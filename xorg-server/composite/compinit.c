@@ -48,13 +48,9 @@
 #include "compint.h"
 #include "compositeext.h"
 
-static int CompScreenPrivateKeyIndex;
-DevPrivateKey CompScreenPrivateKey = &CompScreenPrivateKeyIndex;
-static int CompWindowPrivateKeyIndex;
-DevPrivateKey CompWindowPrivateKey = &CompWindowPrivateKeyIndex;
-static int CompSubwindowsPrivateKeyIndex;
-DevPrivateKey CompSubwindowsPrivateKey = &CompSubwindowsPrivateKeyIndex;
-
+DevPrivateKeyRec CompScreenPrivateKeyRec;
+DevPrivateKeyRec CompWindowPrivateKeyRec;
+DevPrivateKeyRec CompSubwindowsPrivateKeyRec;
 
 static Bool
 compCloseScreen (int index, ScreenPtr pScreen)
@@ -69,9 +65,7 @@ compCloseScreen (int index, ScreenPtr pScreen)
     pScreen->InstallColormap = cs->InstallColormap;
     pScreen->ChangeWindowAttributes = cs->ChangeWindowAttributes;
     pScreen->ReparentWindow = cs->ReparentWindow;
-    pScreen->MoveWindow = cs->MoveWindow;
-    pScreen->ResizeWindow = cs->ResizeWindow;
-    pScreen->ChangeBorderWidth = cs->ChangeBorderWidth;
+    pScreen->ConfigNotify = cs->ConfigNotify;
     
     pScreen->ClipNotify = cs->ClipNotify;
     pScreen->UnrealizeWindow = cs->UnrealizeWindow;
@@ -141,7 +135,7 @@ compScreenUpdate (ScreenPtr pScreen)
     compCheckTree (pScreen);
     if (cs->damaged)
     {
-	compWindowUpdate (WindowTable[pScreen->myNum]);
+	compWindowUpdate (pScreen->root);
 	cs->damaged = FALSE;
     }
 }
@@ -321,6 +315,13 @@ compScreenInit (ScreenPtr pScreen)
 {
     CompScreenPtr   cs;
 
+    if (!dixRegisterPrivateKey(&CompScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&CompWindowPrivateKeyRec, PRIVATE_WINDOW, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&CompSubwindowsPrivateKeyRec, PRIVATE_WINDOW, 0))
+	return FALSE;
+
     if (GetCompScreen (pScreen))
 	return TRUE;
     cs = (CompScreenPtr) malloc(sizeof (CompScreenRec));
@@ -362,14 +363,8 @@ compScreenInit (ScreenPtr pScreen)
     cs->ClipNotify = pScreen->ClipNotify;
     pScreen->ClipNotify = compClipNotify;
 
-    cs->MoveWindow = pScreen->MoveWindow;
-    pScreen->MoveWindow = compMoveWindow;
-
-    cs->ResizeWindow = pScreen->ResizeWindow;
-    pScreen->ResizeWindow = compResizeWindow;
-
-    cs->ChangeBorderWidth = pScreen->ChangeBorderWidth;
-    pScreen->ChangeBorderWidth = compChangeBorderWidth;
+    cs->ConfigNotify = pScreen->ConfigNotify;
+    pScreen->ConfigNotify = compConfigNotify;
 
     cs->ReparentWindow = pScreen->ReparentWindow;
     pScreen->ReparentWindow = compReparentWindow;

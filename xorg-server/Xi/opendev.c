@@ -154,7 +154,7 @@ ProcXOpenDevice(ClientPtr client)
     rep.num_classes = j;
     WriteReplyToClient(client, sizeof(xOpenDeviceReply), &rep);
     WriteToClient(client, j * sizeof(xInputClassInfo), (char *)evbase);
-    return (Success);
+    return Success;
 }
 
 /***********************************************************************

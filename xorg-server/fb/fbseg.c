@@ -624,8 +624,8 @@ fbSegment (DrawablePtr	pDrawable,
     unsigned int oc1;	/* outcode of point 1 */
     unsigned int oc2;	/* outcode of point 2 */
 
-    nBox = REGION_NUM_RECTS (pClip);
-    pBox = REGION_RECTS (pClip);
+    nBox = RegionNumRects (pClip);
+    pBox = RegionRects (pClip);
     
     bres = fbSelectBres (pDrawable, pGC);
     

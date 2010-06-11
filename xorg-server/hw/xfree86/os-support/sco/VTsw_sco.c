@@ -58,7 +58,7 @@ xf86VTRequest(int sig)
 Bool
 xf86VTSwitchPending(void)
 {
-  return(xf86Info.vtRequestsPending ? TRUE : FALSE);
+  return xf86Info.vtRequestsPending ? TRUE : FALSE;
 }
 
 /*
@@ -79,9 +79,9 @@ xf86VTSwitchAway(void)
 
   xf86Info.vtRequestsPending = FALSE;
   if (ioctl(xf86Info.consoleFd, VT_RELDISP, VT_TRUE) < 0) {
-    return(FALSE);
+    return FALSE;
   } else {
-    return(TRUE);
+    return TRUE;
   }
 }
 
@@ -97,7 +97,7 @@ xf86VTSwitchTo(void)
 
   xf86Info.vtRequestsPending = FALSE;
   if (ioctl(xf86Info.consoleFd, VT_RELDISP, VT_ACKACQ) < 0) {
-    return(FALSE);
+    return FALSE;
   } else {
     if (sco_ledstatus >= 0) {
       ioctl (xf86Info.consoleFd, KDSETLED, sco_ledstate);
@@ -120,8 +120,8 @@ Bool
 xf86VTActivate(int vtno)
 {
 	if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, vtno - 1) < 0) {
-		return(FALSE);
+		return FALSE;
 	}
 
-	return(TRUE);
+	return TRUE;
 }

@@ -335,8 +335,8 @@ fb24_32SetSpans (DrawablePtr	    pDrawable,
     {
 	d = dst + (ppt->y + dstYoff) * dstStride;
 	s = (CARD8 *) src;
-	n = REGION_NUM_RECTS(pClip);
-	pbox = REGION_RECTS (pClip);
+	n = RegionNumRects(pClip);
+	pbox = RegionRects (pClip);
 	while (n--)
 	{
 	    if (pbox->y1 > ppt->y)
@@ -399,8 +399,8 @@ fb24_32PutZImage (DrawablePtr	pDrawable,
     dstStride *= sizeof(FbBits);
     dst = (CARD8 *) dstBits;
 
-    for (nbox = REGION_NUM_RECTS (pClip),
-	 pbox = REGION_RECTS(pClip);
+    for (nbox = RegionNumRects (pClip),
+	 pbox = RegionRects(pClip);
 	 nbox--;
 	 pbox++)
     {

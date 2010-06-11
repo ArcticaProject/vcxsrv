@@ -144,18 +144,12 @@ FreePixmapCachePrivate(XAAPixmapCachePrivatePtr pPriv)
 {
     if(!pPriv) return;
 
-    if(pPriv->Info512)
-	free(pPriv->Info512);
-    if(pPriv->Info256)
-	free(pPriv->Info256);
-    if(pPriv->Info128)
-	free(pPriv->Info128);
-    if(pPriv->InfoColor)
-	free(pPriv->InfoColor);
-    if(pPriv->InfoMono)
-	free(pPriv->InfoMono);
-    if(pPriv->InfoPartial)
-	free(pPriv->InfoPartial);
+    free(pPriv->Info512);
+    free(pPriv->Info256);
+    free(pPriv->Info128);
+    free(pPriv->InfoColor);
+    free(pPriv->InfoMono);
+    free(pPriv->InfoPartial);
      
     free(pPriv);
 }
@@ -639,8 +633,8 @@ XAAInitPixmapCache(
    ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
    XAAInfoRecPtr infoRec = (XAAInfoRecPtr)data;
    XAAPixmapCachePrivatePtr pCachePriv;
-   BoxPtr pBox = REGION_RECTS(areas);
-   int nBox = REGION_NUM_RECTS(areas);
+   BoxPtr pBox = RegionRects(areas);
+   int nBox = RegionNumRects(areas);
    int Num512, Num256, Num128, NumPartial, NumColor, NumMono;
    int Target512, Target256;
    CacheLinkPtr List512, List256, List128, ListPartial, ListColor, ListMono;

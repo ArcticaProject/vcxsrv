@@ -672,8 +672,7 @@ winOverrideIcon (unsigned long longWin)
       {
 	free (res_name);
 	free (res_class);
-	if (wmName)
-	  free (wmName);
+	free(wmName);
 
 	if (pref.icon[i].hicon)
 	  return pref.icon[i].hicon;
@@ -691,8 +690,7 @@ winOverrideIcon (unsigned long longWin)
   /* Didn't find the icon, fail gracefully */
   free (res_name);
   free (res_class);
-  if (wmName)
-    free (wmName);
+  free(wmName);
 
   return 0;
 }
@@ -849,8 +847,7 @@ winOverrideStyle (unsigned long longpWin)
       {
 	free (res_name);
 	free (res_class);
-	if (wmName)
-	  free (wmName);
+	free(wmName);
 
 	if (pref.style[i].type)
 	  return pref.style[i].type;
@@ -860,8 +857,7 @@ winOverrideStyle (unsigned long longpWin)
   /* Didn't find the style, fail gracefully */
   free (res_name);
   free (res_class);
-  if (wmName)
-    free (wmName);
+  free(wmName);
 
   return STYLE_NONE;
 }

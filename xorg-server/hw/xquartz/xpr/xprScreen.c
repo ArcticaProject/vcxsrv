@@ -397,7 +397,7 @@ xprUpdateScreen(ScreenPtr pScreen)
     rootlessGlobalOffsetX = darwinMainScreenX;
     rootlessGlobalOffsetY = darwinMainScreenY;
 
-    AppleWMSetScreenOrigin(WindowTable[pScreen->myNum]);
+    AppleWMSetScreenOrigin(pScreen->root);
 
     RootlessRepositionWindows(pScreen);
     RootlessUpdateScreenPixmap(pScreen);
@@ -416,7 +416,7 @@ xprInitInput(int argc, char **argv)
     rootlessGlobalOffsetY = darwinMainScreenY;
 
     for (i = 0; i < screenInfo.numScreens; i++)
-        AppleWMSetScreenOrigin(WindowTable[i]);
+        AppleWMSetScreenOrigin(screenInfo.screens[i]->root);
 }
 
 /*

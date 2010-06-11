@@ -33,8 +33,9 @@
 #define DR_CLIENT_DRIVER_NAME_SIZE 48
 #define DR_BUSID_SIZE 48
 
-static int XvMCScreenKeyIndex;
-static DevPrivateKey XvMCScreenKey;
+static DevPrivateKeyRec XvMCScreenKeyRec;
+#define XvMCScreenKey (&XvMCScreenKeyRec)
+static Bool XvMCInUse;
 
 unsigned long XvMCGeneration = 0;
 
@@ -138,7 +139,7 @@ ProcXvMCListSurfaceTypes(ClientPtr client)
 
     VALIDATE_XV_PORT(stuff->port, pPort, DixReadAccess);
 
-    if(XvMCScreenKey) { /* any adaptors at all */
+    if(XvMCInUse) { /* any adaptors at all */
        ScreenPtr pScreen = pPort->pAdaptor->pScreen;
        if((pScreenPriv = XVMC_GET_PRIVATE(pScreen))) {  /* any this screen */
           for(i = 0; i < pScreenPriv->num_adaptors; i++) {
@@ -193,7 +194,7 @@ ProcXvMCCreateContext(ClientPtr client)
 
     pScreen = pPort->pAdaptor->pScreen;
 
-    if(XvMCScreenKey == NULL) /* no XvMC adaptors */
+    if(!XvMCInUse) /* no XvMC adaptors */
        return BadMatch;
  
     if(!(pScreenPriv = XVMC_GET_PRIVATE(pScreen))) /* none this screen */
@@ -258,8 +259,7 @@ ProcXvMCCreateContext(ClientPtr client)
       WriteToClient(client, dwords << 2, (char*)data); 
     AddResource(pContext->context_id, XvMCRTContext, pContext);
 
-    if(data)
-	free(data);
+    free(data);
 
     return Success;
 }
@@ -326,8 +326,7 @@ ProcXvMCCreateSurface(ClientPtr client)
       WriteToClient(client, dwords << 2, (char*)data);
     AddResource(pSurface->surface_id, XvMCRTSurface, pSurface);
 
-    if(data)
-        free(data);
+    free(data);
 
     pContext->refcnt++;
 
@@ -443,8 +442,7 @@ ProcXvMCCreateSubpicture(ClientPtr client)
       WriteToClient(client, dwords << 2, (char*)data);
     AddResource(pSubpicture->subpicture_id, XvMCRTSubpicture, pSubpicture);
 
-    if(data)
-        free(data);
+    free(data);
 
     pContext->refcnt++;
 
@@ -716,7 +714,8 @@ XvMCScreenInit(ScreenPtr pScreen, int num, XvMCAdaptorPtr pAdapt)
 {
    XvMCScreenPtr pScreenPriv;
 
-   XvMCScreenKey = &XvMCScreenKeyIndex;
+   if (!dixRegisterPrivateKey(&XvMCScreenKeyRec, PRIVATE_SCREEN, 0))
+       return BadAlloc;
 
    if(!(pScreenPriv = malloc(sizeof(XvMCScreenRec))))
 	return BadAlloc;
@@ -733,6 +732,8 @@ XvMCScreenInit(ScreenPtr pScreen, int num, XvMCAdaptorPtr pAdapt)
    pScreenPriv->major = 0;
    pScreenPriv->minor = 0;
    pScreenPriv->patchLevel = 0;
+
+   XvMCInUse = TRUE;
 
    return Success;
 }

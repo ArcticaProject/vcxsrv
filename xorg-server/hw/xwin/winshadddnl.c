@@ -601,8 +601,8 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
   HRESULT		ddrval = DD_OK;
   RECT			rcDest, rcSrc;
   POINT			ptOrigin;
-  DWORD			dwBox = REGION_NUM_RECTS (damage);
-  BoxPtr		pBox = REGION_RECTS (damage);
+  DWORD			dwBox = RegionNumRects (damage);
+  BoxPtr		pBox = RegionRects (damage);
   HRGN			hrgnTemp = NULL, hrgnCombined = NULL;
 
   /*
@@ -677,7 +677,7 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
     }
   else
     {
-      BoxPtr		pBoxExtents = REGION_EXTENTS (pScreen, damage);
+      BoxPtr		pBoxExtents = RegionExtents(damage);
 
       /* Compute a GDI region from the damaged region */
       hrgnCombined = CreateRectRgn (pBox->x1, pBox->y1, pBox->x2, pBox->y2);

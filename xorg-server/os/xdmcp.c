@@ -251,48 +251,48 @@ XdmcpOptions(int argc, char **argv, int i)
 	get_manager_by_name(argc, argv, i++);
 	XDM_INIT_STATE = XDM_QUERY;
 	AccessUsingXdmcp ();
-	return (i + 1);
+	return i + 1;
     }
     if (strcmp(argv[i], "-broadcast") == 0) {
 	XDM_INIT_STATE = XDM_BROADCAST;
 	AccessUsingXdmcp ();
-	return (i + 1);
+	return i + 1;
     }
 #if defined(IPv6) && defined(AF_INET6)
     if (strcmp(argv[i], "-multicast") == 0) {
 	i = get_mcast_options(argc, argv, ++i);
 	XDM_INIT_STATE = XDM_MULTICAST;
 	AccessUsingXdmcp ();
-	return (i + 1);
+	return i + 1;
     }
 #endif
     if (strcmp(argv[i], "-indirect") == 0) {
 	get_manager_by_name(argc, argv, i++);
 	XDM_INIT_STATE = XDM_INDIRECT;
 	AccessUsingXdmcp ();
-	return (i + 1);
+	return i + 1;
     }
     if (strcmp(argv[i], "-port") == 0) {
         if (++i == argc)  {
 	    FatalError("Xserver: missing port number in command line\n");
 	}
 	xdm_udp_port = (unsigned short) atoi(argv[i]);
-	return (i + 1);
+	return i + 1;
     }
     if (strcmp(argv[i], "-from") == 0) {
 	get_fromaddr_by_name(argc, argv, ++i);
-	return (i + 1);
+	return i + 1;
     }
     if (strcmp(argv[i], "-once") == 0) {
 	OneSession = TRUE;
-	return (i + 1);
+	return i + 1;
     }
     if (strcmp(argv[i], "-class") == 0) {
         if (++i == argc)  {
 	    FatalError("Xserver: missing class name in command line\n");
 	}
 	defaultDisplayClass = argv[i];
-	return (i + 1);
+	return i + 1;
     }
 #ifdef HASXDMAUTH
     if (strcmp(argv[i], "-cookie") == 0) {
@@ -300,7 +300,7 @@ XdmcpOptions(int argc, char **argv, int i)
 	    FatalError("Xserver: missing cookie data in command line\n");
 	}
 	xdmAuthCookie = argv[i];
-	return (i + 1);
+	return i + 1;
     }
 #endif
     if (strcmp(argv[i], "-displayID") == 0) {
@@ -308,9 +308,9 @@ XdmcpOptions(int argc, char **argv, int i)
 	    FatalError("Xserver: missing displayID in command line\n");
 	}
 	XdmcpRegisterManufacturerDisplayID (argv[i], strlen (argv[i]));
-	return (i + 1);
+	return i + 1;
     }
-    return (i);
+    return i;
 }
 
 /*
@@ -338,7 +338,7 @@ XdmcpRegisterBroadcastAddress (const struct sockaddr_in *addr)
     if (NumBroadcastAddresses >= MAX_BROADCAST)
 	return;
     bcast = &BroadcastAddresses[NumBroadcastAddresses++];
-    bzero (bcast, sizeof (struct sockaddr_in));
+    memset(bcast, 0, sizeof (struct sockaddr_in));
 #ifdef BSD44SOCKETS
     bcast->sin_len = addr->sin_len;
 #endif
@@ -1483,7 +1483,7 @@ get_addr_by_name(
     char *pport = portstr;
     int gaierr;
 
-    bzero(&hints, sizeof(hints));
+    memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = socktype;
 
     if (port == 0) {
@@ -1616,7 +1616,7 @@ get_mcast_options(int argc, char **argv, int i)
     } else {
 	FatalError("Xserver: port out of range: %d\n", xdm_udp_port);
     }
-    bzero(&hints, sizeof(hints));
+    memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_DGRAM;
 
     if ((gaierr = getaddrinfo(address, portstr, &hints, &firstai)) == 0) {

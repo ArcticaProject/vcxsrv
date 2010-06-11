@@ -213,7 +213,7 @@ XAAFillPolygonSolid(
     int		    c, y, maxy, h, yoffset;
     DDXPointPtr	    topPoint;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     if (mode == CoordModePrevious) {
@@ -226,7 +226,7 @@ XAAFillPolygonSolid(
         mode = CoordModeOrigin;
     }
     
-    if (REGION_NUM_RECTS(pGC->pCompositeClip) != 1) {
+    if (RegionNumRects(pGC->pCompositeClip) != 1) {
 	miFillPolygon (pDraw, pGC, shape, mode, count, ptsIn);
 	return;
     }
@@ -676,7 +676,7 @@ XAAFillPolygonStippled(
     RectFuncPtr	    RectFunc = NULL;
     TrapFuncPtr	    TrapFunc = NULL;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     if (mode == CoordModePrevious) {
@@ -689,7 +689,7 @@ XAAFillPolygonStippled(
         mode = CoordModeOrigin;
     }
     
-    if (REGION_NUM_RECTS(pGC->pCompositeClip) != 1) {
+    if (RegionNumRects(pGC->pCompositeClip) != 1) {
 	miFillPolygon (pDraw, pGC, shape, mode, count, ptsIn);
 	return;
     }
@@ -836,7 +836,7 @@ XAAFillPolygonTiled(
     RectFuncPtr	    RectFunc = NULL;
     TrapFuncPtr	    TrapFunc = NULL;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     if (mode == CoordModePrevious) {
@@ -849,7 +849,7 @@ XAAFillPolygonTiled(
         mode = CoordModeOrigin;
     }
     
-    if (REGION_NUM_RECTS(pGC->pCompositeClip) != 1) {
+    if (RegionNumRects(pGC->pCompositeClip) != 1) {
 	miFillPolygon (pDraw, pGC, shape, mode, count, ptsIn);
 	return;
     }

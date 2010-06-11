@@ -106,7 +106,7 @@ mmapStat(pointer Base, unsigned long Size) {
 	   }
 	}
 	if (region == -1 && nmmreg > 0) region=region * i;
-	return(region);
+	return region;
 }
 #endif
 
@@ -211,7 +211,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 			"xf86MapVidMem: SUCCEED Mapping FrameBuffer \n");
 #endif /* HAS_SVR3_MMAPDRV */
 #endif /* SVR4 */
-	return(base);
+	return base;
 }
 
 /* ARGSUSED */

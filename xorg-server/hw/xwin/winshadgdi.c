@@ -499,8 +499,8 @@ winShadowUpdateGDI (ScreenPtr pScreen,
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
   RegionPtr		damage = shadowDamage(pBuf);
-  DWORD			dwBox = REGION_NUM_RECTS (damage);
-  BoxPtr		pBox = REGION_RECTS (damage);
+  DWORD			dwBox = RegionNumRects (damage);
+  BoxPtr		pBox = RegionRects (damage);
   int			x, y, w, h;
   HRGN			hrgnTemp = NULL, hrgnCombined = NULL;
 #ifdef XWIN_UPDATESTATS
@@ -508,7 +508,7 @@ winShadowUpdateGDI (ScreenPtr pScreen,
   static DWORD		s_dwTotalUpdates = 0;
   static DWORD		s_dwTotalBoxes = 0;
 #endif
-  BoxPtr		pBoxExtents = REGION_EXTENTS (pScreen, damage);
+  BoxPtr		pBoxExtents = RegionExtents(damage);
 
   /*
    * Return immediately if the app is not active

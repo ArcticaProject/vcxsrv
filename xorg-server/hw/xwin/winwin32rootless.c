@@ -150,8 +150,8 @@ winMWExtWMCreateRgnFromRegion (RegionPtr pShape)
 
   if (pShape == NULL) return NULL;
 
-  nRects = REGION_NUM_RECTS(pShape);
-  pRects = REGION_RECTS(pShape);
+  nRects = RegionNumRects(pShape);
+  pRects = RegionRects(pShape);
   
   hRgn = CreateRectRgn (0, 0, 0, 0);
   if (hRgn == NULL)

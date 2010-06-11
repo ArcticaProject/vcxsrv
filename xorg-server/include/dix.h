@@ -83,7 +83,7 @@ SOFTWARE.
     if (!LegalNewID(id,client)) \
     {\
 	client->errorValue = id;\
-        return(BadIDChoice);\
+        return BadIDChoice;\
     }
 
 #define VALIDATE_DRAWABLE_AND_GC(drawID, pDraw, mode)\
@@ -95,7 +95,7 @@ SOFTWARE.
 	if (rc != Success)\
 	    return rc;\
 	if ((pGC->depth != pDraw->depth) || (pGC->pScreen != pDraw->pScreen))\
-	    return (BadMatch);\
+	    return BadMatch;\
     }\
     if (pGC->serialNumber != pDraw->serialNumber)\
 	ValidateGC(pDraw, pGC);

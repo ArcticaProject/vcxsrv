@@ -37,22 +37,19 @@ fbCloseScreen (int index, ScreenPtr pScreen)
     free(depths);
     free(pScreen->visuals);
     free(pScreen->devPrivate);
-#ifdef FB_SCREEN_PRIVATE
-    free(dixLookupPrivate(&pScreen->devPrivates, fbGetScreenPrivateKey()));
-#endif
     return TRUE;
 }
 
 Bool
 fbRealizeFont(ScreenPtr pScreen, FontPtr pFont)
 {
-    return (TRUE);
+    return TRUE;
 }
 
 Bool
 fbUnrealizeFont(ScreenPtr pScreen, FontPtr pFont)
 {
-    return (TRUE);
+    return TRUE;
 }
 
 void

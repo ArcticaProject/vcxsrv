@@ -363,9 +363,9 @@ xf86findDevice (const char *ident, XF86ConfDevicePtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->dev_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }

@@ -1065,35 +1065,85 @@ of the class. If none of the optional entries appear, the
 .B InputClass
 section is generic and will match any input device. If more than one of
 these entries appear, they all must match for the configuration to apply.
-The allowed matching entries are shown below.
 .PP
+There are two types of match entries used in
+.B InputClass
+sections. The first allows various tokens to be matched against attributes
+of the device. An entry can be constructed to match attributes from different
+devices by separating arguments with a '|' character. Multiple entries of the
+same type may be supplied to add multiple matching conditions on the same
+attribute. For example:
+.PP
+.RS 4
+.nf
+.B  "Section \*qInputClass\*q"
+.B  "    Identifier   \*qMy Class\*q"
+.B  "    # product string must contain example and
+.B  "    # either gizmo or gadget
+.B  "    MatchProduct \*qexample\*q
+.B  "    MatchProduct \*qgizmo|gadget\*q
+.I  "    ..."
+.B  "EndSection"
+.fi
+.RE
 .TP 7
 .BI "MatchProduct  \*q" matchproduct \*q
 This entry can be used to check if the substring
 .RI \*q matchproduct \*q
-occurs in the device's product name. Multiple substrings can be matched by
-separating arguments with a '|' character.
+occurs in the device's product name.
 .TP 7
 .BI "MatchVendor  \*q" matchvendor \*q
 This entry can be used to check if the substring
 .RI \*q matchvendor \*q
-occurs in the device's vendor name. Multiple substrings can be matched by
-separating arguments with a '|' character.
+occurs in the device's vendor name.
 .TP 7
 .BI "MatchDevicePath \*q" matchdevice \*q
 This entry can be used to check if the device file matches the
 .RI \*q matchdevice \*q
-pathname pattern. Multiple patterns can be matched by separating arguments
-with a '|' character.
+pathname pattern.
+.TP 7
+.BI "MatchOS \*q" matchos \*q
+This entry can be used to check if the operating system matches the
+case-insensitive
+.RI \*q matchos \*q
+string. This entry is only supported on platforms providing the
+.BR uname (2)
+system call.
+.TP 7
+.BI "MatchPnPID \*q" matchpnp \*q
+The device's Plug and Play (PnP) ID can be checked against the
+.RI \*q matchpnp \*q
+shell wildcard pattern.
+.TP 7
+.BI "MatchUSBID \*q" matchusb \*q
+The device's USB ID can be checked against the
+.RI \*q matchusb \*q
+shell wildcard pattern. The ID is constructed as lowercase hexadecimal numbers
+separated by a ':'. This is the same format as the
+.BR lsusb (8)
+program.
+.TP 7
+.BI "MatchDriver \*q" matchdriver \*q
+Check the case-sensitive string
+.RI \*q matchdriver \*q
+against the currently configured driver of the device. Ordering of sections
+using this entry is important since it will not match unless the driver has
+been set by the config backend or a previous
+.B InputClass
+section.
 .TP 7
 .BI "MatchTag \*q" matchtag \*q
 This entry can be used to check if tags assigned by the config backend
 matches the
 .RI \*q matchtag \*q
-pattern.  Multiple patterns can be matched by separating arguments
-with a '|' character. A match is found if at least one of the tags given in
+pattern. A match is found if at least one of the tags given in
 .RI \*q matchtag \*q
 matches at least one of the tags assigned by the backend.
+.PP
+The second type of entry is used to match device types. These entries take a
+boolean argument similar to
+.B Option
+entries.
 .TP 7
 .BI "MatchIsKeyboard     \*q" bool \*q
 .TP 7
@@ -1106,9 +1156,6 @@ matches at least one of the tags assigned by the backend.
 .BI "MatchIsTouchpad     \*q" bool \*q
 .TP 7
 .BI "MatchIsTouchscreen  \*q" bool \*q
-Match device types. These entries take a boolean argument similar to
-.B Option
-entries.
 .PP
 When an input device has been matched to the
 .B InputClass

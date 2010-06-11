@@ -204,24 +204,15 @@ extern _X_EXPORT Mask	DontPropagateMasks[];
 
 #define HasBorder(w)	((w)->borderWidth || wClipShape(w))
 
-typedef struct _ScreenSaverStuff {
-    WindowPtr pWindow;
-    XID       wid;
-    char      blanked;
-    Bool      (*ExternalScreenSaver)(
-	ScreenPtr	/*pScreen*/,
-	int		/*xstate*/,
-	Bool		/*force*/);
-} ScreenSaverStuffRec, *ScreenSaverStuffPtr;
+typedef struct _ScreenSaverStuff *ScreenSaverStuffPtr;
 
 #define SCREEN_IS_BLANKED   0
 #define SCREEN_ISNT_SAVED   1
 #define SCREEN_IS_TILED     2
 #define SCREEN_IS_BLACK	    3
 
-#define HasSaverWindow(i)   (savedScreenInfo[i].pWindow != NullWindow)
+#define HasSaverWindow(pScreen)   (pScreen->screensaver.pWindow != NullWindow)
 
 extern _X_EXPORT int screenIsSaved;
-extern _X_EXPORT ScreenSaverStuffRec savedScreenInfo[MAXSCREENS];
 
 #endif /* WINDOWSTRUCT_H */

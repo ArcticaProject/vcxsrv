@@ -94,8 +94,7 @@ InitSelections(void)
     pSel = CurrentSelections;
     while (pSel) {
 	pNextSel = pSel->next;
-	dixFreePrivates(pSel->devPrivates);
-	free(pSel);
+	dixFreeObjectWithPrivates(pSel, PRIVATE_SELECTION);
 	pSel = pNextSel;
     }
 

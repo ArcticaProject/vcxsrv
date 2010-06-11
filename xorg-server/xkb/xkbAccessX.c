@@ -394,7 +394,7 @@ XkbSrvLedInfoPtr	sli;
 	unsigned timeElapsed = (now-xkbi->lastPtrEventTime);
 
 	if (timeToWait > timeElapsed)
-	    return (timeToWait - timeElapsed);
+	    return timeToWait - timeElapsed;
     }
     old= *ctrls;
     xkbi->shiftKeyCount= 0;

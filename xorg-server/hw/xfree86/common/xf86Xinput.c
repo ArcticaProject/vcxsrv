@@ -80,6 +80,9 @@
 #ifdef HAVE_FNMATCH_H
 #include <fnmatch.h>
 #endif
+#ifdef HAVE_SYS_UTSNAME_H
+#include <sys/utsname.h>
+#endif
 
 #include "extnsionst.h"
 
@@ -278,9 +281,9 @@ xf86SendDragEvents(DeviceIntPtr	device)
     LocalDevicePtr local = (LocalDevicePtr) device->public.devicePrivate;
     
     if (device->button && device->button->buttonsDown > 0)
-        return (local->flags & XI86_SEND_DRAG_EVENTS);
+        return local->flags & XI86_SEND_DRAG_EVENTS;
     else
-        return (TRUE);
+        return TRUE;
 }
 
 /***********************************************************************
@@ -497,73 +500,152 @@ AddOtherInputDevices(void)
 }
 
 /*
+ * Get the operating system name from uname and store it statically to avoid
+ * repeating the system call each time MatchOS is checked.
+ */
+static const char *
+HostOS(void)
+{
+#ifdef HAVE_SYS_UTSNAME_H
+    struct utsname name;
+    static char host_os[sizeof(name.sysname)] = "";
+
+    if (*host_os == '\0') {
+        if (uname(&name) >= 0)
+            strcpy(host_os, name.sysname);
+        else {
+            strncpy(host_os, "unknown", sizeof(host_os));
+            host_os[sizeof(host_os)-1] = '\0';
+        }
+    }
+    return host_os;
+#else
+    return "";
+#endif
+}
+
+static int
+match_substring(const char *attr, const char *pattern)
+{
+    return (strstr(attr, pattern)) ? 0 : -1;
+}
+
+#ifdef HAVE_FNMATCH_H
+static int
+match_pattern(const char *attr, const char *pattern)
+{
+    return fnmatch(pattern, attr, 0);
+}
+#else
+#define match_pattern match_substring
+#endif
+
+#ifdef HAVE_FNMATCH_H
+static int
+match_path_pattern(const char *attr, const char *pattern)
+{
+    return fnmatch(pattern, attr, FNM_PATHNAME);
+}
+#else
+#define match_path_pattern match_substring
+#endif
+
+/*
+ * Match an attribute against a list of NULL terminated arrays of patterns.
+ * If a pattern in each list entry is matched, return TRUE.
+ */
+static Bool
+MatchAttrToken(const char *attr, struct list *patterns,
+               int (*compare)(const char *attr, const char *pattern))
+{
+    const xf86MatchGroup *group;
+
+    /* If there are no patterns, accept the match */
+    if (list_is_empty(patterns))
+        return TRUE;
+
+    /* If there are patterns but no attribute, reject the match */
+    if (!attr)
+        return FALSE;
+
+    /*
+     * Otherwise, iterate the list of patterns ensuring each entry has a
+     * match. Each list entry is a separate Match line of the same type.
+     */
+    list_for_each_entry(group, patterns, entry) {
+        char * const *cur;
+        Bool match = FALSE;
+
+        for (cur = group->values; *cur; cur++)
+            if ((*compare)(attr, *cur) == 0) {
+                match = TRUE;
+                break;
+            }
+        if (!match)
+            return FALSE;
+    }
+
+    /* All the entries in the list matched the attribute */
+    return TRUE;
+}
+
+/*
  * Classes without any Match statements match all devices. Otherwise, all
  * statements must match.
  */
 static Bool
-InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
+InputClassMatches(const XF86ConfInputClassPtr iclass, const IDevPtr idev,
+                  const InputAttributes *attrs)
 {
-    char **cur;
-    Bool match;
+    /* MatchProduct substring */
+    if (!MatchAttrToken(attrs->product, &iclass->match_product, match_substring))
+        return FALSE;
 
-    if (iclass->match_product) {
-        if (!attrs->product)
-            return FALSE;
-        /* see if any of the values match */
-        for (cur = iclass->match_product, match = FALSE; *cur; cur++)
-            if (strstr(attrs->product, *cur)) {
-                match = TRUE;
-                break;
-            }
-        if (!match)
-            return FALSE;
-    }
-    if (iclass->match_vendor) {
-        if (!attrs->vendor)
-            return FALSE;
-        /* see if any of the values match */
-        for (cur = iclass->match_vendor, match = FALSE; *cur; cur++)
-            if (strstr(attrs->vendor, *cur)) {
-                match = TRUE;
-                break;
-            }
-        if (!match)
-            return FALSE;
-    }
-    if (iclass->match_device) {
-        if (!attrs->device)
-            return FALSE;
-        /* see if any of the values match */
-        for (cur = iclass->match_device, match = FALSE; *cur; cur++)
-#ifdef HAVE_FNMATCH_H
-            if (fnmatch(*cur, attrs->device, FNM_PATHNAME) == 0) {
-#else
-            if (strstr(attrs->device, *cur)) {
-#endif
-                match = TRUE;
-                break;
-            }
-        if (!match)
-            return FALSE;
-    }
-    if (iclass->match_tag) {
+    /* MatchVendor substring */
+    if (!MatchAttrToken(attrs->vendor, &iclass->match_vendor, match_substring))
+        return FALSE;
+
+    /* MatchDevicePath pattern */
+    if (!MatchAttrToken(attrs->device, &iclass->match_device, match_path_pattern))
+        return FALSE;
+
+    /* MatchOS case-insensitive string */
+    if (!MatchAttrToken(HostOS(), &iclass->match_os, strcasecmp))
+        return FALSE;
+
+    /* MatchPnPID pattern */
+    if (!MatchAttrToken(attrs->pnp_id, &iclass->match_pnpid, match_pattern))
+        return FALSE;
+
+    /* MatchUSBID pattern */
+    if (!MatchAttrToken(attrs->usb_id, &iclass->match_usbid, match_pattern))
+        return FALSE;
+
+    /* MatchDriver string */
+    if (!MatchAttrToken(idev->driver, &iclass->match_driver, strcmp))
+        return FALSE;
+
+    /*
+     * MatchTag string
+     * See if any of the device's tags match any of the MatchTag tokens.
+     */
+    if (!list_is_empty(&iclass->match_tag)) {
+        char * const *tag;
+        Bool match;
+
         if (!attrs->tags)
             return FALSE;
-
-        for (cur = iclass->match_tag, match = FALSE; *cur && !match; cur++) {
-            char * const *tag;
-            for(tag = attrs->tags; *tag; tag++) {
-                if (!strcmp(*tag, *cur)) {
-                    match = TRUE;
-                    break;
-                }
+        for (tag = attrs->tags, match = FALSE; *tag; tag++) {
+            if (MatchAttrToken(*tag, &iclass->match_tag, strcmp)) {
+                match = TRUE;
+                break;
             }
         }
-
         if (!match)
             return FALSE;
     }
 
+    /* MatchIs* booleans */
     if (iclass->is_keyboard.set &&
         iclass->is_keyboard.val != !!(attrs->flags & ATTR_KEYBOARD))
         return FALSE;
@@ -582,6 +664,7 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
     if (iclass->is_touchscreen.set &&
         iclass->is_touchscreen.val != !!(attrs->flags & ATTR_TOUCHSCREEN))
         return FALSE;
+
     return TRUE;
 }
 
@@ -591,37 +674,36 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
  * well as any previous InputClass sections.
  */
 static int
-MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
+MergeInputClasses(const IDevPtr idev, const InputAttributes *attrs)
 {
     XF86ConfInputClassPtr cl;
-    XF86OptionPtr classopts, mergedopts = NULL;
-    char *classdriver = NULL;
+    XF86OptionPtr classopts;
 
     for (cl = xf86configptr->conf_inputclass_lst; cl; cl = cl->list.next) {
-        if (!InputClassMatches(cl, attrs))
+        if (!InputClassMatches(cl, idev, attrs))
             continue;
 
-        /* Collect class options and merge over previous classes */
+        /* Collect class options and driver settings */
+        classopts = xf86optionListDup(cl->option_lst);
+        if (cl->driver) {
+            free(idev->driver);
+            idev->driver = xstrdup(cl->driver);
+            if (!idev->driver) {
+                xf86Msg(X_ERROR, "Failed to allocate memory while merging "
+                        "InputClass configuration");
+                return BadAlloc;
+            }
+            classopts = xf86ReplaceStrOption(classopts, "driver",
+                                             idev->driver);
+        }
+
+        /* Apply options to device with InputClass settings preferred. */
         xf86Msg(X_CONFIG, "%s: Applying InputClass \"%s\"\n",
                 idev->identifier, cl->identifier);
-        if (cl->driver)
-            classdriver = cl->driver;
-        classopts = xf86optionListDup(cl->option_lst);
-        mergedopts = xf86optionListMerge(mergedopts, classopts);
+        idev->commonOptions = xf86optionListMerge(idev->commonOptions,
+                                                  classopts);
     }
 
-    /* Apply options to device with InputClass settings preferred. */
-    if (classdriver) {
-        free(idev->driver);
-        idev->driver = xstrdup(classdriver);
-        if (!idev->driver) {
-            xf86Msg(X_ERROR, "Failed to allocate memory while merging "
-                    "InputClass configuration");
-            return BadAlloc;
-        }
-        mergedopts = xf86ReplaceStrOption(mergedopts, "driver", idev->driver);
-    }
-    idev->commonOptions = xf86optionListMerge(idev->commonOptions, mergedopts);
     return Success;
 }
 
@@ -630,14 +712,14 @@ MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
  * value of the last matching class and holler when returning TRUE.
  */
 static Bool
-IgnoreInputClass(IDevPtr idev, InputAttributes *attrs)
+IgnoreInputClass(const IDevPtr idev, const InputAttributes *attrs)
 {
     XF86ConfInputClassPtr cl;
     Bool ignore = FALSE;
     const char *ignore_class;
 
     for (cl = xf86configptr->conf_inputclass_lst; cl; cl = cl->list.next) {
-        if (!InputClassMatches(cl, attrs))
+        if (!InputClassMatches(cl, idev, attrs))
             continue;
         if (xf86findOption(cl->option_lst, "Ignore")) {
             ignore = xf86CheckBoolOption(cl->option_lst, "Ignore", FALSE);
@@ -844,10 +926,8 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
 unwind:
     if (is_auto && !xf86Info.autoAddDevices)
         xf86Msg(X_INFO, "AutoAddDevices is off - not adding device.\n");
-    if(idev->driver)
-        free(idev->driver);
-    if(idev->identifier)
-        free(idev->identifier);
+    free(idev->driver);
+    free(idev->identifier);
     xf86optionListFree(idev->commonOptions);
     free(idev);
     return rval;
@@ -1195,7 +1275,7 @@ xf86ScaleAxis(int	Cx,
     if (X < Sxlow)
 	X = Sxlow;
     
-    return (X);
+    return X;
 }
 
 /*

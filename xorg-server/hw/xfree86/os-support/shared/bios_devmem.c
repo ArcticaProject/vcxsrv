@@ -53,7 +53,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	{
 		xf86Msg(X_WARNING, "xf86ReadBIOS: Failed to open %s (%s)\n",
 			DEV_MEM, strerror(errno));
-		return(-1);
+		return -1;
 	}
 
 	if (lseek(fd, (Base+Offset), SEEK_SET) < 0)
@@ -61,15 +61,15 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		xf86Msg(X_WARNING, "xf86ReadBIOS: %s seek failed (%s)\n",
 			DEV_MEM, strerror(errno));
 		close(fd);
-		return(-1);
+		return -1;
 	}
 	if (read(fd, Buf, Len) != Len)
 	{
 		xf86Msg(X_WARNING, "xf86ReadBIOS: %s read failed (%s)\n",
 			DEV_MEM, strerror(errno));
 		close(fd);
-		return(-1);
+		return -1;
 	}
 	close(fd);
-	return(Len);
+	return Len;
 }

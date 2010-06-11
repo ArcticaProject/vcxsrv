@@ -255,9 +255,9 @@ static int ProcPseudoramiXGetScreenSize(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     /* screen dimensions */
     rep.width  = pseudoramiXScreens[stuff->screen].w;
-    // was panoramiXdataPtr[stuff->screen].width;
+    // was screenInfo.screens[stuff->screen]->width;
     rep.height = pseudoramiXScreens[stuff->screen].h;
-    // was panoramiXdataPtr[stuff->screen].height;
+    // was screenInfo.screens[stuff->screen]->height;
     if (client->swapped) {
         swaps (&rep.sequenceNumber, n);
         swapl (&rep.length, n);

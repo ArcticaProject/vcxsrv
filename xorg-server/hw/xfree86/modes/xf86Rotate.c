@@ -76,13 +76,13 @@ xf86RotateCrtcRedisplay (xf86CrtcPtr crtc, RegionPtr region)
 {
     ScrnInfoPtr		scrn = crtc->scrn;
     ScreenPtr		screen = scrn->pScreen;
-    WindowPtr		root = WindowTable[screen->myNum];
+    WindowPtr		root = screen->root;
     PixmapPtr		dst_pixmap = crtc->rotatedPixmap;
-    PictFormatPtr	format = compWindowFormat (WindowTable[screen->myNum]);
+    PictFormatPtr	format = compWindowFormat (screen->root);
     int			error;
     PicturePtr		src, dst;
-    int			n = REGION_NUM_RECTS(region);
-    BoxPtr		b = REGION_RECTS(region);
+    int			n = RegionNumRects(region);
+    BoxPtr		b = RegionRects(region);
     XID			include_inferiors = IncludeInferiors;
     
     src = CreatePicture (None,
@@ -167,10 +167,10 @@ xf86CrtcDamageShadow (xf86CrtcPtr crtc)
     if (damage_box.y1 < 0) damage_box.y1 = 0;
     if (damage_box.x2 > pScreen->width) damage_box.x2 = pScreen->width;
     if (damage_box.y2 > pScreen->height) damage_box.y2 = pScreen->height;
-    REGION_INIT (pScreen, &damage_region, &damage_box, 1);
+    RegionInit(&damage_region, &damage_box, 1);
     DamageRegionAppend (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
 			&damage_region);
-    REGION_UNINIT (pScreen, &damage_region);
+    RegionUninit(&damage_region);
     crtc->shadowClear = TRUE;
 }
 
@@ -217,7 +217,7 @@ xf86RotateRedisplay(ScreenPtr pScreen)
 	return FALSE;
     xf86RotatePrepare (pScreen);
     region = DamageRegion(damage);
-    if (REGION_NOTEMPTY(pScreen, region)) 
+    if (RegionNotEmpty(region))
     {
 	int			c;
 	SourceValidateProcPtr	SourceValidate;
@@ -240,14 +240,14 @@ xf86RotateRedisplay(ScreenPtr pScreen)
 		RegionRec   crtc_damage;
 
 		/* compute portion of damage that overlaps crtc */
-		REGION_INIT(pScreen, &crtc_damage, &crtc->bounds, 1);
-		REGION_INTERSECT (pScreen, &crtc_damage, &crtc_damage, region);
+		RegionInit(&crtc_damage, &crtc->bounds, 1);
+		RegionIntersect(&crtc_damage, &crtc_damage, region);
 		
 		/* update damaged region */
-		if (REGION_NOTEMPTY(pScreen, &crtc_damage))
+		if (RegionNotEmpty(&crtc_damage))
     		    xf86RotateCrtcRedisplay (crtc, &crtc_damage);
 		
-		REGION_UNINIT (pScreen, &crtc_damage);
+		RegionUninit(&crtc_damage);
 	    }
 	}
 	pScreen->SourceValidate = SourceValidate;
@@ -405,8 +405,7 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
 	 */
 	xf86RotateDestroy (crtc);
 	crtc->transform_in_use = FALSE;
-	if (new_params)
-	    free(new_params);
+	free(new_params);
 	new_params = NULL;
 	new_nparams = 0;
 	new_filter = NULL;
@@ -506,8 +505,7 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
     crtc->crtc_to_framebuffer = crtc_to_fb;
     crtc->f_crtc_to_framebuffer = f_crtc_to_fb;
     crtc->f_framebuffer_to_crtc = f_fb_to_crtc;
-    if (crtc->params)
-	free(crtc->params);
+    free(crtc->params);
     crtc->params = new_params;
     crtc->nparams = new_nparams;
     crtc->filter = new_filter;

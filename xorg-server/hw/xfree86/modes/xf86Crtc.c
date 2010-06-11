@@ -157,8 +157,7 @@ xf86CrtcDestroy (xf86CrtcPtr crtc)
 	    xf86_config->num_crtc--;
 	    break;
 	}
-    if (crtc->params)
-	free(crtc->params);
+    free(crtc->params);
     free(crtc->gamma_red);
     free(crtc);
 }
@@ -382,8 +381,7 @@ done:
 	crtc->transformPresent = saved_transform_present;
     }
 
-    if (adjusted_mode->name)
-	    free(adjusted_mode->name);
+    free(adjusted_mode->name);
     free(adjusted_mode);
 
     if (didLock)
@@ -482,8 +480,7 @@ xf86OutputSetMonitor (xf86OutputPtr output)
     if (!output->name)
 	return;
 
-    if (output->options)
-	free(output->options);
+    free(output->options);
 
     output->options = xnfalloc (sizeof (xf86OutputOptions));
     memcpy (output->options, xf86OutputOptions, sizeof (xf86OutputOptions));
@@ -580,7 +577,7 @@ xf86OutputInitialRotation (xf86OutputPtr output)
     
     for (i = 0; i < 4; i++)
 	if (xf86nameCompare (direction[i], rotate_name) == 0)
-	    return (1 << i);
+	    return 1 << i;
     return RR_Rotate_0;
 }
 
@@ -1041,8 +1038,8 @@ xf86DefaultScreenLimits (ScrnInfoPtr scrn, int *widthp, int *heightp,
 
 	if (crtc->enabled)
 	{
-	    crtc_width = crtc->x + xf86ModeWidth (&crtc->desiredMode, crtc->desiredRotation);
-	    crtc_height = crtc->y + xf86ModeHeight (&crtc->desiredMode, crtc->desiredRotation);
+	    crtc_width = crtc->desiredX + xf86ModeWidth (&crtc->desiredMode, crtc->desiredRotation);
+	    crtc_height = crtc->desiredY + xf86ModeHeight (&crtc->desiredMode, crtc->desiredRotation);
 	}
 	if (!canGrow) {
 	    for (o = 0; o < config->num_output; o++)
@@ -2204,7 +2201,7 @@ xf86TargetFallback(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
 				       target_rotation, width, height);
     }
 
-    return (target_mode != NULL);
+    return target_mode != NULL;
 }
 
 static Bool
@@ -3155,9 +3152,9 @@ xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 						  &crtc_box);
 
 	if (crtc) {
-	    REGION_INIT (pScreen, &crtc_region_local, &crtc_box, 1);
+	    RegionInit(&crtc_region_local, &crtc_box, 1);
 	    crtc_region = &crtc_region_local;
-	    REGION_INTERSECT (pScreen, crtc_region, crtc_region, reg);
+	    RegionIntersect(crtc_region, crtc_region, reg);
 	}
 	*crtc_ret = crtc;
     }
@@ -3166,7 +3163,7 @@ xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 				crtc_region, width, height);
 
     if (crtc_region != reg)
-	REGION_UNINIT (pScreen, &crtc_region_local);
+	RegionUninit(&crtc_region_local);
 
     return ret;
 }
@@ -3223,7 +3220,7 @@ xf86_crtc_supports_gamma(ScrnInfoPtr pScrn)
 	    return FALSE;
 	crtc = xf86_config->crtc[0];
 
-	return (crtc->funcs->gamma_set != NULL);
+	return crtc->funcs->gamma_set != NULL;
     }
 
     return FALSE;

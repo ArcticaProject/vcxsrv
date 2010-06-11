@@ -532,7 +532,7 @@ hostx_get_server_depth (EphyrScreenInfo screen)
 {
   struct EphyrHostScreen *host_screen = host_screen_from_screen_info (screen);
 
-  return (host_screen ? host_screen->server_depth : 0);
+  return host_screen ? host_screen->server_depth : 0;
 }
 
 void

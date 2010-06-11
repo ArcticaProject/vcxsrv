@@ -122,7 +122,7 @@ DMXStatInfo *dmxStatAlloc(void)
 /** Free the memory used by a \a DMXStatInfo structure. */
 void dmxStatFree(DMXStatInfo *pt)
 {
-    if (pt) free(pt);
+    free(pt);
 }
 
 static void dmxStatValue(DMXStatAvg *data, unsigned long value)

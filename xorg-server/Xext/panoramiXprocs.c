@@ -129,14 +129,14 @@ int PanoramiXCreateWindow(ClientPtr client)
     orig_visual = stuff->visual;
     orig_x = stuff->x;
     orig_y = stuff->y;
-    parentIsRoot = (stuff->parent == WindowTable[0]->drawable.id) ||
-                   (stuff->parent == savedScreenInfo[0].wid);
+    parentIsRoot = (stuff->parent == screenInfo.screens[0]->root->drawable.id) ||
+                   (stuff->parent == screenInfo.screens[0]->screensaver.wid);
     FOR_NSCREENS_BACKWARD(j) {
         stuff->wid = newWin->info[j].id;
         stuff->parent = parent->info[j].id;
 	if (parentIsRoot) {
-	    stuff->x = orig_x - panoramiXdataPtr[j].x;
-	    stuff->y = orig_y - panoramiXdataPtr[j].y;
+	    stuff->x = orig_x - screenInfo.screens[j]->x;
+	    stuff->y = orig_y - screenInfo.screens[j]->y;
 	}
 	if (backPix)
 	    *((CARD32 *) &stuff[1] + pback_offset) = backPix->info[j].id;
@@ -155,7 +155,7 @@ int PanoramiXCreateWindow(ClientPtr client)
     else 
         free(newWin);
 
-    return (result);
+    return result;
 }
 
 
@@ -227,7 +227,7 @@ int PanoramiXChangeWindowAttributes(ClientPtr client)
         result = (*SavedProcVector[X_ChangeWindowAttributes])(client);
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -253,7 +253,7 @@ int PanoramiXDestroyWindow(ClientPtr client)
     /* Since ProcDestroyWindow is using FreeResource, it will free
 	our resource for us on the last pass through the loop above */
  
-    return (result);
+    return result;
 }
 
 
@@ -279,7 +279,7 @@ int PanoramiXDestroySubwindows(ClientPtr client)
     /* DestroySubwindows is using FreeResource which will free
 	our resources for us on the last pass through the loop above */
 
-    return (result);
+    return result;
 }
 
 
@@ -302,7 +302,7 @@ int PanoramiXChangeSaveSet(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -328,20 +328,20 @@ int PanoramiXReparentWindow(ClientPtr client)
 
     x = stuff->x;
     y = stuff->y;
-    parentIsRoot = (stuff->parent == WindowTable[0]->drawable.id) ||
-                   (stuff->parent == savedScreenInfo[0].wid);
+    parentIsRoot = (stuff->parent == screenInfo.screens[0]->root->drawable.id) ||
+                   (stuff->parent == screenInfo.screens[0]->screensaver.wid);
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->window = win->info[j].id;
 	stuff->parent = parent->info[j].id;
 	if(parentIsRoot) {
-	    stuff->x = x - panoramiXdataPtr[j].x;
-	    stuff->y = y - panoramiXdataPtr[j].y;
+	    stuff->x = x - screenInfo.screens[j]->x;
+	    stuff->y = y - screenInfo.screens[j]->y;
 	}
 	result = (*SavedProcVector[X_ReparentWindow])(client);
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -364,7 +364,7 @@ int PanoramiXMapWindow(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -387,7 +387,7 @@ int PanoramiXMapSubwindows(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -410,7 +410,7 @@ int PanoramiXUnmapWindow(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -433,7 +433,7 @@ int PanoramiXUnmapSubwindows(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -475,8 +475,8 @@ int PanoramiXConfigureWindow(ClientPtr client)
 	}
     }
 
-    if(pWin->parent && ((pWin->parent == WindowTable[0]) ||
-                        (pWin->parent->drawable.id == savedScreenInfo[0].wid)))
+    if(pWin->parent && ((pWin->parent == screenInfo.screens[0]->root) ||
+                        (pWin->parent->drawable.id == screenInfo.screens[0]->screensaver.wid)))
     {
 	if ((Mask)stuff->mask & CWX) {
 	    x_offset = 0;
@@ -495,14 +495,14 @@ int PanoramiXConfigureWindow(ClientPtr client)
 	if(sib)
 	    *((CARD32 *) &stuff[1] + sib_offset) = sib->info[j].id;
 	if(x_offset >= 0)
-	    *((CARD32 *) &stuff[1] + x_offset) = x - panoramiXdataPtr[j].x;
+	    *((CARD32 *) &stuff[1] + x_offset) = x - screenInfo.screens[j]->x;
 	if(y_offset >= 0)
-	    *((CARD32 *) &stuff[1] + y_offset) = y - panoramiXdataPtr[j].y;
+	    *((CARD32 *) &stuff[1] + y_offset) = y - screenInfo.screens[j]->y;
 	result = (*SavedProcVector[X_ConfigureWindow])(client);
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -525,7 +525,7 @@ int PanoramiXCirculateWindow(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -544,7 +544,7 @@ int PanoramiXGetGeometry(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.root = WindowTable[0]->drawable.id;
+    rep.root = screenInfo.screens[0]->root->drawable.id;
     rep.depth = pDraw->depth;
     rep.width = pDraw->width;
     rep.height = pDraw->height;
@@ -557,16 +557,16 @@ int PanoramiXGetGeometry(ClientPtr client)
 	rep.width = root->pixWidth;
 	rep.height = root->pixHeight;
     } else 
-    if ((pDraw->type == UNDRAWABLE_WINDOW) || (pDraw->type == DRAWABLE_WINDOW))
+    if (WindowDrawable(pDraw->type))
     {
         WindowPtr pWin = (WindowPtr)pDraw;
 	rep.x = pWin->origin.x - wBorderWidth (pWin);
 	rep.y = pWin->origin.y - wBorderWidth (pWin);
-	if((pWin->parent == WindowTable[0]) || 
-           (pWin->parent->drawable.id == savedScreenInfo[0].wid))
+	if((pWin->parent == screenInfo.screens[0]->root) ||
+           (pWin->parent->drawable.id == screenInfo.screens[0]->screensaver.wid))
         {
-	   rep.x += panoramiXdataPtr[0].x;
-	   rep.y += panoramiXdataPtr[0].y;
+	   rep.x += screenInfo.screens[0]->x;
+	   rep.y += screenInfo.screens[0]->y;
 	}
 	rep.borderWidth = pWin->borderWidth;
     }
@@ -596,11 +596,11 @@ int PanoramiXTranslateCoords(ClientPtr client)
     rep.sameScreen = xTrue;
     rep.child = None;
 
-    if((pWin == WindowTable[0]) || 
-       (pWin->drawable.id == savedScreenInfo[0].wid))
+    if((pWin == screenInfo.screens[0]->root) ||
+       (pWin->drawable.id == screenInfo.screens[0]->screensaver.wid))
     { 
-	x = stuff->srcX - panoramiXdataPtr[0].x;
-	y = stuff->srcY - panoramiXdataPtr[0].y;
+	x = stuff->srcX - screenInfo.screens[0]->x;
+	y = stuff->srcY - screenInfo.screens[0]->y;
     } else {
 	x = pWin->drawable.x + stuff->srcX;
 	y = pWin->drawable.y + stuff->srcY;
@@ -620,8 +620,7 @@ int PanoramiXTranslateCoords(ClientPtr client)
 		 * borderSize
 		 */
 		&& (!wBoundingShape(pWin) ||
-		    POINT_IN_REGION(pWin->drawable.pScreen, 
-					wBoundingShape(pWin), 
+		    RegionContainsPoint(wBoundingShape(pWin),
 					x - pWin->drawable.x, 
 					y - pWin->drawable.y, &box))
 		)
@@ -634,11 +633,11 @@ int PanoramiXTranslateCoords(ClientPtr client)
     }
     rep.dstX = x - pDst->drawable.x;
     rep.dstY = y - pDst->drawable.y;
-    if((pDst == WindowTable[0]) || 
-       (pDst->drawable.id == savedScreenInfo[0].wid))
+    if((pDst == screenInfo.screens[0]->root) ||
+       (pWin->drawable.id == screenInfo.screens[0]->screensaver.wid))
     {
-	rep.dstX += panoramiXdataPtr[0].x;
-	rep.dstY += panoramiXdataPtr[0].y;
+	rep.dstX += screenInfo.screens[0]->x;
+	rep.dstY += screenInfo.screens[0]->y;
     }
 
     WriteReplyToClient(client, sizeof(xTranslateCoordsReply), &rep);
@@ -680,7 +679,7 @@ int PanoramiXCreatePixmap(ClientPtr client)
     else 
 	free(newPix);
 
-    return (result);
+    return result;
 }
 
 
@@ -708,7 +707,7 @@ int PanoramiXFreePixmap(ClientPtr client)
     /* Since ProcFreePixmap is using FreeResource, it will free
 	our resource for us on the last pass through the loop above */
  
-    return (result);
+    return result;
 }
 
 
@@ -790,7 +789,7 @@ int PanoramiXCreateGC(ClientPtr client)
     else 
         free(newGC);
 
-    return (result);
+    return result;
 }
 
 int PanoramiXChangeGC(ClientPtr client)
@@ -856,7 +855,7 @@ int PanoramiXChangeGC(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -885,7 +884,7 @@ int PanoramiXCopyGC(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -908,7 +907,7 @@ int PanoramiXSetDashes(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -931,7 +930,7 @@ int PanoramiXSetClipRectangles(ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 
@@ -957,7 +956,7 @@ int PanoramiXFreeGC(ClientPtr client)
     /* Since ProcFreeGC is using FreeResource, it will free
 	our resource for us on the last pass through the loop above */
  
-    return (result);
+    return result;
 }
 
 
@@ -981,14 +980,14 @@ int PanoramiXClearToBackground(ClientPtr client)
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->window = win->info[j].id;
 	if(isRoot) {
-	    stuff->x = x - panoramiXdataPtr[j].x;
-	    stuff->y = y - panoramiXdataPtr[j].y;
+	    stuff->x = x - screenInfo.screens[j]->x;
+	    stuff->y = y - screenInfo.screens[j]->y;
 	}
 	result = (*SavedProcVector[X_ClearArea])(client);
 	if(result != Success) break;
     }
  
-    return (result);
+    return result;
 }
 
 
@@ -1070,7 +1069,7 @@ int PanoramiXCopyArea(ClientPtr client)
 	    if(drawables[0]->depth != pDst->depth) {
 		client->errorValue = stuff->dstDrawable;
 		free(data);
-		return (BadMatch);
+		return BadMatch;
 	    }
 
 	    (*pGC->ops->PutImage) (pDst, pGC, pDst->depth, dstx, dsty, 
@@ -1084,20 +1083,22 @@ int PanoramiXCopyArea(ClientPtr client)
     } else {
 	DrawablePtr pDst = NULL, pSrc = NULL;
 	GCPtr pGC = NULL;
-	RegionPtr pRgn[MAXSCREENS];
+	RegionRec totalReg;
 	int rc;
 
+	RegionNull(&totalReg);
 	FOR_NSCREENS_BACKWARD(j) {
+	    RegionPtr pRgn;
 	    stuff->dstDrawable = dst->info[j].id;
 	    stuff->srcDrawable = src->info[j].id;
 	    stuff->gc          = gc->info[j].id;
  	    if (srcIsRoot) {	
-		stuff->srcX = srcx - panoramiXdataPtr[j].x;
-		stuff->srcY = srcy - panoramiXdataPtr[j].y;
+		stuff->srcX = srcx - screenInfo.screens[j]->x;
+		stuff->srcY = srcy - screenInfo.screens[j]->y;
 	    }
  	    if (dstIsRoot) {	
-		stuff->dstX = dstx - panoramiXdataPtr[j].x;
-		stuff->dstY = dsty - panoramiXdataPtr[j].y;
+		stuff->dstX = dstx - screenInfo.screens[j]->x;
+		stuff->dstY = dsty - screenInfo.screens[j]->y;
 	    }
 
 	    VALIDATE_DRAWABLE_AND_GC(stuff->dstDrawable, pDst, DixWriteAccess);
@@ -1111,42 +1112,34 @@ int PanoramiXCopyArea(ClientPtr client)
 		if ((pDst->pScreen != pSrc->pScreen) || 
 		    (pDst->depth != pSrc->depth)) {
 			client->errorValue = stuff->dstDrawable;
-			return (BadMatch);
+			return BadMatch;
    		}
  	    } else
 		pSrc = pDst;
 
-	    pRgn[j] = (*pGC->ops->CopyArea)(pSrc, pDst, pGC, 
+	    pRgn = (*pGC->ops->CopyArea)(pSrc, pDst, pGC,
 				stuff->srcX, stuff->srcY,
 				stuff->width, stuff->height, 
 				stuff->dstX, stuff->dstY);
-
-	    if(dstShared) {
-		while(j--) pRgn[j] = NULL;
-		break;
+	    if(pGC->graphicsExposures && pRgn) {
+	       if(srcIsRoot) {
+		   RegionTranslate(pRgn,
+			    screenInfo.screens[j]->x, screenInfo.screens[j]->y);
+	       }
+	       RegionAppend(&totalReg, pRgn);
+	       RegionDestroy(pRgn);
 	    }
+
+	    if(dstShared)
+		break;
 	}
 
 	if(pGC->graphicsExposures) {
-	    ScreenPtr pScreen = pDst->pScreen;
-	    RegionRec totalReg;
 	    Bool overlap;
-
-	    REGION_NULL(pScreen, &totalReg);
-	    FOR_NSCREENS_BACKWARD(j) {
-		if(pRgn[j]) {
-		   if(srcIsRoot) {
-		       REGION_TRANSLATE(pScreen, pRgn[j], 
-				panoramiXdataPtr[j].x, panoramiXdataPtr[j].y);
-		   }
-		   REGION_APPEND(pScreen, &totalReg, pRgn[j]);
-		   REGION_DESTROY(pScreen, pRgn[j]);
-		}
-	    }
-	    REGION_VALIDATE(pScreen, &totalReg, &overlap);
-	    (*pScreen->SendGraphicsExpose)(
+	    RegionValidate(&totalReg, &overlap);
+	    (*pDst->pScreen->SendGraphicsExpose)(
 		client, &totalReg, stuff->dstDrawable, X_CopyArea, 0);
-	    REGION_UNINIT(pScreen, &totalReg);
+	    RegionUninit(&totalReg);
 	}
     }
 
@@ -1163,7 +1156,7 @@ int PanoramiXCopyPlane(ClientPtr client)
     Bool		srcShared, dstShared;
     DrawablePtr 	psrcDraw, pdstDraw = NULL;
     GCPtr 		pGC = NULL;
-    RegionPtr 		pRgn[MAXSCREENS];
+    RegionRec		totalReg;
     REQUEST(xCopyPlaneReq);
 
     REQUEST_SIZE_MATCH(xCopyPlaneReq);
@@ -1198,17 +1191,19 @@ int PanoramiXCopyPlane(ClientPtr client)
     srcx = stuff->srcX; srcy = stuff->srcY;
     dstx = stuff->dstX; dsty = stuff->dstY;
  
+    RegionNull(&totalReg);
     FOR_NSCREENS_BACKWARD(j) {
+	RegionPtr pRgn;
 	stuff->dstDrawable = dst->info[j].id;
 	stuff->srcDrawable = src->info[j].id;
 	stuff->gc          = gc->info[j].id;
 	if (srcIsRoot) {	
-	    stuff->srcX = srcx - panoramiXdataPtr[j].x;
-	    stuff->srcY = srcy - panoramiXdataPtr[j].y;
+	    stuff->srcX = srcx - screenInfo.screens[j]->x;
+	    stuff->srcY = srcy - screenInfo.screens[j]->y;
 	}
 	if (dstIsRoot) {	
-	    stuff->dstX = dstx - panoramiXdataPtr[j].x;
-	    stuff->dstY = dsty - panoramiXdataPtr[j].y;
+	    stuff->dstX = dstx - screenInfo.screens[j]->x;
+	    stuff->dstY = dsty - screenInfo.screens[j]->y;
 	}
 
 	VALIDATE_DRAWABLE_AND_GC(stuff->dstDrawable, pdstDraw, DixWriteAccess);
@@ -1220,7 +1215,7 @@ int PanoramiXCopyPlane(ClientPtr client)
 
             if (pdstDraw->pScreen != psrcDraw->pScreen) {
 		client->errorValue = stuff->dstDrawable;
-		return (BadMatch);
+		return BadMatch;
 	    }
 	} else
 	    psrcDraw = pdstDraw;
@@ -1228,36 +1223,28 @@ int PanoramiXCopyPlane(ClientPtr client)
 	if(stuff->bitPlane == 0 || (stuff->bitPlane & (stuff->bitPlane - 1)) ||
 		(stuff->bitPlane > (1L << (psrcDraw->depth - 1)))) {
 	    client->errorValue = stuff->bitPlane;
-	    return(BadValue);
+	    return BadValue;
 	}
 
-	pRgn[j] = (*pGC->ops->CopyPlane)(psrcDraw, pdstDraw, pGC, 
+	pRgn = (*pGC->ops->CopyPlane)(psrcDraw, pdstDraw, pGC,
 				stuff->srcX, stuff->srcY,
 				stuff->width, stuff->height, 
 				stuff->dstX, stuff->dstY, stuff->bitPlane);
-
-	if(dstShared) {
-	    while(j--) pRgn[j] = NULL;
-	    break;
+	if(pGC->graphicsExposures && pRgn) {
+	    RegionAppend(&totalReg, pRgn);
+	    RegionDestroy(pRgn);
 	}
+
+	if(dstShared)
+	    break;
     }
 
     if(pGC->graphicsExposures) {
-	ScreenPtr pScreen = pdstDraw->pScreen;
-	RegionRec totalReg;
 	Bool overlap;
-
-	REGION_NULL(pScreen, &totalReg);
-	FOR_NSCREENS_BACKWARD(j) {
-	    if(pRgn[j]) {
-		REGION_APPEND(pScreen, &totalReg, pRgn[j]);
-		REGION_DESTROY(pScreen, pRgn[j]);
-	    }
-	}
-	REGION_VALIDATE(pScreen, &totalReg, &overlap);
-	(*pScreen->SendGraphicsExpose)(
+	RegionValidate(&totalReg, &overlap);
+	(*pdstDraw->pScreen->SendGraphicsExpose)(
 		client, &totalReg, stuff->dstDrawable, X_CopyPlane, 0);
-	REGION_UNINIT(pScreen, &totalReg);
+	RegionUninit(&totalReg);
     }
 
     return Success;
@@ -1297,8 +1284,8 @@ int PanoramiXPolyPoint(ClientPtr client)
             if(j) memcpy(&stuff[1], origPts, npoint * sizeof(xPoint));
 
             if (isRoot) {
-                int x_off = panoramiXdataPtr[j].x;
-                int y_off = panoramiXdataPtr[j].y;
+                int x_off = screenInfo.screens[j]->x;
+                int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
                     xPoint *pnts = (xPoint*)&stuff[1];
@@ -1318,7 +1305,7 @@ int PanoramiXPolyPoint(ClientPtr client)
 	    if(result != Success) break;
         }
         free(origPts);
-        return (result);
+        return result;
     } else
 	return Success;
 }
@@ -1357,8 +1344,8 @@ int PanoramiXPolyLine(ClientPtr client)
             if(j) memcpy(&stuff[1], origPts, npoint * sizeof(xPoint));
 
             if (isRoot) {
-                int x_off = panoramiXdataPtr[j].x;
-                int y_off = panoramiXdataPtr[j].y;
+                int x_off = screenInfo.screens[j]->x;
+                int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
 		    xPoint *pnts = (xPoint*)&stuff[1];
@@ -1378,7 +1365,7 @@ int PanoramiXPolyLine(ClientPtr client)
 	    if(result != Success) break;
         }
         free(origPts);
-        return (result);
+        return result;
    } else
 	return Success;
 }
@@ -1420,8 +1407,8 @@ int PanoramiXPolySegment(ClientPtr client)
             if(j) memcpy(&stuff[1], origSegs, nsegs * sizeof(xSegment));
 
             if (isRoot) {
-                int x_off = panoramiXdataPtr[j].x;
-                int y_off = panoramiXdataPtr[j].y;
+                int x_off = screenInfo.screens[j]->x;
+                int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
 		    xSegment *segs = (xSegment*)&stuff[1];
@@ -1441,7 +1428,7 @@ int PanoramiXPolySegment(ClientPtr client)
 	    if(result != Success) break;
     	}
 	free(origSegs);
-	return (result);
+	return result;
     } else
 	  return Success;
 }
@@ -1483,8 +1470,8 @@ int PanoramiXPolyRectangle(ClientPtr client)
             if(j) memcpy(&stuff[1], origRecs, nrects * sizeof(xRectangle));
 
 	    if (isRoot) {
-		int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 
 		if(x_off || y_off) {
@@ -1503,7 +1490,7 @@ int PanoramiXPolyRectangle(ClientPtr client)
 	    if(result != Success) break;
 	}
 	free(origRecs);
-	return (result);
+	return result;
     } else
        return Success;
 }
@@ -1545,8 +1532,8 @@ int PanoramiXPolyArc(ClientPtr client)
             if(j) memcpy(&stuff[1], origArcs, narcs * sizeof(xArc));
 
 	    if (isRoot) {
-		int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 	
 		if(x_off || y_off) {
 		    xArc *arcs = (xArc *) &stuff[1];
@@ -1563,7 +1550,7 @@ int PanoramiXPolyArc(ClientPtr client)
 	    if(result != Success) break;
         }
 	free(origArcs);
-	return (result);
+	return result;
     } else
        return Success;
 }
@@ -1603,8 +1590,8 @@ int PanoramiXFillPoly(ClientPtr client)
 	    if(j) memcpy(&stuff[1], locPts, count * sizeof(DDXPointRec));
 
 	    if (isRoot) {
-		int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
 		    DDXPointPtr pnts = (DDXPointPtr)&stuff[1];
@@ -1624,7 +1611,7 @@ int PanoramiXFillPoly(ClientPtr client)
 	    if(result != Success) break;
 	}
 	free(locPts);
-	return (result);
+	return result;
     } else
        return Success;
 }
@@ -1666,8 +1653,8 @@ int PanoramiXPolyFillRectangle(ClientPtr client)
 	    if(j) memcpy(&stuff[1], origRects, things * sizeof(xRectangle));
 
 	    if (isRoot) {
-		int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
 		    xRectangle *rects = (xRectangle *) &stuff[1];
@@ -1685,7 +1672,7 @@ int PanoramiXPolyFillRectangle(ClientPtr client)
 	    if(result != Success) break;
 	}
 	free(origRects);
-	return (result);
+	return result;
     } else
        return Success;
 }
@@ -1727,8 +1714,8 @@ int PanoramiXPolyFillArc(ClientPtr client)
 	    if(j) memcpy(&stuff[1], origArcs, narcs * sizeof(xArc));
 
 	    if (isRoot) {
-		int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
 		    xArc *arcs = (xArc *) &stuff[1];
@@ -1746,7 +1733,7 @@ int PanoramiXPolyFillArc(ClientPtr client)
 	    if(result != Success) break;
 	}
 	free(origArcs);
-	return (result);
+	return result;
     } else
        return Success;
 }
@@ -1780,15 +1767,15 @@ int PanoramiXPutImage(ClientPtr client)
     orig_y = stuff->dstY;
     FOR_NSCREENS_BACKWARD(j){
 	if (isRoot) {
-    	  stuff->dstX = orig_x - panoramiXdataPtr[j].x;
-	  stuff->dstY = orig_y - panoramiXdataPtr[j].y;
+	  stuff->dstX = orig_x - screenInfo.screens[j]->x;
+	  stuff->dstY = orig_y - screenInfo.screens[j]->y;
 	}
 	stuff->drawable = draw->info[j].id;
 	stuff->gc = gc->info[j].id;
 	result = (* SavedProcVector[X_PutImage])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -1811,7 +1798,7 @@ int PanoramiXGetImage(ClientPtr client)
 
     if ((stuff->format != XYPixmap) && (stuff->format != ZPixmap)) {
 	client->errorValue = stuff->format;
-        return(BadValue);
+        return BadValue;
     }
 
     rc = dixLookupResourceByClass((pointer *)&draw, stuff->drawable,
@@ -1828,7 +1815,7 @@ int PanoramiXGetImage(ClientPtr client)
 	return rc;
 
     if(!((WindowPtr)pDraw)->realized)
-	return(BadMatch);
+	return BadMatch;
 
     x = stuff->x;
     y = stuff->y;
@@ -1843,19 +1830,19 @@ int PanoramiXGetImage(ClientPtr client)
       if( /* check for being onscreen */
 	x < 0 || x + w > PanoramiXPixWidth ||
 	y < 0 || y + h > PanoramiXPixHeight )
-	    return(BadMatch);
+	    return BadMatch;
     } else {
       if( /* check for being onscreen */
-	panoramiXdataPtr[0].x + pDraw->x + x < 0 ||
-	panoramiXdataPtr[0].x + pDraw->x + x + w > PanoramiXPixWidth ||
-        panoramiXdataPtr[0].y + pDraw->y + y < 0 ||
-	panoramiXdataPtr[0].y + pDraw->y + y + h > PanoramiXPixHeight ||
+	screenInfo.screens[0]->x + pDraw->x + x < 0 ||
+	screenInfo.screens[0]->x + pDraw->x + x + w > PanoramiXPixWidth ||
+	screenInfo.screens[0]->y + pDraw->y + y < 0 ||
+	screenInfo.screens[0]->y + pDraw->y + y + h > PanoramiXPixHeight ||
 	 /* check for being inside of border */
        	x < - wBorderWidth((WindowPtr)pDraw) ||
 	x + w > wBorderWidth((WindowPtr)pDraw) + (int)pDraw->width ||
 	y < -wBorderWidth((WindowPtr)pDraw) ||
 	y + h > wBorderWidth ((WindowPtr)pDraw) + (int)pDraw->height)
-	    return(BadMatch);
+	    return BadMatch;
     }
 
     drawables[0] = pDraw;
@@ -1897,7 +1884,7 @@ int PanoramiXGetImage(ClientPtr client)
     }
     length = linesPerBuf * widthBytesLine;
     if(!(pBuf = malloc(length)))
-	return (BadAlloc);
+	return BadAlloc;
 
     WriteReplyToClient(client, sizeof (xGetImageReply), &xgi);
 
@@ -1910,7 +1897,7 @@ int PanoramiXGetImage(ClientPtr client)
 	    nlines = min(linesPerBuf, h - linesDone);
 
 	    if(pDraw->depth == 1)
-		bzero(pBuf, nlines * widthBytesLine);
+		memset(pBuf, 0, nlines * widthBytesLine);
 
 	    XineramaGetImageData(drawables, x, y + linesDone, w, nlines,
 			format, planemask, pBuf, widthBytesLine, isRoot);
@@ -1927,7 +1914,7 @@ int PanoramiXGetImage(ClientPtr client)
 	        while (h - linesDone > 0) {
 		    nlines = min(linesPerBuf, h - linesDone);
 
-		    bzero(pBuf, nlines * widthBytesLine);
+		    memset(pBuf, 0, nlines * widthBytesLine);
 
 		    XineramaGetImageData(drawables, x, y + linesDone, w, 
 					nlines, format, plane, pBuf,
@@ -1983,13 +1970,13 @@ PanoramiXPolyText8(ClientPtr client)
 	stuff->drawable = draw->info[j].id;
 	stuff->gc = gc->info[j].id;
 	if (isRoot) {
-	    stuff->x = orig_x - panoramiXdataPtr[j].x;
-	    stuff->y = orig_y - panoramiXdataPtr[j].y;
+	    stuff->x = orig_x - screenInfo.screens[j]->x;
+	    stuff->y = orig_y - screenInfo.screens[j]->y;
 	}
 	result = (*SavedProcVector[X_PolyText8])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 int 
@@ -2024,13 +2011,13 @@ PanoramiXPolyText16(ClientPtr client)
 	stuff->drawable = draw->info[j].id;
 	stuff->gc = gc->info[j].id;
 	if (isRoot) {
-	    stuff->x = orig_x - panoramiXdataPtr[j].x;
-	    stuff->y = orig_y - panoramiXdataPtr[j].y;
+	    stuff->x = orig_x - screenInfo.screens[j]->x;
+	    stuff->y = orig_y - screenInfo.screens[j]->y;
 	}
 	result = (*SavedProcVector[X_PolyText16])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2065,13 +2052,13 @@ int PanoramiXImageText8(ClientPtr client)
 	stuff->drawable = draw->info[j].id;
 	stuff->gc = gc->info[j].id;
 	if (isRoot) {
-	    stuff->x = orig_x - panoramiXdataPtr[j].x;
-	    stuff->y = orig_y - panoramiXdataPtr[j].y;
+	    stuff->x = orig_x - screenInfo.screens[j]->x;
+	    stuff->y = orig_y - screenInfo.screens[j]->y;
 	}
 	result = (*SavedProcVector[X_ImageText8])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2106,13 +2093,13 @@ int PanoramiXImageText16(ClientPtr client)
 	stuff->drawable = draw->info[j].id;
 	stuff->gc = gc->info[j].id;
 	if (isRoot) {
-	    stuff->x = orig_x - panoramiXdataPtr[j].x;
-	    stuff->y = orig_y - panoramiXdataPtr[j].y;
+	    stuff->x = orig_x - screenInfo.screens[j]->x;
+	    stuff->y = orig_y - screenInfo.screens[j]->y;
 	}
 	result = (*SavedProcVector[X_ImageText16])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2152,7 +2139,7 @@ int PanoramiXCreateColormap(ClientPtr client)
     else 
         free(newCmap);
 
-    return (result);
+    return result;
 }
 
 
@@ -2180,7 +2167,7 @@ int PanoramiXFreeColormap(ClientPtr client)
     /* Since ProcFreeColormap is using FreeResource, it will free
 	our resource for us on the last pass through the loop above */
 
-    return (result);
+    return result;
 }
 
 
@@ -2221,7 +2208,7 @@ PanoramiXCopyColormapAndFree(ClientPtr client)
     else 
         free(newCmap);
 
-    return (result);
+    return result;
 }
 
 
@@ -2245,7 +2232,7 @@ int PanoramiXInstallColormap(ClientPtr client)
 	result = (* SavedProcVector[X_InstallColormap])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2269,7 +2256,7 @@ int PanoramiXUninstallColormap(ClientPtr client)
 	result = (* SavedProcVector[X_UninstallColormap])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2293,7 +2280,7 @@ int PanoramiXAllocColor(ClientPtr client)
 	result = (* SavedProcVector[X_AllocColor])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2317,7 +2304,7 @@ int PanoramiXAllocNamedColor(ClientPtr client)
         result = (* SavedProcVector[X_AllocNamedColor])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2341,7 +2328,7 @@ int PanoramiXAllocColorCells(ClientPtr client)
 	result = (* SavedProcVector[X_AllocColorCells])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2365,7 +2352,7 @@ int PanoramiXAllocColorPlanes(ClientPtr client)
 	result = (* SavedProcVector[X_AllocColorPlanes])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2389,7 +2376,7 @@ int PanoramiXFreeColors(ClientPtr client)
         stuff->cmap = cmap->info[j].id;
         result = (* SavedProcVector[X_FreeColors])(client);
     }
-    return (result);
+    return result;
 }
 
 
@@ -2413,7 +2400,7 @@ int PanoramiXStoreColors(ClientPtr client)
 	result = (* SavedProcVector[X_StoreColors])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }
 
 
@@ -2437,5 +2424,5 @@ int PanoramiXStoreNamedColor(ClientPtr client)
 	result = (* SavedProcVector[X_StoreNamedColor])(client);
 	if(result != Success) break;
     }
-    return (result);
+    return result;
 }

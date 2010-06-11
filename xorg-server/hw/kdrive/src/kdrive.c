@@ -64,8 +64,7 @@ KdDepths    kdDepths[] = {
 
 #define KD_DEFAULT_BUTTONS 5
 
-static int          kdScreenPrivateKeyIndex;
-DevPrivateKey       kdScreenPrivateKey = &kdScreenPrivateKeyIndex;
+DevPrivateKeyRec    kdScreenPrivateKeyRec;
 unsigned long	    kdGeneration;
 
 Bool                kdVideoTest;
@@ -95,7 +94,7 @@ KdOsFuncs	*kdOsFuncs;
 void
 KdSetRootClip (ScreenPtr pScreen, BOOL enable)
 {
-    WindowPtr	pWin = WindowTable[pScreen->myNum];
+    WindowPtr	pWin = pScreen->root;
     WindowPtr	pChild;
     Bool	WasViewable;
     Bool	anyMarked = FALSE;
@@ -121,8 +120,8 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
 	    {
 		RegionPtr	borderVisible;
 
-		borderVisible = REGION_CREATE(pScreen, NullBox, 1);
-		REGION_SUBTRACT(pScreen, borderVisible,
+		borderVisible = RegionCreate(NullBox, 1);
+		RegionSubtract(borderVisible,
 				&pWin->borderClip, &pWin->winSize);
 		pWin->valdata->before.borderVisible = borderVisible;
 	    }
@@ -138,15 +137,15 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
 	box.y2 = pScreen->height;
 	pWin->drawable.width = pScreen->width;
 	pWin->drawable.height = pScreen->height;
-	REGION_INIT (pScreen, &pWin->winSize, &box, 1);
-	REGION_INIT (pScreen, &pWin->borderSize, &box, 1);
-	REGION_RESET(pScreen, &pWin->borderClip, &box);
-	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+	RegionInit(&pWin->winSize, &box, 1);
+	RegionInit(&pWin->borderSize, &box, 1);
+	RegionReset(&pWin->borderClip, &box);
+	RegionBreak(&pWin->clipList);
     }
     else
     {
-	REGION_EMPTY(pScreen, &pWin->borderClip);
-	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+	RegionEmpty(&pWin->borderClip);
+	RegionBreak(&pWin->clipList);
     }
 
     ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
@@ -699,6 +698,9 @@ KdAllocatePrivates (ScreenPtr pScreen)
     if (kdGeneration != serverGeneration)
 	kdGeneration = serverGeneration;
 
+    if (!dixRegisterPrivateKey(&kdScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     pScreenPriv = calloc(1, sizeof (*pScreenPriv));
     if (!pScreenPriv)
 	return FALSE;
@@ -836,8 +838,8 @@ KdCreateWindow (WindowPtr pWin)
 
 	if (!pScreenPriv->enabled)
 	{
-	    REGION_EMPTY (pWin->drawable.pScreen, &pWin->borderClip);
-	    REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+	    RegionEmpty(&pWin->borderClip);
+	    RegionBreak(&pWin->clipList);
 	}
     }
 #endif
@@ -941,9 +943,8 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     pScreenPriv->card = card;
     pScreenPriv->bytesPerPixel = screen->fb.bitsPerPixel >> 3;
     pScreenPriv->dpmsState = KD_DPMS_NORMAL;
-#ifdef PANORAMIX
-    dixScreenOrigins[pScreen->myNum] = screen->origin;
-#endif
+    pScreen->x = screen->origin.x;
+    pScreen->y = screen->origin.y;
 
     if (!monitorResolution)
 	monitorResolution = 75;

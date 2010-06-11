@@ -581,7 +581,7 @@ xf86InitOrigins(void)
 {
     unsigned long screensLeft, prevScreensLeft, mask;
     screenLayoutPtr screen;
-    ScreenPtr pScreen;
+    ScreenPtr pScreen, refScreen;
     int x1, x2, y1, y2, left, right, top, bottom;
     int i, j, ref, minX, minY, min, max;
     xf86ScreenLayoutPtr pLayout;
@@ -590,7 +590,7 @@ xf86InitOrigins(void)
     /* need to have this set up with a config file option */
     HardEdges = FALSE;
 
-    bzero(xf86ScreenLayout, MAXSCREENS * sizeof(xf86ScreenLayoutRec));
+    memset(xf86ScreenLayout, 0, MAXSCREENS * sizeof(xf86ScreenLayoutRec));
 	
     screensLeft = prevScreensLeft = (1 << xf86NumScreens) - 1;
 
@@ -608,6 +608,7 @@ xf86InitOrigins(void)
 	        continue;
 	    }
 
+	    pScreen = xf86Screens[i]->pScreen;
 	    switch(screen->where) {
 	    case PosObsolete:
 		OldStyleConfig = TRUE;
@@ -620,7 +621,7 @@ xf86InitOrigins(void)
 			break;
 		    }
 		    pLayout->left = AddEdge(pLayout->left, 
-			0, xf86Screens[i]->pScreen->height,
+			0, pScreen->height,
 			xf86Screens[ref]->pScreen->width, 0, ref);
 		}
 		if(screen->right) {
@@ -629,7 +630,6 @@ xf86InitOrigins(void)
 			ErrorF("Referenced uninitialized screen in Layout!\n");
 			break;
 		    }
-		    pScreen = xf86Screens[i]->pScreen;
 		    pLayout->right = AddEdge(pLayout->right, 
 			0, pScreen->height, -pScreen->width, 0, ref);
 		}
@@ -640,7 +640,7 @@ xf86InitOrigins(void)
 			break;
 		    }
 		    pLayout->up = AddEdge(pLayout->up, 
-			0, xf86Screens[i]->pScreen->width,
+			0, pScreen->width,
 			0, xf86Screens[ref]->pScreen->height, ref);
 		}
 		if(screen->bottom) {
@@ -649,7 +649,6 @@ xf86InitOrigins(void)
 			ErrorF("Referenced uninitialized screen in Layout!\n");
 			break;
 		    }
-		    pScreen = xf86Screens[i]->pScreen;
 		    pLayout->down = AddEdge(pLayout->down, 
 			0, pScreen->width, 0, -pScreen->height, ref);
 		}
@@ -658,8 +657,8 @@ xf86InitOrigins(void)
 		screen->x = screen->y = 0;
 		/* FALLTHROUGH */
 	    case PosAbsolute:
-		dixScreenOrigins[i].x = screen->x;
-		dixScreenOrigins[i].y = screen->y;
+		pScreen->x = screen->x;
+		pScreen->y = screen->y;
 		screensLeft &= ~(1 << i);
 		break;
 	    case PosRelative:
@@ -669,8 +668,9 @@ xf86InitOrigins(void)
 		    break;
 		}
 		if(screensLeft & (1 << ref)) break;
-		dixScreenOrigins[i].x = dixScreenOrigins[ref].x + screen->x;
-		dixScreenOrigins[i].y = dixScreenOrigins[ref].y + screen->y;
+		refScreen = xf86Screens[ref]->pScreen;
+		pScreen->x = refScreen->x + screen->x;
+		pScreen->y = refScreen->y + screen->y;
 		screensLeft &= ~(1 << i);
 		break;
 	    case PosRightOf:
@@ -680,10 +680,9 @@ xf86InitOrigins(void)
 		    break;
 		}
 		if(screensLeft & (1 << ref)) break;
-		pScreen = xf86Screens[ref]->pScreen;
-		dixScreenOrigins[i].x = 
-			dixScreenOrigins[ref].x + pScreen->width;
-		dixScreenOrigins[i].y = dixScreenOrigins[ref].y;
+		refScreen = xf86Screens[ref]->pScreen;
+		pScreen->x = refScreen->x + refScreen->width;
+		pScreen->y = refScreen->y;
 		screensLeft &= ~(1 << i);
 		break;
 	    case PosLeftOf:
@@ -693,10 +692,9 @@ xf86InitOrigins(void)
 		    break;
 		}
 		if(screensLeft & (1 << ref)) break;
-		pScreen = xf86Screens[i]->pScreen;
-		dixScreenOrigins[i].x = 
-			dixScreenOrigins[ref].x - pScreen->width;
-		dixScreenOrigins[i].y = dixScreenOrigins[ref].y;
+		refScreen = xf86Screens[ref]->pScreen;
+		pScreen->x = refScreen->x - pScreen->width;
+		pScreen->y = refScreen->y;
 		screensLeft &= ~(1 << i);
 		break;
 	    case PosBelow:
@@ -706,10 +704,9 @@ xf86InitOrigins(void)
 		    break;
 		}
 		if(screensLeft & (1 << ref)) break;
-		pScreen = xf86Screens[ref]->pScreen;
-		dixScreenOrigins[i].x = dixScreenOrigins[ref].x;
-		dixScreenOrigins[i].y = 
-			dixScreenOrigins[ref].y + pScreen->height;
+		refScreen = xf86Screens[ref]->pScreen;
+		pScreen->x = refScreen->x;
+		pScreen->y = refScreen->y + refScreen->height;
 		screensLeft &= ~(1 << i);
 		break;
 	    case PosAbove:
@@ -719,10 +716,9 @@ xf86InitOrigins(void)
 		    break;
 		}
 		if(screensLeft & (1 << ref)) break;
-		pScreen = xf86Screens[i]->pScreen;
-		dixScreenOrigins[i].x = dixScreenOrigins[ref].x;
-		dixScreenOrigins[i].y = 
-			dixScreenOrigins[ref].y - pScreen->height;
+		refScreen = xf86Screens[ref]->pScreen;
+		pScreen->x = refScreen->x;
+		pScreen->y = refScreen->y - pScreen->height;
 		screensLeft &= ~(1 << i);
 		break;
 	    default:
@@ -741,7 +737,7 @@ xf86InitOrigins(void)
 	    while(!((1 << i) & screensLeft)){ i++; }
 
 	    ref = xf86ConfigLayout.screens[i].refscreen->screennum;
-	    dixScreenOrigins[ref].x = dixScreenOrigins[ref].y = 0;
+	    xf86Screens[ref]->pScreen->x = xf86Screens[ref]->pScreen->y = 0;
 	    screensLeft &= ~(1 << ref);
 	}
 
@@ -749,20 +745,20 @@ xf86InitOrigins(void)
     }
 
     /* justify the topmost and leftmost to (0,0) */
-    minX = dixScreenOrigins[0].x;
-    minY = dixScreenOrigins[0].y;
+    minX = xf86Screens[0]->pScreen->x;
+    minY = xf86Screens[0]->pScreen->y;
 
     for(i = 1; i < xf86NumScreens; i++) {
-	if(dixScreenOrigins[i].x < minX)
-	  minX = dixScreenOrigins[i].x;
-	if(dixScreenOrigins[i].y < minY)
-	  minY = dixScreenOrigins[i].y;
+	if(xf86Screens[i]->pScreen->x < minX)
+	  minX = xf86Screens[i]->pScreen->x;
+	if(xf86Screens[i]->pScreen->y < minY)
+	  minY = xf86Screens[i]->pScreen->y;
     }
 
     if (minX || minY) {
 	for(i = 0; i < xf86NumScreens; i++) {
-	   dixScreenOrigins[i].x -= minX;
-	   dixScreenOrigins[i].y -= minY;
+	   xf86Screens[i]->pScreen->x -= minX;
+	   xf86Screens[i]->pScreen->y -= minY;
 	}
     }
 
@@ -775,18 +771,20 @@ xf86InitOrigins(void)
 
 	pScreen = xf86Screens[i]->pScreen;
 
-	left = dixScreenOrigins[i].x;
+	left = pScreen->x;
 	right = left + pScreen->width;
-	top = dixScreenOrigins[i].y;
+	top = pScreen->y;
 	bottom = top + pScreen->height;
 
 	for(j = 0; j < xf86NumScreens; j++) {
 	    if(i == j) continue;
 
-	    x1 = dixScreenOrigins[j].x;
-	    x2 = x1 + xf86Screens[j]->pScreen->width;
-	    y1 = dixScreenOrigins[j].y;
-	    y2 = y1 + xf86Screens[j]->pScreen->height;
+	    refScreen = xf86Screens[j]->pScreen;
+
+	    x1 = refScreen->x;
+	    x2 = x1 + refScreen->width;
+	    y1 = refScreen->y;
+	    y2 = y1 + refScreen->height;
 
 	    if((bottom > y1) && (top < y2)) {
 		min = y1 - top;
@@ -796,13 +794,13 @@ xf86InitOrigins(void)
 
 		if(((left - 1) >= x1) && ((left - 1) < x2))
 		    pLayout->left = AddEdge(pLayout->left, min, max,
-			dixScreenOrigins[i].x - dixScreenOrigins[j].x,
-			dixScreenOrigins[i].y - dixScreenOrigins[j].y, j);
+			pScreen->x - refScreen->x,
+			pScreen->y - refScreen->y, j);
 
 		if((right >= x1) && (right < x2))	
 		    pLayout->right = AddEdge(pLayout->right, min, max,
-			dixScreenOrigins[i].x - dixScreenOrigins[j].x,
-			dixScreenOrigins[i].y - dixScreenOrigins[j].y, j);
+			pScreen->x - refScreen->x,
+			pScreen->y - refScreen->y, j);
 	    }
 
 
@@ -814,13 +812,13 @@ xf86InitOrigins(void)
 
 		if(((top - 1) >= y1) && ((top - 1) < y2))
 		    pLayout->up = AddEdge(pLayout->up, min, max,
-			dixScreenOrigins[i].x - dixScreenOrigins[j].x,
-			dixScreenOrigins[i].y - dixScreenOrigins[j].y, j);
+			pScreen->x - refScreen->x,
+			pScreen->y - refScreen->y, j);
 
 		if((bottom >= y1) && (bottom < y2))
 		    pLayout->down = AddEdge(pLayout->down, min, max,
-			dixScreenOrigins[i].x - dixScreenOrigins[j].x,
-			dixScreenOrigins[i].y - dixScreenOrigins[j].y, j);
+			pScreen->x - refScreen->x,
+			pScreen->y - refScreen->y, j);
 	    }
 	}
       }
@@ -850,10 +848,10 @@ xf86ReconfigureLayout(void)
     for (i = 0; i < MAXSCREENS; i++) {
 	xf86ScreenLayoutPtr sl = &xf86ScreenLayout[i];
 	/* we don't have to zero these, xf86InitOrigins() takes care of that */
-	if (sl->left) free(sl->left);
-	if (sl->right) free(sl->right);
-	if (sl->up) free(sl->up);
-	if (sl->down) free(sl->down);
+	free(sl->left);
+	free(sl->right);
+	free(sl->up);
+	free(sl->down);
     }
 
     xf86InitOrigins();

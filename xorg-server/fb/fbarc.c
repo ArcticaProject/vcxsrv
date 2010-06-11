@@ -102,7 +102,7 @@ fbPolyArc (DrawablePtr	pDrawable,
 		    y2 = box.y1 + (int)parcs->height + 1;
 		    box.y2 = y2;
 		    if ( (x2 <= SHRT_MAX) && (y2 <= SHRT_MAX) &&
-			(RECT_IN_REGION(pDrawable->pScreen, cclip, &box) == rgnIN) ) {
+			(RegionContainsRect(cclip, &box) == rgnIN) ) {
 #ifdef FB_ACCESS_WRAPPER
 			if (!wrapped) {
 			    fbPrepareAccess (pDrawable);

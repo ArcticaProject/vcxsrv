@@ -351,7 +351,7 @@ do {									\
         
 #define MAXSCREENSFREE(o)                                               \
     do {                                                                \
-        if (o) free(o);                                                \
+        free(o);                                                \
         o = NULL;                                                       \
     } while (0)
 
@@ -363,5 +363,28 @@ do {									\
 #define MAXSCREENSCALLOC(o,m)           _MAXSCREENSALLOCF(o,MAXSCREENS*(m),0)
 #define MAXSCREENSCALLOC_FATAL(o,m)     _MAXSCREENSALLOCF(o,MAXSCREENS*(m),1)
 #endif
+
+extern DevPrivateKeyRec dmxGCPrivateKeyRec;
+#define dmxGCPrivateKey (&dmxGCPrivateKeyRec) /**< Private index for GCs       */
+
+extern DevPrivateKeyRec dmxWinPrivateKeyRec;
+#define dmxWinPrivateKey (&dmxWinPrivateKeyRec) /**< Private index for Windows   */
+
+extern DevPrivateKeyRec dmxPixPrivateKeyRec;
+#define dmxPixPrivateKey (&dmxPixPrivateKeyRec) /**< Private index for Pixmaps   */
+
+extern int dmxFontPrivateIndex;        /**< Private index for Fonts     */
+
+extern DevPrivateKeyRec dmxScreenPrivateKeyRec;
+#define dmxScreenPrivateKey (&dmxScreenPrivateKeyRec) /**< Private index for Screens   */
+
+extern DevPrivateKeyRec dmxColormapPrivateKeyRec;
+#define dmxColormapPrivateKey (&dmxColormapPrivateKeyRec) /**< Private index for Colormaps */
+
+extern DevPrivateKeyRec dmxPictPrivateKeyRec;
+#define dmxPictPrivateKey (&dmxPictPrivateKeyRec) /**< Private index for Picts     */
+
+extern DevPrivateKeyRec dmxGlyphSetPrivateKeyRec;
+#define dmxGlyphSetPrivateKey (&dmxGlyphSetPrivateKeyRec) /**< Private index for GlyphSets */
 
 #endif /* DMX_H */

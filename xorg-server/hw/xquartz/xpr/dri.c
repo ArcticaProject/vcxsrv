@@ -74,14 +74,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <AvailabilityMacros.h>
 
-static int DRIScreenPrivKeyIndex;
-static DevPrivateKey DRIScreenPrivKey = &DRIScreenPrivKeyIndex;
-static int DRIWindowPrivKeyIndex;
-static DevPrivateKey DRIWindowPrivKey = &DRIWindowPrivKeyIndex;
-static int DRIPixmapPrivKeyIndex;
-static DevPrivateKey DRIPixmapPrivKey = &DRIPixmapPrivKeyIndex;
-static int DRIPixmapBufferPrivKeyIndex;
-static DevPrivateKey DRIPixmapBufferPrivKey = &DRIPixmapBufferPrivKeyIndex;
+static DevPrivateKeyRec DRIScreenPrivKeyRec;
+#define DRIScreenPrivKey (&DRIScreenPrivKeyRec)
+static DevPrivateKeyRec DRIWindowPrivKeyRec;
+#define DRIWindowPrivKey (&DRIWindowPrivKeyRec)
+static DevPrivateKeyRec DRIPixmapPrivKeyRec;
+#define DRIPixmapPrivKey (&DRIPixmapPrivKeyRec)
+static DevPrivateKeyRec DRIPixmapBufferPrivKeyRec;
+#define DRIPixmapBufferPrivKey (&DRIPixmapBufferPrivKeyRec)
 
 static RESTYPE DRIDrawablePrivResType;
 
@@ -205,6 +205,15 @@ DRIScreenInit(ScreenPtr pScreen)
     DRIScreenPrivPtr    pDRIPriv;
     int                 i;
 
+    if (!dixRegisterPrivateKey(&DRIScreenPrivKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&DRIWindowPrivKeyRec, PRIVATE_WINDOW, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&DRIPixmapPrivKeyRec, PRIVATE_PIXMAP, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&DRIPixmapBufferPrivKeyRec, PRIVATE_PIXMAP, 0))
+	return FALSE;
+
     pDRIPriv = (DRIScreenPrivPtr) calloc(1, sizeof(DRIScreenPrivRec));
     if (!pDRIPriv) {
 	dixSetPrivate(&pScreen->devPrivates, DRIScreenPrivKey, NULL);
@@ -280,7 +289,7 @@ DRIExtensionInit(void)
     DRIDrawablePrivResType = CreateNewResourceType(DRIDrawablePrivDelete,
 						   "DRIDrawable");
 
-    return (DRIDrawablePrivResType != 0);
+    return DRIDrawablePrivResType != 0;
 }
 
 void
@@ -347,8 +356,8 @@ DRIUpdateSurface(DRIDrawablePrivPtr pDRIDrawablePriv, DrawablePtr pDraw)
         wc.height = pWin->drawable.height + 2 * pWin->borderWidth;
         wc.bit_gravity = XP_GRAVITY_NONE;
 
-        wc.shape_nrects = REGION_NUM_RECTS(&pWin->clipList);
-        wc.shape_rects = REGION_RECTS(&pWin->clipList);
+        wc.shape_nrects = RegionNumRects(&pWin->clipList);
+        wc.shape_rects = RegionRects(&pWin->clipList);
         wc.shape_tx = - (pTopWin->drawable.x - pTopWin->borderWidth);
         wc.shape_ty = - (pTopWin->drawable.y - pTopWin->borderWidth);
 

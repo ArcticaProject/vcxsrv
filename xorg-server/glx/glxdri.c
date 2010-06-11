@@ -468,7 +468,7 @@ nooverride:
 	pRegion = NULL;
     } else {
 	pRegion = DamageRegion(driDraw->pDamage);
-	if (REGION_NIL(pRegion))
+	if (RegionNil(pRegion))
 	    return Success;
     }
 
@@ -531,8 +531,8 @@ nooverride:
         int i, numRects;
 	BoxPtr p;
 
-	numRects = REGION_NUM_RECTS (pRegion);
-	p = REGION_RECTS (pRegion);
+	numRects = RegionNumRects (pRegion);
+	p = RegionRects (pRegion);
 
 	CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SKIP_PIXELS, 0) );
 	CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SKIP_ROWS, 0) );
@@ -832,12 +832,12 @@ static void __glXReportDamage(__DRIdrawable *driDraw,
 
     __glXenterServer(GL_FALSE);
 
-    REGION_INIT(pDraw->pScreen, &region, (BoxPtr) rects, num_rects);
-    REGION_TRANSLATE(pScreen, &region, pDraw->x, pDraw->y);
+    RegionInit(&region, (BoxPtr) rects, num_rects);
+    RegionTranslate(&region, pDraw->x, pDraw->y);
     DamageRegionAppend(pDraw, &region);
     /* This is wrong, this needs a seperate function. */
     DamageRegionProcessPending(pDraw);
-    REGION_UNINIT(pDraw->pScreen, &region);
+    RegionUninit(&region);
 
     __glXleaveServer(GL_FALSE);
 }

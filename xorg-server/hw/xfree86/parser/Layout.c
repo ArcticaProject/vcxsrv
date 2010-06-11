@@ -513,7 +513,7 @@ xf86validateLayout (XF86ConfigPtr p)
 			{
 				xf86validationError (UNDEFINED_SCREEN_MSG,
 							   adj->adj_screen_str, layout->lay_identifier);
-				return (FALSE);
+				return FALSE;
 			}
 			else
 				adj->adj_screen = screen;
@@ -529,7 +529,7 @@ xf86validateLayout (XF86ConfigPtr p)
 			{
 				xf86validationError (UNDEFINED_DEVICE_LAY_MSG,
 						iptr->inactive_device_str, layout->lay_identifier);
-				return (FALSE);
+				return FALSE;
 			}
 			else
 				iptr->inactive_device = device;
@@ -541,7 +541,7 @@ xf86validateLayout (XF86ConfigPtr p)
 
 		layout = layout->list.next;
 	}
-	return (TRUE);
+	return TRUE;
 }
 
 XF86ConfLayoutPtr
@@ -550,9 +550,9 @@ xf86findLayout (const char *name, XF86ConfLayoutPtr list)
 	while (list)
 	{
 		if (xf86nameCompare (list->lay_identifier, name) == 0)
-			return (list);
+			return list;
 		list = list->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 

@@ -118,8 +118,8 @@ XAABitBlt(
 	    fastExpose = 0;
 	}
     } else {
-	REGION_INIT(pGC->pScreen, &rgnDst, &fastBox, 1);
-	REGION_INTERSECT(pGC->pScreen, &rgnDst, &rgnDst, prgnSrcClip);
+	RegionInit(&rgnDst, &fastBox, 1);
+	RegionIntersect(&rgnDst, &rgnDst, prgnSrcClip);
     }
 
     dstx += pDstDrawable->x;
@@ -128,9 +128,9 @@ XAABitBlt(
     if (pDstDrawable->type == DRAWABLE_WINDOW) {
 	if (!((WindowPtr)pDstDrawable)->realized) {
 	    if (!fastClip)
-		REGION_UNINIT(pGC->pScreen, &rgnDst);
+		RegionUninit(&rgnDst);
 	    if (freeSrcClip)
-		REGION_DESTROY(pGC->pScreen, prgnSrcClip);
+		RegionDestroy(prgnSrcClip);
 	    return NULL;
 	}
     }
@@ -153,8 +153,8 @@ XAABitBlt(
 	   blown region and call intersect */
 
 	cclip = pGC->pCompositeClip;
-        if (REGION_NUM_RECTS(cclip) == 1) {
-	    BoxPtr pBox = REGION_RECTS(cclip);
+        if (RegionNumRects(cclip) == 1) {
+	    BoxPtr pBox = RegionRects(cclip);
 
 	    if (fastBox.x1 < pBox->x1) fastBox.x1 = pBox->x1;
 	    if (fastBox.x2 > pBox->x2) fastBox.x2 = pBox->x2;
@@ -163,37 +163,37 @@ XAABitBlt(
 
 	    /* Check to see if the region is empty */
 	    if (fastBox.x1 >= fastBox.x2 || fastBox.y1 >= fastBox.y2) {
-		REGION_NULL(pGC->pScreen, &rgnDst);
+		RegionNull(&rgnDst);
 	    } else {
-		REGION_INIT(pGC->pScreen, &rgnDst, &fastBox, 1);
+		RegionInit(&rgnDst, &fastBox, 1);
 	    }
 	} else {
 	    /* We must turn off fastClip now, since we must create
 	       a full blown region.  It is intersected with the
 	       composite clip below. */
 	    fastClip = 0;
-	    REGION_INIT(pGC->pScreen, &rgnDst, &fastBox,1);
+	    RegionInit(&rgnDst, &fastBox,1);
 	}
     } else {
-        REGION_TRANSLATE(pGC->pScreen, &rgnDst, -dx, -dy);
+        RegionTranslate(&rgnDst, -dx, -dy);
     }
 
     if (!fastClip) {
-	REGION_INTERSECT(pGC->pScreen, &rgnDst, &rgnDst,
+	RegionIntersect(&rgnDst, &rgnDst,
 				 pGC->pCompositeClip);
     }
 
     /* Do bit blitting */
-    numRects = REGION_NUM_RECTS(&rgnDst);
+    numRects = RegionNumRects(&rgnDst);
     if (numRects && width && height) {
 	if(!(pptSrc = (DDXPointPtr)malloc(numRects *
 						  sizeof(DDXPointRec)))) {
-	    REGION_UNINIT(pGC->pScreen, &rgnDst);
+	    RegionUninit(&rgnDst);
 	    if (freeSrcClip)
-		REGION_DESTROY(pGC->pScreen, prgnSrcClip);
+		RegionDestroy(prgnSrcClip);
 	    return NULL;
 	}
-	pbox = REGION_RECTS(&rgnDst);
+	pbox = RegionRects(&rgnDst);
 	ppt = pptSrc;
 	for (i = numRects; --i >= 0; pbox++, ppt++) {
 	    ppt->x = pbox->x1 + dx;
@@ -214,8 +214,8 @@ XAABitBlt(
 				  (int)origSource.height,
 				  origDest.x, origDest.y, bitPlane);
     }
-    REGION_UNINIT(pGC->pScreen, &rgnDst);
+    RegionUninit(&rgnDst);
     if (freeSrcClip)
-	REGION_DESTROY(pGC->pScreen, prgnSrcClip);
+	RegionDestroy(prgnSrcClip);
     return prgnExposed;
 }

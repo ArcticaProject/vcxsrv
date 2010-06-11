@@ -125,10 +125,10 @@ typedef struct _xaaWrapperGCPriv {
 #define xaaWrapperGCPriv(pGC)   xaaWrapperGCPrivPtr  pGCPriv = xaaWrapperGetGCPriv(pGC)
 
 
-static int xaaWrapperScrPrivateKeyIndex;
-static DevPrivateKey xaaWrapperScrPrivateKey = &xaaWrapperScrPrivateKeyIndex;
-static int xaaWrapperGCPrivateKeyIndex;
-static DevPrivateKey xaaWrapperGCPrivateKey = &xaaWrapperGCPrivateKeyIndex;
+static DevPrivateKeyRec xaaWrapperScrPrivateKeyRec;
+#define xaaWrapperScrPrivateKey (&xaaWrapperScrPrivateKeyRec)
+static DevPrivateKeyRec xaaWrapperGCPrivateKeyRec;
+#define xaaWrapperGCPrivateKey (&xaaWrapperGCPrivateKeyRec)
 
 static Bool
 xaaWrapperCreateScreenResources(ScreenPtr pScreen)
@@ -268,7 +268,10 @@ xaaSetupWrapper(ScreenPtr pScreen, XAAInfoRecPtr infoPtr, int depth, SyncFunc *f
     xaaWrapperScrPrivPtr pScrPriv;
     PictureScreenPtr	ps = GetPictureScreenIfSet(pScreen);
 
-    if (!dixRequestPrivate(xaaWrapperGCPrivateKey, sizeof(xaaWrapperGCPrivRec)))
+    if (!dixRegisterPrivateKey(&xaaWrapperGCPrivateKeyRec, PRIVATE_GC, sizeof(xaaWrapperGCPrivRec)))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&xaaWrapperScrPrivateKeyRec, PRIVATE_SCREEN, 0))
 	return FALSE;
 
     pScrPriv = (xaaWrapperScrPrivPtr) malloc(sizeof (xaaWrapperScrPrivRec));

@@ -64,7 +64,7 @@ GARTInit(int screenNum)
 	struct _agp_info agpinf;
 
 	if (initDone)
-		return (gartFd != -1);
+		return gartFd != -1;
 
 	initDone = TRUE;
 

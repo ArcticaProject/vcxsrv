@@ -111,8 +111,8 @@ miPolyFillRect(
     pwFirst = malloc(maxheight * sizeof(int));
     if(!pptFirst || !pwFirst)
     {
-	if (pwFirst) free(pwFirst);
-	if (pptFirst) free(pptFirst);
+	free(pwFirst);
+	free(pptFirst);
 	return;
     }
 

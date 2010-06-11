@@ -168,8 +168,7 @@ fakeMapFramebuffer (KdScreenInfo *screen)
     KdSetPointerMatrix (&m);
     
     priv->bytes_per_line = ((screen->width * screen->fb.bitsPerPixel + 31) >> 5) << 2;
-    if (priv->base)
-	free (priv->base);
+    free(priv->base);
     priv->base = malloc (priv->bytes_per_line * screen->height);
     
     if (scrpriv->shadow)

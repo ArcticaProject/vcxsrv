@@ -74,8 +74,7 @@ XAAComputeDash(GCPtr pGC)
     int shift, value, direction;
     Bool set;
 
-    if(pGCPriv->DashPattern)
-	free(pGCPriv->DashPattern);
+    free(pGCPriv->DashPattern);
 
     pGCPriv->DashPattern = NULL;
     pGCPriv->DashLength = 0; 

@@ -296,17 +296,17 @@ AlterSaveSetForClient(ClientPtr client, WindowPtr pWin, unsigned mode,
     if (mode == SetModeInsert)
     {
 	if (j < numnow)         /* duplicate */
-	   return(Success);
+	   return Success;
 	numnow++;
 	pTmp = (SaveSetElt *)realloc(client->saveSet, sizeof(*pTmp) * numnow);
 	if (!pTmp)
-	    return(BadAlloc);
+	    return BadAlloc;
 	client->saveSet = pTmp;
        	client->numSaved = numnow;
 	SaveSetAssignWindow(client->saveSet[numnow - 1], pWin);
 	SaveSetAssignToRoot(client->saveSet[numnow - 1], toRoot);
 	SaveSetAssignMap(client->saveSet[numnow - 1], map);
-	return(Success);
+	return Success;
     }
     else if ((mode == SetModeDelete) && (j < numnow))
     {
@@ -328,9 +328,9 @@ AlterSaveSetForClient(ClientPtr client, WindowPtr pWin, unsigned mode,
 	    client->saveSet = (SaveSetElt *)NULL;
 	}
 	client->numSaved = numnow;
-	return(Success);
+	return Success;
     }
-    return(Success);
+    return Success;
 }
 
 void
@@ -893,7 +893,7 @@ InitCallbackManager(void)
     {
 	DeleteCallbackList(listsToCleanup[i]);
     }
-    if (listsToCleanup) free(listsToCleanup);
+    free(listsToCleanup);
 
     numCallbackListsToCleanup = 0;
     listsToCleanup = NULL;

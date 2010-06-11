@@ -69,6 +69,7 @@ void __glXDispSwap_Map1f(GLbyte *pc)
     GLenum target;
     GLint compsize;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_INT(pc + 0);
     __GLX_SWAP_INT(pc + 12);
@@ -99,6 +100,7 @@ void __glXDispSwap_Map2f(GLbyte *pc)
     GLenum target;
     GLint compsize;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_INT(pc + 0);
     __GLX_SWAP_INT(pc + 12);
@@ -137,6 +139,7 @@ void __glXDispSwap_Map1d(GLbyte *pc)
     GLenum target;
     GLdouble u1, u2, *points;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_DOUBLE(pc + 0);
     __GLX_SWAP_DOUBLE(pc + 8);
@@ -179,6 +182,7 @@ void __glXDispSwap_Map2d(GLbyte *pc)
     GLint uorder, vorder, ustride, vstride, k, compsize;
     GLenum target;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_DOUBLE(pc + 0);
     __GLX_SWAP_DOUBLE(pc + 8);
@@ -228,6 +232,7 @@ void __glXDispSwap_CallLists(GLbyte *pc)
     GLenum type;
     GLsizei n;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_INT(pc + 4);
     __GLX_SWAP_INT(pc + 0);

@@ -156,7 +156,7 @@ ProcXCloseDevice(ClientPtr client)
      * Delete passive grabs from all windows for this device.      */
 
     for (i = 0; i < screenInfo.numScreens; i++) {
-	pWin = WindowTable[i];
+	pWin = screenInfo.screens[i]->root;
 	DeleteDeviceEvents(d, pWin, client);
 	p1 = pWin->firstChild;
 	DeleteEventsFromChildren(d, p1, client);

@@ -318,7 +318,7 @@ SProcSendEvent(ClientPtr client)
     /* Swap event */
     proc = EventSwapVector[stuff->event.u.u.type & 0177];
     if (!proc ||  proc == NotImplemented)    /* no swapping proc; invalid event type? */
-       return (BadValue);
+       return BadValue;
     (*proc)(&stuff->event, &eventT);
     stuff->event = eventT;
 

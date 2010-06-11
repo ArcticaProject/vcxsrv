@@ -15,7 +15,8 @@ is" without express or implied warranty.
 #ifndef XNESTPIXMAP_H
 #define XNESTPIXMAP_H
 
-extern DevPrivateKey xnestPixmapPrivateKey;
+extern DevPrivateKeyRec xnestPixmapPrivateKeyRec;
+#define xnestPixmapPrivateKey (&xnestPixmapPrivateKeyRec)
 
 typedef struct {
   Pixmap pixmap;

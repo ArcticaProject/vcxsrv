@@ -276,8 +276,8 @@ extern void dmxKeyboardKbdCtrlProc(DeviceIntPtr pDevice, KeybdCtrl *ctrl);
 extern void dmxKeyboardBellProc(int percent, DeviceIntPtr pDevice,
                                 pointer ctrl, int unknown);
 
-extern int  dmxInputExtensionErrorHandler(Display *dsp, char *name,
-                                          char *reason);
+extern int  dmxInputExtensionErrorHandler(Display *dsp, _Xconst char *name,
+                                          _Xconst char *reason);
 
 extern int          dmxInputDetach(DMXInputInfo *dmxInput);
 extern void         dmxInputDetachAll(DMXScreenInfo *dmxScreen);

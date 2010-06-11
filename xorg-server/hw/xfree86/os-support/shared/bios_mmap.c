@@ -53,7 +53,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	{
 		xf86Msg(X_WARNING, "xf86ReadBIOS: Failed to open %s (%s)\n",
 			DEV_MEM, strerror(errno));
-		return(-1);
+		return -1;
 	}
 	psize = getpagesize();
 	Offset += Base & (psize - 1);
@@ -66,14 +66,14 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		xf86Msg(X_WARNING, "xf86ReadBIOS: %s mmap failed (%s)\n",
 			DEV_MEM, strerror(errno));
 		close(fd);
-		return(-1);
+		return -1;
 	}
 	DebugF("xf86ReadBIOS: BIOS at 0x%08x has signature 0x%04x\n",
 		Base, ptr[0] | (ptr[1] << 8));
 	(void)memcpy(Buf, (void *)(ptr + Offset), Len);
 	(void)munmap((caddr_t)ptr, mlen);
 	(void)close(fd);
-	return(Len);
+	return Len;
 }
 
 #else /* __alpha__ */
@@ -114,7 +114,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	{
 		xf86Msg(X_WARNING, "xf86ReadBIOS: Failed to open %s (%s)\n",
 			DEV_MEM, strerror(errno));
-		return(-1);
+		return -1;
 	}
 
 	psize = getpagesize();
@@ -128,14 +128,14 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	{
 		xf86Msg(X_WARNING, "xf86ReadBIOS: Failed to mmap %s (%s)\n",
 			DEV_MEM, strerror(errno));
-		return(-1);
+		return -1;
 	}
 
 	xf86SlowBCopyFromBus((unsigned char *)(base+Offset), Buf, Len);
 
 	munmap((caddr_t)base, mlen);
 	close(fd);
-	return(Len);
+	return Len;
 }
 
 #endif /* __alpha__ */

@@ -327,7 +327,7 @@ char *__glXGetServerString( unsigned int name )
 	 break;
    }
 
-   return( ret );
+   return ret;
 
 }
 
@@ -338,10 +338,10 @@ __GLXFBConfig *glxLookupFBConfig( GLXFBConfigID id )
 
    for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
       if ( __glXFBConfigs[j]->id == id) 
-	 return( __glXFBConfigs[j] );
+	 return __glXFBConfigs[j];
    }
 
-   return(NULL);
+   return NULL;
 }
 
 __GLXFBConfig *glxLookupFBConfigByVID( VisualID vid )
@@ -350,10 +350,10 @@ __GLXFBConfig *glxLookupFBConfigByVID( VisualID vid )
 
    for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
       if ( __glXFBConfigs[j]->associatedVisualId == vid) 
-	 return( __glXFBConfigs[j] );
+	 return __glXFBConfigs[j];
    }
 
-   return(NULL);
+   return NULL;
 }
 
 __GLXFBConfig *glxLookupBackEndFBConfig( GLXFBConfigID id, int screen )
@@ -363,10 +363,10 @@ __GLXFBConfig *glxLookupBackEndFBConfig( GLXFBConfigID id, int screen )
 
    for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
       if ( __glXFBConfigs[j]->id == id) 
-	 return( __glXFBConfigs[j+screen+1] );
+	 return __glXFBConfigs[j+screen+1];
    }
 
-   return(NULL);
+   return NULL;
 
 }
 

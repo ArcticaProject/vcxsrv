@@ -360,7 +360,7 @@ IntervalListCreateSet(RecordSetInterval *pIntervals, int nIntervals,
     memcpy(&prls[1], stackIntervals, nIntervals * sizeof(RecordSetInterval));
     prls->nIntervals = nIntervals;
 bailout:
-    if (stackIntervals) free(stackIntervals);
+    free(stackIntervals);
     return (RecordSetPtr)prls;
 }
 

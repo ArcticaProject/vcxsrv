@@ -84,8 +84,7 @@ FILE *debug_log_fp = NULL;
  * X server shared global variables
  */
 int                     darwinScreensFound = 0;
-static int              darwinScreenKeyIndex;
-DevPrivateKey           darwinScreenKey = &darwinScreenKeyIndex;
+DevPrivateKeyRec        darwinScreenKeyRec;
 io_connect_t            darwinParamConnect = 0;
 int                     darwinEventReadFD = -1;
 int                     darwinEventWriteFD = -1;
@@ -185,6 +184,9 @@ static Bool DarwinScreenInit(int index, ScreenPtr pScreen, int argc, char **argv
     Bool        ret;
     DarwinFramebufferPtr dfb;
 
+    if (!dixRegisterPrivateKey(&darwinScreenKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     // reset index of found screens for each server generation
     if (index == 0) {
         foundIndex = 0;
@@ -262,8 +264,8 @@ static Bool DarwinScreenInit(int index, ScreenPtr pScreen, int argc, char **argv
         return FALSE;
     }
 
-    dixScreenOrigins[index].x = dfb->x;
-    dixScreenOrigins[index].y = dfb->y;
+    pScreen->x = dfb->x;
+    pScreen->y = dfb->y;
 
     /*    ErrorF("Screen %d added: %dx%d @ (%d,%d)\n",
 	  index, dfb->width, dfb->height, dfb->x, dfb->y); */
@@ -526,16 +528,16 @@ DarwinAdjustScreenOrigins(ScreenInfo *pScreenInfo)
 {
     int i, left, top;
 
-    left = dixScreenOrigins[0].x;
-    top  = dixScreenOrigins[0].y;
+    left = pScreenInfo->screens[0]->x;
+    top  = pScreenInfo->screens[0]->y;
 
     /* Find leftmost screen. If there's a tie, take the topmost of the two. */
     for (i = 1; i < pScreenInfo->numScreens; i++) {
-        if (dixScreenOrigins[i].x < left  ||
-            (dixScreenOrigins[i].x == left && dixScreenOrigins[i].y < top))
+        if (pScreenInfo->screens[i]->x < left  ||
+            (pScreenInfo->screens[i]->x == left && pScreenInfo->screens[i]->y < top))
         {
-            left = dixScreenOrigins[i].x;
-            top = dixScreenOrigins[i].y;
+            left = pScreenInfo->screens[i]->x;
+            top = pScreenInfo->screens[i]->y;
         }
     }
 
@@ -551,10 +553,10 @@ DarwinAdjustScreenOrigins(ScreenInfo *pScreenInfo)
 
     if (darwinMainScreenX != 0 || darwinMainScreenY != 0) {
         for (i = 0; i < pScreenInfo->numScreens; i++) {
-            dixScreenOrigins[i].x -= darwinMainScreenX;
-            dixScreenOrigins[i].y -= darwinMainScreenY;
+            pScreenInfo->screens[i]->x -= darwinMainScreenX;
+            pScreenInfo->screens[i]->y -= darwinMainScreenY;
             DEBUG_LOG("Screen %d placed at X11 coordinate (%d,%d).\n",
-                      i, dixScreenOrigins[i].x, dixScreenOrigins[i].y);
+                      i, pScreenInfo->screens[i]->x, pScreenInfo->screens[i]->y);
         }
     }
 }
@@ -793,7 +795,7 @@ void AbortDDX( void )
 void
 xf86SetRootClip (ScreenPtr pScreen, int enable)
 {
-    WindowPtr	pWin = WindowTable[pScreen->myNum];
+    WindowPtr	pWin = pScreen->root;
     WindowPtr	pChild;
     Bool	WasViewable = (Bool)(pWin->viewable);
     Bool	anyMarked = TRUE;
@@ -817,8 +819,8 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
 	    {
 		RegionPtr	borderVisible;
 
-		borderVisible = REGION_CREATE(pScreen, NullBox, 1);
-		REGION_SUBTRACT(pScreen, borderVisible,
+		borderVisible = RegionCreate(NullBox, 1);
+		RegionSubtract(borderVisible,
 				&pWin->borderClip, &pWin->winSize);
 		pWin->valdata->before.borderVisible = borderVisible;
 	    }
@@ -837,13 +839,13 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
 	box.y1 = 0;
 	box.x2 = pScreen->width;
 	box.y2 = pScreen->height;
-	REGION_RESET(pScreen, &pWin->borderClip, &box);
-	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+	RegionReset(&pWin->borderClip, &box);
+	RegionBreak(&pWin->clipList);
     }
     else
     {
-	REGION_EMPTY(pScreen, &pWin->borderClip);
-	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+	RegionEmpty(&pWin->borderClip);
+	RegionBreak(&pWin->clipList);
     }
 
     ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
@@ -852,8 +854,8 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
     {
 	if (pWin->backStorage)
 	{
-	    pOldClip = REGION_CREATE(pScreen, NullBox, 1);
-	    REGION_COPY(pScreen, pOldClip, &pWin->clipList);
+	    pOldClip = RegionCreate(NullBox, 1);
+	    RegionCopy(pOldClip, &pWin->clipList);
 	}
 
 	if (pWin->firstChild)
@@ -882,7 +884,7 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
 			     (pWin, 0, 0, pOldClip,
 			      pWin->drawable.x, pWin->drawable.y);
 	if (WasViewable)
-	    REGION_DESTROY(pScreen, pOldClip);
+	    RegionDestroy(pOldClip);
 	if (bsExposed)
 	{
 	    RegionPtr	valExposed = NullRegion;
@@ -891,8 +893,8 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
 		valExposed = &pWin->valdata->after.exposed;
 	    (*pScreen->WindowExposures) (pWin, valExposed, bsExposed);
 	    if (valExposed)
-		REGION_EMPTY(pScreen, valExposed);
-	    REGION_DESTROY(pScreen, bsExposed);
+		RegionEmpty(valExposed);
+	    RegionDestroy(bsExposed);
 	}
     }
     if (WasViewable)

@@ -59,8 +59,8 @@ static RESTYPE		CursorHideCountType;
 static RESTYPE		CursorWindowType;
 static CursorPtr	CursorCurrent[MAXDEVICES];
 
-static int CursorScreenPrivateKeyIndex;
-static DevPrivateKey CursorScreenPrivateKey = &CursorScreenPrivateKeyIndex;
+static DevPrivateKeyRec CursorScreenPrivateKeyRec;
+#define CursorScreenPrivateKey (&CursorScreenPrivateKeyRec)
 
 static void deleteCursorHideCountsForScreen (ScreenPtr pScreen);
 
@@ -269,7 +269,7 @@ ProcXFixesSelectCursorInput (ClientPtr client)
     if (stuff->eventMask & ~CursorAllEvents)
     {
 	client->errorValue = stuff->eventMask;
-	return( BadValue );
+	return BadValue;
     }
     return XFixesSelectCursorInput (client, pWin, stuff->eventMask);
 }
@@ -690,7 +690,7 @@ ReplaceCursor (CursorPtr pCursor,
 	}
     }
     /* this "knows" that WindowHasNewCursor doesn't depend on it's argument */
-    WindowHasNewCursor (WindowTable[0]);
+    WindowHasNewCursor (screenInfo.screens[0]->root);
 }
 
 static Bool 
@@ -732,7 +732,7 @@ static Bool
 TestForCursorName (CursorPtr pCursor, pointer closure)
 {
     Atom *pName = closure;
-    return (pCursor->name == *pName);
+    return pCursor->name == *pName;
 }
 
 int
@@ -1037,6 +1037,9 @@ XFixesCursorInit (void)
     if (party_like_its_1989)
 	CursorVisible = EnableCursor;
     
+    if (!dixRegisterPrivateKey(&CursorScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     for (i = 0; i < screenInfo.numScreens; i++)
     {
 	ScreenPtr	pScreen = screenInfo.screens[i];

@@ -45,8 +45,7 @@ is" without express or implied warranty.
 
 Window xnestDefaultWindows[MAXSCREENS];
 Window xnestScreenSaverWindows[MAXSCREENS];
-static int xnestCursorScreenKeyIndex;
-DevPrivateKey xnestCursorScreenKey = &xnestCursorScreenKeyIndex;
+DevPrivateKeyRec xnestCursorScreenKeyRec;
 
 ScreenPtr
 xnestScreen(Window window)
@@ -146,10 +145,14 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
   int rootDepth;
   miPointerScreenPtr PointPriv;
 
-  if (!dixRequestPrivate(xnestWindowPrivateKey, sizeof(xnestPrivWin)))
-      return False;
-  if (!dixRequestPrivate(xnestGCPrivateKey, sizeof(xnestPrivGC)))
-    return False;
+  if (!dixRegisterPrivateKey(&xnestWindowPrivateKeyRec, PRIVATE_WINDOW, sizeof(xnestPrivWin)))
+      return FALSE;
+  if (!dixRegisterPrivateKey(&xnestGCPrivateKeyRec, PRIVATE_GC, sizeof(xnestPrivGC)))
+    return FALSE;
+  if (!dixRegisterPrivateKey(&xnestPixmapPrivateKeyRec, PRIVATE_PIXMAP, sizeof (xnestPrivPixmap)))
+      return FALSE;
+  if (!dixRegisterPrivateKey(&xnestCursorScreenKeyRec, PRIVATE_SCREEN, 0))
+      return FALSE;
 
   visuals = (VisualPtr)malloc(xnestNumVisuals * sizeof(VisualRec));
   numVisuals = 0;

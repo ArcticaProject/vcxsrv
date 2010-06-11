@@ -131,8 +131,8 @@ exaCreatePixmap_classic(ScreenPtr pScreen, int w, int h, int depth,
     box.y1 = 0;
     box.x2 = w;
     box.y2 = h;
-    REGION_INIT(pScreen, &pExaPixmap->validSys, &box, 0);
-    REGION_INIT(pScreen, &pExaPixmap->validFB, &box, 0);
+    RegionInit(&pExaPixmap->validSys, &box, 0);
+    RegionInit(&pExaPixmap->validFB, &box, 0);
 
     exaSetAccelBlock(pExaScr, pExaPixmap,
                      w, h, bpp);
@@ -237,8 +237,8 @@ exaDestroyPixmap_classic (PixmapPtr pPixmap)
 	    pPixmap->devPrivate.ptr = pExaPixmap->sys_ptr;
 	    pPixmap->devKind = pExaPixmap->sys_pitch;
 	}
-	REGION_UNINIT(pPixmap->drawable.pScreen, &pExaPixmap->validSys);
-	REGION_UNINIT(pPixmap->drawable.pScreen, &pExaPixmap->validFB);
+	RegionUninit(&pExaPixmap->validSys);
+	RegionUninit(&pExaPixmap->validFB);
     }
 
     swap(pExaScr, pScreen, DestroyPixmap);

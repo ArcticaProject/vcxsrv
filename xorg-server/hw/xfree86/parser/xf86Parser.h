@@ -66,6 +66,7 @@
 
 #include <X11/Xdefs.h>
 #include "xf86Optrec.h"
+#include "list.h"
 
 #define HAVE_PARSER_DECLS
 
@@ -340,13 +341,24 @@ xf86TriState;
 
 typedef struct
 {
+	struct list entry;
+	char **values;
+}
+xf86MatchGroup;
+
+typedef struct
+{
 	GenericListRec list;
 	char *identifier;
 	char *driver;
-	char **match_product;
-	char **match_vendor;
-	char **match_device;
-	char **match_tag;
+	struct list match_product;
+	struct list match_vendor;
+	struct list match_device;
+	struct list match_os;
+	struct list match_pnpid;
+	struct list match_usbid;
+	struct list match_driver;
+	struct list match_tag;
 	xf86TriState is_keyboard;
 	xf86TriState is_pointer;
 	xf86TriState is_joystick;

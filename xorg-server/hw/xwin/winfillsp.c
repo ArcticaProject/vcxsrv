@@ -80,8 +80,8 @@ winFillSpansNativeGDI (DrawablePtr	pDrawable,
   int		    	fullX1, fullX2, fullY1;
   HRGN			hrgn = NULL, combined = NULL;
 
-  nbox = REGION_NUM_RECTS (pClip);
-  pbox = REGION_RECTS (pClip);
+  nbox = RegionNumRects (pClip);
+  pbox = RegionRects (pClip);
 
   if (!nbox) return;
 
@@ -97,7 +97,7 @@ winFillSpansNativeGDI (DrawablePtr	pDrawable,
       pbox++;
     }
 
-  pextent = REGION_EXTENTS (pGC->pScreen, pClip);
+  pextent = RegionExtents(pClip);
   extentX1 = pextent->x1;
   extentY1 = pextent->y1;
   extentX2 = pextent->x2;

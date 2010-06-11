@@ -145,7 +145,7 @@ GLint __glDrawPixels_size(GLenum format, GLenum type, GLsizei w, GLsizei h)
       default:
 	return 0;
     }
-    return (elements * esize * w * h);
+    return elements * esize * w * h;
 }
 
 GLint __glBitmap_size(GLsizei w, GLsizei h)
@@ -294,7 +294,7 @@ GLint __glTexImage1D_size(GLenum format, GLenum type, GLsizei w)
       default:
 	return 0;
     }
-    return (elements * esize * w);
+    return elements * esize * w;
 }
 
 GLint __glTexImage2D_size(GLenum format, GLenum type, GLsizei w, GLsizei h)
@@ -371,7 +371,7 @@ GLint __glTexImage2D_size(GLenum format, GLenum type, GLsizei w, GLsizei h)
       default:
 	return 0;
     }
-    return (elements * esize * w * h);
+    return elements * esize * w * h;
 }
 
 GLint __glTexImage3D_size(GLenum format, GLenum type, GLsizei w, GLsizei h,
@@ -450,7 +450,7 @@ GLint __glTexImage3D_size(GLenum format, GLenum type, GLsizei w, GLsizei h,
       default:
 	return 0;
     }
-    return (elements * esize * w * h * d);
+    return elements * esize * w * h * d;
 }
 
 GLint __glLightfv_size(GLenum pname)

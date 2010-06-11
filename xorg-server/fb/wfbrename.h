@@ -83,13 +83,14 @@
 #define fbFixCoordModePrevious wfbFixCoordModePrevious
 #define fbGCFuncs wfbGCFuncs
 #define fbGCOps wfbGCOps
-#define fbGCPrivateKey wfbGCPrivateKey
+#define fbGCPrivateKeyRec wfbGCPrivateKeyRec
 #define fbGeneration wfbGeneration
 #define fbGetGCPrivateKey wfbGetGCPrivateKey
 #define fbGetImage wfbGetImage
 #define fbGetScreenPrivateKey wfbGetScreenPrivateKey
 #define fbGetSpans wfbGetSpans
 #define _fbGetWindowPixmap _wfbGetWindowPixmap
+#define fbWinPrivateKeyRec wfbWinPrivateKeyRec
 #define fbGetWinPrivateKey wfbGetWinPrivateKey
 #define fbGlyph16 wfbGlyph16
 #define fbGlyph24 wfbGlyph24
@@ -118,7 +119,6 @@
 #define fbOverlayGeneration wfbOverlayGeneration
 #define fbOverlayGetScreenPrivateKey wfbOverlayGetScreenPrivateKey
 #define fbOverlayPaintKey wfbOverlayPaintKey
-#define fbOverlayScreenPrivateKey wfbOverlayScreenPrivateKey
 #define fbOverlaySetupScreen wfbOverlaySetupScreen
 #define fbOverlayUpdateLayerRegion wfbOverlayUpdateLayerRegion
 #define fbOverlayWindowExposures wfbOverlayWindowExposures
@@ -157,7 +157,7 @@
 #define fbResolveColor wfbResolveColor
 #define fbRestoreAreas wfbRestoreAreas
 #define fbSaveAreas wfbSaveAreas
-#define fbScreenPrivateKey wfbScreenPrivateKey
+#define fbScreenPrivateKeyRec wfbScreenPrivateKeyRec
 #define fbSegment wfbSegment
 #define fbSelectBres wfbSelectBres
 #define fbSetSpans wfbSetSpans
@@ -182,7 +182,7 @@
 #define fbUnrealizeFont wfbUnrealizeFont
 #define fbValidateGC wfbValidateGC
 #define fbWalkCompositeRegion wfbWalkCompositeRegion
-#define fbWinPrivateKey wfbWinPrivateKey
+#define fbWinPrivateKeyRec wfbWinPrivateKeyRec
 #define fbZeroLine wfbZeroLine
 #define fbZeroSegment wfbZeroSegment
 #define free_pixman_pict wfb_free_pixman_pict

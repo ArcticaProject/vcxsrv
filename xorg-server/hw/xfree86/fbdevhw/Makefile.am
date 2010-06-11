@@ -1,5 +1,4 @@
-linuxmoduledir = $(moduledir)/linux
-linuxmodule_LTLIBRARIES = libfbdevhw.la
+module_LTLIBRARIES = libfbdevhw.la
 
 libfbdevhw_la_LDFLAGS = -avoid-version
 

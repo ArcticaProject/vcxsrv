@@ -120,8 +120,7 @@ FreeList(const char ***list, int *lines)
     int i;
 
     for (i = 0; i < *lines; i++) {
-	if ((*list)[i])
-	    free((*list)[i]);
+	free((*list)[i]);
     }
     free(*list);
     *list = NULL;
@@ -186,7 +185,7 @@ xf86AutoConfig(void)
     if (ret != CONFIG_OK)
 	xf86Msg(X_ERROR, "Error parsing the built-in default configuration.\n");
 
-    return (ret == CONFIG_OK);
+    return ret == CONFIG_OK;
 }
 
 static void
@@ -257,7 +256,7 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
     }
 #endif
 
-    xf86PciMatchDriver(matches, nmatches);
+    i = xf86PciMatchDriver(matches, nmatches);
 
     /* Fallback to platform default hardware */
     if (i < (nmatches - 1)) {

@@ -508,7 +508,7 @@ InsertFakeRequest(ClientPtr client, char *data, int count)
 
 	ibuf = (char *)realloc(oci->buffer, gotnow + count);
 	if (!ibuf)
-	    return(FALSE);
+	    return FALSE;
 	oci->size = gotnow + count;
 	oci->buffer = ibuf;
 	oci->bufptr = ibuf + oci->bufcnt - gotnow;
@@ -529,7 +529,7 @@ InsertFakeRequest(ClientPtr client, char *data, int count)
 	FD_SET(fd, &ClientsWithInput);
     else
 	YieldControlNoInput(fd);
-    return(TRUE);
+    return TRUE;
 }
 
 /*****************************************************************
@@ -706,7 +706,7 @@ WriteToClient (ClientPtr who, int count, const void *__buf)
     Bool multicount = FALSE;
 #endif
     if (!count || !who || who == serverClient || who->clientGone)
-	return(0);
+	return 0;
     oc = who->osPrivate;
     oco = oc->output;
 #ifdef DEBUG_COMMUNICATION
@@ -826,7 +826,7 @@ WriteToClient (ClientPtr who, int count, const void *__buf)
     FD_SET(oc->fd, &OutputPending);
     memmove((char *)oco->buf + oco->count, buf, count);
     oco->count += count + padBytes;
-    return(count);
+    return count;
 }
 
  /********************
@@ -948,7 +948,7 @@ FlushClient(ClientPtr who, OsCommPtr oc, const void *__extraBuf, int extraCount)
 		    oc->trans_conn = NULL;
 		    MarkClientException(who);
 		    oco->count = 0;
-		    return(-1);
+		    return -1;
 		}
 		oco->size = notWritten + BUFSIZE;
 		oco->buf = obuf;
@@ -981,7 +981,7 @@ FlushClient(ClientPtr who, OsCommPtr oc, const void *__extraBuf, int extraCount)
 	    }
 	    MarkClientException(who);
 	    oco->count = 0;
-	    return(-1);
+	    return -1;
 	}
     }
 

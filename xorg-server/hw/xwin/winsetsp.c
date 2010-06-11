@@ -54,8 +54,8 @@ winSetSpansNativeGDI (DrawablePtr	pDrawable,
   int			nbox;
   BoxPtr	 	pbox;
 
-  nbox = REGION_NUM_RECTS (pGC->pCompositeClip);
-  pbox = REGION_RECTS (pGC->pCompositeClip);
+  nbox = RegionNumRects (pGC->pCompositeClip);
+  pbox = RegionRects (pGC->pCompositeClip);
 
   if (!nbox) return;
 

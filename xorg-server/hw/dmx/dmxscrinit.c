@@ -65,21 +65,14 @@ static Bool dmxSaveScreen(ScreenPtr pScreen, int what);
 static unsigned long dmxGeneration;
 static unsigned long *dmxCursorGeneration;
 
-static int dmxGCPrivateKeyIndex;
-DevPrivateKey dmxGCPrivateKey = &dmxGCPrivateKeyIndex; /**< Private index for GCs       */
-static int dmxWinPrivateKeyIndex;
-DevPrivateKey dmxWinPrivateKey = &dmxWinPrivateKeyIndex; /**< Private index for Windows   */
-static int dmxPixPrivateKeyIndex;
-DevPrivateKey dmxPixPrivateKey = &dmxPixPrivateKeyIndex; /**< Private index for Pixmaps   */
+DevPrivateKeyRec dmxGCPrivateKeyRec;
+DevPrivateKeyRec dmxWinPrivateKeyRec;
+DevPrivateKeyRec dmxPixPrivateKeyRec;
 int dmxFontPrivateIndex;        /**< Private index for Fonts     */
-static int dmxScreenPrivateKeyIndex;
-DevPrivateKey dmxScreenPrivateKey = &dmxScreenPrivateKeyIndex; /**< Private index for Screens   */
-static int dmxColormapPrivateKeyIndex;
-DevPrivateKey dmxColormapPrivateKey = &dmxColormapPrivateKeyIndex; /**< Private index for Colormaps */
-static int dmxPictPrivateKeyIndex;
-DevPrivateKey dmxPictPrivateKey = &dmxPictPrivateKeyIndex; /**< Private index for Picts     */
-static int dmxGlyphSetPrivateKeyIndex;
-DevPrivateKey dmxGlyphSetPrivateKey = &dmxGlyphSetPrivateKeyIndex; /**< Private index for GlyphSets */
+DevPrivateKeyRec dmxScreenPrivateKeyRec;
+DevPrivateKeyRec dmxColormapPrivateKeyRec;
+DevPrivateKeyRec dmxPictPrivateKeyRec;
+DevPrivateKeyRec dmxGlyphSetPrivateKeyRec;
 
 /** Initialize the parts of screen \a idx that require access to the
  *  back-end server. */
@@ -209,6 +202,13 @@ Bool dmxScreenInit(int idx, ScreenPtr pScreen, int argc, char *argv[])
 {
     DMXScreenInfo        *dmxScreen = &dmxScreens[idx];
     int                   i, j;
+
+    if (!dixRegisterPrivateKey(&dmxScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&dmxColormapPrivateKeyRec, PRIVATE_COLORMAP, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&dmxGlyphSetPrivateKeyRec, PRIVATE_GLYPHSET, 0))
+	return FALSE;
 
     if (dmxGeneration != serverGeneration) {
 	/* Allocate font private index */

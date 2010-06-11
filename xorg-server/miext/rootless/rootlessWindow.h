@@ -39,7 +39,7 @@
 Bool RootlessCreateWindow(WindowPtr pWin);
 Bool RootlessDestroyWindow(WindowPtr pWin);
 
-void RootlessSetShape(WindowPtr pWin);
+void RootlessSetShape(WindowPtr pWin, int kind);
 
 Bool RootlessChangeWindowAttributes(WindowPtr pWin, unsigned long vmask);
 Bool RootlessPositionWindow(WindowPtr pWin, int x, int y);

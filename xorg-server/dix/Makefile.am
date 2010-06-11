@@ -32,6 +32,7 @@ libdix_la_SOURCES = 	\
 	privates.c	\
 	property.c	\
 	ptrveloc.c	\
+	region.c	\
 	registry.c	\
 	resource.c	\
 	selection.c	\

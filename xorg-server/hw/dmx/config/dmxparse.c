@@ -98,7 +98,7 @@ const char *dmxConfigCopyString(const char *string, int length)
 
 void dmxConfigFree(void *area)
 {
-    if (area) free(area);
+    free(area);
 }
 
 DMXConfigTokenPtr dmxConfigCreateToken(int token, int line,
@@ -370,7 +370,7 @@ DMXConfigOptionPtr dmxConfigCreateOption(DMXConfigTokenPtr pStart,
 void dmxConfigFreeOption(DMXConfigOptionPtr p)
 {
     if (!p) return;
-    if (p->string) free(p->string);
+    free(p->string);
     dmxConfigFreeToken(p->start);
     dmxConfigFreeString(p->option);
     dmxConfigFreeToken(p->end);

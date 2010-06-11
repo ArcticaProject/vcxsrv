@@ -145,7 +145,7 @@ Bool dmxPictureInit(ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     if (!miPictureInit(pScreen, formats, nformats))
 	return FALSE;
 
-    if (!dixRequestPrivate(dmxPictPrivateKey, sizeof(dmxPictPrivRec)))
+    if (!dixRegisterPrivateKey(&dmxPictPrivateKeyRec, PRIVATE_PICTURE, sizeof(dmxPictPrivRec)))
 	return FALSE;
 
     ps = GetPictureScreen(pScreen);
@@ -871,8 +871,8 @@ int dmxChangePictureClip(PicturePtr pPicture, int clipType,
 				       pPictPriv->pict, 0, 0, None);
 	} else if (pPicture->clientClip) {
 	    RegionPtr   pClip = pPicture->clientClip;
-	    BoxPtr      pBox  = REGION_RECTS(pClip);
-	    int         nBox  = REGION_NUM_RECTS(pClip);
+	    BoxPtr      pBox  = RegionRects(pClip);
+	    int         nBox  = RegionNumRects(pClip);
 	    XRectangle *pRects;
 	    XRectangle *pRect;
 	    int         nRects;

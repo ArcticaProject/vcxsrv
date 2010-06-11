@@ -243,11 +243,11 @@ winScreenInit (int index,
      Note the screen origin in a normalized coordinate space where (0,0) is at the top left
      of the native virtual desktop area
   */
-  dixScreenOrigins[index].x = pScreenInfo->dwInitialX - GetSystemMetrics(SM_XVIRTUALSCREEN);
-  dixScreenOrigins[index].y = pScreenInfo->dwInitialY - GetSystemMetrics(SM_YVIRTUALSCREEN);
+  pScreen->x = pScreenInfo->dwInitialX - GetSystemMetrics(SM_XVIRTUALSCREEN);
+  pScreen->y = pScreenInfo->dwInitialY - GetSystemMetrics(SM_YVIRTUALSCREEN);
 
   ErrorF("Screen %d added at virtual desktop coordinate (%d,%d).\n",
-         index, dixScreenOrigins[index].x, dixScreenOrigins[index].y);
+         index, pScreen->x, pScreen->y);
 
 #if CYGDEBUG || YES
   winDebug ("winScreenInit - returning\n");

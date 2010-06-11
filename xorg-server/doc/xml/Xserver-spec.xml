@@ -2101,7 +2101,7 @@ Making direct calls is faster on many architectures.</para>
 		BoxPtr rect;
 		int size;
 
-	macro: RegionPtr REGION_CREATE(pScreen, rect, size)
+	macro: RegionPtr RegionCreate(rect, size)
 
 </programlisting></blockquote>
 RegionCreate creates a region that describes ONE rectangle.  The
@@ -2122,7 +2122,7 @@ applicable.</para>
 		BoxPtr		rect;
 		int		size;
 
-	macro: REGION_INIT(pScreen, pRegion, rect, size)
+	macro: RegionInit(pRegion, rect, size)
 
 </programlisting></blockquote>
 Given an existing raw region structure (such as an local variable), this
@@ -2136,7 +2136,7 @@ allocation overhead for the region structure itself.
 	Bool pScreen->RegionCopy(dstrgn, srcrgn)
 		RegionPtr dstrgn, srcrgn;
 
-	macro: Bool REGION_COPY(pScreen, dstrgn, srcrgn)
+	macro: Bool RegionCopy(dstrgn, srcrgn)
 
 </programlisting></blockquote>
 RegionCopy copies the description of one region, srcrgn, to another
@@ -2148,7 +2148,7 @@ dstrgn; returning TRUE if the copy succeeded, and FALSE otherwise.</para>
 	void pScreen->RegionDestroy( pRegion)
 		RegionPtr pRegion;
 
-	macro: REGION_DESTROY(pScreen, pRegion)
+	macro: RegionDestroy(pRegion)
 
 </programlisting></blockquote>
 RegionDestroy destroys a region and frees all allocated memory.</para>
@@ -2158,7 +2158,7 @@ RegionDestroy destroys a region and frees all allocated memory.</para>
 	void pScreen->RegionUninit (pRegion)
 		RegionPtr pRegion;
 
-	macro: REGION_UNINIT(pScreen, pRegion)
+	macro: RegionUninit(pRegion)
 
 </programlisting></blockquote>
 Frees everything except the region structure itself, useful when the
@@ -2171,23 +2171,23 @@ it has been RegionInit'ed again.</para>
 	Bool pScreen->Intersect(newReg, reg1, reg2)
 		RegionPtr newReg, reg1, reg2;
 
-	macro: Bool REGION_INTERSECT(pScreen, newReg, reg1, reg2)
+	macro: Bool RegionIntersect(newReg, reg1, reg2)
 
 	Bool  pScreen->Union(newReg, reg1, reg2)
 		RegionPtr newReg, reg1, reg2;
 
-	macro: Bool REGION_UNION(pScreen, newReg, reg1, reg2)
+	macro: Bool RegionUnion(newReg, reg1, reg2)
 
 	Bool  pScreen->Subtract(newReg, regMinuend, regSubtrahend)
 		RegionPtr newReg, regMinuend, regSubtrahend;
 
-	macro: Bool REGION_UNION(pScreen, newReg, regMinuend, regSubtrahend)
+	macro: Bool RegionUnion(newReg, regMinuend, regSubtrahend)
 
 	Bool pScreen->Inverse(newReg, pReg,  pBox)
 		RegionPtr newReg, pReg;
 		BoxPtr pBox;
 
-	macro: Bool REGION_INVERSE(pScreen, newReg, pReg,  pBox)
+	macro: Bool RegionInverse(newReg, pReg,  pBox)
 
 </programlisting></blockquote>
 The above four calls all do basic logical operations on regions.  They
@@ -2213,7 +2213,7 @@ Each routine must return the value TRUE for success.</para>
 		RegionPtr pRegion;
 		BoxPtr pBox;
 
-	macro: REGION_RESET(pScreen, pRegion, pBox)
+	macro: RegionReset(pRegion, pBox)
 
 </programlisting></blockquote>
 RegionReset sets the region to describe
@@ -2225,7 +2225,7 @@ one rectangle and reallocates it to a size of one rectangle, if applicable.</par
 		RegionPtr pRegion;
 		int x, y;
 
-	macro: REGION_TRANSLATE(pScreen, pRegion, x, y)
+	macro: RegionTranslate(pRegion, x, y)
 
 </programlisting></blockquote>
 TranslateRegion simply moves a region +x in the x direction and +y in the y
@@ -2237,7 +2237,7 @@ direction.</para>
 		RegionPtr pRegion;
 		BoxPtr pBox;
 
-	macro: int RECT_IN_REGION(pScreen, pRegion, pBox)
+	macro: int RegionContainsRect(pRegion, pBox)
 
 </programlisting></blockquote>
 RectIn returns one of the defined constants rgnIN, rgnOUT, or rgnPART,
@@ -2252,7 +2252,7 @@ These constants are defined in Xserver/include/region.h.</para>
 		int x, y;
 		BoxPtr pBox;
 
-	macro: Bool POINT_IN_REGION(pScreen, pRegion, x, y, pBox)
+	macro: Bool RegionContainsPoint(pRegion, x, y, pBox)
 
 </programlisting></blockquote>
 PointInRegion returns true if the point x, y is in the region.  In
@@ -2275,7 +2275,7 @@ returned box.</para>
 	Bool pScreen->RegionNotEmpty(pRegion)
 		RegionPtr pRegion;
 
-	macro: Bool REGION_NOTEMPTY(pScreen, pRegion)
+	macro: Bool RegionNotEmpty(pRegion)
 
 </programlisting></blockquote>
 RegionNotEmpty is a boolean function that returns
@@ -2286,7 +2286,7 @@ true or false depending upon whether the region encloses any pixels.</para>
 	void pScreen->RegionEmpty(pRegion)
 		RegionPtr pRegion;
 
-	macro: REGION_EMPTY(pScreen, pRegion)
+	macro: RegionEmpty(pRegion)
 
 </programlisting></blockquote>
 RegionEmpty sets the region to be empty.</para>
@@ -2296,7 +2296,7 @@ RegionEmpty sets the region to be empty.</para>
 	BoxPtr pScreen->RegionExtents(pRegion)
 		RegionPtr pRegion;
 
-	macro: REGION_EXTENTS(pScreen, pRegion)
+	macro: RegionExtents(pRegion)
 
 </programlisting></blockquote>
 RegionExtents returns a rectangle that is the smallest
@@ -2310,13 +2310,13 @@ in your region struct.</para>
 		RegionPtr pDstRgn;
 		RegionPtr pRegion;
 
-	macro: Bool REGION_APPEND(pScreen, pDstRgn, pRegion)
+	macro: Bool RegionAppend(pDstRgn, pRegion)
 
 	Bool pScreen->RegionValidate (pRegion, pOverlap)
 		RegionPtr pRegion;
 		Bool *pOverlap;
 
-	macro: Bool REGION_VALIDATE(pScreen, pRegion, pOverlap)
+	macro: Bool RegionValidate(pRegion, pOverlap)
 
 </programlisting></blockquote>
 These functions provide an optimization for clip list generation and
@@ -2332,7 +2332,7 @@ regions overlap; FALSE otherwise.</para>
 	RegionPtr pScreen->BitmapToRegion (pPixmap)
 		PixmapPtr pPixmap;
 
-	macro: RegionPtr BITMAP_TO_REGION(pScreen, pPixmap)
+	macro: RegionPtr BitmapToRegion(pScreen, pPixmap)
 
 </programlisting></blockquote>
 Given a depth-1 pixmap, this routine must create a valid region which
@@ -2346,7 +2346,7 @@ areas filled with 0's.  This routine returns NULL if out of memory.</para>
 		xRectangle *pRects;
 		int ordering;
 
-	macro: RegionPtr RECTS_TO_REGION(pScreen, nrects, pRects, ordering)
+	macro: RegionPtr RegionFromRects(nrects, pRects, ordering)
 
 </programlisting></blockquote>
 Given a client-supplied list of rectangles, produces a region which includes

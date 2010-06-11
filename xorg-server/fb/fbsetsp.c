@@ -60,8 +60,8 @@ fbSetSpans (DrawablePtr	    pDrawable,
 	xoff = (int) (((long) src) & (FB_MASK >> 3));
 	s = (FbBits *) (src - xoff);
 	xoff <<= 3;
-	n = REGION_NUM_RECTS(pClip);
-	pbox = REGION_RECTS (pClip);
+	n = RegionNumRects(pClip);
+	pbox = RegionRects (pClip);
 	while (n--)
 	{
 	    if (pbox->y1 > ppt->y)

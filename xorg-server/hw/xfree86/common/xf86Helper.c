@@ -234,8 +234,7 @@ xf86DeleteScreen(int scrnIndex, int flags)
     if (pScrn->drv)
 	pScrn->drv->refCount--;
 
-    if (pScrn->privates)
-	free(pScrn->privates);
+    free(pScrn->privates);
 
     xf86ClearEntityListForScreen(scrnIndex);
 
@@ -269,7 +268,7 @@ xf86AllocateScrnInfoPrivateIndex(void)
 	nprivs = xnfrealloc(pScr->privates,
 			    xf86ScrnInfoPrivateCount * sizeof(DevUnion));
 	/* Zero the new private */
-	bzero(&nprivs[idx], sizeof(DevUnion));
+	memset(&nprivs[idx], 0, sizeof(DevUnion));
 	pScr->privates = nprivs;
     }
     return idx;
@@ -327,8 +326,7 @@ xf86DeleteInput(InputInfoPtr pInp, int flags)
     /* This should *really* be handled in drv->UnInit(dev) call instead, but
      * if the driver forgets about it make sure we free it or at least crash
      * with flying colors */
-    if (pInp->private)
-	free(pInp->private);
+    free(pInp->private);
 
     FreeInputAttributes(pInp->attrs);
 
@@ -1062,7 +1060,7 @@ xf86SetBlackWhitePixels(ScreenPtr pScreen)
 static void
 xf86SetRootClip (ScreenPtr pScreen, Bool enable)
 {
-    WindowPtr	pWin = WindowTable[pScreen->myNum];
+    WindowPtr	pWin = pScreen->root;
     WindowPtr	pChild;
     Bool	WasViewable = (Bool)(pWin->viewable);
     Bool	anyMarked = FALSE;
@@ -1085,8 +1083,8 @@ xf86SetRootClip (ScreenPtr pScreen, Bool enable)
 	    {
 		RegionPtr	borderVisible;
 
-		borderVisible = REGION_CREATE(pScreen, NullBox, 1);
-		REGION_SUBTRACT(pScreen, borderVisible,
+		borderVisible = RegionCreate(NullBox, 1);
+		RegionSubtract(borderVisible,
 				&pWin->borderClip, &pWin->winSize);
 		pWin->valdata->before.borderVisible = borderVisible;
 	    }
@@ -1105,18 +1103,18 @@ xf86SetRootClip (ScreenPtr pScreen, Bool enable)
 	box.y1 = 0;
 	box.x2 = pScreen->width;
 	box.y2 = pScreen->height;
-	REGION_INIT (pScreen, &pWin->winSize, &box, 1);
-	REGION_INIT (pScreen, &pWin->borderSize, &box, 1);
+	RegionInit(&pWin->winSize, &box, 1);
+	RegionInit(&pWin->borderSize, &box, 1);
 	if (WasViewable)
-	    REGION_RESET(pScreen, &pWin->borderClip, &box);
+	    RegionReset(&pWin->borderClip, &box);
 	pWin->drawable.width = pScreen->width;
 	pWin->drawable.height = pScreen->height;
-        REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+        RegionBreak(&pWin->clipList);
     }
     else
     {
-	REGION_EMPTY(pScreen, &pWin->borderClip);
-	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
+	RegionEmpty(&pWin->borderClip);
+	RegionBreak(&pWin->clipList);
     }
 
     ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
@@ -1362,7 +1360,7 @@ xf86TokenToString(SymTabPtr table, int token)
     if (table[i].token < 0)
 	return NULL;
     else
-	return(table[i].name);
+	return table[i].name;
 }
 
 int
@@ -1376,7 +1374,7 @@ xf86StringToToken(SymTabPtr table, const char *string)
     for (i = 0; table[i].token >= 0 && xf86NameCmp(string, table[i].name); i++)
 	;
 
-    return(table[i].token);
+    return table[i].token;
 }
 
 /*
@@ -1995,7 +1993,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
 	   ScrnIndex, property, type, format, len, value);
 
     if (ScrnIndex<0 || ScrnIndex>=xf86NumScreens) {
-      return(BadMatch);
+      return BadMatch;
     }
 
     if (xf86RegisteredPropertiesTable &&
@@ -2009,7 +2007,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
 
     if (!pNewProp) {
       if ((pNewProp = (RootWinPropPtr)malloc(sizeof(RootWinProp))) == NULL) {
-	return(BadAlloc);
+	return BadAlloc;
       }
       /*
        * We will put this property at the end of the list so that
@@ -2017,8 +2015,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
        */
       pNewProp->next = NULL;
     } else {
-      if (pNewProp->name)
-	free(pNewProp->name);
+      free(pNewProp->name);
       existing = TRUE;
     }
 
@@ -2034,7 +2031,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
       DebugF("creating xf86RegisteredPropertiesTable[] size %d\n",
 	     xf86NumScreens);
       if ( NULL==(xf86RegisteredPropertiesTable=(RootWinPropPtr*)xnfcalloc(sizeof(RootWinProp),xf86NumScreens) )) {
-	return(BadAlloc);
+	return BadAlloc;
       }
       for (i=0; i<xf86NumScreens; i++) {
 	xf86RegisteredPropertiesTable[i] = NULL;
@@ -2059,7 +2056,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
       }
     }
     DebugF("xf86RegisterRootWindowProperty succeeded\n");
-    return(Success);
+    return Success;
 }
 
 Bool

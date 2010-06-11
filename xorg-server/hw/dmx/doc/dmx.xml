@@ -1497,9 +1497,7 @@ PanoramiX prefix.
     <para>The Xinerama extension is registered by calling AddExtension().
     </para>
 
-    <para>A local per-screen array of data structures
-    (panoramiXdataPtr&lsqb;&rsqb;)
-    is allocated for each physical screen, and GC and Screen private
+    <para>GC and Screen private
     indexes are allocated, and both GC and Screen private areas are
     allocated for each physical screen.  These hold Xinerama-specific
     per-GC and per-Screen data.  Each screen's CreateGC and CloseScreen
@@ -1509,13 +1507,10 @@ PanoramiX prefix.
     Xinerama windows, pixmaps and colormaps.
     </para>
 
-    <para>A region (XineramaScreenRegions&lsqb;i&rsqb;) is initialized for each
-    physical screen, and single region (PanoramiXScreenRegion) is
-    initialized to be the union of the screen regions.  The
-    panoramiXdataPtr&lsqb;&rsqb; array is also initialized with the size and
-    origin of each screen.  The relative positioning information for the
-    physical screens is taken from the array
-    dixScreenOrigins&lsqb;&rsqb;, which
+    <para>A region (PanoramiXScreenRegion) is
+    initialized to be the union of the screen regions.
+    The relative positioning information for the
+    physical screens is taken from the ScreenRec x and y members, which
     the DDX layer must initialize in InitOutput().  The bounds of the
     combined screen is also calculated (PanoramiXPixWidth and
     PanoramiXPixHeight).

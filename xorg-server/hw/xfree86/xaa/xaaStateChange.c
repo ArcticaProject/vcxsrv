@@ -272,8 +272,8 @@ typedef struct _XAAStateWrapRec {
                                       int width, int height, int flags);
 } XAAStateWrapRec, *XAAStateWrapPtr;
 
-static int XAAStateKeyIndex;
-static DevPrivateKey XAAStateKey = &XAAStateKeyIndex;
+static DevPrivateKeyRec XAAStateKeyRec;
+#define XAAStateKey (&XAAStateKeyRec)
 
 /* Wrap functions start here */
 #define GET_STATEPRIV_GC(pGC)   XAAStateWrapPtr pStatePriv =\
@@ -1500,6 +1500,7 @@ XAAInitStateWrap(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
    XAAStateWrapPtr pStatePriv;
    int i = 0;
    
+   if (!dixRegisterPrivateKey(&XAAStateKeyRec, PRIVATE_SCREEN, 0)) return FALSE;
    if(!(pStatePriv = malloc(sizeof(XAAStateWrapRec)))) return FALSE;
    dixSetPrivate(&pScreen->devPrivates, XAAStateKey, pStatePriv);
    pStatePriv->RestoreAccelState = infoRec->RestoreAccelState;

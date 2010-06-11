@@ -61,10 +61,11 @@ unsigned char DGAReqCode = 0;
 int DGAErrorBase;
 int DGAEventBase;
 
-static int DGAScreenPrivateKeyIndex;
-static DevPrivateKey DGAScreenPrivateKey = &DGAScreenPrivateKeyIndex;
-static int DGAClientPrivateKeyIndex;
-static DevPrivateKey DGAClientPrivateKey = &DGAClientPrivateKeyIndex;
+static DevPrivateKeyRec DGAScreenPrivateKeyRec;
+#define DGAScreenPrivateKey (&DGAScreenPrivateKeyRec)
+#define DGAScreenPrivateKeyRegistered (DGAScreenPrivateKeyRec.initialized)
+static DevPrivateKeyRec DGAClientPrivateKeyRec;
+#define DGAClientPrivateKey (&DGAClientPrivateKeyRec)
 static int DGACallbackRefCount = 0;
 
 /* This holds the client's version information */
@@ -88,6 +89,12 @@ void
 XFree86DGAExtensionInit(INITARGS)
 {
     ExtensionEntry* extEntry;
+
+    if (!dixRegisterPrivateKey(&DGAClientPrivateKeyRec, PRIVATE_CLIENT, 0))
+	return;
+
+    if (!dixRegisterPrivateKey(&DGAScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
 
     if ((extEntry = AddExtension(XF86DGANAME,
 				XF86DGANumberEvents,
@@ -685,10 +692,10 @@ ProcXF86DGAGetVideoLL(ClientPtr client)
     rep.sequenceNumber = client->sequence;
 
     if(!DGAAvailable(stuff->screen))
-	return (DGAErrorBase + XF86DGANoDirectVideoMode);
+	return DGAErrorBase + XF86DGANoDirectVideoMode;
 
     if(!(num = DGAGetOldDGAMode(stuff->screen)))
-	return (DGAErrorBase + XF86DGANoDirectVideoMode);
+	return DGAErrorBase + XF86DGANoDirectVideoMode;
 
     /* get the parameters for the mode that best matches */
     DGAGetModeInfo(stuff->screen, &mode, num);
@@ -717,24 +724,24 @@ ProcXF86DGADirectVideo(ClientPtr client)
 
     if (stuff->screen > screenInfo.numScreens)
 	return BadValue;
-    owner = DGA_GETCLIENT(stuff->screen);
-
     REQUEST_SIZE_MATCH(xXF86DGADirectVideoReq);
 
     if (!DGAAvailable(stuff->screen))
 	return DGAErrorBase + XF86DGANoDirectVideoMode;
+
+    owner = DGA_GETCLIENT(stuff->screen);
 
     if (owner && owner != client)
         return DGAErrorBase + XF86DGANoDirectVideoMode;
 
     if (stuff->enable & XF86DGADirectGraphics) {
 	if(!(num = DGAGetOldDGAMode(stuff->screen)))
-	    return (DGAErrorBase + XF86DGANoDirectVideoMode);
+	    return DGAErrorBase + XF86DGANoDirectVideoMode;
     } else
 	num = 0;
 
     if(Success != DGASetMode(stuff->screen, num, &mode, &pix))
-	return (DGAErrorBase + XF86DGAScreenNotActive);
+	return DGAErrorBase + XF86DGAScreenNotActive;
 
     DGASetInputMode (stuff->screen,
 		     (stuff->enable & XF86DGADirectKeyb) != 0,
@@ -778,10 +785,10 @@ ProcXF86DGAGetViewPortSize(ClientPtr client)
     rep.sequenceNumber = client->sequence;
 
     if (!DGAAvailable(stuff->screen))
-	return (DGAErrorBase + XF86DGANoDirectVideoMode);
+	return DGAErrorBase + XF86DGANoDirectVideoMode;
 
     if(!(num = DGAGetOldDGAMode(stuff->screen)))
-	return (DGAErrorBase + XF86DGANoDirectVideoMode);
+	return DGAErrorBase + XF86DGANoDirectVideoMode;
 
     DGAGetModeInfo(stuff->screen, &mode, num);
 
@@ -806,7 +813,7 @@ ProcXF86DGASetViewPort(ClientPtr client)
     REQUEST_SIZE_MATCH(xXF86DGASetViewPortReq);
 
     if (!DGAAvailable(stuff->screen))
-	return (DGAErrorBase + XF86DGANoDirectVideoMode);
+	return DGAErrorBase + XF86DGANoDirectVideoMode;
 
     if (!DGAActive(stuff->screen))
 	return DGAErrorBase + XF86DGADirectNotActivated;
@@ -870,7 +877,7 @@ ProcXF86DGAInstallColormap(ClientPtr client)
     REQUEST_SIZE_MATCH(xXF86DGAInstallColormapReq);
 
     if (!DGAActive(stuff->screen))
-	return (DGAErrorBase + XF86DGADirectNotActivated);
+	return DGAErrorBase + XF86DGADirectNotActivated;
 
     rc = dixLookupResourceByType((pointer *)&pcmp, stuff->id, RT_COLORMAP,
 				 client, DixInstallAccess);
@@ -919,7 +926,7 @@ ProcXF86DGAViewPortChanged(ClientPtr client)
     REQUEST_SIZE_MATCH(xXF86DGAViewPortChangedReq);
 
     if (!DGAActive(stuff->screen))
-	return (DGAErrorBase + XF86DGADirectNotActivated);
+	return DGAErrorBase + XF86DGADirectNotActivated;
 
     rep.type = X_Reply;
     rep.length = 0;

@@ -343,13 +343,13 @@ ephyrInternalDamageRedisplay (ScreenPtr pScreen)
 
   pRegion = DamageRegion (scrpriv->pDamage);
 
-  if (REGION_NOTEMPTY (pScreen, pRegion))
+  if (RegionNotEmpty(pRegion))
     {
       int           nbox;
       BoxPtr        pbox;
 
-      nbox = REGION_NUM_RECTS (pRegion);
-      pbox = REGION_RECTS (pRegion);
+      nbox = RegionNumRects (pRegion);
+      pbox = RegionRects (pRegion);
 
       while (nbox--)
         {
@@ -897,10 +897,10 @@ ephyrExposePairedWindow (int a_remote)
 	return;
     }
     screen = pair->local->drawable.pScreen;
-    REGION_NULL (screen, &reg);
-    REGION_COPY (screen, &reg, &pair->local->clipList);
+    RegionNull(&reg);
+    RegionCopy(&reg, &pair->local->clipList);
     screen->WindowExposures (pair->local, &reg, NullRegion);
-    REGION_UNINIT (screen, &reg);
+    RegionUninit(&reg);
 }
 #endif /* XF86DRI */
 

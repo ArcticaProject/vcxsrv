@@ -108,7 +108,7 @@ static Bool dmxCheckFontPathElement(DMXScreenInfo *dmxScreen, char *fp)
     dmxSync(dmxScreen, TRUE);   /* Must complete before removing handler */
     XSetErrorHandler(oldErrorHandler);
 
-    return (dmxFontLastError == 0);
+    return dmxFontLastError == 0;
 }
 
 static int dmxSetFontPath(DMXScreenInfo *dmxScreen)

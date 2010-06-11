@@ -77,7 +77,7 @@ GLint __glGetMap_size(GLenum target, GLenum query)
 	    /*
 	    ** The query above might fail, but then order will be zero anyway.
 	    */
-	    return (order * k);
+	    return order * k;
 	  case GL_DOMAIN:
 	    return 2;
 	  case GL_ORDER:
@@ -101,7 +101,7 @@ GLint __glGetMap_size(GLenum target, GLenum query)
 	    /*
 	    ** The query above might fail, but then majorMinor will be zeroes
 	    */
-	    return (majorMinor[0] * majorMinor[1] * k);
+	    return majorMinor[0] * majorMinor[1] * k;
 	  case GL_DOMAIN:
 	    return 4;
 	  case GL_ORDER:

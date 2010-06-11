@@ -78,7 +78,7 @@ static Bool
 GARTInit(int screenNum)
 {
 	if (initDone)
-		return (gartFd != -1);
+		return gartFd != -1;
 
 	if (gartFd == -1)
 		gartFd = open(AGP_DEVICE, O_RDWR);
@@ -115,16 +115,16 @@ xf86GetAGPInfo(int screenNum)
 	if (!GARTInit(screenNum))
 		return NULL;
 
-	if ((info = calloc(sizeof(AgpInfo), 1)) == NULL) {
-		xf86DrvMsg(screenNum, X_ERROR,
-		    "xf86GetAGPInfo: Failed to allocate AgpInfo\n");
-		return NULL;
-	}
-
 	if (ioctl(gartFd, AGPIOC_INFO, &agpinf) != 0) {
 		xf86DrvMsg(screenNum, X_ERROR,
 		    "xf86GetAGPInfo: AGPIOC_INFO failed (%s)\n",
 		    strerror(errno));
+		return NULL;
+	}
+
+	if ((info = calloc(sizeof(AgpInfo), 1)) == NULL) {
+		xf86DrvMsg(screenNum, X_ERROR,
+		    "xf86GetAGPInfo: Failed to allocate AgpInfo\n");
 		return NULL;
 	}
 

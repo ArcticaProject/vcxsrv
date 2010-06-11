@@ -78,21 +78,21 @@ winAllocatePrivates (ScreenPtr pScreen)
   winSetScreenPriv (pScreen, pScreenPriv);
 
   /* Reserve GC memory for our privates */
-  if (!dixRequestPrivate(g_iGCPrivateKey, sizeof (winPrivGCRec)))
+  if (!dixRequestPrivateKey(g_iGCPrivateKey, PRIVATE_GC, sizeof (winPrivGCRec)))
     {
       ErrorF ("winAllocatePrivates - AllocateGCPrivate () failed\n");
       return FALSE;
     }
 
   /* Reserve Pixmap memory for our privates */
-  if (!dixRequestPrivate(g_iPixmapPrivateKey, sizeof (winPrivPixmapRec)))
+  if (!dixRequestPrivateKey(g_iPixmapPrivateKey, PRIVATE_PIXMAP, sizeof (winPrivPixmapRec)))
     {
       ErrorF ("winAllocatePrivates - AllocatePixmapPrivates () failed\n");
       return FALSE;
     }
 
   /* Reserve Window memory for our privates */
-  if (!dixRequestPrivate(g_iWindowPrivateKey, sizeof (winPrivWinRec)))
+  if (!dixRequestPrivateKey(g_iWindowPrivateKey, PRIVATE_WINDOW, sizeof (winPrivWinRec)))
     {
       ErrorF ("winAllocatePrivates () - AllocateWindowPrivates () failed\n");
        return FALSE;

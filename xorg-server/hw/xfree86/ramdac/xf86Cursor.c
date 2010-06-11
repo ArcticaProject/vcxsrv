@@ -18,8 +18,7 @@
 #include "inputstr.h"
 extern InputInfo inputInfo;
 
-static int xf86CursorScreenKeyIndex;
-DevPrivateKey xf86CursorScreenKey = &xf86CursorScreenKeyIndex;
+DevPrivateKeyRec xf86CursorScreenKeyRec;
 
 /* sprite functions */
 
@@ -63,6 +62,9 @@ xf86InitCursor(
     miPointerScreenPtr PointPriv;
 
     if (!xf86InitHardwareCursor(pScreen, infoPtr))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&xf86CursorScreenKeyRec, PRIVATE_SCREEN, 0))
 	return FALSE;
 
     ScreenPriv = calloc(1, sizeof(xf86CursorScreenRec));

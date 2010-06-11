@@ -134,8 +134,8 @@ fbPutZImage (DrawablePtr	pDrawable,
 
     fbGetStipDrawable (pDrawable, dst, dstStride, dstBpp, dstXoff, dstYoff);
 
-    for (nbox = REGION_NUM_RECTS (pClip),
-	 pbox = REGION_RECTS(pClip);
+    for (nbox = RegionNumRects (pClip),
+	 pbox = RegionRects(pClip);
 	 nbox--;
 	 pbox++)
     {
@@ -224,8 +224,8 @@ fbPutXYImage (DrawablePtr	pDrawable,
 	}
     }
 
-    for (nbox = REGION_NUM_RECTS (pClip),
-	 pbox = REGION_RECTS(pClip);
+    for (nbox = RegionNumRects (pClip),
+	 pbox = RegionRects(pClip);
 	 nbox--;
 	 pbox++)
     {

@@ -114,7 +114,7 @@ static char **defaultPathList = NULL;
 static Bool
 PathIsAbsolute(const char *path)
 {
-    return (*path == '/');
+    return *path == '/';
 }	
 
 /*
@@ -315,16 +315,14 @@ InitSubdirs(const char **subdirlist)
 		if (**s == '/' || **s == '\\' || strchr(*s, ':') ||
 		    strstr(*s, "..")) {
 		    xf86Msg(X_ERROR, "InitSubdirs: Bad subdir: \"%s\"\n", *s);
-		    if (tmp_subdirlist)
-			free(tmp_subdirlist);
+		    free(tmp_subdirlist);
 		    return NULL;
 		}
 	    }
 	}
 	subdirs = malloc((i * 2 + 1) * sizeof(char *));
 	if (!subdirs) {
-	    if (tmp_subdirlist)
-		free(tmp_subdirlist);
+	    free(tmp_subdirlist);
 	    return NULL;
 	}
 	i = 0;
@@ -348,8 +346,7 @@ InitSubdirs(const char **subdirlist)
 		while (--i >= 0)
 		    free(subdirs[i]);
 		free(subdirs);
-		if (tmp_subdirlist)
-		    free(tmp_subdirlist);
+		free(tmp_subdirlist);
 		return NULL;
 	    }
 	    /* tack on the OS name */
@@ -367,8 +364,7 @@ InitSubdirs(const char **subdirlist)
 	}
 	subdirs[i] = NULL;
     }
-    if (tmp_subdirlist)
-	free(tmp_subdirlist);
+    free(tmp_subdirlist);
     return (const char **)subdirs;
 }
 
@@ -743,7 +739,7 @@ static ModuleDescPtr
 AddSibling(ModuleDescPtr head, ModuleDescPtr new)
 {
     new->sib = head;
-    return (new);
+    return new;
 }
 
 pointer
@@ -793,7 +789,7 @@ NewModuleDesc(const char *name)
 	mdp->TearDownData = NULL;
     }
 
-    return (mdp);
+    return mdp;
 }
 
 ModuleDescPtr

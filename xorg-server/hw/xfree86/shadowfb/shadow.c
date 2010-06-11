@@ -84,11 +84,11 @@ typedef struct {
    GCFuncs *funcs;
 } ShadowGCRec, *ShadowGCPtr;
 
+static DevPrivateKeyRec ShadowScreenKeyRec;
+#define ShadowScreenKey (&ShadowScreenKeyRec)
 
-static int ShadowScreenKeyIndex;
-static DevPrivateKey ShadowScreenKey = &ShadowScreenKeyIndex;
-static int ShadowGCKeyIndex;
-static DevPrivateKey ShadowGCKey = &ShadowGCKeyIndex;
+static DevPrivateKeyRec ShadowGCKeyRec;
+#define ShadowGCKey (&ShadowGCKeyRec)
 
 #define GET_SCREEN_PRIVATE(pScreen) \
     (ShadowScreenPtr)dixLookupPrivate(&(pScreen)->devPrivates, ShadowScreenKey)
@@ -162,7 +162,10 @@ ShadowFBInit2 (
 
     if(!preRefreshArea && !postRefreshArea) return FALSE;
     
-    if(!dixRequestPrivate(ShadowGCKey, sizeof(ShadowGCRec)))
+    if (!dixRegisterPrivateKey(&ShadowScreenKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
+    if(!dixRegisterPrivateKey(&ShadowGCKeyRec, PRIVATE_GC, sizeof(ShadowGCRec)))
 	return FALSE;
 
     if(!(pPriv = (ShadowScreenPtr)malloc(sizeof(ShadowScreenRec))))
@@ -272,18 +275,18 @@ ShadowCopyWindow(
     RegionRec rgnDst;
 
     if (pPriv->vtSema) {
-        REGION_NULL(pWin->drawable.pScreen, &rgnDst);
-	REGION_COPY(pWin->drawable.pScreen, &rgnDst, prgn);
+        RegionNull(&rgnDst);
+	RegionCopy(&rgnDst, prgn);
         
-        REGION_TRANSLATE(pWin->drawable.pScreen, &rgnDst,
+        RegionTranslate(&rgnDst,
                          pWin->drawable.x - ptOldOrg.x,
                          pWin->drawable.y - ptOldOrg.y);
-        REGION_INTERSECT(pScreen, &rgnDst, &pWin->borderClip, &rgnDst);
-        if ((num = REGION_NUM_RECTS(&rgnDst))) {
+        RegionIntersect(&rgnDst, &pWin->borderClip, &rgnDst);
+        if ((num = RegionNumRects(&rgnDst))) {
             if(pPriv->preRefresh)
-                (*pPriv->preRefresh)(pPriv->pScrn, num, REGION_RECTS(&rgnDst));
+                (*pPriv->preRefresh)(pPriv->pScrn, num, RegionRects(&rgnDst));
         } else {
-            REGION_UNINIT(pWin->drawable.pScreen, &rgnDst);
+            RegionUninit(&rgnDst);
         }
     }
     
@@ -293,8 +296,8 @@ ShadowCopyWindow(
     
     if (num) {
         if (pPriv->postRefresh)
-            (*pPriv->postRefresh)(pPriv->pScrn, num, REGION_RECTS(&rgnDst));
-        REGION_UNINIT(pWin->drawable.pScreen, &rgnDst);
+            (*pPriv->postRefresh)(pPriv->pScrn, num, RegionRects(&rgnDst));
+        RegionUninit(&rgnDst);
     }
 }
 
@@ -1353,38 +1356,32 @@ ShadowFontToBox(BoxPtr BB, DrawablePtr pDrawable, GCPtr pGC, int x, int y,
 	}
 	right += pFont->info.maxbounds.rightSideBearing;
 	BB->x1 =
-	    max(pDrawable->x + x - left, (REGION_EXTENTS(pGC->pScreen,
-		&((WindowPtr) pDrawable)->winSize))->x1);
+	    max(pDrawable->x + x - left,
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->x1);
 	BB->y1 =
 	    max(pDrawable->y + y - ascent,
-	    (REGION_EXTENTS(pGC->pScreen,
-             &((WindowPtr) pDrawable)->winSize))->y1);
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->y1);
 	BB->x2 =
 	    min(pDrawable->x + x + right,
-	    (REGION_EXTENTS(pGC->pScreen,
-             &((WindowPtr) pDrawable)->winSize))->x2);
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->x2);
 	BB->y2 =
 	    min(pDrawable->y + y + descent,
-	    (REGION_EXTENTS(pGC->pScreen,
-             &((WindowPtr) pDrawable)->winSize))->y2);
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->y2);
     } else {
     	ShadowTextExtent(pFont, count, chars, wide ? (FONTLASTROW(pFont) == 0)
                          ? Linear16Bit : TwoD16Bit : Linear8Bit, BB);
 	BB->x1 =
-	    max(pDrawable->x + x + BB->x1, (REGION_EXTENTS(pGC->pScreen,
-		&((WindowPtr) pDrawable)->winSize))->x1);
+	    max(pDrawable->x + x + BB->x1,
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->x1);
 	BB->y1 =
 	    max(pDrawable->y + y + BB->y1,
-	    (REGION_EXTENTS(pGC->pScreen,
-             &((WindowPtr) pDrawable)->winSize))->y1);
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->y1);
 	BB->x2 =
 	    min(pDrawable->x + x + BB->x2,
-	    (REGION_EXTENTS(pGC->pScreen,
-	     &((WindowPtr) pDrawable)->winSize))->x2);
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->x2);
 	BB->y2 =
 	    min(pDrawable->y + y + BB->y2,
-	    (REGION_EXTENTS(pGC->pScreen, 
-	     &((WindowPtr) pDrawable)->winSize))->y2);
+		RegionExtents(&((WindowPtr) pDrawable)->winSize)->y2);
     }
 }
 

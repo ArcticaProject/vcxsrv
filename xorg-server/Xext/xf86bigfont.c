@@ -134,7 +134,7 @@ CheckForShmSyscall(void)
         badSysCall = TRUE;
     }
     signal(SIGSYS, oldHandler);
-    return (!badSysCall);
+    return !badSysCall;
 }
 
 #define MUST_CHECK_FOR_SHM_SYSCALL

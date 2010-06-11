@@ -389,8 +389,8 @@ ddxProcessArgument(int argc, char *argv[], int i)
     return 0;
 }
 
-static int cmapScrPrivateKeyIndex;
-static DevPrivateKey cmapScrPrivateKey = &cmapScrPrivateKeyIndex;
+static DevPrivateKeyRec cmapScrPrivateKeyRec;
+#define cmapScrPrivateKey (&cmapScrPrivateKeyRec)
 
 #define GetInstalledColormap(s) ((ColormapPtr) dixLookupPrivate(&(s)->devPrivates, cmapScrPrivateKey))
 #define SetInstalledColormap(s,c) (dixSetPrivate(&(s)->devPrivates, cmapScrPrivateKey, c))
@@ -401,7 +401,7 @@ vfbListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
     /* By the time we are processing requests, we can guarantee that there
      * is always a colormap installed */
     *pmaps = GetInstalledColormap(pScreen)->mid;
-    return (1);
+    return 1;
 }
 
 
@@ -570,7 +570,7 @@ vfbAllocateMmappedFramebuffer(vfbScreenInfoPtr pvfb)
 
     /* Extend the file to be the proper size */
 
-    bzero(dummyBuffer, DUMMY_BUFFER_SIZE);
+    memset(dummyBuffer, 0, DUMMY_BUFFER_SIZE);
     for (currentFileSize = 0;
 	 currentFileSize < pvfb->sizeInBytes;
 	 currentFileSize += writeThisTime)
@@ -811,6 +811,9 @@ vfbScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     int ret;
     char *pbits;
     
+    if (!dixRegisterPrivateKey(&cmapScrPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     if (dpix == 0)
       dpix = 100;
 

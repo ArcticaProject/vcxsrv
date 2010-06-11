@@ -35,6 +35,13 @@
 /* BOOL. If present, device is a virtual XTEST device */
 #define XI_PROP_XTEST_DEVICE  "XTEST Device"
 
+/* Coordinate transformation matrix for absolute input devices
+ * FLOAT, 9 values in row-major order, coordinates in 0..1 range:
+ * [c0 c1 c2]   [x]
+ * [c3 c4 c5] * [y]
+ * [c6 c7 c8]   [1] */
+#define XI_PROP_TRANSFORM "Coordinate Transformation Matrix"
+
 /* Pointer acceleration properties */
 /* INTEGER of any format */
 #define ACCEL_PROP_PROFILE_NUMBER "Device Accel Profile"

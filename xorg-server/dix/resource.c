@@ -254,8 +254,6 @@ CreateNewResourceType(DeleteType deleteFunc, char *name)
     types = realloc(resourceTypes, (next + 1) * sizeof(*resourceTypes));
     if (!types)
 	return 0;
-    if (!dixRegisterPrivateOffset(next, -1))
-	return 0;
 
     lastResourceType = next;
     resourceTypes = types;
@@ -903,7 +901,7 @@ LegalNewID(XID id, ClientPtr client)
 
 	    rc = dixLookupResourceByClass(&val, id, RC_ANY, serverClient,
 					  DixGetAttrAccess);
-	    return (rc == BadValue);
+	    return rc == BadValue;
 	}
 	return FALSE;
 }

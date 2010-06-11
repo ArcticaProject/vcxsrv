@@ -377,5 +377,5 @@ pointer usbCreatePrivate(DeviceIntPtr pDevice)
 /** Destroy a private structure. */
 void usbDestroyPrivate(pointer priv)
 {
-    if (priv) free(priv);
+    free(priv);
 }

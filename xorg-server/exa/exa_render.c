@@ -292,7 +292,7 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
 
     exaGetDrawableDeltas (pDst->pDrawable, pDstPix, &dst_off_x, &dst_off_y);
 
-    REGION_TRANSLATE(pScreen, &region, dst_off_x, dst_off_y);
+    RegionTranslate(&region, dst_off_x, dst_off_y);
 
     if (pSrc->pDrawable) {
 	pSrcPix = exaGetDrawablePixmap (pSrc->pDrawable);
@@ -305,7 +305,7 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
 	!exaGetPixelFromRGBA(&pixel, red, green, blue, alpha,
 			     pDst->pFormat))
     {
-	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	RegionUninit(&region);
 	return -1;
     }
 
@@ -320,18 +320,18 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
     }
 
     if (!exaPixmapHasGpuCopy(pDstPix)) {
-	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	RegionUninit(&region);
 	return 0;
     }
 
     if (!(*pExaScr->info->PrepareSolid) (pDstPix, GXcopy, 0xffffffff, pixel))
     {
-	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	RegionUninit(&region);
 	return -1;
     }
 
-    nbox = REGION_NUM_RECTS(&region);
-    pbox = REGION_RECTS(&region);
+    nbox = RegionNumRects(&region);
+    pbox = RegionRects(&region);
 
     while (nbox--)
     {
@@ -342,7 +342,7 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
     (*pExaScr->info->DoneSolid) (pDstPix);
     exaMarkSync(pDst->pDrawable->pScreen);
 
-    REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+    RegionUninit(&region);
     return 1;
 }
 
@@ -469,10 +469,10 @@ exaTryDriverCompositeRects(CARD8	       op,
 				       rects->width, rects->height))
 	    goto next_rect;
 
-	REGION_TRANSLATE(pScreen, &region, dst_off_x, dst_off_y);
+	RegionTranslate(&region, dst_off_x, dst_off_y);
 
-	nbox = REGION_NUM_RECTS(&region);
-	pbox = REGION_RECTS(&region);
+	nbox = RegionNumRects(&region);
+	pbox = RegionRects(&region);
 
 	xMask = xMask + mask_off_x - xDst - dst_off_x;
 	yMask = yMask + mask_off_y - yDst - dst_off_y;
@@ -494,7 +494,7 @@ exaTryDriverCompositeRects(CARD8	       op,
 	}
 
     next_rect:
-	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	RegionUninit(&region);
 
 	rects++;
     }
@@ -575,11 +575,11 @@ exaCompositeRects(CARD8	              op,
 	 * (see use of DamagePendingRegion in exaCopyDirty)
 	 */
 
-	REGION_INIT(pScreen, &region, &box, 1);
+	RegionInit(&region, &box, 1);
     
 	DamageRegionAppend(pDst->pDrawable, &region);
 
-	REGION_UNINIT(pScreen, &region);
+	RegionUninit(&region);
     }
     
     /************************************************************/
@@ -703,7 +703,7 @@ exaTryDriverComposite(CARD8		op,
 
     exaGetDrawableDeltas (pDst->pDrawable, pDstPix, &dst_off_x, &dst_off_y);
 
-    REGION_TRANSLATE(pScreen, &region, dst_off_x, dst_off_y);
+    RegionTranslate(&region, dst_off_x, dst_off_y);
 
     if (pExaScr->do_migration) {
 	ExaMigrationRec pixmaps[3];
@@ -737,7 +737,7 @@ exaTryDriverComposite(CARD8		op,
     if (pSrcPix) {
 	pSrcPix = exaGetOffscreenPixmap (pSrc->pDrawable, &src_off_x, &src_off_y);
 	if (!pSrcPix) {
-	    REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	    RegionUninit(&region);
 	    return 0;
 	}
     }
@@ -746,25 +746,25 @@ exaTryDriverComposite(CARD8		op,
 	pMaskPix = exaGetOffscreenPixmap (pMask->pDrawable, &mask_off_x,
 					  &mask_off_y);
 	if (!pMaskPix) {
-	    REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	    RegionUninit(&region);
 	    return 0;
 	}
     }
 
     if (!exaPixmapHasGpuCopy(pDstPix)) {
-	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	RegionUninit(&region);
 	return 0;
     }
 
     if (!(*pExaScr->info->PrepareComposite) (op, pSrc, pMask, pDst, pSrcPix,
 					     pMaskPix, pDstPix))
     {
-	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+	RegionUninit(&region);
 	return -1;
     }
 
-    nbox = REGION_NUM_RECTS(&region);
-    pbox = REGION_RECTS(&region);
+    nbox = RegionNumRects(&region);
+    pbox = RegionRects(&region);
 
     xMask = xMask + mask_off_x - xDst - dst_off_x;
     yMask = yMask + mask_off_y - yDst - dst_off_y;
@@ -788,7 +788,7 @@ exaTryDriverComposite(CARD8		op,
     (*pExaScr->info->DoneComposite) (pDstPix);
     exaMarkSync(pDst->pDrawable->pScreen);
 
-    REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+    RegionUninit(&region);
     return 1;
 }
 
@@ -953,9 +953,9 @@ exaComposite(CARD8	op,
 		    goto done;
 
 		ret = exaHWCopyNtoN(pSrc->pDrawable, pDst->pDrawable, NULL,
-			     REGION_RECTS(&region), REGION_NUM_RECTS(&region),
+			     RegionRects(&region), RegionNumRects(&region),
 			     xSrc - xDst, ySrc - yDst, FALSE, FALSE);
-		REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+		RegionUninit(&region);
 
 		/* Reset values to their original values. */
 		xDst -= pDst->pDrawable->x;
@@ -1005,7 +1005,7 @@ exaComposite(CARD8	op,
 					 (PixmapPtr)pSrc->pDrawable,
 					 &patOrg, FB_ALLONES, GXcopy, CT_NONE);
 
-		REGION_UNINIT(pDst->pDrawable->pScreen, &region);
+		RegionUninit(&region);
 
 		if (ret)
 		    goto done;

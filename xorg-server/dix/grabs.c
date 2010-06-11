@@ -441,10 +441,10 @@ DeletePassiveGrabFromList(GrabPtr pMinuendGrab)
     details = malloc(i * sizeof(Mask *));
     if (!deletes || !adds || !updates || !details)
     {
-	if (details) free(details);
-	if (updates) free(updates);
-	if (adds) free(adds);
-	if (deletes) free(deletes);
+	free(details);
+	free(updates);
+	free(adds);
+	free(deletes);
 	return FALSE;
     }
 

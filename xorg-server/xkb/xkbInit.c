@@ -43,6 +43,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "inputstr.h"
 #include "opaque.h"
 #include "property.h"
+#include "scrnintstr.h"
 #define	XKBSRV_NEED_FILE_FUNCS
 #include <xkbsrv.h>
 #include "xkbgeom.h"
@@ -210,7 +211,7 @@ char *			pval;
 	ErrorF("[xkb] Internal Error! bad size (%d!=%d) for _XKB_RULES_NAMES\n",
 								out,len);
     }
-    dixChangeWindowProperty(serverClient, WindowTable[0], name, XA_STRING, 8,
+    dixChangeWindowProperty(serverClient, screenInfo.screens[0]->root, name, XA_STRING, 8,
 			    PropModeReplace, len, pval, TRUE);
     free(pval);
     return TRUE;
@@ -219,20 +220,15 @@ char *			pval;
 static void
 XkbSetRulesUsed(XkbRMLVOSet *rmlvo)
 {
-    if (XkbRulesUsed)
-        free(XkbRulesUsed);
+    free(XkbRulesUsed);
     XkbRulesUsed= (rmlvo->rules?_XkbDupString(rmlvo->rules):NULL);
-    if (XkbModelUsed)
-	free(XkbModelUsed);
+    free(XkbModelUsed);
     XkbModelUsed= (rmlvo->model?_XkbDupString(rmlvo->model):NULL);
-    if (XkbLayoutUsed)
-	free(XkbLayoutUsed);
+    free(XkbLayoutUsed);
     XkbLayoutUsed= (rmlvo->layout?_XkbDupString(rmlvo->layout):NULL);
-    if (XkbVariantUsed)
-	free(XkbVariantUsed);
+    free(XkbVariantUsed);
     XkbVariantUsed= (rmlvo->variant?_XkbDupString(rmlvo->variant):NULL);
-    if (XkbOptionsUsed)
-	free(XkbOptionsUsed);
+    free(XkbOptionsUsed);
     XkbOptionsUsed= (rmlvo->options?_XkbDupString(rmlvo->options):NULL);
     if (XkbWantRulesProp)
 	QueueWorkProc(XkbWriteRulesProp,NULL,NULL);
@@ -243,28 +239,23 @@ void
 XkbSetRulesDflts(XkbRMLVOSet *rmlvo)
 {
     if (rmlvo->rules) {
-        if (XkbRulesDflt)
-	    free(XkbRulesDflt);
+        free(XkbRulesDflt);
         XkbRulesDflt= _XkbDupString(rmlvo->rules);
     }
     if (rmlvo->model) {
-	if (XkbModelDflt)
-	    free(XkbModelDflt);
+	free(XkbModelDflt);
 	XkbModelDflt= _XkbDupString(rmlvo->model);
     }
     if (rmlvo->layout) {
-	if (XkbLayoutDflt)
-	    free(XkbLayoutDflt);
+	free(XkbLayoutDflt);
 	XkbLayoutDflt= _XkbDupString(rmlvo->layout);
     }
     if (rmlvo->variant) {
-	if (XkbVariantDflt)
-	    free(XkbVariantDflt);
+	free(XkbVariantDflt);
 	XkbVariantDflt= _XkbDupString(rmlvo->variant);
     }
     if (rmlvo->options) {
-	if (XkbOptionsDflt)
-	    free(XkbOptionsDflt);
+	free(XkbOptionsDflt);
 	XkbOptionsDflt= _XkbDupString(rmlvo->options);
     }
     return;

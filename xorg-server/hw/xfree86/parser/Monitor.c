@@ -264,7 +264,7 @@ xf86parseModeLine (void)
 #ifdef DEBUG
 	printf ("ModeLine parsed\n");
 #endif
-	return (ptr);
+	return ptr;
 }
 
 static XF86ConfModeLinePtr
@@ -413,7 +413,7 @@ xf86parseVerboseMode (void)
 #ifdef DEBUG
 	printf ("Verbose Mode parsed\n");
 #endif
-	return (ptr);
+	return ptr;
 }
 
 #undef CLEANUP
@@ -848,11 +848,11 @@ xf86findMonitor (const char *ident, XF86ConfMonitorPtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->mon_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 
 XF86ConfModesPtr
@@ -861,11 +861,11 @@ xf86findModes (const char *ident, XF86ConfModesPtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->modes_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 
 XF86ConfModeLinePtr
@@ -874,11 +874,11 @@ xf86findModeLine (const char *ident, XF86ConfModeLinePtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->ml_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 
 int
@@ -895,10 +895,10 @@ xf86validateMonitor (XF86ConfigPtr p, XF86ConfScreenPtr screen)
 			xf86validationError (UNDEFINED_MODES_MSG, 
 					     modeslnk->ml_modes_str, 
 					     screen->scrn_identifier);
-			return (FALSE);
+			return FALSE;
 		}
 		modeslnk->ml_modes = modes;
 		modeslnk = modeslnk->list.next;
 	}
-	return (TRUE);
+	return TRUE;
 }

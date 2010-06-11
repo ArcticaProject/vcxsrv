@@ -67,7 +67,7 @@ SetTimeSinceLastInputEvent(void)
 static Bool
 xnestExposurePredicate(Display *display, XEvent *event, char *args)
 {
-  return (event->type == Expose || event->type == ProcessedExpose);
+  return event->type == Expose || event->type == ProcessedExpose;
 }
 
 static Bool
@@ -93,7 +93,7 @@ xnestCollectExposures(void)
       Box.x2 = Box.x1 + X.xexpose.width;
       Box.y2 = Box.y1 + X.xexpose.height;
       
-      REGION_INIT(pWin->drawable.pScreen, &Rgn, &Box, 1);
+      RegionInit(&Rgn, &Box, 1);
       
       miSendExposures(pWin, &Rgn, Box.x2, Box.y2);
     }

@@ -122,9 +122,9 @@ miFillSppPoly(
 
     if(!ptsOut || !width || !Marked)
     {
-	if (Marked) free(Marked);
-	if (width) free(width);
-	if (ptsOut) free(ptsOut);
+	free(Marked);
+	free(width);
+	free(ptsOut);
 	return;
     }
 
@@ -276,5 +276,5 @@ GetFPolyYBounds(
 
     *by = ICEIL(ymin + yFtrans);
     *ty = ICEIL(ymax + yFtrans - 1);
-    return(ptMin-ptsStart);
+    return ptMin-ptsStart;
 }

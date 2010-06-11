@@ -139,4 +139,7 @@
 /* Support PC98 */
 #undef SUPPORT_PC98
 
+/* Build with libdrm support */
+#undef WITH_LIBDRM
+
 #endif /* _XORG_CONFIG_H_ */

@@ -482,7 +482,7 @@ CloseFont(pointer value, XID fid)
     FontPtr     pfont = (FontPtr)value;
 
     if (pfont == NullFont)
-	return (Success);
+	return Success;
     if (--pfont->refcnt == 0) {
 	if (patternCache)
 	    RemoveCachedFontPattern (patternCache, pfont);
@@ -504,7 +504,7 @@ CloseFont(pointer value, XID fid)
 	(*fpe_functions[fpe->type].close_font) (fpe, pfont);
 	FreeFPE(fpe);
     }
-    return (Success);
+    return Success;
 }
 
 
@@ -677,7 +677,7 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
 		    return TRUE;
 		}
 		if (err == FontNameAlias) {
-		    if (resolved) free(resolved);
+		    free(resolved);
 		    resolved = malloc(resolvedlen + 1);
 		    if (resolved)
 			memmove(resolved, tmpname, resolvedlen + 1);
@@ -731,8 +731,7 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
 		{
 		    c->saved = c->current;
 		    c->haveSaved = TRUE;
-		    if (c->savedName)
-			free(c->savedName);
+		    free(c->savedName);
 		    c->savedName = malloc(namelen + 1);
 		    if (c->savedName)
 			memmove(c->savedName, name, namelen + 1);
@@ -828,10 +827,10 @@ bail:
     for (i = 0; i < c->num_fpes; i++)
 	FreeFPE(c->fpe_list[i]);
     free(c->fpe_list);
-    if (c->savedName) free(c->savedName);
+    free(c->savedName);
     FreeFontNames(names);
     free(c);
-    if (resolved) free(resolved);
+    free(resolved);
     return TRUE;
 }
 
@@ -994,8 +993,7 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
 		c->saved = c->current;
 		c->haveSaved = TRUE;
 		c->savedNumFonts = numFonts;
-		if (c->savedName)
-		  free(c->savedName);
+		free(c->savedName);
 		c->savedName = malloc(namelen + 1);
 		if (c->savedName)
 		  memmove(c->savedName, name, namelen + 1);
@@ -1093,7 +1091,7 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
     }
 finish:
     length = sizeof(xListFontsWithInfoReply);
-    bzero((char *) &finalReply, sizeof(xListFontsWithInfoReply));
+    memset((char *) &finalReply, 0, sizeof(xListFontsWithInfoReply));
     finalReply.type = X_Reply;
     finalReply.sequenceNumber = client->sequence;
     finalReply.length = bytes_to_int32(sizeof(xListFontsWithInfoReply)
@@ -1106,7 +1104,7 @@ bail:
 	FreeFPE(c->fpe_list[i]);
     free(c->reply);
     free(c->fpe_list);
-    if (c->savedName) free(c->savedName);
+    free(c->savedName);
     free(c);
     return TRUE;
 }

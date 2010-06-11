@@ -148,7 +148,7 @@ pointer dmxConsoleCreatePrivate(DeviceIntPtr pDevice)
 /** If \a private is non-NULL, free its associated memory. */
 void dmxConsoleDestroyPrivate(pointer private)
 {
-    if (private) free(private);
+    free(private);
 }
 
 static void dmxConsoleDrawFineCursor(myPrivate *priv, XRectangle *rect)
@@ -204,7 +204,8 @@ static void dmxConsoleDrawWindows(pointer private)
     XUnionRectWithRegion(&rect, whole, whole);
     
     for (i = 0; i < dmxNumScreens; i++) {
-        WindowPtr     pRoot       = WindowTable[i];
+        ScreenPtr     pScreen     = screenInfo.screens[i];
+        WindowPtr     pRoot       = pScreen->root;
         WindowPtr     pChild;
 
 #if DMX_WINDOW_DEBUG
@@ -225,12 +226,10 @@ static void dmxConsoleDrawWindows(pointer private)
                        pChild->drawable.height,
                        pChild->visibility,
                        pChild->overrideRedirect,
-                       REGION_NUM_RECTS(&pChild->clipList));
+                       RegionNumRects(&pChild->clipList));
 #endif
-                rect.x      = scalex(priv, pChild->drawable.x
-                                     + dixScreenOrigins[i].x);
-                rect.y      = scaley(priv, pChild->drawable.y
-                                     + dixScreenOrigins[i].y);
+                rect.x      = scalex(priv, pChild->drawable.x + pScreen->x);
+                rect.y      = scaley(priv, pChild->drawable.y + pScreen->y);
                 rect.width  = scalex(priv, pChild->drawable.width);
                 rect.height = scaley(priv, pChild->drawable.height);
                 XDrawRectangle(dpy, priv->pixmap, priv->gc,
@@ -263,15 +262,15 @@ static void dmxConsoleDraw(myPrivate *priv, int updateCursor, int update)
         DMXScreenInfo *dmxScreen = &dmxScreens[i];
 	XFillRectangle(dpy, priv->pixmap,
                        dmxScreen->beDisplay ? priv->gcRev : priv->gcDet,
-                       scalex(priv, dixScreenOrigins[i].x),
-                       scaley(priv, dixScreenOrigins[i].y),
+                       scalex(priv, screenInfo.screens[i]->x),
+                       scaley(priv, screenInfo.screens[i]->y),
                        scalex(priv, screenInfo.screens[i]->width),
                        scaley(priv, screenInfo.screens[i]->height));
     }
     for (i = 0; i < dmxNumScreens; i++) {
         XDrawRectangle(dpy, priv->pixmap, priv->gc,
-                       scalex(priv, dixScreenOrigins[i].x),
-                       scaley(priv, dixScreenOrigins[i].y),
+                       scalex(priv, screenInfo.screens[i]->x),
+                       scaley(priv, screenInfo.screens[i]->y),
                        scalex(priv, screenInfo.screens[i]->width),
                        scaley(priv, screenInfo.screens[i]->height));
     }
@@ -671,11 +670,11 @@ static void dmxConsoleComputeWidthHeight(myPrivate *priv,
                                  * possible by computing the visible
                                  * bounding box. */
     for (i = 0; i < dmxNumScreens; i++) {
-	if (dixScreenOrigins[i].x+screenInfo.screens[i]->width > *width)
-	    *width = dixScreenOrigins[i].x+screenInfo.screens[i]->width;
+	if (screenInfo.screens[i]->x+screenInfo.screens[i]->width > *width)
+	    *width = screenInfo.screens[i]->x+screenInfo.screens[i]->width;
         
-	if (dixScreenOrigins[i].y+screenInfo.screens[i]->height > *height)
-	    *height = dixScreenOrigins[i].y+screenInfo.screens[i]->height;
+	if (screenInfo.screens[i]->y+screenInfo.screens[i]->height > *height)
+	    *height = screenInfo.screens[i]->y+screenInfo.screens[i]->height;
     }
 #endif
 

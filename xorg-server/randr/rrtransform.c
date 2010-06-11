@@ -37,8 +37,7 @@ RRTransformInit (RRTransformPtr transform)
 void
 RRTransformFini (RRTransformPtr transform)
 {
-    if (transform->params)
-	free(transform->params);
+    free(transform->params);
 }
 
 Bool
@@ -82,8 +81,7 @@ RRTransformSetFilter (RRTransformPtr	dst,
     }
     else
 	new_params = NULL;
-    if (dst->params)
-	free(dst->params);
+    free(dst->params);
     dst->filter = filter;
     dst->params = new_params;
     dst->nparams = nparams;

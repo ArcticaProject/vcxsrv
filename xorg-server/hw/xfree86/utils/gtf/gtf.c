@@ -634,7 +634,7 @@ mode *vert_refresh (int h_pixels, int v_lines, float freq,
     m->h_freq = h_freq;
     m->v_freq = freq;
 
-    return (m);
+    return m;
     
 }
 
@@ -686,7 +686,7 @@ options *parse_command_line (int argc, char *argv[])
 
     if (!o->fbmode && !o->xorgmode) o->xorgmode = 1;
     
-    return (o);
+    return o;
     
  bad_option:
 
@@ -713,7 +713,7 @@ options *parse_command_line (int argc, char *argv[])
     fprintf (stderr, "\n");
     
     free (o);
-    return (NULL);
+    return NULL;
 
 }
 

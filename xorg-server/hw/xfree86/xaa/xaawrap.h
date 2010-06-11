@@ -32,7 +32,7 @@
 #define XAA_GC_OP_PROLOGUE_WITH_RETURN(pGC)\
     XAAGCPtr pGCPriv = (XAAGCPtr)dixLookupPrivate(&(pGC)->devPrivates, XAAGetGCKey()); \
     GCFuncs *oldFuncs = pGC->funcs;\
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip)) return; \
+    if(!RegionNumRects(pGC->pCompositeClip)) return; \
     pGC->funcs = pGCPriv->wrapFuncs;\
     pGC->ops = pGCPriv->wrapOps
 

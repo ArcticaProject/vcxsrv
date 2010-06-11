@@ -46,7 +46,7 @@
 
 
 #ifdef DPMSExtension
-static int DPMSKeyIndex;
+static DevPrivateKeyRec DPMSKeyRec;
 static DevPrivateKey DPMSKey;
 static Bool DPMSClose(int i, ScreenPtr pScreen);
 static int DPMSCount = 0;
@@ -62,10 +62,9 @@ xf86DPMSInit(ScreenPtr pScreen, DPMSSetProcPtr set, int flags)
     pointer DPMSOpt;
     MessageType enabled_from;
 
-    DPMSKey = &DPMSKeyIndex;
+    DPMSKey = &DPMSKeyRec;
 
-    if (!dixSetPrivate(&pScreen->devPrivates, DPMSKey,
-		       calloc(sizeof(DPMSRec), 1)))
+    if (!dixRegisterPrivateKey(&DPMSKeyRec, PRIVATE_SCREEN, sizeof (DPMSRec)))
 	return FALSE;
 
     pDPMS = dixLookupPrivate(&pScreen->devPrivates, DPMSKey);
@@ -127,8 +126,6 @@ DPMSClose(int i, ScreenPtr pScreen)
  	xf86Screens[i]->DPMSSet(xf86Screens[i],DPMSModeOn,0);
     }
     
-    free(pDPMS);
-    dixSetPrivate(&pScreen->devPrivates, DPMSKey, NULL);
     if (--DPMSCount == 0)
 	DPMSKey = NULL;
     return pScreen->CloseScreen(i, pScreen);

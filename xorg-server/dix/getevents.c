@@ -33,6 +33,7 @@
 #include <X11/X.h>
 #include <X11/keysym.h>
 #include <X11/Xproto.h>
+#include <math.h>
 
 #include "misc.h"
 #include "resource.h"
@@ -56,6 +57,7 @@
 
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
+#include <pixman.h>
 #include "exglobals.h"
 #include "exevents.h"
 #include "exglobals.h"
@@ -325,8 +327,7 @@ void
 AllocateMotionHistory(DeviceIntPtr pDev)
 {
     int size;
-    if (pDev->valuator->motion)
-        free(pDev->valuator->motion);
+    free(pDev->valuator->motion);
 
     if (pDev->valuator->numMotionEvents < 1)
         return;
@@ -997,6 +998,22 @@ FreeEventList(EventListPtr list, int num_events)
     free(list);
 }
 
+static void
+transformAbsolute(DeviceIntPtr dev, int v[MAX_VALUATORS])
+{
+    struct pixman_f_vector p;
+
+    /* p' = M * p in homogeneous coordinates */
+    p.v[0] = v[0];
+    p.v[1] = v[1];
+    p.v[2] = 1.0;
+
+    pixman_f_transform_point(&dev->transform, &p);
+
+    v[0] = lround(p.v[0]);
+    v[1] = lround(p.v[1]);
+}
+
 /**
  * Generate a series of xEvents (filled into the EventList) representing
  * pointer motion, or button presses.  Xi and XKB-aware.
@@ -1068,6 +1085,7 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
                         scr->height);
         }
 
+        transformAbsolute(pDev, valuators);
         moveAbsolute(pDev, &x, &y, first_valuator, num_valuators, valuators);
     } else {
         if (flags & POINTER_ACCELERATE) {
@@ -1191,8 +1209,8 @@ PostSyntheticMotion(DeviceIntPtr pDev,
        will translate from sprite screen to screen 0 upon reentry
        to the DIX layer. */
     if (!noPanoramiXExtension) {
-        x += panoramiXdataPtr[0].x - panoramiXdataPtr[screen].x;
-        y += panoramiXdataPtr[0].y - panoramiXdataPtr[screen].y;
+        x += screenInfo.screens[0]->x - screenInfo.screens[screen]->x;
+        y += screenInfo.screens[0]->y - screenInfo.screens[screen]->y;
     }
 #endif
 

@@ -97,9 +97,7 @@ static int __glXMakeBitmapFromGlyph(FontPtr font, CharInfoPtr pci)
 				  pci->metrics.characterWidth, 0, 
 				  allocbuf ? allocbuf : buf) );
 
-    if (allocbuf) {
-	free(allocbuf);
-    }
+    free(allocbuf);
     return Success;
 #undef __GL_CHAR_BUF_SIZE
 }

@@ -210,7 +210,7 @@ winDestroyGCNativeGDI (GCPtr pGC)
   winScreenPriv(pGC->pScreen);
 
   if (pGC->freeCompClip)
-	REGION_DESTROY (pGC->pScreen, pGC->pCompositeClip);
+	RegionDestroy(pGC->pCompositeClip);
 
   /* Free the memory DC */
   if (pGCPriv->hdcMem != NULL)

@@ -329,7 +329,7 @@ __glXDRIscreenCreateDrawable(ClientPtr client,
     gcvals[0].val = GXcopy;
     ChangeGC(NullClient, private->gc, GCFunction, gcvals);
     gcvals[1].val = FALSE;
-    ChangeGC(NullClient, private->gc, GCFunction | GCGraphicsExposures, gcvals);
+    ChangeGC(NullClient, private->swapgc, GCFunction | GCGraphicsExposures, gcvals);
 
     private->driDrawable =
 	(*driScreen->swrast->createNewDrawable)(driScreen->driScreen,

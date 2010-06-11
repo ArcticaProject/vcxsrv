@@ -155,11 +155,11 @@ xf86strToUL (char *str)
 		}
 		else
 		{
-			return (tot);
+			return tot;
 		}
 		p++;
 	}
-	return (tot);
+	return tot;
 }
 
 /*
@@ -289,7 +289,7 @@ xf86getNextLine(void)
 
 	} while (!eolFound);
 
-	return (ret);
+	return ret;
 }
 
 /* 
@@ -308,7 +308,7 @@ xf86getToken (xf86ConfigSymTabRec * tab)
 	 * oth * case the next token must be read from the input.
 	 */
 	if (pushToken == EOF_TOKEN)
-		return (EOF_TOKEN);
+		return EOF_TOKEN;
 	else if (pushToken == LOCK_TOKEN)
 	{
 		/*
@@ -350,7 +350,7 @@ again:
 					goto again;
 				}
 				else
-					return (pushToken = EOF_TOKEN);
+					return pushToken = EOF_TOKEN;
 			}
 			configLineNo++;
 			configPos = 0;
@@ -387,7 +387,7 @@ again:
 			 * Use xf86addComment when setting a comment.
 			 */
 			val.str = configRBuf;
-			return (COMMENT);
+			return COMMENT;
 		}
 
 		/* GJA -- handle '-' and ','  * Be careful: "-hsync" is a keyword. */
@@ -436,7 +436,7 @@ again:
 			configRBuf[i] = '\0';
 			val.num = xf86strToUL (configRBuf);
 			val.realnum = atof (configRBuf);
-			return (NUMBER);
+			return NUMBER;
 		}
 
 		/* 
@@ -453,7 +453,7 @@ again:
 			configRBuf[i] = '\0';
 			val.str = malloc (strlen (configRBuf) + 1);
 			strcpy (val.str, configRBuf);	/* private copy ! */
-			return (STRING);
+			return STRING;
 		}
 
 		/* 
@@ -486,9 +486,9 @@ again:
 		pushToken = LOCK_TOKEN;
 
 		if (temp == COMMA || temp == DASH)
-			return (temp);
+			return temp;
 		if (temp == NUMBER || temp == STRING)
-			return (temp);
+			return temp;
 	}
 
 	/* 
@@ -499,12 +499,12 @@ again:
 		i = 0;
 		while (tab[i].token != -1)
 			if (xf86nameCompare (configRBuf, tab[i].name) == 0)
-				return (tab[i].token);
+				return tab[i].token;
 			else
 				i++;
 	}
 
-	return (ERROR_TOKEN);		/* Error catcher */
+	return ERROR_TOKEN;		/* Error catcher */
 }
 
 int
@@ -519,7 +519,7 @@ xf86getSubToken (char **comment)
 				*comment = xf86addComment(*comment, val.str);
 		}
 		else
-			return (token);
+			return token;
 	}
 	/*NOTREACHED*/
 }
@@ -536,7 +536,7 @@ xf86getSubTokenWithTab (char **comment, xf86ConfigSymTabRec *tab)
 				*comment = xf86addComment(*comment, val.str);
 		}
 		else
-			return (token);
+			return token;
 	}
 	/*NOTREACHED*/
 }
@@ -601,7 +601,7 @@ xf86pathIsSafe(const char *path)
  *    %P    projroot
  *    %C    sysconfdir
  *    %D    datadir
- *    %M    major version number
+ *    %M    config file format version number
  *    %%    %
  */
 
@@ -626,17 +626,10 @@ xf86pathIsSafe(const char *path)
 #ifndef XCONFENV
 #define XCONFENV	"XORGCONFIG"
 #endif
-#define XFREE86CFGFILE "XF86Config"
-#ifndef XF86_VERSION_MAJOR
-#ifdef XVERSION
-#if XVERSION > 40000000
-#define XF86_VERSION_MAJOR	(XVERSION / 10000000)
-#else
-#define XF86_VERSION_MAJOR	(XVERSION / 1000)
-#endif
-#else
-#define XF86_VERSION_MAJOR	4
-#endif
+/* xorg.conf is based on XF86Config version 4.   If we ever break
+   compatibility of the xorg.conf syntax, we'll bump this version number. */
+#ifndef CONFIG_FILE_VERSION
+#define CONFIG_FILE_VERSION	4
 #endif
 
 #define BAIL_OUT		do {									\
@@ -771,11 +764,8 @@ DoSubstitution(const char *template, const char *cmdline, const char *projroot,
 				break;
 			case 'M':
 				if (!majorvers[0]) {
-					if (XF86_VERSION_MAJOR < 0 || XF86_VERSION_MAJOR > 99) {
-						fprintf(stderr, "XF86_VERSION_MAJOR is out of range\n");
-						BAIL_OUT;
-					} else
-						sprintf(majorvers, "%d", XF86_VERSION_MAJOR);
+					snprintf(majorvers, sizeof(majorvers),
+						 "%d", CONFIG_FILE_VERSION);
 				}
 				APPEND_STR(majorvers);
 				break;
@@ -933,8 +923,7 @@ OpenConfigDir(const char *path, const char *cmdline, const char *projroot,
 		if (!found) {
 			free(dirpath);
 			dirpath = NULL;
-			if (list)
-				free(list);
+			free(list);
 		}
 	}
 
@@ -997,11 +986,8 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 	if (!projroot || !projroot[0])
 		projroot = PROJECTROOT;
 
-	/* Search for a config file or a fallback */
+	/* Search for a config file */
 	configPath = OpenConfigFile(path, cmdline, projroot, XCONFIGFILE);
-	if (!configPath)
-		configPath = OpenConfigFile(path, cmdline, projroot,
-					    XFREE86CFGFILE);
 	return configPath;
 }
 
@@ -1101,8 +1087,7 @@ xf86validationError (char *format,...)
 void
 xf86setSection (char *section)
 {
-	if (configSection)
-		free(configSection);
+	free(configSection);
 	configSection = malloc(strlen (section) + 1);
 	strcpy (configSection, section);
 }
@@ -1127,7 +1112,7 @@ StringToToken (char *str, xf86ConfigSymTabRec * tab)
 		if (!xf86nameCompare (tab[i].name, str))
 			return tab[i].token;
 	}
-	return (ERROR_TOKEN);
+	return ERROR_TOKEN;
 }
 
 
@@ -1142,9 +1127,9 @@ xf86nameCompare (const char *s1, const char *s2)
 
 	if (!s1 || *s1 == 0) {
 		if (!s2 || *s2 == 0)
-			return (0);
+			return 0;
 		else
-			return (1);
+			return 1;
 		}
 
 	while (*s1 == '_' || *s1 == ' ' || *s1 == '\t')
@@ -1156,7 +1141,7 @@ xf86nameCompare (const char *s1, const char *s2)
 	while (c1 == c2)
 	{
 		if (c1 == '\0')
-			return (0);
+			return 0;
 		s1++;
 		s2++;
 		while (*s1 == '_' || *s1 == ' ' || *s1 == '\t')
@@ -1166,7 +1151,7 @@ xf86nameCompare (const char *s1, const char *s2)
 		c1 = (isupper (*s1) ? tolower (*s1) : *s1);
 		c2 = (isupper (*s2) ? tolower (*s2) : *s2);
 	}
-	return (c1 - c2);
+	return c1 - c2;
 }
 
 char *
@@ -1176,7 +1161,7 @@ xf86addComment(char *cur, char *add)
 	int len, curlen, iscomment, hasnewline = 0, endnewline;
 
 	if (add == NULL || add[0] == '\0')
-		return (cur);
+		return cur;
 
 	if (cur) {
 		curlen = strlen(cur);
@@ -1201,7 +1186,7 @@ xf86addComment(char *cur, char *add)
 	len +=  1 + iscomment + (!hasnewline) + (!endnewline) + eol_seen;
 
 	if ((str = realloc(cur, len + curlen)) == NULL)
-		return (cur);
+		return cur;
 
 	cur = str;
 
@@ -1213,7 +1198,7 @@ xf86addComment(char *cur, char *add)
 	if (!endnewline)
 		strcat(cur, "\n");
 
-	return (cur);
+	return cur;
 }
 
 Bool

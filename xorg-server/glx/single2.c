@@ -272,10 +272,8 @@ char *__glXcombine_strings(const char *cext_string, const char *sext_string)
 	s2 = sext_string;
    }
    if (!combo_string || !s1) {
-	if (combo_string)
-	    free(combo_string);
-	if (s1)
-	    free(s1);
+	free(combo_string);
+	free(s1);
 	return NULL;
    }
    combo_string[0] = '\0';

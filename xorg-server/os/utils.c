@@ -548,12 +548,12 @@ void UseMsg(void)
 static int 
 VerifyDisplayName(const char *d)
 {
-    if ( d == (char *)0 ) return( 0 );  /*  null  */
-    if ( *d == '\0' ) return( 0 );  /*  empty  */
-    if ( *d == '-' ) return( 0 );  /*  could be confused for an option  */
-    if ( *d == '.' ) return( 0 );  /*  must not equal "." or ".."  */
-    if ( strchr(d, '/') != (char *)0 ) return( 0 );  /*  very important!!!  */
-    return( 1 );
+    if ( d == (char *)0 ) return 0;  /*  null  */
+    if ( *d == '\0' ) return 0;  /*  empty  */
+    if ( *d == '-' ) return 0;  /*  could be confused for an option  */
+    if ( *d == '.' ) return 0;  /*  must not equal "." or ".."  */
+    if ( strchr(d, '/') != (char *)0 ) return 0;  /*  very important!!!  */
+    return 1;
 }
 
 /*
@@ -979,7 +979,7 @@ set_font_authorizations(char **authorizations, int *authlen, pointer client)
 
 	gethostname(hname, 1024);
 #if defined(IPv6) && defined(AF_INET6)
-	bzero(&hints, sizeof(hints));
+	memset(&hints, 0, sizeof(hints));
 	hints.ai_flags = AI_CANONNAME;
 	if (getaddrinfo(hname, NULL, &hints, &ai) == 0) {
 	    hnameptr = ai->ai_canonname;
@@ -1178,7 +1178,7 @@ SmartScheduleInit (void)
     if (SmartScheduleDisable)
 	return TRUE;
     
-    bzero ((char *) &act, sizeof(struct sigaction));
+    memset((char *) &act, 0, sizeof(struct sigaction));
 
     /* Set up the timer signal function */
     act.sa_handler = SmartScheduleTimer;
@@ -1284,7 +1284,7 @@ System(char *command)
     int status;
 
     if (!command)
-	return(1);
+	return 1;
 
 #ifdef SIGCHLD
     csig = signal(SIGCHLD, SIG_DFL);

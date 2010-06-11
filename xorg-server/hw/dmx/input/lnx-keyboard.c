@@ -368,7 +368,7 @@ pointer kbdLinuxCreatePrivate(DeviceIntPtr pKeyboard)
 /** Destroy a private structure. */
 void kbdLinuxDestroyPrivate(pointer priv)
 {
-    if (priv) free(priv);
+    free(priv);
 }
 
 /** Ring the bell.

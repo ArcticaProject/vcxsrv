@@ -105,7 +105,7 @@ if( (ptr=calloc(1,sizeof(typerec))) == NULL ) { return; }
 if ((ptr->f=func) == NULL)\
 {\
 	CLEANUP (ptr);\
-	return (NULL);\
+	return NULL;\
 }
 
 #define HANDLE_LIST(field,func,type)\
@@ -114,7 +114,7 @@ type p = func ();\
 if (p == NULL)\
 {\
 	CLEANUP (ptr);\
-	return (NULL);\
+	return NULL;\
 }\
 else\
 {\

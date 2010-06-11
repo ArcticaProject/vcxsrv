@@ -47,14 +47,10 @@
 
 /* Globals that video drivers may access */
 
-/* Index into pScreen.devPrivates */
-static int xf86CreateRootWindowKeyIndex;
-DevPrivateKey xf86CreateRootWindowKey = &xf86CreateRootWindowKeyIndex;
-/* Index of ScrnInfo in pScreen.devPrivates */
-static int xf86ScreenKeyIndex;
-DevPrivateKey xf86ScreenKey = &xf86ScreenKeyIndex;
-static int xf86PixmapKeyIndex;
-DevPrivateKey xf86PixmapKey = &xf86PixmapKeyIndex;
+DevPrivateKeyRec xf86CreateRootWindowKeyRec;
+DevPrivateKeyRec xf86ScreenKeyRec;
+DevPrivateKeyRec xf86PixmapKeyRec;
+
 ScrnInfoPtr *xf86Screens = NULL;	/* List of ScrnInfos */
 const unsigned char byte_reversed[256] =
 {

@@ -75,7 +75,7 @@ Bool dmxBECreateColormap(ColormapPtr pColormap)
                                          visual,
                                          (pVisual->class & DynamicClass ?
                                           AllocAll : AllocNone));
-       return (pCmapPriv->cmap != 0);
+       return pCmapPriv->cmap != 0;
     }
     else {
        dmxLog(dmxWarning, "dmxBECreateColormap: No visual found\n");

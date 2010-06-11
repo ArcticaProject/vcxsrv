@@ -55,9 +55,16 @@
 extern _X_EXPORT int xf86DoConfigure;
 extern _X_EXPORT int xf86DoShowOptions;
 extern _X_EXPORT Bool xf86DoConfigurePass1;
-extern _X_EXPORT DevPrivateKey xf86ScreenKey;
-extern _X_EXPORT DevPrivateKey xf86CreateRootWindowKey;
-extern _X_EXPORT DevPrivateKey xf86PixmapKey;
+
+extern _X_EXPORT DevPrivateKeyRec xf86ScreenKeyRec;
+#define xf86ScreenKey (&xf86ScreenKeyRec)
+
+extern _X_EXPORT DevPrivateKeyRec xf86CreateRootWindowKeyRec;
+#define xf86CreateRootWindowKey (&xf86CreateRootWindowKeyRec)
+
+extern _X_EXPORT DevPrivateKeyRec xf86PixmapKeyRec;
+#define xf86PixmapKey (&xf86PixmapKeyRec)
+
 extern _X_EXPORT ScrnInfoPtr *xf86Screens;	/* List of pointers to ScrnInfoRecs */
 extern _X_EXPORT const unsigned char byte_reversed[256];
 extern _X_EXPORT Bool fbSlotClaimed;

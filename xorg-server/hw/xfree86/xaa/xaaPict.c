@@ -215,7 +215,7 @@ XAADoComposite (
     BoxPtr pbox;
     int nbox, w, h;
 
-    if(!REGION_NUM_RECTS(pDst->pCompositeClip))
+    if(!RegionNumRects(pDst->pCompositeClip))
         return TRUE;
 
     if(!infoRec->pScrn->vtSema || !DRAWABLE_IS_ON_CARD(pDst->pDrawable))
@@ -273,8 +273,8 @@ XAADoComposite (
                                    width, height))
 		      return TRUE;
 		      
-	  	nbox = REGION_NUM_RECTS(&region);
-	  	pbox = REGION_RECTS(&region);   
+		nbox = RegionNumRects(&region);
+		pbox = RegionRects(&region);
 		
 	        if(!nbox)
 		    return TRUE;	
@@ -298,7 +298,7 @@ XAADoComposite (
 	   	}
 				  
 		/* WriteBitmap sets the Sync flag */		  
-	        REGION_UNINIT(pScreen, &region);
+	        RegionUninit(&region);
 		return TRUE;
 	  }
 
@@ -340,11 +340,11 @@ XAADoComposite (
                                    width, height))
 		return TRUE;
 
-	  nbox = REGION_NUM_RECTS(&region);
-	  pbox = REGION_RECTS(&region);   
+	  nbox = RegionNumRects(&region);
+	  pbox = RegionRects(&region);
 	     
 	  if(!nbox) {
-                REGION_UNINIT(pScreen, &region);
+                RegionUninit(&region);
 		return TRUE;
 	  }
 
@@ -355,7 +355,7 @@ XAADoComposite (
 			((PixmapPtr)(pMask->pDrawable))->devKind, 
 			w, h, flags))
 	  {
-                REGION_UNINIT(pScreen, &region);
+                RegionUninit(&region);
 		return FALSE;
 	  }
 
@@ -371,7 +371,7 @@ XAADoComposite (
 	   }
 
 	   SET_SYNC_FLAG(infoRec);
-	   REGION_UNINIT(pScreen, &region);
+	   RegionUninit(&region);
 	   return TRUE;
 	}
     } else {
@@ -409,11 +409,11 @@ XAADoComposite (
                                    width, height))
 		return TRUE;
 
-	nbox = REGION_NUM_RECTS(&region);
-	pbox = REGION_RECTS(&region);   
+	nbox = RegionNumRects(&region);
+	pbox = RegionRects(&region);
 	     
         if(!nbox) {
-             REGION_UNINIT(pScreen, &region);
+             RegionUninit(&region);
              return TRUE;
         }
 
@@ -423,7 +423,7 @@ XAADoComposite (
 			((PixmapPtr)(pSrc->pDrawable))->devKind, 
 			w, h, flags))
         {
-              REGION_UNINIT(pScreen, &region);
+              RegionUninit(&region);
               return FALSE;
         }
 
@@ -440,7 +440,7 @@ XAADoComposite (
 	 }
 
 	SET_SYNC_FLAG(infoRec);
-	REGION_UNINIT(pScreen, &region);
+	RegionUninit(&region);
 	return TRUE;
     }
 
@@ -476,16 +476,16 @@ XAACompositeSrcCopy (PicturePtr pSrc,
 				   width, height))
 	return;
 
-    nbox = REGION_NUM_RECTS(&region);
-    pbox = REGION_RECTS(&region);   
+    nbox = RegionNumRects(&region);
+    pbox = RegionRects(&region);
 
     if(!nbox) {
-	REGION_UNINIT(pScreen, &region);
+	RegionUninit(&region);
 	return;
     }
     pptSrc = malloc(sizeof(DDXPointRec) * nbox);
     if (!pptSrc) {
-	REGION_UNINIT(pScreen, &region);
+	RegionUninit(&region);
 	return;
     }
     xoff = xSrc - xDst;
@@ -502,7 +502,7 @@ XAACompositeSrcCopy (PicturePtr pSrc,
 		pptSrc);
 
     free(pptSrc);
-    REGION_UNINIT(pScreen, &region);
+    RegionUninit(&region);
     return;
 }
 
@@ -588,7 +588,7 @@ XAADoGlyphs (CARD8         op,
     ScreenPtr	pScreen = pDst->pDrawable->pScreen;
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_SCREEN(pScreen);
 
-    if(!REGION_NUM_RECTS(pDst->pCompositeClip))
+    if(!RegionNumRects(pDst->pCompositeClip))
 	return TRUE;
 
     if(!infoRec->pScrn->vtSema || 

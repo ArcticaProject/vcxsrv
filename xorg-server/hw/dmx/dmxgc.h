@@ -63,9 +63,6 @@ extern void dmxCopyClip(GCPtr pGCDst, GCPtr pGCSrc);
 extern void dmxBECreateGC(ScreenPtr pScreen, GCPtr pGC);
 extern Bool dmxBEFreeGC(GCPtr pGC);
 
-/** Private index.  \see dmxgc.c \see dmxscrinit.c */
-extern DevPrivateKey dmxGCPrivateKey;
-
 /** Get private. */
 #define DMX_GET_GC_PRIV(_pGC)						\
     (dmxGCPrivPtr)dixLookupPrivate(&(_pGC)->devPrivates, dmxGCPrivateKey)

@@ -82,7 +82,7 @@ XkbSymInterpretRec *prev_interpret;
     }
     compat->size_si= nSI;
     compat->num_si= 0;
-    bzero((char *)&compat->groups[0],XkbNumKbdGroups*sizeof(XkbModsRec));
+    memset((char *)&compat->groups[0], 0, XkbNumKbdGroups*sizeof(XkbModsRec));
     xkb->compat= compat;
     return Success;
 }
@@ -99,7 +99,7 @@ register XkbCompatMapPtr compat;
     if (freeMap)
 	which= XkbAllCompatMask;
     if (which&XkbGroupCompatMask)
-	bzero((char *)&compat->groups[0],XkbNumKbdGroups*sizeof(XkbModsRec));
+	memset((char *)&compat->groups[0], 0, XkbNumKbdGroups*sizeof(XkbModsRec));
     if (which&XkbSymInterpMask) {
 	if ((compat->sym_interpret)&&(compat->size_si>0))
 	    free(compat->sym_interpret);

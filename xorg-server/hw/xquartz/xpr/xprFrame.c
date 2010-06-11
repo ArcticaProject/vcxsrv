@@ -163,8 +163,8 @@ xprCreateFrame(RootlessWindowPtr pFrame, ScreenPtr pScreen,
 
     if (pShape != NULL)
     {
-        wc.shape_nrects = REGION_NUM_RECTS(pShape);
-        wc.shape_rects = REGION_RECTS(pShape);
+        wc.shape_nrects = RegionNumRects(pShape);
+        wc.shape_rects = RegionRects(pShape);
         wc.shape_tx = wc.shape_ty = 0;
         mask |= XP_SHAPE;
     }
@@ -306,8 +306,8 @@ xprReshapeFrame(RootlessFrameID wid, RegionPtr pShape)
     
     if (pShape != NULL)
     {
-        wc.shape_nrects = REGION_NUM_RECTS(pShape);
-        wc.shape_rects = REGION_RECTS(pShape);
+        wc.shape_nrects = RegionNumRects(pShape);
+        wc.shape_rects = RegionRects(pShape);
     }
     else
     {
@@ -576,7 +576,7 @@ xprHideWindows(Bool hide)
     
     for (screen = 0; screen < screenInfo.numScreens; screen++) {
         RootlessFrameID prevWid = NULL;
-        pRoot = WindowTable[screenInfo.screens[screen]->myNum];
+        pRoot = screenInfo.screens[screen]->root;
 
         for (pWin = pRoot->firstChild; pWin; pWin = pWin->nextSib) {
             RootlessWindowRec *winRec = WINREC(pWin);

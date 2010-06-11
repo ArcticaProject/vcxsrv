@@ -406,7 +406,7 @@ XAAPutImage(
     Bool depthBug = FALSE;
     if(!w || !h) return;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     depthBug = XAA_DEPTH_BUG(pGC);
@@ -431,7 +431,7 @@ XAAPutImage(
 	     !(infoRec->WriteBitmapFlags & NO_PLANEMASK) &&
 	     !(infoRec->WriteBitmapFlags & TRANSPARENCY_ONLY))){
 
-	int MaxBoxes = REGION_NUM_RECTS(pGC->pCompositeClip);
+	int MaxBoxes = RegionNumRects(pGC->pCompositeClip);
 	BoxPtr pbox, pClipBoxes;
 	int nboxes, srcx, srcy, srcwidth;
 	xRectangle TheRect;

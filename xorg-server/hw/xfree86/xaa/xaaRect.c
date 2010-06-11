@@ -46,8 +46,8 @@ XAAPolyRectangleThinSolid(
     int         clipYMax;       /* lower right corner of clip rect */
     int         width, height;  /* width and height of rect */
 
-    nClipRects = REGION_NUM_RECTS(pGC->pCompositeClip);
-    pClipRects = REGION_RECTS(pGC->pCompositeClip);
+    nClipRects = RegionNumRects(pGC->pCompositeClip);
+    pClipRects = RegionRects(pGC->pCompositeClip);
 
     if(!nClipRects) return;
 

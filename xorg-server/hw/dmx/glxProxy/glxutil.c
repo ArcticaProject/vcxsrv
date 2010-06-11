@@ -105,7 +105,5 @@ __glXRealloc(void *addr, size_t newSize)
 void
 __glXFree(void *addr)
 {
-    if (addr) {
-	free(addr);
-    }
+    free(addr);
 }

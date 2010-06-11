@@ -36,8 +36,8 @@
 #error "You should be compiling fbcmap_mi.c instead of fbcmap.c!"
 #endif
 
-static int cmapScrPrivateKeyIndex;
-static DevPrivateKey cmapScrPrivateKey = &cmapScrPrivateKeyIndex;
+static DevPrivateKeyRec cmapScrPrivateKeyRec;
+#define cmapScrPrivateKey (&cmapScrPrivateKeyRec)
 
 #define GetInstalledColormap(s) ((ColormapPtr) dixLookupPrivate(&(s)->devPrivates, cmapScrPrivateKey))
 #define SetInstalledColormap(s,c) (dixSetPrivate(&(s)->devPrivates, cmapScrPrivateKey, c))
@@ -48,7 +48,7 @@ fbListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
     /* By the time we are processing requests, we can guarantee that there
      * is always a colormap installed */
     *pmaps = GetInstalledColormap(pScreen)->mid;
-    return (1);
+    return 1;
 }
 
 

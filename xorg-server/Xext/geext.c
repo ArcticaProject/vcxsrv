@@ -36,11 +36,9 @@
 
 #define rClient(obj) (clients[CLIENT_ID((obj)->resource)])
 
-static int GEClientPrivateKeyIndex;
-DevPrivateKey GEClientPrivateKey = &GEClientPrivateKeyIndex;
+DevPrivateKeyRec GEClientPrivateKeyRec;
 
 int RT_GECLIENT  = 0;
-
 
 GEExtension GEExtensions[MAXEXTENSIONS];
 
@@ -209,7 +207,7 @@ GEExtensionInit(void)
 {
     ExtensionEntry *extEntry;
 
-    if (!dixRequestPrivate(GEClientPrivateKey, sizeof(GEClientInfoRec)))
+    if (!dixRegisterPrivateKey(&GEClientPrivateKeyRec, PRIVATE_CLIENT, sizeof(GEClientInfoRec)))
         FatalError("GEExtensionInit: GE private request failed.\n");
 
     if(!AddCallback(&ClientStateCallback, GEClientCallback, 0))

@@ -299,7 +299,8 @@ typedef struct _rrScrPriv {
 #endif
 } rrScrPrivRec, *rrScrPrivPtr;
 
-extern _X_EXPORT DevPrivateKey rrPrivKey;
+extern _X_EXPORT DevPrivateKeyRec rrPrivKeyRec;
+#define rrPrivKey (&rrPrivKeyRec)
 
 #define rrGetScrPriv(pScr)  ((rrScrPrivPtr)dixLookupPrivate(&(pScr)->devPrivates, rrPrivKey))
 #define rrScrPriv(pScr)	rrScrPrivPtr    pScrPriv = rrGetScrPriv(pScr)
@@ -335,7 +336,8 @@ typedef struct _RRClient {
 } RRClientRec, *RRClientPtr;
 
 extern _X_EXPORT RESTYPE RRClientType, RREventType; /* resource types for event masks */
-extern _X_EXPORT DevPrivateKey RRClientPrivateKey;
+extern _X_EXPORT DevPrivateKeyRec RRClientPrivateKeyRec;
+#define RRClientPrivateKey (&RRClientPrivateKeyRec)
 extern _X_EXPORT RESTYPE RRCrtcType, RRModeType, RROutputType;
 
 #define VERIFY_RR_OUTPUT(id, ptr, a)\

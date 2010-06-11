@@ -37,7 +37,8 @@
 #include "extnsionst.h"
 #include <X11/extensions/geproto.h>
 
-extern _X_EXPORT DevPrivateKey GEClientPrivateKey;
+extern _X_EXPORT DevPrivateKeyRec GEClientPrivateKeyRec;
+#define GEClientPrivateKey (&GEClientPrivateKeyRec)
 
 typedef struct _GEClientInfo {
     CARD32  major_version;

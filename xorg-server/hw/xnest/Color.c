@@ -34,8 +34,8 @@ is" without express or implied warranty.
 #include "XNWindow.h"
 #include "Args.h"
 
-static int cmapScrPrivateKeyIndex;
-static DevPrivateKey cmapScrPrivateKey = &cmapScrPrivateKeyIndex;
+static DevPrivateKeyRec cmapScrPrivateKeyRec;
+#define cmapScrPrivateKey (&cmapScrPrivateKeyRec)
 
 #define GetInstalledColormap(s) ((ColormapPtr) dixLookupPrivate(&(s)->devPrivates, cmapScrPrivateKey))
 #define SetInstalledColormap(s,c) (dixSetPrivate(&(s)->devPrivates, cmapScrPrivateKey, c))
@@ -214,8 +214,7 @@ xnestSetInstalledColormapWindows(ScreenPtr pScreen)
   free(icws.cmapIDs);
   
   if (!xnestSameInstalledColormapWindows(icws.windows, icws.numWindows)) {
-    if (xnestOldInstalledColormapWindows)
-      free(xnestOldInstalledColormapWindows);
+    free(xnestOldInstalledColormapWindows);
 
 #ifdef _XSERVER64
     {
@@ -264,14 +263,13 @@ xnestSetInstalledColormapWindows(ScreenPtr pScreen)
 #endif /* DUMB_WINDOW_MANAGERS */
   }
   else
-    if (icws.windows) free(icws.windows);
+    free(icws.windows);
 }
 
 void
 xnestSetScreenSaverColormapWindow(ScreenPtr pScreen)
 {
-  if (xnestOldInstalledColormapWindows)
-    free(xnestOldInstalledColormapWindows);
+  free(xnestOldInstalledColormapWindows);
   
 #ifdef _XSERVER64
   {
@@ -468,6 +466,9 @@ xnestCreateDefaultColormap(ScreenPtr pScreen)
   ColormapPtr pCmap;
   unsigned short zero = 0, ones = 0xFFFF;  
   Pixel wp, bp;
+
+  if (!dixRegisterPrivateKey(&cmapScrPrivateKeyRec, PRIVATE_SCREEN, 0))
+      return FALSE;
 
   for (pVisual = pScreen->visuals;
        pVisual->vid != pScreen->rootVisual;

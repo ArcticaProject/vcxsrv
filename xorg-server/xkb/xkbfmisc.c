@@ -437,5 +437,5 @@ XkbNameMatchesPattern(char *name,char *ptrn)
 	ptrn++;
     }
     /* if we get here, the pattern is exhausted (-:just like me:-) */
-    return (name[0]=='\0');
+    return name[0]=='\0';
 }

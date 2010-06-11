@@ -62,10 +62,10 @@ static miPointerSpriteFuncRec VGAarbiterSpriteFuncs = {
     VGAarbiterDeviceCursorInitialize, VGAarbiterDeviceCursorCleanup
 };
 
-static int VGAarbiterKeyIndex;
-static DevPrivateKey VGAarbiterScreenKey = &VGAarbiterKeyIndex;
-static int VGAarbiterGCIndex;
-static DevPrivateKey VGAarbiterGCKey = &VGAarbiterGCIndex;
+static DevPrivateKeyRec VGAarbiterScreenKeyRec;
+#define VGAarbiterScreenKey (&VGAarbiterScreenKeyRec)
+static DevPrivateKeyRec VGAarbiterGCKeyRec;
+#define VGAarbiterGCKey (&VGAarbiterGCKeyRec)
 
 static int vga_no_arb = 0;
 void
@@ -175,8 +175,11 @@ xf86VGAarbiterWrapFunctions(void)
         pScrn = xf86Screens[pScreen->myNum];
         PointPriv = dixLookupPrivate(&pScreen->devPrivates, miPointerScreenKey);
 
-        if (!dixRequestPrivate(VGAarbiterGCKey, sizeof(VGAarbiterGCRec)))
+        if (!dixRegisterPrivateKey(&VGAarbiterGCKeyRec, PRIVATE_GC, sizeof(VGAarbiterGCRec)))
             return FALSE;
+
+	if (!dixRegisterPrivateKey(&VGAarbiterScreenKeyRec, PRIVATE_SCREEN, 0))
+	    return FALSE;
 
         if (!(pScreenPriv = malloc(sizeof(VGAarbiterScreenRec))))
             return FALSE;

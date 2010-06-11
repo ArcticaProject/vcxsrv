@@ -730,7 +730,7 @@ winNameCompare (const char *s1, const char *s2)
       c1 = (isupper (*s1) ? tolower (*s1) : *s1);
       c2 = (isupper (*s2) ? tolower (*s2) : *s2);
     }
-  return (c1 - c2);
+  return c1 - c2;
 }
 
 
@@ -765,11 +765,11 @@ winFindOptionValue (XF86OptionPtr list, const char *name)
   if (list)
     {
       if (list->opt_val)
-	return (list->opt_val);
+	return list->opt_val;
       else
 	return "";
     }
-  return (NULL);
+  return NULL;
 }
 
 

@@ -418,23 +418,6 @@ extern _X_EXPORT void miPushPixels(
     int /*yOrg*/
 );
 
-/* miregion.c */
-
-/* see also region.h */
-
-extern _X_EXPORT Bool miRectAlloc(
-    RegionPtr /*pRgn*/,
-    int /*n*/
-);
-
-#ifdef DEBUG
-extern _X_EXPORT Bool miValidRegion(
-    RegionPtr /*prgn*/
-);
-#endif
-
-extern _X_EXPORT Bool miRegionBroken(RegionPtr pReg);
-
 /* miscrinit.c */
 
 extern _X_EXPORT Bool miModifyPixmapHeader(
@@ -480,7 +463,6 @@ extern _X_EXPORT DevPrivateKey miAllocateGCPrivateIndex(
 /* mivaltree.c */
 
 extern _X_EXPORT int miShapedWindowIn(
-    ScreenPtr /*pScreen*/,
     RegionPtr /*universe*/,
     RegionPtr /*bounding*/,
     BoxPtr /*rect*/,
@@ -567,7 +549,8 @@ extern _X_EXPORT WindowPtr miGetLayerWindow(
 );
 
 extern _X_EXPORT void miSetShape(
-    WindowPtr /*pWin*/
+    WindowPtr /*pWin*/,
+    int /*kind*/
 );
 
 extern _X_EXPORT void miChangeBorderWidth(

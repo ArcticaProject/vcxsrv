@@ -124,7 +124,7 @@ Bool
 compCreateOverlayWindow (ScreenPtr pScreen)
 {
     CompScreenPtr   cs = GetCompScreen(pScreen);
-    WindowPtr	    pRoot = WindowTable[pScreen->myNum];
+    WindowPtr	    pRoot = pScreen->root;
     WindowPtr	    pWin;
     XID		    attrs[] = { None, TRUE }; /* backPixmap, overrideRedirect */
     int		    result;

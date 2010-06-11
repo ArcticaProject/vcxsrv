@@ -50,7 +50,7 @@ miDestroyGC(GCPtr pGC)
     if (pGC->pRotatedPixmap)
 	(*pGC->pScreen->DestroyPixmap) (pGC->pRotatedPixmap);
     if (pGC->freeCompClip)
-	REGION_DESTROY(pGC->pScreen, pGC->pCompositeClip);
+	RegionDestroy(pGC->pCompositeClip);
 }
 
 void
@@ -68,7 +68,7 @@ miDestroyClip(GCPtr pGC)
 	 * we know we'll never have a list of rectangles, since ChangeClip
 	 * immediately turns them into a region
 	 */
-	REGION_DESTROY(pGC->pScreen, pGC->clientClip);
+	RegionDestroy(pGC->clientClip);
     }
     pGC->clientClip = NULL;
     pGC->clientClipType = CT_NONE;
@@ -81,7 +81,7 @@ miChangeClip( GCPtr pGC, int type, pointer pvalue, int nrects)
     if (type == CT_PIXMAP)
     {
 	/* convert the pixmap to a region */
-	pGC->clientClip = (pointer) BITMAP_TO_REGION(pGC->pScreen,
+	pGC->clientClip = (pointer) BitmapToRegion(pGC->pScreen,
 							(PixmapPtr) pvalue);
 	(*pGC->pScreen->DestroyPixmap) (pvalue);
     }
@@ -92,7 +92,7 @@ miChangeClip( GCPtr pGC, int type, pointer pvalue, int nrects)
     }
     else if (type != CT_NONE)
     {
-	pGC->clientClip = (pointer) RECTS_TO_REGION(pGC->pScreen, nrects,
+	pGC->clientClip = (pointer) RegionFromRects(nrects,
 						      (xRectangle *) pvalue,
 								    type);
 	free(pvalue);
@@ -116,9 +116,8 @@ miCopyClip(GCPtr pgcDst, GCPtr pgcSrc)
 				   pgcSrc->clientClip, 0);
 	break;
       case CT_REGION:
-	prgnNew = REGION_CREATE(pgcSrc->pScreen, NULL, 1);
-	REGION_COPY(pgcDst->pScreen, prgnNew,
-					(RegionPtr) (pgcSrc->clientClip));
+	prgnNew = RegionCreate(NULL, 1);
+	RegionCopy(prgnNew, (RegionPtr) (pgcSrc->clientClip));
 	(*pgcDst->funcs->ChangeClip) (pgcDst, CT_REGION, (pointer) prgnNew, 0);
 	break;
     }
@@ -134,11 +133,6 @@ miCopyGC(GCPtr pGCSrc, unsigned long changes, GCPtr pGCDst)
 void
 miComputeCompositeClip( GCPtr pGC, DrawablePtr pDrawable)
 {
-    ScreenPtr       pScreen;
-
-    /* This prevents warnings about pScreen not being used. */
-    pGC->pScreen = pScreen = pGC->pScreen;
-
     if (pDrawable->type == DRAWABLE_WINDOW)
     {
 	WindowPtr       pWin = (WindowPtr) pDrawable;
@@ -167,7 +161,7 @@ miComputeCompositeClip( GCPtr pGC, DrawablePtr pDrawable)
 	if (pGC->clientClipType == CT_NONE)
 	{
 	    if (freeCompClip)
-		REGION_DESTROY(pScreen, pGC->pCompositeClip);
+		RegionDestroy(pGC->pCompositeClip);
 	    pGC->pCompositeClip = pregWin;
 	    pGC->freeCompClip = freeTmpClip;
 	}
@@ -182,30 +176,30 @@ miComputeCompositeClip( GCPtr pGC, DrawablePtr pDrawable)
 	     * clip. if neither is real, create a new region.
 	     */
 
-	    REGION_TRANSLATE(pScreen, pGC->clientClip,
+	    RegionTranslate(pGC->clientClip,
 					 pDrawable->x + pGC->clipOrg.x,
 					 pDrawable->y + pGC->clipOrg.y);
 
 	    if (freeCompClip)
 	    {
-		REGION_INTERSECT(pGC->pScreen, pGC->pCompositeClip,
+		RegionIntersect(pGC->pCompositeClip,
 					    pregWin, pGC->clientClip);
 		if (freeTmpClip)
-		    REGION_DESTROY(pScreen, pregWin);
+		    RegionDestroy(pregWin);
 	    }
 	    else if (freeTmpClip)
 	    {
-		REGION_INTERSECT(pScreen, pregWin, pregWin, pGC->clientClip);
+		RegionIntersect(pregWin, pregWin, pGC->clientClip);
 		pGC->pCompositeClip = pregWin;
 	    }
 	    else
 	    {
-		pGC->pCompositeClip = REGION_CREATE(pScreen, NullBox, 0);
-		REGION_INTERSECT(pScreen, pGC->pCompositeClip,
+		pGC->pCompositeClip = RegionCreate(NullBox, 0);
+		RegionIntersect(pGC->pCompositeClip,
 				       pregWin, pGC->clientClip);
 	    }
 	    pGC->freeCompClip = TRUE;
-	    REGION_TRANSLATE(pScreen, pGC->clientClip,
+	    RegionTranslate(pGC->clientClip,
 					 -(pDrawable->x + pGC->clipOrg.x),
 					 -(pDrawable->y + pGC->clipOrg.y));
 	}
@@ -223,31 +217,31 @@ miComputeCompositeClip( GCPtr pGC, DrawablePtr pDrawable)
 
 	if (pGC->freeCompClip)
 	{
-	    REGION_RESET(pScreen, pGC->pCompositeClip, &pixbounds);
+	    RegionReset(pGC->pCompositeClip, &pixbounds);
 	}
 	else
 	{
 	    pGC->freeCompClip = TRUE;
-	    pGC->pCompositeClip = REGION_CREATE(pScreen, &pixbounds, 1);
+	    pGC->pCompositeClip = RegionCreate(&pixbounds, 1);
 	}
 
 	if (pGC->clientClipType == CT_REGION)
 	{
 	    if(pDrawable->x || pDrawable->y) {
-	        REGION_TRANSLATE(pScreen, pGC->clientClip,
+	        RegionTranslate(pGC->clientClip,
 					  pDrawable->x + pGC->clipOrg.x, 
 					  pDrawable->y + pGC->clipOrg.y);
-	        REGION_INTERSECT(pScreen, pGC->pCompositeClip,
+	        RegionIntersect(pGC->pCompositeClip,
 				pGC->pCompositeClip, pGC->clientClip);
-	        REGION_TRANSLATE(pScreen, pGC->clientClip,
+	        RegionTranslate(pGC->clientClip,
 					  -(pDrawable->x + pGC->clipOrg.x), 
 					  -(pDrawable->y + pGC->clipOrg.y));
 	    } else {
-	        REGION_TRANSLATE(pScreen, pGC->pCompositeClip,
+	        RegionTranslate(pGC->pCompositeClip,
 					 -pGC->clipOrg.x, -pGC->clipOrg.y);
-	        REGION_INTERSECT(pScreen, pGC->pCompositeClip,
+	        RegionIntersect(pGC->pCompositeClip,
 				pGC->pCompositeClip, pGC->clientClip);
-	        REGION_TRANSLATE(pScreen, pGC->pCompositeClip,
+	        RegionTranslate(pGC->pCompositeClip,
 					 pGC->clipOrg.x, pGC->clipOrg.y);
 	    }
 	}

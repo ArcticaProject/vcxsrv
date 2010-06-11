@@ -35,7 +35,9 @@
 #endif
 
 #include <errno.h>
+#ifdef WITH_LIBDRM
 #include <xf86drm.h>
+#endif
 #include "xf86Module.h"
 #include "list.h"
 #include "scrnintstr.h"
@@ -49,12 +51,15 @@
 CARD8 dri2_major; /* version of DRI2 supported by DDX */
 CARD8 dri2_minor;
 
-static int           dri2ScreenPrivateKeyIndex;
-static DevPrivateKey dri2ScreenPrivateKey = &dri2ScreenPrivateKeyIndex;
-static int dri2WindowPrivateKeyIndex;
-static DevPrivateKey dri2WindowPrivateKey = &dri2WindowPrivateKeyIndex;
-static int dri2PixmapPrivateKeyIndex;
-static DevPrivateKey dri2PixmapPrivateKey = &dri2PixmapPrivateKeyIndex;
+static DevPrivateKeyRec dri2ScreenPrivateKeyRec;
+#define dri2ScreenPrivateKey (&dri2ScreenPrivateKeyRec)
+
+static DevPrivateKeyRec dri2WindowPrivateKeyRec;
+#define dri2WindowPrivateKey (&dri2WindowPrivateKeyRec)
+
+static DevPrivateKeyRec dri2PixmapPrivateKeyRec;
+#define dri2PixmapPrivateKey (&dri2PixmapPrivateKeyRec)
+
 static RESTYPE       dri2DrawableRes;
 
 typedef struct _DRI2Screen *DRI2ScreenPtr;
@@ -94,6 +99,7 @@ typedef struct _DRI2Screen {
     DRI2ScheduleSwapProcPtr	 ScheduleSwap;
     DRI2GetMSCProcPtr		 GetMSC;
     DRI2ScheduleWaitMSCProcPtr	 ScheduleWaitMSC;
+    DRI2AuthMagicProcPtr	 AuthMagic;
 
     HandleExposuresProcPtr       HandleExposures;
 
@@ -112,12 +118,15 @@ DRI2GetDrawable(DrawablePtr pDraw)
     WindowPtr pWin;
     PixmapPtr pPixmap;
 
-    if (pDraw->type == DRAWABLE_WINDOW) {
+    switch (pDraw->type) {
+    case DRAWABLE_WINDOW:
 	pWin = (WindowPtr) pDraw;
 	return dixLookupPrivate(&pWin->devPrivates, dri2WindowPrivateKey);
-    } else {
+    case DRAWABLE_PIXMAP:
 	pPixmap = (PixmapPtr) pDraw;
 	return dixLookupPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey);
+    default:
+	return NULL;
     }
 }
 
@@ -458,7 +467,7 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
 	box.y1 = 0;
 	box.x2 = pPriv->width;
 	box.y2 = pPriv->height;
-	REGION_INIT(pDraw->pScreen, &region, &box, 0);
+	RegionInit(&region, &box, 0);
 
 	DRI2CopyRegion(pDraw, &region, DRI2BufferFakeFrontLeft,
 		       DRI2BufferFrontLeft);
@@ -604,14 +613,14 @@ DRI2CanFlip(DrawablePtr pDraw)
     if (pDraw->type == DRAWABLE_PIXMAP)
 	return TRUE;
 
-    pRoot = WindowTable[pScreen->myNum];
+    pRoot = pScreen->root;
     pRootPixmap = pScreen->GetWindowPixmap(pRoot);
 
     pWin = (WindowPtr) pDraw;
     pWinPixmap = pScreen->GetWindowPixmap(pWin);
     if (pRootPixmap != pWinPixmap)
 	return FALSE;
-    if (!REGION_EQUAL(pScreen, &pWin->clipList, &pRoot->winSize))
+    if (!RegionEqual(&pWin->clipList, &pRoot->winSize))
 	return FALSE;
 
     return TRUE;
@@ -707,7 +716,7 @@ DRI2SwapComplete(ClientPtr client, DrawablePtr pDraw, int frame,
     box.y1 = 0;
     box.x2 = pDraw->width;
     box.y2 = pDraw->height;
-    REGION_INIT(pScreen, &region, &box, 0);
+    RegionInit(&region, &box, 0);
     DRI2CopyRegion(pDraw, &region, DRI2BufferFakeFrontLeft,
 		   DRI2BufferFrontLeft);
 
@@ -779,7 +788,7 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
 	box.y1 = 0;
 	box.x2 = pDraw->width;
 	box.y2 = pDraw->height;
-	REGION_INIT(pScreen, &region, &box, 0);
+	RegionInit(&region, &box, 0);
 
 	pPriv->swapsPending++;
 
@@ -906,8 +915,7 @@ DRI2WaitMSC(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
 }
 
 int
-DRI2WaitSBC(ClientPtr client, DrawablePtr pDraw, CARD64 target_sbc,
-	    CARD64 *ust, CARD64 *msc, CARD64 *sbc)
+DRI2WaitSBC(ClientPtr client, DrawablePtr pDraw, CARD64 target_sbc)
 {
     DRI2DrawablePtr pPriv;
 
@@ -921,14 +929,13 @@ DRI2WaitSBC(ClientPtr client, DrawablePtr pDraw, CARD64 target_sbc,
     if (target_sbc == 0)
         target_sbc = pPriv->swap_count + pPriv->swapsPending;
 
-    /* If current swap count already >= target_sbc,
+    /* If current swap count already >= target_sbc, reply and
      * return immediately with (ust, msc, sbc) triplet of
      * most recent completed swap.
      */
     if (pPriv->swap_count >= target_sbc) {
-        *sbc = pPriv->swap_count;
-        *msc = pPriv->last_swap_msc;
-        *ust = pPriv->last_swap_ust;
+        ProcDRI2WaitMSCReply(client, pPriv->last_swap_ust,
+                             pPriv->last_swap_msc, pPriv->swap_count);
         return Success;
     }
 
@@ -943,7 +950,7 @@ DRI2HasSwapControl(ScreenPtr pScreen)
 {
     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
 
-    return (ds->ScheduleSwap && ds->GetMSC);
+    return ds->ScheduleSwap && ds->GetMSC;
 }
 
 Bool
@@ -964,17 +971,17 @@ DRI2Connect(ScreenPtr pScreen, unsigned int driverType, int *fd,
 }
 
 Bool
-DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic)
+DRI2Authenticate(ScreenPtr pScreen, uint32_t magic)
 {
     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
 
-    if (ds == NULL || drmAuthMagic(ds->fd, magic))
-	return FALSE;
+    if (ds == NULL || (*ds->AuthMagic)(ds->fd, magic))
+        return FALSE;
 
     return TRUE;
 }
 
-static void
+static int
 DRI2ConfigNotify(WindowPtr pWin, int x, int y, int w, int h, int bw,
 		 WindowPtr pSib)
 {
@@ -982,20 +989,24 @@ DRI2ConfigNotify(WindowPtr pWin, int x, int y, int w, int h, int bw,
     ScreenPtr pScreen = pDraw->pScreen;
     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
     DRI2DrawablePtr dd = DRI2GetDrawable(pDraw);
+    int ret;
 
     if (ds->ConfigNotify) {
 	pScreen->ConfigNotify = ds->ConfigNotify;
 
-	(*pScreen->ConfigNotify)(pWin, x, y, w, h, bw, pSib);
+	ret = (*pScreen->ConfigNotify)(pWin, x, y, w, h, bw, pSib);
 
 	ds->ConfigNotify = pScreen->ConfigNotify;
 	pScreen->ConfigNotify = DRI2ConfigNotify;
+	if (ret)
+	    return ret;
     }
 
     if (!dd || (dd->width == w && dd->height == h))
-	return;
+	return Success;
 
     DRI2InvalidateDrawable(pDraw);
+    return Success;
 }
 
 Bool
@@ -1017,6 +1028,15 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
                   "[DRI2] Direct rendering is not supported when VGA arb is necessary for the device\n");
         return FALSE;
     }
+
+    if (!dixRegisterPrivateKey(&dri2ScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&dri2WindowPrivateKeyRec, PRIVATE_WINDOW, 0))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&dri2PixmapPrivateKeyRec, PRIVATE_PIXMAP, 0))
+	return FALSE;
 
     ds = calloc(1, sizeof *ds);
     if (!ds)
@@ -1040,6 +1060,21 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 	cur_minor = 1;
     }
 
+    if (info->version >= 5) {
+        ds->AuthMagic = info->AuthMagic;
+    }
+
+    /*
+     * if the driver doesn't provide an AuthMagic function or the info struct
+     * version is too low, it relies on the old method (using libdrm) or fail
+     */
+    if (!ds->AuthMagic)
+#ifdef WITH_LIBDRM
+        ds->AuthMagic = drmAuthMagic;
+#else
+        goto err_out;
+#endif
+
     /* Initialize minor if needed and set to minimum provied by DDX */
     if (!dri2_minor || dri2_minor > cur_minor)
 	dri2_minor = cur_minor;
@@ -1048,18 +1083,14 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 	/* Driver too old: use the old-style driverName field */
 	ds->numDrivers = 1;
 	ds->driverNames = malloc(sizeof(*ds->driverNames));
-	if (!ds->driverNames) {
-	    free(ds);
-	    return FALSE;
-	}
+	if (!ds->driverNames)
+	    goto err_out;
 	ds->driverNames[0] = info->driverName;
     } else {
 	ds->numDrivers = info->numDrivers;
 	ds->driverNames = malloc(info->numDrivers * sizeof(*ds->driverNames));
-	if (!ds->driverNames) {
-	    free(ds);
-	    return FALSE;
-	}
+	if (!ds->driverNames)
+		goto err_out;
 	memcpy(ds->driverNames, info->driverNames,
 	       info->numDrivers * sizeof(*ds->driverNames));
     }
@@ -1078,6 +1109,12 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
     }
 
     return TRUE;
+
+err_out:
+    xf86DrvMsg(pScreen->myNum, X_WARNING,
+            "[DRI2] Initialization failed for info version %d.\n", info->version);
+    free(ds);
+    return FALSE;
 }
 
 void

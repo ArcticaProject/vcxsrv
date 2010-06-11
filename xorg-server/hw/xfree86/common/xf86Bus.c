@@ -245,7 +245,7 @@ xf86AllocateEntity(void)
     xf86Entities[xf86NumEntities - 1] = xnfcalloc(1,sizeof(EntityRec));
     xf86Entities[xf86NumEntities - 1]->entityPrivates =
                xnfcalloc(sizeof(DevUnion) * xf86EntityPrivateCount, 1);
-    return (xf86NumEntities - 1);
+    return xf86NumEntities - 1;
 }
 
 Bool
@@ -257,9 +257,9 @@ xf86IsEntityPrimary(int entityIndex)
 
     switch (pEnt->bus.type) {
     case BUS_PCI:
-	return (pEnt->bus.id.pci == primaryBus.id.pci);
+	return pEnt->bus.id.pci == primaryBus.id.pci;
     case BUS_SBUS:
-	return (pEnt->bus.id.sbus.fbNum == primaryBus.id.sbus.fbNum);
+	return pEnt->bus.id.sbus.fbNum == primaryBus.id.sbus.fbNum;
     default:
 	return FALSE;
     }
@@ -342,7 +342,7 @@ xf86FindScreenForEntity(int entityIndex)
 	for (i = 0; i < xf86NumScreens; i++) {
 	    for (j = 0; j < xf86Screens[i]->numEntities; j++) {
 		if ( xf86Screens[i]->entityList[j] == entityIndex )
-		    return (xf86Screens[i]);
+		    return xf86Screens[i];
 	    }
 	}
     }
@@ -557,7 +557,7 @@ int
 xf86GetLastScrnFlag(int entityIndex)
 {
     if(entityIndex < xf86NumEntities) {
-        return(xf86Entities[entityIndex]->lastScrnFlag);
+        return xf86Entities[entityIndex]->lastScrnFlag;
     } else {
         return -1;
     }
@@ -654,7 +654,7 @@ xf86AllocateEntityPrivateIndex(void)
 	nprivs = xnfrealloc(pEnt->entityPrivates,
 			    xf86EntityPrivateCount * sizeof(DevUnion));
 	/* Zero the new private */
-	bzero(&nprivs[idx], sizeof(DevUnion));
+	memset(&nprivs[idx], 0, sizeof(DevUnion));
 	pEnt->entityPrivates = nprivs;
     }
     return idx;

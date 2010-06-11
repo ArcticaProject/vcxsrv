@@ -248,6 +248,7 @@ int __glXSwapGetVisualConfigs(__GLXclientState *cl, GLbyte *pc)
     unsigned int screen;
     int i, p;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_INT(&req->screen);
     screen = req->screen;
@@ -481,6 +482,7 @@ void glxSwapQueryExtensionsStringReply(ClientPtr client,
 {
     int length = reply->length;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     __GLX_SWAP_SHORT(&reply->sequenceNumber);
     __GLX_SWAP_INT(&reply->length);
     __GLX_SWAP_INT(&reply->n);
@@ -507,6 +509,7 @@ void __glXSwapQueryContextInfoEXTReply(ClientPtr client, xGLXQueryContextInfoEXT
 {
     int length = reply->length;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     __GLX_SWAP_SHORT(&reply->sequenceNumber);
     __GLX_SWAP_INT(&reply->length);
     __GLX_SWAP_INT(&reply->n);
@@ -521,6 +524,7 @@ void __glXSwapQueryContextReply(ClientPtr client,
 {
     int length = reply->length;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     __GLX_SWAP_SHORT(&reply->sequenceNumber);
     __GLX_SWAP_INT(&reply->length);
     __GLX_SWAP_INT(&reply->n);
@@ -533,6 +537,7 @@ void __glXSwapGetDrawableAttributesReply(ClientPtr client,
                                  xGLXGetDrawableAttributesReply *reply, int *buf) 
 {
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     __GLX_SWAP_SHORT(&reply->sequenceNumber);
     __GLX_SWAP_INT(&reply->length);
     __GLX_SWAP_INT(&reply->numAttribs);
@@ -564,6 +569,7 @@ int __glXSwapRender(__GLXclientState *cl, GLbyte *pc)
     __GLXrenderHeader *hdr;
     ClientPtr client = cl->client;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     /*
     ** NOTE: much of this code also appears in the nonswapping version of this
@@ -647,6 +653,7 @@ int __glXSwapRenderLarge(__GLXclientState *cl, GLbyte *pc)
     xGLXRenderLargeReq *req;
     __GLXrenderLargeHeader *hdr;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     req = (xGLXRenderLargeReq *) pc;
     __GLX_SWAP_SHORT(&req->length);
@@ -1003,6 +1010,7 @@ int __glXSwapCreatePbuffer(__GLXclientState *cl, GLbyte *pc)
     xGLXCreatePbufferReq *req = (xGLXCreatePbufferReq *)pc;
     int nattr = req->numAttribs;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->screen);
@@ -1040,6 +1048,7 @@ int __glXSwapChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 {
    xGLXChangeDrawableAttributesReq *req = (xGLXChangeDrawableAttributesReq *)pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->drawable);

@@ -41,17 +41,17 @@
  */
 
 void
-winSetShapeMultiWindow (WindowPtr pWin)
+winSetShapeMultiWindow (WindowPtr pWin, int kind)
 {
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winSetShapeMultiWindow - pWin: %08x\n", pWin);
+  ErrorF ("winSetShapeMultiWindow - pWin: %08x kind: %i\n", pWin, kind);
 #endif
   
   WIN_UNWRAP(SetShape); 
-  (*pScreen->SetShape)(pWin);
+  (*pScreen->SetShape)(pWin, kind);
   WIN_WRAP(SetShape, winSetShapeMultiWindow);
   
   /* Update the Windows window's shape */
@@ -117,15 +117,12 @@ winReshapeMultiWindow (WindowPtr pWin)
   if (!wBoundingShape (pWin))
     return;
 
-  REGION_NULL(pWin->drawable.pScreen, &rrNewShape);
-  REGION_COPY(pWin->drawable.pScreen, &rrNewShape, wBoundingShape(pWin));
-  REGION_TRANSLATE(pWin->drawable.pScreen,
-		   &rrNewShape,
-		   pWin->borderWidth,
-                   pWin->borderWidth);
+  RegionNull(&rrNewShape);
+  RegionCopy(&rrNewShape, wBoundingShape(pWin));
+  RegionTranslate(&rrNewShape, pWin->borderWidth, pWin->borderWidth);
   
-  nRects = REGION_NUM_RECTS(&rrNewShape);
-  pShape = REGION_RECTS(&rrNewShape);
+  nRects = RegionNumRects(&rrNewShape);
+  pShape = RegionRects(&rrNewShape);
   
   /* Don't do anything if there are no rectangles in the region */
   if (nRects > 0)
@@ -205,7 +202,7 @@ winReshapeMultiWindow (WindowPtr pWin)
       pWinPriv->hRgn = hRgn;
     }
 
-  REGION_UNINIT(pWin->drawable.pScreen, &rrNewShape);
+  RegionUninit(&rrNewShape);
   
   return;
 }

@@ -494,7 +494,7 @@ CalcTracker(DeviceVelocityPtr vel, int offset, int cur_t){
                       + vel->tracker[index].dy * vel->tracker[index].dy);
     int dtime = cur_t - vel->tracker[index].time;
     if(dtime > 0)
-	return (dist / dtime);
+	return dist / dtime;
     else
 	return 0;/* synonymous for NaN, since we're not C99 */
 }

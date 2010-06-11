@@ -78,5 +78,7 @@ extern int DevicePropertyNotify;
 
 extern int RT_INPUTCLIENT;
 
-extern DevPrivateKey XIClientPrivateKey;
+extern DevPrivateKeyRec XIClientPrivateKeyRec;
+#define XIClientPrivateKey (&XIClientPrivateKeyRec)
+
 #endif /* EXGLOBALS_H */

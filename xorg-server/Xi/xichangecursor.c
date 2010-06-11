@@ -93,7 +93,7 @@ int ProcXIChangeCursor(ClientPtr client)
 
     if (stuff->cursor == None)
     {
-        if (pWin == WindowTable[pWin->drawable.pScreen->myNum])
+        if (pWin == pWin->drawable.pScreen->root)
             pCursor = rootCursor;
         else
             pCursor = (CursorPtr)None;

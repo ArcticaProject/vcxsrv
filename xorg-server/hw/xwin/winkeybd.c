@@ -262,7 +262,7 @@ winRestoreModeKeyStates (void)
 
   /* Only process events if the rootwindow is mapped. The keyboard events
    * will cause segfaults otherwise */
-  if (WindowTable && WindowTable[0] && WindowTable[0]->mapped == FALSE)
+  if (screenInfo.screens[0]->root && screenInfo.screens[0]->root->mapped == FALSE)
     processEvents = FALSE;    
   
   /* Force to process all pending events in the mi event queue */

@@ -292,21 +292,25 @@ miScreenInit(
     return miScreenDevPrivateInit(pScreen, width, pbits);
 }
 
-static int privateKeyIndex;
-static DevPrivateKey privateKey = &privateKeyIndex;
+static DevPrivateKeyRec privateKeyRec;
+#define privateKey (&privateKeyRec)
 
 DevPrivateKey
 miAllocateGCPrivateIndex(void)
 {
+    if (!dixRegisterPrivateKey(&privateKeyRec, PRIVATE_GC, 0))
+	return NULL;
     return privateKey;
 }
 
-static int miZeroLineScreenKeyIndex;
-DevPrivateKey miZeroLineScreenKey = &miZeroLineScreenKeyIndex;
+DevPrivateKeyRec miZeroLineScreenKeyRec;
 
 void
 miSetZeroLineBias(ScreenPtr pScreen, unsigned int bias)
 {
+    if (!dixRegisterPrivateKey(&miZeroLineScreenKeyRec, PRIVATE_SCREEN, 0))
+	return;
+
     dixSetPrivate(&pScreen->devPrivates, miZeroLineScreenKey, 
 					(unsigned long *)(unsigned long)bias);
 }

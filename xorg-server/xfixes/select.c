@@ -211,7 +211,7 @@ ProcXFixesSelectSelectionInput (ClientPtr client)
     if (stuff->eventMask & ~SelectionAllEvents)
     {
 	client->errorValue = stuff->eventMask;
-	return( BadValue );
+	return BadValue;
     }
     return XFixesSelectSelectionInput (client, stuff->selection,
 				       pWin, stuff->eventMask);
