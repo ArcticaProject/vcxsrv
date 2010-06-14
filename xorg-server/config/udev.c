@@ -86,8 +86,8 @@ device_added(struct udev_device *udev_device)
     if (!options)
         return;
 
-    options->key = xstrdup("_source");
-    options->value = xstrdup("server/udev");
+    options->key = strdup("_source");
+    options->value = strdup("server/udev");
     if (!options->key || !options->value)
         goto unwind;
 
@@ -197,7 +197,7 @@ device_added(struct udev_device *udev_device)
 
     for (; dev; dev = dev->next) {
         free(dev->config_info);
-        dev->config_info = xstrdup(config_info);
+        dev->config_info = strdup(config_info);
     }
 
  unwind:

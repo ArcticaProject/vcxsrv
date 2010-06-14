@@ -580,7 +580,7 @@ winConfigFiles ()
   else if (filesptr != NULL && filesptr->file_fontpath)
     {
       from = X_CONFIG;
-      defaultFontPath = xstrdup (filesptr->file_fontpath);
+      defaultFontPath = strdup (filesptr->file_fontpath);
     }
   winDebug ("FontPath set to \"%s\"\n", defaultFontPath);
 
@@ -627,7 +627,7 @@ winSetStrOption (pointer optlist, const char *name, char *deflt)
   if (ParseOptionValue (-1, optlist, &o))
     deflt = o.value.str;
   if (deflt)
-    return xstrdup (deflt);
+    return strdup (deflt);
   else
     return NULL;
 }

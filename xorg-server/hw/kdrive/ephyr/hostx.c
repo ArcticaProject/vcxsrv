@@ -683,11 +683,8 @@ hostx_screen_init (EphyrScreenInfo screen,
 	}
       else
 	{
-	  if (host_screen->ximg->data) 
-	    {
-	      free(host_screen->ximg->data);
-	      host_screen->ximg->data = NULL;
-	    } 
+	  free(host_screen->ximg->data);
+	  host_screen->ximg->data = NULL;
 
 	  XDestroyImage(host_screen->ximg);
 	}
@@ -1186,10 +1183,8 @@ out:
         XFree (visuals) ;
         visuals = NULL;
     }
-    if (host_visuals) {
-        free (host_visuals) ;
-        host_visuals = NULL;
-    }
+    free(host_visuals);
+    host_visuals = NULL;
     EPHYR_LOG ("leave\n") ;
     return is_ok ;
 
@@ -1322,10 +1317,8 @@ hostx_set_window_bounding_rectangles (int a_window,
 #endif
     is_ok = TRUE ;
 
-    if (rects) {
-        free (rects) ;
-        rects = NULL ;
-    }
+    free(rects);
+    rects = NULL;
     EPHYR_LOG ("leave\n") ;
     return is_ok;
 }
@@ -1363,10 +1356,8 @@ hostx_set_window_clipping_rectangles (int a_window,
 #endif
     is_ok = TRUE ;
 
-    if (rects) {
-        free (rects) ;
-        rects = NULL ;
-    }
+    free(rects);
+    rects = NULL;
     EPHYR_LOG ("leave\n") ;
     return is_ok;
 }

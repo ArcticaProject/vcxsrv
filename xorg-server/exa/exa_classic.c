@@ -257,9 +257,10 @@ exaPixmapHasGpuCopy_classic(PixmapPtr pPixmap)
     Bool ret;
 
     if (pExaScr->info->PixmapIsOffscreen) {
+	void* old_ptr = pPixmap->devPrivate.ptr;
 	pPixmap->devPrivate.ptr = ExaGetPixmapAddress(pPixmap);
 	ret = pExaScr->info->PixmapIsOffscreen(pPixmap);
-	pPixmap->devPrivate.ptr = NULL;
+	pPixmap->devPrivate.ptr = old_ptr;
     } else
 	ret = (pExaPixmap->use_gpu_copy && pExaPixmap->fb_ptr);
 

@@ -133,7 +133,7 @@ add_option(InputOption **options, const char *key, const char *value)
     *options = calloc(sizeof(**options), 1);
     if (!*options) /* Yeesh. */
         return;
-    (*options)->key = xstrdup(key);
-    (*options)->value = xstrdup(value);
+    (*options)->key = strdup(key);
+    (*options)->value = strdup(value);
     (*options)->next = NULL;
 }

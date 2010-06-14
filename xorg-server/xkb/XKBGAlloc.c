@@ -114,10 +114,8 @@ register char *ptr;
     }
     if (freeAll) {
 	(*num_inout)= (*sz_inout)= 0;
-	if (*elems) {
-	    free(*elems);
-	    *elems= NULL;
-	}
+	free(*elems);
+	*elems = NULL;
     }
     else if (first+count>=(*num_inout))
 	*num_inout= first;
@@ -137,14 +135,10 @@ _XkbClearProperty(char *prop_in)
 {
 XkbPropertyPtr	prop= (XkbPropertyPtr)prop_in;
 
-    if (prop->name) {
-	free(prop->name);
-	prop->name= NULL;
-    }
-    if (prop->value) {
-	free(prop->value);
-	prop->value= NULL;
-    }
+    free(prop->name);
+    prop->name = NULL;
+    free(prop->value);
+    prop->value = NULL;
     return;
 }
 

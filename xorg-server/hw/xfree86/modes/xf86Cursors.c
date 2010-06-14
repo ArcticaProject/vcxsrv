@@ -659,11 +659,8 @@ xf86_cursors_fini (ScreenPtr screen)
 	xf86DestroyCursorInfoRec (xf86_config->cursor_info);
 	xf86_config->cursor_info = NULL;
     }
-    if (xf86_config->cursor_image)
-    {
-	free(xf86_config->cursor_image);
-	xf86_config->cursor_image = NULL;
-    }
+    free(xf86_config->cursor_image);
+    xf86_config->cursor_image = NULL;
     if (xf86_config->cursor)
     {
 	FreeCursor (xf86_config->cursor, None);

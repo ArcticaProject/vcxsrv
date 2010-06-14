@@ -2520,8 +2520,6 @@ RecordDeleteContext(pointer value, XID id)
 	}
     }
 
-    free(pContext);
-
     /* remove context from AllContexts list */
 
     if (-1 != (i = RecordFindContextOnAllContexts(pContext)))
@@ -2533,6 +2531,8 @@ RecordDeleteContext(pointer value, XID id)
 	    ppAllContexts = NULL;
 	}
     }
+    free(pContext);
+
     return Success;
 } /* RecordDeleteContext */
 

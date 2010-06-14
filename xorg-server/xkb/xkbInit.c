@@ -635,10 +635,8 @@ unwind_key:
 void
 XkbFreeInfo(XkbSrvInfoPtr xkbi)
 {
-    if (xkbi->radioGroups) {
-	free(xkbi->radioGroups);
-	xkbi->radioGroups= NULL;
-    }
+    free(xkbi->radioGroups);
+    xkbi->radioGroups = NULL;
     if (xkbi->mouseKeyTimer) {
 	TimerFree(xkbi->mouseKeyTimer);
 	xkbi->mouseKeyTimer= NULL;

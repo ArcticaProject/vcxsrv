@@ -135,7 +135,7 @@ InitPathList(const char *path)
     if (!path)
 	return defaultPathList;
 
-    fullpath = xstrdup(path);
+    fullpath = strdup(path);
     if (!fullpath)
 	return NULL;
     elem = strtok(fullpath, ",");
@@ -353,7 +353,7 @@ InitSubdirs(const char **subdirlist)
 	    sprintf(subdirs[i], "%s%s%s/", *s, slash, osname);
 	    i++;
 	    /* path as given */
-	    subdirs[i] = xstrdup(*s);
+	    subdirs[i] = strdup(*s);
 	    i++;
 	    s++;
 	    if (indefault && !s) {
@@ -1246,7 +1246,7 @@ LoaderGetCanonicalName(const char *modname, PatternPtr patterns)
 	}
 
     /* If there is no match, return the whole name minus the leading path */
-    return xstrdup(s);
+    return strdup(s);
 }
 
 /*

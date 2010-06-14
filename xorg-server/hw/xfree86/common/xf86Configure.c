@@ -277,16 +277,16 @@ configureInputSection (void)
     mouse->inp_identifier = "Mouse0";
     mouse->inp_driver = "mouse";
     mouse->inp_option_lst = 
-		xf86addNewOption(mouse->inp_option_lst, xstrdup("Protocol"),
-				xstrdup(DFLT_MOUSE_PROTO));
+		xf86addNewOption(mouse->inp_option_lst, strdup("Protocol"),
+				strdup(DFLT_MOUSE_PROTO));
 #ifndef __SCO__
     mouse->inp_option_lst = 
-		xf86addNewOption(mouse->inp_option_lst, xstrdup("Device"),
-				xstrdup(DFLT_MOUSE_DEV));
+		xf86addNewOption(mouse->inp_option_lst, strdup("Device"),
+				strdup(DFLT_MOUSE_DEV));
 #endif
     mouse->inp_option_lst = 
-		xf86addNewOption(mouse->inp_option_lst, xstrdup("ZAxisMapping"),
-				xstrdup("4 5 6 7"));
+		xf86addNewOption(mouse->inp_option_lst, strdup("ZAxisMapping"),
+				strdup("4 5 6 7"));
     ptr = (XF86ConfInputPtr)xf86addListItem((glp)ptr, (glp)mouse);
     return ptr;
 }
@@ -389,7 +389,7 @@ configureDeviceSection (int screennum)
 	    "        ### <string>: \"String\", <freq>: \"<f> Hz/kHz/MHz\",\n"
 	    "        ### <percent>: \"<f>%\"\n"
 	    "        ### [arg]: arg optional\n";
-	ptr->dev_comment = xstrdup(descrip);
+	ptr->dev_comment = strdup(descrip);
 	if (ptr->dev_comment) {
     	    for (p = DevToConfig[screennum].GDev.options;
 		 p->name != NULL; p++) {
@@ -440,7 +440,7 @@ configureLayoutSection (void)
 	iptr->iref_option_lst = NULL;
 	iptr->iref_inputdev_str = "Mouse0";
 	iptr->iref_option_lst =
-		xf86addNewOption (iptr->iref_option_lst, xstrdup("CorePointer"), NULL);
+		xf86addNewOption (iptr->iref_option_lst, strdup("CorePointer"), NULL);
 	ptr->lay_input_lst = (XF86ConfInputrefPtr)
 		xf86addListItem ((glp) ptr->lay_input_lst, (glp) iptr);
     }
@@ -453,7 +453,7 @@ configureLayoutSection (void)
 	iptr->iref_option_lst = NULL;
 	iptr->iref_inputdev_str = "Keyboard0";
 	iptr->iref_option_lst =
-		xf86addNewOption (iptr->iref_option_lst, xstrdup("CoreKeyboard"), NULL);
+		xf86addNewOption (iptr->iref_option_lst, strdup("CoreKeyboard"), NULL);
 	ptr->lay_input_lst = (XF86ConfInputrefPtr)
 		xf86addListItem ((glp) ptr->lay_input_lst, (glp) iptr);
     }
@@ -626,7 +626,7 @@ configureDDCMonitorSection (int screennum)
                              ptr);
 
     if (ConfiguredMonitor->features.dpms) {
-      ptr->mon_option_lst = xf86addNewOption(ptr->mon_option_lst, xstrdup("DPMS"), NULL);
+      ptr->mon_option_lst = xf86addNewOption(ptr->mon_option_lst, strdup("DPMS"), NULL);
     }
 
     return ptr;

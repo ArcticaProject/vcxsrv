@@ -831,10 +831,8 @@ out:
         XFreeGC (dpy, gc) ;
         gc = NULL ;
     }
-    if (rects) {
-        free (rects) ;
-        rects = NULL ;
-    }
+    free(rects);
+    rects = NULL;
     EPHYR_LOG ("leave\n") ;
     return is_ok ;
 }

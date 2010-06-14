@@ -191,10 +191,8 @@ sparcPromClose(void)
 	close(promFd);
 	promFd = -1;
     }
-    if (promOpio) {
-	free(promOpio);
-	promOpio = NULL;
-    }
+    free(promOpio);
+    promOpio = NULL;
     promOpenCount = 0;
 }
 

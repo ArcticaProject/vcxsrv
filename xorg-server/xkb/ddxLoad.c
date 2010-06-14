@@ -74,6 +74,8 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #ifdef WIN32
 
+#define strdup _strdup
+
 #include <X11/Xwindows.h>
 const char* 
 Win32TempDir()
@@ -103,7 +105,7 @@ Win32System(const char *cmdline)
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
     DWORD dwExitCode;
-    char *cmd = xstrdup(cmdline);
+    char *cmd = strdup(cmdline);
 
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
@@ -235,6 +237,11 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 		  xkm_output_dir, keymap);
 
     free(xkbbasedirflag);
+
+    if (!buf) {
+        LogMessage(X_ERROR, "XKB: Could not invoke xkbcomp: not enough memory\n");
+        return FALSE;
+    }
     
 #ifndef WIN32
     out= Popen(buf,"w");
