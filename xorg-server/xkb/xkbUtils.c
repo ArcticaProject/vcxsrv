@@ -1761,15 +1761,15 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                     if (sdoodad->any.type == XkbTextDoodad) {
                         if (sdoodad->text.text)
                             ddoodad->text.text =
-                             xstrdup(sdoodad->text.text);
+                             strdup(sdoodad->text.text);
                         if (sdoodad->text.font)
                             ddoodad->text.font =
-                             xstrdup(sdoodad->text.font);
+                             strdup(sdoodad->text.font);
                     }
                     else if (sdoodad->any.type == XkbLogoDoodad) {
                         if (sdoodad->logo.logo_name)
                             ddoodad->logo.logo_name =
-                             xstrdup(sdoodad->logo.logo_name);
+                             strdup(sdoodad->logo.logo_name);
                     }
                 }
                 dsection->overlays = NULL;
@@ -1832,14 +1832,14 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                 memcpy(ddoodad , sdoodad, sizeof(XkbDoodadRec));
                 if (sdoodad->any.type == XkbTextDoodad) {
                     if (sdoodad->text.text)
-                        ddoodad->text.text = xstrdup(sdoodad->text.text);
+                        ddoodad->text.text = strdup(sdoodad->text.text);
                     if (sdoodad->text.font)
-                        ddoodad->text.font = xstrdup(sdoodad->text.font);
+                        ddoodad->text.font = strdup(sdoodad->text.font);
                 }
                 else if (sdoodad->any.type == XkbLogoDoodad) {
                     if (sdoodad->logo.logo_name)
                         ddoodad->logo.logo_name =
-                          xstrdup(sdoodad->logo.logo_name);
+                          strdup(sdoodad->logo.logo_name);
                 }
             }
 

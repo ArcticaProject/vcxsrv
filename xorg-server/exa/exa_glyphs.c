@@ -127,15 +127,11 @@ exaUnrealizeGlyphCaches(ScreenPtr    pScreen,
 	    cache->picture = NULL;
 	}
 
-	if (cache->hashEntries) {
-	    free(cache->hashEntries);
-	    cache->hashEntries = NULL;
-	}
+	free(cache->hashEntries);
+	cache->hashEntries = NULL;
 	
-	if (cache->glyphs) {
-	    free(cache->glyphs);
-	    cache->glyphs = NULL;
-	}
+	free(cache->glyphs);
+	cache->glyphs = NULL;
 	cache->glyphCount = 0;
     }
 }

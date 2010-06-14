@@ -676,7 +676,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
       fbConfigsDump(screen->base.numFBConfigs, screen->base.fbconfigs);
 
       // Override the GL extensions string set by __glXScreenInit()
-      screen->base.GLextensions = xstrdup(gl_extensions);
+      screen->base.GLextensions = strdup(gl_extensions);
 
       // Generate the GLX extensions string (overrides that set by __glXScreenInit())
       {
@@ -706,13 +706,13 @@ glxWinScreenProbe(ScreenPtr pScreen)
 
           if (screen->has_WGL_ARB_multisample)
             {
-              screen->base.GLXversion = xstrdup("1.4");
+              screen->base.GLXversion = strdup("1.4");
               screen->base.GLXmajor = 1;
               screen->base.GLXminor = 4;
             }
           else
             {
-              screen->base.GLXversion = xstrdup("1.3");
+              screen->base.GLXversion = strdup("1.3");
               screen->base.GLXmajor = 1;
               screen->base.GLXminor = 3;
             }

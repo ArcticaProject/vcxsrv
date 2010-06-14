@@ -2433,7 +2433,7 @@ int __glXDisp_ClientInfo(__GLXclientState *cl, GLbyte *pc)
     cl->GLClientminorVersion = req->minor;
     free(cl->GLClientextensions);
     buf = (const char *)(req+1);
-    cl->GLClientextensions = xstrdup(buf);
+    cl->GLClientextensions = strdup(buf);
 
     return Success;
 }

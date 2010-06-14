@@ -208,10 +208,7 @@ char	tmpname[PATH_MAX];
 	return BadImplementation;
     }
     list->nFound[what]= 0;
-    if (buf) {
-        free(buf);
-        buf = NULL;
-    }
+    free(buf);
     buf = malloc(PATH_MAX * sizeof(char));
     if (!buf)
         return BadAlloc;

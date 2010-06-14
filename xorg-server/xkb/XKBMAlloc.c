@@ -221,18 +221,12 @@ XkbCopyKeyType(XkbKeyTypePtr from,XkbKeyTypePtr into)
 {
     if ((!from)||(!into))
 	return BadMatch;
-    if (into->map) {
-	free(into->map);
-	into->map= NULL;
-    }
-    if (into->preserve) {
-	free(into->preserve);
-	into->preserve= NULL;
-    }
-    if (into->level_names) {
-	free(into->level_names);
-	into->level_names= NULL;
-    }
+    free(into->map);
+    into->map = NULL;
+    free(into->preserve);
+    into->preserve = NULL;
+    free(into->level_names);
+    into->level_names = NULL;
     *into= *from;
     if ((from->map)&&(into->map_count>0)) {
 	into->map= calloc(into->map_count, sizeof(XkbKTMapEntryRec));

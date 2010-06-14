@@ -885,7 +885,7 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
                         && dmxL->deviceId < 0) {
                         dmxL->deviceId   = devices[i].id;
                         dmxL->deviceName = (devices[i].name
-                                            ? xstrdup(devices[i].name)
+                                            ? strdup(devices[i].name)
                                             : NULL);
                     }
                 }
@@ -918,7 +918,7 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
                         dmxLocal->sendsCore  = FALSE;
                         dmxLocal->deviceId   = devices[i].id;
                         dmxLocal->deviceName = (devices[i].name
-                                                ? xstrdup(devices[i].name)
+                                                ? strdup(devices[i].name)
                                                 : NULL);
                     }
                 }

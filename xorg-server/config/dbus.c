@@ -86,8 +86,8 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
         return BadAlloc;
     }
 
-    options->key = xstrdup("_source");
-    options->value = xstrdup("client/dbus");
+    options->key = strdup("_source");
+    options->value = strdup("client/dbus");
     if (!options->key || !options->value) {
         ErrorF("[config/dbus] couldn't allocate first key/value pair\n");
         ret = BadAlloc;
@@ -120,7 +120,7 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
                    tmp);
             MALFORMED_MESSAGE();
         }
-        options->key = xstrdup(tmp);
+        options->key = strdup(tmp);
         if (!options->key) {
             ErrorF("[config/dbus] couldn't duplicate key!\n");
             ret = BadAlloc;
@@ -136,7 +136,7 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
         dbus_message_iter_get_basic(&subiter, &tmp);
         if (!tmp)
             MALFORMED_MESSAGE();
-        options->value = xstrdup(tmp);
+        options->value = strdup(tmp);
         if (!options->value) {
             ErrorF("[config/dbus] couldn't duplicate option!\n");
             ret = BadAlloc;

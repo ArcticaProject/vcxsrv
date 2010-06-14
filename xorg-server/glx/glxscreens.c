@@ -356,9 +356,9 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 	return;
 
     pGlxScreen->pScreen       = pScreen;
-    pGlxScreen->GLextensions  = xstrdup(GLServerExtensions);
-    pGlxScreen->GLXvendor     = xstrdup(GLXServerVendorName);
-    pGlxScreen->GLXextensions = xstrdup(GLXServerExtensions);
+    pGlxScreen->GLextensions  = strdup(GLServerExtensions);
+    pGlxScreen->GLXvendor     = strdup(GLXServerVendorName);
+    pGlxScreen->GLXextensions = strdup(GLXServerExtensions);
 
     /* All GLX providers must support all of the functionality required for at
      * least GLX 1.2.  If the provider supports a higher version, the GLXminor

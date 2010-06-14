@@ -919,7 +919,7 @@ KdAddConfigKeyboard (char *keyboard)
     if (!new)
         return BadAlloc;
 
-    new->line = xstrdup(keyboard);
+    new->line = strdup(keyboard);
     new->next = NULL;
 
     for (prev = &kdConfigKeyboards; *prev; prev = &(*prev)->next);
@@ -987,7 +987,7 @@ KdAddConfigPointer (char *pointer)
     if (!new)
         return BadAlloc;
 
-    new->line = xstrdup(pointer);
+    new->line = strdup(pointer);
     new->next = NULL;
 
     for (prev = &kdConfigPointers; *prev; prev = &(*prev)->next);
@@ -1067,11 +1067,11 @@ KdGetOptions (InputOption **options, char *string)
         newopt->key = (char *)malloc(tam_key);
         strncpy(newopt->key, string, tam_key);
         newopt->key[tam_key] = '\0';
-        newopt->value = xstrdup(strchr(string, '=') + 1);
+        newopt->value = strdup(strchr(string, '=') + 1);
     }
     else
     {
-        newopt->key = xstrdup(string);
+        newopt->key = strdup(string);
         newopt->value = NULL;
     }
     newopt->next = NULL;
@@ -1147,7 +1147,7 @@ KdParseKeyboard (char *arg)
     if (strcmp (save, "auto") == 0)
         ki->driverPrivate = NULL;
     else
-        ki->driverPrivate = xstrdup(save);
+        ki->driverPrivate = strdup(save);
 
     if (delim != ',')
     {
@@ -1243,7 +1243,7 @@ KdParsePointer (char *arg)
     if (strcmp(save, "auto") == 0)
         pi->driverPrivate = NULL;
     else
-        pi->driverPrivate = xstrdup(save);
+        pi->driverPrivate = strdup(save);
 
     if (delim != ',')
     {

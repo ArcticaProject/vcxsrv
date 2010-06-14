@@ -5510,10 +5510,8 @@ ProcXkbListComponents(ClientPtr client)
     if ((XkbPaddedSize(len)/4)!=stuff->length)
 	return BadLength;
     if ((status=XkbDDXList(dev,&list,client))!=Success) {
-	if (list.pool) {
-	    free(list.pool);
-	    list.pool= NULL;
-	}
+	free(list.pool);
+	list.pool = NULL;
 	return status;
     }
     memset(&rep, 0, sizeof(xkbListComponentsReply));
@@ -5886,11 +5884,16 @@ ProcXkbGetKbdByName(ClientPtr client)
 	XkbFreeKeyboard(new,XkbAllComponentsMask,TRUE);
 	new= NULL;
     }
-    if (names.keycodes)	{ free(names.keycodes); names.keycodes= NULL; }
-    if (names.types)	{ free(names.types); names.types= NULL; }
-    if (names.compat)	{ free(names.compat); names.compat= NULL; }
-    if (names.symbols)	{ free(names.symbols); names.symbols= NULL; }
-    if (names.geometry)	{ free(names.geometry); names.geometry= NULL; }
+    free(names.keycodes);
+    names.keycodes = NULL;
+    free(names.types);
+    names.types = NULL;
+    free(names.compat);
+    names.compat = NULL;
+    free(names.symbols);
+    names.symbols = NULL;
+    free(names.geometry);
+    names.geometry = NULL;
     return Success;
 }
 

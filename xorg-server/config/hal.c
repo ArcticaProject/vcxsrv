@@ -81,7 +81,7 @@ get_prop_string(LibHalContext *hal_ctx, const char *udi, const char *name)
     prop = libhal_device_get_property_string(hal_ctx, udi, name, NULL);
     LogMessageVerb(X_INFO, 10, "config/hal: getting %s on %s returned %s\n", name, udi, prop ? prop : "(null)");
     if (prop) {
-        ret = xstrdup(prop);
+        ret = strdup(prop);
         libhal_free_string(prop);
     }
     else {
@@ -156,13 +156,13 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         LogMessage(X_WARNING,"config/hal: no driver or path specified for %s\n", udi);
         goto unwind;
     }
-    attrs.device = xstrdup(path);
+    attrs.device = strdup(path);
 
     name = get_prop_string(hal_ctx, udi, "info.product");
     if (!name)
-        name = xstrdup("(unnamed)");
+        name = strdup("(unnamed)");
     else
-        attrs.product = xstrdup(name);
+        attrs.product = strdup(name);
 
     attrs.vendor = get_prop_string(hal_ctx, udi, "info.vendor");
     hal_tags = get_prop_string(hal_ctx, udi, "input.tags");
@@ -211,8 +211,8 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         goto unwind;
     }
 
-    options->key = xstrdup("_source");
-    options->value = xstrdup("server/hal");
+    options->key = strdup("_source");
+    options->value = strdup("server/hal");
     if (!options->key || !options->value) {
         LogMessage(X_ERROR, "config/hal: couldn't allocate first key/value pair\n");
         goto unwind;
@@ -387,7 +387,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
 
     for (; dev; dev = dev->next){
         free(dev->config_info);
-        dev->config_info = xstrdup(config_info);
+        dev->config_info = strdup(config_info);
     }
 
 unwind:

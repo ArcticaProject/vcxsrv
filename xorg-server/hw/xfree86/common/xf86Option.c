@@ -209,7 +209,7 @@ LookupStrOption(pointer optlist, const char *name, char *deflt, Bool markUsed)
     if (ParseOptionValue(-1, optlist, &o, markUsed))
         deflt = o.value.str;
     if (deflt)
-	return xstrdup(deflt);
+	return strdup(deflt);
     else
 	return NULL;
 }
