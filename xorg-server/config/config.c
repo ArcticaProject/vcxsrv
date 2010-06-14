@@ -32,6 +32,10 @@
 #include "hotplug.h"
 #include "config-backends.h"
 
+#ifdef _MSC_VER
+#define strdup _strdup
+#endif
+
 void
 config_init(void)
 {
