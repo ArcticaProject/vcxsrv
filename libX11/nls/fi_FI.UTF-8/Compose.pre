@@ -2,8 +2,9 @@ XCOMM
 XCOMM Official compose sequences for Finland based on SFS 5966 standard
 XCOMM
 XCOMM This compose sequence map implements all the functionality of Annex 3
-XCOMM of the standard and additionally defines the sequences provided in
-XCOMM en_US.UTF-8/Compose. Annex 3 definitions override en_US.UTF-8 rules.
+XCOMM and Annex 4 of the standard and additionally defines the sequences
+XCOMM provided in en_US.UTF-8/Compose. SFS 5966 sequences override any
+XCOMM conflicting rules from en_US.UTF-8/Compose.
 XCOMM
 XCOMM Annex 1 of the standard is implemented in the keymap symbols/fi
 XCOMM
@@ -16,6 +17,8 @@ include "X11_LOCALEDATADIR/en_US.UTF-8/Compose"
 
 XCOMM Define all the sequences of the standard overriding any sequence
 XCOMM from en_US.UTF-8/Compose if such a sequence was provided already
+
+XCOMM Sequences from Annex 3
 
 XCOMM Sequences with COMBINING ACUTE ACCENT / <dead_acute>
 <dead_acute> <space>                    : "´"   # ACUTE ACCENT
@@ -300,6 +303,110 @@ XCOMM Sequences with AUXILIARY STROKE / <dead_stroke>
 <dead_stroke> <t>                       : "ŧ"   # LATIN SMALL LETTER T WITH STROKE
 <dead_stroke> <T>                       : "Ŧ"   # LATIN CAPITAL LETTER T WITH STROKE
 
+XCOMM Sequences from Annex 4
+
+XCOMM Sequences with COMBINING BREVE / <dead_breve>
+<dead_acute>    <dead_breve> <a>        : "ắ"   # LATIN SMALL LETTER A WITH BREVE AND ACUTE
+<dead_belowdot> <dead_breve> <a>        : "ặ"   # LATIN SMALL LETTER A WITH BREVE AND DOT BELOW
+<dead_grave>    <dead_breve> <a>        : "ằ"   # LATIN SMALL LETTER A WITH BREVE AND GRAVE
+<dead_hook>     <dead_breve> <a>        : "ẳ"   # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
+<dead_tilde>    <dead_breve> <a>        : "ẵ"   # LATIN SMALL LETTER A WITH BREVE AND TILDE
+<dead_acute>    <dead_breve> <A>        : "Ắ"   # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
+<dead_belowdot> <dead_breve> <A>        : "Ặ"   # LATIN CAPITAL LETTER A WITH BREVE AND DOT BELOW
+<dead_grave>    <dead_breve> <A>        : "Ằ"   # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
+<dead_hook>     <dead_breve> <A>        : "Ẳ"   # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
+<dead_tilde>    <dead_breve> <A>        : "Ẵ"   # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
+
+XCOMM Sequences with COMBINING CIRCUMFLEX ACCENT / <dead_circumflex>
+<dead_acute>    <dead_circumflex> <a>   : "ấ"   # LATIN SMALL LETTER A WITH CIRCUMFLEX AND ACUTE
+<dead_belowdot> <dead_circumflex> <a>   : "ậ"   # LATIN SMALL LETTER A WITH CIRCUMFLEX AND DOT BELOW
+<dead_grave>    <dead_circumflex> <a>   : "ầ"   # LATIN SMALL LETTER A WITH CIRCUMFLEX AND GRAVE
+<dead_hook>     <dead_circumflex> <a>   : "ẩ"   # LATIN SMALL LETTER A WITH CIRCUMFLEX AND HOOK ABOVE
+<dead_tilde>    <dead_circumflex> <a>   : "ẫ"   # LATIN SMALL LETTER A WITH CIRCUMFLEX AND TILDE
+<dead_acute>    <dead_circumflex> <A>   : "Ấ"   # LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND ACUTE
+<dead_belowdot> <dead_circumflex> <A>   : "Ậ"   # LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND DOT BELOW
+<dead_grave>    <dead_circumflex> <A>   : "Ầ"   # LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND GRAVE
+<dead_hook>     <dead_circumflex> <A>   : "Ẩ"   # LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND HOOK ABOVE
+<dead_tilde>    <dead_circumflex> <A>   : "Ẫ"   # LATIN CAPITAL LETTER A WITH CIRCUMFLEX AND TILDE
+<dead_acute>    <dead_circumflex> <e>   : "ế"   # LATIN SMALL LETTER E WITH CIRCUMFLEX AND ACUTE
+<dead_belowdot> <dead_circumflex> <e>   : "ệ"   # LATIN SMALL LETTER E WITH CIRCUMFLEX AND DOT BELOW
+<dead_grave>    <dead_circumflex> <e>   : "ề"   # LATIN SMALL LETTER E WITH CIRCUMFLEX AND GRAVE
+<dead_hook>     <dead_circumflex> <e>   : "ể"   # LATIN SMALL LETTER E WITH CIRCUMFLEX AND HOOK ABOVE
+<dead_tilde>    <dead_circumflex> <e>   : "ễ"   # LATIN SMALL LETTER E WITH CIRCUMFLEX AND TILDE
+<dead_acute>    <dead_circumflex> <E>   : "Ệ"   # LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND ACUTE
+<dead_belowdot> <dead_circumflex> <E>   : "Ệ"   # LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND DOT BELOW
+<dead_grave>    <dead_circumflex> <E>   : "Ề"   # LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND GRAVE
+<dead_hook>     <dead_circumflex> <E>   : "Ể"   # LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND HOOK ABOVE
+<dead_tilde>    <dead_circumflex> <E>   : "Ễ"   # LATIN CAPITAL LETTER E WITH CIRCUMFLEX AND TILDE
+<dead_acute>    <dead_circumflex> <o>   : "ố"   # LATIN SMALL LETTER O WITH CIRCUMFLEX AND ACUTE
+<dead_belowdot> <dead_circumflex> <o>   : "ộ"   # LATIN SMALL LETTER O WITH CIRCUMFLEX AND DOT BELOW
+<dead_grave>    <dead_circumflex> <o>   : "ồ"   # LATIN SMALL LETTER O WITH CIRCUMFLEX AND GRAVE
+<dead_hook>     <dead_circumflex> <o>   : "ổ"   # LATIN SMALL LETTER O WITH CIRCUMFLEX AND HOOK ABOVE
+<dead_tilde>    <dead_circumflex> <o>   : "ỗ"   # LATIN SMALL LETTER O WITH CIRCUMFLEX AND TILDE
+<dead_acute>    <dead_circumflex> <O>   : "Ố"   # LATIN CAPITAL LETTER O WITH CIRCUMFLEX AND ACUTE
+<dead_belowdot> <dead_circumflex> <O>   : "Ộ"   # LATIN CAPITAL LETTER O WITH CIRCUMFLEX AND DOT BELOW
+<dead_grave>    <dead_circumflex> <O>   : "Ồ"   # LATIN CAPITAL LETTER O WITH CIRCUMFLEX AND GRAVE
+<dead_hook>     <dead_circumflex> <O>   : "Ổ"   # LATIN CAPITAL LETTER O WITH CIRCUMFLEX AND HOOK ABOVE
+<dead_tilde>    <dead_circumflex> <O>   : "Ỗ"   # LATIN CAPITAL LETTER O WITH CIRCUMFLEX AND TILDE
+
+XCOMM Sequences with COMBINING DIAERESIS / <dead_diaeresis>
+<dead_macron>   <dead_diaeresis> <a>    : "ǟ"   # LATIN SMALL LETTER A WITH DIAERESIS AND MACRON
+<dead_macron>   <dead_diaeresis> <A>    : "Ǟ"   # LATIN CAPITAL LETTER A WITH DIAERESIS AND MACRON
+
+XCOMM Sequences with COMBINING DOT ABOVE / <dead_abovedot>
+                <dead_abovedot> <a>     : "ȧ"   # LATIN SMALL LETTER A WITH DOT ABOVE
+<dead_macron>   <dead_abovedot> <a>     : "ǡ"   # LATIN SMALL LETTER A WITH DOT ABOVE AND MACRON
+                <dead_abovedot> <A>     : "Ȧ"   # LATIN CAPITAL LETTER A WITH DOT ABOVE
+<dead_macron>   <dead_abovedot> <A>     : "Ǡ"   # LATIN CAPITAL LETTER A WITH DOT ABOVE AND MACRON
+
+XCOMM Sequences with COMBINING HOOK ABOVE / <dead_hook>
+<dead_hook> <a>                         : "ả"   # LATIN SMALL LETTER A WITH HOOK ABOVE
+<dead_hook> <A>                         : "Ả"   # LATIN CAPITAL LETTER A WITH HOOK ABOVE
+<dead_hook> <e>                         : "ẻ"   # LATIN SMALL LETTER E WITH HOOK ABOVE
+<dead_hook> <E>                         : "Ẻ"   # LATIN CAPITAL LETTER E WITH HOOK ABOVE
+<dead_hook> <i>                         : "ỉ"   # LATIN SMALL LETTER I WITH HOOK ABOVE
+<dead_hook> <I>                         : "Ỉ"   # LATIN CAPITAL LETTER I WITH HOOK ABOVE
+<dead_hook> <o>                         : "ỏ"   # LATIN SMALL LETTER O WITH HOOK ABOVE
+<dead_hook> <O>                         : "Ỏ"   # LATIN CAPITAL LETTER O WITH HOOK ABOVE
+<dead_hook> <u>                         : "ủ"   # LATIN SMALL LETTER U WITH HOOK ABOVE
+<dead_hook> <U>                         : "Ủ"   # LATIN CAPITAL LETTER U WITH HOOK ABOVE
+<dead_hook> <y>                         : "ỷ"   # LATIN SMALL LETTER Y WITH HOOK ABOVE
+<dead_hook> <Y>                         : "Ỷ"   # LATIN CAPITAL LETTER Y WITH HOOK ABOVE
+
+XCOMM Sequences with COMBINING HORN / <dead_horn>
+                <dead_horn> <o>         : "ơ"   # LATIN SMALL LETTER O WITH HORN
+<dead_acute>    <dead_horn> <o>         : "ớ"   # LATIN SMALL LETTER O WITH HORN AND ACUTE
+<dead_belowdot> <dead_horn> <o>         : "ợ"   # LATIN SMALL LETTER O WITH HORN AND DOT BELOW
+<dead_grave>    <dead_horn> <o>         : "ờ"   # LATIN SMALL LETTER O WITH HORN AND GRAVE
+<dead_hook>     <dead_horn> <o>         : "ờ"   # LATIN SMALL LETTER O WITH HORN AND HOOK ABOVE
+<dead_tilde>    <dead_horn> <o>         : "ỡ"   # LATIN SMALL LETTER O WITH HORN AND TILDE
+                <dead_horn> <O>         : "Ơ"   # LATIN CAPITAL LETTER O WITH HORN
+<dead_acute>    <dead_horn> <O>         : "Ớ"   # LATIN CAPITAL LETTER O WITH HORN AND ACUTE
+<dead_belowdot> <dead_horn> <O>         : "Ợ"   # LATIN CAPITAL LETTER O WITH HORN AND DOT BELOW
+<dead_grave>    <dead_horn> <O>         : "Ờ"   # LATIN CAPITAL LETTER O WITH HORN AND GRAVE
+<dead_hook>     <dead_horn> <O>         : "Ở"   # LATIN CAPITAL LETTER O WITH HORN AND HOOK ABOVE
+<dead_tilde>    <dead_horn> <O>         : "Ỡ"   # LATIN CAPITAL LETTER O WITH HORN AND TILDE
+                <dead_horn> <u>         : "ư"   # LATIN SMALL LETTER U WITH HORN
+<dead_acute>    <dead_horn> <u>         : "ứ"   # LATIN SMALL LETTER U WITH HORN AND ACUTE
+<dead_belowdot> <dead_horn> <u>         : "ự"   # LATIN SMALL LETTER U WITH HORN AND DOT BELOW
+<dead_grave>    <dead_horn> <u>         : "ừ"   # LATIN SMALL LETTER U WITH HORN AND GRAVE
+<dead_hook>     <dead_horn> <u>         : "ử"   # LATIN SMALL LETTER U WITH HORN AND HOOK ABOVE
+<dead_tilde>    <dead_horn> <u>         : "ữ"   # LATIN SMALL LETTER U WITH HORN AND TILDE
+                <dead_horn> <U>         : "Ư"   # LATIN CAPITAL LETTER U WITH HORN
+<dead_acute>    <dead_horn> <U>         : "Ứ"   # LATIN CAPITAL LETTER U WITH HORN AND ACUTE
+<dead_belowdot> <dead_horn> <U>         : "Ự"   # LATIN CAPITAL LETTER U WITH HORN AND DOT BELOW
+<dead_grave>    <dead_horn> <U>         : "Ừ"   # LATIN CAPITAL LETTER U WITH HORN AND GRAVE
+<dead_hook>     <dead_horn> <U>         : "Ử"   # LATIN CAPITAL LETTER U WITH HORN AND HOOK ABOVE
+<dead_tilde>    <dead_horn> <U>         : "Ữ"   # LATIN CAPITAL LETTER U WITH HORN AND TILDE
+
+XCOMM Sequences with COMBINING OGONEK / <dead_ogonek>
+<dead_macron>   <dead_ogonek> <o>       : "ǭ"   # LATIN SMALL LETTER O WITH OGONEK AND MACRON
+<dead_macron>   <dead_ogonek> <O>       : "Ǭ"   # LATIN CAPITAL LETTER O WITH OGONEK AND MACRON
+
+XCOMM Sequences with COMBINING RING ABOVE / <dead_abovering>
+<dead_acute>    <dead_abovering> <a>    : "ǻ"   # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
+<dead_acute>    <dead_abovering> <A>    : "Ǻ"   # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
+
 XCOMM Additional sequences from Annex 5 for the reportoire of the MES-2
 XCOMM (Multilingual European Subset No. 2 in ISO/IEC 10646, Collection 282)
 <dead_hook> <f>                         : "ƒ"   # LATIN SMALL LETTER F WITH HOOK
@@ -312,6 +419,7 @@ XCOMM (Multilingual European Subset No. 2 in ISO/IEC 10646, Collection 282)
 <Multi_key> <apostrophe> <space> <n>    : "ŉ"   # LATIN SMALL LETTER N PRECEDED BY APOSTROPHE
 <dead_hook> <r>                         : "ɼ"   # LATIN SMALL LETTER R WITH LONG LEG
 <Multi_key> <f> <s>                     : "ſ"   # LATIN SMALL LETTER LONG S
+<dead_abovedot> <Multi_key> <f> <s>     : "ẛ"   # LATIN SMALL LETTER LONG S WITH DOT ABOVE
 <Multi_key> <dead_abovedot> <f> <s>     : "ẛ"   # LATIN SMALL LETTER LONG S WITH DOT ABOVE
 <dead_belowcomma> <s>                   : "ș"   # LATIN SMALL LETTER S WITH COMMA BELOW
 <dead_belowcomma> <S>                   : "Ș"   # LATIN CAPITAL LETTER S WITH COMMA BELOW
