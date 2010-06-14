@@ -57,4 +57,5 @@ XORG_LINT_LIBRARY([Xext])
 AC_OUTPUT([Makefile
            man/Makefile
 	   src/Makefile
+	   specs/Makefile
 	   xext.pc])

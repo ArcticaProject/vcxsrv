@@ -1,4 +1,4 @@
-SUBDIRS = man src
+SUBDIRS = man src specs
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xext.pc
