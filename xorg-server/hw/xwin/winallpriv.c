@@ -72,6 +72,13 @@ winAllocatePrivates (ScreenPtr pScreen)
   /* Intialize private structure members */
   pScreenPriv->fActive = TRUE;
 
+  /* Reserve screen memory for our privates */
+  if (!dixRegisterPrivateKey(g_iScreenPrivateKey, PRIVATE_SCREEN, 0))
+    {
+      ErrorF ("winAllocatePrivates - dixRegisterPrivateKey () failed\n");
+      return FALSE;
+    }
+
   /* Save the screen private pointer */
   winSetScreenPriv (pScreen, pScreenPriv);
 
