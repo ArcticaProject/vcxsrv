@@ -32,9 +32,6 @@ libXext_la_SOURCES = \
 libXextincludedir = $(includedir)/X11/extensions
 libXextinclude_HEADERS = $(top_srcdir)/include/X11/extensions/dpms.h \
 			 $(top_srcdir)/include/X11/extensions/extutil.h \
-			 $(top_srcdir)/include/X11/extensions/lbxbuf.h \
-			 $(top_srcdir)/include/X11/extensions/lbxbufstr.h \
-			 $(top_srcdir)/include/X11/extensions/lbximage.h \
 			 $(top_srcdir)/include/X11/extensions/MITMisc.h \
 			 $(top_srcdir)/include/X11/extensions/multibuf.h \
 			 $(top_srcdir)/include/X11/extensions/security.h \

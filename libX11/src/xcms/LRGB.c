@@ -753,7 +753,7 @@ LINEAR_RGB_InitSCCData(
 		/* Blue Intensity Table */
 		if (!(pScreenData->pBlueTbl = (IntensityTbl *)
 			Xcalloc (1, sizeof(IntensityTbl)))) {
-		    goto FreeBlueTblElements;
+		    goto FreeGreenTblElements;
 		}
 		if (_XcmsGetTableType1(pScreenData->pBlueTbl, format_return, &pChar,
 			&nitems) == XcmsFailure) {
