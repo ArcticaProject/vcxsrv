@@ -228,7 +228,9 @@ int main(int argc, char *argv[], char *envp[])
 	clients[0] = serverClient;
 	currentMaxClients = 1;
 
-	/* Initialize server client devPrivates, to be reallocated as
+	dixResetPrivates();
+
+  /* Initialize server client devPrivates, to be reallocated as
 	 * more client privates are registered
 	 */
 	if (!dixAllocatePrivates(&serverClient->devPrivates, PRIVATE_CLIENT))
@@ -244,7 +246,6 @@ int main(int argc, char *argv[], char *envp[])
 	InitEvents();
 	InitSelections();
 	InitGlyphCaching();
-	dixResetPrivates();
 	dixResetRegistry();
 	ResetFontPrivateIndex();
 	InitCallbackManager();
