@@ -50,9 +50,6 @@ libXt\include\X11\Xtos.h                          X11\Xtos.h
 
 libXext\include\X11\extensions\dpms.h             X11\extensions\dpms.h
 libXext\include\X11\extensions\extutil.h          X11\extensions\extutil.h
-libXext\include\X11\extensions\lbxbuf.h           X11\extensions\lbxbuf.h
-libXext\include\X11\extensions\lbxbufstr.h        X11\extensions\lbxbufstr.h
-libXext\include\X11\extensions\lbximage.h         X11\extensions\lbximage.h
 libXext\include\X11\extensions\MITMisc.h          X11\extensions\MITMisc.h
 libXext\include\X11\extensions\multibuf.h         X11\extensions\multibuf.h
 libXext\include\X11\extensions\security.h         X11\extensions\security.h
