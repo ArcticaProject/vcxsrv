@@ -753,6 +753,8 @@ xf86CrtcCloseScreen (int index, ScreenPtr screen)
 
 	crtc->randr_crtc = NULL;
     }
+    xf86RandR12CloseScreen (screen);
+
     return screen->CloseScreen (index, screen);
 }
 

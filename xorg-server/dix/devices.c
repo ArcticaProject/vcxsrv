@@ -1546,7 +1546,7 @@ InitPointerDeviceStruct(DevicePtr device, CARD8 *map, int numButtons, Atom* btn_
 
     return(InitButtonClassDeviceStruct(dev, numButtons, btn_labels, map) &&
 	   InitValuatorClassDeviceStruct(dev, numAxes, axes_labels,
-					 numMotionEvents, 0) &&
+					 numMotionEvents, Relative) &&
 	   InitPtrFeedbackClassDeviceStruct(dev, controlProc));
 }
 

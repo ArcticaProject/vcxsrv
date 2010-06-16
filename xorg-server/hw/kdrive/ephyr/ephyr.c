@@ -38,6 +38,8 @@
 #include "ephyrglxext.h"
 #endif /* XF86DRI */
 
+#include "xkbsrv.h"
+
 extern int KdTsPhyScreen;
 #ifdef GLXEXT
 extern Bool noGlxVisualInit;
@@ -748,75 +750,55 @@ ephyrScreenFini (KdScreenInfo *screen)
 void
 ephyrUpdateModifierState(unsigned int state)
 {
-#if 0
-  DeviceIntPtr pkeydev;
-  KeyClassPtr  keyc;
-  int          i;
-  CARD8        mask;
 
-  pkeydev = inputInfo.keyboard;
-
-  if (!pkeydev)
-    return;
+  DeviceIntPtr pDev = inputInfo.keyboard;
+  KeyClassPtr keyc = pDev->key;
+  int i;
+  CARD8 mask;
+  int xkb_state;
   
-/* This is pretty broken.
- *
- * What should happen is that focus out should do as a VT switch does in
- * traditional servers: fake releases for all keys (and buttons too, come
- * to think of it) currently down.  Then, on focus in, get the state from
- * the host, and fake keypresses for everything currently down.
- *
- * So I'm leaving this broken for a little while.  Sorry, folks.
- *
- * -daniels
- */
+  if (!pDev)
+      return;
 
-  keyc = pkeydev->key;
-  
+  xkb_state = XkbStateFieldFromRec(&pDev->key->xkbInfo->state);
   state = state & 0xff;
-  
-  if (keyc->state == state)
+
+  if (xkb_state == state)
     return;
-  
-  for (i = 0, mask = 1; i < 8; i++, mask <<= 1) 
-    {
-      int key;
       
-      /* Modifier is down, but shouldn't be   */
-      if ((keyc->state & mask) && !(state & mask)) 
-	{
-	  int count = keyc->modifierKeyCount[i];
-	  
-	  for (key = 0; key < MAP_LENGTH; key++)
-	    if (keyc->xkbInfo->desc->map->modmap[key] & mask)
-	      {
-		int bit;
-		BYTE *kptr;
-		
-		kptr = &keyc->down[key >> 3];
-		bit = 1 << (key & 7);
-		
-		if (*kptr & bit && ephyrKbd &&
-                    ((EphyrKbdPrivate *)ephyrKbd->driverPrivate)->enabled)
-		  KdEnqueueKeyboardEvent(ephyrKbd, key, TRUE); /* release */
-		
-		if (--count == 0)
-		  break;
-	      }
-	}
-       
-      /* Modifier shoud be down, but isn't   */
-      if (!(keyc->state & mask) && (state & mask))
-	for (key = 0; key < MAP_LENGTH; key++)
-	  if (keyc->xkbInfo->desc->map->modmap[key] & mask)
-	    {
-              if (keyc->xkbInfo->desc->map->modmap[key] & mask && ephyrKbd &&
-                  ((EphyrKbdPrivate *)ephyrKbd->driverPrivate)->enabled)
-	          KdEnqueueKeyboardEvent(ephyrKbd, key, FALSE); /* press */
-	      break;
-	    }
+  for (i = 0, mask = 1; i < 8; i++, mask <<= 1) {
+    int key;
+
+    /* Modifier is down, but shouldn't be
+     */
+    if ((xkb_state & mask) && !(state & mask)) {
+      int count = keyc->modifierKeyCount[i];
+
+      for (key = 0; key < MAP_LENGTH; key++)
+        if (keyc->xkbInfo->desc->map->modmap[key] & mask) {
+          int bit;
+          BYTE *kptr;
+
+          kptr = &keyc->down[key >> 3];
+          bit = 1 << (key & 7);
+
+          if (*kptr & bit)
+	        KdEnqueueKeyboardEvent (ephyrKbd, key, TRUE);
+
+          if (--count == 0)
+            break;
+        }
     }
-#endif
+
+    /* Modifier shoud be down, but isn't
+     */
+    if (!(xkb_state & mask) && (state & mask))
+      for (key = 0; key < MAP_LENGTH; key++)
+        if (keyc->xkbInfo->desc->map->modmap[key] & mask) {
+	        KdEnqueueKeyboardEvent (ephyrKbd, key, FALSE);
+          break;
+        }
+  }
 }
 
 static void
@@ -998,6 +980,7 @@ ephyrPoll(void)
           if (!ephyrKbd ||
               !((EphyrKbdPrivate *)ephyrKbd->driverPrivate)->enabled)
               continue;
+	  ephyrUpdateModifierState(ev.key_state);
 	  KdEnqueueKeyboardEvent (ephyrKbd, ev.data.key_up.scancode, TRUE);
 	  break;
 

@@ -928,6 +928,24 @@ xf86RandR12Init (ScreenPtr pScreen)
 }
 
 void
+xf86RandR12CloseScreen (ScreenPtr pScreen)
+{
+    XF86RandRInfoPtr	randrp;
+
+#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
+    if (xf86RandR12Key == NULL)
+	return;
+#endif
+
+    randrp = XF86RANDRINFO(pScreen);
+#if RANDR_12_INTERFACE
+    xf86Screens[pScreen->myNum]->EnterVT = randrp->orig_EnterVT;
+#endif
+
+    free(randrp);
+}
+
+void
 xf86RandR12SetRotations (ScreenPtr pScreen, Rotation rotations)
 {
     XF86RandRInfoPtr	randrp;
@@ -1755,10 +1773,16 @@ static Bool
 xf86RandR12EnterVT (int screen_index, int flags)
 {
     ScreenPtr        pScreen = screenInfo.screens[screen_index];
+    ScrnInfoPtr	     pScrn = xf86Screens[screen_index];
     XF86RandRInfoPtr randrp  = XF86RANDRINFO(pScreen);
+    Bool	     ret;
 
     if (randrp->orig_EnterVT) {
-	if (!randrp->orig_EnterVT (screen_index, flags))
+	pScrn->EnterVT = randrp->orig_EnterVT;
+	ret = pScrn->EnterVT (screen_index, flags);
+	randrp->orig_EnterVT = pScrn->EnterVT;
+	pScrn->EnterVT = xf86RandR12EnterVT;
+	if (!ret)
 	    return FALSE;
     }
 

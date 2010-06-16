@@ -957,8 +957,12 @@ Bool
 DRI2Connect(ScreenPtr pScreen, unsigned int driverType, int *fd,
 	    const char **driverName, const char **deviceName)
 {
-    DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
+    DRI2ScreenPtr ds;
 
+    if (!dixPrivateKeyRegistered(dri2ScreenPrivateKey))
+	return FALSE;
+
+    ds = DRI2GetScreen(pScreen);
     if (ds == NULL || driverType >= ds->numDrivers ||
 	    !ds->driverNames[driverType])
 	return FALSE;
