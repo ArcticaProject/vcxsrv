@@ -14,6 +14,23 @@
     </layout>
     <layout>
       <configItem>
+        <name>ir</name>
+        <_shortDescription>Iran</_shortDescription>
+        <_description>Iran</_description>
+        <languageList><iso639Id>per</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>ave</name>
+            <_description>Avestan</_description>
+            <languageList><iso639Id>ave</iso639Id></languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>us</name>
         <_shortDescription>USA</_shortDescription>
         <_description>USA</_description>

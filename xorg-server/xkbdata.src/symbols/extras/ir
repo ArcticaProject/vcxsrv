@@ -1,0 +1,63 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+// Generated keyboard layout file with the Keyboard Layout Editor.
+// For more about the software, see http://code.google.com/p/keyboardlayouteditor
+//
+// Version 0.2, fixed AD09.
+//
+// Layout by Ernst Tremel, http://ubuntuforums.org/showpost.php?p=9365469&postcount=32
+// Creation of this file by Simos Xenitellis.
+
+partial default alphanumeric_keys
+xkb_symbols "ave"
+{
+	name[Group1] = "Iran - Avestan";
+
+	key <AB01> { [ U10B30,         U10B32 ] }; // 𐬰 𐬲 
+	key <AB02> { [ U10B11,         U10B12 ] }; // 𐬑 𐬒 
+	key <AB03> { [ U10B17,          UE102 ] }; // 𐬗  
+	key <AB04> { [ U10B2C,         U10B13 ] }; // 𐬬 𐬓 
+	key <AB05> { [ U10B20,         U10B21 ] }; // 𐬠 𐬡 
+	key <AB06> { [ U10B25,         U10B27 ] }; // 𐬥 𐬧 
+	key <AB07> { [ U10B28,         U10B29 ] }; // 𐬨 𐬩 
+	key <AB08> { [ U10B3C,         U10B39 ] }; // 𐬼 𐬹 
+	key <AB09> { [ U10B3E,         U10B3D ] }; // 𐬾 𐬽 
+	key <AB10> { [ U10B3F, periodcentered ] }; // 𐬿 · 
+
+	key <AC01> { [ U10B00,         U10B01 ] }; // 𐬀 𐬁 
+	key <AC02> { [ U10B2F,         U10B31 ] }; // 𐬯 𐬱 
+	key <AC03> { [ U10B1B,         U10B1C ] }; // 𐬛 𐬜 
+	key <AC04> { [ U10B1F,         U10B16 ] }; // 𐬟 𐬖 
+	key <AC05> { [ U10B14,         U10B15 ] }; // 𐬔 𐬕 
+	key <AC06> { [ U10B35,          UE100 ] }; // 𐬵  
+	key <AC07> { [ U10B18,         U10B24 ] }; // 𐬘 𐬤 
+	key <AC08> { [ U10B10,          UE101 ] }; // 𐬐  
+	key <AC09> { [ U10B2E,          UE103 ] }; // 𐬮  
+	key <AC10> { [ U10B3B,         U10B3A ] }; // 𐬻 𐬺 
+	key <AC11> { [ U10B1D                 ] }; // 𐬝 
+
+	key <AD01> { [ U10B22,         U10B23 ] }; // 𐬢 𐬣 
+	key <AD02> { [ U10B33,         U10B34 ] }; // 𐬳 𐬴 
+	key <AD03> { [ U10B08,         U10B09 ] }; // 𐬈 𐬉 
+	key <AD04> { [ U10B2D,         U10B26 ] }; // 𐬭 𐬦 
+	key <AD05> { [ U10B19,         U10B1A ] }; // 𐬙 𐬚 
+	key <AD06> { [ U10B2B,         U10B2A ] }; // 𐬫 𐬪 
+	key <AD07> { [ U10B0E,         U10B0F ] }; // 𐬎 𐬏 
+	key <AD08> { [ U10B0C,         U10B0D ] }; // 𐬌 𐬍 
+	key <AD09> { [ U10B0A,         U10B0B ] }; // 𐬊 𐬋
+	key <AD10> { [ U10B1E                 ] }; // 𐬞 
+	key <AD11> { [ U10B06,         U10B07 ] }; // 𐬆 𐬇 
+	key <AD12> { [ U10B02,         U10B03 ] }; // 𐬂 𐬃 
+
+	key <AE01> { [ U10B78                 ] }; // 𐭸 
+	key <AE02> { [ U10B79                 ] }; // 𐭹 
+	key <AE03> { [ U10B7A                 ] }; // 𐭺 
+	key <AE04> { [ U10B7B                 ] }; // 𐭻 
+	key <AE05> { [ U10B7C                 ] }; // 𐭼 
+	key <AE06> { [ U10B7D                 ] }; // 𐭽 
+	key <AE07> { [ U10B7E                 ] }; // 𐭾 
+	key <AE08> { [ U10B7F                 ] }; // 𐭿 
+
+	key <BKSL> { [ U10B04,         U10B05 ] }; // 𐬄 𐬅 
+	key <LSGT> { [ U10B04,         U10B05 ] }; // 𐬄 𐬅 
+};
