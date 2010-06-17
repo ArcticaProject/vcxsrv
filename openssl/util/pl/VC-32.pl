@@ -123,21 +123,26 @@ else	# Win32
     }
 $mlflags='';
 
-$out_def="out32"; $out_def.='_$(TARGETCPU)' if ($FLAVOR =~ /CE/);
-$tmp_def="tmp32"; $tmp_def.='_$(TARGETCPU)' if ($FLAVOR =~ /CE/);
+$out_def ="\$(OUT_D)";	$out_def.="dll"			if ($shlib);
+			$out_def.='_$(TARGETCPU)'	if ($FLAVOR =~ /CE/);
+$tmp_def ="\$(TMP_D)";	$tmp_def.="dll"			if ($shlib);
+			$tmp_def.='_$(TARGETCPU)'	if ($FLAVOR =~ /CE/);
 $inc_def="inc32";
 
 if ($debug)
 	{
 	$cflags=$dbg_cflags.$base_cflags;
-	$lflags.=" /debug";
-	$mlflags.=' /debug';
 	}
 else
 	{
 	$cflags=$opt_cflags.$base_cflags;
 	$cdflags=$dbg_cflags.$base_cflags;
 	}
+
+# generate symbols.pdb unconditionally
+$app_cflag.=" /Zi /Fd$tmp_def/app";
+$lib_cflag.=" /Zi /Fd$tmp_def/lib";
+$lflags.=" /debug";
 
 $obj='.obj';
 $asm_suffix='.asm';
@@ -179,18 +184,15 @@ $lfile='/out:';
 $shlib_ex_obj="";
 $app_ex_obj="setargv.obj" if ($FLAVOR !~ /CE/);
 if ($FLAVOR =~ /WIN64A/) {
-	if (`nasm -v` =~ /NASM version ([0-9]+\.[0-9]+)/ && $1 >= 2.0) {
-		$asm='nasm -f win64 -DNEAR -Ox';
-		$asm.=' -g' if $debug;
+	if (`nasm -v 2>NUL` =~ /NASM version ([0-9]+\.[0-9]+)/ && $1 >= 2.0) {
+		$asm='nasm -f win64 -DNEAR -Ox -g';
 		$afile='-o ';
 	} else {
-		$asm='ml64 /c /Cp /Cx';
-		$asm.=" /Zi" if $debug;
+		$asm='ml64 /c /Cp /Cx /Zi';
 		$afile='/Fo';
 	}
 } elsif ($FLAVOR =~ /WIN64I/) {
-	$asm='ias';
-	$asm.=" -d debug" if $debug;
+	$asm='ias -d debug';
 	$afile="-o ";
 } elsif ($nasm) {
 	my $ver=`nasm -v 2>NUL`;
@@ -200,8 +202,7 @@ if ($FLAVOR =~ /WIN64A/) {
 	$asmtype="win32n";
 	$afile='-o ';
 } else {
-	$asm='ml /nologo /Cp /coff /c /Cx';
-	$asm.=" /Zi" if $debug;
+	$asm='ml /nologo /Cp /coff /c /Cx /Zi';
 	$afile='/Fo';
 	$asmtype="win32";
 }
@@ -234,9 +235,7 @@ if (!$no_asm)
 if ($shlib && $FLAVOR !~ /CE/)
 	{
 	$mlflags.=" $lflags /dll";
-	$lib_cflag=" -D_WINDLL";
-	$out_def="out32dll";
-	$tmp_def="tmp32dll";
+	$lib_cflag.=" -D_WINDLL";
 	#
 	# Engage Applink...
 	#
@@ -266,13 +265,8 @@ elsif ($shlib && $FLAVOR =~ /CE/)
 	{
 	$mlflags.=" $lflags /dll";
 	$lflags.=' /entry:mainCRTstartup' if(defined($ENV{'PORTSDK_LIBPATH'}));
-	$lib_cflag=" -D_WINDLL -D_DLL";
-	$out_def='out32dll_$(TARGETCPU)';
-	$tmp_def='tmp32dll_$(TARGETCPU)';
+	$lib_cflag.=" -D_WINDLL -D_DLL";
 	}
-
-$cflags.=" /Fd\$(OUT_D)";
-$cdflags.=" /Fd\$(OUT_D)";
 
 sub do_lib_rule
 	{
