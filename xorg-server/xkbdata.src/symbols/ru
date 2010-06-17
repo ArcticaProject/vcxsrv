@@ -298,7 +298,7 @@ xkb_symbols "udm" {
 
     key	<AE01> {	[	 question,	    exclam,    1,       1 	]	};
     key	<AE02> {	[	parenleft,        quotedbl,    2,       2	]	};
-    key	<AE03> {	[      parenright,      numbersign,    3,       3	]	};
+    key	<AE03> {	[      parenright,      numerosign,    3,       3	]	};
     key	<AE04> {	[	    colon,       semicolon,    4,       4	]	};
     key	<AE05> {	[	 asterisk,	   percent,    5,       5	]	};
     key	<AE06> {	[      0x010004dd,	0x010004dc,    6,       6	]	};
