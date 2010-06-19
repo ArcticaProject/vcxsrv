@@ -50,7 +50,7 @@ xkb_symbols "olpc" {
     // Contact: Sayamindu Dasgupta <sayamindu@laptop.org>
     include "fr(basic)"
 
-    name[Group1]="France - OLPC";
+    name[Group1]="France";
 
     key <AD02>	{ [ z,  Z,  VoidSymbol, guillemotleft ]	};
 

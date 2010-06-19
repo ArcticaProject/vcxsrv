@@ -1441,6 +1441,13 @@ xf86MatchDevice(const char *drivername, GDevPtr **sectlist)
 	*sectlist = NULL;
 
     /*
+     * This can happen when running Xorg -showopts and a module like ati
+     * or vmware tries to load its submodules when xf86ConfigLayout is empty
+     */
+    if (!xf86ConfigLayout.screens)
+	return 0;
+
+    /*
      * This is a very important function that matches the device sections
      * as they show up in the config file with the drivers that the server
      * loads at run time.

@@ -759,6 +759,7 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
     DRI2DrawablePtr pPriv;
     DRI2BufferPtr   pDestBuffer = NULL, pSrcBuffer = NULL;
     int             ret, i;
+    CARD64          ust, current_msc;
 
     pPriv = DRI2GetDrawable(pDraw);
     if (pPriv == NULL) {
@@ -803,12 +804,26 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
      * need to schedule a swap for the last swap target + the swap interval.
      */
     if (target_msc == 0 && divisor == 0 && remainder == 0) {
+	/* If the current vblank count of the drawable's crtc is lower
+	 * than the count stored in last_swap_target from a previous swap
+	 * then reinitialize last_swap_target to the current crtc's msc,
+	 * otherwise the swap will hang. This will happen if the drawable
+	 * is moved to a crtc with a lower refresh rate, or a crtc that just
+	 * got enabled.
+	 */
+	if (!(*ds->GetMSC)(pDraw, &ust, &current_msc))
+	    pPriv->last_swap_target = 0;
+
+	if (current_msc < pPriv->last_swap_target)
+	    pPriv->last_swap_target = current_msc;
+
 	/*
 	 * Swap target for this swap is last swap target + swap interval since
 	 * we have to account for the current swap count, interval, and the
 	 * number of pending swaps.
 	 */
 	*swap_target = pPriv->last_swap_target + pPriv->swap_interval;
+
     } else {
 	/* glXSwapBuffersMscOML could have a 0 target_msc, honor it */
 	*swap_target = target_msc;

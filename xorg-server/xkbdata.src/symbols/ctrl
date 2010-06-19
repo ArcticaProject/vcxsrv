@@ -39,3 +39,10 @@ partial modifier_keys
 xkb_symbols "ctrl_ra" {
     key <RCTL>	{  symbols[Group1]= [ Alt_R ] };
 };
+
+// Menu works as Right Ctrl
+partial modifier_keys
+xkb_symbols "ctrl_menu" {
+  replace key <MENU> { [ Control_R, Control_R ] };
+  modifier_map Control { Control_L, <MENU> };
+};

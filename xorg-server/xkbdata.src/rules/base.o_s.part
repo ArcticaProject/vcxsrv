@@ -64,6 +64,7 @@
   ctrl:ctrl_ac		=	+ctrl(ctrl_ac)
   ctrl:ctrl_aa		=	+ctrl(ctrl_aa)
   ctrl:ctrl_ra		=	+ctrl(ctrl_ra)
+  ctrl:ctrl_menu	=	+ctrl(ctrl_menu)
   compose:ralt		=	+compose(ralt)
   compose:lwin		=	+compose(lwin)
   compose:rwin		=	+compose(rwin)

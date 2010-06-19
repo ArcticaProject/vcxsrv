@@ -230,8 +230,6 @@ xkb_symbols "sundeadkeys" {
 partial alphanumeric_keys modifier_keys keypad_keys
 xkb_symbols "neo_base" {
 
-    name[Group1]= "Germany - Neo 2";
-
     // Levels in Neo jargon
     // --------------------------------------------------------------
     // Ebene 1: normal
@@ -385,6 +383,8 @@ partial alphanumeric_keys modifier_keys keypad_keys
 xkb_symbols "neo" {
 
     include "de(neo_base)"
+
+    name[Group1]= "Germany - Neo 2";
 
     include "shift(both_capslock)"
     include "level3(caps_switch)"
