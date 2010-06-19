@@ -4121,6 +4121,12 @@
         </variant>
         <variant>
           <configItem>
+            <name>mac_intl</name>
+            <_description>Macintosh (International)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
             <name>colemak</name>
             <_description>Colemak</_description>
           </configItem>
@@ -4766,7 +4772,7 @@
         </configItem>
       </option>
     </group>
-    <group allowMultipleSelection="false">
+    <group allowMultipleSelection="true">
       <!-- Tweaking the position of the "Ctrl" key -->
       <configItem>
         <name>ctrl</name>
@@ -4800,6 +4806,12 @@
         <configItem>
           <name>ctrl:ctrl_ra</name>
           <_description>Right Ctrl as Right Alt</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>ctrl:ctrl_menu</name>
+          <description>Right Ctrl is mapped to Menu</description>
         </configItem>
       </option>
     </group>

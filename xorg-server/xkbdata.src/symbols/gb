@@ -180,3 +180,25 @@ xkb_symbols "mac" {
 };
 
 
+partial alphanumeric_keys 
+xkb_symbols "mac_intl" { 
+
+    include "latin" 
+
+    name[Group1]="United Kingdom - Macintosh (International)"; 
+
+    key <AE02>  { [   2,                       at,           EuroSign,    onehalf ] };
+    key <AE03>  { [   3,                 sterling,        twosuperior,   onethird ] };
+    key <AE04>  { [   4,                   dollar,      threesuperior, onequarter ] };
+    key <AE06>  { [   6,          dead_circumflex,           NoSymbol,   onesixth ] };
+    key <AD09>    { [   o,                        O,                 oe,       OE ] };
+
+    key <AC11>  { [ dead_acute,    dead_diaeresis,     dead_diaeresis,        bar ] }; //dead_doubleacute
+    key <TLDE>  { [ section,            plusminus,            notsign,    notsign ] }; //dead_grave
+
+    key <BKSL>  { [ backslash,                bar,         numbersign,        bar ] };
+    key <LSGT>  { [ dead_grave,        dead_tilde,          brokenbar,        bar ] };
+
+    include "level3(ralt_switch)"
+};
+

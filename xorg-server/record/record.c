@@ -2895,6 +2895,9 @@ RecordExtensionInit(void)
     if (!RTContext)
 	return;
 
+    if (!dixRegisterPrivateKey(RecordClientPrivateKey, PRIVATE_CLIENT, 0))
+        return;
+
     ppAllContexts = NULL;
     numContexts = numEnabledContexts = numEnabledRCAPs = 0;
 
