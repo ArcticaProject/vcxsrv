@@ -232,19 +232,25 @@ static xcb_generic_reply_t *poll_for_response(Display *dpy)
 	void *response;
 	xcb_generic_error_t *error;
 	PendingRequest *req;
-	while(!(response = poll_for_event(dpy)) &&
-	      (req = dpy->xcb->pending_requests) &&
+
+	response = poll_for_event(dpy);
+	if (response)
+		return response;
+
+	while((req = dpy->xcb->pending_requests) &&
 	      !req->reply_waiter &&
 	      xcb_poll_for_reply(dpy->xcb->connection, req->sequence, &response, &error))
 	{
 		assert(XLIB_SEQUENCE_COMPARE(req->sequence, <=, dpy->request));
 		dpy->last_request_read = req->sequence;
-		if(!response)
-			dequeue_pending_request(dpy, req);
+		if(response)
+			return response;
+		dequeue_pending_request(dpy, req);
 		if(error)
 			return (xcb_generic_reply_t *) error;
 	}
-	return response;
+
+	return NULL;
 }
 
 static void handle_response(Display *dpy, xcb_generic_reply_t *response, Bool in_XReply)
