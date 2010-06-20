@@ -80,10 +80,6 @@
 #include "win.h"
 #include <winmsg.h>
 
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
-
 extern Bool			g_fXdmcpEnabled;
 extern Bool g_fNativeGl;
 

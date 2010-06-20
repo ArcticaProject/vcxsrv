@@ -29,6 +29,7 @@ THE SOFTWARE.
 #endif
 
 #include <stdlib.h>
+#include <unistd.h>
 
 #define FALSE 0
 #define TRUE 1
@@ -37,9 +38,6 @@ THE SOFTWARE.
 
 #include <X11/fonts/fontenc.h>
 #include "fontencI.h"
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
 
 /* Functions local to this file */
 

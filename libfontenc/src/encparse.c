@@ -35,9 +35,7 @@ THE SOFTWARE.
 #endif
 
 #include <stdlib.h>
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
+#include <unistd.h>
 
 #include "zlib.h"
 typedef gzFile FontFilePtr;

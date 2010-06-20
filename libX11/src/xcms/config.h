@@ -1,2 +1,2 @@
 #include <string.h>
-#define strdup _strdup
+#include <unistd.h>

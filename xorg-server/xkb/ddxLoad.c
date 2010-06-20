@@ -74,8 +74,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #ifdef WIN32
 
-#define strdup _strdup
-
 #include <X11/Xwindows.h>
 const char* 
 Win32TempDir()

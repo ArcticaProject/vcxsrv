@@ -122,10 +122,6 @@ __stdcall unsigned long GetTickCount(void);
 
 #include "picture.h"
 
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
-
 Bool noTestExtensions;
 #ifdef COMPOSITE
 Bool noCompositeExtension = FALSE;

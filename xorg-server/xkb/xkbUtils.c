@@ -69,10 +69,6 @@ DEALINGS IN THE SOFTWARE.
 #include "xkbgeom.h"
 #include "xkb.h"
 
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
-
 /***====================================================================***/
 
 int

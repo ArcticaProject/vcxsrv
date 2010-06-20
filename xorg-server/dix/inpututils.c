@@ -35,9 +35,6 @@
 #include "xace.h"
 #include "xkbsrv.h"
 #include "xkbstr.h"
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
 
 /* Check if a button map change is okay with the device.
  * Returns -1 for BadValue, as it collides with MappingBusy. */

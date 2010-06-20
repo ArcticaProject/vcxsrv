@@ -74,10 +74,6 @@ Equipment Corporation.
 #include "xf86bigfontsrv.h"
 #endif
 
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
-
 #define QUERYCHARINFO(pci, pr)  *(pr) = (pci)->metrics
 
 extern pointer fosNaturalParams;

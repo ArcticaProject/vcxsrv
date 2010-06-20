@@ -48,10 +48,6 @@
 #include "glxext.h"
 #include "protocol-versions.h"
 
-#ifdef _MSC_VER
-#define strdup _strdup
-#endif
-
 static DevPrivateKeyRec glxScreenPrivateKeyRec;
 #define glxScreenPrivateKey (&glxScreenPrivateKeyRec)
 

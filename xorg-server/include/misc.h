@@ -79,6 +79,7 @@ OF THIS SOFTWARE.
 #include <X11/Xdefs.h>
 
 #include <stddef.h>
+#include <unistd.h>
 
 #ifdef _MSC_VER
 #define inline __inline
