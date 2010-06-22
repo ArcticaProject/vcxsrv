@@ -17,6 +17,8 @@ m4_ifndef([XORG_MACROS_VERSION],
           [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.3)
 XORG_DEFAULT_OPTIONS
+XORG_ENABLE_SPECS
+XORG_WITH_GROFF
 AM_CONFIG_HEADER([config.h])
 
 # Determine .so library version per platform 
