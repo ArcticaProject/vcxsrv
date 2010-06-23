@@ -1123,6 +1123,11 @@ Bool LocalClient(ClientPtr client)
     pointer		addr;
     register HOST	*host;
 
+    if (!client->osPrivate)
+        return FALSE;
+    if (!((OsCommPtr)client->osPrivate)->trans_conn)
+        return FALSE;
+
     if (!_XSERVTransGetPeerAddr (((OsCommPtr)client->osPrivate)->trans_conn,
 	&notused, &alen, &from))
     {

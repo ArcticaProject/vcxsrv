@@ -74,25 +74,32 @@ winAllocatePrivates (ScreenPtr pScreen)
   /* Intialize private structure members */
   pScreenPriv->fActive = TRUE;
 
+  /* Register our screen private */
+  if (!dixRegisterPrivateKey(g_iScreenPrivateKey, PRIVATE_SCREEN, 0))
+    {
+      ErrorF ("winAllocatePrivates - AllocateScreenPrivate () failed\n");
+      return FALSE;
+    }
+
   /* Save the screen private pointer */
   winSetScreenPriv (pScreen, pScreenPriv);
 
   /* Reserve GC memory for our privates */
-  if (!dixRequestPrivateKey(g_iGCPrivateKey, PRIVATE_GC, sizeof (winPrivGCRec)))
+  if (!dixRegisterPrivateKey(g_iGCPrivateKey, PRIVATE_GC, sizeof (winPrivGCRec)))
     {
       ErrorF ("winAllocatePrivates - AllocateGCPrivate () failed\n");
       return FALSE;
     }
 
   /* Reserve Pixmap memory for our privates */
-  if (!dixRequestPrivateKey(g_iPixmapPrivateKey, PRIVATE_PIXMAP, sizeof (winPrivPixmapRec)))
+  if (!dixRegisterPrivateKey(g_iPixmapPrivateKey, PRIVATE_PIXMAP, sizeof (winPrivPixmapRec)))
     {
       ErrorF ("winAllocatePrivates - AllocatePixmapPrivates () failed\n");
       return FALSE;
     }
 
   /* Reserve Window memory for our privates */
-  if (!dixRequestPrivateKey(g_iWindowPrivateKey, PRIVATE_WINDOW, sizeof (winPrivWinRec)))
+  if (!dixRegisterPrivateKey(g_iWindowPrivateKey, PRIVATE_WINDOW, sizeof (winPrivWinRec)))
     {
       ErrorF ("winAllocatePrivates () - AllocateWindowPrivates () failed\n");
        return FALSE;
@@ -160,6 +167,13 @@ winAllocateCmapPrivates (ColormapPtr pCmap)
 
   /* Initialize the memory of the private structure */
   ZeroMemory (pCmapPriv, sizeof (winPrivCmapRec));
+
+  /* Register our colourmap private */
+  if (!dixRegisterPrivateKey(g_iCmapPrivateKey, PRIVATE_COLORMAP, 0))
+    {
+      ErrorF ("winAllocateCmapPrivates - AllocateCmapPrivate () failed\n");
+      return FALSE;
+    }
 
   /* Save the cmap private pointer */
   winSetCmapPriv (pCmap, pCmapPriv);

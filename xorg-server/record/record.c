@@ -997,10 +997,11 @@ RecordUninstallHooks(RecordClientsAndProtocolPtr pRCAP, XID oneclient)
 		ClientPtr pClient = clients[CLIENT_ID(client)];
 		int c;
 		Bool otherRCAPwantsProcVector = FALSE;
-		RecordClientPrivatePtr pClientPriv =
-						RecordClientPrivate(pClient);
+		RecordClientPrivatePtr pClientPriv = NULL;
 
-		assert (pClient && RecordClientPrivate(pClient));
+		assert (pClient);
+		pClientPriv = RecordClientPrivate(pClient);
+		assert (pClientPriv);
 		memcpy(pClientPriv->recordVector, pClientPriv->originalVector,
 		       sizeof (pClientPriv->recordVector));
 
@@ -2813,6 +2814,8 @@ RecordAClientStateChange(CallbackListPtr *pcbl, pointer nulldata, pointer callda
     NewClientInfoRec *pci = (NewClientInfoRec *)calldata;
     int i;
     ClientPtr pClient = pci->client;
+    RecordContextPtr *ppAllContextsCopy = NULL;
+    int numContextsCopy = 0;
 
     switch (pClient->clientState)
     {
@@ -2834,10 +2837,17 @@ RecordAClientStateChange(CallbackListPtr *pcbl, pointer nulldata, pointer callda
 
     case ClientStateGone:
     case ClientStateRetained: /* client disconnected */
-	for (i = 0; i < numContexts; i++)
+
+        /* RecordDisableContext modifies contents of ppAllContexts. */
+	numContextsCopy = numContexts;
+	ppAllContextsCopy = malloc(numContextsCopy * sizeof(RecordContextPtr));
+	assert(ppAllContextsCopy);
+	memcpy(ppAllContextsCopy, ppAllContexts, numContextsCopy * sizeof(RecordContextPtr));
+
+	for (i = 0; i < numContextsCopy; i++)
 	{
 	    RecordClientsAndProtocolPtr pRCAP;
-	    RecordContextPtr pContext = ppAllContexts[i];
+	    RecordContextPtr pContext = ppAllContextsCopy[i];
 	    int pos;
 
 	    if (pContext->pRecordingClient == pClient)
@@ -2851,6 +2861,8 @@ RecordAClientStateChange(CallbackListPtr *pcbl, pointer nulldata, pointer callda
 		RecordDeleteClientFromRCAP(pRCAP, pos);
 	    }
 	}
+
+	free(ppAllContextsCopy);
     break;
 
     default:

@@ -126,13 +126,6 @@ Atom			g_atomLastOwnedSelection = None;
 void
 winInitializeGlobals (void)
 {
-  if (!dixRegisterPrivateKey(&g_iScreenPrivateKeyRec, PRIVATE_SCREEN, 0) ||
-      !dixRegisterPrivateKey(&g_iCmapPrivateKeyRec, PRIVATE_COLORMAP, 0) ||
-      !dixRegisterPrivateKey(&g_iGCPrivateKeyRec, PRIVATE_GC, 0) ||
-      !dixRegisterPrivateKey(&g_iPixmapPrivateKeyRec, PRIVATE_PIXMAP, 0) ||
-      !dixRegisterPrivateKey(&g_iWindowPrivateKeyRec, PRIVATE_WINDOW, 0)) {
-      FatalError("cannot register private key");
-  }
   g_dwCurrentThreadID = GetCurrentThreadId ();
   g_hwndKeyboardFocus = NULL;
 #ifdef XWIN_CLIPBOARD

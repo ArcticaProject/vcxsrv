@@ -15,6 +15,7 @@ abi_extension=@abi_extension@
 Name: xorg-server
 Description: Modular X.Org X Server
 Version: @PACKAGE_VERSION@
-Requires: pixman-1 pciaccess xproto >= 7.0.17
+Requires: pixman-1 pciaccess
+Requires.private: @SDK_REQUIRED_MODULES@
 Cflags: -I${sdkdir} @symbol_visibility@
 Libs: -L${libdir}

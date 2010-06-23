@@ -631,7 +631,7 @@ extern int			g_fdMessageQueue;
 extern DevPrivateKeyRec		g_iScreenPrivateKeyRec;
 #define g_iScreenPrivateKey  	(&g_iScreenPrivateKeyRec)
 extern DevPrivateKeyRec		g_iCmapPrivateKeyRec;
-#define g_iCmapPrivateKeyRec 	(&g_iCmapPrivateKeyRec)
+#define g_iCmapPrivateKey 	(&g_iCmapPrivateKeyRec)
 extern DevPrivateKeyRec		g_iGCPrivateKeyRec;
 #define g_iGCPrivateKey 	(&g_iGCPrivateKeyRec)
 extern DevPrivateKeyRec		g_iPixmapPrivateKeyRec;
