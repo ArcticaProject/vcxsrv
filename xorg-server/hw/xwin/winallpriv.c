@@ -72,7 +72,7 @@ winAllocatePrivates (ScreenPtr pScreen)
   /* Intialize private structure members */
   pScreenPriv->fActive = TRUE;
 
-  /* Reserve screen memory for our privates */
+  /* Register our screen private */
   if (!dixRegisterPrivateKey(g_iScreenPrivateKey, PRIVATE_SCREEN, 0))
     {
       ErrorF ("winAllocatePrivates - dixRegisterPrivateKey () failed\n");
@@ -161,6 +161,13 @@ winAllocateCmapPrivates (ColormapPtr pCmap)
 
   /* Initialize the memory of the private structure */
   ZeroMemory (pCmapPriv, sizeof (winPrivCmapRec));
+
+  /* Register our colourmap private */
+  if (!dixRegisterPrivateKey(g_iCmapPrivateKey, PRIVATE_COLORMAP, 0))
+    {
+      ErrorF ("winAllocateCmapPrivates - AllocateCmapPrivate () failed\n");
+      return FALSE;
+    }
 
   /* Save the cmap private pointer */
   winSetCmapPriv (pCmap, pCmapPriv);

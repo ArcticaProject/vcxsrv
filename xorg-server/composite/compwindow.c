@@ -334,6 +334,65 @@ compImplicitRedirect (WindowPtr pWin, WindowPtr pParent)
     return FALSE;
 }
 
+static void compFreeOldPixmap(WindowPtr pWin)
+{
+    ScreenPtr		pScreen = pWin->drawable.pScreen;
+    if (pWin->redirectDraw != RedirectDrawNone)
+    {
+	CompWindowPtr	cw = GetCompWindow (pWin);
+	if (cw->pOldPixmap)
+	{
+	    (*pScreen->DestroyPixmap) (cw->pOldPixmap);
+	    cw->pOldPixmap = NullPixmap;
+	}
+    }
+}
+void
+compMoveWindow (WindowPtr pWin, int x, int y, WindowPtr pSib, VTKind kind)
+{
+    ScreenPtr		pScreen = pWin->drawable.pScreen;
+    CompScreenPtr	cs = GetCompScreen (pScreen);
+
+    pScreen->MoveWindow = cs->MoveWindow;
+    (*pScreen->MoveWindow) (pWin, x, y, pSib, kind);
+    cs->MoveWindow = pScreen->MoveWindow;
+    pScreen->MoveWindow = compMoveWindow;
+
+    compFreeOldPixmap(pWin);
+    compCheckTree (pScreen);
+}
+
+void
+compResizeWindow (WindowPtr pWin, int x, int y,
+		  unsigned int w, unsigned int h, WindowPtr pSib)
+{
+    ScreenPtr		pScreen = pWin->drawable.pScreen;
+    CompScreenPtr	cs = GetCompScreen (pScreen);
+
+    pScreen->ResizeWindow = cs->ResizeWindow;
+    (*pScreen->ResizeWindow) (pWin, x, y, w, h, pSib);
+    cs->ResizeWindow = pScreen->ResizeWindow;
+    pScreen->ResizeWindow = compResizeWindow;
+
+    compFreeOldPixmap(pWin);
+    compCheckTree (pWin->drawable.pScreen);
+}
+
+void
+compChangeBorderWidth (WindowPtr pWin, unsigned int bw)
+{
+    ScreenPtr		pScreen = pWin->drawable.pScreen;
+    CompScreenPtr	cs = GetCompScreen (pScreen);
+
+    pScreen->ChangeBorderWidth = cs->ChangeBorderWidth;
+    (*pScreen->ChangeBorderWidth) (pWin, bw);
+    cs->ChangeBorderWidth = pScreen->ChangeBorderWidth;
+    pScreen->ChangeBorderWidth = compChangeBorderWidth;
+
+    compFreeOldPixmap(pWin);
+    compCheckTree (pWin->drawable.pScreen);
+}
+
 void
 compReparentWindow (WindowPtr pWin, WindowPtr pPriorParent)
 {
@@ -705,7 +764,6 @@ compConfigNotify(WindowPtr pWin, int x, int y, int w, int h,
     CompScreenPtr	cs = GetCompScreen (pScreen);
     Bool                ret = 0;
     WindowPtr		pParent = pWin->parent;
-    CompWindowPtr       cw;
     int			draw_x, draw_y;
     Bool alloc_ret;
 
@@ -728,14 +786,6 @@ compConfigNotify(WindowPtr pWin, int x, int y, int w, int h,
     draw_x = pParent->drawable.x + x + bw;
     draw_y = pParent->drawable.y + y + bw;
     alloc_ret = compReallocPixmap (pWin, draw_x, draw_y, w, h, bw);
-    
-    cw = GetCompWindow (pWin);
-    if (cw->pOldPixmap)
-    {
-	(*pScreen->DestroyPixmap) (cw->pOldPixmap);
-	cw->pOldPixmap = NullPixmap;
-    }
-    compCheckTree (pScreen);
 
     if (alloc_ret == FALSE)
 	return BadAlloc;

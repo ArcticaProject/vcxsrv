@@ -127,9 +127,14 @@ typedef struct _CompScreen {
     UnrealizeWindowProcPtr	UnrealizeWindow;
     ClipNotifyProcPtr		ClipNotify;
     /*
-     * Called from ConfigureWindow.
+     * Called from ConfigureWindow, these
+     * three track changes to the offscreen storage
+     * geometry
      */
     ConfigNotifyProcPtr         ConfigNotify;
+    MoveWindowProcPtr		MoveWindow;
+    ResizeWindowProcPtr		ResizeWindow;
+    ChangeBorderWidthProcPtr	ChangeBorderWidth;
     /*
      * Reparenting has an effect on Subwindows redirect
      */
@@ -279,6 +284,16 @@ compUnrealizeWindow (WindowPtr pWin);
 
 void
 compClipNotify (WindowPtr pWin, int dx, int dy);
+
+void
+compMoveWindow (WindowPtr pWin, int x, int y, WindowPtr pSib, VTKind kind);
+
+void
+compResizeWindow (WindowPtr pWin, int x, int y,
+		  unsigned int w, unsigned int h, WindowPtr pSib);
+
+void
+compChangeBorderWidth (WindowPtr pWin, unsigned int border_width);
 
 void
 compReparentWindow (WindowPtr pWin, WindowPtr pPriorParent);

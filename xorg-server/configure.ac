@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.8.99.901, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2010-06-15"
+AC_INIT([xorg-server], 1.8.99.903, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2010-06-22"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -793,8 +793,12 @@ WINDOWSWMPROTO="windowswmproto"
 APPLEWMPROTO="applewmproto >= 1.4"
 
 dnl Core modules for most extensions, et al.
-REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.17] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
+SDK_REQUIRED_MODULES="[xproto >= 7.0.17] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.0.99.3] [inputproto >= 1.9.99.902] [kbproto >= 1.0.3] fontsproto"
+REQUIRED_MODULES="[fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] $SDK_REQUIRED_MODULES"
 REQUIRED_LIBS="xfont xau"
+
+# Make SDK_REQUIRED_MODULES available for inclusion in xorg-server.pc
+AC_SUBST(SDK_REQUIRED_MODULES)
 
 dnl List of libraries that require a specific version
 LIBAPPLEWM="applewm >= 1.4"
@@ -947,6 +951,7 @@ if test "x$XV" = xyes; then
 	AC_DEFINE(XV, 1, [Support Xv extension])
 	AC_DEFINE(XvExtension, 1, [Build Xv extension])
 	REQUIRED_MODULES="$REQUIRED_MODULES $VIDEOPROTO"
+	SDK_REQUIRED_MODULES="$SDK_REQUIRED_MODULES $VIDEOPROTO"
 else
 	XVMC=no
 fi
@@ -1036,6 +1041,7 @@ case "$DRI2,$HAVE_DRI2PROTO" in
 	yes,yes | auto,yes)
 		AC_DEFINE(DRI2, 1, [Build DRI2 extension])
 		DRI2=yes
+		SDK_REQUIRED_MODULES="$SDK_REQUIRED_MODULES $DRI2PROTO"
 		;;
 esac
 AM_CONDITIONAL(DRI2, test "x$DRI2" = xyes)
@@ -1074,6 +1080,7 @@ if test "x$XINERAMA" = xyes; then
 	AC_DEFINE(XINERAMA, 1, [Support Xinerama extension])
 	AC_DEFINE(PANORAMIX, 1, [Internal define for Xinerama])
 	REQUIRED_MODULES="$REQUIRED_MODULES $XINERAMAPROTO"
+	SDK_REQUIRED_MODULES="$SDK_REQUIRED_MODULES $XINERAMAPROTO"
 fi
 
 AM_CONDITIONAL(XACE, [test "x$XACE" = xyes])

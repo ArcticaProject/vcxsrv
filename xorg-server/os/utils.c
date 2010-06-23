@@ -205,8 +205,6 @@ int auditTrailLevel = 1;
 #define HAS_SAVED_IDS_AND_SETEUID
 #endif
 
-static char *dev_tty_from_init = NULL;	/* since we need to parse it anyway */
-
 OsSigHandlerPtr
 OsSignal(int sig, OsSigHandlerPtr handler)
 {
@@ -892,8 +890,7 @@ ProcessCommandLine(int argc, char *argv[])
 	}
 	else if (strncmp (argv[i], "tty", 3) == 0)
 	{
-	    /* just in case any body is interested */
-	    dev_tty_from_init = argv[i];
+            /* init supplies us with this useless information */
 	}
 #ifdef XDMCP
 	else if ((skip = XdmcpOptions(argc, argv, i)) != i)
@@ -1873,53 +1870,3 @@ error:
     free(list);
     return NULL;
 }
-
-#ifdef __SCO__
-#include <fcntl.h>
-
-static void
-lockit (int fd, short what)
-{
-  struct flock lck;
-
-  lck.l_whence = 0;
-  lck.l_start = 0;
-  lck.l_len = 1;
-  lck.l_type = what;
-
-  (void)fcntl (fd, F_SETLKW, &lck);
-}
-
-/* SCO OpenServer 5 lacks pread/pwrite. Emulate them. */
-ssize_t
-pread (int fd, void *buf, size_t nbytes, off_t offset)
-{
-  off_t saved;
-  ssize_t ret;
-
-  lockit (fd, F_RDLCK);
-  saved = lseek (fd, 0, SEEK_CUR);
-  lseek (fd, offset, SEEK_SET);
-  ret = read (fd, buf, nbytes);
-  lseek (fd, saved, SEEK_SET);
-  lockit (fd, F_UNLCK);
-
-  return ret;
-}
-
-ssize_t
-pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
-{
-  off_t saved;
-  ssize_t ret;
-
-  lockit (fd, F_WRLCK);
-  saved = lseek (fd, 0, SEEK_CUR);
-  lseek (fd, offset, SEEK_SET);
-  ret = write (fd, buf, nbytes);
-  lseek (fd, saved, SEEK_SET);
-  lockit (fd, F_UNLCK);
-
-  return ret;
-}
-#endif /* __SCO__ */

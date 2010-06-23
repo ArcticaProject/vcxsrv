@@ -1133,12 +1133,13 @@ XvdiSetPortAttribute(
   Atom attribute,
   INT32 value
 ){
+  int status;
 
+  status = (* pPort->pAdaptor->ddSetPortAttribute)(client, pPort, attribute, value);
+  if (status == Success)
     XvdiSendPortNotify(pPort, attribute, value);
 
-  return 
-    (* pPort->pAdaptor->ddSetPortAttribute)(client, pPort, attribute, value);
-
+  return status;
 }
 
 int

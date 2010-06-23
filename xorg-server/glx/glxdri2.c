@@ -435,7 +435,8 @@ __glXDRIinvalidateBuffers(DrawablePtr pDraw, void *priv)
     __GLXDRIdrawable *private = priv;
     __GLXDRIscreen *screen = private->screen;
 
-    (*screen->flush->invalidate)(private->driDrawable);
+    if (screen->flush)
+	(*screen->flush->invalidate)(private->driDrawable);
 #endif
 }
 
