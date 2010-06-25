@@ -54,7 +54,7 @@ libXaw-1.0.7
 libxcb-1.5
 libXdmcp-1.0.3
 libXext-1.1.2
-libXfont-1.4.1
+libXfont-1.4.2
 libXinerama-1.1
 libxkbfile-1.0.6
 libXmu-1.0.5

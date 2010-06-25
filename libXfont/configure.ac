@@ -20,12 +20,14 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
+AC_PREREQ([2.60])
 
 AC_INIT([libXfont],
-	1.4.1,
+	1.4.2,
 	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
 	libXfont)
+# Autoheader generates config.h.in. No new lines allowed in the list.
+AC_CONFIG_HEADERS([config.h include/X11/fonts/fontconf.h])
 dnl
 dnl This is the package version number, not the shared library
 dnl version.  This same version number must appear in Xfont.h
@@ -33,12 +35,16 @@ dnl Yes, it is a pain to synchronize version numbers.  Unfortunately, it's
 dnl not possible to extract the version number here from Xfont.h
 dnl
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
-AM_CONFIG_HEADER(config.h)
-AC_CONFIG_HEADERS([include/X11/fonts/fontconf.h])
+AM_MAINTAINER_MODE
 
-# Require xorg-macros version >= 1.3.0 for XORG_DEFAULT_OPTIONS
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.6 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.6)
+XORG_DEFAULT_OPTIONS
+XORG_ENABLE_DEVEL_DOCS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
 
 # Check for progs
 AC_PROG_CC
@@ -47,25 +53,9 @@ dnl If the first PKG_CHECK_MODULES appears inside a conditional, pkg-config
 dnl must first be located explicitly.
 PKG_PROG_PKG_CONFIG
 
-XORG_DEFAULT_OPTIONS
-
-# xmlto is used to convert doc/fontlib.xml from DocBook to PDF/HTML
-AC_ARG_VAR([XMLTO], [Path to xmlto command])
-AC_PATH_PROG([XMLTO], [xmlto])
-AM_CONDITIONAL([HAVE_XMLTO], [test "x$XMLTO" != "x"])
-
-# Option to enable support for building developer internals docs
-AC_ARG_ENABLE(devel-docs,
-	AS_HELP_STRING([--enable-devel-docs],
-	    [Build internals documentation for developers (default: enabled)]),
-	    [DEVEL_DOCS=$enableval], [DEVEL_DOCS=yes])
-AM_CONDITIONAL([MAKE_DEVEL_DOCS], [test "x$DEVEL_DOCS" = "xyes"])
-
 # Look for headers
 AC_CHECK_HEADERS([endian.h poll.h sys/poll.h])
 AC_CHECK_FUNCS([poll])
-
-m4_ifdef([AS_HELP_STRING], , [m4_define([AS_HELP_STRING], m4_defn([AC_HELP_STRING]))])
 
 #
 # select libraries to include

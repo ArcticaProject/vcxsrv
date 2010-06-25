@@ -43,21 +43,27 @@ nodist_libXfontinclude_HEADERS = \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xfont.pc
 
-EXTRA_DIST = xfont.pc.in ChangeLog include/X11/fonts/fontconf.h.in
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
 
 # Developer documentation - not installed on system
-EXTRA_DIST += doc/fontlib.xml doc/fontlib.xsl doc/fontlib.css
+EXTRA_DIST = doc/fontlib.xml doc/fontlib.xsl doc/fontlib.css
 
-if MAKE_DEVEL_DOCS
+if ENABLE_DEVEL_DOCS
 if HAVE_XMLTO
 noinst_DATA = doc/fontlib.txt doc/fontlib.html $(srcdir)/doc/fontlib.css
+if HAVE_FOP
+noinst_DATA += doc/fontlib.pdf doc/fontlib.ps
+endif
 CLEANFILES = doc/fontlib.txt doc/fontlib.html doc/fontlib.pdf doc/fontlib.ps
 
 doc/fontlib.txt: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
@@ -67,9 +73,9 @@ doc/fontlib.html: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
 	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc xhtml-nochunks $(srcdir)/doc/fontlib.xml
 
 doc/fontlib.pdf: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
-	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc pdf $(srcdir)/doc/fontlib.xml
+	$(AM_V_GEN)$(XMLTO) --with-fop -m $(srcdir)/doc/fontlib.xsl -o doc pdf $(srcdir)/doc/fontlib.xml
 
 doc/fontlib.ps: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
-	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc ps $(srcdir)/doc/fontlib.xml
+	$(AM_V_GEN)$(XMLTO) --with-fop -m $(srcdir)/doc/fontlib.xsl -o doc ps $(srcdir)/doc/fontlib.xml
 endif HAVE_XMLTO
-endif MAKE_DEVEL_DOCS
+endif ENABLE_DEVEL_DOCS
