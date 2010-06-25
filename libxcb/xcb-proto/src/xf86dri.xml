@@ -132,9 +132,14 @@ authorization from the authors.
 	    <field type="INT16" name="drawable_size_W" />
 	    <field type="INT16" name="drawable_size_H" />
 	    <field type="CARD32" name="num_clip_rects" />
-	    <pad bytes="4" />
+	    <field type="INT16" name="back_x" />
+	    <field type="INT16" name="back_y" />
+	    <field type="CARD32" name="num_back_clip_rects" />
 	    <list type="DrmClipRect" name="clip_rects">
 		<fieldref>num_clip_rects</fieldref>
+	    </list>
+	    <list type="DrmClipRect" name="back_clip_rects">
+		<fieldref>num_back_clip_rects</fieldref>
 	    </list>
 	</reply>
     </request>

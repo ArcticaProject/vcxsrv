@@ -1924,9 +1924,7 @@ InitFonts (void)
 {
     patternCache = MakeFontPatternCache();
 
-    BuiltinRegisterFpeFunctions();
-    FontFileRegisterFpeFunctions();
-    fs_register_fpe_functions();
+    register_fpe_functions();
 }
 
 int
