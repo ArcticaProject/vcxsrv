@@ -196,6 +196,7 @@ libman_PRE = \
 
 filemandir = $(FILE_MAN_DIR)
 fileman_PRE = Compose.man
+FILE_MAN_DIR_SUFFIX = $(FILE_MAN_DIR:@mandir@/man%=%)
 
 # What we actually install 
 

@@ -141,10 +141,7 @@ extern _X_EXPORT void InitGlyphCaching(void);
 
 extern _X_EXPORT void SetGlyphCachingMode(int /*newmode*/);
 
-/*
- * libXfont/src/builtins/builtin.h
- */
-extern _X_EXPORT void BuiltinRegisterFpeFunctions(void);
+extern _X_EXPORT void register_fpe_functions(void);
 
 /*
  * libXfont stubs.

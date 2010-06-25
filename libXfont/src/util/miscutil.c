@@ -46,10 +46,19 @@ from The Open Group.
 #pragma weak register_fpe_functions
 #endif
 
+extern void BuiltinRegisterFpeFunctions(void);
+
+#ifndef _MSC_VER
 /* make sure everything initializes themselves at least once */
 weak long serverGeneration = 1;
+#endif
 
 weak void
 register_fpe_functions (void)
 {
+    BuiltinRegisterFpeFunctions();
+    FontFileRegisterFpeFunctions();
+#ifdef XFONT_FC
+    fs_register_fpe_functions();
+#endif
 }

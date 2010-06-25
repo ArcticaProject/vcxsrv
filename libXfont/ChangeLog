@@ -1,3 +1,235 @@
+commit 27270de56f7da5e047784434f3b29fa672f97ffd
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Jun 10 16:29:37 2010 +0300
+
+    libXfont 1.4.2
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Reviewed-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Alex Deucher <alexdeucher@gmail.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit a85f4fc6142349517aaa4cf6bc8049e2d85c1006
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Jun 10 16:18:05 2010 +0300
+
+    Use one single function to register fpe functions
+    
+    X server doesn't need to understand fpe internals, so let it transparent
+    turning all registration functions in a single one. For that, fill the already
+    existent register_fpe_functions().
+    
+    Some X servers don't want font server support, so this patch also sets font
+    server support to be configured in build time.
+    
+    In my machine, I see 20kB of RSS being saved in libXfont mapped in Xorg
+    process when I disabled font server support and other kind of fonts in the
+    library (--disable-pcfformat --disable-bdfformat --disable-snfformat
+    --disable-freetype --disable-fc).
+    
+    The default library built was taking:
+       text    data     bss     dec     hex filename
+     261847    4484    1536  267867   4165b ./lib/libXfont.so
+    
+    and with these flags, it jumps to:
+       text    data     bss     dec     hex filename
+     157764    2428    1188  161380   27664 ./lib/libXfont.so
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Reviewed-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Alex Deucher <alexdeucher@gmail.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit d137c81b83e0a6f68989c37035d0c950bb43fcc5
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Apr 1 14:12:47 2010 -0400
+
+    config: fontconf.h.in is redundant in EXTRA_DIST
+    
+    Output files listed in AC_CONFIG_HEADERS or AC_OUTPUT have
+    their input files (typically .in) included in the tarball.
+    
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit d8d901323776599c8392f9b973ba129c3af45a4b
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Mar 30 09:26:13 2010 -0400
+
+    config: replace obsolete AM_CONFIG_HEADER with AC_CONFIG_HEADERS
+    
+    There are 2 headers to generate. The first one (config.h)
+    is picked up by autoheader to generate the familiar config.h.in
+    input file. The others in the list (or in subsequent AC_CONFIG_HEADERS
+    macro calls) are generated from their existing matching template,
+    e.g. fontconf.h.in.
+    
+    When multiple headers are listed in the same macro call,
+    they cannot be separated by a new line like we do in AC_OUTPUT.
+    
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit df94cb141f02f123a64b0ef7abf5f593c1b27e13
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Mar 31 20:21:47 2010 -0400
+
+    Revert "config: replace obsolete AM_CONFIG_HEADER with AC_CONFIG_HEADERS"
+    
+    This reverts commit 8e84687b26be6e8f5da4fce173c0a134eb07f4f3.
+    
+    Until the issue is resolved on MAC O/S
+    http://tinderbox.x.org/builds/2010-03-31-0030/logs/libXfont/
+
+commit 8e84687b26be6e8f5da4fce173c0a134eb07f4f3
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Mar 30 09:26:13 2010 -0400
+
+    config: replace obsolete AM_CONFIG_HEADER with AC_CONFIG_HEADERS
+    
+    Both headers end up created by the same macro.
+    
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit a7b7bc72b9ad061ed164601d2d18dbffd6ec1f4f
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Mar 29 14:53:48 2010 -0400
+
+    config: remove the pkgconfig pc.in file from EXTRA_DIST
+    
+    Automake always includes it in the tarball.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit f77258d0b286c2fd2a2fee36e42280016e310b10
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Mar 27 17:06:34 2010 -0400
+
+    config: remove protection for AS_HELP_STRING for old autoconf
+    
+    No longer needed as modules will not configure with 2.57.
+    AS_HELP_STRING was introduced in 2.58. The minimum level
+    is now 2.60.
+    
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit a79a22bfcb344c47f2659e4178fd79f8555fbcfd
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Mar 11 10:11:23 2010 -0500
+
+    doc: specify 0.0.20 as the minimum version for xmlto
+    
+    Older versions do not have fop backend.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit a76488f75f23b8e08763e28b2fa56352e7b04e19
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Jan 30 13:13:33 2010 -0500
+
+    doc: use new macros to control doc generation
+    
+    Namely XORG_WITH_FOP for the fop backend (pdf) and
+    XORG_ENABLE_DEVEL_DOCS for the generation of all docs
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 360f10333ac19f033ea64a8360c4886fbb657890
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 20 11:46:21 2010 -0500
+
+    config: replace custom code with reusable macro XORG_WITH_XMLTO
+    
+    XORG_WITH_XMLTO provides additional functions like a configure
+    option which allow platform builders to control the usage of
+    the xmlto program.
+    
+    This is a requirement from platforms that do not have such doc tool.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 24a257ca5b70e168564f0c6527e60bb06b61be8c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 21:39:11 2010 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit d1c9028a410a10ef1b27c990f55de836eb948887
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Nov 27 20:56:04 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 72353a449e8dbf82a53a1d7958755198e989d892
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 15:28:32 2009 -0400
+
+    configure.ac: AM_MAINTAINER_MODE missing #24238
+    
+    This turns off maintainer mode build rules in tarballs.
+    Works in conjunction with autogen.sh --enable-maintainer-mode
+    For all X.Org components.
+
+commit 489e7b2cb3371042552489385902a98dc1cd976a
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:10 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit c22d67cc78c27d19bb6eaba5bf71b66444ed4a40
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Oct 27 15:07:25 2009 -0400
+
+    Deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit 271382b01995469eb60035d38880f9d3665d4c4c
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:43 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit 9be83ae94cd82b447ed59ba0869f9e94ed9018f7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 15:34:34 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 489924bfb693a844f8f8ad6023fc78e4a212bef6
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Oct 14 11:31:59 2009 -0500
+
+    Add -lbz2 to Libs.private if bzip2 is enabled
+    
+    This is required on Cygwin, which must link the xservers with a static
+    libXfont due to poor weak-symbol support.  Z_LIBS includes -lz and, if
+    bzip2 support is enabled, -lbz2.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Acked-by: Julien Cristau <jcristau@debian.org>
+
 commit 64f21944c5f374b0da63657f01e289b34d00904c
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Oct 9 17:38:33 2009 -0700
@@ -451,7 +683,7 @@ Date:   Sat Aug 25 23:32:54 2007 +0200
     Kill unused macro definition.
 
 commit 3c3b47bf6f080ddb700886de3e5bfa42c2f0774e
-Merge: 9f86614... 32d2d33...
+Merge: 9f86614 32d2d33
 Author: Dodji Seketeli <dodji@openedhand.com>
 Date:   Sat Aug 11 23:09:50 2007 +0200
 
@@ -623,7 +855,7 @@ Date:   Wed Apr 4 17:05:13 2007 -0700
     Version bump: 1.2.8
 
 commit 224fb6403a328e70b370540cc5cefd74421fafac
-Merge: e7a59cf... 0fbb37c...
+Merge: e7a59cf 0fbb37c
 Author: Matthieu Herrb <matthieu@roadrock.(none)>
 Date:   Tue Apr 3 16:05:48 2007 +0200
 
@@ -751,7 +983,7 @@ Date:   Thu Oct 5 18:12:50 2006 -0700
     --disable-builtins should not force off all bitmap support
 
 commit 264df52d24f585915e0d9823d5f087cf23e3fc75
-Merge: 0fb55cb... d896c3e...
+Merge: 0fb55cb d896c3e
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Sep 22 11:36:43 2006 -0700
 
