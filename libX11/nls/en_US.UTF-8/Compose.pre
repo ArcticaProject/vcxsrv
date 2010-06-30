@@ -640,8 +640,10 @@ XCOMM Part 3
 <Multi_key> <b> <a>              	: "ă"   U0103 # LATIN SMALL LETTER A WITH BREVE
 <dead_ogonek> <A>                	: "Ą"   U0104 # LATIN CAPITAL LETTER A WITH OGONEK
 <Multi_key> <semicolon> <A>      	: "Ą"   U0104 # LATIN CAPITAL LETTER A WITH OGONEK
+<Multi_key> <comma> <A>         	: "Ą"   U0104 # LATIN CAPITAL LETTER A WITH OGONEK
 <dead_ogonek> <a>                	: "ą"   U0105 # LATIN SMALL LETTER A WITH OGONEK
 <Multi_key> <semicolon> <a>      	: "ą"   U0105 # LATIN SMALL LETTER A WITH OGONEK
+<Multi_key> <comma> <a>         	: "ą"   U0105 # LATIN SMALL LETTER A WITH OGONEK
 <dead_acute> <C>                 	: "Ć"   U0106 # LATIN CAPITAL LETTER C WITH ACUTE
 <Multi_key> <acute> <C>          	: "Ć"   U0106 # LATIN CAPITAL LETTER C WITH ACUTE
 <Multi_key> <apostrophe> <C>     	: "Ć"   U0106 # LATIN CAPITAL LETTER C WITH ACUTE
@@ -688,8 +690,10 @@ XCOMM Part 3
 <Multi_key> <period> <e>         	: "ė"   U0117 # LATIN SMALL LETTER E WITH DOT ABOVE
 <dead_ogonek> <E>                	: "Ę"   U0118 # LATIN CAPITAL LETTER E WITH OGONEK
 <Multi_key> <semicolon> <E>      	: "Ę"   U0118 # LATIN CAPITAL LETTER E WITH OGONEK
+<Multi_key> <comma> <E>          	: "Ę"   U0118 # LATIN CAPITAL LETTER E WITH OGONEK
 <dead_ogonek> <e>                	: "ę"   U0119 # LATIN SMALL LETTER E WITH OGONEK
 <Multi_key> <semicolon> <e>      	: "ę"   U0119 # LATIN SMALL LETTER E WITH OGONEK
+<Multi_key> <comma> <e>          	: "ę"   U0119 # LATIN SMALL LETTER E WITH OGONEK
 <dead_caron> <E>                 	: "Ě"   U011A # LATIN CAPITAL LETTER E WITH CARON
 <Multi_key> <c> <E>              	: "Ě"   U011A # LATIN CAPITAL LETTER E WITH CARON
 <dead_caron> <e>                 	: "ě"   U011B # LATIN SMALL LETTER E WITH CARON
@@ -742,8 +746,10 @@ XCOMM Part 3
 <Multi_key> <b> <i>              	: "ĭ"   U012D # LATIN SMALL LETTER I WITH BREVE
 <dead_ogonek> <I>                	: "Į"   U012E # LATIN CAPITAL LETTER I WITH OGONEK
 <Multi_key> <semicolon> <I>      	: "Į"   U012E # LATIN CAPITAL LETTER I WITH OGONEK
+<Multi_key> <comma> <I>         	: "Į"   U012E # LATIN CAPITAL LETTER I WITH OGONEK
 <dead_ogonek> <i>                	: "į"   U012F # LATIN SMALL LETTER I WITH OGONEK
 <Multi_key> <semicolon> <i>      	: "į"   U012F # LATIN SMALL LETTER I WITH OGONEK
+<Multi_key> <comma> <i>         	: "į"   U012F # LATIN SMALL LETTER I WITH OGONEK
 <dead_abovedot> <I>              	: "İ"   U0130 # LATIN CAPITAL LETTER I WITH DOT ABOVE
 <Multi_key> <period> <I>         	: "İ"   U0130 # LATIN CAPITAL LETTER I WITH DOT ABOVE
 <dead_abovedot> <i>              	: "ı"   U0131 # LATIN SMALL LETTER DOTLESS I
@@ -894,8 +900,10 @@ XCOMM Part 3
 <Multi_key> <equal> <u>          	: "ű"   U0171 # LATIN SMALL LETTER U WITH DOUBLE ACUTE
 <dead_ogonek> <U>                	: "Ų"   U0172 # LATIN CAPITAL LETTER U WITH OGONEK
 <Multi_key> <semicolon> <U>      	: "Ų"   U0172 # LATIN CAPITAL LETTER U WITH OGONEK
+<Multi_key> <comma> <U>         	: "Ų"   U0172 # LATIN CAPITAL LETTER U WITH OGONEK
 <dead_ogonek> <u>                	: "ų"   U0173 # LATIN SMALL LETTER U WITH OGONEK
 <Multi_key> <semicolon> <u>      	: "ų"   U0173 # LATIN SMALL LETTER U WITH OGONEK
+<Multi_key> <comma> <u>         	: "ų"   U0173 # LATIN SMALL LETTER U WITH OGONEK
 <dead_circumflex> <W>            	: "Ŵ"   U0174 # LATIN CAPITAL LETTER W WITH CIRCUMFLEX
 <Multi_key> <asciicircum> <W>    	: "Ŵ"   U0174 # LATIN CAPITAL LETTER W WITH CIRCUMFLEX
 <dead_circumflex> <w>            	: "ŵ"   U0175 # LATIN SMALL LETTER W WITH CIRCUMFLEX
@@ -1187,10 +1195,8 @@ XCOMM Part 3
 <dead_abovedot> <a>              	: "ȧ"   U0227 # LATIN SMALL LETTER A WITH DOT ABOVE
 <Multi_key> <period> <a>         	: "ȧ"   U0227 # LATIN SMALL LETTER A WITH DOT ABOVE
 <dead_cedilla> <E>               	: "Ȩ"   U0228 # LATIN CAPITAL LETTER E WITH CEDILLA
-<Multi_key> <comma> <E>          	: "Ȩ"   U0228 # LATIN CAPITAL LETTER E WITH CEDILLA
 <Multi_key> <cedilla> <E>          	: "Ȩ"   U0228 # LATIN CAPITAL LETTER E WITH CEDILLA
 <dead_cedilla> <e>               	: "ȩ"   U0229 # LATIN SMALL LETTER E WITH CEDILLA
-<Multi_key> <comma> <e>          	: "ȩ"   U0229 # LATIN SMALL LETTER E WITH CEDILLA
 <Multi_key> <cedilla> <e>          	: "ȩ"   U0229 # LATIN SMALL LETTER E WITH CEDILLA
 <dead_macron> <Odiaeresis>       	: "Ȫ"   U022A # LATIN CAPITAL LETTER O WITH DIAERESIS AND MACRON
 <Multi_key> <macron> <Odiaeresis> 	: "Ȫ"   U022A # LATIN CAPITAL LETTER O WITH DIAERESIS AND MACRON
