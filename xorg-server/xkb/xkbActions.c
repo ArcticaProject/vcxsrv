@@ -633,6 +633,16 @@ _XkbFilterPointerBtn(	XkbSrvInfoPtr	xkbi,
 		    break;
 		}
 		xkbi->lockedPtrButtons&= ~(1<<button);
+
+		if (IsMaster(xkbi->device))
+		{
+		    XkbMergeLockedPtrBtns(xkbi->device);
+                    /* One SD still has lock set, don't post event */
+		    if ((xkbi->lockedPtrButtons & (1 << button)) != 0)
+			break;
+		}
+
+		/* fallthrough */
 	    case XkbSA_PtrBtn:
 		XkbFakeDeviceButton(xkbi->device, 0, button);
 		break;

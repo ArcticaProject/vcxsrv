@@ -924,6 +924,9 @@ extern int XkbGetEffectiveGroup(
         XkbStatePtr             /* xkbstate */,
         CARD8                   /* keycode */);
 
+extern void XkbMergeLockedPtrBtns(
+        DeviceIntPtr            /* master */);
+
 #include "xkbfile.h"
 #include "xkbrules.h"
 

@@ -682,7 +682,7 @@ ProcXF86DRIOpenConnection (register ClientPtr client)
 {
     xXF86DRIOpenConnectionReply rep;
     drm_handle_t			hSAREA;
-    char*			busIdString;
+    char*			busIdString = NULL;
     REQUEST(xXF86DRIOpenConnectionReq);
     REQUEST_SIZE_MATCH(xXF86DRIOpenConnectionReq);
 
@@ -716,6 +716,7 @@ ProcXF86DRIOpenConnection (register ClientPtr client)
     WriteToClient(client, sizeof(xXF86DRIOpenConnectionReply), (char *)&rep);
     if (rep.busIdStringLength)
         WriteToClient(client, rep.busIdStringLength, busIdString);
+    free(busIdString);
     EPHYR_LOG ("leave\n") ;
     return Success;
 }

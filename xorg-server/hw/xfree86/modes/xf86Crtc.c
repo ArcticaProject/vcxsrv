@@ -572,8 +572,11 @@ xf86OutputInitialRotation (xf86OutputPtr output)
 						OPTION_ROTATE);
     int	    i;
 
-    if (!rotate_name)
+    if (!rotate_name) {
+	if (output->initial_rotation)
+	    return output->initial_rotation;
 	return RR_Rotate_0;
+    }
     
     for (i = 0; i < 4; i++)
 	if (xf86nameCompare (direction[i], rotate_name) == 0)

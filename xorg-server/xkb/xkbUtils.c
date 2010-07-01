@@ -2094,3 +2094,29 @@ XkbGetEffectiveGroup(XkbSrvInfoPtr xkbi, XkbStatePtr xkbState, CARD8 keycode)
 
     return effectiveGroup;
 }
+
+/* Merge the lockedPtrButtons from all attached SDs for the given master
+ * device into the MD's state.
+ */
+void
+XkbMergeLockedPtrBtns(DeviceIntPtr master)
+{
+    DeviceIntPtr d = inputInfo.devices;
+    XkbSrvInfoPtr xkbi = NULL;
+
+    if (!IsMaster(master))
+        return;
+
+    if (!master->key)
+        return;
+
+    xkbi = master->key->xkbInfo;
+    xkbi->lockedPtrButtons = 0;
+
+    for (; d; d = d->next) {
+        if (IsMaster(d) || GetMaster(d, MASTER_KEYBOARD) != master || !d->key)
+            continue;
+
+        xkbi->lockedPtrButtons |= d->key->xkbInfo->lockedPtrButtons;
+    }
+}
