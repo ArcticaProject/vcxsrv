@@ -98,6 +98,7 @@ typedef struct _Client {
     int         clientGone;
     int         noClientException;	/* this client died or needs to be
 					 * killed */
+    int         ignoreCount;		/* count for Attend/IgnoreClient */
     SaveSetElt	*saveSet;
     int         numSaved;
     int         (**requestVector) (

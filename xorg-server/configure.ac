@@ -2073,6 +2073,9 @@ if test "$KDRIVE" = yes; then
     if test "x$XEPHYR" = xauto; then
         XEPHYR=$xephyr
     fi
+    if test "x$XEPHYR" = xyes && test "x$xephyr" = xno; then	
+        AC_MSG_ERROR([Xephyr dependencies missing])
+    fi
 
     # Xephyr needs nanosleep() which is in librt on Solaris
     AC_CHECK_FUNC([nanosleep], [],

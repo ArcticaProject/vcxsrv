@@ -707,8 +707,24 @@ DeviceEvent     *event = &ev->device_event;
 	    changed |= XkbPointerButtonMask;
     }
     else if (event->type == ET_ButtonRelease) {
-	if (xkbi)
+	if (xkbi) {
 	    xkbi->lockedPtrButtons&= ~(1 << (event->detail.key & 0x7));
+
+            /* Merge this MD's lockedPtrButtons with the one of all
+             * attached slave devices.
+             * The DIX uses a merged button state for MDs, not
+             * releasing buttons until the last SD has released
+             * thenm. If we unconditionally clear the
+             * lockedPtrButtons bit on the MD, a PointerKeys button
+             * release on the SD keyboard won't generate the required fake button
+             * event on the XTEST pointer, thus never processing the
+             * button event in the DIX and the XTEST pointer's
+             * buttons stay down - result is a stuck button.
+             */
+	    if (IsMaster(dev))
+                XkbMergeLockedPtrBtns(dev);
+	}
+
 	changed |= XkbPointerButtonMask;
     }
 

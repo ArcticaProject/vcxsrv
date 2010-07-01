@@ -228,9 +228,10 @@ int main(int argc, char *argv[], char *envp[])
 	clients[0] = serverClient;
 	currentMaxClients = 1;
 
+	/* Initialize privates before first allocation */
 	dixResetPrivates();
 
-  /* Initialize server client devPrivates, to be reallocated as
+	/* Initialize server client devPrivates, to be reallocated as
 	 * more client privates are registered
 	 */
 	if (!dixAllocatePrivates(&serverClient->devPrivates, PRIVATE_CLIENT))

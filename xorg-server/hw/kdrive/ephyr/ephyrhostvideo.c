@@ -380,7 +380,8 @@ ephyrHostXVAdaptorHasPutVideo (const EphyrHostXVAdaptor *a_this,
 {
     EPHYR_RETURN_VAL_IF_FAIL (a_this && a_result, FALSE) ;
 
-    if (((XvAdaptorInfo*)a_this)->type & XvVideoMask & XvInputMask)
+    if ((((XvAdaptorInfo*)a_this)->type & (XvVideoMask | XvInputMask)) ==
+		    (XvVideoMask | XvInputMask))
         *a_result = TRUE ;
     else
         *a_result = FALSE ;
@@ -391,7 +392,8 @@ Bool
 ephyrHostXVAdaptorHasGetVideo (const EphyrHostXVAdaptor *a_this,
                                Bool *a_result)
 {
-    if (((XvAdaptorInfo*)a_this)->type & XvVideoMask & XvOutputMask)
+    if ((((XvAdaptorInfo*)a_this)->type & (XvVideoMask | XvOutputMask)) ==
+		    (XvVideoMask | XvOutputMask))
         *a_result = TRUE ;
     else
         *a_result = FALSE ;
@@ -404,7 +406,8 @@ ephyrHostXVAdaptorHasPutStill (const EphyrHostXVAdaptor *a_this,
 {
     EPHYR_RETURN_VAL_IF_FAIL (a_this && a_result, FALSE) ;
 
-    if (((XvAdaptorInfo*)a_this)->type & XvStillMask && XvInputMask)
+    if ((((XvAdaptorInfo*)a_this)->type & (XvStillMask | XvInputMask)) ==
+		    (XvStillMask | XvInputMask))
         *a_result = TRUE ;
     else
         *a_result = FALSE ;
@@ -417,7 +420,8 @@ ephyrHostXVAdaptorHasGetStill (const EphyrHostXVAdaptor *a_this,
 {
     EPHYR_RETURN_VAL_IF_FAIL (a_this && a_result, FALSE) ;
 
-    if (((XvAdaptorInfo*)a_this)->type & XvStillMask && XvOutputMask)
+    if ((((XvAdaptorInfo*)a_this)->type & (XvStillMask | XvOutputMask)) ==
+		    (XvStillMask | XvOutputMask))
         *a_result = TRUE ;
     else
         *a_result = FALSE ;
@@ -430,7 +434,8 @@ ephyrHostXVAdaptorHasPutImage (const EphyrHostXVAdaptor *a_this,
 {
     EPHYR_RETURN_VAL_IF_FAIL (a_this && a_result, FALSE) ;
 
-    if (((XvAdaptorInfo*)a_this)->type & XvImageMask && XvInputMask)
+    if ((((XvAdaptorInfo*)a_this)->type & (XvImageMask | XvInputMask)) ==
+		    (XvImageMask | XvInputMask))
         *a_result = TRUE ;
     else
         *a_result = FALSE ;
