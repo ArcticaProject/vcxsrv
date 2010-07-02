@@ -68,7 +68,7 @@ xkb_symbols "syc" {
     // End Alphanumeric Section
 
     // Space
-    include "nbsp(zwnj2)";
+    include "nbsp(zwnj2)"
     
     // Begin Modifier Mappings
     

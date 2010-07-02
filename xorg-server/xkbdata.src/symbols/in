@@ -85,7 +85,7 @@ xkb_symbols "deva" {
 	key <AB10> { [ U092f, U095f, slash, question ] };
 
 	// space, space, Zero-Width-Non-Joiner (ZWNJ), Zero-Width-Joiner (ZWJ):
-	include "nbsp(zwnj3zwj4)";
+	include "nbsp(zwnj3zwj4)"
 };
 
 //Name		:	Bolnagri (Combined)
@@ -1263,7 +1263,7 @@ xkb_symbols "olpc" {
   key <AB10> { [	U092F,	U095F ] }; // DEVANAGARI LETTER YA; DEVANAGARI LETTER YYA
 
   // space, space, Zero-Width-Non-Joiner (ZWNJ), Zero-Width-Joiner (ZWJ):
-  include "nbsp(zwnj3zwj4)";
+  include "nbsp(zwnj3zwj4)"
 
   include "group(olpc)"
 };
