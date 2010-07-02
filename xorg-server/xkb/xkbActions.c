@@ -41,11 +41,12 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "xkb.h"
 #include <ctype.h>
 #include "mi.h"
+#include "mipointer.h"
 #define EXTENSION_EVENT_BASE 64
 
 DevPrivateKeyRec xkbDevicePrivateKeyRec;
 
-static void XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button);
+void XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button);
 static void XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y);
 
 void
@@ -499,9 +500,6 @@ _XkbFilterPointerMove(	XkbSrvInfoPtr	xkbi,
 {
 int	x,y;
 Bool	accel;
-
-    if (xkbi->device == inputInfo.keyboard)
-        return 0;
 
     if (filter->keycode==0) {		/* initial press */
 	filter->keycode = keycode;
@@ -1340,12 +1338,16 @@ XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
     EventListPtr        events;
     int                 nevents, i;
     DeviceIntPtr        ptr;
+    ScreenPtr           pScreen;
+    Bool                saveWait;
     int                 gpe_flags = 0;
 
-    if (!dev->u.master)
+    if (IsMaster(dev))
+        ptr = GetXTestDevice(GetMaster(dev, MASTER_POINTER));
+    else if (!dev->u.master)
         ptr = dev;
     else
-        ptr = GetXTestDevice(GetMaster(dev, MASTER_POINTER));
+        return;
 
     if (flags & XkbSA_MoveAbsoluteX || flags & XkbSA_MoveAbsoluteY)
         gpe_flags = POINTER_ABSOLUTE;
@@ -1354,9 +1356,12 @@ XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
 
     events = InitEventList(GetMaximumEventsNum());
     OsBlockSignals();
+    pScreen = miPointerGetScreen(ptr);
+    saveWait = miPointerSetWaitForUpdate(pScreen, FALSE);
     nevents = GetPointerEvents(events, ptr,
                                MotionNotify, 0,
                                gpe_flags, 0, 2, (int[]){x, y});
+    miPointerSetWaitForUpdate(pScreen, saveWait);
     OsReleaseSignals();
 
     for (i = 0; i < nevents; i++)
@@ -1365,7 +1370,7 @@ XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
     FreeEventList(events, GetMaximumEventsNum());
 }
 
-static void
+void
 XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button)
 {
     EventListPtr        events;

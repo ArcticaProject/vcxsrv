@@ -151,18 +151,13 @@ xf86PciProbe(void)
     
     /* Print a summary of the video devices found */
     for (k = 0; k < num; k++) {
-	const char *vendorname = NULL, *chipname = NULL;
 	const char *prim = " ";
 	Bool memdone = FALSE, iodone = FALSE;
 
 
 	info = xf86PciVideoInfo[k];
 
-	vendorname = pci_device_get_vendor_name( info );
-	chipname = pci_device_get_device_name( info );
-
-	if ((!vendorname || !chipname) &&
-	    !PCIALWAYSPRINTCLASSES(info->device_class))
+	if (!PCIALWAYSPRINTCLASSES(info->device_class))
 	    continue;
 
 	if (xf86IsPrimaryPci(info))
@@ -172,12 +167,6 @@ xf86PciProbe(void)
 		info->domain, info->bus, info->dev, info->func,
 		info->vendor_id, info->device_id,
 		info->subvendor_id, info->subdevice_id);
-
-	if (vendorname)
-	    xf86ErrorF("%s ", vendorname);
-
-	if (chipname)
-	    xf86ErrorF("%s ", chipname);
 
 	xf86ErrorF("rev %d", info->revision);
 

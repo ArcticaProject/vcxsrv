@@ -245,8 +245,6 @@ xf86CursorSwitchMode(int index, DisplayModePtr mode, int flags)
     ScreenPtr pScreen = screenInfo.screens[index];
     xf86CursorScreenPtr ScreenPriv = (xf86CursorScreenPtr)dixLookupPrivate(
 	&pScreen->devPrivates, xf86CursorScreenKey);
-    miPointerScreenPtr PointPriv = (miPointerScreenPtr)dixLookupPrivate(
-	&pScreen->devPrivates, miPointerScreenKey);
 
     if (ScreenPriv->isUp) {
 	xf86SetCursor(pScreen, NullCursor, ScreenPriv->x, ScreenPriv->y);
@@ -261,7 +259,7 @@ xf86CursorSwitchMode(int index, DisplayModePtr mode, int flags)
      * ensure the cursor is repainted by miPointerWarpCursor().
      */
     ScreenPriv->CursorToRestore = ScreenPriv->CurrentCursor;
-    PointPriv->waitForUpdate = FALSE;	/* Force cursor repaint */
+    miPointerSetWaitForUpdate(pScreen, FALSE);	/* Force cursor repaint */
 
     return ret;
 }
@@ -302,9 +300,6 @@ xf86CursorSetCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCurs,
     xf86CursorScreenPtr ScreenPriv = (xf86CursorScreenPtr)dixLookupPrivate(
 	&pScreen->devPrivates, xf86CursorScreenKey);
     xf86CursorInfoPtr infoPtr = ScreenPriv->CursorInfoPtr;
-    miPointerScreenPtr PointPriv = (miPointerScreenPtr)dixLookupPrivate(
-    &pScreen->devPrivates, miPointerScreenKey);
-
 
     if (pCurs == NullCursor) {	/* means we're supposed to remove the cursor */
         if (ScreenPriv->SWCursor ||
@@ -355,11 +350,12 @@ xf86CursorSetCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCurs,
 	    xf86SetCursor(pScreen, pCurs, x, y);
 	    ScreenPriv->SWCursor = FALSE;
 	    ScreenPriv->isUp = TRUE;
-	    PointPriv->waitForUpdate = !infoPtr->pScrn->silkenMouse;
+
+	    miPointerSetWaitForUpdate(pScreen, !infoPtr->pScrn->silkenMouse);
 	    return;
 	}
 
-        PointPriv->waitForUpdate = TRUE;
+        miPointerSetWaitForUpdate(pScreen, TRUE);
 
         if (ScreenPriv->isUp) {
             /* Remove the HW cursor, or make it transparent */

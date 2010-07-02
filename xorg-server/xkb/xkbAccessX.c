@@ -710,39 +710,20 @@ DeviceEvent     *event = &ev->device_event;
 	if (xkbi) {
 	    xkbi->lockedPtrButtons&= ~(1 << (event->detail.key & 0x7));
 
-            /* Merge this MD's lockedPtrButtons with the one of all
-             * attached slave devices.
-             * The DIX uses a merged button state for MDs, not
-             * releasing buttons until the last SD has released
-             * thenm. If we unconditionally clear the
-             * lockedPtrButtons bit on the MD, a PointerKeys button
-             * release on the SD keyboard won't generate the required fake button
-             * event on the XTEST pointer, thus never processing the
-             * button event in the DIX and the XTEST pointer's
-             * buttons stay down - result is a stuck button.
-             */
-	    if (IsMaster(dev))
-                XkbMergeLockedPtrBtns(dev);
+            if (IsMaster(dev))
+            {
+                DeviceIntPtr source;
+                int rc;
+                rc = dixLookupDevice(&source, event->sourceid, serverClient, DixWriteAccess);
+                if (rc != Success)
+                    ErrorF("[xkb] bad sourceid '%d' on button release event.\n", event->sourceid);
+                else if (!IsXTestDevice(source, GetMaster(dev, MASTER_POINTER)))
+                    XkbFakeDeviceButton(dev, FALSE, event->detail.key);
+            }
 	}
 
 	changed |= XkbPointerButtonMask;
     }
-
-    /* Guesswork. mostly. 
-     * xkb actuall goes through some effort to transparently wrap the
-     * processInputProcs (see XkbSetExtension). But we all love fun, so the
-     * previous XKB implementation just hardcoded the CPPE call here instead
-     * of unwrapping like anybody with any sense of decency would do. 
-     * I got no clue what the correct thing to do is, but my guess is that
-     * it's not hardcoding. I may be wrong. whatever it is, don't come whining
-     * to me. I just work here. 
-     *
-     * Anyway. here's the old call, if you don't like the wrapping, revert it.
-     *
-     * CoreProcessPointerEvent(xE,mouse,count);
-     *
-     *          see. it's still steaming. told you. (whot)
-     */
 
     UNWRAP_PROCESS_INPUT_PROC(mouse, xkbPrivPtr, backupproc);
     mouse->public.processInputProc(ev, mouse);

@@ -107,34 +107,12 @@ bus_sbus_configure(void *busData)
 static void
 bus_pci_newdev_configure(void *busData, int i, int *chipset)
 {
-	const char *VendorName;
-	const char *CardName;
 	char busnum[8];
     struct pci_device * pVideo = NULL;
 
     pVideo = (struct pci_device *) busData;
 
 	DevToConfig[i].pVideo = pVideo;
-
-	VendorName = pci_device_get_vendor_name( pVideo );
-	CardName = pci_device_get_device_name( pVideo );
-
-	if (!VendorName) {
-	    VendorName = xnfalloc(15);
-	    sprintf((char*)VendorName, "Unknown Vendor");
-	}
-
-	if (!CardName) {
-	    CardName = xnfalloc(14);
-	    sprintf((char*)CardName, "Unknown Board");
-	}
-
-	DevToConfig[i].GDev.identifier =
-	    xnfalloc(strlen(VendorName) + strlen(CardName) + 2);
-	sprintf(DevToConfig[i].GDev.identifier, "%s %s", VendorName, CardName);
-
-	DevToConfig[i].GDev.vendor = (char *)VendorName;
-	DevToConfig[i].GDev.board = (char *)CardName;
 
 	DevToConfig[i].GDev.busID = xnfalloc(16);
 	xf86FormatPciBusNumber(pVideo->bus, busnum);
@@ -357,9 +335,6 @@ configureDeviceSection (int screennum)
     /* Move device info to parser structure */
     sprintf(identifier, "Card%d", screennum);
     ptr->dev_identifier = strdup(identifier);
-/*    ptr->dev_identifier = DevToConfig[screennum].GDev.identifier;*/
-    ptr->dev_vendor = DevToConfig[screennum].GDev.vendor;
-    ptr->dev_board = DevToConfig[screennum].GDev.board;
     ptr->dev_chipset = DevToConfig[screennum].GDev.chipset;
     ptr->dev_busid = DevToConfig[screennum].GDev.busID;
     ptr->dev_driver = DevToConfig[screennum].GDev.driver;

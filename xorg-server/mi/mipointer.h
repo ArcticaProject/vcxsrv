@@ -139,6 +139,11 @@ extern _X_EXPORT void miPointerSetPosition(
 extern _X_EXPORT void miPointerUpdateSprite(
     DeviceIntPtr pDev);
 
+/* Sets whether the sprite should be updated immediately on pointer moves */
+extern _X_EXPORT Bool miPointerSetWaitForUpdate(
+    ScreenPtr pScreen,
+    Bool wait);
+
 extern _X_EXPORT DevPrivateKeyRec miPointerPrivKeyRec;
 #define miPointerPrivKey (&miPointerPrivKeyRec)
 

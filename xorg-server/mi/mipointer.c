@@ -452,6 +452,22 @@ miPointerGetScreen(DeviceIntPtr pDev)
     return (pPointer) ? pPointer->pScreen : NULL;
 }
 
+/* Controls whether the cursor image should be updated immediately when
+   moved (FALSE) or if something else will be responsible for updating
+   it later (TRUE).  Returns current setting.
+   Caller is responsible for calling OsBlockSignal first.
+*/
+Bool
+miPointerSetWaitForUpdate(ScreenPtr pScreen, Bool wait)
+{
+    SetupScreen(pScreen);
+    Bool prevWait = pScreenPriv->waitForUpdate;
+
+    pScreenPriv->waitForUpdate = wait;
+    return prevWait;
+}
+
+
 /* Move the pointer on the current screen,  and update the sprite. */
 static void
 miPointerMoved (DeviceIntPtr pDev, ScreenPtr pScreen,

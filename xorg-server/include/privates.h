@@ -177,7 +177,7 @@ static inline pointer *
 dixLookupPrivateAddr(PrivatePtr *privates, const DevPrivateKey key)
 {
     assert (key->size == 0);
-    return dixGetPrivateAddr(privates, key);
+    return (pointer *)dixGetPrivateAddr(privates, key);
 }
 
 /*
