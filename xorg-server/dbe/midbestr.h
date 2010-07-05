@@ -48,11 +48,6 @@
 #define MI_DBE_WINDOW_PRIV_PRIV_FROM_WINDOW(pWin)\
     MI_DBE_WINDOW_PRIV_PRIV(DBE_WINDOW_PRIV(pWin))
 
-#define MI_DBE_SCREEN_PRIV_PRIV(pDbeScreenPriv) \
-    (!(pDbeScreenPriv) ? NULL : (MiDbeScreenPrivPrivPtr) \
-     dixLookupPrivate(&(pDbeScreenPriv)->devPrivates, miDbeScreenPrivPrivKey))
-
-
 /* TYPEDEFS */
 
 typedef struct _MiDbeWindowPrivPrivRec
@@ -79,17 +74,6 @@ typedef struct _MiDbeWindowPrivPrivRec
     DbeWindowPrivPtr	pDbeWindowPriv;
 
 } MiDbeWindowPrivPrivRec, *MiDbeWindowPrivPrivPtr;
-
-typedef struct _MiDbeScreenPrivPrivRec
-{
-    /* Place machine-specific fields in here.
-     * Since this is mi code, we do not really have machine-specific fields.
-     */
-
-    /* Pointer back to our screen private with which we are associated. */
-    DbeScreenPrivPtr	pDbeScreenPriv;
-
-} MiDbeScreenPrivPrivRec, *MiDbeScreenPrivPrivPtr;
 
 #endif /* MIDBE_STRUCT_H */
 
