@@ -202,12 +202,6 @@ miDbeAllocBackBufferName(WindowPtr pWin, XID bufId, int swapAction)
             return (rc == Success) ? BadAlloc : rc;
         }
 
-
-        /* Attach the priv priv to the priv. */
-	dixSetPrivate(&pDbeWindowPriv->devPrivates, miDbeWindowPrivPrivKey,
-		      pDbeWindowPrivPriv);
-
-
         /* Clear the back buffer. */
         pGC = GetScratchGC(pWin->drawable.depth, pWin->drawable.pScreen);
         if ((*pDbeScreenPriv->SetupBackgroundPainter)(pWin, pGC))

@@ -449,6 +449,13 @@
     </model>
     <model>
       <configItem>
+        <name>kinesis</name>
+        <_description>Kinesis</_description>
+        <vendor>Kinesis</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
         <name>logitech_base</name>
         <_description>Logitech Generic Keyboard</_description>
         <vendor>Logitech</vendor>
@@ -556,42 +563,42 @@
       <configItem>
         <name>rapidaccess</name>
         <_description>IBM Rapid Access</_description>
-        <vendor>IBM</vendor>
+        <vendor>Lenovo (previously IBM)</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>rapidaccess2</name>
         <_description>IBM Rapid Access II</_description>
-        <vendor>IBM</vendor>
+        <vendor>Lenovo (previously IBM)</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>thinkpad</name>
         <_description>IBM ThinkPad 560Z/600/600E/A22E</_description>
-        <vendor>IBM</vendor>
+        <vendor>Lenovo (previously IBM)</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>thinkpad60</name>
         <_description>IBM ThinkPad R60/T60/R61/T61</_description>
-        <vendor>IBM</vendor>
+        <vendor>Lenovo (previously IBM)</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>thinkpadz60</name>
         <_description>IBM ThinkPad Z60m/Z60t/Z61m/Z61t</_description>
-        <vendor>IBM</vendor>
+        <vendor>Lenovo (previously IBM)</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>ibm_spacesaver</name>
         <_description>IBM Space Saver</_description>
-        <vendor>IBM</vendor>
+        <vendor>Lenovo (previously IBM)</vendor>
       </configItem>
     </model>
     <model>
@@ -4269,6 +4276,13 @@
             <name>ara</name>
             <_description>Arabic</_description>
             <languageList><iso639Id>ara</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>snd</name>
+            <_description>Sindhi</_description>
+            <languageList><iso639Id>sd</iso639Id></languageList>
           </configItem>
         </variant>
       </variantList>

@@ -201,6 +201,67 @@ xkb_symbols "urd-nla" {
 };
 
 partial alphanumeric_keys
+xkb_symbols "snd" {
+   name[Group1]= "Pakistan - MBSindhi";
+// www.bhurgri.com
+
+     key <TLDE> {  [       0x1002019,       0x1002018                 ]       };
+    key <AE01> {  [               1,          exclam, 0x1000610      ]       };
+    key <AE02> {  [               2,       0x1000670, 0x1000611      ]       };
+    key <AE03> {  [               3,       0x1000621, 0x1000613      ]       };
+    key <AE04> {  [               4,       0x1000621, 0x1000612      ]       };
+    key <AE05> {  [               5,       0x1000621, 0x1002026      ]       };
+    key <AE06> {  [               6,       0x1000621, 0x1002022      ]       };
+    key <AE07> {  [               7,       0x10006FD                 ]       };
+    key <AE08> {  [               8,        asterisk                 ]       };
+    key <AE09> {  [               9,      parenright                 ]       };
+    key <AE10> {  [               0,       parenleft                 ]       };
+    key <AE11> {  [       0x100068F,       0x100005F, 0x100002D      ]       };
+    key <AE12> {  [       0x100068C,            plus, 0x100003D      ]       };
+    key <BKSL> {  [       0x100068D,       0x100067A, 0x100007C      ]       };
+
+    key <AD01> {  [       0x1000642,       0x100064E, 0x100064B      ]       };
+    key <AD02> {  [       0x1000635,       0x1000636, 0x100FDFA      ]       };
+    key <AD03> {  [       0x100064A,       0x1000650, 0x1000656      ]       };
+    key <AD04> {  [       0x1000631,       0x1000699, 0x100FDE6      ]       };
+    key <AD05> {  [       0x100062A,       0x100067D, 0x1000629      ]       };
+    key <AD06> {  [       0x100067F,       0x100062B, 0x100FDE5      ]       };
+    key <AD07> {  [       0x1000639,       0x100063A, 0x100FDE3      ]       };
+    key <AD08> {  [       0x10006B3,       0x10006BE, 0x100FDE4      ]       };
+    key <AD09> {  [       0x1000648,       0x100064F, 0x1000657      ]       };
+    key <AD10> {  [       0x100067E,       0x10006A6                 ]       };
+    key <AD11> {  [       0x1000687,       0x1000683                 ]       };
+    key <AD12> {  [       0x1000686,       0x1000684                 ]       };
+
+    key <AC01> {  [       0x1000627,       0x1000622, 0x1000649      ]       };
+    key <AC02> {  [       0x1000633,       0x1000634                 ]       };
+    key <AC03> {  [       0x100062F,       0x100068A                 ]       };
+    key <AC04> {  [       0x1000641,       0x10006A6                 ]       };
+    key <AC05> {  [       0x10006AF,       0x10006AF                 ]       };
+    key <AC06> {  [       0x1000647,       0x100062D, 0x10006C1      ]       };
+    key <AC07> {  [       0x100062C,       0x100062C, 0x100FDFB      ]       };
+    key <AC08> {  [       0x10006AA,       0x10006E1                 ]       };
+    key <AC09> {  [       0x1000644,       0x100003A                 ]       };
+    key <AC10> {  [       0x10006A9,       0x100061B                 ]       };
+    key <AC11> {  [       0x10006B1,       0x1000640                 ]       };
+
+    key <AB01> {  [       0x1000632,       0x1000630, 0x1000652      ]       };
+    key <AB02> {  [       0x100062E,       0x1000651, 0x100200C      ]       };
+    key <AB03> {  [       0x1000637,       0x1000638, 0x100200D      ]       };
+    key <AB04> {  [       0x1000680,       0x1000621, 0x1000624      ]       };
+    key <AB05> {  [       0x1000628,       0x100067B, 0x100FDE1      ]       };
+    key <AB06> {  [       0x1000646,       0x10006BB, 0x100200E      ]       };
+    key <AB07> {  [       0x1000645,       0x10006FE, 0x100FDF4      ]       };
+    key <AB08> {  [       0x100060C,       0x100201C, 0x100200F      ]       };
+    key <AB09> {  [          period,       0x100201D, 0x10006D4      ]       };
+    key <AB10> {  [       0x1000626, Arabic_question_mark, 0x100002F ]       };
+
+   include "level3(ralt_switch)"
+
+   // End alphanumeric section
+};
+
+partial alphanumeric_keys
 xkb_symbols "ara" {
    name[Group1]= "Pakistan - Arabic";
 
