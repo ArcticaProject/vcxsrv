@@ -625,12 +625,15 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
 	  rcDest.bottom = ptOrigin.y + rcSrc.bottom;
 	  
 	  /* Blit the damaged areas */
-	  ddrval = IDirectDrawSurface4_Blt (pScreenPriv->pddsPrimary4,
+	  if (pScreenPriv->pddsPrimary4)
+	    ddrval = IDirectDrawSurface4_Blt (pScreenPriv->pddsPrimary4,
 					    &rcDest,
 					    pScreenPriv->pddsShadow4,
 					    &rcSrc,
 					    DDBLT_WAIT,
 					    NULL);
+	  else
+	    ddrval=-1;
 	  if (FAILED (ddrval))
 	    {
 	      static int	s_iFailCount = 0;
