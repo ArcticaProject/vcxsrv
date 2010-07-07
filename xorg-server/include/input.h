@@ -228,14 +228,19 @@ typedef struct _InputAttributes {
 #define ATTR_TOUCHPAD (1<<4)
 #define ATTR_TOUCHSCREEN (1<<5)
 
-/* Key has been run through all input processing and events sent to clients. */
+/* Key/Button has been run through all input processing and events sent to clients. */
 #define KEY_PROCESSED 1
-/* Key has not been fully processed, no events have been sent. */
+#define BUTTON_PROCESSED 1
+/* Key/Button has not been fully processed, no events have been sent. */
 #define KEY_POSTED 2
+#define BUTTON_POSTED 2
 
 extern void set_key_down(DeviceIntPtr pDev, int key_code, int type);
 extern void set_key_up(DeviceIntPtr pDev, int key_code, int type);
 extern int key_is_down(DeviceIntPtr pDev, int key_code, int type);
+extern void set_button_down(DeviceIntPtr pDev, int button, int type);
+extern void set_button_up(DeviceIntPtr pDev, int button, int type);
+extern int button_is_down(DeviceIntPtr pDev, int button, int type);
 
 extern void InitCoreDevices(void);
 extern void InitXTestDevices(void);
