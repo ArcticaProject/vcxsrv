@@ -3937,13 +3937,7 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
 void
 FixKeyState (DeviceEvent *event, DeviceIntPtr keybd)
 {
-    int             key, bit;
-    BYTE   *kptr;
-    KeyClassPtr keyc = keybd->key;
-
-    key = event->detail.key;
-    kptr = &keyc->down[key >> 3];
-    bit = 1 << (key & 7);
+    int key = event->detail.key;
 
     if (event->type == ET_KeyPress) {
 	DebugF("FixKeyState: Key %d %s\n",key,
@@ -3951,9 +3945,9 @@ FixKeyState (DeviceEvent *event, DeviceIntPtr keybd)
     }
 
     if (event->type == ET_KeyPress)
-	    *kptr |= bit;
+        set_key_down(keybd, key, KEY_PROCESSED);
     else if (event->type == ET_KeyRelease)
-	    *kptr &= ~bit;
+        set_key_up(keybd, key, KEY_PROCESSED);
     else
         FatalError("Impossible keyboard event");
 }

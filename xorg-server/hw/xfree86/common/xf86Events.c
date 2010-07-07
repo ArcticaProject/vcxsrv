@@ -372,8 +372,6 @@ xf86PrintBacktrace(void)
     xorg_backtrace();
 }
 
-#define KeyPressed(k) (keyc->postdown[k >> 3] & (1 << (k & 7)))
-
 static void
 xf86ReleaseKeys(DeviceIntPtr pDev)
 {
@@ -399,7 +397,7 @@ xf86ReleaseKeys(DeviceIntPtr pDev)
     for (i = keyc->xkbInfo->desc->min_key_code;
          i < keyc->xkbInfo->desc->max_key_code;
          i++) {
-        if (KeyPressed(i)) {
+        if (key_is_down(pDev, i, KEY_POSTED)) {
             sigstate = xf86BlockSIGIO ();
             nevents = GetKeyboardEvents(xf86Events, pDev, KeyRelease, i);
             for (j = 0; j < nevents; j++)

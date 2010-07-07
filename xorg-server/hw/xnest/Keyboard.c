@@ -231,13 +231,7 @@ xnestUpdateModifierState(unsigned int state)
 
       for (key = 0; key < MAP_LENGTH; key++)
 	if (keyc->xkbInfo->desc->map->modmap[key] & mask) {
-	  int bit;
-	  BYTE *kptr;
-
-	  kptr = &keyc->down[key >> 3];
-	  bit = 1 << (key & 7);
-
-	  if (*kptr & bit)
+	  if (key_is_down(pDev, key, KEY_PROCESSED))
 	    xnestQueueKeyEvent(KeyRelease, key);
 
 	  if (--count == 0)
