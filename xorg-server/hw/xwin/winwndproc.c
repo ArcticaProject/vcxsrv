@@ -50,6 +50,7 @@
  * Global variables
  */
 
+extern Bool		g_fClipboardStarted;
 Bool				g_fCursor = TRUE;
 Bool				g_fButton[3] = { FALSE, FALSE, FALSE };
 
@@ -1198,6 +1199,7 @@ winWindowProc (HWND hwnd, UINT message,
       if (s_pScreenInfo->fMultiWindow)
 	winDeinitMultiWindowWM ();
 #endif
+      g_fClipboardStarted=FALSE; /* This is to avoid dead-locls caused by the clipboard thread still doing some stuff */
       GiveUp (0);
       return 0;
 

@@ -170,6 +170,7 @@ winClipboardShutdown (void)
       /* Synchronously destroy the clipboard window */
       if (g_hwndClipboard != NULL)
 	{
+	  g_fClipboardStarted=FALSE; /* This is to avoid dead-locls caused by the clipboard thread still doing some stuff */
 	  SendMessage (g_hwndClipboard, WM_DESTROY, 0, 0);
 	  /* NOTE: g_hwndClipboard is set to NULL in winclipboardthread.c */
 	}
