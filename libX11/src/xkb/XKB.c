@@ -28,8 +28,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <config.h>
 #endif
 #include <stdio.h>
-#define NEED_REPLIES
-#define NEED_EVENTS
 
 #ifdef XKB_IN_SERVER
 #define XkbVirtualModsToReal    SrvXkbVirtualModsToReal

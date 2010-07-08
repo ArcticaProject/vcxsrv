@@ -33,7 +33,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 /* 2000 Modifier: Ivan Pascal	The XFree86 Project.
  */
 
-#define NEED_EVENTS
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

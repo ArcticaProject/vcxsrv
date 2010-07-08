@@ -55,7 +55,6 @@ PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #include <X11/Xatom.h>
 #include <X11/Xmd.h>
-#define NEED_EVENTS
 #include "Xlibint.h"
 #include <X11/Xwindows.h>
 #include <X11/Xtrans/Xtrans.h>

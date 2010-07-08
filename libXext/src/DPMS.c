@@ -32,7 +32,6 @@ Equipment Corporation.
  * HISTORY
  */
 
-#define NEED_REPLIES
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

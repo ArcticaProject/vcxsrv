@@ -220,12 +220,6 @@ typedef struct _XSQEvent
 } _XQEvent;
 #endif
 
-#ifdef XTHREADS			/* for xReply */
-#define NEED_REPLIES
-#endif
-
-#define NEED_EVENTS
-#define NEED_REPLIES
 #include <X11/Xproto.h>
 #ifdef __sgi
 #define _SGI_MP_SOURCE  /* turn this on to get MP safe errno */

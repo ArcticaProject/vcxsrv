@@ -49,7 +49,6 @@ from The Open Group.
 
 */
 
-#define NEED_EVENTS
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

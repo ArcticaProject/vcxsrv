@@ -29,8 +29,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #endif
 #include <stdio.h>
 #include <ctype.h>
-#define NEED_REPLIES
-#define NEED_EVENTS
 
 #ifdef XKB_IN_SERVER
 #define XkbAllocClientMap   SrvXkbAllocClientMap

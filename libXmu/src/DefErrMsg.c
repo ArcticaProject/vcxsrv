@@ -31,7 +31,6 @@ in this Software without prior written authorization from The Open Group.
 #include <config.h>
 #endif
 #include <stdio.h>
-#define NEED_EVENTS
 #include <X11/Xlibint.h>
 #include <X11/Xproto.h>
 #include <X11/Xmu/Error.h>

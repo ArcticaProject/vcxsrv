@@ -58,7 +58,6 @@ X Window System is a trademark of The Open Group.
 
 /* This can really be considered an os dependent routine */
 
-#define NEED_REPLIES
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

@@ -27,8 +27,6 @@ in this Software without prior written authorization from The Open Group.
  */
 /* $XFree86: xc/lib/Xext/XMultibuf.c,v 1.5 2001/12/14 19:55:00 dawes Exp $ */
 
-#define NEED_EVENTS
-#define NEED_REPLIES
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

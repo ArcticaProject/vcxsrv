@@ -32,9 +32,6 @@
 #include <config.h>
 #endif
 
-#define NEED_EVENTS
-#define NEED_REPLIES
-
 #include <stdio.h>
 #include <X11/extensions/geproto.h>
 #include <X11/extensions/ge.h>

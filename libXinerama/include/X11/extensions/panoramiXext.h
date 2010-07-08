@@ -36,7 +36,7 @@ Equipment Corporation.
 typedef struct {
     Window  window;         /* PanoramiX window - may not exist */
     int	    screen;
-    int     State;          /* PanroamiXOff, PanoramiXOn */
+    int     State;          /* PanoramiXOff, PanoramiXOn */
     int	    width;	    /* width of this screen */
     int     height;	    /* height of this screen */
     int     ScreenCount;    /* real physical number of screens */

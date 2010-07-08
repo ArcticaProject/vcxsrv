@@ -64,7 +64,6 @@ Sun Microsystems, Inc. or its licensors is granted.
 #include <config.h>
 #endif
 #include <stdio.h>
-#define NEED_EVENTS
 #include "Xlibint.h"
 #include "Xlcint.h"
 #include "XlcGeneric.h"

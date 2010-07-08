@@ -30,7 +30,6 @@ PERFORMANCE OF THIS SOFTWARE.
 #include <config.h>
 #endif
 #include <X11/Xatom.h>
-#define NEED_EVENTS
 #include "Xlibint.h"
 #include "Xlcint.h"
 #include "Ximint.h"

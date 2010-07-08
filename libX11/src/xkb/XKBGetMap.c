@@ -24,9 +24,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ********************************************************/
 
-
-#define NEED_REPLIES
-#define NEED_EVENTS
 #define	NEED_MAP_READERS
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -26,8 +26,7 @@ in this Software without prior written authorization from The Open Group.
  * Author:  Keith Packard, MIT X Consortium
  */
 /* $XFree86: xc/lib/Xext/XShape.c,v 1.3 2002/10/16 00:37:27 dawes Exp $ */
-#define NEED_EVENTS
-#define NEED_REPLIES
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

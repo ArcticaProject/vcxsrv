@@ -57,9 +57,6 @@ University of California.
  * include files
  *****************************************************************************/
 
-#define NEED_REPLIES
-#define NEED_EVENTS
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
