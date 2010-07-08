@@ -22,8 +22,7 @@ OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ********************************************************/
 /* $XFree86$ */
-#define NEED_EVENTS
-#define NEED_REPLIES
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

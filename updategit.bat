@@ -9,6 +9,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libX11
 git clone git://anongit.freedesktop.org/xorg/lib/libXdmcp
 git clone git://anongit.freedesktop.org/xorg/lib/libXext
 git clone git://anongit.freedesktop.org/xorg/lib/libfontenc
+git clone git://anongit.freedesktop.org/xorg/lib/libXinerama
 
 :noclone
 pushd .
@@ -44,6 +45,10 @@ popd
 echo Updating libfontenc|& tee /a d:\updategit.log
 pushd libfontenc        |& tee /a d:\updategit.log
 git pull                |& tee /a d:\updategit.log
+popd
+echo Updating libXinerama|& tee /a d:\updategit.log
+pushd libXinerama        |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
 popd
 popd
 setlocal off

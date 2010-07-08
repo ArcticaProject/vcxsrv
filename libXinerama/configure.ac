@@ -20,27 +20,25 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
+AC_PREREQ([2.60])
 
 AC_INIT(libXinerama, 1.1, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libXinerama)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG, XORG_WITH_LINT
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.3 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
+# Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.8)
+XORG_DEFAULT_OPTIONS
 AM_CONFIG_HEADER(config.h)
 
 # Check for progs
 AC_PROG_CC
 AC_PROG_LIBTOOL
-XORG_DEFAULT_OPTIONS
 
 # Check for dependencies
 PKG_CHECK_MODULES(XINERAMA, x11 xext xextproto [xineramaproto >= 1.1.99.1])
-XINERAMA_CFLAGS="$CWARNFLAGS $XINERAMA_CFLAGS"
-AC_SUBST(XINERAMA_CFLAGS)
-AC_SUBST(XINERAMA_LIBS)
 
 dnl Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT

@@ -31,8 +31,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #endif
 
-#define NEED_EVENTS
-#define NEED_REPLIES
 #include "Xlibint.h"
 #include "XKBlibint.h"
 #include <X11/extensions/XKBgeom.h>

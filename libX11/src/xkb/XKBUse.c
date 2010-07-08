@@ -29,8 +29,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #endif
 #include <stdio.h>
 #include <ctype.h>
-#define NEED_REPLIES
-#define NEED_EVENTS
 #include "Xlibint.h"
 #include <X11/extensions/XKBproto.h>
 #include "XKBlibint.h"

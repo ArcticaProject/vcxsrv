@@ -27,7 +27,6 @@ authorization from the X Consortium and the XFree86 Project.
 
 */
 
-#define NEED_REPLIES
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

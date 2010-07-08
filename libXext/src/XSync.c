@@ -55,8 +55,6 @@ PERFORMANCE OF THIS SOFTWARE.
 #include <config.h>
 #endif
 #include <stdio.h>
-#define NEED_EVENTS
-#define NEED_REPLIES
 #include <X11/Xlibint.h>
 #include <X11/extensions/Xext.h>
 #include <X11/extensions/extutil.h>

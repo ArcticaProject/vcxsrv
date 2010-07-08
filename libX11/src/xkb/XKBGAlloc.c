@@ -30,9 +30,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <config.h>
 #endif
 
-#define	NEED_EVENTS
-#define	NEED_REPLIES
-
 #ifndef XKB_IN_SERVER
 
 #include <stdio.h>

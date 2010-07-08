@@ -27,7 +27,6 @@ from The Open Group.
 */
 
 /* XPutBackEvent puts an event back at the head of the queue. */
-#define NEED_EVENTS
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

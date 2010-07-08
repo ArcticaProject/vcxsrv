@@ -25,8 +25,6 @@ Equipment Corporation.
 ******************************************************************/
 /* $XFree86: xc/lib/Xinerama/Xinerama.c,v 1.2 2001/07/23 17:20:28 dawes Exp $ */
 
-#define NEED_EVENTS
-#define NEED_REPLIES
 #include <X11/Xlibint.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xext.h>

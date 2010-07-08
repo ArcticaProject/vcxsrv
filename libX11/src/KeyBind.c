@@ -26,7 +26,6 @@ in this Software without prior written authorization from The Open Group.
 
 /* Beware, here be monsters (still under construction... - JG */
 
-#define NEED_EVENTS
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
