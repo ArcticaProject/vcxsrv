@@ -51,63 +51,102 @@ static unsigned short offsets[KTNUM];
 static unsigned short indexes[KTNUM];
 static KeySym values[KTNUM];
 static char buf[1024];
+static int ksnum = 0;
+
+static int
+parse_line(const char *buf, char *key, KeySym *val, char *prefix)
+{
+    int i;
+    char alias[128];
+    char *tmp, *tmpa;
+
+    /* See if we can catch a straight XK_foo 0x1234-style definition first;
+     * the trickery around tmp is to account for prefices. */
+    i = sscanf(buf, "#define %127s 0x%lx", key, val);
+    if (i == 2 && (tmp = strstr(key, "XK_"))) {
+        memcpy(prefix, key, tmp - key);
+        prefix[tmp - key] = '\0';
+        tmp += 3;
+        memmove(key, tmp, strlen(tmp) + 1);
+        return 1;
+    }
+
+    /* Now try to catch alias (XK_foo XK_bar) definitions, and resolve them
+     * immediately: if the target is in the form XF86XK_foo, we need to
+     * canonicalise this to XF86foo before we do the lookup. */
+    i = sscanf(buf, "#define %127s %127s", key, alias);
+    if (i == 2 && (tmp = strstr(key, "XK_")) && (tmpa = strstr(alias, "XK_"))) {
+        memcpy(prefix, key, tmp - key);
+        prefix[tmp - key] = '\0';
+        tmp += 3;
+        memmove(key, tmp, strlen(tmp) + 1);
+        memmove(tmpa, tmpa + 3, strlen(tmpa + 3) + 1);
+
+        for (i = ksnum - 1; i >= 0; i--) {
+            if (strcmp(info[i].name, alias) == 0) {
+                *val = info[i].val;
+                return 1;
+            }
+        }
+
+        fprintf(stderr, "can't find matching definition %s for keysym %s%s\n",
+                alias, prefix, key);
+    }
+
+    return 0;
+}
 
 int
 main(int argc, char *argv[])
 {
-    int ksnum = 0;
     int max_rehash;
     Signature sig;
-    register int i, j, k, z;
-    register char *name;
-    register char c;
+    int i, j, k, l, z;
+    FILE *fptr;
+    char *name;
+    char c;
     int first;
     int best_max_rehash;
     int best_z = 0;
     int num_found;
     KeySym val;
-    char key[128];
-    char alias[128];
+    char key[128], prefix[128];
 
+    for (l = 1; l < argc; l++) {
+        fptr = fopen(argv[l], "r");
+        if (!fptr) {
+            fprintf(stderr, "couldn't open %s\n", argv[l]);
+            continue;
+        }
 
-    while (fgets(buf, sizeof(buf), stdin)) {
-	i = sscanf(buf, "#define XK_%127s 0x%lx", key, &info[ksnum].val);
-	if (i != 2) {
-	    i = sscanf(buf, "#define XK_%127s XK_%127s", key, alias);
-	    if (i != 2)
-		continue;
-	    for (i = ksnum - 1; i >= 0; i--) {
-		if (strcmp(info[i].name, alias) == 0) {
-		    info[ksnum].val = info[i].val;
-		    break;
-		}
-	    }
-	    if (i < 0) {  /* Didn't find a match */
-		fprintf(stderr,
-		    "can't find matching definition %s for keysym %s\n",
-		    alias, key);
-		continue;
-	    }
-	}
-	if (info[ksnum].val == XK_VoidSymbol)
-	    info[ksnum].val = 0;
-	if (info[ksnum].val > 0x1fffffff) {
-	    fprintf(stderr,
-		    "ignoring illegal keysym (%s), remove it from .h file!\n",
-		    key);
-	    continue;
-	}
-	name = strdup(key);
-	if (!name) {
-	    fprintf(stderr, "makekeys: out of memory!\n");
-	    exit(1);
-	}
-	info[ksnum].name = name;
-	ksnum++;
-	if (ksnum == KTNUM) {
-	    fprintf(stderr, "makekeys: too many keysyms!\n");
-	    exit(1);
-	}
+        while (fgets(buf, sizeof(buf), fptr)) {
+            if (!parse_line(buf, key, &val, prefix))
+                continue;
+
+            if (val == XK_VoidSymbol)
+                val = 0;
+            if (val > 0x1fffffff) {
+                fprintf(stderr, "ignoring illegal keysym (%s, %lx)\n", key,
+                        val);
+                continue;
+            }
+
+            name = malloc(strlen(prefix) + strlen(key) + 1);
+            if (!name) {
+                fprintf(stderr, "makekeys: out of memory!\n");
+                exit(1);
+            }
+            sprintf(name, "%s%s", prefix, key);
+            info[ksnum].name = name;
+            info[ksnum].val = val;
+            ksnum++;
+            if (ksnum == KTNUM) {
+                fprintf(stderr, "makekeys: too many keysyms!\n");
+                exit(1);
+            }
+        }
+
+        fclose(fptr);
     }
 
     printf("/* This file is generated from keysymdef.h. */\n");

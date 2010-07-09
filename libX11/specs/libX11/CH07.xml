@@ -1,0 +1,3401 @@
+<chapter id="graphics_context_functions">
+<title>Graphics Context Functions</title>
+
+<para>
+A number of resources are used when performing graphics operations in X. Most information
+about performing graphics (for example, foreground color, background color, line style, and so
+on) is stored in resources called graphics contexts (GCs). Most graphics operations (see chapter
+8) take a GC as an argument. Although in theory the X protocol permits sharing of GCs between
+applications, it is expected that applications will use their own GCs when performing operations.
+Sharing of GCs is highly discouraged because the library may cache GC state.
+</para>
+<para>
+Graphics operations can be performed to either windows or pixmaps, which collectively are
+called drawables. Each drawable exists on a single screen. A GC is created for a speciﬁc screen
+and drawable depth and can only be used with drawables of matching screen and depth.
+</para>
+<para>
+This chapter discusses how to:
+</para>
+<itemizedlist>
+  <listitem><para>Manipulate graphics context/state</para></listitem>
+  <listitem><para>Use graphics context convenience functions</para></listitem>
+</itemizedlist>
+
+<sect1 id="Manipulating_Graphics_Context_State">
+<title>Manipulating Graphics Context/State</title>
+<!-- .XS -->
+<!-- (SN Manipulating Graphics Context/State  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+Most attributes of graphics operations are stored in GCs.
+These include line width, line style, plane mask, foreground, background,
+tile, stipple, clipping region, end style, join style, and so on.
+Graphics operations (for example, drawing lines) use these values
+to determine the actual drawing operation.
+Extensions to X may add additional components to GCs.
+The contents of a GC are private to Xlib.
+</para>
+<para>
+<!-- .LP -->
+Xlib implements a write-back cache for all elements of a GC that are not
+resource IDs to allow Xlib to implement the transparent coalescing of changes 
+to GCs.
+For example,
+a call to
+<function>XSetForeground</function>
+of a GC followed by a call to
+<function>XSetLineAttributes</function>
+results in only a single-change GC protocol request to the server.
+GCs are neither expected nor encouraged to be shared between client 
+applications, so this write-back caching should present no problems.
+Applications cannot share GCs without external synchronization.
+Therefore,
+sharing GCs between applications is highly discouraged. 
+</para>
+<para>
+<!-- .LP -->
+To set an attribute of a GC,
+set the appropriate member of the
+<function>XGCValues</function>
+structure and OR in the corresponding value bitmask in your subsequent calls to
+<function>XCreateGC</function>.
+The symbols for the value mask bits and the
+<function>XGCValues</function>
+structure are:
+<!-- .sM -->
+</para>
+
+
+<literallayout class="monospaced">
+/* GC attribute value mask bits */
+
+#define     GCFunction              (1L&lt;&lt;0)
+#define     GCPlaneMask             (1L&lt;&lt;1)
+#define     GCForeground            (1L&lt;&lt;2)
+#define     GCBackground            (1L&lt;&lt;3)
+#define     GCLineWidth             (1L&lt;&lt;4)
+#define     GCLineStyle             (1L&lt;&lt;5)
+#define     GCCapStyle              (1L&lt;&lt;6)
+#define     GCJoinStyle             (1L&lt;&lt;7)
+#define     GCFillStyle             (1L&lt;&lt;8)
+#define     GCFillRule              (1L&lt;&lt;9)
+#define     GCTile                  (1L&lt;&lt;10)
+#define     GCStipple               (1L&lt;&lt;11)
+#define     GCTileStipXOrigin       (1L&lt;&lt;12)
+#define     GCTileStipYOrigin       (1L&lt;&lt;13)
+#define     GCFont                  (1L&lt;&lt;14)
+#define     GCSubwindowMode         (1L&lt;&lt;15)
+#define     GCGraphicsExposures     (1L&lt;&lt;16)
+#define     GCClipXOrigin           (1L&lt;&lt;17)
+#define     GCClipYOrigin           (1L&lt;&lt;18)
+#define     GCClipMask              (1L&lt;&lt;19)
+#define     GCDashOffset            (1L&lt;&lt;20)
+#define     GCDashList              (1L&lt;&lt;21)
+#define     GCArcMode               (1L&lt;&lt;22)
+</literallayout>
+
+<literallayout class="monospaced">
+<!-- .TA .5i 3i -->
+<!-- .ta .5i 3i -->
+/* Values */
+
+typedef struct {
+     int function;                 /* logical operation */
+     unsigned long plane_mask;     /* plane mask */
+     unsigned long foreground;     /* foreground pixel */
+     unsigned long background;     /* background pixel */
+     int line_width;               /* line width (in pixels) */
+     int line_style;               /* LineSolid, LineOnOffDash, LineDoubleDash */
+     int cap_style;                /* CapNotLast, CapButt, CapRound, CapProjecting */
+     int join_style;               /* JoinMiter, JoinRound, JoinBevel */
+     int fill_style;               /* FillSolid, FillTiled, FillStippled FillOpaqueStippled*/
+     int fill_rule;                /* EvenOddRule, WindingRule */
+     int arc_mode;                 /* ArcChord, ArcPieSlice */
+     Pixmap tile;                  /* tile pixmap for tiling operations */
+     Pixmap stipple;               /* stipple 1 plane pixmap for stippling */
+     int ts_x_origin;              /* offset for tile or stipple operations */
+     int ts_y_origin
+     Font font;                    /* default text font for text operations */
+     int subwindow_mode;           /* ClipByChildren, IncludeInferiors */
+     Bool graphics_exposures;      /* boolean, should exposures be generated */
+     int clip_x_origin;            /* origin for clipping */
+     int clip_y_origin;
+     Pixmap clip_mask;             /* bitmap clipping; other calls for rects */
+     int dash_offset;              /* patterned/dashed line information */
+     char dashes;
+} XGCValues;
+</literallayout>
+
+<para>
+<!-- .LP -->
+<!-- .eM  -->
+The default GC values are:
+</para>
+<informaltable>
+  <tgroup cols='3' align='center'>
+  <colspec colname='c1'/>
+  <colspec colname='c2'/>
+  <colspec colname='c3'/>
+  <thead>
+    <row>
+      <entry>Component</entry>
+      <entry>Default</entry>
+    </row>
+  </thead>
+  <tbody>
+    <row>
+      <entry>function</entry>
+      <entry><function>GXcopy</function></entry>
+    </row>
+    <row>
+      <entry>plane_mask</entry>
+      <entry>All ones</entry>
+    </row>
+    <row>
+      <entry>foreground</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>background</entry>
+      <entry>1</entry>
+    </row>
+    <row>
+      <entry>line_width</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>line_style</entry>
+      <entry><function>LineSolid</function></entry>
+    </row>
+    <row>
+      <entry>cap_style</entry>
+      <entry><function>CapButt</function></entry>
+    </row>
+    <row>
+      <entry>join_style</entry>
+      <entry><function>JoinMiter</function></entry>
+    </row>
+    <row>
+      <entry>fill_style</entry>
+      <entry><function>FillSolid</function></entry>
+    </row>
+    <row>
+      <entry>fill_rule</entry>
+      <entry><function>EvenOddRule</function></entry>
+    </row>
+    <row>
+      <entry>arc_mode</entry>
+      <entry><function>ArcPieSlice</function></entry>
+    </row>
+    <row>
+      <entry>tile</entry>
+      <entry>Pixmap of unspecified size filled with foreground pixel</entry>
+    </row>
+    <row>
+      <entry></entry>
+      <entry>(that is, client specified pixel if any, else 0)</entry>
+    </row>
+    <row>
+      <entry></entry>
+      <entry>(subsequent changes to foreground do not affect this pixmap)</entry>
+    </row>
+    <row>
+      <entry>stipple</entry>
+      <entry>Pixmap of unspecified size filled with ones</entry>
+    </row>
+    <row>
+      <entry>ts_x_origin</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>ts_y_origin</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>font</entry>
+      <entry>&lt;implementation dependent&gt;</entry>
+    </row>
+    <row>
+      <entry>subwindow_mode</entry>
+      <entry><function>ClipByChildren</function></entry>
+    </row>
+    <row>
+      <entry>graphics_exposures</entry>
+      <entry><function>True</function></entry>
+    </row>
+    <row>
+      <entry>clip_x_origin</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>clip_y_origin</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>clip_mask</entry>
+      <entry><function>None</function></entry>
+    </row>
+    <row>
+      <entry>dash_offset</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry>dashes</entry>
+      <entry>4 (that is, the list [4, 4])</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+<!-- .LP -->
+Note that foreground and background are not set to any values likely
+to be useful in a window.
+</para>
+
+<para>
+<!-- .LP -->
+<indexterm significance="preferred"><primary>Display Functions</primary></indexterm>
+<indexterm significance="preferred"><primary>Source</primary></indexterm>
+<indexterm significance="preferred"><primary>Destination</primary></indexterm>
+The function attributes of a GC are used when you update a section of
+a drawable (the destination) with bits from somewhere else (the source).  
+The function in a GC defines how the new destination bits are to be
+computed from the source bits and the old destination bits.
+<function>GXcopy</function>
+is typically the most useful because it will work on a color display,
+but special applications may use other functions,
+particularly in concert with particular planes of a color display.
+The 16 GC functions, defined in 
+<!-- .hN X11/X.h , -->
+are:
+</para>
+<!-- .\" are listed in Table 5-1 along with the  -->
+<!-- .\"the associated hexadecimal code -->
+<!-- .\" and operation. -->
+<!-- .\".CP T 1 -->
+<!-- .\"Display Functions -->
+<informaltable>
+  <tgroup cols='3' align='center'>
+  <colspec colname='c1'/>
+  <colspec colname='c2'/>
+  <colspec colname='c3'/>
+  <thead>
+    <row>
+      <entry>Function Name</entry>
+      <entry>Value</entry>
+      <entry>Operation</entry>
+    </row>
+  </thead>
+  <tbody>
+    <row>
+      <entry><function>GXclear</function></entry>
+      <entry>0x0</entry>
+      <entry>0</entry>
+    </row>
+    <row>
+      <entry><function>GXand</function></entry>
+      <entry>0x1</entry>
+      <entry>src AND dst</entry>
+    </row>
+    <row>
+      <entry><function>GXandReverse</function></entry>
+      <entry>0x2</entry>
+      <entry>src AND NOT dst</entry>
+    </row>
+    <row>
+      <entry><function>GXcopy</function></entry>
+      <entry>0x3</entry>
+      <entry>src</entry>
+    </row>
+    <row>
+      <entry><function>GXandInverted</function></entry>
+      <entry>0x4</entry>
+      <entry>(NOT src) AND dst</entry>
+    </row>
+    <row>
+      <entry><function>GXnoop</function></entry>
+      <entry>0x5</entry>
+      <entry>dst</entry>
+    </row>
+    <row>
+      <entry><function>GXxor</function></entry>
+      <entry>0x6</entry>
+      <entry>src XOR dst</entry>
+    </row>
+    <row>
+      <entry><function>GXor</function></entry>
+      <entry>0x7</entry>
+      <entry>src OR dst</entry>
+    </row>
+    <row>
+      <entry><function>GXnor</function></entry>
+      <entry>0x8</entry>
+      <entry>(NOT src) AND (NOT dst)</entry>
+    </row>
+    <row>
+      <entry><function>GXequiv</function></entry>
+      <entry>0x9</entry>
+      <entry>(NOT src) XOR dst</entry>
+    </row>
+    <row>
+      <entry><function>GXinvert</function></entry>
+      <entry>0xa</entry>
+      <entry>NOT dst</entry>
+    </row>
+    <row>
+      <entry><function>GXorReverse</function></entry>
+      <entry>0xb</entry>
+      <entry>src OR (NOT dst)</entry>
+    </row>
+    <row>
+      <entry><function>GXcopyInverted</function></entry>
+      <entry>0xc</entry>
+      <entry>NOT src</entry>
+    </row>
+    <row>
+      <entry><function>GXorInverted</function></entry>
+      <entry>0xd</entry>
+      <entry>(NOT src) OR dst</entry>
+    </row>
+    <row>
+      <entry><function>GXnand</function></entry>
+      <entry>0xe</entry>
+      <entry>(NOT src) OR (NOT dst)</entry>
+    </row>
+    <row>
+      <entry><function>GXset</function></entry>
+      <entry>0xf</entry>
+      <entry>1</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+<!-- .LP -->
+Many graphics operations depend on either pixel values or planes in a GC.
+<indexterm><primary>Pixel value</primary></indexterm>
+The planes attribute is of type long, and it specifies which planes of the
+destination are to be modified, one bit per plane.
+<indexterm><primary>Plane</primary><secondary>mask</secondary></indexterm>
+A monochrome display has only one plane and
+will be the least significant bit of the word.
+As planes are added to the display hardware, they will occupy more
+significant bits in the plane mask.
+</para>
+<para>
+<!-- .LP -->
+In graphics operations, given a source and destination pixel, 
+the result is computed bitwise on corresponding bits of the pixels.
+That is, a Boolean operation is performed in each bit plane.  
+The plane_mask restricts the operation to a subset of planes.
+A macro constant
+<function>AllPlanes</function>
+can be used to refer to all planes of the screen simultaneously.
+The result is computed by the following:
+</para>
+<para>
+<!-- .LP -->
+<literallayout class="monospaced">
+((src FUNC dst) AND plane-mask) OR (dst AND (NOT plane-mask))
+</literallayout>
+</para>
+<para>
+<!-- .LP -->
+Range checking is not performed on the values for foreground,
+background, or plane_mask.
+They are simply truncated to the appropriate
+number of bits.
+The line-width is measured in pixels and either can be greater than or equal to
+one (wide line) or can be the special value zero (thin line).
+</para>
+<para>
+<!-- .LP -->
+Wide lines are drawn centered on the path described by the graphics request.
+Unless otherwise specified by the join-style or cap-style,
+the bounding box of a wide line with endpoints [x1, y1], [x2, y2] and
+width w is a rectangle with vertices at the following real coordinates:
+</para>
+<para>
+<!-- .LP -->
+<literallayout class="monospaced">
+<!-- .TA .5i 2.5i -->
+<!-- .ta .5i 2.5i -->
+[x1-(w*sn/2), y1+(w*cs/2)], [x1+(w*sn/2), y1-(w*cs/2)],
+[x2-(w*sn/2), y2+(w*cs/2)], [x2+(w*sn/2), y2-(w*cs/2)]
+</literallayout>
+</para>
+<para>
+<!-- .LP -->
+Here sn is the sine of the angle of the line,
+and cs is the cosine of the angle of the line.
+A pixel is part of the line and so is drawn
+if the center of the pixel is fully inside the bounding box
+(which is viewed as having infinitely thin edges).
+If the center of the pixel is exactly on the bounding box,
+it is part of the line if and only if the interior is immediately to its right
+(x increasing direction).
+Pixels with centers on a horizontal edge are a special case and are part of
+the line if and only if the interior or the boundary is immediately below 
+(y increasing direction) and the interior or the boundary is immediately
+to the right (x increasing direction).
+</para>
+<para>
+<!-- .LP -->
+Thin lines (zero line-width) are one-pixel-wide lines drawn using an
+unspecified, device-dependent algorithm.
+There are only two constraints on this algorithm. 
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+If a line is drawn unclipped from [x1,y1] to [x2,y2] and
+if another line is drawn unclipped from [x1+dx,y1+dy] to [x2+dx,y2+dy],
+a point [x,y] is touched by drawing the first line 
+if and only if the point [x+dx,y+dy] is touched by drawing the second line.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+The effective set of points comprising a line cannot be affected by clipping.
+That is, a point is touched in a clipped line if and only if the point 
+lies inside the clipping region and the point would be touched
+by the line when drawn unclipped.
+    </para>
+  </listitem>
+</itemizedlist>
+<para>
+<!-- .LP -->
+A wide line drawn from [x1,y1] to [x2,y2] always draws the same pixels 
+as a wide line drawn from [x2,y2] to [x1,y1], not counting cap-style 
+and join-style.
+It is recommended that this property be true for thin lines, 
+but this is not required.
+A line-width of zero may differ from a line-width of one in which pixels are
+drawn.
+This permits the use of many manufacturers' line drawing hardware,
+which may run many times faster than the more precisely specified
+wide lines.
+</para>
+<para>
+<!-- .LP -->
+In general, 
+drawing a thin line will be faster than drawing a wide line of width one.
+However, because of their different drawing algorithms,
+thin lines may not mix well aesthetically with wide lines.
+If it is desirable to obtain precise and uniform results across all displays,
+a client should always use a line-width of one rather than a line-width of zero.
+</para>
+<para>
+<!-- .LP -->
+The line-style defines which sections of a line are drawn:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term><function>LineSolid</function></term>
+    <listitem>
+      <para>The full path of the line is drawn.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><function>LineDoubleDash</function></term>
+    <listitem>
+      <para>
+The full path of the line is drawn,
+but the even dashes are filled differently
+from the odd dashes (see fill-style) with <!-- xref -->
+<function>CapButt </function>
+style used where even and odd dashes meet.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><function>LineOnOffDash</function></term>
+    <listitem>
+      <para>
+Only the even dashes are drawn,
+and cap-style applies to 
+all internal ends of the individual dashes,
+except
+<function>CapNotLast</function>
+is treated as
+<function>CapButt</function>.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<para>
+The cap-style defines how the endpoints of a path are drawn:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term><function>CapNotLast</function></term>
+    <listitem>
+      <para>
+This is equivalent to
+<function>CapButt</function>
+except that for a line-width of zero the final endpoint is not drawn.
+     </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term><function>CapButt</function></term>
+    <listitem>
+      <para>
+The line is square at the endpoint (perpendicular to the slope of the line)
+with no projection beyond.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><function>CapRound</function></term>
+    <listitem>
+      <para>
+The line has a circular arc with the diameter equal to the line-width,
+centered on the endpoint.
+(This is equivalent to 
+<function>CapButt </function>
+for line-width of zero).
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><function>CapProjecting</function></term>
+    <listitem>
+      <para>
+The line is square at the end, but the path continues beyond the endpoint
+for a distance equal to half the line-width.
+(This is equivalent to
+<function>CapButt </function>
+for line-width of zero).
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+<para>
+The join-style defines how corners are drawn for wide lines:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term><function>JoinMiter</function></term>
+    <listitem>
+      <para>
+The outer edges of two lines extend to meet at an angle.
+However, if the angle is less than 11 degrees,
+then a
+<function>JoinBevel</function>
+join-style is used instead.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><function>JoinRound</function></term>
+    <listitem>
+      <para>
+The corner is a circular arc with the diameter equal to the line-width,
+centered on the joinpoint.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><function>JoinBevel</function></term>
+    <listitem>
+      <para>
+The corner has
+<function>CapButt </function>
+endpoint styles with the triangular notch filled.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+
+<para>
+<!-- .LP -->
+For a line with coincident endpoints (x1=x2, y1=y2), 
+when the cap-style is applied to both endpoints, 
+the semantics depends on the line-width and the cap-style:
+</para>
+
+<informaltable>
+  <tgroup cols='3' align='center'>
+  <colspec colname='c1'/>
+  <colspec colname='c2'/>
+  <colspec colname='c3'/>
+  <tbody>
+    <row>
+      <entry><function>CapNotLast</function></entry>
+      <entry>thin</entry>
+      <entry>The results are device dependent,
+      but the desired effect is that nothing is drawn.</entry>
+    </row>
+    <row>
+      <entry><function>CapButt</function></entry>
+      <entry>thin</entry>
+      <entry>The results are device dependent,
+      but the desired effect is that a single pixel is drawn.</entry>
+    </row>
+    <row>
+      <entry><function>CapRound</function></entry>
+      <entry>thin</entry>
+      <entry>The results are the same as for
+      <function>CapButt /thin</function>.</entry>
+    </row>
+    <row>
+      <entry><function>CapProjecting</function></entry>
+      <entry>thin</entry>
+      <entry>The results are the same as for
+      <function>CapButt /thin</function>.</entry>
+    </row>
+    <row>
+      <entry><function>CapButt</function></entry>
+      <entry>wide</entry>
+      <entry>Nothing is drawn.</entry>
+    </row>
+    <row>
+      <entry><function>CapRound</function></entry>
+      <entry>wide</entry>
+      <entry>The closed path is a circle, centered at the endpoint, and
+      with the diameter equal to the line-width.</entry>
+    </row>
+    <row>
+      <entry><function>CapProjecting</function></entry>
+      <entry>wide</entry>
+      <entry>The closed path is a square, aligned with the coordinate axes, centered at the
+      endpoint, and with the sides equal to the line-width.</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+<!-- .LP -->
+For a line with coincident endpoints (x1=x2, y1=y2), 
+when the join-style is applied at one or both endpoints, 
+the effect is as if the line was removed from the overall path.
+However, if the total path consists of or is reduced to a single point joined
+with itself, the effect is the same as when the cap-style is applied at both
+endpoints.
+</para>
+<para>
+<!-- .LP -->
+The tile/stipple represents an infinite two-dimensional plane,
+with the tile/stipple replicated in all dimensions.
+When that plane is superimposed on the drawable
+for use in a graphics operation, the upper-left corner
+of some instance of the tile/stipple is at the coordinates within
+the drawable specified by the tile/stipple origin.
+The tile/stipple and clip origins are interpreted relative to the
+origin of whatever destination drawable is specified in a graphics
+request.
+The tile pixmap must have the same root and depth as the GC,
+or a
+<function>BadMatch </function>
+error results.
+The stipple pixmap must have depth one and must have the same root as the
+GC, or a 
+<function>BadMatch </function>
+error results.  
+For stipple operations where the fill-style is
+<function>FillStippled</function>
+but not 
+<function>FillOpaqueStippled</function>,
+the stipple pattern is tiled in a
+single plane and acts as an additional clip mask to be ANDed with the clip-mask.
+Although some sizes may be faster to use than others,
+any size pixmap can be used for tiling or stippling.
+</para>
+
+<para>
+<!-- .LP -->
+The fill-style defines the contents of the source for line, text, and
+fill requests.  
+For all text and fill requests (for example,
+<function>XDrawText</function>,
+<function>XDrawText16</function>,
+<function>XFillRectangle</function>,
+<function>XFillPolygon</function>,
+and
+<function>XFillArc</function>);
+for line requests 
+with line-style 
+<function>LineSolid </function>
+(for example,
+<function>XDrawLine</function>,
+<function>XDrawSegments</function>,
+<function>XDrawRectangle</function>,
+<function>XDrawArc</function>);
+and for the even dashes for line requests with line-style 
+<function>LineOnOffDash </function>
+or 
+<function>LineDoubleDash</function>,
+the following apply:
+</para>
+
+<informaltable>
+  <tgroup cols='2' align='center'>
+  <colspec colname='c1'/>
+  <colspec colname='c2'/>
+  <tbody>
+    <row>
+      <entry><function>FillSolid</function></entry>
+      <entry>Foreground</entry>
+    </row>
+    <row>
+      <entry><function>FillTiled</function></entry>
+      <entry>Tile</entry>
+    </row>
+    <row>
+      <entry><function>FillOpaqueStippled</function></entry>
+      <entry>A tile with the same width and height as stipple,
+      but with background everywhere stipple has a zero
+      and with foreground everywhere stipple has a one</entry>
+    </row>
+    <row>
+      <entry><function>FillStippled</function></entry>
+      <entry>Foreground masked by stipple</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+<!-- .LP -->
+When drawing lines with line-style
+<function>LineDoubleDash</function>,
+the odd dashes are controlled by the fill-style in the following manner:
+</para>
+
+<informaltable>
+  <tgroup cols='2' align='center'>
+  <colspec colname='c1'/>
+  <colspec colname='c2'/>
+  <tbody>
+    <row>
+      <entry><function>FillSolid</function></entry>
+      <entry>Background</entry>
+    </row>
+    <row>
+      <entry><function>FillTiled</function></entry>
+      <entry>Same as for even dashes</entry>
+    </row>
+    <row>
+      <entry><function>FillOpaqueStippled</function></entry>
+      <entry>Same as for even dashes</entry>
+    </row>
+    <row>
+      <entry><function>FillStippled</function></entry>
+      <entry>Background masked by stipple</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+<!-- .LP -->
+Storing a pixmap in a GC might or might not result in a copy
+being made.
+If the pixmap is later used as the destination for a graphics request,
+the change might or might not be reflected in the GC.
+If the pixmap is used simultaneously in a graphics request both as
+a destination and as a tile or stipple,
+the results are undefined.
+</para>
+<para>
+<!-- .LP -->
+For optimum performance,
+you should draw as much as possible with the same GC 
+(without changing its components).
+The costs of changing GC components relative to using different GCs
+depend on the display hardware and the server implementation.
+It is quite likely that some amount of GC information will be
+cached in display hardware and that such hardware can only cache a small number
+of GCs.
+</para>
+<para>
+<!-- .LP -->
+The dashes value is actually a simplified form of the
+more general patterns that can be set with 
+<function>XSetDashes</function>.
+Specifying a
+value of N is equivalent to specifying the two-element list [N, N] in 
+<function>XSetDashes</function>.
+The value must be nonzero,
+or a
+<function>BadValue</function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+The clip-mask restricts writes to the destination drawable.  
+If the clip-mask is set to a pixmap,
+it must have depth one and have the same root as the GC,
+or a
+<function>BadMatch </function>
+error results.
+If clip-mask is set to
+<function>None</function>,
+the pixels are always drawn regardless of the clip origin.
+The clip-mask also can be set by calling the
+<function>XSetClipRectangles</function>
+or
+<function>XSetRegion</function>
+functions.
+Only pixels where the clip-mask has a bit set to 1 are drawn.  
+Pixels are not drawn outside the area covered by the clip-mask 
+or where the clip-mask has a bit set to 0.
+The clip-mask affects all graphics requests.
+The clip-mask does not clip sources.
+The clip-mask origin is interpreted relative to the origin of whatever
+destination drawable is specified in a graphics request.
+</para>
+<para>
+<!-- .LP -->
+You can set the subwindow-mode to
+<function>ClipByChildren</function>
+or
+<function>IncludeInferiors</function>.
+For 
+<function>ClipByChildren</function>,
+both source and destination windows are
+additionally clipped by all viewable 
+<function>InputOutput</function>
+children.  
+For 
+<function>IncludeInferiors</function>,
+neither source nor destination window is clipped by inferiors. 
+This will result in including subwindow contents in the source
+and drawing through subwindow boundaries of the destination.
+The use of 
+<function>IncludeInferiors </function>
+on a window of one depth with mapped
+inferiors of differing depth is not illegal, but the semantics are
+undefined by the core protocol.
+</para>
+<para>
+<!-- .LP -->
+The fill-rule defines what pixels are inside (drawn) for
+paths given in 
+<function>XFillPolygon </function>
+requests and can be set to 
+<function>EvenOddRule </function>
+or
+<function>WindingRule</function>.
+For
+<function>EvenOddRule</function>,
+a point is inside if
+an infinite ray with the point as origin crosses the path an odd number
+of times.  
+For 
+<function>WindingRule</function>,
+a point is inside if an infinite ray with the
+point as origin crosses an unequal number of clockwise and
+counterclockwise directed path segments.
+A clockwise directed path segment is one that crosses the ray from left to
+right as observed from the point.
+A counterclockwise segment is one that crosses the ray from right to left
+as observed from the point.
+The case where a directed line segment is coincident with the ray is
+uninteresting because you can simply choose a different ray that is not
+coincident with a segment.
+</para>
+<para>
+<!-- .LP -->
+For both 
+<function>EvenOddRule</function>
+and
+<function>WindingRule</function>,
+a point is infinitely small, 
+and the path is an infinitely thin line.  
+A pixel is inside if the center point of the pixel is inside
+and the center point is not on the boundary.  
+If the center point is on the boundary,
+the pixel is inside if and only if the polygon interior is immediately to
+its right (x increasing direction).  
+Pixels with centers on a horizontal edge are a special case 
+and are inside if and only if the polygon interior is immediately below 
+(y increasing direction).
+</para>
+<para>
+<!-- .LP -->
+The arc-mode controls filling in the 
+<function>XFillArcs</function>
+function and can be set to
+<function>ArcPieSlice</function>
+or
+<function>ArcChord</function>.
+For
+<function>ArcPieSlice</function>,
+the arcs are pie-slice filled.
+For
+<function>ArcChord</function>,
+the arcs are chord filled.
+</para>
+<para>
+<!-- .LP -->
+The graphics-exposure flag controls 
+<function>GraphicsExpose </function>
+event generation
+for 
+<function>XCopyArea </function>
+and 
+<function>XCopyPlane</function>
+requests (and any similar requests defined by extensions).
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To create a new GC that is usable on a given screen with a 
+depth of drawable, use
+<function>XCreateGC</function>.
+<indexterm><primary>Graphics context</primary><secondary>initializing</secondary></indexterm>
+<indexterm significance="preferred"><primary>XCreateGC</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>GC<function> XCreateGC</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Drawable<parameter> d</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> valuemask</parameter></paramdef>
+  <paramdef>XGCValues<parameter> *\^values</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>d</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the drawable. 
+<!-- .ds Vm set using the information in the specified values structure -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>valuemask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies which components in the GC are to be (Vm. 
+This argument is the bitwise inclusive OR of zero or more of the valid
+GC component mask bits.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>values</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies any values as specified by the valuemask.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XCreateGC</function>
+function creates a graphics context and returns a GC.
+The GC can be used with any destination drawable having the same root
+and depth as the specified drawable.
+Use with other drawables results in a
+<function>BadMatch</function>
+error.
+</para>
+<para>
+<!-- .LP -->
+<function>XCreateGC</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadDrawable</function>,
+<function>BadFont</function>,
+<function>BadMatch</function>,
+<function>BadPixmap</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To copy components from a source GC to a destination GC, use
+<function>XCopyGC</function>.
+<indexterm significance="preferred"><primary>XCopyGC</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XCopyGC</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GCsrc,<parameter> dest</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> valuemask</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>src</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the components of the source GC.
+<!-- .ds Vm copied to the destination GC -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>valuemask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies which components in the GC are to be (Vm. 
+This argument is the bitwise inclusive OR of zero or more of the valid
+GC component mask bits.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>dest</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the destination GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM  -->
+The
+<function>XCopyGC</function>
+function copies the specified components from the source GC
+to the destination GC.
+The source and destination GCs must have the same root and depth,
+or a
+<function>BadMatch</function>
+error results.
+The valuemask specifies which component to copy, as for
+<function>XCreateGC</function>.
+</para>
+<para>
+<!-- .LP -->
+<function>XCopyGC</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadMatch</function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To change the components in a given GC, use
+<function>XChangeGC</function>.
+<indexterm significance="preferred"><primary>XChangeGC</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XChangeGC</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> valuemask</parameter></paramdef>
+  <paramdef>XGCValues<parameter> *\^values</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+<!-- .ds Vm changed using information in the specified values structure -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>valuemask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies which components in the GC are to be (Vm. 
+This argument is the bitwise inclusive OR of zero or more of the valid
+GC component mask bits.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>values</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies any values as specified by the valuemask.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XChangeGC</function>
+function changes the components specified by valuemask for
+the specified GC.
+The values argument contains the values to be set.
+The values and restrictions are the same as for 
+<function>XCreateGC</function>.
+Changing the clip-mask overrides any previous 
+<function>XSetClipRectangles</function>
+request on the context. 
+Changing the dash-offset or dash-list
+overrides any previous 
+<function>XSetDashes</function>
+request on the context.
+The order in which components are verified and altered is server dependent.
+If an error is generated, a subset of the components may have been altered.
+</para>
+<para>
+<!-- .LP -->
+<function>XChangeGC</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadFont</function>,
+<function>BadGC</function>,
+<function>BadMatch</function>,
+<function>BadPixmap</function>,
+and
+<function>BadValue</function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To obtain components of a given GC, use
+<function>XGetGCValues</function>.
+<indexterm significance="preferred"><primary>XGetGCValues</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Status<function> XGetGCValues</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> valuemask</parameter></paramdef>
+  <paramdef>XGCValues<parameter> *values_return</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+<!-- .ds Vm returned in the values_return argument -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>valuemask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies which components in the GC are to be (Vm. 
+This argument is the bitwise inclusive OR of zero or more of the valid
+GC component mask bits.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>values_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+Returns the GC values in the specified
+<function>XGCValues </function>
+structure.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XGetGCValues</function>
+function returns the components specified by valuemask for the specified GC.
+If the valuemask contains a valid set of GC mask bits
+(<function>GCFunction</function>,
+<function>GCPlaneMask</function>,
+<function>GCForeground</function>,
+<function>GCBackground</function>,
+<function>GCLineWidth</function>,
+<function>GCLineStyle</function>,
+<function>GCCapStyle</function>,
+<function>GCJoinStyle</function>,
+<function>GCFillStyle</function>,
+<function>GCFillRule</function>,
+<function>GCTile</function>,
+<function>GCStipple</function>,
+<function>GCTileStipXOrigin</function>,
+<function>GCTileStipYOrigin</function>,
+<function>GCFont</function>,
+<function>GCSubwindowMode</function>,
+<function>GCGraphicsExposures</function>,
+<function>GCClipXOrigin</function>,
+<function>GCCLipYOrigin</function>,
+<function>GCDashOffset</function>,
+or
+<function>GCArcMode</function>)
+and no error occurs,
+<function>XGetGCValues</function>
+sets the requested components in values_return and returns a nonzero status.
+Otherwise, it returns a zero status.
+Note that the clip-mask and dash-list (represented by the
+<function>GCClipMask</function>
+and 
+<function>GCDashList</function>
+bits, respectively, in the valuemask)
+cannot be requested.
+Also note that an invalid resource ID (with one or more of the three
+most significant bits set to 1) will be returned for
+<function>GCFont</function>,
+<function>GCTile</function>,
+and
+<function>GCStipple</function>
+if the component has never been explicitly set by the client.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To free a given GC, use
+<function>XFreeGC</function>.
+<indexterm significance="preferred"><primary>XFreeGC</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XFreeGC</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XFreeGC</function>
+function destroys the specified GC as well as all the associated storage.
+</para>
+<para>
+<!-- .LP -->
+<function>XFreeGC</function>
+can generate a
+<function>BadGC </function>
+error.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To obtain the 
+<function>GContext </function>
+resource ID for a given GC, use 
+<function>XGContextFromGC</function>.
+<indexterm significance="preferred"><primary>XGContextFromGC</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>GContext<function> XGContextFromGC</function></funcdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<!-- .ds Gc for which you want the resource ID -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC (Gc.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<!-- .sp -->
+Xlib usually defers sending changes to the components of a GC to the server
+until a graphics function is actually called with that GC.
+This permits batching of component changes into a single server request.
+In some circumstances, however, it may be necessary for the client
+to explicitly force sending the changes to the server.
+An example might be when a protocol extension uses the GC indirectly,
+in such a way that the extension interface cannot know what GC will be used.
+To force sending GC component changes, use
+<function>XFlushGC</function>.
+<indexterm significance="preferred"><primary>XFlushGC</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>void<function> XFlushGC</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+</para>
+</sect1>
+<sect1 id="Using_Graphics_Context_Convenience_Routines">
+<title>Using Graphics Context Convenience Routines</title>
+<!-- .XS -->
+<!-- (SN Using Graphics Context Convenience Routines  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+This section discusses how to set the:
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+Foreground, background, plane mask, or function components
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Line attributes and dashes components
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Fill style and fill rule components
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Fill tile and stipple components
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Font component
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Clip region component
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Arc mode, subwindow mode, and graphics exposure components
+    </para>
+  </listitem>
+</itemizedlist>
+<sect2 id="Setting_the_Foreground_Background_Function_or_Plane_Mask">
+<title>Setting the Foreground, Background, Function, or Plane Mask</title>
+<!-- .XS -->
+<!-- (SN Setting the Foreground, Background, Function, or Plane Mask -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+To set the foreground, background, plane mask, and function components
+for a given GC, use
+<function>XSetState</function>.
+<indexterm significance="preferred"><primary>XSetState</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetState</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedlongforeground,<parameter> background</parameter></paramdef>
+  <paramdef>int<parameter> function</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> plane_mask</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>foreground</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the foreground you want to set for the specified GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>background</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the background you want to set for the specified GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>function</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the function you want to set for the specified GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>plane_mask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the plane mask.
+<!-- .\" *** JIM: NEED MORE INFO FOR THIS. *** -->
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetState</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the foreground of a given GC, use
+<function>XSetForeground</function>.
+<indexterm significance="preferred"><primary>XSetForeground</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetForeground</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> foreground</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>foreground</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the foreground you want to set for the specified GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetForeground</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadGC </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the background of a given GC, use
+<function>XSetBackground</function>.
+<indexterm significance="preferred"><primary>XSetBackground</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetBackground</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> background</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>background</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the background you want to set for the specified GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetBackground</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadGC </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the display function in a given GC, use
+<function>XSetFunction</function>.
+<indexterm significance="preferred"><primary>XSetFunction</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetFunction</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>int<parameter> function</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>function</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the function you want to set for the specified GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetFunction</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the plane mask of a given GC, use
+<function>XSetPlaneMask</function>.
+<indexterm significance="preferred"><primary>XSetPlaneMask</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetPlaneMask</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedlong<parameter> plane_mask</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>plane_mask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the plane mask.
+<!-- .\" *** JIM: NEED MORE INFO FOR THIS. *** -->
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetPlaneMask</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadGC </function>
+errors.
+</para>
+</sect2>
+<sect2 id="Setting_the_Line_Attributes_and_Dashes">
+<title>Setting the Line Attributes and Dashes</title>
+<!-- .XS -->
+<!-- (SN Setting the Line Attributes and Dashes  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+To set the line drawing components of a given GC, use
+<function>XSetLineAttributes</function>.
+<indexterm significance="preferred"><primary>XSetLineAttributes</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetLineAttributes</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>unsignedint<parameter> line_width</parameter></paramdef>
+  <paramdef>int<parameter> line_style</parameter></paramdef>
+  <paramdef>int<parameter> cap_style</parameter></paramdef>
+  <paramdef>int<parameter> join_style</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>line_width</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the line-width you want to set for the specified GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>line_style</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the line-style you want to set for the specified GC.
+You can pass
+<function>LineSolid</function>,
+<function>LineOnOffDash</function>,
+or
+<function>LineDoubleDash</function>.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>cap_style</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the line-style and cap-style you want to set for the specified GC.
+You can pass
+<function>CapNotLast</function>,
+<function>CapButt</function>,
+<function>CapRound</function>,
+or
+<function>CapProjecting</function>.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>join_style</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the line join-style you want to set for the specified GC.
+You can pass
+<function>JoinMiter</function>,
+<function>JoinRound</function>,
+or
+<function>JoinBevel</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetLineAttributes</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the dash-offset and dash-list for dashed line styles of a given GC, use
+<function>XSetDashes</function>.
+<indexterm significance="preferred"><primary>XSetDashes</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetDashes</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>int<parameter> dash_offset</parameter></paramdef>
+  <paramdef>char<parameter> dash_list[]\^</parameter></paramdef>
+  <paramdef>int<parameter> n</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>dash_offset</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the phase of the pattern for the dashed line-style you want to set
+for the specified GC. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>dash_list</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the dash-list for the dashed line-style
+you want to set for the specified GC. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>n</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the number of elements in dash_list. 
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM  -->
+The
+<function>XSetDashes</function>
+function sets the dash-offset and dash-list attributes for dashed line styles
+in the specified GC.
+There must be at least one element in the specified dash_list,
+or a
+<function>BadValue</function>
+error results. 
+The initial and alternating elements (second, fourth, and so on) 
+of the dash_list are the even dashes, and
+the others are the odd dashes.
+Each element specifies a dash length in pixels.
+All of the elements must be nonzero,
+or a
+<function>BadValue</function>
+error results.
+Specifying an odd-length list is equivalent to specifying the same list
+concatenated with itself to produce an even-length list.
+</para>
+<para>
+<!-- .LP -->
+The dash-offset defines the phase of the pattern,
+specifying how many pixels into the dash-list the pattern
+should actually begin in any single graphics request.
+Dashing is continuous through path elements combined with a join-style
+but is reset to the dash-offset between each sequence of joined lines.
+</para>
+<para>
+<!-- .LP -->
+The unit of measure for dashes is the same for the ordinary coordinate system.
+Ideally, a dash length is measured along the slope of the line, but implementations
+are only required to match this ideal for horizontal and vertical lines.
+Failing the ideal semantics, it is suggested that the length be measured along the
+major axis of the line.
+The major axis is defined as the x axis for lines drawn at an angle of between
+\-45 and +45 degrees or between 135 and 225 degrees from the x axis.
+For all other lines, the major axis is the y axis.
+</para>
+<para>
+<!-- .LP -->
+<function>XSetDashes</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+</sect2>
+<sect2 id="Setting_the_Fill_Style_and_Fill_Rule_">
+<title>Setting the Fill Style and Fill Rule </title>
+<!-- .XS -->
+<!-- (SN Setting the Fill Style and Fill Rule  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+To set the fill-style of a given GC, use
+<function>XSetFillStyle</function>.
+<indexterm significance="preferred"><primary>XSetFillStyle</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetFillStyle</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>int<parameter> fill_style</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>fill_style</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the fill-style you want to set for the specified GC.
+You can pass
+<function>FillSolid</function>,
+<function>FillTiled</function>,
+<function>FillStippled</function>,
+or
+<function>FillOpaqueStippled</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetFillStyle</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the fill-rule of a given GC, use
+<function>XSetFillRule</function>.
+<indexterm significance="preferred"><primary>XSetFillRule</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetFillRule</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>int<parameter> fill_rule</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>fill_rule</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the fill-rule you want to set for the specified GC.
+You can pass 
+<function>EvenOddRule</function>
+or
+<function>WindingRule</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetFillRule</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+</sect2>
+<sect2 id="Setting_the_Fill_Tile_and_Stipple_">
+<title>Setting the Fill Tile and Stipple </title>
+<!-- .XS -->
+<!-- (SN Setting the Fill Tile and Stipple  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+Some displays have hardware support for tiling or
+stippling with patterns of specific sizes.
+Tiling and stippling operations that restrict themselves to those specific
+sizes run much faster than such operations with arbitrary size patterns.
+Xlib provides functions that you can use to determine the best size, 
+tile, or stipple for the display
+as well as to set the tile or stipple shape and the tile or stipple origin.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To obtain the best size of a tile, stipple, or cursor, use
+<function>XQueryBestSize</function>.
+<indexterm significance="preferred"><primary>XQueryBestSize</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Status<function> XQueryBestSize</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>int<parameter> class</parameter></paramdef>
+  <paramdef>Drawable<parameter> which_screen</parameter></paramdef>
+  <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
+  <paramdef>unsignedint*width_return,<parameter> *height_return</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>class</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the class that you are interested in.
+You can pass 
+<function>TileShape</function>,
+<function>CursorShape</function>,
+or 
+<function>StippleShape</function>.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>which_screen</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies any drawable on the screen.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the width and height.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+Return the width and height of the object best supported 
+by the display hardware.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XQueryBestSize</function>
+function returns the best or closest size to the specified size.
+For 
+<function>CursorShape</function>,
+this is the largest size that can be fully displayed on the screen specified by
+which_screen.
+For 
+<function>TileShape</function>,
+this is the size that can be tiled fastest.
+For 
+<function>StippleShape</function>,
+this is the size that can be stippled fastest.
+For 
+<function>CursorShape</function>,
+the drawable indicates the desired screen.
+For 
+<function>TileShape </function>
+and 
+<function>StippleShape</function>,
+the drawable indicates the screen and possibly the window class and depth.
+An 
+<function>InputOnly </function>
+window cannot be used as the drawable for 
+<function>TileShape</function>
+or 
+<function>StippleShape</function>,
+or a
+<function>BadMatch </function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+<function>XQueryBestSize</function>
+can generate
+<function>BadDrawable</function>,
+<function>BadMatch</function>,
+and 
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To obtain the best fill tile shape, use
+<function>XQueryBestTile</function>.
+<indexterm significance="preferred"><primary>XQueryBestTile</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Status<function> XQueryBestTile</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Drawable<parameter> which_screen</parameter></paramdef>
+  <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
+  <paramdef>unsignedint*width_return,<parameter> *height_return</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>which_screen</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies any drawable on the screen.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the width and height.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+Return the width and height of the object best supported 
+by the display hardware.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XQueryBestTile</function>
+function returns the best or closest size, that is, the size that can be
+tiled fastest on the screen specified by which_screen.
+The drawable indicates the screen and possibly the window class and depth.
+If an 
+<function>InputOnly </function>
+window is used as the drawable, a 
+<function>BadMatch </function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+<function>XQueryBestTile</function>
+can generate
+<function>BadDrawable</function>
+and
+<function>BadMatch </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To obtain the best stipple shape, use
+<function>XQueryBestStipple</function>.
+<indexterm significance="preferred"><primary>XQueryBestStipple</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Status<function> XQueryBestStipple</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Drawable<parameter> which_screen</parameter></paramdef>
+  <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
+  <paramdef>unsignedint*width_return,<parameter> *height_return</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>which_screen</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies any drawable on the screen.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the width and height.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+Return the width and height of the object best supported 
+by the display hardware.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XQueryBestStipple</function>
+function returns the best or closest size, that is, the size that can be
+stippled fastest on the screen specified by which_screen.
+The drawable indicates the screen and possibly the window class and depth.
+If an
+<function>InputOnly</function>
+window is used as the drawable, a
+<function>BadMatch</function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+<function>XQueryBestStipple</function>
+can generate
+<function>BadDrawable</function>
+and
+<function>BadMatch </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the fill tile of a given GC, use
+<function>XSetTile</function>.
+<indexterm significance="preferred"><primary>XSetTile</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetTile</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>Pixmap<parameter> tile</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>tile</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the fill tile you want to set for the specified GC. 
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The tile and GC must have the same depth,
+or a
+<function>BadMatch</function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+<function>XSetTile</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+<function>BadMatch</function>,
+and
+<function>BadPixmap </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the stipple of a given GC, use
+<function>XSetStipple</function>.
+<indexterm significance="preferred"><primary>XSetStipple</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetStipple</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>Pixmap<parameter> stipple</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>stipple</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the stipple you want to set for the specified GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The stipple must have a depth of one,
+or a
+<function>BadMatch</function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+<function>XSetStipple</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+<function>BadMatch</function>,
+and
+<function>BadPixmap </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the tile or stipple origin of a given GC, use
+<function>XSetTSOrigin</function>.
+<indexterm significance="preferred"><primary>XSetTSOrigin</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetTSOrigin</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>intts_x_origin,<parameter> ts_y_origin</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>ts_x_origin</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>ts_y_origin</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the x and y coordinates of the tile and stipple origin.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+When graphics requests call for tiling or stippling,
+the parent's origin will be interpreted relative to whatever destination 
+drawable is specified in the graphics request.
+</para>
+<para>
+<!-- .LP -->
+<function>XSetTSOrigin</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadGC </function>
+errors.
+</para>
+</sect2>
+<sect2 id="Setting_the_Current_Font_">
+<title>Setting the Current Font </title>
+<!-- .XS -->
+<!-- (SN Setting the Current Font  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+To set the current font of a given GC, use
+<function>XSetFont</function>.
+<indexterm significance="preferred"><primary>XSetFont</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetFont</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>Font<parameter> font</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>font</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the font.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetFont</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadFont</function>,
+and 
+<function>BadGC </function>
+errors.
+</para>
+</sect2>
+<sect2 id="Setting_the_Clip_Region">
+<title>Setting the Clip Region</title>
+<!-- .XS -->
+<!-- (SN Setting the Clip Region  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+Xlib provides functions that you can use to set the clip-origin 
+and the clip-mask or set the clip-mask to a list of rectangles.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the clip-origin of a given GC, use
+<function>XSetClipOrigin</function>.
+<indexterm significance="preferred"><primary>XSetClipOrigin</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetClipOrigin</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>intclip_x_origin,<parameter> clip_y_origin</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>clip_x_origin</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>clip_y_origin</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the x and y coordinates of the clip-mask origin.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The clip-mask origin is interpreted relative to the origin of whatever 
+destination drawable is specified in the graphics request.
+</para>
+<para>
+<!-- .LP -->
+<function>XSetClipOrigin</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadGC </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the clip-mask of a given GC to the specified pixmap, use
+<function>XSetClipMask</function>.
+<indexterm significance="preferred"><primary>XSetClipMask</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetClipMask</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>Pixmap<parameter> pixmap</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>pixmap</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the pixmap or
+<function>None</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+If the clip-mask is set to
+<function>None</function>,
+the pixels are always drawn (regardless of the clip-origin).
+</para>
+<para>
+<!-- .LP -->
+<function>XSetClipMask</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+<function>BadMatch</function>,
+and
+<function>BadPixmap </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the clip-mask of a given GC to the specified list of rectangles, use
+<function>XSetClipRectangles</function>.
+<indexterm significance="preferred"><primary>XSetClipRectangles</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetClipRectangles</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>intclip_x_origin,<parameter> clip_y_origin</parameter></paramdef>
+  <paramdef>XRectangle<parameter> rectangles[]\^</parameter></paramdef>
+  <paramdef>int<parameter> n</parameter></paramdef>
+  <paramdef>int<parameter> ordering</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>clip_x_origin</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>clip_y_origin</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the x and y coordinates of the clip-mask origin.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>rectangles</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies an array of rectangles that define the clip-mask.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>n</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the number of rectangles. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>ordering</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the ordering relations on the rectangles.
+You can pass
+<function>Unsorted</function>,
+<function>YSorted</function>,
+<function>YXSorted</function>,
+or
+<function>YXBanded</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XSetClipRectangles</function>
+function changes the clip-mask in the specified GC 
+to the specified list of rectangles and sets the clip origin.
+The output is clipped to remain contained within the
+rectangles.
+The clip-origin is interpreted relative to the origin of
+whatever destination drawable is specified in a graphics request.  
+The rectangle coordinates are interpreted relative to the clip-origin.  
+The rectangles should be nonintersecting, or the graphics results will be
+undefined.
+Note that the list of rectangles can be empty, 
+which effectively disables output.
+This is the opposite of passing
+<function>None</function>
+as the clip-mask in
+<function>XCreateGC</function>,
+<function>XChangeGC</function>,
+and
+<function>XSetClipMask</function>.
+</para>
+<para>
+<!-- .LP -->
+If known by the client, ordering relations on the rectangles can be
+specified with the ordering argument. 
+This may provide faster operation
+by the server. 
+If an incorrect ordering is specified, the X server may generate a
+<function>BadMatch</function>
+error, but it is not required to do so.
+If no error is generated, the graphics
+results are undefined.
+<function>Unsorted </function>
+means the rectangles are in arbitrary order.
+<function>YSorted </function>
+means that the rectangles are nondecreasing in their Y origin.
+<function>YXSorted </function>
+additionally constrains 
+<function>YSorted </function>
+order in that all
+rectangles with an equal Y origin are nondecreasing in their X
+origin.  
+<function>YXBanded </function>
+additionally constrains 
+<function>YXSorted </function>
+by requiring that,
+for every possible Y scanline, all rectangles that include that
+scanline have an identical Y origins and Y extents.
+</para>
+<para>
+<!-- .LP -->
+<function>XSetClipRectangles</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+<function>BadMatch</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+Xlib provides a set of basic functions for performing
+region arithmetic.
+For information about these functions,
+see section 16.5.
+</para>
+</sect2>
+<sect2 id="Setting_the_Arc_Mode_Subwindow_Mode_and_Graphics_Exposure_">
+<title>Setting the Arc Mode, Subwindow Mode, and Graphics Exposure </title>
+<!-- .XS -->
+<!-- (SN Setting the Arc Mode, Subwindow Mode, and Graphics Exposure  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+To set the arc mode of a given GC, use
+<function>XSetArcMode</function>.
+<indexterm significance="preferred"><primary>XSetArcMode</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetArcMode</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>int<parameter> arc_mode</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>arc_mode</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the arc mode.
+You can pass
+<function>ArcChord</function>
+or
+<function>ArcPieSlice</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetArcMode</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the subwindow mode of a given GC, use
+<function>XSetSubwindowMode</function>.
+<indexterm significance="preferred"><primary>XSetSubwindowMode</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetSubwindowMode</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>int<parameter> subwindow_mode</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>subwindow_mode</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the subwindow mode.
+You can pass
+<function>ClipByChildren</function>
+or
+<function>IncludeInferiors</function>.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetSubwindowMode</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To set the graphics-exposures flag of a given GC, use
+<function>XSetGraphicsExposures</function>.
+<indexterm significance="preferred"><primary>XSetGraphicsExposures</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XSetGraphicsExposures</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>GC<parameter> gc</parameter></paramdef>
+  <paramdef>Bool<parameter> graphics_exposures</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>gc</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the GC.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>graphics_exposures</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies a Boolean value that indicates whether you want
+<function>GraphicsExpose</function>
+and
+<function>NoExpose</function>
+events to be reported when calling
+<function>XCopyArea</function>
+and
+<function>XCopyPlane</function>
+with this GC.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+<function>XSetGraphicsExposures</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadGC</function>,
+and
+<function>BadValue </function>
+errors.
+<!-- .bp -->
+
+</para>
+</sect2>
+</sect1>
+</chapter>

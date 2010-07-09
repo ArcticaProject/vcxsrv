@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
+# Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,33 +22,43 @@
 #
 
 if ENABLE_SPECS
+doc_sources = dbelib.xml dpmslib.xml shapelib.xml synclib.xml
+dist_doc_DATA = $(doc_sources)
 
-specdir = $(docdir)/$(subdir)
-doc_sources = libX11.xml
-dist_spec_DATA = $(doc_sources)	\
-	AppA.xml		\
-	AppB.xml		\
-	AppC.xml		\
-	AppD.xml		\
-	CH01.xml		\
-	CH02.xml		\
-	CH03.xml		\
-	CH04.xml		\
-	CH05.xml		\
-	CH06.xml		\
-	CH07.xml		\
-	CH08.xml		\
-	CH09.xml		\
-	CH10.xml		\
-	CH11.xml		\
-	CH12.xml		\
-	CH13.xml		\
-	CH14.xml		\
-	CH15.xml		\
-	CH16.xml		\
-	credits.xml		\
-	glossary.xml
+if HAVE_XMLTO
+doc_DATA = $(doc_sources:.xml=.html)
 
-include $(top_srcdir)/specs/xmlrules.in
+if HAVE_FOP
+doc_DATA += $(doc_sources:.xml=.ps) $(doc_sources:.xml=.pdf)
+endif
 
+if HAVE_XMLTO_TEXT
+doc_DATA += $(doc_sources:.xml=.txt)
+endif
+
+if HAVE_STYLESHEETS
+XMLTO_FLAGS = -m $(XSL_STYLESHEET)
+
+doc_DATA += xorg.css
+xorg.css: $(STYLESHEET_SRCDIR)/xorg.css
+	$(AM_V_GEN)cp -pf $(STYLESHEET_SRCDIR)/xorg.css $@
+endif
+
+CLEANFILES = $(doc_DATA)
+
+SUFFIXES = .xml .ps .pdf .txt .html
+
+.xml.txt:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) txt $<
+
+.xml.html:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) xhtml-nochunks $<
+
+.xml.pdf:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop pdf $<
+
+.xml.ps:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop ps $<
+
+endif HAVE_XMLTO
 endif ENABLE_SPECS

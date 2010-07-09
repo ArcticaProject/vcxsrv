@@ -1,0 +1,773 @@
+% $Xorg: synclib.tex,v 1.3 2000/08/17 19:42:37 cpqbld Exp $
+% $XdotOrg: xc/doc/specs/Xext/synclib.tex,v 1.2 2004/04/23 18:42:18 eich Exp $
+%
+% Copyright 1991 by Olivetti Research Limited, Cambridge, England and
+% Digital Equipment Corporation, Maynard, Massachusetts.
+%
+%                        All Rights Reserved
+%
+% Permission to use, copy, modify, and distribute this software and its 
+% documentation for any purpose and without fee is hereby granted, 
+% provided that the above copyright notice appear in all copies and that
+% both that copyright notice and this permission notice appear in 
+% supporting documentation, and that the names of Digital or Olivetti
+% not be used in advertising or publicity pertaining to distribution of the
+% software without specific, written prior permission.  
+%
+% DIGITAL AND OLIVETTI DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+% INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+% SHALL THEY BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+% ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+% IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+% OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+%\documentstyle[a4]{article}
+\documentstyle{article}
+
+\setlength{\parindent}{0 pt}
+\setlength{\parskip}{6pt}
+
+% Protocol Section
+% For the DP book, these four should be assigned the font for global symbols.
+
+\newcommand{\request}[1]{{\bf #1}}
+\newcommand{\event}[1]{{\bf #1}}
+\newcommand{\error}[1]{{\bf #1}}
+\newcommand{\enum}[1]{{\bf #1}}
+
+% The following fonts are not reassigned for the DP book.
+
+\newcommand{\system}[1]{{\sc #1}}
+\newcommand{\param}[1]{{\it #1}}
+
+\newcommand{\eventdef}[1]{\item {\bf#1}}
+\newcommand{\requestdef}[1]{\item {\bf#1}}
+\newcommand{\errordef}[1]{\item {\bf#1}}
+
+\newcommand{\defn}[1]{{\bf #1}}
+
+\newcommand{\tabstopsA}{\hspace*{4cm}\=\hspace*{1cm}\=\hspace*{7cm}\=\kill}
+\newcommand{\tabstopsB}{\hspace*{1cm}\=\hspace*{1cm}\=\hspace*{3cm}\=\kill}
+\newcommand{\tabstopsC}{\hspace*{1cm}\=\hspace*{1cm}\=\hspace*{5cm}\=\kill}
+
+% commands for formatting the API
+% For the DP book, these three should be assigned the font for global symbols.
+
+\newcommand{\cfunctionname}[1]{\mbox{\tt#1}}
+\newcommand{\ctypename}[1]{\mbox{\tt#1}}
+\newcommand{\cconst}[1]{\mbox{\tt#1}}
+
+% For the DP book, within function definitions, the type and name are in
+% the ordinary font; therefore, ctypenamedef and cfunctionnamedef are used
+% and defined below.
+\newcommand{\ctypenamedef}[1]{\mbox{#1}}
+\newcommand{\cfunctionnamedef}[1]{\mbox{#1}}
+\newcommand{\cargname}[1]{\mbox{\it#1}}
+\newcommand{\cstartfunction}[2]{\begin{sloppypar}\begin{samepage}\ctypenamedef{#1}\\ \cfunctionnamedef{#2}\ (}
+\newcommand{\cargdecl}[2]{\penalty -1\ctypenamedef{#1} \cargname{#2}}
+\newcommand{\cendfunctiondecl}{){\hangafter=2 \hangindent=20pt \raggedright\par}}
+\newcommand{\cendfuncdescription}{\end{samepage}\end{sloppypar}}
+
+\newcommand{\cstartmacro}[2]{\begin{sloppypar}\begin{samepage}\ctypenamedef{#1}\\ \cfunctionnamedef{#2}\ (}
+\newcommand{\cendmacrodecl}{)\par}
+\newcommand{\cendmacrodescription}{\end{samepage}\end{sloppypar}}
+
+% make things easier with all the long names
+\spaceskip .3333em plus 5em
+\tolerance=2000
+
+\begin{document}
+
+\begin{center}
+
+{\large X Synchronization Extension Library}\\[10pt]
+{\large Version 3.0}\\[15pt]
+{\large X Consortium Standard}\\[15pt]
+{\large X Version 11, Release 6.8}\\[15pt]
+{\it Tim Glauert}\\[0pt]
+{\tt thg@cam-orl.co.uk}\\[0pt]
+{\bf Olivetti Research / MultiWorks}\\[5pt]
+{\it Dave Carver}\\[0pt]
+{\tt dcc@athena.mit.edu}\\[0pt]
+{\bf Digital Equipment Corporation,}\\[0pt]
+{\bf MIT / Project Athena}\\[5pt]
+{\it Jim Gettys}\\[0pt]
+{\tt jg@crl.dec.com}\\[0pt]
+{\bf Digital Equipment Corporation,}\\[0pt]
+{\bf Cambridge Research Laboratory}\\[5pt]
+{\it David P. Wiggins}\\[0pt]
+{\tt dpw@x.org}\\[0pt]
+{\bf X Consortium, Inc.}\\[0pt]
+
+\end {center}
+
+Copyright 1991 by Olivetti Research Limited, Cambridge, England and
+Digital Equipment Corporation, Maynard, Massachusetts.
+
+{\small Permission to use, copy, modify, and distribute this documentation
+for any purpose and without fee is hereby granted, provided that the above
+copyright notice appear in all copies. Olivetti, Digital, MIT, and the
+X Consortium
+make no representations about the suitability for any purpose of the
+information in this document. This documentation is provided as is without
+express or implied warranty.}
+
+Copyright (c) 1991 X Consortium, Inc.
+
+{\small Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the ``Software''), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of the X Consortium shall not be
+used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization from the X Consortium.}
+\eject
+
+\section{Synchronization Protocol}
+
+The core X protocol makes no guarantees about the relative order of execution
+of requests for different clients. This means that any synchronization between
+clients must be done at the client level in an operating system-dependent and
+network-dependent manner. Even if there was an accepted standard for such
+synchronization, the use of a network introduces unpredictable delays between
+the synchronization of the clients and the delivery of the resulting requests
+to the X server.
+
+The core X protocol also makes no guarantees about the time at which requests
+are executed, which means that all clients with real-time constraints must
+implement their timing on the host computer. Any such timings are subject to
+error introduced by delays within the operating system and network and are
+inefficient because of the need for round-trip requests that keep the client and
+server synchronized.
+
+The synchronization extension provides primitives that allow synchronization
+between clients to take place entirely within the X server. This removes any
+error introduced by the network and makes it possible to synchronize clients
+on different hosts running different operating systems. This is important for
+multimedia applications, where audio, video, and graphics data streams are
+being synchronized. The extension also provides internal timers within the X
+server to which client requests can be synchronized. This allows simple
+animation applications to be implemented without any round-trip requests and
+makes best use of buffering within the client, network, and server.
+
+\subsection{Description}
+
+The mechanism used by this extension for synchronization within the X server
+is to block the processing of requests from a client until a specific
+synchronization condition occurs. When the condition occurs, the client is
+released and processing of requests continues. Multiple clients may block on
+the same condition to give inter-client synchronization.  Alternatively, a
+single client may block on a condition such as an animation frame marker.
+
+The extension adds \defn{Counter} and \defn{Alarm} to the set of resources
+managed by the server. A counter has a 64-bit integer value that may be
+increased or decreased by client requests or by the server internally. A
+client can block by sending an \request{Await} request that waits until
+one of a set of synchronization conditions, called TRIGGERs, becomes TRUE.
+
+The \request{CreateCounter} request allows a client to create a
+\defn{Counter} that can be changed by explicit \request{SetCounter} and
+\request{ChangeCounter} requests. These can be used to implement
+synchronization between different clients.
+
+There are some counters, called \defn{System Counters}, that are changed by
+the server internally rather than by client requests. The effect of any change
+to a system counter is not visible until the server has finished processing the
+current request. In other words, system counters are apparently updated in the
+gaps between the execution of requests rather than during the actual execution
+of a request. The extension provides a system counter that advances with the
+server time as defined by the core protocol, and it may also provide counters
+that advance with the real-world time or that change each time the CRT
+screen is refreshed.  Other extensions may provide their own
+extension-specific system counters.
+
+The extension provides an \defn{Alarm} mechanism that allows clients to
+receive an event on a regular basis when a particular counter is changed.
+
+\section{C Language Binding}
+
+The C routines provide direct access to	the protocol and add
+no additional semantics.
+
+The include file for this extension is \verb|<X11/extensions/sync.h>|.
+
+Most of the names in the language binding are derived from the
+protocol names by prepending \cfunctionname{XSync} to the protocol name and changing
+the capitalization.
+
+\subsection{C Functions}
+
+Most of the following functions generate SYNC protocol requests.
+
+% start marker
+\cstartfunction{Status}{XSyncQueryExtension}
+\cargdecl{Display *}{dpy},
+\cargdecl{int *}{event\_base\_return},
+\cargdecl{int *}{error\_base\_return}
+\cendfunctiondecl
+% end marker
+
+If dpy supports the SYNC extension, \cfunctionname{XSyncQueryExtension}
+returns \cconst{True}, sets *event\_base\_return to the event number for the
+first SYNC event, and sets
+*error\_base\_return to the error number for the first SYNC
+error.  If dpy does not support the SYNC extension, it
+returns \cconst{False}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncInitialize}
+\cargdecl{Display *}{dpy},
+\cargdecl{int *}{major\_version\_return},
+\cargdecl{int *}{minor\_version\_return}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncInitialize} sets *major\_version\_return and
+*minor\_version\_return to the major/minor SYNC protocol
+version supported by the server.  If the XSync library is compatible
+with the version returned by the server, this function returns \cconst{True}.
+If dpy does not support the SYNC extension, or if there was an error during
+communication with the server, or if the server and library protocol
+versions are incompatible, this function returns \cconst{False}.  The only
+XSync function that may be called before this function is
+\cfunctionname{XSyncQueryExtension}.  If a client violates this rule,
+the effects of all XSync calls that it makes are undefined.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{XSyncSystemCounter *}{XSyncListSystemCounters}
+\cargdecl{Display *}{dpy},
+\cargdecl{int *}{n\_counters\_return}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncListSystemCounters} returns a pointer to an
+array of system counters supported by the display and sets 
+*n\_counters\_return to the number of
+counters in the array.  The array should be freed with
+\cfunctionname{XSyncFreeSystemCounterList}.  If dpy does not
+support the SYNC extension,
+or if there was an error during communication with the
+server, or if the server does not support any system counters, this
+function returns NULL.
+
+\ctypename{XSyncSystemCounter} has the following fields:
+
+\begin{tabular}{lll}
+char * & name; & /* null-terminated name of system counter */\\
+XSyncCounter & counter; & /* counter id of this system counter */\\
+XSyncValue & resolution; & /* resolution of this system counter */\\
+\end{tabular}
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{void}{XSyncFreeSystemCounterList}
+\cargdecl{XSyncSystemCounter *}{list}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncFreeSystemCounterList} frees the memory associated 
+with the system counter list returned by \cfunctionname{XSyncListSystemCounters}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{XSyncCounter}{XSyncCreateCounter}
+\cargdecl{Display *}{dpy}, 
+\cargdecl{XSyncValue}{initial\_value}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncCreateCounter} creates a counter on the dpy
+with the given initial\_value and returns the counter ID. 
+It returns \cconst{None} if dpy does not
+support the SYNC extension.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncSetCounter}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncCounter}{counter},
+\cargdecl{XSyncValue}{value}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncSetCounter} sets counter to value.  
+It returns \cconst{False} if dpy does not support the SYNC extension;
+otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncChangeCounter}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncCounter}{counter},
+\cargdecl{XSyncValue}{value}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncChangeCounter} adds value to counter.
+It returns \cconst{False} if dpy does not support the SYNC extension;
+otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncDestroyCounter}
+\cargdecl{Display *}{dpy}, 
+\cargdecl{XSyncCounter}{counter}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncDestroyCounter} destroys counter. 
+It returns \cconst{False} if dpy does not
+support the SYNC extension; otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncQueryCounter}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncCounter}{counter},
+\cargdecl{XSyncValue *}{value\_return}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncQueryCounter} sets *value\_return to the current value of
+counter.  It returns \cconst{False} if there was an error during
+communication with the server or if dpy does not support
+the SYNC extension; otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncAwait}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncWaitCondition *}{wait\_list},
+\cargdecl{int}{n\_conditions}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncAwait} awaits on the conditions in wait\_list.
+The n\_conditions is the number of wait conditions in
+wait\_list.  It returns \cconst{False} if dpy does not
+support the SYNC extension; otherwise, it returns \cconst{True}.
+The await is processed asynchronously by the server;
+this function always returns immediately
+after issuing the request.
+
+\ctypename{XSyncWaitCondition} has the following fields:
+
+\begin{tabular}{lll}
+XSyncCounter & trigger.counter; & /* counter to trigger on */ \\
+XSyncValueType & trigger.value\_type; & /* absolute/relative */ \\
+XSyncValue & trigger.wait\_value; & /* value to compare counter to */ \\
+XSyncTestType & trigger.test\_type;	& /* pos/neg comparison/transtion */ \\
+XSyncValue & event\_threshold; & /* send event if past threshold */ \\
+\end{tabular}
+
+\ctypename{XSyncValueType} can be either \cconst{XSyncAbsolute} or \cconst{XSyncRelative}.
+
+\ctypename{XSyncTestType} can be one of \cconst{XSyncPositiveTransition},
+\cconst{XSyncNegativeTransition}, \cconst{XSyncPositiveComparison}, or
+\cconst{XSyncNegativeComparison}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{XSyncAlarm}{XSyncCreateAlarm}
+\cargdecl{Display *}{dpy},
+\cargdecl{unsigned long}{values\_mask},
+\cargdecl{XSyncAlarmAttributes *}{values}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncCreateAlarm} creates an alarm and returns the alarm ID.
+It returns \cconst{None} if the display does not support the SYNC extension. 
+The values\_mask and values specify the alarm attributes.
+
+\ctypename{XSyncAlarmAttributes} has the following fields.  The attribute\_mask
+column specifies the symbol that the caller should OR into
+values\_mask to indicate that the value for the corresponding
+attribute was actually supplied.  Default values are used for all
+attributes that do not have their attribute\_mask OR'ed into 
+values\_mask.
+See the protocol
+description for \request{CreateAlarm} for the defaults.
+
+\begin{tabular}{lll}
+type & field name & attribute\_mask \\
+XSyncCounter & trigger.counter; & \cconst{XSyncCACounter} \\
+XSyncValueType & trigger.value\_type; & \cconst{XSyncCAValueType} \\
+XSyncValue & trigger.wait\_value; & \cconst{XSyncCAValue} \\
+XSyncTestType & trigger.test\_type; & \cconst{XSyncCATestType} \\
+XSyncValue & delta;	& \cconst{XSyncCADelta} \\
+Bool & events; & \cconst{XSyncCAEvents} \\
+XSyncAlarmState & state; & client cannot set this \\
+\end{tabular}
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncDestroyAlarm}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncAlarm}{alarm}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncDestroyAlarm} destroys alarm. 
+It returns \cconst{False} if dpy does not
+support the SYNC extension; otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncQueryAlarm}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncAlarm}{alarm},
+\cargdecl{XSyncAlarmAttributes *}{values\_return}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncQueryAlarm} sets *values\_return to the alarm's
+attributes.  It returns \cconst{False} if there was an error 
+during communication with the server or if dpy does not support 
+the SYNC extension; otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncChangeAlarm}
+\cargdecl{Display *}{dpy},
+\cargdecl{XSyncAlarm}{alarm},
+\cargdecl{unsigned long}{values\_mask},
+\cargdecl{XSyncAlarmAttributes *}{values}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncChangeAlarm} changes alarm's attributes.
+The attributes to change are specified as in \cfunctionname{XSyncCreateAlarm}.
+It returns \cconst{False} if dpy does not support the SYNC extension; 
+otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncSetPriority}
+\cargdecl{Display *}{dpy},
+\cargdecl{XID}{client\_resource\_id},
+\cargdecl{int}{priority}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncSetPriority} sets the priority of the client owning 
+client\_resource\_id to priority.  
+If client\_resource\_id is \cconst{None},
+it sets the caller's priority.  It returns \cconst{False} if dpy
+does not support the SYNC extension; otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+
+% start marker
+\cstartfunction{Status}{XSyncGetPriority}
+\cargdecl{Display *}{dpy},
+\cargdecl{XID}{client\_resource\_id},
+\cargdecl{int *}{return\_priority}
+\cendfunctiondecl
+% end marker
+
+\cfunctionname{XSyncGetPriority} sets *return\_priority to the priority
+of the client owning client\_resource\_id. 
+If client\_resource\_id is
+\cconst{None}, it sets *return\_priority to the caller's priority.
+It returns \cconst{False} if there was an error
+during communication with the server or if dpy does not
+support the SYNC extension; otherwise, it returns \cconst{True}.
+\cendfuncdescription
+
+\subsection{C Macros/Functions}
+
+The following procedures manipulate 64-bit values.  They are defined
+both as macros and as functions.  By default, the macro form is used.
+To use the function form, \#undef the macro name to uncover the
+function.
+
+
+% start marker
+\cstartmacro{void}{XSyncIntToValue}
+\cargdecl{XSyncValue}{*pv},
+\cargdecl{int}{i}
+\cendmacrodecl
+% end marker
+
+Converts i to an \ctypename{XSyncValue} and stores it in
+*pv.  Performs sign extension (*pv will have the
+same sign as i.)
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{void}{XSyncIntsToValue}
+\cargdecl{XSyncValue}{*pv},
+\cargdecl{unsigned int}{low},
+\cargdecl{int}{high}
+\cendmacrodecl
+% end marker
+
+Stores low in the low 32 bits of *pv and 
+high in the high 32 bits of *pv.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueGreaterThan}
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if a is greater than b,
+else returns \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueLessThan}
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if a is less than b,
+else returns \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueGreaterOrEqual}
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if a is greater than or equal to b,
+else returns \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueLessOrEqual}
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if a is less than or equal to b.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueEqual}
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if a is equal to b,
+else returns \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueIsNegative}
+\cargdecl{XSyncValue}{v}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if v is negative, else returns
+\cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueIsZero}
+\cargdecl{XSyncValue}{v}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if v is zero,
+else returns \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{Bool}{XSyncValueIsPositive}
+\cargdecl{XSyncValue}{v}
+\cendmacrodecl
+% end marker
+
+Returns \cconst{True} if v is positive, else returns
+\cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{unsigned int}{XSyncValueLow32}
+\cargdecl{XSyncValue}{v}
+\cendmacrodecl
+% end marker
+
+Returns the low 32 bits of v.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{int}{XSyncValueHigh32}
+\cargdecl{XSyncValue}{v}
+\cendmacrodecl
+% end marker
+
+Returns the high 32 bits of v.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{void}{XSyncValueAdd}
+\cargdecl{XSyncValue *}{presult},
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b},
+\cargdecl{Bool *}{poverflow}
+\cendmacrodecl
+% end marker
+
+Adds a to b and stores the result in *presult.
+If the result could not fit in 64 bits, *poverflow is set to
+\cconst{True}, else it is set to \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{void}{XSyncValueSubtract}
+\cargdecl{XSyncValue *}{presult},
+\cargdecl{XSyncValue}{a},
+\cargdecl{XSyncValue}{b},
+\cargdecl{Bool *}{poverflow}
+\cendmacrodecl
+% end marker
+
+Subtracts b from a and stores the result in
+*presult.
+If the result could not fit in 64 bits, overflow is set to
+\cconst{True}, else it is set to \cconst{False}.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{void}{XSyncMaxValue}
+\cargdecl{XSyncValue *}{pv}
+\cendmacrodecl
+% end marker
+
+Sets *pv to the maximum value expressible in 64 bits.
+\cendmacrodescription
+
+
+% start marker
+\cstartmacro{void}{XSyncMinValue}
+\cargdecl{XSyncValue *}{pv}
+\cendmacrodecl
+% end marker
+
+Sets *pv to the minimum value expressible in 64 bits.
+\cendmacrodescription
+
+\subsection{Events}
+
+Let \cargname{event\_base} be the value \cargname{event\_base\_return}
+as defined in the function \cfunctionname{XSyncQueryExtension}.
+
+An \ctypename{XSyncCounterNotifyEvent}'s type field has the value
+\cargname{event\_base} + \cconst{XSyncCounterNotify}.  The fields of
+this structure are:
+
+\begin{tabular}{lll}
+int & type;	& /* event base + \cconst{XSyncCounterNotify} */ \\
+unsigned long & serial; & /* number of last request processed by server */ \\
+Bool & send\_event;& /* true if this came from a SendEvent request */ \\
+Display * & display; & /* Display the event was read from */\\
+XSyncCounter & counter;	& /* counter involved in await */\\
+XSyncValue & wait\_value; & /* value being waited for */\\
+XSyncValue & counter\_value; & /* counter value when this event was sent */\\
+Time & time; & /* milliseconds */\\
+int & count; & /* how many more events to come */\\
+Bool & destroyed; & /* True if counter was destroyed */\\
+\end{tabular}
+
+An \ctypename{XSyncAlarmNotifyEvent}'s type field has the value
+\cargname{event\_base} + \cconst{XSyncAlarmNotify}.  The fields of this
+structure are:
+
+\begin{tabular}{lll}
+int & type;&	/* event base + \cconst{XSyncAlarmNotify} */\\
+unsigned long & serial;&/* number of last request processed by server */\\
+Bool & send\_event;& /* true if this came from a SendEvent request */\\
+Display * & display;&	/* Display the event was read from */\\
+XSyncAlarm & alarm;&	/* alarm that triggered */\\
+XSyncValue & counter\_value;&/* value that triggered the alarm */\\
+XSyncValue & alarm\_value;&	/* test  value of trigger in alarm */\\
+Time & time;&	/* milliseconds */\\
+XSyncAlarmState & state;&	/* new state of alarm */\\
+\end{tabular}
+
+\subsection{Errors}
+
+Let \cargname{error\_base} be the value \cargname{error\_base\_return}
+as defined in the function \cfunctionname{XSyncQueryExtension}.
+
+An \ctypename{XSyncAlarmError}'s error\_code field has the value
+\cargname{error\_base} + \cconst{XSyncBadAlarm}.  The fields of
+this structure are:
+
+\begin{tabular}{lll}
+int & type;	\\
+Display * & display;& /* Display the event was read from */\\
+XSyncAlarm &  alarm;& /* resource id */\\
+unsigned long & serial;& /* serial number of failed request */\\
+unsigned char & error\_code;&/* error base + XSyncBadAlarm */\\
+unsigned char & request\_code;&/* Major op-code of failed request */\\
+unsigned char & minor\_code;&/* Minor op-code of failed request */\\
+\end{tabular}
+
+An \ctypename{XSyncCounterError}'s error\_code field has the value
+\cargname{error\_base} + \cconst{XSyncBadCounter}.  The fields of
+this structure are:
+
+\begin{tabular}{lll}
+int &type;\\
+Display * & display;&	/* Display the event was read from */\\
+XSyncCounter & counter;&	/* resource id */\\
+unsigned long & serial;&	/* serial number of failed request */\\
+unsigned char & error\_code;&/* error base + XSyncBadCounter */\\
+unsigned char & request\_code;&/* Major op-code of failed request */\\
+unsigned char & minor\_code;& /* Minor op-code of failed request */\\
+\end{tabular}
+
+\end{document}

@@ -341,7 +341,7 @@ libX11_la_SOURCES+=UIThrStubs.c
 endif
 
 x11datadir = @X11_DATADIR@
-x11data_DATA = XKeysymDB XErrorDB
+x11data_DATA = XErrorDB
 
 EXTRA_DIST = \
 	$(x11data_DATA) \
@@ -414,10 +414,10 @@ endif MAKE_LINT_LIB
 # Building ks_tables.h requires the makekeys utility
 #
 
-KEYSYMDEF=@KEYSYMDEF@
+KEYSYMDEFS=@KEYSYMDEFS@
 
-ks_tables.h: $(KEYSYMDEF) $(top_builddir)/src/util/makekeys$(EXEEXT)
-	$(top_builddir)/src/util/makekeys < $(KEYSYMDEF) > ks_tables_h
+ks_tables.h: $(KEYSYMDEFS) $(top_builddir)/src/util/makekeys$(EXEEXT)
+	$(top_builddir)/src/util/makekeys $(KEYSYMDEFS) > ks_tables_h
 	mv ks_tables_h $@
 
 $(top_builddir)/src/util/makekeys$(EXEEXT): force
