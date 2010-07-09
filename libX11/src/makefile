@@ -257,11 +257,12 @@ CSRCS = \
                   WMGeom.c \
                   WMProps.c \
                   WrBitF.c \
+                  xcb_disp.c \
+                  xcb_io.c \
                   XlibAsync.c \
                   XlibInt.c \
                   Xrm.c \
-                  xcb_disp.c \
-                  xcb_io.c
+
 
 INCLUDES := . xcms xlibi18n xkb $(MHMAKECONF)\X11 $(OBJDIR) $(INCLUDES)
 
@@ -272,6 +273,6 @@ $(OBJDIR)\$(LIBRARY).lib: $(OBJDIR)\ks_tables.h
 load_makefile util\makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG)
 
 $(OBJDIR)\ks_tables.h: $(KEYSYMDEF) util\$(OBJDIR)\makekeys.exe
-	util\$(OBJDIR)\makekeys < $(relpath $<) > $(relpath $@)
+	util\$(OBJDIR)\makekeys $(relpath $<) > $(relpath $@)
 
 

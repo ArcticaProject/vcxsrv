@@ -16,17 +16,20 @@ AM_MAINTAINER_MODE
 AM_CONFIG_HEADER([src/config.h])
 AC_CONFIG_HEADER([include/X11/XlibConf.h])
 
-# Require xorg-macros: XORG_DEFAULT_OPTIONS
-m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.6 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.6)
-
 # Set common system defines for POSIX extensions, such as _GNU_SOURCE
 # Must be called before any macros that run the compiler (like AC_PROG_LIBTOOL)
 # to avoid autoconf errors.
 AC_USE_SYSTEM_EXTENSIONS
+
+# Require xorg-macros minimum of 1.10 for DocBook XML documentation
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.10)
 XORG_DEFAULT_OPTIONS
 XORG_ENABLE_SPECS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
+XORG_CHECK_SGML_DOCTOOLS(1.5)
 XORG_WITH_GROFF
 XORG_WITH_PS2PDF
 
@@ -313,15 +316,18 @@ AC_CHECK_FUNC(poll, [AC_DEFINE(USE_POLL, 1, [poll() function is available])], )
 #
 # Find keysymdef.h
 #
-AC_MSG_CHECKING([keysymdef.h])
-dir=`$PKG_CONFIG --variable=includedir xproto`
-KEYSYMDEF="$dir/X11/keysymdef.h"
-if test -f "$KEYSYMDEF"; then
-        AC_MSG_RESULT([$KEYSYMDEF])
-else
-	AC_MSG_ERROR([Cannot find keysymdef.h])
-fi
-AC_SUBST(KEYSYMDEF)
+AC_MSG_CHECKING([keysym definitions])
+KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11
+FILES="keysymdef.h XF86keysym.h Sunkeysym.h DECkeysym.h HPkeysym.h"
+for i in $FILES; do
+    if test -f "$KEYSYMDEFDIR/$i"; then
+            KEYSYMDEFS="$KEYSYMDEFS $KEYSYMDEFDIR/$i"
+    elif test "x$i" = "xkeysymdef.h"; then
+	    AC_MSG_ERROR([Cannot find keysymdef.h])
+    fi
+done
+AC_MSG_RESULT([$KEYSYMDEFS])
+AC_SUBST(KEYSYMDEFS)
 
 AM_CONDITIONAL(UDC, test xfalse = xtrue)
 
@@ -410,7 +416,7 @@ XORG_WITH_LINT
 XORG_LINT_LIBRARY([X11])
 
 X11_DATADIR="${datadir}/X11"
-AC_DEFINE_DIR(X11_DATADIR, X11_DATADIR, [Location of libX11 data])
+AX_DEFINE_DIR(X11_DATADIR, X11_DATADIR, [Location of libX11 data])
 AC_SUBST(X11_DATADIR)
 
 X11_LIBDIR="${libdir}/X11"
@@ -429,25 +435,25 @@ X11_CFLAGS="$X11_CFLAGS $XTHREAD_CFLAGS"
 #
 
 X11_LOCALEDATADIR="${X11_DATADIR}/locale"
-AC_DEFINE_DIR(XLOCALEDATADIR, X11_LOCALEDATADIR, [Location of libX11 locale data])
+AX_DEFINE_DIR(XLOCALEDATADIR, X11_LOCALEDATADIR, [Location of libX11 locale data])
 AC_SUBST(X11_LOCALEDATADIR)
 
 AC_ARG_WITH(locale-lib-dir,	AS_HELP_STRING([--with-locale-lib-dir=DIR],
  [Directory where locale libraries files are installed (default: $libdir/X11/locale)]),
 				[ X11_LOCALELIBDIR="$withval" ],
 				[ X11_LOCALELIBDIR="${X11_LIBDIR}/locale" ])
-AC_DEFINE_DIR(XLOCALELIBDIR, X11_LOCALELIBDIR, [Location of libX11 locale libraries])
+AX_DEFINE_DIR(XLOCALELIBDIR, X11_LOCALELIBDIR, [Location of libX11 locale libraries])
 AC_SUBST(X11_LOCALELIBDIR)
 
 X11_LOCALEDIR="${X11_LOCALEDATADIR}"
-AC_DEFINE_DIR(XLOCALEDIR, X11_LOCALEDIR, [Location of libX11 locale data])
+AX_DEFINE_DIR(XLOCALEDIR, X11_LOCALEDIR, [Location of libX11 locale data])
 AC_SUBST(X11_LOCALEDIR)
 
 XKEYSYMDB="${X11_DATADIR}/XKeysymDB"
-AC_DEFINE_DIR(XKEYSYMDB, XKEYSYMDB, [Location of keysym database])
+AX_DEFINE_DIR(XKEYSYMDB, XKEYSYMDB, [Location of keysym database])
 
 XERRORDB="${X11_DATADIR}/XErrorDB"
-AC_DEFINE_DIR(XERRORDB, XERRORDB, [Location of error message database])
+AX_DEFINE_DIR(XERRORDB, XERRORDB, [Location of error message database])
 
 XORG_CHECK_MALLOC_ZERO
 

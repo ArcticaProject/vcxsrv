@@ -44,6 +44,8 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #endif
 
+#include <unistd.h>
+
 static Bool initialized;
 static XrmDatabase keysymdb;
 static XrmQuark Qkeysym[2];
@@ -152,5 +154,20 @@ XStringToKeysym(_Xconst char *s)
 	    return val;
         return val | 0x01000000;
     }
+
+    /* Stupid inconsistency between the headers and XKeysymDB: the former has
+     * no separating underscore, while some XF86* syms in the latter did.
+     * As a last ditch effort, try without. */
+    if (strncmp(s, "XF86_", 5) == 0) {
+        KeySym ret;
+        char *tmp = strdup(s);
+        if (!tmp)
+            return NoSymbol;
+        memmove(&tmp[4], &tmp[5], strlen(s) - 5 + 1);
+        ret = XStringToKeysym(tmp);
+        free(tmp);
+        return ret;
+    }
+
     return NoSymbol;
 }

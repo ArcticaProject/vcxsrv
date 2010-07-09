@@ -1,0 +1,815 @@
+<chapter id="pixmap_and_cursor_functions">
+<title>Pixmap and Cursor Functions</title>
+<sect1 id="Creating_and_Freeing_Pixmaps">
+<title>Creating and Freeing Pixmaps</title>
+<!-- .XS -->
+<!-- (SN Creating and Freeing Pixmaps -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+Pixmaps can only be used on the screen on which they were created.
+Pixmaps are off-screen resources that are used for various operations,
+such as defining cursors as tiling patterns 
+or as the source for certain raster operations.
+Most graphics requests can operate either on a window or on a pixmap.
+A bitmap is a single bit-plane pixmap.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To create a pixmap of a given size, use
+<function>XCreatePixmap</function>.
+<indexterm significance="preferred"><primary>XCreatePixmap</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Pixmap<function> XCreatePixmap</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Drawable<parameter> d</parameter></paramdef>
+  <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
+  <paramdef>unsignedint<parameter> depth</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>d</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies which screen the pixmap is created on. 
+<!-- .ds Wh , which define the dimensions of the pixmap -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the width and height(Wh.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>depth</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the depth of the pixmap.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM  -->
+The
+<function>XCreatePixmap</function>
+function creates a pixmap of the width, height, and depth you specified
+and returns a pixmap ID that identifies it.
+It is valid to pass an 
+<function>InputOnly</function>
+window to the drawable argument.
+The width and height arguments must be nonzero,
+or a 
+<function>BadValue</function>
+error results.
+The depth argument must be one of the depths supported by the screen
+of the specified drawable,
+or a
+<function>BadValue</function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+The server uses the specified drawable to determine on which screen
+to create the pixmap.
+The pixmap can be used only on this screen
+and only with other drawables of the same depth (see
+<function>XCopyPlane</function>
+for an exception to this rule).
+The initial contents of the pixmap are undefined.
+</para>
+<para>
+<!-- .LP -->
+<function>XCreatePixmap</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadDrawable</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To free all storage associated with a specified pixmap, use
+<function>XFreePixmap</function>.
+<indexterm significance="preferred"><primary>XFreePixmap</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XFreePixmap</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Pixmap<parameter> pixmap</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN	 -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>pixmap</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the pixmap.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM  -->
+The
+<function>XFreePixmap</function>
+function first deletes the association between the pixmap ID and the pixmap.
+Then, the X server frees the pixmap storage when there are no references to it.
+The pixmap should never be referenced again.
+</para>
+<para>
+<!-- .LP -->
+<function>XFreePixmap</function>
+can generate a
+<function>BadPixmap </function>
+error.
+</para>
+</sect1>
+<sect1 id="Creating_Recoloring_and_Freeing_Cursors">
+<title>Creating, Recoloring, and Freeing Cursors</title>
+<!-- .XS -->
+<!-- (SN Creating, Recoloring, and Freeing Cursors  -->
+<!-- .XE -->
+<para>
+<!-- .LP -->
+Each window can have a different cursor defined for it.
+Whenever the pointer is in a visible window, 
+it is set to the cursor defined for that window.
+If no cursor was defined for that window, 
+the cursor is the one defined for the parent window.
+</para>
+<para>
+<!-- .LP -->
+From X's perspective, 
+a cursor consists of a cursor source, mask, colors, and a hotspot. 
+The mask pixmap determines the shape of the cursor and must be a depth
+of one.
+The source pixmap must have a depth of one,
+and the colors determine the colors of the source.
+The hotspot defines the point on the cursor that is reported
+when a pointer event occurs.
+There may be limitations imposed by the hardware on
+cursors as to size and whether a mask is implemented. 
+<indexterm><primary>XQueryBestCursor</primary></indexterm>
+<function>XQueryBestCursor</function>
+can be used to find out what sizes are possible.
+There is a standard font for creating cursors, but
+Xlib provides functions that you can use to create cursors
+from an arbitrary font or from bitmaps.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To create a cursor from the standard cursor font, use
+<function>XCreateFontCursor</function>.
+</para>
+<para>
+#include &lt;X11/cursorfont.h&gt;
+</para>
+
+<indexterm significance="preferred"><primary>XCreateFontCursor</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Cursor<function> XCreateFontCursor</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>unsignedint<parameter> shape</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>shape</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the shape of the cursor.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+
+<para>
+<!-- .LP -->
+<!-- .eM -->
+X provides a set of standard cursor shapes in a special font named
+cursor.
+Applications are encouraged to use this interface for their cursors
+because the font can be customized for the individual display type.
+The shape argument specifies which glyph of the standard fonts
+to use.
+</para>
+<para>
+<!-- .LP -->
+The hotspot comes from the information stored in the cursor font.
+The initial colors of a cursor are a black foreground and a white
+background (see
+<function>XRecolorCursor</function>).
+For further information about cursor shapes,
+see appendix B.
+</para>
+<para>
+<!-- .LP -->
+<function>XCreateFontCursor</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To create a cursor from font glyphs, use
+<function>XCreateGlyphCursor</function>.
+<indexterm significance="preferred"><primary>XCreateGlyphCursor</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Cursor<function> XCreateGlyphCursor</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Fontsource_font,<parameter> mask_font</parameter></paramdef>
+  <paramdef>unsignedintsource_char,<parameter> mask_char</parameter></paramdef>
+  <paramdef>XColor<parameter> *foreground_color</parameter></paramdef>
+  <paramdef>XColor<parameter> *background_color</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>source_font</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the font for the source glyph.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>mask_font</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the font for the mask glyph or
+<function>None</function>.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>source_char</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the character glyph for the source.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>mask_char</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the glyph character for the mask. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>foreground_color</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the <acronym>RGB</acronym> values for the foreground of the source. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>background_color</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the <acronym>RGB</acronym> values for the background of the source.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XCreateGlyphCursor</function>
+function is similar to
+<function>XCreatePixmapCursor</function>
+except that the source and mask bitmaps are obtained from the specified 
+font glyphs.
+The source_char must be a defined glyph in source_font, 
+or a
+<function>BadValue</function>
+error results.
+If mask_font is given, 
+mask_char must be a defined glyph in mask_font,
+or a
+<function>BadValue</function>
+error results.
+The mask_font and character are optional.
+The origins of the source_char and mask_char (if defined) glyphs are
+positioned coincidently and define the hotspot. 
+The source_char and mask_char need not have the same bounding box metrics, 
+and there is no restriction on the placement of the hotspot relative to the bounding
+boxes. 
+If no mask_char is given, all pixels of the source are displayed.
+You can free the fonts immediately by calling
+<function>XFreeFont</function>
+if no further explicit references to them are to be made. 
+</para>
+<para>
+<!-- .LP -->
+For 2-byte matrix fonts, 
+the 16-bit value should be formed with the byte1
+member in the most significant byte and the byte2 member in the 
+least significant byte.
+</para>
+<para>
+<!-- .LP -->
+<function>XCreateGlyphCursor</function>
+can generate
+<function>BadAlloc</function>,
+<function>BadFont</function>,
+and
+<function>BadValue </function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To create a cursor from two bitmaps,
+use
+<function>XCreatePixmapCursor</function>.
+<indexterm significance="preferred"><primary>XCreatePixmapCursor</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Cursor<function> XCreatePixmapCursor</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Pixmap<parameter> source</parameter></paramdef>
+  <paramdef>Pixmap<parameter> mask</parameter></paramdef>
+  <paramdef>XColor<parameter> *foreground_color</parameter></paramdef>
+  <paramdef>XColor<parameter> *background_color</parameter></paramdef>
+  <paramdef>unsignedintx,<parameter> y</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>source</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the shape of the source cursor.
+<!-- .\" *** JIM: NEED TO CHECK THIS. *** -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>mask</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the cursor's source bits to be displayed or
+<function>None</function>.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>foreground_color</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the <acronym>RGB</acronym> values for the foreground of the source. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>background_color</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the <acronym>RGB</acronym> values for the background of the source.
+<!-- .ds Xy , which indicate the hotspot relative to the source's origin -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>x</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>y</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the x and y coordinates(Xy.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XCreatePixmapCursor</function>
+function creates a cursor and returns the cursor ID associated with it.
+The foreground and background <acronym>RGB</acronym> values must be specified using
+foreground_color and background_color,
+even if the X server only has a
+<function>StaticGray</function>
+or
+<function>GrayScale</function>
+screen.
+The foreground color is used for the pixels set to 1 in the
+source, and the background color is used for the pixels set to 0.
+Both source and mask, if specified, must have depth one (or a 
+<function>BadMatch</function>
+error results) but can have any root.
+The mask argument defines the shape of the cursor.
+The pixels set to 1 in the mask define which source pixels are displayed,
+and the pixels set to 0 define which pixels are ignored.
+If no mask is given, 
+all pixels of the source are displayed.
+The mask, if present, must be the same size as the pixmap defined by the 
+source argument, or a
+<function>BadMatch</function>
+error results.
+The hotspot must be a point within the source,
+or a
+<function>BadMatch</function>
+error results.
+</para>
+<para>
+<!-- .LP -->
+The components of the cursor can be transformed arbitrarily to meet
+display limitations.
+The pixmaps can be freed immediately if no further explicit references
+to them are to be made.
+Subsequent drawing in the source or mask pixmap has an undefined effect on the
+cursor.
+The X server might or might not make a copy of the pixmap.
+</para>
+<para>
+<!-- .LP -->
+<function>XCreatePixmapCursor</function>
+can generate
+<function>BadAlloc</function>
+and
+<function>BadPixmap</function>
+errors.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To determine useful cursor sizes, use
+<function>XQueryBestCursor</function>.
+<indexterm significance="preferred"><primary>XQueryBestCursor</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Status<function> XQueryBestCursor</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Drawable<parameter> d</parameter></paramdef>
+  <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
+  <paramdef>unsignedint*width_return,<parameter> *height_return</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+<!-- .ds Dr , which indicates the screen -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>d</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the drawable(Dr. 
+<!-- .ds Wh \ of the cursor that you want the size information for -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specify the width and height(Wh.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>width_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+<!-- .br -->
+<!-- .ns -->
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>height_return</emphasis>
+    </term>
+    <listitem>
+      <para>
+Return the best width and height that is closest to the specified width 
+and height.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+Some displays allow larger cursors than other displays.
+The
+<function>XQueryBestCursor</function>
+function provides a way to find out what size cursors are actually
+possible on the display.
+<indexterm ><primary>Cursor</primary><secondary>limitations</secondary></indexterm>
+It returns the largest size that can be displayed.
+Applications should be prepared to use smaller cursors on displays that
+cannot support large ones.
+</para>
+<para>
+<!-- .LP -->
+<function>XQueryBestCursor</function>
+can generate a
+<function>BadDrawable </function>
+error.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To change the color of a given cursor, use
+<function>XRecolorCursor</function>.
+<indexterm significance="preferred"><primary>XRecolorCursor</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XRecolorCursor</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Cursor<parameter> cursor</parameter></paramdef>
+  <paramdef>XColor*foreground_color,<parameter> *background_color</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>cursor</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the cursor. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>foreground_color</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the <acronym>RGB</acronym> values for the foreground of the source. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>background_color</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the <acronym>RGB</acronym> values for the background of the source.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM -->
+The
+<function>XRecolorCursor</function>
+function changes the color of the specified cursor, and
+if the cursor is being displayed on a screen,
+the change is visible immediately.
+The pixel members of the
+<function>XColor</function>
+structures are ignored; only the <acronym>RGB</acronym> values are used.
+</para>
+<para>
+<!-- .LP -->
+<function>XRecolorCursor</function>
+can generate a
+<function>BadCursor </function>
+error.
+</para>
+<para>
+<!-- .LP -->
+<!-- .sp -->
+To free (destroy) a given cursor, use
+<function>XFreeCursor</function>.
+<indexterm significance="preferred"><primary>XFreeCursor</primary></indexterm>
+<!-- .sM -->
+<funcsynopsis>
+<funcprototype>
+  <funcdef><function> XFreeCursor</function></funcdef>
+  <paramdef>Display<parameter> *display</parameter></paramdef>
+  <paramdef>Cursor<parameter> cursor</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- .FN -->
+<variablelist>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>display</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the connection to the X server.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <emphasis remap='I'>cursor</emphasis>
+    </term>
+    <listitem>
+      <para>
+Specifies the cursor. 
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<para>
+<!-- .LP -->
+<!-- .eM  -->
+The
+<function>XFreeCursor</function>
+function deletes the association between the cursor resource ID 
+and the specified cursor.
+The cursor storage is freed when no other resource references it.
+The specified cursor ID should not be referred to again.
+</para>
+<para>
+<!-- .LP -->
+<function>XFreeCursor</function>
+can generate a
+<function>BadCursor </function>
+error.
+<!-- .bp -->
+
+</para>
+</sect1>
+</chapter>
