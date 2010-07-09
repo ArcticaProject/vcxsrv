@@ -188,7 +188,8 @@ optvarassignment: STRING OPTEQUAL maybeemptyexpression
 ;
 
 maybeemptyexpression: NEWLINE {$$=g_EmptyString;} |
-                      expression NEWLINE
+                      expression NEWLINE |
+                      expression SPACE NEWLINE 
 ;
 
 expression: nonspaceexpression |

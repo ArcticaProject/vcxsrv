@@ -33,11 +33,19 @@ class commandqueue
 {
   struct activeentry
   {
-    refptr<fileinfo>         pTarget;
-    vector<string>::iterator CurrentCommandIt;
-    string                   Command;
-    md5_context              md5ctx;
-    bool                     IgnoreError;
+    refptr<fileinfo>               pTarget;
+    vector<string>::const_iterator CurrentCommandIt;
+    string                         Command;
+    md5_context                    md5ctx;
+    bool                           IgnoreError;
+    void clear()
+    {
+      pTarget=NULL;
+      Command.clear();
+      #ifdef _DEBUG
+      md5ctx.Data.clear();
+      #endif
+    }
   };
 private:
   queue< refptr<fileinfo> >  m_Queue;

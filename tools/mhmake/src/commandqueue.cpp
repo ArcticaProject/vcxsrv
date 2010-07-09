@@ -140,7 +140,7 @@ void commandqueue::RemoveActiveEntry(unsigned Entry)
       Entry=EntryP1;
     }
   }
-  m_pActiveEntries[Entry]=activeentry();
+  m_pActiveEntries[Entry].clear();
   m_pActiveProcesses[Entry]=NULL;
   m_NrActiveEntries--;
 }
