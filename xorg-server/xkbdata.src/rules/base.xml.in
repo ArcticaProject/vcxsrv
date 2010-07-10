@@ -1544,6 +1544,7 @@
         <_shortDescription>Bel</_shortDescription>
         <_description>Belgium</_description>
         <languageList><iso639Id>ger</iso639Id>
+                      <iso639Id>nld</iso639Id>
                       <iso639Id>fra</iso639Id></languageList>
       </configItem>
       <variantList>
