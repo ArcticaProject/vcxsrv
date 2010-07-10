@@ -82,6 +82,7 @@ typedef struct _DRI2Drawable {
     CARD64		 last_swap_msc; /* msc at completion of most recent swap */
     CARD64		 last_swap_ust; /* ust at completion of most recent swap */
     int			 swap_limit; /* for N-buffering */
+    unsigned long	 serialNumber;
 } DRI2DrawableRec, *DRI2DrawablePtr;
 
 typedef struct _DRI2Screen {
@@ -130,6 +131,19 @@ DRI2GetDrawable(DrawablePtr pDraw)
     }
 }
 
+static unsigned long
+DRI2DrawableSerial(DrawablePtr pDraw)
+{
+    ScreenPtr pScreen = pDraw->pScreen;
+    PixmapPtr pPix;
+
+    if (pDraw->type != DRAWABLE_WINDOW)
+	return pDraw->serialNumber;
+
+    pPix = pScreen->GetWindowPixmap((WindowPtr)pDraw);
+    return pPix->drawable.serialNumber;
+}
+
 static DRI2DrawablePtr
 DRI2AllocateDrawable(DrawablePtr pDraw)
 {
@@ -163,6 +177,7 @@ DRI2AllocateDrawable(DrawablePtr pDraw)
     pPriv->last_swap_msc = 0;
     pPriv->last_swap_ust = 0;
     list_init(&pPriv->reference_list);
+    pPriv->serialNumber = DRI2DrawableSerial(pDraw);
 
     if (pDraw->type == DRAWABLE_WINDOW) {
 	pWin = (WindowPtr) pDraw;
@@ -326,6 +341,7 @@ allocate_or_reuse_buffer(DrawablePtr pDraw, DRI2ScreenPtr ds,
 	|| !dimensions_match
 	|| (pPriv->buffers[old_buf]->format != format)) {
 	*buffer = (*ds->CreateBuffer)(pDraw, attachment, format);
+	pPriv->serialNumber = DRI2DrawableSerial(pDraw);
 	return TRUE;
 
     } else {
@@ -384,7 +400,8 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
     }
 
     dimensions_match = (pDraw->width == pPriv->width)
-	&& (pDraw->height == pPriv->height);
+	&& (pDraw->height == pPriv->height)
+	&& (pPriv->serialNumber == DRI2DrawableSerial(pDraw));
 
     buffers = malloc((count + 1) * sizeof(buffers[0]));
 

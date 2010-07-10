@@ -76,7 +76,6 @@ miModifyPixmapHeader(PixmapPtr pPixmap, int width, int height, int depth,
 	pPixmap->drawable.depth = depth;
 	pPixmap->drawable.bitsPerPixel = bitsPerPixel;
 	pPixmap->drawable.id = 0;
-	pPixmap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
 	pPixmap->drawable.x = 0;
 	pPixmap->drawable.y = 0;
 	pPixmap->drawable.width = width;
@@ -116,6 +115,7 @@ miModifyPixmapHeader(PixmapPtr pPixmap, int width, int height, int depth,
 	if (pPixData)
 	    pPixmap->devPrivate.ptr = pPixData;
     }
+    pPixmap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
     return TRUE;
 }
 
