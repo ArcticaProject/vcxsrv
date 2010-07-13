@@ -105,14 +105,14 @@ To determine if the current locale is supported by X, use
 The 
 <function>XSupportsLocale</function>
 function returns 
-<function>True</function>
+<symbol>True</symbol>
 if Xlib functions are capable of operating under the current locale.
 If it returns 
-<function>False</function>,
+<symbol>False</symbol>,
 Xlib locale-dependent functions for which the 
-<function>XLocaleNotSupported </function>
+<symbol>XLocaleNotSupported</symbol>
 return status is defined will return 
-<function>XLocaleNotSupported</function>.
+<symbol>XLocaleNotSupported</symbol>.
 Other Xlib locale-dependent routines will operate in the ``C'' locale.
 </para>
 <para>
@@ -145,7 +145,7 @@ To configure Xlib locale modifiers for the current locale, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *XSetLocaleModifiers</function></funcdef>
+  <funcdef>char *<function>XSetLocaleModifiers</function></funcdef>
   <paramdef>char<parameter> *modifier_list</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -321,16 +321,16 @@ the following table describes the locale (and modifiers) dependency:
     <row>
       <entry><function>setlocale</function></entry>
       <entry><function>XrmGetFileDatabase</function></entry>
-      <entry>Locale of <function>XrmDatabase</function></entry>
+      <entry>Locale of <type>XrmDatabase</type></entry>
     </row>
     <row>
       <entry></entry>
       <entry><function>XrmGetStringDatabase</function></entry>
     </row>
     <row>
-      <entry><function>XrmDatabase</function></entry>
+      <entry><type>XrmDatabase</type></entry>
       <entry><function>XrmPutFileDatabase</function></entry>
-      <entry>Locale of <function>XrmDatabase</function></entry>
+      <entry>Locale of <type>XrmDatabase</type></entry>
     </row>
     <row>
       <entry></entry>
@@ -390,7 +390,7 @@ the following table describes the locale (and modifiers) dependency:
       <entry><acronym>XIM</acronym> selection</entry>
     </row>
     <row>
-      <entry><function>XIM</function></entry>
+      <entry><type>XIM</type></entry>
       <entry><function>XCreateIC</function></entry>
       <entry><acronym>XIC</acronym> input method configuration</entry>
     </row>
@@ -400,7 +400,7 @@ the following table describes the locale (and modifiers) dependency:
       <entry>Queried locale</entry>
     </row>
     <row>
-      <entry><function>XIC</function></entry>
+      <entry><type>XIC</type></entry>
       <entry><function>XmbLookupString</function></entry>
       <entry>Keyboard layout</entry>
     </row>
@@ -427,7 +427,7 @@ the following table describes the locale (and modifiers) dependency:
       <entry>Charsets of fonts in XFontSet</entry>
     </row>
     <row>
-      <entry><function>XOM</function></entry>
+      <entry><type>XOM</type></entry>
       <entry><function>XCreateOC</function></entry>
       <entry><acronym>XOC</acronym> output method configuration</entry>
     </row>
@@ -437,7 +437,7 @@ the following table describes the locale (and modifiers) dependency:
       <entry>Queried locale</entry>
     </row>
     <row>
-      <entry><function>XFontSet</function></entry>
+      <entry><type>XFontSet</type></entry>
       <entry><function>XmbDrawText</function>,</entry>
       <entry>Locale of supplied text</entry>
     </row>
@@ -520,17 +520,17 @@ to the ANSI C variable argument list calling convention.
 Each function denoted with an argument of the form ``...'' takes 
 a variable-length list of name and value pairs,
 where each name is a string and each value is of type 
-<function>XPointer</function>.
+<type>XPointer</type>.
 A name argument that is NULL identifies the end of the list. 
 </para>
 <para>
 <!-- .LP -->
 A variable-length argument list may contain a nested list.
 If the name 
-<function>XNVaNestedList</function>
+<symbol>XNVaNestedList</symbol>
 is specified in place of an argument name,
 then the following value is interpreted as an 
-<function>XVaNestedList</function>
+<type>XVaNestedList</type>
 value that specifies a list of values logically inserted into the
 original list at the point of declaration.
 A NULL identifies the end of a nested list.
@@ -544,7 +544,7 @@ To allocate a nested variable argument list dynamically, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XVaNestedList<function> XVaCreateNestedList</function></funcdef>
+  <funcdef>XVaNestedList <function>XVaCreateNestedList</function></funcdef>
   <paramdef>int<parameter> dummy</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -706,14 +706,14 @@ the output method for clients.
 <!-- .LP -->
 The abstraction used to communicate with an output method
 is an opaque data structure represented by the 
-<function>XOM</function>
+<type>XOM</type>
 data type.
 The abstraction for representing the state of a particular output thread
 is called an <emphasis remap='I'>output context</emphasis>.
 The Xlib representation of an output context is an 
-<function>XOC</function>,
+<type>XOC</type>,
 which is compatible with 
-<function>XFontSet</function>
+<type>XFontSet</type>
 in terms of its functional interface, but is 
 a broader, more generalized abstraction.
 </para>
@@ -731,7 +731,7 @@ To open an output method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XOM<function> XOpenOM</function></funcdef>
+  <funcdef>XOM <function>XOpenOM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XrmDatabase<parameter> db</parameter></paramdef>
   <paramdef>char<parameter> *res_name</parameter></paramdef>
@@ -849,7 +849,7 @@ To close an output method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XCloseOM</function></funcdef>
+  <funcdef>Status <function>XCloseOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -883,7 +883,7 @@ To set output method attributes, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XSetOMValues</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -936,7 +936,7 @@ To query an output method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XGetOMValues</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -984,7 +984,7 @@ To obtain the display associated with an output method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Display<function> *</function></funcdef>
+  <funcdef>Display *<function>XDisplayOfOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1018,7 +1018,7 @@ To get the locale associated with an output method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XLocaleOfOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1095,19 +1095,19 @@ The following key applies to this table.
   </thead>
   <tbody>
     <row>
-      <entry><function>XNRequiredCharSet</function></entry>
+      <entry><symbol>XNRequiredCharSet</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNQueryOrientation</function></entry>
+      <entry><symbol>XNQueryOrientation</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNDirectionalDependentDrawing</function></entry>
+      <entry><symbol>XNDirectionalDependentDrawing</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNContextualDrawing</function></entry>
+      <entry><symbol>XNContextualDrawing</symbol></entry>
       <entry>G</entry>
     </row>
   </tbody>
@@ -1125,16 +1125,16 @@ The following key applies to this table.
 <para>
 <!-- .LP -->
 The
-<function>XNRequiredCharSet</function>
+<symbol>XNRequiredCharSet</symbol>
 argument returns the list of charsets that are required for loading the fonts
 needed for the locale.
 The value of the argument is a pointer to a structure of type
-<function>XOMCharSetList</function>.
+<structname>XOMCharSetList</structname>.
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XOMCharSetList</function>
+<structname>XOMCharSetList</structname>
 structure is defined as follows:
 <indexterm significance="preferred"><primary>XOMCharSetList</primary></indexterm>
 <!-- .sM -->
@@ -1163,7 +1163,7 @@ freed by the client.
 It will be freed by a call to 
 <function>XCloseOM</function>
 with the associated 
-<function>XOM</function>.
+<type>XOM</type>.
 Until freed, its contents will not be modified by Xlib.
 </para>
 <para>
@@ -1178,15 +1178,15 @@ Until freed, its contents will not be modified by Xlib.
 <para>
 <!-- .LP -->
 The
-<function>XNQueryOrientation</function>
+<symbol>XNQueryOrientation</symbol>
 argument returns the global orientation of text when drawn.
 Other than
-<function>XOMOrientation_LTR_TTB</function>,
+<constant>XOMOrientation_LTR_TTB</constant>,
 the set of orientations supported is locale-dependent.
 The value of the argument is a pointer to a structure of type
-<function>XOMOrientation</function>.
+<structname>XOMOrientation</structname>.
 Clients are responsible for freeing the
-<function>XOMOrientation</function>
+<structname>XOMOrientation</structname>
 structure by using
 <function>XFree</function>;
 this also frees the contents of the structure.
@@ -1219,31 +1219,31 @@ The possible value for XOrientation may be:
 <itemizedlist>
   <listitem>
     <para>
-<function>XOMOrientation_LTR_TTB  </function>
+<constant>XOMOrientation_LTR_TTB</constant>
 left-to-right, top-to-bottom global orientation
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XOMOrientation_RTL_TTB  </function>
+<constant>XOMOrientation_RTL_TTB</constant>
 right-to-left, top-to-bottom global orientation
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XOMOrientation_TTB_LTR  </function>
+<constant>XOMOrientation_TTB_LTR</constant>
 top-to-bottom, left-to-right global orientation
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XOMOrientation_TTB_RTL  </function>
+<constant>XOMOrientation_TTB_RTL</constant>
 top-to-bottom, right-to-left global orientation
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XOMOrientation_Context  </function>
+<constant>XOMOrientation_Context</constant>
 contextual global orientation
     </para>
   </listitem>
@@ -1260,15 +1260,15 @@ contextual global orientation
 <para>
 <!-- .LP -->
 The
-<function>XNDirectionalDependentDrawing</function>
+<symbol>XNDirectionalDependentDrawing</symbol>
 argument indicates whether the text rendering functions
 implement implicit handling of directional text.  If this value
 is
-<function>True</function>,
+<symbol>True</symbol>,
 the output method has knowledge of directional
 dependencies and reorders text as necessary when
 rendering text.  If this value is
-<function>False</function>,
+<symbol>False</symbol>,
 the output method does not implement any directional text
 handling, and all character directions are assumed to be left-to-right.
 </para>
@@ -1293,10 +1293,10 @@ function.
 <para>
 <!-- .LP -->
 The
-<function>XNContextualDrawing</function>
+<symbol>XNContextualDrawing</symbol>
 argument indicates whether the text rendering functions
 implement implicit context-dependent drawing.  If this value is
-<function>True</function>,
+<symbol>True</symbol>,
 the output method has knowledge of context dependencies and
 performs character shape editing, combining glyphs to present
 a single character as necessary.  The actual shape editing is
@@ -1328,22 +1328,22 @@ It is intended that output methods be controlled by these <acronym>XOC</acronym>
 As new <acronym>XOC</acronym> values are created,
 they should be registered with the X Consortium.
 An
-<function>XOC</function>
+<type>XOC</type>
 can be used anywhere an
-<function>XFontSet</function>
+<type>XFontSet</type>
 can be used, and vice versa;
-<function>XFontSet</function>
+<type>XFontSet</type>
 is retained for compatibility with previous releases.
 The concepts of output methods and output contexts include broader,
 more generalized abstraction than font set,
 supporting complex and more intelligent text display, and dealing not only
 with multiple fonts but also with context dependencies.
 However,
-<function>XFontSet</function>
+<type>XFontSet</type>
 is widely used in several interfaces, so
-<function>XOC</function>
+<type>XOC</type>
 is defined as an upward compatible type of
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -1354,7 +1354,7 @@ To create an output context, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XOC<function> XCreateOC</function></funcdef>
+  <funcdef>XOC <function>XCreateOC</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1387,7 +1387,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateOC </function>
+<function>XCreateOC</function>
 function creates an output context within the specified output method.
 </para>
 <para>
@@ -1428,7 +1428,7 @@ The output method encountered an output method implementation-dependent error.
 <!-- .LP -->
 <function>XCreateOC</function>
 can generate a
-<function>BadAtom</function>
+<errorname>BadAtom</errorname>
 error.
 </para>
 <para>
@@ -1440,7 +1440,7 @@ To destroy an output context, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XDestroyOC</function></funcdef>
+  <funcdef>void <function>XDestroyOC</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1474,7 +1474,7 @@ To get the output method associated with an output context, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XOM<function> XOMOfOC</function></funcdef>
+  <funcdef>XOM <function>XOMOfOC</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1521,7 +1521,7 @@ To set <acronym>XOC</acronym> values, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XSetOCValues</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1586,7 +1586,7 @@ matching the data type imposed by the semantics of the argument.
 <!-- .LP -->
 <function>XSetOCValues</function>
 can generate a
-<function>BadAtom </function>
+<errorname>BadAtom</errorname>
 error.
 </para>
 <para>
@@ -1598,7 +1598,7 @@ To obtain <acronym>XOC</acronym> values, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XGetOCValues</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1774,7 +1774,7 @@ The following keys apply to this table.
 <para>
 <!-- .LP -->
 The
-<function>XNBaseFontName</function>
+<symbol>XNBaseFontName</symbol>
 argument is a list of base font names that Xlib uses
 to load the fonts needed for the locale.
 The base font names are a comma-separated list.  The string is null-terminated
@@ -1817,7 +1817,7 @@ returns NULL.
 <para>
 <!-- .LP -->
 When querying for the
-<function>XNBaseFontName</function>
+<symbol>XNBaseFontName</symbol>
 <acronym>XOC</acronym> value,
 <function>XGetOCValues</function>
 returns a null-terminated string identifying the base font names that
@@ -1827,7 +1827,7 @@ the client.
 The string will be freed by a call to
 <function>XDestroyOC</function>
 with the associated
-<function>XOC</function>.
+<type>XOC</type>.
 Until freed, the string contents will not be modified by Xlib.
 </para>
 </sect3>
@@ -1839,11 +1839,11 @@ Until freed, the string contents will not be modified by Xlib.
 <para>
 <!-- .LP -->
 The
-<function>XNMissingCharSet</function>
+<symbol>XNMissingCharSet</symbol>
 argument returns the list of required charsets that are missing from the
 font set.
 The value of the argument is a pointer to a structure of type
-<function>XOMCharSetList</function>.
+<structname>XOMCharSetList</structname>.
 </para>
 <para>
 <!-- .LP -->
@@ -1864,7 +1864,7 @@ freed by the client.
 It will be freed by a call to 
 <function>XDestroyOC</function>
 with the associated
-<function>XOC</function>.
+<type>XOC</type>.
 Until freed, its contents will not be modified by Xlib.
 </para>
 </sect3>
@@ -1876,14 +1876,14 @@ Until freed, its contents will not be modified by Xlib.
 <para>
 <!-- .LP -->
 When a drawing or measuring function is called with an
-<function>XOC</function>
+<type>XOC</type>
 that has missing charsets, some characters in the locale will not be
 drawable.
 The
-<function>XNDefaultString</function>
+<symbol>XNDefaultString</symbol>
 argument returns a pointer to a string that represents the glyphs
 that are drawn with this
-<function>XOC</function>
+<type>XOC</type>
 when the charsets of the available fonts do not include all glyphs
 required to draw a character.
 The string does not necessarily consist of valid characters
@@ -1891,12 +1891,12 @@ in the current locale and is not necessarily drawn with
 the fonts loaded for the font set,
 but the client can draw or measure the default glyphs
 by including this string in a string being drawn or measured with the
-<function>XOC</function>.
+<type>XOC</type>.
 </para>
 <para>
 <!-- .LP -->
 If the
-<function>XNDefaultString</function>
+<symbol>XNDefaultString</symbol>
 argument returned the empty string (""),
 no glyphs are drawn and the escapement is zero.
 The returned string is null-terminated.
@@ -1904,7 +1904,7 @@ It is owned by Xlib and should not be modified or freed by the client.
 It will be freed by a call to
 <function>XDestroyOC</function>
 with the associated
-<function>XOC</function>.
+<type>XOC</type>.
 Until freed, its contents will not be modified by Xlib.
 </para>
 </sect3>
@@ -1916,39 +1916,39 @@ Until freed, its contents will not be modified by Xlib.
 <para>
 <!-- .LP -->
 The
-<function>XNOrientation</function>
+<symbol>XNOrientation</symbol>
 argument specifies the current orientation of text when drawn.  The value of
 this argument is one of the values returned by the
 <function>XGetOMValues</function>
 function with the
-<function>XNQueryOrientation</function>
+<symbol>XNQueryOrientation</symbol>
 argument specified in the
-<function>XOrientation</function>
+<type>XOrientation</type>
 list.
 The value of the argument is of type
-<function>XOrientation</function>.
+<type>XOrientation</type>.
 When
-<function>XNOrientation</function>
+<symbol>XNOrientation</symbol>
 is queried, the value specifies the current orientation.  
 When
-<function>XNOrientation</function>
+<symbol>XNOrientation</symbol>
 is set, a value is used to set the current orientation.
 </para>
 <para>
 <!-- .LP -->
 When 
-<function>XOMOrientation_Context</function>
+<constant>XOMOrientation_Context</constant>
 is set, the text orientation of the 
 text is determined according to an implementation-defined method
 (for example, ISO 6429 control sequences), and the initial text orientation for
 locale-dependent Xlib functions is assumed to 
 be
-<function>XOMOrientation_LTR_TTB</function>.
+<constant>XOMOrientation_LTR_TTB</constant>.
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XNOrientation</function>
+<symbol>XNOrientation</symbol>
 value does not change the prime drawing direction 
 for Xlib drawing functions.  
 </para>
@@ -1961,9 +1961,9 @@ for Xlib drawing functions.
 <para>
 <!-- .LP -->
 The
-<function>XNResourceName</function>
+<symbol>XNResourceName</symbol>
 and
-<function>XNResourceClass</function>
+<symbol>XNResourceClass</symbol>
 arguments are strings that specify the full name and class
 used by the client to obtain resources for the display of the output context.
 These values should be used as prefixes for name and class
@@ -1979,9 +1979,9 @@ set as resources.
 <para>
 <!-- .LP -->
 When querying for the
-<function>XNResourceName</function>
+<symbol>XNResourceName</symbol>
 or
-<function>XNResourceClass</function>
+<symbol>XNResourceClass</symbol>
 <acronym>XOC</acronym> value,
 <function>XGetOCValues</function>
 returns a null-terminated string.
@@ -1990,7 +1990,7 @@ the client.
 The string will be freed by a call to
 <function>XDestroyOC</function>
 with the associated
-<function>XOC</function>
+<type>XOC</type>
 or when the associated value is changed via
 <function>XSetOCValues</function>.
 Until freed, the string contents will not be modified by Xlib.
@@ -2004,13 +2004,13 @@ Until freed, the string contents will not be modified by Xlib.
 <para>
 <!-- .LP -->
 The
-<function>XNFontInfo</function>
+<symbol>XNFontInfo</symbol>
 argument specifies a list of one or more 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures
 and font names for the fonts used for drawing by the given output context.
 The value of the argument is a pointer to a structure of type
-<function>XOMFontInfo</function>.
+<structname>XOMFontInfo</structname>.
 </para>
 <para>
 <!-- .LP -->
@@ -2029,13 +2029,13 @@ typedef struct {
 <!-- .LP -->
 <!-- .eM -->
 A list of pointers to the
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures is returned to font_struct_list.
 A list of pointers to null-terminated, fully-specified font name strings
 in the locale of the output context is returned to font_name_list.
 The font_name_list order corresponds to the font_struct_list order.
 The number of
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures and font names is returned to num_font.
 </para>
 <para>
@@ -2046,31 +2046,31 @@ there is no provision for mapping a character or default string
 to the font properties, font ID, or direction hint for the font 
 for the character.
 The client may access the 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 list to obtain these values for all the fonts currently in use.
 </para>
 <para>
 <!-- .LP -->
 Xlib does not guarantee that fonts are loaded from the server
 at the creation of an 
-<function>XOC</function>.
+<type>XOC</type>.
 Xlib may choose to cache font data, loading it only as needed to draw text 
 or compute text dimensions.
 Therefore, existence of the per_char metrics in the 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures in the
-<function>XFontStructSet</function>
+<structname>XFontStructSet</structname>
 is undefined.
 Also, note that all properties in the 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures are in the STRING encoding.
 </para>
 <para>
 <!-- .LP -->
 The client must not free the 
-<function>XOMFontInfo</function>
+<structname>XOMFontInfo</structname>
 struct itself; it will be freed when the
-<function>XOC</function>
+<type>XOC</type>
 is closed.
 </para>
 </sect3>
@@ -2082,7 +2082,7 @@ is closed.
 <para>
 <!-- .LP -->
 The
-<function>XNOMAutomatic</function>
+<symbol>XNOMAutomatic</symbol>
 argument returns whether the associated output context was created by
 <function>XCreateFontSet</function>
 or not.  Because the
@@ -2096,9 +2096,9 @@ However, it is possible that a client does not know how the output context
 was created.
 Before a client destroys the output context,
 it can query whether
-<function>XNOMAutomatic</function>
+<symbol>XNOMAutomatic</symbol>
 is set to determine whether 
-<function>XFreeFontSet </function>
+<function>XFreeFontSet</function>
 or 
 <function>XDestroyOC</function>
 should be used to destroy the output context.
@@ -2117,10 +2117,10 @@ as needed for the locale of the text.
 Fonts are loaded according to a list of base font names 
 supplied by the client and the charsets required by the locale.
 The
-<function>XFontSet</function>
+<type>XFontSet</type>
 is an opaque type representing the state of a particular output thread
 and is equivalent to the type
-<function>XOC</function>.
+<type>XOC</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -2129,15 +2129,15 @@ The
 <function>XCreateFontSet</function>
 function is a convenience function for creating an output context using
 only default values.  The returned
-<function>XFontSet</function>
+<type>XFontSet</type>
 has an implicitly created
-<function>XOM</function>.
+<type>XOM</type>.
 This
-<function>XOM</function>
+<type>XOM</type>
 has an OM value
-<function>XNOMAutomatic</function>
+<symbol>XNOMAutomatic</symbol>
 automatically set to
-<function>True</function>
+<symbol>True</symbol>
 so that the output context self indicates whether it was created by
 <function>XCreateOC</function>
 or
@@ -2146,7 +2146,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XFontSet<function> XCreateFontSet</function></funcdef>
+  <funcdef>XFontSet <function>XCreateFontSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>char<parameter> *base_font_name_list</parameter></paramdef>
   <paramdef>char<parameter> ***missing_charset_list_return</parameter></paramdef>
@@ -2256,7 +2256,7 @@ function will return this <acronym>XLFD</acronym> name instead of the client-sup
 <!-- .LP -->
 Xlib uses the following algorithm to select the fonts
 that will be used to display text with the 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -2269,9 +2269,9 @@ of the following cases that names a set of fonts that exist at the server:
     <para>
 The first <acronym>XLFD</acronym>-conforming base font name that specifies the required
 charset or a superset of the required charset in its 
-<function>CharSetRegistry</function>
+<structfield>CharSetRegistry</structfield>
 and 
-<function>CharSetEncoding</function>
+<structfield>CharSetEncoding</structfield>
 fields.
 The implementation may use a base font name whose specified charset
 is a superset of the required charset, for example,
@@ -2297,9 +2297,9 @@ if a JIS Roman font is not available.
 The first <acronym>XLFD</acronym>-conforming font name or the first non-<acronym>XLFD</acronym> font name
 for which an <acronym>XLFD</acronym> font name can be obtained, combined with the
 required charset (replacing the 
-<function>CharSetRegistry</function>
+<structfield>CharSetRegistry</structfield>
 and
-<function>CharSetEncoding</function>
+<structfield>CharSetEncoding</structfield>
 fields in the <acronym>XLFD</acronym> font name).
 As in case 1,
 the implementation may use a charset that is a superset
@@ -2384,7 +2384,7 @@ is set to zero.
 If fonts exist for all of the charsets required by the current locale,
 <function>XCreateFontSet</function>
 returns a valid
-<function>XFontSet</function>,
+<type>XFontSet</type>,
 missing_charset_list_return is set to NULL,
 and missing_charset_count_return is set to zero.
 </para>
@@ -2409,20 +2409,20 @@ returns NULL.
 Otherwise, 
 <function>XCreateFontSet</function>
 returns a valid 
-<function>XFontSet</function>
+<type>XFontSet</type>
 to font_set.
 </para>
 <para>
 <!-- .LP -->
 When an Xmb/wc drawing or measuring function is called with an
-<function>XFontSet</function>
+<type>XFontSet</type>
 that has missing charsets, some characters in the locale will not be
 drawable.
 If def_string_return is non-NULL,
 <function>XCreateFontSet</function>
 returns a pointer to a string that represents the glyphs
 that are drawn with this 
-<function>XFontSet</function>
+<type>XFontSet</type>
 when the charsets of the available fonts do not include all font glyphs
 required to draw a codepoint.
 The string does not necessarily consist of valid characters 
@@ -2430,7 +2430,7 @@ in the current locale and is not necessarily drawn with
 the fonts loaded for the font set,
 but the client can draw and measure the default glyphs
 by including this string in a string being drawn or measured with the 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -2441,7 +2441,7 @@ It is owned by Xlib and should not be modified or freed by the client.
 It will be freed by a call to 
 <function>XFreeFontSet</function>
 with the associated 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 Until freed, its contents will not be modified by Xlib.
 </para>
 <para>
@@ -2453,7 +2453,7 @@ operation in the case that some fonts did not exist.
 <para>
 <!-- .LP -->
 The returned 
-<function>XFontSet</function>
+<type>XFontSet</type>
 and missing charset list should be freed with 
 <function>XFreeFontSet</function>
 and
@@ -2467,16 +2467,16 @@ by the client after calling
 <!-- .LP -->
 <!-- .sp -->
 To obtain a list of 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures and full font names given an 
-<function>XFontSet</function>,
+<type>XFontSet</type>,
 use
 <function>XFontsOfFontSet</function>.
 <indexterm significance="preferred"><primary>XFontsOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XFontsOfFontSet</function></funcdef>
+  <funcdef>int <function>XFontsOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>XFontStruct<parameter> ***font_struct_list_return</parameter></paramdef>
   <paramdef>char<parameter> ***font_name_list_return</parameter></paramdef>
@@ -2522,17 +2522,17 @@ Returns the list of font names.
 The
 <function>XFontsOfFontSet</function>
 function returns a list of one or more 
-<function>XFontStructs</function>
+<structname>XFontStruct</structname>s
 and font names for the fonts used by the Xmb and Xwc layers
 for the given font set.
 A list of pointers to the
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures is returned to font_struct_list_return.
 A list of pointers to null-terminated, fully specified font name strings
 in the locale of the font set is returned to font_name_list_return.
 The font_name_list order corresponds to the font_struct_list order.
 The number of
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures and font names is returned as the value of the function.
 </para>
 <para>
@@ -2543,49 +2543,49 @@ there is no provision for mapping a character or default string
 to the font properties, font ID, or direction hint for the font 
 for the character.
 The client may access the 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 list to obtain these values for all the fonts currently in use.
 </para>
 <para>
 <!-- .LP -->
 Xlib does not guarantee that fonts are loaded from the server
 at the creation of an 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 Xlib may choose to cache font data, loading it only as needed to draw text 
 or compute text dimensions.
 Therefore, existence of the per_char metrics in the 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures in the
-<function>XFontStructSet</function>
+<structname>XFontStructSet</structname>
 is undefined.
 Also, note that all properties in the 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 structures are in the STRING encoding.
 </para>
 <para>
 <!-- .LP -->
 The 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 and font name lists are owned by Xlib 
 and should not be modified or freed by the client.
 They will be freed by a call to
 <function>XFreeFontSet</function>
 with the associated
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 Until freed, their contents will not be modified by Xlib.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the base font name list and the selected font name list given an
-<function>XFontSet</function>,
+<type>XFontSet</type>,
 use
 <function>XBaseFontNameListOfFontSet</function>.
 <indexterm significance="preferred"><primary>XBaseFontNameListOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *XBaseFontNameListOfFontSet</function></funcdef>
+  <funcdef>char *<function>XBaseFontNameListOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -2610,7 +2610,7 @@ The
 <function>XBaseFontNameListOfFontSet</function>
 function returns the original base font name list supplied
 by the client when the 
-<function>XFontSet</function>
+<type>XFontSet</type>
 was created.
 A null-terminated string containing a list of
 comma-separated font names is returned
@@ -2633,21 +2633,21 @@ freed by the client.
 It will be freed by a call to 
 <function>XFreeFontSet</function>
 with the associated 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 Until freed, its contents will not be modified by Xlib.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the locale name given an 
-<function>XFontSet</function>,
+<type>XFontSet</type>,
 use
 <function>XLocaleOfFontSet</function>.
 <indexterm significance="preferred"><primary>XLocaleOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *XLocaleOfFontSet</function></funcdef>
+  <funcdef>char *<function>XLocaleOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -2672,7 +2672,7 @@ The
 <function>XLocaleOfFontSet</function>
 function
 returns the name of the locale bound to the specified
-<function>XFontSet</function>,
+<type>XFontSet</type>,
 as a null-terminated string.
 </para>
 <para>
@@ -2682,7 +2682,7 @@ and should not be modified or freed by the client.
 It may be freed by a call to
 <function>XFreeFontSet</function>
 with the associated 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 Until freed, it will not be modified by Xlib.
 </para>
 <para>
@@ -2691,16 +2691,16 @@ Until freed, it will not be modified by Xlib.
 The 
 <function>XFreeFontSet</function>
 function is a convenience function for freeing an output context.
-<function>XFreeFontSet </function>
+<function>XFreeFontSet</function>
 also frees its associated 
-<function>XOM</function>
+<type>XOM</type>
 if the output context was created by
 <function>XCreateFontSet</function>.
 <indexterm significance="preferred"><primary>XFreeFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XFreeFontSet</function></funcdef>
+  <funcdef>void <function>XFreeFontSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
@@ -2736,9 +2736,9 @@ The
 <function>XFreeFontSet</function>
 function frees the specified font set.
 The associated base font name list, font name list, 
-<function>XFontStruct</function>
+<structname>XFontStruct</structname>
 list, and 
-<function>XFontSetExtents</function>,
+<structname>XFontSetExtents</structname>,
 if any, are freed.
 </para>
 </sect2>
@@ -2804,7 +2804,7 @@ To find out about direction-dependent rendering, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool<function> XDirectionalDependentDrawing</function></funcdef>
+  <funcdef>Bool <function>XDirectionalDependentDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -2828,10 +2828,10 @@ Specifies the font set.
 The
 <function>XDirectionalDependentDrawing</function>
 function returns
-<function>True</function>
+<symbol>True</symbol>
 if the drawing functions implement implicit text directionality;
 otherwise, it returns
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -2842,7 +2842,7 @@ To find out about context-dependent rendering, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool<function> XContextualDrawing</function></funcdef>
+  <funcdef>Bool <function>XContextualDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -2866,10 +2866,10 @@ Specifies the font set.
 The
 <function>XContextualDrawing</function>
 function returns
-<function>True</function>
+<symbol>True</symbol>
 if text drawn with the font set might include context-dependent drawing;
 otherwise, it returns
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -2880,7 +2880,7 @@ To find out about context-dependent or direction-dependent rendering, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool<function> XContextDependentDrawing</function></funcdef>
+  <funcdef>Bool <function>XContextDependentDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -2904,11 +2904,11 @@ Specifies the font set.
 The
 <function>XContextDependentDrawing</function>
 function returns
-<function>True</function>
+<symbol>True</symbol>
 if the drawing functions implement implicit text directionality or
 if text drawn with the font_set might include context-dependent drawing;
 otherwise, it returns
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -2923,7 +2923,7 @@ in a text stream.
 <!-- .LP -->
 The maximum character extents for the fonts that are used by the text
 drawing layers can be accessed by the 
-<function>XFontSetExtents</function>
+<structname>XFontSetExtents</structname>
 structure:
 <indexterm significance="preferred"><primary>XFontSetExtents</primary></indexterm>
 </para>
@@ -2941,7 +2941,7 @@ typedef struct {
 <para>
 <!-- .LP -->
 The 
-<function>XRectangle</function>
+<structname>XRectangle</structname>
 structures used to return font set metrics are the usual Xlib screen-oriented 
 rectangles
 with x, y giving the upper left corner, and width and height always positive.
@@ -2979,22 +2979,22 @@ individual extent.
 <para>
 <!-- .LP -->
 The rectangles for a given character in a string can be obtained from
-<function>XmbPerCharExtents</function>
+<function>XmbTextPerCharExtents</function>
 or
-<function>XwcPerCharExtents</function>.
+<function>XwcTextPerCharExtents</function>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the maximum extents structure given an
-<function>XFontSet</function>,
+<type>XFontSet</type>,
 use
 <function>XExtentsOfFontSet</function>.
 <indexterm significance="preferred"><primary>XExtentsOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XFontSetExtents<function> *XExtentsOfFontSet</function></funcdef>
+  <funcdef>XFontSetExtents *<function>XExtentsOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -3018,20 +3018,20 @@ Specifies the font set.
 The
 <function>XExtentsOfFontSet</function>
 function returns an
-<function>XFontSetExtents</function>
+<structname>XFontSetExtents</structname>
 structure for the fonts used by the Xmb and Xwc layers
 for the given font set.
 </para>
 <para>
 <!-- .LP -->
 The 
-<function>XFontSetExtents</function>
+<structname>XFontSetExtents</structname>
 structure is owned by Xlib and should not be modified
 or freed by the client.
 It will be freed by a call to 
 <function>XFreeFontSet</function>
 with the associated 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 Until freed, its contents will not be modified by Xlib.
 </para>
 <para>
@@ -3047,7 +3047,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XmbTextEscapement</function></funcdef>
+  <funcdef>int <function>XmbTextEscapement</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_bytes</parameter></paramdef>
@@ -3056,7 +3056,7 @@ or
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XwcTextEscapement</function></funcdef>
+  <funcdef>int <function>XwcTextEscapement</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>wchar_t<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_wchars</parameter></paramdef>
@@ -3139,7 +3139,7 @@ use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XmbTextExtents</function></funcdef>
+  <funcdef>int <function>XmbTextExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_bytes</parameter></paramdef>
@@ -3150,7 +3150,7 @@ use
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XwcTextExtents</function></funcdef>
+  <funcdef>int <function>XwcTextExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>wchar_t<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_wchars</parameter></paramdef>
@@ -3265,11 +3265,11 @@ should not intersect this rectangle.
 <para>
 <!-- .LP -->
 When the 
-<function>XFontSet</function>
+<type>XFontSet</type>
 has missing charsets,
 metrics for each unavailable character are taken 
 from the default string returned by 
-<function>XCreateFontSet </function>
+<function>XCreateFontSet</function>
 so that the metrics represent the text as it will actually be drawn.
 The behavior for an invalid codepoint is undefined.
 </para>
@@ -3299,7 +3299,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XmbTextPerCharExtents</function></funcdef>
+  <funcdef>Status <function>XmbTextPerCharExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_bytes</parameter></paramdef>
@@ -3314,7 +3314,7 @@ or
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XwcTextPerCharExtents</function></funcdef>
+  <funcdef>Status <function>XwcTextPerCharExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>wchar_t<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_wchars</parameter></paramdef>
@@ -3462,19 +3462,19 @@ logical_array_return rectangles.
 <para>
 <!-- .LP -->
 Note that an 
-<function>XRectangle</function>
+<structname>XRectangle</structname>
 represents the effective drawing dimensions of the character,
 regardless of the number of font glyphs that are used to draw
 the character or the direction in which the character is drawn.
 If multiple characters map to a single character glyph,
 the dimensions of all the 
-<function>XRectangles</function>
+<structname>XRectangle</structname>s
 of those characters are the same.
 </para>
 <para>
 <!-- .LP -->
 When the 
-<function>XFontSet</function>
+<type>XFontSet</type>
 has missing charsets, metrics for each unavailable
 character are taken from the default string returned by 
 <function>XCreateFontSet</function>
@@ -3521,7 +3521,7 @@ instead of treating the bytes of the string as direct font indexes.
 See section 8.6 for details of the use of Graphics Contexts (GCs)
 and possible protocol errors.
 If a 
-<function>BadFont</function>
+<errorname>BadFont</errorname>
 error is generated,
 characters prior to the offending character may have been drawn.
 </para>
@@ -3581,7 +3581,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XmbDrawText</function></funcdef>
+  <funcdef>void <function>XmbDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>GC<parameter> gc</parameter></paramdef>
@@ -3593,7 +3593,7 @@ or
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XwcDrawText</function></funcdef>
+  <funcdef>void <function>XwcDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>GC<parameter> gc</parameter></paramdef>
@@ -3684,7 +3684,7 @@ Specifies the number of text items in the array.
 The
 <function>XmbDrawText</function>
 and 
-<function>XwcDrawText </function>
+<function>XwcDrawText</function>
 functions allow complex spacing and font set shifts between text strings.
 Each text item is processed in turn, with the origin of a text
 element advanced in the primary draw direction by the escapement of the
@@ -3692,11 +3692,11 @@ previous text item.
 A text item delta specifies an additional escapement of the text item
 drawing origin in the primary draw direction.
 A font_set member other than 
-<function>None</function>
+<symbol>None</symbol>
 in an item causes the font set to be used for this and subsequent text items
 in the text_items list.
 Leading text items with a font_set member set to
-<function>None</function>
+<symbol>None</symbol>
 will not be drawn.
 </para>
 <para>
@@ -3714,7 +3714,7 @@ or
 and
 <function>XwcTextPerCharExtents</function>.
 When the 
-<function>XFontSet</function>
+<type>XFontSet</type>
 has missing charsets, each unavailable character is drawn 
 with the default string returned by 
 <function>XCreateFontSet</function>.
@@ -3732,7 +3732,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XmbDrawString</function></funcdef>
+  <funcdef>void <function>XmbDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3745,7 +3745,7 @@ or
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XwcDrawString</function></funcdef>
+  <funcdef>void <function>XwcDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3860,7 +3860,7 @@ and
 <function>XwcDrawString</function>
 functions draw the specified text with the foreground pixel.
 When the 
-<function>XFontSet</function>
+<type>XFontSet</type>
 has missing charsets, each unavailable character is drawn 
 with the default string returned by 
 <function>XCreateFontSet</function>.
@@ -3878,7 +3878,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XmbDrawImageString</function></funcdef>
+  <funcdef>void <function>XmbDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3891,7 +3891,7 @@ or
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XwcDrawImageString</function></funcdef>
+  <funcdef>void <function>XwcDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -4011,12 +4011,12 @@ The filled rectangle is the rectangle returned to overall_logical_return by
 or 
 <function>XwcTextExtents</function>
 for the same text and 
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 </para>
 <para>
 <!-- .LP -->
 When the 
-<function>XFontSet</function>
+<type>XFontSet</type>
 has missing charsets, each unavailable character is drawn 
 with the default string returned by 
 <function>XCreateFontSet</function>.
@@ -4387,7 +4387,7 @@ but there is only one in a front-end architecture.
 <!-- .LP -->
 The abstraction used by a client to communicate with an input method
 is an opaque data structure represented by the 
-<function>XIM</function>
+<type>XIM</type>
 data type.
 This data structure is returned by the 
 <function>XOpenIM</function>
@@ -4403,7 +4403,7 @@ A single input server may be used for one or more languages,
 supporting one or more encoding schemes.
 But the strings returned from an input method will always be encoded
 in the (single) locale associated with the
-<function>XIM</function>
+<type>XIM</type>
 object.
 </para>
 </sect3>
@@ -4421,7 +4421,7 @@ and the user possibly switching among them at any time.
 The abstraction for representing the state of a particular input thread
 is called an <emphasis remap='I'>input context</emphasis>.
 The Xlib representation of an input context is an 
-<function>XIC</function>.
+<type>XIC</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -4440,11 +4440,11 @@ One input context belongs to exactly one input method.
 Different input contexts may be associated with the same input method,
 possibly with the same client window.
 An 
-<function>XIC</function>
+<type>XIC</type>
 is created with the
 <function>XCreateIC</function>
 function, providing an 
-<function>XIM</function>
+<type>XIM</type>
 argument and affiliating the input context to the input method
 for its lifetime. 
 When an input method is closed with 
@@ -4606,19 +4606,19 @@ Before a client provides geometry management for an input method,
 it must determine if geometry management is needed.
 The input method indicates the need for geometry management 
 by setting 
-<function>XIMPreeditArea</function>
+<symbol>XIMPreeditArea</symbol>
 or 
-<function>XIMStatusArea</function>
+<symbol>XIMStatusArea</symbol>
 in its 
-<function>XIMStyles</function>
+<structname>XIMStyles</structname>
 value returned by 
 <function>XGetIMValues</function>.
 When a client has decided that it will provide geometry management
 for an input method, 
 it indicates that decision by setting the
-<function>XNInputStyle</function>
+<symbol>XNInputStyle</symbol>
 value in the 
-<function>XIC</function>.
+<type>XIC</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -4631,7 +4631,7 @@ The geometry is negotiated by the following steps:
   <listitem>
     <para>
 The client suggests an area to the input method by setting the
-<function>XNAreaNeeded</function>
+<symbol>XNAreaNeeded</symbol>
 value for that area.
 If the client has no constraints for the input method,
 it either will not suggest an area or will set the width and height to zero.
@@ -4641,7 +4641,7 @@ Otherwise, it will set one of the values.
   <listitem>
     <para>
 The client will get the <acronym>XIC</acronym> value 
-<function>XNAreaNeeded</function>.
+<symbol>XNAreaNeeded</symbol>.
 The input method will return its suggested size in this value.
 The input method should pay attention to any constraints suggested
 by the client.
@@ -4650,7 +4650,7 @@ by the client.
   <listitem>
     <para>
 The client sets the <acronym>XIC</acronym> value
-<function>XNArea</function>
+<symbol>XNArea</symbol>
 to inform the input method of the geometry of its window.  
 The client should try to honor the geometry requested by the input method.
 The input method must accept this geometry.
@@ -4662,9 +4662,9 @@ The input method must accept this geometry.
 Clients doing geometry management must be aware that setting other
 <acronym>XIC</acronym> values may affect the geometry desired by an input method.
 For example, 
-<function>XNFontSet</function>
+<symbol>XNFontSet</symbol>
 and
-<function>XNLineSpacing</function>
+<symbol>XNLineSpace</symbol>
 may change the geometry desired by the input method.  
 </para>
 <para>
@@ -4694,7 +4694,7 @@ to capture X events transparently to clients.
 It is expected that toolkits (or clients) using
 <function>XmbLookupString</function>
 or
-<function>XwcLookupString </function>
+<function>XwcLookupString</function>
 will call this filter at some point in the event processing mechanism
 to make sure that events needed by an input method can be filtered
 by that input method.
@@ -4729,7 +4729,7 @@ to translations such as those the X Toolkit Intrinsics library provides.
 <para>
 <!-- .LP -->
 Clients are expected to get the <acronym>XIC</acronym> value 
-<function>XNFilterEvents</function>
+<symbol>XNFilterEvents</symbol>
 and augment the event mask for the client window with that event mask.
 This mask may be zero.
 </para>
@@ -4793,7 +4793,7 @@ attempting to draw preedit strings that are longer than the
 available space.  Once the display area is exceeded, it is not
 clear how best to display the preedit string.
 The visible position feedback masks of
-<function>XIMText</function>
+<structname>XIMText</structname>
 help resolve this problem by allowing the input method to specify hints that
 indicate the essential portions of the preedit string.
 For example, such hints can help developers implement
@@ -4919,16 +4919,16 @@ functions.
 <para>
 <!-- .LP -->
 String conversion support is dependent on the availability of the 
-<function>XNStringConversion</function>
+<symbol>XNStringConversion</symbol>
 or 
-<function>XNStringConversionCallback </function>
+<symbol>XNStringConversionCallback</symbol>
 <acronym>XIC</acronym> values.
 Because the input method may not support string conversions,
 clients have to query the availability of string conversion
 operations by checking the supported <acronym>XIC</acronym> values list by calling
 <function>XGetIMValues</function>
 with the
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 IM value.
 </para>
 <para>
@@ -4936,7 +4936,7 @@ IM value.
 The difference between these two values is whether the
 conversion is invoked by the client or the input method.  
 The 
-<function>XNStringConversion</function>
+<symbol>XNStringConversion</symbol>
 <acronym>XIC</acronym> value is used by clients to request 
 a string conversion from the input method.  The client
 is responsible for determining which events are used 
@@ -4945,14 +4945,14 @@ converted should be copied or deleted.  The type of conversion
 is determined by the input method; the client can only 
 pass the string to be converted.  The client is guaranteed that
 no
-<function>XNStringConversionCallback</function>
+<symbol>XNStringConversionCallback</symbol>
 will be issued when this value is set; thus, the client need
 only set one of these values.
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XNStringConversionCallback</function>
+<symbol>XNStringConversionCallback</symbol>
 <acronym>XIC</acronym> value is used by the client to notify the input method that
 it will accept requests from the input method for string conversion.
 If this value is set,
@@ -4963,13 +4963,13 @@ client-supplied procedure to retrieve the string to be converted.  The client's
 callback procedure is notified whether to copy or delete the string and 
 is provided with hints as to the amount of text needed.
 The
-<function>XIMStringConversionCallbackStruct</function>
+<structname>XIMStringConversionCallbackStruct</structname>
 specifies which text should be passed back to the input method.
 </para>
 <para>
 <!-- .LP -->
 Finally, the input method may call the client's 
-<function>XNStringConversionCallback</function>
+<symbol>XNStringConversionCallback</symbol>
 procedure multiple times if the string returned from the callback is
 not sufficient to perform a successful conversion.   The arguments
 to the client's procedure allow the input method to define a
@@ -5048,9 +5048,9 @@ functions are provided:
       being called.</entry>
     </row>
     <row>
-      <entry><function>XSetIMValue</function>, <function>XSetICValue</function></entry>
+      <entry><function>XSetIMValues</function>, <function>XSetICValues</function></entry>
       <entry>These functions use the <acronym>XIM</acronym> and <acronym>XIC</acronym> values,
-      <function>XNDestroyCallback</function>,
+      <symbol>XNDestroyCallback</symbol>,
       to allow a client 
       to register a callback procedure to be called when Xlib detects that
       an IM server that was associated with an opened 
@@ -5115,7 +5115,7 @@ Therefore, clients have to query support of hot keys by checking the
 supported <acronym>XIC</acronym> values list by calling
 <function>XGetIMValues</function>
 with the
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 IM value.
 When the hot keys specified conflict with the key bindings of the 
 input method, hot keys take precedence over the key bindings of the input 
@@ -5142,20 +5142,20 @@ retrieving the preedit state of an input context.
 One method is to query the state by calling
 <function>XGetICValues</function>
 with the
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 <acronym>XIC</acronym> value.
 Another method is to receive notification whenever
 the preedit state is changed.  To receive such notification,
 an application needs to register a callback by calling
 <function>XSetICValues</function>
 with the
-<function>XNPreeditStateNotifyCallback</function>
+<symbol>XNPreeditStateNotifyCallback</symbol>
 <acronym>XIC</acronym> value. 
 In order to change the preedit state programmatically, an application 
 needs to call 
 <function>XSetICValues</function>
 with
-<function>XNPreeditState</function>.
+<symbol>XNPreeditState</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -5166,7 +5166,7 @@ query availability of preedit state operations by checking the
 supported <acronym>XIC</acronym> values list by calling
 <function>XGetIMValues</function>
 with the
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 IM value.
 </para>
 </sect3>
@@ -5184,7 +5184,7 @@ To open a connection, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XIM<function> XOpenIM</function></funcdef>
+  <funcdef>XIM <function>XOpenIM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XrmDatabase<parameter> db</parameter></paramdef>
   <paramdef>char<parameter> *res_name</parameter></paramdef>
@@ -5305,7 +5305,7 @@ To close a connection, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XCloseIM</function></funcdef>
+  <funcdef>Status <function>XCloseIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -5339,7 +5339,7 @@ To set input method attributes, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XSetIMValues</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -5392,7 +5392,7 @@ To query an input method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XGetIMValues</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -5455,7 +5455,7 @@ To obtain the display associated with an input method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Display<function> *</function></funcdef>
+  <funcdef>Display *<function>XDisplayOfIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -5489,7 +5489,7 @@ To get the locale associated with an input method, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XLocaleOfIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -5523,7 +5523,7 @@ To register an input method instantiate callback, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool<function> XRegisterIMInstantiateCallback</function></funcdef>
+  <funcdef>Bool <function>XRegisterIMInstantiateCallback</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XrmDatabase<parameter> db</parameter></paramdef>
   <paramdef>char<parameter> *res_name</parameter></paramdef>
@@ -5608,9 +5608,9 @@ locale and modifiers.
 <para>
 <!-- .LP -->
 The function returns 
-<function>True</function>
+<symbol>True</symbol>
  if it succeeds; otherwise, it returns 
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -5619,7 +5619,7 @@ The generic prototype is as follows:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> IMInstantiateCallback</function></funcdef>
+  <funcdef>void <function><replaceable>IMInstantiateCallback</replaceable></function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -5668,7 +5668,7 @@ To unregister an input method instantiation callback, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool<function> XUnregisterIMInstantiateCallback</function></funcdef>
+  <funcdef>Bool <function>XUnregisterIMInstantiateCallback</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XrmDatabase<parameter> db</parameter></paramdef>
   <paramdef>char<parameter> *res_name</parameter></paramdef>
@@ -5749,9 +5749,9 @@ The
 function removes an input method instantiation callback previously
 registered.
 The function returns
-<function>True</function>
+<symbol>True</symbol>
 if it succeeds; otherwise, it returns 
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 </sect2>
 <sect2 id="Input_Method_Values">
@@ -5817,35 +5817,35 @@ The following keys apply to this table.
   </thead>
   <tbody>
     <row>
-      <entry><function>XNQueryInputStyle</function></entry>
+      <entry><symbol>XNQueryInputStyle</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNResourceName</function></entry>
+      <entry><symbol>XNResourceName</symbol></entry>
       <entry>D-S-G</entry>
     </row>
     <row>
-      <entry><function>XNResourceClass</function></entry>
+      <entry><symbol>XNResourceClass</symbol></entry>
       <entry>D-S-G</entry>
     </row>
     <row>
-      <entry><function>XNDestroyCallback</function></entry>
+      <entry><symbol>XNDestroyCallback</symbol></entry>
       <entry>D-S-G</entry>
     </row>
     <row>
-      <entry><function>XNQueryIMValuesList</function></entry>
+      <entry><symbol>XNQueryIMValuesList</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNQueryICValuesList</function></entry>
+      <entry><symbol>XNQueryICValuesList</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNVisiblePosition</function></entry>
+      <entry><symbol>XNVisiblePosition</symbol></entry>
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>XNR6PreeditCallbackBehavior</function></entry>
+      <entry><symbol>XNR6PreeditCallback</symbol></entry>
       <entry>D-S-G</entry>
     </row>
   </tbody>
@@ -5854,7 +5854,7 @@ The following keys apply to this table.
 
 <para>
 <!-- .LP -->
-<function>XNR6PreeditCallbackBehavior</function>
+<symbol>XNR6PreeditCallback</symbol>
 is obsolete and its use is not recommended (see section 13.5.4.6).
 </para>
 
@@ -5880,9 +5880,9 @@ it should negotiate with the user the continuation of the program
 The argument value must be a pointer to a location
 where the returned value will be stored.
 The returned value is a pointer to a structure of type
-<function>XIMStyles</function>.
+<structname>XIMStyles</structname>.
 Clients are responsible for freeing the 
-<function>XIMStyles</function>
+<structname>XIMStyles</structname>
 structure.
 To do so, use
 <function>XFree</function>.
@@ -5890,7 +5890,7 @@ To do so, use
 <para>
 <!-- .LP -->
 The
-<function>XIMStyles</function>
+<structname>XIMStyles</structname>
 structure is defined as follows:
 </para>
 
@@ -5934,7 +5934,7 @@ typedef struct {
 <!-- .LP -->
 <!-- .eM -->
 An 
-<function>XIMStyles</function>
+<structname>XIMStyles</structname>
 structure contains the number of input styles supported
 in its count_styles field.
 This is also the size of the supported_styles array.
@@ -5965,41 +5965,41 @@ by the input method for preedit information.
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XIMPreeditArea </function></entry>
+      <entry><symbol>XIMPreeditArea</symbol></entry>
       <entry>If chosen,
       the input method would require the client to provide some area values
       for it to do its preediting.
       Refer to <acronym>XIC</acronym> values 
-      <function>XNArea</function>
+      <symbol>XNArea</symbol>
       and
-      <function>XNAreaNeeded</function>.</entry>
+      <symbol>XNAreaNeeded</symbol>.</entry>
     </row>
     <row>
-      <entry><function>XIMPreeditPosition</function></entry>
+      <entry><symbol>XIMPreeditPosition</symbol></entry>
       <entry>If chosen,
       the input method would require the client to provide positional values. 
       Refer to <acronym>XIC</acronym> values 
-      <function>XNSpotLocation</function>
+      <symbol>XNSpotLocation</symbol>
       and
-      <function>XNFocusWindow</function>.</entry>
+      <symbol>XNFocusWindow</symbol>.</entry>
     </row>
     <row>
-      <entry><function>XIMPreeditCallbacks</function></entry>
+      <entry><symbol>XIMPreeditCallbacks</symbol></entry>
       <entry>If chosen,
       the input method would require the client to define the set of preedit callbacks.
       Refer to <acronym>XIC</acronym> values 
-      <function>XNPreeditStartCallback</function>,
-      <function>XNPreeditDoneCallback</function>,
-      <function>XNPreeditDrawCallback</function>,
+      <symbol>XNPreeditStartCallback</symbol>,
+      <symbol>XNPreeditDoneCallback</symbol>,
+      <symbol>XNPreeditDrawCallback</symbol>,
       and
-      <function>XNPreeditCaretCallback</function>.</entry>
+      <symbol>XNPreeditCaretCallback</symbol>.</entry>
     </row>
     <row>
-      <entry><function>XIMPreeditNothing</function></entry>
+      <entry><symbol>XIMPreeditNothing</symbol></entry>
       <entry>If chosen, the input method can function without any preedit values.</entry>
     </row>
     <row>
-      <entry><function>XIMPreeditNone</function></entry>
+      <entry><symbol>XIMPreeditNone</symbol></entry>
       <entry>The input method does not provide any preedit feedback.
       Any preedit value is ignored.
       This style is mutually exclusive with the other preedit styles.</entry>
@@ -6023,28 +6023,28 @@ by the input method for status information.
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XIMStatusArea</function></entry>
+      <entry><symbol>XIMStatusArea</symbol></entry>
       <entry>The input method requires the client to provide
       some area values for it to do its status feedback.
       See
-      <function>XNArea</function>
+      <symbol>XNArea</symbol>
       and
-      <function>XNAreaNeeded</function>.</entry>
+      <symbol>XNAreaNeeded</symbol>.</entry>
     </row>
     <row>
-      <entry><function>XIMStatusCallbacks</function></entry>
+      <entry><symbol>XIMStatusCallbacks</symbol></entry>
       <entry>The input method requires the client to define the set of status callbacks,
-      <function>XNStatusStartCallback</function>,
-      <function>XNStatusDoneCallback</function>,
+      <symbol>XNStatusStartCallback</symbol>,
+      <symbol>XNStatusDoneCallback</symbol>,
       and
-      <function>XNStatusDrawCallback</function>.</entry>
+      <symbol>XNStatusDrawCallback</symbol>.</entry>
     </row>
     <row>
-      <entry><function>XIMStatusNothing</function></entry>
+      <entry><symbol>XIMStatusNothing</symbol></entry>
       <entry>The input method can function without any status values.</entry>
     </row>
     <row>
-      <entry><function>XIMStatusNone</function></entry>
+      <entry><symbol>XIMStatusNone</symbol></entry>
       <entry>The input method does not provide any status feedback.
       If chosen, any status value is ignored.
       This style is mutually exclusive with the other status styles.</entry>
@@ -6062,9 +6062,9 @@ by the input method for status information.
 <para>
 <!-- .LP -->
 The
-<function>XNResourceName</function>
+<symbol>XNResourceName</symbol>
 and
-<function>XNResourceClass</function>
+<symbol>XNResourceClass</symbol>
 arguments are strings that specify the full name and class
 used by the input method.
 These values should be used as prefixes for the name and class
@@ -6089,10 +6089,10 @@ set as resources.
 <para>
 <!-- .LP -->
 The 
-<function>XNDestroyCallback </function>
+<symbol>XNDestroyCallback</symbol>
 argument is a pointer to a structure of type
-<function>XIMCallback</function>.
-<function>XNDestroyCallback</function>
+<structname>XIMCallback</structname>.
+<symbol>XNDestroyCallback</symbol>
 is triggered when an input method stops its service for any reason. 
 After the callback is invoked, the input method is closed and the
 associated input context(s) are destroyed by Xlib.
@@ -6108,7 +6108,7 @@ The generic prototype of this callback function is as follows:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> DestroyCallback</function></funcdef>
+  <funcdef>void <function><replaceable>DestroyCallback</replaceable></function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -6164,9 +6164,9 @@ A DestroyCallback is always called with a NULL call_data argument.
 <!-- .XE -->
 <para>
 <!-- .LP -->
-<function>XNQueryIMValuesList</function>
+<symbol>XNQueryIMValuesList</symbol>
 and
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 are used to query about <acronym>XIM</acronym> and <acronym>XIC</acronym> values supported by the input method.
 </para>
 <para>
@@ -6174,9 +6174,9 @@ are used to query about <acronym>XIM</acronym> and <acronym>XIC</acronym> values
 The argument value must be a pointer to a location where the returned
 value will be stored.  The returned value is a pointer to a structure
 of type
-<function>XIMValuesList</function>.
+<structname>XIMValuesList</structname>.
 Clients are responsible for freeing the 
-<function>XIMValuesList</function>
+<structname>XIMValuesList</structname>
 structure.
 To do so, use
 <function>XFree</function>.
@@ -6184,7 +6184,7 @@ To do so, use
 <para>
 <!-- .LP -->
 The
-<function>XIMValuesList</function>
+<structname>XIMValuesList</structname>
 structure is defined as follows:
 <!-- .sM -->
 <literallayout class="monospaced">
@@ -6209,24 +6209,24 @@ typedef struct {
 <para>
 <!-- .LP -->
 The 
-<function>XNVisiblePosition</function>
+<symbol>XNVisiblePosition</symbol>
 argument indicates whether the visible position masks of 
-<function>XIMFeedback</function>
+<type>XIMFeedback</type>
 in
-<function>XIMText</function>
+<structname>XIMText</structname>
 are available.
 </para>
 <para>
 <!-- .LP -->
 The argument value must be a pointer to a location where the returned
 value will be stored.  The returned value is of type
-<function>Bool</function>.
+<type>Bool</type>.
 If the returned value is
-<function>True</function>,
+<symbol>True</symbol>,
 the input method uses the visible position masks of
-<function>XIMFeedback</function>
+<type>XIMFeedback</type>
 in
-<function>XIMText</function>;
+<structname>XIMText</structname>;
 otherwise, the input method does not use the masks.
 </para>
 <para>
@@ -6234,16 +6234,16 @@ otherwise, the input method does not use the masks.
 Because this <acronym>XIM</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryIMValues</function>
+<symbol>XNQueryIMValuesList</symbol>
 before using this argument.
 If the 
-<function>XNVisiblePosition</function>
+<symbol>XNVisiblePosition</symbol>
 does not exist in the IM values list returned from 
-<function>XNQueryIMValues</function>,
+<symbol>XNQueryIMValuesList</symbol>,
 the visible position masks of
-<function>XIMFeedback</function>
+<type>XIMFeedback</type>
 in
-<function>XIMText</function>
+<structname>XIMText</structname>
 are not used to indicate the visible position.
 </para>
 <para>
@@ -6258,7 +6258,7 @@ are not used to indicate the visible position.
 <para>
 <!-- .LP -->
 The
-<function>XNR6PreeditCallbackBehavior</function>
+<symbol>XNR6PreeditCallback</symbol>
 argument originally included in the X11R6 specification has been
 deprecated.\(dg
 <!-- .\" If XNR6PreeditCallbackBehavior is not deprecated, then its type -->
@@ -6269,7 +6269,7 @@ the R6 PreeditDrawCallbacks was going to differ significantly from
 that of the R5 callbacks.
 Late changes to the specification converged the R5 and R6 behaviors,
 eliminating the need for
-<function>XNR6PreeditCallbackBehavior</function>.
+<symbol>XNR6PreeditCallback</symbol>.
 Unfortunately, this argument was not removed from the R6 specification
 before it was published.
 <!-- .FE -->
@@ -6277,39 +6277,39 @@ before it was published.
 <para>
 <!-- .LP -->
 The 
-<function>XNR6PreeditCallbackBehavior</function>
+<symbol>XNR6PreeditCallback</symbol>
 argument indicates whether the behavior of preedit callbacks regarding
-<function>XIMPreeditDrawCallbackStruct</function>
+<structname>XIMPreeditDrawCallbackStruct</structname>
 values follows Release 5 or Release 6 semantics.
 </para>
 <para>
 <!-- .LP -->
 The value is of type
-<function>Bool</function>.
+<type>Bool</type>.
 When querying for
-<function>XNR6PreeditCallbackBehavior</function>,
+<symbol>XNR6PreeditCallback</symbol>,
 if the returned value is
-<function>True</function>,
+<symbol>True</symbol>,
 the input method uses the Release 6 behavior;
 otherwise, it uses the Release 5 behavior.
 The default value is
-<function>False</function>.
+<symbol>False</symbol>.
 In order to use Release 6 semantics, the value of
-<function>XNR6PreeditCallbackBehavior</function>
+<symbol>XNR6PreeditCallback</symbol>
 must be set to
-<function>True</function>.
+<symbol>True</symbol>.
 </para>
 <para>
 <!-- .LP -->
 Because this <acronym>XIM</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryIMValues</function>
+<symbol>XNQueryIMValuesList</symbol>
 before using this argument.
 If the
-<function>XNR6PreeditCallbackBehavior</function>
+<symbol>XNR6PreeditCallback</symbol>
 does not exist in the IM values list returned from
-<function>XNQueryIMValues</function>,
+<symbol>XNQueryIMValuesList</symbol>,
 the PreeditCallback behavior is Release 5 semantics.
 </para>
 <para>
@@ -6344,7 +6344,7 @@ To create an input context, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XIC<function> XCreateIC</function></funcdef>
+  <funcdef>XIC <function>XCreateIC</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6377,7 +6377,7 @@ Specifies the variable length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateIC </function>
+<function>XCreateIC</function>
 function creates a context within the specified input method.
 </para>
 <para>
@@ -6403,7 +6403,7 @@ A required argument was not set.
   <listitem>
     <para>
 A read-only argument was set (for example,
-<function>XNFilterEvents</function>).
+<symbol>XNFilterEvents</symbol>).
     </para>
   </listitem>
   <listitem>
@@ -6421,11 +6421,11 @@ The input method encountered an input method implementation-dependent error.
 <!-- .LP -->
 <function>XCreateIC</function>
 can generate
-<function>BadAtom</function>,
-<function>BadColor</function>,
-<function>BadPixmap</function>,
+<errorname>BadAtom</errorname>,
+<errorname>BadColor</errorname>,
+<errorname>BadPixmap</errorname>,
 and
-<function>BadWindow</function>
+<errorname>BadWindow</errorname>
 errors.
 </para>
 <para>
@@ -6437,7 +6437,7 @@ To destroy an input context, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XDestroyIC</function></funcdef>
+  <funcdef>void <function>XDestroyIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6474,7 +6474,7 @@ and
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XSetICFocus</function></funcdef>
+  <funcdef>void <function>XSetICFocus</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6515,7 +6515,7 @@ does not affect the focus window value.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> XUnsetICFocus</function></funcdef>
+  <funcdef>void <function>XUnsetICFocus</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6564,14 +6564,14 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XmbResetIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>wchar_t<function> *</function></funcdef>
+  <funcdef>wchar_t *<function>XwcResetIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6593,17 +6593,17 @@ Specifies the input context.
 <!-- .LP -->
 <!-- .eM -->
 When
-<function>XNResetState</function>
+<symbol>XNResetState</symbol>
 is set to
-<function>XIMInitialState</function>,
+<symbol>XIMInitialState</symbol>,
 <function>XmbResetIC</function>
 and
 <function>XwcResetIC</function>
 reset an input context to its initial state;
 when
-<function>XNResetState</function>
+<symbol>XNResetState</symbol>
 is set to
-<function>XIMPreserveState</function>,
+<symbol>XIMPreserveState</symbol>,
 the current input context state is preserved.
 In both cases, any input pending on that context is deleted.
 The input method is required to clear the preedit area, if any,
@@ -6639,7 +6639,7 @@ To get the input method associated with an input context, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XIM<function> XIMOfIC</function></funcdef>
+  <funcdef>XIM <function>XIMOfIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6684,7 +6684,7 @@ To set <acronym>XIC</acronym> values, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XSetICValues</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6727,7 +6727,7 @@ An argument might not be set for any of the following reasons:
   <listitem>
     <para>
 The argument is read-only (for example,
-<function>XNFilterEvents</function>).
+<symbol>XNFilterEvents</symbol>).
     </para>
   </listitem>
   <listitem>
@@ -6750,12 +6750,12 @@ matching the data type imposed by the semantics of the argument.
 <!-- .LP -->
 <function>XSetICValues</function>
 can generate
-<function>BadAtom</function>,
-<function>BadColor</function>,
-<function>BadCursor</function>,
-<function>BadPixmap</function>,
+<errorname>BadAtom</errorname>,
+<errorname>BadColor</errorname>,
+<errorname>BadCursor</errorname>,
+<errorname>BadPixmap</errorname>,
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 </para>
 <para>
@@ -6767,7 +6767,7 @@ To obtain <acronym>XIC</acronym> values, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *</function></funcdef>
+  <funcdef>char *<function>XGetICValues</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -6831,10 +6831,10 @@ and the client is responsible for freeing this data by calling
 <function>XFree</function>
 with the returned pointer.
 The exception to this rule is for an IC value of type
-<function>XVaNestedList</function>
+<type>XVaNestedList</type>
 (for preedit and status attributes).
 In this case,  the argument must also be of type
-<function>XVaNestedList</function>.
+<type>XVaNestedList</type>.
 Then, the rule of changing type T to T* and freeing the allocated data
 applies to each element of the nested list.
 </para>
@@ -7263,7 +7263,7 @@ The following keys apply to these tables.
       <entry>G</entry>
     </row>
     <row>
-      <entry><function>Status</function></entry>
+      <entry><type>Status</type></entry>
     </row>
     <row>
       <entry>Area</entry>
@@ -7356,12 +7356,12 @@ The following keys apply to these tables.
 <para>
 <!-- .LP -->
 The
-<function>XNInputStyle</function>
+<symbol>XNInputStyle</symbol>
 argument specifies the input style to be used.
 The value of this argument must be one of the values returned by the
 <function>XGetIMValues</function>
 function with the
-<function>XNQueryInputStyle</function>
+<symbol>XNQueryInputStyle</symbol>
 argument specified in the supported_styles list.
 </para>
 <para>
@@ -7379,7 +7379,7 @@ and cannot be changed.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNClientWindow</primary></indexterm>
 The
-<function>XNClientWindow</function>
+<symbol>XNClientWindow</symbol>
 argument specifies to the input method the client window in
 which the input method
 can display data or create subwindows.
@@ -7396,7 +7396,7 @@ the input method may not operate correctly.
 If an attempt is made to set this value a second time with
 <function>XSetICValues</function>,
 the string
-<function>XNClientWindow</function>
+<symbol>XNClientWindow</symbol>
 will be returned by
 <function>XSetICValues</function>,
 and the client window will not be changed.
@@ -7406,7 +7406,7 @@ and the client window will not be changed.
 If the client window is not a valid window ID on the display
 attached to the input method,
 a 
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 error can be generated when this value is used by the input method.
 </para>
 </sect3>
@@ -7419,10 +7419,10 @@ error can be generated when this value is used by the input method.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNFocusWindow</primary></indexterm>
 The
-<function>XNFocusWindow</function>
+<symbol>XNFocusWindow</symbol>
 argument specifies the focus window.
 The primary purpose of the 
-<function>XNFocusWindow</function>
+<symbol>XNFocusWindow</symbol>
 is to identify the window that will receive the key event when input
 is composed.
 In addition, the input method may possibly affect the focus window
@@ -7453,11 +7453,11 @@ Grab the keyboard within that window
 <para>
 <!-- .LP -->
 The associated value must be of type 
-<function>Window</function>.
+<type>Window</type>.
 If the focus window is not a valid window ID on the display 
 attached to the input method,
 a 
-<function>BadWindow</function>
+<errorname>BadWindow</errorname>
 error can be generated when this value is used by the input method.
 </para>
 <para>
@@ -7476,9 +7476,9 @@ the input method will use the client window as the default focus window.
 <indexterm significance="preferred"><primary>XNResourceName</primary></indexterm>
 <indexterm significance="preferred"><primary>XNResourceClass</primary></indexterm>
 The
-<function>XNResourceName</function>
+<symbol>XNResourceName</symbol>
 and
-<function>XNResourceClass</function>
+<symbol>XNResourceClass</symbol>
 arguments are strings that specify the full name and class
 used by the client to obtain resources for the client window. 
 These values should be used as prefixes for name and class
@@ -7501,15 +7501,15 @@ set as resources.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNGeometryCallback</primary></indexterm>
 The 
-<function>XNGeometryCallback</function>
+<symbol>XNGeometryCallback</symbol>
 argument is a structure of type 
-<function>XIMCallback </function>
+<structname>XIMCallback</structname>
 (see section 13.5.6.13.12).
 </para>
 <para>
 <!-- .LP -->
 The 
-<function>XNGeometryCallback</function>
+<symbol>XNGeometryCallback</symbol>
 argument specifies the geometry callback that a client can set.
 This callback is not required for correct operation of either 
 an input method or a client.
@@ -7529,7 +7529,7 @@ events that it uses to initiate the change.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNFilterEvents</primary></indexterm>
 The 
-<function>XNFilterEvents</function>
+<symbol>XNFilterEvents</symbol>
 argument returns the event mask that an input method needs
 to have selected for.
 The client is expected to augment its own event mask 
@@ -7543,8 +7543,8 @@ and is never changed.
 <para>
 <!-- .LP -->
 The type of this argument is 
-<function>unsigned</function>
-<function>long</function>.
+<type>unsigned</type>
+<type>long</type>.
 Setting this value will cause an error.
 </para>
 </sect3>
@@ -7556,9 +7556,9 @@ Setting this value will cause an error.
 <para>
 <!-- .LP -->
 The 
-<function>XNDestroyCallback </function>
+<symbol>XNDestroyCallback</symbol>
 argument is a pointer to a structure of type
-<function>XIMCallback </function>
+<structname>XIMCallback</structname>
 (see section 13.5.6.13.12).  This callback is triggered when the input method 
 stops its service for any reason; for example, when a connection to an IM
 server is broken.  After the destroy callback is called, 
@@ -7580,15 +7580,15 @@ and
 <para>
 <!-- .LP -->
 The
-<function>XNStringConversionCallback</function>
+<symbol>XNStringConversionCallback</symbol>
 argument is a structure of type
-<function>XIMCallback </function>
+<structname>XIMCallback</structname>
 (see section 13.5.6.13.12).
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XNStringConversionCallback</function>
+<symbol>XNStringConversionCallback</symbol>
 argument specifies a string conversion callback.  This callback
 is not required for correct operation of
 either the input method or the client.  It can be set by a client
@@ -7601,7 +7601,7 @@ will filter any events that it uses to initiate the conversion.
 Because this <acronym>XIC</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 before using this argument.
 </para>
 <para>
@@ -7616,14 +7616,14 @@ before using this argument.
 <para>
 <!-- .LP -->
 The
-<function>XNStringConversion</function>
+<symbol>XNStringConversion</symbol>
 argument is a structure of type
-<function>XIMStringConversionText</function>.
+<structname>XIMStringConversionText</structname>.
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XNStringConversion</function>
+<symbol>XNStringConversion</symbol>
 argument specifies the string to be converted by an input method.
 This argument is not required for correct operation of either
 the input method or the client.
@@ -7641,13 +7641,13 @@ reconversion, or transliteration conversion on it.
 Because this <acronym>XIC</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 before using this argument.
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XIMStringConversionText</function>
+<structname>XIMStringConversionText</structname>
 structure is defined as follows:
 </para>
 <para>
@@ -7689,7 +7689,7 @@ element to NULL.
 <para>
 <!-- .LP -->
 The
-<function>XNResetState</function>
+<symbol>XNResetState</symbol>
 argument specifies the state the input context will return to after calling
 <function>XmbResetIC</function>
 or
@@ -7698,7 +7698,7 @@ or
 <para>
 <!-- .LP -->
 The <acronym>XIC</acronym> state may be set to its initial state, as specified by the
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 value when
 <function>XCreateIC</function>
 was called, or it may be set to preserve the current state.
@@ -7706,7 +7706,7 @@ was called, or it may be set to preserve the current state.
 <para>
 <!-- .LP -->
 The valid masks for
-<function>XIMResetState</function>
+<type>XIMResetState</type>
 are as follows:
 </para>
 <para>
@@ -7727,19 +7727,19 @@ typedef unsigned long XIMResetState;
 <!-- .LP -->
 <!-- .eM -->
 If
-<function>XIMInitialState</function>
+<symbol>XIMInitialState</symbol>
 is set, then
 <function>XmbResetIC</function>
 and
 <function>XwcResetIC</function>
 will return to the initial
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 state of the <acronym>XIC</acronym>.
 </para>
 <para>
 <!-- .LP -->
 If
-<function>XIMPreserveState</function>
+<symbol>XIMPreserveState</symbol>
 is set, then 
 <function>XmbResetIC</function>
 and
@@ -7749,22 +7749,22 @@ will preserve the current state of the <acronym>XIC</acronym>.
 <para>
 <!-- .LP -->
 If
-<function>XNResetState</function>
+<symbol>XNResetState</symbol>
 is left unspecified, the default is
-<function>XIMInitialState</function>.
+<symbol>XIMInitialState</symbol>.
 </para>
 <para>
 <!-- .LP -->
-<function>XIMResetState</function>
+<type>XIMResetState</type>
 values other than those specified above will default to
-<function>XIMInitialState</function>.
+<symbol>XIMInitialState</symbol>.
 </para>
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 before using this argument.
 </para>
 <para>
@@ -7779,30 +7779,30 @@ before using this argument.
 <para>
 <!-- .LP -->
 The
-<function>XNHotKey</function>
+<symbol>XNHotKey</symbol>
 argument specifies the hot key list to the <acronym>XIC</acronym>.
 The hot key list is a pointer to the structure of type
-<function>XIMHotKeyTriggers</function>,
+<structname>XIMHotKeyTriggers</structname>,
 which specifies the key events that must be received
 without any interruption of the input method.
 For the hot key list set with this argument to be utilized, the client
 must also set
-<function>XNHotKeyState</function>
+<symbol>XNHotKeyState</symbol>
 to
-<function>XIMHotKeyStateON</function>.
+<symbol>XIMHotKeyStateON</symbol>.
 </para>
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 before using this functionality.
 </para>
 <para>
 <!-- .LP -->
 The value of the argument is a pointer to a structure of type
-<function>XIMHotKeyTriggers</function>.
+<structname>XIMHotKeyTriggers</structname>.
 </para>
 <para>
 <!-- .LP -->
@@ -7882,7 +7882,7 @@ is ignored when evaluating whether the key is hot or not.
 <para>
 <!-- .LP -->
 The
-<function>XNHotKeyState</function>
+<symbol>XNHotKeyState</symbol>
 argument specifies the hot key state of the input method.
 This is usually used to switch the input method between hot key
 operation and normal input processing.
@@ -7907,7 +7907,7 @@ typedef unsigned long XIMHotKeyState;
 <para>
 <!-- .LP -->
 If not specified, the default is
-<function>XIMHotKeyStateOFF</function>.
+<symbol>XIMHotKeyStateOFF</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -7923,9 +7923,9 @@ If not specified, the default is
 <indexterm significance="preferred"><primary>XNPreeditAttributes</primary></indexterm>
 <indexterm significance="preferred"><primary>XNStatusAttributes</primary></indexterm>
 The
-<function>XNPreeditAttributes</function>
+<symbol>XNPreeditAttributes</symbol>
 and
-<function>XNStatusAttributes</function>
+<symbol>XNStatusAttributes</symbol>
 arguments specify to an input method the attributes to be used for the 
 preedit and status areas,
 if any.
@@ -7945,18 +7945,18 @@ The names to be used in these lists are described in the following sections.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNArea</primary></indexterm>
 The value of the
-<function>XNArea</function>
+<symbol>XNArea</symbol>
 argument must be a pointer to a structure of type
-<function>XRectangle</function>.
+<structname>XRectangle</structname>.
 The interpretation of the
-<function>XNArea</function>
+<symbol>XNArea</symbol>
 argument is dependent on the input method style that has been set.
 </para>
 <para>
 <!-- .LP -->
 If the input method style is 
-<function>XIMPreeditPosition</function>,
-<function>XNArea</function>
+<symbol>XIMPreeditPosition</symbol>,
+<symbol>XNArea</symbol>
 specifies the clipping region within which preediting will take place.
 If the focus window has been set,
 the coordinates are assumed to be relative to the focus window.
@@ -7967,33 +7967,33 @@ the results are undefined.
 <para>
 <!-- .LP -->
 If 
-<function>XNArea</function>
+<symbol>XNArea</symbol>
 is not specified, is set to NULL, or is invalid,
 the input method will default the clipping region
 to the geometry of the
-<function>XNFocusWindow</function>.
+<symbol>XNFocusWindow</symbol>.
 If the area specified is NULL or invalid,
 the results are undefined.
 </para>
 <para>
 <!-- .LP -->
 If the input style is 
-<function>XIMPreeditArea</function>
+<symbol>XIMPreeditArea</symbol>
 or 
-<function>XIMStatusArea</function>,
-<function>XNArea</function>
+<symbol>XIMStatusArea</symbol>,
+<symbol>XNArea</symbol>
 specifies the geometry provided by the client to the input method.
 The input method may use this area to display its data,
 either preedit or status depending on the area designated.
 The input method may create a window as a child of the client window
 with dimensions that fit the
-<function>XNArea</function>.
+<symbol>XNArea</symbol>.
 The coordinates are relative to the client window.
 If the client window has not been set yet,
 the input method should save these values 
 and apply them when the client window is set.
 If 
-<function>XNArea</function>
+<symbol>XNArea</symbol>
 is not specified, is set to NULL, or is invalid,
 the results are undefined.
 </para>
@@ -8007,12 +8007,12 @@ the results are undefined.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNAreaNeeded</primary></indexterm>
 When set, the
-<function>XNAreaNeeded</function>
+<symbol>XNAreaNeeded</symbol>
 argument specifies the geometry suggested by the client for this area
 (preedit or status).
 The value associated with the argument must be a pointer to a 
 structure of type 
-<function>XRectangle</function>.
+<structname>XRectangle</structname>.
 Note that the x, y values are not used
 and that nonzero values for width or height are the constraints 
 that the client wishes the input method to respect.
@@ -8020,16 +8020,16 @@ that the client wishes the input method to respect.
 <para>
 <!-- .LP -->
 When read, the
-<function>XNAreaNeeded</function>
+<symbol>XNAreaNeeded</symbol>
 argument specifies the preferred geometry desired by the input method
 for the area.
 </para>
 <para>
 <!-- .LP -->
 This argument is only valid if the input style is 
-<function>XIMPreeditArea</function>
+<symbol>XIMPreeditArea</symbol>
 or 
-<function>XIMStatusArea</function>.
+<symbol>XIMStatusArea</symbol>.
 It is used for geometry negotiation between the client and the input method
 and has no other effect on the input method 
 (see section 13.5.1.5).
@@ -8044,14 +8044,14 @@ and has no other effect on the input method
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNSpotLocation</primary></indexterm>
 The
-<function>XNSpotLocation</function>
+<symbol>XNSpotLocation</symbol>
 argument specifies to the input method the coordinates of the spot
 to be used by an input method executing with 
-<function>XNInputStyle </function>
+<symbol>XNInputStyle</symbol>
 set to 
-<function>XIMPreeditPosition</function>.
+<symbol>XIMPreeditPosition</symbol>.
 When specified to any input method other than 
-<function>XIMPreeditPosition</function>,
+<symbol>XIMPreeditPosition</symbol>,
 this <acronym>XIC</acronym> value is ignored.
 </para>
 <para>
@@ -8068,7 +8068,7 @@ the results are undefined.
 <para>
 <!-- .LP -->
 The value of the argument is a pointer to a structure of type
-<function>XPoint</function>.
+<structname>XPoint</structname>.
 </para>
 </sect4>
 <sect4 id="Colormap">
@@ -8085,27 +8085,27 @@ should use to allocate colors, a colormap ID, or a standard colormap name.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNColormap</primary></indexterm>
 The
-<function>XNColormap</function>
+<symbol>XNColormap</symbol>
 argument is used to specify a colormap ID.
 The argument value is of type
-<function>Colormap</function>.
+<type>Colormap</type>.
 An invalid argument may generate a 
-<function>BadColor</function>
+<errorname>BadColor</errorname>
 error when it is used by the input method.
 </para>
 <para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNStdColormap</primary></indexterm>
 The
-<function>XNStdColormap</function>
+<symbol>XNStdColormap</symbol>
 argument is used to indicate the name of the standard colormap
 in which the input method should allocate colors.
 The argument value is an 
-<function>Atom</function>
+<type>Atom</type>
 that should be a valid atom for calling
 <function>XGetRGBColormaps</function>.
 An invalid argument may generate a
-<function>BadAtom</function>
+<errorname>BadAtom</errorname>
 error when it is used by the input method.
 </para>
 <para>
@@ -8124,13 +8124,13 @@ the client window colormap becomes the default.
 <indexterm significance="preferred"><primary>XNForeground</primary></indexterm>
 <indexterm significance="preferred"><primary>XNBackground</primary></indexterm>
 The
-<function>XNForeground</function>
+<symbol>XNForeground</symbol>
 and
-<function>XNBackground</function>
+<symbol>XNBackground</symbol>
 arguments specify the foreground and background pixel, respectively.
 The argument value is of type
-<function>unsigned</function>
-<function>long</function>.
+<type>unsigned</type>
+<type>long</type>.
 It must be a valid pixel in the input method colormap.
 </para>
 <para>
@@ -8147,13 +8147,13 @@ the default is determined by the input method.
 <para>
 <!-- .LP -->
 The
-<function>XNBackgroundPixmap</function>
+<symbol>XNBackgroundPixmap</symbol>
 argument specifies a background pixmap to be used as the background of the
 window.
 The value must be of type 
-<function>Pixmap</function>.
+<type>Pixmap</type>.
 An invalid argument may generate a
-<function>BadPixmap</function>
+<errorname>BadPixmap</errorname>
 error when it is used by the input method.
 </para>
 <para>
@@ -8171,10 +8171,10 @@ the default is determined by the input method.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNFontSet</primary></indexterm>
 The
-<function>XNFontSet</function>
+<symbol>XNFontSet</symbol>
 argument specifies to the input method what font set is to be used.
 The argument value is of type
-<function>XFontSet</function>.
+<type>XFontSet</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -8190,11 +8190,11 @@ the default is determined by the input method.
 <para>
 <!-- .LP -->
 The
-<function>XNLineSpace</function>
+<symbol>XNLineSpace</symbol>
 argument specifies to the input method what line spacing is to be used
 in the preedit window if more than one line is to be used.
 This argument is of type
-<function>int</function>.
+<type>int</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -8211,16 +8211,16 @@ the default is determined by the input method.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XNCursor</primary></indexterm>
 The
-<function>XNCursor</function>
+<symbol>XNCursor</symbol>
 argument specifies to the input method what cursor is to be used
 in the specified window.
 This argument is of type 
-<function>Cursor</function>.
+<type>Cursor</type>.
 </para>
 <para>
 <!-- .LP -->
 An invalid argument may generate a
-<function>BadCursor</function>
+<errorname>BadCursor</errorname>
 error when it is used by the input method.
 If this value is left unspecified,
 the default is determined by the input method.
@@ -8234,14 +8234,14 @@ the default is determined by the input method.
 <para>
 <!-- .LP -->
 The
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 argument specifies the state of input preediting for the input method.
 Input preediting can be on or off.
 </para>
 <para>
 <!-- .LP -->
 The valid mask names for
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 are as follows:
 </para>
 <para>
@@ -8265,29 +8265,29 @@ typedef unsigned long XIMPreeditState;
 <!-- .LP -->
 <!-- .eM -->
 If a value of
-<function>XIMPreeditEnable</function>
+<symbol>XIMPreeditEnable</symbol>
 is set, then input preediting is turned on by the input method.
 </para>
 <para>
 <!-- .LP -->
 If a value of
-<function>XIMPreeditDisable</function>
+<symbol>XIMPreeditDisable</symbol>
 is set, then input preediting is turned off by the input method.
 </para>
 <para>
 <!-- .LP -->
 If
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 is left unspecified, then the state will be implementation-dependent.
 </para>
 <para>
 <!-- .LP -->
 When
-<function>XNResetState</function>
+<symbol>XNResetState</symbol>
 is set to
-<function>XIMInitialState</function>,
+<symbol>XIMInitialState</symbol>,
 the
-<function>XNPreeditState</function>
+<symbol>XNPreeditState</symbol>
 value specified at the creation time will be reflected as the initial state for
 <function>XmbResetIC</function>
 and
@@ -8298,7 +8298,7 @@ and
 Because this <acronym>XIC</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 before using this argument.
 </para>
 </sect4>
@@ -8312,15 +8312,15 @@ before using this argument.
 The preedit state notify callback is triggered by the input method
 when the preediting state has changed.
 The value of the
-<function>XNPreeditStateNotifyCallback</function>
+<symbol>XNPreeditStateNotifyCallback</symbol>
 argument is a pointer to a structure of type
-<function>XIMCallback</function>.
+<structname>XIMCallback</structname>.
 The generic prototype is as follows:
 <indexterm significance="preferred"><primary>PreeditStateNotifyCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> PreeditStateNotifyCallback</function></funcdef>
+  <funcdef>void <function><replaceable>PreeditStateNotifyCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XIMPreeditStateNotifyCallbackStruct<parameter> *call_data</parameter></paramdef>
@@ -8364,7 +8364,7 @@ Specifies the current preedit state.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XIMPreeditStateNotifyCallbackStruct</function>
+<structname>XIMPreeditStateNotifyCallbackStruct</structname>
 structure is defined as follows:
 </para>
 <para>
@@ -8388,7 +8388,7 @@ typedef struct _XIMPreeditStateNotifyCallbackStruct {
 Because this <acronym>XIC</acronym> value is optional, a client should call
 <function>XGetIMValues</function>
 with argument
-<function>XNQueryICValuesList</function>
+<symbol>XNQueryICValuesList</symbol>
 before using this argument.
 </para>
 </sect4>
@@ -8400,7 +8400,7 @@ before using this argument.
 <para>
 <!-- .LP -->
 A client that wants to support the input style
-<function>XIMPreeditCallbacks</function>
+<symbol>XIMPreeditCallbacks</symbol>
 must provide a set of preedit callbacks to the input method.
 The set of preedit callbacks is as follows:
 </para>
@@ -8414,19 +8414,19 @@ The set of preedit callbacks is as follows:
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XNPreeditStartCallback</function></entry>
+      <entry><symbol>XNPreeditStartCallback</symbol></entry>
       <entry>This is called when the input method starts preedit.</entry>
     </row>
     <row>
-      <entry><function>XNPreeditDoneCallback</function></entry>
+      <entry><symbol>XNPreeditDoneCallback</symbol></entry>
       <entry>This is called when the input method stops preedit.</entry>
     </row>
     <row>
-      <entry><function>XNPreeditDrawCallback</function></entry>
+      <entry><symbol>XNPreeditDrawCallback</symbol></entry>
       <entry>This is called when a number of preedit keystrokes should be echoed.</entry>
     </row>
     <row>
-      <entry><function>XNPreeditCaretCallback</function></entry>
+      <entry><symbol>XNPreeditCaretCallback</symbol></entry>
       <entry>This is called to move the text insertion point within the preedit string.</entry>
     </row>
   </tbody>
@@ -8436,7 +8436,7 @@ The set of preedit callbacks is as follows:
 <para>
 <!-- .LP -->
 A client that wants to support the input style
-<function>XIMStatusCallbacks</function>
+<symbol>XIMStatusCallbacks</symbol>
 must provide a set of status callbacks to the input method.
 The set of status callbacks is as follows:
 </para>
@@ -8450,15 +8450,15 @@ The set of status callbacks is as follows:
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XNStatusStartCallback</function></entry>
+      <entry><symbol>XNStatusStartCallback</symbol></entry>
       <entry>This is called when the input method initializes the status area.</entry>
     </row>
     <row>
-      <entry><function>XNStatusDoneCallback</function></entry>
+      <entry><symbol>XNStatusDoneCallback</symbol></entry>
       <entry>This is called when the input method no longer needs the status area.</entry>
     </row>
     <row>
-      <entry><function>XNStatusDrawCallback</function></entry>
+      <entry><symbol>XNStatusDrawCallback</symbol></entry>
       <entry>This is called when updating of the status area is required.</entry>
     </row>
   </tbody>
@@ -8468,7 +8468,7 @@ The set of status callbacks is as follows:
 <!-- .LP -->
 The value of any status or preedit argument is a pointer
 to a structure of type
-<function>XIMCallback</function>.
+<structname>XIMCallback</structname>.
 <indexterm significance="preferred"><primary>XIMProc</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMCallback</primary></indexterm>
 <!-- .sM -->
@@ -8538,7 +8538,7 @@ All callback procedures follow the generic prototype:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> CallbackPrototype</function></funcdef>
+  <funcdef>void <function><replaceable>CallbackPrototype</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>SomeType<parameter> call_data</parameter></paramdef>
@@ -8610,7 +8610,7 @@ The generic prototype is as follows:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> GeometryCallback</function></funcdef>
+  <funcdef>void <function><replaceable>GeometryCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -8671,7 +8671,7 @@ The generic prototype is as follows:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> DestroyCallback</function></funcdef>
+  <funcdef>void <function><replaceable>DestroyCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -8733,7 +8733,7 @@ The callback prototype is as follows:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> StringConversionCallback</function></funcdef>
+  <funcdef>void <function><replaceable>StringConversionCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XIMStringConversionCallbackStruct<parameter> *call_data</parameter></paramdef>
@@ -8777,15 +8777,15 @@ Specifies the amount of the string to be converted.
 <!-- .LP -->
 <!-- .eM -->
 The callback is passed an
-<function>XIMStringConversionCallbackStruct</function>
+<structname>XIMStringConversionCallbackStruct</structname>
 structure in the call_data argument.
 The text member is an
-<function>XIMStringConversionText</function>
+<structname>XIMStringConversionText</structname>
 structure (see section 13.5.6.9) to be filled in by the client
 and describes the text to be sent to the input method.
 The data pointed to by the 
 string and feedback elements of the
-<function>XIMStringConversionText</function>
+<structname>XIMStringConversionText</structname>
 structure will be freed using
 <function>XFree</function>
 by the input method
@@ -8798,7 +8798,7 @@ freeing memory at some random location due to an uninitialized pointer.
 <para>
 <!-- .LP -->
 The 
-<function>XIMStringConversionCallbackStruct</function>
+<structname>XIMStringConversionCallbackStruct</structname>
 structure is defined as follows:
 </para>
 <para>
@@ -8828,10 +8828,10 @@ typedef unsigned short XIMStringConversionOperation;
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XIMStringConversionPosition</function>
+<type>XIMStringConversionPosition</type>
 specifies the starting position of the string to be returned
 in the
-<function>XIMStringConversionText</function>
+<structname>XIMStringConversionText</structname>
 structure.  The value identifies a position, in units of characters,
 relative to the client's cursor position in the client's buffer.
 </para>
@@ -8840,36 +8840,36 @@ relative to the client's cursor position in the client's buffer.
 The ending position of the text buffer is determined by
 the direction and factor members.  Specifically, it is the character position 
 relative to the starting point as defined by the
-<function>XIMCaretDirection</function>.
+<structname>XIMCaretDirection</structname>.
 The factor member of 
-<function>XIMStringConversionCallbackStruct </function>
+<structname>XIMStringConversionCallbackStruct</structname>
 specifies the number of
-<function>XIMCaretDirection </function>
+<structname>XIMCaretDirection</structname>
 positions to be applied.  For example, if the direction specifies
-<function>XIMLineEnd</function>
+<constant>XIMLineEnd</constant>
 and factor is 1, then all characters from the starting position to 
 the end of the current display line are returned.  If the direction
 specifies
-<function>XIMForwardChar</function>
+<constant>XIMForwardChar</constant>
 or
-<function>XIMBackwardChar</function>,
+<constant>XIMBackwardChar</constant>,
 then the factor specifies a relative position, indicated in characters, 
 from the starting position.
 </para>
 <para>
 <!-- .LP -->
-<function>XIMStringConversionOperation</function>
+<type>XIMStringConversionOperation</type>
 specifies whether the string to be converted should be 
 deleted (substitution) or copied (retrieval) from the client's
 buffer.  When the
-<function>XIMStringConversionOperation</function>
+<type>XIMStringConversionOperation</type>
 is
-<function>XIMStringConversionSubstitution</function>,
+<symbol>XIMStringConversionSubstitution</symbol>,
 the client must delete the string to be converted from its own buffer.
 When the
-<function>XIMStringConversionOperation</function>
+<type>XIMStringConversionOperation</type>
 is
-<function>XIMStringConversionRetrieval</function>,
+<symbol>XIMStringConversionRetrieval</symbol>,
 the client must not delete the string to be converted from its buffer.
 The substitute operation is typically used for reconversion and
 transliteration conversion,
@@ -8885,16 +8885,16 @@ conversion.
 <para>
 <!-- .LP -->
 When the input method turns preediting on or off, a
-<function>PreeditStartCallback</function>
+<function><replaceable>PreeditStartCallback</replaceable></function>
 or
-<function>PreeditDoneCallback</function>
+<function><replaceable>PreeditDoneCallback</replaceable></function>
 callback is triggered to let the toolkit do the setup
 or the cleanup for the preedit region.
 <indexterm significance="preferred"><primary>PreeditStartCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> PreeditStartCallback</function></funcdef>
+  <funcdef>int <function><replaceable>PreeditStartCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -8939,7 +8939,7 @@ Not used for this callback and always passed as NULL.
 <!-- .eM -->
 When preedit starts on the specified input context,
 the callback is called with a NULL call_data argument.
-<function>PreeditStartCallback</function>
+<function><replaceable>PreeditStartCallback</replaceable></function>
 will return the maximum size of the preedit string.
 A positive number indicates the maximum number of bytes allowed
 in the preedit string, 
@@ -8948,7 +8948,7 @@ and a value of -1 indicates there is no limit.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> PreeditDoneCallback</function></funcdef>
+  <funcdef>void <function><replaceable>PreeditDoneCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -8994,19 +8994,19 @@ Not used for this callback and always passed as NULL.
 When preedit stops on the specified input context,
 the callback is called with a NULL call_data argument.
 The client can release the data allocated by
-<function>PreeditStartCallback</function>.
+<function><replaceable>PreeditStartCallback</replaceable></function>.
 </para>
 <para>
 <!-- .LP -->
-<function>PreeditStartCallback</function>
+<function><replaceable>PreeditStartCallback</replaceable></function>
 should initialize appropriate data needed for
 displaying preedit information and for handling further 
-<function>PreeditDrawCallback</function>
+<function><replaceable>PreeditDrawCallback</replaceable></function>
 calls.
 Once
-<function>PreeditStartCallback</function>
+<function><replaceable>PreeditStartCallback</replaceable></function>
 is called, it will not be called again before
-<function>PreeditDoneCallback</function>
+<function><replaceable>PreeditDoneCallback</replaceable></function>
 has been called.
 </para>
 </sect3>
@@ -9029,7 +9029,7 @@ is as follows:
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> PreeditDrawCallback</function></funcdef>
+  <funcdef>void <function><replaceable>PreeditDrawCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XIMPreeditDrawCallbackStruct<parameter> *call_data</parameter></paramdef>
@@ -9073,7 +9073,7 @@ Specifies the preedit drawing information.
 <!-- .LP -->
 <!-- .eM -->
 The callback is passed an 
-<function>XIMPreeditDrawCallbackStruct</function>
+<structname>XIMPreeditDrawCallbackStruct</structname>
 structure in the call_data argument.
 The text member of this structure contains the text to be drawn.
 After the string has been drawn,
@@ -9082,7 +9082,7 @@ the caret should be moved to the specified location.
 <para>
 <!-- .LP -->
 The 
-<function>XIMPreeditDrawCallbackStruct</function>
+<structname>XIMPreeditDrawCallbackStruct</structname>
 structure is defined as follows:
 </para>
 <para>
@@ -9132,7 +9132,7 @@ that are affected by this call.
 A positive chg_length indicates that chg_length number of characters, starting
 at chg_first, must be deleted or must be replaced by text, whose length is
 specified in the
-<function>XIMText</function>
+<structname>XIMText</structname>
 structure.
     </para>
   </listitem>
@@ -9148,7 +9148,7 @@ A value of zero for chg_first specifies the first character in the buffer.
 chg_length and chg_first combine to identify the modification required to
 the preedit buffer; beginning at chg_first, replace chg_length number of
 characters with the text in the supplied
-<function>XIMText</function>
+<structname>XIMText</structname>
 structure. For example, suppose the preedit buffer contains the string "ABCDE".
     </para>
   </listitem>
@@ -9171,7 +9171,7 @@ relative to the character.
 If the value of chg_first is 1 and the value of chg_length is 3, this
 says to replace 3 characters beginning at character position 1 with the
 string in the
-<function>XIMText</function>
+<structname>XIMText</structname>
 structure.
 Hence, <acronym>BCD</acronym> would be replaced by the value in the structure.
     </para>
@@ -9264,25 +9264,25 @@ If an input method wants to control display of the preedit string, an
 input method can indicate the visibility hints using feedbacks in
 a specific way.
 The 
-<function>XIMVisibleToForward</function>,
-<function>XIMVisibleToBackward</function>,
+<symbol>XIMVisibleToForward</symbol>,
+<symbol>XIMVisibleToBackword</symbol>,
 and
-<function>XIMVisibleCenter</function>
+<symbol>XIMVisibleToCenter</symbol>
 masks are exclusively used for these visibility hints.
 The 
-<function>XIMVisibleToForward</function>
+<symbol>XIMVisibleToForward</symbol>
 mask
 indicates that the preedit text is preferably displayed in the
 primary draw direction from the
 caret position in the preedit area forward.
 The 
-<function>XIMVisibleToBackward</function>
+<symbol>XIMVisibleToBackword</symbol>
 mask
 indicates that the preedit text is preferably displayed from
 the caret position in the preedit area backward, relative to the primary
 draw direction.
 The 
-<function>XIMVisibleCenter</function>
+<symbol>XIMVisibleToCenter</symbol>
 mask
 indicates that the preedit text is preferably displayed with
 the caret position in the preedit area centered.
@@ -9296,7 +9296,7 @@ masks
 is valid for the entire preedit string, and only one character
 can hold one of these feedbacks for a given input context at one time.
 This feedback may be OR'ed together with another highlight (such as
-<function>XIMReverse</function>).
+<symbol>XIMReverse</symbol>).
 Only the most recently set feedback is valid, and any previous
 feedback is automatically canceled.  This is a hint to the client, and
 the client is free to choose how to display the preedit string.
@@ -9318,17 +9318,17 @@ character of the string, and the length of the array is thus length.
 If an input method wants to indicate that it is only updating the feedback of
 the preedit text without changing the content of it, 
 the
-<function>XIMText</function>
+<structname>XIMText</structname>
 structure will contain a NULL value for the string field,
 the number of characters affected (relative to chg_first)
 will be in the length field,
 and the feedback field will point to an array of 
-<function>XIMFeedback</function>.
+<type>XIMFeedback</type>.
 </para>
 <para>
 <!-- .LP -->
 Each element in the feedback array is a bitmask represented by a value of type
-<function>XIMFeedback</function>.
+<type>XIMFeedback</type>.
 The valid mask names are as follows:
 </para>
 <para>
@@ -9341,7 +9341,7 @@ The valid mask names are as follows:
 <indexterm significance="preferred"><primary>XIMTertiary</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMVisibleToForward</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMVisibleToBackward</primary></indexterm>
-<indexterm significance="preferred"><primary>XIMVisibleCenter</primary></indexterm>
+<indexterm significance="preferred"><primary>XIMVisibleToCenter</primary></indexterm>
 <!-- .sM -->
 </para>
 <literallayout class="monospaced">
@@ -9355,7 +9355,7 @@ typedef unsigned long XIMFeedback;
 #define     XIMTertiary                    (1L&lt;&lt;7)*
 #define     XIMVisibleToForward            (1L&lt;&lt;8)
 #define     XIMVisibleToBackward           (1L&lt;&lt;9)
-#define     XIMVisibleCenter               (1L&lt;&lt;10)
+#define     XIMVisibleToCenter               (1L&lt;&lt;10)
 
 *† The values for XIMPrimary, XIMSecondary, and XIMTertiary were incorrectly deﬁned in
 the R5 speciﬁcation. The X Consortium’s X11R5 implementation correctly implemented the val-
@@ -9367,29 +9367,29 @@ agree with the values in the Consortium’s X11R5 and X11R6 implementations.
 <para>
 <!-- .LP -->
 Characters drawn with the
-<function>XIMReverse</function>
+<symbol>XIMReverse</symbol>
 highlight should be drawn by swapping the foreground and background colors
 used to draw normal, unhighlighted characters.
 Characters drawn with the
-<function>XIMUnderline</function>
+<symbol>XIMUnderline</symbol>
 highlight should be underlined.
 Characters drawn with the
-<function>XIMHighlight</function>,
-<function>XIMPrimary</function>,
-<function>XIMSecondary</function>,
+<symbol>XIMHighlight</symbol>,
+<symbol>XIMPrimary</symbol>,
+<symbol>XIMSecondary</symbol>,
 and
-<function>XIMTertiary</function>
+<symbol>XIMTertiary</symbol>
 highlights should be drawn in some unique manner that must be different
 from
-<function>XIMReverse</function>
+<symbol>XIMReverse</symbol>
 and
-<function>XIMUnderline</function>.
+<symbol>XIMUnderline</symbol>.
 <!-- .FS \(dg -->
 The values for
-<function>XIMPrimary</function>,
-<function>XIMSecondary</function>,
+<symbol>XIMPrimary</symbol>,
+<symbol>XIMSecondary</symbol>,
 and
-<function>XIMTertiary</function>
+<symbol>XIMTertiary</symbol>
 were incorrectly defined in the R5 specification.
 The X Consortium's X11R5
 implementation correctly implemented the values for these highlights.
@@ -9415,7 +9415,7 @@ It then calls the PreeditCaretCallback.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> PreeditCaretCallback</function></funcdef>
+  <funcdef>void <function><replaceable>PreeditCaretCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XIMPreeditCaretCallbackStruct<parameter> *call_data</parameter></paramdef>
@@ -9461,7 +9461,7 @@ Specifies the preedit caret information.
 The input method will trigger PreeditCaretCallback
 to move the text insertion point during preedit.
 The call_data argument contains a pointer to an 
-<function>XIMPreeditCaretCallbackStruct</function>
+<structname>XIMPreeditCaretCallbackStruct</structname>
 structure,
 which indicates where the caret should be moved.
 The callback must move the insertion point to its new location
@@ -9470,7 +9470,7 @@ and return, in field position, the new offset value from the initial position.
 <para>
 <!-- .LP -->
 The
-<function>XIMPreeditCaretCallbackStruct</function>
+<structname>XIMPreeditCaretCallbackStruct</structname>
 structure is defined as follows:
 <indexterm significance="preferred"><primary>XIMPreeditCaretCallbackStruct</primary></indexterm>
 </para>
@@ -9491,7 +9491,7 @@ typedef struct _XIMPreeditCaretCallbackStruct {
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XIMCaretStyle</function>
+<structname>XIMCaretStyle</structname>
 structure is defined as follows:
 </para>
 <para>
@@ -9512,7 +9512,7 @@ typedef enum {
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XIMCaretDirection</function>
+<structname>XIMCaretDirection</structname>
 structure is defined as follows:
 <indexterm significance="preferred"><primary>XIMCaretDirection</primary></indexterm>
 </para>
@@ -9550,54 +9550,54 @@ These values are defined as follows:
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XIMForwardChar</function></entry>
+      <entry><constant>XIMForwardChar</constant></entry>
       <entry>Move the caret forward one character position.</entry>
     </row>
     <row>
-      <entry><function>XIMBackwardChar</function></entry>
+      <entry><constant>XIMBackwardChar</constant></entry>
       <entry>Move the caret backward one character position.</entry>
     </row>
     <row>
-      <entry><function>XIMForwardWord</function></entry>
+      <entry><constant>XIMForwardWord</constant></entry>
       <entry>Move the caret forward one word.</entry>
     </row>
     <row>
-      <entry><function>XIMBackwardWord</function></entry>
+      <entry><constant>XIMBackwardWord</constant></entry>
       <entry>Move the caret backward one word.</entry>
     </row>
     <row>
-      <entry><function>XIMCaretUp</function></entry>
+      <entry><constant>XIMCaretUp</constant></entry>
       <entry>Move the caret up one line keeping the current horizontal offset.</entry>
     </row>
     <row>
-      <entry><function>XIMCaretDown</function></entry>
+      <entry><constant>XIMCaretDown</constant></entry>
       <entry>Move the caret down one line keeping the current horizontal offset.</entry>
     </row>
     <row>
-      <entry><function>XIMPreviousLine</function></entry>
+      <entry><constant>XIMPreviousLine</constant></entry>
       <entry>Move the caret to the beginning of the previous line.</entry>
     </row>
     <row>
-      <entry><function>XIMNextLine</function></entry>
+      <entry><constant>XIMNextLine</constant></entry>
       <entry>Move the caret to the beginning of the next line.</entry>
     </row>
     <row>
-      <entry><function>XIMLineStart</function></entry>
+      <entry><constant>XIMLineStart</constant></entry>
       <entry>Move the caret to the beginning of the current display line that contains the caret.</entry>
     </row>
     <row>
-      <entry><function>XIMLineEnd</function></entry>
+      <entry><constant>XIMLineEnd</constant></entry>
       <entry>Move the caret to the end of the current display line that contains the caret.</entry>
     </row>
     <row>
-      <entry><function>XIMAbsolutePosition</function></entry>
+      <entry><constant>XIMAbsolutePosition</constant></entry>
       <entry>The callback must move to the location specified by the position field
       of the callback data, indicated in characters, starting from the beginning
       of the preedit text.
       Hence, a value of zero means move back to the beginning of the preedit text.</entry>
     </row>
     <row>
-      <entry><function>XIMDontChange</function></entry>
+      <entry><constant>XIMDontChange</constant></entry>
       <entry>The caret position does not change.</entry>
     </row>
   </tbody>
@@ -9631,7 +9631,7 @@ the input method calls the StatusStartCallback callback.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> StatusStartCallback</function></funcdef>
+  <funcdef>void <function><replaceable>StatusStartCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -9688,7 +9688,7 @@ is destroyed or when it loses focus, the input method calls StatusDoneCallback.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> StatusDoneCallback</function></funcdef>
+  <funcdef>void <function><replaceable>StatusDoneCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XPointer<parameter> call_data</parameter></paramdef>
@@ -9743,7 +9743,7 @@ StatusDrawCallback.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void<function> StatusDrawCallback</function></funcdef>
+  <funcdef>void <function><replaceable>StatusDrawCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XPointer<parameter> client_data</parameter></paramdef>
   <paramdef>XIMStatusDrawCallbackStruct<parameter> *call_data</parameter></paramdef>
@@ -9792,9 +9792,9 @@ or imaging a bitmap in the status area.
 <para>
 <!-- .LP -->
 The
-<function>XIMStatusDataType</function>
+<structname>XIMStatusDataType</structname>
 and
-<function>XIMStatusDrawCallbackStruct</function>
+<structname>XIMStatusDrawCallbackStruct</structname>
 structures are defined as follows:
 <indexterm significance="preferred"><primary>XIMStatusDataType</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMStatusDrawCallbackStruct</primary></indexterm>
@@ -9826,14 +9826,14 @@ typedef struct _XIMStatusDrawCallbackStruct {
 <para>
 <!-- .LP -->
 The feedback styles
-<function>XIMVisibleToForward</function>,
-<function>XIMVisibleToBackward</function>,
+<symbol>XIMVisibleToForward</symbol>,
+<symbol>XIMVisibleToBackword</symbol>,
 and
-<function>XIMVisibleToCenter</function>
+<symbol>XIMVisibleToCenter</symbol>
 are not relevant and will not appear in the
-<function>XIMFeedback</function>
+<type>XIMFeedback</type>
 element of the
-<function>XIMText</function>
+<structname>XIMText</structname>
 structure.
 </para>
 <para>
@@ -9855,7 +9855,7 @@ This filter is called by a client (or toolkit) by calling
 after calling 
 <function>XNextEvent</function>.
 Any client that uses the 
-<function>XIM</function>
+<type>XIM</type>
 interface should call
 <function>XFilterEvent</function>
 to allow input methods to process their events without knowledge
@@ -9881,7 +9881,7 @@ To filter an event, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool<function> XFilterEvent</function></funcdef>
+  <funcdef>Bool <function>XFilterEvent</function></funcdef>
   <paramdef>XEvent<parameter> *event</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
 </funcprototype>
@@ -9916,10 +9916,10 @@ Specifies the window (Wi.
 <!-- .LP -->
 <!-- .eM -->
 If the window argument is
-<function>None</function>,
-<function>XFilterEvent </function>
+<symbol>None</symbol>,
+<function>XFilterEvent</function>
 applies the filter to the window specified in the
-<function>XEvent</function>
+<structname>XEvent</structname>
 structure.
 The window argument is provided so that layers above Xlib
 that do event redirection can indicate to which window an event
@@ -9930,13 +9930,13 @@ has been redirected.
 If
 <function>XFilterEvent</function>
 returns
-<function>True</function>,
+<symbol>True</symbol>,
 then some input method has filtered the event,
 and the client should discard the event.
 If
 <function>XFilterEvent</function>
 returns
-<function>False</function>,
+<symbol>False</symbol>,
 then the client should continue processing the event.
 </para>
 <para>
@@ -9944,7 +9944,7 @@ then the client should continue processing the event.
 If a grab has occurred in the client and
 <function>XFilterEvent</function>
 returns
-<function>True</function>,
+<symbol>True</symbol>,
 the client should ungrab the keyboard.
 </para>
 </sect2>
@@ -9965,7 +9965,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XmbLookupString</function></funcdef>
+  <funcdef>int <function>XmbLookupString</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XKeyPressedEvent<parameter> *event</parameter></paramdef>
   <paramdef>char<parameter> *buffer_return</parameter></paramdef>
@@ -9977,7 +9977,7 @@ or
 <!-- .FN -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XwcLookupString</function></funcdef>
+  <funcdef>int <function>XwcLookupString</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
   <paramdef>XKeyPressedEvent<parameter> *event</parameter></paramdef>
   <paramdef>wchar_t<parameter> *buffer_return</parameter></paramdef>
@@ -10108,13 +10108,13 @@ begins in the initial state of the encoding of the locale
 <note><para>
 To insure proper input processing,
 it is essential that the client pass only 
-<function>KeyPress</function>
+<symbol>KeyPress</symbol>
 events to
 <function>XmbLookupString</function>
 and
 <function>XwcLookupString</function>.
 Their behavior when a client passes a 
-<function>KeyRelease</function>
+<symbol>KeyRelease</symbol>
 event is undefined.
 </para></note>
 <!-- .NE -->
@@ -10134,7 +10134,7 @@ The possible values returned are:
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XBufferOverflow</function></entry>
+      <entry><symbol>XBufferOverflow</symbol></entry>
       <entry>The input string to be returned is too large for the supplied buffer_return.
       The required size
       (<function>XmbLookupString</function>
@@ -10146,13 +10146,13 @@ The possible values returned are:
       and a buffer of adequate size to obtain the string.</entry>
     </row>
     <row>
-      <entry><function>XLookupNone</function></entry>
+      <entry><symbol>XLookupNone</symbol></entry>
       <entry>No consistent input has been composed so far.
       The contents of buffer_return and keysym_return are not modified, 
       and the function returns zero.</entry>
     </row>
     <row>
-      <entry><function>XLookupChars</function></entry>
+      <entry><symbol>XLookupChars</symbol></entry>
       <entry>Some input characters have been composed.
       They are placed in the buffer_return argument,
       and the string length is returned as the value of the function.
@@ -10160,18 +10160,18 @@ The possible values returned are:
       The content of the keysym_return argument is not modified.</entry>
     </row>
     <row>
-      <entry><function>XLookupKeySym</function></entry>
+      <entry><symbol>XLookupKeySym</symbol></entry>
       <entry>A KeySym has been returned instead of a string
       and is returned in keysym_return.
       The content of the buffer_return argument is not modified,
       and the function returns zero.</entry>
     </row>
     <row>
-      <entry><function>XLookupBoth</function></entry>
+      <entry><symbol>XLookupBoth</symbol></entry>
       <entry>Both a KeySym and a string are returned;
-      <function>XLookupChars</function>
+      <symbol>XLookupChars</symbol>
       and
-      <function>XLookupKeySym</function>
+      <symbol>XLookupKeySym</symbol>
       occur simultaneously.</entry>
     </row>
   </tbody>
@@ -10228,14 +10228,14 @@ or raise an exception or error of some sort.
 <para>
 <!-- .LP -->
 A 
-<function>KeyPress</function>
+<symbol>KeyPress</symbol>
 event with a KeyCode of zero is used exclusively as a
 signal that an input method has composed input that can be returned by
 <function>XmbLookupString</function>
 or
 <function>XwcLookupString</function>.
 No other use is made of a 
-<function>KeyPress</function>
+<symbol>KeyPress</symbol>
 event with KeyCode of zero.
 </para>
 <para>
@@ -10259,7 +10259,7 @@ onto a client's event queue
   <listitem>
     <para>
 A 
-<function>KeyPress</function>
+<symbol>KeyPress</symbol>
 event whose KeyCode value is modified by an input method filter
     </para>
   </listitem>

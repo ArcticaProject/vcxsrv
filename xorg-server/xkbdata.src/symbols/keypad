@@ -124,6 +124,7 @@ xkb_symbols "x11" {
 
     key  <KP0> {	[  KP_Insert,	KP_0	]	};
     key <KPDL> {  	[  KP_Delete,	KP_Decimal ]	};
+    key <KPPT> {  	[  KP_Decimal,	KP_Decimal ]	};
 };
 
 

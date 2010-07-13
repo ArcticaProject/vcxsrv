@@ -56,4 +56,9 @@ SUFFIXES = .xml .ps .pdf .txt .html
 %.ps: %.xml $(dist_spec_DATA)
 	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop ps $<
 
+chunked-html: $(doc_sources)
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) -o html xhtml $(doc_sources)
+
+CLEANFILES += html
+
 endif HAVE_XMLTO

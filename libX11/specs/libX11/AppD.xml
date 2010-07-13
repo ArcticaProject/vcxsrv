@@ -26,7 +26,7 @@ Set and get window sizing hints
   <listitem>
     <para>
 Set and get an
-<function>XStandardColormap</function>
+<structname>XStandardColormap</structname>
 structure 
     </para>
   </listitem>
@@ -57,7 +57,7 @@ and WM_NORMAL_HINTS properties.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XSetStandardProperties</function></funcdef>
+  <funcdef><function>XSetStandardProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>char<parameter> *window_name</parameter></paramdef>
@@ -119,7 +119,7 @@ which should be a null-terminated string.
     <listitem>
       <para>
 Specifies the bitmap that is to be used for the icon or
-<function>None</function>.
+<symbol>None</symbol>.
       </para>
     </listitem>
   </varlistentry>
@@ -176,9 +176,9 @@ the result is implementation-dependent.
 <!-- .LP -->
 <function>XSetStandardProperties</function>
 can generate
-<function>BadAlloc</function>
+<errorname>BadAlloc</errorname>
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 <!-- .SH -->
 </para>
@@ -189,9 +189,9 @@ Setting and Getting Window Sizing Hints
 <!-- .LP -->
 Xlib provides functions that you can use to set or get window sizing hints.
 The functions discussed in this section use the flags and the
-<function>XSizeHints </function>
+<structname>XSizeHints</structname>
 structure, as defined in the
-<!-- .hN X11/Xutil.h -->
+&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
 header file and use the WM_NORMAL_HINTS property.
 </para>
 <para>
@@ -205,7 +205,7 @@ This function has been superseded by
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XSetNormalHints</function></funcdef>
+  <funcdef><function>XSetNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XSizeHints<parameter> *hints</parameter></paramdef>
@@ -278,9 +278,9 @@ the structure have been assigned values.
 <!-- .LP -->
 <function>XSetNormalHints</function>
 can generate
-<function>BadAlloc</function>
+<errorname>BadAlloc</errorname>
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 </para>
 <para>
@@ -294,7 +294,7 @@ This function has been superseded by
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XGetNormalHints</function></funcdef>
+  <funcdef>Status <function>XGetNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XSizeHints<parameter> *hints_return</parameter></paramdef>
@@ -347,7 +347,7 @@ the application specified no normal size hints for this window.
 <!-- .LP -->
 <function>XGetNormalHints</function>
 can generate a
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 error.
 </para>
 <para>
@@ -365,7 +365,7 @@ This function is no longer supported by the
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XSetZoomHints</function></funcdef>
+  <funcdef><function>XSetZoomHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XSizeHints<parameter> *zhints</parameter></paramdef>
@@ -419,9 +419,9 @@ zoomed state.
 <!-- .LP -->
 <function>XSetZoomHints</function>
 can generate
-<function>BadAlloc</function>
+<errorname>BadAlloc</errorname>
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 </para>
 <para>
@@ -435,7 +435,7 @@ This function is no longer supported by the
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XGetZoomHints</function></funcdef>
+  <funcdef>Status <function>XGetZoomHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XSizeHints<parameter> *zhints_return</parameter></paramdef>
@@ -488,7 +488,7 @@ the application specified no zoom size hints for this window.
 <!-- .LP -->
 <function>XGetZoomHints</function>
 can generate a
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 error.
 </para>
 <para>
@@ -502,7 +502,7 @@ This function has been superseded by
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XSetSizeHints</function></funcdef>
+  <funcdef><function>XSetSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XSizeHints<parameter> *hints</parameter></paramdef>
@@ -559,7 +559,7 @@ Specifies the property name.
 The
 <function>XSetSizeHints</function>
 function sets the
-<function>XSizeHints</function>
+<structname>XSizeHints</structname>
 structure for the named property and the specified window.
 This is used by
 <function>XSetNormalHints</function>
@@ -572,10 +572,10 @@ Thus, it may be useful if other properties of that type get defined.
 <!-- .LP -->
 <function>XSetSizeHints</function>
 can generate
-<function>BadAlloc</function>,
-<function>BadAtom</function>,
+<errorname>BadAlloc</errorname>,
+<errorname>BadAtom</errorname>,
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 </para>
 <para>
@@ -589,7 +589,7 @@ This function has been superseded by
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XGetSizeHints</function></funcdef>
+  <funcdef>Status <function>XGetSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XSizeHints<parameter> *hints_return</parameter></paramdef>
@@ -646,7 +646,7 @@ Specifies the property name.
 The
 <function>XGetSizeHints</function>
 function returns the
-<function>XSizeHints</function>
+<structname>XSizeHints</structname>
 structure for the named property and the specified window.
 This is used by
 <function>XGetNormalHints</function>
@@ -663,9 +663,9 @@ or zero otherwise.
 <!-- .LP -->
 <function>XGetSizeHints</function>
 can generate
-<function>BadAtom</function>
+<errorname>BadAtom</errorname>
 and 
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 <!-- .SH -->
 Getting and Setting an XStandardColormap Structure
@@ -673,16 +673,16 @@ Getting and Setting an XStandardColormap Structure
 <para>
 <!-- .LP -->
 To get the 
-<function>XStandardColormap </function>
+<structname>XStandardColormap</structname>
 structure associated with one of the described atoms, use
 <function>XGetStandardColormap</function>.
 This function has been superseded by
-<function>XGetRGBColormap</function>.
+<function>XGetRGBColormaps</function>.
 <indexterm significance="preferred"><primary>XGetStandardColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XGetStandardColormap</function></funcdef>
+  <funcdef>Status <function>XGetStandardColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XStandardColormap<parameter> *colormap_return</parameter></paramdef>
@@ -744,7 +744,7 @@ as the property argument.
 returns a nonzero status if successful and zero otherwise.
 For example,
 to fetch the standard
-<function>GrayScale</function>
+<symbol>GrayScale</symbol>
 colormap for a display,
 you use
 <function>XGetStandardColormap</function>
@@ -768,9 +768,9 @@ See section 14.3 for the semantics of standard colormaps.
 <!-- .LP -->
 <function>XGetStandardColormap</function>
 can generate
-<function>BadAtom</function>
+<errorname>BadAtom</errorname>
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 </para>
 <para>
@@ -779,12 +779,12 @@ errors.
 To set a standard colormap, use
 <function>XSetStandardColormap</function>.
 This function has been superseded by
-<function>XSetRGBColormap</function>.
+<function>XSetRGBColormaps</function>.
 <indexterm significance="preferred"><primary>XSetStandardColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XSetStandardColormap</function></funcdef>
+  <funcdef><function>XSetStandardColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
   <paramdef>XStandardColormap<parameter> *colormap</parameter></paramdef>
@@ -846,11 +846,11 @@ function usually is only used by window or session managers.
 <!-- .LP -->
 <function>XSetStandardColormap</function>
 can generate
-<function>BadAlloc</function>,
-<function>BadAtom</function>,
-<function>BadDrawable</function>,
+<errorname>BadAlloc</errorname>,
+<errorname>BadAtom</errorname>,
+<errorname>BadDrawable</errorname>,
 and
-<function>BadWindow </function>
+<errorname>BadWindow</errorname>
 errors.
 <!-- .SH -->
 Parsing Window Geometry
@@ -867,7 +867,7 @@ This function has been superseded by
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>int<function> XGeometry</function></funcdef>
+  <funcdef>int <function>XGeometry</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>int<parameter> screen</parameter></paramdef>
   <paramdef>char*position,<parameter> *default_position</parameter></paramdef>
@@ -1026,13 +1026,13 @@ size of the increments fwidth and fheight
 and any additional interior space (xadder and yadder)
 to make it easy to compute the resulting size.
 The
-<function>XGeometry </function>
+<function>XGeometry</function>
 function returns the position the window should be placed given a position and
 a default position.
 <function>XGeometry</function>
 determines the placement of
 a window using a geometry specification as specified by
-<function>XParseGeometry </function>
+<function>XParseGeometry</function>
 and the additional information about the window.
 Given a fully qualified default geometry specification and
 an incomplete geometry specification, 
@@ -1071,7 +1071,7 @@ It is only useful in very simple applications.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *XGetDefault</function></funcdef>
+  <funcdef>char *<function>XGetDefault</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>char<parameter> *program</parameter></paramdef>
   <paramdef>char<parameter> *option</parameter></paramdef>
@@ -1148,7 +1148,7 @@ a resource file in the user's home directory is used.
 On a <acronym>POSIX</acronym>-conformant system,
 this file is
 <function>"$HOME/.Xdefaults"</function>.
-<indexterm><primary>Files</primary><secondary>$HOME/.Xdefaults</secondary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename>$HOME/.Xdefaults</filename></secondary></indexterm>
 After loading these defaults,
 <function>XGetDefault</function>
 merges additional defaults specified by the XENVIRONMENT
@@ -1158,8 +1158,8 @@ it contains a full path name for the additional resource file.
 If XENVIRONMENT is not defined,
 <function>XGetDefault</function>
 looks for
-"$HOME/.Xdefaults-<emphasis remap='I'>name</emphasis>" ,
-where <emphasis remap='I'>name</emphasis> specifies the name of the machine on which the application
+"<filename>$HOME/.Xdefaults-<replaceable>name</replaceable></filename>" ,
+where <replaceable>name</replaceable> specifies the name of the machine on which the application
 is running.
 <!-- .SH -->
 X Version 10 Compatibility Functions
@@ -1190,10 +1190,10 @@ These functions are provided mainly for compatibility with X Version 10
 and have no server support.  
 That is, they call other Xlib functions, not the server directly.  
 Thus, if you just have straight lines to draw, using 
-<function>XDrawLines </function>
+<function>XDrawLines</function>
 <indexterm><primary>XDrawLines</primary></indexterm>
 or
-<function>XDrawSegments </function>
+<function>XDrawSegments</function>
 <indexterm><primary>XDrawSegments</primary></indexterm>
 is much faster.
 </para>
@@ -1215,13 +1215,13 @@ and
 They are as compatible as possible given X Version 11's new line-drawing 
 functions.  
 One thing to note, however, is that
-<function>VertexDrawLastPoint </function>
+<function>VertexDrawLastPoint</function>
 is no longer supported. 
 Also, the error status returned is the opposite of what it was under 
 X Version 10 (this is the X Version 11 standard error status).  
-<function>XAppendVertex </function>
+<function>XAppendVertex</function>
 and 
-<function>XClearVertexFlag </function>
+<function>XClearVertexFlag</function>
 from X Version 10 also are not supported.
 </para>
 <para>
@@ -1233,15 +1233,15 @@ the closing of a closed figure  (see
 <function>XDrawLines</function>).
 The functions discussed here fail (return zero) only if they run out of memory
 or are passed a 
-<function>Vertex </function>
+<structname>Vertex</structname>
 list that has a 
-<function>Vertex </function>
+<structname>Vertex</structname>
 with 
-<function>VertexStartClosed</function>
+<symbol>VertexStartClosed</symbol>
 set that is not followed by a 
-<function>Vertex </function>
+<structname>Vertex</structname>
 with 
-<function>VertexEndClosed </function>
+<symbol>VertexEndClosed</symbol>
 set.
 </para>
 <para>
@@ -1265,7 +1265,7 @@ use
 
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XDraw</function></funcdef>
+  <funcdef>Status <function>XDraw</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>GC<parameter> gc</parameter></paramdef>
@@ -1330,7 +1330,7 @@ Specifies how many vertices are in vlist.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDraw </function>
+<function>XDraw</function>
 function draws an arbitrary polygon or curve.  
 The figure drawn is defined by the specified list of vertices (vlist).
 The points are connected by lines as specified in the flags in the
@@ -1339,7 +1339,7 @@ vertex structure.
 <para>
 <!-- .LP -->
 Each Vertex, as defined in
-<!-- .hN X11/X10.h , -->
+&lt;<filename class="headerfile">X11/X10.h</filename>&gt;,
 is a structure with the following members:
 </para>
 <para>
@@ -1361,15 +1361,15 @@ typedef struct _Vertex {
 The x and y members are the coordinates of the vertex 
 that are relative to either the upper left inside corner of the drawable 
 (if 
-<function>VertexRelative </function>
+<symbol>VertexRelative</symbol>
 is zero) or the previous vertex (if 
-<function>VertexRelative </function>
+<symbol>VertexRelative</symbol>
 is one).
 </para>
 <para>
 <!-- .LP -->
 The flags, as defined in 
-<!-- .hN X11/X10.h ,  -->
+&lt;<filename class="headerfile">X11/X10.h</filename>&gt;,
 are as follows:
 <indexterm significance="preferred"><primary>VertexRelative</primary></indexterm>
 <indexterm significance="preferred"><primary>VertexDontDraw</primary></indexterm>
@@ -1391,7 +1391,7 @@ VertexEndClosed    0x0010     /* else not */
   <listitem>
     <para>
 If 
-<function>VertexRelative </function>
+<symbol>VertexRelative</symbol>
 is not set,  
 the coordinates are absolute (that is, relative to the drawable's origin).  
 The first vertex must be an absolute vertex.
@@ -1400,7 +1400,7 @@ The first vertex must be an absolute vertex.
   <listitem>
     <para>
 If
-<function>VertexDontDraw </function>
+<symbol>VertexDontDraw</symbol>
 is one, 
 no line or curve is drawn from the previous vertex to this one.  
 This is analogous to picking up the pen and moving to another place 
@@ -1410,13 +1410,13 @@ before drawing another line.
   <listitem>
     <para>
 If 
-<function>VertexCurved </function>
+<symbol>VertexCurved</symbol>
 is one, 
 a spline algorithm is used to draw a smooth curve from the previous vertex
 through this one to the next vertex.  
 Otherwise, a straight line is drawn from the previous vertex to this one.  
 It makes sense to set 
-<function>VertexCurved </function>
+<symbol>VertexCurved</symbol>
 to one only if a previous and next vertex are both defined
 (either explicitly in the array or through the definition of a closed 
 curve).
@@ -1425,9 +1425,9 @@ curve).
   <listitem>
     <para>
 It is permissible for 
-<function>VertexDontDraw </function>
+<symbol>VertexDontDraw</symbol>
 bits and 
-<function>VertexCurved</function>
+<symbol>VertexCurved</symbol>
 bits both to be one. 
 This is useful if you want to define the previous point for the smooth curve
 but do not want an actual curve drawing to start until this point.
@@ -1436,13 +1436,13 @@ but do not want an actual curve drawing to start until this point.
   <listitem>
     <para>
 If 
-<function>VertexStartClosed </function>
+<symbol>VertexStartClosed</symbol>
 is one, 
 then this point marks the beginning of a closed curve.  
 This vertex must be followed later in the array by another vertex 
 whose effective coordinates are identical
 and that has a
-<function>VertexEndClosed </function>
+<symbol>VertexEndClosed</symbol>
 bit of one.
 The points in between form a cycle to determine predecessor 
 and successor vertices for the spline algorithm.
@@ -1463,7 +1463,7 @@ tile-stipple-x-origin, tile-stipple-y-origin, dash-offset, and dash-list.
 <!-- .LP -->
 <!-- .sp -->
 To achieve the effects of the X Version 10
-<function>XDrawTiled </function>
+<function>XDrawTiled</function>
 <indexterm><primary>X10 compatibility</primary><secondary>XDrawTiled</secondary></indexterm>
 and 
 <function>XDrawFilled</function>,
@@ -1476,7 +1476,7 @@ use
 
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XDrawFilled</function></funcdef>
+  <funcdef>Status <function>XDrawFilled</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>GC<parameter> gc</parameter></paramdef>
@@ -1542,7 +1542,7 @@ Specifies how many vertices are in vlist.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawFilled </function>
+<function>XDrawFilled</function>
 function draws arbitrary polygons or curves and then fills them.
 </para>
 <para>
@@ -1564,7 +1564,7 @@ These functions have been superseded by the context management functions
 (see section 16.10). 
 It is often necessary to associate arbitrary information with resource IDs.
 Xlib provides the 
-<function>XAssocTable </function>
+<function>XAssocTable</function>
 functions that you can use to make such an association.
 <indexterm><primary>Hash Lookup</primary></indexterm>
 <indexterm><primary>Window</primary><secondary>IDs</secondary></indexterm>
@@ -1575,9 +1575,9 @@ The
 <function>XAssocTable</function>
 system provides users of the X library with a method
 for associating their own data structures with X resources
-(<function>Pixmaps</function>,
-<function>Fonts</function>,
-<function>Windows</function>,
+(<type>Pixmap</type>s,
+<type>Font</type>s,
+<type>Window</type>s,
 and so on).
 </para>
 <para>
@@ -1597,7 +1597,7 @@ It is called an XID.
 <para>
 <!-- .LP -->
 There are a few  guidelines  that  should be observed when using an
-<function>XAssocTable :</function>
+<function>XAssocTable</function> :
 </para>
 <itemizedlist>
   <listitem>
@@ -1631,7 +1631,7 @@ use
 </para>
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XAssocTable<function> *XCreateAssocTable</function></funcdef>
+  <funcdef>XAssocTable *<function>XCreateAssocTable</function></funcdef>
   <paramdef>int<parameter> size</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1661,7 +1661,7 @@ should be a power of two.
 Some size  suggestions  might  be:  use  32 buckets  per  100  objects,
 and a reasonable maximum number of objects per buckets is 8.
 If  an  error  allocating  memory  for  the
-<function>XAssocTable </function>
+<function>XAssocTable</function>
 occurs, 
 a NULL pointer is returned. 
 </para>
@@ -1677,7 +1677,7 @@ use
 </para>
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XMakeAssoc</function></funcdef>
+  <funcdef><function>XMakeAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XAssocTable<parameter> *table</parameter></paramdef>
   <paramdef>XID<parameter> x_id</parameter></paramdef>
@@ -1751,7 +1751,7 @@ use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char<function> *XLookUpAssoc</function></funcdef>
+  <funcdef>char *<function>XLookUpAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XAssocTable<parameter> *table</parameter></paramdef>
   <paramdef>XID<parameter> x_id</parameter></paramdef>
@@ -1816,7 +1816,7 @@ use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XDeleteAssoc</function></funcdef>
+  <funcdef><function>XDeleteAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XAssocTable<parameter> *table</parameter></paramdef>
   <paramdef>XID<parameter> x_id</parameter></paramdef>
@@ -1880,7 +1880,7 @@ use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XDestroyAssocTable</function></funcdef>
+  <funcdef><function>XDestroyAssocTable</function></funcdef>
   <paramdef>XAssocTable<parameter> *table</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>

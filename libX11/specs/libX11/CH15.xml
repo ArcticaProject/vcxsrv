@@ -123,7 +123,7 @@ value for that entry.
 <para>
 <!-- .LP -->
 The definitions for the resource manager are contained in
-<!-- .hN X11/Xresource.h . -->
+&lt;<filename class="headerfile">X11/Xresource.h</filename>&gt;.
 </para>
 <sect1 id="Resource_File_Syntax">
 <title>Resource File Syntax</title>
@@ -337,7 +337,7 @@ in many of the resource manager functions.
 Simple comparisons can be performed rather than string comparisons.
 The shorthand name for a string is called a quark and is the
 type 
-<function>XrmQuark</function>.
+<type>XrmQuark</type>.
 On some occasions,
 you may want to allocate a quark that has no string equivalent.
 </para>
@@ -368,7 +368,7 @@ is known to the resource manager.
 <!-- .LP -->
 <!-- .sp -->
 Each name, class, and representation type is typedef'd as an
-<function>XrmQuark</function>.
+<type>XrmQuark</type>.
 </para>
 <para>
 <!-- .LP -->
@@ -473,7 +473,7 @@ To convert a quark to a string, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char <function> *XrmQuarkToString</function></funcdef>
+  <funcdef>char *<function>XrmQuarkToString</function></funcdef>
   <paramdef>XrmQuark<parameter> quark</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -520,7 +520,7 @@ To convert a string with one or more components to a quark list, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmStringToQuarkList</function></funcdef>
+  <funcdef>void <function>XrmStringToQuarkList</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
   <paramdef>XrmQuarkList<parameter> quarks_return</parameter></paramdef>
 </funcprototype>
@@ -567,7 +567,7 @@ the conversion is implementation-dependent.
 <para>
 <!-- .LP -->
 A binding list is a list of type
-<function>XrmBindingList</function>
+<type>XrmBindingList</type>
 and indicates if components of name or class lists are bound tightly or loosely
 (that is, if wildcarding of intermediate components is specified).
 </para>
@@ -579,9 +579,9 @@ typedef enum {XrmBindTightly, XrmBindLoosely} XrmBinding, *XrmBindingList;
 </para>
 <para>
 <!-- .LP -->
-<function>XrmBindTightly</function>
+<constant>XrmBindTightly</constant>
 indicates that a period separates the components, and
-<function>XrmBindLoosely</function>
+<constant>XrmBindLoosely</constant>
 indicates that an asterisk separates the components.
 </para>
 <para>
@@ -594,7 +594,7 @@ and a quark list, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XrmStringToBindingQuarkList</function></funcdef>
+  <funcdef><function>XrmStringToBindingQuarkList</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
   <paramdef>XrmBindingList<parameter> bindings_return</parameter></paramdef>
   <paramdef>XrmQuarkList<parameter> quarks_return</parameter></paramdef>
@@ -668,9 +668,9 @@ bindings:     loose     tight     loose
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XrmDatabase</primary></indexterm>
 A resource database is an opaque type,
-<function>XrmDatabase</function>.
+<type>XrmDatabase</type>.
 Each database value is stored in an
-<function>XrmValue </function>
+<type>XrmValue</type>
 structure.
 This structure consists of a size, an address, and a representation type.
 The size is specified in bytes.
@@ -678,7 +678,7 @@ The representation type is a way for you to store data tagged by some
 application-defined type (for example, the strings ``font'' or ``color'').
 It has nothing to do with the C data type or with its class. 
 The
-<function>XrmValue </function>
+<type>XrmValue</type>
 structure is defined as:
 </para>
 <para>
@@ -704,7 +704,7 @@ To initialize the resource manager, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmInitialize</function></funcdef>
+  <funcdef>void <function>XrmInitialize</function></funcdef>
   <paramdef>void<parameter> XrmInitialize(\|)</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -719,7 +719,7 @@ To retrieve a database from disk, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XrmDatabase <function> XrmGetFileDatabase</function></funcdef>
+  <funcdef>XrmDatabase <function>XrmGetFileDatabase</function></funcdef>
   <paramdef>char<parameter> *filename</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -763,7 +763,7 @@ To store a copy of a database to disk, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmPutFileDatabase</function></funcdef>
+  <funcdef>void <function>XrmPutFileDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
   <paramdef>char<parameter> *stored_db</parameter></paramdef>
 </funcprototype>
@@ -816,7 +816,7 @@ To obtain a pointer to the screen-independent resources of a display, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char *<function> XResourceManagerString</function></funcdef>
+  <funcdef>char *<function>XResourceManagerString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -860,7 +860,7 @@ To obtain a pointer to the screen-specific resources of a screen, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char *<function> XScreenResourceString</function></funcdef>
+  <funcdef>char *<function>XScreenResourceString</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -904,7 +904,7 @@ To create a database from a string, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XrmDatabase <function> XrmGetStringDatabase</function></funcdef>
+  <funcdef>XrmDatabase <function>XrmGetStringDatabase</function></funcdef>
   <paramdef>char<parameter> *data</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -949,7 +949,7 @@ To obtain the locale name of a database, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>char *<function> XrmLocaleOfDatabase</function></funcdef>
+  <funcdef>char *<function>XrmLocaleOfDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -989,7 +989,7 @@ To destroy a resource database and free its allocated memory, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmDestroyDatabase</function></funcdef>
+  <funcdef>void <function>XrmDestroyDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1023,7 +1023,7 @@ To associate a resource database with a display, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmSetDatabase</function></funcdef>
+  <funcdef>void <function>XrmSetDatabase</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
 </funcprototype>
@@ -1072,7 +1072,7 @@ To get the resource database associated with a display, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>XrmDatabase <function> XrmGetDatabase</function></funcdef>
+  <funcdef>XrmDatabase <function>XrmGetDatabase</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1112,7 +1112,7 @@ To merge the contents of a resource file into a database, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status <function> XrmCombineFileDatabase</function></funcdef>
+  <funcdef>Status <function>XrmCombineFileDatabase</function></funcdef>
   <paramdef>char<parameter> *filename</parameter></paramdef>
   <paramdef>XrmDatabase<parameter> *target_db</parameter></paramdef>
   <paramdef>Bool<parameter> override</parameter></paramdef>
@@ -1163,7 +1163,7 @@ If the same specifier is used for an entry in both the file and
 the database,
 the entry in the file will replace the entry in the database
 if override is
-<function>True</function>;
+<symbol>True</symbol>;
 otherwise, the entry in the file is discarded.
 The file is parsed in the current locale.
 If the file cannot be read,
@@ -1186,7 +1186,7 @@ To merge the contents of one database into another database, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmCombineDatabase</function></funcdef>
+  <funcdef>void <function>XrmCombineDatabase</function></funcdef>
   <paramdef>XrmDatabasesource_db,<parameter> *target_db</parameter></paramdef>
   <paramdef>Bool<parameter> override</parameter></paramdef>
 </funcprototype>
@@ -1235,7 +1235,7 @@ function merges the contents of one database into another.
 If the same specifier is used for an entry in both databases,
 the entry in the source_db will replace the entry in the target_db
 if override is
-<function>True</function>;
+<symbol>True</symbol>;
 otherwise, the entry in source_db is discarded.
 If target_db contains NULL,
 <function>XrmCombineDatabase</function>
@@ -1256,7 +1256,7 @@ semantics, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmMergeDatabases</function></funcdef>
+  <funcdef>void <function>XrmMergeDatabases</function></funcdef>
   <paramdef>XrmDatabasesource_db,<parameter> *target_db</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1293,7 +1293,7 @@ Calling the
 function is equivalent to calling the
 <function>XrmCombineDatabase</function>
 function with an override argument of
-<function>True</function>.
+<symbol>True</symbol>.
 </para>
 </sect1>
 <sect1 id="Looking_Up_Resources">
@@ -1316,7 +1316,7 @@ or
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool <function> XrmGetResource</function></funcdef>
+  <funcdef>Bool <function>XrmGetResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
   <paramdef>char<parameter> *str_name</parameter></paramdef>
   <paramdef>char<parameter> *str_class</parameter></paramdef>
@@ -1386,7 +1386,7 @@ Returns the value in the database.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool <function> XrmQGetResource</function></funcdef>
+  <funcdef>Bool <function>XrmQGetResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
   <paramdef>XrmNameList<parameter> quark_name</parameter></paramdef>
   <paramdef>XrmClassList<parameter> quark_class</parameter></paramdef>
@@ -1452,9 +1452,9 @@ Returns the value in the database.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XrmGetResource </function>
+<function>XrmGetResource</function>
 and 
-<function>XrmQGetResource </function>
+<function>XrmQGetResource</function>
 functions retrieve a resource from the specified database.
 Both take a fully qualified name/class pair, a destination
 resource representation, and the address of a value
@@ -1473,13 +1473,13 @@ A client that is not storing new values into the database or
 is not merging the database should be safe using the address passed 
 back at any time until it exits.
 If a resource was found, both
-<function>XrmGetResource </function>
+<function>XrmGetResource</function>
 and
-<function>XrmQGetResource </function>
+<function>XrmQGetResource</function>
 return 
-<function>True</function>;
+<symbol>True</symbol>;
 otherwise, they return 
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -1493,7 +1493,7 @@ The X toolkit access pattern for a resource database is quite stylized.
 A series of from 1 to 20 probes is made with only the 
 last name/class differing in each probe.
 The 
-<function>XrmGetResource </function>
+<function>XrmGetResource</function>
 function is at worst a %2 sup n% algorithm,  <!-- FIXME: log(n) ?  -->
 where <emphasis remap='I'>n</emphasis> is the length of the name/class list.
 This can be improved upon by the application programmer by prefetching a list
@@ -1508,7 +1508,7 @@ To obtain a list of database levels, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool <function> XrmQGetSearchResource</function></funcdef>
+  <funcdef>Bool <function>XrmQGetSearchResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
   <paramdef>XrmNameList<parameter> names</parameter></paramdef>
   <paramdef>XrmClassList<parameter> classes</parameter></paramdef>
@@ -1581,14 +1581,14 @@ function takes a list of names and classes
 and returns a list of database levels where a match might occur.
 The returned list is in best-to-worst order and
 uses the same algorithm as 
-<function>XrmGetResource </function>
+<function>XrmGetResource</function>
 for determining precedence.
 If list_return was large enough for the search list,
 <function>XrmQGetSearchList</function>
 returns 
-<function>True</function>;
+<symbol>True</symbol>;
 otherwise, it returns
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -1601,7 +1601,7 @@ where <emphasis remap='I'>n</emphasis> is the number of name or class components
 <para>
 <!-- .LP -->
 When using 
-<function>XrmQGetSearchList </function>
+<function>XrmQGetSearchList</function>
 followed by multiple probes for resources with a common name and class prefix,
 only the common prefix should be specified in the name and class list to 
 <function>XrmQGetSearchList</function>.
@@ -1615,7 +1615,7 @@ To search resource database levels for a given resource, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool <function> XrmQGetSearchResource</function></funcdef>
+  <funcdef>Bool <function>XrmQGetSearchResource</function></funcdef>
   <paramdef>XrmSearchList<parameter> list</parameter></paramdef>
   <paramdef>XrmName<parameter> name</parameter></paramdef>
   <paramdef>XrmClass<parameter> class</parameter></paramdef>
@@ -1688,22 +1688,22 @@ that is fully identified by the specified name and class.
 The search stops with the first match.
 <function>XrmQGetSearchResource</function>
 returns 
-<function>True </function>
+<symbol>True</symbol>
 if the resource was found;
 otherwise, it returns
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
 A call to 
-<function>XrmQGetSearchList </function>
+<function>XrmQGetSearchList</function>
 with a name and class list containing all but the last component 
 of a resource name followed by a call to 
-<function>XrmQGetSearchResource </function>
+<function>XrmQGetSearchResource</function>
 with the last component name and class returns the same database entry as 
-<function>XrmGetResource </function>
+<function>XrmGetResource</function>
 and 
-<function>XrmQGetResource </function>
+<function>XrmQGetResource</function>
 with the fully qualified name and class.
 </para>
 </sect1>
@@ -1715,7 +1715,7 @@ with the fully qualified name and class.
 <para>
 <!-- .LP -->
 To store resources into the database, use
-<function>XrmPutResource </function>
+<function>XrmPutResource</function>
 or
 <function>XrmQPutResource</function>.
 Both functions take a partial resource specification, a
@@ -1729,7 +1729,7 @@ This value is copied into the specified database.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmPutResource</function></funcdef>
+  <funcdef>void <function>XrmPutResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
   <paramdef>char<parameter> *specifier</parameter></paramdef>
   <paramdef>char<parameter> *type</parameter></paramdef>
@@ -1807,7 +1807,7 @@ The value is stored in the database without modification.
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmQPutResource</function></funcdef>
+  <funcdef>void <function>XrmQPutResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
   <paramdef>XrmBindingList<parameter> bindings</parameter></paramdef>
   <paramdef>XrmQuarkList<parameter> quarks</parameter></paramdef>
@@ -1889,7 +1889,7 @@ To add a resource that is specified as a string, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmPutStringResource</function></funcdef>
+  <funcdef>void <function>XrmPutStringResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
   <paramdef>char<parameter> *specifier</parameter></paramdef>
   <paramdef>char<parameter> *value</parameter></paramdef>
@@ -1956,7 +1956,7 @@ To add a string resource using quarks as a specification, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmQPutStringResource</function></funcdef>
+  <funcdef>void <function>XrmQPutStringResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
   <paramdef>XrmBindingList<parameter> bindings</parameter></paramdef>
   <paramdef>XrmQuarkList<parameter> quarks</parameter></paramdef>
@@ -2015,7 +2015,7 @@ If database contains NULL,
 creates a new database and returns a pointer to it.
 <function>XrmQPutStringResource</function>
 is a convenience routine that constructs an
-<function>XrmValue</function>
+<type>XrmValue</type>
 for the value string (by calling
 <function>strlen</function>
 to compute the size) and
@@ -2034,7 +2034,7 @@ both a name and a value, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmPutLineResource</function></funcdef>
+  <funcdef>void <function>XrmPutLineResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
   <paramdef>char<parameter> *line</parameter></paramdef>
 </funcprototype>
@@ -2077,7 +2077,7 @@ the database that results from using a string
 with incorrect syntax is implementation-dependent.
 The string is parsed in the locale of the database.
 If the
-<function>ResourceName</function>
+<replaceable>ResourceName</replaceable>
 is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 Note that comment lines are not stored.
@@ -2103,7 +2103,7 @@ To enumerate the entries of a database, use
 
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Bool <function> XrmEnumerateDatabase</function></funcdef>
+  <funcdef>Bool <function>XrmEnumerateDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
   <paramdef>XrmNameList<parameter> name_prefix</parameter></paramdef>
   <paramdef>XrmClassList<parameter> class_prefix</parameter></paramdef>
@@ -2185,20 +2185,20 @@ function calls the specified procedure for each resource in the database
 that would match some completion of the given name/class resource prefix.
 The order in which resources are found is implementation-dependent.
 If mode is
-<function>XrmEnumOneLevel</function>,
+<symbol>XrmEnumOneLevel</symbol>,
 a resource must match the given name/class prefix with
 just a single name and class appended.  If mode is
-<function>XrmEnumAllLevels</function>,
+<symbol>XrmEnumAllLevels</symbol>,
 the resource must match the given name/class prefix with one or more names and
 classes appended.
 If the procedure returns
-<function>True</function>,
+<symbol>True</symbol>,
 the enumeration terminates and the function returns
-<function>True</function>.
+<symbol>True</symbol>.
 If the procedure always returns
-<function>False</function>,
+<symbol>False</symbol>,
 all matching resources are enumerated and the function returns
-<function>False</function>.
+<symbol>False</symbol>.
 </para>
 <para>
 <!-- .LP -->
@@ -2223,7 +2223,7 @@ The procedure is called with the following arguments:
 <para>
 <!-- .LP -->
 The bindings and quarks lists are terminated by
-<function>NULLQUARK</function>.
+<symbol>NULLQUARK</symbol>.
 Note that pointers
 to the database and type are passed, but these values should not be modified.
 </para>
@@ -2271,14 +2271,14 @@ typedef enum {
 <!-- .LP -->
 <!-- .eM -->
 Note that
-<function>XrmoptionSkipArg</function>
+<constant>XrmoptionSkipArg</constant>
 is equivalent to 
-<function>XrmoptionSkipNArgs</function>
+<constant>XrmoptionSkipNArgs</constant>
 with the
-<function>XrmOptionDescRec.value</function>
+<structname>XrmOptionDescRec</structname>.<structfield>value</structfield>
 field containing the value one.
 Note also that the value zero for
-<function>XrmoptionSkipNArgs</function>
+<constant>XrmoptionSkipNArgs</constant>
 indicates that only the option itself is to be skipped.
 </para>
 <para>
@@ -2307,7 +2307,7 @@ To load a resource database from a C command line, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>void <function> XrmParseCommand</function></funcdef>
+  <funcdef>void <function>XrmParseCommand</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
   <paramdef>XrmOptionDescList<parameter> table</parameter></paramdef>
   <paramdef>int<parameter> table_count</parameter></paramdef>
@@ -2404,7 +2404,7 @@ in the order they occur in argv.
 The table entries contain information on the option string,
 the option name, the style of option, 
 and a value to provide if the option kind is 
-<function>XrmoptionNoArg</function>.
+<constant>XrmoptionNoArg</constant>.
 The option names are compared byte-for-byte to arguments in argv,
 independent of any locale.
 The resource values given in the table are stored in the resource database

@@ -121,7 +121,7 @@ X does not guarantee to preserve the contents of windows.
 When part or all of a window is hidden and then brought back onto the screen,
 its contents may be lost. 
 The server then sends the client program an
-<function>Expose</function>
+<symbol>Expose</symbol>
 event to notify it that part or all of the window needs to be repainted.
 Programs must be prepared to regenerate the contents of windows on demand.
 </para>
@@ -171,15 +171,15 @@ that returns a value from the server or waits for input.
 Many Xlib functions will return an integer resource ID,
 which allows you to refer to objects stored on the X server.
 These can be of type 
-<function>Window</function>,
-<function>Font</function>,
-<function>Pixmap</function>,
-<function>Colormap</function>,
-<function>Cursor</function>,
+<type>Window</type>,
+<type>Font</type>,
+<type>Pixmap</type>,
+<type>Colormap</type>,
+<type>Cursor</type>,
 and 
-<function>GContext</function>,
+<type>GContext</type>,
 as defined in the file
-<!-- .hN X11/X.h . -->
+&lt;<filename class="headerfile">X11/X.h</filename>&gt;.
 These resources are created by requests and are destroyed
 (or freed) by requests or when connections are closed.
 Most of these resources are potentially sharable between
@@ -196,7 +196,7 @@ Xlib provides no support for sharing graphics contexts between applications.
 Client programs are informed of events.
 Events may either be side effects of a request (for example, restacking windows
 generates 
-<function>Expose </function>
+<symbol>Expose</symbol>
 events) or completely asynchronous (for example, from the keyboard).
 A client program asks to be informed of events.
 Because other applications can send events to your application,
@@ -214,9 +214,9 @@ In addition, some library
 functions (for example,
 <function>XRaiseWindow</function>)
 generate 
-<function>Expose</function>
+<symbol>Expose</symbol>
 and
-<function>ConfigureRequest</function>
+<symbol>ConfigureRequest</symbol>
 events.
 These events also arrive asynchronously, but the client may
 <indexterm><primary>XSync</primary></indexterm>
@@ -233,7 +233,7 @@ after calling a function that can cause the server to generate events.
 <para>
 <!-- .LP -->
 Some functions return 
-<function>Status</function>,
+<type>Status</type>,
 an integer error indication.
 If the function fails, it returns a zero.
 If the function returns a status of zero,
@@ -282,19 +282,16 @@ the error is printed, and your program terminates.
 <!-- .LP -->
 The following include files are part of the Xlib standard:
 </para>
-<!-- .IP \(bu 5 -->
-<!-- .hN X11/Xlib.h -->
-<!-- .IP -->
 
 <variablelist>
   <varlistentry>
-    <term>&lt;/X11/Xlib.h&gt;</term>
+    <term>&lt;<filename class="headerfile">X11/Xlib.h</filename>&gt;</term>
     <listitem>
       <para>
 This is the main header file for Xlib.
 The majority of all Xlib symbols are declared by including this file.
 This file also contains the preprocessor symbol
-<function>XlibSpecificationRelease</function>.
+<symbol>XlibSpecificationRelease</symbol>.
 <indexterm significance="preferred"><primary>XlibSpecificationRelease</primary></indexterm>
 This symbol is defined to have the 6 in this release of the standard.
 (Release 5 of Xlib was the first release to have this symbol.)
@@ -459,17 +456,17 @@ The following symbols are defined by Xlib and used throughout the manual:
   <listitem>
     <para>
 Xlib defines the type
-<function>Bool</function>
+<type>Bool</type>
 and the Boolean values
-<function>True</function>
+<symbol>True</symbol>
 and
-<function>False</function>.
+<symbol>False</symbol>.
 <indexterm significance="preferred"><primary>None</primary></indexterm>
     </para>
   </listitem>
   <listitem>
     <para>
-<function>None</function>
+<symbol>None</symbol>
 is the universal null resource ID or atom.
 <indexterm significance="preferred"><primary>XID</primary></indexterm>
     </para>
@@ -477,7 +474,7 @@ is the universal null resource ID or atom.
   <listitem>
     <para>
 The type
-<function>XID</function>
+<type>XID</type>
 is used for generic resource IDs.
 <indexterm significance="preferred"><primary>XPointer</primary></indexterm>
     </para>
@@ -485,7 +482,7 @@ is used for generic resource IDs.
   <listitem>
     <para>
 The type
-<function>XPointer</function>
+<type>XPointer</type>
 is defined to be char\^* and is used as a generic opaque pointer to data.
     </para>
   </listitem>
@@ -611,7 +608,7 @@ Coordinates and sizes in X are actually 16-bit quantities.
 This decision was made to minimize the bandwidth required for a
 given level of performance.
 Coordinates usually are declared as an
-<function>int </function>
+<type>int</type>
 in the interface.
 Values larger than 16 bits are truncated silently.
 Sizes (width and height) are declared as unsigned quantities.
@@ -768,8 +765,8 @@ a..z A..Z 0..9 ._-
   <listitem>
     <para>
 Global symbols are printed in 
-<function>this </function>
-<function>special </function>
+<function>this</function>
+<function>special</function>
 <function>font</function>.
 These can be either function names,
 symbols defined in include files, or structure names.
