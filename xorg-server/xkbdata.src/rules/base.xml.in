@@ -4517,7 +4517,7 @@
       <option>
         <configItem>
           <name>grp:caps_switch</name>
-          <_description>CapsLock (while pressed), Alt+CapsLock does the original capslock action</_description>
+          <_description>Caps Lock (while pressed), Alt+Caps Lock does the original capslock action</_description>
         </configItem>
       </option>
       <option>
@@ -4541,19 +4541,19 @@
       <option>
         <configItem>
           <name>grp:caps_toggle</name>
-          <_description>CapsLock</_description>
+          <_description>Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>grp:shift_caps_toggle</name>
-          <_description>Shift+CapsLock</_description>
+          <_description>Shift+Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>grp:shift_caps_switch</name>
-          <_description>CapsLock (to first layout), Shift+CapsLock (to last layout)</_description>
+          <_description>Caps Lock (to first layout), Shift+Caps Lock (to last layout)</_description>
         </configItem>
       </option>
       <option>
@@ -4571,7 +4571,7 @@
       <option>
         <configItem>
           <name>grp:alt_caps_toggle</name>
-          <_description>Alt+CapsLock</_description>
+          <_description>Alt+Caps Lock</_description>
         </configItem>
       </option>
       <option>
@@ -4673,7 +4673,7 @@
       <option>
         <configItem>
           <name>grp:sclk_toggle</name>
-          <_description>ScrollLock</_description>
+          <_description>Scroll Lock</_description>
         </configItem>
       </option>
     </group>
@@ -4753,7 +4753,7 @@
       <option>
         <configItem>
           <name>lv3:caps_switch</name>
-          <_description>CapsLock</_description>
+          <_description>Caps Lock</_description>
         </configItem>
       </option>
       <option>
@@ -4771,7 +4771,7 @@
       <option>
         <configItem>
           <name>lv3:caps_switch_latch</name>
-          <description>CapsLock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+          <description>Caps Lock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
         </configItem>
       </option>
       <option>
@@ -4796,13 +4796,13 @@
       <option>
         <configItem>
           <name>ctrl:nocaps</name>
-          <_description>Make CapsLock an additional Ctrl</_description>
+          <_description>Make Caps Lock an additional Ctrl</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>ctrl:swapcaps</name>
-          <_description>Swap Ctrl and CapsLock</_description>
+          <_description>Swap Ctrl and Caps Lock</_description>
         </configItem>
       </option>
       <option>
@@ -4839,19 +4839,19 @@
       <option>
         <configItem>
           <name>grp_led:num</name>
-          <_description>NumLock</_description>
+          <_description>Num Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>grp_led:caps</name>
-          <_description>CapsLock</_description>
+          <_description>Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>grp_led:scroll</name>
-          <_description>ScrollLock</_description>
+          <_description>Scroll Lock</_description>
         </configItem>
       </option>
     </group>
@@ -4971,89 +4971,89 @@
       </option>
     </group>
     <group allowMultipleSelection="false">
-      <!-- CapsLock tweaks. 
+      <!-- Caps Lock tweaks. 
 	   "Internal" capitalization means capitalization using some internal tables.
 	   Otherwise "as Shift" - means using next group. -->
       <configItem>
         <name>caps</name>
-        <_description>CapsLock key behavior</_description>
+        <_description>Caps Lock key behavior</_description>
       </configItem>
       <option>
         <configItem>
           <name>caps:internal</name>
-          <_description>CapsLock uses internal capitalization. Shift "pauses" CapsLock</_description>
+          <_description>Caps Lock uses internal capitalization. Shift "pauses" Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:internal_nocancel</name>
-          <_description>CapsLock uses internal capitalization. Shift doesn't affect CapsLock</_description>
+          <_description>Caps Lock uses internal capitalization. Shift doesn't affect Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:shift</name>
-          <_description>CapsLock acts as Shift with locking. Shift "pauses" CapsLock</_description>
+          <_description>Caps Lock acts as Shift with locking. Shift "pauses" Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:shift_nocancel</name>
-          <_description>CapsLock acts as Shift with locking. Shift doesn't affect CapsLock</_description>
+          <_description>Caps Lock acts as Shift with locking. Shift doesn't affect Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:capslock</name>
-          <_description>CapsLock toggles normal capitalization of alphabetic characters</_description>
+          <_description>Caps Lock toggles normal capitalization of alphabetic characters</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:numlock</name>
-          <_description>Make CapsLock an additional NumLock</_description>
+          <_description>Make Caps Lock an additional Num Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:swapescape</name>
-          <_description>Swap ESC and CapsLock</_description>
+          <_description>Swap ESC and Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:escape</name>
-          <_description>Make CapsLock an additional ESC</_description>
+          <_description>Make Caps Lock an additional ESC</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:backspace</name>
-          <_description>Make CapsLock an additional Backspace</_description>
+          <_description>Make Caps Lock an additional Backspace</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:super</name>
-          <_description>Make CapsLock an additional Super</_description>
+          <_description>Make Caps Lock an additional Super</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:hyper</name>
-          <_description>Make CapsLock an additional Hyper</_description>
+          <_description>Make Caps Lock an additional Hyper</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:shiftlock</name>
-          <_description>CapsLock toggles Shift so all keys are affected</_description>
+          <_description>Caps Lock toggles Shift so all keys are affected</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>caps:none</name>
-          <_description>CapsLock is disabled</_description>
+          <_description>Caps Lock is disabled</_description>
         </configItem>
       </option>
     </group>
@@ -5163,7 +5163,7 @@
       <option>
         <configItem>
           <name>compose:caps</name>
-          <_description>CapsLock</_description>
+          <_description>Caps Lock</_description>
         </configItem>
       </option>
       <option>
@@ -5187,7 +5187,7 @@
       <option>
         <configItem>
           <name>compose:sclk</name>
-          <_description>ScrollLock</_description>
+          <_description>Scroll Lock</_description>
         </configItem>
       </option>
     </group>
@@ -5217,7 +5217,7 @@
       <option>
         <configItem>
           <name>numpad:shift3</name>
-          <_description>Shift does not cancel NumLock, chooses 3rd level instead</_description>
+          <_description>Shift does not cancel Num Lock, chooses 3rd level instead</_description>
         </configItem>
       </option>
       <option>
@@ -5229,13 +5229,13 @@
       <option>
         <configItem>
           <name>apple:alupckeys</name>
-          <_description>Apple Aluminium Keyboard: emulate PC keys (Print, Scroll_Lock, Pause, NumLock)</_description>
+          <_description>Apple Aluminium Keyboard: emulate PC keys (Print, Scroll Lock, Pause, Num Lock)</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>shift:breaks_caps</name>
-          <_description>Shift cancels CapsLock</_description>
+          <_description>Shift cancels Caps Lock</_description>
         </configItem>
       </option>
       <option>
@@ -5247,13 +5247,13 @@
       <option>
         <configItem>
           <name>shift:both_capslock</name>
-          <_description>Both Shift-Keys together toggle CapsLock</_description>
+          <_description>Both Shift-Keys together toggle Caps Lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>shift:both_capslock_cancel</name>
-          <description>Both Shift-Keys together activate CapsLock, one Shift-Key deactivates</description>
+          <description>Both Shift-Keys together activate Caps Lock, one Shift-Key deactivates</description>
         </configItem>
       </option>
       <option>

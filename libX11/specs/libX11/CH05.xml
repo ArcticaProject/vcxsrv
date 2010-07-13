@@ -23,7 +23,7 @@ To create a pixmap of a given size, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Pixmap<function> XCreatePixmap</function></funcdef>
+  <funcdef>Pixmap <function>XCreatePixmap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
@@ -94,16 +94,16 @@ The
 function creates a pixmap of the width, height, and depth you specified
 and returns a pixmap ID that identifies it.
 It is valid to pass an 
-<function>InputOnly</function>
+<symbol>InputOnly</symbol>
 window to the drawable argument.
 The width and height arguments must be nonzero,
 or a 
-<function>BadValue</function>
+<errorname>BadValue</errorname>
 error results.
 The depth argument must be one of the depths supported by the screen
 of the specified drawable,
 or a
-<function>BadValue</function>
+<errorname>BadValue</errorname>
 error results.
 </para>
 <para>
@@ -120,10 +120,10 @@ The initial contents of the pixmap are undefined.
 <!-- .LP -->
 <function>XCreatePixmap</function>
 can generate
-<function>BadAlloc</function>,
-<function>BadDrawable</function>,
+<errorname>BadAlloc</errorname>,
+<errorname>BadDrawable</errorname>,
 and
-<function>BadValue </function>
+<errorname>BadValue</errorname>
 errors.
 </para>
 <para>
@@ -135,7 +135,7 @@ To free all storage associated with a specified pixmap, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XFreePixmap</function></funcdef>
+  <funcdef><function>XFreePixmap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Pixmap<parameter> pixmap</parameter></paramdef>
 </funcprototype>
@@ -177,7 +177,7 @@ The pixmap should never be referenced again.
 <!-- .LP -->
 <function>XFreePixmap</function>
 can generate a
-<function>BadPixmap </function>
+<errorname>BadPixmap</errorname>
 error.
 </para>
 </sect1>
@@ -227,7 +227,7 @@ To create a cursor from the standard cursor font, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Cursor<function> XCreateFontCursor</function></funcdef>
+  <funcdef>Cursor <function>XCreateFontCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>unsignedint<parameter> shape</parameter></paramdef>
 </funcprototype>
@@ -280,9 +280,9 @@ see appendix B.
 <!-- .LP -->
 <function>XCreateFontCursor</function>
 can generate
-<function>BadAlloc</function>
+<errorname>BadAlloc</errorname>
 and
-<function>BadValue </function>
+<errorname>BadValue</errorname>
 errors.
 </para>
 <para>
@@ -294,7 +294,7 @@ To create a cursor from font glyphs, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Cursor<function> XCreateGlyphCursor</function></funcdef>
+  <funcdef>Cursor <function>XCreateGlyphCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Fontsource_font,<parameter> mask_font</parameter></paramdef>
   <paramdef>unsignedintsource_char,<parameter> mask_char</parameter></paramdef>
@@ -331,7 +331,7 @@ Specifies the font for the source glyph.
     <listitem>
       <para>
 Specifies the font for the mask glyph or
-<function>None</function>.
+<symbol>None</symbol>.
       </para>
     </listitem>
   </varlistentry>
@@ -388,12 +388,12 @@ except that the source and mask bitmaps are obtained from the specified
 font glyphs.
 The source_char must be a defined glyph in source_font, 
 or a
-<function>BadValue</function>
+<errorname>BadValue</errorname>
 error results.
 If mask_font is given, 
 mask_char must be a defined glyph in mask_font,
 or a
-<function>BadValue</function>
+<errorname>BadValue</errorname>
 error results.
 The mask_font and character are optional.
 The origins of the source_char and mask_char (if defined) glyphs are
@@ -417,10 +417,10 @@ least significant byte.
 <!-- .LP -->
 <function>XCreateGlyphCursor</function>
 can generate
-<function>BadAlloc</function>,
-<function>BadFont</function>,
+<errorname>BadAlloc</errorname>,
+<errorname>BadFont</errorname>,
 and
-<function>BadValue </function>
+<errorname>BadValue</errorname>
 errors.
 </para>
 <para>
@@ -433,7 +433,7 @@ use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Cursor<function> XCreatePixmapCursor</function></funcdef>
+  <funcdef>Cursor <function>XCreatePixmapCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Pixmap<parameter> source</parameter></paramdef>
   <paramdef>Pixmap<parameter> mask</parameter></paramdef>
@@ -472,7 +472,7 @@ Specifies the shape of the source cursor.
     <listitem>
       <para>
 Specifies the cursor's source bits to be displayed or
-<function>None</function>.
+<symbol>None</symbol>.
       </para>
     </listitem>
   </varlistentry>
@@ -529,14 +529,14 @@ function creates a cursor and returns the cursor ID associated with it.
 The foreground and background <acronym>RGB</acronym> values must be specified using
 foreground_color and background_color,
 even if the X server only has a
-<function>StaticGray</function>
+<symbol>StaticGray</symbol>
 or
-<function>GrayScale</function>
+<symbol>GrayScale</symbol>
 screen.
 The foreground color is used for the pixels set to 1 in the
 source, and the background color is used for the pixels set to 0.
 Both source and mask, if specified, must have depth one (or a 
-<function>BadMatch</function>
+<errorname>BadMatch</errorname>
 error results) but can have any root.
 The mask argument defines the shape of the cursor.
 The pixels set to 1 in the mask define which source pixels are displayed,
@@ -545,11 +545,11 @@ If no mask is given,
 all pixels of the source are displayed.
 The mask, if present, must be the same size as the pixmap defined by the 
 source argument, or a
-<function>BadMatch</function>
+<errorname>BadMatch</errorname>
 error results.
 The hotspot must be a point within the source,
 or a
-<function>BadMatch</function>
+<errorname>BadMatch</errorname>
 error results.
 </para>
 <para>
@@ -566,9 +566,9 @@ The X server might or might not make a copy of the pixmap.
 <!-- .LP -->
 <function>XCreatePixmapCursor</function>
 can generate
-<function>BadAlloc</function>
+<errorname>BadAlloc</errorname>
 and
-<function>BadPixmap</function>
+<errorname>BadPixmap</errorname>
 errors.
 </para>
 <para>
@@ -580,7 +580,7 @@ To determine useful cursor sizes, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef>Status<function> XQueryBestCursor</function></funcdef>
+  <funcdef>Status <function>XQueryBestCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>unsignedintwidth,<parameter> height</parameter></paramdef>
@@ -673,7 +673,7 @@ cannot support large ones.
 <!-- .LP -->
 <function>XQueryBestCursor</function>
 can generate a
-<function>BadDrawable </function>
+<errorname>BadDrawable</errorname>
 error.
 </para>
 <para>
@@ -685,7 +685,7 @@ To change the color of a given cursor, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XRecolorCursor</function></funcdef>
+  <funcdef><function>XRecolorCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Cursor<parameter> cursor</parameter></paramdef>
   <paramdef>XColor*foreground_color,<parameter> *background_color</parameter></paramdef>
@@ -744,14 +744,14 @@ function changes the color of the specified cursor, and
 if the cursor is being displayed on a screen,
 the change is visible immediately.
 The pixel members of the
-<function>XColor</function>
+<structname>XColor</structname>
 structures are ignored; only the <acronym>RGB</acronym> values are used.
 </para>
 <para>
 <!-- .LP -->
 <function>XRecolorCursor</function>
 can generate a
-<function>BadCursor </function>
+<errorname>BadCursor</errorname>
 error.
 </para>
 <para>
@@ -763,7 +763,7 @@ To free (destroy) a given cursor, use
 <!-- .sM -->
 <funcsynopsis>
 <funcprototype>
-  <funcdef><function> XFreeCursor</function></funcdef>
+  <funcdef><function>XFreeCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Cursor<parameter> cursor</parameter></paramdef>
 </funcprototype>
@@ -806,7 +806,7 @@ The specified cursor ID should not be referred to again.
 <!-- .LP -->
 <function>XFreeCursor</function>
 can generate a
-<function>BadCursor </function>
+<errorname>BadCursor</errorname>
 error.
 <!-- .bp -->
 
