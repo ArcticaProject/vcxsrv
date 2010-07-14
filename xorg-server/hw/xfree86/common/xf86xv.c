@@ -1229,11 +1229,15 @@ xf86XVQueryAdaptors(
 static Bool
 xf86XVEnterVT(int index, int flags)
 {
+    ScrnInfoPtr pScrn = xf86Screens[index];
     ScreenPtr pScreen = screenInfo.screens[index];
     XF86XVScreenPtr ScreenPriv = GET_XF86XV_SCREEN(pScreen);
     Bool ret;
 
+    pScrn->EnterVT = ScreenPriv->EnterVT;
     ret = (*ScreenPriv->EnterVT)(index, flags);
+    ScreenPriv->EnterVT = pScrn->EnterVT;
+    pScrn->EnterVT = xf86XVEnterVT;
 
     if(ret) WalkTree(pScreen, xf86XVReputAllVideo, 0);
 
@@ -1243,6 +1247,7 @@ xf86XVEnterVT(int index, int flags)
 static void
 xf86XVLeaveVT(int index, int flags)
 {
+    ScrnInfoPtr pScrn = xf86Screens[index];
     ScreenPtr pScreen = screenInfo.screens[index];
     XvScreenPtr pxvs = GET_XV_SCREEN(pScreen);
     XF86XVScreenPtr ScreenPriv = GET_XF86XV_SCREEN(pScreen);
@@ -1274,7 +1279,10 @@ xf86XVLeaveVT(int index, int flags)
 	}
     }
 
+    pScrn->LeaveVT = ScreenPriv->LeaveVT;
     (*ScreenPriv->LeaveVT)(index, flags);
+    ScreenPriv->LeaveVT = pScrn->LeaveVT;
+    pScrn->LeaveVT = xf86XVLeaveVT;
 }
 
 static void

@@ -216,9 +216,14 @@ static Bool
 ShadowEnterVT(int index, int flags)
 {
     ScrnInfoPtr pScrn = xf86Screens[index];
+    Bool ret;
     ShadowScreenPtr pPriv = GET_SCREEN_PRIVATE(pScrn->pScreen);
 
-    if((*pPriv->EnterVT)(index, flags)) {
+    pScrn->EnterVT = pPriv->EnterVT;
+    ret = (*pPriv->EnterVT)(index, flags);
+    pPriv->EnterVT = pScrn->EnterVT;
+    pScrn->EnterVT = ShadowEnterVT;
+    if(ret) {
 	pPriv->vtSema = TRUE;
         return TRUE;
     }
@@ -229,11 +234,15 @@ ShadowEnterVT(int index, int flags)
 static void
 ShadowLeaveVT(int index, int flags)
 {
+    ScrnInfoPtr pScrn = xf86Screens[index];
     ShadowScreenPtr pPriv = GET_SCREEN_PRIVATE(xf86Screens[index]->pScreen);
 
     pPriv->vtSema = FALSE;
 
+    pScrn->LeaveVT = pPriv->LeaveVT;
     (*pPriv->LeaveVT)(index, flags);
+    pPriv->LeaveVT = pScrn->LeaveVT;
+    pScrn->LeaveVT = ShadowLeaveVT;
 }
 
 /**********************************************************/

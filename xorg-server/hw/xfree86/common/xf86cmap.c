@@ -466,11 +466,17 @@ CMapInstallColormap(ColormapPtr pmap)
 static Bool 
 CMapEnterVT(int index, int flags)
 {
+    ScrnInfoPtr pScrn = xf86Screens[index];
     ScreenPtr pScreen = screenInfo.screens[index];
+    Bool ret;
     CMapScreenPtr pScreenPriv = (CMapScreenPtr)dixLookupPrivate(
 	&pScreen->devPrivates, CMapScreenKey);
 
-    if((*pScreenPriv->EnterVT)(index, flags)) {
+    pScrn->EnterVT = pScreenPriv->EnterVT;
+    ret = (*pScreenPriv->EnterVT)(index, flags);
+    pScreenPriv->EnterVT = pScrn->EnterVT;
+    pScrn->EnterVT = CMapEnterVT;
+    if(ret) {
 	if(GetInstalledmiColormap(pScreen))
 	    CMapReinstallMap(GetInstalledmiColormap(pScreen));
 	return TRUE;

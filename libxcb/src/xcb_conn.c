@@ -310,15 +310,15 @@ int _xcb_conn_wait(xcb_connection_t *c, pthread_cond_t *cond, struct iovec **vec
     pthread_mutex_unlock(&c->iolock);
     do {
 #if USE_POLL
-    ret = poll(&fd, 1, -1);
+        ret = poll(&fd, 1, -1);
 #else
-	ret = select(c->fd + 1, &rfds, &wfds, 0, 0);
+        ret = select(c->fd + 1, &rfds, &wfds, 0, 0);
 #endif
     } while (ret == -1 && errno == EINTR);
-    if (ret < 0)
+    if(ret < 0)
     {
         _xcb_conn_shutdown(c);
-	ret = 0;
+        ret = 0;
     }
     pthread_mutex_lock(&c->iolock);
 

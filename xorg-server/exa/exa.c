@@ -435,6 +435,29 @@ exaFinishAccess(DrawablePtr pDrawable, int index)
     (*pExaScr->info->FinishAccess) (pPixmap, i);
 }
 
+
+/**
+ * Helper for things common to all schemes when a pixmap is destroyed
+ */
+void
+exaDestroyPixmap(PixmapPtr pPixmap)
+{
+    ExaScreenPriv(pPixmap->drawable.pScreen);
+    int i;
+
+    /* Finish access if it was prepared (e.g. pixmap created during
+     * software fallback)
+     */
+    for (i = 0; i < EXA_NUM_PREPARE_INDICES; i++) {
+	if (pExaScr->access[i].pixmap == pPixmap) {
+	    exaFinishAccess(&pPixmap->drawable, i);
+	    pExaScr->access[i].pixmap = NULL;
+	    break;
+	}
+    }
+}
+
+
 /**
  * Here begins EXA's GC code.
  * Do not ever access the fb/mi layer directly.

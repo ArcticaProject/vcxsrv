@@ -44,17 +44,6 @@
 #include "darwin.h"
 
 /*
- * QuartzFSUseQDCursor
- *  Return whether the screen should use a QuickDraw cursor.
- */
-int QuartzFSUseQDCursor(
-    int depth)  // screen depth
-{
-    return TRUE;
-}
-
-
-/*
  * QuartzBlockHandler
  *  Clean out any autoreleased objects.
  */

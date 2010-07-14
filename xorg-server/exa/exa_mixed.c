@@ -245,9 +245,7 @@ exaDestroyPixmap_mixed(PixmapPtr pPixmap)
     {
 	ExaPixmapPriv (pPixmap);
 
-	/* During a fallback we must finish access, but we don't know the index. */
-	if (pExaScr->fallback_counter)
-	    exaFinishAccess(&pPixmap->drawable, -1);
+	exaDestroyPixmap(pPixmap);
 
 	if (pExaScr->deferred_mixed_pixmap == pPixmap)
 	    pExaScr->deferred_mixed_pixmap = NULL;

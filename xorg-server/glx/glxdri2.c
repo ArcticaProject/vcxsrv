@@ -605,12 +605,21 @@ static const char dri_driver_path[] = DRI_DRIVER_PATH;
 static Bool
 glxDRIEnterVT (int index, int flags)
 {
+    ScrnInfoPtr scrn = xf86Screens[index];
+    Bool	ret;
     __GLXDRIscreen *screen = (__GLXDRIscreen *) 
 	glxGetScreen(screenInfo.screens[index]);
 
     LogMessage(X_INFO, "AIGLX: Resuming AIGLX clients after VT switch\n");
 
-    if (!(*screen->enterVT) (index, flags))
+    scrn->EnterVT = screen->enterVT;
+
+    ret = scrn->EnterVT (index, flags);
+
+    screen->enterVT = scrn->EnterVT;
+    scrn->EnterVT = glxDRIEnterVT;
+
+    if (!ret)
 	return FALSE;
     
     glxResumeClients();
@@ -621,6 +630,7 @@ glxDRIEnterVT (int index, int flags)
 static void
 glxDRILeaveVT (int index, int flags)
 {
+    ScrnInfoPtr scrn = xf86Screens[index];
     __GLXDRIscreen *screen = (__GLXDRIscreen *)
 	glxGetScreen(screenInfo.screens[index]);
 
@@ -628,7 +638,10 @@ glxDRILeaveVT (int index, int flags)
 
     glxSuspendClients();
 
-    return (*screen->leaveVT) (index, flags);
+    scrn->LeaveVT = screen->leaveVT;
+    (*screen->leaveVT) (index, flags);
+    screen->leaveVT = scrn->LeaveVT;
+    scrn->LeaveVT = glxDRILeaveVT;
 }
 
 static void

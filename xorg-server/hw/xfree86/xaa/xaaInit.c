@@ -508,16 +508,23 @@ XAAChangeWindowAttributes (WindowPtr pWin, unsigned long mask)
 static Bool 
 XAAEnterVT(int index, int flags)
 {
+    ScrnInfoPtr pScrn = xf86Screens[index];
+    Bool ret;
     ScreenPtr pScreen = screenInfo.screens[index];
     XAAScreenPtr pScreenPriv = 
 	(XAAScreenPtr)dixLookupPrivate(&pScreen->devPrivates, XAAScreenKey);
 
-    return((*pScreenPriv->EnterVT)(index, flags));
+    pScrn->EnterVT = pScreenPriv->EnterVT;
+    ret = ((*pScreenPriv->EnterVT)(index, flags));
+    pScreenPriv->EnterVT = pScrn->EnterVT;
+    pScrn->EnterVT = XAAEnterVT;
+    return ret;
 }
 
 static void 
 XAALeaveVT(int index, int flags)
 {
+    ScrnInfoPtr pScrn = xf86Screens[index];
     ScreenPtr pScreen = screenInfo.screens[index];
     XAAScreenPtr pScreenPriv = 
 	(XAAScreenPtr)dixLookupPrivate(&pScreen->devPrivates, XAAScreenKey);
@@ -528,7 +535,10 @@ XAALeaveVT(int index, int flags)
         infoRec->NeedToSync = FALSE;
     }
 
+    pScrn->LeaveVT = pScreenPriv->LeaveVT;
     (*pScreenPriv->LeaveVT)(index, flags);
+    pScreenPriv->LeaveVT = pScrn->LeaveVT;
+    pScrn->LeaveVT = XAALeaveVT;
 }
 
 typedef struct {
