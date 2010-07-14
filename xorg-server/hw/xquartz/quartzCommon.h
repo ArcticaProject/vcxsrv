@@ -51,20 +51,13 @@ typedef struct {
 #define QUARTZ_PRIV(pScreen) \
     ((QuartzScreenPtr)dixLookupPrivate(&pScreen->devPrivates, quartzScreenKey))
 
-// Data stored at startup for Cocoa front end
-extern int              quartzEventWriteFD;
-
 // User preferences used by Quartz modes
 extern int              quartzUseSysBeep;
-extern int              focusOnNewWindow;
-extern int              quartzUseAGL;
-extern int              quartzEnableKeyEquivalents;
 extern int              quartzFullscreenDisableHotkeys;
 extern int              quartzOptionSendsAlt;
 
 // Other shared data
 extern int              quartzServerVisible;
-extern int              quartzServerQuitting;
 extern DevPrivateKeyRec quartzScreenKeyRec;
 #define quartzScreenKey (&quartzScreenKeyRec)
 extern int              aquaMenuBarHeight;
@@ -72,14 +65,6 @@ extern int              aquaMenuBarHeight;
 // Name of GLX bundle for native OpenGL
 extern const char      *quartzOpenGLBundle;
 
-void QuartzReadPreferences(void);
-void QuartzMessageMainThread(unsigned msg, void *data, unsigned length);
-void QuartzMessageServerThread(int type, int argc, ...);
-void QuartzSetWindowMenu(int nitems, const char **items,
-                         const char *shortcuts);
-void QuartzFSCapture(void);
-void QuartzFSRelease(void);
-int  QuartzFSUseQDCursor(int depth);
 void QuartzBlockHandler(pointer blockData, OSTimePtr pTimeout, pointer pReadmask);
 void QuartzWakeupHandler(pointer blockData, int result, pointer pReadmask);
 

@@ -67,12 +67,8 @@
 #define FAKE_RANDR 1
 
 // Shared global variables for Quartz modes
-int                     quartzEventWriteFD = -1;
 int                     quartzUseSysBeep = 0;
-int                     quartzUseAGL = 1;
-int                     quartzEnableKeyEquivalents = 1;
 int                     quartzServerVisible = FALSE;
-int                     quartzServerQuitting = FALSE;
 DevPrivateKeyRec        quartzScreenKeyRec;
 int                     aquaMenuBarHeight = 0;
 QuartzModeProcsPtr      quartzProcs = NULL;

@@ -67,6 +67,7 @@ static Bool
 load_cursor(CursorPtr src, int screen)
 {
     uint32_t *data;
+    Bool free_data = FALSE;
     uint32_t rowbytes;
     int width, height;
     int hot_x, hot_y;
@@ -95,6 +96,7 @@ load_cursor(CursorPtr src, int screen)
         unsigned i;
         rowbytes = src->bits->width * sizeof (CARD32);
         data = malloc(rowbytes * src->bits->height);
+        free_data = TRUE;
         if(!data) {
             FatalError("Failed to allocate memory in %s\n", __func__);
         }
@@ -121,6 +123,7 @@ load_cursor(CursorPtr src, int screen)
         /* round up to 8 pixel boundary so we can convert whole bytes */
         rowbytes = ((src->bits->width * 4) + 31) & ~31;
         data = malloc(rowbytes * src->bits->height);
+        free_data = TRUE;
         if(!data) {
             FatalError("Failed to allocate memory in %s\n", __func__);
         }
@@ -173,7 +176,8 @@ load_cursor(CursorPtr src, int screen)
     }
 
     err = xp_set_cursor(width, height, hot_x, hot_y, data, rowbytes);
-    free(data);
+    if(free_data)
+        free(data);
     return err == Success;
 }
 
