@@ -27,6 +27,7 @@ in this Software without prior written authorization from The Open Group.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <limits.h>
 #include "Xlibint.h"
 #include <X11/Xresource.h>
 #include <X11/keysymdef.h>
@@ -151,6 +152,15 @@ XStringToKeysym(_Xconst char *s)
 	if (val < 0x100)
 	    return val;
         return val | 0x01000000;
+    }
+
+    if (strlen(s) > 2 && s[0] == '0' && s[1] == 'x') {
+        char *tmp = NULL;
+        val = strtoul(s, &tmp, 16);
+        if (val == ULONG_MAX || (tmp && *tmp != '\0'))
+            return NoSymbol;
+        else
+            return val;
     }
 
     /* Stupid inconsistency between the headers and XKeysymDB: the former has
