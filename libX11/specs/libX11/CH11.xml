@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="event_handling_functions">
 <title>Event Handling Functions</title>
 
@@ -2436,7 +2439,7 @@ the major request protocol number is used for the message argument.
 For an extension request,
 the extension name (as given by
 <function>InitExtension</function>)
-followed by a period (\.) and the minor request protocol number 
+followed by a period (.) and the minor request protocol number 
 is used for the message argument.
 If no string is found in the error database,
 the default_string is returned to the buffer argument.

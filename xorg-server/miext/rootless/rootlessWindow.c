@@ -1315,6 +1315,13 @@ RootlessResizeWindow(WindowPtr pWin, int x, int y,
         RegionCopy(&pWin->clipList, &pWin->winSize);
         RegionCopy(&pWin->borderClip, &pWin->winSize);
 
+        if (winRec) {
+            SCREENREC(pScreen)->imp->ResizeFrame(winRec->wid, pScreen,
+                                                 x + SCREEN_TO_GLOBAL_X,
+                                                 y + SCREEN_TO_GLOBAL_Y,
+                                                 w, h, RL_GRAVITY_NONE);
+        }
+
         miSendExposures(pWin, &pWin->borderClip,
                         pWin->drawable.x, pWin->drawable.y);        
     }

@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="pixmap_and_cursor_functions">
 <title>Pixmap and Cursor Functions</title>
 <sect1 id="Creating_and_Freeing_Pixmaps">

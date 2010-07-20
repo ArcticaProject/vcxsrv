@@ -1,17 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <appendix id="compatibility_functions">
 <title>Compatibility Functions</title>
 <para>
-<!-- .LP -->
 The X Version 11 and X Version 10 functions discussed in this appendix 
 are obsolete, have been superseded by newer X Version 11 functions,
 and are maintained for compatibility reasons only.
-<!-- .SH -->
-X Version 11 Compatibility Functions
 </para>
+<sect1 id="X_Version_11_Compatibility_Functions">
+<title>X Version 11 Compatibility Functions</title>
 <para>
-<!-- .LP -->
 You can use the X Version 11 compatibility functions to:
-</para>
 <itemizedlist>
   <listitem>
     <para>
@@ -38,21 +38,21 @@ Parse window geometry
   <listitem>
     <para>
 Get X environment defaults
-<!-- .SH -->
-Setting Standard Properties
     </para>
   </listitem>
 </itemizedlist>
+</para>
+<sect2 id="Setting_Standard_Properties">
+<title>Setting Standard Properties</title>
 <para>
-<!-- .LP -->
 To specify a minimum set of properties describing the simplest application,
 use
 <function>XSetStandardProperties</function>.
 This function has been superseded by
 <function>XSetWMProperties</function>
 and sets all or portions of the 
-WM_NAME, WM_ICON_NAME, WM_HINTS, WM_COMMAND, 
-and WM_NORMAL_HINTS properties.
+<property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_COMMAND</property>, 
+and <property>WM_NORMAL_HINTS</property> properties.
 <indexterm significance="preferred"><primary>XSetStandardProperties</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
@@ -180,19 +180,20 @@ can generate
 and
 <errorname>BadWindow</errorname>
 errors.
-<!-- .SH -->
 </para>
+</sect2>
+<sect2 id="Setting_and_Getting_Window_Sizing_Hints">
+<title>Setting and Getting Window Sizing Hints</title>
 <para>
-Setting and Getting Window Sizing Hints
-</para>
-<para>
-<!-- .LP -->
 Xlib provides functions that you can use to set or get window sizing hints.
 The functions discussed in this section use the flags and the
 <structname>XSizeHints</structname>
 structure, as defined in the
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
-header file and use the WM_NORMAL_HINTS property.
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+header file and use the <property>WM_NORMAL_HINTS</property> property.
 </para>
 <para>
 <!-- .LP -->
@@ -353,7 +354,7 @@ error.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-The next two functions set and read the WM_ZOOM_HINTS property.
+The next two functions set and read the <property>WM_ZOOM_HINTS</property> property.
 </para>
 <para>
 <!-- .LP -->
@@ -494,7 +495,7 @@ error.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set the value of any property of type WM_SIZE_HINTS, use
+To set the value of any property of type <property>WM_SIZE_HINTS</property>, use
 <function>XSetSizeHints</function>.
 This function has been superseded by
 <function>XSetWMSizeHints</function>.
@@ -565,7 +566,7 @@ This is used by
 <function>XSetNormalHints</function>
 and
 <function>XSetZoomHints</function>
-and can be used to set the value of any property of type WM_SIZE_HINTS.
+and can be used to set the value of any property of type <property>WM_SIZE_HINTS</property>.
 Thus, it may be useful if other properties of that type get defined.
 </para>
 <para>
@@ -581,7 +582,7 @@ errors.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To read the value of any property of type WM_SIZE_HINTS, use
+To read the value of any property of type <property>WM_SIZE_HINTS</property>, use
 <function>XGetSizeHints</function>.
 This function has been superseded by
 <function>XGetWMSizeHints</function>.
@@ -653,7 +654,7 @@ This is used by
 and
 <function>XGetZoomHints</function>.
 It also can be used to retrieve the value of any property of type
-WM_SIZE_HINTS.
+<property>WM_SIZE_HINTS</property>.
 Thus, it may be useful if other properties of that type get defined.
 <function>XGetSizeHints</function>
 returns a nonzero status if a size hint was defined
@@ -667,11 +668,11 @@ can generate
 and 
 <errorname>BadWindow</errorname>
 errors.
-<!-- .SH -->
-Getting and Setting an XStandardColormap Structure
 </para>
+</sect2>
+<sect2 id="Getting_and_Setting_an_XStandardColormap_Structure">
+<title>Getting and Setting an XStandardColormap Structure</title>
 <para>
-<!-- .LP -->
 To get the 
 <structname>XStandardColormap</structname>
 structure associated with one of the described atoms, use
@@ -749,19 +750,9 @@ colormap for a display,
 you use
 <function>XGetStandardColormap</function>
 with the following syntax:
-</para>
-<para>
-<!-- .LP -->
-<!-- .sM -->
-<literallayout class="monospaced">
-<!-- .TA .5i 1.5i -->
-<!-- .ta .5i 1.5i -->
+<programlisting>
 XGetStandardColormap(dpy, DefaultRootWindow(dpy), &amp;cmap, XA_RGB_GRAY_MAP);
-</literallayout>
-</para>
-<para>
-<!-- .LP -->
-<!-- .eM -->
+</programlisting>
 See section 14.3 for the semantics of standard colormaps.
 </para>
 <para>
@@ -852,11 +843,11 @@ can generate
 and
 <errorname>BadWindow</errorname>
 errors.
-<!-- .SH -->
-Parsing Window Geometry
 </para>
+</sect2>
+<sect2 id="Parsing_Window_Geometry">
+<title>Parsing Window Geometry</title>
 <para>
-<!-- .LP -->
 To parse window geometry given a user-specified position 
 and a default position, use
 <function>XGeometry</function>.
@@ -1051,13 +1042,11 @@ The x and y coordinates are computed by using the border width,
 the screen width and height, padding as specified by xadder and yadder,
 and the fheight and fwidth times the width and height from the
 geometry specifications.
-<!-- .SH -->
 </para>
+</sect2>
+<sect2 id="Getting_the_X_Environment_Defaults">
+<title>Getting the X Environment Defaults</title>
 <para>
-Getting the X Environment Defaults
-</para>
-<para>
-<!-- .LP -->
 The
 <function>XGetDefault</function>
 function provides a primitive interface to the resource manager facilities 
@@ -1161,13 +1150,13 @@ looks for
 "<filename>$HOME/.Xdefaults-<replaceable>name</replaceable></filename>" ,
 where <replaceable>name</replaceable> specifies the name of the machine on which the application
 is running.
-<!-- .SH -->
-X Version 10 Compatibility Functions
 </para>
+</sect2>
+</sect1>
+<sect1 id="X_Version_10_Compatibility_Functions">
+<title>X Version 10 Compatibility Functions</title>
 <para>
-<!-- .LP -->
 You can use the X Version 10 compatibility functions to:
-</para>
 <itemizedlist>
   <listitem>
     <para>
@@ -1177,11 +1166,12 @@ Draw and fill polygons and curves
   <listitem>
     <para>
 Associate user data with a value
-<!-- .SH -->
-Drawing and Filling Polygons and Curves
     </para>
   </listitem>
 </itemizedlist>
+</para>
+<sect2 id="Drawing_and_Filling_Polygons_and_Curves">
+<title>Drawing and Filling Polygons and Curves</title>
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to draw or fill
@@ -1339,25 +1329,18 @@ vertex structure.
 <para>
 <!-- .LP -->
 Each Vertex, as defined in
-&lt;<filename class="headerfile">X11/X10.h</filename>&gt;,
+<filename class="headerfile">&lt;X11/X10.h&gt;</filename>,
+<indexterm type="file"><primary><filename class="headerfile">X11/X10.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/X10.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/X10.h&gt;</filename></secondary></indexterm>
 is a structure with the following members:
-</para>
-<para>
-<!-- .LP -->
 <indexterm significance="preferred"><primary>Vertex</primary></indexterm>
-<!-- .sM -->
-<literallayout class="monospaced">
-<!-- .TA .5i 1.5i -->
-<!-- .ta .5i 1.5i -->
+<synopsis>
 typedef struct _Vertex {
 	short x,y;
 	unsigned short flags;
 } Vertex;
-</literallayout>
-</para>
-<para>
-<!-- .LP -->
-<!-- .eM -->
+</synopsis>
 The x and y members are the coordinates of the vertex 
 that are relative to either the upper left inside corner of the drawable 
 (if 
@@ -1369,7 +1352,10 @@ is one).
 <para>
 <!-- .LP -->
 The flags, as defined in 
-&lt;<filename class="headerfile">X11/X10.h</filename>&gt;,
+<filename class="headerfile">&lt;X11/X10.h&gt;</filename>,
+<indexterm type="file"><primary><filename class="headerfile">X11/X10.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/X10.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/X10.h&gt;</filename></secondary></indexterm>
 are as follows:
 <indexterm significance="preferred"><primary>VertexRelative</primary></indexterm>
 <indexterm significance="preferred"><primary>VertexDontDraw</primary></indexterm>
@@ -1377,15 +1363,14 @@ are as follows:
 <indexterm significance="preferred"><primary>VertexStartClosed</primary></indexterm>
 <indexterm significance="preferred"><primary>VertexEndClosed</primary></indexterm>
 <!-- .sM -->
-</para>
 
-<literallayout class="monospaced">
+<synopsis>
 VertexRelative     0x0001     /* else absolute */
 VertexDontDraw     0x0002     /* else draw */
 VertexCurved       0x0004     /* else straight */
 VertexStartClosed  0x0008     /* else not */
 VertexEndClosed    0x0010     /* else not */
-</literallayout>
+</synopsis>
 
 <itemizedlist>
   <listitem>
@@ -1449,6 +1434,7 @@ and successor vertices for the spline algorithm.
     </para>
   </listitem>
 </itemizedlist>
+</para>
 <para>
 <!-- .LP -->
 This function uses these GC components:
@@ -1555,9 +1541,10 @@ It also uses these GC mode-dependent components:
 foreground, background, tile, stipple,
 tile-stipple-x-origin, tile-stipple-y-origin, 
 dash-offset, dash-list, fill-style, and fill-rule.
-<!-- .SH -->
-Associating User Data with a Value
 </para>
+</sect2>
+<sect2 id="Associating_User_Data_with_a_Value">
+<title>Associating User Data with a Value</title>
 <para>
 <!-- .LP -->
 These functions have been superseded by the context management functions
@@ -1865,7 +1852,7 @@ function deletes an association in an
 <function>XAssocTable</function>
 keyed on its XID.
 Redundant deletes (and deletes of nonexistent XIDs) are ignored.
-Deleting associations in no way impairs the performance of an 
+Deleting associations in no way impairs the performance of an
 <function>XAssocTable</function>.
 </para>
 <para>
@@ -1897,4 +1884,6 @@ Specifies the assoc table.
   </listitem>
   </varlistentry>
 </variablelist>
+</sect2>
+</sect1>
 </appendix>

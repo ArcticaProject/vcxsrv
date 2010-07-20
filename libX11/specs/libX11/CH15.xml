@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="resource_manager_functions">
 <title>Resource Manager Functions</title>
 <!-- .sp 2 -->
@@ -123,7 +126,10 @@ value for that entry.
 <para>
 <!-- .LP -->
 The definitions for the resource manager are contained in
-&lt;<filename class="headerfile">X11/Xresource.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xresource.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xresource.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xresource.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xresource.h&gt;</filename></secondary></indexterm>
 </para>
 <sect1 id="Resource_File_Syntax">
 <title>Resource File Syntax</title>
@@ -1484,9 +1490,6 @@ otherwise, they return
 <para>
 <!-- .LP -->
 <!-- .sp -->
-<!-- .EQ -->
-<!-- delim %% -->
-<!-- .EN -->
 Most applications and toolkits do not make random probes
 into a resource database to fetch resources.
 The X toolkit access pattern for a resource database is quite stylized.
@@ -1494,7 +1497,8 @@ A series of from 1 to 20 probes is made with only the
 last name/class differing in each probe.
 The 
 <function>XrmGetResource</function>
-function is at worst a %2 sup n% algorithm,  <!-- FIXME: log(n) ?  -->
+function is at worst a
+2<superscript><emphasis remap='I'>n</emphasis></superscript> algorithm,
 where <emphasis remap='I'>n</emphasis> is the length of the name/class list.
 This can be improved upon by the application programmer by prefetching a list
 of database levels that might match the first part of a name/class list.
@@ -1595,8 +1599,10 @@ otherwise, it returns
 The size of the search list that the caller must allocate is
 dependent upon the number of levels and wildcards in the resource specifiers 
 that are stored in the database.
-The worst case length is %3 sup n%,
-where <emphasis remap='I'>n</emphasis> is the number of name or class components in names or classes.
+The worst case length is
+3<superscript><emphasis remap='I'>n</emphasis></superscript>,
+where <emphasis remap='I'>n</emphasis> is the number of name or class
+components in names or classes.
 </para>
 <para>
 <!-- .LP -->

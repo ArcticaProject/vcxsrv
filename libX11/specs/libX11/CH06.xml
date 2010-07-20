@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="color_management_functions">
 <title>Color Management Functions</title>
 <!-- .sp 2 -->
@@ -77,9 +80,15 @@ Add new color spaces
 <!-- .LP -->
 All functions, types, and symbols in this chapter with the prefix ``Xcms''
 are defined in
-&lt;<filename class="headerfile">X11/Xcms.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xcms.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xcms.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xcms.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xcms.h&gt;</filename></secondary></indexterm>
 The remaining functions and types are defined in
-&lt;<filename class="headerfile">X11/Xlib.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xlib.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></secondary></indexterm>
 </para>
 <para>
 <!-- .LP -->
@@ -1994,9 +2003,6 @@ pixels_return array.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<!-- .EQ -->
-delim %%
-<!-- .EN -->
 The
 <function>XAllocColorCells</function>
 function allocates read/write color cells.
@@ -2010,7 +2016,8 @@ and nplane plane masks are returned.
 No mask will have any bits set to 1 in common with
 any other mask or with any of the pixels.
 By ORing together each pixel with zero or more masks,
-ncolors * %2 sup nplanes% distinct pixels can be produced.
+ncolors &times; 2<superscript><emphasis>nplanes</emphasis></superscript>
+distinct pixels can be produced.
 All of these are
 allocated writable by the request.
 For 
@@ -2197,9 +2204,6 @@ Return bit masks for the red, green, and blue planes.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<!-- .EQ -->
-delim %%
-<!-- .EN -->
 The specified ncolors must be positive; 
 and nreds, ngreens, and nblues must be nonnegative,
 or a
@@ -2220,12 +2224,17 @@ each mask
 will lie within the corresponding pixel subfield.
 By ORing together
 subsets of masks with each pixel value, 
-ncolors * %2 sup (nreds+ngreens+nblues)% distinct pixel values can be produced. 
+ncolors &times; 2<superscript><emphasis>(nreds+ngreens+nblues)</emphasis></superscript>
+distinct pixel values can be produced.
 All of these are allocated by the request.
 However, in the
-colormap, there are only ncolors * %2 sup nreds% independent red entries, 
-ncolors * %2 sup ngreens% independent green entries, 
-and ncolors * %2 sup nblues% independent blue entries. 
+colormap, there are only
+ncolors &times; 2<superscript><emphasis>nreds</emphasis></superscript>
+independent red entries,
+ncolors &times; 2<superscript><emphasis>ngreens</emphasis></superscript>
+independent green entries, and
+ncolors &times; 2<superscript><emphasis>nblues</emphasis></superscript>
+independent blue entries.
 This is true even for 
 <symbol>PseudoColor</symbol>.
 When the colormap entry of a pixel

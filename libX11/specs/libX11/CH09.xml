@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="window_and_session_manager_functions">
 <title>Window and Session Manager Functions</title>
 
@@ -1102,7 +1105,7 @@ or
 Timeout and interval are specified in seconds. 
 A timeout of 0 disables the screen saver 
 (but an activated screen saver is not deactivated),
-and a timeout of \-1 restores the default.
+and a timeout of &minus;1 restores the default.
 Other negative values generate a
 <errorname>BadValue</errorname>
 error.
