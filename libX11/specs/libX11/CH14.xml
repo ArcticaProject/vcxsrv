@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="inter_client_communication_functions">
 <title>Inter-Client Communication Functions</title>
 <para>
@@ -40,7 +43,7 @@ managers are:
   </thead>
   <tbody>
     <row>
-      <entry>WM_CLASS</entry>
+      <entry><property>WM_CLASS</property></entry>
       <entry>STRING</entry>
       <entry>8</entry>
       <entry>Set by application programs to allow
@@ -50,7 +53,7 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_CLIENT_MACHINE</entry>
+      <entry><property>WM_CLIENT_MACHINE</property></entry>
       <entry>TEXT</entry>
       <entry></entry>
       <entry>The string name of the machine on
@@ -59,7 +62,7 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_COLORMAP_WINDOWS</entry>
+      <entry><property>WM_COLORMAP_WINDOWS</property></entry>
       <entry>WINDOWS</entry>
       <entry>32</entry>
       <entry>The list of window IDs that may
@@ -68,7 +71,7 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_COMMAND</entry>
+      <entry><property>WM_COMMAND</property></entry>
       <entry>TEXT</entry>
       <entry></entry>
       <entry>The command and arguments, null-
@@ -76,8 +79,8 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_HINTS</entry>
-      <entry>WM_HINTS</entry>
+      <entry><property>WM_HINTS</property></entry>
+      <entry><property>WM_HINTS</property></entry>
       <entry>32</entry>
       <entry>Additional hints set by the client for
       use by the window manager. The C
@@ -85,14 +88,14 @@ managers are:
       </entry> 
     </row>
     <row>
-      <entry>WM_ICON_NAME</entry>
+      <entry><property>WM_ICON_NAME</property></entry>
       <entry>TEXT</entry>
       <entry></entry>
       <entry>The name to be used in an icon.</entry>
     </row>
     <row>
-      <entry>WM_ICON_SIZE</entry>
-      <entry>WM_ICON_SIZE</entry>
+      <entry><property>WM_ICON_SIZE</property></entry>
+      <entry><property>WM_ICON_SIZE</property></entry>
       <entry>32</entry>
       <entry>The window manager may set this
       property on the root window to
@@ -102,14 +105,14 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_NAME</entry>
+      <entry><property>WM_NAME</property></entry>
       <entry>TEXT</entry>
       <entry></entry>
       <entry>The name of the application.</entry>
     </row>
     <row>
-      <entry>WM_NORMAL_HINTS</entry>
-      <entry>WM_NORMAL_HINTS</entry>
+      <entry><property>WM_NORMAL_HINTS</property></entry>
+      <entry><property>WM_NORMAL_HINTS</property></entry>
       <entry>32</entry>
       <entry>Size hints for a window in its
       normal state. The C type of this
@@ -117,7 +120,7 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_PROTOCOLS</entry>
+      <entry><property>WM_PROTOCOLS</property></entry>
       <entry>ATOM</entry>
       <entry>32</entry>
       <entry>List of atoms that identify the 
@@ -127,8 +130,8 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_STATE</entry>
-      <entry>WM_STATE</entry>
+      <entry><property>WM_STATE</property></entry>
+      <entry><property>WM_STATE</property></entry>
       <entry>32</entry>
       <entry>Intended for communication
       between window and session man-
@@ -136,7 +139,7 @@ managers are:
       </entry>
     </row>
     <row>
-      <entry>WM_TRANSIENT_FOR</entry>
+      <entry><property>WM_TRANSIENT_FOR</property></entry>
       <entry>WINDOW</entry>
       <entry>32</entry>
       <entry>Set by application programs to 
@@ -186,47 +189,47 @@ Set and read text properties
   </listitem>
   <listitem>
     <para>
-Set and read the WM_NAME property
+Set and read the <property>WM_NAME</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_ICON_NAME property
+Set and read the <property>WM_ICON_NAME</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_HINTS property
+Set and read the <property>WM_HINTS</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_NORMAL_HINTS property
+Set and read the <property>WM_NORMAL_HINTS</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_CLASS property
+Set and read the <property>WM_CLASS</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_TRANSIENT_FOR property
+Set and read the <property>WM_TRANSIENT_FOR</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_PROTOCOLS property
+Set and read the <property>WM_PROTOCOLS</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_COLORMAP_WINDOWS property
+Set and read the <property>WM_COLORMAP_WINDOWS</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_ICON_SIZE property
+Set and read the <property>WM_ICON_SIZE</property> property
     </para>
   </listitem>
   <listitem>
@@ -303,7 +306,7 @@ Specifies the appropriate screen number on the host server.
 <!-- .eM -->
 The 
 <function>XIconifyWindow</function>
-function sends a WM_CHANGE_STATE 
+function sends a <property>WM_CHANGE_STATE</property> 
 <symbol>ClientMessage</symbol>
 event with a format of 32 and a first data element of 
 <symbol>IconicState</symbol>
@@ -317,7 +320,7 @@ with an event mask set to
 Window managers may elect to receive this message and
 if the window is in its normal state, 
 may treat it as a request to change the window's state from normal to iconic.
-If the WM_CHANGE_STATE property cannot be interned, 
+If the <property>WM_CHANGE_STATE</property> property cannot be interned, 
 <function>XIconifyWindow</function>
 does not send a message and returns a zero status.
 It returns a nonzero status if the client message is sent successfully;
@@ -1173,7 +1176,7 @@ and the missing charset list allocated by
 Xlib provides two functions that you can use to set and read
 the text properties for a given window.
 You can use these functions to set and read those properties of type TEXT
-(WM_NAME, WM_ICON_NAME, WM_COMMAND, and WM_CLIENT_MACHINE).
+(<property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_COMMAND</property>, and <property>WM_CLIENT_MACHINE</property>).
 In addition,
 Xlib provides separate convenience functions that you can use to set each 
 of these properties.
@@ -1382,12 +1385,12 @@ errors.
 <para>
 <!-- .LP -->
 Xlib provides convenience functions that you can use to set and read 
-the WM_NAME property for a given window.
+the <property>WM_NAME</property> property for a given window.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To set a window's WM_NAME property with the supplied convenience function, use
+To set a window's <property>WM_NAME</property> property with the supplied convenience function, use
 <function>XSetWMName</function>.
 <indexterm significance="preferred"><primary>XSetWMName</primary></indexterm>
 <!-- .sM -->
@@ -1442,12 +1445,12 @@ The
 <function>XSetWMName</function>
 convenience function calls
 <function>XSetTextProperty</function>
-to set the WM_NAME property.
+to set the <property>WM_NAME</property> property.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_NAME property with the supplied convenience function, use
+To read a window's <property>WM_NAME</property> property with the supplied convenience function, use
 <function>XGetWMName</function>.
 <indexterm significance="preferred"><primary>XGetWMName</primary></indexterm>
 <!-- .sM -->
@@ -1502,7 +1505,7 @@ The
 <function>XGetWMName</function>
 convenience function calls
 <function>XGetTextProperty</function>
-to obtain the WM_NAME property.
+to obtain the <property>WM_NAME</property> property.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
 </para>
@@ -1649,7 +1652,7 @@ If it succeeds,
 it returns a nonzero status; 
 otherwise, no name has been set for the window,
 and it returns zero.
-If the WM_NAME property has not been set for this window,
+If the <property>WM_NAME</property> property has not been set for this window,
 <function>XFetchName</function>
 sets window_name_return to NULL.
 If the data returned by the server is in the Latin Portable Character Encoding,
@@ -1675,12 +1678,12 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides convenience functions that you can use to set and read 
-the WM_ICON_NAME property for a given window.
+the <property>WM_ICON_NAME</property> property for a given window.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set a window's WM_ICON_NAME property,
+To set a window's <property>WM_ICON_NAME</property> property,
 use
 <function>XSetWMIconName</function>.
 <indexterm significance="preferred"><primary>XSetWMIconName</primary></indexterm>
@@ -1736,12 +1739,12 @@ The
 <function>XSetWMIconName</function>
 convenience function calls
 <function>XSetTextProperty</function>
-to set the WM_ICON_NAME property.
+to set the <property>WM_ICON_NAME</property> property.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_ICON_NAME property,
+To read a window's <property>WM_ICON_NAME</property> property,
 use
 <function>XGetWMIconName</function>.
 <indexterm significance="preferred"><primary>XGetWMIconName</primary></indexterm>
@@ -1797,7 +1800,7 @@ The
 <function>XGetWMIconName</function>
 convenience function calls
 <function>XGetTextProperty</function>
-to obtain the WM_ICON_NAME property.
+to obtain the <property>WM_ICON_NAME</property> property.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
 </para>
@@ -1960,11 +1963,14 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read 
-the WM_HINTS property for a given window.
+the <property>WM_HINTS</property> property for a given window.
 These functions use the flags and the
 <structname>XWMHints</structname>
 structure, as defined in the
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 header file.
 <!-- .sp -->
 </para>
@@ -2113,7 +2119,7 @@ or the window to be withdrawn.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set a window's WM_HINTS property, use
+To set a window's <property>WM_HINTS</property> property, use
 <function>XSetWMHints</function>.
 <indexterm significance="preferred"><primary>XSetWMHints</primary></indexterm>
 <!-- .sM -->
@@ -2182,7 +2188,7 @@ errors.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To read a window's WM_HINTS property, use
+To read a window's <property>WM_HINTS</property> property, use
 <function>XGetWMHints</function>.
 <indexterm significance="preferred"><primary>XGetWMHints</primary></indexterm>
 <!-- .sM -->
@@ -2223,7 +2229,7 @@ Specifies the window.
 The
 <function>XGetWMHints</function>
 function reads the window manager hints and 
-returns NULL if no WM_HINTS property was set on the window 
+returns NULL if no <property>WM_HINTS</property> property was set on the window 
 or returns a pointer to an 
 <structname>XWMHints</structname>
 structure if it succeeds.
@@ -2247,11 +2253,14 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set or read 
-the WM_NORMAL_HINTS property for a given window.
+the <property>WM_NORMAL_HINTS</property> property for a given window.
 The functions use the flags and the
 <structname>XSizeHints</structname>
 structure, as defined in the
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 header file.
 </para>
 <para>
@@ -2376,7 +2385,7 @@ macro is highly discouraged.
 </para>
 <para>
 <!-- .LP -->
-To set a window's WM_NORMAL_HINTS property, use
+To set a window's <property>WM_NORMAL_HINTS</property> property, use
 <function>XSetWMNormalHints</function>.
 <indexterm significance="preferred"><primary>XSetWMNormalHints</primary></indexterm>
 <!-- .sM -->
@@ -2427,12 +2436,12 @@ Specifies the size hints for the window in its normal state.
 <!-- .eM -->
 The 
 <function>XSetWMNormalHints</function>
-function replaces the size hints for the WM_NORMAL_HINTS property 
+function replaces the size hints for the <property>WM_NORMAL_HINTS</property> property 
 on the specified window.
 If the property does not already exist,
 <function>XSetWMNormalHints</function>
-sets the size hints for the WM_NORMAL_HINTS property on the specified window.
-The property is stored with a type of WM_SIZE_HINTS and a format of 32.
+sets the size hints for the <property>WM_NORMAL_HINTS</property> property on the specified window.
+The property is stored with a type of <property>WM_SIZE_HINTS</property> and a format of 32.
 </para>
 <para>
 <!-- .LP -->
@@ -2446,7 +2455,7 @@ errors.
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_NORMAL_HINTS property, use
+To read a window's <property>WM_NORMAL_HINTS</property> property, use
 <function>XGetWMNormalHints</function>.
 <indexterm significance="preferred"><primary>XGetWMNormalHints</primary></indexterm>
 <!-- .sM -->
@@ -2508,9 +2517,9 @@ Returns the hints that were supplied by the user.
 <!-- .eM -->
 The 
 <function>XGetWMNormalHints</function>
-function returns the size hints stored in the WM_NORMAL_HINTS property 
+function returns the size hints stored in the <property>WM_NORMAL_HINTS</property> property 
 on the specified window.
-If the property is of type WM_SIZE_HINTS, is of format 32,
+If the property is of type <property>WM_SIZE_HINTS</property>, is of format 32,
 and is long enough to contain either an old (pre-<acronym>ICCCM</acronym>) 
 or new size hints structure, 
 <function>XGetWMNormalHints</function>
@@ -2557,7 +2566,7 @@ error.
 </para>
 <para>
 <!-- .LP -->
-To set a window's WM_SIZE_HINTS property, use
+To set a window's <property>WM_SIZE_HINTS</property> property, use
 <function>XSetWMSizeHints</function>.
 <indexterm significance="preferred"><primary>XSetWMSizeHints</primary></indexterm>
 <!-- .sM -->
@@ -2627,7 +2636,7 @@ If the specified property does not already exist,
 <function>XSetWMSizeHints</function>
 sets the size hints for the specified property
 on the named window.
-The property is stored with a type of WM_SIZE_HINTS and a format of 32.
+The property is stored with a type of <property>WM_SIZE_HINTS</property> and a format of 32.
 To set a window's normal size hints, 
 you can use the 
 <function>XSetWMNormalHints</function>
@@ -2646,7 +2655,7 @@ errors.
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_SIZE_HINTS property, use
+To read a window's <property>WM_SIZE_HINTS</property> property, use
 <function>XGetWMSizeHints</function>.
 <indexterm significance="preferred"><primary>XGetWMSizeHints</primary></indexterm>
 <!-- .sM -->
@@ -2723,7 +2732,7 @@ The
 <function>XGetWMSizeHints</function>
 function returns the size hints stored in the specified property 
 on the named window.
-If the property is of type WM_SIZE_HINTS, is of format 32, 
+If the property is of type <property>WM_SIZE_HINTS</property>, is of format 32, 
 and is long enough to contain either an old (pre-<acronym>ICCCM</acronym>) 
 or new size hints structure, 
 <function>XGetWMSizeHints</function>
@@ -2783,11 +2792,14 @@ errors.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and get 
-the WM_CLASS property for a given window.
+the <property>WM_CLASS</property> property for a given window.
 These functions use the
 <structname>XClassHint</structname>
 structure, which is defined in the
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 header file.
 <!-- .sp -->
 </para>
@@ -2847,19 +2859,19 @@ typedef struct {
 <!-- .eM -->
 The res_name member contains the application name, 
 and the res_class member contains the application class. 
-Note that the name set in this property may differ from the name set as WM_NAME.
-That is, WM_NAME specifies what should be displayed in the title bar and,
+Note that the name set in this property may differ from the name set as <property>WM_NAME</property>.
+That is, <property>WM_NAME</property> specifies what should be displayed in the title bar and,
 therefore, can contain temporal information (for example, the name of
 a file currently in an editor's buffer).
 On the other hand, 
-the name specified as part of WM_CLASS is the formal name of the application
+the name specified as part of <property>WM_CLASS</property> is the formal name of the application
 that should be used when retrieving the application's resources from the 
 resource database.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set a window's WM_CLASS property, use
+To set a window's <property>WM_CLASS</property> property, use
 <function>XSetClassHint</function>.
 <indexterm significance="preferred"><primary>XSetClassHint</primary></indexterm>
 <!-- .sM -->
@@ -2928,7 +2940,7 @@ errors.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To read a window's WM_CLASS property, use
+To read a window's <property>WM_CLASS</property> property, use
 <function>XGetClassHint</function>.
 <indexterm significance="preferred"><primary>XGetClassHint</primary></indexterm>
 <!-- .sM -->
@@ -3009,12 +3021,12 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read
-the WM_TRANSIENT_FOR property for a given window.
+the <property>WM_TRANSIENT_FOR</property> property for a given window.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set a window's WM_TRANSIENT_FOR property, use
+To set a window's <property>WM_TRANSIENT_FOR</property> property, use
 <function>XSetTransientForHint</function>.
 <indexterm significance="preferred"><primary>XSetTransientForHint</primary></indexterm>
 <!-- .sM -->
@@ -3054,7 +3066,7 @@ Specifies the window.
     </term>
     <listitem>
       <para>
-Specifies the window that the WM_TRANSIENT_FOR property is to be set to.
+Specifies the window that the <property>WM_TRANSIENT_FOR</property> property is to be set to.
     </para>
   </listitem>
   </varlistentry>
@@ -3065,7 +3077,7 @@ Specifies the window that the WM_TRANSIENT_FOR property is to be set to.
 <!-- .eM -->
 The
 <function>XSetTransientForHint</function>
-function sets the WM_TRANSIENT_FOR property of the specified window to the 
+function sets the <property>WM_TRANSIENT_FOR</property> property of the specified window to the 
 specified prop_window.
 </para>
 <para>
@@ -3080,7 +3092,7 @@ errors.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To read a window's WM_TRANSIENT_FOR property, use
+To read a window's <property>WM_TRANSIENT_FOR</property> property, use
 <function>XGetTransientForHint</function>.
 <indexterm significance="preferred"><primary>XGetTransientForHint</primary></indexterm>
 <!-- .sM -->
@@ -3120,7 +3132,7 @@ Specifies the window.
     </term>
     <listitem>
       <para>
-Returns the WM_TRANSIENT_FOR property of the specified window.
+Returns the <property>WM_TRANSIENT_FOR</property> property of the specified window.
     </para>
   </listitem>
   </varlistentry>
@@ -3131,7 +3143,7 @@ Returns the WM_TRANSIENT_FOR property of the specified window.
 <!-- .eM -->
 The
 <function>XGetTransientForHint</function>
-function returns the WM_TRANSIENT_FOR property for the specified window.
+function returns the <property>WM_TRANSIENT_FOR</property> property for the specified window.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
 </para>
@@ -3151,12 +3163,12 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read
-the WM_PROTOCOLS property for a given window.
+the <property>WM_PROTOCOLS</property> property for a given window.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set a window's WM_PROTOCOLS property, use
+To set a window's <property>WM_PROTOCOLS</property> property, use
 <function>XSetWMProtocols</function>.
 <indexterm significance="preferred"><primary>XSetWMProtocols</primary></indexterm>
 <!-- .sM -->
@@ -3219,14 +3231,14 @@ Specifies the number of (Cn.
 <!-- .eM -->
 The 
 <function>XSetWMProtocols</function>
-function replaces the WM_PROTOCOLS property on the specified window 
+function replaces the <property>WM_PROTOCOLS</property> property on the specified window 
 with the list of atoms specified by the protocols argument.
 If the property does not already exist,
 <function>XSetWMProtocols</function>
-sets the WM_PROTOCOLS property on the specified window
+sets the <property>WM_PROTOCOLS</property> property on the specified window
 to the list of atoms specified by the protocols argument.
 The property is stored with a type of ATOM and a format of 32.
-If it cannot intern the WM_PROTOCOLS atom, 
+If it cannot intern the <property>WM_PROTOCOLS</property> atom, 
 <function>XSetWMProtocols</function>
 returns a zero status.
 Otherwise, it returns a nonzero status.
@@ -3243,7 +3255,7 @@ errors.
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_PROTOCOLS property, use
+To read a window's <property>WM_PROTOCOLS</property> property, use
 <function>XGetWMProtocols</function>.
 <indexterm significance="preferred"><primary>XGetWMProtocols</primary></indexterm>
 <!-- .sM -->
@@ -3306,12 +3318,12 @@ Returns the number of (Cn.
 <!-- .eM -->
 The 
 <function>XGetWMProtocols</function>
-function returns the list of atoms stored in the WM_PROTOCOLS property 
+function returns the list of atoms stored in the <property>WM_PROTOCOLS</property> property 
 on the specified window.
 These atoms describe window manager protocols in which the owner 
 of this window is willing to participate.
 If the property exists, is of type ATOM, is of format 32, 
-and the atom WM_PROTOCOLS can be interned, 
+and the atom <property>WM_PROTOCOLS</property> can be interned, 
 <function>XGetWMProtocols</function>
 sets the protocols_return argument to a list of atoms, 
 sets the count_return argument to the number of elements in the list, 
@@ -3337,12 +3349,12 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read
-the WM_COLORMAP_WINDOWS property for a given window.
+the <property>WM_COLORMAP_WINDOWS</property> property for a given window.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To set a window's WM_COLORMAP_WINDOWS property, use
+To set a window's <property>WM_COLORMAP_WINDOWS</property> property, use
 <function>XSetWMColormapWindows</function>.
 <indexterm significance="preferred"><primary>XSetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
@@ -3405,14 +3417,14 @@ Specifies the number of (Cn.
 <!-- .eM -->
 The 
 <function>XSetWMColormapWindows</function>
-function replaces the WM_COLORMAP_WINDOWS property on the specified
+function replaces the <property>WM_COLORMAP_WINDOWS</property> property on the specified
 window with the list of windows specified by the colormap_windows argument.
 If the property does not already exist,
 <function>XSetWMColormapWindows</function>
-sets the WM_COLORMAP_WINDOWS property on the specified
+sets the <property>WM_COLORMAP_WINDOWS</property> property on the specified
 window to the list of windows specified by the colormap_windows argument.
 The property is stored with a type of WINDOW and a format of 32.
-If it cannot intern the WM_COLORMAP_WINDOWS atom,
+If it cannot intern the <property>WM_COLORMAP_WINDOWS</property> atom,
 <function>XSetWMColormapWindows</function>
 returns a zero status.
 Otherwise, it returns a nonzero status.
@@ -3429,7 +3441,7 @@ errors.
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_COLORMAP_WINDOWS property, use
+To read a window's <property>WM_COLORMAP_WINDOWS</property> property, use
 <function>XGetWMColormapWindows</function>.
 <indexterm significance="preferred"><primary>XGetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
@@ -3493,11 +3505,11 @@ Returns the number of (Cn.
 The 
 <function>XGetWMColormapWindows</function>
 function returns the list of window identifiers stored 
-in the WM_COLORMAP_WINDOWS property on the specified window.
+in the <property>WM_COLORMAP_WINDOWS</property> property on the specified window.
 These identifiers indicate the colormaps that the window manager
 may need to install for this window.
 If the property exists, is of type WINDOW, is of format 32, 
-and the atom WM_COLORMAP_WINDOWS can be interned, 
+and the atom <property>WM_COLORMAP_WINDOWS</property> can be interned, 
 <function>XGetWMColormapWindows</function>
 sets the windows_return argument to a list of window identifiers, 
 sets the count_return argument to the number of elements in the list, 
@@ -3523,12 +3535,15 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read 
-the WM_ICON_SIZE property for a given window.
+the <property>WM_ICON_SIZE</property> property for a given window.
 These functions use the 
 <structname>XIconSize</structname>
 <indexterm><primary>XIconSize</primary></indexterm>
 structure, which is defined in the
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 header file.
 <!-- .sp -->
 </para>
@@ -3591,7 +3606,7 @@ sizes (minimum to maximum) that represent the supported icon sizes.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To set a window's WM_ICON_SIZE property, use
+To set a window's <property>WM_ICON_SIZE</property> property, use
 <function>XSetIconSizes</function>.
 <indexterm significance="preferred"><primary>XSetIconSizes</primary></indexterm>
 <!-- .sM -->
@@ -3667,7 +3682,7 @@ errors.
 <para>
 <!-- .LP -->
 <!-- .sp -->
-To read a window's WM_ICON_SIZE property, use
+To read a window's <property>WM_ICON_SIZE</property> property, use
 <function>XGetIconSizes</function>.
 <indexterm significance="preferred"><primary>XGetIconSizes</primary></indexterm>
 <!-- .sM -->
@@ -3764,8 +3779,8 @@ function stores the standard set of window manager properties,
 with text properties in standard encodings
 for internationalized text communication.
 The standard window manager properties for a given window are
-WM_NAME, WM_ICON_NAME, WM_HINTS, WM_NORMAL_HINTS, WM_CLASS,
-WM_COMMAND, WM_CLIENT_MACHINE, and WM_LOCALE_NAME.
+<property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_NORMAL_HINTS</property>, <property>WM_CLASS</property>,
+<property>WM_COMMAND</property>, <property>WM_CLIENT_MACHINE</property>, and <property>WM_LOCALE_NAME</property>.
 <indexterm significance="preferred"><primary>XmbSetWMProperties</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
@@ -3896,10 +3911,10 @@ for communicating with other clients
 <!-- .LP -->
 If the window_name argument is non-NULL,
 <function>XmbSetWMProperties</function>
-sets the WM_NAME property.
+sets the <property>WM_NAME</property> property.
 If the icon_name argument is non-NULL,
 <function>XmbSetWMProperties</function>
-sets the WM_ICON_NAME property.
+sets the <property>WM_ICON_NAME</property> property.
 The window_name and icon_name arguments are null-terminated strings
 in the encoding of the current locale.
 If the arguments can be fully converted to the STRING encoding,
@@ -3913,18 +3928,18 @@ If the normal_hints argument is non-NULL,
 <function>XmbSetWMProperties</function>
 calls
 <function>XSetWMNormalHints</function>,
-which sets the WM_NORMAL_HINTS property (see section 14.1.7).
+which sets the <property>WM_NORMAL_HINTS</property> property (see section 14.1.7).
 If the wm_hints argument is non-NULL, 
 <function>XmbSetWMProperties</function>
 calls
 <function>XSetWMHints</function>,
-which sets the WM_HINTS property (see section 14.1.6).
+which sets the <property>WM_HINTS</property> property (see section 14.1.6).
 </para>
 <para>
 <!-- .LP -->
 If the argv argument is non-NULL,
 <function>XmbSetWMProperties</function>
-sets the WM_COMMAND property from argv and argc.
+sets the <property>WM_COMMAND</property> property from argv and argc.
 An argc of zero indicates a zero-length command.
 </para>
 <para>
@@ -3937,7 +3952,7 @@ The hostname of the machine is stored using
 <!-- .LP -->
 If the class_hints argument is non-NULL,
 <function>XmbSetWMProperties</function>
-sets the WM_CLASS property.
+sets the <property>WM_CLASS</property> property.
 If the res_name member in the 
 <structname>XClassHint</structname>
 structure is set to the NULL pointer and the RESOURCE_NAME
@@ -3954,7 +3969,7 @@ It is assumed that the supplied class_hints.res_name and argv,
 the RESOURCE_NAME environment variable, and the hostname of the machine
 are in the encoding of the locale announced for the LC_CTYPE category
 (on <acronym>POSIX</acronym>-compliant systems, the LC_CTYPE, else LANG environment variable).
-The corresponding WM_CLASS, WM_COMMAND, and WM_CLIENT_MACHINE properties
+The corresponding <property>WM_CLASS</property>, <property>WM_COMMAND</property>, and <property>WM_CLIENT_MACHINE</property> properties
 are typed according to the local host locale announcer.
 No encoding conversion is performed prior to storage in the properties.
 </para>
@@ -3962,7 +3977,7 @@ No encoding conversion is performed prior to storage in the properties.
 <!-- .LP -->
 For clients that need to process the property text in a locale,
 <function>XmbSetWMProperties</function>
-sets the WM_LOCALE_NAME property to be the name of the current locale.
+sets the <property>WM_LOCALE_NAME</property> property to be the name of the current locale.
 The name is assumed to be in the Host Portable Character Encoding
 and is converted to STRING for storage in the property.
 </para>
@@ -3982,8 +3997,8 @@ To set a window's standard window manager properties
 with strings in client-specified encodings, use
 <function>XSetWMProperties</function>.
 The standard window manager properties for a given window are
-WM_NAME, WM_ICON_NAME, WM_HINTS, WM_NORMAL_HINTS, WM_CLASS,
-WM_COMMAND, and WM_CLIENT_MACHINE.
+<property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_NORMAL_HINTS</property>, <property>WM_CLASS</property>,
+<property>WM_COMMAND</property>, and <property>WM_CLIENT_MACHINE</property>.
 <indexterm significance="preferred"><primary>XSetWMProperties</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
@@ -4116,17 +4131,17 @@ If the window_name argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMName</function>,
-which, in turn, sets the WM_NAME property (see section 14.1.4).
+which, in turn, sets the <property>WM_NAME</property> property (see section 14.1.4).
 If the icon_name argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMIconName</function>,
-which sets the WM_ICON_NAME property (see section 14.1.5).
+which sets the <property>WM_ICON_NAME</property> property (see section 14.1.5).
 If the argv argument is non-NULL, 
 <function>XSetWMProperties</function>
 calls
 <function>XSetCommand</function>,
-which sets the WM_COMMAND property (see section 14.2.1).
+which sets the <property>WM_COMMAND</property> property (see section 14.2.1).
 Note that an argc of zero is allowed to indicate a zero-length command.
 Note also that the hostname of this machine is stored using
 <function>XSetWMClientMachine</function>
@@ -4138,12 +4153,12 @@ If the normal_hints argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMNormalHints</function>,
-which sets the WM_NORMAL_HINTS property (see section 14.1.7).
+which sets the <property>WM_NORMAL_HINTS</property> property (see section 14.1.7).
 If the wm_hints argument is non-NULL, 
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMHints</function>,
-which sets the WM_HINTS property (see section 14.1.6).
+which sets the <property>WM_HINTS</property> property (see section 14.1.6).
 </para>
 <para>
 <!-- .LP -->
@@ -4151,7 +4166,7 @@ If the class_hints argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetClassHint</function>,
-which sets the WM_CLASS property (see section 14.1.8).
+which sets the <property>WM_CLASS</property> property (see section 14.1.8).
 If the res_name member in the
 <structname>XClassHint</structname>
 structure is set to the NULL pointer and the RESOURCE_NAME environment 
@@ -4186,12 +4201,12 @@ This section discusses how to:
 <itemizedlist>
   <listitem>
     <para>
-Set and read the WM_COMMAND property
+Set and read the <property>WM_COMMAND</property> property
     </para>
   </listitem>
   <listitem>
     <para>
-Set and read the WM_CLIENT_MACHINE property
+Set and read the <property>WM_CLIENT_MACHINE</property> property
     </para>
   </listitem>
 </itemizedlist>
@@ -4203,12 +4218,12 @@ Set and read the WM_CLIENT_MACHINE property
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read
-the WM_COMMAND property for a given window.
+the <property>WM_COMMAND</property> property for a given window.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To set a window's WM_COMMAND property, use
+To set a window's <property>WM_COMMAND</property> property, use
 <function>XSetCommand</function>.
 <indexterm significance="preferred"><primary>XSetCommand</primary></indexterm>
 <!-- .sM -->
@@ -4288,7 +4303,7 @@ errors.
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_COMMAND property, use
+To read a window's <property>WM_COMMAND</property> property, use
 <function>XGetCommand</function>.
 <indexterm significance="preferred"><primary>XGetCommand</primary></indexterm>
 <!-- .sM -->
@@ -4350,9 +4365,9 @@ Returns the number of arguments returned.
 <!-- .eM -->
 The 
 <function>XGetCommand</function>
-function reads the WM_COMMAND property from the specified window 
+function reads the <property>WM_COMMAND</property> property from the specified window 
 and returns a string list.
-If the WM_COMMAND property exists, 
+If the <property>WM_COMMAND</property> property exists, 
 it is of type STRING and format 8.
 If sufficient memory can be allocated to contain the string list, 
 <function>XGetCommand</function>
@@ -4374,12 +4389,12 @@ To free the memory allocated to the string list, use
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set and read 
-the WM_CLIENT_MACHINE property for a given window.
+the <property>WM_CLIENT_MACHINE</property> property for a given window.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To set a window's WM_CLIENT_MACHINE property, use
+To set a window's <property>WM_CLIENT_MACHINE</property> property, use
 <function>XSetWMClientMachine</function>.
 <indexterm significance="preferred"><primary>XSetWMClientMachine</primary></indexterm>
 <!-- .sM -->
@@ -4434,12 +4449,12 @@ The
 <function>XSetWMClientMachine</function>
 convenience function calls
 <function>XSetTextProperty</function>
-to set the WM_CLIENT_MACHINE property.
+to set the <property>WM_CLIENT_MACHINE</property> property.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
-To read a window's WM_CLIENT_MACHINE property, use
+To read a window's <property>WM_CLIENT_MACHINE</property> property, use
 <function>XGetWMClientMachine</function>.
 <indexterm significance="preferred"><primary>XGetWMClientMachine</primary></indexterm>
 <!-- .sM -->
@@ -4494,7 +4509,7 @@ The
 <function>XGetWMClientMachine</function>
 convenience function performs an 
 <function>XGetTextProperty</function>
-on the WM_CLIENT_MACHINE property.
+on the <property>WM_CLIENT_MACHINE</property> property.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
 </para>
@@ -4772,7 +4787,10 @@ and each such property is identified by an atom.
 The following list names the atoms and describes the colormap
 associated with each one.
 The
-&lt;<filename class="headerfile">X11/Xatom.h</filename>&gt;
+<filename class="headerfile">&lt;X11/Xatom.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xatom.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></secondary></indexterm>
 header file contains the definitions for each of the following atoms,
 which are prefixed with XA_.
 </para>

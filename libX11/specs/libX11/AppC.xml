@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <appendix id="extensions">
 <title>Extensions</title>
 <para>
@@ -239,16 +242,16 @@ and is defined in
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XExtCodes</primary></indexterm>
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
+<synopsis>
 typedef struct _XExtCodes {	/* public to extension, cannot be changed */
-	int extension;	/* extension number */
+	int extension;		/* extension number */
 	int major_opcode;	/* major op-code assigned by server */
 	int first_event;	/* first event number for the extension */
 	int first_error;	/* first error number for the extension */
 } XExtCodes;
-</literallayout>
+</synopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -428,12 +431,14 @@ When
 is called, 
 your procedure is called 
 with these arguments:
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 </para>
-<literallayout class="monospaced">
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>codes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-</literallayout>
 <para>
 <indexterm significance="preferred"><primary>XESetCreateGC</primary></indexterm>
 <!-- .sM -->
@@ -492,16 +497,16 @@ It returns any previously defined procedure, usually NULL.
 <!-- .LP -->
 When a GC is created, 
 your procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>gc</emphasis>, <emphasis remap='I'>codes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	GC <emphasis remap='I'>gc</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-</literallayout>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>GC <parameter>gc</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 </para>
 <indexterm significance="preferred"><primary>XESetCopyGC</primary></indexterm>
 <!-- .sM -->
@@ -559,13 +564,15 @@ It returns any previously defined procedure, usually NULL.
 <!-- .LP -->
 When a GC is copied, 
 your procedure is called with these arguments:
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>GC <parameter>gc</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 </para>
-<literallayout class="monospaced">
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>gc</emphasis>, <emphasis remap='I'>codes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	GC <emphasis remap='I'>gc</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-</literallayout>
 <funcsynopsis>
 <funcprototype>
   <funcdef>int *<function>XESetFreeGC</function></funcdef>
@@ -619,19 +626,19 @@ It returns any previously defined procedure, usually NULL.
 <!-- .LP -->
 When a GC is freed, 
 your procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>gc</emphasis>, <emphasis remap='I'>codes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	GC <emphasis remap='I'>gc</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-</literallayout>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>GC <parameter>gc</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -700,19 +707,19 @@ or
 <function>XQueryFont</function>
 is called, 
 your procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>fs</emphasis>, <emphasis remap='I'>codes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XFontStruct *<emphasis remap='I'>fs</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-</literallayout>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XFontStruct *<parameter>fs</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -776,19 +783,19 @@ It returns any previously defined procedure, usually NULL.
 When 
 <function>XFreeFont</function>
 is called, your procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>fs</emphasis>, <emphasis remap='I'>codes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XFontStruct *<emphasis remap='I'>fs</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-</literallayout>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XFontStruct *<parameter>fs</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -895,21 +902,19 @@ and modify it before being placed in the queue or otherwise examined.
 <!-- .NE -->
 When Xlib needs to convert an event from wire format to host
 format, your procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-Status (*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>re</emphasis>, <emphasis remap='I'>event</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XEvent *<emphasis remap='I'>re</emphasis>;
-	xEvent *<emphasis remap='I'>event</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XEvent *<parameter>re</parameter></paramdef>
+  <paramdef>xEvent *<parameter>event</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 Your procedure must return status to indicate if the conversion succeeded.
@@ -1053,21 +1058,19 @@ and modify it before being sent to another client.
 <!-- .NE -->
 When Xlib needs to convert an event from host format to wire format, 
 your procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>re</emphasis>, <emphasis remap='I'>event</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XEvent *<emphasis remap='I'>re</emphasis>;
-	xEvent *<emphasis remap='I'>event</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XEvent *<parameter>re</parameter></paramdef>
+  <paramdef>xEvent *<parameter>event</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 The re argument is a pointer to the host format event,
@@ -1146,21 +1149,19 @@ X error before it is otherwise examined.
 <!-- .LP -->
 When Xlib needs to convert an error from wire format to host format,
 the procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-Bool (*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>he</emphasis>, <emphasis remap='I'>we</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XErrorEvent *<emphasis remap='I'>he</emphasis>;
-	xError *<emphasis remap='I'>we</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XErrorEvent *<parameter>he</parameter></paramdef>
+  <paramdef>xError *<parameter>we</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 The he argument is a pointer to where the host format error should be stored.
@@ -1234,22 +1235,20 @@ case, and are typically programmed to be synchronous).
 When Xlib detects a protocol error in 
 <function>_XReply</function>,
 it calls your procedure with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-int (*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>err</emphasis>, <emphasis remap='I'>codes</emphasis>, <emphasis remap='I'>ret_code</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	xError *<emphasis remap='I'>err</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-	int *<emphasis remap='I'>ret_code</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>xError *<parameter>err</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+  <paramdef>int *<parameter>ret_code</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 The err argument is a pointer to the 32-byte wire format error.
@@ -1326,19 +1325,19 @@ The following is an example.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-(*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>code</emphasis>, <emphasis remap='I'>codes</emphasis>, <emphasis remap='I'>buffer</emphasis>, <emphasis remap='I'>nbytes</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	int <emphasis remap='I'>code</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-	char *<emphasis remap='I'>buffer</emphasis>;
-	int <emphasis remap='I'>nbytes</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>int <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>int <parameter>code</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+  <paramdef>char *<parameter>buffer</parameter></paramdef>
+  <paramdef>int <parameter>nbytes</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 Your procedure is called with the error code for every error detected.
@@ -1403,21 +1402,19 @@ It returns any previously defined procedure.
 <!-- .LP -->
 When Xlib needs to print an error,
 the procedure is called with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-void (*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>ev</emphasis>, <emphasis remap='I'>fp</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XErrorEvent *<emphasis remap='I'>ev</emphasis>;
-	void *<emphasis remap='I'>fp</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>void <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XErrorEvent *<parameter>ev</parameter></paramdef>
+  <paramdef>void *<parameter>fp</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 The structure pointed at by ev is guaranteed to be as large as an
@@ -1532,22 +1529,20 @@ The
 function defines a procedure to be called when data is about to be
 sent to the server.  When data is about to be sent, your procedure is  
 called one or more times with these arguments:
-</para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
 <!-- .R -->
-void (*<emphasis remap='I'>proc</emphasis>)(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>codes</emphasis>, <emphasis remap='I'>data</emphasis>, <emphasis remap='I'>len</emphasis>)
-	Display *<emphasis remap='I'>display</emphasis>;
-	XExtCodes *<emphasis remap='I'>codes</emphasis>;
-	char *<emphasis remap='I'>data</emphasis>;
-	long <emphasis remap='I'>len</emphasis>;
-</literallayout>
-</para>
-<para>
+<funcsynopsis>
+<funcprototype>
+  <funcdef>void <function>(*<replaceable>proc</replaceable>)</function></funcdef>
+  <paramdef>Display *<parameter>display</parameter></paramdef>
+  <paramdef>XExtCodes *<parameter>codes</parameter></paramdef>
+  <paramdef>char *<parameter>data</parameter></paramdef>
+  <paramdef>long <parameter>len</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <!-- .LP -->
 <!-- .eM -->
 The data argument specifies a portion of the outgoing data buffer,
@@ -1583,16 +1578,16 @@ and is defined in
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XExtData</primary></indexterm>
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
+<synopsis>
 typedef struct _XExtData {
 	int number;	/* number returned by XInitExtension */
 	struct _XExtData *next;	/* next item on list of data for structure */
 	int (*free_private)();	/* if defined,  called to free private */
 	XPointer private_data;	/* data private to this extension. */
 } XExtData;
-</literallayout>
+</synopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -1606,16 +1601,16 @@ and the structure itself.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i -->
 <!-- .ta .5i -->
+<synopsis>
 union {	Display *display;
 	GC gc;
 	Visual *visual;
 	Screen *screen;
 	ScreenFormat *pixmap_format;
 	XFontStruct *font } XEDataObject;
-</literallayout>
+</synopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -1971,12 +1966,9 @@ For example, here is the source for the
 stub.
 (Writing extension stubs is discussed in the next section.)
 </para>
-<itemizedlist>
-  <listitem>
-    <para>
 <!-- .sM -->
 <!-- .nf -->
-
+<programlisting>
 #include &lt;X11/Xlibint.h&gt;
 
 /* precompute the maximum size of batching request allowed */
@@ -2020,10 +2012,8 @@ XDrawPoint(dpy, d, gc, x, y)
     UnlockDisplay(dpy);
     SyncHandle();
 }
+</programlisting>
 <!-- .fi -->
-    </para>
-  </listitem>
-</itemizedlist>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2088,10 +2078,10 @@ that looks similar to this:
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 #define X_DoSomething   42
-</literallayout>
+</programlisting>
 In your extension header file, 
 this will be a minor opcode, 
 instead of a major opcode.
@@ -2151,18 +2141,18 @@ which looks like:
 <!-- .LP -->
 <indexterm significance="preferred"><primary>xDoSomethingReq</primary></indexterm>
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
+<synopsis>
 typedef struct _DoSomethingReq {
-	CARD8 reqType;	/* X_DoSomething */
+	CARD8 reqType;		/* X_DoSomething */
 	CARD8 someDatum;	/* used differently in different requests */
 	CARD16 length B16;	/* total # of bytes in request, divided by 4 */
 	...
 	/* request-specific data */
 	...
 } xDoSomethingReq;
-</literallayout>
+</synopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -2189,16 +2179,16 @@ or
 <!-- .LP -->
 <indexterm significance="preferred"><primary>xResourceReq</primary></indexterm>
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
+<synopsis>
 typedef struct _ResourceReq {
 	CARD8 reqType;	/* the request type, e.g. X_DoSomething */
 	BYTE pad;	/* not used */
 	CARD16 length B16;	/* 2 (= total # of bytes in request, divided by 4) */
 	CARD32 id B32;	/* the Window, Drawable, Font, GContext, etc. */
 } xResourceReq;
-</literallayout>
+</synopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -2239,9 +2229,9 @@ also contains a reply structure typedef:
 <!-- .LP -->
 <indexterm significance="preferred"><primary>xDoSomethingReply</primary></indexterm>
 <!-- .sM -->
-<literallayout class="monospaced">
 <!-- .TA .5i 3i -->
 <!-- .ta .5i 3i -->
+<synopsis>
 typedef struct _DoSomethingReply {
 	BYTE type;	/* always X_Reply */
 	BYTE someDatum;	/* used differently in different requests */
@@ -2251,7 +2241,7 @@ typedef struct _DoSomethingReply {
 	/* request-specific data */
 	...
 } xDoSomethingReply;
-</literallayout>
+</synopsis>
 </para>
 <para>
 <!-- .LP -->
@@ -2305,8 +2295,8 @@ An Xlib stub procedure should start like this:
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 #include "&lt;X11/Xlibint.h&gt;
 
 XDoSomething (arguments, ... )
@@ -2315,17 +2305,17 @@ XDoSomething (arguments, ... )
 
 register XDoSomethingReq *req;
 ...
-</literallayout>
+</programlisting>
 If the protocol request has a reply, 
 then the variable declarations should include the reply structure for the request.
 The following is an example:
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 xDoSomethingReply rep;
-</literallayout> 
+</programlisting>
 <!-- .SH -->
 Locking Data Structures
 </para>
@@ -2408,10 +2398,10 @@ then use
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R  -->
+<programlisting>
 GetEmptyReq (DoSomething, req);
-</literallayout>
+</programlisting>
 If the protocol request has a single 32-bit argument (such as a
 <type>Pixmap</type>,
 <type>Window</type>,
@@ -2426,10 +2416,10 @@ is a good example.
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 GetResReq (DoSomething, rid, req);
-</literallayout>
+</programlisting>
 The rid argument is the 
 <type>Pixmap</type>,
 <type>Window</type>,
@@ -2447,14 +2437,14 @@ usually from arguments to the stub procedure.
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 GetReq (DoSomething, req);
 /* fill in arguments here */
 req-&gt;arg1 = arg1;
 req-&gt;arg2 = arg2;
 ...
-</literallayout>
+</programlisting>
 A few stub procedures (such as 
 <function>XCreateGC</function>
 and 
@@ -2468,12 +2458,12 @@ that were assigned to this client when it opened the connection.
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 rid = req-&gt;rid = XAllocID();
 ...
 return (rid);
-</literallayout>
+</programlisting>
 Finally, some stub procedures transmit a fixed amount of variable-length
 data after the request.  
 Typically, these procedures (such as
@@ -2515,10 +2505,10 @@ then you must round the length up and shift it before adding:
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 req-&gt;length += (nbytes+3)&gt;&gt;2;
-</literallayout>
+</programlisting>
 To transmit variable-length data, use the 
 <function>Data</function>
 macros.
@@ -2736,8 +2726,8 @@ data, you write something like:
 </para>
 <para>
 <!-- .LP -->
-<literallayout class="monospaced">
 <!-- .R -->
+<programlisting>
 _XReply(display, (xReply *)&amp;rep, 0, True);
 *ret1 = rep.ret1;
 *ret2 = rep.ret2;
@@ -2747,7 +2737,7 @@ UnlockDisplay(dpy);
 SyncHandle();
 return (rep.ret4);
 }
-</literallayout>
+</programlisting>
 If there is variable-length data after the reply, 
 change the 
 <symbol>True</symbol>

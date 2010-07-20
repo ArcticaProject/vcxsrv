@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="window_functions"><title>Window Functions</title>
 <sect1 id="Visual_Types">
 <title>Visual Types</title>
@@ -176,7 +179,7 @@ use
 <funcsynopsis>
 <funcprototype>
   <funcdef>VisualID <function>XVisualIDFromVisual</function></funcdef>
-  <paramdef>Visual<parameter> *\^visual</parameter></paramdef>
+  <paramdef>Visual *<parameter>visual</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
@@ -750,7 +753,7 @@ change of width and height, the (x, y) pairs are defined:
 <para>
 <!-- .LP -->
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='2' align='center'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
@@ -819,9 +822,9 @@ A bit-gravity of
 indicates that the contents or origin should not move relative to the 
 origin of the root window.
 If the change in size of the window is coupled with a change in position (x, y),
-then for bit-gravity the change in position of each pixel is (\-x, \-y), and for
+then for bit-gravity the change in position of each pixel is (&minus;x, &minus;y), and for
 win-gravity the change in position of a child when its parent is so resized is
-(\-x, \-y).
+(&minus;x, &minus;y).
 Note that
 <symbol>StaticGravity</symbol>
 still only takes effect when the width or height of the window is changed, 
@@ -3386,7 +3389,6 @@ To restack a set of windows from top to bottom, use
 <funcsynopsis>
 <funcprototype>
   <funcdef><function>XRestackWindows</function></funcdef>
-  <paramdef>XRestackWindows\^(\^display,windows,<parameter> \^nwindows)</parameter></paramdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> windows[]</parameter></paramdef>
   <paramdef>int<parameter> nwindows</parameter></paramdef>

@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="input_device_functions">
 <title>Input Device Functions</title>
 
@@ -3035,14 +3038,20 @@ standards.
 In areas where no standards exist,
 some of these sets are derived from Digital Equipment Corporation standards.
 The list of defined symbols can be found in
-&lt;<filename class="headerfile">X11/keysymdef.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/keysymdef.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename></secondary></indexterm>
 Unfortunately, some C preprocessors have
 limits on the number of defined symbols.
 If you must use KeySyms not
 in the Latin 1-4, Greek, and miscellaneous classes,
 you may have to define a symbol for those sets.
 Most applications usually only include 
-&lt;<filename class="headerfile">X11/keysym.h</filename>&gt;,
+<filename class="headerfile">&lt;X11/keysym.h&gt;</filename>,
+<indexterm type="file"><primary><filename class="headerfile">X11/keysym.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/keysym.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/keysym.h&gt;</filename></secondary></indexterm>
 which defines symbols for ISO Latin 1-4, Greek, and miscellaneous.
 </para>
 <para>

@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="window_information_functions">
 <title>Window Information Functions</title>
 
@@ -253,73 +256,38 @@ or
 <!-- .LP -->
 The bit_gravity member is set to the window's bit gravity
 and can be one of the following:
+  <simplelist type="vert" columns="2">
+    <member><symbol>ForgetGravity</symbol></member>
+    <member><symbol>NorthWestGravity</symbol></member>
+    <member><symbol>NorthGravity</symbol></member>
+    <member><symbol>NorthEastGravity</symbol></member>
+    <member><symbol>WestGravity</symbol></member>
+
+    <member><symbol>EastGravity</symbol></member>
+    <member><symbol>SouthWestGravity</symbol></member>
+    <member><symbol>SouthGravity</symbol></member>
+    <member><symbol>SouthEastGravity</symbol></member>
+    <member><symbol>StaticGravity</symbol></member>
+  </simplelist>
 </para>
-<informaltable>
-  <tgroup cols='2' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
-  <tbody>
-    <row>
-      <entry><symbol>ForgetGravity</symbol></entry>
-      <entry><symbol>EastGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>NorthWestGravity</symbol></entry>
-      <entry><symbol>SouthWestGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>NorthGravity</symbol></entry>
-      <entry><symbol>SouthGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>NorthEastGravity</symbol></entry>
-      <entry><symbol>SouthEastGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>WestGravity</symbol></entry>
-      <entry><symbol>StaticGravity</symbol></entry>
-    </row>
-  </tbody>
-  </tgroup>
-</informaltable>
 <para>
-<!-- .LP -->
 The win_gravity member is set to the window's window gravity
 and can be one of the following:
-</para>
+  <simplelist type="vert" columns="2">
+    <member><symbol>UnmapGravity</symbol></member>
+    <member><symbol>NorthWestGravity</symbol></member>
+    <member><symbol>NorthGravity</symbol></member>
+    <member><symbol>NorthEastGravity</symbol></member>
+    <member><symbol>WestGravity</symbol></member>
 
-<informaltable>
-  <tgroup cols='2' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
-  <tbody>
-    <row>
-      <entry><symbol>UnmapGravity</symbol></entry>
-      <entry><symbol>EastGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>NorthWestGravity</symbol></entry>
-      <entry><symbol>SouthWestGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>NorthGravity</symbol></entry>
-      <entry><symbol>SouthGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>NorthEastGravity</symbol></entry>
-      <entry><symbol>SouthEastGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>WestGravity</symbol></entry>
-      <entry><symbol>StaticGravity</symbol></entry>
-    </row>
-    <row>
-      <entry><symbol>CenterGravity</symbol></entry>
-      <entry></entry>
-    </row>
-  </tbody>
-  </tgroup>
-</informaltable>
+    <member><symbol>EastGravity</symbol></member>
+    <member><symbol>SouthWestGravity</symbol></member>
+    <member><symbol>SouthGravity</symbol></member>
+    <member><symbol>SouthEastGravity</symbol></member>
+    <member><symbol>StaticGravity</symbol></member>
+    <member><symbol>CenterGravity</symbol></member>
+  </simplelist>
+</para>
 <para>
 <!-- .LP -->
 For additional information on gravity,
@@ -910,7 +878,10 @@ arbitrary extension in this type scheme.
 Certain property names are
 predefined in the server for commonly used functions.
 The atoms for these properties are defined in 
-&lt;<filename class="headerfile">X11/Xatom.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xatom.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xatom.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></secondary></indexterm>
 To avoid name clashes with user symbols, the 
 <code>#define</code>
 name for each atom has the XA_ prefix.
@@ -973,206 +944,98 @@ event (none are built into the X server)
 <para>
 <!-- .LP -->
 The built-in selection property names are:
-</para>
-<para>
-<!-- .LP -->
-<literallayout class="monospaced">
-<!-- .TA .5i 1.5i 3i -->
-<!-- .ta .5i 1.5i 3i -->
-<!-- .R -->
-PRIMARY
-SECONDARY
-</literallayout>
+<simplelist type="vert" columns="2">
+  <member><property>PRIMARY</property></member>
+  <member><property>SECONDARY</property></member>
+</simplelist>
 </para>
 <para>
 <!-- .LP -->
 The built-in property names are: 
-<informaltable>
-  <tgroup cols='2' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
-  <tbody>
-    <row>
-      <entry>lw(2i) lw(2i).</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER0</entry>
-      <entry>RESOURCE_MANAGER</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER1</entry>
-      <entry>WM_CLASS</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER2</entry>
-      <entry>WM_CLIENT_MACHINE</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER3</entry>
-      <entry>WM_COLORMAP_WINDOWS</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER4</entry>
-      <entry>WM_COMMAND</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER5</entry>
-      <entry>WM_HINTS</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER6</entry>
-      <entry>WM_ICON_NAME</entry>
-    </row>
-    <row>
-      <entry>CUT_BUFFER7</entry>
-      <entry>WM_ICON_SIZE</entry>
-    </row>
-    <row>
-      <entry>RGB_BEST_MAP</entry>
-      <entry>WM_NAME</entry>
-    </row>
-    <row>
-      <entry>RGB_BLUE_MAP</entry>
-      <entry>WM_NORMAL_HINTS</entry>
-    </row>
-    <row>
-      <entry>RGB_DEFAULT_MAP</entry>
-      <entry>WM_PROTOCOLS</entry>
-    </row>
-    <row>
-      <entry>RGB_GRAY_MAP</entry>
-      <entry>WM_STATE</entry>
-    </row>
-    <row>
-      <entry>RGB_GREEN_MAP</entry>
-      <entry>WM_TRANSIENT_FOR</entry>
-    </row>
-    <row>
-      <entry>RGB_RED_MAP</entry>
-      <entry>WM_ZOOM_HINTS</entry>
-    </row>
-  </tbody>
-  </tgroup>
-</informaltable>
+  <simplelist type="vert" columns="2">
+    <member><property>CUT_BUFFER0</property></member>
+    <member><property>CUT_BUFFER1</property></member>
+    <member><property>CUT_BUFFER2</property></member>
+    <member><property>CUT_BUFFER3</property></member>
+    <member><property>CUT_BUFFER4</property></member>
+    <member><property>CUT_BUFFER5</property></member>
+    <member><property>CUT_BUFFER6</property></member>
+    <member><property>CUT_BUFFER7</property></member>
+    <member><property>RGB_BEST_MAP</property></member>
+    <member><property>RGB_BLUE_MAP</property></member>
+    <member><property>RGB_DEFAULT_MAP</property></member>
+    <member><property>RGB_GRAY_MAP</property></member>
+    <member><property>RGB_GREEN_MAP</property></member>
+    <member><property>RGB_RED_MAP</property></member>
+
+    <member><property>RESOURCE_MANAGER</property></member>
+    <member><property>WM_CLASS</property></member>
+    <member><property>WM_CLIENT_MACHINE</property></member>
+    <member><property>WM_COLORMAP_WINDOWS</property></member>
+    <member><property>WM_COMMAND</property></member>
+    <member><property>WM_HINTS</property></member>
+    <member><property>WM_ICON_NAME</property></member>
+    <member><property>WM_ICON_SIZE</property></member>
+    <member><property>WM_NAME</property></member>
+    <member><property>WM_NORMAL_HINTS</property></member>
+    <member><property>WM_PROTOCOLS</property></member>
+    <member><property>WM_STATE</property></member>
+    <member><property>WM_TRANSIENT_FOR</property></member>
+    <member><property>WM_ZOOM_HINTS</property></member>
+  </simplelist>
 </para>
 <para>
-<!-- .LP -->
 The built-in property types are: 
+  <simplelist type="vert" columns="2">
+    <member><property>ARC</property></member>
+    <member><property>ATOM</property></member>
+    <member><property>BITMAP</property></member>
+    <member><property>CARDINAL</property></member>
+    <member><property>COLORMAP</property></member>
+    <member><property>CURSOR</property></member>
+    <member><property>DRAWABLE</property></member>
+    <member><property>FONT</property></member>
+    <member><property>INTEGER</property></member>
+    <member><property>PIXMAP</property></member>
+    <member><property>POINT</property></member>
+    <member><property>RGB_COLOR_MAP</property></member>
+    <member><property>RECTANGLE</property></member>
+    <member><property>STRING</property></member>
+    <member><property>VISUALID</property></member>
+    <member><property>WINDOW</property></member>
+    <member><property>WM_HINTS</property></member>
+    <member><property>WM_SIZE_HINTS</property></member>
+  </simplelist>
 </para>
 <para>
-<!-- .LP -->
-<informaltable>
-  <tgroup cols='2' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
-  <tbody>
-    <row>
-      <entry>lw(2i) lw(2i).</entry>
-    </row>
-    <row>
-      <entry>ARC</entry>
-      <entry>POINT</entry>
-    </row>
-    <row>
-      <entry>ATOM</entry>
-      <entry>RGB_COLOR_MAP</entry>
-    </row>
-    <row>
-      <entry>BITMAP</entry>
-      <entry>RECTANGLE</entry>
-    </row>
-    <row>
-      <entry>CARDINAL</entry>
-      <entry>STRING</entry>
-    </row>
-    <row>
-      <entry>COLORMAP</entry>
-      <entry>VISUALID</entry>
-    </row>
-    <row>
-      <entry>CURSOR</entry>
-      <entry>WINDOW</entry>
-    </row>
-    <row>
-      <entry>DRAWABLE</entry>
-      <entry>WM_HINTS</entry>
-    </row>
-    <row>
-      <entry>FONT</entry>
-      <entry>WM_SIZE_HINTS</entry>
-    </row>
-    <row>
-      <entry>INTEGER</entry>
-    </row>
-    <row>
-      <entry>PIXMAP</entry>
-    </row>
-  </tbody>
-  </tgroup>
-</informaltable>
-</para>
-<para>
-<!-- .LP -->
 The built-in font property names are: 
-<informaltable>
-  <tgroup cols='2' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
-  <tbody>
-    <row>
-      <entry>lw(2i) lw(2i).</entry>
-    </row>
-    <row>
-      <entry>MIN_SPACE</entry>
-      <entry>STRIKEOUT_DESCENT</entry>
-    </row>
-    <row>
-      <entry>NORM_SPACE</entry>
-      <entry>STRIKEOUT_ASCENT</entry>
-    </row>
-    <row>
-      <entry>MAX_SPACE</entry>
-      <entry>ITALIC_ANGLE</entry>
-    </row>
-    <row>
-      <entry>END_SPACE</entry>
-      <entry>X_HEIGHT</entry>
-    </row>
-    <row>
-      <entry>SUPERSCRIPT_X</entry>
-      <entry>QUAD_WIDTH</entry>
-    </row>
-    <row>
-      <entry>SUPERSCRIPT_Y</entry>
-      <entry>WEIGHT</entry>
-    </row>
-    <row>
-      <entry>SUBSCRIPT_X</entry>
-      <entry>POINT_SIZE</entry>
-    </row>
-    <row>
-      <entry>SUBSCRIPT_Y</entry>
-      <entry>RESOLUTION</entry>
-    </row>
-    <row>
-      <entry>UNDERLINE_POSITION</entry>
-      <entry>COPYRIGHT</entry>
-    </row>
-    <row>
-      <entry>UNDERLINE_THICKNESS</entry>
-      <entry>NOTICE</entry>
-    </row>
-    <row>
-      <entry>FONT_NAME</entry>
-      <entry>FAMILY_NAME</entry>
-    </row>
-    <row>
-      <entry>FULL_NAME</entry>
-      <entry>CAP_HEIGHT</entry>
-    </row>
-  </tbody>
-  </tgroup>
-</informaltable>
+  <simplelist type="vert" columns="2">
+    <member><property>MIN_SPACE</property></member>
+    <member><property>NORM_SPACE</property></member>
+    <member><property>MAX_SPACE</property></member>
+    <member><property>END_SPACE</property></member>
+    <member><property>SUPERSCRIPT_X</property></member>
+    <member><property>SUPERSCRIPT_Y</property></member>
+    <member><property>SUBSCRIPT_X</property></member>
+    <member><property>SUBSCRIPT_Y</property></member>
+    <member><property>UNDERLINE_POSITION</property></member>
+    <member><property>UNDERLINE_THICKNESS</property></member>
+    <member><property>FONT_NAME</property></member>
+    <member><property>FULL_NAME</property></member>
+
+    <member><property>STRIKEOUT_DESCENT</property></member>
+    <member><property>STRIKEOUT_ASCENT</property></member>
+    <member><property>ITALIC_ANGLE</property></member>
+    <member><property>X_HEIGHT</property></member>
+    <member><property>QUAD_WIDTH</property></member>
+    <member><property>WEIGHT</property></member>
+    <member><property>POINT_SIZE</property></member>
+    <member><property>RESOLUTION</property></member>
+    <member><property>COPYRIGHT</property></member>
+    <member><property>NOTICE</property></member>
+    <member><property>FAMILY_NAME</property></member>
+    <member><property>CAP_HEIGHT</property></member>
+  </simplelist>
 </para>
 <para>
 <!-- .LP -->
@@ -1549,7 +1412,7 @@ To obtain the type, format, and value of a property of a given window, use
 <funcsynopsis>
 <funcprototype>
   <funcdef>int <function>XGetWindowProperty</function></funcdef>
-  <paramdef><parameter> \^display</parameter></paramdef>
+  <paramdef><parameter> display</parameter></paramdef>
   <paramdef><parameter> w</parameter></paramdef>
   <paramdef><parameter> property</parameter></paramdef>
   <paramdef><parameter> long_offset</parameter></paramdef>
@@ -2105,7 +1968,7 @@ To rotate a window's property list, use
   <funcdef><function>XRotateWindowProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Window<parameter> w</parameter></paramdef>
-  <paramdef>Atom<parameter> properties[]\^</parameter></paramdef>
+  <paramdef>Atom<parameter> properties[]</parameter></paramdef>
   <paramdef>int<parameter> num_prop</parameter></paramdef>
   <paramdef>int<parameter> npositions</parameter></paramdef>
 </funcprototype>
@@ -2176,7 +2039,7 @@ events.
 If the property names in the properties array are viewed as being numbered 
 starting from zero and if there are num_prop property names in the list,
 then the value associated with property name I becomes the value associated 
-with property name (I + npositions) mod N for all I from zero to N \- 1.
+with property name (I + npositions) mod N for all I from zero to N &minus; 1.
 The effect is to rotate the states by npositions places around the virtual ring
 of property names (right for positive npositions, 
 left for negative npositions).

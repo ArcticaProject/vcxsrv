@@ -1,70 +1,74 @@
-<chapter><title>Introduction to Xlib</title>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="Introduction_to_Xlib"><title>Introduction to Xlib</title>
 
-<para>
-The X Window System is a network-transparent window system that was designed at MIT. X
-display servers run on computers with either monochrome or color bitmap display hardware. The
-server distributes user input to and accepts output requests from various client programs located
-either on the same machine or elsewhere in the network. Xlib is a C subroutine library that appli-
-cation programs (clients) use to interface with the window system by means of a stream connec-
-tion. Although a client usually runs on the same machine as the X server it is talking to, this need
-not be the case.
-</para>
-<para>
-Xlib − C Language X Interface is a reference guide to the low-level C language interface to the X
-Window System protocol. It is neither a tutorial nor a user’s guide to programming the X Win-
-dow System. Rather, it provides a detailed description of each function in the library as well as a
-discussion of the related background information. Xlib − C Language X Interface assumes a
-basic understanding of a graphics window system and of the C programming language. Other
-higher-level abstractions (for example, those provided by the toolkits for X) are built on top of the
-Xlib library. For further information about these higher-level libraries, see the appropriate toolkit
-documentation. The X Window System Protocol provides the deﬁnitive word on the behavior of
-X. Although additional information appears here, the protocol document is the ruling document.
-</para>
-<para>
+  <para>
+The X Window System is a network-transparent window system that was
+designed at MIT. X display servers run on computers with either
+monochrome or color bitmap display hardware. The server distributes
+user input to and accepts output requests from various client programs
+located either on the same machine or elsewhere in the network. Xlib
+is a C subroutine library that application programs (clients) use to
+interface with the window system by means of a stream connection.
+Although a client usually runs on the same machine as the X server
+it is talking to, this need not be the case.
+  </para>
+  <para>
+<citetitle>Xlib − C Language X Interface</citetitle> is a reference
+guide to the low-level C language interface to the X Window System
+protocol. It is neither a tutorial nor a user’s guide to programming
+the X Window System. Rather, it provides a detailed description of
+each function in the library as well as a discussion of the related
+background information. <citetitle>Xlib − C Language X Interface</citetitle>
+assumes a basic understanding of a graphics window system and of the C
+programming language. Other higher-level abstractions (for example,
+those provided by the toolkits for X) are built on top of the Xlib
+library. For further information about these higher-level libraries,
+see the appropriate toolkit documentation.
+The <citetitle>X Window System Protocol</citetitle> provides the
+deﬁnitive word on the behavior of X.
+Although additional information appears here, the protocol document is
+the ruling document.
+  </para>
+  <para>
 To provide an introduction to X programming, this chapter discusses:
-</para>
 
-<itemizedlist>
-  <listitem><para>Overview of the X Window System</para></listitem>
-  <listitem><para>Errors</para></listitem>
-  <listitem><para>Standard header files</para></listitem>
-  <listitem><para>Generic values and types</para></listitem>
-  <listitem><para>Naming and argument conventions within Xlib</para></listitem>
-  <listitem><para>Programming considerations</para></listitem>
-  <listitem><para>Character sets and encodings</para></listitem>
-  <listitem><para>Formatting conventions</para></listitem>
-</itemizedlist>
+    <itemizedlist>
+      <listitem><para><link linkend="Overview_of_the_X_Window_System">Overview of the X Window System</link></para></listitem>
+      <listitem><para><link linkend="Errors">Errors</link></para></listitem>
+      <listitem><para><link linkend="Standard_Header_Files">Standard header files</link></para></listitem>
+      <listitem><para><link linkend="Generic_Values_and_Types">Generic values and types</link></para></listitem>
+      <listitem><para><link linkend="Naming_and_Argument_Conventions_within_Xlib">Naming and argument conventions within Xlib</link></para></listitem>
+      <listitem><para><link linkend="Programming_Considerations">Programming considerations</link></para></listitem>
+      <listitem><para><link linkend="Character_Sets_and_Encodings">Character sets and encodings</link></para></listitem>
+      <listitem><para><link linkend="Formatting_Conventions">Formatting conventions</link></para></listitem>
+    </itemizedlist>
+  </para>
 
-
-<sect1 id="Overview_of_the_X_Window_System">
-<title>Overview of the X Window System</title>
-<!-- .XS -->
-<!-- (SN Overview of the X Window System -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
+  <sect1 id="Overview_of_the_X_Window_System">
+    <title>Overview of the X Window System</title>
+    <para>
 Some of the terms used in this book are unique to X,
-and other terms that are common to other window systems 
-have different meanings in X.
-You may find it helpful to refer to the glossary, 
+and other terms that are common to other window systems
+have different meanings in X. You may find it helpful to refer to
+<link linkend="glossary">the glossary</link>,
 which is located at the end of the book.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 The X Window System supports one or more screens containing
 overlapping windows or subwindows.
-A screen is a physical monitor and hardware
+<indexterm><primary>Screen</primary></indexterm>
+A <firstterm>screen</firstterm> is a physical monitor and hardware
 that can be color, grayscale, or monochrome.
 There can be multiple screens for each display or workstation.
 A single X server can provide display services for any number of screens.
 A set of screens for a single user with one keyboard and one pointer
-(usually a mouse) is called a display.
-</para>
-<para>
-<!-- .LP -->
-<indexterm><primary>Screen</primary></indexterm>
+(usually a mouse) is called a <firstterm>display</firstterm>.
+    </para>
+    <para>
 All the windows in an X server are arranged in strict hierarchies.
-At the top of each hierarchy is a root window,
+At the top of each hierarchy is a <firstterm>root window</firstterm>,
 which covers each of the display screens.
 Each root window is partially or completely covered by child windows.
 All windows, except for root windows, have parents.
@@ -72,29 +76,27 @@ There is usually at least one window for each application program.
 <indexterm><primary>Child window</primary></indexterm>
 <indexterm><primary>Parent Window</primary></indexterm>
 Child windows may in turn have their own children.
-In this way, 
-an application program can create an arbitrarily deep tree 
+In this way,
+an application program can create an arbitrarily deep tree
 on each screen.
 X provides graphics, text, and raster operations for windows.
-</para>
-<para>
-<!-- .LP -->
-A child window can be larger than its parent. 
+    </para>
+    <para>
+A child window can be larger than its parent.
 That is, part or all of
 the child window can extend beyond the boundaries of the parent,
 but all output to a window is clipped by its parent.
 <indexterm><primary>Stacking order</primary></indexterm>
-If several children of a window have overlapping locations, 
+If several children of a window have overlapping locations,
 one of the children is considered to be on top of or raised over the
 others, thus obscuring them.
 Output to areas covered by other windows is suppressed by the window
 system unless the window has backing store.
-If a window is obscured by a second window, 
+If a window is obscured by a second window,
 the second window obscures only those ancestors of the second window
 that are also ancestors of the first window.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 <indexterm significance="preferred"><primary>Window</primary></indexterm>
 A window has a border zero or more pixels in width, which can
 be any pattern (pixmap) or solid color you like.
@@ -103,43 +105,40 @@ which will be repainted by the window system when uncovered.
 Child windows obscure their parents,
 and graphic operations in the parent window usually
 are clipped by the children.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 Each window and pixmap has its own coordinate system.
 The coordinate system has the X axis horizontal and the Y axis vertical
 with the origin [0, 0] at the upper-left corner.
 Coordinates are integral,
 in terms of pixels,
 and coincide with pixel centers.
-For a window, 
+For a window,
 the origin is inside the border at the inside, upper-left corner.
-</para>
-<para>
-<!-- .LP -->
-X does not guarantee to preserve the contents of windows. 
+    </para>
+    <para>
+X does not guarantee to preserve the contents of windows.
 When part or all of a window is hidden and then brought back onto the screen,
-its contents may be lost. 
+its contents may be lost.
 The server then sends the client program an
-<symbol>Expose</symbol>
+<systemitem class="event">Expose</systemitem>
 event to notify it that part or all of the window needs to be repainted.
 Programs must be prepared to regenerate the contents of windows on demand.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 <indexterm><primary>Pixmap</primary></indexterm>
 <indexterm><primary>Drawable</primary></indexterm>
 <indexterm><primary>Tile</primary></indexterm>
 <indexterm><primary>Bitmap</primary></indexterm>
 X also provides off-screen storage of graphics objects,
-called pixmaps.
-Single plane (depth 1) pixmaps are sometimes referred to as bitmaps.
+called <firstterm linkend="glossary:Pixmap">pixmaps</firstterm>.
+Single plane (depth 1) pixmaps are sometimes referred to as
+<firstterm>bitmaps</firstterm>.
 Pixmaps can be used in most graphics functions interchangeably with
 windows and are used in various graphics operations to define patterns or tiles.
 Windows and pixmaps together are referred to as drawables.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 Most of the functions in Xlib just add requests to an output buffer.
 These requests later execute asynchronously on the X server.
 Functions that return values of information stored in
@@ -147,39 +146,41 @@ the server do not return (that is, they block)
 until an explicit reply is received or an error occurs.
 You can provide an error handler,
 which will be called when the error is reported.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 <indexterm><primary>XSync</primary></indexterm>
-If a client does not want a request to execute asynchronously, 
-it can follow the request with a call to 
+If a client does not want a request to execute asynchronously,
+it can follow the request with a call to
 <function>XSync</function>,
 which blocks until all previously buffered
 asynchronous events have been sent and acted on.
-As an important side effect, 
+As an important side effect,
 the output buffer in Xlib is always flushed by a call to any function
 that returns a value from the server or waits for input.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 <indexterm><primary>Resource IDs</primary></indexterm>
 <indexterm><primary>Resource IDs</primary><secondary>Window</secondary></indexterm>
 <indexterm><primary>Resource IDs</primary><secondary>Font</secondary></indexterm>
 <indexterm><primary>Resource IDs</primary><secondary>Pixmap</secondary></indexterm>
+<indexterm><primary>Resource IDs</primary><secondary>Colormap</secondary></indexterm>
 <indexterm><primary>Resource IDs</primary><secondary>Cursor</secondary></indexterm>
 <indexterm><primary>Resource IDs</primary><secondary>GContext</secondary></indexterm>
 Many Xlib functions will return an integer resource ID,
 which allows you to refer to objects stored on the X server.
-These can be of type 
+These can be of type
 <type>Window</type>,
 <type>Font</type>,
 <type>Pixmap</type>,
 <type>Colormap</type>,
 <type>Cursor</type>,
-and 
+and
 <type>GContext</type>,
 as defined in the file
-&lt;<filename class="headerfile">X11/X.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/X.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/X.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/X.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/X.h&gt;</filename></secondary></indexterm>
 These resources are created by requests and are destroyed
 (or freed) by requests or when connections are closed.
 Most of these resources are potentially sharable between
@@ -189,23 +190,21 @@ Fonts and cursors are shared automatically across multiple screens.
 Fonts are loaded and unloaded as needed and are shared by multiple clients.
 Fonts are often cached in the server.
 Xlib provides no support for sharing graphics contexts between applications.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 <indexterm><primary>Event</primary></indexterm>
 Client programs are informed of events.
 Events may either be side effects of a request (for example, restacking windows
-generates 
-<symbol>Expose</symbol>
+generates
+<systemitem class="event">Expose</systemitem>
 events) or completely asynchronous (for example, from the keyboard).
 A client program asks to be informed of events.
 Because other applications can send events to your application,
 programs must be prepared to handle (or ignore) events of all types.
-</para>
-<para>
-<!-- .LP -->
-Input events (for example, a key pressed or the pointer moved) 
-arrive asynchronously from the server and are queued until they are 
+    </para>
+    <para>
+Input events (for example, a key pressed or the pointer moved)
+arrive asynchronously from the server and are queued until they are
 requested by an explicit call (for example,
 <function>XNextEvent</function>
 or
@@ -213,7 +212,7 @@ or
 In addition, some library
 functions (for example,
 <function>XRaiseWindow</function>)
-generate 
+generate
 <symbol>Expose</symbol>
 and
 <symbol>ConfigureRequest</symbol>
@@ -223,70 +222,66 @@ These events also arrive asynchronously, but the client may
 wish to explicitly wait for them by calling
 <function>XSync</function>
 after calling a function that can cause the server to generate events.
-</para>
-</sect1>
-<sect1 id="Errors">
-<title>Errors</title>
-<!-- .XS -->
-<!-- (SN Errors -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
-Some functions return 
+    </para>
+  </sect1>
+
+  <sect1 id="Errors">
+    <title>Errors</title>
+
+    <para>
+Some functions return
 <type>Status</type>,
 an integer error indication.
 If the function fails, it returns a zero.
 If the function returns a status of zero,
 it has not updated the return arguments.
 <indexterm><primary>Status</primary></indexterm>
-Because C does not provide multiple return values, 
-many functions must return their results by writing into client-passed storage. 
+Because C does not provide multiple return values,
+many functions must return their results by writing into client-passed storage.
 <indexterm><primary>Error</primary><secondary>handling</secondary></indexterm>
 By default, errors are handled either by a standard library function
 or by one that you provide.
 Functions that return pointers to strings return NULL pointers if
 the string does not exist.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 The X server reports protocol errors at the time that it detects them.
 If more than one error could be generated for a given request,
 the server can report any of them.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 Because Xlib usually does not transmit requests to the server immediately
 (that is, it buffers them), errors can be reported much later than they
 actually occur.
 For debugging purposes, however,
-Xlib provides a mechanism for forcing synchronous behavior 
+Xlib provides a mechanism for forcing synchronous behavior
 (see section 11.8.1). <!-- xref -->
-When synchronization is enabled, 
+When synchronization is enabled,
 errors are reported as they are generated.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 When Xlib detects an error,
 it calls an error handler,
 which your program can provide.
 If you do not provide an error handler,
 the error is printed, and your program terminates.
-</para>
-</sect1>
-<sect1 id="Standard_Header_Files">
-<title>Standard Header Files</title>
-<!-- .XS -->
-<!-- (SN Standard Header Files -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
+    </para>
+  </sect1>
+
+  <sect1 id="Standard_Header_Files">
+    <title>Standard Header Files</title>
+
+    <para>
 The following include files are part of the Xlib standard:
-</para>
+<indexterm><primary>Headers</primary></indexterm>
 
 <variablelist>
-  <varlistentry>
-    <term>&lt;<filename class="headerfile">X11/Xlib.h</filename>&gt;</term>
+  <varlistentry id="Standard_Header_Files:Xlib.h">
+    <term><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xlib.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xlib.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xlib.h&gt;</secondary></indexterm>
       <para>
 This is the main header file for Xlib.
 The majority of all Xlib symbols are declared by including this file.
@@ -298,212 +293,262 @@ This symbol is defined to have the 6 in this release of the standard.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/X.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:X.h">
+    <term><filename class="headerfile">&lt;X11/X.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/X.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/X.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/X.h&gt;</secondary></indexterm>
       <para>
 This file declares types and constants for the X protocol that are
 to be used by applications.  It is included automatically from
-&gt;X11/Xlib.h&lt; so application code should never need to 
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>
+so application code should never need to
 reference this file directly.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xcms.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:Xcms.h">
+    <term><filename class="headerfile">&lt;X11/Xcms.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xcms.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xcms.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xcms.h&gt;</secondary></indexterm>
       <para>
 This file contains symbols for much of the color management facilities
-described in chapter 6.  All functions, types, and symbols with the 
+described in chapter 6.  All functions, types, and symbols with the
 prefix "Xcms", <!-- xref -->
 plus the Color Conversion Contexts macros, are declared in this file.
-&lt;X11/Xlib.h&gt; must be included before including this file.
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xutil.h&gt;</term>
-    <listitem>
-      <para>
-This file declares various functions, types, and symbols used for
-inter-client communication and application utility functions,
-which are described in chapters 14 and 16. <!-- xref -->
-&lt;X11/Xlib.h&gt; must be included before including this file.
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xresource.h&gt;</term>
-    <listitem>
-      <para>
-This file declares all functions, types, and symbols for the
-resource manager facilities, which are described in chapter 15.
-&lt;X11/Xlib.h&gt; <!-- xref -->
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>
 must be included before including this file.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xatom.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:Xutil.h">
+    <term><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xutil.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xutil.h&gt;</secondary></indexterm>
       <para>
-This file declares all predefined atoms, 
+This file declares various functions, types, and symbols used for
+inter-client communication and application utility functions,
+which are described in chapters 14 and 16. <!-- xref -->
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename> must be included before including this file.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry id="Standard_Header_Files:Xresource.h">
+    <term><filename class="headerfile">&lt;X11/Xresource.h&gt;</filename></term>
+    <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xresource.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xresource.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xresource.h&gt;</secondary></indexterm>
+      <para>
+This file declares all functions, types, and symbols for the
+resource manager facilities, which are described in chapter 15.
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename> <!-- xref -->
+must be included before including this file.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry id="Standard_Header_Files:Xatom.h">
+    <term><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></term>
+    <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xatom.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xatom.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xatom.h&gt;</secondary></indexterm>
+      <para>
+This file declares all predefined atoms,
 which are symbols with the prefix "XA_".
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/cursorfont.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:cursorfont.h">
+    <term><filename class="headerfile">&lt;X11/cursorfont.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/cursorfont.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/cursorfont.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/cursorfont.h&gt;</secondary></indexterm>
       <para>
 This file declares the cursor symbols for the standard cursor font,
-which are listed in appendix B.
+which are listed in <link linkend="x_font_cursors">Appendix B</link>.
 All cursor symbols have the prefix "XC_".
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/keysymdef.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:keysymdef.h">
+    <term><filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/keysymdef.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/keysymdef.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/keysymdef.h&gt;</secondary></indexterm>
       <para>
 This file declares all standard KeySym values,
 which are symbols with the prefix "XK_".
 The KeySyms are arranged in groups, and a preprocessor symbol controls
 inclusion of each group.  The preprocessor symbol must be defined
 prior to inclusion of the file to obtain the associated values.
-The preprocessor symbols are <function>XK_MISCELLANY, XK_XKB_KEYS, XK_3270,
-XK_LATIN1, XK_LATIN2, XK_LATIN3, XK_LATIN4, XK_KATAKANA, XK_ARABIC, 
-XK_CYRILLIC, XK_GREEK, XK_TECHNICAL, XK_SPECIAL, XK_PUBLISHING, XK_APL, 
-XK_HEBREW, XK_THAI, and XK_KOREAN</function>.
+The preprocessor symbols are
+<symbol>XK_MISCELLANY</symbol>,
+<symbol>XK_XKB_KEYS</symbol>,
+<symbol>XK_3270</symbol>,
+<symbol>XK_LATIN1</symbol>,
+<symbol>XK_LATIN2</symbol>,
+<symbol>XK_LATIN3</symbol>,
+<symbol>XK_LATIN4</symbol>,
+<symbol>XK_KATAKANA</symbol>,
+<symbol>XK_ARABIC</symbol>,
+<symbol>XK_CYRILLIC</symbol>,
+<symbol>XK_GREEK</symbol>,
+<symbol>XK_TECHNICAL</symbol>,
+<symbol>XK_SPECIAL</symbol>,
+<symbol>XK_PUBLISHING</symbol>,
+<symbol>XK_APL</symbol>,
+<symbol>XK_HEBREW</symbol>,
+<symbol>XK_THAI</symbol>, and
+<symbol>XK_KOREAN</symbol>.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/keysym.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:keysym.h">
+    <term><filename class="headerfile">&lt;X11/keysym.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/keysym.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/keysym.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/keysym.h&gt;</secondary></indexterm>
       <para>
 This file defines the preprocessor symbols
-XK_MISCELLANY, XK_XKB_KEYS, XK_LATIN1, XK_LATIN2, XK_LATIN3,
-XK_LATIN4, and XK_GREEK
-and then includes &lt;X11/keysymdef.h&gt;
+<symbol>XK_MISCELLANY</symbol>,
+<symbol>XK_XKB_KEYS</symbol>,
+<symbol>XK_LATIN1</symbol>,
+<symbol>XK_LATIN2</symbol>,
+<symbol>XK_LATIN3</symbol>,
+<symbol>XK_LATIN4</symbol>, and
+<symbol>XK_GREEK</symbol>
+and then includes <filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename>.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xlibint.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:Xlibint.h">
+    <term><filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xlibint.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xlibint.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xlibint.h&gt;</secondary></indexterm>
       <para>
 This file declares all the functions, types, and symbols used for
-extensions, which are described in appendix C.
+extensions, which are described in <link linkend="extensions">Appendix C</link>.
 This file automatically includes
-&lt;X11/Xlib.h&lt;.
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xproto.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:Xproto.h">
+    <term><filename class="headerfile">&lt;X11/Xproto.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xproto.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xproto.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xproto.h&gt;</secondary></indexterm>
       <para>
 This file declares types and symbols for the basic X protocol,
 for use in implementing extensions.
 It is included automatically from
-&lt;X11/Xlibint.h&lt;,
+<filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename>,
 so application and extension code should never need to
 reference this file directly.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/Xprotostr.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:Xprotostr.h">
+    <term><filename class="headerfile">&lt;X11/Xprotostr.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/Xprotostr.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/Xprotostr.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/Xprotostr.h&gt;</secondary></indexterm>
       <para>
 This file declares types and symbols for the basic X protocol,
 for use in implementing extensions.
 It is included automatically from
-&lt;X11/Xproto.h&lt;,
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>,
 so application and extension code should never need to
 reference this file directly.
       </para>
     </listitem>
   </varlistentry>
-  <varlistentry>
-    <term>&lt;X11/X10.h&gt;</term>
+  <varlistentry id="Standard_Header_Files:X10.h">
+    <term><filename class="headerfile">&lt;X11/X10.h&gt;</filename></term>
     <listitem>
+      <indexterm type="file"><primary><filename class="headerfile">X11/X10.h</filename></primary></indexterm>
+      <indexterm><primary>Files</primary><secondary>&lt;X11/X10.h&gt;</secondary></indexterm>
+      <indexterm><primary>Headers</primary><secondary>&lt;X11/X10.h&gt;</secondary></indexterm>
       <para>
 This file declares all the functions, types, and symbols used for the
-X10 compatibility functions, which are described in appendix D.
+X10 compatibility functions, which are described in
+<link linkend="X_Version_10_Compatibility_Functions">Appendix D</link>.
       </para>
     </listitem>
   </varlistentry>
 </variablelist>
-</sect1>
+    </para>
+  </sect1>
 
+  <sect1 id="Generic_Values_and_Types">
+    <title>Generic Values and Types</title>
 
-
-<sect1 id="Generic_Values_and_Types">
-<title>Generic Values and Types</title>
-<!-- .XS -->
-<!-- (SN Generic Values and Types -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
+    <para>
 The following symbols are defined by Xlib and used throughout the manual:
-<indexterm significance="preferred"><primary>Bool</primary></indexterm>
-<indexterm significance="preferred"><primary>True</primary></indexterm>
-<indexterm significance="preferred"><primary>False</primary></indexterm>
-</para>
 <itemizedlist>
   <listitem>
     <para>
+<indexterm significance="preferred"><primary>Bool</primary></indexterm>
+<indexterm significance="preferred"><primary>True</primary></indexterm>
+<indexterm significance="preferred"><primary>False</primary></indexterm>
 Xlib defines the type
 <type>Bool</type>
 and the Boolean values
 <symbol>True</symbol>
 and
 <symbol>False</symbol>.
-<indexterm significance="preferred"><primary>None</primary></indexterm>
     </para>
   </listitem>
   <listitem>
     <para>
+<indexterm significance="preferred"><primary>None</primary></indexterm>
 <symbol>None</symbol>
 is the universal null resource ID or atom.
-<indexterm significance="preferred"><primary>XID</primary></indexterm>
     </para>
   </listitem>
   <listitem>
     <para>
+<indexterm significance="preferred"><primary>XID</primary></indexterm>
 The type
 <type>XID</type>
 is used for generic resource IDs.
-<indexterm significance="preferred"><primary>XPointer</primary></indexterm>
     </para>
   </listitem>
   <listitem>
     <para>
-The type
-<type>XPointer</type>
-is defined to be char\^* and is used as a generic opaque pointer to data.
+<indexterm significance="preferred"><primary>XPointer</primary></indexterm>
+The type <type>XPointer</type> is defined to be <type>char&hairsp;*</type>
+and is used as a generic opaque pointer to data.
     </para>
   </listitem>
 </itemizedlist>
-</sect1>
-<sect1 id="Naming_and_Argument_Conventions_within_Xlib">
-<title>Naming and Argument Conventions within Xlib</title>
-<!-- .XS -->
-<!-- (SN Naming and Argument Conventions within Xlib -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
+    </para>
+  </sect1>
+
+  <sect1 id="Naming_and_Argument_Conventions_within_Xlib">
+    <title>Naming and Argument Conventions within Xlib</title>
+
+    <para>
 Xlib follows a number of conventions for the naming and syntax of the functions.
 Given that you remember what information the function requires,
-these conventions are intended to make the syntax of the functions more 
+these conventions are intended to make the syntax of the functions more
 predictable.
-</para>
-<para>
-<!-- .LP -->
+    </para>
+    <para>
 The major naming conventions are:
-</para>
 <itemizedlist>
   <listitem>
     <para>
@@ -591,16 +636,14 @@ the mask always precedes the pointer to the structure in the argument list.
     </para>
   </listitem>
 </itemizedlist>
-</sect1>
-<sect1 id="Programming_Considerations">
-<title>Programming Considerations</title>
-<!-- .XS -->
-<!-- (SN Programming Considerations -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
+    </para>
+  </sect1>
+
+  <sect1 id="Programming_Considerations">
+    <title>Programming Considerations</title>
+
+    <para>
 The major programming considerations are:
-</para>
 <itemizedlist>
   <listitem>
     <para>
@@ -638,133 +681,111 @@ What you do inside of your top-level window, however,
 is up to your application.
 For further information,
 see chapter 14 <!-- xref -->
-and the <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
+and the <citetitle>Inter-Client Communication Conventions Manual</citetitle>.
     </para>
   </listitem>
 </itemizedlist>
-</sect1>
-<sect1 id="Character_Sets_and_Encodings">
-<title>Character Sets and Encodings</title>
-<!-- .XS -->
-<!-- (SN Character Sets and Encodings -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
+    </para>
+  </sect1>
+
+  <sect1 id="Character_Sets_and_Encodings">
+    <title>Character Sets and Encodings</title>
+
+    <para>
 Some of the Xlib functions make reference to specific character sets
 and character encodings.
 The following are the most common:
-</para>
-<itemizedlist>
-  <listitem>
-    <para>
-X Portable Character Set
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-A basic set of 97 characters, 
+
+<variablelist>
+  <varlistentry>
+    <term><firstterm>X Portable Character Set</firstterm></term>
+    <listitem><para>
+A basic set of 97 characters,
 which are assumed to exist in all locales supported by Xlib.
 This set contains the following characters:
-    </para>
-  </listitem>
-  <listitem>
-    <para>
+<literallayout>
 a..z A..Z 0..9 !"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~ &lt;space&gt;, &lt;tab&gt;, and &lt;newline&gt;
-    </para>
-  </listitem>
-  <listitem>
-    <para>
+</literallayout>
+      </para>
+      <para>
 This set is the left/lower half
 of the graphic character set of ISO8859-1 plus space, tab, and newline.
 It is also the set of graphic characters in 7-bit ASCII plus the same
 three control characters.
 The actual encoding of these characters on the host is system dependent.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-Host Portable Character Encoding
-    </para>
-  </listitem>
-  <listitem>
-    <para>
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><firstterm>Host Portable Character Encoding</firstterm></term>
+    <listitem>
+      <para>
 The encoding of the X Portable Character Set on the host.
 The encoding itself is not defined by this standard,
 but the encoding must be the same in all locales supported by Xlib on the host.
 If a string is said to be in the Host Portable Character Encoding,
 then it only contains characters from the X Portable Character Set,
 in the host encoding.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-Latin-1
-    </para>
-  </listitem>
-  <listitem>
-    <para>
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><firstterm>Latin-1</firstterm></term>
+    <listitem>
+      <para>
 The coded character set defined by the ISO8859-1 standard.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-Latin Portable Character Encoding
-    </para>
-  </listitem>
-  <listitem>
-    <para>
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><firstterm>Latin Portable Character Encoding</firstterm></term>
+    <listitem>
+      <para>
 The encoding of the X Portable Character Set using the Latin-1 codepoints
 plus ASCII control characters.
 If a string is said to be in the Latin Portable Character Encoding,
 then it only contains characters from the X Portable Character Set,
 not all of Latin-1.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-STRING Encoding
-    </para>
-  </listitem>
-  <listitem>
-    <para>
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><firstterm>STRING Encoding</firstterm></term>
+    <listitem>
+      <para>
 Latin-1, plus tab and newline.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-<acronym>POSIX</acronym> Portable Filename Character Set
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-The set of 65 characters, 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><firstterm><acronym>POSIX</acronym> Portable Filename Character Set</firstterm></term>
+    <listitem>
+      <para>
+The set of 65 characters,
 which can be used in naming files on a <acronym>POSIX</acronym>-compliant host,
 that are correctly processed in all locales.
 The set is:
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-<literallayout class="monospaced">
+<literallayout>
 a..z A..Z 0..9 ._-
 </literallayout>
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
     </para>
-  </listitem>
-</itemizedlist>
-</sect1>
-<sect1 id="Formatting_Conventions">
-<title>Formatting Conventions</title>
-<!-- .XS -->
-<!-- (SN Formatting Conventions -->
-<!-- .XE -->
-<para>
-<!-- .LP -->
-<emphasis remap='I'>Xlib \- C Language X Interface</emphasis> uses the following conventions:
-</para>
-<itemizedlist>
-  <listitem>
+  </sect1>
+
+  <sect1 id="Formatting_Conventions">
+    <title>Formatting Conventions</title>
+
     <para>
-Global symbols are printed in 
+      <citetitle>Xlib − C Language X Interface</citetitle> uses the
+      following conventions:
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+Global symbols are printed in
 <function>this</function>
 <function>special</function>
 <function>font</function>.
@@ -774,11 +795,11 @@ When declared and defined,
 function arguments are printed in <emphasis remap='I'>italics</emphasis>.
 In the explanatory text that follows,
 they usually are printed in regular type.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-Each function is introduced by a general discussion that 
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+Each function is introduced by a general discussion that
 distinguishes it from other functions.
 The function declaration itself follows,
 and each argument is specifically explained.
@@ -787,36 +808,36 @@ Xlib header files normally declare functions using function prototypes
 in ANSI C environments.
 General discussion of the function, if any is required,
 follows the arguments.
-Where applicable, 
-the last paragraph of the explanation lists the possible 
+Where applicable,
+the last paragraph of the explanation lists the possible
 Xlib error codes that the function can generate.
 For a complete discussion of the Xlib error codes,
 see section 11.8.2. <!-- xref -->
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-To eliminate any ambiguity between those arguments that you pass and those that 
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+To eliminate any ambiguity between those arguments that you pass and those that
 a function returns to you,
 the explanations for all arguments that you pass start with the word
-<emphasis remap='I'>specifies</emphasis> or, in the case of multiple arguments, the word <emphasis remap='I'>specify\^</emphasis>.
+<emphasis remap='I'>specifies</emphasis> or, in the case of multiple arguments, the word <emphasis remap='I'>specify</emphasis>.
 The explanations for all arguments that are returned to you start with the
-word <emphasis remap='I'>returns</emphasis> or, in the case of multiple arguments, the word <emphasis remap='I'>return\^</emphasis>.
+word <emphasis remap='I'>returns</emphasis> or, in the case of multiple arguments, the word <emphasis remap='I'>return</emphasis>.
 The explanations for all arguments that you can pass and are returned start
-with the words <emphasis remap='I'>specifies and returns\^</emphasis>.
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-Any pointer to a structure that is used to return a value is designated as 
+with the words <emphasis remap='I'>specifies and returns</emphasis>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+Any pointer to a structure that is used to return a value is designated as
 such by the <emphasis remap='I'>_return</emphasis> suffix as part of its name.
 All other pointers passed to these functions are
 used for reading only.
 A few arguments use pointers to structures that are used for
 both input and output and are indicated by using the <emphasis remap='I'>_in_out</emphasis> suffix.
-<!-- .bp -->
+	  </para>
+	</listitem>
+      </itemizedlist>
     </para>
-  </listitem>
-</itemizedlist>
-</sect1>
+  </sect1>
 </chapter>

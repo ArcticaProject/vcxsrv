@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="application_utility_functions">
 <title>Application Utility Functions</title>
 <!-- .sp 2 -->
@@ -394,7 +397,10 @@ Specifies the name of the KeySym that is to be converted.
 <!-- .LP -->
 <!-- .eM -->
 Standard KeySym names are obtained from
-&lt;<filename class="headerfile">X11/keysymdef.h</filename>&gt;
+<filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/keysymdef.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/keysymdef.h&gt;</filename></secondary></indexterm>
 by removing the XK_ prefix from each name.
 KeySyms that are not part of the Xlib standard also may be obtained
 with this function.
@@ -792,7 +798,7 @@ use
   <funcdef><function>XRebindKeysym</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>KeySym<parameter> keysym</parameter></paramdef>
-  <paramdef>KeySym<parameter> list[\^]\^</parameter></paramdef>
+  <paramdef>KeySym<parameter> list[&hairsp;]</parameter></paramdef>
   <paramdef>int<parameter> mod_count</parameter></paramdef>
   <paramdef>unsignedchar<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> num_bytes</parameter></paramdef>
@@ -1011,8 +1017,8 @@ Specifically, this function lets you parse strings of the form:
 <para>
 <!-- .LP -->
 The fields map into the arguments associated with this function.
-(Items enclosed in &lt;\^&gt; are integers, items in [\^] are optional, and
-items enclosed in {\^} indicate ``choose one of.''
+(Items enclosed in &lt;&hairsp;&gt; are integers, items in [&hairsp;] are optional, and
+items enclosed in {&hairsp;} indicate ``choose one of.''
 Note that the brackets should not appear in the actual string.)
 If the string is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
@@ -1024,7 +1030,7 @@ The
 function returns a bitmask that indicates which of the four values (width,
 height, xoffset, and yoffset) were actually found in the string 
 and whether the x and y values are negative. 
-By convention, \-0 is not equal to +0, because the user needs to
+By convention, &minus;0 is not equal to +0, because the user needs to
 be able to say ``position the window relative to the right or bottom edge.''
 For each value found, the corresponding argument is updated.
 For each value not found, the argument is left unchanged.
@@ -1037,7 +1043,10 @@ The bits are represented by
 or
 <symbol>YNegative</symbol>
 and are defined in 
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 They will be set whenever one of the values is defined 
 or one of the signs is set.
 </para>
@@ -1196,7 +1205,7 @@ The
 function combines any geometry information (given in the format used by 
 <function>XParseGeometry</function>)
 specified by the user and by the calling program with size hints 
-(usually the ones to be stored in WM_NORMAL_HINTS) and returns the position, 
+(usually the ones to be stored in <property>WM_NORMAL_HINTS</property>) and returns the position, 
 size, and gravity
 (<symbol>NorthWestGravity</symbol>,
 <symbol>NorthEastGravity</symbol>,
@@ -1239,7 +1248,10 @@ Xlib provides functions for manipulating regions.
 The opaque type 
 <structname>Region</structname>
 is defined in 
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 Xlib provides functions that you can use to manipulate regions.
 This section discusses how to:
 </para>
@@ -2144,7 +2156,7 @@ To store data in cut buffer 0, use
   <funcdef><function>XStoreBytes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>char<parameter> *bytes</parameter></paramdef>
-  <paramdef>int<parameter> \^nbytes</parameter></paramdef>
+  <paramdef>int<parameter> nbytes</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 <!-- .FN  -->
@@ -2209,7 +2221,7 @@ To store data in a specified cut buffer, use
   <funcdef><function>XStoreBuffer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>char<parameter> *bytes</parameter></paramdef>
-  <paramdef>int<parameter> \^nbytes</parameter></paramdef>
+  <paramdef>int<parameter> nbytes</parameter></paramdef>
   <paramdef>int<parameter> buffer</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -2456,7 +2468,10 @@ The functions in this section use the visual information masks and the
 <structname>XVisualInfo</structname>
 structure,
 which is defined in
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 and contains:
 <!-- .sM -->
 </para>
@@ -2675,7 +2690,10 @@ All operations on images are defined using an
 <structname>XImage</structname>
 structure, 
 as defined in
-&lt;<filename class="headerfile">X11/Xlib.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xlib.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></secondary></indexterm>
 Because the number of different types of image formats can be very large,
 this hides details of image storage properly from applications.
 </para>
@@ -2900,7 +2918,10 @@ The basic functions used to get a pixel, set a pixel, create a subimage,
 and add a constant value to an image are defined in the image object.
 The functions in this section are really macro invocations of the functions
 in the image object and are defined in
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 </para>
 <para>
 <!-- .LP -->
@@ -3180,7 +3201,7 @@ use
 <funcsynopsis>
 <funcprototype>
   <funcdef><function>XDestroyImage</function></funcdef>
-  <paramdef>XImage<parameter> *\^ximage</parameter></paramdef>
+  <paramdef>XImage *<parameter>ximage</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
@@ -3400,7 +3421,7 @@ when finished.
 If <emphasis remap='I'>name</emphasis>_x_hot and <emphasis remap='I'>name</emphasis>_y_hot exist,
 <function>XReadBitmapFile</function>
 returns them to x_hot_return and y_hot_return;
-otherwise, it returns \-1,\-1.
+otherwise, it returns &minus;1,&minus;1.
 </para>
 <para>
 <!-- .LP -->
@@ -3597,7 +3618,7 @@ Specify the width and height.
     </term>
     <listitem>
       <para>
-Specify where to place the hotspot coordinates (or \-1,\-1 if none are present)
+Specify where to place the hotspot coordinates (or &minus;1,&minus;1 if none are present)
 in the file.
     </para>
   </listitem>
@@ -3623,7 +3644,7 @@ returns
 otherwise, on no error,
 it returns
 <returnvalue>BitmapSuccess</returnvalue>.
-If x_hot and y_hot are not \-1, \-1, 
+If x_hot and y_hot are not &minus;1, &minus;1,
 <function>XWriteBitmapFile</function>
 writes them out as the hotspot coordinates for the bitmap.
 </para>
@@ -3909,7 +3930,10 @@ Xlib provides context management functions with which you can
 save data values, get data values, delete entries, and create a unique
 context type.
 The symbols used are in
-&lt;<filename class="headerfile">X11/Xutil.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xutil.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xutil.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xutil.h&gt;</filename></secondary></indexterm>
 </para>
 <para>
 <!-- .LP -->

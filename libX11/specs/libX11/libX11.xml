@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
-<book id="libX11">
+<book id="libX11" lang="en">
 
 <bookinfo>
    <title>Xlib - C Language X Interface</title>

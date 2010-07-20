@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE glossary PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <glossary id='glossary'>
 <title>Glossary</title>
 <glossentry id="glossary:Access_control_list">
@@ -1065,12 +1068,10 @@ displayed.
   <glossterm>Pixmap</glossterm>
   <glossdef>
 <indexterm significance="preferred"><primary>Pixmap</primary></indexterm>
-<!-- .EQ -->
-<!-- .EN -->
     <para>
 A pixmap is a three-dimensional array of bits.  
 A pixmap is normally thought of as a two-dimensional array of pixels, 
-where each pixel can be a value from 0 to %2 sup N %\-1, 
+where each pixel can be a value from 0 to 2<superscript>N</superscript>-1,
 and where N is the depth (z axis) of the pixmap.  
 A pixmap can also be thought of as a stack of N bitmaps.
 A pixmap can only be used on the screen that it was created in.
@@ -1667,19 +1668,11 @@ Manipulation of windows on the screen and much of the user interface
     <para>
 A basic set of 97 characters which are assumed to exist in all
 locales supported by Xlib.  This set contains the following characters:
-    </para>
-    <para>
-<!-- .Ds 0 -->
-<!-- .EQ -->
-<!-- .EN -->
-    </para>
-    <para>
+      <literallayout>
 a..z A..Z 0..9
 !"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~
 &lt;space&gt;, &lt;tab&gt;, and &lt;newline&gt;
-<!-- .EQ -->
-<!-- .EN -->
-<!-- .De -->
+      </literallayout>
     </para>
     <para>
 This is the left/lower half (also called the G0 set)

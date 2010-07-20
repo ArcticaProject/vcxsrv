@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <chapter id="graphics_functions">
 <title>Graphics Functions</title>
 <para>
@@ -3341,7 +3344,10 @@ if the property was not defined or
 if it was defined.
 A set of predefined atoms exists for font properties,
 which can be found in
-&lt;<filename class="headerfile">X11/Xatom.h</filename>&gt;.
+<filename class="headerfile">&lt;X11/Xatom.h&gt;</filename>.
+<indexterm type="file"><primary><filename class="headerfile">X11/Xatom.h</filename></primary></indexterm>
+<indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></secondary></indexterm>
+<indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xatom.h&gt;</filename></secondary></indexterm>
 This set contains the standard properties associated with
 a font.
 Although it is not guaranteed,
