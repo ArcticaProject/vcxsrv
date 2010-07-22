@@ -78,9 +78,18 @@ static WindowPtr FocusWindows[MAXDEVICES];
  * window.
  */
 static BOOL
-HasPointer(WindowPtr win)
+HasPointer(DeviceIntPtr dev, WindowPtr win)
 {
     int i;
+
+    /* FIXME: The enter/leave model does not cater for grabbed devices. For
+     * now, a quickfix: if the device about to send an enter/leave event to
+     * a window is grabbed, assume there is no pointer in that window.
+     * Fixes fdo 27804.
+     * There isn't enough beer in my fridge to fix this properly.
+     */
+    if (dev->deviceGrab.grab)
+        return FALSE;
 
     for (i = 0; i < MAXDEVICES; i++)
         if (PointerWindows[i] == win)
@@ -270,7 +279,7 @@ CoreEnterNotifies(DeviceIntPtr dev,
           may need to be changed from Virtual to NonlinearVirtual depending
           on the previous P(W). */
 
-    if (!HasPointer(parent) && !FirstPointerChild(parent))
+    if (!HasPointer(dev, parent) && !FirstPointerChild(parent))
             CoreEnterLeaveEvent(dev, EnterNotify, mode, detail, parent,
                                 child->drawable.id);
 }
@@ -309,7 +318,7 @@ CoreLeaveNotifies(DeviceIntPtr dev,
 
         /* If one window has a pointer or a child with a pointer, skip some
          * work and exit. */
-        if (HasPointer(win) || FirstPointerChild(win))
+        if (HasPointer(dev, win) || FirstPointerChild(win))
             return;
 
         CoreEnterLeaveEvent(dev, LeaveNotify, mode, detail, win, child->drawable.id);
@@ -373,7 +382,7 @@ CoreEnterLeaveNonLinear(DeviceIntPtr dev,
           vice versa depending on the the new P(W)
      */
 
-    if (!HasPointer(A))
+    if (!HasPointer(dev, A))
     {
         WindowPtr child = FirstPointerChild(A);
         if (child)
@@ -417,7 +426,7 @@ CoreEnterLeaveNonLinear(DeviceIntPtr dev,
           The detail may need to be changed from Ancestor to Nonlinear
           or vice-versa depending on the previous P(W). */
 
-     if (!HasPointer(B))
+     if (!HasPointer(dev, B))
      {
          WindowPtr child = FirstPointerChild(B);
          if (child)
@@ -455,7 +464,7 @@ CoreEnterLeaveToAncestor(DeviceIntPtr dev,
           The detail may need to be changed from Ancestor to Nonlinear or
           vice versa depending on the the new P(W)
      */
-    if (!HasPointer(A))
+    if (!HasPointer(dev, A))
     {
         WindowPtr child = FirstPointerChild(A);
         if (child)
@@ -479,7 +488,7 @@ CoreEnterLeaveToAncestor(DeviceIntPtr dev,
           P(W) changes from a descendant to W itself. The subwindow
           field should be set to the child containing the old P(W) <<< WRONG */
 
-    if (!HasPointer(B))
+    if (!HasPointer(dev, B))
         CoreEnterLeaveEvent(dev, EnterNotify, mode, NotifyInferior, B, None);
 
 }
@@ -507,7 +516,7 @@ CoreEnterLeaveToDescendant(DeviceIntPtr dev,
           P(W) changes from W to a descendant of W. The subwindow field
           is set to the child containing the new P(W) <<< THIS IS WRONG */
 
-    if (!HasPointer(A))
+    if (!HasPointer(dev, A))
         CoreEnterLeaveEvent(dev, LeaveNotify, mode, NotifyInferior, A, None);
 
 
@@ -531,7 +540,7 @@ CoreEnterLeaveToDescendant(DeviceIntPtr dev,
           The detail may need to be changed from Ancestor to Nonlinear
           or vice-versa depending on the previous P(W). */
 
-     if (!HasPointer(B))
+     if (!HasPointer(dev, B))
      {
          WindowPtr child = FirstPointerChild(B);
          if (child)
