@@ -543,6 +543,8 @@ winDestroyWindowsWindow (WindowPtr pWin)
   MSG			msg;
   winWindowPriv(pWin);
   BOOL			oldstate = winInDestroyWindowsWindow;
+  HICON hIcon;
+  HICON hIconSm;
   
 #if CYGMULTIWINDOW_DEBUG
   winDebug ("winDestroyWindowsWindow\n");
@@ -554,12 +556,20 @@ winDestroyWindowsWindow (WindowPtr pWin)
 
   winInDestroyWindowsWindow = TRUE;
 
+  /* Store the info we need to destroy after this window is gone */
+  hIcon = (HICON)SendMessage(pWinPriv->hWnd, WM_GETICON, ICON_BIG, 0);
+  hIconSm = (HICON)SendMessage(pWinPriv->hWnd, WM_GETICON, ICON_SMALL, 0);
+
   SetProp (pWinPriv->hWnd, WIN_WINDOW_PROP, NULL);
   /* Destroy the Windows window */
   DestroyWindow (pWinPriv->hWnd);
 
   /* Null our handle to the Window so referencing it will cause an error */
   pWinPriv->hWnd = NULL;
+
+  /* Destroy any icons we created for this window */
+  winDestroyIcon(hIcon);
+  winDestroyIcon(hIconSm);
 
   /* Process all messages on our queue */
   while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))

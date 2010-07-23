@@ -1023,6 +1023,30 @@ winMultiWindowXMsgProc (void *pArg)
                 }
             }
         }
+      else if (event.type == ConfigureNotify)
+        {
+          if (!event.xconfigure.send_event)
+            {
+              /*
+                Java applications using AWT on JRE 1.6.0 break with non-reparenting WMs AWT
+                doesn't explicitly know about (See sun bug #6434227)
+
+                XDecoratedPeer.handleConfigureNotifyEvent() only processes non-synthetic
+                ConfigureNotify events to update window location if it's identified the
+                WM as a non-reparenting WM it knows about (compiz or lookingglass)
+
+                Rather than tell all sorts of lies to get XWM to recognize us as one of
+                those, simply send a synthetic ConfigureNotify for every non-synthetic one
+               */
+              XEvent event_send = event;
+              event_send.xconfigure.send_event = TRUE;
+              event_send.xconfigure.event = event.xconfigure.window;
+              XSendEvent(event.xconfigure.display,
+                         event.xconfigure.window,
+                         True, StructureNotifyMask,
+                         &event_send);
+            }
+        }
       else if (event.type == PropertyNotify
 	       && event.xproperty.atom == atmWmName)
 	{
