@@ -255,7 +255,7 @@ ddxGiveUp (void)
       g_fpDirectDrawCreateClipper = NULL;
     }
 
-  /* Unload our TrackMouseEvent funtion pointer */
+  /* Unload our TrackMouseEvent function pointer */
   if (g_hmodCommonControls != NULL)
     {
       FreeLibrary (g_hmodCommonControls);
