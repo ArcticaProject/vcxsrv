@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libXau.la
 
-AM_CFLAGS = $(XAU_CFLAGS)
+AM_CFLAGS = $(XAU_CFLAGS) $(CWARNFLAGS)
 
 INCLUDES = -I${top_srcdir}/include
 
@@ -57,7 +57,8 @@ CLEANFILES = $(libman_DATA) $(BUILT_SOURCES) $(lintlib_DATA)
 libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 	      $(Xau_shadows:=.@LIB_MAN_SUFFIX@)
 
-EXTRA_DIST = xau.pc.in $(libman_PRE) ChangeLog
+MAINTAINERCLEANFILES = ChangeLog INSTALL
+EXTRA_DIST = $(libman_PRE)
 
 Xau_shadows =                               \
     XauFileName                             \
@@ -71,18 +72,22 @@ Xau_shadows =                               \
 
 Xau_shadows_man = $(Xau_shadows:=.@LIB_MAN_SUFFIX@)
 $(Xau_shadows_man):
-	echo .so man$(LIB_MAN_DIR_SUFFIX)/Xau.$(LIB_MAN_SUFFIX) > $@
+	$(AM_V_GEN)echo .so man$(LIB_MAN_DIR_SUFFIX)/Xau.$(LIB_MAN_SUFFIX) > $@
 
 XORGRELSTRING = @PACKAGE_STRING@
   XORGMANNAME = X Version 11
 
 Xau.$(LIB_MAN_SUFFIX): $(srcdir)/Xau.man
-	sed 's/__xorgversion__/"$(XORGRELSTRING)" "$(XORGMANNAME)"/' \
+	$(AM_V_GEN)$(SED) \
+		-e 's/__xorgversion__/"$(XORGRELSTRING)" "$(XORGMANNAME)"/' \
 	< $(srcdir)/Xau.man > Xau.$(LIB_MAN_SUFFIX)
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL

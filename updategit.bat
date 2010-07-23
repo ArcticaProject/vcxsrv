@@ -10,6 +10,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libXdmcp
 git clone git://anongit.freedesktop.org/xorg/lib/libXext
 git clone git://anongit.freedesktop.org/xorg/lib/libfontenc
 git clone git://anongit.freedesktop.org/xorg/lib/libXinerama
+git clone git://anongit.freedesktop.org/xorg/lib/libXau
 
 :noclone
 pushd .
@@ -48,6 +49,10 @@ git pull                |& tee /a d:\updategit.log
 popd
 echo Updating libXinerama|& tee /a d:\updategit.log
 pushd libXinerama        |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating libXau     |& tee /a d:\updategit.log
+pushd libXau             |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 popd
