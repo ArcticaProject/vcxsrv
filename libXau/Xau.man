@@ -58,18 +58,19 @@ Xauth *XauReadAuth (FILE *\fIauth_file\fP\^);
 int XauWriteAuth (FILE *\fIauth_file\fP, Xauth *\fIauth\fP\^); 
 .HP
 Xauth *XauGetAuthByAddr (unsigned short \fIfamily\fP\^, unsigned short
-\fIaddress_length\fP\^, char *\fIaddress\fP\^, unsigned short
-\fInumber_length\fP\^, char *\fInumber\fP\^);
+\fIaddress_length\fP\^, const char *\fIaddress\fP\^, unsigned short
+\fInumber_length\fP\^, const char *\fInumber\fP\^, unsigned short
+\fIname_length\fP\^, const char *\fIname\fP\^);
 .HP
 Xauth *XauGetBestAuthByAddr (unsigned short \fIfamily\fP\^, unsigned short
-\fIaddress_length\fP\^, char *\fIaddress\fP\^, unsigned short
-\fInumber_length\fP\^, char *\fInumber\fP\^, int \fItypes_length\fP\^, char
-**\fItypes\fR\^, int *\fItype_lengths\fR\^); 
+\fIaddress_length\fP\^, const char *\fIaddress\fP\^, unsigned short
+\fInumber_length\fP\^, const char *\fInumber\fP\^, int \fItypes_length\fP\^,
+char **\fItypes\fR\^, const int *\fItype_lengths\fR\^); 
 .HP
-int XauLockAuth (char *\fIfile_name\fP\^, int \fIretries\fP\^, int
+int XauLockAuth (const char *\fIfile_name\fP\^, int \fIretries\fP\^, int
 \fItimeout\fP\^, long \fIdead\fP\^); 
 .HP
-int XauUnlockAuth (char *\fIfile_name\fP\^); 
+int XauUnlockAuth (const char *\fIfile_name\fP\^); 
 .HP
 int XauDisposeAuth (Xauth *\fIauth\fP\^); 
 .ft R
