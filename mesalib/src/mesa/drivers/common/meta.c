@@ -424,6 +424,7 @@ _mesa_meta_begin(GLcontext *ctx, GLbitfield state)
 
    if (state & META_SCISSOR) {
       save->Scissor = ctx->Scissor; /* struct copy */
+      _mesa_set_enable(ctx, GL_SCISSOR_TEST, GL_FALSE);
    }
 
    if (state & META_SHADER) {
@@ -812,6 +813,21 @@ _mesa_meta_end(GLcontext *ctx)
 
 
 /**
+ * Convert Z from a normalized value in the range [0, 1] to an object-space
+ * Z coordinate in [-1, +1] so that drawing at the new Z position with the
+ * default/identity ortho projection results in the original Z value.
+ * Used by the meta-Clear, Draw/CopyPixels and Bitmap functions where the Z
+ * value comes from the clear value or raster position.
+ */
+static INLINE GLfloat
+invert_z(GLfloat normZ)
+{
+   GLfloat objZ = 1.0 - 2.0 * normZ;
+   return objZ;
+}
+
+
+/**
  * One-time init for a temp_texture object.
  * Choose tex target, compute max tex size, etc.
  */
@@ -1112,8 +1128,10 @@ blitframebuffer_texture(GLcontext *ctx,
          _mesa_BindTexture(target, texObj->Name);
          _mesa_TexParameteri(target, GL_TEXTURE_MIN_FILTER, filter);
          _mesa_TexParameteri(target, GL_TEXTURE_MAG_FILTER, filter);
-         _mesa_TexParameteri(target, GL_TEXTURE_BASE_LEVEL, srcLevel);
-         _mesa_TexParameteri(target, GL_TEXTURE_MAX_LEVEL, srcLevel);
+         if (target != GL_TEXTURE_RECTANGLE_ARB) {
+            _mesa_TexParameteri(target, GL_TEXTURE_BASE_LEVEL, srcLevel);
+            _mesa_TexParameteri(target, GL_TEXTURE_MAX_LEVEL, srcLevel);
+         }
          _mesa_TexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
          _mesa_TexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
          _mesa_TexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -1171,8 +1189,10 @@ blitframebuffer_texture(GLcontext *ctx,
           */
          _mesa_TexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilterSave);
          _mesa_TexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilterSave);
-         _mesa_TexParameteri(target, GL_TEXTURE_BASE_LEVEL, baseLevelSave);
-         _mesa_TexParameteri(target, GL_TEXTURE_MAX_LEVEL, maxLevelSave);
+         if (target != GL_TEXTURE_RECTANGLE_ARB) {
+            _mesa_TexParameteri(target, GL_TEXTURE_BASE_LEVEL, baseLevelSave);
+            _mesa_TexParameteri(target, GL_TEXTURE_MAX_LEVEL, maxLevelSave);
+         }
          _mesa_TexParameteri(target, GL_TEXTURE_WRAP_S, wrapSSave);
          _mesa_TexParameteri(target, GL_TEXTURE_WRAP_T, wrapTSave);
 
@@ -1428,7 +1448,7 @@ _mesa_meta_Clear(GLcontext *ctx, GLbitfield buffers)
       const GLfloat y0 = (GLfloat) ctx->DrawBuffer->_Ymin;
       const GLfloat x1 = (GLfloat) ctx->DrawBuffer->_Xmax;
       const GLfloat y1 = (GLfloat) ctx->DrawBuffer->_Ymax;
-      const GLfloat z = 1.0 - 2.0 * ctx->Depth.Clear;
+      const GLfloat z = invert_z(ctx->Depth.Clear);
       GLuint i;
 
       verts[0].x = x0;
@@ -1534,7 +1554,7 @@ _mesa_meta_CopyPixels(GLcontext *ctx, GLint srcX, GLint srcY,
       const GLfloat dstY0 = (GLfloat) dstY;
       const GLfloat dstX1 = dstX + width * ctx->Pixel.ZoomX;
       const GLfloat dstY1 = dstY + height * ctx->Pixel.ZoomY;
-      const GLfloat z = ctx->Current.RasterPos[2];
+      const GLfloat z = invert_z(ctx->Current.RasterPos[2]);
 
       verts[0].x = dstX0;
       verts[0].y = dstY0;
@@ -1823,7 +1843,7 @@ _mesa_meta_DrawPixels(GLcontext *ctx,
       const GLfloat y0 = (GLfloat) y;
       const GLfloat x1 = x + width * ctx->Pixel.ZoomX;
       const GLfloat y1 = y + height * ctx->Pixel.ZoomY;
-      const GLfloat z = ctx->Current.RasterPos[2];
+      const GLfloat z = invert_z(ctx->Current.RasterPos[2]);
 
       verts[0].x = x0;
       verts[0].y = y0;
@@ -2026,7 +2046,7 @@ _mesa_meta_Bitmap(GLcontext *ctx,
       const GLfloat y0 = (GLfloat) y;
       const GLfloat x1 = (GLfloat) (x + width);
       const GLfloat y1 = (GLfloat) (y + height);
-      const GLfloat z = ctx->Current.RasterPos[2];
+      const GLfloat z = invert_z(ctx->Current.RasterPos[2]);
       GLuint i;
 
       verts[0].x = x0;
