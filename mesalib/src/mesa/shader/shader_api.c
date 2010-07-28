@@ -1260,6 +1260,54 @@ lookup_uniform_parameter(GLcontext *ctx, GLuint program, GLint location,
 
 
 /**
+ * GLGL uniform arrays and structs require special handling.
+ *
+ * The GL_ARB_shader_objects spec says that if you use
+ * glGetUniformLocation to get the location of an array, you CANNOT
+ * access other elements of the array by adding an offset to the
+ * returned location.  For example, you must call
+ * glGetUniformLocation("foo[16]") if you want to set the 16th element
+ * of the array with glUniform().
+ *
+ * HOWEVER, some other OpenGL drivers allow accessing array elements
+ * by adding an offset to the returned array location.  And some apps
+ * seem to depend on that behaviour.
+ *
+ * Mesa's gl_uniform_list doesn't directly support this since each
+ * entry in the list describes one uniform variable, not one uniform
+ * element.  We could insert dummy entries in the list for each array
+ * element after [0] but that causes complications elsewhere.
+ *
+ * We solve this problem by encoding two values in the location that's
+ * returned by glGetUniformLocation():
+ *  a) index into gl_uniform_list::Uniforms[] for the uniform
+ *  b) an array/field offset (0 for simple types)
+ *
+ * These two values are encoded in the high and low halves of a GLint.
+ * By putting the uniform number in the high part and the offset in the
+ * low part, we can support the unofficial ability to index into arrays
+ * by adding offsets to the location value.
+ */
+static void
+merge_location_offset(GLint *location, GLint offset)
+{
+   *location = (*location << 16) | offset;
+}
+
+
+/**
+ * Seperate the uniform location and parameter offset.  See above.
+ */
+static void
+split_location_offset(GLint *location, GLint *offset)
+{
+   *offset = *location & 0xffff;
+   *location = *location >> 16;
+}
+
+
+
+/**
  * Called via ctx->Driver.GetUniformfv().
  */
 static void
@@ -1268,6 +1316,9 @@ _mesa_get_uniformfv(GLcontext *ctx, GLuint program, GLint location,
 {
    struct gl_program *prog;
    GLint paramPos;
+   GLint offset;
+
+   split_location_offset(&location, &offset);
 
    lookup_uniform_parameter(ctx, program, location, &prog, &paramPos);
 
@@ -1298,7 +1349,10 @@ _mesa_get_uniformiv(GLcontext *ctx, GLuint program, GLint location,
 {
    struct gl_program *prog;
    GLint paramPos;
+   GLint offset;
 
+   split_location_offset(&location, &offset);
+ 
    lookup_uniform_parameter(ctx, program, location, &prog, &paramPos);
 
    if (prog) {
@@ -1315,31 +1369,6 @@ _mesa_get_uniformiv(GLcontext *ctx, GLuint program, GLint location,
          }
       }
    }
-}
-
-
-/**
- * The value returned by GetUniformLocation actually encodes two things:
- * 1. the index into the prog->Uniforms[] array for the uniform
- * 2. an offset in the prog->ParameterValues[] array for specifying array
- *    elements or structure fields.
- * This function merges those two values.
- */
-static void
-merge_location_offset(GLint *location, GLint offset)
-{
-   *location = *location | (offset << 16);
-}
-
-
-/**
- * Seperate the uniform location and parameter offset.  See above.
- */
-static void
-split_location_offset(GLint *location, GLint *offset)
-{
-   *offset = (*location >> 16);
-   *location = *location & 0xffff;
 }
 
 

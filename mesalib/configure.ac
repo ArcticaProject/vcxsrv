@@ -547,8 +547,14 @@ else
     x11_pkgconfig=no
 fi
 dnl Use the autoconf macro if no pkg-config files
-if test "$x11_pkgconfig" = no; then
+if test "$x11_pkgconfig" = yes; then
+    PKG_CHECK_MODULES([X11], [x11])
+else
     AC_PATH_XTRA
+    test -z "$X11_CFLAGS" && X11_CFLAGS="$X_CFLAGS"
+    test -z "$X11_LIBS" && X11_LIBS="$X_LIBS -lX11"
+    AC_SUBST([X11_CFLAGS])
+    AC_SUBST([X11_LIBS])
 fi
 
 dnl Try to tell the user that the --x-* options are only used when
@@ -859,7 +865,7 @@ else
 fi
 AC_ARG_ENABLE([gl-osmesa],
     [AS_HELP_STRING([--enable-gl-osmesa],
-        [enable OSMesa on libGL @<:@default=enabled for xlib driver@:>@])],
+        [enable OSMesa with libGL @<:@default=enabled for xlib driver@:>@])],
     [gl_osmesa="$enableval"],
     [gl_osmesa="$default_gl_osmesa"])
 if test "x$gl_osmesa" = xyes; then
@@ -894,8 +900,8 @@ x16|x32)
 esac
 AC_SUBST([OSMESA_LIB])
 
-case "$mesa_driver" in
-osmesa)
+case "$DRIVER_DIRS" in
+*osmesa*)
     # only link libraries with osmesa if shared
     if test "$enable_static" = no; then
         OSMESA_LIB_DEPS="-lm -lpthread $SELINUX_LIBS $DLOPEN_LIBS"
@@ -905,19 +911,7 @@ osmesa)
     OSMESA_MESA_DEPS=""
     OSMESA_PC_LIB_PRIV="-lm -lpthread $SELINUX_LIBS $DLOPEN_LIBS"
     ;;
-*)
-    # Link OSMesa to libGL otherwise
-    OSMESA_LIB_DEPS=""
-    # only link libraries with osmesa if shared
-    if test "$enable_static" = no; then
-        OSMESA_MESA_DEPS='-l$(GL_LIB)'
-    else
-        OSMESA_MESA_DEPS=""
-    fi
-    OSMESA_PC_REQ="gl"
-    ;;
 esac
-OSMESA_PC_LIB_PRIV="$OSMESA_PC_LIB_PRIV"
 AC_SUBST([OSMESA_LIB_DEPS])
 AC_SUBST([OSMESA_MESA_DEPS])
 AC_SUBST([OSMESA_PC_REQ])
