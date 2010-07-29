@@ -67,7 +67,6 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
-    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PreBuildEventUseInBuild>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PreBuildEventUseInBuild>
@@ -77,17 +76,10 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">$(Configuration)\</IntDir>
     <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">true</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <CustomBuildStep>
-      <Command>
-      </Command>
-      <Outputs>%(Outputs)</Outputs>
-    </CustomBuildStep>
     <ClCompile>
       <AdditionalOptions>/Zm1000  %(AdditionalOptions)</AdditionalOptions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -114,15 +106,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <CustomBuildStep>
-      <Command>
-      </Command>
-      <Outputs>%(Outputs)</Outputs>
-    </CustomBuildStep>
     <ClCompile>
       <AdditionalOptions>/Zm1000  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
@@ -146,15 +129,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <CustomBuildStep>
-      <Command>
-      </Command>
-      <Outputs>%(Outputs)</Outputs>
-    </CustomBuildStep>
     <ClCompile>
       <AdditionalOptions>/Zm1000  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
@@ -178,15 +152,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <CustomBuildStep>
-      <Command>
-      </Command>
-      <Outputs>%(Outputs)</Outputs>
-    </CustomBuildStep>
     <ClCompile>
       <AdditionalOptions>/Zm1000  %(AdditionalOptions)</AdditionalOptions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -596,94 +561,94 @@
     <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_token.h" />
     <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_token_util.h" />
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_120_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_120_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_120_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_120_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_120_core_gc.h</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_builtin.h" />
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_builtin_120_common_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_builtin_120_common_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_builtin_120_common_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_builtin_120_common_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_common_gc.h</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_builtin_120_fragment_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_builtin_120_fragment_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_builtin_120_fragment_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_builtin_120_fragment_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc ..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_builtin_120_fragment_gc.h</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_codegen.h" />
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_common_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_common_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_common_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_common_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_common_builtin_gc.h</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_compile.h" />
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_compile_function.h" />
@@ -691,49 +656,49 @@
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_compile_struct.h" />
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_compile_variable.h" />
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_core_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_core.gc ..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_core_gc.h</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_emit.h" />
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_fragment_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_fragment_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_fragment_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_fragment_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe fragment ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_fragment_builtin_gc.h</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_ir.h" />
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_label.h" />
@@ -747,26 +712,26 @@
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_utility.h" />
     <ClInclude Include="..\..\..\..\src\mesa\shader\slang\slang_vartable.h" />
     <CustomBuild Include="..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building predefined shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">Building slang_vertex_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe vertex ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building slang_vertex_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\apps\compile.exe vertex ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">Building slang_vertex_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\glsl\apps\compile.exe vertex ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building predefined shaders</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building slang_vertex_builtin_gc.h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\apps\compile.exe vertex ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc ..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin.gc</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\shader\slang\library\slang_vertex_builtin_gc.h</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\src\mesa\swrast_setup\ss_context.h" />
     <ClInclude Include="..\..\..\..\src\mesa\swrast_setup\ss_triangle.h" />
