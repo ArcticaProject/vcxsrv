@@ -21,4 +21,16 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-SUBDIRS=framework localedb trans
+XML_FILES = Xserver-DTrace.xml
+
+include ../xmlrules.in
+
+if XSERVER_DTRACE
+doc_DATA = $(BUILT_DOC_FILES)
+else
+noinst_DATA = $(BUILT_DOC_FILES)
+endif
+
+CLEANFILES = $(CLEAN_DOC_FILES)
+
+EXTRA_DIST = $(XML_FILES)

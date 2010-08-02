@@ -211,7 +211,7 @@ XCOMM Other symbols
 <Multi_key> <Cyrillic_EN> <Cyrillic_o>	: "№" numerosign # NUMERO SIGN
 <Multi_key> <Cyrillic_EN> <Cyrillic_O>	: "№" numerosign # NUMERO SIGN
 
-<Multi_key> <question> <exclam>         : "‽"   U203D # INTERROBANG
+<Multi_key> <question> <exclam>         : "⸘"   U2E18 # INVERTED INTERROBANG
 <Multi_key> <exclam> <question>         : "‽"   U203D # INTERROBANG
 
 <Multi_key> <C> <C> <C> <P>             : "☭"   U262D # HAMMER AND SICKLE

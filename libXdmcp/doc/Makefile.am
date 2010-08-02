@@ -21,4 +21,44 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-SUBDIRS=framework localedb trans
+if ENABLE_DOCS
+doc_sources = xdmcp.xml
+dist_doc_DATA = $(doc_sources)
+
+if HAVE_XMLTO
+doc_DATA = $(doc_sources:.xml=.html)
+
+if HAVE_FOP
+doc_DATA += $(doc_sources:.xml=.ps) $(doc_sources:.xml=.pdf)
+endif
+
+if HAVE_XMLTO_TEXT
+doc_DATA += $(doc_sources:.xml=.txt)
+endif
+
+if HAVE_STYLESHEETS
+XMLTO_FLAGS = -m $(XSL_STYLESHEET)
+
+doc_DATA += xorg.css
+xorg.css: $(STYLESHEET_SRCDIR)/xorg.css
+	$(AM_V_GEN)cp -pf $(STYLESHEET_SRCDIR)/xorg.css $@
+endif
+
+CLEANFILES = $(doc_DATA)
+
+SUFFIXES = .xml .ps .pdf .txt .html
+
+.xml.txt:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) txt $<
+
+.xml.html:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) xhtml-nochunks $<
+
+.xml.pdf:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop pdf $<
+
+.xml.ps:
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop ps $<
+
+endif HAVE_XMLTO
+endif ENABLE_DOCS

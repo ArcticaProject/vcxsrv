@@ -357,11 +357,15 @@ Resource types are integer values starting at 1.  Get
 a resource type by calling
 <blockquote><programlisting>
 
-    RESTYPE CreateNewResourceType(deleteFunc)
+    RESTYPE CreateNewResourceType(deleteFunc, char *name)
 
 </programlisting></blockquote>
 deleteFunc will be called to destroy all resources with this
-type.</para>
+type.   name will be used to identify this type of resource
+to clients using the X-Resource extension, to security
+extensions such as SELinux, and to tracing frameworks such as DTrace.
+[The name argument was added in xorg-server 1.8.]
+</para>
 <para>
 Resource classes are masks starting at 1 &lt;&lt; 31 which can
 be or'ed with any resource type to provide attributes for the

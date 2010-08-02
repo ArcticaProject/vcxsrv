@@ -32,12 +32,13 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros: XORG_DEFAULT_OPTIONS
+# Require xorg-macros minimum of 1.10 for XORG_CHECK_SGML_DOCTOOLS
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.6 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.6)
+          [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.10)
 XORG_DEFAULT_OPTIONS
 XORG_WITH_DOXYGEN(1.6.1)
+XORG_CHECK_SGML_DOCTOOLS(1.5)
 
 m4_ifndef([XORG_FONT_MACROS_VERSION], [m4_fatal([must install fontutil 1.1 or later before running autoconf/autogen])])
 XORG_FONT_MACROS_VERSION(1.1)
@@ -2182,6 +2183,7 @@ dbe/Makefile
 dix/Makefile
 doc/Makefile
 doc/xml/Makefile
+doc/xml/dtrace/Makefile
 doc/xml/xserver.ent
 fb/Makefile
 record/Makefile

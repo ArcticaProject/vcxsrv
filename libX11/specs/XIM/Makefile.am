@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
+# Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,8 +21,20 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-# Based on xc/doc/specs/XIM/Makefile from X11R6.9
+if ENABLE_SPECS
 
-doc_sources = xim.ms
+specdir = $(docdir)/$(subdir)
+doc_sources = xim.xml
+dist_spec_DATA = 			\
+	$(doc_sources)			\
+	dynamicflowsampleseq.svg	\
+	dynamicflow.svg			\
+	eventflow.svg			\
+	sampleprotocolflow1.svg		\
+	sampleprotocolflow2.svg		\
+	staticflowsampleseq.svg		\
+	staticflow.svg
 
-include $(top_srcdir)/specs/troffrules.in
+include $(top_srcdir)/specs/xmlrules.in
+
+endif ENABLE_SPECS
