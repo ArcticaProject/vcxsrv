@@ -33,6 +33,10 @@ m4_ifndef([XORG_MACROS_VERSION],
           [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.3)
 XORG_DEFAULT_OPTIONS
+XORG_ENABLE_DOCS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
+XORG_CHECK_SGML_DOCTOOLS(1.5)
 
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -61,4 +65,5 @@ XORG_WITH_LINT
 XORG_LINT_LIBRARY([Xdmcp])
 
 AC_OUTPUT([Makefile
+	   doc/Makefile
            xdmcp.pc])

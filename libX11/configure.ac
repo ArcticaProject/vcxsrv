@@ -30,8 +30,6 @@ XORG_ENABLE_SPECS
 XORG_WITH_XMLTO(0.0.20)
 XORG_WITH_FOP
 XORG_CHECK_SGML_DOCTOOLS(1.5)
-XORG_WITH_GROFF
-XORG_WITH_PS2PDF
 
 # Checks for programs.
 AC_PROG_LIBTOOL
@@ -539,6 +537,9 @@ AC_OUTPUT([Makefile
 	   nls/zh_TW.UTF-8/Makefile
 	   specs/Makefile
 	   specs/i18n/Makefile
+	   specs/i18n/framework/Makefile
+	   specs/i18n/localedb/Makefile
+	   specs/i18n/trans/Makefile
 	   specs/libX11/Makefile
 	   specs/XIM/Makefile
 	   x11.pc

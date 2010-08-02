@@ -102,7 +102,7 @@ resort(unsigned char *s_block)
 }
 
 static int
-DDC_checksum(unsigned char *block, int len)
+DDC_checksum(const unsigned char *block, int len)
 {
     int i, result = 0;
     int not_null = 0;
@@ -149,7 +149,10 @@ GetEDID_DDC1(unsigned int *s_ptr)
 	d_pos++;
     }
     free(s_ptr);
-    if (d_block && DDC_checksum(d_block,EDID1_LEN)) return NULL;
+    if (d_block && DDC_checksum(d_block,EDID1_LEN)) {
+	free(d_block);
+	return NULL;
+    }
     return (resort(d_block));
 }
 

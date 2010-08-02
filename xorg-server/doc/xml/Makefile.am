@@ -21,6 +21,8 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
+SUBDIRS = dtrace
+
 XML_FILES = Xserver-spec.xml
 
 include xmlrules.in

@@ -133,7 +133,7 @@ File to use for compose sequences.
 Directory to use for caching compiled compose files.
 .SH FILES
 .TP
-.I $HOME/.Xcompose
+.I $HOME/.XCompose
 User default compose file if XCOMPOSEFILE is not set.
 .TP
 .I __xlocaledir__/compose.dir

@@ -21,4 +21,12 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-SUBDIRS=framework localedb trans
+if ENABLE_SPECS
+
+specdir = $(docdir)/$(subdir)
+doc_sources = localedb.xml
+dist_spec_DATA = $(doc_sources)
+
+include $(top_srcdir)/specs/xmlrules.in
+
+endif ENABLE_SPECS

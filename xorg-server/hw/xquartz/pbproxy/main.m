@@ -75,6 +75,8 @@ static int x_io_error_handler (Display *dpy) {
         exit(EXIT_FAILURE);
 #endif
 
+    /* Prevent _XIOError from calling exit() */
+    pthread_exit(NULL);
     return 0;
 }
 

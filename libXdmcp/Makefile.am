@@ -1,3 +1,5 @@
+SUBDIRS=doc
+
 lib_LTLIBRARIES = libXdmcp.la
 
 AM_CPPFLAGS = -I${top_srcdir}/include

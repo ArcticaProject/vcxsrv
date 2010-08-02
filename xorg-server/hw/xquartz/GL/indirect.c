@@ -271,8 +271,7 @@ static void __glXAquaContextDestroy(__GLXcontext *baseContext) {
 
     __GLXAquaContext *context = (__GLXAquaContext *) baseContext;
     
-    GLAQUA_DEBUG_MSG("glAquaContextDestroy (ctx 0x%x)\n",
-                     (unsigned int) baseContext);
+    GLAQUA_DEBUG_MSG("glAquaContextDestroy (ctx %p)\n", baseContext);
     if (context != NULL) {
       if (context->sid != 0 && surface_hash != NULL) {
 		lst = x_hash_table_lookup(surface_hash, x_cvt_uint_to_vptr(context->sid), NULL);
@@ -321,7 +320,7 @@ static void surface_notify(void *_arg, void *data) {
     case AppleDRISurfaceNotifyDestroyed:
         if (surface_hash != NULL)
             x_hash_table_remove(surface_hash, x_cvt_uint_to_vptr(arg->id));
-	draw->base.pDraw = NULL;
+	draw->pDraw = NULL;
 	draw->sid = 0;
         break;
 
