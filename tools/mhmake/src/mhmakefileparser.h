@@ -198,6 +198,7 @@ public:
     m_RuleThatIsBuild=NULL;
   }
   void UpdateAutomaticDependencies(const refptr<fileinfo> &Target);
+  void UpdateNoRuleAutomaticDependencies(const refptr<fileinfo> &Target);
   const refptr<fileinfoarray> GetIncludeDirs() const;
   void GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<fileinfo> > &Autodeps);
   void SaveAutoDepsFile();

@@ -1627,6 +1627,8 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     if (pMakefile->ForceAutoDepRescan()||MakeTarget==true)
       pMakefile->UpdateAutomaticDependencies(Target);
   }
+  else if (Target->GetAutoDepsMakefile())
+    Target->GetAutoDepsMakefile()->UpdateNoRuleAutomaticDependencies(Target);
 
   BuildDependencies(pRule,Target,TargetDate,YoungestDate,MakeTarget);
 

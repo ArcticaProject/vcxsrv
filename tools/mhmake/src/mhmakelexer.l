@@ -559,6 +559,12 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
+\.AUTODEPS {
+  PRINTF(("%s %d: .AUTODEPS: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  return mhmakeparser::AUTODEPS;
+}
+
+ /*---------------------------------------------------------------------------*/
 export {
   PRINTF(("%s %d: export: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   return mhmakeparser::EXPORT;

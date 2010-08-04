@@ -42,7 +42,7 @@
 %token <theString> COMMAND
 %token <theString> COMMA OPENBRACE CLOSEBRACE
 %token <theString> STRING DOLLAREXPR EQUAL COLON DOUBLECOLON
-%token IMEQUAL PEQUAL OPTEQUAL PHONY EXPORT NEWLINE INCLUDEMAK SPACE
+%token IMEQUAL PEQUAL OPTEQUAL PHONY AUTODEPS EXPORT NEWLINE INCLUDEMAK SPACE
 
 %type <theString> expression nonspaceexpression simpleexpression
 %type <theString> maybeemptyexpression
@@ -72,6 +72,7 @@ statement: NEWLINE |
            includemak |
            ruledef |
            phonyrule |
+           autodepsrule |
            varassignment |
            imvarassignment |
            pvarassignment |
@@ -142,6 +143,22 @@ phonyrule: PHONY COLON expression
            NEWLINE
 ;
 
+autodepsrule: AUTODEPS COLON expression
+           {
+             vector< refptr<fileinfo> > Items;
+             SplitToItems(ExpandExpression($3),Items);
+             vector< refptr<fileinfo> >::iterator pIt=Items.begin();
+             while (pIt!=Items.end())
+             {
+               (*pIt)->SetAutoDepsScan(this);
+               pIt++;
+             }
+             PRINTF(("Defining autodeps rule : %s\n",$3.c_str()));
+             PRINTF(("  Expanded to : %s\n",ExpandExpression($3).c_str()));
+           }
+           NEWLINE
+;
+
 exportrule: EXPORT SPACE exportstrings NEWLINE
 ;
 
@@ -189,7 +206,7 @@ optvarassignment: STRING OPTEQUAL maybeemptyexpression
 
 maybeemptyexpression: NEWLINE {$$=g_EmptyString;} |
                       expression NEWLINE |
-                      expression SPACE NEWLINE 
+                      expression SPACE NEWLINE
 ;
 
 expression: nonspaceexpression |

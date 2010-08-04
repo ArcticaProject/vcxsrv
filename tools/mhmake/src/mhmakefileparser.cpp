@@ -642,6 +642,21 @@ void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Targe
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void mhmakefileparser::UpdateNoRuleAutomaticDependencies(const refptr<fileinfo> &Target)
+{
+  // we have to search for the include files in the Target
+  set< refptr<fileinfo> > Autodeps;
+  GetAutoDeps(Target,Autodeps);
+  // Now add these dependencies also to the rules
+  set< refptr<fileinfo> >::iterator It=Autodeps.begin();
+  while (It!=Autodeps.end())
+  {
+    Target->AddDep(*It);
+    It++;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 const refptr<fileinfoarray> mhmakefileparser::GetIncludeDirs() const
 {
   string Includes=ExpandExpression("$(INCLUDES)");
