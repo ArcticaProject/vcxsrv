@@ -33,7 +33,7 @@
 
 #include "xkbcomp.h"
 
-extern char *scanStr;
+extern char scanBuf[1024];
 extern int scanInt;
 extern int lineNum;
 
@@ -121,7 +121,7 @@ extern ExprDef *ActionCreate(Atom /* name */ ,
                              ExprDef *  /* args */
     );
 
-extern ExprDef *CreateKeysymList(KeySym /* sym */
+extern ExprDef *CreateKeysymList(char * /* sym */
     );
 
 extern ShapeDef *ShapeDeclCreate(Atom /* name */ ,
@@ -161,7 +161,7 @@ extern DoodadDef *DoodadCreate(unsigned /* type */ ,
     );
 
 extern ExprDef *AppendKeysymList(ExprDef * /* list */ ,
-                                 KeySym /* sym */
+                                 char * /* sym */
     );
 
 extern int LookupKeysym(char * /* str */ ,

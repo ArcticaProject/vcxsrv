@@ -83,9 +83,6 @@ RESOURCES = XWin.rc
 
 $(OBJDIR)\$(APP).exe: $(LINKLIBS)
 
-XKeysymDB: ..\libX11\src\XKeysymDB
-	copy $< $@
-
 XErrorDB: ..\libX11\src\XErrorDB
 	copy $< $@
 
@@ -123,7 +120,7 @@ load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0
 load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
 load_makefile xkeyboard-config\makefile MAKESERVER=0 DEBUG=0
 
-all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
+all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XErrorDB \
      ..\libX11\nls\all fonts.src\all xkeyboard-config\all plink.exe xclock.exe xcalc.exe \
      xwininfo.exe swrast_dri.dll swrast_dri_dbg.dll
 

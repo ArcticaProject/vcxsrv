@@ -53,3 +53,5 @@ LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype200b8MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
 endif
 
+xkbparse.c xkbparse.h: xkbparse.y
+	bison -d -oxkbparse.c $<

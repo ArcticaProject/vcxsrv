@@ -45,14 +45,17 @@ int lineNum = 0;
 
 int scanInt;
 
-char *scanStr = NULL;
+char scanBuf[1024];
 static int scanStrLine = 0;
 
-#define	BUFSIZE	512
-static int nInBuf = 0;
-static char buf[BUFSIZE];
+#define	BUFSIZE	4096
+static char readBuf[BUFSIZE];
+static int readBufPos = 0;
+static int readBufLen = 0;
 
 #ifdef DEBUG
+extern int debugFlags;
+
 static char *
 tokText(int tok)
 {
@@ -216,7 +219,7 @@ tokText(int tok)
         break;
 
     case STRING:
-        snprintf(buf, sizeof(buf), "STRING (%s)", scanStr);
+        snprintf(buf, sizeof(buf), "STRING (%s)", scanBuf);
         break;
     case INTEGER:
         snprintf(buf, sizeof(buf), "INTEGER (0x%x)", scanInt);
@@ -226,10 +229,10 @@ tokText(int tok)
                 scanInt / XkbGeomPtsPerMM, scanInt % XkbGeomPtsPerMM);
         break;
     case IDENT:
-        snprintf(buf, sizeof(buf), "IDENT (%s)", scanStr);
+        snprintf(buf, sizeof(buf), "IDENT (%s)", scanBuf);
         break;
     case KEYNAME:
-        snprintf(buf, sizeof(buf), "KEYNAME (%s)", scanStr);
+        snprintf(buf, sizeof(buf), "KEYNAME (%s)", scanBuf);
         break;
 
     case PARTIAL:
@@ -266,6 +269,32 @@ tokText(int tok)
 }
 #endif
 
+static int
+scanchar(void)
+{
+    if (readBufPos >= readBufLen) {
+        readBufLen = fread(readBuf, 1, BUFSIZE, yyin);
+        readBufPos = 0;
+        if (!readBufLen)
+            return EOF;
+        if (feof(yyin))
+            readBuf[readBufLen] = EOF;
+    }
+
+    return readBuf[readBufPos++];
+}
+
+static void
+unscanchar(int c)
+{
+    if (readBuf[--readBufPos] != c) {
+        fprintf(stderr, "UNGETCHAR FAILED! Put back %c, was expecting %c at "
+                        "position %d, buf is '%s'\n", c, readBuf[readBufPos],
+                        readBufPos, readBuf);
+        _exit(94);
+    }
+}
+
 int
 setScanState(char *file, int line)
 {
@@ -279,14 +308,14 @@ setScanState(char *file, int line)
 static int
 yyGetString(void)
 {
-    int ch;
+    int ch, i;
 
-    nInBuf = 0;
-    while (((ch = getc(yyin)) != EOF) && (ch != '"'))
+    i = 0;
+    while (((ch = scanchar()) != EOF) && (ch != '"'))
     {
         if (ch == '\\')
         {
-            if ((ch = getc(yyin)) != EOF)
+            if ((ch = scanchar()) != EOF)
             {
                 if (ch == 'n')
                     ch = '\n';
@@ -306,7 +335,7 @@ yyGetString(void)
                 {
                     int tmp, stop;
                     ch = stop = 0;
-                    if (((tmp = getc(yyin)) != EOF) && (isdigit(tmp))
+                    if (((tmp = scanchar()) != EOF) && (isdigit(tmp))
                         && (tmp != '8') && (tmp != '9'))
                     {
                         ch = (ch * 8) + (tmp - '0');
@@ -314,11 +343,11 @@ yyGetString(void)
                     else
                     {
                         stop = 1;
-                        ungetc(tmp, yyin);
+                        unscanchar(tmp);
                     }
                     if (!stop)
                     {
-                        if (((tmp = getc(yyin)) != EOF)
+                        if (((tmp = scanchar()) != EOF)
                             && (isdigit(tmp)) && (tmp != '8') && (tmp != '9'))
                         {
                             ch = (ch * 8) + (tmp - '0');
@@ -326,12 +355,12 @@ yyGetString(void)
                         else
                         {
                             stop = 1;
-                            ungetc(tmp, yyin);
+                            unscanchar(tmp);
                         }
                     }
                     if (!stop)
                     {
-                        if (((tmp = getc(yyin)) != EOF)
+                        if (((tmp = scanchar()) != EOF)
                             && (isdigit(tmp)) && (tmp != '8') && (tmp != '9'))
                         {
                             ch = (ch * 8) + (tmp - '0');
@@ -339,7 +368,7 @@ yyGetString(void)
                         else
                         {
                             stop = 1;
-                            ungetc(tmp, yyin);
+                            unscanchar(tmp);
                         }
                     }
                 }
@@ -347,15 +376,12 @@ yyGetString(void)
             else
                 return ERROR_TOK;
         }
-        if (nInBuf < BUFSIZE - 1)
-            buf[nInBuf++] = ch;
+        if (i < sizeof(scanBuf) - 1)
+            scanBuf[i++] = ch;
     }
     if (ch == '"')
     {
-        buf[nInBuf++] = '\0';
-        if (scanStr)
-            uFree(scanStr);
-        scanStr = (char *) uStringDup(buf);
+        scanBuf[i++] = '\0';
         scanStrLine = lineNum;
         return STRING;
     }
@@ -365,14 +391,14 @@ yyGetString(void)
 static int
 yyGetKeyName(void)
 {
-    int ch;
+    int ch, i;
 
-    nInBuf = 0;
-    while (((ch = getc(yyin)) != EOF) && (ch != '>'))
+    i = 0;
+    while (((ch = scanchar()) != EOF) && (ch != '>'))
     {
         if (ch == '\\')
         {
-            if ((ch = getc(yyin)) != EOF)
+            if ((ch = scanchar()) != EOF)
             {
                 if (ch == 'n')
                     ch = '\n';
@@ -392,7 +418,7 @@ yyGetKeyName(void)
                 {
                     int tmp, stop;
                     ch = stop = 0;
-                    if (((tmp = getc(yyin)) != EOF) && (isdigit(tmp))
+                    if (((tmp = scanchar()) != EOF) && (isdigit(tmp))
                         && (tmp != '8') && (tmp != '9'))
                     {
                         ch = (ch * 8) + (tmp - '0');
@@ -400,9 +426,9 @@ yyGetKeyName(void)
                     else
                     {
                         stop = 1;
-                        ungetc(tmp, yyin);
+                        unscanchar(tmp);
                     }
-                    if ((!stop) && ((tmp = getc(yyin)) != EOF)
+                    if ((!stop) && ((tmp = scanchar()) != EOF)
                         && (isdigit(tmp)) && (tmp != '8') && (tmp != '9'))
                     {
                         ch = (ch * 8) + (tmp - '0');
@@ -410,9 +436,9 @@ yyGetKeyName(void)
                     else
                     {
                         stop = 1;
-                        ungetc(tmp, yyin);
+                        unscanchar(tmp);
                     }
-                    if ((!stop) && ((tmp = getc(yyin)) != EOF)
+                    if ((!stop) && ((tmp = scanchar()) != EOF)
                         && (isdigit(tmp)) && (tmp != '8') && (tmp != '9'))
                     {
                         ch = (ch * 8) + (tmp - '0');
@@ -420,7 +446,7 @@ yyGetKeyName(void)
                     else
                     {
                         stop = 1;
-                        ungetc(tmp, yyin);
+                        unscanchar(tmp);
                     }
                 }
             }
@@ -428,15 +454,12 @@ yyGetKeyName(void)
                 return ERROR_TOK;
         }
 
-        if (nInBuf < BUFSIZE - 1)
-            buf[nInBuf++] = ch;
+        if (i < sizeof(scanBuf) - 1)
+            scanBuf[i++] = ch;
     }
-    if ((ch == '>') && (nInBuf < 5))
+    if ((ch == '>') && (i < 5))
     {
-        buf[nInBuf++] = '\0';
-        if (scanStr)
-            uFree(scanStr);
-        scanStr = (char *) uStringDup(buf);
+        scanBuf[i++] = '\0';
         scanStrLine = lineNum;
         return KEYNAME;
     }
@@ -545,22 +568,22 @@ static int numKeywords = sizeof(keywords) / sizeof(struct _Keyword);
 static int
 yyGetIdent(int first)
 {
-    int ch, i, found;
+    int ch, i, j, found;
     int rtrn = IDENT;
 
-    buf[0] = first;
-    nInBuf = 1;
-    while (((ch = getc(yyin)) != EOF) && (isalnum(ch) || (ch == '_')))
+    scanBuf[0] = first;
+    j = 1;
+    while (((ch = scanchar()) != EOF) && (isalnum(ch) || (ch == '_')))
     {
-        if (nInBuf < BUFSIZE - 1)
-            buf[nInBuf++] = ch;
+        if (j < sizeof(scanBuf) - 1)
+            scanBuf[j++] = ch;
     }
-    buf[nInBuf++] = '\0';
+    scanBuf[j++] = '\0';
     found = 0;
 
     for (i = 0; (!found) && (i < numKeywords); i++)
     {
-        if (uStrCaseCmp(buf, keywords[i].keyword) == 0)
+        if (uStrCaseCmp(scanBuf, keywords[i].keyword) == 0)
         {
             rtrn = keywords[i].token;
             found = 1;
@@ -568,15 +591,12 @@ yyGetIdent(int first)
     }
     if (!found)
     {
-        if (scanStr)
-            uFree(scanStr);
-        scanStr = (char *) uStringDup(buf);
         scanStrLine = lineNum;
         rtrn = IDENT;
     }
 
     if ((ch != EOF) && (!isspace(ch)))
-        ungetc(ch, yyin);
+        unscanchar(ch);
     else if (ch == '\n')
         lineNum++;
 
@@ -587,10 +607,12 @@ static int
 yyGetNumber(int ch)
 {
     int isFloat = 0;
+    char buf[1024];
+    int nInBuf = 0;
 
     buf[0] = ch;
     nInBuf = 1;
-    while (((ch = getc(yyin)) != EOF)
+    while (((ch = scanchar()) != EOF)
            && (isxdigit(ch) || ((nInBuf == 1) && (ch == 'x'))))
     {
         buf[nInBuf++] = ch;
@@ -599,14 +621,14 @@ yyGetNumber(int ch)
     {
         isFloat = 1;
         buf[nInBuf++] = ch;
-        while (((ch = getc(yyin)) != EOF) && (isxdigit(ch)))
+        while (((ch = scanchar()) != EOF) && (isxdigit(ch)))
         {
             buf[nInBuf++] = ch;
         }
     }
     buf[nInBuf++] = '\0';
     if ((ch != EOF) && (!isspace(ch)))
-        ungetc(ch, yyin);
+        unscanchar(ch);
 
     if (isFloat)
     {
@@ -631,7 +653,7 @@ yylex(void)
 
     do
     {
-        ch = getc(yyin);
+        ch = scanchar();
         if (ch == '\n')
         {
             lineNum++;
@@ -640,26 +662,26 @@ yylex(void)
         {                       /* handle shell style '#' comments */
             do
             {
-                ch = getc(yyin);
+                ch = scanchar();
             }
             while ((ch != '\n') && (ch != EOF));
             lineNum++;
         }
         else if (ch == '/')
         {                       /* handle C++ style double-/ comments */
-            int newch = getc(yyin);
+            int newch = scanchar();
             if (newch == '/')
             {
                 do
                 {
-                    ch = getc(yyin);
+                    ch = scanchar();
                 }
                 while ((ch != '\n') && (ch != EOF));
                 lineNum++;
             }
             else if (newch != EOF)
             {
-                ungetc(newch, yyin);
+                unscanchar(newch);
             }
         }
     }
