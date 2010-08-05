@@ -179,10 +179,10 @@ $(DESTDIR)\%.xml: %.xml.in
 	copy $< $@
 
 $(DESTDIR)\evdev.xml: base.xml.in
-	cp $< $@
+	copy $< $@
 
 $(DESTDIR)\evdev.extras.xml: base.extras.xml.in
-	cp $< $@
+	copy $< $@
 
 DATA_FILES=$(rules_DATA:%=$(DESTDIR)\%) $(xml_DATA:%=$(DESTDIR)\%)
 
