@@ -27,6 +27,7 @@
 #include "xkbcomp.h"
 #include "tokens.h"
 #include "expr.h"
+#include "parseutils.h"
 
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
@@ -968,8 +969,12 @@ AddSymbolsToKey(KeyInfo * key,
         return False;
     }
     key->symsDefined |= (1 << ndx);
-    memcpy((char *) key->syms[ndx], (char *) value->value.list.syms,
-           nSyms * sizeof(KeySym));
+    for (i = 0; i < nSyms; i++) {
+        if (!LookupKeysym(value->value.list.syms[i], &key->syms[ndx][i])) {
+            WSGO1("Could not resolve keysym %s\n", value->value.list.syms[i]);
+            key->syms[ndx][i] = NoSymbol;
+        }
+    }
     for (i = key->numLevels[ndx] - 1;
          (i >= 0) && (key->syms[ndx][i] == NoSymbol); i--)
     {

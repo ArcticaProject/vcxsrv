@@ -30,6 +30,8 @@
 #include <X11/keysym.h>
 #include <X11/extensions/XKBgeom.h>
 #include <X11/Xalloca.h>
+#include <limits.h>
+#include <stdlib.h>
 
 XkbFile *rtrnValue;
 
@@ -392,7 +394,7 @@ ActionCreate(Atom name, ExprDef * args)
 }
 
 ExprDef *
-CreateKeysymList(KeySym sym)
+CreateKeysymList(char *sym)
 {
     ExprDef *def;
 
@@ -400,8 +402,8 @@ CreateKeysymList(KeySym sym)
     if (def)
     {
         def->value.list.nSyms = 1;
-        def->value.list.szSyms = 2;
-        def->value.list.syms = uTypedCalloc(2, KeySym);
+        def->value.list.szSyms = 4;
+        def->value.list.syms = uTypedCalloc(4, char *);
         if (def->value.list.syms != NULL)
         {
             def->value.list.syms[0] = sym;
@@ -600,7 +602,7 @@ DoodadCreate(unsigned type, Atom name, VarDef * body)
 }
 
 ExprDef *
-AppendKeysymList(ExprDef * list, KeySym sym)
+AppendKeysymList(ExprDef * list, char *sym)
 {
     if (list->value.list.nSyms >= list->value.list.szSyms)
     {
@@ -608,7 +610,7 @@ AppendKeysymList(ExprDef * list, KeySym sym)
         list->value.list.syms = uTypedRecalloc(list->value.list.syms,
                                                list->value.list.nSyms,
                                                list->value.list.szSyms,
-                                               KeySym);
+                                               char *);
         if (list->value.list.syms == NULL)
         {
             FATAL("Couldn't resize list of symbols for append\n");
@@ -623,6 +625,7 @@ int
 LookupKeysym(char *str, KeySym * sym_rtrn)
 {
     KeySym sym;
+    char *tmp;
 
     if ((!str) || (uStrCaseCmp(str, "any") == 0)
         || (uStrCaseCmp(str, "nosymbol") == 0))
@@ -641,6 +644,13 @@ LookupKeysym(char *str, KeySym * sym_rtrn)
     {
         *sym_rtrn = sym;
         return 1;
+    }
+    if (strlen(str) > 2 && str[0] == '0' && str[1] == 'x') {
+        sym = strtoul(str, &tmp, 16);
+        if (sym != ULONG_MAX && (!tmp || *tmp == '\0')) {
+            *sym_rtrn = sym;
+            return 1;
+        }
     }
     return 0;
 }

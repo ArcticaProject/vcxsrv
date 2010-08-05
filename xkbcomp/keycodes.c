@@ -158,7 +158,6 @@ AddIndicatorName(KeyNamesInfo * info, IndicatorNameInfo * new)
 {
     IndicatorNameInfo *old;
     Bool replace;
-    const char *action;
 
     replace = (new->defs.merge == MergeReplace) ||
         (new->defs.merge == MergeOverride);
@@ -176,23 +175,22 @@ AddIndicatorName(KeyNamesInfo * info, IndicatorNameInfo * new)
                 {
                     if (replace)
                         old->virtual = new->virtual;
-                    action = "Using %s instead of %s\n";
+                    ACTION2("Using %s instead of %s\n",
+                            (old->virtual ? "virtual" : "real"),
+                            (old->virtual ? "real" : "virtual"));
                 }
                 else
                 {
-                    action = "Identical definitions ignored\n";
+                    ACTION("Identical definitions ignored\n");
                 }
-                ACTION2(action, (old->virtual ? "virtual" : "real"),
-                        (old->virtual ? "real" : "virtual"));
                 return True;
             }
             else
             {
                 if (replace)
-                    action = "Ignoring %d, using %d\n";
+                    ACTION2("Ignoring %d, using %d\n", old->ndx, new->ndx);
                 else
-                    action = "Using %d, ignoring %d\n";
-                ACTION2(action, old->ndx, new->ndx);
+                    ACTION2("Using %d, ignoring %d\n", old->ndx, new->ndx);
             }
             if (replace)
             {
@@ -224,7 +222,7 @@ AddIndicatorName(KeyNamesInfo * info, IndicatorNameInfo * new)
         {
             WARN1("Multiple names for indicator %d\n", new->ndx);
             if ((old->name == new->name) && (old->virtual == new->virtual))
-                action = "Identical definitions ignored\n";
+                ACTION("Identical definitions ignored\n");
             else
             {
                 const char *oldType, *newType;

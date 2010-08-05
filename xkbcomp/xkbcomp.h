@@ -156,7 +156,7 @@ typedef struct _Expr
         {
             int nSyms;
             int szSyms;
-            KeySym *syms;
+            char **syms;
         } list;
         struct
         {
