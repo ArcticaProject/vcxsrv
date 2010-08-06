@@ -59,7 +59,7 @@ TTYAPP=vcxsrv_dbg
 APP:=$(TTYAPP)
 
 LINKLIBS += $(MHMAKECONF)\openssl\out32_d\libeay32.lib \
-            $(MHMAKECONF)\freetype\lib\freetype214MT_D.lib \
+            $(MHMAKECONF)\freetype\lib\freetype241MT_D.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2d.lib
 
 $(OBJDIR)\$(TTYAPP).exe: $(LINKLIBS)
@@ -69,7 +69,7 @@ WINAPP=vcxsrv
 APP:=$(WINAPP)
 
 LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib \
-            $(MHMAKECONF)\freetype\lib\freetype214MT.lib \
+            $(MHMAKECONF)\freetype\lib\freetype241MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
 
 endif

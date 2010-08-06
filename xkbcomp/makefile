@@ -23,6 +23,8 @@ endif
 
 DEFINES += DFLT_XKB_CONFIG_ROOT="\".\""
 
+INCLUDES += $(OBJDIR)
+
 CSRCS = action.c \
         alias.c \
         compat.c \
@@ -46,12 +48,12 @@ CSRCS = action.c \
 LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib
 
 ifeq ($(DEBUG),1)
-LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype214MT_D.lib \
+LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype241MT_D.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2d.lib
 else
-LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype214MT.lib \
+LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype241MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
 endif
 
-xkbparse.c xkbparse.h: xkbparse.y
-	bison -d -oxkbparse.c $<
+$(OBJDIR)\xkbparse.c $(OBJDIR)\xkbparse.h: xkbparse.y
+	bison -d -o$(OBJDIR)\xkbparse.c $<
