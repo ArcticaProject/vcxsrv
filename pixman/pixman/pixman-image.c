@@ -65,8 +65,7 @@ _pixman_image_get_scanline_generic_64 (pixman_image_t * image,
                                        int              y,
                                        int              width,
                                        uint32_t *       buffer,
-                                       const uint32_t * mask,
-                                       uint32_t         mask_bits)
+                                       const uint32_t * mask)
 {
     uint32_t *mask8 = NULL;
 
@@ -83,8 +82,7 @@ _pixman_image_get_scanline_generic_64 (pixman_image_t * image,
     }
 
     /* Fetch the source image into the first half of buffer. */
-    _pixman_image_get_scanline_32 (image, x, y, width, (uint32_t*)buffer, mask8,
-                                   mask_bits);
+    _pixman_image_get_scanline_32 (image, x, y, width, (uint32_t*)buffer, mask8);
 
     /* Expand from 32bpp to 64bpp in place. */
     pixman_expand ((uint64_t *)buffer, buffer, PIXMAN_a8r8g8b8, width);
@@ -142,10 +140,9 @@ _pixman_image_get_scanline_32 (pixman_image_t *image,
                                int             y,
                                int             width,
                                uint32_t *      buffer,
-                               const uint32_t *mask,
-                               uint32_t        mask_bits)
+                               const uint32_t *mask)
 {
-    image->common.get_scanline_32 (image, x, y, width, buffer, mask, mask_bits);
+    image->common.get_scanline_32 (image, x, y, width, buffer, mask);
 }
 
 /* Even thought the type of buffer is uint32_t *, the function actually expects
@@ -157,10 +154,9 @@ _pixman_image_get_scanline_64 (pixman_image_t *image,
                                int             y,
                                int             width,
                                uint32_t *      buffer,
-                               const uint32_t *unused,
-                               uint32_t        unused2)
+                               const uint32_t *unused)
 {
-    image->common.get_scanline_64 (image, x, y, width, buffer, unused, unused2);
+    image->common.get_scanline_64 (image, x, y, width, buffer, unused);
 }
 
 static void
@@ -680,6 +676,12 @@ pixman_image_set_component_alpha   (pixman_image_t *image,
     image_property_changed (image);
 }
 
+PIXMAN_EXPORT pixman_bool_t
+pixman_image_get_component_alpha   (pixman_image_t       *image)
+{
+    return image->common.component_alpha;
+}
+
 PIXMAN_EXPORT void
 pixman_image_set_accessors (pixman_image_t *           image,
                             pixman_read_memory_func_t  read_func,
@@ -741,13 +743,22 @@ pixman_image_get_depth (pixman_image_t *image)
     return 0;
 }
 
+PIXMAN_EXPORT pixman_format_code_t
+pixman_image_get_format (pixman_image_t *image)
+{
+    if (image->type == BITS)
+	return image->bits.format;
+
+    return 0;
+}
+
 uint32_t
 _pixman_image_get_solid (pixman_image_t *     image,
                          pixman_format_code_t format)
 {
     uint32_t result;
 
-    _pixman_image_get_scanline_32 (image, 0, 0, 1, &result, NULL, 0);
+    _pixman_image_get_scanline_32 (image, 0, 0, 1, &result, NULL);
 
     /* If necessary, convert RGB <--> BGR. */
     if (PIXMAN_FORMAT_TYPE (format) != PIXMAN_TYPE_ARGB)

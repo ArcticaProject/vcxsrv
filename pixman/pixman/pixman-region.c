@@ -1329,6 +1329,24 @@ pixman_region_union_o (region_type_t *region,
     return TRUE;
 }
 
+PIXMAN_EXPORT pixman_bool_t
+PREFIX(_intersect_rect) (region_type_t *dest,
+			 region_type_t *source,
+			 int x, int y,
+			 unsigned int width,
+			 unsigned int height)
+{
+    region_type_t region;
+
+    region.data = NULL;
+    region.extents.x1 = x;
+    region.extents.y1 = y;
+    region.extents.x2 = x + width;
+    region.extents.y2 = y + height;
+
+    return PREFIX(_intersect) (dest, source, &region);
+}
+
 /* Convenience function for performing union of region with a
  * single rectangle
  */

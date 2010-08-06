@@ -330,8 +330,7 @@ bits_image_fetch_bilinear_no_repeat_8888 (pixman_image_t * ima,
 					  int              line,
 					  int              width,
 					  uint32_t *       buffer,
-					  const uint32_t * mask,
-					  uint32_t         mask_bits)
+					  const uint32_t * mask)
 {
     bits_image_t *bits = &ima->bits;
     pixman_fixed_t x_top, x_bottom, x;
@@ -407,8 +406,9 @@ bits_image_fetch_bilinear_no_repeat_8888 (pixman_image_t * ima,
      */
     if (!mask)
     {
+	uint32_t mask_bits = 1;
+
         mask_inc = 0;
-        mask_bits = 1;
         mask = &mask_bits;
     }
     else
@@ -643,8 +643,7 @@ bits_image_fetch_transformed (pixman_image_t * image,
                               int              line,
                               int              width,
                               uint32_t *       buffer,
-                              const uint32_t * mask,
-                              uint32_t         mask_bits)
+                              const uint32_t * mask)
 {
     pixman_fixed_t x, y, w;
     pixman_fixed_t ux, uy, uw;
@@ -682,7 +681,7 @@ bits_image_fetch_transformed (pixman_image_t * image,
     {
 	for (i = 0; i < width; ++i)
 	{
-	    if (!mask || (mask[i] & mask_bits))
+	    if (!mask || mask[i])
 	    {
 		buffer[i] =
 		    bits_image_fetch_pixel_filtered (&image->bits, x, y);
@@ -696,12 +695,20 @@ bits_image_fetch_transformed (pixman_image_t * image,
     {
 	for (i = 0; i < width; ++i)
 	{
-	    pixman_fixed_t x0, y0;
-
-	    if (!mask || (mask[i] & mask_bits))
+	    if (!mask || mask[i])
 	    {
-		x0 = ((pixman_fixed_48_16_t)x << 16) / w;
-		y0 = ((pixman_fixed_48_16_t)y << 16) / w;
+		pixman_fixed_t x0, y0;
+
+		if (w != 0)
+		{
+		    x0 = ((pixman_fixed_48_16_t)x << 16) / w;
+		    y0 = ((pixman_fixed_48_16_t)y << 16) / w;
+		}
+		else
+		{
+		    x0 = 0;
+		    y0 = 0;
+		}
 
 		buffer[i] =
 		    bits_image_fetch_pixel_filtered (&image->bits, x0, y0);
@@ -720,8 +727,7 @@ bits_image_fetch_solid_32 (pixman_image_t * image,
                            int              y,
                            int              width,
                            uint32_t *       buffer,
-                           const uint32_t * mask,
-                           uint32_t         mask_bits)
+                           const uint32_t * mask)
 {
     uint32_t color;
     uint32_t *end;
@@ -739,8 +745,7 @@ bits_image_fetch_solid_64 (pixman_image_t * image,
                            int              y,
                            int              width,
                            uint32_t *       b,
-                           const uint32_t * unused,
-                           uint32_t         unused2)
+                           const uint32_t * unused)
 {
     uint64_t color;
     uint64_t *buffer = (uint64_t *)b;
@@ -785,9 +790,9 @@ bits_image_fetch_untransformed_repeat_none (bits_image_t *image,
 	w = MIN (width, image->width - x);
 
 	if (wide)
-	    image->fetch_scanline_raw_64 ((pixman_image_t *)image, x, y, w, buffer, NULL, 0);
+	    image->fetch_scanline_raw_64 ((pixman_image_t *)image, x, y, w, buffer, NULL);
 	else
-	    image->fetch_scanline_raw_32 ((pixman_image_t *)image, x, y, w, buffer, NULL, 0);
+	    image->fetch_scanline_raw_32 ((pixman_image_t *)image, x, y, w, buffer, NULL);
 
 	width -= w;
 	buffer += w * (wide? 2 : 1);
@@ -823,9 +828,9 @@ bits_image_fetch_untransformed_repeat_normal (bits_image_t *image,
 	w = MIN (width, image->width - x);
 
 	if (wide)
-	    image->fetch_scanline_raw_64 ((pixman_image_t *)image, x, y, w, buffer, NULL, 0);
+	    image->fetch_scanline_raw_64 ((pixman_image_t *)image, x, y, w, buffer, NULL);
 	else
-	    image->fetch_scanline_raw_32 ((pixman_image_t *)image, x, y, w, buffer, NULL, 0);
+	    image->fetch_scanline_raw_32 ((pixman_image_t *)image, x, y, w, buffer, NULL);
 
 	buffer += w * (wide? 2 : 1);
 	x += w;
@@ -839,8 +844,7 @@ bits_image_fetch_untransformed_32 (pixman_image_t * image,
                                    int              y,
                                    int              width,
                                    uint32_t *       buffer,
-                                   const uint32_t * mask,
-                                   uint32_t         mask_bits)
+                                   const uint32_t * mask)
 {
     if (image->common.repeat == PIXMAN_REPEAT_NONE)
     {
@@ -860,8 +864,7 @@ bits_image_fetch_untransformed_64 (pixman_image_t * image,
                                    int              y,
                                    int              width,
                                    uint32_t *       buffer,
-                                   const uint32_t * unused,
-                                   uint32_t         unused2)
+                                   const uint32_t * unused)
 {
     if (image->common.repeat == PIXMAN_REPEAT_NONE)
     {
@@ -914,6 +917,7 @@ bits_image_property_changed (pixman_image_t *image)
 	     bits->common.transform->matrix[2][2] == pixman_fixed_1	&&
 	     bits->common.transform->matrix[0][0] > 0			&&
 	     bits->common.transform->matrix[1][0] == 0			&&
+	     !bits->read_func						&&
 	     (bits->common.filter == PIXMAN_FILTER_BILINEAR ||
 	      bits->common.filter == PIXMAN_FILTER_GOOD	    ||
 	      bits->common.filter == PIXMAN_FILTER_BEST)		&&

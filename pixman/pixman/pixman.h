@@ -420,7 +420,6 @@ void                    pixman_region_init_from_image    (pixman_region16_t *reg
 void                    pixman_region_fini               (pixman_region16_t *region);
 
 
-
 /* manipulation */
 void                    pixman_region_translate          (pixman_region16_t *region,
 							  int                x,
@@ -434,6 +433,12 @@ pixman_bool_t           pixman_region_union              (pixman_region16_t *new
 							  pixman_region16_t *reg1,
 							  pixman_region16_t *reg2);
 pixman_bool_t           pixman_region_union_rect         (pixman_region16_t *dest,
+							  pixman_region16_t *source,
+							  int                x,
+							  int                y,
+							  unsigned int       width,
+							  unsigned int       height);
+pixman_bool_t		pixman_region_intersect_rect     (pixman_region16_t *dest,
 							  pixman_region16_t *source,
 							  int                x,
 							  int                y,
@@ -521,6 +526,12 @@ pixman_bool_t           pixman_region32_intersect          (pixman_region32_t *n
 pixman_bool_t           pixman_region32_union              (pixman_region32_t *new_reg,
 							    pixman_region32_t *reg1,
 							    pixman_region32_t *reg2);
+pixman_bool_t		pixman_region32_intersect_rect     (pixman_region32_t *dest,
+							    pixman_region32_t *source,
+							    int                x,
+							    int                y,
+							    unsigned int       width,
+							    unsigned int       height);
 pixman_bool_t           pixman_region32_union_rect         (pixman_region32_t *dest,
 							    pixman_region32_t *source,
 							    int                x,
@@ -653,6 +664,7 @@ typedef enum {
     PIXMAN_x8b8g8r8 =	 PIXMAN_FORMAT(32,PIXMAN_TYPE_ABGR,0,8,8,8),
     PIXMAN_b8g8r8a8 =	 PIXMAN_FORMAT(32,PIXMAN_TYPE_BGRA,8,8,8,8),
     PIXMAN_b8g8r8x8 =	 PIXMAN_FORMAT(32,PIXMAN_TYPE_BGRA,0,8,8,8),
+    PIXMAN_x14r6g6b6 =	 PIXMAN_FORMAT(32,PIXMAN_TYPE_ARGB,0,6,6,6),
     PIXMAN_x2r10g10b10 = PIXMAN_FORMAT(32,PIXMAN_TYPE_ARGB,0,10,10,10),
     PIXMAN_a2r10g10b10 = PIXMAN_FORMAT(32,PIXMAN_TYPE_ARGB,2,10,10,10),
     PIXMAN_x2b10g10r10 = PIXMAN_FORMAT(32,PIXMAN_TYPE_ABGR,0,10,10,10),
@@ -768,6 +780,7 @@ void            pixman_image_set_alpha_map           (pixman_image_t            
 						      int16_t                       y);
 void            pixman_image_set_component_alpha     (pixman_image_t               *image,
 						      pixman_bool_t                 component_alpha);
+pixman_bool_t   pixman_image_get_component_alpha     (pixman_image_t               *image);
 void		pixman_image_set_accessors	     (pixman_image_t		   *image,
 						      pixman_read_memory_func_t	    read_func,
 						      pixman_write_memory_func_t    write_func);
@@ -778,6 +791,7 @@ int		pixman_image_get_width               (pixman_image_t               *image);
 int             pixman_image_get_height              (pixman_image_t               *image);
 int		pixman_image_get_stride              (pixman_image_t               *image); /* in bytes */
 int		pixman_image_get_depth               (pixman_image_t		   *image);
+pixman_format_code_t pixman_image_get_format	     (pixman_image_t		   *image);
 pixman_bool_t	pixman_image_fill_rectangles	     (pixman_op_t		    op,
 						      pixman_image_t		   *image,
 						      pixman_color_t		   *color,

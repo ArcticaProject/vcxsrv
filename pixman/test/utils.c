@@ -206,3 +206,116 @@ make_random_bytes (int n_bytes)
 
     return bytes;
 }
+
+/*
+ * A function, which can be used as a core part of the test programs,
+ * intended to detect various problems with the help of fuzzing input
+ * to pixman API (according to some templates, aka "smart" fuzzing).
+ * Some general information about such testing can be found here:
+ * http://en.wikipedia.org/wiki/Fuzz_testing
+ *
+ * It may help detecting:
+ *  - crashes on bad handling of valid or reasonably invalid input to
+ *    pixman API.
+ *  - deviations from the behavior of older pixman releases.
+ *  - deviations from the behavior of the same pixman release, but
+ *    configured in a different way (for example with SIMD optimizations
+ *    disabled), or running on a different OS or hardware.
+ *
+ * The test is performed by calling a callback function a huge number
+ * of times. The callback function is expected to run some snippet of
+ * pixman code with pseudorandom variations to the data feeded to
+ * pixman API. A result of running each callback function should be
+ * some deterministic value which depends on test number (test number
+ * can be used as a seed for PRNG). When 'verbose' argument is nonzero,
+ * callback function is expected to print to stdout some information
+ * about what it does.
+ *
+ * Return values from many small tests are accumulated together and
+ * used as final checksum, which can be compared to some expected
+ * value. Running the tests not individually, but in a batch helps
+ * to reduce process start overhead and also allows to parallelize
+ * testing and utilize multiple CPU cores.
+ *
+ * The resulting executable can be run without any arguments. In
+ * this case it runs a batch of tests starting from 1 and up to
+ * 'default_number_of_iterations'. The resulting checksum is
+ * compared with 'expected_checksum' and FAIL or PASS verdict
+ * depends on the result of this comparison.
+ *
+ * If the executable is run with 2 numbers provided as command line
+ * arguments, they specify the starting and ending numbers for a test
+ * batch.
+ *
+ * If the executable is run with only one number provided as a command
+ * line argument, then this number is used to call the callback function
+ * once, and also with verbose flag set.
+ */
+int
+fuzzer_test_main (const char *test_name,
+		  int         default_number_of_iterations,
+		  uint32_t    expected_checksum,
+		  uint32_t    (*test_function)(int testnum, int verbose),
+		  int         argc,
+		  const char *argv[])
+{
+    int i, n1 = 1, n2 = 0;
+    uint32_t checksum = 0;
+    int verbose = getenv ("VERBOSE") != NULL;
+
+    if (argc >= 3)
+    {
+	n1 = atoi (argv[1]);
+	n2 = atoi (argv[2]);
+	if (n2 < n1)
+	{
+	    printf ("invalid test range\n");
+	    return 1;
+	}
+    }
+    else if (argc >= 2)
+    {
+	n2 = atoi (argv[1]);
+	checksum = test_function (n2, 1);
+	printf ("%d: checksum=%08X\n", n2, checksum);
+	return 0;
+    }
+    else
+    {
+	n1 = 1;
+	n2 = default_number_of_iterations;
+    }
+
+#ifdef USE_OPENMP
+    #pragma omp parallel for reduction(+:checksum) default(none) \
+					shared(n1, n2, test_function, verbose)
+#endif
+    for (i = n1; i <= n2; i++)
+    {
+	uint32_t crc = test_function (i, 0);
+	if (verbose)
+	    printf ("%d: %08X\n", i, crc);
+	checksum += crc;
+    }
+
+    if (n1 == 1 && n2 == default_number_of_iterations)
+    {
+	if (checksum == expected_checksum)
+	{
+	    printf ("%s test passed (checksum=%08X)\n",
+		    test_name, checksum);
+	}
+	else
+	{
+	    printf ("%s test failed! (checksum=%08X, expected %08X)\n",
+		    test_name, checksum, expected_checksum);
+	    return 1;
+	}
+    }
+    else
+    {
+	printf ("%d-%d: checksum=%08X\n", n1, n2, checksum);
+    }
+
+    return 0;
+}

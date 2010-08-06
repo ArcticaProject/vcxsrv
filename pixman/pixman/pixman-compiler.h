@@ -70,7 +70,14 @@
 #endif
 
 /* TLS */
-#if defined(TOOLCHAIN_SUPPORTS__THREAD)
+#if defined(PIXMAN_NO_TLS)
+
+#   define PIXMAN_DEFINE_THREAD_LOCAL(type, name)			\
+    static type name
+#   define PIXMAN_GET_THREAD_LOCAL(name)				\
+    (&name)
+
+#elif defined(TOOLCHAIN_SUPPORTS__THREAD)
 
 #   define PIXMAN_DEFINE_THREAD_LOCAL(type, name)			\
     static __thread type name
@@ -158,9 +165,16 @@ extern int __stdcall ReleaseMutex (void *);
     static pthread_key_t tls_ ## name ## _key;				\
 									\
     static void								\
+    tls_ ## name ## _destroy_value (void *value)			\
+    {									\
+	free (value);							\
+    }									\
+									\
+    static void								\
     tls_ ## name ## _make_key (void)					\
     {									\
-	pthread_key_create (&tls_ ## name ## _key, NULL);		\
+	pthread_key_create (&tls_ ## name ## _key,			\
+			    tls_ ## name ## _destroy_value);		\
     }									\
 									\
     static type *							\
@@ -191,6 +205,6 @@ extern int __stdcall ReleaseMutex (void *);
 
 #else
 
-#    error "Unknown thread local support for this system"
+#    error "Unknown thread local support for this system. Pixman will not work with multiple threads. Define PIXMAN_NO_TLS to acknowledge and accept this limitation and compile pixman without thread-safety support."
 
 #endif

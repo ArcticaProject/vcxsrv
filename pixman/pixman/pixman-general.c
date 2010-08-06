@@ -206,7 +206,7 @@ general_composite_rect  (pixman_implementation_t *imp,
 		/* fetch mask before source so that fetching of
 		   source can be optimized */
 		fetch_mask (mask, mask_x, mask_y + i,
-		            width, (void *)mask_buffer, 0, 0);
+		            width, (void *)mask_buffer, 0);
 
 		if (mask_class == SOURCE_IMAGE_CLASS_HORIZONTAL)
 		    fetch_mask = NULL;
@@ -215,20 +215,19 @@ general_composite_rect  (pixman_implementation_t *imp,
 	    if (src_class == SOURCE_IMAGE_CLASS_HORIZONTAL)
 	    {
 		fetch_src (src, src_x, src_y + i,
-		           width, (void *)src_buffer, 0, 0);
+		           width, (void *)src_buffer, 0);
 		fetch_src = NULL;
 	    }
 	    else
 	    {
 		fetch_src (src, src_x, src_y + i,
-		           width, (void *)src_buffer, (void *)mask_buffer,
-		           0xffffffff);
+		           width, (void *)src_buffer, (void *)mask_buffer);
 	    }
 	}
 	else if (fetch_mask)
 	{
 	    fetch_mask (mask, mask_x, mask_y + i,
-	                width, (void *)mask_buffer, 0, 0);
+	                width, (void *)mask_buffer, 0);
 	}
 
 	if (store)
@@ -237,7 +236,7 @@ general_composite_rect  (pixman_implementation_t *imp,
 	    if (fetch_dest)
 	    {
 		fetch_dest (dest, dest_x, dest_y + i,
-		            width, (void *)dest_buffer, 0, 0);
+		            width, (void *)dest_buffer, 0);
 	    }
 
 	    /* blend */
