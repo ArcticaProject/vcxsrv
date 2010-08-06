@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/freetype200b8.lib"
+				OutputFile="$(OutDir)/freetype214.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -144,7 +144,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/freetype200b8MT.lib"
+				OutputFile="$(OutDir)/freetype214MT.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -218,7 +218,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/freetype200b8_D.lib"
+				OutputFile="$(OutDir)/freetype214_D.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -292,7 +292,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/freetype200b8MT_D.lib"
+				OutputFile="$(OutDir)/freetype214MT_D.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

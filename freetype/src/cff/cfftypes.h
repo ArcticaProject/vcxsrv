@@ -24,9 +24,9 @@
 #include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/t1tables.h>
-#include FT_INTERNAL_SERVICE_H
-#include FT_SERVICE_POSTSCRIPT_CMAPS_H
-#include FT_INTERNAL_POSTSCRIPT_HINTS_H
+#include <freetype/internal/ftserv.h>
+#include <freetype/internal/services/svpscmap.h>
+#include <freetype/internal/pshints.h>
 
 
 FT_BEGIN_HEADER

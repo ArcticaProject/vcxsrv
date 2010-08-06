@@ -46,10 +46,10 @@ CSRCS = action.c \
 LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib
 
 ifeq ($(DEBUG),1)
-LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype200b8MT_D.lib \
+LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype214MT_D.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2d.lib
 else
-LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype200b8MT.lib \
+LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype214MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
 endif
 
