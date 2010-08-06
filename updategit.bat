@@ -12,6 +12,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libfontenc
 git clone git://anongit.freedesktop.org/xorg/lib/libXinerama
 git clone git://anongit.freedesktop.org/xorg/lib/libXau
 git clone git://anongit.freedesktop.org/xorg/app/xkbcomp
+git clone git://anongit.freedesktop.org/pixman
 
 :noclone
 pushd .
@@ -57,7 +58,11 @@ pushd libXau             |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 echo Updating xkbcomp    |& tee /a d:\updategit.log
-pushd xkbcomp        |& tee /a d:\updategit.log
+pushd xkbcomp            |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating pixman     |& tee /a d:\updategit.log
+pushd pixman             |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 popd

@@ -2,24 +2,8 @@
  * Test program, which stresses the use of different color formats and
  * compositing operations.
  *
- * Just run it without any command line arguments, and it will report either
- *   "blitters test passed" - everything is ok
- *   "blitters test failed!" - there is some problem
- *
- * In the case of failure, finding the problem involves the following steps:
- * 1. Get the reference 'blitters-test' binary. It makes sense to disable all
- *    the cpu specific optimizations in pixman and also configure it with
- *    '--disable-shared' option. Those who are paranoid can also tweak the
- *    sources to disable all fastpath functions. The resulting binary
- *    can be renamed to something like 'blitters-test.ref'.
- * 2. Compile the buggy binary (also with the '--disable-shared' option).
- * 3. Run 'ruby blitters-test-bisect.rb ./blitters-test.ref ./blitters-test'
- * 4. Look at the information about failed case (destination buffer content
- *    will be shown) and try to figure out what is wrong. Loading
- *    test program in gdb, specifying failed test number in the command
- *    line with '-' character prepended and setting breakpoint on
- *    'pixman_image_composite' function can provide detailed information
- *    about function arguments
+ * Script 'fuzzer-find-diff.pl' can be used to narrow down the problem in
+ * the case of test failure.
  */
 #include <assert.h>
 #include <stdlib.h>
@@ -27,7 +11,8 @@
 #include <config.h>
 #include "utils.h"
 
-static pixman_indexed_t palette;
+static pixman_indexed_t rgb_palette[9];
+static pixman_indexed_t y_palette[9];
 
 static void *
 aligned_malloc (size_t align, size_t size)
@@ -82,10 +67,13 @@ create_random_image (pixman_format_code_t *allowed_formats,
 
     img = pixman_image_create_bits (fmt, width, height, buf, stride);
 
-    if (PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_COLOR	||
-	PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_GRAY)
+    if (PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_COLOR)
     {
-	pixman_image_set_indexed (img, &palette);
+	pixman_image_set_indexed (img, &(rgb_palette[PIXMAN_FORMAT_BPP (fmt)]));
+    }
+    else if (PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_GRAY)
+    {
+	pixman_image_set_indexed (img, &(y_palette[PIXMAN_FORMAT_BPP (fmt)]));
     }
 
     image_endian_swap (img, PIXMAN_FORMAT_BPP (fmt));
@@ -209,6 +197,7 @@ static pixman_format_code_t img_fmt_list[] = {
     PIXMAN_x8b8g8r8,
     PIXMAN_b8g8r8a8,
     PIXMAN_b8g8r8x8,
+    PIXMAN_x14r6g6b6,
     PIXMAN_r8g8b8,
     PIXMAN_b8g8r8,
     PIXMAN_r5g6b5,
@@ -260,7 +249,7 @@ static pixman_format_code_t mask_fmt_list[] = {
  * Composite operation with pseudorandom images
  */
 uint32_t
-test_composite (uint32_t initcrc, int testnum, int verbose)
+test_composite (int testnum, int verbose)
 {
     int i;
     pixman_image_t *src_img = NULL;
@@ -410,88 +399,86 @@ test_composite (uint32_t initcrc, int testnum, int verbose)
 	printf ("---\n");
     }
 
-    free_random_image (initcrc, src_img, -1);
-    crc32 = free_random_image (initcrc, dst_img, dst_fmt);
+    free_random_image (0, src_img, -1);
+    crc32 = free_random_image (0, dst_img, dst_fmt);
 
     if (mask_img)
     {
 	if (srcbuf == maskbuf)
 	    pixman_image_unref(mask_img);
 	else
-	    free_random_image (initcrc, mask_img, -1);
+	    free_random_image (0, mask_img, -1);
     }
 
 
     return crc32;
 }
 
+#define CONVERT_15(c, is_rgb)						\
+    (is_rgb?								\
+     ((((c) >> 3) & 0x001f) |						\
+      (((c) >> 6) & 0x03e0) |						\
+      (((c) >> 9) & 0x7c00)) :						\
+     (((((c) >> 16) & 0xff) * 153 +					\
+       (((c) >>  8) & 0xff) * 301 +					\
+       (((c)      ) & 0xff) * 58) >> 2))
+
 static void
-initialize_palette (void)
+initialize_palette (pixman_indexed_t *palette, uint32_t mask, int is_rgb)
 {
     int i;
 
-    for (i = 0; i < PIXMAN_MAX_INDEXED; ++i)
-	palette.rgba[i] = lcg_rand ();
-
     for (i = 0; i < 32768; ++i)
-	palette.ent[i] = lcg_rand() & 0xff;
+	palette->ent[i] = lcg_rand() & mask;
+
+    for (i = 0; i < mask + 1; ++i)
+    {
+	uint32_t rgba24;
+ 	pixman_bool_t retry;
+	uint32_t i15;
+
+	/* We filled the rgb->index map with random numbers, but we
+	 * do need the ability to round trip, that is if some indexed
+	 * color expands to an argb24, then the 15 bit version of that
+	 * color must map back to the index. Anything else, we don't
+	 * care about too much.
+	 */
+	do
+	{
+	    uint32_t old_idx;
+	    
+	    rgba24 = lcg_rand();
+	    i15 = CONVERT_15 (rgba24, is_rgb);
+
+	    old_idx = palette->ent[i15];
+	    if (CONVERT_15 (palette->rgba[old_idx], is_rgb) == i15)
+		retry = 1;
+	    else
+		retry = 0;
+	} while (retry);
+	
+	palette->rgba[i] = rgba24;
+	palette->ent[i15] = i;
+    }
+
+    for (i = 0; i < mask + 1; ++i)
+    {
+	assert (palette->ent[CONVERT_15 (palette->rgba[i], is_rgb)] == i);
+    }
 }
 
 int
-main (int argc, char *argv[])
+main (int argc, const char *argv[])
 {
-    int i, n1 = 1, n2 = 0;
-    uint32_t crc = 0;
-    int verbose = getenv ("VERBOSE") != NULL;
+    int i;
 
-    initialize_palette();
-
-    if (argc >= 3)
+    for (i = 1; i <= 8; i++)
     {
-	n1 = atoi (argv[1]);
-	n2 = atoi (argv[2]);
-    }
-    else if (argc >= 2)
-    {
-	n2 = atoi (argv[1]);
-    }
-    else
-    {
-	n1 = 1;
-	n2 = 2000000;
+	initialize_palette (&(rgb_palette[i]), (1 << i) - 1, TRUE);
+	initialize_palette (&(y_palette[i]), (1 << i) - 1, FALSE);
     }
 
-    if (n2 < 0)
-    {
-	crc = test_composite (0, abs (n2), 1);
-	printf ("crc32=%08X\n", crc);
-    }
-    else
-    {
-	for (i = n1; i <= n2; i++)
-	{
-	    crc = test_composite (crc, i, 0);
-
-	    if (verbose)
-		printf ("%d: %08X\n", i, crc);
-	}
-	printf ("crc32=%08X\n", crc);
-
-	if (n2 == 2000000)
-	{
-	    /* Predefined value for running with all the fastpath functions
-	       disabled. It needs to be updated every time when changes are
-	       introduced to this program or behavior of pixman changes! */
-	    if (crc == 0x8F9F7DC1)
-	    {
-		printf ("blitters test passed\n");
-	    }
-	    else
-	    {
-		printf ("blitters test failed!\n");
-		return 1;
-	    }
-	}
-    }
-    return 0;
+    return fuzzer_test_main("blitters", 2000000,
+			    0x217CF14A,
+			    test_composite, argc, argv);
 }

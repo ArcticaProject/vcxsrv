@@ -53,8 +53,8 @@ AC_PREREQ([2.57])
 #
 
 m4_define([pixman_major], 0)
-m4_define([pixman_minor], 18)
-m4_define([pixman_micro], 2)
+m4_define([pixman_minor], 19)
+m4_define([pixman_micro], 1)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -76,6 +76,69 @@ AC_PROG_LIBTOOL
 AC_CHECK_FUNCS([getisax])
 AC_C_BIGENDIAN
 AC_C_INLINE
+
+dnl PIXMAN_LINK_WITH_ENV(env-setup, program, true-action, false-action)
+dnl
+dnl Compiles and links the given program in the environment setup by env-setup
+dnl and executes true-action on success and false-action on failure.
+AC_DEFUN([PIXMAN_LINK_WITH_ENV],[dnl
+	save_CFLAGS="$CFLAGS"
+	save_LDFLAGS="$LDFLAGS"
+	save_LIBS="$LIBS"
+	CFLAGS=""
+	LDFLAGS=""
+	LIBS=""
+	$1
+	AC_LINK_IFELSE(
+		[$2],
+		[pixman_cc_stderr=`test -f conftest.err && cat conftest.err`
+		 pixman_cc_flag=yes],
+		[pixman_cc_stderr=`test -f conftest.err && cat conftest.err`
+		 pixman_cc_flag=no])
+
+	if test "x$pixman_cc_stderr" != "x"; then
+		pixman_cc_flag=no
+	fi
+
+	if test "x$pixman_cc_flag" = "xyes"; then
+		ifelse([$3], , :, [$3])
+	else
+		ifelse([$4], , :, [$4])
+	fi
+	CFLAGS="$save_CFLAGS"
+	LDFLAGS="$save_LDFLAGS"
+	LIBS="$save_LIBS"
+])
+
+dnl Find a -Werror for catching warnings.
+WERROR=
+for w in -Werror -errwarn; do
+    if test "z$WERROR" = "z"; then
+        AC_MSG_CHECKING([whether the compiler supports $w])
+        PIXMAN_LINK_WITH_ENV(
+		[CFLAGS=$w],
+		[int main(int c, char **v) { (void)c; (void)v; return 0; }],
+		[WERROR=$w; yesno=yes], [yesno=no])
+	AC_MSG_RESULT($_yesno)
+    fi
+done
+
+dnl PIXMAN_CHECK_CFLAG(flag, [program])
+dnl  Adds flag to CFLAGS if the given program links without warnings or errors.
+AC_DEFUN([PIXMAN_CHECK_CFLAG], [dnl
+	AC_MSG_CHECKING([whether the compiler supports $1])
+	PIXMAN_LINK_WITH_ENV(
+		[CFLAGS="$WERROR $1"],
+		[$2
+		 int main(int c, char **v) { (void)c; (void)v; return 0; }
+		],
+		[_yesno=yes],
+		[_yesno=no])
+	if test "x$_yesno" = xyes; then
+	   CFLAGS="$CFLAGS $1"
+	fi
+	AC_MSG_RESULT($_yesno)
+])
 
 AC_CHECK_SIZEOF(long)
 
@@ -117,20 +180,8 @@ AC_SUBST(LT_VERSION_INFO)
 # Check for dependencies
 #PKG_CHECK_MODULES(DEP, x11)
 
-changequote(,)dnl
-if test "x$GCC" = "xyes"; then
-
-  case " $CFLAGS " in
-  *[\ \	]-Wall[\ \	]*) ;;
-  *) CFLAGS="$CFLAGS -Wall" ;;
-  esac 
-
-  case " $CFLAGS " in
-  *[\ \	]-fno-strict-aliasing[\ \	]*) ;;
-  *) CFLAGS="$CFLAGS -fno-strict-aliasing" ;;
-  esac
-
-fi changequote([,])dnl
+PIXMAN_CHECK_CFLAG([-Wall])
+PIXMAN_CHECK_CFLAG([-fno-strict-aliasing])
 
 AC_PATH_PROG(PERL, perl, no)
 if test "x$PERL" = xno; then
@@ -139,37 +190,76 @@ fi
 AC_SUBST(PERL)
 
 dnl =========================================================================
+dnl OpenMP for the test suite?
+dnl
+
+# Check for OpenMP support (only supported by autoconf >=2.62)
+OPENMP_CFLAGS=
+m4_ifdef([AC_OPENMP], [AC_OPENMP])
+
+m4_define([openmp_test_program],[dnl
+#include <stdio.h>
+
+extern unsigned int lcg_seed;
+#pragma omp threadprivate(lcg_seed)
+unsigned int lcg_seed;
+
+unsigned function(unsigned a, unsigned b)
+{
+	lcg_seed ^= b;
+	return ((a + b) ^ a ) + lcg_seed;
+}
+
+int main(int argc, char **argv)
+{
+	int i;
+	int n1 = 0, n2 = argc;
+	unsigned checksum = 0;
+	int verbose = argv != NULL;
+	unsigned (*test_function)(unsigned, unsigned);
+	test_function = function;
+    #pragma omp parallel for reduction(+:checksum) default(none) \
+					shared(n1, n2, test_function, verbose)
+	for (i = n1; i < n2; i++)
+    	{
+		unsigned crc = test_function (i, 0);
+		if (verbose)
+			printf ("%d: %08X\n", i, crc);
+		checksum += crc;
+	}
+	printf("%u\n", checksum);
+	return 0;
+}
+])
+
+PIXMAN_LINK_WITH_ENV(
+	[CFLAGS="$OPENMP_CFLAGS" LDFLAGS="$OPENMP_CFLAGS"],
+	[openmp_test_program],
+	[have_openmp=yes],
+	[have_openmp=no])
+if test "x$have_openmp" = "xyes"; then
+   AC_DEFINE(USE_OPENMP, 1, [use OpenMP in the test suite])
+else
+   OPENMP_CFLAGS=""
+fi
+AC_SUBST(OPENMP_CFLAGS)
+
+dnl =========================================================================
 dnl -fvisibility stuff
 
-have_gcc4=no
-AC_MSG_CHECKING(for -fvisibility)
-AC_COMPILE_IFELSE([
+PIXMAN_CHECK_CFLAG([-fvisibility=hidden], [dnl
 #if defined(__GNUC__) && (__GNUC__ >= 4)
 #else
 error Need GCC 4.0 for visibility
 #endif
-int main () { return 0; } 
-], have_gcc4=yes)
+])
 
-if test "x$have_gcc4" = "xyes"; then
-   CFLAGS="$CFLAGS -fvisibility=hidden"
-fi
-AC_MSG_RESULT($have_gcc4)
-
-have_sunstudio8=no
-AC_MSG_CHECKING([for -xldscope (Sun compilers)])
-AC_COMPILE_IFELSE([
+PIXMAN_CHECK_CFLAG([-xldscope=hidden], [dnl
 #if defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
 #else
 error Need Sun Studio 8 for visibility
 #endif
-int main () { return 0; } 
-], have_sunstudio8=yes)
-
-if test "x$have_sunstudio8" = "xyes"; then
-   CFLAGS="$CFLAGS -xldscope=hidden"
-fi
-AC_MSG_RESULT($have_sunstudio8)
+])
 
 dnl ===========================================================================
 dnl Check for MMX
@@ -523,12 +613,15 @@ dnl Thread local storage
 support_for__thread=no
 
 AC_MSG_CHECKING(for __thread)
-AC_COMPILE_IFELSE([
+AC_LINK_IFELSE([
 #ifdef __MINGW32__
 #error MinGW has broken __thread support
 #endif
-__thread int x ;
-int main () { return 0; }
+#ifdef __OpenBSD__
+#error OpenBSD has broken __thread support
+#endif
+static __thread int x ;
+int main () { x = 123; return x; }
 ], support_for__thread=yes)
 
 if test $support_for__thread = yes; then 
@@ -537,21 +630,11 @@ fi
 
 AC_MSG_RESULT($support_for__thread)
 
+dnl
 dnl posix tls
+dnl
 
-if test $support_for__thread = no; then
-
-support_for_pthread_setspecific=no
-   
-AC_MSG_CHECKING(for pthread_setspecific)
-
-save_LDFLAGS=$LDFLAGS
-
-LDFLAGS="-pthread"
-
-AC_LINK_IFELSE([
-#include <pthread.h>
-
+m4_define([pthread_test_program],[dnl
 #include <stdlib.h>
 #include <pthread.h>
 
@@ -568,7 +651,7 @@ int
 main ()
 {
     void *value = NULL;
-    
+
     if (pthread_once (&once_control, make_key) != 0)
     {
 	value = NULL;
@@ -582,23 +665,41 @@ main ()
 	    pthread_setspecific (key, value);
 	}
     }
+    return 0;
 }
-], support_for_pthread_setspecific=yes);
+])
 
-LDFLAGS=$save_LDFLAGS
+AC_DEFUN([PIXMAN_CHECK_PTHREAD],[dnl
+    if test "z$support_for_pthread_setspecific" != "zyes"; then
+	PIXMAN_LINK_WITH_ENV(
+		[$1], [pthread_test_program],
+		[PTHREAD_CFLAGS="$CFLAGS"
+		 PTHREAD_LIBS="$LIBS"
+		 PTHREAD_LDFLAGS="$LDFLAGS"
+		 support_for_pthread_setspecific=yes])
+    fi
+])
 
-if test $support_for_pthread_setspecific = yes; then
-   PTHREAD_LDFLAGS="-pthread"
-   AC_DEFINE([HAVE_PTHREAD_SETSPECIFIC], [], [Whether pthread_setspecific() is supported])
-fi
+if test $support_for__thread = no; then
+    support_for_pthread_setspecific=no
 
-AC_MSG_RESULT($support_for_pthread_setspecific);
+    AC_MSG_CHECKING(for pthread_setspecific)
 
+    PIXMAN_CHECK_PTHREAD([CFLAGS="-D_REENTRANT"; LIBS="-lpthread"])
+    PIXMAN_CHECK_PTHREAD([CFLAGS="-pthread"; LDFLAGS="-pthread"])
+
+    if test $support_for_pthread_setspecific = yes; then
+	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+	AC_DEFINE([HAVE_PTHREAD_SETSPECIFIC], [], [Whether pthread_setspecific() is supported])
+    fi
+
+    AC_MSG_RESULT($support_for_pthread_setspecific);
 fi
 
 AC_SUBST(TOOLCHAIN_SUPPORTS__THREAD)
 AC_SUBST(HAVE_PTHREAD_SETSPECIFIC)
 AC_SUBST(PTHREAD_LDFLAGS)
+AC_SUBST(PTHREAD_LIBS)
 
 AC_OUTPUT([pixman-1.pc
            pixman-1-uninstalled.pc

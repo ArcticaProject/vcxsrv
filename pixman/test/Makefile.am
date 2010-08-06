@@ -1,3 +1,6 @@
+AM_CFLAGS = @OPENMP_CFLAGS@
+AM_LDFLAGS = @OPENMP_CFLAGS@
+
 TEST_LDADD = $(top_builddir)/pixman/libpixman-1.la
 INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman
 
@@ -7,8 +10,10 @@ TESTPROGRAMS =			\
 	fetch-test		\
 	oob-test		\
 	window-test		\
+	gradient-crash-test	\
 	trap-crasher		\
 	alphamap		\
+	scaling-crash-test	\
 	blitters-test		\
 	scaling-test		\
 	composite
@@ -16,9 +21,11 @@ TESTPROGRAMS =			\
 a1_trap_test_LDADD = $(TEST_LDADD)
 fetch_test_LDADD = $(TEST_LDADD)
 composite_LDADD = $(TEST_LDADD)
+gradient_crash_test_LDADD = $(TEST_LDADD)
 trap_crasher_LDADD = $(TEST_LDADD)
 oob_test_LDADD = $(TEST_LDADD)
 window_test_LDADD = $(TEST_LDADD)
+scaling_crash_test_LDADD = $(TEST_LDADD)
 
 region_test_LDADD = $(TEST_LDADD)
 region_test_SOURCES = region-test.c utils.c utils.h
@@ -47,8 +54,7 @@ TESTPROGRAMS_GTK =		\
 	alpha-test		\
 	screen-test		\
 	convolution-test	\
-	trap-test		\
-	alphamap
+	trap-test
 
 INCLUDES += $(GTK_CFLAGS)
 

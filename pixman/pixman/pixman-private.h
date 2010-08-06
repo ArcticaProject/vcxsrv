@@ -36,8 +36,7 @@ typedef void (*fetch_scanline_t) (pixman_image_t *image,
 				  int             y,
 				  int             width,
 				  uint32_t       *buffer,
-				  const uint32_t *mask,
-				  uint32_t        mask_bits);
+				  const uint32_t *mask);
 
 typedef uint32_t (*fetch_pixel_32_t) (bits_image_t *image,
 				      int           x,
@@ -162,7 +161,7 @@ struct conical_gradient
 {
     gradient_t           common;
     pixman_point_fixed_t center;
-    pixman_fixed_t       angle;
+    double		 angle;
 };
 
 struct bits_image
@@ -224,8 +223,7 @@ _pixman_image_get_scanline_generic_64  (pixman_image_t *image,
                                         int             y,
                                         int             width,
                                         uint32_t *      buffer,
-                                        const uint32_t *mask,
-                                        uint32_t        mask_bits);
+                                        const uint32_t *mask);
 
 source_image_class_t
 _pixman_image_classify (pixman_image_t *image,
@@ -240,8 +238,7 @@ _pixman_image_get_scanline_32 (pixman_image_t *image,
                                int             y,
                                int             width,
                                uint32_t *      buffer,
-                               const uint32_t *mask,
-                               uint32_t        mask_bits);
+                               const uint32_t *mask);
 
 /* Even thought the type of buffer is uint32_t *, the function actually expects
  * a uint64_t *buffer.
@@ -252,8 +249,7 @@ _pixman_image_get_scanline_64 (pixman_image_t *image,
                                int             y,
                                int             width,
                                uint32_t *      buffer,
-                               const uint32_t *unused,
-                               uint32_t        unused2);
+                               const uint32_t *unused);
 
 void
 _pixman_image_store_scanline_32 (bits_image_t *  image,

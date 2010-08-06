@@ -92,6 +92,8 @@ show_image (pixman_image_t *image)
     height = pixman_image_get_height (image);
     stride = pixman_image_get_stride (image);
 
+    gtk_window_set_default_size (GTK_WINDOW (window), width, height);
+    
     format = image->bits.format;
     
     if (format == PIXMAN_a8r8g8b8)
