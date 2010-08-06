@@ -95,22 +95,22 @@
 #define PACKAGE_NAME "pixman"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "pixman 0.12.0"
+#define PACKAGE_STRING "pixman 0.19.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "pixman"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.12.0"
+#define PACKAGE_VERSION "0.19.1"
 
 /* Major version of this package */
 #define PACKAGE_VERSION_MAJOR 0
 
 /* Minor version of this package */
-#define PACKAGE_VERSION_MINOR 12
+#define PACKAGE_VERSION_MINOR 19
 
 /* Patch version of this package */
-#define PACKAGE_VERSION_PATCHLEVEL 0
+#define PACKAGE_VERSION_PATCHLEVEL 1
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1

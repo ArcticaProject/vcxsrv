@@ -84,6 +84,9 @@ clean$(OBJDIRPREFIX):
 $(OBJDIR)\%$(OBJEXT) : %.c
 	$(CC) $(CCFLAGS) $(COMMONCFLAGS)
 
+$(OBJDIR)\%$(OBJEXT) : $(OBJDIR)\%.c
+	$(CC) $(CCFLAGS) $(COMMONCFLAGS)
+
 $(OBJDIR)\%$(OBJEXT) : %.cc
 	$(CC) $(CCFLAGS) /EHsc $(COMMONCFLAGS)
 

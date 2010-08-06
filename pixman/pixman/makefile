@@ -1,5 +1,7 @@
 LIBRARY = libpixman-1
 
+INCLUDES += $(OBJDIR)
+
 CSRCS =			\
 	pixman-access.c				\
 	pixman-access-accessors.c		\
@@ -28,15 +30,15 @@ CSRCS =			\
 
 BUILT_SOURCES = pixman-combine32.h pixman-combine32.c pixman-combine64.h pixman-combine64.c
 
-#pixman-combine32.c : pixman-combine.c.template pixman-combine32.h make-combine.pl
-#	$(PERL) $(srcdir)/make-combine.pl 8 < $(srcdir)/pixman-combine.c.template > $@ || ($(RM) $@; exit 1)
-#pixman-combine32.h : pixman-combine.h.template make-combine.pl
-#	$(PERL) $(srcdir)/make-combine.pl 8 < $(srcdir)/pixman-combine.h.template > $@ || ($(RM) $@; exit 1)
+$(OBJDIR)\pixman-combine32.c : pixman-combine.c.template pixman-combine32.h make-combine.pl
+	perl make-combine.pl 8 < pixman-combine.c.template > $@
+$(OBJDIR)\pixman-combine32.h : pixman-combine.h.template make-combine.pl
+	perl make-combine.pl 8 < pixman-combine.h.template > $@
 
-#pixman-combine64.c : pixman-combine.c.template pixman-combine64.h make-combine.pl
-#	$(PERL) $(srcdir)/make-combine.pl 16 < $(srcdir)/pixman-combine.c.template > $@ || ($(RM) $@; exit 1)
-#pixman-combine64.h : pixman-combine.h.template make-combine.pl
-#	$(PERL) $(srcdir)/make-combine.pl 16 < $(srcdir)/pixman-combine.h.template > $@ || ($(RM) $@; exit 1)
+$(OBJDIR)\pixman-combine64.c : pixman-combine.c.template pixman-combine64.h make-combine.pl
+	perl make-combine.pl 16 < pixman-combine.c.template > $@
+$(OBJDIR)\pixman-combine64.h : pixman-combine.h.template make-combine.pl
+	perl make-combine.pl 16 < pixman-combine.h.template > $@
 
 ## mmx code
 #if USE_MMX
