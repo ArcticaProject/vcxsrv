@@ -67,8 +67,6 @@ if test x"$LDFLAGS_FOR_BUILD" = x; then
 fi
 AC_SUBST(LDFLAGS_FOR_BUILD)
 
-XORG_PROG_RAWCPP
-
 # Find perl for "make check" tests in nls/localerules.in
 AC_ARG_WITH(perl,
 	AC_HELP_STRING([--with-perl=<path>],

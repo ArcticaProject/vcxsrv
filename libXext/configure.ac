@@ -51,9 +51,6 @@ AC_HEADER_STDC
 
 XORG_CHECK_MALLOC_ZERO
 
-# Man page processing requirements
-XORG_PROG_RAWCPP
-
 dnl Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 XORG_LINT_LIBRARY([Xext])

@@ -819,6 +819,10 @@ WriteToClient (ClientPtr who, int count, const void *__buf)
 	  CriticalOutputPending = FALSE;
 	  NewOutputPending = FALSE;
 	}
+
+	if (FlushCallback)
+	    CallCallbacks(&FlushCallback, NULL);
+
 	return FlushClient(who, oc, buf, count);
     }
 

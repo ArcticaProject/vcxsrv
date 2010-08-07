@@ -33,7 +33,7 @@ spec_DATA += $(doc_sources:.xml=.txt)
 endif
 
 if HAVE_STYLESHEETS
-XMLTO_FLAGS = -m $(XSL_STYLESHEET)
+XMLTO_FLAGS = -m $(XSL_STYLESHEET) --stringparam img.src.path=$(abs_builddir)/
 
 spec_DATA += xorg.css
 xorg.css: $(STYLESHEET_SRCDIR)/xorg.css

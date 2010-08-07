@@ -1,6 +1,3 @@
-# Have to fake out automake by calling our man pages "DATA" since "MANS" won't
-# accept .3x as a valid man page suffix
-
 SUBDIRS = xkb
 
 libmandir = $(LIB_MAN_DIR)
@@ -198,8 +195,6 @@ filemandir = $(FILE_MAN_DIR)
 fileman_PRE = Compose.man
 FILE_MAN_DIR_SUFFIX = $(FILE_MAN_DIR:@mandir@/man%=%)
 
-# What we actually install 
-
 if MANPAGES
 libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 	      $(all_shadows:=.@LIB_MAN_SUFFIX@)
@@ -212,24 +207,13 @@ EXTRA_DIST = $(libman_PRE) $(fileman_PRE)
 
 CLEANFILES = $(libman_DATA) $(fileman_DATA)
 
-include $(top_srcdir)/cpprules.in
+SUFFIXES = .$(LIB_MAN_SUFFIX) .$(FILE_MAN_SUFFIX) .man
 
-SUFFIXES += .$(LIB_MAN_SUFFIX) .$(FILE_MAN_SUFFIX) .man
+MAN_SUBSTS += -e 's|__xlocaledir__|$(X11_LOCALEDATADIR)|g'
 
-XORGRELSTRING = @PACKAGE_STRING@
-  XORGMANNAME = X Version 11
-
-MANDEFS = -D__libmansuffix__=$(LIB_MAN_SUFFIX) \
-	-D__appmansuffix__=$(APP_MAN_SUFFIX) \
-	-D__filemansuffix__=$(FILE_MAN_SUFFIX) \
-	-D__miscmansuffix__=$(MISC_MAN_SUFFIX) \
-	-D__xlocaledir__="$(X11_LOCALEDATADIR)" \
-	-D__xorgversion__="\"$(XORGRELSTRING)\" \"$(XORGMANNAME)\""
-
-CPP_MAN_FLAGS = $(MANDEFS) $(EXTRAMANDEFS)
-
+# String replacements in MAN_SUBSTS now come from xorg-macros.m4 via configure
 .man.$(LIB_MAN_SUFFIX) .man.$(FILE_MAN_SUFFIX):
-	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
+	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@
 
 # Generate man page shadow files (Replaces InstallManPageAliases from Imake)
 all_shadows =                                \

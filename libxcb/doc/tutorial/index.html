@@ -1453,7 +1453,7 @@ typedef enum {
 </pre>
         <p>
         If the window has already been created, we can use the
-        <span class="code">xcb_configure_window()</span> function to set
+        <span class="code">xcb_change_window_attributes()</span> function to set
         the events that the window will receive. The subsection
         <a href="#winconf">Configuring a window</a> shows its
         prototype. As an example, here is a piece of code that
@@ -1466,7 +1466,7 @@ const static uint32_t values[] = { XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTT
 
 /* The connection c and the window win are supposed to be defined */
 
-xcb_configure_window (c, win, XCB_CW_EVENT_MASK, values);
+xcb_change_window_attributes (c, win, XCB_CW_EVENT_MASK, values);
 </pre>
         <div class="emph">
         <p>

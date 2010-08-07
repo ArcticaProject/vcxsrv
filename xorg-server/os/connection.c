@@ -1033,6 +1033,9 @@ CloseDownConnection(ClientPtr client)
 {
     OsCommPtr oc = (OsCommPtr)client->osPrivate;
 
+    if (FlushCallback)
+	CallCallbacks(&FlushCallback, NULL);
+
     if (oc->output && oc->output->count)
 	FlushClient(client, oc, (char *)NULL, 0);
 #ifdef XDMCP
