@@ -583,7 +583,7 @@ Status _XReply(Display *dpy, xReply *rep, int extra, Bool discard)
 		xcb_generic_event_t *event = dpy->xcb->next_event;
 		unsigned long event_sequence = dpy->last_request_read;
 		widen(&event_sequence, event->full_sequence);
-		if(event_sequence == current->sequence)
+		if(event_sequence == dpy->last_request_read)
 		{
 			error = (xcb_generic_error_t *) event;
 			dpy->xcb->next_event = NULL;
