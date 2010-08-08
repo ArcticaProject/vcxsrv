@@ -297,21 +297,33 @@ compute_image_info (pixman_image_t *image)
     /* Transform */
     if (!image->common.transform)
     {
-	flags |= (FAST_PATH_ID_TRANSFORM | FAST_PATH_X_UNIT_POSITIVE);
+	flags |= (FAST_PATH_ID_TRANSFORM	|
+		  FAST_PATH_X_UNIT_POSITIVE	|
+		  FAST_PATH_Y_UNIT_ZERO		|
+		  FAST_PATH_AFFINE_TRANSFORM);
     }
     else
     {
-	if (image->common.transform->matrix[0][1] == 0 &&
-	    image->common.transform->matrix[1][0] == 0 &&
-	    image->common.transform->matrix[2][0] == 0 &&
-	    image->common.transform->matrix[2][1] == 0 &&
+	flags |= FAST_PATH_HAS_TRANSFORM;
+
+	if (image->common.transform->matrix[2][0] == 0			&&
+	    image->common.transform->matrix[2][1] == 0			&&
 	    image->common.transform->matrix[2][2] == pixman_fixed_1)
 	{
-	    flags |= FAST_PATH_SCALE_TRANSFORM;
+	    flags |= FAST_PATH_AFFINE_TRANSFORM;
+
+	    if (image->common.transform->matrix[0][1] == 0 &&
+		image->common.transform->matrix[1][0] == 0)
+	    {
+		flags |= FAST_PATH_SCALE_TRANSFORM;
+	    }
 	}
 
 	if (image->common.transform->matrix[0][0] > 0)
 	    flags |= FAST_PATH_X_UNIT_POSITIVE;
+
+	if (image->common.transform->matrix[1][0] == 0)
+	    flags |= FAST_PATH_Y_UNIT_ZERO;
     }
 
     /* Alpha map */
@@ -326,6 +338,12 @@ compute_image_info (pixman_image_t *image)
 	flags |= (FAST_PATH_NEAREST_FILTER | FAST_PATH_NO_CONVOLUTION_FILTER);
 	break;
 
+    case PIXMAN_FILTER_BILINEAR:
+    case PIXMAN_FILTER_GOOD:
+    case PIXMAN_FILTER_BEST:
+	flags |= (FAST_PATH_BILINEAR_FILTER | FAST_PATH_NO_CONVOLUTION_FILTER);
+	break;
+
     case PIXMAN_FILTER_CONVOLUTION:
 	break;
 
@@ -338,15 +356,15 @@ compute_image_info (pixman_image_t *image)
     switch (image->common.repeat)
     {
     case PIXMAN_REPEAT_NONE:
-	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_PAD_REPEAT;
+	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_PAD_REPEAT | FAST_PATH_NO_NORMAL_REPEAT;
 	break;
 
     case PIXMAN_REPEAT_REFLECT:
-	flags |= FAST_PATH_NO_PAD_REPEAT | FAST_PATH_NO_NONE_REPEAT;
+	flags |= FAST_PATH_NO_PAD_REPEAT | FAST_PATH_NO_NONE_REPEAT | FAST_PATH_NO_NORMAL_REPEAT;
 	break;
 
     case PIXMAN_REPEAT_PAD:
-	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_NONE_REPEAT;
+	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_NONE_REPEAT | FAST_PATH_NO_NORMAL_REPEAT;
 	break;
 
     default:
