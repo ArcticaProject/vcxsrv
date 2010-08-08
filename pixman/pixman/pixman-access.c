@@ -2732,7 +2732,7 @@ store_scanline_generic_64 (bits_image_t *  image,
      */
     pixman_contract (argb8_pixels, (uint64_t *)values, width);
     
-    image->store_scanline_raw_32 (image, x, y, width, argb8_pixels);
+    image->store_scanline_32 (image, x, y, width, argb8_pixels);
     
     free (argb8_pixels);
 }
@@ -2753,7 +2753,7 @@ fetch_scanline_generic_64 (pixman_image_t *image,
     /* Fetch the pixels into the first half of buffer and then expand them in
      * place.
      */
-    image->bits.fetch_scanline_raw_32 (image, x, y, width, buffer, NULL);
+    image->bits.fetch_scanline_32 (image, x, y, width, buffer, NULL);
 
     format = image->bits.format;
     if (PIXMAN_FORMAT_TYPE (format) == PIXMAN_TYPE_COLOR	||
@@ -2776,7 +2776,7 @@ fetch_pixel_generic_64 (bits_image_t *image,
 			int	      offset,
 			int           line)
 {
-    uint32_t pixel32 = image->fetch_pixel_raw_32 (image, offset, line);
+    uint32_t pixel32 = image->fetch_pixel_32 (image, offset, line);
     uint64_t result;
     pixman_format_code_t format;
 
@@ -2808,7 +2808,7 @@ fetch_pixel_generic_lossy_32 (bits_image_t *image,
 			      int           offset,
 			      int           line)
 {
-    uint64_t pixel64 = image->fetch_pixel_raw_64 (image, offset, line);
+    uint64_t pixel64 = image->fetch_pixel_64 (image, offset, line);
     uint32_t result;
     
     pixman_contract (&result, &pixel64, 1);
@@ -2819,12 +2819,12 @@ fetch_pixel_generic_lossy_32 (bits_image_t *image,
 typedef struct
 {
     pixman_format_code_t	format;
-    fetch_scanline_t		fetch_scanline_raw_32;
-    fetch_scanline_t		fetch_scanline_raw_64;
-    fetch_pixel_32_t		fetch_pixel_raw_32;
-    fetch_pixel_64_t		fetch_pixel_raw_64;
-    store_scanline_t		store_scanline_raw_32;
-    store_scanline_t		store_scanline_raw_64;
+    fetch_scanline_t		fetch_scanline_32;
+    fetch_scanline_t		fetch_scanline_64;
+    fetch_pixel_32_t		fetch_pixel_32;
+    fetch_pixel_64_t		fetch_pixel_64;
+    store_scanline_t		store_scanline_32;
+    store_scanline_t		store_scanline_64;
 } format_info_t;
 
 #define FORMAT_INFO(format) 						\
@@ -2951,12 +2951,12 @@ setup_accessors (bits_image_t *image)
     {
 	if (info->format == image->format)
 	{
-	    image->fetch_scanline_raw_32 = info->fetch_scanline_raw_32;
-	    image->fetch_scanline_raw_64 = info->fetch_scanline_raw_64;
-	    image->fetch_pixel_raw_32 = info->fetch_pixel_raw_32;
-	    image->fetch_pixel_raw_64 = info->fetch_pixel_raw_64;
-	    image->store_scanline_raw_32 = info->store_scanline_raw_32;
-	    image->store_scanline_raw_64 = info->store_scanline_raw_64;
+	    image->fetch_scanline_32 = info->fetch_scanline_32;
+	    image->fetch_scanline_64 = info->fetch_scanline_64;
+	    image->fetch_pixel_32 = info->fetch_pixel_32;
+	    image->fetch_pixel_64 = info->fetch_pixel_64;
+	    image->store_scanline_32 = info->store_scanline_32;
+	    image->store_scanline_64 = info->store_scanline_64;
 	    
 	    return;
 	}
@@ -2967,13 +2967,13 @@ setup_accessors (bits_image_t *image)
 
 #ifndef PIXMAN_FB_ACCESSORS
 void
-_pixman_bits_image_setup_raw_accessors_accessors (bits_image_t *image);
+_pixman_bits_image_setup_accessors_accessors (bits_image_t *image);
 
 void
-_pixman_bits_image_setup_raw_accessors (bits_image_t *image)
+_pixman_bits_image_setup_accessors (bits_image_t *image)
 {
     if (image->read_func || image->write_func)
-	_pixman_bits_image_setup_raw_accessors_accessors (image);
+	_pixman_bits_image_setup_accessors_accessors (image);
     else
 	setup_accessors (image);
 }
@@ -2981,7 +2981,7 @@ _pixman_bits_image_setup_raw_accessors (bits_image_t *image)
 #else
 
 void
-_pixman_bits_image_setup_raw_accessors_accessors (bits_image_t *image)
+_pixman_bits_image_setup_accessors_accessors (bits_image_t *image)
 {
     setup_accessors (image);
 }

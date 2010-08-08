@@ -175,24 +175,12 @@ struct bits_image
     uint32_t *                 free_me;
     int                        rowstride;  /* in number of uint32_t's */
 
-    /* Fetch a pixel, disregarding alpha maps, transformations etc. */
-    fetch_pixel_32_t	       fetch_pixel_raw_32;
-    fetch_pixel_64_t	       fetch_pixel_raw_64;
-
-    /* Fetch a pixel, taking alpha maps into account */
+    fetch_scanline_t           fetch_scanline_32;
     fetch_pixel_32_t	       fetch_pixel_32;
-    fetch_pixel_64_t	       fetch_pixel_64;
-
-    /* Fetch raw scanlines, with no regard for transformations, alpha maps etc. */
-    fetch_scanline_t           fetch_scanline_raw_32;
-    fetch_scanline_t           fetch_scanline_raw_64;
-
-    /* Store scanlines with no regard for alpha maps */
-    store_scanline_t           store_scanline_raw_32;
-    store_scanline_t           store_scanline_raw_64;
-
-    /* Store a scanline, taking alpha maps into account */
     store_scanline_t           store_scanline_32;
+
+    fetch_scanline_t           fetch_scanline_64;
+    fetch_pixel_64_t	       fetch_pixel_64;
     store_scanline_t           store_scanline_64;
 
     /* Used for indirect access to the bits */
@@ -213,9 +201,8 @@ union pixman_image
     solid_fill_t       solid;
 };
 
-
 void
-_pixman_bits_image_setup_raw_accessors (bits_image_t *image);
+_pixman_bits_image_setup_accessors (bits_image_t *image);
 
 void
 _pixman_image_get_scanline_generic_64  (pixman_image_t *image,
@@ -577,8 +564,32 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_NEEDS_WORKAROUND		(1 << 14)
 #define FAST_PATH_NO_NONE_REPEAT		(1 << 15)
 #define FAST_PATH_SAMPLES_COVER_CLIP		(1 << 16)
-#define FAST_PATH_16BIT_SAFE			(1 << 17)
-#define FAST_PATH_X_UNIT_POSITIVE		(1 << 18)
+#define FAST_PATH_X_UNIT_POSITIVE		(1 << 17)
+#define FAST_PATH_AFFINE_TRANSFORM		(1 << 18)
+#define FAST_PATH_Y_UNIT_ZERO			(1 << 19)
+#define FAST_PATH_BILINEAR_FILTER		(1 << 20)
+#define FAST_PATH_NO_NORMAL_REPEAT		(1 << 21)
+#define FAST_PATH_HAS_TRANSFORM			(1 << 22)
+
+#define FAST_PATH_PAD_REPEAT						\
+    (FAST_PATH_NO_NONE_REPEAT		|				\
+     FAST_PATH_NO_NORMAL_REPEAT		|				\
+     FAST_PATH_NO_REFLECT_REPEAT)
+
+#define FAST_PATH_NORMAL_REPEAT						\
+    (FAST_PATH_NO_NONE_REPEAT		|				\
+     FAST_PATH_NO_PAD_REPEAT		|				\
+     FAST_PATH_NO_REFLECT_REPEAT)
+
+#define FAST_PATH_NONE_REPEAT						\
+    (FAST_PATH_NO_NORMAL_REPEAT		|				\
+     FAST_PATH_NO_PAD_REPEAT		|				\
+     FAST_PATH_NO_REFLECT_REPEAT)
+
+#define FAST_PATH_REFLECT_REPEAT					\
+    (FAST_PATH_NO_NONE_REPEAT		|				\
+     FAST_PATH_NO_NORMAL_REPEAT		|				\
+     FAST_PATH_NO_PAD_REPEAT)
 
 #define _FAST_PATH_STANDARD_FLAGS					\
     (FAST_PATH_ID_TRANSFORM		|				\
