@@ -6,7 +6,7 @@ DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\symbols\extras
 
 dist_symbols_DATA = apl \
 		    ir \
-		    rs \
+		    rs ru \
 		    us
 
 DATA_FILES=$(dist_symbols_DATA:%=$(DESTDIR)\%)

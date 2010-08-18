@@ -1,4 +1,9 @@
 #include "utils.h"
+#include <signal.h>
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 /* Random number seed
  */
@@ -318,4 +323,32 @@ fuzzer_test_main (const char *test_name,
     }
 
     return 0;
+}
+
+static const char *global_msg;
+
+static void
+on_alarm (int signo)
+{
+    printf ("%s\n", global_msg);
+    exit (1);
+}
+
+void
+fail_after (int seconds, const char *msg)
+{
+#ifdef HAVE_SIGACTION
+#ifdef HAVE_ALARM
+    struct sigaction action;
+
+    global_msg = msg;
+
+    memset (&action, 0, sizeof (action));
+    action.sa_handler = on_alarm;
+
+    alarm (seconds);
+
+    sigaction (SIGALRM, &action, NULL);
+#endif
+#endif
 }

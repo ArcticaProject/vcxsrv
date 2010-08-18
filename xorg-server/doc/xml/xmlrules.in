@@ -48,10 +48,12 @@ xorg.css: $(STYLESHEET_SRCDIR)/xorg.css
 endif
 
 if HAVE_XMLTO
+if HAVE_XMLTO_TEXT
 BUILT_DOC_FILES += $(TXT_FILES)
 .xml.txt:
 	@rm -f $@
 	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) txt $<
+endif
 
 BUILT_DOC_FILES += $(HTML_FILES)
 .xml.html:

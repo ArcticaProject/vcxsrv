@@ -28,10 +28,10 @@ AM_MAINTAINER_MODE
 
 AM_CONFIG_HEADER(config.h)
 
-# Require xorg-macros: XORG_DEFAULT_OPTIONS
+# Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.4 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.4)
+          [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
 AC_PROG_CC
@@ -75,4 +75,5 @@ LINT_FLAGS="${LINT_FLAGS} ${XAU_CFLAGS}"
 
 
 AC_OUTPUT([Makefile
+           man/Makefile
            xau.pc])

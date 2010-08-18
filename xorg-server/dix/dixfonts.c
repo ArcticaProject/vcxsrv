@@ -323,10 +323,10 @@ doOpenFont(ClientPtr client, OFclosurePtr c)
 	    continue;
 	}
 	if (err == Suspended) {
-	    if (!c->slept) {
-		c->slept = TRUE;
-		ClientSleep(client, (ClientSleepProcPtr)doOpenFont, (pointer) c);
-	    }
+	    if (!ClientIsAsleep(client))
+		ClientSleep(client, (ClientSleepProcPtr)doOpenFont, c);
+	    else
+		goto xinerama_sleep;
 	    return TRUE;
 	}
 	break;
@@ -375,8 +375,8 @@ bail:
 	SendErrorToClient(c->client, X_OpenFont, 0,
 			  c->fontid, FontToXError(err));
     }
-    if (c->slept)
-	ClientWakeup(c->client);
+    ClientWakeup(c->client);
+xinerama_sleep:
     for (i = 0; i < c->num_fpes; i++) {
 	FreeFPE(c->fpe_list[i]);
     }
@@ -462,7 +462,6 @@ OpenFont(ClientPtr client, XID fid, Mask flags, unsigned lenfname, char *pfontna
     c->current_fpe = 0;
     c->num_fpes = num_fpes;
     c->fnamelen = lenfname;
-    c->slept = FALSE;
     c->flags = flags;
     c->non_cachable_font = cached;
 
@@ -624,12 +623,12 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
 		 c->names);
 
 	    if (err == Suspended) {
-		if (!c->slept) {
-		    c->slept = TRUE;
+		if (!ClientIsAsleep(client))
 		    ClientSleep(client,
-			(ClientSleepProcPtr)doListFontsAndAliases,
-			(pointer) c);
-		}
+				(ClientSleepProcPtr)doListFontsAndAliases,
+				c);
+		else
+		    goto xinerama_sleep;
 		return TRUE;
 	    }
 
@@ -652,12 +651,12 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
 		     c->current.patlen, c->current.max_names - c->names->nnames,
 		     &c->current.private);
 		if (err == Suspended) {
-		    if (!c->slept) {
+		    if (!ClientIsAsleep(client))
 			ClientSleep(client,
 				    (ClientSleepProcPtr)doListFontsAndAliases,
-				    (pointer) c);
-			c->slept = TRUE;
-		    }
+				    c);
+		    else
+			goto xinerama_sleep;
 		    return TRUE;
 		}
 		if (err == Successful)
@@ -670,12 +669,12 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
 		    ((pointer) c->client, fpe, &name, &namelen, &tmpname,
 		     &resolvedlen, c->current.private);
 		if (err == Suspended) {
-		    if (!c->slept) {
+		    if (ClientIsAsleep(client))
 			ClientSleep(client,
 				    (ClientSleepProcPtr)doListFontsAndAliases,
-				    (pointer) c);
-			c->slept = TRUE;
-		    }
+				    c);
+		    else
+			goto xinerama_sleep;
 		    return TRUE;
 		}
 		if (err == FontNameAlias) {
@@ -824,8 +823,8 @@ finish:
     free(bufferStart);
 
 bail:
-    if (c->slept)
-	ClientWakeup(client);
+    ClientWakeup(client);
+xinerama_sleep:
     for (i = 0; i < c->num_fpes; i++)
 	FreeFPE(c->fpe_list[i]);
     free(c->fpe_list);
@@ -883,7 +882,6 @@ ListFonts(ClientPtr client, unsigned char *pattern, unsigned length,
     c->current.list_started = FALSE;
     c->current.private = 0;
     c->haveSaved = FALSE;
-    c->slept = FALSE;
     c->savedName = 0;
     doListFontsAndAliases(client, c);
     return Success;
@@ -930,11 +928,11 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
 		 c->current.max_names, &c->current.private);
 	    if (err == Suspended)
  	    {
-		if (!c->slept)
- 		{
-		    ClientSleep(client, (ClientSleepProcPtr)doListFontsWithInfo, c);
-		    c->slept = TRUE;
-		}
+		if (!ClientIsAsleep(client))
+		    ClientSleep(client,
+				(ClientSleepProcPtr)doListFontsWithInfo, c);
+		else
+		    goto xinerama_sleep;
 		return TRUE;
 	    }
 	    if (err == Successful)
@@ -949,13 +947,11 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
 		 &numFonts, c->current.private);
 	    if (err == Suspended)
  	    {
-		if (!c->slept)
- 		{
+		if (!ClientIsAsleep(client))
 		    ClientSleep(client,
-		    	     (ClientSleepProcPtr)doListFontsWithInfo,
-			     c);
-		    c->slept = TRUE;
-		}
+				(ClientSleepProcPtr)doListFontsWithInfo, c);
+		else
+		    goto xinerama_sleep;
 		return TRUE;
 	    }
 	}
@@ -1100,8 +1096,8 @@ finish:
 		     - sizeof(xGenericReply));
     WriteSwappedDataToClient(client, length, &finalReply);
 bail:
-    if (c->slept)
-	ClientWakeup(client);
+    ClientWakeup(client);
+xinerama_sleep:
     for (i = 0; i < c->num_fpes; i++)
 	FreeFPE(c->fpe_list[i]);
     free(c->reply);
@@ -1156,7 +1152,6 @@ StartListFontsWithInfo(ClientPtr client, int length, unsigned char *pattern,
     c->current.private = 0;
     c->savedNumFonts = 0;
     c->haveSaved = FALSE;
-    c->slept = FALSE;
     c->savedName = 0;
     doListFontsWithInfo(client, c);
     return Success;
@@ -1183,7 +1178,7 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 	fpe = c->pGC->font->fpe;
 	(*fpe_functions[fpe->type].client_died) ((pointer) client, fpe);
 
-	if (c->slept)
+	if (ClientIsAsleep(client))
 	{
 	    /* Client has died, but we cannot bail out right now.  We
 	       need to clean up after the work we did when going to
@@ -1200,7 +1195,7 @@ doPolyText(ClientPtr client, PTclosurePtr c)
     }
 
     /* Make sure our drawable hasn't disappeared while we slept. */
-    if (c->slept && c->pDraw)
+    if (ClientIsAsleep(client) && c->pDraw)
     {
 	DrawablePtr pDraw;
 	dixLookupDrawable(&pDraw, c->did, client, 0, DixWriteAccess);
@@ -1214,7 +1209,7 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 	}
     }
 
-    client_state = c->slept ? SLEEPING : NEVER_SLEPT;
+    client_state = ClientIsAsleep(client) ? SLEEPING : NEVER_SLEPT;
 
     while (c->endReq - c->pElt > TextEltHeader)
     {
@@ -1297,7 +1292,7 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 
 	    if (lgerr == Suspended)
 	    {
-		if (!c->slept) {
+		if (!ClientIsAsleep(client)) {
 		    int len;
 		    GC *pGC;
 		    PTclosurePtr new_closure;
@@ -1370,15 +1365,14 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 		    c->pGC = pGC;
 		    ValidateGC(c->pDraw, c->pGC);
 		    
-		    c->slept = TRUE;
-		    ClientSleep(client,
-		    	     (ClientSleepProcPtr)doPolyText,
-			     (pointer) c);
+		    ClientSleep(client, (ClientSleepProcPtr)doPolyText, c);
 
 		    /* Set up to perform steps 3 and 4 */
 		    client_state = START_SLEEP;
 		    continue;	/* on to steps 3 and 4 */
 		}
+		else
+		    goto xinerama_sleep;
 		return TRUE;
 	    }
 	    else if (lgerr != Successful)
@@ -1421,9 +1415,10 @@ bail:
 #endif
 	    SendErrorToClient(c->client, c->reqType, 0, 0, err);
     }
-    if (c->slept)
+    if (ClientIsAsleep(client))
     {
 	ClientWakeup(c->client);
+xinerama_sleep:
 	ChangeGC(NullClient, c->pGC, clearGCmask, clearGC);
 
 	/* Unreference the font from the scratch GC */
@@ -1462,7 +1457,6 @@ PolyText(ClientPtr client, DrawablePtr pDraw, GC *pGC, unsigned char *pElt,
     local_closure.pGC = pGC;
     local_closure.did = did;
     local_closure.err = Success;
-    local_closure.slept = FALSE;
 
     (void) doPolyText(client, &local_closure);
     return Success;
@@ -1487,7 +1481,7 @@ doImageText(ClientPtr client, ITclosurePtr c)
     }
 
     /* Make sure our drawable hasn't disappeared while we slept. */
-    if (c->slept && c->pDraw)
+    if (ClientIsAsleep(client) && c->pDraw)
     {
 	DrawablePtr pDraw;
 	dixLookupDrawable(&pDraw, c->did, client, 0, DixWriteAccess);
@@ -1504,7 +1498,7 @@ doImageText(ClientPtr client, ITclosurePtr c)
     lgerr = LoadGlyphs(client, c->pGC->font, c->nChars, c->itemSize, c->data);
     if (lgerr == Suspended)
     {
-        if (!c->slept) {
+        if (!ClientIsAsleep(client)) {
 	    GC *pGC;
 	    unsigned char *data;
 	    ITclosurePtr new_closure;
@@ -1557,9 +1551,10 @@ doImageText(ClientPtr client, ITclosurePtr c)
 	    c->pGC = pGC;
 	    ValidateGC(c->pDraw, c->pGC);
 
-	    c->slept = TRUE;
-            ClientSleep(client, (ClientSleepProcPtr)doImageText, (pointer) c);
+            ClientSleep(client, (ClientSleepProcPtr)doImageText, c);
         }
+	else
+	    goto xinerama_sleep;
         return TRUE;
     }
     else if (lgerr != Successful)
@@ -1578,9 +1573,10 @@ bail:
     if (err != Success && c->client != serverClient) {
 	SendErrorToClient(c->client, c->reqType, 0, 0, err);
     }
-    if (c->slept)
+    if (ClientIsAsleep(client))
     {
 	ClientWakeup(c->client);
+xinerama_sleep:
 	ChangeGC(NullClient, c->pGC, clearGCmask, clearGC);
 
 	/* Unreference the font from the scratch GC */
@@ -1618,7 +1614,6 @@ ImageText(ClientPtr client, DrawablePtr pDraw, GC *pGC, int nChars,
 	local_closure.itemSize = 2;
     }
     local_closure.did = did;
-    local_closure.slept = FALSE;
 
     (void) doImageText(client, &local_closure);
     return Success;

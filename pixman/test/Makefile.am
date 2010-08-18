@@ -13,6 +13,7 @@ TESTPROGRAMS =			\
 	gradient-crash-test	\
 	trap-crasher		\
 	alphamap		\
+	alpha-loop		\
 	scaling-crash-test	\
 	blitters-test		\
 	scaling-test		\
@@ -38,6 +39,9 @@ scaling_test_SOURCES = scaling-test.c utils.c utils.h
 
 alphamap_LDADD = $(TEST_LDADD)
 alphamap_SOURCES = alphamap.c utils.c utils.h
+
+alpha_loop_LDADD = $(TEST_LDADD)
+alpha_loop_SOURCES = alpha-loop.c utils.c utils.h
 
 # GTK using test programs
 

@@ -23,32 +23,23 @@
 
 libmandir = $(LIB_MAN_DIR)
 
-LIB_MAN_DIR_SUFFIX = $(LIB_MAN_DIR:@mandir@/man%=%)
+libman_PRE =				\
+	Xinerama.man			\
+	$(Xinerama_shadows:=.man)
 
-libman_PRE = Xinerama.man
-
-BUILT_SOURCES = $(Xinerama_shadowmen)
+Xinerama_shadows =			\
+	XineramaQueryExtension		\
+	XineramaQueryVersion		\
+	XineramaIsActive		\
+	XineramaQueryScreens
 
 EXTRA_DIST = $(libman_PRE)
+CLEANFILES = $(libman_DATA)
 
-CLEANFILES = $(libman_DATA) $(BUILT_SOURCES)
-
-libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
-	      $(Xinerama_shadowmen)
+libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@)
 
 SUFFIXES = .$(LIB_MAN_SUFFIX) .man
 
+# String replacements in MAN_SUBSTS now come from xorg-macros.m4 via configure
 .man.$(LIB_MAN_SUFFIX):
 	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@
-
-# Generate man page shadow files (Replaces InstallManPageAliases from Imake)
-
-Xinerama_shadows =		\
-	XineramaQueryExtension	\
-	XineramaQueryVersion	\
-	XineramaIsActive	\
-	XineramaQueryScreens
-
-Xinerama_shadowmen = $(Xinerama_shadows:=.@LIB_MAN_SUFFIX@)
-$(Xinerama_shadowmen):
-	$(AM_V_GEN)echo ".so man$(LIB_MAN_DIR_SUFFIX)/Xinerama.$(LIB_MAN_SUFFIX)" > $@

@@ -1109,7 +1109,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
 
   __GLXconfig *config = gc->base.config;
   GLXWinConfig *winConfig = (GLXWinConfig *)config;
-  
+
   GLWIN_DEBUG_MSG("glxWinSetPixelFormat: pixelFormatIndex %d", winConfig->pixelFormatIndex);
 
   /*
@@ -1153,7 +1153,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
     {
       PIXELFORMATDESCRIPTOR pfd;
       int pixelFormat;
-      
+
       /* convert fbConfig to PFD */
       if (fbConfigToPixelFormat(gc->base.config, &pfd, drawableTypeOverride))
         {

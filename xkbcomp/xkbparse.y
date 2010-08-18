@@ -92,6 +92,10 @@
 #ifdef DEBUG
 #define	YYDEBUG 1
 #endif
+
+#define YYMALLOC malloc
+#define YYFREE free
+
 #define	DEBUG_VAR parseDebug
 #include "parseutils.h"
 #include <X11/keysym.h>

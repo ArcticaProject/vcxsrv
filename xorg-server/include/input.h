@@ -439,6 +439,12 @@ extern void CreateClassesChangedEvent(EventListPtr event,
                                       DeviceIntPtr master,
                                       DeviceIntPtr slave,
                                       int type);
+extern EventListPtr UpdateFromMaster(
+    EventListPtr events,
+    DeviceIntPtr pDev,
+    int type,
+    int *num_events);
+
 extern _X_EXPORT int GetPointerEvents(
     EventListPtr events,
     DeviceIntPtr pDev,

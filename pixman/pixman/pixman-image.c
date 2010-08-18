@@ -101,6 +101,7 @@ _pixman_image_allocate (void)
 
 	pixman_region32_init (&common->clip_region);
 
+	common->alpha_count = 0;
 	common->have_clip_region = FALSE;
 	common->clip_sources = FALSE;
 	common->transform = NULL;
@@ -408,12 +409,14 @@ compute_image_info (pixman_image_t *image)
 	    }
 	}
 
-	if (image->common.repeat != PIXMAN_REPEAT_NONE				&&
-	    !PIXMAN_FORMAT_A (image->bits.format)				&&
+	if (!PIXMAN_FORMAT_A (image->bits.format)				&&
 	    PIXMAN_FORMAT_TYPE (image->bits.format) != PIXMAN_TYPE_GRAY		&&
 	    PIXMAN_FORMAT_TYPE (image->bits.format) != PIXMAN_TYPE_COLOR)
 	{
-	    flags |= FAST_PATH_IS_OPAQUE;
+	    flags |= FAST_PATH_SAMPLES_OPAQUE;
+
+	    if (image->common.repeat != PIXMAN_REPEAT_NONE)
+		flags |= FAST_PATH_IS_OPAQUE;
 	}
 
 	if (source_image_needs_out_of_bounds_workaround (&image->bits))
@@ -461,7 +464,7 @@ compute_image_info (pixman_image_t *image)
 	image->common.filter == PIXMAN_FILTER_CONVOLUTION	||
 	image->common.component_alpha)
     {
-	flags &= ~FAST_PATH_IS_OPAQUE;
+	flags &= ~(FAST_PATH_IS_OPAQUE | FAST_PATH_SAMPLES_OPAQUE);
     }
 
     image->common.flags = flags;
@@ -668,15 +671,41 @@ pixman_image_set_alpha_map (pixman_image_t *image,
 
     return_if_fail (!alpha_map || alpha_map->type == BITS);
 
+    if (alpha_map && common->alpha_count > 0)
+    {
+	/* If this image is being used as an alpha map itself,
+	 * then you can't give it an alpha map of its own.
+	 */
+	return;
+    }
+
+    if (alpha_map && alpha_map->common.alpha_map)
+    {
+	/* If the image has an alpha map of its own,
+	 * then it can't be used as an alpha map itself
+	 */
+	return;
+    }
+
     if (common->alpha_map != (bits_image_t *)alpha_map)
     {
 	if (common->alpha_map)
+	{
+	    common->alpha_map->common.alpha_count--;
+
 	    pixman_image_unref ((pixman_image_t *)common->alpha_map);
+	}
 
 	if (alpha_map)
+	{
 	    common->alpha_map = (bits_image_t *)pixman_image_ref (alpha_map);
+
+	    common->alpha_map->common.alpha_count++;
+	}
 	else
+	{
 	    common->alpha_map = NULL;
+	}
     }
 
     common->alpha_origin_x = x;

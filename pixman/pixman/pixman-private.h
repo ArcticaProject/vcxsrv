@@ -80,6 +80,7 @@ struct image_common
     image_type_t                type;
     int32_t                     ref_count;
     pixman_region32_t           clip_region;
+    int32_t			alpha_count;	    /* How many times this image is being used as an alpha map */
     pixman_bool_t               have_clip_region;   /* FALSE if there is no clip */
     pixman_bool_t               client_clip;        /* Whether the source clip was
 						       set by a client */
@@ -570,6 +571,7 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_BILINEAR_FILTER		(1 << 20)
 #define FAST_PATH_NO_NORMAL_REPEAT		(1 << 21)
 #define FAST_PATH_HAS_TRANSFORM			(1 << 22)
+#define FAST_PATH_SAMPLES_OPAQUE		(1 << 23)
 
 #define FAST_PATH_PAD_REPEAT						\
     (FAST_PATH_NO_NONE_REPEAT		|				\

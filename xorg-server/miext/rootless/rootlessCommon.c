@@ -92,6 +92,9 @@ IsFramedWindow(WindowPtr pWin)
 {
     WindowPtr top;
 
+    if (!dixPrivateKeyRegistered(&rootlessWindowPrivateKeyRec))
+        return FALSE;
+
     if (!pWin->realized)
         return FALSE;
     top = TopLevelParent(pWin);

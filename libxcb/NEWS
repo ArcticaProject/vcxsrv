@@ -1,3 +1,12 @@
+Release 1.7 (2010-08-13)
+========================
+- Always wake up readers after writing
+- Get rid of PATH_MAX and MAXPATHLEN
+- Add ~ operator support in code generator
+- xcb_open: Improve protocol/host parsing
+- xcb_connect_to_display_with_auth_info: Fix memory leak
+- Report which extensions are being built
+
 Release 1.6 (2010-04-09)
 ========================
 - darwin: xnu doesn't support poll on ttys on the master side

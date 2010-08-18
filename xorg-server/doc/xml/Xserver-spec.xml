@@ -92,6 +92,13 @@
 	<authorinitials>efw</authorinitials>
 	<revremark>Revised for devPrivates changes</revremark>
       </revision>
+      <revision>
+	<revnumber>3.5</revnumber>
+	<date>July 2010</date>
+	<authorinitials>ac</authorinitials>
+	<revremark>Revised for Xorg 1.9 devPrivates changes
+	  and 1.8 CreateNewResourceType changes</revremark>
+      </revision>
     </revhistory>
     <legalnotice>
       <para>Copyright &#xA9; 1994 X Consortium, Inc., 2004 X.org Foundation, Inc.</para>
@@ -3753,7 +3760,7 @@ Also included in each GC is support for dynamic devPrivates, which the
 DDX can use for any purpose (see <xref linkend="wrappers_and_privates"/> below).</para>
 <para>
 The DIX routines available for manipulating GCs are
-CreateGC, ChangeGC, CopyGC, SetClipRects, SetDashes, and FreeGC.
+CreateGC, ChangeGC, ChangeGCXIDs, CopyGC, SetClipRects, SetDashes, and FreeGC.
 <blockquote><programlisting>
 
 	GCPtr CreateGC(pDrawable, mask, pval, pStatus)
@@ -3762,10 +3769,17 @@ CreateGC, ChangeGC, CopyGC, SetClipRects, SetDashes, and FreeGC.
 	    XID *pval;
 	    int *pStatus;
 
-	int ChangeGC(pGC, mask, pval)
+	int ChangeGC(client, pGC, mask, pUnion)
+	    ClientPtr client;
 	    GCPtr pGC;
 	    BITS32 mask;
-	    XID *pval;
+	    ChangeGCValPtr pUnion;
+
+	int ChangeGCXIDs(client, pGC, mask, pC32)
+	    ClientPtr client;
+	    GCPtr pGC;
+	    BITS32 mask;
+	    CARD32 *pC32;
 
 	int CopyGC(pgcSrc, pgcDst, mask)
 	    GCPtr pgcSrc;
@@ -4808,32 +4822,68 @@ Two new extensibility concepts have been developed for release 4, Wrappers
 and devPrivates.  These replace the R3 GCInterest queues, which were not a
 general enough mechanism for many extensions and only provided hooks into a
 single data structure.  devPrivates have been revised substantially for
-X.org X server relase 1.5.</para>
+X.Org X server release 1.5, and updated again for the 1.9 release.</para>
 <section>
   <title>devPrivates</title>
 <para>
 devPrivates provides a way to attach arbitrary private data to various server structures.
 Any structure which contains a <structfield>devPrivates</structfield> field of
-type <type>PrivateRec</type> supports this mechanism.  Private data can be allocated at
-any time during an object's life cycle and callbacks are available to initialize and clean
-up allocated space.</para>
+type <type>PrivateRec</type> supports this mechanism.  Some structures allow
+allocating space for private data after some objects have been created, others
+require all space allocations be registered before any objects of that type
+are created.  <filename class="headerfile">Xserver/include/privates.h</filename>
+lists which of these cases applies to each structure containing
+<structfield>devPrivates</structfield>.</para>
+
+<para>
+To request private space, use
+<blockquote><programlisting>
+	Bool dixRegisterPrivateKey(DevPrivateKey key, DevPrivateType type, unsigned size);
+</programlisting></blockquote>
+The first argument is a pointer to a <type>DevPrivateKeyRec</type> which
+will serve as the unique identifier for the private data.  Typically this is
+the address of a static <type>DevPrivateKeyRec</type> in your code.
+The second argument is the class of objects for which this key will apply.
+The third argument is the size of the space being requested, or
+<constant>0</constant> to only allocate a pointer that the caller will manage.
+If space is requested, this space will be automatically freed when the object
+is destroyed.  Note that a call to <function>dixSetPrivate</function>
+that changes the pointer value may cause the space to be unreachable by the caller, however it will still be automatically freed.
+The function returns <literal>TRUE</literal> unless memory allocation fails.
+If the function is called more than once on the same key, all calls must use
+the same value for <type>size</type> or the server will abort.</para>
+
+<para>
+To request private space and have the server manage the key, use
+<blockquote><programlisting>
+	DevPrivateKey dixCreatePrivateKey(DevPrivateType type, unsigned size);
+</programlisting></blockquote>
+The <parameter>type</parameter> and <parameter>size</parameter> arguments are
+the same as those to <function>dixRegisterPrivateKey</function> but this
+function allocates a <type>DevPrivateKeyRec</type> and returns a pointer to it
+instead of requiring the caller to pass a pointer to an existing structure.
+The server will free it automatically when the privates system is restarted
+at server reset time.</para>
+
 <para>
 To attach a piece of private data to an object, use:
 <blockquote><programlisting>
-	int dixSetPrivate(PrivateRec **privates, const DevPrivateKey key, pointer val)
+	void dixSetPrivate(PrivateRec **privates, const DevPrivateKey key, pointer val)
 </programlisting></blockquote>
-The first argument is the address of the <structfield>devPrivates</structfield> field
-in the target structure.  This field is managed privately by the DIX layer and
-should not be directly modified.  The second argument is some address value which
-will serve as the unique identifier for the private data.  Typically this is the address
-of some global variable in your code.  Only one piece of data with a given key can be attached to an object.  However, you
-can use the same key to store data in any object that supports the devPrivates mechanism.  The third
-argument is the value to store.</para>
+The first argument is the address of the <structfield>devPrivates</structfield>
+field in the target structure.  This field is managed privately by the DIX
+layer and should not be directly modified.  The second argument is a pointer
+to the <type>DevPrivateKeyRec</type> which you registered with
+<function>dixRegisterPrivateKey</function> or allocated with
+<function>dixCreatePrivateKey</function>.  Only one
+piece of data with a given key can be attached to an object, and in most cases
+each key is specific to the type of object it was registered for.   (An
+exception is the PRIVATE_XSELINUX class which applies to multiple object types.)
+The third argument is the value to store.</para>
 <para>
-If private data with the given key is already associated with the object, <function>dixSetPrivate</function> will
-overwrite the old value with the new one.  Otherwise, new space will be allocated to hold the pointer value.
-The function returns <literal>TRUE</literal> unless memory allocation fails, but note that since memory allocation only
-occurs on the first reference to the private data, all subsequent calls are guaranteed to succeed.</para>
+If private data with the given key is already associated with the object,
+<function>dixSetPrivate</function> will overwrite the old value with the
+new one.</para>
 
 <para>
 To look up a piece of private data, use one of:
@@ -4842,56 +4892,22 @@ To look up a piece of private data, use one of:
 	pointer *dixLookupPrivateAddr(PrivateRec **privates, const DevPrivateKey key)
 </programlisting></blockquote>
 The first argument is the address of the <structfield>devPrivates</structfield> field
-in the target structure.  The second argument is the key to look up.  If private data with the given key is already associated
-with the object, <function>dixLookupPrivate</function> will return the stored pointer value while <function>dixLookupPrivateAddr</function>
-will return the address of the stored pointer.  Otherwise, new space will be first allocated to hold the pointer value
-and it will be initialized to NULL.  Both functions return <literal>NULL</literal> if memory allocation fails, but note that
-since memory allocation only occurs on the first reference to the private data, all subsequent calls are guaranteed to succeed.</para>
+in the target structure.  The second argument is the key to look up.
+If a non-zero size was given when the key was registered, or if private data
+with the given key is already associated with the object, then
+<function>dixLookupPrivate</function> will return the pointer value
+while <function>dixLookupPrivateAddr</function>
+will return the address of the pointer.</para>
 
 <para>
-To request pre-allocated private space, use
-<blockquote><programlisting>
-	int dixRequestPrivate(const DevPrivateKey key, unsigned size)
-</programlisting></blockquote>
-The first argument is the key for which space is being requested.  The second argument is the size of the space being requested.
-After this function has been called,
-future calls to <function>dixLookupPrivate</function> or <function>dixLookupPrivateAddr</function> that cause the private pointer
-to be initially allocated will also allocate <varname>size</varname> bytes of space cleared to zero and initialize the private pointer to point
-to this space instead of <literal>NULL</literal>.  This space will be automatically freed.  Note that a call to <function>dixSetPrivate</function>
-that changes the pointer value may cause the space to be unreachable by the caller, however it will still be automatically freed.
-The function returns <literal>TRUE</literal> unless memory allocation fails.  If the function is called more than once, the largest value
-of <type>size</type> is used.</para>
-
-<para>
-To set callbacks for initializing and cleaning up private space, use
-<blockquote><programlisting>
-	typedef struct {
-		DevPrivateKey key;
-		pointer *value;
-	} PrivateCallbackRec;
-
-	int dixRegisterPrivateInitFunc(const DevPrivateKey key,
-		CallbackProcPtr callback,
-		pointer userdata)
-	int dixRegisterPrivateDeleteFunc(const DevPrivateKey key,
-		CallbackProcPtr callback,
-		pointer userdata)
-</programlisting></blockquote>
-The first argument is the key for which the callbacks are being registered.  The second argument is the callback function.  The third argument
-will be passed as the user data argument to the callback function when it is called.  The call data argument to the callback is a pointer to
-a structure of type <type>PrivateCallbackRec</type>.</para>
-<para>
-The init callback is called immediately after new private space has been allocated for the given key.  The delete callback is called immediately
-before the private space is freed when the object is being destroyed.  The <type>PrivateCallbackRec</type> structure contains the devPrivate key
-and the address of the private pointer.  The init callback may be used to initialize any pre-allocated space requested by
-<function>dixRequestPrivate</function>, while the delete callback may be used to free any data stored there.  However the callbacks are called even
-if no pre-allocated space was requested.</para>
-
-<para>
-When implementing new server resource objects that support devPrivates, there are three steps to perform:
-Declare a field of type <type>PrivateRec *</type> in your structure;
+When implementing new server resource objects that support devPrivates, there
+are four steps to perform:
+Add a type value to the <type>DevPrivateType</type> enum in
+<filename class="headerfile">Xserver/include/privates.h</filename>,
+declare a field of type <type>PrivateRec *</type> in your structure;
 initialize this field to <literal>NULL</literal> when creating any objects; and
-call the <function>dixFreePrivates</function> function, passing in the field value, when freeing any objects.</para>
+when freeing any objects call the <function>dixFreePrivates</function> or
+<function>dixFreeObjectWithPrivates</function> function.</para>
 </section>
 <section>
   <title>Wrappers</title>
