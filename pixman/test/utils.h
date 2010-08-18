@@ -62,3 +62,6 @@ fuzzer_test_main (const char *test_name,
 		  uint32_t    (*test_function)(int testnum, int verbose),
 		  int         argc,
 		  const char *argv[]);
+
+void
+fail_after (int seconds, const char *msg);

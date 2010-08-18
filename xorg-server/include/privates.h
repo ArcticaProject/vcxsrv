@@ -81,10 +81,10 @@ typedef struct _DevPrivateKeyRec {
  * you can get the address of the extra space and store whatever data you like
  * there.
  *
- * You may call dixRegisterPrivate more than once on the same key, but the
+ * You may call dixRegisterPrivateKey more than once on the same key, but the
  * size and type must match or the server will abort.
  *
- * dixRegisterPrivateIndex returns FALSE if it fails to allocate memory
+ * dixRegisterPrivateKey returns FALSE if it fails to allocate memory
  * during its operation.
  */
 extern _X_EXPORT Bool

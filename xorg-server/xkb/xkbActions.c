@@ -1332,35 +1332,53 @@ xkbStateNotify	sn;
     return;
 }
 
+/*
+ * The event is injected into the event processing, not the EQ. Thus,
+ * ensure that we restore the master after the event sequence to the
+ * original set of classes. Otherwise, the master remains on the XTEST
+ * classes and drops events that don't fit into the XTEST layout (e.g.
+ * events with more than 2 valuators).
+ *
+ * FIXME: EQ injection in the processing stage is not designed for, so this
+ * is a rather awkward hack. The event list returned by GetPointerEvents()
+ * and friends is always prefixed with a DCE if the last _posted_ device was
+ * different. For normal events, this sequence then resets the master during
+ * the processing stage. Since we inject the PointerKey events in the
+ * processing stage though, we need to manually reset to restore the
+ * previous order, because the events already in the EQ must be sent for the
+ * right device.
+ * So we post-fix the event list we get from GPE with a DCE back to the
+ * previous slave device.
+ *
+ * First one on drinking island wins!
+ */
 static void
-XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
+InjectPointerKeyEvents(DeviceIntPtr dev, int type, int button, int flags, int num_valuators, int *valuators)
 {
+    ScreenPtr           pScreen;
     EventListPtr        events;
     int                 nevents, i;
-    DeviceIntPtr        ptr;
-    ScreenPtr           pScreen;
+    DeviceIntPtr        ptr, mpointer, lastSlave = NULL;
     Bool                saveWait;
-    int                 gpe_flags = 0;
 
-    if (IsMaster(dev))
-        ptr = GetXTestDevice(GetMaster(dev, MASTER_POINTER));
-    else if (!dev->u.master)
+    if (IsMaster(dev)) {
+        mpointer = GetMaster(dev, MASTER_POINTER);
+        lastSlave = mpointer->u.lastSlave;
+        ptr = GetXTestDevice(mpointer);
+    } else if (!dev->u.master)
         ptr = dev;
     else
         return;
 
-    if (flags & XkbSA_MoveAbsoluteX || flags & XkbSA_MoveAbsoluteY)
-        gpe_flags = POINTER_ABSOLUTE;
-    else
-        gpe_flags = POINTER_RELATIVE;
 
-    events = InitEventList(GetMaximumEventsNum());
+    events = InitEventList(GetMaximumEventsNum() + 1);
     OsBlockSignals();
     pScreen = miPointerGetScreen(ptr);
     saveWait = miPointerSetWaitForUpdate(pScreen, FALSE);
-    nevents = GetPointerEvents(events, ptr,
-                               MotionNotify, 0,
-                               gpe_flags, 0, 2, (int[]){x, y});
+    nevents = GetPointerEvents(events, ptr, type, button, flags, 0,
+                               num_valuators, valuators);
+    if (IsMaster(dev) && (lastSlave && lastSlave != ptr))
+        UpdateFromMaster(&events[nevents], lastSlave, DEVCHANGE_POINTER_EVENT, &nevents);
     miPointerSetWaitForUpdate(pScreen, saveWait);
     OsReleaseSignals();
 
@@ -1368,14 +1386,31 @@ XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
         mieqProcessDeviceEvent(ptr, (InternalEvent*)events[i].event, NULL);
 
     FreeEventList(events, GetMaximumEventsNum());
+
+}
+
+static void
+XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
+{
+    int                 gpe_flags = 0;
+
+    /* ignore attached SDs */
+    if (!IsMaster(dev) && GetMaster(dev, MASTER_POINTER) != NULL)
+        return;
+
+    if (flags & XkbSA_MoveAbsoluteX || flags & XkbSA_MoveAbsoluteY)
+        gpe_flags = POINTER_ABSOLUTE;
+    else
+        gpe_flags = POINTER_RELATIVE;
+
+    InjectPointerKeyEvents(dev, MotionNotify, 0, gpe_flags, 2, (int[]){x, y});
 }
 
 void
 XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button)
 {
-    EventListPtr        events;
-    int                 nevents, i;
     DeviceIntPtr        ptr;
+    int                 down;
 
     /* If dev is a slave device, and the SD is attached, do nothing. If we'd
      * post through the attached master pointer we'd get duplicate events.
@@ -1385,24 +1420,18 @@ XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button)
      * if dev is a floating slave, post through the device itself.
      */
 
-    if (IsMaster(dev))
-        ptr = GetXTestDevice(GetMaster(dev, MASTER_POINTER));
-    else if (!dev->u.master)
+    if (IsMaster(dev)) {
+        DeviceIntPtr mpointer = GetMaster(dev, MASTER_POINTER);
+        ptr = GetXTestDevice(mpointer);
+    } else if (!dev->u.master)
         ptr = dev;
     else
         return;
 
-    events = InitEventList(GetMaximumEventsNum());
-    OsBlockSignals();
-    nevents = GetPointerEvents(events, ptr,
-                               press ? ButtonPress : ButtonRelease, button,
-                               0 /* flags */, 0 /* first */,
-                               0 /* num_val */, NULL);
-    OsReleaseSignals();
+    down = button_is_down(ptr, button, BUTTON_PROCESSED);
+    if (press == down)
+        return;
 
-
-    for (i = 0; i < nevents; i++)
-        mieqProcessDeviceEvent(ptr, (InternalEvent*)events[i].event, NULL);
-
-    FreeEventList(events, GetMaximumEventsNum());
+    InjectPointerKeyEvents(dev, press ? ButtonPress : ButtonRelease,
+                           button, 0, 0, NULL);
 }

@@ -2111,9 +2111,6 @@ ProcChangePointerControl(ClientPtr client)
     REQUEST(xChangePointerControlReq);
     REQUEST_SIZE_MATCH(xChangePointerControlReq);
 
-    if (!mouse->ptrfeed->CtrlProc)
-        return BadDevice;
-
     ctrl = mouse->ptrfeed->ctrl;
     if ((stuff->doAccel != xTrue) && (stuff->doAccel != xFalse)) {
 	client->errorValue = stuff->doAccel;
@@ -2161,7 +2158,7 @@ ProcChangePointerControl(ClientPtr client)
 
     for (dev = inputInfo.devices; dev; dev = dev->next) {
         if ((dev == mouse || (!IsMaster(dev) && dev->u.master == mouse)) &&
-            dev->ptrfeed && dev->ptrfeed->CtrlProc) {
+            dev->ptrfeed) {
 	    rc = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixManageAccess);
 	    if (rc != Success)
 		return rc;
@@ -2170,9 +2167,8 @@ ProcChangePointerControl(ClientPtr client)
 
     for (dev = inputInfo.devices; dev; dev = dev->next) {
         if ((dev == mouse || (!IsMaster(dev) && dev->u.master == mouse)) &&
-            dev->ptrfeed && dev->ptrfeed->CtrlProc) {
+            dev->ptrfeed) {
             dev->ptrfeed->ctrl = ctrl;
-            (*dev->ptrfeed->CtrlProc)(dev, &mouse->ptrfeed->ctrl);
         }
     }
 

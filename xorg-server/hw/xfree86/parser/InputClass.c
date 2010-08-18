@@ -111,8 +111,10 @@ xf86parseInputClassSection(void)
         case DRIVER:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "Driver");
-            if (strcmp(val.str, "keyboard") == 0)
-                ptr->driver = "kbd";
+            if (strcmp(val.str, "keyboard") == 0) {
+                ptr->driver = strdup("kbd");
+                free(val.str);
+            }
             else
                 ptr->driver = val.str;
             break;

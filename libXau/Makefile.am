@@ -1,3 +1,5 @@
+SUBDIRS=man
+
 lib_LTLIBRARIES = libXau.la
 
 AM_CFLAGS = $(XAU_CFLAGS) $(CWARNFLAGS)
@@ -48,39 +50,8 @@ $(LINTLIB): $(libXau_la_SOURCES)
 	$(LINT) -y -oXau -x $(ALL_LINT_FLAGS) $(libXau_la_SOURCES)
 endif MAKE_LINT_LIB
 
-LIB_MAN_DIR_SUFFIX = $(LIB_MAN_DIR:@mandir@/man%=%)
-
-libmandir = $(LIB_MAN_DIR)
-libman_PRE = Xau.man
-BUILT_SOURCES = $(Xau_shadows:=.@LIB_MAN_SUFFIX@)
-CLEANFILES = $(libman_DATA) $(BUILT_SOURCES) $(lintlib_DATA)
-libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
-	      $(Xau_shadows:=.@LIB_MAN_SUFFIX@)
-
+CLEANFILES = $(lintlib_DATA)
 MAINTAINERCLEANFILES = ChangeLog INSTALL
-EXTRA_DIST = $(libman_PRE)
-
-Xau_shadows =                               \
-    XauFileName                             \
-    XauReadAuth                             \
-    XauLockAuth                             \
-    XauUnlockAuth                           \
-    XauWriteAuth                            \
-    XauDisposeAuth                          \
-    XauGetAuthByAddr                        \
-    XauGetBestAuthByAddr
-
-Xau_shadows_man = $(Xau_shadows:=.@LIB_MAN_SUFFIX@)
-$(Xau_shadows_man):
-	$(AM_V_GEN)echo .so man$(LIB_MAN_DIR_SUFFIX)/Xau.$(LIB_MAN_SUFFIX) > $@
-
-XORGRELSTRING = @PACKAGE_STRING@
-  XORGMANNAME = X Version 11
-
-Xau.$(LIB_MAN_SUFFIX): $(srcdir)/Xau.man
-	$(AM_V_GEN)$(SED) \
-		-e 's/__xorgversion__/"$(XORGRELSTRING)" "$(XORGMANNAME)"/' \
-	< $(srcdir)/Xau.man > Xau.$(LIB_MAN_SUFFIX)
 
 .PHONY: ChangeLog INSTALL
 

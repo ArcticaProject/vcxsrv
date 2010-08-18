@@ -884,6 +884,17 @@ do_composite (pixman_op_t	       op,
     if (!analyze_extent (mask, dest_x - mask_x, dest_y - mask_y, extents, &mask_flags))
 	goto out;
 
+    /* If the clip is within the source samples, and the samples are opaque,
+     * then the source is effectively opaque.
+     */
+#define BOTH (FAST_PATH_SAMPLES_OPAQUE | FAST_PATH_SAMPLES_COVER_CLIP)
+
+    if ((src_flags & BOTH) == BOTH)
+	src_flags |= FAST_PATH_IS_OPAQUE;
+    
+    if ((mask_flags & BOTH) == BOTH)
+	mask_flags |= FAST_PATH_IS_OPAQUE;
+    
     /*
      * Check if we can replace our operator by a simpler one
      * if the src or dest are opaque. The output operator should be

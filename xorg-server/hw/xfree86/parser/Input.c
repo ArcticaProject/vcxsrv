@@ -59,6 +59,7 @@
 #include <xorg-config.h>
 #endif
 
+#include "os.h"
 #include "xf86Parser.h"
 #include "xf86tokens.h"
 #include "Configint.h"
@@ -102,8 +103,10 @@ xf86parseInputSection (void)
 		case DRIVER:
 			if (xf86getSubToken (&(ptr->inp_comment)) != STRING)
 				Error (QUOTE_MSG, "Driver");
-                        if (strcmp(val.str, "keyboard") == 0)
-                            ptr->inp_driver = "kbd";
+                        if (strcmp(val.str, "keyboard") == 0) {
+                            ptr->inp_driver = strdup("kbd");
+                            free(val.str);
+                        }
                         else
 			    ptr->inp_driver = val.str;
 			break;

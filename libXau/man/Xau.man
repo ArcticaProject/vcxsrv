@@ -2,33 +2,33 @@
 .\" $XdotOrg$
 .\"
 .\" Copyright (c) 1994  X Consortium
-.\" 
+.\"
 .\" Permission is hereby granted, free of charge, to any person obtaining a
-.\" copy of this software and associated documentation files (the "Software"), 
-.\" to deal in the Software without restriction, including without limitation 
-.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" copy of this software and associated documentation files (the "Software"),
+.\" to deal in the Software without restriction, including without limitation
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense,
+.\" and/or sell copies of the Software, and to permit persons to whom the
 .\" Software furnished to do so, subject to the following conditions:
-.\" 
+.\"
 .\" The above copyright notice and this permission notice shall be included in
 .\" all copies or substantial portions of the Software.
-.\" 
+.\"
 .\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 .\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
-.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
-.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .\" SOFTWARE.
-.\" 
-.\" Except as contained in this notice, the name of the X Consortium shall not 
-.\" be used in advertising or otherwise to promote the sale, use or other 
-.\" dealing in this Software without prior written authorization from the 
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall not
+.\" be used in advertising or otherwise to promote the sale, use or other
+.\" dealing in this Software without prior written authorization from the
 .\" X Consortium.
 .\"
 .\" $XFree86: xc/doc/man/Xau/Xau.man,v 1.2 2001/01/27 18:20:19 dawes Exp $
 .\"
-.TH Xau 3 __xorgversion__
+.TH Xau __libmansuffix__ __xorgversion__
 .SH NAME
 Xau library: XauFileName, XauReadAuth, XauLockAuth, XauUnlockAuth,
 XauWriteAuth, XauDisposeAuth,
@@ -51,11 +51,11 @@ typedef struct xauth {
 } Xauth;
 
 .HP
-char *XauFileName (void); 
+char *XauFileName (void);
 .HP
-Xauth *XauReadAuth (FILE *\fIauth_file\fP\^); 
+Xauth *XauReadAuth (FILE *\fIauth_file\fP\^);
 .HP
-int XauWriteAuth (FILE *\fIauth_file\fP, Xauth *\fIauth\fP\^); 
+int XauWriteAuth (FILE *\fIauth_file\fP, Xauth *\fIauth\fP\^);
 .HP
 Xauth *XauGetAuthByAddr (unsigned short \fIfamily\fP\^, unsigned short
 \fIaddress_length\fP\^, const char *\fIaddress\fP\^, unsigned short
@@ -65,14 +65,14 @@ Xauth *XauGetAuthByAddr (unsigned short \fIfamily\fP\^, unsigned short
 Xauth *XauGetBestAuthByAddr (unsigned short \fIfamily\fP\^, unsigned short
 \fIaddress_length\fP\^, const char *\fIaddress\fP\^, unsigned short
 \fInumber_length\fP\^, const char *\fInumber\fP\^, int \fItypes_length\fP\^,
-char **\fItypes\fR\^, const int *\fItype_lengths\fR\^); 
+char **\fItypes\fR\^, const int *\fItype_lengths\fR\^);
 .HP
 int XauLockAuth (const char *\fIfile_name\fP\^, int \fIretries\fP\^, int
-\fItimeout\fP\^, long \fIdead\fP\^); 
+\fItimeout\fP\^, long \fIdead\fP\^);
 .HP
-int XauUnlockAuth (const char *\fIfile_name\fP\^); 
+int XauUnlockAuth (const char *\fIfile_name\fP\^);
 .HP
-int XauDisposeAuth (Xauth *\fIauth\fP\^); 
+int XauDisposeAuth (Xauth *\fIauth\fP\^);
 .ft R
 .SH DESCRIPTION
 .PP
@@ -124,7 +124,7 @@ results:
 
 .fi
 .PP
-\fBXauUnlockAuth\fP undoes the work of \fIXauLockAuth\fP by unlinking both 
+\fBXauUnlockAuth\fP undoes the work of \fIXauLockAuth\fP by unlinking both
 the ``-c'' and ``-l'' file names.
 .PP
 \fBXauDisposeAuth\fP frees storage allocated to hold an authorization entry.

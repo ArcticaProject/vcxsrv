@@ -1591,13 +1591,6 @@ fast_composite_scaled_nearest_ ## scale_func_name ## _ ## OP (pixman_implementat
 	if (w & 1)										\
 	{											\
 	    x1 = vx >> 16;									\
-	    vx += unit_x;									\
-	    if (PIXMAN_REPEAT_ ## repeat_mode == PIXMAN_REPEAT_NORMAL)				\
-	    {											\
-		/* This works because we know that unit_x is positive */			\
-		while (vx >= max_vx)								\
-		    vx -= max_vx;								\
-	    }											\
 	    s1 = src[x1];									\
 												\
 	    if (PIXMAN_OP_ ## OP == PIXMAN_OP_OVER)						\

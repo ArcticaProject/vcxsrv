@@ -81,6 +81,22 @@
         </variant>
       </variantList>
     </layout>
+    <layout>
+      <configItem>
+        <name>ru</name>
+        <shortDescription>Rus</shortDescription>
+        <description>Russia</description>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>chu</name>
+            <description>Church Slavonic</description>
+            <languageList><iso639Id>chu</iso639Id></languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
   </layoutList>
   <optionList/>
 </xkbConfigRegistry>

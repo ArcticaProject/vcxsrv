@@ -264,9 +264,6 @@ ApplyAccelerationSettings(DeviceIntPtr dev){
         if (i >= 0)
             dev->ptrfeed->ctrl.threshold = i;
 
-        /* mostly a no-op anyway */
-        (*dev->ptrfeed->CtrlProc)(dev, &dev->ptrfeed->ctrl);
-
         xf86Msg(X_CONFIG, "%s: (accel) acceleration factor: %.3f\n",
                             local->name, ((float)dev->ptrfeed->ctrl.num)/
                                          ((float)dev->ptrfeed->ctrl.den));

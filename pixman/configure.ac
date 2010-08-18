@@ -600,11 +600,21 @@ AC_SUBST(DEP_CFLAGS)
 AC_SUBST(DEP_LIBS)
 
 dnl =====================================
-dnl posix_memalign 
+dnl posix_memalign, sigaction, alarm
 
 AC_CHECK_FUNC(posix_memalign, have_posix_memalign=yes, have_posix_memalign=no)
 if test x$have_posix_memalign = xyes; then
    AC_DEFINE(HAVE_POSIX_MEMALIGN, 1, [Whether we have posix_memalign()])
+fi
+
+AC_CHECK_FUNC(sigaction, have_sigaction=yes, have_sigaction=no)
+if test x$have_sigaction = xyes; then
+   AC_DEFINE(HAVE_SIGACTION, 1, [Whether we have sigaction()])
+fi
+
+AC_CHECK_FUNC(alarm, have_alarm=yes, have_alarm=no)
+if test x$have_alarm = xyes; then
+   AC_DEFINE(HAVE_ALARM, 1, [Whether we have alarm()])
 fi
 
 dnl =====================================

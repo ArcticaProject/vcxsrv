@@ -223,6 +223,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
         {
             classes = to->unused_classes;
             to->intfeed = classes->intfeed;
+            classes->intfeed = NULL;
         }
 
         i = &to->intfeed;
@@ -258,6 +259,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
         {
             classes = to->unused_classes;
             to->stringfeed = classes->stringfeed;
+            classes->stringfeed = NULL;
         }
 
         s = &to->stringfeed;
@@ -293,6 +295,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
         {
             classes = to->unused_classes;
             to->bell = classes->bell;
+            classes->bell = NULL;
         }
 
         b = &to->bell;
@@ -329,6 +332,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
         {
             classes = to->unused_classes;
             to->leds = classes->leds;
+            classes->leds = NULL;
         }
 
         l = &to->leds;
@@ -379,6 +383,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
             to->kbdfeed = classes->kbdfeed;
             if (!to->kbdfeed)
                 InitKeyboardDeviceStruct(to, NULL, NULL, NULL);
+            classes->kbdfeed = NULL;
         }
 
         k = &to->kbdfeed;
@@ -506,6 +511,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
         {
             classes = to->unused_classes;
             to->ptrfeed = classes->ptrfeed;
+            classes->ptrfeed = NULL;
         }
 
         p = &to->ptrfeed;
