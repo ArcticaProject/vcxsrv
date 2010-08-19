@@ -581,10 +581,15 @@ RootlessReorderWindow(WindowPtr pWin)
 
         RootlessStopDrawing(pWin, FALSE);
 
-        /* Find the next window above this one that has a mapped frame. */
+        /* Find the next window above this one that has a mapped frame. 
+         * Only include cases where the windows are in the same category of
+         * hittability to ensure offscreen windows dont get restacked
+         * relative to onscreen ones (but that the offscreen ones maintain
+         * their stacking order if they are explicitly asked to Reorder
+         */
 
         newPrevW = pWin->prevSib;
-        while (newPrevW && (WINREC(newPrevW) == NULL || !newPrevW->realized))
+        while (newPrevW && (WINREC(newPrevW) == NULL || !newPrevW->realized || newPrevW->rootlessUnhittable != pWin->rootlessUnhittable))
             newPrevW = newPrevW->prevSib;
 
         newPrev = newPrevW != NULL ? WINREC(newPrevW) : NULL;
@@ -1502,7 +1507,7 @@ RootlessChangeBorderWidth(WindowPtr pWin, unsigned int width)
  * (i.e in front of Aqua windows) -- called when X11.app is given focus
  */
 void
-RootlessOrderAllWindows (void)
+RootlessOrderAllWindows (Bool include_unhitable)
 {
     int i;
     WindowPtr pWin;
@@ -1519,6 +1524,7 @@ RootlessOrderAllWindows (void)
       for (pWin = pWin->firstChild; pWin != NULL; pWin = pWin->nextSib) {
 	if (!pWin->realized) continue;
 	if (RootlessEnsureFrame(pWin) == NULL) continue;
+        if (!include_unhitable && pWin->rootlessUnhittable) continue;
 	RootlessReorderWindow (pWin);
       }
     }
