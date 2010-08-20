@@ -552,7 +552,7 @@ get_monitor_ranges(Uchar *c, struct monitor_ranges *r)
     r->max_h = MAX_H;
     r->max_clock = 0;
     if(MAX_CLOCK != 0xff) /* is specified? */
-	r->max_clock = MAX_CLOCK * 10;
+	r->max_clock = MAX_CLOCK * 10 + 5;
     if (HAVE_2ND_GTF) {
 	r->gtf_2nd_f = F_2ND_GTF;
 	r->gtf_2nd_c = C_2ND_GTF;

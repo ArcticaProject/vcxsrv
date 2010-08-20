@@ -491,6 +491,13 @@ __glXGetDrawable(__GLXcontext *glxc, GLXDrawable drawId, ClientPtr client,
 	return pGlxDraw;
     }
 
+    /* No active context and an unknown drawable, bail. */
+    if (glxc == NULL) {
+	    client->errorValue = drawId;
+	    *error = BadMatch;
+	    return NULL;
+    }
+
     /* The drawId wasn't a GLX drawable.  Make sure it's a window and
      * create a GLXWindow for it.  Check that the drawable screen
      * matches the context screen and that the context fbconfig is
