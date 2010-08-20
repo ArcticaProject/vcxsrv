@@ -921,6 +921,8 @@ DeleteWindow(pointer value, XID wid)
 	if (pWin->prevSib)
 	    pWin->prevSib->nextSib = pWin->nextSib;
     }
+    else
+	pWin->drawable.pScreen->root = NULL;
     dixFreeObjectWithPrivates(pWin, PRIVATE_WINDOW);
     return Success;
 }

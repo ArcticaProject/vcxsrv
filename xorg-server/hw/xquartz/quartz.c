@@ -265,7 +265,6 @@ void QuartzUpdateScreens(void) {
     pScreen->height = height;
     
     DarwinAdjustScreenOrigins(&screenInfo);
-    quartzProcs->UpdateScreen(pScreen);
     
     /* DarwinAdjustScreenOrigins or UpdateScreen may change pScreen->x/y,
      * so use it rather than x/y
@@ -277,6 +276,7 @@ void QuartzUpdateScreens(void) {
     pRoot = pScreen->root;
     AppleWMSetScreenOrigin(pRoot);
     pScreen->ResizeWindow(pRoot, x - sx, y - sy, width, height, NULL);
+
     miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
 
     /* <rdar://problem/7770779> pointer events are clipped to old display region after display reconfiguration
@@ -303,6 +303,8 @@ void QuartzUpdateScreens(void) {
     e.u.configureNotify.borderWidth = wBorderWidth(pRoot);
     e.u.configureNotify.override = pRoot->overrideRedirect;
     DeliverEvents(pRoot, &e, 1, NullWindow);
+
+    quartzProcs->UpdateScreen(pScreen);
     
 #ifdef FAKE_RANDR
     RREditConnectionInfo(pScreen);

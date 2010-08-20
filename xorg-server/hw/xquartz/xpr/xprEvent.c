@@ -73,7 +73,7 @@ Bool QuartzModeEventHandler(int screenNum, XQuartzEvent *e, DeviceIntPtr dev) {
             
         case kXquartzBringAllToFront:
             DEBUG_LOG("kXquartzBringAllToFront\n");
-            RootlessOrderAllWindows();
+            RootlessOrderAllWindows(e->data[0]);
             return TRUE;
         default:
             return FALSE;

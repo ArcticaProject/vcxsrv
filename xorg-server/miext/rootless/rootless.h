@@ -444,7 +444,7 @@ void RootlessUpdateScreenPixmap(ScreenPtr pScreen);
 void RootlessRepositionWindows(ScreenPtr pScreen);
 
 /*
- * Bring all windows to the front of the Aqua stack
+ * Bring all windows to the front of the native stack
  */
-void RootlessOrderAllWindows (void);
+void RootlessOrderAllWindows (Bool include_unhitable);
 #endif /* _ROOTLESS_H */

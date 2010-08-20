@@ -337,7 +337,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                 case NSApplicationActivatedEventType:
                     for_x = NO;
                     if ([self modalWindow] == nil) {
-                        BOOL switch_on_activate, ok;
+                        BOOL order_all_windows = YES, workspaces, ok;
                         for_appkit = NO;
                         
                         /* FIXME: hack to avoid having to pass the event to appkit,
@@ -347,13 +347,27 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                         [self activateX:YES];
                         
                         /* Get the Spaces preference for SwitchOnActivate */
-                        (void)CFPreferencesAppSynchronize(CFSTR(".GlobalPreferences"));
-                        switch_on_activate = CFPreferencesGetAppBooleanValue(CFSTR("AppleSpacesSwitchOnActivate"), CFSTR(".GlobalPreferences"), &ok);
-                        if(!ok)
-                            switch_on_activate = YES;
+                        (void)CFPreferencesAppSynchronize(CFSTR("com.apple.dock"));
+                        workspaces = CFPreferencesGetAppBooleanValue(CFSTR("workspaces"), CFSTR("com.apple.dock"), &ok);
+                        if (!ok)
+                            workspaces = NO;
+
+                        if (workspaces) {
+                            (void)CFPreferencesAppSynchronize(CFSTR(".GlobalPreferences"));
+                            order_all_windows = CFPreferencesGetAppBooleanValue(CFSTR("AppleSpacesSwitchOnActivate"), CFSTR(".GlobalPreferences"), &ok);
+                            if (!ok)
+                                order_all_windows = YES;
+                        }
                         
-                        if ([e data2] & 0x10 && switch_on_activate) // 0x10 is set when we use cmd-tab or the dock icon
-                            DarwinSendDDXEvent(kXquartzBringAllToFront, 0);
+                        /* TODO: In the workspaces && !AppleSpacesSwitchOnActivate case, the windows are ordered
+                         *       correctly, but we need to activate the top window on this space if there is
+                         *       none active.
+                         *
+                         *       If there are no active windows, and there are minimized windows, we should
+                         *       be restoring one of them.
+                         */
+                        if ([e data2] & 0x10) // 0x10 is set when we use cmd-tab or the dock icon
+                            DarwinSendDDXEvent(kXquartzBringAllToFront, 1, order_all_windows);
                     }
                     break;
                     
