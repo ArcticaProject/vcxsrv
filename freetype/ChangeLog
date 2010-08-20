@@ -1,3 +1,129 @@
+2010-08-06  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.4.2 released.
+	=========================
+
+
+	Tag sources with `VER-2-4-2'.
+
+	* docs/CHANGES: Updated.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.4.2
+
+	* README, Jamfile (RefDoc),
+	builds/win32/vc2005/freetype.vcproj, builds/win32/vc2005/index.html,
+	builds/win32/vc2008/freetype.vcproj, builds/win32/vc2008/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualc/index.html, builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.4.1/2.4.2/, s/241/242/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 2.
+
+	* builds/unix/configure.raw (version_info): Set to 12:0:6.
+
+2010-08-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #30648.
+
+	* src/base/ftobjs.c (FT_Done_Library): Specify the order of font
+	drivers during the face closing process.  Type42 faces should be
+	closed before TrueType faces, because a Type42 face refers to
+	another internal TrueType face which is created from sfnt[] array on
+	the memory.
+
+2010-08-06  Yuriy Kaminskiy  <yumkam@mail.ru>
+
+	[raster] Fix valgrind warning.
+
+	* src/raster/ftraster.c (Decompose_Curve) <default>: Access point[0]
+	only if we don't hit `limit'.
+
+2010-08-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #30658.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check that the total
+	length of collected POST segments does not overrun the allocated
+	buffer.
+
+2010-08-06  Yuriy Kaminskiy  <yumkam@mail.ru>
+
+	Fix conditional usage of FT_MulFix_i386.
+	With -ansi flag, gcc does not define `i386', only `__i386__'.
+
+	* include/freetype/config/ftconfig.h, builds/unix/ftconfig.in:
+	s/i386/__i386__/.
+
+2010-08-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30657.
+
+	* src/truetype/ttinterp.c (BOUNDSL): New macro.
+	Change `BOUNDS' to `BOUNDSL' where appropriate.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Fix type of
+	`cvtSize'.
+
+2010-08-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30656.
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Protect against negative
+	string_size.
+	Fix comparison.
+
+2010-08-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cff] Don't use any values in decoder after parsing error.
+
+	* src/cff/cffgload.c (cff_slot_load): Skip the evaluations
+	of the values in decoder, if cff_decoder_parse_charstrings()
+	returns any error.
+
+2010-08-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30644.
+
+	* src/base/ftstream.c (FT_Stream_EnterFrame): Fix comparison.
+
+2010-08-04  Werner Lemberg  <wl@gnu.org>
+
+	`make devel' fails if FT_CONFIG_OPTION_OLD_INTERNALS is set.
+
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
+2010-08-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cff] Improve stack overflow test.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Check stack
+	after execution of operations too.
+
+2010-07-18  Werner Lemberg  <wl@gnu.org>
+
+	Add reference counters and to FT_Library and FT_Face objects.
+
+	* include/freetype/freetype.h (FT_Reference_Face): New function.
+	* include/freetype/ftmodapi.h (FT_Rererence_Library): New function.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec,
+	FT_LibraryRec): New field `refcount'.
+
+	* src/base/ftobjs.c (FT_Open_Face, FT_New_Library): Handle
+	`refcount'.
+	(FT_Reference_Face, FT_Reference_Library): Implement new functions.
+	(FT_Done_Face, FT_Done_Library): Handle `refcount'.
+
+	* docs/CHANGES: Updated.
+
 2010-07-18  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.1 released.
