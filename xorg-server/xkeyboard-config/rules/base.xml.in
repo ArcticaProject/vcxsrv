@@ -1879,35 +1879,35 @@
         <variant>
           <configItem>
             <name>tifinagh-alt</name>
-            <_description>Tifinagh Alternative</_description>
+            <_description>Tifinagh alternative</_description>
             <languageList><iso639Id>ber</iso639Id></languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>tifinagh-alt-phonetic</name>
-            <_description>Tifinagh Alternative Phonetic</_description>
+            <_description>Tifinagh alternative phonetic</_description>
             <languageList><iso639Id>ber</iso639Id></languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>tifinagh-extended</name>
-            <_description>Tifinagh Extended</_description>
+            <_description>Tifinagh extended</_description>
             <languageList><iso639Id>ber</iso639Id></languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>tifinagh-phonetic</name>
-            <_description>Tifinagh Phonetic</_description>
+            <_description>Tifinagh phonetic</_description>
             <languageList><iso639Id>ber</iso639Id></languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>tifinagh-extended-phonetic</name>
-            <_description>Tifinagh Extended Phonetic</_description>
+            <_description>Tifinagh extended phonetic</_description>
             <languageList><iso639Id>ber</iso639Id></languageList>
           </configItem>
         </variant>
@@ -2632,6 +2632,13 @@
           <configItem>
             <name>qwerty</name>
             <_description>qwerty</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>ru</name>
+            <_description>Russian phonetic</_description>
+            <languageList><iso639Id>rus</iso639Id></languageList>
           </configItem>
         </variant>
       </variantList>
