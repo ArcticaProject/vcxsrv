@@ -564,7 +564,7 @@ xcb_generic_error_t *xcb_request_check(xcb_connection_t *c, xcb_void_cookie_t co
     void *reply;
     if(c->has_error)
         return 0;
-    if(XCB_SEQUENCE_COMPARE_32(cookie.sequence,>,c->in.request_expected)
+    if(XCB_SEQUENCE_COMPARE_32(cookie.sequence,>=,c->in.request_expected)
        && XCB_SEQUENCE_COMPARE_32(cookie.sequence,>,c->in.request_completed))
     {
         free(xcb_get_input_focus_reply(c, xcb_get_input_focus(c), &ret));
