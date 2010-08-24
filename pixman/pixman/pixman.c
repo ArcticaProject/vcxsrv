@@ -787,14 +787,17 @@ analyze_extent (pixman_image_t *image, int x, int y,
     if (!compute_sample_extents (transform, &ex, x, y, x_off, y_off, width, height))
 	return FALSE;
 
-    /* Check whether the non-expanded, transformed extent is entirely within
-     * the source image, and set the FAST_PATH_SAMPLES_COVER_CLIP if it is.
-     */
-    ex = *extents;
-    if (compute_sample_extents (transform, &ex, x, y, x_off, y_off, width, height))
+    if (image->type == BITS)
     {
-	if (ex.x1 >= 0 && ex.y1 >= 0 && ex.x2 <= image->bits.width && ex.y2 <= image->bits.height)
-	    *flags |= FAST_PATH_SAMPLES_COVER_CLIP;
+	/* Check whether the non-expanded, transformed extent is entirely within
+	 * the source image, and set the FAST_PATH_SAMPLES_COVER_CLIP if it is.
+	 */
+	ex = *extents;
+	if (compute_sample_extents (transform, &ex, x, y, x_off, y_off, width, height))
+	{
+	    if (ex.x1 >= 0 && ex.y1 >= 0 && ex.x2 <= image->bits.width && ex.y2 <= image->bits.height)
+		*flags |= FAST_PATH_SAMPLES_COVER_CLIP;
+	}
     }
 
     return TRUE;

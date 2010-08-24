@@ -40,7 +40,7 @@ typedef struct _X11XCBPrivate {
 
 /* xcb_disp.c */
 
-int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *screenp);
+int _XConnectXCB(Display *dpy, _Xconst char *display, int *screenp);
 void _XFreeX11XCBStructure(Display *dpy);
 
 #endif /* XXCBINT_H */

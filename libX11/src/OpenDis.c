@@ -70,7 +70,6 @@ XOpenDisplay (
 	int j, k;			/* random iterator indexes */
 	char *display_name;		/* pointer to display name */
 	char *setup = NULL;		/* memory allocated at startup */
-	char *fullname = NULL;		/* expanded name of display */
 	int iscreen;			/* screen number */
 	xConnSetupPrefix prefix;	/* prefix information */
 	int vendorlen;			/* length of vendor string */
@@ -118,13 +117,17 @@ XOpenDisplay (
 		return(NULL);
 	}
 
+	if ((dpy->display_name = strdup(display_name)) == NULL) {
+		OutOfMemory(dpy);
+		return(NULL);
+	}
+
 /*
  * Call the Connect routine to get the transport connection object.
- * If NULL is returned, the connection failed. The connect routine
- * will set fullname to point to the expanded name.
+ * If NULL is returned, the connection failed.
  */
 
-	if(!_XConnectXCB(dpy, display, &fullname, &iscreen)) {
+	if(!_XConnectXCB(dpy, display, &iscreen)) {
 		/* Try falling back on other transports if no transport specified */
 		const char *slash = strrchr(display_name, '/');
 		if(slash == NULL) {
@@ -136,14 +139,13 @@ XOpenDisplay (
 			if(buf) {
 				for(s = protocols; buf && *s; s++) {
 					snprintf(buf, buf_size, "%s/%s", *s, display_name);
-					if(_XConnectXCB(dpy, buf, &fullname, &iscreen))
+					if(_XConnectXCB(dpy, buf, &iscreen))
 						goto fallback_success;
 				}
 				Xfree(buf);
 			}
 		}
 
-		dpy->display_name = fullname;
 		OutOfMemory(dpy);
 		return NULL;
 	}
@@ -153,7 +155,6 @@ fallback_success:
 	 * Initialize pointers to NULL so that XFreeDisplayStructure will
 	 * work if we run out of memory before we finish initializing.
 	 */
-	dpy->display_name	= fullname;
 	dpy->keysyms		= (KeySym *) NULL;
 	dpy->modifiermap	= NULL;
 	dpy->lock_meaning	= NoSymbol;
@@ -315,7 +316,7 @@ fallback_success:
 	if (!mask)
 	{
 	    fprintf (stderr, "Xlib: connection to \"%s\" invalid setup\n",
-		     fullname);
+		     dpy->display_name);
 	    OutOfMemory(dpy);
 	    return (NULL);
 	}
@@ -679,8 +680,7 @@ void _XFreeDisplayStructure(Display *dpy)
             Xfree ((char *)dpy->pixmap_format);
 	    }
 
-	if (dpy->display_name)
-	   Xfree (dpy->display_name);
+	free(dpy->display_name);
 	if (dpy->vendor)
 	   Xfree (dpy->vendor);
 

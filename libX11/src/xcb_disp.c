@@ -54,11 +54,10 @@ void XSetAuthorization(char *name, int namelen, char *data, int datalen)
 	_XUnlockMutex(_Xglobal_lock);
 }
 
-int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *screenp)
+int _XConnectXCB(Display *dpy, _Xconst char *display, int *screenp)
 {
 	char *host;
 	int n = 0;
-	int len;
 	xcb_connection_t *c;
 
 	dpy->fd = -1;
@@ -69,20 +68,7 @@ int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *scr
 
 	if(!xcb_parse_display(display, &host, &n, screenp))
 		return 0;
-
-	len = strlen(host) + (1 + 20 + 1 + 20 + 1);
-	*fullnamep = Xmalloc(len);
-	if (!*fullnamep) {
-		free(host);
-		return 0;
-	}
-
-#ifdef HAVE_LAUNCHD
-	if(strncmp(host, "/tmp/launch", 11) == 0)
-		snprintf(*fullnamep, len, "%s:%d", host, n);
-	else
-#endif
-		snprintf(*fullnamep, len, "%s:%d.%d", host, n, *screenp);
+	/* host and n are unused, but xcb_parse_display requires them */
 	free(host);
 
 	_XLockMutex(_Xglobal_lock);
