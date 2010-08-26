@@ -49,6 +49,11 @@
 
 #include <X11/Xtrans/Xtrans.h>
 
+/* SHUT_RDWR is fairly recent and is not available on all platforms */
+#if !defined(SHUT_RDWR)
+#define SHUT_RDWR 2
+#endif
+
 typedef struct {
     uint8_t  status;
     uint8_t  pad0[5];
@@ -289,6 +294,9 @@ void xcb_disconnect(xcb_connection_t *c)
         return;
 
     free(c->setup);
+
+    /* disallow further sends and receives */
+    shutdown(c->fd, SHUT_RDWR);
     close(c->fd);
 
     pthread_mutex_destroy(&c->iolock);
