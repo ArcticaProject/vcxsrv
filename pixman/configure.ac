@@ -178,7 +178,6 @@ AC_SUBST(PIXMAN_VERSION_MICRO)
 AC_SUBST(LT_VERSION_INFO)
 
 # Check for dependencies
-#PKG_CHECK_MODULES(DEP, x11)
 
 PIXMAN_CHECK_CFLAG([-Wall])
 PIXMAN_CHECK_CFLAG([-fno-strict-aliasing])
@@ -585,11 +584,18 @@ AC_ARG_ENABLE(gtk,
    [enable_gtk=$enableval], [enable_gtk=auto])
 
 PKG_PROG_PKG_CONFIG
-if test $enable_gtk = auto ; then
-   PKG_CHECK_EXISTS([gtk+-2.0], [enable_gtk=yes], [enable_gtk=no])
-fi
+
 if test $enable_gtk = yes ; then
-   PKG_CHECK_MODULES(GTK, [gtk+-2.0])
+   AC_CHECK_LIB([pixman-1], [pixman_version_string])
+   PKG_CHECK_MODULES(GTK, [gtk+-2.0 pixman-1])
+fi
+
+if test $enable_gtk = auto ; then
+   AC_CHECK_LIB([pixman-1], [pixman_version_string], [enable_gtk=auto], [enable_gtk=no])
+fi
+
+if test $enable_gtk = auto ; then
+   PKG_CHECK_MODULES(GTK, [gtk+-2.0 pixman-1], [enable_gtk=yes], [enable_gtk=no])
 fi
 
 AM_CONDITIONAL(HAVE_GTK, [test "x$enable_gtk" = xyes])

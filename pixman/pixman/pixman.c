@@ -501,7 +501,7 @@ typedef struct
 
 PIXMAN_DEFINE_THREAD_LOCAL (cache_t, fast_path_cache);
 
-static force_inline void
+static force_inline pixman_bool_t
 lookup_composite_function (pixman_op_t			op,
 			   pixman_format_code_t		src_format,
 			   uint32_t			src_flags,
@@ -577,7 +577,7 @@ lookup_composite_function (pixman_op_t			op,
 	    ++info;
 	}
     }
-    return;
+    return FALSE;
 
 update_cache:
     if (i)
@@ -595,6 +595,8 @@ update_cache:
 	cache->cache[0].fast_path.dest_flags = dest_flags;
 	cache->cache[0].fast_path.func = *out_func;
     }
+
+    return TRUE;
 }
 
 static pixman_bool_t
@@ -803,19 +805,38 @@ analyze_extent (pixman_image_t *image, int x, int y,
     return TRUE;
 }
 
-static void
-do_composite (pixman_op_t	       op,
-	      pixman_image_t	      *src,
-	      pixman_image_t	      *mask,
-	      pixman_image_t	      *dest,
-	      int		       src_x,
-	      int		       src_y,
-	      int		       mask_x,
-	      int		       mask_y,
-	      int		       dest_x,
-	      int		       dest_y,
-	      int		       width,
-	      int		       height)
+/*
+ * Work around GCC bug causing crashes in Mozilla with SSE2
+ *
+ * When using -msse, gcc generates movdqa instructions assuming that
+ * the stack is 16 byte aligned. Unfortunately some applications, such
+ * as Mozilla and Mono, end up aligning the stack to 4 bytes, which
+ * causes the movdqa instructions to fail.
+ *
+ * The __force_align_arg_pointer__ makes gcc generate a prologue that
+ * realigns the stack pointer to 16 bytes.
+ *
+ * On x86-64 this is not necessary because the standard ABI already
+ * calls for a 16 byte aligned stack.
+ *
+ * See https://bugs.freedesktop.org/show_bug.cgi?id=15693
+ */
+#if defined (USE_SSE2) && defined(__GNUC__) && !defined(__x86_64__) && !defined(__amd64__)
+__attribute__((__force_align_arg_pointer__))
+#endif
+PIXMAN_EXPORT void
+pixman_image_composite32 (pixman_op_t      op,
+                          pixman_image_t * src,
+                          pixman_image_t * mask,
+                          pixman_image_t * dest,
+                          int32_t          src_x,
+                          int32_t          src_y,
+                          int32_t          mask_x,
+                          int32_t          mask_y,
+                          int32_t          dest_x,
+                          int32_t          dest_y,
+                          int32_t          width,
+                          int32_t          height)
 {
     pixman_format_code_t src_format, mask_format, dest_format;
     uint32_t src_flags, mask_flags, dest_flags;
@@ -830,6 +851,11 @@ do_composite (pixman_op_t	       op,
     pixman_bool_t need_workaround;
     pixman_implementation_t *imp;
     pixman_composite_func_t func;
+
+    _pixman_image_validate (src);
+    if (mask)
+	_pixman_image_validate (mask);
+    _pixman_image_validate (dest);
 
     src_format = src->common.extended_format_code;
     src_flags = src->common.flags;
@@ -907,20 +933,21 @@ do_composite (pixman_op_t	       op,
     if (op == PIXMAN_OP_DST)
 	goto out;
 
-    lookup_composite_function (op,
-			       src_format, src_flags,
-			       mask_format, mask_flags,
-			       dest_format, dest_flags,
-			       &imp, &func);
-
-    walk_region_internal (imp, op,
-			  src, mask, dest,
-			  src_x, src_y, mask_x, mask_y,
-			  dest_x, dest_y,
-			  width, height,
-			  (src_flags & FAST_PATH_SIMPLE_REPEAT),
-			  (mask_flags & FAST_PATH_SIMPLE_REPEAT),
-			  &region, func);
+    if (lookup_composite_function (op,
+				   src_format, src_flags,
+				   mask_format, mask_flags,
+				   dest_format, dest_flags,
+				   &imp, &func))
+    {
+	walk_region_internal (imp, op,
+			      src, mask, dest,
+			      src_x, src_y, mask_x, mask_y,
+			      dest_x, dest_y,
+			      width, height,
+			      (src_flags & FAST_PATH_SIMPLE_REPEAT),
+			      (mask_flags & FAST_PATH_SIMPLE_REPEAT),
+			      &region, func);
+    }
 
 out:
     if (need_workaround)
@@ -949,52 +976,6 @@ pixman_image_composite (pixman_op_t      op,
 {
     pixman_image_composite32 (op, src, mask, dest, src_x, src_y, 
                               mask_x, mask_y, dest_x, dest_y, width, height);
-}
-
-/*
- * Work around GCC bug causing crashes in Mozilla with SSE2
- *
- * When using -msse, gcc generates movdqa instructions assuming that
- * the stack is 16 byte aligned. Unfortunately some applications, such
- * as Mozilla and Mono, end up aligning the stack to 4 bytes, which
- * causes the movdqa instructions to fail.
- *
- * The __force_align_arg_pointer__ makes gcc generate a prologue that
- * realigns the stack pointer to 16 bytes.
- *
- * On x86-64 this is not necessary because the standard ABI already
- * calls for a 16 byte aligned stack.
- *
- * See https://bugs.freedesktop.org/show_bug.cgi?id=15693
- */
-#if defined (USE_SSE2) && defined(__GNUC__) && !defined(__x86_64__) && !defined(__amd64__)
-__attribute__((__force_align_arg_pointer__))
-#endif
-PIXMAN_EXPORT void
-pixman_image_composite32 (pixman_op_t      op,
-                          pixman_image_t * src,
-                          pixman_image_t * mask,
-                          pixman_image_t * dest,
-                          int32_t          src_x,
-                          int32_t          src_y,
-                          int32_t          mask_x,
-                          int32_t          mask_y,
-                          int32_t          dest_x,
-                          int32_t          dest_y,
-                          int32_t          width,
-                          int32_t          height)
-{
-    _pixman_image_validate (src);
-    if (mask)
-	_pixman_image_validate (mask);
-    _pixman_image_validate (dest);
-
-    do_composite (op,
-		  src, mask, dest,
-		  src_x, src_y,
-		  mask_x, mask_y,
-		  dest_x, dest_y,
-		  width, height);
 }
 
 PIXMAN_EXPORT pixman_bool_t
