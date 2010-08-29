@@ -376,17 +376,6 @@ AC_ARG_ENABLE(xkb,
                 [Disable XKB support *EXPERIMENTAL*]),
               [XKB=$enableval],[XKB=yes])
 
-AC_ARG_ENABLE(man-pages,
-	      AC_HELP_STRING([--enable-man-pages=section],
-			     [Choose manual section for installing man pages]),
-		[LIBMAN=$enableval],[LIBMAN=yes])
-
-if test "x$LIBMAN" != "xyes"; then
-	LIB_MAN_SUFFIX=$LIBMAN
-fi
-
-AM_CONDITIONAL(MANPAGES, [ test x$LIBMAN '!=' xno ])
-
 AM_CONDITIONAL(XKB, [ test x$XKB = xyes ])
 if test x"$XKB" = "xyes"; then
    XKBPROTO_REQUIRES="kbproto"
@@ -544,11 +533,6 @@ AC_OUTPUT([Makefile
 	   x11.pc
 	   x11-xcb.pc])
 
-man_pages_suffix=$LIB_MAN_SUFFIX
-if test -z "$man_pages_suffix"; then
-    man_pages_suffix=none
-fi
-
 echo ""
 echo "X11 will be built with the following settings:"
 echo " Loadable i18n module support:            "$XLIB_LOADABLE_I18N
@@ -561,7 +545,7 @@ echo " Internationalization support:            "$XLOCALE
 echo " XF86BigFont support:                     "$XF86BIGFONT
 echo " XKB support:                             "$XKB
 echo " XLOCALEDIR environment variable support: "$ENABLE_XLOCALEDIR
-echo " Manual pages suffix:                     "$man_pages_suffix
+echo " Manual pages suffix:                     "$LIB_MAN_SUFFIX
 echo " Compose table cache enabled:             "$COMPOSECACHE
 echo " Functional specs building enabled:       "$build_specs
 echo ""

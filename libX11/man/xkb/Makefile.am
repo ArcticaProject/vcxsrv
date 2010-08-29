@@ -202,9 +202,7 @@ libman_PRE = \
 	XkbUpdateMapFromCore.man                \
 	XkbVirtualModsToReal.man                
 
-if MANPAGES
 libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@)
-endif
 
 EXTRA_DIST = $(libman_PRE)
 
