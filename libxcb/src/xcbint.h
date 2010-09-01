@@ -28,7 +28,6 @@
 #ifndef __XCBINT_H
 #define __XCBINT_H
 
-#include <unistd.h>
 #include "bigreq.h"
 
 #ifdef HAVE_CONFIG_H

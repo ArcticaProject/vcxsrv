@@ -25,18 +25,19 @@
 
 /* Authorization systems for the X protocol. */
 
-#ifdef WIN32
-#define INCL_WINSOCK_API_TYPEDEFS 1 /* Needed for LPFN_GETPEERNAME */
-#endif
-
 #include <assert.h>
 #include <X11/Xauth.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/un.h>
 #include <sys/param.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
+#include "xcb_windefs.h"
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/un.h>
+#endif /* _WIN32 */
 
 #include "xcb.h"
 #include "xcbint.h"

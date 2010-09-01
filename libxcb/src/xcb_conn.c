@@ -30,12 +30,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#ifdef _MSC_VER
-#include <X11/Xwinsock.h>
-#define STDERR_FILENO stderr
-#else
-#include <netinet/in.h>
-#endif
 #include <fcntl.h>
 #include <errno.h>
 
@@ -43,9 +37,15 @@
 #include "xcbint.h"
 #if USE_POLL
 #include <poll.h>
-#else
+#elif !defined _WIN32
 #include <sys/select.h>
 #endif
+
+#ifdef _WIN32
+#include "xcb_windefs.h"
+#else
+#include <netinet/in.h>
+#endif /* _WIN32 */
 
 #include <X11/Xtrans/Xtrans.h>
 
@@ -62,49 +62,18 @@ typedef struct {
 
 static const int error_connection = 1;
 
-#ifdef _MSC_VER
-#undef close
-#define close(fd) closesocket(fd)
-
-size_t writev(int fildes, const struct iovec *iov, int iovcnt)
-{
-  int i, r;
-  char *p;
-  size_t l, sum;
-
-  /* We should buffer */
-  sum= 0;
-  for (i= 0; i<iovcnt; i++)
-  {
-    p= iov[i].iov_base;
-    l= iov[i].iov_len;
-    while (l > 0)
-    {
-      r= send(fildes, p, l, 0);
-      if (r <= 0)
-      {
-        errno =WSAGetLastError();
-        if(errno == WSAEWOULDBLOCK)
-          errno = EAGAIN;
-        if (sum)
-          return sum;
-        else
-          return r;
-      }
-      p += r;
-      l -= r;
-      sum += r;
-    }
-  }
-  return sum;
-}
-#endif
-
 static int set_fd_flags(const int fd)
 {
-#ifdef _MSC_VER
-    unsigned long arg = 1;
-    int ret = ioctlsocket (fd, FIONBIO, &arg);
+/* Win32 doesn't have file descriptors and the fcntl function. This block sets the socket in non-blocking mode */
+
+#ifdef _WIN32
+   u_long iMode = 1; /* non-zero puts it in non-blocking mode, 0 in blocking mode */   
+   int ret;
+
+   ret = ioctlsocket(fd, FIONBIO, &iMode);
+   if(ret != 0) 
+       return 0;
+   return 1;
 #else
     int flags = fcntl(fd, F_GETFL, 0);
     if(flags == -1)
@@ -114,8 +83,8 @@ static int set_fd_flags(const int fd)
         return 0;
     if(fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
         return 0;
-#endif
     return 1;
+#endif /* _WIN32 */
 }
 
 static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
@@ -207,10 +176,39 @@ static int read_setup(xcb_connection_t *c)
 static int write_vec(xcb_connection_t *c, struct iovec **vector, int *count)
 {
     int n;
+
+#ifdef _WIN32
+    int i = 0;
+    int ret = 0,err = 0;
+    struct iovec *vec;
+    n = 0;
+    assert(!c->out.queue_len);
+
+    /* Could use the WSASend win32 function for scatter/gather i/o but setting up the WSABUF struct from
+       an iovec would require more work and I'm not sure of the benefit....works for now */
+    vec = *vector;
+    while(i < *count)
+    {         	 
+         ret = send(c->fd,vec->iov_base,vec->iov_len,0);	 
+         if(ret == SOCKET_ERROR)
+         {
+             err  = WSAGetLastError();
+             if(err == WSAEWOULDBLOCK)
+             {
+                 return 1;
+             }
+         }
+         n += ret;
+         vec++;
+         i++;
+    }
+#else
     assert(!c->out.queue_len);
     n = writev(c->fd, *vector, *count);
     if(n < 0 && errno == EAGAIN)
         return 1;
+#endif /* _WIN32 */    
+
     if(n <= 0)
     {
         _xcb_conn_shutdown(c);

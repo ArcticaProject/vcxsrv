@@ -28,8 +28,6 @@
 #ifndef __XCBEXT_H
 #define __XCBEXT_H
 
-#include <unistd.h>
-
 #include "xcb.h"
 
 #ifdef __cplusplus

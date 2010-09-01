@@ -35,19 +35,13 @@
 #include <stdint.h>
 #endif
 
-#ifndef _MSC_VER
+#ifndef _WIN32
 #include <sys/uio.h>
 #else
-#define HANDLE void *
-typedef int pid_t;
+#include "xcb_windefs.h"
 #endif
 #include <pthread.h>
 
-#ifdef _MSC_VER
-#undef HANDLE
-typedef unsigned uint32_t;
-typedef int int32_t;
-#endif
 
 #ifdef __cplusplus
 extern "C" {
