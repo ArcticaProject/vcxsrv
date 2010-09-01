@@ -37,13 +37,24 @@
 #include "xcbint.h"
 #if USE_POLL
 #include <poll.h>
-#else
-#include <sys/select.h>
 #endif
+#ifndef _WIN32
+#include <sys/select.h>
+#include <sys/socket.h>
+#endif
+
+#ifdef _WIN32
+#include "xcb_windefs.h"
+#endif /* _WIN32 */
 
 #define XCB_ERROR 0
 #define XCB_REPLY 1
 #define XCB_XGE_EVENT 35
+
+/* required for compiling for Win32 using MinGW */
+#ifndef MSG_WAITALL
+#define MSG_WAITALL 0
+#endif
 
 struct event_list {
     xcb_generic_event_t *event;
@@ -255,10 +266,14 @@ static int read_block(const int fd, void *buf, const ssize_t len)
     int done = 0;
     while(done < len)
     {
-        int ret = read(fd, ((char *) buf) + done, len - done);
+        int ret = recv(fd, ((char *) buf) + done, len - done,MSG_WAITALL);
         if(ret > 0)
             done += ret;
+#ifndef _WIN32
         if(ret < 0 && errno == EAGAIN)
+#else
+        if(ret == SOCKET_ERROR && WSAGetLastError() == WSAEWOULDBLOCK)
+#endif /* !_Win32 */
         {
 #if USE_POLL
             struct pollfd pfd;
@@ -272,10 +287,13 @@ static int read_block(const int fd, void *buf, const ssize_t len)
             fd_set fds;
             FD_ZERO(&fds);
             FD_SET(fd, &fds);
+
+	    /* Initializing errno here makes sure that for Win32 this loop will execute only once */
+	    errno = 0;  
 	    do {
 		ret = select(fd + 1, &fds, 0, 0, 0);
 	    } while (ret == -1 && errno == EINTR);
-#endif
+#endif /* USE_POLL */
         }
         if(ret <= 0)
             return ret;
@@ -663,12 +681,16 @@ void _xcb_in_replies_done(xcb_connection_t *c)
 
 int _xcb_in_read(xcb_connection_t *c)
 {
-    int n = read(c->fd, c->in.queue + c->in.queue_len, sizeof(c->in.queue) - c->in.queue_len);
+    int n = recv(c->fd, c->in.queue + c->in.queue_len, sizeof(c->in.queue) - c->in.queue_len,MSG_WAITALL);
     if(n > 0)
         c->in.queue_len += n;
     while(read_packet(c))
         /* empty */;
+#ifndef _WIN32
     if((n > 0) || (n < 0 && errno == EAGAIN))
+#else
+    if((n > 0) || (n < 0 && WSAGetLastError() == WSAEWOULDBLOCK))
+#endif /* !_WIN32 */
         return 1;
     _xcb_conn_shutdown(c);
     return 0;

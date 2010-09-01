@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <netinet/in.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -38,9 +37,15 @@
 #include "xcbint.h"
 #if USE_POLL
 #include <poll.h>
-#else
+#elif !defined _WIN32
 #include <sys/select.h>
 #endif
+
+#ifdef _WIN32
+#include "xcb_windefs.h"
+#else
+#include <netinet/in.h>
+#endif /* _WIN32 */
 
 /* SHUT_RDWR is fairly recent and is not available on all platforms */
 #if !defined(SHUT_RDWR)
@@ -57,6 +62,17 @@ static const int error_connection = 1;
 
 static int set_fd_flags(const int fd)
 {
+/* Win32 doesn't have file descriptors and the fcntl function. This block sets the socket in non-blocking mode */
+
+#ifdef _WIN32
+   u_long iMode = 1; /* non-zero puts it in non-blocking mode, 0 in blocking mode */   
+   int ret = 0;
+
+   ret = ioctlsocket(fd, FIONBIO, &iMode);
+   if(ret != 0) 
+       return 0;
+   return 1;
+#else
     int flags = fcntl(fd, F_GETFL, 0);
     if(flags == -1)
         return 0;
@@ -66,6 +82,7 @@ static int set_fd_flags(const int fd)
     if(fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
         return 0;
     return 1;
+#endif /* _WIN32 */
 }
 
 static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
@@ -158,9 +175,37 @@ static int write_vec(xcb_connection_t *c, struct iovec **vector, int *count)
 {
     int n;
     assert(!c->out.queue_len);
+
+#ifdef _WIN32
+    int i = 0;
+    int ret = 0,err = 0;
+    struct iovec *vec;
+    n = 0;
+
+    /* Could use the WSASend win32 function for scatter/gather i/o but setting up the WSABUF struct from
+       an iovec would require more work and I'm not sure of the benefit....works for now */
+    vec = *vector;
+    while(i < *count)
+    {         	 
+         ret = send(c->fd,vec->iov_base,vec->iov_len,0);	 
+         if(ret == SOCKET_ERROR)
+         {
+             err  = WSAGetLastError();
+             if(err == WSAEWOULDBLOCK)
+             {
+                 return 1;
+             }
+         }
+         n += ret;
+         *vec++;
+         i++;
+    }
+#else
     n = writev(c->fd, *vector, *count);
     if(n < 0 && errno == EAGAIN)
         return 1;
+#endif /* _WIN32 */    
+
     if(n <= 0)
     {
         _xcb_conn_shutdown(c);
