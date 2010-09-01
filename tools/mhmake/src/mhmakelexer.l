@@ -447,6 +447,11 @@ load_makefile {
 <IF>[ \t\r]*[a-zA-Z0-9_]+[ \t\r]*\n {
   unput( '\n' );
   m_IndentStack.push(0);
+#ifndef WIN32
+  int lastidx=strlen((const char *)yytext)-1;
+  if (yytext[lastidx]=='\r')
+    yytext[lastidx]='\0';
+#endif
   string Val=GetParser()->ExpandVar((const char *)yytext);
   if (Val.empty() || Val=="0")
   {

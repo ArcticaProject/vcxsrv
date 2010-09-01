@@ -104,7 +104,7 @@ protected:
 
   static mh_time_t m_sBuildTime;
 private:
-  string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) const;
+  string ResolveExpression(const string &InExpr,string &Rest) const;
 
 public:
 #ifdef _DEBUG
