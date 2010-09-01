@@ -337,11 +337,13 @@ load_makefile {
 ^[ \t]*if[ \t]*\\[ \t\r]*\n[ \t]* {
   BEGIN(IF);
   m_Line++;
+  m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
 }
 
 ^[ \t]*if[ \t]+ {
   BEGIN(IF);
+  m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
 }
 
@@ -417,12 +419,12 @@ load_makefile {
   }
 }
 
-<IFEQ,IFNEQ>[ \t]*\\[ \t\r]*\n[ \t]* { m_Line++; m_curtoken += g_SpaceString;}
+<IF,IFEQ,IFNEQ>[ \t]*\\[ \t\r]*\n[ \t]* { m_Line++; m_curtoken += g_SpaceString;}
 
-<IFEQ,IFNEQ>\r    /* skip */
+<IF,IFEQ,IFNEQ>\r    /* skip */
 
-<IFEQ,IFNEQ>[^\\\r\n]+ |
-<IFEQ,IFNEQ>\\                        { m_curtoken += (const char *)yytext; }
+<IF,IFEQ,IFNEQ>[^\\\r\n]+ |
+<IF,IFEQ,IFNEQ>\\                        { m_curtoken += (const char *)yytext; }
 
  /*****************************************************************************/
 <IFNEQ>\n {
@@ -442,10 +444,8 @@ load_makefile {
 }
 
  /*****************************************************************************/
-<IF,IFDEF,IFNDEF>[ \t\r]*  /* skip */
-
- /*---------------------------------------------------------------------------*/
-<IF>[a-zA-Z0-9_]+ {
+<IF>[ \t\r]*[a-zA-Z0-9_]+[ \t\r]*\n {
+  unput( '\n' );
   m_IndentStack.push(0);
   string Val=GetParser()->ExpandVar((const char *)yytext);
   if (Val.empty() || Val=="0")
@@ -460,6 +460,26 @@ load_makefile {
     BEGIN(INITIAL);
   }
 }
+
+ /*---------------------------------------------------------------------------*/
+<IF>\n {
+  unput( yytext[0] );
+  m_IndentStack.push(0);
+  if (GetParser()->IsExprTrue(m_curtoken))
+  {
+    PRINTF(("%s %d: Not Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    BEGIN(INITIAL);
+  }
+  else
+  {
+    PRINTF(("%s %d: Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    m_IndentSkip=m_IndentStack.size();
+    BEGIN(SKIPUNTILELSEORENDIF);
+  }
+}
+
+ /*****************************************************************************/
+<IFDEF,IFNDEF>[ \t\r]*  /* skip */
 
  /*---------------------------------------------------------------------------*/
 <IFDEF>[a-zA-Z0-9_]+ {
@@ -523,7 +543,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-<SKIPUNTILELSEORENDIF>\n[ ]*if(def|ndef|eq|neq) {
+<SKIPUNTILELSEORENDIF>\n[ ]*if(def|ndef|eq|neq)? {
   m_Line++;
   m_IndentStack.push(0);
   PRINTF(("%s %d: %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext+1,m_IndentStack.size()));

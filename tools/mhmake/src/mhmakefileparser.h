@@ -103,6 +103,8 @@ protected:
   set< const fileinfo* , less_fileinfo > m_Targets; // List of targets that are build by this makefile
 
   static mh_time_t m_sBuildTime;
+private:
+  string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) const;
 
 public:
 #ifdef _DEBUG
@@ -228,6 +230,7 @@ public:
   /* Functions to handle variables */
   bool IsDefined(const string &Var) const;
   bool IsEqual(const string &EqualExpr) const;
+  bool IsExprTrue(const string &EqualExpr) const;
   string ExpandExpression(const string &Expr) const;
   string ExpandMacro(const string &Expr) const;
   string ExpandVar(const string &Var) const;

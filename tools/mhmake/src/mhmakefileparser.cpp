@@ -100,6 +100,10 @@ static inline size_t SkipMakeExpr(const string &Expr,size_t i)
     {
       i=SkipMakeExpr(Expr,i);
     }
+#ifdef _DEBUG
+    if (i>=Expr.length())
+      throw(string(") not found in ")+Expr);
+#endif
     Char=Expr[i++];
   }
   return i;
@@ -1179,5 +1183,137 @@ void mhmakefileparser::CreateUSED_ENVVARS()
   }
 
   m_Variables[USED_ENVVARS]=Val;
+}
+
+static string s_TrueString("1");
+static string s_FalseString("0");
+
+static string AndExpression(const string &First, const string &Second)
+{
+  if (First.empty() || First==s_FalseString)
+  {
+    return g_EmptyString;
+  }
+  else
+  {
+    return Second.empty() || Second==s_FalseString ? g_EmptyString : s_TrueString;
+  }
+}
+
+static string OrExpression(const string &First, const string &Second)
+{
+  if (First.empty() || First==s_FalseString)
+  {
+    return Second.empty() || Second==s_FalseString ? g_EmptyString : s_TrueString;
+  }
+  else
+  {
+    return s_TrueString;
+  }
+}
+
+string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) const
+{
+  unsigned i=0;
+  string Ret;
+  string Expr=InExpr;
+
+  Rest=g_EmptyString;
+
+  while (i<Expr.length())
+  {
+    while (strchr(" \t\r",Expr[i])) i++;
+    switch (Expr[i])
+    {
+    case '!':
+      if (Expr[i+1]!='=')
+      {
+        Ret=ResolveExpression(Expr.substr(i+1),Expr);
+        Ret = Ret.empty() || Ret==s_FalseString ? s_TrueString : g_EmptyString;
+        i=0;
+      }
+      else
+      {
+        Ret = Ret!=ResolveExpression(Expr.substr(i+2),Expr) ? s_TrueString : g_EmptyString;
+        i=0;
+      }
+      break;
+    case '&':
+      if (Expr[i+1]!='&')
+      {
+        Ret+=Expr[i++];
+      }
+      else
+      {
+        Ret=AndExpression(Ret,ResolveExpression(Expr.substr(i+2),Expr));
+        i=0;
+      }
+      break;
+    case '|':
+      if (Expr[i+1]!='|')
+      {
+        Ret+=Expr[i++];
+      }
+      else
+      {
+        Ret=OrExpression(Ret,ResolveExpression(Expr.substr(i+2),Expr));
+        i=0;
+      }
+      break;
+    case '(':
+      if (Ret=="defined")
+      {
+        Ret=IsDefined(ResolveExpression(Expr.substr(i+1),Expr)) ? s_TrueString : g_EmptyString;
+      }
+      else
+      {
+        Ret+=ResolveExpression(Expr.substr(i+1),Expr);
+      }
+      i=0;
+      break;
+    case ')':
+      Rest=Expr.substr(i+1);
+      return Ret;
+      break;
+    case '"':
+      {
+        i++;
+        while (i<Expr.length())
+        {
+          char Char=Expr[i++];
+          if (Char=='"')
+            break;
+          Ret+=Char;
+        }
+      }
+      break;
+    case '=':
+      if (Expr[i+1]!='=')
+      {
+        Ret+=Expr[i++];
+      }
+      else
+      {
+        Ret = Ret==ResolveExpression(Expr.substr(i+2),Expr) ? s_TrueString : g_EmptyString;
+        i=0;
+      }
+      break;
+    default:
+      Ret+=Expr[i++];
+      break;
+    }
+  }
+  return Ret;
+}
+///////////////////////////////////////////////////////////////////////////////
+bool mhmakefileparser::IsExprTrue(const string &EqualExpr) const
+{
+  string Expr=ExpandExpression(EqualExpr);
+  string Rest;
+  Expr=ResolveExpression(Expr,Rest);
+  if (Expr.empty() || Expr==s_FalseString)
+    return false;
+  else
+    return true;
 }
 

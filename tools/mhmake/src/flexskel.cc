@@ -806,9 +806,6 @@ void YY_@_CLASS::yyunput( YY_@_CHAR c, YY_@_CHAR *yy_bp )
         YY_FATAL_ERROR( "flex scanner push-back overflow" );
   }
 
-  if ( yy_cp > yy_bp && yy_cp[-1] == '\n' )
-    yy_cp[-2] = '\n';
-
   *--yy_cp = c;
 
     /* note: the formal parameter *must* be called "yy_bp" for this
