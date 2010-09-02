@@ -32,7 +32,7 @@ xkb_symbols "level2" {
 // level3 & level3ns provide no-breaking spaces starting from level3
 // This is good for typographers but experience shows many users accidently
 // type no-breaking spaces on the CLI (resulting in errors)
-// Used by fr(latin9)
+// Used by fr(latin9) and lt(std)
 partial
 xkb_symbols "level3" {
   key <SPCE> {
