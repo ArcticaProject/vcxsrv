@@ -913,9 +913,9 @@ string mhmakefileparser::GetFullCommand(string Command)
           }
           if (!bBuild)
           {
-            set< refptr<fileinfo> > Autodeps;
+            deps_t Autodeps;
             GetAutoDeps(pPyFile, Autodeps);
-            set< refptr<fileinfo> >::iterator It=Autodeps.begin();
+            deps_t::iterator It=Autodeps.begin();
             while (It!=Autodeps.end())
             {
               if (pExeFile->GetDate().IsOlder((*It)->GetDate()))
