@@ -196,11 +196,11 @@ xkb_geometry "pc102" {
     shape "TABK" { { [ 28,18] }, { [2,1], [ 26,16] } };
     shape "BKSL" { { [ 28,18] }, { [2,1], [ 26,16] } };
     shape "RTRN" {
-        { [16,0],[ 43,0],[43,37],[2,37],[2,19],[16,19] }, 
-        { [18,1],[ 41,1],[41,36],[4,36],[4,20],[18,20] } };
+        { [0,0], [28,0], [28,37], [5,37], [5,18], [0,18] },
+        { [2,1], [26,1], [26,35], [7,35], [7,16], [2,16] } };
     shape "CAPS" { { [ 33,18] }, { [2,1], [ 31,16] } };
     shape "LFSH" { { [ 25,18] }, { [2,1], [ 23,16] } };
-    shape "RTSH" { { [ 49,18] }, { [2,1], [ 47,16] } };
+    shape "RTSH" { { [ 50,18] }, { [2,1], [ 48,16] } };
     shape "MODK" { { [ 27,18] }, { [2,1], [ 25,16] } };
     shape "SPCE" { { [134,18] }, { [2,1], [132,16] } };
     shape "KP0"  { { [ 37,18] }, { [2,1], [ 35,16] } };
@@ -251,8 +251,8 @@ xkb_geometry "pc102" {
 	    top= 1;
 	    keys { <TLDE>, <AE01>, <AE02>, <AE03>, <AE04>,
 		   <AE05>, <AE06>, <AE07>, <AE08>, <AE09>,
-		   <AE10>, <AE11>, <AE12>, <BKSL>, 
-		   { <BKSP>, color="grey20" }
+		   <AE10>, <AE11>, <AE12>, 
+		   { <BKSP>, "BKSP", color="grey20" }
 	    };
 	};
 	row {
@@ -260,7 +260,7 @@ xkb_geometry "pc102" {
 	    keys { { <TAB>, "TABK", color="grey20" },
 		   <AD01>, <AD02>, <AD03>, <AD04>, <AD05>, 
 		   <AD06>, <AD07>, <AD08>, <AD09>, <AD10>, 
-		   <AD11>, <AD12>, { <RTRN>, -15, "RTRN", color="grey20" }
+		   <AD11>, <AD12>, { <RTRN>, "RTRN", color="grey20" }
 	    };
 	};
 	row {
@@ -268,7 +268,7 @@ xkb_geometry "pc102" {
 	    keys { { <CAPS>, "CAPS", color="grey20" },
 		   <AC01>, <AC02>, <AC03>, <AC04>, <AC05>, 
 		   <AC06>, <AC07>, <AC08>, <AC09>, <AC10>, 
-		   <AC11>
+		   <AC11>, <BKSL>
 	    };
 	};
 	row {
@@ -285,7 +285,7 @@ xkb_geometry "pc102" {
 	    key.color= "grey20";
 	    keys { <LCTL>, { <LALT>, 20 },
 		   { <SPCE>, "SPCE", color="white" },
-		   <RALT>, { <RCTL>, 20 }
+		   <RALT>, { <RCTL>, 21 }
 	    };
 	};
     }; // End of "Alpha" section
@@ -510,6 +510,7 @@ xkb_geometry "pc105" {
     height= 180;
 
     shape.cornerRadius= 1;
+
     shape "NORM" { { [ 18,18] }, { [2,1], [ 16,16] } };
     shape "BKSP" { { [ 38,18] }, { [2,1], [ 36,16] } };
     shape "TABK" { { [ 28,18] }, { [2,1], [ 26,16] } };
