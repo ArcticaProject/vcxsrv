@@ -409,19 +409,6 @@ winRestackWindowMultiWindow (WindowPtr pWin, WindowPtr pOldNextSib)
 }
 
 
-static void ClientResize(HWND hWnd, int nWidth, int nHeight)
-{
-  RECT rcClient, rcWindow;
-  POINT ptDiff;
-
-  GetClientRect(hWnd, &rcClient);
-  GetWindowRect(hWnd, &rcWindow);
-  ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
-  ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-  MoveWindow(hWnd,rcWindow.left, rcWindow.top, nWidth + ptDiff.x, nHeight + ptDiff.y, TRUE);
-}
-
-
 /*
  * winCreateWindowsWindow - Create a Windows window associated with an X window
  */
@@ -440,6 +427,9 @@ winCreateWindowsWindow (WindowPtr pWin)
   winPrivScreenPtr	pScreenPriv = pWinPriv->pScreenPriv;
   WinXSizeHints         hints;
   WindowPtr		pDaddy;
+  DWORD dwStyle;
+  DWORD dwExStyle;
+  RECT rc;
 
   winInitMultiWindowClass();
 
@@ -482,10 +472,24 @@ winCreateWindowsWindow (WindowPtr pWin)
   /* Create the window */
   /* Make it OVERLAPPED in create call since WS_POPUP doesn't support */
   /* CW_USEDEFAULT, change back to popup after creation */
-  hWnd = CreateWindowExA (WS_EX_TOOLWINDOW,	/* Extended styles */
+
+  dwStyle = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+  dwExStyle = WS_EX_TOOLWINDOW;
+  rc;
+  rc.top = 0;
+  rc.left = 0;
+  rc.bottom = iHeight;
+  rc.right = iWidth;
+  AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
+  iHeight = rc.bottom - rc.top;
+  iWidth = rc.right - rc.left;
+
+  winDebug("winCreateWindowsWindow - window size %dx%d\n", iWidth, iHeight);
+
+  hWnd = CreateWindowExA (dwExStyle,	/* Extended styles */
 			  WINDOW_CLASS_X,	/* Class name */
 			  WINDOW_TITLE_X,	/* Window name */
-			  WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
+			  dwStyle,		/* Styles */
 			  iX,			/* Horizontal position */
 			  iY,			/* Vertical position */
 			  iWidth,		/* Right edge */ 
@@ -516,8 +520,6 @@ winCreateWindowsWindow (WindowPtr pWin)
 		SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
   /* Make sure it gets the proper system menu for a WS_POPUP, too */
   GetSystemMenu (hWnd, TRUE);
-
-  ClientResize(hWnd,iWidth,iHeight);
 
   /* Cause any .XWinrc menus to be added in main WNDPROC */
   PostMessage (hWnd, WM_INIT_SYS_MENU, 0, 0);
