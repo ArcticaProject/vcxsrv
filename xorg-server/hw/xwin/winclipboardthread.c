@@ -63,6 +63,9 @@ extern Window		g_iClipboardWindow;
  */
 
 static jmp_buf			g_jmpEntry;
+static XIOErrorHandler g_winClipboardOldIOErrorHandler;
+static pthread_t g_winClipboardProcThread;
+
 Bool				g_fUnicodeSupport = FALSE;
 Bool				g_fUseUnicode = FALSE;
 
@@ -77,6 +80,8 @@ winClipboardErrorHandler (Display *pDisplay, XErrorEvent *pErr);
 static int
 winClipboardIOErrorHandler (Display *pDisplay);
 
+static void
+winClipboardThreadExit(void *arg);
 
 /*
  * Main thread function
@@ -103,6 +108,8 @@ winClipboardProc (void *pvNotUsed)
   char			szDisplay[512];
   int			iSelectError;
 
+  pthread_cleanup_push(&winClipboardThreadExit, NULL);
+
   winDebug ("winClipboardProc - Hello\n");
 
   /* Do we have Unicode support? */
@@ -126,6 +133,11 @@ winClipboardProc (void *pvNotUsed)
   /* Save copy of HWND in screen privates */
   g_hwndClipboard = hwnd;
 
+  /* Set error handler */
+  XSetErrorHandler (winClipboardErrorHandler);
+  g_winClipboardProcThread = pthread_self();
+  g_winClipboardOldIOErrorHandler = XSetIOErrorHandler (winClipboardIOErrorHandler);
+
   /* Set jump point for Error exits */
   iReturn = setjmp (g_jmpEntry);
   
@@ -147,10 +159,6 @@ winClipboardProc (void *pvNotUsed)
 
   /* Use our generated cookie for authentication */
   winSetAuthorization();
-
-  /* Set error handler */
-  XSetErrorHandler (winClipboardErrorHandler);
-  XSetIOErrorHandler (winClipboardIOErrorHandler);
 
   /* Initialize retry count */
   iRetries = 0;
@@ -278,6 +286,7 @@ winClipboardProc (void *pvNotUsed)
           goto thread_errorexit;
 	}
     }
+
   /* Pre-flush X events */
   /* 
    * NOTE: Apparently you'll freeze if you don't do this,
@@ -429,12 +438,8 @@ winClipboardProc (void *pvNotUsed)
     }
 #endif
 
-  g_iClipboardWindow = None;
-  g_pClipboardDisplay = NULL;
-  g_fClipboardLaunched = FALSE;
-  g_fClipboardStarted = FALSE;
+  goto commonexit;
 
-  return NULL;
 thread_errorexit:
   if (g_pClipboardDisplay && g_iClipboardWindow)
   {
@@ -446,12 +451,16 @@ thread_errorexit:
 	    winDebug ("winClipboardProc - XDestroyWindow succeeded.\n");
 #endif
   }
+  winDebug ("Clipboard thread died.\n");
+
+commonexit:
   g_iClipboardWindow = None;
   g_pClipboardDisplay = NULL;
   g_fClipboardLaunched = FALSE;
   g_fClipboardStarted = FALSE;
-  //pthread_exit (NULL);
-  winDebug ("Clipboard thread died.\n");
+
+  pthread_cleanup_pop(0);
+
   return NULL;
 }
 
@@ -494,8 +503,25 @@ winClipboardIOErrorHandler (Display *pDisplay)
 {
   ErrorF ("winClipboardIOErrorHandler!\n\n");
 
-  /* Restart at the main entry point */
-  longjmp (g_jmpEntry, WIN_JMP_ERROR_IO);
-  
+  if (pthread_equal(pthread_self(),g_winClipboardProcThread))
+    {
+      /* Restart at the main entry point */
+      longjmp (g_jmpEntry, WIN_JMP_ERROR_IO);
+    }
+
+  if (g_winClipboardOldIOErrorHandler)
+    g_winClipboardOldIOErrorHandler(pDisplay);
+
   return 0;
+}
+
+/*
+ * winClipboardThreadExit - Thread exit handler
+ */
+
+static void
+winClipboardThreadExit(void *arg)
+{
+  /* clipboard thread has exited, stop server as well */
+  TerminateProcess(GetCurrentProcess(),1);
 }
