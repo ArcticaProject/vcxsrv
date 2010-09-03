@@ -194,6 +194,15 @@
 #define KEY_HKTG         /* Hirugana/Katakana tog 0xc8  */  200
 #define KEY_BSlash2      /* \           _         0xcb  */  203
 
+#define KEY_Mute         /* Audio Mute                  */  152
+#define KEY_AudioLower   /* Audio Lower                 */  168
+#define KEY_AudioRaise   /* Audio Raise                 */  166
+
+#define KEY_NEXTSONG     /* Media next                  */  145
+#define KEY_PLAYPAUSE    /* Media play/pause toggle     */  154
+#define KEY_PREVIOUSSONG /* Media previous              */  136
+#define KEY_STOPCD       /* Media stop                  */  156
+
 /* These are for "notused" and "unknown" entries in translation maps. */
 #define KEY_NOTUSED	  0
 #define KEY_UNKNOWN	255
