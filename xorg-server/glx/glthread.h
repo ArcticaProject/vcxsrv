@@ -64,21 +64,12 @@
 #define GLTHREAD_H
 
 
-#if defined(USE_MGL_NAMESPACE)
-#define _glapi_Dispatch _mglapi_Dispatch
+#if defined(PTHREADS) || defined(WIN32_THREADS) || defined(BEOS_THREADS)
+#ifndef THREADS
+#define THREADS
+#endif
 #endif
 
-
-
-#if (defined(PTHREADS) || defined(SOLARIS_THREADS) ||\
-     defined(WIN32_THREADS) || defined(USE_XTHREADS) || defined(BEOS_THREADS)) \
-    && !defined(THREADS)
-# define THREADS
-#endif
-
-#ifdef VMS
-#include <GL/vms_x_fix.h>
-#endif
 
 /*
  * POSIX threads. This should be your choice in the Unix world
@@ -119,39 +110,6 @@ typedef pthread_mutex_t _glthread_Mutex;
 #endif /* PTHREADS */
 
 
-
-
-/*
- * Solaris threads. Use only up to Solaris 2.4.
- * Solaris 2.5 and higher provide POSIX threads.
- * Be sure to compile with -mt on the Solaris compilers, or
- * use -D_REENTRANT if using gcc.
- */
-#ifdef SOLARIS_THREADS
-#include <thread.h>
-
-typedef struct {
-   thread_key_t key;
-   mutex_t      keylock;
-   int          initMagic;
-} _glthread_TSD;
-
-typedef thread_t _glthread_Thread;
-
-typedef mutex_t _glthread_Mutex;
-
-/* XXX need to really implement mutex-related macros */
-#define _glthread_DECLARE_STATIC_MUTEX(name)  static _glthread_Mutex name = 0
-#define _glthread_INIT_MUTEX(name)  (void) name
-#define _glthread_DESTROY_MUTEX(name) (void) name
-#define _glthread_LOCK_MUTEX(name)  (void) name
-#define _glthread_UNLOCK_MUTEX(name)  (void) name
-
-#endif /* SOLARIS_THREADS */
-
-
-
-
 /*
  * Windows threads. Should work with Windows NT and 95.
  * IMPORTANT: Link with multithreaded runtime library when THREADS are
@@ -169,55 +127,22 @@ typedef HANDLE _glthread_Thread;
 
 typedef CRITICAL_SECTION _glthread_Mutex;
 
-#define _glthread_DECLARE_STATIC_MUTEX(name)  /*static*/ _glthread_Mutex name = {0,0,0,0,0,0}
-#define _glthread_INIT_MUTEX(name)  InitializeCriticalSection(&name)
-#define _glthread_DESTROY_MUTEX(name)  DeleteCriticalSection(&name)
-#define _glthread_LOCK_MUTEX(name)  EnterCriticalSection(&name)
-#define _glthread_UNLOCK_MUTEX(name)  LeaveCriticalSection(&name)
-
-#endif /* WIN32_THREADS */
-
-
-
-
-/*
- * XFree86 has its own thread wrapper, Xthreads.h
- * We wrap it again for GL.
- */
-#ifdef USE_XTHREADS
-#include <X11/Xthreads.h>
-
-typedef struct {
-   xthread_key_t key;
-   int initMagic;
-} _glthread_TSD;
-
-typedef xthread_t _glthread_Thread;
-
-typedef xmutex_rec _glthread_Mutex;
-
-#ifdef XMUTEX_INITIALIZER
 #define _glthread_DECLARE_STATIC_MUTEX(name) \
-   static _glthread_Mutex name = XMUTEX_INITIALIZER
-#else
-#define _glthread_DECLARE_STATIC_MUTEX(name) \
-   static _glthread_Mutex name
-#endif
+   /* static */ _glthread_Mutex name = { 0, 0, 0, 0, 0, 0 }
 
 #define _glthread_INIT_MUTEX(name) \
-   xmutex_init(&(name))
+   InitializeCriticalSection(&name)
 
 #define _glthread_DESTROY_MUTEX(name) \
-   xmutex_clear(&(name))
+   DeleteCriticalSection(&name)
 
 #define _glthread_LOCK_MUTEX(name) \
-   (void) xmutex_lock(&(name))
+   EnterCriticalSection(&name)
 
 #define _glthread_UNLOCK_MUTEX(name) \
-   (void) xmutex_unlock(&(name))
+   LeaveCriticalSection(&name)
 
-#endif /* USE_XTHREADS */
-
+#endif /* WIN32_THREADS */
 
 
 /*
@@ -225,8 +150,20 @@ typedef xmutex_rec _glthread_Mutex;
  */
 #ifdef BEOS_THREADS
 
+/* Problem with OS.h and this file on haiku */
+#ifndef __HAIKU__
 #include <kernel/OS.h>
+#endif
+
 #include <support/TLS.h>
+
+/* The only two typedefs required here
+ * this is cause of the OS.h problem
+ */
+#ifdef __HAIKU__
+typedef int32 thread_id;
+typedef int32 sem_id;
+#endif
 
 typedef struct {
    int32        key;
@@ -242,28 +179,40 @@ typedef struct {
 } benaphore;
 typedef benaphore _glthread_Mutex;
 
-#define _glthread_DECLARE_STATIC_MUTEX(name)  static _glthread_Mutex name = { 0, 0 }
-#define _glthread_INIT_MUTEX(name)    	name.sem = create_sem(0, #name"_benaphore"), name.lock = 0
-#define _glthread_DESTROY_MUTEX(name) 	delete_sem(name.sem), name.lock = 0
-#define _glthread_LOCK_MUTEX(name)    	if (name.sem == 0) _glthread_INIT_MUTEX(name); \
-									  	if (atomic_add(&(name.lock), 1) >= 1) acquire_sem(name.sem)
-#define _glthread_UNLOCK_MUTEX(name)  	if (atomic_add(&(name.lock), -1) > 1) release_sem(name.sem)
+#define _glthread_DECLARE_STATIC_MUTEX(name) \
+   static _glthread_Mutex name = { 0, 0 }
+
+#define _glthread_INIT_MUTEX(name) \
+   name.sem = create_sem(0, #name"_benaphore"), \
+   name.lock = 0
+
+#define _glthread_DESTROY_MUTEX(name) \
+   delete_sem(name.sem), \
+   name.lock = 0
+
+#define _glthread_LOCK_MUTEX(name) \
+   if (name.sem == 0) \
+      _glthread_INIT_MUTEX(name); \
+   if (atomic_add(&(name.lock), 1) >= 1) \
+      acquire_sem(name.sem)
+
+#define _glthread_UNLOCK_MUTEX(name) \
+   if (atomic_add(&(name.lock), -1) > 1) \
+      release_sem(name.sem)
 
 #endif /* BEOS_THREADS */
 
 
-
-#ifndef THREADS
-
 /*
  * THREADS not defined
  */
+#ifndef THREADS
 
-typedef int _glthread_TSD;
+typedef unsigned _glthread_TSD;
 
-typedef int _glthread_Thread;
+typedef unsigned _glthread_Thread;
 
-typedef int _glthread_Mutex;
+typedef unsigned _glthread_Mutex;
 
 #define _glthread_DECLARE_STATIC_MUTEX(name)  static _glthread_Mutex name = 0
 
@@ -291,29 +240,16 @@ extern void
 _glthread_InitTSD(_glthread_TSD *);
 
 
+extern void
+_glthread_DestroyTSD(_glthread_TSD *); /* WIN32 only */
+
+
 extern void *
 _glthread_GetTSD(_glthread_TSD *);
 
 
 extern void
 _glthread_SetTSD(_glthread_TSD *, void *);
-
-#if defined(GLX_USE_TLS)
-
-extern __thread struct _glapi_table * _glapi_tls_Dispatch
-    __attribute__((tls_model("initial-exec")));
-
-#define GET_DISPATCH() _glapi_tls_Dispatch
-
-#elif !defined(GL_CALL)
-# if defined(THREADS)
-#  define GET_DISPATCH() \
-   ((__builtin_expect( _glapi_Dispatch != NULL, 1 )) \
-       ? _glapi_Dispatch : _glapi_get_dispatch())
-# else
-#  define GET_DISPATCH() _glapi_Dispatch
-# endif /* defined(THREADS) */
-#endif  /* ndef GL_CALL */
 
 
 #endif /* THREADS_H */

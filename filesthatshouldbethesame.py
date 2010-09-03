@@ -75,6 +75,7 @@ include\xcb\xcb.h                                 libxcb\src\xcb.h
 include\xcb\xc_misc.h                             libxcb\src\xc_misc.h
 include\xcb\bigreq.h                              libxcb\src\bigreq.h
 include\xcb\xproto.h                              libxcb\src\xproto.h
+include\xcb\xcb_windefs.h                         libxcb\src\xcb_windefs.h
 
 libXinerama\include\X11\extensions\panoramiXext.h X11\extensions\panoramiXext.h
 libXinerama\include\X11\extensions\Xinerama.h     X11\extensions\Xinerama.h
@@ -88,6 +89,14 @@ gl\glx_mangle.h                                   mesalib\include\gl\glx_mangle.
 gl\gl_mangle.h                                    mesalib\include\gl\gl_mangle.h
 gl\internal\dri_interface.h                       mesalib\include\gl\internal\dri_interface.h
 gl\internal\glcore.h                              mesalib\include\gl\internal\glcore.h
+
+xorg-server\glx\glapioffsets.h                    mesalib\src\mesa\glapi\glapioffsets.h
+xorg-server\glx\glprocs.h                         mesalib\src\mesa\glapi\glprocs.h
+xorg-server\glx\glapitemp.h                       mesalib\src\mesa\glapi\glapitemp.h
+xorg-server\glx\glthread.h                        mesalib\src\mesa\glapi\glthread.h
+xorg-server\glx\glapi.h                           mesalib\src\mesa\glapi\glapi.h
+xorg-server\glx\glapitable.h                      mesalib\src\mesa\glapi\glapitable.h
+
 libXaw\include\X11\Xaw\AllWidgets.h               X11\Xaw\AllWidgets.h
 libXaw\include\X11\Xaw\AsciiSink.h                X11\Xaw\AsciiSink.h
 libXaw\include\X11\Xaw\AsciiSinkP.h               X11\Xaw\AsciiSinkP.h

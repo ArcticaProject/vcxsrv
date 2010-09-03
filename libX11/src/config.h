@@ -237,3 +237,7 @@
 
 /* Support gzip for bitmap fonts */
 #define X_GZIP_FONT_COMPRESSION 1
+
+#define INCL_WINSOCK_API_TYPEDEFS 1
+#include <X11/Xwinsock.h>
+#include <X11/Xwindows.h>

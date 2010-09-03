@@ -38,6 +38,7 @@
 #include "unpack.h"
 #include "indirect_size_get.h"
 #include "indirect_dispatch.h"
+#include "GL/gl.h"
 #include "glapitable.h"
 #include "glapi.h"
 #include "glthread.h"

@@ -143,6 +143,13 @@ PERFORMANCE OF THIS SOFTWARE.
 /*
  * byte order
  */
+#ifdef BIGENDIAN
+#undef BIGENDIAN
+#endif
+#ifdef LITTLEENDIAN
+#undef LITTLEENDIAN
+#endif
+
 #define BIGENDIAN	(CARD8)0x42	/* MSB first */
 #define LITTLEENDIAN	(CARD8)0x6c	/* LSB first */
 

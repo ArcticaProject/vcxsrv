@@ -58,8 +58,10 @@ typedef struct {
 
 #define TRUE 1
 #define FALSE 0
+#ifndef MAXSHORT
 #define MAXSHORT 32767
 #define MINSHORT -MAXSHORT
+#endif
 #ifndef MAX
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif

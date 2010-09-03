@@ -95,7 +95,7 @@ extern __thread void * _glapi_tls_Context
 #else
 
 #ifdef INSERVER
-#define EXTERN _declspec(dllimport)
+#define EXTERN _declspec(dllexport)
 #else
 #define EXTERN extern
 #endif
@@ -134,7 +134,7 @@ extern void
 _glapi_destroy_multithread(void);
 
 
-extern void
+EXTERN void
 _glapi_check_multithread(void);
 
 
@@ -158,7 +158,7 @@ extern unsigned int
 _glapi_get_dispatch_table_size(void);
 
 
-extern int
+EXTERN int
 _glapi_add_dispatch( const char * const * function_names,
 		     const char * parameter_signature );
 

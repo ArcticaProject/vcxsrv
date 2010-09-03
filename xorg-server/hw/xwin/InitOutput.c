@@ -132,9 +132,6 @@ const char *
 winGetBaseDir(void);
 #endif
 
-static
-void glx_debugging(void);
-
 /*
  * For the depth 24 pixmap we default to 32 bits per pixel, but
  * we change this pixmap format later if we detect that the display
@@ -1061,7 +1058,6 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
        */
       setlocale (LC_ALL, "");
 
-      glx_debugging();
     }
 #endif
 
@@ -1141,23 +1137,4 @@ winCheckDisplayNumber (void)
     }
 
   return TRUE;
-}
-
-/* GLX debugging helpers */
-#include <../glx/glapi.h>
-
-static
-void warn_func(void * p1, const char *format, ...) {
-  va_list v;
-  va_start(v, format);
-  vfprintf(stderr, format, v);
-  va_end(v);
-  fprintf(stderr,"\n");
-}
-
-static
-void glx_debugging(void)
-{
-  _glapi_set_warning_func(warn_func);
-  _glapi_noop_enable_warnings(TRUE);
 }
