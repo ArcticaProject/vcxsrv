@@ -344,7 +344,17 @@ mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
         {
           // There should still be active entries, otherwise this is a serious bug
           if (!m_NrActiveEntries && !Return)
-            throw("Fatal error: WaitForTarget "+pTarget->GetQuotedFullFileName()+": no active targets anymore.");
+          {
+            // This may happen when having multiple target rules and pTarget was build when on of the other targets
+            // was build. so first check if the pTarget was not build in the mean time. If so, this is not an error
+            if (pTarget->IsBuild())
+            {
+              Return=true;
+              break;
+            }
+            else
+              throw("Fatal error: WaitForTarget "+pTarget->GetQuotedFullFileName()+": no active targets anymore.");
+          }
           else
             break;
         }
