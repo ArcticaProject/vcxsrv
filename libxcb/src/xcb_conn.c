@@ -364,6 +364,13 @@ int _xcb_conn_wait(xcb_connection_t *c, pthread_cond_t *cond, struct iovec **vec
     do {
 #if USE_POLL
         ret = poll(&fd, 1, -1);
+        /* If poll() returns an event we didn't expect, such as POLLNVAL, treat
+         * it as if it failed. */
+        if(ret >= 0 && (fd.revents & ~fd.events))
+        {
+            ret = -1;
+            break;
+        }
 #else
         ret = select(c->fd + 1, &rfds, &wfds, 0, 0);
 #endif
