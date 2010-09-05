@@ -591,8 +591,11 @@ void loadedmakefile::LoadMakefile()
     map<string,string>::const_iterator pIt=m_CommandLineVars.begin();
     while (pIt!=m_CommandLineVars.end())
     {
-      md5_update(&ctx, (uint8*)pIt->first.c_str(), pIt->first.size());
-      md5_update(&ctx, (uint8*)pIt->second.c_str(), pIt->second.size());
+      if (pIt->first!="MAKE")
+      {
+        md5_update(&ctx, (uint8*)pIt->first.c_str(), pIt->first.size());
+        md5_update(&ctx, (uint8*)pIt->second.c_str(), pIt->second.size());
+      }
       pIt++;
     }
     md5_update(&ctx, (uint8*)m_Makefile->GetFullFileName().c_str(), m_Makefile->GetFullFileName().size());
