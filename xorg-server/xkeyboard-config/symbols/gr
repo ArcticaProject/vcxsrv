@@ -11,11 +11,12 @@
 
 default partial alphanumeric_keys alternate_group
 xkb_symbols "basic" {
+	include "gr(simple)"
+
 	name[Group1] = "Greece";
 
 	include "eurosign(e)"
 	include "eurosign(5)"
-	include "gr(simple)"
 	include "kpdl(comma)"
 	include "level3(ralt_switch)"
 
