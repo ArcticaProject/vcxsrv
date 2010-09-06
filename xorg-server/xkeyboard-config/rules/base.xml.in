@@ -1502,6 +1502,34 @@
     </layout>
     <layout>
       <configItem>
+        <name>at</name>
+        <_shortDescription>Aut</_shortDescription>
+        <_description>Austria</_description>
+        <languageList><iso639Id>ger</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>nodeadkeys</name>
+            <_description>Eliminate dead keys</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>sundeadkeys</name>
+            <_description>Sun dead keys</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>mac</name>
+            <_description>Macintosh</_description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>az</name>
         <_shortDescription>Aze</_shortDescription>
         <_description>Azerbaijan</_description>
