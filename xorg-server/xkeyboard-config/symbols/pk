@@ -202,7 +202,7 @@ xkb_symbols "urd-nla" {
 
 partial alphanumeric_keys
 xkb_symbols "snd" {
-   name[Group1]= "Pakistan - MBSindhi";
+   name[Group1]= "Pakistan - Sindhi";
 // www.bhurgri.com
 
      key <TLDE> {  [       0x1002019,       0x1002018                 ]       };
