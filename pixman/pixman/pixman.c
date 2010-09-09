@@ -302,17 +302,13 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
     if (region->extents.x1 >= region->extents.x2 ||
         region->extents.y1 >= region->extents.y2)
     {
-	pixman_region32_init (region);
 	return FALSE;
     }
 
     if (dst_image->common.have_clip_region)
     {
 	if (!clip_general_image (region, &dst_image->common.clip_region, 0, 0))
-	{
-	    pixman_region32_fini (region);
 	    return FALSE;
-	}
     }
 
     if (dst_image->common.alpha_map && dst_image->common.alpha_map->common.have_clip_region)
@@ -321,7 +317,6 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
 	                         -dst_image->common.alpha_origin_x,
 	                         -dst_image->common.alpha_origin_y))
 	{
-	    pixman_region32_fini (region);
 	    return FALSE;
 	}
     }
@@ -330,10 +325,7 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
     if (src_image->common.have_clip_region)
     {
 	if (!clip_source_image (region, src_image, dest_x - src_x, dest_y - src_y))
-	{
-	    pixman_region32_fini (region);
 	    return FALSE;
-	}
     }
     if (src_image->common.alpha_map && src_image->common.alpha_map->common.have_clip_region)
     {
@@ -341,7 +333,6 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
 	                        dest_x - (src_x - src_image->common.alpha_origin_x),
 	                        dest_y - (src_y - src_image->common.alpha_origin_y)))
 	{
-	    pixman_region32_fini (region);
 	    return FALSE;
 	}
     }
@@ -349,17 +340,14 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
     if (mask_image && mask_image->common.have_clip_region)
     {
 	if (!clip_source_image (region, mask_image, dest_x - mask_x, dest_y - mask_y))
-	{
-	    pixman_region32_fini (region);
 	    return FALSE;
-	}
+
 	if (mask_image->common.alpha_map && mask_image->common.alpha_map->common.have_clip_region)
 	{
 	    if (!clip_source_image (region, (pixman_image_t *)mask_image->common.alpha_map,
 	                            dest_x - (mask_x - mask_image->common.alpha_origin_x),
 	                            dest_y - (mask_y - mask_image->common.alpha_origin_y)))
 	    {
-		pixman_region32_fini (region);
 		return FALSE;
 	    }
 	}
@@ -625,6 +613,9 @@ compute_sample_extents (pixman_transform_t *transform,
     {
 	int i;
 
+	/* Silence GCC */
+	tx1 = ty1 = tx2 = ty2 = 0;
+    
 	for (i = 0; i < 4; ++i)
 	{
 	    pixman_fixed_48_16_t tx, ty;
