@@ -2425,11 +2425,11 @@ store_scanline_a2b2g2r2 (bits_image_t *  image,
     {
 	SPLIT_A (values[i]);
 	
-	*(pixel++) =
-	    ((a     ) & 0xc0) |
-	    ((b >> 2) & 0x30) |
-	    ((g >> 4) & 0x0c) |
-	    ((r >> 6)       );
+	WRITE (image, pixel++,
+	       ((a     ) & 0xc0) |
+	       ((b >> 2) & 0x30) |
+	       ((g >> 4) & 0x0c) |
+	       ((r >> 6)       ));
     }
 }
 

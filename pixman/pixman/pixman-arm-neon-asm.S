@@ -881,6 +881,42 @@ generate_composite_function \
 
 /******************************************************************************/
 
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_over_8888_8_0565_process_pixblock_tail_head
+    vld1.16     {d4, d5}, [DST_R, :128]!
+    pixman_composite_over_n_8_0565_process_pixblock_tail
+    vld4.8      {d8, d9, d10, d11}, [SRC]!
+    cache_preload 8, 8
+    vld1.8      {d24}, [MASK]!
+    pixman_composite_over_n_8_0565_process_pixblock_head
+    vst1.16     {d28, d29}, [DST_W, :128]!
+.endm
+
+.macro pixman_composite_over_8888_8_0565_init
+    vpush       {d8-d15}
+.endm
+
+.macro pixman_composite_over_8888_8_0565_cleanup
+    vpop        {d8-d15}
+.endm
+
+generate_composite_function \
+    pixman_composite_over_8888_8_0565_asm_neon, 32, 8, 16, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_over_8888_8_0565_init, \
+    pixman_composite_over_8888_8_0565_cleanup, \
+    pixman_composite_over_n_8_0565_process_pixblock_head, \
+    pixman_composite_over_n_8_0565_process_pixblock_tail, \
+    pixman_composite_over_8888_8_0565_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    4,  /* dst_r_basereg */ \
+    8,  /* src_basereg   */ \
+    24  /* mask_basereg  */
+
+/******************************************************************************/
+
 .macro pixman_composite_src_0565_0565_process_pixblock_head
 .endm
 

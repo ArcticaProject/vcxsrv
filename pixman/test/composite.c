@@ -882,6 +882,7 @@ main (void)
 						 mask.size? TRUE : FALSE);
 			    break;
                         default:
+			    ok = FALSE; /* Silence GCC */
                             break;
 			}
 			group_ok = group_ok && ok;
