@@ -821,6 +821,7 @@ nb_NO.iso88591:					nb_NO.ISO8859-1
 nb_NO.ISO-8859-1:				nb_NO.ISO8859-1
 nb_NO.iso885915:				nb_NO.ISO8859-15
 nb_NO.ISO-8859-15:				nb_NO.ISO8859-15
+nb_NO.utf8:					nb_NO.UTF-8
 ne_NP.utf8:					ne_NP.UTF-8
 ne_NP.UTF-8:					ne_NP.UTF-8
 nl:						nl_NL.ISO8859-1
@@ -856,6 +857,7 @@ nn_NO.ISO-8859-1:				nn_NO.ISO8859-1
 nn_NO.ISO_8859-1:				nn_NO.ISO8859-1
 nn_NO.iso885915:				nn_NO.ISO8859-15
 nn_NO.ISO-8859-15:				nn_NO.ISO8859-15
+nn_NO.utf8:					nn_NO.UTF-8
 no:						no_NO.ISO8859-1
 no_NO:						no_NO.ISO8859-1
 no_NO.88591:					no_NO.ISO8859-1
