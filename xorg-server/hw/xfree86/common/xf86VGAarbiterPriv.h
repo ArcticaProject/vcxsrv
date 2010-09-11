@@ -93,23 +93,16 @@
     (VGAarbiterGCPtr)dixLookupPrivate(&(x)->devPrivates, VGAarbiterGCKey);\
     (x)->ops = pGCPriv->wrapOps; (x)->funcs = pGCPriv->wrapFuncs;
 
-#define GC_SCREEN register ScrnInfoPtr pScrn = \
-    xf86Screens[pGC->pScreen->myNum]
-
-#define VGAGet(x)\
-    pci_device_vgaarb_set_target(xf86Screens[pScreen->myNum]->vgaDev); \
+static inline void
+VGAGet(ScreenPtr pScreen) {
+    pci_device_vgaarb_set_target(xf86Screens[pScreen->myNum]->vgaDev);
     pci_device_vgaarb_lock();
+}
 
-#define VGAGet_GC(x)\
-    pci_device_vgaarb_set_target(xf86Screens[pGC->pScreen->myNum]->vgaDev); \
-    pci_device_vgaarb_lock();
-
-#define VGAPut(x)\
+static inline void
+VGAPut(void) {
     pci_device_vgaarb_unlock();
-
-#define VGAPut_GC(x)\
-    pci_device_vgaarb_unlock();
-
+}
 
 typedef struct _VGAarbiterScreen {
     CreateGCProcPtr             CreateGC;

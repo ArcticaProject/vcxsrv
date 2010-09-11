@@ -125,6 +125,7 @@ typedef struct _connectionInput {
     int  bufcnt;                /* count of bytes in buffer */
     int lenLastReq;
     int size;
+    unsigned int ignoreBytes;   /* bytes to ignore before the next request */
 } ConnectionInput, *ConnectionInputPtr;
 
 typedef struct _connectionOutput {

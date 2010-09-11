@@ -556,6 +556,7 @@ Bool			checkNames;
     else if ((kf!=NULL)&&((kf->xkb_sli->flags&XkbSLI_IsDefault)!=0)) {
 	XkbDescPtr	xkb;
 	xkb= dev->key->xkbInfo->desc;
+	sli= kf->xkb_sli;
 	sli->physIndicators=	xkb->indicators->phys_indicators;
 	if (xkb->names->indicators!=sli->names) {
 	    checkNames= TRUE;
@@ -584,6 +585,8 @@ Bool			checkNames;
 	sli->maps=		NULL;
 	sli->names=		NULL;
     }
+    else
+	return NULL;
     if ((sli->names==NULL)&&(needed_parts&XkbXI_IndicatorNamesMask))
 	sli->names= calloc(XkbNumIndicators, sizeof(Atom));
     if ((sli->maps==NULL)&&(needed_parts&XkbXI_IndicatorMapsMask))
@@ -714,10 +717,12 @@ XkbSrvLedInfoPtr	sli;
 	    }	
 	}
     }
-    if ((sli->names==NULL)&&(needed_parts&XkbXI_IndicatorNamesMask))
-	sli->names= calloc(XkbNumIndicators, sizeof(Atom));
-    if ((sli->maps==NULL)&&(needed_parts&XkbXI_IndicatorMapsMask))
-	sli->maps= calloc(XkbNumIndicators, sizeof(XkbIndicatorMapRec));
+    if (sli) {
+	if ((sli->names==NULL)&&(needed_parts&XkbXI_IndicatorNamesMask))
+	    sli->names= calloc(XkbNumIndicators, sizeof(Atom));
+	if ((sli->maps==NULL)&&(needed_parts&XkbXI_IndicatorMapsMask))
+	    sli->maps= calloc(XkbNumIndicators, sizeof(XkbIndicatorMapRec));
+    }
     return sli;
 }
 

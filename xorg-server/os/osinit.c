@@ -169,15 +169,9 @@ OsInit(void)
 	struct sigaction act, oact;
 	int i;
 	int siglist[] = { SIGSEGV, SIGQUIT, SIGILL, SIGFPE, SIGBUS,
-#ifdef SIGSYS
 			  SIGSYS,
-#endif
-#ifdef SIGXCPU
 			  SIGXCPU,
-#endif
-#ifdef SIGXFSZ
 			  SIGXFSZ,
-#endif
 #ifdef SIGEMT
 			  SIGEMT,
 #endif
@@ -314,9 +308,7 @@ OsInit(void)
      * log file name if logging to a file is desired.
      */
     LogInit(NULL, NULL);
-    if (!SmartScheduleDisable)
-	if (!SmartScheduleInit ())
-	    SmartScheduleDisable = TRUE;
+    SmartScheduleInit ();
 }
 
 void

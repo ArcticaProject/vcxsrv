@@ -55,6 +55,7 @@ extern _X_EXPORT int defaultBackingStore;
 extern _X_EXPORT Bool disableBackingStore;
 extern _X_EXPORT Bool enableBackingStore;
 extern _X_EXPORT Bool PartialNetwork;
+extern _X_EXPORT Bool RunFromSigStopParent;
 #ifndef NOLOGOHACK
 extern _X_EXPORT int logoScreenSaver;
 #endif

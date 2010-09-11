@@ -72,11 +72,11 @@ static struct {
 
 static const Bool xselinux_private[PRIVATE_LAST] = {
     /* PRIVATE_XSELINUX,*/    FALSE,
-    /* PRIVATE_SCREEN,*/      FALSE,
+    /* PRIVATE_SCREEN,*/      TRUE,
     /* [PRIVATE_EXTENSION] =*/TRUE,
     /* [PRIVATE_COLORMAP] =*/ TRUE,
     /* [PRIVATE_DEVICE] =*/   TRUE,
-    /*[PRIVATE_CLIENT] = */   TRUE,
+    /* [PRIVATE_CLIENT] = */  TRUE,
     /* [PRIVATE_PROPERTY] =*/ TRUE,
     /* [PRIVATE_SELECTION] =*/TRUE,
     /* [PRIVATE_WINDOW] =*/   TRUE,

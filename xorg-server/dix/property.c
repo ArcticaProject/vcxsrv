@@ -284,7 +284,6 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
         pProp->format = format;
         pProp->data = data;
 	pProp->size = len;
-	pProp->devPrivates = NULL;
 	rc = XaceHookPropertyAccess(pClient, pWin, &pProp,
 				    DixCreateAccess|DixWriteAccess);
 	if (rc != Success) {

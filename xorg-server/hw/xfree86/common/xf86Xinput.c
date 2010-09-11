@@ -66,6 +66,7 @@
 #include "xf86InPriv.h"
 #include "compiler.h"
 #include "extinit.h"
+#include "loaderProcs.h"
 
 #ifdef DPMSExtension
 #include <X11/extensions/dpmsconst.h>

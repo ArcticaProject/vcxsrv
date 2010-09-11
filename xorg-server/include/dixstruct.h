@@ -136,7 +136,7 @@ extern _X_EXPORT void SmartScheduleStopTimer(void);
 #define SMART_MAX_PRIORITY  (20)
 #define SMART_MIN_PRIORITY  (-20)
 
-extern _X_EXPORT Bool SmartScheduleInit(void);
+extern _X_EXPORT void SmartScheduleInit(void);
 
 
 /* This prototype is used pervasively in Xext, dix */

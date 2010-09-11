@@ -66,7 +66,6 @@ miClearToBackground(WindowPtr pWin,
 {
     BoxRec box;
     RegionRec	reg;
-    RegionPtr pBSReg = NullRegion;
     BoxPtr  extents;
     int	    x1, y1, x2, y2;
 
@@ -114,12 +113,10 @@ miClearToBackground(WindowPtr pWin,
 
     RegionIntersect(&reg, &reg, &pWin->clipList);
     if (generateExposures)
-	(*pWin->drawable.pScreen->WindowExposures)(pWin, &reg, pBSReg);
+	(*pWin->drawable.pScreen->WindowExposures)(pWin, &reg, NULL);
     else if (pWin->backgroundState != None)
 	miPaintWindow(pWin, &reg, PW_BACKGROUND);
     RegionUninit(&reg);
-    if (pBSReg)
-	RegionDestroy(pBSReg);
 }
 
 void

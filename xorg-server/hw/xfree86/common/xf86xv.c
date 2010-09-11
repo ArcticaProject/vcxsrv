@@ -429,8 +429,7 @@ xf86XVInitAdaptors(
       pa->ddGetPortAttribute = xf86XVGetPortAttribute;
       pa->ddQueryBestSize = xf86XVQueryBestSize;
       pa->ddQueryImageAttributes = xf86XVQueryImageAttributes;
-      if((pa->name = malloc(strlen(adaptorPtr->name) + 1)))
-	  strcpy(pa->name, adaptorPtr->name);
+      pa->name = strdup(adaptorPtr->name);
 
       if(adaptorPtr->nEncodings &&
 	(pEncode = calloc(adaptorPtr->nEncodings, sizeof(XvEncodingRec)))) {
@@ -440,8 +439,7 @@ xf86XVInitAdaptors(
 	{
 	    pe->id = encodingPtr->id;
 	    pe->pScreen = pScreen;
-	    if((pe->name = malloc(strlen(encodingPtr->name) + 1)))
-		strcpy(pe->name, encodingPtr->name);
+	    pe->name = strdup(encodingPtr->name);
 	    pe->width = encodingPtr->width;
 	    pe->height = encodingPtr->height;
 	    pe->rate.numerator = encodingPtr->rate.numerator;
@@ -493,8 +491,7 @@ xf86XVInitAdaptors(
 	    pat->flags = attributePtr->flags;
 	    pat->min_value = attributePtr->min_value;
 	    pat->max_value = attributePtr->max_value;
-	    if((pat->name = malloc(strlen(attributePtr->name) + 1)))
-		strcpy(pat->name, attributePtr->name);
+	    pat->name = strdup(attributePtr->name);
 	}
 	pa->nAttributes = adaptorPtr->nAttributes;
 	pa->pAttributes = pAttribute;

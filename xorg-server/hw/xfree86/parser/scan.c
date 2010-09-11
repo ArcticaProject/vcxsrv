@@ -819,6 +819,7 @@ OpenConfigFile(const char *path, const char *cmdline, const char *projroot,
 		}
 	}
 
+	free(pathcopy);
 	if (file) {
 		configFiles[numFiles].file = file;
 		configFiles[numFiles].path = strdup(filepath);
@@ -927,6 +928,7 @@ OpenConfigDir(const char *path, const char *cmdline, const char *projroot,
 		}
 	}
 
+	free(pathcopy);
 	return dirpath;
 }
 
@@ -1088,8 +1090,7 @@ void
 xf86setSection (char *section)
 {
 	free(configSection);
-	configSection = malloc(strlen (section) + 1);
-	strcpy (configSection, section);
+	configSection = strdup(section);
 }
 
 /* 

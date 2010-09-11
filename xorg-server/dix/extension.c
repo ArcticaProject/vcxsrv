@@ -96,7 +96,7 @@ AddExtension(char *name, int NumEvents, int NumErrors,
 	free(ext);
 	return NULL;
     }
-    ext->name = malloc(strlen(name) + 1);
+    ext->name = strdup(name);
     ext->num_aliases = 0;
     ext->aliases = (char **)NULL;
     if (!ext->name)
@@ -105,7 +105,6 @@ AddExtension(char *name, int NumEvents, int NumErrors,
 	free(ext);
 	return((ExtensionEntry *) NULL);
     }
-    strcpy(ext->name,  name);
     i = NumExtensions;
     newexts = (ExtensionEntry **) realloc(extensions,
 					   (i + 1) * sizeof(ExtensionEntry *));
@@ -164,10 +163,9 @@ Bool AddExtensionAlias(char *alias, ExtensionEntry *ext)
     if (!aliases)
 	return FALSE;
     ext->aliases = aliases;
-    name = malloc(strlen(alias) + 1);
+    name = strdup(alias);
     if (!name)
 	return FALSE;
-    strcpy(name,  alias);
     ext->aliases[ext->num_aliases] = name;
     ext->num_aliases++;
     return TRUE;

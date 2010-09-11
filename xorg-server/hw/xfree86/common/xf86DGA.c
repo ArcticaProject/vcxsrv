@@ -1095,7 +1095,7 @@ DGAProcessPointerEvent (ScreenPtr pScreen, DGAEvent *event, DeviceIntPtr mouse)
     ev.header = ET_Internal;
     ev.length = sizeof(ev);
     ev.type = event->subtype;
-    ev.corestate  = butc->state;
+    ev.corestate  = butc ? butc->state : 0;
     if (master && master->key)
         ev.corestate |= XkbStateFieldFromRec(&master->key->xkbInfo->state);
 

@@ -224,7 +224,8 @@ ProcXkbSelectEvents(ClientPtr client)
     masks = XkbFindClientResource((DevicePtr)dev,client);
     if (!masks){
 	XID id = FakeClientID(client->index);
-	AddResource(id,RT_XKBCLIENT,dev);
+	if (!AddResource(id,RT_XKBCLIENT,dev))
+	    return BadAlloc;
 	masks= XkbAddClientResource((DevicePtr)dev,client,id);
     }
     if (masks) {
@@ -3019,6 +3020,7 @@ register unsigned	bit;
 	    to = (CARD8 *)wire;
 	    if ((to-map)!=length) {
 		client->errorValue = _XkbErrCode2(0xff,length);
+		free(map);
 		return BadLength;
 	    }
 	}
@@ -5377,7 +5379,8 @@ ProcXkbPerClientFlags(ClientPtr client)
 	}
 	else if (want && (!interest)) {
 	    XID id = FakeClientID(client->index);
-	    AddResource(id,RT_XKBCLIENT,dev);
+	    if (!AddResource(id,RT_XKBCLIENT,dev))
+		return BadAlloc;
 	    interest= XkbAddClientResource((DevicePtr)dev,client,id);
 	    if (!interest)
 		return BadAlloc;

@@ -28,7 +28,6 @@
 #endif
 #include "windowstr.h"
 #include <X11/extensions/ge.h>
-#include "registry.h"
 
 #include "geint.h"
 #include "geext.h"

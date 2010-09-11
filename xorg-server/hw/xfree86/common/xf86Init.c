@@ -314,18 +314,10 @@ InstallSignalHandlers(void)
 	signal(SIGEMT, SIG_DFL);
 #endif
 	signal(SIGFPE, SIG_DFL);
-#ifdef SIGBUS
 	signal(SIGBUS, SIG_DFL);
-#endif
-#ifdef SIGSYS
 	signal(SIGSYS, SIG_DFL);
-#endif
-#ifdef SIGXCPU
 	signal(SIGXCPU, SIG_DFL);
-#endif
-#ifdef SIGXFSZ
 	signal(SIGXFSZ, SIG_DFL);
-#endif
     }
 }
 
@@ -863,9 +855,7 @@ OsVendorInit(void)
 {
   static Bool beenHere = FALSE;
 
-#ifdef SIGCHLD
   signal(SIGCHLD, SIG_DFL);	/* Need to wait for child processes */
-#endif
 
   if (!beenHere) {
     umask(022);
@@ -1046,11 +1036,6 @@ xf86PrintDefaultLibraryPath(void)
 int
 ddxProcessArgument(int argc, char **argv, int i)
 {
-  /*
-   * Note: can't use xalloc/xfree here because OsInit() hasn't been called
-   * yet.  Use malloc/free instead.
-   */
-
 #define CHECK_FOR_REQUIRED_ARGUMENT() \
     if (((i + 1) >= argc) || (!argv[i + 1])) { 				\
       ErrorF("Required argument to %s not specified\n", argv[i]); 	\
@@ -1067,10 +1052,9 @@ ddxProcessArgument(int argc, char **argv, int i)
     {
       char *mp;
       CHECK_FOR_REQUIRED_ARGUMENT();
-      mp = malloc(strlen(argv[i + 1]) + 1);
+      mp = strdup(argv[i + 1]);
       if (!mp)
 	FatalError("Can't allocate memory for ModulePath\n");
-      strcpy(mp, argv[i + 1]);
       xf86ModulePath = mp;
       xf86ModPathFrom = X_CMDLINE;
       return 2;
@@ -1079,10 +1063,9 @@ ddxProcessArgument(int argc, char **argv, int i)
     {
       char *lf;
       CHECK_FOR_REQUIRED_ARGUMENT();
-      lf = malloc(strlen(argv[i + 1]) + 1);
+      lf = strdup(argv[i + 1]);
       if (!lf)
 	FatalError("Can't allocate memory for LogFile\n");
-      strcpy(lf, argv[i + 1]);
       xf86LogFile = lf;
       xf86LogFileFrom = X_CMDLINE;
       return 2;

@@ -540,6 +540,7 @@ void UseMsg(void)
 #endif
     ErrorF("-dumbSched             Disable smart scheduling, enable old behavior\n");
     ErrorF("-schedInterval int     Set scheduler interval in msec\n");
+    ErrorF("-sigstop               Enable SIGSTOP based startup\n");
     ErrorF("+extension name        Enable extension\n");
     ErrorF("-extension name        Disable extension\n");
 #ifdef XDMCP
@@ -935,6 +936,10 @@ ProcessCommandLine(int argc, char *argv[])
 	    else
 		UseMsg ();
 	}
+	else if ( strcmp( argv[i], "-sigstop") == 0)
+	{
+	    RunFromSigStopParent = TRUE;
+	}
 	else if ( strcmp( argv[i], "+extension") == 0)
 	{
 	    if (++i < argc)
@@ -1129,20 +1134,10 @@ XNFstrdup(const char *s)
     return ret;
 }
 
-
-#if defined(SIGVTALRM) && !defined(__CYGWIN__)
-#define SMART_SCHEDULE_POSSIBLE
-#endif
-
-#ifdef SMART_SCHEDULE_POSSIBLE
-#define SMART_SCHEDULE_SIGNAL		SIGALRM
-#define SMART_SCHEDULE_TIMER		ITIMER_REAL
-#endif
-
 void
 SmartScheduleStopTimer (void)
 {
-#ifdef SMART_SCHEDULE_POSSIBLE
+#ifndef _MSC_VER
     struct itimerval	timer;
     
     if (SmartScheduleDisable)
@@ -1158,7 +1153,7 @@ SmartScheduleStopTimer (void)
 void
 SmartScheduleStartTimer (void)
 {
-#ifdef SMART_SCHEDULE_POSSIBLE
+#ifndef _MSC_VER
     struct itimerval	timer;
     
     if (SmartScheduleDisable)
@@ -1171,37 +1166,32 @@ SmartScheduleStartTimer (void)
 #endif
 }
 
-#ifdef SMART_SCHEDULE_POSSIBLE
 static void
 SmartScheduleTimer (int sig)
 {
     SmartScheduleTime += SmartScheduleInterval;
 }
-#endif
 
-Bool
+void
 SmartScheduleInit (void)
 {
-#ifdef SMART_SCHEDULE_POSSIBLE
+#ifndef _MSC_VER
     struct sigaction	act;
 
     if (SmartScheduleDisable)
-	return TRUE;
-    
+	return;
+
     memset((char *) &act, 0, sizeof(struct sigaction));
 
     /* Set up the timer signal function */
     act.sa_handler = SmartScheduleTimer;
     sigemptyset (&act.sa_mask);
-    sigaddset (&act.sa_mask, SMART_SCHEDULE_SIGNAL);
-    if (sigaction (SMART_SCHEDULE_SIGNAL, &act, 0) < 0)
+    sigaddset (&act.sa_mask, SIGALRM);
+    if (sigaction (SIGALRM, &act, 0) < 0)
     {
 	perror ("sigaction for smart scheduler");
-	return FALSE;
+	SmartScheduleDisable = TRUE;
     }
-    return TRUE;
-#else
-    return FALSE;
 #endif
 }
 
@@ -1219,30 +1209,18 @@ OsBlockSignals (void)
 	sigset_t    set;
 	
 	sigemptyset (&set);
-#ifdef SIGALRM
 	sigaddset (&set, SIGALRM);
-#endif
-#ifdef SIGVTALRM
 	sigaddset (&set, SIGVTALRM);
-#endif
 #ifdef SIGWINCH
 	sigaddset (&set, SIGWINCH);
 #endif
 #ifdef SIGIO
 	sigaddset (&set, SIGIO);
 #endif
-#ifdef SIGTSTP
 	sigaddset (&set, SIGTSTP);
-#endif
-#ifdef SIGTTIN
 	sigaddset (&set, SIGTTIN);
-#endif
-#ifdef SIGTTOU
 	sigaddset (&set, SIGTTOU);
-#endif
-#ifdef SIGCHLD
 	sigaddset (&set, SIGCHLD);
-#endif
 	sigprocmask (SIG_BLOCK, &set, &PreviousSignalMask);
     }
 #endif
@@ -1288,21 +1266,17 @@ int
 System(char *command)
 {
     int pid, p;
-#ifdef SIGCHLD
     void (*csig)(int);
-#endif
     int status;
 
     if (!command)
 	return 1;
 
-#ifdef SIGCHLD
     csig = signal(SIGCHLD, SIG_DFL);
     if (csig == SIG_ERR) {
       perror("signal");
       return -1;
     }
-#endif
 
 #ifdef DEBUG
     ErrorF("System: `%s'\n", command);
@@ -1325,12 +1299,10 @@ System(char *command)
 	
     }
 
-#ifdef SIGCHLD
     if (signal(SIGCHLD, csig) == SIG_ERR) {
       perror("signal");
       return -1;
     }
-#endif
 
     return p == -1 ? -1 : status;
 }

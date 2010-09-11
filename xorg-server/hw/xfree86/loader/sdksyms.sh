@@ -345,11 +345,14 @@ BEGIN {
     if (sdk && $3 ~ /\.h"$/) {
 	# remove quotes
 	gsub(/"/, "", $3);
+	line = $2;
+	header = $3;
 	if (! headers[$3]) {
 	    printf(" \\\n  %s", $3) >> "sdksyms.dep";
 	    headers[$3] = 1;
 	}
     }
+    next;
 }
 
 /^extern[ 	]/  {
@@ -398,8 +401,12 @@ BEGIN {
 	sub(/[^a-zA-Z0-9_].*/, "", symbol);
 
 	#print;
-	printf("    (void *) &%s,\n", symbol);
+	printf("    (void *) &%-50s /* %s:%s */\n", symbol ",", header, line);
     }
+}
+
+{
+    line++;
 }
 
 END {
