@@ -71,6 +71,7 @@ static struct {
 } keys[PRIVATE_LAST];
 
 static const Bool xselinux_private[PRIVATE_LAST] = {
+    [PRIVATE_SCREEN] = TRUE,
     [PRIVATE_CLIENT] = TRUE,
     [PRIVATE_WINDOW] = TRUE,
     [PRIVATE_PIXMAP] = TRUE,

@@ -479,12 +479,11 @@ static void setup_env(void) {
         pds = LAUNCHD_ID_PREFIX".X11";
     }
 
-    server_bootstrap_name = malloc(sizeof(char) * (strlen(pds) + 1));
+    server_bootstrap_name = strdup(pds);
     if(!server_bootstrap_name) {
         fprintf(stderr, "X11.app: Memory allocation error.\n");
         exit(1);
     }
-    strcpy(server_bootstrap_name, pds);
     setenv("X11_PREFS_DOMAIN", server_bootstrap_name, 1);
     
     len = strlen(server_bootstrap_name);

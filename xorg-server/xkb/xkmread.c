@@ -534,8 +534,7 @@ XkbAction               *act;
 
         case XkbSA_XFree86Private:
             /* copy the kind of action */
-            strncpy((char*)act->any.data, (char*)wire.actionData,
-                    XkbAnyActionDataSize);
+            memcpy(act->any.data, wire.actionData, XkbAnyActionDataSize);
             break ;
 
         case XkbSA_Terminate:
@@ -687,7 +686,11 @@ int			nRead=0;
 	    if ((tmp=XkmGetCountedString(file,buf,100))<1)
 		return -1;
 	    nRead+= tmp;
-	    if ((buf[0]!='\0')&&(xkb->names)) {
+
+	    if (!xkb->names)
+		    continue;
+
+	    if (buf[0]!='\0') {
 		Atom name;
 		name= XkbInternAtom(buf,0);
 		xkb->names->groups[i]= name;

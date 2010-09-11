@@ -1154,8 +1154,7 @@ void
 AssignTypeAndName(DeviceIntPtr dev, Atom type, char *name)
 {
     dev->xinput_type = type;
-    dev->name = (char *)malloc(strlen(name) + 1);
-    strcpy(dev->name, name);
+    dev->name = strdup(name);
 }
 
 /***********************************************************************

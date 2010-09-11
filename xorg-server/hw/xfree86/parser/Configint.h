@@ -98,9 +98,6 @@ LexRec, *LexPtr;
 #define parsePrologue(typeptr,typerec) typeptr ptr; \
 if( (ptr=calloc(1,sizeof(typerec))) == NULL ) { return NULL; }
 
-#define parsePrologueVoid(typeptr,typerec) int token; typeptr ptr; \
-if( (ptr=calloc(1,sizeof(typerec))) == NULL ) { return; }
-
 #define HANDLE_RETURN(f,func)\
 if ((ptr->f=func) == NULL)\
 {\
@@ -152,10 +149,6 @@ else\
 "The %s keyword requires a boolean to follow it."
 #define ZAXISMAPPING_MSG \
 "The ZAxisMapping keyword requires 2 positive numbers or X or Y to follow it."
-#define AUTOREPEAT_MSG \
-"The AutoRepeat keyword requires 2 numbers (delay and rate) to follow it."
-#define XLEDS_MSG \
-"The XLeds keyword requries one or more numbers to follow it."
 #define DACSPEED_MSG \
 "The DacSpeed keyword must be followed by a list of up to %d numbers."
 #define DISPLAYSIZE_MSG \
@@ -216,7 +209,5 @@ else\
 /* Warning messages */
 #define OBSOLETE_MSG \
 "Ignoring obsolete keyword \"%s\"."
-#define MOVED_TO_FLAGS_MSG \
-"Keyword \"%s\" is now an Option flag in the ServerFlags section."
 
 #endif /* _Configint_h_ */

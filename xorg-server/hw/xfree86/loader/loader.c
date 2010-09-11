@@ -212,10 +212,8 @@ LoaderOpen(const char *module, const char *cname, int handle,
     refCount[new_handle] = 1;
 
     tmp = _LoaderListPush();
-    tmp->name = malloc(strlen(module) + 1);
-    strcpy(tmp->name, module);
-    tmp->cname = malloc(strlen(cname) + 1);
-    strcpy(tmp->cname, cname);
+    tmp->name = strdup(module);
+    tmp->cname = strdup(cname);
     tmp->handle = new_handle;
     tmp->module = moduleseq++;
 

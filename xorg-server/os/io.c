@@ -251,7 +251,14 @@ ReadRequestFromClient(ClientPtr client)
     need_header = FALSE;
     move_header = FALSE;
     gotnow = oci->bufcnt + oci->buffer - oci->bufptr;
-    if (gotnow < sizeof(xReq))
+
+    if (oci->ignoreBytes > 0) {
+	if (oci->ignoreBytes > oci->size)
+	    needed = oci->size;
+	else
+	    needed = oci->ignoreBytes;
+    }
+    else if (gotnow < sizeof(xReq))
     {
 	/* We don't have an entire xReq yet.  Can't tell how big
 	 * the request will be until we get the whole xReq.
@@ -294,8 +301,13 @@ ReadRequestFromClient(ClientPtr client)
 	if (needed > maxBigRequestSize << 2)
 	{
 	    /* request is too big for us to handle */
-	    YieldControlDeath();
-	    return -1;
+	    /*
+	     * Mark the rest of it as needing to be ignored, and then return
+	     * the full size.  Dispatch() will turn it into a BadLength error.
+	     */
+	    oci->ignoreBytes = needed - gotnow;
+	    oci->lenLastReq = gotnow;
+	    return needed;
 	}
 	if ((gotnow == 0) ||
 	    ((oci->bufptr - oci->buffer + needed) > oci->size))
@@ -399,6 +411,14 @@ ReadRequestFromClient(ClientPtr client)
 	    needed = sizeof(xReq);
     }
     oci->lenLastReq = needed;
+
+    /* If there are bytes to ignore, ignore them now. */
+
+    if (oci->ignoreBytes > 0) {
+	assert(needed == oci->ignoreBytes || needed == oci->size);
+	oci->ignoreBytes -= gotnow;
+	needed = gotnow = 0;
+    }
 
     /*
      *  Check to see if client has at least one whole request in the
@@ -1030,6 +1050,7 @@ AllocateInputBuffer(void)
     oci->bufptr = oci->buffer;
     oci->bufcnt = 0;
     oci->lenLastReq = 0;
+    oci->ignoreBytes = 0;
     return oci;
 }
 

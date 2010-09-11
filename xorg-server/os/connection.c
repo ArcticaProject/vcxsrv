@@ -146,6 +146,8 @@ Bool NewOutputPending;		/* not yet attempted to write some new output */
 Bool AnyClientsWriteBlocked;	/* true if some client blocked on write */
 
 static Bool RunFromSmartParent;	/* send SIGUSR1 to parent process */
+Bool RunFromSigStopParent;	/* send SIGSTOP to our own process; Upstart (or
+				   equivalent) will send SIGCONT back. */
 Bool PartialNetwork;	/* continue even if unable to bind all addrs */
 static Pid_t ParentProcess;
 
@@ -357,6 +359,8 @@ NotifyParentProcess(void)
 	    kill (ParentProcess, SIGUSR1);
 	}
     }
+    if (RunFromSigStopParent)
+	raise (SIGSTOP);
 #endif
 }
 

@@ -806,6 +806,7 @@ ProcessInputProc backupproc;
     /* never actually used uninitialised, but gcc isn't smart enough
      * to work that out. */
     memset(&old, 0, sizeof(old));
+    memset(&ev, 0, sizeof(ev));
 
     if ((filter->keycode!=0)&&(filter->keycode!=keycode))
 	return 1;

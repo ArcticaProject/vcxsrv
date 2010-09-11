@@ -1,4 +1,6 @@
 .\" $XdotOrg: xserver/xorg/hw/xfree86/doc/man/Xorg.man.pre,v 1.3 2005/07/04 18:41:01 ajax Exp $
+.\" shorthand for double quote that works everywhere.
+.ds q \N'34'
 .TH __xservername__ __appmansuffix__ __vendorversion__
 .SH NAME
 __xservername__ - X11R7 X server
@@ -440,6 +442,14 @@ Immediately kills the server -- no questions asked. It can be disabled by
 setting the
 .B DontZap
 __xconfigfile__(__filemansuffix__) file option to a TRUE value.
+.PP
+.RS 8
+It should be noted that zapping is triggered by the
+.B Terminate_Server
+action in the keyboard map. This action is not part of the default keymaps
+but can be enabled with the XKB option
+.B \*qterminate:ctrl_alt_bksp\*q.
+.RE
 .TP 8
 .B Ctrl+Alt+Keypad-Plus
 Change video mode to next one specified in the configuration file.

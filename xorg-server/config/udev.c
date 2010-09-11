@@ -58,7 +58,6 @@ device_added(struct udev_device *udev_device)
     char *config_info = NULL;
     const char *syspath;
     const char *tags_prop;
-    const char *usb_vendor = NULL, *usb_model = NULL;
     const char *key, *value, *tmp;
     InputOption *options = NULL, *tmpo;
     InputAttributes attrs = {};
@@ -94,6 +93,8 @@ device_added(struct udev_device *udev_device)
     parent = udev_device_get_parent(udev_device);
     if (parent) {
         const char *ppath = udev_device_get_devnode(parent);
+        const char *product = udev_device_get_property_value(parent, "PRODUCT");
+        unsigned int usb_vendor, usb_model;
 
         name = udev_device_get_sysattr_value(parent, "name");
         LOG_SYSATTR(ppath, "name", name);
@@ -104,6 +105,13 @@ device_added(struct udev_device *udev_device)
 
         attrs.pnp_id = udev_device_get_sysattr_value(parent, "id");
         LOG_SYSATTR(ppath, "id", attrs.pnp_id);
+
+        /* construct USB ID in lowercase hex - "0000:ffff" */
+        if (product && sscanf(product, "%*x/%4x/%4x/%*x", &usb_vendor, &usb_model) == 2) {
+            attrs.usb_id = Xprintf("%04x:%04x", usb_vendor, usb_model);
+            if (attrs.usb_id)
+                LOG_PROPERTY(path, "PRODUCT", product);
+        }
     }
     if (!name)
         name = "(unnamed)";
@@ -152,12 +160,6 @@ device_added(struct udev_device *udev_device)
         } else if (!strcmp(key, "ID_VENDOR")) {
             LOG_PROPERTY(path, key, value);
             attrs.vendor = value;
-        } else if (!strcmp(key, "ID_VENDOR_ID")) {
-            LOG_PROPERTY(path, key, value);
-            usb_vendor = value;
-        } else if (!strcmp(key, "ID_VENDOR_MODEL")) {
-            LOG_PROPERTY(path, key, value);
-            usb_model = value;
         } else if (!strcmp(key, "ID_INPUT_KEY")) {
             LOG_PROPERTY(path, key, value);
             attrs.flags |= ATTR_KEYBOARD;
@@ -176,16 +178,6 @@ device_added(struct udev_device *udev_device)
         } else if (!strcmp(key, "ID_INPUT_TOUCHSCREEN")) {
             LOG_PROPERTY(path, key, value);
             attrs.flags |= ATTR_TOUCHSCREEN;
-        }
-    }
-
-    /* construct USB ID in lowercase hex - "0000:ffff" */
-    if (usb_vendor && usb_model) {
-        attrs.usb_id = Xprintf("%s:%s", usb_vendor, usb_model);
-        if (attrs.usb_id) {
-            char *cur;
-            for (cur = attrs.usb_id; *cur; cur++)
-                *cur = tolower(*cur);
         }
     }
 

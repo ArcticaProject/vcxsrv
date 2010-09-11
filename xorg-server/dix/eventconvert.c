@@ -102,6 +102,15 @@ EventToCore(InternalEvent *event, xEvent *core)
     switch(event->any.type)
     {
         case ET_Motion:
+            {
+                DeviceEvent *e = &event->device_event;
+                /* Don't create core motion event if neither x nor y are
+                 * present */
+                if (!BitIsOn(e->valuators.mask, 0) &&
+                    !BitIsOn(e->valuators.mask, 1))
+                    return BadMatch;
+            }
+            /* fallthrough */
         case ET_ButtonPress:
         case ET_ButtonRelease:
         case ET_KeyPress:

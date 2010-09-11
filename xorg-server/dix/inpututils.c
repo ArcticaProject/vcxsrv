@@ -286,7 +286,7 @@ int generate_modkeymap(ClientPtr client, DeviceIntPtr dev,
 {
     CARD8 keys_per_mod[8];
     int max_keys_per_mod;
-    KeyCode *modkeymap;
+    KeyCode *modkeymap = NULL;
     int i, j, ret;
 
     ret = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixGetAttrAccess);
@@ -310,18 +310,20 @@ int generate_modkeymap(ClientPtr client, DeviceIntPtr dev,
         }
     }
 
-    modkeymap = calloc(max_keys_per_mod * 8, sizeof(KeyCode));
-    if (!modkeymap)
-        return BadAlloc;
+    if (max_keys_per_mod != 0) {
+        modkeymap = calloc(max_keys_per_mod * 8, sizeof(KeyCode));
+        if (!modkeymap)
+            return BadAlloc;
 
-    for (i = 0; i < 8; i++)
-        keys_per_mod[i] = 0;
+        for (i = 0; i < 8; i++)
+            keys_per_mod[i] = 0;
 
-    for (i = 8; i < MAP_LENGTH; i++) {
-        for (j = 0; j < 8; j++) {
-            if (dev->key->xkbInfo->desc->map->modmap[i] & (1 << j)) {
-                modkeymap[(j * max_keys_per_mod) + keys_per_mod[j]] = i;
-                keys_per_mod[j]++;
+        for (i = 8; i < MAP_LENGTH; i++) {
+            for (j = 0; j < 8; j++) {
+                if (dev->key->xkbInfo->desc->map->modmap[i] & (1 << j)) {
+                    modkeymap[(j * max_keys_per_mod) + keys_per_mod[j]] = i;
+                    keys_per_mod[j]++;
+                }
             }
         }
     }

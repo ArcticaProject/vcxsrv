@@ -196,12 +196,11 @@ ProcSetSelectionOwner(ClientPtr client)
 	/*
 	 * It doesn't exist, so add it...
 	 */
-	pSel = malloc(sizeof(Selection));
+	pSel = dixAllocateObjectWithPrivates(Selection, PRIVATE_SELECTION);
 	if (!pSel)
 	    return BadAlloc;
 
 	pSel->selection = stuff->selection;
-	pSel->devPrivates = NULL;
 
 	/* security creation/labeling check */
 	rc = XaceHookSelectionAccess(client, &pSel,

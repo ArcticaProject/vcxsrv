@@ -157,9 +157,7 @@ xf86writeConfigFile (const char *filename, XF86ConfigPtr cptr)
 
 #if !defined(HAS_SAVED_IDS_AND_SETEUID)
 		/* Need to fork to change ruid without loosing euid */
-#ifdef SIGCHLD
 		csig = signal(SIGCHLD, SIG_DFL);
-#endif
 		switch ((pid = fork()))
 		{
 		case -1:
@@ -180,9 +178,7 @@ xf86writeConfigFile (const char *filename, XF86ConfigPtr cptr)
 				p = waitpid(pid, &status, 0);
 			} while (p == -1 && errno == EINTR);
 		}
-#ifdef SIGCHLD
 		signal(SIGCHLD, csig);
-#endif
 		if (p != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0)
 			return 1;	/* success */
 		else

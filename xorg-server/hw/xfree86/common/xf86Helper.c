@@ -1267,7 +1267,7 @@ xf86MsgVerb(MessageType type, int verb, const char *format, ...)
     va_list ap;
 
     va_start(ap, format);
-    xf86VDrvMsgVerb(-1, type, verb, format, ap);
+    LogVMessageVerb(type, verb, format, ap);
     va_end(ap);
 }
 
@@ -1278,7 +1278,7 @@ xf86Msg(MessageType type, const char *format, ...)
     va_list ap;
 
     va_start(ap, format);
-    xf86VDrvMsgVerb(-1, type, 1, format, ap);
+    LogVMessageVerb(type, 1, format, ap);
     va_end(ap);
 }
 

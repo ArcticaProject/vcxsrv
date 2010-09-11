@@ -88,14 +88,8 @@ extern const ModuleVersions LoaderVersionInfo;
 extern unsigned long LoaderOptions;
 
 /* Internal Functions */
-void LoaderDuplicateSymbol(const char *, const int);
-char *_LoaderModuleToName(int);
 int LoaderOpen(const char *, const char *, int, int *, int *, int *, int);
 int LoaderHandleOpen(int);
-
-/* object to name lookup routines */
-char *_LoaderHandleToName(int handle);
-char *_LoaderHandleToCanonicalName(int handle);
 
 /* Loader backends. */
 #include "dlloader.h"
