@@ -95,9 +95,9 @@ extern __thread void * _glapi_tls_Context
 #else
 
 #ifdef INSERVER
-#define EXTERN _declspec(dllexport)
+#define EXTERN _declspec(dllimport)
 #else
-#define EXTERN extern
+#define EXTERN _declspec(dllexport)
 #endif
 
 EXTERN struct _glapi_table *_glapi_Dispatch;

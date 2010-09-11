@@ -74,7 +74,6 @@
 #include <unistd.h>
 #define str_dup strdup
 
-#define INSERVER
 #include "glapi.h"
 #include "glapioffsets.h"
 #include "GL/gl.h"
