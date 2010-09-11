@@ -277,8 +277,18 @@ class CMyWizard : public CWizard
 	    {
 		case IDD_CLIENTS:
                     // Enable or disable XDMCP radiobutton and text
-		    EnableWindow(GetDlgItem(hwndDlg, IDC_XDMCP), config.window != CConfig::MultiWindow);
-		    EnableWindow(GetDlgItem(hwndDlg, IDC_XDMCP_DESC), config.window != CConfig::MultiWindow);
+		    if (config.window != CConfig::MultiWindow)
+		    {
+		      EnableWindow(GetDlgItem(hwndDlg, IDC_XDMCP), true);
+		      EnableWindow(GetDlgItem(hwndDlg, IDC_XDMCP_DESC), true);
+		    }
+		    else
+		    {
+		      if (IsDlgButtonChecked(hwndDlg, IDC_XDMCP))
+		        CheckRadioButton(hwndDlg, IDC_CLIENT_NONE, IDC_CLIENT, IDC_CLIENT_NONE);
+		      EnableWindow(GetDlgItem(hwndDlg, IDC_XDMCP), false);
+		      EnableWindow(GetDlgItem(hwndDlg, IDC_XDMCP_DESC), false);
+		    }
 		    break;
 	    }
 	    return FALSE;
