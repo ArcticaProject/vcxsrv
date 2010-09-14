@@ -40,13 +40,9 @@
 #include "colormapst.h"
 
 unsigned int rootless_CopyBytes_threshold = 0;
-unsigned int rootless_FillBytes_threshold = 0;
-unsigned int rootless_CompositePixels_threshold = 0;
 unsigned int rootless_CopyWindow_threshold = 0;
-#ifdef ROOTLESS_GLOBAL_COORDS
 int rootlessGlobalOffsetX = 0;
 int rootlessGlobalOffsetY = 0;
-#endif
 
 RegionRec rootlessHugeRoot = {{-32767, -32767, 32767, 32767}, NULL};
 
@@ -305,16 +301,11 @@ RootlessDamageRegion(WindowPtr pWindow, RegionPtr pRegion)
             if (in == rgnIN) {
             /* clip totally contains pRegion */
 
-#ifdef ROOTLESS_TRACK_DAMAGE
-                RegionUnion(&winRec->damage,
-                                 &winRec->damage, (pRegion));
-#else
                 SCREENREC(pWindow->drawable.pScreen)->imp->
                     DamageRects(winRec->wid,
                                 RegionNumRects(pRegion),
                                 RegionRects(pRegion),
                                 -winRec->x, -winRec->y);
-#endif
 
                 RootlessQueueRedisplay(pTop->drawable.pScreen);
                 goto out;
@@ -331,16 +322,11 @@ RootlessDamageRegion(WindowPtr pWindow, RegionPtr pRegion)
         RegionNull(&clipped);
         RegionIntersect(&clipped, &pWindow->borderClip, pRegion);
 
-#ifdef ROOTLESS_TRACK_DAMAGE
-        RegionUnion(&winRec->damage,
-                     &winRec->damage, (pRegion));
-#else
         SCREENREC(pWindow->drawable.pScreen)->imp->
             DamageRects(winRec->wid,
                         RegionNumRects(&clipped),
                         RegionRects(&clipped),
                         -winRec->x, -winRec->y);
-#endif
 
         RegionUninit(&clipped);
 
@@ -415,32 +401,7 @@ RootlessDamageRect(WindowPtr pWindow, int x, int y, int w, int h)
 void
 RootlessRedisplay(WindowPtr pWindow)
 {
-#ifdef ROOTLESS_TRACK_DAMAGE
-
-    RootlessWindowRec *winRec = WINREC(pWindow);
-    ScreenPtr pScreen = pWindow->drawable.pScreen;
-
-    RootlessStopDrawing(pWindow, FALSE);
-
-    if (RegionNotEmpty(&winRec->damage)) {
-        RL_DEBUG_MSG("Redisplay Win 0x%x, %i x %i @ (%i, %i)\n",
-                     pWindow, winRec->width, winRec->height,
-                     winRec->x, winRec->y);
-
-        // move region to window local coords
-        RegionTranslate(&winRec->damage,
-                         -winRec->x, -winRec->y);
-
-        SCREENREC(pScreen)->imp->UpdateRegion(winRec->wid, &winRec->damage);
-
-        RegionEmpty(&winRec->damage);
-    }
-
-#else   /* !ROOTLESS_TRACK_DAMAGE */
-
     RootlessStopDrawing(pWindow, TRUE);
-
-#endif
 }
 
 

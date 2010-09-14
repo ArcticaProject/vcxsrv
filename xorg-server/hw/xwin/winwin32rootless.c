@@ -906,24 +906,6 @@ winMWExtWMCopyBytes (unsigned int width, unsigned int height,
 }
 
 void
-winMWExtWMFillBytes (unsigned int width, unsigned int height, unsigned int value,
-			   void *dst, unsigned int dstRowBytes)
-{
-  winDebug ("winMWExtWMFillBytes - Not implemented\n");
-}
-
-int
-winMWExtWMCompositePixels (unsigned int width, unsigned int height, unsigned int function,
-				 void *src[2], unsigned int srcRowBytes[2],
-				 void *mask, unsigned int maskRowBytes,
-				 void *dst[2], unsigned int dstRowBytes[2])
-{
-  winDebug ("winMWExtWMCompositePixels - Not implemented\n");
-  return 0;
-}
-
-
-void
 winMWExtWMCopyWindow (RootlessFrameID wid, int nDstRects, const BoxRec *pDstRects,
 			    int nDx, int nDy)
 {

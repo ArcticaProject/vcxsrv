@@ -36,11 +36,9 @@
 
 #ifdef __APPLE__
 
-# define ROOTLESS_GLOBAL_COORDS TRUE
 # define ROOTLESS_PROTECT_ALPHA TRUE
 # define ROOTLESS_REDISPLAY_DELAY 10
 # define ROOTLESS_RESIZE_GRAVITY TRUE
-# undef  ROOTLESS_TRACK_DAMAGE
 /*# define ROOTLESSDEBUG*/
 
 /* Bit mask for alpha channel with a particular number of bits per
@@ -52,11 +50,9 @@
 
 #if defined(__CYGWIN__) || defined(WIN32)
 
-# define ROOTLESS_GLOBAL_COORDS TRUE
 # define ROOTLESS_PROTECT_ALPHA NO
 # define ROOTLESS_REDISPLAY_DELAY 10
 # undef  ROOTLESS_RESIZE_GRAVITY
-# undef  ROOTLESS_TRACK_DAMAGE
 /*# define ROOTLESSDEBUG*/
 
 # define RootlessAlphaMask(bpp) ((bpp) == 32 ? 0xFF000000 : 0)

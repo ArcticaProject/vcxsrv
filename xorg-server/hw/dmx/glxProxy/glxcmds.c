@@ -38,11 +38,6 @@
 #include "dmxfont.h"
 #include "dmxsync.h"
 
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
 #include "glxserver.h"
 #include <GL/glxtokens.h>
 #include "g_disptab.h"
@@ -144,7 +139,7 @@ static int CreateContext(__GLXclientState *cl,
     /*
     ** Allocate memory for the new context
     */
-    glxc = __glXCalloc(1, sizeof(__GLXcontext));
+    glxc = calloc(1, sizeof(__GLXcontext));
     if (!glxc) {
 	return BadAlloc;
     }
@@ -156,7 +151,7 @@ static int CreateContext(__GLXclientState *cl,
        glxc->pFBConfig = glxLookupFBConfig( fbconfigId );
        if (!glxc->pFBConfig) {
 	  client->errorValue = fbconfigId;
-	  __glXFree( glxc );
+	  free( glxc );
 	  return BadValue;
        }
        visual = glxc->pFBConfig->associatedVisualId;
@@ -177,7 +172,7 @@ static int CreateContext(__GLXclientState *cl,
        }
        if (i == pScreen->numVisuals) {
 	  client->errorValue = visual;
-	  __glXFree( glxc );
+	  free( glxc );
 	  return BadValue;
        }
 
@@ -192,7 +187,7 @@ static int CreateContext(__GLXclientState *cl,
 	   ** Visual not support on this screen by this OpenGL implementation.
 	   */
 	  client->errorValue = visual;
-	  __glXFree( glxc );
+	  free( glxc );
 	  return BadValue;
        }
 
@@ -203,7 +198,7 @@ static int CreateContext(__GLXclientState *cl,
 	      /*
                * visual does not have an FBConfig ???
 	      client->errorValue = visual;
-	      __glXFree( glxc );
+	      free( glxc );
 	      return BadValue;
 	       */
 	   }
@@ -223,11 +218,11 @@ static int CreateContext(__GLXclientState *cl,
      * allocate memory for back-end servers info
      */
     num_be_screens = to_screen - from_screen + 1;
-    glxc->real_ids = (XID *)__glXMalloc(sizeof(XID) * num_be_screens);
+    glxc->real_ids = (XID *)malloc(sizeof(XID) * num_be_screens);
     if (!glxc->real_ids) {
 	return BadAlloc;
     }
-    glxc->real_vids = (XID *)__glXMalloc(sizeof(XID) * num_be_screens);
+    glxc->real_vids = (XID *)malloc(sizeof(XID) * num_be_screens);
     if (!glxc->real_vids) {
 	return BadAlloc;
     }
@@ -252,9 +247,9 @@ static int CreateContext(__GLXclientState *cl,
 
 	  if (!be_vid) {
 	     /* visual is not supported on the back-end server */
-	     __glXFree( glxc->real_ids );
-	     __glXFree( glxc->real_vids );
-	     __glXFree( glxc );
+	     free( glxc->real_ids );
+	     free( glxc->real_vids );
+	     free( glxc );
 	     return BadValue;
 	  }
        }
@@ -346,9 +341,9 @@ static int CreateContext(__GLXclientState *cl,
     ** Register this context as a resource.
     */
     if (!AddResource(gcId, __glXContextRes, (pointer)glxc)) {
-       __glXFree( glxc->real_ids );
-       __glXFree( glxc->real_vids );
-       __glXFree( glxc );
+       free( glxc->real_ids );
+       free( glxc->real_vids );
+       free( glxc );
 	client->errorValue = gcId;
 	return BadAlloc;
     }
@@ -585,16 +580,16 @@ static int AddCurrentContext(__GLXclientState *cl, __GLXcontext *glxc, DrawableP
     ** Didn't find a free slot, so we'll have to grow the table.
     */
     if (!num) {
-	table = (__GLXcontext **) __glXMalloc(sizeof(__GLXcontext *));
-	cl->currentDrawables = (DrawablePtr *) __glXMalloc(sizeof(DrawablePtr));
-	cl->be_currentCTag = (GLXContextTag *) __glXMalloc(screenInfo.numScreens *sizeof(GLXContextTag));
+	table = (__GLXcontext **) malloc(sizeof(__GLXcontext *));
+	cl->currentDrawables = (DrawablePtr *) malloc(sizeof(DrawablePtr));
+	cl->be_currentCTag = (GLXContextTag *) malloc(screenInfo.numScreens *sizeof(GLXContextTag));
     } else {
-	table = (__GLXcontext **) __glXRealloc(table,
+	table = (__GLXcontext **) realloc(table,
 					   (num+1)*sizeof(__GLXcontext *));
-	cl->currentDrawables = (DrawablePtr *) __glXRealloc(
+	cl->currentDrawables = (DrawablePtr *) realloc(
 	                                          cl->currentDrawables ,
 						  (num+1)*sizeof(DrawablePtr));
-	cl->be_currentCTag = (GLXContextTag *) __glXRealloc(cl->be_currentCTag,
+	cl->be_currentCTag = (GLXContextTag *) realloc(cl->be_currentCTag,
 	            (num+1)*screenInfo.numScreens*sizeof(GLXContextTag));
     }
     table[num] = glxc;
@@ -1721,13 +1716,13 @@ static int CreateGLXPixmap(__GLXclientState *cl,
        pGlxVisual = NULL;
     }
 
-    pGlxPixmap = (__GLXpixmap *) __glXMalloc(sizeof(__GLXpixmap));
+    pGlxPixmap = (__GLXpixmap *) malloc(sizeof(__GLXpixmap));
     if (!pGlxPixmap) {
 	return BadAlloc;
     }
-    pGlxPixmap->be_xids = (XID *) __glXMalloc(sizeof(XID) * screenInfo.numScreens);
+    pGlxPixmap->be_xids = (XID *) malloc(sizeof(XID) * screenInfo.numScreens);
     if (!pGlxPixmap->be_xids) {
-        __glXFree( pGlxPixmap );
+        free( pGlxPixmap );
 	return BadAlloc;
     }
 
@@ -1832,7 +1827,7 @@ static int CreateGLXPixmap(__GLXclientState *cl,
        }
        else {
 	  client->errorValue = ( visual ? visual : fbconfigId );
-          __glXFree( pGlxPixmap );
+          free( pGlxPixmap );
 	  return BadValue;
        }
 
@@ -1840,7 +1835,7 @@ static int CreateGLXPixmap(__GLXclientState *cl,
     }
 
     if (!(AddResource(glxpixmapId, __glXPixmapRes, pGlxPixmap))) {
-        __glXFree( pGlxPixmap );
+        free( pGlxPixmap );
 	return BadAlloc;
     }
 
@@ -2570,7 +2565,7 @@ int __glXClientInfo(__GLXclientState *cl, GLbyte *pc)
    
     cl->GLClientmajorVersion = req->major;
     cl->GLClientminorVersion = req->minor;
-    if (cl->GLClientextensions) __glXFree(cl->GLClientextensions);
+    if (cl->GLClientextensions) free(cl->GLClientextensions);
     buf = (const char *)(req+1);
     cl->GLClientextensions = strdup(buf);
 

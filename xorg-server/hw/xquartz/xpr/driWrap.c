@@ -41,7 +41,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 typedef struct {
     GCOps *originalOps;
-    GCOps *driOps;
 } DRIGCRec;
 
 typedef struct {
@@ -86,9 +85,7 @@ DRIUnwrapGC(GCPtr pGC) {
 
 static void 
 DRIWrapGC(GCPtr pGC) {
-    DRIGCRec *pGCPriv = DRIGetGCPriv(pGC);
-    
-    pGC->ops = pGCPriv->driOps;
+    pGC->ops = &driGCOps;
 }
 
 static void
@@ -513,7 +510,6 @@ DRICreateGC(GCPtr pGC) {
     if(ret) {
 	pGCPriv->originalOps = pGC->ops;
 	pGC->ops = &driGCOps;
-	pGCPriv->driOps = &driGCOps;
     }
 
     wrap(pScreenPriv, pScreen, CreateGC, DRICreateGC);

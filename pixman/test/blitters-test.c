@@ -267,6 +267,7 @@ test_composite (int testnum, int verbose)
     uint32_t *dstbuf, *srcbuf, *maskbuf;
     uint32_t crc32;
     int max_width, max_height, max_extra_stride;
+    FLOAT_REGS_CORRUPTION_DETECTOR_START ();
 
     max_width = max_height = 24 + testnum / 10000;
     max_extra_stride = 4 + testnum / 1000000;
@@ -410,7 +411,7 @@ test_composite (int testnum, int verbose)
 	    free_random_image (0, mask_img, -1);
     }
 
-
+    FLOAT_REGS_CORRUPTION_DETECTOR_FINISH ();
     return crc32;
 }
 

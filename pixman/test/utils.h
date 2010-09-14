@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <config.h>
+#include <assert.h>
 #include "pixman-private.h" /* For 'inline' definition */
 
 /* A primitive pseudorandom number generator,
@@ -65,3 +66,38 @@ fuzzer_test_main (const char *test_name,
 
 void
 fail_after (int seconds, const char *msg);
+
+/* A pair of macros which can help to detect corruption of
+ * floating point registers after a function call. This may
+ * happen if _mm_empty() call is forgotten in MMX/SSE2 fast
+ * path code, or ARM NEON assembly optimized function forgets
+ * to save/restore d8-d15 registers before use.
+ */
+
+#define FLOAT_REGS_CORRUPTION_DETECTOR_START()                 \
+    static volatile double frcd_volatile_constant1 = 123451;   \
+    static volatile double frcd_volatile_constant2 = 123452;   \
+    static volatile double frcd_volatile_constant3 = 123453;   \
+    static volatile double frcd_volatile_constant4 = 123454;   \
+    static volatile double frcd_volatile_constant5 = 123455;   \
+    static volatile double frcd_volatile_constant6 = 123456;   \
+    static volatile double frcd_volatile_constant7 = 123457;   \
+    static volatile double frcd_volatile_constant8 = 123458;   \
+    double frcd_canary_variable1 = frcd_volatile_constant1;    \
+    double frcd_canary_variable2 = frcd_volatile_constant2;    \
+    double frcd_canary_variable3 = frcd_volatile_constant3;    \
+    double frcd_canary_variable4 = frcd_volatile_constant4;    \
+    double frcd_canary_variable5 = frcd_volatile_constant5;    \
+    double frcd_canary_variable6 = frcd_volatile_constant6;    \
+    double frcd_canary_variable7 = frcd_volatile_constant7;    \
+    double frcd_canary_variable8 = frcd_volatile_constant8;
+
+#define FLOAT_REGS_CORRUPTION_DETECTOR_FINISH()                \
+    assert (frcd_canary_variable1 == frcd_volatile_constant1); \
+    assert (frcd_canary_variable2 == frcd_volatile_constant2); \
+    assert (frcd_canary_variable3 == frcd_volatile_constant3); \
+    assert (frcd_canary_variable4 == frcd_volatile_constant4); \
+    assert (frcd_canary_variable5 == frcd_volatile_constant5); \
+    assert (frcd_canary_variable6 == frcd_volatile_constant6); \
+    assert (frcd_canary_variable7 == frcd_volatile_constant7); \
+    assert (frcd_canary_variable8 == frcd_volatile_constant8);

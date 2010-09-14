@@ -48,11 +48,6 @@ XAACreateGC(GCPtr pGC)
 	pGCPriv->wrapOps = NULL;
 	pGCPriv->wrapFuncs = pGC->funcs;
 	pGCPriv->XAAOps = &XAAFallbackOps;
-	pGCPriv->flags = 0;
-	pGCPriv->DashLength = 0;
-	pGCPriv->DashPattern = NULL;
-	pGCPriv->changes = 0;
-	/* initialize any other private fields here */
 	pGC->funcs = &XAAGCFuncs;
     }
  
@@ -651,5 +646,4 @@ GCOps XAAPixmapOps = {
     XAAPolyText16Pixmap, XAAImageText8Pixmap, 
     XAAImageText16Pixmap, XAAImageGlyphBltPixmap, 
     XAAPolyGlyphBltPixmap, XAAPushPixelsPixmap,
-    {NULL}		/* devPrivate */
 };

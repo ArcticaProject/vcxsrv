@@ -33,12 +33,6 @@
 
 extern void __glXNop(void);
 
-/* memory management */
-extern void *__glXMalloc(size_t size);
-extern void *__glXCalloc(size_t numElements, size_t elementSize);
-extern void *__glXRealloc(void *addr, size_t newSize);
-extern void __glXFree(void *ptr);
-
 /* context helper routines */
 extern __GLXcontext *__glXLookupContextByTag(__GLXclientState*, GLXContextTag);
 extern DrawablePtr __glXLookupDrawableByTag(__GLXclientState *cl, GLXContextTag tag);

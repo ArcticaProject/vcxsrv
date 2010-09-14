@@ -178,7 +178,6 @@ cat > sdksyms.c << EOF
 #include "xaa.h"
 #include "xaalocal.h"
 #include "xaarop.h"
-#include "xaaWrapper.h"
  */
 
 

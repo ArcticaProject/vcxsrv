@@ -122,10 +122,6 @@ extern _X_EXPORT int FreeGC(
     pointer /*pGC*/,
     XID /*gid*/);
 
-extern _X_EXPORT GCPtr CreateScratchGC(
-    ScreenPtr /*pScreen*/,
-    unsigned /*depth*/);
-
 extern _X_EXPORT void FreeGCperDepth(
     int /*screenNum*/);
 

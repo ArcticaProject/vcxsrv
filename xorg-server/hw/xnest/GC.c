@@ -73,9 +73,6 @@ static GCOps xnestOps = {
 Bool
 xnestCreateGC(GCPtr pGC)
 {
-  pGC->clientClipType = CT_NONE;
-  pGC->clientClip = NULL;
-  
   pGC->funcs = &xnestFuncs;
   pGC->ops = &xnestOps;
   
@@ -92,8 +89,6 @@ xnestCreateGC(GCPtr pGC)
 void
 xnestValidateGC(GCPtr pGC, unsigned long changes, DrawablePtr pDrawable)
 {
-  pGC->lastWinOrg.x = pDrawable->x;
-  pGC->lastWinOrg.y = pDrawable->y;
 }
 
 void

@@ -1730,6 +1730,5 @@ GCOps ShadowGCOps = {
     ShadowPolyText16, ShadowImageText8, 
     ShadowImageText16, ShadowImageGlyphBlt, 
     ShadowPolyGlyphBlt, ShadowPushPixels,
-    {NULL}		/* devPrivate */
 };
 

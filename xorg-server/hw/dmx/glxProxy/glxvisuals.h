@@ -39,12 +39,4 @@ VisualID glxMatchVisualInConfigList( ScreenPtr pScreen, VisualPtr pVisual, __GLX
 
 VisualPtr glxMatchVisual( ScreenPtr pScreen, VisualPtr pVisual, ScreenPtr pMatchScreen );
 
-void glxSetVisualConfigs(int nconfigs, __GLXvisualConfig *configs,
-                 void **privates);
-
-Bool glxInitVisuals(int *nvisualp, VisualPtr *visualp,
-			 VisualID *defaultVisp,
-			 int ndepth, DepthPtr pdepth,
-			 int rootDepth);
-
 #endif

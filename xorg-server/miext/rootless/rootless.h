@@ -68,10 +68,6 @@ typedef struct _RootlessWindowRec {
 
     PixmapPtr pixmap;
 
-#ifdef ROOTLESS_TRACK_DAMAGE
-    RegionRec damage;
-#endif
-
     unsigned int is_drawing :1;	// Currently drawing?
     unsigned int is_reorder_pending :1;
     unsigned int is_offscreen :1;
@@ -80,37 +76,13 @@ typedef struct _RootlessWindowRec {
 
 
 /* Offset for screen-local to global coordinate transforms */
-#ifdef ROOTLESS_GLOBAL_COORDS
 extern int rootlessGlobalOffsetX;
 extern int rootlessGlobalOffsetY;
-#endif
 
 /* The minimum number of bytes or pixels for which to use the
    implementation's accelerated functions. */
 extern unsigned int rootless_CopyBytes_threshold;
-extern unsigned int rootless_FillBytes_threshold;
-extern unsigned int rootless_CompositePixels_threshold;
 extern unsigned int rootless_CopyWindow_threshold;
-
-/* Operations used by CompositePixels */
-enum rl_composite_op_enum {
-    RL_COMPOSITE_SRC = 0,
-    RL_COMPOSITE_OVER,
-};
-
-/* Data formats for depth field and composite functions */
-enum rl_depth_enum {
-    RL_DEPTH_NIL = 0,			/* null source when compositing */
-    RL_DEPTH_ARGB8888,
-    RL_DEPTH_RGB555,
-    RL_DEPTH_A8,			/* for masks when compositing */
-    RL_DEPTH_INDEX8,
-};
-
-/* Macro to form the composite function for CompositePixels */
-#define RL_COMPOSITE_FUNCTION(op, src_depth, mask_depth, dest_depth) \
-    (((op) << 24) | ((src_depth) << 16) \
-     | ((mask_depth) << 8) | ((dest_depth) << 0))
 
 /* Gravity for window contents during resizing */
 enum rl_gravity_enum {
@@ -134,8 +106,7 @@ enum rl_gravity_enum {
  *              initialized before calling except for pFrame->wid, which
  *              is set by this function.
  *  pScreen     Screen on which to place the new frame
- *  newX, newY  Position of the frame. These will be identical to pFrame-x,
- *              pFrame->y unless ROOTLESS_GLOBAL_COORDS is set.
+ *  newX, newY  Position of the frame.
  *  pNewShape   Shape for the frame (in frame-local coordinates). NULL for
  *              unshaped frames.
  */
@@ -227,8 +198,7 @@ typedef void (*RootlessStartDrawingProc)
  *  is started again.
  *
  *  wid         Frame id
- *  flush       Flush drawing updates for this frame to the screen. This
- *              will always be FALSE if ROOTLESS_TRACK_DAMAGE is set.
+ *  flush       Flush drawing updates for this frame to the screen.
  */
 typedef void (*RootlessStopDrawingProc)
     (RootlessFrameID wid, Bool flush);
@@ -239,15 +209,13 @@ typedef void (*RootlessStopDrawingProc)
  *
  *  wid         Frame id
  *  pDamage     Region containing all the changed pixels in frame-lcoal
- *              coordinates. This is clipped to the window's clip. This
- *              will be NULL if ROOTLESS_TRACK_DAMAGE is not set.
+ *              coordinates. This is clipped to the window's clip.
  */
 typedef void (*RootlessUpdateRegionProc)
     (RootlessFrameID wid, RegionPtr pDamage);
 
 /*
  * Mark damaged rectangles as requiring redisplay to screen.
- *  This will only be called if ROOTLESS_TRACK_DAMAGE is not set.
  *
  *  wid         Frame id
  *  nrects      Number of damaged rectangles
@@ -302,44 +270,6 @@ typedef void (*RootlessCopyBytesProc)
      void *dst, unsigned int dstRowBytes);
 
 /*
- * Fill memory with 32-bit pattern. (Optional)
- *
- *  width       Bytes to fill per row
- *  height      Number of rows
- *  value       32-bit pattern to fill with
- *  dst         Destination data
- *  dstRowBytes Width of destination in bytes
- */
-typedef void (*RootlessFillBytesProc)
-    (unsigned int width, unsigned int height, unsigned int value,
-     void *dst, unsigned int dstRowBytes);
-
-/*
- * Composite pixels from source and mask to destination. (Optional)
- *
- *  width, height   Size of area to composite to in pizels
- *  function        Composite function built with RL_COMPOSITE_FUNCTION
- *  src             Source data
- *  srcRowBytes     Width of source in bytes (Passing NULL means source
- *                  is a single pixel.
- *  mask            Mask data
- *  maskRowBytes    Width of mask in bytes
- *  dst             Destination data
- *  dstRowBytes     Width of destination in bytes
- *
- *  For src and dst, the first element of the array is the color data. If
- *  the second element is non-null it implies there is alpha data (which
- *  may be meshed or planar). Data without alpha is assumed to be opaque.
- *
- *  An X11 error code is returned.
- */
-typedef int (*RootlessCompositePixelsProc)
-    (unsigned int width, unsigned int height, unsigned int function,
-     void *src[2], unsigned int srcRowBytes[2],
-     void *mask, unsigned int maskRowBytes,
-     void *dst[2], unsigned int dstRowBytes[2]);
-
-/*
  * Copy area in frame to another part of frame. (Optional)
  *
  *  wid         Frame id
@@ -374,9 +304,7 @@ typedef struct _RootlessFrameProcs {
     RootlessStartDrawingProc StartDrawing;
     RootlessStopDrawingProc StopDrawing;
     RootlessUpdateRegionProc UpdateRegion;
-#ifndef ROOTLESS_TRACK_DAMAGE
     RootlessDamageRectsProc DamageRects;
-#endif
 
     /* Optional frame functions */
     RootlessSwitchWindowProc SwitchWindow;
@@ -386,8 +314,6 @@ typedef struct _RootlessFrameProcs {
 
     /* Optional acceleration functions */
     RootlessCopyBytesProc CopyBytes;
-    RootlessFillBytesProc FillBytes;
-    RootlessCompositePixelsProc CompositePixels;
     RootlessCopyWindowProc CopyWindow;
 } RootlessFrameProcsRec, *RootlessFrameProcsPtr;
 
@@ -396,13 +322,6 @@ typedef struct _RootlessFrameProcs {
  * Initialize rootless mode on the given screen.
  */
 Bool RootlessInit(ScreenPtr pScreen, RootlessFrameProcsPtr procs);
-
-/*
- * Initialize acceleration for rootless mode on a given screen.
- *  Note: RootlessAccelInit() must be called before DamageSetup()
- *  and RootlessInit() must be called afterwards.
- */
-Bool RootlessAccelInit(ScreenPtr pScreen);
 
 /*
  * Return the frame ID for the physical window displaying the given window. 
@@ -426,8 +345,7 @@ void RootlessStartDrawing(WindowPtr pWindow);
 /*
  * Finish drawing to a window's backing buffer.
  *
- *  flush       If true and ROOTLESS_TRACK_DAMAGE is set, damaged areas
- *              are flushed to the screen.
+ *  flush       If true, damaged areas are flushed to the screen.
  */
 void RootlessStopDrawing(WindowPtr pWindow, Bool flush);
 

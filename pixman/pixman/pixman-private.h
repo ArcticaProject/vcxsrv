@@ -613,6 +613,7 @@ _pixman_choose_implementation (void);
      FAST_PATH_COMPONENT_ALPHA)
 #define FAST_PATH_STD_DEST_FLAGS					\
     (FAST_PATH_NO_ACCESSORS		|				\
+     FAST_PATH_NO_ALPHA_MAP		|				\
      FAST_PATH_NO_WIDE_FORMAT)
 
 #define FAST_PATH(op, src, src_flags, mask, mask_flags, dest, dest_flags, func) \

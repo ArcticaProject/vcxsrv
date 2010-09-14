@@ -77,10 +77,10 @@ static void ResetClientState(int clientIndex)
     Display **keep_be_displays;
     int i;
 
-    if (cl->returnBuf) __glXFree(cl->returnBuf);
-    if (cl->currentContexts) __glXFree(cl->currentContexts);
-    if (cl->currentDrawables) __glXFree(cl->currentDrawables);
-    if (cl->largeCmdBuf) __glXFree(cl->largeCmdBuf);
+    if (cl->returnBuf) free(cl->returnBuf);
+    if (cl->currentContexts) free(cl->currentContexts);
+    if (cl->currentDrawables) free(cl->currentDrawables);
+    if (cl->largeCmdBuf) free(cl->largeCmdBuf);
 
     for (i=0; i< screenInfo.numScreens; i++) {
        if (cl->be_displays[i])
@@ -97,7 +97,7 @@ static void ResetClientState(int clientIndex)
     */
     cl->GLClientmajorVersion = 1;
     cl->GLClientminorVersion = 0;
-    if (cl->GLClientextensions) __glXFree(cl->GLClientextensions);
+    if (cl->GLClientextensions) free(cl->GLClientextensions);
 
     memset(cl->be_displays, 0, screenInfo.numScreens * sizeof(Display *));
 }
@@ -167,8 +167,8 @@ void __glXFreeGLXPixmap( __GLXpixmap *pGlxPixmap )
 	** only if it's zero.
 	*/
 	(*pGlxPixmap->pScreen->DestroyPixmap)(pPixmap);
-	__glXFree(pGlxPixmap->be_xids);
-	__glXFree(pGlxPixmap);
+	free(pGlxPixmap->be_xids);
+	free(pGlxPixmap);
     }
 
 }
@@ -222,10 +222,10 @@ GLboolean __glXFreeContext(__GLXcontext *cx)
 {
     if (cx->idExists || cx->isCurrent) return GL_FALSE;
     
-    if (cx->feedbackBuf) __glXFree(cx->feedbackBuf);
-    if (cx->selectBuf) __glXFree(cx->selectBuf);
-    if (cx->real_ids) __glXFree(cx->real_ids);
-    if (cx->real_vids) __glXFree(cx->real_vids);
+    if (cx->feedbackBuf) free(cx->feedbackBuf);
+    if (cx->selectBuf) free(cx->selectBuf);
+    if (cx->real_ids) free(cx->real_ids);
+    if (cx->real_vids) free(cx->real_vids);
 
     if (cx->pGlxPixmap) {
        /*
@@ -263,7 +263,7 @@ GLboolean __glXFreeContext(__GLXcontext *cx)
        cx->pGlxReadWindow = 0;   
     }
 
-    __glXFree(cx);
+    free(cx);
 
     if (cx == __glXLastContext) {
 	__glXFlushContextCache();
@@ -367,46 +367,6 @@ Bool __glXCoreType(void)
 
 /************************************************************************/
 
-void GlxSetVisualConfigs(int nconfigs, 
-                         __GLXvisualConfig *configs, void **privates)
-{
-    glxSetVisualConfigs(nconfigs, configs, privates);
-}
-
-static miInitVisualsProcPtr saveInitVisualsProc;
-
-Bool GlxInitVisuals(VisualPtr *visualp, DepthPtr *depthp,
-		    int *nvisualp, int *ndepthp,
-		    int *rootDepthp, VisualID *defaultVisp,
-		    unsigned long sizes, int bitsPerRGB,
-		    int preferredVis)
-{
-    Bool ret;
-
-    if (saveInitVisualsProc) {
-        ret = saveInitVisualsProc(visualp, depthp, nvisualp, ndepthp,
-                                  rootDepthp, defaultVisp, sizes, bitsPerRGB,
-                                  preferredVis);
-        if (!ret)
-            return False;
-    }
-
-    glxInitVisuals(nvisualp, visualp, defaultVisp, *ndepthp, *depthp,*rootDepthp);
-
-    return True;
-}
-
-void
-GlxWrapInitVisuals(miInitVisualsProcPtr *initVisProc)
-{
-    if (dmxGLXProxy) {
-	saveInitVisualsProc = *initVisProc;
-	*initVisProc = GlxInitVisuals;
-    }
-}
-
-/************************************************************************/
-
 void __glXFlushContextCache(void)
 {
     __glXLastContext = 0;
@@ -427,15 +387,15 @@ static int __glXDispatch(ClientPtr client)
     opcode = stuff->glxCode;
     cl = __glXClients[client->index];
     if (!cl) {
-	cl = __glXCalloc(1, sizeof(__GLXclientState));
+	cl = calloc(1, sizeof(__GLXclientState));
 	 __glXClients[client->index] = cl;
 	if (!cl) {
 	    return BadAlloc;
 	}
 
-	cl->be_displays = __glXCalloc(screenInfo.numScreens, sizeof(Display *));
+	cl->be_displays = calloc(screenInfo.numScreens, sizeof(Display *));
 	if (!cl->be_displays) {
-	    __glXFree( cl );
+	    free( cl );
 	    return BadAlloc;
 	}
     }
@@ -479,15 +439,15 @@ static int __glXSwapDispatch(ClientPtr client)
     opcode = stuff->glxCode;
     cl = __glXClients[client->index];
     if (!cl) {
-	cl = __glXCalloc(1, sizeof(__GLXclientState));
+	cl = calloc(1, sizeof(__GLXclientState));
 	 __glXClients[client->index] = cl;
 	if (!cl) {
 	    return BadAlloc;
 	}
 
-	cl->be_displays = __glXCalloc(screenInfo.numScreens, sizeof(Display *));
+	cl->be_displays = calloc(screenInfo.numScreens, sizeof(Display *));
 	if (!cl->be_displays) {
-	    __glXFree( cl );
+	    free( cl );
 	    return BadAlloc;
 	}
     }

@@ -151,9 +151,6 @@ static GCOps rootlessGCOps = {
 };
 
 /*
-   There are two issues we must contend with when drawing. These are
-   controlled with ROOTLESS_PROTECT_ALPHA and RootlessAccelInit().
-
    If ROOTLESS_PROTECT_ALPHA is set, we have to make sure that the alpha
    channel of the on screen windows is always opaque. fb makes this harder
    than it would otherwise be by noticing that a planemask of 0x00ffffff
@@ -174,21 +171,8 @@ static GCOps rootlessGCOps = {
    can do this when drawing op is GXcopy. We can also do this when copying
    from another window since its alpha channel must also be opaque.
 
-   The other issue to consider is that the rootless implementation may
-   provide accelerated drawing functions if RootlessAccelInit() is called.For 
-   some drawing primitives we swap in rootless acceleration functions, which
-   use the accelerated drawing functions where possible.
-
-   Where both alpha protection and acceleration is used, it is even a bigger
-   win to relax the planemask to all ones because most accelerated drawing
-   functions can only be used in this case. However, even if we can't set
-   the planemask to all ones, we can still use the accelerated
-   CompositePixels function for GXcopy if it is a forward copy. This is
-   mainly intended for copying from pixmaps to windows. The CompositePixels
-   operation used sets alpha to 0xFF during the copy.
-
-   The three macros below are used to implement this, potentially accelerated
-   drawing ops look something like this:
+   The three macros below are used to implement this. Drawing ops that can
+   potentially have their planemask relaxed look like:
 
    OP {
        GC_SAVE(gc);
@@ -286,16 +270,6 @@ canAccelFill(DrawablePtr pDraw, GCPtr pGC)
         return NULL;
 
     return canAccelBlit(pDraw, pGC);
-}
-
-static unsigned int
-boxBytes(DrawablePtr pDraw, BoxRec *box)
-{
-    unsigned int pixels;
-
-    pixels = (box->x2 - box->x1) * (box->y2 - box->y1);
-
-    return pixels * (pDraw->bitsPerPixel >> 3);
 }
 
 
@@ -480,8 +454,7 @@ RootlessFillSpans(DrawablePtr dst, GCPtr pGC, int nInit,
 
         RootlessStartDrawing((WindowPtr) dst);
 
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -587,15 +560,11 @@ RootlessCopyArea(DrawablePtr pSrc, DrawablePtr dst, GCPtr pGC,
     RL_DEBUG_MSG("copy area start (src 0x%x, dst 0x%x)", pSrc, dst);
 
     if (pSrc->type == DRAWABLE_WINDOW && IsFramedWindow((WindowPtr)pSrc)) {
-        unsigned int bytes;
-
         /* If both source and dest are windows, and we're doing
            a simple copy operation, we can remove the alpha-protecting
            planemask (since source has opaque alpha as well) */
 
-        bytes = w * h * (pSrc->depth >> 3);
-
-        if (bytes >= rootless_CopyBytes_threshold && canAccelBlit(pSrc, pGC))
+        if (canAccelBlit(pSrc, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -1067,8 +1036,7 @@ static void RootlessFillPolygon(DrawablePtr dst, GCPtr pGC,
 
         RootlessStartDrawing((WindowPtr) dst);
 
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -1120,8 +1088,7 @@ static void RootlessPolyFillRect(DrawablePtr dst, GCPtr pGC,
 
         RootlessStartDrawing((WindowPtr) dst);
  
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -1173,8 +1140,7 @@ static void RootlessPolyFillArc(DrawablePtr dst, GCPtr pGC,
 
         RootlessStartDrawing((WindowPtr) dst);
 
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -1224,8 +1190,7 @@ static void RootlessImageText8(DrawablePtr dst, GCPtr pGC,
 
         RootlessStartDrawing((WindowPtr) dst);
 
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -1312,8 +1277,7 @@ static void RootlessImageText16(DrawablePtr dst, GCPtr pGC,
 
         RootlessStartDrawing((WindowPtr) dst);
 
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }
@@ -1411,8 +1375,7 @@ static void RootlessImageGlyphBlt(DrawablePtr dst, GCPtr pGC,
 
         RootlessStartDrawing((WindowPtr) dst);
 
-        if (canAccelFill(dst, pGC) &&
-            boxBytes(dst, &box) >= rootless_FillBytes_threshold)
+        if (canAccelFill(dst, pGC))
         {
             GC_UNSET_PM(pGC, dst);
         }

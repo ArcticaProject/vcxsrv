@@ -69,12 +69,6 @@
 #include "dmx_glxvisuals.h"
 #include <X11/extensions/Xext.h>
 #include <X11/extensions/extutil.h>
-
-extern void GlxSetVisualConfigs(
-    int               nconfigs,
-    __GLXvisualConfig *configs,
-    void              **configprivs
-);
 #endif /* GLXEXT */
 
 /* Global variables available to all Xserver/hw/dmx routines. */
@@ -767,9 +761,6 @@ void InitOutput(ScreenInfo *pScreenInfo, int argc, char *argv[])
 			}
 		    }
 		}
-
-		/* Hand out the glx configs to glx extension */
-		GlxSetVisualConfigs(nconfigs, configs, (void**)configprivs);
 
                 XFlush(dmxScreen->beDisplay);
 	    }

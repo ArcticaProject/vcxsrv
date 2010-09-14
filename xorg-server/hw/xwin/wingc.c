@@ -96,11 +96,6 @@ winCreateGCNativeGDI (GCPtr pGC)
   winDebug ("winCreateGCNativeGDI - depth: %d\n",
 	  pGC->depth);
 
-  pGC->clientClip = NULL;
-  pGC->clientClipType = CT_NONE;
-  pGC->freeCompClip = FALSE;
-  pGC->pCompositeClip = 0;
-
   pGC->ops = (GCOps *) &winGCOps;
   pGC->funcs = (GCFuncs *) &winGCFuncs;
 
