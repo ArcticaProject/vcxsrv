@@ -95,7 +95,6 @@ typedef struct _GCFuncs {
     void	(* CopyClip)(
 		GCPtr /*pgcDst*/,
 		GCPtr /*pgcSrc*/);
-    DevUnion	devPrivate;
 } GCFuncs;
 
 /*
@@ -264,8 +263,6 @@ typedef struct _GCOps {
 		int /*h*/,
 		int /*x*/,
 		int /*y*/);
-
-    DevUnion	devPrivate;
 } GCOps;
 
 /* there is padding in the bit fields because the Sun compiler doesn't
@@ -306,7 +303,6 @@ typedef struct _GC {
     DDXPointRec		patOrg;		/* origin for (tile, stipple) */
     struct _Font	*font;
     DDXPointRec		clipOrg;
-    DDXPointRec		lastWinOrg;	/* position of window last validated */
     pointer		clientClip;
     unsigned long	stateChanges;	/* masked with GC_<kind> */
     unsigned long       serialNumber;

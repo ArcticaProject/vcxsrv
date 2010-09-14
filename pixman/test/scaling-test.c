@@ -46,6 +46,7 @@ test_composite (int      testnum,
     uint32_t *         srcbuf;
     uint32_t *         dstbuf;
     uint32_t           crc32;
+    FLOAT_REGS_CORRUPTION_DETECTOR_START ();
 
     lcg_srand (testnum);
 
@@ -234,6 +235,8 @@ test_composite (int      testnum,
     crc32 = compute_crc32 (0, dstbuf, dst_stride * dst_height);
     free (srcbuf);
     free (dstbuf);
+
+    FLOAT_REGS_CORRUPTION_DETECTOR_FINISH ();
     return crc32;
 }
 

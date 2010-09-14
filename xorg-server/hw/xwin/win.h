@@ -1377,16 +1377,6 @@ winMWExtWMCopyBytes (unsigned int width, unsigned int height,
 			   void *dst, unsigned int dstRowBytes);
 
 void
-winMWExtWMFillBytes (unsigned int width, unsigned int height, unsigned int value,
-			   void *dst, unsigned int dstRowBytes);
-
-int
-winMWExtWMCompositePixels (unsigned int width, unsigned int height, unsigned int function,
-				 void *src[2], unsigned int srcRowBytes[2],
-				 void *mask, unsigned int maskRowBytes,
-				 void *dst[2], unsigned int dstRowBytes[2]);
-
-void
 winMWExtWMCopyWindow (RootlessFrameID wid, int dstNrects, const BoxRec *dstRects,
 			    int dx, int dy);
 #endif

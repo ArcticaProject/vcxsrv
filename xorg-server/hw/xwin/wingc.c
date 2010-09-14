@@ -137,11 +137,6 @@ winCreateGCNativeGDI (GCPtr pGC)
 	  pGC->depth);
 #endif
 
-  pGC->clientClip = NULL;
-  pGC->clientClipType = CT_NONE;
-  pGC->freeCompClip = FALSE;
-  pGC->pCompositeClip = 0;
-
   pGC->ops = (GCOps *) &winGCOps;
   pGC->funcs = (GCFuncs *) &winGCFuncs;
 

@@ -76,15 +76,6 @@ rootlessConfig.h to specify compile time options for its platform.
         The following compile-time options are defined in 
 rootlessConfig.h:
 
-      o ROOTLESS_GLOBAL_COORDS: This option controls the way that frame
-        coordinates are passed to the rootless implementation. If false,
-        the coordinates are passed per screen relative to the origin of 
-        the screen the frame is currently on. Some implementations may 
-        prefer to work in a single global coordinate space that spans all 
-        screens. If this option is true, the coordinates are passed after 
-        adding the coordinates of the screen origin and an overall offset of 
-        (rootlessGlobalOffsetX, rootlessGlobalOffsetY).
-
       o ROOTLESS_PROTECT_ALPHA: By default for a color bit depth of 24 and
         32 bits per pixel, fb will overwrite the "unused" 8 bits to optimize
         drawing speed. If this is true, the alpha channel of frames is
@@ -105,27 +96,13 @@ rootlessConfig.h:
         during resizing and rely on the frame contents being preserved
         accordingly.
 
-      o ROOTLESS_TRACK_DAMAGE: The generic rootless layer draws to the
-        frames' backing buffers and periodically flushes the modified
-        regions to the underlying window server. If this option is true,
-        the generic rootless layer will track these damaged regions. 
-        Currently it uses the miRegion code and will not simplify damaged 
-        regions even when updating a bounding region would be more 
-        efficient. Some window systems provide a more efficient way to 
-        track damaged regions. If this option is false, the rootless 
-        implementation function DamageRects() is called whenever a 
-        backing buffer is modified and the rootless implementation is 
-        expected to track the damaged regions itself.
-
         The following runtime options are defined in rootless.h:
 
-      o rootlessGlobalOffsetX, rootlessGlobalOffsetY: These are only 
-        used if ROOTLESS_GLOBAL_COORDS is true. They specify the global
+      o rootlessGlobalOffsetX, rootlessGlobalOffsetY: These specify the global
         offset that is applied to all screens when converting from
         screen-local to global coordinates.
 
-      o rootless_CopyBytes_threshold, rootless_FillBytes_threshold, 
-        rootless_CompositePixels_threshold, rootless_CopyWindow_threshold:
+      o rootless_CopyBytes_threshold, rootless_CopyWindow_threshold:
         The minimum number of bytes or pixels for which to use the rootless
         implementation's respective acceleration function. The rootless
         acceleration functions are all optional so these will only be used
@@ -194,8 +171,7 @@ implementation to indicate the frame to operate on.
  *              initialized before calling except for pFrame->wid, which
  *              is set by this function.
  *  pScreen     Screen on which to place the new frame
- *  newX, newY  Position of the frame. These will be identical to pFrame-x,
- *              pFrame->y unless ROOTLESS_GLOBAL_COORDS is set.
+ *  newX, newY  Position of the frame.
  *  pNewShape   Shape for the frame (in frame-local coordinates). NULL for
  *              unshaped frames.
  */
@@ -287,8 +263,7 @@ typedef void (*RootlessStartDrawingProc)
  *  is started again.
  *
  *  wid         Frame id
- *  flush       Flush drawing updates for this frame to the screen. This
- *              will always be FALSE if ROOTLESS_TRACK_DAMAGE is set.
+ *  flush       Flush drawing updates for this frame to the screen.
  */
 typedef void (*RootlessStopDrawingProc)
     (RootlessFrameID wid, Bool flush);
@@ -299,15 +274,13 @@ typedef void (*RootlessStopDrawingProc)
  *
  *  wid         Frame id
  *  pDamage     Region containing all the changed pixels in frame-local
- *              coordinates. This is clipped to the window's clip. This
- *              will be NULL if ROOTLESS_TRACK_DAMAGE is not set.
+ *              coordinates. This is clipped to the window's clip.
  */
 typedef void (*RootlessUpdateRegionProc)
     (RootlessFrameID wid, RegionPtr pDamage);
 
 /*
  * Mark damaged rectangles as requiring redisplay to screen.
- *  This will only be called if ROOTLESS_TRACK_DAMAGE is not set.
  *
  *  wid         Frame id
  *  nrects      Number of damaged rectangles
@@ -346,44 +319,6 @@ typedef void (*RootlessCopyBytesProc)
     (unsigned int width, unsigned int height,
      const void *src, unsigned int srcRowBytes,
      void *dst, unsigned int dstRowBytes);
-
-/*
- * Fill memory with 32-bit pattern. (Optional)
- *
- *  width       Bytes to fill per row
- *  height      Number of rows
- *  value       32-bit pattern to fill with
- *  dst         Destination data
- *  dstRowBytes Width of destination in bytes
- */
-typedef void (*RootlessFillBytesProc)
-    (unsigned int width, unsigned int height, unsigned int value,
-     void *dst, unsigned int dstRowBytes);
-
-/*
- * Composite pixels from source and mask to destination. (Optional)
- *
- *  width, height   Size of area to composite to in pizels
- *  function        Composite function built with RL_COMPOSITE_FUNCTION
- *  src             Source data
- *  srcRowBytes     Width of source in bytes (Passing NULL means source
- *                  is a single pixel.
- *  mask            Mask data
- *  maskRowBytes    Width of mask in bytes
- *  dst             Destination data
- *  dstRowBytes     Width of destination in bytes
- *
- *  For src and dst, the first element of the array is the color data. If
- *  the second element is non-null it implies there is alpha data (which
- *  may be meshed or planar). Data without alpha is assumed to be opaque.
- *
- *  An X11 error code is returned.
- */
-typedef int (*RootlessCompositePixelsProc)
-    (unsigned int width, unsigned int height, unsigned int function,
-     void *src[2], unsigned int srcRowBytes[2],
-     void *mask, unsigned int maskRowBytes,
-     void *dst[2], unsigned int dstRowBytes[2]);
 
 /*
  * Copy area in frame to another part of frame. (Optional)

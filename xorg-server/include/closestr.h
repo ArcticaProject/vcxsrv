@@ -97,16 +97,6 @@ typedef struct _LFclosure {
 
 /* PolyText */
 
-typedef
-    int			(* PolyTextPtr)(
-			DrawablePtr /* pDraw */,
-			GCPtr /* pGC */,
-			int /* x */,
-			int /* y */,
-			int /* count */,
-			void * /* chars or shorts */
-			);
-
 typedef struct _PTclosure {
     ClientPtr		client;
     DrawablePtr		pDraw;
@@ -117,23 +107,11 @@ typedef struct _PTclosure {
     int			xorg;
     int			yorg;
     CARD8		reqType;
-    PolyTextPtr		polyText;
-    int			itemSize;
     XID			did;
     int			err;
 } PTclosureRec;
 
 /* ImageText */
-
-typedef
-    void		(* ImageTextPtr)(
-			DrawablePtr /* pDraw */,
-			GCPtr /* pGC */,
-			int /* x */,
-			int /* y */,
-			int /* count */,
-			void * /* chars or shorts */
-			);
 
 typedef struct _ITclosure {
     ClientPtr		client;
@@ -144,8 +122,6 @@ typedef struct _ITclosure {
     int			xorg;
     int			yorg;
     CARD8		reqType;
-    ImageTextPtr	imageText;
-    int			itemSize;
     XID			did;
 } ITclosureRec;
 #endif				/* CLOSESTR_H */

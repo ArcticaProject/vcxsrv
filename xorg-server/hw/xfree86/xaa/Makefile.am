@@ -17,7 +17,7 @@ module_LTLIBRARIES = libxaa.la
 libxaa_la_SOURCES = xaaInit.c xaaGC.c xaaInitAccel.c xaaFallback.c \
                    xaaBitBlt.c xaaCpyArea.c xaaGCmisc.c xaaCpyWin.c \
                    xaaCpyPlane.c xaaFillRect.c xaaTEText.c xaaNonTEText.c \
-                   xaaPCache.c xaaSpans.c xaaROP.c xaaImage.c xaaWrapper.c \
+                   xaaPCache.c xaaSpans.c xaaROP.c xaaImage.c \
                    xaaRect.c xaaLineMisc.c xaaBitOrder.c \
                    xaaFillPoly.c xaaWideLine.c xaaTables.c xaaFillArc.c \
                    xaaLine.c xaaDashLine.c xaaOverlay.c xaaOffscreen.c \
@@ -64,7 +64,7 @@ DISTCLEANFILES = $(POLYSEG) \
 	$(LSB_FIRST) $(LSB_FIXED) $(MSB_FIRST) $(MSB_FIXED) \
 	$(LSB_3_FIRST) $(LSB_3_FIXED) $(MSB_3_FIRST) $(MSB_3_FIXED)
 
-sdk_HEADERS = xaa.h xaalocal.h xaarop.h xaaWrapper.h
+sdk_HEADERS = xaa.h xaalocal.h xaarop.h
 EXTRA_DIST = xaacexp.h xaawrap.h xaaLine.c xaaDashLine.c \
              xaaStipple.c xaaTEGlyph.c xaaNonTEGlyph.c xaaBitmap.c \
              XAA.HOWTO

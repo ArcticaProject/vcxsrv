@@ -182,8 +182,6 @@ miPolyGlyphBlt(
 				0, 0, gWidth, gHeight, 
 				0, XYBitmap, (char *)pb);
 
-	    if ((pGC->serialNumber) != (pDrawable->serialNumber))
-		ValidateGC(pDrawable, pGC);
 	    (*pGC->ops->PushPixels)(pGC, pPixmap, pDrawable,
 			       gWidth, gHeight,
 			       x + pci->metrics.leftSideBearing,

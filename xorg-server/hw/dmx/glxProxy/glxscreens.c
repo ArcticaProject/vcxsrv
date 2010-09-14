@@ -35,11 +35,6 @@
 #include "dmx.h"
 #include "dmxlog.h"
 
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
 #include "glxserver.h"
 
 #include <windowstr.h>

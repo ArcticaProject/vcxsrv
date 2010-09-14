@@ -39,11 +39,6 @@
 #include "dmxfont.h"
 #include "dmxcb.h"
 
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
 #include "glxserver.h"
 #include "glxext.h"
 #include "g_disptab.h"

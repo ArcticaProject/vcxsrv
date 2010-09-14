@@ -343,7 +343,6 @@ GCOps XAAFallbackOps = {
     XAAPolyText16Fallback, XAAImageText8Fallback, 
     XAAImageText16Fallback, XAAImageGlyphBltFallback, 
     XAAPolyGlyphBltFallback, XAAPushPixelsFallback,
-    {NULL}		/* devPrivate */
 };
 
 GCOps *XAAGetFallbackOps(void)

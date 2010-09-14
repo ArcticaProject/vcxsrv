@@ -53,7 +53,6 @@ static GCOps VGAarbiterGCOps = {
     VGAarbiterPolyFillArc, VGAarbiterPolyText8, VGAarbiterPolyText16,
     VGAarbiterImageText8, VGAarbiterImageText16, VGAarbiterImageGlyphBlt,
     VGAarbiterPolyGlyphBlt, VGAarbiterPushPixels,
-    {NULL}      /* devPrivate */
 };
 
 static miPointerSpriteFuncRec VGAarbiterSpriteFuncs = {
@@ -574,9 +573,7 @@ VGAarbiterCreateGC(GCPtr pGC)
     Bool         ret;
 
     SCREEN_PROLOG(CreateGC);
-    VGAGet(pScreen);
     ret = (*pScreen->CreateGC)(pGC);
-    VGAPut();
     GC_WRAP(pGC);
     SCREEN_EPILOG(CreateGC,VGAarbiterCreateGC);
 
@@ -1123,7 +1120,7 @@ void xf86VGAarbiterLock(ScrnInfoPtr pScrn) {}
 void xf86VGAarbiterUnlock(ScrnInfoPtr pScrn) {}
 Bool xf86VGAarbiterAllowDRI(ScreenPtr pScreen) { return TRUE; }
 void xf86VGAarbiterScrnInit(ScrnInfoPtr pScrn) {}
-void xf86VGAarbiterDeviceDecodes(ScrnInfoPtr pScrn) {}
+void xf86VGAarbiterDeviceDecodes(ScrnInfoPtr pScrn, int rsrc) {}
 Bool xf86VGAarbiterWrapFunctions(void) { return FALSE; }
 
 #endif

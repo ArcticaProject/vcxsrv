@@ -32,8 +32,9 @@ typedef struct {
   int index;
 } xnestInstalledColormapWindows;
 
+extern DevPrivateKeyRec xnestColormapPrivateKeyRec;
 #define xnestColormapPriv(pCmap) \
-  ((xnestPrivColormap *)((pCmap)->devPriv))
+  ((xnestPrivColormap *) dixLookupPrivate(&(pCmap)->devPrivates, &xnestColormapPrivateKeyRec))
 
 #define xnestColormap(pCmap) (xnestColormapPriv(pCmap)->colormap)
 

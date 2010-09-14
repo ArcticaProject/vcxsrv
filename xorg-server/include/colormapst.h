@@ -126,9 +126,7 @@ typedef struct _ColormapRec
     Entry	*red;
     Entry 	*green;
     Entry	*blue;
-    pointer	devPriv;
-    PrivateRec	*devPrivates;	/* dynamic devPrivates added after devPriv
-				   already existed - must keep devPriv */
+    PrivateRec	*devPrivates;
 } ColormapRec;
 	      
 #endif /* COLORMAP_H */

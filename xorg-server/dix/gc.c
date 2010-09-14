@@ -527,8 +527,6 @@ CreateGC(DrawablePtr pDrawable, BITS32 mask, XID *pval, int *pStatus,
     pGC->numInDashList = 2;
     pGC->dash = DefaultDash;
     pGC->dashOffset = 0;
-    pGC->lastWinOrg.x = 0;
-    pGC->lastWinOrg.y = 0;
 
     /* use the default font and stipple */
     pGC->font = defaultFont;
@@ -801,7 +799,7 @@ is what fills the default tile.  (maybe this comment should
 go with CreateGC() or ChangeGC().)
 */
 
-GCPtr
+static GCPtr
 CreateScratchGC(ScreenPtr pScreen, unsigned depth)
 {
     GCPtr pGC;
@@ -841,8 +839,6 @@ CreateScratchGC(ScreenPtr pScreen, unsigned depth)
     pGC->dashOffset = 0;
     pGC->numInDashList = 2;
     pGC->dash = DefaultDash;
-    pGC->lastWinOrg.x = 0;
-    pGC->lastWinOrg.y = 0;
 
     /* scratch GCs in the GCperDepth pool start off unused */
     pGC->scratch_inuse = FALSE;

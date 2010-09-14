@@ -74,19 +74,5 @@ extern void GlxExtensionInit(void);
 
 extern Bool __glXCoreType(void);
 
-extern int GlxInitVisuals(
-#if NeedFunctionPrototypes
-    VisualPtr *       visualp,
-    DepthPtr *        depthp,
-    int *             nvisualp,
-    int *             ndepthp,
-    int *             rootDepthp,
-    VisualID *        defaultVisp,
-    unsigned long     sizes,
-    int               bitsPerRGB,
-    int               preferredVis
-#endif
-);
-
 #endif /* _glxext_h_ */
 

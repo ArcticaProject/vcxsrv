@@ -34,6 +34,8 @@ is" without express or implied warranty.
 #include "XNWindow.h"
 #include "Args.h"
 
+DevPrivateKeyRec xnestColormapPrivateKeyRec;
+
 static DevPrivateKeyRec cmapScrPrivateKeyRec;
 #define cmapScrPrivateKey (&cmapScrPrivateKeyRec)
 
@@ -52,8 +54,6 @@ xnestCreateColormap(ColormapPtr pCmap)
   pVisual = pCmap->pVisual;
   ncolors = pVisual->ColormapEntries;
 
-  pCmap->devPriv = (pointer)malloc(sizeof(xnestPrivColormap));
-  
   xnestColormapPriv(pCmap)->colormap = 
     XCreateColormap(xnestDisplay,
 		    xnestDefaultWindows[pCmap->pScreen->myNum],
@@ -130,7 +130,6 @@ void
 xnestDestroyColormap(ColormapPtr pCmap)
 {
   XFreeColormap(xnestDisplay, xnestColormap(pCmap));
-  free(pCmap->devPriv);
 }
 
 #define SEARCH_PREDICATE \

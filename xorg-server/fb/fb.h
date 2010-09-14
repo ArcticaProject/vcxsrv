@@ -666,7 +666,6 @@ typedef struct {
     FbBits		bgand, bgxor;	/* for stipples */
     FbBits		fg, bg, pm;	/* expanded and filled */
     unsigned int	dashLength;	/* total of all dash elements */
-    unsigned char    	oneRect;	/* clip list is single rectangle */
     unsigned char    	evenStipple;	/* stipple is even */
     unsigned char    	bpp;		/* current drawable bpp */
 } FbGCPrivRec, *FbGCPrivPtr;
