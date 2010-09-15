@@ -55,8 +55,40 @@ HWND winGetWindowInfo(WindowPtr pWin)
 
             if (pWinPriv->hWnd == NULL)
             {
-              winCreateWindowsWindow(pWin);
-              ErrorF("winGetWindowInfo: forcing window to exist...\n");
+              if (pWin->parent && pWin->parent->parent)
+              {
+                int ExtraClass=(pWin->realized)?WS_VISIBLE:0;
+                HWND hWndParent;
+                WindowPtr pParent=pWin->parent;
+                while (pParent)
+                {
+                  winWindowPriv(pParent);
+                  hWndParent=pWinPriv->hWnd;
+                  if (hWndParent)
+                    break;
+                  pParent=pParent->parent;
+                }
+                if (!hWndParent)
+                  hWndParent=hwnd;
+                pWinPriv->hWnd=CreateWindowExA(WS_EX_TRANSPARENT,
+                             WIN_GL_WINDOW_CLASS,
+                             "",
+                             WS_CHILD |WS_CLIPSIBLINGS | WS_CLIPCHILDREN  | ExtraClass,
+                             pWin->drawable.x,
+                             pWin->drawable.y,
+                             pWin->drawable.width,
+                             pWin->drawable.height,
+                             hWndParent,
+                             NULL,
+                             GetModuleHandle(NULL),
+                             NULL);
+                pWinPriv->GlCtxWnd=TRUE;
+              }
+              else
+              {
+                winCreateWindowsWindow(pWin);
+                ErrorF("winGetWindowInfo: forcing window to exist...\n");
+              }
             }
             if (pWinPriv->hWnd != NULL)
             {

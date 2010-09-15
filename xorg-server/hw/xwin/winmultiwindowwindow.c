@@ -625,9 +625,25 @@ winUpdateWindowsWindow (WindowPtr pWin)
     }
   else if (hWnd != NULL)
     {
-      /* Destroy the Windows window if its parents are destroyed */
-      winDestroyWindowsWindow (pWin);
-      assert (pWinPriv->hWnd == NULL);
+      if (pWinPriv->OpenGlWindow)
+      {
+        HWND hParentWnd;
+
+        {
+          winWindowPriv(pWin->parent);
+          ErrorF("Window handle = %x\n",pWinPriv->hWnd);
+          hParentWnd=pWinPriv->hWnd;
+        }
+        SetParent(pWinPriv->hWnd,hParentWnd);
+        SetWindowPos(pWinPriv->hWnd,NULL,0,0,0,0,SWP_NOSIZE|SWP_NOZORDER|SWP_SHOWWINDOW);
+      }
+      else
+      {
+        /* Destroy the Windows window if its parents are destroyed */
+        /* First check if we need to release the DC when it is an opengl window */
+        winDestroyWindowsWindow (pWin);
+        assert (pWinPriv->hWnd == NULL);
+      }
     }
 
 #if CYGMULTIWINDOW_DEBUG

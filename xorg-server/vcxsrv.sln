@@ -1,7 +1,17 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "vcxsrv.exe", "vcxsrv.exe", "{0A7F2844-C7BA-43E2-B7AE-48070F7AA1A7}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "vcxsrv", "vcxsrv.exe", "{0A7F2844-C7BA-43E2-B7AE-48070F7AA1A7}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = D:\vcxsrv x server\trunk\xorg-server\vcxsrv.exe
+		RemoteMachine = OAB1MAHAENEW
+		StartingDirectory = D:\vcxsrv x server\trunk\xorg-server
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
