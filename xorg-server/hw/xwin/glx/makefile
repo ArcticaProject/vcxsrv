@@ -28,9 +28,21 @@ SPEC_FILES = gl.spec gl.tm wglext.spec wgl.tm
 getspecfiles:
 	wget http://www.opengl.org/registry/api/gl.spec
 	wget http://www.opengl.org/registry/api/gl.tm
+
+	wget http://www.opengl.org/registry/api/glxenum.spec
+	wget http://www.opengl.org/registry/api/glxenumext.spec
+	wget http://www.opengl.org/registry/api/glx.spec
+	wget http://www.opengl.org/registry/api/glxext.spec
+	wget http://www.opengl.org/registry/api/glx.tm
+
+	wget http://www.opengl.org/registry/api/wglenum.spec
+	wget http://www.opengl.org/registry/api/wglenumext.spec
+	wget http://www.opengl.org/registry/api/wgl.spec
 	wget http://www.opengl.org/registry/api/wglext.spec
 	wget http://www.opengl.org/registry/api/wgl.tm
 	wget http://www.opengl.org/registry/api/wglext.h
+	wget http://www.opengl.org/registry/api/glext.h
+	wget http://www.opengl.org/registry/api/glxext.h
 
 generated_gl_wrappers.c: gen_gl_wrappers.py gl.spec gl.tm
 	gen_gl_wrappers --spec=gl.spec --typemap=gl.tm --dispatch-header=../../../glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
