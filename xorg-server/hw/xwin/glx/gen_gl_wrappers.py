@@ -320,6 +320,6 @@ if dispatchheader :
                 if wrappers.has_key(d) :
                         print '  SET_'+ d + '(disp, ' + prefix + d + 'Wrapper);'
                 else :
-                        print '#warning  No wrapper for ' + prefix + d + ' !'
+                        print '#pragma message("No wrapper for ' + prefix + d + ' !")'
 
         print '}'
