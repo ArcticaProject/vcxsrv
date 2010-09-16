@@ -1,14 +1,17 @@
 # wglext.spec file
 # DON'T REMOVE PREVIOUS LINE!!! libspec depends on it!
 #
-# Copyright (C) 1991-2002 Silicon Graphics, Inc. All Rights Reserved.
+# Copyright (c) 1991-2002 Silicon Graphics, Inc. All Rights Reserved.
+# Copyright (c) 2006-2010 The Khronos Group, Inc.
 #
 # This document is licensed under the SGI Free Software B License Version
 # 2.0. For details, see http://oss.sgi.com/projects/FreeB/ .
+#
+# $Revision: 12183 $ on $Date: 2010-08-06 02:53:05 -0700 (Fri, 06 Aug 2010) $
 
 required-props:
 param:		retval retained
-category:	wgl ARB_buffer_region ARB_extensions_string ARB_pixel_format ARB_make_current_read ARB_pbuffer ARB_render_texture ARB_pixel_format_float EXT_display_color_table EXT_extensions_string EXT_make_current_read EXT_pbuffer EXT_pixel_format EXT_swap_control OML_sync_control I3D_digital_video_control I3D_gamma I3D_genlock I3D_image_buffer I3D_swap_frame_lock I3D_swap_frame_usage NV_vertex_array_range 3DL_stereo_control NV_swap_group NV_video_output NV_present_video ARB_create_context NV_gpu_affinity AMD_gpu_association NV_video_capture NV_copy_image
+category:	wgl ARB_buffer_region ARB_extensions_string ARB_pixel_format ARB_make_current_read ARB_pbuffer ARB_render_texture ARB_pixel_format_float EXT_display_color_table EXT_extensions_string EXT_make_current_read EXT_pbuffer EXT_pixel_format EXT_swap_control OML_sync_control I3D_digital_video_control I3D_gamma I3D_genlock I3D_image_buffer I3D_swap_frame_lock I3D_swap_frame_usage NV_vertex_array_range 3DL_stereo_control NV_swap_group NV_video_output NV_present_video ARB_create_context NV_gpu_affinity AMD_gpu_association NV_video_capture NV_copy_image ARB_framebuffer_sRGB
 # required-props in wgl.spec (which is not used for anything):
 # dlflags:	  notlistable handcode
 # wglflags:	  client-handcode server-handcode non-dispatch
@@ -242,6 +245,16 @@ newcategory: ARB_pixel_format_float
 
 ###############################################################################
 #
+# ARB Extension #46
+# ARB_framebuffer_sRGB commands
+#
+###############################################################################
+
+# (none)
+newcategory: ARB_framebuffer_sRGB
+
+###############################################################################
+#
 # ARB Extension #55
 # ARB_create_context commands
 #
@@ -263,6 +276,16 @@ CreateContextAttribsARB(hDC, hShareContext, attribList)
 
 # (none)
 newcategory: ARB_create_context_profile
+
+###############################################################################
+#
+# ARB Extension #102
+# ARB_create_context_robustness commands
+#
+###############################################################################
+
+# (none)
+newcategory: ARB_create_context_robustness
 
 
 ###############################################################################
@@ -1091,3 +1114,13 @@ CopyImageSubDataNV(hSrcRC, srcName, srcTarget, srcLevel, srcX, srcY, srcZ, hDstR
 	param		height		GLsizei in value
 	param		depth		GLsizei in value
 	category	NV_copy_image
+
+###############################################################################
+#
+# Extension #393
+# NV_multisample_coverage commands
+#
+###############################################################################
+
+# (none)
+newcategory: NV_multisample_coverage
