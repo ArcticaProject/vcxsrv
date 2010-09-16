@@ -890,12 +890,18 @@ glxWinUnrealizeWindow(WindowPtr pWin)
 
     GLWIN_DEBUG_MSG("glxWinUnrealizeWindow");
 
-    pScreen->UnrealizeWindow = screenPriv->UnrealizeWindow;
-    result = pScreen->UnrealizeWindow(pWin);
-    pScreen->UnrealizeWindow = glxWinUnrealizeWindow;
-
     if (pWinPriv->GlCtxWnd && pWinPriv->hWnd)
+    {
       ShowWindow(pWinPriv->hWnd,SW_HIDE);
+      result = TRUE;
+    }
+    else
+    {
+      pScreen->UnrealizeWindow = screenPriv->UnrealizeWindow;
+      result = pScreen->UnrealizeWindow(pWin);
+      pScreen->UnrealizeWindow = glxWinUnrealizeWindow;
+    }
+
 
     return result;
 }
