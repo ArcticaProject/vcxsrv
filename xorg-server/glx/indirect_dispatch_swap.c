@@ -83,6 +83,14 @@ bswap_ENUM( const void * src )
     return x.ret;
 }
 
+static GLsync
+bswap_CARD64( const void * src )
+{
+    union { uint64_t dst; GLsync ret; } x;
+    x.dst = bswap_64( *(uint64_t *) src );
+    return x.ret;
+}
+
 static GLdouble
 bswap_FLOAT64( const void * src )
 {
@@ -4886,6 +4894,17 @@ void __glXDispSwap_DrawBuffersARB(GLbyte * pc)
     ) );
 }
 
+void __glXDispSwap_RenderbufferStorageMultisample(GLbyte * pc)
+{
+    CALL_RenderbufferStorageMultisample( GET_DISPATCH(), (
+         (GLenum  )bswap_ENUM   ( pc +  0 ),
+         (GLsizei )bswap_CARD32 ( pc +  4 ),
+         (GLenum  )bswap_ENUM   ( pc +  8 ),
+         (GLsizei )bswap_CARD32 ( pc + 12 ),
+         (GLsizei )bswap_CARD32 ( pc + 16 )
+    ) );
+}
+
 void __glXDispSwap_SampleMaskSGIS(GLbyte * pc)
 {
     CALL_SampleMaskSGIS( GET_DISPATCH(), (
@@ -6050,6 +6069,33 @@ void __glXDispSwap_RenderbufferStorageEXT(GLbyte * pc)
          (GLenum  )bswap_ENUM   ( pc +  4 ),
          (GLsizei )bswap_CARD32 ( pc +  8 ),
          (GLsizei )bswap_CARD32 ( pc + 12 )
+    ) );
+}
+
+void __glXDispSwap_BlitFramebufferEXT(GLbyte * pc)
+{
+    CALL_BlitFramebufferEXT( GET_DISPATCH(), (
+         (GLint   )bswap_CARD32 ( pc +  0 ),
+         (GLint   )bswap_CARD32 ( pc +  4 ),
+         (GLint   )bswap_CARD32 ( pc +  8 ),
+         (GLint   )bswap_CARD32 ( pc + 12 ),
+         (GLint   )bswap_CARD32 ( pc + 16 ),
+         (GLint   )bswap_CARD32 ( pc + 20 ),
+         (GLint   )bswap_CARD32 ( pc + 24 ),
+         (GLint   )bswap_CARD32 ( pc + 28 ),
+         (GLbitfield)bswap_CARD32 ( pc + 32 ),
+         (GLenum  )bswap_ENUM   ( pc + 36 )
+    ) );
+}
+
+void __glXDispSwap_FramebufferTextureLayerEXT(GLbyte * pc)
+{
+    CALL_FramebufferTextureLayerEXT( GET_DISPATCH(), (
+         (GLenum  )bswap_ENUM   ( pc +  0 ),
+         (GLenum  )bswap_ENUM   ( pc +  4 ),
+         (GLuint  )bswap_CARD32 ( pc +  8 ),
+         (GLint   )bswap_CARD32 ( pc + 12 ),
+         (GLint   )bswap_CARD32 ( pc + 16 )
     ) );
 }
 

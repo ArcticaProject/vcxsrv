@@ -4736,6 +4736,17 @@ void __glXDisp_DrawBuffersARB(GLbyte * pc)
     ) );
 }
 
+void __glXDisp_RenderbufferStorageMultisample(GLbyte * pc)
+{
+    CALL_RenderbufferStorageMultisample( GET_DISPATCH(), (
+        *(GLenum   *)(pc +  0),
+        *(GLsizei  *)(pc +  4),
+        *(GLenum   *)(pc +  8),
+        *(GLsizei  *)(pc + 12),
+        *(GLsizei  *)(pc + 16)
+    ) );
+}
+
 void __glXDisp_SampleMaskSGIS(GLbyte * pc)
 {
     CALL_SampleMaskSGIS( GET_DISPATCH(), (
@@ -5886,6 +5897,33 @@ void __glXDisp_RenderbufferStorageEXT(GLbyte * pc)
         *(GLenum   *)(pc +  4),
         *(GLsizei  *)(pc +  8),
         *(GLsizei  *)(pc + 12)
+    ) );
+}
+
+void __glXDisp_BlitFramebufferEXT(GLbyte * pc)
+{
+    CALL_BlitFramebufferEXT( GET_DISPATCH(), (
+        *(GLint    *)(pc +  0),
+        *(GLint    *)(pc +  4),
+        *(GLint    *)(pc +  8),
+        *(GLint    *)(pc + 12),
+        *(GLint    *)(pc + 16),
+        *(GLint    *)(pc + 20),
+        *(GLint    *)(pc + 24),
+        *(GLint    *)(pc + 28),
+        *(GLbitfield *)(pc + 32),
+        *(GLenum   *)(pc + 36)
+    ) );
+}
+
+void __glXDisp_FramebufferTextureLayerEXT(GLbyte * pc)
+{
+    CALL_FramebufferTextureLayerEXT( GET_DISPATCH(), (
+        *(GLenum   *)(pc +  0),
+        *(GLenum   *)(pc +  4),
+        *(GLuint   *)(pc +  8),
+        *(GLint    *)(pc + 12),
+        *(GLint    *)(pc + 16)
     ) );
 }
 
