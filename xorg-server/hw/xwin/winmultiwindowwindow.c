@@ -254,10 +254,21 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
 	      rcNew.right - rcNew.left, rcNew.bottom - rcNew.top);
 
         /* Change the position and dimensions of the Windows window */
-      MoveWindow (hWnd,
-		  rcNew.left, rcNew.top,
-		  rcNew.right - rcNew.left, rcNew.bottom - rcNew.top,
-		  TRUE);
+      if (pWinPriv->GlCtxWnd)
+      {
+        int iWidth=rcNew.right - rcNew.left;
+        int iHeight=rcNew.bottom - rcNew.top;
+        ScreenToClient(GetParent(hWnd), (LPPOINT)&rcNew);
+        MoveWindow (hWnd,
+		      rcNew.left, rcNew.top,
+		      iWidth, iHeight,
+		      TRUE);
+      }
+      else
+        MoveWindow (hWnd,
+		      rcNew.left, rcNew.top,
+		      rcNew.right - rcNew.left, rcNew.bottom - rcNew.top,
+		      TRUE);
     }
   else
     {
