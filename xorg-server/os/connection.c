@@ -1008,7 +1008,8 @@ CheckConnections(void)
     struct timeval	notime;
     int r;
 #ifdef WIN32
-    fd_set savedAllClients;
+    fd_set savedAllSockets;
+    unsigned j;
 #endif
 
     notime.tv_sec = 0;
@@ -1034,19 +1035,23 @@ CheckConnections(void)
 	}
     }	
 #else
-    XFD_COPYSET(&AllClients, &savedAllClients);
-    for (i = 0; i < XFD_SETCOUNT(&savedAllClients); i++)
+    XFD_COPYSET(&AllSockets, &savedAllSockets);
+    for (j=0; j<2; j++)
     {
-	curclient = XFD_FD(&savedAllClients, i);
-	FD_ZERO(&tmask);
-	FD_SET(curclient, &tmask);
-        do {
-            r = Select (curclient + 1, &tmask, NULL, NULL, &notime);
-        } while (r < 0 && (errno == EINTR || errno == EAGAIN));
-	if (r < 0)
-            if (GetConnectionTranslation(curclient) > 0)
-                CloseDownClient(clients[GetConnectionTranslation(curclient)]);
-    }	
+	    for (i = 0; i < XFD_SETCOUNT(&savedAllSockets); i++)
+	    {
+		curclient = XFD_FD(&savedAllSockets, i);
+		FD_ZERO(&tmask);
+		FD_SET(curclient, &tmask);
+		do {
+		    r = Select (curclient + 1, &tmask, NULL, NULL, &notime);
+		} while (r < 0 && (WSAGetLastError() == WSAEINTR || WSAGetLastError() == WSAEWOULDBLOCK));
+		if (r < 0)
+		    if (GetConnectionTranslation(curclient) > 0)
+			CloseDownClient(clients[GetConnectionTranslation(curclient)]);
+	    }
+	XFD_COPYSET(&AllClients, &savedAllSockets);
+    }	    
 #endif
 }
 
