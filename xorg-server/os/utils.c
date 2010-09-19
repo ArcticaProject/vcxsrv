@@ -201,6 +201,11 @@ Bool PanoramiXExtensionDisabledHack = FALSE;
 
 int auditTrailLevel = 1;
 
+#ifdef _MSC_VER
+static HANDLE s_hSmartScheduleTimer = NULL;
+static HANDLE s_hSmartScheduleTimerQueue = NULL;
+#endif
+
 #if defined(SVR4) || defined(__linux__) || defined(CSRG_BASED)
 #define HAS_SAVED_IDS_AND_SETEUID
 #endif
@@ -1137,7 +1142,12 @@ XNFstrdup(const char *s)
 void
 SmartScheduleStopTimer (void)
 {
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+    if (SmartScheduleDisable)
+	return;
+    DeleteTimerQueueTimer(s_hSmartScheduleTimerQueue, s_hSmartScheduleTimer, NULL);
+    s_hSmartScheduleTimer=NULL;
+#else
     struct itimerval	timer;
     
     if (SmartScheduleDisable)
@@ -1150,10 +1160,33 @@ SmartScheduleStopTimer (void)
 #endif
 }
 
+#ifdef _MSC_VER
+static VOID CALLBACK SmartScheduleTimer( PVOID lpParameter, BOOLEAN TimerOrWaitFired)
+#else
+static void SmartScheduleTimer (int sig)
+#endif
+{
+    SmartScheduleTime += SmartScheduleInterval;
+}
+
+
 void
 SmartScheduleStartTimer (void)
 {
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+    if (SmartScheduleDisable)
+	return;
+
+    if (!CreateTimerQueueTimer( &s_hSmartScheduleTimer, s_hSmartScheduleTimerQueue, SmartScheduleTimer, NULL
+                              , SmartScheduleInterval, SmartScheduleInterval, WT_EXECUTEONLYONCE|WT_EXECUTEINPERSISTENTTHREAD))
+    {
+        DWORD Error=GetLastError();
+        ErrorF("Error starting timer, smart scheduling disabled: 0x%x (%d)\n",Error,Error);
+	CloseHandle(s_hSmartScheduleTimer);
+	SmartScheduleDisable = TRUE;
+	return;
+    }
+#else
     struct itimerval	timer;
     
     if (SmartScheduleDisable)
@@ -1166,16 +1199,20 @@ SmartScheduleStartTimer (void)
 #endif
 }
 
-static void
-SmartScheduleTimer (int sig)
-{
-    SmartScheduleTime += SmartScheduleInterval;
-}
-
 void
 SmartScheduleInit (void)
 {
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+    if (SmartScheduleDisable)
+	return;
+    s_hSmartScheduleTimerQueue = CreateTimerQueue();
+    if (!s_hSmartScheduleTimerQueue)
+    {
+        DWORD Error=GetLastError();
+        ErrorF("Error creating timer, smart scheduling disabled: 0x%x (%d)\n",Error,Error);
+	SmartScheduleDisable = TRUE;
+    }
+#else
     struct sigaction	act;
 
     if (SmartScheduleDisable)
