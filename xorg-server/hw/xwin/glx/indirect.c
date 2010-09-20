@@ -875,6 +875,7 @@ glxWinPositionWindow(WindowPtr pWin, int x, int y)
                   pWin->drawable.width,
                   pWin->drawable.height,
                   FALSE);
+       winDebug("Move window %x,  %x, %d, %d, %d, %d\n",pWinPriv->hWnd,GetParent(pWinPriv->hWnd), pWin->drawable.x, pWin->drawable.y, pWin->drawable.width, pWin->drawable.height);
     }
     return result;
 }

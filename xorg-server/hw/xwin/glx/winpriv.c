@@ -57,6 +57,8 @@ HWND winGetWindowInfo(WindowPtr pWin)
             {
               if (pWin->parent && pWin->parent->parent)
               {
+                int offsetx;
+                int offsety;
                 int ExtraClass=(pWin->realized)?WS_VISIBLE:0;
                 HWND hWndParent;
                 WindowPtr pParent=pWin->parent;
@@ -70,24 +72,35 @@ HWND winGetWindowInfo(WindowPtr pWin)
                 }
                 if (!hWndParent)
                   hWndParent=hwnd;
+                if (pParent)
+                {
+                  offsetx=pParent->drawable.x;
+                  offsety=pParent->drawable.y;
+                }
+                else
+                {
+                  offsetx=0;
+                  offsety=0;
+                }
                 pWinPriv->hWnd=CreateWindowExA(WS_EX_TRANSPARENT,
                              WIN_GL_WINDOW_CLASS,
                              "",
                              WS_CHILD |WS_CLIPSIBLINGS | WS_CLIPCHILDREN  | ExtraClass,
-                             pWin->drawable.x,
-                             pWin->drawable.y,
+                             pWin->drawable.x-offsetx,
+                             pWin->drawable.y-offsety,
                              pWin->drawable.width,
                              pWin->drawable.height,
                              hWndParent,
                              NULL,
                              GetModuleHandle(NULL),
                              NULL);
+                winDebug("Window created %x %x %d %d %d %d\n",pWinPriv->hWnd,hWndParent,pWin->drawable.x-offsetx,pWin->drawable.y-offsety,pWin->drawable.width, pWin->drawable.height);
                 pWinPriv->GlCtxWnd=TRUE;
               }
               else
               {
                 winCreateWindowsWindow(pWin);
-                ErrorF("winGetWindowInfo: forcing window to exist...\n");
+                winDebug("winGetWindowInfo: forcing window to exist...\n");
               }
             }
             if (pWinPriv->hWnd != NULL)

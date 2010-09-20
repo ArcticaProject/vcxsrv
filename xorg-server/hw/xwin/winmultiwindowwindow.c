@@ -636,17 +636,37 @@ winUpdateWindowsWindow (WindowPtr pWin)
     }
   else if (hWnd != NULL)
     {
-      if (pWinPriv->OpenGlWindow)
+      if (pWinPriv->GlCtxWnd)
       {
+        /* We do not need to destroy the window but to reparent it and move it to the
+           correct place when it is an opengl window */
+        int offsetx;
+        int offsety;
         HWND hParentWnd;
+        WindowPtr pParent=pWin->parent;
 
+        while (pParent)
         {
-          winWindowPriv(pWin->parent);
-          ErrorF("Window handle = %x\n",pWinPriv->hWnd);
+          winWindowPriv(pParent);
           hParentWnd=pWinPriv->hWnd;
+          if (hParentWnd)
+            break;
+          pParent=pParent->parent;
         }
+
+        if (pParent)
+        {
+          offsetx=pParent->drawable.x;
+          offsety=pParent->drawable.y;
+        }
+        else
+        {
+          offsetx=0;
+          offsety=0;
+        }
+        winDebug ("-winUpdateWindowsWindow: %x changing parent to %x and moving to %d,%d\n",pWinPriv->hWnd,hParentWnd,pWin->drawable.x-offsetx,pWin->drawable.y-offsety);
         SetParent(pWinPriv->hWnd,hParentWnd);
-        SetWindowPos(pWinPriv->hWnd,NULL,0,0,0,0,SWP_NOSIZE|SWP_NOZORDER|SWP_SHOWWINDOW);
+        SetWindowPos(pWinPriv->hWnd,NULL,pWin->drawable.x-offsetx,pWin->drawable.y-offsety,0,0,SWP_NOSIZE|SWP_NOZORDER|SWP_SHOWWINDOW);
       }
       else
       {
