@@ -104,12 +104,11 @@ main (int argc, char **argv)
 	{ d2f (0.0), { full, low, low, alpha } },
 	{ d2f (0.25), { full, full, low, alpha } },
 	{ d2f (0.4), { low, full, low, alpha } },
-	{ d2f (0.5), { low, full, full, alpha } },
+	{ d2f (0.6), { low, full, full, alpha } },
 	{ d2f (0.8), { low, low, full, alpha } },
 	{ d2f (1.0), { full, low, full, alpha } },
     };
-	
-	    
+
     int i;
 
     gtk_init (&argc, &argv);

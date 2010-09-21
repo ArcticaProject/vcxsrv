@@ -327,10 +327,6 @@ compute_image_info (pixman_image_t *image)
 	    flags |= FAST_PATH_Y_UNIT_ZERO;
     }
 
-    /* Alpha map */
-    if (!image->common.alpha_map)
-	flags |= FAST_PATH_NO_ALPHA_MAP;
-
     /* Filter */
     switch (image->common.filter)
     {
@@ -357,19 +353,34 @@ compute_image_info (pixman_image_t *image)
     switch (image->common.repeat)
     {
     case PIXMAN_REPEAT_NONE:
-	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_PAD_REPEAT | FAST_PATH_NO_NORMAL_REPEAT;
+	flags |=
+	    FAST_PATH_NO_REFLECT_REPEAT		|
+	    FAST_PATH_NO_PAD_REPEAT		|
+	    FAST_PATH_NO_NORMAL_REPEAT;
 	break;
 
     case PIXMAN_REPEAT_REFLECT:
-	flags |= FAST_PATH_NO_PAD_REPEAT | FAST_PATH_NO_NONE_REPEAT | FAST_PATH_NO_NORMAL_REPEAT;
+	flags |=
+	    FAST_PATH_NO_PAD_REPEAT		|
+	    FAST_PATH_NO_NONE_REPEAT		|
+	    FAST_PATH_NO_NORMAL_REPEAT		|
+	    FAST_PATH_COVERS_CLIP;
 	break;
 
     case PIXMAN_REPEAT_PAD:
-	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_NONE_REPEAT | FAST_PATH_NO_NORMAL_REPEAT;
+	flags |=
+	    FAST_PATH_NO_REFLECT_REPEAT		|
+	    FAST_PATH_NO_NONE_REPEAT		|
+	    FAST_PATH_NO_NORMAL_REPEAT		|
+	    FAST_PATH_COVERS_CLIP;
 	break;
 
     default:
-	flags |= FAST_PATH_NO_REFLECT_REPEAT | FAST_PATH_NO_PAD_REPEAT | FAST_PATH_NO_NONE_REPEAT;
+	flags |=
+	    FAST_PATH_NO_REFLECT_REPEAT		|
+	    FAST_PATH_NO_PAD_REPEAT		|
+	    FAST_PATH_NO_NONE_REPEAT		|
+	    FAST_PATH_COVERS_CLIP;
 	break;
     }
 
@@ -379,7 +390,7 @@ compute_image_info (pixman_image_t *image)
     else
 	flags |= FAST_PATH_UNIFIED_ALPHA;
 
-    flags |= (FAST_PATH_NO_ACCESSORS | FAST_PATH_NO_WIDE_FORMAT);
+    flags |= (FAST_PATH_NO_ACCESSORS | FAST_PATH_NARROW_FORMAT);
 
     /* Type specific checks */
     switch (image->type)
@@ -389,6 +400,8 @@ compute_image_info (pixman_image_t *image)
 
 	if (image->solid.color.alpha == 0xffff)
 	    flags |= FAST_PATH_IS_OPAQUE;
+
+	flags |= FAST_PATH_COVERS_CLIP;
 	break;
 
     case BITS:
@@ -426,7 +439,7 @@ compute_image_info (pixman_image_t *image)
 	    flags &= ~FAST_PATH_NO_ACCESSORS;
 
 	if (PIXMAN_FORMAT_IS_WIDE (image->bits.format))
-	    flags &= ~FAST_PATH_NO_WIDE_FORMAT;
+	    flags &= ~FAST_PATH_NARROW_FORMAT;
 	break;
 
     case LINEAR:
@@ -452,6 +465,17 @@ compute_image_info (pixman_image_t *image)
     default:
 	code = PIXMAN_unknown;
 	break;
+    }
+
+    /* Alpha map */
+    if (!image->common.alpha_map)
+    {
+	flags |= FAST_PATH_NO_ALPHA_MAP;
+    }
+    else
+    {
+	if (PIXMAN_FORMAT_IS_WIDE (image->common.alpha_map->format))
+	    flags &= ~FAST_PATH_NARROW_FORMAT;
     }
 
     /* Both alpha maps and convolution filters can introduce

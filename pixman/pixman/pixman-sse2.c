@@ -35,6 +35,7 @@
 #include <emmintrin.h> /* for SSE2 intrinsics */
 #include "pixman-private.h"
 #include "pixman-combine32.h"
+#include "pixman-fast-path.h"
 
 #if defined(_MSC_VER) && defined(_M_AMD64)
 /* Windows 64 doesn't allow MMX to be used, so
@@ -6346,6 +6347,107 @@ sse2_composite_over_8888_8888_8888 (pixman_implementation_t *imp,
     _mm_empty ();
 }
 
+/* A variant of 'core_combine_over_u_sse2' with minor tweaks */
+static force_inline void
+scaled_nearest_scanline_sse2_8888_8888_OVER (uint32_t*       pd,
+                                             const uint32_t* ps,
+                                             int32_t         w,
+                                             pixman_fixed_t  vx,
+                                             pixman_fixed_t  unit_x,
+                                             pixman_fixed_t  max_vx)
+{
+    uint32_t s, d;
+    const uint32_t* pm = NULL;
+
+    __m128i xmm_dst_lo, xmm_dst_hi;
+    __m128i xmm_src_lo, xmm_src_hi;
+    __m128i xmm_alpha_lo, xmm_alpha_hi;
+
+    /* Align dst on a 16-byte boundary */
+    while (w && ((unsigned long)pd & 15))
+    {
+	d = *pd;
+	s = combine1 (ps + (vx >> 16), pm);
+	vx += unit_x;
+
+	*pd++ = core_combine_over_u_pixel_sse2 (s, d);
+	if (pm)
+	    pm++;
+	w--;
+    }
+
+    while (w >= 4)
+    {
+	__m128i tmp;
+	uint32_t tmp1, tmp2, tmp3, tmp4;
+
+	tmp1 = ps[vx >> 16];
+	vx += unit_x;
+	tmp2 = ps[vx >> 16];
+	vx += unit_x;
+	tmp3 = ps[vx >> 16];
+	vx += unit_x;
+	tmp4 = ps[vx >> 16];
+	vx += unit_x;
+
+	tmp = _mm_set_epi32 (tmp4, tmp3, tmp2, tmp1);
+
+	xmm_src_hi = combine4 ((__m128i*)&tmp, (__m128i*)pm);
+
+	if (is_opaque (xmm_src_hi))
+	{
+	    save_128_aligned ((__m128i*)pd, xmm_src_hi);
+	}
+	else if (!is_zero (xmm_src_hi))
+	{
+	    xmm_dst_hi = load_128_aligned ((__m128i*) pd);
+
+	    unpack_128_2x128 (xmm_src_hi, &xmm_src_lo, &xmm_src_hi);
+	    unpack_128_2x128 (xmm_dst_hi, &xmm_dst_lo, &xmm_dst_hi);
+
+	    expand_alpha_2x128 (
+		xmm_src_lo, xmm_src_hi, &xmm_alpha_lo, &xmm_alpha_hi);
+
+	    over_2x128 (&xmm_src_lo, &xmm_src_hi,
+			&xmm_alpha_lo, &xmm_alpha_hi,
+			&xmm_dst_lo, &xmm_dst_hi);
+
+	    /* rebuid the 4 pixel data and save*/
+	    save_128_aligned ((__m128i*)pd,
+			      pack_2x128_128 (xmm_dst_lo, xmm_dst_hi));
+	}
+
+	w -= 4;
+	pd += 4;
+	if (pm)
+	    pm += 4;
+    }
+
+    while (w)
+    {
+	d = *pd;
+	s = combine1 (ps + (vx >> 16), pm);
+	vx += unit_x;
+
+	*pd++ = core_combine_over_u_pixel_sse2 (s, d);
+	if (pm)
+	    pm++;
+
+	w--;
+    }
+    _mm_empty ();
+}
+
+FAST_NEAREST_MAINLOOP (sse2_8888_8888_cover_OVER,
+		       scaled_nearest_scanline_sse2_8888_8888_OVER,
+		       uint32_t, uint32_t, COVER);
+FAST_NEAREST_MAINLOOP (sse2_8888_8888_none_OVER,
+		       scaled_nearest_scanline_sse2_8888_8888_OVER,
+		       uint32_t, uint32_t, NONE);
+FAST_NEAREST_MAINLOOP (sse2_8888_8888_pad_OVER,
+		       scaled_nearest_scanline_sse2_8888_8888_OVER,
+		       uint32_t, uint32_t, PAD);
+
 static const pixman_fast_path_t sse2_fast_paths[] =
 {
     /* PIXMAN_OP_OVER */
@@ -6428,6 +6530,19 @@ static const pixman_fast_path_t sse2_fast_paths[] =
     PIXMAN_STD_FAST_PATH (IN, a8, null, a8, sse2_composite_in_8_8),
     PIXMAN_STD_FAST_PATH (IN, solid, a8, a8, sse2_composite_in_n_8_8),
     PIXMAN_STD_FAST_PATH (IN, solid, null, a8, sse2_composite_in_n_8),
+
+    SIMPLE_NEAREST_FAST_PATH_COVER (OVER, a8r8g8b8, x8r8g8b8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_COVER (OVER, a8b8g8r8, x8b8g8r8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_COVER (OVER, a8r8g8b8, a8r8g8b8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_COVER (OVER, a8b8g8r8, a8b8g8r8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_NONE (OVER, a8r8g8b8, x8r8g8b8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_NONE (OVER, a8b8g8r8, x8b8g8r8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_NONE (OVER, a8r8g8b8, a8r8g8b8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_NONE (OVER, a8b8g8r8, a8b8g8r8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8r8g8b8, x8r8g8b8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8b8g8r8, x8b8g8r8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8r8g8b8, a8r8g8b8, sse2_8888_8888),
+    SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8b8g8r8, a8b8g8r8, sse2_8888_8888),
 
     { PIXMAN_OP_NONE },
 };

@@ -139,14 +139,18 @@ optimize_operator (pixman_op_t     op,
 		   uint32_t        dst_flags)
 {
     pixman_bool_t is_source_opaque, is_dest_opaque;
-    int opaqueness;
 
-    is_source_opaque = ((src_flags & mask_flags) & FAST_PATH_IS_OPAQUE) != 0;
-    is_dest_opaque = (dst_flags & FAST_PATH_IS_OPAQUE) != 0;
+#define OPAQUE_SHIFT 13
+    
+    COMPILE_TIME_ASSERT (FAST_PATH_IS_OPAQUE == (1 << OPAQUE_SHIFT));
+    
+    is_dest_opaque = (dst_flags & FAST_PATH_IS_OPAQUE);
+    is_source_opaque = ((src_flags & mask_flags) & FAST_PATH_IS_OPAQUE);
 
-    opaqueness = ((is_dest_opaque << 1) | is_source_opaque);
+    is_dest_opaque >>= OPAQUE_SHIFT - 1;
+    is_source_opaque >>= OPAQUE_SHIFT;
 
-    return operator_table[op].opaque_info[opaqueness];
+    return operator_table[op].opaque_info[is_dest_opaque | is_source_opaque];
 }
 
 static void
@@ -302,6 +306,10 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
     if (region->extents.x1 >= region->extents.x2 ||
         region->extents.y1 >= region->extents.y2)
     {
+	region->extents.x1 = 0;
+	region->extents.x2 = 0;
+	region->extents.y1 = 0;
+	region->extents.y2 = 0;
 	return FALSE;
     }
 
@@ -311,13 +319,26 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
 	    return FALSE;
     }
 
-    if (dst_image->common.alpha_map && dst_image->common.alpha_map->common.have_clip_region)
+    if (dst_image->common.alpha_map)
     {
-	if (!clip_general_image (region, &dst_image->common.alpha_map->common.clip_region,
-	                         -dst_image->common.alpha_origin_x,
-	                         -dst_image->common.alpha_origin_y))
+	if (!pixman_region32_intersect_rect (region, region,
+					     dst_image->common.alpha_origin_x,
+					     dst_image->common.alpha_origin_y,
+					     dst_image->common.alpha_map->width,
+					     dst_image->common.alpha_map->height))
 	{
 	    return FALSE;
+	}
+	if (!pixman_region32_not_empty (region))
+	    return FALSE;
+	if (dst_image->common.alpha_map->common.have_clip_region)
+	{
+	    if (!clip_general_image (region, &dst_image->common.alpha_map->common.clip_region,
+				     -dst_image->common.alpha_origin_x,
+				     -dst_image->common.alpha_origin_y))
+	    {
+		return FALSE;
+	    }
 	}
     }
 
@@ -691,28 +712,8 @@ analyze_extent (pixman_image_t *image, int x, int y,
     pixman_fixed_t width, height;
     pixman_box32_t ex;
 
-    *flags |= FAST_PATH_COVERS_CLIP;
     if (!image)
 	return TRUE;
-
-    transform = image->common.transform;
-    if (image->common.type == BITS)
-    {
-	/* During repeat mode calculations we might convert the
-	 * width/height of an image to fixed 16.16, so we need
-	 * them to be smaller than 16 bits.
-	 */
-	if (image->bits.width >= 0x7fff	|| image->bits.height >= 0x7fff)
-	    return FALSE;
-
-	if (image->common.repeat == PIXMAN_REPEAT_NONE &&
-	    (x > extents->x1 || y > extents->y1 ||
-	     x + image->bits.width < extents->x2 ||
-	     y + image->bits.height < extents->y2))
-	{
-	    (*flags) &= ~FAST_PATH_COVERS_CLIP;
-	}
-    }
 
     /* Some compositing functions walk one step
      * outside the destination rectangle, so we
@@ -727,8 +728,28 @@ analyze_extent (pixman_image_t *image, int x, int y,
 	return FALSE;
     }
 
+    transform = image->common.transform;
     if (image->common.type == BITS)
     {
+	/* During repeat mode calculations we might convert the
+	 * width/height of an image to fixed 16.16, so we need
+	 * them to be smaller than 16 bits.
+	 */
+	if (image->bits.width >= 0x7fff	|| image->bits.height >= 0x7fff)
+	    return FALSE;
+
+#define ID_AND_NEAREST (FAST_PATH_ID_TRANSFORM | FAST_PATH_NEAREST_FILTER)
+	
+	if ((image->common.flags & ID_AND_NEAREST) == ID_AND_NEAREST &&
+	    extents->x1 - x >= 0 &&
+	    extents->y1 - y >= 0 &&
+	    extents->x2 - x <= image->bits.width &&
+	    extents->y2 - y <= image->bits.height)
+	{
+	    *flags |= (FAST_PATH_SAMPLES_COVER_CLIP | FAST_PATH_COVERS_CLIP);
+	    return TRUE;
+	}
+    
 	switch (image->common.filter)
 	{
 	case PIXMAN_FILTER_CONVOLUTION:
@@ -759,6 +780,17 @@ analyze_extent (pixman_image_t *image, int x, int y,
 	default:
 	    return FALSE;
 	}
+
+	/* Check whether the non-expanded, transformed extent is entirely within
+	 * the source image, and set the FAST_PATH_SAMPLES_COVER_CLIP if it is.
+	 */
+	ex = *extents;
+	if (compute_sample_extents (transform, &ex, x, y, x_off, y_off, width, height) &&
+	    ex.x1 >= 0 && ex.y1 >= 0 &&
+	    ex.x2 <= image->bits.width && ex.y2 <= image->bits.height)
+	{
+	    *flags |= (FAST_PATH_SAMPLES_COVER_CLIP | FAST_PATH_COVERS_CLIP);
+	}
     }
     else
     {
@@ -769,8 +801,8 @@ analyze_extent (pixman_image_t *image, int x, int y,
     }
 
     /* Check that the extents expanded by one don't overflow. This ensures that
-     * compositing functions can simply walk the source space using 16.16 variables
-     * without worrying about overflow.
+     * compositing functions can simply walk the source space using 16.16
+     * variables without worrying about overflow.
      */
     ex.x1 = extents->x1 - 1;
     ex.y1 = extents->y1 - 1;
@@ -779,19 +811,6 @@ analyze_extent (pixman_image_t *image, int x, int y,
 
     if (!compute_sample_extents (transform, &ex, x, y, x_off, y_off, width, height))
 	return FALSE;
-
-    if (image->type == BITS)
-    {
-	/* Check whether the non-expanded, transformed extent is entirely within
-	 * the source image, and set the FAST_PATH_SAMPLES_COVER_CLIP if it is.
-	 */
-	ex = *extents;
-	if (compute_sample_extents (transform, &ex, x, y, x_off, y_off, width, height))
-	{
-	    if (ex.x1 >= 0 && ex.y1 >= 0 && ex.x2 <= image->bits.width && ex.y2 <= image->bits.height)
-		*flags |= FAST_PATH_SAMPLES_COVER_CLIP;
-	}
-    }
 
     return TRUE;
 }

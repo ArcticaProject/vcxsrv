@@ -51,9 +51,22 @@ compute_crc32 (uint32_t    in_crc32,
 void
 image_endian_swap (pixman_image_t *img, int bpp);
 
-/* Generate n_bytes random bytes in malloced memory */
+/* Allocate memory that is bounded by protected pages,
+ * so that out-of-bounds access will cause segfaults
+ */
+void *
+fence_malloc (uint32_t len);
+
+void
+fence_free (void *data);
+
+/* Generate n_bytes random bytes in fence_malloced memory */
 uint8_t *
 make_random_bytes (int n_bytes);
+
+/* Return current time in seconds */
+double
+gettime (void);
 
 /* main body of the fuzzer test */
 int
@@ -101,3 +114,7 @@ fail_after (int seconds, const char *msg);
     assert (frcd_canary_variable6 == frcd_volatile_constant6); \
     assert (frcd_canary_variable7 == frcd_volatile_constant7); \
     assert (frcd_canary_variable8 == frcd_volatile_constant8);
+
+/* Try to get an aligned memory chunk */
+void *
+aligned_malloc (size_t align, size_t size);

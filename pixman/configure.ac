@@ -54,7 +54,7 @@ AC_PREREQ([2.57])
 
 m4_define([pixman_major], 0)
 m4_define([pixman_minor], 19)
-m4_define([pixman_micro], 3)
+m4_define([pixman_micro], 5)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -248,6 +248,9 @@ dnl -fvisibility stuff
 
 PIXMAN_CHECK_CFLAG([-fvisibility=hidden], [dnl
 #if defined(__GNUC__) && (__GNUC__ >= 4)
+#ifdef _WIN32
+#error Have -fvisibility but it is ignored and generates a warning
+#endif
 #else
 error Need GCC 4.0 for visibility
 #endif
@@ -606,7 +609,7 @@ AC_SUBST(DEP_CFLAGS)
 AC_SUBST(DEP_LIBS)
 
 dnl =====================================
-dnl posix_memalign, sigaction, alarm
+dnl posix_memalign, sigaction, alarm, gettimeofday
 
 AC_CHECK_FUNC(posix_memalign, have_posix_memalign=yes, have_posix_memalign=no)
 if test x$have_posix_memalign = xyes; then
@@ -623,6 +626,25 @@ if test x$have_alarm = xyes; then
    AC_DEFINE(HAVE_ALARM, 1, [Whether we have alarm()])
 fi
 
+AC_CHECK_HEADER([sys/mman.h],
+   [AC_DEFINE(HAVE_SYS_MMAN_H, [1], [Define to 1 if we have <sys/mman.h>])])
+
+AC_CHECK_FUNC(mprotect, have_mprotect=yes, have_mprotect=no)
+if test x$have_mprotect = xyes; then
+   AC_DEFINE(HAVE_MPROTECT, 1, [Whether we have mprotect()])
+fi
+
+AC_CHECK_FUNC(getpagesize, have_getpagesize=yes, have_getpagesize=no)
+if test x$have_getpagesize = xyes; then
+   AC_DEFINE(HAVE_GETPAGESIZE, 1, [Whether we have getpagesize()])
+fi
+
+AC_CHECK_FUNC(gettimeofday, have_gettimeofday=yes, have_gettimeofday=no)
+AC_CHECK_HEADER(sys/time.h, have_sys_time_h=yes, have_sys_time_h=no)
+if test x$have_gettimeofday = xyes && test x$have_sys_time_h = xyes; then
+   AC_DEFINE(HAVE_GETTIMEOFDAY, 1, [Whether we have gettimeofday()])
+fi
+
 dnl =====================================
 dnl Thread local storage
 
@@ -630,8 +652,9 @@ support_for__thread=no
 
 AC_MSG_CHECKING(for __thread)
 AC_LINK_IFELSE([
-#ifdef __MINGW32__
-#error MinGW has broken __thread support
+#ifdef defined __MINGW32__ && !(__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
+#error This MinGW version has broken __thread support
+#endif
 #endif
 #ifdef __OpenBSD__
 #error OpenBSD has broken __thread support
