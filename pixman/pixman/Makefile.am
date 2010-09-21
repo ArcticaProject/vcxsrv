@@ -21,6 +21,7 @@ libpixman_1_la_SOURCES =			\
 	pixman-general.c			\
 	pixman.c				\
 	pixman-fast-path.c			\
+	pixman-fast-path.h			\
 	pixman-solid-fill.c			\
 	pixman-conical-gradient.c		\
 	pixman-linear-gradient.c		\

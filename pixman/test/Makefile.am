@@ -13,11 +13,12 @@ TESTPROGRAMS =			\
 	window-test		\
 	gradient-crash-test	\
 	trap-crasher		\
-	alphamap		\
 	alpha-loop		\
 	scaling-crash-test	\
+	alphamap		\
 	blitters-test		\
 	scaling-test		\
+	affine-test		\
 	composite
 
 a1_trap_test_LDADD = $(TEST_LDADD)
@@ -38,6 +39,9 @@ blitters_test_SOURCES = blitters-test.c utils.c utils.h
 
 scaling_test_LDADD = $(TEST_LDADD)
 scaling_test_SOURCES = scaling-test.c utils.c utils.h
+
+affine_test_LDADD = $(TEST_LDADD)
+affine_test_SOURCES = affine-test.c utils.c utils.h
 
 alphamap_LDADD = $(TEST_LDADD)
 alphamap_SOURCES = alphamap.c utils.c utils.h
@@ -90,7 +94,14 @@ convolution_test_SOURCES = convolution-test.c $(GTK_UTILS)
 
 endif
 
-noinst_PROGRAMS = $(TESTPROGRAMS) $(TESTPROGRAMS_GTK)
+# Benchmarks
+
+BENCHMARKS =			\
+	lowlevel-blt-bench
+
+lowlevel_blt_bench_SOURCES = lowlevel-blt-bench.c utils.c utils.h
+lowlevel_blt_bench_LDADD = $(TEST_LDADD)
+
+noinst_PROGRAMS = $(TESTPROGRAMS) $(TESTPROGRAMS_GTK) $(BENCHMARKS)
 
 TESTS = $(TESTPROGRAMS)
-

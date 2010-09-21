@@ -1,8 +1,18 @@
 #include "utils.h"
 #include <signal.h>
 
+#ifdef HAVE_GETTIMEOFDAY
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifdef HAVE_SYS_MMAN_H
+#include <sys/mman.h>
 #endif
 
 /* Random number seed
@@ -197,10 +207,117 @@ image_endian_swap (pixman_image_t *img, int bpp)
     }
 }
 
+#define N_LEADING_PROTECTED	10
+#define N_TRAILING_PROTECTED	10
+
+typedef struct
+{
+    void *addr;
+    uint32_t len;
+    uint8_t *trailing;
+    int n_bytes;
+} info_t;
+
+#if defined(HAVE_MPROTECT) && defined(HAVE_GETPAGESIZE)
+
+/* This is apparently necessary on at least OS X */
+#ifndef MAP_ANONYMOUS
+#define MAP_ANONYMOUS MAP_ANON
+#endif
+
+void *
+fence_malloc (uint32_t len)
+{
+    unsigned long page_size = getpagesize();
+    unsigned long page_mask = page_size - 1;
+    uint32_t n_payload_bytes = (len + page_mask) & ~page_mask;
+    uint32_t n_bytes =
+	(page_size * (N_LEADING_PROTECTED + N_TRAILING_PROTECTED + 2) +
+	 n_payload_bytes) & ~page_mask;
+    uint8_t *initial_page;
+    uint8_t *leading_protected;
+    uint8_t *trailing_protected;
+    uint8_t *payload;
+    uint8_t *addr;
+
+    addr = mmap (NULL, n_bytes, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
+		 -1, 0);
+
+    if (addr == (void *)MAP_FAILED)
+    {
+	printf ("mmap failed on %u %u\n", len, n_bytes);
+	return NULL;
+    }
+
+    initial_page = (uint8_t *)(((unsigned long)addr + page_mask) & ~page_mask);
+    leading_protected = initial_page + page_size;
+    payload = leading_protected + N_LEADING_PROTECTED * page_size;
+    trailing_protected = payload + n_payload_bytes;
+
+    ((info_t *)initial_page)->addr = addr;
+    ((info_t *)initial_page)->len = len;
+    ((info_t *)initial_page)->trailing = trailing_protected;
+    ((info_t *)initial_page)->n_bytes = n_bytes;
+
+    if (mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
+		  PROT_NONE) == -1)
+    {
+	free (addr);
+	return NULL;
+    }
+
+    if (mprotect (trailing_protected, N_TRAILING_PROTECTED * page_size,
+		  PROT_NONE) == -1)
+    {
+	mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
+		  PROT_READ | PROT_WRITE);
+
+	free (addr);
+	return NULL;
+    }
+
+    return payload;
+}
+
+void
+fence_free (void *data)
+{
+    uint32_t page_size = getpagesize();
+    uint8_t *payload = data;
+    uint8_t *leading_protected = payload - N_LEADING_PROTECTED * page_size;
+    uint8_t *initial_page = leading_protected - page_size;
+    info_t *info = (info_t *)initial_page;
+    uint8_t *trailing_protected = info->trailing;
+
+    mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
+	      PROT_READ | PROT_WRITE);
+
+    mprotect (trailing_protected, N_LEADING_PROTECTED * page_size,
+	      PROT_READ | PROT_WRITE);
+
+    munmap (info->addr, info->n_bytes);
+}
+
+#else
+
+void *
+fence_malloc (uint32_t len)
+{
+    return malloc (len);
+}
+
+void
+fence_free (void *data)
+{
+    free (data);
+}
+
+#endif
+
 uint8_t *
 make_random_bytes (int n_bytes)
 {
-    uint8_t *bytes = malloc (n_bytes);
+    uint8_t *bytes = fence_malloc (n_bytes);
     int i;
 
     if (!bytes)
@@ -325,6 +442,20 @@ fuzzer_test_main (const char *test_name,
     return 0;
 }
 
+/* Try to obtain current time in seconds */
+double
+gettime (void)
+{
+#ifdef HAVE_GETTIMEOFDAY
+    struct timeval tv;
+
+    gettimeofday (&tv, NULL);
+    return (double)((int64_t)tv.tv_sec * 1000000 + tv.tv_usec) / 1000000.;
+#else
+    return (double)clock() / (double)CLOCKS_PER_SEC;
+#endif
+}
+
 static const char *global_msg;
 
 static void
@@ -351,4 +482,19 @@ fail_after (int seconds, const char *msg)
     sigaction (SIGALRM, &action, NULL);
 #endif
 #endif
+}
+
+void *
+aligned_malloc (size_t align, size_t size)
+{
+    void *result;
+
+#ifdef HAVE_POSIX_MEMALIGN
+    if (posix_memalign (&result, align, size) != 0)
+      result = NULL;
+#else
+    result = malloc (size);
+#endif
+
+    return result;
 }

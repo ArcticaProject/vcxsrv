@@ -14,21 +14,6 @@
 static pixman_indexed_t rgb_palette[9];
 static pixman_indexed_t y_palette[9];
 
-static void *
-aligned_malloc (size_t align, size_t size)
-{
-    void *result;
-
-#ifdef HAVE_POSIX_MEMALIGN
-    if (posix_memalign (&result, align, size) != 0)
-      result = NULL;
-#else
-    result = malloc (size);
-#endif
-
-    return result;
-}
-
 /* Create random image for testing purposes */
 static pixman_image_t *
 create_random_image (pixman_format_code_t *allowed_formats,

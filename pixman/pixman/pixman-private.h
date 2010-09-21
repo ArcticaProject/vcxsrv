@@ -554,7 +554,7 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_NO_PAD_REPEAT			(1 <<  3)
 #define FAST_PATH_NO_REFLECT_REPEAT		(1 <<  4)
 #define FAST_PATH_NO_ACCESSORS			(1 <<  5)
-#define FAST_PATH_NO_WIDE_FORMAT		(1 <<  6)
+#define FAST_PATH_NARROW_FORMAT		(1 <<  6)
 #define FAST_PATH_COVERS_CLIP			(1 <<  7)
 #define FAST_PATH_COMPONENT_ALPHA		(1 <<  8)
 #define FAST_PATH_UNIFIED_ALPHA			(1 <<  9)
@@ -600,7 +600,7 @@ _pixman_choose_implementation (void);
      FAST_PATH_NO_PAD_REPEAT		|				\
      FAST_PATH_NO_REFLECT_REPEAT	|				\
      FAST_PATH_NO_ACCESSORS		|				\
-     FAST_PATH_NO_WIDE_FORMAT		|				\
+     FAST_PATH_NARROW_FORMAT		|				\
      FAST_PATH_COVERS_CLIP)
 
 #define FAST_PATH_STD_SRC_FLAGS						\
@@ -614,7 +614,7 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_STD_DEST_FLAGS					\
     (FAST_PATH_NO_ACCESSORS		|				\
      FAST_PATH_NO_ALPHA_MAP		|				\
-     FAST_PATH_NO_WIDE_FORMAT)
+     FAST_PATH_NARROW_FORMAT)
 
 #define FAST_PATH(op, src, src_flags, mask, mask_flags, dest, dest_flags, func) \
     PIXMAN_OP_ ## op,							\
@@ -743,6 +743,9 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
  */
 
 #undef DEBUG
+
+#define COMPILE_TIME_ASSERT(x)						\
+    do { typedef int compile_time_assertion [(x)?1:-1]; } while (0)
 
 /* Turn on debugging depending on what type of release this is
  */
