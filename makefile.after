@@ -105,17 +105,6 @@ $(DESTDIR)\%.enc.gz: %.enc
 	gzip -c < $< > $@
 endif
 
-ifdef x11thislocaledir
-
-$(x11thislocaledir)\%: %.pre
-	cl /nologo /EP $< -DXCOMM\#\# > $@
-
-$(x11thislocaledir):
-	$(CREATEDIR)
-
-all: $(x11thislocaledir)
-endif
-
 ifdef DESTDIR
 $(DESTDIR):
 	$(CREATEDIR)

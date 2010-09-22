@@ -1,17 +1,20 @@
 x11localedir = $(X11_LOCALEDATADIR)
+specdir = $(docdir)/Compose
+
+include $(top_srcdir)/specs/xmlrules.in
 
 EXTRA_DIST = locale.alias.pre compose.dir.pre locale.dir.pre \
-	compose-check.pl
+	compose-check.pl compose-chart.pl
 
 x11locale_DATA = locale.alias locale.dir compose.dir
 
-CLEANFILES= \
+CLEANFILES += \
 	locale.alias locale.alias.l1 locale.alias.l2 \
 	compose.dir compose.dir.l1 compose.dir.l2 \
 	locale.dir locale.dir.l1 locale.dir.l2 \
 	XLC_LOCALE
 
-SUBDIRS= \
+locales = \
 	am_ET.UTF-8		\
 	armscii-8		\
 	C			\
@@ -75,6 +78,8 @@ SUBDIRS= \
 
 include $(top_srcdir)/cpprules.in
 
+# Global data files
+
 locale.alias: locale.alias.pre
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $(srcdir)/locale.alias.pre | $(CPP_SED_MAGIC) > locale.alias.l1
 	sed -e '/^[^#][^        ]*:/s/://' -e '/^[^#].*[        ].*:/d' \
@@ -92,3 +97,53 @@ locale.dir: locale.dir.pre
 	sed -e '/^[^#][^        ]*:/s/://' -e '/^[^#].*[        ].*:/d' \
         < locale.dir.l1 > locale.dir.l2
 	cat locale.dir.l2 locale.dir.l1 > locale.dir
+
+if HAVE_PERL
+doc_sources = Compose/index.xml
+
+Compose/index.xml: Compose
+	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl \
+	 --index --output="$@" $(locales)
+
+Compose:
+	$(MKDIR_P) $@
+
+clean-local: clean-Compose-dir
+clean-Compose-dir:
+	-rm -rf Compose
+endif HAVE_PERL
+
+
+# Per-locale data files
+
+nobase_dist_x11locale_DATA = $(locales:%=%/XI18N_OBJS)
+
+nobase_x11locale_DATA = $(locales:%=%/XLC_LOCALE) $(locales:%=%/Compose)
+EXTRA_DIST += $(nobase_x11locale_DATA:%=%.pre)
+CLEANFILES += $(nobase_x11locale_DATA)
+
+$(nobase_x11locale_DATA): builddirs
+
+builddirs:
+	$(MKDIR_P) $(locales)
+
+if HAVE_PERL
+TESTS_ENVIRONMENT = $(PERL)
+TESTS = $(srcdir)/compose-check.pl
+
+COMPOSE_CHARTS = $(locales:%=%/Compose.xml)
+doc_sources += $(locales:%=Compose/%.xml)
+CLEANFILES += $(COMPOSE_CHARTS) $(doc_sources)
+
+XMLTO_FLAGS += -o $(@D)
+
+%/Compose.xml: %/Compose
+	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl \
+	 --locale="$(@D)" --output="$@" $<
+
+Compose/%.xml: %/Compose.xml
+	$(AM_V_GEN)cp $< $@
+
+$(doc_sources): Compose
+
+endif HAVE_PERL

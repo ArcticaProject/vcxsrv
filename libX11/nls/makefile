@@ -1,4 +1,8 @@
-SUBDIRS= \
+X11_LOCALEDATADIR = ..\..\xorg-server\locale
+
+x11localedir = $(X11_LOCALEDATADIR)
+x11locale_DATA = locale.alias locale.dir compose.dir
+locales = \
 	am_ET.UTF-8		\
 	armscii-8		\
 	C			\
@@ -60,29 +64,22 @@ SUBDIRS= \
 	zh_TW.big5		\
 	zh_TW.UTF-8
 
-CPP_FILES_FLAGS = -DWCHAR32=@WCHAR32@
+include ../cpprules.mak
 
-X11_LOCALEDATADIR = ..\..\xorg-server\locale
 
-$(X11_LOCALEDATADIR)\locale.alias: locale.alias.pre
-	cl /nologo /EP $< -DXCOMM\#\# > locale.alias.l1
-	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < locale.alias.l1 > locale.alias.l2
-	type locale.alias.l2 locale.alias.l1 > $@
-	del locale.alias.l1
-	del locale.alias.l2
+$(X11_LOCALEDATADIR)\%: %.pre
+	cl /nologo /EP $< -DXCOMM\#\# > $<.l1
+	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < $<.l1 > $<.l2
+	type $<.l2 $<.l1 > $@
+	del $<.l1
+	del $<.l2
 
-$(X11_LOCALEDATADIR)\compose.dir: compose.dir.pre
-	cl /nologo /EP $< -DXCOMM\#\# > compose.dir.l1
-	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < compose.dir.l1 > compose.dir.l2
-	type compose.dir.l2 compose.dir.l1 > $@
-	del compose.dir.l1
-	del compose.dir.l2
+# Per-locale data files
 
-$(X11_LOCALEDATADIR)\locale.dir: locale.dir.pre
-	cl /nologo /EP $< -DXCOMM\#\# > locale.dir.l1
-	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < locale.dir.l1 > locale.dir.l2
-	type locale.dir.l2 locale.dir.l1 > $@
-	del locale.dir.l1
-	del locale.dir.l2
+nobase_dist_x11locale_DATA = $(locales:%=%\XI18N_OBJS)
 
-all: $(X11_LOCALEDATADIR)\locale.alias $(X11_LOCALEDATADIR)\compose.dir $(X11_LOCALEDATADIR)\locale.dir
+nobase_x11locale_DATA = $(locales:%=%\XLC_LOCALE) $(locales:%=%\Compose)
+
+all_DATA = $(nobase_dist_x11locale_DATA) $(nobase_x11locale_DATA) $(x11locale_DATA)
+
+all: $(all_DATA:%=$(X11_LOCALEDATADIR)\%)

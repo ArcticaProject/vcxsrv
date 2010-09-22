@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.60)
 AC_INIT([libX11],
-        1.3.99.901,
+        1.3.99.902,
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -67,7 +67,7 @@ if test x"$LDFLAGS_FOR_BUILD" = x; then
 fi
 AC_SUBST(LDFLAGS_FOR_BUILD)
 
-# Find perl for "make check" tests in nls/localerules.in
+# Find perl for "make check" tests in nls/Makefile.am
 AC_ARG_WITH(perl,
 	AC_HELP_STRING([--with-perl=<path>],
 			[path to perl interpreter for build-time tests]),
@@ -462,66 +462,6 @@ AC_OUTPUT([Makefile
 	   modules/om/generic/Makefile
 	   src/xkb/Makefile
 	   nls/Makefile
-	   nls/am_ET.UTF-8/Makefile
-	   nls/armscii-8/Makefile
-	   nls/C/Makefile
-	   nls/el_GR.UTF-8/Makefile
-	   nls/en_US.UTF-8/Makefile
-	   nls/fi_FI.UTF-8/Makefile
-	   nls/georgian-academy/Makefile
-	   nls/georgian-ps/Makefile
-	   nls/ibm-cp1133/Makefile
-	   nls/iscii-dev/Makefile
-	   nls/isiri-3342/Makefile
-	   nls/iso8859-1/Makefile
-	   nls/iso8859-10/Makefile
-	   nls/iso8859-11/Makefile
-	   nls/iso8859-13/Makefile
-	   nls/iso8859-14/Makefile
-	   nls/iso8859-15/Makefile
-	   nls/iso8859-2/Makefile
-	   nls/iso8859-3/Makefile
-	   nls/iso8859-4/Makefile
-	   nls/iso8859-5/Makefile
-	   nls/iso8859-6/Makefile
-	   nls/iso8859-7/Makefile
-	   nls/iso8859-8/Makefile
-	   nls/iso8859-9/Makefile
-	   nls/iso8859-9e/Makefile
-	   nls/ja/Makefile
-	   nls/ja.JIS/Makefile
-	   nls/ja_JP.UTF-8/Makefile
-	   nls/ja.S90/Makefile
-	   nls/ja.SJIS/Makefile
-	   nls/ja.U90/Makefile
-	   nls/ko/Makefile
-	   nls/koi8-c/Makefile
-	   nls/koi8-r/Makefile
-	   nls/koi8-u/Makefile
-	   nls/ko_KR.UTF-8/Makefile
-	   nls/microsoft-cp1251/Makefile
-	   nls/microsoft-cp1255/Makefile
-	   nls/microsoft-cp1256/Makefile
-	   nls/mulelao-1/Makefile
-	   nls/nokhchi-1/Makefile
-	   nls/pt_BR.UTF-8/Makefile
-	   nls/ru_RU.UTF-8/Makefile
-	   nls/tatar-cyr/Makefile
-	   nls/th_TH/Makefile
-	   nls/th_TH.UTF-8/Makefile
-	   nls/tscii-0/Makefile
-	   nls/vi_VN.tcvn/Makefile
-	   nls/vi_VN.viscii/Makefile
-	   nls/zh_CN/Makefile
-	   nls/zh_CN.gb18030/Makefile
-	   nls/zh_CN.gbk/Makefile
-	   nls/zh_CN.UTF-8/Makefile
-	   nls/zh_HK.big5/Makefile
-	   nls/zh_HK.big5hkscs/Makefile
-	   nls/zh_HK.UTF-8/Makefile
-	   nls/zh_TW/Makefile
-	   nls/zh_TW.big5/Makefile
-	   nls/zh_TW.UTF-8/Makefile
 	   specs/Makefile
 	   specs/i18n/Makefile
 	   specs/i18n/framework/Makefile
@@ -544,7 +484,6 @@ echo " Internationalization support:            "$XLOCALE
 echo " XF86BigFont support:                     "$XF86BIGFONT
 echo " XKB support:                             "$XKB
 echo " XLOCALEDIR environment variable support: "$ENABLE_XLOCALEDIR
-echo " Manual pages suffix:                     "$LIB_MAN_SUFFIX
 echo " Compose table cache enabled:             "$COMPOSECACHE
 echo " Functional specs building enabled:       "$build_specs
 echo ""
