@@ -34,10 +34,15 @@ use warnings;
 my $error_count = 0;
 
 if (scalar(@ARGV) == 0) {
-  push @ARGV, "Compose";
+  if ( -f 'Compose' ) {
+    push @ARGV, 'Compose';
+  } else {
+    push @ARGV, glob '*/Compose';
+  }
 }
 
 foreach my $cf (@ARGV) {
+  # print "Checking $cf\n";
   $error_count += check_compose_file($cf);
 }
 

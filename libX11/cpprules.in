@@ -4,7 +4,7 @@
 
 SED = sed
 
-SUFFIXES = .pre
+SUFFIXES += .pre
 
 WCHAR32_FLAGS = -DWCHAR32=@WCHAR32@
 
