@@ -71,8 +71,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "inputstr.h"
 #include "xf86VGAarbiter.h"
 
-#define PCI_BUS_NO_DOMAIN(bus) ((bus) & 0xffu)
-
 static int DRIEntPrivIndex = -1;
 static DevPrivateKeyRec DRIScreenPrivKeyRec;
 #define DRIScreenPrivKey (&DRIScreenPrivKeyRec)

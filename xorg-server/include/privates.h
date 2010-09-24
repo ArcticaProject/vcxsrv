@@ -65,6 +65,10 @@ typedef struct _DevPrivateKeyRec {
     struct _DevPrivateKeyRec	*next;
 } DevPrivateKeyRec, *DevPrivateKey;
 
+typedef struct _DevScreenPrivateKeyRec {
+    DevPrivateKeyRec	screenKey;
+} DevScreenPrivateKeyRec, *DevScreenPrivateKey;
+
 /*
  * Let drivers know how to initialize private keys
  */
@@ -98,17 +102,6 @@ dixPrivateKeyRegistered(DevPrivateKey key)
 {
     return key->initialized;
 }
-
-/*
- * Allocate a new private key.
- *
- * This manages the storage of the key object itself, freeing it when the
- * privates system is restarted at server reset time. All other keys
- * are expected to be statically allocated as the privates must be
- * reset after all objects have been freed
- */
-extern _X_EXPORT DevPrivateKey
-dixCreatePrivateKey(DevPrivateType type, unsigned size);
 
 /*
  * Get the address of the private storage.
@@ -178,6 +171,42 @@ dixLookupPrivateAddr(PrivatePtr *privates, const DevPrivateKey key)
 {
     assert (key->size == 0);
     return (pointer *)dixGetPrivateAddr(privates, key);
+}
+
+extern _X_EXPORT Bool
+dixRegisterScreenPrivateKey(DevScreenPrivateKey key, ScreenPtr pScreen, DevPrivateType type, unsigned size);
+
+extern _X_EXPORT DevPrivateKey
+_dixGetScreenPrivateKey(const DevScreenPrivateKey key, ScreenPtr pScreen);
+
+static inline void *
+dixGetScreenPrivateAddr(PrivatePtr *privates, const DevScreenPrivateKey key, ScreenPtr pScreen)
+{
+    return dixGetPrivateAddr(privates, _dixGetScreenPrivateKey(key, pScreen));
+}
+
+static inline void *
+dixGetScreenPrivate(PrivatePtr *privates, const DevScreenPrivateKey key, ScreenPtr pScreen)
+{
+    return dixGetPrivate(privates, _dixGetScreenPrivateKey(key, pScreen));
+}
+
+static inline void
+dixSetScreenPrivate(PrivatePtr *privates, const DevScreenPrivateKey key, ScreenPtr pScreen, pointer val)
+{
+    return dixSetPrivate(privates, _dixGetScreenPrivateKey(key, pScreen), val);
+}
+
+static inline pointer
+dixLookupScreenPrivate(PrivatePtr *privates, const DevScreenPrivateKey key, ScreenPtr pScreen)
+{
+    return dixLookupPrivate(privates, _dixGetScreenPrivateKey(key, pScreen));
+}
+
+static inline pointer *
+dixLookupScreenPrivateAddr(PrivatePtr *privates, const DevScreenPrivateKey key, ScreenPtr pScreen)
+{
+    return dixLookupPrivateAddr(privates, _dixGetScreenPrivateKey(key, pScreen));
 }
 
 /*

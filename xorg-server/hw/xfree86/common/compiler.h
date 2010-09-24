@@ -103,7 +103,7 @@
 # if defined(NO_INLINE) || defined(DO_PROTOTYPES)
 
 #  if !defined(__arm__)
-#   if !defined(__sparc__) && !defined(__sparc) && !defined(__arm32__) \
+#   if !defined(__sparc__) && !defined(__sparc) && !defined(__arm32__) && !defined(__nds32__) \
       && !(defined(__alpha__) && defined(linux)) \
       && !(defined(__ia64__) && defined(linux)) \
 
@@ -114,7 +114,7 @@ extern _X_EXPORT unsigned int inb(unsigned short);
 extern _X_EXPORT unsigned int inw(unsigned short);
 extern _X_EXPORT unsigned int inl(unsigned short);
 
-#   else /* __sparc__,  __arm32__, __alpha__*/
+#   else /* __sparc__,  __arm32__, __alpha__, __nds32__ */
 
 extern _X_EXPORT void outb(unsigned long, unsigned char);
 extern _X_EXPORT void outw(unsigned long, unsigned short);
@@ -123,7 +123,7 @@ extern _X_EXPORT unsigned int inb(unsigned long);
 extern _X_EXPORT unsigned int inw(unsigned long);
 extern _X_EXPORT unsigned int inl(unsigned long);
 
-#   endif /* __sparc__,  __arm32__, __alpha__ */
+#   endif /* __sparc__,  __arm32__, __alpha__, __nds32__ */
 #  endif /* __arm__ */
 
 #  if defined(__powerpc__) && !defined(__OpenBSD__)
@@ -1018,6 +1018,355 @@ xf_outl(unsigned short port, unsigned int val)
 #define outw xf_outw
 #define outl xf_outl
 
+#   elif defined(__nds32__)
+
+/*
+ * Assume all port access are aligned.  We need to revise this implementation
+ * if there is unaligned port access.  For ldq_u, ldl_u, ldw_u, stq_u, stl_u and
+ * stw_u, they are assumed unaligned.
+ */
+
+#define barrier()		/* no barrier */
+
+#define PORT_SIZE long
+
+static __inline__ unsigned char
+xf86ReadMmio8(__volatile__ void *base, const unsigned long offset)
+{
+	return *(volatile unsigned char *)((unsigned char *)base + offset) ;
+}
+
+static __inline__ void
+xf86WriteMmio8(__volatile__ void *base, const unsigned long offset,
+	       const unsigned int val)
+{
+	*(volatile unsigned char *)((unsigned char *)base + offset) = val ;
+	barrier();
+}
+
+static __inline__ void
+xf86WriteMmio8NB(__volatile__ void *base, const unsigned long offset,
+		 const unsigned int val)
+{
+	*(volatile unsigned char *)((unsigned char *)base + offset) = val ;
+}
+
+static __inline__ unsigned short
+xf86ReadMmio16Swap(__volatile__ void *base, const unsigned long offset)
+{
+	unsigned long addr = ((unsigned long)base) + offset;
+	unsigned short ret;
+
+	__asm__ __volatile__(
+	           "lhi %0, [%1];\n\t"
+	           "wsbh %0, %0;\n\t"
+			     : "=r" (ret)
+			     : "r" (addr));
+	return ret;
+}
+
+static __inline__ unsigned short
+xf86ReadMmio16(__volatile__ void *base, const unsigned long offset)
+{
+	return *(volatile unsigned short *)((char *)base + offset) ;
+}
+
+static __inline__ void
+xf86WriteMmio16Swap(__volatile__ void *base, const unsigned long offset,
+		  const unsigned int val)
+{
+	unsigned long addr = ((unsigned long)base) + offset;
+
+	__asm__ __volatile__(
+	           "wsbh %0, %0;\n\t"
+	           "shi %0, [%1];\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+	barrier();
+}
+
+static __inline__ void
+xf86WriteMmio16(__volatile__ void *base, const unsigned long offset,
+		  const unsigned int val)
+{
+	*(volatile unsigned short *)((unsigned char *)base + offset) = val ;
+	barrier();
+}
+
+static __inline__ void
+xf86WriteMmio16SwapNB(__volatile__ void *base, const unsigned long offset,
+		    const unsigned int val)
+{
+	unsigned long addr = ((unsigned long)base) + offset;
+
+	__asm__ __volatile__(
+	           "wsbh %0, %0;\n\t"
+	           "shi %0, [%1];\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+}
+
+static __inline__ void
+xf86WriteMmio16NB(__volatile__ void *base, const unsigned long offset,
+		    const unsigned int val)
+{
+	*(volatile unsigned short *)((unsigned char *)base + offset) = val ;
+}
+
+static __inline__ unsigned int
+xf86ReadMmio32Swap(__volatile__ void *base, const unsigned long offset)
+{
+	unsigned long addr = ((unsigned long)base) + offset;
+	unsigned int ret;
+
+	__asm__ __volatile__(
+	           "lwi %0, [%1];\n\t"
+	           "wsbh %0, %0;\n\t"
+				  "rotri %0, %0, 16;\n\t"
+			     : "=r" (ret)
+			     : "r" (addr));
+	return ret;
+}
+
+static __inline__ unsigned int
+xf86ReadMmio32(__volatile__ void *base, const unsigned long offset)
+{
+	return *(volatile unsigned int *)((unsigned char *)base + offset) ;
+}
+
+static __inline__ void
+xf86WriteMmio32Swap(__volatile__ void *base, const unsigned long offset,
+		  const unsigned int val)
+{
+	unsigned long addr = ((unsigned long)base) + offset;
+
+	__asm__ __volatile__(
+	           "wsbh %0, %0;\n\t"
+	           "rotri %0, %0, 16;\n\t"
+				  "swi %0, [%1];\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+	barrier();
+}
+
+static __inline__ void
+xf86WriteMmio32(__volatile__ void *base, const unsigned long offset,
+		  const unsigned int val)
+{
+	*(volatile unsigned int *)((unsigned char *)base + offset) = val ;
+	barrier();
+}
+
+static __inline__ void
+xf86WriteMmio32SwapNB(__volatile__ void *base, const unsigned long offset,
+		    const unsigned int val)
+{
+	unsigned long addr = ((unsigned long)base) + offset;
+
+	__asm__ __volatile__(
+	           "wsbh %0, %0;\n\t"
+				  "rotri %0, %0, 16;\n\t"
+				  "swi %0, [%1];\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+}
+
+static __inline__ void
+xf86WriteMmio32NB(__volatile__ void *base, const unsigned long offset,
+		    const unsigned int val)
+{
+	*(volatile unsigned int *)((unsigned char *)base + offset) = val ;
+}
+
+#    if defined(NDS32_MMIO_SWAP)
+static __inline__ void
+outb(unsigned PORT_SIZE port, unsigned char val)
+{
+   xf86WriteMmio8(IOPortBase, port, val);
+}
+
+static __inline__ void
+outw(unsigned PORT_SIZE port, unsigned short val)
+{
+   xf86WriteMmio16Swap(IOPortBase, port, val);
+}
+
+static __inline__ void
+outl(unsigned PORT_SIZE port, unsigned int val)
+{
+   xf86WriteMmio32Swap(IOPortBase, port, val);
+}
+
+static __inline__ unsigned int
+inb(unsigned PORT_SIZE port)
+{
+   return xf86ReadMmio8(IOPortBase, port);
+}
+
+static __inline__ unsigned int
+inw(unsigned PORT_SIZE port)
+{
+   return xf86ReadMmio16Swap(IOPortBase, port);
+}
+
+static __inline__ unsigned int
+inl(unsigned PORT_SIZE port)
+{
+   return xf86ReadMmio32Swap(IOPortBase, port);
+}
+
+static __inline__ unsigned long ldq_u(unsigned long *p)
+{
+	unsigned long addr = (unsigned long)p;
+	unsigned int ret;
+
+	__asm__ __volatile__(
+				  "lmw.bi %0, [%1], %0, 0;\n\t"
+	           "wsbh %0, %0;\n\t"
+				  "rotri %0, %0, 16;\n\t"
+			     : "=r" (ret)
+			     : "r" (addr));
+	return ret;
+}
+
+static __inline__ unsigned long ldl_u(unsigned int *p)
+{
+	unsigned long addr = (unsigned long)p;
+	unsigned int ret;
+
+	__asm__ __volatile__(
+				  "lmw.bi %0, [%1], %0, 0;\n\t"
+	           "wsbh %0, %0;\n\t"
+				  "rotri %0, %0, 16;\n\t"
+			     : "=r" (ret)
+			     : "r" (addr));
+	return ret;
+}
+
+static __inline__ void stq_u(unsigned long val, unsigned long *p)
+{
+	unsigned long addr = (unsigned long)p;
+
+	__asm__ __volatile__(
+	           "wsbh %0, %0;\n\t"
+				  "rotri %0, %0, 16;\n\t"
+				  "smw.bi %0, [%1], %0, 0;\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+}
+
+static __inline__ void stl_u(unsigned long val, unsigned int *p)
+{
+	unsigned long addr = (unsigned long)p;
+
+	__asm__ __volatile__(
+	           "wsbh %0, %0;\n\t"
+				  "rotri %0, %0, 16;\n\t"
+				  "smw.bi %0, [%1], %0, 0;\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+}
+
+#    else /* !NDS32_MMIO_SWAP */
+static __inline__ void
+outb(unsigned PORT_SIZE port, unsigned char val)
+{
+	*(volatile unsigned char*)(((unsigned PORT_SIZE)(port))) = val;
+	barrier();
+}
+
+static __inline__ void
+outw(unsigned PORT_SIZE port, unsigned short val)
+{
+	*(volatile unsigned short*)(((unsigned PORT_SIZE)(port))) = val;
+	barrier();
+}
+
+static __inline__ void
+outl(unsigned PORT_SIZE port, unsigned int val)
+{
+	*(volatile unsigned int*)(((unsigned PORT_SIZE)(port))) = val;
+	barrier();
+}
+static __inline__ unsigned int
+inb(unsigned PORT_SIZE port)
+{
+	return *(volatile unsigned char*)(((unsigned PORT_SIZE)(port)));
+}
+
+static __inline__ unsigned int
+inw(unsigned PORT_SIZE port)
+{
+	return *(volatile unsigned short*)(((unsigned PORT_SIZE)(port)));
+}
+
+static __inline__ unsigned int
+inl(unsigned PORT_SIZE port)
+{
+	return *(volatile unsigned int*)(((unsigned PORT_SIZE)(port)));
+}
+
+static __inline__ unsigned long ldq_u(unsigned long *p)
+{
+	unsigned long addr = (unsigned long)p;
+	unsigned int ret;
+
+	__asm__ __volatile__(
+				  "lmw.bi %0, [%1], %0, 0;\n\t"
+			     : "=r" (ret)
+			     : "r" (addr));
+	return ret;
+}
+
+static __inline__ unsigned long ldl_u(unsigned int *p)
+{
+	unsigned long addr = (unsigned long)p;
+	unsigned int ret;
+
+	__asm__ __volatile__(
+				  "lmw.bi %0, [%1], %0, 0;\n\t"
+			     : "=r" (ret)
+			     : "r" (addr));
+	return ret;
+}
+
+
+static __inline__ void stq_u(unsigned long val, unsigned long *p)
+{
+	unsigned long addr = (unsigned long)p;
+
+	__asm__ __volatile__(
+				  "smw.bi %0, [%1], %0, 0;\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+}
+
+static __inline__ void stl_u(unsigned long val, unsigned int *p)
+{
+	unsigned long addr = (unsigned long)p;
+
+	__asm__ __volatile__(
+				  "smw.bi %0, [%1], %0, 0;\n\t"
+			     : /* No outputs */
+			     : "r" (val), "r" (addr));
+}
+#    endif /* NDS32_MMIO_SWAP */
+
+#    if (((X_BYTE_ORDER == X_BIG_ENDIAN) && !defined(NDS32_MMIO_SWAP)) || ((X_BYTE_ORDER != X_BIG_ENDIAN) && defined(NDS32_MMIO_SWAP)))
+#    define ldw_u(p)	((*(unsigned char *)(p)) << 8 | \
+			(*((unsigned char *)(p)+1)))
+#    define stw_u(v,p)	(*(unsigned char *)(p)) = ((v) >> 8); \
+				(*((unsigned char *)(p)+1)) = (v)
+#    else
+#    define ldw_u(p)	((*(unsigned char *)(p)) | \
+			(*((unsigned char *)(p)+1)<<8))
+#    define stw_u(v,p)	(*(unsigned char *)(p)) = (v); \
+				(*((unsigned char *)(p)+1)) = ((v) >> 8)
+#    endif
+
+#    define mem_barrier()         /* XXX: nop for now */
+#    define write_mem_barrier()   /* XXX: nop for now */
+
 #   else /* ix86 */
 
 #    if !defined(__SUNPRO_C)
@@ -1337,6 +1686,67 @@ extern _X_EXPORT void xf86SlowBCopyToBus(unsigned char *, unsigned char *, int);
 
 #  define MMIO_MOVE32(base, offset, val) \
        xf86WriteMmio32Be(base, offset, (CARD32)(val))
+
+# elif defined(__nds32__)
+ /*
+  * we provide byteswapping and no byteswapping functions here
+  * with no byteswapping as default; when endianness of CPU core
+  * and I/O devices don't match, byte swapping is necessary
+  * drivers that need byteswapping should define NDS32_MMIO_SWAP
+  */
+#  define MMIO_IN8(base, offset) xf86ReadMmio8(base, offset)
+#  define MMIO_OUT8(base, offset, val) \
+    xf86WriteMmio8(base, offset, (CARD8)(val))
+#  define MMIO_ONB8(base, offset, val) \
+    xf86WriteMmioNB8(base, offset, (CARD8)(val))
+
+#  if defined(NDS32_MMIO_SWAP) /* byteswapping */
+#   define MMIO_IN16(base, offset) xf86ReadMmio16Swap(base, offset)
+#   define MMIO_IN32(base, offset) xf86ReadMmio32Swap(base, offset)
+#   define MMIO_OUT16(base, offset, val) \
+    xf86WriteMmio16Swap(base, offset, (CARD16)(val))
+#   define MMIO_OUT32(base, offset, val) \
+    xf86WriteMmio32Swap(base, offset, (CARD32)(val))
+#   define MMIO_ONB16(base, offset, val) \
+    xf86WriteMmioNB16Swap(base, offset, (CARD16)(val))
+#   define MMIO_ONB32(base, offset, val) \
+    xf86WriteMmioNB32Swap(base, offset, (CARD32)(val))
+#  else /* no byteswapping is the default */
+#   define MMIO_IN16(base, offset) xf86ReadMmio16(base, offset)
+#   define MMIO_IN32(base, offset) xf86ReadMmio32(base, offset)
+#   define MMIO_OUT16(base, offset, val) \
+     xf86WriteMmio16(base, offset, (CARD16)(val))
+#   define MMIO_OUT32(base, offset, val) \
+     xf86WriteMmio32(base, offset, (CARD32)(val))
+#   define MMIO_ONB16(base, offset, val) \
+     xf86WriteMmioNB16(base, offset, (CARD16)(val))
+#   define MMIO_ONB32(base, offset, val) \
+     xf86WriteMmioNB32(base, offset, (CARD32)(val))
+#  endif
+
+#  define MMIO_MOVE32(base, offset, val) \
+       xf86WriteMmio32(base, offset, (CARD32)(val))
+
+#ifdef N1213_HC /* for NDS32 N1213 hardcore */
+static __inline__ void nds32_flush_icache(char *addr)
+{
+	__asm__ volatile (
+		"isync %0;"
+		"msync;"
+		"isb;"
+		"cctl %0,L1I_VA_INVAL;"
+		"isb;"
+		: : "r"(addr) : "memory");
+}
+#else
+static __inline__ void nds32_flush_icache(char *addr)
+{
+	__asm__ volatile (
+		"isync %0;"
+		"isb;"
+		: : "r"(addr) : "memory");
+}
+#endif
 
 # else /* !__alpha__ && !__powerpc__ && !__sparc__ */
 

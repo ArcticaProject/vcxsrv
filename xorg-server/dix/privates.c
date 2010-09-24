@@ -237,28 +237,35 @@ dixRegisterPrivateKey(DevPrivateKey key, DevPrivateType type, unsigned size)
     return TRUE;
 }
 
-/*
- * Allocate a new private key.
- *
- * This manages the storage of the key object itself, freeing it when the
- * privates system is restarted at server reset time. All other keys
- * are expected to be statically allocated as the privates must be
- * reset after all objects have been freed
- */
-DevPrivateKey
-dixCreatePrivateKey(DevPrivateType type, unsigned size)
+Bool
+dixRegisterScreenPrivateKey(DevScreenPrivateKey screenKey, ScreenPtr pScreen, DevPrivateType type, unsigned size)
 {
     DevPrivateKey	key;
 
+    if (!dixRegisterPrivateKey(&screenKey->screenKey, PRIVATE_SCREEN, 0))
+	return FALSE;
+    key = dixGetPrivate(&pScreen->devPrivates, &screenKey->screenKey);
+    if (key != NULL) {
+	assert(key->size == size);
+	assert(key->type == type);
+	return TRUE;
+    }
     key = calloc(sizeof (DevPrivateKeyRec), 1);
     if (!key)
-	return NULL;
+	return FALSE;
     if (!dixRegisterPrivateKey(key, type, size)) {
 	free(key);
-	return NULL;
+	return FALSE;
     }
     key->allocated = TRUE;
-    return key;
+    dixSetPrivate(&pScreen->devPrivates, &screenKey->screenKey, key);
+    return TRUE;
+}
+
+DevPrivateKey
+_dixGetScreenPrivateKey(const DevScreenPrivateKey key, ScreenPtr pScreen)
+{
+    return dixGetPrivate(&pScreen->devPrivates, &key->screenKey);
 }
 
 /*

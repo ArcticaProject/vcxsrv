@@ -174,6 +174,8 @@ void _xcb_ext_destroy(xcb_connection_t *c);
 
 /* xcb_conn.c */
 
+extern const int error_connection;
+
 struct xcb_connection_t {
     int has_error;
 

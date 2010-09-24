@@ -462,6 +462,11 @@ Mem_wl(CARD32 addr, CARD32 val)
 
 static CARD32 PciCfg1Addr = 0;
 
+#define PCI_DOM_FROM_TAG(tag)  (((tag) >> 24) & (PCI_DOM_MASK))
+#define PCI_BUS_FROM_TAG(tag)  (((tag) >> 16) & (PCI_DOMBUS_MASK))
+#define PCI_DEV_FROM_TAG(tag)  (((tag) & 0x0000f800u) >> 11)
+#define PCI_FUNC_FROM_TAG(tag) (((tag) & 0x00000700u) >> 8)
+
 #define PCI_OFFSET(x) ((x) & 0x000000ff)
 #define PCI_TAG(x)    ((x) & 0x7fffff00)
 

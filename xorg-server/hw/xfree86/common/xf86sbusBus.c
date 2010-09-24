@@ -685,3 +685,32 @@ xf86SbusHandleColormaps(ScreenPtr pScreen, sbusDevicePtr psdp)
     return xf86HandleColormaps(pScreen, 256, 8,
 			       xf86SbusCmapLoadPalette, NULL, 0);
 }
+
+Bool
+xf86SbusConfigure(void *busData, sbusDevicePtr sBus)
+{
+    if (sBus && sBus->fbNum == ((sbusDevicePtr) busData)->fbNum)
+        return 0;
+    return 1;
+}
+
+void
+xf86SbusConfigureNewDev(void *busData, sbusDevicePtr sBus, GDevRec *GDev)
+{
+    char *promPath = NULL;
+
+    sBus = (sbusDevicePtr) busData;
+    GDev->identifier = sBus->descr;
+    if (sparcPromInit() >= 0) {
+        promPath = sparcPromNode2Pathname(&sBus->node);
+        sparcPromClose();
+    }
+    if (promPath) {
+        GDev->busID = xnfalloc(strlen(promPath) + 6);
+        sprintf(GDev->busID, "SBUS:%s", promPath);
+        free(promPath);
+    } else {
+        GDev->busID = xnfalloc(12);
+        sprintf(GDev->busID, "SBUS:fb%d", sBus->fbNum);
+    }
+}

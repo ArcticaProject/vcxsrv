@@ -60,7 +60,7 @@
 #include "configProcs.h"
 #include "globals.h"
 #include "extension.h"
-#include "Pci.h"
+#include "xf86pciBus.h"
 
 #include "xf86Xinput.h"
 extern DeviceAssocRec mouse_assoc;
@@ -2535,18 +2535,11 @@ xf86HandleConfigFile(Bool autoconfig)
            scanptr = xf86ConfigLayout.screens->screen->device->busID;
     }
     if (scanptr) {
-       int bus, device, func;
        if (strncmp(scanptr, "PCI:", 4) != 0) {
            xf86Msg(X_WARNING, "Bus types other than PCI not yet isolable.\n"
                               "\tIgnoring IsolateDevice option.\n");
-       } else if (sscanf(scanptr, "PCI:%d:%d:%d", &bus, &device, &func) == 3) {
-           xf86IsolateDevice.domain = PCI_DOM_FROM_BUS(bus);
-           xf86IsolateDevice.bus = PCI_BUS_NO_DOMAIN(bus);
-           xf86IsolateDevice.dev = device;
-           xf86IsolateDevice.func = func;
-           xf86Msg(X_INFO,
-                   "Isolating PCI bus \"%d:%d:%d\"\n", bus, device, func);
-       }
+       } else
+           xf86PciIsolateDevice(scanptr);
     }
 
     /* Now process everything else */

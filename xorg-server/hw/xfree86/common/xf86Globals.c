@@ -198,7 +198,3 @@ Bool xf86VidModeAllowNonLocal = FALSE;
 RootWinPropPtr *xf86RegisteredPropertiesTable = NULL;
 Bool xf86inSuspend = FALSE;
 Bool xorgHWAccess = FALSE;
-
-struct pci_slot_match xf86IsolateDevice = {
-    PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, 0
-};

@@ -38,14 +38,6 @@
 
 extern XF86ConfigPtr xf86configptr;
 
-/*
- * This is the version number where we epoched.  These files get copied
- * into drivers that want to use this setup infrastructure on pre-1.3
- * servers, so when that happens they need to define these symbols
- * themselves.  However, _in_ the server, we basically always define them now.
- */
-#if XORG_VERSION_CURRENT <= XORG_VERSION_NUMERIC(7,2,99,2,0)
-
 /**
  * Calculates the horizontal sync rate of a mode.
  */
@@ -326,7 +318,6 @@ xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
 		   mode->VTotal, flags, xf86ModeHSync(mode));
     free(flags);
 }
-#endif /* XORG_VERSION_CURRENT <= 7.2.99.2 */
 
 /**
  * Marks as bad any modes with unsupported flags.
@@ -503,12 +494,7 @@ xf86ValidateModesBandwidth(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 
     for (mode = modeList; mode != NULL; mode = mode->next) {
 	if (xf86ModeBandwidth(mode, depth) > bandwidth)
-#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
 	    mode->status = MODE_BANDWIDTH;
-#else
-	    /* MODE_BANDWIDTH didn't exist in xserver 1.2 */
-	    mode->status = MODE_BAD;
-#endif
     }
 }
 

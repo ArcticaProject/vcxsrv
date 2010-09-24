@@ -174,7 +174,7 @@ typedef struct _vgaHWRec {
 #define BITS_PER_GUN 6
 #define COLORMAP_SIZE 256
 
-#if defined(__powerpc__) || defined(__arm__) || defined(__s390__)
+#if defined(__powerpc__) || defined(__arm__) || defined(__s390__) || defined(__nds32__)
 #define DACDelay(hw) /* No legacy VGA support */
 #else
 #define DACDelay(hw)							      \

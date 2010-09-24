@@ -227,11 +227,7 @@ xf86_set_cursor_colors (ScrnInfoPtr scrn, int bg, int fg)
     CursorPtr		cursor = xf86_config->cursor;
     int			c;
     CARD8		*bits = cursor ?
-#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
         dixLookupPrivate(&cursor->devPrivates, CursorScreenKey(screen))
-#else
-        cursor->devPriv[screen->myNum]
-#endif
       : NULL;
 
     /* Save ARGB versions of these colors */
@@ -630,11 +626,7 @@ xf86_reload_cursors (ScreenPtr screen)
 
     if (cursor)
     {
-#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
 	void *src = dixLookupPrivate(&cursor->devPrivates, CursorScreenKey(screen));
-#else
-	void *src = cursor->devPriv[screen->myNum];
-#endif
 #ifdef ARGB_CURSOR
 	if (cursor->bits->argb && cursor_info->LoadCursorARGB)
 	    (*cursor_info->LoadCursorARGB) (scrn, cursor);
