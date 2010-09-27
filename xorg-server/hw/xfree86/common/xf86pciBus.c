@@ -76,6 +76,11 @@ Bool pciSlotClaimed = FALSE;
     (((c) & 0x00ffff00) \
 	 == ((PCI_CLASS_DISPLAY << 16) | (PCI_SUBCLASS_DISPLAY_VGA << 8)))
 
+
+static struct pci_slot_match xf86IsolateDevice = {
+    PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, 0
+};
+
 void
 xf86FormatPciBusNumber(int busnum, char *buffer)
 {
@@ -1302,15 +1307,10 @@ xf86PciMatchDriver(char* matches[], int nmatches) {
     }
 
     pci_iterator_destroy(iter);
-
-    if (!info) {
-	ErrorF("Primary device is not PCI\n");
-    }
 #ifdef __linux__
-    else {
+    if (info)
 	matchDriverFromFiles(matches, info->vendor_id, info->device_id);
-    }
-#endif /* __linux__ */
+#endif
 
     for (i = 0; (i < nmatches) && (matches[i]); i++) {
 	/* find end of matches list */
@@ -1321,4 +1321,39 @@ xf86PciMatchDriver(char* matches[], int nmatches) {
     }
 
     return i;
+}
+
+Bool
+xf86PciConfigure(void *busData, struct pci_device *pDev)
+{
+    struct pci_device * pVideo = NULL;
+
+    pVideo = (struct pci_device *) busData;
+    if (pDev &&
+        (pDev->domain == pVideo->domain) &&
+        (pDev->bus == pVideo->bus) &&
+        (pDev->dev == pVideo->dev) &&
+        (pDev->func == pVideo->func))
+        return 0;
+
+    return 1;
+}
+
+void
+xf86PciConfigureNewDev(void *busData, struct pci_device *pVideo,
+                         GDevRec *GDev, int *chipset)
+{
+    char busnum[8];
+
+    pVideo = (struct pci_device *) busData;
+
+    GDev->busID = xnfalloc(16);
+    xf86FormatPciBusNumber(pVideo->bus, busnum);
+    sprintf(GDev->busID, "PCI:%s:%d:%d", busnum, pVideo->dev, pVideo->func);
+
+    GDev->chipID = pVideo->device_id;
+    GDev->chipRev = pVideo->revision;
+
+    if (*chipset < 0)
+        *chipset = (pVideo->vendor_id << 16) | pVideo->device_id;
 }

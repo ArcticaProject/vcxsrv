@@ -49,12 +49,8 @@
 #endif
 
 #include <stdio.h>
-#include "compiler.h"
-#include "xf86.h"
-#include "xf86Priv.h"
 #include "xf86_OSlib.h"
 #include "Pci.h"
-#include <dirent.h>
 
 static const struct pci_id_match match_host_bridge = {
     PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY,

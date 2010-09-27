@@ -84,6 +84,27 @@ SOFTWARE.
 
 #endif /* __arm32__ */
 
+#if defined(__nds32__)
+
+#define IMAGE_BYTE_ORDER	LSBFirst
+
+#if defined(XF86MONOVGA) || defined(XF86VGA16) || defined(XF86MONO)
+# define BITMAP_BIT_ORDER	MSBFirst
+#else
+# define BITMAP_BIT_ORDER	LSBFirst
+#endif
+
+#if defined(XF86MONOVGA) || defined(XF86VGA16)
+# define BITMAP_SCANLINE_UNIT	8
+#endif
+
+#define GLYPHPADBYTES		4
+#define GETLEFTBITS_ALIGNMENT	1
+#define LARGE_INSTRUCTION_CACHE
+#define AVOID_MEMORY_READ
+
+#endif /* __nds32__ */
+
 #if defined __hppa__
 
 #define IMAGE_BYTE_ORDER	MSBFirst

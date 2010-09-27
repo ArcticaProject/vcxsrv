@@ -35,8 +35,6 @@
 #ifndef _XF86PRIV_H
 #define _XF86PRIV_H
 
-#include <pciaccess.h>
-
 #include "xf86Privstr.h"
 #include "propertyst.h"
 #include "input.h"
@@ -72,7 +70,6 @@ extern _X_EXPORT  rgb xf86Weight;
 extern _X_EXPORT  Bool xf86FlipPixels;
 extern _X_EXPORT  Gamma xf86Gamma;
 extern _X_EXPORT  char *xf86ServerName;
-extern _X_EXPORT  struct pci_slot_match xf86IsolateDevice;
 
 /* Other parameters */
 

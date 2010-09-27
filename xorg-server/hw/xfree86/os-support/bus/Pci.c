@@ -124,18 +124,7 @@
 #include <xorg-config.h>
 #endif
 
-#include <errno.h>
-#include <signal.h>
-#include "compiler.h"
-#include "xf86.h"
-#include "xf86Priv.h"
-#define XF86_OS_PRIVS
-#include "xf86_OSproc.h"
 #include "Pci.h"
-
-#include <pciaccess.h>
-
-/* Global data */
 
 PCITAG
 pciTag(int busnum, int devnum, int funcnum)

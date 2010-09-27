@@ -58,8 +58,6 @@
 #define close(fd) closesocket(fd)
 #endif
 
-static const int error_connection = 1;
-
 int xcb_popcount(uint32_t mask)
 {
     uint32_t y;

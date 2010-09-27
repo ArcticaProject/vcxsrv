@@ -34,6 +34,7 @@
 #define IN_XSERVER
 #include "Configint.h"
 #include "xf86DDC.h"
+#include "xf86pciBus.h"
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
 #include "xf86Bus.h"
 #include "xf86Sbus.h"
@@ -71,85 +72,6 @@ static char *DFLT_MOUSE_DEV = "/dev/mouse";
 static char *DFLT_MOUSE_PROTO = "auto";
 #endif
 
-static Bool
-bus_pci_configure(void *busData)
-{
-    int i;
-    struct pci_device * pVideo = NULL;
-
-	pVideo = (struct pci_device *) busData;
-	for (i = 0;  i < nDevToConfig;  i++)
-	    if (DevToConfig[i].pVideo &&
-		(DevToConfig[i].pVideo->domain == pVideo->domain) &&
-		(DevToConfig[i].pVideo->bus == pVideo->bus) &&
-		(DevToConfig[i].pVideo->dev == pVideo->dev) &&
-		(DevToConfig[i].pVideo->func == pVideo->func))
-		return 0;
-
-	return 1;
-}
-
-static Bool
-bus_sbus_configure(void *busData)
-{
-#if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
-    int i;
-
-    for (i = 0;  i < nDevToConfig;  i++)
-        if (DevToConfig[i].sVideo &&
-        DevToConfig[i].sVideo->fbNum == ((sbusDevicePtr) busData)->fbNum)
-            return 0;
-
-#endif
-    return 1;
-}
-
-static void
-bus_pci_newdev_configure(void *busData, int i, int *chipset)
-{
-	char busnum[8];
-    struct pci_device * pVideo = NULL;
-
-    pVideo = (struct pci_device *) busData;
-
-	DevToConfig[i].pVideo = pVideo;
-
-	DevToConfig[i].GDev.busID = xnfalloc(16);
-	xf86FormatPciBusNumber(pVideo->bus, busnum);
-	sprintf(DevToConfig[i].GDev.busID, "PCI:%s:%d:%d",
-	    busnum, pVideo->dev, pVideo->func);
-
-	DevToConfig[i].GDev.chipID = pVideo->device_id;
-	DevToConfig[i].GDev.chipRev = pVideo->revision;
-
-	if (*chipset < 0) {
-	    *chipset = (pVideo->vendor_id << 16) | pVideo->device_id;
-	}
-}
-
-static void
-bus_sbus_newdev_configure(void *busData, int i)
-{
-#if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
-	char *promPath = NULL;
-	DevToConfig[i].sVideo = (sbusDevicePtr) busData;
-	DevToConfig[i].GDev.identifier = DevToConfig[i].sVideo->descr;
-	if (sparcPromInit() >= 0) {
-	    promPath = sparcPromNode2Pathname(&DevToConfig[i].sVideo->node);
-	    sparcPromClose();
-	}
-	if (promPath) {
-	    DevToConfig[i].GDev.busID = xnfalloc(strlen(promPath) + 6);
-	    sprintf(DevToConfig[i].GDev.busID, "SBUS:%s", promPath);
-	    free(promPath);
-	} else {
-	    DevToConfig[i].GDev.busID = xnfalloc(12);
-	    sprintf(DevToConfig[i].GDev.busID, "SBUS:fb%d",
-                                DevToConfig[i].sVideo->fbNum);
-	}
-#endif
-}
-
 /*
  * This is called by the driver, either through xf86Match???Instances() or
  * directly.  We allocate a GDevRec and fill it in as much as we can, letting
@@ -164,19 +86,22 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
 	return NULL;
 
     /* Check for duplicates */
-    switch (bus) {
-        case BUS_PCI:
-            ret = bus_pci_configure(busData);
-	        break;
-        case BUS_SBUS:
-            ret = bus_sbus_configure(busData);
-	        break;
-        default:
-	        return NULL;
+    for (i = 0;  i < nDevToConfig;  i++) {
+        switch (bus) {
+            case BUS_PCI:
+                ret = xf86PciConfigure(busData, DevToConfig[i].pVideo);
+                break;
+#if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
+            case BUS_SBUS:
+                ret = xf86SbusConfigure(busData, DevToConfig[i].sVideo);
+                break;
+#endif
+            default:
+                return NULL;
+        }
+        if (ret == 0)
+            goto out;
     }
-
-    if (ret == 0)
-        goto out;
 
     /* Allocate new structure occurrence */
     i = nDevToConfig++;
@@ -195,11 +120,15 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
 
     switch (bus) {
         case BUS_PCI:
-            bus_pci_newdev_configure(busData, i, &chipset);
+            xf86PciConfigureNewDev(busData, DevToConfig[i].pVideo,
+                                   &DevToConfig[i].GDev, &chipset);
 	        break;
+#if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
         case BUS_SBUS:
-            bus_sbus_newdev_configure(busData, i);
+            xf86SbusConfigureNewDev(busData, DevToConfig[i].sVideo,
+                                    &DevToConfig[i].GDev);
 	        break;
+#endif
         default:
 	        break;
     }
