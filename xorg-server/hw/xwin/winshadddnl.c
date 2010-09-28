@@ -118,6 +118,55 @@ winCreatePrimarySurfaceShadowDDNL (ScreenPtr pScreen);
 static Bool
 winReleasePrimarySurfaceShadowDDNL (ScreenPtr pScreen);
 
+static HRESULT myIDirectDrawSurface4_Blt( winPrivScreenPtr pScreenPriv, RECT *pRect, RECT *prcSrc)
+{
+  HRESULT ddrval = DD_OK;
+  unsigned i;
+
+  for (i = 0; i <= WIN_REGAIN_SURFACE_RETRIES; ++i)
+  {
+    ddrval = IDirectDrawSurface4_Blt(pScreenPriv->pddsPrimary4, pRect, pScreenPriv->pddsShadow4, prcSrc, DDBLT_WAIT, NULL);
+     /* Try to regain the primary surface and blit again if we've lost it */
+    if (ddrval == DDERR_SURFACELOST)
+    {
+      /* Surface was lost */
+      ErrorF ("IDirectDrawSurface4_Blt reported that the primary "
+              "surface was lost, trying to restore, retry: %d\n", i + 1);
+    
+      /* Try to restore the surface, once */
+      
+      ddrval = IDirectDraw4_RestoreAllSurfaces (pScreenPriv->pdd4);
+      //ddrval = IDirectDrawSurface4_Restore (pScreenPriv->pddsPrimary4);
+      //ddrval = IDirectDrawSurface4_Restore (pScreenPriv->pddsShadow4);
+      ErrorF ("IDirectDraw4_RestoreAllSurfaces returned: ");
+      if (ddrval == DD_OK)
+        ErrorF ("DD_OK\n");
+      else if (ddrval == DDERR_WRONGMODE)
+        ErrorF ("DDERR_WRONGMODE\n");
+      else if (ddrval == DDERR_INCOMPATIBLEPRIMARY)
+        ErrorF ("DDERR_INCOMPATIBLEPRIMARY\n");
+      else if (ddrval == DDERR_UNSUPPORTED)
+        ErrorF ("DDERR_UNSUPPORTED\n");
+      else if (ddrval == DDERR_INVALIDPARAMS)
+        ErrorF ("DDERR_INVALIDPARAMS\n");
+      else if (ddrval == DDERR_INVALIDOBJECT)
+        ErrorF ("DDERR_INVALIDOBJECT\n");
+      else
+        ErrorF ("unknown error: %08x\n", ddrval);
+      
+      /* Loop around to try the blit one more time */
+      continue;
+    }
+    else if (FAILED (ddrval))
+    {
+      ErrorF ("IDirectDrawSurface4_Blt failed, but surface not "
+              "lost: %08x %d\n", ddrval, ddrval);
+    }
+    break;
+  }    
+  return ddrval;
+}
+
 
 /*
  * Create the primary surface and attach the clipper.
@@ -580,7 +629,6 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
   RegionPtr		damage = shadowDamage(pBuf);
-  HRESULT		ddrval = DD_OK;
   RECT			rcDest, rcSrc;
   POINT			ptOrigin;
   DWORD			dwBox = RegionNumRects (damage);
@@ -626,35 +674,9 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
 	  
 	  /* Blit the damaged areas */
 	  if (pScreenPriv->pddsPrimary4)
-	    ddrval = IDirectDrawSurface4_Blt (pScreenPriv->pddsPrimary4,
-					    &rcDest,
-					    pScreenPriv->pddsShadow4,
-					    &rcSrc,
-					    DDBLT_WAIT,
-					    NULL);
-	  else
-	    ddrval=-1;
-	  if (FAILED (ddrval))
-	    {
-	      static int	s_iFailCount = 0;
-	      
-	      if (s_iFailCount < FAIL_MSG_MAX_BLT)
-		{
-		  ErrorF ("winShadowUpdateDDNL - IDirectDrawSurface4_Blt () "
-			  "failed: %08x\n",
-			  (unsigned int) ddrval);
-		  
-		  ++s_iFailCount;
-
-		  if (s_iFailCount == FAIL_MSG_MAX_BLT)
-		    {
-		      ErrorF ("winShadowUpdateDDNL - IDirectDrawSurface4_Blt "
-			      "failure message maximum (%d) reached.  No "
-			      "more failure messages will be printed.\n",
-			      FAIL_MSG_MAX_BLT);
-		    }
-		}
-	    }
+	    myIDirectDrawSurface4_Blt (pScreenPriv,
+				    &rcDest,
+				    &rcSrc);
 	  
 	  /* Get a pointer to the next box */
 	  ++pBox;
@@ -698,12 +720,9 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
       rcDest.bottom = ptOrigin.y + rcSrc.bottom;
 
       /* Our Blt should be clipped to the invalidated region */
-      ddrval = IDirectDrawSurface4_Blt (pScreenPriv->pddsPrimary4,
-					&rcDest,
-					pScreenPriv->pddsShadow4,
-					&rcSrc,
-					DDBLT_WAIT,
-					NULL);
+      myIDirectDrawSurface4_Blt (pScreenPriv,
+				&rcDest,
+				&rcSrc);
 
       /* Reset the clip region */
       SelectClipRgn (pScreenPriv->hdcScreen, NULL);
@@ -1100,63 +1119,16 @@ winBltExposedRegionsShadowDDNL (ScreenPtr pScreen)
   rcSrc.right = pScreenInfo->dwWidth;
   rcSrc.bottom = pScreenInfo->dwHeight;
 
-  /* Try to regain the primary surface and blit again if we've lost it */
-  for (i = 0; i <= WIN_REGAIN_SURFACE_RETRIES; ++i)
-    {
       /* Our Blt should be clipped to the invalidated region */
-      ddrval = IDirectDrawSurface4_Blt (pScreenPriv->pddsPrimary4,
+  ddrval = myIDirectDrawSurface4_Blt (pScreenPriv,
 					&rcDest,
-					pScreenPriv->pddsShadow4,
-					&rcSrc,
-					DDBLT_WAIT,
-					NULL);
-      if (ddrval == DDERR_SURFACELOST)
-	{
-	  /* Surface was lost */
-	  ErrorF ("winBltExposedRegionsShadowDDNL - "
-          "IDirectDrawSurface4_Blt reported that the primary "
-          "surface was lost, trying to restore, retry: %d\n", i + 1);
-
-	  /* Try to restore the surface, once */
-	  
-	  ddrval = IDirectDrawSurface4_Restore (pScreenPriv->pddsPrimary4);
-	  winDebug ("winBltExposedRegionsShadowDDNL - "
-		  "IDirectDrawSurface4_Restore returned: ");
-	  if (ddrval == DD_OK)
-	    winDebug ("DD_OK\n");
-	  else if (ddrval == DDERR_WRONGMODE)
-	    winDebug ("DDERR_WRONGMODE\n");
-	  else if (ddrval == DDERR_INCOMPATIBLEPRIMARY)
-	    winDebug ("DDERR_INCOMPATIBLEPRIMARY\n");
-	  else if (ddrval == DDERR_UNSUPPORTED)
-	    winDebug ("DDERR_UNSUPPORTED\n");
-	  else if (ddrval == DDERR_INVALIDPARAMS)
-	    winDebug ("DDERR_INVALIDPARAMS\n");
-	  else if (ddrval == DDERR_INVALIDOBJECT)
-	    winDebug ("DDERR_INVALIDOBJECT\n");
-	  else
-	    winDebug ("unknown error: %08x\n", (unsigned int) ddrval);
-	  
-	  /* Loop around to try the blit one more time */
-	  continue;
-	}  
-      else if (FAILED (ddrval))
+					&rcSrc);
+  if (FAILED (ddrval))
 	{
 	  fReturn = FALSE;
-	  ErrorF ("winBltExposedRegionsShadowDDNL - "
-		  "IDirectDrawSurface4_Blt failed, but surface not "
-		  "lost: %08x %d\n",
-		  (unsigned int) ddrval, (int) ddrval);
-	  goto winBltExposedRegionsShadowDDNL_Exit;
 	}
-      else
-	{
-	  /* Success, stop looping */
-	  break;
-	}
-    }
 
- winBltExposedRegionsShadowDDNL_Exit:
+winBltExposedRegionsShadowDDNL_Exit:
   /* EndPaint frees the DC */
   if (hdcUpdate != NULL)
     EndPaint (pScreenPriv->hwndScreen, &ps);
@@ -1199,7 +1171,6 @@ winRedrawScreenShadowDDNL (ScreenPtr pScreen)
 {
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  HRESULT		ddrval = DD_OK;
   RECT			rcSrc, rcDest;
   POINT			ptOrigin;
 
@@ -1221,19 +1192,9 @@ winRedrawScreenShadowDDNL (ScreenPtr pScreen)
   rcSrc.bottom = pScreenInfo->dwHeight;
 
   /* Redraw the whole window, to take account for the new colors */
-  ddrval = IDirectDrawSurface4_Blt (pScreenPriv->pddsPrimary4,
-				    &rcDest,
-				    pScreenPriv->pddsShadow4,
-				    &rcSrc,
-				    DDBLT_WAIT,
-				    NULL);
-  if (FAILED (ddrval))
-    {
-      ErrorF ("winRedrawScreenShadowDDNL - IDirectDrawSurface4_Blt () "
-	      "failed: %08x\n",
-	      (unsigned int) ddrval);
-    }
-
+  myIDirectDrawSurface4_Blt (pScreenPriv,
+			    &rcDest,
+			    &rcSrc);
   return TRUE;
 }
 
