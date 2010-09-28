@@ -152,6 +152,9 @@ to_m64 (uint64_t x)
 #endif
 }
 
+#ifdef _MSC_VER
+#define to_uint64(arg)  arg.M64_MEMBER
+#else
 static force_inline uint64_t
 to_uint64 (__m64 x)
 {
@@ -164,6 +167,7 @@ to_uint64 (__m64 x)
     return (uint64_t)x;
 #endif
 }
+#endif
 
 static force_inline __m64
 shift (__m64 v,
@@ -310,11 +314,15 @@ pack8888 (__m64 lo, __m64 hi)
     return _mm_packs_pu16 (lo, hi);
 }
 
+#ifdef _MSC_VER
+#define store8888(v) _mm_cvtsi64_si32 (pack8888 (v, _mm_setzero_si64 ()))
+#else
 static force_inline uint32_t
 store8888 (__m64 v)
 {
     return _mm_cvtsi64_si32 (pack8888 (v, _mm_setzero_si64 ()));
 }
+#endif
 
 /* Expand 16 bits positioned at @pos (0-3) of a mmx register into
  *
@@ -417,6 +425,13 @@ pix_add_mul (__m64 x, __m64 a, __m64 y, __m64 b)
 
 /* --------------- MMX code patch for fbcompose.c --------------------- */
 
+#ifdef _MSC_VER
+#define combine(src, mask)                                                        \
+  ((mask) ?                                                                         \
+      store8888 (pix_multiply (load8888 (*src), expand_alpha (load8888 (*mask))))  \
+    :                                                                              \
+      *src)
+#else
 static force_inline uint32_t
 combine (const uint32_t *src, const uint32_t *mask)
 {
@@ -435,6 +450,7 @@ combine (const uint32_t *src, const uint32_t *mask)
 
     return ssrc;
 }
+#endif
 
 static void
 mmx_combine_over_u (pixman_implementation_t *imp,
@@ -448,7 +464,7 @@ mmx_combine_over_u (pixman_implementation_t *imp,
 
     while (dest < end)
     {
-	uint32_t ssrc = combine (src, mask);
+	uint32_t ssrc = combine( src, mask);
 	uint32_t a = ssrc >> 24;
 
 	if (a == 0xff)
@@ -2845,19 +2861,19 @@ mmx_composite_add_n_8_8 (pixman_implementation_t *imp,
 }
 
 static void
-mmx_composite_add_8000_8000 (pixman_implementation_t *imp,
-                             pixman_op_t              op,
-                             pixman_image_t *         src_image,
-                             pixman_image_t *         mask_image,
-                             pixman_image_t *         dst_image,
-                             int32_t                  src_x,
-                             int32_t                  src_y,
-                             int32_t                  mask_x,
-                             int32_t                  mask_y,
-                             int32_t                  dest_x,
-                             int32_t                  dest_y,
-                             int32_t                  width,
-                             int32_t                  height)
+mmx_composite_add_8_8 (pixman_implementation_t *imp,
+		       pixman_op_t              op,
+		       pixman_image_t *         src_image,
+		       pixman_image_t *         mask_image,
+		       pixman_image_t *         dst_image,
+		       int32_t                  src_x,
+		       int32_t                  src_y,
+		       int32_t                  mask_x,
+		       int32_t                  mask_y,
+		       int32_t                  dest_x,
+		       int32_t                  dest_y,
+		       int32_t                  width,
+		       int32_t                  height)
 {
     uint8_t *dst_line, *dst;
     uint8_t *src_line, *src;
@@ -3268,7 +3284,7 @@ static const pixman_fast_path_t mmx_fast_paths[] =
 
     PIXMAN_STD_FAST_PATH    (ADD,  a8r8g8b8, null,     a8r8g8b8, mmx_composite_add_8888_8888       ),
     PIXMAN_STD_FAST_PATH    (ADD,  a8b8g8r8, null,     a8b8g8r8, mmx_composite_add_8888_8888       ),
-    PIXMAN_STD_FAST_PATH    (ADD,  a8,       null,     a8,       mmx_composite_add_8000_8000       ),
+    PIXMAN_STD_FAST_PATH    (ADD,  a8,       null,     a8,       mmx_composite_add_8_8		   ),
     PIXMAN_STD_FAST_PATH    (ADD,  solid,    a8,       a8,       mmx_composite_add_n_8_8           ),
 
     PIXMAN_STD_FAST_PATH    (SRC,  solid,    a8,       a8r8g8b8, mmx_composite_src_n_8_8888        ),
