@@ -38,13 +38,14 @@ sub getXkbSettings
 sub setXkbSettings
 {
   my ( $xkbRules, $xkbModel, $xkbLayouts, $xkbVariants, $xkbOptions ) = @_;
-  ( system ( "setxkbmap", "-synch",
-       "-rules", $xkbRules,
-       "-model", $xkbModel,
-       "-layout", $xkbLayouts,
-       "-variant", $xkbVariants,
-       "-option", $xkbOptions ) == 0 ) or die "Could not set xkb configuration";
-  sleep 1;
+  my $outfile = ".test.out.xkb";
+  ( system ( "setxkbmap -rules \"$xkbRules\" " .
+             "-model \"$xkbModel\" " .
+             "-layout \"$xkbLayouts\" " .
+             "-variant \"$xkbVariants\" " .
+             "-option \"$xkbOptions\" " .
+             "-print | xkbcomp - -xkb $outfile" ) == 0 ) or die "Could not set xkb configuration";
+  unlink($outfile);
 }
 
 sub restoreXkbSettings

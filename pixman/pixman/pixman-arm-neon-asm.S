@@ -495,15 +495,15 @@ generate_composite_function \
 
 /******************************************************************************/
 
-.macro pixman_composite_add_8000_8000_process_pixblock_head
+.macro pixman_composite_add_8_8_process_pixblock_head
     vqadd.u8    q14, q0, q2
     vqadd.u8    q15, q1, q3
 .endm
 
-.macro pixman_composite_add_8000_8000_process_pixblock_tail
+.macro pixman_composite_add_8_8_process_pixblock_tail
 .endm
 
-.macro pixman_composite_add_8000_8000_process_pixblock_tail_head
+.macro pixman_composite_add_8_8_process_pixblock_tail_head
     vld1.8      {d0, d1, d2, d3}, [SRC]!
                                     PF add PF_X, PF_X, #32
                                     PF tst PF_CTL, #0xF
@@ -523,15 +523,15 @@ generate_composite_function \
 .endm
 
 generate_composite_function \
-    pixman_composite_add_8000_8000_asm_neon, 8, 0, 8, \
+    pixman_composite_add_8_8_asm_neon, 8, 0, 8, \
     FLAG_DST_READWRITE, \
     32, /* number of pixels, processed in a single block */ \
     10, /* prefetch distance */ \
     default_init, \
     default_cleanup, \
-    pixman_composite_add_8000_8000_process_pixblock_head, \
-    pixman_composite_add_8000_8000_process_pixblock_tail, \
-    pixman_composite_add_8000_8000_process_pixblock_tail_head
+    pixman_composite_add_8_8_process_pixblock_head, \
+    pixman_composite_add_8_8_process_pixblock_tail, \
+    pixman_composite_add_8_8_process_pixblock_tail_head
 
 /******************************************************************************/
 
@@ -561,8 +561,8 @@ generate_composite_function \
     10, /* prefetch distance */ \
     default_init, \
     default_cleanup, \
-    pixman_composite_add_8000_8000_process_pixblock_head, \
-    pixman_composite_add_8000_8000_process_pixblock_tail, \
+    pixman_composite_add_8_8_process_pixblock_head, \
+    pixman_composite_add_8_8_process_pixblock_tail, \
     pixman_composite_add_8888_8888_process_pixblock_tail_head
 
 generate_composite_function_single_scanline \
@@ -571,8 +571,8 @@ generate_composite_function_single_scanline \
     8, /* number of pixels, processed in a single block */ \
     default_init, \
     default_cleanup, \
-    pixman_composite_add_8000_8000_process_pixblock_head, \
-    pixman_composite_add_8000_8000_process_pixblock_tail, \
+    pixman_composite_add_8_8_process_pixblock_head, \
+    pixman_composite_add_8_8_process_pixblock_tail, \
     pixman_composite_add_8888_8888_process_pixblock_tail_head
 
 /******************************************************************************/

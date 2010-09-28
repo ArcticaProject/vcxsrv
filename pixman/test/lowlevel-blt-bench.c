@@ -544,7 +544,7 @@ struct
 tests_tbl[] =
 {
     { "add_8_8_8",             PIXMAN_a8,          0, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_a8 },
-    { "add_n_8_8000",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_a8 },
+    { "add_n_8_8",             PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_a8 },
     { "add_n_8_8888",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_a8r8g8b8 },
     { "add_n_8_x888",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_x8r8g8b8 },
     { "add_n_8_0565",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_r5g6b5 },
@@ -553,7 +553,7 @@ tests_tbl[] =
     { "add_n_8_2222",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_a2r2g2b2 },
     { "add_n_8_2x10",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_x2r10g10b10 },
     { "add_n_8_2a10",          PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_a8,       0, PIXMAN_a2r10g10b10 },
-    { "add_n_8000",            PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a8 },
+    { "add_n_8",               PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a8 },
     { "add_n_8888",            PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a8r8g8b8 },
     { "add_n_x888",            PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_x8r8g8b8 },
     { "add_n_0565",            PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_r5g6b5 },
@@ -562,7 +562,7 @@ tests_tbl[] =
     { "add_n_2222",            PIXMAN_a8r8g8b8,    1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a2r2g2b2 },
     { "add_n_2x10",            PIXMAN_a2r10g10b10, 1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_x2r10g10b10 },
     { "add_n_2a10",            PIXMAN_a2r10g10b10, 1, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a2r10g10b10 },
-    { "add_8000_8000",         PIXMAN_a8,          0, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a8 },
+    { "add_8_8",               PIXMAN_a8,          0, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a8 },
     { "add_x888_x888",         PIXMAN_x8r8g8b8,    0, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_x8r8g8b8 },
     { "add_8888_8888",         PIXMAN_a8r8g8b8,    0, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_a8r8g8b8 },
     { "add_8888_0565",         PIXMAN_a8r8g8b8,    0, PIXMAN_OP_ADD,     PIXMAN_null,     0, PIXMAN_r5g6b5 },

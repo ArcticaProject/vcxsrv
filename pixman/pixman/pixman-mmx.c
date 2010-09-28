@@ -2845,19 +2845,19 @@ mmx_composite_add_n_8_8 (pixman_implementation_t *imp,
 }
 
 static void
-mmx_composite_add_8000_8000 (pixman_implementation_t *imp,
-                             pixman_op_t              op,
-                             pixman_image_t *         src_image,
-                             pixman_image_t *         mask_image,
-                             pixman_image_t *         dst_image,
-                             int32_t                  src_x,
-                             int32_t                  src_y,
-                             int32_t                  mask_x,
-                             int32_t                  mask_y,
-                             int32_t                  dest_x,
-                             int32_t                  dest_y,
-                             int32_t                  width,
-                             int32_t                  height)
+mmx_composite_add_8_8 (pixman_implementation_t *imp,
+		       pixman_op_t              op,
+		       pixman_image_t *         src_image,
+		       pixman_image_t *         mask_image,
+		       pixman_image_t *         dst_image,
+		       int32_t                  src_x,
+		       int32_t                  src_y,
+		       int32_t                  mask_x,
+		       int32_t                  mask_y,
+		       int32_t                  dest_x,
+		       int32_t                  dest_y,
+		       int32_t                  width,
+		       int32_t                  height)
 {
     uint8_t *dst_line, *dst;
     uint8_t *src_line, *src;
@@ -3268,7 +3268,7 @@ static const pixman_fast_path_t mmx_fast_paths[] =
 
     PIXMAN_STD_FAST_PATH    (ADD,  a8r8g8b8, null,     a8r8g8b8, mmx_composite_add_8888_8888       ),
     PIXMAN_STD_FAST_PATH    (ADD,  a8b8g8r8, null,     a8b8g8r8, mmx_composite_add_8888_8888       ),
-    PIXMAN_STD_FAST_PATH    (ADD,  a8,       null,     a8,       mmx_composite_add_8000_8000       ),
+    PIXMAN_STD_FAST_PATH    (ADD,  a8,       null,     a8,       mmx_composite_add_8_8		   ),
     PIXMAN_STD_FAST_PATH    (ADD,  solid,    a8,       a8,       mmx_composite_add_n_8_8           ),
 
     PIXMAN_STD_FAST_PATH    (SRC,  solid,    a8,       a8r8g8b8, mmx_composite_src_n_8_8888        ),
