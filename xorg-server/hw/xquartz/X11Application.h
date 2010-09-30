@@ -75,9 +75,6 @@ void X11ApplicationLaunchClient (const char *cmd);
 
 void X11ApplicationMain(int argc, char **argv, char **envp);
 
-extern int X11EnableKeyEquivalents;
-extern int quartzHasRoot, quartzEnableRootless, quartzFullscreenMenu;
-
 #define PREFS_APPSMENU              "apps_menu"
 #define PREFS_FAKEBUTTONS           "enable_fake_buttons"
 #define PREFS_SYSBEEP               "enable_system_beep"

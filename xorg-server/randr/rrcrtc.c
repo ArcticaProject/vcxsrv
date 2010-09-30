@@ -631,8 +631,17 @@ RRCrtcInit (void)
     RRCrtcType = CreateNewResourceType (RRCrtcDestroyResource, "CRTC");
     if (!RRCrtcType)
 	return FALSE;
-    SetResourceTypeErrorValue(RRCrtcType, RRErrorBase + BadRRCrtc);
+    
     return TRUE;
+}
+
+/*
+ * Initialize crtc type error value
+ */
+void
+RRCrtcInitErrorValue(void)
+{
+    SetResourceTypeErrorValue(RRCrtcType, RRErrorBase + BadRRCrtc);
 }
 
 int

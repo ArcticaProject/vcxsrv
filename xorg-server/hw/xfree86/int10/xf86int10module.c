@@ -22,8 +22,6 @@
 #define combine(a,b) concat(a,b)
 #define NAME(x) combine(MOD_NAME,x)
 
-static MODULESETUPPROTO(NAME(Setup));
-
 static XF86ModuleVersionInfo NAME(VersRec) =
 {
     STRING(NAME( )),
@@ -40,25 +38,6 @@ static XF86ModuleVersionInfo NAME(VersRec) =
 
 _X_EXPORT XF86ModuleData NAME(ModuleData) = {
     &NAME(VersRec),
-    NAME(Setup),
+    NULL,
     NULL
 };
-
-static pointer
-NAME(Setup)(pointer module, pointer opts, int *errmaj, int *errmin)
-{
-    static Bool setupDone = FALSE;
-    
-    if (!setupDone) {
-	setupDone = TRUE;
-	/*
-	 * Tell the loader about symbols from other modules that this module
-	 * might refer to.
-	 */
-    } 
-    /*
-     * The return value must be non-NULL on success even though there
-     * is no TearDownProc.
-     */
-    return (pointer)1;
-}

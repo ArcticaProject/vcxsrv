@@ -38,6 +38,7 @@
 #import "X11Application.h"
 
 #include "darwin.h"
+#include "quartz.h"
 #include "darwinEvents.h"
 #include "quartzKeyboard.h"
 #include "quartz.h"
@@ -62,9 +63,6 @@ extern int xpbproxy_run (void);
 
 /* Stuck modifier / button state... force release when we context switch */
 static NSEventType keyState[NUM_KEYCODES];
-
-int X11EnableKeyEquivalents = TRUE, quartzFullscreenMenu = FALSE;
-int quartzHasRoot = FALSE, quartzEnableRootless = TRUE;
 
 extern Bool noTestExtensions;
 
@@ -287,23 +285,23 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                         do_swallow = YES;
                         for_x = NO;
 #if XPLUGIN_VERSION >= 1
-                    } else if(X11EnableKeyEquivalents &&
+                    } else if(XQuartzEnableKeyEquivalents &&
                              xp_is_symbolic_hotkey_event([e eventRef])) {
                         swallow_keycode = [e keyCode];
                         do_swallow = YES;
                         for_x = NO;
 #endif
-                    } else if(X11EnableKeyEquivalents &&
+                    } else if(XQuartzEnableKeyEquivalents &&
                               [[self mainMenu] performKeyEquivalent:e]) {
                         swallow_keycode = [e keyCode];
                         do_swallow = YES;
                         for_appkit = NO;
                         for_x = NO;
-                    } else if(!quartzEnableRootless
+                    } else if(!XQuartzIsRootless
                               && ([e modifierFlags] & ALL_KEY_MASKS) == (NSCommandKeyMask | NSAlternateKeyMask)
                               && ([e keyCode] == 0 /*a*/ || [e keyCode] == 53 /*Esc*/)) {
                         /* We have this here to force processing fullscreen 
-                         * toggle even if X11EnableKeyEquivalents is disabled */
+                         * toggle even if XQuartzEnableKeyEquivalents is disabled */
                         swallow_keycode = [e keyCode];
                         do_swallow = YES;
                         for_x = NO;
@@ -372,7 +370,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                     break;
                     
                 case 18: /* ApplicationDidReactivate */
-                    if (quartzHasRoot) for_appkit = NO;
+                    if (XQuartzFullscreenVisible) for_appkit = NO;
                     break;
                     
                 case NSApplicationDeactivatedEventType:
@@ -422,7 +420,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
     if ([state boolValue])
         SetSystemUIMode(kUIModeNormal, 0); 
     else
-        SetSystemUIMode(kUIModeAllHidden, quartzFullscreenMenu ? kUIOptionAutoShowMenuBar : 0); // kUIModeAllSuppressed or kUIOptionAutoShowMenuBar can be used to allow "mouse-activation"
+        SetSystemUIMode(kUIModeAllHidden, XQuartzFullscreenMenu ? kUIOptionAutoShowMenuBar : 0); // kUIModeAllSuppressed or kUIOptionAutoShowMenuBar can be used to allow "mouse-activation"
 }
 
 - (void) launch_client:(NSString *)cmd {
@@ -720,18 +718,18 @@ static NSMutableArray * cfarray_to_nsarray (CFArrayRef in) {
     NSString *nsstr;
     const char *tem;
 	
-    quartzUseSysBeep = [self prefs_get_boolean:@PREFS_SYSBEEP
-                                       default:quartzUseSysBeep];
-    quartzEnableRootless = [self prefs_get_boolean:@PREFS_ROOTLESS
-                                           default:quartzEnableRootless];
-    quartzFullscreenMenu = [self prefs_get_boolean:@PREFS_FULLSCREEN_MENU
-                                           default:quartzFullscreenMenu];
-    quartzFullscreenDisableHotkeys = ![self prefs_get_boolean:@PREFS_FULLSCREEN_HOTKEYS
-                                                      default:!quartzFullscreenDisableHotkeys];
+    XQuartzUseSysBeep = [self prefs_get_boolean:@PREFS_SYSBEEP
+                                       default:XQuartzUseSysBeep];
+    XQuartzRootlessDefault = [self prefs_get_boolean:@PREFS_ROOTLESS
+                                           default:XQuartzRootlessDefault];
+    XQuartzFullscreenMenu = [self prefs_get_boolean:@PREFS_FULLSCREEN_MENU
+                                           default:XQuartzFullscreenMenu];
+    XQuartzFullscreenDisableHotkeys = ![self prefs_get_boolean:@PREFS_FULLSCREEN_HOTKEYS
+                                                      default:!XQuartzFullscreenDisableHotkeys];
     darwinFakeButtons = [self prefs_get_boolean:@PREFS_FAKEBUTTONS
                                         default:darwinFakeButtons];
-    quartzOptionSendsAlt = [self prefs_get_boolean:@PREFS_OPTION_SENDS_ALT
-                                           default:quartzOptionSendsAlt];
+    XQuartzOptionSendsAlt = [self prefs_get_boolean:@PREFS_OPTION_SENDS_ALT
+                                           default:XQuartzOptionSendsAlt];
 
     if (darwinFakeButtons) {
         const char *fake2, *fake3;
@@ -759,8 +757,8 @@ static NSMutableArray * cfarray_to_nsarray (CFArrayRef in) {
         }
     }
 
-    X11EnableKeyEquivalents = [self prefs_get_boolean:@PREFS_KEYEQUIVS
-                                              default:X11EnableKeyEquivalents];
+    XQuartzEnableKeyEquivalents = [self prefs_get_boolean:@PREFS_KEYEQUIVS
+                                              default:XQuartzEnableKeyEquivalents];
 	
     darwinSyncKeymap = [self prefs_get_boolean:@PREFS_SYNC_KEYMAP
                                        default:darwinSyncKeymap];
@@ -1158,7 +1156,7 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
                 pDev = darwinTabletCurrent;
             }
 
-            if(!quartzServerVisible && noTestExtensions) {
+            if(!XQuartzServerVisible && noTestExtensions) {
 #if defined(XPLUGIN_VERSION) && XPLUGIN_VERSION > 0
 /* Older libXplugin (Tiger/"Stock" Leopard) aren't thread safe, so we can't call xp_find_window from the Appkit thread */
                 xp_window_id wid = 0;
@@ -1218,7 +1216,7 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
             /* If we're in the background, we need to send a MotionNotify event
              * first, since we aren't getting them on background mouse motion
              */
-            if(!quartzServerVisible && noTestExtensions) {
+            if(!XQuartzServerVisible && noTestExtensions) {
                 bgMouseLocationUpdated = FALSE;
                 DarwinSendPointerEvents(darwinPointer, MotionNotify, 0, location.x,
                                         location.y, pressure, tilt.x, tilt.y);

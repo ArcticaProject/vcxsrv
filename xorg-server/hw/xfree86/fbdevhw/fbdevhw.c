@@ -21,8 +21,6 @@
 
 #define PAGE_MASK               (~(getpagesize() - 1))
 
-static MODULESETUPPROTO(fbdevhwSetup);
-
 static XF86ModuleVersionInfo fbdevHWVersRec =
 {
 	"fbdevhw",
@@ -39,15 +37,9 @@ static XF86ModuleVersionInfo fbdevHWVersRec =
 
 _X_EXPORT XF86ModuleData fbdevhwModuleData = {
     &fbdevHWVersRec,
-    fbdevhwSetup,
+    NULL,
     NULL
 };
-
-static pointer
-fbdevhwSetup(pointer module, pointer opts, int *errmaj, int *errmin)
-{
-    return (pointer)1;
-}
 
 #include <fcntl.h>
 #include <errno.h>

@@ -8,7 +8,6 @@ INCLUDES = $(XORG_INCS) -I$(srcdir)/../parser -I$(top_srcdir)/miext/cw \
 AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
 
 EXTRA_DIST = \
-	dlloader.h \
 	loader.h \
 	loaderProcs.h \
 	sdksyms.sh
@@ -18,7 +17,6 @@ libloader_la_SOURCES = \
 	loaderProcs.h \
 	loadext.c \
         loadmod.c \
-        dlloader.c \
 	os.c \
 	sdksyms.c
 libloader_la_LIBADD = $(DLOPEN_LIBS)

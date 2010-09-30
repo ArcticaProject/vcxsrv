@@ -60,7 +60,8 @@ typedef struct module_desc {
     struct module_desc *sib;
     struct module_desc *parent;
     char *name;
-    int handle;
+    char *path;
+    void *handle;
     ModuleSetupProc SetupProc;
     ModuleTearDownProc TearDownProc;
     void *TearDownData;		/* returned from SetupProc */
@@ -81,7 +82,7 @@ void UnloadDriver(ModuleDescPtr);
 void LoaderSetPath(const char *path);
 void LoaderSortExtensions(void);
 
-int LoaderUnload(int);
+void LoaderUnload(const char *, void *);
 unsigned long LoaderGetModuleVersion(ModuleDescPtr mod);
 
 void LoaderResetOptions(void);

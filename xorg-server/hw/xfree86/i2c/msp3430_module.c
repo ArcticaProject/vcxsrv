@@ -4,8 +4,6 @@
 
 #include "xf86Module.h"
 
-static MODULESETUPPROTO(msp3430Setup);
-
 static XF86ModuleVersionInfo msp3430VersRec =
 {
         "msp3430",
@@ -22,11 +20,6 @@ static XF86ModuleVersionInfo msp3430VersRec =
  
 _X_EXPORT XF86ModuleData msp3430ModuleData = {
         &msp3430VersRec,
-        msp3430Setup,
+        NULL,
         NULL
 }; 
-
-static pointer
-msp3430Setup(pointer module, pointer opts, int *errmaj, int *errmin) {
-   return (pointer)1;
-}

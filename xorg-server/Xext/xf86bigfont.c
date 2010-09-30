@@ -80,12 +80,6 @@ static void XF86BigfontResetProc(
     ExtensionEntry *	/* extEntry */
     );
 
-static DISPATCH_PROC(ProcXF86BigfontDispatch);
-static DISPATCH_PROC(ProcXF86BigfontQueryVersion);
-static DISPATCH_PROC(ProcXF86BigfontQueryFont);
-static DISPATCH_PROC(SProcXF86BigfontDispatch);
-static DISPATCH_PROC(SProcXF86BigfontQueryVersion);
-static DISPATCH_PROC(SProcXF86BigfontQueryFont);
 
 #ifdef HAS_SHM
 

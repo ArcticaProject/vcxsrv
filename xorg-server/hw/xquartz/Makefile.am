@@ -34,6 +34,7 @@ libXquartz_la_SOURCES = \
 	quartzCocoa.m \
 	quartzKeyboard.c \
 	quartzStartup.c \
+	quartzRandR.c \
 	threadSafety.c
 
 EXTRA_DIST = \
@@ -49,6 +50,7 @@ EXTRA_DIST = \
 	quartzAudio.h \
 	quartzCommon.h \
 	quartzKeyboard.h \
+	quartzRandR.h \
 	sanitizedCarbon.h \
 	sanitizedCocoa.h \
 	threadSafety.h

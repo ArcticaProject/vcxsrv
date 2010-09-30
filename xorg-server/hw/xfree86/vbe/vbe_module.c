@@ -6,8 +6,6 @@
 #include "xf86str.h"
 #include "vbe.h"
 
-static MODULESETUPPROTO(vbeSetup);
-
 static XF86ModuleVersionInfo vbeVersRec =
 {
     "vbe",
@@ -22,10 +20,4 @@ static XF86ModuleVersionInfo vbeVersRec =
     {0,0,0,0}
 };
 
-_X_EXPORT XF86ModuleData vbeModuleData = { &vbeVersRec, vbeSetup, NULL };
-
-static pointer
-vbeSetup(pointer module, pointer opts, int *errmaj, int *errmin)
-{
-    return (pointer)1;
-}
+_X_EXPORT XF86ModuleData vbeModuleData = { &vbeVersRec, NULL, NULL };

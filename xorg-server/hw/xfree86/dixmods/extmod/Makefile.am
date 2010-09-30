@@ -4,7 +4,7 @@ extsmoduledir = $(moduledir)/extensions
 extsmodule_LTLIBRARIES = libextmod.la
 
 if DGA
-DGA_SRCS = xf86dga2.c dgaproc.h xf86dgaext.h
+DGA_SRCS = xf86dga2.c dgaproc.h
 endif
 
 if XV

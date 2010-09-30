@@ -100,36 +100,6 @@ static void SyncInitServerTime(void);
 
 static void SyncInitIdleTime(void);
 
-static DISPATCH_PROC(ProcSyncAwait);
-static DISPATCH_PROC(ProcSyncChangeAlarm);
-static DISPATCH_PROC(ProcSyncChangeCounter);
-static DISPATCH_PROC(ProcSyncCreateAlarm);
-static DISPATCH_PROC(ProcSyncCreateCounter);
-static DISPATCH_PROC(ProcSyncDestroyAlarm);
-static DISPATCH_PROC(ProcSyncDestroyCounter);
-static DISPATCH_PROC(ProcSyncDispatch);
-static DISPATCH_PROC(ProcSyncGetPriority);
-static DISPATCH_PROC(ProcSyncInitialize);
-static DISPATCH_PROC(ProcSyncListSystemCounters);
-static DISPATCH_PROC(ProcSyncQueryAlarm);
-static DISPATCH_PROC(ProcSyncQueryCounter);
-static DISPATCH_PROC(ProcSyncSetCounter);
-static DISPATCH_PROC(ProcSyncSetPriority);
-static DISPATCH_PROC(SProcSyncAwait);
-static DISPATCH_PROC(SProcSyncChangeAlarm);
-static DISPATCH_PROC(SProcSyncChangeCounter);
-static DISPATCH_PROC(SProcSyncCreateAlarm);
-static DISPATCH_PROC(SProcSyncCreateCounter);
-static DISPATCH_PROC(SProcSyncDestroyAlarm);
-static DISPATCH_PROC(SProcSyncDestroyCounter);
-static DISPATCH_PROC(SProcSyncDispatch);
-static DISPATCH_PROC(SProcSyncGetPriority);
-static DISPATCH_PROC(SProcSyncInitialize);
-static DISPATCH_PROC(SProcSyncListSystemCounters);
-static DISPATCH_PROC(SProcSyncQueryAlarm);
-static DISPATCH_PROC(SProcSyncQueryCounter);
-static DISPATCH_PROC(SProcSyncSetCounter);
-static DISPATCH_PROC(SProcSyncSetPriority);
 
 /*  Each counter maintains a simple linked list of triggers that are
  *  interested in the counter.  The two functions below are used to

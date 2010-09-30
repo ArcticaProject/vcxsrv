@@ -38,26 +38,7 @@
 #include <X11/Xdefs.h>
 #include "privates.h"
 
-// Quartz specific per screen storage structure
-typedef struct {
-    // List of CoreGraphics displays that this X11 screen covers.
-    // This is more than one CG display for video mirroring and
-    // rootless PseudoramiX mode.
-    // No CG display will be covered by more than one X11 screen.
-    int displayCount;
-    CGDirectDisplayID *displayIDs;
-} QuartzScreenRec, *QuartzScreenPtr;
-
-#define QUARTZ_PRIV(pScreen) \
-    ((QuartzScreenPtr)dixLookupPrivate(&pScreen->devPrivates, quartzScreenKey))
-
-// User preferences used by Quartz modes
-extern int              quartzUseSysBeep;
-extern int              quartzFullscreenDisableHotkeys;
-extern int              quartzOptionSendsAlt;
-
 // Other shared data
-extern int              quartzServerVisible;
 extern DevPrivateKeyRec quartzScreenKeyRec;
 #define quartzScreenKey (&quartzScreenKeyRec)
 extern int              aquaMenuBarHeight;

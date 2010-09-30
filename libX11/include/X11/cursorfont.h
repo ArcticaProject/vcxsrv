@@ -26,8 +26,8 @@ from The Open Group.
 
 */
 
-#ifndef _cursorfont_h_
-#define _cursorfont_h_
+#ifndef _X11_CURSORFONT_H_
+#define _X11_CURSORFONT_H_
 
 #define XC_num_glyphs 154
 #define XC_X_cursor 0
@@ -108,4 +108,4 @@ from The Open Group.
 #define XC_watch 150
 #define XC_xterm 152
 
-#endif /* _cursorfont_h_ */
+#endif /* _X11_CURSORFONT_H_ */

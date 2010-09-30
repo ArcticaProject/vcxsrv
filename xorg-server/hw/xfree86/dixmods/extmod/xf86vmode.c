@@ -65,48 +65,6 @@ typedef struct {
 #define VM_SETPRIV(c,p) \
     dixSetPrivate(&(c)->devPrivates, VidModeClientPrivateKey, p)
 
-static DISPATCH_PROC(ProcXF86VidModeDispatch);
-static DISPATCH_PROC(ProcXF86VidModeGetAllModeLines);
-static DISPATCH_PROC(ProcXF86VidModeGetModeLine);
-static DISPATCH_PROC(ProcXF86VidModeGetMonitor);
-static DISPATCH_PROC(ProcXF86VidModeLockModeSwitch);
-static DISPATCH_PROC(ProcXF86VidModeAddModeLine);
-static DISPATCH_PROC(ProcXF86VidModeDeleteModeLine);
-static DISPATCH_PROC(ProcXF86VidModeModModeLine);
-static DISPATCH_PROC(ProcXF86VidModeValidateModeLine);
-static DISPATCH_PROC(ProcXF86VidModeQueryVersion);
-static DISPATCH_PROC(ProcXF86VidModeSwitchMode);
-static DISPATCH_PROC(ProcXF86VidModeSwitchToMode);
-static DISPATCH_PROC(ProcXF86VidModeGetViewPort);
-static DISPATCH_PROC(ProcXF86VidModeSetViewPort);
-static DISPATCH_PROC(ProcXF86VidModeGetDotClocks);
-static DISPATCH_PROC(ProcXF86VidModeSetGamma);
-static DISPATCH_PROC(ProcXF86VidModeGetGamma);
-static DISPATCH_PROC(ProcXF86VidModeSetClientVersion);
-static DISPATCH_PROC(ProcXF86VidModeGetGammaRamp);
-static DISPATCH_PROC(ProcXF86VidModeSetGammaRamp);
-static DISPATCH_PROC(ProcXF86VidModeGetGammaRampSize);
-static DISPATCH_PROC(SProcXF86VidModeDispatch);
-static DISPATCH_PROC(SProcXF86VidModeGetAllModeLines);
-static DISPATCH_PROC(SProcXF86VidModeGetModeLine);
-static DISPATCH_PROC(SProcXF86VidModeGetMonitor);
-static DISPATCH_PROC(SProcXF86VidModeLockModeSwitch);
-static DISPATCH_PROC(SProcXF86VidModeAddModeLine);
-static DISPATCH_PROC(SProcXF86VidModeDeleteModeLine);
-static DISPATCH_PROC(SProcXF86VidModeModModeLine);
-static DISPATCH_PROC(SProcXF86VidModeValidateModeLine);
-static DISPATCH_PROC(SProcXF86VidModeQueryVersion);
-static DISPATCH_PROC(SProcXF86VidModeSwitchMode);
-static DISPATCH_PROC(SProcXF86VidModeSwitchToMode);
-static DISPATCH_PROC(SProcXF86VidModeGetViewPort);
-static DISPATCH_PROC(SProcXF86VidModeSetViewPort);
-static DISPATCH_PROC(SProcXF86VidModeGetDotClocks);
-static DISPATCH_PROC(SProcXF86VidModeSetGamma);
-static DISPATCH_PROC(SProcXF86VidModeGetGamma);
-static DISPATCH_PROC(SProcXF86VidModeSetClientVersion);
-static DISPATCH_PROC(SProcXF86VidModeGetGammaRamp);
-static DISPATCH_PROC(SProcXF86VidModeSetGammaRamp);
-static DISPATCH_PROC(SProcXF86VidModeGetGammaRampSize);
 
 #if 0
 static unsigned char XF86VidModeReqCode = 0;
@@ -158,58 +116,6 @@ static DevPrivateKeyRec ScreenPrivateKeyRec;
 #else
 # define DEBUG_P(x) /**/
 #endif
-
-void
-XFree86VidModeExtensionInit(void)
-{
-    ExtensionEntry* extEntry;
-    ScreenPtr pScreen;
-    int		    i;
-    Bool	    enabled = FALSE;
-
-    DEBUG_P("XFree86VidModeExtensionInit");
-
-    if (!dixRegisterPrivateKey(&VidModeClientPrivateKeyRec, PRIVATE_CLIENT, 0))
-	return;
-#ifdef XF86VIDMODE_EVENTS
-    if (!dixRegisterPrivateKey(&ScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
-	return;
-#endif
-
-#ifdef XF86VIDMODE_EVENTS
-    EventType = CreateNewResourceType(XF86VidModeFreeEvents, "VidModeEvent");
-#endif
-
-    for(i = 0; i < screenInfo.numScreens; i++) {
-        pScreen = screenInfo.screens[i];
-	if (VidModeExtensionInit(pScreen))
-	    enabled = TRUE;
-    }
-    /* This means that the DDX doesn't want the vidmode extension enabled */
-    if (!enabled)
-	return;
-
-    if (
-#ifdef XF86VIDMODE_EVENTS
-        EventType &&
-#endif
-	(extEntry = AddExtension(XF86VIDMODENAME,
-				XF86VidModeNumberEvents,
-				XF86VidModeNumberErrors,
-				ProcXF86VidModeDispatch,
-				SProcXF86VidModeDispatch,
-				NULL,
-				StandardMinorOpcode))) {
-#if 0
-	XF86VidModeReqCode = (unsigned char)extEntry->base;
-#endif
-	VidModeErrorBase = extEntry->errorBase;
-#ifdef XF86VIDMODE_EVENTS
-	XF86VidModeEventBase = extEntry->eventBase;
-	EventSwapVector[XF86VidModeEventBase] = (EventSwapPtr)SXF86VidModeNotifyEvent;
-#endif
-    }
-}
 
 static int
 ClientMajorVersion(ClientPtr client)
@@ -2164,5 +2070,57 @@ SProcXF86VidModeDispatch(ClientPtr client)
 	    }
 	} else
 	    return VidModeErrorBase + XF86VidModeClientNotLocal;
+    }
+}
+
+void
+XFree86VidModeExtensionInit(void)
+{
+    ExtensionEntry* extEntry;
+    ScreenPtr pScreen;
+    int		    i;
+    Bool	    enabled = FALSE;
+
+    DEBUG_P("XFree86VidModeExtensionInit");
+
+    if (!dixRegisterPrivateKey(&VidModeClientPrivateKeyRec, PRIVATE_CLIENT, 0))
+	return;
+#ifdef XF86VIDMODE_EVENTS
+    if (!dixRegisterPrivateKey(&ScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
+#endif
+
+#ifdef XF86VIDMODE_EVENTS
+    EventType = CreateNewResourceType(XF86VidModeFreeEvents, "VidModeEvent");
+#endif
+
+    for(i = 0; i < screenInfo.numScreens; i++) {
+        pScreen = screenInfo.screens[i];
+	if (VidModeExtensionInit(pScreen))
+	    enabled = TRUE;
+    }
+    /* This means that the DDX doesn't want the vidmode extension enabled */
+    if (!enabled)
+	return;
+
+    if (
+#ifdef XF86VIDMODE_EVENTS
+        EventType &&
+#endif
+	(extEntry = AddExtension(XF86VIDMODENAME,
+				XF86VidModeNumberEvents,
+				XF86VidModeNumberErrors,
+				ProcXF86VidModeDispatch,
+				SProcXF86VidModeDispatch,
+				NULL,
+				StandardMinorOpcode))) {
+#if 0
+	XF86VidModeReqCode = (unsigned char)extEntry->base;
+#endif
+	VidModeErrorBase = extEntry->errorBase;
+#ifdef XF86VIDMODE_EVENTS
+	XF86VidModeEventBase = extEntry->eventBase;
+	EventSwapVector[XF86VidModeEventBase] = (EventSwapPtr)SXF86VidModeNotifyEvent;
+#endif
     }
 }

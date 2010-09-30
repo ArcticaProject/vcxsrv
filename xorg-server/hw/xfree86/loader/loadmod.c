@@ -83,8 +83,7 @@ static char *LoaderGetCanonicalName(const char *, PatternPtr);
 static void RemoveChild(ModuleDescPtr);
 static ModuleDescPtr doLoadModule(const char *, const char *, const char **,
 				  const char **, pointer,
-				  const XF86ModReqInfo *, int *, int *,
-				  int flags);
+				  const XF86ModReqInfo *, int *, int *);
 
 const ModuleVersions LoaderVersionInfo = {
     XORG_VERSION_CURRENT,
@@ -765,7 +764,7 @@ LoadSubModule(pointer _parent, const char *module,
     }
 
     submod = doLoadModule(module, NULL, subdirlist, patternlist, options,
-			  modreq, errmaj, errmin, LD_FLAG_GLOBAL);
+			  modreq, errmaj, errmin);
     if (submod && submod != (ModuleDescPtr) 1) {
 	parent->child = AddSibling(parent->child, submod);
 	submod->parent = parent;
@@ -776,18 +775,10 @@ LoadSubModule(pointer _parent, const char *module,
 static ModuleDescPtr
 NewModuleDesc(const char *name)
 {
-    ModuleDescPtr mdp = malloc(sizeof(ModuleDesc));
+    ModuleDescPtr mdp = calloc(1, sizeof(ModuleDesc));
 
-    if (mdp) {
-	mdp->child = NULL;
-	mdp->sib = NULL;
-	mdp->parent = NULL;
+    if (mdp)
 	mdp->name = xstrdup(name);
-	mdp->handle = -1;
-	mdp->SetupProc = NULL;
-	mdp->TearDownProc = NULL;
-	mdp->TearDownData = NULL;
-    }
 
     return mdp;
 }
@@ -796,6 +787,7 @@ ModuleDescPtr
 DuplicateModule(ModuleDescPtr mod, ModuleDescPtr parent)
 {
     ModuleDescPtr ret;
+    int errmaj, errmin;
 
     if (!mod)
 	return NULL;
@@ -804,10 +796,11 @@ DuplicateModule(ModuleDescPtr mod, ModuleDescPtr parent)
     if (ret == NULL)
 	return NULL;
 
-    if (LoaderHandleOpen(mod->handle) == -1)
-	return NULL;
+    if (!(ret->handle = LoaderOpen(mod->path, &errmaj, &errmin))) {
+        free(ret);
+        return NULL;
+    }
 
-    ret->handle = mod->handle;
     ret->SetupProc = mod->SetupProc;
     ret->TearDownProc = mod->TearDownProc;
     ret->TearDownData = NULL;
@@ -815,6 +808,7 @@ DuplicateModule(ModuleDescPtr mod, ModuleDescPtr parent)
     ret->sib = DuplicateModule(mod->sib, parent);
     ret->parent = parent;
     ret->VersionInfo = mod->VersionInfo;
+    ret->path = strdup(mod->path);
 
     return ret;
 }
@@ -830,7 +824,7 @@ static ModuleDescPtr
 doLoadModule(const char *module, const char *path, const char **subdirlist,
 	     const char **patternlist, pointer options,
 	     const XF86ModReqInfo * modreq,
-	     int *errmaj, int *errmin, int flags)
+	     int *errmaj, int *errmin)
 {
     XF86ModuleData *initdata = NULL;
     char **pathlist = NULL;
@@ -839,7 +833,6 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
     char **path_elem = NULL;
     char *p = NULL;
     ModuleDescPtr ret = NULL;
-    int wasLoaded = 0;
     PatternPtr patterns = NULL;
     int noncanonical = 0;
     char *m = NULL;
@@ -926,10 +919,10 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
 	    *errmin = 0;
 	goto LoadModule_fail;
     }
-    ret->handle = LoaderOpen(found, name, 0,
-			     errmaj, errmin, &wasLoaded, flags);
+    ret->handle = LoaderOpen(found, errmaj, errmin);
     if (ret->handle < 0)
 	goto LoadModule_fail;
+    ret->path = strdup(found);
 
     /* drop any explicit suffix from the module name */
     p = strchr(name, '.');
@@ -960,26 +953,24 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
 	setup = initdata->setup;
 	teardown = initdata->teardown;
 
-	if (!wasLoaded) {
-	    if (vers) {
-		if (!CheckVersion(module, vers, modreq)) {
-		    if (errmaj)
-			*errmaj = LDR_MISMATCH;
-		    if (errmin)
-			*errmin = 0;
-		    goto LoadModule_fail;
-		}
-	    } else {
-		xf86Msg(X_ERROR,
-			"LoadModule: Module %s does not supply"
-			" version information\n", module);
-		if (errmaj)
-		    *errmaj = LDR_INVALID;
-		if (errmin)
-		    *errmin = 0;
-		goto LoadModule_fail;
-	    }
-	}
+        if (vers) {
+            if (!CheckVersion(module, vers, modreq)) {
+                if (errmaj)
+                    *errmaj = LDR_MISMATCH;
+                if (errmin)
+                    *errmin = 0;
+                goto LoadModule_fail;
+            }
+        } else {
+            xf86Msg(X_ERROR,
+                    "LoadModule: Module %s does not supply"
+                    " version information\n", module);
+            if (errmaj)
+                *errmaj = LDR_INVALID;
+            if (errmin)
+                *errmin = 0;
+            goto LoadModule_fail;
+        }
 	if (setup)
 	    ret->SetupProc = setup;
 	if (teardown)
@@ -1067,7 +1058,7 @@ LoadModule(const char *module, const char *path, const char **subdirlist,
 	   const XF86ModReqInfo * modreq, int *errmaj, int *errmin)
 {
   return doLoadModule(module, path, subdirlist, patternlist, options,
-		      modreq, errmaj, errmin, LD_FLAG_GLOBAL);
+		      modreq, errmaj, errmin);
 }
 
 void
@@ -1089,12 +1080,13 @@ UnloadModuleOrDriver(ModuleDescPtr mod)
 
     if ((mod->TearDownProc) && (mod->TearDownData))
 	mod->TearDownProc(mod->TearDownData);
-    LoaderUnload(mod->handle);
+    LoaderUnload(mod->name, mod->handle);
 
     if (mod->child)
 	UnloadModuleOrDriver(mod->child);
     if (mod->sib)
 	UnloadModuleOrDriver(mod->sib);
+    free(mod->path);
     free(mod->name);
     free(mod);
 }
@@ -1111,13 +1103,14 @@ UnloadSubModule(pointer _mod)
 
     if ((mod->TearDownProc) && (mod->TearDownData))
 	mod->TearDownProc(mod->TearDownData);
-    LoaderUnload(mod->handle);
+    LoaderUnload(mod->name, mod->handle);
 
     RemoveChild(mod);
 
     if (mod->child)
 	UnloadModuleOrDriver(mod->child);
 
+    free(mod->path);
     free(mod->name);
     free(mod);
 }

@@ -609,13 +609,13 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 }
 
 - (IBAction) enable_fullscreen_changed:sender {
-    int value = ![enable_fullscreen intValue];
+    XQuartzRootlessDefault = ![enable_fullscreen intValue];
 
-    [enable_fullscreen_menu setEnabled:!value];
+    [enable_fullscreen_menu setEnabled:!XQuartzRootlessDefault];
 
-    DarwinSendDDXEvent(kXquartzSetRootless, 1, value);
+    DarwinSendDDXEvent(kXquartzSetRootless, 1, XQuartzRootlessDefault);
 
-    [NSApp prefs_set_boolean:@PREFS_ROOTLESS value:value];
+    [NSApp prefs_set_boolean:@PREFS_ROOTLESS value:XQuartzRootlessDefault];
     [NSApp prefs_synchronize];
 }
 
@@ -638,24 +638,24 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
         darwinFakeButtons = [fake_buttons intValue];
         [NSApp prefs_set_boolean:@PREFS_FAKEBUTTONS value:darwinFakeButtons];
     } else if(sender == use_sysbeep) {
-        quartzUseSysBeep = [use_sysbeep intValue];
-        [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:quartzUseSysBeep];
+        XQuartzUseSysBeep = [use_sysbeep intValue];
+        [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:XQuartzUseSysBeep];
     } else if(sender == enable_keyequivs) {
-        X11EnableKeyEquivalents =  [enable_keyequivs intValue];
-        [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:X11EnableKeyEquivalents];
+        XQuartzEnableKeyEquivalents =  [enable_keyequivs intValue];
+        [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:XQuartzEnableKeyEquivalents];
     } else if(sender == sync_keymap) {
         darwinSyncKeymap = [sync_keymap intValue];
         [NSApp prefs_set_boolean:@PREFS_SYNC_KEYMAP value:darwinSyncKeymap];
     } else if(sender == enable_fullscreen_menu) {
-        quartzFullscreenMenu = [enable_fullscreen_menu intValue];
-        [NSApp prefs_set_boolean:@PREFS_FULLSCREEN_MENU value:quartzFullscreenMenu];
+        XQuartzFullscreenMenu = [enable_fullscreen_menu intValue];
+        [NSApp prefs_set_boolean:@PREFS_FULLSCREEN_MENU value:XQuartzFullscreenMenu];
     } else if(sender == option_sends_alt) {
-        BOOL prev_opt_sends_alt = quartzOptionSendsAlt;
+        BOOL prev_opt_sends_alt = XQuartzOptionSendsAlt;
         
-        quartzOptionSendsAlt = [option_sends_alt intValue];
-        [NSApp prefs_set_boolean:@PREFS_OPTION_SENDS_ALT value:quartzOptionSendsAlt];
+        XQuartzOptionSendsAlt = [option_sends_alt intValue];
+        [NSApp prefs_set_boolean:@PREFS_OPTION_SENDS_ALT value:XQuartzOptionSendsAlt];
 
-        if(prev_opt_sends_alt != quartzOptionSendsAlt)
+        if(prev_opt_sends_alt != XQuartzOptionSendsAlt)
             QuartsResyncKeymap(TRUE);
     } else if(sender == click_through) {
         [NSApp prefs_set_boolean:@PREFS_CLICK_THROUGH value:[click_through intValue]];
@@ -701,10 +701,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     BOOL pbproxy_active = [NSApp prefs_get_boolean:@PREFS_SYNC_PB default:YES];
     
     [fake_buttons setIntValue:darwinFakeButtons];
-    [use_sysbeep setIntValue:quartzUseSysBeep];
-    [enable_keyequivs setIntValue:X11EnableKeyEquivalents];
+    [use_sysbeep setIntValue:XQuartzUseSysBeep];
+    [enable_keyequivs setIntValue:XQuartzEnableKeyEquivalents];
     [sync_keymap setIntValue:darwinSyncKeymap];
-    [option_sends_alt setIntValue:quartzOptionSendsAlt];
+    [option_sends_alt setIntValue:XQuartzOptionSendsAlt];
     [click_through setIntValue:[NSApp prefs_get_boolean:@PREFS_CLICK_THROUGH default:NO]];
     [focus_follows_mouse setIntValue:[NSApp prefs_get_boolean:@PREFS_FFM default:NO]];
     [focus_on_new_window setIntValue:[NSApp prefs_get_boolean:@PREFS_FOCUS_ON_NEW_WINDOW default:YES]];
@@ -729,9 +729,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     [sync_text1 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
     [sync_text2 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
 	
-    [enable_fullscreen setIntValue:!quartzEnableRootless];
-    [enable_fullscreen_menu setEnabled:!quartzEnableRootless];
-    [enable_fullscreen_menu setIntValue:quartzFullscreenMenu];
+    [enable_fullscreen setIntValue:!XQuartzRootlessDefault];
+    [enable_fullscreen_menu setEnabled:!XQuartzRootlessDefault];
+    [enable_fullscreen_menu setIntValue:XQuartzFullscreenMenu];
     
     [prefs_panel makeKeyAndOrderFront:sender];
 }
@@ -752,7 +752,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
   NSMenu *menu = [item menu];
     
   if (item == toggle_fullscreen_item)
-    return !quartzEnableRootless;
+    return !XQuartzIsRootless;
   else if (menu == [X11App windowsMenu] || menu == dock_menu
 	   || (menu == [x11_about_item menu] && [item tag] == 42))
     return (AppleWMSelectedEvents () & AppleWMControllerNotifyMask) != 0;

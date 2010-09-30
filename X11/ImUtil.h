@@ -1,6 +1,6 @@
 
-#ifndef _IMUTIL_H_
-#define _IMUTIL_H_
+#ifndef _X11_IMUTIL_H_
+#define _X11_IMUTIL_H_
 
 extern int
 _XGetScanlinePad(
@@ -27,4 +27,4 @@ extern void
 _XInitImageFuncPtrs(
     register XImage *image);
 
-#endif /* _IMUTIL_H_ */
+#endif /* _X11_IMUTIL_H_ */

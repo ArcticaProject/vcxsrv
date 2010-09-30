@@ -52,9 +52,9 @@
  * Local function prototypes
  */
 
-DISPATCH_PROC(winProcEstablishConnection);
-DISPATCH_PROC(winProcQueryTree);
-DISPATCH_PROC(winProcSetSelectionOwner);
+int winProcEstablishConnection(ClientPtr /* client */);
+int winProcQueryTree(ClientPtr /* client */);
+int winProcSetSelectionOwner(ClientPtr /* client */);
 
 
 /*

@@ -260,6 +260,9 @@ RRModeDestroyResource (pointer value, XID pid)
     return 1;
 }
 
+/*
+ * Initialize mode type
+ */
 Bool
 RRModeInit (void)
 {
@@ -268,8 +271,17 @@ RRModeInit (void)
     RRModeType = CreateNewResourceType (RRModeDestroyResource, "MODE");
     if (!RRModeType)
 	return FALSE;
-    SetResourceTypeErrorValue(RRModeType, RRErrorBase + BadRRMode);
+    
     return TRUE;
+}
+
+/*
+ * Initialize mode type error value
+ */
+void
+RRModeInitErrorValue(void)
+{
+    SetResourceTypeErrorValue(RRModeType, RRErrorBase + BadRRMode);
 }
 
 int

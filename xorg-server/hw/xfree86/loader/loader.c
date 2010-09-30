@@ -54,18 +54,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#if defined(UseMMAP) || (defined(linux) && defined(__ia64__))
-#include <sys/mman.h>
-#endif
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
-#if defined(linux) && \
-    (defined(__alpha__) || defined(__powerpc__) || defined(__ia64__) \
-    || defined(__amd64__))
-#include <malloc.h>
-#endif
 #include <stdarg.h>
 
 #include "os.h"
@@ -75,44 +67,34 @@
 #include "xf86Priv.h"
 #include "compiler.h"
 
+#ifdef HAVE_DLFCN_H
+
+#include <dlfcn.h>
+#include <X11/Xos.h>
+
+#if defined(DL_LAZY)
+#define DLOPEN_LAZY DL_LAZY
+#elif defined(RTLD_LAZY)
+#define DLOPEN_LAZY RTLD_LAZY
+#elif defined(__FreeBSD__)
+#define DLOPEN_LAZY 1
+#else
+#define DLOPEN_LAZY 0
+#endif
+
+#if defined(LD_GLOBAL)
+#define DLOPEN_GLOBAL LD_GLOBAL
+#elif defined(RTLD_GLOBAL)
+#define DLOPEN_GLOBAL RTLD_GLOBAL
+#else
+#define DLOPEN_GLOBAL 0
+#endif
+
+#else
+#error i have no dynamic linker and i must scream
+#endif
+
 extern void *xorg_symbols[];
-
-#define MAX_HANDLE 256
-static int refCount[MAX_HANDLE];
-
-static int moduleseq = 0;
-
-/* Prototypes for static functions. */
-static loaderPtr listHead = NULL;
-
-static loaderPtr
-_LoaderListPush(void)
-{
-    loaderPtr item = calloc(1, sizeof(struct _loader));
-
-    item->next = listHead;
-    listHead = item;
-
-    return item;
-}
-
-static loaderPtr
-_LoaderListPop(int handle)
-{
-    loaderPtr item = listHead;
-    loaderPtr *bptr = &listHead;	/* pointer to previous node */
-
-    while (item) {
-	if (item->handle == handle) {
-	    *bptr = item->next;	/* remove this from the list */
-	    return item;
-	}
-	bptr = &(item->next);
-	item = item->next;
-    }
-
-    return 0;
-}
 
 void
 LoaderInit(void)
@@ -149,134 +131,60 @@ LoaderInit(void)
 	    path = uwcrtpath; /* fallback: try to get libcrt.a from the uccs */
 	else
 	    path = xcrtpath; /* get the libcrt.a we compiled with */
-	LoaderOpen (path, "libcrt", 0, &errmaj, &errmin, &wasLoaded);
+	LoaderOpen (path, &errmaj, &errmin, &wasLoaded, 0);
     }
 #endif
 }
 
 /* Public Interface to the loader. */
 
-int
-LoaderOpen(const char *module, const char *cname, int handle,
-	   int *errmaj, int *errmin, int *wasLoaded, int flags)
+void *
+LoaderOpen(const char *module, int *errmaj, int *errmin)
 {
-    loaderPtr tmp;
-    int new_handle;
+    void *ret;
 
 #if defined(DEBUG)
     ErrorF("LoaderOpen(%s)\n", module);
 #endif
 
-    /* Is the module already loaded? */
-    if (handle >= 0) {
-	tmp = listHead;
-	while (tmp) {
-#ifdef DEBUGLIST
-	    ErrorF("strcmp(%x(%s),{%x} %x(%s))\n", module, module,
-		   &(tmp->name), tmp->name, tmp->name);
-#endif
-	    if (!strcmp(module, tmp->name)) {
-		refCount[tmp->handle]++;
-		if (wasLoaded)
-		    *wasLoaded = 1;
-		xf86MsgVerb(X_INFO, 2, "Reloading %s\n", module);
-		return tmp->handle;
-	    }
-	    tmp = tmp->next;
-	}
-    }
-
-    /*
-     * OK, it's a new one. Add it.
-     */
     xf86Msg(X_INFO, "Loading %s\n", module);
-    if (wasLoaded)
-	*wasLoaded = 0;
 
-    /*
-     * Find a free handle.
-     */
-    new_handle = 1;
-    while (new_handle < MAX_HANDLE && refCount[new_handle])
-	new_handle++;
-
-    if (new_handle == MAX_HANDLE) {
-	xf86Msg(X_ERROR, "Out of loader space\n");	/* XXX */
-	if (errmaj)
-	    *errmaj = LDR_NOSPACE;
-	if (errmin)
-	    *errmin = LDR_NOSPACE;
-	return -1;
-    }
-
-    refCount[new_handle] = 1;
-
-    tmp = _LoaderListPush();
-    tmp->name = strdup(module);
-    tmp->cname = strdup(cname);
-    tmp->handle = new_handle;
-    tmp->module = moduleseq++;
-
-    if ((tmp->private = DLLoadModule(tmp, flags)) == NULL) {
-	xf86Msg(X_ERROR, "Failed to load %s\n", module);
-	_LoaderListPop(new_handle);
-	refCount[new_handle] = 0;
+    if (!(ret = dlopen(module, DLOPEN_LAZY | DLOPEN_GLOBAL))) {
+	xf86Msg(X_ERROR, "Failed to load %s: %s\n", module, dlerror());
 	if (errmaj)
 	    *errmaj = LDR_NOLOAD;
 	if (errmin)
 	    *errmin = LDR_NOLOAD;
-	return -1;
+	return NULL;
     }
 
-    return new_handle;
-}
-
-int
-LoaderHandleOpen(int handle)
-{
-    if (handle < 0 || handle >= MAX_HANDLE)
-	return -1;
-
-    if (!refCount[handle])
-	return -1;
-
-    refCount[handle]++;
-    return handle;
+    return ret;
 }
 
 void *
-LoaderSymbol(const char *sym)
+LoaderSymbol(const char *name)
 {
-    return (DLFindSymbol(sym));
+    static void *global_scope = NULL;
+    void *p;
+
+    p = dlsym(RTLD_DEFAULT, name);
+    if (p != NULL)
+	return p;
+
+    if (!global_scope)
+	global_scope = dlopen(NULL, DLOPEN_LAZY | DLOPEN_GLOBAL);
+
+    if (global_scope)
+	return dlsym(global_scope, name);
+
+    return NULL;
 }
 
-int
-LoaderUnload(int handle)
+void
+LoaderUnload(const char *name, void *handle)
 {
-    loaderRec fakeHead;
-    loaderPtr tmp = &fakeHead;
-
-    if (handle < 0 || handle >= MAX_HANDLE)
-	return -1;
-
-    /*
-     * check the reference count, only free it if it goes to zero
-     */
-    if (--refCount[handle])
-	return 0;
-    /*
-     * find the loaderRecs associated with this handle.
-     */
-
-    while ((tmp = _LoaderListPop(handle)) != NULL) {
-	xf86Msg(X_INFO, "Unloading %s\n", tmp->name);
-	DLUnloadModule(tmp->private);
-	free(tmp->name);
-	free(tmp->cname);
-	free(tmp);
-    }
-
-    return 0;
+    xf86Msg(X_INFO, "Unloading %s\n", name);
+    dlclose(handle);
 }
 
 unsigned long LoaderOptions = 0;

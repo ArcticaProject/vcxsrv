@@ -4,8 +4,6 @@
 
 #include "xf86Module.h"
 
-static MODULESETUPPROTO(uda1380Setup);
-
 static XF86ModuleVersionInfo uda1380VersRec =
 {
         "uda1380",
@@ -22,11 +20,6 @@ static XF86ModuleVersionInfo uda1380VersRec =
  
 _X_EXPORT XF86ModuleData uda1380ModuleData = {
         &uda1380VersRec,
-        uda1380Setup,
+        NULL,
         NULL
 }; 
-
-static pointer
-uda1380Setup(pointer module, pointer opts, int *errmaj, int *errmin) {
-   return (pointer)1;
-}

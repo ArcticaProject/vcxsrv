@@ -27,8 +27,8 @@ from The Open Group.
 
 */
 
-#ifndef _XLIBINT_H_
-#define _XLIBINT_H_ 1
+#ifndef _X11_XLIBINT_H_
+#define _X11_XLIBINT_H_ 1
 
 /*
  *	Xlibint.h - Header definition and support file for the internal
@@ -1394,4 +1394,4 @@ extern void xlocaledir(
 
 _XFUNCPROTOEND
 
-#endif /* _XLIBINT_H_ */
+#endif /* _X11_XLIBINT_H_ */

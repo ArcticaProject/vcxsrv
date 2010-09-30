@@ -354,6 +354,11 @@ RRExtensionInit (void)
 	SRRScreenChangeNotifyEvent;
     EventSwapVector[RREventBase + RRNotify] = (EventSwapPtr)
 	SRRNotifyEvent;
+
+    RRModeInitErrorValue();
+    RRCrtcInitErrorValue();
+    RROutputInitErrorValue();
+
 #ifdef PANORAMIX
     RRXineramaExtensionInit();
 #endif

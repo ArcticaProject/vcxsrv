@@ -108,7 +108,6 @@ Equipment Corporation.
 #include "panoramiXsrv.h"
 #else
 #include "dixevents.h"		/* InitEvents() */
-#include "dispatch.h"		/* InitProcVectors() */
 #endif
 
 #ifdef DPMSExtension
@@ -121,8 +120,6 @@ Equipment Corporation.
 #endif
 
 extern void Dispatch(void);
-
-extern void InitProcVectors(void);
 
 #ifdef XQUARTZ
 #include <pthread.h>
@@ -215,7 +212,6 @@ int main(int argc, char *argv[], char *envp[])
 	if(serverGeneration == 1)
 	{
 	    CreateWellKnownSockets();
-	    InitProcVectors();
 	    for (i=1; i<MAXCLIENTS; i++)
 		clients[i] = NullClient;
 	    serverClient = calloc(sizeof(ClientRec), 1);

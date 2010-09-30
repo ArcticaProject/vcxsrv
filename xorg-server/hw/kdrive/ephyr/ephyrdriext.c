@@ -72,23 +72,7 @@ typedef EphyrDRIScreenPrivRec* EphyrDRIScreenPrivPtr;
 
 static int DRIErrorBase;
 
-static DISPATCH_PROC(ProcXF86DRIQueryVersion);
-static DISPATCH_PROC(ProcXF86DRIQueryDirectRenderingCapable);
-static DISPATCH_PROC(ProcXF86DRIOpenConnection);
-static DISPATCH_PROC(ProcXF86DRICloseConnection);
-static DISPATCH_PROC(ProcXF86DRIGetClientDriverName);
-static DISPATCH_PROC(ProcXF86DRICreateContext);
-static DISPATCH_PROC(ProcXF86DRIDestroyContext);
-static DISPATCH_PROC(ProcXF86DRICreateDrawable);
-static DISPATCH_PROC(ProcXF86DRIDestroyDrawable);
-static DISPATCH_PROC(ProcXF86DRIGetDrawableInfo);
-static DISPATCH_PROC(ProcXF86DRIGetDeviceInfo);
-static DISPATCH_PROC(ProcXF86DRIDispatch);
-static DISPATCH_PROC(ProcXF86DRIAuthConnection);
 
-static DISPATCH_PROC(SProcXF86DRIQueryVersion);
-static DISPATCH_PROC(SProcXF86DRIQueryDirectRenderingCapable);
-static DISPATCH_PROC(SProcXF86DRIDispatch);
 
 static Bool ephyrDRIScreenInit (ScreenPtr a_screen) ;
 static Bool ephyrDRICreateWindow (WindowPtr a_win) ;
@@ -118,65 +102,6 @@ static DevPrivateKeyRec ephyrDRIScreenKeyRec;
     dixLookupPrivate(&(win)->devPrivates, ephyrDRIWindowKey))
 #define GET_EPHYR_DRI_SCREEN_PRIV(screen) ((EphyrDRIScreenPrivPtr) \
     dixLookupPrivate(&(screen)->devPrivates, ephyrDRIScreenKey))
-
-
-Bool
-ephyrDRIExtensionInit (ScreenPtr a_screen)
-{
-    Bool is_ok=FALSE ;
-    ExtensionEntry* extEntry=NULL;
-    EphyrDRIScreenPrivPtr screen_priv=NULL ;
-
-    EPHYR_LOG ("enter\n") ;
-    if (!hostx_has_dri ()) {
-        EPHYR_LOG ("host does not have DRI extension\n") ;
-        goto out ;
-    }
-    EPHYR_LOG ("host X does have DRI extension\n") ;
-    if (!hostx_has_xshape ()) {
-        EPHYR_LOG ("host does not have XShape extension\n") ;
-        goto out ;
-    }
-    EPHYR_LOG ("host X does have XShape extension\n") ;
-
-#ifdef XF86DRI_EVENTS
-    EventType = CreateNewResourceType (XF86DRIFreeEvents, "DRIEvents");
-    if (!EventType) {
-        EPHYR_LOG_ERROR ("failed to register DRI event resource type\n") ;
-        goto out ;
-    }
-#endif
-
-    if ((extEntry = AddExtension(XF86DRINAME,
-				 XF86DRINumberEvents,
-				 XF86DRINumberErrors,
-				 ProcXF86DRIDispatch,
-				 SProcXF86DRIDispatch,
-				 NULL,
-				 StandardMinorOpcode))) {
-	DRIReqCode = (unsigned char)extEntry->base;
-	DRIErrorBase = extEntry->errorBase;
-    } else {
-        EPHYR_LOG_ERROR ("failed to register DRI extension\n") ;
-        goto out ;
-    }
-    screen_priv = calloc(1, sizeof (EphyrDRIScreenPrivRec)) ;
-    if (!screen_priv) {
-        EPHYR_LOG_ERROR ("failed to allocate screen_priv\n") ;
-        goto out ;
-    }
-    dixSetPrivate(&a_screen->devPrivates, ephyrDRIScreenKey, screen_priv);
-
-    if (!ephyrDRIScreenInit (a_screen)) {
-        EPHYR_LOG_ERROR ("ephyrDRIScreenInit() failed\n") ;
-        goto out ;
-    }
-    EphyrMirrorHostVisuals (a_screen) ;
-    is_ok=TRUE ;
-out:
-    EPHYR_LOG ("leave\n") ;
-    return is_ok ;
-}
 
 static Bool
 ephyrDRIScreenInit (ScreenPtr a_screen)
@@ -1427,4 +1352,62 @@ SProcXF86DRIDispatch (register ClientPtr client)
             return DRIErrorBase + XF86DRIClientNotLocal;
         }
     }
+}
+
+Bool
+ephyrDRIExtensionInit (ScreenPtr a_screen)
+{
+    Bool is_ok=FALSE ;
+    ExtensionEntry* extEntry=NULL;
+    EphyrDRIScreenPrivPtr screen_priv=NULL ;
+
+    EPHYR_LOG ("enter\n") ;
+    if (!hostx_has_dri ()) {
+        EPHYR_LOG ("host does not have DRI extension\n") ;
+        goto out ;
+    }
+    EPHYR_LOG ("host X does have DRI extension\n") ;
+    if (!hostx_has_xshape ()) {
+        EPHYR_LOG ("host does not have XShape extension\n") ;
+        goto out ;
+    }
+    EPHYR_LOG ("host X does have XShape extension\n") ;
+
+#ifdef XF86DRI_EVENTS
+    EventType = CreateNewResourceType (XF86DRIFreeEvents, "DRIEvents");
+    if (!EventType) {
+        EPHYR_LOG_ERROR ("failed to register DRI event resource type\n") ;
+        goto out ;
+    }
+#endif
+
+    if ((extEntry = AddExtension(XF86DRINAME,
+				 XF86DRINumberEvents,
+				 XF86DRINumberErrors,
+				 ProcXF86DRIDispatch,
+				 SProcXF86DRIDispatch,
+				 NULL,
+				 StandardMinorOpcode))) {
+	DRIReqCode = (unsigned char)extEntry->base;
+	DRIErrorBase = extEntry->errorBase;
+    } else {
+        EPHYR_LOG_ERROR ("failed to register DRI extension\n") ;
+        goto out ;
+    }
+    screen_priv = calloc(1, sizeof (EphyrDRIScreenPrivRec)) ;
+    if (!screen_priv) {
+        EPHYR_LOG_ERROR ("failed to allocate screen_priv\n") ;
+        goto out ;
+    }
+    dixSetPrivate(&a_screen->devPrivates, ephyrDRIScreenKey, screen_priv);
+
+    if (!ephyrDRIScreenInit (a_screen)) {
+        EPHYR_LOG_ERROR ("ephyrDRIScreenInit() failed\n") ;
+        goto out ;
+    }
+    EphyrMirrorHostVisuals (a_screen) ;
+    is_ok=TRUE ;
+out:
+    EPHYR_LOG ("leave\n") ;
+    return is_ok ;
 }
