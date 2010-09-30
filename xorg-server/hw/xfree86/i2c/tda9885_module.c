@@ -4,8 +4,6 @@
 
 #include "xf86Module.h"
 
-static MODULESETUPPROTO(tda9885Setup);
-
 static XF86ModuleVersionInfo tda9885VersRec =
 {
         "tda9885",
@@ -22,11 +20,6 @@ static XF86ModuleVersionInfo tda9885VersRec =
  
 _X_EXPORT XF86ModuleData tda9885ModuleData = {
         &tda9885VersRec,
-        tda9885Setup,
+        NULL,
         NULL
 }; 
-
-static pointer
-tda9885Setup(pointer module, pointer opts, int *errmaj, int *errmin) {
-   return (pointer)1;
-}

@@ -64,55 +64,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 static int DRIErrorBase;
 
-static DISPATCH_PROC(ProcXF86DRIQueryVersion);
-static DISPATCH_PROC(ProcXF86DRIQueryDirectRenderingCapable);
-static DISPATCH_PROC(ProcXF86DRIOpenConnection);
-static DISPATCH_PROC(ProcXF86DRICloseConnection);
-static DISPATCH_PROC(ProcXF86DRIGetClientDriverName);
-static DISPATCH_PROC(ProcXF86DRICreateContext);
-static DISPATCH_PROC(ProcXF86DRIDestroyContext);
-static DISPATCH_PROC(ProcXF86DRICreateDrawable);
-static DISPATCH_PROC(ProcXF86DRIDestroyDrawable);
-static DISPATCH_PROC(ProcXF86DRIGetDrawableInfo);
-static DISPATCH_PROC(ProcXF86DRIGetDeviceInfo);
-static DISPATCH_PROC(ProcXF86DRIDispatch);
-static DISPATCH_PROC(ProcXF86DRIAuthConnection);
 
-static DISPATCH_PROC(SProcXF86DRIQueryVersion);
-static DISPATCH_PROC(SProcXF86DRIQueryDirectRenderingCapable);
-static DISPATCH_PROC(SProcXF86DRIDispatch);
 
 static void XF86DRIResetProc(ExtensionEntry* extEntry);
 
 static unsigned char DRIReqCode = 0;
 
 extern void XFree86DRIExtensionInit(void);
-
-void
-XFree86DRIExtensionInit(void)
-{
-    ExtensionEntry* extEntry;
-
-#ifdef XF86DRI_EVENTS
-    EventType = CreateNewResourceType(XF86DRIFreeEvents, "DRIEvent");
-#endif
-
-    if (
-	DRIExtensionInit() &&
-#ifdef XF86DRI_EVENTS
-        EventType && ScreenPrivateIndex != -1 &&
-#endif
-	(extEntry = AddExtension(XF86DRINAME,
-				 XF86DRINumberEvents,
-				 XF86DRINumberErrors,
-				 ProcXF86DRIDispatch,
-				 SProcXF86DRIDispatch,
-				 XF86DRIResetProc,
-				 StandardMinorOpcode))) {
-	DRIReqCode = (unsigned char)extEntry->base;
-	DRIErrorBase = extEntry->errorBase;
-    }
-}
 
 /*ARGSUSED*/
 static void
@@ -675,5 +633,31 @@ SProcXF86DRIDispatch (
 	return SProcXF86DRIQueryDirectRenderingCapable(client);
     default:
 	return DRIErrorBase + XF86DRIClientNotLocal;
+    }
+}
+
+void
+XFree86DRIExtensionInit(void)
+{
+    ExtensionEntry* extEntry;
+
+#ifdef XF86DRI_EVENTS
+    EventType = CreateNewResourceType(XF86DRIFreeEvents, "DRIEvent");
+#endif
+
+    if (
+	DRIExtensionInit() &&
+#ifdef XF86DRI_EVENTS
+        EventType && ScreenPrivateIndex != -1 &&
+#endif
+	(extEntry = AddExtension(XF86DRINAME,
+				 XF86DRINumberEvents,
+				 XF86DRINumberErrors,
+				 ProcXF86DRIDispatch,
+				 SProcXF86DRIDispatch,
+				 XF86DRIResetProc,
+				 StandardMinorOpcode))) {
+	DRIReqCode = (unsigned char)extEntry->base;
+	DRIErrorBase = extEntry->errorBase;
     }
 }

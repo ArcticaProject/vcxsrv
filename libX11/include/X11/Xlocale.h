@@ -26,8 +26,8 @@ from The Open Group.
 
 */
 
-#ifndef _XLOCALE_H_
-#define _XLOCALE_H_
+#ifndef _X11_XLOCALE_H_
+#define _X11_XLOCALE_H_
 
 #include <X11/Xfuncproto.h>
 #include <X11/Xosdefs.h>
@@ -56,4 +56,4 @@ _XFUNCPROTOEND
 
 #endif /* X_LOCALE */
 
-#endif /* _XLOCALE_H_ */
+#endif /* _X11_XLOCALE_H_ */

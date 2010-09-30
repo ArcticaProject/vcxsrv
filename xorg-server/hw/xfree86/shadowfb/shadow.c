@@ -36,15 +36,6 @@ static void ShadowCopyWindow(
     RegionPtr prgn 
 );
 static Bool ShadowCreateGC(GCPtr pGC);
-static Bool ShadowModifyPixmapHeader(
-    PixmapPtr pPixmap,
-    int width,
-    int height,
-    int depth,
-    int bitsPerPixel,
-    int devKind,
-    pointer pPixData
-);
 
 static Bool ShadowEnterVT(int index, int flags);
 static void ShadowLeaveVT(int index, int flags);
@@ -189,7 +180,6 @@ ShadowFBInit2 (
     pScreen->CloseScreen = ShadowCloseScreen;
     pScreen->CopyWindow = ShadowCopyWindow;
     pScreen->CreateGC = ShadowCreateGC;
-    pScreen->ModifyPixmapHeader = ShadowModifyPixmapHeader;
 
     pScrn->EnterVT = ShadowEnterVT;
     pScrn->LeaveVT = ShadowLeaveVT;
@@ -308,49 +298,6 @@ ShadowCopyWindow(
             (*pPriv->postRefresh)(pPriv->pScrn, num, RegionRects(&rgnDst));
         RegionUninit(&rgnDst);
     }
-}
-
-static Bool
-ShadowModifyPixmapHeader(
-    PixmapPtr pPixmap,
-    int width,
-    int height,
-    int depth,
-    int bitsPerPixel,
-    int devKind,
-    pointer pPixData
-)
-{
-    ScreenPtr pScreen;
-    ScrnInfoPtr pScrn;
-    ShadowScreenPtr pPriv;
-    Bool retval;
-    PixmapPtr pScreenPix;
-
-    if (!pPixmap)
-	return FALSE;
-
-    pScreen = pPixmap->drawable.pScreen;
-    pScrn = xf86Screens[pScreen->myNum];
-
-    pScreenPix = (*pScreen->GetScreenPixmap)(pScreen);
-    
-    if (pPixmap == pScreenPix && !pScrn->vtSema)
-	pScreenPix->devPrivate = pScrn->pixmapPrivate;
-    
-    pPriv = GET_SCREEN_PRIVATE(pScreen);
-
-    pScreen->ModifyPixmapHeader = pPriv->ModifyPixmapHeader;
-    retval = (*pScreen->ModifyPixmapHeader)(pPixmap,
-	width, height, depth, bitsPerPixel, devKind, pPixData);
-    pScreen->ModifyPixmapHeader = ShadowModifyPixmapHeader;
-
-    if (pPixmap == pScreenPix && !pScrn->vtSema)
-    {
-	pScrn->pixmapPrivate = pScreenPix->devPrivate;
-	pScreenPix->devPrivate.ptr = 0;
-    }
-    return retval;
 }
 
 static void

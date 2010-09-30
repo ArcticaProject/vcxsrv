@@ -25,7 +25,6 @@
 #include <X11/extensions/xf86dgaproto.h>
 #include "swaprep.h"
 #include "dgaproc.h"
-#include "xf86dgaext.h"
 #include "protocol-versions.h"
 
 #include <string.h>
@@ -34,24 +33,6 @@
 
 #define DGA_PROTOCOL_OLD_SUPPORT 1
 
-static DISPATCH_PROC(ProcXDGADispatch);
-static DISPATCH_PROC(SProcXDGADispatch);
-static DISPATCH_PROC(ProcXDGAQueryVersion);
-static DISPATCH_PROC(ProcXDGAQueryModes);
-static DISPATCH_PROC(ProcXDGASetMode);
-static DISPATCH_PROC(ProcXDGAOpenFramebuffer);
-static DISPATCH_PROC(ProcXDGACloseFramebuffer);
-static DISPATCH_PROC(ProcXDGASetViewport);
-static DISPATCH_PROC(ProcXDGAInstallColormap);
-static DISPATCH_PROC(ProcXDGASelectInput);
-static DISPATCH_PROC(ProcXDGAFillRectangle);
-static DISPATCH_PROC(ProcXDGACopyArea);
-static DISPATCH_PROC(ProcXDGACopyTransparentArea);
-static DISPATCH_PROC(ProcXDGAGetViewportStatus);
-static DISPATCH_PROC(ProcXDGASync);
-static DISPATCH_PROC(ProcXDGASetClientVersion);
-static DISPATCH_PROC(ProcXDGAChangePixmapMode);
-static DISPATCH_PROC(ProcXDGACreateColormap);
 
 static void XDGAResetProc(ExtensionEntry *extEntry);
 
@@ -83,36 +64,6 @@ typedef struct {
     dixLookupPrivate(&(c)->devPrivates, DGAClientPrivateKey))
 #define DGA_SETPRIV(c,p) \
     dixSetPrivate(&(c)->devPrivates, DGAClientPrivateKey, p)
-
-
-void
-XFree86DGAExtensionInit(INITARGS)
-{
-    ExtensionEntry* extEntry;
-
-    if (!dixRegisterPrivateKey(&DGAClientPrivateKeyRec, PRIVATE_CLIENT, 0))
-	return;
-
-    if (!dixRegisterPrivateKey(&DGAScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
-	return;
-
-    if ((extEntry = AddExtension(XF86DGANAME,
-				XF86DGANumberEvents,
-				XF86DGANumberErrors,
-				ProcXDGADispatch,
-				SProcXDGADispatch,
-				XDGAResetProc,
-				StandardMinorOpcode))) {
-	int i;
-
-	DGAReqCode = (unsigned char)extEntry->base;
-	DGAErrorBase = extEntry->errorBase;
-	DGAEventBase = extEntry->eventBase;
-	for (i = KeyPress; i <= MotionNotify; i++)
-	    SetCriticalEvent (DGAEventBase + i);
-    }
-}
-
 
 
 static void
@@ -663,15 +614,6 @@ ProcXDGACreateColormap(ClientPtr client)
 
 #ifdef DGA_PROTOCOL_OLD_SUPPORT
 
-static DISPATCH_PROC(ProcXF86DGADirectVideo);
-static DISPATCH_PROC(ProcXF86DGAGetVidPage);
-static DISPATCH_PROC(ProcXF86DGAGetVideoLL);
-static DISPATCH_PROC(ProcXF86DGAGetViewPortSize);
-static DISPATCH_PROC(ProcXF86DGASetVidPage);
-static DISPATCH_PROC(ProcXF86DGASetViewPort);
-static DISPATCH_PROC(ProcXF86DGAInstallColormap);
-static DISPATCH_PROC(ProcXF86DGAQueryDirectVideo);
-static DISPATCH_PROC(ProcXF86DGAViewPortChanged);
 
 
 static int
@@ -1062,4 +1004,32 @@ void
 XFree86DGARegister(INITARGS)
 {
   XDGAEventBase = &DGAEventBase;
+}
+
+void
+XFree86DGAExtensionInit(INITARGS)
+{
+    ExtensionEntry* extEntry;
+
+    if (!dixRegisterPrivateKey(&DGAClientPrivateKeyRec, PRIVATE_CLIENT, 0))
+	return;
+
+    if (!dixRegisterPrivateKey(&DGAScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
+
+    if ((extEntry = AddExtension(XF86DGANAME,
+				XF86DGANumberEvents,
+				XF86DGANumberErrors,
+				ProcXDGADispatch,
+				SProcXDGADispatch,
+				XDGAResetProc,
+				StandardMinorOpcode))) {
+	int i;
+
+	DGAReqCode = (unsigned char)extEntry->base;
+	DGAErrorBase = extEntry->errorBase;
+	DGAEventBase = extEntry->eventBase;
+	for (i = KeyPress; i <= MotionNotify; i++)
+	    SetCriticalEvent (DGAEventBase + i);
+    }
 }

@@ -171,7 +171,7 @@ xprCreateFrame(RootlessWindowPtr pFrame, ScreenPtr pScreen,
 
     pFrame->level = !IsRoot (pWin) ? AppleWMWindowLevelNormal : AppleWMNumWindowLevels;
 
-    if(quartzEnableRootless)
+    if(XQuartzIsRootless)
         wc.window_level = normal_window_levels[pFrame->level];
     else
         wc.window_level = rooted_window_levels[pFrame->level];
@@ -285,7 +285,7 @@ static void xprRestackFrame(RootlessFrameID wid, RootlessFrameID nextWid) {
         RootlessWindowRec *winRec = x_hash_table_lookup(window_hash, wid, NULL);
 
         if(winRec) {
-            if(quartzEnableRootless)
+            if(XQuartzIsRootless)
                 wc.window_level = normal_window_levels[winRec->level];
             else
                 wc.window_level = rooted_window_levels[winRec->level];

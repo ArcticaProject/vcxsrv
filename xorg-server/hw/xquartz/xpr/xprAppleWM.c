@@ -67,7 +67,7 @@ static int xprSetWindowLevel(
     if(!winRec)
         return BadWindow;
     
-    if(quartzEnableRootless)
+    if(XQuartzIsRootless)
         wc.window_level = normal_window_levels[level];
     else
         wc.window_level = rooted_window_levels[level];

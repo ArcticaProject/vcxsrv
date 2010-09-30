@@ -124,7 +124,7 @@ static int glxBlockClients;
 */
 static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 {
-    __GLXcontext *c;
+    __GLXcontext *c, *next;
 
     /* If this drawable was created using glx 1.3 drawable
      * constructors, we added it as a glx drawable resource under both
@@ -137,7 +137,8 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 	    FreeResourceByType(glxPriv->drawId, __glXDrawableRes, TRUE);
     }
 
-    for (c = glxAllContexts; c; c = c->next) {
+    for (c = glxAllContexts; c; c = next) {
+	next = c->next;
 	if (c->isCurrent && (c->drawPriv == glxPriv || c->readPriv == glxPriv)) {
 	    int i;
 
@@ -160,15 +161,13 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 		    }
 		}
 	    }
-
-	    if (!c->idExists) {
-		__glXFreeContext(c);
-	    }
 	}
 	if (c->drawPriv == glxPriv)
 	    c->drawPriv = NULL;
 	if (c->readPriv == glxPriv)
 	    c->readPriv = NULL;
+	if (!c->idExists && !c->isCurrent)
+	    __glXFreeContext(c);
     }
 
     glxPriv->destroy(glxPriv);

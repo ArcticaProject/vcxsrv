@@ -120,20 +120,6 @@ static void SShmCompletionEvent(
 
 static Bool ShmDestroyPixmap (PixmapPtr pPixmap);
 
-static DISPATCH_PROC(ProcShmAttach);
-static DISPATCH_PROC(ProcShmCreatePixmap);
-static DISPATCH_PROC(ProcShmDetach);
-static DISPATCH_PROC(ProcShmDispatch);
-static DISPATCH_PROC(ProcShmGetImage);
-static DISPATCH_PROC(ProcShmPutImage);
-static DISPATCH_PROC(ProcShmQueryVersion);
-static DISPATCH_PROC(SProcShmAttach);
-static DISPATCH_PROC(SProcShmCreatePixmap);
-static DISPATCH_PROC(SProcShmDetach);
-static DISPATCH_PROC(SProcShmDispatch);
-static DISPATCH_PROC(SProcShmGetImage);
-static DISPATCH_PROC(SProcShmPutImage);
-static DISPATCH_PROC(SProcShmQueryVersion);
 
 static unsigned char ShmReqCode;
 int ShmCompletionCode;
@@ -252,56 +238,6 @@ ShmRegisterPrivates(void)
     if (!dixRegisterPrivateKey(&shmPixmapPrivateKeyRec, PRIVATE_PIXMAP, 0))
 	return FALSE;
     return TRUE;
-}
-
-void
-ShmExtensionInit(INITARGS)
-{
-    ExtensionEntry *extEntry;
-    int i;
-
-#ifdef MUST_CHECK_FOR_SHM_SYSCALL
-    if (!CheckForShmSyscall())
-    {
-	ErrorF("MIT-SHM extension disabled due to lack of kernel support\n");
-	return;
-    }
-#endif
-
-    if (!ShmRegisterPrivates())
-	return;
-
-    sharedPixmaps = xFalse;
-    {
-      sharedPixmaps = xTrue;
-      for (i = 0; i < screenInfo.numScreens; i++)
-      {
-	ShmScrPrivateRec *screen_priv = ShmInitScreenPriv(screenInfo.screens[i]);
-	if (!screen_priv->shmFuncs)
-	    screen_priv->shmFuncs = &miFuncs;
-	if (!screen_priv->shmFuncs->CreatePixmap)
-	    sharedPixmaps = xFalse;
-      }
-      if (sharedPixmaps)
-	for (i = 0; i < screenInfo.numScreens; i++)
-	{
-	    ShmScrPrivateRec *screen_priv = ShmGetScreenPriv(screenInfo.screens[i]);
-	    screen_priv->destroyPixmap = screenInfo.screens[i]->DestroyPixmap;
-	    screenInfo.screens[i]->DestroyPixmap = ShmDestroyPixmap;
-	}
-    }
-    ShmSegType = CreateNewResourceType(ShmDetachSegment, "ShmSeg");
-    if (ShmSegType &&
-	(extEntry = AddExtension(SHMNAME, ShmNumberEvents, ShmNumberErrors,
-				 ProcShmDispatch, SProcShmDispatch,
-				 ShmResetProc, StandardMinorOpcode)))
-    {
-	ShmReqCode = (unsigned char)extEntry->base;
-	ShmCompletionCode = extEntry->eventBase;
-	BadShmSegCode = extEntry->errorBase;
-	SetResourceTypeErrorValue(ShmSegType, BadShmSegCode);
-	EventSwapVector[ShmCompletionCode] = (EventSwapPtr) SShmCompletionEvent;
-    }
 }
 
 /*ARGSUSED*/
@@ -581,6 +517,226 @@ doShmPutImage(DrawablePtr dst, GCPtr pGC,
     }
 }
 
+static int
+ProcShmPutImage(ClientPtr client)
+{
+    GCPtr pGC;
+    DrawablePtr pDraw;
+    long length;
+    ShmDescPtr shmdesc;
+    REQUEST(xShmPutImageReq);
+
+    REQUEST_SIZE_MATCH(xShmPutImageReq);
+    VALIDATE_DRAWABLE_AND_GC(stuff->drawable, pDraw, DixWriteAccess);
+    VERIFY_SHMPTR(stuff->shmseg, stuff->offset, FALSE, shmdesc, client);
+    if ((stuff->sendEvent != xTrue) && (stuff->sendEvent != xFalse))
+	return BadValue;
+    if (stuff->format == XYBitmap)
+    {
+        if (stuff->depth != 1)
+            return BadMatch;
+        length = PixmapBytePad(stuff->totalWidth, 1);
+    }
+    else if (stuff->format == XYPixmap)
+    {
+        if (pDraw->depth != stuff->depth)
+            return BadMatch;
+        length = PixmapBytePad(stuff->totalWidth, 1);
+	length *= stuff->depth;
+    }
+    else if (stuff->format == ZPixmap)
+    {
+        if (pDraw->depth != stuff->depth)
+            return BadMatch;
+        length = PixmapBytePad(stuff->totalWidth, stuff->depth);
+    }
+    else
+    {
+	client->errorValue = stuff->format;
+        return BadValue;
+    }
+
+    /*
+     * There's a potential integer overflow in this check:
+     * VERIFY_SHMSIZE(shmdesc, stuff->offset, length * stuff->totalHeight,
+     *                client);
+     * the version below ought to avoid it
+     */
+    if (stuff->totalHeight != 0 &&
+	length > (shmdesc->size - stuff->offset)/stuff->totalHeight) {
+	client->errorValue = stuff->totalWidth;
+	return BadValue;
+    }
+    if (stuff->srcX > stuff->totalWidth)
+    {
+	client->errorValue = stuff->srcX;
+	return BadValue;
+    }
+    if (stuff->srcY > stuff->totalHeight)
+    {
+	client->errorValue = stuff->srcY;
+	return BadValue;
+    }
+    if ((stuff->srcX + stuff->srcWidth) > stuff->totalWidth)
+    {
+	client->errorValue = stuff->srcWidth;
+	return BadValue;
+    }
+    if ((stuff->srcY + stuff->srcHeight) > stuff->totalHeight)
+    {
+	client->errorValue = stuff->srcHeight;
+	return BadValue;
+    }
+
+    if ((((stuff->format == ZPixmap) && (stuff->srcX == 0)) ||
+	 ((stuff->format != ZPixmap) &&
+	  (stuff->srcX < screenInfo.bitmapScanlinePad) &&
+	  ((stuff->format == XYBitmap) ||
+	   ((stuff->srcY == 0) &&
+	    (stuff->srcHeight == stuff->totalHeight))))) &&
+	((stuff->srcX + stuff->srcWidth) == stuff->totalWidth))
+	(*pGC->ops->PutImage) (pDraw, pGC, stuff->depth,
+			       stuff->dstX, stuff->dstY,
+			       stuff->totalWidth, stuff->srcHeight,
+			       stuff->srcX, stuff->format,
+			       shmdesc->addr + stuff->offset +
+			       (stuff->srcY * length));
+    else
+	doShmPutImage(pDraw, pGC, stuff->depth, stuff->format,
+		      stuff->totalWidth, stuff->totalHeight,
+		      stuff->srcX, stuff->srcY,
+		      stuff->srcWidth, stuff->srcHeight,
+		      stuff->dstX, stuff->dstY,
+                      shmdesc->addr + stuff->offset);
+
+    if (stuff->sendEvent)
+    {
+	xShmCompletionEvent ev;
+
+	ev.type = ShmCompletionCode;
+	ev.drawable = stuff->drawable;
+	ev.minorEvent = X_ShmPutImage;
+	ev.majorEvent = ShmReqCode;
+	ev.shmseg = stuff->shmseg;
+	ev.offset = stuff->offset;
+	WriteEventsToClient(client, 1, (xEvent *) &ev);
+    }
+
+    return Success;
+}
+
+static int
+ProcShmGetImage(ClientPtr client)
+{
+    DrawablePtr		pDraw;
+    long		lenPer = 0, length;
+    Mask		plane = 0;
+    xShmGetImageReply	xgi;
+    ShmDescPtr		shmdesc;
+    int			n, rc;
+
+    REQUEST(xShmGetImageReq);
+
+    REQUEST_SIZE_MATCH(xShmGetImageReq);
+    if ((stuff->format != XYPixmap) && (stuff->format != ZPixmap))
+    {
+	client->errorValue = stuff->format;
+        return BadValue;
+    }
+    rc = dixLookupDrawable(&pDraw, stuff->drawable, client, 0,
+			   DixReadAccess);
+    if (rc != Success)
+	return rc;
+    VERIFY_SHMPTR(stuff->shmseg, stuff->offset, TRUE, shmdesc, client);
+    if (pDraw->type == DRAWABLE_WINDOW)
+    {
+      if( /* check for being viewable */
+	 !((WindowPtr) pDraw)->realized ||
+	  /* check for being on screen */
+         pDraw->x + stuff->x < 0 ||
+         pDraw->x + stuff->x + (int)stuff->width > pDraw->pScreen->width ||
+         pDraw->y + stuff->y < 0 ||
+         pDraw->y + stuff->y + (int)stuff->height > pDraw->pScreen->height ||
+          /* check for being inside of border */
+         stuff->x < - wBorderWidth((WindowPtr)pDraw) ||
+         stuff->x + (int)stuff->width >
+		wBorderWidth((WindowPtr)pDraw) + (int)pDraw->width ||
+         stuff->y < -wBorderWidth((WindowPtr)pDraw) ||
+         stuff->y + (int)stuff->height >
+		wBorderWidth((WindowPtr)pDraw) + (int)pDraw->height
+        )
+	    return BadMatch;
+	xgi.visual = wVisual(((WindowPtr)pDraw));
+    }
+    else
+    {
+	if (stuff->x < 0 ||
+	    stuff->x+(int)stuff->width > pDraw->width ||
+	    stuff->y < 0 ||
+	    stuff->y+(int)stuff->height > pDraw->height
+	    )
+	    return BadMatch;
+	xgi.visual = None;
+    }
+    xgi.type = X_Reply;
+    xgi.length = 0;
+    xgi.sequenceNumber = client->sequence;
+    xgi.depth = pDraw->depth;
+    if(stuff->format == ZPixmap)
+    {
+	length = PixmapBytePad(stuff->width, pDraw->depth) * stuff->height;
+    }
+    else
+    {
+	lenPer = PixmapBytePad(stuff->width, 1) * stuff->height;
+	plane = ((Mask)1) << (pDraw->depth - 1);
+	/* only planes asked for */
+	length = lenPer * Ones(stuff->planeMask & (plane | (plane - 1)));
+    }
+
+    VERIFY_SHMSIZE(shmdesc, stuff->offset, length, client);
+    xgi.size = length;
+
+    if (length == 0)
+    {
+	/* nothing to do */
+    }
+    else if (stuff->format == ZPixmap)
+    {
+	(*pDraw->pScreen->GetImage)(pDraw, stuff->x, stuff->y,
+				    stuff->width, stuff->height,
+				    stuff->format, stuff->planeMask,
+				    shmdesc->addr + stuff->offset);
+    }
+    else
+    {
+
+	length = stuff->offset;
+        for (; plane; plane >>= 1)
+	{
+	    if (stuff->planeMask & plane)
+	    {
+		(*pDraw->pScreen->GetImage)(pDraw,
+					    stuff->x, stuff->y,
+					    stuff->width, stuff->height,
+					    stuff->format, plane,
+					    shmdesc->addr + length);
+		length += lenPer;
+	    }
+	}
+    }
+
+    if (client->swapped) {
+	swaps(&xgi.sequenceNumber, n);
+	swapl(&xgi.length, n);
+	swapl(&xgi.visual, n);
+	swapl(&xgi.size, n);
+    }
+    WriteToClient(client, sizeof(xShmGetImageReply), (char *)&xgi);
+
+    return Success;
+}
+
 #ifdef PANORAMIX
 static int 
 ProcPanoramiXShmPutImage(ClientPtr client)
@@ -858,230 +1014,7 @@ CreatePmap:
 
     return result;
 }
-
 #endif
-
-static int
-ProcShmPutImage(ClientPtr client)
-{
-    GCPtr pGC;
-    DrawablePtr pDraw;
-    long length;
-    ShmDescPtr shmdesc;
-    REQUEST(xShmPutImageReq);
-
-    REQUEST_SIZE_MATCH(xShmPutImageReq);
-    VALIDATE_DRAWABLE_AND_GC(stuff->drawable, pDraw, DixWriteAccess);
-    VERIFY_SHMPTR(stuff->shmseg, stuff->offset, FALSE, shmdesc, client);
-    if ((stuff->sendEvent != xTrue) && (stuff->sendEvent != xFalse))
-	return BadValue;
-    if (stuff->format == XYBitmap)
-    {
-        if (stuff->depth != 1)
-            return BadMatch;
-        length = PixmapBytePad(stuff->totalWidth, 1);
-    }
-    else if (stuff->format == XYPixmap)
-    {
-        if (pDraw->depth != stuff->depth)
-            return BadMatch;
-        length = PixmapBytePad(stuff->totalWidth, 1);
-	length *= stuff->depth;
-    }
-    else if (stuff->format == ZPixmap)
-    {
-        if (pDraw->depth != stuff->depth)
-            return BadMatch;
-        length = PixmapBytePad(stuff->totalWidth, stuff->depth);
-    }
-    else
-    {
-	client->errorValue = stuff->format;
-        return BadValue;
-    }
-
-    /* 
-     * There's a potential integer overflow in this check:
-     * VERIFY_SHMSIZE(shmdesc, stuff->offset, length * stuff->totalHeight,
-     *                client);
-     * the version below ought to avoid it
-     */
-    if (stuff->totalHeight != 0 && 
-	length > (shmdesc->size - stuff->offset)/stuff->totalHeight) {
-	client->errorValue = stuff->totalWidth;
-	return BadValue;
-    }
-    if (stuff->srcX > stuff->totalWidth)
-    {
-	client->errorValue = stuff->srcX;
-	return BadValue;
-    }
-    if (stuff->srcY > stuff->totalHeight)
-    {
-	client->errorValue = stuff->srcY;
-	return BadValue;
-    }
-    if ((stuff->srcX + stuff->srcWidth) > stuff->totalWidth)
-    {
-	client->errorValue = stuff->srcWidth;
-	return BadValue;
-    }
-    if ((stuff->srcY + stuff->srcHeight) > stuff->totalHeight)
-    {
-	client->errorValue = stuff->srcHeight;
-	return BadValue;
-    }
-
-    if ((((stuff->format == ZPixmap) && (stuff->srcX == 0)) ||
-	 ((stuff->format != ZPixmap) &&
-	  (stuff->srcX < screenInfo.bitmapScanlinePad) &&
-	  ((stuff->format == XYBitmap) ||
-	   ((stuff->srcY == 0) &&
-	    (stuff->srcHeight == stuff->totalHeight))))) &&
-	((stuff->srcX + stuff->srcWidth) == stuff->totalWidth))
-	(*pGC->ops->PutImage) (pDraw, pGC, stuff->depth,
-			       stuff->dstX, stuff->dstY,
-			       stuff->totalWidth, stuff->srcHeight, 
-			       stuff->srcX, stuff->format, 
-			       shmdesc->addr + stuff->offset +
-			       (stuff->srcY * length));
-    else
-	doShmPutImage(pDraw, pGC, stuff->depth, stuff->format,
-		      stuff->totalWidth, stuff->totalHeight,
-		      stuff->srcX, stuff->srcY,
-		      stuff->srcWidth, stuff->srcHeight,
-		      stuff->dstX, stuff->dstY,
-                      shmdesc->addr + stuff->offset);
-
-    if (stuff->sendEvent)
-    {
-	xShmCompletionEvent ev;
-
-	ev.type = ShmCompletionCode;
-	ev.drawable = stuff->drawable;
-	ev.minorEvent = X_ShmPutImage;
-	ev.majorEvent = ShmReqCode;
-	ev.shmseg = stuff->shmseg;
-	ev.offset = stuff->offset;
-	WriteEventsToClient(client, 1, (xEvent *) &ev);
-    }
-
-    return Success;
-}
-
-
-
-static int
-ProcShmGetImage(ClientPtr client)
-{
-    DrawablePtr		pDraw;
-    long		lenPer = 0, length;
-    Mask		plane = 0;
-    xShmGetImageReply	xgi;
-    ShmDescPtr		shmdesc;
-    int			n, rc;
-
-    REQUEST(xShmGetImageReq);
-
-    REQUEST_SIZE_MATCH(xShmGetImageReq);
-    if ((stuff->format != XYPixmap) && (stuff->format != ZPixmap))
-    {
-	client->errorValue = stuff->format;
-        return BadValue;
-    }
-    rc = dixLookupDrawable(&pDraw, stuff->drawable, client, 0,
-			   DixReadAccess);
-    if (rc != Success)
-	return rc;
-    VERIFY_SHMPTR(stuff->shmseg, stuff->offset, TRUE, shmdesc, client);
-    if (pDraw->type == DRAWABLE_WINDOW)
-    {
-      if( /* check for being viewable */
-	 !((WindowPtr) pDraw)->realized ||
-	  /* check for being on screen */
-         pDraw->x + stuff->x < 0 ||
- 	 pDraw->x + stuff->x + (int)stuff->width > pDraw->pScreen->width ||
-         pDraw->y + stuff->y < 0 ||
-         pDraw->y + stuff->y + (int)stuff->height > pDraw->pScreen->height ||
-          /* check for being inside of border */
-         stuff->x < - wBorderWidth((WindowPtr)pDraw) ||
-         stuff->x + (int)stuff->width >
-		wBorderWidth((WindowPtr)pDraw) + (int)pDraw->width ||
-         stuff->y < -wBorderWidth((WindowPtr)pDraw) ||
-         stuff->y + (int)stuff->height >
-		wBorderWidth((WindowPtr)pDraw) + (int)pDraw->height
-        )
-	    return BadMatch;
-	xgi.visual = wVisual(((WindowPtr)pDraw));
-    }
-    else
-    {
-	if (stuff->x < 0 ||
-	    stuff->x+(int)stuff->width > pDraw->width ||
-	    stuff->y < 0 ||
-	    stuff->y+(int)stuff->height > pDraw->height
-	    )
-	    return BadMatch;
-	xgi.visual = None;
-    }
-    xgi.type = X_Reply;
-    xgi.length = 0;
-    xgi.sequenceNumber = client->sequence;
-    xgi.depth = pDraw->depth;
-    if(stuff->format == ZPixmap)
-    {
-	length = PixmapBytePad(stuff->width, pDraw->depth) * stuff->height;
-    }
-    else 
-    {
-	lenPer = PixmapBytePad(stuff->width, 1) * stuff->height;
-	plane = ((Mask)1) << (pDraw->depth - 1);
-	/* only planes asked for */
-	length = lenPer * Ones(stuff->planeMask & (plane | (plane - 1)));
-    }
-
-    VERIFY_SHMSIZE(shmdesc, stuff->offset, length, client);
-    xgi.size = length;
-
-    if (length == 0)
-    {
-	/* nothing to do */
-    }
-    else if (stuff->format == ZPixmap)
-    {
-	(*pDraw->pScreen->GetImage)(pDraw, stuff->x, stuff->y,
-				    stuff->width, stuff->height,
-				    stuff->format, stuff->planeMask,
-				    shmdesc->addr + stuff->offset);
-    }
-    else
-    {
-
-	length = stuff->offset;
-        for (; plane; plane >>= 1)
-	{
-	    if (stuff->planeMask & plane)
-	    {
-		(*pDraw->pScreen->GetImage)(pDraw,
-					    stuff->x, stuff->y,
-					    stuff->width, stuff->height,
-					    stuff->format, plane,
-					    shmdesc->addr + length);
-		length += lenPer;
-	    }
-	}
-    }
-    
-    if (client->swapped) {
-    	swaps(&xgi.sequenceNumber, n);
-    	swapl(&xgi.length, n);
-	swapl(&xgi.visual, n);
-	swapl(&xgi.size, n);
-    }
-    WriteToClient(client, sizeof(xShmGetImageReply), (char *)&xgi);
-
-    return Success;
-}
 
 static PixmapPtr
 fbShmCreatePixmap (ScreenPtr pScreen,
@@ -1340,5 +1273,55 @@ SProcShmDispatch (ClientPtr client)
 	return SProcShmCreatePixmap(client);
     default:
 	return BadRequest;
+    }
+}
+
+void
+ShmExtensionInit(INITARGS)
+{
+    ExtensionEntry *extEntry;
+    int i;
+
+#ifdef MUST_CHECK_FOR_SHM_SYSCALL
+    if (!CheckForShmSyscall())
+    {
+	ErrorF("MIT-SHM extension disabled due to lack of kernel support\n");
+	return;
+    }
+#endif
+
+    if (!ShmRegisterPrivates())
+	return;
+
+    sharedPixmaps = xFalse;
+    {
+      sharedPixmaps = xTrue;
+      for (i = 0; i < screenInfo.numScreens; i++)
+      {
+	ShmScrPrivateRec *screen_priv = ShmInitScreenPriv(screenInfo.screens[i]);
+	if (!screen_priv->shmFuncs)
+	    screen_priv->shmFuncs = &miFuncs;
+	if (!screen_priv->shmFuncs->CreatePixmap)
+	    sharedPixmaps = xFalse;
+      }
+      if (sharedPixmaps)
+	for (i = 0; i < screenInfo.numScreens; i++)
+	{
+	    ShmScrPrivateRec *screen_priv = ShmGetScreenPriv(screenInfo.screens[i]);
+	    screen_priv->destroyPixmap = screenInfo.screens[i]->DestroyPixmap;
+	    screenInfo.screens[i]->DestroyPixmap = ShmDestroyPixmap;
+	}
+    }
+    ShmSegType = CreateNewResourceType(ShmDetachSegment, "ShmSeg");
+    if (ShmSegType &&
+	(extEntry = AddExtension(SHMNAME, ShmNumberEvents, ShmNumberErrors,
+				 ProcShmDispatch, SProcShmDispatch,
+				 ShmResetProc, StandardMinorOpcode)))
+    {
+	ShmReqCode = (unsigned char)extEntry->base;
+	ShmCompletionCode = extEntry->eventBase;
+	BadShmSegCode = extEntry->errorBase;
+	SetResourceTypeErrorValue(ShmSegType, BadShmSegCode);
+	EventSwapVector[ShmCompletionCode] = (EventSwapPtr) SShmCompletionEvent;
     }
 }

@@ -765,7 +765,6 @@ typedef struct _ScrnInfoRec {
 
     /* Allow screens to be enabled/disabled individually */
     Bool		vtSema;
-    DevUnion		pixmapPrivate;		/* saved devPrivate from pixmap */
 
     /* hw cursor moves at SIGIO time */
     Bool		silkenMouse;

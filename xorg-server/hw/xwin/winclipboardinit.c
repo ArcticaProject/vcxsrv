@@ -41,7 +41,7 @@
 
 typedef int (*winDispatchProcPtr) (ClientPtr);
 
-DISPATCH_PROC(winProcSetSelectionOwner);
+int winProcSetSelectionOwner(ClientPtr /* client */);
 
 
 /*

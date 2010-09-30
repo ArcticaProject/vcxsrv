@@ -84,26 +84,6 @@ static int XTestSwapFakeInput(
         xReq * /* req */
         );
 
-static DISPATCH_PROC(ProcXTestCompareCursor);
-static DISPATCH_PROC(ProcXTestDispatch);
-static DISPATCH_PROC(ProcXTestFakeInput);
-static DISPATCH_PROC(ProcXTestGetVersion);
-static DISPATCH_PROC(ProcXTestGrabControl);
-static DISPATCH_PROC(SProcXTestCompareCursor);
-static DISPATCH_PROC(SProcXTestDispatch);
-static DISPATCH_PROC(SProcXTestFakeInput);
-static DISPATCH_PROC(SProcXTestGetVersion);
-static DISPATCH_PROC(SProcXTestGrabControl);
-
-void
-XTestExtensionInit(INITARGS)
-{
-    AddExtension(XTestExtensionName, 0, 0,
-            ProcXTestDispatch, SProcXTestDispatch,
-            NULL, StandardMinorOpcode);
-
-    xtest_evlist = InitEventList(GetMaximumEventsNum());
-}
 
 static int
 ProcXTestGetVersion(ClientPtr client)
@@ -699,3 +679,12 @@ GetXTestDevice(DeviceIntPtr master)
     return NULL;
 }
 
+void
+XTestExtensionInit(INITARGS)
+{
+    AddExtension(XTestExtensionName, 0, 0,
+            ProcXTestDispatch, SProcXTestDispatch,
+            NULL, StandardMinorOpcode);
+
+    xtest_evlist = InitEventList(GetMaximumEventsNum());
+}

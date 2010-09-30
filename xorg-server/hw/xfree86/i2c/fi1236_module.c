@@ -4,8 +4,6 @@
 
 #include "xf86Module.h"
 
-static MODULESETUPPROTO(fi1236Setup);
-
 static XF86ModuleVersionInfo fi1236VersRec =
 {
         "fi1236",
@@ -22,11 +20,6 @@ static XF86ModuleVersionInfo fi1236VersRec =
  
 _X_EXPORT XF86ModuleData fi1236ModuleData = {
         &fi1236VersRec,
-        fi1236Setup,
+        NULL,
         NULL
 }; 
-
-static pointer
-fi1236Setup(pointer module, pointer opts, int *errmaj, int *errmin) {
-   return (pointer)1;
-}

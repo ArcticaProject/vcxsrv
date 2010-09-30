@@ -511,7 +511,6 @@ xf86RandR12SetMode (ScreenPtr	    pScreen,
     WindowPtr		pRoot = pScreen->root;
     DisplayModePtr      currentMode = NULL;
     Bool 		ret = TRUE;
-    PixmapPtr 		pspix = NULL;
 
     if (pRoot)
 	(*scrp->EnableDisableFBAccess) (pScreen->myNum, FALSE);
@@ -560,14 +559,6 @@ xf86RandR12SetMode (ScreenPtr	    pScreen,
 	pScreen->mmHeight = oldmmHeight;
         scrp->currentMode = currentMode;
     }
-    /*
-     * Get the new Screen pixmap ptr as SwitchMode might have called
-     * ModifyPixmapHeader and xf86EnableDisableFBAccess will put it back...
-     * Unfortunately.
-     */
-    pspix = (*pScreen->GetScreenPixmap) (pScreen);
-    if (pspix->devPrivate.ptr)
-       scrp->pixmapPrivate = pspix->devPrivate;
 
     /*
      * Make sure the layout is correct
@@ -677,7 +668,7 @@ xf86RandR12ScreenSetSize (ScreenPtr	pScreen,
     ScrnInfoPtr		pScrn = XF86SCRNINFO(pScreen);
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(pScrn);
     WindowPtr		pRoot = pScreen->root;
-    PixmapPtr		pScrnPix = (*pScreen->GetScreenPixmap)(pScreen);
+    PixmapPtr		pScrnPix;
     Bool		ret = FALSE;
     int                 c;
 
@@ -714,6 +705,7 @@ xf86RandR12ScreenSetSize (ScreenPtr	pScreen,
 	}
     }
 
+    pScrnPix = (*pScreen->GetScreenPixmap)(pScreen);
     pScreen->width = pScrnPix->drawable.width = width;
     pScreen->height = pScrnPix->drawable.height = height;
     randrp->mmWidth = pScreen->mmWidth = mmWidth;

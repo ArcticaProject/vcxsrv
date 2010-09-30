@@ -46,8 +46,8 @@ SOFTWARE.
 
 ******************************************************************/
 
-#ifndef _XUTIL_H_
-#define _XUTIL_H_
+#ifndef _X11_XUTIL_H_
+#define _X11_XUTIL_H_
 
 /* You must include <X11/Xlib.h> before including this file */
 #include <X11/Xlib.h>
@@ -823,4 +823,4 @@ extern int XXorRegion(
 
 _XFUNCPROTOEND
 
-#endif /* _XUTIL_H_ */
+#endif /* _X11_XUTIL_H_ */

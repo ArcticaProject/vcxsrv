@@ -238,7 +238,6 @@ long	    SmartLastPrint;
 #endif
 
 void        Dispatch(void);
-void        InitProcVectors(void);
 
 static int
 SmartScheduleClient (int *clientReady, int nready)
@@ -3385,25 +3384,6 @@ int ProcNoOperation(ClientPtr client)
     
     /* noop -- don't do anything */
     return Success;
-}
-
-void
-InitProcVectors(void)
-{
-    int i;
-    for (i = 0; i<256; i++)
-    {
-	if(!ProcVector[i])
-	{
-            ProcVector[i] = SwappedProcVector[i] = ProcBadRequest;
-	    ReplySwapVector[i] = ReplyNotSwappd;
-	}
-    }
-    for(i = LASTEvent; i < 128; i++)
-    {
-	EventSwapVector[i] = NotImplemented;
-    }
-    
 }
 
 /**********************

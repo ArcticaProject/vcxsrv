@@ -52,6 +52,7 @@ in this Software without prior written authorization from The Open Group.
 #include "darwin.h"
 #include "quartz.h"
 #include "quartzKeyboard.h"
+#include "quartzRandR.h"
 #include "darwinEvents.h"
 
 #include <sys/types.h>
@@ -238,19 +239,19 @@ static void DarwinEventHandler(int screenNum, InternalEvent *ie, DeviceIntPtr de
             
         case kXquartzToggleFullscreen:
             DEBUG_LOG("kXquartzToggleFullscreen\n");
-            if(quartzEnableRootless) 
+            if(XQuartzIsRootless)
                 ErrorF("Ignoring kXquartzToggleFullscreen because of rootless mode.");
-            else if (quartzHasRoot)
-                QuartzHide();
-            else
-                QuartzShow();
+            else 
+                QuartzRandRToggleFullscreen();
             break;
             
         case kXquartzSetRootless:
             DEBUG_LOG("kXquartzSetRootless\n");
-            QuartzSetRootless(e->data[0]);
-            if (!quartzEnableRootless && !quartzHasRoot)
-                QuartzHide();
+            if(e->data[0]) {
+                QuartzRandRSetFakeRootless();
+            } else {
+                QuartzRandRSetFakeFullscreen(FALSE);
+            }
             break;
             
         case kXquartzSetRootClip:
@@ -276,7 +277,12 @@ static void DarwinEventHandler(int screenNum, InternalEvent *ie, DeviceIntPtr de
             break;
             
         case kXquartzDisplayChanged:
+            DEBUG_LOG("kXquartzDisplayChanged\n");
             QuartzUpdateScreens();
+#ifdef RANDR
+            /* Update our RandR info */
+            QuartzRandRUpdateFakeModes(TRUE);
+#endif
             break;
             
         default:

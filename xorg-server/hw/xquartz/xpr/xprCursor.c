@@ -35,7 +35,7 @@
 #include <dix-config.h>
 #endif
 
-#include "quartzCommon.h"
+#include "quartz.h"
 #include "xpr.h"
 #include "darwin.h"
 #include "darwinEvents.h"
@@ -226,7 +226,7 @@ QuartzSetCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, 
 {
     QuartzCursorScreenPtr ScreenPriv = CURSOR_PRIV(pScreen);
 
-    if (!quartzServerVisible)
+    if (!XQuartzServerVisible)
         return;
 
     if (pCursor == NULL)
@@ -295,7 +295,7 @@ QuartzCrossScreen(ScreenPtr pScreen, Bool entering)
 static void
 QuartzWarpCursor(DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
-    if (quartzServerVisible)
+    if (XQuartzServerVisible)
     {
         int sx, sy;
 

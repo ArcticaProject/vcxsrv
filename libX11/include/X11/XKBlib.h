@@ -24,8 +24,8 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ********************************************************/
 
-#ifndef _XKBLIB_H_
-#define _XKBLIB_H_
+#ifndef _X11_XKBLIB_H_
+#define _X11_XKBLIB_H_
 
 #include <X11/Xlib.h>
 #include <X11/extensions/XKBstr.h>
@@ -1146,4 +1146,4 @@ extern void XkbUpdateKeyTypeVirtualMods(
 
 _XFUNCPROTOEND
 
-#endif /* _XKBLIB_H_ */
+#endif /* _X11_XKBLIB_H_ */

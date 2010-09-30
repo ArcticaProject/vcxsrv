@@ -70,8 +70,6 @@ static AppleWMProcsPtr appleWMProcs;
 
 static int WMErrorBase;
 
-static DISPATCH_PROC(ProcAppleWMDispatch);
-static DISPATCH_PROC(SProcAppleWMDispatch);
 
 static unsigned char WMReqCode = 0;
 static int WMEventBase = 0;
@@ -103,33 +101,6 @@ make_box (int x, int y, int w, int h)
     r.x2 = x + w;
     r.y2 = y + h;
     return r;
-}
-
-void
-AppleWMExtensionInit(
-    AppleWMProcsPtr procsPtr)
-{
-    ExtensionEntry* extEntry;
-
-    ClientType = CreateNewResourceType(WMFreeClient, "WMClient");
-    EventType = CreateNewResourceType(WMFreeEvents, "WMEvent");
-    eventResource = FakeClientID(0);
-
-    if (ClientType && EventType &&
-        (extEntry = AddExtension(APPLEWMNAME,
-                                 AppleWMNumberEvents,
-                                 AppleWMNumberErrors,
-                                 ProcAppleWMDispatch,
-                                 SProcAppleWMDispatch,
-                                 NULL,
-                                 StandardMinorOpcode)))
-    {
-        WMReqCode = (unsigned char)extEntry->base;
-        WMErrorBase = extEntry->errorBase;
-        WMEventBase = extEntry->eventBase;
-        EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
-        appleWMProcs = procsPtr;
-    }
 }
 
 /* Updates the _NATIVE_SCREEN_ORIGIN property on the given root window. */
@@ -734,5 +705,32 @@ SProcAppleWMDispatch (
         return SProcAppleWMQueryVersion(client);
     default:
         return BadRequest;
+    }
+}
+
+void
+AppleWMExtensionInit(
+    AppleWMProcsPtr procsPtr)
+{
+    ExtensionEntry* extEntry;
+
+    ClientType = CreateNewResourceType(WMFreeClient, "WMClient");
+    EventType = CreateNewResourceType(WMFreeEvents, "WMEvent");
+    eventResource = FakeClientID(0);
+
+    if (ClientType && EventType &&
+        (extEntry = AddExtension(APPLEWMNAME,
+                                 AppleWMNumberEvents,
+                                 AppleWMNumberErrors,
+                                 ProcAppleWMDispatch,
+                                 SProcAppleWMDispatch,
+                                 NULL,
+                                 StandardMinorOpcode)))
+    {
+        WMReqCode = (unsigned char)extEntry->base;
+        WMErrorBase = extEntry->errorBase;
+        WMEventBase = extEntry->eventBase;
+        EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
+        appleWMProcs = procsPtr;
     }
 }

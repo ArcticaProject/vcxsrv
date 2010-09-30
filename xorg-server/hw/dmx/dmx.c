@@ -69,39 +69,7 @@ extern void DMXExtensionInit(void);
 
 static unsigned char DMXCode;
 
-static DISPATCH_PROC(ProcDMXDispatch);
-static DISPATCH_PROC(ProcDMXQueryVersion);
-static DISPATCH_PROC(ProcDMXSync);
-static DISPATCH_PROC(ProcDMXForceWindowCreation);
-static DISPATCH_PROC(ProcDMXGetScreenCount);
-static DISPATCH_PROC(ProcDMXGetScreenAttributes);
-static DISPATCH_PROC(ProcDMXChangeScreensAttributes);
-static DISPATCH_PROC(ProcDMXAddScreen);
-static DISPATCH_PROC(ProcDMXRemoveScreen);
-static DISPATCH_PROC(ProcDMXGetWindowAttributes);
-static DISPATCH_PROC(ProcDMXGetDesktopAttributes);
-static DISPATCH_PROC(ProcDMXChangeDesktopAttributes);
-static DISPATCH_PROC(ProcDMXGetInputCount);
-static DISPATCH_PROC(ProcDMXGetInputAttributes);
-static DISPATCH_PROC(ProcDMXAddInput);
-static DISPATCH_PROC(ProcDMXRemoveInput);
 
-static DISPATCH_PROC(SProcDMXDispatch);
-static DISPATCH_PROC(SProcDMXQueryVersion);
-static DISPATCH_PROC(SProcDMXSync);
-static DISPATCH_PROC(SProcDMXForceWindowCreation);
-static DISPATCH_PROC(SProcDMXGetScreenCount);
-static DISPATCH_PROC(SProcDMXGetScreenAttributes);
-static DISPATCH_PROC(SProcDMXChangeScreensAttributes);
-static DISPATCH_PROC(SProcDMXAddScreen);
-static DISPATCH_PROC(SProcDMXRemoveScreen);
-static DISPATCH_PROC(SProcDMXGetWindowAttributes);
-static DISPATCH_PROC(SProcDMXGetDesktopAttributes);
-static DISPATCH_PROC(SProcDMXChangeDesktopAttributes);
-static DISPATCH_PROC(SProcDMXGetInputCount);
-static DISPATCH_PROC(SProcDMXGetInputAttributes);
-static DISPATCH_PROC(SProcDMXAddInput);
-static DISPATCH_PROC(SProcDMXRemoveInput);
 
 static int _DMXXineramaActive(void)
 {
@@ -109,17 +77,6 @@ static int _DMXXineramaActive(void)
     return !noPanoramiXExtension;
 #endif
     return 0;
-}
-
-/** Initialize the extension. */
-void DMXExtensionInit(void)
-{
-    ExtensionEntry *extEntry;
-    
-    if ((extEntry = AddExtension(DMX_EXTENSION_NAME, 0, 0,
-                                 ProcDMXDispatch, SProcDMXDispatch,
-                                 NULL, StandardMinorOpcode)))
-	DMXCode = extEntry->base;
 }
 
 static void dmxSetScreenAttribute(int bit, DMXScreenAttributesPtr attr,
@@ -1124,4 +1081,15 @@ static int SProcDMXDispatch (ClientPtr client)
 
     default:                        return BadRequest;
     }
+}
+
+/** Initialize the extension. */
+void DMXExtensionInit(void)
+{
+    ExtensionEntry *extEntry;
+    
+    if ((extEntry = AddExtension(DMX_EXTENSION_NAME, 0, 0,
+                                 ProcDMXDispatch, SProcDMXDispatch,
+                                 NULL, StandardMinorOpcode)))
+	DMXCode = extEntry->base;
 }

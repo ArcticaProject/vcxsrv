@@ -59,8 +59,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 static int DRIErrorBase = 0;
 
-static DISPATCH_PROC(ProcAppleDRIDispatch);
-static DISPATCH_PROC(SProcAppleDRIDispatch);
 
 static void AppleDRIResetProc(ExtensionEntry* extEntry);
 static int ProcAppleDRICreatePixmap(ClientPtr client);
@@ -77,27 +75,6 @@ typedef struct _DRIEvent {
     XID             clientResource;
     unsigned int    mask;
 } DRIEventRec;
-
-
-void
-AppleDRIExtensionInit(void)
-{
-    ExtensionEntry* extEntry;
-
-    if (DRIExtensionInit() &&
-        (extEntry = AddExtension(APPLEDRINAME,
-                                 AppleDRINumberEvents,
-                                 AppleDRINumberErrors,
-                                 ProcAppleDRIDispatch,
-                                 SProcAppleDRIDispatch,
-                                 AppleDRIResetProc,
-                                 StandardMinorOpcode))) {
-        DRIReqCode = (unsigned char)extEntry->base;
-        DRIErrorBase = extEntry->errorBase;
-        DRIEventBase = extEntry->eventBase;
-        EventSwapVector[DRIEventBase] = (EventSwapPtr) SNotifyEvent;
-    }
-}
 
 /*ARGSUSED*/
 static void
@@ -419,5 +396,25 @@ SProcAppleDRIDispatch (
         return SProcAppleDRIQueryVersion(client);
     default:
         return BadRequest;
+    }
+}
+
+void
+AppleDRIExtensionInit(void)
+{
+    ExtensionEntry* extEntry;
+
+    if (DRIExtensionInit() &&
+        (extEntry = AddExtension(APPLEDRINAME,
+                                 AppleDRINumberEvents,
+                                 AppleDRINumberErrors,
+                                 ProcAppleDRIDispatch,
+                                 SProcAppleDRIDispatch,
+                                 AppleDRIResetProc,
+                                 StandardMinorOpcode))) {
+        DRIReqCode = (unsigned char)extEntry->base;
+        DRIErrorBase = extEntry->errorBase;
+        DRIEventBase = extEntry->eventBase;
+        EventSwapVector[DRIEventBase] = (EventSwapPtr) SNotifyEvent;
     }
 }

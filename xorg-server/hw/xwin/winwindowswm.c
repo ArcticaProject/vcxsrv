@@ -44,10 +44,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "protocol-versions.h"
 
 static int WMErrorBase;
-
-static DISPATCH_PROC(ProcWindowsWMDispatch);
-static DISPATCH_PROC(SProcWindowsWMDispatch);
-
 static unsigned char WMReqCode = 0;
 static int WMEventBase = 0;
 
@@ -78,31 +74,6 @@ make_box (int x, int y, int w, int h)
   r.x2 = x + w;
   r.y2 = y + h;
   return r;
-}
-
-void
-winWindowsWMExtensionInit (void)
-{
-  ExtensionEntry* extEntry;
-
-  ClientType = CreateNewResourceType(WMFreeClient, "WMClient");
-  eventResourceType = CreateNewResourceType(WMFreeEvents, "WMEvent");
-  eventResource = FakeClientID(0);
-
-  if (ClientType && eventResourceType &&
-      (extEntry = AddExtension(WINDOWSWMNAME,
-			       WindowsWMNumberEvents,
-			       WindowsWMNumberErrors,
-			       ProcWindowsWMDispatch,
-			       SProcWindowsWMDispatch,
-			       NULL,
-			       StandardMinorOpcode)))
-    {
-      WMReqCode = (unsigned char)extEntry->base;
-      WMErrorBase = extEntry->errorBase;
-      WMEventBase = extEntry->eventBase;
-      EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
-    }
 }
 
 static int
@@ -639,5 +610,30 @@ SProcWindowsWMDispatch (register ClientPtr client)
       return SProcWindowsWMQueryVersion(client);
     default:
       return BadRequest;
+    }
+}
+
+void
+winWindowsWMExtensionInit (void)
+{
+  ExtensionEntry* extEntry;
+
+  ClientType = CreateNewResourceType(WMFreeClient, "WMClient");
+  eventResourceType = CreateNewResourceType(WMFreeEvents, "WMEvent");
+  eventResource = FakeClientID(0);
+
+  if (ClientType && eventResourceType &&
+      (extEntry = AddExtension(WINDOWSWMNAME,
+			       WindowsWMNumberEvents,
+			       WindowsWMNumberErrors,
+			       ProcWindowsWMDispatch,
+			       SProcWindowsWMDispatch,
+			       NULL,
+			       StandardMinorOpcode)))
+    {
+      WMReqCode = (unsigned char)extEntry->base;
+      WMErrorBase = extEntry->errorBase;
+      WMEventBase = extEntry->eventBase;
+      EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
     }
 }

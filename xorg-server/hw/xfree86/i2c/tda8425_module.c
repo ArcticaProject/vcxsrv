@@ -4,8 +4,6 @@
 
 #include "xf86Module.h"
 
-static MODULESETUPPROTO(tda8425Setup);
-
 static XF86ModuleVersionInfo tda8425VersRec =
 {
         "tda8425",
@@ -22,11 +20,6 @@ static XF86ModuleVersionInfo tda8425VersRec =
  
 _X_EXPORT XF86ModuleData tda8425ModuleData = {
         &tda8425VersRec,
-        tda8425Setup,
+        NULL,
         NULL
 }; 
-
-static pointer
-tda8425Setup(pointer module, pointer opts, int *errmaj, int *errmin) {
-   return (pointer)1;
-}

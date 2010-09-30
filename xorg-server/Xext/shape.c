@@ -68,26 +68,6 @@ static void SShapeNotifyEvent(
  * externally by the Xfixes extension and are now defined in window.h
  */
 
-static DISPATCH_PROC(ProcShapeCombine);
-static DISPATCH_PROC(ProcShapeDispatch);
-static DISPATCH_PROC(ProcShapeGetRectangles);
-static DISPATCH_PROC(ProcShapeInputSelected);
-static DISPATCH_PROC(ProcShapeMask);
-static DISPATCH_PROC(ProcShapeOffset);
-static DISPATCH_PROC(ProcShapeQueryExtents);
-static DISPATCH_PROC(ProcShapeQueryVersion);
-static DISPATCH_PROC(ProcShapeRectangles);
-static DISPATCH_PROC(ProcShapeSelectInput);
-static DISPATCH_PROC(SProcShapeCombine);
-static DISPATCH_PROC(SProcShapeDispatch);
-static DISPATCH_PROC(SProcShapeGetRectangles);
-static DISPATCH_PROC(SProcShapeInputSelected);
-static DISPATCH_PROC(SProcShapeMask);
-static DISPATCH_PROC(SProcShapeOffset);
-static DISPATCH_PROC(SProcShapeQueryExtents);
-static DISPATCH_PROC(SProcShapeQueryVersion);
-static DISPATCH_PROC(SProcShapeRectangles);
-static DISPATCH_PROC(SProcShapeSelectInput);
 
 #ifdef PANORAMIX
 #include "panoramiX.h"
@@ -121,23 +101,6 @@ typedef struct _ShapeEvent {
  * extension is dynamically loaded.
  *
  ****************/
-
-void
-ShapeExtensionInit(void)
-{
-    ExtensionEntry *extEntry;
-
-    ClientType = CreateNewResourceType(ShapeFreeClient, "ShapeClient");
-    ShapeEventType = CreateNewResourceType(ShapeFreeEvents, "ShapeEvent");
-    if (ClientType && ShapeEventType &&
-	(extEntry = AddExtension(SHAPENAME, ShapeNumberEvents, 0,
-				 ProcShapeDispatch, SProcShapeDispatch,
-				 NULL, StandardMinorOpcode)))
-    {
-	ShapeEventBase = extEntry->eventBase;
-	EventSwapVector[ShapeEventBase] = (EventSwapPtr) SShapeNotifyEvent;
-    }
-}
 
 static int
 RegionOperate (
@@ -1276,5 +1239,22 @@ SProcShapeDispatch (ClientPtr client)
 	return SProcShapeGetRectangles (client);
     default:
 	return BadRequest;
+    }
+}
+
+void
+ShapeExtensionInit(void)
+{
+    ExtensionEntry *extEntry;
+
+    ClientType = CreateNewResourceType(ShapeFreeClient, "ShapeClient");
+    ShapeEventType = CreateNewResourceType(ShapeFreeEvents, "ShapeEvent");
+    if (ClientType && ShapeEventType &&
+	(extEntry = AddExtension(SHAPENAME, ShapeNumberEvents, 0,
+				 ProcShapeDispatch, SProcShapeDispatch,
+				 NULL, StandardMinorOpcode)))
+    {
+	ShapeEventBase = extEntry->eventBase;
+	EventSwapVector[ShapeEventBase] = (EventSwapPtr) SShapeNotifyEvent;
     }
 }

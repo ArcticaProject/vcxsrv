@@ -45,8 +45,8 @@ SOFTWARE.
 
 ************************************************************************/
 
-#ifndef _XREGION_H
-#define _XREGION_H
+#ifndef _X11_XREGION_H_
+#define _X11_XREGION_H_
 
 typedef struct {
     short x1, x2, y1, y2;
@@ -186,4 +186,4 @@ typedef struct _POINTBLOCK {
     struct _POINTBLOCK *next;
 } POINTBLOCK;
 
-#endif
+#endif /* _X11_XREGION_H_ */

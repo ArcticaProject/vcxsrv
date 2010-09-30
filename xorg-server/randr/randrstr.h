@@ -701,6 +701,12 @@ extern _X_EXPORT Bool
 RRCrtcInit (void);
 
 /*
+ * Initialize crtc type error value
+ */
+extern _X_EXPORT void
+RRCrtcInitErrorValue (void);
+
+/*
  * Crtc dispatch
  */
 
@@ -762,6 +768,12 @@ RRModesForScreen (ScreenPtr pScreen, int *num_ret);
  */
 extern _X_EXPORT Bool
 RRModeInit (void);
+
+/*
+ * Initialize mode type error value
+ */
+extern _X_EXPORT void
+RRModeInitErrorValue (void);
     
 extern _X_EXPORT int
 ProcRRCreateMode (ClientPtr client);
@@ -856,6 +868,12 @@ ProcRRGetOutputPrimary (ClientPtr client);
  */
 extern _X_EXPORT Bool
 RROutputInit (void);
+
+/*
+ * Initialize output type error value
+ */
+extern _X_EXPORT void
+RROutputInitErrorValue (void);
     
 /* rrpointer.c */
 extern _X_EXPORT void

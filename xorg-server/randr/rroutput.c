@@ -418,8 +418,17 @@ RROutputInit (void)
     RROutputType = CreateNewResourceType (RROutputDestroyResource, "OUTPUT");
     if (!RROutputType)
 	return FALSE;
-    SetResourceTypeErrorValue(RROutputType, RRErrorBase + BadRROutput);
+
     return TRUE;
+}
+
+/*
+ * Initialize output type error value
+ */
+void
+RROutputInitErrorValue(void)
+{
+    SetResourceTypeErrorValue(RROutputType, RRErrorBase + BadRROutput);
 }
 
 #define OutputInfoExtra	(SIZEOF(xRRGetOutputInfoReply) - 32)

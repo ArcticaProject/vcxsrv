@@ -4,8 +4,6 @@
 
 #include "xf86Module.h"
 
-static MODULESETUPPROTO(bt829Setup);
-
 static XF86ModuleVersionInfo bt829VersRec =
 {
         "bt829",
@@ -20,9 +18,4 @@ static XF86ModuleVersionInfo bt829VersRec =
         {0,0,0,0}
 };
  
-_X_EXPORT XF86ModuleData bt829ModuleData = { &bt829VersRec, bt829Setup, NULL }; 
-
-static pointer
-bt829Setup(pointer module, pointer opts, int *errmaj, int *errmin) {
-   return (pointer)1;
-}
+_X_EXPORT XF86ModuleData bt829ModuleData = { &bt829VersRec, NULL, NULL }; 

@@ -1333,3 +1333,16 @@ xkb_symbols "hin-wx" {
     include "level3(ralt_switch)"
 };
 
+partial alphanumeric_keys
+xkb_symbols "eng" {
+
+    name[Group1]= "India - English with RupeeSign";
+
+    include "us(basic)"
+
+    include "rupeesign(4)"
+
+    include "level3(ralt_switch)"
+};
+
+

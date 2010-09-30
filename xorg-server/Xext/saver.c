@@ -62,20 +62,6 @@ in this Software without prior written authorization from the X Consortium.
 
 static int ScreenSaverEventBase = 0;
 
-static DISPATCH_PROC(ProcScreenSaverQueryInfo);
-static DISPATCH_PROC(ProcScreenSaverDispatch);
-static DISPATCH_PROC(ProcScreenSaverQueryVersion);
-static DISPATCH_PROC(ProcScreenSaverSelectInput);
-static DISPATCH_PROC(ProcScreenSaverSetAttributes);
-static DISPATCH_PROC(ProcScreenSaverUnsetAttributes);
-static DISPATCH_PROC(ProcScreenSaverSuspend);
-static DISPATCH_PROC(SProcScreenSaverDispatch);
-static DISPATCH_PROC(SProcScreenSaverQueryInfo);
-static DISPATCH_PROC(SProcScreenSaverQueryVersion);
-static DISPATCH_PROC(SProcScreenSaverSelectInput);
-static DISPATCH_PROC(SProcScreenSaverSetAttributes);
-static DISPATCH_PROC(SProcScreenSaverUnsetAttributes);
-static DISPATCH_PROC(SProcScreenSaverSuspend);
 
 static Bool ScreenSaverHandle (
 	ScreenPtr /* pScreen */,
@@ -236,45 +222,6 @@ static DevPrivateKeyRec ScreenPrivateKeyRec;
 #define SetupScreen(s)	ScreenSaverScreenPrivatePtr pPriv = (s ? GetScreenPrivate(s) : NULL)
 
 #define New(t)	(malloc(sizeof (t)))
-
-/****************
- * ScreenSaverExtensionInit
- *
- * Called from InitExtensions in main() or from QueryExtension() if the
- * extension is dynamically loaded.
- *
- ****************/
-
-void
-ScreenSaverExtensionInit(INITARGS)
-{
-    ExtensionEntry *extEntry;
-    int		    i;
-    ScreenPtr	    pScreen;
-
-    if (!dixRegisterPrivateKey(&ScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
-	return;
-
-    AttrType = CreateNewResourceType(ScreenSaverFreeAttr, "SaverAttr");
-    SaverEventType = CreateNewResourceType(ScreenSaverFreeEvents,
-					   "SaverEvent");
-    SuspendType = CreateNewResourceType(ScreenSaverFreeSuspend,
-					"SaverSuspend");
-
-    for (i = 0; i < screenInfo.numScreens; i++)
-    {
-	pScreen = screenInfo.screens[i];
-	SetScreenPrivate (pScreen, NULL);
-    }
-    if (AttrType && SaverEventType && SuspendType &&
-	(extEntry = AddExtension(ScreenSaverName, ScreenSaverNumberEvents, 0,
-				 ProcScreenSaverDispatch, SProcScreenSaverDispatch,
-				 NULL, StandardMinorOpcode)))
-    {
-	ScreenSaverEventBase = extEntry->eventBase;
-	EventSwapVector[ScreenSaverEventBase] = (EventSwapPtr) SScreenSaverNotifyEvent;
-    }
-}
 
 static void
 CheckScreenPrivate (ScreenPtr pScreen)
@@ -1412,7 +1359,7 @@ ProcScreenSaverSuspend (ClientPtr client)
     return Success;
 }
 
-static DISPATCH_PROC((*NormalVector[])) = {
+static int (*NormalVector[]) (ClientPtr /* client */) = {
     ProcScreenSaverQueryVersion,
     ProcScreenSaverQueryInfo,
     ProcScreenSaverSelectInput,
@@ -1513,7 +1460,7 @@ SProcScreenSaverSuspend (ClientPtr client)
     return ProcScreenSaverSuspend (client);
 }
 
-static DISPATCH_PROC((*SwappedVector[])) = {
+static int (*SwappedVector[]) (ClientPtr /* client */) = {
     SProcScreenSaverQueryVersion,
     SProcScreenSaverQueryInfo,
     SProcScreenSaverSelectInput,
@@ -1530,4 +1477,35 @@ SProcScreenSaverDispatch (ClientPtr client)
     if (stuff->data < NUM_REQUESTS)
 	return (*SwappedVector[stuff->data])(client);
     return BadRequest;
+}
+
+void
+ScreenSaverExtensionInit(INITARGS)
+{
+    ExtensionEntry *extEntry;
+    int		    i;
+    ScreenPtr	    pScreen;
+
+    if (!dixRegisterPrivateKey(&ScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
+
+    AttrType = CreateNewResourceType(ScreenSaverFreeAttr, "SaverAttr");
+    SaverEventType = CreateNewResourceType(ScreenSaverFreeEvents,
+					   "SaverEvent");
+    SuspendType = CreateNewResourceType(ScreenSaverFreeSuspend,
+					"SaverSuspend");
+
+    for (i = 0; i < screenInfo.numScreens; i++)
+    {
+	pScreen = screenInfo.screens[i];
+	SetScreenPrivate (pScreen, NULL);
+    }
+    if (AttrType && SaverEventType && SuspendType &&
+	(extEntry = AddExtension(ScreenSaverName, ScreenSaverNumberEvents, 0,
+				 ProcScreenSaverDispatch, SProcScreenSaverDispatch,
+				 NULL, StandardMinorOpcode)))
+    {
+	ScreenSaverEventBase = extEntry->eventBase;
+	EventSwapVector[ScreenSaverEventBase] = (EventSwapPtr) SScreenSaverNotifyEvent;
+    }
 }

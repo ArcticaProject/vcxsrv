@@ -46,24 +46,6 @@ from The Open Group.
 #define UINT32_MAX 0xffffffffU
 #endif
 
-static DISPATCH_PROC(ProcXCMiscDispatch);
-static DISPATCH_PROC(ProcXCMiscGetVersion);
-static DISPATCH_PROC(ProcXCMiscGetXIDList);
-static DISPATCH_PROC(ProcXCMiscGetXIDRange);
-static DISPATCH_PROC(SProcXCMiscDispatch);
-static DISPATCH_PROC(SProcXCMiscGetVersion);
-static DISPATCH_PROC(SProcXCMiscGetXIDList);
-static DISPATCH_PROC(SProcXCMiscGetXIDRange);
-
-void XCMiscExtensionInit(INITARGS);
-
-void
-XCMiscExtensionInit(INITARGS)
-{
-    AddExtension(XCMiscExtensionName, 0, 0,
-		 ProcXCMiscDispatch, SProcXCMiscDispatch,
-		 NULL, StandardMinorOpcode);
-}
 
 static int
 ProcXCMiscGetVersion(ClientPtr client)
@@ -214,4 +196,12 @@ SProcXCMiscDispatch (ClientPtr client)
     default:
 	return BadRequest;
     }
+}
+
+void
+XCMiscExtensionInit(INITARGS)
+{
+    AddExtension(XCMiscExtensionName, 0, 0,
+		 ProcXCMiscDispatch, SProcXCMiscDispatch,
+		 NULL, StandardMinorOpcode);
 }
