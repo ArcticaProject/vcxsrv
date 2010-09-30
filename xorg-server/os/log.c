@@ -534,6 +534,8 @@ VAuditF(const char *f, va_list args)
 	free(prefix);
 }
 
+extern char g_FatalErrorMessage[1024];
+
 void
 FatalError(const char *f, ...)
 {
@@ -548,6 +550,9 @@ FatalError(const char *f, ...)
     va_start(args, f);
 #ifdef __APPLE__
     (void)vsnprintf(__crashreporter_info_buff__, sizeof(__crashreporter_info_buff__), f, args);
+#endif
+#ifdef WIN32
+    vsnprintf(g_FatalErrorMessage, 1024, f, args);
 #endif
     VErrorF(f, args);
     va_end(args);

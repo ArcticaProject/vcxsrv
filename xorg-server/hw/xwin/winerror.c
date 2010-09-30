@@ -99,6 +99,7 @@ OsVendorVErrorF (const char *pszFormat, va_list va_args)
  *
  * Attempt to do last-ditch, safe, important cleanup here.
  */
+char g_FatalErrorMessage[1024];
 void
 OsVendorFatalError (void)
 {
@@ -114,8 +115,9 @@ OsVendorFatalError (void)
 
   winMessageBoxF (
           "A fatal error has occurred and " PROJECT_NAME " will now exit.\n" \
-		  "Please open %s for more information.\n",
-		  MB_ICONERROR, (g_pszLogFile?g_pszLogFile:"the logfile"));
+	  "%s\n"	  
+          "Please open %s for more information.\n",
+		  MB_ICONERROR, g_FatalErrorMessage, (g_pszLogFile?g_pszLogFile:"the logfile"));
 }
 
 

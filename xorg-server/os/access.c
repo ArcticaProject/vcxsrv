@@ -394,70 +394,81 @@ DefineSelf (int fd)
     hp = _XGethostbyname(name.nodename, hparams);
     if (hp != NULL)
     {
-	saddr.sa.sa_family = hp->h_addrtype;
-	switch (hp->h_addrtype) {
-	case AF_INET:
-	    inetaddr = (struct sockaddr_in *) (&(saddr.sa));
-	    acopy ( hp->h_addr, &(inetaddr->sin_addr), hp->h_length);
-	    len = sizeof(saddr.sa);
-	    break;
-#if defined(IPv6) && defined(AF_INET6)
-	case AF_INET6:
-	    inet6addr = (struct sockaddr_in6 *) (&(saddr.sa));
-	    acopy ( hp->h_addr, &(inet6addr->sin6_addr), hp->h_length);
-	    len = sizeof(saddr.in6);
-	    break;
-#endif
-	default:
-	    goto DefineLocalHost;
-	}
-	family = ConvertAddr ( &(saddr.sa), &len, (pointer *)&addr);
-	if ( family != -1 && family != FamilyLocal )
-	{
-	    for (host = selfhosts;
-		 host && !addrEqual (family, addr, len, host);
-		 host = host->next) ;
-	    if (!host)
-	    {
-		/* add this host to the host list.	*/
-		MakeHost(host,len)
-		if (host)
-		{
-		    host->family = family;
-		    host->len = len;
-		    acopy ( addr, host->addr, len);
-		    host->next = selfhosts;
-		    selfhosts = host;
-		}
-#ifdef XDMCP
-		/*
-		 *  If this is an Internet Address, but not the localhost
-		 *  address (127.0.0.1), nor the bogus address (0.0.0.0),
-		 *  register it.
-		 */
-		if (family == FamilyInternet &&
-		    !(len == 4 &&
-		      ((addr[0] == 127) ||
-		       (addr[0] == 0 && addr[1] == 0 &&
-			addr[2] == 0 && addr[3] == 0)))
-		      )
-		{
-		    XdmcpRegisterConnection (family, (char *)addr, len);
-		    broad_addr = *inetaddr;
-		    ((struct sockaddr_in *) &broad_addr)->sin_addr.s_addr =
-			htonl (INADDR_BROADCAST);
-		    XdmcpRegisterBroadcastAddress ((struct sockaddr_in *)
-						   &broad_addr);
-		}
-#if defined(IPv6) && defined(AF_INET6)
-		else if (family == FamilyInternet6 &&
-		  !(IN6_IS_ADDR_LOOPBACK((struct in6_addr *)addr)))
-		{
-		    XdmcpRegisterConnection (family, (char *)addr, len);
-		}
-#endif
+	#ifdef h_addr
+	#define hp_addr *list
+	char **list;
 
-#endif /* XDMCP */
+	/* iterate over the addresses */
+	for (list = hp->h_addr_list; *list; list++)
+	#else
+	#define hp_addr hp->h_addr
+	#endif
+	{
+	    saddr.sa.sa_family = hp->h_addrtype;
+	    switch (hp->h_addrtype) {
+	    case AF_INET:
+		inetaddr = (struct sockaddr_in *) (&(saddr.sa));
+		acopy ( hp_addr, &(inetaddr->sin_addr), hp->h_length);
+		len = sizeof(saddr.sa);
+		break;
+#if defined(IPv6) && defined(AF_INET6)
+	    case AF_INET6:
+		inet6addr = (struct sockaddr_in6 *) (&(saddr.sa));
+		acopy ( hp_addr, &(inet6addr->sin6_addr), hp->h_length);
+		len = sizeof(saddr.in6);
+		break;
+#endif
+	    default:
+		goto DefineLocalHost;
+	    }
+	    family = ConvertAddr ( &(saddr.sa), &len, (pointer *)&addr);
+	    if ( family != -1 && family != FamilyLocal )
+	    {
+		for (host = selfhosts;
+		    host && !addrEqual (family, addr, len, host);
+		    host = host->next) ;
+		if (!host)
+		{
+		    /* add this host to the host list.	*/
+		    MakeHost(host,len)
+		    if (host)
+		    {
+			host->family = family;
+			host->len = len;
+			acopy ( addr, host->addr, len);
+			host->next = selfhosts;
+			selfhosts = host;
+		    }
+		    #ifdef XDMCP
+		    /*
+		     *  If this is an Internet Address, but not the localhost
+		     *  address (127.0.0.1), nor the bogus address (0.0.0.0),
+		     *  register it.
+		     */
+		    if (family == FamilyInternet &&
+		        !(len == 4 &&
+		          ((addr[0] == 127) ||
+		           (addr[0] == 0 && addr[1] == 0 &&
+		    	addr[2] == 0 && addr[3] == 0)))
+		          )
+		    {
+			XdmcpRegisterConnection (family, (char *)addr, len);
+			broad_addr = *inetaddr;
+			((struct sockaddr_in *) &broad_addr)->sin_addr.s_addr =
+			htonl (INADDR_BROADCAST);
+			XdmcpRegisterBroadcastAddress ((struct sockaddr_in *)
+						   &broad_addr);
+		    }
+		    #if defined(IPv6) && defined(AF_INET6)
+		    else if (family == FamilyInternet6 &&
+		      !(IN6_IS_ADDR_LOOPBACK((struct in6_addr *)addr)))
+		    {
+		        XdmcpRegisterConnection (family, (char *)addr, len);
+		    }
+		    #endif
+                    
+		    #endif /* XDMCP */
+		}
 	    }
 	}
     }

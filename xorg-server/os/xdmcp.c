@@ -592,6 +592,32 @@ XdmcpInit(void)
 				        (pointer) 0);
     	timeOutRtx = 0;
     	DisplayNumber = (CARD16) atoi(display);
+        if (ConnectionTypes.length>1 && xdm_from==NULL)
+        {
+          unsigned i=0;
+          char ErrorMessage[1024];
+          sprintf(ErrorMessage,"Multiple ip-addresses detected:\n");
+          for (i=0; i<ConnectionTypes.length; i++)
+          {
+             int AddrLen=ConnectionAddresses.data[i].length;
+             if (AddrLen==4)
+               sprintf(ErrorMessage+strlen(ErrorMessage),"  %d.%d.%d.%d\n",
+                                                         ConnectionAddresses.data[i].data[0],
+                                                         ConnectionAddresses.data[i].data[1],
+                                                         ConnectionAddresses.data[i].data[2],
+                                                         ConnectionAddresses.data[i].data[3]);
+             else
+             {
+               int j;
+               sprintf(ErrorMessage+strlen(ErrorMessage),"  ");
+               for (j=0; j<AddrLen; j++)
+                 sprintf(ErrorMessage+strlen(ErrorMessage),"%02x",ConnectionAddresses.data[i].data[j]);
+               sprintf(ErrorMessage+strlen(ErrorMessage),"\n");
+             }
+          }
+          sprintf(ErrorMessage+strlen(ErrorMessage),"Please specify the ip-address you want to use with -from\n");
+          FatalError(ErrorMessage);
+        }
     	get_xdmcp_sock();
     	send_packet();
     }
