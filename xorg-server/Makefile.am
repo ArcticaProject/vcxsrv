@@ -56,8 +56,6 @@ DISTCHECK_CONFIGURE_FLAGS=\
 	--with-xkb-bin-directory=$(XKB_BIN_DIRECTORY) \
 	--with-xkb-output='$${datadir}/X11/xkb/compiled'
 
-DISTCLEANFILES = doltcompile doltlibtool
-
 .PHONY: ChangeLog INSTALL
 
 INSTALL:
