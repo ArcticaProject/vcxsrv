@@ -76,9 +76,7 @@ include\xcb\xc_misc.h                             libxcb\src\xc_misc.h
 include\xcb\bigreq.h                              libxcb\src\bigreq.h
 include\xcb\xproto.h                              libxcb\src\xproto.h
 include\xcb\xcb_windefs.h                         libxcb\src\xcb_windefs.h
-
-libXinerama\include\X11\extensions\panoramiXext.h X11\extensions\panoramiXext.h
-libXinerama\include\X11\extensions\Xinerama.h     X11\extensions\Xinerama.h
+include\xcb\shape.h                               libxcb\src\shape.h
 
 gl\glcore.h                                       gl\internal\glcore.h
 

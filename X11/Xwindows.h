@@ -52,7 +52,9 @@ The Open Group.
 #define NOMINMAX
 #define BOOL wBOOL
 #define INT32 wINT32
+#ifdef Status
 #undef Status
+#endif
 #define Status wStatus
 #define ATOM wATOM
 #define BYTE wBYTE
@@ -60,7 +62,7 @@ The Open Group.
 #include <windows.h>
 #undef NOMINMAX
 #undef Status
-#define Status int
+typedef int Status;
 #undef BYTE
 #undef BOOL
 #undef INT32

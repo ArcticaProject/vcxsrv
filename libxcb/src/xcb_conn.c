@@ -49,6 +49,10 @@
 
 #include <X11/Xtrans/Xtrans.h>
 
+#ifdef _MSC_VER
+#define _close(fd) closesocket(fd)
+#endif
+
 /* SHUT_RDWR is fairly recent and is not available on all platforms */
 #if !defined(SHUT_RDWR)
 #define SHUT_RDWR 2

@@ -83,8 +83,8 @@ _Xmblen(
 
 typedef char *XPointer;
 
-#define Bool int
-#define Status int
+typedef int Bool;
+typedef int Status;
 #define True 1
 #define False 0
 

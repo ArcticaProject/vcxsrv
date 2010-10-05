@@ -31,10 +31,7 @@ from The Open Group.
 #define _SECURITY_SRV_H
 
 /* Allow client side portions of <X11/extensions/security.h> to compile */
-#ifndef Status
-# define Status int
-# define NEED_UNDEF_Status
-#endif
+typedef int Status;
 #ifndef Display
 # define Display void
 # define NEED_UNDEF_Display

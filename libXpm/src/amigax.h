@@ -48,8 +48,8 @@
 /* really never used */
 #define ZPixmap   2
 
-#define Bool     int
-#define Status   int
+typedef int Bool;
+typedef int Status;
 #define True     1
 #define False    0
 

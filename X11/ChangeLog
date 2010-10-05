@@ -1,3 +1,12 @@
+commit d14e0d02507dd873f43b1122c468a52ed5b295c1
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Mon May 17 20:57:27 2010 -0700
+
+    Add Sun cc 5.9 & later to compilers supporting noreturn attribute
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+
 commit 9ffca704438993516016671e9a7f67c5ca21f142
 Author: Julien Cristau <jcristau@debian.org>
 Date:   Sat May 15 17:43:32 2010 +0200

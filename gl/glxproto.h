@@ -1255,7 +1255,7 @@ typedef struct {
 /*
 ** glXHyperpipeConfigSGIX request
 */
-typedef struct GLXHyperpipeConfigSGIX {
+typedef struct {
     CARD8       reqType;
     CARD8       glxCode;
     CARD16      length B16;

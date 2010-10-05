@@ -12,7 +12,6 @@ glinternal_HEADERS = \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = glproto.pc
 
-EXTRA_DIST = glproto.pc.in
 
 MAINTAINERCLEANFILES = ChangeLog INSTALL
 

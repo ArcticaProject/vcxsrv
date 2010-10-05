@@ -388,6 +388,7 @@ generate_composite_function \
     vld1.16     {d4, d5}, [DST_R, :128]!
     vst1.16     {d28, d29}, [DST_W, :128]!
     pixman_composite_over_n_0565_process_pixblock_head
+    cache_preload 8, 8
 .endm
 
 .macro pixman_composite_over_n_0565_init
@@ -710,6 +711,7 @@ generate_composite_function_single_scanline \
     vld4.8      {d4, d5, d6, d7}, [DST_R, :128]!
     vst4.8      {d28, d29, d30, d31}, [DST_W, :128]!
     pixman_composite_over_8888_8888_process_pixblock_head
+    cache_preload 8, 8
 .endm
 
 .macro pixman_composite_over_n_8888_init
@@ -1870,3 +1872,104 @@ generate_composite_function \
     10,  /* dst_r_basereg */ \
     8,  /* src_basereg   */ \
     15  /* mask_basereg  */
+
+/******************************************************************************/
+
+.macro pixman_composite_add_0565_8_0565_process_pixblock_head
+    /* mask is in d15 */
+    convert_0565_to_x888 q4, d2, d1, d0
+    convert_0565_to_x888 q5, d6, d5, d4
+    /* source pixel data is in      {d0, d1, d2, XX} */
+    /* destination pixel data is in {d4, d5, d6, XX} */
+    vmull.u8    q6,  d15, d2
+    vmull.u8    q5,  d15, d1
+    vmull.u8    q4,  d15, d0
+    vrshr.u16   q12, q6,  #8
+    vrshr.u16   q11, q5,  #8
+    vrshr.u16   q10, q4,  #8
+    vraddhn.u16 d2,  q6,  q12
+    vraddhn.u16 d1,  q5,  q11
+    vraddhn.u16 d0,  q4,  q10
+.endm
+
+.macro pixman_composite_add_0565_8_0565_process_pixblock_tail
+    vqadd.u8    q0,  q0,  q2
+    vqadd.u8    q1,  q1,  q3
+    /* 32bpp result is in {d0, d1, d2, XX} */
+    convert_8888_to_0565 d2, d1, d0, q14, q15, q3
+.endm
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_add_0565_8_0565_process_pixblock_tail_head
+    vld1.8     {d15}, [MASK]!
+    pixman_composite_add_0565_8_0565_process_pixblock_tail
+    vld1.16    {d8, d9}, [SRC]!
+    vld1.16    {d10, d11}, [DST_R, :128]!
+    cache_preload 8, 8
+    pixman_composite_add_0565_8_0565_process_pixblock_head
+    vst1.16    {d28, d29}, [DST_W, :128]!
+.endm
+
+generate_composite_function \
+    pixman_composite_add_0565_8_0565_asm_neon, 16, 8, 16, \
+    FLAG_DST_READWRITE, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    default_init_need_all_regs, \
+    default_cleanup_need_all_regs, \
+    pixman_composite_add_0565_8_0565_process_pixblock_head, \
+    pixman_composite_add_0565_8_0565_process_pixblock_tail, \
+    pixman_composite_add_0565_8_0565_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    10, /* dst_r_basereg */ \
+    8,  /* src_basereg   */ \
+    15  /* mask_basereg  */
+
+/******************************************************************************/
+
+.macro pixman_composite_out_reverse_8_0565_process_pixblock_head
+    /* mask is in d15 */
+    convert_0565_to_x888 q5, d6, d5, d4
+    /* destination pixel data is in {d4, d5, d6, xx} */
+    vmvn.8      d24, d15 /* get inverted alpha */
+    /* now do alpha blending */
+    vmull.u8    q8, d24, d4
+    vmull.u8    q9, d24, d5
+    vmull.u8    q10, d24, d6
+.endm
+
+.macro pixman_composite_out_reverse_8_0565_process_pixblock_tail
+    vrshr.u16   q14, q8, #8
+    vrshr.u16   q15, q9, #8
+    vrshr.u16   q12, q10, #8
+    vraddhn.u16 d0, q14, q8
+    vraddhn.u16 d1, q15, q9
+    vraddhn.u16 d2, q12, q10
+    /* 32bpp result is in {d0, d1, d2, XX} */
+    convert_8888_to_0565 d2, d1, d0, q14, q15, q3
+.endm
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_out_reverse_8_0565_process_pixblock_tail_head
+    vld1.8     {d15}, [SRC]!
+    pixman_composite_out_reverse_8_0565_process_pixblock_tail
+    vld1.16    {d10, d11}, [DST_R, :128]!
+    cache_preload 8, 8
+    pixman_composite_out_reverse_8_0565_process_pixblock_head
+    vst1.16    {d28, d29}, [DST_W, :128]!
+.endm
+
+generate_composite_function \
+    pixman_composite_out_reverse_8_0565_asm_neon, 8, 0, 16, \
+    FLAG_DST_READWRITE, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    default_init_need_all_regs, \
+    default_cleanup_need_all_regs, \
+    pixman_composite_out_reverse_8_0565_process_pixblock_head, \
+    pixman_composite_out_reverse_8_0565_process_pixblock_tail, \
+    pixman_composite_out_reverse_8_0565_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    10, /* dst_r_basereg */ \
+    15, /* src_basereg   */ \
+    0   /* mask_basereg  */

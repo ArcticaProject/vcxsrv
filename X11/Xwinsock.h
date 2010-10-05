@@ -41,14 +41,16 @@ The Open Group.
 
 #define BOOL wBOOL
 #define INT32 wINT32
+#ifdef Status
 #undef Status
+#endif
 #define Status wStatus
 #define ATOM wATOM
 #define BYTE wBYTE
 #define FreeResource wFreeResource
 #include <winsock2.h>
 #undef Status
-#define Status int
+typedef int Status;
 #undef BYTE
 #undef BOOL
 #undef INT32

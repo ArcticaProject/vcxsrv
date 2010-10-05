@@ -1,3 +1,217 @@
+commit 35741d9dc745532dc4af37cc07e256392e3880da
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Aug 3 11:03:49 2010 -0400
+
+    specs: convert protocol geproto.txt to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 260da6ca1dec9abde11c064d0aeac01f695a1596
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 15:10:04 2010 -0400
+
+    specs: convert protocol xtest.ms from xorg-docs to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 4240526710d837cf06502521ee58c6a4538c6c0e
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 13:43:32 2010 -0400
+
+    specs: convert protocol buffer.ms from xorg-docs to DocBook XML
+    
+    multibuf.xml
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit c86700c0c87de8d6ec7f085d06e9a48558bb5118
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 13:35:26 2010 -0400
+
+    specs: convert protocol evi.ms from xorg-docs to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit f825b85bd8bde4b78c6e3d0b05b713e6f48a2ff5
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 13:28:07 2010 -0400
+
+    specs: convert protocol appgroup.ms from xorg-docs to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 99a5fde423a301167cb825edbf718de7af9f1158
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 13:21:31 2010 -0400
+
+    specs: convert protocol tog-cup.ms from xorg-docs to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit fc2c585ab9bfe0815a917c897e0b463bf04f8475
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 10:46:54 2010 -0400
+
+    specs: convert protocol dpms.ms specs from xorg-docs module to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 7c9b2197cbb0f787b6330243eb777f612251064d
+Author: Matt Dew <matt@osource.org>
+Date:   Mon Aug 2 10:40:47 2010 -0400
+
+    specs: convert protocol shm.ms specs from xorg-docs module to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit cf083a0d35da6665b2aebc6eea4f65009c32411b
+Author: Matt Dew <matt@osource.org>
+Date:   Sun Aug 1 20:41:48 2010 -0400
+
+    specs: convert protocol shape.ms specs from xorg-docs module to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 69996150256954ef71c45ee7727fea96e02f8db2
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jun 30 13:39:21 2010 -0400
+
+    specs: move geproto.txt in the specs directory
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 3f1718e39c73475fb8384e61b6dc78f313d926f9
+Author: Matt Dew <matt@osource.org>
+Date:   Wed Jun 30 13:21:28 2010 -0400
+
+    specs: convert protocol .ms specs from xorg-docs module to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit c4595fad1d79c0957d3f4dff6ef56d72ae8cc38d
+Author: Aaron Plattner <aplattner@nvidia.com>
+Date:   Tue Mar 30 09:54:26 2010 -0700
+
+    XGE: Don't reserve an extension event.
+    
+    The Generic Event Extension extension uses the "GenericEvent" core event type,
+    so it doesn't need to also reserve an extension event.
+    
+    Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 5f2cc1e2b99d45a612204a86583abb386907be04
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 19:25:52 2010 -0400
+
+    config: update AC_PREREQ statement to 2.60
+    
+    Unrelated to the previous patches, the new value simply reflects
+    the reality that the minimum level for autoconf to configure
+    all x.org modules is 2.60 dated June 2006.
+    
+    ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 21f7dc38add3bda551216a0fa6319d9f3f9af99a
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 19:00:31 2010 -0400
+
+    config: remove the pkgconfig pc.in file from EXTRA_DIST
+    
+    Automake always includes it in the tarball.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 650615405c327398b5708787bc19198cbb864d20
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 17:51:29 2010 -0400
+
+    config: install and distribute geproto.txt
+    
+    It will now be installed in $docdir in addition
+    to being distributed in the tarball.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 37f6affde561251df61c7011f9d1d83b006d2fbe
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 22 19:24:48 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit e9fa939ef8515bca5f8cde85a91b3ae0ae456de7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Nov 16 11:13:30 2009 -0500
+
+    README: file created or updated #24206
+    
+    Contains a set of URLs to freedesktop.org.
+
+commit 3690603986929a706acd76fc0b33132fe0178129
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 19:45:27 2009 -0500
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit e52cb6ef1baa65c1688b3160727214efae57b0e2
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 18:31:29 2009 -0500
+
+    Makefile.am: INSTALL file is missing or incorrect #24206
+    
+    The standard GNU file on building/installing  tarball is copied
+    using the XORG_INSTALL macro contained in XORG_DEFAULT_OPTIONS
+    Add INSTALL target
+
+commit bfaecf2a80ef1bcbfa6243fdb1bfc2e335f86a10
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 18:11:36 2009 -0500
+
+    configure.ac: deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit 182e739d8ff1f9bb8ddb8fcff8737dabde96c47f
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 13:55:25 2009 -0500
+
+    configure.ac: AM_MAINTAINER_MODE missing #24238
+    
+    This turns off maintainer mode build rules in tarballs.
+    Works in conjunction with autogen.sh --enable-maintainer-mode
+
+commit 4b0b3afee88fdefaab2d9aa690dc5dc465964316
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Nov 14 18:26:47 2009 -0500
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 9d5e140111ef0e7e0c9d30d7e0acf8c43a248816
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Nov 3 14:41:33 2009 -0800
+
+    Allow old servers to build with new headers
+    
+    This provides header compatibility back to X server version 1.6 at
+    least (that's all I tested).
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 987aeb9bd1915a655f31e250ee9c02d04927b150
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Tue Aug 25 09:30:15 2009 +1000

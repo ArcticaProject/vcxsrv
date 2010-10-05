@@ -330,9 +330,9 @@ extern	int	DeviceButtonPress,DeviceButtonRelease;
 #undef	IsKeypadKey
 #define	IsKeypadKey(s)		XkbKSIsKeypad(s)
 
-#define	Status		int
-#define	XPointer	pointer
-#define	Display		struct _XDisplay
+typedef int Status;
+typedef pointer XPointer;
+typedef struct _XDisplay Display;
 
 #ifndef True
 #define	True	1

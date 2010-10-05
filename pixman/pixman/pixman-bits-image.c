@@ -944,7 +944,8 @@ convert_r5g6b5 (const uint8_t *row, int x)
 					  convert_ ## format,		\
 					  PIXMAN_ ## format,		\
 					  repeat_mode);			\
-    }
+    }									\
+    extern int no_such_variable
 
 MAKE_BILINEAR_FETCHER (pad_a8r8g8b8,     a8r8g8b8, PIXMAN_REPEAT_PAD);
 MAKE_BILINEAR_FETCHER (none_a8r8g8b8,    a8r8g8b8, PIXMAN_REPEAT_NONE);

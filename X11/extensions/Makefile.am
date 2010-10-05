@@ -1,3 +1,5 @@
+SUBDIRS=specs
+
 xextdir = $(includedir)/X11/extensions
 xext_HEADERS = \
 	dpmsconst.h \
@@ -31,17 +33,27 @@ xext_HEADERS = \
 	xtestconst.h \
 	xtestproto.h
 
+#
+# These headers allow old servers to be built with
+# new headers
+#
+compatdir = $(xextdir)
+compat_HEADERS = \
+	shapestr.h \
+	shmstr.h \
+	syncstr.h
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xextproto.pc
 
-EXTRA_DIST = xextproto.pc.in geproto.txt
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 
-EXTRA_DIST += ChangeLog
-MAINTAINERCLEANFILES = ChangeLog
+.PHONY: ChangeLog INSTALL
 
-.PHONY: ChangeLog
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL

@@ -25,7 +25,7 @@
 #undef HAVE_STRLCAT
 
 /* Define to 1 if you have a working strnlen function. */
-#undef HAVE_STRNLEN
+#define HAVE_STRNLEN
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
