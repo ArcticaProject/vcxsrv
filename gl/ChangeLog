@@ -1,3 +1,68 @@
+commit b173af9ea5361b4794d4cca79f7c7dddd8401a87
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Aug 4 09:44:14 2010 -0400
+
+    Remove structure tag for xGLXHyperpipeConfigSGIXReq
+    
+    X request structs don't have tags, in general, and this particular one
+    causes a conflict with glxext.h which defines GLXHyperpipeConfigSGIX for
+    the client-side API.
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit 8e7ef2d30ea8a98b6e90540e674b60d066a71fef
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 19:25:52 2010 -0400
+
+    config: update AC_PREREQ statement to 2.60
+    
+    Unrelated to the previous patches, the new value simply reflects
+    the reality that the minimum level for autoconf to configure
+    all x.org modules is 2.60 dated June 2006.
+    
+    ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit bba203c33e943d8de1bfe545434bee1db52a2245
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 19:00:31 2010 -0400
+
+    config: remove the pkgconfig pc.in file from EXTRA_DIST
+    
+    Automake always includes it in the tarball.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 9c58144688d0200e7683882549490827868a44b5
+Author: Luc Verhaegen <libv@skynet.be>
+Date:   Fri Mar 5 15:32:11 2010 +0100
+
+    Sync glcore.h with mesa HEAD.
+    
+    EXT_texture_from_pixmap was added close to 4ys ago, but this file never
+    got updated, leading to "interesting" behaviour when anything slightly less
+    standard is attempted.
+    
+    Signed-off-by: Luc Verhaegen <libv@skynet.be>
+
+commit fa99593342f13220fb675a1c3c17b6a3d755abda
+Author: Ian Romanick <ian.d.romanick@intel.com>
+Date:   Tue Feb 9 15:20:59 2010 -0800
+
+    Update tokens for GLX_INTEL_swap_event to match final version of spec
+
+commit 2c7f76a1d42fbd4be995de56563c94882dd4a058
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Nov 16 11:47:44 2009 -0500
+
+    COPYING: add Copyright from Silicon Graphics
+    
+    The COPYING file contains all Copyright notices from source code.
+    Refer to glxproto.h
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
 commit 3966379209ec48f14a1d12e48f51b687d48cc6ac
 Author: Jesse Barnes <jbarnes@virtuousgeek.org>
 Date:   Fri Jan 8 15:11:48 2010 -0500
@@ -5,7 +70,7 @@ Date:   Fri Jan 8 15:11:48 2010 -0500
     Bump version for release
 
 commit 6a9361aaec49495d566db1267a21a0f4ed1b9480
-Merge: c35f05d... f2b9a6a...
+Merge: c35f05d f2b9a6a
 Author: Jesse Barnes <jbarnes@virtuousgeek.org>
 Date:   Fri Jan 8 11:43:07 2010 -0500
 
@@ -172,7 +237,7 @@ Date:   Fri Oct 12 19:03:25 2007 -0400
     Bump to 1.4.9 so we can depend on SGI pbuffer structs.
 
 commit e89ed37e56e2dec95fd43778f3a72bafca1d56e3
-Merge: 2adf876... 750a853...
+Merge: 2adf876 750a853
 Author: James Cloos <cloos@jhcloos.com>
 Date:   Mon Sep 3 06:17:08 2007 -0400
 

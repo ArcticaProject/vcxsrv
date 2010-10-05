@@ -1,4 +1,3 @@
-/* $Xorg: dsimple.h,v 1.4 2001/02/09 02:05:54 xorgcvs Exp $ */
 /*
 
 Copyright 1993, 1998  The Open Group
@@ -26,60 +25,39 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/programs/xlsfonts/dsimple.h,v 1.8 2002/12/24 17:43:01 tsi Exp $ */
 
 /*
- * Just_display.h: This file contains the definitions needed to use the
- *                 functions in just_display.c.  It also declares the global
- *                 variables dpy, screen, and program_name which are needed to
- *                 use just_display.c.
+ * dsimple.h: This file contains the definitions needed to use the
+ *            functions in dsimple.c.  It also declares the global
+ *            variable program_name which is needed to use dsimple.c.
  *
- * Written by Mark Lillibridge.   Last updated 7/1/87
- *
- * Send bugs, etc. to chariot@athena.mit.edu.
+ * Written by Mark Lillibridge for Xlib.   Last updated 7/1/87
+ * Ported to XCB over two decades later.
  */
 
-    /* Simple helper macros */
-#ifndef MAX
-#define MAX(a,b) (((a)>(b))?(a):(b))
-#endif /* MAX */
-#ifndef MIN
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#endif /* MIN */
+#include <X11/Xfuncproto.h>
+#include <xcb/xcb.h>
+#include <xcb/xproto.h>
+
+typedef enum { False = 0, True } Bool;
 
     /* Global variables used by routines in dsimple.c */
 
 extern char *program_name;                   /* Name of this program */
-extern Display *dpy;                         /* The current display */
-extern int screen;                           /* The current screen */
 
-#define INIT_NAME program_name=argv[0]        /* use this in main to setup
-                                                 program_name */
+    /* Declarations for functions in dsimple.c */
 
-    /* Declaritions for functions in dsimple.c */
+const char *Get_Display_Name (const char *displayname);
+void Setup_Display_And_Screen (const char *displayname,
+			       xcb_connection_t **dpy, xcb_screen_t **screen);
 
-char *Get_Display_Name(int *, char **);
-Display *Open_Display(char *);
-void Setup_Display_And_Screen(int *, char **);
-void Close_Display(void);
-Window Select_Window_Args(int *, char **);
-void usage(void);
+xcb_window_t Select_Window (xcb_connection_t *, const xcb_screen_t *, int);
+xcb_window_t Window_With_Name (xcb_connection_t *, xcb_window_t, const char *);
 
-#define X_USAGE "[host:display]"              /* X arguments handled by
-						 Get_Display_Name */
+void Fatal_Error (char *, ...) _X_NORETURN _X_ATTRIBUTE_PRINTF(1, 2);
 
-/*
- * Other_stuff.h: Definitions of routines in other_stuff.
- *
- * Written by Mark Lillibridge.   Last updated 7/1/87
- *
- * Send bugs, etc. to chariot@athena.mit.edu.
- */
+void Print_X_Error (xcb_connection_t *, xcb_generic_error_t *);
 
-Window Select_Window(Display *, int);
-Window Window_With_Name(Display *, Window, char *);
-#ifdef __GNUC__
-void Fatal_Error(char *, ...) __attribute__((__noreturn__));
-#else
-void Fatal_Error(char *, ...);
-#endif
+struct atom_cache_entry *Intern_Atom (xcb_connection_t *, const char *);
+xcb_atom_t Get_Atom (xcb_connection_t *, const char *);
+const char *Get_Atom_Name (xcb_connection_t *, xcb_atom_t);

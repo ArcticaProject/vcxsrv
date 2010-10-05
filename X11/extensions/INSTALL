@@ -1,8 +1,0 @@
-Damage is built with the traditional configure script:
-
-	$ ./configure --prefix=/usr/X11R6
-
-This should generate valid Makefiles, then:
-
-        $ make
-        $ make install

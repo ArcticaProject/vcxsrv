@@ -1,3 +1,160 @@
+commit 97110e50013fc5735c6220f559588b0be9a8b821
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Sep 23 18:34:13 2010 -0700
+
+    xclock 1.0.5
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 051b0f943db06ee56349dc6a03735f4b4d3f6e0f
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Jul 20 18:45:18 2010 -0400
+
+    config: update AC_PREREQ statement to 2.60
+    
+    Unrelated to the previous patches, the new value simply reflects
+    the reality that the minimum level for autoconf to configure
+    all x.org modules is 2.60 dated June 2006.
+    
+    ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit b5ce0b4f7e7b36451872df82c37251fc3d860de4
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Thu Aug 26 08:23:41 2010 -0700
+
+    Remove extraneous  reference to HAS_STRLCAT
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit eefa040512ec291da7cc537774e14d24801b784e
+Author: David Coppa <dcoppa@gmail.com>
+Date:   Thu Jul 29 21:46:11 2010 +0200
+
+    Fix a crash on sparc64.
+    
+    The pid variable that is passed to XChangeProperty() is not a long.
+    The libX11 code deferences the variable as a long and on a 64-bit sparc
+    this must be aligned on a 8-byte boundary.
+    
+    Signed-off-by: Matthieu Herrb <matthieu.herrb@laas.fr>
+    
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit ed35a91ebdbe54befb003599364434193d5c8078
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Jul 1 16:50:16 2010 -0700
+
+    Sun's copyrights now belong to Oracle
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit cd064a06a4d87c1acb890a0b0f2a543c0e90116b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Jul 1 16:46:54 2010 -0700
+
+    Xmu functions are called directly, so include it in PKG_CHECK_MODULES
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 7b8ac4d10c8d745750a015ad50e07d5e3ef704fa
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Jun 30 23:25:03 2010 -0700
+
+    config: upgrade to util-macros 1.8 for additional man page support
+    
+    Use MAN_SUBST now supplied in XORG_MANPAGE_SECTIONS
+    The value of MAN_SUBST is the same for all X.Org packages.
+    
+    Use AC_PROG_SED now supplied by XORG_DEFAULT_OPTIONS
+    The existing statement can now be removed from the configuration file.
+    
+    Use automake provided $(AM_V_GEN) and XORG_DEFAULT_OPTIONS provided $(SED)
+    Enables silent rule and use platform appropriate version of sed.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 3f3532422225e23114427ad6f1fbc039e60b64c9
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jan 15 13:05:38 2010 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit bf3695b37628fda8b06fc5363123cf25c77fe76e
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Dec 19 20:48:47 2009 -0500
+
+    configure.ac: use backticks rather than $() for cmd subs
+    
+    Use "$PKG_CONFIG" rather than hard coded "pkg-config"
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit ee1225481c1c5fe7b6fb9093df5fe4ae9f490e9e
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Nov 26 09:19:53 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit baf85e944fbd238586805293025a11f62ee56683
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:08 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit 795cd3133fd861d8aa987c76b1227befc641fd17
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Oct 27 15:07:24 2009 -0400
+
+    Deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit ff0358b1b151f2f07d6bf4345ef32769dab96365
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:38 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit 742033062d0153f8e5dcf1214ac904131a27c2cb
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 12:34:15 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 30db8ad3c045a4fbcff171435bb8e56ed792a5ec
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 08:31:17 2009 +1000
+
+    Add INSTALL to .gitignore. (#24157)
+    
+    Avoids git error "fatal: Untracked working tree file 'INSTALL' would be
+    overwritten by merge." when switching between pre-1.0.4 and now.
+    
+    X.Org Bug 24157 <http://bugs.freedesktop.org/show_bug.cgi?id=24157>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 779dd2f2af9a65f96b741c2692d7055bf5970969
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Mon Sep 21 21:05:16 2009 -0700

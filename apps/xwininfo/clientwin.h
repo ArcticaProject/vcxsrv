@@ -22,8 +22,10 @@
 #ifndef _CLIENTWIN_H_
 #define _CLIENTWIN_H_
 
-#include <X11/Xlib.h>
+#include <xcb/xcb.h>
+#include <xcb/xproto.h>
 
-extern Window Find_Client(Display * dpy, Window root, Window target_win);
+extern xcb_window_t Find_Client(xcb_connection_t * dpy, xcb_window_t root,
+				xcb_window_t target_win);
 
 #endif

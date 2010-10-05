@@ -153,14 +153,14 @@ extern "C" {
 
 /* glXSelectEvent event mask bits */
 #define GLX_PBUFFER_CLOBBER_MASK	0x08000000
-#define GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK	0x10000000
+#define GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK	0x04000000
 
 /* GLXPbufferClobberEvent event_type values */
 #define GLX_DAMAGED			0x8020
 #define GLX_SAVED			0x8021
-#define GLX_EXCHANGE_COMPLETE_INTEL	0x8024
-#define GLX_BLIT_COMPLETE_INTEL		0x8025
-#define GLX_FLIP_COMPLETE_INTEL		0x8026
+#define GLX_EXCHANGE_COMPLETE_INTEL	0x8180
+#define GLX_BLIT_COMPLETE_INTEL		0x8181
+#define GLX_FLIP_COMPLETE_INTEL		0x8182
 
 /* GLXPbufferClobberEvent draw_type values */
 #define GLX_WINDOW			0x8022

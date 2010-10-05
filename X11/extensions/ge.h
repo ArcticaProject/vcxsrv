@@ -47,9 +47,7 @@
  *
  */
 
-#define X_GenericEvent        0
-
-#define GENumberEvents        (X_GenericEvent + 1)
+#define GENumberEvents        0
 
 /*********************************************************
  *

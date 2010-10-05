@@ -26,6 +26,8 @@
 #ifndef _RENDER_H_
 #define _RENDER_H_
 
+#include <X11/Xdefs.h>
+
 typedef XID		Glyph;
 typedef XID		GlyphSet;
 typedef XID		Picture;

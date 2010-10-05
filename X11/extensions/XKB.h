@@ -139,7 +139,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define	XkbAXN_BKAcceptMask		(1L << 4)
 #define	XkbAXN_BKRejectMask		(1L << 5)
 #define	XkbAXN_AXKWarningMask		(1L << 6)
-#define	XkbAllAccessXEventsMask		(0xf)
+#define	XkbAllAccessXEventsMask		(0x7f)
 
     /*
      * Miscellaneous event details:

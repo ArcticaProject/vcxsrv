@@ -1,6 +1,6 @@
 			The X Rendering Extension
-			      Version 0.10
-			       2005-07-01
+			      Version 0.11
+			       2009-07-15
 			      Keith Packard
 			    keithp@keithp.com
 
@@ -615,7 +615,8 @@ CreatePicture
 	Rendering is additionally clipped by the geometry and clip mask of
 	alpha-map.  Exposures to the window do not affect the contents of
 	alpha-map.  Alpha-map must refer to a picture containing a Pixmap,
-	not a Window (or a Match error results).
+	not a Window (or a Match error results).  If the alpha-map picture
+	itself already has an alpha-map, the result is undefined.
 
 	The clip-mask restricts reads and writes to drawable.  Only pixels
 	where the clip-mask has bits set to 1 are read or written.  Pixels

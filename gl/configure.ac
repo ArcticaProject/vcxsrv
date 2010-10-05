@@ -1,5 +1,5 @@
-AC_PREREQ([2.57])
-AC_INIT([GLProto], [1.4.11], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
+AC_PREREQ([2.60])
+AC_INIT([GLProto], [1.4.12], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
