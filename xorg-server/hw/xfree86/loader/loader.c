@@ -184,7 +184,8 @@ void
 LoaderUnload(const char *name, void *handle)
 {
     xf86Msg(X_INFO, "Unloading %s\n", name);
-    dlclose(handle);
+    if (handle)
+	dlclose(handle);
 }
 
 unsigned long LoaderOptions = 0;

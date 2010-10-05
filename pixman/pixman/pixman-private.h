@@ -554,13 +554,13 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_NO_PAD_REPEAT			(1 <<  3)
 #define FAST_PATH_NO_REFLECT_REPEAT		(1 <<  4)
 #define FAST_PATH_NO_ACCESSORS			(1 <<  5)
-#define FAST_PATH_NARROW_FORMAT		(1 <<  6)
-#define FAST_PATH_COVERS_CLIP			(1 <<  7)
+#define FAST_PATH_NARROW_FORMAT			(1 <<  6)
 #define FAST_PATH_COMPONENT_ALPHA		(1 <<  8)
+#define FAST_PATH_SAMPLES_OPAQUE		(1 <<  7)
 #define FAST_PATH_UNIFIED_ALPHA			(1 <<  9)
 #define FAST_PATH_SCALE_TRANSFORM		(1 << 10)
 #define FAST_PATH_NEAREST_FILTER		(1 << 11)
-#define FAST_PATH_SIMPLE_REPEAT			(1 << 12)
+#define FAST_PATH_HAS_TRANSFORM			(1 << 12)
 #define FAST_PATH_IS_OPAQUE			(1 << 13)
 #define FAST_PATH_NEEDS_WORKAROUND		(1 << 14)
 #define FAST_PATH_NO_NONE_REPEAT		(1 << 15)
@@ -570,8 +570,6 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_Y_UNIT_ZERO			(1 << 19)
 #define FAST_PATH_BILINEAR_FILTER		(1 << 20)
 #define FAST_PATH_NO_NORMAL_REPEAT		(1 << 21)
-#define FAST_PATH_HAS_TRANSFORM			(1 << 22)
-#define FAST_PATH_SAMPLES_OPAQUE		(1 << 23)
 
 #define FAST_PATH_PAD_REPEAT						\
     (FAST_PATH_NO_NONE_REPEAT		|				\
@@ -593,28 +591,24 @@ _pixman_choose_implementation (void);
      FAST_PATH_NO_NORMAL_REPEAT		|				\
      FAST_PATH_NO_PAD_REPEAT)
 
-#define _FAST_PATH_STANDARD_FLAGS					\
-    (FAST_PATH_ID_TRANSFORM		|				\
-     FAST_PATH_NO_ALPHA_MAP		|				\
-     FAST_PATH_NO_CONVOLUTION_FILTER	|				\
-     FAST_PATH_NO_PAD_REPEAT		|				\
-     FAST_PATH_NO_REFLECT_REPEAT	|				\
+#define FAST_PATH_STANDARD_FLAGS					\
+    (FAST_PATH_NO_CONVOLUTION_FILTER	|				\
      FAST_PATH_NO_ACCESSORS		|				\
-     FAST_PATH_NARROW_FORMAT		|				\
-     FAST_PATH_COVERS_CLIP)
+     FAST_PATH_NO_ALPHA_MAP		|				\
+     FAST_PATH_NARROW_FORMAT)
 
-#define FAST_PATH_STD_SRC_FLAGS						\
-    _FAST_PATH_STANDARD_FLAGS
-#define FAST_PATH_STD_MASK_U_FLAGS					\
-    (_FAST_PATH_STANDARD_FLAGS		|				\
-     FAST_PATH_UNIFIED_ALPHA)
-#define FAST_PATH_STD_MASK_CA_FLAGS					\
-    (_FAST_PATH_STANDARD_FLAGS		|				\
-     FAST_PATH_COMPONENT_ALPHA)
 #define FAST_PATH_STD_DEST_FLAGS					\
     (FAST_PATH_NO_ACCESSORS		|				\
      FAST_PATH_NO_ALPHA_MAP		|				\
      FAST_PATH_NARROW_FORMAT)
+
+#define SOURCE_FLAGS(format)						\
+    (FAST_PATH_STANDARD_FLAGS |						\
+     ((PIXMAN_ ## format == PIXMAN_solid) ?				\
+      0 : (FAST_PATH_SAMPLES_COVER_CLIP | FAST_PATH_ID_TRANSFORM)))
+
+#define MASK_FLAGS(format, extra)					\
+    ((PIXMAN_ ## format == PIXMAN_null) ? 0 : (SOURCE_FLAGS (format) | extra))
 
 #define FAST_PATH(op, src, src_flags, mask, mask_flags, dest, dest_flags, func) \
     PIXMAN_OP_ ## op,							\
@@ -628,19 +622,19 @@ _pixman_choose_implementation (void);
 
 #define PIXMAN_STD_FAST_PATH(op, src, mask, dest, func)			\
     { FAST_PATH (							\
-	  op,								\
-	  src, FAST_PATH_STD_SRC_FLAGS,					\
-	  mask, (PIXMAN_ ## mask) ? FAST_PATH_STD_MASK_U_FLAGS : 0,	\
-	  dest, FAST_PATH_STD_DEST_FLAGS,				\
-	  func) }
+	    op,								\
+	    src,  SOURCE_FLAGS (src),					\
+	    mask, MASK_FLAGS (mask, FAST_PATH_UNIFIED_ALPHA),		\
+	    dest, FAST_PATH_STD_DEST_FLAGS,				\
+	    func) }
 
 #define PIXMAN_STD_FAST_PATH_CA(op, src, mask, dest, func)		\
     { FAST_PATH (							\
-	  op,								\
-	  src, FAST_PATH_STD_SRC_FLAGS,					\
-	  mask, FAST_PATH_STD_MASK_CA_FLAGS,				\
-	  dest, FAST_PATH_STD_DEST_FLAGS,				\
-	  func) }
+	    op,								\
+	    src,  SOURCE_FLAGS (src),					\
+	    mask, MASK_FLAGS (mask, FAST_PATH_COMPONENT_ALPHA),		\
+	    dest, FAST_PATH_STD_DEST_FLAGS,				\
+	    func) }
 
 /* Memory allocation helpers */
 void *

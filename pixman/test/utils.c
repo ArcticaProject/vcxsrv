@@ -243,7 +243,7 @@ fence_malloc (uint32_t len)
     addr = mmap (NULL, n_bytes, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
 		 -1, 0);
 
-    if (addr == (void *)MAP_FAILED)
+    if (addr == MAP_FAILED)
     {
 	printf ("mmap failed on %u %u\n", len, n_bytes);
 	return NULL;
@@ -259,20 +259,12 @@ fence_malloc (uint32_t len)
     ((info_t *)initial_page)->trailing = trailing_protected;
     ((info_t *)initial_page)->n_bytes = n_bytes;
 
-    if (mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
-		  PROT_NONE) == -1)
+    if ((mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
+		  PROT_NONE) == -1) ||
+	(mprotect (trailing_protected, N_TRAILING_PROTECTED * page_size,
+		  PROT_NONE) == -1))
     {
-	free (addr);
-	return NULL;
-    }
-
-    if (mprotect (trailing_protected, N_TRAILING_PROTECTED * page_size,
-		  PROT_NONE) == -1)
-    {
-	mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
-		  PROT_READ | PROT_WRITE);
-
-	free (addr);
+	munmap (addr, n_bytes);
 	return NULL;
     }
 
@@ -287,13 +279,6 @@ fence_free (void *data)
     uint8_t *leading_protected = payload - N_LEADING_PROTECTED * page_size;
     uint8_t *initial_page = leading_protected - page_size;
     info_t *info = (info_t *)initial_page;
-    uint8_t *trailing_protected = info->trailing;
-
-    mprotect (leading_protected, N_LEADING_PROTECTED * page_size,
-	      PROT_READ | PROT_WRITE);
-
-    mprotect (trailing_protected, N_LEADING_PROTECTED * page_size,
-	      PROT_READ | PROT_WRITE);
 
     munmap (info->addr, info->n_bytes);
 }

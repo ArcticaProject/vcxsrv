@@ -363,24 +363,21 @@ compute_image_info (pixman_image_t *image)
 	flags |=
 	    FAST_PATH_NO_PAD_REPEAT		|
 	    FAST_PATH_NO_NONE_REPEAT		|
-	    FAST_PATH_NO_NORMAL_REPEAT		|
-	    FAST_PATH_COVERS_CLIP;
+	    FAST_PATH_NO_NORMAL_REPEAT;
 	break;
 
     case PIXMAN_REPEAT_PAD:
 	flags |=
 	    FAST_PATH_NO_REFLECT_REPEAT		|
 	    FAST_PATH_NO_NONE_REPEAT		|
-	    FAST_PATH_NO_NORMAL_REPEAT		|
-	    FAST_PATH_COVERS_CLIP;
+	    FAST_PATH_NO_NORMAL_REPEAT;
 	break;
 
     default:
 	flags |=
 	    FAST_PATH_NO_REFLECT_REPEAT		|
 	    FAST_PATH_NO_PAD_REPEAT		|
-	    FAST_PATH_NO_NONE_REPEAT		|
-	    FAST_PATH_COVERS_CLIP;
+	    FAST_PATH_NO_NONE_REPEAT;
 	break;
     }
 
@@ -400,8 +397,6 @@ compute_image_info (pixman_image_t *image)
 
 	if (image->solid.color.alpha == 0xffff)
 	    flags |= FAST_PATH_IS_OPAQUE;
-
-	flags |= FAST_PATH_COVERS_CLIP;
 	break;
 
     case BITS:
@@ -414,12 +409,6 @@ compute_image_info (pixman_image_t *image)
 	else
 	{
 	    code = image->bits.format;
-
-	    if (!image->common.transform &&
-		image->common.repeat == PIXMAN_REPEAT_NORMAL)
-	    {
-		flags |= FAST_PATH_SIMPLE_REPEAT;
-	    }
 	}
 
 	if (!PIXMAN_FORMAT_A (image->bits.format)				&&
