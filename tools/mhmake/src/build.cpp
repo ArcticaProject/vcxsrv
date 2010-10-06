@@ -240,7 +240,7 @@ void mhmakefileparser::CreatePythonExe(const string &FullCommand)
 #endif
 
 /*****************************************************************************/
-int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const
+int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, size_t Len, char *szFullCommand,char **pFilePart) const
 {
   static vector< refptr<fileinfo> > vSearchPath;
 
@@ -284,7 +284,7 @@ int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, int Le
 
 found:
   string FullCommand=CommandFile->GetFullFileName();
-  int CommandLen=FullCommand.size();
+  size_t CommandLen=FullCommand.size();
   if (CommandLen>Len-1)
   {
     throw string("Command to long: ") + FullCommand;

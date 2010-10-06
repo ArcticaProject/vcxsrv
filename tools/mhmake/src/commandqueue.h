@@ -31,36 +31,34 @@ typedef pid_t mh_pid_t;
 
 class commandqueue
 {
-  struct activeentry
+  struct activeentry : public refbase
   {
     refptr<fileinfo>               pTarget;
     vector<string>::const_iterator CurrentCommandIt;
     string                         Command;
     md5_context                    md5ctx;
     bool                           IgnoreError;
-    void clear()
-    {
-      pTarget=NULL;
-      Command.clear();
-      #ifdef _DEBUG
-      md5ctx.Data.clear();
-      #endif
-    }
   };
 private:
   queue< refptr<fileinfo> >  m_Queue;
   unsigned                   m_MaxNrCommandsInParallel;
   mh_pid_t                  *m_pActiveProcesses;
-  activeentry               *m_pActiveEntries;
+  refptr<activeentry>       *m_pActiveEntries;
   unsigned                   m_NrActiveEntries;
+  mh_pid_t                   m_DummyWaitHandle;
 
 private:
-  void ThrowCommandExecutionError(activeentry *pActiveEntry);
-  void AddActiveEntry(activeentry &ActiveEntry, mh_pid_t ActiveProcess);
+  void ThrowCommandExecutionError(refptr<activeentry> pActiveEntry);
+  refptr<activeentry> CreateActiveEntry(void);
+  unsigned GetActiveEntryId(const refptr<activeentry> pActiveEntry) const;
   void RemoveActiveEntry(unsigned Entry);
+  void RemoveActiveEntry(refptr<activeentry> pActiveEntry)
+  {
+    RemoveActiveEntry(GetActiveEntryId(pActiveEntry));
+  }
   bool StartExecuteCommands(const refptr<fileinfo> &pTarget);
-  bool StartExecuteNextCommand(activeentry *pActiveEntry, mh_pid_t *pActiveProcess);
-  void TargetBuildFinished(activeentry *pActiveEntry);
+  bool StartExecuteNextCommand(refptr<activeentry> pActiveEntry, mh_pid_t *pActiveProcess);
+  void TargetBuildFinished(refptr<activeentry> pActiveEntry);
 
 public:
   commandqueue();

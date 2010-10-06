@@ -316,9 +316,7 @@ public:
     return m_IsPhony;
   }
   mh_time_t realGetDate(void);
-#ifdef _DEBUG
   void SetDateToNow(void);
-#endif
 
   void SetDate(mh_time_t Date)
   {

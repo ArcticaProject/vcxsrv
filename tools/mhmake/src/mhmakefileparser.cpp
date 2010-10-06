@@ -928,7 +928,7 @@ void mhmakefileparser::SetExport(const string &Var, const string &Val)
     {
       while (*pEnd++);
     }
-    int Len=pEnd-pEnv+1;
+    size_t Len=pEnd-pEnv+1;
     m_pEnv=(char*)malloc(Len);
     memcpy(m_pEnv,pEnv,Len);
     m_EnvLen=Len;
@@ -964,9 +964,9 @@ void mhmakefileparser::SetExport(const string &Var, const string &Val)
     }
     while (*pEnv++);
   }
-  int VarLen=Var.length();
-  int ValLen=Val.length();
-  int Extra=VarLen+ValLen+2;
+  size_t VarLen=Var.length();
+  size_t ValLen=Val.length();
+  size_t Extra=VarLen+ValLen+2;
   /* Add the variable at the end */
   m_pEnv=(char*)realloc(m_pEnv,m_EnvLen+Extra);
   pEnv=m_pEnv+m_EnvLen-1;

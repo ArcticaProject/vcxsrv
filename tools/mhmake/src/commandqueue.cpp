@@ -60,6 +60,8 @@ commandqueue::commandqueue() :
   SYSTEM_INFO SysInfo;
   GetSystemInfo(&SysInfo);
   m_MaxNrCommandsInParallel=SysInfo.dwNumberOfProcessors;
+
+  m_DummyWaitHandle=(mh_pid_t)CreateEvent(NULL,TRUE,FALSE,NULL);
 #else
   FILE *pFile=fopen("/proc/cpuinfo","r");
   const char *pProc="\nprocessor";
@@ -81,16 +83,21 @@ commandqueue::commandqueue() :
       cur=0;
   }
   m_MaxNrCommandsInParallel=NrProcs;
+  m_DummyWaitHandle=(mh_pid_t)-1;
+
 #endif
 
   m_pActiveProcesses=new mh_pid_t[m_MaxNrCommandsInParallel];
-  m_pActiveEntries= new activeentry[m_MaxNrCommandsInParallel];
+  m_pActiveEntries= new refptr<activeentry>[m_MaxNrCommandsInParallel];
 }
 
 commandqueue::~commandqueue()
 {
   delete [] m_pActiveProcesses;
   delete [] m_pActiveEntries;
+  #ifdef WIN32
+  CloseHandle(m_DummyWaitHandle);
+  #endif
 }
 
 void commandqueue::SetNrParallelBuilds(unsigned NrParallelBuilds)
@@ -102,10 +109,10 @@ void commandqueue::SetNrParallelBuilds(unsigned NrParallelBuilds)
   delete [] m_pActiveProcesses;
   delete [] m_pActiveEntries;
   m_pActiveProcesses=new mh_pid_t[NrParallelBuilds];
-  m_pActiveEntries= new activeentry[NrParallelBuilds];
+  m_pActiveEntries= new refptr<activeentry>[NrParallelBuilds];
 }
 
-void commandqueue::ThrowCommandExecutionError(activeentry *pActiveEntry)
+void commandqueue::ThrowCommandExecutionError(refptr<activeentry> pActiveEntry)
 {
   refptr<fileinfo> pTarget=pActiveEntry->pTarget;
   const string    &Command=pActiveEntry->Command;
@@ -118,12 +125,22 @@ void commandqueue::ThrowCommandExecutionError(activeentry *pActiveEntry)
   throw ErrorMessage;
 }
 
-void commandqueue::AddActiveEntry(activeentry &ActiveEntry, mh_pid_t ActiveProcess)
+refptr<commandqueue::activeentry> commandqueue::CreateActiveEntry(void)
 {
-//cout << "Adding entry "<<m_NrActiveEntries<<" to queue:"<<ActiveEntry.pTarget->GetQuotedFullFileName()<<" ("<<ActiveProcess<<")\n";
-  m_pActiveEntries[m_NrActiveEntries]=ActiveEntry;
-  m_pActiveProcesses[m_NrActiveEntries]=ActiveProcess;
+  refptr<activeentry> pRet=new activeentry;
+  m_pActiveEntries[m_NrActiveEntries]=pRet;
+  m_pActiveProcesses[m_NrActiveEntries]=this->m_DummyWaitHandle;
   m_NrActiveEntries++;
+  return pRet;
+}
+
+unsigned commandqueue::GetActiveEntryId(const refptr<activeentry> pActiveEntry) const
+{
+  unsigned i=0;
+  for (i=0; i<m_NrActiveEntries; i++)
+    if (m_pActiveEntries[i]==pActiveEntry)
+      return i;
+  throw("ActiveEntry not found for "+ pActiveEntry->pTarget->GetFullFileName());
 }
 
 void commandqueue::RemoveActiveEntry(unsigned Entry)
@@ -140,14 +157,14 @@ void commandqueue::RemoveActiveEntry(unsigned Entry)
       Entry=EntryP1;
     }
   }
-  m_pActiveEntries[Entry].clear();
+  m_pActiveEntries[Entry]=NULL;
   m_pActiveProcesses[Entry]=NULL;
   m_NrActiveEntries--;
 }
 
 /* Start to execute next command, return true when command is completely executed
    upon return */
-bool commandqueue::StartExecuteNextCommand(activeentry *pActiveEntry, mh_pid_t *pActiveProcess)
+bool commandqueue::StartExecuteNextCommand(refptr<activeentry> pActiveEntry, mh_pid_t *pActiveProcess)
 {
   refptr<fileinfo> pTarget=pActiveEntry->pTarget;
   mhmakeparser *pMakefile=pTarget->GetRule()->GetMakefile();
@@ -189,7 +206,7 @@ bool commandqueue::StartExecuteNextCommand(activeentry *pActiveEntry, mh_pid_t *
   return true;
 }
 
-void commandqueue::TargetBuildFinished(activeentry *pActiveEntry)
+void commandqueue::TargetBuildFinished(refptr<activeentry> pActiveEntry)
 {
   refptr<fileinfo> pTarget=pActiveEntry->pTarget;
 
@@ -237,20 +254,20 @@ bool commandqueue::StartExecuteCommands(const refptr<fileinfo> &pTarget)
   mhmakeparser *pMakefile=pRule->GetMakefile();
   vector<string>::iterator CommandIt=pRule->GetCommands().begin();
 
-  activeentry ActiveEntry;
+  refptr<activeentry> pActiveEntry=CreateActiveEntry();
   mh_pid_t ActiveProcess;
 
-  md5_starts( &ActiveEntry.md5ctx );
+  md5_starts( &pActiveEntry->md5ctx );
 
-  ActiveEntry.pTarget=pTarget;
-  ActiveEntry.CurrentCommandIt=CommandIt;
+  pActiveEntry->pTarget=pTarget;
+  pActiveEntry->CurrentCommandIt=CommandIt;
 
   while (1)
   {
-    if (StartExecuteNextCommand(&ActiveEntry, &ActiveProcess))
+    if (StartExecuteNextCommand(pActiveEntry, &ActiveProcess))
     {
-      ActiveEntry.CurrentCommandIt++;
-      if (ActiveEntry.CurrentCommandIt==pRule->GetCommands().end())
+      pActiveEntry->CurrentCommandIt++;
+      if (pActiveEntry->CurrentCommandIt==pRule->GetCommands().end())
       {
          // All commands executed
          break;
@@ -258,11 +275,12 @@ bool commandqueue::StartExecuteCommands(const refptr<fileinfo> &pTarget)
     }
     else
     {
-      AddActiveEntry(ActiveEntry,ActiveProcess);
+      m_pActiveProcesses[GetActiveEntryId(pActiveEntry)]=ActiveProcess;  // We use GetActiveEntryId to avoid reentrancy problems
       return false;
     }
   }
-  TargetBuildFinished(&ActiveEntry);
+  TargetBuildFinished(pActiveEntry);
+  RemoveActiveEntry(pActiveEntry);
   return true;
 }
 
@@ -296,10 +314,23 @@ mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
   while (1)
   {
     // First wait until one of the processes that are running is finished
+    if (m_NrActiveEntries==1 && m_pActiveProcesses[0]==this->m_DummyWaitHandle)
+    {
+      #ifdef _DEBUG
+      if (pTarget!=m_pActiveEntries[0]->pTarget)
+        throw("Wrong assumption: waiting for target " + pTarget->GetFullFileName() + " but in wait list is " + m_pActiveEntries[0]->pTarget->GetFullFileName());
+      #endif
+      pTarget->SetDateToNow();
+      return pTarget->GetDate(); // This is a reentrancy problem, assume that the target is just build
+    }
     unsigned Ret=WaitForMultipleObjects(m_NrActiveEntries,m_pActiveProcesses,FALSE,INFINITE);
     if (Ret>=m_NrActiveEntries)
+      #ifdef WIN32
+      throw("fatal error: unexpected return value of WaitForMultipleObjects " + stringify(Ret) + " " + stringify(GetLastError()));
+      #else
       throw("fatal error: unexpected return value of WaitForMultipleObjects " + stringify(Ret));
-    activeentry *pActiveEntry=&m_pActiveEntries[Ret];
+      #endif
+    refptr<activeentry> pActiveEntry=m_pActiveEntries[Ret];
     refptr<fileinfo> pCurrentTarget=pActiveEntry->pTarget;
     refptr<rule> pRule=pCurrentTarget->GetRule();
 
