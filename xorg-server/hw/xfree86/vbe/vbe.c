@@ -527,69 +527,9 @@ VBEGetModeInfo(vbeInfoPtr pVbe, int mode)
     if (R16(pVbe->pInt10->ax) != 0x4f)
 	return NULL;
 
-    block = calloc(sizeof(VbeModeInfoBlock), 1);
-
-    block->ModeAttributes = *(CARD16*)pVbe->memory;
-    block->WinAAttributes = ((char*)pVbe->memory)[2];
-    block->WinBAttributes = ((char*)pVbe->memory)[3];
-    block->WinGranularity = *(CARD16*)(((char*)pVbe->memory) + 4);
-    block->WinSize = *(CARD16*)(((char*)pVbe->memory) + 6);
-    block->WinASegment = *(CARD16*)(((char*)pVbe->memory) + 8);
-    block->WinBSegment = *(CARD16*)(((char*)pVbe->memory) + 10);
-    block->WinFuncPtr = *(CARD32*)(((char*)pVbe->memory) + 12);
-    block->BytesPerScanline = *(CARD16*)(((char*)pVbe->memory) + 16);
-
-    /* mandatory information for VBE 1.2 and above */
-    block->XResolution = *(CARD16*)(((char*)pVbe->memory) + 18);
-    block->YResolution = *(CARD16*)(((char*)pVbe->memory) + 20);
-    block->XCharSize = ((char*)pVbe->memory)[22];
-    block->YCharSize = ((char*)pVbe->memory)[23];
-    block->NumberOfPlanes = ((char*)pVbe->memory)[24];
-    block->BitsPerPixel = ((char*)pVbe->memory)[25];
-    block->NumberOfBanks = ((char*)pVbe->memory)[26];
-    block->MemoryModel = ((char*)pVbe->memory)[27];
-    block->BankSize = ((char*)pVbe->memory)[28];
-    block->NumberOfImages = ((char*)pVbe->memory)[29];
-    block->Reserved = ((char*)pVbe->memory)[30];
-
-    /* Direct color fields (required for direct/6 and YUV/7 memory models) */
-    block->RedMaskSize = ((char*)pVbe->memory)[31];
-    block->RedFieldPosition = ((char*)pVbe->memory)[32];
-    block->GreenMaskSize = ((char*)pVbe->memory)[33];
-    block->GreenFieldPosition = ((char*)pVbe->memory)[34];
-    block->BlueMaskSize = ((char*)pVbe->memory)[35];
-    block->BlueFieldPosition = ((char*)pVbe->memory)[36];
-    block->RsvdMaskSize = ((char*)pVbe->memory)[37];
-    block->RsvdFieldPosition = ((char*)pVbe->memory)[38];
-    block->DirectColorModeInfo = ((char*)pVbe->memory)[39];
-
-    /* Mandatory information for VBE 2.0 and above */
-    if (pVbe->version >= 0x200) {
-	block->PhysBasePtr = *(CARD32*)(((char*)pVbe->memory) + 40);
-	block->Reserved32 = *(CARD32*)(((char*)pVbe->memory) + 44);
-	block->Reserved16 = *(CARD16*)(((char*)pVbe->memory) + 48);
-
-	/* Mandatory information for VBE 3.0 and above */
-	if (pVbe->version >= 0x300) {
-	    block->LinBytesPerScanLine = *(CARD16*)(((char*)pVbe->memory) + 50);
-	    block->BnkNumberOfImagePages = ((char*)pVbe->memory)[52];
-	    block->LinNumberOfImagePages = ((char*)pVbe->memory)[53];
-	    block->LinRedMaskSize = ((char*)pVbe->memory)[54];
-	    block->LinRedFieldPosition = ((char*)pVbe->memory)[55];
-	    block->LinGreenMaskSize = ((char*)pVbe->memory)[56];
-	    block->LinGreenFieldPosition = ((char*)pVbe->memory)[57];
-	    block->LinBlueMaskSize = ((char*)pVbe->memory)[58];
-	    block->LinBlueFieldPosition = ((char*)pVbe->memory)[59];
-	    block->LinRsvdMaskSize = ((char*)pVbe->memory)[60];
-	    block->LinRsvdFieldPosition = ((char*)pVbe->memory)[61];
-	    block->MaxPixelClock = *(CARD32*)(((char*)pVbe->memory) + 62);
-	    memcpy(&block->Reserved2, ((char*)pVbe->memory) + 66, 188);
-	}
-	else
-	memcpy(&block->LinBytesPerScanLine, ((char*)pVbe->memory) + 50, 206);
-    }
-    else
-	memcpy(&block->PhysBasePtr, ((char*)pVbe->memory) + 40, 216);
+    block = malloc(sizeof(VbeModeInfoBlock));
+    if (block)
+	memcpy(block, pVbe->memory, sizeof(*block));
 
     return block;
 }

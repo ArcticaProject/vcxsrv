@@ -484,8 +484,8 @@ DDCModesFromStandardTiming(struct std_timings *timing, ddc_quirk_t quirks,
 	     (hsize == 1368 && vsize == 769))) {
 	    Mode = xf86CVTMode(1366, 768, 60, FALSE, FALSE);
 	    Mode->HDisplay = 1366;
-	    Mode->VSyncStart--;
-	    Mode->VSyncEnd--;
+	    Mode->HSyncStart--;
+	    Mode->HSyncEnd--;
 	} else if (hsize && vsize && refresh) {
 	    Mode = FindDMTMode(hsize, vsize, refresh, rb);
 

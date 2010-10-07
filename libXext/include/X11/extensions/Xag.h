@@ -1,4 +1,3 @@
-/* $XFree86: xc/include/extensions/Xag.h,v 1.5 2001/12/17 20:52:24 dawes Exp $ */
 /*
 Copyright 1996, 1998  The Open Group
 
@@ -24,7 +23,6 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from The Open Group.
 */
-/* $Xorg: Xag.h,v 1.5 2001/02/09 02:03:24 xorgcvs Exp $ */
 
 #ifndef _XAG_H_
 #define _XAG_H_

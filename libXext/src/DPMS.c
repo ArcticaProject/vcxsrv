@@ -1,4 +1,3 @@
-/* $Xorg: DPMS.c,v 1.3 2000/08/17 19:45:50 cpqbld Exp $ */
 /*****************************************************************
 
 Copyright (c) 1996 Digital Equipment Corporation, Maynard, Massachusetts.
@@ -26,7 +25,6 @@ dealings in this Software without prior written authorization from Digital
 Equipment Corporation.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xext/DPMS.c,v 3.5 2002/10/16 00:37:27 dawes Exp $ */
 
 /*
  * HISTORY

@@ -1,4 +1,3 @@
-/* $XFree86: xc/include/extensions/shape.h,v 1.3 2001/12/14 19:53:29 dawes Exp $ */
 /************************************************************
 
 Copyright 1989, 1998  The Open Group
@@ -24,8 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 ********************************************************/
-
-/* $Xorg: shape.h,v 1.4 2001/02/09 02:03:24 xorgcvs Exp $ */
 
 #ifndef _SHAPE_H_
 #define _SHAPE_H_

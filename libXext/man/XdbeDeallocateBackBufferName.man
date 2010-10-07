@@ -1,5 +1,3 @@
-.\" $Xorg: XdbeDeal.man,v 1.3 2000/08/17 19:41:55 cpqbld Exp $
-.\"
 .\" Copyright (c) 1995  Hewlett-Packard Company
 .\" 
 .\" Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,8 +22,6 @@
 .\" be used in advertising or otherwise to promote the sale, use or other 
 .\" dealing in this Software without prior written authorization from the 
 .\" Hewlett-Packard Company.
-.\"
-.\" $XFree86: xc/doc/man/Xext/dbe/XdbeDeal.man,v 3.4 2001/01/27 18:20:20 dawes Exp $
 .\"
 .TH XdbeDeallocateBackBufferName __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME

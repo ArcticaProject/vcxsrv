@@ -49,7 +49,6 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xext/XSync.c,v 1.7tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -26,8 +26,6 @@ in this Software without prior written authorization from The Open Group.
 
 /* RANDOM CRUFT! THIS HAS NO OFFICIAL X CONSORTIUM OR X PROJECT TEAM BLESSING */
 
-/* $Xorg: MITMisc.h,v 1.4 2001/02/09 02:03:23 xorgcvs Exp $ */
-
 #ifndef _XMITMISC_H_
 #define _XMITMISC_H_
 

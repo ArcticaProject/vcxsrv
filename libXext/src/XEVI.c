@@ -1,4 +1,3 @@
-/* $Xorg: XEVI.c,v 1.3 2000/08/17 19:45:51 cpqbld Exp $ */
 /************************************************************
 Copyright (c) 1997 by Silicon Graphics Computer Systems, Inc.
 Permission to use, copy, modify, and distribute this
@@ -21,7 +20,6 @@ DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ********************************************************/
-/* $XFree86$ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

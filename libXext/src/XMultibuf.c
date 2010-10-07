@@ -1,5 +1,4 @@
 /*
- * $Xorg: XMultibuf.c,v 1.6 2001/02/09 02:03:49 xorgcvs Exp $
  *
 Copyright 1989, 1998  The Open Group
 
@@ -25,7 +24,6 @@ in this Software without prior written authorization from The Open Group.
  *
  * Authors:  Jim Fulton, MIT X Consortium
  */
-/* $XFree86: xc/lib/Xext/XMultibuf.c,v 1.5 2001/12/14 19:55:00 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

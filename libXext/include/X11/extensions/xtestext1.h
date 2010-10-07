@@ -1,4 +1,3 @@
-/* $Xorg: xtestext1.h,v 1.4 2001/02/09 02:03:24 xorgcvs Exp $ */
 /*
  * xtestext1.h
  *
