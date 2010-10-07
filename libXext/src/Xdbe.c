@@ -1,4 +1,3 @@
-/* $Xorg: Xdbe.c,v 1.4 2000/08/17 19:45:53 cpqbld Exp $ */
 /******************************************************************************
  * 
  * Copyright (c) 1994, 1995  Hewlett-Packard Company
@@ -30,7 +29,6 @@
  *     Xlib DBE code
  *
  *****************************************************************************/
-/* $XFree86: xc/lib/Xext/Xdbe.c,v 3.7 2002/10/16 02:19:22 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

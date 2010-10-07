@@ -1,4 +1,3 @@
-/* $Xorg: XLbx.h,v 1.3 2000/08/18 04:05:45 coskrey Exp $ */
 /*
  * Copyright 1992 Network Computing Devices
  *
@@ -20,7 +19,6 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-/* $XFree86: xc/include/extensions/XLbx.h,v 1.3 2002/10/16 01:59:55 dawes Exp $ */
  
 #ifndef _XLBX_H_
 #define _XLBX_H_

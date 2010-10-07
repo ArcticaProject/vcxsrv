@@ -1,5 +1,4 @@
 /*
- * $Xorg: extutil.c,v 1.4 2001/02/09 02:03:49 xorgcvs Exp $
  *
 Copyright 1989, 1998  The Open Group
 
@@ -45,7 +44,6 @@ in this Software without prior written authorization from The Open Group.
  *         XSetExtensionErrorHandler	establish an extension error handler
  *         XMissingExtension		raise an error about missing ext
  */
-/* $XFree86: xc/lib/Xext/extutil.c,v 1.5 2002/10/16 00:37:27 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

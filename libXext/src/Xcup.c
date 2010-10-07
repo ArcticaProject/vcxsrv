@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/Xext/Xcup.c,v 1.8 2002/10/16 02:19:22 dawes Exp $ */
 /*
 
 Copyright 1987, 1988, 1998  The Open Group
@@ -24,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $Xorg: Xcup.c,v 1.5 2001/02/09 02:03:49 xorgcvs Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -1,6 +1,4 @@
 /*
- * $Xorg: XLbx.c,v 1.3 2000/08/17 19:45:51 cpqbld Exp $
- *
  * Copyright 1992 Network Computing Devices
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
@@ -22,7 +20,6 @@
  *
  * Author:  Keith Packard, Network Computing Devices
  */
-/* $XFree86: xc/lib/Xext/XLbx.c,v 1.4 2002/10/16 00:37:27 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

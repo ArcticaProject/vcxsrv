@@ -1,5 +1,3 @@
-.\" $Xorg: Xevi.man,v 1.3 2000/08/17 19:41:54 cpqbld Exp $
-.\"
 .\" Copyright (c) 1997  Silicon Graphics, Inc.
 .\" 
 .\" Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,8 +22,6 @@
 .\" be used in advertising or otherwise to promote the sale, use or other 
 .\" dealing in this Software without prior written authorization from
 .\" Silicon Graphics, Inc.
-.\"
-.\" $XFree86: xc/doc/man/Xext/Xevi.man,v 1.2 2001/01/27 18:20:19 dawes Exp $
 .\"
 .TH XEVI __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
