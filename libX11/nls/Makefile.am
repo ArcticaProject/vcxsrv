@@ -1,3 +1,4 @@
+
 x11localedir = $(X11_LOCALEDATADIR)
 specdir = $(docdir)/Compose
 
@@ -101,12 +102,10 @@ locale.dir: locale.dir.pre
 if HAVE_PERL
 doc_sources = Compose/index.xml
 
-Compose/index.xml: Compose
+Compose/index.xml:
+	@$(MKDIR_P) $(@D)
 	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl \
 	 --index --output="$@" $(locales)
-
-Compose:
-	$(MKDIR_P) $@
 
 clean-local: clean-Compose-dir
 clean-Compose-dir:
@@ -121,11 +120,6 @@ nobase_dist_x11locale_DATA = $(locales:%=%/XI18N_OBJS)
 nobase_x11locale_DATA = $(locales:%=%/XLC_LOCALE) $(locales:%=%/Compose)
 EXTRA_DIST += $(nobase_x11locale_DATA:%=%.pre)
 CLEANFILES += $(nobase_x11locale_DATA)
-
-$(nobase_x11locale_DATA): builddirs
-
-builddirs:
-	$(MKDIR_P) $(locales)
 
 if HAVE_PERL
 TESTS_ENVIRONMENT = $(PERL)
@@ -143,7 +137,5 @@ XMLTO_FLAGS += -o $(@D)
 
 Compose/%.xml: %/Compose.xml
 	$(AM_V_GEN)cp $< $@
-
-$(doc_sources): Compose
 
 endif HAVE_PERL

@@ -26,4 +26,5 @@ CPP_SED_MAGIC = $(SED) -e '/^\#  *[0-9][0-9]*  *.*$$/d' \
                        -e '/\@\@$$/s/\@\@$$/\\/'
 
 .pre:
+	@$(MKDIR_P) $(@D)
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
