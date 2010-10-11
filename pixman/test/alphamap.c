@@ -45,15 +45,29 @@ format_name (pixman_format_code_t format)
     return "<unknown - bug in alphamap.c>";
 }
 
+static void
+on_destroy (pixman_image_t *image, void *data)
+{
+    uint32_t *bits = pixman_image_get_data (image);
+
+    fence_free (bits);
+}
+
 static pixman_image_t *
 make_image (pixman_format_code_t format)
 {
     uint32_t *bits;
     uint8_t bpp = PIXMAN_FORMAT_BPP (format) / 8;
+    pixman_image_t *image;
 
     bits = (uint32_t *)make_random_bytes (WIDTH * HEIGHT * bpp);
 
-    return pixman_image_create_bits (format, WIDTH, HEIGHT, bits, WIDTH * bpp);
+    image = pixman_image_create_bits (format, WIDTH, HEIGHT, bits, WIDTH * bpp);
+
+    if (image && bits)
+	pixman_image_set_destroy_function (image, on_destroy, NULL);
+
+    return image;
 }
 
 static pixman_image_t *
