@@ -1,4 +1,3 @@
-/* $Xorg: dpms.h,v 1.3 2000/08/18 04:05:45 coskrey Exp $ */
 /*****************************************************************
 
 Copyright (c) 1996 Digital Equipment Corporation, Maynard, Massachusetts.
@@ -26,7 +25,6 @@ dealings in this Software without prior written authorization from Digital
 Equipment Corporation.
 
 ******************************************************************/
-/* $XFree86: xc/include/extensions/dpms.h,v 3.4 2000/03/15 16:51:51 tsi Exp $ */
 
 #ifndef _X11_EXTENSIONS_DPMS_H
 #define _X11_EXTENSIONS_DPMS_H 1
