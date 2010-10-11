@@ -355,9 +355,13 @@ BIND_COMBINE_U (out_reverse)
 pixman_implementation_t *
 _pixman_implementation_create_arm_neon (void)
 {
-    pixman_implementation_t *general = _pixman_implementation_create_fast_path ();
+#ifdef USE_ARM_SIMD
+    pixman_implementation_t *fallback = _pixman_implementation_create_arm_simd ();
+#else
+    pixman_implementation_t *fallback = _pixman_implementation_create_fast_path ();
+#endif
     pixman_implementation_t *imp =
-	_pixman_implementation_create (general, arm_neon_fast_paths);
+	_pixman_implementation_create (fallback, arm_neon_fast_paths);
 
     imp->combine_32[PIXMAN_OP_OVER] = neon_combine_over_u;
     imp->combine_32[PIXMAN_OP_ADD] = neon_combine_add_u;

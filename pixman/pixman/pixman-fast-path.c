@@ -1399,14 +1399,59 @@ FAST_NEAREST (8888_565_cover, 8888, 0565, uint32_t, uint16_t, SRC, COVER);
 FAST_NEAREST (8888_565_none, 8888, 0565, uint32_t, uint16_t, SRC, NONE);
 FAST_NEAREST (8888_565_pad, 8888, 0565, uint32_t, uint16_t, SRC, PAD);
 FAST_NEAREST (8888_565_normal, 8888, 0565, uint32_t, uint16_t, SRC, NORMAL);
-FAST_NEAREST (565_565_cover, 0565, 0565, uint16_t, uint16_t, SRC, COVER);
-FAST_NEAREST (565_565_none, 0565, 0565, uint16_t, uint16_t, SRC, NONE);
-FAST_NEAREST (565_565_pad, 0565, 0565, uint16_t, uint16_t, SRC, PAD);
 FAST_NEAREST (565_565_normal, 0565, 0565, uint16_t, uint16_t, SRC, NORMAL);
 FAST_NEAREST (8888_565_cover, 8888, 0565, uint32_t, uint16_t, OVER, COVER);
 FAST_NEAREST (8888_565_none, 8888, 0565, uint32_t, uint16_t, OVER, NONE);
 FAST_NEAREST (8888_565_pad, 8888, 0565, uint32_t, uint16_t, OVER, PAD);
 FAST_NEAREST (8888_565_normal, 8888, 0565, uint32_t, uint16_t, OVER, NORMAL);
+
+/* Use more unrolling for src_0565_0565 because it is typically CPU bound */
+static force_inline void
+scaled_nearest_scanline_565_565_SRC (uint16_t *      dst,
+				     uint16_t *      src,
+				     int32_t         w,
+				     pixman_fixed_t  vx,
+				     pixman_fixed_t  unit_x,
+				     pixman_fixed_t  max_vx)
+{
+    uint16_t tmp1, tmp2, tmp3, tmp4;
+    while ((w -= 4) >= 0)
+    {
+	tmp1 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp2 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp3 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp4 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	*dst++ = tmp1;
+	*dst++ = tmp2;
+	*dst++ = tmp3;
+	*dst++ = tmp4;
+    }
+    if (w & 2)
+    {
+	tmp1 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp2 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	*dst++ = tmp1;
+	*dst++ = tmp2;
+    }
+    if (w & 1)
+	*dst++ = src[pixman_fixed_to_int (vx)];
+}
+
+FAST_NEAREST_MAINLOOP (565_565_cover_SRC,
+		       scaled_nearest_scanline_565_565_SRC,
+		       uint16_t, uint16_t, COVER);
+FAST_NEAREST_MAINLOOP (565_565_none_SRC,
+		       scaled_nearest_scanline_565_565_SRC,
+		       uint16_t, uint16_t, NONE);
+FAST_NEAREST_MAINLOOP (565_565_pad_SRC,
+		       scaled_nearest_scanline_565_565_SRC,
+		       uint16_t, uint16_t, PAD);
 
 static force_inline uint32_t
 fetch_nearest (pixman_repeat_t src_repeat,
