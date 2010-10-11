@@ -7,7 +7,7 @@
 # This document is licensed under the SGI Free Software B License Version
 # 2.0. For details, see http://oss.sgi.com/projects/FreeB/ .
 #
-# $Revision: 12194 $ on $Date: 2010-08-09 02:56:00 -0700 (Mon, 09 Aug 2010) $
+# $Revision: 12582 $ on $Date: 2010-09-30 01:35:22 -0700 (Thu, 30 Sep 2010) $
 
 required-props:
 # Description of a parameter
@@ -20404,7 +20404,7 @@ ProgramParameters4dvNV(target, index, count, v)
 	return		void
 	param		target		VertexAttribEnumNV in value
 	param		index		UInt32 in value
-	param		count		UInt32 in value
+	param		count		SizeI in value
 	param		v		Float64 in array [count*4]
 	category	NV_vertex_program
 	version		1.2
@@ -20412,13 +20412,11 @@ ProgramParameters4dvNV(target, index, count, v)
 	glxropcode	4187
 	offset		598
 
-#??? 'count' was SizeI in the latest NVIDIA gl.spec, but UInt32 in the
-#??? extension specification in the registry.
 ProgramParameters4fvNV(target, index, count, v)
 	return		void
 	param		target		VertexAttribEnumNV in value
 	param		index		UInt32 in value
-	param		count		UInt32 in value
+	param		count		SizeI in value
 	param		v		Float32 in array [count*4]
 	category	NV_vertex_program
 	version		1.2
