@@ -34,11 +34,11 @@ font-misc-cyrillic-1.0.1
 font-misc-ethiopic-1.0.1
 font-misc-meltho-1.0.1
 font-misc-misc-1.1.0
-font-mutt-misc-1.0.1
+font-mutt-misc-1.0.2
 font-schumacher-misc-1.1.0
 font-screen-cyrillic-1.0.2
 font-sony-misc-1.0.1
-font-sun-misc-1.0.1
+font-sun-misc-1.0.2
 font-util-1.1.1
 font-winitzki-cyrillic-1.0.1
 font-xfree86-type1-1.0.2
