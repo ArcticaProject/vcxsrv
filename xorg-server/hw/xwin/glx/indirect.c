@@ -286,6 +286,9 @@ static void pfdOut(const PIXELFORMATDESCRIPTOR *pfd)
         DUMP_PFD_FLAG(PFD_SWAP_COPY);
         DUMP_PFD_FLAG(PFD_SWAP_LAYER_BUFFERS);
         DUMP_PFD_FLAG(PFD_GENERIC_ACCELERATED);
+        DUMP_PFD_FLAG(PFD_SUPPORT_DIRECTDRAW);
+        DUMP_PFD_FLAG(PFD_DIRECT3D_ACCELERATED);
+        DUMP_PFD_FLAG(PFD_SUPPORT_COMPOSITION);
         DUMP_PFD_FLAG(PFD_DEPTH_DONTCARE);
         DUMP_PFD_FLAG(PFD_DOUBLEBUFFER_DONTCARE);
         DUMP_PFD_FLAG(PFD_STEREO_DONTCARE);
@@ -367,7 +370,7 @@ fbConfigsDump(unsigned int n, __GLXconfig *c)
     {
       unsigned int i = ((GLXWinConfig *)c)->pixelFormatIndex;
 
-      ErrorF("%3d  %2x  %2x "
+      ErrorF("%3d  %3x  %3x "
              "%-11s"
              " %3d %3d   %s   %s  %s %s  %s  "
              "%2d %2d %2d %2d  "
