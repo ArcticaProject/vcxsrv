@@ -152,10 +152,11 @@ struct radial_gradient
 
     circle_t   c1;
     circle_t   c2;
-    double     cdx;
-    double     cdy;
-    double     dr;
-    double     A;
+
+    circle_t   delta;
+    double     a;
+    double     inva;
+    double     mindr;
 };
 
 struct conical_gradient
