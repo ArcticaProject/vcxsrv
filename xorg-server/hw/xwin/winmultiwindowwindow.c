@@ -452,12 +452,18 @@ winCreateWindowsWindow (WindowPtr pWin)
   iWidth = pWin->drawable.width;
   iHeight = pWin->drawable.height;
 
-  /* ensure window actually ends up somewhere visible */
-  if (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN))
-    iX = CW_USEDEFAULT;
+  /* If it's an InputOutput window, and so is going to end up being made visible,
+     make sure the window actually ends up somewhere where it will be visible */
+  if (pWin->drawable.class != InputOnly)
+    {
+      if ((iX < GetSystemMetrics (SM_XVIRTUALSCREEN)) || (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN)))
+        iX = CW_USEDEFAULT;
 
-  if (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN))
-    iY = CW_USEDEFAULT;
+      if ((iY < GetSystemMetrics (SM_YVIRTUALSCREEN)) || (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN)))
+        iY = CW_USEDEFAULT;
+    }
+
+  winDebug("winCreateWindowsWindow - %dx%d @ %dx%d\n", iWidth, iHeight, iX, iY);
 
   if (winMultiWindowGetTransientFor (pWin, &pDaddy))
     {
@@ -629,7 +635,8 @@ winUpdateWindowsWindow (WindowPtr pWin)
 	}
 
       /* Display the window without activating it */
-      ShowWindow (pWinPriv->hWnd, SW_SHOWNOACTIVATE);
+      if (pWin->drawable.class != InputOnly)
+        ShowWindow (pWinPriv->hWnd, SW_SHOWNOACTIVATE);
 
       /* Send first paint message */
       UpdateWindow (pWinPriv->hWnd);
