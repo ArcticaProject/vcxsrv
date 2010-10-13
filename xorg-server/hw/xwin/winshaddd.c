@@ -499,6 +499,10 @@ winShadowUpdateDD (ScreenPtr pScreen,
   if ((!pScreenPriv->fActive && pScreenInfo->fFullScreen)
       || pScreenPriv->fBadDepth) return;
 
+  /* Return immediately if we didn't get needed surfaces */
+  if (!pScreenPriv->pddsPrimary || !pScreenPriv->pddsShadow)
+    return;
+
   /* Get the origin of the window in the screen coords */
   ptOrigin.x = pScreenInfo->dwXOffset;
   ptOrigin.y = pScreenInfo->dwYOffset;
