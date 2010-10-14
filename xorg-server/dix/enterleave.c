@@ -1251,11 +1251,6 @@ CoreFocusEvents(DeviceIntPtr dev,
     SetFocusIn(dev, to);
 }
 
-/**
- * The root window the given device is currently on.
- */
-#define RootWindow(dev) dev->spriteInfo->sprite->spriteTrace[0]
-
 static void
 DeviceFocusEvents(DeviceIntPtr dev,
                   WindowPtr from,
@@ -1284,7 +1279,7 @@ DeviceFocusEvents(DeviceIntPtr dev,
         if ((from == NullWindow) || (from == PointerRootWin))
         {
             if (from == PointerRootWin)
-                DeviceFocusOutEvents(dev, sprite->win, RootWindow(dev), mode,
+                DeviceFocusOutEvents(dev, sprite->win, GetCurrentRootWindow(dev), mode,
                         NotifyPointer);
             /* Notify all the roots */
             for (i = 0; i < nscreens; i++)
@@ -1304,19 +1299,19 @@ DeviceFocusEvents(DeviceIntPtr dev,
         for (i = 0; i < nscreens; i++)
             DeviceFocusEvent(dev, XI_FocusIn, mode, in, screenInfo.screens[i]->root);
         if (to == PointerRootWin)
-            DeviceFocusInEvents(dev, RootWindow(dev), sprite->win, mode, NotifyPointer);
+            DeviceFocusInEvents(dev, GetCurrentRootWindow(dev), sprite->win, mode, NotifyPointer);
     }
     else
     {
         if ((from == NullWindow) || (from == PointerRootWin))
         {
             if (from == PointerRootWin)
-                DeviceFocusOutEvents(dev, sprite->win, RootWindow(dev), mode,
+                DeviceFocusOutEvents(dev, sprite->win, GetCurrentRootWindow(dev), mode,
                         NotifyPointer);
             for (i = 0; i < nscreens; i++)
                 DeviceFocusEvent(dev, XI_FocusOut, mode, out, screenInfo.screens[i]->root);
             if (to->parent != NullWindow)
-                DeviceFocusInEvents(dev, RootWindow(dev), to, mode, NotifyNonlinearVirtual);
+                DeviceFocusInEvents(dev, GetCurrentRootWindow(dev), to, mode, NotifyNonlinearVirtual);
             DeviceFocusEvent(dev, XI_FocusIn, mode, NotifyNonlinear, to);
             if (IsParent(to, sprite->win))
                 DeviceFocusInEvents(dev, to, sprite->win, mode, NotifyPointer);

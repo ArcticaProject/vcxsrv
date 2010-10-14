@@ -53,6 +53,10 @@ SOFTWARE.
 #include <X11/Xproto.h>
 #include <X11/Xfuncproto.h>
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 /*
  *  callback manager stuff
  */
@@ -75,9 +79,16 @@ extern _X_EXPORT Bool DeleteCallback(
     CallbackProcPtr /*callback*/,
     pointer /*data*/);
 
-extern _X_EXPORT void CallCallbacks(
+extern _X_EXPORT void _CallCallbacks(
     CallbackListPtr * /*pcbl*/,
     pointer /*call_data*/);
+
+static inline void
+CallCallbacks(CallbackListPtr *pcbl, pointer call_data)
+{
+    if (!pcbl || !*pcbl) return;
+    _CallCallbacks(pcbl, call_data);
+}
 
 extern _X_EXPORT void DeleteCallbackList(
     CallbackListPtr * /*pcbl*/);

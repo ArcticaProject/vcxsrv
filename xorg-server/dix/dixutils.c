@@ -729,7 +729,7 @@ _DeleteCallback(
     return FALSE;
 }
 
-static void 
+void 
 _CallCallbacks(
     CallbackListPtr    *pcbl,
     pointer	    call_data)
@@ -868,13 +868,6 @@ DeleteCallback(CallbackListPtr *pcbl, CallbackProcPtr callback, pointer data)
 {
     if (!pcbl || !*pcbl) return FALSE;
     return _DeleteCallback(pcbl, callback, data);
-}
-
-void
-CallCallbacks(CallbackListPtr *pcbl, pointer call_data)
-{
-    if (!pcbl || !*pcbl) return;
-    _CallCallbacks(pcbl, call_data);
 }
 
 void

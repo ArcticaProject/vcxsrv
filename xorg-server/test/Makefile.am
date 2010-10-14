@@ -33,10 +33,9 @@ libxservertest_la_LIBADD = \
             $(top_builddir)/mi/libmi.la \
             $(top_builddir)/os/libos.la \
             @XORG_LIBS@
+endif
 
 CLEANFILES=libxservertest.c
 
 libxservertest.c:
 	touch $@
-
-endif
