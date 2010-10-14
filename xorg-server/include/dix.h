@@ -401,7 +401,7 @@ extern _X_EXPORT void WindowHasNewCursor(
 extern Bool CheckDeviceGrabs(
     DeviceIntPtr /* device */,
     DeviceEvent* /* event */,
-    int /* checkFirst */);
+    WindowPtr /* ancestor */);
 
 extern void DeliverFocusedEvent(
     DeviceIntPtr /* keybd */,

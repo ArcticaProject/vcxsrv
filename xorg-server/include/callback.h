@@ -75,9 +75,16 @@ extern _X_EXPORT Bool DeleteCallback(
     CallbackProcPtr /*callback*/,
     pointer /*data*/);
 
-extern _X_EXPORT void CallCallbacks(
+extern _X_EXPORT void _CallCallbacks(
     CallbackListPtr * /*pcbl*/,
     pointer /*call_data*/);
+
+static inline void
+CallCallbacks(CallbackListPtr *pcbl, pointer call_data)
+{
+    if (!pcbl || !*pcbl) return;
+    _CallCallbacks(pcbl, call_data);
+}
 
 extern _X_EXPORT void DeleteCallbackList(
     CallbackListPtr * /*pcbl*/);

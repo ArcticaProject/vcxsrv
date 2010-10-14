@@ -171,14 +171,6 @@ winSetSpansNativeGDI (DrawablePtr	pDrawable,
       SelectClipRgn (pGCPriv->hdc, NULL);
       break;
 
-    case UNDRAWABLE_WINDOW:
-      FatalError ("\nwinSetSpansNativeGDI - UNDRAWABLE_WINDOW\n\n");
-      break;
-
-    case DRAWABLE_BUFFER:
-      FatalError ("\nwinSetSpansNativeGDI - DRAWABLE_BUFFER\n\n");
-      break;
-      
     default:
       FatalError ("\nwinSetSpansNativeGDI - Unknown drawable type\n\n");
       break;

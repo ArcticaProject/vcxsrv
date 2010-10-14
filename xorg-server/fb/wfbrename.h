@@ -155,8 +155,6 @@
 #define fbReduceRasterOp wfbReduceRasterOp
 #define fbReplicatePixel wfbReplicatePixel
 #define fbResolveColor wfbResolveColor
-#define fbRestoreAreas wfbRestoreAreas
-#define fbSaveAreas wfbSaveAreas
 #define fbScreenPrivateKeyRec wfbScreenPrivateKeyRec
 #define fbSegment wfbSegment
 #define fbSelectBres wfbSelectBres

@@ -1276,7 +1276,6 @@ static void
 ComputeFreezes(void)
 {
     DeviceIntPtr replayDev = syncEvents.replayDev;
-    int i;
     WindowPtr w;
     GrabPtr grab;
     DeviceIntPtr dev;
@@ -1294,29 +1293,15 @@ ComputeFreezes(void)
 	syncEvents.replayDev = (DeviceIntPtr)NULL;
 
         w = XYToWindow(replayDev, event->root_x, event->root_y);
-	for (i = 0; i < replayDev->spriteInfo->sprite->spriteTraceGood; i++)
-	{
-	    if (syncEvents.replayWin ==
-		replayDev->spriteInfo->sprite->spriteTrace[i])
-	    {
-		if (!CheckDeviceGrabs(replayDev, event, i+1)) {
-		    if (replayDev->focus && !IsPointerEvent((InternalEvent*)event))
-			DeliverFocusedEvent(replayDev, (InternalEvent*)event, w);
-		    else
-			DeliverDeviceEvents(w, (InternalEvent*)event, NullGrab,
-                                            NullWindow, replayDev);
-		}
-		goto playmore;
-	    }
-	}
-	/* must not still be in the same stack */
-	if (replayDev->focus && !IsPointerEvent((InternalEvent*)event))
-	    DeliverFocusedEvent(replayDev, (InternalEvent*)event, w);
-	else
-	    DeliverDeviceEvents(w, (InternalEvent*)event, NullGrab,
-                                NullWindow, replayDev);
+        if (!CheckDeviceGrabs(replayDev, event, syncEvents.replayWin))
+        {
+            if (replayDev->focus && !IsPointerEvent((InternalEvent*)event))
+                DeliverFocusedEvent(replayDev, (InternalEvent*)event, w);
+            else
+                DeliverDeviceEvents(w, (InternalEvent*)event, NullGrab,
+                                    NullWindow, replayDev);
+        }
     }
-playmore:
     for (dev = inputInfo.devices; dev; dev = dev->next)
     {
 	if (!dev->deviceGrab.sync.frozen)
@@ -2648,11 +2633,11 @@ ActivateFocusInGrab(DeviceIntPtr dev, WindowPtr old, WindowPtr win)
     BOOL rc = FALSE;
     DeviceEvent event;
 
-    if (dev->deviceGrab.grab &&
-        dev->deviceGrab.fromPassiveGrab &&
-        dev->deviceGrab.grab->type == XI_Enter)
+    if (dev->deviceGrab.grab)
     {
-        if (dev->deviceGrab.grab->window == win ||
+        if (!dev->deviceGrab.fromPassiveGrab ||
+            dev->deviceGrab.grab->type != XI_Enter ||
+            dev->deviceGrab.grab->window == win ||
             IsParent(dev->deviceGrab.grab->window, win))
             return FALSE;
         DoEnterLeaveEvents(dev, dev->id, old, win, XINotifyPassiveUngrab);
@@ -2688,11 +2673,11 @@ ActivateEnterGrab(DeviceIntPtr dev, WindowPtr old, WindowPtr win)
     BOOL rc = FALSE;
     DeviceEvent event;
 
-    if (dev->deviceGrab.grab &&
-        dev->deviceGrab.fromPassiveGrab &&
-        dev->deviceGrab.grab->type == XI_Enter)
+    if (dev->deviceGrab.grab)
     {
-        if (dev->deviceGrab.grab->window == win ||
+        if (!dev->deviceGrab.fromPassiveGrab ||
+            dev->deviceGrab.grab->type != XI_Enter ||
+            dev->deviceGrab.grab->window == win ||
             IsParent(dev->deviceGrab.grab->window, win))
             return FALSE;
         DoEnterLeaveEvents(dev, dev->id, old, win, XINotifyPassiveUngrab);
@@ -3403,9 +3388,6 @@ CheckPassiveGrabsOnWindow(
 #define XI2_MATCH        0x4
     int match = 0;
 
-    if (device->deviceGrab.grab)
-        return FALSE;
-
     if (!grab)
 	return FALSE;
     /* Fill out the grab details, but leave the type for later before
@@ -3614,7 +3596,7 @@ CheckPassiveGrabsOnWindow(
 */
 
 Bool
-CheckDeviceGrabs(DeviceIntPtr device, DeviceEvent *event, int checkFirst)
+CheckDeviceGrabs(DeviceIntPtr device, DeviceEvent *event, WindowPtr ancestor)
 {
     int i;
     WindowPtr pWin = NULL;
@@ -3629,30 +3611,38 @@ CheckDeviceGrabs(DeviceIntPtr device, DeviceEvent *event, int checkFirst)
         && (device->button->buttonsDown != 1))
 	return FALSE;
 
-    i = checkFirst;
+    if (device->deviceGrab.grab)
+        return FALSE;
+
+    i = 0;
+    if (ancestor)
+    {
+        while (i < device->spriteInfo->sprite->spriteTraceGood)
+            if (device->spriteInfo->sprite->spriteTrace[i++] == ancestor)
+                break;
+        if (i == device->spriteInfo->sprite->spriteTraceGood)
+            return FALSE;
+    }
 
     if (focus)
     {
 	for (; i < focus->traceGood; i++)
 	{
 	    pWin = focus->trace[i];
-	    if (pWin->optional &&
-	        CheckPassiveGrabsOnWindow(pWin, device, event, sendCore))
+	    if (CheckPassiveGrabsOnWindow(pWin, device, event, sendCore))
 		return TRUE;
 	}
 
 	if ((focus->win == NoneWin) ||
 	    (i >= device->spriteInfo->sprite->spriteTraceGood) ||
-	    ((i > checkFirst) &&
-             (pWin != device->spriteInfo->sprite->spriteTrace[i-1])))
+	    (pWin && pWin != device->spriteInfo->sprite->spriteTrace[i-1]))
 	    return FALSE;
     }
 
     for (; i < device->spriteInfo->sprite->spriteTraceGood; i++)
     {
 	pWin = device->spriteInfo->sprite->spriteTrace[i];
-	if (pWin->optional &&
-	    CheckPassiveGrabsOnWindow(pWin, device, event, sendCore))
+	if (CheckPassiveGrabsOnWindow(pWin, device, event, sendCore))
 	    return TRUE;
     }
 
@@ -5065,7 +5055,7 @@ ProcSendEvent(ClientPtr client)
 	/* If the input focus is PointerRootWin, send the event to where
 	the pointer is if possible, then perhaps propogate up to root. */
 	if (inputFocus == PointerRootWin)
-	    inputFocus = pSprite->spriteTrace[0]; /* Root window! */
+	    inputFocus = RootWindow(dev);
 
 	if (IsParent(inputFocus, pSprite->win))
 	{

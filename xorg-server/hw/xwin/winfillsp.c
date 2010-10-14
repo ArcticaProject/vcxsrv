@@ -824,41 +824,6 @@ winFillSpansNativeGDI (DrawablePtr	pDrawable,
       SelectClipRgn (pGCPriv->hdc, NULL);
       break;
 
-    case UNDRAWABLE_WINDOW:
-      /* UNDRAWABLE_WINDOW doesn't appear to get called when running xterm */
-      switch (pGC->fillStyle)
-	{
-	case FillSolid:
-	  ErrorF ("winFillSpans - UNDRAWABLE_WINDOW - FillSolid - "
-		  "Unimplemented\n");
-	  break;
-
-	case FillStippled:
-	  ErrorF ("winFillSpans - UNDRAWABLE_WINDOW - FillStippled - "
-		  "Unimplemented\n");
-	  break;
-
-	case FillTiled:
-	  ErrorF ("winFillSpans - UNDRAWABLE_WINDOW - FillTiled - "
-		  "Unimplemented\n");
-	  break;
-
-	case FillOpaqueStippled:
-	  ErrorF ("winFillSpans - UNDRAWABLE_WINDOW - OpaqueStippled - "
-		  "Unimplemented\n");
-	  break;
-
-	default:
-	  ErrorF ("winFillSpans - UNDRAWABLE_WINDOW - Unknown fillStyle\n");
-	  break;
-	}
-      break;
-
-    case DRAWABLE_BUFFER:
-      /* DRAWABLE_BUFFER seems to be undocumented. */
-      ErrorF ("winFillSpans - DRAWABLE_BUFFER - Unimplemented\n");
-      break;
-
     default:
       ErrorF ("winFillSpans - Unknown drawable type\n");
       break;
