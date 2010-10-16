@@ -364,7 +364,7 @@
 #undef XORG_RELEASE
 
 /* Current Xorg version */
-#define XORG_VERSION_CURRENT (((1) * 10000000) + ((9) * 100000) + ((0) * 1000) + 2)
+#define XORG_VERSION_CURRENT (((1) * 10000000) + ((9) * 100000) + ((0) * 1000) + 902)
 
 /* Xorg release date */
 #define XORG_DATE "10 Sept 2009"
