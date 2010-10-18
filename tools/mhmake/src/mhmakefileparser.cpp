@@ -918,6 +918,7 @@ bool mhmakefileparser::SkipHeaderFile(const string &FileName)
 ///////////////////////////////////////////////////////////////////////////////
 void mhmakefileparser::SetExport(const string &Var, const string &Val)
 {
+  m_Exports.insert(Var);
 #ifdef WIN32
   if (!m_pEnv)
   {
@@ -1158,6 +1159,20 @@ void mhmakefileparser::CreateUSED_ENVVARS()
 
   set<string>::const_iterator It=m_UsedEnvVars.begin();
   set<string>::const_iterator ItEnd=m_UsedEnvVars.end();
+
+  while (It!=ItEnd)
+  {
+    string Var=*It;
+    if (!SkipVar(Var))
+    {
+      transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
+      Variables.insert(Var);
+    }
+    It++;
+  }
+
+  It=m_Exports.begin();
+  ItEnd=m_Exports.end();
 
   while (It!=ItEnd)
   {

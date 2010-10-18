@@ -190,7 +190,7 @@ imvarassignment: STRING IMEQUAL maybeemptyexpression
 pvarassignment: STRING PEQUAL maybeemptyexpression
                {
                  m_Variables[$1]=m_Variables[$1]+g_SpaceString+$3;
-                 PRINTF(("Setting variable %s to %s\n",$1.c_str(), $3.c_str()));
+                 PRINTF(("Adding to variable %s: %s\n",$1.c_str(), $3.c_str()));
                }
 ;
 

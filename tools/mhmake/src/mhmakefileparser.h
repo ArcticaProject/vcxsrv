@@ -95,6 +95,7 @@ protected:
   bool                  m_RebuildAll; /* true when to rebuild all targets of this makefile */
 
   set<string>           m_UsedEnvVars;     // Array containing a list of variables that are taken from the environment (This is used for rebuild checking)
+  set<string>           m_Exports;         // Array containing a list of exported variables in the makefile (This is used for rebuild checking)
 #ifdef WIN32
   char                 *m_pEnv;            // New environment in case the makefile exports variables
 #else
