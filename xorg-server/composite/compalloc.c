@@ -472,8 +472,19 @@ compUnredirectOneSubwindow (WindowPtr pParent, WindowPtr pWin)
     return Success;
 }
 
+static int
+bgNoneVisitWindow(WindowPtr pWin, void *null)
+{
+    if (pWin->backgroundState != BackgroundPixmap)
+	return WT_WALKCHILDREN;
+    if (pWin->background.pixmap != None)
+	return WT_WALKCHILDREN;
+
+    return WT_STOPWALKING;
+}
+
 static PixmapPtr
-compNewPixmap (WindowPtr pWin, int x, int y, int w, int h)
+compNewPixmap (WindowPtr pWin, int x, int y, int w, int h, Bool map)
 {
     ScreenPtr	    pScreen = pWin->drawable.pScreen;
     WindowPtr	    pParent = pWin->parent;
@@ -487,15 +498,30 @@ compNewPixmap (WindowPtr pWin, int x, int y, int w, int h)
     
     pPixmap->screen_x = x;
     pPixmap->screen_y = y;
-    
+
+    /* resize allocations will update later in compCopyWindow, not here */
+    if (!map)
+	return pPixmap;
+
+    /*
+     * If there's no bg=None in the tree, we're done.
+     *
+     * We could optimize this more by collection the regions of all the
+     * bg=None subwindows and feeding that in as the clip for the
+     * CopyArea below, but since window trees are shallow these days it
+     * might not be worth the effort.
+     */
+    if (TraverseTree(pWin, bgNoneVisitWindow, NULL) == WT_NOMATCH)
+	return pPixmap;
+
+    /*
+     * Copy bits from the parent into the new pixmap so that it will
+     * have "reasonable" contents in case for background None areas.
+     */
     if (pParent->drawable.depth == pWin->drawable.depth)
     {
 	GCPtr	pGC = GetScratchGC (pWin->drawable.depth, pScreen);
 	
-	/*
-	 * Copy bits from the parent into the new pixmap so that it will
-	 * have "reasonable" contents in case for background None areas.
-	 */
 	if (pGC)
 	{
 	    ChangeGCVal val;
@@ -558,7 +584,7 @@ compAllocPixmap (WindowPtr pWin)
     int		    y = pWin->drawable.y - bw;
     int		    w = pWin->drawable.width + (bw << 1);
     int		    h = pWin->drawable.height + (bw << 1);
-    PixmapPtr	    pPixmap = compNewPixmap (pWin, x, y, w, h);
+    PixmapPtr	    pPixmap = compNewPixmap (pWin, x, y, w, h, TRUE);
     CompWindowPtr   cw = GetCompWindow (pWin);
 
     if (!pPixmap)
@@ -632,7 +658,7 @@ compReallocPixmap (WindowPtr pWin, int draw_x, int draw_y,
     pix_h = h + (bw << 1);
     if (pix_w != pOld->drawable.width || pix_h != pOld->drawable.height)
     {
-	pNew = compNewPixmap (pWin, pix_x, pix_y, pix_w, pix_h);
+	pNew = compNewPixmap (pWin, pix_x, pix_y, pix_w, pix_h, FALSE);
 	if (!pNew)
 	    return FALSE;
 	cw->pOldPixmap = pOld;

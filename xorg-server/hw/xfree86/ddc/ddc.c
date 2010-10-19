@@ -314,10 +314,6 @@ DDC2Init(int scrnIndex, I2CBusPtr pBus)
     dev = DDC2MakeDevice(pBus, 0x00A0, "ddc2");
     if (xf86I2CProbeAddress(pBus, 0x0060))
 	DDC2MakeDevice(pBus, 0x0060, "E-EDID segment register");
-    if (xf86I2CProbeAddress(pBus, 0x0062))
-	DDC2MakeDevice(pBus, 0x0062, "EDID EEPROM interface");
-    if (xf86I2CProbeAddress(pBus, 0x006E))
-	DDC2MakeDevice(pBus, 0x006E, "DDC control interface");
 
     return dev;
 }

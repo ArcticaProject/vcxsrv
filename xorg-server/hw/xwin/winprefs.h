@@ -151,7 +151,8 @@ typedef struct WINPREFS
 
 } WINPREFS;
 
-
+/* The global pref settings structure loaded by the winprefyacc.y parser */
+extern WINPREFS pref;
 
 
 /* Functions */

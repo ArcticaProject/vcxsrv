@@ -41,7 +41,6 @@
 #include <X11/extensions/windowswmstr.h>
 #include "dixevents.h"
 #include "winmultiwindowclass.h"
-#include "winprefs.h"
 #include <X11/Xatom.h>
 
 

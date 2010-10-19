@@ -41,13 +41,6 @@
 #include "propertyst.h"
 #include "windowstr.h"
 
-/*
- * External global variables
- */
-
-extern HICON		g_hIconX;
-extern HICON		g_hSmallIconX;
-
 
 /*
  * Prototypes for local functions

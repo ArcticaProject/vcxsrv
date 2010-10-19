@@ -53,14 +53,6 @@
 
 
 /*
- * Global variables
- */
-
-extern Bool			g_fNoConfigureWindow;
-extern Bool			g_fSoftwareCursor;
-
-
-/*
  * Local globals
  */
 

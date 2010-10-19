@@ -586,7 +586,7 @@ winMultiWindowWMProc (void *pArg)
   
   winDebug ("winMultiWindowWMProc ()\n");
 
-  /* Loop until we explicity break out */
+  /* Loop until we explicitly break out */
   for (;;)
     {
       WMMsgNodePtr	pNode;
@@ -1531,7 +1531,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   int			format;
   unsigned long		hint = 0, maxmin = 0, style, nitems = 0 , left = 0;
   WindowPtr		pWin = GetProp (hWnd, WIN_WINDOW_PROP);
-  MwmHints             *mwm_hint = NULL;
+  MwmHints              *mwm_hint = NULL;
   WinXSizeHints         SizeHints;
 
   if (!hWnd) return;

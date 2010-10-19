@@ -44,21 +44,9 @@
  * References to external globals
  */
 
-extern Bool			g_fCursor;
-extern HWND			g_hDlgDepthChange;
-extern HWND			g_hDlgExit;
-extern HWND			g_hDlgAbout;
-extern WINPREFS			pref;
 #ifdef XWIN_CLIPBOARD
 extern Bool			g_fClipboardStarted;
 #endif
-extern Bool			g_fSoftwareCursor;
-
-#if defined(XWIN_MULTIWINDOW)
-extern HICON                    g_hIconX;
-extern HICON                    g_hSmallIconX;
-#endif
-
 /*
  * Local function prototypes
  */

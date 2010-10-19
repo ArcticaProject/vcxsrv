@@ -78,7 +78,7 @@ winClipboardFlushXEvents (HWND hwnd,
       XEvent			event;
       XSelectionEvent		eventSelection;
       unsigned long		ulReturnBytesLeft;
-      unsigned char		*pszReturnData = NULL;
+      char			*pszReturnData = NULL;
       char			*pszGlobalData = NULL;
       int			iReturn;
       HGLOBAL			hGlobal = NULL;
@@ -225,7 +225,7 @@ winClipboardFlushXEvents (HWND hwnd,
 	    if (!OpenClipboard (hwnd))
 	      {
 	        ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
-		        "OpenClipboard () failed: %08x\n",
+		        "OpenClipboard () failed: %08lx\n",
 		        GetLastError ());
 
 	        /* Abort */
@@ -275,7 +275,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		XSetSelectionOwner (pDisplay, XInternAtom (pDisplay, "CLIPBOARD", False), None, CurrentTime);
 	        }
 	        ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
-		      "GetClipboardData () failed: %08x\n",
+		      "GetClipboardData () failed: %08lx\n",
 		      GetLastError ());
 
 	      /* Abort */

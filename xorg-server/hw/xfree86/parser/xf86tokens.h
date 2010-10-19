@@ -273,7 +273,6 @@ typedef enum {
 
     /* DRI Tokens */
     GROUP,
-    BUFFERS,
 
     /* InputClass Tokens */
     MATCH_PRODUCT,

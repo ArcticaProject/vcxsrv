@@ -49,11 +49,6 @@
 /* Where will the custom menu commands start counting from? */
 #define STARTMENUID WM_USER
 
-/* External global variables */
-#ifdef XWIN_MULTIWINDOW
-extern DWORD g_dwCurrentThreadID;
-#endif
-
 extern const char *winGetBaseDir(void);
 
 extern const char *g_pszLogFile;
@@ -61,12 +56,6 @@ extern const char *g_pszLogFile;
 /* From winmultiwindowflex.l, the real parser */
 extern void parse_file (FILE *fp);
 
-/* From winprefyacc.y, the pref structure loaded by the parser */
-extern WINPREFS pref;
-
-/* The global X default icon */
-extern HICON		g_hIconX;
-extern HICON		g_hSmallIconX;
 
 /* Currently in use command ID, incremented each new menu item created */
 static int g_cmdid = STARTMENUID;

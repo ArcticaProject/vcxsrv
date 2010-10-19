@@ -30,14 +30,10 @@ from The Open Group.
 #ifdef HAVE_XWIN_CONFIG_H
 #include <xwin-config.h>
 #endif
-#ifdef XVENDORNAME
-#define VENDOR_STRING XVENDORNAME
-#define VENDOR_CONTACT BUILDERADDR
-#endif
+
 #include <../xfree86/common/xorgVersion.h>
 #include "win.h"
 #include "winconfig.h"
-#include "winprefs.h"
 #include "winmsg.h"
 #define COMPILE_MULTIMON_STUBS
 #include <multimon.h>
@@ -45,26 +41,10 @@ from The Open Group.
  * References to external symbols
  */
 
-extern int			g_iNumScreens;
-extern winScreenInfo *		g_ScreenInfo;
 #ifdef XWIN_CLIPBOARD
 extern Bool			g_fUnicodeClipboard;
 extern Bool			g_fClipboard;
 #endif
-extern int			g_iLogVerbose;
-extern const char *		g_pszLogFile;
-#ifdef RELOCATE_PROJECTROOT
-extern Bool			g_fLogFileChanged;
-#endif
-extern Bool			g_fXdmcpEnabled;
-extern Bool			g_fAuthEnabled;
-extern char *			g_pszCommandLine;
-extern Bool			g_fKeyboardHookLL;
-extern Bool			g_fNoHelpMessageBox;                     
-extern Bool			g_fSoftwareCursor;
-extern Bool			g_fSilentDupError;
-extern Bool			g_fNativeGl;
-
 /* globals required by callback function for monitor information */
 struct GetMonitorInfoData {
     int  requestedMonitor;
@@ -1224,10 +1204,10 @@ winLogVersionInfo (void)
   s_fBeenHere = TRUE;
 
   winDebug ("Welcome to the VcXsrv X Server\n");
-  winDebug ("Vendor: %s\n", VENDOR_STRING);
+  winDebug ("Vendor: %s\n", XVENDORNAME);
   winDebug ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
   winDebug ("%s\n\n", BUILDERSTRING);
-  winDebug ("Contact: %s\n\n", VENDOR_CONTACT);
+  winDebug ("Contact: %s\n\n", BUILDERADDR);
 #endif
 }
 /*

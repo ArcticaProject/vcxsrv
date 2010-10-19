@@ -480,7 +480,7 @@ winClipboardErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 		 sizeof (pszErrorMsg));
   ErrorF ("winClipboardErrorHandler - ERROR: \n\t%s\n"
           "  errorCode %d\n"
-          "  serial %d\n"
+          "  serial %lu\n"
           "  resourceID 0x%x\n"
           "  majorCode %d\n"
           "  minorCode %d\n"

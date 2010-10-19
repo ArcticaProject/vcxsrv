@@ -35,13 +35,6 @@
 
 
 /*
- * External symbols
- */
-
-extern HWND			g_hDlgExit;
-
-
-/*
  * Local function prototypes
  */
 

@@ -65,14 +65,6 @@ winMWExtWMProcs = {
 };
 #endif
 
-
-/*
- * References to external symbols
- */
-
-extern Bool                     g_fSoftwareCursor;
-
-
 /*
  * Prototypes
  */

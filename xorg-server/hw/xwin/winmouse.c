@@ -137,6 +137,7 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
 
     case DEVICE_CLOSE:
       g_winMouseButtonMap = NULL;
+
     case DEVICE_OFF:
       pDevice->on = FALSE;
       break;
