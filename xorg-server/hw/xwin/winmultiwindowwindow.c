@@ -38,16 +38,6 @@
 #include "win.h"
 #include "dixevents.h"
 #include "winmultiwindowclass.h"
-#include "winprefs.h"
-
-/*
- * External global variables
- */
-
-extern HICON		g_hIconX;
-extern HICON		g_hSmallIconX;
-extern HWND		g_hDlgDepthChange;
-extern Bool             g_fNativeGl;
 
 /*
  * Prototypes for local functions

@@ -712,8 +712,8 @@ winNameCompare (const char *s1, const char *s2)
   while (*s2 == '_' || *s2 == ' ' || *s2 == '\t')
     s2++;
 
-  c1 = (isupper (*s1) ? tolower (*s1) : *s1);
-  c2 = (isupper (*s2) ? tolower (*s2) : *s2);
+  c1 = (isupper ((int)*s1) ? tolower ((int)*s1) : *s1);
+  c2 = (isupper ((int)*s2) ? tolower ((int)*s2) : *s2);
 
   while (c1 == c2)
     {
@@ -727,8 +727,8 @@ winNameCompare (const char *s1, const char *s2)
       while (*s2 == '_' || *s2 == ' ' || *s2 == '\t')
 	s2++;
 
-      c1 = (isupper (*s1) ? tolower (*s1) : *s1);
-      c2 = (isupper (*s2) ? tolower (*s2) : *s2);
+      c1 = (isupper ((int)*s1) ? tolower ((int)*s1) : *s1);
+      c2 = (isupper ((int)*s2) ? tolower ((int)*s2) : *s2);
     }
   return c1 - c2;
 }
@@ -1089,8 +1089,8 @@ winNormalizeName (const char *s)
 	case '\t':
 	  continue;
 	default:
-	  if (isupper (*p))
-	    *q++ = tolower (*p);
+	  if (isupper ((int)*p))
+	    *q++ = tolower ((int)*p);
 	  else
 	    *q++ = *p;
 	}

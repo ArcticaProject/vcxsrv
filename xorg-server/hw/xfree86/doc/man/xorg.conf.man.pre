@@ -39,14 +39,11 @@ server is started as a normal user:
 .IR __projectroot__/etc/X11/ <cmdline>
 .IB /etc/X11/ $XORGCONFIG
 .IB __projectroot__/etc/X11/ $XORGCONFIG
-.I /etc/X11/__xconfigfile__\-4
 .I /etc/X11/__xconfigfile__
 .I /etc/__xconfigfile__
 .IR __projectroot__/etc/X11/__xconfigfile__. <hostname>
-.I __projectroot__/etc/X11/__xconfigfile__\-4
 .I __projectroot__/etc/X11/__xconfigfile__
 .IR __projectroot__/lib/X11/__xconfigfile__. <hostname>
-.I __projectroot__/lib/X11/__xconfigfile__\-4
 .I __projectroot__/lib/X11/__xconfigfile__
 .fi
 .RE
@@ -74,14 +71,11 @@ search locations are as follows:
 .B $XORGCONFIG
 .IB /etc/X11/ $XORGCONFIG
 .IB __projectroot__/etc/X11/ $XORGCONFIG
-.I /etc/X11/__xconfigfile__\-4
 .I /etc/X11/__xconfigfile__
 .I /etc/__xconfigfile__
 .IR __projectroot__/etc/X11/__xconfigfile__. <hostname>
-.I __projectroot__/etc/X11/__xconfigfile__\-4
 .I __projectroot__/etc/X11/__xconfigfile__
 .IR __projectroot__/lib/X11/__xconfigfile__. <hostname>
-.I __projectroot__/lib/X11/__xconfigfile__\-4
 .I __projectroot__/lib/X11/__xconfigfile__
 .fi
 .RE

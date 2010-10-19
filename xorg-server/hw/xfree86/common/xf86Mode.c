@@ -1831,8 +1831,6 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	numModes++;
     }
 
-#undef _VIRTUALX
-
     /*
      * If we estimated the virtual size above, we may have filtered away all
      * the modes that maximally match that size; scan again to find out and
@@ -1847,13 +1845,69 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	    }
 	}
 	if (vx < virtX || vy < virtY) {
+	    const int types[] = {
+		M_T_BUILTIN | M_T_PREFERRED,
+		M_T_BUILTIN,
+		M_T_DRIVER | M_T_PREFERRED,
+		M_T_DRIVER,
+		0
+	    };
+	    const int ntypes = sizeof(types) / sizeof(int);
+	    int n;
+
+	    /* 
+	     * We did not find the estimated virtual size. So now we want to 
+	     * find the largest mode available, but we want to search in the
+	     * modes in the order of "types" listed above.
+	     */
+	    for (n = 0; n < ntypes; n++) {
+		int type = types[n];
+
+		vx = 0; vy = 0;
+		for (p = scrp->modes; p; p = p->next) {
+		    /* scan through the modes in the sort order above */
+		    if ((p->type & type) != type)
+			continue;
+		    if (p->HDisplay > vx && p->VDisplay > vy) {
+			vx = p->HDisplay;
+			vy = p->VDisplay;
+		    }
+		}
+		if (vx && vy)
+		    /* Found one */
+		    break;
+	    }
 	    xf86DrvMsg(scrp->scrnIndex, X_WARNING,
 		       "Shrinking virtual size estimate from %dx%d to %dx%d\n",
 		       virtX, virtY, vx, vy);
-	    virtX = vx;
+	    virtX = _VIRTUALX(vx);
 	    virtY = vy;
-	    linePitch = scanLineWidth(vx, vy, minPitch, apertureSize,
-				      BankFormat, pitchInc);
+	    for (p = scrp->modes; p; p = p->next) {
+		if (numModes > 0) {
+		    if (p->HDisplay > virtX)
+			p->status = MODE_VIRTUAL_X;
+		    if (p->VDisplay > virtY)
+			p->status = MODE_VIRTUAL_Y;
+		    if (p->status != MODE_OK) {
+			numModes--;
+			printModeRejectMessage(scrp->scrnIndex, p, p->status);
+		    }
+		}
+	    }
+	    if (linePitches != NULL) {
+		for (i = 0; linePitches[i] != 0; i++) {
+		    if ((linePitches[i] >= virtX) &&
+			(linePitches[i] ==
+			scanLineWidth(virtX, virtY, linePitches[i],
+				      apertureSize, BankFormat, pitchInc))) {
+			linePitch = linePitches[i];
+			break;
+		    }
+		}
+	    } else {
+		linePitch = scanLineWidth(virtX, virtY, minPitch,
+					  apertureSize, BankFormat, pitchInc);
+	    }
 	}
     }
 

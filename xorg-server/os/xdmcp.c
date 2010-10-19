@@ -1520,7 +1520,7 @@ get_addr_by_name(
 #ifdef XTHREADS_NEEDS_BYNAMEPARAMS
     _Xgethostbynameparams hparams;
 #endif
-#if defined(WIN32) && (defined(TCPCONN) || defined(DNETCONN))
+#if defined(WIN32) && defined(TCPCONN)
     _XSERVTransWSAStartup(); 
 #endif
     if (!(hep = _XGethostbyname(namestr, hparams)))

@@ -210,7 +210,7 @@ set_valuators(DeviceIntPtr dev, DeviceEvent* event, int first_valuator,
     }
 
     memcpy(&event->valuators.data[first_valuator],
-           valuators, num_valuators * sizeof(uint32_t));
+           valuators, num_valuators * sizeof(int32_t));
 
 }
 
@@ -894,20 +894,12 @@ GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type, int key_code) 
 
 
 /**
- * Returns a set of keyboard events for KeyPress/KeyRelease, optionally
- * also with valuator events.  Handles Xi and XKB.
- *
- * DOES NOT GENERATE CORE EVENTS! Core events are created when processing the
- * event (ProcessOtherEvent).
+ * Returns a set of InternalEvents for KeyPress/KeyRelease, optionally
+ * also with valuator events.
  *
  * events is not NULL-terminated; the return value is the number of events.
  * The DDX is responsible for allocating the event structure in the first
  * place via GetMaximumEventsNum(), and for freeing it.
- *
- * This function does not change the core keymap to that of the device;
- * that is done by SwitchCoreKeyboard, which is called from
- * mieqProcessInputEvents.  If replacing that function, take care to call
- * SetCoreKeyboard before processInputProc, so keymaps are altered to suit.
  */
 int
 GetKeyboardValuatorEvents(EventList *events, DeviceIntPtr pDev, int type,
@@ -1050,11 +1042,8 @@ transformAbsolute(DeviceIntPtr dev, int v[MAX_VALUATORS])
 }
 
 /**
- * Generate a series of xEvents (filled into the EventList) representing
- * pointer motion, or button presses.  Xi and XKB-aware.
- *
- * DOES NOT GENERATE CORE EVENTS! Core events are created when processing the
- * event (ProcessOtherEvent).
+ * Generate a series of InternalEvents (filled into the EventList)
+ * representing pointer motion, or button presses.
  *
  * events is not NULL-terminated; the return value is the number of events.
  * The DDX is responsible for allocating the event structure in the first
@@ -1183,7 +1172,8 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
 
 
 /**
- * Post ProximityIn/ProximityOut events, accompanied by valuators.
+ * Generate ProximityIn/ProximityOut InternalEvents, accompanied by
+ * valuators.
  *
  * events is not NULL-terminated; the return value is the number of events.
  * The DDX is responsible for allocating the event structure in the first

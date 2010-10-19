@@ -113,9 +113,6 @@ SOFTWARE.
 
 #define Pid_t pid_t
 
-#ifdef DNETCONN
-#include <netdnet/dn.h>
-#endif /* DNETCONN */
 
 #ifdef HAS_GETPEERUCRED
 # include <ucred.h>
@@ -521,7 +518,7 @@ AuthAudit (ClientPtr client, Bool letin,
 #endif
 	    strcpy(out, "local host");
 	    break;
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)
+#if defined(TCPCONN) || defined(STREAMSCONN)
 	case AF_INET:
 	    sprintf(out, "IP %s",
 		inet_ntoa(((struct sockaddr_in *) saddr)->sin_addr));
@@ -535,12 +532,6 @@ AuthAudit (ClientPtr client, Bool letin,
 	}
 	    break;
 #endif
-#endif
-#ifdef DNETCONN
-	case AF_DECnet:
-	    sprintf(out, "DN %s",
-		    dnet_ntoa(&((struct sockaddr_dn *) saddr)->sdn_add));
-	    break;
 #endif
 	default:
 	    strcpy(out, "unknown address");

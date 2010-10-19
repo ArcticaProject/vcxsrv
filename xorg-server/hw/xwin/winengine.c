@@ -34,13 +34,17 @@
 #include "win.h"
 #include "winmsg.h"
 
+/*
+ * Global variables for function pointers into
+ * dynamically loaded libraries
+ */
+FARPROC		g_fpDirectDrawCreate = NULL;
+FARPROC		g_fpDirectDrawCreateClipper = NULL;
 
 /*
- * External global variables
- */
-
-extern const GUID _IID_IDirectDraw4;
-
+  module handle for dynamically loaded directdraw library
+*/
+static HMODULE g_hmodDirectDraw = NULL;
 
 /*
  * Detect engines supported by current Windows version
@@ -333,4 +337,16 @@ winGetDDProcAddresses (void)
     }
   
   return fReturn;
+}
+
+void
+winReleaseDDProcAddresses(void)
+{
+  if (g_hmodDirectDraw != NULL)
+    {
+      FreeLibrary (g_hmodDirectDraw);
+      g_hmodDirectDraw = NULL;
+      g_fpDirectDrawCreate = NULL;
+      g_fpDirectDrawCreateClipper = NULL;
+    }
 }

@@ -35,13 +35,6 @@
 #include "winmsg.h"
 
 
-/*
- * References to external symbols
- */
-
-extern int			g_iNumScreens;
-extern winScreenInfo *		g_ScreenInfo;
-extern Bool			g_fXdmcpEnabled;
 
 
 /*

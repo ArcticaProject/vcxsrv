@@ -34,13 +34,7 @@
 #include "win.h"
 
 
-/*
- * References to external symbols
- */
-
-extern HHOOK			g_hhookKeyboardLL;
-extern DWORD			g_dwCurrentThreadID;
-extern HWND			g_hwndKeyboardFocus;
+static HHOOK g_hhookKeyboardLL = NULL;
 
 
 /*

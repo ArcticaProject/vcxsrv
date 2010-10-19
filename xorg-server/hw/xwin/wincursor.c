@@ -41,8 +41,6 @@
 #include <servermd.h>
 #include "misc.h"
 
-extern Bool	g_fSoftwareCursor;
-
 #define BRIGHTNESS(x) (x##Red * 0.299 + x##Green * 0.587 + x##Blue * 0.114)
 
 #if 0
@@ -557,7 +555,7 @@ static void
 winDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScr)
 {
   winScreenPriv(pScr);
-  return pScreenPriv->cursor.spriteFuncs->DeviceCursorCleanup(pDev, pScr);
+  pScreenPriv->cursor.spriteFuncs->DeviceCursorCleanup(pDev, pScr);
 }
 
 static miPointerSpriteFuncRec winSpriteFuncsRec = {

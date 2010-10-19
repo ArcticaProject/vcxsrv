@@ -31,20 +31,9 @@
 #ifdef HAVE_XWIN_CONFIG_H
 #include <xwin-config.h>
 #endif
-#ifdef XVENDORNAME
-#define VENDOR_STRING XVENDORNAME
-#define VENDOR_CONTACT BUILDERADDR
-#endif
 
 #include <../xfree86/common/xorgVersion.h>
 #include "win.h"
-
-/* References to external symbols */
-extern char *		g_pszCommandLine;
-extern const char *	g_pszLogFile;
-extern Bool		g_fSilentFatalError;
-extern Bool		g_fLogInited;
-
 
 #ifdef DDXOSVERRORF
 /* Prototype */
@@ -129,11 +118,12 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
 	"%s\n"
 
   pszMsgBox = Xprintf (MESSAGEBOXF,
-	   pszErrorF, VENDOR_STRING,
+                       pszErrorF, XVENDORNAME,
 		       XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT,
-		       VENDOR_CONTACT,
+		       BUILDERADDR,
 		       BUILDERSTRING,
-	   g_pszCommandLine);
+		       g_pszCommandLine);
+
   if (!pszMsgBox)
     goto winMessageBoxF_Cleanup;
 

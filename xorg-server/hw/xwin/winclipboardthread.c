@@ -437,7 +437,7 @@ winClipboardErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 		 pszErrorMsg,
 		 sizeof (pszErrorMsg));
   ErrorF ("winClipboardErrorHandler - ERROR: \n\t%s\n"
-	  "\tSerial: %d, Request Code: %d, Minor Code: %d\n",
+	  "\tSerial: %lu, Request Code: %d, Minor Code: %d\n",
 	  pszErrorMsg,
 	  pErr->serial,
 	  pErr->request_code,

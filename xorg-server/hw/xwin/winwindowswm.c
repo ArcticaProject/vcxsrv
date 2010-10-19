@@ -77,10 +77,10 @@ make_box (int x, int y, int w, int h)
 }
 
 static int
-ProcWindowsWMQueryVersion(register ClientPtr client)
+ProcWindowsWMQueryVersion(ClientPtr client)
 {
   xWindowsWMQueryVersionReply rep;
-  register int n;
+  int n;
 
   REQUEST_SIZE_MATCH(xWindowsWMQueryVersionReq);
   rep.type = X_Reply;
@@ -158,7 +158,7 @@ WMFreeEvents (pointer data, XID id)
 }
 
 static int
-ProcWindowsWMSelectInput (register ClientPtr client)
+ProcWindowsWMSelectInput (ClientPtr client)
 {
   REQUEST(xWindowsWMSelectInputReq);
   WMEventPtr		pEvent, pNewEvent, *pHead;
@@ -298,7 +298,7 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
 /* general utility functions */
 
 static int
-ProcWindowsWMDisableUpdate (register ClientPtr client)
+ProcWindowsWMDisableUpdate (ClientPtr client)
 {
   REQUEST_SIZE_MATCH(xWindowsWMDisableUpdateReq);
 
@@ -308,7 +308,7 @@ ProcWindowsWMDisableUpdate (register ClientPtr client)
 }
 
 static int
-ProcWindowsWMReenableUpdate (register ClientPtr client)
+ProcWindowsWMReenableUpdate (ClientPtr client)
 {
   REQUEST_SIZE_MATCH(xWindowsWMReenableUpdateReq);
 
@@ -321,7 +321,7 @@ ProcWindowsWMReenableUpdate (register ClientPtr client)
 /* window functions */
 
 static int
-ProcWindowsWMSetFrontProcess (register ClientPtr client)
+ProcWindowsWMSetFrontProcess (ClientPtr client)
 {
   REQUEST_SIZE_MATCH(xWindowsWMSetFrontProcessReq);
   
@@ -334,7 +334,7 @@ ProcWindowsWMSetFrontProcess (register ClientPtr client)
 /* frame functions */
 
 static int
-ProcWindowsWMFrameGetRect (register ClientPtr client)
+ProcWindowsWMFrameGetRect (ClientPtr client)
 {
   xWindowsWMFrameGetRectReply rep;
   BoxRec ir;
@@ -388,7 +388,7 @@ ProcWindowsWMFrameGetRect (register ClientPtr client)
 
 
 static int
-ProcWindowsWMFrameDraw (register ClientPtr client)
+ProcWindowsWMFrameDraw (ClientPtr client)
 {
   REQUEST(xWindowsWMFrameDrawReq);
   WindowPtr pWin;
@@ -478,12 +478,10 @@ ProcWindowsWMFrameDraw (register ClientPtr client)
 }
 
 static int
-ProcWindowsWMFrameSetTitle(
-			   register ClientPtr client
-			   )
+ProcWindowsWMFrameSetTitle(ClientPtr client)
 {
   unsigned int title_length, title_max;
-  unsigned char *title_bytes;
+  char *title_bytes;
   REQUEST(xWindowsWMFrameSetTitleReq);
   WindowPtr pWin;
   win32RootlessWindowPtr pRLWinPriv;
@@ -540,7 +538,7 @@ ProcWindowsWMFrameSetTitle(
 /* dispatch */
 
 static int
-ProcWindowsWMDispatch (register ClientPtr client)
+ProcWindowsWMDispatch (ClientPtr client)
 {
   REQUEST(xReq);
 
@@ -586,16 +584,16 @@ SNotifyEvent (xWindowsWMNotifyEvent *from, xWindowsWMNotifyEvent *to)
 }
 
 static int
-SProcWindowsWMQueryVersion (register ClientPtr client)
+SProcWindowsWMQueryVersion (ClientPtr client)
 {
-  register int n;
+  int n;
   REQUEST(xWindowsWMQueryVersionReq);
   swaps(&stuff->length, n);
   return ProcWindowsWMQueryVersion(client);
 }
 
 static int
-SProcWindowsWMDispatch (register ClientPtr client)
+SProcWindowsWMDispatch (ClientPtr client)
 {
   REQUEST(xReq);
 

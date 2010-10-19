@@ -441,43 +441,6 @@ ProcRRGetScreenInfo (ClientPtr client);
 extern _X_EXPORT void
 RRDeliverScreenEvent (ClientPtr client, WindowPtr pWin, ScreenPtr pScreen);
     
-/* mirandr.c */
-extern _X_EXPORT Bool
-miRandRInit (ScreenPtr pScreen);
-
-extern _X_EXPORT Bool
-miRRGetInfo (ScreenPtr pScreen, Rotation *rotations);
-
-extern _X_EXPORT Bool
-miRRCrtcSet (ScreenPtr	pScreen,
-	     RRCrtcPtr	crtc,
-	     RRModePtr	mode,
-	     int	x,
-	     int	y,
-	     Rotation	rotation,
-	     int	numOutput,
-	     RROutputPtr *outputs);
-
-extern _X_EXPORT Bool
-miRROutputSetProperty (ScreenPtr	    pScreen,
-		       RROutputPtr	    output,
-		       Atom		    property,
-		       RRPropertyValuePtr   value);
-
-extern _X_EXPORT Bool
-miRROutputGetProperty (ScreenPtr	    pScreen,
-		       RROutputPtr	    output,
-		       Atom		    property);
-
-extern _X_EXPORT Bool
-miRROutputValidateMode (ScreenPtr	    pScreen,
-			RROutputPtr	    output,
-			RRModePtr	    mode);
-
-extern _X_EXPORT void
-miRRModeDestroy (ScreenPtr  pScreen,
-		 RRModePtr  mode);
-
 /* randr.c */
 /*
  * Send all pending events

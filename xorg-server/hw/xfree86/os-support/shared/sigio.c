@@ -1,4 +1,3 @@
-
 /* sigio.c -- Support for SIGIO handler installation and removal
  * Created: Thu Jun  3 15:39:18 1999 by faith@precisioninsight.com
  *
@@ -65,14 +64,6 @@
 
 #ifdef HAVE_STROPTS_H
 # include <stropts.h>
-#endif
-
-/*
- * Linux libc5 defines FASYNC, but not O_ASYNC.  Don't know if it is
- * functional or not.
- */
-#if defined(FASYNC) && !defined(O_ASYNC)
-#  define O_ASYNC FASYNC
 #endif
 
 #ifdef MAXDEVICES

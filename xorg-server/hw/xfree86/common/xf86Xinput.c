@@ -1238,40 +1238,43 @@ xf86FirstLocalDevice(void)
 
 /* 
  * Cx     - raw data from touch screen
- * Sxhigh - scaled highest dimension
+ * to_max - scaled highest dimension
  *          (remember, this is of rows - 1 because of 0 origin)
- * Sxlow  - scaled lowest dimension
- * Rxhigh - highest raw value from touch screen calibration
- * Rxlow  - lowest raw value from touch screen calibration
+ * to_min  - scaled lowest dimension
+ * from_max - highest raw value from touch screen calibration
+ * from_min  - lowest raw value from touch screen calibration
  *
  * This function is the same for X or Y coordinates.
  * You may have to reverse the high and low values to compensate for
  * different orgins on the touch screen vs X.
+ *
+ * e.g. to scale from device coordinates into screen coordinates, call
+ * xf86ScaleAxis(x, 0, screen_width, dev_min, dev_max);
  */
 
 int
 xf86ScaleAxis(int	Cx,
-              int	Sxhigh,
-              int	Sxlow,
-              int	Rxhigh,
-              int	Rxlow )
+              int	to_max,
+              int	to_min,
+              int	from_max,
+              int	from_min )
 {
     int X;
-    int64_t dSx = Sxhigh - Sxlow;
-    int64_t dRx = Rxhigh - Rxlow;
+    int64_t to_width = to_max - to_min;
+    int64_t from_width = from_max - from_min;
 
-    if (dRx) {
-	X = (int)(((dSx * (Cx - Rxlow)) / dRx) + Sxlow);
+    if (from_width) {
+	X = (int)(((to_width * (Cx - from_min)) / from_width) + to_min);
     }
     else {
 	X = 0;
 	ErrorF ("Divide by Zero in xf86ScaleAxis");
     }
     
-    if (X > Sxhigh)
-	X = Sxhigh;
-    if (X < Sxlow)
-	X = Sxlow;
+    if (X > to_max)
+	X = to_max;
+    if (X < to_min)
+	X = to_min;
     
     return X;
 }

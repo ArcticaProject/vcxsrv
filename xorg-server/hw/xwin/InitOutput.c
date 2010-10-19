@@ -58,29 +58,9 @@ typedef HRESULT (*SHGETFOLDERPATHPROC)(
 );
 #endif
 
-
 /*
  * References to external symbols
  */
-
-extern int			g_iNumScreens;
-extern winScreenInfo *		g_ScreenInfo;
-extern char *			g_pszCommandLine;
-extern Bool			g_fSilentFatalError;
-
-extern const char *		g_pszLogFile;
-extern Bool			g_fLogFileChanged;
-extern int			g_iLogVerbose;
-Bool				g_fLogInited;
-
-extern Bool			g_fXdmcpEnabled;
-extern Bool			g_fAuthEnabled;
-#ifdef HAS_DEVWINDOWS
-extern int			g_fdMessageQueue;
-#endif
-extern const char *		g_pszQueryHost;
-extern HINSTANCE		g_hInstance;
-
 #ifdef XWIN_CLIPBOARD
 extern Bool			g_fUnicodeClipboard;
 extern Bool			g_fClipboardLaunched;
@@ -90,15 +70,11 @@ extern HWND			g_hwndClipboard;
 extern Bool			g_fClipboard;
 #endif
 
-extern HMODULE			g_hmodDirectDraw;
-extern FARPROC			g_fpDirectDrawCreate;
-extern FARPROC			g_fpDirectDrawCreateClipper;
-  
-extern HMODULE			g_hmodCommonControls;
-extern FARPROC			g_fpTrackMouseEvent;
-extern Bool			g_fNoHelpMessageBox;                     
-extern Bool			g_fSilentDupError;                     
-extern Bool                     g_fNativeGl;
+
+/*
+  module handle for dynamically loaded comctl32 library
+*/
+static HMODULE g_hmodCommonControls = NULL;
 
 /*
  * Function prototypes
@@ -258,15 +234,9 @@ ddxGiveUp (void)
    * At this point we aren't creating any new screens, so
    * we are guaranteed to not need the DirectDraw functions.
    */
-  if (g_hmodDirectDraw != NULL)
-    {
-      FreeLibrary (g_hmodDirectDraw);
-      g_hmodDirectDraw = NULL;
-      g_fpDirectDrawCreate = NULL;
-      g_fpDirectDrawCreateClipper = NULL;
-    }
+  winReleaseDDProcAddresses();
 
-  /* Unload our TrackMouseEvent funtion pointer */
+  /* Unload our TrackMouseEvent function pointer */
   if (g_hmodCommonControls != NULL)
     {
       FreeLibrary (g_hmodCommonControls);
@@ -437,7 +407,7 @@ winFixupPaths (void)
             int needs_sep = TRUE; 
             int comment_block = FALSE;
 
-            /* get defautl fontpath */
+            /* get default fontpath */
             char *fontpath = strdup(defaultFontPath);
             size_t size = strlen(fontpath);
 
@@ -873,7 +843,7 @@ winUseMsg (void)
 
   ErrorF ("-silent-dup-error\n"
 	  "\tIf another instance of " EXECUTABLE_NAME " with the same display number is running\n"
-     "\texit silently and don’t display any error message.\n");
+	  "\texit silently and don't display any error message.\n");
 
   ErrorF ("-swcursor\n"
 	  "\tDisable the usage of the Windows cursor and use the X11 software\n"

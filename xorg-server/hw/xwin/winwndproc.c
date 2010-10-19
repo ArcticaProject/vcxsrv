@@ -51,18 +51,6 @@ Bool				g_fButton[3] = { FALSE, FALSE, FALSE };
 
 
 /*
- * References to external symbols
- */
-
-extern Bool			g_fClipboard;
-extern HWND			g_hDlgDepthChange;
-extern Bool			g_fKeyboardHookLL;
-extern HWND			g_hwndKeyboardFocus;
-extern Bool			g_fSoftwareCursor;
-extern DWORD			g_dwCurrentThreadID;
-
-
-/*
  * Called by winWakeupHandler
  * Processes current Windows message
  */
@@ -964,9 +952,6 @@ winWindowProc (HWND hwnd, UINT message,
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
 
-      /* Save handle of our main window that last received focus */
-      g_hwndKeyboardFocus = hwnd;
-
       /* Restore the state of all mode keys */
       winRestoreModeKeyStates ();
 
@@ -978,9 +963,6 @@ winWindowProc (HWND hwnd, UINT message,
     case WM_KILLFOCUS:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
-
-      /* Clear handle of our main window that last received focus */
-      g_hwndKeyboardFocus = NULL;
 
       /* Release any pressed keys */
       winKeybdReleaseKeys ();

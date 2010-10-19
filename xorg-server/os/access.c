@@ -104,11 +104,7 @@ SOFTWARE.
 
 #if defined(TCPCONN) || defined(STREAMSCONN) || defined(__SCO__)
 #include <netinet/in.h>
-#endif /* TCPCONN || STREAMSCONN || ISC || __SCO__ */
-#ifdef DNETCONN
-#include <netdnet/dn.h>
-#include <netdnet/dnetdb.h>
-#endif
+#endif /* TCPCONN || STREAMSCONN || __SCO__ */
 
 #ifdef HAS_GETPEERUCRED
 # include <ucred.h>
@@ -333,7 +329,7 @@ ifioctl (int fd, int cmd, char *arg)
 }
 #else /* Case sun, SCO325 and others  */
 #define ifioctl ioctl
-#endif /* ((SVR4 && !sun !SCO325) || ISC) && SIOCGIFCONF */
+#endif
 
 /*
  * DefineSelf (fd):
@@ -346,7 +342,7 @@ ifioctl (int fd, int cmd, char *arg)
 void
 DefineSelf (int fd)
 {
-#if !defined(TCPCONN) && !defined(STREAMSCONN) && !defined(UNIXCONN) && !defined(MNX_TCPCONN)
+#if !defined(TCPCONN) && !defined(STREAMSCONN) && !defined(UNIXCONN)
     return;
 #else
     register int n;
@@ -480,7 +476,7 @@ DefineLocalHost:
 	    selfhosts = host;
 	}
     }
-#endif /* !TCPCONN && !STREAMSCONN && !UNIXCONN && !MNX_TCPCONN */
+#endif /* !TCPCONN && !STREAMSCONN && !UNIXCONN */
 }
 
 #else
@@ -545,35 +541,6 @@ DefineSelf (int fd)
     int 		family;
     register HOST 	*host;
     
-#ifdef DNETCONN
-    struct dn_naddr *dnaddr = getnodeadd();
-    /*
-     * AF_DECnet may not be listed in the interface list.  Instead use
-     * the supported library call to find out the local address (if any).
-     */
-    if (dnaddr)
-    {    
-	addr = (unsigned char *) dnaddr;
-	len = dnaddr->a_len + sizeof(dnaddr->a_len);
-	family = FamilyDECnet;
-	for (host = selfhosts;
-	     host && !addrEqual (family, addr, len, host);
-	     host = host->next)
-	    ;
-        if (!host)
-	{
-	    MakeHost(host,len)
-	    if (host)
-	    {
-		host->family = family;
-		host->len = len;
-		acopy(addr, host->addr, len);
-		host->next = selfhosts;
-		selfhosts = host;
-	    }
-	}
-    }
-#endif /* DNETCONN */
 #ifndef HAS_GETIFADDRS
 
     len = sizeof(buf);
@@ -624,13 +591,6 @@ DefineSelf (int fd)
 	len = ifraddr_size (IFR_IFR_ADDR);
 	family = ConvertAddr ((struct sockaddr *) &IFR_IFR_ADDR, 
 	  			&len, (pointer *)&addr);
-#ifdef DNETCONN
-	/*
-	 * DECnet was handled up above.
-	 */
-	if (family == AF_DECnet)
-	    continue;
-#endif /* DNETCONN */
         if (family == -1 || family == FamilyLocal)
 	    continue;
 #if defined(IPv6) && defined(AF_INET6)
@@ -760,10 +720,6 @@ DefineSelf (int fd)
     for (ifr = ifap; ifr != NULL; ifr = ifr->ifa_next) {
         if (!ifr->ifa_addr)
             continue;
-#ifdef DNETCONN
-	if (ifr->ifa_addr.sa_family == AF_DECnet) 
-	    continue;
-#endif /* DNETCONN */
 	len = sizeof(*(ifr->ifa_addr));
 	family = ConvertAddr((struct sockaddr *) ifr->ifa_addr, &len,
 			     (pointer *)&addr);
@@ -919,21 +875,14 @@ ResetHosts (char *display)
     FILE		*fd;
     char		*ptr;
     int                 i, hostlen;
-#if ((defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)) && \
-     (!defined(IPv6) || !defined(AF_INET6))) || defined(DNETCONN)
+#if (defined(TCPCONN) || defined(STREAMSCONN) ) && \
+     (!defined(IPv6) || !defined(AF_INET6))
     union {
         struct sockaddr	sa;
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)
+#if defined(TCPCONN) || defined(STREAMSCONN)
 	struct sockaddr_in in;
 #endif /* TCPCONN || STREAMSCONN */
-#ifdef DNETCONN
-	struct sockaddr_dn dn;
-#endif
     }			saddr;
-#endif
-#ifdef DNETCONN
-    struct nodeent 	*np;
-    struct dn_naddr 	dnaddr, *dnaddrp, *dnet_addr();
 #endif
     int			family = 0;
     pointer		addr;
@@ -980,7 +929,7 @@ ResetHosts (char *display)
 	    NewHost(family, "", 0, FALSE);
 	    LocalHostRequested = TRUE;	/* Fix for XFree86 bug #156 */
 	}
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)
+#if defined(TCPCONN) || defined(STREAMSCONN)
 	else if (!strncmp("inet:", lhostname, 5))
 	{
 	    family = FamilyInternet;
@@ -993,13 +942,6 @@ ResetHosts (char *display)
 	    hostname = ohostname + 6;
 	}
 #endif
-#endif
-#ifdef DNETCONN
-	else if (!strncmp("dnet:", lhostname, 5))
-	{
-	    family = FamilyDECnet;
-	    hostname = ohostname + 5;
-	}
 #endif
 #ifdef SECURE_RPC
 	else if (!strncmp("nis:", lhostname, 4))
@@ -1024,32 +966,6 @@ ResetHosts (char *display)
 	    }
 	}
 	else
-#ifdef DNETCONN
-    	if ((family == FamilyDECnet) || ((family == FamilyWild) &&
-	    (ptr = strchr(hostname, ':')) && (*(ptr + 1) == ':') &&
-	    !(*ptr = '\0')))	/* bash trailing colons if necessary */
-	{
-    	    /* node name (DECnet names end in "::") */
-	    dnaddrp = dnet_addr(hostname);
-    	    if (!dnaddrp && (np = getnodebyname (hostname)))
-	    {
-		/* node was specified by name */
-		saddr.sa.sa_family = np->n_addrtype;
-		len = sizeof(saddr.sa);
-		if (ConvertAddr (&saddr.sa, &len, (pointer *)&addr) == FamilyDECnet)
-		{
-		    memset((char *) &dnaddr, 0, sizeof (dnaddr));
-		    dnaddr.a_len = np->n_length;
-		    acopy (np->n_addr, dnaddr.a_addr, np->n_length);
-		    dnaddrp = &dnaddr;
-		}
-    	    }
-	    if (dnaddrp)
-		(void) NewHost(FamilyDECnet, (pointer)dnaddrp,
-			(int)(dnaddrp->a_len + sizeof(dnaddrp->a_len)), FALSE);
-    	}
-	else
-#endif /* DNETCONN */
 #ifdef SECURE_RPC
 	if ((family == FamilyNetname) || (strchr(hostname, '@')))
 	{
@@ -1058,7 +974,7 @@ ResetHosts (char *display)
 	}
 	else
 #endif /* SECURE_RPC */
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)
+#if defined(TCPCONN) || defined(STREAMSCONN)
 	{
 #if defined(IPv6) && defined(AF_INET6)
 	    if ( (family == FamilyInternet) || (family == FamilyInternet6) ||
@@ -1523,7 +1439,7 @@ CheckAddr (
 
     switch (family)
     {
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)
+#if defined(TCPCONN) || defined(STREAMSCONN)
       case FamilyInternet:
 	if (length == sizeof (struct in_addr))
 	    len = length;
@@ -1539,21 +1455,6 @@ CheckAddr (
         break;
 #endif
 #endif 
-#ifdef DNETCONN
-      case FamilyDECnet:
-        {
-	    struct dn_naddr *dnaddr = (struct dn_naddr *) pAddr;
-
-	    if ((length < sizeof(dnaddr->a_len)) ||
-		(length < dnaddr->a_len + sizeof(dnaddr->a_len)))
-		len = -1;
-	    else
-		len = dnaddr->a_len + sizeof(dnaddr->a_len);
-	    if (len > sizeof(struct dn_naddr))
-		len = -1;
-	}
-        break;
-#endif
       case FamilyServerInterpreted:
 	len = siCheckAddr(pAddr, length);
 	break;
@@ -1631,7 +1532,7 @@ ConvertAddr (
     case AF_UNIX:
 #endif
         return FamilyLocal;
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(MNX_TCPCONN)
+#if defined(TCPCONN) || defined(STREAMSCONN)
     case AF_INET:
 #ifdef WIN32
         if (16777343 == *(long*)&((struct sockaddr_in *) saddr)->sin_addr)
@@ -1655,22 +1556,6 @@ ConvertAddr (
 	}
     }
 #endif
-#endif
-#ifdef DNETCONN
-    case AF_DECnet:
-	{
-	    struct sockaddr_dn *sdn = (struct sockaddr_dn *) saddr;
-	    *len = sdn->sdn_nodeaddrl + sizeof(sdn->sdn_nodeaddrl);
-	    *addr = (pointer) &(sdn->sdn_add);
-	}
-        return FamilyDECnet;
-#endif
-#ifdef CHAOSCONN
-    case AF_CHAOS:
-	{
-	    not implemented
-	}
-	return FamilyChaos;
 #endif
     default:
         return -1;

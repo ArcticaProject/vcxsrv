@@ -44,21 +44,9 @@
  * References to external globals
  */
 
-extern Bool			g_fCursor;
-extern HWND			g_hDlgDepthChange;
-extern HWND			g_hDlgExit;
-extern HWND			g_hDlgAbout;
-extern WINPREFS			pref;
 #ifdef XWIN_CLIPBOARD
 extern Bool			g_fClipboardStarted;
 #endif
-extern Bool			g_fSoftwareCursor;
-
-#if defined(XWIN_MULTIWINDOW)
-extern HICON                    g_hIconX;
-extern HICON                    g_hSmallIconX;
-#endif
-
 /*
  * Local function prototypes
  */
@@ -324,7 +312,7 @@ winDisplayExitDialog (winPrivScreenPtr pScreenPriv)
   
   /* Set focus to the Cancel button */
   PostMessage (g_hDlgExit, WM_NEXTDLGCTL,
-	       GetDlgItem (g_hDlgExit, IDCANCEL), TRUE);
+	       (WPARAM)GetDlgItem (g_hDlgExit, IDCANCEL), TRUE);
 }
 
 #define CONNECTED_CLIENTS_FORMAT	"There %s currently %d client%s connected."
@@ -594,7 +582,7 @@ winDisplayAboutDialog (winPrivScreenPtr pScreenPriv)
   
   /* Set focus to the OK button */
   PostMessage (g_hDlgAbout, WM_NEXTDLGCTL,
-	       GetDlgItem (g_hDlgAbout, IDOK), TRUE);
+	       (WPARAM)GetDlgItem (g_hDlgAbout, IDOK), TRUE);
 }
 
 
@@ -675,7 +663,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 
 	case ID_ABOUT_CHANGELOG:
 	  {
-	    HINSTANCE iReturn;
+	    int iReturn;
 #ifdef __CYGWIN__
 	    const char *	pszCygPath = "/usr/X11R6/share/doc/"
 	      "xorg-x11-xwin/changelog.html";
@@ -688,7 +676,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 		    "devel/server/changelog.html";
 #endif
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszWinPath,
                                     NULL,
@@ -708,7 +696,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	    const char *	pszPath = __VENDORDWEBSUPPORT__;
 	    int			iReturn;
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszPath,
                                     NULL,
@@ -728,7 +716,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	    const char *	pszPath = "http://x.cygwin.com/docs/ug/";
 	    int			iReturn;
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszPath,
                                     NULL,
@@ -748,7 +736,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	    const char *	pszPath = "http://x.cygwin.com/docs/faq/";
 	    int			iReturn;
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszPath,
                                     NULL,

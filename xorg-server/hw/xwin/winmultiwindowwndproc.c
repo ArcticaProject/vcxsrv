@@ -42,15 +42,6 @@
 #include "winmsg.h"
 #include "inputstr.h"
 
-/*
- * External global variables
- */
-
-extern Bool			g_fCursor;
-extern Bool			g_fKeyboardHookLL;
-extern Bool			g_fSoftwareCursor;
-extern Bool			g_fButton[3];
-
 extern void winUpdateWindowPosition (HWND hWnd, Bool reshape, HWND *zstyle);
 
 
