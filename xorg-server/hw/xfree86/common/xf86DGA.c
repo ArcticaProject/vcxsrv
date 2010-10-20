@@ -1133,6 +1133,10 @@ DGAProcessPointerEvent (ScreenPtr pScreen, DGAEvent *event, DeviceIntPtr mouse)
             ev.root_x           = event->dx;
             ev.root_y           = event->dy;
             ev.corestate        = event->state;
+            /* DGA is core only, so valuators.data doesn't actually matter.
+             * Mask must be set for EventToCore to create motion events. */
+            SetBit(ev.valuators.mask, 0);
+            SetBit(ev.valuators.mask, 1);
 	    DeliverGrabbedEvent ((InternalEvent*)&ev, mouse, FALSE);
 	}
     }

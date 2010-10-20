@@ -1677,20 +1677,6 @@ xkbSymMapWireDesc*	wire = *wireRtrn;
     if (!(XkbKeySymsMask&req->present))
 	return 1;
     CHK_REQ_KEY_RANGE2(0x11,req->firstKeySym,req->nKeySyms,req,(*errorRtrn),0);
-    map = &xkb->map->key_sym_map[xkb->min_key_code];
-    for (i=xkb->min_key_code;i<(unsigned)req->firstKeySym;i++,map++) {
-	register int g,ng,w;
-	ng= XkbNumGroups(map->group_info);
-	for (w=g=0;g<ng;g++) {
-	    if (map->kt_index[g]>=(unsigned)nTypes) {
-		*errorRtrn = _XkbErrCode4(0x13,i,g,map->kt_index[g]);
-		return 0;
-	    }
-	    if (mapWidths[map->kt_index[g]]>w)
-		w= mapWidths[map->kt_index[g]];
-	}
-	symsPerKey[i] = w*ng;
-    }
     for (i=0;i<req->nKeySyms;i++) {
 	KeySym *pSyms;
 	register unsigned nG;
@@ -2343,8 +2329,10 @@ _XkbSetMapChecks(ClientPtr client, DeviceIntPtr dev, xkbSetMapReq *req, char* va
     XkbDescPtr          xkb;
     int                 error;
     int                 nTypes = 0, nActions;
-    CARD8               mapWidths[XkbMaxLegalKeyCode + 1];
-    CARD16              symsPerKey[XkbMaxLegalKeyCode + 1];
+    CARD8               mapWidths[XkbMaxLegalKeyCode + 1] = {0};
+    CARD16              symsPerKey[XkbMaxLegalKeyCode + 1] = {0};
+    XkbSymMapPtr        map;
+    int                 i;
 
     xkbi= dev->key->xkbInfo;
     xkb = xkbi->desc;
@@ -2373,6 +2361,23 @@ _XkbSetMapChecks(ClientPtr client, DeviceIntPtr dev, xkbSetMapReq *req, char* va
 	client->errorValue = nTypes;
 	return BadValue;
     }
+
+    /* symsPerKey/mapWidths must be filled regardless of client-side flags */
+    map = &xkb->map->key_sym_map[xkb->min_key_code];
+    for (i=xkb->min_key_code;i<xkb->max_key_code;i++,map++) {
+	register int g,ng,w;
+	ng= XkbNumGroups(map->group_info);
+	for (w=g=0;g<ng;g++) {
+	    if (map->kt_index[g]>=(unsigned)nTypes) {
+		client->errorValue = _XkbErrCode4(0x13,i,g,map->kt_index[g]);
+		return 0;
+	    }
+	    if (mapWidths[map->kt_index[g]]>w)
+		w= mapWidths[map->kt_index[g]];
+	}
+	symsPerKey[i] = w*ng;
+    }
+
     if ((req->present & XkbKeySymsMask) &&
 	(!CheckKeySyms(client,xkb,req,nTypes,mapWidths,symsPerKey,
 					(xkbSymMapWireDesc **)&values,&error))) {
