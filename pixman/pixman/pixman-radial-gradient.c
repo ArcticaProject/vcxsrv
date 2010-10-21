@@ -290,10 +290,11 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
 	db = dot (unit.vector[0], unit.vector[1], 0,
 		  radial->delta.x, radial->delta.y, 0);
 
-	c = dot (v.vector[0], v.vector[1], -radial->c1.radius,
+	c = dot (v.vector[0], v.vector[1],
+		 -((pixman_fixed_48_16_t) radial->c1.radius),
 		 v.vector[0], v.vector[1], radial->c1.radius);
-	dc = dot (2 * v.vector[0] + unit.vector[0],
-		  2 * v.vector[1] + unit.vector[1],
+	dc = dot (2 * (pixman_fixed_48_16_t) v.vector[0] + unit.vector[0],
+		  2 * (pixman_fixed_48_16_t) v.vector[1] + unit.vector[1],
 		  0,
 		  unit.vector[0], unit.vector[1], 0);
 	ddc = 2 * dot (unit.vector[0], unit.vector[1], 0,

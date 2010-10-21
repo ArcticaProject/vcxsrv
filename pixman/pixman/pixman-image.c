@@ -48,7 +48,6 @@ _pixman_init_gradient (gradient_t *                  gradient,
     gradient->n_stops = n_stops;
 
     gradient->stop_range = 0xffff;
-    gradient->common.class = SOURCE_IMAGE_CLASS_UNKNOWN;
 
     return TRUE;
 }
