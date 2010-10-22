@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include "md5.h"
 class mhmakeparser;
 class fileinfo;
-extern refptr<fileinfo> NullFileInfo;
 
 class rule: public refbase
 {
@@ -47,7 +46,7 @@ public:
   {
     return m_Commands;
   }
-  void PrintCommands(refptr<fileinfo> Target=NullFileInfo) const;
+  void PrintCommands(fileinfo *pTarget=NULL) const;
 
   void SetStem(const string &Stem)
   {
@@ -77,10 +76,10 @@ public:
 
 class IMPLICITRULE
 {
-  static map< string, vector<pair<string,refptr<rule> > > > m_ImplicitRules;
+  static vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > > m_ImplicitRules;  // Use a vector and not a map because the order of the implicit rules is important
 public:
-  static void AddImplicitRule(const refptr<fileinfo> &Target,const vector< refptr<fileinfo> >&Deps,refptr<rule> pRule);
-  static void SearchImplicitRule(const refptr<fileinfo> &Target,vector< pair<refptr<fileinfo>,refptr<rule> > >&Result);
+  static void AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &Deps,refptr<rule> pRule);
+  static void SearchImplicitRule(const fileinfo *pTarget,vector< pair<fileinfo*,refptr<rule> > >&Result);
   static void PrintImplicitRules();
 };
 

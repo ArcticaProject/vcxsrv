@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -351,45 +351,45 @@ string mhmakefileparser::f_firstword(const string & Arg) const
 ///////////////////////////////////////////////////////////////////////////////
 string mhmakefileparser::f_wildcard(const string & Arg) const
 {
-  refptr<fileinfo> FileSpec=GetFileInfo(TrimString(Arg),m_MakeDir); /* Use GetFileInfo to make the relative path absolute */
-  refptr<fileinfo> Dir=FileSpec->GetDir();
+  fileinfo *pFileSpec=GetFileInfo(TrimString(Arg),m_MakeDir); /* Use GetFileInfo to make the relative path absolute */
+  fileinfo *pDir=pFileSpec->GetDir();
 #ifdef WIN32
   struct _finddata_t FileInfo;
-  intptr_t hFile=_findfirst(FileSpec->GetFullFileName().c_str(),&FileInfo);
+  intptr_t hFile=_findfirst(pFileSpec->GetFullFileName().c_str(),&FileInfo);
   if (hFile==-1)
     return g_EmptyString;
 
   string Ret=g_EmptyString;
 
   /* We have to verify with percentmatch since the find functions *.ext also matches the functions *.extbrol */
-  string CheckSpec=FileSpec->GetName();
-  if (PercentMatch(FileInfo.name,CheckSpec,NULL,'*'))
+  string CheckSpec=pFileSpec->GetName();
+  if (PercentMatchNoCase(FileInfo.name,CheckSpec,NULL,'*'))
   {
-    Ret=GetFileInfo(FileInfo.name,Dir)->GetQuotedFullFileName();
+    Ret=GetFileInfo(FileInfo.name,pDir)->GetQuotedFullFileName();
   }
   while (-1!=_findnext(hFile,&FileInfo))
   {
-    if (PercentMatch(FileInfo.name,CheckSpec,NULL,'*'))
+    if (PercentMatchNoCase(FileInfo.name,CheckSpec,NULL,'*'))
     {
       Ret+=g_SpaceString;
-      Ret+=GetFileInfo(FileInfo.name,Dir)->GetQuotedFullFileName();
+      Ret+=GetFileInfo(FileInfo.name,pDir)->GetQuotedFullFileName();
     }
   }
   _findclose(hFile);
 #else
   glob_t Res;
-  if (glob (FileSpec->GetFullFileName().c_str(), GLOB_ERR|GLOB_NOSORT|GLOB_MARK, NULL, &Res))
+  if (glob (pFileSpec->GetFullFileName().c_str(), GLOB_ERR|GLOB_NOSORT|GLOB_MARK, NULL, &Res))
     return g_EmptyString;
 
   string Ret=g_EmptyString;
   string SepStr=g_EmptyString;
-  string CheckSpec=FileSpec->GetName();
+  string CheckSpec=pFileSpec->GetName();
   for (int i=0; i<Res.gl_pathc; i++)
   {
     if (PercentMatch(Res.gl_pathv[i],CheckSpec,NULL,'*'))
     {
       Ret+=SepStr;
-      Ret+=GetFileInfo(Res.gl_pathv[i],Dir)->GetQuotedFullFileName();
+      Ret+=GetFileInfo(Res.gl_pathv[i],pDir)->GetQuotedFullFileName();
       SepStr=g_SpaceString;
     }
   }
@@ -403,7 +403,7 @@ string mhmakefileparser::f_wildcard(const string & Arg) const
 string mhmakefileparser::f_exist(const string & Arg) const
 {
   string File=TrimString(Arg);
-  refptr<fileinfo> pFile=GetFileInfo(File,m_MakeDir);
+  fileinfo *pFile=GetFileInfo(File,m_MakeDir);
   if (pFile->Exists())
   {
     return string("1");
@@ -427,7 +427,7 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
   string strDirs;
   NextCharItem(pTmp,strDirs,',');
 
-  vector< refptr<fileinfo> > Dirs;
+  vector<fileinfo*> Dirs;
   SplitToItems(strDirs,Dirs);
 
   pTmp=strFiles.c_str();
@@ -436,11 +436,11 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
   while (*pTmp)
   {
     string File;
-    refptr<fileinfo> pFile;
+    fileinfo *pFile;
     pTmp=NextItem(pTmp,File);
 
-    vector< refptr<fileinfo> >::iterator It=Dirs.begin();
-    vector< refptr<fileinfo> >::iterator ItEnd=Dirs.end();
+    vector<fileinfo*>::iterator It=Dirs.begin();
+    vector<fileinfo*>::iterator ItEnd=Dirs.end();
     while (It!=ItEnd)
     {
       pFile=GetFileInfo(File,*It++);
@@ -448,7 +448,7 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
       {
         break;
       }
-      pFile=NullFileInfo;
+      pFile=NULL;
     }
     if (!pFile)
       continue;
@@ -471,7 +471,7 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
 string mhmakefileparser::f_fullname(const string & Arg) const
 {
   string File=TrimString(Arg);
-  refptr<fileinfo> pFile=GetFileInfo(File,m_MakeDir);
+  fileinfo *pFile=GetFileInfo(File,m_MakeDir);
   return pFile->GetQuotedFullFileName();
 }
 
@@ -674,26 +674,26 @@ string mhmakefileparser::f_shell(const string & Command) const
 ///////////////////////////////////////////////////////////////////////////////
 static string relpath(const string &FileName,void *pvDir)
 {
-  const refptr<fileinfo> pDir=*(const refptr<fileinfo> *)pvDir;
-  refptr<fileinfo> Path=GetFileInfo(FileName,pDir);
+  const fileinfo *pDir=*(const fileinfo **)pvDir;
+  const fileinfo *pPath=GetFileInfo(FileName,pDir);
   const char *pCur=pDir->GetFullFileName().c_str();
-  const char *pPath=Path->GetFullFileName().c_str();
+  const char *pszPath=pPath->GetFullFileName().c_str();
 
-  const char *pLast=pPath;
-  while (*pCur==*pPath)
+  const char *pLast=pszPath;
+  while (*pCur==*pszPath)
   {
-    char Char=*pPath;
+    char Char=*pszPath;
     if (!Char)
     {
       return "."; // Means that FileName is the same as the current directory
     }
     if (Char==OSPATHSEP)
-      pLast=pPath+1;
+      pLast=pszPath+1;
     pCur++;
-    pPath++;
+    pszPath++;
   }
-  if (*pPath==OSPATHSEP && !*pCur)
-    pLast=pPath+1;
+  if (*pszPath==OSPATHSEP && !*pCur)
+    pLast=pszPath+1;
   string retPath;
   if (*pCur==OSPATHSEP) {
     bool first=true;
@@ -705,7 +705,7 @@ static string relpath(const string &FileName,void *pvDir)
         retPath+=OSPATHSEPSTR"..";
       pCur++;
     }
-    if (pPath)
+    if (pszPath)
       retPath=retPath+OSPATHSEPSTR+pLast;
   }
   else

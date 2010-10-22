@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,26 +21,25 @@
 #ifndef __CURDIR_H
 #define __CURDIR_H
 
-#include "refptr.h"
 class fileinfo;
 
 class curdir
 {
 public:
-  class initcurdir : public refptr<fileinfo>
+  class initcurdir
   {
+    friend curdir;
+    const fileinfo *m_pDir;
   public:
-    initcurdir &operator=(const refptr<fileinfo>& Src);
-
     initcurdir();
   };
 private:
   static initcurdir m_pCurrentDir;
 
 public:
-  static refptr<fileinfo> &GetCurDir()
+  static const fileinfo* GetCurDir()
   {
-    return m_pCurrentDir;
+    return m_pCurrentDir.m_pDir;
   }
 };
 

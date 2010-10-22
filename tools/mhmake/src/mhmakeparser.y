@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@
 %token <theString> COMMAND
 %token <theString> COMMA OPENBRACE CLOSEBRACE
 %token <theString> STRING DOLLAREXPR EQUAL COLON DOUBLECOLON
-%token IMEQUAL PEQUAL OPTEQUAL PHONY AUTODEPS EXPORT NEWLINE INCLUDEMAK SPACE
+%token IMEQUAL PEQUAL OPTEQUAL PHONY AUTODEPS EXPORT NEWLINE INCLUDEMAK SPACE VPATH
 
 %type <theString> expression nonspaceexpression simpleexpression
 %type <theString> maybeemptyexpression
@@ -69,6 +69,7 @@ statements :
 ;
 
 statement: NEWLINE |
+           SPACE |
            includemak |
            ruledef |
            phonyrule |
@@ -78,6 +79,7 @@ statement: NEWLINE |
            pvarassignment |
            optvarassignment |
            exportrule |
+           vpathrule |
            COMMAND
            {
              if (!m_pCurrentRule)
@@ -129,9 +131,9 @@ rulecolon: COLON {$$=0;} |
 
 phonyrule: PHONY COLON expression
            {
-             vector< refptr<fileinfo> > Items;
+             vector<fileinfo*> Items;
              SplitToItems(ExpandExpression($3),Items);
-             vector< refptr<fileinfo> >::iterator pIt=Items.begin();
+             vector<fileinfo*>::iterator pIt=Items.begin();
              while (pIt!=Items.end())
              {
                (*pIt)->SetPhony();
@@ -145,9 +147,9 @@ phonyrule: PHONY COLON expression
 
 autodepsrule: AUTODEPS COLON expression
            {
-             vector< refptr<fileinfo> > Items;
+             vector<fileinfo*> Items;
              SplitToItems(ExpandExpression($3),Items);
-             vector< refptr<fileinfo> >::iterator pIt=Items.begin();
+             vector<fileinfo*>::iterator pIt=Items.begin();
              while (pIt!=Items.end())
              {
                (*pIt)->SetAutoDepsScan(this);
@@ -171,6 +173,13 @@ exportstring : STRING
                  SetExport($1,ExpandExpression(ExpandVar($1)));
                  PRINTF(("Exporting %s : %s\n",$1.c_str(),ExpandExpression(ExpandVar($1)).c_str()));
                }
+;
+
+vpathrule: VPATH SPACE nonspaceexpression SPACE expression NEWLINE
+           {
+             SetvPath(ExpandExpression($3),ExpandExpression($5));
+             PRINTF(("Setting vpath %s to %s\n",$3.c_str(),ExpandExpression($5).c_str()));
+           }
 ;
 
 varassignment: STRING EQUAL maybeemptyexpression

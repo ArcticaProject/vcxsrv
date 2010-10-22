@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,14 +33,14 @@ class commandqueue
 {
   struct activeentry : public refbase
   {
-    refptr<fileinfo>               pTarget;
+    fileinfo*                      pTarget;
     vector<string>::const_iterator CurrentCommandIt;
     string                         Command;
     md5_context                    md5ctx;
     bool                           IgnoreError;
   };
 private:
-  queue< refptr<fileinfo> >  m_Queue;
+  queue<fileinfo*>     m_Queue;
   unsigned                   m_MaxNrCommandsInParallel;
   mh_pid_t                  *m_pActiveProcesses;
   refptr<activeentry>       *m_pActiveEntries;
@@ -56,7 +56,7 @@ private:
   {
     RemoveActiveEntry(GetActiveEntryId(pActiveEntry));
   }
-  bool StartExecuteCommands(const refptr<fileinfo> &pTarget);
+  bool StartExecuteCommands(fileinfo *pTarget);
   bool StartExecuteNextCommand(refptr<activeentry> pActiveEntry, mh_pid_t *pActiveProcess);
   void TargetBuildFinished(refptr<activeentry> pActiveEntry);
 
@@ -64,8 +64,8 @@ public:
   commandqueue();
   ~commandqueue();
 
-  bool QueueTarget(const refptr<fileinfo> &pTarget);  // Returns true if target has been queued, false when commands are executed upon return
-  mh_time_t WaitForTarget(const refptr<fileinfo> &pTarget);
+  bool QueueTarget(fileinfo *pTarget);  // Returns true if target has been queued, false when commands are executed upon return
+  mh_time_t WaitForTarget(fileinfo *pTarget);
   void SetNrParallelBuilds(unsigned NrParallelBuilds);
 };
 

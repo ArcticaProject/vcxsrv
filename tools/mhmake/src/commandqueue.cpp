@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -114,7 +114,7 @@ void commandqueue::SetNrParallelBuilds(unsigned NrParallelBuilds)
 
 void commandqueue::ThrowCommandExecutionError(refptr<activeentry> pActiveEntry)
 {
-  refptr<fileinfo> pTarget=pActiveEntry->pTarget;
+  fileinfo*     pTarget=pActiveEntry->pTarget;
   const string    &Command=pActiveEntry->Command;
   mhmakeparser    *pMakefile=pTarget->GetRule()->GetMakefile();
 
@@ -166,7 +166,7 @@ void commandqueue::RemoveActiveEntry(unsigned Entry)
    upon return */
 bool commandqueue::StartExecuteNextCommand(refptr<activeentry> pActiveEntry, mh_pid_t *pActiveProcess)
 {
-  refptr<fileinfo> pTarget=pActiveEntry->pTarget;
+  fileinfo* pTarget=pActiveEntry->pTarget;
   mhmakeparser *pMakefile=pTarget->GetRule()->GetMakefile();
 
   pMakefile->SetRuleThatIsBuild(pTarget); // Make sure that the command expension is correct
@@ -208,7 +208,7 @@ bool commandqueue::StartExecuteNextCommand(refptr<activeentry> pActiveEntry, mh_
 
 void commandqueue::TargetBuildFinished(refptr<activeentry> pActiveEntry)
 {
-  refptr<fileinfo> pTarget=pActiveEntry->pTarget;
+  fileinfo* pTarget=pActiveEntry->pTarget;
 
   // Building of this target finished
   uint32 Md5_32=md5_finish32( &pActiveEntry->md5ctx);
@@ -246,7 +246,7 @@ void commandqueue::TargetBuildFinished(refptr<activeentry> pActiveEntry)
 
 /* Start executing the commands of a target
 */
-bool commandqueue::StartExecuteCommands(const refptr<fileinfo> &pTarget)
+bool commandqueue::StartExecuteCommands(fileinfo* pTarget)
 {
   cout << "Building " << pTarget->GetQuotedFullFileName()<<endl;
   // We do not have to put it in the queue, we can start executing directly
@@ -287,7 +287,7 @@ bool commandqueue::StartExecuteCommands(const refptr<fileinfo> &pTarget)
 
 /* put the target in the execution queue or start executing immediately
 */
-bool commandqueue::QueueTarget(const refptr<fileinfo> &pTarget)
+bool commandqueue::QueueTarget(fileinfo* pTarget)
 {
   pTarget->SetBuilding();
   // First check if there is place in the active entries
@@ -306,7 +306,7 @@ bool commandqueue::QueueTarget(const refptr<fileinfo> &pTarget)
 /* Wait for all the commands being executed of a target. In the mean time also continue
    executing all other commands in the queue
 */
-mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
+mh_time_t commandqueue::WaitForTarget(fileinfo *pTarget)
 {
   if (!pTarget->IsBuilding())
     return pTarget->GetDate();
@@ -331,7 +331,7 @@ mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
       throw("fatal error: unexpected return value of WaitForMultipleObjects " + stringify(Ret));
       #endif
     refptr<activeentry> pActiveEntry=m_pActiveEntries[Ret];
-    refptr<fileinfo> pCurrentTarget=pActiveEntry->pTarget;
+    fileinfo* pCurrentTarget=pActiveEntry->pTarget;
     refptr<rule> pRule=pCurrentTarget->GetRule();
 
       // First check the error code of the command
@@ -391,7 +391,7 @@ mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
         }
         else
         {
-          refptr<fileinfo> pNewTarget=m_Queue.front();
+          fileinfo* pNewTarget=m_Queue.front();
           m_Queue.pop();
           if (StartExecuteCommands(pNewTarget))
           {

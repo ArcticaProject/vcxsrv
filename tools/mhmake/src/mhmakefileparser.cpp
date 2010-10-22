@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ void mhmakefileparser::yyerror(const char *m)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int mhmakefileparser::ParseFile(const refptr<fileinfo> &FileInfo, refptr<fileinfo> &pMakeDir)
+int mhmakefileparser::ParseFile(const fileinfo *pFileInfo, const fileinfo *pMakeDir)
 {
   mhmakelexer theLexer;
   m_ptheLexer=&theLexer;
@@ -51,12 +51,12 @@ int mhmakefileparser::ParseFile(const refptr<fileinfo> &FileInfo, refptr<fileinf
     m_MakeDir=pMakeDir;
     m_Variables[CURDIR]=m_MakeDir->GetQuotedFullFileName();
   }
-  theLexer.m_InputFileName=FileInfo->GetFullFileName();
+  theLexer.m_InputFileName=pFileInfo->GetFullFileName();
   theLexer.m_pParser=(mhmakeparser*)this;
-  theLexer.yyin=::fopen(FileInfo->GetFullFileName().c_str(),"r");
+  theLexer.yyin=::fopen(pFileInfo->GetFullFileName().c_str(),"r");
   if (!theLexer.yyin)
   {
-    cerr << "Error opening makefile: "<<FileInfo->GetQuotedFullFileName()<<endl;
+    cerr << "Error opening makefile: "<<pFileInfo->GetQuotedFullFileName()<<endl;
     return 1;
   }
   int Ret=yyparse();
@@ -371,7 +371,7 @@ string mhmakefileparser::ExpandVar(const string &Var) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::SplitToItems(const string &String,vector< refptr<fileinfo> > &Items) const
+void mhmakefileparser::SplitToItems(const string &String,vector<fileinfo*> &Items) const
 {
   const char *pTmp=String.c_str();
   while (*pTmp)
@@ -453,7 +453,7 @@ void mhmakefileparser::PrintVariables(bool Expand) const
 ///////////////////////////////////////////////////////////////////////////////
 void mhmakefileparser::AddRule()
 {
-  vector< refptr<fileinfo> >::iterator pIt=m_pCurrentItems->begin();
+  fileinfoarray::iterator pIt=m_pCurrentItems->begin();
   while (pIt!=m_pCurrentItems->end())
   {
     if ((*pIt)->GetFullFileName().find('%')!=string::npos)
@@ -484,10 +484,10 @@ void mhmakefileparser::AddRule()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Autodeps)
+void mhmakefileparser::GetAutoDeps(const fileinfo *pFirstDep, deps_t &Autodeps)
 {
   /* Here we have to scan only c/c++ headers so skip certain extensions */
-  const char *pFullName=FirstDep->GetFullFileName().c_str();
+  const char *pFullName=pFirstDep->GetFullFileName().c_str();
   const char *pExt=strrchr(pFullName,'.');
   bool bPython=false;
   if (pExt)
@@ -574,7 +574,7 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Aut
         #endif
         if (Type[0]=='"')
         {
-          refptr<fileinfo> pInclude=GetFileInfo(IncludeFile,FirstDep->GetDir());
+          fileinfo *pInclude=GetFileInfo(IncludeFile,pFirstDep->GetDir());
           /* Add the dependency when the file alrady exist or there is a rule available to be build */
           mh_time_t Date=BuildTarget(pInclude);
           if (Date.DoesExist())  // Try to build the target, and add it if it exists after building
@@ -588,10 +588,10 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Aut
           }
         }
         const refptr<fileinfoarray> IncludeDirs=GetIncludeDirs();
-        vector< refptr<fileinfo> >::const_iterator It=IncludeDirs->begin();
+        fileinfoarray::const_iterator It=IncludeDirs->begin();
         while (It<IncludeDirs->end())
         {
-          refptr<fileinfo> pInclude=GetFileInfo(IncludeFile,*It);
+          fileinfo *pInclude=GetFileInfo(IncludeFile,*It);
           mh_time_t Date=BuildTarget(pInclude);
           if (Date.DoesExist()) // Try to build the target, and add it if it exists after building
           {
@@ -618,20 +618,20 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Aut
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void mhmakefileparser::GetAutoDepsIfNeeded(const refptr<fileinfo> &Target, const refptr<fileinfo>&FirstDep)
+void mhmakefileparser::GetAutoDepsIfNeeded(fileinfo *pTarget, const fileinfo *pFirstDep)
 {
-  autodeps_entry_t &Autodeps=m_AutoDeps[Target];
+  autodeps_entry_t &Autodeps=m_AutoDeps[pTarget];
   if (!Autodeps.first)
   {
     Autodeps.first=true;
     /* We are going to rescan, so throw away the old. */
     Autodeps.second.clear();
-    GetAutoDeps(FirstDep,Autodeps.second);
+    GetAutoDeps(pFirstDep,Autodeps.second);
     // Now add these dependencies also to the rules
     deps_t::iterator It=Autodeps.second.begin();
     while (It!=Autodeps.second.end())
     {
-      Target->AddDep(*It);
+      pTarget->AddDep(*It);
       It++;
     }
   }
@@ -639,31 +639,31 @@ void mhmakefileparser::GetAutoDepsIfNeeded(const refptr<fileinfo> &Target, const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Target)
+void mhmakefileparser::UpdateAutomaticDependencies(fileinfo *pTarget)
 {
-  if (Target->IsAutoDepExtention())
+  if (pTarget->IsAutoDepExtention())
   {
     // we have to search for the include files in the first dependency of Target
-    vector< refptr<fileinfo> > &Deps=Target->GetDeps();
+    vector<fileinfo*> &Deps=pTarget->GetDeps();
     if (!Deps.size())
       return; // There is no first dep
-    refptr<fileinfo> FirstDep=Deps[0];
-    GetAutoDepsIfNeeded(Target,FirstDep);
+    fileinfo *pFirstDep=Deps[0];
+    GetAutoDepsIfNeeded(pTarget,pFirstDep);
     SetAutoDepsDirty();
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::UpdateNoRuleAutomaticDependencies(const refptr<fileinfo> &Target)
+void mhmakefileparser::UpdateNoRuleAutomaticDependencies(fileinfo *pTarget)
 {
   // we have to search for the include files in the Target
-  set< refptr<fileinfo> > Autodeps;
-  GetAutoDeps(Target,Autodeps);
+  deps_t Autodeps;
+  GetAutoDeps(pTarget,Autodeps);
   // Now add these dependencies also to the rules
-  set< refptr<fileinfo> >::iterator It=Autodeps.begin();
+  deps_t::iterator It=Autodeps.begin();
   while (It!=Autodeps.end())
   {
-    Target->AddDep(*It);
+    pTarget->AddDep(*It);
     It++;
   }
 }
@@ -683,7 +683,7 @@ const refptr<fileinfoarray> mhmakefileparser::GetIncludeDirs() const
     {
       string Item;
       pTmp=NextItem(pTmp,Item);
-      refptr<fileinfo> pIncDir=GetFileInfo(Item,m_MakeDir);
+      fileinfo *pIncDir=GetFileInfo(Item,m_MakeDir);
       if (pIncDir->Exists() || pIncDir->GetRule())
         ((mhmakefileparser*)this)->m_pIncludeDirs->push_back(pIncDir);
     }
@@ -712,25 +712,25 @@ static void ReadStr(FILE *pFile,char *Str)
   Str[i]='\0';
 }
 
-void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
+void mhmakefileparser::LoadAutoDepsFile(fileinfo *pDepFile)
 {
-  if (m_AutoDepFileLoaded && m_AutoDepFileLoaded==DepFile)
+  if (m_AutoDepFileLoaded && m_AutoDepFileLoaded==pDepFile)
     return;  /* This autodep file is already loaded. */
 
-  m_AutoDepFileLoaded=DepFile;
+  m_AutoDepFileLoaded=pDepFile;
 
-  FILE *pIn=fopen(DepFile->GetFullFileName().c_str(),"rb");
+  FILE *pIn=fopen(pDepFile->GetFullFileName().c_str(),"rb");
 #ifdef _DEBUG
   if (!pIn)
   {
-    cerr << "Error opening autodep file "<<DepFile->GetQuotedFullFileName()<<endl;
+    cerr << "Error opening autodep file "<<pDepFile->GetQuotedFullFileName()<<endl;
     return;
   }
 #endif
   fread(&m_EnvMd5_32,sizeof(m_EnvMd5_32),1,pIn);
 #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
-    cout << "Reading Env Md5 from "<<DepFile->GetQuotedFullFileName()<<": "<<hex<<m_EnvMd5_32<<endl;
+    cout << "Reading Env Md5 from "<<pDepFile->GetQuotedFullFileName()<<": "<<hex<<m_EnvMd5_32<<endl;
 #endif
   char UsedEnvVars[1024];
   ReadStr(pIn,UsedEnvVars);
@@ -740,16 +740,16 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   ReadStr(pIn,FileName);
   while (FileName[0])
   {
-    refptr<fileinfo> Target=GetFileInfo(FileName,m_MakeDir);
-    autodeps_entry_t &Autodeps=m_AutoDeps[Target];
+    fileinfo *pTarget=GetFileInfo(FileName,m_MakeDir);
+    autodeps_entry_t &Autodeps=m_AutoDeps[pTarget];
     ReadStr(pIn,FileName);
     while (FileName[0])
     {
       if (!g_ForceAutoDepRescan)  /* If we are forcing the autodepscan we do not have to load the dependencies. */
       {
-        refptr<fileinfo> Dep=GetFileInfo(FileName,m_MakeDir);
-        Autodeps.second.insert(Dep);
-        Target->AddDep(Dep);
+        fileinfo *pDep=GetFileInfo(FileName,m_MakeDir);
+        Autodeps.second.insert(pDep);
+        pTarget->AddDep(pDep);
       }
       ReadStr(pIn,FileName);
     }
@@ -761,20 +761,23 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   while (fread(&Md5_32,sizeof(Md5_32),1,pIn))
   {
     ReadStr(pIn,FileName);
-    pair <set<refptr<fileinfo>,less_refptrfileinfo >::iterator, bool> pPair=g_FileInfos.insert(new fileinfo(FileName,Md5_32));
-    if (!pPair.second)
+
+    fileinfo *pTarget=GetAbsFileInfo(FileName);
+
+    if (!pTarget->CompareMd5_32(0) && !pTarget->CompareMd5_32(Md5_32))
     {
-      if (!(*pPair.first)->CompareMd5_32(Md5_32) && !(*pPair.first)->CompareMd5_32(0))
         MakeNotDirty=false; /* BuildTarget had set the dirty flag, but since the md5 did not change it was a false dirty. This is for BuildTargets called before this routine */
       #ifdef _DEBUG
-      if (!(*pPair.first)->CompareMd5_32(Md5_32) && !(*pPair.first)->CompareMd5_32(0))
-        cout << "Warning: trying to set to different md5's for Target "<<(*pPair.first)->GetQuotedFullFileName()<<" Old: "<<hex<<(*pPair.first)->GetCommandsMd5_32()<<" New: "<<Md5_32<<endl;
-      if (g_PrintAdditionalInfo)
-        cout << "Setting Md5 for Target "<<(*pPair.first)->GetQuotedFullFileName()<<" to "<<hex<<Md5_32<<endl;
+      cout << "Warning: trying to set to different md5's for Target "<<pTarget->GetQuotedFullFileName()<<" Old: "<<hex<<pTarget->GetCommandsMd5_32()<<" New: "<<Md5_32<<endl;
       #endif
-      (*pPair.first)->SetCommandsMd5_32(Md5_32);  // If it was already there, just update the md5 value
     }
-    AddTarget(*pPair.first);
+    #ifdef _DEBUG
+    if (g_PrintAdditionalInfo)
+      cout << "Setting Md5 for Target "<<pTarget->GetQuotedFullFileName()<<" to "<<hex<<Md5_32<<endl;
+    #endif
+    pTarget->SetCommandsMd5_32(Md5_32);  // If it was already there, just update the md5 value
+
+    AddTarget(pTarget);
   }
   if (MakeNotDirty)
     ClearAutoDepsDirty();
@@ -782,16 +785,16 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   fclose(pIn);
 }
 
-static void MakeDirs(const refptr<fileinfo> & Dir)
+static void MakeDirs(const fileinfo *pDir)
 {
-  refptr<fileinfo> ParentDir=Dir->GetDir();
-  if (!ParentDir->GetDate().DoesExist())
+  fileinfo *pParentDir=pDir->GetDir();
+  if (!pParentDir->GetDate().DoesExist())
   {  /* First make parent dirs */
-    MakeDirs(ParentDir);
+    MakeDirs(pParentDir);
   }
-  if (!Dir->GetDate().DoesExist())
+  if (!pDir->GetDate().DoesExist())
   { /* Create directory */
-    mkdir(Dir->GetFullFileName().c_str(),S_IRWXU);
+    mkdir(pDir->GetFullFileName().c_str(),S_IRWXU);
   }
 }
 
@@ -812,7 +815,7 @@ void mhmakefileparser::SaveAutoDepsFile()
   {
     return;
   }
-  refptr<fileinfo> pDepFile=GetFileInfo(DepFile,m_MakeDir);
+  fileinfo *pDepFile=GetFileInfo(DepFile,m_MakeDir);
 
 #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
@@ -860,7 +863,7 @@ void mhmakefileparser::SaveAutoDepsFile()
   /* Now save the Md5 strings */
   fprintf(pOut,"\n");
 
-  set< const fileinfo * , less_fileinfo>::iterator pIt=m_Targets.begin();
+  set<const fileinfo *>::iterator pIt=m_Targets.begin();
   while (pIt!=m_Targets.end())
   {
     if (!(*pIt)->CompareMd5_32(0))
@@ -1030,6 +1033,85 @@ void mhmakefileparser::SetExport(const string &Var, const string &Val)
   }
 
 #endif
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void mhmakefileparser::SetvPath(const string &Pattern, const string &Path)
+{
+  // First create the array of directory from the Path parameter. For now all entries need to
+  // be valid directories (extra checking). This could be improved by checking if there
+  // is a rule for creating the directory entry, but like first said, not for now.
+  refptr<fileinfoarray> pDirArray=new fileinfoarray;
+
+  const char *pTmp=Path.c_str();
+  while (*pTmp)
+  {
+    string Item;
+    pTmp=NextItem(pTmp,Item," \t:;");
+    if (!Item.empty())
+    {
+      fileinfo *pDir=GetFileInfo(Item,m_MakeDir);
+      if (!pDir->IsDir())
+      {
+        #ifdef WIN32
+        // On windows this could happen if a full pathname was specified, so we try together
+        // with the next item to check if this is not a valid directories
+        // but only if the the length of the item was 1 namely the driver letter
+        if (Item.length()==1)
+        {
+          string Rest;
+          pTmp=NextItem(pTmp,Rest," \t:;");
+          pDir=GetFileInfo(Item+":"+Rest,m_MakeDir);
+          #ifdef _DEBUG
+          if (g_PrintAdditionalInfo && !pDir->IsDir())
+            throw(pDir->GetFullFileName()+" is not a valid directory.");
+          #endif
+        }
+        #ifdef _DEBUG
+        else if (g_PrintAdditionalInfo)
+          cout << pDir->GetFullFileName() << " is not a valid directory.\n";
+        #endif
+        #else
+        #ifdef _DEBUG
+        if (g_PrintAdditionalInfo)
+          cout << pDir->GetFullFileName() << " is not a valid directory.\n";
+        #endif
+        #endif
+      }
+      pDirArray->push_back(pDir);
+    }
+  }
+  m_vPath.push_back(pair<string, refptr<fileinfoarray> >(Pattern,pDirArray));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Search for the target using the vPath
+fileinfo* mhmakefileparser::SearchvPath(const fileinfo* pTarget)
+{
+  string TargetName=pTarget->GetName();
+  vector< pair< string, refptr<fileinfoarray> > >::iterator vPathIt=m_vPath.begin();
+  while (vPathIt!=m_vPath.end())
+  {
+    matchres Res;
+
+    if (PercentMatch(TargetName,vPathIt->first,&Res))
+    {
+      fileinfoarray::iterator pIt=vPathIt->second->begin();
+      while (pIt!=vPathIt->second->end())
+      {
+        fileinfo* pNewTarget=GetFileInfo(TargetName,*pIt);
+        mh_time_t TargetDate=StartBuildTarget(pNewTarget,false);
+        if (!TargetDate.IsDateValid())
+          TargetDate=WaitBuildTarget(pNewTarget);
+        if (pNewTarget->GetDate().DoesExist())
+          return pNewTarget;
+        pIt++;
+      }
+    }
+    vPathIt++;
+  }
+  return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

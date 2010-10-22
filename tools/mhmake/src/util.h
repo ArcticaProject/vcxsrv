@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "2.2.5"
+#define MHMAKEVER    "2.2.9"
 
 class makecommand
 {
@@ -150,6 +150,7 @@ struct matchres
 };
 
 bool PercentMatch(const string &String,const string &Expr,matchres *pRes=NULL,const char Char='%');
+bool PercentMatchNoCase(const string &String,const string &Expr,matchres *pRes=NULL,const char Char='%');
 bool PercentMatchList(const string &String,const string &ExprList,matchres *pRes=NULL);
 string ReplaceWithStem(const string &String,const string &Stem);
 
@@ -158,20 +159,20 @@ struct loadedmakefile : public refbase
   struct loadedmakefile_statics
   {
     map<string,string>   m_GlobalCommandLineVars;
-    refptr<fileinfo>     m_MhMakeConf;
+    fileinfo            *m_MhMakeConf;
 
     loadedmakefile_statics();
   };
   static loadedmakefile_statics sm_Statics;
 
-  refptr<fileinfo>     m_Makefile;
-  refptr<fileinfo>     m_MakeDir;
+  fileinfo            *m_Makefile;
+  const fileinfo      *m_MakeDir;
   map<string,string>   m_CommandLineVars;
 
   vector<string>       m_CommandLineTargets;
   refptr<mhmakeparser> m_pParser;
 
-  loadedmakefile(const refptr<fileinfo> &pDir, vector<string> &Args,const string &Makefile=g_EmptyString);
+  loadedmakefile(const fileinfo *pDir, vector<string> &Args,const string &Makefile=g_EmptyString);
 
   void LoadMakefile();
   void AddCommandLineVarsToEnvironment()

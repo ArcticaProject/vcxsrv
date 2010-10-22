@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -130,22 +130,21 @@ inline ostream& operator<<(ostream& out,const mh_time &Src)
   return out;
 }
 
-class fileinfo : public refbase
+class fileinfo
 {
   string m_AbsFileName;
   bool m_IsPhony;
   int m_BuildStatus;  /* Bit 0 means the target built is started, Bit 1 means the target is still building */
   refptr<rule> m_pRule;
   mhmakeparser *m_pAutoDepsMakefile;
-  vector< refptr<fileinfo> > m_Deps;
+  vector<fileinfo*> m_Deps;
   mh_time_t m_Date;
   uint32 m_CommandsMd5_32;  // 32-bit Md5 checksum of commands to build this target
 
   fileinfo(const fileinfo &Src);
   fileinfo(void);
-public:
 
-  fileinfo(const string &AbsFileName,uint32 Md5_32)
+  void init(const string &AbsFileName,uint32 Md5_32)
   {
     m_IsPhony=false;
     m_pAutoDepsMakefile=NULL;
@@ -158,9 +157,15 @@ public:
       cout << "Initialising Md5 of "<<GetQuotedFullFileName().c_str()<<" to 0x"<<hex<<Md5_32<<endl;
     #endif
   }
+  fileinfo &operator = (const fileinfo &Src);  // Do not allow copying
+public:
+  fileinfo(const string &AbsFileName,uint32 Md5_32)
+  {
+    init(AbsFileName,Md5_32);
+  }
   fileinfo(const string &AbsFileName)
   {
-    new (this) fileinfo(AbsFileName,0);
+    init(AbsFileName,0);
   }
   /* The following constructor is only used for name comparisons, and should only be used for that */
   fileinfo(int Dummy,const string &AbsFileName)
@@ -170,14 +175,11 @@ public:
 
   fileinfo(const char *szFile)
   {
-    new (this) fileinfo(string(szFile));
+    init(szFile,0);
   }
   fileinfo(const char *szFile,uint32 Md5_32)
   {
-    new (this) fileinfo(string(szFile),Md5_32);
-  }
-  ~fileinfo()
-  {
+    init(szFile,Md5_32);
   }
   const string &GetFullFileName(void) const
   {
@@ -194,13 +196,8 @@ public:
     if (!m_AbsFileName.empty() && m_AbsFileName[m_AbsFileName.length()-1]==OSPATHSEP)
       m_AbsFileName.resize(m_AbsFileName.length()-1);
   }
-  fileinfo &operator = (const fileinfo &Src)
-  {
-    new (this) fileinfo(Src);
-    return *this;
-  }
 
-  refptr<fileinfo> GetDir(void) const;
+  fileinfo* GetDir(void) const;
   string GetName() const;
   bool IsDir() const;
 
@@ -241,28 +238,28 @@ public:
     }
   }
 
-  refptr<rule> GetRule(void)
+  refptr<rule> GetRule(void) const
   {
     return m_pRule;
   }
-  void AddDep(const refptr<fileinfo> &Dep)
+  void AddDep(fileinfo *pDep)
   {
-    if (&*Dep==this)
+    if (&*pDep==this)
     {
       #ifdef _DEBUG
       cout << GetQuotedFullFileName()<<" is directly dependent on itself\n";
       #endif
       return;
     }
-    m_Deps.push_back(Dep);
+    m_Deps.push_back(pDep);
   }
-  void AddDeps(vector< refptr<fileinfo> > &Deps);
+  void AddDeps(vector<fileinfo*> &Deps);
 
-  void InsertDeps(vector< refptr<fileinfo> > &Deps)
+  void InsertDeps(vector<fileinfo*> &Deps)
   {
-    vector< refptr<fileinfo> > NewDeps;
-    vector< refptr<fileinfo> >::const_iterator It=Deps.begin();
-    vector< refptr<fileinfo> >::const_iterator ItEnd=Deps.end();
+    vector<fileinfo*> NewDeps;
+    vector<fileinfo*>::const_iterator It=Deps.begin();
+    vector<fileinfo*>::const_iterator ItEnd=Deps.end();
     while (It!=ItEnd)
     {
       if (&**It==this)
@@ -278,18 +275,18 @@ public:
     if (NewDeps.size())
       m_Deps.insert(m_Deps.begin(),NewDeps.begin(),NewDeps.end());
   }
-  void AddMainDep(refptr<fileinfo> &MainDep)
+  void AddMainDep(fileinfo* pMainDep)
   {
-    if (&*MainDep==this)
+    if (&*pMainDep==this)
     {
       #ifdef _DEBUG
       cout << GetQuotedFullFileName()<<" is directly dependent on itself\n";
       #endif
       return;
     }
-    m_Deps.insert(m_Deps.begin(),MainDep);
+    m_Deps.insert(m_Deps.begin(),pMainDep);
   }
-  vector< refptr<fileinfo> > &GetDeps(void)
+  vector<fileinfo*> &GetDeps(void)
   {
     return m_Deps;
   }
@@ -311,11 +308,11 @@ public:
     m_IsPhony=true;
     m_Date.SetNotExist(); // This will sure that this target will always be build (even if a corresponding file exists)
   }
-  bool IsPhony(void)
+  bool IsPhony(void) const
   {
     return m_IsPhony;
   }
-  mh_time_t realGetDate(void);
+  mh_time_t realGetDate(void) const;
   void SetDateToNow(void);
 
   void SetDate(mh_time_t Date)
@@ -332,7 +329,7 @@ public:
     m_Date.Invalidate();
   }
 
-  mh_time_t GetDate(void)
+  mh_time_t GetDate(void) const
   {
     if (m_Date.IsDateValid())
       return m_Date;
@@ -343,7 +340,7 @@ public:
   {  // this is used to make sure that this item is rebuild, even if it really exists
     m_Date.SetNotExist();
   }
-  bool Exists(void)
+  bool Exists(void) const
   {
     return GetDate().DoesExist();
   }
@@ -402,14 +399,6 @@ public:
   }
 };
 
-struct less_refptrfileinfo : public binary_function <refptr<fileinfo>, refptr<fileinfo>, bool>
-{
-  bool operator()(const refptr<fileinfo>& _Left, const refptr<fileinfo>& _Right) const
-  {
-    return less<string>().operator ()(_Left->GetFullFileName(),_Right->GetFullFileName());
-  }
-};
-
 struct less_fileinfo : public binary_function <const fileinfo*, const fileinfo*, bool>
 {
   bool operator()(const fileinfo *_Left, const fileinfo *_Right) const
@@ -418,31 +407,34 @@ struct less_fileinfo : public binary_function <const fileinfo*, const fileinfo*,
   }
 };
 
-extern const string NullString;
-extern refptr<fileinfo> NullFileInfo;
+fileinfo *GetFileInfo(const string &szName,const fileinfo* pRelDir);
 
-const refptr<fileinfo> &GetFileInfo(const string &szName,const refptr<fileinfo> &pRelDir);
-
-extern set<refptr<fileinfo>,less_refptrfileinfo > g_FileInfos;
-
-inline const refptr<fileinfo> &GetAbsFileInfo(const string &strAbsName)
+class fileinfos : public set<fileinfo*,less_fileinfo>
 {
-  static refptr<fileinfo> SearchFileInfo(new fileinfo(""));
-  SearchFileInfo->SetFullFileName(strAbsName);
+  public:
+    ~fileinfos();
+};
+
+extern fileinfos g_FileInfos;
+
+inline fileinfo *GetAbsFileInfo(const string &strAbsName)
+{
+  static fileinfo SearchFileInfo("");
+  SearchFileInfo.SetFullFileName(strAbsName);
   /* Using find is just an optimalisation, you could use insert immediately */
-  set<refptr<fileinfo>,less_refptrfileinfo >::const_iterator pFind=g_FileInfos.find(SearchFileInfo);
+  fileinfos::const_iterator pFind=g_FileInfos.find(&SearchFileInfo);
   if (pFind==g_FileInfos.end())
   {
-    pair <set<refptr<fileinfo>,less_refptrfileinfo >::iterator, bool> pPair=g_FileInfos.insert(new fileinfo(SearchFileInfo->GetFullFileName()));
+    pair <fileinfos::iterator, bool> pPair=g_FileInfos.insert(new fileinfo(SearchFileInfo.GetFullFileName()));
     return *(pPair.first);
   }
   else
     return *pFind;
 }
 
-inline const refptr<fileinfo> &GetFileInfo(const char *szName,const refptr<fileinfo> &RelDir)
+inline fileinfo *GetFileInfo(const char *szName,const fileinfo* pRelDir)
 {
-  return GetFileInfo(string(szName),RelDir);
+  return GetFileInfo(string(szName),pRelDir);
 }
 
 string &NormalizePathName(string &Name);

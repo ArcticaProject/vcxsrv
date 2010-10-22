@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -235,6 +235,64 @@ bool PercentMatch(const string &String,const string &Expr,matchres *pRes,const c
   return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
+bool PercentMatchNoCase(const string &String,const string &Expr,matchres *pRes,const char Char)
+{
+  const char *pFirst=String.c_str();
+  const char *pFirstExpr=Expr.c_str();
+  while (*pFirstExpr && *pFirstExpr!=Char)
+  {
+    if (tolower(*pFirst)!=tolower(*pFirstExpr))
+      return false;
+    pFirst++;
+    pFirstExpr++;
+  }
+
+  if (!*pFirstExpr)
+  {
+    if (!*pFirst)
+    {
+      if (pRes)
+      {
+        pRes->m_First=String;
+        pRes->m_Stem=pRes->m_Last=g_EmptyString;
+      }
+      return true;
+    } else
+      return false;
+  }
+  else if (!*pFirst)
+    return false;
+
+  const char *pEnd=pFirst+strlen(pFirst);
+
+  const char *pLast=pEnd;
+  const char *pLastExpr=pFirstExpr+strlen(pFirstExpr)-1;
+  if (pLastExpr!=pFirstExpr)
+  {
+    pLast--;
+
+    while (pLastExpr>pFirstExpr)
+    {
+      if (tolower(*pLastExpr)!=tolower(*pLast))
+        return false;
+      pLastExpr--;
+      pLast--;
+    }
+    pLast++;
+  }
+  string Stem=string(pFirst,pLast-pFirst);
+
+  if (pRes)
+  {
+    pRes->m_First=string(String.c_str(),pFirst-String.c_str());
+
+    pRes->m_Stem=Stem;
+
+    pRes->m_Last=string(pLast,pEnd-pLast);
+  }
+  return true;
+}
+///////////////////////////////////////////////////////////////////////////////
 bool PercentMatchList(const string &String,const string &ExprList,matchres *pRes)
 {
   const char *pTmp=ExprList.c_str();
@@ -365,11 +423,12 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-loadedmakefile::loadedmakefile(const refptr<fileinfo> &pDir, vector<string> &Args,const string&Makefile)
+loadedmakefile::loadedmakefile(const fileinfo *pDir, vector<string> &Args,const string&Makefile)
 {
+  m_Makefile=NULL;
   m_CommandLineVars=sm_Statics.m_GlobalCommandLineVars;
 
-  m_MakeDir=NullFileInfo;
+  m_MakeDir=NULL;
   vector<string>::iterator ArgIt=Args.begin();
   while (ArgIt!=Args.end())
   {
@@ -554,7 +613,7 @@ void loadedmakefile::LoadMakefile()
   string BaseAutoMak;
 
   // First parse the makefile.before makefile which is in the directory $(MHMAKECONF) environment variable
-  refptr<fileinfo> DepFile;
+  fileinfo *pDepFile;
   if (sm_Statics.m_MhMakeConf)
   {
     BaseAutoMak=m_pParser->ExpandVar(BASEAUTOMAK);
@@ -563,14 +622,14 @@ void loadedmakefile::LoadMakefile()
       BaseAutoMak="makefile";
       m_pParser->SetVariable(BASEAUTOMAK,BaseAutoMak);
     }
-    refptr<fileinfo> BeforeMakefile=GetFileInfo(BaseAutoMak+".before",sm_Statics.m_MhMakeConf);
+    const fileinfo *pBeforeMakefile=GetFileInfo(BaseAutoMak+".before",sm_Statics.m_MhMakeConf);
 
-    int result=m_pParser->ParseFile(BeforeMakefile,m_MakeDir);
+    int result=m_pParser->ParseFile(pBeforeMakefile,m_MakeDir);
     if (result)
     {
-      throw string("Error parsing ")+BeforeMakefile->GetQuotedFullFileName();
+      throw string("Error parsing ")+pBeforeMakefile->GetQuotedFullFileName();
     }
-    m_pParser->UpdateDate(BeforeMakefile->GetDate());
+    m_pParser->UpdateDate(pBeforeMakefile->GetDate());
 
     // Now parse the automaticly generated dependency file, which needs to be in the objdir directory
     string ObjDirName=m_pParser->ExpandExpression("$(OBJDIR)");
@@ -578,8 +637,8 @@ void loadedmakefile::LoadMakefile()
     {
       throw string("When making use of MHMAKECONF, you have to define OBJDIR in makefile.before");
     }
-    DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR "." + m_Makefile->GetName()+ ".dep",m_MakeDir);
-    m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
+    pDepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR "." + m_Makefile->GetName()+ ".dep",m_MakeDir);
+    m_pParser->SetVariable(AUTODEPFILE,pDepFile->GetQuotedFullFileName());
   }
   else
   {
@@ -603,12 +662,12 @@ void loadedmakefile::LoadMakefile()
     char ID[10];
     sprintf(ID,"_%x",md5_finish32( &ctx));
 
-    DepFile=GetFileInfo(string(".") + m_Makefile->GetName()+ ".dep"+ID,m_MakeDir);
-    m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
+    pDepFile=GetFileInfo(string(".") + m_Makefile->GetName()+ ".dep"+ID,m_MakeDir);
+    m_pParser->SetVariable(AUTODEPFILE,pDepFile->GetQuotedFullFileName());
   }
 
-  if (DepFile->Exists())
-    m_pParser->LoadAutoDepsFile(DepFile); /* Already load this autodep file before parsing of the makefile to avoid needless rebuilds. */
+  if (pDepFile->Exists())
+    m_pParser->LoadAutoDepsFile(pDepFile); /* Already load this autodep file before parsing of the makefile to avoid needless rebuilds. */
 
   //m_pParser->yydebug=1;
   int result=m_pParser->ParseFile(m_Makefile,m_MakeDir);
@@ -619,9 +678,9 @@ void loadedmakefile::LoadMakefile()
   #ifdef _DEBUG
   /* Check if the makefile has changed the AUTODEPFILE variable, if so generate a warning that a
    * rebuild could happen for the rules defined for making included makefiles */
-  if (m_pParser->ExpandVar(AUTODEPFILE)!=DepFile->GetQuotedFullFileName())
+  if (m_pParser->ExpandVar(AUTODEPFILE)!=pDepFile->GetQuotedFullFileName())
   {
-    cout << "\n\nWARNING:\n  makefile '"<< m_Makefile->GetQuotedFullFileName() <<"' re-defines AUTODEPFILE\n  from '"<< DepFile->GetQuotedFullFileName() <<"'\n  to '"<<
+    cout << "\n\nWARNING:\n  makefile '"<< m_Makefile->GetQuotedFullFileName() <<"' re-defines AUTODEPFILE\n  from '"<< pDepFile->GetQuotedFullFileName() <<"'\n  to '"<<
             m_pParser->ExpandVar(AUTODEPFILE) << "'\n  (may cause needless rebuilds when having rules for included makefiles!!!!!)\n\n\n";
   }
 
@@ -637,16 +696,16 @@ void loadedmakefile::LoadMakefile()
 
   if (sm_Statics.m_MhMakeConf)
   {
-    refptr<fileinfo> AfterMakefile=GetFileInfo(BaseAutoMak+".after",sm_Statics.m_MhMakeConf);
-    int result=m_pParser->ParseFile(AfterMakefile);
+    fileinfo  *pAfterMakefile=GetFileInfo(BaseAutoMak+".after",sm_Statics.m_MhMakeConf);
+    int result=m_pParser->ParseFile(pAfterMakefile);
     if (result) {
-      throw string("Error parsing ")+AfterMakefile->GetQuotedFullFileName();
+      throw string("Error parsing ")+pAfterMakefile->GetQuotedFullFileName();
     }
-    m_pParser->UpdateDate(AfterMakefile->GetDate());
+    m_pParser->UpdateDate(pAfterMakefile->GetDate());
   }
   bool ForceAutoDepRescan=g_ForceAutoDepRescan;
-  if (DepFile->Exists())
-    m_pParser->LoadAutoDepsFile(DepFile);
+  if (pDepFile->Exists())
+    m_pParser->LoadAutoDepsFile(pDepFile);
   else
     ForceAutoDepRescan=true;
   if (ForceAutoDepRescan)

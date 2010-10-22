@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,14 +24,8 @@
 #include "curdir.h"
 #include "util.h"
 
-set<refptr<fileinfo>,less_refptrfileinfo> g_FileInfos;  // declare here since it is important that it is constructed before m_pcurrentdir
+fileinfos g_FileInfos;  // declare here since it is important that it is constructed before m_pcurrentdir
 curdir::initcurdir curdir::m_pCurrentDir;
-
-///////////////////////////////////////////////////////////////////////////////
-curdir::initcurdir &curdir::initcurdir::operator=(const refptr<fileinfo>& Src)
-{
-  return (curdir::initcurdir&)refptr<fileinfo>::operator=(Src);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 curdir::initcurdir::initcurdir()
@@ -39,5 +33,5 @@ curdir::initcurdir::initcurdir()
   char CurDir[MAX_PATH];
   getcwd(CurDir,MAX_PATH);
   string strCurDir=CurDir;
-  *this=GetAbsFileInfo(NormalizePathName(strCurDir));
+  m_pDir=GetAbsFileInfo(NormalizePathName(strCurDir));
 }

@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -242,20 +242,20 @@ void mhmakefileparser::CreatePythonExe(const string &FullCommand)
 /*****************************************************************************/
 int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, size_t Len, char *szFullCommand,char **pFilePart) const
 {
-  static vector< refptr<fileinfo> > vSearchPath;
+  static vector< fileinfo* > vSearchPath;
 
   string Command(szCommand);
   if (pExt)
     Command+=pExt;
-  vector< refptr<fileinfo> >::iterator It;
-  vector< refptr<fileinfo> >::iterator ItEnd;
+  vector< fileinfo* >::iterator It;
+  vector< fileinfo* >::iterator ItEnd;
 
-  refptr<fileinfo> CommandFile=GetFileInfo(Command,m_MakeDir);
-  if (CommandFile->Exists())
+  fileinfo* pCommandFile=GetFileInfo(Command,m_MakeDir);
+  if (pCommandFile->Exists())
   {
     goto found;
   }
-  CommandFile->InvalidateDate(); // It could be created in the makefile later
+  pCommandFile->InvalidateDate(); // It could be created in the makefile later
   if (!vSearchPath.size())
   {
      char *pPath=getenv(PATH);
@@ -274,8 +274,8 @@ int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, size_t
   ItEnd=vSearchPath.end();
   while (It!=ItEnd)
   {
-    CommandFile=GetFileInfo(Command,*It);
-    if (CommandFile->Exists())
+    pCommandFile=GetFileInfo(Command,*It);
+    if (pCommandFile->Exists())
       goto found;
     It++;
   }
@@ -283,7 +283,7 @@ int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, size_t
   return 0;
 
 found:
-  string FullCommand=CommandFile->GetFullFileName();
+  string FullCommand=pCommandFile->GetFullFileName();
   size_t CommandLen=FullCommand.size();
   if (CommandLen>Len-1)
   {
@@ -392,7 +392,7 @@ static bool DeleteDir(const string &Dir,const string WildSearch="*",bool bRemove
 mh_pid_t mhmakefileparser::DeleteFiles(const string &Params) const
 {
   bool IgnoreError=false;
-  vector< refptr<fileinfo> > Files;
+  vector<fileinfo*> Files;
 
   // First check if the first parameter is -e meaning don't give an error when file does not exist
   if (Params[1]=='-')
@@ -413,10 +413,10 @@ mh_pid_t mhmakefileparser::DeleteFiles(const string &Params) const
     SplitToItems(Params,Files);
   }
 
-  vector< refptr<fileinfo> >::const_iterator It=Files.begin();
+  vector<fileinfo*>::const_iterator It=Files.begin();
   while (It!=Files.end())
   {
-    refptr<fileinfo> pFile=*It++;
+    fileinfo* pFile=*It++;
     string DirSearch="*";
     bool bRemoveDir=true;
 
@@ -457,7 +457,7 @@ mh_pid_t mhmakefileparser::DeleteFiles(const string &Params) const
 
 /*****************************************************************************/
 /* pDest can be a directory or a file */
-static bool CopyFile(refptr<fileinfo> pSrc, refptr<fileinfo> pDest)
+static bool CopyFile(fileinfo* pSrc, fileinfo* pDest)
 {
   if (pDest->IsDir())
   {
@@ -494,7 +494,7 @@ static bool CopyFile(refptr<fileinfo> pSrc, refptr<fileinfo> pDest)
 
 /*****************************************************************************/
 /* Copies a complete directory to a destination (currenlty not recursive */
-static bool CopyDir(refptr<fileinfo> pDir,refptr<fileinfo> pDest,const string WildSearch="*")
+static bool CopyDir(fileinfo* pDir, fileinfo* pDest,const string WildSearch="*")
 {
   bool Error=true;
   string Pattern=pDir->GetFullFileName()+OSPATHSEP+WildSearch;
@@ -513,11 +513,11 @@ static bool CopyDir(refptr<fileinfo> pDir,refptr<fileinfo> pDest,const string Wi
     {
       if (FindData.dwFileAttributes&FILE_ATTRIBUTE_HIDDEN)
         continue;
-      refptr<fileinfo> pSrc=GetFileInfo(FindData.cFileName,pDir);
+      fileinfo* pSrc=GetFileInfo(FindData.cFileName,pDir);
 
       if (pSrc->IsDir())
       {
-        refptr<fileinfo> pNewDest=GetFileInfo(FindData.cFileName,pDest);
+        fileinfo* pNewDest=GetFileInfo(FindData.cFileName,pDest);
         if (!pNewDest->IsDir())
         {
           if (pNewDest->Exists())
@@ -554,7 +554,7 @@ exit:
 
   for (int i=0; i<Res.gl_pathc; i++)
   {
-    refptr<fileinfo> pSrc=GetFileInfo(Res.gl_pathv[i],pDir);
+    fileinfo* pSrc=GetFileInfo(Res.gl_pathv[i],pDir);
     if (pSrc->IsDir())
     {
       *(strrchr(Res.gl_pathv[i],'/'))='\0';
@@ -563,7 +563,7 @@ exit:
       if (SrcDirName[0]=='.')
         continue;
 
-      refptr<fileinfo> pNewDest=GetFileInfo(SrcDirName,pDest);
+      fileinfo* pNewDest=GetFileInfo(SrcDirName,pDest);
       if (!pNewDest->IsDir())
       {
         if (pNewDest->Exists())
@@ -615,14 +615,14 @@ mh_pid_t mhmakefileparser::EchoCommand(const string &Params) const
     if (Params[Pos+1]=='>')
     {
       NextItem(Params.substr(Pos+2).c_str(),Filename);
-      refptr<fileinfo> pFile=GetFileInfo(Filename,m_MakeDir);
+      fileinfo* pFile=GetFileInfo(Filename,m_MakeDir);
         // Open file in append
       pfFile=fopen(pFile->GetFullFileName().c_str(),"a");
     }
     else
     {
       NextItem(Params.substr(Pos+1).c_str(),Filename);
-      refptr<fileinfo> pFile=GetFileInfo(Filename,m_MakeDir);
+      fileinfo* pFile=GetFileInfo(Filename,m_MakeDir);
       pfFile=fopen(pFile->GetFullFileName().c_str(),"w");
     }
     if (!pfFile)
@@ -646,7 +646,7 @@ mh_pid_t mhmakefileparser::EchoCommand(const string &Params) const
 /*****************************************************************************/
 mh_pid_t mhmakefileparser::CopyFiles(const string &Params) const
 {
-  vector< refptr<fileinfo> > Files;
+  vector<fileinfo*> Files;
 
   SplitToItems(Params,Files);
 
@@ -658,7 +658,7 @@ mh_pid_t mhmakefileparser::CopyFiles(const string &Params) const
     return false;
   }
 
-  refptr<fileinfo> pDest=Files[NrSrcs];
+  fileinfo* pDest=Files[NrSrcs];
   if (NrSrcs>1 && !pDest->IsDir())
   {
     cerr << "copy: Destination must be a directory when more then one source : "<<Params<<endl;
@@ -667,7 +667,7 @@ mh_pid_t mhmakefileparser::CopyFiles(const string &Params) const
 
   for (size_t i=0; i<NrSrcs; i++)
   {
-    refptr<fileinfo> pSrc=Files[i];
+    fileinfo* pSrc=Files[i];
 
     string SrcFileName=pSrc->GetFullFileName();
 
@@ -704,14 +704,14 @@ mh_pid_t mhmakefileparser::CopyFiles(const string &Params) const
 /*****************************************************************************/
 mh_pid_t mhmakefileparser::TouchFiles(const string &Params) const
 {
-  vector< refptr<fileinfo> > Files;
+  vector<fileinfo*> Files;
 
   SplitToItems(Params,Files);
 
-  vector< refptr<fileinfo> >::const_iterator It=Files.begin();
+  vector<fileinfo*>::const_iterator It=Files.begin();
   while (It!=Files.end())
   {
-    refptr<fileinfo> pFile=*It++;
+    fileinfo* pFile=*It++;
     const string &FileName=pFile->GetFullFileName();
 
     /* Since this can be part of a list of commands for a certain rule, and it is possible that the file
@@ -904,8 +904,8 @@ string mhmakefileparser::GetFullCommand(string Command)
         Command=FullCommand;
         if (!PythonFullCommand.empty()&&s_Py2ExeInstalled)
         {
-          refptr<fileinfo> pExeFile=GetFileInfo(FullCommand,m_MakeDir);
-          refptr<fileinfo> pPyFile=GetFileInfo(PythonFullCommand,m_MakeDir);
+          fileinfo* pExeFile=GetFileInfo(FullCommand,m_MakeDir);
+          fileinfo* pPyFile=GetFileInfo(PythonFullCommand,m_MakeDir);
           bool bBuild=false;
           if (pExeFile->GetDate().IsOlder(pPyFile->GetDate()))
           {
@@ -950,7 +950,7 @@ string mhmakefileparser::GetFullCommand(string Command)
           /* Now first try to create an executable for it */
           if (s_Py2ExeInstalled)
           {
-            refptr<fileinfo> pExeFile;
+            fileinfo* pExeFile;
             CreatePythonExe(FullCommand);
             string ExeFullCommand=SearchCommand(Command,EXEEXT);
             if (!ExeFullCommand.empty())
@@ -1435,11 +1435,11 @@ mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, str
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, const refptr<fileinfo> &Target, mh_time_t TargetDate, mh_time_t &YoungestDate, bool &MakeTarget)
+void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, fileinfo* pTarget, mh_time_t TargetDate, mh_time_t &YoungestDate, bool &MakeTarget)
 {
 
-  vector< refptr<fileinfo> > &Deps=Target->GetDeps();
-  vector< refptr<fileinfo> >::iterator pDepIt=Deps.begin();
+  vector<fileinfo*> &Deps=pTarget->GetDeps();
+  vector<fileinfo*>::iterator pDepIt=Deps.begin();
   while (pDepIt!=Deps.end())
   {
     StartBuildTarget(*pDepIt);
@@ -1455,7 +1455,7 @@ void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, const refptr
     {
       #ifdef _DEBUG
       if (pRule&&g_pPrintDependencyCheck && DepDate.IsExistingFile() && TargetDate.IsExistingFile())
-        cout<<"Going to build "<<Target->GetQuotedFullFileName()<<" because "<<(*pDepIt)->GetQuotedFullFileName()<<" is more recent\n";
+        cout<<"Going to build "<<pTarget->GetQuotedFullFileName()<<" because "<<(*pDepIt)->GetQuotedFullFileName()<<" is more recent\n";
       #endif
       MakeTarget=true;
     }
@@ -1464,24 +1464,24 @@ void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, const refptr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool bCheckTargetDir)
+mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTargetDir)
 {
   #ifdef _DEBUG
   if (g_CheckCircularDeps)
   {
-    deque< refptr<fileinfo> >::const_iterator pFind=find(m_TargetStack.begin(),m_TargetStack.end(),Target);
+    deque<fileinfo*>::const_iterator pFind=find(m_TargetStack.begin(),m_TargetStack.end(),pTarget);
     if (pFind!=m_TargetStack.end())
     {
-      cout << "Circular dependency detected.\n"<<Target->GetQuotedFullFileName()<<" depending on itself.\n";
+      cout << "Circular dependency detected.\n"<<pTarget->GetQuotedFullFileName()<<" depending on itself.\n";
       cout << "Dependency stack:\n";
-      deque< refptr<fileinfo> >::const_iterator pIt=m_TargetStack.begin();
+      deque<fileinfo*>::const_iterator pIt=m_TargetStack.begin();
       while (pIt!=m_TargetStack.end())
       {
         cout << "  " << (*pIt)->GetQuotedFullFileName() << endl;
         pIt++;
       }
     }
-    if (!Target->IsBuildStarted()) m_TargetStack.push_back(Target);
+    if (!pTarget->IsBuildStarted()) m_TargetStack.push_back(pTarget);
   }
   #endif
 
@@ -1494,46 +1494,46 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     throw string("Compilation Interrupted by user.");
   }
 
-  if (Target->IsBuild())
+  if (pTarget->IsBuild())
   {
     #ifdef _DEBUG
     if (g_pPrintDependencyCheck)
     {
       for (int i=0; i<Indent; i++)
         cout<<"  ";
-      cout<<"  Already build "<<Target->GetQuotedFullFileName()<<" : "<<Target->GetDate()<<endl;
+      cout<<"  Already build "<<pTarget->GetQuotedFullFileName()<<" : "<<pTarget->GetDate()<<endl;
     }
     #endif
-    return Target->GetDate();
+    return pTarget->GetDate();
   }
-  if (Target->IsBuilding())
-    return mh_time_t();  // Target is still building, so we have to wait
+  if (pTarget->IsBuilding())
+    return mh_time_t();  // pTarget is still building, so we have to wait
 
   #ifdef _DEBUG
   if (g_GenProjectTree)
-    cout << Target->GetQuotedFullFileName() << endl;
+    cout << pTarget->GetQuotedFullFileName() << endl;
 
   Indent++;
   if (g_pPrintDependencyCheck)
   {
     for (int i=0; i<Indent; i++)
       cout<<"  ";
-    cout<<"Building dependencies of "<<Target->GetQuotedFullFileName()<<endl;
+    cout<<"Building dependencies of "<<pTarget->GetQuotedFullFileName()<<endl;
   }
   #endif
 
-  Target->SetBuild();
+  pTarget->SetBuild();
 
   /* Optimisation: do not build target when target dir does not exist,
      but first build the target dir, in case there exists a rule for it*/
-  refptr<rule> pRule=Target->GetRule();
+  refptr<rule> pRule=pTarget->GetRule();
 
   if (!pRule && bCheckTargetDir)
   {
-    refptr<fileinfo> TargetDir=Target->GetDir();
-    mh_time_t TargetDirDate=BuildTarget(TargetDir,false);
+    fileinfo *pTargetDir=pTarget->GetDir();
+    mh_time_t TargetDirDate=BuildTarget(pTargetDir,false);
 
-    if (!TargetDir->Exists())
+    if (!pTargetDir->Exists())
     {
       #ifdef _DEBUG
       Indent--;
@@ -1546,29 +1546,28 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     }
   }
 
-  mh_time_t TargetDate=Target->GetDate();
+  mh_time_t TargetDate=pTarget->GetDate();
   bool MakeTarget=false;
   mh_time_t YoungestDate=TargetDate;
 
   if (!pRule || !pRule->GetCommands().size())
   {
-    vector< pair<refptr<fileinfo>,refptr<rule> > > Result;
+    vector< pair<fileinfo*,refptr<rule> > > Result;
 
+    IMPLICITRULE::SearchImplicitRule(pTarget,Result);
 
-    IMPLICITRULE::SearchImplicitRule(Target,Result);
-
-    vector< pair<refptr<fileinfo>,refptr<rule> > >::iterator ResultIt=Result.begin();
+    vector< pair<fileinfo*,refptr<rule> > >::iterator ResultIt=Result.begin();
     while (ResultIt!=Result.end())
     {
-      if (ResultIt->first==NullFileInfo)
+      if (ResultIt->first==NULL)
       {
         pRule=ResultIt->second;
-        Target->SetRule(pRule);
+        pTarget->SetRule(pRule);
         #ifdef _DEBUG
         if (g_PrintAdditionalInfo)
         {
-          cout<<"Found implicit rule for "<<Target->GetQuotedFullFileName()<<endl;
-          pRule->PrintCommands(Target);
+          cout<<"Found implicit rule for "<<pTarget->GetQuotedFullFileName()<<endl;
+          pRule->PrintCommands(pTarget);
         }
         #endif
         break;
@@ -1578,28 +1577,36 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
         #ifdef _DEBUG
         m_ImplicitSearch++;
         #endif
-        mh_time_t DepDate=BuildTarget(ResultIt->first);
+        fileinfo* pNewTarget=ResultIt->first;
+        mh_time_t DepDate=BuildTarget(pNewTarget);
+        if (!DepDate.DoesExist())
+        {
+          pNewTarget=ResultIt->second->GetMakefile()->SearchvPath(pNewTarget);
+          if (pNewTarget!=NULL)
+            DepDate=pNewTarget->GetDate();
+        }
         #ifdef _DEBUG
         m_ImplicitSearch--;
         #endif
-        if (DepDate.DoesExist()) {
+        if (DepDate.DoesExist())
+        {
           if (DepDate.IsNewer(YoungestDate))
             YoungestDate=DepDate;
           pRule=ResultIt->second;
-          Target->AddMainDep(ResultIt->first);
-          Target->SetRule(pRule);  /* This is an implicit rule so do not add the target */
+          pTarget->AddMainDep(pNewTarget);
+          pTarget->SetRule(pRule);  /* This is an implicit rule so do not add the target */
           #ifdef _DEBUG
           if (g_PrintAdditionalInfo)
           {
-            cout<<"Found implicit rule for "<<Target->GetQuotedFullFileName()<<". Dependent "<<ResultIt->first->GetQuotedFullFileName()<<endl;
-            pRule->PrintCommands(Target);
+            cout<<"Found implicit rule for "<<pTarget->GetQuotedFullFileName()<<". Dependent "<<ResultIt->first->GetQuotedFullFileName()<<endl;
+            pRule->PrintCommands(pTarget);
           }
           #endif
           if (DepDate.IsNewer(TargetDate))
           {
             #ifdef _DEBUG
             if (pRule,g_pPrintDependencyCheck && DepDate.IsExistingFile() && TargetDate.IsExistingFile())
-              cout<<"Going to build "<<Target->GetQuotedFullFileName()<<" because "<<ResultIt->first->GetQuotedFullFileName()<<" is more recent\n";
+              cout<<"Going to build "<<pTarget->GetQuotedFullFileName()<<" because "<<ResultIt->first->GetQuotedFullFileName()<<" is more recent\n";
             #endif
             MakeTarget=true;
           }
@@ -1611,11 +1618,11 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     if (pRule)
     {
       #ifdef _DEBUG
-      Target->SetBuilding();
-      Target->SetRule(pRule);
-      Target->ClearBuilding();
+      pTarget->SetBuilding();
+      pTarget->SetRule(pRule);
+      pTarget->ClearBuilding();
       #else
-      Target->SetRule(pRule);
+      pTarget->SetRule(pRule);
       #endif
     }
   }
@@ -1625,12 +1632,12 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
   {
     pMakefile=pRule->GetMakefile();
     if (pMakefile->ForceAutoDepRescan()||MakeTarget==true)
-      pMakefile->UpdateAutomaticDependencies(Target);
+      pMakefile->UpdateAutomaticDependencies(pTarget);
   }
-  else if (Target->GetAutoDepsMakefile())
-    Target->GetAutoDepsMakefile()->UpdateNoRuleAutomaticDependencies(Target);
+  else if (pTarget->GetAutoDepsMakefile())
+    pTarget->GetAutoDepsMakefile()->UpdateNoRuleAutomaticDependencies(pTarget);
 
-  BuildDependencies(pRule,Target,TargetDate,YoungestDate,MakeTarget);
+  BuildDependencies(pRule,pTarget,TargetDate,YoungestDate,MakeTarget);
 
   if (pRule)
   {
@@ -1639,7 +1646,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     {
       for (int i=0; i<Indent; i++)
         cout<<"  ";
-      cout<<"Building "<<Target->GetQuotedFullFileName()<<endl;
+      cout<<"Building "<<pTarget->GetQuotedFullFileName()<<endl;
     }
     #endif
     if (!MakeTarget)
@@ -1651,12 +1658,12 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
         {
           if (!TargetDate.DoesExist())
           {
-            if (!m_ImplicitSearch && !Target->IsPhony())
-              cout<<"Building "<<Target->GetQuotedFullFileName()<<" because it does not exist yet\n";
+            if (!m_ImplicitSearch && !pTarget->IsPhony())
+              cout<<"Building "<<pTarget->GetQuotedFullFileName()<<" because it does not exist yet\n";
           }
           else if (TargetDate.IsOlder(m_sBuildTime))
           {
-            cout<<"Building "<<Target->GetQuotedFullFileName()<<" because need to rebuild all (-a)\n";
+            cout<<"Building "<<pTarget->GetQuotedFullFileName()<<" because need to rebuild all (-a)\n";
           }
         }
         #endif
@@ -1675,7 +1682,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
       md5_starts( &ctx );
       while (CommandIt!=Commands.end())
       {
-        pMakefile->SetRuleThatIsBuild(Target); // Make sure that the command expension is correct
+        pMakefile->SetRuleThatIsBuild(pTarget); // Make sure that the command expension is correct
         string Command=pMakefile->ExpandExpression(*CommandIt);
         pMakefile->ClearRuleThatIsBuild();  /* Make sure that further expansion is not taking this rule into account.*/
         md5_update( &ctx, (uint8 *)Command.c_str(), (unsigned long)Command.size());
@@ -1683,20 +1690,20 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
       }
 
       uint32 Md5_32=md5_finish32( &ctx);
-      if (!Target->CompareMd5_32(Md5_32))
+      if (!pTarget->CompareMd5_32(Md5_32))
       {
         if (TargetDate.IsNewerOrSame(m_sBuildTime) || TargetDate.IsDir())
         {
           // Only rebuild if it is not yet rebuild in this current run. This may happen for implicit rules that have multiple targets (implicit rules that build more then one target at the same time
-          Target->SetCommandsMd5_32(Md5_32);
-          pMakefile->AddTarget(Target);
+          pTarget->SetCommandsMd5_32(Md5_32);
+          pMakefile->AddTarget(pTarget);
           pMakefile->SetAutoDepsDirty();  /* We need to update the autodeps file if the md5 has been changed */
         }
         else
         {
           #ifdef _DEBUG
           if (!g_GenProjectTree)
-            cout << "Md5 is different for " << Target->GetQuotedFullFileName() << " Old:"<<hex<<Target->GetCommandsMd5_32()<<", New: "<<Md5_32<<". Commandline must have been changed so recompiling\n";
+            cout << "Md5 is different for " << pTarget->GetQuotedFullFileName() << " Old:"<<hex<<pTarget->GetCommandsMd5_32()<<", New: "<<Md5_32<<". Commandline must have been changed so recompiling\n";
           #endif
 
           #ifdef _DEBUG
@@ -1714,10 +1721,9 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     if (MakeTarget)
     {
       // Queue for execution
-//      Target->SetDate(YoungestDate);
-      if (sm_CommandQueue.QueueTarget(Target))
+      if (sm_CommandQueue.QueueTarget(pTarget))
         return mh_time_t();
-      mh_time_t NewDate=Target->GetDate();
+      mh_time_t NewDate=pTarget->GetDate();
       if (NewDate.IsNewer(YoungestDate))
         YoungestDate=NewDate;
     }
@@ -1728,7 +1734,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
   {
     for (int i=0; i<Indent; i++)
       cout<<"  ";
-    cout<<"Building "<<Target->GetQuotedFullFileName()<<" finished : "<< YoungestDate << endl;
+    cout<<"Building "<<pTarget->GetQuotedFullFileName()<<" finished : "<< YoungestDate << endl;
   }
   Indent--;
   if (g_CheckCircularDeps)
@@ -1736,26 +1742,26 @@ mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool
     m_TargetStack.pop_back();
   }
 
-  if (!m_ImplicitSearch && !Target->Exists() && !Target->IsPhony() && !g_DoNotExecute && !g_GenProjectTree)
+  if (!m_ImplicitSearch && !pTarget->Exists() && !pTarget->IsPhony() && !g_DoNotExecute && !g_GenProjectTree)
   {
     // This is only a warning for phony messages
-    cout<<"Warning: don't know how to make "<<Target->GetQuotedFullFileName()<<"\nMake the rule a phony rule to avoid this warning (but only do it when it is really phony).\n";;
+    cout<<"Warning: don't know how to make "<<pTarget->GetQuotedFullFileName()<<"\nMake the rule a phony rule to avoid this warning (but only do it when it is really phony).\n";;
   }
   #endif
-  Target->SetDate(YoungestDate); /* This is especially needed for phony targets in between real targets */
+  pTarget->SetDate(YoungestDate); /* This is especially needed for phony targets in between real targets */
   return YoungestDate;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-mh_time_t mhmakefileparser::WaitBuildTarget(const refptr<fileinfo> &Target)
+mh_time_t mhmakefileparser::WaitBuildTarget(fileinfo* pTarget)
 {
-  return sm_CommandQueue.WaitForTarget(Target);
+  return sm_CommandQueue.WaitForTarget(pTarget);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void mhmakefileparser::BuildIncludedMakefiles()
 {
-  vector< refptr<fileinfo> >::iterator MakefileIt=m_IncludedMakefiles.begin();
+  vector<fileinfo*>::iterator MakefileIt=m_IncludedMakefiles.begin();
   while (MakefileIt!=m_IncludedMakefiles.end())
   {
     #ifdef _DEBUG

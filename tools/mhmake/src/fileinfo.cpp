@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,9 +28,6 @@
 #ifndef S_ISDIR
 #define S_ISDIR(val) ((val)&_S_IFDIR)
 #endif
-
-const string NullString;
-refptr<fileinfo> NullFileInfo;
 
 ///////////////////////////////////////////////////////////////////////////////
 string QuoteFileName(const string &Filename)
@@ -78,7 +75,7 @@ string UnquoteFileName(const string &Filename)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-refptr<fileinfo> fileinfo::GetDir() const
+fileinfo* fileinfo::GetDir() const
 {
   return GetAbsFileInfo(m_AbsFileName.substr(0,m_AbsFileName.find_last_of(OSPATHSEP)));
 }
@@ -90,15 +87,15 @@ string fileinfo::GetName() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-mh_time_t fileinfo::realGetDate()
+mh_time_t fileinfo::realGetDate() const
 {
   struct stat Buf;
   if (-1==stat(m_AbsFileName.c_str(),&Buf))
-    m_Date.SetNotExist();
+    ((fileinfo*)this)->m_Date.SetNotExist();
   else if (S_ISDIR(Buf.st_mode))
-    m_Date.SetDir();
+    ((fileinfo*)this)->m_Date.SetDir();
   else
-    m_Date=Buf.st_mtime;
+    ((fileinfo*)this)->m_Date=Buf.st_mtime;
   return m_Date;
 }
 
@@ -145,7 +142,7 @@ string fileinfo::GetPrerequisits() const
 {
   // Build a string with all prerequisits, but make sure that every dependency
   // is only in there once (we do this be building a set in parallel
-  vector< refptr<fileinfo> >::const_iterator DepIt=m_Deps.begin();
+  vector<fileinfo*>::const_iterator DepIt=m_Deps.begin();
   deps_t Deps;
   bool first=true;
   string Ret=g_EmptyString;
@@ -171,10 +168,10 @@ string fileinfo::GetPrerequisits() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void fileinfo::AddDeps(vector< refptr<fileinfo> > &Deps)
+void fileinfo::AddDeps(vector<fileinfo*> &Deps)
 {
-  vector< refptr<fileinfo> >::iterator It=Deps.begin();
-  vector< refptr<fileinfo> >::iterator ItEnd=Deps.end();
+  vector<fileinfo*>::iterator It=Deps.begin();
+  vector<fileinfo*>::iterator ItEnd=Deps.end();
   while (It!=ItEnd)
   {
     AddDep(*It++);
@@ -293,7 +290,7 @@ string &NormalizePathName(string &Name)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-const refptr<fileinfo> &GetFileInfo(const string &NameIn,const refptr<fileinfo> &RelDir)
+fileinfo* GetFileInfo(const string &NameIn,const fileinfo* pRelDir)
 {
   string Name=UnquoteFileName(NameIn);
   bool DoesExist=true;
@@ -305,36 +302,36 @@ const refptr<fileinfo> &GetFileInfo(const string &NameIn,const refptr<fileinfo> 
   {
     if (Name[0]!=OSPATHSEP)
     {
-      Name=RelDir->GetFullFileName()+OSPATHSEPSTR+Name;
-      if (!RelDir->Exists())  /* if the directory does not exist, the file will not exist either */
+      Name=pRelDir->GetFullFileName()+OSPATHSEPSTR+Name;
+      if (!pRelDir->Exists())  /* if the directory does not exist, the file will not exist either */
         DoesExist=false;
     }
     #ifdef WIN32
     else
     {
       /* The filename is absolute but does not contain a driver letter. So add it (only on windows) */
-      Name=RelDir->GetFullFileName().substr(0,2)+Name;
+      Name=pRelDir->GetFullFileName().substr(0,2)+Name;
     }
     #endif
   }
-  const refptr<fileinfo> &Ret=GetAbsFileInfo(NormalizePathName(Name));
+  fileinfo* pRet=GetAbsFileInfo(NormalizePathName(Name));
   if (!DoesExist)
-    Ret->SetNotExist();
-  return Ret;
+    pRet->SetNotExist();
+  return pRet;
 }
 
 #ifdef _DEBUG
 ///////////////////////////////////////////////////////////////////////////////
 void PrintFileInfos()
 {
-  set<refptr<fileinfo>,less_refptrfileinfo>::iterator pIt=g_FileInfos.begin();
+  fileinfos::iterator pIt=g_FileInfos.begin();
   while (pIt!=g_FileInfos.end())
   {
     cout<<(*pIt)->GetQuotedFullFileName()<<" :";
     if ((*pIt)->IsPhony())
       cout<<" (phony)";
-    vector< refptr<fileinfo> > &Deps=(*pIt)->GetDeps();
-    vector< refptr<fileinfo> >::iterator pDepIt=Deps.begin();
+    vector<fileinfo*> &Deps=(*pIt)->GetDeps();
+    vector<fileinfo*>::iterator pDepIt=Deps.begin();
     while (pDepIt!=Deps.end())
     {
       cout<<g_SpaceString<<(*pDepIt)->GetQuotedFullFileName();
@@ -354,3 +351,13 @@ void PrintFileInfos()
 }
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
+fileinfos::~fileinfos()
+{
+  fileinfos::iterator It=begin();
+  while (It!=end())
+  {
+    delete (*It);
+    It++;
+  }
+}

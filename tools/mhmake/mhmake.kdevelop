@@ -1,8 +1,8 @@
 <?xml version = '1.0'?>
 <kdevelop>
   <general>
-    <author>Marc Haesen</author>
-    <email>hmca@telenet.be</email>
+    <author>marha</author>
+    <email>marc@hc-consult.be</email>
     <version>1.1.12</version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
@@ -164,8 +164,8 @@
     <APPNAMELC>mhmake</APPNAMELC>
     <APPNAMESC>Mhmake</APPNAMESC>
     <APPNAMEUC>MHMAKE</APPNAMEUC>
-    <AUTHOR>Marc Haesen</AUTHOR>
-    <EMAIL>hmca@telenet.be</EMAIL>
+    <AUTHOR>marha</AUTHOR>
+    <EMAIL>marc@hc-consult.be</EMAIL>
     <LICENSE>Custom</LICENSE>
     <VERSION>0.1</VERSION>
     <YEAR>2006</YEAR>

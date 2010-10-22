@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,13 +44,13 @@ struct funcdef
   function_f   pFunc;
 };
 
-class fileinfoarray : public refbase,public vector<refptr<fileinfo> >
+class fileinfoarray : public refbase,public vector<fileinfo*>
 {
 };
 
-typedef set< refptr<fileinfo> > deps_t;
+typedef set<fileinfo*> deps_t;
 typedef pair< bool, deps_t > autodeps_entry_t;
-typedef map< refptr<fileinfo>, autodeps_entry_t > autodeps_t;
+typedef map<fileinfo*, autodeps_entry_t > autodeps_t;
 
 class mhmakefileparser : public refbase
 {
@@ -60,10 +60,10 @@ private:
 
   mhmakelexer          *m_ptheLexer;
   int                   m_yyloc;
-  refptr<fileinfo>      m_RuleThatIsBuild;
+  fileinfo             *m_RuleThatIsBuild;
   vector<string>        m_ToBeIncludeAfterBuild;
   vector<string>        m_MakefilesToLoad;
-  refptr<fileinfo>      m_AutoDepFileLoaded;
+  fileinfo*             m_AutoDepFileLoaded;
   int                   m_InExpandExpression;
   mh_time_t             m_Date;
   uint32                m_EnvMd5_32;   /* Cached Md5_32 value of the userd environment variables */
@@ -76,11 +76,11 @@ protected:
   map<string,string>    m_Variables;
   map<string,string>    m_CommandLineVars;
   TOKENVALUE            m_theTokenValue;
-  refptr<fileinfo>      m_MakeDir;
+  const fileinfo       *m_MakeDir;
   refptr<rule>          m_pCurrentRule;
   refptr<fileinfoarray> m_pCurrentItems;
   refptr<fileinfoarray> m_pCurrentDeps;
-  refptr<fileinfo>      m_FirstTarget;
+  fileinfo*             m_FirstTarget;
   fileinfoarray         m_IncludedMakefiles;
   refptr<fileinfoarray> m_pIncludeDirs;
   string                m_IncludeDirs;
@@ -96,6 +96,7 @@ protected:
 
   set<string>           m_UsedEnvVars;     // Array containing a list of variables that are taken from the environment (This is used for rebuild checking)
   set<string>           m_Exports;         // Array containing a list of exported variables in the makefile (This is used for rebuild checking)
+  vector< pair< string, refptr<fileinfoarray> > > m_vPath;
 #ifdef WIN32
   char                 *m_pEnv;            // New environment in case the makefile exports variables
 #else
@@ -104,7 +105,7 @@ protected:
   size_t                m_EnvLen;          // Current length of m_pEnv
 
   autodeps_t m_AutoDeps;
-  set< const fileinfo* , less_fileinfo > m_Targets; // List of targets that are build by this makefile
+  set< const fileinfo* > m_Targets; // List of targets that are build by this makefile
 
   static mh_time_t m_sBuildTime;
 private:
@@ -112,7 +113,7 @@ private:
 
 public:
 #ifdef _DEBUG
-  deque< refptr<fileinfo> > m_TargetStack;   /* Used to detect circular dependencies */
+  deque<fileinfo*> m_TargetStack;   /* Used to detect circular dependencies */
 #endif
 
   mhmakefileparser(const map<string,string> &CommandLineVars)
@@ -124,6 +125,7 @@ public:
       ,m_RebuildAll(false)
       ,m_EnvMd5_32(0)
       ,m_pEnv(NULL)
+      ,m_FirstTarget(NULL)
       #ifdef _DEBUG
       ,m_ImplicitSearch(0)
       #endif
@@ -135,7 +137,7 @@ public:
   }
 
   /* Needed if you only want to use the searchcommand and execommand functions */
-  mhmakefileparser(const refptr<fileinfo> &pMakeDir) :
+  mhmakefileparser(const fileinfo *pMakeDir) :
     m_MakeDir(pMakeDir)
   , m_AutoDepsDirty(false)
   , m_pEnv(NULL)
@@ -152,6 +154,7 @@ public:
   void CreateUSED_ENVVARS();
 
   void SetExport(const string & Var, const string & Val);
+  void SetvPath(const string & Pattern, const string & Path);
 
   void CheckEnv(void);
 
@@ -195,21 +198,21 @@ public:
   {
     return m_ForceAutoDepRescan;
   }
-  void SetRuleThatIsBuild(const refptr<fileinfo> &Target)
+  void SetRuleThatIsBuild(fileinfo *pTarget)
   {
-    m_RuleThatIsBuild=Target;
+    m_RuleThatIsBuild=pTarget;
   }
   void ClearRuleThatIsBuild()
   {
     m_RuleThatIsBuild=NULL;
   }
-  void GetAutoDepsIfNeeded(const refptr<fileinfo> &Target, const refptr<fileinfo>&FirstDep);
-  void UpdateAutomaticDependencies(const refptr<fileinfo> &Target);
-  void UpdateNoRuleAutomaticDependencies(const refptr<fileinfo> &Target);
+  void GetAutoDepsIfNeeded(fileinfo *pTarget, const fileinfo *pFirstDep);
+  void UpdateAutomaticDependencies(fileinfo *pTarget);
+  void UpdateNoRuleAutomaticDependencies(fileinfo *pTarget);
   const refptr<fileinfoarray> GetIncludeDirs() const;
-  void GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Autodeps);
+  void GetAutoDeps(const fileinfo *pFirstDep, deps_t &Autodeps);
   void SaveAutoDepsFile();
-  void LoadAutoDepsFile(refptr<fileinfo> &DepFile);
+  void LoadAutoDepsFile(fileinfo *pDepFile);
   bool SkipHeaderFile(const string &FileName);
   void InitEnv() const;
 
@@ -230,7 +233,7 @@ public:
     throw("Please derive if you want to execute yyparse.");
   }
 
-  int ParseFile(const refptr<fileinfo> &FileInfo,refptr<fileinfo> &pMakeDir=NullFileInfo);
+  int ParseFile(const fileinfo *pFileInfo,const fileinfo *pMakeDir=NULL);
 
   /* Functions to handle variables */
   bool IsDefined(const string &Var) const;
@@ -274,12 +277,12 @@ public:
   string f_strip(const string & Arg) const;
   string f_which(const string & Arg) const;
 
-  const refptr<fileinfo> GetFirstTarget() const
+  fileinfo* GetFirstTarget() const
   {
     return m_FirstTarget;
   }
 
-  const refptr<fileinfo> GetMakeDir() const
+  const fileinfo *GetMakeDir() const
   {
     return m_MakeDir;
   }
@@ -302,28 +305,29 @@ public:
   /* Starts building the target,
     returns 0 when target build is not finished,
     returns the date of the target when target is build, especially important for phony rules, since this will be the youngest date of all dependencies */
-  mh_time_t StartBuildTarget(const refptr<fileinfo> &Target, bool bCheckTargetDir=true);
+  mh_time_t StartBuildTarget(fileinfo* pTarget, bool bCheckTargetDir=true);
   /* Waits for the target being build, returns the date of the target. Not needed to be cald when StartBuildTarget returned a value different from zero */
-  mh_time_t WaitBuildTarget(const refptr<fileinfo> &Target);
+  mh_time_t WaitBuildTarget(fileinfo* pTarget);
+
+  fileinfo* SearchvPath(const fileinfo* pTarget);  /* Search for the target using the vPath */
 
   /* Use the following command when you want to wait for the target is built */
-  mh_time_t BuildTarget(const refptr<fileinfo> &Target, bool bCheckTargetDir=true)
+  mh_time_t BuildTarget(fileinfo* pTarget, bool bCheckTargetDir=true)
   {
-    mh_time_t TargetDate=StartBuildTarget(Target,bCheckTargetDir);
+    mh_time_t TargetDate=StartBuildTarget(pTarget,bCheckTargetDir);
     if (!TargetDate.IsDateValid())
-      return WaitBuildTarget(Target);
-    else
+      TargetDate=WaitBuildTarget(pTarget);
       return TargetDate;
   }
 
-  void BuildDependencies(const refptr<rule> &pRule, const refptr<fileinfo> &Target, mh_time_t TargetDate, mh_time_t &YoungestDate, bool &MakeTarget);
+  void BuildDependencies(const refptr<rule> &pRule, fileinfo* pTarget, mh_time_t TargetDate, mh_time_t &YoungestDate, bool &MakeTarget);
 
   void BuildIncludedMakefiles();
 
-  void AddIncludedMakefile(refptr<fileinfo> &MakeInfo)
+  void AddIncludedMakefile(fileinfo* pMakeInfo)
   {
-    UpdateDate(MakeInfo->GetDate());
-    m_IncludedMakefiles.push_back(MakeInfo);
+    UpdateDate(pMakeInfo->GetDate());
+    m_IncludedMakefiles.push_back(pMakeInfo);
   }
   fileinfoarray &GetIncludedMakefiles()
   {
@@ -357,7 +361,7 @@ public:
 
   static void InitBuildTime();
 
-  void SplitToItems(const string &String, vector< refptr<fileinfo> > &Items) const;
+  void SplitToItems(const string &String, vector<fileinfo*> &Items) const;
   mh_pid_t DeleteFiles(const string &Params) const;
   mh_pid_t CopyFiles(const string &Params) const;
   mh_pid_t TouchFiles(const string &Params) const;

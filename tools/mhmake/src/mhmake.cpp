@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -120,17 +120,17 @@ int __CDECL main(int argc, char* argv[])
         {
           g_Clean=true;
         }
-        refptr<fileinfo> pTarget=GetFileInfo(*It,pFirstMakefile->m_MakeDir);
+        fileinfo *pTarget=GetFileInfo(*It,pFirstMakefile->m_MakeDir);
         pFirstMakefile->m_pParser->BuildTarget(pTarget);
         It++;
       }
     }
     else
     {
-      refptr<fileinfo> FirstTarget=pFirstMakefile->m_pParser->GetFirstTarget();
-      if (FirstTarget)
+      fileinfo *pFirstTarget=pFirstMakefile->m_pParser->GetFirstTarget();
+      if (pFirstTarget)
       {
-        pFirstMakefile->m_pParser->BuildTarget(FirstTarget);
+        pFirstMakefile->m_pParser->BuildTarget(pFirstTarget);
       }
       else
         cout << "Warning: no targets in makefile. Nothing to be build.\nMHMAKECONF defined?\n";

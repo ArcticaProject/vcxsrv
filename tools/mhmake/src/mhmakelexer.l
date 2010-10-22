@@ -1,6 +1,6 @@
 /*  This file is part of mhmake.
  *
- *  Copyright (C) 2001-2009 Marc Haesen
+ *  Copyright (C) 2001-2010 marha@sourceforge.net
  *
  *  Mhmake is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,9 +26,9 @@
 #include "rule.h"
 #include "util.h"
 
-static uint32 LoadMakMd5(refptr<fileinfo> &Target)
+static uint32 LoadMakMd5(fileinfo *pTarget)
 {
-  string FileName=Target->GetFullFileName();
+  string FileName=pTarget->GetFullFileName();
   FileName+=".md5_32";
   FILE *pFile=fopen(FileName.c_str(),"rb");
   if (!pFile)
@@ -36,20 +36,20 @@ static uint32 LoadMakMd5(refptr<fileinfo> &Target)
   uint32 Md5_32=0;
   fread(&Md5_32,sizeof(Md5_32),1,pFile);
   fclose(pFile);
-  Target->SetCommandsMd5_32(Md5_32);
+  pTarget->SetCommandsMd5_32(Md5_32);
   return Md5_32;
 }
 
-static void SaveMakMd5(refptr<fileinfo> &Target)
+static void SaveMakMd5(fileinfo *pTarget)
 {
-  string FileName=Target->GetFullFileName();
+  string FileName=pTarget->GetFullFileName();
   FileName+=".md5_32";
   FILE *pFile=fopen(FileName.c_str(),"wb");
   if (!pFile)
   {
     throw string("Error creating file ")+FileName;
   }
-  Target->WriteMd5_32(pFile);
+  pTarget->WriteMd5_32(pFile);
   fclose(pFile);
 }
 
@@ -83,12 +83,12 @@ static void SaveMakMd5(refptr<fileinfo> &Target)
 
 /* -------------- rules section -------------- */
 %x INCLUDE IFDEF IF IFNDEF SKIPUNTILELSEORENDIF QUOTE MAKEEXPRES SINGLEQUOTE COMMANDPARSE
-%x IFEQ IFNEQ ERRORMACRO MESSAGEMACRO REPARSEMACRO LOAD_MAKEFILE
+%x IFEQ IFNEQ ERRORMACRO MESSAGEMACRO MESSAGEINFO MESSAGEERROR REPARSEMACRO LOAD_MAKEFILE
 
 %%
 
  /*---------------------------------------------------------------------------*/
-[ \t\r]*\n[ ][ \t]* |
+[ \t\r]*\n/[ ][ \t]* |
 [ \t\r]*\n {
   PRINTF(("%s %d: NEWLINE:\n",m_InputFileName.c_str(),m_Line));
   m_Line++;
@@ -96,10 +96,12 @@ static void SaveMakMd5(refptr<fileinfo> &Target)
 }
 
  /*---------------------------------------------------------------------------*/
-^[s\-]?include {
+^[ \t]*[s\-]?include {
   PRINTF(("%s %d: INCLUDE: ",m_InputFileName.c_str(),m_Line));
   BEGIN(INCLUDE);
-  if (yytext[0]=='-' || yytext[0]=='s')
+  unsigned i=0;
+  while (strchr(" \t",yytext[i])) i++;
+  if (strchr("-s",yytext[i]))
     m_IgnoreIncludeError=true;
   else
     m_IgnoreIncludeError=false;
@@ -123,7 +125,7 @@ static void SaveMakMd5(refptr<fileinfo> &Target)
     if (!IncludeFileName.empty())
     {
       PRINTF(("%s -> %s\n",yytext,IncludeFileName.c_str()));
-      refptr<fileinfo> pInclude=GetFileInfo(IncludeFileName,pParser->GetMakeDir());
+      fileinfo *pInclude=GetFileInfo(IncludeFileName,pParser->GetMakeDir());
       /* Already build the include file, in case we already have a rule for it. */
       if (pInclude->GetRule())
       {
@@ -595,6 +597,11 @@ export {
   return mhmakeparser::EXPORT;
 }
 
+ /*---------------------------------------------------------------------------*/
+^[ \t]*vpath {
+  PRINTF(("%s %d: vpath\n",m_InputFileName.c_str(),m_Line));
+  return mhmakeparser::VPATH;
+}
 
  /*---------------------------------------------------------------------------*/
 [a-zA-Z]:[a-zA-Z0-9\\\._\~\-%\@<&/]+\\[ \t\r]*\n {
@@ -672,6 +679,20 @@ export {
   m_BraceIndent++;
   PRINTF(("%s %d: BEGIN MESSAGE MACRO $(: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
   BEGIN(MESSAGEMACRO);
+  m_curtoken=g_EmptyString;
+}
+
+ /*---------------------------------------------------------------------------*/
+[ \t]*\$\{[ \t]*info[ \t]+ {
+  PRINTF(("%s %d: BEGIN INFO MESSAGE ${: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  BEGIN(MESSAGEINFO);
+  m_curtoken=g_EmptyString;
+}
+
+ /*---------------------------------------------------------------------------*/
+[ \t]*\$\{[ \t]*error[ \t]+ {
+  PRINTF(("%s %d: BEGIN ERROR MESSAGE ${: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  BEGIN(MESSAGEERROR);
   m_curtoken=g_EmptyString;
 }
 
@@ -823,6 +844,22 @@ export {
   } else {
     yymore();
   }
+}
+
+ /*****************************************************************************/
+<MESSAGEERROR>[^\}]+ {
+  throw(GetParser()->ExpandExpression((const char*)yytext));
+}
+
+ /*****************************************************************************/
+<MESSAGEINFO>[^\}]+ {
+  cerr<<GetParser()->ExpandExpression((const char*)yytext)<<endl;
+}
+
+ /*****************************************************************************/
+<MESSAGEINFO>\} {
+  PRINTF(("%s %d: MESSAGEINFO: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  BEGIN(INITIAL);
 }
 
  /*****************************************************************************/
