@@ -65,7 +65,6 @@ typedef enum
 {
     SOURCE_IMAGE_CLASS_UNKNOWN,
     SOURCE_IMAGE_CLASS_HORIZONTAL,
-    SOURCE_IMAGE_CLASS_VERTICAL,
 } source_image_class_t;
 
 typedef source_image_class_t (*classify_func_t) (pixman_image_t *image,
@@ -112,7 +111,6 @@ struct image_common
 struct source_image
 {
     image_common_t common;
-    source_image_class_t class;
 };
 
 struct solid_fill

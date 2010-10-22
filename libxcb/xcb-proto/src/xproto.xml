@@ -1296,8 +1296,8 @@ authorization from the authors.
     <reply>
       <field type="BOOL" name="same_screen" />
       <field type="WINDOW" name="child" altenum="Window" />
-      <field type="CARD16" name="dst_x" />
-      <field type="CARD16" name="dst_y" />
+      <field type="INT16" name="dst_x" />
+      <field type="INT16" name="dst_y" />
     </reply>
   </request>
 

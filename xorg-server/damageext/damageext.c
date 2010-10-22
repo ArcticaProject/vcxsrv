@@ -217,7 +217,6 @@ ProcDamageCreate (ClientPtr client)
     if (!AddResource (stuff->damage, DamageExtType, (pointer) pDamageExt))
 	return BadAlloc;
 
-    DamageSetReportAfterOp (pDamageExt->pDamage, TRUE);
     DamageRegister (pDamageExt->pDrawable, pDamageExt->pDamage);
 
     if (pDrawable->type == DRAWABLE_WINDOW)
