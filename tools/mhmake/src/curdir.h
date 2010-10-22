@@ -28,7 +28,7 @@ class curdir
 public:
   class initcurdir
   {
-    friend curdir;
+    friend class curdir;
     const fileinfo *m_pDir;
   public:
     initcurdir();
