@@ -53,8 +53,8 @@ AC_PREREQ([2.57])
 #
 
 m4_define([pixman_major], 0)
-m4_define([pixman_minor], 19)
-m4_define([pixman_micro], 7)
+m4_define([pixman_minor], 21)
+m4_define([pixman_micro], 1)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -726,7 +726,8 @@ if test $support_for__thread = no; then
 
     PIXMAN_CHECK_PTHREAD([CFLAGS="-D_REENTRANT"; LIBS="-lpthread"])
     PIXMAN_CHECK_PTHREAD([CFLAGS="-pthread"; LDFLAGS="-pthread"])
-
+    PIXMAN_CHECK_PTHREAD([CFLAGS="-D_REENTRANT"; LDFLAGS="-lroot"])
+    
     if test $support_for_pthread_setspecific = yes; then
 	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 	AC_DEFINE([HAVE_PTHREAD_SETSPECIFIC], [], [Whether pthread_setspecific() is supported])

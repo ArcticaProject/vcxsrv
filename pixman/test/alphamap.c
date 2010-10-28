@@ -82,6 +82,7 @@ create_image (pixman_format_code_t format, pixman_format_code_t alpha_format,
 
 	pixman_image_set_alpha_map (image, alpha,
 				    alpha_origin_x, alpha_origin_y);
+	pixman_image_unref (alpha);
     }
 
     return image;
@@ -216,6 +217,10 @@ run_test (int s, int d, int sa, int da, int soff, int doff)
 	    }
 	}
     }
+
+    pixman_image_set_alpha_map (src, NULL, 0, 0);
+    pixman_image_set_alpha_map (dst, NULL, 0, 0);
+    pixman_image_set_alpha_map (orig_dst, NULL, 0, 0);
 
     pixman_image_unref (src);
     pixman_image_unref (dst);
