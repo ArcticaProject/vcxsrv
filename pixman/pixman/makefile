@@ -30,12 +30,12 @@ CSRCS =			\
 
 BUILT_SOURCES = pixman-combine32.h pixman-combine32.c pixman-combine64.h pixman-combine64.c
 
-$(OBJDIR)\pixman-combine32.c : pixman-combine.c.template pixman-combine32.h make-combine.pl
+$(OBJDIR)\pixman-combine32.c : pixman-combine.c.template $(OBJDIR)\pixman-combine32.h make-combine.pl
 	perl make-combine.pl 8 < pixman-combine.c.template > $@
 $(OBJDIR)\pixman-combine32.h : pixman-combine.h.template make-combine.pl
 	perl make-combine.pl 8 < pixman-combine.h.template > $@
 
-$(OBJDIR)\pixman-combine64.c : pixman-combine.c.template pixman-combine64.h make-combine.pl
+$(OBJDIR)\pixman-combine64.c : pixman-combine.c.template $(OBJDIR)\pixman-combine64.h make-combine.pl
 	perl make-combine.pl 16 < pixman-combine.c.template > $@
 $(OBJDIR)\pixman-combine64.h : pixman-combine.h.template make-combine.pl
 	perl make-combine.pl 16 < pixman-combine.h.template > $@
