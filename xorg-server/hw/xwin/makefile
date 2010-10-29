@@ -112,7 +112,7 @@ DEFINES += HAVE_XWIN_CONFIG_H BUILD_DATE=0-0-0000 PTW32_STATIC_LIB
 
 INCLUDES += $(OBJDIR)
 
-$(OBJDIR)\winprefslex.c: winprefslex.l winprefsyacc.h
+$(OBJDIR)\winprefslex.c: winprefslex.l $(OBJDIR)\winprefsyacc.h
 	flex -i -o$@ $<
 
 $(OBJDIR)\winprefsyacc.c $(OBJDIR)\winprefsyacc.h: winprefsyacc.y
