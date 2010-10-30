@@ -27,6 +27,7 @@
 
 refptr<rule> NullRule;
 
+set<rule*> IMPLICITRULE::m_ImplicitRuleRecurseDetStack;
 vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > > IMPLICITRULE::m_ImplicitRules;
 
 makecommand g_MakeCommand;  // Order is important since sm_Statics is using g_MakeCommand
@@ -78,8 +79,8 @@ static bool FindDep(fileinfo *pDep, vector<pair<fileinfo*,refptr<rule> > >*pImpl
         else
           cerr << ErrorMessage << endl;
       }
-      mhmakeparser *pOldMakefile=SecIt->second->GetMakefile();
-      mhmakeparser *pNewMakefile=Rule->GetMakefile();
+      mhmakefileparser *pOldMakefile=SecIt->second->GetMakefile();
+      mhmakefileparser *pNewMakefile=Rule->GetMakefile();
       vector<string>::iterator OldIt=OldCommands.begin();
       vector<string>::iterator NewIt=NewCommands.begin();
       while (OldIt!=OldCommands.end())
@@ -107,6 +108,14 @@ static bool FindDep(fileinfo *pDep, vector<pair<fileinfo*,refptr<rule> > >*pImpl
 ///////////////////////////////////////////////////////////////////////////////
 void IMPLICITRULE::AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &Deps,refptr<rule> Rule)
 {
+  if (!Rule)
+  {
+    #ifdef _DEBUG
+    if (g_PrintAdditionalInfo)
+      cout << "No commands defined for implicit rule " << pTarget->GetFullFileName()<<endl;
+    #endif
+    return;
+  }
   // first search if there is already the same target in the current list of implicit rules
   vector<pair<fileinfo*,refptr<rule> > >* pImplicitRule=NULL;
   vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > >::iterator RuleIt=m_ImplicitRules.begin();
@@ -164,13 +173,20 @@ void IMPLICITRULE::SearchImplicitRule(const fileinfo *pTarget,vector< pair<filei
 #ifdef _DEBUG
         if (!ResIt->second)
         {
-          throw string("No rhs for implicit rule : ") + ImpRegExIt->first->GetFullFileName();
+          throw string("No commands for implicit rule : ") + ImpRegExIt->first->GetFullFileName();
         }
 #endif
         ResIt->second->SetStem(Res.m_Stem);
         if (ResIt->first!=NULL)
         {
           string Dependent=ReplaceWithStem(ResIt->first->GetFullFileName(),Res.m_Stem);
+          #ifdef _DEBUG
+          if (Dependent.length()>MAX_PATH)
+          {
+            /* File name is getting too long, this is most probable an infinit loop */
+            throw(string("Filename too long in implicit rule search: ")+Dependent+"\nProbably some infinit loop in the implicit rules search.\n");
+          }
+          #endif
           Result.push_back(pair<fileinfo*,refptr<rule> >(GetFileInfo(Dependent,ResIt->second->GetMakefile()->GetMakeDir()),ResIt->second));
         }
         else

@@ -91,13 +91,10 @@
     <ClInclude Include="src\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(OutDir)mhmakelexer.h">
-      <Filter>Parser Files\Auto</Filter>
-    </ClInclude>
-    <ClInclude Include="$(OutDir)mhmakeparser.h">
-      <Filter>Parser Files\Auto</Filter>
-    </ClInclude>
     <ClInclude Include="src\bison.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(OutDir)\mhmakeparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

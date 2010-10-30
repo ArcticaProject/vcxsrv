@@ -470,7 +470,7 @@ loadedmakefile::loadedmakefile(const fileinfo *pDir, vector<string> &Args,const 
           break;
         case 'C':
 #ifdef _DEBUG
-          if ((*ArgIt)[2]=='D')
+          if (ArgIt->size()>2 && (*ArgIt)[2]=='D')
           {
             g_CheckCircularDeps=true;
             break;
@@ -593,7 +593,7 @@ void loadedmakefile::LoadMakefile()
     cout << "Loading makefile "<<m_Makefile->GetQuotedFullFileName()<<endl;
   #endif
 
-  m_pParser=refptr<mhmakeparser>(new mhmakeparser(m_CommandLineVars));
+  m_pParser=refptr<mhmakefileparser>(new mhmakeparser(m_CommandLineVars));
 
   // Add the MAKECMDGOALS environment variable
   string MakeCmdGoals;

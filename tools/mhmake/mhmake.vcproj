@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="mhmake"
 	ProjectGUID="{7F1669C8-7974-45DF-9B71-0E2A8DC44C06}"
 	RootNamespace="mhmake"
@@ -268,7 +268,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\mhmake_dbg.exe"
+				OutputFile="$(ConfigurationName)/mhmake_dbg.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -358,7 +358,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\mhmake_dbg.exe"
+				OutputFile="$(ConfigurationName)/mhmake_dbg.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -493,8 +493,8 @@
 		</Configuration>
 		<Configuration
 			Name="Profile|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="Profile64"
+			IntermediateDirectory="Profile64"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -779,9 +779,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Release&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -789,9 +789,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Release64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -799,9 +799,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Debug&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -809,9 +809,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Debug64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -819,9 +819,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Profile&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -829,9 +829,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Profile64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -839,9 +839,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Debug64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -849,9 +849,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Debug64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -859,9 +859,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Release64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -869,9 +869,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
+						CommandLine="cmd.exe /c makelex.bat Release64&#x0D;&#x0A;"
+						AdditionalDependencies=".\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;"
+						Outputs="$(OutDir)\$(InputName).cpp"
 					/>
 				</FileConfiguration>
 			</File>
@@ -883,7 +883,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Release&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -893,7 +893,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Release64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -903,7 +903,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Debug&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -913,7 +913,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Debug64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -923,7 +923,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Profile&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -933,7 +933,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Profile64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -943,7 +943,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Debug64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -953,7 +953,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Debug64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -963,7 +963,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Release64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -973,7 +973,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat Release64&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
 						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
@@ -985,10 +985,6 @@
 				>
 				<File
 					RelativePath="$(OutDir)\mhmakelexer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="$(OutDir)\mhmakelexer.h"
 					>
 				</File>
 				<File

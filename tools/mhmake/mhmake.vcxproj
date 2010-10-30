@@ -110,8 +110,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Profile64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Profile64\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">false</LinkIncremental>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mhmake_dbg</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mhmake_dbg</TargetName>
@@ -274,7 +274,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)mhmake_dbg.exe</OutputFile>
+      <OutputFile>$(OutDir)\mhmake_dbg.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/mhmake.pdb</ProgramDatabaseFile>
@@ -322,7 +322,7 @@
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)\$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapExports>true</MapExports>
       <SubSystem>Console</SubSystem>
@@ -375,7 +375,7 @@
       <OutputFile>$(Configuration)/mhmake.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)\$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapExports>true</MapExports>
       <SubSystem>Console</SubSystem>
@@ -405,8 +405,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\util.cpp" />
-    <ClCompile Include="$(OutDir)mhmakelexer.cpp" />
-    <ClCompile Include="$(OutDir)mhmakeparser.cpp" />
+    <ClCompile Include="$(OutDir)\mhmakelexer.cpp" />
+    <ClCompile Include="$(OutDir)\mhmakeparser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\commandqueue.h" />
@@ -418,60 +418,56 @@
     <ClInclude Include="src\rule.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\util.h" />
-    <ClInclude Include="$(OutDir)mhmakelexer.h" />
-    <ClInclude Include="$(OutDir)mhmakeparser.h" />
+    <ClInclude Include="$(OutDir)\mhmakeparser.h" />
     <ClInclude Include="src\bison.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\mhmakeLexer.l">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cmd.exe /c makelex.bat $(OutDir) "%(FullPath)" ..\src\flexskel.cc ..\src\flexskel.h %(Filename).h %(Filename).cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cmd.exe /c makelex.bat Debug
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src\flexskel.cc;.\src\flexskel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cmd.exe /c makelex.bat $(OutDir) "%(FullPath)" ..\src\flexskel.cc ..\src\flexskel.h %(Filename).h %(Filename).cpp
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cmd.exe /c makelex.bat Debug64
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\src\flexskel.cc;.\src\flexskel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">cmd.exe /c makelex.bat $(OutDir) "%(FullPath)" ..\src\flexskel.cc ..\src\flexskel.h %(Filename).h %(Filename).cpp
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">cmd.exe /c makelex.bat Profile
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">.\src\flexskel.cc;.\src\flexskel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">cmd.exe /c makelex.bat $(OutDir) "%(FullPath)" ..\src\flexskel.cc ..\src\flexskel.h %(Filename).h %(Filename).cpp
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">.\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(OutDir)%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">cmd.exe /c makelex.bat Profile64
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">.\src\flexskel.cc;.\src\flexskel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cmd.exe /c makelex.bat $(OutDir) "%(FullPath)" ..\src\flexskel.cc ..\src\flexskel.h %(Filename).h %(Filename).cpp
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">.\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(OutDir)%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cmd.exe /c makelex.bat Release
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\src\flexskel.cc;.\src\flexskel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cmd.exe /c makelex.bat $(OutDir) "%(FullPath)" ..\src\flexskel.cc ..\src\flexskel.h %(Filename).h %(Filename).cpp
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\src\flexskel.cc;.\src\flexskel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cmd.exe /c makelex.bat Release64</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\src\flexint.h;.\src\flex.skl;.\src\flexlexer.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="src\mhmakeParser.y">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cmd.exe /c makebison.bat $(OutDir) "%(FullPath)" ..\src\bison.cc ..\src\bison.h %(Filename).h %(Filename).cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cmd.exe /c makebison.bat Debug
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src\bison.cc;.\src\bison.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cmd.exe /c makebison.bat $(OutDir) "%(FullPath)" ..\src\bison.cc ..\src\bison.h %(Filename).h %(Filename).cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cmd.exe /c makebison.bat Debug64
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\src\bison.cc;.\src\bison.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">cmd.exe /c makebison.bat $(OutDir) "%(FullPath)" ..\src\bison.cc ..\src\bison.h %(Filename).h %(Filename).cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">cmd.exe /c makebison.bat Profile
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">.\src\bison.cc;.\src\bison.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">cmd.exe /c makebison.bat $(OutDir) "%(FullPath)" ..\src\bison.cc ..\src\bison.h %(Filename).h %(Filename).cpp
-</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">cmd.exe /c makebison.bat Profile64</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">.\src\bison.cc;.\src\bison.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cmd.exe /c makebison.bat $(OutDir) "%(FullPath)" ..\src\bison.cc ..\src\bison.h %(Filename).h %(Filename).cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cmd.exe /c makebison.bat Release
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\src\bison.cc;.\src\bison.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cmd.exe /c makebison.bat $(OutDir) "%(FullPath)" ..\src\bison.cc ..\src\bison.h %(Filename).h %(Filename).cpp
-</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cmd.exe /c makebison.bat Release64</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\src\bison.cc;.\src\bison.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename).cpp;$(OutDir)%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>

@@ -41,7 +41,7 @@
 
 %token <theString> COMMAND
 %token <theString> COMMA OPENBRACE CLOSEBRACE
-%token <theString> STRING DOLLAREXPR EQUAL COLON DOUBLECOLON
+%token <theString> STRING DOLLAREXPR EQUAL COLON DOUBLECOLON VARDEF VARVAL
 %token IMEQUAL PEQUAL OPTEQUAL PHONY AUTODEPS EXPORT NEWLINE INCLUDEMAK SPACE VPATH
 
 %type <theString> expression nonspaceexpression simpleexpression
@@ -182,7 +182,12 @@ vpathrule: VPATH SPACE nonspaceexpression SPACE expression NEWLINE
            }
 ;
 
-varassignment: STRING EQUAL maybeemptyexpression
+varassignment: VARDEF VARVAL
+               {
+                 m_Variables[f_strip($1)]=$2;
+                 PRINTF(("Defining variable %s to %s\n",f_strip($1).c_str(), $2.c_str()));
+               }
+               | STRING EQUAL maybeemptyexpression
                {
                  m_Variables[$1]=$3;
                  PRINTF(("Setting variable %s to %s\n",$1.c_str(), $3.c_str()));

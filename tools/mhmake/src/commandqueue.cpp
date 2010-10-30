@@ -116,7 +116,7 @@ void commandqueue::ThrowCommandExecutionError(refptr<activeentry> pActiveEntry)
 {
   fileinfo*     pTarget=pActiveEntry->pTarget;
   const string    &Command=pActiveEntry->Command;
-  mhmakeparser    *pMakefile=pTarget->GetRule()->GetMakefile();
+  mhmakefileparser *pMakefile=pTarget->GetRule()->GetMakefile();
 
   string ErrorMessage = string("Error running command: ")+ Command +"\n";
   ErrorMessage += "Command defined in makefile: " + pMakefile->GetMakeDir()->GetQuotedFullFileName();
@@ -167,7 +167,7 @@ void commandqueue::RemoveActiveEntry(unsigned Entry)
 bool commandqueue::StartExecuteNextCommand(refptr<activeentry> pActiveEntry, mh_pid_t *pActiveProcess)
 {
   fileinfo* pTarget=pActiveEntry->pTarget;
-  mhmakeparser *pMakefile=pTarget->GetRule()->GetMakefile();
+  mhmakefileparser *pMakefile=pTarget->GetRule()->GetMakefile();
 
   pMakefile->SetRuleThatIsBuild(pTarget); // Make sure that the command expension is correct
   string Command=pMakefile->ExpandExpression(*pActiveEntry->CurrentCommandIt);
@@ -222,7 +222,7 @@ void commandqueue::TargetBuildFinished(refptr<activeentry> pActiveEntry)
   pTarget->SetCommandsMd5_32(Md5_32);  /* If the rule of the target was added with an implicit rule the targets in the rule is empty */
 
   refptr<rule> pRule=pTarget->GetRule();
-  mhmakeparser *pMakefile=pRule->GetMakefile();
+  mhmakefileparser *pMakefile=pRule->GetMakefile();
 
   pMakefile->AddTarget(pTarget);
   pMakefile->SetAutoDepsDirty();
@@ -251,7 +251,7 @@ bool commandqueue::StartExecuteCommands(fileinfo* pTarget)
   cout << "Building " << pTarget->GetQuotedFullFileName()<<endl;
   // We do not have to put it in the queue, we can start executing directly
   refptr<rule> pRule=pTarget->GetRule();
-  mhmakeparser *pMakefile=pRule->GetMakefile();
+  mhmakefileparser *pMakefile=pRule->GetMakefile();
   vector<string>::iterator CommandIt=pRule->GetCommands().begin();
 
   refptr<activeentry> pActiveEntry=CreateActiveEntry();

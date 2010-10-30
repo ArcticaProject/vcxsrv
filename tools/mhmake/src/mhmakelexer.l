@@ -19,9 +19,8 @@
 /* $Rev$ */
 
 /* -------------- declaration section -------------- */
-%name mhmakelexer
-%header{
-#include "mhmakeparser.h"
+%{
+
 #include "fileinfo.h"
 #include "rule.h"
 #include "util.h"
@@ -53,51 +52,59 @@ static void SaveMakMd5(fileinfo *pTarget)
   fclose(pFile);
 }
 
+static void ReplaceCurlyBraces(string &String)
+{
+  int Pos=String.find_first_of('{',0);
+  if (Pos!=string::npos)
+  {
+    /* if not { found, } will not be there eather (or it is a valid syntax, so it may generate an error) */
+    do
+    {
+      String.replace(Pos,1,1,'(');
+      Pos=String.find_first_of('{',Pos);
+    }
+    while (Pos!=string::npos);
+    Pos=0;
+    while ((Pos=String.find_first_of('}',Pos))!=string::npos)
+      String.replace(Pos,1,1,')');
+        }
+}
+
+#define YY_DECL int mhmakeFlexLexer::yylex(TOKENVALUE &theValue)
+
 %}
 
-%define LEX_PARAM TOKENVALUE &theValue
-%define MEMBERS public: \
-        struct INSTACK\
-        {\
-          YY_BUFFER_STATE m_BufferState;\
-          string m_FileName;\
-          int m_Line;\
-          INSTACK(YY_BUFFER_STATE BufferState,string FileName,int Line) :\
-            m_BufferState(BufferState),m_FileName(FileName),m_Line(Line) {}\
-        };\
-        int m_Line;\
-        int m_BraceIndent;\
-        size_t m_IndentSkip;\
-        iterstack<int> m_IndentStack;\
-        bool m_IgnoreIncludeError;\
-        string m_InputFileName; \
-        string m_curtoken; \
-        iterstack<INSTACK> m_IncludeStack; \
-        mhmakeparser *m_pParser;\
-        mhmakeparser *GetParser()\
-        {\
-          return m_pParser;\
-        }
-
-%define CONSTRUCTOR_INIT : m_Line(1), m_BraceIndent(0)
+%option prefix="mhmake"
+%option never-interactive
+%option 8bit
+%option c++
+%option full
+%option noyywrap
+%option warn
 
 /* -------------- rules section -------------- */
 %x INCLUDE IFDEF IF IFNDEF SKIPUNTILELSEORENDIF QUOTE MAKEEXPRES SINGLEQUOTE COMMANDPARSE
-%x IFEQ IFNEQ ERRORMACRO MESSAGEMACRO MESSAGEINFO MESSAGEERROR REPARSEMACRO LOAD_MAKEFILE
+%x IFEQ IFNEQ ERRORMACRO MESSAGEMACRO REPARSEMACRO LOAD_MAKEFILE
+%x DEFINE
 
 %%
 
  /*---------------------------------------------------------------------------*/
-[ \t\r]*\n/[ ][ \t]* |
+[ \t\r]*\n[ ][ \t]* {
+  yy_set_bol(1); // Make sure the next rule also matches the ^
+  yylineno++;
+  return mhmakeparser::NEWLINE;
+}
+
 [ \t\r]*\n {
-  PRINTF(("%s %d: NEWLINE:\n",m_InputFileName.c_str(),m_Line));
-  m_Line++;
+  PRINTF(("%s %d: NEWLINE:\n",m_InputFileName.c_str(),yylineno));
+  yylineno++;
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*[s\-]?include {
-  PRINTF(("%s %d: INCLUDE: ",m_InputFileName.c_str(),m_Line));
+^[s\-]?include {
+  PRINTF(("%s %d: INCLUDE: ",m_InputFileName.c_str(),yylineno));
   BEGIN(INCLUDE);
   unsigned i=0;
   while (strchr(" \t",yytext[i])) i++;
@@ -114,7 +121,10 @@ static void SaveMakMd5(fileinfo *pTarget)
 <INCLUDE>[^\r\n]+ { /* got the include file name */
   mhmakeparser *pParser=GetParser();
 
-  string IncludeFileNames=pParser->ExpandExpression((const char*)yytext);
+  /* replace the {} by () before expanding */
+  string IncludeFileNames(yytext);
+  ReplaceCurlyBraces(IncludeFileNames);
+  IncludeFileNames=pParser->ExpandExpression(IncludeFileNames);
   PRINTF(("%s -> %s\n",yytext,IncludeFileNames.c_str()));
 
   const char *pTmp=IncludeFileNames.c_str();
@@ -138,31 +148,34 @@ static void SaveMakMd5(fileinfo *pTarget)
       pParser->AddIncludedMakefile(pInclude);
 
       string strToInclude=pInclude->GetFullFileName();
-      FILE *pTmp = ::fopen(strToInclude.c_str(), "r" );
-      if ( ! pTmp )
+      INSTACK *pStackElem=new INSTACK(YY_CURRENT_BUFFER, strToInclude, m_InputFileName, yylineno);
+      if ( pStackElem->fail() )
       {
+        delete pStackElem;
         if (!m_IgnoreIncludeError)
         {
-          iterstack<INSTACK>::reverse_iterator StackIt=m_IncludeStack.rbegin();
+          mystack::reverse_iterator StackIt=m_IncludeStack.rbegin();
           while (StackIt!=m_IncludeStack.rend())
           {
-            cout<<" in "<<StackIt->m_FileName<<" ("<<StackIt->m_Line<<")";
+            cout<<" in "<<(*StackIt)->m_FileName<<" ("<<(*StackIt)->yylineno<<")";
             StackIt++;
           }
           cout<<endl;
-          cout<<"Warning error opening file "<<strToInclude<<" in "<<m_InputFileName<<" ("<<m_Line<<")\n";
+          cout<<"Warning error opening file "<<strToInclude<<" in "<<m_InputFileName<<" ("<<yylineno<<")\n";
           pParser->IncludeAfterBuild(strToInclude);
         }
+        else
+         pInclude->SetPhony();  /* To be sure that no message is printed when mhmake is trying to build the file later */
       }
       else
       {
-        m_IncludeStack.push(INSTACK(YY_mhmakelexer_CURRENT_BUFFER,m_InputFileName,m_Line));
-        m_Line=1;
+        m_IncludeStack.push(pStackElem);
+        yylineno=1;
 
-        yyin=pTmp;
         m_InputFileName=strToInclude;
 
-        YY_mhmakelexer_SWITCH_TO_BUFFER(YY_mhmakelexer_CREATE_BUFFER( yyin, YY_BUF_SIZE ) );
+        yypush_buffer_state(yy_create_buffer( pStackElem->GetStream(), YY_BUF_SIZE ));
+        yyrestart(pStackElem->GetStream());
       }
 
     }
@@ -173,15 +186,17 @@ static void SaveMakMd5(fileinfo *pTarget)
 
  /*---------------------------------------------------------------------------*/
 load_makefile {
-  PRINTF(("%s %d: LOAD_MAKEFILE:\n",m_InputFileName.c_str(),m_Line));
+  PRINTF(("%s %d: LOAD_MAKEFILE:\n",m_InputFileName.c_str(),yylineno));
   BEGIN(LOAD_MAKEFILE);
   return mhmakeparser::NEWLINE;  // Return a newline to be sure that the previous line is completely parse by yacc (in case it is a variable definition)
 }
 
  /*****************************************************************************/
 <LOAD_MAKEFILE>[^\r\n]+ {
-  string ListOfMakefiles=GetParser()->ExpandExpression((const char*)yytext);
-  PRINTF(("%s %d: LOAD_MAKEFILE: '%s'\n",m_InputFileName.c_str(),m_Line,ListOfMakefiles.c_str()));
+  string ListOfMakefiles((const char*)yytext);
+  ReplaceCurlyBraces(ListOfMakefiles);
+  ListOfMakefiles=GetParser()->ExpandExpression(ListOfMakefiles);
+  PRINTF(("%s %d: LOAD_MAKEFILE: '%s'\n",m_InputFileName.c_str(),yylineno,ListOfMakefiles.c_str()));
 
   const char *pTmp=ListOfMakefiles.c_str();
   while (*pTmp)
@@ -190,7 +205,7 @@ load_makefile {
     pTmp=NextCharItem(pTmp,Item,';');
     if (Item.empty())
     {
-      throw m_InputFileName + "(" + stringify(m_Line) + "): Error in load_makefile statement";
+      throw m_InputFileName + "(" + stringify(yylineno) + "): Error in load_makefile statement";
     }
     GetParser()->AddMakefileToMakefilesToLoad(Item);
   }
@@ -198,78 +213,78 @@ load_makefile {
 }
  /*---------------------------------------------------------------------------*/
 <LOAD_MAKEFILE>\r?\n {
-  m_Line++;
+  yylineno++;
   BEGIN(INITIAL);
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]+ {
-  PRINTF(("%s %d: SPACE:\n",m_InputFileName.c_str(),m_Line));
+  PRINTF(("%s %d: SPACE:\n",m_InputFileName.c_str(),yylineno));
   return mhmakeparser::SPACE;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*=[ \t]*\\[ \t\r]*\n[ \t]* {
-  PRINTF(("%s %d: EQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-  m_Line++;
+  PRINTF(("%s %d: EQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+  yylineno++;
   theValue.theString=(const char *)yytext;
   return mhmakeparser::EQUAL;
 }
 
 [ \t]*=[ \t]* {
-  PRINTF(("%s %d: EQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: EQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::EQUAL;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*:=[ \t]*\\[ \t\r]*\n[ \t]* {
-  m_Line++;
-  PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  yylineno++;
+  PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::IMEQUAL;
 }
 
 [ \t]*:=[ \t]* {
-  PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::IMEQUAL;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*\?=[ \t]*\\[ \t\r]*\n[ \t]* {
-  m_Line++;
-  PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  yylineno++;
+  PRINTF(("%s %d: OPTEQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::OPTEQUAL;
 }
 
 [ \t]*\?=[ \t]* {
-  PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: OPTEQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::OPTEQUAL;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*\+=[ \t]*\\[ \t\r]*\n[ \t]* {
-  PRINTF(("%s %d: PEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-  m_Line++;
+  PRINTF(("%s %d: PEQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+  yylineno++;
   return mhmakeparser::PEQUAL;
 }
 
 [ \t]*\+=[ \t]* {
-  PRINTF(("%s %d: PEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: PEQUAL: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::PEQUAL;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*;[ \t]*\\[ \t\r]*\n[ \t]* {
-  PRINTF(("%s %d: -SEMICOLON (NEWLINE): %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: -SEMICOLON (NEWLINE): %s\n",m_InputFileName.c_str(),yylineno,yytext));
   m_curtoken=g_EmptyString;
-  m_Line++;
+  yylineno++;
   BEGIN(COMMANDPARSE);
   return mhmakeparser::NEWLINE;
 }
 
 [ \t]*;[ \t]* {
-  PRINTF(("%s %d: -SEMICOLON (NEWLINE): %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: -SEMICOLON (NEWLINE): %s\n",m_InputFileName.c_str(),yylineno,yytext));
   m_curtoken=g_EmptyString;
   BEGIN(COMMANDPARSE);
   return mhmakeparser::NEWLINE;
@@ -277,169 +292,170 @@ load_makefile {
 
  /*---------------------------------------------------------------------------*/
 [ \t]*::[ \t]*\\[ \t\r]*\n[ \t]* {
-  PRINTF(("%s %d: DOUBLECOLON: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-  m_Line++;
+  PRINTF(("%s %d: DOUBLECOLON: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+  yylineno++;
   theValue.theString=(const char *)yytext;
   return mhmakeparser::DOUBLECOLON;
 }
 
 [ \t]*::[ \t]* {
-  PRINTF(("%s %d: DOUBLECOLON: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: DOUBLECOLON: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::DOUBLECOLON;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*:[ \t]*\\[ \t\r]*\n[ \t]* {
-  PRINTF(("%s %d: COLON: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-  m_Line++;
+  PRINTF(("%s %d: COLON: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+  yylineno++;
   theValue.theString=(const char *)yytext;
   return mhmakeparser::COLON;
 }
 
 [ \t]*:[ \t]* {
-  PRINTF(("%s %d: COLON: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: COLON: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::COLON;
 }
 
  /*---------------------------------------------------------------------------*/
 , {
-  PRINTF(("%s %d: COMMA: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: COMMA: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::COMMA;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*endif {
+^endif {
   if (m_IndentStack.size())
   {
     m_IndentStack.pop();
-    PRINTF(("%s %d: %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
   }
   else
   {
-     throw string("Unexpected endif at line ") + stringify(m_Line) + " of " + m_InputFileName;
+     throw string("Unexpected endif at line ") + stringify(yylineno) + " of " + m_InputFileName;
   }
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*ifdef[ \t]*\\[ \t\r]*\n[ \t]* {
+^ifdef[ \t]*\\[ \t\r]*\n[ \t]* {
   BEGIN(IFDEF);
-  m_Line++;
+  yylineno++;
   return mhmakeparser::NEWLINE;
 }
 
-^[ \t]*ifdef[ \t]+ {
+^ifdef[ \t]+ {
   BEGIN(IFDEF);
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*if[ \t]*\\[ \t\r]*\n[ \t]* {
+^if[ \t]*\\[ \t\r]*\n[ \t]* {
   BEGIN(IF);
-  m_Line++;
+  yylineno++;
   m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
 }
 
-^[ \t]*if[ \t]+ {
+^if[ \t]+ {
   BEGIN(IF);
   m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*ifndef[ \t]*\\[ \t\r]*\n[ \t]* {
+^ifndef[ \t]*\\[ \t\r]*\n[ \t]* {
   BEGIN(IFNDEF);
-  m_Line++;
+  yylineno++;
   return mhmakeparser::NEWLINE;
 }
 
-^[ \t]*ifndef[ \t]+ {
+^ifndef[ \t]+ {
   BEGIN(IFNDEF);
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*ifeq[ \t]*\\[ \t\r]*\n[ \t]* {
+^ifeq[ \t]*\\[ \t\r]*\n[ \t]* {
   BEGIN(IFEQ);
   m_curtoken=g_EmptyString;
-  m_Line++;
+  yylineno++;
   return mhmakeparser::NEWLINE;
 }
 
-^[ \t]*ifeq[ \t]+ {
+^ifeq[ \t]+ {
   BEGIN(IFEQ);
   m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*ifneq[ \t]*\\[ \t\r]*\n[ \t]* {
+^ifneq[ \t]*\\[ \t\r]*\n[ \t]* {
   BEGIN(IFNEQ);
   m_curtoken=g_EmptyString;
-  m_Line++;
+  yylineno++;
   return mhmakeparser::NEWLINE;
 }
 
-^[ \t]*ifneq[ \t]+ {
+^ifneq[ \t]+ {
   BEGIN(IFNEQ);
   m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*else[ \t]* {
+^else[ \t]* {
   if (m_IndentStack.size() && (!m_IndentStack.top()))
   {
-    PRINTF(("%s %d: skipping else: depth %d\n",m_InputFileName.c_str(),m_Line,m_IndentStack.size()));
+    PRINTF(("%s %d: skipping else: depth %d\n",m_InputFileName.c_str(),yylineno,m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     m_IndentStack.top()=1;
     BEGIN(SKIPUNTILELSEORENDIF);
   }
   else
   {
-     throw string("Unexpected else at line ") + stringify(m_Line) + " of file " + m_InputFileName;
+     throw string("Unexpected else at line ") + stringify(yylineno) + " of file " + m_InputFileName;
   }
 }
 
  /*****************************************************************************/
 <IFEQ>\n {
-  unput( yytext[0] );
+  yyless(0);
   m_IndentStack.push(0);
   if (GetParser()->IsEqual(m_curtoken))
   {
-    PRINTF(("%s %d: Not Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    PRINTF(("%s %d: Not Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str(),m_IndentStack.size()));
     BEGIN(INITIAL);
   }
   else
   {
-    PRINTF(("%s %d: Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    PRINTF(("%s %d: Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str(),m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     BEGIN(SKIPUNTILELSEORENDIF);
   }
 }
 
-<IF,IFEQ,IFNEQ>[ \t]*\\[ \t\r]*\n[ \t]* { m_Line++; m_curtoken += g_SpaceString;}
+<IF,IFEQ,IFNEQ>[ \t]*\\[ \t\r]*\n[ \t]* { yylineno++; m_curtoken += g_SpaceString;}
 
 <IF,IFEQ,IFNEQ>\r    /* skip */
 
-<IF,IFEQ,IFNEQ>[^\\\r\n]+ |
+<IF,IFEQ,IFNEQ>[^\\\r\n{}\$]+ |
+<IF,IFEQ,IFNEQ>\$ |
 <IF,IFEQ,IFNEQ>\\                        { m_curtoken += (const char *)yytext; }
 
  /*****************************************************************************/
 <IFNEQ>\n {
-  unput( yytext[0] );
+  yyless(0);
   m_IndentStack.push(0);
   if (!GetParser()->IsEqual(m_curtoken))
   {
-    PRINTF(("%s %d: Not Skipping ifneq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    PRINTF(("%s %d: Not Skipping ifneq %s: depth %d\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str(),m_IndentStack.size()));
     BEGIN(INITIAL);
   }
   else
   {
-    PRINTF(("%s %d: Skipping ifneq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    PRINTF(("%s %d: Skipping ifneq %s: depth %d\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str(),m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     BEGIN(SKIPUNTILELSEORENDIF);
   }
@@ -447,39 +463,39 @@ load_makefile {
 
  /*****************************************************************************/
 <IF>[ \t\r]*[a-zA-Z0-9_]+[ \t\r]*\n {
-  unput( '\n' );
+  yyless(yyleng-1);
   m_IndentStack.push(0);
 #ifndef WIN32
-  int lastidx=strlen((const char *)yytext)-1;
+  int lastidx=yyleng-1;
   if (yytext[lastidx]=='\r')
     yytext[lastidx]='\0';
 #endif
   string Val=GetParser()->ExpandVar((const char *)yytext);
   if (Val.empty() || Val=="0")
   {
-    PRINTF(("%s %d: Skipping if %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: Skipping if %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     BEGIN(SKIPUNTILELSEORENDIF);
   }
   else
   {
-    PRINTF(("%s %d: Not Skipping if %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: Not Skipping if %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
     BEGIN(INITIAL);
   }
 }
 
  /*---------------------------------------------------------------------------*/
 <IF>\n {
-  unput( yytext[0] );
+  yyless(0);
   m_IndentStack.push(0);
   if (GetParser()->IsExprTrue(m_curtoken))
   {
-    PRINTF(("%s %d: Not Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    PRINTF(("%s %d: Not Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str(),m_IndentStack.size()));
     BEGIN(INITIAL);
   }
   else
   {
-    PRINTF(("%s %d: Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str(),m_IndentStack.size()));
+    PRINTF(("%s %d: Skipping ifeq %s: depth %d\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str(),m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     BEGIN(SKIPUNTILELSEORENDIF);
   }
@@ -493,12 +509,12 @@ load_makefile {
   m_IndentStack.push(0);
   if (GetParser()->IsDefined((const char *)yytext))
   {
-    PRINTF(("%s %d: Not Skipping ifdef %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: Not Skipping ifdef %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
     BEGIN(INITIAL);
   }
   else
   {
-    PRINTF(("%s %d: Skipping ifdef %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: Skipping ifdef %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     BEGIN(SKIPUNTILELSEORENDIF);
   }
@@ -508,12 +524,12 @@ load_makefile {
 <IFNDEF>[a-zA-Z0-9_]+ {
   m_IndentStack.push(0);
   if (!GetParser()->IsDefined((const char *)yytext)) {
-    PRINTF(("%s %d: Not Skipping ifndef %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: Not Skipping ifndef %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
     BEGIN(INITIAL);
   }
   else
   {
-    PRINTF(("%s %d: Skipping ifndef %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext,m_IndentStack.size()));
+    PRINTF(("%s %d: Skipping ifndef %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext,m_IndentStack.size()));
     m_IndentSkip=m_IndentStack.size();
     BEGIN(SKIPUNTILELSEORENDIF);
   }
@@ -521,26 +537,26 @@ load_makefile {
 
  /*****************************************************************************/
 <SKIPUNTILELSEORENDIF>\n[ ]*endif {
-  m_Line++;
+  yylineno++;
   if (!m_IndentStack.size())
   {
-    throw string("Unexpected endif at line ") + stringify(m_Line) + " of " + m_InputFileName;
+    throw string("Unexpected endif at line ") + stringify(yylineno) + " of " + m_InputFileName;
   }
   else
   {
     m_IndentStack.pop();
-    PRINTF(("%s %d: endif: depth %d\n",m_InputFileName.c_str(),m_Line,m_IndentStack.size()));
+    PRINTF(("%s %d: endif: depth %d\n",m_InputFileName.c_str(),yylineno,m_IndentStack.size()));
     if (m_IndentStack.size()==m_IndentSkip-1) BEGIN(INITIAL);
   }
 }
 
  /*---------------------------------------------------------------------------*/
 <SKIPUNTILELSEORENDIF>\n[ ]*else {
-  m_Line++;
-  PRINTF(("%s %d: else: depth %d\n",m_InputFileName.c_str(),m_Line,m_IndentStack.size()));
+  yylineno++;
+  PRINTF(("%s %d: else: depth %d\n",m_InputFileName.c_str(),yylineno,m_IndentStack.size()));
   if (m_IndentStack.top())
   {
-    throw string("Unexpected else at line ") + stringify(m_Line) + " of file " + m_InputFileName;
+    throw string("Unexpected else at line ") + stringify(yylineno) + " of file " + m_InputFileName;
   }
   m_IndentStack.top()=1;
   if (m_IndentStack.size()==m_IndentSkip)
@@ -551,9 +567,9 @@ load_makefile {
 
  /*---------------------------------------------------------------------------*/
 <SKIPUNTILELSEORENDIF>\n[ ]*if(def|ndef|eq|neq)? {
-  m_Line++;
+  yylineno++;
   m_IndentStack.push(0);
-  PRINTF(("%s %d: %s: depth %d\n",m_InputFileName.c_str(),m_Line,yytext+1,m_IndentStack.size()));
+  PRINTF(("%s %d: %s: depth %d\n",m_InputFileName.c_str(),yylineno,yytext+1,m_IndentStack.size()));
 }
 
  /*---------------------------------------------------------------------------*/
@@ -561,89 +577,116 @@ load_makefile {
  /*---------------------------------------------------------------------------*/
 <SKIPUNTILELSEORENDIF>[^a-zA-Z\n]+ /* skip */
  /*---------------------------------------------------------------------------*/
-<SKIPUNTILELSEORENDIF>\n[ ]*[a-zA-Z]+ m_Line++;
+<SKIPUNTILELSEORENDIF>\n[ ]*[a-zA-Z]+ yylineno++;
  /*---------------------------------------------------------------------------*/
 <SKIPUNTILELSEORENDIF>\n {
-  m_Line++;
+  yylineno++;
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*#[^\n]* {
-  PRINTF(("%s %d: -COMMENT: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: -COMMENT: %s\n",m_InputFileName.c_str(),yylineno,yytext));
 }
 
  /*---------------------------------------------------------------------------*/
 [ \t]*\\[ \t\r]*\n[ \t]* {
-  PRINTF(("%s %d: SPACE:\n",m_InputFileName.c_str(),m_Line));
-  m_Line++;
+  PRINTF(("%s %d: SPACE:\n",m_InputFileName.c_str(),yylineno));
+  yylineno++;
   return mhmakeparser::SPACE;
 }
 
  /*---------------------------------------------------------------------------*/
 \.PHONY {
-  PRINTF(("%s %d: .PHONY: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: .PHONY: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::PHONY;
 }
 
  /*---------------------------------------------------------------------------*/
 \.AUTODEPS {
-  PRINTF(("%s %d: .AUTODEPS: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: .AUTODEPS: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::AUTODEPS;
 }
 
  /*---------------------------------------------------------------------------*/
 export {
-  PRINTF(("%s %d: export: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: export: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::EXPORT;
 }
 
  /*---------------------------------------------------------------------------*/
-^[ \t]*vpath {
-  PRINTF(("%s %d: vpath\n",m_InputFileName.c_str(),m_Line));
+^vpath {
+  PRINTF(("%s %d: vpath\n",m_InputFileName.c_str(),yylineno));
   return mhmakeparser::VPATH;
 }
 
  /*---------------------------------------------------------------------------*/
 [a-zA-Z]:[a-zA-Z0-9\\\._\~\-%\@<&/]+\\[ \t\r]*\n {
-  size_t EndIndex=::strlen((const char*)yytext);
+  size_t EndIndex=yyleng;
   while (strchr(" \t\r\n\\",yytext[--EndIndex]));
   yyless(EndIndex+1);
 
-  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
 }
 
 [a-zA-Z]:[a-zA-Z0-9\\\._\~\-%\@<&/]+ {
-  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
 }
 
  /*---------------------------------------------------------------------------*/
 ([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+\\[ \t\r]*\n  {
-  size_t EndIndex=::strlen((const char*)yytext);
+  size_t EndIndex=yyleng;
   while (strchr(" \t\r\n\\",yytext[--EndIndex]));
   yyless(EndIndex+1);
 
-  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
 }
 
 ([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+\+=  {
-  size_t Len;
-  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-  Len=strlen((const char *)yytext)-2;
-  yyless(Len);
+  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+  yyless(yyleng-2);
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
 }
 
 ([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+  {
-  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
+}
+
+^define[ \t]+[a-zA-Z0-9_\.]+[ \t]*\n {
+  const char *pVar=(const char *)yytext;
+  while (strchr(" \t",*pVar)) pVar++;
+  pVar+=6;
+  theValue.theString=pVar;
+  BEGIN(DEFINE);
+  m_curtoken=g_EmptyString;
+  PRINTF(("%s %d: VARDEF: %s\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str()));
+  yylineno++;
+  return mhmakeparser::VARDEF;
+}
+
+<DEFINE>[ \t]*\\[ \t\r]*\n[ \t]* {
+  yylineno++;
+  m_curtoken+=g_SpaceString;
+}
+
+<DEFINE>. {
+  m_curtoken+=(const char *)yytext;
+}
+
+<DEFINE>[ \t]*\n[ \t]*endef {
+  yylineno++;
+  theValue.theString=m_curtoken;
+  PRINTF(("%s %d: VARVAL: %s\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str()));
+  BEGIN(INITIAL);
+  return mhmakeparser::VARVAL;
 }
 
  /*---------------------------------------------------------------------------*/
@@ -661,45 +704,33 @@ export {
  /*---------------------------------------------------------------------------*/
 \$\(  {
   m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN MACRO $(: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: BEGIN MACRO $(: %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   BEGIN(MAKEEXPRES);
-  yymore();
+  m_curtoken=(const char *)yytext;
 }
 
  /*---------------------------------------------------------------------------*/
 \$\([ \t]*error[ \t]+ {
   m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN ERROR MACRO $(: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: BEGIN ERROR MACRO $(: %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   BEGIN(ERRORMACRO);
   m_curtoken=g_EmptyString;
+  return mhmakeparser::NEWLINE; // Make sure that the previous lines are matched by the bison parser (so that all variables until here are defined)
 }
 
  /*---------------------------------------------------------------------------*/
-\$\([ \t]*message[ \t]+ {
+\$\([ \t]*(message|info)[ \t]+ {
   m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN MESSAGE MACRO $(: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: BEGIN MESSAGE MACRO $(: %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   BEGIN(MESSAGEMACRO);
   m_curtoken=g_EmptyString;
-}
-
- /*---------------------------------------------------------------------------*/
-[ \t]*\$\{[ \t]*info[ \t]+ {
-  PRINTF(("%s %d: BEGIN INFO MESSAGE ${: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
-  BEGIN(MESSAGEINFO);
-  m_curtoken=g_EmptyString;
-}
-
- /*---------------------------------------------------------------------------*/
-[ \t]*\$\{[ \t]*error[ \t]+ {
-  PRINTF(("%s %d: BEGIN ERROR MESSAGE ${: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
-  BEGIN(MESSAGEERROR);
-  m_curtoken=g_EmptyString;
+  return mhmakeparser::NEWLINE; // Make sure that the previous lines are matched by the bison parser (so that all variables until here are defined)
 }
 
  /*---------------------------------------------------------------------------*/
 \$\([ \t]*reparse[ \t]+ {
   m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN REPARSE MACRO $(: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: BEGIN REPARSE MACRO $(: %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   BEGIN(REPARSEMACRO);
   m_curtoken=g_EmptyString;
   return mhmakeparser::NEWLINE;
@@ -707,19 +738,19 @@ export {
 
  /*---------------------------------------------------------------------------*/
 \(   {
-  PRINTF(("%s %d: OPENBRACE: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: OPENBRACE: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::OPENBRACE;
 }
 
  /*---------------------------------------------------------------------------*/
 \)   {
-  PRINTF(("%s %d: CLOSEBRACE: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: CLOSEBRACE: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   return mhmakeparser::CLOSEBRACE;
 }
 
  /*---------------------------------------------------------------------------*/
 \$[<@/$] {
-  PRINTF(("%s %d: DOLLAREXPR: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: DOLLAREXPR: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::DOLLAREXPR;
 }
@@ -727,40 +758,50 @@ export {
  /*---------------------------------------------------------------------------*/
 [ \t\r]*\n\t[ \t]* {
   /* token newline */
-  PRINTF(("%s %d: NEWLINE\n",m_InputFileName.c_str(),m_Line));
-  m_Line++;
+  PRINTF(("%s %d: NEWLINE\n",m_InputFileName.c_str(),yylineno));
+  yylineno++;
   m_curtoken=g_EmptyString;
   BEGIN(COMMANDPARSE);
   return mhmakeparser::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
+<*>\$\{ {
+  unput('(');
+  unput('$');
+}
+ /*---------------------------------------------------------------------------*/
+<*>\} {
+  unput(')');
+}
+
+ /*---------------------------------------------------------------------------*/
 [^\n] {
-  PRINTF(("%s %d: ANYCHAR: %d: %s\n",m_InputFileName.c_str(),m_Line,m_Line,yytext));
+  PRINTF(("%s %d: ANYCHAR: %d: %s\n",m_InputFileName.c_str(),yylineno,yylineno,yytext));
 }
 
  /*****************************************************************************/
 
 <COMMANDPARSE>[ \t\r]*\n {
-  PRINTF(("%s %d: COMMAND: %d: %s\n",m_InputFileName.c_str(),m_Line,m_Line,m_curtoken.c_str()));
+  PRINTF(("%s %d: COMMAND: %d: %s\n",m_InputFileName.c_str(),yylineno,yylineno,m_curtoken.c_str()));
   theValue.theString=m_curtoken;
-  m_Line++;
+  yylineno++;
   BEGIN(INITIAL);
   return mhmakeparser::COMMAND;
 }
 
  /*---------------------------------------------------------------------------*/
 <COMMANDPARSE>[ \t\r]*\n\t[ \t]* {
-  PRINTF(("%s %d: COMMAND: %s\n",m_InputFileName.c_str(),m_Line,m_curtoken.c_str()));
+  PRINTF(("%s %d: COMMAND: %s\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str()));
   theValue.theString=m_curtoken;
-  m_Line++;
+  yylineno++;
   m_curtoken=g_EmptyString;
   return mhmakeparser::COMMAND;
 }
 
  /*---------------------------------------------------------------------------*/
 <COMMANDPARSE>[ \t]*\\[ \t\r]*\n[ \t]* {
-  m_Line++;
+  yylineno++;
   m_curtoken+=g_SpaceString;
 }
 
@@ -770,35 +811,28 @@ export {
 }
 
  /*---------------------------------------------------------------------------*/
-<COMMANDPARSE>[^ \r\n#\\]+ |
+<COMMANDPARSE>[^ \r\n#\\{}$]+ |
+<COMMANDPARSE>\$ |
 <COMMANDPARSE>\\ {
   m_curtoken+=(const char *)yytext;
 }
 
  /*---------------------------------------------------------------------------*/
 <COMMANDPARSE>[ \t]*\\#[^\n]* {
-  char ToAdd[100];
-  int i=0;
   int nChars=(int)((strchr((const char *)yytext,'#')-(char*)yytext))+1;
-  while (strchr(" \t",yytext[i]))
-  {
-    ToAdd[i]=yytext[i];
-    i++;
-  }
-  ToAdd[i++]='#';
-  ToAdd[i++]=0;
-  m_curtoken+=ToAdd;
   yyless(nChars);
+  m_curtoken+=string(yytext,nChars-2);
+  m_curtoken+='#';
 }
 
  /*---------------------------------------------------------------------------*/
 <COMMANDPARSE>[ \t]*#[^\n]* {
-  PRINTF(("%s %d: -COMMENT: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: -COMMENT: %s\n",m_InputFileName.c_str(),yylineno,yytext));
 }
 
  /*****************************************************************************/
 <QUOTE>\" {
-  PRINTF(("%s %d: QUOTEDSTRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: QUOTEDSTRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   BEGIN(INITIAL);
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
@@ -807,7 +841,8 @@ export {
  /*---------------------------------------------------------------------------*/
 <QUOTE>\r /* skip */
 
-<QUOTE>[^\\\"\r\n]+  |
+<QUOTE>[^\\\"\r\n{}$]+  |
+<QUOTE>\$            |
 <QUOTE>\\            |
 <QUOTE>\\\"          |
 <QUOTE>\\#  {
@@ -816,7 +851,7 @@ export {
 
  /*****************************************************************************/
 <SINGLEQUOTE>\' {
-  PRINTF(("%s %d: QUOTEDSTRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
+  PRINTF(("%s %d: QUOTEDSTRING: %s\n",m_InputFileName.c_str(),yylineno,yytext));
   BEGIN(INITIAL);
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
@@ -825,7 +860,8 @@ export {
  /*---------------------------------------------------------------------------*/
 <SINGLEQUOTE>\r /* skip */
 
-<SINGLEQUOTE>[^\\\'\r\n]+ |
+<SINGLEQUOTE>[^\\\'\r\n{}$]+ |
+<SINGLEQUOTE>\$           |
 <SINGLEQUOTE>\\           |
 <SINGLEQUOTE>\\\'         |
 <SINGLEQUOTE>\\# {
@@ -835,57 +871,39 @@ export {
  /*****************************************************************************/
 <ERRORMACRO>\) {
   m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE ERROR MACRO ): %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: CLOSE BRACE ERROR MACRO ): %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   if (!m_BraceIndent)
   {
-    PRINTF(("%s %d: ERRORMACRO: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-    yyless(0);
-    throw GetParser()->ExpandExpression((const char*)yytext);
+    PRINTF(("%s %d: ERRORMACRO: %s\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str()));
+    throw string("\n-> ")+m_InputFileName.c_str()+"("+stringify(yylineno)+") : "+GetParser()->ExpandExpression(m_curtoken);
   } else {
-    yymore();
-  }
+    m_curtoken+=(const char *)yytext;
 }
-
- /*****************************************************************************/
-<MESSAGEERROR>[^\}]+ {
-  throw(GetParser()->ExpandExpression((const char*)yytext));
-}
-
- /*****************************************************************************/
-<MESSAGEINFO>[^\}]+ {
-  cerr<<GetParser()->ExpandExpression((const char*)yytext)<<endl;
-}
-
- /*****************************************************************************/
-<MESSAGEINFO>\} {
-  PRINTF(("%s %d: MESSAGEINFO: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-  BEGIN(INITIAL);
 }
 
  /*****************************************************************************/
 <MESSAGEMACRO>\) {
   m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE MESSAGE MACRO ): %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: CLOSE BRACE MESSAGE MACRO ): %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   if (!m_BraceIndent)
   {
-    PRINTF(("%s %d: MESSAGEMACRO: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-    yytext[strlen((const char*)yytext)-1]=0;
-    cerr<<GetParser()->ExpandExpression((const char*)yytext)<<endl;
+    PRINTF(("%s %d: MESSAGEMACRO: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+    cerr<<m_InputFileName.c_str()<<"("<<stringify(yylineno)+") : "<<GetParser()->ExpandExpression(m_curtoken)<<endl;
     BEGIN(INITIAL);
   } else {
-    yymore();
+    m_curtoken+=(const char *)yytext;
   }
 }
 
  /*****************************************************************************/
 <REPARSEMACRO>\) {
   m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE REPARSE MACRO ): %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: CLOSE BRACE REPARSE MACRO ): %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   if (!m_BraceIndent)
   {
-    PRINTF(("%s %d: REPARSEMACRO: %s\n",m_InputFileName.c_str(),m_Line,yytext));
-    string Deps=GetParser()->ExpandExpression((const char*)yytext);
-    PRINTF(("%s %d: REPARSEMACRO expanded: %s\n",m_InputFileName.c_str(),m_Line,Deps.c_str()));
+    PRINTF(("%s %d: REPARSEMACRO: %s\n",m_InputFileName.c_str(),yylineno,yytext));
+    string Deps=GetParser()->ExpandExpression(m_curtoken);
+    PRINTF(("%s %d: REPARSEMACRO expanded: %s\n",m_InputFileName.c_str(),yylineno,Deps.c_str()));
     string::const_reverse_iterator It=Deps.rbegin()+1; // +1 because we don't want the latest brace
     string::const_reverse_iterator ItBeg=Deps.rend();
     while (It!= ItBeg)
@@ -898,42 +916,45 @@ export {
   }
   else
   {
-    yymore();
+    m_curtoken+=(const char *)yytext;
   }
 }
 
  /*****************************************************************************/
 <MAKEEXPRES>\) {
   m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE MAKEEXPRES MACRO ): %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
+  PRINTF(("%s %d: CLOSE BRACE MAKEEXPRES MACRO ): %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
   if (!m_BraceIndent)
   {
-    PRINTF(("%s %d: DOLLAREXPR: %s\n",m_InputFileName.c_str(),m_Line,yytext));
     BEGIN(INITIAL);
-    theValue.theString=(const char *)yytext;
+    m_curtoken+=(const char *)yytext;
+    theValue.theString=m_curtoken;
+    PRINTF(("%s %d: DOLLAREXPR: %s\n",m_InputFileName.c_str(),yylineno,m_curtoken.c_str()));
     return mhmakeparser::DOLLAREXPR;
   }
   else
   {
-    yymore();
+    m_curtoken+=(const char *)yytext;
   }
 }
 
  /*---------------------------------------------------------------------------*/
 <MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>\$\( {
   m_BraceIndent++;
-  PRINTF(("%s %d: MACRO extra $(: %d\n",m_InputFileName.c_str(),m_Line,m_BraceIndent));
-  yymore();
+  PRINTF(("%s %d: MACRO extra $(: %d\n",m_InputFileName.c_str(),yylineno,m_BraceIndent));
+  m_curtoken+=(const char *)yytext;
 }
 
  /*---------------------------------------------------------------------------*/
-<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>[^$\(\)\r\n]+ |
+<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>[^$\(\){}\r\n\\]+ |
 <MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>\$        |
+<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>\\        |
 <MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>\( {
-  yymore();
+  m_curtoken+=(const char *)yytext;
 }
-<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>\r?\n {
-  m_Line++;
+<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>[ \t\r]*\\[ \t\r]*\n[ \t\r]* {
+  yylineno++;
+  m_curtoken+=g_SpaceString;
 }
 
 <SKIPUNTILELSEORENDIF><<EOF>> {
@@ -955,12 +976,10 @@ export {
   }
   else
   {
-    ::fclose(YY_mhmakelexer_CURRENT_BUFFER->yy_input_file);
-    YY_mhmakelexer_DELETE_BUFFER(YY_mhmakelexer_CURRENT_BUFFER);
-    INSTACK *pInStack=&m_IncludeStack.top();
-    YY_mhmakelexer_SWITCH_TO_BUFFER(pInStack->m_BufferState);
+    INSTACK *pInStack=m_IncludeStack.top();
+    yypop_buffer_state();
     m_InputFileName=pInStack->m_FileName;
-    m_Line=pInStack->m_Line;
+    yylineno=pInStack->yylineno;
     m_IncludeStack.pop();
   }
 }

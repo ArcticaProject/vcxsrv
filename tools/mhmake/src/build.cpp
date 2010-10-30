@@ -440,7 +440,7 @@ mh_pid_t mhmakefileparser::DeleteFiles(const string &Params) const
       if (DeleteDir(FileName,DirSearch,bRemoveDir) && !IgnoreError)
       {
         cerr << "Error deleting "<<FileName<<endl;
-        return false;
+        return (mh_pid_t)-1;
       }
     }
     else
@@ -866,7 +866,7 @@ string mhmakefileparser::GetFullCommand(string Command)
     const char *pBeg=Command.c_str();
     const char *pEnd=pBeg+Command.length()-1;
     bool HasExt=false;
-    while (pEnd>pBeg && *pEnd!=OSPATHSEP)
+    while (pEnd>pBeg && *pEnd!='\\' && *pEnd!='/')
     {
       if (*pEnd=='.')
       {
@@ -1315,7 +1315,7 @@ mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, str
 {
   bool Echo=true;
   IgnoreError=false;
-  while (1)
+  while (Command.length())
   {
     if (Command[0]=='@')
     {
@@ -1331,6 +1331,8 @@ mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, str
     }
     break;
   }
+  if (!Command.length())
+    (mh_pid_t)0;
   string InCommand=Command;
   if (g_Quiet)
     Echo=false;
@@ -1378,7 +1380,7 @@ mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, str
   }
   else
   {
-    if (Command!="echo")
+    if (Command!="echo" || strchr(Params.c_str(),'|'))  // the EchoCommand(Params) does not implement piping, only redirecting (>)
     {
       string FullCommand=GetFullCommand(Command);
       string ComSpec=GetComspec();
@@ -1449,6 +1451,15 @@ void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, fileinfo* pT
   while (pDepIt!=Deps.end())
   {
     mh_time_t DepDate=WaitBuildTarget(*pDepIt);
+    #ifdef _DEBUG
+    if (!DepDate.DoesExist()&&!(*pDepIt)->IsPhony())
+    {
+      if (!(*pDepIt)->GetDir()->GetDate().DoesExist())
+        cout << "Building of "<<(*pDepIt)->GetFullFileName()<<" failed because directory does not exist (rule defined to create it?)\n";
+      else
+        cout << "Does not known how to create "<<(*pDepIt)->GetFullFileName()<<".\n";
+    }
+    #endif
     if (DepDate.IsNewer(YoungestDate))
       YoungestDate=DepDate;
     if (DepDate.IsNewer(TargetDate))
@@ -1572,7 +1583,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
         #endif
         break;
       }
-      else
+      else if (!IMPLICITRULE::PushRule(ResultIt->second))
       {
         #ifdef _DEBUG
         m_ImplicitSearch++;
@@ -1585,6 +1596,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
           if (pNewTarget!=NULL)
             DepDate=pNewTarget->GetDate();
         }
+        IMPLICITRULE::PopRule(ResultIt->second);
         #ifdef _DEBUG
         m_ImplicitSearch--;
         #endif
@@ -1613,6 +1625,12 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
           break;
         }
       }
+      #ifdef _DEBUG
+      else if (g_PrintAdditionalInfo)
+      {
+        cout << "Stopping implicit search of "<<pTarget->GetFullFileName()<<" because of implicit rule recursion detected.\n";
+      }
+      #endif
       ResultIt++;
     }
     if (pRule)
@@ -1627,7 +1645,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
     }
   }
 
-  mhmakeparser *pMakefile=NULL;
+  mhmakefileparser *pMakefile=NULL;
   if (pRule)
   {
     pMakefile=pRule->GetMakefile();

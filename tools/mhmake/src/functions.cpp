@@ -525,7 +525,7 @@ string mhmakefileparser::f_addprefix(const string & Arg) const
   string PreFix;
   pTmp=NextCharItem(pTmp,PreFix,',');
   #ifdef _DEBUG
-  if (!*pTmp) {
+  if (PreFix.empty()) {
     throw ("Wrong number of arguments in function addprefix");
   }
   #endif

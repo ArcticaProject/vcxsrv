@@ -1,16 +1,11 @@
 @echo off
 setlocal
 
-cd %1
-"..\flex++" -8 -S%3 -H%4 -h%5 -o%6 %2
+set M4=.\m4.exe
 
-set file=%6
-set tempfile=%RANDOM%lex.tmp
+"flex++" --nounistd -Ssrc/flex.skl -o%1/mhmakelexer.cpp src/mhmakelexer.l
 
-move %file% %tempfile%
-echo #include "stdafx.h" > %file%
-type %tempfile% >> %file%
-del /q %tempfile%
+python addstdafxh.py %1\mhmakelexer.cpp
 
 endlocal
 

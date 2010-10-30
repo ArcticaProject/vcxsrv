@@ -23,17 +23,17 @@
 
 #include "refptr.h"
 #include "md5.h"
-class mhmakeparser;
+class mhmakefileparser;
 class fileinfo;
 
 class rule: public refbase
 {
   vector<string> m_Commands;
   string m_Stem;   // Contains the stem in case the rule is part of an implicit rule (filled in in the implicit search)
-  mhmakeparser* m_pMakefile;
+  mhmakefileparser* m_pMakefile;
   vector< fileinfo* > m_Targets;  /* Targets that are build with this rule, do not use refptr here because otherwise we get circular references */
 public:
-  rule(mhmakeparser *pMakefile): m_pMakefile(pMakefile)
+  rule(mhmakefileparser *pMakefile): m_pMakefile(pMakefile)
   {
   }
 
@@ -56,11 +56,11 @@ public:
   {
     return m_Stem;
   }
-  void SetMakefile(mhmakeparser *pMakefile)
+  void SetMakefile(mhmakefileparser *pMakefile)
   {
     m_pMakefile=pMakefile;
   }
-  mhmakeparser *GetMakefile()
+  mhmakefileparser *GetMakefile()
   {
     return m_pMakefile;
   }
@@ -76,11 +76,29 @@ public:
 
 class IMPLICITRULE
 {
+  static set<rule*> m_ImplicitRuleRecurseDetStack;
   static vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > > m_ImplicitRules;  // Use a vector and not a map because the order of the implicit rules is important
 public:
   static void AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &Deps,refptr<rule> pRule);
   static void SearchImplicitRule(const fileinfo *pTarget,vector< pair<fileinfo*,refptr<rule> > >&Result);
   static void PrintImplicitRules();
+  static bool PushRule(rule *pRule)
+  {
+    set<rule*>::iterator pFound=m_ImplicitRuleRecurseDetStack.find(pRule);
+    if (pFound==m_ImplicitRuleRecurseDetStack.end())
+    {
+      m_ImplicitRuleRecurseDetStack.insert(pRule);
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+  }
+  static void PopRule(rule *pRule)
+  {
+    m_ImplicitRuleRecurseDetStack.erase(pRule);
+  }
 };
 
 extern refptr<rule> NullRule;

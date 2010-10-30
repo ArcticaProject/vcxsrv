@@ -27,7 +27,7 @@
 
 class rule;
 
-class mhmakelexer;
+class mhmakeFlexLexer;
 
 struct TOKENVALUE
 {
@@ -58,13 +58,12 @@ class mhmakefileparser : public refbase
 private:
   static commandqueue   sm_CommandQueue;
 
-  mhmakelexer          *m_ptheLexer;
+  mhmakeFlexLexer      *m_ptheLexer;
   int                   m_yyloc;
   fileinfo             *m_RuleThatIsBuild;
   vector<string>        m_ToBeIncludeAfterBuild;
   vector<string>        m_MakefilesToLoad;
   fileinfo*             m_AutoDepFileLoaded;
-  int                   m_InExpandExpression;
   mh_time_t             m_Date;
   uint32                m_EnvMd5_32;   /* Cached Md5_32 value of the userd environment variables */
 #ifdef _DEBUG
@@ -118,7 +117,6 @@ public:
 
   mhmakefileparser(const map<string,string> &CommandLineVars)
     :  m_CommandLineVars(CommandLineVars)
-      ,m_InExpandExpression(0)
       ,m_AutoDepsDirty(false)
       ,m_ForceAutoDepRescan(false)
       ,m_SkipHeadersInitialized(false)
@@ -126,6 +124,8 @@ public:
       ,m_EnvMd5_32(0)
       ,m_pEnv(NULL)
       ,m_FirstTarget(NULL)
+      ,m_RuleThatIsBuild(NULL)
+      ,m_AutoDepFileLoaded(NULL)
       #ifdef _DEBUG
       ,m_ImplicitSearch(0)
       #endif
@@ -216,7 +216,7 @@ public:
   bool SkipHeaderFile(const string &FileName);
   void InitEnv() const;
 
-  virtual ~mhmakefileparser()
+  virtual ~mhmakefileparser() /* virtual to be sure the correct destructor is called when we delete with a pointer to this class which in reality is a pointer to a derived class */
   {
     SaveAutoDepsFile();
 #ifndef WIN32
@@ -240,7 +240,8 @@ public:
   bool IsEqual(const string &EqualExpr) const;
   bool IsExprTrue(const string &EqualExpr) const;
   string ExpandExpression(const string &Expr) const;
-  string ExpandMacro(const string &Expr) const;
+  string ExpandExpressionRecurse(const string &Expr, bool &Recurse) const;
+  string ExpandMacro(const string &Expr, bool &Recurse) const;
   string ExpandVar(const string &Var) const;
 
   void PrintVariables(bool Expand=false) const;

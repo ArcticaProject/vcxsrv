@@ -11,13 +11,15 @@ PROJECT(${PROGRAM_NAME})
 SET( CMAKE_CXX_FLAGS_DEBUG "-D _DEBUG")
 
 ADD_CUSTOM_COMMAND(
-   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.h
-   COMMAND flex++ -8 -S${CMAKE_CURRENT_SOURCE_DIR}/src/flexskel.cc -H${CMAKE_CURRENT_SOURCE_DIR}/src/flexskel.h -h${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.h -otemp1234.456 ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
+   COMMAND flex++ -S${CMAKE_CURRENT_SOURCE_DIR}/src/flex.skl -o${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l
+   COMMAND mv ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp  ${CMAKE_CURRENT_BINARY_DIR}/temp1234.456
    COMMAND echo '\#include \"stdafx.h\"' > ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
-   COMMAND cat temp1234.456 >> ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
-   COMMAND rm temp1234.456
+   COMMAND cat ${CMAKE_CURRENT_BINARY_DIR}/temp1234.456 >> ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
+   COMMAND rm ${CMAKE_CURRENT_BINARY_DIR}/temp1234.456
+   COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/src/flexlexer.h ${CMAKE_CURRENT_BINARY_DIR}/FlexLexer.h
 
-   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.h
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l ${CMAKE_CURRENT_SOURCE_DIR}/src/flex.skl ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.h
 )
 ADD_CUSTOM_COMMAND(
    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.h
@@ -32,8 +34,8 @@ INCLUDE_DIRECTORIES(src ${CMAKE_CURRENT_BINARY_DIR})
 LINK_LIBRARIES(/usr/lib/libpopt.a)
 
 ADD_EXECUTABLE(${PROGRAM_NAME}
-               mhmakeparser.cpp
-               mhmakelexer.cpp
+               ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp
+               ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
                src/mhmake.cpp
                src/mhmakefileparser.cpp
                src/util.cpp

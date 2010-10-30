@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "2.2.9"
+#define MHMAKEVER    "2.3.15"
 
 class makecommand
 {
@@ -170,7 +170,7 @@ struct loadedmakefile : public refbase
   map<string,string>   m_CommandLineVars;
 
   vector<string>       m_CommandLineTargets;
-  refptr<mhmakeparser> m_pParser;
+  refptr<mhmakefileparser> m_pParser;
 
   loadedmakefile(const fileinfo *pDir, vector<string> &Args,const string &Makefile=g_EmptyString);
 

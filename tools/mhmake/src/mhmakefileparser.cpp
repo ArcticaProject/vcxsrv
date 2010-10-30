@@ -24,14 +24,14 @@
 
 #include "mhmakefileparser.h"
 #include "rule.h"
-#include "mhmakelexer.h"
+#include "flexlexer.h"
 
 commandqueue mhmakefileparser::sm_CommandQueue;
 
 ///////////////////////////////////////////////////////////////////////////////
 int mhmakefileparser::yylex(void)
 {
-  m_yyloc=m_ptheLexer->m_Line;
+  m_yyloc=m_ptheLexer->lineno();
   return m_ptheLexer->yylex(m_theTokenValue);
 }
 
@@ -44,23 +44,24 @@ void mhmakefileparser::yyerror(const char *m)
 ///////////////////////////////////////////////////////////////////////////////
 int mhmakefileparser::ParseFile(const fileinfo *pFileInfo, const fileinfo *pMakeDir)
 {
-  mhmakelexer theLexer;
-  m_ptheLexer=&theLexer;
   if (pMakeDir)
   {
     m_MakeDir=pMakeDir;
     m_Variables[CURDIR]=m_MakeDir->GetQuotedFullFileName();
   }
-  theLexer.m_InputFileName=pFileInfo->GetFullFileName();
-  theLexer.m_pParser=(mhmakeparser*)this;
-  theLexer.yyin=::fopen(pFileInfo->GetFullFileName().c_str(),"r");
-  if (!theLexer.yyin)
+
+  ifstream yyin(pFileInfo->GetFullFileName().c_str(),ios_base::in);
+  if (yyin.fail())
   {
     cerr << "Error opening makefile: "<<pFileInfo->GetQuotedFullFileName()<<endl;
     return 1;
   }
+
+  mhmakeFlexLexer theLexer(&yyin);
+  m_ptheLexer=&theLexer;
+  theLexer.m_InputFileName=pFileInfo->GetFullFileName();
+  theLexer.m_pParser=(mhmakeparser*)this;
   int Ret=yyparse();
-  ::fclose(theLexer.yyin);
   return Ret;
 }
 
@@ -169,7 +170,21 @@ bool mhmakefileparser::IsEqual(const string &EqualExpr) const
 ///////////////////////////////////////////////////////////////////////////////
 string mhmakefileparser::ExpandExpression(const string &Expr) const
 {
-  ((mhmakefileparser*)this)->m_InExpandExpression++;
+  bool Recurse;
+  string Ret(Expr);
+  do
+  {
+    Recurse=false;
+    Ret=ExpandExpressionRecurse(Ret,Recurse);
+  }
+  while (Recurse);
+  return Ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::ExpandExpressionRecurse(const string &Expr, bool &Recurse) const
+{
+  //((mhmakefileparser*)this)->m_InExpandExpression++;
   size_t i=0;
   size_t Length=Expr.size();
   string Ret;
@@ -182,7 +197,7 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
       char CharNext=Expr[i];
       if (CharNext=='$')
       {
-        ToAdd="$$";
+        ToAdd="$";
         i++;
       }
       else
@@ -191,13 +206,13 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
         i++;
         if (inew>i)
         {
-          ToAdd=ExpandMacro(Expr.substr(i,inew-i-1));
+          ToAdd=ExpandMacro(Expr.substr(i,inew-i-1),Recurse);
           i=inew;
         }
         else
         {
           // This is a single character expression
-          ToAdd=ExpandMacro(string(1,Expr[i-1]));
+          ToAdd=ExpandMacro(string(1,Expr[i-1]),Recurse);
         }
       }
       Ret+=ToAdd;
@@ -207,28 +222,14 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
       Ret+=Char;
     }
   }
-  if (m_InExpandExpression==1)
-  {
-      // Here we do a special case in case we still have a $ within a %
-    if (Ret.find('$')!=string::npos)
-      Ret=ExpandExpression(Ret);
-    size_t Pos;
-    while ((Pos=Ret.find("$$"))!=string::npos)
-    {
-      Ret=Ret.replace(Pos,2,"$");
-    }
-  }
-  ((mhmakefileparser*)this)->m_InExpandExpression--;
 
   return Ret;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::ExpandMacro(const string &Expr) const
+string mhmakefileparser::ExpandMacro(const string &Expr, bool &Recurse) const
 {
-  if (Expr.find('%')!=string::npos && Expr.find('$')==string::npos && Expr.find(':')==string::npos)
-    return string("$(")+Expr+")";
-  string ExpandedExpr=ExpandExpression(Expr);
+  string ExpandedExpr=ExpandExpressionRecurse(Expr,Recurse);
 
   const char *pTmp=ExpandedExpr.c_str();
   /* First remove leading spaces */
@@ -272,8 +273,17 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
     {
       string Func(pVar,pVarEnd);
       string Arg(pTmp);
-      if (Arg.find('%')!=string::npos && Arg.find('$')!=string::npos)
-        return string("$(")+ExpandedExpr+")";
+      if (Recurse)
+      {
+        #ifdef _DEBUG
+        if (!(Arg.find('%')!=string::npos && Arg.find('$')!=string::npos))
+          throw(string("Bug in mhmake: expected a % and $ sign: ")+Arg);
+        #endif
+        return string("$(")+ExpandedExpr+")";  // we cannot call the function yet since there is still a $(*%*) macro to resolve. so
+                                               // return it a a macro again so it can be resolved when the % is resolved
+                                               // remark that the current test is not completely safe because the % could be out of
+                                               // the $ macro
+      }
       function_f pFunc=m_Functions[Func];
       #ifdef _DEBUG
       if (pFunc)
@@ -299,8 +309,22 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
   }
   else
   {
+    if (ExpandedExpr.find('%')!=string::npos)
+    {
+      // we have encountered a *%* macro. This means a previous subst is not yet finished. so return
+      // it back as a macro so it can be expanded again later when the % is replaced
+      Recurse=true;
+      return string("$(")+ExpandedExpr+")";
+    }
+    #ifdef _DEBUG
+    else if (ExpandedExpr.find('$')!=string::npos)
+      throw(string("Bug in mhmake: wasn't expecting a $ sign in: ")+ExpandedExpr);
+    #endif
+    else
+    {
     return ExpandExpression(ExpandVar(ExpandedExpr));
   }
+}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

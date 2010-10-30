@@ -136,7 +136,7 @@ class fileinfo
   bool m_IsPhony;
   int m_BuildStatus;  /* Bit 0 means the target built is started, Bit 1 means the target is still building */
   refptr<rule> m_pRule;
-  mhmakeparser *m_pAutoDepsMakefile;
+  mhmakefileparser *m_pAutoDepsMakefile;
   vector<fileinfo*> m_Deps;
   mh_time_t m_Date;
   uint32 m_CommandsMd5_32;  // 32-bit Md5 checksum of commands to build this target
@@ -291,7 +291,7 @@ public:
     return m_Deps;
   }
   string GetPrerequisits(void) const;
-  void SetAutoDepsScan(mhmakeparser *pMakefile)
+  void SetAutoDepsScan(mhmakefileparser *pMakefile)
   {
     #ifdef _DEBUG
     if (m_pAutoDepsMakefile)
@@ -299,7 +299,7 @@ public:
     #endif
     m_pAutoDepsMakefile=pMakefile;
   }
-  mhmakeparser *GetAutoDepsMakefile(void) const
+  mhmakefileparser *GetAutoDepsMakefile(void) const
   {
     return m_pAutoDepsMakefile;
   }
