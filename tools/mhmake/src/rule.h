@@ -74,13 +74,16 @@ public:
   void SetTargetsIsBuilding(const fileinfo *pSrc);
 };
 
+typedef vector<pair<vector<fileinfo*>,refptr<rule> > > implicitruledep_t;
+typedef pair<fileinfo *, implicitruledep_t > implicitrule_t;
+
 class IMPLICITRULE
 {
   static set<rule*> m_ImplicitRuleRecurseDetStack;
-  static vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > > m_ImplicitRules;  // Use a vector and not a map because the order of the implicit rules is important
+  static vector<implicitrule_t> m_ImplicitRules;  // Use a vector and not a map because the order of the implicit rules is important
 public:
-  static void AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &Deps,refptr<rule> pRule);
-  static void SearchImplicitRule(const fileinfo *pTarget,vector< pair<fileinfo*,refptr<rule> > >&Result);
+  static void AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &Deps, refptr<rule> pRule);
+  static void SearchImplicitRule(const fileinfo *pTarget, implicitruledep_t &Result);
   static void PrintImplicitRules();
   static bool PushRule(rule *pRule)
   {

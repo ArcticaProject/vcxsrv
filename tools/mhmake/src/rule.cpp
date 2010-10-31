@@ -28,19 +28,19 @@
 refptr<rule> NullRule;
 
 set<rule*> IMPLICITRULE::m_ImplicitRuleRecurseDetStack;
-vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > > IMPLICITRULE::m_ImplicitRules;
+vector<implicitrule_t> IMPLICITRULE::m_ImplicitRules;
 
 makecommand g_MakeCommand;  // Order is important since sm_Statics is using g_MakeCommand
 const string g_QuoteString("\""); // Order is important since sm_Statics is using g_QuoteString
 loadedmakefile::loadedmakefile_statics loadedmakefile::sm_Statics;
 
 ///////////////////////////////////////////////////////////////////////////////
-static bool FindDep(fileinfo *pDep, vector<pair<fileinfo*,refptr<rule> > >*pImplicitRule,refptr<rule> &Rule)
+static bool FindDep(fileinfo *pTarget, implicitruledep_t *pImplicitRule,refptr<rule> &Rule)
 {
-  vector<pair<fileinfo*,refptr<rule> > >::iterator SecIt=pImplicitRule->begin();
+  implicitruledep_t::iterator SecIt=pImplicitRule->begin();
   while (SecIt!=pImplicitRule->end())
   {
-    if (SecIt->first==pDep)
+    if (SecIt->first.empty())
     {
       #ifdef _DEBUG
       // Check if the rule has the same commands
@@ -52,9 +52,9 @@ static bool FindDep(fileinfo *pDep, vector<pair<fileinfo*,refptr<rule> > >*pImpl
       {
         string ErrorMessage;
         if (bCommandsDifferent)
-          ErrorMessage += "Implicit Rule '"+ pDep->GetFullFileName() + "' defined twice with different commands\n";
+          ErrorMessage += "Implicit Rule '"+ pTarget->GetFullFileName() + "' defined twice with different commands\n";
         else
-          ErrorMessage += "Implicit Rule '"+ pDep->GetFullFileName() + "' defined twice with same commands\n";
+          ErrorMessage += "Implicit Rule '"+ pTarget->GetFullFileName() + "' defined twice with same commands\n";
         ErrorMessage += "Command 1: makedir = " + SecIt->second->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()+ "\n";
 
         vector<string>::const_iterator It;
@@ -87,7 +87,7 @@ static bool FindDep(fileinfo *pDep, vector<pair<fileinfo*,refptr<rule> > >*pImpl
       {
         if (pOldMakefile->ExpandExpression(*OldIt)!=pNewMakefile->ExpandExpression(*NewIt))
         {
-          string ErrorMessage = string("Implicit Rule '") + pDep->GetFullFileName() + "' defined twice with different commands\n";
+          string ErrorMessage = string("Implicit Rule '") + pTarget->GetFullFileName() + "' defined twice with different commands\n";
           ErrorMessage += "Command 1: makedir = " + pOldMakefile->GetMakeDir()->GetQuotedFullFileName()+ "\n";
           ErrorMessage += "  " + pOldMakefile->ExpandExpression(*OldIt) + "\n";
           ErrorMessage += "Command 2: makedir = " + pNewMakefile->GetMakeDir()->GetQuotedFullFileName()+ "\n";
@@ -117,8 +117,8 @@ void IMPLICITRULE::AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &De
     return;
   }
   // first search if there is already the same target in the current list of implicit rules
-  vector<pair<fileinfo*,refptr<rule> > >* pImplicitRule=NULL;
-  vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > >::iterator RuleIt=m_ImplicitRules.begin();
+  implicitruledep_t* pImplicitRule=NULL;
+  vector<implicitrule_t>::iterator RuleIt=m_ImplicitRules.begin();
   while (RuleIt!=m_ImplicitRules.end())
   {
     if (pTarget==RuleIt->first)
@@ -128,46 +128,45 @@ void IMPLICITRULE::AddImplicitRule(fileinfo *pTarget,const vector<fileinfo*> &De
     RuleIt++;
   }
   if (!pImplicitRule)
-{
+  {
     // Add a new entry
-    m_ImplicitRules.push_back(pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > >(pTarget,vector<pair<fileinfo*,refptr<rule> > >()));
+    m_ImplicitRules.push_back(implicitrule_t(pTarget,implicitruledep_t()));
     pImplicitRule=&((m_ImplicitRules.end()-1)->second);
   }
 
   if (Deps.size())
   {
+    #ifdef _DEBUG
     vector<fileinfo*>::const_iterator DepIt=Deps.begin();
     while (DepIt!=Deps.end())
     {
-      #ifdef _DEBUG
       if (*DepIt==pTarget)
         throw(string("Implicit rule : ")+pTarget->GetFullFileName()+" is directly dependent on itself. This is not allowed.");
-      #endif
-      if (!FindDep(*DepIt,pImplicitRule,Rule))
-        pImplicitRule->push_back(pair<fileinfo*,refptr<rule> >(*DepIt,Rule));
       DepIt++;
     }
+    #endif
+    pImplicitRule->push_back(pair<vector<fileinfo*>,refptr<rule> >(Deps,Rule));
   }
   else
   {
-    if (!FindDep(NULL,pImplicitRule,Rule))
-      pImplicitRule->push_back(pair<fileinfo*,refptr<rule> >((fileinfo*)NULL,Rule));
+    if (!FindDep(pTarget,pImplicitRule,Rule))
+      pImplicitRule->push_back(pair<vector<fileinfo*>, refptr<rule> >(vector<fileinfo*>(), Rule));
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void IMPLICITRULE::SearchImplicitRule(const fileinfo *pTarget,vector< pair<fileinfo*,refptr<rule> > >&Result)
+void IMPLICITRULE::SearchImplicitRule(const fileinfo *pTarget, implicitruledep_t &Result)
 {
   string TargetFileName=pTarget->GetFullFileName();
 
-  vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > >::iterator ImpRegExIt=m_ImplicitRules.begin();
+  vector<implicitrule_t>::iterator ImpRegExIt=m_ImplicitRules.begin();
   while (ImpRegExIt!=m_ImplicitRules.end())
   {
     matchres Res;
 
     if (PercentMatch(TargetFileName,ImpRegExIt->first->GetFullFileName(),&Res))
     {
-      vector<pair<fileinfo*,refptr<rule> > >::iterator ResIt=ImpRegExIt->second.begin();
+      implicitruledep_t::iterator ResIt=ImpRegExIt->second.begin();
       while (ResIt!=ImpRegExIt->second.end())
       {
 #ifdef _DEBUG
@@ -177,9 +176,12 @@ void IMPLICITRULE::SearchImplicitRule(const fileinfo *pTarget,vector< pair<filei
         }
 #endif
         ResIt->second->SetStem(Res.m_Stem);
-        if (ResIt->first!=NULL)
+        vector<fileinfo*> Deps;
+        const fileinfo *pMakeDir=ResIt->second->GetMakefile()->GetMakeDir();
+        vector<fileinfo*>::iterator It=ResIt->first.begin();
+        while (It!=ResIt->first.end())
         {
-          string Dependent=ReplaceWithStem(ResIt->first->GetFullFileName(),Res.m_Stem);
+          string Dependent=ReplaceWithStem((*It)->GetFullFileName(),Res.m_Stem);
           #ifdef _DEBUG
           if (Dependent.length()>MAX_PATH)
           {
@@ -187,10 +189,10 @@ void IMPLICITRULE::SearchImplicitRule(const fileinfo *pTarget,vector< pair<filei
             throw(string("Filename too long in implicit rule search: ")+Dependent+"\nProbably some infinit loop in the implicit rules search.\n");
           }
           #endif
-          Result.push_back(pair<fileinfo*,refptr<rule> >(GetFileInfo(Dependent,ResIt->second->GetMakefile()->GetMakeDir()),ResIt->second));
+          Deps.push_back(GetFileInfo(Dependent,pMakeDir));
+          It++;
         }
-        else
-          Result.push_back(pair<fileinfo*,refptr<rule> >((fileinfo*)NULL,ResIt->second));
+        Result.push_back(pair<vector<fileinfo*>,refptr<rule> >(Deps, ResIt->second));
         ResIt++;
       }
     }
@@ -246,14 +248,21 @@ void rule::SetTargetsIsBuilding(const fileinfo *pSrc)
 ///////////////////////////////////////////////////////////////////////////////
 void IMPLICITRULE::PrintImplicitRules()
 {
-  vector<pair<fileinfo *, vector<pair< fileinfo *,refptr<rule> > > > >::iterator ImpRegExIt=m_ImplicitRules.begin();
+  vector<implicitrule_t>::iterator ImpRegExIt=m_ImplicitRules.begin();
   while (ImpRegExIt!=m_ImplicitRules.end())
   {
-    vector<pair<fileinfo*,refptr<rule> > >::iterator SecIt=ImpRegExIt->second.begin();
+    implicitruledep_t::iterator SecIt=ImpRegExIt->second.begin();
     cout << ImpRegExIt->first->GetFullFileName() << " :\n";
     while (SecIt!=ImpRegExIt->second.end())
     {
-      cout << "  : " << SecIt->first <<endl;
+      cout << "  :";
+      vector<fileinfo*>::iterator DepIt=SecIt->first.begin();
+      while (DepIt!=SecIt->first.end())
+      {
+        cout << " " << (*DepIt)->GetQuotedFullFileName() <<endl;
+        DepIt++;
+      }
+      cout << endl;
       if (SecIt->second)
       {
         SecIt->second->PrintCommands();

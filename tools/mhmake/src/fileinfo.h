@@ -257,6 +257,7 @@ public:
 
   void InsertDeps(vector<fileinfo*> &Deps)
   {
+    #ifdef _DEBUG
     vector<fileinfo*> NewDeps;
     vector<fileinfo*>::const_iterator It=Deps.begin();
     vector<fileinfo*>::const_iterator ItEnd=Deps.end();
@@ -274,17 +275,9 @@ public:
     }
     if (NewDeps.size())
       m_Deps.insert(m_Deps.begin(),NewDeps.begin(),NewDeps.end());
-  }
-  void AddMainDep(fileinfo* pMainDep)
-  {
-    if (&*pMainDep==this)
-    {
-      #ifdef _DEBUG
-      cout << GetQuotedFullFileName()<<" is directly dependent on itself\n";
-      #endif
-      return;
-    }
-    m_Deps.insert(m_Deps.begin(),pMainDep);
+    #else
+      m_Deps.insert(m_Deps.begin(),Deps.begin(),Deps.end());
+    #endif
   }
   vector<fileinfo*> &GetDeps(void)
   {

@@ -1563,14 +1563,14 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
 
   if (!pRule || !pRule->GetCommands().size())
   {
-    vector< pair<fileinfo*,refptr<rule> > > Result;
+    implicitruledep_t Result;
 
     IMPLICITRULE::SearchImplicitRule(pTarget,Result);
 
-    vector< pair<fileinfo*,refptr<rule> > >::iterator ResultIt=Result.begin();
+    implicitruledep_t::iterator ResultIt=Result.begin();
     while (ResultIt!=Result.end())
     {
-      if (ResultIt->first==NULL)
+      if (ResultIt->first.empty())
       {
         pRule=ResultIt->second;
         pTarget->SetRule(pRule);
@@ -1585,40 +1585,67 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
       }
       else if (!IMPLICITRULE::PushRule(ResultIt->second))
       {
+        /* We have to check all the implicitrule dependencies, only when they all can be build,
+           the implicit rule matches */
         #ifdef _DEBUG
+        fileinfo *pYoungestTarget;
         m_ImplicitSearch++;
         #endif
-        fileinfo* pNewTarget=ResultIt->first;
-        mh_time_t DepDate=BuildTarget(pNewTarget);
-        if (!DepDate.DoesExist())
+        mh_time_t ThisYoungestDate=YoungestDate;
+        vector<fileinfo*>::iterator ImplicitRuleDepsIt=ResultIt->first.begin();
+        while (ImplicitRuleDepsIt!=ResultIt->first.end())
         {
-          pNewTarget=ResultIt->second->GetMakefile()->SearchvPath(pNewTarget);
-          if (pNewTarget!=NULL)
-            DepDate=pNewTarget->GetDate();
+          fileinfo *pNewTarget=*ImplicitRuleDepsIt;
+          mh_time_t DepDate=BuildTarget(pNewTarget);
+          if (!DepDate.DoesExist())
+          {
+            pNewTarget=ResultIt->second->GetMakefile()->SearchvPath(pNewTarget);
+            if (pNewTarget!=NULL)
+            {
+              *ImplicitRuleDepsIt=pNewTarget;  /* The file was elsewere so we have to update the dependencies */
+              DepDate=pNewTarget->GetDate();
+            }
+          }
+          if (!DepDate.DoesExist())
+            break;
+          if (DepDate.IsNewer(ThisYoungestDate))
+          {
+            ThisYoungestDate=DepDate;
+            #ifdef _DEBUG
+            pYoungestTarget=pNewTarget;
+            #endif
+          }
+          ImplicitRuleDepsIt++;
         }
+        
         IMPLICITRULE::PopRule(ResultIt->second);
         #ifdef _DEBUG
         m_ImplicitSearch--;
         #endif
-        if (DepDate.DoesExist())
+        if (ImplicitRuleDepsIt==ResultIt->first.end()) // All deps exists
         {
-          if (DepDate.IsNewer(YoungestDate))
-            YoungestDate=DepDate;
+          ThisYoungestDate=YoungestDate;
           pRule=ResultIt->second;
-          pTarget->AddMainDep(pNewTarget);
+          pTarget->InsertDeps(ResultIt->first);
           pTarget->SetRule(pRule);  /* This is an implicit rule so do not add the target */
           #ifdef _DEBUG
           if (g_PrintAdditionalInfo)
           {
-            cout<<"Found implicit rule for "<<pTarget->GetQuotedFullFileName()<<". Dependent "<<ResultIt->first->GetQuotedFullFileName()<<endl;
+            cout<<"Found implicit rule for "<<pTarget->GetQuotedFullFileName()<<". Dependents:\n";
+            vector<fileinfo*>::iterator ImplicitRuleDepsIt=ResultIt->first.begin();
+            while (ImplicitRuleDepsIt!=ResultIt->first.end())
+            {
+              cout<<"  "<<(*ImplicitRuleDepsIt)->GetQuotedFullFileName()<<endl;
+              ImplicitRuleDepsIt++;
+            }
             pRule->PrintCommands(pTarget);
           }
           #endif
-          if (DepDate.IsNewer(TargetDate))
+          if (ThisYoungestDate.IsNewer(TargetDate))
           {
             #ifdef _DEBUG
-            if (pRule,g_pPrintDependencyCheck && DepDate.IsExistingFile() && TargetDate.IsExistingFile())
-              cout<<"Going to build "<<pTarget->GetQuotedFullFileName()<<" because "<<ResultIt->first->GetQuotedFullFileName()<<" is more recent\n";
+            if (pRule,g_pPrintDependencyCheck && ThisYoungestDate.IsExistingFile() && TargetDate.IsExistingFile())
+              cout<<"Going to build "<<pTarget->GetQuotedFullFileName()<<" because "<<pYoungestTarget->GetQuotedFullFileName()<<" is more recent\n";
             #endif
             MakeTarget=true;
           }
