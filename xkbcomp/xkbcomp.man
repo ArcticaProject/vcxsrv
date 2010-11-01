@@ -58,7 +58,8 @@ use the \-I option alone (i.e. without a directory), before any \-I
 options that specify the directories you do want searched.
 .TP 8
 .B \-i\ \fIdeviceid\fP
-Specifies device ID (not name) to compile for.
+If \fIsource\fP or \fIdestination\fP is a valid X display, load the keymap
+from/into the device with the specified ID (not name).
 .TP 8
 .B \-l
 List maps that specify the \fImap\fP pattern in any files listed on the
