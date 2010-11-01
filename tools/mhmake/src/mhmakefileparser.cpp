@@ -295,7 +295,7 @@ string mhmakefileparser::ExpandMacro(const string &Expr, bool &Recurse) const
         throw string("Unknown function specified in macro: ")+Func;
       }
       #else
-      return (this->*pFunc)(Arg);
+      return (this->*pFunc)(Arg, &Expr);
       #endif
     }
     else
