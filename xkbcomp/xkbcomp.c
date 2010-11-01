@@ -1037,6 +1037,7 @@ main(int argc, char *argv[])
                 ok = False;
                 break;
             }
+            result.xkb->device_spec = device_id;
         }
         else if (inputFormat == INPUT_XKM) /* parse xkm file */
         {
@@ -1053,6 +1054,7 @@ main(int argc, char *argv[])
                 ERROR1("Cannot read XKM file \"%s\"\n", inputFile);
                 ok = False;
             }
+            result.xkb->device_spec = device_id;
         }
         else
         {
