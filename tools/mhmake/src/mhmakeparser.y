@@ -184,8 +184,8 @@ vpathrule: VPATH SPACE nonspaceexpression SPACE expression NEWLINE
 
 varassignment: VARDEF VARVAL
                {
-                 m_Variables[f_strip($1)]=$2;
-                 PRINTF(("Defining variable %s to %s\n",f_strip($1).c_str(), $2.c_str()));
+                 m_Variables[f_strip($1,NULL)]=$2;
+                 PRINTF(("Defining variable %s to %s\n",f_strip($1,NULL).c_str(), $2.c_str()));
                }
                | STRING EQUAL maybeemptyexpression
                {

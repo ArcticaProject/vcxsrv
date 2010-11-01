@@ -288,7 +288,7 @@ string mhmakefileparser::ExpandMacro(const string &Expr, bool &Recurse) const
       #ifdef _DEBUG
       if (pFunc)
       {
-        return (this->*pFunc)(Arg);
+        return (this->*pFunc)(Arg, &Expr);
       }
       else
       {

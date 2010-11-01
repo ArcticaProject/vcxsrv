@@ -36,7 +36,7 @@ struct TOKENVALUE
 };
 
 class mhmakefileparser;
-typedef string (mhmakefileparser::*function_f)(const string &) const;
+typedef string (mhmakefileparser::*function_f)(const string &, const string *) const;
 
 struct funcdef
 {
@@ -189,6 +189,10 @@ public:
   {
     m_Variables[Var]=Val;
   }
+  void DeleteVariable(string Var)
+  {
+    m_Variables.erase(Var);
+  }
   void EnableAutoDepRescan(void)
   {
     m_ForceAutoDepRescan=true;
@@ -251,32 +255,33 @@ public:
   static map<string,function_f> m_Functions;
   static bool m_FunctionsInitialised;
   static void InitFuncs(void);
-  string f_filter(const string &) const;
-  string f_call(const string &) const;
-  string f_if(const string &) const;
-  string f_findstring(const string &) const;
-  string f_firstword(const string &) const;
-  string f_wildcard(const string &) const;
-  string f_subst(const string &) const;
-  string f_patsubst(const string &) const;
-  string f_concat(const string &) const;
-  string f_basename(const string & Arg) const;
-  string f_notdir(const string & Arg) const;
-  string f_dir(const string & Arg) const;
-  string f_shell(const string & Arg) const;
-  string f_relpath(const string & Arg) const;
-  string f_toupper(const string & Arg) const;
-  string f_tolower(const string & Arg) const;
-  string f_exist(const string & Arg) const;
-  string f_filesindirs(const string & Arg) const;
-  string f_fullname(const string & Arg) const;
-  string f_addprefix(const string & Arg) const;
-  string f_addsuffix(const string & Arg) const;
-  string f_filterout(const string & Arg) const;
-  string f_word(const string & Arg) const;
-  string f_words(const string & Arg) const;
-  string f_strip(const string & Arg) const;
-  string f_which(const string & Arg) const;
+  string f_filter(const string &, const string *pOriExpr) const;
+  string f_call(const string &, const string *pOriExpr) const;
+  string f_if(const string &, const string *pOriExpr) const;
+  string f_findstring(const string &, const string *pOriExpr) const;
+  string f_firstword(const string &, const string *pOriExpr) const;
+  string f_wildcard(const string &, const string *pOriExpr) const;
+  string f_subst(const string &, const string *pOriExpr) const;
+  string f_patsubst(const string &, const string *pOriExpr) const;
+  string f_concat(const string &, const string *pOriExpr) const;
+  string f_basename(const string & Arg, const string *pOriExpr) const;
+  string f_notdir(const string & Arg, const string *pOriExpr) const;
+  string f_dir(const string & Arg, const string *pOriExpr) const;
+  string f_shell(const string & Arg, const string *pOriExpr) const;
+  string f_relpath(const string & Arg, const string *pOriExpr) const;
+  string f_toupper(const string & Arg, const string *pOriExpr) const;
+  string f_tolower(const string & Arg, const string *pOriExpr) const;
+  string f_exist(const string & Arg, const string *pOriExpr) const;
+  string f_filesindirs(const string & Arg, const string *pOriExpr) const;
+  string f_fullname(const string & Arg, const string *pOriExpr) const;
+  string f_addprefix(const string & Arg, const string *pOriExpr) const;
+  string f_addsuffix(const string & Arg, const string *pOriExpr) const;
+  string f_filterout(const string & Arg, const string *pOriExpr) const;
+  string f_word(const string & Arg, const string *pOriExpr) const;
+  string f_words(const string & Arg, const string *pOriExpr) const;
+  string f_strip(const string & Arg, const string *pOriExpr) const;
+  string f_which(const string & Arg, const string *pOriExpr) const;
+  string f_foreach(const string & Arg, const string *pOriExpr) const;
 
   fileinfo* GetFirstTarget() const
   {
