@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.60)
 AC_INIT([libX11],
-        1.3.99.902,
+        [1.3.99.903],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -21,14 +21,14 @@ AC_CONFIG_HEADER([include/X11/XlibConf.h])
 # to avoid autoconf errors.
 AC_USE_SYSTEM_EXTENSIONS
 
-# Require xorg-macros minimum of 1.10 for DocBook XML documentation
+# Require xorg-macros minimum of 1.11 for disabling fop by default
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.10)
+          [m4_fatal([must install xorg-macros 1.11 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.11)
 XORG_DEFAULT_OPTIONS
 XORG_ENABLE_SPECS
 XORG_WITH_XMLTO(0.0.20)
-XORG_WITH_FOP
+XORG_WITH_FOP([no])
 XORG_CHECK_SGML_DOCTOOLS(1.5)
 XORG_PROG_RAWCPP
 
