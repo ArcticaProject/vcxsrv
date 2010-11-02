@@ -40,7 +40,6 @@
 
 #ifdef XWIN_CLIPBOARD
 int winProcEstablishConnection(ClientPtr /* client */);
-int winProcQueryTree(ClientPtr /* client */);
 int winProcSetSelectionOwner(ClientPtr /* client */);
 #endif
 
@@ -101,12 +100,6 @@ InitInput (int argc, char *argv[])
     {
       winProcEstablishConnectionOrig = InitialVector[2];
       InitialVector[2] = winProcEstablishConnection;
-    }
-  if (g_fXdmcpEnabled
-      && ProcVector[X_QueryTree] != winProcQueryTree)
-    {
-      winProcQueryTreeOrig = ProcVector[X_QueryTree];
-      ProcVector[X_QueryTree] = winProcQueryTree;
     }
 #endif
 

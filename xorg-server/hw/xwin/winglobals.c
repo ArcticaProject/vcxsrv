@@ -91,7 +91,6 @@ FARPROC		g_fpTrackMouseEvent = (FARPROC) (void (*)(void))NoopDDA;
  * Wrapped DIX functions
  */
 winDispatchProcPtr	winProcEstablishConnectionOrig = NULL;
-winDispatchProcPtr	winProcQueryTreeOrig = NULL;
 winDispatchProcPtr	winProcSetSelectionOwnerOrig = NULL;
 
 
