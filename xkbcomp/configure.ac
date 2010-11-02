@@ -34,11 +34,14 @@ XORG_DEFAULT_OPTIONS
 
 AM_CONFIG_HEADER(config.h)
 
+# If both the C file and YACC are missing, the package cannot be build.
 AC_PROG_YACC
 AC_PATH_PROG([YACC_INST], $YACC)
-AC_CHECK_FILE([$srcdir/xkbparse.c], [],
-              [test -z "$YACC_INST" && AC_MSG_ERROR([yacc not found - unable to compile xkbparse.y])])
-
+if test ! -f "$srcdir/xkbparse.c"; then
+   if test -z "$YACC_INST"; then
+      AC_MSG_ERROR([yacc not found - unable to compile xkbparse.y])
+   fi
+fi
 
 AC_CHECK_FUNCS([strdup strcasecmp])
 
