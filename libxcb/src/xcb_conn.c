@@ -183,7 +183,7 @@ static int write_vec(xcb_connection_t *c, struct iovec **vector, int *count)
 
 #ifdef _WIN32
     int i = 0;
-    int ret = 0,err = 0;
+    int cnt=*count;
     struct iovec *vec;
     n = 0;
     assert(!c->out.queue_len);
@@ -191,20 +191,34 @@ static int write_vec(xcb_connection_t *c, struct iovec **vector, int *count)
     /* Could use the WSASend win32 function for scatter/gather i/o but setting up the WSABUF struct from
        an iovec would require more work and I'm not sure of the benefit....works for now */
     vec = *vector;
-    while(i < *count)
+    while(i < cnt)
     {         	 
-         ret = send(c->fd,vec->iov_base,vec->iov_len,0);	 
+      char *p= vec->iov_base;
+      size_t l= vec->iov_len;
+      while (l > 0)
+      {
+         int ret = send(c->fd, p, l, 0); 
          if(ret == SOCKET_ERROR)
          {
-             err  = WSAGetLastError();
+             int err  = WSAGetLastError();
              if(err == WSAEWOULDBLOCK)
              {
-                 return 1;
+                 if (n)
+                 {
+                   /* already return the data */
+                   i=cnt;
+                   break;
+                 }
+                 else
+                   return 1;
              }
          }
+         p += ret;
+         l -= ret;
          n += ret;
-         vec++;
-         i++;
+      }
+      vec++;
+      i++;
     }
 #else
     assert(!c->out.queue_len);
