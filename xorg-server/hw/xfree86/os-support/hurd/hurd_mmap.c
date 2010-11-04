@@ -39,8 +39,8 @@
 int 
 xf86ReadBIOS(unsigned long Base,unsigned long Offset,unsigned char *Buf,int Len)
 {
-    mach_port_t device,iopl_dev;
-    memory_object_t iopl_mem;
+    mach_port_t device,mem_dev;
+    memory_object_t mem_obj;
     vm_address_t addr = (vm_address_t)0; /* serach starting address */
     kern_return_t err;
 
@@ -51,14 +51,14 @@ xf86ReadBIOS(unsigned long Base,unsigned long Offset,unsigned char *Buf,int Len)
 	errno = err;
 	FatalError("xf86ReadBIOS() can't get_privileged_ports. (%s)\n",strerror(errno));
     }
-    err = device_open(device,D_READ|D_WRITE,"iopl",&iopl_dev);
+    err = device_open(device,D_READ|D_WRITE,"mem",&mem_dev);
     mach_port_deallocate (mach_task_self (), device);
     if( err )
     {
 	errno = err;
 	FatalError("xf86ReadBIOS() can't device_open. (%s)\n",strerror(errno));
     }
-    err = device_map(iopl_dev,VM_PROT_READ|VM_PROT_WRITE, Base , BIOS_SIZE ,&iopl_mem,0);
+    err = device_map(mem_dev,VM_PROT_READ|VM_PROT_WRITE, Base , BIOS_SIZE ,&mem_obj,0);
     if( err )
     {
 	errno = err;
@@ -69,13 +69,13 @@ xf86ReadBIOS(unsigned long Base,unsigned long Offset,unsigned char *Buf,int Len)
 		 BIOS_SIZE,
 		 0,
 		 TRUE,
-		 iopl_mem,
+		 mem_obj,
 		 Base,
 		 FALSE,
 		 VM_PROT_READ|VM_PROT_WRITE,
 		 VM_PROT_READ|VM_PROT_WRITE,
 		 VM_INHERIT_SHARE);
-    mach_port_deallocate(mach_task_self(),iopl_mem);
+    mach_port_deallocate(mach_task_self(),mem_obj);
     if( err )
     {
 	errno = err;

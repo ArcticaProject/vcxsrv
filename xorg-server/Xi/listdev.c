@@ -180,10 +180,10 @@ CopySwapDevice(ClientPtr client, DeviceIntPtr d, int num_classes,
 	dev->use = IsXKeyboard;
     else if (IsMaster(d) && IsPointerDevice(d))
 	dev->use = IsXPointer;
-    else if (d->key && d->kbdfeed)
-        dev->use = IsXExtensionKeyboard;
     else if (d->valuator && d->button)
         dev->use = IsXExtensionPointer;
+    else if (d->key && d->kbdfeed)
+        dev->use = IsXExtensionKeyboard;
     else
 	dev->use = IsXExtensionDevice;
 

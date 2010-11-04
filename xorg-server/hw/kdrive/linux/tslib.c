@@ -117,14 +117,21 @@ TslibEnable (KdPointerInfo *pi)
         pi->path = strdup("/dev/input/touchscreen0");
         ErrorF("[tslib/TslibEnable] no device path given, trying %s\n", pi->path);
     }
+
     private->tsDev = ts_open(pi->path, 0);
-    private->fd = ts_fd(private->tsDev);
-    if (!private->tsDev || ts_config(private->tsDev) || private->fd < 0) {
+    if (!private->tsDev) {
         ErrorF("[tslib/TslibEnable] failed to open %s\n", pi->path);
-        if (private->fd >= 0)
-            close(private->fd);
         return BadAlloc;
     }
+
+    if (ts_config(private->tsDev)) {
+        ErrorF("[tslib/TslibEnable] failed to load configuration\n");
+        ts_close(private->tsDev);
+        private->tsDev = NULL;
+        return BadValue;
+    }
+
+    private->fd = ts_fd(private->tsDev);
 
     KdRegisterFd(private->fd, TsRead, pi);
 

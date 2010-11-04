@@ -182,6 +182,8 @@ static void dix_event_to_core(int type)
     ev.time     = time;
     ev.root_y   = x;
     ev.root_x   = y;
+    SetBit(ev.valuators.mask, 0);
+    SetBit(ev.valuators.mask, 1);
     ev.root     = ROOT_WINDOW_ID;
     ev.corestate = state;
     ev.detail.key = detail;
