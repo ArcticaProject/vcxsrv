@@ -2304,8 +2304,8 @@ typedef struct xcb_translate_coordinates_reply_t {
     uint16_t     sequence; /**<  */
     uint32_t     length; /**<  */
     xcb_window_t child; /**<  */
-    uint16_t     dst_x; /**<  */
-    uint16_t     dst_y; /**<  */
+    int16_t      dst_x; /**<  */
+    int16_t      dst_y; /**<  */
 } xcb_translate_coordinates_reply_t;
 
 /** Opcode for xcb_warp_pointer. */
