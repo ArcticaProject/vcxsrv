@@ -3660,9 +3660,9 @@ WindowParentHasDeviceCursor(WindowPtr pWin,
                     &pParentNode, &pParentPrev))
         {
             /* if there is a node in the list, the win has a dev cursor */
-            if (!pParentNode->cursor) /* inherited. loop needs to cont. */
-            {
-            } else if (pParentNode->cursor == pCursor) /* inherit */
+            if (!pParentNode->cursor) /* inherited. */
+                pParent = pParent->parent;
+            else if (pParentNode->cursor == pCursor) /* inherit */
                 return TRUE;
             else  /* different cursor */
                 return FALSE;
