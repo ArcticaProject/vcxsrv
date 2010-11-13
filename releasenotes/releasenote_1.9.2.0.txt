@@ -1,5 +1,5 @@
-Changes in 1.9.0.902
---------------------
+Changes in 1.9.2.0
+------------------
 - Update the following packages:
      xserver git update until 4/11/2010
      libxcb git update until 4/11/2010
