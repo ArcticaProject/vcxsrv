@@ -60,6 +60,7 @@ SOFTWARE.
 #define BitIsOn(ptr, bit) (((BYTE *) (ptr))[(bit)>>3] & (1 << ((bit) & 7)))
 #define SetBit(ptr, bit)  (((BYTE *) (ptr))[(bit)>>3] |= (1 << ((bit) & 7)))
 #define ClearBit(ptr, bit) (((BYTE *)(ptr))[(bit)>>3] &= ~(1 << ((bit) & 7)))
+extern _X_EXPORT int CountBits(const uint8_t *mask, int len);
 
 #define SameClient(obj,client) \
 	(CLIENT_BITS((obj)->resource) == (client)->clientAsMask)
@@ -217,6 +218,7 @@ typedef struct _AxisInfo {
     int		min_value;
     int		max_value;
     Atom	label;
+    CARD8	mode;
 } AxisInfo, *AxisInfoPtr;
 
 typedef struct _ValuatorAccelerationRec {
@@ -238,7 +240,6 @@ typedef struct _ValuatorClassRec {
     AxisInfoPtr 	  axes;
     unsigned short	  numAxes;
     double		  *axisVal; /* always absolute, but device-coord system */
-    CARD8	 	  mode;
     ValuatorAccelerationRec	accelScheme;
 } ValuatorClassRec, *ValuatorClassPtr;
 
@@ -271,7 +272,7 @@ typedef struct _FocusClassRec {
 
 typedef struct _ProximityClassRec {
     int		sourceid;
-    char	pad;
+    char	in_proximity;
 } ProximityClassRec, *ProximityClassPtr;
 
 typedef struct _AbsoluteClassRec {

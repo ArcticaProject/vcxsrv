@@ -516,11 +516,8 @@ winGetPaletteDD (ScreenPtr pScreen, ColormapPtr pcmap)
   pScreen->blackPixel = 0;
 
   /* Free colormap */
-  if (ppeColors != NULL)
-    {
-      free (ppeColors);
-      ppeColors = NULL;
-    }
+  free(ppeColors);
+  ppeColors = NULL;
 
   /* Free the DC */
   if (hdc != NULL)

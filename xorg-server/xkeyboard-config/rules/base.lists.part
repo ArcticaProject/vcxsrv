@@ -50,7 +50,7 @@
               genius geniuscomfy2 \
               gyration honeywell_euroboard \
               hp250x hp5xx hp500fa hpdv5 \
-              hpi6 hpxe3gc hpxe3gf hpxe4xxx hpxt1000 hpzt11xx \
+              hpi6 hpxe3gc hpxe3gf hpxe4xxx hpxt1000 hpzt11xx htcdream \
               ibm_spacesaver ipaq inspiron intel \
               logiaccess logicda logicink \
               logiex110 logiclx300 \
@@ -104,3 +104,4 @@
                    lt lv nl no pl pt ro ru \
                    se sk tr tw ua
 
+! $htcdreamlayouts = us it de

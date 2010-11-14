@@ -277,9 +277,7 @@ xf86OpenConsole(void)
             tcsetattr(xf86Info.consoleFd, TCSANOW, &nTty);
 
             /* need to keep the buffer clean, else the kernel gets angry */
-	    if (xf86Info.allowEmptyInput)
-		console_handler = xf86AddGeneralHandler(xf86Info.consoleFd,
-							drain_console, NULL);
+	    xf86SetConsoleHandler(drain_console, NULL);
 
 	    /* we really should have a InitOSInputDevices() function instead
 	     * of Init?$#*&Device(). So I just place it here */

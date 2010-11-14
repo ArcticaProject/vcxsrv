@@ -841,19 +841,25 @@ void          pixman_image_composite32        (pixman_op_t        op,
 					       int32_t            width,
 					       int32_t            height);
 
-/* Old X servers rely on out-of-bounds accesses when they are asked
- * to composite with a window as the source. They create a pixman image
- * pointing to some bogus position in memory, but then they set a clip
- * region to the position where the actual bits are.
+/* Executive Summary: This function is a no-op that only exists
+ * for historical reasons.
+ *
+ * There used to be a bug in the X server where it would rely on
+ * out-of-bounds accesses when it was asked to composite with a
+ * window as the source. It would create a pixman image pointing
+ * to some bogus position in memory, but then set a clip region
+ * to the position where the actual bits were.
  *
  * Due to a bug in old versions of pixman, where it would not clip
  * against the image bounds when a clip region was set, this would
- * actually work. So by default we allow certain out-of-bound access
- * to happen unless explicitly disabled.
+ * actually work. So when the pixman bug was fixed, a workaround was
+ * added to allow certain out-of-bound accesses. This function disabled
+ * those workarounds.
  *
- * Fixed X servers should call this function to disable the workaround.
+ * Since 0.21.2, pixman doesn't do these workarounds anymore, so now this
+ * function is a no-op.
  */
-void          pixman_disable_out_of_bounds_workaround (void);
+void pixman_disable_out_of_bounds_workaround (void);
 
 /*
  * Trapezoids

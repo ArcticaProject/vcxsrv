@@ -110,7 +110,7 @@ ProcXSetDeviceMode(ClientPtr client)
 	rep.status = SetDeviceMode(client, dev, stuff->mode);
 
     if (rep.status == Success)
-	dev->valuator->mode = stuff->mode;
+        valuator_set_mode(dev, VALUATOR_MODE_ALL_AXES, stuff->mode);
     else if (rep.status != AlreadyGrabbed)
     {
 	switch(rep.status) {

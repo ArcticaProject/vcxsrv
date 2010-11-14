@@ -50,10 +50,8 @@ _XkbFreeGeomLeafElems(	Bool			freeAll,
 {
     if ((freeAll)||(*elems==NULL)) {
 	*num_inout= *sz_inout= 0;
-	if (*elems!=NULL) {
-	    free(*elems);
-	    *elems= NULL;
-	}	
+	free(*elems);
+	*elems = NULL;
 	return;
     }
 
@@ -373,22 +371,16 @@ XkbDoodadPtr	doodad= (XkbDoodadPtr)doodad_in;
     switch (doodad->any.type) {
    	case XkbTextDoodad: 
 	    {
-		if (doodad->text.text!=NULL) {
-		    free(doodad->text.text);
-		    doodad->text.text= NULL;
-		}
-		if (doodad->text.font!=NULL) {
-		    free(doodad->text.font);
-		    doodad->text.font= NULL;
-		}
+		free(doodad->text.text);
+		doodad->text.text = NULL;
+		free(doodad->text.font);
+		doodad->text.font = NULL;
 	    }
 	    break;
    	case XkbLogoDoodad: 
 	    {
-		if (doodad->logo.logo_name!=NULL) {
-		    free(doodad->logo.logo_name);
-		    doodad->logo.logo_name= NULL;
-		}
+		free(doodad->logo.logo_name);
+		doodad->logo.logo_name = NULL;
 	    }
 	    break;
     }
@@ -434,10 +426,8 @@ XkbFreeGeometry(XkbGeometryPtr geom,unsigned which,Bool freeMap)
     if ((which&XkbGeomKeyAliasesMask)&&(geom->key_aliases!=NULL))
 	XkbFreeGeomKeyAliases(geom,0,geom->num_key_aliases,TRUE);
     if (freeMap) {
-	if (geom->label_font!=NULL) {
-	    free(geom->label_font);
-	    geom->label_font= NULL;
-	}
+	free(geom->label_font);
+	geom->label_font = NULL;
 	free(geom);
     }
     return;

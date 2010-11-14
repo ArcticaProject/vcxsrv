@@ -136,12 +136,286 @@ int SProcXIChangeHierarchy(ClientPtr client)
     return (ProcXIChangeHierarchy(client));
 }
 
+static int
+add_master(ClientPtr client, xXIAddMasterInfo *c, int flags[MAXDEVICES])
+{
+    DeviceIntPtr ptr, keybd, XTestptr, XTestkeybd;
+    char* name;
+    int rc;
+
+    name = calloc(c->name_len + 1, sizeof(char));
+    strncpy(name, (char*)&c[1], c->name_len);
+
+    rc = AllocDevicePair(client, name, &ptr, &keybd,
+                         CorePointerProc, CoreKeyboardProc, TRUE);
+    if (rc != Success)
+        goto unwind;
+
+    if (!c->send_core)
+        ptr->coreEvents = keybd->coreEvents =  FALSE;
+
+    /* Allocate virtual slave devices for xtest events */
+    rc = AllocXTestDevice(client, name, &XTestptr, &XTestkeybd, ptr, keybd);
+    if (rc != Success)
+    {
+        DeleteInputDeviceRequest(ptr);
+        DeleteInputDeviceRequest(keybd);
+        goto unwind;
+    }
+
+    ActivateDevice(ptr, FALSE);
+    ActivateDevice(keybd, FALSE);
+    flags[ptr->id] |= XIMasterAdded;
+    flags[keybd->id] |= XIMasterAdded;
+
+    ActivateDevice(XTestptr, FALSE);
+    ActivateDevice(XTestkeybd, FALSE);
+    flags[XTestptr->id] |= XISlaveAdded;
+    flags[XTestkeybd->id] |= XISlaveAdded;
+
+    if (c->enable)
+    {
+        EnableDevice(ptr, FALSE);
+        EnableDevice(keybd, FALSE);
+        flags[ptr->id] |= XIDeviceEnabled;
+        flags[keybd->id] |= XIDeviceEnabled;
+
+        EnableDevice(XTestptr, FALSE);
+        EnableDevice(XTestkeybd, FALSE);
+        flags[XTestptr->id] |= XIDeviceEnabled;
+        flags[XTestkeybd->id] |= XIDeviceEnabled;
+    }
+
+    /* Attach the XTest virtual devices to the newly
+       created master device */
+    AttachDevice(NULL, XTestptr, ptr);
+    AttachDevice(NULL, XTestkeybd, keybd);
+    flags[XTestptr->id] |= XISlaveAttached;
+    flags[XTestkeybd->id] |= XISlaveAttached;
+
+unwind:
+    free(name);
+    return rc;
+}
+
+static int
+remove_master(ClientPtr client, xXIRemoveMasterInfo *r,
+              int flags[MAXDEVICES])
+{
+    DeviceIntPtr ptr, keybd, XTestptr, XTestkeybd;
+    int rc = Success;
+
+    if (r->return_mode != XIAttachToMaster &&
+        r->return_mode != XIFloating)
+        return BadValue;
+
+    rc = dixLookupDevice(&ptr, r->deviceid, client, DixDestroyAccess);
+    if (rc != Success)
+        goto unwind;
+
+    if (!IsMaster(ptr))
+    {
+        client->errorValue = r->deviceid;
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    /* XXX: For now, don't allow removal of VCP, VCK */
+    if (ptr == inputInfo.pointer || ptr == inputInfo.keyboard)
+    {
+        rc = BadDevice;
+        goto unwind;
+    }
+
+
+    ptr = GetMaster(ptr, MASTER_POINTER);
+    rc = dixLookupDevice(&ptr, ptr->id, client, DixDestroyAccess);
+    if (rc != Success)
+        goto unwind;
+    keybd = GetMaster(ptr, MASTER_KEYBOARD);
+    rc = dixLookupDevice(&keybd, keybd->id, client, DixDestroyAccess);
+    if (rc != Success)
+        goto unwind;
+
+    XTestptr = GetXTestDevice(ptr);
+    rc = dixLookupDevice(&XTestptr, XTestptr->id, client, DixDestroyAccess);
+    if (rc != Success)
+        goto unwind;
+
+    XTestkeybd = GetXTestDevice(keybd);
+    rc = dixLookupDevice(&XTestkeybd, XTestkeybd->id, client,
+                         DixDestroyAccess);
+    if (rc != Success)
+        goto unwind;
+
+    /* Disabling sends the devices floating, reattach them if
+     * desired. */
+    if (r->return_mode == XIAttachToMaster)
+    {
+        DeviceIntPtr attached,
+                     newptr,
+                     newkeybd;
+
+        rc = dixLookupDevice(&newptr, r->return_pointer, client, DixAddAccess);
+        if (rc != Success)
+            goto unwind;
+
+        if (!IsMaster(newptr))
+        {
+            client->errorValue = r->return_pointer;
+            rc = BadDevice;
+            goto unwind;
+        }
+
+        rc = dixLookupDevice(&newkeybd, r->return_keyboard,
+                             client, DixAddAccess);
+        if (rc != Success)
+            goto unwind;
+
+        if (!IsMaster(newkeybd))
+        {
+            client->errorValue = r->return_keyboard;
+            rc = BadDevice;
+            goto unwind;
+        }
+
+        for (attached = inputInfo.devices; attached; attached = attached->next)
+        {
+            if (!IsMaster(attached)) {
+                if (attached->u.master == ptr)
+                {
+                    AttachDevice(client, attached, newptr);
+                    flags[attached->id] |= XISlaveAttached;
+                }
+                if (attached->u.master == keybd)
+                {
+                    AttachDevice(client, attached, newkeybd);
+                    flags[attached->id] |= XISlaveAttached;
+                }
+            }
+        }
+    }
+
+    /* can't disable until we removed pairing */
+    keybd->spriteInfo->paired = NULL;
+    ptr->spriteInfo->paired = NULL;
+    XTestptr->spriteInfo->paired = NULL;
+    XTestkeybd->spriteInfo->paired = NULL;
+
+    /* disable the remove the devices, XTest devices must be done first
+       else the sprites they rely on will be destroyed  */
+    DisableDevice(XTestptr, FALSE);
+    DisableDevice(XTestkeybd, FALSE);
+    DisableDevice(keybd, FALSE);
+    DisableDevice(ptr, FALSE);
+    flags[XTestptr->id] |= XIDeviceDisabled | XISlaveDetached;
+    flags[XTestkeybd->id] |= XIDeviceDisabled | XISlaveDetached;
+    flags[keybd->id] |= XIDeviceDisabled;
+    flags[ptr->id] |= XIDeviceDisabled;
+
+    RemoveDevice(XTestptr, FALSE);
+    RemoveDevice(XTestkeybd, FALSE);
+    RemoveDevice(keybd, FALSE);
+    RemoveDevice(ptr, FALSE);
+    flags[XTestptr->id] |= XISlaveRemoved;
+    flags[XTestkeybd->id] |= XISlaveRemoved;
+    flags[keybd->id] |= XIMasterRemoved;
+    flags[ptr->id] |= XIMasterRemoved;
+
+unwind:
+    return rc;
+}
+
+static int
+detach_slave(ClientPtr client, xXIDetachSlaveInfo *c, int flags[MAXDEVICES])
+{
+    DeviceIntPtr dev;
+    int rc;
+
+    rc = dixLookupDevice(&dev, c->deviceid, client, DixManageAccess);
+    if (rc != Success)
+        goto unwind;
+
+    if (IsMaster(dev))
+    {
+        client->errorValue = c->deviceid;
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    /* Don't allow changes to XTest Devices, these are fixed */
+    if (IsXTestDevice(dev, NULL))
+    {
+        client->errorValue = c->deviceid;
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    AttachDevice(client, dev, NULL);
+    flags[dev->id] |= XISlaveDetached;
+
+unwind:
+    return rc;
+}
+
+static int
+attach_slave(ClientPtr client, xXIAttachSlaveInfo *c,
+             int flags[MAXDEVICES])
+{
+    DeviceIntPtr dev;
+    DeviceIntPtr newmaster;
+    int rc;
+
+    rc = dixLookupDevice(&dev, c->deviceid, client, DixManageAccess);
+    if (rc != Success)
+        goto unwind;
+
+    if (IsMaster(dev))
+    {
+        client->errorValue = c->deviceid;
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    /* Don't allow changes to XTest Devices, these are fixed */
+    if (IsXTestDevice(dev, NULL))
+    {
+        client->errorValue = c->deviceid;
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    rc = dixLookupDevice(&newmaster, c->new_master, client, DixAddAccess);
+    if (rc != Success)
+        goto unwind;
+    if (!IsMaster(newmaster))
+    {
+        client->errorValue = c->new_master;
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    if (!((IsPointerDevice(newmaster) && IsPointerDevice(dev)) ||
+        (IsKeyboardDevice(newmaster) && IsKeyboardDevice(dev))))
+    {
+        rc = BadDevice;
+        goto unwind;
+    }
+
+    AttachDevice(client, dev, newmaster);
+    flags[dev->id] |= XISlaveAttached;
+
+unwind:
+    return rc;
+}
+
+
+
 #define SWAPIF(cmd) if (client->swapped) { cmd; }
 
 int
 ProcXIChangeHierarchy(ClientPtr client)
 {
-    DeviceIntPtr ptr, keybd, XTestptr, XTestkeybd;
     xXIAnyHierarchyChangeInfo *any;
     int required_len = sizeof(xXIChangeHierarchyReq);
     char n;
@@ -169,276 +443,38 @@ ProcXIChangeHierarchy(ClientPtr client)
             case XIAddMaster:
                 {
                     xXIAddMasterInfo* c = (xXIAddMasterInfo*)any;
-                    char* name;
-
                     SWAPIF(swaps(&c->name_len, n));
-                    name = calloc(c->name_len + 1, sizeof(char));
-                    strncpy(name, (char*)&c[1], c->name_len);
 
-
-                    rc = AllocDevicePair(client, name, &ptr, &keybd,
-                                         CorePointerProc, CoreKeyboardProc,
-                                         TRUE);
+                    rc = add_master(client, c, flags);
                     if (rc != Success)
-                    {
-                        free(name);
                         goto unwind;
-                    }
-
-                    if (!c->send_core)
-                        ptr->coreEvents = keybd->coreEvents =  FALSE;
-
-                    /* Allocate virtual slave devices for xtest events */
-                    rc = AllocXTestDevice(client, name, &XTestptr, &XTestkeybd,
-                                         ptr, keybd);
-                    if (rc != Success)
-                    {
-
-                        free(name);
-                        goto unwind;
-                    }
-
-                    ActivateDevice(ptr, FALSE);
-                    ActivateDevice(keybd, FALSE);
-                    flags[ptr->id] |= XIMasterAdded;
-                    flags[keybd->id] |= XIMasterAdded;
-
-                    ActivateDevice(XTestptr, FALSE);
-                    ActivateDevice(XTestkeybd, FALSE);
-                    flags[XTestptr->id] |= XISlaveAdded;
-                    flags[XTestkeybd->id] |= XISlaveAdded;
-
-                    if (c->enable)
-                    {
-                        EnableDevice(ptr, FALSE);
-                        EnableDevice(keybd, FALSE);
-                        flags[ptr->id] |= XIDeviceEnabled;
-                        flags[keybd->id] |= XIDeviceEnabled;
-
-                        EnableDevice(XTestptr, FALSE);
-                        EnableDevice(XTestkeybd, FALSE);
-                        flags[XTestptr->id] |= XIDeviceEnabled;
-                        flags[XTestkeybd->id] |= XIDeviceEnabled;
-                    }
-
-                    /* Attach the XTest virtual devices to the newly
-                       created master device */
-                    AttachDevice(NULL, XTestptr, ptr);
-                    AttachDevice(NULL, XTestkeybd, keybd);
-                    flags[XTestptr->id] |= XISlaveAttached;
-                    flags[XTestkeybd->id] |= XISlaveAttached;
-
-                    free(name);
                 }
                 break;
             case XIRemoveMaster:
                 {
                     xXIRemoveMasterInfo* r = (xXIRemoveMasterInfo*)any;
 
-                    if (r->return_mode != XIAttachToMaster &&
-                            r->return_mode != XIFloating)
-                        return BadValue;
-
-                    rc = dixLookupDevice(&ptr, r->deviceid, client,
-                                         DixDestroyAccess);
+                    rc = remove_master(client, r, flags);
                     if (rc != Success)
                         goto unwind;
-
-                    if (!IsMaster(ptr))
-                    {
-                        client->errorValue = r->deviceid;
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-                    /* XXX: For now, don't allow removal of VCP, VCK */
-                    if (ptr == inputInfo.pointer ||
-                            ptr == inputInfo.keyboard)
-                    {
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-
-                    ptr = GetMaster(ptr, MASTER_POINTER);
-                    rc = dixLookupDevice(&ptr,
-                                         ptr->id,
-                                         client,
-                                         DixDestroyAccess);
-                    if (rc != Success)
-                        goto unwind;
-                    keybd = GetMaster(ptr, MASTER_KEYBOARD);
-                    rc = dixLookupDevice(&keybd,
-                                         keybd->id,
-                                         client,
-                                         DixDestroyAccess);
-                    if (rc != Success)
-                        goto unwind;
-
-                    XTestptr = GetXTestDevice(ptr);
-                    rc = dixLookupDevice(&XTestptr, XTestptr->id, client,
-                                         DixDestroyAccess);
-                    if (rc != Success)
-                        goto unwind;
-
-                    XTestkeybd = GetXTestDevice(keybd);
-                    rc = dixLookupDevice(&XTestkeybd, XTestkeybd->id, client,
-                                         DixDestroyAccess);
-                    if (rc != Success)
-                        goto unwind;
-
-                    /* Disabling sends the devices floating, reattach them if
-                     * desired. */
-                    if (r->return_mode == XIAttachToMaster)
-                    {
-                        DeviceIntPtr attached,
-                                     newptr,
-                                     newkeybd;
-
-                        rc = dixLookupDevice(&newptr, r->return_pointer,
-                                             client, DixAddAccess);
-                        if (rc != Success)
-                            goto unwind;
-
-                        if (!IsMaster(newptr))
-                        {
-                            client->errorValue = r->return_pointer;
-                            rc = BadDevice;
-                            goto unwind;
-                        }
-
-                        rc = dixLookupDevice(&newkeybd, r->return_keyboard,
-                                             client, DixAddAccess);
-                        if (rc != Success)
-                            goto unwind;
-
-                        if (!IsMaster(newkeybd))
-                        {
-                            client->errorValue = r->return_keyboard;
-                            rc = BadDevice;
-                            goto unwind;
-                        }
-
-                        for (attached = inputInfo.devices;
-                                attached;
-                                attached = attached->next)
-                        {
-                            if (!IsMaster(attached)) {
-                                if (attached->u.master == ptr)
-                                {
-                                    AttachDevice(client, attached, newptr);
-                                    flags[attached->id] |= XISlaveAttached;
-                                }
-                                if (attached->u.master == keybd)
-                                {
-                                    AttachDevice(client, attached, newkeybd);
-                                    flags[attached->id] |= XISlaveAttached;
-                                }
-                            }
-                        }
-                    }
-
-                    /* can't disable until we removed pairing */
-                    keybd->spriteInfo->paired = NULL;
-                    ptr->spriteInfo->paired = NULL;
-                    XTestptr->spriteInfo->paired = NULL;
-                    XTestkeybd->spriteInfo->paired = NULL;
-
-                    /* disable the remove the devices, XTest devices must be done first
-                       else the sprites they rely on will be destroyed  */
-                    DisableDevice(XTestptr, FALSE);
-                    DisableDevice(XTestkeybd, FALSE);
-                    DisableDevice(keybd, FALSE);
-                    DisableDevice(ptr, FALSE);
-                    flags[XTestptr->id] |= XIDeviceDisabled | XISlaveDetached;
-                    flags[XTestkeybd->id] |= XIDeviceDisabled | XISlaveDetached;
-                    flags[keybd->id] |= XIDeviceDisabled;
-                    flags[ptr->id] |= XIDeviceDisabled;
-
-                    RemoveDevice(XTestptr, FALSE);
-                    RemoveDevice(XTestkeybd, FALSE);
-                    RemoveDevice(keybd, FALSE);
-                    RemoveDevice(ptr, FALSE);
-                    flags[XTestptr->id] |= XISlaveRemoved;
-                    flags[XTestkeybd->id] |= XISlaveRemoved;
-                    flags[keybd->id] |= XIMasterRemoved;
-                    flags[ptr->id] |= XIMasterRemoved;
                 }
                 break;
             case XIDetachSlave:
                 {
                     xXIDetachSlaveInfo* c = (xXIDetachSlaveInfo*)any;
 
-                    rc = dixLookupDevice(&ptr, c->deviceid, client,
-                                          DixManageAccess);
+                    rc = detach_slave(client, c, flags);
                     if (rc != Success)
                        goto unwind;
-
-                    if (IsMaster(ptr))
-                    {
-                        client->errorValue = c->deviceid;
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-                    /* Don't allow changes to XTest Devices, these are fixed */
-                    if (IsXTestDevice(ptr, NULL))
-                    {
-                        client->errorValue = c->deviceid;
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-                    AttachDevice(client, ptr, NULL);
-                    flags[ptr->id] |= XISlaveDetached;
                 }
                 break;
             case XIAttachSlave:
                 {
                     xXIAttachSlaveInfo* c = (xXIAttachSlaveInfo*)any;
-                    DeviceIntPtr newmaster;
 
-                    rc = dixLookupDevice(&ptr, c->deviceid, client,
-                                          DixManageAccess);
+                    rc = attach_slave(client, c, flags);
                     if (rc != Success)
                        goto unwind;
-
-                    if (IsMaster(ptr))
-                    {
-                        client->errorValue = c->deviceid;
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-                    /* Don't allow changes to XTest Devices, these are fixed */
-                    if (IsXTestDevice(ptr, NULL))
-                    {
-                        client->errorValue = c->deviceid;
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-                    rc = dixLookupDevice(&newmaster, c->new_master,
-                            client, DixAddAccess);
-                    if (rc != Success)
-                        goto unwind;
-                    if (!IsMaster(newmaster))
-                    {
-                        client->errorValue = c->new_master;
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-
-                    if (!((IsPointerDevice(newmaster) &&
-                                    IsPointerDevice(ptr)) ||
-                                (IsKeyboardDevice(newmaster) &&
-                                 IsKeyboardDevice(ptr))))
-                    {
-                        rc = BadDevice;
-                        goto unwind;
-                    }
-                    AttachDevice(client, ptr, newmaster);
-                    flags[ptr->id] |= XISlaveAttached;
                 }
                 break;
         }

@@ -52,6 +52,7 @@
 #include "mipointer.h"
 #include "xserver-properties.h"
 #include "exevents.h"
+#include "inpututils.h"
 
 #include "modinit.h"
 
@@ -153,6 +154,7 @@ ProcXTestFakeInput(ClientPtr client)
     WindowPtr root;
     Bool extension = FALSE;
     deviceValuator *dv = NULL;
+    ValuatorMask mask;
     int valuators[MAX_VALUATORS] = {0};
     int numValuators = 0;
     int firstValuator = 0;
@@ -413,14 +415,14 @@ ProcXTestFakeInput(ClientPtr client)
 
     switch(type) {
         case MotionNotify:
-            nevents = GetPointerEvents(xtest_evlist, dev, type, 0, flags,
-                            firstValuator, numValuators, valuators);
+            valuator_mask_set_range(&mask, firstValuator, numValuators, valuators);
+            nevents = GetPointerEvents(xtest_evlist, dev, type, 0, flags, &mask);
             break;
         case ButtonPress:
         case ButtonRelease:
+            valuator_mask_set_range(&mask, firstValuator, numValuators, valuators);
             nevents = GetPointerEvents(xtest_evlist, dev, type, ev->u.u.detail,
-                                       flags, firstValuator,
-                                       numValuators, valuators);
+                                       flags, &mask);
             break;
         case KeyPress:
         case KeyRelease:

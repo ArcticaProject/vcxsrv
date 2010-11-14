@@ -58,8 +58,7 @@ conical_gradient_get_scanline_32 (pixman_image_t *image,
                                   uint32_t *      buffer,
                                   const uint32_t *mask)
 {
-    source_image_t *source = (source_image_t *)image;
-    gradient_t *gradient = (gradient_t *)source;
+    gradient_t *gradient = (gradient_t *)image;
     conical_gradient_t *conical = (conical_gradient_t *)image;
     uint32_t       *end = buffer + width;
     pixman_gradient_walker_t walker;
@@ -71,9 +70,9 @@ conical_gradient_get_scanline_32 (pixman_image_t *image,
     double ry = y + 0.5;
     double rz = 1.;
 
-    _pixman_gradient_walker_init (&walker, gradient, source->common.repeat);
+    _pixman_gradient_walker_init (&walker, gradient, image->common.repeat);
 
-    if (source->common.transform)
+    if (image->common.transform)
     {
 	pixman_vector_t v;
 
@@ -82,19 +81,19 @@ conical_gradient_get_scanline_32 (pixman_image_t *image,
 	v.vector[1] = pixman_int_to_fixed (y) + pixman_fixed_1 / 2;
 	v.vector[2] = pixman_fixed_1;
 
-	if (!pixman_transform_point_3d (source->common.transform, &v))
+	if (!pixman_transform_point_3d (image->common.transform, &v))
 	    return;
 
-	cx = source->common.transform->matrix[0][0] / 65536.;
-	cy = source->common.transform->matrix[1][0] / 65536.;
-	cz = source->common.transform->matrix[2][0] / 65536.;
+	cx = image->common.transform->matrix[0][0] / 65536.;
+	cy = image->common.transform->matrix[1][0] / 65536.;
+	cz = image->common.transform->matrix[2][0] / 65536.;
 
 	rx = v.vector[0] / 65536.;
 	ry = v.vector[1] / 65536.;
 	rz = v.vector[2] / 65536.;
 
 	affine =
-	    source->common.transform->matrix[2][0] == 0 &&
+	    image->common.transform->matrix[2][0] == 0 &&
 	    v.vector[2] == pixman_fixed_1;
     }
 

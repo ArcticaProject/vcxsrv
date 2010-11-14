@@ -740,6 +740,33 @@ AC_SUBST(HAVE_PTHREAD_SETSPECIFIC)
 AC_SUBST(PTHREAD_LDFLAGS)
 AC_SUBST(PTHREAD_LIBS)
 
+dnl =====================================
+dnl __attribute__((constructor))
+
+support_for_attribute_constructor=no
+
+AC_MSG_CHECKING(for __attribute__((constructor)))
+AC_LINK_IFELSE([
+#if defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7))
+/* attribute 'constructor' is supported since gcc 2.7, but some compilers
+ * may only pretend to be gcc, so let's try to actually use it
+ */
+static int x = 1;
+static void __attribute__((constructor)) constructor_function () { x = 0; }
+int main (void) { return x; }
+#else
+#error not gcc or gcc version is older than 2.7
+#endif
+], support_for_attribute_constructor=yes)
+
+if test x$support_for_attribute_constructor = xyes; then
+   AC_DEFINE([TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR],
+             [],[Whether the tool chain supports __attribute__((constructor))])
+fi
+
+AC_MSG_RESULT($support_for_attribute_constructor)
+AC_SUBST(TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR)
+
 AC_OUTPUT([pixman-1.pc
            pixman-1-uninstalled.pc
            Makefile

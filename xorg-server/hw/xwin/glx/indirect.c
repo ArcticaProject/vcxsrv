@@ -682,10 +682,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
         unsigned int buffer_size = __glXGetExtensionString(screen->glx_enable_bits, NULL);
         if (buffer_size > 0)
           {
-            if (screen->base.GLXextensions != NULL)
-              {
-                free(screen->base.GLXextensions);
-              }
+            free(screen->base.GLXextensions);
 
             screen->base.GLXextensions = xnfalloc(buffer_size);
             __glXGetExtensionString(screen->glx_enable_bits, screen->base.GLXextensions);

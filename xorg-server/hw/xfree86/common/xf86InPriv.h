@@ -37,9 +37,6 @@
 extern InputDriverPtr *xf86InputDriverList;
 extern int xf86NumInputDrivers;
 
-/* xf86Xinput.c */
-int xf86ActivateDevice(InputInfoPtr pInfo);
-
 /* xf86Helper.c */
 InputDriverPtr xf86LookupInputDriver(const char *name);
 

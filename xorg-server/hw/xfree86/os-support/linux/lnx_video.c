@@ -530,6 +530,8 @@ xf86EnableIO(void)
 		return FALSE;
         }
 # if !defined(__alpha__)
+	/* XXX: this is actually not trapping anything because of iopl(3)
+	 * above */
 	ioperm(0x40,4,0); /* trap access to the timer chip */
 	ioperm(0x60,4,0); /* trap access to the keyboard controller */
 # endif

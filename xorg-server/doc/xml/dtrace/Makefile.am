@@ -25,10 +25,12 @@ XML_FILES = Xserver-DTrace.xml
 
 include ../xmlrules.in
 
+if ENABLE_DOCS
 if XSERVER_DTRACE
 doc_DATA = $(BUILT_DOC_FILES)
 else
 noinst_DATA = $(BUILT_DOC_FILES)
+endif
 endif
 
 CLEANFILES = $(CLEAN_DOC_FILES)

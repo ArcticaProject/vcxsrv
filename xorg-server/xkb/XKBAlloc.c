@@ -212,10 +212,8 @@ XkbNamesPtr	names;
 	    register XkbKeyTypePtr	type;
 	    type= map->types;
 	    for (i=0;i<map->num_types;i++,type++) {
-		if (type->level_names!=NULL) {
-		    free(type->level_names);
-		    type->level_names= NULL;
-		}
+		free(type->level_names);
+		type->level_names = NULL;
 	    }
 	}
     }

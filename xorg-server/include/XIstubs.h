@@ -26,20 +26,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef XI_STUBS_H
 #define XI_STUBS_H 1
 
-extern _X_EXPORT void
-CloseInputDevice (
-	DeviceIntPtr           /* d */,
-	ClientPtr              /* client */);
-
-extern _X_EXPORT void
-AddOtherInputDevices (void);
-
-extern _X_EXPORT void
-OpenInputDevice (
-	DeviceIntPtr           /* dev */,
-	ClientPtr              /* client */,
-	int *                  /* status */);
-
 extern _X_EXPORT int
 SetDeviceMode (
 	ClientPtr              /* client */,

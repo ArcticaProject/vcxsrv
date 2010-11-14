@@ -203,6 +203,7 @@ extern _X_EXPORT pointer xf86AddGeneralHandler(int fd, InputHandlerProc proc, po
 extern _X_EXPORT int xf86RemoveGeneralHandler(pointer handler);
 extern _X_EXPORT void xf86DisableGeneralHandler(pointer handler);
 extern _X_EXPORT void xf86EnableGeneralHandler(pointer handler);
+extern _X_EXPORT InputHandlerProc xf86SetConsoleHandler(InputHandlerProc handler, pointer data);
 extern _X_EXPORT void xf86InterceptSignals(int *signo);
 extern _X_EXPORT void xf86InterceptSigIll(void (*sigillhandler)(void));
 extern _X_EXPORT Bool xf86EnableVTSwitch(Bool new);

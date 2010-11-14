@@ -814,7 +814,7 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 void
 InitInput(int argc, char **argv)
 {
-    IDevPtr* pDev;
+    InputInfoPtr* pDev;
     DeviceIntPtr dev;
 
     xf86Info.vtRequestsPending = FALSE;

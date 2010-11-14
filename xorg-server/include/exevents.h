@@ -48,7 +48,8 @@ extern _X_EXPORT void InitValuatorAxisStruct(
 	int                    /* maxval */,
 	int                    /* resolution */,
 	int                    /* min_res */,
-	int                    /* max_res */);
+	int                    /* max_res */,
+	int                    /* mode */);
 
 /* Input device properties */
 extern _X_EXPORT void XIDeleteAllDeviceProperties(
@@ -145,10 +146,6 @@ typedef struct _GrabParameters {
     unsigned int        modifiers;
 } GrabParameters;
 
-
-extern void
-RegisterOtherDevice (
-	DeviceIntPtr           /* device */);
 
 extern int
 UpdateDeviceState (

@@ -124,8 +124,17 @@ xf86EnableIO()
 	FatalError("xf86EnableIO: ioperm() failed (%s)\n", strerror(errno));
 	return FALSE;
     }
+#if 0
+    /*
+     * Trapping disabled for now, as some VBIOSes (mga-g450 notably) use these
+     * ports, and the int10 wrapper is not emulating them. (Note that it's
+     * effectively what happens in the Linux variant too, as iopl() is used
+     * there, making the ioperm() meaningless.)
+     *
+     * Reenable this when int10 gets fixed.  */
     ioperm(0x40,4,0); /* trap access to the timer chip */
     ioperm(0x60,4,0); /* trap access to the keyboard controller */
+#endif
     return TRUE;
 }
 	

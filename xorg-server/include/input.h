@@ -157,6 +157,8 @@ typedef struct _DeviceRec {
     Bool	on;			/* used by DDX to keep state */
 } DeviceRec, *DevicePtr;
 
+typedef struct _ValuatorMask ValuatorMask;
+
 typedef struct {
     int			click, bell, bell_pitch, bell_duration;
     Bool		autoRepeat;
@@ -273,12 +275,6 @@ extern _X_EXPORT int RemoveDevice(
     BOOL /* sendevent */);
 
 extern _X_EXPORT int NumMotionEvents(void);
-
-extern void RegisterPointerDevice(
-    DeviceIntPtr /*device*/);
-
-extern void RegisterKeyboardDevice(
-    DeviceIntPtr /*device*/);
 
 extern _X_EXPORT int dixLookupDevice(
     DeviceIntPtr *         /* dev */,
@@ -451,9 +447,7 @@ extern _X_EXPORT int GetPointerEvents(
     int type,
     int buttons,
     int flags,
-    int first_valuator,
-    int num_valuators,
-    int *valuators);
+    const ValuatorMask *mask);
 
 extern _X_EXPORT int GetKeyboardEvents(
     EventListPtr events,
@@ -466,17 +460,13 @@ extern int GetKeyboardValuatorEvents(
     DeviceIntPtr pDev,
     int type,
     int key_code,
-    int first_valuator,
-    int num_valuator,
-    int *valuators);
+    const ValuatorMask *mask);
 
 extern int GetProximityEvents(
     EventListPtr events,
     DeviceIntPtr pDev,
     int type,
-    int first_valuator,
-    int num_valuators,
-    int *valuators);
+    const ValuatorMask *mask);
 
 extern void PostSyntheticMotion(
     DeviceIntPtr pDev,
@@ -556,8 +546,22 @@ extern _X_EXPORT void DDXRingBell(
     int pitch,
     int duration);
 
+#define VALUATOR_MODE_ALL_AXES -1
+extern _X_HIDDEN int valuator_get_mode(DeviceIntPtr dev, int axis);
+extern _X_HIDDEN void valuator_set_mode(DeviceIntPtr dev, int axis, int mode);
+
 /* Set to TRUE by default - os/utils.c sets it to FALSE on user request,
    xfixes/cursor.c uses it to determine if the cursor is enabled */
 extern Bool EnableCursor;
+
+/* For server-internal functions, see inpututil.h */
+extern _X_EXPORT ValuatorMask  *valuator_mask_new(int num_valuators);
+extern _X_EXPORT void valuator_mask_set_range(ValuatorMask *mask,
+                                       int first_valuator, int num_valuators,
+                                       const int* valuators);
+extern _X_EXPORT void valuator_mask_set(ValuatorMask *mask,
+                                        int valuator,
+                                        int data);
+extern _X_EXPORT void valuator_mask_zero(ValuatorMask *mask);
 
 #endif /* INPUT_H */

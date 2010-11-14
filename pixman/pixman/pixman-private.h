@@ -20,7 +20,6 @@
  * Images
  */
 typedef struct image_common image_common_t;
-typedef struct source_image source_image_t;
 typedef struct solid_fill solid_fill_t;
 typedef struct gradient gradient_t;
 typedef struct linear_gradient linear_gradient_t;
@@ -108,14 +107,9 @@ struct image_common
     pixman_format_code_t	extended_format_code;
 };
 
-struct source_image
-{
-    image_common_t common;
-};
-
 struct solid_fill
 {
-    source_image_t common;
+    image_common_t common;
     pixman_color_t color;
     
     uint32_t	   color_32;
@@ -124,10 +118,9 @@ struct solid_fill
 
 struct gradient
 {
-    source_image_t          common;
+    image_common_t	    common;
     int                     n_stops;
     pixman_gradient_stop_t *stops;
-    int                     stop_range;
 };
 
 struct linear_gradient
@@ -193,7 +186,6 @@ union pixman_image
     image_type_t       type;
     image_common_t     common;
     bits_image_t       bits;
-    source_image_t     source;
     gradient_t         gradient;
     linear_gradient_t  linear;
     conical_gradient_t conical;
@@ -561,14 +553,13 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_NEAREST_FILTER		(1 << 11)
 #define FAST_PATH_HAS_TRANSFORM			(1 << 12)
 #define FAST_PATH_IS_OPAQUE			(1 << 13)
-#define FAST_PATH_NEEDS_WORKAROUND		(1 << 14)
+#define FAST_PATH_NO_NORMAL_REPEAT		(1 << 14)
 #define FAST_PATH_NO_NONE_REPEAT		(1 << 15)
 #define FAST_PATH_SAMPLES_COVER_CLIP		(1 << 16)
 #define FAST_PATH_X_UNIT_POSITIVE		(1 << 17)
 #define FAST_PATH_AFFINE_TRANSFORM		(1 << 18)
 #define FAST_PATH_Y_UNIT_ZERO			(1 << 19)
 #define FAST_PATH_BILINEAR_FILTER		(1 << 20)
-#define FAST_PATH_NO_NORMAL_REPEAT		(1 << 21)
 
 #define FAST_PATH_PAD_REPEAT						\
     (FAST_PATH_NO_NONE_REPEAT		|				\

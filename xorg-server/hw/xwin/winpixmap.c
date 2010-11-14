@@ -163,11 +163,8 @@ winDestroyPixmapNativeGDI (PixmapPtr pPixmap)
   if (pPixmapPriv->hBitmap) DeleteObject (pPixmapPriv->hBitmap);
   
   /* Free the bitmap info header memory */
-  if (pPixmapPriv->pbmih != NULL)
-    {
-      free (pPixmapPriv->pbmih);
-      pPixmapPriv->pbmih = NULL;
-    }
+  free(pPixmapPriv->pbmih);
+  pPixmapPriv->pbmih = NULL;
 
   /* Free the pixmap memory */
   free (pPixmap);

@@ -952,11 +952,9 @@ SetAccelerationProfile(
     if(profile == NULL && profile_num != PROFILE_UNINITIALIZE)
 	return FALSE;
 
-    if(vel->profile_private != NULL){
-        /* Here one could free old profile-private data */
-        free(vel->profile_private);
-        vel->profile_private = NULL;
-    }
+    /* Here one could free old profile-private data */
+    free(vel->profile_private);
+    vel->profile_private = NULL;
     /* Here one could init profile-private data */
     vel->Profile = profile;
     vel->statistics.profile_number = profile_num;

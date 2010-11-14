@@ -273,72 +273,6 @@ xf86AllocateScrnInfoPrivateIndex(void)
     return idx;
 }
 
-/* Allocate a new InputInfoRec and append it to the tail of xf86InputDevs. */
-InputInfoPtr
-xf86AllocateInput(InputDriverPtr drv, int flags)
-{
-    InputInfoPtr new, *prev = NULL;
-
-    if (!(new = calloc(sizeof(InputInfoRec), 1)))
-	return NULL;
-
-    new->drv = drv;
-    new->module = DuplicateModule(drv->module, NULL);
-
-    for (prev = &xf86InputDevs; *prev; prev = &(*prev)->next)
-        ;
-
-    *prev = new;
-    new->next = NULL;
-
-    return new;
-}
-
-
-/*
- * Remove an entry from xf86InputDevs.  Ideally it should free all allocated
- * data.  To do this properly may require a driver hook.
- */
-
-void
-xf86DeleteInput(InputInfoPtr pInp, int flags)
-{
-    InputInfoPtr p;
-
-    /* First check if the inputdev is valid. */
-    if (pInp == NULL)
-	return;
-
-#if 0
-    /* If a free function is defined, call it here. */
-    if (pInp->free)
-	pInp->free(pInp, 0);
-#endif
-
-    if (pInp->module)
-	UnloadModule(pInp->module);
-
-    /* This should *really* be handled in drv->UnInit(dev) call instead, but
-     * if the driver forgets about it make sure we free it or at least crash
-     * with flying colors */
-    free(pInp->private);
-
-    FreeInputAttributes(pInp->attrs);
-
-    /* Remove the entry from the list. */
-    if (pInp == xf86InputDevs)
-	xf86InputDevs = pInp->next;
-    else {
-	p = xf86InputDevs;
-	while (p && p->next != pInp)
-	    p = p->next;
-	if (p)
-	    p->next = pInp->next;
-	/* Else the entry wasn't in the xf86InputDevs list (ignore this). */
-    }
-    free(pInp);
-}
-
 Bool
 xf86AddPixFormat(ScrnInfoPtr pScrn, int depth, int bpp, int pad)
 {
@@ -1247,6 +1181,43 @@ xf86DrvMsg(int scrnIndex, MessageType type, const char *format, ...)
     va_end(ap);
 }
 
+/* Print input driver messages in the standard format of
+   <driver>: <device name>: <message> */
+void
+xf86VIDrvMsgVerb(InputInfoPtr dev, MessageType type, int verb, const char *format,
+		 va_list args)
+{
+    char *msg;
+
+    msg = Xprintf("%s: %s: %s", dev->drv->driverName, dev->name, format);
+    LogVMessageVerb(type, verb, "%s", msg);
+    free(msg);
+}
+
+/* Print input driver message, with verbose level specified directly */
+void
+xf86IDrvMsgVerb(InputInfoPtr dev, MessageType type, int verb, const char *format,
+	       ...)
+{
+    va_list ap;
+
+    va_start(ap, format);
+    xf86VIDrvMsgVerb(dev, type, verb, format, ap);
+    va_end(ap);
+}
+
+/* Print input driver messages, with verbose level of 1 (default) */
+void
+xf86IDrvMsg(InputInfoPtr dev, MessageType type, const char *format, ...)
+{
+    va_list ap;
+
+    va_start(ap, format);
+    xf86VIDrvMsgVerb(dev, type, 1, format, ap);
+    va_end(ap);
+}
+
+
 /* Print non-driver messages with verbose level specified directly */
 void
 xf86MsgVerb(MessageType type, int verb, const char *format, ...)
@@ -2070,7 +2041,7 @@ xf86IsUnblank(int mode)
 }
 
 void
-xf86MotionHistoryAllocate(LocalDevicePtr local)
+xf86MotionHistoryAllocate(InputInfoPtr pInfo)
 {
-    AllocateMotionHistory(local->dev);
+    AllocateMotionHistory(pInfo->dev);
 }

@@ -7,7 +7,7 @@ amiga ataritt chicony \
 dell everex fujitsu \
 hhk hp keytronic kinesis \
 macintosh microsoft nec nokia \
-northgate pc sony thinkpad \
+northgate pc sanwa sony thinkpad \
 sun typematrix winbook README
 
 dir_data = $(dist_geom_DATA)

@@ -84,6 +84,7 @@ extern _X_EXPORT pointer xf86NewOption(char *name, char *value );
 extern _X_EXPORT pointer xf86NextOption(pointer list );
 extern _X_EXPORT pointer xf86OptionListCreate(const char **options, int count, int used);
 extern _X_EXPORT pointer xf86OptionListMerge(pointer head, pointer tail);
+extern _X_EXPORT pointer xf86OptionListDuplicate(pointer list);
 extern _X_EXPORT void xf86OptionListFree(pointer opt);
 extern _X_EXPORT char *xf86OptionName(pointer opt);
 extern _X_EXPORT char *xf86OptionValue(pointer opt);

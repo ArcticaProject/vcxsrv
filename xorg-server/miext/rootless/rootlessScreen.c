@@ -92,8 +92,7 @@ RootlessUpdateScreenPixmap(ScreenPtr pScreen)
     rowbytes = PixmapBytePad(pScreen->width, pScreen->rootDepth);
 
     if (s->pixmap_data_size < rowbytes) {
-        if (s->pixmap_data != NULL)
-            free(s->pixmap_data);
+        free(s->pixmap_data);
 
         s->pixmap_data_size = rowbytes;
         s->pixmap_data = malloc(s->pixmap_data_size);

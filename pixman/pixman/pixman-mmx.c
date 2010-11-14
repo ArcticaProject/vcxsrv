@@ -1921,8 +1921,8 @@ pixman_fill_mmx (uint32_t *bits,
         "movq		%7,	%4\n"
         "movq		%7,	%5\n"
         "movq		%7,	%6\n"
-	: "=y" (v1), "=y" (v2), "=y" (v3),
-	  "=y" (v4), "=y" (v5), "=y" (v6), "=y" (v7)
+	: "=&y" (v1), "=&y" (v2), "=&y" (v3),
+	  "=&y" (v4), "=&y" (v5), "=&y" (v6), "=y" (v7)
 	: "y" (vfill));
 #endif
 

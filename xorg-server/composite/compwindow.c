@@ -519,7 +519,7 @@ compCopyWindow (WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
 	RegionTranslate(prgnSrc,
 			  pWin->drawable.x - ptOldOrg.x,
 			  pWin->drawable.y - ptOldOrg.y);
-	DamageRegionAppend(&pWin->drawable, prgnSrc);
+	DamageDamageRegion(&pWin->drawable, prgnSrc);
     }
     cs->CopyWindow = pScreen->CopyWindow;
     pScreen->CopyWindow = compCopyWindow;
@@ -598,7 +598,7 @@ compSetRedirectBorderClip (WindowPtr pWin, RegionPtr pRegion)
     /*
      * Report that as damaged so it will be redrawn
      */
-    DamageRegionAppend(&pWin->drawable, &damage);
+    DamageDamageRegion(&pWin->drawable, &damage);
     RegionUninit(&damage);
     /*
      * Save the new border clip region

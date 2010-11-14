@@ -403,7 +403,7 @@ miPolyBuildPoly (
     i = top;
     j = StepAround (top, -1, count);
 
-    if (slopes[j].dy * slopes[i].dx > slopes[i].dy * slopes[j].dx)
+    if ((int64_t)slopes[j].dy * slopes[i].dx > (int64_t)slopes[i].dy * slopes[j].dx)
     {
 	clockwise = -1;
 	slopeoff = -1;

@@ -122,10 +122,6 @@ InitInput (int argc, char *argv[])
 
   g_pwinPointer = AddInputDevice (serverClient, winMouseProc, TRUE);
   g_pwinKeyboard = AddInputDevice (serverClient, winKeybdProc, TRUE);
-  
-  RegisterPointerDevice (g_pwinPointer);
-  RegisterKeyboardDevice (g_pwinKeyboard);
-
   g_pwinPointer->name = strdup("Windows mouse");
   g_pwinKeyboard->name = strdup("Windows keyboard");
 

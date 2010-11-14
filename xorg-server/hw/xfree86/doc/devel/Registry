@@ -253,7 +253,6 @@ ReportDelay               I     I    ??
 ReportingMode             S     I    may be "raw" or "scaled"
 ScreenNumber              I     I    Screen number (for touch screen)
 SendCoreEvents            B     I    Send core events
-SendDragEvents            B     I    Send drag events
 StopBits                  I     I    Serial port stop bits
 SwapXY                    B     I    Swap the X and Y axes
 UntouchDelay              I     I    ??

@@ -449,6 +449,13 @@
     </model>
     <model>
       <configItem>
+        <name>htcdream</name>
+        <_description>HTC Dream</_description>
+        <vendor>HTC</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
         <name>kinesis</name>
         <_description>Kinesis</_description>
         <vendor>Kinesis</vendor>
@@ -897,6 +904,13 @@
     </model>
     <model>
       <configItem>
+        <name>sanwaskbkg3</name>
+        <description>Sanwa Supply SKB-KG3</description>
+        <vendor>Sanwa Supply Inc.</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
         <name>sk1300</name>
         <_description>SK-1300</_description>
 	<vendor>NEC</vendor>
@@ -1209,6 +1223,13 @@
         <_description>Creative Desktop Wireless 7000</_description>
         <vendor>Creative</vendor>
       </configItem>
+    </model>
+    <model>
+      <configItem>
+       <name>htcdream</name>
+       <_description>Htc Dream phone</_description>
+       <vendor>htc</vendor>
+     </configItem>
     </model>
   </modelList>
   <layoutList>
@@ -2954,6 +2975,12 @@
         </variant>
 	<variant>
           <configItem>
+            <name>kana86</name>
+            <_description>Kana 86</_description>
+          </configItem>
+	</variant>
+	<variant>
+          <configItem>
             <name>OADG109A</name>
             <_description>OADG 109A</_description>
           </configItem>
@@ -4518,6 +4545,130 @@
         <languageList><iso639Id>tsn</iso639Id></languageList>
       </configItem>
     </layout>
+    <layout>
+      <configItem>
+        <name>ph</name>
+        <_shortDescription>Phi</_shortDescription>
+        <_description>Philippines</_description>
+        <languageList><iso639Id>eng</iso639Id>
+                     <iso639Id>bik</iso639Id>
+                      <iso639Id>ceb</iso639Id>
+                      <iso639Id>fil</iso639Id>
+                      <iso639Id>hil</iso639Id>
+                      <iso639Id>ilo</iso639Id>
+                      <iso639Id>pam</iso639Id>
+                      <iso639Id>pag</iso639Id>
+                      <iso639Id>phi</iso639Id>
+                      <iso639Id>tgl</iso639Id>
+                      <iso639Id>war</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>qwerty-bay</name>
+            <_description>QWERTY (Baybayin)</_description>
+            <languageList><iso639Id>bik</iso639Id>
+                          <iso639Id>ceb</iso639Id>
+                          <iso639Id>fil</iso639Id>
+                          <iso639Id>hil</iso639Id>
+                          <iso639Id>ilo</iso639Id>
+                          <iso639Id>pam</iso639Id>
+                          <iso639Id>pag</iso639Id>
+                          <iso639Id>phi</iso639Id>
+                          <iso639Id>tgl</iso639Id>
+                          <iso639Id>war</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>capewell-dvorak</name>
+            <_description>Capewell-Dvorak (Latin)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>capewell-dvorak-bay</name>
+            <_description>Capewell-Dvorak (Baybayin)</_description>
+            <languageList><iso639Id>bik</iso639Id>
+                          <iso639Id>ceb</iso639Id>
+                          <iso639Id>fil</iso639Id>
+                          <iso639Id>hil</iso639Id>
+                          <iso639Id>ilo</iso639Id>
+                          <iso639Id>pam</iso639Id>
+                          <iso639Id>pag</iso639Id>
+                          <iso639Id>phi</iso639Id>
+                          <iso639Id>tgl</iso639Id>
+                          <iso639Id>war</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>capewell-qwerf2k6</name>
+            <_description>Capewell-QWERF 2006 (Latin)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>capewell-qwerf2k6-bay</name>
+            <_description>Capewell-QWERF 2006 (Baybayin)</_description>
+            <languageList><iso639Id>bik</iso639Id>
+                          <iso639Id>ceb</iso639Id>
+                          <iso639Id>fil</iso639Id>
+                          <iso639Id>hil</iso639Id>
+                          <iso639Id>ilo</iso639Id>
+                          <iso639Id>pam</iso639Id>
+                          <iso639Id>pag</iso639Id>
+                          <iso639Id>phi</iso639Id>
+                          <iso639Id>tgl</iso639Id>
+                          <iso639Id>war</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>colemak</name>
+            <_description>Colemak (Latin)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>colemak-bay</name>
+            <_description>Colemak (Baybayin)</_description>
+            <languageList><iso639Id>bik</iso639Id>
+                          <iso639Id>ceb</iso639Id>
+                          <iso639Id>fil</iso639Id>
+                          <iso639Id>hil</iso639Id>
+                          <iso639Id>ilo</iso639Id>
+                          <iso639Id>pam</iso639Id>
+                          <iso639Id>pag</iso639Id>
+                          <iso639Id>phi</iso639Id>
+                          <iso639Id>tgl</iso639Id>
+                          <iso639Id>war</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>dvorak</name>
+            <_description>Dvorak (Latin)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>dvorak-bay</name>
+            <_description>Dvorak (Baybayin)</_description>
+            <languageList><iso639Id>bik</iso639Id>
+                          <iso639Id>ceb</iso639Id>
+                          <iso639Id>fil</iso639Id>
+                          <iso639Id>hil</iso639Id>
+                          <iso639Id>ilo</iso639Id>
+                          <iso639Id>pam</iso639Id>
+                          <iso639Id>pag</iso639Id>
+                          <iso639Id>phi</iso639Id>
+                          <iso639Id>tgl</iso639Id>
+                          <iso639Id>war</iso639Id></languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
   </layoutList>
   <optionList>
     <group allowMultipleSelection="true">
@@ -5302,6 +5453,12 @@
         <configItem>
           <name>shift:both_shiftlock</name>
           <description>Both Shift-Keys together toggle ShiftLock</description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>keypad:pointerkeys</name>
+          <_description>Toggle PointerKeys with Shift + NumLock.</_description>
         </configItem>
       </option>
     </group>

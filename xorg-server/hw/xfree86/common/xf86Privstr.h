@@ -96,7 +96,6 @@ typedef struct {
 #endif
     Bool		pmFlag;
     Log			log;
-    Bool		kbdCustomKeycodes;
     Bool		disableRandR;
     MessageType		randRFrom;
     Bool		aiglx;
@@ -108,8 +107,7 @@ typedef struct {
     MessageType		useDefaultFontPathFrom;
     Bool        ignoreABI;
 
-    Bool        allowEmptyInput;  /* Allow the server to start with no input
-                                   * devices. */
+    Bool        forceInputDevices; /* force xorg.conf or built-in input devices */
     Bool        autoAddDevices; /* Whether to succeed NIDR, or ignore. */
     Bool        autoEnableDevices; /* Whether to enable, or let the client
                                     * control. */

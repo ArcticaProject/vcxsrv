@@ -24,7 +24,7 @@ ma mao me \
 mk ml mm \
 mn mt mv \
 ng nl no np \
-pc pk pl pt \
+pc ph pk pl pt \
 ro rs ru \
 se si sk sn \
 sy th \

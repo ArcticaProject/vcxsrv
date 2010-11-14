@@ -215,11 +215,8 @@ fakeUnmapFramebuffer (KdScreenInfo *screen)
 {
     FakePriv		*priv = screen->card->driver;
     KdShadowFbFree (screen);
-    if (priv->base)
-    {
-	free (priv->base);
-	priv->base = 0;
-    }
+    free(priv->base);
+    priv->base = NULL;
     return TRUE;
 }
 

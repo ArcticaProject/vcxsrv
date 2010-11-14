@@ -376,6 +376,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         add_option(&options, "xkb_model", xkb_opts.model);
     if (xkb_opts.options)
         add_option(&options, "xkb_options", xkb_opts.options);
+    add_option(&options, "config_info", config_info);
 
     /* this isn't an error, but how else do you output something that the user can see? */
     LogMessage(X_INFO, "config/hal: Adding input device %s\n", name);
@@ -383,11 +384,6 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         LogMessage(X_ERROR, "config/hal: NewInputDeviceRequest failed (%d)\n", rc);
         dev = NULL;
         goto unwind;
-    }
-
-    for (; dev; dev = dev->next){
-        free(dev->config_info);
-        dev->config_info = strdup(config_info);
     }
 
 unwind:

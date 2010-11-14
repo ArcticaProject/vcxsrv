@@ -45,11 +45,6 @@
 
 	    See the evdev documentation for more information. 
     
-    You will probably want to add the following option to the ServerFlags of 
-    your xorg.conf:
-    
-        Option "AllowEmptyInput" "True"
-        
     FIXME: Support tablets too. 
     TODO: I think its fixed, can't test
     

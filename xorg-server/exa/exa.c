@@ -159,8 +159,7 @@ exaPixmapDirty (PixmapPtr pPix, int x1, int y1, int x2, int y2)
 	return;
 
     RegionInit(&region, &box, 1);
-    DamageRegionAppend(&pPix->drawable, &region);
-    DamageRegionProcessPending(&pPix->drawable);
+    DamageDamageRegion(&pPix->drawable, &region);
     RegionUninit(&region);
 }
 

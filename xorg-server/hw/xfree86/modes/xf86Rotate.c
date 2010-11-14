@@ -168,7 +168,7 @@ xf86CrtcDamageShadow (xf86CrtcPtr crtc)
     if (damage_box.x2 > pScreen->width) damage_box.x2 = pScreen->width;
     if (damage_box.y2 > pScreen->height) damage_box.y2 = pScreen->height;
     RegionInit(&damage_region, &damage_box, 1);
-    DamageRegionAppend (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
+    DamageDamageRegion (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
 			&damage_region);
     RegionUninit(&damage_region);
     crtc->shadowClear = TRUE;

@@ -285,14 +285,6 @@ sets the stack space limit of the server to the specified number of kilobytes.
 A value of zero makes the stack size as large as possible.  The default value
 of \-1 leaves the stack space limit unchanged.
 .TP 8
-.B \-logo
-turns on the X Window System logo display in the screen-saver.
-There is currently no way to change this from a client.
-.TP 8
-.B nologo
-turns off the X Window System logo display in the screen-saver.
-There is currently no way to change this from a client.
-.TP 8
 .B \-render 
 .BR default | mono | gray | color
 sets the color allocation policy that will be used by the render extension.

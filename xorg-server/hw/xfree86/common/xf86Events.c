@@ -600,6 +600,26 @@ xf86AddGeneralHandler(int fd, InputHandlerProc proc, pointer data)
     return ih;
 }
 
+/**
+ * Set the handler for the console's fd. Replaces (and returns) the previous
+ * handler or NULL, whichever appropriate.
+ * proc may be NULL if the server should not handle events on the console.
+ */
+InputHandlerProc
+xf86SetConsoleHandler(InputHandlerProc proc, pointer data)
+{
+    static InputHandlerProc handler = NULL;
+    InputHandlerProc old_handler = handler;
+
+    if (old_handler)
+        xf86RemoveGeneralHandler(old_handler);
+
+    xf86AddGeneralHandler(xf86Info.consoleFd, proc, data);
+    handler = proc;
+
+    return old_handler;
+}
+
 static void
 removeInputHandler(IHPtr ih)
 {

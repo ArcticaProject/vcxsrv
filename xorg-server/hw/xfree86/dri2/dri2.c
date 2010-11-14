@@ -828,11 +828,14 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
 	 * is moved to a crtc with a lower refresh rate, or a crtc that just
 	 * got enabled.
 	 */
-	if (!(*ds->GetMSC)(pDraw, &ust, &current_msc))
-	    pPriv->last_swap_target = 0;
+	if (ds->GetMSC) {
+	    if (!(*ds->GetMSC)(pDraw, &ust, &current_msc))
+		pPriv->last_swap_target = 0;
 
-	if (current_msc < pPriv->last_swap_target)
-	    pPriv->last_swap_target = current_msc;
+	    if (current_msc < pPriv->last_swap_target)
+		pPriv->last_swap_target = current_msc;
+
+	}
 
 	/*
 	 * Swap target for this swap is last swap target + swap interval since

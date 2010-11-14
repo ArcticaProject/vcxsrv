@@ -1147,3 +1147,48 @@ xkb_symbols "srp" {
 
   include "level3(ralt_switch)"
 };
+
+//based on http://upload.wikimedia.org/wikipedia/commons/1/18/T-Mobile_G1_launch_event_2.jpg
+partial alphanumeric_keys
+xkb_symbols "htcdream" {
+        include "inet(htcdream)"
+        name[Group1]= "USA - htcdream";
+
+        //second row
+        key <AD01> { [ q, Q, Tab, Tab ] };
+        key <AD02> { [ w, W, grave, grave ] };
+        key <AD03> { [ e, E, underscore, underscore ] };
+        key <AD04> { [ r, R, sterling, sterling ] };
+        key <AD05> { [ t, T, EuroSign, EuroSign ] };
+        key <AD06> { [ y, Y, division, division ] };
+        key <AD07> { [ u, U, multiply, multiply ] };
+        key <AD08> { [ i, I, minus, minus ] };
+        key <AD09> { [ o, O, plus, plus ] };
+        key <AD10> { [ p, P, equal, equal ] };
+
+        //third row
+        key <AC01> { [ a, A, NoSymbol, NoSymbol ] };
+        key <AC02> { [ s, S, bar, bar ] };
+        key <AC03> { [ d ,D, backslash, backslash ] };
+        key <AC04> { [ f, F, braceleft, braceleft ] };
+        key <AC05> { [ g, G, braceright, braceright ] };
+        key <AC06> { [ h, H, colon, colon ] };
+        key <AC07> { [ j, J, semicolon, semicolon ] };
+        key <AC08> { [ k, K, quotedbl, quotedbl ] };
+        key <AC09> { [ l, L, apostrophe, apostrophe ] };
+
+        //forth row
+        key <AB01> { [ z, Z, NoSymbol, NoSymbol ] };
+        key <AB02> { [ x, X, NoSymbol, NoSymbol ] };
+        key <AB03> { [ c, C, NoSymbol, NoSymbol ] };
+        key <AB04> { [ v, V, bracketleft, bracketleft ] };
+        key <AB05> { [ b, B, bracketright, bracketright ] };
+        key <AB06> { [ n, N, less, less ] };
+        key <AB07> { [ m, M, greater, greater ] };
+        key <AB08> { [ comma, comma, question, question ] };
+
+        //fifth row
+        key <FK15> { [ at, at, asciitilde, asciitilde ] };
+
+        include "level3(alt_switch)"
+};

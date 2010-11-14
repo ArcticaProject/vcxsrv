@@ -349,7 +349,7 @@ ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info, int axisnumber,
     info->value.frac = (int)(v->axisVal[axisnumber] * (1 << 16) * (1 << 16));
     info->resolution = v->axes[axisnumber].resolution;
     info->number = axisnumber;
-    info->mode = v->mode; /* Server doesn't have per-axis mode yet */
+    info->mode = valuator_get_mode(dev, axisnumber);
     info->sourceid = v->sourceid;
 
     if (!reportState)

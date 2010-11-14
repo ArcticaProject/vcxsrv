@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include "extinit.h" /* for XInputExtensionInit */
 #include "exglobals.h"
+#include "xkbsrv.h" /* for XkbInitPrivates */
 #include <glib.h>
 
 #include "protocol-common.h"

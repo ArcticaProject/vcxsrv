@@ -38,7 +38,6 @@ linear_gradient_classify (pixman_image_t *image,
                           int             width,
                           int             height)
 {
-    source_image_t *source = (source_image_t *)image;
     linear_gradient_t *linear = (linear_gradient_t *)image;
     pixman_vector_t v;
     pixman_fixed_32_32_t l;
@@ -48,19 +47,19 @@ linear_gradient_classify (pixman_image_t *image,
 
     class = SOURCE_IMAGE_CLASS_UNKNOWN;
 
-    if (source->common.transform)
+    if (image->common.transform)
     {
 	/* projective transformation */
-	if (source->common.transform->matrix[2][0] != 0 ||
-	    source->common.transform->matrix[2][1] != 0 ||
-	    source->common.transform->matrix[2][2] == 0)
+	if (image->common.transform->matrix[2][0] != 0 ||
+	    image->common.transform->matrix[2][1] != 0 ||
+	    image->common.transform->matrix[2][2] == 0)
 	{
 	    return class;
 	}
 
-	v.vector[0] = source->common.transform->matrix[0][1];
-	v.vector[1] = source->common.transform->matrix[1][1];
-	v.vector[2] = source->common.transform->matrix[2][2];
+	v.vector[0] = image->common.transform->matrix[0][1];
+	v.vector[1] = image->common.transform->matrix[1][1];
+	v.vector[2] = image->common.transform->matrix[2][2];
     }
     else
     {
@@ -104,26 +103,25 @@ linear_gradient_get_scanline_32 (pixman_image_t *image,
     pixman_fixed_32_32_t l;
     pixman_fixed_48_16_t dx, dy;
     gradient_t *gradient = (gradient_t *)image;
-    source_image_t *source = (source_image_t *)image;
     linear_gradient_t *linear = (linear_gradient_t *)image;
     uint32_t *end = buffer + width;
     pixman_gradient_walker_t walker;
 
-    _pixman_gradient_walker_init (&walker, gradient, source->common.repeat);
+    _pixman_gradient_walker_init (&walker, gradient, image->common.repeat);
 
     /* reference point is the center of the pixel */
     v.vector[0] = pixman_int_to_fixed (x) + pixman_fixed_1 / 2;
     v.vector[1] = pixman_int_to_fixed (y) + pixman_fixed_1 / 2;
     v.vector[2] = pixman_fixed_1;
 
-    if (source->common.transform)
+    if (image->common.transform)
     {
-	if (!pixman_transform_point_3d (source->common.transform, &v))
+	if (!pixman_transform_point_3d (image->common.transform, &v))
 	    return;
-	
-	unit.vector[0] = source->common.transform->matrix[0][0];
-	unit.vector[1] = source->common.transform->matrix[1][0];
-	unit.vector[2] = source->common.transform->matrix[2][0];
+
+	unit.vector[0] = image->common.transform->matrix[0][0];
+	unit.vector[1] = image->common.transform->matrix[1][0];
+	unit.vector[2] = image->common.transform->matrix[2][0];
     }
     else
     {

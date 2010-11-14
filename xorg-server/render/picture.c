@@ -1391,11 +1391,8 @@ SetPictureTransform (PicturePtr	    pPicture,
     }
     else
     {
-	if (pPicture->transform)
-	{
-	    free(pPicture->transform);
-	    pPicture->transform = 0;
-	}
+	free(pPicture->transform);
+	pPicture->transform = NULL;
     }
     pPicture->serialNumber |= GC_CHANGE_SERIAL_BIT;
 

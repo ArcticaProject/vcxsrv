@@ -1140,10 +1140,8 @@ FinishFrameResize(WindowPtr pWin, Bool gravity, int oldX, int oldY,
         }
     }
 
-    if (gResizeDeathBits != NULL) {
-        free(gResizeDeathBits);
-        gResizeDeathBits = NULL;
-    }
+    free(gResizeDeathBits);
+    gResizeDeathBits = NULL;
 
     if (gravity) {
         pScreen->CopyWindow = gResizeOldCopyWindowProc;

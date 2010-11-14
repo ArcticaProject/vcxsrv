@@ -1,5 +1,6 @@
 /*
  * Copyright © 2008 Mozilla Corporation
+ * Copyright © 2010 Nokia Corporation
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -326,5 +327,74 @@ pixman_asm_function pixman_composite_over_n_8_8888_asm_armv6
 	bne	5b
 0:	add	sp, sp, #28
 	pop	{r4, r5, r6, r7, r8, r9, r10, r11}
+	bx	lr
+.endfunc
+
+/*
+ * Note: This function is only using armv4t instructions (not even armv6),
+ *       but is scheduled for ARM Cortex-A8 pipeline. So it might need to
+ *       be split into a few variants, tuned for each microarchitecture.
+ *
+ * TODO: In order to get good performance on ARM9/ARM11 cores (which don't
+ * have efficient write combining), it needs to be changed to use 16-byte
+ * aligned writes using STM instruction.
+ */
+pixman_asm_function pixman_scaled_nearest_scanline_0565_0565_SRC_asm_armv6
+	W	.req	r0
+	DST	.req	r1
+	SRC	.req	r2
+	VX	.req	r3
+	UNIT_X	.req	ip
+	TMP1	.req	r4
+	TMP2	.req	r5
+	VXMASK	.req	r6
+
+	ldr	UNIT_X, [sp]
+	push	{r4, r5, r6, r7}
+	mvn	VXMASK, #1
+
+	/* define helper macro */
+	.macro	scale_2_pixels
+		ldrh	TMP1, [SRC, TMP1]
+		and	TMP2, VXMASK, VX, lsr #15
+		add	VX, VX, UNIT_X
+		strh	TMP1, [DST], #2
+
+		ldrh	TMP2, [SRC, TMP2]
+		and	TMP1, VXMASK, VX, lsr #15
+		add	VX, VX, UNIT_X
+		strh	TMP2, [DST], #2
+	.endm
+
+	/* now do the scaling */
+	and	TMP1, VXMASK, VX, lsr #15
+	add	VX, VX, UNIT_X
+	subs	W, #4
+	blt	2f
+1: /* main loop, process 4 pixels per iteration */
+	scale_2_pixels
+	scale_2_pixels
+	subs	W, W, #4
+	bge	1b
+2:
+	tst	W, #2
+	beq	2f
+	scale_2_pixels
+2:
+	tst	W, #1
+	ldrneh	TMP1, [SRC, TMP1]
+	strneh	TMP1, [DST], #2
+	/* cleanup helper macro */
+	.purgem	scale_2_pixels
+	.unreq	DST
+	.unreq	SRC
+	.unreq	W
+	.unreq	VX
+	.unreq	UNIT_X
+	.unreq	TMP1
+	.unreq	TMP2
+	.unreq	VXMASK
+	/* return */
+	pop	{r4, r5, r6, r7}
 	bx	lr
 .endfunc

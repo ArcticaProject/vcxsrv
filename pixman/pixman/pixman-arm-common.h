@@ -26,6 +26,8 @@
 #ifndef PIXMAN_ARM_COMMON_H
 #define PIXMAN_ARM_COMMON_H
 
+#include "pixman-fast-path.h"
+
 /* Define some macros which can expand into proxy functions between
  * ARM assembly optimized functions and the rest of pixman fast path API.
  *
@@ -269,5 +271,43 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                              src_line, src_stride,      \
                                              mask_line, mask_stride);   \
 }
+
+#define PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_DST(cputype, name, op,             \
+                                               src_type, dst_type)            \
+void                                                                          \
+pixman_scaled_nearest_scanline_##name##_##op##_asm_##cputype (                \
+                                                       int32_t        w,      \
+                                                       dst_type *     dst,    \
+                                                       src_type *     src,    \
+                                                       pixman_fixed_t vx,     \
+                                                       pixman_fixed_t unit_x);\
+                                                                              \
+static force_inline void                                                      \
+scaled_nearest_scanline_##cputype##_##name##_##op (dst_type *       pd,       \
+                                                   src_type *       ps,       \
+                                                   int32_t          w,        \
+                                                   pixman_fixed_t   vx,       \
+                                                   pixman_fixed_t   unit_x,   \
+                                                   pixman_fixed_t   max_vx)   \
+{                                                                             \
+    pixman_scaled_nearest_scanline_##name##_##op##_asm_##cputype (w, pd, ps,  \
+                                                                  vx, unit_x);\
+}                                                                             \
+                                                                              \
+FAST_NEAREST_MAINLOOP (cputype##_##name##_cover_##op,                         \
+                       scaled_nearest_scanline_##cputype##_##name##_##op,     \
+                       src_type, dst_type, COVER)                             \
+FAST_NEAREST_MAINLOOP (cputype##_##name##_none_##op,                          \
+                       scaled_nearest_scanline_##cputype##_##name##_##op,     \
+                       src_type, dst_type, NONE)                              \
+FAST_NEAREST_MAINLOOP (cputype##_##name##_pad_##op,                           \
+                       scaled_nearest_scanline_##cputype##_##name##_##op,     \
+                       src_type, dst_type, PAD)
+
+/* Provide entries for the fast path table */
+#define PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH(op,s,d,func)                      \
+    SIMPLE_NEAREST_FAST_PATH_COVER (op,s,d,func),                             \
+    SIMPLE_NEAREST_FAST_PATH_NONE (op,s,d,func),                              \
+    SIMPLE_NEAREST_FAST_PATH_PAD (op,s,d,func)
 
 #endif

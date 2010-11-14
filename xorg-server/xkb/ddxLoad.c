@@ -267,8 +267,7 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 		strncpy(nameRtrn,keymap,nameRtrnLen);
 		nameRtrn[nameRtrnLen-1]= '\0';
 	    }
-            if (buf != NULL)
-                free(buf);
+            free(buf);
 	    return TRUE;
 	}
 	else
@@ -287,8 +286,7 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
     }
     if (nameRtrn)
 	nameRtrn[0]= '\0';
-    if (buf != NULL)
-        free(buf);
+    free(buf);
     return FALSE;
 }
 

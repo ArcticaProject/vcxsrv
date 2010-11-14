@@ -19,7 +19,6 @@ cat > sdksyms.c << EOF
 #include "mipict.h"
 #include "glyphstr.h"
 #include "picturestr.h"
-#include "renderedge.h"
 
 
 /* fb/Makefile.am -- module */

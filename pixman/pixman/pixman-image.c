@@ -47,8 +47,6 @@ _pixman_init_gradient (gradient_t *                  gradient,
 
     gradient->n_stops = n_stops;
 
-    gradient->stop_range = 0xffff;
-
     return TRUE;
 }
 
@@ -238,54 +236,27 @@ _pixman_image_reset_clip_region (pixman_image_t *image)
     image->common.have_clip_region = FALSE;
 }
 
-static pixman_bool_t out_of_bounds_workaround = TRUE;
-
-/* Old X servers rely on out-of-bounds accesses when they are asked
- * to composite with a window as the source. They create a pixman image
- * pointing to some bogus position in memory, but then they set a clip
- * region to the position where the actual bits are.
+/* Executive Summary: This function is a no-op that only exists
+ * for historical reasons.
+ *
+ * There used to be a bug in the X server where it would rely on
+ * out-of-bounds accesses when it was asked to composite with a
+ * window as the source. It would create a pixman image pointing
+ * to some bogus position in memory, but then set a clip region
+ * to the position where the actual bits were.
  *
  * Due to a bug in old versions of pixman, where it would not clip
  * against the image bounds when a clip region was set, this would
- * actually work. So by default we allow certain out-of-bound access
- * to happen unless explicitly disabled.
+ * actually work. So when the pixman bug was fixed, a workaround was
+ * added to allow certain out-of-bound accesses. This function disabled
+ * those workarounds.
  *
- * Fixed X servers should call this function to disable the workaround.
+ * Since 0.21.2, pixman doesn't do these workarounds anymore, so now
+ * this function is a no-op.
  */
 PIXMAN_EXPORT void
 pixman_disable_out_of_bounds_workaround (void)
 {
-    out_of_bounds_workaround = FALSE;
-}
-
-static pixman_bool_t
-source_image_needs_out_of_bounds_workaround (bits_image_t *image)
-{
-    if (image->common.clip_sources                      &&
-        image->common.repeat == PIXMAN_REPEAT_NONE      &&
-	image->common.have_clip_region			&&
-        out_of_bounds_workaround)
-    {
-	if (!image->common.client_clip)
-	{
-	    /* There is no client clip, so if the clip region extends beyond the
-	     * drawable geometry, it must be because the X server generated the
-	     * bogus clip region.
-	     */
-	    const pixman_box32_t *extents =
-		pixman_region32_extents (&image->common.clip_region);
-
-	    if (extents->x1 >= 0 && extents->x2 <= image->width &&
-		extents->y1 >= 0 && extents->y2 <= image->height)
-	    {
-		return FALSE;
-	    }
-	}
-
-	return TRUE;
-    }
-
-    return FALSE;
 }
 
 static void
@@ -420,9 +391,6 @@ compute_image_info (pixman_image_t *image)
 		flags |= FAST_PATH_IS_OPAQUE;
 	}
 
-	if (source_image_needs_out_of_bounds_workaround (&image->bits))
-	    flags |= FAST_PATH_NEEDS_WORKAROUND;
-
 	if (image->bits.read_func || image->bits.write_func)
 	    flags &= ~FAST_PATH_NO_ACCESSORS;
 
@@ -430,8 +398,23 @@ compute_image_info (pixman_image_t *image)
 	    flags &= ~FAST_PATH_NARROW_FORMAT;
 	break;
 
-    case LINEAR:
     case RADIAL:
+	code = PIXMAN_unknown;
+
+	/*
+	 * As explained in pixman-radial-gradient.c, every point of
+	 * the plane has a valid associated radius (and thus will be
+	 * colored) if and only if a is negative (i.e. one of the two
+	 * circles contains the other one).
+	 */
+
+        if (image->radial.a >= 0)
+	    break;
+
+	/* Fall through */
+
+    case CONICAL:
+    case LINEAR:
 	code = PIXMAN_unknown;
 
 	if (image->common.repeat != PIXMAN_REPEAT_NONE)

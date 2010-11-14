@@ -17,8 +17,6 @@ if DGA
 DGASOURCES = xf86DGA.c
 endif
 
-XISOURCES = xf86Xinput.c xisb.c
-XISDKINCS = xf86Xinput.h xisb.h
 RANDRSOURCES = xf86RandR.c
 
 BUSSOURCES = xf86pciBus.c xf86fbBus.c xf86noBus.c $(SBUS_SOURCES)

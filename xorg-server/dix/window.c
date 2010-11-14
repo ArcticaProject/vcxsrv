@@ -137,6 +137,8 @@ Equipment Corporation.
  *    ChangeWindowDeviceCursor
  ******/
 
+Bool bgNoneRoot = FALSE;
+
 static unsigned char _back_lsb[4] = {0x88, 0x22, 0x44, 0x11};
 static unsigned char _back_msb[4] = {0x11, 0x44, 0x22, 0x88};
 
@@ -462,6 +464,10 @@ InitRootWindow(WindowPtr pWin)
 
     if (party_like_its_1989) {
         MakeRootTile(pWin);
+        backFlag |= CWBackPixmap;
+    } else if (pScreen->canDoBGNoneRoot && bgNoneRoot) {
+        pWin->backgroundState = XaceBackgroundNoneState(pWin);
+        pWin->background.pixel = pScreen->whitePixel;
         backFlag |= CWBackPixmap;
     } else {
 	if (whiteRoot)
@@ -950,6 +956,26 @@ DestroySubwindows(WindowPtr pWin, ClientPtr client)
     return Success;
 }
 
+static void
+SetRootWindowBackground(WindowPtr pWin, ScreenPtr pScreen, Mask *index2)
+{
+    /* following the protocol: "Changing the background of a root window to
+     * None or ParentRelative restores the default background pixmap" */
+    if (bgNoneRoot) {
+	pWin->backgroundState = XaceBackgroundNoneState(pWin);
+	pWin->background.pixel = pScreen->whitePixel;
+    }
+    else if (party_like_its_1989)
+	MakeRootTile(pWin);
+    else {
+	if (whiteRoot)
+	    pWin->background.pixel = pScreen->whitePixel;
+	else
+	    pWin->background.pixel = pScreen->blackPixel;
+	*index2 = CWBackPixel;
+    }
+}
+
 /*****
  *  ChangeWindowAttributes
  *   
@@ -999,7 +1025,7 @@ ChangeWindowAttributes(WindowPtr pWin, Mask vmask, XID *vlist, ClientPtr client)
 		if (pWin->backgroundState == BackgroundPixmap)
 		    (*pScreen->DestroyPixmap)(pWin->background.pixmap);
 		if (!pWin->parent)
-		    MakeRootTile(pWin);
+		    SetRootWindowBackground(pWin, pScreen, &index2);
 		else {
 		    pWin->backgroundState = XaceBackgroundNoneState(pWin);
 		    pWin->background.pixel = pScreen->whitePixel;
@@ -1016,7 +1042,7 @@ ChangeWindowAttributes(WindowPtr pWin, Mask vmask, XID *vlist, ClientPtr client)
 		if (pWin->backgroundState == BackgroundPixmap)
 		    (*pScreen->DestroyPixmap)(pWin->background.pixmap);
 		if (!pWin->parent)
-		    MakeRootTile(pWin);
+		    SetRootWindowBackground(pWin, pScreen, &index2);
 		else
 		    pWin->backgroundState = ParentRelative;
 		borderRelative = TRUE;
@@ -3087,13 +3113,6 @@ SendVisibilityNotify(WindowPtr pWin)
 }
 
 #define RANDOM_WIDTH 32
-
-#ifndef NOLOGOHACK
-static void DrawLogo(
-    WindowPtr pWin
-);
-#endif
-
 int
 dixSaveScreens(ClientPtr client, int on, int mode)
 {
@@ -3155,18 +3174,10 @@ dixSaveScreens(ClientPtr client, int on, int mode)
 		 * for the root window, so miPaintWindow works
 		 */
 		screenIsSaved = SCREEN_SAVER_OFF;
-#ifndef NOLOGOHACK
-		if (logoScreenSaver)
-		    (*pWin->drawable.pScreen->ClearToBackground)(pWin, 0, 0, 0, 0, FALSE);
-#endif
 		(*pWin->drawable.pScreen->MoveWindow)(pWin,
 			   (short)(-(rand() % RANDOM_WIDTH)),
 			   (short)(-(rand() % RANDOM_WIDTH)),
 			   pWin->nextSib, VTMove);
-#ifndef NOLOGOHACK
-		if (logoScreenSaver)
-		    DrawLogo(pWin);
-#endif
 		screenIsSaved = SCREEN_SAVER_ON;
 	    }
 	    /*
@@ -3324,10 +3335,6 @@ TileScreenSaver(ScreenPtr pScreen, int kind)
 	(*pWin->drawable.pScreen->ChangeWindowAttributes)(pWin, CWBackPixmap);
     }
     MapWindow(pWin, serverClient);
-#ifndef NOLOGOHACK
-    if (kind == SCREEN_IS_TILED && logoScreenSaver)
-	DrawLogo(pWin);
-#endif
     return TRUE;
 }
 
@@ -3673,184 +3680,3 @@ WindowParentHasDeviceCursor(WindowPtr pWin,
     }
     return FALSE;
 }
-
-#ifndef NOLOGOHACK
-static void
-DrawLogo(WindowPtr pWin)
-{
-    DrawablePtr pDraw;
-    ScreenPtr pScreen;
-    int x, y;
-    unsigned int width, height, size;
-    GC *pGC;
-    int rc, thin, gap, d31;
-    DDXPointRec poly[4];
-    ChangeGCVal fore[2], back[2];
-    xrgb rgb[2];
-    BITS32 fmask, bmask;
-    ColormapPtr cmap;
-
-    pDraw = (DrawablePtr)pWin;
-    pScreen = pDraw->pScreen;
-    x = -pWin->origin.x;
-    y = -pWin->origin.y;
-    width = pScreen->width;
-    height = pScreen->height;
-    pGC = GetScratchGC(pScreen->rootDepth, pScreen);
-    if (!pGC)
-	return;
-
-    if ((rand() % 100) <= 17) /* make the probability for white fairly low */
-	fore[0].val = pScreen->whitePixel;
-    else
-	fore[0].val = pScreen->blackPixel;
-    if (pWin->backgroundState == BackgroundPixel) {
-	rc = dixLookupResourceByType((pointer *)&cmap, wColormap(pWin),
-				     RT_COLORMAP, serverClient, DixReadAccess);
-	if (rc == Success) {
-	    Pixel querypixels[2];
-
-	    querypixels[0] = fore[0].val;
-	    querypixels[1] = pWin->background.pixel;
-	    QueryColors(cmap, 2, querypixels, rgb, serverClient);
-	    if ((rgb[0].red == rgb[1].red) &&
-		(rgb[0].green == rgb[1].green) &&
-		(rgb[0].blue == rgb[1].blue)) {
-		if (fore[0].val == pScreen->blackPixel)
-		    fore[0].val = pScreen->whitePixel;
-		else
-		    fore[0].val = pScreen->blackPixel;
-	    }
-	}
-    }
-    fore[1].val = FillSolid;
-    fmask = GCForeground|GCFillStyle;
-    if (pWin->backgroundState == BackgroundPixel) {
-	back[0].val = pWin->background.pixel;
-	back[1].val = FillSolid;
-	bmask = GCForeground|GCFillStyle;
-    } else {
-	back[0].val = 0;
-	back[1].val = 0;
-	ChangeGC(NullClient, pGC, GCTileStipXOrigin|GCTileStipYOrigin, back);
-	back[0].val = FillTiled;
-	back[1].ptr = pWin->background.pixmap;
-	bmask = GCFillStyle|GCTile;
-    }
-
-    /* should be the same as the reference function XmuDrawLogo() */
-
-    size = width;
-    if (height < width)
-	 size = height;
-    size = RANDOM_WIDTH + rand() % (size - RANDOM_WIDTH);
-    size &= ~1;
-    x += rand() % (width - size);
-    y += rand() % (height - size);
-
-/*
- * Draw what will be the thin strokes.
- *
- *           -----
- *          /    /
- *         /    /
- *        /    /
- *       /    /
- *      /____/
- *           d
- *
- * Point d is 9/44 (~1/5) of the way across.
- */
-
-    thin = (size / 11);
-    if (thin < 1) thin = 1;
-    gap = (thin+3) / 4;
-    d31 = thin + thin + gap;
-    poly[0].x = x + size;	       poly[0].y = y;
-    poly[1].x = x + size-d31;	       poly[1].y = y;
-    poly[2].x = x + 0;		       poly[2].y = y + size;
-    poly[3].x = x + d31;	       poly[3].y = y + size;
-    ChangeGC(NullClient, pGC, fmask, fore);
-    ValidateGC(pDraw, pGC);
-    (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
-
-/*
- * Erase area not needed for lower thin stroke.
- *
- *           ------
- *          /	  /
- *         /  __ /
- *        /  /	/
- *       /  /  /
- *      /__/__/
- */
-
-    poly[0].x = x + d31/2;			 poly[0].y = y + size;
-    poly[1].x = x + size / 2;			 poly[1].y = y + size/2;
-    poly[2].x = x + (size/2)+(d31-(d31/2));	 poly[2].y = y + size/2;
-    poly[3].x = x + d31;			 poly[3].y = y + size;
-    ChangeGC(NullClient, pGC, bmask, back);
-    ValidateGC(pDraw, pGC);
-    (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
-
-/*
- * Erase area not needed for upper thin stroke.
- *
- *	     ------
- *	    /  /  /
- *	   /--/	 /
- *	  /	/
- *	 /     /
- *	/_____/
- */
-
-    poly[0].x = x + size - d31/2;		 poly[0].y = y;
-    poly[1].x = x + size / 2;			 poly[1].y = y + size/2;
-    poly[2].x = x + (size/2)-(d31-(d31/2));	 poly[2].y = y + size/2;
-    poly[3].x = x + size - d31;			 poly[3].y = y;
-    ValidateGC(pDraw, pGC);
-    (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
-
-/*
- * Draw thick stroke.
- * Point b is 1/4 of the way across.
- *
- *      b
- * -----
- * \	\
- *  \	 \
- *   \	  \
- *    \	   \
- *     \____\
- */
-
-    poly[0].x = x;		       poly[0].y = y;
-    poly[1].x = x + size/4;	       poly[1].y = y;
-    poly[2].x = x + size;	       poly[2].y = y + size;
-    poly[3].x = x + size - size/4;     poly[3].y = y + size;
-    ChangeGC(NullClient, pGC, fmask, fore);
-    ValidateGC(pDraw, pGC);
-    (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
-
-/*
- * Erase to create gap.
- *
- *	    /
- *	   /
- *	  /
- *	 /
- *	/
- */
-
-    poly[0].x = x + size- thin;	      poly[0].y = y;
-    poly[1].x = x + size-( thin+gap);  poly[1].y = y;
-    poly[2].x = x + thin;	      poly[2].y = y + size;
-    poly[3].x = x + thin + gap;	      poly[3].y = y + size;
-    ChangeGC(NullClient, pGC, bmask, back);
-    ValidateGC(pDraw, pGC);
-    (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
-
-    FreeScratchGC(pGC);
-}
-
-#endif

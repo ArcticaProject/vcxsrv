@@ -817,22 +817,10 @@ is called once for each input device.
 </para>
 
 <para>Once input handles for core keyboard and core pointer devices have
-been obtained from AddInputDevice(), they are registered as core devices
-by calling RegisterPointerDevice() and RegisterKeyboardDevice().  Each
-of these should be called once.  If both core devices are not
+been obtained from AddInputDevice().  If both core devices are not
 registered, then the X server will exit with a fatal error when it
 attempts to start the input devices in InitAndStartDevices(), which is
 called directly after InitInput() (see below).
-
-<variablelist>
-<varlistentry>
-<term>Register{Pointer,Keyboard}Device()</term>
-<listitem><para>These DIX functions take a
-handle returned from AddInputDevice() and initialize the core input
-device fields in inputInfo, and initialize the input processing and grab
-functions for each core input device.
-</para></listitem></varlistentry>
-</variablelist>
 </para>
 
 <para>The core pointer device is then registered with the miPointer code
