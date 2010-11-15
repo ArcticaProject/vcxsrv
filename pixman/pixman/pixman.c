@@ -30,14 +30,23 @@
 
 #include <stdlib.h>
 
+static pixman_implementation_t *global_implementation;
+
+#ifdef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
+static void __attribute__((constructor))
+pixman_constructor (void)
+{
+    global_implementation = _pixman_choose_implementation ();
+}
+#endif
+
 static force_inline pixman_implementation_t *
 get_implementation (void)
 {
-    static pixman_implementation_t *global_implementation;
-
+#ifndef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
     if (!global_implementation)
 	global_implementation = _pixman_choose_implementation ();
-
+#endif
     return global_implementation;
 }
 
@@ -151,57 +160,6 @@ optimize_operator (pixman_op_t     op,
     is_source_opaque >>= OPAQUE_SHIFT;
 
     return operator_table[op].opaque_info[is_dest_opaque | is_source_opaque];
-}
-
-static void
-apply_workaround (pixman_image_t *image,
-		  int32_t *       x,
-		  int32_t *       y,
-		  uint32_t **     save_bits,
-		  int *           save_dx,
-		  int *           save_dy)
-{
-    if (image && (image->common.flags & FAST_PATH_NEEDS_WORKAROUND))
-    {
-	/* Some X servers generate images that point to the
-	 * wrong place in memory, but then set the clip region
-	 * to point to the right place. Because of an old bug
-	 * in pixman, this would actually work.
-	 *
-	 * Here we try and undo the damage
-	 */
-	int bpp = PIXMAN_FORMAT_BPP (image->bits.format) / 8;
-	pixman_box32_t *extents;
-	uint8_t *t;
-	int dx, dy;
-	
-	extents = pixman_region32_extents (&(image->common.clip_region));
-	dx = extents->x1;
-	dy = extents->y1;
-	
-	*save_bits = image->bits.bits;
-	
-	*x -= dx;
-	*y -= dy;
-	pixman_region32_translate (&(image->common.clip_region), -dx, -dy);
-	
-	t = (uint8_t *)image->bits.bits;
-	t += dy * image->bits.rowstride * 4 + dx * bpp;
-	image->bits.bits = (uint32_t *)t;
-	
-	*save_dx = dx;
-	*save_dy = dy;
-    }
-}
-
-static void
-unapply_workaround (pixman_image_t *image, uint32_t *bits, int dx, int dy)
-{
-    if (image && (image->common.flags & FAST_PATH_NEEDS_WORKAROUND))
-    {
-	image->bits.bits = bits;
-	pixman_region32_translate (&image->common.clip_region, dx, dy);
-    }
 }
 
 /*
@@ -732,13 +690,6 @@ pixman_image_composite32 (pixman_op_t      op,
     uint32_t src_flags, mask_flags, dest_flags;
     pixman_region32_t region;
     pixman_box32_t *extents;
-    uint32_t *src_bits;
-    int src_dx, src_dy;
-    uint32_t *mask_bits;
-    int mask_dx, mask_dy;
-    uint32_t *dest_bits;
-    int dest_dx, dest_dy;
-    pixman_bool_t need_workaround;
     pixman_implementation_t *imp;
     pixman_composite_func_t func;
 
@@ -774,16 +725,6 @@ pixman_image_composite32 (pixman_op_t      op,
 	    src_format = mask_format = PIXMAN_pixbuf;
 	else if (src_format == PIXMAN_x8r8g8b8)
 	    src_format = mask_format = PIXMAN_rpixbuf;
-    }
-
-    /* Check for workaround */
-    need_workaround = (src_flags | mask_flags | dest_flags) & FAST_PATH_NEEDS_WORKAROUND;
-
-    if (need_workaround)
-    {
-	apply_workaround (src, &src_x, &src_y, &src_bits, &src_dx, &src_dy);
-	apply_workaround (mask, &mask_x, &mask_y, &mask_bits, &mask_dx, &mask_dy);
-	apply_workaround (dest, &dest_x, &dest_y, &dest_bits, &dest_dx, &dest_dy);
     }
 
     pixman_region32_init (&region);
@@ -852,13 +793,6 @@ pixman_image_composite32 (pixman_op_t      op,
     }
 
 out:
-    if (need_workaround)
-    {
-	unapply_workaround (src, src_bits, src_dx, src_dy);
-	unapply_workaround (mask, mask_bits, mask_dx, mask_dy);
-	unapply_workaround (dest, dest_bits, dest_dx, dest_dy);
-    }
-
     pixman_region32_fini (&region);
 }
 

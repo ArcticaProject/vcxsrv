@@ -115,10 +115,6 @@ ProcXOpenDevice(ClientPtr client)
     if (IsMaster(dev))
             return BadDevice;
 
-    OpenInputDevice(dev, client, &status);
-    if (status != Success)
-	return status;
-
     memset(&rep, 0, sizeof(xOpenDeviceReply));
     rep.repType = X_Reply;
     rep.RepType = X_OpenDevice;

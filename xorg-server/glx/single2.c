@@ -350,9 +350,7 @@ int DoGetString(__GLXclientState *cl, GLbyte *pc, GLboolean need_swap)
 				      cl->GLClientextensions);
 	buf = __glXcombine_strings(buf1,
 				      cx->pGlxScreen->GLextensions);
-	if (buf1 != NULL) {
-	    free(buf1);
-	}
+	free(buf1);
 	string = buf;
     }
     else if ( name == GL_VERSION ) {
@@ -381,8 +379,7 @@ int DoGetString(__GLXclientState *cl, GLbyte *pc, GLboolean need_swap)
 
     __GLX_SEND_HEADER();
     WriteToClient(client, length, (char *) string); 
-    if (buf != NULL)
-	free(buf);
+    free(buf);
 
     return Success;
 }

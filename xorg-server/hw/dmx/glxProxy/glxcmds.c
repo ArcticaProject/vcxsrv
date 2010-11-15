@@ -2565,7 +2565,7 @@ int __glXClientInfo(__GLXclientState *cl, GLbyte *pc)
    
     cl->GLClientmajorVersion = req->major;
     cl->GLClientminorVersion = req->minor;
-    if (cl->GLClientextensions) free(cl->GLClientextensions);
+    free(cl->GLClientextensions);
     buf = (const char *)(req+1);
     cl->GLClientextensions = strdup(buf);
 

@@ -26,7 +26,7 @@ xkb_symbols "pc105" {
 
     key <CAPS> {	[ Caps_Lock	]	};
 
-    key <NMLK> {	[ Num_Lock, Pointer_EnableKeys		]	};
+    key <NMLK> {	[ Num_Lock 	]	};
 
     key <LFSH> {	[ Shift_L	]	};
     key <LCTL> {	[ Control_L	]	};

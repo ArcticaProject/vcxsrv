@@ -119,7 +119,6 @@ XF86ConfModuleRec, *XF86ConfModulePtr;
 #define XF86CONF_NCSYNC    0x0100
 #define XF86CONF_HSKEW     0x0200	/* hskew provided */
 #define XF86CONF_BCAST     0x0400
-#define XF86CONF_CUSTOM    0x0800	/* timing numbers customized by editor */
 #define XF86CONF_VSCAN     0x1000
 
 typedef struct

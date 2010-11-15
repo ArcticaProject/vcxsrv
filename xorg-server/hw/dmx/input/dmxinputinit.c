@@ -476,7 +476,8 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
                     InitValuatorAxisStruct(pDevice, i, axis_labels[i],
                                            info.minval[i], info.maxval[i],
                                            info.res[i],
-                                           info.minres[i], info.maxres[i]);
+                                           info.minres[i], info.maxres[i],
+                                           Relative);
             } else if (info.numRelAxes) {
                 InitValuatorClassDeviceStruct(pDevice, info.numRelAxes,
                                               axis_labels,
@@ -486,7 +487,8 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
                     InitValuatorAxisStruct(pDevice, i, axis_labels[i],
                                            info.minval[i],
                                            info.maxval[i], info.res[i],
-                                           info.minres[i], info.maxres[i]);
+                                           info.minres[i], info.maxres[i],
+                                           Relative);
             } else if (info.numAbsAxes) {
                 InitValuatorClassDeviceStruct(pDevice, info.numAbsAxes,
                                               axis_labels,
@@ -497,7 +499,7 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
                                            axis_labels[i],
                                            info.minval[i], info.maxval[i],
                                            info.res[i], info.minres[i],
-                                           info.maxres[i]);
+                                           info.maxres[i], Absolute);
             }
         }
         if (info.focusClass)       InitFocusClassDeviceStruct(pDevice);
@@ -693,7 +695,6 @@ static DeviceIntPtr dmxAddDevice(DMXLocalInputInfoPtr dmxLocal)
     DeviceIntPtr pDevice;
     Atom         atom;
     const char   *name = NULL;
-    void         (*registerProcPtr)(DeviceIntPtr)   = NULL;
     char         *devname;
     DMXInputInfo *dmxInput;
 
@@ -706,22 +707,19 @@ static DeviceIntPtr dmxAddDevice(DMXLocalInputInfoPtr dmxLocal)
             dmxLocal->isCore     = 1;
             dmxLocalCoreKeyboard = dmxLocal;
             name                 = "keyboard";
-            registerProcPtr      = RegisterKeyboardDevice;
         }
         if (dmxLocal->type == DMX_LOCAL_MOUSE && !dmxLocalCorePointer) {
             dmxLocal->isCore     = 1;
             dmxLocalCorePointer  = dmxLocal;
             name                 = "pointer";
-            registerProcPtr      = RegisterPointerDevice;
         }
     }
 
     if (!name) {
         name            = "extension";
-        registerProcPtr = RegisterOtherDevice;
     }
 
-    if (!name || !registerProcPtr)
+    if (!name)
         dmxLog(dmxFatal, "Cannot add device %s\n", dmxLocal->name);
 
     pDevice                       = AddInputDevice(serverClient, dmxDeviceOnOff, TRUE);
@@ -737,8 +735,6 @@ static DeviceIntPtr dmxAddDevice(DMXLocalInputInfoPtr dmxLocal)
     atom          = MakeAtom((char *)devname, strlen(devname), TRUE);
     pDevice->type = atom;
     pDevice->name = devname;
-
-    registerProcPtr(pDevice);
 
     if (dmxLocal->isCore && dmxLocal->type == DMX_LOCAL_MOUSE) {
 #if 00 /*BP*/

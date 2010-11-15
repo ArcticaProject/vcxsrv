@@ -182,7 +182,6 @@ winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
           winDebug ("winKeybdProc - Error initializing keyboard AutoRepeat\n");
         }
 
-	  XkbSetExtension(pDeviceInt, ProcessKeyboardEvent);
       break;
       
     case DEVICE_ON: 

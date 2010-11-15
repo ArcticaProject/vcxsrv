@@ -13,9 +13,8 @@ librender_la_SOURCES =	\
 	mitrap.c	\
 	mitri.c		\
 	picture.c	\
-	render.c	\
-	renderedge.c
+	render.c
 
 if XORG
-sdk_HEADERS = picture.h mipict.h glyphstr.h picturestr.h renderedge.h
+sdk_HEADERS = picture.h mipict.h glyphstr.h picturestr.h
 endif

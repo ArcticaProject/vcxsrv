@@ -162,6 +162,5 @@ ProcXCloseDevice(ClientPtr client)
 	DeleteEventsFromChildren(d, p1, client);
     }
 
-    CloseInputDevice(d, client);
     return Success;
 }

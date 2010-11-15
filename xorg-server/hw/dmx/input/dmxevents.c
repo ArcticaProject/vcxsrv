@@ -53,6 +53,7 @@
 #include <X11/keysym.h>
 #include "opaque.h"
 #include "inputstr.h"
+#include "inpututils.h"
 #include "mipointer.h"
 #include "mi.h"
 #include "exglobals.h"
@@ -178,12 +179,14 @@ static void enqueueMotion(DevicePtr pDev, int x, int y)
     int i, nevents, valuators[3];
     EventListPtr events;
     int detail = 0;  /* XXX should this be mask of pressed buttons? */
+    ValuatorMask mask;
     valuators[0] = x;
     valuators[1] = y;
 
+    valuator_mask_set_range(&mask, 0, 2, valuators);
     GetEventList(&events);
     nevents = GetPointerEvents(events, p, MotionNotify, detail,
-                               POINTER_ABSOLUTE | POINTER_SCREEN, 0, 2, valuators);
+                               POINTER_ABSOLUTE | POINTER_SCREEN, &mask);
     for (i = 0; i < nevents; i++)
        mieqEnqueue(p, (InternalEvent*)(events + i)->event);
     return;
@@ -292,12 +295,13 @@ static void dmxExtMotion(DMXLocalInputInfoPtr dmxLocal,
     int                    count;
     EventListPtr           events;
     int                    nevents;
+    ValuatorMask           mask;
 
     memset(xE, 0, sizeof(xE));
 
     if (axesCount > DMX_MAX_AXES) axesCount = DMX_MAX_AXES;
 
-    if (!pDevice->valuator->mode && axesCount == 2) {
+    if ((valuator_get_mode(pDevice,0) == Relative) && axesCount == 2) {
                                 /* The dmx console is a relative mode
                                  * device that sometimes reports
                                  * absolute motion.  It only has two
@@ -370,9 +374,10 @@ static void dmxExtMotion(DMXLocalInputInfoPtr dmxLocal,
 
     if (block)
         dmxSigioBlock();
+    valuator_mask_set_range(&mask, firstAxis, axesCount, v);
     GetEventList(&events);
-    nevents = GetPointerEvents(events, pDevice, MotionNotify, 0, POINTER_ABSOLUTE,
-                               firstAxis, axesCount, v);
+    nevents = GetPointerEvents(events, pDevice, MotionNotify, 0,
+                               POINTER_ABSOLUTE, &mask);
     for (i = 0; i < nevents; i++)
         mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
 
@@ -388,13 +393,14 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
     XDeviceKeyEvent        *ke     = (XDeviceKeyEvent *)e;
     XDeviceMotionEvent     *me     = (XDeviceMotionEvent *)e;
     DeviceIntPtr           pDevice = dmxLocal->pDevice;
-    int                    valuators[6];
+    int                    valuators[MAX_VALUATORS];
     EventListPtr           events;
     int                    nevents, i;
+    ValuatorMask           mask;
 
     if (!e)
         return -1;          /* No extended event passed, cannot handle */
-    
+
     if ((XID)dmxLocal->deviceId != ke->deviceid) {
                                 /* Search for the correct dmxLocal,
                                  * since backend and console events are
@@ -432,23 +438,23 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
     }
 
 #define EXTRACT_VALUATORS(ke, valuators) \
-        valuators[0]       = ke->axis_data[0]; \
-        valuators[1]       = ke->axis_data[1]; \
-        valuators[2]       = ke->axis_data[2]; \
-        valuators[3]       = ke->axis_data[3]; \
-        valuators[4]       = ke->axis_data[4]; \
-        valuators[5]       = ke->axis_data[5]; \
+        valuators[0] = ke->axis_data[0]; \
+        valuators[1] = ke->axis_data[1]; \
+        valuators[2] = ke->axis_data[2]; \
+        valuators[3] = ke->axis_data[3]; \
+        valuators[4] = ke->axis_data[4]; \
+        valuators[5] = ke->axis_data[5]; \
 
     switch (type) {
     case XI_DeviceKeyPress:
     case XI_DeviceKeyRelease:
         EXTRACT_VALUATORS(ke, valuators);
+        valuator_mask_set_range(&mask, ke->first_axis, ke->axes_count, valuators);
         if (block)
             dmxSigioBlock();
         GetEventList(&events);
         nevents = GetKeyboardValuatorEvents(events, pDevice, event,
-                                            ke->keycode, ke->first_axis,
-                                            ke->axes_count, valuators);
+                                            ke->keycode, &mask);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
 
@@ -458,12 +464,12 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
     case XI_DeviceButtonPress:
     case XI_DeviceButtonRelease:
         EXTRACT_VALUATORS(ke, valuators);
+        valuator_mask_set_range(&mask, ke->first_axis, ke->axes_count, valuators);
         if (block)
             dmxSigioBlock();
         GetEventList(&events);
         nevents = GetPointerEvents(events, pDevice, event, ke->keycode,
-                                   POINTER_ABSOLUTE, ke->first_axis,
-                                   ke->axes_count, valuators);
+                                   POINTER_ABSOLUTE, &mask);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
 
@@ -473,12 +479,11 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
     case XI_ProximityIn:
     case XI_ProximityOut:
         EXTRACT_VALUATORS(ke, valuators);
+        valuator_mask_set_range(&mask, ke->first_axis, ke->axes_count, valuators);
         if (block)
             dmxSigioBlock();
         GetEventList(&events);
-        nevents = GetProximityEvents(events, pDevice, event,
-                                     ke->first_axis, ke->axes_count,
-                                     valuators);
+        nevents = GetProximityEvents(events, pDevice, event, &mask);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
 
@@ -664,6 +669,7 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
     DeviceIntPtr p = dmxLocal->pDevice;
     int i, nevents, valuators[3];
     EventListPtr events;
+    ValuatorMask mask;
 
     DMXDBG2("dmxEnqueue: Enqueuing type=%d detail=0x%0x\n", type, detail);
 
@@ -687,12 +693,10 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
     case ButtonPress:
     case ButtonRelease:
         detail = dmxGetButtonMapping(dmxLocal, detail);
+        valuator_mask_zero(&mask);
         GetEventList(&events);
         nevents = GetPointerEvents(events, p, type, detail,
-                                   POINTER_ABSOLUTE | POINTER_SCREEN,
-                                   0,   /* first_valuator = 0 */
-                                   0,   /* num_valuators = 0 */
-                                   valuators);
+                                   POINTER_ABSOLUTE | POINTER_SCREEN, &mask);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(p, (InternalEvent*)(events + i)->event);
         return;
@@ -702,8 +706,9 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
         valuators[0] = e->xmotion.x;
         valuators[1] = e->xmotion.y;
         valuators[2] = e->xmotion.state; /* FIXME: WTF?? */
+        valuator_mask_set_range(&mask, 0, 3, valuators);
         nevents = GetPointerEvents(events, p, type, detail, 
-                                   POINTER_ABSOLUTE | POINTER_SCREEN, 0, 3, valuators);
+                                   POINTER_ABSOLUTE | POINTER_SCREEN, &mask);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(p, (InternalEvent*)(events + i)->event);
         return;

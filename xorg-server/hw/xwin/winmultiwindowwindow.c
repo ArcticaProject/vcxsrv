@@ -482,7 +482,6 @@ winCreateWindowsWindow (WindowPtr pWin)
 
   dwStyle = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
   dwExStyle = WS_EX_TOOLWINDOW;
-  rc;
   rc.top = 0;
   rc.left = 0;
   rc.bottom = iHeight;

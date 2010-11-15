@@ -181,16 +181,13 @@ device_added(struct udev_device *udev_device)
         }
     }
 
+    add_option(&options, "config_info", config_info);
+
     LogMessage(X_INFO, "config/udev: Adding input device %s (%s)\n",
                name, path);
     rc = NewInputDeviceRequest(options, &attrs, &dev);
     if (rc != Success)
         goto unwind;
-
-    for (; dev; dev = dev->next) {
-        free(dev->config_info);
-        dev->config_info = strdup(config_info);
-    }
 
  unwind:
     free(config_info);

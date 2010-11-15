@@ -314,10 +314,9 @@ static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
                                     (PtrCtrlProcPtr)NoopDDA,
                                     GetMotionHistorySize(), NAXES,
                                     axes_labels);
-            pPointer->valuator->mode = Absolute; // Relative
             InitAbsoluteClassDeviceStruct(pPointer);
-//            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-//            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+//            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
+//            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
             break;
         case DEVICE_ON:
             pPointer->public.on = TRUE;
@@ -362,15 +361,14 @@ static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
                                     (PtrCtrlProcPtr)NoopDDA,
                                     GetMotionHistorySize(), NAXES,
                                     axes_labels);
-            pPointer->valuator->mode = Absolute; // Relative
             InitProximityClassDeviceStruct(pPointer);
 			InitAbsoluteClassDeviceStruct(pPointer);
 
-            InitValuatorAxisStruct(pPointer, 0, axes_labels[0], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 1, axes_labels[1], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 2, axes_labels[2], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 3, axes_labels[3], -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 4, axes_labels[4], -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 0, axes_labels[0], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
+            InitValuatorAxisStruct(pPointer, 1, axes_labels[1], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
+            InitValuatorAxisStruct(pPointer, 2, axes_labels[2], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
+            InitValuatorAxisStruct(pPointer, 3, axes_labels[3], -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
+            InitValuatorAxisStruct(pPointer, 4, axes_labels[4], -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
 //          pPointer->use = IsXExtensionDevice;
             break;
         case DEVICE_ON:
@@ -468,7 +466,6 @@ void InitInput( int argc, char **argv )
     XkbSetRulesDflts(&rmlvo);
 
     darwinKeyboard = AddInputDevice(serverClient, DarwinKeybdProc, TRUE);
-    RegisterKeyboardDevice( darwinKeyboard );
     darwinKeyboard->name = strdup("keyboard");
 
     /* here's the snippet from the current gdk sources:
@@ -486,19 +483,15 @@ void InitInput( int argc, char **argv )
     */
 
     darwinPointer = AddInputDevice(serverClient, DarwinMouseProc, TRUE);
-    RegisterPointerDevice( darwinPointer );
     darwinPointer->name = strdup("pointer");
 
     darwinTabletStylus = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
-    RegisterPointerDevice( darwinTabletStylus );
     darwinTabletStylus->name = strdup("pen");
 
     darwinTabletCursor = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
-    RegisterPointerDevice( darwinTabletCursor );
     darwinTabletCursor->name = strdup("cursor");
 
     darwinTabletEraser = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
-    RegisterPointerDevice( darwinTabletEraser );
     darwinTabletEraser->name = strdup("eraser");
 
     darwinTabletCurrent = darwinTabletStylus;

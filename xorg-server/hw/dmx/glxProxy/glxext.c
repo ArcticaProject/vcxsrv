@@ -77,10 +77,10 @@ static void ResetClientState(int clientIndex)
     Display **keep_be_displays;
     int i;
 
-    if (cl->returnBuf) free(cl->returnBuf);
-    if (cl->currentContexts) free(cl->currentContexts);
-    if (cl->currentDrawables) free(cl->currentDrawables);
-    if (cl->largeCmdBuf) free(cl->largeCmdBuf);
+    free(cl->returnBuf);
+    free(cl->currentContexts);
+    free(cl->currentDrawables);
+    free(cl->largeCmdBuf);
 
     for (i=0; i< screenInfo.numScreens; i++) {
        if (cl->be_displays[i])
@@ -97,7 +97,7 @@ static void ResetClientState(int clientIndex)
     */
     cl->GLClientmajorVersion = 1;
     cl->GLClientminorVersion = 0;
-    if (cl->GLClientextensions) free(cl->GLClientextensions);
+    free(cl->GLClientextensions);
 
     memset(cl->be_displays, 0, screenInfo.numScreens * sizeof(Display *));
 }
@@ -222,10 +222,10 @@ GLboolean __glXFreeContext(__GLXcontext *cx)
 {
     if (cx->idExists || cx->isCurrent) return GL_FALSE;
     
-    if (cx->feedbackBuf) free(cx->feedbackBuf);
-    if (cx->selectBuf) free(cx->selectBuf);
-    if (cx->real_ids) free(cx->real_ids);
-    if (cx->real_vids) free(cx->real_vids);
+    free(cx->feedbackBuf);
+    free(cx->selectBuf);
+    free(cx->real_ids);
+    free(cx->real_vids);
 
     if (cx->pGlxPixmap) {
        /*

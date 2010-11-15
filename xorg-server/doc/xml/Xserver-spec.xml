@@ -1710,8 +1710,6 @@ Input initialization is a bit complicated.
 It all starts with InitInput(), a routine that you write to call
 AddInputDevice() twice
 (once for pointing device and once for keyboard.)
-You also want to call RegisterKeyboardDevice() and RegisterPointerDevice()
-on them.
 </para>
 <para>
 When you Add the devices, a routine you supply for each device
@@ -1731,8 +1729,6 @@ the pointer is the pointer.
 InitInput is a DDX routine you must write to initialize the
 input subsystem in DDX.
 It must call AddInputDevice() for each device that might generate events.
-In addition, you must register the main keyboard and pointing devices by
-calling RegisterPointerDevice() and RegisterKeyboardDevice().
 </para>
 <para>
 <blockquote><programlisting>
@@ -1753,25 +1749,6 @@ install the device.
 <para>
 Note also that except for the main keyboard and pointing device,
 an extension is needed to provide for a client interface to a device.
-</para>
-<para>
-<blockquote><programlisting>
-
-	void RegisterPointerDevice(device)
-		DevicePtr device;
-</programlisting></blockquote>
-RegisterPointerDevice is a DIX routine that your DDX code calls that
-makes that device the main pointing device.
-This routine is called once upon initialization and cannot be called again.
-</para>
-<para>
-<blockquote><programlisting>
-
-	void RegisterKeyboardDevice(device)
-		DevicePtr device;
-</programlisting></blockquote>
-RegisterKeyboardDevice makes the given device the main keyboard.
-This routine is called once upon initialization and cannot be called again.
 </para>
 <para>
 The following DIX
@@ -5163,8 +5140,6 @@ mi and fb implementations.</para>
 	      </row>
 	    </thead>
 	    <tbody>
-<row><entry><function>RegisterKeyboardDevice</function></entry><entry><literal>dix</literal></entry><entry><para></para></entry></row>
-<row><entry><function>RegisterPointerDevice</function></entry><entry><literal>dix</literal></entry><entry><para></para></entry></row>
 <row><entry><function>RemoveEnabledDevice</function></entry><entry><literal>os</literal></entry><entry><para></para></entry></row>
 <row><entry><function>ResetCurrentRequest</function></entry><entry><literal>os</literal></entry><entry><para></para></entry></row>
 <row><entry><function>SaveScreen</function></entry><entry><literal>ddx</literal></entry><entry><para>Screen</para></entry></row>

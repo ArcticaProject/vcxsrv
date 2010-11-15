@@ -118,57 +118,42 @@ xf86CollectOptions(ScrnInfoPtr pScrn, pointer extraOpts)
 }
 
 /*
- * xf86CollectInputOptions collects the options for an InputDevice.
- * This function requires that the following has been initialised:
- *
- *	pInfo->conf_idev
- *
- * The extraOpts parameter may optionally contain a list of additional options
- * to include.
- *
- * The order of precedence for options is:
- *
- *   extraOpts, pInfo->conf_idev->extraOptions,
- *   pInfo->conf_idev->commonOptions, defaultOpts
+ * xf86CollectInputOptions collects extra options for an InputDevice (other
+ * than those added by the config backend).
+ * The options are merged into the existing ones and thus take precedence
+ * over the others.
  */
 
 void
-xf86CollectInputOptions(InputInfoPtr pInfo, const char **defaultOpts,
-			pointer extraOpts)
+xf86CollectInputOptions(InputInfoPtr pInfo, const char **defaultOpts)
 {
-    XF86OptionPtr tmp;
-    XF86OptionPtr extras = (XF86OptionPtr)extraOpts;
-
-    pInfo->options = NULL;
     if (defaultOpts) {
-	pInfo->options = xf86OptionListCreate(defaultOpts, -1, 0);
-    }
-    if (pInfo->conf_idev && pInfo->conf_idev->commonOptions) {
-	tmp = xf86optionListDup(pInfo->conf_idev->commonOptions);
+	XF86OptionPtr tmp =xf86optionListCreate(defaultOpts, -1, 0);
 	if (pInfo->options)
 	    pInfo->options = xf86optionListMerge(pInfo->options, tmp);
 	else
 	    pInfo->options = tmp;
-    }
-    if (pInfo->conf_idev && pInfo->conf_idev->extraOptions) {
-	tmp = xf86optionListDup(pInfo->conf_idev->extraOptions);
-	if (pInfo->options)
-	    pInfo->options = xf86optionListMerge(pInfo->options, tmp);
-	else
-	    pInfo->options = tmp;
-    }
-    if (extras) {
-	tmp = xf86optionListDup(extras);
-	if (pInfo->options)
-	    pInfo->options = xf86optionListMerge(pInfo->options, tmp);
-	else
-	    pInfo->options = tmp;
-    }
-
-    if (pInfo->conf_idev && pInfo->conf_idev->attrs) {
-        pInfo->attrs = pInfo->conf_idev->attrs;
     }
 }
+
+/**
+ * Duplicate the option list passed in. The returned pointer will be a newly
+ * allocated option list and must be freed by the caller.
+ */
+pointer
+xf86OptionListDuplicate(pointer options)
+{
+    pointer o = NULL;
+
+    while (options)
+    {
+        o = xf86AddNewOption(o, xf86OptionName(options), xf86OptionValue(options));
+        options = xf86nextOption(options);
+    }
+
+    return o;
+}
+
 
 /* Created for new XInput stuff -- essentially extensions to the parser	*/
 

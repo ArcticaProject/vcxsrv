@@ -10,7 +10,6 @@ TESTPROGRAMS =			\
 	region-translate-test	\
 	fetch-test		\
 	oob-test		\
-	window-test		\
 	gradient-crash-test	\
 	trap-crasher		\
 	alpha-loop		\
@@ -26,7 +25,6 @@ fetch_test_LDADD = $(TEST_LDADD)
 gradient_crash_test_LDADD = $(TEST_LDADD)
 trap_crasher_LDADD = $(TEST_LDADD)
 oob_test_LDADD = $(TEST_LDADD)
-window_test_LDADD = $(TEST_LDADD)
 scaling_crash_test_LDADD = $(TEST_LDADD)
 region_translate_test_LDADD = $(TEST_LDADD)
 

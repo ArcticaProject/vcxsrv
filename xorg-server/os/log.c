@@ -183,7 +183,6 @@ LogInit(const char *fname, const char *backup)
     char *logFileName = NULL;
 
     if (fname && *fname) {
-	/* malloc() can't be used yet. */
 	logFileName = malloc(strlen(fname) + strlen(display) + 1);
 	if (!logFileName)
 	    FatalError("Cannot allocate space for the log file name\n");
@@ -309,17 +308,10 @@ LogVWrite(int verb, const char *f, va_list args)
 #endif
 	    }
 	} else if (needBuffer) {
-	    /*
-	     * Note, this code is used before OsInit() has been called, so
-	     * malloc() and friends can't be used.
-	     */
 	    if (len > bufferUnused) {
 		bufferSize += 1024;
 		bufferUnused += 1024;
-		if (saveBuffer)
-		    saveBuffer = realloc(saveBuffer, bufferSize);
-		else
-		    saveBuffer = malloc(bufferSize);
+		saveBuffer = realloc(saveBuffer, bufferSize);
 		if (!saveBuffer)
 		    FatalError("realloc() failed while saving log messages\n");
 	    }
@@ -496,8 +488,7 @@ AuditFlush(OsTimerPtr timer, CARD32 now, pointer arg)
 	ErrorF("%slast message repeated %d times\n",
 	       prefix != NULL ? prefix : "", nrepeat);
 	nrepeat = 0;
-	if (prefix != NULL)
-	    free(prefix);
+	free(prefix);
 	return AUDIT_TIMEOUT;
     } else {
 	/* if the timer expires without anything to print, flush the message */
@@ -530,8 +521,7 @@ VAuditF(const char *f, va_list args)
 	nrepeat = 0;
 	auditTimer = TimerSet(auditTimer, 0, AUDIT_TIMEOUT, AuditFlush, NULL);
     }
-    if (prefix != NULL)
-	free(prefix);
+    free(prefix);
 }
 
 extern char g_FatalErrorMessage[1024];

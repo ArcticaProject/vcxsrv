@@ -46,6 +46,7 @@
 #include "inputstr.h"
 #include "exevents.h" /* for button/axes labels */
 #include "xserver-properties.h"
+#include "inpututils.h"
 
 /* Peek the internal button mapping */
 static CARD8 const *g_winMouseButtonMap = NULL;
@@ -242,13 +243,15 @@ winMouseButtonsSendEvent (int iEventType, int iButton)
 {
   EventListPtr events;
   int i, nevents;
+  ValuatorMask mask;
 
   if (g_winMouseButtonMap)
     iButton = g_winMouseButtonMap[iButton];
 
+  valuator_mask_zero(&mask);
   GetEventList(&events);
   nevents = GetPointerEvents(events, g_pwinPointer, iEventType, iButton,
-			     POINTER_RELATIVE, 0, 0, NULL);
+			     POINTER_RELATIVE, &mask);
 
   for (i = 0; i < nevents; i++)
     mieqEnqueue(g_pwinPointer, (InternalEvent*)events[i].event);
@@ -371,15 +374,17 @@ void winEnqueueMotion(int x, int y)
 {
   int i, nevents;
   int valuators[2];
+  ValuatorMask mask;
   EventListPtr events;
 
   miPointerSetPosition(g_pwinPointer, &x, &y);
   valuators[0] = x;
   valuators[1] = y;
 
+  valuator_mask_set_range(&mask, 0, 2, valuators);
   GetEventList(&events);
   nevents = GetPointerEvents(events, g_pwinPointer, MotionNotify, 0,
-			     POINTER_ABSOLUTE | POINTER_SCREEN, 0, 2, valuators);
+			     POINTER_ABSOLUTE | POINTER_SCREEN, &mask);
 
   for (i = 0; i < nevents; i++)
     mieqEnqueue(g_pwinPointer, (InternalEvent*)events[i].event);

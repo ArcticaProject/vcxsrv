@@ -2964,8 +2964,7 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
     int			size;
 #endif
     
-    if (output->MonInfo != NULL)
-	free(output->MonInfo);
+    free(output->MonInfo);
     
     output->MonInfo = edid_mon;
 

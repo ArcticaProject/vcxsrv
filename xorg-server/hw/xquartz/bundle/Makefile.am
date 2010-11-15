@@ -12,7 +12,9 @@ install-data-hook:
 	$(srcdir)/mk_bundke.sh $(srcdir) $(builddir) $(DESTDIR)$(APPLE_APPLICATIONS_DIR)/$(APPLE_APPLICATION_NAME).app install
 
 uninstall-hook:
-	$(RM) -rf $(DESTDIR)$(APPLE_APPLICATIONS_DIR)/$(APPLE_APPLICATION_NAME).app	
+	$(RM) -rf $(DESTDIR)$(APPLE_APPLICATIONS_DIR)/$(APPLE_APPLICATION_NAME).app/Contents/Resources
+	$(RM) -rf $(DESTDIR)$(APPLE_APPLICATIONS_DIR)/$(APPLE_APPLICATION_NAME).app/Contents/Info.plist
+	$(RM) -rf $(DESTDIR)$(APPLE_APPLICATIONS_DIR)/$(APPLE_APPLICATION_NAME).app/Contents/PkgInfo
 
 noinst_PRE = Info.plist.cpp
 noinst_DATA = $(noinst_PRE:plist.cpp=plist)

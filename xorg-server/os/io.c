@@ -410,15 +410,28 @@ ReadRequestFromClient(ClientPtr client)
 	else
 	    needed = sizeof(xReq);
     }
-    oci->lenLastReq = needed;
 
     /* If there are bytes to ignore, ignore them now. */
 
     if (oci->ignoreBytes > 0) {
 	assert(needed == oci->ignoreBytes || needed == oci->size);
-	oci->ignoreBytes -= gotnow;
-	needed = gotnow = 0;
+	/*
+	 * The _XSERVTransRead call above may return more or fewer bytes than we
+	 * want to ignore.  Ignore the smaller of the two sizes.
+	 */
+	if (gotnow < needed) {
+	    oci->ignoreBytes -= gotnow;
+	    oci->bufptr += gotnow;
+	    gotnow = 0;
+	} else {
+	    oci->ignoreBytes -= needed;
+	    oci->bufptr += needed;
+	    gotnow -= needed;
+	}
+	needed = 0;
     }
+
+    oci->lenLastReq = needed;
 
     /*
      *  Check to see if client has at least one whole request in the

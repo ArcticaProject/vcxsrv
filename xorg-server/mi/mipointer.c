@@ -39,6 +39,7 @@ in this Software without prior written authorization from The Open Group.
 # include   "cursorstr.h"
 # include   "dixstruct.h"
 # include   "inputstr.h"
+# include   "inpututils.h"
 
 DevPrivateKeyRec miPointerScreenKeyRec;
 
@@ -553,6 +554,7 @@ miPointerMove (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
     int i, nevents;
     int valuators[2];
+    ValuatorMask mask;
 
     miPointerMoveNoEvent(pDev, pScreen, x, y);
 
@@ -571,7 +573,9 @@ miPointerMove (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
         }
     }
 
-    nevents = GetPointerEvents(events, pDev, MotionNotify, 0, POINTER_SCREEN | POINTER_ABSOLUTE, 0, 2, valuators);
+    valuator_mask_set_range(&mask, 0, 2, valuators);
+    nevents = GetPointerEvents(events, pDev, MotionNotify, 0,
+                               POINTER_SCREEN | POINTER_ABSOLUTE, &mask);
 
     OsBlockSignals();
 #ifdef XQUARTZ

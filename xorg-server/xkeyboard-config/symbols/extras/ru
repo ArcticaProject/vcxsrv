@@ -13,7 +13,7 @@ xkb_symbols "chu"
 	    key <AE02> { [ U0454, U0404, U0465, U0464] }; // є Є ѥ Ѥ
 	    key <AE03> { [ U046F, U046E, U0469, U0468] }; // ѯ Ѯ ѩ Ѩ
 	    key <AE04> { [ U0471, U0470, U046D, U046C] }; // ѱ Ѱ ѭ Ѭ
-	    key <AE05> { [ U0473, U0472, Cyrillic_ya, Cyrillic_YA] }; // ѳ Ѳ я Я (WHERE Я IS I+A, NOT SMALL YUS)
+	    key <AE05> { [ U0473, U0472, UA657, UA656] }; // ѳ Ѳ iotified A
 	    key <AE06> { [ U0475, U0474, U0477, U0476] }; // ѵ Ѵ ѷ Ѷ
 	    key <AE07> { [ U047B, U047A, UA64D, UA64C] }; // ѻ Ѻ ꙍ Ꙍ
 	    key <AE08> { [ U047F, U047E, U046B, U046A] }; // ѿ Ѿ ѫ Ѫ

@@ -28,7 +28,6 @@
 
 #include "picturestr.h"
 #include "mipict.h"
-#include "renderedge.h"
 #include "fbpict.h"
 
 void

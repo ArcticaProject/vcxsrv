@@ -215,7 +215,7 @@ void miAppendSpans(SpanGroup *spanGroup, SpanGroup *otherGroup, Spans *spans)
 
 void miFreeSpanGroup(SpanGroup *spanGroup)
 {
-    if (spanGroup->group != NULL) free(spanGroup->group);
+    free(spanGroup->group);
 }
 
 static void QuickSortSpansX(

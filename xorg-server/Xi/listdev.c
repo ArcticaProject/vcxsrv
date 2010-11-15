@@ -230,10 +230,11 @@ CopySwapKeyClass(ClientPtr client, KeyClassPtr k, char **buf)
  */
 
 static int
-CopySwapValuatorClass(ClientPtr client, ValuatorClassPtr v, char **buf)
+CopySwapValuatorClass(ClientPtr client, DeviceIntPtr dev, char **buf)
 {
     int i, j, axes, t_axes;
     char n;
+    ValuatorClassPtr v = dev->valuator;
     xValuatorInfoPtr v2;
     AxisInfo *a;
     xAxisInfoPtr a2;
@@ -247,7 +248,7 @@ CopySwapValuatorClass(ClientPtr client, ValuatorClassPtr v, char **buf)
 	v2->class = ValuatorClass;
 	v2->length = sizeof(xValuatorInfo) + t_axes * sizeof(xAxisInfo);
 	v2->num_axes = t_axes;
-	v2->mode = v->mode & DeviceMode;
+	v2->mode = valuator_get_mode(dev, 0);
 	v2->motion_buffer_size = v->numMotionEvents;
 	if (client && client->swapped) {
 	    swapl(&v2->motion_buffer_size, n);
@@ -286,7 +287,7 @@ CopySwapClasses(ClientPtr client, DeviceIntPtr dev, CARD8 *num_classes,
     }
     if (dev->valuator != NULL) {
 	(*num_classes) +=
-	    CopySwapValuatorClass(client, dev->valuator, classbuf);
+	    CopySwapValuatorClass(client, dev, classbuf);
     }
 }
 
@@ -355,9 +356,6 @@ ProcXListInputDevices(ClientPtr client)
     rep.RepType = X_ListInputDevices;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-
-
-    AddOtherInputDevices();
 
     /* allocate space for saving skip value */
     skip = calloc(sizeof(Bool), inputInfo.numDevices);

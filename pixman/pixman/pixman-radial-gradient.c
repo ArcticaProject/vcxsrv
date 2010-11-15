@@ -219,7 +219,6 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
      */
 
     gradient_t *gradient = (gradient_t *)image;
-    source_image_t *source = (source_image_t *)image;
     radial_gradient_t *radial = (radial_gradient_t *)image;
     uint32_t *end = buffer + width;
     pixman_gradient_walker_t walker;
@@ -230,16 +229,16 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
     v.vector[1] = pixman_int_to_fixed (y) + pixman_fixed_1 / 2;
     v.vector[2] = pixman_fixed_1;
 
-    _pixman_gradient_walker_init (&walker, gradient, source->common.repeat);
+    _pixman_gradient_walker_init (&walker, gradient, image->common.repeat);
 
-    if (source->common.transform)
+    if (image->common.transform)
     {
-	if (!pixman_transform_point_3d (source->common.transform, &v))
+	if (!pixman_transform_point_3d (image->common.transform, &v))
 	    return;
 	
-	unit.vector[0] = source->common.transform->matrix[0][0];
-	unit.vector[1] = source->common.transform->matrix[1][0];
-	unit.vector[2] = source->common.transform->matrix[2][0];
+	unit.vector[0] = image->common.transform->matrix[0][0];
+	unit.vector[1] = image->common.transform->matrix[1][0];
+	unit.vector[2] = image->common.transform->matrix[2][0];
     }
     else
     {
@@ -309,7 +308,7 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
 						radial->delta.radius,
 						radial->mindr,
 						&walker,
-						source->common.repeat);
+						image->common.repeat);
 	    }
 
 	    b += db;
@@ -354,14 +353,14 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
 						    radial->delta.radius,
 						    radial->mindr,
 						    &walker,
-						    source->common.repeat);
+						    image->common.repeat);
 		}
 		else
 		{
 		    *buffer = 0;
 		}
 	    }
-	    
+
 	    ++buffer;
 
 	    v.vector[0] += unit.vector[0];

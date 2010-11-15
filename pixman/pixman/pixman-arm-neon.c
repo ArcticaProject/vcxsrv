@@ -97,6 +97,15 @@ PIXMAN_ARM_BIND_FAST_PATH_SRC_MASK_DST (neon, over_8888_8_0565,
 PIXMAN_ARM_BIND_FAST_PATH_SRC_MASK_DST (neon, over_0565_8_0565,
                                         uint16_t, 1, uint8_t, 1, uint16_t, 1)
 
+PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_DST (neon, 8888_8888, OVER,
+                                        uint32_t, uint32_t)
+PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_DST (neon, 8888_0565, OVER,
+                                        uint32_t, uint16_t)
+PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_DST (neon, 8888_0565, SRC,
+                                        uint32_t, uint16_t)
+PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_DST (neon, 0565_8888, SRC,
+                                        uint16_t, uint32_t)
+
 void
 pixman_composite_src_n_8_asm_neon (int32_t   w,
                                    int32_t   h,
@@ -270,6 +279,27 @@ static const pixman_fast_path_t arm_neon_fast_paths[] =
     PIXMAN_STD_FAST_PATH (OVER_REVERSE, solid, null, a8b8g8r8, neon_composite_over_reverse_n_8888),
     PIXMAN_STD_FAST_PATH (OUT_REVERSE,  a8,    null, r5g6b5,   neon_composite_out_reverse_8_0565),
     PIXMAN_STD_FAST_PATH (OUT_REVERSE,  a8,    null, b5g6r5,   neon_composite_out_reverse_8_0565),
+
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (OVER, a8r8g8b8, a8r8g8b8, neon_8888_8888),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (OVER, a8b8g8r8, a8b8g8r8, neon_8888_8888),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (OVER, a8r8g8b8, x8r8g8b8, neon_8888_8888),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (OVER, a8b8g8r8, x8b8g8r8, neon_8888_8888),
+
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (OVER, a8r8g8b8, r5g6b5, neon_8888_0565),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (OVER, a8b8g8r8, b5g6r5, neon_8888_0565),
+
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (SRC, a8r8g8b8, r5g6b5, neon_8888_0565),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (SRC, x8r8g8b8, r5g6b5, neon_8888_0565),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (SRC, a8b8g8r8, b5g6r5, neon_8888_0565),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (SRC, x8b8g8r8, b5g6r5, neon_8888_0565),
+
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (SRC, b5g6r5, x8b8g8r8, neon_0565_8888),
+    PIXMAN_ARM_SIMPLE_NEAREST_FAST_PATH (SRC, r5g6b5, x8r8g8b8, neon_0565_8888),
+    /* Note: NONE repeat is not supported yet */
+    SIMPLE_NEAREST_FAST_PATH_COVER (SRC, r5g6b5, a8r8g8b8, neon_0565_8888),
+    SIMPLE_NEAREST_FAST_PATH_COVER (SRC, b5g6r5, a8b8g8r8, neon_0565_8888),
+    SIMPLE_NEAREST_FAST_PATH_PAD (SRC, r5g6b5, a8r8g8b8, neon_0565_8888),
+    SIMPLE_NEAREST_FAST_PATH_PAD (SRC, b5g6r5, a8b8g8r8, neon_0565_8888),
 
     { PIXMAN_OP_NONE },
 };

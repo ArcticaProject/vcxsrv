@@ -402,14 +402,6 @@ typedef struct {
 } GDevRec, *GDevPtr;
 
 typedef struct {
-   char *			identifier;
-   char *			driver;
-   pointer		 	commonOptions;
-   pointer			extraOptions;
-   InputAttributes              *attrs;
-} IDevRec, *IDevPtr;
-
-typedef struct {
     int			frameX0;
     int			frameY0;
     int			virtualX;
@@ -478,11 +470,13 @@ typedef struct _screenlayoutrec {
     confScreenPtr	refscreen;
 } screenLayoutRec, *screenLayoutPtr;
 
+typedef struct _InputInfoRec InputInfoRec;
+
 typedef struct _serverlayoutrec {
     char *		id;
     screenLayoutPtr	screens;
     GDevPtr		inactives;
-    IDevPtr*            inputs; /* NULL terminated */
+    InputInfoRec**      inputs; /* NULL terminated */
     pointer		options;
 } serverLayoutRec, *serverLayoutPtr;
 

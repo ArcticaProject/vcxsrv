@@ -558,9 +558,6 @@ Default: off.
 This tells the mousedrv(__drivermansuffix__) and vmmouse(__drivermansuffix__)
 drivers to not report failure if the mouse device can't be opened/initialised.
 It has no effect on the evdev(__drivermansuffix__) or other drivers.
-The previous functionality of allowing the server to start up even if
-the mouse device can't be opened/initialised is now handled by the
-AllowEmptyInput option.
 Default: false.
 .TP 7
 .BI "Option \*qVTSysReq\*q  \*q" boolean \*q
@@ -676,12 +673,6 @@ default.
 .BI "Option \*qIgnoreABI\*q \*q" boolean \*q
 Allow modules built for a different, potentially incompatible version of
 the X server to load. Disabled by default.
-.TP 7
-.BI "Option \*qAllowEmptyInput\*q \*q" boolean \*q
-If enabled, don't add the standard keyboard and mouse drivers, if there are no
-input devices in the config file.  Enabled by default if AutoAddDevices and
-AutoEnableDevices is enabled, otherwise disabled.
-If AllowEmptyInput is on, devices using the kbd, mouse or vmmouse driver are ignored.
 .TP 7
 .BI "Option \*qAutoAddDevices\*q \*q" boolean \*q
 If this option is disabled, then no devices will be added from HAL events.
@@ -938,9 +929,6 @@ default. Devices with
 disabled will be \*qfloating\*q and only accessible by clients employing the
 X Input extension. This option controls the startup behavior only, a device
 may be reattached or set floating at runtime.
-.TP 7
-.BI "Option \*qSendDragEvents\*q  \*q" boolean \*q
-Send core events while dragging. Enabled by default.
 .PP
 For pointing devices, the following options control how the pointer
 is accelerated or decelerated with respect to physical device motion. Most of

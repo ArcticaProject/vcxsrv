@@ -117,11 +117,8 @@ CreateGrab(
 static void
 FreeGrab(GrabPtr pGrab)
 {
-    if (pGrab->modifiersDetail.pMask != NULL)
-	free(pGrab->modifiersDetail.pMask);
-
-    if (pGrab->detail.pMask != NULL)
-	free(pGrab->detail.pMask);
+    free(pGrab->modifiersDetail.pMask);
+    free(pGrab->detail.pMask);
 
     if (pGrab->cursor)
 	FreeCursor(pGrab->cursor, (Cursor)0);

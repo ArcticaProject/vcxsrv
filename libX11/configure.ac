@@ -246,8 +246,8 @@ dnl AC_PATH_XTRA
 
 # arch specific things
 WCHAR32="1"
-case $target_alias in
-  *os2*) os2="true" ; WCHAR32="0" ;;
+case $host_os in
+  os2*) os2="true" ; WCHAR32="0" ;;
   *) ;;
 esac
 AC_SUBST(WCHAR32)

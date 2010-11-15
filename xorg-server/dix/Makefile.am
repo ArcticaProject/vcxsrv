@@ -1,5 +1,6 @@
 noinst_LTLIBRARIES = libdix.la libmain.la
 
+AM_CPPFLAGS = -I$(top_srcdir)/include
 AM_CFLAGS = $(DIX_CFLAGS)
 
 libmain_la_SOURCES =    \

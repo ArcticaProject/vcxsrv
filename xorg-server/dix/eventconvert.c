@@ -261,6 +261,12 @@ eventToKeyButtonPointer(DeviceEvent *ev, xEvent **xi, int *count)
     }
 
     num_events = (countValuators(ev, &first) + 5)/6; /* valuator ev */
+    if (num_events <= 0)
+    {
+        *count = 0;
+        return BadMatch;
+    }
+
     num_events++; /* the actual event event */
 
     *xi = calloc(num_events, sizeof(xEvent));
@@ -318,6 +324,12 @@ countValuators(DeviceEvent *ev, int *first)
 
     for (i = 0; i < sizeof(ev->valuators.mask) * 8; i++)
     {
+        /* Assume mode of 0th valuator matches XI1 device mode. Stop when the
+         * event mode changes since XI1 can't handle mixed mode devices.
+         */
+        if (ev->valuators.mode[i] != ev->valuators.mode[0])
+            break;
+
         if (BitIsOn(ev->valuators.mask, i))
         {
             if (first_valuator == -1)
@@ -440,7 +452,7 @@ appendValuatorInfo(DeviceChangedEvent *dce, xXIValuatorInfo *info, int axisnumbe
     info->value.frac = 0;
     info->resolution = dce->valuators[axisnumber].resolution;
     info->number = axisnumber;
-    info->mode = dce->valuators[axisnumber].mode; /* Server doesn't have per-axis mode yet */
+    info->mode = dce->valuators[axisnumber].mode;
     info->sourceid = dce->sourceid;
 
     return info->length * 4;

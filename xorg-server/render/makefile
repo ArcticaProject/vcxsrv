@@ -12,5 +12,4 @@ CSRCS =	\
 	mitrap.c	\
 	mitri.c		\
 	picture.c	\
-	render.c	\
-	renderedge.c
+	render.c

@@ -322,16 +322,10 @@ void
 miCloseIndexed (ScreenPtr	pScreen,
 		PictFormatPtr	pFormat)
 {
-    if (pFormat->index.devPrivate)
-    {
-	free(pFormat->index.devPrivate);
-	pFormat->index.devPrivate = 0;
-    }
-    if (pFormat->index.pValues)
-    {
-	free(pFormat->index.pValues);
-	pFormat->index.pValues = 0;
-    }
+    free(pFormat->index.devPrivate);
+    pFormat->index.devPrivate = NULL;
+    free(pFormat->index.pValues);
+    pFormat->index.pValues = NULL;
 }
 
 void

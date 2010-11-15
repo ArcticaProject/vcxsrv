@@ -514,12 +514,9 @@ void UseMsg(void)
     ErrorF("-ls int                limit stack space to N Kb\n");
 #endif
     ErrorF("-nolock                disable the locking mechanism\n");
-#ifndef NOLOGOHACK
-    ErrorF("-logo                  enable logo in screen saver\n");
-    ErrorF("nologo                 disable logo in screen saver\n");
-#endif
     ErrorF("-nolisten string       don't listen on protocol\n");
     ErrorF("-noreset               don't reset after last client exists\n");
+    ErrorF("-background [none]     create root window with no background\n");
     ErrorF("-reset                 reset after last client exists\n");
     ErrorF("-p #                   screen-saver pattern duration (minutes)\n");
     ErrorF("-pn                    accept failure to listen on all ports\n");
@@ -773,16 +770,6 @@ ProcessCommandLine(int argc, char *argv[])
 #endif
 	    nolock = TRUE;
 	}
-#ifndef NOLOGOHACK
-	else if ( strcmp( argv[i], "-logo") == 0)
-	{
-	    logoScreenSaver = 1;
-	}
-	else if ( strcmp( argv[i], "nologo") == 0)
-	{
-	    logoScreenSaver = 0;
-	}
-#endif
 	else if ( strcmp( argv[i], "-nolisten") == 0)
 	{
             if(++i < argc) {
@@ -860,6 +847,14 @@ ProcessCommandLine(int argc, char *argv[])
 	    defaultBackingStore = WhenMapped;
         else if ( strcmp( argv[i], "-wr") == 0)
             whiteRoot = TRUE;
+        else if ( strcmp( argv[i], "-background") == 0) {
+            if(++i < argc) {
+                if (!strcmp ( argv[i], "none"))
+                    bgNoneRoot = TRUE;
+                else
+                    UseMsg();
+            }
+        }
         else if ( strcmp( argv[i], "-maxbigreqsize") == 0) {
              if(++i < argc) {
                  long reqSizeArg = atol(argv[i]);

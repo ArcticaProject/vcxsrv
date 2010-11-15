@@ -35,6 +35,7 @@
 #include "xace.h"
 #include "xkbsrv.h"
 #include "xkbstr.h"
+#include "inpututils.h"
 
 /* Check if a button map change is okay with the device.
  * Returns -1 for BadValue, as it collides with MappingBusy. */
@@ -418,3 +419,132 @@ FreeInputAttributes(InputAttributes *attrs)
     free(attrs);
 }
 
+/**
+ * Alloc a valuator mask large enough for num_valuators.
+ */
+ValuatorMask*
+valuator_mask_new(int num_valuators)
+{
+    /* alloc a fixed size mask for now and ignore num_valuators. in the
+     * flying-car future, when we can dynamically alloc the masks and are
+     * not constrained by signals, we can start using num_valuators */
+    ValuatorMask *mask = calloc(1, sizeof(ValuatorMask));
+    mask->last_bit = -1;
+    return mask;
+}
+
+/**
+ * Sets a range of valuators between first_valuator and num_valuators with
+ * the data in the valuators array. All other values are set to 0.
+ */
+void
+valuator_mask_set_range(ValuatorMask *mask, int first_valuator, int num_valuators,
+                        const int* valuators)
+{
+    int i;
+
+    valuator_mask_zero(mask);
+
+    for (i = first_valuator; i < min(first_valuator + num_valuators, MAX_VALUATORS); i++)
+        valuator_mask_set(mask, i, valuators[i - first_valuator]);
+}
+
+/**
+ * Reset mask to zero.
+ */
+void
+valuator_mask_zero(ValuatorMask *mask)
+{
+    memset(mask, 0, sizeof(*mask));
+    mask->last_bit = -1;
+}
+
+/**
+ * Returns the current size of the mask (i.e. the highest number of
+ * valuators currently set + 1).
+ */
+int
+valuator_mask_size(const ValuatorMask *mask)
+{
+    return mask->last_bit + 1;
+}
+
+/**
+ * Returns the number of valuators set in the given mask.
+ */
+int
+valuator_mask_num_valuators(const ValuatorMask *mask)
+{
+    return CountBits(mask->mask, min(mask->last_bit + 1, MAX_VALUATORS));
+}
+
+/**
+ * Return true if the valuator is set in the mask, or false otherwise.
+ */
+int
+valuator_mask_isset(const ValuatorMask *mask, int valuator)
+{
+    return mask->last_bit >= valuator && BitIsOn(mask->mask, valuator);
+}
+
+/**
+ * Set the valuator to the given data.
+ */
+void
+valuator_mask_set(ValuatorMask *mask, int valuator, int data)
+{
+    mask->last_bit = max(valuator, mask->last_bit);
+    SetBit(mask->mask, valuator);
+    mask->valuators[valuator] = data;
+}
+
+/**
+ * Return the requested valuator value. If the mask bit is not set for the
+ * given valuator, the returned value is undefined.
+ */
+int
+valuator_mask_get(const ValuatorMask *mask, int valuator)
+{
+    return mask->valuators[valuator];
+}
+
+/**
+ * Remove the valuator from the mask.
+ */
+void
+valuator_mask_unset(ValuatorMask *mask, int valuator)
+{
+    if (mask->last_bit >= valuator) {
+        int i, lastbit = -1;
+
+        ClearBit(mask->mask, valuator);
+        mask->valuators[valuator] = 0;
+
+        for (i = 0; i <= mask->last_bit; i++)
+            if (valuator_mask_isset(mask, i))
+                lastbit = max(lastbit, i);
+        mask->last_bit = lastbit;
+    }
+}
+
+void
+valuator_mask_copy(ValuatorMask *dest, const ValuatorMask *src)
+{
+    if (src)
+        memcpy(dest, src, sizeof(*dest));
+    else
+        valuator_mask_zero(dest);
+}
+
+int
+CountBits(const uint8_t *mask, int len)
+{
+    int i;
+    int ret = 0;
+
+    for (i = 0; i < len; i++)
+        if (BitIsOn(mask, i))
+            ret++;
+
+    return ret;
+}

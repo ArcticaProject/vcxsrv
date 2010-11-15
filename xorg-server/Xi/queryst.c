@@ -151,7 +151,8 @@ ProcXQueryDeviceState(ClientPtr client)
 	tv->class = ValuatorClass;
 	tv->length = sizeof(xValuatorState) + v->numAxes * 4;
 	tv->num_valuators = v->numAxes;
-	tv->mode = v->mode;
+	tv->mode = valuator_get_mode(dev, 0);
+	tv->mode |= (dev->proximity && !dev->proximity->in_proximity) ? OutOfProximity : 0;
 	buf += sizeof(xValuatorState);
 	for (i = 0, values = v->axisVal; i < v->numAxes; i++) {
 	    if (rc != BadAccess)

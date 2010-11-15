@@ -265,8 +265,8 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
     if (!dev)
 	return (DeviceIntPtr)NULL;
     dev->id = devid;
-    dev->public.processInputProc = (ProcessInputProc)NoopDDA;
-    dev->public.realInputProc = (ProcessInputProc)NoopDDA;
+    dev->public.processInputProc = ProcessOtherEvent;
+    dev->public.realInputProc = ProcessOtherEvent;
     dev->public.enqueueInputProc = EnqueueEvent;
     dev->deviceProc = deviceProc;
     dev->startup = autoStart;
@@ -275,6 +275,8 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
     dev->deviceGrab.grabTime = currentTime;
     dev->deviceGrab.ActivateGrab = ActivateKeyboardGrab;
     dev->deviceGrab.DeactivateGrab = DeactivateKeyboardGrab;
+
+    XkbSetExtension(dev, ProcessKeyboardEvent);
 
     dev->coreEvents = TRUE;
 
@@ -1114,18 +1116,6 @@ NumMotionEvents(void)
     return inputInfo.pointer->valuator->numMotionEvents;
 }
 
-void
-RegisterPointerDevice(DeviceIntPtr device)
-{
-    RegisterOtherDevice(device);
-}
-
-void
-RegisterKeyboardDevice(DeviceIntPtr device)
-{
-    RegisterOtherDevice(device);
-}
-
 int
 dixLookupDevice(DeviceIntPtr *pDev, int id, ClientPtr client, Mask access_mode)
 {
@@ -1269,16 +1259,19 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
     valc->numMotionEvents = numMotionEvents;
     valc->motionHintWindow = NullWindow;
     valc->numAxes = numAxes;
-    valc->mode = mode;
     valc->axes = (AxisInfoPtr)(valc + 1);
     valc->axisVal = (double *)(valc->axes + numAxes);
+
+    if (mode & OutOfProximity)
+        InitProximityClassDeviceStruct(dev);
+
     dev->valuator = valc;
 
     AllocateMotionHistory(dev);
 
     for (i=0; i<numAxes; i++) {
         InitValuatorAxisStruct(dev, i, labels[i], NO_AXIS_LIMITS, NO_AXIS_LIMITS,
-                               0, 0, 0);
+                               0, 0, 0, mode);
 	valc->axisVal[i]=0;
     }
 
@@ -2375,8 +2368,7 @@ RecalculateMasterButtons(DeviceIntPtr slave)
                 event.valuators[i].min = master->valuator->axes[i].min_value;
                 event.valuators[i].max = master->valuator->axes[i].max_value;
                 event.valuators[i].resolution = master->valuator->axes[i].resolution;
-                /* This should, eventually, be a per-axis mode */
-                event.valuators[i].mode = master->valuator->mode;
+                event.valuators[i].mode = master->valuator->axes[i].mode;
                 event.valuators[i].name = master->valuator->axes[i].label;
             }
         }
@@ -2589,3 +2581,25 @@ AllocDevicePair (ClientPtr client, char* name,
     return Success;
 }
 
+/**
+ * Return Relative or Absolute for the device.
+ */
+int valuator_get_mode(DeviceIntPtr dev, int axis)
+{
+    return (dev->valuator->axes[axis].mode & DeviceMode);
+}
+
+/**
+ * Set the given mode for the axis. If axis is VALUATOR_MODE_ALL_AXES, then
+ * set the mode for all axes.
+ */
+void valuator_set_mode(DeviceIntPtr dev, int axis, int mode)
+{
+    if (axis != VALUATOR_MODE_ALL_AXES)
+        dev->valuator->axes[axis].mode = mode;
+    else {
+        int i;
+        for (i = 0; i < dev->valuator->numAxes; i++)
+            dev->valuator->axes[i].mode = mode;
+    }
+}

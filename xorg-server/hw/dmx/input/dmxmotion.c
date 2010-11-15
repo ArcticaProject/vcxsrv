@@ -125,12 +125,11 @@ void dmxPointerPutMotionEvent(DeviceIntPtr pDevice,
                                 /* Initialize the data from the known
                                  * values (if Absolute) or to zero (if
                                  * Relative) */
-    if (pDevice->valuator->mode == Absolute) {
-        for (i = 0; i < numAxes; i++) 
+    for (i = 0; i < numAxes; i++) {
+        if (pDevice->valuator->axes[i].mode == Absolute)
             dmxLocal->history[OFFSET(dmxLocal->tail,i+1)]
                 = dmxLocal->valuators[i];
-    } else {
-        for (i = 0; i < numAxes; i++) 
+        else
             dmxLocal->history[OFFSET(dmxLocal->tail,i+1)] = 0;
     }
     

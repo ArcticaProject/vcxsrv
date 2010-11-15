@@ -634,7 +634,7 @@ int PanoramiXTranslateCoords(ClientPtr client)
     rep.dstX = x - pDst->drawable.x;
     rep.dstY = y - pDst->drawable.y;
     if((pDst == screenInfo.screens[0]->root) ||
-       (pWin->drawable.id == screenInfo.screens[0]->screensaver.wid))
+       (pDst->drawable.id == screenInfo.screens[0]->screensaver.wid))
     {
 	rep.dstX += screenInfo.screens[0]->x;
 	rep.dstY += screenInfo.screens[0]->y;

@@ -292,11 +292,9 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
     }
     type= &xkb->map->types[type_ndx];
     if (map_count==0) {
-	if (type->map!=NULL)
-	    free(type->map);
+	free(type->map);
 	type->map= NULL;
-	if (type->preserve!=NULL)
-	    free(type->preserve);
+	free(type->preserve);
 	type->preserve= NULL;
 	type->map_count= 0;
     }
@@ -321,9 +319,9 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 		return BadAlloc;
 	    }
 	}
-	else if (type->preserve!=NULL) {
+	else {
 	    free(type->preserve);
-	    type->preserve= NULL;
+	    type->preserve = NULL;
 	}
 	type->map_count= map_count;
     }
@@ -807,19 +805,13 @@ XkbClientMapPtr	map;
 		register int 	i;
 		XkbKeyTypePtr	type;
 		for (i=0,type=map->types;i<map->num_types;i++,type++) {
-		    if (type->map!=NULL) {
-			free(type->map);
-			type->map= NULL;
-		    }
-		    if (type->preserve!=NULL) {
-			free(type->preserve);
-			type->preserve= NULL;
-		    }
+		    free(type->map);
+		    type->map = NULL;
+		    free(type->preserve);
+		    type->preserve = NULL;
 		    type->map_count= 0;
-		    if (type->level_names!=NULL) {
-			free(type->level_names);
-			type->level_names= NULL;
-		    }
+		    free(type->level_names);
+		    type->level_names = NULL;
 		}
 	    }
 	    free(map->types);
@@ -828,10 +820,8 @@ XkbClientMapPtr	map;
 	}
     }
     if (what&XkbKeySymsMask) {
-	if (map->key_sym_map!=NULL) {
-	    free(map->key_sym_map);
-	    map->key_sym_map= NULL;
-	}
+	free(map->key_sym_map);
+	map->key_sym_map = NULL;
 	if (map->syms!=NULL) {
 	    free(map->syms);
 	    map->size_syms= map->num_syms= 0;
@@ -864,10 +854,8 @@ XkbServerMapPtr	map;
 	map->explicit= NULL;
     }
     if (what&XkbKeyActionsMask) {
-	if (map->key_acts!=NULL) {
-	    free(map->key_acts);
-	    map->key_acts= NULL;
-	}
+	free(map->key_acts);
+	map->key_acts = NULL;
 	if (map->acts!=NULL) {
 	    free(map->acts);
 	    map->num_acts= map->size_acts= 0;
