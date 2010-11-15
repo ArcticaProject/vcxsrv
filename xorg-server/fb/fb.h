@@ -1262,7 +1262,7 @@ fbBltPlane (FbBits	    *src,
 	    Pixel	    planeMask);
 
 /*
- * fbcmap.c
+ * fbcmap_mi.c
  */
 extern _X_EXPORT int
 fbListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps);

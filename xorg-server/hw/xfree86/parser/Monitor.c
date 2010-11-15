@@ -105,7 +105,6 @@ static xf86ConfigSymTabRec TimingTab[] =
 	{TT_HSKEW, "hskew"},
 	{TT_BCAST, "bcast"},
 	{TT_VSCAN, "vscan"},
-	{TT_CUSTOM, "CUSTOM"},
 	{-1, ""},
 };
 
@@ -247,9 +246,6 @@ xf86parseModeLine (void)
 			ptr->ml_vscan = val.num;
 			ptr->ml_flags |= XF86CONF_VSCAN;
 			break;
-		case TT_CUSTOM:
-			ptr->ml_flags |= XF86CONF_CUSTOM;
-			break;
 		case EOF_TOKEN:
 			Error (UNEXPECTED_EOF_MSG, NULL);
 			break;
@@ -369,9 +365,6 @@ xf86parseVerboseMode (void)
 					break;
 				case TT_DBLSCAN:
 					ptr->ml_flags |= XF86CONF_DBLSCAN;
-					break;
-				case TT_CUSTOM:
-					ptr->ml_flags |= XF86CONF_CUSTOM;
 					break;
 				case EOF_TOKEN:
 					Error (UNEXPECTED_EOF_MSG, NULL);

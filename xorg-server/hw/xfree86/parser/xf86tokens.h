@@ -165,7 +165,6 @@ typedef enum {
     TT_HSKEW,
     TT_BCAST,
     TT_VSCAN,
-    TT_CUSTOM,
 
     /* Module tokens */
     LOAD,
