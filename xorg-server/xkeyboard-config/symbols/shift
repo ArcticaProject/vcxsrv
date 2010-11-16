@@ -23,7 +23,8 @@ partial modifier_keys
 xkb_symbols "lshift_both_capslock" {
   key <LFSH> {
     type[Group1]="TWO_LEVEL",
-    symbols[Group1] = [ Shift_L,                       Caps_Lock                ]
+    symbols[Group1] = [ Shift_L,                  Caps_Lock                ],
+    actions[Group1] = [ SetMods(modifiers=Shift), LockMods(modifiers=Lock) ]
   };
 };
 // When pressed together with another Shift key, set or unset Lock.
@@ -31,7 +32,8 @@ partial modifier_keys
 xkb_symbols "rshift_both_capslock" {
   key <RTSH> {
     type[Group1]="TWO_LEVEL",
-    symbols[Group1] = [ Shift_R,                       Caps_Lock                ]
+    symbols[Group1] = [ Shift_R,                  Caps_Lock                ],
+    actions[Group1] = [ SetMods(modifiers=Shift), LockMods(modifiers=Lock) ]
   };
 };
 partial modifier_keys
