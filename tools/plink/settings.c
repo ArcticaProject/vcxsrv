@@ -8,11 +8,6 @@
 #include "putty.h"
 #include "storage.h"
 
-/*
- * Tables of string <-> enum value mappings
- */
-struct keyval { char *s; int v; };
-
 /* The cipher order given here is the default order. */
 static const struct keyval ciphernames[] = {
     { "aes",	    CIPHER_AES },
@@ -84,9 +79,13 @@ int get_remote_username(Config *cfg, char *user, size_t len)
 	if (cfg->username_from_env) {
 	    /* Use local username. */
 	    char *luser = get_username();
-	    strncpy(user, luser, len);
-	    user[len-1] = '\0';
-	    sfree(luser);
+	    if (luser) {
+		strncpy(user, luser, len);
+		user[len-1] = '\0';
+		sfree(luser);
+	    } else {
+		*user = '\0';
+	    }
 	} else {
 	    *user = '\0';
 	}
@@ -352,6 +351,11 @@ void save_open_settings(void *sesskey, Config *cfg)
     write_setting_i(sesskey, "AuthTIS", cfg->try_tis_auth);
     write_setting_i(sesskey, "AuthKI", cfg->try_ki_auth);
     write_setting_i(sesskey, "AuthGSSAPI", cfg->try_gssapi_auth);
+#ifndef NO_GSSAPI
+    wprefs(sesskey, "GSSLibs", gsslibkeywords, ngsslibs,
+	   cfg->ssh_gsslist);
+    write_setting_filename(sesskey, "GSSCustom", cfg->ssh_gss_custom);
+#endif
     write_setting_i(sesskey, "SshNoShell", cfg->ssh_no_shell);
     write_setting_i(sesskey, "SshProt", cfg->sshprot);
     write_setting_s(sesskey, "LogHost", cfg->loghost);
@@ -473,6 +477,7 @@ void save_open_settings(void *sesskey, Config *cfg)
     write_setting_i(sesskey, "BugIgnore1", 2-cfg->sshbug_ignore1);
     write_setting_i(sesskey, "BugPlainPW1", 2-cfg->sshbug_plainpw1);
     write_setting_i(sesskey, "BugRSA1", 2-cfg->sshbug_rsa1);
+    write_setting_i(sesskey, "BugIgnore2", 2-cfg->sshbug_ignore2);
     write_setting_i(sesskey, "BugHMAC2", 2-cfg->sshbug_hmac2);
     write_setting_i(sesskey, "BugDeriveKey2", 2-cfg->sshbug_derivekey2);
     write_setting_i(sesskey, "BugRSAPad2", 2-cfg->sshbug_rsapad2);
@@ -640,6 +645,11 @@ void load_open_settings(void *sesskey, Config *cfg)
     gppi(sesskey, "AuthTIS", 0, &cfg->try_tis_auth);
     gppi(sesskey, "AuthKI", 1, &cfg->try_ki_auth);
     gppi(sesskey, "AuthGSSAPI", 1, &cfg->try_gssapi_auth);
+#ifndef NO_GSSAPI
+    gprefs(sesskey, "GSSLibs", "\0",
+	   gsslibkeywords, ngsslibs, cfg->ssh_gsslist);
+    gppfile(sesskey, "GSSCustom", &cfg->ssh_gss_custom);
+#endif
     gppi(sesskey, "SshNoShell", 0, &cfg->ssh_no_shell);
     gppfile(sesskey, "PublicKeyFile", &cfg->keyfile);
     gpps(sesskey, "RemoteCommand", "", cfg->remote_cmd,
@@ -813,6 +823,7 @@ void load_open_settings(void *sesskey, Config *cfg)
     gppi(sesskey, "BugIgnore1", 0, &i); cfg->sshbug_ignore1 = 2-i;
     gppi(sesskey, "BugPlainPW1", 0, &i); cfg->sshbug_plainpw1 = 2-i;
     gppi(sesskey, "BugRSA1", 0, &i); cfg->sshbug_rsa1 = 2-i;
+    gppi(sesskey, "BugIgnore2", 0, &i); cfg->sshbug_ignore2 = 2-i;
     {
 	int i;
 	gppi(sesskey, "BugHMAC2", 0, &i); cfg->sshbug_hmac2 = 2-i;
