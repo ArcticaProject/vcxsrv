@@ -4994,6 +4994,12 @@
       </option>
       <option>
         <configItem>
+          <name>ctrl:lctrl_meta</name>
+          <_description>Meta on Left Ctrl</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
           <name>ctrl:swapcaps</name>
           <_description>Swap Ctrl and Caps Lock</_description>
         </configItem>

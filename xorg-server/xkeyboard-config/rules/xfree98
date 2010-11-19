@@ -23,6 +23,7 @@
   grp:ctrl_shift_toggle	=	+group(ctrl_shift_toggle)
   grp:ctrl_alt_toggle	=	+group(ctrl_alt_toggle)
   ctrl:nocaps		=	+ctrl(nocaps)
+  ctrl:lctrl_meta	=	+ctrl(lctrl_meta)
   ctrl:swapcaps		=	+ctrl(swapcaps)
   ctrl:ctrl_ac		=	+ctrl(ctrl_ac)
   ctrl:ctrl_aa		=	+ctrl(ctrl_aa)

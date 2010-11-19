@@ -9,6 +9,11 @@ xkb_symbols "nocaps" {
     modifier_map  Control { <CAPS>, <LCTL> };
 };
 
+// replace left control with Meta
+xkb_symbols "lctrl_meta" {
+    replace key <LCTL>	{  [ Meta_L ] };
+};
+
 // swap the caps lock key with the left control key
 partial modifier_keys 
 xkb_symbols "swapcaps" {
