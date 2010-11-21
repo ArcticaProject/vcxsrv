@@ -907,6 +907,77 @@ bits_image_fetch_bilinear_affine (pixman_image_t * image,
     }
 }
 
+static force_inline void
+bits_image_fetch_nearest_affine (pixman_image_t * image,
+				 int              offset,
+				 int              line,
+				 int              width,
+				 uint32_t *       buffer,
+				 const uint32_t * mask,
+				 
+				 convert_pixel_t	convert_pixel,
+				 pixman_format_code_t	format,
+				 pixman_repeat_t	repeat_mode)
+{
+    pixman_fixed_t x, y;
+    pixman_fixed_t ux, uy;
+    pixman_vector_t v;
+    bits_image_t *bits = &image->bits;
+    int i;
+
+    /* reference point is the center of the pixel */
+    v.vector[0] = pixman_int_to_fixed (offset) + pixman_fixed_1 / 2;
+    v.vector[1] = pixman_int_to_fixed (line) + pixman_fixed_1 / 2;
+    v.vector[2] = pixman_fixed_1;
+
+    if (!pixman_transform_point_3d (image->common.transform, &v))
+	return;
+
+    ux = image->common.transform->matrix[0][0];
+    uy = image->common.transform->matrix[1][0];
+
+    x = v.vector[0];
+    y = v.vector[1];
+
+    for (i = 0; i < width; ++i)
+    {
+	int width, height, x0, y0;
+	const uint8_t *row;
+
+	if (mask && !mask[i])
+	    goto next;
+	
+	width = image->bits.width;
+	height = image->bits.height;
+	x0 = pixman_fixed_to_int (x - pixman_fixed_e);
+	y0 = pixman_fixed_to_int (y - pixman_fixed_e);
+
+	if (repeat_mode == PIXMAN_REPEAT_NONE &&
+	    (y0 < 0 || y0 >= height || x0 < 0 || x0 >= width))
+	{
+	    buffer[i] = 0;
+	}
+	else
+	{
+	    uint32_t mask = PIXMAN_FORMAT_A (format)? 0 : 0xff000000;
+
+	    if (repeat_mode != PIXMAN_REPEAT_NONE)
+	    {
+		repeat (repeat_mode, width, &x0);
+		repeat (repeat_mode, height, &y0);
+	    }
+
+	    row = (uint8_t *)bits->bits + bits->rowstride * 4 * y0;
+
+	    buffer[i] = convert_pixel (row, x0) | mask;
+	}
+
+    next:
+	x += ux;
+	y += uy;
+    }
+}
+
 static force_inline uint32_t
 convert_a8r8g8b8 (const uint8_t *row, int x)
 {
@@ -940,29 +1011,51 @@ convert_r5g6b5 (const uint8_t *row, int x)
 					       uint32_t *       buffer,	\
 					       const uint32_t * mask)	\
     {									\
-	bits_image_fetch_bilinear_affine (image, offset, line, width, buffer, mask, \
+	bits_image_fetch_bilinear_affine (image, offset, line,		\
+					  width, buffer, mask,		\
 					  convert_ ## format,		\
 					  PIXMAN_ ## format,		\
 					  repeat_mode);			\
     }									\
     extern int no_such_variable
 
-MAKE_BILINEAR_FETCHER (pad_a8r8g8b8,     a8r8g8b8, PIXMAN_REPEAT_PAD);
-MAKE_BILINEAR_FETCHER (none_a8r8g8b8,    a8r8g8b8, PIXMAN_REPEAT_NONE);
-MAKE_BILINEAR_FETCHER (reflect_a8r8g8b8, a8r8g8b8, PIXMAN_REPEAT_REFLECT);
-MAKE_BILINEAR_FETCHER (normal_a8r8g8b8,  a8r8g8b8, PIXMAN_REPEAT_NORMAL);
-MAKE_BILINEAR_FETCHER (pad_x8r8g8b8,     x8r8g8b8, PIXMAN_REPEAT_PAD);
-MAKE_BILINEAR_FETCHER (none_x8r8g8b8,    x8r8g8b8, PIXMAN_REPEAT_NONE);
-MAKE_BILINEAR_FETCHER (reflect_x8r8g8b8, x8r8g8b8, PIXMAN_REPEAT_REFLECT);
-MAKE_BILINEAR_FETCHER (normal_x8r8g8b8,  x8r8g8b8, PIXMAN_REPEAT_NORMAL);
-MAKE_BILINEAR_FETCHER (pad_a8,           a8,       PIXMAN_REPEAT_PAD);
-MAKE_BILINEAR_FETCHER (none_a8,          a8,       PIXMAN_REPEAT_NONE);
-MAKE_BILINEAR_FETCHER (reflect_a8,	 a8,       PIXMAN_REPEAT_REFLECT);
-MAKE_BILINEAR_FETCHER (normal_a8,	 a8,       PIXMAN_REPEAT_NORMAL);
-MAKE_BILINEAR_FETCHER (pad_r5g6b5,       r5g6b5,   PIXMAN_REPEAT_PAD);
-MAKE_BILINEAR_FETCHER (none_r5g6b5,      r5g6b5,   PIXMAN_REPEAT_NONE);
-MAKE_BILINEAR_FETCHER (reflect_r5g6b5,   r5g6b5,   PIXMAN_REPEAT_REFLECT);
-MAKE_BILINEAR_FETCHER (normal_r5g6b5,    r5g6b5,   PIXMAN_REPEAT_NORMAL);
+#define MAKE_NEAREST_FETCHER(name, format, repeat_mode)			\
+    static void								\
+    bits_image_fetch_nearest_affine_ ## name (pixman_image_t *image,	\
+					      int              offset,	\
+					      int              line,	\
+					      int              width,	\
+					      uint32_t *       buffer,	\
+					      const uint32_t * mask)	\
+    {									\
+	bits_image_fetch_nearest_affine (image, offset, line,		\
+					 width, buffer, mask,		\
+					 convert_ ## format,		\
+					 PIXMAN_ ## format,		\
+					 repeat_mode);			\
+    }									\
+    extern int no_such_variable
+
+#define MAKE_FETCHERS(name, format, repeat_mode)			\
+    MAKE_NEAREST_FETCHER (name, format, repeat_mode);			\
+    MAKE_BILINEAR_FETCHER (name, format, repeat_mode);
+
+MAKE_FETCHERS (pad_a8r8g8b8,     a8r8g8b8, PIXMAN_REPEAT_PAD);
+MAKE_FETCHERS (none_a8r8g8b8,    a8r8g8b8, PIXMAN_REPEAT_NONE);
+MAKE_FETCHERS (reflect_a8r8g8b8, a8r8g8b8, PIXMAN_REPEAT_REFLECT);
+MAKE_FETCHERS (normal_a8r8g8b8,  a8r8g8b8, PIXMAN_REPEAT_NORMAL);
+MAKE_FETCHERS (pad_x8r8g8b8,     x8r8g8b8, PIXMAN_REPEAT_PAD);
+MAKE_FETCHERS (none_x8r8g8b8,    x8r8g8b8, PIXMAN_REPEAT_NONE);
+MAKE_FETCHERS (reflect_x8r8g8b8, x8r8g8b8, PIXMAN_REPEAT_REFLECT);
+MAKE_FETCHERS (normal_x8r8g8b8,  x8r8g8b8, PIXMAN_REPEAT_NORMAL);
+MAKE_FETCHERS (pad_a8,           a8,       PIXMAN_REPEAT_PAD);
+MAKE_FETCHERS (none_a8,          a8,       PIXMAN_REPEAT_NONE);
+MAKE_FETCHERS (reflect_a8,	 a8,       PIXMAN_REPEAT_REFLECT);
+MAKE_FETCHERS (normal_a8,	 a8,       PIXMAN_REPEAT_NORMAL);
+MAKE_FETCHERS (pad_r5g6b5,       r5g6b5,   PIXMAN_REPEAT_PAD);
+MAKE_FETCHERS (none_r5g6b5,      r5g6b5,   PIXMAN_REPEAT_NONE);
+MAKE_FETCHERS (reflect_r5g6b5,   r5g6b5,   PIXMAN_REPEAT_REFLECT);
+MAKE_FETCHERS (normal_r5g6b5,    r5g6b5,   PIXMAN_REPEAT_NORMAL);
 
 static void
 bits_image_fetch_solid_32 (pixman_image_t * image,
@@ -1176,6 +1269,13 @@ static const fetcher_info_t fetcher_info[] =
      FAST_PATH_AFFINE_TRANSFORM		|				\
      FAST_PATH_BILINEAR_FILTER)
 
+#define GENERAL_NEAREST_FLAGS						\
+    (FAST_PATH_NO_ALPHA_MAP		|				\
+     FAST_PATH_NO_ACCESSORS		|				\
+     FAST_PATH_HAS_TRANSFORM		|				\
+     FAST_PATH_AFFINE_TRANSFORM		|				\
+     FAST_PATH_NEAREST_FILTER)
+
 #define BILINEAR_AFFINE_FAST_PATH(name, format, repeat)			\
     { PIXMAN_ ## format,						\
       GENERAL_BILINEAR_FLAGS | FAST_PATH_ ## repeat ## _REPEAT,		\
@@ -1183,22 +1283,33 @@ static const fetcher_info_t fetcher_info[] =
       _pixman_image_get_scanline_generic_64				\
     },
 
-    BILINEAR_AFFINE_FAST_PATH (pad_a8r8g8b8, a8r8g8b8, PAD)
-    BILINEAR_AFFINE_FAST_PATH (none_a8r8g8b8, a8r8g8b8, NONE)
-    BILINEAR_AFFINE_FAST_PATH (reflect_a8r8g8b8, a8r8g8b8, REFLECT)
-    BILINEAR_AFFINE_FAST_PATH (normal_a8r8g8b8, a8r8g8b8, NORMAL)
-    BILINEAR_AFFINE_FAST_PATH (pad_x8r8g8b8, x8r8g8b8, PAD)
-    BILINEAR_AFFINE_FAST_PATH (none_x8r8g8b8, x8r8g8b8, NONE)
-    BILINEAR_AFFINE_FAST_PATH (reflect_x8r8g8b8, x8r8g8b8, REFLECT)
-    BILINEAR_AFFINE_FAST_PATH (normal_x8r8g8b8, x8r8g8b8, NORMAL)
-    BILINEAR_AFFINE_FAST_PATH (pad_a8, a8, PAD)
-    BILINEAR_AFFINE_FAST_PATH (none_a8, a8, NONE)
-    BILINEAR_AFFINE_FAST_PATH (reflect_a8, a8, REFLECT)
-    BILINEAR_AFFINE_FAST_PATH (normal_a8, a8, NORMAL)
-    BILINEAR_AFFINE_FAST_PATH (pad_r5g6b5, r5g6b5, PAD)
-    BILINEAR_AFFINE_FAST_PATH (none_r5g6b5, r5g6b5, NONE)
-    BILINEAR_AFFINE_FAST_PATH (reflect_r5g6b5, r5g6b5, REFLECT)
-    BILINEAR_AFFINE_FAST_PATH (normal_r5g6b5, r5g6b5, NORMAL)
+#define NEAREST_AFFINE_FAST_PATH(name, format, repeat)			\
+    { PIXMAN_ ## format,						\
+      GENERAL_NEAREST_FLAGS | FAST_PATH_ ## repeat ## _REPEAT,		\
+      bits_image_fetch_nearest_affine_ ## name,			\
+      _pixman_image_get_scanline_generic_64				\
+    },
+
+#define AFFINE_FAST_PATHS(name, format, repeat)				\
+    BILINEAR_AFFINE_FAST_PATH(name, format, repeat)			\
+    NEAREST_AFFINE_FAST_PATH(name, format, repeat)
+    
+    AFFINE_FAST_PATHS (pad_a8r8g8b8, a8r8g8b8, PAD)
+    AFFINE_FAST_PATHS (none_a8r8g8b8, a8r8g8b8, NONE)
+    AFFINE_FAST_PATHS (reflect_a8r8g8b8, a8r8g8b8, REFLECT)
+    AFFINE_FAST_PATHS (normal_a8r8g8b8, a8r8g8b8, NORMAL)
+    AFFINE_FAST_PATHS (pad_x8r8g8b8, x8r8g8b8, PAD)
+    AFFINE_FAST_PATHS (none_x8r8g8b8, x8r8g8b8, NONE)
+    AFFINE_FAST_PATHS (reflect_x8r8g8b8, x8r8g8b8, REFLECT)
+    AFFINE_FAST_PATHS (normal_x8r8g8b8, x8r8g8b8, NORMAL)
+    AFFINE_FAST_PATHS (pad_a8, a8, PAD)
+    AFFINE_FAST_PATHS (none_a8, a8, NONE)
+    AFFINE_FAST_PATHS (reflect_a8, a8, REFLECT)
+    AFFINE_FAST_PATHS (normal_a8, a8, NORMAL)
+    AFFINE_FAST_PATHS (pad_r5g6b5, r5g6b5, PAD)
+    AFFINE_FAST_PATHS (none_r5g6b5, r5g6b5, NONE)
+    AFFINE_FAST_PATHS (reflect_r5g6b5, r5g6b5, REFLECT)
+    AFFINE_FAST_PATHS (normal_r5g6b5, r5g6b5, NORMAL)
 
     /* Affine, no alpha */
     { PIXMAN_any,
