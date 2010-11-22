@@ -3,7 +3,7 @@
  * Version:  7.8
  *
  * Copyright (C) 1999-2008  Brian Paul   All Rights Reserved.
- * Copyright (C) 2010  VMWare, Inc.  All Rights Reserved.
+ * Copyright (C) 2010  VMware, Inc.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,28 +38,11 @@
 
 
 
-#ifdef HAVE_DIX_CONFIG_H
-#include <dix-config.h>
-#include "glapi/mesa.h"
-#else
-#include "main/compiler.h"
-#include "main/glheader.h"
-#endif
+#include "glapi/glapi_priv.h"
 
-#include "glapi/glapi.h"
-
-
-/*
- * These stubs are kept so that the old DRI drivers still load.
- */
-PUBLIC void
-_glapi_noop_enable_warnings(GLboolean enable);
-
-PUBLIC void
-_glapi_set_warning_func(_glapi_proc func);
 
 void
-_glapi_noop_enable_warnings(GLboolean enable)
+_glapi_noop_enable_warnings(unsigned char enable)
 {
 }
 

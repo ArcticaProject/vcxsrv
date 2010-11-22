@@ -45,6 +45,7 @@ struct _mesa_prim {
    GLuint start;
    GLuint count;
    GLint basevertex;
+   GLsizei num_instances;
 };
 
 /* Would like to call this a "vbo_index_buffer", but this would be
@@ -138,6 +139,30 @@ void GLAPIENTRY
 _vbo_Materialfv(GLenum face, GLenum pname, const GLfloat *params);
 
 void GLAPIENTRY
+_vbo_Materialf(GLenum face, GLenum pname, GLfloat param);
+
+void GLAPIENTRY
 _vbo_VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+
+void GLAPIENTRY
+_vbo_VertexAttrib1f(GLuint indx, GLfloat x);
+
+void GLAPIENTRY
+_vbo_VertexAttrib1fv(GLuint indx, const GLfloat* values);
+
+void GLAPIENTRY
+_vbo_VertexAttrib2f(GLuint indx, GLfloat x, GLfloat y);
+
+void GLAPIENTRY
+_vbo_VertexAttrib2fv(GLuint indx, const GLfloat* values);
+
+void GLAPIENTRY
+_vbo_VertexAttrib3f(GLuint indx, GLfloat x, GLfloat y, GLfloat z);
+
+void GLAPIENTRY
+_vbo_VertexAttrib3fv(GLuint indx, const GLfloat* values);
+
+void GLAPIENTRY
+_vbo_VertexAttrib4fv(GLuint indx, const GLfloat* values);
 
 #endif

@@ -4666,8 +4666,8 @@
 
     <function name="MultiDrawArrays" alias="MultiDrawArraysEXT">
         <param name="mode" type="GLenum"/>
-        <param name="first" type="GLint *"/> <!-- Spec bug. Should be const. -->
-        <param name="count" type="GLsizei *"/> <!-- Spec bug. Should be const. -->
+        <param name="first" type="const GLint *"/>
+        <param name="count" type="const GLsizei *"/>
         <param name="primcount" type="GLsizei"/>
     </function>
 
@@ -7967,6 +7967,12 @@
 
 <xi:include href="NV_conditional_render.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
+<xi:include href="EXT_transform_feedback.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+<xi:include href="ARB_draw_instanced.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+<xi:include href="ARB_geometry_shader4.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
 
 <!-- Non-ARB extensions sorted by extension number. -->
 
@@ -9788,8 +9794,8 @@
 <category name="GL_EXT_multi_draw_arrays" number="148">
     <function name="MultiDrawArraysEXT" offset="assign">
         <param name="mode" type="GLenum"/>
-        <param name="first" type="GLint *"/> <!-- Spec bug. Should be const. -->
-        <param name="count" type="GLsizei *"/> <!-- Spec bug. Should be const. -->
+        <param name="first" type="const GLint *"/>
+        <param name="count" type="const GLsizei *"/>
         <param name="primcount" type="GLsizei"/>
         <glx handcode="true"/>
     </function>

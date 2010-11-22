@@ -27,8 +27,8 @@
  * \file glapi_dispatch.c
  *
  * This file generates all the gl* function entrypoints.  This code is not
- * used if optimized assembly stubs are available (e.g., using x86/glapi_x86.S
- * on IA32 or sparc/glapi_sparc.S on SPARC).
+ * used if optimized assembly stubs are available (e.g., using
+ * glapi/glapi_x86.S on IA32 or glapi/glapi_sparc.S on SPARC).
  *
  * \note
  * This file is also used to build the client-side libGL that loads DRI-based
@@ -37,18 +37,9 @@
  * \author Brian Paul <brian@precisioninsight.com>
  */
 
-#ifdef HAVE_DIX_CONFIG_H
-#include <dix-config.h>
-#include "glapi/mesa.h"
-#else
-#include "main/glheader.h"
-#include "main/compiler.h"
-#endif
-
-#include "glapi/glapi.h"
+#include "glapi/glapi_priv.h"
 #include "glapi/glapitable.h"
 #include "glapi/glapidispatch.h"
-#include "glapi/glthread.h"
 
 
 #if !(defined(USE_X86_ASM) || defined(USE_X86_64_ASM) || defined(USE_SPARC_ASM))

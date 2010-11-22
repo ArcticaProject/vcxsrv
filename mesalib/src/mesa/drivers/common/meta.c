@@ -34,6 +34,7 @@
 #include "main/glheader.h"
 #include "main/mtypes.h"
 #include "main/imports.h"
+#include "main/arbprogram.h"
 #include "main/arrayobj.h"
 #include "main/blend.h"
 #include "main/bufferobj.h"
@@ -51,7 +52,7 @@
 #include "main/polygon.h"
 #include "main/readpix.h"
 #include "main/scissor.h"
-#include "main/shaders.h"
+#include "main/shaderapi.h"
 #include "main/state.h"
 #include "main/stencil.h"
 #include "main/texobj.h"
@@ -61,8 +62,7 @@
 #include "main/texstate.h"
 #include "main/varray.h"
 #include "main/viewport.h"
-#include "shader/program.h"
-#include "shader/arbprogram.h"
+#include "program/program.h"
 #include "swrast/swrast.h"
 #include "drivers/common/meta.h"
 
@@ -430,13 +430,15 @@ _mesa_meta_begin(GLcontext *ctx, GLbitfield state)
    if (state & META_SHADER) {
       if (ctx->Extensions.ARB_vertex_program) {
          save->VertexProgramEnabled = ctx->VertexProgram.Enabled;
-         save->VertexProgram = ctx->VertexProgram.Current;
+         _mesa_reference_vertprog(ctx, &save->VertexProgram,
+				  ctx->VertexProgram.Current);
          _mesa_set_enable(ctx, GL_VERTEX_PROGRAM_ARB, GL_FALSE);
       }
 
       if (ctx->Extensions.ARB_fragment_program) {
          save->FragmentProgramEnabled = ctx->FragmentProgram.Enabled;
-         save->FragmentProgram = ctx->FragmentProgram.Current;
+         _mesa_reference_fragprog(ctx, &save->FragmentProgram,
+				  ctx->FragmentProgram.Current);
          _mesa_set_enable(ctx, GL_FRAGMENT_PROGRAM_ARB, GL_FALSE);
       }
 
@@ -664,6 +666,7 @@ _mesa_meta_end(GLcontext *ctx)
                           save->VertexProgramEnabled);
          _mesa_reference_vertprog(ctx, &ctx->VertexProgram.Current, 
                                   save->VertexProgram);
+	 _mesa_reference_vertprog(ctx, &save->VertexProgram, NULL);
       }
 
       if (ctx->Extensions.ARB_fragment_program) {
@@ -671,6 +674,7 @@ _mesa_meta_end(GLcontext *ctx)
                           save->FragmentProgramEnabled);
          _mesa_reference_fragprog(ctx, &ctx->FragmentProgram.Current,
                                   save->FragmentProgram);
+	 _mesa_reference_fragprog(ctx, &save->FragmentProgram, NULL);
       }
 
       if (ctx->Extensions.ARB_shader_objects) {
@@ -721,6 +725,7 @@ _mesa_meta_end(GLcontext *ctx)
       for (tgt = 0; tgt < NUM_TEXTURE_TARGETS; tgt++) {
          _mesa_reference_texobj(&ctx->Texture.Unit[0].CurrentTex[tgt],
                                 save->CurrentTexture[tgt]);
+         _mesa_reference_texobj(&save->CurrentTexture[tgt], NULL);
       }
 
       /* Re-enable textures, texgen */
@@ -2082,8 +2087,10 @@ _mesa_meta_Bitmap(GLcontext *ctx,
    }
 
    bitmap1 = _mesa_map_pbo_source(ctx, &unpackSave, bitmap1);
-   if (!bitmap1)
+   if (!bitmap1) {
+      _mesa_meta_end(ctx);
       return;
+   }
 
    bitmap8 = (GLubyte *) calloc(1, width * height);
    if (bitmap8) {
@@ -2393,6 +2400,9 @@ _mesa_meta_GenerateMipmap(GLcontext *ctx, GLenum target,
          break;
       }
 
+      /* Set MaxLevel large enough to hold the new level when we allocate it  */
+      _mesa_TexParameteri(target, GL_TEXTURE_MAX_LEVEL, dstLevel);
+
       /* Create empty dest image */
       if (target == GL_TEXTURE_1D) {
          _mesa_TexImage1D(target, dstLevel, srcImage->InternalFormat,
@@ -2560,12 +2570,6 @@ copy_tex_image(GLcontext *ctx, GLuint dims, GLenum target, GLint level,
       return;
    }
 
-   if (texImage->TexFormat == MESA_FORMAT_NONE)
-      texImage->TexFormat = ctx->Driver.ChooseTextureFormat(ctx,
-                                                            internalFormat,
-                                                            format,
-                                                            type);
-
    _mesa_unlock_texture(ctx, texObj); /* need to unlock first */
 
    /*
@@ -2579,12 +2583,10 @@ copy_tex_image(GLcontext *ctx, GLuint dims, GLenum target, GLint level,
    /*
     * Prepare for new texture image size/data
     */
-#if FEATURE_convolve
    if (_mesa_is_color_format(internalFormat)) {
       _mesa_adjust_image_for_convolution(ctx, 2,
                                          &postConvWidth, &postConvHeight);
    }
-#endif
 
    if (texImage->Data) {
       ctx->Driver.FreeTexImageData(ctx, texImage);
@@ -2593,6 +2595,9 @@ copy_tex_image(GLcontext *ctx, GLuint dims, GLenum target, GLint level,
    _mesa_init_teximage_fields(ctx, target, texImage,
                               postConvWidth, postConvHeight, 1,
                               border, internalFormat);
+
+   _mesa_choose_texture_format(ctx, texObj, texImage, target, level,
+                               internalFormat, GL_NONE, GL_NONE);
 
    /*
     * Store texture data (with pixel transfer ops)

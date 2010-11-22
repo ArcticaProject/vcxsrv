@@ -33,7 +33,7 @@
 #define FORMATS_H
 
 
-#include "main/mtypes.h"
+#include <GL/gl.h>
 
 
 
@@ -131,13 +131,38 @@ typedef enum
    /*@}*/
 
    /**
+    * \name Non-normalized signed integer formats.
+    * XXX Note: these are just stand-ins for some better hardware
+    * formats TBD such as BGRA or ARGB.
+    */
+   MESA_FORMAT_RGBA_INT8,
+   MESA_FORMAT_RGBA_INT16,
+   MESA_FORMAT_RGBA_INT32,
+
+   /**
+    * \name Non-normalized unsigned integer formats.
+    */
+   MESA_FORMAT_RGBA_UINT8,
+   MESA_FORMAT_RGBA_UINT16,
+   MESA_FORMAT_RGBA_UINT32,
+
+                                  /* msb <------ TEXEL BITS -----------> lsb */
+                                  /* ---- ---- ---- ---- ---- ---- ---- ---- */
+   /**
     * \name Signed fixed point texture formats.
     */
    /*@{*/
-   MESA_FORMAT_DUDV8,
-   MESA_FORMAT_SIGNED_RGBA8888,
-   MESA_FORMAT_SIGNED_RGBA8888_REV,
-   MESA_FORMAT_SIGNED_RGBA_16,
+   MESA_FORMAT_DUDV8,             /*                     DUDU DUDU DVDV DVDV */
+   MESA_FORMAT_SIGNED_R8,         /*                               RRRR RRRR */
+   MESA_FORMAT_SIGNED_RG88,       /*                     RRRR RRRR GGGG GGGG */
+   MESA_FORMAT_SIGNED_RGBX8888,   /* RRRR RRRR GGGG GGGG BBBB BBBB xxxx xxxx */
+   MESA_FORMAT_SIGNED_RGBA8888,   /* RRRR RRRR GGGG GGGG BBBB BBBB AAAA AAAA */
+   MESA_FORMAT_SIGNED_RGBA8888_REV,/*AAAA AAAA BBBB BBBB GGGG GGGG RRRR RRRR */
+   MESA_FORMAT_SIGNED_R_16,       /* ushort[0]=R */
+   MESA_FORMAT_SIGNED_RG_16,      /* ushort[0]=R, ushort[1]=G */
+   MESA_FORMAT_SIGNED_RGB_16,     /* ushort[0]=R, ushort[1]=G, ushort[2]=B */
+   MESA_FORMAT_SIGNED_RGBA_16,    /* ... */
+   MESA_FORMAT_RGBA_16,           /* ... */
    /*@}*/
 
    MESA_FORMAT_COUNT
@@ -164,6 +189,9 @@ _mesa_get_format_block_size(gl_format format, GLuint *bw, GLuint *bh);
 
 extern GLboolean
 _mesa_is_format_compressed(gl_format format);
+
+extern GLboolean
+_mesa_is_format_packed_depth_stencil(gl_format format);
 
 extern GLenum
 _mesa_get_format_color_encoding(gl_format format);
