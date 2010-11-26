@@ -1,0 +1,22 @@
+
+# The doc_sources variable contains one or more DocBook/XML source file.
+# The generated documents will NOT be installed in $(docdir),
+# The DocBook/XML files will always be included in the tarball
+
+dist_noinst_DATA = $(doc_sources)
+
+if HAVE_XMLTO
+noinst_DATA = $(doc_sources:.xml=.html)
+
+if HAVE_FOP
+noinst_DATA += $(doc_sources:.xml=.pdf)
+endif
+
+if HAVE_XMLTO_TEXT
+noinst_DATA += $(doc_sources:.xml=.txt)
+endif
+
+CLEANFILES = $(noinst_DATA)
+include $(top_srcdir)/doc/xml/xmlrules.in
+
+endif HAVE_XMLTO

@@ -21,18 +21,16 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-XML_FILES = Xserver-DTrace.xml
-
-include ../xmlrules.in
+doc_sources =  Xserver-DTrace.xml
 
 if ENABLE_DOCS
+
+# This user's documentation is installed only if tracing is available
 if XSERVER_DTRACE
-doc_DATA = $(BUILT_DOC_FILES)
+include $(top_srcdir)/doc/xml/xmlrules-inst.in
 else
-noinst_DATA = $(BUILT_DOC_FILES)
-endif
+include $(top_srcdir)/doc/xml/xmlrules-noinst.in
 endif
 
-CLEANFILES = $(CLEAN_DOC_FILES)
+endif
 
-EXTRA_DIST = $(XML_FILES)

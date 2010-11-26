@@ -48,8 +48,10 @@ XORG_FONT_MACROS_VERSION(1.1)
 XORG_FONTSUBDIR([ENCODINGSDIR], [encodingsdir], [encodings])
 
 # zlib
-
-AC_CHECK_LIB(z, gzclose) 
+AC_CHECK_HEADER([zlib.h], [],
+                AC_MSG_FAILURE([zlib.h is required to compile libfontenc]))
+AC_CHECK_LIB(z, gzclose, [],
+             AC_MSG_FAILURE([zlib is required to compile libfontenc]))
 
 # Check for dependencies
 PKG_CHECK_MODULES(FONTENC, xproto)

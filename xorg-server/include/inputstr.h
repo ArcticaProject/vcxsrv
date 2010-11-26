@@ -57,7 +57,7 @@ SOFTWARE.
 #include "geext.h"
 #include "privates.h"
 
-#define BitIsOn(ptr, bit) (((BYTE *) (ptr))[(bit)>>3] & (1 << ((bit) & 7)))
+#define BitIsOn(ptr, bit) (!!(((BYTE *) (ptr))[(bit)>>3] & (1 << ((bit) & 7))))
 #define SetBit(ptr, bit)  (((BYTE *) (ptr))[(bit)>>3] |= (1 << ((bit) & 7)))
 #define ClearBit(ptr, bit) (((BYTE *)(ptr))[(bit)>>3] &= ~(1 << ((bit) & 7)))
 extern _X_EXPORT int CountBits(const uint8_t *mask, int len);

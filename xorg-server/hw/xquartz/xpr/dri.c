@@ -89,14 +89,6 @@ static x_hash_table *surface_hash;      /* maps surface ids -> drawablePrivs */
 
 static Bool DRIFreePixmapImp(DrawablePtr pDrawable);
 
-/* FIXME: don't hardcode this? */
-#define CG_INFO_FILE "/System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreGraphics.framework/Resources/Info-macos.plist"
-
-/* Corresponds to SU Jaguar Green */
-#define CG_REQUIRED_MAJOR 1
-#define CG_REQUIRED_MINOR 157
-#define CG_REQUIRED_MICRO 11
-
 typedef struct {
     DrawablePtr pDrawable;
     int refCount;
@@ -108,96 +100,6 @@ typedef struct {
     size_t length; /* length of buffer */
     void *buffer;       
 } DRIPixmapBuffer, *DRIPixmapBufferPtr;
-
-/* Returns version as major.minor.micro in 10.10.10 fixed form */
-static unsigned int
-get_cg_version (void)
-{
-    static unsigned int version;
-
-    FILE *fh;
-    char *ptr;
-
-    if (version != 0)
-        return version;
-
-    /* I tried CFBundleGetVersion, but it returns zero, so.. */
-
-    fh = fopen (CG_INFO_FILE, "r");
-    if (fh != NULL)
-    {
-        char buf[256];
-
-        while (fgets (buf, sizeof (buf), fh) != NULL)
-        {
-            unsigned char c;
-
-            if (!strstr (buf, "<key>CFBundleShortVersionString</key>")
-                || fgets (buf, sizeof (buf), fh) == NULL)
-            {
-                continue;
-            }
-
-            ptr = strstr (buf, "<string>");
-            if (ptr == NULL)
-                continue;
-
-            ptr += strlen ("<string>");
-
-            /* Now PTR points to "MAJOR.MINOR.MICRO". */
-
-            version = 0;
-
-        again:
-            switch ((c = *ptr++))
-            {
-            case '.':
-                version = version * 1024;
-                goto again;
-
-            case '0': case '1': case '2': case '3': case '4':
-            case '5': case '6': case '7': case '8': case '9':
-                version = ((version & ~0x3ff)
-                          + (version & 0x3ff) * 10 + (c - '0'));
-                goto again;
-            }
-            break;
-        }
-
-        fclose (fh);
-    }
-
-    return version;
-}
-
-static Bool
-test_cg_version (unsigned int major, unsigned int minor, unsigned int micro)
-{
-    unsigned int cg_ver = get_cg_version ();
-
-    unsigned int cg_major = (cg_ver >> 20) & 0x3ff;
-    unsigned int cg_minor = (cg_ver >> 10) & 0x3ff;
-    unsigned int cg_micro =  cg_ver        & 0x3ff;
-
-    if (cg_major > major)
-        return TRUE;
-    else if (cg_major < major)
-        return FALSE;
-
-    /* cg_major == major */
-
-    if (cg_minor > minor)
-        return TRUE;
-    else if (cg_minor < minor)
-        return FALSE;
-
-    /* cg_minor == minor */
-
-    if (cg_micro < micro)
-        return FALSE;
-
-    return TRUE;
-}
 
 Bool
 DRIScreenInit(ScreenPtr pScreen)
@@ -223,20 +125,6 @@ DRIScreenInit(ScreenPtr pScreen)
     dixSetPrivate(&pScreen->devPrivates, DRIScreenPrivKey, pDRIPriv);
     pDRIPriv->directRenderingSupport = TRUE;
     pDRIPriv->nrWindows = 0;
-
-    /* Need recent cg for window access update */
-    if (!test_cg_version (CG_REQUIRED_MAJOR,
-                          CG_REQUIRED_MINOR,
-                          CG_REQUIRED_MICRO))
-    {
-        ErrorF ("[DRI] disabled direct rendering; requires CoreGraphics %d.%d.%d\n",
-                CG_REQUIRED_MAJOR, CG_REQUIRED_MINOR, CG_REQUIRED_MICRO);
-
-        pDRIPriv->directRenderingSupport = FALSE;
-
-        /* Note we don't nuke the dri private, since we need it for
-           managing indirect surfaces. */
-    }
 
     /* Initialize drawable tables */
     for (i = 0; i < DRI_MAX_DRAWABLES; i++) {

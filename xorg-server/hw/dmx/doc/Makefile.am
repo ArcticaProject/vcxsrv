@@ -19,14 +19,12 @@
 #  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-XML_FILES = dmx.xml scaled.xml
+doc_sources = dmx.xml scaled.xml
 
-include ../../../doc/xml/xmlrules.in
-
+# Developer's documentation is not installed
 if ENABLE_DEVEL_DOCS
-noinst_DATA = $(BUILT_DOC_FILES)
+include $(top_srcdir)/doc/xml/xmlrules-noinst.in
 endif
-CLEANFILES = $(CLEAN_DOC_FILES)
 
 if HAVE_DOXYGEN
 

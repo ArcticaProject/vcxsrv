@@ -85,7 +85,11 @@ static void *console_handler;
 static void
 drain_console(int fd, void *closure)
 {
-    tcflush(fd, TCIOFLUSH);
+    errno = 0;
+    if (tcflush(fd, TCIOFLUSH) == -1 && errno == EIO) {
+	xf86RemoveGeneralHandler(console_handler);
+	console_handler = NULL;
+    }
 }
 
 void

@@ -22,14 +22,9 @@
 #
 
 SUBDIRS = dtrace
+doc_sources =  Xserver-spec.xml
 
-XML_FILES = Xserver-spec.xml
-
-include xmlrules.in
-
+# Developer's documentation is not installed
 if ENABLE_DEVEL_DOCS
-noinst_DATA = $(BUILT_DOC_FILES)
+include $(top_srcdir)/doc/xml/xmlrules-noinst.in
 endif
-CLEANFILES = $(CLEAN_DOC_FILES)
-
-EXTRA_DIST = $(XML_FILES)

@@ -960,7 +960,7 @@ moTpvKDmoIfmjInplK7jgIIKA</string>
 												<object class="NSTextFieldCell" key="NSCell" id="461823902">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">4194304</int>
-													<string key="NSContents">如果您想要使用 xclipboard、klipper 或其他任何 X11 夹纸板管理程序，请停用此选项。</string>
+													<string key="NSContents">如果您想要使用 xclipboard、klipper 或其他任何 X11 剪切板管理程序，请停用此选项。</string>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="620944856"/>
 													<reference key="NSBackgroundColor" ref="57160303"/>

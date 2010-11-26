@@ -21,58 +21,27 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-# This file is included by Makefile.am in subdirectories that have
-# DocBook XML documentation files.
-#
-# No files are automatically distributed or installed by this subset of rules
-# Any files to be distributed or installed would be listed in the including
-# Makefile.am
-
-TXT_FILES  = $(XML_FILES:%.xml=%.txt)
-HTML_FILES = $(XML_FILES:%.xml=%.html)
-PDF_FILES  = $(XML_FILES:%.xml=%.pdf)
-
-BUILT_DOC_FILES =
-
-SUFFIXES = .xml .txt .html .pdf
+# This file provides pattern rules to generate html/pdf/txt from DocBook/XML
+# A stylesheet is used if xorg-sgml-doctools is installed
+# This file is included by xmlrules-inst.in for installable user's documentation
+# It is included by xmlrules-noinst for non installable developer's documentation
+# If the server version or release date changes, autogen && make
 
 XML_ENT_DIR = $(abs_top_builddir)/doc/xml
+SUFFIXES = .xml .txt .html .pdf
+
 XMLTO_FLAGS = --searchpath $(XML_ENT_DIR)
 
 if HAVE_STYLESHEETS
-XMLTO_FLAGS += -m $(XSL_STYLESHEET)
-BUILT_DOC_FILES += xorg.css
-
-xorg.css: $(STYLESHEET_SRCDIR)/xorg.css
-	$(AM_V_GEN)cp -pf $(STYLESHEET_SRCDIR)/xorg.css $@
+XMLTO_FLAGS += -m $(XSL_STYLESHEET) \
+	--stringparam html.stylesheet=$(STYLESHEET_SRCDIR)/xorg.css
 endif
 
-if HAVE_XMLTO
-if HAVE_XMLTO_TEXT
-BUILT_DOC_FILES += $(TXT_FILES)
-.xml.txt:
-	@rm -f $@
+%.txt: %.xml $(XML_ENT_DIR)/xserver.ent
 	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) txt $<
-endif
 
-BUILT_DOC_FILES += $(HTML_FILES)
-.xml.html:
-	@rm -f $@
+%.html: %.xml $(XML_ENT_DIR)/xserver.ent
 	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) xhtml-nochunks $<
 
-if HAVE_FOP
-BUILT_DOC_FILES += $(PDF_FILES)
-.xml.pdf:
-	@rm -f $@
+%.pdf: %.xml $(XML_ENT_DIR)/xserver.ent
 	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop pdf $<
-endif
-
-endif
-
-CLEAN_DOC_FILES = $(TXT_FILES) $(HTML_FILES) $(PDF_FILES) xorg.css
-
-# All the files we build depend on the entities
-$(BUILT_DOC_FILES): $(XML_ENT_DIR)/xserver.ent
-
-$(XML_ENT_DIR)/xserver.ent:
-	(cd $(XML_ENT_DIR) && $(MAKE) $(AM_MAKEFLAGS) $(@F))

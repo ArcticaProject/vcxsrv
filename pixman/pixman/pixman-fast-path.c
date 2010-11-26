@@ -1334,7 +1334,11 @@ fast_composite_solid_fill (pixman_implementation_t *imp,
 
     src = _pixman_image_get_solid (src_image, dst_image->bits.format);
 
-    if (dst_image->bits.format == PIXMAN_a8)
+    if (dst_image->bits.format == PIXMAN_a1)
+    {
+	src = src >> 31;
+    }
+    else if (dst_image->bits.format == PIXMAN_a8)
     {
 	src = src >> 24;
     }
@@ -1655,6 +1659,7 @@ static const pixman_fast_path_t c_fast_paths[] =
     PIXMAN_STD_FAST_PATH (SRC, solid, null, x8r8g8b8, fast_composite_solid_fill),
     PIXMAN_STD_FAST_PATH (SRC, solid, null, a8b8g8r8, fast_composite_solid_fill),
     PIXMAN_STD_FAST_PATH (SRC, solid, null, x8b8g8r8, fast_composite_solid_fill),
+    PIXMAN_STD_FAST_PATH (SRC, solid, null, a1, fast_composite_solid_fill),
     PIXMAN_STD_FAST_PATH (SRC, solid, null, a8, fast_composite_solid_fill),
     PIXMAN_STD_FAST_PATH (SRC, solid, null, r5g6b5, fast_composite_solid_fill),
     PIXMAN_STD_FAST_PATH (SRC, x8r8g8b8, null, a8r8g8b8, fast_composite_src_x888_8888),
@@ -1732,6 +1737,82 @@ static const pixman_fast_path_t c_fast_paths[] =
 
     {   PIXMAN_OP_NONE	},
 };
+
+#ifdef WORDS_BIGENDIAN
+#define A1_FILL_MASK(n, offs) (((1 << (n)) - 1) << (32 - (offs) - (n)))
+#else
+#define A1_FILL_MASK(n, offs) (((1 << (n)) - 1) << (offs))
+#endif
+
+static force_inline void
+pixman_fill1_line (uint32_t *dst, int offs, int width, int v)
+{
+    if (offs)
+    {
+	int leading_pixels = 32 - offs;
+	if (leading_pixels >= width)
+	{
+	    if (v)
+		*dst |= A1_FILL_MASK (width, offs);
+	    else
+		*dst &= ~A1_FILL_MASK (width, offs);
+	    return;
+	}
+	else
+	{
+	    if (v)
+		*dst++ |= A1_FILL_MASK (leading_pixels, offs);
+	    else
+		*dst++ &= ~A1_FILL_MASK (leading_pixels, offs);
+	    width -= leading_pixels;
+	}
+    }
+    while (width >= 32)
+    {
+	if (v)
+	    *dst++ = 0xFFFFFFFF;
+	else
+	    *dst++ = 0;
+	width -= 32;
+    }
+    if (width > 0)
+    {
+	if (v)
+	    *dst |= A1_FILL_MASK (width, 0);
+	else
+	    *dst &= ~A1_FILL_MASK (width, 0);
+    }
+}
+
+static void
+pixman_fill1 (uint32_t *bits,
+              int       stride,
+              int       x,
+              int       y,
+              int       width,
+              int       height,
+              uint32_t  xor)
+{
+    uint32_t *dst = bits + y * stride + (x >> 5);
+    int offs = x & 31;
+
+    if (xor & 1)
+    {
+	while (height--)
+	{
+	    pixman_fill1_line (dst, offs, width, 1);
+	    dst += stride;
+	}
+    }
+    else
+    {
+	while (height--)
+	{
+	    pixman_fill1_line (dst, offs, width, 0);
+	    dst += stride;
+	}
+    }
+}
 
 static void
 pixman_fill8 (uint32_t *bits,
@@ -1819,6 +1900,10 @@ fast_path_fill (pixman_implementation_t *imp,
 {
     switch (bpp)
     {
+    case 1:
+	pixman_fill1 (bits, stride, x, y, width, height, xor);
+	break;
+
     case 8:
 	pixman_fill8 (bits, stride, x, y, width, height, xor);
 	break;

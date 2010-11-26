@@ -1548,7 +1548,7 @@ extern Atom XInternAtom(
 );
 extern Status XInternAtoms(
     Display*		/* dpy */,
-    char**		/* names */,
+    _Xconst char**	/* names */,
     int			/* count */,
     Bool		/* onlyIfExists */,
     Atom*		/* atoms_return */

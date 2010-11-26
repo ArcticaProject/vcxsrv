@@ -367,7 +367,7 @@
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
-				<string key="NSWindowContentMaxSize">{3.4028235e+38, 3.4028235e+38}</string>
+				<string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<string key="NSWindowContentMinSize">{320, 240}</string>
 				<object class="NSView" key="NSWindowView" id="941366957">
 					<nil key="NSNextResponder"/>
@@ -459,7 +459,7 @@
 														<string key="NSColorName">controlColor</string>
 														<object class="NSColor" key="NSColor" id="590688762">
 															<int key="NSColorSpace">3</int>
-															<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
+															<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 														</object>
 													</object>
 													<object class="NSColor" key="NSTextColor" id="930815747">
@@ -508,7 +508,7 @@
 										</array>
 										<string key="NSFrame">{{10, 33}, {438, 246}}</string>
 									</object>
-									<string key="NSLabel">أمان</string>
+									<string key="NSLabel">الأمان</string>
 									<reference key="NSColor" ref="57160303"/>
 									<reference key="NSTabView" ref="448510093"/>
 								</object>
@@ -637,7 +637,7 @@
 										</array>
 										<string key="NSFrame">{{10, 33}, {438, 246}}</string>
 									</object>
-									<string key="NSLabel">Windows</string>
+									<string key="NSLabel">نوافذ</string>
 									<reference key="NSColor" ref="57160303"/>
 									<reference key="NSTabView" ref="448510093"/>
 								</object>
@@ -853,7 +853,7 @@
 												<object class="NSTextFieldCell" key="NSCell" id="624655599">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">71303296</int>
-													<string key="NSContents">تستخدم إشارات X11 الصوتية تنبيه النظام القياسي، كما هو محدد في لوحة تفضيلات النظام لمؤثرات الصوت.</string>
+													<string key="NSContents">تستخدم إشارات X11 الصوتية التنبيه القياسي للنظام، كما هو محدد في لوحة تفضيلات النظام لمؤثرات الصوت.</string>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="1039016593"/>
 													<reference key="NSBackgroundColor" ref="57160303"/>
@@ -908,7 +908,7 @@
 															<reference ref="616492372"/>
 															<object class="NSMenuItem" id="759499526">
 																<reference key="NSMenu" ref="341113515"/>
-																<string key="NSTitle">256 لونًا</string>
+																<string key="NSTitle">٢٥٦ لونًا</string>
 																<string key="NSKeyEquiv"/>
 																<int key="NSKeyEquivModMask">1048576</int>
 																<int key="NSMnemonicLoc">2147483647</int>
@@ -1035,7 +1035,7 @@
 												<object class="NSTextFieldCell" key="NSCell" id="761107402">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">71303296</int>
-													<string key="NSContents">تمكين نافذة X11 الجذري. استخدم ضغط مفاتيح الأوامر-الاختيار-A لدخول ومغادرة وضع ملء الشاشة.</string>
+													<string key="NSContents">تمكين نافذة X11 root. استخدم ضغط مفاتيح الأوامر-الاختيار-A لدخول ومغادرة وضع ملء الشاشة.</string>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="298603383"/>
 													<reference key="NSBackgroundColor" ref="57160303"/>
@@ -1145,7 +1145,7 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 												<object class="NSTextFieldCell" key="NSCell" id="666057093">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">71303296</int>
-													<string key="NSContents">السماح بكتابة تغييرات قائمة الإدخال فوق مخطط مفاتيح X11 الحالي.</string>
+													<string key="NSContents">السماح لتغييرات قائمة الإدخال بالكتابة فوق مخطط مفاتيح X11 الحالي.</string>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="31160162"/>
 													<reference key="NSBackgroundColor" ref="57160303"/>
@@ -1183,7 +1183,7 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 												<object class="NSTextFieldCell" key="NSCell" id="617441821">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">71303296</int>
-													<string key="NSContents">عند التمكين، مفاتيح الخيار إرسال Alt_L و Alt_R X11 علامات المفتاح بدلًا من Mode_switch.</string>
+													<string key="NSContents">عند تمكينها، تقوم مفاتيح الاختيار بإرسال علامات المفتاح Alt_L و Alt_R X11 بدلًا من Mode_switch.</string>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="278155937"/>
 													<reference key="NSBackgroundColor" ref="57160303"/>
@@ -1199,7 +1199,7 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 												<object class="NSButtonCell" key="NSCell" id="67728988">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">67108992</int>
-													<string key="NSContents">مفاتيح الخيار إرسال Alt_L و Alt_R</string>
+													<string key="NSContents">مفاتيح الاختيار تقوم بإرسال Alt_L و Alt_R</string>
 													<reference key="NSSupport" ref="463863101"/>
 													<reference key="NSControlView" ref="406291430"/>
 													<int key="NSButtonFlags">1210864127</int>
@@ -1216,7 +1216,7 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 										<string key="NSFrame">{{10, 33}, {438, 246}}</string>
 										<reference key="NSSuperview" ref="448510093"/>
 									</object>
-									<string key="NSLabel">إدخال</string>
+									<string key="NSLabel">الإدخال</string>
 									<reference key="NSColor" ref="57160303"/>
 									<reference key="NSTabView" ref="448510093"/>
 								</object>
@@ -1235,7 +1235,7 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 938}}</string>
 				<string key="NSMinSize">{320, 262}</string>
-				<string key="NSMaxSize">{3.4028235e+38, 3.4028235e+38}</string>
+				<string key="NSMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<string key="NSFrameAutosaveName">x11_prefs</string>
 			</object>
 			<object class="NSWindowTemplate" id="604417141">
@@ -1249,10 +1249,10 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
-				<string key="NSWindowContentMaxSize">{3.4028235e+38, 3.4028235e+38}</string>
+				<string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<string key="NSWindowContentMinSize">{320, 240}</string>
 				<object class="NSView" key="NSWindowView" id="85544634">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSButton" id="671954382">
@@ -1260,7 +1260,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{14, 191}, {100, 32}}</string>
 							<reference key="NSSuperview" ref="85544634"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="143554520">
 								<int key="NSCellFlags">67239424</int>
@@ -1288,7 +1287,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{14, 159}, {100, 32}}</string>
 							<reference key="NSSuperview" ref="85544634"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="8201128">
 								<int key="NSCellFlags">67239424</int>
@@ -1320,14 +1318,12 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 											<int key="NSvFlags">256</int>
 											<string key="NSFrameSize">{301, 198}</string>
 											<reference key="NSSuperview" ref="580565898"/>
-											<reference key="NSWindow"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="792419186">
 												<reference key="NSNextResponder" ref="672307654"/>
 												<int key="NSvFlags">256</int>
 												<string key="NSFrameSize">{301, 17}</string>
 												<reference key="NSSuperview" ref="672307654"/>
-												<reference key="NSWindow"/>
 												<reference key="NSTableView" ref="905092943"/>
 											</object>
 											<object class="_NSCornerView" key="NSCornerView" id="898633680">
@@ -1335,7 +1331,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 												<int key="NSvFlags">256</int>
 												<string key="NSFrame">{{302, 0}, {16, 17}}</string>
 												<reference key="NSSuperview" ref="1063387772"/>
-												<reference key="NSWindow"/>
 											</object>
 											<array class="NSMutableArray" key="NSTableColumns">
 												<object class="NSTableColumn" id="242608782">
@@ -1468,7 +1463,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 									</array>
 									<string key="NSFrame">{{1, 17}, {301, 198}}</string>
 									<reference key="NSSuperview" ref="1063387772"/>
-									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="905092943"/>
 									<reference key="NSDocView" ref="905092943"/>
 									<reference key="NSBGColor" ref="812484075"/>
@@ -1479,7 +1473,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 									<int key="NSvFlags">256</int>
 									<string key="NSFrame">{{302, 17}, {15, 198}}</string>
 									<reference key="NSSuperview" ref="1063387772"/>
-									<reference key="NSWindow"/>
 									<reference key="NSTarget" ref="1063387772"/>
 									<string key="NSAction">_doScroller:</string>
 									<double key="NSPercent">0.99492377042770386</double>
@@ -1489,7 +1482,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 									<int key="NSvFlags">256</int>
 									<string key="NSFrame">{{1, 215}, {301, 15}}</string>
 									<reference key="NSSuperview" ref="1063387772"/>
-									<reference key="NSWindow"/>
 									<int key="NSsFlags">1</int>
 									<reference key="NSTarget" ref="1063387772"/>
 									<string key="NSAction">_doScroller:</string>
@@ -1503,7 +1495,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 									</array>
 									<string key="NSFrame">{{1, 0}, {301, 17}}</string>
 									<reference key="NSSuperview" ref="1063387772"/>
-									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="792419186"/>
 									<reference key="NSDocView" ref="792419186"/>
 									<reference key="NSBGColor" ref="812484075"/>
@@ -1513,14 +1504,12 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 							</array>
 							<string key="NSFrame">{{116, 20}, {318, 231}}</string>
 							<reference key="NSSuperview" ref="85544634"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="580565898"/>
 							<int key="NSsFlags">50</int>
 							<reference key="NSVScroller" ref="842897584"/>
 							<reference key="NSHScroller" ref="17278747"/>
 							<reference key="NSContentView" ref="580565898"/>
 							<reference key="NSHeaderClipView" ref="672307654"/>
-							<reference key="NSCornerView" ref="898633680"/>
 							<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
 						</object>
 						<object class="NSButton" id="758204686">
@@ -1528,7 +1517,6 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{14, 223}, {100, 32}}</string>
 							<reference key="NSSuperview" ref="85544634"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="1025474039">
 								<int key="NSCellFlags">-2080244224</int>
@@ -1549,12 +1537,10 @@ INmE2KrZhti02YrYtyDYstixINin2YTZhdin2YjYsyDYp9mE2KPZiNiz2Lcg2KPZiCDYp9mE2KPZitmF
 						</object>
 					</array>
 					<string key="NSFrameSize">{454, 271}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 938}}</string>
 				<string key="NSMinSize">{320, 262}</string>
-				<string key="NSMaxSize">{3.4028235e+38, 3.4028235e+38}</string>
+				<string key="NSMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<string key="NSFrameAutosaveName">x11_apps</string>
 			</object>
 			<object class="NSMenu" id="294137138">

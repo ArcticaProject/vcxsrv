@@ -1023,6 +1023,34 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
 }
 #endif
 
+#ifdef DEBUG_UNTRUSTED_POINTER_DELTA
+static const char *untrusted_str(NSEvent *e) {
+    switch([e type]) {
+        case NSScrollWheel:
+            return "NSScrollWheel";
+        case NSTabletPoint:
+            return "NSTabletPoint";
+        case NSOtherMouseDown:
+            return "NSOtherMouseDown";
+        case NSOtherMouseUp:
+            return "NSOtherMouseUp";
+        case NSLeftMouseDown:
+            return "NSLeftMouseDown";
+        case NSLeftMouseUp:
+            return "NSLeftMouseUp";
+        default:
+            switch([e subtype]) {
+                case NSTabletPointEventSubtype:
+                    return "NSTabletPointEventSubtype";
+                case NSTabletProximityEventSubtype:
+                    return "NSTabletProximityEventSubtype";
+                default:
+                    return "Other";
+            }
+    }
+}
+#endif
+
 - (void) sendX11NSEvent:(NSEvent *)e {
     NSPoint location = NSZeroPoint, tilt = NSZeroPoint;
     int ev_button, ev_type;
@@ -1060,6 +1088,10 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
         // The deltaXY for scroll events correspond to the scroll delta, not the pointer delta
         // <rdar://problem/7989690> deltaXY for wheel events are being sent as mouse movement
         hasUntrustedPointerDelta = hasUntrustedPointerDelta || [e type] == NSScrollWheel;
+
+#ifdef DEBUG_UNTRUSTED_POINTER_DELTA
+        hasUntrustedPointerDelta = hasUntrustedPointerDelta || [e type] == NSLeftMouseDown || [e type] == NSLeftMouseUp;
+#endif
         
         if (window != nil)	{
             NSRect frame = [window frame];
@@ -1068,8 +1100,22 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
             location.y += frame.origin.y;
             lastpt = location;
         } else if(hasUntrustedPointerDelta) {
+#ifdef DEBUG_UNTRUSTED_POINTER_DELTA
+            ErrorF("--- Begin Event Debug ---\n");
+            ErrorF("Event type: %s\n", untrusted_str(e));
+            ErrorF("old lastpt: (%0.2f, %0.2f)\n", lastpt.x, lastpt.y);
+            ErrorF("     delta: (%0.2f, %0.2f)\n", [e deltaX], -[e deltaY]);
+            ErrorF("  location: (%0.2f, %0.2f)\n", lastpt.x + [e deltaX], lastpt.y - [e deltaY]);
+            ErrorF("workaround: (%0.2f, %0.2f)\n", [e locationInWindow].x, [e locationInWindow].y);
+            ErrorF("--- End Event Debug ---\n");
+
+            location.x = lastpt.x + [e deltaX];
+            location.y = lastpt.y - [e deltaY];
+            lastpt = [e locationInWindow];
+#else
             location = [e locationInWindow];
             lastpt = location;
+#endif
         } else {
             location.x = lastpt.x + [e deltaX];
             location.y = lastpt.y - [e deltaY];

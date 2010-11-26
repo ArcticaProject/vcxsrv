@@ -1296,7 +1296,7 @@ xf86ScaleAxis(int	Cx,
     }
     else {
 	X = 0;
-	ErrorF ("Divide by Zero in xf86ScaleAxis");
+	ErrorF ("Divide by Zero in xf86ScaleAxis\n");
     }
     
     if (X > to_max)
