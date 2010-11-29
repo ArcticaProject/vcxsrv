@@ -88,12 +88,11 @@ gl\gl_mangle.h                                    mesalib\include\gl\gl_mangle.h
 gl\internal\dri_interface.h                       mesalib\include\gl\internal\dri_interface.h
 gl\internal\glcore.h                              mesalib\include\gl\internal\glcore.h
 
-xorg-server\glx\glapioffsets.h                    mesalib\src\mesa\glapi\glapioffsets.h
-xorg-server\glx\glprocs.h                         mesalib\src\mesa\glapi\glprocs.h
-xorg-server\glx\glapitemp.h                       mesalib\src\mesa\glapi\glapitemp.h
-xorg-server\glx\glthread.h                        mesalib\src\mesa\glapi\glthread.h
-xorg-server\glx\glapi.h                           mesalib\src\mesa\glapi\glapi.h
-xorg-server\glx\glapitable.h                      mesalib\src\mesa\glapi\glapitable.h
+xorg-server\glx\glapioffsets.h                    mesalib\src\mapi\glapi\glapioffsets.h
+xorg-server\glx\glprocs.h                         mesalib\src\mapi\glapi\glprocs.h
+xorg-server\glx\glapitemp.h                       mesalib\src\mapi\glapi\glapitemp.h
+xorg-server\glx\glapi.h                           mesalib\src\mapi\glapi\glapi.h
+xorg-server\glx\glapitable.h                      mesalib\src\mapi\glapi\glapitable.h
 
 libXaw\include\X11\Xaw\AllWidgets.h               X11\Xaw\AllWidgets.h
 libXaw\include\X11\Xaw\AsciiSink.h                X11\Xaw\AsciiSink.h

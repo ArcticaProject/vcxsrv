@@ -32,6 +32,7 @@
 
 
 #include "glheader.h"
+#include "enums.h"
 #include "hash.h"
 #include "imports.h"
 #include "image.h"
@@ -46,7 +47,7 @@
 /*#define BOUNDS_CHECK*/
 
 
-#ifdef FEATURE_OES_mapbuffer
+#if FEATURE_OES_mapbuffer
 #define DEFAULT_ACCESS GL_MAP_WRITE_BIT
 #else
 #define DEFAULT_ACCESS (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)
@@ -82,6 +83,13 @@ get_buffer_target(GLcontext *ctx, GLenum target)
          return &ctx->CopyWriteBuffer;
       }
       break;
+#if FEATURE_EXT_transform_feedback
+   case GL_TRANSFORM_FEEDBACK_BUFFER:
+      if (ctx->Extensions.EXT_transform_feedback) {
+         return &ctx->TransformFeedback.CurrentBuffer;
+      }
+      break;
+#endif
    default:
       return NULL;
    }
@@ -582,7 +590,7 @@ bind_buffer_object(GLcontext *ctx, GLenum target, GLuint buffer)
 
    bindTarget = get_buffer_target(ctx, target);
    if (!bindTarget) {
-      _mesa_error(ctx, GL_INVALID_ENUM, "glBindBufferARB(target 0x%x)");
+      _mesa_error(ctx, GL_INVALID_ENUM, "glBindBufferARB(target 0x%x)", target);
       return;
    }
 
@@ -1376,31 +1384,49 @@ _mesa_GetBufferParameterivARB(GLenum target, GLenum pname, GLint *params)
 
    bufObj = get_buffer(ctx, target);
    if (!bufObj) {
-      _mesa_error(ctx, GL_INVALID_ENUM, "GetBufferParameterivARB(target)" );
+      _mesa_error(ctx, GL_INVALID_ENUM, "glGetBufferParameterivARB(target)" );
       return;
    }
    if (!_mesa_is_bufferobj(bufObj)) {
-      _mesa_error(ctx, GL_INVALID_OPERATION, "GetBufferParameterivARB" );
+      _mesa_error(ctx, GL_INVALID_OPERATION, "glGetBufferParameterivARB" );
       return;
    }
 
    switch (pname) {
    case GL_BUFFER_SIZE_ARB:
       *params = (GLint) bufObj->Size;
-      break;
+      return;
    case GL_BUFFER_USAGE_ARB:
       *params = bufObj->Usage;
-      break;
+      return;
    case GL_BUFFER_ACCESS_ARB:
       *params = simplified_access_mode(bufObj->AccessFlags);
-      break;
+      return;
    case GL_BUFFER_MAPPED_ARB:
       *params = _mesa_bufferobj_mapped(bufObj);
-      break;
-   default:
-      _mesa_error(ctx, GL_INVALID_ENUM, "glGetBufferParameterivARB(pname)");
       return;
+   case GL_BUFFER_ACCESS_FLAGS:
+      if (ctx->VersionMajor < 3)
+         goto invalid_pname;
+      *params = bufObj->AccessFlags;
+      return;
+   case GL_BUFFER_MAP_OFFSET:
+      if (ctx->VersionMajor < 3)
+         goto invalid_pname;
+      *params = (GLint) bufObj->Offset;
+      return;
+   case GL_BUFFER_MAP_LENGTH:
+      if (ctx->VersionMajor < 3)
+         goto invalid_pname;
+      *params = (GLint) bufObj->Length;
+      return;
+   default:
+      ; /* fall-through */
    }
+
+invalid_pname:
+   _mesa_error(ctx, GL_INVALID_ENUM, "glGetBufferParameterivARB(pname=%s)",
+               _mesa_lookup_enum_by_nr(pname));
 }
 
 
@@ -1418,31 +1444,49 @@ _mesa_GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params)
 
    bufObj = get_buffer(ctx, target);
    if (!bufObj) {
-      _mesa_error(ctx, GL_INVALID_ENUM, "GetBufferParameteri64v(target)" );
+      _mesa_error(ctx, GL_INVALID_ENUM, "glGetBufferParameteri64v(target)" );
       return;
    }
    if (!_mesa_is_bufferobj(bufObj)) {
-      _mesa_error(ctx, GL_INVALID_OPERATION, "GetBufferParameteri64v" );
+      _mesa_error(ctx, GL_INVALID_OPERATION, "glGetBufferParameteri64v" );
       return;
    }
 
    switch (pname) {
    case GL_BUFFER_SIZE_ARB:
       *params = bufObj->Size;
-      break;
+      return;
    case GL_BUFFER_USAGE_ARB:
       *params = bufObj->Usage;
-      break;
+      return;
    case GL_BUFFER_ACCESS_ARB:
       *params = simplified_access_mode(bufObj->AccessFlags);
-      break;
+      return;
+   case GL_BUFFER_ACCESS_FLAGS:
+      if (ctx->VersionMajor < 3)
+         goto invalid_pname;
+      *params = bufObj->AccessFlags;
+      return;
    case GL_BUFFER_MAPPED_ARB:
       *params = _mesa_bufferobj_mapped(bufObj);
-      break;
-   default:
-      _mesa_error(ctx, GL_INVALID_ENUM, "glGetBufferParameteri64v(pname)");
       return;
+   case GL_BUFFER_MAP_OFFSET:
+      if (ctx->VersionMajor < 3)
+         goto invalid_pname;
+      *params = bufObj->Offset;
+      return;
+   case GL_BUFFER_MAP_LENGTH:
+      if (ctx->VersionMajor < 3)
+         goto invalid_pname;
+      *params = bufObj->Length;
+      return;
+   default:
+      ; /* fall-through */
    }
+
+invalid_pname:
+   _mesa_error(ctx, GL_INVALID_ENUM, "glGetBufferParameteri64v(pname=%s)",
+               _mesa_lookup_enum_by_nr(pname));
 }
 
 
@@ -1509,27 +1553,27 @@ _mesa_CopyBufferSubData(GLenum readTarget, GLenum writeTarget,
 
    if (readOffset < 0) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-                  "glCopyBuffserSubData(readOffset = %d)", readOffset);
+                  "glCopyBuffserSubData(readOffset = %d)", (int) readOffset);
       return;
    }
 
    if (writeOffset < 0) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-                  "glCopyBuffserSubData(writeOffset = %d)", writeOffset);
+                  "glCopyBuffserSubData(writeOffset = %d)", (int) writeOffset);
       return;
    }
 
    if (readOffset + size > src->Size) {
       _mesa_error(ctx, GL_INVALID_VALUE,
                   "glCopyBuffserSubData(readOffset + size = %d)",
-                  readOffset, size);
+                  (int) (readOffset + size));
       return;
    }
 
    if (writeOffset + size > dst->Size) {
       _mesa_error(ctx, GL_INVALID_VALUE,
                   "glCopyBuffserSubData(writeOffset + size = %d)",
-                  writeOffset, size);
+                  (int) (writeOffset + size));
       return;
    }
 
@@ -1573,13 +1617,13 @@ _mesa_MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length,
 
    if (offset < 0) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-                  "glMapBufferRange(offset = %ld)", offset);
+                  "glMapBufferRange(offset = %ld)", (long)offset);
       return NULL;
    }
 
    if (length < 0) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-                  "glMapBufferRange(length = %ld)", length);
+                  "glMapBufferRange(length = %ld)", (long)length);
       return NULL;
    }
 
@@ -1664,13 +1708,13 @@ _mesa_FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
 
    if (offset < 0) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-                  "glMapBufferRange(offset = %ld)", offset);
+                  "glMapBufferRange(offset = %ld)", (long)offset);
       return;
    }
 
    if (length < 0) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-                  "glMapBufferRange(length = %ld)", length);
+                  "glMapBufferRange(length = %ld)", (long)length);
       return;
    }
 
@@ -1702,8 +1746,8 @@ _mesa_FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
 
    if (offset + length > bufObj->Length) {
       _mesa_error(ctx, GL_INVALID_VALUE,
-             "glMapBufferRange(offset %ld + length %ld > mapped length %ld)",
-             offset, length, bufObj->Length);
+		  "glMapBufferRange(offset %ld + length %ld > mapped length %ld)",
+		  (long)offset, (long)length, (long)bufObj->Length);
       return;
    }
 
@@ -1880,7 +1924,7 @@ _mesa_BufferObjectUnpurgeable(GLcontext *ctx, GLuint name, GLenum option)
 
    bufObj->Purgeable = GL_FALSE;
 
-   retval = GL_RETAINED_APPLE;
+   retval = option;
    if (ctx->Driver.BufferObjectUnpurgeable)
       retval = ctx->Driver.BufferObjectUnpurgeable(ctx, bufObj, option);
 
@@ -1910,11 +1954,11 @@ _mesa_RenderObjectUnpurgeable(GLcontext *ctx, GLuint name, GLenum option)
 
    bufObj->Purgeable = GL_FALSE;
 
-   retval = GL_RETAINED_APPLE;
+   retval = option;
    if (ctx->Driver.RenderObjectUnpurgeable)
       retval = ctx->Driver.RenderObjectUnpurgeable(ctx, bufObj, option);
 
-   return option;
+   return retval;
 }
 
 
@@ -1940,7 +1984,7 @@ _mesa_TextureObjectUnpurgeable(GLcontext *ctx, GLuint name, GLenum option)
 
    bufObj->Purgeable = GL_FALSE;
 
-   retval = GL_RETAINED_APPLE;
+   retval = option;
    if (ctx->Driver.TextureObjectUnpurgeable)
       retval = ctx->Driver.TextureObjectUnpurgeable(ctx, bufObj, option);
 

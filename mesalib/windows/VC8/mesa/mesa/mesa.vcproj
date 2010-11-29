@@ -503,6 +503,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\glapi\glapi_entrypoint.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\glapi\glapi_getproc.c"
 				>
 			</File>

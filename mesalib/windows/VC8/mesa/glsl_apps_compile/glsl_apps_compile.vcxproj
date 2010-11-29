@@ -18,12 +18,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -49,14 +49,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;INSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\src\talloc;..\..\..\..\src\mesa;..\..\..\..\src\glsl;..\..\..\..\src\mapi;..\..\..\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -72,12 +73,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;INSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\src\talloc;..\..\..\..\src\mesa;..\..\..\..\src\glsl;..\..\..\..\src\mapi;..\..\..\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -94,35 +96,74 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\glsl\apps\compile.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\cl\sl_cl_parse.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_context.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_define.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_dict.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_error.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_expression.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_extension.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_if.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_line.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_macro.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_pragma.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_process.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_purify.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_token.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_token_util.c" />
-    <ClCompile Include="..\..\..\..\src\glsl\pp\sl_pp_version.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_token.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\cl\sl_cl_parse.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_context.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_dict.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_expression.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_macro.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_process.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_public.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_purify.h" />
-    <ClInclude Include="..\..\..\..\src\glsl\pp\sl_pp_token_util.h" />
+    <ClCompile Include="..\..\..\..\src\glsl\ast_expr.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ast_function.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ast_to_hir.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ast_type.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\builtin_function.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\getopt.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\glcpp\glcpp-lex.c" />
+    <ClCompile Include="..\..\..\..\src\glsl\glcpp\glcpp-parse.c" />
+    <ClCompile Include="..\..\..\..\src\glsl\glcpp\pp.c" />
+    <ClCompile Include="..\..\..\..\src\glsl\glsl_lexer.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\glsl_parser.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\glsl_parser_extras.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\glsl_symbol_table.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\glsl_types.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\hir_field_selection.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_algebraic.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_basic_block.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_clone.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_constant_expression.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_constant_folding.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_constant_propagation.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_constant_variable.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_copy_propagation.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_dead_code.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_dead_code_local.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_dead_functions.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_div_to_mul_rcp.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_explog_to_explog2.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_expression_flattening.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_function.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_function_can_inline.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_function_inlining.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_hierarchical_visitor.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_hv_accept.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_if_simplification.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_if_to_cond_assign.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_import_prototypes.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_lower_jumps.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_mat_op_to_vec.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_mod_to_fract.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_noop_swizzle.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_print_visitor.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_reader.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_rvalue_visitor.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_set_program_inouts.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_structure_splitting.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_sub_to_add_neg.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_swizzle_swizzle.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_tree_grafting.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_validate.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_variable.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_variable_refcount.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_vec_index_to_cond_assign.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_vec_index_to_swizzle.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\linker.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\link_functions.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\loop_analysis.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\loop_controls.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\loop_unroll.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\lower_noise.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\lower_variable_index_to_cond_assign.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\main.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\opt_redundant_jumps.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\s_expression.cpp" />
+    <ClCompile Include="..\..\..\..\src\mesa\program\hash_table.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\program\symbol_table.c" />
+    <ClCompile Include="..\..\..\..\src\talloc\talloc.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

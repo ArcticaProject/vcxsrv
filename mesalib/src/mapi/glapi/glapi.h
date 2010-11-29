@@ -39,20 +39,33 @@
  * This module is intended to be non-Mesa-specific so it can be used
  * with the X/DRI libGL also.
  */
-
-
 #ifndef _GLAPI_H
 #define _GLAPI_H
 
-#include "glthread.h"
+/* opengl.dll does not export _glapi_* */
+#if defined(_WIN32)
+#define _GLAPI_NO_EXPORTS
+#endif
+
+#ifdef _GLAPI_NO_EXPORTS
+#  define _GLAPI_EXPORT
+#else /* _GLAPI_NO_EXPORTS */
+#  ifdef _WIN32
+#    ifdef _GLAPI_DLL_EXPORTS
+#      define _GLAPI_EXPORT __declspec(dllexport)
+#    else
+#      define _GLAPI_EXPORT __declspec(dllimport)
+#    endif
+#  elif defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
+#    define _GLAPI_EXPORT __attribute__((visibility("default")))
+#  else
+#    define _GLAPI_EXPORT
+#  endif
+#endif /* _GLAPI_NO_EXPORTS */
 
 
-struct _glapi_table;
-
-typedef void (*_glapi_proc)(void); /* generic function pointer */
-
-
-#if defined(USE_MGL_NAMESPACE)
+/* Is this needed?  It is incomplete anyway. */
+#ifdef USE_MGL_NAMESPACE
 #define _glapi_set_dispatch _mglapi_set_dispatch
 #define _glapi_get_dispatch _mglapi_get_dispatch
 #define _glapi_set_context _mglapi_set_context
@@ -61,47 +74,36 @@ typedef void (*_glapi_proc)(void); /* generic function pointer */
 #define _glapi_Context _mglapi_Context
 #endif
 
+#include "glthread.h"
 
-#if defined(__GNUC__)
-#  define likely(x)   __builtin_expect(!!(x), 1)
-#  define unlikely(x) __builtin_expect(!!(x), 0)
-#else
-#  define likely(x)   (x)
-#  define unlikely(x) (x)
-#endif
+typedef void (*_glapi_proc)(void);
+struct _glapi_table;
 
 
-/**
- ** Define the GET_DISPATCH() and GET_CURRENT_CONTEXT() macros.
- **
- ** \param C local variable which will hold the current context.
- **/
 #if defined (GLX_USE_TLS)
 
-extern const struct _glapi_table *_glapi_Dispatch;
-
-extern const void *_glapi_Context;
-
-extern __thread struct _glapi_table * _glapi_tls_Dispatch
+_GLAPI_EXPORT extern __thread struct _glapi_table * _glapi_tls_Dispatch
     __attribute__((tls_model("initial-exec")));
 
-extern __thread void * _glapi_tls_Context
+_GLAPI_EXPORT extern __thread void * _glapi_tls_Context
     __attribute__((tls_model("initial-exec")));
+
+_GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
+_GLAPI_EXPORT extern const void *_glapi_Context;
 
 # define GET_DISPATCH() _glapi_tls_Dispatch
-
 # define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_tls_Context
 
 #else
 
 #ifdef INSERVER
-#define EXTERN _declspec(dllimport)
+#define SERVEXTERN _declspec(dllimport)
 #else
-#define EXTERN _declspec(dllexport)
+#define SERVEXTERN _declspec(dllexport)
 #endif
 
-EXTERN struct _glapi_table *_glapi_Dispatch;
-EXTERN void *_glapi_Context;
+SERVEXTERN struct _glapi_table *_glapi_Dispatch;
+SERVEXTERN void *_glapi_Context;
 
 # ifdef THREADS
 
@@ -114,7 +116,6 @@ EXTERN void *_glapi_Context;
 # else
 
 #  define GET_DISPATCH() _glapi_Dispatch
-
 #  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_Context
 
 # endif
@@ -122,77 +123,63 @@ EXTERN void *_glapi_Context;
 #endif /* defined (GLX_USE_TLS) */
 
 
-/**
- ** GL API public functions
- **/
-
-extern void
-_glapi_init_multithread(void);
-
-
-extern void
+void
 _glapi_destroy_multithread(void);
 
 
-EXTERN void
+SERVEXTERN void
 _glapi_check_multithread(void);
 
 
-extern void
+SERVEXTERN void
 _glapi_set_context(void *context);
 
 
-extern void *
+SERVEXTERN void *
 _glapi_get_context(void);
 
 
-extern void
+SERVEXTERN void
 _glapi_set_dispatch(struct _glapi_table *dispatch);
 
 
-extern struct _glapi_table *
+SERVEXTERN struct _glapi_table *
 _glapi_get_dispatch(void);
 
 
-extern unsigned int
+SERVEXTERN unsigned int
 _glapi_get_dispatch_table_size(void);
 
 
-EXTERN int
+SERVEXTERN int
 _glapi_add_dispatch( const char * const * function_names,
 		     const char * parameter_signature );
 
-extern int
+_GLAPI_EXPORT int
 _glapi_get_proc_offset(const char *funcName);
 
 
-extern _glapi_proc
+_GLAPI_EXPORT _glapi_proc
 _glapi_get_proc_address(const char *funcName);
 
 
-/**
- * GL API local functions and defines
- */
-
-extern void
-init_glapi_relocs_once(void);
-
-extern void
-_glapi_check_table_not_null(const struct _glapi_table *table);
-
-
-extern void
-_glapi_check_table(const struct _glapi_table *table);
-
-
-extern const char *
+_GLAPI_EXPORT const char *
 _glapi_get_proc_name(unsigned int offset);
 
 
+_GLAPI_EXPORT unsigned long
+_glthread_GetID(void);
+
+
 /*
- * Number of extension functions which we can dynamically add at runtime.
+ * These stubs are kept so that the old DRI drivers still load.
  */
-#define MAX_EXTENSION_FUNCS 300
+SERVEXTERN void
+_glapi_noop_enable_warnings(unsigned char enable);
 
 
-#endif
+_GLAPI_EXPORT void
+_glapi_set_warning_func(_glapi_proc func);
+
+
+#endif /* _GLAPI_H */

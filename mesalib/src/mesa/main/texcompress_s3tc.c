@@ -36,10 +36,10 @@
 #include "glheader.h"
 #include "imports.h"
 #include "colormac.h"
-#include "context.h"
 #include "convolve.h"
 #include "dlopen.h"
 #include "image.h"
+#include "macros.h"
 #include "texcompress.h"
 #include "texcompress_s3tc.h"
 #include "texstore.h"
@@ -48,7 +48,7 @@
 #if FEATURE_texture_s3tc
 
 
-#ifdef __MINGW32__
+#if defined(_WIN32) || defined(WIN32)
 #define DXTN_LIBNAME "dxtn.dll"
 #define RTLD_LAZY 0
 #define RTLD_GLOBAL 0
@@ -78,7 +78,7 @@ nonlinear_to_linear(GLubyte cs8)
             table[i] = cs / 12.92f;
          }
          else {
-            table[i] = (GLfloat) _mesa_pow((cs + 0.055) / 1.055, 2.4);
+            table[i] = (GLfloat) pow((cs + 0.055) / 1.055, 2.4);
          }
       }
       tableReady = GL_TRUE;
@@ -149,7 +149,6 @@ _mesa_init_texture_s3tc( GLcontext *ctx )
    }
    if (dxtlibhandle) {
       ctx->Mesa_DXTn = GL_TRUE;
-      _mesa_warning(ctx, "software DXTn compression/decompression available");
    }
 #else
    (void) ctx;
@@ -168,7 +167,8 @@ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
    const GLchan *tempImage = NULL;
 
-   ASSERT(dstFormat == MESA_FORMAT_RGB_DXT1);
+   ASSERT(dstFormat == MESA_FORMAT_RGB_DXT1 ||
+          dstFormat == MESA_FORMAT_SRGB_DXT1);
    ASSERT(dstXoffset % 4 == 0);
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
@@ -231,7 +231,8 @@ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
    const GLchan *tempImage = NULL;
 
-   ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT1);
+   ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT1 ||
+          dstFormat == MESA_FORMAT_SRGBA_DXT1);
    ASSERT(dstXoffset % 4 == 0);
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
@@ -293,7 +294,8 @@ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
    const GLchan *tempImage = NULL;
 
-   ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT3);
+   ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT3 ||
+          dstFormat == MESA_FORMAT_SRGBA_DXT3);
    ASSERT(dstXoffset % 4 == 0);
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
@@ -354,7 +356,8 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
    const GLchan *tempImage = NULL;
 
-   ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT5);
+   ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT5 ||
+          dstFormat == MESA_FORMAT_SRGBA_DXT5);
    ASSERT(dstXoffset % 4 == 0);
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
