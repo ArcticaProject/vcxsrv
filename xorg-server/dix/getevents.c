@@ -130,9 +130,9 @@ button_is_down(DeviceIntPtr pDev, int button, int type)
     int ret = 0;
 
     if (type & BUTTON_PROCESSED)
-        ret |= !!BitIsOn(pDev->button->down, button);
+        ret |= BitIsOn(pDev->button->down, button);
     if (type & BUTTON_POSTED)
-        ret |= !!BitIsOn(pDev->button->postdown, button);
+        ret |= BitIsOn(pDev->button->postdown, button);
 
     return ret;
 }
@@ -161,9 +161,9 @@ key_is_down(DeviceIntPtr pDev, int key_code, int type)
     int ret = 0;
 
     if (type & KEY_PROCESSED)
-        ret |= !!BitIsOn(pDev->key->down, key_code);
+        ret |= BitIsOn(pDev->key->down, key_code);
     if (type & KEY_POSTED)
-        ret |= !!BitIsOn(pDev->key->postdown, key_code);
+        ret |= BitIsOn(pDev->key->postdown, key_code);
 
     return ret;
 }
@@ -225,7 +225,7 @@ set_valuators(DeviceIntPtr dev, DeviceEvent* event, ValuatorMask *mask)
         if (valuator_mask_isset(mask, i))
         {
             SetBit(event->valuators.mask, i);
-            if (dev->valuator->axes[i].mode == Absolute)
+            if (valuator_get_mode(dev, i) == Absolute)
                 SetBit(event->valuators.mode, i);
             event->valuators.data[i] = valuator_mask_get(mask, i);
             event->valuators.data_frac[i] =
@@ -1072,14 +1072,18 @@ transformAbsolute(DeviceIntPtr dev, ValuatorMask *mask)
     struct pixman_f_vector p;
 
     /* p' = M * p in homogeneous coordinates */
-    p.v[0] = valuator_mask_get(mask, 0);
-    p.v[1] = valuator_mask_get(mask, 1);
+    p.v[0] = (valuator_mask_isset(mask, 0) ? valuator_mask_get(mask, 0) :
+              dev->last.valuators[0]);
+    p.v[1] = (valuator_mask_isset(mask, 1) ? valuator_mask_get(mask, 1) :
+              dev->last.valuators[1]);
     p.v[2] = 1.0;
 
     pixman_f_transform_point(&dev->transform, &p);
 
-    valuator_mask_set(mask, 0, lround(p.v[0]));
-    valuator_mask_set(mask, 1, lround(p.v[1]));
+    if (lround(p.v[0]) != dev->last.valuators[0])
+        valuator_mask_set(mask, 0, lround(p.v[0]));
+    if (lround(p.v[1]) != dev->last.valuators[1])
+        valuator_mask_set(mask, 1, lround(p.v[1]));
 }
 
 /**
@@ -1170,10 +1174,15 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
              * should be converted to masked valuators. */
             int vals[2];
             vals[0] = valuator_mask_isset(&mask, 0) ?
-                      valuator_mask_get(&mask, 0) : pDev->last.valuators[0];
+                      valuator_mask_get(&mask, 0) : 0;
             vals[1] = valuator_mask_isset(&mask, 1) ?
-                      valuator_mask_get(&mask, 1) : pDev->last.valuators[1];
+                      valuator_mask_get(&mask, 1) : 0;
             accelPointer(pDev, 0, 2, vals, ms);
+
+            if (valuator_mask_isset(&mask, 0))
+                valuator_mask_set(&mask, 0, vals[0]);
+            if (valuator_mask_isset(&mask, 1))
+                valuator_mask_set(&mask, 1, vals[1]);
 
             /* The pointer acceleration code modifies the fractional part
              * in-place, so we need to extract this information first */
@@ -1192,7 +1201,7 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
     if (valuator_mask_isset(&mask, 0))
         valuator_mask_set(&mask, 0, x);
     if (valuator_mask_isset(&mask, 1))
-        valuator_mask_set(&mask, 0, y);
+        valuator_mask_set(&mask, 1, y);
 
     clipValuators(pDev, &mask);
 
@@ -1254,12 +1263,16 @@ GetProximityEvents(EventList *events, DeviceIntPtr pDev, int type, const Valuato
     valuator_mask_copy(&mask, mask_in);
 
     /* ignore relative axes for proximity. */
-    for (i = 0; i < valuator_mask_num_valuators(&mask); i++)
+    for (i = 0; i < valuator_mask_size(&mask); i++)
     {
         if (valuator_mask_isset(&mask, i) &&
             valuator_get_mode(pDev, i) == Relative)
             valuator_mask_unset(&mask, i);
     }
+
+    /* FIXME: posting proximity events with relative valuators only results
+     * in an empty event, EventToXI() will fail to convert → no event sent
+     * to client. */
 
     events = UpdateFromMaster(events, pDev, DEVCHANGE_POINTER_EVENT, &num_events);
 

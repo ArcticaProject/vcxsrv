@@ -19,13 +19,9 @@
 #  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-XML_FILES = DESIGN.xml
+doc_sources = DESIGN.xml
 
-include ../../../../doc/xml/xmlrules.in
-
+# Developer's documentation is not installed
 if ENABLE_DEVEL_DOCS
-noinst_DATA = $(BUILT_DOC_FILES)
+include $(top_srcdir)/doc/xml/xmlrules-noinst.in
 endif
-CLEANFILES = $(CLEAN_DOC_FILES)
-
-EXTRA_DIST = $(XML_FILES)

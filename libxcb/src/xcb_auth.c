@@ -328,10 +328,15 @@ int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display)
     if (!info->namelen)
         goto no_auth;   /* out of memory */
 
-    if (!gotsockname && (sockname = get_peer_sock_name(getsockname, fd)) == NULL)
+    if (!gotsockname)
     {
-        free(info->name);
-        goto no_auth;   /* can only authenticate sockets */
+        free(sockname);
+
+        if ((sockname = get_peer_sock_name(getsockname, fd)) == NULL)
+        {
+            free(info->name);
+            goto no_auth;   /* can only authenticate sockets */
+        }
     }
 
     ret = compute_auth(info, authptr, sockname);

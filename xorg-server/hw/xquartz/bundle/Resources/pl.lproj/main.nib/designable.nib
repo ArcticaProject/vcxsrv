@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1040</int>
-		<string key="IBDocument.SystemVersion">11A79a</string>
-		<string key="IBDocument.InterfaceBuilderVersion">732</string>
-		<string key="IBDocument.AppKitVersion">1059</string>
-		<string key="IBDocument.HIToolboxVersion">478.00</string>
+		<string key="IBDocument.SystemVersion">11A194b</string>
+		<string key="IBDocument.InterfaceBuilderVersion">787</string>
+		<string key="IBDocument.AppKitVersion">1079</string>
+		<string key="IBDocument.HIToolboxVersion">502.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">732</string>
+			<string key="NS.object.0">787</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
@@ -257,7 +257,7 @@
 								</object>
 								<object class="NSMenuItem" id="677652931">
 									<reference key="NSMenu" ref="96874957"/>
-									<string key="NSTitle">Miniaturka</string>
+									<string key="NSTitle">Minimalizuj okno</string>
 									<string key="NSKeyEquiv">m</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -366,6 +366,7 @@
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
 				</object>
+				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<string key="NSWindowContentMinSize">{320, 240}</string>
 				<object class="NSView" key="NSWindowView" id="941366957">
@@ -1028,7 +1029,7 @@ dWplIMWbcm9ka293eSBsdWIgcHJhd3kgcHJ6eWNpc2sgbXlzenkuCg</string>
 												<object class="NSTextFieldCell" key="NSCell" id="399127858">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">4194304</int>
-													<string key="NSContents">Lliknięcie nieaktywnego okna będzie powodowało jego uaktywnienie i przeniesienie do niego fokusu.</string>
+													<string key="NSContents">Kliknięcie nieaktywnego okna będzie powodowało jego uaktywnienie i przeniesienie do niego fokusu.</string>
 													<reference key="NSSupport" ref="26"/>
 													<string key="NSPlaceholderString"/>
 													<reference key="NSControlView" ref="290578835"/>
@@ -1256,6 +1257,7 @@ dWplIMWbcm9ka293eSBsdWIgcHJhd3kgcHJ6eWNpc2sgbXlzenkuCg</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
 				</object>
+				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
 				<string key="NSWindowContentMinSize">{320, 240}</string>
 				<object class="NSView" key="NSWindowView" id="85544634">
@@ -1523,7 +1525,6 @@ dWplIMWbcm9ka293eSBsdWIgcHJhd3kgcHJ6eWNpc2sgbXlzenkuCg</string>
 							<reference key="NSHScroller" ref="17278747"/>
 							<reference key="NSContentView" ref="580565898"/>
 							<reference key="NSHeaderClipView" ref="672307654"/>
-							<reference key="NSCornerView" ref="898633680"/>
 							<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
 						</object>
 						<object class="NSButton" id="758204686">
@@ -3583,6 +3584,7 @@ dWplIMWbcm9ka293eSBsdWIgcHJhd3kgcHJ6eWNpc2sgbXlzenkuCg</string>
 			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
+		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1040" key="NS.object.0"/>
@@ -3590,5 +3592,10 @@ dWplIMWbcm9ka293eSBsdWIgcHJhd3kgcHJ6eWNpc2sgbXlzenkuCg</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../X11.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NSMenuCheckmark">{9, 8}</string>
+			<string key="NSMenuMixedState">{7, 2}</string>
+			<string key="NSSwitch">{15, 15}</string>
+		</dictionary>
 	</data>
 </archive>

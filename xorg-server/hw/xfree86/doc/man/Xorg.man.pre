@@ -32,8 +32,8 @@ SPARC and PowerPC.  The most widely supported operating systems are the
 free/OpenSource UNIX-like systems such as Linux, FreeBSD, NetBSD,
 OpenBSD, and Solaris.  Commercial UNIX operating systems such as
 UnixWare are also supported.  Other supported operating systems include
-GNU Hurd.  Darwin and Mac OS X are supported with the
-XDarwin(__appmansuffix__) X server.  Win32/Cygwin is supported with the 
+GNU Hurd.  Mac OS X is supported with the
+Xquartz(__appmansuffix__) X server.  Win32/Cygwin is supported with the
 XWin(__appmansuffix__) X server.
 .PP
 .SH "NETWORK CONNECTIONS"

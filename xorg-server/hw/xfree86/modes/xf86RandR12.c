@@ -1731,6 +1731,7 @@ xf86RandR12EnterVT (int screen_index, int flags)
     ScreenPtr        pScreen = screenInfo.screens[screen_index];
     ScrnInfoPtr	     pScrn = xf86Screens[screen_index];
     XF86RandRInfoPtr randrp  = XF86RANDRINFO(pScreen);
+    rrScrPrivPtr     rp = rrGetScrPriv(pScreen);
     Bool	     ret;
 
     if (randrp->orig_EnterVT) {
@@ -1742,6 +1743,11 @@ xf86RandR12EnterVT (int screen_index, int flags)
 	    return FALSE;
     }
 
+    /* reload gamma */
+    int i;
+    for (i = 0; i < rp->numCrtcs; i++)
+	xf86RandR12CrtcSetGamma(pScreen, rp->crtcs[i]);
+
     return RRGetInfo (pScreen, TRUE); /* force a re-probe of outputs and notify clients about changes */
 }
 
@@ -1751,6 +1757,7 @@ xf86RandR12Init12 (ScreenPtr pScreen)
     ScrnInfoPtr		pScrn = xf86Screens[pScreen->myNum];
     rrScrPrivPtr	rp = rrGetScrPriv(pScreen);
     XF86RandRInfoPtr	randrp  = XF86RANDRINFO(pScreen);
+    int i;
 
     rp->rrGetInfo = xf86RandR12GetInfo12;
     rp->rrScreenSetSize = xf86RandR12ScreenSetSize;
@@ -1780,6 +1787,9 @@ xf86RandR12Init12 (ScreenPtr pScreen)
      */
     if (!xf86RandR12SetInfo12 (pScreen))
 	return FALSE;
+    for (i = 0; i < rp->numCrtcs; i++) {
+	xf86RandR12CrtcGetGamma(pScreen, rp->crtcs[i]);
+    }
     return TRUE;
 }
 

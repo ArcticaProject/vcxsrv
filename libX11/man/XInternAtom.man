@@ -144,11 +144,11 @@
 XInternAtom, XInternAtoms, XGetAtomName, XGetAtomNames \- create or return atom names
 .SH SYNTAX
 .HP
-Atom XInternAtom\^(\^Display *\fIdisplay\fP\^, char *\fIatom_name\fP\^, Bool
-\fIonly_if_exists\fP\^); 
+Atom XInternAtom\^(\^Display *\fIdisplay\fP\^, const char *\fIatom_name\fP\^,
+Bool \fIonly_if_exists\fP\^);
 .HP
-Status XInternAtoms\^(\^Display *\fIdisplay\fP\^, char **\fInames\fP\^, int
-\fIcount\fP\^, Bool \fIonly_if_exists\fP\^, Atom *\fIatoms_return\fP\^); 
+Status XInternAtoms\^(\^Display *\fIdisplay\fP\^, const char **\fInames\fP\^,
+int \fIcount\fP\^, Bool \fIonly_if_exists\fP\^, Atom *\fIatoms_return\fP\^);
 .HP
 char *XGetAtomName\^(\^Display *\fIdisplay\fP\^, Atom \fIatom\fP\^); 
 .HP

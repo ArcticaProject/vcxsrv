@@ -63,25 +63,6 @@ SOFTWARE.
 #include "XIstubs.h"
 #include "darwin.h"
 
-/***********************************************************************
- *
- * Caller:	ProcXCloseDevice
- *
- * Take care of implementation-dependent details of closing a device.
- * Some implementations may actually close the device, others may just
- * remove this clients interest in that device.
- *
- * The default implementation is to do nothing (assume all input devices
- * are initialized during X server initialization and kept open).
- *
- */
-
-void
-CloseInputDevice(DeviceIntPtr d, ClientPtr client)
-{
-  DEBUG_LOG("CloseInputDevice(%p, %p)\n", d, client);
-}
-
 /****************************************************************************
  *
  * Caller:	ProcXSetDeviceMode

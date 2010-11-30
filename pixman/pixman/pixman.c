@@ -875,7 +875,8 @@ color_to_pixel (pixman_color_t *     color,
           format == PIXMAN_b8g8r8x8     ||
           format == PIXMAN_r5g6b5       ||
           format == PIXMAN_b5g6r5       ||
-          format == PIXMAN_a8))
+          format == PIXMAN_a8           ||
+          format == PIXMAN_a1))
     {
 	return FALSE;
     }
@@ -895,7 +896,9 @@ color_to_pixel (pixman_color_t *     color,
 	    ((c & 0x000000ff) << 24);
     }
 
-    if (format == PIXMAN_a8)
+    if (format == PIXMAN_a1)
+	c = c >> 31;
+    else if (format == PIXMAN_a8)
 	c = c >> 24;
     else if (format == PIXMAN_r5g6b5 ||
              format == PIXMAN_b5g6r5)

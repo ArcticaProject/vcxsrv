@@ -8,6 +8,7 @@ BUNDLE_ROOT=$3
 
 localities="Dutch English French German Italian Japanese Spanish da fi ko no pl pt pt_PT ru sv zh_CN zh_TW"
 for lang in ${localities} ; do
+    [ -d ${BUNDLE_ROOT}/Contents/Resources/${lang}.lproj ] && rm -rf ${BUNDLE_ROOT}/Contents/Resources/${lang}.lproj
     mkdir -p ${BUNDLE_ROOT}/Contents/Resources/${lang}.lproj/main.nib
     [ -d ${BUNDLE_ROOT}/Contents/Resources/${lang}.lproj/main.nib ] || exit 1
 
@@ -16,7 +17,7 @@ for lang in ${localities} ; do
     done
 done
 
-install -m 644 ${SRCDIR}/Resources/English.lproj/main.nib//designable.nib ${BUNDLE_ROOT}/Contents/Resources/English.lproj/main.nib
+install -m 644 ${SRCDIR}/Resources/English.lproj/main.nib/designable.nib ${BUNDLE_ROOT}/Contents/Resources/English.lproj/main.nib
 install -m 644 ${SRCDIR}/Resources/X11.icns ${BUNDLE_ROOT}/Contents/Resources
 
 install -m 644 ${BUILDDIR}/Info.plist ${BUNDLE_ROOT}/Contents
