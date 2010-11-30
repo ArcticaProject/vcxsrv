@@ -56,8 +56,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../../../include;../../../../src/mesa/drivers/dri/common;../../../../src/mapi;../../../../src/mesa;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;SWRAST_DRI_EXPORTS;_DLL;BUILD_GL32;MESA_MINWARN;INSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../../include;../../../../src/mesa;../../../../src/talloc;../../../../src/glsl;../../../../src/mapi;../../../../src/mesa/main;../../../../src/mesa/shader;../../../../src/mesa/shader/slang;../../../../../include;../../../../src/mesa/drivers/dri/common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_DLL;SWRAST_DRI_EXPORTS;_GDI32_;BUILD_GL32;WIN32_THREADS;MESA_MINWARN;_CRT_SECURE_NO_DEPRECATE;INSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
@@ -95,8 +95,8 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>../../../../include;../../../../src/mesa/drivers/dri/common;../../../../src/mapi;../../../../src/mesa;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;SWRAST_DRI_EXPORTS;_DLL;BUILD_GL32;MESA_MINWARN;INSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../../include;../../../../src/mesa;../../../../src/talloc;../../../../src/glsl;../../../../src/mapi;../../../../src/mesa/main;../../../../src/mesa/shader;../../../../src/mesa/shader/slang;../../../../../include;../../../../src/mesa/drivers/dri/common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_DLL;SWRAST_DRI_EXPORTS;_GDI32_;BUILD_GL32;WIN32_THREADS;MESA_MINWARN;_CRT_SECURE_NO_DEPRECATE;INSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
