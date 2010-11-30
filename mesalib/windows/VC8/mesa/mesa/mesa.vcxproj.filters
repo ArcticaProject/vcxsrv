@@ -443,15 +443,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\uniforms.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\vf\vf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\vf\vf_generic.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\vf\vf_sse.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\program\ir_to_mesa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

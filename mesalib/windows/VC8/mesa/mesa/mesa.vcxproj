@@ -325,9 +325,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\version.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\viewport.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\vtxfmt.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\vf\vf.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\vf\vf_generic.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\vf\vf_sse.c" />
     <ClCompile Include="..\..\..\..\src\talloc\talloc.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
