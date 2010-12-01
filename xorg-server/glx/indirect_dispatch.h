@@ -28,7 +28,7 @@
 #if !defined( _INDIRECT_DISPATCH_H_ )
 #  define _INDIRECT_DISPATCH_H_
 
-#  if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))) && defined(__ELF__)
+#  if defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590)) && defined(__ELF__)
 #    define HIDDEN  __attribute__((visibility("hidden")))
 #  else
 #    define HIDDEN
@@ -301,6 +301,8 @@ extern HIDDEN void __glXDisp_ConvolutionParameterfv(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_ConvolutionParameterfv(GLbyte * pc);
 extern HIDDEN int __glXDisp_GetTexGendv(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN int __glXDispSwap_GetTexGendv(struct __GLXclientStateRec *, GLbyte *);
+extern HIDDEN int __glXDisp_GetVertexAttribfvNV(struct __GLXclientStateRec *, GLbyte *);
+extern HIDDEN int __glXDispSwap_GetVertexAttribfvNV(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN void __glXDisp_LoadProgramNV(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_LoadProgramNV(GLbyte * pc);
 extern HIDDEN int __glXDisp_EndList(struct __GLXclientStateRec *, GLbyte *);
@@ -581,12 +583,8 @@ extern HIDDEN void __glXDisp_TexGend(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_TexGend(GLbyte * pc);
 extern HIDDEN int __glXDisp_GetPolygonStipple(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN int __glXDispSwap_GetPolygonStipple(struct __GLXclientStateRec *, GLbyte *);
-extern HIDDEN int __glXDisp_GetVertexAttribfvNV(struct __GLXclientStateRec *, GLbyte *);
-extern HIDDEN int __glXDispSwap_GetVertexAttribfvNV(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN void __glXDisp_VertexAttrib2svNV(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_VertexAttrib2svNV(GLbyte * pc);
-extern HIDDEN void __glXDisp_VertexAttribs1fvNV(GLbyte * pc);
-extern HIDDEN void __glXDispSwap_VertexAttribs1fvNV(GLbyte * pc);
 extern HIDDEN void __glXDisp_VertexAttrib4NuivARB(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_VertexAttrib4NuivARB(GLbyte * pc);
 extern HIDDEN int __glXDisp_DestroyWindow(struct __GLXclientStateRec *, GLbyte *);
@@ -807,6 +805,8 @@ extern HIDDEN int __glXDisp_DeleteProgramsNV(struct __GLXclientStateRec *, GLbyt
 extern HIDDEN int __glXDispSwap_DeleteProgramsNV(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN void __glXDisp_EvalMesh1(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_EvalMesh1(GLbyte * pc);
+extern HIDDEN void __glXDisp_VertexAttribs1fvNV(GLbyte * pc);
+extern HIDDEN void __glXDispSwap_VertexAttribs1fvNV(GLbyte * pc);
 extern HIDDEN void __glXDisp_MultiTexCoord1dvARB(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_MultiTexCoord1dvARB(GLbyte * pc);
 extern HIDDEN void __glXDisp_Vertex2iv(GLbyte * pc);

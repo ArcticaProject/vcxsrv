@@ -53,8 +53,8 @@
 ** The last context used by the server.  It is the context that is current
 ** from the server's perspective.
 */
-__GLXcontext *__glXLastContext;
-__GLXcontext *__glXContextList;
+struct glx_context *__glXLastContext;
+struct glx_context *__glXContextList;
 
 /*
 ** X resources.
@@ -105,7 +105,7 @@ void __glXResetLargeCommandStatus(__GLXclientState *cl)
 ** flag that the ID is no longer valid, and (maybe) free the context.
 ** use.
 */
-static int ContextGone(__GLXcontext* cx, XID id)
+static int ContextGone(struct glx_context* cx, XID id)
 {
     cx->idExists = GL_FALSE;
     if (!cx->isCurrent) {
@@ -115,8 +115,8 @@ static int ContextGone(__GLXcontext* cx, XID id)
     return True;
 }
 
-static __GLXcontext *glxPendingDestroyContexts;
-static __GLXcontext *glxAllContexts;
+static struct glx_context *glxPendingDestroyContexts;
+static struct glx_context *glxAllContexts;
 static int glxServerLeaveCount;
 static int glxBlockClients;
 
@@ -126,7 +126,7 @@ static int glxBlockClients;
 */
 static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 {
-    __GLXcontext *c, *next;
+    struct glx_context *c, *next;
 
     /* If this drawable was created using glx 1.3 drawable
      * constructors, we added it as a glx drawable resource under both
@@ -177,15 +177,15 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
     return True;
 }
 
-void __glXAddToContextList(__GLXcontext *cx)
+void __glXAddToContextList(struct glx_context *cx)
 {
     cx->next = glxAllContexts;
     glxAllContexts = cx;
 }
 
-static void __glXRemoveFromContextList(__GLXcontext *cx)
+static void __glXRemoveFromContextList(struct glx_context *cx)
 {
-    __GLXcontext *c, *prev;
+    struct glx_context *c, *prev;
 
     if (cx == glxAllContexts)
 	glxAllContexts = cx->next;
@@ -202,7 +202,7 @@ static void __glXRemoveFromContextList(__GLXcontext *cx)
 /*
 ** Free a context.
 */
-GLboolean __glXFreeContext(__GLXcontext *cx)
+GLboolean __glXFreeContext(struct glx_context *cx)
 {
     if (cx->idExists || cx->isCurrent) return GL_FALSE;
     
@@ -287,7 +287,7 @@ glxClientCallback (CallbackListPtr	*list,
     NewClientInfoRec	*clientinfo = (NewClientInfoRec *) data;
     ClientPtr		pClient = clientinfo->client;
     __GLXclientState	*cl = glxGetClient(pClient);
-    __GLXcontext	*cx;
+    struct glx_context	*cx;
     int i;
 
     switch (pClient->clientState) {
@@ -415,18 +415,18 @@ void __glXFlushContextCache(void)
 ** Make a context the current one for the GL (in this implementation, there
 ** is only one instance of the GL, and we use it to serve all GL clients by
 ** switching it between different contexts).  While we are at it, look up
-** a context by its tag and return its (__GLXcontext *).
+** a context by its tag and return its (struct glx_context *).
 */
-__GLXcontext *__glXForceCurrent(__GLXclientState *cl, GLXContextTag tag,
+struct glx_context *__glXForceCurrent(__GLXclientState *cl, GLXContextTag tag,
 				int *error)
 {
-    __GLXcontext *cx;
+    struct glx_context *cx;
 
     /*
     ** See if the context tag is legal; it is managed by the extension,
     ** so if it's invalid, we have an implementation error.
     */
-    cx = (__GLXcontext *) __glXLookupContextByTag(cl, tag);
+    cx = (struct glx_context *) __glXLookupContextByTag(cl, tag);
     if (!cx) {
 	cl->client->errorValue = tag;
 	*error = __glXError(GLXBadContextTag);
@@ -482,7 +482,7 @@ void glxSuspendClients(void)
 
 void glxResumeClients(void)
 {
-    __GLXcontext *cx, *next;
+    struct glx_context *cx, *next;
     int i;
 
     glxBlockClients = FALSE;

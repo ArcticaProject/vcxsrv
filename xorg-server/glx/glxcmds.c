@@ -136,7 +136,7 @@ validGlxFBConfigForWindow(ClientPtr client, __GLXconfig *config,
 
 static int
 validGlxContext(ClientPtr client, XID id, int access_mode,
-		__GLXcontext **context, int *err)
+		struct glx_context **context, int *err)
 {
     *err = dixLookupResourceByType((pointer *) context, id,
 				   __glXContextRes, client, access_mode);
@@ -191,24 +191,24 @@ validGlxDrawable(ClientPtr client, XID id, int type, int access_mode,
 }
 
 void
-__glXContextDestroy(__GLXcontext *context)
+__glXContextDestroy(struct glx_context *context)
 {
     __glXFlushContextCache();
 }
 
-static void __glXdirectContextDestroy(__GLXcontext *context)
+static void __glXdirectContextDestroy(struct glx_context *context)
 {
     __glXContextDestroy(context);
     free(context);
 }
 
-static __GLXcontext *__glXdirectContextCreate(__GLXscreen *screen,
+static struct glx_context *__glXdirectContextCreate(__GLXscreen *screen,
 					      __GLXconfig *modes,
-					      __GLXcontext *shareContext)
+					      struct glx_context *shareContext)
 {
-    __GLXcontext *context;
+    struct glx_context *context;
 
-    context = calloc(1, sizeof (__GLXcontext));
+    context = calloc(1, sizeof (struct glx_context));
     if (context == NULL)
 	return NULL;
 
@@ -231,7 +231,7 @@ DoCreateContext(__GLXclientState *cl, GLXContextID gcId,
 		__GLXscreen *pGlxScreen, GLboolean isDirect)
 {
     ClientPtr client = cl->client;
-    __GLXcontext *glxc, *shareglxc;
+    struct glx_context *glxc, *shareglxc;
     int err;
     
     LEGAL_NEW_RESOURCE(gcId, client);
@@ -367,7 +367,7 @@ int __glXDisp_CreateContextWithConfigSGIX(__GLXclientState *cl, GLbyte *pc)
 int __glXDisp_DestroyContext(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXDestroyContextReq *req = (xGLXDestroyContextReq *) pc;
-    __GLXcontext *glxc;
+    struct glx_context *glxc;
     int err;
 
     if (!validGlxContext(cl->client, req->context, DixDestroyAccess,
@@ -389,11 +389,11 @@ int __glXDisp_DestroyContext(__GLXclientState *cl, GLbyte *pc)
 /*
 ** Add a current context, and return the tag that will be used to refer to it.
 */
-static int AddCurrentContext(__GLXclientState *cl, __GLXcontext *glxc)
+static int AddCurrentContext(__GLXclientState *cl, struct glx_context *glxc)
 {
     int i;
     int num = cl->numCurrentContexts;
-    __GLXcontext **table = cl->currentContexts;
+    struct glx_context **table = cl->currentContexts;
 
     if (!glxc) return -1;
     
@@ -410,10 +410,10 @@ static int AddCurrentContext(__GLXclientState *cl, __GLXcontext *glxc)
     ** Didn't find a free slot, so we'll have to grow the table.
     */
     if (!num) {
-	table = (__GLXcontext **) malloc(sizeof(__GLXcontext *));
+	table = (struct glx_context **) malloc(sizeof(struct glx_context *));
     } else {
-	table = (__GLXcontext **) realloc(table,
-					   (num+1)*sizeof(__GLXcontext *));
+	table = (struct glx_context **) realloc(table,
+					   (num+1)*sizeof(struct glx_context *));
     }
     table[num] = glxc;
     cl->currentContexts = table;
@@ -424,10 +424,10 @@ static int AddCurrentContext(__GLXclientState *cl, __GLXcontext *glxc)
 /*
 ** Given a tag, change the current context for the corresponding entry.
 */
-static void ChangeCurrentContext(__GLXclientState *cl, __GLXcontext *glxc,
+static void ChangeCurrentContext(__GLXclientState *cl, struct glx_context *glxc,
 				GLXContextTag tag)
 {
-    __GLXcontext **table = cl->currentContexts;
+    struct glx_context **table = cl->currentContexts;
     table[tag-1] = glxc;
 }
 
@@ -436,7 +436,7 @@ static void ChangeCurrentContext(__GLXclientState *cl, __GLXcontext *glxc,
 ** context's entry in the table as the context tag.  A tag must be greater
 ** than 0.
 */
-__GLXcontext *__glXLookupContextByTag(__GLXclientState *cl, GLXContextTag tag)
+struct glx_context *__glXLookupContextByTag(__GLXclientState *cl, GLXContextTag tag)
 {
     int num = cl->numCurrentContexts;
 
@@ -449,7 +449,7 @@ __GLXcontext *__glXLookupContextByTag(__GLXclientState *cl, GLXContextTag tag)
 
 /*****************************************************************************/
 
-static void StopUsingContext(__GLXcontext *glxc)
+static void StopUsingContext(struct glx_context *glxc)
 {
     if (glxc) {
 	if (glxc == __glXLastContext) {
@@ -463,7 +463,7 @@ static void StopUsingContext(__GLXcontext *glxc)
     }
 }
 
-static void StartUsingContext(__GLXclientState *cl, __GLXcontext *glxc)
+static void StartUsingContext(__GLXclientState *cl, struct glx_context *glxc)
 {
     glxc->isCurrent = GL_TRUE;
     __glXLastContext = glxc;	
@@ -476,7 +476,7 @@ static void StartUsingContext(__GLXclientState *cl, __GLXcontext *glxc)
  * sure it's an X window and create a GLX drawable one the fly.
  */
 static __GLXdrawable *
-__glXGetDrawable(__GLXcontext *glxc, GLXDrawable drawId, ClientPtr client,
+__glXGetDrawable(struct glx_context *glxc, GLXDrawable drawId, ClientPtr client,
 		 int *error)
 {
     DrawablePtr pDraw;
@@ -549,7 +549,7 @@ DoMakeCurrent(__GLXclientState *cl,
 {
     ClientPtr client = cl->client;
     xGLXMakeCurrentReply reply;
-    __GLXcontext *glxc, *prevglxc;
+    struct glx_context *glxc, *prevglxc;
     __GLXdrawable *drawPriv = NULL;
     __GLXdrawable *readPriv = NULL;
     int error;
@@ -716,7 +716,7 @@ int __glXDisp_IsDirect(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client = cl->client;
     xGLXIsDirectReq *req = (xGLXIsDirectReq *) pc;
     xGLXIsDirectReply reply;
-    __GLXcontext *glxc;
+    struct glx_context *glxc;
     int err;
 
     if (!validGlxContext(cl->client, req->context, DixReadAccess, &glxc, &err))
@@ -771,7 +771,7 @@ int __glXDisp_WaitGL(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXWaitGLReq *req = (xGLXWaitGLReq *)pc;
     GLXContextTag tag = req->contextTag;
-    __GLXcontext *glxc = NULL;
+    struct glx_context *glxc = NULL;
     int error;
 
     if (tag) {
@@ -795,7 +795,7 @@ int __glXDisp_WaitX(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXWaitXReq *req = (xGLXWaitXReq *)pc;
     GLXContextTag tag = req->contextTag;
-    __GLXcontext *glxc = NULL;
+    struct glx_context *glxc = NULL;
     int error;
 
     if (tag) {
@@ -821,7 +821,7 @@ int __glXDisp_CopyContext(__GLXclientState *cl, GLbyte *pc)
     GLXContextID dest = req->dest;
     GLXContextTag tag = req->contextTag;
     unsigned long mask = req->mask;
-    __GLXcontext *src, *dst;
+    struct glx_context *src, *dst;
     int error;
 
     if (!validGlxContext(cl->client, source, DixReadAccess, &src, &error))
@@ -848,7 +848,7 @@ int __glXDisp_CopyContext(__GLXclientState *cl, GLbyte *pc)
     }
 
     if (tag) {
-	__GLXcontext *tagcx = __glXLookupContextByTag(cl, tag);
+	struct glx_context *tagcx = __glXLookupContextByTag(cl, tag);
 	
 	if (!tagcx) {
 	    return __glXError(GLXBadContextTag);
@@ -1478,7 +1478,7 @@ int __glXDisp_SwapBuffers(__GLXclientState *cl, GLbyte *pc)
     xGLXSwapBuffersReq *req = (xGLXSwapBuffersReq *) pc;
     GLXContextTag tag = req->contextTag;
     XID drawId = req->drawable;
-    __GLXcontext *glxc = NULL;
+    struct glx_context *glxc = NULL;
     __GLXdrawable *pGlxDraw;
     int error;
 
@@ -1520,7 +1520,7 @@ static int
 DoQueryContext(__GLXclientState *cl, GLXContextID gcId)
 {
     ClientPtr client = cl->client;
-    __GLXcontext *ctx;
+    struct glx_context *ctx;
     xGLXQueryContextInfoEXTReply reply;
     int nProps;
     int *sendBuf, *pSendBuf;
@@ -1578,7 +1578,7 @@ int __glXDisp_BindTexImageEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *) pc;
     ClientPtr		 client = cl->client;
-    __GLXcontext	*context;
+    struct glx_context	*context;
     __GLXdrawable	*pGlxDraw;
     GLXDrawable		 drawId;
     int			 buffer;
@@ -1613,7 +1613,7 @@ int __glXDisp_ReleaseTexImageEXT(__GLXclientState *cl, GLbyte *pc)
     xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *) pc;
     ClientPtr		 client = cl->client;
     __GLXdrawable	*pGlxDraw;
-    __GLXcontext	*context;
+    struct glx_context	*context;
     GLXDrawable		 drawId;
     int			 buffer;
     int			 error;
@@ -1643,7 +1643,7 @@ int __glXDisp_CopySubBufferMESA(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *) pc;
     GLXContextTag         tag = req->contextTag;
-    __GLXcontext         *glxc = NULL;
+    struct glx_context         *glxc = NULL;
     __GLXdrawable        *pGlxDraw;
     ClientPtr		  client = cl->client;
     GLXDrawable		  drawId;
@@ -1772,7 +1772,7 @@ int __glXDisp_Render(__GLXclientState *cl, GLbyte *pc)
     int commandsDone;
     CARD16 opcode;
     __GLXrenderHeader *hdr;
-    __GLXcontext *glxc;
+    struct glx_context *glxc;
     __GLX_DECLARE_SWAP_VARIABLES;
 
     req = (xGLXRenderReq *) pc;
@@ -1866,7 +1866,7 @@ int __glXDisp_RenderLarge(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client= cl->client;
     size_t dataBytes;
     __GLXrenderLargeHeader *hdr;
-    __GLXcontext *glxc;
+    struct glx_context *glxc;
     int error;
     CARD16 opcode;
     __GLX_DECLARE_SWAP_VARIABLES;

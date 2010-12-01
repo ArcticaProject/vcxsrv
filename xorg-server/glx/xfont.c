@@ -155,7 +155,7 @@ int __glXDisp_UseXFont(__GLXclientState *cl, GLbyte *pc)
     xGLXUseXFontReq *req;
     FontPtr pFont;
     GLuint currentListIndex;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     int error;
 
     req = (xGLXUseXFontReq *) pc;

@@ -96,7 +96,7 @@ typedef struct __GLXWinScreen glxWinScreen;
 typedef struct __GLXWinConfig GLXWinConfig;
 
 struct __GLXWinContext {
-  __GLXcontext base;
+  glx_context base;
   HGLRC ctx;                         /* Windows GL Context */
   HDC hDC;                           /* Windows device context */
   HDC hreadDC;                     /* Windows device read context */
@@ -415,9 +415,9 @@ fbConfigsDump(unsigned int n, __GLXconfig *c)
  */
 
 static __GLXscreen *glxWinScreenProbe(ScreenPtr pScreen);
-static __GLXcontext *glxWinCreateContext(__GLXscreen *screen,
+static glx_context *glxWinCreateContext(__GLXscreen *screen,
                                         __GLXconfig *modes,
-                                        __GLXcontext *baseShareContext);
+                                        glx_context *baseShareContext);
 static __GLXdrawable *glxWinCreateDrawable(ClientPtr client,
                                           __GLXscreen *screen,
                                           DrawablePtr pDraw,
@@ -1070,7 +1070,7 @@ glxWinCreateDrawable(ClientPtr client,
  */
 
 static
-int glxWinBindTexImage(__GLXcontext  *baseContext,
+int glxWinBindTexImage(glx_context  *baseContext,
                       int            buffer,
                       __GLXdrawable *pixmap)
 {
@@ -1079,7 +1079,7 @@ int glxWinBindTexImage(__GLXcontext  *baseContext,
 }
 
 static
-int glxWinReleaseTexImage(__GLXcontext  *baseContext,
+int glxWinReleaseTexImage(glx_context  *baseContext,
                          int            buffer,
                          __GLXdrawable *pixmap)
 {
@@ -1546,7 +1546,7 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
 
 /* Context manipulation routines should return TRUE on success, FALSE on failure */
 static int
-glxWinContextMakeCurrent(__GLXcontext *base)
+glxWinContextMakeCurrent(glx_context *base)
 {
   __GLXWinContext *gc = (__GLXWinContext *)base;
   BOOL ret;
@@ -1621,7 +1621,7 @@ glxWinContextMakeCurrent(__GLXcontext *base)
 }
 
 static int
-glxWinContextLoseCurrent(__GLXcontext *base)
+glxWinContextLoseCurrent(glx_context *base)
 {
   BOOL ret=TRUE;
   __GLXWinContext *gc = (__GLXWinContext *)base;
@@ -1650,7 +1650,7 @@ glxWinContextLoseCurrent(__GLXcontext *base)
 }
 
 static int
-glxWinContextCopy(__GLXcontext *dst_base, __GLXcontext *src_base, unsigned long mask)
+glxWinContextCopy(glx_context *dst_base, glx_context *src_base, unsigned long mask)
 {
   __GLXWinContext *dst = (__GLXWinContext *)dst_base;
   __GLXWinContext *src = (__GLXWinContext *)src_base;
@@ -1668,14 +1668,14 @@ glxWinContextCopy(__GLXcontext *dst_base, __GLXcontext *src_base, unsigned long 
 }
 
 static int
-glxWinContextForceCurrent(__GLXcontext *base)
+glxWinContextForceCurrent(glx_context *base)
 {
   /* wglMakeCurrent always flushes the previous context, so this is equivalent to glxWinContextMakeCurrent */
   return glxWinContextMakeCurrent(base);
 }
 
 static void
-glxWinContextDestroy(__GLXcontext *base)
+glxWinContextDestroy(glx_context *base)
 {
   __GLXWinContext *gc = (__GLXWinContext *)base;
 
@@ -1706,10 +1706,10 @@ glxWinContextDestroy(__GLXcontext *base)
     }
 }
 
-static __GLXcontext *
+static glx_context *
 glxWinCreateContext(__GLXscreen *screen,
                    __GLXconfig *modes,
-                   __GLXcontext *baseShareContext)
+                   glx_context *baseShareContext)
 {
     __GLXWinContext *context;
     __GLXWinContext *shareContext = (__GLXWinContext *)baseShareContext;

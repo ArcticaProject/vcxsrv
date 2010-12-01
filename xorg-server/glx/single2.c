@@ -54,7 +54,7 @@ int __glXDisp_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
 {
     GLsizei size;
     GLenum type;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     int error;
 
     cx = __glXForceCurrent(cl, __GLX_GET_SINGLE_CONTEXT_TAG(pc), &error);
@@ -82,7 +82,7 @@ int __glXDisp_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDisp_SelectBuffer(__GLXclientState *cl, GLbyte *pc)
 {
-    __GLXcontext *cx;
+    struct glx_context *cx;
     GLsizei size;
     int error;
 
@@ -112,7 +112,7 @@ int __glXDisp_RenderMode(__GLXclientState *cl, GLbyte *pc)
 {
     ClientPtr client;
     xGLXRenderModeReply reply;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     GLint nitems=0, retBytes=0, retval, newModeCheck;
     GLubyte *retBuffer = NULL;
     GLenum newMode;
@@ -208,7 +208,7 @@ int __glXDisp_RenderMode(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDisp_Flush(__GLXclientState *cl, GLbyte *pc)
 {
-	__GLXcontext *cx;
+	struct glx_context *cx;
 	int error;
 
 	cx = __glXForceCurrent(cl, __GLX_GET_SINGLE_CONTEXT_TAG(pc), &error);
@@ -223,7 +223,7 @@ int __glXDisp_Flush(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDisp_Finish(__GLXclientState *cl, GLbyte *pc)
 {
-    __GLXcontext *cx;
+    struct glx_context *cx;
     ClientPtr client;
     int error;
 
@@ -311,7 +311,7 @@ char *__glXcombine_strings(const char *cext_string, const char *sext_string)
 int DoGetString(__GLXclientState *cl, GLbyte *pc, GLboolean need_swap)
 {
     ClientPtr client;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     GLenum name;
     const char *string;
     __GLX_DECLARE_SWAP_VARIABLES;

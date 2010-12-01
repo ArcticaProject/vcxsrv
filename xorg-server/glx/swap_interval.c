@@ -51,7 +51,7 @@ int DoSwapInterval(__GLXclientState *cl, GLbyte *pc, int do_swap)
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     ClientPtr client = cl->client;
     const GLXContextTag tag = req->contextTag;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     GLint interval;
 
 

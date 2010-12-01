@@ -66,7 +66,7 @@ typedef XID GLXDrawable;
 
 typedef struct __GLXclientStateRec __GLXclientState;
 typedef struct __GLXdrawable __GLXdrawable;
-typedef struct __GLXcontext __GLXcontext;
+typedef struct glx_context glx_context;
 
 #include "glxscreens.h"
 #include "glxdrawable.h"
@@ -94,8 +94,8 @@ void __glXScreenInitVisuals(__GLXscreen *screen);
 /*
 ** The last context used (from the server's persective) is cached.
 */
-extern __GLXcontext *__glXLastContext;
-extern __GLXcontext *__glXForceCurrent(__GLXclientState*, GLXContextTag, int*);
+extern struct glx_context *__glXLastContext;
+extern struct glx_context *__glXForceCurrent(__GLXclientState*, GLXContextTag, int*);
 
 extern ClientPtr __pGlxClient;
 
@@ -163,7 +163,7 @@ struct __GLXclientStateRec {
     ** Keep a list of all the contexts that are current for this client's
     ** threads.
     */
-    __GLXcontext **currentContexts;
+    struct glx_context **currentContexts;
     GLint numCurrentContexts;
 
     /* Back pointer to X client record */

@@ -63,7 +63,7 @@ int __glXDisp_NewList(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -81,7 +81,7 @@ int __glXDisp_EndList(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -105,6 +105,8 @@ void __glXDisp_CallLists(GLbyte * pc)
     const GLenum type = *(GLenum   *)(pc +  4);
     const GLvoid * lists =  (const GLvoid *)(pc +  8);
 
+    lists = (const GLvoid *) (pc + 8);
+
     CALL_CallLists( GET_DISPATCH(), (
         n,
         type,
@@ -116,7 +118,7 @@ int __glXDisp_DeleteLists(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -134,7 +136,7 @@ int __glXDisp_GenLists(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -165,7 +167,7 @@ void __glXDisp_Begin(GLbyte * pc)
 
 void __glXDisp_Bitmap(GLbyte * pc)
 {
-    const GLubyte * const bitmap = (const GLubyte *) (pc + 44);
+    const GLubyte * const bitmap = (const GLubyte *) ((pc + 44));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_LSB_FIRST,    hdr->lsbFirst) );
@@ -1042,7 +1044,7 @@ void __glXDisp_PolygonMode(GLbyte * pc)
 
 void __glXDisp_PolygonStipple(GLbyte * pc)
 {
-    const GLubyte * const mask = (const GLubyte *) (pc + 20);
+    const GLubyte * const mask = (const GLubyte *) ((pc + 20));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_LSB_FIRST,    hdr->lsbFirst) );
@@ -1121,7 +1123,7 @@ void __glXDisp_TexParameteriv(GLbyte * pc)
 
 void __glXDisp_TexImage1D(GLbyte * pc)
 {
-    const GLvoid * const pixels = (const GLvoid *) (pc + 52);
+    const GLvoid * const pixels = (const GLvoid *) ((pc + 52));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -1145,7 +1147,7 @@ void __glXDisp_TexImage1D(GLbyte * pc)
 
 void __glXDisp_TexImage2D(GLbyte * pc)
 {
-    const GLvoid * const pixels = (const GLvoid *) (pc + 52);
+    const GLvoid * const pixels = (const GLvoid *) ((pc + 52));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -1666,7 +1668,7 @@ int __glXDisp_PixelStoref(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1684,7 +1686,7 @@ int __glXDisp_PixelStorei(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1751,7 +1753,7 @@ void __glXDisp_CopyPixels(GLbyte * pc)
 
 void __glXDisp_DrawPixels(GLbyte * pc)
 {
-    const GLvoid * const pixels = (const GLvoid *) (pc + 36);
+    const GLvoid * const pixels = (const GLvoid *) ((pc + 36));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -1774,7 +1776,7 @@ int __glXDisp_GetBooleanv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1802,7 +1804,7 @@ int __glXDisp_GetClipPlane(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1822,7 +1824,7 @@ int __glXDisp_GetDoublev(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1850,7 +1852,7 @@ int __glXDisp_GetError(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1867,7 +1869,7 @@ int __glXDisp_GetFloatv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1895,7 +1897,7 @@ int __glXDisp_GetIntegerv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1923,7 +1925,7 @@ int __glXDisp_GetLightfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1952,7 +1954,7 @@ int __glXDisp_GetLightiv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -1981,7 +1983,7 @@ int __glXDisp_GetMapdv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2011,7 +2013,7 @@ int __glXDisp_GetMapfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2041,7 +2043,7 @@ int __glXDisp_GetMapiv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2071,7 +2073,7 @@ int __glXDisp_GetMaterialfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2100,7 +2102,7 @@ int __glXDisp_GetMaterialiv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2129,7 +2131,7 @@ int __glXDisp_GetPixelMapfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2157,7 +2159,7 @@ int __glXDisp_GetPixelMapuiv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2185,7 +2187,7 @@ int __glXDisp_GetPixelMapusv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2213,7 +2215,7 @@ int __glXDisp_GetTexEnvfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2242,7 +2244,7 @@ int __glXDisp_GetTexEnviv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2271,7 +2273,7 @@ int __glXDisp_GetTexGendv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2300,7 +2302,7 @@ int __glXDisp_GetTexGenfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2329,7 +2331,7 @@ int __glXDisp_GetTexGeniv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2358,7 +2360,7 @@ int __glXDisp_GetTexParameterfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2387,7 +2389,7 @@ int __glXDisp_GetTexParameteriv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2416,7 +2418,7 @@ int __glXDisp_GetTexLevelParameterfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2446,7 +2448,7 @@ int __glXDisp_GetTexLevelParameteriv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2476,7 +2478,7 @@ int __glXDisp_IsEnabled(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2495,7 +2497,7 @@ int __glXDisp_IsList(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2741,7 +2743,7 @@ int __glXDisp_AreTexturesResident(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2766,7 +2768,7 @@ int __glXDisp_AreTexturesResidentEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2844,7 +2846,7 @@ int __glXDisp_DeleteTextures(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2864,7 +2866,7 @@ int __glXDisp_DeleteTexturesEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2884,7 +2886,7 @@ int __glXDisp_GenTextures(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2907,7 +2909,7 @@ int __glXDisp_GenTexturesEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2930,7 +2932,7 @@ int __glXDisp_IsTexture(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2949,7 +2951,7 @@ int __glXDisp_IsTextureEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -2977,7 +2979,7 @@ void __glXDisp_PrioritizeTextures(GLbyte * pc)
 
 void __glXDisp_TexSubImage1D(GLbyte * pc)
 {
-    const GLvoid * const pixels = (const GLvoid *) (pc + 56);
+    const GLvoid * const pixels = (const GLvoid *) ((pc + 56));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -3000,7 +3002,7 @@ void __glXDisp_TexSubImage1D(GLbyte * pc)
 
 void __glXDisp_TexSubImage2D(GLbyte * pc)
 {
-    const GLvoid * const pixels = (const GLvoid *) (pc + 56);
+    const GLvoid * const pixels = (const GLvoid *) ((pc + 56));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -3042,7 +3044,7 @@ void __glXDisp_BlendEquation(GLbyte * pc)
 
 void __glXDisp_ColorTable(GLbyte * pc)
 {
-    const GLvoid * const table = (const GLvoid *) (pc + 40);
+    const GLvoid * const table = (const GLvoid *) ((pc + 40));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -3105,7 +3107,7 @@ int __glXDisp_GetColorTableParameterfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3134,7 +3136,7 @@ int __glXDisp_GetColorTableParameterfvSGI(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3163,7 +3165,7 @@ int __glXDisp_GetColorTableParameteriv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3192,7 +3194,7 @@ int __glXDisp_GetColorTableParameterivSGI(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3219,7 +3221,7 @@ int __glXDisp_GetColorTableParameterivSGI(__GLXclientState *cl, GLbyte *pc)
 
 void __glXDisp_ColorSubTable(GLbyte * pc)
 {
-    const GLvoid * const data = (const GLvoid *) (pc + 40);
+    const GLvoid * const data = (const GLvoid *) ((pc + 40));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -3252,7 +3254,7 @@ void __glXDisp_CopyColorSubTable(GLbyte * pc)
 
 void __glXDisp_ConvolutionFilter1D(GLbyte * pc)
 {
-    const GLvoid * const image = (const GLvoid *) (pc + 44);
+    const GLvoid * const image = (const GLvoid *) ((pc + 44));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -3274,7 +3276,7 @@ void __glXDisp_ConvolutionFilter1D(GLbyte * pc)
 
 void __glXDisp_ConvolutionFilter2D(GLbyte * pc)
 {
-    const GLvoid * const image = (const GLvoid *) (pc + 44);
+    const GLvoid * const image = (const GLvoid *) ((pc + 44));
     __GLXpixelHeader * const hdr = (__GLXpixelHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -3368,7 +3370,7 @@ int __glXDisp_GetConvolutionParameterfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3397,7 +3399,7 @@ int __glXDisp_GetConvolutionParameterfvEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3426,7 +3428,7 @@ int __glXDisp_GetConvolutionParameteriv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3455,7 +3457,7 @@ int __glXDisp_GetConvolutionParameterivEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3484,7 +3486,7 @@ int __glXDisp_GetHistogramParameterfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3513,7 +3515,7 @@ int __glXDisp_GetHistogramParameterfvEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3542,7 +3544,7 @@ int __glXDisp_GetHistogramParameteriv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3571,7 +3573,7 @@ int __glXDisp_GetHistogramParameterivEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3600,7 +3602,7 @@ int __glXDisp_GetMinmaxParameterfv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3629,7 +3631,7 @@ int __glXDisp_GetMinmaxParameterfvEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3658,7 +3660,7 @@ int __glXDisp_GetMinmaxParameteriv(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3687,7 +3689,7 @@ int __glXDisp_GetMinmaxParameterivEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -3776,7 +3778,7 @@ void __glXDisp_TexImage3D(GLbyte * pc)
 
 void __glXDisp_TexSubImage3D(GLbyte * pc)
 {
-    const GLvoid * const pixels = (const GLvoid *) (pc + 88);
+    const GLvoid * const pixels = (const GLvoid *) ((pc + 88));
     __GLXpixel3DHeader * const hdr = (__GLXpixel3DHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );
@@ -4092,7 +4094,7 @@ int __glXDisp_GetProgramEnvParameterdvARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4113,7 +4115,7 @@ int __glXDisp_GetProgramEnvParameterfvARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4134,7 +4136,7 @@ int __glXDisp_GetProgramLocalParameterdvARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4155,7 +4157,7 @@ int __glXDisp_GetProgramLocalParameterfvARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4176,7 +4178,7 @@ int __glXDisp_GetProgramivARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4205,7 +4207,7 @@ int __glXDisp_GetVertexAttribdvARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4234,7 +4236,7 @@ int __glXDisp_GetVertexAttribfvARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4263,7 +4265,7 @@ int __glXDisp_GetVertexAttribivARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4574,7 +4576,7 @@ int __glXDisp_DeleteQueriesARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4601,7 +4603,7 @@ int __glXDisp_GenQueriesARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4624,7 +4626,7 @@ int __glXDisp_GetQueryObjectivARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4653,7 +4655,7 @@ int __glXDisp_GetQueryObjectuivARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4682,7 +4684,7 @@ int __glXDisp_GetQueryivARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4711,7 +4713,7 @@ int __glXDisp_IsQueryARB(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_SINGLE_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4888,7 +4890,7 @@ int __glXDisp_AreProgramsResidentNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4921,7 +4923,7 @@ int __glXDisp_DeleteProgramsNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4950,7 +4952,7 @@ int __glXDisp_GenProgramsNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4973,7 +4975,7 @@ int __glXDisp_GetProgramParameterdvNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -4995,7 +4997,7 @@ int __glXDisp_GetProgramParameterfvNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5017,7 +5019,7 @@ int __glXDisp_GetProgramivNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5046,7 +5048,7 @@ int __glXDisp_GetTrackMatrixivNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5068,7 +5070,7 @@ int __glXDisp_GetVertexAttribdvNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5097,7 +5099,7 @@ int __glXDisp_GetVertexAttribfvNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5126,7 +5128,7 @@ int __glXDisp_GetVertexAttribivNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5155,7 +5157,7 @@ int __glXDisp_IsProgramNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5573,7 +5575,7 @@ int __glXDisp_GetProgramNamedParameterdvNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5597,7 +5599,7 @@ int __glXDisp_GetProgramNamedParameterfvNV(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5677,7 +5679,7 @@ int __glXDisp_CheckFramebufferStatusEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5760,7 +5762,7 @@ int __glXDisp_GenFramebuffersEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5783,7 +5785,7 @@ int __glXDisp_GenRenderbuffersEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5813,7 +5815,7 @@ int __glXDisp_GetFramebufferAttachmentParameterivEXT(__GLXclientState *cl, GLbyt
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5835,7 +5837,7 @@ int __glXDisp_GetRenderbufferParameterivEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5856,7 +5858,7 @@ int __glXDisp_IsFramebufferEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {
@@ -5875,7 +5877,7 @@ int __glXDisp_IsRenderbufferEXT(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXVendorPrivateReq * const req = (xGLXVendorPrivateReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, &error);
+    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, &error);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
     if ( cx != NULL ) {

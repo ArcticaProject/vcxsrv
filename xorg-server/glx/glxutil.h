@@ -42,7 +42,7 @@ extern GLboolean __glXDrawableInit(__GLXdrawable *drawable,
 extern void __glXDrawableRelease(__GLXdrawable *drawable);
 
 /* context helper routines */
-extern __GLXcontext *__glXLookupContextByTag(__GLXclientState*, GLXContextTag);
+extern struct glx_context *__glXLookupContextByTag(__GLXclientState*, GLXContextTag);
 
 /* init helper routines */
 extern void *__glXglDDXScreenInfo(void);

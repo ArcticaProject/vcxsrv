@@ -48,7 +48,7 @@ int __glXDisp_GetCompressedTexImageARB(struct __GLXclientStateRec *cl, GLbyte *p
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent( cl, req->contextTag, & error );
+    struct glx_context * const cx = __glXForceCurrent( cl, req->contextTag, & error );
     ClientPtr client = cl->client;
 
 
@@ -88,7 +88,7 @@ int __glXDispSwap_GetCompressedTexImageARB(struct __GLXclientStateRec *cl, GLbyt
 {
     xGLXSingleReq * const req = (xGLXSingleReq *) pc;
     int error;
-    __GLXcontext * const cx = __glXForceCurrent( cl, bswap_32( req->contextTag ), & error );
+    struct glx_context * const cx = __glXForceCurrent( cl, bswap_32( req->contextTag ), & error );
     ClientPtr client = cl->client;
 
 

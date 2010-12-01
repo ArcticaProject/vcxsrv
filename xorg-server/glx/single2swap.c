@@ -51,7 +51,7 @@ int __glXDispSwap_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
     GLsizei size;
     GLenum type;
     __GLX_DECLARE_SWAP_VARIABLES;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     int error;
 
     __GLX_SWAP_INT(&((xGLXSingleReq *)pc)->contextTag);
@@ -82,7 +82,7 @@ int __glXDispSwap_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_SelectBuffer(__GLXclientState *cl, GLbyte *pc)
 {
-    __GLXcontext *cx;
+    struct glx_context *cx;
     GLsizei size;
     __GLX_DECLARE_SWAP_VARIABLES;
     int error;
@@ -114,7 +114,7 @@ int __glXDispSwap_SelectBuffer(__GLXclientState *cl, GLbyte *pc)
 int __glXDispSwap_RenderMode(__GLXclientState *cl, GLbyte *pc)
 {
     ClientPtr client;
-    __GLXcontext *cx;
+    struct glx_context *cx;
     xGLXRenderModeReply reply;
     GLint nitems=0, retBytes=0, retval, newModeCheck;
     GLubyte *retBuffer = NULL;
@@ -222,7 +222,7 @@ int __glXDispSwap_RenderMode(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_Flush(__GLXclientState *cl, GLbyte *pc)
 {
-	__GLXcontext *cx;
+	struct glx_context *cx;
 	int error;
 	__GLX_DECLARE_SWAP_VARIABLES;
 
@@ -239,7 +239,7 @@ int __glXDispSwap_Flush(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_Finish(__GLXclientState *cl, GLbyte *pc)
 {
-    __GLXcontext *cx;
+    struct glx_context *cx;
     ClientPtr client;
     int error;
     __GLX_DECLARE_SWAP_VARIABLES;
