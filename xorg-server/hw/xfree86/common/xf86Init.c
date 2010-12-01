@@ -732,8 +732,7 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 	  FatalError("Cannot register DDX private keys");
 
   if (!dixRegisterPrivateKey(&xf86ScreenKeyRec, PRIVATE_SCREEN, 0) ||
-      !dixRegisterPrivateKey(&xf86CreateRootWindowKeyRec, PRIVATE_SCREEN, 0) ||
-      !dixRegisterPrivateKey(&xf86PixmapKeyRec, PRIVATE_PIXMAP, 0))
+      !dixRegisterPrivateKey(&xf86CreateRootWindowKeyRec, PRIVATE_SCREEN, 0))
       FatalError("Cannot register DDX private keys");
 
   for (i = 0; i < xf86NumScreens; i++) {

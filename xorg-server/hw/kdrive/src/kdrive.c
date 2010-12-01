@@ -1024,12 +1024,6 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     fbInitValidateTree (pScreen);
 #endif
 
-#if 0
-    pScreen->backingStoreSupport = Always;
-    miInitializeBackingStore (pScreen);
-#endif
-
-
     /*
      * Wrap CloseScreen, the order now is:
      *	KdCloseScreen

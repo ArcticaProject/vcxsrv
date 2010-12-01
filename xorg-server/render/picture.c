@@ -735,13 +735,12 @@ SetPictureToDefaults (PicturePtr    pPicture)
 
     pPicture->transform = 0;
 
-    pPicture->dither = None;
     pPicture->filter = PictureGetFilterId (FilterNearest, -1, TRUE);
     pPicture->filter_params = 0;
     pPicture->filter_nparams = 0;
 
     pPicture->serialNumber = GC_CHANGE_SERIAL_BIT;
-    pPicture->stateChanges = (1 << (CPLastBit+1)) - 1;
+    pPicture->stateChanges = -1;
     pPicture->pSourcePict = 0;
 }
 
@@ -1261,7 +1260,7 @@ ChangePicture (PicturePtr	pPicture,
 	    }
 	    break;
 	case CPDither:
-	    pPicture->dither = NEXT_VAL(Atom);
+	    (void) NEXT_VAL(Atom); /* unimplemented */
 	    break;
 	case CPComponentAlpha:
 	    {
@@ -1480,7 +1479,6 @@ CopyPicture (PicturePtr	pSrc,
 	    pDst->polyMode = pSrc->polyMode;
 	    break;
 	case CPDither:
-	    pDst->dither = pSrc->dither;
 	    break;
 	case CPComponentAlpha:
 	    pDst->componentAlpha = pSrc->componentAlpha;

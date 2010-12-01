@@ -79,8 +79,8 @@ typedef struct _DevCursorNode {
 } DevCursNodeRec, *DevCursNodePtr, *DevCursorList;
 
 typedef struct _WindowOpt {
-    VisualID		visual;		   /* default: same as parent */
     CursorPtr		cursor;		   /* default: window.cursorNone */
+    VisualID		visual;		   /* default: same as parent */
     Colormap		colormap;	   /* default: same as parent */
     Mask		dontPropagateMask; /* default: window.dontPropagate */
     Mask		otherEventMasks;   /* default: 0 */

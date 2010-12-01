@@ -1402,6 +1402,7 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	strategy &= ~LOOKUP_OPTIONAL_TOLERANCES;
     } else {
 	const char *type = "";
+        Bool specified = FALSE;
 
 	if (scrp->monitor->nHsync <= 0) {
 	    if (numTimings > 0) {
@@ -1412,11 +1413,13 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 		}
 	    } else {
 		scrp->monitor->hsync[0].lo = 31.5;
-		scrp->monitor->hsync[0].hi = 37.9;
+		scrp->monitor->hsync[0].hi = 48.0;
 		scrp->monitor->nHsync = 1;
 	    }
 	    type = "default ";
-	}
+	} else {
+            specified = TRUE;
+        }
 	for (i = 0; i < scrp->monitor->nHsync; i++) {
 	    if (scrp->monitor->hsync[i].lo == scrp->monitor->hsync[i].hi)
 	      xf86DrvMsg(scrp->scrnIndex, X_INFO,
@@ -1445,7 +1448,9 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 		scrp->monitor->nVrefresh = 1;
 	    }
 	    type = "default ";
-	}
+	} else {
+            specified = TRUE;
+        }
 	for (i = 0; i < scrp->monitor->nVrefresh; i++) {
 	    if (scrp->monitor->vrefresh[i].lo == scrp->monitor->vrefresh[i].hi)
 	      xf86DrvMsg(scrp->scrnIndex, X_INFO,
@@ -1459,10 +1464,16 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 			 scrp->monitor->vrefresh[i].lo,
 			 scrp->monitor->vrefresh[i].hi);
 	}
+
+        type = "";
+	if (!scrp->monitor->maxPixClock && !specified) {
+            type = "default ";
+            scrp->monitor->maxPixClock = 65000.0;
+        }
 	if (scrp->monitor->maxPixClock) {
 	    xf86DrvMsg(scrp->scrnIndex, X_INFO,
-		       "%s: Using maximum pixel clock of %.2f MHz\n",
-		       scrp->monitor->id,
+		       "%s: Using %smaximum pixel clock of %.2f MHz\n",
+		       scrp->monitor->id, type,
 		       (float)scrp->monitor->maxPixClock / 1000.0);
 	}
     }

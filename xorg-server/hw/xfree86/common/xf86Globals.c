@@ -49,7 +49,6 @@
 
 DevPrivateKeyRec xf86CreateRootWindowKeyRec;
 DevPrivateKeyRec xf86ScreenKeyRec;
-DevPrivateKeyRec xf86PixmapKeyRec;
 
 ScrnInfoPtr *xf86Screens = NULL;	/* List of ScrnInfos */
 const unsigned char byte_reversed[256] =

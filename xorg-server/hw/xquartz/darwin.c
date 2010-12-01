@@ -868,28 +868,6 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
 	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
     }
 
-    if (pWin->backStorage &&
-	((pWin->backingStore == Always) || WasViewable))
-    {
-	if (!WasViewable)
-	    pOldClip = &pWin->clipList; /* a convenient empty region */
-	bsExposed = (*pScreen->TranslateBackingStore)
-			     (pWin, 0, 0, pOldClip,
-			      pWin->drawable.x, pWin->drawable.y);
-	if (WasViewable)
-	    RegionDestroy(pOldClip);
-	if (bsExposed)
-	{
-	    RegionPtr	valExposed = NullRegion;
-
-	    if (pWin->valdata)
-		valExposed = &pWin->valdata->after.exposed;
-	    (*pScreen->WindowExposures) (pWin, valExposed, bsExposed);
-	    if (valExposed)
-		RegionEmpty(valExposed);
-	    RegionDestroy(bsExposed);
-	}
-    }
     if (WasViewable)
     {
 	if (anyMarked)

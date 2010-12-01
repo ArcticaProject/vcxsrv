@@ -283,8 +283,6 @@ Bool dmxScreenInit(int idx, ScreenPtr pScreen, int argc, char *argv[])
     if (dmxShadowFB && !shadowInit(pScreen, dmxShadowUpdateProc, NULL))
 	return FALSE;
 
-    miInitializeBackingStore(pScreen);
-
     if (dmxShadowFB) {
 	miDCInitialize(pScreen, &dmxPointerCursorFuncs);
     } else {

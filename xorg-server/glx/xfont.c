@@ -39,7 +39,6 @@
 #include "glxserver.h"
 #include "glxutil.h"
 #include "unpack.h"
-#include "g_disptab.h"
 #include "glapitable.h"
 #include "glapi.h"
 #include "glthread.h"

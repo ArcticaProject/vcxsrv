@@ -1241,8 +1241,6 @@ typedef struct _XAAInfoRec {
    GetImageProcPtr GetImage;
    GetSpansProcPtr GetSpans;
    CopyWindowProcPtr CopyWindow;
-   BackingStoreSaveAreasProcPtr SaveAreas;
-   BackingStoreRestoreAreasProcPtr RestoreAreas;
 
    unsigned int offscreenDepths;
    Bool offscreenDepthsInitialized;

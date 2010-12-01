@@ -1,6 +1,5 @@
 CSRCS=miarc.c		\
 	mibitblt.c	\
-	mibstore.c	\
 	micmap.c	\
 	micopy.c	\
 	micursor.c	\

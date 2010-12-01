@@ -1011,8 +1011,6 @@ void dmxValidatePicture(PicturePtr pPicture, Mask mask)
 	    attribs.poly_edge = pPicture->polyEdge;
 	if (mask & CPPolyMode)
 	    attribs.poly_mode = pPicture->polyMode;
-	if (mask & CPDither)
-	    attribs.dither = pPicture->dither;
 	if (mask & CPComponentAlpha)
 	    attribs.component_alpha = pPicture->componentAlpha;
 

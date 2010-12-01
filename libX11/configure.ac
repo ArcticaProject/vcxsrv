@@ -469,6 +469,7 @@ AC_OUTPUT([Makefile
 	   specs/i18n/trans/Makefile
 	   specs/libX11/Makefile
 	   specs/XIM/Makefile
+	   specs/XKB/Makefile
 	   x11.pc
 	   x11-xcb.pc])
 

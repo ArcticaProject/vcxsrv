@@ -31,7 +31,7 @@ panoramiXSwap.c
 
 LIBRARY=libxext
 
-INCLUDES += ..\hw\xfree86\dixmods\extmod
+INCLUDES += ..\hw\xfree86\dixmods\extmod ..\composite
 
 
 

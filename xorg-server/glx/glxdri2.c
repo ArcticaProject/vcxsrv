@@ -48,7 +48,6 @@
 #include "glxutil.h"
 #include "glxdricommon.h"
 
-#include "g_disptab.h"
 #include "glapitable.h"
 #include "glapi.h"
 #include "glthread.h"

@@ -32,12 +32,12 @@ DOC_SUBDIR = doc
 
 SUBDIRS = common ddc i2c x86emu $(INT10_SUBDIR) fbdevhw os-support parser \
 	  ramdac shadowfb $(VBE_SUBDIR) $(VGAHW_SUBDIR) $(XAA_SUBDIR) \
-	  xf8_16bpp loader dixmods exa modes \
+	  loader dixmods exa modes \
 	  $(DRI_SUBDIR) $(DRI2_SUBDIR) $(XF86UTILS_SUBDIR) $(DOC_SUBDIR)
 
 DIST_SUBDIRS = common ddc i2c x86emu int10 fbdevhw os-support \
                parser ramdac shadowfb vbe vgahw xaa \
-               xf8_16bpp loader dixmods dri dri2 exa modes \
+               loader dixmods dri dri2 exa modes \
 	       utils doc
 
 bin_PROGRAMS = Xorg

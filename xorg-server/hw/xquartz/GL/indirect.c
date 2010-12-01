@@ -586,8 +586,6 @@ static __GLXscreen * __glXAquaScreenProbe(ScreenPtr pScreen) {
     screen->base.createContext  = __glXAquaScreenCreateContext;
     screen->base.createDrawable = __glXAquaScreenCreateDrawable;
     screen->base.swapInterval = /*FIXME*/ NULL;
-    screen->base.hyperpipeFuncs = NULL;
-    screen->base.swapBarrierFuncs = NULL;
     screen->base.pScreen       = pScreen;
     
     screen->base.fbconfigs = __glXAquaCreateVisualConfigs(&screen->base.numFBConfigs, pScreen->myNum);

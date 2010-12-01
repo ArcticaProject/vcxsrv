@@ -875,13 +875,6 @@ vfbScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 
     if (!ret) return FALSE;
 
-    miInitializeBackingStore(pScreen);
-
-    /*
-     * Circumvent the backing store that was just initialised.  This amounts
-     * to a truely bizarre way of initialising SaveDoomedAreas and friends.
-     */
-
     pScreen->InstallColormap = vfbInstallColormap;
     pScreen->UninstallColormap = vfbUninstallColormap;
     pScreen->ListInstalledColormaps = vfbListInstalledColormaps;

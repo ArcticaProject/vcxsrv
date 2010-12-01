@@ -456,10 +456,6 @@ extern _X_EXPORT Bool miScreenInit(
     VisualPtr /*visuals*/
 );
 
-extern _X_EXPORT DevPrivateKey miAllocateGCPrivateIndex(
-    void
-);
-
 /* mivaltree.c */
 
 extern _X_EXPORT int miShapedWindowIn(

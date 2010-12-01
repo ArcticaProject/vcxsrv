@@ -1629,14 +1629,6 @@ Here is what <function>InitOutput()</function> does:
 	  </blockquote></para></blockquote>
 
       <para>
-    Currently, aperture remapping, as described here, should not be
-    attempted if the driver uses the <literal remap="tt">xf8_16bpp</literal> or
-    <literal remap="tt">xf8_32bpp</literal> framebuffer layers.  A pending
-    restructuring of VT switching will address this restriction in
-    the near future.
-      </para>
-
-      <para>
     Other layers may wrap the <function>ChipEnterVT()</function> and
     <function>ChipLeaveVT()</function> functions if they need to take some
     action when these events are received.
