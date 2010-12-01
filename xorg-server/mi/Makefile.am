@@ -12,9 +12,7 @@ libmi_la_SOURCES = 	\
 	mi.h		\
 	miarc.c		\
 	mibitblt.c	\
-	mibstore.c	\
 	mibstore.h	\
-	mibstorest.h	\
 	micmap.c	\
 	micmap.h	\
 	micoord.h	\

@@ -326,4 +326,7 @@ int
 compConfigNotify(WindowPtr pWin, int x, int y, int w, int h,
 		 int bw, WindowPtr pSib);
 
+void PanoramiXCompositeInit (void);
+void PanoramiXCompositeReset (void);
+
 #endif /* _COMPINT_H_ */

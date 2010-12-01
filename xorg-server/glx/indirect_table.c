@@ -30,7 +30,6 @@
 #include "glxext.h"
 #include "indirect_dispatch.h"
 #include "indirect_reqsize.h"
-#include "g_disptab.h"
 #include "indirect_table.h"
 
 /*****************************************************************/

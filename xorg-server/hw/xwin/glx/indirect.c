@@ -649,8 +649,6 @@ glxWinScreenProbe(ScreenPtr pScreen)
       screen->base.createContext = glxWinCreateContext;
       screen->base.createDrawable = glxWinCreateDrawable;
       screen->base.swapInterval = glxWinScreenSwapInterval;
-      screen->base.hyperpipeFuncs = NULL;
-      screen->base.swapBarrierFuncs = NULL;
       screen->base.pScreen = pScreen;
 
       if (strstr(wgl_extensions, "WGL_ARB_pixel_format"))

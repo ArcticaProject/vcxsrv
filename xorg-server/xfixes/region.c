@@ -842,3 +842,81 @@ SProcXFixesExpandRegion (ClientPtr client)
     return (*ProcXFixesVector[stuff->xfixesReqType]) (client);
 }
 
+#ifdef PANORAMIX
+#include "panoramiX.h"
+#include "panoramiXsrv.h"
+
+int
+PanoramiXFixesSetGCClipRegion (ClientPtr client)
+{
+    REQUEST(xXFixesSetGCClipRegionReq);
+    int		    result = Success, j;
+    PanoramiXRes    *gc;
+    REQUEST_SIZE_MATCH(xXFixesSetGCClipRegionReq);
+
+    if ((result = dixLookupResourceByType((void **)&gc, stuff->gc, XRT_GC,
+					  client, DixWriteAccess))) {
+	client->errorValue = stuff->gc;
+	return result;
+    }
+
+    FOR_NSCREENS_BACKWARD(j) {
+        stuff->gc = gc->info[j].id;
+        result = (*PanoramiXSaveXFixesVector[X_XFixesSetGCClipRegion]) (client);
+        if(result != Success) break;
+    }
+
+    return result;
+}
+
+int
+PanoramiXFixesSetWindowShapeRegion (ClientPtr client)
+{
+    int		    result = Success, j;
+    PanoramiXRes    *win;
+    REQUEST(xXFixesSetWindowShapeRegionReq);
+
+    REQUEST_SIZE_MATCH(xXFixesSetWindowShapeRegionReq);
+
+    if ((result = dixLookupResourceByType((void **)&win, stuff->dest,
+					  XRT_WINDOW, client,
+					  DixWriteAccess))) {
+	client->errorValue = stuff->dest;
+	return result;
+    }
+
+    FOR_NSCREENS_FORWARD(j) {
+	stuff->dest = win->info[j].id;
+	result = (*PanoramiXSaveXFixesVector[X_XFixesSetWindowShapeRegion]) (client);
+        if(result != Success) break;
+    }
+
+    return result;
+}
+
+int
+PanoramiXFixesSetPictureClipRegion (ClientPtr client)
+{
+    REQUEST(xXFixesSetPictureClipRegionReq);
+    int		    result = Success, j;
+    PanoramiXRes    *pict;
+
+    REQUEST_SIZE_MATCH (xXFixesSetPictureClipRegionReq);
+
+    if ((result = dixLookupResourceByType((void **)&pict, stuff->picture,
+					  XRT_PICTURE, client,
+					  DixWriteAccess))) {
+	client->errorValue = stuff->picture;
+	return result;
+    }
+
+    FOR_NSCREENS_BACKWARD(j) {
+        stuff->picture = pict->info[j].id;
+	result = (*PanoramiXSaveXFixesVector[X_XFixesSetPictureClipRegion]) (client);
+        if(result != Success) break;
+    }
+
+    return result;
+}
+
+#endif

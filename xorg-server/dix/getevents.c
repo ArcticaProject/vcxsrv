@@ -112,12 +112,12 @@ set_button_up(DeviceIntPtr pDev, int button, int type)
 Bool
 button_is_down(DeviceIntPtr pDev, int button, int type)
 {
-    int ret = 0;
+    Bool ret = FALSE;
 
     if (type & BUTTON_PROCESSED)
-        ret |= BitIsOn(pDev->button->down, button);
+        ret = ret || BitIsOn(pDev->button->down, button);
     if (type & BUTTON_POSTED)
-        ret |= BitIsOn(pDev->button->postdown, button);
+        ret = ret || BitIsOn(pDev->button->postdown, button);
 
     return ret;
 }
@@ -143,12 +143,12 @@ set_key_up(DeviceIntPtr pDev, int key_code, int type)
 Bool
 key_is_down(DeviceIntPtr pDev, int key_code, int type)
 {
-    int ret = 0;
+    Bool ret = FALSE;
 
     if (type & KEY_PROCESSED)
-        ret |= BitIsOn(pDev->key->down, key_code);
+        ret = ret || BitIsOn(pDev->key->down, key_code);
     if (type & KEY_POSTED)
-        ret |= BitIsOn(pDev->key->postdown, key_code);
+        ret = ret || BitIsOn(pDev->key->postdown, key_code);
 
     return ret;
 }

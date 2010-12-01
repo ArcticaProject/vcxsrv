@@ -394,13 +394,6 @@ winFinishScreenInitFB (int index,
     }
 #endif
 
-  /*
-   * Backing store support should reduce network traffic and increase
-   * performance.
-   */
-  miInitializeBackingStore (pScreen);
-
-  /* KDrive does miDCInitialize right after miInitializeBackingStore */
   /* Setup the cursor routines */
 #if CYGDEBUG
   winDebug ("winFinishScreenInitFB - Calling miDCInitialize ()\n");

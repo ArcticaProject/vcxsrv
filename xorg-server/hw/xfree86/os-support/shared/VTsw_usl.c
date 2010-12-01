@@ -31,10 +31,6 @@
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
 
-#ifdef OSHEADER
-# include OSHEADER
-#endif
-
 /*
  * Handle the VT-switching interface for OSs that use USL-style ioctl()s
  * (the sysv, sco, and linux subdirs).
@@ -63,16 +59,9 @@ xf86VTSwitchAway(void)
 {
 	xf86Info.vtRequestsPending = FALSE;
 	if (ioctl(xf86Info.consoleFd, VT_RELDISP, 1) < 0)
-	{
 		return FALSE;
-	}
 	else
-	{
-#ifdef OSSWITCHAWAY
-	        OSSWITCHAWAY;
-#endif
 		return TRUE;
-	}
 }
 
 Bool
@@ -80,13 +69,9 @@ xf86VTSwitchTo(void)
 {
 	xf86Info.vtRequestsPending = FALSE;
 	if (ioctl(xf86Info.consoleFd, VT_RELDISP, VT_ACKACQ) < 0)
-	{
 		return FALSE;
-	}
 	else
-	{
 		return TRUE;
-	}
 }
 
 Bool

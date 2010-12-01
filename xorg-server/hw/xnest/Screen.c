@@ -239,8 +239,6 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
 	       defaultVisual, /* root visual */
 	       numVisuals, visuals);
 
-/*  miInitializeBackingStore(pScreen); */
-
   pScreen->defColormap = (Colormap) FakeClientID(0);
   pScreen->minInstalledCmaps = MINCMAPS;
   pScreen->maxInstalledCmaps = MAXCMAPS;

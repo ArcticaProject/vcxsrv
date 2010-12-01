@@ -71,10 +71,9 @@ typedef struct _GlyphHash {
 
 typedef struct _GlyphSet {
     CARD32	    refcnt;
-    PictFormatPtr   format;
     int		    fdepth;
+    PictFormatPtr   format;
     GlyphHashRec    hash;
-    int             maxPrivate;
     PrivateRec      *devPrivates;
 } GlyphSetRec, *GlyphSetPtr;
 

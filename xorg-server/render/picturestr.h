@@ -151,8 +151,6 @@ typedef struct _Picture {
     PictFormatShort format;	    /* PICT_FORMAT */
     int		    refcnt;
     CARD32	    id;
-    PicturePtr	    pNext;	    /* chain on same drawable */
-
     unsigned int    repeat : 1;
     unsigned int    graphicsExposures : 1;
     unsigned int    subWindowMode : 1;
@@ -162,7 +160,11 @@ typedef struct _Picture {
     unsigned int    clientClipType : 2;
     unsigned int    componentAlpha : 1;
     unsigned int    repeatType : 2;
-    unsigned int    unused : 21;
+    unsigned int    filter : 3;
+    unsigned int    stateChanges : CPLastBit;
+    unsigned int    unused : 18 - CPLastBit;
+
+    PicturePtr	    pNext;	    /* chain on same drawable */
 
     PicturePtr	    alphaMap;
     DDXPointRec	    alphaOrigin;
@@ -170,9 +172,6 @@ typedef struct _Picture {
     DDXPointRec	    clipOrigin;
     pointer	    clientClip;
 
-    Atom	    dither;
-
-    unsigned long   stateChanges;
     unsigned long   serialNumber;
 
     RegionPtr	    pCompositeClip;
@@ -181,10 +180,9 @@ typedef struct _Picture {
 
     PictTransform   *transform;
 
-    int		    filter;
+    SourcePictPtr   pSourcePict;
     xFixed	    *filter_params;
     int		    filter_nparams;
-    SourcePictPtr   pSourcePict;
 } PictureRec;
 
 typedef Bool (*PictFilterValidateParamsProcPtr) (ScreenPtr pScreen, int id,
@@ -205,6 +203,7 @@ typedef struct {
 #define PictFilterBest		4
 
 #define PictFilterConvolution	5
+/* if you add an 8th filter, expand the filter bitfield above */
 
 typedef struct {
     char	    *alias;

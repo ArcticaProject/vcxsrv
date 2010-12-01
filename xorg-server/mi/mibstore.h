@@ -18,8 +18,6 @@
 
 #include "screenint.h"
 
-extern _X_EXPORT void miInitializeBackingStore(
-    ScreenPtr /*pScreen*/
-);
+#define miInitializeBackingStore(x) do {} while (0)
 
 #endif /* _MIBSTORE_H */

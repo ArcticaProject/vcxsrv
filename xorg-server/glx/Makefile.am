@@ -68,7 +68,6 @@ libglx_la_SOURCES = \
 	indirect_program.c \
 	indirect_table.h \
 	indirect_texture_compression.c \
-        g_disptab.h \
         glxbyteorder.h \
         glxcmds.c \
         glxcmdsswap.c \

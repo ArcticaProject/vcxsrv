@@ -208,12 +208,6 @@ cat > sdksyms.c << EOF
  */
 
 
-/* hw/xfree86/xf8_16bpp/Makefile.am -- module */
-/*
-#include "cfb8_16.h"
- */
-
-
 /* mi/Makefile.am */
 #include "micmap.h"
 #include "miline.h"
@@ -255,8 +249,6 @@ cat > sdksyms.c << EOF
 
 /* include/Makefile.am */
 #include "XIstubs.h"
-#include "bstore.h"
-#include "bstorestr.h"
 #include "closestr.h"
 #include "closure.h"
 #include "colormap.h"

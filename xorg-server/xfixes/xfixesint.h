@@ -255,6 +255,15 @@ ProcXFixesExpandRegion (ClientPtr client);
 int
 SProcXFixesExpandRegion (ClientPtr client);
 
+int
+PanoramiXFixesSetGCClipRegion (ClientPtr client);
+
+int
+PanoramiXFixesSetWindowShapeRegion (ClientPtr client);
+
+int
+PanoramiXFixesSetPictureClipRegion (ClientPtr client);
+
 /* Cursor Visibility (Version 4) */
 
 int 
@@ -268,5 +277,9 @@ ProcXFixesShowCursor (ClientPtr client);
 
 int 
 SProcXFixesShowCursor (ClientPtr client);
+
+extern int (*PanoramiXSaveXFixesVector[XFixesNumberRequests])(ClientPtr);
+void PanoramiXFixesInit (void);
+void PanoramiXFixesReset (void);
 
 #endif /* _XFIXESINT_H_ */

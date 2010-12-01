@@ -40,10 +40,4 @@
 void
 miInitializeBackingStore (ScreenPtr pScreen)
 {
-    pScreen->SaveDoomedAreas = NULL;
-    pScreen->RestoreAreas = NULL;
-    pScreen->ExposeCopy = NULL;
-    pScreen->TranslateBackingStore = NULL;
-    pScreen->ClearBackingStore = NULL;
-    pScreen->DrawGuarantee = NULL;
 }

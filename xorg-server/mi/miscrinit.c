@@ -269,8 +269,6 @@ miScreenInit(
     pScreen->wakeupData = (pointer)0;
     pScreen->MarkWindow = miMarkWindow;
     pScreen->MarkOverlappedWindows = miMarkOverlappedWindows;
-    pScreen->ChangeSaveUnder = NULL;
-    pScreen->PostChangeSaveUnder = NULL;
     pScreen->MoveWindow = miMoveWindow;
     pScreen->ResizeWindow = miSlideAndSizeWindow;
     pScreen->GetLayerWindow = miGetLayerWindow;
@@ -280,27 +278,9 @@ miScreenInit(
     pScreen->SetShape = miSetShape;
     pScreen->MarkUnrealizedWindow = miMarkUnrealizedWindow;
 
-    pScreen->SaveDoomedAreas = 0;
-    pScreen->RestoreAreas = 0;
-    pScreen->ExposeCopy = 0;
-    pScreen->TranslateBackingStore = 0;
-    pScreen->ClearBackingStore = 0;
-    pScreen->DrawGuarantee = 0;
-
     miSetZeroLineBias(pScreen, DEFAULTZEROLINEBIAS);
 
     return miScreenDevPrivateInit(pScreen, width, pbits);
-}
-
-static DevPrivateKeyRec privateKeyRec;
-#define privateKey (&privateKeyRec)
-
-DevPrivateKey
-miAllocateGCPrivateIndex(void)
-{
-    if (!dixRegisterPrivateKey(&privateKeyRec, PRIVATE_GC, 0))
-	return NULL;
-    return privateKey;
 }
 
 DevPrivateKeyRec miZeroLineScreenKeyRec;

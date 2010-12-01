@@ -53,6 +53,12 @@ Equipment Corporation.
 #include "servermd.h"
 #include "resource.h"
 #include "picturestr.h"
+#ifdef XFIXES
+#include "xfixesint.h"
+#endif
+#ifdef COMPOSITE
+#include "compint.h"
+#endif
 #include "modinit.h"
 #include "protocol-versions.h"
 
@@ -581,6 +587,13 @@ void PanoramiXExtensionInit(int argc, char *argv[])
     ProcVector[X_StoreNamedColor] = PanoramiXStoreNamedColor;
 
     PanoramiXRenderInit ();
+#ifdef XFIXES
+    PanoramiXFixesInit ();
+#endif
+#ifdef COMPOSITE
+    PanoramiXCompositeInit ();
+#endif
+
 }
 
 extern Bool CreateConnectionBlock(void);
@@ -882,6 +895,9 @@ static void PanoramiXResetProc(ExtensionEntry* extEntry)
     int		i;
 
     PanoramiXRenderReset ();
+#ifdef XFIXES
+    PanoramiXFixesReset ();
+#endif
     screenInfo.numScreens = PanoramiXNumScreens;
     for (i = 256; i--; )
 	ProcVector[i] = SavedProcVector[i];

@@ -26,6 +26,7 @@ extern _X_EXPORT unsigned long XRT_WINDOW;
 extern _X_EXPORT unsigned long XRT_PIXMAP;
 extern _X_EXPORT unsigned long XRT_GC;
 extern _X_EXPORT unsigned long XRT_COLORMAP;
+extern _X_EXPORT unsigned long XRT_PICTURE;
 
 /*
  * Drivers are allowed to wrap this function.  Each wrapper can decide that the

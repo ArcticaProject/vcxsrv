@@ -47,6 +47,10 @@
 
 #include "compint.h"
 
+#ifdef PANORAMIX
+#include "panoramiXsrv.h"
+#endif
+
 #ifdef COMPOSITE_DEBUG
 static int
 compCheckWindow (WindowPtr pWin, pointer data)
@@ -172,16 +176,26 @@ updateOverlayWindow(ScreenPtr pScreen)
 	CompScreenPtr cs;
 	WindowPtr pWin; /* overlay window */
 	XID vlist[2];
+	int w = pScreen->width;
+	int h = pScreen->height;
+
+#ifdef PANORAMIX
+	if (!noPanoramiXExtension)
+	{
+	    w = PanoramiXPixWidth;
+	    h = PanoramiXPixHeight;
+	}
+#endif
 
 	cs = GetCompScreen(pScreen);
 	if ((pWin = cs->pOverlayWin) != NULL) {
-		if ((pWin->drawable.width == pScreen->width) &&
-			(pWin->drawable.height == pScreen->height))
+		if ((pWin->drawable.width == w) &&
+			(pWin->drawable.height == h))
 			return Success;
 
 		/* Let's resize the overlay window. */
-		vlist[0] = pScreen->width;
-		vlist[1] = pScreen->height;
+		vlist[0] = w;
+		vlist[1] = h;
 		return ConfigureWindow(pWin, CWWidth | CWHeight, vlist, wClient(pWin));
 	}
 

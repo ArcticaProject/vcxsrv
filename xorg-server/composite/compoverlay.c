@@ -48,6 +48,10 @@
 #include "compint.h"
 #include "xace.h"
 
+#ifdef PANORAMIX
+#include "panoramiXsrv.h"
+#endif
+
 /* 
  * Delete the given overlay client list element from its screen list.
  */
@@ -128,10 +132,19 @@ compCreateOverlayWindow (ScreenPtr pScreen)
     WindowPtr	    pWin;
     XID		    attrs[] = { None, TRUE }; /* backPixmap, overrideRedirect */
     int		    result;
+    int		    w = pScreen->width;
+    int		    h = pScreen->height;
+
+#ifdef PANORAMIX
+    if (!noPanoramiXExtension)
+    {
+	w = PanoramiXPixWidth;
+	h = PanoramiXPixHeight;
+    }
+#endif
 
     pWin = cs->pOverlayWin = 
-	CreateWindow (cs->overlayWid, pRoot,
-		      0, 0, pScreen->width, pScreen->height, 0, 
+	CreateWindow (cs->overlayWid, pRoot, 0, 0, w, h, 0,
 		      InputOutput, CWBackPixmap | CWOverrideRedirect, &attrs[0],
 		      pRoot->drawable.depth, 
 		      serverClient, pScreen->rootVisual, &result);
