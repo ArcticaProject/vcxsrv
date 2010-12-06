@@ -1,3 +1,94 @@
+commit cda6ce66caa01997b9dd32eb8689d6e746558369
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Nov 3 00:04:22 2010 -0700
+
+    xproto 7.0.19
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 25bd19ee8587e2c00be7179cf809f4bd8e2a3bed
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Nov 3 00:04:06 2010 -0700
+
+    README: Provide a small description
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit ce8b17064d38ec03527a51c2191674d56989807b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Oct 31 15:35:52 2010 -0700
+
+    specs: Fix nesting of chapters included in sect1-9.xml
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 14acb707dbd1f49eb0e8e5bf4164f32c3209e030
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Oct 31 14:56:08 2010 -0700
+
+    specs: Move indexterms out of glossdef tags
+    
+    Try to avoid problems similar to those fixed in libX11
+    commit 511c4f6d29b2da4f71093feabcbb3913cb5d12a7
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 0d44b3e4db593f3fb48835c9b39e23ef231efcb7
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Oct 31 14:51:55 2010 -0700
+
+    specs: Restore missing indexterms for request, type, error & event definitions
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit ea96e0e74fca3306c1320a5daf7fb9ff609b3c5a
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Oct 30 20:01:25 2010 -0700
+
+    specs: Convert troff ``quotes'' to DocBook <quote>quotes</quote>
+    
+    perl -i -p -e 's{\`\`([^\047]+)\047\047}{<quote>$1</quote>}g' *.xml
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit d27f326c976d7da9ea43706bca1c3766f225ee6f
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Oct 30 19:54:56 2010 -0700
+
+    specs: Convert .IN troff tags to <indexterm> DocBook Tags
+    
+    Many of the .IN tags seem to have been lost in translation before this.
+    
+    Converted those still in comments with:
+    
+    perl -i -p -e 's{\<\!-- \.IN "([^"]+)" "" "\@DEF\@" --\>}{<indexterm significance="preferred"><primary>$1</primary></indexterm>}' *.xml
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 34b099b7b6e72ceaf8edcbf0ca351af410c3b2fb
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Oct 30 19:26:10 2010 -0700
+
+    specs: Fix authorship section
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit c23cc9a4a728e5cccf685388f2e54eff31c3867f
+Author: Matt Dew <matt@osource.org>
+Date:   Tue Aug 17 20:49:44 2010 -0400
+
+    specs: convert protocol .ms from xorg-docs to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit cb020b302c1ebb9477cd5b4adae8677597269733
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Aug 10 10:20:01 2010 -0400
+
+    xproto 7.0.18
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
 commit d14e0d02507dd873f43b1122c468a52ed5b295c1
 Author: Alan Coopersmith <alan.coopersmith@oracle.com>
 Date:   Mon May 17 20:57:27 2010 -0700
