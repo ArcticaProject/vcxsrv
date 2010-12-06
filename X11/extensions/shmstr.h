@@ -1,4 +1,3 @@
-/* $XFree86: xc/include/extensions/shmstr.h,v 3.3 2001/12/14 19:53:29 dawes Exp $ */
 /************************************************************
 
 Copyright 1989, 1998  The Open Group
@@ -29,8 +28,6 @@ in this Software without prior written authorization from The Open Group.
 
 #ifndef _SHMSTR_H_
 #define _SHMSTR_H_
-
-/* $Xorg: shmstr.h,v 1.4 2001/02/09 02:03:24 xorgcvs Exp $ */
 
 #include <X11/extensions/shmproto.h>
 

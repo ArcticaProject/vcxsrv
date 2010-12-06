@@ -13,6 +13,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libXinerama
 git clone git://anongit.freedesktop.org/xorg/lib/libXau
 git clone git://anongit.freedesktop.org/xorg/app/xkbcomp
 git clone git://anongit.freedesktop.org/pixman
+git clone git://anongit.freedesktop.org/xorg/proto/xextproto
 
 :noclone
 pushd .
@@ -63,6 +64,10 @@ git pull                 |& tee /a d:\updategit.log
 popd
 echo Updating pixman     |& tee /a d:\updategit.log
 pushd pixman             |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating exextproto |& tee /a d:\updategit.log
+pushd xextproto          |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 popd

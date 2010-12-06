@@ -54,7 +54,7 @@ PERFORMANCE OF THIS SOFTWARE.
 #define SYNC_NAME "SYNC"
 
 #define SYNC_MAJOR_VERSION	3
-#define SYNC_MINOR_VERSION	0
+#define SYNC_MINOR_VERSION	1
 
 
 #define XSyncCounterNotify              0
@@ -65,7 +65,8 @@ PERFORMANCE OF THIS SOFTWARE.
 
 #define XSyncBadCounter			0L
 #define XSyncBadAlarm			1L
-#define XSyncNumberErrors		(XSyncBadAlarm + 1)
+#define XSyncBadFence           2L
+#define XSyncNumberErrors		(XSyncBadFence + 1)
 
 /*
  * Flags for Alarm Attributes
@@ -172,6 +173,7 @@ typedef enum {
 
 typedef XID XSyncCounter;
 typedef XID XSyncAlarm;
+typedef XID XSyncFence;
 typedef struct _XSyncValue {
     int hi;
     unsigned int lo;
