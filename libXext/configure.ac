@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.60])
 AC_INIT([libXext],
-        [1.2.0],
+        [1.2.99.0],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         [libXext])
 
@@ -40,7 +40,7 @@ AC_PROG_LIBTOOL
 AC_PROG_CC
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XEXT, [xproto >= 7.0.13] [x11 >= 1.1.99.1] [xextproto >= 7.0.99.2])
+PKG_CHECK_MODULES(XEXT, [xproto >= 7.0.13] [x11 >= 1.1.99.1] [xextproto >= 7.1.99])
 AC_SUBST(XEXT_CFLAGS)
 AC_SUBST(XEXT_LIBS)
 

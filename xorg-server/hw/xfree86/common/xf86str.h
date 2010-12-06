@@ -498,7 +498,7 @@ typedef struct _confdrirec {
 /* These values should be adjusted when new fields are added to ScrnInfoRec */
 #define NUM_RESERVED_INTS		16
 #define NUM_RESERVED_POINTERS		14
-#define NUM_RESERVED_FUNCS		11
+#define NUM_RESERVED_FUNCS		10
 
 typedef pointer (*funcPointer)(void);
 
@@ -652,6 +652,7 @@ typedef Bool xf86PMEventProc              (int, pmEvent, Bool);
 typedef void xf86DPMSSetProc		  (ScrnInfoPtr, int, int);
 typedef void xf86LoadPaletteProc   (ScrnInfoPtr, int, int *, LOCO *, VisualPtr);
 typedef void xf86SetOverscanProc          (ScrnInfoPtr, int);
+typedef void xf86ModeSetProc              (ScrnInfoPtr);
 
 
 /*
@@ -802,6 +803,7 @@ typedef struct _ScrnInfoRec {
     xf86LoadPaletteProc			*LoadPalette;
     xf86SetOverscanProc			*SetOverscan;
     xorgDriverFuncProc			*DriverFunc;
+    xf86ModeSetProc			*ModeSet;
 
     /*
      * This can be used when the minor ABI version is incremented.

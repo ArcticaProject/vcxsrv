@@ -1335,7 +1335,7 @@ AC_DEFINE(BIGREQS, 1, [Support BigRequests extension])
 
 if test "x$SPECIAL_DTRACE_OBJECTS" = "xyes" ; then
   DIX_LIB='$(top_builddir)/dix/dix.O'
-  OS_LIB='$(top_builddir)/os/os.O $(SHA1_LIBS)'
+  OS_LIB='$(top_builddir)/os/os.O $(SHA1_LIBS) $(DLOPEN_LIBS)'
 else
   DIX_LIB='$(top_builddir)/dix/libdix.la'
   OS_LIB='$(top_builddir)/os/libos.la'
@@ -2122,7 +2122,7 @@ if test "$KDRIVE" = yes; then
     KDRIVE_STUB_LIB='$(top_builddir)/hw/kdrive/src/libkdrivestubs.la'
     KDRIVE_LOCAL_LIBS="$MAIN_LIB $DIX_LIB $KDRIVE_LIB $KDRIVE_STUB_LIB"
     KDRIVE_LOCAL_LIBS="$KDRIVE_LOCAL_LIBS $FB_LIB $MI_LIB $KDRIVE_PURE_LIBS"
-    KDRIVE_LOCAL_LIBS="$KDRIVE_LOCAL_LIBS $KDRIVE_OS_LIB $OS_LIB"
+    KDRIVE_LOCAL_LIBS="$KDRIVE_LOCAL_LIBS $KDRIVE_OS_LIB"
     KDRIVE_LIBS="$KDRIVE_LOCAL_LIBS $XSERVER_SYS_LIBS $GLX_SYS_LIBS $DLOPEN_LIBS $TSLIB_LIBS"
 
     AC_SUBST([XEPHYR_LIBS])

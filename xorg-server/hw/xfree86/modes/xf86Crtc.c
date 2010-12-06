@@ -371,6 +371,8 @@ done:
 	crtc->active = TRUE;
 	if (scrn->pScreen)
 	    xf86CrtcSetScreenSubpixelOrder (scrn->pScreen);
+	if (scrn->ModeSet)
+	    scrn->ModeSet(scrn);
     } else {
 	crtc->x = saved_x;
 	crtc->y = saved_y;
@@ -407,12 +409,16 @@ xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 void
 xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y)
 {
+    ScrnInfoPtr scrn = crtc->scrn;
+
     crtc->x = x;
     crtc->y = y;
     if (crtc->funcs->set_origin) {
 	if (!xf86CrtcRotate (crtc))
 	    return;
 	crtc->funcs->set_origin (crtc, x, y);
+	if (scrn->ModeSet)
+	    scrn->ModeSet(scrn);
     }
     else
 	xf86CrtcSetMode (crtc, &crtc->mode, crtc->rotation, x, y);
@@ -2894,6 +2900,8 @@ xf86DisableUnusedFunctions(ScrnInfoPtr pScrn)
     }
     if (pScrn->pScreen)
 	xf86_crtc_notify(pScrn->pScreen);
+    if (pScrn->ModeSet)
+	pScrn->ModeSet(pScrn);
 }
 
 #ifdef RANDR_12_INTERFACE

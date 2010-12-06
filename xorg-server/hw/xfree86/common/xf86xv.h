@@ -36,6 +36,10 @@
 #define VIDEO_INVERT_CLIPLIST			0x00000002
 #define VIDEO_OVERLAID_IMAGES			0x00000004
 #define VIDEO_OVERLAID_STILLS			0x00000008
+/*
+ * Usage of VIDEO_CLIP_TO_VIEWPORT is not recommended.
+ * It can make reput behaviour inconsistent.
+ */
 #define VIDEO_CLIP_TO_VIEWPORT			0x00000010
 
 typedef struct {
@@ -107,7 +111,9 @@ typedef int (* PutImageFuncPtr)( ScrnInfoPtr pScrn,
 	short src_w, short src_h, short drw_w, short drw_h,
 	int image, unsigned char* buf, short width, short height, Bool Sync,
 	RegionPtr clipBoxes, pointer data, DrawablePtr pDraw );
-typedef int (* ReputImageFuncPtr)( ScrnInfoPtr pScrn, short drw_x, short drw_y,
+typedef int (* ReputImageFuncPtr)( ScrnInfoPtr pScrn,
+	short src_x, short src_y, short drw_x, short drw_y,
+	short src_w, short src_h, short drw_w, short drw_h,
 	RegionPtr clipBoxes, pointer data, DrawablePtr pDraw );
 typedef int (*QueryImageAttributesFuncPtr)(ScrnInfoPtr pScrn, 
 	int image, unsigned short *width, unsigned short *height, 
@@ -165,7 +171,7 @@ typedef struct {
   GetPortAttributeFuncPtr GetPortAttribute;
   QueryBestSizeFuncPtr QueryBestSize;
   PutImageFuncPtr PutImage;
-  ReputImageFuncPtr ReputImage;
+  ReputImageFuncPtr ReputImage; /* image/still */
   QueryImageAttributesFuncPtr QueryImageAttributes;
   ClipNotifyFuncPtr ClipNotify;
 } XF86VideoAdaptorRec, *XF86VideoAdaptorPtr;

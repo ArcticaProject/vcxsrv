@@ -47,6 +47,9 @@
  * or mask), the corresponding stride argument is unused.
  */
 
+#define SKIP_ZERO_SRC  1
+#define SKIP_ZERO_MASK 2
+
 #define PIXMAN_ARM_BIND_FAST_PATH_SRC_DST(cputype, name,                \
                                           src_type, src_cnt,            \
                                           dst_type, dst_cnt)            \
@@ -87,7 +90,7 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                              src_line, src_stride);     \
 }
 
-#define PIXMAN_ARM_BIND_FAST_PATH_N_DST(cputype, name,                  \
+#define PIXMAN_ARM_BIND_FAST_PATH_N_DST(flags, cputype, name,           \
                                         dst_type, dst_cnt)              \
 void                                                                    \
 pixman_composite_##name##_asm_##cputype (int32_t    w,                  \
@@ -117,7 +120,7 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                                                         \
     src = _pixman_image_get_solid (src_image, dst_image->bits.format);  \
                                                                         \
-    if (src == 0)                                                       \
+    if ((flags & SKIP_ZERO_SRC) && src == 0)                            \
 	return;                                                         \
                                                                         \
     PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, dst_type,         \
@@ -128,7 +131,7 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                              src);                      \
 }
 
-#define PIXMAN_ARM_BIND_FAST_PATH_N_MASK_DST(cputype, name,             \
+#define PIXMAN_ARM_BIND_FAST_PATH_N_MASK_DST(flags, cputype, name,      \
                                              mask_type, mask_cnt,       \
                                              dst_type, dst_cnt)         \
 void                                                                    \
@@ -163,7 +166,7 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                                                         \
     src = _pixman_image_get_solid (src_image, dst_image->bits.format);  \
                                                                         \
-    if (src == 0)                                                       \
+    if ((flags & SKIP_ZERO_SRC) && src == 0)                            \
 	return;                                                         \
                                                                         \
     PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, dst_type,         \
@@ -177,7 +180,7 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                              mask_line, mask_stride);   \
 }
 
-#define PIXMAN_ARM_BIND_FAST_PATH_SRC_N_DST(cputype, name,              \
+#define PIXMAN_ARM_BIND_FAST_PATH_SRC_N_DST(flags, cputype, name,       \
                                             src_type, src_cnt,          \
                                             dst_type, dst_cnt)          \
 void                                                                    \
@@ -211,7 +214,7 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
                                                                         \
     mask = _pixman_image_get_solid (mask_image, dst_image->bits.format);\
                                                                         \
-    if (mask == 0)                                                      \
+    if ((flags & SKIP_ZERO_MASK) && mask == 0)                          \
 	return;                                                         \
                                                                         \
     PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, dst_type,         \
