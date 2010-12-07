@@ -1167,6 +1167,7 @@ videoPtrToDriverList(struct pci_device *dev,
     return i;	/* Number of entries added */
 }
 
+#ifdef __linux__
 static int
 xchomp(char *line)
 {
@@ -1183,7 +1184,6 @@ xchomp(char *line)
     return 0;
 }
 
-#ifdef __linux__
 /* This function is used to provide a workaround for binary drivers that
  * don't export their PCI ID's properly. If distros don't end up using this
  * feature it can and should be removed because the symbol-based resolution

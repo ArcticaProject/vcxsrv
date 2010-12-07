@@ -280,7 +280,8 @@ void
 xf86ProcessCommonOptions(InputInfoPtr pInfo,
                          pointer	list)
 {
-    if (!xf86SetBoolOption(list, "AlwaysCore", 1) ||
+    if (xf86SetBoolOption(list, "Floating", 0) ||
+        !xf86SetBoolOption(list, "AlwaysCore", 1) ||
         !xf86SetBoolOption(list, "SendCoreEvents", 1) ||
         !xf86SetBoolOption(list, "CorePointer", 1) ||
         !xf86SetBoolOption(list, "CoreKeyboard", 1)) {
@@ -652,7 +653,7 @@ IgnoreInputClass(const InputInfoPtr idev, const InputAttributes *attrs)
     return ignore;
 }
 
-static InputInfoPtr
+InputInfoPtr
 xf86AllocateInput(void)
 {
     InputInfoPtr pInfo;

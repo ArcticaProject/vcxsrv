@@ -16,12 +16,16 @@ librandr_la_SOURCES =	\
 	rrinfo.c	\
 	rrmode.c	\
 	rroutput.c	\
+	rrpixmap.c	\
 	rrpointer.c	\
 	rrproperty.c	\
 	rrscreen.c	\
 	rrsdispatch.c	\
+	rrsprite.c	\
 	rrtransform.h	\
-	rrtransform.c
+	rrtransform.c	\
+	mirrcrtc.c
+
 
 if XINERAMA
 librandr_la_SOURCES += ${XINERAMA_SRCS}

@@ -447,6 +447,7 @@ static const char *key_names[PRIVATE_LAST] = {
     [PRIVATE_GLYPH] = "GLYPH",
     [PRIVATE_GLYPHSET] = "GLYPHSET",
     [PRIVATE_PICTURE] = "PICTURE",
+    [PRIVATE_SYNC_FENCE] = "SYNC_FENCE",
 };
 
 void

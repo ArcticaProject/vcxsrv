@@ -406,21 +406,21 @@ FindModuleInSubdir(const char *dirpath, const char *module)
  
         snprintf(tmpBuf, PATH_MAX, "lib%s.so", module);
         if (strcmp(direntry->d_name, tmpBuf) == 0) {
-            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 2);
+            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 1);
             sprintf(ret, "%s%s", dirpath, tmpBuf);
             break;
         }
 
         snprintf(tmpBuf, PATH_MAX, "%s_drv.so", module);
         if (strcmp(direntry->d_name, tmpBuf) == 0) {
-            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 2);
+            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 1);
             sprintf(ret, "%s%s", dirpath, tmpBuf);
             break;
         }
 
         snprintf(tmpBuf, PATH_MAX, "%s.so", module);
         if (strcmp(direntry->d_name, tmpBuf) == 0) {
-            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 2);
+            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 1);
             sprintf(ret, "%s%s", dirpath, tmpBuf);
             break;
         }

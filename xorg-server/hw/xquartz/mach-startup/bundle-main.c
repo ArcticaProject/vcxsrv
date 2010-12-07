@@ -74,7 +74,7 @@ extern int noPanoramiXExtension;
 #endif
 
 static char __crashreporter_info_buff__[4096] = {0};
-static const char *__crashreporter_info__ = &__crashreporter_info_buff__[0];
+static const char *__crashreporter_info__ __attribute__((__used__)) = &__crashreporter_info_buff__[0];
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
 // This is actually a toolchain requirement, but I'm not sure the correct check,
 // but it should be fine to just only include it for Leopard and later.  This line

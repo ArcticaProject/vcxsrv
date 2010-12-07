@@ -82,6 +82,17 @@ xf86CrtcSetSizeRange (ScrnInfoPtr scrn,
     config->maxHeight = maxHeight;
 }
 
+void
+xf86CrtcSetScanoutFormats(ScrnInfoPtr		scrn,
+			  int			num_formats,
+			  xf86CrtcScanoutFormat	*formats)
+{
+    xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(scrn);
+
+    config->num_scanout_formats = num_formats;
+    config->scanout_formats = formats;
+}
+
 /*
  * Crtc functions
  */
@@ -106,12 +117,17 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
     pixman_transform_init_identity (&crtc->crtc_to_framebuffer);
     pixman_f_transform_init_identity (&crtc->f_crtc_to_framebuffer);
     pixman_f_transform_init_identity (&crtc->f_framebuffer_to_crtc);
+    pixman_f_transform_init_identity (&crtc->f_screen_to_crtc);
+    pixman_f_transform_init_identity (&crtc->user_sprite_position_transform);
+    pixman_f_transform_init_identity (&crtc->f_crtc_to_cursor);
+    pixman_f_transform_init_identity (&crtc->user_sprite_image_transform);
     crtc->filter = NULL;
     crtc->params = NULL;
     crtc->nparams = 0;
     crtc->filter_width = 0;
     crtc->filter_height = 0;
     crtc->transform_in_use = FALSE;
+    crtc->sprite_transform_in_use = FALSE;
     crtc->transformPresent = FALSE;
     crtc->desiredTransformPresent = FALSE;
     memset (&crtc->bounds, '\0', sizeof (crtc->bounds));
@@ -247,20 +263,20 @@ xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen)
  * Sets the given video mode on the given crtc
  */
 Bool
-xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
-			  RRTransformPtr transform, int x, int y)
+xf86CrtcSet(xf86CrtcPtr crtc, xf86CrtcSetRec *set)
 {
     ScrnInfoPtr		scrn = crtc->scrn;
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
     int			i;
     Bool		ret = FALSE;
     Bool		didLock = FALSE;
-    DisplayModePtr	adjusted_mode;
+    DisplayModePtr	adjusted_mode = NULL;
     DisplayModeRec	saved_mode;
     int			saved_x, saved_y;
     Rotation		saved_rotation;
     RRTransformRec	saved_transform;
     Bool		saved_transform_present;
+    PixmapPtr		saved_scanout_pixmap;
 
     crtc->enabled = xf86CrtcInUse (crtc);
 
@@ -272,13 +288,15 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
 	return TRUE;
     }
 
-    adjusted_mode = xf86DuplicateMode(mode);
-
+    /* See if nothing has changed */
+    if (!set->flags)
+	return TRUE;
 
     saved_mode = crtc->mode;
     saved_x = crtc->x;
     saved_y = crtc->y;
     saved_rotation = crtc->rotation;
+    saved_scanout_pixmap = crtc->scanoutPixmap;
     if (crtc->transformPresent) {
 	RRTransformInit (&saved_transform);
 	RRTransformCopy (&saved_transform, &crtc->transform);
@@ -288,20 +306,45 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
     /* Update crtc values up front so the driver can rely on them for mode
      * setting.
      */
-    crtc->mode = *mode;
-    crtc->x = x;
-    crtc->y = y;
-    crtc->rotation = rotation;
-    if (transform) {
-	RRTransformCopy (&crtc->transform, transform);
-	crtc->transformPresent = TRUE;
-    } else
-	crtc->transformPresent = FALSE;
+    if (set->flags & XF86CrtcSetMode)
+	crtc->mode = *set->mode;
+    if (set->flags & XF86CrtcSetOrigin) {
+	crtc->x = set->x;
+	crtc->y = set->y;
+    }
+    if (set->flags & XF86CrtcSetRotation)
+	crtc->rotation = set->rotation;
+    if (set->flags & XF86CrtcSetScanoutPixmap)
+	crtc->scanoutPixmap = set->scanout_pixmap;
 
-    if (crtc->funcs->set_mode_major) {
-	ret = crtc->funcs->set_mode_major(crtc, mode, rotation, x, y);
+    if (set->flags & XF86CrtcSetTransform) {
+	if (set->transform) {
+	    RRTransformCopy (&crtc->transform, set->transform);
+	    crtc->transformPresent = TRUE;
+	} else
+	    crtc->transformPresent = FALSE;
+    }
+
+    if (crtc->funcs->set) {
+	ret = crtc->funcs->set(crtc, set->flags);
 	goto done;
     }
+
+    if (set->flags == XF86CrtcSetOrigin && crtc->funcs->set_origin) {
+	ret = xf86CrtcRotate(crtc);
+	if (ret)
+	    crtc->funcs->set_origin(crtc, crtc->x, crtc->y);
+	goto done;
+    }
+
+    if (crtc->funcs->set_mode_major) {
+	ret = crtc->funcs->set_mode_major(crtc, &crtc->mode,
+					  crtc->rotation,
+					  crtc->x, crtc->y);
+	goto done;
+    }
+
+    adjusted_mode = xf86DuplicateMode(&crtc->mode);
 
     didLock = crtc->funcs->lock (crtc);
     /* Pass our mode to the outputs and the CRTC to give them a chance to
@@ -314,12 +357,12 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
 	if (output->crtc != crtc)
 	    continue;
 
-	if (!output->funcs->mode_fixup(output, mode, adjusted_mode)) {
+	if (!output->funcs->mode_fixup(output, &crtc->mode, adjusted_mode)) {
 	    goto done;
 	}
     }
 
-    if (!crtc->funcs->mode_fixup(crtc, mode, adjusted_mode)) {
+    if (!crtc->funcs->mode_fixup(crtc, &crtc->mode, adjusted_mode)) {
 	goto done;
     }
 
@@ -342,12 +385,12 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
     /* Set up the DPLL and any output state that needs to adjust or depend
      * on the DPLL.
      */
-    crtc->funcs->mode_set(crtc, mode, adjusted_mode, crtc->x, crtc->y);
+    crtc->funcs->mode_set(crtc, &crtc->mode, adjusted_mode, crtc->x, crtc->y);
     for (i = 0; i < xf86_config->num_output; i++) 
     {
 	xf86OutputPtr output = xf86_config->output[i];
 	if (output->crtc == crtc)
-	    output->funcs->mode_set(output, mode, adjusted_mode);
+	    output->funcs->mode_set(output, &crtc->mode, adjusted_mode);
     }
 
     /* Only upload when needed, to avoid unneeded delays. */
@@ -381,10 +424,13 @@ done:
 	if (saved_transform_present)
 	    RRTransformCopy (&crtc->transform, &saved_transform);
 	crtc->transformPresent = saved_transform_present;
+	crtc->scanoutPixmap = saved_scanout_pixmap;
     }
 
-    free(adjusted_mode->name);
-    free(adjusted_mode);
+    if (adjusted_mode) {
+	free(adjusted_mode->name);
+	free(adjusted_mode);
+    }
 
     if (didLock)
 	crtc->funcs->unlock (crtc);
@@ -393,35 +439,19 @@ done:
 }
 
 /**
- * Sets the given video mode on the given crtc, but without providing
- * a transform
- */
-Bool
-xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
-		 int x, int y)
-{
-    return xf86CrtcSetModeTransform (crtc, mode, rotation, NULL, x, y);
-}
-
-/**
  * Pans the screen, does not change the mode
  */
 void
 xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y)
 {
-    ScrnInfoPtr scrn = crtc->scrn;
+    xf86CrtcSetRec	set;
 
-    crtc->x = x;
-    crtc->y = y;
-    if (crtc->funcs->set_origin) {
-	if (!xf86CrtcRotate (crtc))
-	    return;
-	crtc->funcs->set_origin (crtc, x, y);
-	if (scrn->ModeSet)
-	    scrn->ModeSet(scrn);
+    if (x != crtc->x || y != crtc->y) {
+	set.x = x;
+	set.y = y;
+	set.flags = XF86CrtcSetOrigin;
+	(void) xf86CrtcSet(crtc, &set);
     }
-    else
-	xf86CrtcSetMode (crtc, &crtc->mode, crtc->rotation, x, y);
 }
 
 /*
@@ -666,13 +696,11 @@ xf86OutputCreate (ScrnInfoPtr		    scrn,
 Bool
 xf86OutputRename (xf86OutputPtr output, const char *name)
 {
-    int	    len = strlen(name) + 1;
-    char    *newname = malloc(len);
+    char    *newname = strdup(name);
     
     if (!newname)
 	return FALSE;	/* so sorry... */
     
-    strcpy (newname, name);
     if (output->name && output->name != (char *) (output + 1))
 	free(output->name);
     output->name = newname;
@@ -2619,6 +2647,7 @@ xf86SetDesiredModes (ScrnInfoPtr scrn)
     for (c = 0; c < config->num_crtc; c++)
     {
 	xf86OutputPtr	output = NULL;
+	xf86CrtcSetRec	set;
 	int		o;
 	RRTransformPtr	transform;
 
@@ -2662,8 +2691,15 @@ xf86SetDesiredModes (ScrnInfoPtr scrn)
 	    transform = &crtc->desiredTransform;
 	else
 	    transform = NULL;
-	if (!xf86CrtcSetModeTransform (crtc, &crtc->desiredMode, crtc->desiredRotation,
-				       transform, crtc->desiredX, crtc->desiredY))
+	set.mode = &crtc->desiredMode;
+	set.rotation = crtc->desiredRotation;
+	set.transform = transform;
+	set.x = crtc->desiredX;
+	set.y = crtc->desiredY;
+	set.flags = (XF86CrtcSetMode | XF86CrtcSetOutput |
+		     XF86CrtcSetOrigin | XF86CrtcSetTransform |
+		     XF86CrtcSetRotation);
+	if (!xf86CrtcSet(crtc, &set))
 	    return FALSE;
     }
 
@@ -2767,6 +2803,7 @@ xf86SetSingleMode (ScrnInfoPtr pScrn, DisplayModePtr desired, Rotation rotation)
 	xf86CrtcPtr	crtc = config->crtc[c];
 	DisplayModePtr	crtc_mode = NULL;
 	int		o;
+	xf86CrtcSetRec	set;
 
 	if (!crtc->enabled)
 	    continue;
@@ -2794,7 +2831,15 @@ xf86SetSingleMode (ScrnInfoPtr pScrn, DisplayModePtr desired, Rotation rotation)
 	    crtc->enabled = FALSE;
 	    continue;
 	}
-	if (!xf86CrtcSetModeTransform (crtc, crtc_mode, rotation, NULL, 0, 0))
+	set.mode = crtc_mode;
+	set.rotation = rotation;
+	set.transform = NULL;
+	set.x = 0;
+	set.y = 0;
+	set.flags = (XF86CrtcSetMode | XF86CrtcSetOutput |
+		     XF86CrtcSetOrigin | XF86CrtcSetTransform |
+		     XF86CrtcSetRotation);
+	if (!xf86CrtcSet (crtc, &set))
 	    ok = FALSE;
 	else
 	{

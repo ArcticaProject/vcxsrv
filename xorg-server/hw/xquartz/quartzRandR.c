@@ -438,18 +438,16 @@ static Bool QuartzRandRSetConfig (ScreenPtr           pScreen,
 static Bool _QuartzRandRUpdateFakeModes (ScreenPtr pScreen) {
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
 
-    if (pQuartzScreen->displayCount == 1) {
-        if(pQuartzScreen->fullscreenMode.ref)
-            CFRelease(pQuartzScreen->fullscreenMode.ref);
-        if(pQuartzScreen->currentMode.ref)
-            CFRelease(pQuartzScreen->currentMode.ref);
+    if(pQuartzScreen->fullscreenMode.ref)
+        CFRelease(pQuartzScreen->fullscreenMode.ref);
+    if(pQuartzScreen->currentMode.ref)
+        CFRelease(pQuartzScreen->currentMode.ref);
         
-        if (!QuartzRandRCopyCurrentModeInfo(pQuartzScreen->displayIDs[0],
-                                            &pQuartzScreen->fullscreenMode))
-            return FALSE;
+    if (!QuartzRandRCopyCurrentModeInfo(pQuartzScreen->displayIDs[0],
+                                        &pQuartzScreen->fullscreenMode))
+        return FALSE;
 
-        CFRetain(pQuartzScreen->fullscreenMode.ref);  /* This extra retain is for currentMode's copy */
-    } else {
+    if (pQuartzScreen->displayCount > 1) {
         pQuartzScreen->fullscreenMode.width = pScreen->width;
         pQuartzScreen->fullscreenMode.height = pScreen->height;
         if(XQuartzIsRootless)
@@ -467,6 +465,11 @@ static Bool _QuartzRandRUpdateFakeModes (ScreenPtr pScreen) {
     } else {
         pQuartzScreen->currentMode = pQuartzScreen->fullscreenMode;
     }
+
+    /* This extra retain is for currentMode's copy.
+     * fullscreen and rootless share a retain.
+     */
+    CFRetain(pQuartzScreen->currentMode.ref);
     
     DEBUG_LOG("rootlessMode: %d x %d\n", (int)pQuartzScreen->rootlessMode.width, (int)pQuartzScreen->rootlessMode.height);
     DEBUG_LOG("fullscreenMode: %d x %d\n", (int)pQuartzScreen->fullscreenMode.width, (int)pQuartzScreen->fullscreenMode.height);

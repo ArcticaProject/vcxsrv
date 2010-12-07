@@ -1458,14 +1458,15 @@ configInputDevices(XF86ConfLayoutPtr layout, serverLayoutPtr servlayoutp)
     irp = layout->lay_input_lst;
     count = 0;
     while (irp) {
-	indp[count] = xnfalloc(sizeof(InputInfoRec));
+	indp[count] = xf86AllocateInput();
 	if (!configInput(indp[count], irp->iref_inputdev, X_CONFIG)) {
 	    while(count--)
 		free(indp[count]);
 	    free(indp);
 	    return FALSE;
 	}
-	indp[count]->options = irp->iref_option_lst;
+	indp[count]->options = xf86OptionListMerge(indp[count]->options,
+						   irp->iref_option_lst);
 	count++;
 	irp = (XF86ConfInputrefPtr)irp->list.next;
     }

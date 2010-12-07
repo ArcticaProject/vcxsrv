@@ -51,16 +51,8 @@ PERFORMANCE OF THIS SOFTWARE.
 #ifndef _SYNCSRV_H_
 #define _SYNCSRV_H_
 
-#define CARD64 XSyncValue /* XXX temporary! need real 64 bit values for Alpha */
-
-typedef struct _SyncCounter {
-    ClientPtr		client;	/* Owning client. 0 for system counters */
-    XSyncCounter	id;		/* resource ID */
-    CARD64		value;		/* counter value */
-    struct _SyncTriggerList *pTriglist;	/* list of triggers */
-    Bool		beingDestroyed; /* in process of going away */
-    struct _SysCounterInfo *pSysCounterInfo; /* NULL if not a system counter */
-} SyncCounter;
+#include "misync.h"
+#include "misyncstr.h"
 
 /*
  * The System Counter interface
@@ -91,29 +83,6 @@ typedef struct _SysCounterInfo {
 } SysCounterInfo;
 
 
-
-typedef struct _SyncTrigger {
-    SyncCounter *pCounter;
-    CARD64	wait_value;	/* wait value */
-    unsigned int value_type;     /* Absolute or Relative */
-    unsigned int test_type;	/* transition or Comparision type */
-    CARD64	test_value;	/* trigger event threshold value */
-    Bool	(*CheckTrigger)(
-				struct _SyncTrigger * /*pTrigger*/,
-				CARD64 /*newval*/
-				);
-    void	(*TriggerFired)(
-				struct _SyncTrigger * /*pTrigger*/
-				);
-    void	(*CounterDestroyed)(
-				struct _SyncTrigger * /*pTrigger*/
-				    );
-} SyncTrigger;
-
-typedef struct _SyncTriggerList {
-    SyncTrigger *pTrigger;
-    struct _SyncTriggerList *next;
-} SyncTriggerList;
 
 typedef struct _SyncAlarmClientList {
     ClientPtr	client;
@@ -148,7 +117,6 @@ typedef union {
     SyncAwait	    await;
 } SyncAwaitUnion;
 
-
 extern pointer SyncCreateSystemCounter(
     char *	/* name */,
     CARD64  	/* inital_value */,
@@ -171,6 +139,7 @@ extern void SyncChangeCounter(
 extern void SyncDestroySystemCounter(
     pointer pCounter
 );
+
 extern void InitServertime(void);
 
 extern void SyncExtensionInit(void);

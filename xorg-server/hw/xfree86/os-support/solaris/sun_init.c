@@ -71,7 +71,6 @@ xf86OpenConsole(void)
     int fd;
     struct vt_mode VT;
     struct vt_stat vtinfo;
-    int FreeVTslot;
     MessageType from = X_PROBED;
 #endif
 
@@ -95,8 +94,8 @@ xf86OpenConsole(void)
 	    }
 	    else
 	    {
-		if ((int)mmap(0, 0x1000, PROT_NONE,
-			      MAP_FIXED | MAP_SHARED, fd, 0) == -1)
+		if (mmap(0, 0x1000, PROT_NONE,
+			 MAP_FIXED | MAP_SHARED, fd, 0) == MAP_FAILED)
 		    xf86Msg(X_WARNING,
 			"xf86OpenConsole: failed to protect page 0 (%s)\n",
 			strerror(errno));
@@ -413,7 +412,7 @@ xf86ProcessArgument(int argc, char **argv, int i)
     return 0;
 }
 
-void xf86UseMsg()
+void xf86UseMsg(void)
 {
 #ifdef HAS_USL_VTS
     ErrorF("vtX                    Use the specified VT number\n");

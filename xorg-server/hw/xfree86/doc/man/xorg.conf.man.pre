@@ -904,30 +904,42 @@ the server. This affects implied layouts as well as explicit layouts
 specified in the configuration and/or on the command line.
 .TP 7
 .BI "Option \*qCorePointer\*q"
-Deprecated, use
-.B SendCoreEvents
-instead.
+Deprecated, see
+.B Floating
 .TP 7
 .BI "Option \*qCoreKeyboard\*q"
-Deprecated, use
-.B SendCoreEvents
-instead.
+Deprecated, see
+.B Floating
 .TP 7
 .BI "Option \*qAlwaysCore\*q  \*q" boolean \*q
-.B
-Deprecated, use
-.B SendCoreEvents
-instead.
+Deprecated, see
+.B Floating
 .TP 7
 .BI "Option \*qSendCoreEvents\*q  \*q" boolean \*q
-Both of these options are equivalent, and when enabled cause the
-input device to report core events through the master device. They are
-enabled by default.  Any device configured to send core events will be
-attached to the virtual core pointer or keyboard and control the cursor by
-default. Devices with
-.B SendCoreEvents
-disabled will be \*qfloating\*q and only accessible by clients employing the
-X Input extension. This option controls the startup behavior only, a device
+Deprecated, see
+.B Floating
+
+.TP 7
+.BI "Option \*qFloating\*q  \*q" boolean \*q
+When enabled, the input device is set up floating and does not
+report events through any master device or control a cursor. The device is
+only available to clients using the X Input Extension API. This option is
+disabled by default.
+The options
+.B CorePointer,
+.B CoreKeyboard,
+.B AlwaysCore,
+and
+.B SendCoreEvents,
+are the inverse of option
+.B Floating
+(i.e.
+.B SendCoreEvents \*qon\*q
+is equivalent to
+.B Floating \*qoff\*q
+).
+
+This option controls the startup behavior only, a device
 may be reattached or set floating at runtime.
 .PP
 For pointing devices, the following options control how the pointer

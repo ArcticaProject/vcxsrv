@@ -56,8 +56,8 @@ general_composite_rect  (pixman_implementation_t *imp,
                          int32_t                  width,
                          int32_t                  height)
 {
-    uint8_t stack_scanline_buffer[SCANLINE_BUFFER_LENGTH * 3];
-    uint8_t *scanline_buffer = stack_scanline_buffer;
+    uint64_t stack_scanline_buffer[(SCANLINE_BUFFER_LENGTH * 3 + 7) / 8];
+    uint8_t *scanline_buffer = (uint8_t *) stack_scanline_buffer;
     uint8_t *src_buffer, *mask_buffer, *dest_buffer;
     fetch_scanline_t fetch_src = NULL, fetch_mask = NULL, fetch_dest = NULL;
     pixman_combine_32_func_t compose;
@@ -255,7 +255,7 @@ general_composite_rect  (pixman_implementation_t *imp,
 	}
     }
 
-    if (scanline_buffer != stack_scanline_buffer)
+    if (scanline_buffer != (uint8_t *) stack_scanline_buffer)
 	free (scanline_buffer);
 }
 

@@ -2072,6 +2072,63 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_src_rpixbuf_8888_process_pixblock_head
+    vmull.u8    q8, d3, d0
+    vmull.u8    q9, d3, d1
+    vmull.u8    q10, d3, d2
+.endm
+
+.macro pixman_composite_src_rpixbuf_8888_process_pixblock_tail
+    vrshr.u16   q11, q8, #8
+    vswp        d3, d31
+    vrshr.u16   q12, q9, #8
+    vrshr.u16   q13, q10, #8
+    vraddhn.u16 d28, q11, q8
+    vraddhn.u16 d29, q12, q9
+    vraddhn.u16 d30, q13, q10
+.endm
+
+.macro pixman_composite_src_rpixbuf_8888_process_pixblock_tail_head
+        vrshr.u16   q11, q8, #8
+        vswp        d3, d31
+        vrshr.u16   q12, q9, #8
+        vrshr.u16   q13, q10, #8
+    fetch_src_pixblock
+        vraddhn.u16 d28, q11, q8
+                                    PF add PF_X, PF_X, #8
+                                    PF tst PF_CTL, #0xF
+                                    PF addne PF_X, PF_X, #8
+                                    PF subne PF_CTL, PF_CTL, #1
+        vraddhn.u16 d29, q12, q9
+        vraddhn.u16 d30, q13, q10
+    vmull.u8    q8, d3, d0
+    vmull.u8    q9, d3, d1
+    vmull.u8    q10, d3, d2
+        vst4.8 {d28, d29, d30, d31}, [DST_W, :128]!
+                                    PF cmp PF_X, ORIG_W
+                                    PF pld, [PF_SRC, PF_X, lsl #src_bpp_shift]
+                                    PF subge PF_X, PF_X, ORIG_W
+                                    PF subges PF_CTL, PF_CTL, #0x10
+                                    PF ldrgeb DUMMY, [PF_SRC, SRC_STRIDE, lsl #src_bpp_shift]!
+.endm
+
+generate_composite_function \
+    pixman_composite_src_rpixbuf_8888_asm_neon, 32, 0, 32, \
+    FLAG_DST_WRITEONLY | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_src_rpixbuf_8888_process_pixblock_head, \
+    pixman_composite_src_rpixbuf_8888_process_pixblock_tail, \
+    pixman_composite_src_rpixbuf_8888_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    0, /* dst_r_basereg */ \
+    0, /* src_basereg   */ \
+    0  /* mask_basereg  */
+
+/******************************************************************************/
+
 .macro pixman_composite_over_0565_8_0565_process_pixblock_head
     /* mask is in d15 */
     convert_0565_to_x888 q4, d2, d1, d0

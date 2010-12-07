@@ -870,8 +870,10 @@ UpdateDeviceState(DeviceIntPtr device, DeviceEvent* event)
                     continue;
                 if (!sd->button)
                     continue;
-                if (button_is_down(sd, key, BUTTON_PROCESSED))
-                    return DONT_PROCESS;
+                for (i = 1; i <= sd->button->numButtons; i++)
+                    if (sd->button->map[i] == key &&
+                        button_is_down(sd, i, BUTTON_PROCESSED))
+                        return DONT_PROCESS;
             }
         }
         set_button_up(device, key, BUTTON_PROCESSED);

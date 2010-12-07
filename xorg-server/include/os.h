@@ -526,7 +526,7 @@ extern _X_EXPORT void FatalError(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2) _X
 
 extern _X_EXPORT void VErrorF(const char *f, va_list args);
 extern _X_EXPORT void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
-extern _X_EXPORT void Error(char *str);
+extern _X_EXPORT void Error(const char *str);
 extern _X_EXPORT void LogPrintMarkers(void);
 
 extern _X_EXPORT void xorg_backtrace(void);
