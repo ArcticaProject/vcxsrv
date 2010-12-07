@@ -14,6 +14,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libXau
 git clone git://anongit.freedesktop.org/xorg/app/xkbcomp
 git clone git://anongit.freedesktop.org/pixman
 git clone git://anongit.freedesktop.org/xorg/proto/xextproto
+git clone git://anongit.freedesktop.org/xorg/proto/randrproto
 
 :noclone
 pushd .
@@ -68,6 +69,10 @@ git pull                 |& tee /a d:\updategit.log
 popd
 echo Updating exextproto |& tee /a d:\updategit.log
 pushd xextproto          |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating randrproto |& tee /a d:\updategit.log
+pushd randrproto         |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 popd

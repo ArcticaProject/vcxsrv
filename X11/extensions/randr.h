@@ -40,11 +40,11 @@ typedef unsigned long	XRandrModeFlags;
 
 #define RANDR_NAME		"RANDR"
 #define RANDR_MAJOR		1
-#define RANDR_MINOR		3
+#define RANDR_MINOR		4
 
 #define RRNumberErrors		3
 #define RRNumberEvents		2
-#define RRNumberRequests	32
+#define RRNumberRequests	37
 
 #define X_RRQueryVersion	0
 /* we skip 1 to make old clients fail pretty immediately */
@@ -91,6 +91,13 @@ typedef unsigned long	XRandrModeFlags;
 #define RRTransformScaleUp	    (1L << 1)
 #define RRTransformScaleDown	    (1L << 2)
 #define RRTransformProjective	    (1L << 3)
+
+/* V1.4 additions */
+#define X_RRQueryScanoutPixmaps	    32
+#define X_RRCreateScanoutPixmap	    33
+#define X_RRSetCrtcSpriteTransform  34
+#define X_RRGetCrtcSpriteTransform  35
+#define X_RRSetCrtcConfigs	    36
 
 /* Event selection bits */
 #define RRScreenChangeNotifyMask  (1L << 0)
@@ -148,6 +155,9 @@ typedef unsigned long	XRandrModeFlags;
 #define BadRROutput		0
 #define BadRRCrtc		1
 #define BadRRMode		2
+
+/* new in 1.4 protocol */
+#define RR_CurrentScanoutPixmap	1	/* current scanout pixmap in RRSetCrtcConfigs */
 
 /* Conventional RandR output properties */
 
