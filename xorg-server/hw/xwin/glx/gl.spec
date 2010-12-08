@@ -7,7 +7,7 @@
 # This document is licensed under the SGI Free Software B License Version
 # 2.0. For details, see http://oss.sgi.com/projects/FreeB/ .
 #
-# $Revision: 12582 $ on $Date: 2010-09-30 01:35:22 -0700 (Thu, 30 Sep 2010) $
+# $Revision: 12819 $ on $Date: 2010-11-03 19:02:01 -0700 (Wed, 03 Nov 2010) $
 
 required-props:
 # Description of a parameter
@@ -31461,7 +31461,18 @@ newcategory: AMD_transform_feedback3_lines_triangles
 ###############################################################################
 #
 # Extension #398 - GLX_AMD_gpu_association
+# Extension #399 - GLX_EXT_create_context_es2_profile
+# Extension #400 - WGL_EXT_create_context_es2_profile
 #
 ###############################################################################
 
+###############################################################################
+#
+# Extension #401
+# AMD_depth_clamp_separate commands
+#
+###############################################################################
+
+# (none)
+newcategory: AMD_depth_clamp_separate
 
