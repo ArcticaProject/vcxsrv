@@ -318,7 +318,7 @@ xf86EnableAGP(int screenNum, CARD32 mode)
 	if (ioctl(gartFd, AGPIOC_SETUP, &setup) != 0) {
 		xf86DrvMsg(screenNum, X_WARNING, "xf86EnableAGP: "
 		    "AGPIOC_SETUP with mode %x failed (%s)\n",
-		    mode, strerror(errno));
+		    (unsigned int) mode, strerror(errno));
 		return FALSE;
 	}
 

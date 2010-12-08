@@ -92,21 +92,107 @@ static XExtensionHooks sync_extension_hooks = {
 static char    *sync_error_list[] = {
     "BadCounter",
     "BadAlarm",
+    "BadFence",
 };
 
+typedef struct _SyncVersionInfoRec {
+    short major;
+    short minor;
+    int num_errors;
+} SyncVersionInfo;
+
+static /* const */ SyncVersionInfo supported_versions[] = {
+    { 3 /* major */, 0 /* minor */, 2 /* num_errors */ },
+    { 3 /* major */, 1 /* minor */, 3 /* num_errors */ },
+};
+
+#define NUM_VERSIONS (sizeof(supported_versions)/sizeof(supported_versions[0]))
+#define GET_VERSION(info) ((info) ? (const SyncVersionInfo*)(info)->data : NULL)
+#define IS_VERSION_SUPPORTED(info) (!!GET_VERSION(info))
+
 static
-XEXT_GENERATE_FIND_DISPLAY(find_display, sync_info,
-			   sync_extension_name,
-			   &sync_extension_hooks,
-			   XSyncNumberEvents, (XPointer) NULL)
+const SyncVersionInfo* GetVersionInfo(Display *dpy)
+{
+    xSyncInitializeReply rep;
+    xSyncInitializeReq *req;
+    XExtCodes codes;
+    int i;
+
+    if (!XQueryExtension(dpy, sync_extension_name,
+                         &codes.major_opcode,
+                         &codes.first_event,
+                         &codes.first_error))
+        return NULL;
+
+    LockDisplay(dpy);
+    GetReq(SyncInitialize, req);
+    req->reqType = codes.major_opcode;
+    req->syncReqType = X_SyncInitialize;
+    req->majorVersion = SYNC_MAJOR_VERSION;
+    req->minorVersion = SYNC_MINOR_VERSION;
+    if (!_XReply(dpy, (xReply *) & rep, 0, xTrue))
+    {
+	UnlockDisplay(dpy);
+	SyncHandle();
+	return NULL;
+    }
+    UnlockDisplay(dpy);
+    SyncHandle();
+
+    for (i = 0; i < NUM_VERSIONS; i++) {
+	if (supported_versions[i].major == rep.majorVersion &&
+	    supported_versions[i].minor == rep.minorVersion) {
+	    return &supported_versions[i];
+	}
+    }
+
+    return NULL;
+}
+
+static
+XExtDisplayInfo *find_display_create_optional(Display *dpy, Bool create)
+{
+    XExtDisplayInfo *dpyinfo;
+
+    if (!sync_info) {
+        if (!(sync_info = XextCreateExtension())) return NULL;
+    }
+
+    if (!(dpyinfo = XextFindDisplay (sync_info, dpy)) && create) {
+        dpyinfo = XextAddDisplay(sync_info, dpy,
+                                 sync_extension_name,
+                                 &sync_extension_hooks,
+                                 XSyncNumberEvents,
+                                 (XPointer)GetVersionInfo(dpy));
+    }
+
+    return dpyinfo;
+}
+
+static
+XExtDisplayInfo *find_display (Display *dpy)
+{
+    return find_display_create_optional(dpy, True);
+}
 
 static
 XEXT_GENERATE_CLOSE_DISPLAY(close_display, sync_info)
 
 static
-XEXT_GENERATE_ERROR_STRING(error_string, sync_extension_name,
-			   XSyncNumberErrors, sync_error_list)
+char *error_string(Display *dpy, int code, XExtCodes *codes, char *buf, int n)
+{
+    XExtDisplayInfo *info = find_display_create_optional(dpy, False);
+    int nerr = IS_VERSION_SUPPORTED(info) ? GET_VERSION(info)->num_errors : 0;
 
+    code -= codes->first_error;
+    if (code >= 0 && code < nerr) {
+	char tmp[256];
+	sprintf (tmp, "%s.%d", sync_extension_name, code);
+	XGetErrorDatabaseText (dpy, "XProtoError", tmp, sync_error_list[code], buf, n);
+	return buf;
+    }
+    return (char *)0;
+}
 
 static Bool
 wire_to_event(Display *dpy, XEvent *event, xEvent *wire)
@@ -231,32 +317,17 @@ XSyncInitialize(
     int *major_version_return, int *minor_version_return)
 {
     XExtDisplayInfo *info = find_display(dpy);
-    xSyncInitializeReply rep;
-    xSyncInitializeReq *req;
 
     SyncCheckExtension(dpy, info, False);
 
-    LockDisplay(dpy);
-    GetReq(SyncInitialize, req);
-    req->reqType = info->codes->major_opcode;
-    req->syncReqType = X_SyncInitialize;
-    req->majorVersion = SYNC_MAJOR_VERSION;
-    req->minorVersion = SYNC_MINOR_VERSION;
-    if (!_XReply(dpy, (xReply *) & rep, 0, xTrue))
-    {
-	UnlockDisplay(dpy);
-	SyncHandle();
+    if (IS_VERSION_SUPPORTED(info)) {
+	*major_version_return = GET_VERSION(info)->major;
+	*minor_version_return = GET_VERSION(info)->minor;
+
+	return True;
+    } else {
 	return False;
     }
-    UnlockDisplay(dpy);
-    SyncHandle();
-    *major_version_return = rep.majorVersion;
-    *minor_version_return = rep.minorVersion;
-    return ((rep.majorVersion == SYNC_MAJOR_VERSION)
-#if SYNC_MINOR_VERSION > 0	/* avoid compiler warning */
-	    && (rep.minorVersion >= SYNC_MINOR_VERSION)
-#endif
-	    );
 }
 
 XSyncSystemCounter *
@@ -685,6 +756,139 @@ XSyncGetPriority(Display *dpy, XID client_resource_id, int *return_priority)
     }
     if (return_priority)
 	*return_priority = rep.priority;
+
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return True;
+}
+
+XSyncFence
+XSyncCreateFence(Display *dpy, Drawable d, Bool initially_triggered)
+{
+    XExtDisplayInfo *info = find_display(dpy);
+    xSyncCreateFenceReq *req;
+    XSyncFence id;
+
+    SyncCheckExtension(dpy, info, None);
+
+    LockDisplay(dpy);
+    GetReq(SyncCreateFence, req);
+    req->reqType = info->codes->major_opcode;
+    req->syncReqType = X_SyncCreateFence;
+
+    req->d = d;
+    id = req->fid = XAllocID(dpy);
+    req->initially_triggered = initially_triggered;
+
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return id;
+}
+
+Bool
+XSyncTriggerFence(Display *dpy, XSyncFence fence)
+{
+    XExtDisplayInfo *info = find_display(dpy);
+    xSyncTriggerFenceReq *req;
+
+    SyncCheckExtension(dpy, info, None);
+
+    LockDisplay(dpy);
+    GetReq(SyncTriggerFence, req);
+    req->reqType = info->codes->major_opcode;
+    req->syncReqType = X_SyncTriggerFence;
+
+    req->fid = fence;
+
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return True;
+}
+
+Bool
+XSyncResetFence(Display *dpy, XSyncFence fence)
+{
+    XExtDisplayInfo *info = find_display(dpy);
+    xSyncResetFenceReq *req;
+
+    SyncCheckExtension(dpy, info, None);
+
+    LockDisplay(dpy);
+    GetReq(SyncResetFence, req);
+    req->reqType = info->codes->major_opcode;
+    req->syncReqType = X_SyncResetFence;
+
+    req->fid = fence;
+
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return True;
+}
+
+Bool
+XSyncDestroyFence(Display *dpy, XSyncFence fence)
+{
+    XExtDisplayInfo *info = find_display(dpy);
+    xSyncDestroyFenceReq *req;
+
+    SyncCheckExtension(dpy, info, None);
+
+    LockDisplay(dpy);
+    GetReq(SyncDestroyFence, req);
+    req->reqType = info->codes->major_opcode;
+    req->syncReqType = X_SyncDestroyFence;
+
+    req->fid = fence;
+
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return True;
+}
+
+Bool
+XSyncQueryFence(Display *dpy, XSyncFence fence, Bool *triggered)
+{
+    XExtDisplayInfo *info = find_display(dpy);
+    xSyncQueryFenceReply rep;
+    xSyncQueryFenceReq *req;
+
+    SyncCheckExtension(dpy, info, None);
+
+    LockDisplay(dpy);
+    GetReq(SyncQueryFence, req);
+    req->reqType = info->codes->major_opcode;
+    req->syncReqType = X_SyncQueryFence;
+    req->fid = fence;
+
+    if (!_XReply(dpy, (xReply *) & rep, 0, xFalse))
+    {
+	UnlockDisplay(dpy);
+	SyncHandle();
+	return False;
+    }
+    if (triggered)
+	*triggered = rep.triggered;
+
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return True;
+}
+
+Bool
+XSyncAwaitFence(Display *dpy, const XSyncFence *fence_list, int n_fences)
+{
+    XExtDisplayInfo *info = find_display(dpy);
+    xSyncAwaitFenceReq  *req;
+
+    SyncCheckExtension(dpy, info, False);
+
+    LockDisplay(dpy);
+    GetReq(SyncAwaitFence, req);
+    req->reqType = info->codes->major_opcode;
+    req->syncReqType = X_SyncAwaitFence;
+    SetReqLen(req, n_fences, n_fences);
+
+    Data32(dpy, (char *)fence_list, sizeof(CARD32) * n_fences);
 
     UnlockDisplay(dpy);
     SyncHandle();

@@ -1,3 +1,5 @@
+SUBDIRS=specs
+
 xprotodir = $(includedir)/X11
 xproto_HEADERS = \
 	ap_keysym.h \

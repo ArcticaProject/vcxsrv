@@ -243,6 +243,7 @@ DemandLoad                O     I    ??
 Device                    S     I    Device file name
 DeviceName                S     I    Input device name
 FlowControl               S     I    Serial flow control ("xon", "none")
+Floating                  B     I    Device initialised as floating
 HistorySize               I     I    ??
 MaxX                      I     I    Maximum X coordinate
 MaxY                      I     I    Maximum Y coordinate

@@ -296,7 +296,7 @@ are required to be 0.
                   value:                FP3232
                   resolution:           CARD32 }
 
-    XIQueryDevices details information about the requested input devices.
+    XIQueryDevice details information about the requested input devices.
 
     devices
         The device to list. If devices is AllDevices, all enabled and
@@ -871,7 +871,7 @@ are required to be 0.
     └───
 
     This request releases the device if this client has it actively grabbed
-    (from either XIGrabDevice,  XIGrabDeviceKey or XIGrabDeviceButton) and
+    (from either XIGrabDevice or  XIPassiveGrabDevice) and
     releases any queued events. If any devices were frozen by the grab,
     XIUngrabDevice thaws them.
 
@@ -999,7 +999,7 @@ are required to be 0.
     └───
 
         GRABTYPE         { GrabtypeButton, GrabtypeKeycode, GrabtypeEnter,
-                           GrabTypeFocusIn}
+                           GrabtypeFocusIn}
 
         GRABMODIFIERINFO {   status:    Access
                              modifiers: CARD32 }
@@ -1223,7 +1223,7 @@ are required to be 0.
         until server reset.
 
         A property cannot be deleted by setting nitems to zero. To delete a
-        property, use XIDeleteDeviceProperty.
+        property, use XIDeleteProperty.
 
         This request generates an XIPropertyEvent.
 
@@ -1443,8 +1443,7 @@ EVENTHEADER { type:                       BYTE
         Details the available classes provided by the device.  The order the
         classes are provided in is undefined.
 
-    For a detailed description of classes, see the XQueryInputDevice
-    request.
+    For a detailed description of classes, see the XQueryDevice request.
 
     ┌───
         DeviceEvent:
@@ -1486,7 +1485,8 @@ EVENTHEADER { type:                       BYTE
 
     An XIDeviceEvent is generated whenever the logical state of a device
     changes in response to a button press, a button release, a motion, a key
-    press or a key release.
+    press or a key release. The event type may be one of KeyPress,
+    KeyRelease, ButtonPress, ButtonRelease, Motion.
 
     detail
         The button number or key code, or 0.
@@ -1554,8 +1554,8 @@ EVENTHEADER { type:                       BYTE
             axisvalues_raw:            LISTofFP3232
     └───
 
-    A RawDevice event provides the information provided by the driver to the
-    client. RawDevice provide both the raw data as supplied by the driver and
+    A RawEvent provides the information provided by the driver to the
+    client. RawEvent provides both the raw data as supplied by the driver and
     transformed data as used in the server. Transformations include, but are
     not limited to, axis clipping and acceleration.
     Transformed valuator data may be equivalent to raw data. In this case,

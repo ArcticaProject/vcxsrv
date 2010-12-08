@@ -62,6 +62,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
+#include <pthread.h>
 
 #include <rootlessCommon.h>
 #include <Xplugin.h>
@@ -246,6 +247,40 @@ void QuartzUpdateScreens(void) {
     quartzProcs->UpdateScreen(pScreen);
 }
 
+static void pokeActivityCallback(CFRunLoopTimerRef timer, void *info) {
+    UpdateSystemActivity(OverallAct);
+}
+
+static void QuartzScreenSaver(int state) {
+    static CFRunLoopTimerRef pokeActivityTimer = NULL;
+    static CFRunLoopTimerContext pokeActivityContext = { 0, NULL, NULL, NULL, NULL };
+    static pthread_mutex_t pokeActivityMutex = PTHREAD_MUTEX_INITIALIZER;
+
+    pthread_mutex_lock(&pokeActivityMutex);
+    
+    if(state) {
+        if(pokeActivityTimer == NULL)
+            goto QuartzScreenSaverEnd;
+
+        CFRunLoopTimerInvalidate(pokeActivityTimer);
+        CFRelease(pokeActivityTimer);
+        pokeActivityTimer = NULL;
+    } else {
+        if(pokeActivityTimer != NULL)
+            goto QuartzScreenSaverEnd;
+        
+        pokeActivityTimer = CFRunLoopTimerCreate(NULL, CFAbsoluteTimeGetCurrent(), 30, 0, 0, pokeActivityCallback, &pokeActivityContext);
+        if(pokeActivityTimer == NULL) {
+            ErrorF("Unable to create pokeActivityTimer.\n");
+            goto QuartzScreenSaverEnd;
+        }
+
+        CFRunLoopAddTimer(CFRunLoopGetMain(), pokeActivityTimer, kCFRunLoopCommonModes);
+    }
+QuartzScreenSaverEnd:
+    pthread_mutex_unlock(&pokeActivityMutex);
+}
+
 void QuartzShowFullscreen(int state) {
     int i;
     
@@ -255,6 +290,8 @@ void QuartzShowFullscreen(int state) {
         ErrorF("QuartzShowFullscreen called while in rootless mode.\n");
         return;
     }
+    
+    QuartzScreenSaver(!state);
     
     if(XQuartzFullscreenVisible == state)
         return;

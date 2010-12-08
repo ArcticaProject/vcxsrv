@@ -577,7 +577,9 @@
    already has the device open with a different mode. It will fail
    and return AlreadyGrabbed if another client has the device
    grabbed. The request will fail with a BadMatch error if the
-   requested mode is not supported by the device.
+   device has no valuators and reports no axes of motion. The
+   request will fail with a BadMode error if the requested mode
+   is not supported by the device.
 
                        SetDeviceMode
                                device:DEVICE

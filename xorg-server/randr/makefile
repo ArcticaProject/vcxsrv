@@ -8,9 +8,12 @@ CSRCS =	\
 	rrinfo.c	\
 	rrmode.c	\
 	rroutput.c	\
+	rrpixmap.c	\
 	rrpointer.c	\
 	rrproperty.c	\
 	rrscreen.c	\
 	rrsdispatch.c	\
-	rrtransform.c
+	rrsprite.c	\
+	rrtransform.c	\
+	mirrcrtc.c
 

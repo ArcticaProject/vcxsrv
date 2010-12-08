@@ -431,6 +431,11 @@
 .endif
 .endm
 
+.macro fetch_mask_pixblock
+    pixld       pixblock_size, mask_bpp, \
+                (mask_basereg - pixblock_size * mask_bpp / 64), MASK
+.endm
+
 /*
  * Macro which is used to process leading pixels until destination
  * pointer is properly aligned (at 16 bytes boundary). When destination

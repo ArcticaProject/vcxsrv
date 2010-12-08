@@ -22,7 +22,7 @@
 #
 
 if ENABLE_SPECS
-doc_sources = dbelib.xml dpmslib.xml shapelib.xml synclib.xml
+doc_sources = dbelib.xml dpmslib.xml shapelib.xml synclib.xml xtest1.xml
 dist_doc_DATA = $(doc_sources)
 
 if HAVE_XMLTO

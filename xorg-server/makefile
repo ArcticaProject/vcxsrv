@@ -15,6 +15,7 @@ INCLUDELIBFILES =  \
  mi\$(OBJDIR)\libmi.lib \
  miext\damage\$(OBJDIR)\libdamage.lib \
  miext\shadow\$(OBJDIR)\libshadow.lib \
+ miext\sync\$(OBJDIR)\libsync.lib \
  os\$(OBJDIR)\libos.lib \
  randr\$(OBJDIR)\librandr.lib \
  record\$(OBJDIR)\librecord.lib \

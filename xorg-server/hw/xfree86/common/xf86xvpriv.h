@@ -44,6 +44,7 @@ typedef struct {
    Bool                         (*EnterVT)(int, int);
    void                         (*LeaveVT)(int, int);
    GCPtr			videoGC;
+   xf86ModeSetProc		*ModeSet;
 } XF86XVScreenRec, *XF86XVScreenPtr;
 
 typedef struct {
@@ -67,7 +68,6 @@ typedef struct {
    DrawablePtr pDraw;
    unsigned char type;
    unsigned int subWindowMode;
-   DDXPointRec clipOrg;
    RegionPtr clientClip;
    RegionPtr pCompositeClip;
    Bool FreeCompositeClip;

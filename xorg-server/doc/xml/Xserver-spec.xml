@@ -442,18 +442,29 @@ and type; if skipFree is true, then the deleteFunc is not called.
 To look up a resource, use one of the following.
 <blockquote><programlisting>
 
-	pointer LookupIDByType(id, rtype)
-	    XID id;
-	    RESTYPE rtype;
+	int dixLookupResourceByType(
+	    pointer *result,
+	    XID id,
+	    RESTYPE rtype,
+	    ClientPtr client,
+	    Mask access_mode);
 
-	pointer LookupIDByClass(id, classes)
-	    XID id;
-	    RESTYPE classes;
+	int dixLookupResourceByClass(
+	    pointer *result,
+	    XID id,
+	    RESTYPE rclass,
+	    ClientPtr client,
+	    Mask access_mode);
 
 </programlisting></blockquote>
-LookupIDByType finds a resource with the given id and exact type.
-LookupIDByClass finds a resource with the given id whose type is
-included in any one of the specified classes.</para>
+dixLookupResourceByType finds a resource with the given id and exact type.
+dixLookupResourceByClass finds a resource with the given id whose type is
+included in any one of the specified classes.
+The client and access_mode must be provided to allow security extensions to
+check if the client has the right privileges for the requested access.
+The bitmask values defined in the dixaccess.h header are or'ed together
+to define the requested access_mode.
+</para>
 </section>
 </section>
 <section>
@@ -469,7 +480,7 @@ these operations.</para>
 Before getting bogged down in the interface details, an typical usage
 example should establish the framework.  Let's look at the
 ClientStateCallback in dix/dispatch.c.  The purpose of this particular
-callback is to notify intereseted parties when a client's state
+callback is to notify interested parties when a client's state
 (initial, running, gone) changes.  The callback is "created" in this
 case by simply declaring a variable:
 <blockquote><programlisting>
@@ -478,7 +489,7 @@ case by simply declaring a variable:
 </para>
 <para>
 Whenever the client's state changes, the following code appears, which notifies
-all intereseted parties of the change:
+all interested parties of the change:
 <blockquote><programlisting>
 	if (ClientStateCallback) CallCallbacks(&amp;ClientStateCallback, (pointer)client);
 </programlisting></blockquote>
@@ -497,24 +508,6 @@ When CallCallbacks is invoked on the list, func will be called thusly:
 </para>
 <para>
 Now for the details.
-<blockquote><programlisting>
-
-	Bool CreateCallbackList(pcbl, cbfuncs)
-	    CallbackListPtr  *pcbl;
-	    CallbackFuncsPtr cbfuncs;
-
-</programlisting></blockquote>
-CreateCallbackList creates a callback list.  We envision that this
-function will be rarely used because the callback list is created
-automatically (if it doesn't already exist) when the first call to
-AddCallback is made on the list.  The only reason to explicitly create
-the callback list with this function is if you want to override the
-implementation of some of the other operations on the list by passing
-your own cbfuncs.  You also lose something by explicit creation: you
-introduce an order dependency during server startup because the list
-must be created before any modules subscribe to it.  Returns TRUE if
-successful.</para>
-<para>
 <blockquote><programlisting>
 
 	Bool AddCallback(pcbl, callback, subscriber_data)
@@ -595,8 +588,9 @@ used here which takes the minor opcode from the normal place in the request
 There are a number of macros in Xserver/include/dix.h which
 are useful to the extension writer.  Ones of particular interest
 are: REQUEST, REQUEST_SIZE_MATCH, REQUEST_AT_LEAST_SIZE,
-REQUEST_FIXED_SIZE, LEGAL_NEW_RESOURCE, LOOKUP_DRAWABLE, VERIFY_GC, and
+REQUEST_FIXED_SIZE, LEGAL_NEW_RESOURCE, and
 VALIDATE_DRAWABLE_AND_GC. Useful byte swapping macros can be found
+in Xserver/include/dix.h: WriteReplyToClient and WriteSwappedDataToClient; and
 in Xserver/include/misc.h: lswapl, lswaps, LengthRestB, LengthRestS,
 LengthRestL, SwapRestS, SwapRestL, swapl, swaps, cpswapl, and cpswaps.</para>
 </section>
@@ -765,7 +759,7 @@ These registered block handlers are called after the per-screen handlers:
 <programlisting>
 	void (*BlockHandler) (blockData, pptv, pReadmask)
 		pointer	blockData;
-		OSTimePtr pptv;
+		OsTimerPtr pptv;
 		pointer	pReadmask;
 </programlisting>
 </blockquote>
@@ -776,7 +770,7 @@ which on UNIX family systems is generally represented by a struct timeval
 consisting of seconds and microseconds in 32 bit values.
 As a convenience to reduce error prone struct timeval computations which
 require modulus arithmetic and correct overflow behavior in the face of
-millisecond wrapping throrugh 32 bits,
+millisecond wrapping through 32 bits,
 <blockquote><programlisting>
 
 	void AdjustWaitForDelay(pointer /*waitTime*, unsigned long /* newdelay */)
@@ -881,7 +875,7 @@ and RemoveEnabledDevice are in Xserver/os/connection.c.
 Similarly, the X server or an extension may need to wait for some timeout.
 Early X releases implemented this functionality using block and wakeup handlers,
 but this has been rewritten to use a general timer facilty, and the
-internal screen saver facilties reimplemented to use Timers.
+internal screen saver facilities reimplemented to use Timers.
 These functions are TimerInit, TimerForce, TimerSet, TimerCheck, TimerCancel,
 and TimerFree, as defined in Xserver/include/os.h. A callback function will be called
 when the timer fires, along with the current time, and a user provided argument.
@@ -919,11 +913,11 @@ for the timer entry.
 
 	void TimerCancel(OsTimerPtr /* pTimer */)
 
-	void TimerFree(OSTimerPtr /* pTimer */)
+	void TimerFree(OsTimerPtr /* pTimer */)
 </programlisting></blockquote>
 </para>
 <para>
-TimerInit frees any exisiting timer entries. TimerForce forces a call to the timer's
+TimerInit frees any existing timer entries. TimerForce forces a call to the timer's
 callback function and returns true if the timer entry existed, else it returns false and
 does not call the callback function. TimerCancel will cancel the specified timer.
 TimerFree calls TimerCancel and frees the specified timer.
@@ -1188,7 +1182,8 @@ are requests in that client's input queue.
   <title>Font Support</title>
 <para>
 In the sample server, fonts are encoded in disk files or fetched from the
-font server.
+font server.   The two fonts required by the server, <quote>fixed</quote>
+and <quote>cursor</quote> are commonly compiled into the font library.
 For disk fonts, there is one file per font, with a file name like
 "fixed.pcf".  Font server fonts are read over the network using the
 X Font Server Protocol.  The disk directories containing disk fonts and
@@ -1202,9 +1197,10 @@ appropriate code in the Font Library, you will automatically export fonts in
 that format both through the X server and the Font server.
 </para>
 <para>
-With the incorporation of font-server based fonts and the Speedo donation
-from Bitstream, the font interfaces have been moved into a separate
-library, now called the Font Library (../fonts/lib).  These routines are
+The code for processing fonts in different formats, as well as handling the
+metadata files for them on disk (such as <filename>fonts.dir</filename>) is
+located in the libXfont library, which is provided as a separately compiled
+module.  These routines are
 shared between the X server and the Font server, so instead of this document
 specifying what you must implement, simply refer to the font
 library interface specification for the details.  All of the interface code to the Font
@@ -1215,18 +1211,10 @@ library is contained in dix/dixfonts.c
   <title>Memory Management</title>
 <para>
 Memory management is based on functions in the C runtime library.
-Xalloc(), Xrealloc(), and Xfree() work just like malloc(), realloc(),
-and free(), except that you can pass a null pointer to Xrealloc() to
-have it allocate anew or pass a null pointer to Xfree() and nothing
-will happen.  The versions in the sample server also do some checking
-that is useful for debugging.  Consult a C runtime library reference
+Xalloc(), Xrealloc(), and Xfree() are deprecated aliases for malloc(),
+realloc(), and free(), and you should simply call the C library functions
+directly.  Consult a C runtime library reference
 manual for more details.
-</para>
-<para>
-The macros ALLOCATE_LOCAL and DEALLOCATE_LOCAL are provided in
-Xserver/include/os.h.  These are useful if your compiler supports
-alloca() (or some method of allocating memory from the stack); and are
-defined appropriately on systems which support it.
 </para>
 <para>
 Treat memory allocation carefully in your implementation.  Memory
@@ -1358,7 +1346,7 @@ terminate the server; it must not return.
 </para>
 <para>
 The sample server implementation for these routines
-is in Xserver/os/util.c.
+is in Xserver/os/log.c along with other routines for logging messages.
 </para>
 </section>
 </section>
@@ -1821,7 +1809,7 @@ printed on each keycap. (See X11/keysym.h)
 <para>
 Legal modifier keys must generate both up and down transitions.  When
 a client tries to change a modifier key (for instance, to make "A" the
-"Control" key), DIX calls the following routine, which should retuurn
+"Control" key), DIX calls the following routine, which should return
 TRUE if the key can be used as a modifier on the given device:
 <blockquote><programlisting>
 
@@ -2722,7 +2710,7 @@ Xserver/dix/colormap.c.)</para>
 
 
 </programlisting></blockquote>
-ListInstalledColormaps fills the pCMapList in with the resource ids
+ListInstalledColormaps fills the pCmapList in with the resource ids
 of the installed maps and returns a count of installed maps.
 pCmapList will point to an array of size MaxInstalledMaps that was allocated
 by the caller.</para>
@@ -3620,7 +3608,7 @@ this screen function.  The new border width is given by width.</para>
 </programlisting></blockquote>
 This function is called for windows that are being unrealized as part of
 an UnrealizeTree.  pChild is the window being unrealized, pWin is an
-ancestor, and the fromConfigure value is simply propogated from UnrealizeTree.</para>
+ancestor, and the fromConfigure value is simply propagated from UnrealizeTree.</para>
 </section>
 </section>
 </section>
@@ -5025,7 +5013,7 @@ mi and fb implementations.</para>
 <row><entry><function>ListInstalledColormaps</function></entry><entry><literal>ddx</literal></entry><entry><para>Screen</para></entry></row>
 <row><entry><function>LookupKeyboardDevice</function></entry><entry><literal>dix</literal></entry><entry><para></para></entry></row>
 <row><entry><function>LookupPointerDevice</function></entry><entry><literal>dix</literal></entry><entry><para></para></entry></row>
-<row><entry><function>ModifyPixmapheader</function></entry><entry><literal>mi</literal></entry><entry><para>Screen</para></entry></row>
+<row><entry><function>ModifyPixmapHeader</function></entry><entry><literal>mi</literal></entry><entry><para>Screen</para></entry></row>
 <row><entry><function>NextAvailableClient</function></entry><entry><literal>dix</literal></entry><entry><para></para></entry></row>
 <row><entry><function>OsInit</function></entry><entry><literal>os</literal></entry><entry><para></para></entry></row>
 <row><entry><function>PaintWindowBackground</function></entry><entry><literal>mi</literal></entry><entry><para>Window</para></entry></row>

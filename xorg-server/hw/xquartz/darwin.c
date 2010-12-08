@@ -792,7 +792,7 @@ xf86SetRootClip (ScreenPtr pScreen, int enable)
     WindowPtr	pChild;
     Bool	WasViewable = (Bool)(pWin->viewable);
     Bool	anyMarked = TRUE;
-    RegionPtr	pOldClip = NULL, bsExposed;
+    RegionPtr	pOldClip = NULL;
     WindowPtr   pLayerWin;
     BoxRec	box;
 

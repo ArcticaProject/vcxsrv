@@ -398,7 +398,7 @@ EphyrDuplicateVisual (unsigned int a_screen,
     int i=0 ;
 
     EPHYR_LOG ("enter\n") ; 
-    if (a_screen > screenInfo.numScreens) {
+    if (a_screen >= screenInfo.numScreens) {
         EPHYR_LOG_ERROR ("bad screen number\n") ;
         goto out;
     }

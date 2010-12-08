@@ -157,7 +157,7 @@ solUnMapVidMem(int ScreenNum, pointer Base, unsigned long Size)
     if (munmap(Base, Size) != 0) {
 	xf86DrvMsgVerb(ScreenNum, X_WARNING, 0,
 		       "solUnMapVidMem: failed to unmap %s"
-		       " (0x%08lx,0x%lx) (%s)\n",
+		       " (0x%p,0x%lx) (%s)\n",
 		       apertureDevName, Base, Size,
 		       strerror(errno));
     }
@@ -212,8 +212,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
     (void)memcpy(Buf, (void *)(ptr + Offset), Len);
     if (munmap((caddr_t)ptr, mlen) != 0) {
 	xf86MsgVerb(X_WARNING, 0,
-		    "solUnMapVidMem: failed to unmap %s"
-		    " (0x%08lx,0x%lx) (%s)\n",
+		    "xf86ReadBIOS: failed to unmap %s (0x%p,0x%x) (%s)\n",
 		    apertureDevName, ptr, mlen, strerror(errno));
     }
 

@@ -67,6 +67,12 @@ PERFORMANCE OF THIS SOFTWARE.
 #define X_SyncDestroyAlarm	       11
 #define X_SyncSetPriority   	       12
 #define X_SyncGetPriority   	       13
+#define X_SyncCreateFence	       14
+#define X_SyncTriggerFence	       15
+#define X_SyncResetFence	       16
+#define X_SyncDestroyFence	       17
+#define X_SyncQueryFence	       18
+#define X_SyncAwaitFence	       19
 
 /* cover up types from sync.h to make sure they're the right size for
  * protocol packaging.  These will be undef'ed after all the protocol
@@ -74,6 +80,8 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 #define XSyncCounter CARD32
 #define XSyncAlarm   CARD32
+#define XSyncFence   CARD32
+#define Drawable     CARD32
 
 /*
  * Initialize
@@ -337,6 +345,92 @@ typedef struct {
 #define sz_xSyncGetPriorityReply	32
 
 /*
+ * Create Fence
+ */
+typedef struct _xSyncCreateFenceReq {
+    CARD8	reqType;
+    CARD8	syncReqType;
+    CARD16	length B16;
+    Drawable	d B32;
+    XSyncFence	fid B32;
+    BOOL	initially_triggered;
+    CARD8	pad0;
+    CARD16	pad1;
+} xSyncCreateFenceReq;
+#define sz_xSyncCreateFenceReq		16
+
+/*
+ * Put a fence object in the "triggered" state.
+ */
+typedef struct _xSyncTriggerFenceReq {
+    CARD8	reqType;
+    CARD8	syncReqType;
+    CARD16	length B16;
+    XSyncFence	fid B32;
+} xSyncTriggerFenceReq;
+#define sz_xSyncTriggerFenceReq		8
+
+/*
+ * Put a fence in the "untriggered" state.
+ */
+typedef struct _xSyncResetFenceReq {
+    CARD8	reqType;
+    CARD8	syncReqType;
+    CARD16	length B16;
+    XSyncFence	fid B32;
+} xSyncResetFenceReq;
+#define sz_xSyncResetFenceReq		8
+
+/*
+ * Destroy a fence object
+ */
+typedef struct _xSyncDestroyFenceReq {
+    CARD8	reqType;
+    CARD8	syncReqType;
+    CARD16	length B16;
+    XSyncFence	fid B32;
+} xSyncDestroyFenceReq;
+#define sz_xSyncDestroyFenceReq		8
+
+/*
+ * Query a fence object
+ */
+typedef struct _xSyncQueryFenceReq {
+    CARD8	reqType;
+    CARD8	syncReqType;
+    CARD16	length B16;
+    XSyncFence	fid B32;
+} xSyncQueryFenceReq;
+#define sz_xSyncQueryFenceReq		8
+
+/*
+ * Wait for any of a list of fence sync objects
+ * to reach the "triggered" state.
+ */
+typedef struct _xSyncAwaitFenceReq {
+    CARD8	reqType;
+    CARD8	syncReqType;
+    CARD16	length B16;
+} xSyncAwaitFenceReq;
+#define sz_xSyncAwaitFenceReq		4
+
+typedef struct {
+    BYTE	type;
+    CARD8	unused;
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    BOOL	triggered;
+    BYTE	pad0;
+    CARD16	pad1 B16;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+    CARD32	pad6 B32;
+} xSyncQueryFenceReply;
+#define sz_xSyncQueryFenceReply		32
+
+/*
  * Events
  */
 
@@ -373,6 +467,8 @@ typedef struct _xSyncAlarmNotifyEvent {
 
 #undef XSyncCounter
 #undef XSyncAlarm
+#undef XSyncFence
+#undef Drawable
 
 
 #endif /* _SYNCPROTO_H_ */

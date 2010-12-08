@@ -155,6 +155,7 @@ extern _X_EXPORT void xf86DisableDevice(DeviceIntPtr dev, Bool panic);
 extern _X_EXPORT void xf86EnableDevice(DeviceIntPtr dev);
 /* not exported */
 int xf86NewInputDevice(InputInfoPtr pInfo, DeviceIntPtr *pdev, BOOL is_auto);
+InputInfoPtr xf86AllocateInput(void);
 
 /* xf86Helper.c */
 extern _X_EXPORT void xf86AddInputDriver(InputDriverPtr driver, pointer module, int flags);

@@ -134,6 +134,24 @@ RRTransformRescale(struct pixman_f_transform *f_transform, double limit)
 	    f_transform->m[j][i] *= scale;
 }
 
+#define EPSILON (1e-20)
+#define IS_F_SAME(a,b)	(fabs((a)-(b)) < EPSILON)
+#define IS_F_ZERO(a)	(fabs(a) < EPSILON)
+
+static Bool
+pict_f_transform_is_identity (const struct pixman_f_transform *t)
+{
+    return (IS_F_SAME (t->m[0][0], t->m[1][1]) &&
+	    IS_F_SAME (t->m[0][0], t->m[2][2]) &&
+	    !IS_F_ZERO (t->m[0][0]) &&
+	    IS_F_ZERO (t->m[0][1]) &&
+	    IS_F_ZERO (t->m[0][2]) &&
+	    IS_F_ZERO (t->m[1][0]) &&
+	    IS_F_ZERO (t->m[1][2]) &&
+	    IS_F_ZERO (t->m[2][0]) &&
+	    IS_F_ZERO (t->m[2][1]));
+}
+
 /*
  * Compute the complete transformation matrix including
  * client-specified transform, rotation/reflection values and the crtc 
@@ -148,23 +166,39 @@ RRTransformCompute (int			    x,
 		    int			    height,
 		    Rotation		    rotation,
 		    RRTransformPtr	    rr_transform,
+		    struct pixman_f_transform *sprite_position_transform,
+		    struct pixman_f_transform *sprite_image_transform,
 
 		    PictTransformPtr	    transform,
 		    struct pixman_f_transform *f_transform,
-		    struct pixman_f_transform *f_inverse)
+		    struct pixman_f_transform *f_inverse,
+		    struct pixman_f_transform *f_fb_to_sprite,
+		    struct pixman_f_transform *f_sprite_to_image,
+		    Bool		      *sprite_transform_in_use)
 {
     PictTransform	    t_transform, inverse;
     struct pixman_f_transform tf_transform, tf_inverse;
+    struct pixman_f_transform sf_position_transform, sf_image_transform;
+    struct pixman_f_transform f_image_to_sprite;
     Bool		    overflow = FALSE;
+    Bool		    ret = TRUE;
 
     if (!transform) transform = &t_transform;
     if (!f_transform) f_transform = &tf_transform;
     if (!f_inverse) f_inverse = &tf_inverse;
+    if (!f_fb_to_sprite) f_fb_to_sprite = &sf_position_transform;
+    if (!f_sprite_to_image) f_sprite_to_image = &sf_image_transform;
+
+    /* invert the sprite image transform to have it go from dest to source */
+    if (!pixman_f_transform_invert (&f_image_to_sprite, f_sprite_to_image))
+	pixman_f_transform_init_identity(&f_image_to_sprite);
 
     pixman_transform_init_identity (transform);
     pixman_transform_init_identity (&inverse);
     pixman_f_transform_init_identity (f_transform);
     pixman_f_transform_init_identity (f_inverse);
+    pixman_f_transform_init_identity (f_fb_to_sprite);
+    pixman_f_transform_init_identity (f_sprite_to_image);
     if (rotation != RR_Rotate_0)
     {
 	double	f_rot_cos, f_rot_sin, f_rot_dx, f_rot_dy;
@@ -246,7 +280,14 @@ RRTransformCompute (int			    x,
 	pixman_f_transform_translate (f_transform, f_inverse, f_scale_dx, f_scale_dy);
     }
     
-#ifdef RANDR_12_INTERFACE
+    /*
+     * Sprite position is affected by the transform matrix,
+     * but the image is not
+     */
+    pixman_f_transform_multiply(f_sprite_to_image,
+				f_transform,
+				&f_image_to_sprite);
+
     if (rr_transform)
     {
         if (!pixman_transform_multiply (transform, &rr_transform->transform, transform))
@@ -254,7 +295,7 @@ RRTransformCompute (int			    x,
 	pixman_f_transform_multiply (f_transform, &rr_transform->f_transform, f_transform);
 	pixman_f_transform_multiply (f_inverse, f_inverse, &rr_transform->f_inverse);
     }
-#endif
+
     /*
      * Compute the class of the resulting transform
      */
@@ -264,7 +305,7 @@ RRTransformCompute (int			    x,
 
 	pixman_f_transform_init_translate (f_transform,  x,  y);
 	pixman_f_transform_init_translate (f_inverse,   -x, -y);
-	return FALSE;
+	ret = FALSE;
     }
     else
     {
@@ -278,6 +319,19 @@ RRTransformCompute (int			    x,
 	    RRTransformRescale(&f_scaled, 16384.0);
 	    pixman_transform_from_pixman_f_transform(transform, &f_scaled);
 	}
-	return TRUE;
+	ret = TRUE;
     }
+
+    /*
+     * Sprite position is affected by the transform matrix,
+     * but the image is not
+     */
+    pixman_f_transform_multiply(f_fb_to_sprite,
+				f_inverse,
+				sprite_position_transform);
+    if (sprite_transform_in_use)
+	*sprite_transform_in_use = ret || !pict_f_transform_is_identity(f_fb_to_sprite);
+    return ret;
 }
+
+

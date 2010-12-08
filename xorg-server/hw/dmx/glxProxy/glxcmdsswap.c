@@ -252,7 +252,7 @@ int __glXSwapGetVisualConfigs(__GLXclientState *cl, GLbyte *pc)
 
     __GLX_SWAP_INT(&req->screen);
     screen = req->screen;
-    if (screen > screenInfo.numScreens) {
+    if (screen >= screenInfo.numScreens) {
 	/* The client library must send a valid screen number. */
 	client->errorValue = screen;
 	return BadValue;

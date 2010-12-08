@@ -1643,8 +1643,7 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	    new = xnfcalloc(1, sizeof(DisplayModeRec));
 	    new->prev = last;
 	    new->type = M_T_USERDEF;
-	    new->name = xnfalloc(strlen(modeNames[i]) + 1);
-	    strcpy(new->name, modeNames[i]);
+	    new->name = xnfstrdup(modeNames[i]);
 	    if (new->prev)
 		new->prev->next = new;
 	    *endp = last = new;
@@ -1716,10 +1715,9 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 
 	    p = xnfcalloc(1, sizeof(DisplayModeRec));
 	    p->prev = last;
-	    p->name = xnfalloc(strlen(r->name) + 1);
+	    p->name = xnfstrdup(r->name);
 	    if (!userModes)
 		p->type = M_T_USERDEF;
-	    strcpy(p->name, r->name);
 	    if (p->prev)
 		p->prev->next = p;
 	    *endp = last = p;
