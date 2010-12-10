@@ -203,7 +203,7 @@ dnl Checks for library functions.
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([geteuid getuid link memmove memset mkstemp strchr strrchr \
 		strtol getopt getopt_long vsnprintf walkcontext backtrace \
-		getisax getzoneid shmctl64 strcasestr ffs])
+		getisax getzoneid shmctl64 strcasestr ffs vasprintf])
 AC_FUNC_ALLOCA
 dnl Old HAS_* names used in os/*.c.
 AC_CHECK_FUNC([getdtablesize],
@@ -1888,7 +1888,7 @@ if test "x$XWIN" = xyes; then
 			XWIN_SYS_LIBS=-lwinsock2
 			;;
 	esac
-	XWIN_LIBS="$FB_LIB $MI_LIB $FIXES_LIB $XEXT_LIB $CONFIG_LIB $RANDR_LIB $DBE_LIB $RECORD_LIB $GLX_LIBS $XKB_LIB $XKB_STUB_LIB $COMPOSITE_LIB $DAMAGE_LIB $MIEXT_SYNC_LIB $MIEXT_DAMAGE_LIB $MIEXT_SHADOW_LIB $XI_LIB $OS_LIB"
+	XWIN_LIBS="$FB_LIB $MI_LIB $FIXES_LIB $XEXT_LIB $RANDR_LIB $RENDER_LIB $DBE_LIB $RECORD_LIB $GLX_LIBS $XKB_LIB $XKB_STUB_LIB $COMPOSITE_LIB $DAMAGE_LIB $MIEXT_SYNC_LIB $MIEXT_DAMAGE_LIB $MIEXT_SHADOW_LIB $XI_LIB $OS_LIB"
 	XWIN_SYS_LIBS="$XWIN_SYS_LIBS $XWINMODULES_LIBS"
 	AC_SUBST(XWIN_LIBS)
 	AC_SUBST(XWIN_SERVER_NAME)

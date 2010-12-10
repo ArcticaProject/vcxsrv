@@ -1,6 +1,7 @@
 if XORG
 sdk_HEADERS =		\
 	XIstubs.h	\
+	Xprintf.h	\
 	callback.h	\
 	closestr.h	\
 	closure.h	\

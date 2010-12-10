@@ -221,9 +221,10 @@ if (fDebugProcMsg) \
 { \
   char *pszTemp; \
   int iLength; \
-  pszTemp = Xprintf (str, ##__VA_ARGS__); \
-  MessageBox (NULL, pszTemp, szFunctionName, MB_OK); \
-  free(pszTemp); \
+  if (asprintf (&pszTemp, str, ##__VA_ARGS__) != -1) { \
+    MessageBox (NULL, pszTemp, szFunctionName, MB_OK); \
+    free (pszTemp); \
+  } \
 }
 #else
 #define DEBUG_MSG(str,...)

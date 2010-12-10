@@ -699,7 +699,8 @@ static void dmxBERestorePixmapImage(pointer value, XID id, RESTYPE type,
 	PixmapPtr      pPix;
 	int            i;
 
-	pPix = (PixmapPtr)LookupIDByType(pXinPix->info[idx].id, RT_PIXMAP);
+	dixLookupResourceByType((pointer*) &pPix, pXinPix->info[idx].id,
+				RT_PIXMAP, NullClient, DixUnknownAccess);
 	if (pPix != pDst) return; /* Not a match.... Next! */
 
 	for (i = 0; i < PanoramiXNumScreens; i++) {
@@ -708,8 +709,8 @@ static void dmxBERestorePixmapImage(pointer value, XID id, RESTYPE type,
 
 	    if (i == idx) continue; /* Self replication is bad */
 
-	    pSrc =
-		(PixmapPtr)LookupIDByType(pXinPix->info[i].id, RT_PIXMAP);
+	    dixLookupResourceByType((pointer*) &pSrc, pXinPix->info[i].id,
+				    RT_PIXMAP, NullClient, DixUnknownAccess);
 	    pSrcPriv = DMX_GET_PIXMAP_PRIV(pSrc);
 	    if (pSrcPriv->pixmap) {
 		DMXScreenInfo *dmxSrcScreen = &dmxScreens[i];
@@ -1365,7 +1366,8 @@ static void dmxBEFindPixmapImage(pointer value, XID id, RESTYPE type,
 	PixmapPtr      pPix;
 	int            i;
 
-	pPix = (PixmapPtr)LookupIDByType(pXinPix->info[idx].id, RT_PIXMAP);
+	dixLookupResourceByType((pointer*) &pPix, pXinPix->info[idx].id,
+				RT_PIXMAP, NullClient, DixUnknownAccess);
 	if (pPix != pDst) return; /* Not a match.... Next! */
 
 	for (i = 0; i < PanoramiXNumScreens; i++) {
@@ -1374,8 +1376,8 @@ static void dmxBEFindPixmapImage(pointer value, XID id, RESTYPE type,
 
 	    if (i == idx) continue; /* Self replication is bad */
 
-	    pSrc =
-		(PixmapPtr)LookupIDByType(pXinPix->info[i].id, RT_PIXMAP);
+	    dixLookupResourceByType((pointer*) &pSrc, pXinPix->info[i].id,
+				    RT_PIXMAP, NullClient, DixUnknownAccess);
 	    pSrcPriv = DMX_GET_PIXMAP_PRIV(pSrc);
 	    if (pSrcPriv->pixmap) {
 		FoundPixImage = True;

@@ -2426,12 +2426,9 @@ DRICreatePCIBusID(const struct pci_device * dev)
 {
     char *busID;
 
-    busID = malloc(20);
-    if (busID == NULL)
+    if (asprintf(&busID, "pci:%04x:%02x:%02x.%d",
+		 dev->domain, dev->bus, dev->dev, dev->func) == -1)
 	return NULL;
-
-    snprintf(busID, 20, "pci:%04x:%02x:%02x.%d", dev->domain, dev->bus,
-	dev->dev, dev->func);
 
     return busID;
 }

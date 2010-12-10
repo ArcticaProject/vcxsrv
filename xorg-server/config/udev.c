@@ -108,8 +108,10 @@ device_added(struct udev_device *udev_device)
 
         /* construct USB ID in lowercase hex - "0000:ffff" */
         if (product && sscanf(product, "%*x/%4x/%4x/%*x", &usb_vendor, &usb_model) == 2) {
-            attrs.usb_id = Xprintf("%04x:%04x", usb_vendor, usb_model);
-            if (attrs.usb_id)
+            if (asprintf(&attrs.usb_id, "%04x:%04x", usb_vendor, usb_model)
+                == -1)
+                attrs.usb_id = NULL;
+            else
                 LOG_PROPERTY(path, "PRODUCT", product);
         }
     }
@@ -127,9 +129,10 @@ device_added(struct udev_device *udev_device)
     LOG_PROPERTY(path, "ID_INPUT.tags", tags_prop);
     attrs.tags = xstrtokenize(tags_prop, ",");
 
-    config_info = Xprintf("udev:%s", syspath);
-    if (!config_info)
+    if (asprintf(&config_info, "udev:%s", syspath) == -1) {
+        config_info = NULL;
         goto unwind;
+    }
 
     if (device_is_duplicate(config_info)) {
         LogMessage(X_WARNING, "config/udev: device %s already added. "
@@ -217,8 +220,7 @@ device_removed(struct udev_device *device)
     char *value;
     const char *syspath = udev_device_get_syspath(device);
 
-    value = Xprintf("udev:%s", syspath);
-    if (!value)
+    if (asprintf(&value, "udev:%s", syspath) == -1)
         return;
 
     remove_devices("udev", value);

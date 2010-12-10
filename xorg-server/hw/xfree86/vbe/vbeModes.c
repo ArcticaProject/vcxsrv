@@ -356,8 +356,8 @@ VBESetModeNames(DisplayModePtr pMode)
 		pMode->VDisplay > 10000 || pMode->VDisplay < 0) {
 		pMode->name = strdup("BADMODE");
 	    } else {
-		pMode->name = xnfalloc(4 + 1 + 4 + 1);
-		sprintf(pMode->name, "%dx%d", pMode->HDisplay, pMode->VDisplay);
+		XNFasprintf(&pMode->name, "%dx%d",
+			    pMode->HDisplay, pMode->VDisplay);
 	    }
 	}
 	pMode = pMode->next;

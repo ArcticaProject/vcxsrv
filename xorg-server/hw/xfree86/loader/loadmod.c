@@ -406,22 +406,22 @@ FindModuleInSubdir(const char *dirpath, const char *module)
  
         snprintf(tmpBuf, PATH_MAX, "lib%s.so", module);
         if (strcmp(direntry->d_name, tmpBuf) == 0) {
-            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 1);
-            sprintf(ret, "%s%s", dirpath, tmpBuf);
+            if (asprintf(&ret, "%s%s", dirpath, tmpBuf) == -1)
+		ret = NULL;
             break;
         }
 
         snprintf(tmpBuf, PATH_MAX, "%s_drv.so", module);
         if (strcmp(direntry->d_name, tmpBuf) == 0) {
-            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 1);
-            sprintf(ret, "%s%s", dirpath, tmpBuf);
+            if (asprintf(&ret, "%s%s", dirpath, tmpBuf) == -1)
+		ret = NULL;
             break;
         }
 
         snprintf(tmpBuf, PATH_MAX, "%s.so", module);
         if (strcmp(direntry->d_name, tmpBuf) == 0) {
-            ret = malloc(strlen(tmpBuf) + strlen(dirpath) + 1);
-            sprintf(ret, "%s%s", dirpath, tmpBuf);
+            if (asprintf(&ret, "%s%s", dirpath, tmpBuf) == -1)
+		ret = NULL;
             break;
         }
     }
@@ -933,16 +933,14 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
      * now check if the special data object <modulename>ModuleData is
      * present.
      */
-    p = malloc(strlen(name) + strlen("ModuleData") + 1);
-    if (!p) {
+    if (asprintf(&p, "%sModuleData", name) == -1) {
+	p = NULL;
 	if (errmaj)
 	    *errmaj = LDR_NOMEM;
 	if (errmin)
 	    *errmin = 0;
 	goto LoadModule_fail;
     }
-    strcpy(p, name);
-    strcat(p, "ModuleData");
     initdata = LoaderSymbol(p);
     if (initdata) {
 	ModuleSetupProc setup;

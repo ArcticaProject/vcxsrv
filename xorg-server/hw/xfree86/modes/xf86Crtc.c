@@ -510,7 +510,6 @@ static void
 xf86OutputSetMonitor (xf86OutputPtr output)
 {
     char    *option_name;
-    static const char monitor_prefix[] = "monitor-";
     char    *monitor;
 
     if (!output->name)
@@ -520,11 +519,8 @@ xf86OutputSetMonitor (xf86OutputPtr output)
 
     output->options = xnfalloc (sizeof (xf86OutputOptions));
     memcpy (output->options, xf86OutputOptions, sizeof (xf86OutputOptions));
-    
-    option_name = xnfalloc (strlen (monitor_prefix) +
-			    strlen (output->name) + 1);
-    strcpy (option_name, monitor_prefix);
-    strcat (option_name, output->name);
+
+    XNFasprintf(&option_name, "monitor-%s", output->name);
     monitor = xf86findOptionValue (output->scrn->options, option_name);
     if (!monitor)
 	monitor = output->name;

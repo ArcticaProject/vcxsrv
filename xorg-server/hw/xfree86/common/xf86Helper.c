@@ -1193,9 +1193,13 @@ xf86VIDrvMsgVerb(InputInfoPtr dev, MessageType type, int verb, const char *forma
 {
     char *msg;
 
-    msg = Xprintf("%s: %s: %s", dev->drv->driverName, dev->name, format);
-    LogVMessageVerb(type, verb, msg, args);
-    free(msg);
+    if (asprintf(&msg, "%s: %s: %s", dev->drv->driverName, dev->name, format)
+	== -1) {
+	LogVMessageVerb(type, verb, "%s", args);
+    } else {
+	LogVMessageVerb(type, verb, msg, args);
+	free(msg);
+    }
 }
 
 /* Print input driver message, with verbose level specified directly */
@@ -1280,11 +1284,8 @@ xf86LogInit(void)
     /* Get the log file name */
     if (xf86LogFileFrom == X_DEFAULT) {
 	/* Append the display number and ".log" */
-	lf = malloc(strlen(xf86LogFile) + strlen("%s") +
-		    strlen(LOGSUFFIX) + 1);
-	if (!lf)
+	if (asprintf(&lf, "%s%%s" LOGSUFFIX, xf86LogFile) == -1)
 	    FatalError("Cannot allocate space for the log file name\n");
-	sprintf(lf, "%s%%s" LOGSUFFIX, xf86LogFile);
 	xf86LogFile = lf;
     }
 

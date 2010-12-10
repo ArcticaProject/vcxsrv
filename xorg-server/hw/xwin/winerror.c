@@ -101,12 +101,15 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
   char *	pszErrorF = NULL;
   char *	pszMsgBox = NULL;
   va_list	args;
+  int		size;
 
   va_start(args, uType);
-  pszErrorF = Xvprintf(pszError, args);
+  size = vasprintf (&pszErrorF, pszError, args);
   va_end(args);
-  if (!pszErrorF)
+  if (size == -1) {
+    pszErrorF = NULL;
     goto winMessageBoxF_Cleanup;
+  }
 
 #define MESSAGEBOXF \
 	"%s\n" \
@@ -117,15 +120,18 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
 	"XWin was started with the following command-line:\n\n" \
 	"%s\n"
 
-  pszMsgBox = Xprintf (MESSAGEBOXF,
-                       pszErrorF, XVENDORNAME,
-		       XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT,
-		       BUILDERADDR,
-		       BUILDERSTRING,
-		       g_pszCommandLine);
+  size = asprintf (&pszMsgBox, MESSAGEBOXF,
+		   pszErrorF, XVENDORNAME,
+		   XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH,
+		    XORG_VERSION_SNAP, XORG_VERSION_CURRENT,
+		   BUILDERADDR,
+		   BUILDERSTRING,
+		   g_pszCommandLine);
 
-  if (!pszMsgBox)
+  if (size == -1) {
+    pszMsgBox = NULL;
     goto winMessageBoxF_Cleanup;
+  }
 
   /* Display the message box string */
   MessageBox (NULL,

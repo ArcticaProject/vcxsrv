@@ -51,6 +51,7 @@ SOFTWARE.
 
 #include "misc.h"
 #include <stdarg.h>
+#include <string.h>
 
 #define SCREEN_SAVER_ON   0
 #define SCREEN_SAVER_OFF  1
@@ -263,10 +264,14 @@ extern _X_EXPORT char *Xstrdup(const char *s);
  */
 extern _X_EXPORT char *XNFstrdup(const char *s);
 
-extern _X_EXPORT char *Xprintf(const char *fmt, ...) _X_ATTRIBUTE_PRINTF(1,2);
-extern _X_EXPORT char *Xvprintf(const char *fmt, va_list va);
-extern _X_EXPORT char *XNFprintf(const char *fmt, ...) _X_ATTRIBUTE_PRINTF(1,2);
-extern _X_EXPORT char *XNFvprintf(const char *fmt, va_list va);
+/* Include new X*asprintf API */
+#include "Xprintf.h"
+
+/* Older api deprecated in favor of the asprintf versions */
+extern _X_EXPORT char *Xprintf(const char *fmt, ...) _X_ATTRIBUTE_PRINTF(1,2) _X_DEPRECATED;
+extern _X_EXPORT char *Xvprintf(const char *fmt, va_list va)_X_ATTRIBUTE_PRINTF(1,0) _X_DEPRECATED;
+extern _X_EXPORT char *XNFprintf(const char *fmt, ...) _X_ATTRIBUTE_PRINTF(1,2) _X_DEPRECATED;
+extern _X_EXPORT char *XNFvprintf(const char *fmt, va_list va)_X_ATTRIBUTE_PRINTF(1,0) _X_DEPRECATED;
 
 typedef void (*OsSigHandlerPtr)(int /* sig */);
 typedef int (*OsSigWrapperPtr)(int /* sig */);

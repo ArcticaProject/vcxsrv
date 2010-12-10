@@ -205,12 +205,9 @@ configureScreenSection (int screennum)
     int depths[] = { 1, 4, 8, 15, 16, 24/*, 32*/ };
     parsePrologue (XF86ConfScreenPtr, XF86ConfScreenRec)
 
-    ptr->scrn_identifier = malloc(18);
-    sprintf(ptr->scrn_identifier, "Screen%d", screennum);
-    ptr->scrn_monitor_str = malloc(19);
-    sprintf(ptr->scrn_monitor_str, "Monitor%d", screennum);
-    ptr->scrn_device_str = malloc(16);
-    sprintf(ptr->scrn_device_str, "Card%d", screennum);
+    XNFasprintf(&ptr->scrn_identifier, "Screen%d", screennum);
+    XNFasprintf(&ptr->scrn_monitor_str, "Monitor%d", screennum);
+    XNFasprintf(&ptr->scrn_device_str, "Card%d", screennum);
 
     for (i=0; i<sizeof(depths)/sizeof(depths[0]); i++)
     {
@@ -256,14 +253,13 @@ optionTypeToString(OptionValueType type)
 static XF86ConfDevicePtr
 configureDeviceSection (int screennum)
 {
-    char identifier[16];
     OptionInfoPtr p;
     int i = 0;
     parsePrologue (XF86ConfDevicePtr, XF86ConfDeviceRec)
 
     /* Move device info to parser structure */
-    sprintf(identifier, "Card%d", screennum);
-    ptr->dev_identifier = strdup(identifier);
+    if (asprintf(&ptr->dev_identifier, "Card%d", screennum) == -1)
+        ptr->dev_identifier = NULL;
     ptr->dev_chipset = DevToConfig[screennum].GDev.chipset;
     ptr->dev_busid = DevToConfig[screennum].GDev.busID;
     ptr->dev_driver = DevToConfig[screennum].GDev.driver;
@@ -306,10 +302,8 @@ configureDeviceSection (int screennum)
 		int len = strlen(ptr->dev_comment) + strlen(prefix) +
 			  strlen(middle) + strlen(suffix) + 1;
 		
-		optname = malloc(strlen(p->name) + 2 + 1);
-		if (!optname)
+		if (asprintf(&optname, "\"%s\"", p->name) == -1)
 		    break;
-		sprintf(optname, "\"%s\"", p->name);
 
 		len += max(20, strlen(optname));
 		len += strlen(opttype);
@@ -370,16 +364,14 @@ configureLayoutSection (void)
 	aptr->adj_x = 0;
 	aptr->adj_y = 0;
 	aptr->adj_scrnum = scrnum;
-	aptr->adj_screen_str = xnfalloc(18);
-	sprintf(aptr->adj_screen_str, "Screen%d", scrnum);
+	XNFasprintf(&aptr->adj_screen_str, "Screen%d", scrnum);
 	if (scrnum == 0) {
 	    aptr->adj_where = CONF_ADJ_ABSOLUTE;
 	    aptr->adj_refscreen = NULL;
 	}
 	else {
 	    aptr->adj_where = CONF_ADJ_RIGHTOF;
-	    aptr->adj_refscreen = xnfalloc(18);
-	    sprintf(aptr->adj_refscreen, "Screen%d", scrnum - 1);
+	    XNFasprintf(&aptr->adj_refscreen, "Screen%d", scrnum - 1);
 	}
     	ptr->lay_adjacency_lst =
 	    (XF86ConfAdjacencyPtr)xf86addListItem((glp)ptr->lay_adjacency_lst,
@@ -443,8 +435,7 @@ configureMonitorSection (int screennum)
 {
     parsePrologue (XF86ConfMonitorPtr, XF86ConfMonitorRec)
 
-    ptr->mon_identifier = malloc(19);
-    sprintf(ptr->mon_identifier, "Monitor%d", screennum);
+    XNFasprintf(&ptr->mon_identifier, "Monitor%d", screennum);
     ptr->mon_vendor = strdup("Monitor Vendor");
     ptr->mon_modelname = strdup("Monitor Model");
 
@@ -491,11 +482,9 @@ configureDDCMonitorSection (int screennum)
 
     parsePrologue (XF86ConfMonitorPtr, XF86ConfMonitorRec)
 
-    ptr->mon_identifier = malloc(19);
-    sprintf(ptr->mon_identifier, "Monitor%d", screennum);
+    XNFasprintf(&ptr->mon_identifier, "Monitor%d", screennum);
     ptr->mon_vendor = strdup(ConfiguredMonitor->vendor.name);
-    ptr->mon_modelname = malloc(12);
-    sprintf(ptr->mon_modelname, "%x", ConfiguredMonitor->vendor.prod_id);
+    XNFasprintf(&ptr->mon_modelname, "%x", ConfiguredMonitor->vendor.prod_id);
 
     /* features in centimetres, we want millimetres */
     mon_width  = 10 * ConfiguredMonitor->features.hsize ;

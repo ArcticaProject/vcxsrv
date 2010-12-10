@@ -24,8 +24,8 @@ BUSSOURCES = xf86pciBus.c xf86fbBus.c xf86noBus.c $(SBUS_SOURCES)
 MODEDEFSOURCES = $(srcdir)/vesamodes $(srcdir)/extramodes
 
 xf86DefModeSet.c: $(srcdir)/modeline2c.awk $(MODEDEFSOURCES)
-	cat $(MODEDEFSOURCES) | LC_ALL=C $(AWK) -f $(srcdir)/modeline2c.awk > $@
-	echo >> $@
+	$(AM_V_GEN)cat $(MODEDEFSOURCES) | LC_ALL=C $(AWK) -f $(srcdir)/modeline2c.awk > $@
+	$(AM_V_GEN)echo >> $@
 
 BUILT_SOURCES = xf86DefModeSet.c
 

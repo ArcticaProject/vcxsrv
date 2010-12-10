@@ -341,11 +341,10 @@ winExitDlgProc (HWND hDialog, UINT message,
 	winInitDialog (hDialog);
 
 	/* Format the connected clients string */
-	pszConnectedClients = Xprintf (CONNECTED_CLIENTS_FORMAT,
+	if (asprintf (&pszConnectedClients, CONNECTED_CLIENTS_FORMAT,
            (s_pScreenPriv->iConnectedClients == 1) ? "is" : "are",
             s_pScreenPriv->iConnectedClients,
-           (s_pScreenPriv->iConnectedClients == 1) ? "" : "s");
-	if (!pszConnectedClients)
+           (s_pScreenPriv->iConnectedClients == 1) ? "" : "s") == -1)
 	    return TRUE;
      
         

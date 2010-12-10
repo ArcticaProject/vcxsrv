@@ -297,8 +297,8 @@ copyScreen(confScreenPtr oscreen, GDevPtr odev, int i, char *driver)
     }
     memcpy(cptr, odev, sizeof(GDevRec));
 
-    cptr->identifier = Xprintf("Autoconfigured Video Device %s", driver);
-    if (!cptr->identifier) {
+    if (asprintf(&cptr->identifier, "Autoconfigured Video Device %s", driver)
+        == -1) {
         free(cptr);
         free(nscreen);
         return FALSE;

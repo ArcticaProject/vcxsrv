@@ -2524,9 +2524,11 @@ AllocDevicePair (ClientPtr client, char* name,
     if (!pointer)
         return BadAlloc;
 
-    pointer->name = calloc(strlen(name) + strlen(" pointer") + 1, sizeof(char));
-    strcpy(pointer->name, name);
-    strcat(pointer->name, " pointer");
+    if (asprintf(&pointer->name, "%s pointer", name) == -1) {
+        pointer->name = NULL;
+        RemoveDevice(pointer, FALSE);
+        return BadAlloc;
+    }
 
     pointer->public.processInputProc = ProcessOtherEvent;
     pointer->public.realInputProc = ProcessOtherEvent;
@@ -2547,9 +2549,12 @@ AllocDevicePair (ClientPtr client, char* name,
         return BadAlloc;
     }
 
-    keyboard->name = calloc(strlen(name) + strlen(" keyboard") + 1, sizeof(char));
-    strcpy(keyboard->name, name);
-    strcat(keyboard->name, " keyboard");
+    if (asprintf(&keyboard->name, "%s keyboard", name) == -1) {
+        keyboard->name = NULL;
+        RemoveDevice(keyboard, FALSE);
+        RemoveDevice(pointer, FALSE);
+        return BadAlloc;
+    }
 
     keyboard->public.processInputProc = ProcessOtherEvent;
     keyboard->public.realInputProc = ProcessOtherEvent;

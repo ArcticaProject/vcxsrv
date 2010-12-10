@@ -25,6 +25,24 @@
 
 #include "xf86.h"
 
+/* Error implementation used by the server code we built in */
+void
+Error(const char *str)
+{
+    perror(str);
+}
+
+/* FatalError implementation used by the server code we built in */
+void
+FatalError(const char *f, ...)
+{
+    va_list args;
+    va_start(args, f);
+    vfprintf(stderr, f, args);
+    va_end(args);
+    exit(1);
+}
+
 /* xnfalloc implementation used by the server code we built in */
 pointer
 XNFalloc(unsigned long n)

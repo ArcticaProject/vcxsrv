@@ -1347,9 +1347,9 @@ xf86PciConfigureNewDev(void *busData, struct pci_device *pVideo,
 
     pVideo = (struct pci_device *) busData;
 
-    GDev->busID = xnfalloc(16);
     xf86FormatPciBusNumber(pVideo->bus, busnum);
-    sprintf(GDev->busID, "PCI:%s:%d:%d", busnum, pVideo->dev, pVideo->func);
+    XNFasprintf(&GDev->busID, "PCI:%s:%d:%d",
+		busnum, pVideo->dev, pVideo->func);
 
     GDev->chipID = pVideo->device_id;
     GDev->chipRev = pVideo->revision;

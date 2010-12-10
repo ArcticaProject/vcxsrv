@@ -97,11 +97,8 @@ void DoShowOptions (void) {
 				);
 				continue;                                                       
 			}
-			pSymbol = malloc(
-				strlen(xf86DriverList[i]->driverName) + strlen("ModuleData") + 1
-			);
-			strcpy (pSymbol, xf86DriverList[i]->driverName);
-			strcat (pSymbol, "ModuleData");
+			XNFasprintf(&pSymbol, "%sModuleData",
+				    xf86DriverList[i]->driverName);
 			initData = LoaderSymbol (pSymbol);
 			if (initData) {
 				XF86ModuleVersionInfo *vers = initData->vers;
@@ -111,6 +108,9 @@ void DoShowOptions (void) {
 				);
 				for (p = pOption; p->name != NULL; p++) {
 					const char *opttype = optionTypeToSting(p->type);
+					/* XXX: Why overallocate by 2 bytes?
+					 * Otherwise, this would be strdup()
+					 */
 					char *optname = malloc(strlen(p->name) + 2 + 1);
 					if (!optname) {
 						continue;                      

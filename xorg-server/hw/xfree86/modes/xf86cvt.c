@@ -279,15 +279,7 @@ xf86CVTMode(int HDisplay, int VDisplay, float VRefresh, Bool Reduced,
     if (Interlaced)
         Mode->VTotal *= 2;
 
-    {
-        char  Name[256];
-        Name[0] = 0;
-
-        snprintf(Name, 256, "%dx%d", HDisplay, VDisplay);
-
-        Mode->name = xnfalloc(strlen(Name) + 1);
-        memcpy(Mode->name, Name, strlen(Name) + 1);
-    }
+    XNFasprintf(&Mode->name, "%dx%d", HDisplay, VDisplay);
 
     if (Reduced)
         Mode->Flags |= V_PHSYNC | V_NVSYNC;

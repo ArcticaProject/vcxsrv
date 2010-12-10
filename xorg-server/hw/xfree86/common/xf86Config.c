@@ -208,9 +208,7 @@ xf86ValidateFontPath(char *path)
 	continue;
       }
       else {
-	p1 = xnfalloc(strlen(dir_elem)+strlen(DIR_FILE)+1);
-	strcpy(p1, dir_elem);
-	strcat(p1, DIR_FILE);
+	XNFasprintf(&p1, "%s%s", dir_elem, DIR_FILE);
 	flag = stat(p1, &stat_buf);
 	if (flag == 0)
 	  if (!S_ISREG(stat_buf.st_mode))
@@ -585,12 +583,11 @@ configFiles(XF86ConfFilesPtr fileconf)
     else if (fileconf && fileconf->file_fontpath) {
 	pathFrom = X_CONFIG;
 	if (xf86Info.useDefaultFontPath) {
-	    defaultFontPath = Xprintf("%s%s%s",
-				      fileconf->file_fontpath,
-				      *temp_path ? "," : "", temp_path);
-	    if (defaultFontPath != NULL) {
+	    if (asprintf(&defaultFontPath, "%s%s%s", fileconf->file_fontpath,
+			 *temp_path ? "," : "", temp_path) == -1)
+		defaultFontPath = NULL;
+	    else
 		must_copy = FALSE;
-	    }
 	}
 	else
 	    defaultFontPath = fileconf->file_fontpath;

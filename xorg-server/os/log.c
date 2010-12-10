@@ -177,10 +177,8 @@ LogInit(const char *fname, const char *backup)
     char *logFileName = NULL;
 
     if (fname && *fname) {
-	logFileName = malloc(strlen(fname) + strlen(display) + 1);
-	if (!logFileName)
+	if (asprintf(&logFileName, fname, display) == -1)
 	    FatalError("Cannot allocate space for the log file name\n");
-	sprintf(logFileName, fname, display);
 
 	if (backup && *backup) {
 	    struct stat buf;
@@ -189,13 +187,9 @@ LogInit(const char *fname, const char *backup)
 		char *suffix;
 		char *oldLog;
 
-		oldLog = malloc(strlen(logFileName) + strlen(backup) +
-				strlen(display) + 1);
-		suffix = malloc(strlen(backup) + strlen(display) + 1);
-		if (!oldLog || !suffix)
+		if ((asprintf(&suffix, backup, display) == -1) ||
+		    (asprintf(&oldLog, "%s%s", logFileName, suffix) == -1))
 		    FatalError("Cannot allocate space for the log file name\n");
-		sprintf(suffix, backup, display);
-		sprintf(oldLog, "%s%s", logFileName, suffix);
 		free(suffix);
 		if (rename(logFileName, oldLog) == -1) {
 		    FatalError("Cannot move old log file \"%s\" to \"%s\"\n",
