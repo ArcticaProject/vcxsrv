@@ -638,13 +638,10 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	    newn = n + 2;
 	} else {
 	    free(n);
-	    n = malloc(strlen(p->name) + 2 + 1);
-	    if (!n) {
+	    if (asprintf(&n, "No%s", p->name) == -1) {
 		p->found = FALSE;
 		return FALSE;
 	    }
-	    strcpy(n, "No");
-	    strcat(n, p->name);
 	    newn = n;
 	}
 	if ((s = xf86findOptionValue(options, newn)) != NULL) {

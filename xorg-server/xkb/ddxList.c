@@ -156,34 +156,45 @@ char	tmpname[PATH_MAX];
 #endif
     if (XkbBaseDirectory!=NULL) {
 	if ((list->pattern[what][0]=='*')&&(list->pattern[what][1]=='\0')) {
-	    buf = Xprintf("%s/%s.dir",XkbBaseDirectory,componentDirs[what]);
-	    in= fopen(buf,"r");
+	    if (asprintf(&buf, "%s/%s.dir", XkbBaseDirectory,
+			 componentDirs[what]) == -1)
+		buf = NULL;
+	    else
+		in = fopen(buf,"r");
 	}
 	if (!in) {
 	    haveDir= FALSE;
 	    free(buf);
-	    buf = Xprintf(
-		"'%s/xkbcomp' '-R%s/%s' -w %ld -l -vlfhpR '%s'" W32_tmparg,
-                XkbBinDirectory,XkbBaseDirectory,componentDirs[what],(long)
-		((xkbDebugFlags<2)?1:((xkbDebugFlags>10)?10:xkbDebugFlags)),
-		file W32_tmpfile
-                );
+	    if (asprintf
+		(&buf,
+		 "'%s/xkbcomp' '-R%s/%s' -w %ld -l -vlfhpR '%s'" W32_tmparg,
+		 XkbBinDirectory, XkbBaseDirectory, componentDirs[what],
+		 (long) ((xkbDebugFlags < 2) ? 1 :
+			 ((xkbDebugFlags > 10) ? 10 : xkbDebugFlags)),
+		 file W32_tmpfile
+		    ) == -1)
+		buf = NULL;
 	}
     }
     else {
 	if ((list->pattern[what][0]=='*')&&(list->pattern[what][1]=='\0')) {
-	    buf = Xprintf("%s.dir",componentDirs[what]);
-	    in= fopen(buf,"r");
+	    if (asprintf(&buf, "%s.dir", componentDirs[what]) == -1)
+		buf = NULL;
+	    else
+		in = fopen(buf,"r");
 	}
 	if (!in) {
 	    haveDir= FALSE;
 	    free(buf);
-	    buf = Xprintf(
-		"xkbcomp -R%s -w %ld -l -vlfhpR '%s'" W32_tmparg,
-                componentDirs[what],(long)
-		((xkbDebugFlags<2)?1:((xkbDebugFlags>10)?10:xkbDebugFlags)),
-		file W32_tmpfile
-                );
+	    if (asprintf
+		(&buf,
+		 "xkbcomp -R%s -w %ld -l -vlfhpR '%s'" W32_tmparg,
+		 componentDirs[what],
+		 (long)	((xkbDebugFlags < 2) ? 1 :
+			 ((xkbDebugFlags > 10) ? 10 : xkbDebugFlags)),
+		 file W32_tmpfile
+		    ) == -1)
+		buf = NULL;
 	}
     }
     status= Success;

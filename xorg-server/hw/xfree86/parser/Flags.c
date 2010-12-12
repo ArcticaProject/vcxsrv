@@ -61,8 +61,8 @@
 #include "xf86Parser.h"
 #include "xf86tokens.h"
 #include "Configint.h"
-#include <math.h>
 #include <X11/Xfuncproto.h>
+#include "Xprintf.h"
 
 extern LexRec val;
 
@@ -143,9 +143,8 @@ xf86parseFlagsSection (void)
 							} else {
 								if (tokentype != NUMBER)
 									Error (NUMBER_MSG, tmp);
-								valstr = malloc(16);
-								if (valstr)
-									sprintf(valstr, "%d", val.num);
+								if (asprintf(&valstr, "%d", val.num) == -1)
+									valstr = NULL;
 							}
 						}
 						ptr->flg_option_lst = xf86addNewOption
@@ -426,13 +425,9 @@ char *
 xf86uLongToString(unsigned long i)
 {
 	char *s;
-	int l;
 
-	l = ceil(log10((double)i) + 2.5);
-	s = malloc(l);
-	if (!s)
+	if (asprintf(&s, "%lu", i) == -1)
 		return NULL;
-	sprintf(s, "%lu", i);
 	return s;
 }
 

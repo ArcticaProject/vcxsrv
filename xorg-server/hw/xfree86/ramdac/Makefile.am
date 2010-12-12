@@ -15,5 +15,5 @@ AM_CFLAGS = -DXAAReverseBitOrder=xf86ReverseBitOrder -DRAMDAC_MODULE \
 INCLUDES = $(XORG_INCS)
 
 xf86BitOrder.c:
-	echo "#define XAAReverseBitOrder xf86ReverseBitOrder" > $@
-	echo "#include \"$(srcdir)/../xaa/xaaBitOrder.c\"" >> $@
+	$(AM_V_GEN)echo "#define XAAReverseBitOrder xf86ReverseBitOrder" > $@
+	$(AM_V_GEN)echo "#include \"$(srcdir)/../xaa/xaaBitOrder.c\"" >> $@

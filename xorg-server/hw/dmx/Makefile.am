@@ -81,8 +81,8 @@ Xdmx_SOURCES = dmx.c \
 #endif
 
 XDMX_LIBS = \
-	@XDMX_LIBS@ \
 	$(GLX_LIBS) \
+	@XDMX_LIBS@ \
         input/libdmxinput.a \
         config/libdmxconfig.a
 

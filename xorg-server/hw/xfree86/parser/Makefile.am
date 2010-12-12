@@ -31,6 +31,7 @@ libxf86config_internal_la_SOURCES = \
 	$(INTERNAL_SOURCES)
 
 libxf86config_a_SOURCES = \
+	$(TOP_SRCDIR)/os/xprintf.c \
 	$(INTERNAL_SOURCES)
 libxf86config_a_CFLAGS = $(AM_CFLAGS)
 

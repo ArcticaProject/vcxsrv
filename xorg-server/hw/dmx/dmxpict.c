@@ -271,9 +271,11 @@ static int dmxProcRenderCreateGlyphSet(ClientPtr client)
 	/* Look up glyphSet that was just created ???? */
 	/* Store glyphsets from backends in glyphSet->devPrivate ????? */
 	/* Make sure we handle all errors here!! */
-	
-	glyphSet = SecurityLookupIDByType(client, stuff->gsid, GlyphSetType,
-					  DixDestroyAccess);
+
+	dixLookupResourceByType((pointer*) &glyphSet,
+				stuff->gsid, GlyphSetType,
+				client, DixDestroyAccess);
+
 	glyphPriv = malloc(sizeof(dmxGlyphPrivRec));
 	if (!glyphPriv) return BadAlloc;
         glyphPriv->glyphSets = NULL;
@@ -314,8 +316,9 @@ static int dmxProcRenderFreeGlyphSet(ClientPtr client)
     REQUEST(xRenderFreeGlyphSetReq);
 
     REQUEST_SIZE_MATCH(xRenderFreeGlyphSetReq);
-    glyphSet = SecurityLookupIDByType(client, stuff->glyphset, GlyphSetType,
-				      DixDestroyAccess);
+    dixLookupResourceByType((pointer*) &glyphSet,
+			    stuff->glyphset, GlyphSetType,
+			    client, DixDestroyAccess);
 
     if (glyphSet && glyphSet->refcnt == 1) {
 	dmxGlyphPrivPtr  glyphPriv = DMX_GET_GLYPH_PRIV(glyphSet);
@@ -357,8 +360,9 @@ static int dmxProcRenderAddGlyphs(ClientPtr client)
 	CARD8           *bits;
 	int              nbytes;
 
-	glyphSet = SecurityLookupIDByType(client, stuff->glyphset,
-					  GlyphSetType, DixReadAccess);
+	dixLookupResourceByType((pointer*) &glyphSet,
+				stuff->glyphset, GlyphSetType,
+				client, DixReadAccess);
 	glyphPriv = DMX_GET_GLYPH_PRIV(glyphSet);
 
 	nglyphs = stuff->nglyphs;
@@ -400,8 +404,9 @@ static int dmxProcRenderFreeGlyphs(ClientPtr client)
     REQUEST(xRenderFreeGlyphsReq);
 
     REQUEST_AT_LEAST_SIZE(xRenderFreeGlyphsReq);
-    glyphSet = SecurityLookupIDByType(client, stuff->glyphset, GlyphSetType,
-				      DixWriteAccess);
+    dixLookupResourceByType((pointer*) &glyphSet,
+			    stuff->glyphset, GlyphSetType,
+			    client, DixWriteAccess);
 
     if (glyphSet) {
 	dmxGlyphPrivPtr  glyphPriv = DMX_GET_GLYPH_PRIV(glyphSet);
@@ -472,14 +477,18 @@ static int dmxProcRenderCompositeGlyphs(ClientPtr client)
 	GlyphSetPtr        glyphSet;
 	dmxGlyphPrivPtr    glyphPriv;
 
-	pSrc = SecurityLookupIDByType(client, stuff->src, PictureType,
-				      DixReadAccess);
+	dixLookupResourceByType((pointer*) &pSrc,
+				stuff->src, PictureType,
+				client, DixReadAccess);
+
 	pSrcPriv = DMX_GET_PICT_PRIV(pSrc);
 	if (!pSrcPriv->pict)
 	    return ret;
 
-	pDst = SecurityLookupIDByType(client, stuff->dst, PictureType,
-				      DixWriteAccess);
+	dixLookupResourceByType((pointer*) &pDst,
+				stuff->dst, PictureType,
+				client, DixWriteAccess);
+
 	pDstPriv = DMX_GET_PICT_PRIV(pDst);
 	if (!pDstPriv->pict)
 	    return ret;
@@ -495,8 +504,9 @@ static int dmxProcRenderCompositeGlyphs(ClientPtr client)
 	    return ret;
 
 	if (stuff->maskFormat)
-	    pFmt = SecurityLookupIDByType(client, stuff->maskFormat,
-					  PictFormatType, DixReadAccess);
+	    dixLookupResourceByType((pointer*) &pFmt,
+				    stuff->maskFormat, PictFormatType,
+				    client, DixReadAccess);
 	else
 	    pFmt = NULL;
 
@@ -546,8 +556,9 @@ static int dmxProcRenderCompositeGlyphs(ClientPtr client)
 	curGlyph = glyphs;
 	curElt = elts;
 
-	glyphSet = SecurityLookupIDByType(client, stuff->glyphset,
-					  GlyphSetType, DixReadAccess);
+	dixLookupResourceByType((pointer*) &glyphSet,
+				stuff->glyphset, GlyphSetType,
+				client, DixReadAccess);
 	glyphPriv = DMX_GET_GLYPH_PRIV(glyphSet);
 
 	while (buffer + sizeof(xGlyphElt) < end) {
@@ -555,10 +566,11 @@ static int dmxProcRenderCompositeGlyphs(ClientPtr client)
 	    buffer += sizeof(xGlyphElt);
 
 	    if (elt->len == 0xff) {
-		glyphSet = SecurityLookupIDByType(client,
-						  *((CARD32 *)buffer),
-						  GlyphSetType,
-						  DixReadAccess);
+		dixLookupResourceByType((pointer*) &glyphSet,
+					*((CARD32 *)buffer),
+					GlyphSetType,
+					client,
+					DixReadAccess);
 		glyphPriv = DMX_GET_GLYPH_PRIV(glyphSet);
 		buffer += 4;
 	    } else {

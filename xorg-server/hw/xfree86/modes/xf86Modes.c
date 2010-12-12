@@ -132,8 +132,8 @@ xf86SetModeDefaultName(DisplayModePtr mode)
 
     free(mode->name);
 
-    mode->name = XNFprintf("%dx%d%s", mode->HDisplay, mode->VDisplay,
-			   interlaced ? "i" : "");
+    XNFasprintf(&mode->name, "%dx%d%s", mode->HDisplay, mode->VDisplay,
+		interlaced ? "i" : "");
 }
 
 /*

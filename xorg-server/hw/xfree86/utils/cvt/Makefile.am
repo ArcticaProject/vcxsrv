@@ -1,4 +1,4 @@
-# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+# Copyright (c) 2005, Oracle and/or its affiliates. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,10 @@ INCLUDES = $(XORG_INCS) \
 	   -I$(top_srcdir)/hw/xfree86/parser
 
 # gah
-cvt_SOURCES = cvt.c $(top_srcdir)/hw/xfree86/modes/xf86cvt.c
+cvt_SOURCES = cvt.c \
+	$(top_srcdir)/hw/xfree86/modes/xf86cvt.c \
+	$(top_srcdir)/os/xprintf.c
+
 cvt_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
 
 man1_MANS = cvt.man

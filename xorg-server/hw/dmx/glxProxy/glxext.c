@@ -186,8 +186,12 @@ void __glXFreeGLXWindow(__glXWindow *pGlxWindow)
 {
     if (!pGlxWindow->idExists && !pGlxWindow->refcnt) {
 	WindowPtr pWindow = (WindowPtr) pGlxWindow->pDraw;
+	WindowPtr ret;
 
-        if (LookupIDByType(pWindow->drawable.id, RT_WINDOW) == pWindow) {
+	dixLookupResourceByType((pointer) &ret,
+				pWindow->drawable.id, RT_WINDOW,
+				NullClient, DixUnknownAccess);
+        if (ret == pWindow) {
             (*pGlxWindow->pScreen->DestroyWindow)(pWindow);
         }
 

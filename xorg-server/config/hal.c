@@ -63,10 +63,8 @@ device_removed(LibHalContext *ctx, const char *udi)
 {
     char *value;
 
-    value = malloc(strlen(udi) + 5); /* "hal:" + NULL */
-    if (!value)
+    if (asprintf (&value, "hal:%s", udi) == -1)
         return;
-    sprintf(value, "hal:%s", udi);
 
     remove_devices("hal", value);
 
@@ -200,7 +198,9 @@ device_added(LibHalContext *hal_ctx, const char *udi)
                        "config/hal: getting usb.product_id on %s "
                        "returned %04x\n", parent, usb_product);
         if (usb_vendor && usb_product)
-            attrs.usb_id = Xprintf("%04x:%04x", usb_vendor, usb_product);
+            if (asprintf(&attrs.usb_id, "%04x:%04x", usb_vendor, usb_product)
+		== -1)
+		attrs.usb_id = NULL;
 
         free(parent);
     }
@@ -226,12 +226,11 @@ device_added(LibHalContext *hal_ctx, const char *udi)
     add_option(&options, "driver", driver);
     add_option(&options, "name", name);
 
-    config_info = malloc(strlen(udi) + 5); /* "hal:" and NULL */
-    if (!config_info) {
+    if (asprintf (&config_info, "hal:%s", udi) == -1) {
+        config_info = NULL;
         LogMessage(X_ERROR, "config/hal: couldn't allocate name\n");
         goto unwind;
     }
-    sprintf(config_info, "hal:%s", udi);
 
     /* Check for duplicate devices */
     if (device_is_duplicate(config_info))

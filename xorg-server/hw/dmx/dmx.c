@@ -231,8 +231,9 @@ static int ProcDMXForceWindowCreation(ClientPtr client)
         PanoramiXRes *win;
         int          i;
 
-        if (!(win = SecurityLookupIDByType(client, stuff->window, XRT_WINDOW,
-                                           DixReadAccess)))
+        if (Success != dixLookupResourceByType((pointer*) &win,
+					       stuff->window, XRT_WINDOW,
+					       client, DixReadAccess))
             return -1;           /* BadWindow */
 
         FOR_NSCREENS(i) {
@@ -506,8 +507,9 @@ static int dmxPopulatePanoramiX(ClientPtr client, Window window,
     int                    count = 0;
     DMXWindowAttributesRec attr;
     
-    if (!(win = SecurityLookupIDByType(client, window, XRT_WINDOW,
-                                       DixReadAccess)))
+    if (Success != dixLookupResourceByType((pointer*) &win,
+					   window, XRT_WINDOW,
+					   client, DixReadAccess))
         return -1;               /* BadWindow */
     
     FOR_NSCREENS(i) {

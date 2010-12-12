@@ -62,6 +62,7 @@
 #include "xf86Parser.h"
 #include "xf86tokens.h"
 #include "Configint.h"
+#include "Xprintf.h"
 
 extern LexRec val;
 
@@ -99,8 +100,8 @@ static xf86ConfigSymTabRec ZMapTab[] =
 XF86ConfInputPtr
 xf86parsePointerSection (void)
 {
-	char *s, *s1, *s2;
-	int l;
+	char *s;
+	unsigned long val1;
 	int token;
 	parsePrologue (XF86ConfInputPtr, XF86ConfInputRec)
 
@@ -184,17 +185,12 @@ xf86parsePointerSection (void)
 			case NUMBER:
 				if (val.num < 0)
 					Error (ZAXISMAPPING_MSG, NULL);
-				s1 = xf86uLongToString(val.num);
+				val1 = val.num;
 				if (xf86getSubToken (&(ptr->inp_comment)) != NUMBER || val.num < 0) {
-					free(s1);
 					Error (ZAXISMAPPING_MSG, NULL);
 				}
-				s2 = xf86uLongToString(val.num);
-				l = strlen(s1) + 1 + strlen(s2) + 1;
-				s = malloc(l);
-				sprintf(s, "%s %s", s1, s2);
-				free(s1);
-				free(s2);
+				if (asprintf(&s, "%ul %ul", val1, val.num) == -1)
+				    s = NULL;
 				break;
 			case XAXIS:
 				s = strdup("x");

@@ -536,8 +536,7 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 
     for (i = 0; i < xf86NumScreens; i++) {
       if (xf86Screens[i]->name == NULL) {
-	xf86Screens[i]->name = xnfalloc(strlen("screen") + 10 + 1);
-	sprintf(xf86Screens[i]->name, "screen%d", i);
+	XNFasprintf(&xf86Screens[i]->name, "screen%d", i);
 	xf86MsgVerb(X_WARNING, 0,
 		    "Screen driver %d has no name set, using `%s'.\n",
 		    i, xf86Screens[i]->name);

@@ -210,7 +210,8 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 #endif
 
     if (XkbBaseDirectory != NULL) {
-	xkbbasedirflag = Xprintf("\"-R%s\"", XkbBaseDirectory);
+	if (asprintf(&xkbbasedirflag, "\"-R%s\"", XkbBaseDirectory) == -1)
+	    xkbbasedirflag = NULL;
     }
 
     if (XkbBinDirectory != NULL) {
@@ -225,14 +226,16 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 	}
     }
 
-    buf = Xprintf("\"%s%sxkbcomp\" -w %d %s -xkm \"%s\" "
+    if (asprintf(&buf,
+		 "\"%s%sxkbcomp\" -w %d %s -xkm \"%s\" "
 		  "-em1 %s -emp %s -eml %s \"%s%s.xkm\"",
-		  xkbbindir, xkbbindirsep,
-		  ( (xkbDebugFlags < 2) ? 1 :
-		    ((xkbDebugFlags > 10) ? 10 : (int)xkbDebugFlags) ),
-		  xkbbasedirflag ? xkbbasedirflag : "", xkmfile,
-		  PRE_ERROR_MSG, ERROR_PREFIX, POST_ERROR_MSG1,
-		  xkm_output_dir, keymap);
+		 xkbbindir, xkbbindirsep,
+		 ((xkbDebugFlags < 2) ? 1 :
+		  ((xkbDebugFlags > 10) ? 10 : (int) xkbDebugFlags)),
+		 xkbbasedirflag ? xkbbasedirflag : "", xkmfile,
+		 PRE_ERROR_MSG, ERROR_PREFIX, POST_ERROR_MSG1,
+		 xkm_output_dir, keymap) == -1)
+	buf = NULL;
 
     free(xkbbasedirflag);
 

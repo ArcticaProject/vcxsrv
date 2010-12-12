@@ -47,6 +47,11 @@
 #include "xace.h"
 #include "protocol-versions.h"
 
+#ifdef PANORAMIX
+#include "panoramiX.h"
+#include "panoramiXsrv.h"
+#endif
+
 #if HAVE_STDINT_H
 #include <stdint.h>
 #elif !defined(UINT32_MAX)
@@ -2651,9 +2656,6 @@ SProcRenderDispatch (ClientPtr client)
 }
 
 #ifdef PANORAMIX
-#include "panoramiX.h"
-#include "panoramiXsrv.h"
-
 #define VERIFY_XIN_PICTURE(pPicture, pid, client, mode) {\
     int rc = dixLookupResourceByType((pointer *)&(pPicture), pid,\
                                      XRT_PICTURE, client, mode);\
