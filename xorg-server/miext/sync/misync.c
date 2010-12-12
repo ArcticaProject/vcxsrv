@@ -167,7 +167,6 @@ SyncCloseScreen (int i, ScreenPtr pScreen)
     SyncScreenPrivPtr pScreenPriv = SYNC_SCREEN_PRIV(pScreen);
 
     pScreen->CloseScreen = pScreenPriv->CloseScreen;
-    free(pScreenPriv);
 
     return (*pScreen->CloseScreen) (i, pScreen);
 }
