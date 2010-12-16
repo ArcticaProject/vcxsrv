@@ -637,9 +637,6 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     if(sender == fake_buttons) {
         darwinFakeButtons = [fake_buttons intValue];
         [NSApp prefs_set_boolean:@PREFS_FAKEBUTTONS value:darwinFakeButtons];
-    } else if(sender == use_sysbeep) {
-        XQuartzUseSysBeep = [use_sysbeep intValue];
-        [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:XQuartzUseSysBeep];
     } else if(sender == enable_keyequivs) {
         XQuartzEnableKeyEquivalents =  [enable_keyequivs intValue];
         [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:XQuartzEnableKeyEquivalents];
@@ -701,7 +698,6 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     BOOL pbproxy_active = [NSApp prefs_get_boolean:@PREFS_SYNC_PB default:YES];
     
     [fake_buttons setIntValue:darwinFakeButtons];
-    [use_sysbeep setIntValue:XQuartzUseSysBeep];
     [enable_keyequivs setIntValue:XQuartzEnableKeyEquivalents];
     [sync_keymap setIntValue:darwinSyncKeymap];
     [option_sends_alt setIntValue:XQuartzOptionSendsAlt];

@@ -30,7 +30,6 @@ libXquartz_la_SOURCES = \
 	keysym2ucs.c \
 	pseudoramiX.c \
 	quartz.c \
-	quartzAudio.c \
 	quartzCocoa.m \
 	quartzKeyboard.c \
 	quartzStartup.c \
@@ -47,7 +46,6 @@ EXTRA_DIST = \
 	keysym2ucs.h \
 	pseudoramiX.h \
 	quartz.h \
-	quartzAudio.h \
 	quartzCommon.h \
 	quartzKeyboard.h \
 	quartzRandR.h \

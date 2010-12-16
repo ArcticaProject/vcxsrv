@@ -24,7 +24,6 @@ doc_sources = dmx.xml scaled.xml
 # Developer's documentation is not installed
 if ENABLE_DEVEL_DOCS
 include $(top_srcdir)/doc/xml/xmlrules-noinst.in
-endif
 
 if HAVE_DOXYGEN
 
@@ -40,6 +39,7 @@ html/annotated.html: $(DOXYGEN_SRC)
 maintainer-clean-local:
 	rm -rf html/
 endif
+endif ENABLE_DEVEL_DOCS
 
 EXTRA_DIST = \
 	$(XML_FILES) \

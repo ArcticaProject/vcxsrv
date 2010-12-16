@@ -77,7 +77,6 @@ void X11ApplicationMain(int argc, char **argv, char **envp);
 
 #define PREFS_APPSMENU              "apps_menu"
 #define PREFS_FAKEBUTTONS           "enable_fake_buttons"
-#define PREFS_SYSBEEP               "enable_system_beep"
 #define PREFS_KEYEQUIVS             "enable_key_equivalents"
 #define PREFS_FULLSCREEN_HOTKEYS    "fullscreen_hotkeys"
 #define PREFS_FULLSCREEN_MENU       "fullscreen_menu"

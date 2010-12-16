@@ -130,7 +130,7 @@ xf86CollectInputOptions(InputInfoPtr pInfo, const char **defaultOpts)
     if (defaultOpts) {
 	XF86OptionPtr tmp =xf86optionListCreate(defaultOpts, -1, 0);
 	if (pInfo->options)
-	    pInfo->options = xf86optionListMerge(pInfo->options, tmp);
+	    pInfo->options = xf86optionListMerge(tmp, pInfo->options);
 	else
 	    pInfo->options = tmp;
     }

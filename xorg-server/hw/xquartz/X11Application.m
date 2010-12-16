@@ -718,8 +718,6 @@ static NSMutableArray * cfarray_to_nsarray (CFArrayRef in) {
     NSString *nsstr;
     const char *tem;
 	
-    XQuartzUseSysBeep = [self prefs_get_boolean:@PREFS_SYSBEEP
-                                       default:XQuartzUseSysBeep];
     XQuartzRootlessDefault = [self prefs_get_boolean:@PREFS_ROOTLESS
                                            default:XQuartzRootlessDefault];
     XQuartzFullscreenMenu = [self prefs_get_boolean:@PREFS_FULLSCREEN_MENU

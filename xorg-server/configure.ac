@@ -581,9 +581,6 @@ AC_ARG_ENABLE(sparkle,AS_HELP_STRING([--enable-sparkle], [Enable updating of X11
 				[ XQUARTZ_SPARKLE="${enableval}" ],
 				[ XQUARTZ_SPARKLE="no" ])
 AC_SUBST([XQUARTZ_SPARKLE])
-AC_ARG_ENABLE(builddocs,      AS_HELP_STRING([--enable-builddocs], [Build docs (default: disabled)]),
-                                [BUILDDOCS=$enableval],
-                                [BUILDDOCS=no])
 AC_ARG_ENABLE(install-libxf86config,
 				AS_HELP_STRING([--enable-install-libxf86config],
 				[Install libxf86config (default: disabled)]),
@@ -709,8 +706,6 @@ if test "x$INT10" = xyes; then
 	AC_CHECK_HEADERS([sys/vm86.h sys/io.h])
 fi
 
-dnl Handle building documentation
-AM_CONDITIONAL(BUILDDOCS, test "x$BUILDDOCS" = xyes)
 XORG_ENABLE_DOCS
 XORG_ENABLE_DEVEL_DOCS
 XORG_WITH_XMLTO(0.0.20)
