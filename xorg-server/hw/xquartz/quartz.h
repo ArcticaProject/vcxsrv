@@ -123,7 +123,6 @@ extern Bool XQuartzIsRootless;       /* Is our current mode rootless (or FS)? */
 extern Bool XQuartzFullscreenMenu;   /* Show the menu bar (autohide) while in FS */
 extern Bool XQuartzFullscreenDisableHotkeys;
 extern Bool XQuartzOptionSendsAlt;   /* Alt or Mode_switch? */
-extern Bool XQuartzUseSysBeep;       /* Sys beep or our own? */
 
 Bool QuartzAddScreen(int index, ScreenPtr pScreen);
 Bool QuartzSetupScreen(int index, ScreenPtr pScreen);

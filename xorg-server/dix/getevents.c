@@ -767,7 +767,7 @@ moveRelative(DeviceIntPtr dev, int *x, int *y, ValuatorMask *mask)
     /* if attached, clip both x and y to the defined limits (usually
      * co-ord space limit). If it is attached, we need x/y to go over the
      * limits to be able to change screens. */
-    if(dev->u.master) {
+    if(dev->u.master && dev->valuator) {
         if (valuator_get_mode(dev, 0) == Absolute)
             clipAxis(dev, 0, x);
         if (valuator_get_mode(dev, 1) == Absolute)
@@ -830,7 +830,7 @@ positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
     int old_screenx, old_screeny;
 
     /* scale x&y to screen */
-    if (dev->valuator->numAxes > 0) {
+    if (dev->valuator && dev->valuator->numAxes > 0) {
         *screenx = rescaleValuatorAxis(*x, x_frac, screenx_frac,
                 dev->valuator->axes + 0, NULL, scr->width);
     } else {
@@ -838,7 +838,7 @@ positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
         *screenx_frac = dev->last.remainder[0];
     }
 
-    if (dev->valuator->numAxes > 1) {
+    if (dev->valuator && dev->valuator->numAxes > 1) {
         *screeny = rescaleValuatorAxis(*y, y_frac, screeny_frac,
                 dev->valuator->axes + 1, NULL, scr->height);
     } else {
@@ -872,18 +872,21 @@ positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
         dev->u.master->last.remainder[1] = *screeny_frac;
     }
 
-    /* Crossed screen? Scale back to device coordiantes */
-    if(*screenx != old_screenx)
+    if (dev->valuator)
     {
-        scr = miPointerGetScreen(dev);
-        *x = rescaleValuatorAxis(*screenx, *screenx_frac, &x_frac, NULL,
-                                dev->valuator->axes + 0, scr->width);
-    }
-    if(*screeny != old_screeny)
-    {
-        scr = miPointerGetScreen(dev);
-        *y = rescaleValuatorAxis(*screeny, *screeny_frac, &y_frac, NULL,
-                                 dev->valuator->axes + 1, scr->height);
+        /* Crossed screen? Scale back to device coordiantes */
+        if(*screenx != old_screenx)
+        {
+            scr = miPointerGetScreen(dev);
+            *x = rescaleValuatorAxis(*screenx, *screenx_frac, &x_frac, NULL,
+                                    dev->valuator->axes + 0, scr->width);
+        }
+        if(*screeny != old_screeny)
+        {
+            scr = miPointerGetScreen(dev);
+            *y = rescaleValuatorAxis(*screeny, *screeny_frac, &y_frac, NULL,
+                                     dev->valuator->axes + 1, scr->height);
+        }
     }
 
     /* dropy x/y (device coordinates) back into valuators for next event */
@@ -904,6 +907,9 @@ positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
 static void
 updateHistory(DeviceIntPtr dev, ValuatorMask *mask, CARD32 ms)
 {
+    if (!dev->valuator)
+        return;
+
     updateMotionHistory(dev, ms, mask, dev->last.valuators);
     if (dev->u.master)
     {
@@ -1104,17 +1110,25 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
     if (!pDev->enabled)
         return 0;
 
+    if (!scr)
+        return 0;
+
+    switch (type)
+    {
+        case MotionNotify:
+            if (!mask_in || valuator_mask_num_valuators(mask_in) <= 0)
+                return 0;
+            break;
+        case ButtonPress:
+        case ButtonRelease:
+            if (!pDev->button || !buttons)
+                return 0;
+            break;
+        default:
+            return 0;
+    }
+
     ms = GetTimeInMillis(); /* before pointer update to help precision */
-
-    if (!scr || !pDev->valuator ||
-        (type != MotionNotify && type != ButtonPress && type != ButtonRelease) ||
-        (type != MotionNotify && !pDev->button) ||
-        ((type == ButtonPress || type == ButtonRelease) && !buttons))
-        return 0;
-
-    if (type == MotionNotify &&
-        (!mask_in || valuator_mask_num_valuators(mask_in) <= 0))
-        return 0;
 
     events = UpdateFromMaster(events, pDev, DEVCHANGE_POINTER_EVENT, &num_events);
 

@@ -1,5 +1,5 @@
 noinst_LTLIBRARIES = libCGLCore.la
-AM_CFLAGS = $(DIX_CFLAGS)
+AM_CFLAGS = $(DIX_CFLAGS) $(GL_CFLAGS)
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/glx \

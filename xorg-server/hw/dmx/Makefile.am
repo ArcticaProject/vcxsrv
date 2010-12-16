@@ -1,6 +1,5 @@
-DIST_SUBDIRS = input config glxProxy examples doc
 
-SUBDIRS = input config examples
+SUBDIRS = input config examples doc
 bin_PROGRAMS = Xdmx
 
 if XINERAMA
@@ -13,10 +12,6 @@ GLX_LIBS = glxProxy/libglxproxy.a
 GLX_SRCS = $(PANORAMIX_SRCS) dmx_glxvisuals.c dmx_glxvisuals.h
 GLX_INCS = -I$(top_srcdir)/hw/xfree86/dixmods/extmod
 GLX_DEFS = @GL_CFLAGS@
-endif
-
-if BUILDDOCS
-SUBDIRS += doc
 endif
 
 AM_CFLAGS = \

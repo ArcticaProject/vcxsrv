@@ -40,7 +40,6 @@
 #include "X11Controller.h"
 #include "darwin.h"
 #include "darwinEvents.h"
-#include "quartzAudio.h"
 #include "quartz.h"
 #include "opaque.h"
 #include "micmap.h"
@@ -116,9 +115,6 @@ int server_main(int argc, char **argv, char **envp) {
             exit(0);
         }
     }
-
-    /* Create the audio mutex */
-    QuartzAudioInit();
 
     X11ControllerMain(argc, argv, envp);
     exit(0);

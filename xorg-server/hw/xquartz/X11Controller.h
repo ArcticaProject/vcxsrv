@@ -65,7 +65,6 @@ typedef unsigned int NSUInteger;
     IBOutlet NSButton *fake_buttons;
     IBOutlet NSButton *enable_fullscreen;
     IBOutlet NSButton *enable_fullscreen_menu;
-    IBOutlet NSButton *use_sysbeep;
     IBOutlet NSButton *enable_keyequivs;
     IBOutlet NSButton *sync_keymap;
     IBOutlet NSButton *option_sends_alt;

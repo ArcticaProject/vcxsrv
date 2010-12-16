@@ -80,7 +80,6 @@ Bool XQuartzRootlessDefault = TRUE;
 Bool XQuartzIsRootless = TRUE;
 Bool XQuartzServerVisible = FALSE;
 Bool XQuartzFullscreenMenu = FALSE;
-Bool XQuartzUseSysBeep = FALSE;
 
 /*
 ===========================================================================
@@ -445,4 +444,14 @@ void QuartzCopyDisplayIDs(ScreenPtr pScreen,
     pQuartzScreen->displayIDs = malloc(size);
     memcpy(pQuartzScreen->displayIDs, displayIDs, size);
     pQuartzScreen->displayCount = displayCount;
+}
+
+void NSBeep(void);
+void DDXRingBell(
+    int volume,         // volume is % of max
+    int pitch,          // pitch is Hz
+    int duration)       // duration is milliseconds
+{
+    if (volume)
+        NSBeep();
 }
