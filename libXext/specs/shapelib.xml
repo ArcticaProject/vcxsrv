@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
 <!-- lifted from troff+ms+XMan by doclifter -->
 <book id="shapelib">
@@ -504,8 +504,6 @@ region specified by kind.
 
 <glossary id='glossary'>
 
-<glossdiv>
-<title>Glossary</title>
 <glossentry id='bounding_region'>
   <glossterm>bounding region</glossterm>
   <glossdef><para>The area of the parent window that this window will occupy.
@@ -575,7 +573,5 @@ clip region (if any) and the client bounding region (if any).  Otherwise,
 the effective clip region is the same as the default clip region.</para>
   </glossdef>
 </glossentry>
-
-</glossdiv>
 </glossary>
 </book>

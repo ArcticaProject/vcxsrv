@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
 
 <!-- lifted from troff+ms+XMan by doclifter -->
-<book id="recordlib">
+<book id="synclib">
 
 <bookinfo>
    <title>X Synchronization Extension Library</title>
@@ -15,28 +15,30 @@
         <firstname>Tim</firstname><surname>Glauert</surname>
         <affiliation><orgname>Olivetti Research/MultiWorks</orgname></affiliation>
       </author>
-      <othercredit>
+      <author>
           <firstname>Dave</firstname>
           <surname>Carver</surname>
-          <affiliation><orgname>Digital EquipmentCorporation, MIT/Project Athena</orgname></affiliation>
-      </othercredit>
-      <othercredit>
+          <affiliation><orgname>Digital Equipment Corporation, MIT/Project Athena</orgname></affiliation>
+      </author>
+      <author>
         <firstname>Jim</firstname>
         <surname>Gettys</surname>
-        <affiliation><orgname>Digital EquipmentCorporation, Cambridge Research Laboratory</orgname></affiliation>
-      </othercredit>
-      <othercredit>
+        <affiliation><orgname>Digital Equipment Corporation, Cambridge Research Laboratory</orgname></affiliation>
+      </author>
+      <author>
         <firstname>David</firstname>
         <surname>Wiggins</surname>
         <affiliation><orgname>X Consortium, Inc.</orgname></affiliation>
-      </othercredit>
+      </author>
    </authorgroup>
-   <copyright><year>1991</year><holder>Olivetti Research Limited, Cambridge England and Digital Equipment Corporation, Maynard, Massachusetts</holder></copyright>
-   <copyright><year>1991</year><holder>X Consortium</holder></copyright>
    <releaseinfo>Version 3.0</releaseinfo>
    <affiliation><orgname>X Consortium</orgname></affiliation>
    <productnumber>X Version 11, Release 6.4</productnumber>
 <legalnotice>
+
+<para>
+Copyright 1991 by Olivetti Research Limited, Cambridge England and Digital Equipment Corporation, Maynard, Massachusetts
+</para>
 
 <para>
 Permission to use, copy, modify, and distribute this documentation for any
@@ -45,6 +47,13 @@ copyright notice appear in all copies. Olivetti, Digital, MIT, and the
 X Consortium make no representations about the suitability for any purpose
 of the information in this document. This documentation is provided as
 is without express or implied warranty.
+</para>
+</legalnotice>
+
+<legalnotice>
+
+<para>
+Copyright &copy; 1991 X Consortium, Inc.
 </para>
 
 <para>

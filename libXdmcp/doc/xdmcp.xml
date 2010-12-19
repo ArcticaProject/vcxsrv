@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!--
+   variable names used in equation markup in the authentication chapter
+   FIXME: Replace with mathml?
+  -->
+<!ENTITY variable.D	"<emphasis role='italic'>D</emphasis>">
+<!ENTITY variable.N	"<emphasis role='italic'>N</emphasis>">
+<!ENTITY variable.T	"<emphasis role='italic'>T</emphasis>">
+<!ENTITY variable.Delta	"<emphasis role='italic'>&Delta;</emphasis>">
+<!ENTITY variable.alpha	"<emphasis role='italic'>&alpha;</emphasis>">
+<!ENTITY variable.beta	"<emphasis role='italic'>&beta;</emphasis>">
+<!ENTITY variable.kappa "<emphasis role='italic'>&kappa;</emphasis>">
+<!ENTITY variable.rho	"<emphasis role='italic'>&rho;</emphasis>">
+<!ENTITY variable.sigma	"<emphasis role='italic'>&sigma;</emphasis>">
+<!ENTITY variable.tau	"<emphasis role='italic'>&tau;</emphasis>">
+]>
 
 <book id="xdmcp">
 
@@ -19,8 +34,8 @@ Massachusetts Institute of Technology
    </author>
    </authorgroup>
 
-   <copyright><year>1989</year><holder>The Open Group</holder></copyright>
-   <copyright><year>2004</year><holder>The Open Group</holder></copyright>
+   <copyright><year>1989</year><year>2004</year>
+     <holder>The Open Group</holder></copyright>
    <productnumber>X Version 11, Release 6.8</productnumber>
 
 <legalnotice>
@@ -59,9 +74,7 @@ in this Software without prior written authorization from The Open Group.
 </legalnotice>
 </bookinfo>
 
-<chapter id="TITLE">
-<title>TITLE</title>
-<sect1 id="Purpose_and_Goals">
+<chapter id="Purpose_and_Goals">
 <title>Purpose and Goals</title>
 <!-- .XS -->
 <!-- (SN Purpose and Goals -->
@@ -179,9 +192,9 @@ XDMCP must be flexible enough to accomodate a variety of security mechanisms.
     </para>
   </listitem>
 </itemizedlist>
-</sect1>
+</chapter>
 
-<sect1 id="Overview_of_the_Protocol">
+<chapter id="Overview_of_the_Protocol">
 <title>Overview of the Protocol</title>
 <!-- .XS -->
 <!-- (SN Overview of the Protocol -->
@@ -235,9 +248,9 @@ when the Manager has received (at least one copy of) a packet.  On the
 Manager side, this means that any packet may be received more than once (if
 the response was lost) and duplicates must be ignored.
 </para>
-</sect1>
+</chapter>
 
-<sect1 id="Data_Types">
+<chapter id="Data_Types">
 <title>Data Types</title>
 <!-- .XS -->
 <!-- (SN Data Types -->
@@ -315,9 +328,9 @@ number of ARRAY8 values to follow.
   </tbody>
   </tgroup>
 </informaltable>
-</sect1>
+</chapter>
 
-<sect1 id="Packet_Format">
+<chapter id="Packet_Format">
 <title>Packet Format</title>
 <!-- .XS -->
 <!-- (SN Packet Format -->
@@ -450,9 +463,9 @@ the Session ID should match the value sent in the preceding
     </para>
   </listitem>
 </orderedlist>
-</sect1>
+</chapter>
 
-<sect1 id="Protocol">
+<chapter id="Protocol">
 <title>Protocol</title>
 <!-- .XS -->
 <!-- (SN Protocol -->
@@ -2805,9 +2818,9 @@ determine the status of the manager.
   </tgroup>
 </informaltable>
 
-</sect1>
+</chapter>
 
-<sect1 id="Session_Termination">
+<chapter id="Session_Termination">
 <title>Session Termination</title>
 <para>
 When the session is over, the initial connection with the display (the one
@@ -2835,9 +2848,9 @@ should not be fixed between loading an otherwise idle system with spurious
 <function>KeepAlive</function>
 packets and not noticing that the manager host is down for a long time.
 </para>
-</sect1>
+</chapter>
 
-<sect1 id="State_Diagrams">
+<chapter id="State_Diagrams">
 <title>State Diagrams</title>
 <!-- .XS -->
 <!-- (SN State Diagrams -->
@@ -3355,9 +3368,9 @@ Send <function>Alive</function> packet containing current status
   </varlistentry>
 </variablelist>
 
-</sect1>
+</chapter>
 
-<sect1 id="Protocol_Encoding">
+<chapter id="Protocol_Encoding">
 <title>Protocol Encoding</title>
 <para>
 When XDMCP is implemented on top of the Internet User Datagram Protocol (UDP),
@@ -3617,9 +3630,9 @@ Note that these three packets are identical except for the opcode field.
      1     CARD8      Session Running (0: not running 1: running)
      4     CARD32     Session ID (0: not running)
 </literallayout>
-</sect1>
+</chapter>
 
-<sect1 id="Display_Class_Format">
+<chapter id="Display_Class_Format">
 <title>Display Class Format</title>
 <!-- .XS -->
 <!-- (SN Display Class Format -->
@@ -3652,9 +3665,9 @@ This string should be documented in the users manual for the
 particular device and  should probably not be specifiable by the
 display user to avoid unexpected configuration errors.
 </para>
-</sect1>
+</chapter>
 
-<sect1 id="Manufacturer_Display_ID_Format">
+<chapter id="Manufacturer_Display_ID_Format">
 <title>Manufacturer Display ID Format</title>
 <!-- .XS -->
 <!-- (SN Manufacturer Display ID Format -->
@@ -3699,9 +3712,9 @@ Manufacturer Display ID and the private key in the documentation set.
 This information should not be modifiable by the display user.
 </para>
 
-</sect1>
+</chapter>
 
-<sect1 id="Authentication">
+<chapter id="Authentication">
 <title>Authentication</title>
 <!-- .XS -->
 <!-- (SN Authentication -->
@@ -3761,37 +3774,37 @@ Some definitions first:
 <itemizedlist>
   <listitem>
     <para>
-{D}= encryption of plain text D by key κ
+{&variable.D;}<superscript>&variable.kappa;</superscript> = encryption of plain text D by key &variable.kappa;
     </para>
   </listitem>
   <listitem>
     <para>
-{&#x394;}*&#x3BA; = decryption of crypto text &#x394; with key &#x3BA;
+{&variable.Delta;}*<superscript>&variable.kappa;</superscript> = decryption of crypto text &variable.Delta; with key &variable.kappa;
     </para>
   </listitem>
   <listitem>
     <para>
-&tau; = private key shared by display and manager
+&variable.tau; = private key shared by display and manager
     </para>
   </listitem>
   <listitem>
     <para>
-&rho; = 64 bit random number generated by display
+&variable.rho; = 64 bit random number generated by display
     </para>
   </listitem>
   <listitem>
     <para>
-&alpha; = authentication data in XDMCP packets
+&variable.alpha; = authentication data in XDMCP packets
     </para>
   </listitem>
   <listitem>
     <para>
-&sigma; = per-session private key, generated by manager
+&variable.sigma; = per-session private key, generated by manager
     </para>
   </listitem>
   <listitem>
     <para>
-&beta; = authorization data
+&variable.beta; = authorization data
     </para>
   </listitem>
 </itemizedlist>
@@ -3802,7 +3815,7 @@ shorter than 64 bits will be zero-filled
 on the right to 64 bits.  Blocks longer than 64 bits will use block chaining:
 </para>
 <para>
-{D}&#x3BA; = {D1 }&#x3BA; {D2 xor {D1 }&#x3BA; }&#x3BA;
+{&variable.D;}<superscript>&variable.kappa;</superscript> = {&variable.D;<subscript>1</subscript>}<superscript>&variable.kappa;</superscript> {&variable.D;<subscript>2</subscript> xor {&variable.D;<subscript>1</subscript>}<superscript>&variable.kappa;</superscript>}<superscript>&variable.kappa;</superscript>
 </para>
 
 <para>
@@ -3812,23 +3825,22 @@ packet:
 </para>
 
 <para>
-&#945;Request = {&#961;}τ
-
+&variable.alpha;<subscript>Request</subscript> = {&variable.rho;}<superscript>&variable.tau;</superscript>
 </para>
 
 <para>
 For the <function>Accept</function>
 packet, the manager decrypts the initial message and returns
-αAccept:
+&variable.alpha;<subscript>Accept</subscript>:
 
 </para>
 
 <para>
-&rho; = {&alpha; Request } *&tau;
+&variable.rho; = {&variable.alpha;<subscript>Request</subscript>}*<superscript>&variable.tau;</superscript>
 </para>
 
 <para>
-&alpha; Accept = { &rho; + 1}&tau;
+&variable.alpha;<subscript>Accept</subscript> = { &variable.rho; + 1}<superscript>&variable.tau;</superscript>
 </para>
 
 <para>
@@ -3844,7 +3856,7 @@ packet contains the authorization name
 "XDM-AUTHORIZATION-1".  The authorization data is the string:
 </para>
 <para>
-β Accept = {σ}τ
+&variable.beta;<subscript>Accept</subscript> = {&variable.sigma;}<superscript>&variable.tau;</superscript>
 </para>
 
 <para>
@@ -3853,20 +3865,20 @@ using the XDM-AUTHORIZATION-1 authorization protocol, the client computes the
 following:
 </para>
 <para>
-N mark = "X client identifier"
+&variable.N; = X client identifier
 </para>
 <para>
-T lineup = "Current time in seconds on client host (32 bits)"
+&variable.T; = Current time in seconds on client host (32 bits)
 </para>
 <para>
-β = {ρNT}σ
+&variable.beta; = {&variable.rho;&variable.N;&variable.T;}<superscript>&variable.sigma;</superscript>
 </para>
 
 <para>
-For TCP connections @N@ is 48 bits long and contains the 32-bit IPv4 address of
+For TCP connections &variable.N; is 48 bits long and contains the 32-bit IPv4 address of
 the client host followed by the 16-bit port number of the client socket.
 Formats for other connections must be registered.
-The resulting value, β, is 192 bits of authorization data that is sent
+The resulting value, &variable.beta;, is 192 bits of authorization data that is sent
 in the connection setup to the server.  The server receives the packet,
 decrypts the contents.  To accept the connection, the following must hold:
 </para>
@@ -3874,22 +3886,21 @@ decrypts the contents.  To accept the connection, the following must hold:
 <itemizedlist>
   <listitem>
     <para>
-ρ must match the value generated for the most recent XDMCP negotiation.
+&variable.rho; must match the value generated for the most recent XDMCP negotiation.
     </para>
   </listitem>
   <listitem>
     <para>
-T must be within 1200 seconds of the internally stored time.  If no time
-been received before, the current time is set to @T@.
+&variable.T; must be within 1200 seconds of the internally stored time.  If no time
+been received before, the current time is set to &variable.T;.
     </para>
   </listitem>
   <listitem>
     <para>
-No packet containing the same pair (N, T) can have been received
+No packet containing the same pair (&variable.N;, &variable.T;) can have been received
 in the last 1200 seconds (20 minutes).
     </para>
   </listitem>
 </itemizedlist>
-</sect1>
 </chapter>
 </book>

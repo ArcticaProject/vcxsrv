@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "pixman-private.h" /* For 'inline' definition */
 
+#define ARRAY_LENGTH(A) ((int) (sizeof (A) / sizeof ((A) [0])))
+
 /* A primitive pseudorandom number generator,
  * taken from POSIX.1-2001 example
  */
@@ -39,6 +41,15 @@ lcg_rand_N (int max)
     return (lo | hi) % max;
 }
 
+static inline uint32_t
+lcg_rand_u32 (void)
+{
+    uint32_t lo = lcg_rand();
+    uint32_t hi = lcg_rand();
+
+    return (hi << 16) | lo;
+}
+
 /* CRC 32 computation
  */
 uint32_t
@@ -55,7 +66,7 @@ image_endian_swap (pixman_image_t *img, int bpp);
  * so that out-of-bounds access will cause segfaults
  */
 void *
-fence_malloc (uint32_t len);
+fence_malloc (int64_t len);
 
 void
 fence_free (void *data);
@@ -79,6 +90,9 @@ fuzzer_test_main (const char *test_name,
 
 void
 fail_after (int seconds, const char *msg);
+
+/* If possible, enable traps for floating point exceptions */
+void enable_fp_exceptions(void);
 
 /* A pair of macros which can help to detect corruption of
  * floating point registers after a function call. This may
@@ -118,3 +132,6 @@ fail_after (int seconds, const char *msg);
 /* Try to get an aligned memory chunk */
 void *
 aligned_malloc (size_t align, size_t size);
+
+void
+initialize_palette (pixman_indexed_t *palette, uint32_t depth, int is_rgb);
