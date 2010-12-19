@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
 
-<book id="xtest1">
+<article id="xtest1">
 
-<bookinfo>
+<articleinfo>
    <title>X11 INPUT SYNTHESIS EXTENSION PROPOSAL</title>
    <subtitle>X Consortium Standard</subtitle>
    <releaseinfo>Version 1.0</releaseinfo>
    <authorgroup>
       <author>
          <firstname>Larry</firstname><surname>Woestman</surname>
-         <affiliation><orgname>Hewlett Packard, Member of Technical Staff</orgname></affiliation>
+         <affiliation><jobtitle>Member of Technical Staff</jobtitle>
+	   <orgname>Hewlett Packard</orgname></affiliation>
       </author>
    </authorgroup>
    <corpname>X Consortium Standard</corpname>
@@ -26,10 +27,8 @@ This is a proposal for an extension to the X11 server and Xlib.
 </para>
 </abstract>
 
-</bookinfo>
+</articleinfo>
 
-<chapter>
-<title>TITLE</title>
 <sect1 id="introduction">
 <title>Introduction</title>
 <para>
@@ -950,5 +949,4 @@ function will return -1 if there is an error, and 0 otherwise.
 <!-- .H 1 'xtestext1.h'~File~Listing -->
 <!-- .so xtestext1.h -->
 <!-- .TC 1 1 4 -->
-</chapter>
-</book>
+</article>

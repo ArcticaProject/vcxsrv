@@ -639,6 +639,14 @@ if test x$have_getpagesize = xyes; then
    AC_DEFINE(HAVE_GETPAGESIZE, 1, [Whether we have getpagesize()])
 fi
 
+AC_CHECK_HEADER([fenv.h],
+   [AC_DEFINE(HAVE_FENV_H, [1], [Define to 1 if we have <fenv.h>])])
+
+AC_CHECK_LIB(m, feenableexcept, have_feenableexcept=yes, have_feenableexcept=no)
+if test x$have_feenableexcept = xyes; then
+   AC_DEFINE(HAVE_FEENABLEEXCEPT, 1, [Whether we have feenableexcept()])
+fi
+
 AC_CHECK_FUNC(gettimeofday, have_gettimeofday=yes, have_gettimeofday=no)
 AC_CHECK_HEADER(sys/time.h, have_sys_time_h=yes, have_sys_time_h=no)
 if test x$have_gettimeofday = xyes && test x$have_sys_time_h = xyes; then

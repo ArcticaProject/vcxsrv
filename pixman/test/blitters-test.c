@@ -400,59 +400,6 @@ test_composite (int testnum, int verbose)
     return crc32;
 }
 
-#define CONVERT_15(c, is_rgb)						\
-    (is_rgb?								\
-     ((((c) >> 3) & 0x001f) |						\
-      (((c) >> 6) & 0x03e0) |						\
-      (((c) >> 9) & 0x7c00)) :						\
-     (((((c) >> 16) & 0xff) * 153 +					\
-       (((c) >>  8) & 0xff) * 301 +					\
-       (((c)      ) & 0xff) * 58) >> 2))
-
-static void
-initialize_palette (pixman_indexed_t *palette, uint32_t mask, int is_rgb)
-{
-    int i;
-
-    for (i = 0; i < 32768; ++i)
-	palette->ent[i] = lcg_rand() & mask;
-
-    for (i = 0; i < mask + 1; ++i)
-    {
-	uint32_t rgba24;
- 	pixman_bool_t retry;
-	uint32_t i15;
-
-	/* We filled the rgb->index map with random numbers, but we
-	 * do need the ability to round trip, that is if some indexed
-	 * color expands to an argb24, then the 15 bit version of that
-	 * color must map back to the index. Anything else, we don't
-	 * care about too much.
-	 */
-	do
-	{
-	    uint32_t old_idx;
-	    
-	    rgba24 = lcg_rand();
-	    i15 = CONVERT_15 (rgba24, is_rgb);
-
-	    old_idx = palette->ent[i15];
-	    if (CONVERT_15 (palette->rgba[old_idx], is_rgb) == i15)
-		retry = 1;
-	    else
-		retry = 0;
-	} while (retry);
-	
-	palette->rgba[i] = rgba24;
-	palette->ent[i15] = i;
-    }
-
-    for (i = 0; i < mask + 1; ++i)
-    {
-	assert (palette->ent[CONVERT_15 (palette->rgba[i], is_rgb)] == i);
-    }
-}
-
 int
 main (int argc, const char *argv[])
 {
@@ -460,8 +407,8 @@ main (int argc, const char *argv[])
 
     for (i = 1; i <= 8; i++)
     {
-	initialize_palette (&(rgb_palette[i]), (1 << i) - 1, TRUE);
-	initialize_palette (&(y_palette[i]), (1 << i) - 1, FALSE);
+	initialize_palette (&(rgb_palette[i]), i, TRUE);
+	initialize_palette (&(y_palette[i]), i, FALSE);
     }
 
     return fuzzer_test_main("blitters", 2000000,

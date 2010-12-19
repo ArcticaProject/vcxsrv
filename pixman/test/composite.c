@@ -31,10 +31,6 @@
 #include <time.h>
 #include "utils.h"
 
-#define ARRAY_LENGTH(A) ((int) (sizeof (A) / sizeof ((A) [0])))
-#define min(a,b) ((a) <= (b) ? (a) : (b))
-#define max(a,b) ((a) >= (b) ? (a) : (b))
-
 typedef struct color_t color_t;
 typedef struct format_t format_t;
 typedef struct image_t image_t;
@@ -211,7 +207,7 @@ static const operator_t operators[] =
 static double
 calc_op (pixman_op_t op, double src, double dst, double srca, double dsta)
 {
-#define mult_chan(src, dst, Fa, Fb) min ((src) * (Fa) + (dst) * (Fb), 1.0)
+#define mult_chan(src, dst, Fa, Fb) MIN ((src) * (Fa) + (dst) * (Fb), 1.0)
 
     double Fa, Fb;
 
@@ -267,150 +263,150 @@ calc_op (pixman_op_t op, double src, double dst, double srca, double dsta)
 	if (srca == 0.0)
 	    Fa = 1.0;
 	else
-	    Fa = min (1.0, (1.0 - dsta) / srca);
+	    Fa = MIN (1.0, (1.0 - dsta) / srca);
 	return mult_chan (src, dst, Fa, 1.0);
 
     case PIXMAN_OP_DISJOINT_OVER:
 	if (dsta == 0.0)
 	    Fb = 1.0;
 	else
-	    Fb = min (1.0, (1.0 - srca) / dsta);
+	    Fb = MIN (1.0, (1.0 - srca) / dsta);
 	return mult_chan (src, dst, 1.0, Fb);
 
     case PIXMAN_OP_DISJOINT_IN:
 	if (srca == 0.0)
 	    Fa = 0.0;
 	else
-	    Fa = max (0.0, 1.0 - (1.0 - dsta) / srca);
+	    Fa = MAX (0.0, 1.0 - (1.0 - dsta) / srca);
 	return mult_chan (src, dst, Fa, 0.0);
 
     case PIXMAN_OP_DISJOINT_IN_REVERSE:
 	if (dsta == 0.0)
 	    Fb = 0.0;
 	else
-	    Fb = max (0.0, 1.0 - (1.0 - srca) / dsta);
+	    Fb = MAX (0.0, 1.0 - (1.0 - srca) / dsta);
 	return mult_chan (src, dst, 0.0, Fb);
 
     case PIXMAN_OP_DISJOINT_OUT:
 	if (srca == 0.0)
 	    Fa = 1.0;
 	else
-	    Fa = min (1.0, (1.0 - dsta) / srca);
+	    Fa = MIN (1.0, (1.0 - dsta) / srca);
 	return mult_chan (src, dst, Fa, 0.0);
 
     case PIXMAN_OP_DISJOINT_OUT_REVERSE:
 	if (dsta == 0.0)
 	    Fb = 1.0;
 	else
-	    Fb = min (1.0, (1.0 - srca) / dsta);
+	    Fb = MIN (1.0, (1.0 - srca) / dsta);
 	return mult_chan (src, dst, 0.0, Fb);
 
     case PIXMAN_OP_DISJOINT_ATOP:
 	if (srca == 0.0)
 	    Fa = 0.0;
 	else
-	    Fa = max (0.0, 1.0 - (1.0 - dsta) / srca);
+	    Fa = MAX (0.0, 1.0 - (1.0 - dsta) / srca);
 	if (dsta == 0.0)
 	    Fb = 1.0;
 	else
-	    Fb = min (1.0, (1.0 - srca) / dsta);
+	    Fb = MIN (1.0, (1.0 - srca) / dsta);
 	return mult_chan (src, dst, Fa, Fb);
 
     case PIXMAN_OP_DISJOINT_ATOP_REVERSE:
 	if (srca == 0.0)
 	    Fa = 1.0;
 	else
-	    Fa = min (1.0, (1.0 - dsta) / srca);
+	    Fa = MIN (1.0, (1.0 - dsta) / srca);
 	if (dsta == 0.0)
 	    Fb = 0.0;
 	else
-	    Fb = max (0.0, 1.0 - (1.0 - srca) / dsta);
+	    Fb = MAX (0.0, 1.0 - (1.0 - srca) / dsta);
 	return mult_chan (src, dst, Fa, Fb);
 
     case PIXMAN_OP_DISJOINT_XOR:
 	if (srca == 0.0)
 	    Fa = 1.0;
 	else
-	    Fa = min (1.0, (1.0 - dsta) / srca);
+	    Fa = MIN (1.0, (1.0 - dsta) / srca);
 	if (dsta == 0.0)
 	    Fb = 1.0;
 	else
-	    Fb = min (1.0, (1.0 - srca) / dsta);
+	    Fb = MIN (1.0, (1.0 - srca) / dsta);
 	return mult_chan (src, dst, Fa, Fb);
 
     case PIXMAN_OP_CONJOINT_OVER:
 	if (dsta == 0.0)
 	    Fb = 0.0;
 	else
-	    Fb = max (0.0, 1.0 - srca / dsta);
+	    Fb = MAX (0.0, 1.0 - srca / dsta);
 	return mult_chan (src, dst, 1.0, Fb);
 
     case PIXMAN_OP_CONJOINT_OVER_REVERSE:
 	if (srca == 0.0)
 	    Fa = 0.0;
 	else
-	    Fa = max (0.0, 1.0 - dsta / srca);
+	    Fa = MAX (0.0, 1.0 - dsta / srca);
 	return mult_chan (src, dst, Fa, 1.0);
 
     case PIXMAN_OP_CONJOINT_IN:
 	if (srca == 0.0)
 	    Fa = 1.0;
 	else
-	    Fa = min (1.0, dsta / srca);
+	    Fa = MIN (1.0, dsta / srca);
 	return mult_chan (src, dst, Fa, 0.0);
 
     case PIXMAN_OP_CONJOINT_IN_REVERSE:
 	if (dsta == 0.0)
 	    Fb = 1.0;
 	else
-	    Fb = min (1.0, srca / dsta);
+	    Fb = MIN (1.0, srca / dsta);
 	return mult_chan (src, dst, 0.0, Fb);
 
     case PIXMAN_OP_CONJOINT_OUT:
 	if (srca == 0.0)
 	    Fa = 0.0;
 	else
-	    Fa = max (0.0, 1.0 - dsta / srca);
+	    Fa = MAX (0.0, 1.0 - dsta / srca);
 	return mult_chan (src, dst, Fa, 0.0);
 
     case PIXMAN_OP_CONJOINT_OUT_REVERSE:
 	if (dsta == 0.0)
 	    Fb = 0.0;
 	else
-	    Fb = max (0.0, 1.0 - srca / dsta);
+	    Fb = MAX (0.0, 1.0 - srca / dsta);
 	return mult_chan (src, dst, 0.0, Fb);
 
     case PIXMAN_OP_CONJOINT_ATOP:
 	if (srca == 0.0)
 	    Fa = 1.0;
 	else
-	    Fa = min (1.0, dsta / srca);
+	    Fa = MIN (1.0, dsta / srca);
 	if (dsta == 0.0)
 	    Fb = 0.0;
 	else
-	    Fb = max (0.0, 1.0 - srca / dsta);
+	    Fb = MAX (0.0, 1.0 - srca / dsta);
 	return mult_chan (src, dst, Fa, Fb);
 
     case PIXMAN_OP_CONJOINT_ATOP_REVERSE:
 	if (srca == 0.0)
 	    Fa = 0.0;
 	else
-	    Fa = max (0.0, 1.0 - dsta / srca);
+	    Fa = MAX (0.0, 1.0 - dsta / srca);
 	if (dsta == 0.0)
 	    Fb = 1.0;
 	else
-	    Fb = min (1.0, srca / dsta);
+	    Fb = MIN (1.0, srca / dsta);
 	return mult_chan (src, dst, Fa, Fb);
 
     case PIXMAN_OP_CONJOINT_XOR:
 	if (srca == 0.0)
 	    Fa = 0.0;
 	else
-	    Fa = max (0.0, 1.0 - dsta / srca);
+	    Fa = MAX (0.0, 1.0 - dsta / srca);
 	if (dsta == 0.0)
 	    Fb = 0.0;
 	else
-	    Fb = max (0.0, 1.0 - srca / dsta);
+	    Fb = MAX (0.0, 1.0 - srca / dsta);
 	return mult_chan (src, dst, Fa, Fb);
 
     case PIXMAN_OP_MULTIPLY:
@@ -617,7 +613,7 @@ eval_diff (color_t *expected, color_t *test, pixman_format_code_t format)
     gdiff = fabs (test->b - expected->b) * bscale;
     adiff = fabs (test->a - expected->a) * ascale;
 
-    return max (max (max (rdiff, gdiff), bdiff), adiff);
+    return MAX (MAX (MAX (rdiff, gdiff), bdiff), adiff);
 }
 
 static char *
