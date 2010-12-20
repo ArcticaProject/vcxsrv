@@ -108,7 +108,7 @@ Xvasprintf(char **ret, const char * _X_RESTRICT_KYWD format, va_list va)
         return -1;
 
     vsnprintf(*ret, size + 1, format, va);
-    ret[size] = 0;
+    (*ret)[size] = 0;
     return size;
 #endif
 }

@@ -939,6 +939,18 @@ ProcRRSetScreenConfig (ClientPtr client)
 	width = mode->mode.height;
 	height = mode->mode.width;
     }
+
+    if (width < pScrPriv->minWidth || pScrPriv->maxWidth < width) {
+	client->errorValue = width;
+	free(pData);
+	return BadValue;
+    }
+    if (height < pScrPriv->minHeight || pScrPriv->maxHeight < height) {
+	client->errorValue = height;
+	free(pData);
+	return BadValue;
+    }
+
     if (width != pScreen->width || height != pScreen->height)
     {
 	int	c;
