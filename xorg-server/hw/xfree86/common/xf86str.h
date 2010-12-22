@@ -581,13 +581,6 @@ typedef struct _entityInfo {
     DriverPtr driver;
 } EntityInfoRec, *EntityInfoPtr;
 
-/* server states */
-
-typedef enum {
-    SETUP,
-    OPERATING
-} xf86State;
-
 /* DGA */
 
 typedef struct {

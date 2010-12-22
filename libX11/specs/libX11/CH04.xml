@@ -1054,7 +1054,7 @@ To return an atom for a given name, use
 <funcprototype>
   <funcdef>Atom <function>XInternAtom</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
-  <paramdef>const char<parameter> *atom_name</parameter></paramdef>
+  <paramdef>char<parameter> *atom_name</parameter></paramdef>
   <paramdef>Bool<parameter> only_if_exists</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
@@ -1136,7 +1136,7 @@ To return atoms for an array of names, use
 <funcprototype>
   <funcdef>Status <function>XInternAtoms</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
-  <paramdef>const char<parameter> **names</parameter></paramdef>
+  <paramdef>char<parameter> **names</parameter></paramdef>
   <paramdef>int<parameter> count</parameter></paramdef>
   <paramdef>Bool<parameter> only_if_exists</parameter></paramdef>
   <paramdef>Atom<parameter> *atoms_return</parameter></paramdef>

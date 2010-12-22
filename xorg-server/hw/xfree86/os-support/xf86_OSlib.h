@@ -85,22 +85,11 @@
 /**************************************************************************/
 #if (defined(SYSV) || defined(SVR4)) && \
     (defined(sun) || defined(__i386__))
-# ifdef SCO325
-#  ifndef _SVID3
-#   define _SVID3
-#  endif
-#  ifndef _NO_STATIC
-#   define _NO_STATIC
-#  endif
-# endif
 # include <sys/ioctl.h>
 # include <signal.h>
 # include <termio.h>
 # include <sys/stat.h>
 # include <sys/types.h>
-# if defined(__SCO__) 
-# include <sys/param.h>
-# endif
 
 
 # include <errno.h>
@@ -140,15 +129,7 @@
 # if !defined(sun)
 #  include <sys/emap.h>
 # endif
-# if defined(SCO325)
-#  include <sys/vtkd.h>
-#  include <sys/console.h>
-#  include <sys/scankbd.h>
-#  include <sys/vid.h>
-#  define LED_CAP CLKED
-#  define LED_NUM NLKED
-#  define LED_SCR SLKED
-# elif defined(HAS_USL_VTS)
+# if   defined(HAS_USL_VTS)
 #  if !defined(sun)
 #   include <sys/at_ansi.h>
 #  endif
@@ -177,19 +158,11 @@
 #  define VT_ACKACQ 2
 # endif /* !VT_ACKACQ */
 
-# if defined(__SCO__)
-#  include <sys/sysmacros.h>
-#  define POSIX_TTY
-# endif /* __SCO__ */
 
-# if defined(SVR4) || defined(SCO325)
+# if defined(SVR4) 
 #  include <sys/mman.h>
 #  if !(defined(sun) && defined (SVR4))
 #    define DEV_MEM "/dev/pmem"
-#  endif
-#  ifdef SCO325
-#   undef DEV_MEM
-#   define DEV_MEM "/dev/mem"
 #  endif
 #  define CLEARDTR_SUPPORT
 #  define POSIX_TTY

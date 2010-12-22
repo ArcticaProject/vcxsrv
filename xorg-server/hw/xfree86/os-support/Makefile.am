@@ -1,5 +1,5 @@
 SUBDIRS = bus @XORG_OS_SUBDIR@ misc $(DRI_SUBDIRS)
-DIST_SUBDIRS = bsd bus misc linux solaris sco hurd
+DIST_SUBDIRS = bsd bus misc linux solaris hurd
 
 sdk_HEADERS = xf86_OSproc.h xf86_OSlib.h
 

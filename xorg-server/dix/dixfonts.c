@@ -667,7 +667,7 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
 		    ((pointer) c->client, fpe, &name, &namelen, &tmpname,
 		     &resolvedlen, c->current.private);
 		if (err == Suspended) {
-		    if (ClientIsAsleep(client))
+		    if (!ClientIsAsleep(client))
 			ClientSleep(client,
 				    (ClientSleepProcPtr)doListFontsAndAliases,
 				    c);

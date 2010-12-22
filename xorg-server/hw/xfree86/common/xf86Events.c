@@ -414,7 +414,8 @@ xf86ReleaseKeys(DeviceIntPtr pDev)
 static void
 xf86VTSwitch(void)
 {
-  int i, prevSIGIO;
+  int i;
+  static int prevSIGIO;
   InputInfoPtr pInfo;
   IHPtr ih;
 
@@ -456,7 +457,8 @@ xf86VTSwitch(void)
           DisableDevice(pInfo->dev, TRUE);
       }
     }
-    xf86EnterServerState(SETUP);
+
+    prevSIGIO = xf86BlockSIGIO();
     for (i = 0; i < xf86NumScreens; i++)
 	xf86Screens[i]->LeaveVT(i, 0);
 
@@ -468,14 +470,11 @@ xf86VTSwitch(void)
        */
 
       DebugF("xf86VTSwitch: Leave failed\n");
-      prevSIGIO = xf86BlockSIGIO();
       xf86AccessEnter();
-      xf86EnterServerState(SETUP);
       for (i = 0; i < xf86NumScreens; i++) {
 	if (!xf86Screens[i]->EnterVT(i, 0))
 	  FatalError("EnterVT failed for screen %d\n", i);
       }
-      xf86EnterServerState(OPERATING);
       if (!(dispatchException & DE_TERMINATE)) {
 	for (i = 0; i < xf86NumScreens; i++) {
 	  if (xf86Screens[i]->EnableDisableFBAccess)
@@ -513,11 +512,9 @@ xf86VTSwitch(void)
 	    xf86DisableIO();
     }
   } else {
-
     DebugF("xf86VTSwitch: Entering\n");
     if (!xf86VTSwitchTo()) return;
 
-    prevSIGIO = xf86BlockSIGIO();
 #ifdef XF86PM
     xf86OSPMClose = xf86OSPMOpen();
 #endif
@@ -525,13 +522,11 @@ xf86VTSwitch(void)
     if (xorgHWAccess)
 	xf86EnableIO();
     xf86AccessEnter();
-    xf86EnterServerState(SETUP);
     for (i = 0; i < xf86NumScreens; i++) {
       xf86Screens[i]->vtSema = TRUE;
       if (!xf86Screens[i]->EnterVT(i, 0))
 	  FatalError("EnterVT failed for screen %d\n", i);
     }
-    xf86EnterServerState(OPERATING);
     for (i = 0; i < xf86NumScreens; i++) {
       if (xf86Screens[i]->EnableDisableFBAccess)
 	(*xf86Screens[i]->EnableDisableFBAccess)(i, TRUE);

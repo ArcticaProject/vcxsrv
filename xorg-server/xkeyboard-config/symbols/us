@@ -1129,9 +1129,9 @@ xkb_symbols "chr" {
 // Serbian charecters added as third level symbols to US keyboard layout.
 
 partial alphanumeric_keys
-xkb_symbols "srp" {
+xkb_symbols "hbs" {
 
-  name[Group1]= "USA - Serbian";
+  name[Group1]= "USA - Serbo-Croatian";
 
   include "us"
 
@@ -1142,8 +1142,10 @@ xkb_symbols "srp" {
   key <AB01> { [ z, Z, U1C6, U1C5 ] };
   key <AD03> { [ e, E, EuroSign, cent ] };
   key <AC03> { [ d, D, dstroke, Dstroke ] };
-  key <AC11> { [ dead_acute, quotedbl, apostrophe, U315 ] };
+  key <AC11> { [ dead_acute, quotedbl, apostrophe, apostrophe ] };
   key <SPCE> { [ space, space, nobreakspace, nobreakspace ] };
+  key <AB08> { [ comma, less, NoSymbol, guillemotright ] };
+  key <AB09> { [ period, greater, NoSymbol, guillemotleft ] };
 
   include "level3(ralt_switch)"
 };

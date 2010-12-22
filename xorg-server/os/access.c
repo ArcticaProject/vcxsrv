@@ -102,9 +102,9 @@ SOFTWARE.
 #include <sys/ioctl.h>
 #include <ctype.h>
 
-#if defined(TCPCONN) || defined(STREAMSCONN) || defined(__SCO__)
+#if defined(TCPCONN) || defined(STREAMSCONN) 
 #include <netinet/in.h>
-#endif /* TCPCONN || STREAMSCONN || __SCO__ */
+#endif /* TCPCONN || STREAMSCONN */
 
 #ifdef HAS_GETPEERUCRED
 # include <ucred.h>
@@ -176,10 +176,6 @@ SOFTWARE.
 #endif
 #endif 
 
-#ifdef __SCO__
-/* The system defined value is wrong. MAXPATHLEN is set in sco5.cf. */
-#undef PATH_MAX
-#endif
 
 #define X_INCLUDE_NETDB_H
 #include <X11/Xos_r.h>
@@ -297,7 +293,7 @@ AccessUsingXdmcp (void)
 }
 
 
-#if  defined(SVR4) && !defined(SCO325) && !defined(sun)  && defined(SIOCGIFCONF) && !defined(USE_SIOCGLIFCONF)
+#if  defined(SVR4) && !defined(sun)  && defined(SIOCGIFCONF) && !defined(USE_SIOCGLIFCONF)
 
 /* Deal with different SIOCGIFCONF ioctl semantics on these OSs */
 
@@ -327,7 +323,7 @@ ifioctl (int fd, int cmd, char *arg)
 #endif
     return ret;
 }
-#else /* Case sun, SCO325 and others  */
+#else
 #define ifioctl ioctl
 #endif
 

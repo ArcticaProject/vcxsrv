@@ -194,5 +194,4 @@ Bool xf86VidModeDisabled = FALSE;
 Bool xf86VidModeAllowNonLocal = FALSE;
 #endif
 RootWinPropPtr *xf86RegisteredPropertiesTable = NULL;
-Bool xf86inSuspend = FALSE;
 Bool xorgHWAccess = FALSE;
