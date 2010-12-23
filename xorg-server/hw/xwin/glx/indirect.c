@@ -1236,7 +1236,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
         // get the best available match of pixel format for the device context   
         iPixelFormat = ChoosePixelFormat(hdc, &pfd); 
          
-        ErrorF("Setting pixel format 2 to  %d on hdc %x\n",iPixelFormat,hdc);
+        ErrorF("Setting pixel format 4 to  %d on hdc %x\n",iPixelFormat,hdc);
         // make that the pixel format of the device context  
         if (!SetPixelFormat(hdc, iPixelFormat, &pfd))
           {
@@ -1751,6 +1751,17 @@ glxWinCreateContext(__GLXscreen *screen,
  * Utility functions
  */
 
+static int GetShift(int Mask)
+{
+  int Shift=0;
+  while ((Mask&1)==0)
+  {
+    Shift++;
+    Mask>>=1;
+  }
+  return Shift;
+}
+
 static int
 fbConfigToPixelFormat(__GLXconfig *mode, PIXELFORMATDESCRIPTOR *pfdret, int drawableTypeOverride)
 {
@@ -1786,16 +1797,26 @@ fbConfigToPixelFormat(__GLXconfig *mode, PIXELFORMATDESCRIPTOR *pfdret, int draw
         pfd.dwFlags |= PFD_DOUBLEBUFFER;
     }
 
-    pfd.iPixelType = PFD_TYPE_RGBA;
     pfd.cColorBits = mode->redBits + mode->greenBits + mode->blueBits;
     pfd.cRedBits = mode->redBits;
-    pfd.cRedShift = 0; /* FIXME */
+    pfd.cRedShift = GetShift(mode->redMask);
     pfd.cGreenBits = mode->greenBits;
-    pfd.cGreenShift = 0; /* FIXME  */
+    pfd.cGreenShift = GetShift(mode->greenMask);
     pfd.cBlueBits = mode->blueBits;
-    pfd.cBlueShift = 0; /* FIXME */
+    pfd.cBlueShift = GetShift(mode->blueMask);
     pfd.cAlphaBits = mode->alphaBits;
-    pfd.cAlphaShift = 0; /* FIXME */
+    pfd.cAlphaShift = GetShift(mode->alphaMask);
+
+    if (mode->visualType = GLX_TRUE_COLOR)
+    {
+      pfd.iPixelType = PFD_TYPE_RGBA;
+      pfd.dwVisibleMask = (pfd.cRedBits << pfd.cRedShift) | (pfd.cGreenBits << pfd.cGreenShift) | (pfd.cBlueBits << pfd.cBlueShift) | (pfd.cAlphaBits << pfd.cAlphaShift);
+    }
+    else
+    {
+      pfd.iPixelType = PFD_TYPE_COLORINDEX;
+      pfd.dwVisibleMask = mode->transparentIndex;
+    }
 
     pfd.cAccumBits = mode->accumRedBits + mode->accumGreenBits + mode->accumBlueBits + mode->accumAlphaBits;
     pfd.cAccumRedBits = mode->accumRedBits;
