@@ -126,9 +126,15 @@ warn(void)
 
 #define F NULL
 
-#define DISPATCH(func, args, msg) 
+#ifdef _DEBUG
+#define DISPATCH(func, args, msg) ErrorF msg 
+
+#define RETURN_DISPATCH(func, args, msg) ErrorF msg ; return 0
+#else
+#define DISPATCH(func, args, msg)
 
 #define RETURN_DISPATCH(func, args, msg) return 0
+#endif
 
 #define DISPATCH_TABLE_NAME __glapi_noop_table
 #define UNUSED_TABLE_NAME __unused_noop_functions
@@ -137,6 +143,9 @@ warn(void)
 
 static GLint NoOpUnused(void)
 {
+   #ifdef _DEBUG
+   ErrorF("NoOpUnused\n");
+   #endif
    return 0;
 }
 
