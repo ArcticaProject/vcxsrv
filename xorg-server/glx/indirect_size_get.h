@@ -25,6 +25,9 @@
  * SOFTWARE.
  */
 
+#if !defined( _INDIRECT_SIZE_GET_H_ )
+#  define _INDIRECT_SIZE_GET_H_
+
 /**
  * \file
  * Prototypes for functions used to determine the number of data elements in
@@ -118,3 +121,5 @@ extern INTERNAL PURE FASTCALL GLint __glGetFramebufferAttachmentParameterivEXT_s
 #  undef PURE
 #  undef FASTCALL
 #  undef INTERNAL
+
+#endif /* !defined( _INDIRECT_SIZE_GET_H_ ) */

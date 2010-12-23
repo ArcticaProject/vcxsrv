@@ -25,6 +25,9 @@
  * SOFTWARE.
  */
 
+#if !defined( _INDIRECT_SIZE_H_ )
+#  define _INDIRECT_SIZE_H_
+
 /**
  * \file
  * Prototypes for functions used to determine the number of data elements in
@@ -55,3 +58,5 @@
 #  undef PURE
 #  undef FASTCALL
 #  undef INTERNAL
+
+#endif /* !defined( _INDIRECT_SIZE_H_ ) */
