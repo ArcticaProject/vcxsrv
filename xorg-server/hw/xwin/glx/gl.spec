@@ -7,7 +7,7 @@
 # This document is licensed under the SGI Free Software B License Version
 # 2.0. For details, see http://oss.sgi.com/projects/FreeB/ .
 #
-# $Revision: 12819 $ on $Date: 2010-11-03 19:02:01 -0700 (Wed, 03 Nov 2010) $
+# $Revision: 13168 $ on $Date: 2010-12-09 02:18:26 -0800 (Thu, 09 Dec 2010) $
 
 required-props:
 # Description of a parameter
@@ -31475,4 +31475,14 @@ newcategory: AMD_transform_feedback3_lines_triangles
 
 # (none)
 newcategory: AMD_depth_clamp_separate
+
+###############################################################################
+#
+# Extension #402
+# EXT_texture_sRGB_decode commands
+#
+###############################################################################
+
+# (none)
+newcategory: EXT_texture_sRGB_decode
 
