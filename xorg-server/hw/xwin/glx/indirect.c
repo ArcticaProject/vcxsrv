@@ -2029,19 +2029,23 @@ glxWinCreateConfigs(HDC hdc, glxWinScreen *screen)
       if (pfd.iPixelType == PFD_TYPE_COLORINDEX)
         {
           c->base.visualType = GLX_STATIC_COLOR;
+          c->base.transparentRed = GLX_NONE;
+          c->base.transparentGreen = GLX_NONE;
+          c->base.transparentBlue = GLX_NONE;
+          c->base.transparentAlpha = GLX_NONE;
+          c->base.transparentIndex = pfd.dwVisibleMask;
+          c->base.transparentPixel = GLX_TRANSPARENT_INDEX;
         }
       else
         {
           c->base.visualType = GLX_TRUE_COLOR;
+          c->base.transparentRed =   (pfd.dwVisibleMask&c->base.redMask)  >>pfd.cRedShift;
+          c->base.transparentGreen = (pfd.dwVisibleMask&c->base.greenMask)>>pfd.cGreenShift;
+          c->base.transparentBlue =  (pfd.dwVisibleMask&c->base.blueMask) >>pfd.cBlueShift;
+          c->base.transparentAlpha = (pfd.dwVisibleMask&c->base.alphaMask)>>pfd.cAlphaShift;
+          c->base.transparentIndex = GLX_NONE;
+          c->base.transparentPixel = GLX_TRANSPARENT_RGB;
         }
-
-      // pfd.dwVisibleMask; ???
-      c->base.transparentPixel = GLX_NONE;
-      c->base.transparentRed = GLX_NONE;
-      c->base.transparentGreen = GLX_NONE;
-      c->base.transparentBlue = GLX_NONE;
-      c->base.transparentAlpha = GLX_NONE;
-      c->base.transparentIndex = GLX_NONE;
 
       /* ARB_multisample / SGIS_multisample */
       c->base.sampleBuffers = 0;
