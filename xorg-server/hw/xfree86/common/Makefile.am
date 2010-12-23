@@ -59,7 +59,6 @@ CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = \
 	compiler.h \
 	fourcc.h \
-	scoasm.h \
 	vidmodeproc.h \
 	xf86.h \
 	xf86Bus.h \

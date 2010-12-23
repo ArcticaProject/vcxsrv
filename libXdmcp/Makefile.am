@@ -7,7 +7,7 @@ AM_CFLAGS = \
 	$(XDMCP_CFLAGS) \
 	$(CWARNFLAGS)
 
-libXdmcp_la_LDFLAGS = -export-symbols-regex '^Xdmcp.*' -version-number 6:0:0 -no-undefined
+libXdmcp_la_LDFLAGS = -version-number 6:0:0 -no-undefined
 libXdmcp_la_LIBADD = $(XDMCP_LIBS)
 libXdmcp_la_SOURCES = \
 	Array.c \

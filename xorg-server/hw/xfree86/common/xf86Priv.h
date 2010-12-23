@@ -114,7 +114,6 @@ extern _X_EXPORT void xf86AccessLeave(void);
 extern _X_EXPORT void xf86PostProbe(void);
 extern _X_EXPORT void xf86ClearEntityListForScreen(int scrnIndex);
 extern _X_EXPORT void xf86AddDevToEntity(int entityIndex, GDevPtr dev);
-extern _X_EXPORT void xf86PostScreenInit(void);
 
 /* xf86Config.c */
 

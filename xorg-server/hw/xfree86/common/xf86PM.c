@@ -33,6 +33,7 @@
 #include "xf86.h"
 #include "xf86Priv.h"
 #include "xf86Xinput.h"
+#include "xf86_OSproc.h"
 
 int (*xf86PMGetEventFromOs)(int fd,pmEvent *events,int num) = NULL;
 pmWait (*xf86PMConfirmEventToOs)(int fd,pmEvent event) = NULL;
@@ -61,14 +62,14 @@ eventName(pmEvent event, char **str)
     }
 }
 
+static int sigio_blocked_for_suspend;
+
 static void
 suspend (pmEvent event, Bool undo)
 {
     int i;
     InputInfoPtr pInfo;
 
-   xf86inSuspend = TRUE;
-    
     for (i = 0; i < xf86NumScreens; i++) {
 	if (xf86Screens[i]->EnableDisableFBAccess)
 	    (*xf86Screens[i]->EnableDisableFBAccess) (i, FALSE);
@@ -78,7 +79,7 @@ suspend (pmEvent event, Bool undo)
 	DisableDevice(pInfo->dev, TRUE);
 	pInfo = pInfo->next;
     }
-    xf86EnterServerState(SETUP);
+    sigio_blocked_for_suspend = xf86BlockSIGIO();
     for (i = 0; i < xf86NumScreens; i++) {
 	if (xf86Screens[i]->PMEvent)
 	    xf86Screens[i]->PMEvent(i,event,undo);
@@ -98,7 +99,6 @@ resume(pmEvent event, Bool undo)
     InputInfoPtr pInfo;
 
     xf86AccessEnter();
-    xf86EnterServerState(SETUP);
     for (i = 0; i < xf86NumScreens; i++) {
 	if (xf86Screens[i]->PMEvent)
 	    xf86Screens[i]->PMEvent(i,event,undo);
@@ -107,7 +107,7 @@ resume(pmEvent event, Bool undo)
 	    xf86Screens[i]->EnterVT(i, 0);
 	}
     }
-    xf86EnterServerState(OPERATING);
+    xf86UnblockSIGIO(sigio_blocked_for_suspend);
     for (i = 0; i < xf86NumScreens; i++) {
 	if (xf86Screens[i]->EnableDisableFBAccess)
 	    (*xf86Screens[i]->EnableDisableFBAccess) (i, TRUE);
@@ -118,18 +118,12 @@ resume(pmEvent event, Bool undo)
 	EnableDevice(pInfo->dev, TRUE);
 	pInfo = pInfo->next;
     }
-    xf86inSuspend = FALSE;
 }
 
 static void
 DoApmEvent(pmEvent event, Bool undo)
 {
-    /* 
-     * we leave that as a global function for now. I don't know if 
-     * this might cause problems in the future. It is a global server 
-     * variable therefore it needs to be in a server info structure
-     */
-    int i, setup = 0;
+    int i, was_blocked;
     
     switch(event) {
 #if 0
@@ -159,14 +153,13 @@ DoApmEvent(pmEvent event, Bool undo)
 	}
 	break;
     default:
+	was_blocked = xf86BlockSIGIO();
 	for (i = 0; i < xf86NumScreens; i++) {
 	    if (xf86Screens[i]->PMEvent) {
-		if (!setup) xf86EnterServerState(SETUP);
-		setup = 1;
 		xf86Screens[i]->PMEvent(i,event,undo);
 	    }
 	}
-	if (setup) xf86EnterServerState(OPERATING);
+	xf86UnblockSIGIO(was_blocked);
 	break;
     }
 }

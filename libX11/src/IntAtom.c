@@ -190,7 +190,7 @@ XInternAtom (
 typedef struct {
     unsigned long start_seq;
     unsigned long stop_seq;
-    const char **names;
+    char **names;
     Atom *atoms;
     int count;
     Status status;
@@ -239,7 +239,7 @@ Bool _XIntAtomHandler(
 Status
 XInternAtoms (
     Display *dpy,
-    const char **names,
+    char **names,
     int count,
     Bool onlyIfExists,
     Atom *atoms_return)

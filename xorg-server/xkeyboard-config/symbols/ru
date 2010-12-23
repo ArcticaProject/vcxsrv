@@ -508,3 +508,24 @@ xkb_symbols "srp" {
     key	<AC10> { [ Cyrillic_zhe, Cyrillic_ZHE, U452, U402 ] };
     key	<AB02> { [ Cyrillic_che, Cyrillic_CHE, U45B, U40B ] };
 };
+
+// Mari language layout
+// based on Russian standard keyboard
+// http://www.marlamuter.ru/
+partial alphanumeric_keys
+xkb_symbols "chm" {
+    include "ru(common)"
+    
+    name[Group1]= "Russia - Mari";
+
+    key.type[group1]="FOUR_LEVEL_ALPHABETIC";
+    key <AC04> { [      Cyrillic_a,     Cyrillic_A,    U04D3,       U04D2     ] };
+    key <AD03> { [      Cyrillic_u, Cyrillic_U,    U04F1,       U04F0     ] };
+    key <AC02> { [      Cyrillic_ui,    Cyrillic_UI,   U04F9,       U04F8     ] };
+    key <AD06> { [      Cyrillic_n, Cyrillic_N,    U04A5,       U04A4     ] };
+    key <AC11> { [      Cyrillic_e, Cyrillic_E,    U04E9,       U04E8     ] };
+    key <AC10> { [      Cyrillic_zh,    Cyrillic_ZH,   U04EB,       U04EA     ] };
+    key <AC01> { [      Cyrillic_f, Cyrillic_F,     UF537,      UF536     ] };
+
+    include "level3(ralt_switch)"
+};

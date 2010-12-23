@@ -56,12 +56,7 @@ xf86MonPtr ConfiguredMonitor;
 Bool xf86DoConfigurePass1 = TRUE;
 static Bool foundMouse = FALSE;
 
-#if defined(__SCO__)
-static char *DFLT_MOUSE_PROTO = "OSMouse";
-#elif defined(__UNIXWARE__)
-static char *DFLT_MOUSE_PROTO = "OSMouse";
-static char *DFLT_MOUSE_DEV = "/dev/mouse";
-#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
+#if   defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
 static char *DFLT_MOUSE_DEV = "/dev/sysmouse";
 static char *DFLT_MOUSE_PROTO = "auto";
 #elif defined(linux)
@@ -169,15 +164,11 @@ configureInputSection (void)
 	}
 #endif
 
-#ifndef __SCO__
 	fd = open(DFLT_MOUSE_DEV, 0);
 	if (fd != -1) {
 	    foundMouse = TRUE;
 	    close(fd);
 	}
-#else
-	foundMouse = TRUE;
-#endif
     }
 
     mouse = calloc(1, sizeof(XF86ConfInputRec));
@@ -186,11 +177,9 @@ configureInputSection (void)
     mouse->inp_option_lst = 
 		xf86addNewOption(mouse->inp_option_lst, strdup("Protocol"),
 				strdup(DFLT_MOUSE_PROTO));
-#ifndef __SCO__
     mouse->inp_option_lst = 
 		xf86addNewOption(mouse->inp_option_lst, strdup("Device"),
 				strdup(DFLT_MOUSE_DEV));
-#endif
     mouse->inp_option_lst = 
 		xf86addNewOption(mouse->inp_option_lst, strdup("ZAxisMapping"),
 				strdup("4 5 6 7"));
@@ -749,13 +738,6 @@ DoConfigure(void)
 
     ErrorF("\n");
 
-#ifdef __SCO__
-    ErrorF("\n"__XSERVERNAME__
-	   " is using the kernel event driver to access the mouse.\n"
-	    "If you wish to use the internal "__XSERVERNAME__
-	   " mouse drivers, please\n"
-	    "edit the file and correct the Device.\n");
-#else /* !__SCO__ */
     if (!foundMouse) {
 	ErrorF("\n"__XSERVERNAME__" is not able to detect your mouse.\n"
 		"Edit the file and correct the Device.\n");
@@ -766,7 +748,6 @@ DoConfigure(void)
 	       " tries to autodetect\n"
 		"the protocol.\n",DFLT_MOUSE_DEV);
     }
-#endif /* !__SCO__ */
 
     if (xf86NumScreens > 1) {
 	ErrorF("\n"__XSERVERNAME__

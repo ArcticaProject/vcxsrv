@@ -75,13 +75,14 @@ setup_int(xf86Int10InfoPtr pInt)
     if (pInt->Flags & SET_BIOS_SCRATCH)
 	SetResetBIOSVars(pInt, TRUE);
 #endif
-    return xf86BlockSIGIO();
+    OsBlockSignals();
+    return 0;
 }
 
 void
 finish_int(xf86Int10InfoPtr pInt, int sig)
 {
-    xf86UnblockSIGIO(sig);
+    OsReleaseSignals();
     pInt->ax = (CARD32) X86_EAX;
     pInt->bx = (CARD32) X86_EBX;
     pInt->cx = (CARD32) X86_ECX;

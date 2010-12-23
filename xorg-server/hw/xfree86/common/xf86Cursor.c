@@ -202,7 +202,7 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
   ScrnInfoPtr pScr = XF86SCRNINFO(pScreen);
   ScreenPtr   pCursorScreen;
   Bool        Switched;
-  int         px, py;
+  int         px, py, was_blocked;
   DeviceIntPtr dev, it;
 
   if (!pScr->vtSema || !mode || !pScr->SwitchMode)
@@ -232,7 +232,7 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
   if (pScreen == pCursorScreen)
     miPointerGetPosition(dev, &px, &py);
 
-  xf86EnterServerState(SETUP);
+  was_blocked = xf86BlockSIGIO();
   Switched = (*pScr->SwitchMode)(pScr->scrnIndex, mode, 0);
   if (Switched) {
     pScr->currentMode = mode;
@@ -269,7 +269,7 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
       pScr->frameY1 = pScr->virtualY - 1;
     }
   }
-  xf86EnterServerState(OPERATING);
+  xf86UnblockSIGIO(was_blocked);
 
   if (pScr->AdjustFrame)
     (*pScr->AdjustFrame)(pScr->scrnIndex, pScr->frameX0, pScr->frameY0, 0);

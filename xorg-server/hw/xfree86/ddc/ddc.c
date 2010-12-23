@@ -235,15 +235,12 @@ EDIDRead_DDC1(ScrnInfoPtr pScrn, DDC1SetSpeedProc DDCSpeed,
  * @return NULL if no monitor attached or failure to interpret the EDID.
  */
 xf86MonPtr
-xf86DoEDID_DDC1(
-    int scrnIndex, DDC1SetSpeedProc DDC1SetSpeed, 
-    unsigned int (*DDC1Read)(ScrnInfoPtr)
-)
+xf86DoEDID_DDC1(int scrnIndex, DDC1SetSpeedProc DDC1SetSpeed, 
+		unsigned int (*DDC1Read)(ScrnInfoPtr))
 {
     ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
     unsigned char *EDID_block = NULL;
     xf86MonPtr tmp = NULL;
-    int sigio;
     /* Default DDC and DDC1 to enabled. */
     Bool noddc = FALSE, noddc1 = FALSE;
     OptionInfoPtr options;
@@ -259,9 +256,9 @@ xf86DoEDID_DDC1(
     if (noddc || noddc1)
 	return NULL;
     
-    sigio = xf86BlockSIGIO();
+    OsBlockSignals();
     EDID_block = EDIDRead_DDC1(pScrn,DDC1SetSpeed,DDC1Read);
-    xf86UnblockSIGIO(sigio);
+    OsReleaseSignals();
 
     if (EDID_block){
 	tmp = xf86InterpretEDID(scrnIndex,EDID_block);

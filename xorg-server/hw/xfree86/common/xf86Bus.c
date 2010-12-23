@@ -484,8 +484,6 @@ xf86AccessEnter(void)
     for (i = 0; i < xf86NumEntities; i++)
         if (xf86Entities[i]->entityEnter)
 		xf86Entities[i]->entityEnter(i,xf86Entities[i]->private);
-
-    xf86EnterServerState(SETUP);
 }
 
 void
@@ -496,32 +494,6 @@ xf86AccessLeave(void)
     for (i = 0; i < xf86NumEntities; i++)
         if (xf86Entities[i]->entityLeave)
 		xf86Entities[i]->entityLeave(i,xf86Entities[i]->private);
-}
-
-/*
- * xf86EnterServerState() -- set state the server is in.
- */
-
-typedef enum { TRI_UNSET, TRI_TRUE, TRI_FALSE } TriState;
-
-void
-xf86EnterServerState(xf86State state)
-{
-    static int sigio_state;
-    static TriState sigio_blocked = TRI_UNSET;
-
-    /*
-     * This is a good place to block SIGIO during SETUP state. SIGIO should be
-     * blocked in SETUP state otherwise (u)sleep() might get interrupted
-     * early. We take care not to call xf86BlockSIGIO() twice.
-     */
-    if ((state == SETUP) && (sigio_blocked != TRI_TRUE)) {
-        sigio_state = xf86BlockSIGIO();
-	sigio_blocked = TRI_TRUE;
-    } else if ((state == OPERATING) && (sigio_blocked != TRI_UNSET)) {
-        xf86UnblockSIGIO(sigio_state);
-        sigio_blocked = TRI_FALSE;
-    }
 }
 
 /*
@@ -544,13 +516,6 @@ xf86PostProbe(void)
     for (i = 0; i < xf86NumEntities; i++)
         if (xf86Entities[i]->entityInit)
 	    xf86Entities[i]->entityInit(i,xf86Entities[i]->private);
-}
-
-void
-xf86PostScreenInit(void)
-{
-    xf86VGAarbiterWrapFunctions();
-    xf86EnterServerState(OPERATING);
 }
 
 int

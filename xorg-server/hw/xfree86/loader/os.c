@@ -50,8 +50,6 @@
 #define OSNAME "openbsd"
 #elif defined(__GNU__)
 #define OSNAME "hurd"
-#elif defined(__SCO__)
-#define OSNAME "sco"
 #elif defined(SVR4) && defined(sun)
 #define OSNAME "solaris"
 #elif defined(SVR5)
