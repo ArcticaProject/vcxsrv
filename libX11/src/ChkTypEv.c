@@ -57,6 +57,7 @@ Bool XCheckTypedEvent (
 		if (qelt->event.type == type) {
 		    *event = qelt->event;
 		    _XDeq(dpy, prev, qelt);
+		    _XStoreEventCookie(dpy, event);
 		    UnlockDisplay(dpy);
 		    return True;
 		}

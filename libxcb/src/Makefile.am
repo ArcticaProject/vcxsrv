@@ -168,6 +168,14 @@ libxcb_xinput_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xinput_la_SOURCES = xinput.c xinput.h
 endif
 
+EXTSOURCES += xkb.c
+if BUILD_XKB
+lib_LTLIBRARIES += libxcb-xkb.la
+libxcb_xkb_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xkb_la_LIBADD = $(XCB_LIBS)
+nodist_libxcb_xkb_la_SOURCES = xkb.c xkb.h
+endif
+
 EXTSOURCES += xprint.c
 if BUILD_XPRINT
 lib_LTLIBRARIES += libxcb-xprint.la

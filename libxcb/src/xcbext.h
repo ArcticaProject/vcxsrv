@@ -93,6 +93,7 @@ int xcb_poll_for_reply(xcb_connection_t *c, unsigned int request, void **reply, 
 /* xcb_util.c */
 
 int xcb_popcount(uint32_t mask);
+int xcb_sumof(uint8_t *list, int len);
 
 #ifdef __cplusplus
 }

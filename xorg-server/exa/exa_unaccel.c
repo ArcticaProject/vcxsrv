@@ -748,6 +748,8 @@ exaGetPixmapFirstPixel (PixmapPtr pPixmap)
 	    return pixel;
 	}
     case 8:
+    case 4:
+    case 1:
 	{
 	    CARD8 pixel;
 

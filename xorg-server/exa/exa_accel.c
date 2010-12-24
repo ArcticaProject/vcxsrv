@@ -1057,6 +1057,8 @@ exaFillRegionSolid (DrawablePtr	pDrawable, RegionPtr pRegion, Pixel pixel,
 		*(CARD16*)pExaPixmap->sys_ptr = pixel;
 		break;
 	    case 8:
+	    case 4:
+	    case 1:
 		*(CARD8*)pExaPixmap->sys_ptr = pixel;
 	    }
 

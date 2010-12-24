@@ -58,6 +58,9 @@ endif
 if BUILD_XINPUT
 pkgconfig_DATA += xcb-xinput.pc
 endif
+if BUILD_XKB
+pkgconfig_DATA += xcb-xkb.pc
+endif
 if BUILD_XPRINT
 pkgconfig_DATA += xcb-xprint.pc
 endif

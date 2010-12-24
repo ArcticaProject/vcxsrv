@@ -66,6 +66,7 @@ authorization from the authors.
         <xsd:element ref="switch" minOccurs="0" maxOccurs="unbounded" />
       </xsd:choice>
     </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="optional" />
   </xsd:complexType>
 
   <!-- switch expression -->
