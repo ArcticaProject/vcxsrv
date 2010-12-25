@@ -1,0 +1,4 @@
+svn export http://o3d.googlecode.com/svn/trunk/googleclient/third_party/libtxc_dxtn/files . --force
+svn export http://o3d.googlecode.com/svn/trunk/googleclient/third_party/chrome/files/base/basictypes.h base --force
+svn export http://o3d.googlecode.com/svn/trunk/googleclient/third_party/chrome/files/base/port.h base --force
+svn export http://o3d.googlecode.com/svn/trunk/googleclient/third_party/chrome/files/build/build_config.h build --force

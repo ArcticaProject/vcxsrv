@@ -1,0 +1,12 @@
+20050819:
+- clean up / make faster the fetch functions, especially the 565 to 888 expand was slow
+20050908:
+- fix overflow/underflow of some values (avoids artifacts with some textures) in
+  fancybasecolorsearch when compressing (fix by Dave Airlie).
+20060508:
+- fix serious copy & paste errors in fetch functions introduced with 20050819 version
+- new Makefile (provided by Tilman Sauerbeck)
+- minor cosmetic fixes
+
+20070518:
+- add the missing dstRowStride parameter Mesa uses

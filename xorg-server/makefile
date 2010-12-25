@@ -123,7 +123,7 @@ load_makefile xkeyboard-config\makefile MAKESERVER=0 DEBUG=0
 
 all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XErrorDB \
      ..\libX11\nls\all fonts.src\all xkeyboard-config\all plink.exe xclock.exe xcalc.exe \
-     xwininfo.exe swrast_dri.dll swrast_dri_dbg.dll
+     xwininfo.exe swrast_dri.dll swrast_dri_dbg.dll dxtn.dll dxtn_dbg.dll
 
 
 load_makefile ..\mesalib\windows\VC8\mesa\makefile MAKESERVER=0 DEBUG=0
@@ -131,6 +131,14 @@ swrast_dri.dll: ..\mesalib\windows\VC8\mesa\Release\swrast_dri.dll
 	copy $< $@
 
 swrast_dri_dbg.dll: ..\mesalib\windows\VC8\mesa\Debug\swrast_dri.dll
+	copy $< $@
+
+load_makefile ..\dxtn\makefile MAKESERVER=0 DEBUG=0
+dxtn.dll: ..\dxtn\obj\release\dxtn.dll
+	copy $< $@
+
+load_makefile ..\dxtn\makefile MAKESERVER=0 DEBUG=1
+dxtn_dbg.dll: ..\dxtn\obj\debug\dxtn.dll
 	copy $< $@
 
 mesaopengl32.dll: ..\mesalib\lib\mesaopengl32.dll
