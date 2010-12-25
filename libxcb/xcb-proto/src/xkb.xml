@@ -401,8 +401,12 @@ authorization from the authors.
 
 	<struct name="KTMapEntry">
 		<field name="active" type="BOOL" />
+		<!-- Xlib uses a different arrangement of fields
 		<field name="mods_mask" type="CARD8" mask="ModMask" />
 		<field name="level" type="CARD8" />
+		-->
+		<field name="level" type="CARD8" />
+		<field name="mods_mask" type="CARD8" mask="ModMask" />
 		<field name="mods_mods" type="CARD8" mask="ModMask" />
 		<field name="mods_vmods" type="CARD16" mask="VMod" />
 		<pad bytes="2" />
@@ -1626,7 +1630,11 @@ authorization from the authors.
 				<bitcase>
 					<enumref ref="NameDetail">KTLevelNames</enumref>
 					<list name="nLevelsPerType" type="CARD8">
-						<fieldref>nKTLevels</fieldref>
+					  <!-- Xlib uses NTypes here - 
+					       the spec says nKTLevels is correct, but
+					       it does not work in reality
+					       <fieldref>nKTLevels</fieldref> -->
+					        <fieldref>nTypes</fieldref>
 					</list>
 					<list name="ktLevelNames" type="ATOM">
 						<sumof ref="nLevelsPerType" />
@@ -1973,9 +1981,16 @@ authorization from the authors.
 			<pad bytes="16" />
 			<switch name="replies">
 				<fieldref>reported</fieldref>
-				<bitcase>
+				<bitcase name="types">
 					<enumref ref="GBNDetail">Types</enumref>
+					<!-- from the spec, this has to be a GetMap reply -->
+					<field name="getmap_type" type="CARD8" />
+				        <!-- done 'emulating' GetMap reply header-->
 					<field name="typeDeviceID" type="CARD8" />
+					<!-- from the spec, this has to be a GetMap reply -->
+					<field name="getmap_sequence" type="CARD16" />
+					<field name="getmap_length" type="CARD32" />
+				        <!-- done 'emulating' GetMap reply header-->
 					<pad bytes="2" />
 					<field name="typeMinKeyCode" type="KEYCODE" />
 					<field name="typeMaxKeyCode" type="KEYCODE" />
@@ -2058,7 +2073,7 @@ authorization from the authors.
 						</bitcase>
 					</switch>
 				</bitcase>
-				<bitcase>
+				<bitcase name="compat_map">
 					<enumref ref="GBNDetail">CompatMap</enumref>
 					<field name="compatDeviceID" type="CARD8" />
 					<field name="groupsRtrn" type="CARD8" mask="SetOfGroup" />
@@ -2079,7 +2094,7 @@ authorization from the authors.
 						</popcount>
 					</list>
 				</bitcase>
-				<bitcase>
+				<bitcase name="client_symbols">
 					<enumref ref="GBNDetail">ClientSymbols</enumref>
 					<field name="clientDeviceID" type="CARD8" />
 					<pad bytes="2" />
@@ -2164,7 +2179,7 @@ authorization from the authors.
 						</bitcase>
 					</switch>
 				</bitcase>
-				<bitcase>
+				<bitcase name="server_symbols">
 					<enumref ref="GBNDetail">ServerSymbols</enumref>
 					<field name="serverDeviceID" type="CARD8" />
 					<pad bytes="2" />
@@ -2249,7 +2264,7 @@ authorization from the authors.
 						</bitcase>
 					</switch>
 				</bitcase>
-				<bitcase>
+				<bitcase name="indicator_maps">
 					<enumref ref="GBNDetail">IndicatorMaps</enumref>
 					<field name="indicatorDeviceID" type="CARD8" />
 					<field name="which" type="CARD32" />
@@ -2260,7 +2275,7 @@ authorization from the authors.
 						<fieldref>nIndicators</fieldref>
 					</list>
 				</bitcase>
-				<bitcase>
+				<bitcase name="key_names">
 					<enumref ref="GBNDetail">KeyNames</enumref>
 					<field name="keyDeviceID" type="CARD8" />
 					<field name="which" type="CARD32" mask="NameDetail" />
@@ -2361,7 +2376,7 @@ authorization from the authors.
 						</bitcase>
 					</switch>
 				</bitcase>
-				<bitcase>
+				<bitcase name="other_names">
 					<enumref ref="GBNDetail">OtherNames</enumref>
 					<field name="otherDeviceID" type="CARD8" />
 					<field name="which" type="CARD32" mask="NameDetail" />
@@ -2462,7 +2477,7 @@ authorization from the authors.
 						</bitcase>
 					</switch>
 				</bitcase>
-				<bitcase>
+				<bitcase name="geometry">
 					<enumref ref="GBNDetail">Geometry</enumref>
 					<field name="geometryDeviceID" type="CARD8" />
 					<field name="name" type="ATOM" />

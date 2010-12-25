@@ -146,6 +146,7 @@ XCB_EXTENSION(XFixes, "yes")
 XCB_EXTENSION(XFree86-DRI, "yes")
 XCB_EXTENSION(Xinerama, "yes")
 XCB_EXTENSION(XInput, "no")
+XCB_EXTENSION(XKB, "no")
 XCB_EXTENSION(Xprint, "yes")
 XCB_EXTENSION(SELinux, "no")
 XCB_EXTENSION(XTest, "yes")
@@ -189,6 +190,7 @@ xcb-xf86dri.pc
 xcb-xfixes.pc
 xcb-xinerama.pc
 xcb-xinput.pc
+xcb-xkb.pc
 xcb-xprint.pc
 xcb-xselinux.pc
 xcb-xtest.pc

@@ -1,0 +1,49 @@
+
+XKB introduces several uncommon data structures:
+ - switch allows conditional inclusion of fields
+ - several complex objects intermix variable and fixed size fields
+ - lists with a variable number of variable size objects
+
+To handle these objects, a number of new functions is generated:
+ - _serialize() turns a structured object into a byte stream, 
+   (re)ordering or including fields according to the protocol
+ - _unserialize() rewrites data from a buffer into a structured object
+ - _unpack() expands a buffer representing a switch object into 
+   a special structured type, all flags needed to resolve the switch
+   expression have to given as parameters
+ - _sizeof() calculates the size of a serialized object, often by calling
+   _unserialize()/_unpack() internally
+
+The new structured data type for switch is special as it contains fixed 
+and variable size fields. Variable size fields can be accessed via pointers. 
+
+If switch appears in a request, an additional set of request helpers is 
+generated with the suffix _aux or _aux_(un)checked. While the 'common'
+request functions require that switch has been serialized before, the _aux
+variants take the structured data type. They are especially designed to 
+replace certain functions in xcb-util/aux. 
+
+Accessors for switch members need two parameters, where the first is usually
+a pointer to the respective request or reply structure, while the second 
+is a pointer to the unpacked switch data structure. 
+
+Functions from the serialize family that take a double pointer can allocate 
+memory on their own, which is useful if the size of a buffer has to be 
+calculated depending on the data within. These functions call malloc() when 
+the double pointer is given as the address of a pointer that has been 
+initialized to 0. It is the responsibility of the user to free any allocated
+memory. 
+
+Intermixed variable and fixed size fields are an important special case in XKB. 
+The current implementation resolves the issue by reordering the fields before
+sending them on the wire as well as before returning a reply. That means that 
+these objects look like 'common' XCB data types and they can be accessed as such 
+(i.e. fixed size fields directly via the structured type and variable size fields
+via accessors/iterators).  
+
+In case a list with variable size elements needs to be accessed, it is necessary 
+to use iterators. The iterator functions take care of determining the actual 
+object size for each element automatically. 
+
+A small and preliminary set of auxiliary functions is available in xkb_util.c 
+in the check_xkb module.  

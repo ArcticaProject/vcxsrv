@@ -66,6 +66,16 @@ int xcb_popcount(uint32_t mask)
     return ((y + (y >> 3)) & 030707070707) % 077;
 }
 
+int xcb_sumof(uint8_t *list, int len)
+{
+  int i, s = 0;
+  for(i=0; i<len; i++) {
+    s += *list;
+    list++;
+  }
+  return s;
+}
+
 static int _xcb_parse_display(const char *name, char **host, char **protocol,
                       int *displayp, int *screenp)
 {

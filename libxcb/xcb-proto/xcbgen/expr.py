@@ -40,6 +40,7 @@ class Expression(object):
 
         self.lenfield_name = None
         self.lenfield_type = None
+        self.lenfield_parent = None
         self.lenfield = None
         self.lenwire = False
         self.bitfield = False
@@ -81,15 +82,46 @@ class Expression(object):
             self.rhs = Expression(list(elt)[0], parent)
 
             self.lenfield_name = self.rhs.lenfield_name
-
+            
         elif elt.tag == 'value':
             # Constant expression
             self.nmemb = int(elt.text, 0)
 
+        elif elt.tag == 'popcount':
+            self.op = 'popcount'
+            self.rhs = Expression(list(elt)[0], parent)
+            self.lenfield_name = self.rhs.lenfield_name
+            # xcb_popcount returns 'int' - handle the type in the language-specific part
+
+        elif elt.tag == 'enumref':
+            self.op = 'enumref'
+            self.lenfield_name = (elt.get('ref'), elt.text)
+            
+        elif elt.tag == 'sumof':
+            self.op = 'sumof'
+            self.lenfield_name = elt.get('ref')
+
         else:
             # Notreached
-            raise Exception('XXX')
-
+            raise Exception("undefined tag '%s'" % elt.tag)
 
     def fixed_size(self):
         return self.nmemb != None
+
+    def resolve(self, module, parents):
+        if self.op == 'enumref':
+            self.lenfield_type = module.get_type(self.lenfield_name[0])
+            self.lenfield_name = self.lenfield_name[1]
+        elif self.op == 'sumof':
+            # need to find the field with lenfield_name
+            for p in reversed(parents): 
+                fields = dict([(f.field_name, f) for f in p.fields])
+                if self.lenfield_name in fields.keys():
+                    if p.is_bitcase:
+                        # switch is the anchestor 
+                        self.lenfield_parent = p.parents[-1]
+                    else:
+                        self.lenfield_parent = p
+                    self.lenfield_type = fields[self.lenfield_name].field_type
+                    break
+                    

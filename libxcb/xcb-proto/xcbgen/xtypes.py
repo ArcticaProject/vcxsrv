@@ -32,6 +32,8 @@ class Type(object):
         self.is_reply = False
         self.is_union = False
         self.is_pad = False
+        self.is_switch = False
+        self.is_bitcase = False
 
     def resolve(self, module):
         '''
@@ -72,6 +74,7 @@ class Type(object):
                 return
 
         complex_type.fields.append(new_field)
+
 
 class SimpleType(Type):
     '''
@@ -152,11 +155,11 @@ class ListType(Type):
     parent is the structure type containing the list.
     expr is an Expression object containing the length information, for variable-sized lists.
     '''
-    def __init__(self, elt, member, parent):
+    def __init__(self, elt, member, *parent):
         Type.__init__(self, member.name)
         self.is_list = True
         self.member = member
-        self.parent = parent
+        self.parents = list(parent)
 
         if elt.tag == 'list':
             elts = list(elt)
@@ -177,9 +180,10 @@ class ListType(Type):
             needlen = True
 
             # See if the length field is already in the structure.
-            for field in self.parent.fields:
-                if field.field_name == lenfield_name:
-                    needlen = False
+            for parent in self.parents:
+                for field in parent.fields:
+                    if field.field_name == lenfield_name:
+                        needlen = False
 
             # It isn't, so we need to add it to the structure ourself.
             if needlen:
@@ -194,15 +198,17 @@ class ListType(Type):
         if self.resolved:
             return
         self.member.resolve(module)
+        self.expr.resolve(module, self.parents)
 
         # Find my length field again.  We need the actual Field object in the expr.
         # This is needed because we might have added it ourself above.
         if not self.fixed_size():
-            for field in self.parent.fields:
-                if field.field_name == self.expr.lenfield_name and field.wire:
-                    self.expr.lenfield = field
-                    break
-            
+            for parent in self.parents:
+                for field in parent.fields:
+                    if field.field_name == self.expr.lenfield_name and field.wire:
+                        self.expr.lenfield = field
+                        break
+
         self.resolved = True
 
     def fixed_size(self):
@@ -215,7 +221,7 @@ class ExprType(Type):
     Public fields added:
     expr is an Expression object containing the value of the field.
     '''
-    def __init__(self, elt, member, parent):
+    def __init__(self, elt, member, *parent):
         Type.__init__(self, member.name)
         self.is_expr = True
         self.member = member
@@ -266,6 +272,7 @@ class ComplexType(Type):
         self.fields = []
         self.nmemb = 1
         self.size = 0
+        self.lenfield_parent = [self]
 
     def resolve(self, module):
         if self.resolved:
@@ -288,18 +295,27 @@ class ComplexType(Type):
             elif child.tag == 'exprfield':
                 field_name = child.get('name')
                 fkey = child.get('type')
-                type = ExprType(child, module.get_type(fkey), self)
+                type = ExprType(child, module.get_type(fkey), *self.lenfield_parent)
                 visible = False
             elif child.tag == 'list':
                 field_name = child.get('name')
                 fkey = child.get('type')
-                type = ListType(child, module.get_type(fkey), self)
+                type = ListType(child, module.get_type(fkey), *self.lenfield_parent)
                 visible = True
             elif child.tag == 'valueparam':
                 field_name = child.get('value-list-name')
                 fkey = 'CARD32'
-                type = ListType(child, module.get_type(fkey), self)
+                type = ListType(child, module.get_type(fkey), *self.lenfield_parent)
                 visible = True
+            elif child.tag == 'switch':
+                field_name = child.get('name')
+                # construct the switch type name from the parent type and the field name
+                field_type = self.name + (field_name,)
+                type = SwitchType(field_type, child, *self.lenfield_parent)
+                visible = True
+                type.make_member_of(module, self, field_type, field_name, visible, True, False)
+                type.resolve(module)
+                continue
             else:
                 # Hit this on Reply
                 continue 
@@ -331,6 +347,109 @@ class ComplexType(Type):
                 return False
         return True
 
+class SwitchType(ComplexType):
+    '''
+    Derived class which represents a List of Items.  
+
+    Public fields added:
+    bitcases is an array of Bitcase objects describing the list items
+    '''
+
+    def __init__(self, name, elt, *parents):
+        ComplexType.__init__(self, name, elt)
+        self.parents = parents
+        # FIXME: switch cannot store lenfields, so it should just delegate the parents
+        self.lenfield_parent = list(parents) + [self]
+        # self.fields contains all possible fields collected from the Bitcase objects, 
+        # whereas self.items contains the Bitcase objects themselves
+        self.bitcases = []
+
+        self.is_switch = True
+        elts = list(elt)
+        self.expr = Expression(elts[0] if len(elts) else elt, self)
+
+    def resolve(self, module):
+        if self.resolved:
+            return
+#        pads = 0
+
+        parents = list(self.parents) + [self]
+
+        # Resolve all of our field datatypes.
+        for index, child in enumerate(list(self.elt)):
+            if child.tag == 'bitcase':
+                field_name = child.get('name')
+                if field_name is None:
+                    field_type = self.name + ('bitcase%d' % index,)
+                else:
+                    field_type = self.name + (field_name,)
+
+                # use self.parent to indicate anchestor, 
+                # as switch does not contain named fields itself
+                type = BitcaseType(index, field_type, child, *parents)
+                # construct the switch type name from the parent type and the field name
+                if field_name is None:
+                    type.has_name = False
+                    # Get the full type name for the field
+                    field_type = type.name               
+                visible = True
+
+                # add the field to ourself
+                type.make_member_of(module, self, field_type, field_name, visible, True, False)
+
+                # recursively resolve the type (could be another structure, list)
+                type.resolve(module)
+                inserted = False
+                for new_field in type.fields:
+                    # We dump the _placeholder_byte if any fields are added.
+                    for (idx, field) in enumerate(self.fields):
+                        if field == _placeholder_byte:
+                            self.fields[idx] = new_field
+                            inserted = True
+                            break
+                    if False == inserted:
+                        self.fields.append(new_field)
+
+        self.calc_size() # Figure out how big we are
+        self.resolved = True
+
+    def make_member_of(self, module, complex_type, field_type, field_name, visible, wire, auto):
+        if not self.fixed_size():
+            # We need a length field.
+            # Ask our Expression object for it's name, type, and whether it's on the wire.
+            lenfid = self.expr.lenfield_type
+            lenfield_name = self.expr.lenfield_name
+            lenwire = self.expr.lenwire
+            needlen = True
+
+            # See if the length field is already in the structure.
+            for parent in self.parents:
+                for field in parent.fields:
+                    if field.field_name == lenfield_name:
+                        needlen = False
+
+            # It isn't, so we need to add it to the structure ourself.
+            if needlen:
+                type = module.get_type(lenfid)
+                lenfield_type = module.get_type_name(lenfid)
+                type.make_member_of(module, complex_type, lenfield_type, lenfield_name, True, lenwire, False)
+
+        # Add ourself to the structure by calling our original method.
+        Type.make_member_of(self, module, complex_type, field_type, field_name, visible, wire, auto)
+
+    # size for switch can only be calculated at runtime
+    def calc_size(self):
+        pass
+
+    # note: switch is _always_ of variable size, but we indicate here wether 
+    # it contains elements that are variable-sized themselves
+    def fixed_size(self):
+        return False
+#        for m in self.fields:
+#            if not m.type.fixed_size():
+#                return False
+#        return True
+
 
 class Struct(ComplexType):
     '''
@@ -348,6 +467,48 @@ class Union(ComplexType):
         self.is_union = True
 
     out = __main__.output['union']
+
+
+class BitcaseType(ComplexType):
+    '''
+    Derived class representing a struct data type.
+    '''
+    def __init__(self, index, name, elt, *parent):
+        elts = list(elt)
+        self.expr = Expression(elts[0] if len(elts) else elt, self)
+        ComplexType.__init__(self, name, elts[1:])        
+        self.has_name = True
+        self.index = 1
+        self.lenfield_parent = list(parent) + [self]
+        self.parents = list(parent)
+        self.is_bitcase = True
+
+    def make_member_of(self, module, switch_type, field_type, field_name, visible, wire, auto):
+        '''
+        register BitcaseType with the corresponding SwitchType
+
+        module is the global module object.
+        complex_type is the structure object.
+        see Field for the meaning of the other parameters.
+        '''
+        new_field = Field(self, field_type, field_name, visible, wire, auto)
+
+        # We dump the _placeholder_byte if any bitcases are added.
+        for (idx, field) in enumerate(switch_type.bitcases):
+            if field == _placeholder_byte:
+                switch_type.bitcases[idx] = new_field
+                return
+
+        switch_type.bitcases.append(new_field)
+
+    def resolve(self, module):
+        if self.resolved:
+            return
+        
+        self.expr.resolve(module, self.parents+[self])
+
+        # Resolve the bitcase expression
+        ComplexType.resolve(self, module)
 
 
 class Reply(ComplexType):
