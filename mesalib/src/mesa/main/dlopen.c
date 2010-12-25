@@ -51,7 +51,7 @@ _mesa_dlopen(const char *libname, int flags)
 #elif defined(_GNU_SOURCE)
    flags = RTLD_LAZY | RTLD_GLOBAL; /* Overriding flags at this time */
    return dlopen(libname, flags);
-#elif defined(__MINGW32__)
+#elif defined(__MINGW32__) | defined(_MSC_VER)
    return LoadLibraryA(libname);
 #else
    return NULL;
@@ -82,7 +82,7 @@ _mesa_dlsym(void *handle, const char *fname)
    u.v = dlsym(handle, fname2);
 #elif defined(_GNU_SOURCE)
    u.v = dlsym(handle, fname);
-#elif defined(__MINGW32__)
+#elif defined(__MINGW32__) | defined(_MSC_VER)
    u.v = (void *) GetProcAddress(handle, fname);
 #else
    u.v = NULL;
@@ -101,7 +101,7 @@ _mesa_dlclose(void *handle)
    (void) handle;
 #elif defined(_GNU_SOURCE)
    dlclose(handle);
-#elif defined(__MINGW32__)
+#elif defined(__MINGW32__) | defined(_MSC_VER)
    FreeLibrary(handle);
 #else
    (void) handle;
