@@ -21,6 +21,19 @@ $(LIBRARY_DIR) : $(OBJS)
 
 endif # End static library stuff
 
+ifdef SHAREDLIB
+DEFFILE ?= $(SHAREDLIB:%=%.def)
+LIBRARYS := $(SHAREDLIB:%=$(OBJDIR)\%.dll) $(SHAREDLIB:%=$(OBJDIR)\%.lib)
+PDB := $(SHAREDLIB:%=$(OBJDIR)\%.pdb)
+LINKFLAGS += /DLL /DEF:$(DEFFILE)
+
+all: $(LIBRARYS)
+
+$(LIBRARYS) : $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) 
+	$(LINK) $(LINKFLAGS) /OUT:$(relpath $(basename $@)).dll $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(OBJS)
+
+endif
+
 ### WINAPP/TTYAPP stuff ###
 ifeq (1,$(call OR, $(call NE,$(WINAPP)_,_) $(call NE,$(TTYAPP)_,_)))
 
