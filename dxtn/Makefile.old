@@ -1,0 +1,14 @@
+libtxc_dxtn.so: txc_compress_dxtn.o txc_fetch_dxtn.o
+	gcc -O3 -Wall -pedantic -fPIC -lpthread -shared -o libtxc_dxtn.so txc_compress_dxtn.o txc_fetch_dxtn.o
+
+txc_compress_dxtn.o : txc_compress_dxtn.c txc_dxtn.h
+	gcc -c -O3 -Wall -pedantic -fPIC -o txc_compress_dxtn.o txc_compress_dxtn.c
+
+txc_fetch_dxtn.o : txc_fetch_dxtn.c txc_dxtn.h
+	gcc -c -O3 -Wall -pedantic -fPIC -o txc_fetch_dxtn.o txc_fetch_dxtn.c
+
+clean:
+	rm txc_fetch_dxtn.o txc_compress_dxtn.o libtxc_dxtn.so
+
+install: libtxc_dxtn.so
+	install libtxc_dxtn.so /usr/lib/
