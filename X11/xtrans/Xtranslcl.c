@@ -102,7 +102,6 @@ from The Open Group.
 /* Types of local connections supported:
  *  - PTS
  *  - named pipes
- *  - ISC
  *  - SCO
  */
 #if !defined(sun)
@@ -163,6 +162,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 
     if (strlen(sun_path) > sizeof(sunaddr->sun_path) - 1) {
 	PRMSG(1, "FillAddrInfo: path too long\n", 0, 0, 0);
+	xfree((char *) sunaddr);
 	return 0;
     }
     strcpy (sunaddr->sun_path, sun_path);
@@ -190,6 +190,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 
     if (strlen(peer_sun_path) > sizeof(p_sunaddr->sun_path) - 1) {
 	PRMSG(1, "FillAddrInfo: peer path too long\n", 0, 0, 0);
+	xfree((char *) p_sunaddr);
 	return 0;
     }
     strcpy (p_sunaddr->sun_path, peer_sun_path);
@@ -247,11 +248,6 @@ static void _dummy(int sig)
 #define NAMEDNODENAME "/tmp/.X11-pipe/X"
 #else
 #define NAMEDNODENAME "/dev/X/Nserver."
-
-/*
- * ISC is only defined for X11 since they are there for
- * backwards binary compatability only.
- */
 
 #define SCORNODENAME	"/dev/X%1sR"
 #define SCOSNODENAME	"/dev/X%1sS"
@@ -352,6 +348,7 @@ TRANS(PTSOpenClient)(XtransConnInfo ciptr, char *port)
 
     if ((fd = open(DEV_PTMX, O_RDWR)) < 0) {
 	PRMSG(1,"PTSOpenClient: failed to open %s\n", DEV_PTMX, 0,0);
+	close(server);
 	return(-1);
     }
 
@@ -933,7 +930,7 @@ TRANS(NAMEDAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
 #if defined(LOCAL_TRANS_SCO)
 
 /*
- * connect_spipe is used by the SCO and ISC connection types.
+ * connect_spipe is used by the SCO connection type.
  */
 static int
 connect_spipe(int fd1, int fd2)
@@ -958,7 +955,7 @@ connect_spipe(int fd1, int fd2)
 }
 
 /*
- * named_spipe is used by the SCO and ISC connection types.
+ * named_spipe is used by the SCO connection type.
  */
 
 static int
@@ -1126,6 +1123,10 @@ TRANS(SCOOpenServer)(XtransConnInfo ciptr, char *port)
     if ((fds = open(DEV_SPX, O_RDWR)) < 0 ||
 	(fdr = open(DEV_SPX, O_RDWR)) < 0 ) {
 	PRMSG(1,"SCOOpenServer: failed to open %s\n", DEV_SPX, 0,0 );
+	if (fds >= 0)
+		close(fds);
+	if (fdr >= 0)
+		close(fdr);
 	return -1;
     }
 
@@ -1165,7 +1166,7 @@ TRANS(SCOOpenServer)(XtransConnInfo ciptr, char *port)
     }
 
     fdr = open (serverR_path, O_RDWR | O_NDELAY);
-    if (fds < 0) {
+    if (fdr < 0) {
 	PRMSG(1,"SCOOpenServer: failed to open %s\n", serverR_path, 0, 0);
 	close (fds);
 	return -1;
@@ -1668,7 +1669,7 @@ static	char	*freeXLOCAL=NULL;
 #elif defined(sun)
 #define DEF_XLOCAL "UNIX:NAMED"
 #else
-#define DEF_XLOCAL "UNIX:PTS:NAMED:ISC:SCO"
+#define DEF_XLOCAL "UNIX:PTS:NAMED:SCO"
 #endif
 
 static void

@@ -300,7 +300,7 @@ typedef struct _Xtransport_table {
 #define TRANS_LOCAL	(1<<1)	/* local transport */
 #define TRANS_DISABLED	(1<<2)	/* Don't open this one */
 #define TRANS_NOLISTEN  (1<<3)  /* Don't listen on this one */
-#define TRANS_NOUNLINK	(1<<4)	/* Dont unlink transport endpoints */
+#define TRANS_NOUNLINK	(1<<4)	/* Don't unlink transport endpoints */
 #define TRANS_ABSTRACT	(1<<5)	/* Use abstract sockets if available */
 #define TRANS_NOXAUTH	(1<<6)	/* Don't verify authentication (because it's secure some other way at the OS layer) */
 

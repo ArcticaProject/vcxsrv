@@ -1829,12 +1829,12 @@ AM_CONDITIONAL([HAVE_PS2PDF], [test "$have_ps2pdf" = yes])
 # parm1:	specify the default value, yes or no.
 #
 AC_DEFUN([XORG_ENABLE_DOCS],[
-m4_define([default], m4_default([$1], [yes]))
+m4_define([docs_default], m4_default([$1], [yes]))
 AC_ARG_ENABLE(docs,
 	AS_HELP_STRING([--enable-docs],
-	   [Enable building the documentation (default: ]default[)]),
-	   [build_docs=$enableval], [build_docs=]default)
-m4_undefine([default])
+	   [Enable building the documentation (default: ]docs_default[)]),
+	   [build_docs=$enableval], [build_docs=]docs_default)
+m4_undefine([docs_default])
 AM_CONDITIONAL(ENABLE_DOCS, [test x$build_docs = xyes])
 AC_MSG_CHECKING([whether to build documentation])
 AC_MSG_RESULT([$build_docs])
@@ -1922,18 +1922,16 @@ AC_ARG_ENABLE(malloc0returnsnull,
 
 AC_MSG_CHECKING([whether malloc(0) returns NULL])
 if test "x$MALLOC_ZERO_RETURNS_NULL" = xauto; then
-	AC_RUN_IFELSE([
-char *malloc();
-char *realloc();
-char *calloc();
-main() {
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([
+#include <stdlib.h>
+],[
     char *m0, *r0, *c0, *p;
     m0 = malloc(0);
     p = malloc(10);
     r0 = realloc(p,0);
-    c0 = calloc(0);
-    exit(m0 == 0 || r0 == 0 || c0 == 0 ? 0 : 1);
-}],
+    c0 = calloc(0,10);
+    exit((m0 == 0 || r0 == 0 || c0 == 0) ? 0 : 1);
+])],
 		[MALLOC_ZERO_RETURNS_NULL=yes],
 		[MALLOC_ZERO_RETURNS_NULL=no],
 		[MALLOC_ZERO_RETURNS_NULL=yes])

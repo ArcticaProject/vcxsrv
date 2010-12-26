@@ -98,7 +98,7 @@ load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=0
 xkbcomp.exe: ..\xkbcomp\obj\release\xkbcomp.exe
 	copy $< $@
 
-%: ..\apps\xcalc\%.ad
+%: ..\apps\xcalc\app-defaults\%
 	copy $< $@
 
 load_makefile ..\apps\xcalc\makefile MAKESERVER=0 DEBUG=0

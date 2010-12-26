@@ -1,3 +1,271 @@
+commit d25f90fe260f546cdea0ec2ebc84df446eef5f47
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Tue Dec 7 19:05:26 2010 -0800
+
+    xproto 7.0.20
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 78806c9fc4be8da93581dcbdafbd668cac9f2d8b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 17:57:24 2010 -0800
+
+    spec: Convert .DS/.DE nroff sections to <literallayout> tags
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit f1309dd259f29357b362c7c40913f33d3c144f49
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 17:37:05 2010 -0800
+
+    spec: Convert some tables that didn't get converted from troff properly
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 19e314d95219d64aea079eb9d2b378533b6efdcd
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 16:28:48 2010 -0800
+
+    Replace ASCII -> arrows with Unicode ▶
+    
+    Matches formatting used in current extension specs like randr
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit fa2daaceb0fe5324589b9fca9d156b41697d3a52
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 16:06:37 2010 -0800
+
+    spec: Make request names in text hyperlinks to request definition sections
+    
+    Same basic process as previous commit for event names
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 998f64c6c986feee7a745a5169152025b229c6d8
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 15:31:21 2010 -0800
+
+    spec: Make event names in text hyperlinks to event definition sections
+    
+    Started by taking list of event names and generating a list of perl
+    commands such as:
+    s{^\<emphasis role='bold'\>KeyPress\</emphasis\>}{<link linkend="events:KeyPress"><emphasis role='bold'>KeyPress</emphasis></link>}g;
+    
+    and running that with perl -i -p /tmp/e.pl *.xml
+    
+    Many of those changes were then manually reverted to avoid having
+    the same link appear multiple times in a paragraph or to avoid having
+    the definition sections link to themselves.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit c4be93c2188c9d8b1b186dde4d80ef91b31f4123
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 14:31:08 2010 -0800
+
+    spec: Convert Events chapter into sections
+    
+    Started with a similar replace-regexp as the Requests chapter, but
+    with a lot more manual editing due to the sections with multiple
+    events grouped into a set.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit eb772110ff1a4f6fc6d574bd23679b0408621ef3
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 13:22:04 2010 -0800
+
+    spec: Convert Requests chapter to have a section per request
+    
+    Bulk of change performed with emacs replace-regexp:
+    <para id="requests:[^"]+">
+    <emphasis role='bold'>\([^<]+\)</emphasis>
+    <indexterm significance="preferred"><primary>[^<]+</primary></indexterm>
+    </para>
+    with:
+       </section>
+      <section id="requests:\1">
+        <title>\1</title>
+        <indexterm significance="preferred"><primary>\1</primary></indexterm>
+    
+    Plus manual editing of the first & last section, and manual
+    conversion of GrabButton & GrabServer due to extra indexterm lines.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 14a0efb08c5e5ca12c8afce213d457e07900b5e6
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 11:45:48 2010 -0800
+
+    spec: Fix a bunch of the .RB -> <emphasis> mappings
+    
+    Cleans up the opening { of enum lists that the closing was handled
+    by commit 68bf1a7a0c89
+    
+    perl -i -p -e 's{^<emphasis([^>]*)>(\W+?\s+)}{$2<emphasis$1>}g' *.xml
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit c11f17ab7654ff32bcf486db24e36a3620408871
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 01:38:10 2010 -0800
+
+    spec: add more indexterms linking into the body of the document
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 19ce91d22578e0a12c4afb4171ae03a497c1fff3
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Dec 4 00:21:36 2010 -0800
+
+    spec: move another indexterm in glossary to workaround fop crashing bug
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 2406b705e546a97b39b3238bd95f125e0f004993
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Dec 3 22:09:05 2010 -0800
+
+    spec: Change titles of other specs from emphasis to citetitle tags
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 10b0200992ee81c0749a69eeba1a05562d724b3a
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Dec 3 22:00:44 2010 -0800
+
+    spec: Fix section title markup in Connection Setup chapter
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 573cf6480727dafa68bd14e5bc725f0b5839f34e
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Dec 3 21:49:39 2010 -0800
+
+    spec: Fix section title markup in Protocol Formats chapter
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 79afc5fb996e820eaf437f1dff42df3a7f70810a
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Dec 3 21:42:00 2010 -0800
+
+    spec: convert predefined atom list from table to simplelist
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 68bf1a7a0c89cdc1c48ed967793d083519f2fb96
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Dec 3 16:02:45 2010 -0800
+
+    spec: Fix a bunch of the .BR -> <emphasis> mappings
+    
+    perl -i -p -e 's{ (\W*?)\s*</emphasis>}{</emphasis>$1}g' *.xml
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit eef13837a6296cbe8d4cd9bda74352769f6a1a66
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Dec 2 15:33:34 2010 -0500
+
+    specs: add ServerInterpreted addresses directory
+    
+    Relocated from xorg-docs/specs/SIAddresses
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit fb8a596aec87133500b6ee33b7843d82b09ecdf7
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Mon Nov 29 00:23:38 2010 -0800
+
+    spec: Add glossterm cross reference links to glossary
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit ee6ddb4b0e6852df8c07680bd6b1dddaa5c24616
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Nov 28 23:56:12 2010 -0800
+
+    spec: Stopping marking glossary terms as functions when they're not
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 710b9979c9db2d0be0dcc787fa1a9229d2b30636
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Nov 28 23:41:36 2010 -0800
+
+    spec: Finish converting some unconverted index entries in glossary
+    
+    Change made by:
+    perl -i -p -e 's{\<\!-- \.IN "([^"]+)" "([^"]+)" "\@DEF\@" --\>}{  <indexterm significance="preferred"><primary>$1</primary><secondary>$2</secondary></indexterm>}' glossary.xml
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit ae571ef20dce0281cd7961663decd9e45838368e
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Nov 28 23:33:54 2010 -0800
+
+    spec: Add id's to glossary entries for use in cross-reference links
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 6bc03d2e9f390638295966714b96ec517ea0b3af
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Nov 28 23:26:53 2010 -0800
+
+    spec: Add cross-reference links in doc ("see ...")
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 2fd776b24ed85865186d40d95e2e9f11831a8e33
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Nov 21 11:46:30 2010 -0800
+
+    Sun's copyrights belong to Oracle now
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit fe7b269fd329201fdbffa12ce7724287c10a3abf
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sun Nov 21 09:48:52 2010 -0800
+
+    Bug 31132: Xarch.h needs to include <sys/types.h> on Solaris 10
+    
+    Workaround older Solaris releases using types from <sys/types.h> in
+    <sys/byteorder.h> and not including it directly.
+    (That was fixed in OpenSolaris/Solaris 11 as part of:
+    http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=4483139 )
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Acked-by: Pat Kane <pekane52@gmail.com>
+
+commit 5d3428de974d15357b0ad407f4c5222cfaa8f9f3
+Author: Bastien Nocera <hadess@hadess.net>
+Date:   Mon Nov 8 15:24:55 2010 +1000
+
+    Add XF86XK_TouchpadOn/Off
+    
+    Those keysyms will be used to report events from the hardware. Hardware
+    like the HP laptops emit 2 separate keycodes when the touchpad is enabled
+    or disabled. So we can catch those in user-space and display a popup.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=31300
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d441b9b0230b57159fa8522b80f18a0b87f5aac5
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Nov 9 15:19:09 2010 -0500
+
+    config: HTML file generation: use the installed copy of xorg.css
+    
+    Currenlty the xorg.css file is copied in each location
+    where a DocBook/XML file resides. This produces about
+    70 copies in the $(docdir) install tree.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
 commit cda6ce66caa01997b9dd32eb8689d6e746558369
 Author: Alan Coopersmith <alan.coopersmith@oracle.com>
 Date:   Wed Nov 3 00:04:22 2010 -0700

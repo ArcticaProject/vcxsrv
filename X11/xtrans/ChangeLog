@@ -1,3 +1,250 @@
+commit 59f57d1a19d4091fef115b9eafa139bf620332cb
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Mon Nov 8 16:33:45 2010 -0800
+
+    xtrans 1.2.6
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 05cd71c899e83022147f27085ee652d26f5462cb
+Author: Jesse Adkins <jesserayadkins@gmail.com>
+Date:   Sat Nov 6 12:53:24 2010 -0700
+
+    Remove ISCFuncs, fix SCOFuncs inclusion (bug 23324)
+    
+    ISCFuncs was removed by commit 339ddc413559d4cb117a72f87b2a70dae6911c32.
+    SCOFuncs should be for SCO only, instead of !sun.
+    
+    Also, remove comments that suggest ISC support.
+    
+    Signed-off-by: Jesse Adkins <jesserayadkins@gmail.com>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 0e5a66c82535dd8e9beee9fc4c42c52f90d05f50
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 6 13:22:59 2010 -0700
+
+    doc: Update for X11R7/modularization
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 1858516e9f0f3e65cc3d1f6cedfe8bfa614c8082
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 6 11:22:15 2010 -0700
+
+    doc: Markup & typo cleanups
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 16bdc50ca85bbae065a32647e2410a5ca47b4924
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 6 09:53:08 2010 -0700
+
+    doc: Correct legal notices
+    
+    Restore both copyright/license notices from troff version
+    Move implementation note out of legalnotice section
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit d01d081538d04ac60b9e14f6e2faa60fe6bed5ff
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 6 09:23:26 2010 -0700
+
+    doc: Use installed css stylesheet instead of making another copy
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit ea6977f4a51612172ba51c3bd35aa150ad9ff158
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 6 12:41:48 2010 -0700
+
+    Xtransint.h: Add missing ' in comment
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 862d2de24950d2658158ebc4cf8307e73f80bc8d
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Oct 29 18:22:33 2010 -0700
+
+    Sun's copyrights now belong to Oracle
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit cbb59ebc916d0be18c322eec782b694f4dc2e685
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Jun 27 20:27:39 2010 -0400
+
+    Update README to reflect docs converted from nroff to DocBook XML
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 3441142714b2640d1e143fcb5d089a2a42bd5321
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Jun 27 20:21:20 2010 -0400
+
+    doc: remove trailing spaces in xtrans.xml
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 7761846c7fd97f15d7207e1b9fd9d42c9e58a0c4
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Jun 26 13:06:22 2010 -0400
+
+    doc: replace groff input format with docbook xml format
+    
+    Initial version of xtrans docbook xml.
+    Requires util-macros 1.10
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 4f557036253ac5750576c88e5b9a86759a49d247
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Jun 18 21:47:52 2010 -0400
+
+    config: XORG_WITH_GROFF: use HAVE_GROFF_HTML conditional
+    
+    Groff uses grohtml to generate html output format. This program, in turn,
+    uses a number of pnm* commands from the netpbm package, psselect
+    from the psutils package and the ghostscript package.
+    
+    These are independently installed, so they could be missing.
+    Skip the HTML output format if one of the dependencies is missing.
+    The version 1.9 of the util-macros package is required.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 1e9b958a096682b1ec111d400bd25048e3f95ed4
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri May 21 18:54:20 2010 -0700
+
+    Update README to reflect docs moved here from xorg-docs module
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit d400e69526c1c331e8e23893e2ba8658979376e8
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Mar 29 14:53:49 2010 -0400
+
+    config: remove the pkgconfig pc.in file from EXTRA_DIST
+    
+    Automake always includes it in the tarball.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 373922e1529b3d55513fbc0ec24527600f7b529c
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Feb 16 18:18:06 2010 -0500
+
+    doc: use HAVE_GROFF_MM to skip doc when 'm.tmac' macros missing
+    
+    This conditional is defined in XORG_WITH_GROFF macro.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit b531ff3ed2ad841b716ba370fd43bbe8f06f1185
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Jan 29 15:05:37 2010 -0500
+
+    doc: use new macros XORG_WITH_GROFF and PS2PDF
+    
+    These control the usage of doc tools
+    Also use XORG_ENABLE_DOCS to control generation of docs
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 5922556f408fbcd14e7ad23bbe46db2ae8dcdee6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 21:11:43 2010 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit dab2bcdaf60977643ec55d71a81e67c1e3a162a9
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Thu Dec 17 08:31:20 2009 +0100
+
+    require autoconf 2.60 because of $(docdir) use
+    
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    Reviewed-by: Gaetan Nadon <memsize@videotron.ca>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 197ec0dc83e775e42fce4966142ae3a641f2db69
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Nov 27 20:56:05 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 27a18fb2c9356cc44bdd892f87200c3ea230109b
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:11 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit 92da89326d26e0924d4c6efe2ebd26ceb527f4f7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:43 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit 9aeff40d0722b4fedc4ab9ccc1aaff75368020fe
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 12:34:20 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit f0f7c47055eecac35786ec616c7632604da204b5
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Oct 21 12:47:27 2009 -0700
+
+    This is not a GNU project, so declare it foreign.
+    
+    On Wed, 2009-10-21 at 13:36 +1000, Peter Hutterer wrote:
+    > On Tue, Oct 20, 2009 at 08:23:55PM -0700, Jeremy Huddleston wrote:
+    > > I noticed an INSTALL file in xlsclients and libXvMC today, and it
+    > > was quite annoying to work around since 'autoreconf -fvi' replaces
+    > > it and git wants to commit it.  Should these files even be in git?
+    > > Can I nuke them for the betterment of humanity and since they get
+    > > created by autoreconf anyways?
+    >
+    > See https://bugs.freedesktop.org/show_bug.cgi?id=24206
+    
+    As an interim measure, replace AM_INIT_AUTOMAKE([dist-bzip2]) with
+    AM_INIT_AUTOMAKE([foreign dist-bzip2]). This will prevent the generation
+    of the INSTALL file. It is also part of the 24206 solution.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 7d98b9b03c5fd5a82f9f4d215b10c0926edeab00
+Author: Eric Sesterhenn <eric.sesterhenn@lsexperts.de>
+Date:   Mon Oct 19 09:53:18 2009 -0700
+
+    Bug 24612: Memory & fd leaks in local transports
+    
+    X.Org bug #24612 <http://bugs.freedesktop.org/show_bug.cgi?id=24612>
+    Patch #30548 <http://bugs.freedesktop.org/attachment.cgi?id=30548>
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
 commit 1127b8ec766ed8c48cc49b0779647fb697a07ebd
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Sat Oct 17 13:14:03 2009 -0700

@@ -40,6 +40,7 @@
 # else
 
 #  if defined(SVR4) || defined(__SVR4)
+#   include <sys/types.h>
 #   include <sys/byteorder.h>
 #  elif defined(CSRG_BASED)
 #   if defined(__NetBSD__) || defined(__OpenBSD__)
