@@ -83,6 +83,6 @@ xkbcomp-1.1.1
 xkeyboard-config-1.8
 xorg-server-1.8.0
 xproto-7.0.19
-xtrans-1.2.5
+xtrans-1.2.6
 xwininfo-1.1.0
 zlib-1.2.3

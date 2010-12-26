@@ -10,9 +10,10 @@ system, this package simply installs the C source files into
 $(prefix)/include/X11/Xtrans and installs a pkg-config file and an
 autoconf m4 macro file with the flags needed to use it.
 
-Documentation of the xtrans API can be found in the xorg-docs package,
-in PostScript format in xorg-docs/hardcopy/xtrans/Xtrans.PS.gz and in
-the original troff format in xorg-docs/specs/xtrans/Xtrans.mm .
+Documentation of the xtrans API can be found in the included xtrans.xml
+file in DocBook XML format. If 'xmlto' is installed, you can generate text,
+html, postscript or pdf versions of the documentation by configuring
+the build with --enable-docs, which is the default.
 
 Please submit bugs & patches to the Xorg bugzilla:
 
