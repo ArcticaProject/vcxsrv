@@ -1,3 +1,242 @@
+commit 2755eae3be5fc239da792c46a10426281ee77b85
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Nov 26 13:53:42 2010 -0800
+
+    xcalc 1.0.4.1
+    
+    Just respinning the tarballs with the correct install-sh instead of the
+    broken copy accidentally included in the 1.0.4 tarballs.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 8245b9f8451b92a1aaa7a3520114a4afdd37c2e8
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Nov 24 15:58:04 2010 -0800
+
+    xcalc 1.0.4
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 4ac002703c8bda62f768f581e1ec81bbf7446365
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 20 11:12:55 2010 -0800
+
+    create_keypad: declare list of button name strings as const
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 0d7aa29c6209391cf8307c19b5cf84528f8c2184
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 20 10:55:58 2010 -0800
+
+    Purge RCS/CVS version tags
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 9ede32efd5f840b7728e28e24efe2759e2c3917b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 20 10:41:45 2010 -0800
+
+    config: Explicitly check for xt & x11 pkgs, since xcalc calls those directly
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 4be6d1bd7b6293ff4af1042098a6164aa9639595
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 20 10:37:40 2010 -0800
+
+    config: replace deprecated AM_CONFIG_HEADER with AC_CONFIG_HEADERS
+    
+    Regroup AC statements under the Autoconf initialization section.
+    Regroup AM statements under the Automake initialization section.
+    Add missing AC_CONFIG_SRCDIR
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 30e01e9b012c7191c28946a73c2ff5b969d9eec7
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 20 10:35:57 2010 -0800
+
+    config: Remove unnecessary calls from configure.ac
+    
+    AC_PROG_CC & AC_PROG_INSTALL are provided by XORG_DEFAULT_OPTIONS now
+    PKG_CONFIG_MODULES handles AC_SUBST of the CFLAGS & LIBS variables
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 5505a663714c71aa3545889633f36079522edcb5
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Nov 20 10:34:33 2010 -0800
+
+    config: upgrade to util-macros 1.8 for additional man page support
+    
+    Use MAN_SUBST now supplied in XORG_MANPAGE_SECTIONS
+    The value of MAN_SUBST is the same for all X.Org packages.
+    
+    Use AC_PROG_SED now supplied by XORG_DEFAULT_OPTIONS
+    Enables use of platform appropriate version of sed.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 6919c12a985abd335b4890005d572107f833c3ec
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Nov 20 10:31:43 2010 -0800
+
+    config: update AC_PREREQ statement to 2.60
+    
+    Unrelated to the previous patches, the new value simply reflects
+    the reality that the minimum level for autoconf to configure
+    all x.org modules is 2.60 dated June 2006.
+    
+    ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 8180d8ea42cfdda9ed3828fb28d1a6cd24d951db
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Feb 11 10:08:06 2010 -0500
+
+    config: move CWARNFLAGS from configure.ac to Makefile.am
+    
+    Compiler warning flags should be explicitly set in the makefile
+    rather than being merged with other packages compiler flags.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 04d8b9bfcd40eee452ba080b654dac9281251115
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Dec 19 20:48:47 2009 -0500
+
+    configure.ac: use backticks rather than $() for cmd subs
+    
+    Use "$PKG_CONFIG" rather than hard coded "pkg-config"
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 6c21e467c805d62593d34da9e83a2fa2f01798a6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 17 19:51:44 2009 -0800
+
+    xcalc 1.0.3
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 146b1da64e575d330c2599161938140a4233cb6a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 17 19:21:22 2009 -0800
+
+    Apply automake silencer to man page generation rule
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit abb1bf5b74642f8d40ca5fbf87490c5186f41590
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Nov 26 09:19:52 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 109d08574cf3d951d73668a5a23c97dad94d6e75
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:08 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit dc35d949925e76e74403b4aea02c2ff198bf0ec6
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Oct 27 15:07:24 2009 -0400
+
+    Deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit 31a1d8fc1486e6dd0cb9c5ba569c820b3b79d890
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:38 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit befb756a62a11a857f20f903b8b892768a58e229
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 12:34:15 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit eab3461ac8e9e809094f45ca2084ddf7b4485035
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Sep 27 15:37:25 2009 -0400
+
+    Makefile.am: do not include autogen.sh in distribution #24183
+    
+    This is a private build script that should not be distributed
+
+commit b685a52aa117e9c7841fdb9b9e6b44fe898cd929
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Oct 1 14:54:20 2009 -0700
+
+    Add README with pointers to mailing lists, bugzilla, & git
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit dd6ca812a9e540ade4afd5db9dd13ea7ed3ea3ab
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Mon Jan 12 20:09:07 2009 -0200
+
+    Ansification and compile warning fixes.
+    
+      This also uses XORG_CHANGELOG and XORG_CWARNFLAGS, corrects
+    make distcheck and all gcc 4.3 and sparse warnings.
+
+commit fd75efe1d9b57c483f7cedd9e2dce34b97eef75e
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Wed Aug 20 10:32:49 2008 -0400
+
+    xaw8 is gone, use xaw7
+
+commit e8360958ef3dba1e7ab8282c5055b0ccf5650f1c
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri May 16 14:20:03 2008 +0200
+
+    $(builddir) is the current directory
+    
+    Apparently automake doesn't always export the builddir variable.
+    This fixes my previous commit.
+
+commit d3849e5474e65d2cf4212118896883330752c763
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun Apr 20 19:42:48 2008 +0200
+
+    Fix build with builddir != srcdir
+
+commit 18db0ddc3a18317585172374d0157dbdc76146aa
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Mar 27 20:07:34 2008 -0700
+
+    Build fix for file systems that are not case sensitive
+
+commit 9f76a0d8684da6dfad67282be213139b6f87a05a
+Author: Matthieu Herrb <matthieu@bluenote.herrb.net>
+Date:   Sat Mar 8 22:09:59 2008 +0100
+
+    Makefile.am: nuke RCS Id
+
 commit 19fad31ddef4c1063ee2315dfee94e4ebb5f0ff0
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Tue Aug 21 11:23:52 2007 -0700
