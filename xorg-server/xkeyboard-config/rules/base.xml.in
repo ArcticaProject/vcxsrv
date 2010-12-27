@@ -2079,6 +2079,13 @@
             <languageList><iso639Id>tib</iso639Id></languageList>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>uig</name>
+            <description>Uyghur</description>
+            <languageList><iso639Id>uig</iso639Id></languageList>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>
