@@ -88,6 +88,7 @@ Section "VcXsrv (required)"
   File "..\..\tools\plink\obj\release\plink.exe"
   File "..\swrast_dri.dll"
   File "..\swrast_dri_dbg.dll"
+  File "..\dxtn.dll"
 !ifndef VS2008
   File "msvcr100.dll"
   File "msvcp100.dll"
