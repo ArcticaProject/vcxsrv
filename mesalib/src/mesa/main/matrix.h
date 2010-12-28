@@ -28,8 +28,9 @@
 #define MATRIX_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
 
+struct gl_context;
 
 extern void GLAPIENTRY
 _mesa_Frustum( GLdouble left, GLdouble right,
@@ -97,16 +98,16 @@ _mesa_MultTransposeMatrixdARB( const GLdouble *m );
 
 
 extern void 
-_mesa_init_matrix( GLcontext * ctx );
+_mesa_init_matrix( struct gl_context * ctx );
 
 extern void 
-_mesa_init_transform( GLcontext *ctx );
+_mesa_init_transform( struct gl_context *ctx );
 
 extern void
-_mesa_free_matrix_data( GLcontext *ctx );
+_mesa_free_matrix_data( struct gl_context *ctx );
 
 extern void 
-_mesa_update_modelview_project( GLcontext *ctx, GLuint newstate );
+_mesa_update_modelview_project( struct gl_context *ctx, GLuint newstate );
 
 
 #endif

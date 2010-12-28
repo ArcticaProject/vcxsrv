@@ -324,23 +324,42 @@ enum {
 };
 
 struct ast_type_qualifier {
-   unsigned invariant:1;
-   unsigned constant:1;
-   unsigned attribute:1;
-   unsigned varying:1;
-   unsigned in:1;
-   unsigned out:1;
-   unsigned centroid:1;
-   unsigned uniform:1;
-   unsigned smooth:1;
-   unsigned flat:1;
-   unsigned noperspective:1;
+   union {
+      struct {
+	 unsigned invariant:1;
+	 unsigned constant:1;
+	 unsigned attribute:1;
+	 unsigned varying:1;
+	 unsigned in:1;
+	 unsigned out:1;
+	 unsigned centroid:1;
+	 unsigned uniform:1;
+	 unsigned smooth:1;
+	 unsigned flat:1;
+	 unsigned noperspective:1;
 
-   /** \name Layout qualifiers for GL_ARB_fragment_coord_conventions */
-   /*@{*/
-   unsigned origin_upper_left:1;
-   unsigned pixel_center_integer:1;
-   /*@}*/
+	 /** \name Layout qualifiers for GL_ARB_fragment_coord_conventions */
+	 /*@{*/
+	 unsigned origin_upper_left:1;
+	 unsigned pixel_center_integer:1;
+	 /*@}*/
+
+	 /**
+	  * Flag set if GL_ARB_explicit_attrib_location "location" layout
+	  * qualifier is used.
+	  */
+	 unsigned explicit_location:1;
+      } q;
+      unsigned i;
+   } flags;
+
+   /**
+    * Location specified via GL_ARB_explicit_attrib_location layout
+    *
+    * \note
+    * This field is only valid if \c explicit_location is set.
+    */
+   unsigned location;
 };
 
 class ast_struct_specifier : public ast_node {
@@ -694,5 +713,9 @@ extern ir_rvalue *
 _mesa_ast_field_selection_to_hir(const ast_expression *expr,
 				 exec_list *instructions,
 				 struct _mesa_glsl_parse_state *state);
+
+void
+emit_function(_mesa_glsl_parse_state *state, exec_list *instructions,
+	      ir_function *f);
 
 #endif /* AST_H */

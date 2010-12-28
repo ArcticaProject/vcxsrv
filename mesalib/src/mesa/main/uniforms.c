@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2004-2008  Brian Paul   All Rights Reserved.
  * Copyright (C) 2009-2010  VMware, Inc.  All Rights Reserved.
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,7 +45,7 @@
 #include "program/prog_parameter.h"
 #include "program/prog_statevars.h"
 #include "program/prog_uniform.h"
-
+#include "program/prog_instruction.h"
 
 
 static GLenum
@@ -79,6 +80,238 @@ base_uniform_type(GLenum type)
    }
 }
 
+static struct gl_builtin_uniform_element gl_DepthRange_elements[] = {
+   {"near", {STATE_DEPTH_RANGE, 0, 0}, SWIZZLE_XXXX},
+   {"far", {STATE_DEPTH_RANGE, 0, 0}, SWIZZLE_YYYY},
+   {"diff", {STATE_DEPTH_RANGE, 0, 0}, SWIZZLE_ZZZZ},
+};
+
+static struct gl_builtin_uniform_element gl_ClipPlane_elements[] = {
+   {NULL, {STATE_CLIPPLANE, 0, 0}, SWIZZLE_XYZW}
+};
+
+static struct gl_builtin_uniform_element gl_Point_elements[] = {
+   {"size", {STATE_POINT_SIZE}, SWIZZLE_XXXX},
+   {"sizeMin", {STATE_POINT_SIZE}, SWIZZLE_YYYY},
+   {"sizeMax", {STATE_POINT_SIZE}, SWIZZLE_ZZZZ},
+   {"fadeThresholdSize", {STATE_POINT_SIZE}, SWIZZLE_WWWW},
+   {"distanceConstantAttenuation", {STATE_POINT_ATTENUATION}, SWIZZLE_XXXX},
+   {"distanceLinearAttenuation", {STATE_POINT_ATTENUATION}, SWIZZLE_YYYY},
+   {"distanceQuadraticAttenuation", {STATE_POINT_ATTENUATION}, SWIZZLE_ZZZZ},
+};
+
+static struct gl_builtin_uniform_element gl_FrontMaterial_elements[] = {
+   {"emission", {STATE_MATERIAL, 0, STATE_EMISSION}, SWIZZLE_XYZW},
+   {"ambient", {STATE_MATERIAL, 0, STATE_AMBIENT}, SWIZZLE_XYZW},
+   {"diffuse", {STATE_MATERIAL, 0, STATE_DIFFUSE}, SWIZZLE_XYZW},
+   {"specular", {STATE_MATERIAL, 0, STATE_SPECULAR}, SWIZZLE_XYZW},
+   {"shininess", {STATE_MATERIAL, 0, STATE_SHININESS}, SWIZZLE_XXXX},
+};
+
+static struct gl_builtin_uniform_element gl_BackMaterial_elements[] = {
+   {"emission", {STATE_MATERIAL, 1, STATE_EMISSION}, SWIZZLE_XYZW},
+   {"ambient", {STATE_MATERIAL, 1, STATE_AMBIENT}, SWIZZLE_XYZW},
+   {"diffuse", {STATE_MATERIAL, 1, STATE_DIFFUSE}, SWIZZLE_XYZW},
+   {"specular", {STATE_MATERIAL, 1, STATE_SPECULAR}, SWIZZLE_XYZW},
+   {"shininess", {STATE_MATERIAL, 1, STATE_SHININESS}, SWIZZLE_XXXX},
+};
+
+static struct gl_builtin_uniform_element gl_LightSource_elements[] = {
+   {"ambient", {STATE_LIGHT, 0, STATE_AMBIENT}, SWIZZLE_XYZW},
+   {"diffuse", {STATE_LIGHT, 0, STATE_DIFFUSE}, SWIZZLE_XYZW},
+   {"specular", {STATE_LIGHT, 0, STATE_SPECULAR}, SWIZZLE_XYZW},
+   {"position", {STATE_LIGHT, 0, STATE_POSITION}, SWIZZLE_XYZW},
+   {"halfVector", {STATE_LIGHT, 0, STATE_HALF_VECTOR}, SWIZZLE_XYZW},
+   {"spotDirection", {STATE_LIGHT, 0, STATE_SPOT_DIRECTION},
+    MAKE_SWIZZLE4(SWIZZLE_X,
+		  SWIZZLE_Y,
+		  SWIZZLE_Z,
+		  SWIZZLE_Z)},
+   {"spotCosCutoff", {STATE_LIGHT, 0, STATE_SPOT_DIRECTION}, SWIZZLE_WWWW},
+   {"spotCutoff", {STATE_LIGHT, 0, STATE_SPOT_CUTOFF}, SWIZZLE_XXXX},
+   {"spotExponent", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_WWWW},
+   {"constantAttenuation", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_XXXX},
+   {"linearAttenuation", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_YYYY},
+   {"quadraticAttenuation", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_ZZZZ},
+};
+
+static struct gl_builtin_uniform_element gl_LightModel_elements[] = {
+   {"ambient", {STATE_LIGHTMODEL_AMBIENT, 0}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_FrontLightModelProduct_elements[] = {
+   {"sceneColor", {STATE_LIGHTMODEL_SCENECOLOR, 0}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_BackLightModelProduct_elements[] = {
+   {"sceneColor", {STATE_LIGHTMODEL_SCENECOLOR, 1}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_FrontLightProduct_elements[] = {
+   {"ambient", {STATE_LIGHTPROD, 0, 0, STATE_AMBIENT}, SWIZZLE_XYZW},
+   {"diffuse", {STATE_LIGHTPROD, 0, 0, STATE_DIFFUSE}, SWIZZLE_XYZW},
+   {"specular", {STATE_LIGHTPROD, 0, 0, STATE_SPECULAR}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_BackLightProduct_elements[] = {
+   {"ambient", {STATE_LIGHTPROD, 0, 1, STATE_AMBIENT}, SWIZZLE_XYZW},
+   {"diffuse", {STATE_LIGHTPROD, 0, 1, STATE_DIFFUSE}, SWIZZLE_XYZW},
+   {"specular", {STATE_LIGHTPROD, 0, 1, STATE_SPECULAR}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_TextureEnvColor_elements[] = {
+   {NULL, {STATE_TEXENV_COLOR, 0}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_EyePlaneS_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_S}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_EyePlaneT_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_T}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_EyePlaneR_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_R}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_EyePlaneQ_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_Q}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_ObjectPlaneS_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_S}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_ObjectPlaneT_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_T}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_ObjectPlaneR_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_R}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_ObjectPlaneQ_elements[] = {
+   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_Q}, SWIZZLE_XYZW},
+};
+
+static struct gl_builtin_uniform_element gl_Fog_elements[] = {
+   {"color", {STATE_FOG_COLOR}, SWIZZLE_XYZW},
+   {"density", {STATE_FOG_PARAMS}, SWIZZLE_XXXX},
+   {"start", {STATE_FOG_PARAMS}, SWIZZLE_YYYY},
+   {"end", {STATE_FOG_PARAMS}, SWIZZLE_ZZZZ},
+   {"scale", {STATE_FOG_PARAMS}, SWIZZLE_WWWW},
+};
+
+static struct gl_builtin_uniform_element gl_NormalScale_elements[] = {
+   {NULL, {STATE_NORMAL_SCALE}, SWIZZLE_XXXX},
+};
+
+#define MATRIX(name, statevar, modifier)				\
+   static struct gl_builtin_uniform_element name ## _elements[] = {	\
+      { NULL, { statevar, 0, 0, 0, modifier}, SWIZZLE_XYZW },		\
+      { NULL, { statevar, 0, 1, 1, modifier}, SWIZZLE_XYZW },		\
+      { NULL, { statevar, 0, 2, 2, modifier}, SWIZZLE_XYZW },		\
+      { NULL, { statevar, 0, 3, 3, modifier}, SWIZZLE_XYZW },		\
+   }
+
+MATRIX(gl_ModelViewMatrix,
+       STATE_MODELVIEW_MATRIX, STATE_MATRIX_TRANSPOSE);
+MATRIX(gl_ModelViewMatrixInverse,
+       STATE_MODELVIEW_MATRIX, STATE_MATRIX_INVTRANS);
+MATRIX(gl_ModelViewMatrixTranspose,
+       STATE_MODELVIEW_MATRIX, 0);
+MATRIX(gl_ModelViewMatrixInverseTranspose,
+       STATE_MODELVIEW_MATRIX, STATE_MATRIX_INVERSE);
+
+MATRIX(gl_ProjectionMatrix,
+       STATE_PROJECTION_MATRIX, STATE_MATRIX_TRANSPOSE);
+MATRIX(gl_ProjectionMatrixInverse,
+       STATE_PROJECTION_MATRIX, STATE_MATRIX_INVTRANS);
+MATRIX(gl_ProjectionMatrixTranspose,
+       STATE_PROJECTION_MATRIX, 0);
+MATRIX(gl_ProjectionMatrixInverseTranspose,
+       STATE_PROJECTION_MATRIX, STATE_MATRIX_INVERSE);
+
+MATRIX(gl_ModelViewProjectionMatrix,
+       STATE_MVP_MATRIX, STATE_MATRIX_TRANSPOSE);
+MATRIX(gl_ModelViewProjectionMatrixInverse,
+       STATE_MVP_MATRIX, STATE_MATRIX_INVTRANS);
+MATRIX(gl_ModelViewProjectionMatrixTranspose,
+       STATE_MVP_MATRIX, 0);
+MATRIX(gl_ModelViewProjectionMatrixInverseTranspose,
+       STATE_MVP_MATRIX, STATE_MATRIX_INVERSE);
+
+MATRIX(gl_TextureMatrix,
+       STATE_TEXTURE_MATRIX, STATE_MATRIX_TRANSPOSE);
+MATRIX(gl_TextureMatrixInverse,
+       STATE_TEXTURE_MATRIX, STATE_MATRIX_INVTRANS);
+MATRIX(gl_TextureMatrixTranspose,
+       STATE_TEXTURE_MATRIX, 0);
+MATRIX(gl_TextureMatrixInverseTranspose,
+       STATE_TEXTURE_MATRIX, STATE_MATRIX_INVERSE);
+
+static struct gl_builtin_uniform_element gl_NormalMatrix_elements[] = {
+   { NULL, { STATE_MODELVIEW_MATRIX, 0, 0, 0, STATE_MATRIX_INVERSE},
+     SWIZZLE_XYZW },
+   { NULL, { STATE_MODELVIEW_MATRIX, 0, 1, 1, STATE_MATRIX_INVERSE},
+     SWIZZLE_XYZW },
+   { NULL, { STATE_MODELVIEW_MATRIX, 0, 2, 2, STATE_MATRIX_INVERSE},
+     SWIZZLE_XYZW },
+};
+
+#undef MATRIX
+
+#define STATEVAR(name) {#name, name ## _elements, Elements(name ## _elements)}
+
+const struct gl_builtin_uniform_desc _mesa_builtin_uniform_desc[] = {
+   STATEVAR(gl_DepthRange),
+   STATEVAR(gl_ClipPlane),
+   STATEVAR(gl_Point),
+   STATEVAR(gl_FrontMaterial),
+   STATEVAR(gl_BackMaterial),
+   STATEVAR(gl_LightSource),
+   STATEVAR(gl_LightModel),
+   STATEVAR(gl_FrontLightModelProduct),
+   STATEVAR(gl_BackLightModelProduct),
+   STATEVAR(gl_FrontLightProduct),
+   STATEVAR(gl_BackLightProduct),
+   STATEVAR(gl_TextureEnvColor),
+   STATEVAR(gl_EyePlaneS),
+   STATEVAR(gl_EyePlaneT),
+   STATEVAR(gl_EyePlaneR),
+   STATEVAR(gl_EyePlaneQ),
+   STATEVAR(gl_ObjectPlaneS),
+   STATEVAR(gl_ObjectPlaneT),
+   STATEVAR(gl_ObjectPlaneR),
+   STATEVAR(gl_ObjectPlaneQ),
+   STATEVAR(gl_Fog),
+
+   STATEVAR(gl_ModelViewMatrix),
+   STATEVAR(gl_ModelViewMatrixInverse),
+   STATEVAR(gl_ModelViewMatrixTranspose),
+   STATEVAR(gl_ModelViewMatrixInverseTranspose),
+
+   STATEVAR(gl_ProjectionMatrix),
+   STATEVAR(gl_ProjectionMatrixInverse),
+   STATEVAR(gl_ProjectionMatrixTranspose),
+   STATEVAR(gl_ProjectionMatrixInverseTranspose),
+
+   STATEVAR(gl_ModelViewProjectionMatrix),
+   STATEVAR(gl_ModelViewProjectionMatrixInverse),
+   STATEVAR(gl_ModelViewProjectionMatrixTranspose),
+   STATEVAR(gl_ModelViewProjectionMatrixInverseTranspose),
+
+   STATEVAR(gl_TextureMatrix),
+   STATEVAR(gl_TextureMatrixInverse),
+   STATEVAR(gl_TextureMatrixTranspose),
+   STATEVAR(gl_TextureMatrixInverseTranspose),
+
+   STATEVAR(gl_NormalMatrix),
+   STATEVAR(gl_NormalScale),
+
+   {NULL, NULL, 0}
+};
 
 static GLboolean
 is_boolean_type(GLenum type)
@@ -151,7 +384,7 @@ get_uniform_parameter(const struct gl_shader_program *shProg, GLuint index)
  * Called by glGetActiveUniform().
  */
 static void
-_mesa_get_active_uniform(GLcontext *ctx, GLuint program, GLuint index,
+_mesa_get_active_uniform(struct gl_context *ctx, GLuint program, GLuint index,
                          GLsizei maxLength, GLsizei *length, GLint *size,
                          GLenum *type, GLchar *nameOut)
 {
@@ -294,7 +527,7 @@ get_uniform_rows_cols(const struct gl_program_parameter *p,
  * to the shader program and return the program parameter position.
  */
 static void
-lookup_uniform_parameter(GLcontext *ctx, GLuint program, GLint location,
+lookup_uniform_parameter(struct gl_context *ctx, GLuint program, GLint location,
                          struct gl_program **progOut, GLint *paramPosOut)
 {
    struct gl_shader_program *shProg
@@ -387,7 +620,7 @@ split_location_offset(GLint *location, GLint *offset)
  * Called via glGetUniformfv().
  */
 static void
-_mesa_get_uniformfv(GLcontext *ctx, GLuint program, GLint location,
+_mesa_get_uniformfv(struct gl_context *ctx, GLuint program, GLint location,
                     GLfloat *params)
 {
    struct gl_program *prog;
@@ -420,7 +653,7 @@ _mesa_get_uniformfv(GLcontext *ctx, GLuint program, GLint location,
  * \sa _mesa_get_uniformfv, only difference is a cast.
  */
 static void
-_mesa_get_uniformiv(GLcontext *ctx, GLuint program, GLint location,
+_mesa_get_uniformiv(struct gl_context *ctx, GLuint program, GLint location,
                     GLint *params)
 {
    struct gl_program *prog;
@@ -449,13 +682,47 @@ _mesa_get_uniformiv(GLcontext *ctx, GLuint program, GLint location,
 
 
 /**
+ * Called via glGetUniformuiv().
+ * New in GL_EXT_gpu_shader4, OpenGL 3.0
+ * \sa _mesa_get_uniformfv, only difference is a cast.
+ */
+static void
+_mesa_get_uniformuiv(struct gl_context *ctx, GLuint program, GLint location,
+                     GLuint *params)
+{
+   struct gl_program *prog;
+   GLint paramPos;
+   GLint offset;
+
+   split_location_offset(&location, &offset);
+
+   lookup_uniform_parameter(ctx, program, location, &prog, &paramPos);
+
+   if (prog) {
+      const struct gl_program_parameter *p =
+         &prog->Parameters->Parameters[paramPos];
+      GLint rows, cols, i, j, k;
+
+      get_uniform_rows_cols(p, &rows, &cols);
+
+      k = 0;
+      for (i = 0; i < rows; i++) {
+         for (j = 0; j < cols; j++ ) {
+            params[k++] = (GLuint) prog->Parameters->ParameterValues[paramPos+i][j];
+         }
+      }
+   }
+}
+
+
+/**
  * Called via glGetUniformLocation().
  *
  * The return value will encode two values, the uniform location and an
  * offset (used for arrays, structs).
  */
 GLint
-_mesa_get_uniform_location(GLcontext *ctx, struct gl_shader_program *shProg,
+_mesa_get_uniform_location(struct gl_context *ctx, struct gl_shader_program *shProg,
 			   const GLchar *name)
 {
    GLint offset = 0, location = -1;
@@ -604,7 +871,7 @@ compatible_types(GLenum userType, GLenum targetType)
  * \param values  the new values, of datatype 'type'
  */
 static void
-set_program_uniform(GLcontext *ctx, struct gl_program *program,
+set_program_uniform(struct gl_context *ctx, struct gl_program *program,
                     GLint index, GLint offset,
                     GLenum type, GLsizei count, GLint elems,
                     const void *values)
@@ -747,7 +1014,7 @@ set_program_uniform(GLcontext *ctx, struct gl_program *program,
  * Called via glUniform*() functions.
  */
 void
-_mesa_uniform(GLcontext *ctx, struct gl_shader_program *shProg,
+_mesa_uniform(struct gl_context *ctx, struct gl_shader_program *shProg,
 	      GLint location, GLsizei count,
               const GLvoid *values, GLenum type)
 {
@@ -851,7 +1118,7 @@ _mesa_uniform(GLcontext *ctx, struct gl_shader_program *shProg,
  * Set a matrix-valued program parameter.
  */
 static void
-set_program_uniform_matrix(GLcontext *ctx, struct gl_program *program,
+set_program_uniform_matrix(struct gl_context *ctx, struct gl_program *program,
                            GLuint index, GLuint offset,
                            GLuint count, GLuint rows, GLuint cols,
                            GLboolean transpose, const GLfloat *values)
@@ -919,7 +1186,7 @@ set_program_uniform_matrix(GLcontext *ctx, struct gl_program *program,
  * Note: cols=2, rows=4  ==>  array[2] of vec4
  */
 void
-_mesa_uniform_matrix(GLcontext *ctx, struct gl_shader_program *shProg,
+_mesa_uniform_matrix(struct gl_context *ctx, struct gl_shader_program *shProg,
 		     GLint cols, GLint rows,
                      GLint location, GLsizei count,
                      GLboolean transpose, const GLfloat *values)
@@ -994,7 +1261,7 @@ void GLAPIENTRY
 _mesa_Uniform1fARB(GLint location, GLfloat v0)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, &v0, GL_FLOAT);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, &v0, GL_FLOAT);
 }
 
 void GLAPIENTRY
@@ -1004,7 +1271,7 @@ _mesa_Uniform2fARB(GLint location, GLfloat v0, GLfloat v1)
    GLfloat v[2];
    v[0] = v0;
    v[1] = v1;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_FLOAT_VEC2);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_FLOAT_VEC2);
 }
 
 void GLAPIENTRY
@@ -1015,7 +1282,7 @@ _mesa_Uniform3fARB(GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
    v[0] = v0;
    v[1] = v1;
    v[2] = v2;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_FLOAT_VEC3);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_FLOAT_VEC3);
 }
 
 void GLAPIENTRY
@@ -1028,14 +1295,14 @@ _mesa_Uniform4fARB(GLint location, GLfloat v0, GLfloat v1, GLfloat v2,
    v[1] = v1;
    v[2] = v2;
    v[3] = v3;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_FLOAT_VEC4);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_FLOAT_VEC4);
 }
 
 void GLAPIENTRY
 _mesa_Uniform1iARB(GLint location, GLint v0)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, &v0, GL_INT);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, &v0, GL_INT);
 }
 
 void GLAPIENTRY
@@ -1045,7 +1312,7 @@ _mesa_Uniform2iARB(GLint location, GLint v0, GLint v1)
    GLint v[2];
    v[0] = v0;
    v[1] = v1;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_INT_VEC2);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_INT_VEC2);
 }
 
 void GLAPIENTRY
@@ -1056,7 +1323,7 @@ _mesa_Uniform3iARB(GLint location, GLint v0, GLint v1, GLint v2)
    v[0] = v0;
    v[1] = v1;
    v[2] = v2;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_INT_VEC3);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_INT_VEC3);
 }
 
 void GLAPIENTRY
@@ -1068,63 +1335,63 @@ _mesa_Uniform4iARB(GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
    v[1] = v1;
    v[2] = v2;
    v[3] = v3;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_INT_VEC4);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_INT_VEC4);
 }
 
 void GLAPIENTRY
 _mesa_Uniform1fvARB(GLint location, GLsizei count, const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_FLOAT);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_FLOAT);
 }
 
 void GLAPIENTRY
 _mesa_Uniform2fvARB(GLint location, GLsizei count, const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_FLOAT_VEC2);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_FLOAT_VEC2);
 }
 
 void GLAPIENTRY
 _mesa_Uniform3fvARB(GLint location, GLsizei count, const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_FLOAT_VEC3);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_FLOAT_VEC3);
 }
 
 void GLAPIENTRY
 _mesa_Uniform4fvARB(GLint location, GLsizei count, const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_FLOAT_VEC4);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_FLOAT_VEC4);
 }
 
 void GLAPIENTRY
 _mesa_Uniform1ivARB(GLint location, GLsizei count, const GLint * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_INT);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_INT);
 }
 
 void GLAPIENTRY
 _mesa_Uniform2ivARB(GLint location, GLsizei count, const GLint * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_INT_VEC2);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_INT_VEC2);
 }
 
 void GLAPIENTRY
 _mesa_Uniform3ivARB(GLint location, GLsizei count, const GLint * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_INT_VEC3);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_INT_VEC3);
 }
 
 void GLAPIENTRY
 _mesa_Uniform4ivARB(GLint location, GLsizei count, const GLint * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_INT_VEC4);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_INT_VEC4);
 }
 
 
@@ -1133,7 +1400,7 @@ void GLAPIENTRY
 _mesa_Uniform1ui(GLint location, GLuint v0)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, &v0, GL_UNSIGNED_INT);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, &v0, GL_UNSIGNED_INT);
 }
 
 void GLAPIENTRY
@@ -1143,7 +1410,7 @@ _mesa_Uniform2ui(GLint location, GLuint v0, GLuint v1)
    GLuint v[2];
    v[0] = v0;
    v[1] = v1;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_UNSIGNED_INT_VEC2);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_UNSIGNED_INT_VEC2);
 }
 
 void GLAPIENTRY
@@ -1154,7 +1421,7 @@ _mesa_Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
    v[0] = v0;
    v[1] = v1;
    v[2] = v2;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_UNSIGNED_INT_VEC3);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_UNSIGNED_INT_VEC3);
 }
 
 void GLAPIENTRY
@@ -1166,35 +1433,35 @@ _mesa_Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
    v[1] = v1;
    v[2] = v2;
    v[3] = v3;
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, 1, v, GL_UNSIGNED_INT_VEC4);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, 1, v, GL_UNSIGNED_INT_VEC4);
 }
 
 void GLAPIENTRY
 _mesa_Uniform1uiv(GLint location, GLsizei count, const GLuint *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_UNSIGNED_INT);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_UNSIGNED_INT);
 }
 
 void GLAPIENTRY
 _mesa_Uniform2uiv(GLint location, GLsizei count, const GLuint *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_UNSIGNED_INT_VEC2);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_UNSIGNED_INT_VEC2);
 }
 
 void GLAPIENTRY
 _mesa_Uniform3uiv(GLint location, GLsizei count, const GLuint *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_UNSIGNED_INT_VEC3);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_UNSIGNED_INT_VEC3);
 }
 
 void GLAPIENTRY
 _mesa_Uniform4uiv(GLint location, GLsizei count, const GLuint *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform(ctx, ctx->Shader.CurrentProgram, location, count, value, GL_UNSIGNED_INT_VEC4);
+   _mesa_uniform(ctx, ctx->Shader.ActiveProgram, location, count, value, GL_UNSIGNED_INT_VEC4);
 }
 
 
@@ -1204,7 +1471,7 @@ _mesa_UniformMatrix2fvARB(GLint location, GLsizei count, GLboolean transpose,
                           const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			2, 2, location, count, transpose, value);
 }
 
@@ -1213,7 +1480,7 @@ _mesa_UniformMatrix3fvARB(GLint location, GLsizei count, GLboolean transpose,
                           const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			3, 3, location, count, transpose, value);
 }
 
@@ -1222,7 +1489,7 @@ _mesa_UniformMatrix4fvARB(GLint location, GLsizei count, GLboolean transpose,
                           const GLfloat * value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			4, 4, location, count, transpose, value);
 }
 
@@ -1235,7 +1502,7 @@ _mesa_UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose,
                          const GLfloat *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			2, 3, location, count, transpose, value);
 }
 
@@ -1244,7 +1511,7 @@ _mesa_UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose,
                          const GLfloat *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			3, 2, location, count, transpose, value);
 }
 
@@ -1253,7 +1520,7 @@ _mesa_UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose,
                          const GLfloat *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			2, 4, location, count, transpose, value);
 }
 
@@ -1262,7 +1529,7 @@ _mesa_UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose,
                          const GLfloat *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			4, 2, location, count, transpose, value);
 }
 
@@ -1271,7 +1538,7 @@ _mesa_UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose,
                          const GLfloat *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			3, 4, location, count, transpose, value);
 }
 
@@ -1280,7 +1547,7 @@ _mesa_UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose,
                          const GLfloat *value)
 {
    GET_CURRENT_CONTEXT(ctx);
-   _mesa_uniform_matrix(ctx, ctx->Shader.CurrentProgram,
+   _mesa_uniform_matrix(ctx, ctx->Shader.ActiveProgram,
 			4, 3, location, count, transpose, value);
 }
 
@@ -1299,6 +1566,16 @@ _mesa_GetUniformivARB(GLhandleARB program, GLint location, GLint *params)
    GET_CURRENT_CONTEXT(ctx);
    _mesa_get_uniformiv(ctx, program, location, params);
 }
+
+
+/* GL3 */
+void GLAPIENTRY
+_mesa_GetUniformuiv(GLhandleARB program, GLint location, GLuint *params)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   _mesa_get_uniformuiv(ctx, program, location, params);
+}
+
 
 
 GLint GLAPIENTRY
@@ -1370,13 +1647,16 @@ _mesa_init_shader_uniform_dispatch(struct _glapi_table *exec)
 
    /* OpenGL 3.0 */
    /* XXX finish dispatch */
-   (void) _mesa_Uniform1ui;
-   (void) _mesa_Uniform2ui;
-   (void) _mesa_Uniform3ui;
-   (void) _mesa_Uniform4ui;
-   (void) _mesa_Uniform1uiv;
-   (void) _mesa_Uniform2uiv;
-   (void) _mesa_Uniform3uiv;
-   (void) _mesa_Uniform4uiv;
+   SET_Uniform1uiEXT(exec, _mesa_Uniform1ui);
+   SET_Uniform2uiEXT(exec, _mesa_Uniform2ui);
+   SET_Uniform3uiEXT(exec, _mesa_Uniform3ui);
+   SET_Uniform4uiEXT(exec, _mesa_Uniform4ui);
+   SET_Uniform1uivEXT(exec, _mesa_Uniform1uiv);
+   SET_Uniform2uivEXT(exec, _mesa_Uniform2uiv);
+   SET_Uniform3uivEXT(exec, _mesa_Uniform3uiv);
+   SET_Uniform4uivEXT(exec, _mesa_Uniform4uiv);
+   SET_GetUniformuivEXT(exec, _mesa_GetUniformuiv);
+
+
 #endif /* FEATURE_GL */
 }

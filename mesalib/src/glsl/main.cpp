@@ -38,12 +38,23 @@
 #include "loop_analysis.h"
 
 extern "C" struct gl_shader *
-_mesa_new_shader(GLcontext *ctx, GLuint name, GLenum type);
+_mesa_new_shader(struct gl_context *ctx, GLuint name, GLenum type);
+
+extern "C" void
+_mesa_reference_shader(struct gl_context *ctx, struct gl_shader **ptr,
+                       struct gl_shader *sh);
 
 /* Copied from shader_api.c for the stand-alone compiler.
  */
+void
+_mesa_reference_shader(struct gl_context *ctx, struct gl_shader **ptr,
+                       struct gl_shader *sh)
+{
+   *ptr = sh;
+}
+
 struct gl_shader *
-_mesa_new_shader(GLcontext *ctx, GLuint name, GLenum type)
+_mesa_new_shader(struct gl_context *ctx, GLuint name, GLenum type)
 {
    struct gl_shader *shader;
 
@@ -60,7 +71,7 @@ _mesa_new_shader(GLcontext *ctx, GLuint name, GLenum type)
 }
 
 static void
-initialize_context(GLcontext *ctx, gl_api api)
+initialize_context(struct gl_context *ctx, gl_api api)
 {
    memset(ctx, 0, sizeof(*ctx));
 
@@ -135,15 +146,6 @@ load_text_file(void *ctx, const char *file_name)
 	return text;
 }
 
-
-void
-usage_fail(const char *name)
-{
-      printf("%s <filename.frag|filename.vert>\n", name);
-      exit(EXIT_FAILURE);
-}
-
-
 int glsl_es = 0;
 int dump_ast = 0;
 int dump_hir = 0;
@@ -159,8 +161,27 @@ const struct option compiler_opts[] = {
    { NULL, 0, NULL, 0 }
 };
 
+/**
+ * \brief Print proper usage and exit with failure.
+ */
 void
-compile_shader(GLcontext *ctx, struct gl_shader *shader)
+usage_fail(const char *name)
+{
+
+   const char *header =
+      "usage: %s [options] <file.vert | file.geom | file.frag>\n"
+      "\n"
+      "Possible options are:\n";
+   printf(header, name, name);
+   for (const struct option *o = compiler_opts; o->name != 0; ++o) {
+      printf("    --%s\n", o->name);
+   }
+   exit(EXIT_FAILURE);
+}
+
+
+void
+compile_shader(struct gl_context *ctx, struct gl_shader *shader)
 {
    struct _mesa_glsl_parse_state *state =
       new(shader) _mesa_glsl_parse_state(ctx, shader->Type, shader);
@@ -197,26 +218,7 @@ compile_shader(GLcontext *ctx, struct gl_shader *shader)
    if (!state->error && !shader->ir->is_empty()) {
       bool progress;
       do {
-	 progress = false;
-
-	 progress = do_function_inlining(shader->ir) || progress;
-	 progress = do_if_simplification(shader->ir) || progress;
-	 progress = do_copy_propagation(shader->ir) || progress;
-	 progress = do_dead_code_local(shader->ir) || progress;
-	 progress = do_dead_code_unlinked(shader->ir) || progress;
-	 progress = do_tree_grafting(shader->ir) || progress;
-	 progress = do_constant_propagation(shader->ir) || progress;
-	 progress = do_constant_variable_unlinked(shader->ir) || progress;
-	 progress = do_constant_folding(shader->ir) || progress;
-	 progress = do_algebraic(shader->ir) || progress;
-	 progress = do_vec_index_to_swizzle(shader->ir) || progress;
-	 progress = do_vec_index_to_cond_assign(shader->ir) || progress;
-	 progress = do_swizzle_swizzle(shader->ir) || progress;
-
-	 loop_state *ls = analyze_loop_variables(shader->ir);
-	 progress = set_loop_controls(shader->ir, ls) || progress;
-	 progress = unroll_loops(shader->ir, ls, 32) || progress;
-	 delete ls;
+	 progress = do_common_optimization(shader->ir, false, 32);
       } while (progress);
 
       validate_ir_tree(shader->ir);
@@ -252,8 +254,8 @@ int
 main(int argc, char **argv)
 {
    int status = EXIT_SUCCESS;
-   GLcontext local_ctx;
-   GLcontext *ctx = &local_ctx;
+   struct gl_context local_ctx;
+   struct gl_context *ctx = &local_ctx;
 
    int c;
    int idx = 0;
@@ -319,7 +321,7 @@ main(int argc, char **argv)
 	 printf("Info log for linking:\n%s\n", whole_program->InfoLog);
    }
 
-   for (unsigned i = 0; i < whole_program->_NumLinkedShaders; i++)
+   for (unsigned i = 0; i < MESA_SHADER_TYPES; i++)
       talloc_free(whole_program->_LinkedShaders[i]);
 
    talloc_free(whole_program);

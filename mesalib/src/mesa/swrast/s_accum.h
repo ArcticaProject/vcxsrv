@@ -27,11 +27,12 @@
 #define S_ACCUM_H
 
 
-#include "main/mtypes.h"
+struct gl_context;
+struct gl_renderbuffer;
 
 
 extern void
-_swrast_clear_accum_buffer(GLcontext *ctx, struct gl_renderbuffer *rb);
+_swrast_clear_accum_buffer(struct gl_context *ctx, struct gl_renderbuffer *rb);
 
 
 #endif

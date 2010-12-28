@@ -37,8 +37,11 @@
 #ifndef ACCUM_H
 #define ACCUM_H
 
+#include "main/glheader.h"
+#include "main/mfeatures.h"
 
-#include "main/mtypes.h"
+struct _glapi_table;
+struct gl_context;
 
 #if FEATURE_accum
 
@@ -67,6 +70,6 @@ _mesa_init_accum_dispatch(struct _glapi_table *disp)
 #endif /* FEATURE_accum */
 
 extern void
-_mesa_init_accum( GLcontext *ctx );
+_mesa_init_accum( struct gl_context *ctx );
 
 #endif /* ACCUM_H */

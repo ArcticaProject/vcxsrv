@@ -28,14 +28,15 @@
 #define VIEWPORT_H
 
 #include "glheader.h"
-#include "mtypes.h"
+
+struct gl_context;
 
 extern void GLAPIENTRY
 _mesa_Viewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 
 extern void 
-_mesa_set_viewport(GLcontext *ctx, GLint x, GLint y,
+_mesa_set_viewport(struct gl_context *ctx, GLint x, GLint y,
                    GLsizei width, GLsizei height);
 
 
@@ -44,11 +45,11 @@ _mesa_DepthRange(GLclampd nearval, GLclampd farval);
 
 
 extern void 
-_mesa_init_viewport(GLcontext *ctx);
+_mesa_init_viewport(struct gl_context *ctx);
 
 
 extern void 
-_mesa_free_viewport_data(GLcontext *ctx);
+_mesa_free_viewport_data(struct gl_context *ctx);
 
 
 #endif

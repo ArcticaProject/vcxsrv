@@ -27,12 +27,13 @@
 #define S_FRAGPROG_H
 
 
-#include "main/mtypes.h"
 #include "s_span.h"
+
+struct gl_context;
 
 
 extern void
-_swrast_exec_fragment_program(GLcontext *ctx, SWspan *span);
+_swrast_exec_fragment_program(struct gl_context *ctx, SWspan *span);
 
 
 #endif /* S_FRAGPROG_H */

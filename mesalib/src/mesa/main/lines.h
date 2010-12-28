@@ -33,8 +33,9 @@
 #define LINES_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
 
+struct gl_context;
 
 extern void GLAPIENTRY
 _mesa_LineWidth( GLfloat width );
@@ -43,6 +44,6 @@ extern void GLAPIENTRY
 _mesa_LineStipple( GLint factor, GLushort pattern );
 
 extern void GLAPIENTRY 
-_mesa_init_line( GLcontext * ctx );
+_mesa_init_line( struct gl_context * ctx );
 
 #endif

@@ -31,9 +31,13 @@
 #ifndef SYNCOBJ_H
 #define SYNCOBJ_H
 
-#include "main/mtypes.h"
+#include "glheader.h"
+#include "mfeatures.h"
 
+struct _glapi_table;
 struct dd_function_table;
+struct gl_context;
+struct gl_sync_object;
 
 #if FEATURE_ARB_sync
 
@@ -44,16 +48,16 @@ extern void
 _mesa_init_sync_dispatch(struct _glapi_table *disp);
 
 extern void
-_mesa_init_sync(GLcontext *);
+_mesa_init_sync(struct gl_context *);
 
 extern void
-_mesa_free_sync_data(GLcontext *);
+_mesa_free_sync_data(struct gl_context *);
 
 extern void
-_mesa_ref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj);
+_mesa_ref_sync_object(struct gl_context *ctx, struct gl_sync_object *syncObj);
 
 extern void
-_mesa_unref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj);
+_mesa_unref_sync_object(struct gl_context *ctx, struct gl_sync_object *syncObj);
 
 extern GLboolean GLAPIENTRY
 _mesa_IsSync(GLsync sync);
@@ -89,23 +93,23 @@ _mesa_init_sync_dispatch(struct _glapi_table *disp)
 }
 
 static INLINE void
-_mesa_init_sync(GLcontext *ctx)
+_mesa_init_sync(struct gl_context *ctx)
 {
 }
 
 static INLINE void
-_mesa_free_sync_data(GLcontext *ctx)
+_mesa_free_sync_data(struct gl_context *ctx)
 {
 }
 
 static INLINE void
-_mesa_ref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj)
+_mesa_ref_sync_object(struct gl_context *ctx, struct gl_sync_object *syncObj)
 {
    ASSERT_NO_FEATURE();
 }
 
 static INLINE void
-_mesa_unref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj)
+_mesa_unref_sync_object(struct gl_context *ctx, struct gl_sync_object *syncObj)
 {
    ASSERT_NO_FEATURE();
 }

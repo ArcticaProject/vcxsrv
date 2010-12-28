@@ -36,8 +36,10 @@
 #ifndef HINT_H
 #define HINT_H
 
+#include "glheader.h"
+#include "mfeatures.h"
 
-#include "mtypes.h"
+struct gl_context;
 
 #if _HAVE_FULL_GL
 
@@ -45,7 +47,7 @@ extern void GLAPIENTRY
 _mesa_Hint( GLenum target, GLenum mode );
 
 extern void 
-_mesa_init_hint( GLcontext * ctx );
+_mesa_init_hint( struct gl_context * ctx );
 
 #else
 

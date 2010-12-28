@@ -27,9 +27,9 @@
 #define TEXENVPROGRAM_H
 
 
-#include "mtypes.h"
+struct gl_context;
 
 extern struct gl_fragment_program *
-_mesa_get_fixed_func_fragment_program(GLcontext *ctx);
+_mesa_get_fixed_func_fragment_program(struct gl_context *ctx);
 
 #endif

@@ -141,12 +141,18 @@ typedef union { GLfloat f; GLint i; } fi_type;
 #define sqrtf(f) ((float) sqrt(f))
 #define tanf(f) ((float) tan(f))
 #define tanhf(f) ((float) tanh(f))
+#define acoshf(f) ((float) acosh(f))
+#define asinhf(f) ((float) asinh(f))
+#define atanhf(f) ((float) atanh(f))
 #endif
 
 #if defined(_MSC_VER)
 static INLINE float truncf(float x) { return x < 0.0f ? ceilf(x) : floorf(x); }
 static INLINE float exp2f(float x) { return powf(2.0f, x); }
 static INLINE float log2f(float x) { return logf(x) * 1.442695041f; }
+static INLINE float asinhf(float x) { return logf(x + sqrtf(x * x + 1.0f)); }
+static INLINE float acoshf(float x) { return logf(x + sqrtf(x * x - 1.0f)); }
+static INLINE float atanhf(float x) { return (logf(1.0f + x) - logf(1.0f - x)) / 2.0f; }
 static INLINE int isblank(int ch) { return ch == ' ' || ch == '\t'; }
 #define strtoll(p, e, b) _strtoi64(p, e, b)
 #endif
@@ -568,17 +574,19 @@ _mesa_str_checksum(const char *str);
 extern int
 _mesa_snprintf( char *str, size_t size, const char *fmt, ... ) PRINTFLIKE(3, 4);
 
-extern void
-_mesa_warning( __GLcontext *gc, const char *fmtString, ... ) PRINTFLIKE(2, 3);
+struct gl_context;
 
 extern void
-_mesa_problem( const __GLcontext *ctx, const char *fmtString, ... ) PRINTFLIKE(2, 3);
+_mesa_warning( struct gl_context *gc, const char *fmtString, ... ) PRINTFLIKE(2, 3);
 
 extern void
-_mesa_error( __GLcontext *ctx, GLenum error, const char *fmtString, ... ) PRINTFLIKE(3, 4);
+_mesa_problem( const struct gl_context *ctx, const char *fmtString, ... ) PRINTFLIKE(2, 3);
 
 extern void
-_mesa_debug( const __GLcontext *ctx, const char *fmtString, ... ) PRINTFLIKE(2, 3);
+_mesa_error( struct gl_context *ctx, GLenum error, const char *fmtString, ... ) PRINTFLIKE(3, 4);
+
+extern void
+_mesa_debug( const struct gl_context *ctx, const char *fmtString, ... ) PRINTFLIKE(2, 3);
 
 
 #if defined(_MSC_VER) && !defined(snprintf)

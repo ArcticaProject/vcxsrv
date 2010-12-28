@@ -32,7 +32,9 @@
 #define POINTS_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
+
+struct gl_context;
 
 
 extern void GLAPIENTRY
@@ -51,7 +53,7 @@ extern void GLAPIENTRY
 _mesa_PointParameterfv( GLenum pname, const GLfloat *params );
 
 extern void 
-_mesa_init_point( GLcontext * ctx );
+_mesa_init_point( struct gl_context * ctx );
 
 
 #endif

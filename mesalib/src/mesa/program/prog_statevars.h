@@ -25,8 +25,10 @@
 #ifndef PROG_STATEVARS_H
 #define PROG_STATEVARS_H
 
-#include "main/mtypes.h"
+#include "main/glheader.h"
 
+struct gl_context;
+struct gl_program_parameter_list;
 
 /**
  * Number of STATE_* values we need to address any GL state.
@@ -67,7 +69,6 @@ typedef enum gl_state_index_ {
    STATE_MVP_MATRIX,
    STATE_TEXTURE_MATRIX,
    STATE_PROGRAM_MATRIX,
-   STATE_COLOR_MATRIX,
    STATE_MATRIX_INVERSE,
    STATE_MATRIX_TRANSPOSE,
    STATE_MATRIX_INVTRANS,
@@ -116,10 +117,9 @@ typedef enum gl_state_index_ {
    STATE_LIGHT_HALF_VECTOR,           /* object vs eye space */
    STATE_PT_SCALE,              /**< Pixel transfer RGBA scale */
    STATE_PT_BIAS,               /**< Pixel transfer RGBA bias */
-   STATE_PCM_SCALE,             /**< Post color matrix RGBA scale */
-   STATE_PCM_BIAS,              /**< Post color matrix RGBA bias */
    STATE_SHADOW_AMBIENT,        /**< ARB_shadow_ambient fail value; token[2] is texture unit index */
    STATE_FB_SIZE,               /**< (width-1, height-1, 0, 0) */
+   STATE_FB_WPOS_Y_TRANSFORM,   /**< (1, 0, -1, height-1) if a FBO is bound, (-1, height-1, 1, 0) otherwise */
    STATE_ROT_MATRIX_0,          /**< ATI_envmap_bumpmap, rot matrix row 0 */
    STATE_ROT_MATRIX_1,          /**< ATI_envmap_bumpmap, rot matrix row 1 */
    STATE_INTERNAL_DRIVER	/* first available state index for drivers (must be last) */
@@ -128,7 +128,7 @@ typedef enum gl_state_index_ {
 
 
 extern void
-_mesa_load_state_parameters(GLcontext *ctx,
+_mesa_load_state_parameters(struct gl_context *ctx,
                             struct gl_program_parameter_list *paramList);
 
 
@@ -141,7 +141,7 @@ _mesa_program_state_string(const gl_state_index state[STATE_LENGTH]);
 
 
 extern void
-_mesa_load_tracked_matrices(GLcontext *ctx);
+_mesa_load_tracked_matrices(struct gl_context *ctx);
 
 
 #endif /* PROG_STATEVARS_H */

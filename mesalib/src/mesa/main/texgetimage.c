@@ -35,6 +35,7 @@
 #include "context.h"
 #include "formats.h"
 #include "image.h"
+#include "pack.h"
 #include "texgetimage.h"
 #include "teximage.h"
 
@@ -63,7 +64,7 @@ type_with_negative_values(GLenum type)
  * glGetTexImage for color index pixels.
  */
 static void
-get_tex_color_index(GLcontext *ctx, GLuint dimensions,
+get_tex_color_index(struct gl_context *ctx, GLuint dimensions,
                     GLenum format, GLenum type, GLvoid *pixels,
                     const struct gl_texture_image *texImage)
 {
@@ -111,7 +112,7 @@ get_tex_color_index(GLcontext *ctx, GLuint dimensions,
  * glGetTexImage for depth/Z pixels.
  */
 static void
-get_tex_depth(GLcontext *ctx, GLuint dimensions,
+get_tex_depth(struct gl_context *ctx, GLuint dimensions,
               GLenum format, GLenum type, GLvoid *pixels,
               const struct gl_texture_image *texImage)
 {
@@ -119,10 +120,15 @@ get_tex_depth(GLcontext *ctx, GLuint dimensions,
    const GLint height = texImage->Height;
    const GLint depth = texImage->Depth;
    GLint img, row, col;
+   GLfloat *depthRow = (GLfloat *) malloc(width * sizeof(GLfloat));
+
+   if (!depthRow) {
+      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glGetTexImage");
+      return;
+   }
 
    for (img = 0; img < depth; img++) {
       for (row = 0; row < height; row++) {
-         GLfloat depthRow[MAX_WIDTH];
          void *dest = _mesa_image_address(dimensions, &ctx->Pack, pixels,
                                           width, height, format, type,
                                           img, row, 0);
@@ -134,6 +140,8 @@ get_tex_depth(GLcontext *ctx, GLuint dimensions,
          _mesa_pack_depth_span(ctx, width, dest, type, depthRow, &ctx->Pack);
       }
    }
+
+   free(depthRow);
 }
 
 
@@ -141,7 +149,7 @@ get_tex_depth(GLcontext *ctx, GLuint dimensions,
  * glGetTexImage for depth/stencil pixels.
  */
 static void
-get_tex_depth_stencil(GLcontext *ctx, GLuint dimensions,
+get_tex_depth_stencil(struct gl_context *ctx, GLuint dimensions,
                       GLenum format, GLenum type, GLvoid *pixels,
                       const struct gl_texture_image *texImage)
 {
@@ -171,7 +179,7 @@ get_tex_depth_stencil(GLcontext *ctx, GLuint dimensions,
  * glGetTexImage for YCbCr pixels.
  */
 static void
-get_tex_ycbcr(GLcontext *ctx, GLuint dimensions,
+get_tex_ycbcr(struct gl_context *ctx, GLuint dimensions,
               GLenum format, GLenum type, GLvoid *pixels,
               const struct gl_texture_image *texImage)
 {
@@ -234,7 +242,7 @@ linear_to_nonlinear(GLfloat cl)
  * glGetTexImagefor sRGB pixels;
  */
 static void
-get_tex_srgb(GLcontext *ctx, GLuint dimensions,
+get_tex_srgb(struct gl_context *ctx, GLuint dimensions,
              GLenum format, GLenum type, GLvoid *pixels,
              const struct gl_texture_image *texImage)
 {
@@ -243,6 +251,12 @@ get_tex_srgb(GLcontext *ctx, GLuint dimensions,
    const GLint depth = texImage->Depth;
    const GLbitfield transferOps = 0x0;
    GLint img, row;
+   GLfloat (*rgba)[4] = (GLfloat (*)[4]) malloc(4 * width * sizeof(GLfloat));
+
+   if (!rgba) {
+      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glGetTexImage");
+      return;
+   }
 
    for (img = 0; img < depth; img++) {
       for (row = 0; row < height; row++) {
@@ -250,7 +264,6 @@ get_tex_srgb(GLcontext *ctx, GLuint dimensions,
                                           width, height, format, type,
                                           img, row, 0);
 
-         GLfloat rgba[MAX_WIDTH][4];
          GLint col;
 
          /* convert row to RGBA format */
@@ -278,6 +291,8 @@ get_tex_srgb(GLcontext *ctx, GLuint dimensions,
                                     &ctx->Pack, transferOps);
       }
    }
+
+   free(rgba);
 }
 
 
@@ -285,7 +300,7 @@ get_tex_srgb(GLcontext *ctx, GLuint dimensions,
 
 
 static INLINE void
-get_tex_srgb(GLcontext *ctx, GLuint dimensions,
+get_tex_srgb(struct gl_context *ctx, GLuint dimensions,
              GLenum format, GLenum type, GLvoid *pixels,
              const struct gl_texture_image *texImage)
 {
@@ -301,7 +316,7 @@ get_tex_srgb(GLcontext *ctx, GLuint dimensions,
  * This is the slow way since we use texture sampling.
  */
 static void
-get_tex_rgba(GLcontext *ctx, GLuint dimensions,
+get_tex_rgba(struct gl_context *ctx, GLuint dimensions,
              GLenum format, GLenum type, GLvoid *pixels,
              const struct gl_texture_image *texImage)
 {
@@ -313,13 +328,18 @@ get_tex_rgba(GLcontext *ctx, GLuint dimensions,
     */
    GLbitfield transferOps = 0x0;
    GLint img, row;
+   GLfloat (*rgba)[4] = (GLfloat (*)[4]) malloc(4 * width * sizeof(GLfloat));
+
+   if (!rgba) {
+      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glGetTexImage");
+      return;
+   }
 
    for (img = 0; img < depth; img++) {
       for (row = 0; row < height; row++) {
          void *dest = _mesa_image_address(dimensions, &ctx->Pack, pixels,
                                           width, height, format, type,
                                           img, row, 0);
-         GLfloat rgba[MAX_WIDTH][4];
          GLint col;
          GLenum dataType = _mesa_get_format_datatype(texImage->TexFormat);
 
@@ -363,6 +383,8 @@ get_tex_rgba(GLcontext *ctx, GLuint dimensions,
                                     &ctx->Pack, transferOps);
       }
    }
+
+   free(rgba);
 }
 
 
@@ -371,7 +393,7 @@ get_tex_rgba(GLcontext *ctx, GLuint dimensions,
  * \return GL_TRUE if done, GL_FALSE otherwise
  */
 static GLboolean
-get_tex_memcpy(GLcontext *ctx, GLenum format, GLenum type, GLvoid *pixels,
+get_tex_memcpy(struct gl_context *ctx, GLenum format, GLenum type, GLvoid *pixels,
                const struct gl_texture_object *texObj,
                const struct gl_texture_image *texImage)
 {
@@ -410,9 +432,19 @@ get_tex_memcpy(GLcontext *ctx, GLenum format, GLenum type, GLvoid *pixels,
                type == GL_UNSIGNED_BYTE) {
          memCopy = GL_TRUE;
       }
+      else if (texImage->TexFormat == MESA_FORMAT_L16 &&
+               format == GL_LUMINANCE &&
+               type == GL_UNSIGNED_SHORT) {
+         memCopy = GL_TRUE;
+      }
       else if (texImage->TexFormat == MESA_FORMAT_A8 &&
                format == GL_ALPHA &&
                type == GL_UNSIGNED_BYTE) {
+         memCopy = GL_TRUE;
+      }
+      else if (texImage->TexFormat == MESA_FORMAT_A16 &&
+               format == GL_ALPHA &&
+               type == GL_UNSIGNED_SHORT) {
          memCopy = GL_TRUE;
       }
    }
@@ -451,7 +483,7 @@ get_tex_memcpy(GLcontext *ctx, GLenum format, GLenum type, GLvoid *pixels,
  * The texture image must be mapped.
  */
 void
-_mesa_get_teximage(GLcontext *ctx, GLenum target, GLint level,
+_mesa_get_teximage(struct gl_context *ctx, GLenum target, GLint level,
                    GLenum format, GLenum type, GLvoid *pixels,
                    struct gl_texture_object *texObj,
                    struct gl_texture_image *texImage)
@@ -528,7 +560,7 @@ _mesa_get_teximage(GLcontext *ctx, GLenum target, GLint level,
  * All error checking will have been done before this routine is called.
  */
 void
-_mesa_get_compressed_teximage(GLcontext *ctx, GLenum target, GLint level,
+_mesa_get_compressed_teximage(struct gl_context *ctx, GLenum target, GLint level,
                               GLvoid *img,
                               struct gl_texture_object *texObj,
                               struct gl_texture_image *texImage)
@@ -585,7 +617,7 @@ _mesa_get_compressed_teximage(GLcontext *ctx, GLenum target, GLint level,
  * \return GL_TRUE if any error, GL_FALSE if no errors.
  */
 static GLboolean
-getteximage_error_check(GLcontext *ctx, GLenum target, GLint level,
+getteximage_error_check(struct gl_context *ctx, GLenum target, GLint level,
                         GLenum format, GLenum type, GLvoid *pixels )
 {
    struct gl_texture_object *texObj;
@@ -771,7 +803,7 @@ _mesa_GetTexImage( GLenum target, GLint level, GLenum format,
  * \return GL_TRUE if any error, GL_FALSE if no errors.
  */
 static GLboolean
-getcompressedteximage_error_check(GLcontext *ctx, GLenum target, GLint level,
+getcompressedteximage_error_check(struct gl_context *ctx, GLenum target, GLint level,
                                   GLvoid *img)
 {
    struct gl_texture_object *texObj;

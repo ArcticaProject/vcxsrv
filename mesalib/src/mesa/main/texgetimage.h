@@ -27,17 +27,21 @@
 #ifndef TEXGETIMAGE_H
 #define TEXGETIMAGE_H
 
-#include "mtypes.h"
+#include "glheader.h"
+
+struct gl_context;
+struct gl_texture_image;
+struct gl_texture_object;
 
 extern void
-_mesa_get_teximage(GLcontext *ctx, GLenum target, GLint level,
+_mesa_get_teximage(struct gl_context *ctx, GLenum target, GLint level,
                    GLenum format, GLenum type, GLvoid *pixels,
                    struct gl_texture_object *texObj,
                    struct gl_texture_image *texImage);
 
 
 extern void
-_mesa_get_compressed_teximage(GLcontext *ctx, GLenum target, GLint level,
+_mesa_get_compressed_teximage(struct gl_context *ctx, GLenum target, GLint level,
                               GLvoid *img,
                               struct gl_texture_object *texObj,
                               struct gl_texture_image *texImage);

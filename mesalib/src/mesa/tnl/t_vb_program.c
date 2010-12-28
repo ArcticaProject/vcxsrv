@@ -67,6 +67,8 @@ struct vp_stage_data {
    GLvector4f ndcCoords;              /**< normalized device coords */
    GLubyte *clipmask;                 /**< clip flags */
    GLubyte ormask, andmask;           /**< for clipping */
+
+   struct gl_program_machine machine;
 };
 
 
@@ -74,7 +76,7 @@ struct vp_stage_data {
 
 
 static void
-userclip( GLcontext *ctx,
+userclip( struct gl_context *ctx,
           GLvector4f *clip,
           GLubyte *clipmask,
           GLubyte *clipormask,
@@ -120,7 +122,7 @@ userclip( GLcontext *ctx,
 
 
 static GLboolean
-do_ndc_cliptest(GLcontext *ctx, struct vp_stage_data *store)
+do_ndc_cliptest(struct gl_context *ctx, struct vp_stage_data *store)
 {
    TNLcontext *tnl = TNL_CONTEXT(ctx);
    struct vertex_buffer *VB = &tnl->vb;
@@ -187,7 +189,7 @@ do_ndc_cliptest(GLcontext *ctx, struct vp_stage_data *store)
  * moved into main/ someday.
  */
 static void
-vp_fetch_texel(GLcontext *ctx, const GLfloat texcoord[4], GLfloat lambda,
+vp_fetch_texel(struct gl_context *ctx, const GLfloat texcoord[4], GLfloat lambda,
                GLuint unit, GLfloat color[4])
 {
    SWcontext *swrast = SWRAST_CONTEXT(ctx);
@@ -204,7 +206,7 @@ vp_fetch_texel(GLcontext *ctx, const GLfloat texcoord[4], GLfloat lambda,
  * string has been parsed.
  */
 GLboolean
-_tnl_program_string(GLcontext *ctx, GLenum target, struct gl_program *program)
+_tnl_program_string(struct gl_context *ctx, GLenum target, struct gl_program *program)
 {
    /* No-op.
     * If we had derived anything from the program that was private to this
@@ -218,7 +220,7 @@ _tnl_program_string(GLcontext *ctx, GLenum target, struct gl_program *program)
  * Initialize virtual machine state prior to executing vertex program.
  */
 static void
-init_machine(GLcontext *ctx, struct gl_program_machine *machine)
+init_machine(struct gl_context *ctx, struct gl_program_machine *machine)
 {
    /* Input registers get initialized from the current vertex attribs */
    memcpy(machine->VertAttribs, ctx->Current.Attrib,
@@ -261,7 +263,7 @@ init_machine(GLcontext *ctx, struct gl_program_machine *machine)
  * Map the texture images which the vertex program will access (if any).
  */
 static void
-map_textures(GLcontext *ctx, const struct gl_vertex_program *vp)
+map_textures(struct gl_context *ctx, const struct gl_vertex_program *vp)
 {
    GLuint u;
 
@@ -283,7 +285,7 @@ map_textures(GLcontext *ctx, const struct gl_vertex_program *vp)
  * Unmap the texture images which were used by the vertex program (if any).
  */
 static void
-unmap_textures(GLcontext *ctx, const struct gl_vertex_program *vp)
+unmap_textures(struct gl_context *ctx, const struct gl_vertex_program *vp)
 {
    GLuint u;
 
@@ -305,13 +307,13 @@ unmap_textures(GLcontext *ctx, const struct gl_vertex_program *vp)
  * This function executes vertex programs
  */
 static GLboolean
-run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
+run_vp( struct gl_context *ctx, struct tnl_pipeline_stage *stage )
 {
    TNLcontext *tnl = TNL_CONTEXT(ctx);
    struct vp_stage_data *store = VP_STAGE_DATA(stage);
    struct vertex_buffer *VB = &tnl->vb;
    struct gl_vertex_program *program = ctx->VertexProgram._Current;
-   struct gl_program_machine machine;
+   struct gl_program_machine *machine = &store->machine;
    GLuint outputs[VERT_RESULT_MAX], numOutputs;
    GLuint i, j;
 
@@ -339,7 +341,7 @@ run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
    for (i = 0; i < VB->Count; i++) {
       GLuint attr;
 
-      init_machine(ctx, &machine);
+      init_machine(ctx, machine);
 
 #if 0
       printf("Input  %d: %f, %f, %f, %f\n", i,
@@ -372,23 +374,23 @@ run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
             check_float(data[2]);
             check_float(data[3]);
 #endif
-	    COPY_CLEAN_4V(machine.VertAttribs[attr], size, data);
+	    COPY_CLEAN_4V(machine->VertAttribs[attr], size, data);
 	 }
       }
 
       /* execute the program */
-      _mesa_execute_program(ctx, &program->Base, &machine);
+      _mesa_execute_program(ctx, &program->Base, machine);
 
       /* copy the output registers into the VB->attribs arrays */
       for (j = 0; j < numOutputs; j++) {
          const GLuint attr = outputs[j];
 #ifdef NAN_CHECK
-         check_float(machine.Outputs[attr][0]);
-         check_float(machine.Outputs[attr][1]);
-         check_float(machine.Outputs[attr][2]);
-         check_float(machine.Outputs[attr][3]);
+         check_float(machine->Outputs[attr][0]);
+         check_float(machine->Outputs[attr][1]);
+         check_float(machine->Outputs[attr][2]);
+         check_float(machine->Outputs[attr][3]);
 #endif
-         COPY_4V(store->results[attr].data[i], machine.Outputs[attr]);
+         COPY_4V(store->results[attr].data[i], machine->Outputs[attr]);
       }
 
       /* FOGC is a special case.  Fragment shader expects (f,0,0,1) */
@@ -398,14 +400,14 @@ run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
          store->results[VERT_RESULT_FOGC].data[i][3] = 1.0;
       }
 #ifdef NAN_CHECK
-      ASSERT(machine.Outputs[0][3] != 0.0F);
+      ASSERT(machine->Outputs[0][3] != 0.0F);
 #endif
 #if 0
       printf("HPOS: %f %f %f %f\n",
-             machine.Outputs[0][0], 
-             machine.Outputs[0][1], 
-             machine.Outputs[0][2], 
-             machine.Outputs[0][3]);
+             machine->Outputs[0][0], 
+             machine->Outputs[0][1], 
+             machine->Outputs[0][2], 
+             machine->Outputs[0][3]);
 #endif
    }
 
@@ -493,7 +495,7 @@ run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
  * allocate data until the first time the stage is run.
  */
 static GLboolean
-init_vp(GLcontext *ctx, struct tnl_pipeline_stage *stage)
+init_vp(struct gl_context *ctx, struct tnl_pipeline_stage *stage)
 {
    TNLcontext *tnl = TNL_CONTEXT(ctx);
    struct vertex_buffer *VB = &(tnl->vb);
@@ -501,7 +503,7 @@ init_vp(GLcontext *ctx, struct tnl_pipeline_stage *stage)
    const GLuint size = VB->Size;
    GLuint i;
 
-   stage->privatePtr = MALLOC(sizeof(*store));
+   stage->privatePtr = CALLOC(sizeof(*store));
    store = VP_STAGE_DATA(stage);
    if (!store)
       return GL_FALSE;
@@ -546,7 +548,7 @@ dtr(struct tnl_pipeline_stage *stage)
 
 
 static void
-validate_vp_stage(GLcontext *ctx, struct tnl_pipeline_stage *stage)
+validate_vp_stage(struct gl_context *ctx, struct tnl_pipeline_stage *stage)
 {
    if (ctx->VertexProgram._Current) {
       _swrast_update_texture_samplers(ctx);

@@ -296,7 +296,7 @@ fetch_vector4ui(const struct prog_src_register *source,
  * XXX this currently only works for fragment program input attribs.
  */
 static void
-fetch_vector4_deriv(GLcontext * ctx,
+fetch_vector4_deriv(struct gl_context * ctx,
                     const struct prog_src_register *source,
                     const struct gl_program_machine *machine,
                     char xOrY, GLfloat result[4])
@@ -380,7 +380,7 @@ fetch_vector1ui(const struct prog_src_register *source,
  * Fetch texel from texture.  Use partial derivatives when possible.
  */
 static INLINE void
-fetch_texel(GLcontext *ctx,
+fetch_texel(struct gl_context *ctx,
             const struct gl_program_machine *machine,
             const struct prog_instruction *inst,
             const GLfloat texcoord[4], GLfloat lodBias,
@@ -630,7 +630,7 @@ store_vector4ui(const struct prog_instruction *inst,
  * \return GL_TRUE if program completed or GL_FALSE if program executed KIL.
  */
 GLboolean
-_mesa_execute_program(GLcontext * ctx,
+_mesa_execute_program(struct gl_context * ctx,
                       const struct gl_program *program,
                       struct gl_program_machine *machine)
 {
@@ -1669,6 +1669,18 @@ _mesa_execute_program(GLcontext * ctx,
             lodBias = texcoord[3];
 
             fetch_texel(ctx, machine, inst, texcoord, lodBias, color);
+
+            if (DEBUG_PROG) {
+               printf("TXB (%g, %g, %g, %g) = texture[%d][%g %g %g %g]"
+                      "  bias %g\n",
+                      color[0], color[1], color[2], color[3],
+                      inst->TexSrcUnit,
+                      texcoord[0],
+                      texcoord[1],
+                      texcoord[2],
+                      texcoord[3],
+                      lodBias);
+            }
 
             store_vector4(inst, machine, color);
          }

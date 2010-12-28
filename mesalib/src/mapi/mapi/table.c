@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "stub.h"
 #include "table.h"
 
 static void
@@ -52,5 +51,6 @@ noop_generic(void)
 }
 
 /* define noop_array */
+#define MAPI_TMP_DEFINES
 #define MAPI_TMP_NOOP_ARRAY
 #include "mapi_tmp.h"

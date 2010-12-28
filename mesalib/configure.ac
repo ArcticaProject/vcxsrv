@@ -30,8 +30,13 @@ AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_CXX
 AC_CHECK_PROGS([MAKE], [gmake make])
+AC_CHECK_PROGS([PYTHON2], [python2 python])
 AC_PATH_PROG([MKDEP], [makedepend])
 AC_PATH_PROG([SED], [sed])
+
+if test "x$MKDEP" = "x"; then
+    AC_MSG_ERROR([makedepend is required to build Mesa])
+fi
 
 dnl Our fallback install-sh is a symlink to minstall. Use the existing
 dnl configuration in that case.
@@ -460,6 +465,71 @@ if test "x$enable_selinux" = "xyes"; then
     DEFINES="$DEFINES -DMESA_SELINUX"
 fi
 
+dnl Determine which APIs to support
+AC_ARG_ENABLE([opengl],
+    [AS_HELP_STRING([--disable-opengl],
+        [disable support for standard OpenGL API @<:@default=no@:>@])],
+    [enable_opengl="$enableval"],
+    [enable_opengl=yes])
+AC_ARG_ENABLE([gles1],
+    [AS_HELP_STRING([--enable-gles1],
+        [enable support for OpenGL ES 1.x API @<:@default=no@:>@])],
+    [enable_gles1="$enableval"],
+    [enable_gles1=no])
+AC_ARG_ENABLE([gles2],
+    [AS_HELP_STRING([--enable-gles2],
+        [enable support for OpenGL ES 2.x API @<:@default=no@:>@])],
+    [enable_gles2="$enableval"],
+    [enable_gles2=no])
+AC_ARG_ENABLE([gles-overlay],
+    [AS_HELP_STRING([--enable-gles-overlay],
+        [build separate OpenGL ES only libraries @<:@default=no@:>@])],
+    [enable_gles_overlay="$enableval"],
+    [enable_gles_overlay=no])
+
+AC_ARG_ENABLE([openvg],
+    [AS_HELP_STRING([--enable-openvg],
+        [enable support for OpenVG API @<:@default=no@:>@])],
+    [enable_openvg="$enableval"],
+    [enable_openvg=no])
+
+dnl smooth the transition; should be removed eventually
+if test "x$enable_openvg" = xno; then
+    case "x$with_state_trackers" in
+    x*vega*)
+        AC_MSG_WARN([vega state tracker is enabled without --enable-openvg])
+        enable_openvg=yes
+        ;;
+    esac
+fi
+
+if test "x$enable_opengl" = xno -a \
+        "x$enable_gles1" = xno -a \
+        "x$enable_gles2" = xno -a \
+        "x$enable_gles_overlay" = xno -a \
+        "x$enable_openvg" = xno; then
+    AC_MSG_ERROR([at least one API should be enabled])
+fi
+
+API_DEFINES=""
+GLES_OVERLAY=0
+if test "x$enable_opengl" = xno; then
+    API_DEFINES="$API_DEFINES -DFEATURE_GL=0"
+else
+    API_DEFINES="$API_DEFINES -DFEATURE_GL=1"
+fi
+if test "x$enable_gles1" = xyes; then
+    API_DEFINES="$API_DEFINES -DFEATURE_ES1=1"
+fi
+if test "x$enable_gles2" = xyes; then
+    API_DEFINES="$API_DEFINES -DFEATURE_ES2=1"
+fi
+if test "x$enable_gles_overlay" = xyes; then
+    GLES_OVERLAY=1
+fi
+AC_SUBST([API_DEFINES])
+AC_SUBST([GLES_OVERLAY])
+
 dnl
 dnl Driver configuration. Options are xlib, dri and osmesa right now.
 dnl More later: fbdev, ...
@@ -479,6 +549,10 @@ linux*)
     ;;
 esac
 
+if test "x$enable_opengl" = xno; then
+    default_driver="no"
+fi
+
 AC_ARG_WITH([driver],
     [AS_HELP_STRING([--with-driver=DRIVER],
         [driver for Mesa: xlib,dri,osmesa @<:@default=dri when available, or xlib@:>@])],
@@ -487,6 +561,11 @@ AC_ARG_WITH([driver],
 dnl Check for valid option
 case "x$mesa_driver" in
 xxlib|xdri|xosmesa)
+    if test "x$enable_opengl" = xno; then
+        AC_MSG_ERROR([Driver '$mesa_driver' requires OpenGL enabled])
+    fi
+    ;;
+xno)
     ;;
 *)
     AC_MSG_ERROR([Driver '$mesa_driver' is not a valid option])
@@ -502,7 +581,7 @@ dnl Driver specific build directories
 dnl
 
 dnl this variable will be prepended to SRC_DIRS and is not exported
-CORE_DIRS="mapi/glapi glsl mesa"
+CORE_DIRS=""
 
 SRC_DIRS=""
 GLU_DIRS="sgi"
@@ -511,6 +590,30 @@ GALLIUM_TARGET_DIRS=""
 GALLIUM_WINSYS_DIRS="sw"
 GALLIUM_DRIVERS_DIRS="softpipe failover galahad trace rbug identity"
 GALLIUM_STATE_TRACKERS_DIRS=""
+
+# build glapi if OpenGL is enabled
+if test "x$enable_opengl" = xyes; then
+    CORE_DIRS="$CORE_DIRS mapi/glapi"
+fi
+
+# build es1api and es2api if OpenGL ES is enabled
+case "x$enable_gles1$enable_gles2$enable_gles_overlay" in
+x*yes*)
+    CORE_DIRS="$CORE_DIRS mapi/es1api mapi/es2api"
+    ;;
+esac
+
+# build vgapi if OpenVG is enabled
+if test "x$enable_openvg" = xyes; then
+    CORE_DIRS="$CORE_DIRS mapi/vgapi"
+fi
+
+# build glsl and mesa if OpenGL or OpenGL ES is enabled
+case "x$enable_opengl$enable_gles1$enable_gles2$enable_gles_overlay" in
+x*yes*)
+    CORE_DIRS="$CORE_DIRS glsl mesa"
+    ;;
+esac
 
 case "$mesa_driver" in
 xlib)
@@ -525,6 +628,9 @@ dri)
     ;;
 osmesa)
     DRIVER_DIRS="osmesa"
+    ;;
+no)
+    DRIVER_DRIS=""
     ;;
 esac
 AC_SUBST([SRC_DIRS])
@@ -618,7 +724,7 @@ xlib)
         GL_LIB_DEPS=""
     fi
     ;;
-dri)
+dri|no) # these checks are still desired when there is no mesa_driver
     # DRI must be shared, I think
     if test "$enable_static" = yes; then
         AC_MSG_ERROR([Can't use static libraries for DRI drivers])
@@ -743,51 +849,6 @@ if test "x$with_dri_drivers" = x; then
     with_dri_drivers=no
 fi
 
-dnl Determine which APIs to support
-AC_ARG_ENABLE([opengl],
-    [AS_HELP_STRING([--disable-opengl],
-        [disable support for standard OpenGL API @<:@default=no@:>@])],
-    [enable_opengl="$enableval"],
-    [enable_opengl=yes])
-AC_ARG_ENABLE([gles1],
-    [AS_HELP_STRING([--enable-gles1],
-        [enable support for OpenGL ES 1.x API @<:@default=no@:>@])],
-    [enable_gles1="$enableval"],
-    [enable_gles1=no])
-AC_ARG_ENABLE([gles2],
-    [AS_HELP_STRING([--enable-gles2],
-        [enable support for OpenGL ES 2.x API @<:@default=no@:>@])],
-    [enable_gles2="$enableval"],
-    [enable_gles2=no])
-AC_ARG_ENABLE([gles-overlay],
-    [AS_HELP_STRING([--enable-gles-overlay],
-        [build separate OpenGL ES only libraries @<:@default=no@:>@])],
-    [enable_gles_overlay="$enableval"],
-    [enable_gles_overlay=no])
-
-API_DEFINES=""
-GLES_OVERLAY=0
-if test "x$enable_opengl" = xno; then
-    API_DEFINES="$API_DEFINES -DFEATURE_GL=0"
-else
-    API_DEFINES="$API_DEFINES -DFEATURE_GL=1"
-fi
-if test "x$enable_gles1" = xyes; then
-    API_DEFINES="$API_DEFINES -DFEATURE_ES1=1"
-fi
-if test "x$enable_gles2" = xyes; then
-    API_DEFINES="$API_DEFINES -DFEATURE_ES2=1"
-fi
-if test "x$enable_gles_overlay" = xyes -o \
-    "x$enable_gles1" = xyes -o "x$enable_gles2" = xyes; then
-    CORE_DIRS="mapi/es1api mapi/es2api $CORE_DIRS"
-    if test "x$enable_gles_overlay" = xyes; then
-        GLES_OVERLAY=1
-    fi
-fi
-AC_SUBST([API_DEFINES])
-AC_SUBST([GLES_OVERLAY])
-
 dnl If $with_dri_drivers is yes, directories will be added through
 dnl platform checks
 DRI_DIRS=""
@@ -808,7 +869,7 @@ yes)
 esac
 
 dnl Set DRI_DIRS, DEFINES and LIB_DEPS
-if test "$mesa_driver" = dri; then
+if test "$mesa_driver" = dri -o "$mesa_driver" = no; then
     # Use TLS in GLX?
     if test "x$GLX_USE_TLS" = xyes; then
         DEFINES="$DEFINES -DGLX_USE_TLS -DPTHREADS"
@@ -886,19 +947,21 @@ if test "$mesa_driver" = dri; then
     DRI_DIRS=`echo "$DRI_DIRS" | $SED 's/  */ /g'`
 
     # Check for expat
-    EXPAT_INCLUDES=""
-    EXPAT_LIB=-lexpat
-    AC_ARG_WITH([expat],
-        [AS_HELP_STRING([--with-expat=DIR],
-            [expat install directory])],[
-        EXPAT_INCLUDES="-I$withval/include"
-        CPPFLAGS="$CPPFLAGS $EXPAT_INCLUDES"
-        LDFLAGS="$LDFLAGS -L$withval/$LIB_DIR"
-        EXPAT_LIB="-L$withval/$LIB_DIR -lexpat"
-        ])
-    AC_CHECK_HEADER([expat.h],[],[AC_MSG_ERROR([Expat required for DRI.])])
-    AC_CHECK_LIB([expat],[XML_ParserCreate],[],
-        [AC_MSG_ERROR([Expat required for DRI.])])
+    if test "$mesa_driver" = dri; then
+        EXPAT_INCLUDES=""
+        EXPAT_LIB=-lexpat
+        AC_ARG_WITH([expat],
+            [AS_HELP_STRING([--with-expat=DIR],
+                [expat install directory])],[
+            EXPAT_INCLUDES="-I$withval/include"
+            CPPFLAGS="$CPPFLAGS $EXPAT_INCLUDES"
+            LDFLAGS="$LDFLAGS -L$withval/$LIB_DIR"
+            EXPAT_LIB="-L$withval/$LIB_DIR -lexpat"
+            ])
+        AC_CHECK_HEADER([expat.h],[],[AC_MSG_ERROR([Expat required for DRI.])])
+        AC_CHECK_LIB([expat],[XML_ParserCreate],[],
+            [AC_MSG_ERROR([Expat required for DRI.])])
+    fi
 
     # put all the necessary libs together
     DRI_LIB_DEPS="$SELINUX_LIBS $LIBDRM_LIBS $EXPAT_LIB -lm -lpthread $DLOPEN_LIBS $TALLOC_LIBS"
@@ -939,6 +1002,9 @@ AC_ARG_ENABLE([gl-osmesa],
     [gl_osmesa="$enableval"],
     [gl_osmesa="$default_gl_osmesa"])
 if test "x$gl_osmesa" = xyes; then
+    if test "x$enable_opengl" = xno; then
+        AC_MSG_ERROR([OpenGL is not available for OSMesa driver])
+    fi
     if test "$mesa_driver" = osmesa; then
         AC_MSG_ERROR([libGL is not available for OSMesa driver])
     else
@@ -995,13 +1061,21 @@ AC_ARG_ENABLE([egl],
         [disable EGL library @<:@default=enabled@:>@])],
     [enable_egl="$enableval"],
     [enable_egl=yes])
+if test "x$enable_egl" = xno; then
+    if test "x$mesa_driver" = xno; then
+        AC_MSG_ERROR([cannot disable EGL when there is no mesa driver])
+    fi
+    if test "x$enable_openvg" = xyes; then
+        AC_MSG_ERROR([cannot enable OpenVG without EGL])
+    fi
+fi
 if test "x$enable_egl" = xyes; then
     SRC_DIRS="$SRC_DIRS egl"
     EGL_LIB_DEPS="$DLOPEN_LIBS -lpthread"
     EGL_DRIVERS_DIRS=""
     if test "$enable_static" != yes; then
         # build egl_glx when libGL is built
-        if test "$mesa_driver" != osmesa; then
+        if test "$mesa_driver" = xlib -o "$mesa_driver" = dri; then
             EGL_DRIVERS_DIRS="glx"
         fi
 
@@ -1035,6 +1109,12 @@ AC_ARG_ENABLE([glu],
         [enable OpenGL Utility library @<:@default=enabled@:>@])],
     [enable_glu="$enableval"],
     [enable_glu=yes])
+
+if test "x$enable_glu" = xyes -a "x$mesa_driver" = xno; then
+    AC_MSG_NOTICE([Disabling GLU since there is no OpenGL driver])
+    enable_glu=no
+fi
+
 if test "x$enable_glu" = xyes; then
     SRC_DIRS="$SRC_DIRS glu"
 
@@ -1084,9 +1164,13 @@ AC_ARG_ENABLE([glw],
     [enable_glw="$enableval"],
     [enable_glw=yes])
 dnl Don't build GLw on osmesa
-if test "x$enable_glw" = xyes && test "$mesa_driver" = osmesa; then
-    AC_MSG_WARN([Disabling GLw since the driver is OSMesa])
-    enable_glw=no
+if test "x$enable_glw" = xyes; then
+    case "$mesa_driver" in
+    osmesa|no)
+        AC_MSG_NOTICE([Disabling GLw since there is no OpenGL driver])
+        enable_glw=no
+        ;;
+    esac
 fi
 AC_ARG_ENABLE([motif],
     [AS_HELP_STRING([--enable-motif],
@@ -1160,14 +1244,18 @@ AC_ARG_ENABLE([glut],
     [enable_glut="$enableval"],
     [enable_glut="$default_glut"])
 
+dnl Don't build glut on osmesa
+if test "x$enable_glut" = xyes; then
+    case "$mesa_driver" in
+    osmesa|no)
+        AC_MSG_NOTICE([Disabling glut since there is no OpenGL driver])
+        enable_glut=no
+        ;;
+    esac
+fi
 dnl Can't build glut if GLU not available
 if test "x$enable_glu$enable_glut" = xnoyes; then
     AC_MSG_WARN([Disabling glut since GLU is disabled])
-    enable_glut=no
-fi
-dnl Don't build glut on osmesa
-if test "x$enable_glut" = xyes && test "$mesa_driver" = osmesa; then
-    AC_MSG_WARN([Disabling glut since the driver is OSMesa])
     enable_glut=no
 fi
 
@@ -1234,6 +1322,9 @@ AC_ARG_ENABLE([gallium],
         [build gallium @<:@default=enabled@:>@])],
     [enable_gallium="$enableval"],
     [enable_gallium=yes])
+if test "x$enable_gallium" = xno -a "x$enable_openvg" = xyes; then
+    AC_MSG_ERROR([cannot enable OpenVG without Gallium])
+fi
 if test "x$enable_gallium" = xyes; then
     SRC_DIRS="$SRC_DIRS gallium gallium/winsys gallium/targets"
     AC_CHECK_HEADER([udis86.h], [HAS_UDIS86="yes"],
@@ -1246,15 +1337,30 @@ AC_SUBST([LLVM_LIBS])
 AC_SUBST([LLVM_LDFLAGS])
 AC_SUBST([LLVM_VERSION])
 
-VG_LIB_DEPS=""
-EGL_CLIENT_APIS='$(GL_LIB)'
-if test "x$enable_gles_overlay" = xyes; then
-    EGL_CLIENT_APIS="$EGL_CLIENT_APIS "'$(GLESv1_CM_LIB) $(GLESv2_LIB)'
-fi
-
 dnl
 dnl Gallium state trackers configuration
 dnl
+
+AC_ARG_ENABLE([gallium-egl],
+    [AS_HELP_STRING([--enable-gallium-egl],
+        [enable gallium EGL state tracker @<:@default=auto@:>@])],
+    [enable_gallium_egl="$enableval"],
+    [enable_gallium_egl=auto])
+if test "x$enable_gallium_egl" = xauto; then
+    case "$mesa_driver" in
+    dri|no)
+        enable_gallium_egl=$enable_egl
+        ;;
+    *)
+        enable_gallium_egl=no
+        ;;
+    esac
+fi
+case "x$enable_egl$enable_gallium_egl" in
+xnoyes)
+    AC_MSG_ERROR([cannot build Gallium EGL state tracker without EGL])
+esac
+
 AC_ARG_WITH([state-trackers],
     [AS_HELP_STRING([--with-state-trackers@<:@=DIRS...@:>@],
         [comma delimited state_trackers list, e.g.
@@ -1275,16 +1381,24 @@ yes)
     dri)
         GALLIUM_STATE_TRACKERS_DIRS="dri"
         HAVE_ST_DRI="yes"
-        if test "x$enable_egl" = xyes; then
-            GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS egl"
-            HAVE_ST_EGL="yes"
-        fi
         # Have only tested st/xorg on 1.6.0 servers
         PKG_CHECK_MODULES(XORG, [xorg-server >= 1.6.0 libdrm >= $LIBDRM_XORG_REQUIRED libkms >= $LIBKMS_XORG_REQUIRED],
             HAVE_ST_XORG="yes"; GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS xorg",
             HAVE_ST_XORG="no")
         ;;
     esac
+
+    if test "x$enable_egl" = xyes; then
+        if test "$enable_openvg" = yes; then
+            GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS vega"
+            st_egl="yes"
+        fi
+
+        if test "$enable_gallium_egl" = yes; then
+            GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS egl"
+            HAVE_ST_EGL="yes"
+        fi
+    fi
     ;;
 *)
     # verify the requested state tracker exist
@@ -1310,22 +1424,10 @@ yes)
             PKG_CHECK_MODULES([LIBKMS_XORG], [libkms >= $LIBKMS_XORG_REQUIRED])
             HAVE_ST_XORG="yes"
             ;;
-        es)
-            AC_MSG_WARN([state tracker 'es' has been replaced by --enable-gles-overlay])
-
-            if test "x$enable_gles_overlay" != xyes; then
-                if test "x$enable_gles1" != xyes -a "x$enable_gles2" != xyes; then
-                    CORE_DIRS="mapi/es1api mapi/es2api $CORE_DIRS"
-                fi
-                GLES_OVERLAY=1
-                EGL_CLIENT_APIS="$EGL_CLIENT_APIS "'$(GLESv1_CM_LIB) $(GLESv2_LIB)'
-            fi
-	    tracker=""
-            ;;
         vega)
-            CORE_DIRS="$CORE_DIRS mapi/vgapi"
-            VG_LIB_DEPS="$VG_LIB_DEPS -lpthread"
-            EGL_CLIENT_APIS="$EGL_CLIENT_APIS "'$(VG_LIB)'
+            if test "x$enable_openvg" != xyes; then
+                AC_MSG_ERROR([cannot build vega state tracker without --enable-openvg])
+            fi
             ;;
         esac
 
@@ -1342,6 +1444,23 @@ yes)
     GALLIUM_STATE_TRACKERS_DIRS="$state_trackers"
     ;;
 esac
+
+
+EGL_CLIENT_APIS=""
+VG_LIB_DEPS=""
+
+case "x$enable_opengl$enable_gles1$enable_gles2" in
+x*yes*)
+    EGL_CLIENT_APIS="$EGL_CLIENT_APIS "'$(GL_LIB)'
+    ;;
+esac
+if test "x$enable_gles_overlay" = xyes; then
+    EGL_CLIENT_APIS="$EGL_CLIENT_APIS "'$(GLESv1_CM_LIB) $(GLESv2_LIB)'
+fi
+if test "x$enable_openvg" = xyes; then
+    EGL_CLIENT_APIS="$EGL_CLIENT_APIS "'$(VG_LIB)'
+    VG_LIB_DEPS="$VG_LIB_DEPS -lpthread"
+fi
 
 AC_SUBST([VG_LIB_DEPS])
 AC_SUBST([EGL_CLIENT_APIS])
@@ -1439,7 +1558,7 @@ AC_ARG_ENABLE([gallium-llvm],
 if test "x$enable_gallium_llvm" = xyes; then
     if test "x$LLVM_CONFIG" != xno; then
 	LLVM_VERSION=`$LLVM_CONFIG --version`
-	LLVM_CFLAGS=`$LLVM_CONFIG --cflags`
+	LLVM_CFLAGS=`$LLVM_CONFIG --cppflags`
 	LLVM_LIBS="`$LLVM_CONFIG --libs jit interpreter nativecodegen bitwriter` -lstdc++"
 
 	if test "x$HAS_UDIS86" != xno; then
@@ -1589,6 +1708,19 @@ if test "x$enable_gallium_swrast" = xyes || test "x$enable_gallium_swrast" = xau
     fi
 fi
 
+dnl
+dnl Gallium noop configuration
+dnl
+AC_ARG_ENABLE([gallium-noop],
+    [AS_HELP_STRING([--enable-gallium-noop],
+        [build gallium radeon @<:@default=disabled@:>@])],
+    [enable_gallium_noop="$enableval"],
+    [enable_gallium_noop=auto])
+if test "x$enable_gallium_noop" = xyes; then
+    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS noop"
+    GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS dri-noop"
+fi
+
 dnl prepend CORE_DIRS to SRC_DIRS
 SRC_DIRS="$CORE_DIRS $SRC_DIRS"
 
@@ -1618,25 +1750,56 @@ echo "        exec_prefix:     $exec_prefix"
 echo "        libdir:          $libdir"
 echo "        includedir:      $includedir"
 
+dnl API info
+echo ""
+echo "        OpenGL:          $enable_opengl (ES1: $enable_gles1 ES2: $enable_gles2)"
+echo "        GLES overlay:    $enable_gles_overlay"
+echo "        OpenVG:          $enable_openvg"
+
 dnl Driver info
 echo ""
 echo "        Driver:          $mesa_driver"
-if echo "$DRIVER_DIRS" | grep 'osmesa' >/dev/null 2>&1; then
-    echo "        OSMesa:          lib$OSMESA_LIB"
-else
-    echo "        OSMesa:          no"
+if test "$mesa_driver" != no; then
+    if echo "$DRIVER_DIRS" | grep 'osmesa' >/dev/null 2>&1; then
+        echo "        OSMesa:          lib$OSMESA_LIB"
+    else
+        echo "        OSMesa:          no"
+    fi
+    if test "$mesa_driver" = dri; then
+        # cleanup the drivers var
+        dri_dirs=`echo $DRI_DIRS | $SED 's/^ *//;s/  */ /;s/ *$//'`
+        if test "x$DRI_DIRS" = x; then
+            echo "        DRI drivers:     no"
+        else
+            echo "        DRI drivers:     $dri_dirs"
+        fi
+        echo "        DRI driver dir:  $DRI_DRIVER_INSTALL_DIR"
+        echo "        Use XCB:         $enable_xcb"
+    fi
 fi
-if test "$mesa_driver" = dri; then
-    # cleanup the drivers var
-    dri_dirs=`echo $DRI_DIRS | $SED 's/^ *//;s/  */ /;s/ *$//'`
-if test "x$DRI_DIRS" = x; then
-    echo "        DRI drivers:     no"
-else
-    echo "        DRI drivers:     $dri_dirs"
+echo ""
+echo "        GLU:             $enable_glu"
+echo "        GLw:             $enable_glw (Motif: $enable_motif)"
+echo "        glut:            $enable_glut"
+
+dnl EGL
+echo ""
+echo "        EGL:             $enable_egl"
+if test "$enable_egl" = yes; then
+    echo "        EGL platforms:   $EGL_PLATFORMS"
+
+    egl_drivers=""
+    for d in $EGL_DRIVERS_DIRS; do
+        egl_drivers="$egl_drivers egl_$d"
+    done
+
+    if test "$enable_gallium" = yes -a "$HAVE_ST_EGL" = yes; then
+        echo "        EGL drivers:    ${egl_drivers} egl_gallium"
+        echo "        EGL Gallium STs:$EGL_CLIENT_APIS"
+    else
+        echo "        EGL drivers:    $egl_drivers"
+    fi
 fi
-    echo "        DRI driver dir:  $DRI_DRIVER_INSTALL_DIR"
-fi
-echo "        Use XCB:         $enable_xcb"
 
 echo ""
 if test "x$MESA_LLVM" = x1; then
@@ -1655,9 +1818,6 @@ if echo "$SRC_DIRS" | grep 'gallium' >/dev/null 2>&1; then
     echo "        Winsys dirs:     $GALLIUM_WINSYS_DIRS"
     echo "        Driver dirs:     $GALLIUM_DRIVERS_DIRS"
     echo "        Trackers dirs:   $GALLIUM_STATE_TRACKERS_DIRS"
-    if test "x$HAVE_ST_EGL" = xyes; then
-        echo "        EGL client APIs: $EGL_CLIENT_APIS"
-    fi
 else
     echo "        Gallium:         no"
 fi
@@ -1666,15 +1826,6 @@ dnl Libraries
 echo ""
 echo "        Shared libs:     $enable_shared"
 echo "        Static libs:     $enable_static"
-if test "$enable_egl" = yes; then
-    echo "        EGL:             $EGL_DRIVERS_DIRS"
-    echo "        EGL platforms:   $EGL_PLATFORMS"
-else
-    echo "        EGL:             no"
-fi
-echo "        GLU:             $enable_glu"
-echo "        GLw:             $enable_glw (Motif: $enable_motif)"
-echo "        glut:            $enable_glut"
 
 dnl Compiler options
 # cleanup the CFLAGS/CXXFLAGS/DEFINES vars
@@ -1687,6 +1838,8 @@ echo ""
 echo "        CFLAGS:          $cflags"
 echo "        CXXFLAGS:        $cxxflags"
 echo "        Macros:          $defines"
+echo ""
+echo "        PYTHON2:         $PYTHON2"
 
 echo ""
 echo "        Run '${MAKE-make}' to build Mesa"
