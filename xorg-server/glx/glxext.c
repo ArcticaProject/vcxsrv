@@ -148,7 +148,7 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 	    c->isCurrent = GL_FALSE;
 	    if (c == __glXLastContext)
 		__glXFlushContextCache();
-
+/*
 	    for (i = 1; i < currentMaxClients; i++) {
 		if (clients[i]) {
 		    __GLXclientState *cl = glxGetClient(clients[i]);
@@ -163,6 +163,7 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 		    }
 		}
 	    }
+*/
 	}
 	if (c->drawPriv == glxPriv)
 	    c->drawPriv = NULL;
