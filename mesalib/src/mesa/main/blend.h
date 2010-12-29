@@ -33,7 +33,9 @@
 #define BLEND_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
+
+struct gl_context;
 
 
 extern void GLAPIENTRY
@@ -82,6 +84,6 @@ _mesa_ClampColorARB(GLenum target, GLenum clamp);
 
 
 extern void  
-_mesa_init_color( GLcontext * ctx );
+_mesa_init_color( struct gl_context * ctx );
 
 #endif

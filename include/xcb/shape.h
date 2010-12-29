@@ -468,6 +468,10 @@ xcb_shape_query_version_reply (xcb_connection_t                  *c  /**< */,
                                xcb_shape_query_version_cookie_t   cookie  /**< */,
                                xcb_generic_error_t              **e  /**< */);
 
+int
+xcb_shape_rectangles_sizeof (const void  *_buffer  /**< */,
+                             uint32_t     rectangles_len  /**< */);
+
 /**
  * Delivers a request to the X server
  * @param c The connection
@@ -960,6 +964,9 @@ xcb_shape_input_selected_reply_t *
 xcb_shape_input_selected_reply (xcb_connection_t                   *c  /**< */,
                                 xcb_shape_input_selected_cookie_t   cookie  /**< */,
                                 xcb_generic_error_t               **e  /**< */);
+
+int
+xcb_shape_get_rectangles_sizeof (const void  *_buffer  /**< */);
 
 /**
  * Delivers a request to the X server

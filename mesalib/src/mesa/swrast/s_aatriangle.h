@@ -28,11 +28,11 @@
 #define S_AATRIANGLE_H
 
 
-#include "main/mtypes.h"
+struct gl_context;
 
 
 extern void
-_swrast_set_aa_triangle_function(GLcontext *ctx);
+_swrast_set_aa_triangle_function(struct gl_context *ctx);
 
 
 #endif

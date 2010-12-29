@@ -5184,7 +5184,7 @@ void __glXDisp_LoadProgramNV(GLbyte * pc)
 
 void __glXDisp_ProgramParameters4dvNV(GLbyte * pc)
 {
-    const GLuint num = *(GLuint   *)(pc +  8);
+    const GLsizei num = *(GLsizei  *)(pc +  8);
 
 #ifdef __GLX_ALIGN64
     const GLuint cmdlen = 16 + __GLX_PAD((num * 32)) - 4;
@@ -5204,7 +5204,7 @@ void __glXDisp_ProgramParameters4dvNV(GLbyte * pc)
 
 void __glXDisp_ProgramParameters4fvNV(GLbyte * pc)
 {
-    const GLuint num = *(GLuint   *)(pc +  8);
+    const GLsizei num = *(GLsizei  *)(pc +  8);
 
     CALL_ProgramParameters4fvNV( GET_DISPATCH(), (
         *(GLenum   *)(pc +  0),

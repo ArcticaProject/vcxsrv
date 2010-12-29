@@ -40,7 +40,8 @@ struct _mesa_prim {
    GLuint begin:1;
    GLuint end:1;
    GLuint weak:1;
-   GLuint pad:20;
+   GLuint no_current_update:1;
+   GLuint pad:19;
 
    GLuint start;
    GLuint count;
@@ -61,12 +62,12 @@ struct _mesa_index_buffer {
 
 
 
-GLboolean _vbo_CreateContext( GLcontext *ctx );
-void _vbo_DestroyContext( GLcontext *ctx );
-void _vbo_InvalidateState( GLcontext *ctx, GLuint new_state );
+GLboolean _vbo_CreateContext( struct gl_context *ctx );
+void _vbo_DestroyContext( struct gl_context *ctx );
+void _vbo_InvalidateState( struct gl_context *ctx, GLuint new_state );
 
 
-typedef void (*vbo_draw_func)( GLcontext *ctx,
+typedef void (*vbo_draw_func)( struct gl_context *ctx,
 			       const struct gl_client_array **arrays,
 			       const struct _mesa_prim *prims,
 			       GLuint nr_prims,
@@ -92,7 +93,7 @@ struct split_limits {
 };
 
 
-void vbo_split_prims( GLcontext *ctx,
+void vbo_split_prims( struct gl_context *ctx,
 		      const struct gl_client_array *arrays[],
 		      const struct _mesa_prim *prim,
 		      GLuint nr_prims,
@@ -106,8 +107,9 @@ void vbo_split_prims( GLcontext *ctx,
 /* Helpers for dealing translating away non-zero min_index.
  */
 GLboolean vbo_all_varyings_in_vbos( const struct gl_client_array *arrays[] );
+GLboolean vbo_any_varyings_in_vbos( const struct gl_client_array *arrays[] );
 
-void vbo_rebase_prims( GLcontext *ctx,
+void vbo_rebase_prims( struct gl_context *ctx,
 		       const struct gl_client_array *arrays[],
 		       const struct _mesa_prim *prim,
 		       GLuint nr_prims,
@@ -116,53 +118,53 @@ void vbo_rebase_prims( GLcontext *ctx,
 		       GLuint max_index,
 		       vbo_draw_func draw );
 void
-vbo_get_minmax_index(GLcontext *ctx, const struct _mesa_prim *prim,
+vbo_get_minmax_index(struct gl_context *ctx, const struct _mesa_prim *prim,
 		     const struct _mesa_index_buffer *ib,
 		     GLuint *min_index, GLuint *max_index);
 
-void vbo_use_buffer_objects(GLcontext *ctx);
+void vbo_use_buffer_objects(struct gl_context *ctx);
 
 
-void vbo_set_draw_func(GLcontext *ctx, vbo_draw_func func);
+void vbo_set_draw_func(struct gl_context *ctx, vbo_draw_func func);
 
 
 void GLAPIENTRY
-_vbo_Color4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+_es_Color4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 
 void GLAPIENTRY
-_vbo_Normal3f(GLfloat x, GLfloat y, GLfloat z);
+_es_Normal3f(GLfloat x, GLfloat y, GLfloat z);
 
 void GLAPIENTRY
-_vbo_MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);
+_es_MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);
 
 void GLAPIENTRY
-_vbo_Materialfv(GLenum face, GLenum pname, const GLfloat *params);
+_es_Materialfv(GLenum face, GLenum pname, const GLfloat *params);
 
 void GLAPIENTRY
-_vbo_Materialf(GLenum face, GLenum pname, GLfloat param);
+_es_Materialf(GLenum face, GLenum pname, GLfloat param);
 
 void GLAPIENTRY
-_vbo_VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+_es_VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 
 void GLAPIENTRY
-_vbo_VertexAttrib1f(GLuint indx, GLfloat x);
+_es_VertexAttrib1f(GLuint indx, GLfloat x);
 
 void GLAPIENTRY
-_vbo_VertexAttrib1fv(GLuint indx, const GLfloat* values);
+_es_VertexAttrib1fv(GLuint indx, const GLfloat* values);
 
 void GLAPIENTRY
-_vbo_VertexAttrib2f(GLuint indx, GLfloat x, GLfloat y);
+_es_VertexAttrib2f(GLuint indx, GLfloat x, GLfloat y);
 
 void GLAPIENTRY
-_vbo_VertexAttrib2fv(GLuint indx, const GLfloat* values);
+_es_VertexAttrib2fv(GLuint indx, const GLfloat* values);
 
 void GLAPIENTRY
-_vbo_VertexAttrib3f(GLuint indx, GLfloat x, GLfloat y, GLfloat z);
+_es_VertexAttrib3f(GLuint indx, GLfloat x, GLfloat y, GLfloat z);
 
 void GLAPIENTRY
-_vbo_VertexAttrib3fv(GLuint indx, const GLfloat* values);
+_es_VertexAttrib3fv(GLuint indx, const GLfloat* values);
 
 void GLAPIENTRY
-_vbo_VertexAttrib4fv(GLuint indx, const GLfloat* values);
+_es_VertexAttrib4fv(GLuint indx, const GLfloat* values);
 
 #endif

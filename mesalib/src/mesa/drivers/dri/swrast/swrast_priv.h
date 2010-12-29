@@ -65,7 +65,7 @@
 struct dri_context
 {
     /* mesa, base class, must be first */
-    GLcontext Base;
+    struct gl_context Base;
 
     /* dri */
     __DRIcontext *cPriv;
@@ -78,7 +78,7 @@ dri_context(__DRIcontext * driContextPriv)
 }
 
 static INLINE struct dri_context *
-swrast_context(GLcontext *ctx)
+swrast_context(struct gl_context *ctx)
 {
     return (struct dri_context *) ctx;
 }
@@ -86,7 +86,7 @@ swrast_context(GLcontext *ctx)
 struct dri_drawable
 {
     /* mesa, base class, must be first */
-    GLframebuffer Base;
+    struct gl_framebuffer Base;
 
     /* dri */
     __DRIdrawable *dPriv;
@@ -102,7 +102,7 @@ dri_drawable(__DRIdrawable * driDrawPriv)
 }
 
 static INLINE struct dri_drawable *
-swrast_drawable(GLframebuffer *fb)
+swrast_drawable(struct gl_framebuffer *fb)
 {
     return (struct dri_drawable *) fb;
 }

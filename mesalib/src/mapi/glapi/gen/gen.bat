@@ -11,7 +11,7 @@ glx_proto_recv.py -m dispatch_c -s > indirect_dispatch_swap.c
 glx_proto_recv.py -m dispatch_h -f gl_and_glX_API.xml -s > indirect_dispatch.h
 gl_table.py > glapitable.h
 gl_table.py -m remap_table > dispatch.h
-gl_offsets.py > glapioffsets.h
+rem gl_offsets.py > glapioffsets.h
 gl_apitemp.py > glapitemp.h
 gl_procs.py > glprocs.h
 

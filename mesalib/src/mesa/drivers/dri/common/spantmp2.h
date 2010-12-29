@@ -48,6 +48,15 @@
 #define HW_WRITE_CLIPLOOP()	HW_CLIPLOOP()
 #endif
 
+#ifdef SPANTMP_MESA_FMT
+#define SPANTMP_PIXEL_FMT GL_NONE
+#define SPANTMP_PIXEL_TYPE GL_NONE
+#endif
+
+#ifndef SPANTMP_MESA_FMT
+#define SPANTMP_MESA_FMT MESA_FORMAT_COUNT
+#endif
+
 #if (SPANTMP_PIXEL_FMT == GL_RGB)  && (SPANTMP_PIXEL_TYPE == GL_UNSIGNED_SHORT_5_6_5)
 
 /**
@@ -445,6 +454,118 @@
 	rgba[3] = p;							\
      } while (0)
 
+#elif (SPANTMP_MESA_FMT == MESA_FORMAT_R8)
+
+#ifndef GET_VALUE
+#ifndef GET_PTR
+#define GET_PTR(_x, _y) (     buf + (_x) + (_y) * pitch)
+#endif
+
+#define GET_VALUE(_x, _y) *(volatile GLubyte *)(GET_PTR(_x, _y))
+#define PUT_VALUE(_x, _y, _v) *(volatile GLubyte *)(GET_PTR(_x, _y)) = (_v)
+#endif /* GET_VALUE */
+
+# define INIT_MONO_PIXEL(p, color)                       \
+     p = color[0]
+
+# define WRITE_RGBA(_x, _y, r, g, b, a)                                 \
+   PUT_VALUE(_x, _y, r)
+
+#define WRITE_PIXEL(_x, _y, p) PUT_VALUE(_x, _y, p)
+
+#define READ_RGBA( rgba, _x, _y )				        \
+     do {								\
+        GLubyte p = GET_VALUE(_x, _y);					\
+	rgba[0] = p;							\
+	rgba[1] = 0;							\
+	rgba[2] = 0;							\
+	rgba[3] = 0;							\
+     } while (0)
+
+#elif (SPANTMP_MESA_FMT == MESA_FORMAT_RG88)
+
+#ifndef GET_VALUE
+#ifndef GET_PTR
+#define GET_PTR(_x, _y) (     buf + (_x) * 2 + (_y) * pitch)
+#endif
+
+#define GET_VALUE(_x, _y) *(volatile GLushort *)(GET_PTR(_x, _y))
+#define PUT_VALUE(_x, _y, _v) *(volatile GLushort *)(GET_PTR(_x, _y)) = (_v)
+#endif /* GET_VALUE */
+
+# define INIT_MONO_PIXEL(p, color)                       \
+   PACK_COLOR_8888(color[0], color[1], 0, 0)
+
+# define WRITE_RGBA(_x, _y, r, g, b, a)                                 \
+   PUT_VALUE(_x, _y, r)
+
+#define WRITE_PIXEL(_x, _y, p) PUT_VALUE(_x, _y, p)
+
+#define READ_RGBA( rgba, _x, _y )				        \
+     do {								\
+        GLushort p = GET_VALUE(_x, _y);					\
+	rgba[0] = p & 0xff;						\
+	rgba[1] = (p >> 8) & 0xff;					\
+	rgba[2] = 0;							\
+	rgba[3] = 0;							\
+     } while (0)
+
+#elif (SPANTMP_MESA_FMT == MESA_FORMAT_R16)
+
+#ifndef GET_VALUE
+#ifndef GET_PTR
+#define GET_PTR(_x, _y) (     buf + (_x) * 2 + (_y) * pitch)
+#endif
+
+#define GET_VALUE(_x, _y) *(volatile GLushort *)(GET_PTR(_x, _y))
+#define PUT_VALUE(_x, _y, _v) *(volatile GLushort *)(GET_PTR(_x, _y)) = (_v)
+#endif /* GET_VALUE */
+
+# define INIT_MONO_PIXEL(p, color)                       \
+     p = color[0]
+
+# define WRITE_RGBA(_x, _y, r, g, b, a)                                 \
+   PUT_VALUE(_x, _y, r)
+
+#define WRITE_PIXEL(_x, _y, p) PUT_VALUE(_x, _y, p)
+
+#define READ_RGBA( rgba, _x, _y )				        \
+     do {								\
+        GLushort p = GET_VALUE(_x, _y);					\
+	rgba[0] = p;							\
+	rgba[1] = 0;							\
+	rgba[2] = 0;							\
+	rgba[3] = 0;							\
+     } while (0)
+
+#elif (SPANTMP_MESA_FMT == MESA_FORMAT_RG1616)
+
+#ifndef GET_VALUE
+#ifndef GET_PTR
+#define GET_PTR(_x, _y) (     buf + (_x) * 4 + (_y) * pitch)
+#endif
+
+#define GET_VALUE(_x, _y) *(volatile GLuint *)(GET_PTR(_x, _y))
+#define PUT_VALUE(_x, _y, _v) *(volatile GLuint *)(GET_PTR(_x, _y)) = (_v)
+#endif /* GET_VALUE */
+
+# define INIT_MONO_PIXEL(p, color)                       \
+   ((color[1] << 16) | (color[0]))
+
+# define WRITE_RGBA(_x, _y, r, g, b, a)                                 \
+   PUT_VALUE(_x, _y, r)
+
+#define WRITE_PIXEL(_x, _y, p) PUT_VALUE(_x, _y, p)
+
+#define READ_RGBA( rgba, _x, _y )				        \
+     do {								\
+        GLuint p = GET_VALUE(_x, _y);					\
+	rgba[0] = p & 0xffff;						\
+	rgba[1] = (p >> 16) & 0xffff;					\
+	rgba[2] = 0;							\
+	rgba[3] = 0;							\
+     } while (0)
+
 #else
 #error SPANTMP_PIXEL_FMT must be set to a valid value!
 #endif
@@ -460,7 +581,7 @@
 #include "x86/common_x86_asm.h"
 #endif
 
-static void TAG(WriteRGBASpan)( GLcontext *ctx,
+static void TAG(WriteRGBASpan)( struct gl_context *ctx,
                                 struct gl_renderbuffer *rb,
 				GLuint n, GLint x, GLint y,
 				const void *values, const GLubyte mask[] )
@@ -503,7 +624,7 @@ static void TAG(WriteRGBASpan)( GLcontext *ctx,
    HW_WRITE_UNLOCK();
 }
 
-static void TAG(WriteRGBSpan)( GLcontext *ctx,
+static void TAG(WriteRGBSpan)( struct gl_context *ctx,
                                struct gl_renderbuffer *rb,
 			       GLuint n, GLint x, GLint y,
 			       const void *values, const GLubyte mask[] )
@@ -542,7 +663,7 @@ static void TAG(WriteRGBSpan)( GLcontext *ctx,
    HW_WRITE_UNLOCK();
 }
 
-static void TAG(WriteRGBAPixels)( GLcontext *ctx,
+static void TAG(WriteRGBAPixels)( struct gl_context *ctx,
                                   struct gl_renderbuffer *rb,
                                   GLuint n, const GLint x[], const GLint y[],
                                   const void *values, const GLubyte mask[] )
@@ -588,7 +709,7 @@ static void TAG(WriteRGBAPixels)( GLcontext *ctx,
 }
 
 
-static void TAG(WriteMonoRGBASpan)( GLcontext *ctx,	
+static void TAG(WriteMonoRGBASpan)( struct gl_context *ctx,	
                                     struct gl_renderbuffer *rb,
 				    GLuint n, GLint x, GLint y, 
 				    const void *value, const GLubyte mask[] )
@@ -627,7 +748,7 @@ static void TAG(WriteMonoRGBASpan)( GLcontext *ctx,
 }
 
 
-static void TAG(WriteMonoRGBAPixels)( GLcontext *ctx,
+static void TAG(WriteMonoRGBAPixels)( struct gl_context *ctx,
                                       struct gl_renderbuffer *rb,
 				      GLuint n,
 				      const GLint x[], const GLint y[],
@@ -669,7 +790,7 @@ static void TAG(WriteMonoRGBAPixels)( GLcontext *ctx,
 }
 
 
-static void TAG(ReadRGBASpan)( GLcontext *ctx,
+static void TAG(ReadRGBASpan)( struct gl_context *ctx,
                                struct gl_renderbuffer *rb,
 			       GLuint n, GLint x, GLint y, void *values)
 {
@@ -702,7 +823,7 @@ static void TAG(ReadRGBASpan)( GLcontext *ctx,
 	(SPANTMP_PIXEL_TYPE == GL_UNSIGNED_INT_8_8_8_8_REV)) || \
     ((SPANTMP_PIXEL_FMT == GL_RGB) && \
 	(SPANTMP_PIXEL_TYPE == GL_UNSIGNED_SHORT_5_6_5)))
-static void TAG2(ReadRGBASpan,_MMX)( GLcontext *ctx,
+static void TAG2(ReadRGBASpan,_MMX)( struct gl_context *ctx,
                                      struct gl_renderbuffer *rb,
                                      GLuint n, GLint x, GLint y, void *values)
 {
@@ -752,7 +873,7 @@ static void TAG2(ReadRGBASpan,_MMX)( GLcontext *ctx,
    defined(USE_SSE_ASM) && \
    (SPANTMP_PIXEL_FMT == GL_BGRA) && \
      (SPANTMP_PIXEL_TYPE == GL_UNSIGNED_INT_8_8_8_8_REV)
-static void TAG2(ReadRGBASpan,_SSE2)( GLcontext *ctx,
+static void TAG2(ReadRGBASpan,_SSE2)( struct gl_context *ctx,
                                       struct gl_renderbuffer *rb,
                                       GLuint n, GLint x, GLint y,
                                       void *values)
@@ -787,7 +908,7 @@ static void TAG2(ReadRGBASpan,_SSE2)( GLcontext *ctx,
    defined(USE_SSE_ASM) && \
    (SPANTMP_PIXEL_FMT == GL_BGRA) && \
      (SPANTMP_PIXEL_TYPE == GL_UNSIGNED_INT_8_8_8_8_REV)
-static void TAG2(ReadRGBASpan,_SSE)( GLcontext *ctx,
+static void TAG2(ReadRGBASpan,_SSE)( struct gl_context *ctx,
                                      struct gl_renderbuffer *rb,
                                      GLuint n, GLint x, GLint y,
                                      void *values)
@@ -829,7 +950,7 @@ static void TAG2(ReadRGBASpan,_SSE)( GLcontext *ctx,
 #endif
 
 
-static void TAG(ReadRGBAPixels)( GLcontext *ctx,
+static void TAG(ReadRGBAPixels)( struct gl_context *ctx,
                                  struct gl_renderbuffer *rb,
 				 GLuint n, const GLint x[], const GLint y[],
 				 void *values )
@@ -914,3 +1035,4 @@ static void TAG(InitPointers)(struct gl_renderbuffer *rb)
 #undef GET_PTR
 #undef SPANTMP_PIXEL_FMT
 #undef SPANTMP_PIXEL_TYPE
+#undef SPANTMP_MESA_FMT

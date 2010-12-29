@@ -54,7 +54,7 @@
  * will typically override this function with a specialized version.
  */
 gl_format
-_mesa_choose_tex_format( GLcontext *ctx, GLint internalFormat,
+_mesa_choose_tex_format( struct gl_context *ctx, GLint internalFormat,
                          GLenum format, GLenum type )
 {
    (void) format;
@@ -75,6 +75,8 @@ _mesa_choose_tex_format( GLcontext *ctx, GLint internalFormat,
 
       /* deep RGBA formats */
       case GL_RGB10_A2:
+         return MESA_FORMAT_ARGB2101010;
+
       case GL_RGBA12:
       case GL_RGBA16:
          return MESA_FORMAT_RGBA_16;
@@ -100,24 +102,30 @@ _mesa_choose_tex_format( GLcontext *ctx, GLint internalFormat,
       /* Alpha formats */
       case GL_ALPHA:
       case GL_ALPHA4:
-      case GL_ALPHA12:
-      case GL_ALPHA16:
       case GL_ALPHA8:
          return MESA_FORMAT_A8;
+
+      case GL_ALPHA12:
+      case GL_ALPHA16:
+         return MESA_FORMAT_A16;
 
       /* Luminance formats */
       case 1:
       case GL_LUMINANCE:
       case GL_LUMINANCE4:
-      case GL_LUMINANCE12:
-      case GL_LUMINANCE16:
       case GL_LUMINANCE8:
          return MESA_FORMAT_L8;
 
+      case GL_LUMINANCE12:
+      case GL_LUMINANCE16:
+         return MESA_FORMAT_L16;
+
       /* Luminance/Alpha formats */
+      case GL_LUMINANCE4_ALPHA4:
+         return MESA_FORMAT_AL44;
+
       case 2:
       case GL_LUMINANCE_ALPHA:
-      case GL_LUMINANCE4_ALPHA4:
       case GL_LUMINANCE6_ALPHA2:
       case GL_LUMINANCE8_ALPHA8:
          return MESA_FORMAT_AL88;
@@ -129,10 +137,12 @@ _mesa_choose_tex_format( GLcontext *ctx, GLint internalFormat,
 
       case GL_INTENSITY:
       case GL_INTENSITY4:
-      case GL_INTENSITY12:
-      case GL_INTENSITY16:
       case GL_INTENSITY8:
          return MESA_FORMAT_I8;
+
+      case GL_INTENSITY12:
+      case GL_INTENSITY16:
+         return MESA_FORMAT_I16;
 
       case GL_COLOR_INDEX:
       case GL_COLOR_INDEX1_EXT:
@@ -426,6 +436,29 @@ _mesa_choose_tex_format( GLcontext *ctx, GLint internalFormat,
       case GL_LUMINANCE8I_EXT:
       case GL_LUMINANCE_ALPHA8I_EXT:
          return MESA_FORMAT_RGBA_INT8;
+      }
+   }
+
+   if (ctx->Extensions.ARB_texture_rg) {
+      switch (internalFormat) {
+      case GL_R8:
+      case GL_RED:
+      case GL_COMPRESSED_RED:
+	 return MESA_FORMAT_R8;
+
+      case GL_R16:
+         return MESA_FORMAT_R16;
+
+      case GL_RG:
+      case GL_RG8:
+      case GL_COMPRESSED_RG:
+	 return MESA_FORMAT_RG88;
+
+      case GL_RG16:
+	 return MESA_FORMAT_RG1616;
+
+      default:
+         ; /* fallthrough */
       }
    }
 

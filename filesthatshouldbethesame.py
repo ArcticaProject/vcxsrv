@@ -78,17 +78,13 @@ include\xcb\xproto.h                              libxcb\src\xproto.h
 include\xcb\xcb_windefs.h                         libxcb\src\xcb_windefs.h
 include\xcb\shape.h                               libxcb\src\shape.h
 
-gl\glcore.h                                       gl\internal\glcore.h
-
 gl\glext.h                                        mesalib\include\gl\glext.h
 gl\glx.h                                          mesalib\include\gl\glx.h
 gl\glxext.h                                       mesalib\include\gl\glxext.h
 gl\glx_mangle.h                                   mesalib\include\gl\glx_mangle.h
 gl\gl_mangle.h                                    mesalib\include\gl\gl_mangle.h
 gl\internal\dri_interface.h                       mesalib\include\gl\internal\dri_interface.h
-gl\internal\glcore.h                              mesalib\include\gl\internal\glcore.h
 
-xorg-server\glx\glapioffsets.h                    mesalib\src\mapi\glapi\glapioffsets.h
 xorg-server\glx\glprocs.h                         mesalib\src\mapi\glapi\glprocs.h
 xorg-server\glx\glapitemp.h                       mesalib\src\mapi\glapi\glapitemp.h
 xorg-server\glx\glapi.h                           mesalib\src\mapi\glapi\glapi.h

@@ -26,8 +26,7 @@
 /**
  * \file ir_to_mesa.cpp
  *
- * Translates the IR to ARB_fragment_program text if possible,
- * printing the result
+ * Translate GLSL IR to Mesa's gl_program representation.
  */
 
 #include <stdio.h>
@@ -54,6 +53,7 @@ extern "C" {
 #include "program/program.h"
 #include "program/prog_uniform.h"
 #include "program/prog_parameter.h"
+#include "program/sampler.h"
 }
 
 static int swizzle_for_size(int size);
@@ -65,7 +65,7 @@ static int swizzle_for_size(int size);
 typedef struct ir_to_mesa_src_reg {
    ir_to_mesa_src_reg(int file, int index, const glsl_type *type)
    {
-      this->file = file;
+      this->file = (gl_register_file) file;
       this->index = index;
       if (type && (type->is_scalar() || type->is_vector() || type->is_matrix()))
 	 this->swizzle = swizzle_for_size(type->vector_elements);
@@ -84,7 +84,7 @@ typedef struct ir_to_mesa_src_reg {
       this->reladdr = NULL;
    }
 
-   int file; /**< PROGRAM_* from Mesa */
+   gl_register_file file; /**< PROGRAM_* from Mesa */
    int index; /**< temporary index, VERT_ATTRIB_*, FRAG_ATTRIB_*, etc. */
    GLuint swizzle; /**< SWIZZLE_XYZWONEZERO swizzles from Mesa. */
    int negate; /**< NEGATE_XYZW mask from mesa */
@@ -123,6 +123,7 @@ public:
    /** Pointer to the ir source this tree came from for debugging */
    ir_instruction *ir;
    GLboolean cond_update;
+   bool saturate;
    int sampler; /**< sampler index */
    int tex_target; /**< One of TEXTURE_*_INDEX */
    GLboolean tex_shadow;
@@ -132,13 +133,13 @@ public:
 
 class variable_storage : public exec_node {
 public:
-   variable_storage(ir_variable *var, int file, int index)
+   variable_storage(ir_variable *var, gl_register_file file, int index)
       : file(file), index(index), var(var)
    {
       /* empty */
    }
 
-   int file;
+   gl_register_file file;
    int index;
    ir_variable *var; /* variable that maps to this, if any */
 };
@@ -183,7 +184,7 @@ public:
 
    function_entry *current_function;
 
-   GLcontext *ctx;
+   struct gl_context *ctx;
    struct gl_program *prog;
    struct gl_shader_program *shader_program;
    struct gl_shader_compiler_options *options;
@@ -260,6 +261,17 @@ public:
 					       ir_to_mesa_src_reg src1,
 					       ir_to_mesa_src_reg src2);
 
+   /**
+    * Emit the correct dot-product instruction for the type of arguments
+    *
+    * \sa ir_to_mesa_emit_op2
+    */
+   void ir_to_mesa_emit_dp(ir_instruction *ir,
+			   ir_to_mesa_dst_reg dst,
+			   ir_to_mesa_src_reg src0,
+			   ir_to_mesa_src_reg src1,
+			   unsigned elements);
+
    void ir_to_mesa_emit_scalar_op1(ir_instruction *ir,
 				   enum prog_opcode op,
 				   ir_to_mesa_dst_reg dst,
@@ -271,10 +283,17 @@ public:
 				   ir_to_mesa_src_reg src0,
 				   ir_to_mesa_src_reg src1);
 
+   void emit_scs(ir_instruction *ir, enum prog_opcode op,
+		 ir_to_mesa_dst_reg dst,
+		 const ir_to_mesa_src_reg &src);
+
    GLboolean try_emit_mad(ir_expression *ir,
 			  int mul_operand);
+   GLboolean try_emit_sat(ir_expression *ir);
 
-   int get_sampler_uniform_value(ir_dereference *deref);
+   void emit_swz(ir_expression *ir);
+
+   bool process_move_condition(ir_rvalue *ir);
 
    void *mem_ctx;
 };
@@ -289,19 +308,22 @@ ir_to_mesa_dst_reg ir_to_mesa_address_reg = {
    PROGRAM_ADDRESS, 0, WRITEMASK_X, COND_TR, NULL
 };
 
-static void fail_link(struct gl_shader_program *prog, const char *fmt, ...) PRINTFLIKE(2, 3);
+static void
+fail_link(struct gl_shader_program *prog, const char *fmt, ...) PRINTFLIKE(2, 3);
 
-static void fail_link(struct gl_shader_program *prog, const char *fmt, ...)
-   {
-      va_list args;
-      va_start(args, fmt);
-      prog->InfoLog = talloc_vasprintf_append(prog->InfoLog, fmt, args);
-      va_end(args);
+static void
+fail_link(struct gl_shader_program *prog, const char *fmt, ...)
+{
+   va_list args;
+   va_start(args, fmt);
+   prog->InfoLog = talloc_vasprintf_append(prog->InfoLog, fmt, args);
+   va_end(args);
 
-      prog->LinkStatus = GL_FALSE;
-   }
+   prog->LinkStatus = GL_FALSE;
+}
 
-static int swizzle_for_size(int size)
+static int
+swizzle_for_size(int size)
 {
    int size_swizzles[4] = {
       MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_X, SWIZZLE_X, SWIZZLE_X),
@@ -310,6 +332,7 @@ static int swizzle_for_size(int size)
       MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_W),
    };
 
+   assert((size >= 1) && (size <= 4));
    return size_swizzles[size - 1];
 }
 
@@ -391,6 +414,21 @@ ir_to_mesa_visitor::ir_to_mesa_emit_op0(ir_instruction *ir,
 			      ir_to_mesa_undef);
 }
 
+void
+ir_to_mesa_visitor::ir_to_mesa_emit_dp(ir_instruction *ir,
+				       ir_to_mesa_dst_reg dst,
+				       ir_to_mesa_src_reg src0,
+				       ir_to_mesa_src_reg src1,
+				       unsigned elements)
+{
+   static const gl_inst_opcode dot_opcodes[] = {
+      OPCODE_DP2, OPCODE_DP3, OPCODE_DP4
+   };
+
+   ir_to_mesa_emit_op3(ir, dot_opcodes[elements - 2],
+		       dst, src0, src1, ir_to_mesa_undef);
+}
+
 inline ir_to_mesa_dst_reg
 ir_to_mesa_dst_reg_from_src(ir_to_mesa_src_reg reg)
 {
@@ -445,6 +483,10 @@ ir_to_mesa_visitor::ir_to_mesa_emit_scalar_op2(ir_instruction *ir,
       GLuint src0_swiz = GET_SWZ(src0.swizzle, i);
       GLuint src1_swiz = GET_SWZ(src1.swizzle, i);
       for (j = i + 1; j < 4; j++) {
+	 /* If there is another enabled component in the destination that is
+	  * derived from the same inputs, generate its value on this pass as
+	  * well.
+	  */
 	 if (!(done_mask & (1 << j)) &&
 	     GET_SWZ(src0.swizzle, j) == src0_swiz &&
 	     GET_SWZ(src1.swizzle, j) == src1_swiz) {
@@ -476,6 +518,102 @@ ir_to_mesa_visitor::ir_to_mesa_emit_scalar_op1(ir_instruction *ir,
    undef.swizzle = SWIZZLE_XXXX;
 
    ir_to_mesa_emit_scalar_op2(ir, op, dst, src0, undef);
+}
+
+/**
+ * Emit an OPCODE_SCS instruction
+ *
+ * The \c SCS opcode functions a bit differently than the other Mesa (or
+ * ARB_fragment_program) opcodes.  Instead of splatting its result across all
+ * four components of the destination, it writes one value to the \c x
+ * component and another value to the \c y component.
+ *
+ * \param ir        IR instruction being processed
+ * \param op        Either \c OPCODE_SIN or \c OPCODE_COS depending on which
+ *                  value is desired.
+ * \param dst       Destination register
+ * \param src       Source register
+ */
+void
+ir_to_mesa_visitor::emit_scs(ir_instruction *ir, enum prog_opcode op,
+			     ir_to_mesa_dst_reg dst,
+			     const ir_to_mesa_src_reg &src)
+{
+   /* Vertex programs cannot use the SCS opcode.
+    */
+   if (this->prog->Target == GL_VERTEX_PROGRAM_ARB) {
+      ir_to_mesa_emit_scalar_op1(ir, op, dst, src);
+      return;
+   }
+
+   const unsigned component = (op == OPCODE_SIN) ? 0 : 1;
+   const unsigned scs_mask = (1U << component);
+   int done_mask = ~dst.writemask;
+   ir_to_mesa_src_reg tmp;
+
+   assert(op == OPCODE_SIN || op == OPCODE_COS);
+
+   /* If there are compnents in the destination that differ from the component
+    * that will be written by the SCS instrution, we'll need a temporary.
+    */
+   if (scs_mask != unsigned(dst.writemask)) {
+      tmp = get_temp(glsl_type::vec4_type);
+   }
+
+   for (unsigned i = 0; i < 4; i++) {
+      unsigned this_mask = (1U << i);
+      ir_to_mesa_src_reg src0 = src;
+
+      if ((done_mask & this_mask) != 0)
+	 continue;
+
+      /* The source swizzle specified which component of the source generates
+       * sine / cosine for the current component in the destination.  The SCS
+       * instruction requires that this value be swizzle to the X component.
+       * Replace the current swizzle with a swizzle that puts the source in
+       * the X component.
+       */
+      unsigned src0_swiz = GET_SWZ(src.swizzle, i);
+
+      src0.swizzle = MAKE_SWIZZLE4(src0_swiz, src0_swiz,
+				   src0_swiz, src0_swiz);
+      for (unsigned j = i + 1; j < 4; j++) {
+	 /* If there is another enabled component in the destination that is
+	  * derived from the same inputs, generate its value on this pass as
+	  * well.
+	  */
+	 if (!(done_mask & (1 << j)) &&
+	     GET_SWZ(src0.swizzle, j) == src0_swiz) {
+	    this_mask |= (1 << j);
+	 }
+      }
+
+      if (this_mask != scs_mask) {
+	 ir_to_mesa_instruction *inst;
+	 ir_to_mesa_dst_reg tmp_dst = ir_to_mesa_dst_reg_from_src(tmp);
+
+	 /* Emit the SCS instruction.
+	  */
+	 inst = ir_to_mesa_emit_op1(ir, OPCODE_SCS, tmp_dst, src0);
+	 inst->dst_reg.writemask = scs_mask;
+
+	 /* Move the result of the SCS instruction to the desired location in
+	  * the destination.
+	  */
+	 tmp.swizzle = MAKE_SWIZZLE4(component, component,
+				     component, component);
+	 inst = ir_to_mesa_emit_op1(ir, OPCODE_SCS, dst, tmp);
+	 inst->dst_reg.writemask = this_mask;
+      } else {
+	 /* Emit the SCS instruction to write directly to the destination.
+	  */
+	 ir_to_mesa_instruction *inst =
+	    ir_to_mesa_emit_op1(ir, OPCODE_SCS, dst, src0);
+	 inst->dst_reg.writemask = scs_mask;
+      }
+
+      done_mask |= this_mask;
+   }
 }
 
 struct ir_to_mesa_src_reg
@@ -578,243 +716,6 @@ ir_to_mesa_visitor::find_variable_storage(ir_variable *var)
    return NULL;
 }
 
-struct statevar_element {
-   const char *field;
-   int tokens[STATE_LENGTH];
-   int swizzle;
-};
-
-static struct statevar_element gl_DepthRange_elements[] = {
-   {"near", {STATE_DEPTH_RANGE, 0, 0}, SWIZZLE_XXXX},
-   {"far", {STATE_DEPTH_RANGE, 0, 0}, SWIZZLE_YYYY},
-   {"diff", {STATE_DEPTH_RANGE, 0, 0}, SWIZZLE_ZZZZ},
-};
-
-static struct statevar_element gl_ClipPlane_elements[] = {
-   {NULL, {STATE_CLIPPLANE, 0, 0}, SWIZZLE_XYZW}
-};
-
-static struct statevar_element gl_Point_elements[] = {
-   {"size", {STATE_POINT_SIZE}, SWIZZLE_XXXX},
-   {"sizeMin", {STATE_POINT_SIZE}, SWIZZLE_YYYY},
-   {"sizeMax", {STATE_POINT_SIZE}, SWIZZLE_ZZZZ},
-   {"fadeThresholdSize", {STATE_POINT_SIZE}, SWIZZLE_WWWW},
-   {"distanceConstantAttenuation", {STATE_POINT_ATTENUATION}, SWIZZLE_XXXX},
-   {"distanceLinearAttenuation", {STATE_POINT_ATTENUATION}, SWIZZLE_YYYY},
-   {"distanceQuadraticAttenuation", {STATE_POINT_ATTENUATION}, SWIZZLE_ZZZZ},
-};
-
-static struct statevar_element gl_FrontMaterial_elements[] = {
-   {"emission", {STATE_MATERIAL, 0, STATE_EMISSION}, SWIZZLE_XYZW},
-   {"ambient", {STATE_MATERIAL, 0, STATE_AMBIENT}, SWIZZLE_XYZW},
-   {"diffuse", {STATE_MATERIAL, 0, STATE_DIFFUSE}, SWIZZLE_XYZW},
-   {"specular", {STATE_MATERIAL, 0, STATE_SPECULAR}, SWIZZLE_XYZW},
-   {"shininess", {STATE_MATERIAL, 0, STATE_SHININESS}, SWIZZLE_XXXX},
-};
-
-static struct statevar_element gl_BackMaterial_elements[] = {
-   {"emission", {STATE_MATERIAL, 1, STATE_EMISSION}, SWIZZLE_XYZW},
-   {"ambient", {STATE_MATERIAL, 1, STATE_AMBIENT}, SWIZZLE_XYZW},
-   {"diffuse", {STATE_MATERIAL, 1, STATE_DIFFUSE}, SWIZZLE_XYZW},
-   {"specular", {STATE_MATERIAL, 1, STATE_SPECULAR}, SWIZZLE_XYZW},
-   {"shininess", {STATE_MATERIAL, 1, STATE_SHININESS}, SWIZZLE_XXXX},
-};
-
-static struct statevar_element gl_LightSource_elements[] = {
-   {"ambient", {STATE_LIGHT, 0, STATE_AMBIENT}, SWIZZLE_XYZW},
-   {"diffuse", {STATE_LIGHT, 0, STATE_DIFFUSE}, SWIZZLE_XYZW},
-   {"specular", {STATE_LIGHT, 0, STATE_SPECULAR}, SWIZZLE_XYZW},
-   {"position", {STATE_LIGHT, 0, STATE_POSITION}, SWIZZLE_XYZW},
-   {"halfVector", {STATE_LIGHT, 0, STATE_HALF_VECTOR}, SWIZZLE_XYZW},
-   {"spotDirection", {STATE_LIGHT, 0, STATE_SPOT_DIRECTION}, SWIZZLE_XYZW},
-   {"spotCosCutoff", {STATE_LIGHT, 0, STATE_SPOT_DIRECTION}, SWIZZLE_WWWW},
-   {"spotCutoff", {STATE_LIGHT, 0, STATE_SPOT_CUTOFF}, SWIZZLE_XXXX},
-   {"spotExponent", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_WWWW},
-   {"constantAttenuation", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_XXXX},
-   {"linearAttenuation", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_YYYY},
-   {"quadraticAttenuation", {STATE_LIGHT, 0, STATE_ATTENUATION}, SWIZZLE_ZZZZ},
-};
-
-static struct statevar_element gl_LightModel_elements[] = {
-   {"ambient", {STATE_LIGHTMODEL_AMBIENT, 0}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_FrontLightModelProduct_elements[] = {
-   {"sceneColor", {STATE_LIGHTMODEL_SCENECOLOR, 0}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_BackLightModelProduct_elements[] = {
-   {"sceneColor", {STATE_LIGHTMODEL_SCENECOLOR, 1}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_FrontLightProduct_elements[] = {
-   {"ambient", {STATE_LIGHTPROD, 0, 0, STATE_AMBIENT}, SWIZZLE_XYZW},
-   {"diffuse", {STATE_LIGHTPROD, 0, 0, STATE_DIFFUSE}, SWIZZLE_XYZW},
-   {"specular", {STATE_LIGHTPROD, 0, 0, STATE_SPECULAR}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_BackLightProduct_elements[] = {
-   {"ambient", {STATE_LIGHTPROD, 0, 1, STATE_AMBIENT}, SWIZZLE_XYZW},
-   {"diffuse", {STATE_LIGHTPROD, 0, 1, STATE_DIFFUSE}, SWIZZLE_XYZW},
-   {"specular", {STATE_LIGHTPROD, 0, 1, STATE_SPECULAR}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_TextureEnvColor_elements[] = {
-   {NULL, {STATE_TEXENV_COLOR, 0}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_EyePlaneS_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_S}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_EyePlaneT_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_T}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_EyePlaneR_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_R}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_EyePlaneQ_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_Q}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_ObjectPlaneS_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_S}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_ObjectPlaneT_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_T}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_ObjectPlaneR_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_R}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_ObjectPlaneQ_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_Q}, SWIZZLE_XYZW},
-};
-
-static struct statevar_element gl_Fog_elements[] = {
-   {"color", {STATE_FOG_COLOR}, SWIZZLE_XYZW},
-   {"density", {STATE_FOG_PARAMS}, SWIZZLE_XXXX},
-   {"start", {STATE_FOG_PARAMS}, SWIZZLE_YYYY},
-   {"end", {STATE_FOG_PARAMS}, SWIZZLE_ZZZZ},
-   {"scale", {STATE_FOG_PARAMS}, SWIZZLE_WWWW},
-};
-
-static struct statevar_element gl_NormalScale_elements[] = {
-   {NULL, {STATE_NORMAL_SCALE}, SWIZZLE_XXXX},
-};
-
-#define MATRIX(name, statevar, modifier)			\
-   static struct statevar_element name ## _elements[] = {		\
-      { NULL, { statevar, 0, 0, 0, modifier}, SWIZZLE_XYZW },		\
-      { NULL, { statevar, 0, 1, 1, modifier}, SWIZZLE_XYZW },		\
-      { NULL, { statevar, 0, 2, 2, modifier}, SWIZZLE_XYZW },		\
-      { NULL, { statevar, 0, 3, 3, modifier}, SWIZZLE_XYZW },		\
-   }
-
-MATRIX(gl_ModelViewMatrix,
-       STATE_MODELVIEW_MATRIX, STATE_MATRIX_TRANSPOSE);
-MATRIX(gl_ModelViewMatrixInverse,
-       STATE_MODELVIEW_MATRIX, STATE_MATRIX_INVTRANS);
-MATRIX(gl_ModelViewMatrixTranspose,
-       STATE_MODELVIEW_MATRIX, 0);
-MATRIX(gl_ModelViewMatrixInverseTranspose,
-       STATE_MODELVIEW_MATRIX, STATE_MATRIX_INVERSE);
-
-MATRIX(gl_ProjectionMatrix,
-       STATE_PROJECTION_MATRIX, STATE_MATRIX_TRANSPOSE);
-MATRIX(gl_ProjectionMatrixInverse,
-       STATE_PROJECTION_MATRIX, STATE_MATRIX_INVTRANS);
-MATRIX(gl_ProjectionMatrixTranspose,
-       STATE_PROJECTION_MATRIX, 0);
-MATRIX(gl_ProjectionMatrixInverseTranspose,
-       STATE_PROJECTION_MATRIX, STATE_MATRIX_INVERSE);
-
-MATRIX(gl_ModelViewProjectionMatrix,
-       STATE_MVP_MATRIX, STATE_MATRIX_TRANSPOSE);
-MATRIX(gl_ModelViewProjectionMatrixInverse,
-       STATE_MVP_MATRIX, STATE_MATRIX_INVTRANS);
-MATRIX(gl_ModelViewProjectionMatrixTranspose,
-       STATE_MVP_MATRIX, 0);
-MATRIX(gl_ModelViewProjectionMatrixInverseTranspose,
-       STATE_MVP_MATRIX, STATE_MATRIX_INVERSE);
-
-MATRIX(gl_TextureMatrix,
-       STATE_TEXTURE_MATRIX, STATE_MATRIX_TRANSPOSE);
-MATRIX(gl_TextureMatrixInverse,
-       STATE_TEXTURE_MATRIX, STATE_MATRIX_INVTRANS);
-MATRIX(gl_TextureMatrixTranspose,
-       STATE_TEXTURE_MATRIX, 0);
-MATRIX(gl_TextureMatrixInverseTranspose,
-       STATE_TEXTURE_MATRIX, STATE_MATRIX_INVERSE);
-
-static struct statevar_element gl_NormalMatrix_elements[] = {
-   { NULL, { STATE_MODELVIEW_MATRIX, 0, 0, 0, STATE_MATRIX_INVERSE},
-     SWIZZLE_XYZW },
-   { NULL, { STATE_MODELVIEW_MATRIX, 0, 1, 1, STATE_MATRIX_INVERSE},
-     SWIZZLE_XYZW },
-   { NULL, { STATE_MODELVIEW_MATRIX, 0, 2, 2, STATE_MATRIX_INVERSE},
-     SWIZZLE_XYZW },
-};
-
-#undef MATRIX
-
-#define STATEVAR(name) {#name, name ## _elements, Elements(name ## _elements)}
-
-static const struct statevar {
-   const char *name;
-   struct statevar_element *elements;
-   unsigned int num_elements;
-} statevars[] = {
-   STATEVAR(gl_DepthRange),
-   STATEVAR(gl_ClipPlane),
-   STATEVAR(gl_Point),
-   STATEVAR(gl_FrontMaterial),
-   STATEVAR(gl_BackMaterial),
-   STATEVAR(gl_LightSource),
-   STATEVAR(gl_LightModel),
-   STATEVAR(gl_FrontLightModelProduct),
-   STATEVAR(gl_BackLightModelProduct),
-   STATEVAR(gl_FrontLightProduct),
-   STATEVAR(gl_BackLightProduct),
-   STATEVAR(gl_TextureEnvColor),
-   STATEVAR(gl_EyePlaneS),
-   STATEVAR(gl_EyePlaneT),
-   STATEVAR(gl_EyePlaneR),
-   STATEVAR(gl_EyePlaneQ),
-   STATEVAR(gl_ObjectPlaneS),
-   STATEVAR(gl_ObjectPlaneT),
-   STATEVAR(gl_ObjectPlaneR),
-   STATEVAR(gl_ObjectPlaneQ),
-   STATEVAR(gl_Fog),
-
-   STATEVAR(gl_ModelViewMatrix),
-   STATEVAR(gl_ModelViewMatrixInverse),
-   STATEVAR(gl_ModelViewMatrixTranspose),
-   STATEVAR(gl_ModelViewMatrixInverseTranspose),
-
-   STATEVAR(gl_ProjectionMatrix),
-   STATEVAR(gl_ProjectionMatrixInverse),
-   STATEVAR(gl_ProjectionMatrixTranspose),
-   STATEVAR(gl_ProjectionMatrixInverseTranspose),
-
-   STATEVAR(gl_ModelViewProjectionMatrix),
-   STATEVAR(gl_ModelViewProjectionMatrixInverse),
-   STATEVAR(gl_ModelViewProjectionMatrixTranspose),
-   STATEVAR(gl_ModelViewProjectionMatrixInverseTranspose),
-
-   STATEVAR(gl_TextureMatrix),
-   STATEVAR(gl_TextureMatrixInverse),
-   STATEVAR(gl_TextureMatrixTranspose),
-   STATEVAR(gl_TextureMatrixInverseTranspose),
-
-   STATEVAR(gl_NormalMatrix),
-   STATEVAR(gl_NormalScale),
-};
-
 void
 ir_to_mesa_visitor::visit(ir_variable *ir)
 {
@@ -827,19 +728,20 @@ ir_to_mesa_visitor::visit(ir_variable *ir)
 
    if (ir->mode == ir_var_uniform && strncmp(ir->name, "gl_", 3) == 0) {
       unsigned int i;
+      const struct gl_builtin_uniform_desc *statevar;
 
-      for (i = 0; i < Elements(statevars); i++) {
-	 if (strcmp(ir->name, statevars[i].name) == 0)
+      for (i = 0; _mesa_builtin_uniform_desc[i].name; i++) {
+	 if (strcmp(ir->name, _mesa_builtin_uniform_desc[i].name) == 0)
 	    break;
       }
 
-      if (i == Elements(statevars)) {
+      if (!_mesa_builtin_uniform_desc[i].name) {
 	 fail_link(this->shader_program,
 		   "Failed to find builtin uniform `%s'\n", ir->name);
 	 return;
       }
 
-      const struct statevar *statevar = &statevars[i];
+      statevar = &_mesa_builtin_uniform_desc[i];
 
       int array_count;
       if (ir->type->is_array()) {
@@ -882,7 +784,7 @@ ir_to_mesa_visitor::visit(ir_variable *ir)
 
       for (int a = 0; a < array_count; a++) {
 	 for (unsigned int i = 0; i < statevar->num_elements; i++) {
-	    struct statevar_element *element = &statevar->elements[i];
+	    struct gl_builtin_uniform_element *element = &statevar->elements[i];
 	    int tokens[STATE_LENGTH];
 
 	    memcpy(tokens, element->tokens, sizeof(element->tokens));
@@ -1039,6 +941,32 @@ ir_to_mesa_visitor::try_emit_mad(ir_expression *ir, int mul_operand)
    return true;
 }
 
+GLboolean
+ir_to_mesa_visitor::try_emit_sat(ir_expression *ir)
+{
+   /* Saturates were only introduced to vertex programs in
+    * NV_vertex_program3, so don't give them to drivers in the VP.
+    */
+   if (this->prog->Target == GL_VERTEX_PROGRAM_ARB)
+      return false;
+
+   ir_rvalue *sat_src = ir->as_rvalue_to_saturate();
+   if (!sat_src)
+      return false;
+
+   sat_src->accept(this);
+   ir_to_mesa_src_reg src = this->result;
+
+   this->result = get_temp(ir->type);
+   ir_to_mesa_instruction *inst;
+   inst = ir_to_mesa_emit_op1(ir, OPCODE_MOV,
+			      ir_to_mesa_dst_reg_from_src(this->result),
+			      src);
+   inst->saturate = true;
+
+   return true;
+}
+
 void
 ir_to_mesa_visitor::reladdr_to_temp(ir_instruction *ir,
 				    ir_to_mesa_src_reg *reg, int *num_reladdr)
@@ -1060,15 +988,129 @@ ir_to_mesa_visitor::reladdr_to_temp(ir_instruction *ir,
 }
 
 void
+ir_to_mesa_visitor::emit_swz(ir_expression *ir)
+{
+   /* Assume that the vector operator is in a form compatible with OPCODE_SWZ.
+    * This means that each of the operands is either an immediate value of -1,
+    * 0, or 1, or is a component from one source register (possibly with
+    * negation).
+    */
+   uint8_t components[4] = { 0 };
+   bool negate[4] = { false };
+   ir_variable *var = NULL;
+
+   for (unsigned i = 0; i < ir->type->vector_elements; i++) {
+      ir_rvalue *op = ir->operands[i];
+
+      assert(op->type->is_scalar());
+
+      while (op != NULL) {
+	 switch (op->ir_type) {
+	 case ir_type_constant: {
+
+	    assert(op->type->is_scalar());
+
+	    const ir_constant *const c = op->as_constant();
+	    if (c->is_one()) {
+	       components[i] = SWIZZLE_ONE;
+	    } else if (c->is_zero()) {
+	       components[i] = SWIZZLE_ZERO;
+	    } else if (c->is_negative_one()) {
+	       components[i] = SWIZZLE_ONE;
+	       negate[i] = true;
+	    } else {
+	       assert(!"SWZ constant must be 0.0 or 1.0.");
+	    }
+
+	    op = NULL;
+	    break;
+	 }
+
+	 case ir_type_dereference_variable: {
+	    ir_dereference_variable *const deref =
+	       (ir_dereference_variable *) op;
+
+	    assert((var == NULL) || (deref->var == var));
+	    components[i] = SWIZZLE_X;
+	    var = deref->var;
+	    op = NULL;
+	    break;
+	 }
+
+	 case ir_type_expression: {
+	    ir_expression *const expr = (ir_expression *) op;
+
+	    assert(expr->operation == ir_unop_neg);
+	    negate[i] = true;
+
+	    op = expr->operands[0];
+	    break;
+	 }
+
+	 case ir_type_swizzle: {
+	    ir_swizzle *const swiz = (ir_swizzle *) op;
+
+	    components[i] = swiz->mask.x;
+	    op = swiz->val;
+	    break;
+	 }
+
+	 default:
+	    assert(!"Should not get here.");
+	    return;
+	 }
+      }
+   }
+
+   assert(var != NULL);
+
+   ir_dereference_variable *const deref =
+      new(mem_ctx) ir_dereference_variable(var);
+
+   this->result.file = PROGRAM_UNDEFINED;
+   deref->accept(this);
+   if (this->result.file == PROGRAM_UNDEFINED) {
+      ir_print_visitor v;
+      printf("Failed to get tree for expression operand:\n");
+      deref->accept(&v);
+      exit(1);
+   }
+
+   ir_to_mesa_src_reg src;
+
+   src = this->result;
+   src.swizzle = MAKE_SWIZZLE4(components[0],
+			       components[1],
+			       components[2],
+			       components[3]);
+   src.negate = ((unsigned(negate[0]) << 0)
+		 | (unsigned(negate[1]) << 1)
+		 | (unsigned(negate[2]) << 2)
+		 | (unsigned(negate[3]) << 3));
+
+   /* Storage for our result.  Ideally for an assignment we'd be using the
+    * actual storage for the result here, instead.
+    */
+   const ir_to_mesa_src_reg result_src = get_temp(ir->type);
+   ir_to_mesa_dst_reg result_dst = ir_to_mesa_dst_reg_from_src(result_src);
+
+   /* Limit writes to the channels that will be used by result_src later.
+    * This does limit this temp's use as a temporary for multi-instruction
+    * sequences.
+    */
+   result_dst.writemask = (1 << ir->type->vector_elements) - 1;
+
+   ir_to_mesa_emit_op1(ir, OPCODE_SWZ, result_dst, src);
+   this->result = result_src;
+}
+
+void
 ir_to_mesa_visitor::visit(ir_expression *ir)
 {
    unsigned int operand;
-   struct ir_to_mesa_src_reg op[2];
+   struct ir_to_mesa_src_reg op[Elements(ir->operands)];
    struct ir_to_mesa_src_reg result_src;
    struct ir_to_mesa_dst_reg result_dst;
-   const glsl_type *vec4_type = glsl_type::get_instance(GLSL_TYPE_FLOAT, 4, 1);
-   const glsl_type *vec3_type = glsl_type::get_instance(GLSL_TYPE_FLOAT, 3, 1);
-   const glsl_type *vec2_type = glsl_type::get_instance(GLSL_TYPE_FLOAT, 2, 1);
 
    /* Quick peephole: Emit OPCODE_MAD(a, b, c) instead of ADD(MUL(a, b), c)
     */
@@ -1077,6 +1119,13 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
 	 return;
       if (try_emit_mad(ir, 0))
 	 return;
+   }
+   if (try_emit_sat(ir))
+      return;
+
+   if (ir->operation == ir_quadop_vector) {
+      this->emit_swz(ir);
+      return;
    }
 
    for (operand = 0; operand < ir->get_num_operands(); operand++) {
@@ -1151,6 +1200,12 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
    case ir_unop_cos:
       ir_to_mesa_emit_scalar_op1(ir, OPCODE_COS, result_dst, op[0]);
       break;
+   case ir_unop_sin_reduced:
+      emit_scs(ir, OPCODE_SIN, result_dst, op[0]);
+      break;
+   case ir_unop_cos_reduced:
+      emit_scs(ir, OPCODE_COS, result_dst, op[0]);
+      break;
 
    case ir_unop_dFdx:
       ir_to_mesa_emit_op1(ir, OPCODE_DDX, result_dst, op[0]);
@@ -1210,12 +1265,7 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
 	 ir_to_mesa_src_reg temp = get_temp(glsl_type::vec4_type);
 	 ir_to_mesa_emit_op2(ir, OPCODE_SNE,
 			     ir_to_mesa_dst_reg_from_src(temp), op[0], op[1]);
-	 if (vector_elements == 4)
-	    ir_to_mesa_emit_op2(ir, OPCODE_DP4, result_dst, temp, temp);
-	 else if (vector_elements == 3)
-	    ir_to_mesa_emit_op2(ir, OPCODE_DP3, result_dst, temp, temp);
-	 else
-	    ir_to_mesa_emit_op2(ir, OPCODE_DP2, result_dst, temp, temp);
+	 ir_to_mesa_emit_dp(ir, result_dst, temp, temp, vector_elements);
 	 ir_to_mesa_emit_op2(ir, OPCODE_SEQ,
 			     result_dst, result_src, src_reg_for_float(0.0));
       } else {
@@ -1229,12 +1279,7 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
 	 ir_to_mesa_src_reg temp = get_temp(glsl_type::vec4_type);
 	 ir_to_mesa_emit_op2(ir, OPCODE_SNE,
 			     ir_to_mesa_dst_reg_from_src(temp), op[0], op[1]);
-	 if (vector_elements == 4)
-	    ir_to_mesa_emit_op2(ir, OPCODE_DP4, result_dst, temp, temp);
-	 else if (vector_elements == 3)
-	    ir_to_mesa_emit_op2(ir, OPCODE_DP3, result_dst, temp, temp);
-	 else
-	    ir_to_mesa_emit_op2(ir, OPCODE_DP2, result_dst, temp, temp);
+	 ir_to_mesa_emit_dp(ir, result_dst, temp, temp, vector_elements);
 	 ir_to_mesa_emit_op2(ir, OPCODE_SNE,
 			     result_dst, result_src, src_reg_for_float(0.0));
       } else {
@@ -1243,20 +1288,9 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
       break;
 
    case ir_unop_any:
-      switch (ir->operands[0]->type->vector_elements) {
-      case 4:
-	 ir_to_mesa_emit_op2(ir, OPCODE_DP4, result_dst, op[0], op[0]);
-	 break;
-      case 3:
-	 ir_to_mesa_emit_op2(ir, OPCODE_DP3, result_dst, op[0], op[0]);
-	 break;
-      case 2:
-	 ir_to_mesa_emit_op2(ir, OPCODE_DP2, result_dst, op[0], op[0]);
-	 break;
-      default:
-	 assert(!"unreached: ir_unop_any of non-bvec");
-	 break;
-      }
+      assert(ir->operands[0]->type->is_vector());
+      ir_to_mesa_emit_dp(ir, result_dst, op[0], op[0],
+			 ir->operands[0]->type->vector_elements);
       ir_to_mesa_emit_op2(ir, OPCODE_SNE,
 			  result_dst, result_src, src_reg_for_float(0.0));
       break;
@@ -1284,26 +1318,10 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
       break;
 
    case ir_binop_dot:
-      if (ir->operands[0]->type == vec4_type) {
-	 assert(ir->operands[1]->type == vec4_type);
-	 ir_to_mesa_emit_op2(ir, OPCODE_DP4,
-			     result_dst,
-			     op[0], op[1]);
-      } else if (ir->operands[0]->type == vec3_type) {
-	 assert(ir->operands[1]->type == vec3_type);
-	 ir_to_mesa_emit_op2(ir, OPCODE_DP3,
-			     result_dst,
-			     op[0], op[1]);
-      } else if (ir->operands[0]->type == vec2_type) {
-	 assert(ir->operands[1]->type == vec2_type);
-	 ir_to_mesa_emit_op2(ir, OPCODE_DP2,
-			     result_dst,
-			     op[0], op[1]);
-      }
-      break;
-
-   case ir_binop_cross:
-      ir_to_mesa_emit_op2(ir, OPCODE_XPD, result_dst, op[0], op[1]);
+      assert(ir->operands[0]->type->is_vector());
+      assert(ir->operands[0]->type == ir->operands[1]->type);
+      ir_to_mesa_emit_dp(ir, result_dst, op[0], op[1],
+			 ir->operands[0]->type->vector_elements);
       break;
 
    case ir_unop_sqrt:
@@ -1364,7 +1382,14 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
    case ir_binop_bit_and:
    case ir_binop_bit_xor:
    case ir_binop_bit_or:
+   case ir_unop_round_even:
       assert(!"GLSL 1.30 features unsupported");
+      break;
+
+   case ir_quadop_vector:
+      /* This operation should have already been handled.
+       */
+      assert(!"Should not get here.");
       break;
    }
 
@@ -1544,7 +1569,13 @@ ir_to_mesa_visitor::visit(ir_dereference_record *ir)
 	 break;
       offset += type_size(struct_type->fields.structure[i].type);
    }
-   this->result.swizzle = swizzle_for_size(ir->type->vector_elements);
+
+   /* If the type is smaller than a vec4, replicate the last channel out. */
+   if (ir->type->is_scalar() || ir->type->is_vector())
+      this->result.swizzle = swizzle_for_size(ir->type->vector_elements);
+   else
+      this->result.swizzle = SWIZZLE_NOOP;
+
    this->result.index += offset;
 }
 
@@ -1571,6 +1602,93 @@ get_assignment_lhs(ir_dereference *ir, ir_to_mesa_visitor *v)
     */
    ir->accept(v);
    return ir_to_mesa_dst_reg_from_src(v->result);
+}
+
+/**
+ * Process the condition of a conditional assignment
+ *
+ * Examines the condition of a conditional assignment to generate the optimal
+ * first operand of a \c CMP instruction.  If the condition is a relational
+ * operator with 0 (e.g., \c ir_binop_less), the value being compared will be
+ * used as the source for the \c CMP instruction.  Otherwise the comparison
+ * is processed to a boolean result, and the boolean result is used as the
+ * operand to the CMP instruction.
+ */
+bool
+ir_to_mesa_visitor::process_move_condition(ir_rvalue *ir)
+{
+   ir_rvalue *src_ir = ir;
+   bool negate = true;
+   bool switch_order = false;
+
+   ir_expression *const expr = ir->as_expression();
+   if ((expr != NULL) && (expr->get_num_operands() == 2)) {
+      bool zero_on_left = false;
+
+      if (expr->operands[0]->is_zero()) {
+	 src_ir = expr->operands[1];
+	 zero_on_left = true;
+      } else if (expr->operands[1]->is_zero()) {
+	 src_ir = expr->operands[0];
+	 zero_on_left = false;
+      }
+
+      /*      a is -  0  +            -  0  +
+       * (a <  0)  T  F  F  ( a < 0)  T  F  F
+       * (0 <  a)  F  F  T  (-a < 0)  F  F  T
+       * (a <= 0)  T  T  F  (-a < 0)  F  F  T  (swap order of other operands)
+       * (0 <= a)  F  T  T  ( a < 0)  T  F  F  (swap order of other operands)
+       * (a >  0)  F  F  T  (-a < 0)  F  F  T
+       * (0 >  a)  T  F  F  ( a < 0)  T  F  F
+       * (a >= 0)  F  T  T  ( a < 0)  T  F  F  (swap order of other operands)
+       * (0 >= a)  T  T  F  (-a < 0)  F  F  T  (swap order of other operands)
+       *
+       * Note that exchanging the order of 0 and 'a' in the comparison simply
+       * means that the value of 'a' should be negated.
+       */
+      if (src_ir != ir) {
+	 switch (expr->operation) {
+	 case ir_binop_less:
+	    switch_order = false;
+	    negate = zero_on_left;
+	    break;
+
+	 case ir_binop_greater:
+	    switch_order = false;
+	    negate = !zero_on_left;
+	    break;
+
+	 case ir_binop_lequal:
+	    switch_order = true;
+	    negate = !zero_on_left;
+	    break;
+
+	 case ir_binop_gequal:
+	    switch_order = true;
+	    negate = zero_on_left;
+	    break;
+
+	 default:
+	    /* This isn't the right kind of comparison afterall, so make sure
+	     * the whole condition is visited.
+	     */
+	    src_ir = ir;
+	    break;
+	 }
+      }
+   }
+
+   src_ir->accept(this);
+
+   /* We use the OPCODE_CMP (a < 0 ? b : c) for conditional moves, and the
+    * condition we produced is 0.0 or 1.0.  By flipping the sign, we can
+    * choose which value OPCODE_CMP produces without an extra instruction
+    * computing the condition.
+    */
+   if (negate)
+      this->result.negate = ~this->result.negate;
+
+   return switch_order;
 }
 
 void
@@ -1632,20 +1750,18 @@ ir_to_mesa_visitor::visit(ir_assignment *ir)
    assert(r.file != PROGRAM_UNDEFINED);
 
    if (ir->condition) {
-      ir_to_mesa_src_reg condition;
+      const bool switch_order = this->process_move_condition(ir->condition);
+      ir_to_mesa_src_reg condition = this->result;
 
-      ir->condition->accept(this);
-      condition = this->result;
-
-      /* We use the OPCODE_CMP (a < 0 ? b : c) for conditional moves,
-       * and the condition we produced is 0.0 or 1.0.  By flipping the
-       * sign, we can choose which value OPCODE_CMP produces without
-       * an extra computing the condition.
-       */
-      condition.negate = ~condition.negate;
       for (i = 0; i < type_size(ir->lhs->type); i++) {
-	 ir_to_mesa_emit_op3(ir, OPCODE_CMP, l,
-			     condition, r, ir_to_mesa_src_reg_from_dst(l));
+	 if (switch_order) {
+	    ir_to_mesa_emit_op3(ir, OPCODE_CMP, l,
+				condition, ir_to_mesa_src_reg_from_dst(l), r);
+	 } else {
+	    ir_to_mesa_emit_op3(ir, OPCODE_CMP, l,
+				condition, r, ir_to_mesa_src_reg_from_dst(l));
+	 }
+
 	 l.index++;
 	 r.index++;
       }
@@ -1894,89 +2010,6 @@ ir_to_mesa_visitor::visit(ir_call *ir)
    this->result = entry->return_reg;
 }
 
-class get_sampler_name : public ir_hierarchical_visitor
-{
-public:
-   get_sampler_name(ir_to_mesa_visitor *mesa, ir_dereference *last)
-   {
-      this->mem_ctx = mesa->mem_ctx;
-      this->mesa = mesa;
-      this->name = NULL;
-      this->offset = 0;
-      this->last = last;
-   }
-
-   virtual ir_visitor_status visit(ir_dereference_variable *ir)
-   {
-      this->name = ir->var->name;
-      return visit_continue;
-   }
-
-   virtual ir_visitor_status visit_leave(ir_dereference_record *ir)
-   {
-      this->name = talloc_asprintf(mem_ctx, "%s.%s", name, ir->field);
-      return visit_continue;
-   }
-
-   virtual ir_visitor_status visit_leave(ir_dereference_array *ir)
-   {
-      ir_constant *index = ir->array_index->as_constant();
-      int i;
-
-      if (index) {
-	 i = index->value.i[0];
-      } else {
-	 /* GLSL 1.10 and 1.20 allowed variable sampler array indices,
-	  * while GLSL 1.30 requires that the array indices be
-	  * constant integer expressions.  We don't expect any driver
-	  * to actually work with a really variable array index, so
-	  * all that would work would be an unrolled loop counter that ends
-	  * up being constant above.
-	  */
-	 mesa->shader_program->InfoLog =
-	    talloc_asprintf_append(mesa->shader_program->InfoLog,
-				   "warning: Variable sampler array index "
-				   "unsupported.\nThis feature of the language "
-				   "was removed in GLSL 1.20 and is unlikely "
-				   "to be supported for 1.10 in Mesa.\n");
-	 i = 0;
-      }
-      if (ir != last) {
-	 this->name = talloc_asprintf(mem_ctx, "%s[%d]", name, i);
-      } else {
-	 offset = i;
-      }
-      return visit_continue;
-   }
-
-   ir_to_mesa_visitor *mesa;
-   const char *name;
-   void *mem_ctx;
-   int offset;
-   ir_dereference *last;
-};
-
-int
-ir_to_mesa_visitor::get_sampler_uniform_value(ir_dereference *sampler)
-{
-   get_sampler_name getname(this, sampler);
-
-   sampler->accept(&getname);
-
-   GLint index = _mesa_lookup_parameter_index(prog->Parameters, -1,
-					      getname.name);
-
-   if (index < 0) {
-      fail_link(this->shader_program,
-		"failed to find sampler named %s.\n", getname.name);
-      return 0;
-   }
-
-   index += getname.offset;
-
-   return this->prog->Parameters->ParameterValues[index][0];
-}
-
 void
 ir_to_mesa_visitor::visit(ir_texture *ir)
 {
@@ -2076,7 +2109,9 @@ ir_to_mesa_visitor::visit(ir_texture *ir)
    if (ir->shadow_comparitor)
       inst->tex_shadow = GL_TRUE;
 
-   inst->sampler = get_sampler_uniform_value(ir->sampler);
+   inst->sampler = _mesa_get_sampler_uniform_value(ir->sampler,
+						   this->shader_program,
+						   this->prog);
 
    const glsl_type *sampler_type = ir->sampler->type;
 
@@ -2137,9 +2172,14 @@ ir_to_mesa_visitor::visit(ir_discard *ir)
 {
    struct gl_fragment_program *fp = (struct gl_fragment_program *)this->prog;
 
-   assert(ir->condition == NULL); /* FINISHME */
+   if (ir->condition) {
+      ir->condition->accept(this);
+      this->result.negate = ~this->result.negate;
+      ir_to_mesa_emit_op1(ir, OPCODE_KIL, ir_to_mesa_undef_dst, this->result);
+   } else {
+      ir_to_mesa_emit_op0(ir, OPCODE_KIL_NV);
+   }
 
-   ir_to_mesa_emit_op0(ir, OPCODE_KIL_NV);
    fp->UsesKill = GL_TRUE;
 }
 
@@ -2210,7 +2250,7 @@ mesa_src_reg_from_ir_src_reg(ir_to_mesa_src_reg reg)
    struct prog_src_register mesa_reg;
 
    mesa_reg.File = reg.file;
-   assert(reg.index < (1 << INST_INDEX_BITS) - 1);
+   assert(reg.index < (1 << INST_INDEX_BITS));
    mesa_reg.Index = reg.index;
    mesa_reg.Swizzle = reg.swizzle;
    mesa_reg.RelAddr = reg.reladdr != NULL;
@@ -2477,7 +2517,7 @@ add_uniforms_to_parameters_list(struct gl_shader_program *shader_program,
 }
 
 static void
-set_uniform_initializer(GLcontext *ctx, void *mem_ctx,
+set_uniform_initializer(struct gl_context *ctx, void *mem_ctx,
 			struct gl_shader_program *shader_program,
 			const char *name, const glsl_type *type,
 			ir_constant *val)
@@ -2547,13 +2587,17 @@ set_uniform_initializer(GLcontext *ctx, void *mem_ctx,
 }
 
 static void
-set_uniform_initializers(GLcontext *ctx,
+set_uniform_initializers(struct gl_context *ctx,
 			 struct gl_shader_program *shader_program)
 {
    void *mem_ctx = NULL;
 
-   for (unsigned int i = 0; i < shader_program->_NumLinkedShaders; i++) {
+   for (unsigned int i = 0; i < MESA_SHADER_TYPES; i++) {
       struct gl_shader *shader = shader_program->_LinkedShaders[i];
+
+      if (shader == NULL)
+	 continue;
+
       foreach_iter(exec_list_iterator, iter, *shader->ir) {
 	 ir_instruction *ir = (ir_instruction *)iter.get();
 	 ir_variable *var = ir->as_variable();
@@ -2572,8 +2616,13 @@ set_uniform_initializers(GLcontext *ctx,
    talloc_free(mem_ctx);
 }
 
-struct gl_program *
-get_mesa_program(GLcontext *ctx, struct gl_shader_program *shader_program,
+
+/**
+ * Convert a shader's GLSL IR into a Mesa gl_program.
+ */
+static struct gl_program *
+get_mesa_program(struct gl_context *ctx,
+                 struct gl_shader_program *shader_program,
 		 struct gl_shader *shader)
 {
    ir_to_mesa_visitor v;
@@ -2595,6 +2644,10 @@ get_mesa_program(GLcontext *ctx, struct gl_shader_program *shader_program,
    case GL_FRAGMENT_SHADER:
       target = GL_FRAGMENT_PROGRAM_ARB;
       target_string = "fragment";
+      break;
+   case GL_GEOMETRY_SHADER:
+      target = GL_GEOMETRY_PROGRAM_NV;
+      target_string = "geometry";
       break;
    default:
       assert(!"should not be reached");
@@ -2662,13 +2715,17 @@ get_mesa_program(GLcontext *ctx, struct gl_shader_program *shader_program,
    mesa_instruction_annotation = talloc_array(v.mem_ctx, ir_instruction *,
 					      num_instructions);
 
+   /* Convert ir_mesa_instructions into prog_instructions.
+    */
    mesa_inst = mesa_instructions;
    i = 0;
    foreach_iter(exec_list_iterator, iter, v.instructions) {
-      ir_to_mesa_instruction *inst = (ir_to_mesa_instruction *)iter.get();
+      const ir_to_mesa_instruction *inst = (ir_to_mesa_instruction *)iter.get();
 
       mesa_inst->Opcode = inst->op;
       mesa_inst->CondUpdate = inst->cond_update;
+      if (inst->saturate)
+	 mesa_inst->SaturateMode = SATURATE_ZERO_ONE;
       mesa_inst->DstReg.File = inst->dst_reg.file;
       mesa_inst->DstReg.Index = inst->dst_reg.index;
       mesa_inst->DstReg.CondMask = inst->dst_reg.cond_mask;
@@ -2686,6 +2743,7 @@ get_mesa_program(GLcontext *ctx, struct gl_shader_program *shader_program,
       if (mesa_inst->DstReg.RelAddr)
          prog->IndirectRegisterFiles |= 1 << mesa_inst->DstReg.File;
 
+      /* Update program's bitmask of indirectly accessed register files */
       for (unsigned src = 0; src < 3; src++)
          if (mesa_inst->SrcReg[src].RelAddr)
             prog->IndirectRegisterFiles |= 1 << mesa_inst->SrcReg[src].File;
@@ -2714,6 +2772,15 @@ get_mesa_program(GLcontext *ctx, struct gl_shader_program *shader_program,
 
       mesa_inst++;
       i++;
+
+      if (!shader_program->LinkStatus)
+         break;
+   }
+
+   if (!shader_program->LinkStatus) {
+      free(mesa_instructions);
+      _mesa_reference_program(ctx, &shader->Program, NULL);
+      return NULL;
    }
 
    set_branchtargets(&v, mesa_instructions, num_instructions);
@@ -2747,8 +2814,14 @@ get_mesa_program(GLcontext *ctx, struct gl_shader_program *shader_program,
 }
 
 extern "C" {
+
+/**
+ * Called via ctx->Driver.CompilerShader().
+ * This is a no-op.
+ * XXX can we remove the ctx->Driver.CompileShader() hook?
+ */
 GLboolean
-_mesa_ir_compile_shader(GLcontext *ctx, struct gl_shader *shader)
+_mesa_ir_compile_shader(struct gl_context *ctx, struct gl_shader *shader)
 {
    assert(shader->CompileStatus);
    (void) ctx;
@@ -2756,15 +2829,25 @@ _mesa_ir_compile_shader(GLcontext *ctx, struct gl_shader *shader)
    return GL_TRUE;
 }
 
+
+/**
+ * Link a shader.
+ * Called via ctx->Driver.LinkShader()
+ * This actually involves converting GLSL IR into Mesa gl_programs with
+ * code lowering and other optimizations.
+ */
 GLboolean
-_mesa_ir_link_shader(GLcontext *ctx, struct gl_shader_program *prog)
+_mesa_ir_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
 {
    assert(prog->LinkStatus);
 
-   for (unsigned i = 0; i < prog->_NumLinkedShaders; i++) {
+   for (unsigned i = 0; i < MESA_SHADER_TYPES; i++) {
+      if (prog->_LinkedShaders[i] == NULL)
+	 continue;
+
       bool progress;
       exec_list *ir = prog->_LinkedShaders[i]->ir;
-      struct gl_shader_compiler_options *options =
+      const struct gl_shader_compiler_options *options =
             &ctx->ShaderCompilerOptions[_mesa_shader_type_to_index(prog->_LinkedShaders[i]->Type)];
 
       do {
@@ -2772,16 +2855,20 @@ _mesa_ir_link_shader(GLcontext *ctx, struct gl_shader_program *prog)
 
 	 /* Lowering */
 	 do_mat_op_to_vec(ir);
-	 do_mod_to_fract(ir);
-	 do_div_to_mul_rcp(ir);
-	 do_explog_to_explog2(ir);
+	 lower_instructions(ir, (MOD_TO_FRACT | DIV_TO_MUL_RCP | EXP_TO_EXP2
+				 | LOG_TO_LOG2
+				 | ((options->EmitNoPow) ? POW_TO_EXP2 : 0)));
 
 	 progress = do_lower_jumps(ir, true, true, options->EmitNoMainReturn, options->EmitNoCont, options->EmitNoLoops) || progress;
 
 	 progress = do_common_optimization(ir, true, options->MaxUnrollIterations) || progress;
 
-	 if (options->EmitNoIfs)
-	    progress = do_if_to_cond_assign(ir) || progress;
+	 progress = lower_quadop_vector(ir, true) || progress;
+
+	 if (options->EmitNoIfs) {
+	    progress = lower_discard(ir) || progress;
+	    progress = lower_if_to_cond_assign(ir) || progress;
+	 }
 
 	 if (options->EmitNoNoise)
 	    progress = lower_noise(ir) || progress;
@@ -2805,37 +2892,54 @@ _mesa_ir_link_shader(GLcontext *ctx, struct gl_shader_program *prog)
       validate_ir_tree(ir);
    }
 
-   for (unsigned i = 0; i < prog->_NumLinkedShaders; i++) {
+   for (unsigned i = 0; i < MESA_SHADER_TYPES; i++) {
       struct gl_program *linked_prog;
-      bool ok = true;
+
+      if (prog->_LinkedShaders[i] == NULL)
+	 continue;
 
       linked_prog = get_mesa_program(ctx, prog, prog->_LinkedShaders[i]);
 
-      switch (prog->_LinkedShaders[i]->Type) {
-      case GL_VERTEX_SHADER:
-	 _mesa_reference_vertprog(ctx, &prog->VertexProgram,
-				  (struct gl_vertex_program *)linked_prog);
-	 ok = ctx->Driver.ProgramStringNotify(ctx, GL_VERTEX_PROGRAM_ARB,
-					      linked_prog);
-	 break;
-      case GL_FRAGMENT_SHADER:
-	 _mesa_reference_fragprog(ctx, &prog->FragmentProgram,
-				  (struct gl_fragment_program *)linked_prog);
-	 ok = ctx->Driver.ProgramStringNotify(ctx, GL_FRAGMENT_PROGRAM_ARB,
-					      linked_prog);
-	 break;
+      if (linked_prog) {
+         bool ok = true;
+
+         switch (prog->_LinkedShaders[i]->Type) {
+         case GL_VERTEX_SHADER:
+            _mesa_reference_vertprog(ctx, &prog->VertexProgram,
+                                     (struct gl_vertex_program *)linked_prog);
+            ok = ctx->Driver.ProgramStringNotify(ctx, GL_VERTEX_PROGRAM_ARB,
+                                                 linked_prog);
+            break;
+         case GL_FRAGMENT_SHADER:
+            _mesa_reference_fragprog(ctx, &prog->FragmentProgram,
+                                     (struct gl_fragment_program *)linked_prog);
+            ok = ctx->Driver.ProgramStringNotify(ctx, GL_FRAGMENT_PROGRAM_ARB,
+                                                 linked_prog);
+            break;
+         case GL_GEOMETRY_SHADER:
+            _mesa_reference_geomprog(ctx, &prog->GeometryProgram,
+                                     (struct gl_geometry_program *)linked_prog);
+            ok = ctx->Driver.ProgramStringNotify(ctx, GL_GEOMETRY_PROGRAM_NV,
+                                                 linked_prog);
+            break;
+         }
+         if (!ok) {
+            return GL_FALSE;
+         }
       }
-      if (!ok) {
-	 return GL_FALSE;
-      }
+
       _mesa_reference_program(ctx, &linked_prog, NULL);
    }
 
    return GL_TRUE;
 }
 
+
+/**
+ * Compile a GLSL shader.  Called via glCompileShader().
+ */
 void
-_mesa_glsl_compile_shader(GLcontext *ctx, struct gl_shader *shader)
+_mesa_glsl_compile_shader(struct gl_context *ctx, struct gl_shader *shader)
 {
    struct _mesa_glsl_parse_state *state =
       new(shader) _mesa_glsl_parse_state(ctx, shader->Type, shader);
@@ -2918,8 +3022,12 @@ _mesa_glsl_compile_shader(GLcontext *ctx, struct gl_shader *shader)
    }
 }
 
+
+/**
+ * Link a GLSL shader program.  Called via glLinkProgram().
+ */
 void
-_mesa_glsl_link_shader(GLcontext *ctx, struct gl_shader_program *prog)
+_mesa_glsl_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
 {
    unsigned int i;
 
@@ -2937,6 +3045,7 @@ _mesa_glsl_link_shader(GLcontext *ctx, struct gl_shader_program *prog)
    prog->Varying = _mesa_new_parameter_list();
    _mesa_reference_vertprog(ctx, &prog->VertexProgram, NULL);
    _mesa_reference_fragprog(ctx, &prog->FragmentProgram, NULL);
+   _mesa_reference_geomprog(ctx, &prog->GeometryProgram, NULL);
 
    if (prog->LinkStatus) {
       link_shaders(ctx, prog);

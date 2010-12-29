@@ -27,20 +27,21 @@
 #define SCISSOR_H
 
 
-#include "main/mtypes.h"
+#include "glheader.h"
 
+struct gl_context;
 
 extern void GLAPIENTRY
 _mesa_Scissor( GLint x, GLint y, GLsizei width, GLsizei height );
 
 
 extern void
-_mesa_set_scissor(GLcontext *ctx, 
+_mesa_set_scissor(struct gl_context *ctx, 
                   GLint x, GLint y, GLsizei width, GLsizei height);
 
 
 extern void 
-_mesa_init_scissor(GLcontext *ctx);
+_mesa_init_scissor(struct gl_context *ctx);
 
 
 #endif

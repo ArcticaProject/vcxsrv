@@ -29,6 +29,7 @@
 #include <errno.h>
 #include "glcpp.h"
 #include "main/mtypes.h"
+#include "main/shaderobj.h"
 
 #ifdef _MSC_VER
 #include <io.h>
@@ -39,6 +40,13 @@
 #endif
 
 extern int yydebug;
+
+void
+_mesa_reference_shader(struct gl_context *ctx, struct gl_shader **ptr,
+                       struct gl_shader *sh)
+{
+   *ptr = sh;
+}
 
 /* Read from fd until EOF and return a string of everything read.
  */

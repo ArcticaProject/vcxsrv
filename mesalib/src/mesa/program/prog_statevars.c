@@ -46,7 +46,7 @@
  * The program parser will produce the state[] values.
  */
 static void
-_mesa_fetch_state(GLcontext *ctx, const gl_state_index state[],
+_mesa_fetch_state(struct gl_context *ctx, const gl_state_index state[],
                   GLfloat *value)
 {
    switch (state[0]) {
@@ -273,7 +273,6 @@ _mesa_fetch_state(GLcontext *ctx, const gl_state_index state[],
    case STATE_MVP_MATRIX:
    case STATE_TEXTURE_MATRIX:
    case STATE_PROGRAM_MATRIX:
-   case STATE_COLOR_MATRIX:
       {
          /* state[0] = modelview, projection, texture, etc. */
          /* state[1] = which texture matrix or program matrix */
@@ -308,9 +307,6 @@ _mesa_fetch_state(GLcontext *ctx, const gl_state_index state[],
          else if (mat == STATE_PROGRAM_MATRIX) {
             ASSERT(index < Elements(ctx->ProgramMatrixStack));
             matrix = ctx->ProgramMatrixStack[index].Top;
-         }
-         else if (mat == STATE_COLOR_MATRIX) {
-            matrix = ctx->ColorMatrixStack.Top;
          }
          else {
             _mesa_problem(ctx, "Bad matrix name in _mesa_fetch_state()");
@@ -555,14 +551,6 @@ _mesa_fetch_state(GLcontext *ctx, const gl_state_index state[],
          value[3] = ctx->Pixel.AlphaBias;
          return;
 
-      case STATE_PCM_SCALE:
-         COPY_4V(value, ctx->Pixel.PostColorMatrixScale);
-         return;
-
-      case STATE_PCM_BIAS:
-         COPY_4V(value, ctx->Pixel.PostColorMatrixBias);
-         return;
-
       case STATE_SHADOW_AMBIENT:
          {
             const int unit = (int) state[2];
@@ -582,6 +570,24 @@ _mesa_fetch_state(GLcontext *ctx, const gl_state_index state[],
          value[1] = (GLfloat) (ctx->DrawBuffer->Height - 1);
          value[2] = 0.0F;
          value[3] = 0.0F;
+         return;
+
+      case STATE_FB_WPOS_Y_TRANSFORM:
+         /* A driver may negate this conditional by using ZW swizzle
+          * instead of XY (based on e.g. some other state). */
+         if (ctx->DrawBuffer->Name != 0) {
+            /* Identity (XY) followed by flipping Y upside down (ZW). */
+            value[0] = 1.0F;
+            value[1] = 0.0F;
+            value[2] = -1.0F;
+            value[3] = (GLfloat) (ctx->DrawBuffer->Height - 1);
+         } else {
+            /* Flipping Y upside down (XY) followed by identity (ZW). */
+            value[0] = -1.0F;
+            value[1] = (GLfloat) (ctx->DrawBuffer->Height - 1);
+            value[2] = 1.0F;
+            value[3] = 0.0F;
+         }
          return;
 
       case STATE_ROT_MATRIX_0:
@@ -667,8 +673,6 @@ _mesa_program_state_flags(const gl_state_index state[STATE_LENGTH])
       return _NEW_TEXTURE_MATRIX;
    case STATE_PROGRAM_MATRIX:
       return _NEW_TRACK_MATRIX;
-   case STATE_COLOR_MATRIX:
-      return _NEW_COLOR_MATRIX;
 
    case STATE_DEPTH_RANGE:
       return _NEW_VIEWPORT;
@@ -706,11 +710,10 @@ _mesa_program_state_flags(const gl_state_index state[STATE_LENGTH])
 
       case STATE_PT_SCALE:
       case STATE_PT_BIAS:
-      case STATE_PCM_SCALE:
-      case STATE_PCM_BIAS:
          return _NEW_PIXEL;
 
       case STATE_FB_SIZE:
+      case STATE_FB_WPOS_Y_TRANSFORM:
          return _NEW_BUFFERS;
 
       default:
@@ -791,9 +794,6 @@ append_token(char *dst, gl_state_index k)
       break;
    case STATE_PROGRAM_MATRIX:
       append(dst, "matrix.program");
-      break;
-   case STATE_COLOR_MATRIX:
-      append(dst, "matrix.color");
       break;
    case STATE_MATRIX_INVERSE:
       append(dst, ".inverse");
@@ -913,17 +913,14 @@ append_token(char *dst, gl_state_index k)
    case STATE_PT_BIAS:
       append(dst, "PTbias");
       break;
-   case STATE_PCM_SCALE:
-      append(dst, "PCMscale");
-      break;
-   case STATE_PCM_BIAS:
-      append(dst, "PCMbias");
-      break;
    case STATE_SHADOW_AMBIENT:
       append(dst, "CompareFailValue");
       break;
    case STATE_FB_SIZE:
       append(dst, "FbSize");
+      break;
+   case STATE_FB_WPOS_Y_TRANSFORM:
+      append(dst, "FbWposYTransform");
       break;
    case STATE_ROT_MATRIX_0:
       append(dst, "rotMatrixRow0");
@@ -1010,7 +1007,6 @@ _mesa_program_state_string(const gl_state_index state[STATE_LENGTH])
    case STATE_MVP_MATRIX:
    case STATE_TEXTURE_MATRIX:
    case STATE_PROGRAM_MATRIX:
-   case STATE_COLOR_MATRIX:
       {
          /* state[0] = modelview, projection, texture, etc. */
          /* state[1] = which texture matrix or program matrix */
@@ -1072,10 +1068,12 @@ _mesa_program_state_string(const gl_state_index state[STATE_LENGTH])
  * Loop over all the parameters in a parameter list.  If the parameter
  * is a GL state reference, look up the current value of that state
  * variable and put it into the parameter's Value[4] array.
- * This would be called at glBegin time when using a fragment program.
+ * Other parameter types never change or are explicitly set by the user
+ * with glUniform() or glProgramParameter(), etc.
+ * This would be called at glBegin time.
  */
 void
-_mesa_load_state_parameters(GLcontext *ctx,
+_mesa_load_state_parameters(struct gl_context *ctx,
                             struct gl_program_parameter_list *paramList)
 {
    GLuint i;
@@ -1083,12 +1081,10 @@ _mesa_load_state_parameters(GLcontext *ctx,
    if (!paramList)
       return;
 
-   /*assert(ctx->Driver.NeedFlush == 0);*/
-
    for (i = 0; i < paramList->NumParameters; i++) {
       if (paramList->Parameters[i].Type == PROGRAM_STATE_VAR) {
          _mesa_fetch_state(ctx,
-			   (gl_state_index *) paramList->Parameters[i].StateIndexes,
+			   paramList->Parameters[i].StateIndexes,
                            paramList->ParameterValues[i]);
       }
    }
@@ -1129,7 +1125,7 @@ load_transpose_matrix(GLfloat registers[][4], GLuint pos,
  * glBegin/glEnd, not per-vertex.
  */
 void
-_mesa_load_tracked_matrices(GLcontext *ctx)
+_mesa_load_tracked_matrices(struct gl_context *ctx)
 {
    GLuint i;
 
@@ -1146,9 +1142,6 @@ _mesa_load_tracked_matrices(GLcontext *ctx)
          GLuint unit = MIN2(ctx->Texture.CurrentUnit,
                             Elements(ctx->TextureMatrixStack) - 1);
          mat = ctx->TextureMatrixStack[unit].Top;
-      }
-      else if (ctx->VertexProgram.TrackMatrix[i] == GL_COLOR) {
-         mat = ctx->ColorMatrixStack.Top;
       }
       else if (ctx->VertexProgram.TrackMatrix[i]==GL_MODELVIEW_PROJECTION_NV) {
          /* XXX verify the combined matrix is up to date */

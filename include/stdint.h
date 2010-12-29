@@ -17,15 +17,15 @@ details. */
 
 #ifndef __int8_t_defined
 #define __int8_t_defined
-typedef signed char int8_t;
-typedef short int16_t;
-typedef int int32_t;
+typedef __int8 int8_t;
+typedef __int16 int16_t;
+typedef __int32 int32_t;
 typedef __int64 int64_t;
 #endif
 
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
+typedef unsigned __int8 uint8_t;
+typedef unsigned __int16 uint16_t;
+typedef unsigned __int32 uint32_t;
 
 /* Minimum-width integer types */
 
@@ -162,12 +162,12 @@ typedef unsigned long long uintmax_t;
 #define INT8_C(x) x
 #define INT16_C(x) x
 #define INT32_C(x) x ## L
-#define INT64_C(x) x ## LL
+#define INT64_C(__val) __val##i64
 
 #define UINT8_C(x) x
 #define UINT16_C(x) x
 #define UINT32_C(x) x ## UL
-#define UINT64_C(x) x ## ULL
+#define UINT64_C(__val) __val##ui64
 
 /* Macros for greatest-width integer constant expressions */
 

@@ -7967,6 +7967,8 @@
 
 <xi:include href="NV_conditional_render.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
+<xi:include href="NV_primitive_restart.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
 <xi:include href="EXT_transform_feedback.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
 <xi:include href="ARB_draw_instanced.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
@@ -9384,13 +9386,13 @@
         <size name="CullParameterdv"/>
     </enum>
 
-    <function name="CullParameterdvEXT" offset="assign" static_dispatch="false">
+    <function name="CullParameterdvEXT">
         <param name="pname" type="GLenum"/>
         <param name="params" type="GLdouble *"/> <!-- Spec bug. Should be const. -->
         <glx ignore="true"/>
     </function>
 
-    <function name="CullParameterfvEXT" offset="assign" static_dispatch="false">
+    <function name="CullParameterfvEXT">
         <param name="pname" type="GLenum"/>
         <param name="params" type="GLfloat *"/> <!-- Spec bug. Should be const. -->
         <glx ignore="true"/>
@@ -11381,7 +11383,7 @@
     <function name="ProgramParameters4dvNV" offset="assign">
         <param name="target" type="GLenum"/>
         <param name="index" type="GLuint"/>
-        <param name="num" type="GLuint" counter="true"/>
+        <param name="num" type="GLsizei" counter="true"/>
         <param name="params" type="const GLdouble *" count="num" count_scale="4"/>
         <glx rop="4187"/>
     </function>
@@ -11389,7 +11391,7 @@
     <function name="ProgramParameters4fvNV" offset="assign">
         <param name="target" type="GLenum"/>
         <param name="index" type="GLuint"/>
-        <param name="num" type="GLuint" counter="true"/>
+        <param name="num" type="GLsizei" counter="true"/>
         <param name="params" type="const GLfloat *" count="num" count_scale="4"/>
         <glx rop="4186"/>
     </function>
@@ -12316,6 +12318,9 @@
     </function>
 </category>
 
+<xi:include href="EXT_separate_shader_objects.xml"
+	    xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
 <!-- Unnumbered extensions sorted by name. -->
 
 <category name="GL_ATI_blend_equation_separate">
@@ -12510,5 +12515,11 @@
 </category>
 
 <xi:include href="OES_EGL_image.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+<xi:include href="EXT_texture_integer.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+<xi:include href="EXT_gpu_shader4.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+<xi:include href="GL3x.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
 
 </OpenGLAPI>

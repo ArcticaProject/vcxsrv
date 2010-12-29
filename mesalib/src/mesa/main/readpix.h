@@ -27,11 +27,12 @@
 #define READPIXELS_H
 
 
-#include "main/mtypes.h"
+#include "glheader.h"
 
+struct gl_context;
 
 extern GLboolean
-_mesa_error_check_format_type(GLcontext *ctx, GLenum format, GLenum type,
+_mesa_error_check_format_type(struct gl_context *ctx, GLenum format, GLenum type,
                               GLboolean drawing);
 
 extern void GLAPIENTRY

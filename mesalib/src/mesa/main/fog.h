@@ -37,7 +37,10 @@
 #define FOG_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
+#include "mfeatures.h"
+
+struct gl_context;
 
 
 #if _HAVE_FULL_GL
@@ -54,7 +57,7 @@ _mesa_Fogfv(GLenum pname, const GLfloat *params );
 extern void GLAPIENTRY
 _mesa_Fogiv(GLenum pname, const GLint *params );
 
-extern void _mesa_init_fog( GLcontext * ctx );
+extern void _mesa_init_fog( struct gl_context * ctx );
 
 #else
 

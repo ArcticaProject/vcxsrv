@@ -28,7 +28,11 @@
 #define VARRAY_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
+#include "mfeatures.h"
+
+struct gl_client_array;
+struct gl_context;
 
 #if _HAVE_FULL_GL
 
@@ -118,7 +122,6 @@ _mesa_VertexAttribPointerARB(GLuint index, GLint size, GLenum type,
 
 void GLAPIENTRY
 _mesa_VertexAttribIPointer(GLuint index, GLint size, GLenum type,
-                           GLboolean normalized,
                            GLsizei stride, const GLvoid *ptr);
 
 
@@ -216,19 +219,19 @@ _mesa_PrimitiveRestartIndex(GLuint index);
 
 
 extern void
-_mesa_copy_client_array(GLcontext *ctx,
+_mesa_copy_client_array(struct gl_context *ctx,
                         struct gl_client_array *dst,
                         struct gl_client_array *src);
 
 
 extern void
-_mesa_print_arrays(GLcontext *ctx);
+_mesa_print_arrays(struct gl_context *ctx);
 
 extern void
-_mesa_init_varray( GLcontext * ctx );
+_mesa_init_varray( struct gl_context * ctx );
 
 extern void 
-_mesa_free_varray_data(GLcontext *ctx);
+_mesa_free_varray_data(struct gl_context *ctx);
 
 #else
 

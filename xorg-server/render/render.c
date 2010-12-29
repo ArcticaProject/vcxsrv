@@ -1084,8 +1084,10 @@ ProcRenderAddGlyphs (ClientPtr client)
     remain -= (sizeof (CARD32) + sizeof (xGlyphInfo)) * nglyphs;
 
     /* protect against bad nglyphs */
-    if (gi < stuff || gi > ((CARD32 *)stuff + client->req_len) ||
-        bits < stuff || bits > ((CARD32 *)stuff + client->req_len)) {
+    if (gi < ((xGlyphInfo *)stuff) ||
+        gi > ((xGlyphInfo *)((CARD32 *)stuff + client->req_len)) ||
+        bits < ((CARD8 *)stuff) ||
+        bits > ((CARD8 *)((CARD32 *)stuff + client->req_len))) {
         err = BadLength;
         goto bail;
     }

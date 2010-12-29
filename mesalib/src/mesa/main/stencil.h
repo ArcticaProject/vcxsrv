@@ -32,8 +32,9 @@
 #define STENCIL_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
 
+struct gl_context;
 
 extern void GLAPIENTRY
 _mesa_ClearStencil( GLint s );
@@ -71,10 +72,10 @@ _mesa_StencilMaskSeparate(GLenum face, GLuint mask);
 
 
 extern void
-_mesa_update_stencil(GLcontext *ctx);
+_mesa_update_stencil(struct gl_context *ctx);
 
 
 extern void 
-_mesa_init_stencil( GLcontext * ctx );
+_mesa_init_stencil( struct gl_context * ctx );
 
 #endif

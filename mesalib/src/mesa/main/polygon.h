@@ -32,11 +32,12 @@
 #define POLYGON_H
 
 
-#include "mtypes.h"
+#include "glheader.h"
 
+struct gl_context;
 
 extern void
-_mesa_polygon_stipple(GLcontext *ctx, const GLubyte *pattern);
+_mesa_polygon_stipple(struct gl_context *ctx, const GLubyte *pattern);
 
 
 extern void GLAPIENTRY
@@ -61,6 +62,6 @@ extern void GLAPIENTRY
 _mesa_GetPolygonStipple( GLubyte *mask );
 
 extern void 
-_mesa_init_polygon( GLcontext * ctx );
+_mesa_init_polygon( struct gl_context * ctx );
 
 #endif

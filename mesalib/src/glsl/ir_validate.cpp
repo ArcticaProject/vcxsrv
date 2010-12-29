@@ -67,6 +67,7 @@ public:
    virtual ir_visitor_status visit_enter(ir_function_signature *ir);
 
    virtual ir_visitor_status visit_leave(ir_expression *ir);
+   virtual ir_visitor_status visit_leave(ir_swizzle *ir);
 
    virtual ir_visitor_status visit_enter(ir_assignment *ir);
 
@@ -266,11 +267,14 @@ ir_validate::visit_leave(ir_expression *ir)
       break;
 
    case ir_unop_trunc:
+   case ir_unop_round_even:
    case ir_unop_ceil:
    case ir_unop_floor:
    case ir_unop_fract:
    case ir_unop_sin:
    case ir_unop_cos:
+   case ir_unop_sin_reduced:
+   case ir_unop_cos_reduced:
    case ir_unop_dFdx:
    case ir_unop_dFdy:
       assert(ir->operands[0]->type->base_type == GLSL_TYPE_FLOAT);
@@ -330,14 +334,31 @@ ir_validate::visit_leave(ir_expression *ir)
 
    case ir_binop_lshift:
    case ir_binop_rshift:
+      assert(ir->operands[0]->type->is_integer() &&
+             ir->operands[1]->type->is_integer());
+      if (ir->operands[0]->type->is_scalar()) {
+          assert(ir->operands[1]->type->is_scalar());
+      }
+      if (ir->operands[0]->type->is_vector() &&
+          ir->operands[1]->type->is_vector()) {
+          assert(ir->operands[0]->type->components() ==
+                 ir->operands[1]->type->components());
+      }
+      assert(ir->type == ir->operands[0]->type);
+      break;
+
    case ir_binop_bit_and:
    case ir_binop_bit_xor:
    case ir_binop_bit_or:
-      assert(ir->operands[0]->type == ir->operands[1]->type);
-      assert(ir->type == ir->operands[0]->type);
-      assert(ir->type->base_type == GLSL_TYPE_INT ||
-	     ir->type->base_type == GLSL_TYPE_UINT);
-      break;
+       assert(ir->operands[0]->type->base_type ==
+              ir->operands[1]->type->base_type);
+       assert(ir->type->is_integer());
+       if (ir->operands[0]->type->is_vector() &&
+           ir->operands[1]->type->is_vector()) {
+           assert(ir->operands[0]->type->vector_elements ==
+                  ir->operands[1]->type->vector_elements);
+       }
+       break;
 
    case ir_binop_logic_and:
    case ir_binop_logic_xor:
@@ -354,11 +375,67 @@ ir_validate::visit_leave(ir_expression *ir)
       assert(ir->operands[0]->type == ir->operands[1]->type);
       break;
 
-   case ir_binop_cross:
-      assert(ir->operands[0]->type == glsl_type::vec3_type);
-      assert(ir->operands[1]->type == glsl_type::vec3_type);
-      assert(ir->type == glsl_type::vec3_type);
-      break;
+   case ir_quadop_vector:
+      /* The vector operator collects some number of scalars and generates a
+       * vector from them.
+       *
+       *  - All of the operands must be scalar.
+       *  - Number of operands must matche the size of the resulting vector.
+       *  - Base type of the operands must match the base type of the result.
+       */
+      assert(ir->type->is_vector());
+      switch (ir->type->vector_elements) {
+      case 2:
+	 assert(ir->operands[0]->type->is_scalar());
+	 assert(ir->operands[0]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[1]->type->is_scalar());
+	 assert(ir->operands[1]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[2] == NULL);
+	 assert(ir->operands[3] == NULL);
+	 break;
+      case 3:
+	 assert(ir->operands[0]->type->is_scalar());
+	 assert(ir->operands[0]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[1]->type->is_scalar());
+	 assert(ir->operands[1]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[2]->type->is_scalar());
+	 assert(ir->operands[2]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[3] == NULL);
+	 break;
+      case 4:
+	 assert(ir->operands[0]->type->is_scalar());
+	 assert(ir->operands[0]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[1]->type->is_scalar());
+	 assert(ir->operands[1]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[2]->type->is_scalar());
+	 assert(ir->operands[2]->type->base_type == ir->type->base_type);
+	 assert(ir->operands[3]->type->is_scalar());
+	 assert(ir->operands[3]->type->base_type == ir->type->base_type);
+	 break;
+      default:
+	 /* The is_vector assertion above should prevent execution from ever
+	  * getting here.
+	  */
+	 assert(!"Should not get here.");
+	 break;
+      }
+   }
+
+   return visit_continue;
+}
+
+ir_visitor_status
+ir_validate::visit_leave(ir_swizzle *ir)
+{
+   int chans[4] = {ir->mask.x, ir->mask.y, ir->mask.z, ir->mask.w};
+
+   for (unsigned int i = 0; i < ir->type->vector_elements; i++) {
+      if (chans[i] >= ir->val->type->vector_elements) {
+	 printf("ir_swizzle @ %p specifies a channel not present "
+		"in the value.\n", (void *) ir);
+	 ir->print();
+	 abort();
+      }
    }
 
    return visit_continue;

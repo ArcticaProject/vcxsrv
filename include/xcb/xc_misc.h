@@ -279,6 +279,9 @@ xcb_xc_misc_get_xid_range_reply (xcb_connection_t                    *c  /**< */
                                  xcb_xc_misc_get_xid_range_cookie_t   cookie  /**< */,
                                  xcb_generic_error_t                **e  /**< */);
 
+int
+xcb_xc_misc_get_xid_list_sizeof (const void  *_buffer  /**< */);
+
 /**
  * Delivers a request to the X server
  * @param c The connection
