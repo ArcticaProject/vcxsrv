@@ -93,62 +93,78 @@ static _glapi_proc generate_entrypoint(GLuint functionOffset);
 static void fill_in_entrypoint_offset(_glapi_proc entrypoint, GLuint offset);
 static void init_glapi_relocs_once( void );
 
-/*
- * Enable/disable printing of warning messages.
+void _GLAPI_EXPORT
+_glapi_noop_enable_warnings(unsigned char enable)
+{
+}
+
+void _GLAPI_EXPORT
+_glapi_set_warning_func(_glapi_proc func)
+{
+}
+
+#ifdef DEBUG
+
+/**
+ * Called by each of the no-op GL entrypoints.
  */
-PUBLIC void
-_glapi_noop_enable_warnings(GLboolean enable)
+static int
+Warn(const char *func)
 {
-   WarnFlag = enable;
-}
-
-static GLboolean
-warn(void)
-{
-   if ((WarnFlag || getenv("MESA_DEBUG") || getenv("LIBGL_DEBUG"))
-       && warning_func) {
-      return GL_TRUE;
+#if !defined(_WIN32_WCE)
+   if (getenv("MESA_DEBUG") || getenv("LIBGL_DEBUG")) {
+      fprintf(stderr, "GL User Error: gl%s called without a rendering context\n",
+              func);
    }
-   else {
-      return GL_FALSE;
-   }
-}
-
-#if defined(__GNUC__) && (__GNUC__ > 2)
-#define possibly_unused __attribute((unused))
-#else
-#define possibly_unused
 #endif
+   return 0;
+}
 
+
+/**
+ * This is called if the user somehow calls an unassigned GL dispatch function.
+ */
+static GLint
+NoOpUnused(void)
+{
+   return Warn(" function");
+}
+
+/*
+ * Defines for the glapitemp.h functions.
+ */
 #define KEYWORD1 static
 #define KEYWORD1_ALT static
-#define KEYWORD2 GLAPIENTRY possibly_unused
+#define KEYWORD2 GLAPIENTRY
 #define NAME(func)  NoOp##func
+#define DISPATCH(func, args, msg)  Warn(#func);
+#define RETURN_DISPATCH(func, args, msg)  Warn(#func); return 0
 
-#define F NULL
 
-#ifdef _DEBUG
-#define DISPATCH(func, args, msg) ErrorF msg 
+/*
+ * Defines for the table of no-op entry points.
+ */
+#define TABLE_ENTRY(name) (_glapi_proc) NoOp##name
 
-#define RETURN_DISPATCH(func, args, msg) ErrorF msg ; return 0
 #else
-#define DISPATCH(func, args, msg)
 
-#define RETURN_DISPATCH(func, args, msg) return 0
+static int
+NoOpGeneric(void)
+{
+#if !defined(_WIN32_WCE)
+   if (getenv("MESA_DEBUG") || getenv("LIBGL_DEBUG")) {
+      fprintf(stderr, "GL User Error: calling GL function without a rendering context\n");
+   }
+#endif
+   return 0;
+}
+
+#define TABLE_ENTRY(name) (_glapi_proc) NoOpGeneric
+
 #endif
 
 #define DISPATCH_TABLE_NAME __glapi_noop_table
 #define UNUSED_TABLE_NAME __unused_noop_functions
-
-#define TABLE_ENTRY(name) (_glapi_proc) NoOp##name
-
-static GLint NoOpUnused(void)
-{
-   #ifdef _DEBUG
-   ErrorF("NoOpUnused\n");
-   #endif
-   return 0;
-}
 
 #include "glapitemp.h"
 
