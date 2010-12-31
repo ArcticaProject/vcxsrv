@@ -1314,6 +1314,8 @@ glxWinMakeDC(__GLXWinContext *gc, __GLXWinDrawable *draw, HWND *hwnd)
 
       if (hdc == NULL)
         ErrorF("GetDC (pbuffer) error: %s\n", glxWinErrorMessage());
+
+      gc->ctx = wglCreateContext(hdc);
     }
     break;
 
@@ -1413,13 +1415,16 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
 
     case GLX_DRAWABLE_PBUFFER:
     {
+      WindowPtr pWin = (WindowPtr) draw->base.pDraw;
       if (draw->hPbuffer == NULL)
         {
           __GLXscreen *screen;
           glxWinScreen *winScreen;
           int pixelFormat;
           // XXX: which DC are supposed to use???
-          HDC screenDC = GetDC(NULL);
+          ScreenPtr pScreen = pWin->drawable.pScreen;
+          winPrivScreenPtr pWinScreen = winGetScreenPriv(pScreen);
+          HDC screenDC=pWinScreen->hdcScreen;
 
           if (!(gc->base.config->drawableType & GLX_PBUFFER_BIT))
             {
@@ -1429,7 +1434,7 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
           screen = gc->base.pGlxScreen;
           winScreen = (glxWinScreen *)screen;
 
-          pixelFormat = fbConfigToPixelFormatIndex(screenDC, gc->base.config, GLX_DRAWABLE_PBUFFER, winScreen);
+          pixelFormat = fbConfigToPixelFormatIndex(screenDC, gc->base.config, GLX_PBUFFER_BIT, winScreen);
           if (pixelFormat == 0)
             {
               ErrorF("wglChoosePixelFormat error: %s\n", glxWinErrorMessage());
@@ -1437,7 +1442,6 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
             }
 
           draw->hPbuffer = wglCreatePbufferARBWrapper(screenDC, pixelFormat, draw->base.pDraw->width, draw->base.pDraw->height, NULL);
-          ReleaseDC(NULL, screenDC);
 
           if (draw->hPbuffer == NULL)
             {
@@ -1527,7 +1531,7 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
   GLWIN_DEBUG_MSG("glxWinDeferredCreateContext: attached context %p to native context %p drawable %p", gc, gc->ctx, draw);
 
   // if the native context was created successfully, shareLists if needed
-  if (gc->ctx && gc->shareContext)
+  if (gc->ctx && gc->shareContext && gc->shareContext->ctx)
     {
       GLWIN_DEBUG_MSG("glxWinCreateContextReal shareLists with context %p (native ctx %p)", gc->shareContext, gc->shareContext->ctx);
 
