@@ -431,7 +431,7 @@ DRIScreenInit(ScreenPtr pScreen, DRIInfoPtr pDRIInfo, int *pDRMFD)
     if (!pDRIPriv->pDriverInfo->dontMapFrameBuffer)
     {
 	if (drmAddMap( pDRIPriv->drmFD,
-		       (drm_handle_t)pDRIPriv->pDriverInfo->frameBufferPhysicalAddress,
+		       (uintptr_t)pDRIPriv->pDriverInfo->frameBufferPhysicalAddress,
 		       pDRIPriv->pDriverInfo->frameBufferSize,
 		       DRM_FRAME_BUFFER,
 		       0,

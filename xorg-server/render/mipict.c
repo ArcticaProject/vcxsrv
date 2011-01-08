@@ -386,7 +386,8 @@ miCompositeSourceValidate (PicturePtr	pPicture,
 	}
         x += pPicture->pDrawable->x;
         y += pPicture->pDrawable->y;
-	(*pScreen->SourceValidate) (pDrawable, x, y, width, height);
+	(*pScreen->SourceValidate) (pDrawable, x, y, width, height,
+				    pPicture->subWindowMode);
     }
 }
 

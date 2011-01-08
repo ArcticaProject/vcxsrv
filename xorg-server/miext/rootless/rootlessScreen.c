@@ -223,7 +223,8 @@ out:
  *  here and leave StopDrawing for the block handler.
  */
 static void
-RootlessSourceValidate(DrawablePtr pDrawable, int x, int y, int w, int h)
+RootlessSourceValidate(DrawablePtr pDrawable, int x, int y, int w, int h,
+                       unsigned int subWindowMode)
 {
     SCREEN_UNWRAP(pDrawable->pScreen, SourceValidate);
     if (pDrawable->type == DRAWABLE_WINDOW) {
@@ -231,7 +232,7 @@ RootlessSourceValidate(DrawablePtr pDrawable, int x, int y, int w, int h)
         RootlessStartDrawing(pWin);
     }
     if (pDrawable->pScreen->SourceValidate) {
-        pDrawable->pScreen->SourceValidate(pDrawable, x, y, w, h);
+        pDrawable->pScreen->SourceValidate(pDrawable, x, y, w, h, subWindowMode);
     }
     SCREEN_WRAP(pDrawable->pScreen, SourceValidate);
 }

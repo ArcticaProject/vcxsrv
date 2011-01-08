@@ -1028,20 +1028,19 @@ ResetHosts (char *display)
 }
 
 /* Is client on the local host */
-Bool LocalClient(ClientPtr client)
+Bool
+ComputeLocalClient(ClientPtr client)
 {
     int    		alen, family, notused;
     Xtransaddr		*from = NULL;
     pointer		addr;
     register HOST	*host;
+    OsCommPtr           oc = (OsCommPtr) client->osPrivate;
 
-    if (!client->osPrivate)
-        return FALSE;
-    if (!((OsCommPtr)client->osPrivate)->trans_conn)
+    if (!oc->trans_conn)
         return FALSE;
 
-    if (!_XSERVTransGetPeerAddr (((OsCommPtr)client->osPrivate)->trans_conn,
-	&notused, &alen, &from))
+    if (!_XSERVTransGetPeerAddr (oc->trans_conn, &notused, &alen, &from))
     {
 	family = ConvertAddr ((struct sockaddr *) from,
 	    &alen, (pointer *)&addr);
@@ -1057,12 +1056,21 @@ Bool LocalClient(ClientPtr client)
 	}
 	for (host = selfhosts; host; host = host->next)
 	{
-	    if (addrEqual (family, addr, alen, host))
+	    if (addrEqual (family, addr, alen, host)) {
+		free(from);
 		return TRUE;
+	    }
 	}
 	free(from);
     }
     return FALSE;
+}
+
+Bool LocalClient(ClientPtr client)
+{
+    if (!client->osPrivate)
+        return FALSE;
+    return ((OsCommPtr)client->osPrivate)->local_client;
 }
 
 /*

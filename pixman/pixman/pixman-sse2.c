@@ -3051,37 +3051,45 @@ sse2_composite_over_8888_n_8888 (pixman_implementation_t *imp,
 	while (w && (unsigned long)dst & 15)
 	{
 	    uint32_t s = *src++;
-	    uint32_t d = *dst;
 
-	    __m64 ms = unpack_32_1x64 (s);
-	    __m64 alpha    = expand_alpha_1x64 (ms);
-	    __m64 dest     = _mm_movepi64_pi64 (xmm_mask);
-	    __m64 alpha_dst = unpack_32_1x64 (d);
-
-	    *dst++ = pack_1x64_32 (
-		in_over_1x64 (&ms, &alpha, &dest, &alpha_dst));
-
+	    if (s)
+	    {
+		uint32_t d = *dst;
+		
+		__m64 ms = unpack_32_1x64 (s);
+		__m64 alpha    = expand_alpha_1x64 (ms);
+		__m64 dest     = _mm_movepi64_pi64 (xmm_mask);
+		__m64 alpha_dst = unpack_32_1x64 (d);
+		
+		*dst = pack_1x64_32 (
+		    in_over_1x64 (&ms, &alpha, &dest, &alpha_dst));
+	    }
+	    dst++;
 	    w--;
 	}
 
 	while (w >= 4)
 	{
 	    xmm_src = load_128_unaligned ((__m128i*)src);
-	    xmm_dst = load_128_aligned ((__m128i*)dst);
 
-	    unpack_128_2x128 (xmm_src, &xmm_src_lo, &xmm_src_hi);
-	    unpack_128_2x128 (xmm_dst, &xmm_dst_lo, &xmm_dst_hi);
-	    expand_alpha_2x128 (xmm_src_lo, xmm_src_hi,
-				&xmm_alpha_lo, &xmm_alpha_hi);
-
-	    in_over_2x128 (&xmm_src_lo, &xmm_src_hi,
-			   &xmm_alpha_lo, &xmm_alpha_hi,
-			   &xmm_mask, &xmm_mask,
-			   &xmm_dst_lo, &xmm_dst_hi);
-
-	    save_128_aligned (
-		(__m128i*)dst, pack_2x128_128 (xmm_dst_lo, xmm_dst_hi));
-
+	    if (!is_zero (xmm_src))
+	    {
+		xmm_dst = load_128_aligned ((__m128i*)dst);
+		
+		unpack_128_2x128 (xmm_src, &xmm_src_lo, &xmm_src_hi);
+		unpack_128_2x128 (xmm_dst, &xmm_dst_lo, &xmm_dst_hi);
+		expand_alpha_2x128 (xmm_src_lo, xmm_src_hi,
+				    &xmm_alpha_lo, &xmm_alpha_hi);
+		
+		in_over_2x128 (&xmm_src_lo, &xmm_src_hi,
+			       &xmm_alpha_lo, &xmm_alpha_hi,
+			       &xmm_mask, &xmm_mask,
+			       &xmm_dst_lo, &xmm_dst_hi);
+		
+		save_128_aligned (
+		    (__m128i*)dst, pack_2x128_128 (xmm_dst_lo, xmm_dst_hi));
+	    }
+		
 	    dst += 4;
 	    src += 4;
 	    w -= 4;
@@ -3090,16 +3098,21 @@ sse2_composite_over_8888_n_8888 (pixman_implementation_t *imp,
 	while (w)
 	{
 	    uint32_t s = *src++;
-	    uint32_t d = *dst;
 
-	    __m64 ms = unpack_32_1x64 (s);
-	    __m64 alpha = expand_alpha_1x64 (ms);
-	    __m64 mask  = _mm_movepi64_pi64 (xmm_mask);
-	    __m64 dest  = unpack_32_1x64 (d);
+	    if (s)
+	    {
+		uint32_t d = *dst;
+		
+		__m64 ms = unpack_32_1x64 (s);
+		__m64 alpha = expand_alpha_1x64 (ms);
+		__m64 mask  = _mm_movepi64_pi64 (xmm_mask);
+		__m64 dest  = unpack_32_1x64 (d);
+		
+		*dst = pack_1x64_32 (
+		    in_over_1x64 (&ms, &alpha, &mask, &dest));
+	    }
 
-	    *dst++ = pack_1x64_32 (
-		in_over_1x64 (&ms, &alpha, &mask, &dest));
-
+	    dst++;
 	    w--;
 	}
     }

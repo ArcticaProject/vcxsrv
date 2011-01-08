@@ -154,8 +154,6 @@ SecurityLookupRequestName(ClientPtr client)
 }
 
 
-#define rClient(obj) (clients[CLIENT_ID((obj)->resource)])
-
 /* SecurityDeleteAuthorization
  *
  * Arguments:

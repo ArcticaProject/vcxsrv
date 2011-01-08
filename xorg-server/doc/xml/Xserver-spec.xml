@@ -2954,16 +2954,17 @@ The sample server implementation is in Xserver/fb/fbscreen.c.</para>
 	pScreen->SourceValidate(pDrawable, x, y, width, height)
 		DrawablePtr pDrawable;
 		int x, y, width, height;
+		unsigned int subWindowMode;
 
 </programlisting></blockquote>
 SourceValidate should be called by CopyArea/CopyPlane primitives when
-the source drawable is not the same as the destination, and the
-SourceValidate function pointer in the screen is non-null.  If you know that
+the SourceValidate function pointer in the screen is non-null.  If you know that
 you will never need SourceValidate, you can avoid this check.  Currently,
 SourceValidate is used by the mi software cursor code to remove the cursor
 from the screen when the source rectangle overlaps the cursor position.
 x,y,width,height describe the source rectangle (source relative, that is)
-for the copy operation.</para>
+for the copy operation.  subWindowMode comes from the GC or source Picture.
+</para>
 <para>
 <blockquote><programlisting>
 

@@ -90,6 +90,16 @@ static RESTYPE  RTAlarmClient;
 static RESTYPE  RTFence;
 static int SyncNumSystemCounters = 0;
 static SyncCounter **SysCounterList = NULL;
+static int SyncNumInvalidCounterWarnings = 0;
+#define MAX_INVALID_COUNTER_WARNINGS	   5
+
+static const char *WARN_INVALID_COUNTER_COMPARE =
+"Warning: Non-counter XSync object using Counter-only\n"
+"         comparison.  Result will never be true.\n";
+
+static const char *WARN_INVALID_COUNTER_ALARM =
+"Warning: Non-counter XSync object used in alarm.  This is\n"
+"         the result of a programming error in the X server.\n";
 
 #define IsSystemCounter(pCounter) \
     (pCounter && (pCounter->sync.client == NULL))
@@ -104,6 +114,22 @@ static void SyncInitServerTime(void);
 
 static void SyncInitIdleTime(void);
 
+static Bool
+SyncCheckWarnIsCounter(const SyncObject* pSync, const char *warning)
+{
+    if (pSync && (SYNC_COUNTER != pSync->type))
+    {
+	if (SyncNumInvalidCounterWarnings++ < MAX_INVALID_COUNTER_WARNINGS)
+	{
+	    ErrorF("%s", warning);
+	    ErrorF("         Counter type: %d\n", pSync->type);
+	}
+
+	return FALSE;
+    }
+
+    return TRUE;
+}
 
 /*  Each counter maintains a simple linked list of triggers that are
  *  interested in the counter.  The two functions below are used to
@@ -212,7 +238,11 @@ SyncCheckTriggerPositiveComparison(SyncTrigger *pTrigger, CARD64 oldval)
 {
     SyncCounter *pCounter;
 
-    assert(!pTrigger->pSync || (SYNC_COUNTER == pTrigger->pSync->type));
+    /* Non-counter sync objects should never get here because they
+     * never trigger this comparison. */
+    if (!SyncCheckWarnIsCounter(pTrigger->pSync, WARN_INVALID_COUNTER_COMPARE))
+	return FALSE;
+
     pCounter = (SyncCounter *)pTrigger->pSync;
 
     return (pCounter == NULL ||
@@ -224,7 +254,11 @@ SyncCheckTriggerNegativeComparison(SyncTrigger *pTrigger,  CARD64 oldval)
 {
     SyncCounter *pCounter;
 
-    assert(!pTrigger->pSync || (SYNC_COUNTER == pTrigger->pSync->type));
+    /* Non-counter sync objects should never get here because they
+     * never trigger this comparison. */
+    if (!SyncCheckWarnIsCounter(pTrigger->pSync, WARN_INVALID_COUNTER_COMPARE))
+	return FALSE;
+
     pCounter = (SyncCounter *)pTrigger->pSync;
 
     return (pCounter == NULL ||
@@ -236,7 +270,11 @@ SyncCheckTriggerPositiveTransition(SyncTrigger *pTrigger, CARD64 oldval)
 {
     SyncCounter *pCounter;
 
-    assert(!pTrigger->pSync || (SYNC_COUNTER == pTrigger->pSync->type));
+    /* Non-counter sync objects should never get here because they
+     * never trigger this comparison. */
+    if (!SyncCheckWarnIsCounter(pTrigger->pSync, WARN_INVALID_COUNTER_COMPARE))
+	return FALSE;
+
     pCounter = (SyncCounter *)pTrigger->pSync;
 
     return (pCounter == NULL ||
@@ -249,7 +287,11 @@ SyncCheckTriggerNegativeTransition(SyncTrigger *pTrigger, CARD64 oldval)
 {
     SyncCounter *pCounter;
 
-    assert(!pTrigger->pSync || (SYNC_COUNTER == pTrigger->pSync->type));
+    /* Non-counter sync objects should never get here because they
+     * never trigger this comparison. */
+    if (!SyncCheckWarnIsCounter(pTrigger->pSync, WARN_INVALID_COUNTER_COMPARE))
+	return FALSE;
+
     pCounter = (SyncCounter *)pTrigger->pSync;
 
     return (pCounter == NULL ||
@@ -326,14 +368,6 @@ SyncInitTrigger(ClientPtr client, SyncTrigger *pTrigger, XID syncObject,
 	}
 	else
 	{
-	    if (pTrigger->test_type != XSyncPositiveTransition &&
-		pTrigger->test_type != XSyncNegativeTransition &&
-		pTrigger->test_type != XSyncPositiveComparison &&
-		pTrigger->test_type != XSyncNegativeComparison)
-	    {
-		client->errorValue = pTrigger->test_type;
-		return BadValue;
-	    }
 	    /* select appropriate CheckTrigger function */
 
 	    switch (pTrigger->test_type)
@@ -350,6 +384,9 @@ SyncInitTrigger(ClientPtr client, SyncTrigger *pTrigger, XID syncObject,
 	    case XSyncNegativeComparison:
 		pTrigger->CheckTrigger = SyncCheckTriggerNegativeComparison;
 		break;
+	    default:
+		client->errorValue = pTrigger->test_type;
+		return BadValue;
 	    }
 	}
     }
@@ -402,7 +439,8 @@ SyncSendAlarmNotifyEvents(SyncAlarm *pAlarm)
     SyncTrigger *pTrigger = &pAlarm->trigger;
     SyncCounter *pCounter;
 
-    assert(!pTrigger->pSync || (SYNC_COUNTER == pTrigger->pSync->type));
+    if (!SyncCheckWarnIsCounter(pTrigger->pSync, WARN_INVALID_COUNTER_ALARM))
+	return;
 
     pCounter = (SyncCounter *)pTrigger->pSync;
 
@@ -507,7 +545,9 @@ SyncAlarmTriggerFired(SyncTrigger *pTrigger)
     SyncCounter *pCounter;
     CARD64 new_test_value;
 
-    assert(!pTrigger->pSync || (SYNC_COUNTER == pTrigger->pSync->type));
+    if (!SyncCheckWarnIsCounter(pTrigger->pSync, WARN_INVALID_COUNTER_ALARM))
+	return;
+
     pCounter = (SyncCounter *)pTrigger->pSync;
 
     /* no need to check alarm unless it's active */
@@ -534,7 +574,10 @@ SyncAlarmTriggerFired(SyncTrigger *pTrigger)
 	SyncTrigger *paTrigger = &pAlarm->trigger;
 	SyncCounter *paCounter;
 
-	assert(!paTrigger->pSync || (SYNC_COUNTER == paTrigger->pSync->type));
+	if (!SyncCheckWarnIsCounter(paTrigger->pSync,
+				    WARN_INVALID_COUNTER_ALARM))
+	    return;
+
 	paCounter = (SyncCounter *)pTrigger->pSync;
 
 	/* "The alarm is updated by repeatedly adding delta to the
@@ -758,17 +801,15 @@ SyncEventSelectForAlarm(SyncAlarm *pAlarm, ClientPtr client, Bool wantevents)
      */
 
     pClients->delete_id = FakeClientID(client->index);
-    if (!AddResource(pClients->delete_id, RTAlarmClient, pAlarm))
-    {
-	free(pClients);
-	return BadAlloc;
-    }
 
     /* link it into list after we know all the allocations succeed */
-
     pClients->next = pAlarm->pEventClients;
     pAlarm->pEventClients = pClients;
     pClients->client = client;
+
+    if (!AddResource(pClients->delete_id, RTAlarmClient, pAlarm))
+	return BadAlloc;
+
     return Success;
 }
 
@@ -877,17 +918,14 @@ static SyncObject *
 SyncCreate(ClientPtr client, XID id, unsigned char type)
 {
     SyncObject *pSync;
-    RESTYPE resType;
 
     switch (type) {
     case SYNC_COUNTER:
-	resType = RTCounter;
 	pSync = malloc(sizeof(SyncCounter));
 	break;
     case SYNC_FENCE:
-	resType = RTFence;
-	pSync = dixAllocateObjectWithPrivates(SyncFence,
-					      PRIVATE_SYNC_FENCE);
+	pSync = (SyncObject*)dixAllocateObjectWithPrivates(SyncFence,
+							   PRIVATE_SYNC_FENCE);
 	break;
     default:
 	return NULL;
@@ -895,19 +933,6 @@ SyncCreate(ClientPtr client, XID id, unsigned char type)
 
     if (!pSync)
 	return NULL;
-
-    if (!AddResource(id, resType, (pointer) pSync))
-    {
-	switch (type) {
-	case SYNC_FENCE:
-	    dixFreeObjectWithPrivates((SyncFence *)pSync, PRIVATE_SYNC_FENCE);
-	    break;
-	default:
-	    free(pSync);
-	}
-
-	return NULL;
-    }
 
     pSync->client = client;
     pSync->id = id;
@@ -931,6 +956,10 @@ SyncCreateCounter(ClientPtr client, XSyncCounter id, CARD64 initialvalue)
 
     pCounter->value = initialvalue;
     pCounter->pSysCounterInfo = NULL;
+
+    if (!AddResource(id, RTCounter, (pointer) pCounter))
+	return NULL;
+
     return pCounter;
 }
 
@@ -1541,14 +1570,11 @@ SyncAwaitPrologue(ClientPtr client, int items)
     /* first item is the header, remainder are real wait conditions */
 
     pAwaitUnion->header.delete_id = FakeClientID(client->index);
-    if (!AddResource(pAwaitUnion->header.delete_id, RTAwait, pAwaitUnion))
-    {
-	free(pAwaitUnion);
-	return NULL;
-    }
-
     pAwaitUnion->header.client = client;
     pAwaitUnion->header.num_waitconditions = 0;
+
+    if (!AddResource(pAwaitUnion->header.delete_id, RTAwait, pAwaitUnion))
+	return NULL;
 
     return pAwaitUnion;
 }
@@ -1776,10 +1802,7 @@ ProcSyncCreateAlarm(ClientPtr client)
     }
 
     if (!AddResource(stuff->id, RTAlarm, pAlarm))
-    {
-	free(pAlarm);
 	return BadAlloc;
-    }
 
     /*  see if alarm already triggered.  NULL counter will not trigger
      *  in CreateAlarm and sets alarm state to Inactive.
@@ -1793,7 +1816,13 @@ ProcSyncCreateAlarm(ClientPtr client)
     {
 	SyncCounter *pCounter;
 
-	assert(SYNC_COUNTER == pTrigger->pSync->type);
+	if (!SyncCheckWarnIsCounter(pTrigger->pSync,
+				    WARN_INVALID_COUNTER_ALARM))
+	{
+	    FreeResource(stuff->id, RT_NONE);
+	    return BadAlloc;
+	}
+
 	pCounter = (SyncCounter *)pTrigger->pSync;
 
 	if ((*pTrigger->CheckTrigger)(pTrigger, pCounter->value))
@@ -1832,11 +1861,9 @@ ProcSyncChangeAlarm(ClientPtr client)
 					    (CARD32 *)&stuff[1])) != Success)
 	return status;
 
-    if (pAlarm->trigger.pSync)
-    {
-	assert(SYNC_COUNTER == pAlarm->trigger.pSync->type);
+    if (SyncCheckWarnIsCounter(pAlarm->trigger.pSync,
+			       WARN_INVALID_COUNTER_ALARM))
 	pCounter = (SyncCounter *)pAlarm->trigger.pSync;
-    }
 
     /*  see if alarm already triggered.  NULL counter WILL trigger
      *  in ChangeAlarm.
@@ -1949,6 +1976,9 @@ ProcSyncCreateFence(ClientPtr client)
 	return BadAlloc;
 
     miSyncInitFence(pDraw->pScreen, pFence, stuff->initially_triggered);
+
+    if (!AddResource(stuff->fid, RTFence, (pointer) pFence))
+	return BadAlloc;
 
     return client->noClientException;
 }
@@ -2092,7 +2122,7 @@ ProcSyncAwaitFence(ClientPtr client)
     }
     if (items == 0)
     {
-	client->errorValue = items; /* XXX protocol change */
+	client->errorValue = items;
 	return BadValue;
     }
 
@@ -2106,14 +2136,14 @@ ProcSyncAwaitFence(ClientPtr client)
     pAwait = &(pAwaitUnion+1)->await; /* skip over header */
     for (i = 0; i < items; i++, pProtocolFences++, pAwait++)
     {
-	if (*pProtocolFences == None) /* XXX protocol change */
+	if (*pProtocolFences == None)
 	{
 	    /*  this should take care of removing any triggers created by
 	     *  this request that have already been registered on sync objects
 	     */
 	    FreeResource(pAwaitUnion->header.delete_id, RT_NONE);
 	    client->errorValue = *pProtocolFences;
-	    return SyncErrorBase + XSyncBadCounter;
+	    return SyncErrorBase + XSyncBadFence;
 	}
 
 	pAwait->trigger.pSync = NULL;

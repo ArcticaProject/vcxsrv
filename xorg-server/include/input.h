@@ -532,6 +532,18 @@ void FixUpEventFromWindow(DeviceIntPtr pDev,
                           WindowPtr pWin,
                           Window child,
                           Bool calcChild);
+extern int EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event,
+                              WindowPtr win);
+/**
+ * Return masks for EventIsDeliverable.
+ * @defgroup EventIsDeliverable return flags
+ * @{
+ */
+#define XI_MASK                 (1 << 0) /**< XI mask set on window */
+#define CORE_MASK               (1 << 1) /**< Core mask set on window */
+#define DONT_PROPAGATE_MASK     (1 << 2) /**< DontPropagate mask set on window */
+#define XI2_MASK                (1 << 3) /**< XI2 mask set on window */
+/* @} */
 
 /* Implemented by the DDX. */
 extern _X_EXPORT int NewInputDeviceRequest(
@@ -554,7 +566,6 @@ extern _X_HIDDEN void valuator_set_mode(DeviceIntPtr dev, int axis, int mode);
    xfixes/cursor.c uses it to determine if the cursor is enabled */
 extern Bool EnableCursor;
 
-/* For server-internal functions, see inpututil.h */
 extern _X_EXPORT ValuatorMask  *valuator_mask_new(int num_valuators);
 extern _X_EXPORT void valuator_mask_set_range(ValuatorMask *mask,
                                        int first_valuator, int num_valuators,
@@ -563,5 +574,12 @@ extern _X_EXPORT void valuator_mask_set(ValuatorMask *mask,
                                         int valuator,
                                         int data);
 extern _X_EXPORT void valuator_mask_zero(ValuatorMask *mask);
+extern _X_EXPORT int valuator_mask_size(const ValuatorMask *mask);
+extern _X_EXPORT int valuator_mask_isset(const ValuatorMask *mask, int bit);
+extern _X_EXPORT void valuator_mask_unset(ValuatorMask *mask, int bit);
+extern _X_EXPORT int valuator_mask_num_valuators(const ValuatorMask *mask);
+extern _X_EXPORT void valuator_mask_copy(ValuatorMask *dest,
+                                         const ValuatorMask *src);
+extern _X_EXPORT int valuator_mask_get(const ValuatorMask *mask, int valnum);
 
 #endif /* INPUT_H */

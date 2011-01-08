@@ -48,6 +48,30 @@
 #include "compint.h"
 
 static void
+compScreenUpdate (ScreenPtr pScreen)
+{
+    compCheckTree (pScreen);
+    compPaintChildrenToWindow (pScreen->root);
+}
+
+static void
+compBlockHandler (int	    i,
+		  pointer   blockData,
+		  pointer   pTimeout,
+		  pointer   pReadmask)
+{
+    ScreenPtr	    pScreen = screenInfo.screens[i];
+    CompScreenPtr   cs = GetCompScreen (pScreen);
+
+    pScreen->BlockHandler = cs->BlockHandler;
+    compScreenUpdate (pScreen);
+    (*pScreen->BlockHandler) (i, blockData, pTimeout, pReadmask);
+
+    /* Next damage will restore the block handler */
+    cs->BlockHandler = NULL;
+}
+
+static void
 compReportDamage (DamagePtr pDamage, RegionPtr pRegion, void *closure)
 {
     WindowPtr	    pWin = (WindowPtr) closure;
@@ -55,8 +79,20 @@ compReportDamage (DamagePtr pDamage, RegionPtr pRegion, void *closure)
     CompScreenPtr   cs = GetCompScreen (pScreen);
     CompWindowPtr   cw = GetCompWindow (pWin);
 
-    cs->damaged = TRUE;
+    if (!cs->BlockHandler) {
+        cs->BlockHandler = pScreen->BlockHandler;
+        pScreen->BlockHandler = compBlockHandler;
+    }
     cw->damaged = TRUE;
+
+    /* Mark the ancestors */
+    pWin = pWin->parent;
+    while (pWin) {
+	if (pWin->damagedDescendants)
+	    break;
+	pWin->damagedDescendants = TRUE;
+	pWin = pWin->parent;
+    }
 }
 
 static void

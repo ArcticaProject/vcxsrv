@@ -461,7 +461,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 		   " (0x%08lx,0x%lx) (%s)\n", Base, Size,
 		   strerror(errno));
     }
-    DebugF("base: %lx aligned base: %lx\n",base, base + alignOff);
+    DebugF("base: %lx aligned base: %lx\n",base, (char *)base + alignOff);
     return (char *)base + alignOff;
 }
 #endif /* !(__sparc__) */

@@ -298,6 +298,10 @@ SetWindowToDefaults(WindowPtr pWin)
 #ifdef ROOTLESS
     pWin->rootlessUnhittable = FALSE;
 #endif
+
+#ifdef COMPOSITE
+    pWin->damagedDescendants = FALSE;
+#endif
 }
 
 static void

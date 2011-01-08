@@ -640,6 +640,17 @@ DRI2CanFlip(DrawablePtr pDraw)
     if (!RegionEqual(&pWin->clipList, &pRoot->winSize))
 	return FALSE;
 
+    /* Does the window match the pixmap exactly? */
+    if (pDraw->x != 0 ||
+	pDraw->y != 0 ||
+#ifdef COMPOSITE
+	pDraw->x != pWinPixmap->screen_x ||
+	pDraw->y != pWinPixmap->screen_y ||
+#endif
+	pDraw->width != pWinPixmap->drawable.width ||
+	pDraw->height != pWinPixmap->drawable.height)
+	return FALSE;
+
     return TRUE;
 }
 

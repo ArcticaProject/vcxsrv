@@ -13,12 +13,8 @@ xkb symbolic names: symbols, geometry, keycodes, compat and types which
 determine the keyboard behaviour. These five components can combined together
 into a resulting keyboard mapping using the 'rules' component.
 
-The complete specification can be found on
-http://www.x-docs.org/XKB/XKBproto.pdf
+More information, including the complete specification, can be found on
+http://www.x.org/wiki/XKB
 
-For XKB configuration information see 'README.config' file.
-
-For information how to further enhance XKB configuration see 'README.enhancing'
-file.
 
 

@@ -146,7 +146,7 @@ extmodSetup(pointer module, pointer opts, int *errmaj, int *errmin)
     for (i = 0; extensionModules[i].name != NULL; i++) {
 	if (opts) {
 	    char *s;
-	    if (Xasprinf(&s, "omit%s", extensionModules[i].name) != -1) {
+	    if (asprintf(&s, "omit%s", extensionModules[i].name) != -1) {
 		pointer o;
 		o = xf86FindOption(opts, s);
 		free(s);

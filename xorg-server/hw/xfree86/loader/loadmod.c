@@ -374,7 +374,7 @@ FreeSubdirs(const char **subdirs)
 
     if (subdirs) {
 	for (s = subdirs; *s; s++)
-	    free(*s);
+	    free((char *)*s);
 	free(subdirs);
     }
 }

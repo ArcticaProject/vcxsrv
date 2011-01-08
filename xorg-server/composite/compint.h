@@ -152,7 +152,6 @@ typedef struct _CompScreen {
 
     ScreenBlockHandlerProcPtr	BlockHandler;
     CloseScreenProcPtr		CloseScreen;
-    Bool			damaged;
     int				numAlternateVisuals;
     VisualID			*alternateVisuals;
 
@@ -160,6 +159,8 @@ typedef struct _CompScreen {
     Window			overlayWid;
     CompOverlayClientPtr        pOverlayClients;
     
+    GetImageProcPtr		GetImage;
+    SourceValidateProcPtr	SourceValidate;
 } CompScreenRec, *CompScreenPtr;
 
 extern DevPrivateKeyRec CompScreenPrivateKeyRec;
@@ -314,7 +315,7 @@ void
 compCopyWindow (WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc);
 
 void
-compWindowUpdate (WindowPtr pWin);
+compPaintChildrenToWindow (WindowPtr pWin);
 
 WindowPtr
 CompositeRealChildHead (WindowPtr pWin);
