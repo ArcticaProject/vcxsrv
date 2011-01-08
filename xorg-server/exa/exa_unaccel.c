@@ -438,7 +438,8 @@ ExaSrcValidate(DrawablePtr pDrawable,
 	       int x,
 	       int y,
 	       int width,
-	       int height)
+	       int height,
+	       unsigned int subWindowMode)
 {
     ScreenPtr pScreen = pDrawable->pScreen;
     ExaScreenPriv(pScreen);
@@ -464,7 +465,7 @@ ExaSrcValidate(DrawablePtr pDrawable,
 
     if (pExaScr->SavedSourceValidate) {
         swap(pExaScr, pScreen, SourceValidate);
-        pScreen->SourceValidate(pDrawable, x, y, width, height);
+        pScreen->SourceValidate(pDrawable, x, y, width, height, subWindowMode);
         swap(pExaScr, pScreen, SourceValidate);
     }
 }

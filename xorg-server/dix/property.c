@@ -424,6 +424,9 @@ DeleteAllWindowProperties(WindowPtr pWin)
 	dixFreeObjectWithPrivates(pProp, PRIVATE_PROPERTY);
 	pProp = pNextProp;
     }
+
+    if (pWin->optional)
+        pWin->optional->userProps = NULL;
 }
 
 static int

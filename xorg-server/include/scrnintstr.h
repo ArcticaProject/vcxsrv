@@ -135,7 +135,8 @@ typedef    void (* SourceValidateProcPtr)(
 	int /*x*/,
 	int /*y*/,
 	int /*width*/,
-	int /*height*/);
+	int /*height*/,
+	unsigned int /*subWindowMode*/);
 
 typedef    Bool (* CreateWindowProcPtr)(
 	WindowPtr /*pWindow*/);

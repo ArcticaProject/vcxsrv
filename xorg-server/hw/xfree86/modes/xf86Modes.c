@@ -355,15 +355,32 @@ xf86ValidateModesSize(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 {
     DisplayModePtr mode;
 
+    if (maxPitch <= 0)
+	    maxPitch = MAXINT;
+    if (maxX <= 0)
+	    maxX = MAXINT;
+    if (maxY <= 0)
+	    maxY = MAXINT;
+
     for (mode = modeList; mode != NULL; mode = mode->next) {
-	if (maxPitch > 0 && mode->HDisplay > maxPitch)
-	    mode->status = MODE_BAD_WIDTH;
+	if ((xf86ModeWidth(mode, RR_Rotate_0) > maxPitch ||
+	     xf86ModeWidth(mode, RR_Rotate_0) > maxX ||
+	     xf86ModeHeight(mode, RR_Rotate_0) > maxY) &&
+	    (xf86ModeWidth(mode, RR_Rotate_90) > maxPitch ||
+	     xf86ModeWidth(mode, RR_Rotate_90) > maxX ||
+	     xf86ModeHeight(mode, RR_Rotate_90) > maxY)) {
+	    if (xf86ModeWidth(mode, RR_Rotate_0) > maxPitch ||
+		xf86ModeWidth(mode, RR_Rotate_90) > maxPitch)
+		mode->status = MODE_BAD_WIDTH;
 
-	if (maxX > 0 && mode->HDisplay > maxX)
-	    mode->status = MODE_VIRTUAL_X;
+	    if (xf86ModeWidth(mode, RR_Rotate_0) > maxX ||
+		xf86ModeWidth(mode, RR_Rotate_90) > maxX)
+		mode->status = MODE_VIRTUAL_X;
 
-	if (maxY > 0 && mode->VDisplay > maxY)
-	    mode->status = MODE_VIRTUAL_Y;
+	    if (xf86ModeHeight(mode, RR_Rotate_0) > maxY ||
+		xf86ModeHeight(mode, RR_Rotate_90) > maxY)
+		mode->status = MODE_VIRTUAL_Y;
+	}
 
 	if (mode->next == modeList)
 	    break;

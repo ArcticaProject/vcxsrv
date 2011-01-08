@@ -653,9 +653,10 @@ compWindowFormat (WindowPtr pWin)
 }
 
 static void
-compWindowUpdateAutomatic (WindowPtr pWin, ScreenPtr pScreen)
+compWindowUpdateAutomatic (WindowPtr pWin)
 {
     CompWindowPtr   cw = GetCompWindow (pWin);
+    ScreenPtr	    pScreen = pWin->drawable.pScreen;
     WindowPtr	    pParent = pWin->parent;
     PixmapPtr	    pSrcPixmap = (*pScreen->GetWindowPixmap) (pWin);
     PictFormatPtr   pSrcFormat = compWindowFormat (pWin);
@@ -678,7 +679,8 @@ compWindowUpdateAutomatic (WindowPtr pWin, ScreenPtr pScreen)
     /*
      * First move the region from window to screen coordinates
      */
-    RegionTranslate(pRegion, pWin->drawable.x, pWin->drawable.y);
+    RegionTranslate(pRegion,
+		      pWin->drawable.x, pWin->drawable.y);
 
     /*
      * Clip against the "real" border clip
@@ -688,7 +690,8 @@ compWindowUpdateAutomatic (WindowPtr pWin, ScreenPtr pScreen)
     /*
      * Now translate from screen to dest coordinates
      */
-    RegionTranslate(pRegion, -pParent->drawable.x, -pParent->drawable.y);
+    RegionTranslate(pRegion,
+		      -pParent->drawable.x, -pParent->drawable.y);
 
     /*
      * Clip the picture
@@ -717,26 +720,35 @@ compWindowUpdateAutomatic (WindowPtr pWin, ScreenPtr pScreen)
     DamageEmpty (cw->damage);
 }
 
-static int
-compWindowUpdateVisit(WindowPtr pWin, void *data)
+static void
+compPaintWindowToParent (WindowPtr pWin)
 {
+    compPaintChildrenToWindow (pWin);
+
     if (pWin->redirectDraw != RedirectDrawNone)
     {
-	CompWindowPtr cw = GetCompWindow(pWin);
+	CompWindowPtr	cw = GetCompWindow(pWin);
+
 	if (cw->damaged)
 	{
-	    compWindowUpdateAutomatic(pWin, data);
+	    compWindowUpdateAutomatic (pWin);
 	    cw->damaged = FALSE;
 	}
     }
-
-    return WT_WALKCHILDREN;
 }
 
 void
-compWindowUpdate (WindowPtr pWin)
+compPaintChildrenToWindow (WindowPtr pWin)
 {
-    TraverseTree(pWin, compWindowUpdateVisit, pWin->drawable.pScreen);
+    WindowPtr pChild;
+
+    if (!pWin->damagedDescendants)
+	return;
+
+    for (pChild = pWin->lastChild; pChild; pChild = pChild->prevSib)
+	compPaintWindowToParent (pChild);
+
+    pWin->damagedDescendants = FALSE;
 }
 
 WindowPtr

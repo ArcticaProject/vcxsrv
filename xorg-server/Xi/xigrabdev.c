@@ -79,7 +79,7 @@ ProcXIGrabDevice(ClientPtr client)
     if (!IsMaster(dev))
         stuff->paired_device_mode = GrabModeAsync;
 
-    if (XICheckInvalidMaskBits((unsigned char*)&stuff[1],
+    if (XICheckInvalidMaskBits(client, (unsigned char*)&stuff[1],
                                stuff->mask_len * 4) != Success)
         return BadValue;
 

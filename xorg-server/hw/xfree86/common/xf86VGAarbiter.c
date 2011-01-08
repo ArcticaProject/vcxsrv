@@ -325,13 +325,14 @@ VGAarbiterGetSpans (
 static void
 VGAarbiterSourceValidate (
     DrawablePtr pDrawable,
-    int x, int y, int width, int height )
+    int x, int y, int width, int height,
+    unsigned int subWindowMode )
 {
     ScreenPtr   pScreen = pDrawable->pScreen;
     SCREEN_PROLOG (SourceValidate);
     VGAGet(pScreen);
     if (pScreen->SourceValidate)
-    (*pScreen->SourceValidate) (pDrawable, x, y, width, height);
+    (*pScreen->SourceValidate) (pDrawable, x, y, width, height, subWindowMode);
     VGAPut();
     SCREEN_EPILOG (SourceValidate, VGAarbiterSourceValidate);
 }

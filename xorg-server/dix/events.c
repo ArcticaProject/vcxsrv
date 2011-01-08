@@ -195,8 +195,6 @@ typedef const char *string;
 #define XE_KBPTR (xE->u.keyButtonPointer)
 
 
-#define rClient(obj) (clients[CLIENT_ID((obj)->resource)])
-
 CallbackListPtr EventCallback;
 CallbackListPtr DeviceEventCallback;
 
@@ -2295,17 +2293,6 @@ FixUpEventFromWindow(
 }
 
 /**
- * Return masks for EventIsDeliverable.
- * @defgroup EventIsDeliverable return flags
- * @{
- */
-#define XI_MASK                 (1 << 0) /**< XI mask set on window */
-#define CORE_MASK               (1 << 1) /**< Core mask set on window */
-#define DONT_PROPAGATE_MASK     (1 << 2) /**< DontPropagate mask set on window */
-#define XI2_MASK                (1 << 3) /**< XI2 mask set on window */
-/* @} */
-
-/**
  * Check if a given event is deliverable at all on a given window.
  *
  * This function only checks if any client wants it, not for a specific
@@ -2318,7 +2305,7 @@ FixUpEventFromWindow(
  * @return Bitmask of ::XI2_MASK, ::XI_MASK, ::CORE_MASK, and
  * ::DONT_PROPAGATE_MASK.
  */
-static int
+int
 EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event, WindowPtr win)
 {
     int rc = 0;

@@ -65,15 +65,11 @@ BUILT_SOURCES = xkbparse.c
 MAINTAINERCLEANFILES = ChangeLog INSTALL
 MAINTAINERCLEANFILES += $(BUILT_SOURCES)
 
-EXTRA_DIST = \
-	README.config \
-	README.enhancing
-
 appmandir = $(APP_MAN_DIR)
 
 appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
 
-EXTRA_DIST += $(appman_PRE)
+EXTRA_DIST = $(appman_PRE)
 CLEANFILES = $(appman_DATA)
 
 SUFFIXES = .$(APP_MAN_SUFFIX) .man

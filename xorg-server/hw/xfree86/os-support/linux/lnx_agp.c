@@ -264,7 +264,7 @@ xf86DeallocateGARTMemory(int screenNum, int key)
 	}
 
 #ifdef __linux__
-	if (ioctl(gartFd, AGPIOC_DEALLOCATE, (int *)key) != 0) {
+	if (ioctl(gartFd, AGPIOC_DEALLOCATE, (int *)(uintptr_t)key) != 0) {
 #else
 	if (ioctl(gartFd, AGPIOC_DEALLOCATE, &key) != 0) {
 #endif

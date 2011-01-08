@@ -18,6 +18,10 @@ extern void XTestExtensionInit(INITARGS);
 extern void XTestExtension1Init(INITARGS);
 #endif
 
+#if 1
+extern void XCMiscExtensionInit(INITARGS);
+#endif
+
 #ifdef SCREENSAVER
 extern void ScreenSaverExtensionInit (INITARGS);
 #include <X11/extensions/saver.h>

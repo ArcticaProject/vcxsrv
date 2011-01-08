@@ -7065,15 +7065,20 @@ Handles opcode 0x9a
 ****************************************************************************/
 static void x86emuOp_call_far_IMM(u8 X86EMU_UNUSED(op1))
 {
-    u16 farseg, faroff;
+    u32 farseg, faroff;
 
     START_OF_INSTR();
-	DECODE_PRINTF("CALL\t");
+    DECODE_PRINTF("CALL\t");
+    if (M.x86.mode & SYSMODE_PREFIX_DATA) {
+	faroff = fetch_long_imm();
+	farseg = fetch_word_imm();
+    } else {
 	faroff = fetch_word_imm();
 	farseg = fetch_word_imm();
-	DECODE_PRINTF2("%04x:", farseg);
-	DECODE_PRINTF2("%04x\n", faroff);
-	CALL_TRACE(M.x86.saved_cs, M.x86.saved_ip, farseg, faroff, "FAR ");
+    }
+    DECODE_PRINTF2("%04x:", farseg);
+    DECODE_PRINTF2("%04x\n", faroff);
+    CALL_TRACE(M.x86.saved_cs, M.x86.saved_ip, farseg, faroff, "FAR ");
 
     /* XXX
      * 
@@ -7084,8 +7089,12 @@ static void x86emuOp_call_far_IMM(u8 X86EMU_UNUSED(op1))
     TRACE_AND_STEP();
     push_word(M.x86.R_CS);
     M.x86.R_CS = farseg;
-    push_word(M.x86.R_IP);
-    M.x86.R_IP = faroff;
+    if (M.x86.mode & SYSMODE_PREFIX_DATA) {
+	push_long(M.x86.R_EIP);
+    } else {
+	push_word(M.x86.R_IP);
+    }
+    M.x86.R_EIP = faroff & 0xffff;
     DECODE_CLEAR_SEGOVR();
     END_OF_INSTR();
 }
@@ -9670,17 +9679,30 @@ Handles opcode 0xe8
 ****************************************************************************/
 static void x86emuOp_call_near_IMM(u8 X86EMU_UNUSED(op1))
 {
-    s16 ip;
+    s16 ip16;
+    s32 ip32;
 
     START_OF_INSTR();
-	DECODE_PRINTF("CALL\t");
-	ip = (s16) fetch_word_imm();
-	ip += (s16) M.x86.R_IP;    /* CHECK SIGN */
-	DECODE_PRINTF2("%04x\n", (u16)ip);
-	CALL_TRACE(M.x86.saved_cs, M.x86.saved_ip, M.x86.R_CS, ip, "");
+    DECODE_PRINTF("CALL\t");
+    if (M.x86.mode & SYSMODE_PREFIX_DATA) {
+	ip32 = (s32) fetch_long_imm();
+	ip32 += (s16) M.x86.R_IP;    /* CHECK SIGN */
+	DECODE_PRINTF2("%04x\n", (u16)ip32);
+	CALL_TRACE(M.x86.saved_cs, M.x86.saved_ip, M.x86.R_CS, ip32, "");
+    } else {
+	ip16 = (s16) fetch_word_imm();
+	ip16 += (s16) M.x86.R_IP;    /* CHECK SIGN */
+	DECODE_PRINTF2("%04x\n", (u16)ip16);
+	CALL_TRACE(M.x86.saved_cs, M.x86.saved_ip, M.x86.R_CS, ip16, "");
+    }
     TRACE_AND_STEP();
-    push_word(M.x86.R_IP);
-    M.x86.R_IP = ip;
+    if (M.x86.mode & SYSMODE_PREFIX_DATA) {
+	push_long(M.x86.R_EIP);
+	M.x86.R_EIP = ip32 & 0xffff;
+    } else {
+	push_word(M.x86.R_IP);
+	M.x86.R_EIP = ip16;
+    }
     DECODE_CLEAR_SEGOVR();
     END_OF_INSTR();
 }
@@ -9718,16 +9740,21 @@ Handles opcode 0xea
 ****************************************************************************/
 static void x86emuOp_jump_far_IMM(u8 X86EMU_UNUSED(op1))
 {
-    u16 cs, ip;
+    u16 cs;
+    u32 ip;
 
     START_OF_INSTR();
     DECODE_PRINTF("JMP\tFAR ");
-    ip = fetch_word_imm();
+    if (M.x86.mode & SYSMODE_PREFIX_DATA) {
+	ip = fetch_long_imm();
+    } else {
+	ip = fetch_word_imm();
+    }
     cs = fetch_word_imm();
     DECODE_PRINTF2("%04x:", cs);
     DECODE_PRINTF2("%04x\n", ip);
     TRACE_AND_STEP();
-    M.x86.R_IP = ip;
+    M.x86.R_EIP = ip & 0xffff;
     M.x86.R_CS = cs;
     DECODE_CLEAR_SEGOVR();
     END_OF_INSTR();

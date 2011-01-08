@@ -33,8 +33,6 @@
 #include "geext.h"
 #include "protocol-versions.h"
 
-#define rClient(obj) (clients[CLIENT_ID((obj)->resource)])
-
 DevPrivateKeyRec GEClientPrivateKeyRec;
 
 int RT_GECLIENT  = 0;

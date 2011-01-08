@@ -61,7 +61,6 @@ compCloseScreen (int index, ScreenPtr pScreen)
     free(cs->alternateVisuals);
 
     pScreen->CloseScreen = cs->CloseScreen;
-    pScreen->BlockHandler = cs->BlockHandler;
     pScreen->InstallColormap = cs->InstallColormap;
     pScreen->ChangeWindowAttributes = cs->ChangeWindowAttributes;
     pScreen->ReparentWindow = cs->ReparentWindow;
@@ -77,6 +76,9 @@ compCloseScreen (int index, ScreenPtr pScreen)
     pScreen->CreateWindow = cs->CreateWindow;
     pScreen->CopyWindow = cs->CopyWindow;
     pScreen->PositionWindow = cs->PositionWindow;
+
+    pScreen->GetImage = cs->GetImage;
+    pScreen->SourceValidate = cs->SourceValidate;
 
     free(cs);
     dixSetPrivate(&pScreen->devPrivates, CompScreenPrivateKey, NULL);
@@ -131,32 +133,40 @@ compChangeWindowAttributes(WindowPtr pWin, unsigned long mask)
 }
 
 static void
-compScreenUpdate (ScreenPtr pScreen)
+compGetImage (DrawablePtr pDrawable,
+	      int sx, int sy,
+	      int w, int h,
+	      unsigned int format,
+	      unsigned long planemask,
+	      char *pdstLine)
 {
-    CompScreenPtr   cs = GetCompScreen (pScreen);
+    ScreenPtr pScreen = pDrawable->pScreen;
+    CompScreenPtr cs = GetCompScreen (pScreen);
 
-    compCheckTree (pScreen);
-    if (cs->damaged)
-    {
-	compWindowUpdate (pScreen->root);
-	cs->damaged = FALSE;
-    }
+    pScreen->GetImage = cs->GetImage;
+    if (pDrawable->type == DRAWABLE_WINDOW)
+	compPaintChildrenToWindow ((WindowPtr) pDrawable);
+    (*pScreen->GetImage) (pDrawable, sx, sy, w, h, format, planemask, pdstLine);
+    cs->GetImage = pScreen->GetImage;
+    pScreen->GetImage = compGetImage;
 }
 
-static void
-compBlockHandler (int	    i,
-		  pointer   blockData,
-		  pointer   pTimeout,
-		  pointer   pReadmask)
+static void compSourceValidate(DrawablePtr pDrawable,
+			       int x, int y,
+			       int width, int height,
+			       unsigned int subWindowMode)
 {
-    ScreenPtr	    pScreen = screenInfo.screens[i];
-    CompScreenPtr   cs = GetCompScreen (pScreen);
+    ScreenPtr pScreen = pDrawable->pScreen;
+    CompScreenPtr cs = GetCompScreen (pScreen);
 
-    pScreen->BlockHandler = cs->BlockHandler;
-    compScreenUpdate (pScreen);
-    (*pScreen->BlockHandler) (i, blockData, pTimeout, pReadmask);
-    cs->BlockHandler = pScreen->BlockHandler;
-    pScreen->BlockHandler = compBlockHandler;
+    pScreen->SourceValidate = cs->SourceValidate;
+    if (pDrawable->type == DRAWABLE_WINDOW && subWindowMode == IncludeInferiors)
+	compPaintChildrenToWindow ((WindowPtr) pDrawable);
+    if (pScreen->SourceValidate)
+	(*pScreen->SourceValidate) (pDrawable, x, y, width, height,
+				    subWindowMode);
+    cs->SourceValidate = pScreen->SourceValidate;
+    pScreen->SourceValidate = compSourceValidate;
 }
 
 /*
@@ -331,7 +341,6 @@ compScreenInit (ScreenPtr pScreen)
     if (!cs)
 	return FALSE;
 
-    cs->damaged = FALSE;
     cs->overlayWid = FakeClientID(0);
     cs->pOverlayWin = NULL;
     cs->pOverlayClients = NULL;
@@ -387,11 +396,16 @@ compScreenInit (ScreenPtr pScreen)
     cs->ChangeWindowAttributes = pScreen->ChangeWindowAttributes;
     pScreen->ChangeWindowAttributes = compChangeWindowAttributes;
 
-    cs->BlockHandler = pScreen->BlockHandler;
-    pScreen->BlockHandler = compBlockHandler;
+    cs->BlockHandler = NULL;
 
     cs->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = compCloseScreen;
+
+    cs->GetImage = pScreen->GetImage;
+    pScreen->GetImage = compGetImage;
+
+    cs->SourceValidate = pScreen->SourceValidate;
+    pScreen->SourceValidate = compSourceValidate;
 
     dixSetPrivate(&pScreen->devPrivates, CompScreenPrivateKey, cs);
 

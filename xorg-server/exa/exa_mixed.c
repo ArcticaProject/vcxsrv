@@ -98,7 +98,7 @@ exaCreatePixmap_mixed(ScreenPtr pScreen, int w, int h, int depth,
 	pExaPixmap->use_gpu_copy = FALSE;
 
 	if (w == 1 && h == 1) {
-	    pExaPixmap->sys_ptr = malloc((pPixmap->drawable.bitsPerPixel + 7) / 8);
+	    pExaPixmap->sys_ptr = malloc(paddedWidth);
 
 	    /* Set up damage tracking */
 	    pExaPixmap->pDamage = DamageCreate(exaDamageReport_mixed, NULL,

@@ -167,6 +167,9 @@ typedef struct _Window {
 #ifdef ROOTLESS
     unsigned		rootlessUnhittable:1;	/* doesn't hit-test */
 #endif
+#ifdef COMPOSITE
+    unsigned		damagedDescendants:1;	/* some descendants are damaged */
+#endif
 } WindowRec;
 
 /*

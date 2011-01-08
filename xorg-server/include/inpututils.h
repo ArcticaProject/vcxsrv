@@ -37,12 +37,4 @@ struct _ValuatorMask {
     int         valuators[MAX_VALUATORS]; /* valuator data */
 };
 
-/* server-internal */
-extern _X_HIDDEN int valuator_mask_size(const ValuatorMask *mask);
-extern _X_HIDDEN int valuator_mask_isset(const ValuatorMask *mask, int bit);
-extern _X_HIDDEN void valuator_mask_unset(ValuatorMask *mask, int bit);
-extern _X_HIDDEN int valuator_mask_num_valuators(const ValuatorMask *mask);
-extern _X_HIDDEN void valuator_mask_copy(ValuatorMask *dest, const ValuatorMask *src);
-extern _X_HIDDEN int valuator_mask_get(const ValuatorMask *mask, int valnum);
-
 #endif

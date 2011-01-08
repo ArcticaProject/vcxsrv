@@ -118,7 +118,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
         return BadValue;
     }
 
-    if (XICheckInvalidMaskBits((unsigned char*)&stuff[1],
+    if (XICheckInvalidMaskBits(client, (unsigned char*)&stuff[1],
                                stuff->mask_len * 4) != Success)
         return BadValue;
 

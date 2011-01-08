@@ -42,14 +42,19 @@
  *
  * @return BadValue if at least one invalid bit is set or Success otherwise.
  */
-int XICheckInvalidMaskBits(unsigned char *mask, int len)
+int XICheckInvalidMaskBits(ClientPtr client, unsigned char *mask, int len)
 {
     if (len >= XIMaskLen(XI2LASTEVENT))
     {
         int i;
         for (i = XI2LASTEVENT + 1; i < len * 8; i++)
+        {
             if (BitIsOn(mask, i))
+            {
+                client->errorValue = i;
                 return BadValue;
+            }
+        }
     }
 
     return Success;
@@ -126,7 +131,10 @@ ProcXISelectEvents(ClientPtr client)
         {
             unsigned char *bits = (unsigned char*)&evmask[1];
             if (BitIsOn(bits, XI_HierarchyChanged))
+            {
+                client->errorValue = XI_HierarchyChanged;
                 return BadValue;
+            }
         }
 
         /* Raw events may only be selected on root windows */
@@ -138,10 +146,13 @@ ProcXISelectEvents(ClientPtr client)
                 BitIsOn(bits, XI_RawButtonPress) ||
                 BitIsOn(bits, XI_RawButtonRelease) ||
                 BitIsOn(bits, XI_RawMotion))
+            {
+                client->errorValue = XI_RawKeyPress;
                 return BadValue;
+            }
         }
 
-        if (XICheckInvalidMaskBits((unsigned char*)&evmask[1],
+        if (XICheckInvalidMaskBits(client, (unsigned char*)&evmask[1],
                                    evmask->mask_len * 4) != Success)
             return BadValue;
 

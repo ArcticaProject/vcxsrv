@@ -149,7 +149,7 @@ static void VGAarbiterGetImage (DrawablePtr pDrawable, int sx, int sy, int w,
 static void VGAarbiterGetSpans (DrawablePtr pDrawable, int wMax, DDXPointPtr
     ppt, int *pwidth, int nspans, char  *pdstStart);
 static void VGAarbiterSourceValidate (DrawablePtr pDrawable, int x, int y,
-    int width, int height);
+    int width, int height, unsigned int subWindowMode);
 static void VGAarbiterCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg,
     RegionPtr prgnSrc);
 static void VGAarbiterClearToBackground (WindowPtr pWin, int x, int y, int w,

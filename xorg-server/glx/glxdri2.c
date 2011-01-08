@@ -594,7 +594,7 @@ static const __DRIextension *loader_extensions[] = {
     &systemTimeExtension.base,
     &loaderExtension.base,
 #ifdef __DRI_USE_INVALIDATE
-    &dri2UseInvalidate,
+    &dri2UseInvalidate.base,
 #endif
     NULL
 };
