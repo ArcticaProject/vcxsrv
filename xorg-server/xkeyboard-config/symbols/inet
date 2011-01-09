@@ -185,11 +185,11 @@ xkb_symbols "evdev" {
 //  key <I221>   {      [ ]       }; // KEY_SOUND
 //  key <I222>   {      [ ]       }; // KEY_QUESTION
     key <I223>   {      [ XF86Mail              ]       };
-//  key <I224>   {      [ XF86Messenger         ]       }; // KEY_CHAT
+    key <I224>   {      [ XF86Messenger         ]       }; // KEY_CHAT
     key <I225>   {      [ XF86Search            ]       };
-//  key <I226>   {      [ XF86Go                ]       }; // KEY_CONNECT
+    key <I226>   {      [ XF86Go                ]       }; // KEY_CONNECT
     key <I227>   {      [ XF86Finance           ]       };
-//  key <I228>   {      [ XF86Game              ]       }; // KEY_SPORT
+    key <I228>   {      [ XF86Game              ]       }; // KEY_SPORT
     key <I229>   {      [ XF86Shop              ]       };
 //  key <I230>   {      [ ]       }; // KEY_ALTERASE
     key <I231>   {      [ Cancel                ]       };
