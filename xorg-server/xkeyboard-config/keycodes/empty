@@ -2,7 +2,3 @@ default xkb_keycodes "empty" {
     minimum= 8;
     maximum= 255;
 };
-default xkb_keycodes "empty" {
-    minimum= 8;
-    maximum= 255;
-};

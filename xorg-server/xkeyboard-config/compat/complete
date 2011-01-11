@@ -8,5 +8,6 @@ default xkb_compatibility "complete"  {
     augment "misc"
     augment "xfree86"
     augment "level5"
+    augment "caps(caps_lock)"
 };
 
