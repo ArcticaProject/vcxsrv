@@ -283,7 +283,7 @@ xkb_symbols "neo_base" {
 
     // Top row
     // --------------------------------------------------------------
-    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC";
+    key.type[Group1] = "EIGHT_LEVEL_SEMIALPHABETIC";
     key <AD01> { [ x,                       X,                       ellipsis,                Greek_xi,                Prior,                   Prior,                   Greek_XI,                NoSymbol                 ] };
     key <AD02> { [ v,                       V,                       underscore,              NoSymbol,                BackSpace,               BackSpace,               radical,                 NoSymbol                 ] };
     key <AD03> { [ l,                       L,                       bracketleft,             Greek_lambda,            Up,                      Up,                      Greek_LAMBDA,            NoSymbol                 ] };
@@ -303,7 +303,7 @@ xkb_symbols "neo_base" {
 
     // Middle row
     // --------------------------------------------------------------
-    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC";
+    key.type[Group1] = "EIGHT_LEVEL_SEMIALPHABETIC";
     key <AC01> { [ u,                       U,                       backslash,               NoSymbol,                Home,                    Home,                    includedin,              NoSymbol                 ] };
     key <AC02> { [ i,                       I,                       slash,                   Greek_iota,              Left,                    Left,                    integral,                NoSymbol                 ] };
     key <AC03> { [ a,                       A,                       braceleft,               Greek_alpha,             Down,                    Down,                    U2200,                   NoSymbol                 ] };
@@ -331,7 +331,7 @@ xkb_symbols "neo_base" {
     key.type[Group1] = "EIGHT_LEVEL";
     key <AB08> { [ comma,                   endash,                  quotedbl,                U03F1,                   KP_2,                    KP_2,                    U21D2,                   NoSymbol                 ] };
     key <AB09> { [ period,                  enfilledcircbullet,      apostrophe,              U03D1,                   KP_3,                    KP_3,                    U21A6,                   NoSymbol                 ] };
-    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC";
+    key.type[Group1] = "EIGHT_LEVEL_SEMIALPHABETIC";
     key <AB10> { [ j,                       J,                       semicolon,               Greek_theta,             semicolon,               NoSymbol,                Greek_THETA,             NoSymbol                 ] };
     key.type[Group1] = "EIGHT_LEVEL";
 

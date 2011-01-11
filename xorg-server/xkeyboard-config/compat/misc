@@ -114,6 +114,8 @@ default partial xkb_compatibility "misc"  {
     };
 
     include "ledscroll"
+	
+    include "misc(assign_shift_left_action)"
 };
 
 partial xkb_compatibility "assign_shift_left_action"  {

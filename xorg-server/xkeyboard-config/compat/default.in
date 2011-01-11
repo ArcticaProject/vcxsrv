@@ -10,4 +10,5 @@ default xkb_compatibility "default"  {
 // ??should be changed/renamed/removed
 //    augment "xfree86"
     augment "japan"
+    augment "caps(caps_lock)"
 };
