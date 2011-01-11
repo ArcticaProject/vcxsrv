@@ -27,7 +27,6 @@
 #ifdef _MSC_VER
 #define __STDC__ 1
 #include <getopt.h>
-typedef size_t ssize_t;
 #define open _open
 #define read _read
 #define fstat _fstat
