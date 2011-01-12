@@ -494,9 +494,6 @@
     <ClCompile Include="..\..\..\..\src\glsl\ir_basic_block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\glsl\builtin_function.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\loop_analysis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -651,6 +648,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\program\sampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\glsl\builtin_stubs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
