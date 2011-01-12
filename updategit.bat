@@ -15,6 +15,7 @@ if not isdir xkbcomp          git clone git://anongit.freedesktop.org/xorg/app/x
 if not isdir pixman           git clone git://anongit.freedesktop.org/pixman
 if not isdir xextproto        git clone git://anongit.freedesktop.org/xorg/proto/xextproto
 if not isdir randrproto       git clone git://anongit.freedesktop.org/xorg/proto/randrproto
+if not isdir mesa             git clone git://anongit.freedesktop.org/git/mesa/mesa
 
 pushd .
 echo Updating xserver   |& tee /a d:\updategit.log
@@ -71,6 +72,10 @@ git pull                 |& tee /a d:\updategit.log
 popd
 echo Updating randrproto |& tee /a d:\updategit.log
 pushd randrproto         |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating mesa       |& tee /a d:\updategit.log
+pushd mesa               |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 popd

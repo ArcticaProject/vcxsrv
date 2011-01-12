@@ -3066,7 +3066,7 @@
     <layout>
       <configItem>
         <name>latam</name>
-        <_shortDescription>LAm</_shortDescription>
+        <_shortDescription>Esp</_shortDescription>
         <_description>Latin American</_description>
         <countryList>
           <iso3166Id>AR</iso3166Id>
