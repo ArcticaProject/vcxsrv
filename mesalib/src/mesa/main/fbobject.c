@@ -999,6 +999,8 @@ _mesa_base_fbo_format(struct gl_context *ctx, GLenum internalFormat)
    case GL_RGBA12:
    case GL_RGBA16:
    case GL_RGBA16_SNORM:
+   case GL_SRGB8_ALPHA8_EXT:
+   case GL_SRGB8_EXT:
       return GL_RGBA;
    case GL_STENCIL_INDEX:
    case GL_STENCIL_INDEX1_EXT:
@@ -1922,6 +1924,13 @@ _mesa_FramebufferRenderbufferEXT(GLenum target, GLenum attachment,
 	 _mesa_error(ctx, GL_INVALID_OPERATION,
 		     "glFramebufferRenderbufferEXT(non-existant"
                      " renderbuffer %u)", renderbuffer);
+	 return;
+      }
+      else if (rb == &DummyRenderbuffer) {
+         /* This is what NVIDIA does */
+	 _mesa_error(ctx, GL_INVALID_VALUE,
+		     "glFramebufferRenderbufferEXT(renderbuffer %u)",
+                     renderbuffer);
 	 return;
       }
    }

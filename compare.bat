@@ -11,3 +11,4 @@ fcg xkbcomp            ..\released\xkbcomp
 fcg pixman             ..\released\pixman          
 fcg xextproto          ..\released\X11\extensions       
 fcg randrproto         ..\released\X11\extensions
+fcg mesa               ..\released\mesalib      

@@ -32,7 +32,7 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 # If both the C file and YACC are missing, the package cannot be build.
 AC_PROG_YACC
@@ -49,7 +49,7 @@ AC_CHECK_FUNCS([strdup strcasecmp])
 PKG_CHECK_MODULES(XKBCOMP, x11 xkbfile)
 
 AC_ARG_WITH([xkb_config_root],
-    [AC_HELP_STRING([--with-xkb-config-root=<paths>],
+    [AS_HELP_STRING([--with-xkb-config-root=<paths>],
         [Set default XKB config root (default: ${datadir}/X11/xkb)])],
     [XKBCONFIGROOT="$withval"],
     [XKBCONFIGROOT='${datadir}/X11/xkb'])
