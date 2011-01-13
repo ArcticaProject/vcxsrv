@@ -96,8 +96,24 @@ radial_compute_color (double                    a,
 
     if (a == 0)
     {
-	return _pixman_gradient_walker_pixel (walker,
-					      pixman_fixed_1 / 2 * c / b);
+	double t;
+
+	if (b == 0)
+	    return 0;
+
+	t = pixman_fixed_1 / 2 * c / b;
+	if (repeat == PIXMAN_REPEAT_NONE)
+	{
+	    if (0 <= t && t <= pixman_fixed_1)
+		return _pixman_gradient_walker_pixel (walker, t);
+	}
+	else
+	{
+	    if (t * dr > mindr)
+		return _pixman_gradient_walker_pixel (walker, t);
+	}
+
+	return 0;
     }
 
     det = fdot (b, a, 0, b, -c, 0);
