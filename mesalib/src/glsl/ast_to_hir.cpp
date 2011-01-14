@@ -1957,6 +1957,52 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
       }
    }
 
+   /* Does the declaration use the 'layout' keyword?
+    */
+   const bool uses_layout = qual->flags.q.pixel_center_integer
+      || qual->flags.q.origin_upper_left
+      || qual->flags.q.explicit_location;
+
+   /* Does the declaration use the deprecated 'attribute' or 'varying'
+    * keywords?
+    */
+   const bool uses_deprecated_qualifier = qual->flags.q.attribute
+      || qual->flags.q.varying;
+
+   /* Is the 'layout' keyword used with parameters that allow relaxed checking.
+    * Many implementations of GL_ARB_fragment_coord_conventions_enable and some
+    * implementations (only Mesa?) GL_ARB_explicit_attrib_location_enable
+    * allowed the layout qualifier to be used with 'varying' and 'attribute'.
+    * These extensions and all following extensions that add the 'layout'
+    * keyword have been modified to require the use of 'in' or 'out'.
+    *
+    * The following extension do not allow the deprecated keywords:
+    *
+    *    GL_AMD_conservative_depth
+    *    GL_ARB_gpu_shader5
+    *    GL_ARB_separate_shader_objects
+    *    GL_ARB_tesselation_shader
+    *    GL_ARB_transform_feedback3
+    *    GL_ARB_uniform_buffer_object
+    *
+    * It is unknown whether GL_EXT_shader_image_load_store or GL_NV_gpu_shader5
+    * allow layout with the deprecated keywords.
+    */
+   const bool relaxed_layout_qualifier_checking =
+      state->ARB_fragment_coord_conventions_enable;
+
+   if (uses_layout && uses_deprecated_qualifier) {
+      if (relaxed_layout_qualifier_checking) {
+	 _mesa_glsl_warning(loc, state,
+			    "`layout' qualifier may not be used with "
+			    "`attribute' or `varying'");
+      } else {
+	 _mesa_glsl_error(loc, state,
+			  "`layout' qualifier may not be used with "
+			  "`attribute' or `varying'");
+      }
+   }
+
    if (var->type->is_array() && state->language_version != 110) {
       var->array_lvalue = true;
    }
@@ -2088,9 +2134,12 @@ ast_declarator_list::hir(exec_list *instructions,
        *
        *     Local variables can only use the qualifier const."
        *
-       * This is relaxed in GLSL 1.30.
+       * This is relaxed in GLSL 1.30.  It is also relaxed by any extension
+       * that adds the 'layout' keyword.
        */
-      if (state->language_version < 130) {
+      if ((state->language_version < 130)
+	  && !state->ARB_explicit_attrib_location_enable
+	  && !state->ARB_fragment_coord_conventions_enable) {
 	 if (this->type->qualifier.flags.q.out) {
 	    _mesa_glsl_error(& loc, state,
 			     "`out' qualifier in declaration of `%s' "
