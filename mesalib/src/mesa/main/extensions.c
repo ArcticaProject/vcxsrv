@@ -80,6 +80,7 @@ static const struct extension extension_table[] = {
    { "GL_ARB_depth_clamp",                         o(ARB_depth_clamp),                         GL             },
    { "GL_ARB_depth_texture",                       o(ARB_depth_texture),                       GL             },
    { "GL_ARB_draw_buffers",                        o(ARB_draw_buffers),                        GL             },
+   { "GL_ARB_draw_buffers_blend",                  o(ARB_draw_buffers_blend),                  GL             },
    { "GL_ARB_draw_elements_base_vertex",           o(ARB_draw_elements_base_vertex),           GL             },
    { "GL_ARB_draw_instanced",                      o(ARB_draw_instanced),                      GL             },
    { "GL_ARB_explicit_attrib_location",            o(ARB_explicit_attrib_location),            GL             },
@@ -196,6 +197,7 @@ static const struct extension extension_table[] = {
    { "GL_EXT_texture_rectangle",                   o(NV_texture_rectangle),                    GL             },
    { "GL_EXT_texture_shared_exponent",             o(EXT_texture_shared_exponent),             GL             },
    { "GL_EXT_texture_sRGB",                        o(EXT_texture_sRGB),                        GL             },
+   { "GL_EXT_texture_sRGB_decode",                 o(EXT_texture_sRGB_decode),                        GL             },
    { "GL_EXT_texture_swizzle",                     o(EXT_texture_swizzle),                     GL             },
    { "GL_EXT_texture_type_2_10_10_10_REV",         o(dummy_true),                                         ES2 },
    { "GL_EXT_timer_query",                         o(EXT_timer_query),                         GL             },
@@ -380,6 +382,7 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
    ctx->Extensions.ARB_depth_texture = GL_TRUE;
    /*ctx->Extensions.ARB_draw_buffers = GL_TRUE;*/
    ctx->Extensions.ARB_draw_elements_base_vertex = GL_TRUE;
+   ctx->Extensions.ARB_draw_instanced = GL_TRUE;
    ctx->Extensions.ARB_explicit_attrib_location = GL_TRUE;
    ctx->Extensions.ARB_fragment_coord_conventions = GL_TRUE;
 #if FEATURE_ARB_fragment_program
@@ -486,6 +489,7 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
    ctx->Extensions.EXT_texture_lod_bias = GL_TRUE;
 #if FEATURE_EXT_texture_sRGB
    ctx->Extensions.EXT_texture_sRGB = GL_TRUE;
+   ctx->Extensions.EXT_texture_sRGB_decode = GL_TRUE;
 #endif
    ctx->Extensions.EXT_texture_swizzle = GL_TRUE;
 #if FEATURE_EXT_transform_feedback

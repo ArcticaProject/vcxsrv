@@ -711,7 +711,15 @@ _mesa_create_exec_table(void)
    SET_GetStringi(exec, _mesa_GetStringi);
    SET_ClampColor(exec, _mesa_ClampColorARB);
 
+   /* GL_ARB_instanced_arrays */
+   SET_VertexAttribDivisorARB(exec, _mesa_VertexAttribDivisor);
 
+   /* GL_ARB_draw_buffer_blend */
+   SET_BlendFunciARB(exec, _mesa_BlendFunci);
+   SET_BlendFuncSeparateiARB(exec, _mesa_BlendFuncSeparatei);
+   SET_BlendEquationiARB(exec, _mesa_BlendEquationi);
+   SET_BlendEquationSeparateiARB(exec, _mesa_BlendEquationSeparatei);
+ 
    return exec;
 }
 
