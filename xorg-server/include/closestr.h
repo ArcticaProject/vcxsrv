@@ -53,6 +53,7 @@ typedef struct _OFclosure {
     XID         fontid;
     char       *fontname;
     int         fnamelen;
+    Bool	from_dispatch;
     FontPtr	non_cachable_font;
 }           OFclosureRec;
 
@@ -78,6 +79,7 @@ typedef struct _LFWIclosure {
     LFWIstateRec	saved;
     int			savedNumFonts;
     Bool		haveSaved;
+    Bool	        from_dispatch;
     char		*savedName;
 } LFWIclosureRec;
 
@@ -91,6 +93,7 @@ typedef struct _LFclosure {
     LFWIstateRec current;
     LFWIstateRec saved;
     Bool        haveSaved;
+    Bool	from_dispatch;    
     char	*savedName;
     int		savedNameLen;
 }	LFclosureRec;
@@ -109,6 +112,7 @@ typedef struct _PTclosure {
     CARD8		reqType;
     XID			did;
     int			err;
+    Bool	        from_dispatch;
 } PTclosureRec;
 
 /* ImageText */
@@ -123,5 +127,6 @@ typedef struct _ITclosure {
     int			yorg;
     CARD8		reqType;
     XID			did;
+    Bool	        from_dispatch;
 } ITclosureRec;
 #endif				/* CLOSESTR_H */

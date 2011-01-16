@@ -241,6 +241,8 @@ doOpenFont(ClientPtr client, OFclosurePtr c)
                *newname;
     int         newlen;
     int		aliascount = 20;
+    Bool	fromDispatch = c->from_dispatch;
+    Bool        finished = FALSE;
     /*
      * Decide at runtime what FontFormat to use.
      */
@@ -271,6 +273,8 @@ doOpenFont(ClientPtr client, OFclosurePtr c)
 #endif
 
 	BitmapFormatScanlineUnit8;
+
+    c->from_dispatch = FALSE;
 
     if (client->clientGone)
     {
@@ -376,13 +380,16 @@ bail:
 			  c->fontid, FontToXError(err));
     }
     ClientWakeup(c->client);
+    finished = TRUE;
 xinerama_sleep:
-    for (i = 0; i < c->num_fpes; i++) {
-	FreeFPE(c->fpe_list[i]);
+    if (finished || fromDispatch) {
+	for (i = 0; i < c->num_fpes; i++) {
+	    FreeFPE(c->fpe_list[i]);
+	}
+	free(c->fpe_list);
+	free(c->fontname);
+	free(c);
     }
-    free(c->fpe_list);
-    free(c->fontname);
-    free(c);
     return TRUE;
 }
 
@@ -463,6 +470,7 @@ OpenFont(ClientPtr client, XID fid, Mask flags, unsigned lenfname, char *pfontna
     c->num_fpes = num_fpes;
     c->fnamelen = lenfname;
     c->flags = flags;
+    c->from_dispatch = TRUE;
     c->non_cachable_font = cached;
 
     (void) doOpenFont(client, c);
@@ -594,6 +602,10 @@ doListFontsAndAliases(ClientPtr client, LFclosurePtr c)
     char	*bufptr;
     char	*bufferStart;
     int		aliascount = 0;
+    Bool	fromDispatch = c->from_dispatch;
+    Bool	finished = FALSE;
+
+    c->from_dispatch = FALSE;
 
     if (client->clientGone)
     {
@@ -824,13 +836,16 @@ finish:
 
 bail:
     ClientWakeup(client);
+    finished = TRUE;
 xinerama_sleep:
-    for (i = 0; i < c->num_fpes; i++)
-	FreeFPE(c->fpe_list[i]);
-    free(c->fpe_list);
-    free(c->savedName);
-    FreeFontNames(names);
-    free(c);
+    if (finished || fromDispatch) {
+	for (i = 0; i < c->num_fpes; i++)
+	    FreeFPE(c->fpe_list[i]);
+	free(c->fpe_list);
+	free(c->savedName);
+	FreeFontNames(names);
+	free(c);
+    }
     free(resolved);
     return TRUE;
 }
@@ -882,6 +897,7 @@ ListFonts(ClientPtr client, unsigned char *pattern, unsigned length,
     c->current.list_started = FALSE;
     c->current.private = 0;
     c->haveSaved = FALSE;
+    c->from_dispatch = TRUE;
     c->savedName = 0;
     doListFontsAndAliases(client, c);
     return Success;
@@ -893,6 +909,8 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
     FontPathElementPtr fpe;
     int         err = Successful;
     char       *name;
+    Bool        fromDispatch = c->from_dispatch;
+    Bool        finished = FALSE;
     int         namelen;
     int         numFonts;
     FontInfoRec fontInfo,
@@ -903,6 +921,8 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
     int         i;
     int		aliascount = 0;
     xListFontsWithInfoReply finalReply;
+
+    c->from_dispatch = FALSE;
 
     if (client->clientGone)
     {
@@ -1097,13 +1117,16 @@ finish:
     WriteSwappedDataToClient(client, length, &finalReply);
 bail:
     ClientWakeup(client);
+    finished = TRUE;
 xinerama_sleep:
-    for (i = 0; i < c->num_fpes; i++)
-	FreeFPE(c->fpe_list[i]);
-    free(c->reply);
-    free(c->fpe_list);
-    free(c->savedName);
-    free(c);
+    if (finished || fromDispatch) {
+	for (i = 0; i < c->num_fpes; i++)
+	    FreeFPE(c->fpe_list[i]);
+	free(c->reply);
+	free(c->fpe_list);
+	free(c->savedName);
+	free(c);
+    }
     return TRUE;
 }
 
@@ -1152,6 +1175,7 @@ StartListFontsWithInfo(ClientPtr client, int length, unsigned char *pattern,
     c->current.private = 0;
     c->savedNumFonts = 0;
     c->haveSaved = FALSE;
+    c->from_dispatch = TRUE;
     c->savedName = 0;
     doListFontsWithInfo(client, c);
     return Success;
@@ -1173,6 +1197,10 @@ doPolyText(ClientPtr client, PTclosurePtr c)
     FontPathElementPtr fpe;
     GC *origGC = NULL;
     int itemSize = c->reqType == X_PolyText8 ? 1 : 2;
+    Bool fromDispatch = c->from_dispatch;
+    Bool finished = FALSE;
+
+    c->from_dispatch = FALSE;
 
     if (client->clientGone)
     {
@@ -1419,16 +1447,19 @@ bail:
     if (ClientIsAsleep(client))
     {
 	ClientWakeup(c->client);
+	finished = TRUE;
 xinerama_sleep:
-	ChangeGC(NullClient, c->pGC, clearGCmask, clearGC);
+	if (finished || fromDispatch) {
+	    ChangeGC(NullClient, c->pGC, clearGCmask, clearGC);
 
-	/* Unreference the font from the scratch GC */
-	CloseFont(c->pGC->font, (Font)0);
-	c->pGC->font = NullFont;
+	    /* Unreference the font from the scratch GC */
+	    CloseFont(c->pGC->font, (Font)0);
+	    c->pGC->font = NullFont;
 
-	FreeScratchGC(c->pGC);
-	free(c->data);
-	free(c);
+	    FreeScratchGC(c->pGC);
+	    free(c->data);
+	    free(c);
+	}
     }
     return TRUE;
 }
@@ -1464,6 +1495,10 @@ doImageText(ClientPtr client, ITclosurePtr c)
     int err = Success, lgerr;	/* err is in X error, not font error, space */
     FontPathElementPtr fpe;
     int itemSize = c->reqType == X_ImageText8 ? 1 : 2;
+    Bool fromDispatch = c->from_dispatch;
+    Bool finished = FALSE;
+
+    c->from_dispatch = FALSE;
 
     if (client->clientGone)
     {
@@ -1573,16 +1608,19 @@ bail:
     if (ClientIsAsleep(client))
     {
 	ClientWakeup(c->client);
+	finished = TRUE;
 xinerama_sleep:
-	ChangeGC(NullClient, c->pGC, clearGCmask, clearGC);
+	if (finished || fromDispatch) {
+	    ChangeGC(NullClient, c->pGC, clearGCmask, clearGC);
 
-	/* Unreference the font from the scratch GC */
-	CloseFont(c->pGC->font, (Font)0);
-	c->pGC->font = NullFont;
+	    /* Unreference the font from the scratch GC */
+	    CloseFont(c->pGC->font, (Font)0);
+	    c->pGC->font = NullFont;
 
-	FreeScratchGC(c->pGC);
-	free(c->data);
-	free(c);
+	    FreeScratchGC(c->pGC);
+	    free(c->data);
+	    free(c);
+	}
     }
     return TRUE;
 }
