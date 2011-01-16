@@ -44,7 +44,7 @@ font-util-1.1.1
 font-winitzki-cyrillic-1.0.1
 font-xfree86-type1-1.0.2
 fontsproto-2.1.1
-freetype-2.4.2
+freetype-2.4.4
 glproto-1.4.12
 inputproto-2.0.1
 kbproto-1.0.5

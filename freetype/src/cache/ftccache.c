@@ -346,7 +346,7 @@
   static void
   FTC_Cache_Clear( FTC_Cache  cache )
   {
-    if ( cache )
+    if ( cache && cache->buckets )
     {
       FTC_Manager  manager = cache->manager;
       FT_UFast     i;
@@ -410,7 +410,7 @@
 
   static void
   ftc_cache_add( FTC_Cache  cache,
-                 FT_UInt32  hash,
+                 FT_PtrDist hash,
                  FTC_Node   node )
   {
     node->hash = hash;
@@ -438,7 +438,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   FTC_Cache_NewNode( FTC_Cache   cache,
-                     FT_UInt32   hash,
+                     FT_PtrDist  hash,
                      FT_Pointer  query,
                      FTC_Node   *anode )
   {
@@ -477,7 +477,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
-                    FT_UInt32   hash,
+                    FT_PtrDist  hash,
                     FT_Pointer  query,
                     FTC_Node   *anode )
   {
