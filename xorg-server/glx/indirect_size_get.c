@@ -821,8 +821,8 @@ __glGetBooleanv_size( GLenum e )
             return 16;
         case GL_FOG_COORDINATE_SOURCE:
         case GL_COMPRESSED_TEXTURE_FORMATS:
-        case GL_MIN_PROGRAM_TEXEL_OFFSET:
-        case GL_MAX_PROGRAM_TEXEL_OFFSET:
+        case GL_MIN_PROGRAM_TEXEL_OFFSET_EXT:
+        case GL_MAX_PROGRAM_TEXEL_OFFSET_EXT:
         case GL_RGBA_INTEGER_MODE_EXT:
             return __glGetBooleanv_variable_size( e );
         default: return 0;

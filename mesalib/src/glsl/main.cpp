@@ -84,6 +84,7 @@ initialize_context(struct gl_context *ctx, gl_api api)
    ctx->API = api;
 
    ctx->Extensions.ARB_draw_buffers = GL_TRUE;
+   ctx->Extensions.ARB_draw_instanced = GL_TRUE;
    ctx->Extensions.ARB_fragment_coord_conventions = GL_TRUE;
    ctx->Extensions.EXT_texture_array = GL_TRUE;
    ctx->Extensions.NV_texture_rectangle = GL_TRUE;
@@ -196,7 +197,7 @@ compile_shader(struct gl_context *ctx, struct gl_shader *shader)
 
    const char *source = shader->Source;
    state->error = preprocess(state, &source, &state->info_log,
-			     state->extensions, ctx->API);
+			     state->extensions, ctx->API) != 0;
 
    if (!state->error) {
       _mesa_glsl_lexer_ctor(state, source);
