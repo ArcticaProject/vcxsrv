@@ -23,40 +23,61 @@ TESTPROGRAMS =			\
 	composite
 
 a1_trap_test_LDADD = $(TEST_LDADD)
+a1_trap_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
+
 fetch_test_LDADD = $(TEST_LDADD)
+fetch_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
+
 trap_crasher_LDADD = $(TEST_LDADD)
+trap_crasher_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
+
 oob_test_LDADD = $(TEST_LDADD)
+oob_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
+
 scaling_crash_test_LDADD = $(TEST_LDADD)
+scaling_crash_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
+
 region_translate_test_LDADD = $(TEST_LDADD)
+region_translate_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 
 pdf_op_test_LDADD = $(TEST_LDADD)
+pdf_op_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 pdf_op_test_SOURCES = pdf-op-test.c utils.c utils.h
 
 region_test_LDADD = $(TEST_LDADD)
+region_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 region_test_SOURCES = region-test.c utils.c utils.h
 
 blitters_test_LDADD = $(TEST_LDADD)
+blitters_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 blitters_test_SOURCES = blitters-test.c utils.c utils.h
 
 scaling_test_LDADD = $(TEST_LDADD)
+scaling_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 scaling_test_SOURCES = scaling-test.c utils.c utils.h
 
 affine_test_LDADD = $(TEST_LDADD)
+affine_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 affine_test_SOURCES = affine-test.c utils.c utils.h
 
 alphamap_LDADD = $(TEST_LDADD)
+alphamap_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 alphamap_SOURCES = alphamap.c utils.c utils.h
 
 alpha_loop_LDADD = $(TEST_LDADD)
+alpha_loop_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 alpha_loop_SOURCES = alpha-loop.c utils.c utils.h
 
 composite_LDADD = $(TEST_LDADD)
+composite_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 composite_SOURCES = composite.c utils.c utils.h
 
 gradient_crash_test_LDADD = $(TEST_LDADD)
+gradient_crash_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 gradient_crash_test_SOURCES = gradient-crash-test.c utils.c utils.h
 
 stress_test_LDADD = $(TEST_LDADD)
+stress_test_LDFLAGS = @TESTPROGS_EXTRA_LDFLAGS@
 stress_test_SOURCES = stress-test.c utils.c utils.h
 
 # GTK using test programs

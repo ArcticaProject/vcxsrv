@@ -5794,13 +5794,13 @@ scaled_nearest_scanline_sse2_8888_8888_OVER (uint32_t*       pd,
 
 FAST_NEAREST_MAINLOOP (sse2_8888_8888_cover_OVER,
 		       scaled_nearest_scanline_sse2_8888_8888_OVER,
-		       uint32_t, uint32_t, COVER);
+		       uint32_t, uint32_t, COVER)
 FAST_NEAREST_MAINLOOP (sse2_8888_8888_none_OVER,
 		       scaled_nearest_scanline_sse2_8888_8888_OVER,
-		       uint32_t, uint32_t, NONE);
+		       uint32_t, uint32_t, NONE)
 FAST_NEAREST_MAINLOOP (sse2_8888_8888_pad_OVER,
 		       scaled_nearest_scanline_sse2_8888_8888_OVER,
-		       uint32_t, uint32_t, PAD);
+		       uint32_t, uint32_t, PAD)
 
 static const pixman_fast_path_t sse2_fast_paths[] =
 {
