@@ -68,7 +68,10 @@ LFLAGS=
 INCLUDES= -i=.
 BUILD_DIR=..
 
-COPYFILES	= $(CPHDR) $(CPLIB) $(CPDLL)
+# The next path is relative to $BUILD_DIR
+QAPC	= ..\QueueUserAPCEx\User\quserex.dll
+
+COPYFILES	= $(CPHDR) $(CPLIB) $(CPDLL) $(QAPC)
 
 TEST		=
 EHFLAGS	=
@@ -188,7 +191,7 @@ sizes.pass: sizes.exe
 	@ $(CC) /P $(EHFLAGS) $(CFLAGS) $(INCLUDES) $<
 
 $(COPYFILES): .SYMBOLIC
-	@ $(ECHO) Copying $@
+	@ $(ECHO) Copying $(BUILD_DIR)\$@
 	@ $(CP) $(BUILD_DIR)\$@ .
 
 pthread.dll:

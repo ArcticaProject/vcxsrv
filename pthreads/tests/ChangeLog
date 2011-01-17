@@ -1,3 +1,27 @@
+2010-06-19  Ross Johnson <Ross dot Johnson at homemail dot com dot au>
+
+	* Makefile (STATICRESULTS): Add all tests into suite for static
+	library.
+	* GNUmakefile (STATICTESTS): Likewise, except for openmp1.c which
+	has a DLL dependency.
+
+2010-02-04  Ross Johnson <Ross dot Johnson at homemail dot com dot au>
+
+	* openmp1.c: New; for libgomp compatibility (OpenMP).
+	* barrier5.c: Rewrite after changes to barriers.
+	* barrier6.c: New.
+	* benchtest6.c: New; timing barriers.
+	* GNUMakefile: Update for new tests.
+	* Makefile: Ditto.
+	* BMakefile: Ditto.
+	* once3.c: Improve cancelation testing.
+	* stress1.c: Fix comment.
+
+2007-01-04  Ross Johnson <Ross dot Johnson at homemail dot com dot au>
+
+        * context1.c: Include context.h from library sources and remove
+        x86 dependence in main().
+
 2005-06-12  Ross Johnson  <rpj@callisto.canberra.edu.au>
 
 	* stress1.c (millisecondsFromNow): Remove limit 0 <= millisecs < 1000;

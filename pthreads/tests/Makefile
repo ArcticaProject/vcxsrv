@@ -40,6 +40,7 @@ MKDIR	= mkdir
 TOUCH	= echo Passed >
 ECHO	= @echo
 
+# The next path is relative to $BUILD_DIR
 QAPC	= ..\QueueUserAPCEx\User\quserex.dll
 
 CPHDR	= pthread.h semaphore.h sched.h
@@ -67,7 +68,7 @@ VCXFLAGS	= /GX /TP /D__CLEANUP_C
 CPLIB	= $(VCLIB)
 CPDLL	= $(VCDLL)
 
-CFLAGS= $(OPTIM) /W3 /WX /MD /nologo /Yd /Zi
+CFLAGS= $(OPTIM) /W3 /MD /nologo /Yd /Zi
 LFLAGS= /INCREMENTAL:NO
 INCLUDES=-I.
 BUILD_DIR=..
@@ -100,7 +101,7 @@ PASSES= sizes.pass  loadfree.pass \
 	  self2.pass  \
 	  cancel1.pass  cancel2.pass  \
 	  semaphore4.pass  semaphore4t.pass  semaphore5.pass  \
-	  barrier1.pass  barrier2.pass  barrier3.pass  barrier4.pass  barrier5.pass  \
+	  barrier1.pass  barrier2.pass  barrier3.pass  barrier4.pass  barrier5.pass  barrier6.pass  \
 	  tsd1.pass  tsd2.pass  delay1.pass  delay2.pass  eyal1.pass  \
 	  condvar3.pass  condvar3_1.pass  condvar3_2.pass  condvar3_3.pass  \
 	  condvar4.pass  condvar5.pass  condvar6.pass  \
@@ -119,13 +120,50 @@ PASSES= sizes.pass  loadfree.pass \
 	  cancel9.pass  create3.pass  stress1.pass
 
 BENCHRESULTS = \
-	  benchtest1.bench benchtest2.bench benchtest3.bench benchtest4.bench benchtest5.bench
+	  benchtest1.bench benchtest2.bench benchtest3.bench benchtest4.bench benchtest5.bench \
+	  benchtest6.bench
 
 STRESSRESULTS = \
 	  stress1.stress
 
 STATICRESULTS = \
-	  self1.pass
+	  sizes.pass  \
+	  self1.pass  mutex5.pass  \
+	  mutex1.pass  mutex1n.pass  mutex1e.pass  mutex1r.pass  \
+	  semaphore1.pass  semaphore2.pass  semaphore3.pass  \
+	  mutex2.pass  mutex3.pass  \
+	  mutex2r.pass  mutex2e.pass  mutex3r.pass  mutex3e.pass  \
+	  condvar1.pass  condvar1_1.pass  condvar1_2.pass  condvar2.pass  condvar2_1.pass  \
+	  exit1.pass  create1.pass  create2.pass  reuse1.pass  reuse2.pass  equal1.pass  \
+	  kill1.pass  valid1.pass  valid2.pass  \
+	  exit2.pass  exit3.pass  exit4.pass  exit5.pass  \
+	  join0.pass  join1.pass  detach1.pass  join2.pass join3.pass  \
+	  mutex4.pass  mutex6.pass  mutex6n.pass  mutex6e.pass  mutex6r.pass  \
+	  mutex6s.pass  mutex6es.pass  mutex6rs.pass  \
+	  mutex7.pass  mutex7n.pass  mutex7e.pass  mutex7r.pass  \
+	  mutex8.pass  mutex8n.pass  mutex8e.pass  mutex8r.pass  \
+	  count1.pass  \
+	  once1.pass  once2.pass  once3.pass  once4.pass  \
+	  self2.pass  \
+	  cancel1.pass  cancel2.pass  \
+	  semaphore4.pass  semaphore4t.pass  semaphore5.pass  \
+	  barrier1.pass  barrier2.pass  barrier3.pass  barrier4.pass  barrier5.pass  barrier6.pass  \
+	  tsd1.pass  tsd2.pass  delay1.pass  delay2.pass  eyal1.pass  \
+	  condvar3.pass  condvar3_1.pass  condvar3_2.pass  condvar3_3.pass  \
+	  condvar4.pass  condvar5.pass  condvar6.pass  \
+	  condvar7.pass  condvar8.pass  condvar9.pass  \
+	  errno1.pass  \
+	  rwlock1.pass  rwlock2.pass  rwlock3.pass  rwlock4.pass  \
+	  rwlock5.pass  rwlock6.pass  rwlock7.pass  rwlock8.pass  \
+	  rwlock2_t.pass  rwlock3_t.pass  rwlock4_t.pass  rwlock5_t.pass  rwlock6_t.pass  rwlock6_t2.pass  \
+	  context1.pass  \
+	  cancel3.pass  cancel4.pass  cancel5.pass  cancel6a.pass  cancel6d.pass  \
+	  cancel7.pass  cancel8.pass  \
+	  cleanup0.pass  cleanup1.pass  cleanup2.pass  cleanup3.pass  \
+	  priority1.pass priority2.pass inherit1.pass  \
+	  spin1.pass  spin2.pass  spin3.pass  spin4.pass  \
+	  exception1.pass  exception2.pass  exception3.pass  \
+	  cancel9.pass  create3.pass  stress1.pass
 
 help:
 	@ $(ECHO) Run one of the following command lines:
@@ -166,8 +204,6 @@ stresstests: $(CPLIB) $(CPDLL) $(CPHDR) $(STRESSRESULTS)
 
 statictests: $(CPLIB) $(CPDLL) $(CPHDR) $(STATICRESULTS)
 	@ $(ECHO) ALL STATIC TESTS DONE.
-	@ $(ECHO) Build and test the DLL to run all tests.
-	@ $(ECHO) The static test only confirms that the .lib links correctly.
 
 sizes.pass: sizes.exe
 	@ $(ECHO) ... Running $(TEST)$(DLL_VER) test: $*.exe
@@ -245,7 +281,7 @@ VC-static:
 	@ $(CC) /P $(EHFLAGS) $(CFLAGS) $(INCLUDES) $<
 
 $(COPYFILES):
-	@ $(ECHO) Copying $@
+	@ $(ECHO) Copying $(BUILD_DIR)\$@
 	@ $(CP) $(BUILD_DIR)\$@ .
 
 pthread.dll: $(CPDLL)
@@ -274,12 +310,14 @@ benchtest2.bench:
 benchtest3.bench:
 benchtest4.bench:
 benchtest5.bench:
+benchtest6.bench:
 
 barrier1.pass: semaphore4.pass
 barrier2.pass: barrier1.pass
 barrier3.pass: barrier2.pass
 barrier4.pass: barrier3.pass
 barrier5.pass: barrier4.pass
+barrier6.pass: barrier5.pass
 cancel1.pass: create1.pass
 cancel2.pass: cancel1.pass
 cancel3.pass: context1.pass

@@ -1,10 +1,8 @@
 /*
- * pthread.c
+ * context.h
  *
  * Description:
- * This translation unit agregates pthreads-win32 translation units.
- * It is used for inline optimisation of the library,
- * maximising for speed at the expense of size.
+ * POSIX thread macros related to thread cancellation.
  *
  * --------------------------------------------------------------------------
  *
@@ -36,31 +34,41 @@
  *      59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "pthread.h"
-#include "implement.h"
+#ifndef PTW32_CONTEXT_H
+#define PTW32_CONTEXT_H
 
-/* The following are ordered for inlining */
+#undef PTW32_PROGCTR
 
-#include "private.c"
-#include "attr.c"
-#include "barrier.c"
-#include "cancel.c"
-#include "cleanup.c"
-#include "condvar.c"
-#include "create.c"
-#include "dll.c"
-#include "autostatic.c"
-#include "errno.c"
-#include "exit.c"
-#include "fork.c"
-#include "global.c"
-#include "misc.c"
-#include "mutex.c"
-#include "nonportable.c"
-#include "rwlock.c"
-#include "sched.c"
-#include "semaphore.c"
-#include "signal.c"
-#include "spin.c"
-#include "sync.c"
-#include "tsd.c"
+#if defined(_M_IX86) || defined(_X86_)
+#define PTW32_PROGCTR(Context)  ((Context).Eip)
+#endif
+
+#if defined (_M_IA64) || defined(_IA64)
+#define PTW32_PROGCTR(Context)  ((Context).StIIP)
+#endif
+
+#if defined(_MIPS_) || defined(MIPS)
+#define PTW32_PROGCTR(Context)  ((Context).Fir)
+#endif
+
+#if defined(_ALPHA_)
+#define PTW32_PROGCTR(Context)  ((Context).Fir)
+#endif
+
+#if defined(_PPC_)
+#define PTW32_PROGCTR(Context)  ((Context).Iar)
+#endif
+
+#if defined(_AMD64_) || defined(__amd64__)
+#define PTW32_PROGCTR(Context)  ((Context).Rip)
+#endif
+
+#if defined(_ARM_) || defined(ARM)
+#define PTW32_PROGCTR(Context)  ((Context).Pc)
+#endif
+
+#if !defined(PTW32_PROGCTR)
+#error Module contains CPU-specific code; modify and recompile.
+#endif
+
+#endif

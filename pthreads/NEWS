@@ -1,3 +1,80 @@
+CURRENT CVS HEAD Version
+RELEASE 2.9.0 pending
+-------------
+(2010-??-??)
+
+General
+-------
+New bug fixes in this release since 2.8.0 have NOT been applied to the
+1.x.x series.
+
+Version 1 no longer maintained
+------------------------------
+The 1.x.x series is no longer maintained. However, if you really need a
+version 1, the differences between 1.11.0 and 2.7.0 are very small, mainly
+revolving around the pthread_once_t_ struct. Those differences applied
+as a patch to the current 2.x.x should work. Don't forget to change
+the version numbering in pthread.h before building. If you distribute
+such a version 1.x.x please bear in mind that your numbers may clash
+with those of others doing the same thing. Please consider also making
+identifying changes in version.rc to differentiate your build.
+
+Testing and verification
+------------------------
+The current CVS head version has been tested on an SMP architecture
+(AMD Phenom 9750 Quad Core) by running the MinGW32 (GCC) builds against
+the full test suite, stress tests and benchmarks.
+
+New Features
+------------
+Dependence on the winsock library is now discretionary via
+#define RETAIN_WSALASTERROR in config.h. It is undefined by default unless
+WINCE is defined (because I (RJ) am unsure of the dependency there).
+- Ramiro Polla
+
+(MSC and GNU builds) The statically linked library now automatically
+initialises and cleans up on program start/exit, i.e. statically linked
+applications need not call the routines pthread_win32_process_attach_np()
+and pthread_win32_process_detach_np() explicitly. The per-thread routine
+pthread_win32_thread_detach_np() is also called at program exit to cleanup
+POSIX resources acquired by the primary Windows native thread (if I (RJ)
+understand the process correctly). Other Windows native threads that call
+POSIX API routines may need to call the thread detach routine on thread
+exit if the application depends on reclaimed POSIX resources or running
+POSIX TSD (TLS) destructors.
+See README.NONPORTABLE for descriptions of these routines.
+- Ramiro Polla
+
+Bug fixes
+---------
+Various modifications and fixes to build and test for WinCE.
+- Marcel Ruff, Sinan Kaya
+
+Fix pthread_cond_destroy() - should not be a cancellation point. Other
+minor build problems fixed.
+- Romano Paolo Tenca
+
+Remove potential deadlock condition from pthread_cond_destroy().
+- Eric Berge
+
+Various modifications to build and test for Win64.
+- Kip Streithorst
+
+Various fixes to the QueueUserAPCEx async cancellation helper DLL
+(this is a separate download) and pthreads code cleanups.
+- Sebastian Gottschalk
+
+Removed potential NULL pointer reference.
+- Robert Kindred
+
+Removed the requirement that applications restrict the number of threads
+calling pthread_barrier_wait() [on the same barrier] to just the barrier
+count in order to avoid contention and dead lock. Also reduced the
+contention between barrier_wait and barrier_destroy. This change will
+have slowed barriers down slightly but halves the number of semaphores
+consumed per barrier to one.
+- Ross Johnson
+
 RELEASE 2.8.0
 -------------
 (2006-12-22)

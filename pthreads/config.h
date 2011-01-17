@@ -52,6 +52,12 @@
 /* Define if you don't have the GetProcessAffinityMask() */
 #undef NEED_PROCESS_AFFINITY_MASK
 
+/* Define if your version of Windows TLSGetValue() clears WSALastError
+ * and calling SetLastError() isn't enough restore it. You'll also need to
+ * link against wsock32.lib (or libwsock32.a for MinGW).
+ */
+#undef RETAIN_WSALASTERROR
+
 /*
 # ----------------------------------------------------------------------
 # The library can be built with some alternative behaviour to better
@@ -100,9 +106,11 @@
 #define NEED_ERRNO
 #define NEED_CALLOC
 #define NEED_FTIME
-//#define NEED_SEM
+/* #define NEED_SEM */
 #define NEED_UNICODE_CONSTS
 #define NEED_PROCESS_AFFINITY_MASK
+/* This may not be needed */
+#define RETAIN_WSALASTERROR
 #endif
 
 #ifdef _UWIN

@@ -63,7 +63,8 @@ DOPT	= $(CLEANUP) -g -O0
 XOPT	=
 
 RCFLAGS		= --include-dir=.
-LFLAGS		= -lwsock32
+# Uncomment this if config.h defines RETAIN_WSALASTERROR
+#LFLAGS		= -lwsock32
 
 # ----------------------------------------------------------------------
 # The library can be built with some alternative behaviour to
@@ -170,6 +171,7 @@ SMALL_STATIC_OBJS	= \
 		pthread_cond_wait.o \
 		create.o \
 		dll.o \
+		autostatic.o \
 		errno.o \
 		pthread_exit.o \
 		fork.o \
@@ -436,6 +438,8 @@ GCE_LIB	= libpthreadGCE$(DLL_VER).a
 GCED_LIB= libpthreadGCE$(DLL_VERD).a
 GCE_INLINED_STAMP = pthreadGCE$(DLL_VER).stamp
 GCED_INLINED_STAMP = pthreadGCE$(DLL_VERD).stamp
+GCE_STATIC_STAMP = libpthreadGCE$(DLL_VER).stamp
+GCED_STATIC_STAMP = libpthreadGCE$(DLL_VERD).stamp
 
 GC_DLL 	= pthreadGC$(DLL_VER).dll
 GCD_DLL	= pthreadGC$(DLL_VERD).dll

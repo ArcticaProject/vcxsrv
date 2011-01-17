@@ -54,7 +54,7 @@
  * - Master and slave do battle continuously until main tells them to stop.
  * - Afterwards, the CV must be successfully destroyed (will return an
  * error if there are waiters (including any internal semaphore waiters,
- * which, if there are, cannot not be real waiters).
+ * which, if there are, cannot be real waiters).
  *
  * Environment:
  * - 
@@ -97,7 +97,7 @@ static int timeoutCount = 0;
 static int signalsTakenCount = 0;
 static int signalsSent = 0;
 static int bias = 0;
-static int timeout = 10; // Must be > 0
+static int timeout = 10; // Must be > 0
 
 enum {
   CTL_STOP     = -1

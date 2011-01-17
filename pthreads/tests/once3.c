@@ -45,7 +45,7 @@
  *      pthread_once()
  */
 
-#define ASSERT_TRACE
+/* #define ASSERT_TRACE */
 
 #include "test.h"
 

@@ -114,6 +114,7 @@ Piet van Bruggen	pietvb at newbridges dot nl
 Makoto Kato		raven at oldskool dot jp
 					AMD64 port.
 Panagiotis E. Hadjidoukas	peh at hpclab dot ceid dot upatras dot gr
+                                phadjido at cs dot uoi dot gr
 					Contributed the QueueUserAPCEx package which
 					makes preemptive async cancelation possible.
 Will Bryant		will dot bryant at ecosm dot com
@@ -127,3 +128,7 @@ Vladimir Kliatchko	vladimir at kliatchko dot com
 					reimplemented pthread_once with the same form
 					as described by A.Terekhov (later version 2);
 					implementation of MCS (Mellor-Crummey/Scott) locks.
+Ramiro Polla		ramiro.polla at gmail.com
+					static library auto init/cleanup on application
+					start/exit via RT hooks (MSC and GCC compilers only).
+					
