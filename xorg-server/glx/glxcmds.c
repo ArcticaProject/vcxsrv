@@ -217,6 +217,12 @@ static struct glx_context *__glXdirectContextCreate(__GLXscreen *screen,
     return context;
 }
 
+void FlushContext(struct glx_context *cx)
+{
+    CALL_Flush( GET_DISPATCH(), () );
+    __GLX_NOTE_FLUSHED_CMDS(cx);
+}
+
 /**
  * Create a GL context with the given properties.  This routine is used
  * to implement \c glXCreateContext, \c glXCreateNewContext, and
