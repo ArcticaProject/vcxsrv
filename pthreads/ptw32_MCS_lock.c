@@ -159,8 +159,8 @@ ptw32_mcs_lock_acquire (ptw32_mcs_lock_t * lock, ptw32_mcs_local_node_t * node)
   node->next = 0; /* initially, no successor */
   
   /* queue for the lock */
-  pred = (ptw32_mcs_local_node_t *)PTW32_INTERLOCKED_EXCHANGE((LPLONG)lock,
-						              (LONG)node);
+  pred = (ptw32_mcs_local_node_t *)PTW32_INTERLOCKED_EXCHANGE((PTW32_INTERLOCKED_LPLONG)lock,
+						              (PTW32_INTERLOCKED_LONG)node);
 
   if (0 != pred)
     {
@@ -184,7 +184,8 @@ ptw32_mcs_lock_release (ptw32_mcs_local_node_t * node)
 {
   ptw32_mcs_lock_t *lock = node->lock;
   ptw32_mcs_local_node_t *next = (ptw32_mcs_local_node_t *)
-    InterlockedExchangeAdd((LPLONG)&node->next, 0); /* MBR fence */
+    InterlockedExchangeAdd((LPLONG)&node->next,
+                           (LONG)0); /* MBR fence */
 
   if (0 == next)
     {
@@ -207,4 +208,56 @@ ptw32_mcs_lock_release (ptw32_mcs_local_node_t * node)
 
   /* pass the lock */
   ptw32_mcs_flag_set(&next->readyFlag);
+}
+
+/*
+  * ptw32_mcs_lock_try_acquire
+ */
+INLINE int
+ptw32_mcs_lock_try_acquire (ptw32_mcs_lock_t * lock, ptw32_mcs_local_node_t * node)
+{
+  node->lock = lock;
+  node->nextFlag = 0;
+  node->readyFlag = 0;
+  node->next = 0; /* initially, no successor */
+
+  return ((PTW32_INTERLOCKED_LPLONG)PTW32_INTERLOCKED_COMPARE_EXCHANGE(
+                                      (PTW32_INTERLOCKED_LPLONG)lock,
+                                      (PTW32_INTERLOCKED_LONG)node,
+                                      (PTW32_INTERLOCKED_LONG)0)
+               == (PTW32_INTERLOCKED_LPLONG)0) ? 0 : EBUSY;
+}
+
+/*
+ * ptw32_mcs_node_substitute -- move an MCS lock local node, usually from thread
+ * space to, for example, global space so that another thread can release
+ * the lock on behalf of the current lock owner.
+ *
+ * Example: used in pthread_barrier_wait where we want the last thread out of
+ * the barrier to release the lock owned by the last thread to enter the barrier
+ * (the one that releases all threads but not necessarily the last to leave).
+ *
+ * Should only be called by the thread that has the lock.
+ */
+INLINE void
+ptw32_mcs_node_substitute (ptw32_mcs_local_node_t * new_node, ptw32_mcs_local_node_t * old_node)
+{
+  new_node->lock = old_node->lock;
+  new_node->nextFlag = 0; /* Not needed - used only in initial Acquire */
+  new_node->readyFlag = 0; /* Not needed - we were waiting on this */
+  new_node->next = 0;
+
+  if ((ptw32_mcs_local_node_t *)PTW32_INTERLOCKED_COMPARE_EXCHANGE((PTW32_INTERLOCKED_LPLONG)new_node->lock,
+                                                                   (PTW32_INTERLOCKED_LONG)new_node,
+                                                                   (PTW32_INTERLOCKED_LONG)old_node) != old_node)
+    {
+      /*
+       * A successor has queued after us, so wait for them to link to us
+       */
+      while (old_node->next == 0)
+        {
+          Sleep(0);
+        }
+      new_node->next = old_node->next;
+    }
 }

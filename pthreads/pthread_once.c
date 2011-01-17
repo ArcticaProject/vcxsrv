@@ -41,7 +41,7 @@
 static void PTW32_CDECL
 ptw32_once_on_init_cancel (void * arg)
 {
-  /* when the initting thread is cancelled we have to release the lock */
+  /* when the initing thread is cancelled we have to release the lock */
   ptw32_mcs_local_node_t *node = (ptw32_mcs_local_node_t *)arg;
   ptw32_mcs_lock_release(node);
 }

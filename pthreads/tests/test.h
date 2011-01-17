@@ -56,7 +56,7 @@
 #endif
 
 
-char * error_string[] = {
+const char * error_string[] = {
   "ZERO_or_EOK",
   "EPERM",
   "ENOFILE_or_ENOENT",
@@ -99,7 +99,7 @@ char * error_string[] = {
   "ENOLCK",
   "ENOSYS",
   "ENOTEMPTY",
-  "EILSEQ",
+  "EILSEQ"
 };
 
 /*

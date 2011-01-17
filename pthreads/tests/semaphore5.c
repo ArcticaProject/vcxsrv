@@ -1,10 +1,6 @@
 /*
- * pthread.c
+ * File: semaphore5.c
  *
- * Description:
- * This translation unit agregates pthreads-win32 translation units.
- * It is used for inline optimisation of the library,
- * maximising for speed at the expense of size.
  *
  * --------------------------------------------------------------------------
  *
@@ -34,33 +30,74 @@
  *      License along with this library in the file COPYING.LIB;
  *      if not, write to the Free Software Foundation, Inc.,
  *      59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ *
+ * --------------------------------------------------------------------------
+ *
+ * Test Synopsis: Verify sem_destroy EBUSY race avoidance
+ * - 
+ *
+ * Test Method (Validation or Falsification):
+ * - Validation
+ *
+ * Requirements Tested:
+ * - 
+ *
+ * Features Tested:
+ * - 
+ *
+ * Cases Tested:
+ * - 
+ *
+ * Description:
+ * - 
+ *
+ * Environment:
+ * - 
+ *
+ * Input:
+ * - None.
+ *
+ * Output:
+ * - File name, Line number, and failed expression on failure.
+ * - No output on success.
+ *
+ * Assumptions:
+ * - 
+ *
+ * Pass Criteria:
+ * - Process returns zero exit status.
+ *
+ * Fail Criteria:
+ * - Process returns non-zero exit status.
  */
 
-#include "pthread.h"
-#include "implement.h"
+// #define ASSERT_TRACE
 
-/* The following are ordered for inlining */
+#include "test.h"
 
-#include "private.c"
-#include "attr.c"
-#include "barrier.c"
-#include "cancel.c"
-#include "cleanup.c"
-#include "condvar.c"
-#include "create.c"
-#include "dll.c"
-#include "autostatic.c"
-#include "errno.c"
-#include "exit.c"
-#include "fork.c"
-#include "global.c"
-#include "misc.c"
-#include "mutex.c"
-#include "nonportable.c"
-#include "rwlock.c"
-#include "sched.c"
-#include "semaphore.c"
-#include "signal.c"
-#include "spin.c"
-#include "sync.c"
-#include "tsd.c"
+void *
+thr(void * arg)
+{
+  assert(sem_post((sem_t *)arg) == 0);
+
+  return 0;
+}
+
+
+int
+main()
+{
+  pthread_t t;
+  sem_t s;
+
+  assert(sem_init(&s, PTHREAD_PROCESS_PRIVATE, 0) == 0);
+  assert(pthread_create(&t, NULL, thr, (void *)&s) == 0);
+
+  assert(sem_wait(&s) == 0);
+  assert(sem_destroy(&s) == 0);
+
+  assert(pthread_join(t, NULL) == 0);
+
+  return 0;
+}
+

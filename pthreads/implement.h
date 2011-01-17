@@ -11,7 +11,7 @@
  *      Copyright(C) 1998 John E. Bossom
  *      Copyright(C) 1999,2005 Pthreads-win32 contributors
  * 
- *      Contact Email: rpj@callisto.canberra.edu.au
+ *      Contact Email: Ross.Johnson@homemail.com.au
  * 
  *      The current list of contributors is contained
  *      in the file CONTRIBUTORS included with the source
@@ -249,13 +249,31 @@ struct pthread_spinlock_t_
   } u;
 };
 
+/*
+ * MCS lock queue node - see ptw32_MCS_lock.c
+ */
+struct ptw32_mcs_node_t_
+{
+  struct ptw32_mcs_node_t_ **lock;        /* ptr to tail of queue */
+  struct ptw32_mcs_node_t_  *next;        /* ptr to successor in queue */
+  LONG                       readyFlag;   /* set after lock is released by
+                                             predecessor */
+  LONG                       nextFlag;    /* set after 'next' ptr is set by
+                                             successor */
+};
+
+typedef struct ptw32_mcs_node_t_   ptw32_mcs_local_node_t;
+typedef struct ptw32_mcs_node_t_  *ptw32_mcs_lock_t;
+
+
 struct pthread_barrier_t_
 {
   unsigned int nCurrentBarrierHeight;
   unsigned int nInitialBarrierHeight;
-  int iStep;
   int pshared;
-  sem_t semBarrierBreeched[2];
+  sem_t semBarrierBreeched;
+  void * lock; /* MCS lock */
+  ptw32_mcs_local_node_t proxynode;
 };
 
 struct pthread_barrierattr_t_
@@ -273,7 +291,6 @@ struct pthread_key_t_
 
 
 typedef struct ThreadParms ThreadParms;
-typedef struct ThreadKeyAssoc ThreadKeyAssoc;
 
 struct ThreadParms
 {
@@ -324,22 +341,7 @@ struct pthread_rwlockattr_t_
   int pshared;
 };
 
-/*
- * MCS lock queue node - see ptw32_MCS_lock.c
- */
-struct ptw32_mcs_node_t_
-{
-  struct ptw32_mcs_node_t_ **lock;        /* ptr to tail of queue */
-  struct ptw32_mcs_node_t_  *next;        /* ptr to successor in queue */
-  LONG                       readyFlag;   /* set after lock is released by
-                                             predecessor */
-  LONG                       nextFlag;    /* set after 'next' ptr is set by
-                                             successor */
-};
-
-typedef struct ptw32_mcs_node_t_   ptw32_mcs_local_node_t;
-typedef struct ptw32_mcs_node_t_  *ptw32_mcs_lock_t;
-
+typedef struct ThreadKeyAssoc ThreadKeyAssoc;
 
 struct ThreadKeyAssoc
 {
@@ -377,17 +379,16 @@ struct ThreadKeyAssoc
    *      general lock (guarding the row) and the thread's general
    *      lock (guarding the column). This avoids the need for a
    *      dedicated lock for each association, which not only consumes
-   *      more handles but requires that: before the lock handle can
-   *      be released - both the key must be deleted and the thread
-   *      must have called the destructor. The two-lock arrangement
-   *      allows the resources to be freed as soon as either thread or
-   *      key is concluded.
+   *      more handles but requires that the lock resources persist
+   *      until both the key is deleted and the thread has called the
+   *      destructor. The two-lock arrangement allows those resources
+   *      to be freed as soon as either thread or key is concluded.
    *
-   *      To avoid deadlock: whenever both locks are required, the key
-   *      and thread locks are always acquired in the order: key lock
-   *      then thread lock. An exception to this exists when a thread
-   *      calls the destructors, however this is done carefully to
-   *      avoid deadlock.
+   *      To avoid deadlock, whenever both locks are required both the
+   *      key and thread locks are acquired consistently in the order
+   *      "key lock then thread lock". An exception to this exists
+   *      when a thread calls the destructors, however, this is done
+   *      carefully (but inelegantly) to avoid deadlock.
    *
    *      An association is created when a thread first calls
    *      pthread_setspecific() on a key that has a specified
@@ -421,7 +422,7 @@ struct ThreadKeyAssoc
    *
    *      nextThread
    *              The pthread_key_t->threads attribute is the head of
-   *              a chain of assoctiations that runs through the
+   *              a chain of associations that runs through the
    *              nextThreads link. This chain provides the 1 to many
    *              relationship between a pthread_key_t and all the 
    *              PThreads that have called pthread_setspecific for
@@ -457,7 +458,7 @@ struct ThreadKeyAssoc
  *      This macro constructs a software exception code following
  *      the same format as the standard Win32 error codes as defined
  *      in WINERROR.H
- *  Values are 32 bit values layed out as follows:
+ *  Values are 32 bit values laid out as follows:
  *
  *   1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
  *  +---+-+-+-----------------------+-------------------------------+
@@ -619,7 +620,11 @@ extern "C"
 
   void ptw32_mcs_lock_acquire (ptw32_mcs_lock_t * lock, ptw32_mcs_local_node_t * node);
 
+  int ptw32_mcs_lock_try_acquire (ptw32_mcs_lock_t * lock, ptw32_mcs_local_node_t * node);
+
   void ptw32_mcs_lock_release (ptw32_mcs_local_node_t * node);
+
+  void ptw32_mcs_node_substitute (ptw32_mcs_local_node_t * new_node, ptw32_mcs_local_node_t * old_node);
 
 #ifdef NEED_FTIME
   void ptw32_timespec_to_filetime (const struct timespec *ts, FILETIME * ft);
@@ -658,8 +663,8 @@ extern "C"
 #       endif
 #   endif
 #else
-#   include <process.h>
-#endif
+#       include <process.h>
+#   endif
 
 
 /*
@@ -667,8 +672,8 @@ extern "C"
  * See ptw32_InterlockedCompareExchange.c
  */
 #ifndef PTW32_INTERLOCKED_COMPARE_EXCHANGE
-#define PTW32_INTERLOCKED_COMPARE_EXCHANGE ptw32_interlocked_compare_exchange
-#endif
+#    define PTW32_INTERLOCKED_COMPARE_EXCHANGE ptw32_interlocked_compare_exchange
+#  endif
 
 #ifndef PTW32_INTERLOCKED_EXCHANGE
 #define PTW32_INTERLOCKED_EXCHANGE InterlockedExchange

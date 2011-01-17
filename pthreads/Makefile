@@ -27,10 +27,12 @@ STATIC_STAMPS	= pthreadVCE$(DLL_VER).static pthreadVSE$(DLL_VER).static pthreadV
 OPTIM	= /O2 /Ob2 /MD
 OPTIMD	= /MDd
 
-CFLAGS	= /W3 /nologo /Yd /I. /D_WIN32_WINNT=0x400 /DHAVE_CONFIG_H
-#CFLAGS	= /W3 /nologo /Yd /I. /D_WIN32_WINNT=0x400 /DHAVE_CONFIG_H
+CFLAGS	= /W3 /nologo /I. /D_WIN32_WINNT=0x400 /DHAVE_CONFIG_H
+
 CFLAGSD	= /Zi $(CFLAGS)
 
+# Uncomment this if config.h defines RETAIN_WSALASTERROR
+#XLIBS = wsock32.lib
 
 # Default cleanup style
 CLEANUP	= __CLEANUP_C
@@ -64,6 +66,7 @@ DLL_OBJS	= \
 		condvar.obj \
 		create.obj \
 		dll.obj \
+		autostatic.obj \
 		errno.obj \
 		exit.obj \
 		fork.obj \
@@ -121,6 +124,7 @@ SMALL_STATIC_OBJS	= \
 		pthread_cond_wait.obj \
 		create.obj \
 		dll.obj \
+		autostatic.obj \
 		errno.obj \
 		pthread_exit.obj \
 		fork.obj \
@@ -473,12 +477,12 @@ install: $(DLLS)
 $(DLLS): $(DLL_OBJS)
 	cl /LDd /Zi /nologo $(DLL_OBJS) \
 		/link /nodefaultlib:libcmt /implib:$*.lib \
-		msvcrt.lib wsock32.lib /out:$@
+		msvcrt.lib $(XLIBS) /out:$@
 
 $(INLINED_STAMPS): $(OUTDIR) $(DLL_INLINED_OBJS)
 	cl /LDd /Zi /nologo $(DLL_INLINED_OBJS) \
 		/link /nodefaultlib:libcmt /implib:$*.lib \
-		msvcrt.lib wsock32.lib /out:$*.dll
+		msvcrt.lib $(XLIBS) /out:$*.dll
 
 $(STATIC_STAMPS): $(OUTDIR) $(DLL_INLINED_OBJS)
 	if exist $*.lib del $*.lib
