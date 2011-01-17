@@ -425,7 +425,8 @@ pixman_transform_is_inverse (const struct pixman_transform *a,
 {
     struct pixman_transform t;
 
-    pixman_transform_multiply (&t, a, b);
+    if (!pixman_transform_multiply (&t, a, b))
+	return FALSE;
 
     return pixman_transform_is_identity (&t);
 }

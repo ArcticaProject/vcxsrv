@@ -1016,8 +1016,7 @@ convert_r5g6b5 (const uint8_t *row, int x)
 					  convert_ ## format,		\
 					  PIXMAN_ ## format,		\
 					  repeat_mode);			\
-    }									\
-    extern int no_such_variable
+    }
 
 #define MAKE_NEAREST_FETCHER(name, format, repeat_mode)			\
     static void								\
@@ -1033,29 +1032,28 @@ convert_r5g6b5 (const uint8_t *row, int x)
 					 convert_ ## format,		\
 					 PIXMAN_ ## format,		\
 					 repeat_mode);			\
-    }									\
-    extern int no_such_variable
+    }
 
 #define MAKE_FETCHERS(name, format, repeat_mode)			\
-    MAKE_NEAREST_FETCHER (name, format, repeat_mode);			\
-    MAKE_BILINEAR_FETCHER (name, format, repeat_mode);
+    MAKE_NEAREST_FETCHER (name, format, repeat_mode)			\
+    MAKE_BILINEAR_FETCHER (name, format, repeat_mode)
 
-MAKE_FETCHERS (pad_a8r8g8b8,     a8r8g8b8, PIXMAN_REPEAT_PAD);
-MAKE_FETCHERS (none_a8r8g8b8,    a8r8g8b8, PIXMAN_REPEAT_NONE);
-MAKE_FETCHERS (reflect_a8r8g8b8, a8r8g8b8, PIXMAN_REPEAT_REFLECT);
-MAKE_FETCHERS (normal_a8r8g8b8,  a8r8g8b8, PIXMAN_REPEAT_NORMAL);
-MAKE_FETCHERS (pad_x8r8g8b8,     x8r8g8b8, PIXMAN_REPEAT_PAD);
-MAKE_FETCHERS (none_x8r8g8b8,    x8r8g8b8, PIXMAN_REPEAT_NONE);
-MAKE_FETCHERS (reflect_x8r8g8b8, x8r8g8b8, PIXMAN_REPEAT_REFLECT);
-MAKE_FETCHERS (normal_x8r8g8b8,  x8r8g8b8, PIXMAN_REPEAT_NORMAL);
-MAKE_FETCHERS (pad_a8,           a8,       PIXMAN_REPEAT_PAD);
-MAKE_FETCHERS (none_a8,          a8,       PIXMAN_REPEAT_NONE);
-MAKE_FETCHERS (reflect_a8,	 a8,       PIXMAN_REPEAT_REFLECT);
-MAKE_FETCHERS (normal_a8,	 a8,       PIXMAN_REPEAT_NORMAL);
-MAKE_FETCHERS (pad_r5g6b5,       r5g6b5,   PIXMAN_REPEAT_PAD);
-MAKE_FETCHERS (none_r5g6b5,      r5g6b5,   PIXMAN_REPEAT_NONE);
-MAKE_FETCHERS (reflect_r5g6b5,   r5g6b5,   PIXMAN_REPEAT_REFLECT);
-MAKE_FETCHERS (normal_r5g6b5,    r5g6b5,   PIXMAN_REPEAT_NORMAL);
+MAKE_FETCHERS (pad_a8r8g8b8,     a8r8g8b8, PIXMAN_REPEAT_PAD)
+MAKE_FETCHERS (none_a8r8g8b8,    a8r8g8b8, PIXMAN_REPEAT_NONE)
+MAKE_FETCHERS (reflect_a8r8g8b8, a8r8g8b8, PIXMAN_REPEAT_REFLECT)
+MAKE_FETCHERS (normal_a8r8g8b8,  a8r8g8b8, PIXMAN_REPEAT_NORMAL)
+MAKE_FETCHERS (pad_x8r8g8b8,     x8r8g8b8, PIXMAN_REPEAT_PAD)
+MAKE_FETCHERS (none_x8r8g8b8,    x8r8g8b8, PIXMAN_REPEAT_NONE)
+MAKE_FETCHERS (reflect_x8r8g8b8, x8r8g8b8, PIXMAN_REPEAT_REFLECT)
+MAKE_FETCHERS (normal_x8r8g8b8,  x8r8g8b8, PIXMAN_REPEAT_NORMAL)
+MAKE_FETCHERS (pad_a8,           a8,       PIXMAN_REPEAT_PAD)
+MAKE_FETCHERS (none_a8,          a8,       PIXMAN_REPEAT_NONE)
+MAKE_FETCHERS (reflect_a8,	 a8,       PIXMAN_REPEAT_REFLECT)
+MAKE_FETCHERS (normal_a8,	 a8,       PIXMAN_REPEAT_NORMAL)
+MAKE_FETCHERS (pad_r5g6b5,       r5g6b5,   PIXMAN_REPEAT_PAD)
+MAKE_FETCHERS (none_r5g6b5,      r5g6b5,   PIXMAN_REPEAT_NONE)
+MAKE_FETCHERS (reflect_r5g6b5,   r5g6b5,   PIXMAN_REPEAT_REFLECT)
+MAKE_FETCHERS (normal_r5g6b5,    r5g6b5,   PIXMAN_REPEAT_NORMAL)
 
 static void
 bits_image_fetch_solid_32 (pixman_image_t * image,

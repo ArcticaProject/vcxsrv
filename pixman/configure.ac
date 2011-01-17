@@ -566,6 +566,20 @@ fi
 AM_CONDITIONAL(USE_GCC_INLINE_ASM, test $have_gcc_inline_asm = yes)
 
 dnl ==============================================
+dnl Static test programs
+
+AC_ARG_ENABLE(static-testprogs,
+   [AC_HELP_STRING([--enable-static-testprogs],
+		   [build test programs as static binaries [default=no]])],
+   [enable_static_testprogs=$enableval], [enable_static_testprogs=no])
+
+TESTPROGS_EXTRA_LDFLAGS=
+if test "x$enable_static_testprogs" = "xyes" ; then
+   TESTPROGS_EXTRA_LDFLAGS="-all-static"
+fi
+AC_SUBST(TESTPROGS_EXTRA_LDFLAGS)
+
+dnl ==============================================
 dnl Timers
 
 AC_ARG_ENABLE(timers,

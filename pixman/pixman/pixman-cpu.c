@@ -244,7 +244,7 @@ pixman_have_arm_neon (void)
 
 #endif /* USE_ARM_NEON */
 
-#else /* linux ELF */
+#elif defined (__linux__) /* linux ELF */
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -328,7 +328,12 @@ pixman_have_arm_neon (void)
 
 #endif /* USE_ARM_NEON */
 
-#endif /* linux */
+#else /* linux ELF */
+
+#define pixman_have_arm_simd() FALSE
+#define pixman_have_arm_neon() FALSE
+
+#endif
 
 #endif /* USE_ARM_SIMD || USE_ARM_NEON */
 
