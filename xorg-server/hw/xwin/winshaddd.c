@@ -616,22 +616,7 @@ winShadowUpdateDD (ScreenPtr pScreen,
 	      "%s file to " BUILDERADDR "\n", g_pszLogFile);
 
       /* Location of shadow framebuffer has changed */
-      pScreenInfo->pfb = pScreenPriv->pddsdShadow->lpSurface;
-      
-      /* Update the screen pixmap */
-      if (!(*pScreen->ModifyPixmapHeader)(pScreen->devPrivate,
-					  pScreen->width,
-					  pScreen->height,
-					  pScreen->rootDepth,
-					  BitsPerPixel (pScreen->rootDepth),
-					  PixmapBytePad (pScreenInfo->dwStride,
-							 pScreenInfo->dwBPP),
-					  pScreenInfo->pfb))
-	{
-	  ErrorF ("winShadowUpdateDD - Bits changed, could not "
-		  "notify fb.\n");
-	  return;
-	}
+      winUpdateFBPointer(pScreen, pScreenPriv->pddsdShadow->lpSurface);
     }
 }
 
