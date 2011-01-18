@@ -3,7 +3,6 @@ WINAPP = xcalc
 DEFINES += XT_NO_SM IEEE
 
 INCLUDELIBFILES = \
- $(MHMAKECONF)\libXt\src\$(OBJDIR)\libXt.lib \
  $(MHMAKECONF)\libX11\src\xkb\$(OBJDIR)\libxkb.lib \
  $(MHMAKECONF)\libX11\src\xcms\$(OBJDIR)\libxcms.lib \
  $(MHMAKECONF)\libx11\src\xlibi18n\$(OBJDIR)\libi18n.lib \
@@ -17,6 +16,7 @@ INCLUDELIBFILES = \
  $(MHMAKECONF)\libxpm\src\$(OBJDIR)\libxpm.lib \
  $(MHMAKECONF)\libxau\$(OBJDIR)\libxau.lib \
  $(MHMAKECONF)\libXaw\src\$(OBJDIR)\libXaw.lib \
+ $(MHMAKECONF)\libXt\src\$(OBJDIR)\libXt.lib \
  $(MHMAKECONF)\libXext\src\$(OBJDIR)\libXext.lib \
  $(MHMAKECONF)\libXmu\src\$(OBJDIR)\libXmu.lib \
  $(MHMAKECONF)\libX11\src\$(OBJDIR)\libX11.lib

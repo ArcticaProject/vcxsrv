@@ -117,6 +117,8 @@ main(int argc, char **argv)
 
     XtSetLanguageProc(NULL, (XtLanguageProc) NULL, NULL);
 
+    XawInitializeWidgetSet();  // Needed to have the string to bitmap conversion function initialised
+
     toplevel = XtAppInitialize(&xtcontext, "XCalc", Options, XtNumber(Options),
 			       &argc, argv, NULL, NULL, 0);
     if (argc != 1) Syntax(argc, argv);
