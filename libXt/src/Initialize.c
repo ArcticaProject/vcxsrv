@@ -387,19 +387,23 @@ static void CombineAppUserDefaults(
     Boolean deallocate = False;
 
     if (!(path = getenv("XUSERFILESEARCHPATH"))) {
+	char *old_path=NULL;
+	char homedir[PATH_MAX]=".";
 #if !defined(WIN32) || !defined(__MINGW32__)
-	char *old_path;
-	char homedir[PATH_MAX];
 	GetRootDirName(homedir, PATH_MAX);
-	if (!(old_path = getenv("XAPPLRESDIR"))) {
+	if (!(old_path = getenv("XAPPLRESDIR")))
+#endif
+        {
 	    char *path_default = "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N";
 	    if (!(path =
 		  ALLOCATE_LOCAL(6*strlen(homedir) + strlen(path_default))))
 		_XtAllocError(NULL);
 	    sprintf( path, path_default,
 		    homedir, homedir, homedir, homedir, homedir, homedir );
-	} else {
-	    char *path_default = "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N:%s/%%N";
+	}
+#if !defined(WIN32) || !defined(__MINGW32__)
+        else
+	{   char *path_default = "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N:%s/%%N";
 	    if (!(path =
 		  ALLOCATE_LOCAL( 6*strlen(old_path) + 2*strlen(homedir)
 				 + strlen(path_default))))
@@ -407,8 +411,8 @@ static void CombineAppUserDefaults(
 	    sprintf(path, path_default, old_path, old_path, old_path, homedir,
 		    old_path, old_path, old_path, homedir );
 	}
-	deallocate = True;
 #endif
+	deallocate = True;
     }
 
     filename = XtResolvePathname(dpy, NULL, NULL, NULL, path, NULL, 0, NULL);
