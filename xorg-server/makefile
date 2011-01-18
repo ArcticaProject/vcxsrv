@@ -105,8 +105,11 @@ load_makefile ..\apps\xcalc\makefile MAKESERVER=0 DEBUG=0
 xcalc.exe: ..\apps\xcalc\obj\release\xcalc.exe XCalc XCalc-color
 	copy $< $@
 
+%: ..\apps\xclock\app-defaults\%
+	copy $< $@
+
 load_makefile ..\apps\xclock\makefile MAKESERVER=0 DEBUG=0
-xclock.exe: ..\apps\xclock\obj\release\xclock.exe
+xclock.exe: ..\apps\xclock\obj\release\xclock.exe XClock XClock-color
 	copy $< $@
 
 load_makefile ..\apps\xwininfo\makefile MAKESERVER=0 DEBUG=0
