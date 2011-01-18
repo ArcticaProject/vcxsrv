@@ -84,6 +84,7 @@ Section "VcXsrv (required)"
   File "..\..\apps\xwininfo\obj\release\xwininfo.exe"
   File "..\XKeysymDB"
   File "..\XErrorDB"
+  File "..\XtErrorDB"
   File "..\hw\xwin\xlaunch\obj\release\xlaunch.exe"
   File "..\..\tools\plink\obj\release\plink.exe"
   File "..\swrast_dri.dll"
@@ -100,6 +101,8 @@ Section "VcXsrv (required)"
   File /r "..\xkbdata\*.*"
   SetOutPath $INSTDIR\locale
   File /r "..\locale\*.*"
+  SetOutPath $INSTDIR\bitmaps
+  File /r "..\bitmaps\*.*"
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\VcXsrv "Install_Dir" "$INSTDIR"
