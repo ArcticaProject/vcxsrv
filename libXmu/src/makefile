@@ -2,7 +2,7 @@ LIBRARY = libXmu
 
 INCLUDES := ..\include ..\include\X11\Xmu $(INCLUDES)
 
-DEFINES += XT_NO_SM
+DEFINES += XT_NO_SM BITMAPDIR="""bitmaps"""
 
 CSRCS = \
 	ClientWin.c \
