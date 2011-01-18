@@ -2,7 +2,7 @@ LIBRARY = libXt
 
 INCLUDES := .. ../include ../include/X11 $(INCLUDES)
 
-DEFINES += XT_NO_SM
+DEFINES += XT_NO_SM ERRORDB="""XtErrorDB"""
 
 CSRCS = \
 	ActionHook.c \
