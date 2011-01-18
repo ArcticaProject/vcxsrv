@@ -137,7 +137,7 @@ unsigned long _DLL_InitTerm(unsigned long mod,unsigned long flag)
 }
 #endif
 
-#if defined(__CYGWIN__) || defined(__MINGW32__)
+#if defined(__CYGWIN__) || defined(__MINGW32__) && !defined(_MSC_VER)
 int __stdcall
 DllMain(unsigned long mod_handle, unsigned long flag, void *routine)
 {
