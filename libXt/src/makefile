@@ -58,7 +58,6 @@ CSRCS = \
 	VarGet.c \
 	Varargs.c \
 	Vendor.c \
-	sharedlib.c \
 	StringDefs.c
 
 BUILT_SOURCE = StringDefs.c 

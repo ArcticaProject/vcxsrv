@@ -67,7 +67,7 @@ SOFTWARE.
  *
  ***************************************************************************/
 
-#if defined(__UNIXOS2__) || defined(__CYGWIN__) || defined(__MINGW32__)
+#if defined(__UNIXOS2__) || defined(__CYGWIN__) || defined(__MINGW32__) && !defined(_MSC_VER)
 /* to fix the EditRes problem because of wrong linker semantics */
 extern WidgetClass vendorShellWidgetClass;
 
@@ -153,7 +153,7 @@ externaldef(vendorshellclassrec) VendorShellClassRec vendorShellClassRec = {
   }
 };
 
-#if !defined(AIXSHLIB) || !defined(SHAREDCODE)
+#if (!defined(AIXSHLIB) || !defined(SHAREDCODE)) && !defined(_MSC_VER)
 externaldef(vendorshellwidgetclass) WidgetClass vendorShellWidgetClass =
 	(WidgetClass) (&vendorShellClassRec);
 #endif
