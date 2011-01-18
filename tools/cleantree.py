@@ -6,7 +6,7 @@ Removes all unversioned files from a subversion working copy directory
 When <directory> is not specified the current directory is used.
 <directory can also be a white space seperated list of directories.
 """
-import os,sys,re,shutil
+import os,sys,re,subprocess
 from optparse import OptionParser
 
 parser = OptionParser(__doc__)
@@ -30,14 +30,62 @@ def Print (Message,NoVerbose=None,Append='\n'):
     sys.stdout.write(Message)
 
 ################################################################################
-def RunCommand(Command,NoVerbose=None):
-  #Print(Command)
-  StdIn,StdOut=os.popen4(Command)
-  while 1:
-    line=StdOut.readline()
-    if not line:
-      break
-    Print(line,NoVerbose,'')
+class RunCommandException(Exception):
+  def __init__(this,CommandLine,Output=None):
+    this.CommandLine=CommandLine
+    this.Output=Output
+  def __str__(this):
+    Ret="\n!!! RunCommand exception:\n-> Commandline:\n"
+    Ret+=this.CommandLine
+    if this.Output:
+      Ret+="\n-> Output:\n"
+      Ret+=this.Output
+    else:
+      Ret+="\n-> Command not found"
+    Ret+="\n"
+    return Ret
+################################################################################
+PIPE=subprocess.PIPE
+STDOUT=subprocess.STDOUT
+
+def RunCommand(Command):
+  try:
+    if sys.platform=='linux2':
+      Process=subprocess.Popen(Command, stdin=PIPE, stdout=PIPE, stderr=STDOUT, shell=True)
+    else:
+      CREATE_NO_WINDOW=0x8000000
+      Process=subprocess.Popen(Command, stdin=PIPE, stdout=PIPE, stderr=STDOUT, creationflags=CREATE_NO_WINDOW, shell=True)
+      import msvcrt
+      msvcrt.setmode(Process.stdout.fileno(), os.O_TEXT)  # Threat output as ascii noy binary
+  except:
+    raise RunCommandException(Command)
+  return Process
+
+################################################################################
+def DelTreeNoJunctions(Dir):
+  try:
+    os.rmdir(Dir)
+    # empty dir or it was a junction, so we can return immediately
+    return
+  except:
+    pass
+
+  for root, dirs, files in os.walk(Dir, topdown=True):
+    for name in files:
+      os.remove(os.path.join(root,name))
+    for dir in dirs:
+      # first try just to remove the directory. This is to be sure that when it is a symbolic link
+      # just the link is removed and not the complete contents where it points to
+      try:
+        os.rmdir(os.path.join(root,dir))
+        del dirs[dir]  # do not walk this directory
+      except:
+        pass # go further in the directory tree
+  # Now delete the empty directories left over from the previous walk
+  for root, dirs, files in os.walk(Dir, topdown=False):
+    for dir in dirs:
+      os.rmdir(os.path.join(root,dir))
+  os.rmdir(Dir)
 
 ################################################################################
 def CleanTree(Dir, NoVerbose=None):
@@ -46,7 +94,8 @@ def CleanTree(Dir, NoVerbose=None):
     Command='svn st --no-ignore'
   else:
     Command='svn st -N --no-ignore'
-  StdIn,StdOut=os.popen4(Command)
+  Process=RunCommand(Command)
+  StdOut=Process.stdout
   NotWorkRe=re.compile("'\.' is not a working copy")
   while 1:
     line=StdOut.readline()
@@ -65,15 +114,16 @@ def CleanTree(Dir, NoVerbose=None):
       if os.path.isdir(Item):
         Print('Deleting directory %s'%(os.path.abspath(Item)),NoVerbose)
         try:
-          shutil.rmtree(Item)
+          DelTreeNoJunctions(Item)
         except:
           print "Error deleting directory %s. Contains read-only files?"%Item
       else:
         Print('Deleting file %s'%(os.path.abspath(Item)),NoVerbose)
         try:
           os.remove(Item)
-        except:
+        except Exception,Details:
           print "Error deleting file %s. Is read-only?"%Item
+          print Details
 
 ################################################################################
 if not g_Args:
