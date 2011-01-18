@@ -365,7 +365,7 @@ FILE *
 fopen_file(_Xconst char *path, char *mode)
 {
     char buf[MAX_PATH];
-    char* bufp;
+    char* bufp=buf;
     void* ret = NULL;
     UINT olderror = SetErrorMode (SEM_FAILCRITICALERRORS);
 
