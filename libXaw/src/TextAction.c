@@ -65,6 +65,9 @@ in this Software without prior written authorization from The Open Group.
 
 #define XawTextActionMaxHexChars	100
 
+#ifdef _MSC_VER
+#define usleep(time) Sleep(time)
+#endif
 /*
  * Prototypes
  */
