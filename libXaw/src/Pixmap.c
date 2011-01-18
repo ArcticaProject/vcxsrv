@@ -750,7 +750,11 @@ BitmapLoader(XawParams *params, Screen *screen, Colormap colormap, int depth,
   if (params->name[0] != '/' && params->name[0] != '.')
     {
       if (!sub[0].substitution)
+	#ifdef _MSC_VER
+	sub[0].substitution = ".";
+	#else
 	sub[0].substitution = getenv("HOME");
+	#endif
       sub[1].substitution = params->name;
       if (pixmap_path == NULL)
 	GetResourcePixmapPath(DisplayOfScreen(screen));
