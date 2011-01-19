@@ -1,3 +1,7 @@
+ifneq ($(NORELDBG),1)
+$(error NORELDBG should have been set to 1)
+endif
+
 INCLUDES+=..\src
 
 TMPL=fcarch.tmpl.h
@@ -12,7 +16,7 @@ CSRCS=fc-arch.c
 DEFINES += HAVE_CONFIG_H
 INCLUDES := .. $(INCLUDES)
 
-$(TARG): $(OBJDIR)\fc-arch.exe $(STMPL) ${top_srcdir}/src/fcint.h ..\config.h
+$(TARG): $(OBJDIR)\fc-arch.exe $(STMPL) ..\src\fcint.h ..\config.h
 	del -e $(TARG)
 	$(OBJDIR)\fc-arch.exe $(ARCHITECTURE) < $(STMPL) > $(TARG).tmp
 	move $(TARG).tmp $(TARG)

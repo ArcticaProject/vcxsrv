@@ -79,7 +79,17 @@ COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I%) -Fo$(relpath $@) -Fd"$(PDB)" 
 #PDB=   # There is no PDB file generated in a release build
 endif
 
-.PHONY: all cleanall clean clean$(OBJDIRPREFIX)
+ifeq ($(OBJDIRPREFIX),)
+ifeq ($(DEBUG),1)
+CLEANRULEPOSTFIX=debug
+else
+CLEANRULEPOSTFIX=release
+endif
+else
+CLEANRULEPOSTFIX=$(OBJDIRPREFIX)
+endif
+
+.PHONY: all cleanall clean clean$(CLEANRULEPOSTFIX)
 
 ### Implicit rules ###
 CREATEDIR=if not exist $@ mkdir $@
@@ -87,11 +97,9 @@ CREATEDIR=if not exist $@ mkdir $@
 $(OBJDIR) :
 	$(CREATEDIR)
 
-ifneq ($(OBJDIRPREFIX),)
-clean: clean$(OBJDIRPREFIX)
-endif
+clean: clean$(CLEANRULEPOSTFIX)
 
-clean$(OBJDIRPREFIX):
+clean$(CLEANRULEPOSTFIX):
 	del -e $(OBJDIR)
 
 $(OBJDIR)\%$(OBJEXT) : %.c

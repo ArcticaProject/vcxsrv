@@ -1,3 +1,7 @@
+ifneq ($(NORELDBG),1)
+$(error NORELDBG should have been set to 1)
+endif
+
 INCLUDES+=..\src
 
 TMPL=fcglyphname.tmpl.h

@@ -9,10 +9,10 @@
 #	-DFC_CACHEDIR='"$(FC_CACHEDIR)"'                \
 #	-DFONTCONFIG_PATH='"$(CONFDIR)"'
 
-load_makefile DEBUG=0 ..\fc-arch\makefile
-load_makefile DEBUG=0 ..\fc-case\makefile
-load_makefile DEBUG=0 ..\fc-glyphname\makefile
-load_makefile DEBUG=0 ..\fc-lang\makefile
+load_makefile NORELDBG=1 ..\fc-arch\makefile
+load_makefile NORELDBG=1 ..\fc-case\makefile
+load_makefile NORELDBG=1 ..\fc-glyphname\makefile
+load_makefile NORELDBG=1 ..\fc-lang\makefile
 
 CSRCS = \
 	fcatomic.c \
