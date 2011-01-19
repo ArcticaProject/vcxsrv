@@ -1,0 +1,845 @@
+.\"
+.\" Copyright © 2000 Keith Packard
+.\"
+.\" Permission to use, copy, modify, distribute, and sell this software and its
+.\" documentation for any purpose is hereby granted without fee, provided that
+.\" the above copyright notice appear in all copies and that both that
+.\" copyright notice and this permission notice appear in supporting
+.\" documentation, and that the name of Keith Packard not be used in
+.\" advertising or publicity pertaining to distribution of the software without
+.\" specific, written prior permission.  Keith Packard makes no
+.\" representations about the suitability of this software for any purpose.  It
+.\" is provided "as is" without express or implied warranty.
+.\"
+.\" KEITH PACKARD DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+.\" INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+.\" EVENT SHALL KEITH PACKARD BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+.\" CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+.\" DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+.\" TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+.\" PERFORMANCE OF THIS SOFTWARE.
+.\"
+.TH Xft __libmansuffix__ __vendorversion__
+.SH NAME
+ Xft \- X FreeType interface library
+.SH DESCRIPTION
+.B Xft
+is a simple library designed to interface the FreeType rasterizer with the X
+Rendering Extension.
+This manual page barely scratches the surface of this library.
+.SH "HEADER FILE"
+.B #include <X11/Xft/Xft.h>
+.SH CONSTANTS
+.TP
+.B XFT_MAJOR
+is the major version number of
+.BR Xft .
+.TP
+.B XFT_MINOR
+is the minor version number of
+.BR Xft .
+.TP
+.B XFT_REVISION
+is the revision number of
+.BR Xft .
+.TP
+.B XFT_VERSION
+is
+.B XFT_MAJOR
+times 10000 (ten thousand), plus
+.B XFT_MINOR
+times 100, plus
+.BR XFT_REVISION .
+.TP
+.B XftVersion
+is an alias for
+.BR XFT_VERSION .
+.PP
+The following example illustrates how
+.BR Xft 's
+version constants might be used:
+.nf
+    #if (XFT_VERSION >= 20107)
+    (void) puts("Version 2.1.7 or later of the Xft library is in"
+                " use.");
+    #else
+    (void) printf("Insufficient version of Xft (%d.%d.%d) installed;
+                  " need at least version 2.1.7.\(rsn", XFT_MAJOR,
+                  XFT_MINOR,
+                  XFT_REVISION);
+    #endif
+.fi
+.\" I don't understand what these are for.  -- BR, 2005-04-02
+.\" XFT_CORE                used in xftname.c
+.\" XFT_RENDER              used in xftdpy.c, xftfreetype.c, xftname.c
+.\" XFT_XLFD                used in xftname.c, xftxlfd.c
+.\" XFT_MAX_GLYPH_MEMORY    used in xftdpy.c, xftfreetype.c
+.\" XFT_MAX_UNREF_FONTS     used in xftdpy.c
+.\" XFT_NMISSING            used in xftcore.c, xftextent.c, xftglyphs.c,
+.\"                                 xftrender.c
+.SH "DATA TYPES"
+.TP
+.B XftFont
+.nf
+typedef struct _XftFont {
+    int         ascent;
+    int         descent;
+    int         height;
+    int         max_advance_width;
+    FcCharSet   *charset;
+    FcPattern   *pattern;
+} XftFont;
+.fi
+An
+.B XftFont
+is the primary data structure of interest to programmers using
+.BR Xft ;
+it contains general font metrics and pointers to the Fontconfig
+character set and pattern associated with the font.
+The
+.B FcCharSet
+and
+.B FcPattern
+data types are defined by the Fontconfig library.
+.TP
+.B ""
+.BR XftFont s
+are populated with any of
+.BR XftFontOpen (),
+.BR XftFontOpenName (),
+.BR XftFontOpenXlfd (),
+.BR XftFontOpenInfo (),
+or
+.BR XftFontOpenPattern ().
+.BR XftFontCopy ()
+is used to duplicate
+.BR XftFont s,
+and
+.BR XftFontClose ()
+is used to mark an
+.B XftFont
+as unused.
+.BR XftFont s
+are internally allocated, reference-counted, and freed by
+.BR Xft ;
+the programmer does not ordinarily need to allocate or free storage
+for them.
+.TP
+.B ""
+.BR XftDrawGlyphs (),
+the
+.BR XftDrawString *()
+family,
+.BR XftDrawCharSpec (),
+and
+.BR XftDrawGlyphSpec ()
+use
+.BR XftFont s
+to render text to an
+.B XftDraw
+object, which may correspond to either a core X drawable or an X
+Rendering Extension drawable.
+.TP
+.B ""
+.BR XftGlyphExtents ()
+and the
+.BR XftTextExtents *()
+family are used to determine the extents (maximum dimensions) of an
+.BR XftFont .
+.TP
+.B ""
+An
+.BR XftFont 's
+glyph or character coverage can be determined with
+.BR XftFontCheckGlyph ()
+or
+.BR XftCharExists ().
+.BR XftCharIndex ()
+returns the
+.BR XftFont -specific
+character index corresponding to a given Unicode codepoint.
+.TP
+.B ""
+.BR XftGlyphRender (),
+.BR XftGlyphSpecRender (),
+.BR XftCharSpecRender (),
+and the
+.BR XftTextRender *()
+family use
+.BR XftFont s
+to draw into X Rendering Extension
+.B Picture
+structures.
+.B Note:
+.BR XftDrawGlyphs (),
+the
+.BR XftDrawString *()
+family,
+.BR XftDrawCharSpec (),
+and
+.BR XftDrawGlyphSpec ()
+provide a means of rendering fonts that is independent of the
+availability of the X Rendering Extension on the X server.
+.\" I'm not sure what these are for; they're used internally, but why
+.\" would any external users want them?  -- BR, 2005-04-02
+.\" .BR XftLockFace()
+.\" .BR XftUnlockFace()
+.TP
+.B XftFontInfo
+is an opaque object that stores information about a font.
+.B XftFontInfo
+structures are created with
+.BR XftFontInfoCreate (),
+freed with
+.BR XftFontInfoDestroy (),
+and compared with
+.BR XftFontInfoEqual ().
+.B XftFontInfo
+objects are internally allocated and freed by
+.BR Xft ;
+the programmer does not ordinarily need to allocate or free storage
+for them.
+.TP
+.B ""
+Each
+.B XftFontInfo
+structure in use is associated with a unique identifier, which can be
+retrieved with
+.BR XftFontInfoHash ().
+An
+.B XftFont
+can be opened based on
+.B XftFontInfo
+data with
+.BR XftFontOpenInfo ().
+.TP
+.B XftColor
+.nf
+typedef struct _XftColor {
+    unsigned long   pixel;
+    XRenderColor    color;
+} XftColor;
+.fi
+An
+.B XftColor
+object permits text and other items to be rendered in a particular
+color (or the closest approximation offered by the X visual in use).
+The
+.B XRenderColor
+data type is defined by the X Render Extension library.
+.TP
+.B ""
+.BR XftColorAllocName ()
+and
+.BR XftColorAllocValue ()
+request a color allocation from the X server (if necessary) and
+initialize the members of
+.BR XftColor .
+.BR XftColorFree ()
+instructs the X server to free the color currently allocated for an
+.BR XftColor .
+.TP
+.B ""
+One an
+.B XftColor
+has been initialized,
+.BR XftDrawSrcPicture (),
+.BR XftDrawGlyphs (),
+the
+.BR XftDrawString *()
+family,
+.BR XftDrawCharSpec (),
+.BR XftDrawCharFontSpec (),
+.BR XftDrawGlyphSpec (),
+.BR XftDrawGlyphFontSpec (),
+and
+.BR XftDrawRect ()
+may be used to draw various objects using it.
+.TP
+.B XftDraw
+is an opaque object which holds information used to render to an X drawable
+using either the core protocol or the X Rendering extension.
+.TP
+.B ""
+.B XftDraw
+objects are created with any of
+.BR XftDrawCreate ()
+(which associates an
+.B XftDraw
+with an existing X drawable),
+.BR XftDrawCreateBitmap (),
+or
+.BR XftDrawCreateAlpha (),
+and destroyed with
+.BR XftDrawDestroy ().
+The X drawable associated with an
+.B XftDraw
+can be changed with
+.BR XftDrawChange ().
+.BR XftDraw s
+are internally allocated and freed by
+.BR Xft ;
+the programmer does not ordinarily need to allocate or free storage
+for them.
+.TP
+.B ""
+The X
+.BR Display ,
+.BR Drawable ,
+.BR Colormap ,
+and
+.BR Visual
+of an
+.B XftDraw
+can be queried with
+.BR XftDrawDisplay (),
+.BR XftDrawDrawable (),
+.BR XftDrawColormap (),
+and
+.BR XftDrawVisual (),
+respectively.
+The X Rendering Extension
+.B Picture
+associated with an
+.B XftDraw
+is returned by
+.BR XftDrawPicture ().
+.\" XftDrawSrcPicture
+.\" XftDrawGlyphs
+.\" XftDrawString*
+.\" XftDrawCharSpec
+.\" XftDrawCharFontSpec
+.\" XftDrawGlyphSpec
+.\" XftDrawGlyphFontSpec
+.\" XftDrawRect
+.\" XftDrawSetClip
+.\" XftDrawSetClipRectangles
+.\" XftDrawSetSubwindowMode
+.TP
+.B XftCharSpec
+.nf
+typedef struct _XftCharSpec {
+    FcChar32    ucs4;
+    short       x;
+    short       y;
+} XftCharSpec;
+.fi
+.TP
+.B ""
+The
+.B FcChar32
+data type is defined by the Fontconfig library.
+.\" XftDrawCharSpec
+.\" XftCharSpecRender
+.TP
+.B XftCharFontSpec
+.nf
+typedef struct _XftCharFontSpec {
+    XftFont     *font;
+    FcChar32    ucs4;
+    short       x;
+    short       y;
+} XftCharFontSpec;
+.fi
+.TP
+.B ""
+The
+.B FcChar32
+data type is defined by the Fontconfig library.
+.\" XftDrawCharFontSpec
+.\" XftCharFontSpecRender
+.TP
+.B XftGlyphSpec
+.nf
+typedef struct _XftGlyphSpec {
+    FT_UInt     glyph;
+    short       x;
+    short       y;
+} XftGlyphSpec;
+.fi
+.TP
+.B ""
+The
+.B FT_UInt
+data type is defined by the FreeType library.
+.\" XftDrawGlyphSpec
+.\" XftGlyphSpecRender
+.TP
+.B XftGlyphFontSpec
+.nf
+typedef struct _XftGlyphFontSpec {
+    XftFont     *font;
+    FT_UInt     glyph;
+    short       x;
+    short       y;
+} XftGlyphFontSpec;
+.fi
+.TP
+.B ""
+The
+.B FT_UInt
+data type is defined by the FreeType library.
+.\" XftDrawGlyphFontSpec
+.\" XftGlyphFontSpecRender
+.SH FUNCTIONS
+.SS "Opening and Matching Fonts"
+.nf
+\fBXftFont *\fR
+\fBXftFontOpen (Display *\fIdpy\fB,\fR
+\fB             int     \fIscreen\fB,\fR
+\fB             ...);\fR\fR
+.fi
+.B XftFontOpen
+takes a list of pattern element triples of the form
+.IR field , " type" , " value"
+(terminated with a NULL), matches that pattern against the available fonts,
+and opens the matching font, sizing it correctly for screen number
+.I screen
+on display
+.IR dpy .
+The
+.B Display
+data type is defined by the X11 library.
+Returns NULL if no match is found.
+.PP
+Example:
+.nf
+    font = XftFontOpen (dpy, screen,
+                        XFT_FAMILY, XftTypeString, "charter",
+                        XFT_SIZE, XftTypeDouble, 12.0,
+                        NULL);
+.fi
+This opens the \(lqcharter\(rq font at 12 points.
+The point size is automatically converted to the correct pixel size based
+on the resolution of the monitor.
+.PP
+.nf
+\fBXftFont *\fR
+\fBXftFontOpenName (Display       *\fIdpy\fB,\fR
+\fB                 int           \fIscreen\fB,\fR
+\fB                 unsigned char *\fIname\fB);\fR
+.fi
+.B XftFontOpenName
+behaves as
+.B XftFontOpen
+does, except that it takes a Fontconfig pattern string (which is passed to
+the Fontconfig library's
+.BR FcNameParse ()
+function).
+.PP
+.nf
+\fBXftFont *\fR
+\fBXftFontOpenXlfd (Display       *\fIdpy\fB,\fR
+\fB                 int           \fIscreen\fB,\fR
+\fB                 unsigned char *\fIxlfd\fB)\fR
+.fi
+.B XftFontOpenXlfd
+behaves as
+.B XftFontOpen
+does, except that it takes a string containing an X Logical Font
+Description (XLFD).
+.PP
+.nf
+\fBFcPattern *\fR
+\fBXftFontMatch (Display   *\fIdpy\fB,\fR
+\fB              int       \fIscreen\fB,\fR
+\fB              FcPattern *\fIpattern\fB,\fR
+\fB              FcResult  *\fIresult\fB);\fR
+.fi
+Also used internally by the
+.BR XftFontOpen *
+functions,
+.B XftFontMatch
+can also be used directly to determine the Fontconfig font pattern
+resulting from an Xft font open request.
+The
+.B FcPattern
+and
+.B FcResult
+data types are defined by the Fontconfig library.
+.SS "Determining the Pixel Extents of a Text String"
+.nf
+\fBvoid\fR
+\fBXftTextExtents8 (Display    *\fIdpy\fB,\fR
+\fB                 XftFont    *\fIfont\fB,\fR
+\fB                 FcChar8    *\fIstring\fB,\fR
+\fB                 int        \fIlen\fB,\fR
+\fB                 XGlyphInfo *\fIextents\fB);\fR
+.fi
+.B XftTextExtents8
+computes the pixel extents on display
+.I dpy
+of no more than
+.I len
+glyphs of a
+.I string
+consisting of eight-bit characters when drawn with
+.IR font ,
+storing them in
+.IR extents .
+The
+.B FcChar8
+data type is defined by the Fontconfig library, and the
+.B XGlyphInfo
+data type is defined by the X Rendering Extension library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftTextExtents16 (Display    *\fIdpy\fB,\fR
+\fB                  XftFont    *\fIfont\fB,\fR
+\fB                  FcChar16   *\fIstring\fB,\fR
+\fB                  int        \fIlen\fB,\fR
+\fB                  XGlyphInfo *\fIextents\fB);\fR
+.fi
+.B XftTextExtents16
+computes the pixel extents on display
+.I dpy
+of no more than
+.I len
+glyphs of a
+.I string
+consisting of sixteen-bit characters when drawn with
+.IR font ,
+storing them in
+.IR extents .
+The
+.B FcChar16
+data type is defined by the Fontconfig library, and the
+.B XGlyphInfo
+data type is defined by the X Rendering Extension library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftTextExtents32 (Display    *\fIdpy\fB,\fR
+\fB                  XftFont    *\fIfont\fB,\fR
+\fB                  FcChar32   *\fIstring\fB,\fR
+\fB                  int        \fIlen\fB,\fR
+\fB                  XGlyphInfo *\fIextents\fB);\fR
+.fi
+.B XftTextExtents32
+computes the pixel extents on display
+.I dpy
+of no more than
+.I len
+glyphs of a
+.I string
+consisting of thirty-two-bit characters when drawn with
+.IR font ,
+storing them in
+.IR extents .
+The
+.B FcChar32
+data type is defined by the Fontconfig library, and the
+.B XGlyphInfo
+data type is defined by the X Rendering Extension library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftTextExtentsUtf8 (Display    *\fIdpy\fB,\fR
+\fB                    XftFont    *\fIfont\fB,\fR
+\fB                    FcChar8    *\fIstring\fB,\fR
+\fB                    int        \fIlen\fB,\fR
+\fB                    XGlyphInfo *\fIextents\fB);\fR
+.fi
+.B XftTextExtentsUtf8
+computes the pixel extents on display
+.I dpy
+of no more than
+.I len
+bytes of a UTF-8 encoded
+.I string
+when drawn with
+.IR font ,
+storing them in
+.IR extents .
+The
+.B XGlyphInfo
+data type is defined by the X Rendering Extension library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftTextExtentsUtf16 (Display    *\fIdpy\fB,\fR
+\fB                     XftFont    *\fIfont\fB,\fR
+\fB                     FcChar8    *\fIstring\fB,\fR
+\fB                     FcEndian   \fIendian\fB,\fR
+\fB                     int        \fIlen\fB,\fR
+\fB                     XGlyphInfo *\fIextents\fB);\fR
+.fi
+.B XftTextExtentsUtf16
+computes the pixel extents on display
+.I dpy
+of no more than
+.I len
+bytes of a UTF-16LE- or UTF-16BE-encoded
+.I string
+when drawn with
+.IR font ,
+storing them in
+.IR extents .
+The endianness of
+.I string
+must be specified in
+.IR endian .
+The
+.B FcEndian
+data type is defined by the Fontconfig library, and the
+.B XGlyphInfo
+data type is defined by the X Rendering Extension library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftGlyphExtents (Display    *\fIdpy\fB,\fR
+\fB                 XftFont    *\fIfont\fB,\fR
+\fB                 FT_UInt    *\fIglyphs\fB,\fR
+\fB                 int        \fInglyphs\fB,\fR
+\fB                 XGlyphInfo *\fIextents\fB);\fR
+.fi
+Also used internally by the
+.BR XftTextExtents *
+functions,
+.B XftGlyphExtents
+computes the pixel extents on display
+.I dpy
+of no more than
+.I nglyphs
+in the array
+.I glyphs
+drawn with
+.IR font ,
+storing them in
+.IR extents .
+The
+.B FT_UInt
+data type is defined by the FreeType library, and the
+.B XGlyphInfo
+data type is defined by the X Rendering Extension library.
+.SS "Drawing Strings (and Other Things)"
+.nf
+\fBXftDraw *\fR
+\fBXftDrawCreate (Display  *\fIdpy\fB,\fR
+\fB               Drawable \fIdrawable\fB,\fR
+\fB               Visual   *\fIvisual\fB,\fR
+\fB               Colormap \fIcolormap\fB);\fR
+.fi
+.B XftDrawCreate
+creates a structure that can be used to render text and rectangles using
+the specified
+.IR drawable ,
+.IR visual ,
+and
+.I colormap
+on
+.IR display .
+The
+.BR Drawable ,
+.BR Visual ,
+and
+.B Colormap
+data types are defined by the X11 library.
+.PP
+.nf
+\fBXftDraw *\fR
+\fBXftDrawCreateBitmap (Display *\fIdpy\fB,\fR
+\fB                     Pixmap  \fIbitmap\fB);\fR
+.fi
+.B XftDrawCreateBitmap
+behaves as
+.BR XftDrawCreate ,
+except it uses an X pixmap of color depth 1 instead of an X drawable.
+The
+.B Pixmap
+data type is defined by the X11 library.
+.PP
+.nf
+\fBXftDraw *\fR
+\fBXftDrawCreateAlpha (Display *\fIdpy\fB,\fR
+\fB                    Pixmap  \fIpixmap\fB,\fR
+\fB                    int     \fIdepth\fB);\fR
+.fi
+.B XftDrawCreateAlpha
+behaves as
+.BR XftDrawCreate ,
+except it uses an X pixmap of color depth
+.I depth
+instead of an X drawable.
+The
+.B Pixmap
+data type is defined by the X11 library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftDrawChange (XftDraw  *\fIdraw\fB,\fR
+\fB               Drawable \fIdrawable\fB);\fR
+.fi
+.B XftDrawChange
+changes the X drawable association of the existing Xft draw object
+.I draw
+from its current value to
+.IR drawable .
+.PP
+.nf
+\fBDisplay *\fR
+\fBXftDrawDisplay (XftDraw *\fIdraw\fB);\fR
+.fi
+.B XftDrawDisplay
+returns a pointer to the display associated with the Xft draw object
+.IR draw .
+.PP
+.nf
+\fBDrawable\fR
+\fBXftDrawDrawable (XftDraw *\fIdraw\fB);\fR
+.fi
+.B XftDrawDrawable
+returns the X drawable associated with the Xft draw object
+.IR draw .
+.PP
+.nf
+\fBColormap\fR
+\fBXftDrawColormap (XftDraw *\fIdraw\fB);\fR
+.fi
+.B XftDrawColormap
+returns the colormap associatied with the Xft draw object
+.IR draw .
+.PP
+.nf
+\fBVisual *\fR
+\fBXftDrawVisual (XftDraw *\fIdraw\fB);\fR
+.fi
+.B XftDrawVisual
+returns a pointer to the visual associated with the Xft draw object
+.IR draw .
+.PP
+.nf
+\fBPicture\fR
+\fBXftDrawPicture (XftDraw *\fIdraw\fB);\fR
+.fi
+.B XftDrawPicture
+returns the picture associated with the Xft draw object
+.IR draw .
+If the the X server does not support the X Rendering Extension, 0 is
+returned.
+.PP
+.nf
+\fBPicture\fR
+\fBXftDrawSrcPicture (XftDraw *\fIdraw\fB,\fR
+\fB                   XftColor *\fIcolor\fB);\fR
+.fi
+.\" Unfortunately, I'm not quite sure what this does.  I think it is the gizmo
+.\" that is used to create an Xrender Picture object so that glyphs can be
+.\" drawn in the XftDraw object
+.\" .I draw
+.\" using the specified
+.\" .IR color .
+.\" -- BR, 2005-04-02
+This function is never called if the X server doesn't support the X
+Rendering Extension; instead,
+.B XftGlyphCore
+is used.
+.PP
+.nf
+\fBvoid\fR
+\fBXftDrawDestroy (XftDraw *\fIdraw\fB);\fR
+.fi
+.B XftDrawDestroy
+destroys
+.I draw
+(created by one of the
+.B XftCreate
+functions) and frees the memory that was allocated for it.
+.PP
+.nf
+\fBvoid\fR
+\fBXftDrawString8 (XftDraw         *\fId\fB,\fR
+\fB                XRenderColor    *\fIcolor\fB,\fR
+\fB                XftFont         *\fIfont\fB,\fR
+\fB                int             \fIx\fB,\fR
+\fB                int             \fIy\fB,\fR
+\fB                unsigned char   *\fIstring\fB,\fR
+\fB                int             \fIlen\fB);\fR
+.fi
+.B XftDrawString8
+draws no more than
+.I len
+glyphs of
+.I string
+to Xft drawable
+.I d
+using
+.I font
+in
+.I color
+at position
+.IR x , " y" .
+The
+.B XRenderColor
+data type is defined by the X Rendering Extension library.
+.PP
+.nf
+\fBvoid\fR
+\fBXftDrawRect (XftDraw        *\fId\fB,\fR
+\fB             XRenderColor   *\fIcolor\fB,\fR
+\fB             int            \fIx\fB,\fR
+\fB             int            \fIy\fB,\fR
+\fB             unsigned int   \fIwidth\fB,\fR
+\fB             unsigned int   \fIheight\fB);\fR
+.fi
+.B XftDrawRect
+draws a solid rectangle of the specified
+.IR color ,
+.IR width ,
+and
+.I height
+at position
+.IR x , " y"
+to Xft drawable
+.IR d .
+.SH COMPATIBILITY
+As of version 2,
+.B Xft
+has become relatively stable and is expected to retain source and binary
+compatibility in future releases.
+.PP
+.B Xft
+does provide a compatibility interface to its previous major version,
+Xft
+.RI 1. x ,
+described below.
+.SS "Xft 1.x Compatibility Header File"
+.B #include <X11/Xft/XftCompat.h>
+.\" .SS "Xft 1.x Compatibility Constants"
+.SS "Xft 1.x Compatibility Data Types"
+.TP
+.B XftPattern
+holds a set of names with associated value lists; each name refers to a
+property of a font.
+.BR XftPattern s
+are used as inputs to the matching code as well as holding information
+about specific fonts.
+.TP
+.B XftFontSet
+contains a list of
+.BR XftPattern s.
+Internally,
+.B Xft
+uses this data structure to hold sets of fonts.
+Externally,
+.B Xft
+returns the results of listing fonts in this format.
+.TP
+.B XftObjectSet
+holds a set of names and is used to specify which fields from fonts are
+placed in the the list of returned patterns when listing fonts.
+.\" .SS "Xft 1.x Compatibility Functions"
+.SH AUTHOR
+Keith Packard
+.SH "SEE ALSO"
+.I Fontconfig Developers Reference
+.br
+.I FreeType API Reference
+.br
+.I Xlib \- C Language Interface
+.\" Set Vim modeline; textwidth is 70 to account for the extra margin
+.\" padding that man (on Debian GNU/Linux) does for output to
+.\" terminals (7 spaces on the left, 2 on the right), so that we don't
+.\" go past 80 columns total, particularly in .nf/.fi regions.
+.\" vim:set ai et sts=4 sw=4 tw=70:

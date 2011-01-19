@@ -43,6 +43,7 @@ font-sun-misc-1.0.2
 font-util-1.1.1
 font-winitzki-cyrillic-1.0.1
 font-xfree86-type1-1.0.2
+fontconfig-2.8.0
 fontsproto-2.1.1
 freetype-2.4.4
 glproto-1.4.12
@@ -54,9 +55,11 @@ libXaw-1.0.7
 libXdmcp-1.0.3
 libXext-1.1.2
 libXfont-1.4.2
+libXft-2.2.0
 libXinerama-1.1
 libXmu-1.0.5
 libXpm-3.5.8
+libXrender-0.9.6
 libXt-1.0.8
 libfontenc-1.0.5
 libxcb-1.5
