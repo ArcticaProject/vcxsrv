@@ -75,6 +75,12 @@
 #include <sys/stat.h>
 #ifdef WIN32
 #include <windows.h>
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
 #endif
 
 using namespace std;

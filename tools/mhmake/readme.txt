@@ -15,12 +15,13 @@ Release.
   process will be faster. mhmake.exe is more likely to crash when badly
   written makefiles are passed as input.
 
-To build with kdevelop3 on linux
-- Open mhmake.kdevelop and build configurations Debug and Optimized
-- run 'make install' in the deubg and release directories (as root)
-
 To build with kdevelop4 on linux
 - run genkdev4.sh
+
+- run 'make' and 'make install' in the build and build.dbg directories
+
+or
+
 - open mhmake.kdev4 and build configuration build and build.dbg
 - run 'make install' in the build and build.dbg directories (as root)
 

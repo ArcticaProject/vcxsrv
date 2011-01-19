@@ -56,11 +56,11 @@
     <ClCompile Include="src\util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(OutDir)mhmakelexer.cpp">
-      <Filter>Parser Files\Auto</Filter>
+    <ClCompile Include="$(OutDir)\mhmakelexer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(OutDir)mhmakeparser.cpp">
-      <Filter>Parser Files\Auto</Filter>
+    <ClCompile Include="$(OutDir)\mhmakeparser.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,10 +91,7 @@
     <ClInclude Include="src\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\bison.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="$(OutDir)\mhmakeparser.h">
+    <ClInclude Include="src\flexlexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

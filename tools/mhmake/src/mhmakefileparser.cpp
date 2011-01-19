@@ -29,19 +29,6 @@
 commandqueue mhmakefileparser::sm_CommandQueue;
 
 ///////////////////////////////////////////////////////////////////////////////
-int mhmakefileparser::yylex(void)
-{
-  m_yyloc=m_ptheLexer->lineno();
-  return m_ptheLexer->yylex(m_theTokenValue);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::yyerror(const char *m)
-{
-  cerr << this->m_ptheLexer->m_InputFileName<< " ("<<m_yyloc<<"): "<<m<<endl;
-}
-
-///////////////////////////////////////////////////////////////////////////////
 int mhmakefileparser::ParseFile(const fileinfo *pFileInfo, const fileinfo *pMakeDir)
 {
   if (pMakeDir)
@@ -60,8 +47,8 @@ int mhmakefileparser::ParseFile(const fileinfo *pFileInfo, const fileinfo *pMake
   mhmakeFlexLexer theLexer(&yyin);
   m_ptheLexer=&theLexer;
   theLexer.m_InputFileName=pFileInfo->GetFullFileName();
-  theLexer.m_pParser=(mhmakeparser*)this;
-  int Ret=yyparse();
+  theLexer.m_pParser=this;
+  int Ret=parse();
   return Ret;
 }
 
@@ -92,10 +79,15 @@ static inline size_t SkipUntilQuote(const string &Expr,size_t i,char Char)
 static inline size_t SkipMakeExpr(const string &Expr,size_t i)
 {
   char Char=Expr[i++];
-  if (Char!='(')
+  char EndChar;
+  if (Char=='(')
+    EndChar=')';
+  else if (Char=='{')
+    EndChar='}';
+  else
     return i;
   Char=Expr[i++];
-  while (Char!=')')
+  while (Char!=EndChar)
   {
     if (Char=='$')
     {
@@ -103,7 +95,7 @@ static inline size_t SkipMakeExpr(const string &Expr,size_t i)
     }
 #ifdef _DEBUG
     if (i>=Expr.length())
-      throw(string(") not found in ")+Expr);
+      throw(string(1,EndChar)+" not found in "+Expr);
 #endif
     Char=Expr[i++];
   }
@@ -570,11 +562,11 @@ void mhmakefileparser::GetAutoDeps(const fileinfo *pFirstDep, deps_t &Autodeps)
       {
         if (Ret=='#')
         {
-          fscanf(pIn,"%*[ \t]");
-          Ret=fscanf(pIn,"include %1[\"<]%254[^>\"]%*[\">]",&Type,IncludeList);
+          Ret=fscanf(pIn,"%*[ \t]");
+          Ret=fscanf(pIn,"include %1[\"<]%254[^>\"]%*[\">]",(char*)&Type,IncludeList);
         }
         else
-          Ret=fscanf(pIn,"import %1[\"<]%254[^>\"]%*[\">]",&Type,IncludeList);
+          Ret=fscanf(pIn,"import %1[\"<]%254[^>\"]%*[\">]",(char*)&Type,IncludeList);
         if (Ret==2)
         {
           bFound=true;
@@ -744,14 +736,17 @@ void mhmakefileparser::LoadAutoDepsFile(fileinfo *pDepFile)
   m_AutoDepFileLoaded=pDepFile;
 
   FILE *pIn=fopen(pDepFile->GetFullFileName().c_str(),"rb");
-#ifdef _DEBUG
   if (!pIn)
   {
     cerr << "Error opening autodep file "<<pDepFile->GetQuotedFullFileName()<<endl;
     return;
   }
-#endif
-  fread(&m_EnvMd5_32,sizeof(m_EnvMd5_32),1,pIn);
+  if (1!=fread(&m_EnvMd5_32,sizeof(m_EnvMd5_32),1,pIn))
+  {
+    cerr << "Wrong format of autodep file "<<pDepFile->GetQuotedFullFileName()<<endl;
+    fclose(pIn);
+    return;
+  }
 #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
     cout << "Reading Env Md5 from "<<pDepFile->GetQuotedFullFileName()<<": "<<hex<<m_EnvMd5_32<<endl;
@@ -1358,7 +1353,12 @@ string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) co
     switch (Expr[i])
     {
     case '!':
-      if (Expr[i+1]!='=')
+      if (i==Expr.length()-1)
+      {
+        i++; // to break out of the loop
+        Ret=s_TrueString; /* the input was ! which means true */
+      }
+      else if (Expr[i+1]!='=')
       {
         Ret=ResolveExpression(Expr.substr(i+1),Expr);
         Ret = Ret.empty() || Ret==s_FalseString ? s_TrueString : g_EmptyString;
@@ -1371,6 +1371,12 @@ string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) co
       }
       break;
     case '&':
+      #ifdef _DEBUG
+      if (i==Expr.length()-1)
+      {
+        throw(string("Error in expression near ")+Expr[i]+": "+InExpr);
+      } else
+      #endif
       if (Expr[i+1]!='&')
       {
         Ret+=Expr[i++];
@@ -1382,6 +1388,12 @@ string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) co
       }
       break;
     case '|':
+      #ifdef _DEBUG
+      if (i==Expr.length()-1)
+      {
+        throw(string("Error in expression near ")+Expr[i]+": "+InExpr);
+      } else
+      #endif
       if (Expr[i+1]!='|')
       {
         Ret+=Expr[i++];
@@ -1420,6 +1432,11 @@ string mhmakefileparser::ResolveExpression(const string &InExpr,string &Rest) co
       }
       break;
     case '=':
+      if (i==Expr.length()-1)
+      {
+        i++; // To break out of the loop
+      }
+      else
       if (Expr[i+1]!='=')
       {
         Ret+=Expr[i++];

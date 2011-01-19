@@ -20,7 +20,7 @@
 
 #include "stdafx.h"
 #include "fileinfo.h"
-#include "mhmakeparser.h"
+#include "mhmakefileparser.h"
 #include "rule.h"
 #include "util.h"
 

@@ -31,7 +31,8 @@ curdir::initcurdir curdir::m_pCurrentDir;
 curdir::initcurdir::initcurdir()
 {
   char CurDir[MAX_PATH];
-  getcwd(CurDir,MAX_PATH);
+  if (!getcwd(CurDir,MAX_PATH))
+    throw string("Error getting current directory.");
   string strCurDir=CurDir;
   m_pDir=GetAbsFileInfo(NormalizePathName(strCurDir));
 }

@@ -21,7 +21,6 @@
 #include "stdafx.h"
 
 #include "mhmakefileparser.h"
-#include "mhmakeparser.h"
 #include "rule.h"
 #include "util.h"
 
@@ -834,7 +833,7 @@ static const string &GetComspec()
     const char *pComspec=getenv(COMSPEC);
     if (pComspec)
     {
-      Comspec=getenv(COMSPEC);
+      Comspec=pComspec;
       #ifdef WIN32
       Comspec+=" /c ";
       #else
@@ -983,6 +982,35 @@ string mhmakefileparser::GetFullCommand(string Command)
   return pFound->second;
 }
 
+static void CommandSep(const string &Command, int &EndPos, int &NextBegin)
+{
+  while (1)
+  {
+    EndPos=Command.find('&',NextBegin);
+    if (EndPos==string::npos || !EndPos)
+      return;
+    EndPos--;
+    char C=Command[EndPos];
+    NextBegin=EndPos+2;
+    if (strchr("|<>",C))
+    {
+      continue;
+    }
+    if (NextBegin!=Command.length())
+    {
+      C=Command[NextBegin];
+      if (strchr("|<>",C))
+      {
+        continue;
+      }
+    }
+    while (strchr(" \t|<>",Command[NextBegin])) NextBegin++;
+    while (strchr(" \t|<>",Command[EndPos])) EndPos--;
+    break;
+  };
+
+}
+
 mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const
 {
   string FullCommandLine;
@@ -997,7 +1025,44 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
   {
     string tmpCommand=Command.substr(ComSpec.size(),Command.size());
     FullCommandLine=ComSpec;
-    FullCommandLine+=g_QuoteString+QuoteFileName(tmpCommand)+Params+g_QuoteString;
+
+    string ComspecCommandLine=QuoteFileName(tmpCommand)+Params;
+    int NextBegin=0;
+    int EndPos=0;
+    CommandSep(ComspecCommandLine,EndPos,NextBegin);
+    if (EndPos!=string::npos)
+    {
+        // We have multiple commands so create an temporary batch file
+      FILE *pFile=(FILE*)1;
+      char Filename[MAX_PATH];
+      int Nr=1;
+      while (1)
+      {
+        sprintf(Filename,"%s\\tmp%d.bat",m_MakeDir->GetFullFileName().c_str(),Nr);
+        pFile=fopen(Filename,"r");
+        if (!pFile)
+          break;
+        fclose(pFile);
+        Nr++;
+      }
+      pFile=fopen(Filename,"w");
+      fprintf(pFile,"@echo off\n");
+      int PrevPos=0;
+      while (EndPos!=string::npos)
+      {
+        string SubCommand=ComspecCommandLine.substr(PrevPos,EndPos-PrevPos+1);
+        fprintf(pFile,"%s\n",SubCommand.c_str());
+        PrevPos=NextBegin;
+        CommandSep(ComspecCommandLine,EndPos,NextBegin);
+      }
+      string SubCommand=ComspecCommandLine.substr(PrevPos);
+      fprintf(pFile,"%s\n",SubCommand.c_str());
+      fclose(pFile);
+      FullCommandLine+=QuoteFileName(Filename);
+      ((mhmakefileparser*)this)->m_FilesToRemoveAtEnd.push_back(string(Filename));
+    }
+    else
+      FullCommandLine+=ComspecCommandLine;
   }
   else
   {
@@ -1132,8 +1197,16 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
     int pipeto[2];      /* pipe to feed the exec'ed program input */
     int pipefrom[2];    /* pipe to get the exec'ed program output */
 
-    pipe( pipeto );
-    pipe( pipefrom );
+    if ( (-1==pipe(pipeto)) || (-1==pipe(pipefrom)) )
+    {
+      if (IgnoreError)
+      {
+        cerr << "Error creating pipe for : "<<Command<<", but ignoring error\n";
+        return (mh_pid_t)0; // Ignore error
+      }
+      else
+        return (mh_pid_t)-1;
+    }
 
     pid_t ID=vfork();
     if (ID==-1)
@@ -1160,7 +1233,8 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
       close( pipefrom[1] );
 
       poptParseArgvString(FullCommandLine.c_str(), &argc, &pargv);
-      chdir(m_MakeDir->GetFullFileName().c_str());
+      if (-1==chdir(m_MakeDir->GetFullFileName().c_str()))
+        throw string("Error changing current directory to ")+m_MakeDir->GetFullFileName();
       if (m_pEnv)
         execve(pargv[0],(char *const*)pargv,m_pEnv);
       else
@@ -1249,7 +1323,8 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
       const char **pargv;
 
       poptParseArgvString(FullCommandLine.c_str(), &argc, &pargv);
-      chdir(m_MakeDir->GetFullFileName().c_str());
+      if (-1==chdir(m_MakeDir->GetFullFileName().c_str()))
+        throw string("Error changing current directory to ")+m_MakeDir->GetFullFileName();
       if (m_pEnv)
         execve(pargv[0],(char *const*)pargv,m_pEnv);
       else

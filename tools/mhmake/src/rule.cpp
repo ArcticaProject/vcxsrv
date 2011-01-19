@@ -23,7 +23,7 @@
 #include "fileinfo.h"
 #include "rule.h"
 #include "util.h"
-#include "mhmakeparser.h"
+#include "mhmakefileparser.h"
 
 refptr<rule> NullRule;
 

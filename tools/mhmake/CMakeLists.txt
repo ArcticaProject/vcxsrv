@@ -8,10 +8,10 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES "Release")
 
 PROJECT(${PROGRAM_NAME})
 
-SET( CMAKE_CXX_FLAGS_DEBUG "-D _DEBUG")
+SET( CMAKE_CXX_FLAGS_DEBUG "-g -D _DEBUG")
 
 ADD_CUSTOM_COMMAND(
-   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp ${CMAKE_CURRENT_BINARY_DIR}/FlexLexer.h
    COMMAND flex++ -S${CMAKE_CURRENT_SOURCE_DIR}/src/flex.skl -o${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l
    COMMAND mv ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp  ${CMAKE_CURRENT_BINARY_DIR}/temp1234.456
    COMMAND echo '\#include \"stdafx.h\"' > ${CMAKE_CURRENT_BINARY_DIR}/mhmakelexer.cpp
@@ -19,16 +19,17 @@ ADD_CUSTOM_COMMAND(
    COMMAND rm ${CMAKE_CURRENT_BINARY_DIR}/temp1234.456
    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/src/flexlexer.h ${CMAKE_CURRENT_BINARY_DIR}/FlexLexer.h
 
-   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l ${CMAKE_CURRENT_SOURCE_DIR}/src/flex.skl ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.h
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakelexer.l ${CMAKE_CURRENT_SOURCE_DIR}/src/flex.skl ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.hpp ${CMAKE_CURRENT_SOURCE_DIR}/src/flexlexer.h
 )
 ADD_CUSTOM_COMMAND(
-   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.h
-   COMMAND bison++ -d -S${CMAKE_CURRENT_SOURCE_DIR}/src/bison.cc -H${CMAKE_CURRENT_SOURCE_DIR}/src/bison.h -h${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.h -otemp1234.456 ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakeparser.y
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.hpp ${CMAKE_CURRENT_BINARY_DIR}/location.hh  ${CMAKE_CURRENT_BINARY_DIR}/position.hh  ${CMAKE_CURRENT_BINARY_DIR}/stack.hh
+   COMMAND BISON_PKGDATADIR=${CMAKE_CURRENT_SOURCE_DIR}/src/bisondata bison -d -ra -S${CMAKE_CURRENT_SOURCE_DIR}/src/bisondata/lalr1.cc -o${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakeparser.y
+   COMMAND mv ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp temp1234.456
    COMMAND echo '\#include \"stdafx.h\"' > ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp
    COMMAND cat temp1234.456 >> ${CMAKE_CURRENT_BINARY_DIR}/mhmakeparser.cpp
    COMMAND rm temp1234.456
 
-   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakeparser.y
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/mhmakeparser.y ${CMAKE_CURRENT_SOURCE_DIR}/src/bisondata/lalr1.cc
 )
 INCLUDE_DIRECTORIES(src ${CMAKE_CURRENT_BINARY_DIR})
 LINK_LIBRARIES(/usr/lib/libpopt.a)

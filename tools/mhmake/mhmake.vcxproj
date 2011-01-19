@@ -193,7 +193,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CallingConvention>FastCall</CallingConvention>
       <CompileAs>Default</CompileAs>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -267,7 +267,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -366,6 +366,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>FastCall</CallingConvention>
       <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4267;4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -412,14 +413,13 @@
     <ClInclude Include="src\commandqueue.h" />
     <ClInclude Include="src\curdir.h" />
     <ClInclude Include="src\fileinfo.h" />
+    <ClInclude Include="src\flexlexer.h" />
     <ClInclude Include="src\md5.h" />
     <ClInclude Include="src\mhmakefileparser.h" />
     <ClInclude Include="src\refptr.h" />
     <ClInclude Include="src\rule.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\util.h" />
-    <ClInclude Include="$(OutDir)\mhmakeparser.h" />
-    <ClInclude Include="src\bison.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\mhmakeLexer.l">

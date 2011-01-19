@@ -304,7 +304,7 @@ struct WRITEMD5DB
       map<uint32,string>::const_iterator It=g_Md5Database.begin();
       while (It!=g_Md5Database.end())
       {
-        fprintf(pFile,"%08x: ",It->first);
+        fprintf(pFile,"%08lx: ",It->first);
         fwrite(It->second.c_str(),It->second.length(),1,pFile);
         fprintf(pFile,"\n");
         It++;

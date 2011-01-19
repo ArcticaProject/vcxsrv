@@ -47,7 +47,18 @@
 #ifndef __FLEX_LEXER_H
 // Never included before - need to define base class.
 #define __FLEX_LEXER_H
-#include "mhmakeparser.h"
+class mhmakefileparser;
+
+#include "refptr.h"
+
+struct YYSTYPE
+{
+  string theString;
+  int ival;
+};
+typedef struct YYSTYPE YYSTYPE;
+
+#include "location.hh"
 
 #include <iostream>
 #  ifndef FLEX_STD
@@ -62,7 +73,7 @@ typedef int yy_state_type;
 
 class FlexLexer {
 public:
-  FlexLexer() : yylineno(1), m_BraceIndent(0) {}
+  FlexLexer() : m_BraceIndent(0) {}
   virtual ~FlexLexer()  { }
 
   const char* YYText() const  { return yytext; }
@@ -75,15 +86,12 @@ public:
   virtual void yy_delete_buffer( struct yy_buffer_state* b ) = 0;
   virtual void yyrestart( FLEX_STD istream* s ) = 0;
 
-  virtual int yylex(TOKENVALUE &theValue) = 0;
-
+  virtual int yylex(YYSTYPE *yylval, yy::location* yylloc) = 0;
 
   // Switch to new input/output streams.  A nil stream pointer
   // indicates "keep the current one".
   virtual void switch_streams( FLEX_STD istream* new_in = 0,
           FLEX_STD ostream* new_out = 0 ) = 0;
-
-  int lineno() const    { return yylineno; }
 
   int debug() const   { return yy_flex_debug; }
   void set_debug( int flag )  { yy_flex_debug = flag; }
@@ -91,7 +99,6 @@ public:
 protected:
   char* yytext;
   int yyleng;
-  int yylineno;   // only maintained if you use %option yylineno
   int yy_flex_debug;  // only has effect with -d or "%option debug"
 
 public:
@@ -101,11 +108,11 @@ public:
     YY_BUFFER_STATE m_BufferState;
     ifstream m_Stream;
     string m_FileName;
-    int yylineno;
-    INSTACK(YY_BUFFER_STATE BufferState, const string &FileToOpen, const string &PrevFileName, int Line) :
+    yy::location yylloc;
+    INSTACK(YY_BUFFER_STATE BufferState, const string &FileToOpen, const string &PrevFileName, yy::location *pLocInfo) :
       m_BufferState(BufferState),
       m_FileName(PrevFileName),
-      yylineno(Line),
+      yylloc(*pLocInfo),
       m_Stream(FileToOpen.c_str(), ios_base::in)
     {
     }
@@ -144,16 +151,19 @@ public:
   string m_InputFileName;
   string m_curtoken;
   mystack m_IncludeStack;
-  mhmakeparser *m_pParser;
-  mhmakeparser *GetParser()
+  mhmakefileparser *m_pParser;
+  mhmakefileparser *GetParser()
   {
     return m_pParser;
   }
-
+public:
+  string &GetInputFilename()
+  {
+    return m_InputFileName;
+  }
 };
 
 }
-#endif // FLEXLEXER_H
 
 #if defined(yyFlexLexer) || ! defined(yyFlexLexerOnce)
 // Either this is the first time through (yyFlexLexerOnce not defined),
@@ -179,7 +189,7 @@ public:
   void yypush_buffer_state( struct yy_buffer_state* new_buffer );
   void yypop_buffer_state();
 
-  virtual int yylex(TOKENVALUE &theValue);
+  virtual int yylex(YYSTYPE* yylval, yy::location* yylloc);
   virtual void switch_streams( FLEX_STD istream* new_in, FLEX_STD ostream* new_out = 0 );
 
 protected:
@@ -258,3 +268,4 @@ protected:
 
 #endif // yyFlexLexer || ! yyFlexLexerOnce
 
+#endif // FLEXLEXER_H

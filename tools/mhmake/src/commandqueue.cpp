@@ -21,7 +21,7 @@
 #include "stdafx.h"
 
 #include "commandqueue.h"
-#include "mhmakeparser.h"
+#include "mhmakefileparser.h"
 
 #ifndef WIN32
 
@@ -64,24 +64,29 @@ commandqueue::commandqueue() :
   m_DummyWaitHandle=(mh_pid_t)CreateEvent(NULL,TRUE,FALSE,NULL);
 #else
   FILE *pFile=fopen("/proc/cpuinfo","r");
-  const char *pProc="\nprocessor";
-  int cur=1;
+  const char szProc[]="processor";
+  int cur=0;
   int NrProcs=0;
   while (!feof(pFile))
   {
     char In=fgetc(pFile);
-    if (In==pProc[cur])
+    if (In=='\n')
     {
-      cur++;
-      if (!pProc[cur])
-      {
-        NrProcs++;
-        cur=0;
-      }
+      cur=0;
     }
     else
-      cur=0;
+    {
+      if (cur<=sizeof(szProc) && In==szProc[cur])
+      {
+        if (!szProc[cur+1])
+        {
+        NrProcs++;
+      }
+    }
+      cur++;
+    }
   }
+
   m_MaxNrCommandsInParallel=NrProcs;
   m_DummyWaitHandle=(mh_pid_t)-1;
 

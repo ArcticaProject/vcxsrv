@@ -23,7 +23,7 @@
 #include "fileinfo.h"
 #include "rule.h"
 #include "util.h"
-#include "mhmakeparser.h"
+#include "mhmakefileparser.h"
 
 #ifndef S_ISDIR
 #define S_ISDIR(val) ((val)&_S_IFDIR)
@@ -242,13 +242,16 @@ string &NormalizePathName(string &Name)
           while ((pPtr[0]=='\\' || pPtr[0]=='/')  && pPtr[1]=='.' && pPtr[2]=='.')
           {
             pLastSlash--;
-            while (*pLastSlash!='\\' && *pLastSlash!='/') pLastSlash--;
-            if (pLastSlash<pBeg)
-              pLastSlash=pBeg;  // This is a fault in the file name, just put it back at the beginning
+            while (pLastSlash>pBeg && *pLastSlash!='\\' && *pLastSlash!='/') pLastSlash--; // Be dure to not go further then the beginning of the file name
             pPtr+=3;
           }
           if (pLastSlash)
+          {
+            if (pLastSlash<pBeg)
+              pWr=(char*)pBeg;
+            else
             pWr=(char*)pLastSlash;
+          }
         }
         else
         {

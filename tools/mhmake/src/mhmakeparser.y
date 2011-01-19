@@ -20,27 +20,38 @@
 
 /* -------------- declaration section -------------- */
 
-%name mhmakeparser
+%require "2.4.1"
+%defines
+%define parser_class_name "mhmakeparser"
+%define parser_base_class_name "mhmakefileparser"
+%define parser_class_constructor_init ": mhmakefileparser(CommandLineVariables)"
+%define parser_class_constructor_param "const map<string,string> &CommandLineVariables"
+%error-verbose
 
-%define LLOC m_yyloc
-%define LTYPE int            // This is the type of LLOC (defined in mhmakefileparser)
+%code requires {
+#include "mhmakefileparser.h"
+}
 
-%define LVAL m_theTokenValue
-%define STYPE TOKENVALUE     // This is the type of LVAL (defined in mhmakefileparser)
+%code provides {
+const char Test[]="dit is een test";
+}
 
-%define INHERIT : public mhmakefileparser
-
-%define CONSTRUCTOR_PARAM  const map<string,string> &CommandLineVariables
-%define CONSTRUCTOR_INIT   : mhmakefileparser(CommandLineVariables)
-
-%header{
+%{
 #include "mhmakefileparser.h"
 #include "rule.h"
 #include "util.h"
 %}
 
+%locations
+%initial-action
+{
+  // Initialize the initial location.
+  @$.initialize(&m_ptheLexer->GetInputFilename());
+};
+
+%token END      0 "end of file"
 %token <theString> COMMAND
-%token <theString> COMMA OPENBRACE CLOSEBRACE
+%token <theString> COMMA
 %token <theString> STRING DOLLAREXPR EQUAL COLON DOUBLECOLON VARDEF VARVAL
 %token IMEQUAL PEQUAL OPTEQUAL PHONY AUTODEPS EXPORT NEWLINE INCLUDEMAK SPACE VPATH
 
@@ -66,6 +77,10 @@ file : statements
 
 statements :
              | statements statement
+;
+
+space : SPACE |
+        space SPACE
 ;
 
 statement: NEWLINE |
@@ -161,11 +176,11 @@ autodepsrule: AUTODEPS COLON expression
            NEWLINE
 ;
 
-exportrule: EXPORT SPACE exportstrings NEWLINE
+exportrule: EXPORT space exportstrings NEWLINE
 ;
 
 exportstrings : exportstring |
-                exportstring SPACE exportstrings
+                exportstring space exportstrings
 ;
 
 exportstring : STRING
@@ -175,7 +190,7 @@ exportstring : STRING
                }
 ;
 
-vpathrule: VPATH SPACE nonspaceexpression SPACE expression NEWLINE
+vpathrule: VPATH space nonspaceexpression space expression NEWLINE
            {
              SetvPath(ExpandExpression($3),ExpandExpression($5));
              PRINTF(("Setting vpath %s to %s\n",$3.c_str(),ExpandExpression($5).c_str()));
@@ -203,7 +218,7 @@ imvarassignment: STRING IMEQUAL maybeemptyexpression
 
 pvarassignment: STRING PEQUAL maybeemptyexpression
                {
-                 m_Variables[$1]=m_Variables[$1]+g_SpaceString+$3;
+                 m_Variables[$1]=ExpandVar($1)+g_SpaceString+$3;
                  PRINTF(("Adding to variable %s: %s\n",$1.c_str(), $3.c_str()));
                }
 ;
@@ -220,15 +235,15 @@ optvarassignment: STRING OPTEQUAL maybeemptyexpression
 
 maybeemptyexpression: NEWLINE {$$=g_EmptyString;} |
                       expression NEWLINE |
-                      expression SPACE NEWLINE
+                      expression space NEWLINE
 ;
 
 expression: nonspaceexpression |
-            expression SPACE nonspaceexpression {$$=$1+g_SpaceString+$3;}
+            expression space nonspaceexpression {$$=$1+g_SpaceString+$3;}
 ;
 
 expression_nocolorequal: nonspaceexpression_nocolorequal |
-                         expression_nocolorequal SPACE nonspaceexpression_nocolorequal {$$=$1+g_SpaceString+$3;}
+                         expression_nocolorequal space nonspaceexpression_nocolorequal {$$=$1+g_SpaceString+$3;}
 ;
 
 nonspaceexpression: simpleexpression |
@@ -246,10 +261,14 @@ simpleexpression: simpleexpression_nocolorequal |
                   COMMA
 ;
 
-simpleexpression_nocolorequal: STRING {$$=$1;} |
-                               DOLLAREXPR {$$=$1;}
+simpleexpression_nocolorequal: STRING |
+                               DOLLAREXPR
 ;
 
 %%
 /* -------------- body section -------------- */
 
+void yy::mhmakeparser::error (const yy::mhmakeparser::location_type& l, const std::string& m)
+{
+  cerr << l << " -> "<<m<<endl;
+}

@@ -27,13 +27,7 @@
 
 class rule;
 
-class mhmakeFlexLexer;
-
-struct TOKENVALUE
-{
-  string theString;
-  int ival;
-};
+#include "flexlexer.h"
 
 class mhmakefileparser;
 typedef string (mhmakefileparser::*function_f)(const string &, const string *) const;
@@ -52,13 +46,18 @@ typedef set<fileinfo*> deps_t;
 typedef pair< bool, deps_t > autodeps_entry_t;
 typedef map<fileinfo*, autodeps_entry_t > autodeps_t;
 
+namespace yy
+{
+  class location;
+}
+
 class mhmakefileparser : public refbase
 {
-
 private:
   static commandqueue   sm_CommandQueue;
-
+protected:
   mhmakeFlexLexer      *m_ptheLexer;
+private:
   int                   m_yyloc;
   fileinfo             *m_RuleThatIsBuild;
   vector<string>        m_ToBeIncludeAfterBuild;
@@ -74,7 +73,6 @@ private:
 protected:
   map<string,string>    m_Variables;
   map<string,string>    m_CommandLineVars;
-  TOKENVALUE            m_theTokenValue;
   const fileinfo       *m_MakeDir;
   refptr<rule>          m_pCurrentRule;
   refptr<fileinfoarray> m_pCurrentItems;
@@ -105,6 +103,8 @@ protected:
 
   autodeps_t m_AutoDeps;
   set< const fileinfo* > m_Targets; // List of targets that are build by this makefile
+
+  vector<string> m_FilesToRemoveAtEnd;
 
   static mh_time_t m_sBuildTime;
 private:
@@ -223,6 +223,13 @@ public:
   virtual ~mhmakefileparser() /* virtual to be sure the correct destructor is called when we delete with a pointer to this class which in reality is a pointer to a derived class */
   {
     SaveAutoDepsFile();
+    /* remove generated temporary batch files */
+    vector<string>::const_iterator It=m_FilesToRemoveAtEnd.begin();
+    while (It!=m_FilesToRemoveAtEnd.end())
+    {
+      remove(It->c_str());
+      It++;
+    }
 #ifndef WIN32
     char **pEnv=m_pEnv;
     if (pEnv)
@@ -230,9 +237,12 @@ public:
 #endif
     free(m_pEnv);
   }
-  virtual int yylex(void);
-  virtual void yyerror(const char *m);
-  virtual int yyparse()
+  int yylex (YYSTYPE* yylval, yy::location* yylloc)
+  {
+    return m_ptheLexer->yylex(yylval,yylloc);
+  }
+
+  virtual int parse()
   {
     throw("Please derive if you want to execute yyparse.");
   }

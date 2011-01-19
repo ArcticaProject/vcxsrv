@@ -1472,7 +1472,6 @@ yyFlexLexer::yyFlexLexer( std::istream* arg_yyin, std::ostream* arg_yyout )
   yy_init = 0;
   yy_start = 0;
   yy_flex_debug = 0;
-  yylineno = 1; // this will only get updated if %option yylineno
 
   yy_did_buffer_switch_on_eof = 0;
 

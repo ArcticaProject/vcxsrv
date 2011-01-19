@@ -22,7 +22,7 @@
 
 #include "rule.h"
 #include "util.h"
-#include "mhmakeparser.h"
+#include "mhmakeparser.hpp"
 
 #ifdef WIN32
 
@@ -114,7 +114,7 @@ void PrintVersionInfo(void)
   static const char VersionStr[]="\
 mhmake : GNU compatible make tool with extensions\n\
 version: "MHMAKEVER"\n\
-Remarks and bug reports -> marha@sourceforge.net\n\
+Remarks and bug reports -> Marc Haesen\n\
 ";
   cerr << VersionStr;
   exit(1);
@@ -593,7 +593,7 @@ void loadedmakefile::LoadMakefile()
     cout << "Loading makefile "<<m_Makefile->GetQuotedFullFileName()<<endl;
   #endif
 
-  m_pParser=refptr<mhmakefileparser>(new mhmakeparser(m_CommandLineVars));
+  m_pParser=refptr<mhmakefileparser>(new yy::mhmakeparser(m_CommandLineVars));
 
   // Add the MAKECMDGOALS environment variable
   string MakeCmdGoals;
@@ -660,7 +660,7 @@ void loadedmakefile::LoadMakefile()
     md5_update(&ctx, (uint8*)m_Makefile->GetFullFileName().c_str(), m_Makefile->GetFullFileName().size());
 
     char ID[10];
-    sprintf(ID,"_%x",md5_finish32( &ctx));
+    sprintf(ID,"_%lx",md5_finish32( &ctx));
 
     pDepFile=GetFileInfo(string(".") + m_Makefile->GetName()+ ".dep"+ID,m_MakeDir);
     m_pParser->SetVariable(AUTODEPFILE,pDepFile->GetQuotedFullFileName());
