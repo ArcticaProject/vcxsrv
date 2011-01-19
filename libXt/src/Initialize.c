@@ -428,6 +428,9 @@ static void CombineUserDefaults(
     Display *dpy,
     XrmDatabase *pdb)
 {
+#ifdef _MSC_VER
+    char *slashDotXdefaults = ".Xdefaults";
+#else
 #ifdef __MINGW32__
     char *slashDotXdefaults = "/Xdefaults";
 #else
@@ -439,9 +442,13 @@ static void CombineUserDefaults(
 	XrmCombineDatabase(XrmGetStringDatabase(dpy_defaults), pdb, False);
     } else {
 	char filename[PATH_MAX];
+#ifndef _MSC_VER
 	(void) GetRootDirName(filename,
 			PATH_MAX - strlen (slashDotXdefaults) - 1);
 	(void) strcat(filename, slashDotXdefaults);
+#else
+	strcpy(filename, slashDotXdefaults);
+#endif
 	(void)XrmCombineFileDatabase(filename, pdb, False);
     }
 }
