@@ -56,6 +56,7 @@
 #include <time.h>
 
 #ifdef _WIN32
+#undef mkdir
 #define mkdir(path,mode) _mkdir(path)
 #endif
 

@@ -65,6 +65,8 @@ libXext\include\X11\extensions\XLbx.h             X11\extensions\XLbx.h
 libXext\include\X11\extensions\XShm.h             X11\extensions\XShm.h
 libXext\include\X11\extensions\xtestext1.h        X11\extensions\xtestext1.h
 
+libXrender\include\X11\extensions\xrender.h       X11\extensions\xrender.h
+
 libXau\include\X11\Xauth.h                        X11\Xauth.h 
 
 libXdmcp\include\X11\Xdmcp.h                      X11\Xdmcp.h

@@ -53,10 +53,6 @@
 #endif /* ENABLE_LIBXML2 */
 
 #ifdef _WIN32
-#define _WIN32_WINNT 0x0500
-#define STRICT
-#include <windows.h>
-#undef STRICT
 #include <mbstring.h>
 #endif
 
