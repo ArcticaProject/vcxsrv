@@ -114,7 +114,7 @@ void PrintVersionInfo(void)
   static const char VersionStr[]="\
 mhmake : GNU compatible make tool with extensions\n\
 version: "MHMAKEVER"\n\
-Remarks and bug reports -> Marc Haesen\n\
+Remarks and bug reports -> marha@sourceforge.net\n\
 ";
   cerr << VersionStr;
   exit(1);
