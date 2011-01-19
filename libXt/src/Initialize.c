@@ -593,6 +593,7 @@ XrmDatabase XtScreenDatabase(
 			PATH_MAX - strlen (slashDotXdefaultsDash) - 1);
 	    (void) strcat(filename, slashDotXdefaultsDash);
 #else
+            filename = filenamebuf;
 	    strcpy(filename, slashDotXdefaultsDash);
 #endif
 	    len = strlen(filename);
