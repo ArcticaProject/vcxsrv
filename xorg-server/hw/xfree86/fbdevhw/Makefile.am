@@ -1,3 +1,5 @@
+SUBDIRS = man
+
 module_LTLIBRARIES = libfbdevhw.la
 
 libfbdevhw_la_LDFLAGS = -avoid-version
@@ -14,14 +16,4 @@ AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
 
 sdk_HEADERS = fbdevhw.h
 
-include $(top_srcdir)/cpprules.in
-
-drivermandir = $(DRIVER_MAN_DIR)
-driverman_DATA = fbdevhw.$(DRIVER_MAN_SUFFIX)
-CLEANFILES = $(driverman_DATA) fbdevhw.man
-
-fbdevhw.$(DRIVER_MAN_SUFFIX): fbdevhw.man
-	-$(AM_V_at)rm -f fbdevhw.$(DRIVER_MAN_SUFFIX)
-	$(AM_V_at)$(LN_S) fbdevhw.man fbdevhw.$(DRIVER_MAN_SUFFIX)
-
-EXTRA_DIST = fbpriv.h fbdevhw.man.pre README
+EXTRA_DIST = fbpriv.h README

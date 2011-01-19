@@ -7,7 +7,7 @@ exa \- new 2D acceleration architecture for X.Org
 .B EXA
 provides a simple API for video drivers to implement for 2D acceleration.  It
 is a module loaded by drivers, and is not intended to be loaded on its own.
-See your driver's manual page for how to enable 
+See your driver's manual page for how to enable
 .BR EXA .
 .PP
 The
@@ -25,7 +25,7 @@ the Render extension.  Not related to the Composite extension.  Default: No.
 Disables acceleration of uploading pixmap data to the framebuffer. Default: No.
 .TP
 .BI "Option \*qEXANoDownloadFromScreen\*q \*q" boolean \*q
-Disables acceleration of downloading of pixmap data from the framebuffer. 
+Disables acceleration of downloading of pixmap data from the framebuffer.
 .B NOTE:
 Not usable with drivers which rely on DownloadFromScreen succeeding.
 Default: No.

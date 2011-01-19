@@ -403,6 +403,9 @@ typedef    void (* DeviceCursorCleanupProcPtr)(
         DeviceIntPtr /* pDev */,
         ScreenPtr    /* pScreen */);
 
+typedef void (*ConstrainCursorHarderProcPtr)(
+       DeviceIntPtr, ScreenPtr, int *, int *);
+
 typedef struct _Screen {
     int			myNum;	/* index of this instance in Screens[] */
     ATOM		id;
@@ -469,6 +472,7 @@ typedef struct _Screen {
     /* Cursor Procedures */
 
     ConstrainCursorProcPtr	ConstrainCursor;
+    ConstrainCursorHarderProcPtr ConstrainCursorHarder;
     CursorLimitsProcPtr		CursorLimits;
     DisplayCursorProcPtr	DisplayCursor;
     RealizeCursorProcPtr	RealizeCursor;

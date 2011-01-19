@@ -1,3 +1,5 @@
+SUBDIRS = man
+
 noinst_LIBRARIES = libdmxconfig.a
 
 LIBSRCS = parser.y \
@@ -53,26 +55,7 @@ dmxtodmx_DEPENDENCIES = libdmxconfig.a
 dmxtodmx_SOURCES = dmxtodmx.c
 dmxtodmx_LDADD = -L. -ldmxconfig
 
-appmandir = $(APP_MAN_DIR)
-
-appman_PRE = xdmxconfig.man vdltodmx.man dmxtodmx.man
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-CLEANFILES = $(appman_DATA)
-
-SUFFIXES = .$(APP_MAN_SUFFIX) .man
-
-# Strings to replace in man pages
-XORGRELSTRING = @PACKAGE_STRING@
-  XORGMANNAME = X Version 11
-
-MAN_SUBSTS = -e 's|__vendorversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' 
-
-.man.$(APP_MAN_SUFFIX):
-	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@
-
 EXTRA_DIST = \
-	$(appman_PRE) \
 	test-a.in test-a.out \
 	test-b.in test-b.out \
 	test-c.in test-c.out \

@@ -35,43 +35,41 @@
 #include "pixman-private.h"
 #include "pixman-combine32.h"
 
-/* Store functions */
-void
-_pixman_image_store_scanline_32 (bits_image_t *  image,
-                                 int             x,
-                                 int             y,
-                                 int             width,
-                                 const uint32_t *buffer)
+/*
+ * By default, just evaluate the image at 32bpp and expand.  Individual image
+ * types can plug in a better scanline getter if they want to. For example
+ * we  could produce smoother gradients by evaluating them at higher color
+ * depth, but that's a project for the future.
+ */
+static void
+_pixman_image_get_scanline_generic_64 (pixman_image_t * image,
+                                       int              x,
+                                       int              y,
+                                       int              width,
+                                       uint32_t *       buffer,
+                                       const uint32_t * mask)
 {
-    image->store_scanline_32 (image, x, y, width, buffer);
+    uint32_t *mask8 = NULL;
 
-    if (image->common.alpha_map)
+    /* Contract the mask image, if one exists, so that the 32-bit fetch
+     * function can use it.
+     */
+    if (mask)
     {
-	x -= image->common.alpha_origin_x;
-	y -= image->common.alpha_origin_y;
+	mask8 = pixman_malloc_ab (width, sizeof(uint32_t));
+	if (!mask8)
+	    return;
 
-	image->common.alpha_map->store_scanline_32 (
-	    image->common.alpha_map, x, y, width, buffer);
+	pixman_contract (mask8, (uint64_t *)mask, width);
     }
-}
 
-void
-_pixman_image_store_scanline_64 (bits_image_t *  image,
-                                 int             x,
-                                 int             y,
-                                 int             width,
-                                 const uint32_t *buffer)
-{
-    image->store_scanline_64 (image, x, y, width, buffer);
+    /* Fetch the source image into the first half of buffer. */
+    image->bits.get_scanline_32 (image, x, y, width, (uint32_t*)buffer, mask8);
 
-    if (image->common.alpha_map)
-    {
-	x -= image->common.alpha_origin_x;
-	y -= image->common.alpha_origin_y;
+    /* Expand from 32bpp to 64bpp in place. */
+    pixman_expand ((uint64_t *)buffer, buffer, PIXMAN_a8r8g8b8, width);
 
-	image->common.alpha_map->store_scanline_64 (
-	    image->common.alpha_map, x, y, width, buffer);
-    }
+    free (mask8);
 }
 
 /* Fetch functions */
@@ -297,6 +295,7 @@ bits_image_fetch_bilinear_no_repeat_8888 (pixman_image_t * ima,
     uint32_t *bottom_row;
     uint32_t *end;
     uint32_t zero[2] = { 0, 0 };
+    uint32_t one = 1;
     int y, y1, y2;
     int disty;
     int mask_inc;
@@ -362,10 +361,8 @@ bits_image_fetch_bilinear_no_repeat_8888 (pixman_image_t * ima,
      */
     if (!mask)
     {
-	uint32_t mask_bits = 1;
-
         mask_inc = 0;
-        mask = &mask_bits;
+        mask = &one;
     }
     else
     {
@@ -1337,12 +1334,182 @@ bits_image_property_changed (pixman_image_t *image)
 	if ((info->format == format || info->format == PIXMAN_any)	&&
 	    (info->flags & flags) == info->flags)
 	{
-	    image->common.get_scanline_32 = info->fetch_32;
-	    image->common.get_scanline_64 = info->fetch_64;
+	    image->bits.get_scanline_32 = info->fetch_32;
+	    image->bits.get_scanline_64 = info->fetch_64;
 	    break;
 	}
 
 	info++;
+    }
+}
+
+static uint32_t *
+src_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
+{
+    iter->image->bits.get_scanline_32 (
+	iter->image, iter->x, iter->y++, iter->width, iter->buffer, mask);
+
+    return iter->buffer;
+}
+
+static uint32_t *
+src_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
+{
+    iter->image->bits.get_scanline_64 (
+	iter->image, iter->x, iter->y++, iter->width, iter->buffer, mask);
+
+    return iter->buffer;
+}
+
+void
+_pixman_bits_image_src_iter_init (pixman_image_t *image,
+				  pixman_iter_t *iter,
+				  int x, int y, int width, int height,
+				  uint8_t *buffer, iter_flags_t flags)
+{
+    if (flags & ITER_NARROW)
+	iter->get_scanline = src_get_scanline_narrow;
+    else
+	iter->get_scanline = src_get_scanline_wide;
+}
+
+static uint32_t *
+dest_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
+{
+    pixman_image_t *image  = iter->image;
+    int             x      = iter->x;
+    int             y      = iter->y;
+    int             width  = iter->width;
+    uint32_t *	    buffer = iter->buffer;
+
+    image->bits.fetch_scanline_32 (image, x, y, width, buffer, mask);
+    if (image->common.alpha_map)
+    {
+	x -= image->common.alpha_origin_x;
+	y -= image->common.alpha_origin_y;
+
+	image->common.alpha_map->fetch_scanline_32 (
+	    (pixman_image_t *)image->common.alpha_map,
+	    x, y, width, buffer, mask);
+    }
+
+    return iter->buffer;
+}
+
+static uint32_t *
+dest_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
+{
+    bits_image_t *  image  = &iter->image->bits;
+    int             x      = iter->x;
+    int             y      = iter->y;
+    int             width  = iter->width;
+    uint32_t *	    buffer = iter->buffer;
+
+    image->fetch_scanline_64 (
+	(pixman_image_t *)image, x, y, width, buffer, mask);
+    if (image->common.alpha_map)
+    {
+	x -= image->common.alpha_origin_x;
+	y -= image->common.alpha_origin_y;
+
+	image->common.alpha_map->fetch_scanline_64 (
+	    (pixman_image_t *)image->common.alpha_map, x, y, width, buffer, mask);
+    }
+
+    return iter->buffer;
+}
+
+static void
+dest_write_back_narrow (pixman_iter_t *iter)
+{
+    bits_image_t *  image  = &iter->image->bits;
+    int             x      = iter->x;
+    int             y      = iter->y;
+    int             width  = iter->width;
+    const uint32_t *buffer = iter->buffer;
+
+    image->store_scanline_32 (image, x, y, width, buffer);
+
+    if (image->common.alpha_map)
+    {
+	x -= image->common.alpha_origin_x;
+	y -= image->common.alpha_origin_y;
+
+	image->common.alpha_map->store_scanline_32 (
+	    image->common.alpha_map, x, y, width, buffer);
+    }
+
+    iter->y++;
+}
+
+static void
+dest_write_back_wide (pixman_iter_t *iter)
+{
+    bits_image_t *  image  = &iter->image->bits;
+    int             x      = iter->x;
+    int             y      = iter->y;
+    int             width  = iter->width;
+    const uint32_t *buffer = iter->buffer;
+
+    image->store_scanline_64 (image, x, y, width, buffer);
+
+    if (image->common.alpha_map)
+    {
+	x -= image->common.alpha_origin_x;
+	y -= image->common.alpha_origin_y;
+
+	image->common.alpha_map->store_scanline_64 (
+	    image->common.alpha_map, x, y, width, buffer);
+    }
+
+    iter->y++;
+}
+
+static void
+dest_write_back_direct (pixman_iter_t *iter)
+{
+    iter->buffer += iter->image->bits.rowstride;
+}
+
+void
+_pixman_bits_image_dest_iter_init (pixman_image_t *image,
+				   pixman_iter_t *iter,
+				   int x, int y, int width, int height,
+				   uint8_t *buffer, iter_flags_t flags)
+{
+    if (flags & ITER_NARROW)
+    {
+	if (((image->common.flags &
+	      (FAST_PATH_NO_ALPHA_MAP | FAST_PATH_NO_ACCESSORS)) ==
+	     (FAST_PATH_NO_ALPHA_MAP | FAST_PATH_NO_ACCESSORS)) &&
+	    (image->bits.format == PIXMAN_a8r8g8b8	||
+	     (image->bits.format == PIXMAN_x8r8g8b8	&&
+	      (flags & ITER_LOCALIZED_ALPHA))))
+	{
+	    iter->buffer = image->bits.bits + y * image->bits.rowstride + x;
+
+	    iter->get_scanline = _pixman_iter_get_scanline_noop;
+	    iter->write_back = dest_write_back_direct;
+	}
+	else
+	{
+	    if ((flags & (ITER_IGNORE_RGB | ITER_IGNORE_ALPHA)) ==
+		(ITER_IGNORE_RGB | ITER_IGNORE_ALPHA))
+	    {
+		iter->get_scanline = _pixman_iter_get_scanline_noop;
+	    }
+	    else
+	    {
+		iter->get_scanline = dest_get_scanline_narrow;
+	    }
+
+	    iter->write_back = dest_write_back_narrow;
+	}
+    }
+    else
+    {
+	iter->get_scanline = dest_get_scanline_wide;
+	iter->write_back = dest_write_back_wide;
     }
 }
 

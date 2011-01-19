@@ -1,5 +1,5 @@
 
-SUBDIRS = input config examples doc
+SUBDIRS = input config examples doc man
 bin_PROGRAMS = Xdmx
 
 if XINERAMA
@@ -84,29 +84,6 @@ XDMX_LIBS = \
 Xdmx_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 Xdmx_DEPENDENCIES= $(XDMX_LIBS)
 Xdmx_LDADD = $(XDMX_LIBS) $(XDMX_SYS_LIBS) $(XSERVER_SYS_LIBS)
-
-# Man page
-appmandir = $(APP_MAN_DIR)
-
-appman_PRE = Xdmx.man
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-CLEANFILES = $(appman_DATA)
-
-# Strings to replace in man pages
-XORGRELSTRING = @PACKAGE_STRING@
-  XORGMANNAME = X Version 11
-
-MAN_SUBSTS = \
-	-e 's|__vendorversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
-	-e 's|__miscmansuffix__|$(MISC_MAN_SUFFIX)|g'
-
-SUFFIXES = .$(APP_MAN_SUFFIX) .man
-
-.man.$(APP_MAN_SUFFIX):
-	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@
-
-EXTRA_DIST = $(appman_PRE)
 
 relink:
 	$(AM_V_at)rm -f Xdmx$(EXEEXT) && $(MAKE) Xdmx$(EXEEXT)

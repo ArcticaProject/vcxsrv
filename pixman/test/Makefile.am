@@ -92,6 +92,7 @@ TESTPROGRAMS_GTK =		\
 	clip-in			\
 	composite-test		\
 	gradient-test		\
+	radial-test		\
 	alpha-test		\
 	screen-test		\
 	convolution-test	\
@@ -101,6 +102,9 @@ INCLUDES += $(GTK_CFLAGS)
 
 gradient_test_LDADD = $(GTK_LDADD)
 gradient_test_SOURCES = gradient-test.c $(GTK_UTILS)
+
+radial_test_LDADD = $(GTK_LDADD)
+radial_test_SOURCES = radial-test.c utils.c utils.h $(GTK_UTILS)
 
 alpha_test_LDADD = $(GTK_LDADD)
 alpha_test_SOURCES = alpha-test.c $(GTK_UTILS)

@@ -45,10 +45,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/XI.h>
 #include "xkb.h"
 
-#if defined(CSRG_BASED) || defined(linux) || defined(__GNU__)
-#include <paths.h>
-#endif
-
 	/*
 	 * If XKM_OUTPUT_DIR specifies a path without a leading slash, it is
 	 * relative to the top-level XKB configuration directory.

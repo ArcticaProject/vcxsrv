@@ -156,7 +156,7 @@ winprefsyacc.h: winprefsyacc.c
 winprefslex.c: winprefslex.l winprefsyacc.c winprefsyacc.h
 
 BUILT_SOURCES = winprefsyacc.h winprefsyacc.c winprefslex.c
-CLEANFILES = $(BUILT_SOURCES) $(appman_DATA) $(fileman_DATA) XWin.man XWinrc.man
+CLEANFILES = $(BUILT_SOURCES)
 
 AM_YFLAGS = -d
 AM_LFLAGS = -i
@@ -165,34 +165,13 @@ AM_CFLAGS = -DHAVE_XWIN_CONFIG_H $(DIX_CFLAGS) \
             -I$(top_srcdir) \
             -Wno-bad-function-cast
 
-MAN_SRCS = XWin.man.pre XWinrc.man.pre
-
-appmandir = $(APP_MAN_DIR)
-appman_DATA = XWin.$(APP_MAN_SUFFIX)
-
-filemandir = $(FILE_MAN_DIR)
-fileman_DATA = XWinrc.$(FILE_MAN_SUFFIX)
-
-XWin.$(APP_MAN_SUFFIX): XWin.man
-	-$(AM_V_at)rm -f XWin.$(APP_MAN_SUFFIX)
-	$(AM_V_at)$(LN_S) XWin.man XWin.$(APP_MAN_SUFFIX)
-
-XWinrc.$(FILE_MAN_SUFFIX): XWinrc.man
-	-$(AM_V_at)rm -f XWinrc.$(FILE_MAN_SUFFIX)
-	$(AM_V_at)$(LN_S) XWinrc.man XWinrc.$(FILE_MAN_SUFFIX)
-
-EXTRAMANDEFS = -D__logdir__=$(logdir) -D__sysconfdir__=$(sysconfdir) -D__datadir__=$(datadir)
-
 xwinconfigdir = $(sysconfdir)/X11
 xwinconfig_DATA = system.XWinrc
-
-include $(top_srcdir)/cpprules.in
 
 install-exec-hook:
 	(cd $(DESTDIR)$(bindir) && rm -f X && $(LN_S) XWin$(EXEEXT) X)
 
 EXTRA_DIST = \
-	$(MAN_SRCS) \
 	$(xwinconfig_DATA) \
 	X.ico \
 	XWin.rc \
@@ -220,5 +199,5 @@ EXTRA_DIST = \
 relink:
 	$(AM_V_at)rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
 
-SUBDIRS = $(GLX_DIR) .
-DIST_SUBDIRS = glx .
+SUBDIRS = man $(GLX_DIR) .
+DIST_SUBDIRS = man glx .

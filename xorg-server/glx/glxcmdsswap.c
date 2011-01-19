@@ -60,8 +60,11 @@
 
 int __glXDispSwap_CreateContext(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateContextReq *req = (xGLXCreateContextReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCreateContextReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->context);
@@ -74,8 +77,11 @@ int __glXDispSwap_CreateContext(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CreateNewContext(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateNewContextReq *req = (xGLXCreateNewContextReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCreateNewContextReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->context);
@@ -89,9 +95,12 @@ int __glXDispSwap_CreateNewContext(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CreateContextWithConfigSGIX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateContextWithConfigSGIXReq *req =
 	(xGLXCreateContextWithConfigSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCreateContextWithConfigSGIXReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->context);
@@ -105,8 +114,11 @@ int __glXDispSwap_CreateContextWithConfigSGIX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_DestroyContext(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXDestroyContextReq *req = (xGLXDestroyContextReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXDestroyContextReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->context);
@@ -116,8 +128,11 @@ int __glXDispSwap_DestroyContext(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_MakeCurrent(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXMakeCurrentReq *req = (xGLXMakeCurrentReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXMakeCurrentReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->drawable);
@@ -129,8 +144,11 @@ int __glXDispSwap_MakeCurrent(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_MakeContextCurrent(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXMakeContextCurrentReq *req = (xGLXMakeContextCurrentReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXMakeContextCurrentReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->drawable);
@@ -143,8 +161,11 @@ int __glXDispSwap_MakeContextCurrent(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_MakeCurrentReadSGI(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXMakeCurrentReadSGIReq *req = (xGLXMakeCurrentReadSGIReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXMakeCurrentReadSGIReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->drawable);
@@ -157,8 +178,11 @@ int __glXDispSwap_MakeCurrentReadSGI(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_IsDirect(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXIsDirectReq *req = (xGLXIsDirectReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXIsDirectReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->context);
@@ -168,8 +192,11 @@ int __glXDispSwap_IsDirect(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_QueryVersion(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXQueryVersionReq *req = (xGLXQueryVersionReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXQueryVersionReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->majorVersion);
@@ -180,8 +207,11 @@ int __glXDispSwap_QueryVersion(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_WaitGL(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXWaitGLReq *req = (xGLXWaitGLReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXWaitGLReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->contextTag);
@@ -191,8 +221,11 @@ int __glXDispSwap_WaitGL(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_WaitX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXWaitXReq *req = (xGLXWaitXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXWaitXReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->contextTag);
@@ -202,8 +235,11 @@ int __glXDispSwap_WaitX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CopyContext(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCopyContextReq *req = (xGLXCopyContextReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCopyContextReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->source);
@@ -215,8 +251,11 @@ int __glXDispSwap_CopyContext(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_GetVisualConfigs(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXGetVisualConfigsReq *req = (xGLXGetVisualConfigsReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXGetVisualConfigsReq);
 
     __GLX_SWAP_INT(&req->screen);
     return __glXDisp_GetVisualConfigs(cl, pc);
@@ -224,8 +263,11 @@ int __glXDispSwap_GetVisualConfigs(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_GetFBConfigs(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXGetFBConfigsReq *req = (xGLXGetFBConfigsReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXGetFBConfigsReq);
 
     __GLX_SWAP_INT(&req->screen);
     return __glXDisp_GetFBConfigs(cl, pc);
@@ -233,8 +275,11 @@ int __glXDispSwap_GetFBConfigs(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_GetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXGetFBConfigsSGIXReq *req = (xGLXGetFBConfigsSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXGetFBConfigsSGIXReq);
 
     __GLX_SWAP_INT(&req->screen);
     return __glXDisp_GetFBConfigsSGIX(cl, pc);
@@ -242,8 +287,11 @@ int __glXDispSwap_GetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CreateGLXPixmap(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateGLXPixmapReq *req = (xGLXCreateGLXPixmapReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCreateGLXPixmapReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->screen);
@@ -256,10 +304,13 @@ int __glXDispSwap_CreateGLXPixmap(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CreatePixmap(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreatePixmapReq *req = (xGLXCreatePixmapReq *) pc;
     CARD32 *attribs;
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
+
+    REQUEST_AT_LEAST_SIZE(xGLXCreatePixmapReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->screen);
@@ -267,17 +318,26 @@ int __glXDispSwap_CreatePixmap(__GLXclientState *cl, GLbyte *pc)
     __GLX_SWAP_INT(&req->pixmap);
     __GLX_SWAP_INT(&req->glxpixmap);
     __GLX_SWAP_INT(&req->numAttribs);
+
+    if (req->numAttribs > (UINT32_MAX >> 3)) {
+	client->errorValue = req->numAttribs;
+	return BadValue;
+    }
+    REQUEST_FIXED_SIZE(xGLXCreatePixmapReq, req->numAttribs << 3);
     attribs = (CARD32*)(req + 1);
-    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs);
+    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs << 1);
 
     return __glXDisp_CreatePixmap(cl, pc);
 }
 
 int __glXDispSwap_CreateGLXPixmapWithConfigSGIX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateGLXPixmapWithConfigSGIXReq *req = 
 	(xGLXCreateGLXPixmapWithConfigSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCreateGLXPixmapWithConfigSGIXReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->screen);
@@ -290,8 +350,11 @@ int __glXDispSwap_CreateGLXPixmapWithConfigSGIX(__GLXclientState *cl, GLbyte *pc
 
 int __glXDispSwap_DestroyGLXPixmap(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXDestroyGLXPixmapReq *req = (xGLXDestroyGLXPixmapReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXDestroyGLXPixmapReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->glxpixmap);
@@ -301,8 +364,11 @@ int __glXDispSwap_DestroyGLXPixmap(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_DestroyPixmap(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXDestroyGLXPixmapReq *req = (xGLXDestroyGLXPixmapReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXDestroyGLXPixmapReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->glxpixmap);
@@ -312,8 +378,11 @@ int __glXDispSwap_DestroyPixmap(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_QueryContext(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXQueryContextReq *req = (xGLXQueryContextReq *) pc;    
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXQueryContextReq);
 
     __GLX_SWAP_INT(&req->context);
 
@@ -322,25 +391,37 @@ int __glXDispSwap_QueryContext(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CreatePbuffer(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreatePbufferReq *req = (xGLXCreatePbufferReq *) pc;    
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     CARD32 *attribs;
 
+    REQUEST_AT_LEAST_SIZE(xGLXCreatePbufferReq);
+
     __GLX_SWAP_INT(&req->screen);
     __GLX_SWAP_INT(&req->fbconfig);
     __GLX_SWAP_INT(&req->pbuffer);
     __GLX_SWAP_INT(&req->numAttribs);
+
+    if (req->numAttribs > (UINT32_MAX >> 3)) {
+	client->errorValue = req->numAttribs;
+	return BadValue;
+    }
+    REQUEST_FIXED_SIZE(xGLXCreatePbufferReq, req->numAttribs << 3);
     attribs = (CARD32*)(req + 1);
-    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs);
+    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs << 1);
 
     return __glXDisp_CreatePbuffer(cl, pc);
 }
 
 int __glXDispSwap_CreateGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateGLXPbufferSGIXReq *req = (xGLXCreateGLXPbufferSGIXReq *) pc;    
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXCreateGLXPbufferSGIXReq);
 
     __GLX_SWAP_INT(&req->screen);
     __GLX_SWAP_INT(&req->fbconfig);
@@ -353,8 +434,11 @@ int __glXDispSwap_CreateGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_DestroyPbuffer(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXDestroyPbufferReq *req = (xGLXDestroyPbufferReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXDestroyPbufferReq);
 
     __GLX_SWAP_INT(&req->pbuffer);
 
@@ -363,8 +447,11 @@ int __glXDispSwap_DestroyPbuffer(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_DestroyGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXDestroyGLXPbufferSGIXReq *req = (xGLXDestroyGLXPbufferSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXDestroyGLXPbufferSGIXReq);
 
     __GLX_SWAP_INT(&req->pbuffer);
 
@@ -373,16 +460,25 @@ int __glXDispSwap_DestroyGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_ChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXChangeDrawableAttributesReq *req =
 	(xGLXChangeDrawableAttributesReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     CARD32 *attribs;
 
+    REQUEST_AT_LEAST_SIZE(xGLXChangeDrawableAttributesReq);
+
     __GLX_SWAP_INT(&req->drawable);
     __GLX_SWAP_INT(&req->numAttribs);
+
+    if (req->numAttribs > (UINT32_MAX >> 3)) {
+	client->errorValue = req->numAttribs;
+	return BadValue;
+    }
+    REQUEST_FIXED_SIZE(xGLXChangeDrawableAttributesReq, req->numAttribs << 3);
     attribs = (CARD32*)(req + 1);
-    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs);
+    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs << 1);
 
     return __glXDisp_ChangeDrawableAttributes(cl, pc);
 }
@@ -390,42 +486,63 @@ int __glXDispSwap_ChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 int __glXDispSwap_ChangeDrawableAttributesSGIX(__GLXclientState *cl,
 					       GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXChangeDrawableAttributesSGIXReq *req =
 	(xGLXChangeDrawableAttributesSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     CARD32 *attribs;
 
+    REQUEST_AT_LEAST_SIZE(xGLXChangeDrawableAttributesSGIXReq);
+
     __GLX_SWAP_INT(&req->drawable);
     __GLX_SWAP_INT(&req->numAttribs);
+
+    if (req->numAttribs > (UINT32_MAX >> 3)) {
+	client->errorValue = req->numAttribs;
+	return BadValue;
+    }
+    REQUEST_FIXED_SIZE(xGLXChangeDrawableAttributesSGIXReq, req->numAttribs << 3);
     attribs = (CARD32*)(req + 1);
-    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs);
+    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs << 1);
 
     return __glXDisp_ChangeDrawableAttributesSGIX(cl, pc);
 }
 
 int __glXDispSwap_CreateWindow(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXCreateWindowReq *req = (xGLXCreateWindowReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     CARD32 *attribs;
+
+    REQUEST_AT_LEAST_SIZE(xGLXCreateWindowReq);
 
     __GLX_SWAP_INT(&req->screen);
     __GLX_SWAP_INT(&req->fbconfig);
     __GLX_SWAP_INT(&req->window);
     __GLX_SWAP_INT(&req->glxwindow);
     __GLX_SWAP_INT(&req->numAttribs);
+
+    if (req->numAttribs > (UINT32_MAX >> 3)) {
+	client->errorValue = req->numAttribs;
+	return BadValue;
+    }
+    REQUEST_FIXED_SIZE(xGLXCreateWindowReq, req->numAttribs << 3);
     attribs = (CARD32*)(req + 1);
-    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs);
+    __GLX_SWAP_INT_ARRAY(attribs, req->numAttribs << 1);
 
     return __glXDisp_CreateWindow(cl, pc);
 }
 
 int __glXDispSwap_DestroyWindow(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXDestroyWindowReq *req = (xGLXDestroyWindowReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXDestroyWindowReq);
 
     __GLX_SWAP_INT(&req->glxwindow);
 
@@ -434,8 +551,11 @@ int __glXDispSwap_DestroyWindow(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_SwapBuffers(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXSwapBuffersReq *req = (xGLXSwapBuffersReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXSwapBuffersReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->contextTag);
@@ -446,8 +566,11 @@ int __glXDispSwap_SwapBuffers(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_UseXFont(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXUseXFontReq *req = (xGLXUseXFontReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXUseXFontReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->contextTag);
@@ -462,8 +585,11 @@ int __glXDispSwap_UseXFont(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_QueryExtensionsString(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXQueryExtensionsStringReq *req = (xGLXQueryExtensionsStringReq *)pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXQueryExtensionsStringReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->screen);
@@ -473,8 +599,11 @@ int __glXDispSwap_QueryExtensionsString(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_QueryServerString(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXQueryServerStringReq *req = (xGLXQueryServerStringReq *)pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXQueryServerStringReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->screen);
@@ -485,8 +614,11 @@ int __glXDispSwap_QueryServerString(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_ClientInfo(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXClientInfoReq *req = (xGLXClientInfoReq *)pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_AT_LEAST_SIZE(xGLXClientInfoReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->major);
@@ -498,8 +630,11 @@ int __glXDispSwap_ClientInfo(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_QueryContextInfoEXT(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXQueryContextInfoEXTReq *req = (xGLXQueryContextInfoEXTReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXQueryContextInfoEXTReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->context);
@@ -509,11 +644,13 @@ int __glXDispSwap_QueryContextInfoEXT(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_BindTexImageEXT(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *) pc;
     GLXDrawable		 *drawId;
     int			 *buffer;
-    
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_FIXED_SIZE(xGLXVendorPrivateReq, 8);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
 
@@ -530,11 +667,13 @@ int __glXDispSwap_BindTexImageEXT(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_ReleaseTexImageEXT(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *) pc;
     GLXDrawable		 *drawId;
     int			 *buffer;
-    
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_FIXED_SIZE(xGLXVendorPrivateReq, 8);
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
 
@@ -551,11 +690,13 @@ int __glXDispSwap_ReleaseTexImageEXT(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_CopySubBufferMESA(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *) pc;
     GLXDrawable		 *drawId;
     int			 *buffer;
-
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_FIXED_SIZE(xGLXVendorPrivateReq, 20);
 
     (void) drawId;
     (void) buffer;
@@ -576,10 +717,12 @@ int __glXDispSwap_CopySubBufferMESA(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_GetDrawableAttributesSGIX(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXVendorPrivateWithReplyReq *req = (xGLXVendorPrivateWithReplyReq *)pc;
     CARD32 *data;
-    
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXGetDrawableAttributesSGIXReq);
 
     data = (CARD32 *) (req + 1);
     __GLX_SWAP_SHORT(&req->length);
@@ -591,9 +734,11 @@ int __glXDispSwap_GetDrawableAttributesSGIX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_GetDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 {
+    ClientPtr client = cl->client;
     xGLXGetDrawableAttributesReq *req = (xGLXGetDrawableAttributesReq *)pc;
-    
     __GLX_DECLARE_SWAP_VARIABLES;
+
+    REQUEST_SIZE_MATCH(xGLXGetDrawableAttributesReq);
 
     __GLX_SWAP_SHORT(&req->length);
     __GLX_SWAP_INT(&req->drawable);

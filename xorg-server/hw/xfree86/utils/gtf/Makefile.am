@@ -25,20 +25,3 @@ bin_PROGRAMS = gtf
 gtf_SOURCES = gtf.c
 gtf_CFLAGS = $(XORG_CFLAGS)
 gtf_LDADD = -lm
-
-appmandir = $(APP_MAN_DIR)
-
-appman_PRE = gtf.man
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-include $(top_srcdir)/cpprules.in
-
-EXTRA_DIST = gtf.man.pre
-BUILT_SOURCES = $(appman_PRE)
-CLEANFILES = $(appman_PRE) $(appman_DATA)
-
-SUFFIXES += .$(APP_MAN_SUFFIX) .man
-
-.man.$(APP_MAN_SUFFIX):
-	-$(AM_V_at)rm -f $@
-	$(AM_V_at)$(LN_S) $< $@

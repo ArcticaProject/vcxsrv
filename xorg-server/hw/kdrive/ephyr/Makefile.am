@@ -1,3 +1,5 @@
+SUBDIRS = man
+
 INCLUDES = 			\
 	@KDRIVE_INCS@		\
 	@KDRIVE_CFLAGS@		\
@@ -83,20 +85,6 @@ Xephyr_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 relink:
 	$(AM_V_at)rm -f $(bin_PROGRAMS) && $(MAKE) $(bin_PROGRAMS)
 
-MAN_SRCS = Xephyr.man.pre
-
-appmandir = $(APP_MAN_DIR)
-appman_DATA = Xephyr.$(APP_MAN_SUFFIX)
-
-Xephyr.$(APP_MAN_SUFFIX): Xephyr.man
-	-$(AM_V_at)rm -f Xephyr.$(APP_MAN_SUFFIX)
-	$(AM_V_at)$(LN_S) Xephyr.man Xephyr.$(APP_MAN_SUFFIX)
-
-include $(top_srcdir)/cpprules.in
-
-CLEANFILES = $(appman_DATA) Xephyr.man
-
 EXTRA_DIST = \
 	$(HOSTVIDEO_SRCS) \
-	$(HOSTDRI_SRCS) \
-	$(MAN_SRCS)
+	$(HOSTDRI_SRCS)
