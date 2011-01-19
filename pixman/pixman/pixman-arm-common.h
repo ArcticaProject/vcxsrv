@@ -118,7 +118,8 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
     int32_t    dst_stride;                                              \
     uint32_t   src;                                                     \
                                                                         \
-    src = _pixman_image_get_solid (src_image, dst_image->bits.format);  \
+    src = _pixman_image_get_solid (					\
+	imp, src_image, dst_image->bits.format);			\
                                                                         \
     if ((flags & SKIP_ZERO_SRC) && src == 0)                            \
 	return;                                                         \
@@ -164,7 +165,8 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
     int32_t    dst_stride, mask_stride;                                 \
     uint32_t   src;                                                     \
                                                                         \
-    src = _pixman_image_get_solid (src_image, dst_image->bits.format);  \
+    src = _pixman_image_get_solid (					\
+	imp, src_image, dst_image->bits.format);			\
                                                                         \
     if ((flags & SKIP_ZERO_SRC) && src == 0)                            \
 	return;                                                         \
@@ -212,7 +214,8 @@ cputype##_composite_##name (pixman_implementation_t *imp,               \
     int32_t    dst_stride, src_stride;                                  \
     uint32_t   mask;                                                    \
                                                                         \
-    mask = _pixman_image_get_solid (mask_image, dst_image->bits.format);\
+    mask = _pixman_image_get_solid (					\
+	imp, mask_image, dst_image->bits.format);			\
                                                                         \
     if ((flags & SKIP_ZERO_MASK) && mask == 0)                          \
 	return;                                                         \

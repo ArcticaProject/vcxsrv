@@ -1,4 +1,4 @@
-.\" $XFree86: xc/programs/Xserver/hw/xfree86/fbdevhw/fbdevhw.man,v 1.1 2001/01/24 00:06:34 dawes Exp $ 
+.\" $XFree86: xc/programs/Xserver/hw/xfree86/fbdevhw/fbdevhw.man,v 1.1 2001/01/24 00:06:34 dawes Exp $
 .TH FBDEVHW __drivermansuffix__ __vendorversion__
 .SH NAME
 fbdevhw \- os-specific submodule for framebuffer device access
@@ -14,7 +14,7 @@ fbdev(__drivermansuffix__) is a non-accelerated driver which runs on top of the
 fbdevhw module.  fbdevhw can be used by other drivers too, this
 is usually activated with `Option "UseFBDev"' in the device section.
 .SH "SEE ALSO"
-__xservername__(__appmansuffix__), __xconfigfile__(__filemansuffix__), 
+__xservername__(__appmansuffix__), __xconfigfile__(__filemansuffix__),
 xorgconfig(__appmansuffix__), Xserver(__appmansuffix__), X(__miscmansuffix__),
 fbdev(__drivermansuffix__)
 .SH AUTHORS

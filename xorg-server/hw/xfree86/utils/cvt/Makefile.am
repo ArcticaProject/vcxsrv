@@ -32,11 +32,3 @@ cvt_SOURCES = cvt.c \
 	$(top_srcdir)/os/xprintf.c
 
 cvt_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
-
-man1_MANS = cvt.man
-
-CLEANFILES = $(man1_MANS)
-
-include $(top_srcdir)/cpprules.in
-
-EXTRA_DIST = cvt.man.pre

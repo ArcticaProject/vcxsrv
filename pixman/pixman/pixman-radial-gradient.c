@@ -144,13 +144,8 @@ radial_compute_color (double                    a,
     return 0;
 }
 
-static void
-radial_gradient_get_scanline_32 (pixman_image_t *image,
-                                 int             x,
-                                 int             y,
-                                 int             width,
-                                 uint32_t *      buffer,
-                                 const uint32_t *mask)
+static uint32_t *
+radial_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
 {
     /*
      * Implementation of radial gradients following the PDF specification.
@@ -233,6 +228,11 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
      *   <=> for every p, the radiuses associated with the two t solutions
      *       have opposite sign
      */
+    pixman_image_t *image = iter->image;
+    int x = iter->x;
+    int y = iter->y;
+    int width = iter->width;
+    uint32_t *buffer = iter->buffer;
 
     gradient_t *gradient = (gradient_t *)image;
     radial_gradient_t *radial = (radial_gradient_t *)image;
@@ -250,7 +250,7 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
     if (image->common.transform)
     {
 	if (!pixman_transform_point_3d (image->common.transform, &v))
-	    return;
+	    return iter->buffer;
 	
 	unit.vector[0] = image->common.transform->matrix[0][0];
 	unit.vector[1] = image->common.transform->matrix[1][0];
@@ -384,13 +384,31 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
 	    v.vector[2] += unit.vector[2];
 	}
     }
+
+    iter->y++;
+    return iter->buffer;
 }
 
-static void
-radial_gradient_property_changed (pixman_image_t *image)
+static uint32_t *
+radial_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
 {
-    image->common.get_scanline_32 = radial_gradient_get_scanline_32;
-    image->common.get_scanline_64 = _pixman_image_get_scanline_generic_64;
+    uint32_t *buffer = radial_get_scanline_narrow (iter, NULL);
+
+    pixman_expand ((uint64_t *)buffer, buffer, PIXMAN_a8r8g8b8, iter->width);
+
+    return buffer;
+}
+
+void
+_pixman_radial_gradient_iter_init (pixman_image_t *image,
+				   pixman_iter_t *iter,
+				   int x, int y, int width, int height,
+				   uint8_t *buffer, iter_flags_t flags)
+{
+    if (flags & ITER_NARROW)
+	iter->get_scanline = radial_get_scanline_narrow;
+    else
+	iter->get_scanline = radial_get_scanline_wide;
 }
 
 PIXMAN_EXPORT pixman_image_t *
@@ -439,8 +457,6 @@ pixman_image_create_radial_gradient (pixman_point_fixed_t *        inner,
 	radial->inva = 1. * pixman_fixed_1 / radial->a;
 
     radial->mindr = -1. * pixman_fixed_1 * radial->c1.radius;
-
-    image->common.property_changed = radial_gradient_property_changed;
 
     return image;
 }

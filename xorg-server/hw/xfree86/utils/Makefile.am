@@ -1,3 +1,4 @@
 SUBDIRS = \
 	gtf \
-	cvt
+	cvt \
+	man

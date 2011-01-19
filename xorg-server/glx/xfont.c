@@ -158,6 +158,8 @@ int __glXDisp_UseXFont(__GLXclientState *cl, GLbyte *pc)
     struct glx_context *cx;
     int error;
 
+    REQUEST_SIZE_MATCH(xGLXUseXFontReq);
+
     req = (xGLXUseXFontReq *) pc;
     cx = __glXForceCurrent(cl, req->contextTag, &error);
     if (!cx) {

@@ -1,3 +1,5 @@
+SUBDIRS = man
+
 bin_PROGRAMS = Xnest
 noinst_LIBRARIES = libfbcmap.a
 
@@ -59,34 +61,12 @@ Xnest_LDADD = $(XNEST_LIBS) $(XNEST_SYS_LIBS) $(XSERVER_SYS_LIBS)
 Xnest_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 
 EXTRA_DIST = icon \
-             screensaver \
-	     Xnest.man.pre
+             screensaver
 
 # -UDPMSExtension for miinitext? can't put into 
 # OS_DEFINES???
 # EXT_DEFINES???
 # ICONFIGFILES -- SpecialCObjectRule
-
-# Man page
-include $(top_srcdir)/cpprules.in
-
-appmandir = $(APP_MAN_DIR)
-
-appman_PRE = Xnest.man
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-EXTRAMANDEFS = \
-	-D__XCONFIGFILE__=$(__XCONFIGFILE__) \
-	-D__XSERVERNAME__=$(XSERVERNAME)
-
-BUILT_SOURCES = $(appman_PRE)
-CLEANFILES = $(appman_PRE) $(appman_DATA)
-
-SUFFIXES += .$(APP_MAN_SUFFIX) .man
-
-.man.$(APP_MAN_SUFFIX):
-	-$(AM_V_at)rm -f $@
-	$(AM_V_at)$(LN_S) $< $@
 
 relink:
 	$(AM_V_at)rm -f Xnest$(EXEEXT) && $(MAKE) Xnest$(EXEEXT)

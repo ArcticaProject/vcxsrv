@@ -1,4 +1,3 @@
-include $(top_srcdir)/cpprules.in
 
 if DRI
 DRI_SUBDIR = dri
@@ -77,7 +76,7 @@ Xorg_LDADD = $(MAIN_LIB) libxorg.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
 Xorg_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 
 BUILT_SOURCES = xorg.conf.example
-DISTCLEANFILES += xorg.conf.example xorg.conf.example.pre
+DISTCLEANFILES += xorg.conf.example
 EXTRA_DIST = xorgconf.cpp
 
 if SPECIAL_DTRACE_OBJECTS
@@ -108,13 +107,14 @@ if INSTALL_SETUID
 	chmod u+s $(DESTDIR)$(bindir)/Xorg
 endif
 
-CPP_FILES_FLAGS = \
-	$(MANDEFS) \
-	-DDEFAULTFONTPATH="\"$(COMPILEDDEFAULTFONTPATH)\"" \
-	-DMODULEPATH=\"$(DEFAULT_MODULE_PATH)\"
+# Use variables from XORG_MANPAGE_SECTIONS and X Server configuration
+# Do not include manpages.am as values are not appropriate for rc files
+CONF_SUBSTS =	-e 's|__filemansuffix__|$(FILE_MAN_SUFFIX)|g' \
+		-e 's|MODULEPATH|$(DEFAULT_MODULE_PATH)|g' \
+		-e 's|DEFAULTFONTPATH|$(COMPILEDDEFAULTFONTPATH)|g'
+
+xorg.conf.example: xorgconf.cpp
+	$(AM_V_GEN)$(SED) $(CONF_SUBSTS) < $< > $@
 
 relink:
 	$(AM_V_at)rm -f Xorg && $(MAKE) Xorg
-
-xorg.conf.example.pre: xorgconf.cpp
-	cp $(srcdir)/xorgconf.cpp $@

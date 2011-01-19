@@ -165,20 +165,17 @@ run_test (int s, int d, int sa, int da, int soff, int doff)
     orig_dst = create_image (df, daf, doff, doff);
     dst = create_image (df, daf, doff, doff);
 
-    /* Transformations on destinations should be ignored, so just set some
-     * random one.
+    /* Transformations, repeats and filters on destinations should be ignored,
+     * so just set some random ones.
      */
     pixman_transform_init_identity (&t1);
     pixman_transform_scale (&t1, NULL, pixman_int_to_fixed (100), pixman_int_to_fixed (11));
     pixman_transform_rotate (&t1, NULL, pixman_double_to_fixed (0.5), pixman_double_to_fixed (0.11));
     pixman_transform_translate (&t1, NULL, pixman_int_to_fixed (11), pixman_int_to_fixed (17));
 
-#if 0
-    /* Unfortunately, this is actually broken at the moment, so we can't
-     * actually turn it on
-     */
     pixman_image_set_transform (dst, &t1);
-#endif
+    pixman_image_set_filter (dst, PIXMAN_FILTER_BILINEAR, NULL, 0);
+    pixman_image_set_repeat (dst, PIXMAN_REPEAT_REFLECT);
 
     pixman_image_composite (PIXMAN_OP_SRC, orig_dst, NULL, dst,
 			    0, 0, 0, 0, 0, 0, WIDTH, HEIGHT);
