@@ -160,9 +160,13 @@ InitDefaults(
      * ~/.Xdefaults.  Next, if there is an XENVIRONMENT environment variable,
      * then load that file.
      */
-
+     
     if (dpy->xdefaults == NULL) {
+	#ifdef _MSC_VER
+	const char *slashDotXdefaults = ".Xdefaults";
+	#else
 	const char *slashDotXdefaults = "/.Xdefaults";
+	#endif
 
 	(void) GetHomeDir (fname, PATH_MAX - strlen (slashDotXdefaults) - 1);
 	(void) strcat (fname, slashDotXdefaults);
@@ -172,7 +176,11 @@ InitDefaults(
     }
 
     if (!(xenv = getenv ("XENVIRONMENT"))) {
+	#ifdef _MSC_VER
+	const char *slashDotXdefaultsDash = ".Xdefaults-";
+	#else
 	const char *slashDotXdefaultsDash = "/.Xdefaults-";
+	#endif
 	int len;
 
 	(void) GetHomeDir (fname, PATH_MAX - strlen (slashDotXdefaultsDash) - 1);
