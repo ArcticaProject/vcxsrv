@@ -436,6 +436,7 @@ static void CombineUserDefaults(
 #else
     char *slashDotXdefaults = "/.Xdefaults";
 #endif
+#endif
     char *dpy_defaults = XResourceManagerString(dpy);
 
     if (dpy_defaults) {
@@ -577,15 +578,23 @@ XrmDatabase XtScreenDatabase(
 
 	if (!(filename = getenv("XENVIRONMENT"))) {
 	    int len;
+#ifdef _MSC_VER
+	    char *slashDotXdefaultsDash = "Xdefaults-";
+#else
 #ifdef __MINGW32__
 	    char *slashDotXdefaultsDash = "/Xdefaults-";
 #else
 	    char *slashDotXdefaultsDash = "/.Xdefaults-";
 #endif
+#endif
 
+#ifndef _MSC_VER
 	    (void) GetRootDirName(filename = filenamebuf,
 			PATH_MAX - strlen (slashDotXdefaultsDash) - 1);
 	    (void) strcat(filename, slashDotXdefaultsDash);
+#else
+	    strcpy(filename, slashDotXdefaultsDash);
+#endif
 	    len = strlen(filename);
 	    GetHostname (filename+len, PATH_MAX-len);
 	}
