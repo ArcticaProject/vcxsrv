@@ -5,4 +5,5 @@
 #define snprintf _snprintf
 #define strdup _strdup
 
+#include <X11\Xw32defs.h>
 #endif
