@@ -1,0 +1,554 @@
+dnl 
+dnl  fontconfig/configure.in
+dnl 
+dnl  Copyright © 2003 Keith Packard
+dnl 
+dnl  Permission to use, copy, modify, distribute, and sell this software and its
+dnl  documentation for any purpose is hereby granted without fee, provided that
+dnl  the above copyright notice appear in all copies and that both that
+dnl  copyright notice and this permission notice appear in supporting
+dnl  documentation, and that the name of Keith Packard not be used in
+dnl  advertising or publicity pertaining to distribution of the software without
+dnl  specific, written prior permission.  Keith Packard makes no
+dnl  representations about the suitability of this software for any purpose.  It
+dnl  is provided "as is" without express or implied warranty.
+dnl 
+dnl  THE AUTHOR(S) DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+dnl  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+dnl  EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+dnl  CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+dnl  DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+dnl  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+dnl  PERFORMANCE OF THIS SOFTWARE.
+dnl
+dnl Process this file with autoconf to create configure.
+
+AC_INIT(fonts.dtd)
+
+dnl ==========================================================================
+dnl                               Versioning              
+dnl ==========================================================================
+
+dnl This is the package version number, not the shared library
+dnl version.  This same version number must appear in fontconfig/fontconfig.h
+dnl Yes, it is a pain to synchronize version numbers.  Unfortunately, it's
+dnl not possible to extract the version number here from fontconfig.h
+AM_INIT_AUTOMAKE(fontconfig, 2.8.0)
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+AM_MAINTAINER_MODE
+
+dnl libtool versioning
+
+dnl bump revision when fixing bugs
+dnl bump current and age, reset revision to zero when adding APIs
+dnl bump current, leave age, reset revision to zero when changing/removing APIS
+LIBT_CURRENT=5
+LIBT_REVISION=4
+AC_SUBST(LIBT_CURRENT)
+AC_SUBST(LIBT_REVISION)
+LIBT_AGE=4
+
+LIBT_VERSION_INFO="$LIBT_CURRENT:$LIBT_REVISION:$LIBT_AGE"
+AC_SUBST(LIBT_VERSION_INFO)
+
+LIBT_CURRENT_MINUS_AGE=`expr $LIBT_CURRENT - $LIBT_AGE`
+AC_SUBST(LIBT_CURRENT_MINUS_AGE)
+
+dnl ==========================================================================
+
+AM_CONFIG_HEADER(config.h)
+
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_LIBTOOL_WIN32_DLL
+AM_PROG_LIBTOOL
+DOLT
+AC_PROG_MAKE_SET
+
+dnl ==========================================================================
+
+case "$host" in
+  *-*-mingw*)
+    os_win32=yes
+    ;;
+  *)
+    os_win32=no
+esac
+AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
+
+if test "$os_win32" = "yes"; then
+  AC_CHECK_PROG(ms_librarian, lib.exe, yes, no)
+fi
+AM_CONDITIONAL(MS_LIB_AVAILABLE, test x$ms_librarian = xyes)
+
+WARN_CFLAGS=""
+if test "x$GCC" = "xyes"; then
+	WARN_CFLAGS="-Wall -Wpointer-arith -Wstrict-prototypes \
+	-Wmissing-prototypes -Wmissing-declarations \
+	-Wnested-externs -fno-strict-aliasing"
+	AC_DEFINE_UNQUOTED(HAVE_WARNING_CPP_DIRECTIVE,1,
+	[Can use #warning in C files])
+fi
+AC_SUBST(WARN_CFLAGS)
+
+
+dnl ==========================================================================
+
+AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
+
+dnl ==========================================================================
+
+# Setup for compiling build tools (fc-glyphname, etc)
+AC_MSG_CHECKING([for a C compiler for build tools])
+if test $cross_compiling = yes; then
+  AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
+else
+  CC_FOR_BUILD=$CC
+fi
+AC_MSG_RESULT([$CC_FOR_BUILD])
+AC_SUBST(CC_FOR_BUILD)
+
+AC_MSG_CHECKING([for suffix of executable build tools])
+if test $cross_compiling = yes; then
+  cat >conftest.c <<\_______EOF
+int
+main ()
+{
+  exit (0);
+}
+_______EOF
+  for i in .exe ""; do
+    compile="$CC_FOR_BUILD conftest.c -o conftest$i"
+    if AC_TRY_EVAL(compile); then
+      if (./conftest) 2>&AC_FD_CC; then
+	EXEEXT_FOR_BUILD=$i
+	break
+      fi
+    fi
+  done
+  rm -f conftest*
+  if test "${EXEEXT_FOR_BUILD+set}" != set; then
+    AC_MSG_ERROR([Cannot determine suffix of executable build tools])
+  fi
+else
+  EXEEXT_FOR_BUILD=$EXEEXT
+fi
+AC_MSG_RESULT([$EXEEXT_FOR_BUILD])
+AC_SUBST(EXEEXT_FOR_BUILD)
+
+dnl ==========================================================================
+
+AC_ARG_WITH(arch,      [  --with-arch=ARCH      Force architecture to ARCH], arch="$withval", arch=auto)
+
+if test $cross_compiling = yes; then
+	case "$arch" in
+	auto)
+		AC_MSG_ERROR([Cannot autodetect architecture in cross compile environment]
+			     [Use --with-arch=ARCH to specify architecture])
+		;;
+	esac
+fi
+
+ARCHITECTURE=$arch
+AC_SUBST(ARCHITECTURE)
+
+dnl ==========================================================================
+
+# Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_PID_T
+
+# Checks for library functions.
+AC_FUNC_VPRINTF
+AC_FUNC_MMAP
+AC_CHECK_FUNCS([geteuid getuid link memmove memset mkstemp strchr strrchr strtol getopt getopt_long sysconf ftruncate chsize rand random lrand48])
+
+#
+# Checks for iconv
+#
+AC_MSG_CHECKING([for a usable iconv])
+ICONV_LIBS=""
+AC_TRY_LINK([#include <iconv.h>],
+	    [iconv_open ("from", "to");],
+	    [use_iconv=1],
+	    [use_iconv=0])
+if test x$use_iconv = x1; then
+	AC_MSG_RESULT([libc])
+else
+	# try using libiconv
+	fontconfig_save_libs="$LIBS"
+	LIBS="$LIBS -liconv"
+
+	AC_TRY_LINK([#include <iconv.h>],
+		    [iconv_open ("from", "to");],
+		    [use_iconv=1],
+		    [use_iconv=0])
+	
+	if test x$use_iconv = x1; then
+		ICONV_LIBS="-liconv"
+		AC_MSG_RESULT([libiconv])
+	else
+		AC_MSG_RESULT([no])
+	fi
+
+	LIBS="$fontconfig_save_libs"
+fi
+AC_SUBST(ICONV_LIBS)
+AC_DEFINE_UNQUOTED(USE_ICONV,$use_iconv,[Use iconv.])
+
+#
+# Checks for FreeType
+#
+
+AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=yes)
+
+if test "$freetype_config" = "yes"; then 
+	AC_PATH_PROG(ft_config,freetype-config,no)
+	if test "$ft_config" = "no"; then
+		AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
+	fi
+else
+	ft_config="$freetype_config"
+fi
+
+FREETYPE_CFLAGS="`$ft_config --cflags`"
+FREETYPE_LIBS="`$ft_config --libs`"
+
+AC_SUBST(FREETYPE_LIBS)
+AC_SUBST(FREETYPE_CFLAGS)
+
+fontconfig_save_libs="$LIBS"
+fontconfig_save_cflags="$CFLAGS"
+LIBS="$LIBS $FREETYPE_LIBS"
+CFLAGS="$CFLAGS $FREETYPE_CFLAGS"
+AC_CHECK_FUNCS(FT_Get_Next_Char FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Select_Size)
+AC_CHECK_MEMBER(FT_Bitmap_Size.y_ppem,
+		HAVE_FT_BITMAP_SIZE_Y_PPEM=1,
+		HAVE_FT_BITMAP_SIZE_Y_PPEM=0,
+[#include <ft2build.h>
+#include FT_FREETYPE_H])
+AC_DEFINE_UNQUOTED(HAVE_FT_BITMAP_SIZE_Y_PPEM,$HAVE_FT_BITMAP_SIZE_Y_PPEM,
+		   [FT_Bitmap_Size structure includes y_ppem field])
+CFLAGS="$fontconfig_save_cflags"
+LIBS="$fontconfig_save_libs"
+
+#
+# Check expat configuration
+#
+
+AC_ARG_WITH(expat,             [  --with-expat=DIR              Use Expat in DIR], expat=$withval, expat=yes)
+AC_ARG_WITH(expat-includes,    [  --with-expat-includes=DIR     Use Expat includes in DIR], expat_includes=$withval, expat_includes=yes)
+AC_ARG_WITH(expat-lib,         [  --with-expat-lib=DIR          Use Expat library in DIR], expat_lib=$withval, expat_lib=yes)
+
+if test "$enable_libxml2" != "yes"; then
+	case "$expat" in
+	no)
+	;;
+	*)
+		case "$expat_includes" in
+		yes)
+			case "$expat" in
+			yes)
+				;;
+			*)
+				EXPAT_CFLAGS="-I$expat/include"
+				;;
+			esac
+			;;
+		no)
+			EXPAT_CFLAGS=""
+			;;
+		*)
+			EXPAT_CFLAGS="-I$expat_includes"
+			;;
+		esac
+		case "$expat_lib" in
+		yes)
+			case "$expat" in
+			yes)
+				EXPAT_LIBS="-lexpat"
+				;;
+			*)
+				EXPAT_LIBS="-L$expat/lib -lexpat"
+				;;
+			esac
+			;;
+		no)
+			;;
+		*)
+			EXPAT_LIBS="-L$expat_lib -lexpat"
+			;;
+		esac
+
+		expatsaved_CPPFLAGS="$CPPFLAGS"
+		CPPFLAGS="$CPPFLAGS $EXPAT_CFLAGS"
+		expatsaved_LIBS="$LIBS"
+		LIBS="$LIBS $EXPAT_LIBS"
+
+		AC_CHECK_HEADER(expat.h)
+		case "$ac_cv_header_expat_h" in
+		no)
+			AC_CHECK_HEADER(xmlparse.h)
+			case "$ac_cv_header_xmlparse_h" in
+			no)
+				have_expat_header=no;
+				;;
+			yes)
+				HAVE_XMLPARSE_H=1
+				AC_SUBST(HAVE_XMLPARSE_H)
+				AC_DEFINE_UNQUOTED(HAVE_XMLPARSE_H,$HAVE_XMLPARSE_H,
+				[Use xmlparse.h instead of expat.h])
+				have_expat_header=yes
+				;;
+			esac
+			;;
+		yes)
+			have_expat_header=yes
+			;;
+		esac
+		case "$have_expat_header" in
+		no)
+			expat=no
+			;;
+		yes)
+			AC_CHECK_FUNCS(XML_SetDoctypeDeclHandler)
+			case "$ac_cv_func_XML_SetDoctypeDeclHandler" in
+			yes)
+				HAVE_EXPAT=1
+				AC_SUBST(HAVE_EXPAT)
+				AC_DEFINE_UNQUOTED(HAVE_EXPAT,$HAVE_EXPAT,
+				[Found a useable expat library])
+				;;
+			*)
+				expat=no
+				;;
+			esac
+			;;
+		esac
+		CPPFLAGS="$expatsaved_CPPFLAGS"
+		LIBS="$expatsaved_LIBS"
+		;;
+	esac
+	
+	AC_SUBST(EXPAT_CFLAGS)
+	AC_SUBST(EXPAT_LIBS)
+
+	case "$expat" in
+	no)
+		EXPAT_CFLAGS=""
+		EXPAT_LIBS=""
+
+		AC_MSG_WARN([Cannot find usable expat library. Trying to use libxml2 as fallback.])
+		;;
+	esac
+fi
+
+#
+# Check libxml2 configuration
+#
+
+AC_ARG_ENABLE(libxml2,         [  --enable-libxml2              Use libxml2 instead of Expat])
+
+PKG_PROG_PKG_CONFIG
+
+if test "$enable_libxml2" = "yes" -o "$expat" = "no"; then
+    PKG_CHECK_MODULES([LIBXML2], [libxml-2.0 >= 2.6])
+    AC_DEFINE_UNQUOTED(ENABLE_LIBXML2,1,[Use libxml2 instead of Expat])
+
+    AC_SUBST(LIBXML2_CFLAGS)
+    AC_SUBST(LIBXML2_LIBS)
+fi
+
+#
+# Set default font directory
+#
+
+AC_ARG_WITH(default-fonts,     [  --with-default-fonts=DIR      Use fonts from DIR when config is busted], default_fonts="$withval", default_fonts=yes)
+
+case "$default_fonts" in
+yes)
+	if test "$os_win32" = "yes"; then
+		FC_DEFAULT_FONTS="WINDOWSFONTDIR"
+		AC_DEFINE_UNQUOTED(FC_DEFAULT_FONTS, "WINDOWSFONTDIR", 
+				   [Windows font directory])
+	else
+		FC_DEFAULT_FONTS="/usr/share/fonts"
+		AC_DEFINE_UNQUOTED(FC_DEFAULT_FONTS, "/usr/share/fonts", 
+				   [System font directory])
+	fi
+	;;
+*)
+	FC_DEFAULT_FONTS="$default_fonts"
+	AC_DEFINE_UNQUOTED(FC_DEFAULT_FONTS, "$default_fonts",
+			   [System font directory])
+	;;
+esac
+
+AC_SUBST(FC_DEFAULT_FONTS)
+
+#
+# Add more fonts if available.  By default, add only the directories
+# with outline fonts; those with bitmaps can be added as desired in
+# local.conf or ~/.fonts.conf
+#
+AC_ARG_WITH(add-fonts,        [  --with-add-fonts=DIR1,DIR2,...Find additional fonts in DIR1,DIR2,... ], add_fonts="$withval", add_fonts=yes)
+
+case "$add_fonts" in
+yes)
+	FC_ADD_FONTS=""
+	for dir in /usr/X11R6/lib/X11 /usr/X11/lib/X11 /usr/lib/X11; do
+		case x"$FC_ADD_FONTS" in
+		x)
+			sub="$dir/fonts"
+			if test -d "$sub"; then
+				case x$FC_ADD_FONTS in
+				x)
+					FC_ADD_FONTS="$sub"
+					;;
+				*)
+					FC_ADD_FONTS="$FC_ADD_FONTS,$sub"
+					;;
+				esac
+			fi
+			;;
+		esac
+	done
+	AC_DEFINE_UNQUOTED(FC_ADD_FONTS,"$add_fonts",[Additional font directories])
+	;;
+no)
+	FC_ADD_FONTS=""
+	;;
+*)
+	FC_ADD_FONTS="$add_fonts"
+	AC_DEFINE_UNQUOTED(FC_ADD_FONTS,"$add_fonts",[Additional font directories])
+	;;
+esac
+
+AC_SUBST(FC_ADD_FONTS)
+
+FC_FONTPATH=""
+
+case "$FC_ADD_FONTS" in
+"")
+	;;
+*)
+	FC_FONTPATH=`echo $FC_ADD_FONTS | 
+			sed -e 's/^/<dir>/' -e 's/$/<\/dir>/' -e 's/,/<\/dir> <dir>/g'`
+	;;
+esac
+
+AC_SUBST(FC_FONTPATH)
+
+#
+# Set default cache directory path
+#
+AC_ARG_WITH(cache-dir,         [  --with-cache-dir=DIR           Use DIR to store cache files (default LOCALSTATEDIR/cache/fontconfig)], fc_cachedir="$withval", fc_cachedir=yes)
+
+case $fc_cachedir in
+no|yes)
+	if test "$os_win32" = "yes"; then
+		fc_cachedir="WINDOWSTEMPDIR_FONTCONFIG_CACHE"
+	else
+		fc_cachedir='${localstatedir}/cache/${PACKAGE}'
+	fi
+	;;
+*)
+	;;
+esac
+AC_SUBST(fc_cachedir)
+FC_CACHEDIR=${fc_cachedir}
+AC_SUBST(FC_CACHEDIR)
+
+FC_FONTDATE=`LC_ALL=C date`
+
+AC_SUBST(FC_FONTDATE)
+
+AC_ARG_WITH(confdir,           [  --with-confdir=DIR            Use DIR to store configuration files (default SYSCONFDIR/fonts)], confdir="$withval", confdir=yes)
+
+#
+# Set CONFDIR and FONTCONFIG_PATH
+#
+
+case "$confdir" in
+no|yes)
+	confdir='${sysconfdir}'/fonts
+	;;
+*)
+	;;
+esac
+AC_SUBST(confdir)
+CONFDIR=${confdir}
+AC_DEFINE_UNQUOTED(CONFDIR, "$CONFDIR",[Font configuration directory])
+AC_SUBST(CONFDIR)
+
+#
+# Let people not build/install docs if they don't have docbook
+#
+
+AC_CHECK_PROG(HASDOCBOOK, docbook2html, yes, no)
+
+AM_CONDITIONAL(USEDOCBOOK, test "x$HASDOCBOOK" = xyes)
+
+default_docs="yes"
+#
+# Check if docs exist or can be created
+#
+if test x$HASDOCBOOK = xno; then
+	if test -f $srcdir/doc/fonts-conf.5; then
+		:
+	else
+		default_docs="no"
+	fi
+fi
+
+AC_ARG_ENABLE(docs,           [  --disable-docs                Don't build and install documentation],,enable_docs=$default_docs)
+
+AM_CONDITIONAL(ENABLE_DOCS, test "x$enable_docs" = xyes)
+
+if test "x$enable_docs" = xyes; then
+	DOCSRC="doc"
+	tmp=funcs.$$
+	cat $srcdir/doc/*.fncs | awk '
+	/^@TITLE@/	{ if (!done) { printf ("%s\n", $2); done = 1; } }
+	/^@FUNC@/	{ if (!done) { printf ("%s\n", $2); done = 1; } }
+	/^@@/		{ done = 0; }' > $tmp
+	DOCMAN3=`cat $tmp | awk '{ printf ("%s.3 ", $1); }'`
+	echo DOCMAN3 $DOCMAN3
+	rm -f $tmp
+else
+	DOCSRC=""
+	DOCMAN3=""
+fi
+
+AC_SUBST(DOCSRC)
+AC_SUBST(DOCMAN3)
+
+AC_OUTPUT([
+Makefile 
+fontconfig/Makefile
+fc-lang/Makefile
+fc-glyphname/Makefile
+fc-case/Makefile
+fc-arch/Makefile
+src/Makefile
+conf.d/Makefile
+fc-cache/Makefile
+fc-cat/Makefile
+fc-list/Makefile
+fc-match/Makefile
+fc-query/Makefile
+fc-scan/Makefile
+doc/Makefile
+doc/version.sgml
+test/Makefile
+fontconfig.spec
+fontconfig.pc
+fontconfig-zip
+])
