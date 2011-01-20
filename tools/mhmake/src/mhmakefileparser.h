@@ -373,7 +373,6 @@ public:
     return ExecuteCommand(Command, IgnoreError, pOutput);
   }
   string GetFullCommand(string Command);
-  void CreatePythonExe(const string &FullCommand);
 
   static void InitBuildTime();
 

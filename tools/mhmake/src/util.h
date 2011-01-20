@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "2.3.28"
+#define MHMAKEVER    "2.3.29"
 
 class makecommand
 {
