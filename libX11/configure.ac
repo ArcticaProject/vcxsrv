@@ -7,14 +7,13 @@ AC_INIT([libX11],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])
+AC_CONFIG_HEADERS([src/config.h include/X11/XlibConf.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
-AM_CONFIG_HEADER([src/config.h])
-AC_CONFIG_HEADER([include/X11/XlibConf.h])
 
 # Set common system defines for POSIX extensions, such as _GNU_SOURCE
 # Must be called before any macros that run the compiler (like AC_PROG_LIBTOOL)
@@ -34,7 +33,6 @@ XORG_PROG_RAWCPP
 
 # Checks for programs.
 AC_PROG_LIBTOOL
-AC_PROG_CC
 PKG_PROG_PKG_CONFIG
 
 if test x"$CC_FOR_BUILD" = x; then
@@ -364,10 +362,8 @@ AC_ARG_ENABLE(xf86bigfont,
 		[Disable XF86BigFont extension support]),
 	      [XF86BIGFONT=$enableval],[XF86BIGFONT="yes"])
 if test "x$XF86BIGFONT" = "xyes"; then
-    PKG_CHECK_MODULES(BIGFONT, xf86bigfontproto,
+    PKG_CHECK_MODULES(BIGFONT, [xf86bigfontproto >= 1.2.0],
          AC_DEFINE(XF86BIGFONT,1,[Enable XF86BIGFONT extension]),XF86BIGFONT="no")
-    AC_SUBST(BIGFONT_CFLAGS)
-    AC_SUBST(BIGFONT_LIBS)
 fi
 
 AC_ARG_ENABLE(xkb,
