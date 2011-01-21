@@ -322,6 +322,14 @@ winWindowProc (HWND hwnd, UINT message,
 	}
 
       break;
+      
+    case WM_SYSCOMMAND:
+        if (wParam == SC_MAXIMIZE||wParam == SC_RESTORE)
+        {
+           winDebug("Posting WM_EXITSIZEMOVE message since windows does not send it when the maximised/restored button is clicked.\n");
+           PostMessage(hwnd, WM_EXITSIZEMOVE, 0, 0);
+        }
+      break;
 
     case WM_SIZE:
       {
@@ -348,7 +356,7 @@ winWindowProc (HWND hwnd, UINT message,
 	if (wParam == SIZE_MINIMIZED)
 	  return 0;
 
-        ErrorF ("winWindowProc - WM_SIZE - new client area w: %d h: %d\n",
+        winDebug ("winWindowProc - WM_SIZE - new client area w: %d h: %d\n",
                 LOWORD (lParam), HIWORD (lParam));
 
         if (s_pScreenInfo->iResizeMode == resizeWithRandr)
@@ -430,13 +438,13 @@ winWindowProc (HWND hwnd, UINT message,
 	s_pScreenInfo->dwYOffset = -si.nPos;
       }
       return 0;
-
+      
     case WM_ENTERSIZEMOVE:
-      ErrorF("winWindowProc - WM_ENTERSIZEMOVE\n");
+      winDebug("winWindowProc - WM_ENTERSIZEMOVE\n");
       break;
 
     case WM_EXITSIZEMOVE:
-      ErrorF("winWindowProc - WM_EXITSIZEMOVE\n");
+      winDebug("winWindowProc - WM_EXITSIZEMOVE\n");
 
       if (s_pScreenInfo->iResizeMode == resizeWithRandr)
         {
