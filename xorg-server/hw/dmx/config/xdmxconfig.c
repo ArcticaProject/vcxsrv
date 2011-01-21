@@ -142,7 +142,7 @@ static void dmxConfigGetDims(int *maxWidth, int *maxHeight)
     DMXConfigEntryPtr e;
     
     *maxWidth = dmxConfigWallWidth  = 0;
-    *maxWidth = dmxConfigWallHeight = 0;
+    *maxHeight = dmxConfigWallHeight = 0;
     if (!dmxConfigCurrent) return;
     
     dmxConfigWallWidth  = dmxConfigCurrent->width;

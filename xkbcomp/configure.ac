@@ -56,4 +56,7 @@ AC_ARG_WITH([xkb_config_root],
 AC_SUBST([XKBCONFIGROOT])
 
 
-AC_OUTPUT([Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	man/Makefile])
+AC_OUTPUT

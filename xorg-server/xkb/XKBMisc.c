@@ -454,11 +454,12 @@ unsigned		changed,tmp;
 	    }
 	    if (((explicit&XkbExplicitAutoRepeatMask)==0)&&(xkb->ctrls)) {
 		CARD8 old;
-		old= xkb->ctrls->per_key_repeat[key/8];
+		old= BitIsOn(xkb->ctrls->per_key_repeat, key);
 		if (interps[0]->flags&XkbSI_AutoRepeat)
-		     xkb->ctrls->per_key_repeat[key/8]|= (1<<(key%8));
-		else xkb->ctrls->per_key_repeat[key/8]&= ~(1<<(key%8));
-		if (changes && (old!=xkb->ctrls->per_key_repeat[key/8]))
+		    SetBit(xkb->ctrls->per_key_repeat, key);
+		else
+		    ClearBit(xkb->ctrls->per_key_repeat, key);
+		if (changes && old != BitIsOn(xkb->ctrls->per_key_repeat, key))
 		    changes->ctrls.changed_ctrls|= XkbPerKeyRepeatMask;
 	    }
 	}
@@ -466,9 +467,9 @@ unsigned		changed,tmp;
     if ((!found)||(interps[0]==NULL)) {
 	if (((explicit&XkbExplicitAutoRepeatMask)==0)&&(xkb->ctrls)) {
 	    CARD8 old;
-	    old= xkb->ctrls->per_key_repeat[key/8];
-            xkb->ctrls->per_key_repeat[key/8]|= (1<<(key%8));
-	    if (changes && (old!=xkb->ctrls->per_key_repeat[key/8]))
+	    old = BitIsOn(xkb->ctrls->per_key_repeat, key);
+	    SetBit(xkb->ctrls->per_key_repeat, key);
+	    if (changes && (old != BitIsOn(xkb->ctrls->per_key_repeat, key)))
 		changes->ctrls.changed_ctrls|= XkbPerKeyRepeatMask;
 	}
 	if (((explicit&XkbExplicitBehaviorMask)==0)&&

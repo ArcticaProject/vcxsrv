@@ -103,6 +103,7 @@ typedef struct _OtherClients *OtherClientsPtr;
 typedef struct _InputClients *InputClientsPtr;
 typedef struct _DeviceIntRec *DeviceIntPtr;
 typedef struct _ClassesRec *ClassesPtr;
+typedef struct _SpriteRec *SpritePtr;
 typedef union _GrabMask GrabMask;
 
 typedef struct _EventList {
@@ -525,13 +526,15 @@ extern _X_EXPORT InputAttributes *DuplicateInputAttributes(InputAttributes *attr
 extern _X_EXPORT void FreeInputAttributes(InputAttributes *attrs);
 
 /* misc event helpers */
+extern Mask GetEventMask(DeviceIntPtr dev, xEvent* ev, InputClientsPtr clients);
 extern Mask GetEventFilter(DeviceIntPtr dev, xEvent *event);
 extern Mask GetWindowXI2Mask(DeviceIntPtr dev, WindowPtr win, xEvent* ev);
-void FixUpEventFromWindow(DeviceIntPtr pDev,
+void FixUpEventFromWindow(SpritePtr pSprite,
                           xEvent *xE,
                           WindowPtr pWin,
                           Window child,
                           Bool calcChild);
+extern WindowPtr XYToWindow(SpritePtr pSprite, int x, int y);
 extern int EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event,
                               WindowPtr win);
 /**
@@ -567,6 +570,7 @@ extern _X_HIDDEN void valuator_set_mode(DeviceIntPtr dev, int axis, int mode);
 extern Bool EnableCursor;
 
 extern _X_EXPORT ValuatorMask  *valuator_mask_new(int num_valuators);
+extern _X_EXPORT void valuator_mask_free(ValuatorMask **mask);
 extern _X_EXPORT void valuator_mask_set_range(ValuatorMask *mask,
                                        int first_valuator, int num_valuators,
                                        const int* valuators);

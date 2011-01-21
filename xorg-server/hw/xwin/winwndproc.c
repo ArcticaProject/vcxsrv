@@ -40,6 +40,7 @@
 #include "winprefs.h"
 #include "winconfig.h"
 #include "winmsg.h"
+#include "winmonitors.h"
 #include "inputstr.h"
 
 /*
@@ -148,6 +149,13 @@ winWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_DISPLAYCHANGE:
+      /*
+        WM_DISPLAYCHANGE seems to be sent when the monitor layout or
+        any monitor's resolution or depth changes, but it's lParam and
+        wParam always indicate the resolution and bpp for the primary
+        monitor (so ignore that as we could be on any monitor...)
+       */
+
       /* We cannot handle a display mode change during initialization */
       if (s_pScreenInfo == NULL)
 	FatalError ("winWindowProc - WM_DISPLAYCHANGE - The display "
@@ -167,150 +175,153 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	      ))
 	{
-	  /* 
-	   * Store the new display dimensions and depth.
-	   * We do this here for future compatibility in case we
-	   * ever allow switching from fullscreen to windowed mode.
-	   */
-	  s_pScreenPriv->dwLastWindowsWidth = GetSystemMetrics (SM_CXSCREEN);
-	  s_pScreenPriv->dwLastWindowsHeight = GetSystemMetrics (SM_CYSCREEN);
-	  s_pScreenPriv->dwLastWindowsBitsPixel
-	    = GetDeviceCaps (s_pScreenPriv->hdcScreen, BITSPIXEL);	  
 	  break;
 	}
-      
-      ErrorF ("winWindowProc - WM_DISPLAYCHANGE - orig bpp: %d, last bpp: %d, "
-	      "new bpp: %d\n",
-	      (int) s_pScreenInfo->dwBPP,
-	      (int) s_pScreenPriv->dwLastWindowsBitsPixel,
-	      wParam);
 
       ErrorF ("winWindowProc - WM_DISPLAYCHANGE - new width: %d "
-	      "new height: %d\n",
-	      LOWORD (lParam), HIWORD (lParam));
-
-      /*
-       * TrueColor --> TrueColor depth changes are disruptive for:
-       *	Windowed:
-       *		Shadow DirectDraw
-       *		Shadow DirectDraw Non-Locking
-       *		Primary DirectDraw
-       *
-       * TrueColor --> TrueColor depth changes are non-optimal for:
-       *	Windowed:
-       *		Shadow GDI
-       *
-       *	FullScreen:
-       *		Shadow GDI
-       *
-       * TrueColor --> PseudoColor or vice versa are disruptive for:
-       *	Windowed:
-       *		Shadow DirectDraw
-       *		Shadow DirectDraw Non-Locking
-       *		Primary DirectDraw
-       *		Shadow GDI
-       */
+	      "new height: %d new bpp: %d\n",
+	      LOWORD (lParam), HIWORD (lParam), wParam);
 
       /*
        * Check for a disruptive change in depth.
        * We can only display a message for a disruptive depth change,
        * we cannot do anything to correct the situation.
        */
-      if ((s_pScreenInfo->dwBPP != wParam)
-	  && (s_pScreenInfo->dwEngine == WIN_SERVER_SHADOW_DD
-	      || s_pScreenInfo->dwEngine == WIN_SERVER_SHADOW_DDNL
-#ifdef XWIN_PRIMARYFB
-	      || s_pScreenInfo->dwEngine == WIN_SERVER_PRIMARY_DD
-#endif
-	      ))
-	{
-	  /* Cannot display the visual until the depth is restored */
-	  ErrorF ("winWindowProc - Disruptive change in depth\n");
-
-	  /* Display Exit dialog */
-	  winDisplayDepthChangeDialog (s_pScreenPriv);
-
-	  /* Flag that we have an invalid screen depth */
-	  s_pScreenPriv->fBadDepth = TRUE;
-
-	  /* Minimize the display window */
-	  ShowWindow (hwnd, SW_MINIMIZE);
-	}
-      else
-	{
-	  /* Flag that we have a valid screen depth */
-	  s_pScreenPriv->fBadDepth = FALSE;
-	}
-      
       /*
-       * Check for a change in display dimensions.
-       * We can simply recreate the same-sized primary surface when
-       * the display dimensions change.
-       */
-      if (s_pScreenPriv->dwLastWindowsWidth != LOWORD (lParam)
-	  || s_pScreenPriv->dwLastWindowsHeight != HIWORD (lParam))
+        XXX: maybe we need to check if GetSystemMetrics(SM_SAMEDISPLAYFORMAT)
+        has changed as well...
+      */
+      if (s_pScreenInfo->dwBPP != GetDeviceCaps (s_pScreenPriv->hdcScreen, BITSPIXEL))
+        {
+          if ((s_pScreenInfo->dwEngine == WIN_SERVER_SHADOW_DD
+               || s_pScreenInfo->dwEngine == WIN_SERVER_SHADOW_DDNL
+#ifdef XWIN_PRIMARYFB
+               || s_pScreenInfo->dwEngine == WIN_SERVER_PRIMARY_DD
+#endif
+               ))
+            {
+              /* Cannot display the visual until the depth is restored */
+              ErrorF ("winWindowProc - Disruptive change in depth\n");
+
+              /* Display depth change dialog */
+              winDisplayDepthChangeDialog (s_pScreenPriv);
+
+              /* Flag that we have an invalid screen depth */
+              s_pScreenPriv->fBadDepth = TRUE;
+
+              /* Minimize the display window */
+              ShowWindow (hwnd, SW_MINIMIZE);
+            }
+          else
+            {
+              /* For GDI, performance may suffer until original depth is restored */
+              ErrorF ("winWindowProc - Performance may be non-optimal after change in depth\n");
+            }
+        }
+      else
+        {
+          /* Flag that we have a valid screen depth */
+          s_pScreenPriv->fBadDepth = FALSE;
+        }
+
+      /*
+        If we could cheaply check if this WM_DISPLAYCHANGE change
+        affects the monitor(s) which this X screen is displayed on
+        then we should do so here.  For the moment, assume it does.
+        (this is probably usually the case so that might be an
+        overoptimization)
+      */
 	{
 	  /*
-	   * NOTE: The non-DirectDraw engines set the ReleasePrimarySurface
-	   * and CreatePrimarySurface function pointers to point
-	   * to the no operation function, NoopDDA.  This allows us
-	   * to blindly call these functions, even if they are not
-	   * relevant to the current engine (e.g., Shadow GDI).
-	   */
-
-#if CYGDEBUG
-	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Dimensions changed\n");
+             In rootless modes which are monitor or virtual desktop size
+             use RandR to resize the X screen
+          */
+          if ((!s_pScreenInfo->fUserGaveHeightAndWidth) &&
+              (s_pScreenInfo->iResizeMode == resizeWithRandr) &&
+              (FALSE
+#ifdef XWIN_MULTIWINDOWEXTWM
+               || s_pScreenInfo->fMWExtWM
 #endif
-	  
-	  /* Release the old primary surface */
-	  (*s_pScreenPriv->pwinReleasePrimarySurface) (s_pScreen);
-
-#if CYGDEBUG
-	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Released "
-		  "primary surface\n");
+               || s_pScreenInfo->fRootless
+#ifdef XWIN_MULTIWINDOW
+               || s_pScreenInfo->fMultiWindow
 #endif
-
-	  /* Create the new primary surface */
-	  (*s_pScreenPriv->pwinCreatePrimarySurface) (s_pScreen);
-
-#if CYGDEBUG
-	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Recreated "
-		  "primary surface\n");
-#endif
-
-#if 0
-	  /* Multi-Window mode uses RandR for resizes */
-	  if (s_pScreenInfo->fMultiWindow)
+               ))
 	    {
-	      RRSetScreenConfig ();
+              DWORD dwWidth, dwHeight;
+
+              if (s_pScreenInfo->fMultipleMonitors)
+                {
+                  /* resize to new virtual desktop size */
+                  dwWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+                  dwHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+                }
+              else
+                {
+                  /* resize to new size of specified monitor */
+                  struct GetMonitorInfoData data;
+                  if (QueryMonitor(s_pScreenInfo->iMonitor, &data))
+                    {
+                      if (data.bMonitorSpecifiedExists == TRUE)
+                        {
+                          dwWidth = data.monitorWidth;
+                          dwHeight = data.monitorHeight;
+                          /*
+                             XXX: monitor may have changed position,
+                             so we might need to update xinerama data
+                          */
+                        }
+                      else
+                        {
+                          ErrorF ("Monitor number %d no longer exists!\n", s_pScreenInfo->iMonitor);
+                        }
+                    }
+                }
+
+              /*
+                XXX: probably a small bug here: we don't compute the work area
+                and allow for task bar
+
+                XXX: generally, we don't allow for the task bar being moved after
+                the server is started
+               */
+
+              /* Set screen size to match new size, if it is different to current */
+              if ((s_pScreenInfo->dwWidth != dwWidth) ||
+                  (s_pScreenInfo->dwHeight != dwHeight))
+                {
+                  winDoRandRScreenSetSize(s_pScreen,
+                                          dwWidth,
+                                          dwHeight,
+                                          (dwWidth * 25.4) / monitorResolution,
+                                          (dwHeight * 25.4) / monitorResolution);
+                }
 	    }
-#endif
-	}
-      else
-	{
-#if CYGDEBUG
-	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Dimensions did not "
-		  "change\n");
-#endif
+          else
+            {
+              /*
+               * We can simply recreate the same-sized primary surface when
+               * the display dimensions change.
+               */
+
+              /*
+               * NOTE: The non-DirectDraw engines set the ReleasePrimarySurface
+               * and CreatePrimarySurface function pointers to point
+               * to the no operation function, NoopDDA.  This allows us
+               * to blindly call these functions, even if they are not
+               * relevant to the current engine (e.g., Shadow GDI).
+               */
+
+              winDebug ("winWindowProc - WM_DISPLAYCHANGE - Releasing and recreating primary surface\n");
+
+              /* Release the old primary surface */
+              (*s_pScreenPriv->pwinReleasePrimarySurface) (s_pScreen);
+
+              /* Create the new primary surface */
+              (*s_pScreenPriv->pwinCreatePrimarySurface) (s_pScreen);
+            }
 	}
 
-      /* Store the new display dimensions and depth */
-      if (s_pScreenInfo->fMultipleMonitors)
-	{
-	  s_pScreenPriv->dwLastWindowsWidth
-	    = GetSystemMetrics (SM_CXVIRTUALSCREEN);
-	  s_pScreenPriv->dwLastWindowsHeight
-	    = GetSystemMetrics (SM_CYVIRTUALSCREEN);
-	}
-      else
-	{
-	  s_pScreenPriv->dwLastWindowsWidth
-	    = GetSystemMetrics (SM_CXSCREEN);
-	  s_pScreenPriv->dwLastWindowsHeight
-	    = GetSystemMetrics (SM_CYSCREEN);
-	}
-      s_pScreenPriv->dwLastWindowsBitsPixel
-	= GetDeviceCaps (s_pScreenPriv->hdcScreen, BITSPIXEL);
       break;
 
     case WM_SIZE:
@@ -323,8 +334,8 @@ winWindowProc (HWND hwnd, UINT message,
 	winDebug ("winWindowProc - WM_SIZE\n");
 #endif
 
-	/* Break if we do not use scrollbars */
-	if (!s_pScreenInfo->fScrollbars
+	/* Break if we do not allow resizing */
+	if ((s_pScreenInfo->iResizeMode == notAllowed)
 	    || !s_pScreenInfo->fDecoration
 #ifdef XWIN_MULTIWINDOWEXTWM
 	    || s_pScreenInfo->fMWExtWM
@@ -339,6 +350,17 @@ winWindowProc (HWND hwnd, UINT message,
 	/* No need to resize if we get minimized */
 	if (wParam == SIZE_MINIMIZED)
 	  return 0;
+
+        ErrorF ("winWindowProc - WM_SIZE - new client area w: %d h: %d\n",
+                LOWORD (lParam), HIWORD (lParam));
+
+        if (s_pScreenInfo->iResizeMode == resizeWithRandr)
+          {
+            /* Actual resizing is done on WM_EXITSIZEMOVE */
+            return 0;
+          }
+
+        /* Otherwise iResizeMode == resizeWithScrollbars */
 
 	/*
 	 * Get the size of the whole window, including client area,
@@ -356,10 +378,6 @@ winWindowProc (HWND hwnd, UINT message,
 	GetWindowRect (hwnd, &rcWindow);
 	iWidth = rcWindow.right - rcWindow.left;
 	iHeight = rcWindow.bottom - rcWindow.top;
-
-	ErrorF ("winWindowProc - WM_SIZE - window w: %d h: %d, "
-		"new client area w: %d h: %d\n",
-		iWidth, iHeight, LOWORD (lParam), HIWORD (lParam));
 
 	/* Subtract the frame size from the window size. */
 	iWidth -= 2 * GetSystemMetrics (SM_CXSIZEFRAME);
@@ -415,6 +433,37 @@ winWindowProc (HWND hwnd, UINT message,
 	s_pScreenInfo->dwYOffset = -si.nPos;
       }
       return 0;
+
+    case WM_ENTERSIZEMOVE:
+      ErrorF("winWindowProc - WM_ENTERSIZEMOVE\n");
+      break;
+
+    case WM_EXITSIZEMOVE:
+      ErrorF("winWindowProc - WM_EXITSIZEMOVE\n");
+
+      if (s_pScreenInfo->iResizeMode == resizeWithRandr)
+        {
+          /* Set screen size to match new client area, if it is different to current */
+          RECT rcClient;
+          DWORD dwWidth, dwHeight;
+
+          GetClientRect (hwnd, &rcClient);
+          dwWidth = rcClient.right - rcClient.left;
+          dwHeight = rcClient.bottom - rcClient.top;
+
+          if ((s_pScreenInfo->dwWidth != dwWidth) ||
+              (s_pScreenInfo->dwHeight != dwHeight))
+            {
+              /* mm = dots * (25.4 mm / inch) / (dots / inch) */
+              winDoRandRScreenSetSize(s_pScreen,
+                                      dwWidth,
+                                      dwHeight,
+                                      (dwWidth * 25.4) / monitorResolution,
+                                      (dwHeight * 25.4) / monitorResolution);
+            }
+        }
+
+      break;
 
     case WM_VSCROLL:
       {
@@ -599,7 +648,7 @@ winWindowProc (HWND hwnd, UINT message,
 
 	/* Can't do anything without screen info */
 	if (s_pScreenInfo == NULL
-	    || !s_pScreenInfo->fScrollbars
+	    || (s_pScreenInfo->iResizeMode != resizeWithScrollbars)
 	    || s_pScreenInfo->fFullScreen
 	    || !s_pScreenInfo->fDecoration
 #ifdef XWIN_MULTIWINDOWEXTWM

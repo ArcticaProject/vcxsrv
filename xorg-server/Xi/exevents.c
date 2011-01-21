@@ -1261,7 +1261,8 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
         xi2event->group.effective_group = dev->key->xkbInfo->state.group;
     }
 
-    FixUpEventFromWindow(dev, (xEvent*)xi2event, pWin, None, FALSE);
+    FixUpEventFromWindow(dev->spriteInfo->sprite, (xEvent*)xi2event, pWin,
+                         None, FALSE);
 
     DeliverEventsToWindow(dev, pWin, (xEvent*)xi2event, 1,
                           GetEventFilter(dev, (xEvent*)xi2event), NullGrab);

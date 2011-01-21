@@ -482,11 +482,11 @@ winChangeDepthDlgProc (HWND hwndDialog, UINT message,
 
 #if CYGDEBUG
       winDebug ("winChangeDepthDlgProc - WM_INITDIALOG - orig bpp: %d, "
-	      "last bpp: %d\n",
+	      "current bpp: %d\n",
 	      s_pScreenInfo->dwBPP,
-	      s_pScreenPriv->dwLastWindowsBitsPixel);
+              GetDeviceCaps(s_pScreenPriv->hdcScreen, BITSPIXEL));
 #endif
-      
+
       winInitDialog( hwndDialog );
 
       return TRUE;
@@ -494,14 +494,13 @@ winChangeDepthDlgProc (HWND hwndDialog, UINT message,
     case WM_DISPLAYCHANGE:
 #if CYGDEBUG
       winDebug ("winChangeDepthDlgProc - WM_DISPLAYCHANGE - orig bpp: %d, "
-	      "last bpp: %d, new bpp: %d\n",
+	      "new bpp: %d\n",
 	      s_pScreenInfo->dwBPP,
-	      s_pScreenPriv->dwLastWindowsBitsPixel,
-	      wParam);
+              GetDeviceCaps(s_pScreenPriv->hdcScreen, BITSPIXEL));
 #endif
 
       /* Dismiss the dialog if the display returns to the original depth */
-      if (wParam == s_pScreenInfo->dwBPP)
+      if (GetDeviceCaps(s_pScreenPriv->hdcScreen, BITSPIXEL) == s_pScreenInfo->dwBPP)
 	{
 	  ErrorF ("winChangeDelthDlgProc - wParam == s_pScreenInfo->dwBPP\n");
 

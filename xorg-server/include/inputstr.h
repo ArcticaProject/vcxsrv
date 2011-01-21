@@ -203,6 +203,47 @@ typedef struct _GrabRec {
     unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
 } GrabRec;
 
+/**
+ * Sprite information for a device.
+ */
+typedef struct _SpriteRec {
+    CursorPtr	current;
+    BoxRec	hotLimits;	/* logical constraints of hot spot */
+    Bool	confined;	/* confined to screen */
+    RegionPtr	hotShape;	/* additional logical shape constraint */
+    BoxRec	physLimits;	/* physical constraints of hot spot */
+    WindowPtr	win;		/* window of logical position */
+    HotSpot	hot;		/* logical pointer position */
+    HotSpot	hotPhys;	/* physical pointer position */
+#ifdef PANORAMIX
+    ScreenPtr	screen;		/* all others are in Screen 0 coordinates */
+    RegionRec   Reg1;	        /* Region 1 for confining motion */
+    RegionRec   Reg2;		/* Region 2 for confining virtual motion */
+    WindowPtr   windows[MAXSCREENS];
+    WindowPtr	confineWin;	/* confine window */
+#endif
+    /* The window trace information is used at dix/events.c to avoid having
+     * to compute all the windows between the root and the current pointer
+     * window each time a button or key goes down. The grabs on each of those
+     * windows must be checked.
+     * spriteTraces should only be used at dix/events.c! */
+    WindowPtr *spriteTrace;
+    int spriteTraceSize;
+    int spriteTraceGood;
+
+    /* Due to delays between event generation and event processing, it is
+     * possible that the pointer has crossed screen boundaries between the
+     * time in which it begins generating events and the time when
+     * those events are processed.
+     *
+     * pEnqueueScreen: screen the pointer was on when the event was generated
+     * pDequeueScreen: screen the pointer was on when the event is processed
+     */
+    ScreenPtr pEnqueueScreen;
+    ScreenPtr pDequeueScreen;
+
+} SpriteRec;
+
 typedef struct _KeyClassRec {
     int			sourceid;
     CARD8		down[DOWN_LENGTH];
@@ -359,47 +400,6 @@ typedef struct _ClassesRec {
     LedFeedbackPtr	leds;
 } ClassesRec;
 
-
-/**
- * Sprite information for a device.
- */
-typedef struct {
-    CursorPtr	current;
-    BoxRec	hotLimits;	/* logical constraints of hot spot */
-    Bool	confined;	/* confined to screen */
-    RegionPtr	hotShape;	/* additional logical shape constraint */
-    BoxRec	physLimits;	/* physical constraints of hot spot */
-    WindowPtr	win;		/* window of logical position */
-    HotSpot	hot;		/* logical pointer position */
-    HotSpot	hotPhys;	/* physical pointer position */
-#ifdef PANORAMIX
-    ScreenPtr	screen;		/* all others are in Screen 0 coordinates */
-    RegionRec   Reg1;	        /* Region 1 for confining motion */
-    RegionRec   Reg2;		/* Region 2 for confining virtual motion */
-    WindowPtr   windows[MAXSCREENS];
-    WindowPtr	confineWin;	/* confine window */ 
-#endif
-    /* The window trace information is used at dix/events.c to avoid having
-     * to compute all the windows between the root and the current pointer
-     * window each time a button or key goes down. The grabs on each of those
-     * windows must be checked.
-     * spriteTraces should only be used at dix/events.c! */
-    WindowPtr *spriteTrace;
-    int spriteTraceSize;
-    int spriteTraceGood;
-
-    /* Due to delays between event generation and event processing, it is
-     * possible that the pointer has crossed screen boundaries between the
-     * time in which it begins generating events and the time when
-     * those events are processed.
-     *
-     * pEnqueueScreen: screen the pointer was on when the event was generated
-     * pDequeueScreen: screen the pointer was on when the event is processed
-     */
-    ScreenPtr pEnqueueScreen;
-    ScreenPtr pDequeueScreen;
-
-} SpriteRec, *SpritePtr;
 
 /* Device properties */
 typedef struct _XIPropertyValue

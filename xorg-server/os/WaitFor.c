@@ -153,12 +153,16 @@ WaitForSomething(int *pClientsReady)
     fd_set clientsWritable;
     int curclient;
     int selecterr;
-    int nready;
+    static int nready;
     fd_set devicesReadable;
     CARD32 now = 0;
     Bool    someReady = FALSE;
 
     FD_ZERO(&clientsReadable);
+
+    if (nready)
+        SmartScheduleStopTimer();
+    nready = 0;
 
     /* We need a while loop here to handle 
        crashed connections and the screen saver timeout */
@@ -211,7 +215,6 @@ WaitForSomething(int *pClientsReady)
 	}
 	XFD_COPYSET(&AllSockets, &LastSelectMask);
 	}
-	SmartScheduleStopTimer ();
 
 	BlockHandler((pointer)&wt, (pointer)&LastSelectMask);
 	if (NewOutputPending)
@@ -230,7 +233,6 @@ WaitForSomething(int *pClientsReady)
 	}
 	selecterr = GetErrno();
 	WakeupHandler(i, (pointer)&LastSelectMask);
-	SmartScheduleStartTimer ();
 	if (i <= 0) /* An error or timeout occurred */
 	{
 	    if (dispatchException)
@@ -388,6 +390,10 @@ WaitForSomething(int *pClientsReady)
 #endif
 	}
     }
+
+    if (nready)
+        SmartScheduleStartTimer();
+
     return nready;
 }
 

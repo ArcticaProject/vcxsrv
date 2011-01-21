@@ -92,6 +92,18 @@ winAllocateFBNativeGDI (ScreenPtr pScreen)
   return TRUE;
 }
 
+static void
+winFreeFBNativeGDI (ScreenPtr pScreen)
+{
+  FatalError ("winFreeFBNativeGDI\n");
+}
+
+
+static Bool
+winInitScreenNativeGDI(ScreenPtr pScreen)
+{
+  FatalError ("winInitScreenNativeGDI\n");
+}
 
 /*
  * We wrap whatever CloseScreen procedure was specified by fb;
@@ -289,28 +301,9 @@ winAdjustVideoModeNativeGDI (ScreenPtr pScreen)
       break;
   }
 
-  /* GDI cannot change the screen depth */
-  if (pScreenInfo->dwBPP == WIN_DEFAULT_BPP)
-    {
-      /* No -depth parameter passed, let the user know the depth being used */
-      ErrorF ("winAdjustVideoModeNativeGDI - Using Windows display "
-	      "depth of %d bits per pixel, %d depth\n",
-	      (int) dwBPP, (int) pScreenInfo->dwDepth);
+  /* GDI cannot change the screen depth, so we'll use GDI's depth */
+  pScreenInfo->dwBPP = dwBPP;
 
-      /* Use GDI's depth */
-      pScreenInfo->dwBPP = dwBPP;
-    }
-  else if (dwBPP != pScreenInfo->dwBPP)
-    {
-      /* Warn user if GDI depth is different than -depth parameter */
-      ErrorF ("winAdjustVideoModeNativeGDI - Command line bpp: %d, "\
-	      "using bpp: %d\n",
-	      (int) pScreenInfo->dwBPP, (int) dwBPP);
-
-      /* We'll use GDI's depth */
-      pScreenInfo->dwBPP = dwBPP;
-    }
-  
   /* Release our DC */
   ReleaseDC (NULL, hdc);
 
@@ -506,7 +499,9 @@ winSetEngineFunctionsNativeGDI (ScreenPtr pScreen)
   
   /* Set our pointers */
   pScreenPriv->pwinAllocateFB = winAllocateFBNativeGDI;
+  pScreenPriv->pwinFreeFB = winFreeFBNativeGDI;
   pScreenPriv->pwinShadowUpdate = winShadowUpdateNativeGDI;
+  pScreenPriv->pwinInitScreen = winInitScreenNativeGDI;
   pScreenPriv->pwinCloseScreen = winCloseScreenNativeGDI;
   pScreenPriv->pwinInitVisuals = winInitVisualsNativeGDI;
   pScreenPriv->pwinAdjustVideoMode = winAdjustVideoModeNativeGDI;

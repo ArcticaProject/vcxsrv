@@ -58,6 +58,7 @@ winReshapeRootless (WindowPtr pWin);
 Bool
 winCreateWindowNativeGDI (WindowPtr pWin)
 {
+  Bool			fResult = TRUE;
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winWindowPriv(pWin);
   winScreenPriv(pScreen);

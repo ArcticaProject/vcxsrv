@@ -74,9 +74,6 @@
 #endif
 #define WIN_DEFAULT_USER_GAVE_HEIGHT_AND_WIDTH	FALSE
 
-#define WIN_DIB_MAXIMUM_SIZE	0x08000000 /* 16 MB on Windows 95, 98, Me */
-#define WIN_DIB_MAXIMUM_SIZE_MB (WIN_DIB_MAXIMUM_SIZE / 8 / 1024 / 1024)
-
 /*
  * Windows only supports 256 color palettes
  */
@@ -276,7 +273,11 @@ static Atom func (void) {					\
 
 typedef Bool (*winAllocateFBProcPtr)(ScreenPtr);
 
+typedef void (*winFreeFBProcPtr)(ScreenPtr);
+
 typedef void (*winShadowUpdateProcPtr)(ScreenPtr, shadowBufPtr);
+
+typedef Bool (*winInitScreenProcPtr)(ScreenPtr);
 
 typedef Bool (*winCloseScreenProcPtr)(int, ScreenPtr);
 
@@ -314,6 +315,12 @@ typedef Bool (*winReleasePrimarySurfaceProcPtr)(ScreenPtr);
 typedef Bool (*winFinishCreateWindowsWindowProcPtr)(WindowPtr pWin);
 
 typedef Bool (*winCreateScreenResourcesProc)(ScreenPtr);
+
+#ifdef XWIN_NATIVEGDI
+/* Typedefs for native GDI wrappers */
+typedef Bool (*RealizeFontPtr) (ScreenPtr pScreen, FontPtr pFont);
+typedef Bool (*UnrealizeFontPtr)(ScreenPtr pScreen, FontPtr pFont);
+#endif
 
 
 /*
@@ -369,6 +376,15 @@ typedef struct {
 } winCursorRec;
 
 /*
+ * Resize modes
+ */
+typedef enum {
+  notAllowed,
+  resizeWithScrollbars,
+  resizeWithRandr
+} winResizeMode;
+
+/*
  * Screen information structure that we need before privates are available
  * in the server startup sequence.
  */
@@ -381,12 +397,12 @@ typedef struct
   Bool			fUserGaveHeightAndWidth;
 
   DWORD			dwScreen;
+
+  int			iMonitor;
   DWORD			dwUserWidth;
   DWORD			dwUserHeight;
   DWORD			dwWidth;
   DWORD			dwHeight;
-  DWORD			dwWidth_mm;
-  DWORD			dwHeight_mm;
   DWORD			dwPaddedWidth;
 
   /* Did the user specify a screen position? */
@@ -431,7 +447,7 @@ typedef struct
 #endif
   Bool                  fMultipleMonitors;
   Bool			fLessPointer;
-  Bool			fScrollbars;
+  winResizeMode		iResizeMode;
   Bool			fNoTrayIcon;
   int			iE3BTimeout;
   /* Windows (Alt+F4) and Unix (Ctrl+Alt+Backspace) Killkey */
@@ -473,11 +489,6 @@ typedef struct _winPrivScreenRec
   /* Handle to icons that must be freed */
   HICON			hiconNotifyIcon;
 
-  /* Last width, height, and depth of the Windows display */
-  DWORD			dwLastWindowsWidth;
-  DWORD			dwLastWindowsHeight;
-  DWORD			dwLastWindowsBitsPixel;
-
   /* Palette management */
   ColormapPtr		pcmapInstalled;
 
@@ -493,7 +504,8 @@ typedef struct _winPrivScreenRec
   HDC			hdcScreen;
   HDC			hdcShadow;
   HWND			hwndScreen;
-  
+  BITMAPINFOHEADER      *pbmih;
+
   /* Privates used by shadow fb and primary fb DirectDraw servers */
   LPDIRECTDRAW		pdd;
   LPDIRECTDRAWSURFACE2	pddsPrimary;
@@ -543,7 +555,9 @@ typedef struct _winPrivScreenRec
   
   /* Engine specific functions */
   winAllocateFBProcPtr			pwinAllocateFB;
+  winFreeFBProcPtr			pwinFreeFB;
   winShadowUpdateProcPtr		pwinShadowUpdate;
+  winInitScreenProcPtr			pwinInitScreen;
   winCloseScreenProcPtr			pwinCloseScreen;
   winInitVisualsProcPtr			pwinInitVisuals;
   winAdjustVideoModeProcPtr		pwinAdjustVideoMode;
@@ -588,6 +602,12 @@ typedef struct _winPrivScreenRec
   SetShapeProcPtr			SetShape;
 
   winCursorRec                          cursor;
+
+#ifdef XWIN_NATIVEGDI
+  RealizeFontPtr                        RealizeFont;
+  UnrealizeFontPtr                      UnrealizeFont;
+#endif
+
 } winPrivScreenRec;
 
 
@@ -1450,6 +1470,18 @@ winInitCursor (ScreenPtr pScreen);
  */
 void
 winInitializeScreens(int maxscreens);
+
+/*
+ * winrandr.c
+ */
+Bool
+winRandRInit (ScreenPtr pScreen);
+void
+winDoRandRScreenSetSize (ScreenPtr  pScreen,
+                         CARD16	    width,
+                         CARD16	    height,
+                         CARD32	    mmWidth,
+                         CARD32	    mmHeight);
 
 /*
  * END DDX and DIX Function Prototypes

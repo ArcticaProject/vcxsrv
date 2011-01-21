@@ -69,10 +69,6 @@ winMWExtWMProcs = {
  * Prototypes
  */
 
-Bool
-winRandRInit (ScreenPtr pScreen);
-
-
 /*
  * Local functions
  */
@@ -95,6 +91,7 @@ winScreenInit (int index,
   winScreenInfoPtr      pScreenInfo = &g_ScreenInfo[index];
   winPrivScreenPtr	pScreenPriv;
   HDC			hdc;
+  DWORD dwInitialBPP;
 
 #if CYGDEBUG || YES
   winDebug ("winScreenInit - dwWidth: %ld dwHeight: %ld\n",
@@ -130,11 +127,28 @@ winScreenInit (int index,
       return FALSE;
     }
 
-  /* Adjust the video mode for our engine type */
+  /* Horribly misnamed function: Allow engine to adjust BPP for screen */
+  dwInitialBPP = pScreenInfo->dwBPP;
+
   if (!(*pScreenPriv->pwinAdjustVideoMode) (pScreen))
     {
       ErrorF ("winScreenInit - winAdjustVideoMode () failed\n");
       return FALSE;
+    }
+
+  if (dwInitialBPP == WIN_DEFAULT_BPP)
+    {
+      /* No -depth parameter was passed, let the user know the depth being used */
+      ErrorF ("winScreenInit - Using Windows display depth of %d bits per pixel\n", (int) pScreenInfo->dwBPP);
+    }
+  else if (dwInitialBPP != pScreenInfo->dwBPP)
+    {
+      /* Warn user if engine forced a depth different to -depth parameter */
+      ErrorF ("winScreenInit - Command line depth of %d bpp overidden by engine, using %d bpp\n", (int) dwInitialBPP, (int) pScreenInfo->dwBPP);
+    }
+  else
+    {
+      ErrorF ("winScreenInit - Using command line depth of %d bpp\n", (int) pScreenInfo->dwBPP);
     }
 
   /* Check for supported display depth */
@@ -155,13 +169,20 @@ winScreenInit (int index,
    * Check that all monitors have the same display depth if we are using
    * multiple monitors
    */
-  if (pScreenInfo->fMultipleMonitors 
+  if (pScreenInfo->fMultipleMonitors
       && !GetSystemMetrics (SM_SAMEDISPLAYFORMAT))
     {
       ErrorF ("winScreenInit - Monitors do not all have same pixel format / "
-	      "display depth.\n"
-	      "Using primary display only.\n");
-      pScreenInfo->fMultipleMonitors = FALSE;
+	      "display depth.\n");
+      if (pScreenInfo->dwEngine == WIN_SERVER_SHADOW_GDI)
+        {
+          ErrorF ("winScreenInit - Performance may suffer off primary display.\n");
+        }
+      else
+        {
+          ErrorF ("winScreenInit - Using primary display only.\n");
+          pScreenInfo->fMultipleMonitors = FALSE;
+        }
     }
 
   /* Create display window */
@@ -175,13 +196,9 @@ winScreenInit (int index,
   /* Get a device context */
   hdc = GetDC (pScreenPriv->hwndScreen);
 
-  /* Store the initial height, width, and depth of the display */
   /* Are we using multiple monitors? */
   if (pScreenInfo->fMultipleMonitors)
     {
-      pScreenPriv->dwLastWindowsWidth = GetSystemMetrics (SM_CXVIRTUALSCREEN);
-      pScreenPriv->dwLastWindowsHeight = GetSystemMetrics (SM_CYVIRTUALSCREEN);
-
       /* 
        * In this case, some of the defaults set in
        * winInitializeScreenDefaults() are not correct ...
@@ -190,30 +207,14 @@ winScreenInit (int index,
 	{
 	  pScreenInfo->dwWidth = GetSystemMetrics (SM_CXVIRTUALSCREEN);
 	  pScreenInfo->dwHeight = GetSystemMetrics (SM_CYVIRTUALSCREEN);
-	  pScreenInfo->dwWidth_mm = (pScreenInfo->dwWidth /
-				     WIN_DEFAULT_DPI) * 25.4;
-	  pScreenInfo->dwHeight_mm = (pScreenInfo->dwHeight /
-				      WIN_DEFAULT_DPI) * 25.4;
 	}
     }
-  else
-    {
-      pScreenPriv->dwLastWindowsWidth = GetSystemMetrics (SM_CXSCREEN);
-      pScreenPriv->dwLastWindowsHeight = GetSystemMetrics (SM_CYSCREEN);
-    }
-
-  /* Save the original bits per pixel */
-  pScreenPriv->dwLastWindowsBitsPixel = GetDeviceCaps (hdc, BITSPIXEL);
 
   /* Release the device context */
   ReleaseDC (pScreenPriv->hwndScreen, hdc);
     
   /* Clear the visuals list */
   miClearVisualTypes ();
-  
-  /* Set the padded screen width */
-  pScreenInfo->dwPaddedWidth = PixmapBytePad (pScreenInfo->dwWidth,
-					      pScreenInfo->dwBPP);
 
   /* Call the engine dependent screen initialization procedure */
   if (!((*pScreenPriv->pwinFinishScreenInit) (index, pScreen, argc, argv)))
@@ -279,14 +280,15 @@ winFinishScreenInitFB (int index,
 #endif
 
   /* Create framebuffer */
-  if (!(*pScreenPriv->pwinAllocateFB) (pScreen))
+  if (!(*pScreenPriv->pwinInitScreen) (pScreen))
     {
       ErrorF ("winFinishScreenInitFB - Could not allocate framebuffer\n");
       return FALSE;
     }
 
   /*
-   * Grab the number of bits that are used to represent color in each pixel.
+   * Calculate the number of bits that are used to represent color in each pixel,
+   * the color depth for the screen
    */
   if (pScreenInfo->dwBPP == 8)
     pScreenInfo->dwDepth = 8;
@@ -294,7 +296,7 @@ winFinishScreenInitFB (int index,
     pScreenInfo->dwDepth = winCountBits (pScreenPriv->dwRedMask)
       + winCountBits (pScreenPriv->dwGreenMask)
       + winCountBits (pScreenPriv->dwBlueMask);
-  
+
   winErrorFVerb (2, "winFinishScreenInitFB - Masks: %08x %08x %08x\n",
 	  (unsigned int) pScreenPriv->dwRedMask,
 	  (unsigned int) pScreenPriv->dwGreenMask,

@@ -755,6 +755,9 @@ winUseMsg (void)
 	  "\t\t1 - Shadow GDI\n"
 	  "\t\t2 - Shadow DirectDraw\n"
 	  "\t\t4 - Shadow DirectDraw4 Non-Locking\n"
+#ifdef XWIN_PRIMARYFB
+	  "\t\t8 - Primary DirectDraw - obsolete\n"
+#endif
 #ifdef XWIN_NATIVEGDI
 	  "\t\t16 - Native GDI - experimental\n"
 #endif
@@ -823,6 +826,11 @@ winUseMsg (void)
 	  "\tSpecify an optional refresh rate to use in fullscreen mode\n"
 	  "\twith a DirectDraw engine.\n");
 
+  ErrorF ("-resize=none|scrollbars|randr"
+	  "\tIn windowed mode, [don't] allow resizing of the window. 'scrollbars'\n"
+	  "\tmode gives the window scrollbars as needed, 'randr' mode uses the RANR\n"
+	  "\textension to resize the X screen.\n");
+
   ErrorF ("-rootless\n"
 	  "\tRun the server in rootless mode.\n");
 
@@ -835,11 +843,6 @@ winUseMsg (void)
       "\t -screen 0 800x600+100+100@2 ; 2nd monitor offset 100,100 size 800x600\n"
       "\t -screen 0 1024x768@3        ; 3rd monitor size 1024x768\n"
       "\t -screen 0 @1 ; on 1st monitor using its full resolution (the default)\n");
-
-  ErrorF ("-scrollbars\n"
-	  "\tIn windowed mode, allow screens bigger than the Windows desktop.\n"
-	  "\tMoreover, if the window has decorations, one can now resize\n"
-	  "\tit.\n");
 
   ErrorF ("-silent-dup-error\n"
 	  "\tIf another instance of " EXECUTABLE_NAME " with the same display number is running\n"

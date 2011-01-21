@@ -154,8 +154,8 @@ winValidateArgs (void)
       
       /* Check for !fullscreen and any fullscreen-only parameters */
       if (!g_ScreenInfo[i].fFullScreen
-	  && (g_ScreenInfo[i].dwRefreshRate != WIN_DEFAULT_BPP
-	      || g_ScreenInfo[i].dwBPP != WIN_DEFAULT_REFRESH))
+	  && (g_ScreenInfo[i].dwRefreshRate != WIN_DEFAULT_REFRESH
+	      || g_ScreenInfo[i].dwBPP != WIN_DEFAULT_BPP))
 	{
 	  ErrorF ("winValidateArgs - -refresh and -depth are only valid "
 		  "with -fullscreen.\n");
@@ -164,12 +164,12 @@ winValidateArgs (void)
 
       /* Check for fullscreen and any non-fullscreen parameters */
       if (g_ScreenInfo[i].fFullScreen
-	  && (g_ScreenInfo[i].fScrollbars
+	  && ((g_ScreenInfo[i].iResizeMode != notAllowed)
 	      || !g_ScreenInfo[i].fDecoration
 	      || g_ScreenInfo[i].fLessPointer))
 	{
 	  ErrorF ("winValidateArgs - -fullscreen is invalid with "
-		  "-scrollbars, -nodecoration, or -lesspointer.\n");
+		  "-scrollbars, -resize, -nodecoration, or -lesspointer.\n");
 	  return FALSE;
 	}
     }

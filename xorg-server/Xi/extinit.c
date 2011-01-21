@@ -757,6 +757,7 @@ static void SDeviceEvent(xXIDeviceEvent *from, xXIDeviceEvent *to)
     swapl(&to->mods.latched_mods, n);
     swapl(&to->mods.locked_mods, n);
     swapl(&to->mods.effective_mods, n);
+    swapl(&to->flags, n);
 
     ptr = (char*)(&to[1]);
     ptr += from->buttons_len * 4;

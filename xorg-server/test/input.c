@@ -256,7 +256,7 @@ static void dix_event_to_core(int type)
 #undef test_event
 }
 
-static void dix_event_to_core_conversion(void)
+static void dix_event_to_core_fail(int evtype, int expected_rc)
 {
     DeviceEvent ev;
     xEvent core;
@@ -265,25 +265,18 @@ static void dix_event_to_core_conversion(void)
     ev.header   = 0xFF;
     ev.length   = sizeof(DeviceEvent);
 
-    ev.type     = 0;
+    ev.type     = evtype;
     rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(rc == BadImplementation);
+    g_assert(rc == expected_rc);
+}
 
-    ev.type     = 1;
-    rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(rc == BadImplementation);
-
-    ev.type     = ET_ProximityOut + 1;
-    rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(rc == BadImplementation);
-
-    ev.type     = ET_ProximityIn;
-    rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(rc == BadMatch);
-
-    ev.type     = ET_ProximityOut;
-    rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(rc == BadMatch);
+static void dix_event_to_core_conversion(void)
+{
+    dix_event_to_core_fail(0, BadImplementation);
+    dix_event_to_core_fail(1, BadImplementation);
+    dix_event_to_core_fail(ET_ProximityOut + 1, BadImplementation);
+    dix_event_to_core_fail(ET_ProximityIn, BadMatch);
+    dix_event_to_core_fail(ET_ProximityOut, BadMatch);
 
     dix_event_to_core(ET_KeyPress);
     dix_event_to_core(ET_KeyRelease);
@@ -1017,7 +1010,8 @@ static void dix_input_valuator_masks(void)
         g_assert(valuator_mask_get(mask, i) == valuator_mask_get(copy, i));
     }
 
-    free(mask);
+    valuator_mask_free(&mask);
+    g_assert(mask == NULL);
 }
 
 static void dix_valuator_mode(void)

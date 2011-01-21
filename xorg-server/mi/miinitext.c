@@ -389,9 +389,7 @@ InitExtensions(int argc, char *argv[])
     if (!noGEExtension) GEExtensionInit();
 
 #ifdef PANORAMIX
-# if !defined(NO_PANORAMIX)
   if (!noPanoramiXExtension) PanoramiXExtensionInit();
-# endif
 #endif
 #ifdef INXQUARTZ
     if(!noPseudoramiXExtension) PseudoramiXExtensionInit();
