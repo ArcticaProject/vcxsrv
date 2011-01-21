@@ -342,15 +342,18 @@ CARD8 *			repeat;
     xkb= xkbi->desc;
     repeat= xkb->ctrls->per_key_repeat;
 
+    /* before letting XKB do any changes, copy the current core values */
     if (pXDev->kbdfeed)
 	memcpy(repeat,pXDev->kbdfeed->ctrl.autoRepeats,XkbPerKeyBitArraySize);
 
     XkbUpdateDescActions(xkb,first,num,changes);
 
     if ((pXDev->kbdfeed)&&
-	(changes->ctrls.enabled_ctrls_changes&XkbPerKeyRepeatMask)) {
-        memcpy(pXDev->kbdfeed->ctrl.autoRepeats,repeat, XkbPerKeyBitArraySize);
-	(*pXDev->kbdfeed->CtrlProc)(pXDev, &pXDev->kbdfeed->ctrl);
+	(changes->ctrls.changed_ctrls&XkbPerKeyRepeatMask)) {
+	/* now copy the modified changes back to core */
+	memcpy(pXDev->kbdfeed->ctrl.autoRepeats,repeat, XkbPerKeyBitArraySize);
+	if (pXDev->kbdfeed->CtrlProc)
+	    (*pXDev->kbdfeed->CtrlProc)(pXDev, &pXDev->kbdfeed->ctrl);
     }
     return;
 }

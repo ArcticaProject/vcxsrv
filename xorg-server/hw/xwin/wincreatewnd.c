@@ -194,7 +194,7 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
           fForceShowWindow = TRUE;
         } 
         dwWindowStyle |= WS_CAPTION;
-        if (pScreenInfo->fScrollbars)
+        if (pScreenInfo->iResizeMode != notAllowed)
             dwWindowStyle |= WS_THICKFRAME | WS_MAXIMIZEBOX;
     }
   else
@@ -235,6 +235,22 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
       iPosY = rcWorkArea.top;
     }
 
+  /* Clean up the scrollbars flag, if necessary */
+  if ((!pScreenInfo->fDecoration
+#ifdef XWIN_MULTIWINDOWEXTWM
+       || pScreenInfo->fMWExtWM
+#endif
+       || pScreenInfo->fRootless
+#ifdef XWIN_MULTIWINDOW
+       || pScreenInfo->fMultiWindow
+#endif
+       )
+      && (pScreenInfo->iResizeMode == resizeWithScrollbars))
+    {
+      /* We cannot have scrollbars if we do not have a window border */
+      pScreenInfo->iResizeMode = notAllowed;
+    }
+
   /* Did the user specify a height and width? */
   if (pScreenInfo->fUserGaveHeightAndWidth)
     {
@@ -254,11 +270,11 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	  )
 	{
 	  winDebug ("winCreateBoundingWindowWindowed - Window has decoration\n");
-	  /* Are we using scrollbars? */
-	  if (pScreenInfo->fScrollbars)
+
+          /* Are we resizable */
+          if (pScreenInfo->iResizeMode != notAllowed)
 	    {
-	      winDebug ("winCreateBoundingWindowWindowed - Window has "
-		      "scrollbars\n");
+	      winDebug ("winCreateBoundingWindowWindowed - Window is resizable\n");
 
 	      iWidth += 2 * GetSystemMetrics (SM_CXSIZEFRAME);
 	      iHeight += 2 * GetSystemMetrics (SM_CYSIZEFRAME) 
@@ -266,8 +282,7 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	    }
 	  else
 	    {
-	      winDebug ("winCreateBoundingWindowWindowed - Window does not have "
-		      "scrollbars\n");
+	      winDebug ("winCreateBoundingWindowWindowed - Window is not resizable\n");
 
 	      iWidth += 2 * GetSystemMetrics (SM_CXFIXEDFRAME);
 	      iHeight += 2 * GetSystemMetrics (SM_CYFIXEDFRAME) 
@@ -288,22 +303,7 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	}
     }
 
-  /* Clean up the scrollbars flag, if necessary */
-  if ((!pScreenInfo->fDecoration
-#ifdef XWIN_MULTIWINDOWEXTWM
-       || pScreenInfo->fMWExtWM
-#endif
-       || pScreenInfo->fRootless
-#ifdef XWIN_MULTIWINDOW
-       || pScreenInfo->fMultiWindow
-#endif
-       )
-      && pScreenInfo->fScrollbars)
-    {
-      /* We cannot have scrollbars if we do not have a window border */
-      pScreenInfo->fScrollbars = FALSE;
-    }
- 
+  /* Make sure window is no bigger than work area */
   if (TRUE 
 #ifdef XWIN_MULTIWINDOWEXTWM
        && !pScreenInfo->fMWExtWM
@@ -389,7 +389,7 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	  rcClient.bottom, rcClient.top);
   
   /* We adjust the visual size if the user did not specify it */
-  if (!(pScreenInfo->fScrollbars && pScreenInfo->fUserGaveHeightAndWidth))
+  if (!((pScreenInfo->iResizeMode == resizeWithScrollbars) && pScreenInfo->fUserGaveHeightAndWidth))
     {
       /*
        * User did not give a height and width with scrollbars enabled,

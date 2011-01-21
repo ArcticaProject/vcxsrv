@@ -433,6 +433,14 @@ valuator_mask_new(int num_valuators)
     return mask;
 }
 
+void
+valuator_mask_free(ValuatorMask **mask)
+{
+    free(*mask);
+    *mask = NULL;
+}
+
+
 /**
  * Sets a range of valuators between first_valuator and num_valuators with
  * the data in the valuators array. All other values are set to 0.

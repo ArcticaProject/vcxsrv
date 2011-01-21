@@ -63,6 +63,7 @@ CSRCS =	InitInput.c \
 	winkeybd.c \
 	winkeyhook.c \
 	winmisc.c \
+	winmonitors.c \
 	winmouse.c \
 	winmsg.c \
 	winmultiwindowclass.c \
@@ -82,12 +83,12 @@ CSRCS =	InitInput.c \
 	winprefsyacc.c \
 	winwndproc.c \
 	windisplay.c \
-	$(SRCS_RANDR) \
 	$(SRCS_CLIPBOARD) \
 	$(SRCS_MULTIWINDOW) \
 	$(SRCS_MULTIWINDOWEXTWM) \
 	$(SRCS_NATIVEGDI) \
-	$(SRCS_PRIMARYFB)
+	$(SRCS_PRIMARYFB) \
+	$(SRCS_RANDR) \
 
 
 DEFINES += YY_NO_UNISTD_H

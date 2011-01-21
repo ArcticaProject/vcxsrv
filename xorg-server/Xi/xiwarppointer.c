@@ -192,6 +192,8 @@ ProcXIWarpPointer(ClientPtr client)
     /* if we don't update the device, we get a jump next time it moves */
     pDev->last.valuators[0] = x;
     pDev->last.valuators[1] = y;
+    pDev->last.remainder[0] = 0;
+    pDev->last.remainder[1] = 0;
     miPointerUpdateSprite(pDev);
 
     /* FIXME: XWarpPointer is supposed to generate an event. It doesn't do it

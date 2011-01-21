@@ -855,7 +855,7 @@ static void dmxBERestorePixmap(PixmapPtr pPixmap)
 static void dmxBECreateResources(pointer value, XID id, RESTYPE type,
 				 pointer n)
 {
-    int        scrnNum = (int)n;
+    int        scrnNum = (uintptr_t)n;
     ScreenPtr  pScreen = screenInfo.screens[scrnNum];
 
     if ((type & TypeMask) == (RT_WINDOW & TypeMask)) {
@@ -1059,7 +1059,7 @@ static void dmxBERestoreRenderPict(pointer value, XID id, pointer n)
 {
     PicturePtr   pPicture = value;               /* The picture */
     DrawablePtr  pDraw    = pPicture->pDrawable; /* The picture's drawable */
-    int          scrnNum  = (int)n;
+    int          scrnNum  = (uintptr_t)n;
 
     if (pDraw->pScreen->myNum != scrnNum) {
 	/* Picture not on the screen we are restoring*/
@@ -1081,7 +1081,7 @@ static void dmxBERestoreRenderPict(pointer value, XID id, pointer n)
 static void dmxBERestoreRenderGlyph(pointer value, XID id, pointer n)
 {
     GlyphSetPtr      glyphSet   = value;
-    int              scrnNum    = (int)n;
+    int              scrnNum    = (uintptr_t)n;
     dmxGlyphPrivPtr  glyphPriv  = DMX_GET_GLYPH_PRIV(glyphSet);
     DMXScreenInfo   *dmxScreen  = &dmxScreens[scrnNum];
     GlyphRefPtr      table;
@@ -1274,7 +1274,7 @@ int dmxAttachScreen(int idx, DMXScreenAttributesPtr attr)
     for (i = currentMaxClients; --i >= 0; )
 	if (clients[i])
 	    FindAllClientResources(clients[i], dmxBECreateResources,
-				   (pointer)idx);
+				   (pointer)(uintptr_t)idx);
 
     /* Create window hierarchy (top down) */
     dmxBECreateWindowTree(idx);
@@ -1283,13 +1283,15 @@ int dmxAttachScreen(int idx, DMXScreenAttributesPtr attr)
     for (i = currentMaxClients; --i >= 0; )
 	if (clients[i])
 	    FindClientResourcesByType(clients[i],PictureType, 
-				      dmxBERestoreRenderPict,(pointer)idx);
+				      dmxBERestoreRenderPict,
+				      (pointer)(uintptr_t)idx);
 
     /* Restore the glyph state for RENDER */
     for (i = currentMaxClients; --i >= 0; )
 	if (clients[i])
 	    FindClientResourcesByType(clients[i],GlyphSetType, 
-				      dmxBERestoreRenderGlyph,(pointer)idx);
+				      dmxBERestoreRenderGlyph,
+				      (pointer)(uintptr_t)idx);
 
     /* Refresh screen by generating exposure events for all windows */
     dmxForceExposures(idx);
@@ -1453,7 +1455,7 @@ static void dmxBESavePixmap(PixmapPtr pPixmap)
 static void dmxBEDestroyResources(pointer value, XID id, RESTYPE type,
 				  pointer n)
 {
-    int        scrnNum = (int)n;
+    int        scrnNum = (uintptr_t)n;
     ScreenPtr  pScreen = screenInfo.screens[scrnNum];
 
     if ((type & TypeMask) == (RT_WINDOW & TypeMask)) {
@@ -1596,7 +1598,7 @@ int dmxDetachScreen(int idx)
     for (i = currentMaxClients; --i >= 0; )
 	if (clients[i])
 	    FindAllClientResources(clients[i], dmxBEDestroyResources,
-				   (pointer)idx);
+				   (pointer)(uintptr_t)idx);
 
     /* Free scratch GCs */
     dmxBEDestroyScratchGCs(idx);

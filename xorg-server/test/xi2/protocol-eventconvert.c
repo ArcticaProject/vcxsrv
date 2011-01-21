@@ -272,6 +272,7 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
     int buttons, valuators;
     int i;
     unsigned char *ptr;
+    uint32_t flagmask = 0;
     FP3232 *values;
 
     if (swap) {
@@ -297,6 +298,7 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
         swapl(&out->mods.latched_mods, n);
         swapl(&out->mods.locked_mods, n);
         swapl(&out->mods.effective_mods, n);
+        swapl(&out->flags, n);
     }
 
     g_assert(out->extension == 0); /* IReqCode defaults to 0 */
@@ -308,7 +310,15 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
     g_assert(out->deviceid == in->deviceid);
     g_assert(out->sourceid == in->sourceid);
 
-    g_assert(out->flags == 0); /* FIXME: we don't set the flags yet */
+    switch (in->type) {
+        case ET_KeyPress:
+            flagmask = XIKeyRepeat;
+            break;
+        default:
+            flagmask = 0;
+            break;
+    }
+    g_assert((out->flags & ~flagmask) == 0);
 
     g_assert(out->root == in->root);
     g_assert(out->event == None); /* set in FixUpEventFromWindow */

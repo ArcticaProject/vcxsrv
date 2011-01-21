@@ -103,7 +103,7 @@ Examples:
 
 .SH OPTIONS CONTROLLING THE APPEARANCE OF THE X SCREEN WINDOWS
 These parameters only apply to windowed mode screens i.e. not
-in \fB-multwindow\fP or \fB-rootless\fP mode
+in \fB-multiwindow\fP or \fB-rootless\fP mode.
 .TP 8
 .B "\-fullscreen"
 The X server window takes the full screen, covering completely the
@@ -115,10 +115,52 @@ etc.
 This parameter is ignored when the \fB\-fullscreen\fP parameter is specified.
 .TP 8
 .B \-scrollbars
-In windowed mode, allow screens bigger than the \fIWindows\fP desktop.
-Moreover, if the window has decorations, one can now resize it.
-This parameter is ignored when the \fB\-fullscreen\fP parameter is specified.
+Alternative name for \fB\-resize=scrollbars\fP.
 
+.SH OPTIONS CONTROLLING RESIZE BEHAVIOUR
+.TP 8
+.B \-resize[=none|scrollbars|randr]
+Select the resize mode of an X screen.
+
+.RS
+.IP \fB\-resize=none\fP 8
+(default). The screen is not resizable.
+
+In windowed mode, if the window has decorations, a fixed frame is used.
+
+.IP \fB\-resize=scrollbars\fP 8
+The screen window is resizeable, but the screen is not resizable.
+
+In windowed mode, if the window has decorations, a resizing frame is used.
+Scrollbars are drawn when needed to allow the entire X screen
+to viewed by adjusting them.
+
+This also permits screens bigger than the \fIWindows\fP virtual desktop to be used.
+
+This parameter is ignored in \fB-multiwindow\fP or \fB-rootless\fP mode.
+Alternative name is \fB\-scrollbars\fP.
+
+.IP \fB\-resize=randr\fP 8
+The screen is resizable and the screen window is resizeable.
+
+In windowed mode, if the window has decorations, a resizing frame is used.
+
+Resizing the  \fIWindows\fP window will use the RANDR extension to change
+the size of the X screen.  Likewise, changing the size of
+the X screen using the RANDR extension will cause the size
+of the \fIWindows\fP window containing the X screen to be changed.
+
+In \fB-multiwindow\fP or \fB-rootless\fP mode, if the X screen is
+of the same dimensions as a Windows monitor or the virtual desktop,
+the X server will respond to the WM_DISPLAYCHANGED sent when those
+dimensions change by resizing the X screen.  Changing the size
+of the X screen using the RANDR extension is not permitted.
+
+The maximum dimensions of the screen are the dimensions of the \fIWindows\fP virtual desktop.
+
+.IP \fB\--resize\fP 8
+on its own is equivalent to \fB\--resize=randr\fP
+.RE
 
 .SH OPTIONS CONTROLLING WINDOWS INTEGRATION
 .TP 8
@@ -190,14 +232,26 @@ respectively).
 .TP 8
 .B "\-engine \fIengine_type_id\fP"
 This option, which is intended for Cygwin/X developers,
-overrides the server's automatically selected engine type.  This
-parameter will be ignored if the specified engine type is not
-supported on the current system.  The supported engine type ids are 1
-- Shadow GDI, 2 - Shadow DirectDraw, and 4 - Shadow DirectDraw Non-Locking.
-Additionally, there are engines with type ids
-8 - Primary DirectDraw (obsolete) and 16 - Native GDI (experimental and barely functional).
-Default behavior is to determine the engine with optimum performance that
+overrides the server's automatically selected drawing engine type.  This
+parameter will be ignored if the specified drawing engine type is not
+supported on the current system.
+
+Default behavior is to select the drawing engine with optimum performance that
 supports the specified depth and window configuration.
+
+The engine type ids are:
+.RS
+.IP 1 4
+Shadow GDI
+.IP 2 4
+Shadow DirectDraw
+.IP 4 4
+Shadow DirectDraw Non-Locking
+.IP 8 4
+Primary DirectDraw (unsupported, obsolete)
+.IP 16 4
+Native GDI (unsupported, experimental and barely functional)
+.RE
 
 .SH FULLSCREEN OPTIONS
 .TP 8
@@ -322,12 +376,9 @@ X(__miscmansuffix__), Xserver(1), xdm(1), xinit(1), XWinrc(__filemansuffix__), s
 
 .SH BUGS
 .I XWin
-and this man page still have many limitations.  Some of the more obvious
-ones are:
-.br
-- The display mode can not be changed once the X server has started.
-.br
-- The \fIXWin\fP software is continuously developing; it is therefore possible that
+and this man page still have many limitations.
+
+The \fIXWin\fP software is continuously developing; it is therefore possible that
 this man page is not up to date.  It is always prudent to
 look also at the output of \fIXWin -help\fP in order to
 check the options that are operative.

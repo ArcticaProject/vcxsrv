@@ -233,32 +233,11 @@ winAllocateFBPrimaryDD (ScreenPtr pScreen)
   return TRUE;
 }
 
-
-/*
- * Call the wrapped CloseScreen function.
- * 
- * Free our resources and private structures.
- */
-
-static Bool
-winCloseScreenPrimaryDD (int nIndex, ScreenPtr pScreen)
+static void
+winFreeFBPrimaryDD (ScreenPtr pScreen)
 {
   winScreenPriv(pScreen);
-  winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  Bool			fReturn;
-  
-  winDebug ("winCloseScreenPrimaryDD - Freeing screen resources\n");
-
-  /* Flag that the screen is closed */
-  pScreenPriv->fClosed = TRUE;
-  pScreenPriv->fActive = FALSE;
-
-  /* Call the wrapped CloseScreen procedure */
-  WIN_UNWRAP(CloseScreen);
-  fReturn = (*pScreen->CloseScreen) (nIndex, pScreen);
-
-  /* Delete the window property */
-  RemoveProp (pScreenPriv->hwndScreen, WIN_SCR_PROP);
+  winScreenInfo *pScreenInfo = pScreenPriv->pScreenInfo;
 
   /* Free the offscreen surface, if there is one */
   if (pScreenPriv->pddsOffscreen)
@@ -284,6 +263,44 @@ winCloseScreenPrimaryDD (int nIndex, ScreenPtr pScreen)
       pScreenPriv->pdd = NULL;
     }
 
+  /* Invalidate the ScreenInfo's fb pointer */
+  pScreenInfo->pfb = NULL;
+}
+
+static Bool
+winInitScreenPrimaryDD(ScreenPtr pScreen)
+{
+  return winAllocateFBPrimaryDD(pScreen);
+}
+
+/*
+ * Call the wrapped CloseScreen function.
+ * 
+ * Free our resources and private structures.
+ */
+
+static Bool
+winCloseScreenPrimaryDD (int nIndex, ScreenPtr pScreen)
+{
+  winScreenPriv(pScreen);
+  winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
+  Bool			fReturn;
+  
+  ErrorF ("winCloseScreenPrimaryDD - Freeing screen resources\n");
+
+  /* Flag that the screen is closed */
+  pScreenPriv->fClosed = TRUE;
+  pScreenPriv->fActive = FALSE;
+
+  /* Call the wrapped CloseScreen procedure */
+  WIN_UNWRAP(CloseScreen);
+  fReturn = (*pScreen->CloseScreen) (nIndex, pScreen);
+
+  /* Delete the window property */
+  RemoveProp (pScreenPriv->hwndScreen, WIN_SCR_PROP);
+
+  winFreeFBPrimaryDD(pScreen);
+
   /* Delete tray icon, if we have one */
   if (!pScreenInfo->fNoTrayIcon)
     winDeleteNotifyIcon (pScreenPriv);
@@ -304,9 +321,6 @@ winCloseScreenPrimaryDD (int nIndex, ScreenPtr pScreen)
 
   /* Kill our screeninfo's pointer to the screen */
   pScreenInfo->pScreen = NULL;
-
-  /* Invalidate the ScreenInfo's fb pointer */
-  pScreenInfo->pfb = NULL;
 
   /* Free the screen privates for this screen */
   free ((pointer) pScreenPriv);
@@ -418,33 +432,13 @@ winAdjustVideoModePrimaryDD (ScreenPtr pScreen)
   dwBPP = GetDeviceCaps (hdc, BITSPIXEL);
 
   /* DirectDraw can only change the depth in fullscreen mode */
-  if (pScreenInfo->dwBPP == WIN_DEFAULT_BPP)
+  if (!(pScreenInfo->fFullScreen &&
+        (pScreenInfo->dwBPP != WIN_DEFAULT_BPP)))
     {
-      /* No -depth parameter passed, let the user know the depth being used */
-      winDebug ("winAdjustVideoModePrimaryDD - Using Windows display "
-	      "depth of %d bits per pixel\n", (int) dwBPP);
-
-      /* Use GDI's depth */
+      /* Otherwise, We'll use GDI's depth */
       pScreenInfo->dwBPP = dwBPP;
     }
-  else if (pScreenInfo->fFullScreen
-	   && pScreenInfo->dwBPP != dwBPP)
-    {
-      /* FullScreen, and GDI depth differs from -depth parameter */
-      winDebug ("winAdjustVideoModePrimaryDD - FullScreen, using command "
-	      "line depth: %d\n", (int) pScreenInfo->dwBPP);
-    }
-  else if (dwBPP != pScreenInfo->dwBPP)
-    {
-      /* Windowed, and GDI depth differs from -depth parameter */
-      winDebug ("winAdjustVideoModePrimaryDD - Windowed, command line "
-	      "depth: %d, using depth: %d\n",
-	      (int) pScreenInfo->dwBPP, (int) dwBPP);
 
-      /* We'll use GDI's depth */
-      pScreenInfo->dwBPP = dwBPP;
-    }
-  
   /* Release our DC */
   ReleaseDC (NULL, hdc);
 
@@ -649,8 +643,9 @@ winSetEngineFunctionsPrimaryDD (ScreenPtr pScreen)
   
   /* Set our pointers */
   pScreenPriv->pwinAllocateFB = winAllocateFBPrimaryDD;
-  pScreenPriv->pwinShadowUpdate
-    = (winShadowUpdateProcPtr) (void (*)(void))NoopDDA;
+  pScreenPriv->pwinFreeFB = winFreeFBPrimaryDD;
+  pScreenPriv->pwinShadowUpdate = (winShadowUpdateProcPtr) (void (*)(void))NoopDDA;
+  pScreenPriv->pwinInitScreen = winInitScreenPrimaryDD;
   pScreenPriv->pwinCloseScreen = winCloseScreenPrimaryDD;
   pScreenPriv->pwinInitVisuals = winInitVisualsPrimaryDD;
   pScreenPriv->pwinAdjustVideoMode = winAdjustVideoModePrimaryDD;
@@ -659,10 +654,17 @@ winSetEngineFunctionsPrimaryDD (ScreenPtr pScreen)
   else
     pScreenPriv->pwinCreateBoundingWindow = winCreateBoundingWindowWindowed;
   pScreenPriv->pwinFinishScreenInit = winFinishScreenInitFB;
-  pScreenPriv->pwinBltExposedRegions
-    = (winBltExposedRegionsProcPtr) (void (*)(void))NoopDDA;
+  pScreenPriv->pwinBltExposedRegions = (winBltExposedRegionsProcPtr) (void (*)(void))NoopDDA;
   pScreenPriv->pwinActivateApp = winActivateAppPrimaryDD;
+  pScreenPriv->pwinRedrawScreen = NULL;
+  pScreenPriv->pwinRealizeInstalledPalette = NULL;
+  pScreenPriv->pwinInstallColormap = NULL;
+  pScreenPriv->pwinStoreColors = NULL;
+  pScreenPriv->pwinCreateColormap = NULL;
+  pScreenPriv->pwinDestroyColormap = NULL;
   pScreenPriv->pwinHotKeyAltTab = winHotKeyAltTabPrimaryDD;
+  pScreenPriv->pwinCreatePrimarySurface = (winCreatePrimarySurfaceProcPtr) (void (*)(void))NoopDDA;
+  pScreenPriv->pwinReleasePrimarySurface = (winReleasePrimarySurfaceProcPtr) (void (*)(void))NoopDDA;
 #ifdef XWIN_MULTIWINDOW
   pScreenPriv->pwinFinishCreateWindowsWindow =
     (winFinishCreateWindowsWindowProcPtr) (void (*)(void))NoopDDA;

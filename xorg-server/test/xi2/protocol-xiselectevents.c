@@ -131,7 +131,7 @@ static void request_XISelectEvents_masks(xXISelectEventsReq *req)
 {
     int i, j;
     xXIEventMask *mask;
-    int nmasks = (XI_LASTEVENT + 7)/8;
+    int nmasks = (XI2LASTEVENT + 7)/8;
     unsigned char *bits;
 
     mask = (xXIEventMask*)&req[1];
@@ -150,14 +150,14 @@ static void request_XISelectEvents_masks(xXISelectEventsReq *req)
         request_XISelectEvent(req, Success);
 
         /* Test 1:
-         * mask may be larger than needed for XI_LASTEVENT.
+         * mask may be larger than needed for XI2LASTEVENT.
          * Test setting each valid mask bit, while leaving unneeded bits 0.
          * -> Success
          */
         bits = (unsigned char*)&mask[1];
         mask->mask_len = (nmasks + 3)/4 * 10;
         memset(bits, 0, mask->mask_len * 4);
-        for (j = 0; j <= XI_LASTEVENT; j++)
+        for (j = 0; j <= XI2LASTEVENT; j++)
         {
             SetBit(bits, j);
             request_XISelectEvent(req, Success);
@@ -165,7 +165,7 @@ static void request_XISelectEvents_masks(xXISelectEventsReq *req)
         }
 
         /* Test 2:
-         * mask may be larger than needed for XI_LASTEVENT.
+         * mask may be larger than needed for XI2LASTEVENT.
          * Test setting all valid mask bits, while leaving unneeded bits 0.
          * -> Success
          */
@@ -173,21 +173,21 @@ static void request_XISelectEvents_masks(xXISelectEventsReq *req)
         mask->mask_len = (nmasks + 3)/4 * 10;
         memset(bits, 0, mask->mask_len * 4);
 
-        for (j = 0; j <= XI_LASTEVENT; j++)
+        for (j = 0; j <= XI2LASTEVENT; j++)
         {
             SetBit(bits, j);
             request_XISelectEvent(req, Success);
         }
 
         /* Test 3:
-         * mask is larger than needed for XI_LASTEVENT. If any unneeded bit
+         * mask is larger than needed for XI2LASTEVENT. If any unneeded bit
          * is set -> BadValue
          */
         bits = (unsigned char*)&mask[1];
         mask->mask_len = (nmasks + 3)/4 * 10;
         memset(bits, 0, mask->mask_len * 4);
 
-        for (j = XI_LASTEVENT + 1; j < mask->mask_len * 4; j++)
+        for (j = XI2LASTEVENT + 1; j < mask->mask_len * 4; j++)
         {
             SetBit(bits, j);
             request_XISelectEvent(req, BadValue);
@@ -200,7 +200,7 @@ static void request_XISelectEvents_masks(xXISelectEventsReq *req)
         bits = (unsigned char*)&mask[1];
         mask->mask_len = (nmasks + 3)/4;
         memset(bits, 0, mask->mask_len * 4);
-        for (j = 0; j <= XI_LASTEVENT; j++)
+        for (j = 0; j <= XI2LASTEVENT; j++)
         {
             SetBit(bits, j);
             request_XISelectEvent(req, Success);
@@ -228,7 +228,7 @@ static void request_XISelectEvents_masks(xXISelectEventsReq *req)
         bits = (unsigned char*)&mask[1];
         mask->mask_len = (nmasks + 3)/4;
         memset(bits, 0, mask->mask_len * 4);
-        for (j = 0; j <= XI_LASTEVENT; j++)
+        for (j = 0; j <= XI2LASTEVENT; j++)
             SetBit(bits, j);
         ClearBit(bits, XI_HierarchyChanged);
         for (j = 1; j < 6; j++)

@@ -87,6 +87,7 @@ SRCS =	InitInput.c \
 	winkeybd.c \
 	winkeyhook.c \
 	winmisc.c \
+	winmonitors.c \
 	winmouse.c \
 	winmsg.c \
 	winmultiwindowclass.c \

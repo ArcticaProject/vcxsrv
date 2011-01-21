@@ -18,7 +18,7 @@ nodist_libxcb_la_SOURCES = xproto.c bigreq.c xc_misc.c
 # * If you add an interface, increment current and age and set revision to 0.
 # * If you change or remove an interface, increment current and set revision
 #   and age to 0.
-libxcb_la_LDFLAGS = -version-info 2:0:1 -no-undefined
+libxcb_la_LDFLAGS = -version-info 2:0:1 -no-undefined @lt_enable_auto_import@
 
 XCB_LIBS = libxcb.la
 
@@ -27,7 +27,7 @@ XCB_LIBS = libxcb.la
 EXTSOURCES += composite.c
 if BUILD_COMPOSITE
 lib_LTLIBRARIES += libxcb-composite.la
-libxcb_composite_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_composite_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_composite_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_composite_la_SOURCES = composite.c composite.h
 endif
@@ -35,7 +35,7 @@ endif
 EXTSOURCES += damage.c
 if BUILD_DAMAGE
 lib_LTLIBRARIES += libxcb-damage.la
-libxcb_damage_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_damage_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_damage_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_damage_la_SOURCES = damage.c damage.h
 endif
@@ -43,7 +43,7 @@ endif
 EXTSOURCES += dpms.c
 if BUILD_DPMS
 lib_LTLIBRARIES += libxcb-dpms.la
-libxcb_dpms_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_dpms_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_dpms_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_dpms_la_SOURCES = dpms.c dpms.h
 endif
@@ -51,7 +51,7 @@ endif
 EXTSOURCES += dri2.c
 if BUILD_DRI2
 lib_LTLIBRARIES += libxcb-dri2.la
-libxcb_dri2_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_dri2_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_dri2_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_dri2_la_SOURCES = dri2.c dri2.h
 endif
@@ -59,7 +59,7 @@ endif
 EXTSOURCES += glx.c
 if BUILD_GLX
 lib_LTLIBRARIES += libxcb-glx.la
-libxcb_glx_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_glx_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_glx_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_glx_la_SOURCES = glx.c glx.h
 endif
@@ -67,7 +67,7 @@ endif
 EXTSOURCES += randr.c
 if BUILD_RANDR
 lib_LTLIBRARIES += libxcb-randr.la
-libxcb_randr_la_LDFLAGS = -version-info 1:0:1 -no-undefined
+libxcb_randr_la_LDFLAGS = -version-info 1:0:1 -no-undefined @lt_enable_auto_import@
 libxcb_randr_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_randr_la_SOURCES = randr.c randr.h
 endif
@@ -75,7 +75,7 @@ endif
 EXTSOURCES += record.c
 if BUILD_RECORD
 lib_LTLIBRARIES += libxcb-record.la
-libxcb_record_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_record_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_record_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_record_la_SOURCES = record.c record.h
 endif
@@ -83,7 +83,7 @@ endif
 EXTSOURCES += render.c
 if BUILD_RENDER
 lib_LTLIBRARIES += libxcb-render.la
-libxcb_render_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_render_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_render_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_render_la_SOURCES = render.c render.h
 endif
@@ -91,7 +91,7 @@ endif
 EXTSOURCES += res.c
 if BUILD_RESOURCE
 lib_LTLIBRARIES += libxcb-res.la
-libxcb_res_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_res_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_res_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_res_la_SOURCES = res.c res.h
 endif
@@ -99,7 +99,7 @@ endif
 EXTSOURCES += screensaver.c
 if BUILD_SCREENSAVER
 lib_LTLIBRARIES += libxcb-screensaver.la
-libxcb_screensaver_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_screensaver_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_screensaver_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_screensaver_la_SOURCES = screensaver.c screensaver.h
 endif
@@ -107,7 +107,7 @@ endif
 EXTSOURCES += shape.c
 if BUILD_SHAPE
 lib_LTLIBRARIES += libxcb-shape.la
-libxcb_shape_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_shape_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_shape_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_shape_la_SOURCES = shape.c shape.h
 endif
@@ -115,7 +115,7 @@ endif
 EXTSOURCES += shm.c
 if BUILD_SHM
 lib_LTLIBRARIES += libxcb-shm.la
-libxcb_shm_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_shm_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_shm_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_shm_la_SOURCES = shm.c shm.h
 endif
@@ -123,7 +123,7 @@ endif
 EXTSOURCES += sync.c
 if BUILD_SYNC
 lib_LTLIBRARIES += libxcb-sync.la
-libxcb_sync_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_sync_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_sync_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_sync_la_SOURCES = sync.c sync.h
 endif
@@ -131,7 +131,7 @@ endif
 EXTSOURCES += xevie.c
 if BUILD_XEVIE
 lib_LTLIBRARIES += libxcb-xevie.la
-libxcb_xevie_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xevie_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xevie_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xevie_la_SOURCES = xevie.c xevie.h
 endif
@@ -139,7 +139,7 @@ endif
 EXTSOURCES += xf86dri.c
 if BUILD_XFREE86_DRI
 lib_LTLIBRARIES += libxcb-xf86dri.la
-libxcb_xf86dri_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xf86dri_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xf86dri_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xf86dri_la_SOURCES = xf86dri.c xf86dri.h
 endif
@@ -147,7 +147,7 @@ endif
 EXTSOURCES += xfixes.c
 if BUILD_XFIXES
 lib_LTLIBRARIES += libxcb-xfixes.la
-libxcb_xfixes_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xfixes_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xfixes_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xfixes_la_SOURCES = xfixes.c xfixes.h
 endif
@@ -155,7 +155,7 @@ endif
 EXTSOURCES += xinerama.c
 if BUILD_XINERAMA
 lib_LTLIBRARIES += libxcb-xinerama.la
-libxcb_xinerama_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xinerama_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xinerama_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xinerama_la_SOURCES = xinerama.c xinerama.h
 endif
@@ -163,7 +163,7 @@ endif
 EXTSOURCES += xinput.c
 if BUILD_XINPUT
 lib_LTLIBRARIES += libxcb-xinput.la
-libxcb_xinput_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xinput_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xinput_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xinput_la_SOURCES = xinput.c xinput.h
 endif
@@ -179,7 +179,7 @@ endif
 EXTSOURCES += xprint.c
 if BUILD_XPRINT
 lib_LTLIBRARIES += libxcb-xprint.la
-libxcb_xprint_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xprint_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xprint_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xprint_la_SOURCES = xprint.c xprint.h
 endif
@@ -187,7 +187,7 @@ endif
 EXTSOURCES += xselinux.c
 if BUILD_SELINUX
 lib_LTLIBRARIES += libxcb-xselinux.la
-libxcb_xselinux_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xselinux_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xselinux_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xselinux_la_SOURCES = xselinux.c xselinux.h
 endif
@@ -195,7 +195,7 @@ endif
 EXTSOURCES += xtest.c
 if BUILD_XTEST
 lib_LTLIBRARIES += libxcb-xtest.la
-libxcb_xtest_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xtest_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xtest_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xtest_la_SOURCES = xtest.c xtest.h
 endif
@@ -203,7 +203,7 @@ endif
 EXTSOURCES += xv.c
 if BUILD_XV
 lib_LTLIBRARIES += libxcb-xv.la
-libxcb_xv_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xv_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xv_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xv_la_SOURCES = xv.c xv.h
 endif
@@ -211,7 +211,7 @@ endif
 EXTSOURCES += xvmc.c
 if BUILD_XVMC
 lib_LTLIBRARIES += libxcb-xvmc.la
-libxcb_xvmc_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+libxcb_xvmc_la_LDFLAGS = -version-info 0:0:0 -no-undefined @lt_enable_auto_import@
 libxcb_xvmc_la_LIBADD = $(XCB_LIBS)
 nodist_libxcb_xvmc_la_SOURCES = xvmc.c xvmc.h
 endif
@@ -219,6 +219,9 @@ endif
 
 EXTHEADERS=$(EXTSOURCES:.c=.h)
 xcbinclude_HEADERS = xcb.h xcbext.h
+if XCB_HAVE_WIN32
+xcbinclude_HEADERS += xcb_windefs.h
+endif
 nodist_xcbinclude_HEADERS = $(EXTHEADERS)
 noinst_HEADERS = xcbint.h
 

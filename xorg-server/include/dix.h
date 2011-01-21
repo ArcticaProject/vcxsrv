@@ -372,6 +372,13 @@ extern void AllowSome(
 extern void ReleaseActiveGrabs(
     ClientPtr client);
 
+extern GrabPtr CheckPassiveGrabsOnWindow(
+    WindowPtr /* pWin */,
+    DeviceIntPtr /* device */,
+    DeviceEvent * /* event */,
+    BOOL /* checkCore */,
+    BOOL /* activate */);
+
 extern _X_EXPORT int DeliverEventsToWindow(
     DeviceIntPtr /* pWin */,
     WindowPtr /* pWin */,
