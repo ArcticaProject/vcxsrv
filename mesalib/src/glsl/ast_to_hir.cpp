@@ -639,7 +639,14 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
    bool error_emitted = (lhs->type->is_error() || rhs->type->is_error());
 
    if (!error_emitted) {
-      if (!lhs->is_lvalue()) {
+      if (lhs->variable_referenced() != NULL
+          && lhs->variable_referenced()->read_only) {
+         _mesa_glsl_error(&lhs_loc, state,
+                          "assignment to read-only variable '%s'",
+                          lhs->variable_referenced()->name);
+         error_emitted = true;
+
+      } else if (!lhs->is_lvalue()) {
 	 _mesa_glsl_error(& lhs_loc, state, "non-lvalue in assignment");
 	 error_emitted = true;
       }
@@ -1809,7 +1816,6 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
       }
    }
 
-   /* FINISHME: Mark 'in' variables at global scope as read-only. */
    if (qual->flags.q.constant || qual->flags.q.attribute
        || qual->flags.q.uniform
        || (qual->flags.q.varying && (state->target == fragment_shader)))
@@ -2206,6 +2212,8 @@ ast_declarator_list::hir(exec_list *instructions,
 			     mode, var->name, extra);
 	 }
       } else if (var->mode == ir_var_in) {
+         var->read_only = true;
+
 	 if (state->target == vertex_shader) {
 	    bool error_emitted = false;
 
