@@ -13,6 +13,7 @@ $banner="\t\@echo Building OpenSSL";
 
 my $no_static_engine = 1;
 my $engines = "";
+my $otherlibs = "";
 local $zlib_opt = 0;	# 0 = no zlib, 1 = static, 2 = dynamic
 local $zlib_lib = "";
 local $perl_asm = 0;	# 1 to autobuild asm files from perl scripts
@@ -298,9 +299,12 @@ $cflags.=" -DOPENSSL_NO_ECDSA" if $no_ecdsa;
 $cdflags.=" -DOPENSSL_NO_ECDSA" if $no_ecdsa;
 $cflags.=" -DOPENSSL_NO_ECDH" if $no_ecdh;
 $cdflags.=" -DOPENSSL_NO_ECDH" if $no_ecdh;
+$cflags.=" -DOPENSSL_NO_GOST" if $no_gost;
+$cdflags.=" -DOPENSSL_NO_GOST" if $no_gost;
 $cflags.=" -DOPENSSL_NO_ENGINE"   if $no_engine;
 $cdflags.=" -DOPENSSL_NO_ENGINE"   if $no_engine;
 $cflags.=" -DOPENSSL_NO_HW"   if $no_hw;
+$cdflags.=" -DOPENSSL_NO_HW"   if $no_hw;
 $cflags.=" -DOPENSSL_NO_JPAKE"    if $no_jpake;
 $cdflags.=" -DOPENSSL_NO_JPAKE"    if $no_jpake;
 $cflags.= " -DZLIB" if $zlib_opt;
@@ -393,6 +397,12 @@ for (;;)
 		{
 		$lib=$val;
 		$lib =~ s/^.*\/([^\/]+)$/$1/;
+		}
+	if ($key eq "LIBNAME" && $no_static_engine)
+		{
+		$lib=$val;
+		$lib =~ s/^.*\/([^\/]+)$/$1/;
+		$otherlibs .= " $lib";
 		}
 
 	if ($key eq "EXHEADER")
@@ -708,7 +718,7 @@ foreach (split(/\s+/,$test))
 	$rules.=&do_link_rule("\$(TEST_D)$o$t$exep",$tt,"\$(LIBS_DEP)","\$(L_LIBS) \$(EX_LIBS)");
 	}
 
-$defs.=&do_defs("E_SHLIB",$engines,"\$(ENG_D)",$shlibp);
+$defs.=&do_defs("E_SHLIB",$engines . $otherlibs,"\$(ENG_D)",$shlibp);
 
 foreach (split(/\s+/,$engines))
 	{
@@ -720,6 +730,14 @@ foreach (split(/\s+/,$engines))
 
 $rules.= &do_lib_rule("\$(SSLOBJ)","\$(O_SSL)",$ssl,$shlib,"\$(SO_SSL)");
 $rules.= &do_lib_rule("\$(CRYPTOOBJ)","\$(O_CRYPTO)",$crypto,$shlib,"\$(SO_CRYPTO)");
+
+foreach (split(/\s+/,$otherlibs))
+	{
+	my $uc = $_;
+	$uc =~ tr /a-z/A-Z/;	
+	$rules.= &do_lib_rule("\$(${uc}OBJ)","\$(ENG_D)$o$_$shlibp", "", $shlib, "");
+
+	}
 
 $rules.=&do_link_rule("\$(BIN_D)$o\$(E_EXE)$exep","\$(E_OBJ)","\$(LIBS_DEP)","\$(L_LIBS) \$(EX_LIBS)");
 
@@ -758,6 +776,7 @@ sub var_add
 	return("") if $no_dsa  && $dir =~ /\/dsa/;
 	return("") if $no_dh   && $dir =~ /\/dh/;
 	return("") if $no_ec   && $dir =~ /\/ec/;
+	return("") if $no_gost   && $dir =~ /\/ccgost/;
 	return("") if $no_cms  && $dir =~ /\/cms/;
 	return("") if $no_jpake  && $dir =~ /\/jpake/;
 	if ($no_des && $dir =~ /\/des/)
@@ -1097,6 +1116,7 @@ sub read_options
 		"no-ec" => \$no_ec,
 		"no-ecdsa" => \$no_ecdsa,
 		"no-ecdh" => \$no_ecdh,
+		"no-gost" => \$no_gost,
 		"no-engine" => \$no_engine,
 		"no-hw" => \$no_hw,
 		"just-ssl" =>

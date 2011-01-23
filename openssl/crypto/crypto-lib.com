@@ -193,7 +193,7 @@ $ LIB_CAST = "c_skey,c_ecb,c_enc,c_cfb64,c_ofb64"
 $ LIB_CAMELLIA = "camellia,cmll_misc,cmll_ecb,cmll_cbc,cmll_ofb,"+ -
 	"cmll_cfb,cmll_ctr"
 $ LIB_SEED = "seed,seed_ecb,seed_cbc,seed_cfb,seed_ofb"
-$ LIB_MODES = "cbc128,ctr128,cfb128,ofb128"
+$ LIB_MODES = "cbc128,ctr128,cfb128,ofb128,cts128"
 $ LIB_BN_ASM = "[.asm]vms.mar,vms-helper"
 $ IF F$TRNLNM("OPENSSL_NO_ASM") .OR. ARCH .NES. "VAX" THEN -
      LIB_BN_ASM = "bn_asm"
@@ -1036,7 +1036,7 @@ $     IF ARCH.EQS."VAX" .AND. F$TRNLNM("DECC$CC_DEFAULT").NES."/DECC" -
 	 THEN CC = "CC/DECC"
 $     CC = CC + "/''CC_OPTIMIZE'/''DEBUGGER'/STANDARD=ANSI89" + -
            "/NOLIST/PREFIX=ALL" + -
-	   "/INCLUDE=(SYS$DISK:[],SYS$DISK:[._''ARCH'],SYS$DISK:[-],SYS$DISK:[.ENGINE.VENDOR_DEFNS],SYS$DISK:[.EVP],SYS$DISK:[.ASN1])" + -
+	   "/INCLUDE=(SYS$DISK:[._''ARCH'],SYS$DISK:[],SYS$DISK:[-],SYS$DISK:[.ENGINE.VENDOR_DEFNS],SYS$DISK:[.EVP],SYS$DISK:[.ASN1])" + -
 	   CCEXTRAFLAGS
 $!
 $!    Define The Linker Options File Name.
@@ -1070,7 +1070,7 @@ $	EXIT
 $     ENDIF
 $     IF F$TRNLNM("DECC$CC_DEFAULT").EQS."/DECC" THEN CC = "CC/VAXC"
 $     CC = CC + "/''CC_OPTIMIZE'/''DEBUGGER'/NOLIST" + -
-	   "/INCLUDE=(SYS$DISK:[],SYS$DISK:[._''ARCH'],SYS$DISK:[-],SYS$DISK:[.ENGINE.VENDOR_DEFNS],SYS$DISK:[.EVP],SYS$DISK:[.ASN1])" + -
+	   "/INCLUDE=(SYS$DISK:[._''ARCH'],SYS$DISK:[],SYS$DISK:[-],SYS$DISK:[.ENGINE.VENDOR_DEFNS],SYS$DISK:[.EVP],SYS$DISK:[.ASN1])" + -
 	   CCEXTRAFLAGS
 $     CCDEFS = """VAXC""," + CCDEFS
 $!
@@ -1102,7 +1102,7 @@ $!
 $!    Use GNU C...
 $!
 $     CC = "GCC/NOCASE_HACK/''GCC_OPTIMIZE'/''DEBUGGER'/NOLIST" + -
-	   "/INCLUDE=(SYS$DISK:[],SYS$DISK:[._''ARCH'],SYS$DISK:[-],SYS$DISK:[.ENGINE.VENDOR_DEFNS],SYS$DISK:[.EVP],SYS$DISK:[.ASN1])" + -
+	   "/INCLUDE=(SYS$DISK:[._''ARCH'],SYS$DISK:[],SYS$DISK:[-],SYS$DISK:[.ENGINE.VENDOR_DEFNS],SYS$DISK:[.EVP],SYS$DISK:[.ASN1])" + -
 	   CCEXTRAFLAGS
 $!
 $!    Define The Linker Options File Name.

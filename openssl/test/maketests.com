@@ -105,7 +105,7 @@ $ TEST_FILES = "BNTEST,ECTEST,ECDSATEST,ECDHTEST,IDEATEST,"+ -
 	       "MDC2TEST,RMDTEST,"+ -
 	       "RANDTEST,DHTEST,ENGINETEST,"+ -
 	       "BFTEST,CASTTEST,SSLTEST,EXPTEST,DSATEST,RSA_TEST,"+ -
-	       "EVP_TEST,JPAKETEST"
+	       "EVP_TEST,IGETEST,JPAKETEST,ASN1TEST"
 $! Should we add MTTEST,PQ_TEST,LH_TEST,DIVTEST,TABTEST as well?
 $!
 $! Additional directory information.
@@ -139,8 +139,9 @@ $ T_D_EXPTEST    := [-.crypto.bn]
 $ T_D_DSATEST    := [-.crypto.dsa]
 $ T_D_RSA_TEST   := [-.crypto.rsa]
 $ T_D_EVP_TEST   := [-.crypto.evp]
-$ T_D_JPAKETEST  := [-.crypto.jpake]
 $ T_D_IGETEST    := [-.test]
+$ T_D_JPAKETEST  := [-.crypto.jpake]
+$ T_D_ASN1TEST   := [-.test]
 $!
 $ TCPIP_PROGRAMS = ",,"
 $ IF COMPILER .EQS. "VAXC" THEN -
