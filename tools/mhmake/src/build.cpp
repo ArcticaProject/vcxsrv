@@ -711,7 +711,12 @@ static void CommandSep(const string &Command, int &EndPos, int &NextBegin)
   {
     EndPos=Command.find('&',NextBegin);
     if (EndPos==string::npos || !EndPos)
+    {
+      // When there is only one command return that command, so we run %comspec% commands
+      // always via a temporary batch file. This is to avoid problems when quotes and pipe
+      // characters in parameters when using cmd /c
       return;
+    }
     EndPos--;
     char C=Command[EndPos];
     NextBegin=EndPos+2;
@@ -753,39 +758,34 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
     int NextBegin=0;
     int EndPos=0;
     CommandSep(ComspecCommandLine,EndPos,NextBegin);
-    if (EndPos!=string::npos)
+      // We have multiple commands so create an temporary batch file
+    FILE *pFile=(FILE*)1;
+    char Filename[MAX_PATH];
+    int Nr=1;
+    while (1)
     {
-        // We have multiple commands so create an temporary batch file
-      FILE *pFile=(FILE*)1;
-      char Filename[MAX_PATH];
-      int Nr=1;
-      while (1)
-      {
-        sprintf(Filename,"%s\\tmp%d.bat",m_MakeDir->GetFullFileName().c_str(),Nr);
-        pFile=fopen(Filename,"r");
-        if (!pFile)
-          break;
-        fclose(pFile);
-        Nr++;
-      }
-      pFile=fopen(Filename,"w");
-      fprintf(pFile,"@echo off\n");
-      int PrevPos=0;
-      while (EndPos!=string::npos)
-      {
-        string SubCommand=ComspecCommandLine.substr(PrevPos,EndPos-PrevPos+1);
-        fprintf(pFile,"%s\n",SubCommand.c_str());
-        PrevPos=NextBegin;
-        CommandSep(ComspecCommandLine,EndPos,NextBegin);
-      }
-      string SubCommand=ComspecCommandLine.substr(PrevPos);
-      fprintf(pFile,"%s\n",SubCommand.c_str());
+      sprintf(Filename,"%s\\tmp%d.bat",m_MakeDir->GetFullFileName().c_str(),Nr);
+      pFile=fopen(Filename,"r");
+      if (!pFile)
+        break;
       fclose(pFile);
-      FullCommandLine+=QuoteFileName(Filename);
-      ((mhmakefileparser*)this)->m_FilesToRemoveAtEnd.push_back(string(Filename));
+      Nr++;
     }
-    else
-      FullCommandLine+=ComspecCommandLine;
+    pFile=fopen(Filename,"w");
+    fprintf(pFile,"@echo off\n");
+    int PrevPos=0;
+    while (EndPos!=string::npos)
+    {
+      string SubCommand=ComspecCommandLine.substr(PrevPos,EndPos-PrevPos+1);
+      fprintf(pFile,"%s\n",SubCommand.c_str());
+      PrevPos=NextBegin;
+      CommandSep(ComspecCommandLine,EndPos,NextBegin);
+    }
+    string SubCommand=ComspecCommandLine.substr(PrevPos);
+    fprintf(pFile,"%s\n",SubCommand.c_str());
+    fclose(pFile);
+    FullCommandLine+=QuoteFileName(Filename);
+    ((mhmakefileparser*)this)->m_FilesToRemoveAtEnd.push_back(string(Filename));
   }
   else
   {
