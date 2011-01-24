@@ -183,6 +183,7 @@ void CConfig::Save(const char *filename)
     setAttribute(root, L"XDMCPIndirect", indirect?L"True":L"False");
     setAttribute(root, L"Clipboard", clipboard?L"True":L"False");
     setAttribute(root, L"ExtraParams", extra_params.c_str());
+    setAttribute(root, L"Wgl", wgl?L"True":L"False");
 
     VARIANT var = VariantString(filename);
     HRCALL(doc->save(var), "save");
@@ -275,7 +276,8 @@ void CConfig::Load(const char *filename)
     getAttributeBool(root, L"XDMCPIndirect", indirect);
     getAttributeBool(root, L"Clipboard", clipboard);
     getAttribute(root, L"ExtraParams", extra_params);
-    
+    getAttributeBool(root, L"Wgl", wgl);
+
 
     doc->Release();
 }
