@@ -265,7 +265,7 @@ fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,
     dst_type_t *dst_line;									\
     src_type_t *src_first_line;									\
     int       y;										\
-    pixman_fixed_t max_vx = max_vx; /* suppress uninitialized variable warning */		\
+    pixman_fixed_t max_vx = INT32_MAX; /* suppress uninitialized variable warning */		\
     pixman_fixed_t max_vy;									\
     pixman_vector_t v;										\
     pixman_fixed_t vx, vy;									\
