@@ -295,7 +295,7 @@ fence_free (void *data)
 #else
 
 void *
-fence_malloc (uint32_t len)
+fence_malloc (int64_t len)
 {
     return malloc (len);
 }
