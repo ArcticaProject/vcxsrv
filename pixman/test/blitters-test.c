@@ -27,7 +27,7 @@ create_random_image (pixman_format_code_t *allowed_formats,
     uint32_t *buf;
     pixman_image_t *img;
 
-    while (allowed_formats[n] != -1)
+    while (allowed_formats[n] != PIXMAN_null)
 	n++;
     fmt = allowed_formats[lcg_rand_n (n)];
 
@@ -78,7 +78,7 @@ free_random_image (uint32_t initcrc,
     uint32_t *data = pixman_image_get_data (img);
     int height = pixman_image_get_height (img);
 
-    if (fmt != -1)
+    if (fmt != PIXMAN_null)
     {
 	/* mask unused 'x' part */
 	if (PIXMAN_FORMAT_BPP (fmt) - PIXMAN_FORMAT_DEPTH (fmt) &&
@@ -218,7 +218,7 @@ static pixman_format_code_t img_fmt_list[] = {
     PIXMAN_a1r1g1b1,
     PIXMAN_a1b1g1r1,
     PIXMAN_a1,
-    -1
+    PIXMAN_null
 };
 
 static pixman_format_code_t mask_fmt_list[] = {
@@ -226,7 +226,7 @@ static pixman_format_code_t mask_fmt_list[] = {
     PIXMAN_a8,
     PIXMAN_a4,
     PIXMAN_a1,
-    -1
+    PIXMAN_null
 };
 
 
@@ -247,7 +247,7 @@ test_composite (int testnum, int verbose)
     int dst_x, dst_y;
     int mask_x, mask_y;
     int w, h;
-    int op;
+    pixman_op_t op;
     pixman_format_code_t src_fmt, dst_fmt, mask_fmt;
     uint32_t *dstbuf, *srcbuf, *maskbuf;
     uint32_t crc32;
@@ -305,7 +305,7 @@ test_composite (int testnum, int verbose)
     dst_y = lcg_rand_n (dst_height);
 
     mask_img = NULL;
-    mask_fmt = -1;
+    mask_fmt = PIXMAN_null;
     mask_x = 0;
     mask_y = 0;
     maskbuf = NULL;
@@ -385,7 +385,7 @@ test_composite (int testnum, int verbose)
 	printf ("---\n");
     }
 
-    free_random_image (0, src_img, -1);
+    free_random_image (0, src_img, PIXMAN_null);
     crc32 = free_random_image (0, dst_img, dst_fmt);
 
     if (mask_img)
@@ -393,7 +393,7 @@ test_composite (int testnum, int verbose)
 	if (srcbuf == maskbuf)
 	    pixman_image_unref(mask_img);
 	else
-	    free_random_image (0, mask_img, -1);
+	    free_random_image (0, mask_img, PIXMAN_null);
     }
 
     FLOAT_REGS_CORRUPTION_DETECTOR_FINISH ();

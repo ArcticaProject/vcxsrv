@@ -40,9 +40,9 @@ test_composite (int      testnum,
     int                w, h;
     pixman_fixed_t     scale_x = 65536, scale_y = 65536;
     pixman_fixed_t     translate_x = 0, translate_y = 0;
-    int                op;
-    int                repeat = 0;
-    int                src_fmt, dst_fmt;
+    pixman_op_t        op;
+    pixman_repeat_t    repeat = PIXMAN_REPEAT_NONE;
+    pixman_format_code_t src_fmt, dst_fmt;
     uint32_t *         srcbuf;
     uint32_t *         dstbuf;
     uint32_t           crc32;

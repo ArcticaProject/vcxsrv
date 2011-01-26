@@ -364,7 +364,7 @@ fast_composite_add_n_8888_8888_ca (pixman_implementation_t *imp,
 				   int32_t                  width,
 				   int32_t                  height)
 {
-    uint32_t src, srca, s;
+    uint32_t src, s;
     uint32_t    *dst_line, *dst, d;
     uint32_t    *mask_line, *mask, ma;
     int dst_stride, mask_stride;
@@ -372,7 +372,6 @@ fast_composite_add_n_8888_8888_ca (pixman_implementation_t *imp,
 
     src = _pixman_image_get_solid (imp, src_image, dst_image->bits.format);
 
-    srca = src >> 24;
     if (src == 0)
 	return;
 
