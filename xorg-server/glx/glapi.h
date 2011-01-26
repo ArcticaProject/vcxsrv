@@ -42,11 +42,6 @@
 #ifndef _GLAPI_H
 #define _GLAPI_H
 
-/* opengl.dll does not export _glapi_* */
-#if defined(_WIN32)
-#define _GLAPI_NO_EXPORTS
-#endif
-
 #ifdef _GLAPI_NO_EXPORTS
 #  define _GLAPI_EXPORT
 #else /* _GLAPI_NO_EXPORTS */
