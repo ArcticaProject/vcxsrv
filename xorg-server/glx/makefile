@@ -1,6 +1,6 @@
 LIBRARY=libglx
 
-DEFINES += GLAPIENTRY=__stdcall
+DEFINES += GLAPIENTRY=__stdcall _GLAPI_NO_EXPORTS
 
 
 glapi_sources =					\
