@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: xkeyboard-config 2.0\n"
 "Report-Msgid-Bugs-To: svu@users.sourceforge.net\n"
 "POT-Creation-Date: 2010-09-15 21:57+0100\n"
-"PO-Revision-Date: 2010-09-27 15:53+0200\n"
-"Last-Translator: Fran Dieguez <frandieguez@ubuntu.com>\n"
+"PO-Revision-Date: 2010-09-28 23:42+0200\n"
+"Last-Translator: Fran Diéguez <frandieguez@ubuntu.com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,11 +23,11 @@ msgstr "&lt;Menor que/Maior que&gt;"
 
 #: ../rules/base.xml.in.h:2
 msgid "&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr ""
+msgstr "&lt;Menor que/Maior que&gt; elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel"
 
 #: ../rules/base.xml.in.h:3
 msgid "&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr ""
+msgstr "&lt;Menor que/Maior que&gt; elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel, unha pulsación libera o bloqueo"
 
 #: ../rules/base.xml.in.h:4
 msgid "(F)"
@@ -1641,7 +1641,7 @@ msgstr "Win esquerda elixe o 5º nivel, bloquea ao premerse xunto con outro sele
 
 #: ../rules/base.xml.in.h:408
 msgid "Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr ""
+msgstr "Win izquierda elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel, unha pulsación libera o bloqueo"
 
 #: ../rules/base.xml.in.h:409
 msgid "Left hand"
@@ -1778,7 +1778,7 @@ msgstr "Baixo sorbio"
 
 #: ../rules/base.xml.in.h:443
 msgid "Lower Sorbian (qwertz)"
-msgstr ""
+msgstr "Baixo sorbio (qwertz)"
 
 #: ../rules/base.xml.in.h:444
 msgid "Ltu"
@@ -1830,27 +1830,27 @@ msgstr "Macintosh, eliminar teclas mortas"
 
 #: ../rules/base.xml.in.h:456
 msgid "Make Caps Lock an additional Backspace"
-msgstr ""
+msgstr "Facer de Bloq Maiús un Retroceso adicional"
 
 #: ../rules/base.xml.in.h:457
 msgid "Make Caps Lock an additional Ctrl"
-msgstr ""
+msgstr "Facer de Bloq Maiús un Ctrl adicional"
 
 #: ../rules/base.xml.in.h:458
 msgid "Make Caps Lock an additional ESC"
-msgstr ""
+msgstr "Facer de Bloq Maiús un Esc adicional"
 
 #: ../rules/base.xml.in.h:459
 msgid "Make Caps Lock an additional Hyper"
-msgstr ""
+msgstr "Facer de Bloq Maiús un Hyper adicional"
 
 #: ../rules/base.xml.in.h:460
 msgid "Make Caps Lock an additional Num Lock"
-msgstr ""
+msgstr "Facer de Bloq Maiús un Bloq Num adicional"
 
 #: ../rules/base.xml.in.h:461
 msgid "Make Caps Lock an additional Super"
-msgstr ""
+msgstr "Facer de Bloq Maiús un Super adicional"
 
 #: ../rules/base.xml.in.h:462
 msgid "Malayalam"
@@ -1874,7 +1874,7 @@ msgstr "Malta"
 
 #: ../rules/base.xml.in.h:467
 msgid "Maltese keyboard with US layout"
-msgstr ""
+msgstr "Teclado maltés con disposición EE. UU."
 
 #: ../rules/base.xml.in.h:468
 msgid "Mao"
@@ -1910,1114 +1910,1114 @@ msgstr "Meta está asignada á tecla Windows izquierda"
 
 #: ../rules/base.xml.in.h:476
 msgid "Meta is mapped to Win keys"
-msgstr ""
+msgstr "Meta está asignada ás teclas Windows"
 
 #: ../rules/base.xml.in.h:477
 msgid "Microsoft Comfort Curve Keyboard 2000"
-msgstr ""
+msgstr "Microsoft Comfort Curve Keyboard 2000"
 
 #: ../rules/base.xml.in.h:478
 msgid "Microsoft Internet Keyboard"
-msgstr ""
+msgstr "Microsoft Internet Keyboard"
 
 #: ../rules/base.xml.in.h:479
 msgid "Microsoft Internet Keyboard Pro, Swedish"
-msgstr ""
+msgstr "Microsoft Internet Keyboard Pro, Sueco"
 
 #: ../rules/base.xml.in.h:480
 msgid "Microsoft Natural"
-msgstr ""
+msgstr "Microsoft Natural"
 
 #: ../rules/base.xml.in.h:481
 msgid "Microsoft Natural Keyboard Elite"
-msgstr ""
+msgstr "Microsoft Natural Keyboard Elite"
 
 #: ../rules/base.xml.in.h:482
 msgid "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
-msgstr ""
+msgstr "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
 
 #: ../rules/base.xml.in.h:483
 msgid "Microsoft Natural Keyboard Pro OEM"
-msgstr ""
+msgstr "Microsoft Natural Keyboard Pro OEM"
 
 #: ../rules/base.xml.in.h:484
 msgid "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
-msgstr ""
+msgstr "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
 
 #: ../rules/base.xml.in.h:485
 msgid "Microsoft Natural Wireless Ergonomic Keyboard 7000"
-msgstr ""
+msgstr "Microsoft Natural Wireless Ergonomic Keyboard 7000"
 
 #: ../rules/base.xml.in.h:486
 msgid "Microsoft Office Keyboard"
-msgstr ""
+msgstr "Microsoft Office Keyboard"
 
 #: ../rules/base.xml.in.h:487
 msgid "Microsoft Wireless Multimedia Keyboard 1.0A"
-msgstr ""
+msgstr "Microsoft Wireless Multimedia Keyboard 1.0A"
 
 #: ../rules/base.xml.in.h:488
 msgid "Miscellaneous compatibility options"
-msgstr ""
+msgstr "Opciones misceláneas de compatiblidade"
 
 #: ../rules/base.xml.in.h:489
 msgid "Mkd"
-msgstr ""
+msgstr "Mkd"
 
 #: ../rules/base.xml.in.h:490
 msgid "Mli"
-msgstr ""
+msgstr "Mli"
 
 #: ../rules/base.xml.in.h:491
 msgid "Mlt"
-msgstr ""
+msgstr "Mlt"
 
 #: ../rules/base.xml.in.h:492
 msgid "Mmr"
-msgstr ""
+msgstr "Mmr"
 
 #: ../rules/base.xml.in.h:493
 msgid "Mng"
-msgstr ""
+msgstr "Mng"
 
 #: ../rules/base.xml.in.h:494
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolia"
 
 #: ../rules/base.xml.in.h:495
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #: ../rules/base.xml.in.h:496
 msgid "Morocco"
-msgstr ""
+msgstr "Marruecos"
 
 #: ../rules/base.xml.in.h:497
 msgid "Multilingual"
-msgstr ""
+msgstr "Multilingüe"
 
 #: ../rules/base.xml.in.h:498
 msgid "Multilingual, first part"
-msgstr ""
+msgstr "Multilingüe, primeira parte"
 
 #: ../rules/base.xml.in.h:499
 msgid "Multilingual, second part"
-msgstr ""
+msgstr "Multilingüe, segunda parte"
 
 #: ../rules/base.xml.in.h:500
 msgid "Myanmar"
-msgstr ""
+msgstr "Myanmar"
 
 #: ../rules/base.xml.in.h:501
 msgid "NICOLA-F style Backspace"
-msgstr ""
+msgstr "Retroceso estilo NICOLA-F"
 
 #: ../rules/base.xml.in.h:502
 msgid "NLA"
-msgstr ""
+msgstr "NLA"
 
 #: ../rules/base.xml.in.h:503
 msgid "Nativo"
-msgstr ""
+msgstr "Nativo"
 
 #: ../rules/base.xml.in.h:504
 msgid "Nativo for Esperanto"
-msgstr ""
+msgstr "Nativo para Esperanto"
 
 #: ../rules/base.xml.in.h:505
 msgid "Nativo for USA keyboards"
-msgstr ""
+msgstr "Nativo para teclados de EE. UU."
 
 #: ../rules/base.xml.in.h:506
 msgid "Neo 2"
-msgstr ""
+msgstr "Neo 2"
 
 #: ../rules/base.xml.in.h:507
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: ../rules/base.xml.in.h:508
 msgid "Netherlands"
-msgstr ""
+msgstr "Holanda"
 
 #: ../rules/base.xml.in.h:509
 msgid "New phonetic"
-msgstr ""
+msgstr "Fonético novo"
 
 #: ../rules/base.xml.in.h:510
 msgid "Nga"
-msgstr ""
+msgstr "Nga"
 
 #: ../rules/base.xml.in.h:511
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigeria"
 
 #: ../rules/base.xml.in.h:512
 msgid "Nld"
-msgstr ""
+msgstr "Nld"
 
 #: ../rules/base.xml.in.h:513
 msgid "Non-breakable space character at fourth level"
-msgstr ""
+msgstr "Carácter de espazo non separábel no cuarto nivel"
 
 #: ../rules/base.xml.in.h:514
 msgid "Non-breakable space character at fourth level, thin non-breakable space character at sixth level"
-msgstr ""
+msgstr "Carácter de espazo non separábel no cuarto nivel, carácter de espacio estreito non separábel no sexto nivel"
 
 #: ../rules/base.xml.in.h:515
 msgid "Non-breakable space character at fourth level, thin non-breakable space character at sixth level (via Ctrl+Shift)"
-msgstr ""
+msgstr "Carácter de espazo non separábel no cuarto nivel, carácter de espazo estreito non separábel o sexto nivel (a través de Ctrl+Maiús)"
 
 #: ../rules/base.xml.in.h:516
 msgid "Non-breakable space character at second level"
-msgstr ""
+msgstr "Carácter de espazo non separábel no segundo nivel"
 
 #: ../rules/base.xml.in.h:517
 msgid "Non-breakable space character at third level"
-msgstr ""
+msgstr "Carácter de espazo non separábel no terceiro nivel"
 
 #: ../rules/base.xml.in.h:518
 msgid "Non-breakable space character at third level, nothing at fourth level"
-msgstr ""
+msgstr "Carácter de espazo non separábel no terceiro nivel, nada no cuarto nivel"
 
 #: ../rules/base.xml.in.h:519
 msgid "Non-breakable space character at third level, thin non-breakable space character at fourth level"
-msgstr ""
+msgstr "Carácter de espazo non separábel no terceiro nivel, carácter de espazo estreito non separábel no cuarto nivel"
 
 #: ../rules/base.xml.in.h:520
 msgid "Nor"
-msgstr ""
+msgstr "Nor"
 
 #: ../rules/base.xml.in.h:521
 msgid "Northern Saami"
-msgstr ""
+msgstr "Saami do norte"
 
 #: ../rules/base.xml.in.h:522
 msgid "Northern Saami, eliminate dead keys"
-msgstr ""
+msgstr "Saami do norte, eliminar teclas mortas"
 
 #: ../rules/base.xml.in.h:523
 msgid "Northgate OmniKey 101"
-msgstr ""
+msgstr "Northgate OmniKey 101"
 
 #: ../rules/base.xml.in.h:524
 msgid "Norway"
-msgstr ""
+msgstr "Noruega"
 
 #: ../rules/base.xml.in.h:525
 msgid "Npl"
-msgstr ""
+msgstr "Npl"
 
 #: ../rules/base.xml.in.h:526
 msgid "Num Lock"
-msgstr ""
+msgstr "Bloq Num"
 
 #: ../rules/base.xml.in.h:527
 msgid "Numeric keypad delete key behaviour"
-msgstr ""
+msgstr "Comportamento da tecla Supr do teclado numérico"
 
 #: ../rules/base.xml.in.h:528
 msgid "Numeric keypad keys work as with Mac"
-msgstr ""
+msgstr "As teclas do teclado numérico funcionan como nun Mac"
 
 #: ../rules/base.xml.in.h:529
 msgid "Numeric keypad layout selection"
-msgstr ""
+msgstr "Selección de distribución de teclado numérico"
 
 #: ../rules/base.xml.in.h:530
 msgid "OADG 109A"
-msgstr ""
+msgstr "OADG 109A"
 
 #: ../rules/base.xml.in.h:531
 msgid "OLPC"
-msgstr ""
+msgstr "OLPC"
 
 #: ../rules/base.xml.in.h:532
 msgid "OLPC Dari"
-msgstr ""
+msgstr "OLPC Dari"
 
 #: ../rules/base.xml.in.h:533
 msgid "OLPC Pashto"
-msgstr ""
+msgstr "OLPC Pashto"
 
 #: ../rules/base.xml.in.h:534
 msgid "OLPC Southern Uzbek"
-msgstr ""
+msgstr "OLPC uzbeco do sur"
 
 #: ../rules/base.xml.in.h:535
 msgid "Occitan"
-msgstr ""
+msgstr "Occitano"
 
 #: ../rules/base.xml.in.h:536
 msgid "Ogham"
-msgstr ""
+msgstr "Ogham"
 
 #: ../rules/base.xml.in.h:537
 msgid "Ogham IS434"
-msgstr ""
+msgstr "Ogham IS434"
 
 #: ../rules/base.xml.in.h:538
 msgid "Oriya"
-msgstr ""
+msgstr "Orixa"
 
 #: ../rules/base.xml.in.h:539
 msgid "Ortek MCK-800 MM/Internet keyboard"
-msgstr ""
+msgstr "Teclado Oretec MCK-800 MM/Internet"
 
 #: ../rules/base.xml.in.h:540
 msgid "Ossetian"
-msgstr ""
+msgstr "Osetio"
 
 #: ../rules/base.xml.in.h:541
 msgid "Ossetian, Winkeys"
-msgstr ""
+msgstr "Osetio, teclas Windows"
 
 #: ../rules/base.xml.in.h:542
 msgid "Ossetian, legacy"
-msgstr ""
+msgstr "Osetio, herdado"
 
 #: ../rules/base.xml.in.h:543
 msgid "PC-98xx Series"
-msgstr ""
+msgstr "PC-98xx Series"
 
 #: ../rules/base.xml.in.h:544
 msgid "Pak"
-msgstr ""
+msgstr "Pak"
 
 #: ../rules/base.xml.in.h:545
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistán"
 
 #: ../rules/base.xml.in.h:546
 msgid "Pannonian Rusyn Homophonic"
-msgstr ""
+msgstr "Rusino de Panonia homofónico"
 
 #: ../rules/base.xml.in.h:547
 msgid "Pashto"
-msgstr ""
+msgstr "Pashto"
 
 #: ../rules/base.xml.in.h:548
 msgid "Pattachote"
-msgstr ""
+msgstr "Pattachote"
 
 #: ../rules/base.xml.in.h:549
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: ../rules/base.xml.in.h:550
 msgid "Persian, with Persian Keypad"
-msgstr ""
+msgstr "Persa con teclado numérico persa"
 
 #: ../rules/base.xml.in.h:551
 msgid "Phonetic"
-msgstr ""
+msgstr "Fonético"
 
 #: ../rules/base.xml.in.h:552
 msgid "Phonetic Winkeys"
-msgstr ""
+msgstr "Teclas Windows fonéticas"
 
 #: ../rules/base.xml.in.h:553
 msgid "Pol"
-msgstr ""
+msgstr "Pol"
 
 #: ../rules/base.xml.in.h:554
 msgid "Poland"
-msgstr ""
+msgstr "Polonia"
 
 #: ../rules/base.xml.in.h:555
 msgid "Polytonic"
-msgstr ""
+msgstr "Politónico"
 
 #: ../rules/base.xml.in.h:556
 msgid "Portugal"
-msgstr ""
+msgstr "Portugal"
 
 #: ../rules/base.xml.in.h:557
 msgid "Probhat"
-msgstr ""
+msgstr "Probhat"
 
 #: ../rules/base.xml.in.h:558
 msgid "Programmer Dvorak"
-msgstr ""
+msgstr "Dvorak de programador"
 
 #: ../rules/base.xml.in.h:559
 msgid "Propeller Voyager (KTEZ-1000)"
-msgstr ""
+msgstr "Propeller Voyager (KTEZ-1000)"
 
 #: ../rules/base.xml.in.h:560
 msgid "Prt"
-msgstr ""
+msgstr "Prt"
 
 #: ../rules/base.xml.in.h:561
 msgid "PrtSc"
-msgstr ""
+msgstr "PrtSc"
 
 #: ../rules/base.xml.in.h:562
 msgid "QTronix Scorpius 98N+"
-msgstr ""
+msgstr "QTronix Scorpius 98N+"
 
 #: ../rules/base.xml.in.h:563
 msgid "Right Alt"
-msgstr ""
+msgstr "Alt dereito"
 
 #: ../rules/base.xml.in.h:564
 msgid "Right Alt (while pressed)"
-msgstr ""
+msgstr "Alt dereito (mentres está premido)"
 
 #: ../rules/base.xml.in.h:565
 msgid "Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr ""
+msgstr "Alt dereita elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel"
 
 #: ../rules/base.xml.in.h:566
 msgid "Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr ""
+msgstr "Alt dereita elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel, unha pulsación libera o bloqueo"
 
 #: ../rules/base.xml.in.h:567
 msgid "Right Alt key never chooses 3rd level"
-msgstr ""
+msgstr "A tecla Alt dereita nunca elixe o 3º nivel"
 
 #: ../rules/base.xml.in.h:568
 msgid "Right Alt, Shift+Right Alt key is Multi_Key"
-msgstr ""
+msgstr "A tecla Alt dereita, Maiús+Alt dereita é tecla Multi"
 
 #: ../rules/base.xml.in.h:569
 msgid "Right Ctrl"
-msgstr ""
+msgstr "Ctrl dereito"
 
 #: ../rules/base.xml.in.h:570
 msgid "Right Ctrl (while pressed)"
-msgstr ""
+msgstr "Ctrl dereito (mentres está premido)"
 
 #: ../rules/base.xml.in.h:571
 msgid "Right Ctrl as Right Alt"
-msgstr ""
+msgstr "Ctrl dereito como Alt dereito"
 
 #: ../rules/base.xml.in.h:572
 msgid "Right Ctrl+Right Shift"
-msgstr ""
+msgstr "Ctrl dereito + Maiús dereito"
 
 #: ../rules/base.xml.in.h:573
 msgid "Right Shift"
-msgstr ""
+msgstr "Maiús dereito"
 
 #: ../rules/base.xml.in.h:574
 msgid "Right Win"
-msgstr ""
+msgstr "Windows dereito"
 
 #: ../rules/base.xml.in.h:575
 msgid "Right Win (while pressed)"
-msgstr ""
+msgstr "A tecla Windows (mentres está premida)"
 
 #: ../rules/base.xml.in.h:576
 msgid "Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr ""
+msgstr "Win dereita elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel"
 
 #: ../rules/base.xml.in.h:577
 msgid "Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr ""
+msgstr "Win dereita elixe o 5º nivel, bloquea ao premerse xunto con outro selector de 5º nivel, unha pulsación libera o bloqueo"
 
 #: ../rules/base.xml.in.h:578
 msgid "Right hand"
-msgstr ""
+msgstr "Diestro"
 
 #: ../rules/base.xml.in.h:579
 msgid "Right handed Dvorak"
-msgstr ""
+msgstr "Dvorak diestro"
 
 #: ../rules/base.xml.in.h:580
 msgid "Romania"
-msgstr ""
+msgstr "Rumanía"
 
 #: ../rules/base.xml.in.h:581
 msgid "Romanian keyboard with German letters"
-msgstr ""
+msgstr "Teclado rumano con letras alemanas"
 
 #: ../rules/base.xml.in.h:582
 msgid "Romanian keyboard with German letters, eliminate dead keys"
-msgstr ""
+msgstr "Teclado rumano con teclas alemanas, eliminar teclas mortas"
 
 #: ../rules/base.xml.in.h:583
 msgid "Rou"
-msgstr ""
+msgstr "Rou"
 
 #: ../rules/base.xml.in.h:584
 msgid "Rus"
-msgstr ""
+msgstr "Rus"
 
 #: ../rules/base.xml.in.h:585
 msgid "Russia"
-msgstr ""
+msgstr "Rusia"
 
 #: ../rules/base.xml.in.h:586
 msgid "Russian"
-msgstr ""
+msgstr "Ruso"
 
 #: ../rules/base.xml.in.h:587
 msgid "Russian phonetic"
-msgstr ""
+msgstr "Ruso fonético"
 
 #: ../rules/base.xml.in.h:588
 msgid "Russian phonetic Dvorak"
-msgstr ""
+msgstr "Dvorak ruso fonético "
 
 #: ../rules/base.xml.in.h:589
 msgid "Russian phonetic, eliminate dead keys"
-msgstr ""
+msgstr "Ruso fonético, eliminar teclas mortas"
 
 #: ../rules/base.xml.in.h:590
 msgid "Russian with Kazakh"
-msgstr ""
+msgstr "Ruso con kazaxo"
 
 #: ../rules/base.xml.in.h:591
 msgid "SILVERCREST Multimedia Wireless Keyboard"
-msgstr ""
+msgstr "SILVERCREST Multimedia Wireless Keyboard"
 
 #: ../rules/base.xml.in.h:592
 msgid "SK-1300"
-msgstr ""
+msgstr "SK-1300"
 
 #: ../rules/base.xml.in.h:593
 msgid "SK-2500"
-msgstr ""
+msgstr "SK-2500"
 
 #: ../rules/base.xml.in.h:594
 msgid "SK-6200"
-msgstr ""
+msgstr "SK-6200"
 
 #: ../rules/base.xml.in.h:595
 msgid "SK-7100"
-msgstr ""
+msgstr "SK-7100"
 
 #: ../rules/base.xml.in.h:596 ../rules/base.extras.xml.in.h:9
 msgid "SRB"
-msgstr ""
+msgstr "SRB"
 
 #: ../rules/base.xml.in.h:597
 msgid "SVEN Ergonomic 2500"
-msgstr ""
+msgstr "SVEN Ergonomic 2500"
 
 #: ../rules/base.xml.in.h:598
 msgid "SVEN Slim 303"
-msgstr ""
+msgstr "SVEN Slim 303"
 
 #: ../rules/base.xml.in.h:599
 msgid "Samsung SDM 4500P"
-msgstr ""
+msgstr "Samsung SDM 4500P"
 
 #: ../rules/base.xml.in.h:600
 msgid "Samsung SDM 4510P"
-msgstr ""
+msgstr "Samsung SDM 4510P"
 
 #: ../rules/base.xml.in.h:601
 msgid "Scroll Lock"
-msgstr ""
+msgstr "Bloq Despl"
 
 #: ../rules/base.xml.in.h:602
 msgid "Secwepemctsin"
-msgstr ""
+msgstr "Secwepemctsin"
 
 #: ../rules/base.xml.in.h:603
 msgid "Semi-colon on third level"
-msgstr ""
+msgstr "Punto e coma en terceiro nivel"
 
 #: ../rules/base.xml.in.h:604
 msgid "Sen"
-msgstr ""
+msgstr "Sen"
 
 #: ../rules/base.xml.in.h:605
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: ../rules/base.xml.in.h:606 ../rules/base.extras.xml.in.h:10
 msgid "Serbia"
-msgstr ""
+msgstr "Serbia"
 
 #: ../rules/base.xml.in.h:607
 msgid "Serbian"
-msgstr ""
+msgstr "Serbio"
 
 #: ../rules/base.xml.in.h:608
 msgid "Shift cancels Caps Lock"
-msgstr ""
+msgstr "Maiús cancela BloqMaiús"
 
 #: ../rules/base.xml.in.h:609
 msgid "Shift does not cancel Num Lock, chooses 3rd level instead"
-msgstr ""
+msgstr "Maiús non cancela Bloq Num, no seu lugar elixe o 3er nivel"
 
 #: ../rules/base.xml.in.h:610
 msgid "Shift with numeric keypad keys works as in MS Windows"
-msgstr ""
+msgstr "Maiús coas teclas do teclado numérico funcionan como en MS Windows"
 
 #: ../rules/base.xml.in.h:611
 msgid "Shift+Caps Lock"
-msgstr ""
+msgstr "Maiús+BloqMaiús"
 
 #: ../rules/base.xml.in.h:612
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #: ../rules/base.xml.in.h:613
 msgid "Sindhi"
-msgstr ""
+msgstr "Sindhi"
 
 #: ../rules/base.xml.in.h:614
 msgid "Slovakia"
-msgstr ""
+msgstr "Eslovaquia"
 
 #: ../rules/base.xml.in.h:615
 msgid "Slovenia"
-msgstr ""
+msgstr "Eslovenia"
 
 #: ../rules/base.xml.in.h:616
 msgid "South Africa"
-msgstr ""
+msgstr "Sudáfrica"
 
 #: ../rules/base.xml.in.h:617
 msgid "Southern Uzbek"
-msgstr ""
+msgstr "Uzbequia do sur"
 
 #: ../rules/base.xml.in.h:618
 msgid "Spain"
-msgstr ""
+msgstr "España"
 
 #: ../rules/base.xml.in.h:619
 msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server"
-msgstr ""
+msgstr "Teclas especiais (Ctrl+Alt+«tecla») manipuladas nun servidor"
 
 #: ../rules/base.xml.in.h:620
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #: ../rules/base.xml.in.h:621
 msgid "Standard"
-msgstr ""
+msgstr "Estándar"
 
 #: ../rules/base.xml.in.h:622
 msgid "Standard (Cedilla)"
-msgstr ""
+msgstr "Estándar (cedilla)"
 
 #. RSTU 2019-91
 #: ../rules/base.xml.in.h:624
 msgid "Standard RSTU"
-msgstr ""
+msgstr "Standard RSTU"
 
 #. RSTU 2019-91
 #: ../rules/base.xml.in.h:626
 msgid "Standard RSTU on Russian layout"
-msgstr ""
+msgstr "Standard RSTU con disposición rusa"
 
 #: ../rules/base.xml.in.h:627
 msgid "Sun Type 5/6"
-msgstr ""
+msgstr "Sun tipo 5/6"
 
 #: ../rules/base.xml.in.h:628
 msgid "Sun dead keys"
-msgstr ""
+msgstr "Teclas mortas de Sun"
 
 #: ../rules/base.xml.in.h:629
 msgid "Super Power Multimedia Keyboard"
-msgstr ""
+msgstr "Super Power Multimedia Keyboard"
 
 #: ../rules/base.xml.in.h:630
 msgid "Svdvorak"
-msgstr ""
+msgstr "Svdvorak"
 
 #: ../rules/base.xml.in.h:631
 msgid "Svk"
-msgstr ""
+msgstr "Svk"
 
 #: ../rules/base.xml.in.h:632
 msgid "Svn"
-msgstr ""
+msgstr "Svn"
 
 #: ../rules/base.xml.in.h:633
 msgid "Swap Ctrl and Caps Lock"
-msgstr ""
+msgstr "Intercambiar Ctrl e Bloq Maiús"
 
 #: ../rules/base.xml.in.h:634
 msgid "Swap ESC and Caps Lock"
-msgstr ""
+msgstr "Intercambiar ESC e Bloq Maiús"
 
 #: ../rules/base.xml.in.h:635
 msgid "Swe"
-msgstr ""
+msgstr "Sue"
 
 #: ../rules/base.xml.in.h:636
 msgid "Sweden"
-msgstr ""
+msgstr "Suecia"
 
 #: ../rules/base.xml.in.h:637
 msgid "Switzerland"
-msgstr ""
+msgstr "Suiza"
 
 #: ../rules/base.xml.in.h:638
 msgid "Symplon PaceBook (tablet PC)"
-msgstr ""
+msgstr "Symplon PaceBook (tablet PC)"
 
 #: ../rules/base.xml.in.h:639
 msgid "Syr"
-msgstr ""
+msgstr "Syr"
 
 #: ../rules/base.xml.in.h:640
 msgid "Syria"
-msgstr ""
+msgstr "Siria"
 
 #: ../rules/base.xml.in.h:641
 msgid "Syriac"
-msgstr ""
+msgstr "Sirio"
 
 #: ../rules/base.xml.in.h:642
 msgid "Syriac phonetic"
-msgstr ""
+msgstr "Sirio fonético"
 
 #: ../rules/base.xml.in.h:643
 msgid "TIS-820.2538"
-msgstr ""
+msgstr "TIS-820.2538"
 
 #: ../rules/base.xml.in.h:644
 msgid "Tajikistan"
-msgstr ""
+msgstr "Taxikistán"
 
 #: ../rules/base.xml.in.h:645
 msgid "Tamil"
-msgstr ""
+msgstr "Tamil"
 
 #: ../rules/base.xml.in.h:646
 msgid "Tamil Keyboard with Numerals"
-msgstr ""
+msgstr "Teclado tamil con letras números"
 
 #: ../rules/base.xml.in.h:647
 msgid "Tamil TAB Typewriter"
-msgstr ""
+msgstr "Tamil TAB Typewriter"
 
 #: ../rules/base.xml.in.h:648
 msgid "Tamil TSCII Typewriter"
-msgstr ""
+msgstr "Tamil TSCII Typewriter"
 
 #: ../rules/base.xml.in.h:649
 msgid "Tamil Unicode"
-msgstr ""
+msgstr "Tamil Unicode"
 
 #: ../rules/base.xml.in.h:650
 msgid "Tanzania"
-msgstr ""
+msgstr "Tanzania"
 
 #: ../rules/base.xml.in.h:651
 msgid "Targa Visionary 811"
-msgstr ""
+msgstr "Targa Visionary 811"
 
 #: ../rules/base.xml.in.h:652
 msgid "Tatar"
-msgstr ""
+msgstr "Tatar"
 
 #: ../rules/base.xml.in.h:653
 msgid "Telugu"
-msgstr ""
+msgstr "Telugu"
 
 #: ../rules/base.xml.in.h:654
 msgid "Tha"
-msgstr ""
+msgstr "Tha"
 
 #: ../rules/base.xml.in.h:655
 msgid "Thailand"
-msgstr ""
+msgstr "Tailandia"
 
 #: ../rules/base.xml.in.h:656
 msgid "Tibetan"
-msgstr ""
+msgstr "Tibetano"
 
 #: ../rules/base.xml.in.h:657
 msgid "Tibetan (with ASCII numerals)"
-msgstr ""
+msgstr "Tibetano (con numerais ASCII)"
 
 #: ../rules/base.xml.in.h:658
 msgid "Tifinagh"
-msgstr ""
+msgstr "Tifinagh"
 
 #: ../rules/base.xml.in.h:659
 msgid "Tifinagh alternative"
-msgstr ""
+msgstr "Alternativa tifinagh"
 
 #: ../rules/base.xml.in.h:660
 msgid "Tifinagh alternative phonetic"
-msgstr ""
+msgstr "Alternativa fonética tifinagh"
 
 #: ../rules/base.xml.in.h:661
 msgid "Tifinagh extended"
-msgstr ""
+msgstr "Estendido tifinagh"
 
 #: ../rules/base.xml.in.h:662
 msgid "Tifinagh extended phonetic"
-msgstr ""
+msgstr "Tifinagh fonético estendido"
 
 #: ../rules/base.xml.in.h:663
 msgid "Tifinagh phonetic"
-msgstr ""
+msgstr "Tifinagh fonético"
 
 #: ../rules/base.xml.in.h:664
 msgid "Tilde (~) variant"
-msgstr ""
+msgstr "Variante vírgula (~)"
 
 #: ../rules/base.xml.in.h:665
 msgid "Tjk"
-msgstr ""
+msgstr "Tjk"
 
 #: ../rules/base.xml.in.h:666
 msgid "Tkm"
-msgstr ""
+msgstr "Tkm"
 
 #: ../rules/base.xml.in.h:667
 msgid "To the corresponding key in a Dvorak keyboard."
-msgstr ""
+msgstr "Á tecla correspondente nun teclado Dvorak."
 
 #: ../rules/base.xml.in.h:668
 msgid "To the corresponding key in a Qwerty keyboard."
-msgstr ""
+msgstr "Á tecla correspondente nun teclado Qwerty."
 
 #: ../rules/base.xml.in.h:669
 msgid "Toshiba Satellite S3000"
-msgstr ""
+msgstr "Toshiba Satellite S3000"
 
 #: ../rules/base.xml.in.h:670
 msgid "Traditional phonetic"
-msgstr ""
+msgstr "Tradicional fonético"
 
 #: ../rules/base.xml.in.h:671
 msgid "Trust Direct Access Keyboard"
-msgstr ""
+msgstr "Trust Direct Access Keyboard"
 
 #: ../rules/base.xml.in.h:672
 msgid "Trust Slimline"
-msgstr ""
+msgstr "Trust Slimline"
 
 #: ../rules/base.xml.in.h:673
 msgid "Trust Wireless Keyboard Classic"
-msgstr ""
+msgstr "Trust Wireless Keyboard Classic"
 
 #: ../rules/base.xml.in.h:674
 msgid "Tur"
-msgstr ""
+msgstr "Tur"
 
 #: ../rules/base.xml.in.h:675
 msgid "Turkey"
-msgstr ""
+msgstr "Turquía"
 
 #: ../rules/base.xml.in.h:676
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistán"
 
 #: ../rules/base.xml.in.h:677
 msgid "TypeMatrix EZ-Reach 2020"
-msgstr ""
+msgstr "TypeMatrix EZ-Reach 2020"
 
 #: ../rules/base.xml.in.h:678
 msgid "TypeMatrix EZ-Reach 2030 PS2"
-msgstr ""
+msgstr "TypeMatrix EZ-Reach 2030 PS2"
 
 #: ../rules/base.xml.in.h:679
 msgid "TypeMatrix EZ-Reach 2030 USB"
-msgstr ""
+msgstr "TypeMatrix EZ-Reach 2030 USB"
 
 #: ../rules/base.xml.in.h:680
 msgid "TypeMatrix EZ-Reach 2030 USB (102/105:EU mode)"
-msgstr ""
+msgstr "TypeMatrix EZ-Reach 2030 USB (102/105:modo EU)"
 
 #: ../rules/base.xml.in.h:681
 msgid "TypeMatrix EZ-Reach 2030 USB (106:JP mode)"
-msgstr ""
+msgstr "TypeMatrix EZ-Reach 2030 USB (106:modo JP)"
 
 #: ../rules/base.xml.in.h:682
 msgid "Typewriter"
-msgstr ""
+msgstr "Máquina de escribir"
 
 #: ../rules/base.xml.in.h:683
 msgid "Typewriter, legacy"
-msgstr ""
+msgstr "Máquina de escribir, herdado"
 
 #: ../rules/base.xml.in.h:684
 msgid "Tza"
-msgstr ""
+msgstr "Tza"
 
 #: ../rules/base.xml.in.h:685
 msgid "UCW layout (accented letters only)"
-msgstr ""
+msgstr "Disposición UCW (só teclas con til)"
 
 #: ../rules/base.xml.in.h:686
 msgid "US Dvorak with CZ UCW support"
-msgstr ""
+msgstr "Teclado EE. UU. con soporte para UCW checo"
 
 #: ../rules/base.xml.in.h:687
 msgid "US keyboard with Bosnian digraphs"
-msgstr ""
+msgstr "Teclado EE. UU. con digrafos bosnios"
 
 #: ../rules/base.xml.in.h:688
 msgid "US keyboard with Bosnian letters"
-msgstr ""
+msgstr "Teclado EE. UU. con letras bosnias"
 
 #: ../rules/base.xml.in.h:689
 msgid "US keyboard with Croatian digraphs"
-msgstr ""
+msgstr "Teclado EE. UU. con digrafos croatas"
 
 #: ../rules/base.xml.in.h:690
 msgid "US keyboard with Croatian letters"
-msgstr ""
+msgstr "Teclado EE. UU. con letras croatas"
 
 #: ../rules/base.xml.in.h:691
 msgid "US keyboard with Estonian letters"
-msgstr ""
+msgstr "Teclado EE. UU. con letras estonias"
 
 #: ../rules/base.xml.in.h:692
 msgid "US keyboard with Italian letters"
-msgstr ""
+msgstr "Teclado EE. UU. con letras italianas"
 
 #: ../rules/base.xml.in.h:693
 msgid "US keyboard with Lithuanian letters"
-msgstr ""
+msgstr "Teclado EE. UU. con letras lituanas"
 
 #: ../rules/base.xml.in.h:694
 msgid "US keyboard with Slovenian letters"
-msgstr ""
+msgstr "Teclado EE. UU. con letras eslovenas"
 
 #: ../rules/base.xml.in.h:695 ../rules/base.extras.xml.in.h:11
 msgid "USA"
-msgstr ""
+msgstr "USA"
 
 #: ../rules/base.xml.in.h:696
 msgid "Udmurt"
-msgstr ""
+msgstr "Udmurto"
 
 #: ../rules/base.xml.in.h:697
 msgid "Ukr"
-msgstr ""
+msgstr "Ucr"
 
 #: ../rules/base.xml.in.h:698
 msgid "Ukraine"
-msgstr ""
+msgstr "Ucrania"
 
 #: ../rules/base.xml.in.h:699
 msgid "Unicode additions (arrows and math operators)"
-msgstr ""
+msgstr "Adicións unicode (frechas e operadores matemáticos)"
 
 #: ../rules/base.xml.in.h:700
 msgid "Unicode additions (arrows and math operators). Math operators on default level"
-msgstr ""
+msgstr "Adicións unicode (frechas e operadores matemáticos); operadores matemáticos no nivel predefinido"
 
 #: ../rules/base.xml.in.h:701
 msgid "UnicodeExpert"
-msgstr ""
+msgstr "UnicodeExperto"
 
 #: ../rules/base.xml.in.h:702
 msgid "United Kingdom"
-msgstr ""
+msgstr "Reino Unido"
 
 #: ../rules/base.xml.in.h:703
 msgid "Unitek KB-1925"
-msgstr ""
+msgstr "Unitek KB-1925"
 
 #: ../rules/base.xml.in.h:704
 msgid "Urdu, Alternative phonetic"
-msgstr ""
+msgstr "Urdu fonético alternativo"
 
 #: ../rules/base.xml.in.h:705
 msgid "Urdu, Phonetic"
-msgstr ""
+msgstr "Urdu fonético"
 
 #: ../rules/base.xml.in.h:706
 msgid "Urdu, Winkeys"
-msgstr ""
+msgstr "Urdu, teclas Windows"
 
 #: ../rules/base.xml.in.h:707
 msgid "Use Bosnian digraphs"
-msgstr ""
+msgstr "Usar digrafos bosnios"
 
 #: ../rules/base.xml.in.h:708
 msgid "Use Croatian digraphs"
-msgstr ""
+msgstr "Usar digrafos croatas"
 
 #: ../rules/base.xml.in.h:709
 msgid "Use guillemets for quotes"
-msgstr ""
+msgstr "Usar guillemots para comillas"
 
 #: ../rules/base.xml.in.h:710
 msgid "Use keyboard LED to show alternative layout"
-msgstr ""
+msgstr "Usar LED del teclado para mostrar la distribución alternativa"
 
 #: ../rules/base.xml.in.h:711
 msgid "Using space key to input non-breakable space character"
-msgstr ""
+msgstr "Usando a tecla espazo para introducir un carácter de espazo non separábel"
 
 #: ../rules/base.xml.in.h:712
 msgid "Usual space at any level"
-msgstr ""
+msgstr "Espacio usual en calquera nivel"
 
 #: ../rules/base.xml.in.h:713
 msgid "Uzb"
-msgstr ""
+msgstr "Uzb"
 
 #: ../rules/base.xml.in.h:714
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Uzbekistán"
 
 #: ../rules/base.xml.in.h:715
 msgid "Vietnam"
-msgstr ""
+msgstr "Vietnam"
 
 #: ../rules/base.xml.in.h:716
 msgid "ViewSonic KU-306 Internet Keyboard"
-msgstr ""
+msgstr "Teclado para internet ViewSonic KU-306"
 
 #: ../rules/base.xml.in.h:717
 msgid "Vnm"
-msgstr ""
+msgstr "Vnm"
 
 #: ../rules/base.xml.in.h:718
 msgid "Wang 724 keypad with unicode additions (arrows and math operators)"
-msgstr ""
+msgstr "Teclado numérico Wang 724 con engadidos Unicode (frechas e operadores matemáticos)"
 
 #: ../rules/base.xml.in.h:719
 msgid "Wang 724 keypad with unicode additions (arrows and math operators). Math operators on default level"
-msgstr ""
+msgstr "Teclado numérico Wang 724 con engadidos Unicode (frechas e operadores matemáticos); operadores matemáticos no nivel predefinido"
 
 #: ../rules/base.xml.in.h:720
 msgid "Wang model 724 azerty"
-msgstr ""
+msgstr "Wang modelo 724 azerty"
 
 #: ../rules/base.xml.in.h:721
 msgid "Western"
-msgstr ""
+msgstr "Occidental"
 
 #: ../rules/base.xml.in.h:722
 msgid "Winbook Model XP5"
-msgstr ""
+msgstr "Winbook Model XP5"
 
 #: ../rules/base.xml.in.h:723
 msgid "Winkeys"
-msgstr ""
+msgstr "Teclas Windows"
 
 #: ../rules/base.xml.in.h:724
 msgid "With &lt;\\|&gt; key"
-msgstr ""
+msgstr "Con tecla &lt;\\|&gt;"
 
 #: ../rules/base.xml.in.h:725
 msgid "With EuroSign on 5"
-msgstr ""
+msgstr "Con símbolo Euro na tecla 5"
 
 #: ../rules/base.xml.in.h:726
 msgid "With guillemets"
-msgstr ""
+msgstr "Con guillemots"
 
 #: ../rules/base.xml.in.h:727
 msgid "Yahoo! Internet Keyboard"
-msgstr ""
+msgstr "Yahoo! Internet Keyboard"
 
 #: ../rules/base.xml.in.h:728
 msgid "Yakut"
-msgstr ""
+msgstr "Yakuto"
 
 #: ../rules/base.xml.in.h:729
 msgid "Yoruba"
-msgstr ""
+msgstr "Yoruba"
 
 #: ../rules/base.xml.in.h:730
 msgid "Z and ZHE swapped"
-msgstr ""
+msgstr "Z y ZHE intercambiados"
 
 #: ../rules/base.xml.in.h:731
 msgid "Zaf"
-msgstr ""
+msgstr "Zaf"
 
 #: ../rules/base.xml.in.h:732
 msgid "Zero-width non-joiner character at second level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel"
 
 #: ../rules/base.xml.in.h:733
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel, carácter de espazo non separábel no terceiro nivel"
 
 #: ../rules/base.xml.in.h:734
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level, nothing at fourth level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel, carácter de espazo non separábel no terceiro nivel, nada no cuarto nivel"
 
 #: ../rules/base.xml.in.h:735
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level, thin non-breakable space at fourth level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel, carácter de espazo non separábel no terceiro nivel, espazo estreito non separábel no cuarto nivel"
 
 #: ../rules/base.xml.in.h:736
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level, zero-width joiner at fourth level"
-msgstr ""
+msgstr "Carácter de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel, carácter de espazo non separábel no terceiro nivel, espazo de anchura cero rompíbel («ZWJ») no cuarto nivel"
 
 #: ../rules/base.xml.in.h:737
 msgid "Zero-width non-joiner character at second level, zero-width joiner character at third level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel, carácter de espazo de anchura cero rompíbel («ZWJ») no terceiro nivel"
 
 #: ../rules/base.xml.in.h:738
 msgid "Zero-width non-joiner character at second level, zero-width joiner character at third level, non-breakable space character at fourth level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no segundo nivel, carácter de espazo de anchura cero rompíbel («ZWJ») no terceiro nivel, caracter de espazo non separábel no cuarto nivel"
 
 #: ../rules/base.xml.in.h:739
 msgid "Zero-width non-joiner character at third level, zero-width joiner at fourth level"
-msgstr ""
+msgstr "Carácer de espazo irrompíbel de anchura cero («ZWNJ») no terceiro nivel, carácter de anchura cero rompíbel («ZWJ») no cuarto nivel"
 
 #: ../rules/base.xml.in.h:740
 msgid "azerty"
-msgstr ""
+msgstr "azerty"
 
 #: ../rules/base.xml.in.h:741
 msgid "azerty/digits"
-msgstr ""
+msgstr "azerty/díxitos"
 
 #: ../rules/base.xml.in.h:742
 msgid "digits"
-msgstr ""
+msgstr "díxitos"
 
 #: ../rules/base.xml.in.h:743
 msgid "displaced semicolon and quote (obsolete)"
-msgstr ""
+msgstr "punto e coma e comilla desprazadas (obsoleto)"
 
 #: ../rules/base.xml.in.h:744
 msgid "lyx"
-msgstr ""
+msgstr "lyx"
 
 #: ../rules/base.xml.in.h:745
 msgid "qwerty"
-msgstr ""
+msgstr "qwerty"
 
 #: ../rules/base.xml.in.h:746
 msgid "qwerty, extended Backslash"
-msgstr ""
+msgstr "qwerty, contrabarra estendida"
 
 #: ../rules/base.xml.in.h:747
 msgid "qwerty/digits"
-msgstr ""
+msgstr "qwerty/díxitos"
 
 #: ../rules/base.xml.in.h:748
 msgid "qwertz"
-msgstr ""
+msgstr "qwertz"
 
 #: ../rules/base.extras.xml.in.h:1
 msgid "APL"
-msgstr ""
+msgstr "APL"
 
 #: ../rules/base.extras.xml.in.h:2
 msgid "Atsina"
-msgstr ""
+msgstr "Atsina"
 
 #: ../rules/base.extras.xml.in.h:3
 msgid "Avestan"
-msgstr ""
+msgstr "Avestán"
 
 #: ../rules/base.extras.xml.in.h:4
 msgid "Combining accents instead of dead keys"
-msgstr ""
+msgstr "Combinar tiles no lugar de teclas mortas"
 
 #: ../rules/base.extras.xml.in.h:5
 msgid "Couer D'alene Salish"
-msgstr ""
+msgstr "Coeur d’Alene salish"
 
 #: ../rules/base.extras.xml.in.h:6
 msgid "International (AltGr Unicode combining)"
-msgstr ""
+msgstr "Internacional (combinando AltGr Unicode)"
 
 #: ../rules/base.extras.xml.in.h:7
 msgid "International (AltGr Unicode combining, alternative)"
-msgstr ""
+msgstr "Internacional (combinando AltGr Unicode, alternativa)"
