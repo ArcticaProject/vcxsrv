@@ -465,9 +465,6 @@ pixman_transform_from_pixman_f_transform (struct pixman_transform *        t,
     return TRUE;
 }
 
-static const int a[3] = { 3, 3, 2 };
-static const int b[3] = { 2, 1, 1 };
-
 PIXMAN_EXPORT pixman_bool_t
 pixman_f_transform_invert (struct pixman_f_transform *      dst,
                            const struct pixman_f_transform *src)

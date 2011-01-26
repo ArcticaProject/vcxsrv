@@ -235,7 +235,6 @@ pixman_add_traps (pixman_image_t * image,
                   pixman_trap_t *  traps)
 {
     int bpp;
-    int width;
     int height;
 
     pixman_fixed_t x_off_fixed;
@@ -245,7 +244,6 @@ pixman_add_traps (pixman_image_t * image,
 
     _pixman_image_validate (image);
     
-    width = image->bits.width;
     height = image->bits.height;
     bpp = PIXMAN_FORMAT_BPP (image->bits.format);
 
@@ -349,10 +347,8 @@ pixman_rasterize_trapezoid (pixman_image_t *          image,
                             int                       y_off)
 {
     int bpp;
-    int width;
     int height;
 
-    pixman_fixed_t x_off_fixed;
     pixman_fixed_t y_off_fixed;
     pixman_edge_t l, r;
     pixman_fixed_t t, b;
@@ -364,11 +360,9 @@ pixman_rasterize_trapezoid (pixman_image_t *          image,
     if (!pixman_trapezoid_valid (trap))
 	return;
 
-    width = image->bits.width;
     height = image->bits.height;
     bpp = PIXMAN_FORMAT_BPP (image->bits.format);
 
-    x_off_fixed = pixman_int_to_fixed (x_off);
     y_off_fixed = pixman_int_to_fixed (y_off);
 
     t = trap->top + y_off_fixed;

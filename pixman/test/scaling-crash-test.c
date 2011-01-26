@@ -95,21 +95,29 @@ run_test (int32_t		dst_width,
     return result;
 }
 
-typedef struct info_t info_t;
-struct info_t
+typedef struct filter_info_t filter_info_t;
+struct filter_info_t
 {
-    int value;
+    pixman_filter_t value;
     char name[28];
 };
 
-static const info_t filters[] =
+static const filter_info_t filters[] =
 {
     { PIXMAN_FILTER_NEAREST, "NEAREST" },
     { PIXMAN_FILTER_BILINEAR, "BILINEAR" },
     { PIXMAN_FILTER_CONVOLUTION, "CONVOLUTION" },
 };
 
-static const info_t repeats[] =
+typedef struct repeat_info_t repeat_info_t;
+struct repeat_info_t
+{
+    pixman_repeat_t value;
+    char name[28];
+};
+
+
+static const repeat_info_t repeats[] =
 {
     { PIXMAN_REPEAT_PAD, "PAD" },
     { PIXMAN_REPEAT_REFLECT, "REFLECT" },
