@@ -22,6 +22,8 @@ if g_Args:
     if not os.path.isdir(g_Args[i]):
       parser.error("%s is not a valid directory"%g_Args[i])
 
+NotWorkRe=re.compile("'\.' is not a working copy")
+
 ################################################################################
 
 def Print (Message,NoVerbose=None,Append='\n'):
@@ -88,29 +90,18 @@ def DelTreeNoJunctions(Dir):
   os.rmdir(Dir)
 
 ################################################################################
-def CleanTree(Dir, NoVerbose=None):
-  Print("Cleaning '"+Dir+"'")
-  if g_Options.Recursive:
-    Command='svn st --no-ignore'
-  else:
-    Command='svn st -N --no-ignore'
-  Process=RunCommand(Command)
-  StdOut=Process.stdout
-  NotWorkRe=re.compile("'\.' is not a working copy")
-  while 1:
-    line=StdOut.readline()
-    if not line:
-      break
+def ProcessSvnLine(line,NoVerbose=None):
+  if line:
     if NotWorkRe.search(line):
       Print(NotWorkRe.sub("'%s' is not a working copy directory. Not cleaning this directory."%(re.sub(r"\\",r"\\\\",Dir)),line))
       sys.exit(1)
     if line[0]=='?' or line[0]=='I':
-      Item=re.sub("^\s+","",line[2:-1])
+      Item=re.sub("^\s+","",line[2:])
       if g_Options.SkipUtil:
         if Item[:5]=='util'+os.sep:
-          continue
+          return
         if Item[:6]=='tools'+os.sep:
-          continue
+          return
       if os.path.isdir(Item):
         Print('Deleting directory %s'%(os.path.abspath(Item)),NoVerbose)
         try:
@@ -122,9 +113,36 @@ def CleanTree(Dir, NoVerbose=None):
         try:
           os.remove(Item)
         except Exception,Details:
-          print "Error deleting file %s. Is read-only?"%Item
+          print "Error deleting file %s. Is read-only? "%Item
           print Details
-
+################################################################################
+def CleanTree(Dir, NoVerbose=None):
+  Print("Cleaning '"+Dir+"'")
+  if g_Options.Recursive:
+    Command='svn st --no-ignore'
+  else:
+    Command='svn st -N --no-ignore'
+  Process=RunCommand(Command)
+  StdOut=Process.stdout
+  all_data=""
+  while 1:
+    done = Process.poll()
+    if done == None or done == 0:
+      line=StdOut.readline()
+      all_data+=line
+      line=line.rstrip()
+      ProcessSvnLine(line,NoVerbose)
+    if done == 0:
+      data=StdOut.read()
+      all_data+=data
+      for line in data.splitlines():
+        ProcessSvnLine(line,NoVerbose)
+      break
+    elif done != None:
+      #error!
+      print "error running svn command:", Command
+      print all_data, StdOut.read()
+      sys.exit(1)
 ################################################################################
 if not g_Args:
   g_Args=["."]
