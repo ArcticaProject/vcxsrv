@@ -746,6 +746,23 @@ void loadedmakefile::LoadMakefile()
   }
 }
 
+/*****************************************************************************/
+bool MakeDirs(const fileinfo *pDir)
+{
+  fileinfo *pParentDir=pDir->GetDir();
+  if (!pParentDir->GetDate().DoesExist())
+  {  /* First make parent dirs */
+    if (!MakeDirs(pParentDir))
+      return false;
+  }
+  if (!pDir->GetDate().DoesExist())
+  { /* Create directory */
+    if (-1==mkdir(pDir->GetFullFileName().c_str(),S_IRWXU))
+      return false;
+  }
+  return true;
+}
+
 #ifdef _DEBUG
 ///////////////////////////////////////////////////////////////////////////////
 void DumpVarsAndRules()

@@ -357,7 +357,7 @@ exit:
           Error = false;
           goto exit;
         }
-        if (-1==mkdir(pNewDest->GetFullFileName().c_str(),0777))
+        if (-1==mkdir(pNewDest->GetFullFileName().c_str(),S_IRWXU))
         {
           cerr << "Error creating directory " << pNewDest->GetQuotedFullFileName() << endl;
           Error = false;
@@ -380,6 +380,23 @@ exit:
 #endif
 
   return Error;
+}
+
+/*****************************************************************************/
+mh_pid_t mhmakefileparser::MakeDirsCommand(const string &Params) const
+{
+  vector<fileinfo*> Dirs;
+
+  SplitToItems(Params,Dirs);
+
+  size_t NrDirs=Dirs.size();
+  for (size_t i=0; i<NrDirs; i++)
+  {
+    fileinfo* pDir=Dirs[i];
+    if (!MakeDirs(pDir))
+      return (mh_pid_t)-1;
+  }
+  return (mh_pid_t)0;
 }
 
 /*****************************************************************************/
@@ -440,7 +457,7 @@ mh_pid_t mhmakefileparser::CopyFiles(const string &Params) const
   if (NrSrcs<1)
   {
     cerr << "Wrong number of arguments in copy: "<<Params<<endl;
-    return false;
+    return (mh_pid_t)-1;
   }
 
   fileinfo* pDest=Files[NrSrcs];
@@ -1166,7 +1183,7 @@ mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, str
   }
   if (i==Params.size())
   {
-    if (Command!="del" && Command!="touch" && Command!="copy" && Command!="echo")
+    if (Command!="del" && Command!="touch" && Command!="copy" && Command!="echo" && Command!="mkdir")
       Command=GetFullCommand(Command);
 #ifndef WIN32
     if (Command.substr(0,GetComspec().size())==GetComspec())
@@ -1225,6 +1242,10 @@ mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, str
     else if (Command=="echo")
     {
       return EchoCommand(Params);
+    }
+    else if (Command=="mkdir")
+    {
+      return MakeDirsCommand(Params);
     }
 
     return OsExeCommand(Command,Params,IgnoreError,pOutput);

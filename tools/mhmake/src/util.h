@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "2.3.30"
+#define MHMAKEVER    "2.4.1"
 
 class makecommand
 {
@@ -232,6 +232,7 @@ public:
 
 extern LOADEDMAKEFILES g_LoadedMakefiles;
 
+bool MakeDirs(const fileinfo *pDir); // Creates a directory tree
 void DumpVarsAndRules();
 
 #endif

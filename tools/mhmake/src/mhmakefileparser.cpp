@@ -804,19 +804,6 @@ void mhmakefileparser::LoadAutoDepsFile(fileinfo *pDepFile)
   fclose(pIn);
 }
 
-static void MakeDirs(const fileinfo *pDir)
-{
-  fileinfo *pParentDir=pDir->GetDir();
-  if (!pParentDir->GetDate().DoesExist())
-  {  /* First make parent dirs */
-    MakeDirs(pParentDir);
-  }
-  if (!pDir->GetDate().DoesExist())
-  { /* Create directory */
-    mkdir(pDir->GetFullFileName().c_str(),S_IRWXU);
-  }
-}
-
 void mhmakefileparser::SaveAutoDepsFile()
 {
   if (!IsAutoDepsDirty())
@@ -845,7 +832,14 @@ void mhmakefileparser::SaveAutoDepsFile()
   if (!pOut)
   {
     /* Maybe it is because the directory does not exist, so try to create this first */
-    MakeDirs(pDepFile->GetDir());
+    if (!MakeDirs(pDepFile->GetDir()))
+    {
+      #ifdef _DEBUG
+      if (!g_DoNotExecute)
+      #endif
+        cerr << "Error creating dir "<<pDepFile->GetDir()->GetFullFileName()<<endl;
+      return;
+    }
     pOut=fopen(pDepFile->GetFullFileName().c_str(),"wb");
 
     if (!pOut)

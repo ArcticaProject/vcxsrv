@@ -381,6 +381,7 @@ public:
   mh_pid_t CopyFiles(const string &Params) const;
   mh_pid_t TouchFiles(const string &Params) const;
   mh_pid_t EchoCommand(const string &Params) const;
+  mh_pid_t MakeDirsCommand(const string &Params) const;
   string SearchCommand(const string &Command, const string &Extension="") const;
   const string &GetPythonExe() const;
   int SearchPath(const char *szCommand, const char *pExt, size_t Len, char *szFullCommand,char **pFilePart) const;

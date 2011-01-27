@@ -77,7 +77,14 @@ string UnquoteFileName(const string &Filename)
 ///////////////////////////////////////////////////////////////////////////////
 fileinfo* fileinfo::GetDir() const
 {
-  return GetAbsFileInfo(m_AbsFileName.substr(0,m_AbsFileName.find_last_of(OSPATHSEP)));
+  string Dir=m_AbsFileName.substr(0,m_AbsFileName.find_last_of(OSPATHSEP));
+  #ifdef WIN32
+  if (Dir.length()==2 && Dir[1]==':')
+  #else
+  if (Dir.empty())
+  #endif
+    Dir+=OSPATHSEP;
+  return GetAbsFileInfo(Dir);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

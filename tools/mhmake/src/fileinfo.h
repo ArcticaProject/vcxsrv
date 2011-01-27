@@ -189,11 +189,16 @@ public:
   {
     return QuoteFileName(m_AbsFileName);
   }
+#ifdef WIN32
+#define MINPATHLENGTH 3 // The smallest dir name in windows is 3, e.g. "c:\"
+#else
+#define MINPATHLENGTH 1 // The smallest dir name in linux is 1, e.g. "/"
+#endif
   void SetFullFileName(const string &strAbsName)
   {
     m_AbsFileName=UnquoteFileName(strAbsName);
-    // If the last char is path sep strip it
-    if (!m_AbsFileName.empty() && m_AbsFileName[m_AbsFileName.length()-1]==OSPATHSEP)
+    // If the last char is path sep strip it, except for the smallest dir name
+    if (m_AbsFileName.length()>MINPATHLENGTH && m_AbsFileName[m_AbsFileName.length()-1]==OSPATHSEP)
       m_AbsFileName.resize(m_AbsFileName.length()-1);
   }
 
