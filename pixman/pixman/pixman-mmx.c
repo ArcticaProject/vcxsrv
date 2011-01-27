@@ -464,7 +464,7 @@ mmx_combine_over_u (pixman_implementation_t *imp,
 
     while (dest < end)
     {
-	uint32_t ssrc = combine( src, mask);
+	uint32_t ssrc = combine (src, mask);
 	uint32_t a = ssrc >> 24;
 
 	if (a == 0xff)
@@ -3356,10 +3356,9 @@ mmx_fill (pixman_implementation_t *imp,
 }
 
 pixman_implementation_t *
-_pixman_implementation_create_mmx (void)
+_pixman_implementation_create_mmx (pixman_implementation_t *fallback)
 {
-    pixman_implementation_t *general = _pixman_implementation_create_fast_path ();
-    pixman_implementation_t *imp = _pixman_implementation_create (general, mmx_fast_paths);
+    pixman_implementation_t *imp = _pixman_implementation_create (fallback, mmx_fast_paths);
 
     imp->combine_32[PIXMAN_OP_OVER] = mmx_combine_over_u;
     imp->combine_32[PIXMAN_OP_OVER_REVERSE] = mmx_combine_over_reverse_u;

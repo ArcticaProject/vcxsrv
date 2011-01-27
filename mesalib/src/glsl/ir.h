@@ -235,6 +235,25 @@ enum ir_variable_interpolation {
    ir_var_noperspective
 };
 
+/**
+ * \brief Layout qualifiers for gl_FragDepth.
+ *
+ * The AMD_conservative_depth extension allows gl_FragDepth to be redeclared
+ * with a layout qualifier.
+ */
+enum ir_depth_layout {
+    ir_depth_layout_none, /**< No depth layout is specified. */
+    ir_depth_layout_any,
+    ir_depth_layout_greater,
+    ir_depth_layout_less,
+    ir_depth_layout_unchanged
+};
+
+/**
+ * \brief Convert depth layout qualifier to string.
+ */
+const char*
+depth_layout_string(ir_depth_layout layout);
 
 class ir_variable : public ir_instruction {
 public:
@@ -333,6 +352,14 @@ public:
    unsigned origin_upper_left:1;
    unsigned pixel_center_integer:1;
    /*@}*/
+
+   /**
+    * \brief Layout qualifier for gl_FragDepth.
+    *
+    * This is not equal to \c ir_depth_layout_none if and only if this
+    * variable is \c gl_FragDepth and a layout qualifier is specified.
+    */
+   ir_depth_layout depth_layout;
 
    /**
     * Was the location explicitly set in the shader?

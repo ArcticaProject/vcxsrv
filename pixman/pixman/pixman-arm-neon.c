@@ -414,13 +414,8 @@ BIND_COMBINE_U (add)
 BIND_COMBINE_U (out_reverse)
 
 pixman_implementation_t *
-_pixman_implementation_create_arm_neon (void)
+_pixman_implementation_create_arm_neon (pixman_implementation_t *fallback)
 {
-#ifdef USE_ARM_SIMD
-    pixman_implementation_t *fallback = _pixman_implementation_create_arm_simd ();
-#else
-    pixman_implementation_t *fallback = _pixman_implementation_create_fast_path ();
-#endif
     pixman_implementation_t *imp =
 	_pixman_implementation_create (fallback, arm_neon_fast_paths);
 

@@ -795,3 +795,26 @@ AC_OUTPUT([pixman-1.pc
 	   pixman/Makefile
 	   pixman/pixman-version.h
 	   test/Makefile])
+
+m4_if(m4_eval(pixman_minor % 2), [1], [
+   echo
+   echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+   echo
+   echo "      Thanks for testing this development snapshot of pixman. Please"
+   echo "      report any problems you find, either by sending email to "
+   echo
+   echo "          pixman@lists.freedesktop.org"
+   echo
+   echo "      or by filing a bug at "
+   echo
+   echo "          https://bugs.freedesktop.org/enter_bug.cgi?product=pixman "
+   echo
+   echo "      If you are looking for a stable release of pixman, please note "
+   echo "      that stable releases have _even_ minor version numbers. Ie., "
+   echo "      pixman-0.]m4_eval(pixman_minor & ~1)[.x are stable releases, whereas pixman-$PIXMAN_VERSION_MAJOR.$PIXMAN_VERSION_MINOR.$PIXMAN_VERSION_MICRO is a "
+   echo "      development snapshot that may contain bugs and experimental "
+   echo "      features. "
+   echo 
+   echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+   echo
+])
