@@ -5957,13 +5957,8 @@ sse2_fill (pixman_implementation_t *imp,
 __attribute__((__force_align_arg_pointer__))
 #endif
 pixman_implementation_t *
-_pixman_implementation_create_sse2 (void)
+_pixman_implementation_create_sse2 (pixman_implementation_t *fallback)
 {
-#ifdef USE_MMX
-    pixman_implementation_t *fallback = _pixman_implementation_create_mmx ();
-#else
-    pixman_implementation_t *fallback = _pixman_implementation_create_fast_path ();
-#endif
     pixman_implementation_t *imp = _pixman_implementation_create (fallback, sse2_fast_paths);
 
     /* SSE2 constants */

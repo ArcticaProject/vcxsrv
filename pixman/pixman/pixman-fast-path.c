@@ -1925,10 +1925,9 @@ fast_path_fill (pixman_implementation_t *imp,
 }
 
 pixman_implementation_t *
-_pixman_implementation_create_fast_path (void)
+_pixman_implementation_create_fast_path (pixman_implementation_t *fallback)
 {
-    pixman_implementation_t *general = _pixman_implementation_create_general ();
-    pixman_implementation_t *imp = _pixman_implementation_create (general, c_fast_paths);
+    pixman_implementation_t *imp = _pixman_implementation_create (fallback, c_fast_paths);
 
     imp->fill = fast_path_fill;
 

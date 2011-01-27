@@ -415,10 +415,9 @@ static const pixman_fast_path_t arm_simd_fast_paths[] =
 };
 
 pixman_implementation_t *
-_pixman_implementation_create_arm_simd (void)
+_pixman_implementation_create_arm_simd (pixman_implementation_t *fallback)
 {
-    pixman_implementation_t *general = _pixman_implementation_create_fast_path ();
-    pixman_implementation_t *imp = _pixman_implementation_create (general, arm_simd_fast_paths);
+    pixman_implementation_t *imp = _pixman_implementation_create (fallback, arm_simd_fast_paths);
 
     return imp;
 }
