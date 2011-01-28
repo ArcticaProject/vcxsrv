@@ -55,6 +55,9 @@
 #include "xcbint.h"
 
 #ifdef _MSC_VER
+#ifdef close
+#undef close
+#endif
 #define close(fd) closesocket(fd)
 #endif
 

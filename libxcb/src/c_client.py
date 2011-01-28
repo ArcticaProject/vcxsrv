@@ -1424,6 +1424,11 @@ def _c_accessor_get_expr(expr, field_mapping):
     else:
         return lenexp
 
+def type_pad_type(type):
+    if type == 'void':
+        return 'char'
+    return type
+
 def _c_accessors_field(self, field):
     '''
     Declares the accessor functions for a non-list field that follows a variable-length field.
@@ -1457,8 +1462,8 @@ def _c_accessors_field(self, field):
             _c('    return (%s *) (R + 1);', field.c_field_type)
         else:
             _c('    xcb_generic_iterator_t prev = %s;', _c_iterator_get_end(field.prev_varsized_field, 'R'))
-            sizeoftype='char' if field.first_field_after_varsized.type.c_type == 'void' else field.first_field_after_varsized.type.c_type
-            _c('    return * (%s *) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index) + %d);', field.c_field_type, sizeoftype, field.prev_varsized_offset)
+            _c('    return * (%s *) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index) + %d);', 
+               field.c_field_type, type_pad_type(field.first_field_after_varsized.type.c_type), field.prev_varsized_offset)
         _c('}')
     else:
         _hc('')
@@ -1488,8 +1493,8 @@ def _c_accessors_field(self, field):
             #       'corrected' in the reply function
         else:
             _c('    xcb_generic_iterator_t prev = %s;', _c_iterator_get_end(field.prev_varsized_field, 'R'))
-            sizeoftype='char' if field.first_field_after_varsized.type.c_type == 'void' else field.first_field_after_varsized.type.c_type
-            _c('    return (%s) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index) + %d);', return_type, sizeoftype, field.prev_varsized_offset)
+            _c('    return (%s) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index) + %d);', 
+               return_type, type_pad_type(field.first_field_after_varsized.type.c_type), field.prev_varsized_offset)
         _c('}')
 
     
@@ -1575,8 +1580,8 @@ def _c_accessors_list(self, field):
             _c('    return (%s *) (R + 1);', field.c_field_type)
         else:
             _c('    xcb_generic_iterator_t prev = %s;', _c_iterator_get_end(field.prev_varsized_field, 'R'))
-            sizeoftype='char' if field.first_field_after_varsized.type.c_type == 'void' else field.first_field_after_varsized.type.c_type
-            _c('    return (%s *) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index) + %d);', field.c_field_type, sizeoftype, field.prev_varsized_offset)
+            _c('    return (%s *) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index) + %d);', 
+               field.c_field_type, type_pad_type(field.first_field_after_varsized.type.c_type), field.prev_varsized_offset)
         _c('}')
 
     _hc('')
@@ -1679,8 +1684,8 @@ def _c_accessors_list(self, field):
             _c('    i.data = (%s *) (R + 1);', field.c_field_type)
         else:
             _c('    xcb_generic_iterator_t prev = %s;', _c_iterator_get_end(field.prev_varsized_field, 'R'))
-            sizeoftype='char' if field.c_field_type == 'void' else field.c_field_type
-            _c('    i.data = (%s *) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index));', field.c_field_type, sizeoftype)
+            _c('    i.data = (%s *) ((char *) prev.data + XCB_TYPE_PAD(%s, prev.index));', 
+               field.c_field_type, type_pad_type(field.c_field_type))
         if switch_obj is None:
             _c('    i.rem = %s;', _c_accessor_get_expr(field.type.expr, fields))
         _c('    i.index = (char *) i.data - (char *) %s;', 'R' if switch_obj is None else 'S' )
