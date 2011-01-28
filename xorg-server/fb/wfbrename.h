@@ -44,7 +44,6 @@
 #define fbCopyNto1 wfbCopyNto1
 #define fbCopyNtoN wfbCopyNtoN
 #define fbCopyPlane wfbCopyPlane
-#define fbCopyRegion wfbCopyRegion
 #define fbCopyWindow wfbCopyWindow
 #define fbCopyWindowProc wfbCopyWindowProc
 #define fbCreateDefColormap wfbCreateDefColormap
@@ -54,7 +53,6 @@
 #define fbCreateWindow wfbCreateWindow
 #define fbDestroyPixmap wfbDestroyPixmap
 #define fbDestroyWindow wfbDestroyWindow
-#define fbDoCopy wfbDoCopy
 #define fbDots wfbDots
 #define fbDots16 wfbDots16
 #define fbDots24 wfbDots24
