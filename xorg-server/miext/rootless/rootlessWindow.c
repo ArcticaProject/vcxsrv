@@ -1002,6 +1002,7 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
     }
     else if (gravity) {
         /* The general case. Just copy everything. */
+        BoxRec tmpBoxRec={oldX, oldY, oldX2, oldY2};
 
         RootlessStartDrawing(pWin);
 
@@ -1010,7 +1011,7 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
         memcpy(gResizeDeathBits, winRec->pixelData,
                winRec->bytesPerRow * winRec->height);
 
-        gResizeDeathBounds[0] = (BoxRec) {oldX, oldY, oldX2, oldY2};
+        gResizeDeathBounds[0] = tmpBoxRec;
         gResizeDeathPix[0]
             = GetScratchPixmapHeader(pScreen, winRec->width,
                                      winRec->height,
@@ -1047,7 +1048,8 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
        window bits. */
 
     if (need_window_source) {
-        gResizeDeathBounds[0] = (BoxRec) {oldX, oldY, oldX2, oldY2};
+        BoxRec tmpBoxRec={oldX, oldY, oldX2, oldY2};
+        gResizeDeathBounds[0] = tmpBoxRec;
         gResizeDeathPix[0]
             = GetScratchPixmapHeader(pScreen, oldW, oldH,
                                      winRec->win->drawable.depth,
