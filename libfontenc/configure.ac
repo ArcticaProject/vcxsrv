@@ -37,7 +37,6 @@ XORG_DEFAULT_OPTIONS
 AM_CONFIG_HEADER(config.h)
 
 # Check for progs
-AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # Require X.Org's font util macros 1.1 or later for XORG_FONTROOTDIR
