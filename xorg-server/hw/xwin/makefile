@@ -1,5 +1,15 @@
 LIBRARY = libXWin
 
+XWIN_MULTIWINDOW=1
+XWIN_CLIPBOARD=1
+XWIN_MULTIWINDOWEXTWM=0  # currently not working correctly
+XWIN_MULTIWINDOWINTWM=0  # currently not working correctly
+XWIN_RANDR=1
+XWIN_NATIVEGDI=0         # currently not working correctly
+XWIN_PRIMARYFB=0         # currently not working correctly
+XWIN_GLX_WINDOWS=0       # everything is in the glx makefile
+
+if XWIN_CLIPBOARD
 SRCS_CLIPBOARD = \
 	winclipboardinit.c \
 	winclipboardtextconv.c \
@@ -8,46 +18,69 @@ SRCS_CLIPBOARD = \
 	winclipboardwndproc.c \
 	winclipboardwrappers.c \
 	winclipboardxevents.c
+DEFS_CLIPBOARD = -DXWIN_CLIPBOARD
+endif
 
-DEFINES += XWIN_CLIPBOARD
+if XWIN_GLX_WINDOWS
+GLX_DIR = glx
+DEFS_GLX_WINDOWS = -DXWIN_GLX_WINDOWS
+XWIN_GLX_LIBS = $(top_builddir)/hw/xwin/glx/libXwinGLX.la
+XWIN_GLX_LINK_FLAGS = -lopengl32
+endif
 
+if XWIN_MULTIWINDOW
 SRCS_MULTIWINDOW = \
 	winmultiwindowshape.c \
 	winmultiwindowwindow.c \
 	winmultiwindowwm.c \
 	winmultiwindowwndproc.c
+DEFS_MULTIWINDOW = -DXWIN_MULTIWINDOW
+endif
 
-DEFINES += XWIN_MULTIWINDOW
+if XWIN_MULTIWINDOWEXTWM
+SRCS_MULTIWINDOWEXTWM = \
+	winwin32rootless.c \
+	winwin32rootlesswindow.c \
+	winwin32rootlesswndproc.c \
+	winwindowswm.c
+DEFS_MULTIWINDOWEXTWM = -DXWIN_MULTIWINDOWEXTWM
+MULTIWINDOWEXTWM_LIBS = $(top_builddir)/miext/rootless/librootless.la
+endif
 
-#SRCS_MULTIWINDOWEXTWM = \
-#	winwin32rootless.c \
-#	winwin32rootlesswindow.c \
-#	winwin32rootlesswndproc.c \
-#	winwindowswm.c
-#DEFINES += XWIN_MULTIWINDOWEXTWM
+if XWIN_NATIVEGDI
+SRCS_NATIVEGDI = \
+	winclip.c \
+	winfillsp.c \
+	winfont.c \
+	wingc.c \
+	wingetsp.c \
+	winnativegdi.c \
+	winpixmap.c \
+	winpolyline.c \
+	winrop.c \
+	winsetsp.c
+DEFS_NATIVEGDI = -DXWIN_NATIVEGDI
+endif
 
-#SRCS_NATIVEGDI = \
-#	winclip.c \
-#	winfillsp.c \
-#	winfont.c \
-#	wingc.c \
-#	wingetsp.c \
-#	winnativegdi.c \
-#	winpixmap.c \
-#	winpolyline.c \
-#	winrop.c \
-#	winsetsp.c
-#DEFINES +=  XWIN_NATIVEGDI
+if XWIN_PRIMARYFB
+SRCS_PRIMARYFB = \
+	winpfbdd.c
+DEFS_PRIMARYFB = -DXWIN_PRIMARYFB
+endif
 
-#SRCS_PRIMARYFB = \
-#	winpfbdd.c
-#DEFINES += XWIN_PRIMARYFB
-
+if XWIN_RANDR
 SRCS_RANDR = \
 	winrandr.c
-DEFINES += XWIN_RANDR RELOCATE_PROJECTROOT
+DEFS_RANDR = -DXWIN_RANDR
+endif
 
-CSRCS =	InitInput.c \
+if XWIN_XV
+SRCS_XV = \
+	winvideo.c
+DEFS_XV = -DXWIN_XV
+endif
+
+SRCS =	InitInput.c \
 	InitOutput.c \
 	winallpriv.c \
 	winauth.c \
@@ -69,6 +102,8 @@ CSRCS =	InitInput.c \
 	winmultiwindowclass.c \
 	winmultiwindowicons.c \
 	winprefs.c \
+	winprefsyacc.y \
+	winprefslex.l \
 	winprocarg.c \
 	winregistry.c \
 	winscrinit.c \
@@ -79,42 +114,58 @@ CSRCS =	InitInput.c \
 	winvalargs.c \
 	winwakeup.c \
 	winwindow.c \
-	winprefslex.c \
-	winprefsyacc.c \
 	winwndproc.c \
+	ddraw.h \
+	winclipboard.h \
+	winconfig.h \
+	win.h \
+	winkeybd.h \
+	winkeynames.h \
+	winlayouts.h \
+	winmessages.h \
+	winmsg.h \
+	winms.h \
+	winmultiwindowclass.h \
+	winprefs.h \
+	winresource.h \
+	winwindow.h \
 	windisplay.c \
+	XWin.rc \
 	$(SRCS_CLIPBOARD) \
 	$(SRCS_MULTIWINDOW) \
 	$(SRCS_MULTIWINDOWEXTWM) \
 	$(SRCS_NATIVEGDI) \
 	$(SRCS_PRIMARYFB) \
 	$(SRCS_RANDR) \
+	$(SRCS_XV)
 
+CSRCS=$(filter %.c,$(SRCS)) $(filter %.y,$(SRCS)) $(filter %.l,$(SRCS))
+CSRCS := $(CSRCS:%.y=%.c)
+CSRCS := $(CSRCS:%.l=%.c)
 
-DEFINES += YY_NO_UNISTD_H
+ DEFS = $(DEFS_CLIPBOARD) \
+	$(DEFS_GLX_WINDOWS) \
+	$(DEFS_MULTIWINDOW) \
+	$(DEFS_MULTIWINDOWEXTWM) \
+	$(DEFS_NATIVEGDI) \
+	$(DEFS_PRIMARYFB) \
+	$(DEFS_RANDR) \
+	$(DEFS_XV)
 
-#	XWin.rc \
-#	$(top_srcdir)/Xext/dpmsstubs.c \
-#	$(top_srcdir)/Xi/stubs.c \
-#	$(top_srcdir)/mi/miinitext.c \
-#	$(top_srcdir)/fb/fbcmap_mi.c \
-#	$(SRCS_PRIMARYFB) \
-#	$(SRCS_XV)
+DEFINES += $(DEFS:-D%=%) HAVE_XWIN_CONFIG_H PTW32_STATIC_LIB RELOCATE_PROJECTROOT
 
 INCLUDES += ..\..\miext\rootless
 
-#.rc.o:
 
-#	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include -DPROJECT_NAME=\"$(VENDOR_NAME_SHORT)\" -DPROJECT_VERSION=\"$(PACKAGE_VERSION)\" -DBUILD_DATE=\"$(BUILD_DATE)\"
 
-DEFINES += HAVE_XWIN_CONFIG_H BUILD_DATE=0-0-0000 PTW32_STATIC_LIB
-
-#CSRCS=winkeybd.c
 
 INCLUDES += $(OBJDIR)
 
+AM_YFLAGS = -d
+AM_LFLAGS = -i
+
 $(OBJDIR)\winprefslex.c: winprefslex.l $(OBJDIR)\winprefsyacc.h
-	flex -i -o$@ $<
+	flex $(AM_LFLAGS) -o$@ $<
 
 $(OBJDIR)\winprefsyacc.c $(OBJDIR)\winprefsyacc.h: winprefsyacc.y
-	bison -d -o$(OBJDIR)\winprefsyacc.c $<
+	bison $(AM_YFLAGS) -o$(OBJDIR)\winprefsyacc.c $<

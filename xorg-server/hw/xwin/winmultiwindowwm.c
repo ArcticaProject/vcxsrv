@@ -69,6 +69,7 @@ typedef int pid_t;
 #include "winmultiwindowclass.h"
 
 #ifdef XWIN_MULTIWINDOWEXTWM
+#define _WINDOWSWM_SERVER_
 #include <X11/extensions/windowswmstr.h>
 #else
 /* We need the native HWND atom for intWM, so for consistency use the
@@ -115,7 +116,9 @@ typedef struct _WMInfo {
   Atom			atmWmProtos;
   Atom			atmWmDelete;
   Atom			atmPrivMap;
+#ifdef XWIN_MULTIWINDOWINTWM
   Bool			fAllowOtherWM;
+#endif
 } WMInfoRec, *WMInfoPtr;
 
 typedef struct _WMProcArgRec {
@@ -591,11 +594,13 @@ winMultiWindowWMProc (void *pArg)
     {
       WMMsgNodePtr	pNode;
 
+#ifdef XWIN_MULTIWINDOWINTWM
       if(g_fAnotherWMRunning)/* Another Window manager exists. */
 	{
 	  Sleep (1000);
 	  continue;
 	}
+#endif
 
       /* Pop a message off of our queue */
       pNode = PopMessage (&pWMInfo->wmMsgQueue, pWMInfo);
@@ -891,9 +896,17 @@ winMultiWindowXMsgProc (void *pArg)
 	  "successfully opened the display.\n");
 
   /* Check if another window manager is already running */
+#ifdef XWIN_MULTIWINDOWINTWM
   g_fAnotherWMRunning = CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen, pProcArg->pWMInfo->fAllowOtherWM);
+#else
+  g_fAnotherWMRunning = CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen, FALSE);
+#endif
 
-  if (g_fAnotherWMRunning && !pProcArg->pWMInfo->fAllowOtherWM)
+  if (g_fAnotherWMRunning
+#ifdef XWIN_MULTIWINDOWINTWM
+      && !pProcArg->pWMInfo->fAllowOtherWM
+#endif
+      )
     {
       ErrorF ("winMultiWindowXMsgProc - "
           "another window manager is running.  Exiting.\n");
@@ -940,6 +953,7 @@ winMultiWindowXMsgProc (void *pArg)
       if (g_shutdown)
         break;
 
+#ifdef XWIN_MULTIWINDOWINTWM
       if (pProcArg->pWMInfo->fAllowOtherWM && !XPending (pProcArg->pDisplay))
 	{
 	  if (CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen, TRUE))
@@ -961,6 +975,7 @@ winMultiWindowXMsgProc (void *pArg)
 	  Sleep (500);
 	  continue;
 	}
+#endif
 
       /* Fetch next event */
       XNextEvent (pProcArg->pDisplay, &event);
@@ -1138,7 +1153,9 @@ winInitWM (void **ppWMInfo,
 
   /* Set a return pointer to the Window Manager info structure */
   *ppWMInfo = pWMInfo;
+#ifdef XWIN_MULTIWINDOWINTWM
   pWMInfo->fAllowOtherWM = allowOtherWM;
+#endif
 
   /* Setup the argument structure for the thread function */
   pArg->dwScreen = dwScreen;

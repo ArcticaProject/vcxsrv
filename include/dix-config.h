@@ -422,7 +422,7 @@
 #undef pid_t
 
 /* Build Rootless code */
-#undef ROOTLESS
+#define ROOTLESS 1
 
 /* Define to 1 if unsigned long is 64 bits. */
 #undef _XSERVER64

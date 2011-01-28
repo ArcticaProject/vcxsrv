@@ -212,8 +212,8 @@ winSetEngine (ScreenPtr pScreen)
       return TRUE;
     }
 
-  /* If the user's choice is supported, we'll use that */
-  if (g_dwEnginesSupported & pScreenInfo->dwEnginePreferred)
+  /* If there is a user's choice, we'll use that */
+  if (pScreenInfo->dwEnginePreferred)
     {
       winDebug ("winSetEngine - Using user's preference: %d\n",
 	      (int) pScreenInfo->dwEnginePreferred);
@@ -242,7 +242,7 @@ winSetEngine (ScreenPtr pScreen)
 	  break;
 #endif
 	default:
-	  FatalError ("winSetEngine - Invalid engine type\n");
+	  FatalError ("winSetEngine - Invalid engine type %d\n",pScreenInfo->dwEngine);
 	}
       return TRUE;
     }

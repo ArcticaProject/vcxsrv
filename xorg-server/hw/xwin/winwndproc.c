@@ -1198,7 +1198,7 @@ winWindowProc (HWND hwnd, UINT message,
       /* Call engine specific screen activation/deactivation function */
       (*s_pScreenPriv->pwinActivateApp) (s_pScreen);
 
-#ifdef XWIN_MULTIWINDOWEXTWM
+#ifdef XWIN_MULTIWINDOWINTWM
       if (s_pScreenPriv->fActive)
 	{
 	  /* Restack all window unless using built-in wm. */
@@ -1268,22 +1268,26 @@ winWindowProc (HWND hwnd, UINT message,
       winDebug ("winWindowProc - WM_MANAGE\n");
       s_pScreenInfo->fAnotherWMRunning = FALSE;
 
+#ifdef XWIN_MULTIWINDOWINTWM
       if (s_pScreenInfo->fInternalWM)
 	{
 	  EnumThreadWindows (g_dwCurrentThreadID, winMWExtWMDecorateWindow, 0);
 	  //RootlessRepositionWindows (s_pScreen);
 	}
+#endif
       break;
 
     case WM_UNMANAGE:
       winDebug ("winWindowProc - WM_UNMANAGE\n");
       s_pScreenInfo->fAnotherWMRunning = TRUE;
 
+#ifdef XWIN_MULTIWINDOWINTWM
       if (s_pScreenInfo->fInternalWM)
 	{
 	  EnumThreadWindows (g_dwCurrentThreadID, winMWExtWMDecorateWindow, 0);
 	  winMWExtWMRestackWindows (s_pScreen);
 	}
+#endif
       break;
 #endif
 

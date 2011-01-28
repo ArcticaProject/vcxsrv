@@ -113,6 +113,8 @@ winInitializeScreenDefaults(void)
   defaultScreenInfo.fDecoration = TRUE;
 #ifdef XWIN_MULTIWINDOWEXTWM
   defaultScreenInfo.fMWExtWM = FALSE;
+#endif
+#ifdef XWIN_MULTIWINDOWINTWM
   defaultScreenInfo.fInternalWM = FALSE;
 #endif
   defaultScreenInfo.fRootless = FALSE;
@@ -573,7 +575,9 @@ ddxProcessArgument (int argc, char *argv[], int i)
       /* Indicate that we have processed this argument */
       return 1;
     }
-  /*
+#endif
+#ifdef XWIN_MULTIWINDOWINTWM
+   /*
    * Look for the '-internalwm' argument
    */
   if (IS_OPTION ("-internalwm"))

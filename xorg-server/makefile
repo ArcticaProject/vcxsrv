@@ -16,6 +16,7 @@ INCLUDELIBFILES =  \
  miext\damage\$(OBJDIR)\libdamage.lib \
  miext\shadow\$(OBJDIR)\libshadow.lib \
  miext\sync\$(OBJDIR)\libsync.lib \
+ miext\rootless\$(OBJDIR)\librootless.lib \
  os\$(OBJDIR)\libos.lib \
  randr\$(OBJDIR)\librandr.lib \
  record\$(OBJDIR)\librecord.lib \

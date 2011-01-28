@@ -774,7 +774,7 @@ winUseMsg (void)
   ErrorF ("-ignoreinput\n"
 	  "\tIgnore keyboard and mouse input.\n");
 
-#ifdef XWIN_MULTIWINDOWEXTWM
+#ifdef XWIN_MULTIWINDOWINTWM
   ErrorF ("-internalwm\n"
 	  "\tRun the internal window manager.\n");
 #endif

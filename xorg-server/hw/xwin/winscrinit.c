@@ -563,7 +563,7 @@ winFinishScreenInitFB (int index,
 #ifdef XWIN_MULTIWINDOW
       || pScreenInfo->fMultiWindow
 #endif
-#ifdef XWIN_MULTIWINDOWEXTWM
+#ifdef XWIN_MULTIWINDOWINTWM
       || pScreenInfo->fInternalWM
 #endif
       )
@@ -577,7 +577,7 @@ winFinishScreenInitFB (int index,
 		      &pScreenPriv->pmServerStarted,
 		      pScreenInfo->dwScreen,
 		      (HWND)&pScreenPriv->hwndScreen,
-#ifdef XWIN_MULTIWINDOWEXTWM
+#ifdef XWIN_MULTIWINDOWINTWM
 		      pScreenInfo->fInternalWM ||
 #endif
 		      FALSE))

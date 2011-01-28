@@ -456,9 +456,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_CLOSE:
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_CLOSE %d\n", pRLWinPriv->fClose);
-#endif
+
       /* Tell window-manager to close window */
       if (pRLWinPriv->fClose)
 	{
@@ -466,6 +465,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	}
       else
 	{
+#ifdef XWIN_MULTIWINDOWINTWM
 	  if (winIsInternalWMRunning(pScreenInfo))
 	    {
 	      /* Tell our Window Manager thread to kill the window */
@@ -473,6 +473,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	      if (fWMMsgInitialized)
 		winSendMessageToWM (pScreenPriv->pWMInfo, &wmMsg);
 	    }
+#endif
 	  winWindowsWMSendEvent(WindowsWMControllerNotify,
 				WindowsWMControllerNotifyMask,
 				1,
@@ -692,23 +693,24 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_MOUSEACTIVATE:
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_MOUSEACTIVATE\n");
-#endif
-#if 1
+
+#ifdef XWIN_MULTIWINDOWINTWM
       /* Check if this window needs to be made active when clicked */
       if (winIsInternalWMRunning(pScreenInfo) && pWin->overrideRedirect)
 	{
-#if CYGMULTIWINDOW_DEBUG
 	  winDebug ("winMWExtWMWindowProc - WM_MOUSEACTIVATE - "
 		    "MA_NOACTIVATE\n");
-#endif
 
 	  /* */
 	  return MA_NOACTIVATE;
 	}
 #endif
-      if (!winIsInternalWMRunning(pScreenInfo) && !IsMouseActive (pWin))
+      if (
+#ifdef XWIN_MULTIWINDOWINTWM
+          !winIsInternalWMRunning(pScreenInfo) &&
+#endif
+          !IsMouseActive (pWin))
 	return MA_NOACTIVATE;
 
       break;
@@ -818,11 +820,10 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       break;
 
     case WM_ACTIVATE:
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_ACTIVATE\n");
-#endif
       if (LOWORD(wParam) != WA_INACTIVE)
 	{
+#ifdef XWIN_MULTIWINDOWINTWM
 	  if (winIsInternalWMRunning(pScreenInfo))
 	    {
 #if 0
@@ -837,6 +838,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 		if (!pWin || !pWin->overrideRedirect) /* for OOo menus */
 		  winSendMessageToWM (pScreenPriv->pWMInfo, &wmMsg);
 	    }
+#endif
 	  winWindowsWMSendEvent(WindowsWMControllerNotify,
 				WindowsWMControllerNotifyMask,
 				1,
@@ -854,24 +856,23 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	{
 	  if (pRLWinPriv->fRestackingNow || pScreenPriv->fRestacking)
 	    {
-#if CYGMULTIWINDOW_DEBUG
 	      winDebug ("Win %08x is now restacking.\n", (unsigned int)pRLWinPriv);
-#endif
 	      break;
 	    }
 
-	  if (winIsInternalWMRunning(pScreenInfo) || IsRaiseOnClick (pWin))
+	  if (
+#ifdef XWIN_MULTIWINDOWINTWM
+               winIsInternalWMRunning(pScreenInfo) ||
+#endif
+               IsRaiseOnClick (pWin))
 	    {
-#if CYGMULTIWINDOW_DEBUG
 	      winDebug ("Win %08x has WINDOWSWM_RAISE_ON_CLICK.\n", (unsigned int)pRLWinPriv);
-#endif
 	      break;
 	    }
 
-#if CYGMULTIWINDOW_DEBUG
 	  winDebug ("Win %08x forbid to change z order (%08x).\n",
 		    (unsigned int)pRLWinPriv, (unsigned int)pWinPos->hwndInsertAfter);
-#endif
+
 	  pWinPos->flags |= SWP_NOZORDER;
 	}
       break;
@@ -904,14 +905,14 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       }
 #endif
 
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("\t(%d, %d)\n", (short) LOWORD(lParam), (short) HIWORD(lParam));
-#endif
+
       if (!pRLWinPriv->fMovingOrSizing)
 	{
+#ifdef XWIN_MULTIWINDOWINTWM
 	  if (winIsInternalWMRunning(pScreenInfo))
 	    winAdjustXWindow (pWin, hwnd);
-
+#endif
 	  winMWExtWMMoveXWindow (pWin,
 				 (LOWORD(lParam) - wBorderWidth (pWin)
 				  - GetSystemMetrics (SM_XVIRTUALSCREEN)),
@@ -921,14 +922,14 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_SHOWWINDOW:
-#if CYGMULTIWINDOW_DEBUG || TRUE
       winDebug ("winMWExtWMWindowProc - WM_SHOWWINDOW - %d ms\n",
 		(unsigned int)GetTickCount ());
-#endif
+
       /* Bail out if the window is being hidden */
       if (!wParam)
 	return 0;
 
+#ifdef XWIN_MULTIWINDOWINTWM
       if (!pScreenInfo->fInternalWM)//XXXX
 	return 0;
 
@@ -936,9 +937,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 
       if (winIsInternalWMRunning(pScreenInfo))
 	{
-#if CYGMULTIWINDOW_DEBUG || TRUE
 	  winDebug ("\tMapWindow\n");
-#endif
+
 	  /* Tell X to map the window */
 	   MapWindow (pWin, wClient(pWin));
 
@@ -955,6 +955,9 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	  if (fWMMsgInitialized)
 	    winSendMessageToWM (pScreenPriv->pWMInfo, &wmMsg);
 	}
+#else
+      return 0;
+#endif
       break;
 
     case WM_SIZING:
@@ -965,7 +968,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
     case WM_WINDOWPOSCHANGED:
       {
 	pWinPos = (LPWINDOWPOS) lParam;
-#if CYGMULTIWINDOW_DEBUG
+#ifdef _DEBUG
         winDebug("winMWExtWMWindowProc - WM_WINDOWPOSCHANGED\n");
 	winDebug("\tflags: %s%s%s%s%s%s%s%s%s%s%s%s\n",
 	(pWinPos->flags & SWP_DRAWFRAME)?"SWP_DRAWFRAME ":"",
@@ -987,22 +990,21 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 #endif
 	if (pWinPos->flags & SWP_HIDEWINDOW) break;
 
+#ifdef XWIN_MULTIWINDOWINTWM
 	/* Reorder if window z order was changed */
 	if ((pScreenPriv != NULL)
 	    && !(pWinPos->flags & SWP_NOZORDER)
 	    && !(pWinPos->flags & SWP_SHOWWINDOW)
 	    && winIsInternalWMRunning(pScreenInfo))
 	  {
-#if CYGMULTIWINDOW_DEBUG
 	    winDebug ("\twindow z order was changed\n");
-#endif
+
 	    if (pWinPos->hwndInsertAfter == HWND_TOP
 		||pWinPos->hwndInsertAfter == HWND_TOPMOST
 		||pWinPos->hwndInsertAfter == HWND_NOTOPMOST)
 	      {
-#if CYGMULTIWINDOW_DEBUG
 		winDebug ("\traise to top\n");
-#endif
+
 		/* Raise the window to the top in Z order */
 		wmMsg.msg = WM_WM_RAISE;
 		if (fWMMsgInitialized)
@@ -1036,9 +1038,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 		   raise it in X stack. */
 		if (hWndAbove == NULL)
 		  {
-#if CYGMULTIWINDOW_DEBUG
 		    winDebug ("\traise to top\n");
-#endif
+
 		    /* Raise the window to the top in Z order */
 		    wmMsg.msg = WM_WM_RAISE;
 		    if (fWMMsgInitialized)
@@ -1047,12 +1048,12 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	      }
 #endif
 	  }
+#endif
 
 	if (!(pWinPos->flags & SWP_NOSIZE)) {
 	  if (IsIconic(hwnd)){
-#if CYGMULTIWINDOW_DEBUG
 	    winDebug ("\tIconic -> MINIMIZED\n");
-#endif
+#ifdef XWIN_MULTIWINDOWINTWM
 	    if (winIsInternalWMRunning(pScreenInfo))
 	      {
 	      /* Raise the window to the top in Z order */
@@ -1060,6 +1061,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 		if (fWMMsgInitialized)
 		  winSendMessageToWM (pScreenPriv->pWMInfo, &wmMsg);
 	      }
+#endif
 	    winWindowsWMSendEvent(WindowsWMControllerNotify,
 				  WindowsWMControllerNotifyMask,
 				  1,
@@ -1067,9 +1069,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 				  pWin->drawable.id,
 				  0, 0, 0, 0);
 	  } else if (IsZoomed(hwnd)){
-#if CYGMULTIWINDOW_DEBUG
 	    winDebug ("\tZoomed -> MAXIMIZED\n");
-#endif
+
 	    winWindowsWMSendEvent(WindowsWMControllerNotify,
 				  WindowsWMControllerNotifyMask,
 				  1,
@@ -1077,9 +1078,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 				  pWin->drawable.id,
 				  0, 0, 0, 0);
 	  } else {
-#if CYGMULTIWINDOW_DEBUG
 	    winDebug ("\tnone -> RESTORED\n");
-#endif
+
 	    winWindowsWMSendEvent(WindowsWMControllerNotify,
 				  WindowsWMControllerNotifyMask,
 				  1,
@@ -1097,12 +1097,12 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 
 	    if (!(pWinPos->flags & SWP_NOMOVE)
 		&&!(pWinPos->flags & SWP_NOSIZE)) {
-#if CYGMULTIWINDOW_DEBUG
 	      winDebug ("\tmove & resize\n");
-#endif
+
+#ifdef XWIN_MULTIWINDOWINTWM
 	      if (winIsInternalWMRunning(pScreenInfo))
                 winAdjustXWindow (pWin, hwnd);
-
+#endif
 	      winMWExtWMMoveResizeXWindow (pWin,
 					   rcClient.left - wBorderWidth (pWin)
 					   - GetSystemMetrics (SM_XVIRTUALSCREEN),
@@ -1113,12 +1113,11 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 					   rcClient.bottom - rcClient.top
 					   - wBorderWidth (pWin)*2);
 	    } else if (!(pWinPos->flags & SWP_NOMOVE)) {
-#if CYGMULTIWINDOW_DEBUG
 	      winDebug ("\tmove\n");
-#endif
+#ifdef XWIN_MULTIWINDOWINTWM
 	      if (winIsInternalWMRunning(pScreenInfo))
                 winAdjustXWindow (pWin, hwnd);
-
+#endif
 	      winMWExtWMMoveResizeXWindow (pWin,
 					   rcClient.left - wBorderWidth (pWin)
 					   - GetSystemMetrics (SM_XVIRTUALSCREEN),
@@ -1129,24 +1128,23 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 					   rcClient.bottom - rcClient.top
 					   - wBorderWidth (pWin)*2);
 	    } else if (!(pWinPos->flags & SWP_NOMOVE)) {
-#if CYGMULTIWINDOW_DEBUG
 	      winDebug ("\tmove\n");
-#endif
+
+#ifdef XWIN_MULTIWINDOWINTWM
 	      if (winIsInternalWMRunning(pScreenInfo))
                 winAdjustXWindow (pWin, hwnd); 
-
+#endif
 	      winMWExtWMMoveXWindow (pWin,
 				     rcClient.left - wBorderWidth (pWin)
 				     - GetSystemMetrics (SM_XVIRTUALSCREEN),
 				     rcClient.top - wBorderWidth (pWin)
 				     - GetSystemMetrics (SM_YVIRTUALSCREEN));
 	    } else if (!(pWinPos->flags & SWP_NOSIZE)) {
-#if CYGMULTIWINDOW_DEBUG
 	      winDebug ("\tresize\n");
-#endif
+#ifdef XWIN_MULTIWINDOWINTWM
 	      if (winIsInternalWMRunning(pScreenInfo))
                 winAdjustXWindow (pWin, hwnd); 
-
+#endif
 	      winMWExtWMResizeXWindow (pWin,
 				       rcClient.right - rcClient.left
 				       - wBorderWidth (pWin)*2,
@@ -1156,30 +1154,27 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	  }
 	}
       }
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_WINDOWPOSCHANGED - done.\n");
-#endif
+
       return 0;
 
     case WM_SIZE:
       /* see dix/window.c */
       /* FIXME: Maximize/Restore? */
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_SIZE - %d ms\n",
 		(unsigned int)GetTickCount ());
-#endif
-#if CYGMULTIWINDOW_DEBUG
+
       winDebug ("\t(%d, %d) %d\n", (short) LOWORD(lParam), (short) HIWORD(lParam), g_fNoConfigureWindow);
-#endif
+
       if (g_fNoConfigureWindow) break;
 
       /* Branch on type of resizing occurring */
       switch (wParam)
 	{
 	case SIZE_MINIMIZED:
-#if CYGMULTIWINDOW_DEBUG
 	  winDebug ("\tSIZE_MINIMIZED\n");
-#endif
+
+#ifdef XWIN_MULTIWINDOWINTWM
 	  if (winIsInternalWMRunning(pScreenInfo))
 	    {
 	      /* Raise the window to the top in Z order */
@@ -1187,6 +1182,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	      if (fWMMsgInitialized)
 		winSendMessageToWM (pScreenPriv->pWMInfo, &wmMsg);
 	    }
+#endif
 	  winWindowsWMSendEvent(WindowsWMControllerNotify,
 				WindowsWMControllerNotifyMask,
 				1,
@@ -1197,9 +1193,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	  break;
 
 	case SIZE_RESTORED:
-#if CYGMULTIWINDOW_DEBUG
 	  winDebug ("\tSIZE_RESTORED\n");
-#endif
+
 	  winWindowsWMSendEvent(WindowsWMControllerNotify,
 				WindowsWMControllerNotifyMask,
 				1,
@@ -1226,9 +1221,10 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       /* Perform the resize and notify the X client */
       if (!pRLWinPriv->fMovingOrSizing)
 	{
+#ifdef XWIN_MULTIWINDOWINTWM
 	  if (winIsInternalWMRunning(pScreenInfo))
             winAdjustXWindow (pWin, hwnd);
-
+#endif
 	  winMWExtWMResizeXWindow (pWin,
 				   (short) LOWORD(lParam)
 				   - wBorderWidth (pWin)*2,
@@ -1244,12 +1240,14 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 #endif
       if (wParam)
 	{
+#ifdef XWIN_MULTIWINDOWINTWM
 	  if (winIsInternalWMRunning(pScreenInfo))
 	    {
 	    }
 	  else
 	    {
 	    }
+#endif
 	  winWindowsWMSendEvent(WindowsWMActivationNotify,
 				WindowsWMActivationNotifyMask,
 				1,
@@ -1279,26 +1277,26 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       break;
 
     case WM_ENTERSIZEMOVE:
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_ENTERSIZEMOVE - %d ms\n",
 		(unsigned int)GetTickCount ());
-#endif
+
       pRLWinPriv->fMovingOrSizing = TRUE;
       break;
 
     case WM_EXITSIZEMOVE:
-#if CYGMULTIWINDOW_DEBUG
       winDebug ("winMWExtWMWindowProc - WM_EXITSIZEMOVE - %d ms\n",
 		(unsigned int)GetTickCount ());
-#endif
+
       pRLWinPriv->fMovingOrSizing = FALSE;
 
       GetClientRect (hwnd, &rcClient);
 
       MapWindowPoints (hwnd, HWND_DESKTOP, (LPPOINT)&rcClient, 2);
 
+#ifdef XWIN_MULTIWINDOWINTWM
       if (winIsInternalWMRunning(pScreenInfo))
         winAdjustXWindow (pWin, hwnd); 
+#endif
 
       winMWExtWMMoveResizeXWindow (pWin,
 				   rcClient.left - wBorderWidth (pWin)
