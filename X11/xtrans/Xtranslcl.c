@@ -72,16 +72,22 @@ from The Open Group.
 
 #include <errno.h>
 #include <ctype.h>
+#ifdef _MSC_VER
+#include <signal.h>
+#else
 #include <sys/signal.h>
 #include <sys/ioctl.h>
+#endif
 #include <sys/stat.h>
 #if defined(SVR4) || defined(__SVR4)
 #include <sys/filio.h>
 #endif
+#ifndef _MSC_VER
 #ifdef sun
 # include <stropts.h>
 #else
 # include <sys/stropts.h>
+#endif
 #endif
 #include <sys/wait.h>
 #include <sys/types.h>
