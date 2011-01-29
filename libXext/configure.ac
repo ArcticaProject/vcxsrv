@@ -21,7 +21,7 @@ XORG_ENABLE_SPECS
 XORG_WITH_XMLTO(0.0.20)
 XORG_WITH_FOP
 XORG_CHECK_SGML_DOCTOOLS(1.5)
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 # Determine .so library version per platform 
 # based on SharedXextRev in monolith xc/config/cf/*Lib.tmpl
@@ -37,17 +37,11 @@ AC_SUBST(XEXT_SOREV)
 
 # Checks for programs.
 AC_PROG_LIBTOOL
-AC_PROG_CC
 
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(XEXT, [xproto >= 7.0.13] [x11 >= 1.1.99.1] [xextproto >= 7.1.99])
 AC_SUBST(XEXT_CFLAGS)
 AC_SUBST(XEXT_LIBS)
-
-# Checks for libraries.
-
-# Checks for header files.
-AC_HEADER_STDC
 
 XORG_CHECK_MALLOC_ZERO
 

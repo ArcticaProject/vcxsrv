@@ -26,7 +26,7 @@ AC_INIT(libXau, 1.0.6, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg]
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
 
 # Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
 m4_ifndef([XORG_MACROS_VERSION],
@@ -34,17 +34,14 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
-AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
-AC_PROG_MAKE_SET
-AC_PROG_SED
 
 PKG_CHECK_MODULES(XAU, xproto)
 
 AC_ARG_ENABLE(xthreads,
-              AC_HELP_STRING([--disable-xthreads],
+              AS_HELP_STRING([--disable-xthreads],
                 [Disable libXau support for Multithreading]),
               [xthreads=$enableval],[xthreads=yes])
 
