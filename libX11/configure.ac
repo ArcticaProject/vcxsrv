@@ -67,7 +67,7 @@ AC_SUBST(LDFLAGS_FOR_BUILD)
 
 # Find perl for "make check" tests in nls/Makefile.am
 AC_ARG_WITH(perl,
-	AC_HELP_STRING([--with-perl=<path>],
+	AS_HELP_STRING([--with-perl=<path>],
 			[path to perl interpreter for build-time tests]),
 	[PERL=$withval ; AC_MSG_CHECKING([perl]) ;
 	 AC_MSG_RESULT([(from --with-perl) $PERL])],
@@ -164,7 +164,7 @@ case $host_os in
 esac
 
 AC_ARG_WITH(local-transport-order,
-	AC_HELP_STRING([--with-local-transport-order=LIST], [preference sorted list of transport types to try for local connections]),
+	AS_HELP_STRING([--with-local-transport-order=LIST], [preference sorted list of transport types to try for local connections]),
 	[LOCAL_TRANSPORT_LIST=$withval],
 	[LOCAL_TRANSPORT_LIST=$DEFAULT_LOCAL_TRANS])
 AC_DEFINE_UNQUOTED([LOCAL_TRANSPORT_LIST], [$LOCAL_TRANSPORT_LIST],
@@ -194,7 +194,7 @@ AC_MSG_RESULT($HAVE_LOADABLE_MODULES)
 
 AC_MSG_CHECKING([if loadable i18n module support should be enabled])
 AC_ARG_ENABLE(loadable-i18n,
-	      AC_HELP_STRING([--enable-loadable-i18n],
+	      AS_HELP_STRING([--enable-loadable-i18n],
 	       [Controls loadable i18n module support]),
 	       [XLIB_LOADABLE_I18N=$enableval],
 	       [XLIB_LOADABLE_I18N="no"])
@@ -212,7 +212,7 @@ AM_CONDITIONAL(XLIB_LOADABLE_I18N, test x$XLIB_LOADABLE_I18N = xyes)
 
 AC_MSG_CHECKING([if loadable Xcursor library support should be enabled])
 AC_ARG_ENABLE(loadable-xcursor,
-	      AC_HELP_STRING([--disable-loadable-xcursor],
+	      AS_HELP_STRING([--disable-loadable-xcursor],
 	       [Controls loadable xcursor library support]),
 	       [XLIB_LOADABLE_XCURSOR=$enableval],
 	       [XLIB_LOADABLE_XCURSOR=$HAVE_LOADABLE_MODULES])
@@ -223,7 +223,6 @@ fi
 AC_MSG_RESULT($XLIB_LOADABLE_XCURSOR)
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS([sys/select.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -264,7 +263,7 @@ if test "x$LAUNCHD" = xyes ; then
 fi
 
 AC_ARG_ENABLE(xthreads,
-              AC_HELP_STRING([--disable-xthreads],
+              AS_HELP_STRING([--disable-xthreads],
                 [Disable Xlib support for Multithreading]),
               [xthreads=$enableval],[xthreads=yes])
 
@@ -326,7 +325,7 @@ AC_SUBST(KEYSYMDEFS)
 AM_CONDITIONAL(UDC, test xfalse = xtrue)
 
 AC_ARG_ENABLE(xcms,
-              AC_HELP_STRING([--disable-xcms],
+              AS_HELP_STRING([--disable-xcms],
                 [Disable Xlib support for CMS *EXPERIMENTAL*]),
               [XCMS=$enableval],[XCMS=yes])
 AM_CONDITIONAL(XCMS, [test x$XCMS = xyes ])
@@ -335,7 +334,7 @@ if test x"$XCMS" = "xyes"; then
 fi
 
 AC_ARG_ENABLE(xlocale,
-              AC_HELP_STRING([--disable-xlocale],
+              AS_HELP_STRING([--disable-xlocale],
                 [Disable Xlib locale implementation *EXPERIMENTAL*]),
               [XLOCALE=$enableval],[XLOCALE=yes])
 
@@ -349,7 +348,7 @@ fi
 # clients that are setgid or setuid to an id other than 0.
 AC_MSG_CHECKING([if XLOCALEDIR support should be enabled])
 AC_ARG_ENABLE(xlocaledir,
-	      AC_HELP_STRING([--enable-xlocaledir],
+	      AS_HELP_STRING([--enable-xlocaledir],
 		[Enable XLOCALEDIR environment variable support]),
 	      [ENABLE_XLOCALEDIR=$enableval],[ENABLE_XLOCALEDIR=$XLOCALEDIR_IS_SAFE])
 if test "x$ENABLE_XLOCALEDIR" = "xno"; then
@@ -358,7 +357,7 @@ fi
 AC_MSG_RESULT($ENABLE_XLOCALEDIR)
 
 AC_ARG_ENABLE(xf86bigfont,
-	      AC_HELP_STRING([--disable-xf86bigfont],
+	      AS_HELP_STRING([--disable-xf86bigfont],
 		[Disable XF86BigFont extension support]),
 	      [XF86BIGFONT=$enableval],[XF86BIGFONT="yes"])
 if test "x$XF86BIGFONT" = "xyes"; then
@@ -367,7 +366,7 @@ if test "x$XF86BIGFONT" = "xyes"; then
 fi
 
 AC_ARG_ENABLE(xkb,
-              AC_HELP_STRING([--disable-xkb],
+              AS_HELP_STRING([--disable-xkb],
                 [Disable XKB support *EXPERIMENTAL*]),
               [XKB=$enableval],[XKB=yes])
 
@@ -385,7 +384,7 @@ AC_FUNC_MMAP()
 composecache_default=$ac_cv_func_mmap_fixed_mapped
 AC_CHECK_FUNC(nl_langinfo, , [composecache_default=no])
 AC_ARG_ENABLE(composecache,
-              AC_HELP_STRING([--disable-composecache],
+              AS_HELP_STRING([--disable-composecache],
                 [Disable compose table cache support]),
               [COMPOSECACHE=$enableval],[COMPOSECACHE=$composecache_default])
 if test x"$COMPOSECACHE" = "xyes"; then

@@ -270,7 +270,7 @@ sub make_compose_chart {
 	    $action =~ s{^\s*"\\[0-7]+"}{"&#$char;"};
 	  }
 	}
-	$action =~ s{^\s*"(.+)"}{"<literal>$1</literal>"};
+	$action =~ s{^\s*"(.+)"}{"$1"};
 
 	print $OUTPUT
 	    qq(<row><entry>),
