@@ -678,7 +678,7 @@ extern int	XkbDfltRepeatInterval;
 extern unsigned short	XkbDfltAccessXTimeout;
 extern unsigned int	XkbDfltAccessXTimeoutMask;
 extern unsigned int	XkbDfltAccessXFeedback;
-extern unsigned char	XkbDfltAccessXOptions;
+extern unsigned short	XkbDfltAccessXOptions;
 
 int
 XkbProcessArguments(int argc,char *argv[],int i)
