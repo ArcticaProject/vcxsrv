@@ -978,7 +978,7 @@ ProcGetGeometry(ClientPtr client)
 /* Do not return the clipboard window in ProcQueryTree, cause this may cause
    the clipboard client being closed when connecting through xdmcp.
 */
-extern int g_iClipboardWindow;
+extern Window g_iClipboardWindow;
 
 #endif
 
