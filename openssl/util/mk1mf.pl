@@ -501,7 +501,11 @@ EX_LIBS=$ex_libs
 SRC_D=$src_dir
 
 LINK=$link
+!ifdef DEBUG
+LFLAGS=$lflagsd
+!else
 LFLAGS=$lflags
+!endif
 RSC=$rsc
 
 # The output directory for the header files
@@ -513,7 +517,11 @@ CP=$cp
 RM=$rm
 RANLIB=$ranlib
 MKDIR=$mkdir
+!ifdef DEBUG
+MKLIB=$bin_dir$mklibd
+!else
 MKLIB=$bin_dir$mklib
+!endif
 MLFLAGS=$mlflags
 ASM=$bin_dir$asm
 

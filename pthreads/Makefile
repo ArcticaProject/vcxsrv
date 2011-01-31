@@ -24,12 +24,12 @@ INLINED_STAMPS	= pthreadVCE$(DLL_VER).stamp pthreadVSE$(DLL_VER).stamp pthreadVC
 STATIC_STAMPS	= pthreadVCE$(DLL_VER).static pthreadVSE$(DLL_VER).static pthreadVC$(DLL_VER).static \
 				  pthreadVCE$(DLL_VERD).static pthreadVSE$(DLL_VERD).static pthreadVC$(DLL_VERD).static
 
-OPTIM	= /O2 /Ob2 /MD
+OPTIM	= /O2 /Ob2 /Oi /Ox /Oy /Ot /MD /GL
 OPTIMD	= /MDd
 
-CFLAGS	= /W3 /nologo /I. /D_WIN32_WINNT=0x400 /DHAVE_CONFIG_H
+CFLAGS	= /W3 /nologo /Gy /GF /Zi /I. /D_WIN32_WINNT=0x400 /DHAVE_CONFIG_H
 
-CFLAGSD	= /Zi $(CFLAGS)
+CFLAGSD	= $(CFLAGS)
 
 # Uncomment this if config.h defines RETAIN_WSALASTERROR
 #XLIBS = wsock32.lib

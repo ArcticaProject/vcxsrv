@@ -74,6 +74,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
   char *pProgramName;
   char **penv;
   int Ret;
+  LPTCH pEnvStrings;
 
   hInstance=hInstance;
   nCmdShow=nCmdShow;
@@ -132,20 +133,22 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
   }
   
   {
-    LPTCH pEnvStrings=GetEnvironmentStrings();
+    LPTCH pTmp=GetEnvironmentStrings();
     int NrEnv=0;
+    pEnvStrings=pTmp;
     penv=malloc(sizeof(*penv));
-    while (*pEnvStrings)
+    while (*pTmp)
     {
       penv=realloc(penv,(NrEnv+2)*sizeof(*penv));
-      penv[NrEnv++]=pEnvStrings;
-      while (*pEnvStrings) pEnvStrings++;
-      pEnvStrings++;
+      penv[NrEnv++]=pTmp;
+      while (*pTmp) pTmp++;
+      pTmp++;
     }
     penv[NrEnv]=NULL;
   }
 
   Ret = main(argc,argv,penv);
   free(penv);
+  FreeEnvironmentStrings(pEnvStrings);
   return Ret;
 }

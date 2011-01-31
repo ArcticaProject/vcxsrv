@@ -37,7 +37,8 @@ if ($FLAVOR =~ /WIN64/)
     $lib_cflag='/Zl' if (!$shlib);	# remove /DEFAULTLIBs from static lib
     $opt_cflags=$f.' /Ox';
     $dbg_cflags=$f.'d /Od -DDEBUG -D_DEBUG';
-    $lflags="/nologo /subsystem:console /opt:ref";
+    $lflags="/NOLOGO /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:STATUS";
+    $lflagsd="/NOLOGO /SUBSYSTEM:CONSOLE";
 
     *::perlasm_compile_target = sub {
 	my ($target,$source,$bname)=@_;
@@ -109,7 +110,8 @@ elsif ($FLAVOR =~ /CE/)
     $base_cflags.=' -I$(PORTSDK_LIBPATH)/../../include'	if (defined($ENV{'PORTSDK_LIBPATH'}));
     $opt_cflags=' /MC /O1i';	# optimize for space, but with intrinsics...
     $dbg_clfags=' /MC /Od -DDEBUG -D_DEBUG';
-    $lflags="/nologo /opt:ref $wcelflag";
+    $lflags="/NOLOGO /OPT:REF /OPT:ICF /LTCG:STATUS $wcelflag";
+    $lflagsd="/NOLOGO $wcelflag";
     }
 else	# Win32
     {
@@ -117,9 +119,10 @@ else	# Win32
 
     my $f = ' /MD';
     $lib_cflag='/Zl' if (!$shlib);	# remove /DEFAULTLIBs from static lib
-    $opt_cflags=$f.' /O2 /Ob2 /Oi /Ox /Oy /Ot';     
-    $dbg_cflags=$f.'d /RTCc /RTC1 /Od /GS /GR /Zi';   
-    $lflags="/nologo /subsystem:console /opt:ref";
+    $opt_cflags=$f.' /O2 /Ob2 /Oi /Ox /Oy /Ot /GL /Gy /GF /Zi';     
+    $dbg_cflags=$f.'d /RTCc /RTC1 /Od /GS /GR /Gy /GF /Zi';   
+    $lflags="/NOLOGO /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:STATUS";
+    $lflagsd="/NOLOGO /SUBSYSTEM:CONSOLE";
     }
 $mlflags='';
 
@@ -142,7 +145,8 @@ else
 # generate symbols.pdb unconditionally
 $app_cflag.=" /Zi /Fd\$(TMP_D)/app";
 $lib_cflag.=" /Zi /Fd\$(TMP_D)/lib";
-$lflags.=" /debug";
+$lflags.=" /DEBUG";
+$lflagsd.=" /DEBUG";
 
 $obj='.obj';
 $asm_suffix='.asm';
@@ -174,7 +178,8 @@ else
 
 	$cdflags.=" -DOPENSSL_SYSNAME_WINNT -DUNICODE -D_UNICODE";
 # static library stuff
-$mklib='lib /nologo';
+$mklib='lib /nologo /LTCG';
+$mklibd='lib /nologo';
 $ranlib='';
 $plib="";
 $libp=".lib";
@@ -234,7 +239,7 @@ if (!$no_asm)
 
 if ($shlib && $FLAVOR !~ /CE/)
 	{
-	$mlflags.=" $lflags /dll";
+	$mlflags.=" $lflags /DLL";
 	$lib_cflag.=" -D_WINDLL";
 	#
 	# Engage Applink...
@@ -263,8 +268,8 @@ ___
 	}
 elsif ($shlib && $FLAVOR =~ /CE/)
 	{
-	$mlflags.=" $lflags /dll";
-	$lflags.=' /entry:mainCRTstartup' if(defined($ENV{'PORTSDK_LIBPATH'}));
+	$mlflags.=" $lflags /DLL";
+	$lflags.=' /ENTRY:mainCRTstartup' if(defined($ENV{'PORTSDK_LIBPATH'}));
 	$lib_cflag.=" -D_WINDLL -D_DLL";
 	}
 
