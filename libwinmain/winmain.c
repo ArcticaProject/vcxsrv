@@ -6,7 +6,7 @@
 
 #define MAX_CONSOLE_LINES 500
 
-int main(int argc, char *argv[]);
+int main(int argc, char *argv[], char *penv[]);
 
 /* Ignore control c and control break signals */
 static BOOL WINAPI IgnoreControlC(DWORD dwCtrlType)
@@ -72,6 +72,8 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
   char *argv[MAXNRARGS];
   char *pTmp;
   char *pProgramName;
+  char **penv;
+  int Ret;
 
   hInstance=hInstance;
   nCmdShow=nCmdShow;
@@ -128,6 +130,22 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
       break;
     }
   }
+  
+  {
+    LPTCH pEnvStrings=GetEnvironmentStrings();
+    int NrEnv=0;
+    penv=malloc(sizeof(*penv));
+    while (*pEnvStrings)
+    {
+      penv=realloc(penv,(NrEnv+2)*sizeof(*penv));
+      penv[NrEnv++]=pEnvStrings;
+      while (*pEnvStrings) pEnvStrings++;
+      pEnvStrings++;
+    }
+    penv[NrEnv]=NULL;
+  }
 
-  return main(argc,argv);
+  Ret = main(argc,argv,penv);
+  free(penv);
+  return Ret;
 }
