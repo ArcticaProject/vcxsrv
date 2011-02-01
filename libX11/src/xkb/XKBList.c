@@ -79,6 +79,8 @@ char *			str;
 	if (!this->name)
 	    goto BAILOUT;
 	str= (char *)_XkbGetReadBufferPtr(buf,wlen);
+	if (!str)
+	    goto BAILOUT;
 	memcpy(this->name,str,slen);
     }
     return first;

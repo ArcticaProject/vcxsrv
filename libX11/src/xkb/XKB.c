@@ -462,7 +462,7 @@ XkbKTMapEntryPtr	entry = NULL;
     if (map_rtrn!=NULL) {
 	bzero(map_rtrn,type->mods.mask+1);
 	for (i=0;i<type->map_count;i++) {
-	    if (entry->active) {
+	    if (entry && entry->active) {
 		map_rtrn[type->map[i].mods.mask]= type->map[i].level;
 	    }
 	}

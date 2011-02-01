@@ -619,7 +619,7 @@ KeySym *	syms;
 	XkbApplyCompatMapToKey(xkb,key,changes);
     }
 
-    if ((xkb->server->vmods!=NULL)&&(xkb->map->modmap!=NULL)&&(changes)&&
+    if ((xkb->map->modmap!=NULL)&&(changes)&&
 	(changes->map.changed&(XkbVirtualModMapMask|XkbModifierMapMask))) {
 	unsigned char		newVMods[XkbNumVirtualMods];
 	register  unsigned 	bit,i;
