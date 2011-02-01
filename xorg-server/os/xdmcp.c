@@ -776,6 +776,37 @@ XdmcpSelectHost(
  * selects the first host to respond with willing message.
  */
 
+#ifdef _MSC_VER
+void DisplayXdmcpHostsDialog(void);
+int XdmcpHostAddName(const char *HostName, int HostIndex);
+
+struct hostinfo
+{
+  struct sockaddr *from;
+  int              fromlen;
+  ARRAY8           AuthenticationName;
+};
+static int g_NrHosts;
+static struct hostinfo *g_Hosts;
+
+void XdmcpHostSelected(int HostIdx)
+{
+  int i;
+
+    /* Connect to the selected host */
+  XdmcpSelectHost(g_Hosts[HostIdx].from, g_Hosts[HostIdx].fromlen, &g_Hosts[HostIdx].AuthenticationName);
+
+  for (i=0; i<g_NrHosts; i++)
+  {
+    free(g_Hosts[i].from);
+    free(g_Hosts[i].AuthenticationName.data);
+  }
+  free(g_Hosts);
+  g_Hosts=NULL;
+  g_NrHosts=0;
+}
+#endif
+
 /*ARGSUSED*/
 static void
 XdmcpAddHost(
@@ -785,7 +816,35 @@ XdmcpAddHost(
     ARRAY8Ptr		hostname,
     ARRAY8Ptr		status)
 {
-    XdmcpSelectHost(from, fromlen, AuthenticationName);
+#ifdef _MSC_VER
+  char szHostName[100];
+  int HostIdx;
+  
+  memcpy(szHostName,hostname->data,hostname->length);
+  szHostName[hostname->length]=0;
+
+  DisplayXdmcpHostsDialog();  /* Display the dialog if not already displayed */
+  
+  HostIdx=XdmcpHostAddName(szHostName, g_NrHosts);
+  if (HostIdx==-1)
+  {
+    HostIdx=g_NrHosts;
+    g_NrHosts++;
+    g_Hosts=realloc(g_Hosts,g_NrHosts*sizeof(*g_Hosts));
+    g_Hosts[HostIdx].AuthenticationName.data=NULL;
+    g_Hosts[HostIdx].from=NULL;
+  }
+
+  g_Hosts[HostIdx].fromlen=fromlen;
+  g_Hosts[HostIdx].from=realloc(g_Hosts[HostIdx].from,g_Hosts[HostIdx].fromlen);
+  memcpy(g_Hosts[HostIdx].from,from,fromlen);
+
+  g_Hosts[HostIdx].AuthenticationName.length=AuthenticationName->length;
+  g_Hosts[HostIdx].AuthenticationName.data=realloc(g_Hosts[HostIdx].AuthenticationName.data,AuthenticationName->length);
+  memcpy(g_Hosts[HostIdx].AuthenticationName.data,AuthenticationName->data,AuthenticationName->length);
+#else
+  XdmcpSelectHost(from, fromlen, AuthenticationName);
+#endif
 }
 
 /*

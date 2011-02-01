@@ -51,4 +51,6 @@
 #define ID_ABOUT_CHANGELOG	302
 #define ID_ABOUT_WEBSITE	303
 
+#define IDC_HOSTLIST            100
+
 #endif

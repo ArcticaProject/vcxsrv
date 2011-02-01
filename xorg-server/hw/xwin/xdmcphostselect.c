@@ -1,0 +1,158 @@
+#ifdef HAVE_XWIN_CONFIG_H
+#include <xwin-config.h>
+#endif
+#include "win.h"
+
+void XdmcpHostSelected(int HostIndex);
+
+static HWND g_hDlgHosts;
+
+/*
+ * Process messages for the about dialog.
+ */
+
+static wBOOL CALLBACK DisplayXdmcpHostsDlgProc (HWND hwndDialog, UINT message, WPARAM wParam, LPARAM lParam)
+{
+  /* Branch on message type */
+  switch (message)
+  {
+    case WM_INITDIALOG:
+    {
+      HWND hwndDesk=GetForegroundWindow();
+      RECT rc, rcDlg, rcDesk;
+      
+      GetWindowRect (hwndDesk, &rcDesk);
+      GetWindowRect (hwndDialog, &rcDlg);
+      CopyRect (&rc, &rcDesk);
+
+      OffsetRect (&rcDlg, -rcDlg.left, -rcDlg.top);
+      OffsetRect (&rc, -rc.left, -rc.top);
+      OffsetRect (&rc, -rcDlg.right, -rcDlg.bottom);
+
+      SetWindowPos (hwndDialog,
+      HWND_TOPMOST,
+      rcDesk.left + (rc.right / 2),
+      rcDesk.top + (rc.bottom / 2),
+      0, 0,
+      SWP_NOSIZE | SWP_FRAMECHANGED);
+      return TRUE;
+    }
+    break;
+    case WM_MOUSEMOVE:
+    case WM_NCMOUSEMOVE:
+      /* Show the cursor if it is hidden */
+      if (g_fSoftwareCursor && !g_fCursor)
+      {
+        g_fCursor = TRUE;
+        ShowCursor (TRUE);
+      }
+      return TRUE;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+      {
+        case IDOK:
+        {
+          int Index;
+          winDebug ("DisplayXdmcpHostsDlgProc - WM_COMMAND - IDOK or IDCANCEL\n");
+
+            /* Retreive the host to connect to */
+          Index=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETCURSEL, 0, 0);
+          if (Index==LB_ERR)
+          {
+            MessageBox(hwndDialog,"Please select a host to connect to!","Error",MB_OK);
+          }
+          else
+          {
+            int HostIndex=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETITEMDATA, (WPARAM)Index, 0);
+            XdmcpHostSelected(HostIndex);
+
+            DestroyWindow (g_hDlgHosts);
+            g_hDlgHosts = NULL;
+          }
+
+          return TRUE;
+        }
+        break;
+        case IDCANCEL:
+          winDebug ("DisplayXdmcpHostsDlgProc - WM_COMMAND - IDCANCEL\n");
+
+          DestroyWindow (g_hDlgHosts);
+          AbortDDX();
+          TerminateProcess(GetCurrentProcess(),1);  /* Exit the application */
+
+          return TRUE;
+        break;
+        case IDC_HOSTLIST:
+          if (HIWORD(wParam)==LBN_DBLCLK)
+          {
+            int Index=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETCURSEL, 0, 0);
+            int HostIndex=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETITEMDATA, (WPARAM)Index, 0);
+            XdmcpHostSelected(HostIndex);
+
+            DestroyWindow (g_hDlgHosts);
+            g_hDlgHosts = NULL;
+            return TRUE;
+          }
+        break;
+      }
+      break;
+
+    case WM_CLOSE:
+      ErrorF ("DisplayXdmcpHostsDlgProc - WM_CLOSE\n");
+
+      DestroyWindow (g_hDlgHosts);
+      g_hDlgHosts = NULL;
+      AbortDDX();
+      TerminateProcess(GetCurrentProcess(),1);  /* Exit the application */
+
+      return TRUE;
+  }
+
+  return FALSE;
+}
+
+int XdmcpHostAddName(const char *HostName, int HostIndex)
+{
+  int Index=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_FINDSTRINGEXACT, -1, (LPARAM)HostName);
+  if (LB_ERR==Index)
+  {
+    Index=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_ADDSTRING, 0, (LPARAM)HostName); 
+    SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_SETITEMDATA, (WPARAM)Index, (LPARAM)HostIndex); 
+    return -1;
+  }
+  else
+    return SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETITEMDATA, (WPARAM)Index, 0);
+}
+/*
+ * Display the host selection dialog box
+ */
+
+void DisplayXdmcpHostsDialog(void)
+{
+  /* Check if dialog already exists */
+  if (g_hDlgHosts != NULL)
+  {
+    /* Dialog box already exists, display it */
+    ShowWindow (g_hDlgHosts, SW_SHOWDEFAULT);
+
+    /* User has lost the dialog.  Show them where it is. */
+    SetForegroundWindow (g_hDlgHosts);
+
+    return;
+  }
+
+  /*
+   * Display the about box
+   */
+  g_hDlgHosts = CreateDialogParam (g_hInstance, "XDMCP_HOSTS", NULL, DisplayXdmcpHostsDlgProc, 0);
+ 
+  /* Show the dialog box */
+  ShowWindow (g_hDlgHosts, SW_SHOW);
+
+  /* Needed to get keyboard controls (tab, arrows, enter, esc) to work */
+  SetForegroundWindow (g_hDlgHosts);
+  
+  /* Set focus to the OK button */
+  PostMessage (g_hDlgAbout, WM_NEXTDLGCTL, (WPARAM)GetDlgItem (g_hDlgHosts, IDOK), TRUE);
+}

@@ -137,7 +137,8 @@ SRCS =	InitInput.c \
 	$(SRCS_NATIVEGDI) \
 	$(SRCS_PRIMARYFB) \
 	$(SRCS_RANDR) \
-	$(SRCS_XV)
+	$(SRCS_XV) \
+	xdmcphostselect.c
 
 CSRCS=$(filter %.c,$(SRCS)) $(filter %.y,$(SRCS)) $(filter %.l,$(SRCS))
 CSRCS := $(CSRCS:%.y=%.c)
