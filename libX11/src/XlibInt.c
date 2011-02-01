@@ -783,10 +783,10 @@ _XFreeEventCookies(Display *dpy)
     head = (struct stored_event**)&dpy->cookiejar;
 
     DL_FOREACH_SAFE(*head, e, tmp) {
-        XFree(e->ev.data);
-        XFree(e);
         if (dpy->cookiejar == e)
             dpy->cookiejar = NULL;
+        XFree(e->ev.data);
+        XFree(e);
     }
 }
 

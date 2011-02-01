@@ -443,7 +443,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\program\ir_to_mesa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\talloc\talloc.c">
+    <ClCompile Include="..\..\..\..\src\glsl\ralloc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\ir.cpp">
