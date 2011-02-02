@@ -1456,7 +1456,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
             pRule->PrintCommands(pTarget);
           }
           #endif
-          if (ThisYoungestDate.IsNewer(TargetDate))
+          if (!TargetDate.DoesExist() || ThisYoungestDate.IsNewer(TargetDate))
           {
             #ifdef _DEBUG
             if (pRule,g_pPrintDependencyCheck && ThisYoungestDate.IsExistingFile() && TargetDate.IsExistingFile())
