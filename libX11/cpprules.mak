@@ -14,5 +14,6 @@ $(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\XLC_LOCALE : %\XLC_LOCALE.pre;	cl /
 
 $(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\Compose : %\Compose.pre;	cl /nologo /EP $$< -DXCOMM\#\# > $$@;; ))
 
-$(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\XI18N_OBJS : %\XI18N_OBJS;	copy $$< $$@;; ))
+$(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\XI18N_OBJS : $(X11_LOCALEDATADIR)\% %\XI18N_OBJS;	copy %\XI18N_OBJS $$@;; ))
 
+$(reparse $(locales:%=$(X11_LOCALEDATADIR)\% : ;	mkdir $$@;; ))
