@@ -758,7 +758,10 @@ bool MakeDirs(const fileinfo *pDir)
   if (!pDir->GetDate().DoesExist())
   { /* Create directory */
     if (-1==mkdir(pDir->GetFullFileName().c_str(),S_IRWXU))
+    {
+      cerr << "mkdir function failed for directory " << QuoteFileName(pDir->GetFullFileName()) << endl; 
       return false;
+    }
   }
   return true;
 }
