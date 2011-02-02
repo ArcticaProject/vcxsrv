@@ -1,24 +1,24 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.60)
-AC_INIT([libX11],
-        [1.4.1],
-        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
-        libX11)
+# Initialize Autoconf
+AC_PREREQ([2.60])
+AC_INIT([libX11], [1.4.1],
+        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [libX11])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS([src/config.h include/X11/XlibConf.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
-
-AM_INIT_AUTOMAKE([foreign dist-bzip2])
-AM_MAINTAINER_MODE
-
 # Set common system defines for POSIX extensions, such as _GNU_SOURCE
 # Must be called before any macros that run the compiler (like AC_PROG_LIBTOOL)
 # to avoid autoconf errors.
 AC_USE_SYSTEM_EXTENSIONS
+
+# Initialize Automake
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AM_MAINTAINER_MODE
+
+# Initialize libtool
+AC_PROG_LIBTOOL
 
 # Require xorg-macros minimum of 1.11 for disabling fop by default
 m4_ifndef([XORG_MACROS_VERSION],
@@ -31,8 +31,7 @@ XORG_WITH_FOP([no])
 XORG_CHECK_SGML_DOCTOOLS(1.5)
 XORG_PROG_RAWCPP
 
-# Checks for programs.
-AC_PROG_LIBTOOL
+# Required when PKG_CHECK_MODULES called within an if statement
 PKG_PROG_PKG_CONFIG
 
 if test x"$CC_FOR_BUILD" = x; then
@@ -84,13 +83,13 @@ PKG_PROG_PKG_CONFIG()
 
 AC_SUBST(X11_EXTRA_DEPS)
 
-dnl Issue an error if xtrans.m4 was not found and XTRANS_CONNECTION_FLAGS macro
-dnl was not expanded, since libX11 with no transport types is rather useless.
-dnl
-dnl If you're seeing an error here, be sure you installed the lib/xtrans module
-dnl first and if it's not in the default location, that you set the ACLOCAL
-dnl environment variable to find it, such as:
-dnl	ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
+# Issue an error if xtrans.m4 was not found and XTRANS_CONNECTION_FLAGS macro
+# was not expanded, since libX11 with no transport types is rather useless.
+#
+# If you're seeing an error here, be sure you installed the lib/xtrans module
+# first and if it's not in the default location, that you set the ACLOCAL
+# environment variable to find it, such as:
+#	ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
 m4_pattern_forbid([^XTRANS_CONNECTION_FLAGS$])
 
 # Transport selection macro from xtrans.m4
@@ -239,7 +238,7 @@ AC_CHECK_FUNC([getresuid], [XLOCALEDIR_IS_SAFE="yes"]
 AC_CHECK_FUNC([shmat], AC_DEFINE(HAS_SHM,1,[Has shm*() functions]))
 
 # Checks for system services
-dnl AC_PATH_XTRA
+# AC_PATH_XTRA
 
 # arch specific things
 WCHAR32="1"
@@ -284,7 +283,7 @@ esac
 AC_CHECK_LIB(c, pthread_self, [thrstubs="no"], [thrstubs="yes"])
 AM_CONDITIONAL(THRSTUBS, test x$thrstubs = xyes)
 
-dnl XXX incomplete, please fill this in
+# XXX incomplete, please fill this in
 if test x$xthreads = xyes ; then
     case $host_os in
     linux*|openbsd*|gnu*|k*bsd*-gnu)
@@ -391,7 +390,7 @@ if test x"$COMPOSECACHE" = "xyes"; then
 	AC_DEFINE(COMPOSECACHE,1,[Include compose table cache support])
 fi
 
-dnl Allow checking code with lint, sparse, etc.
+# Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 XORG_LINT_LIBRARY([X11])
 
@@ -437,36 +436,37 @@ AX_DEFINE_DIR(XERRORDB, XERRORDB, [Location of error message database])
 
 XORG_CHECK_MALLOC_ZERO
 
-AC_OUTPUT([Makefile
-           include/Makefile
-	   man/Makefile
-           man/xkb/Makefile
-           src/Makefile
-           src/util/Makefile
-	   src/xcms/Makefile
-	   src/xlibi18n/Makefile
-	   modules/Makefile
-	   modules/im/Makefile
-	   modules/im/ximcp/Makefile
-	   modules/lc/Makefile
-	   modules/lc/def/Makefile
-	   modules/lc/gen/Makefile
-	   modules/lc/Utf8/Makefile
-	   modules/lc/xlocale/Makefile
-	   modules/om/Makefile
-	   modules/om/generic/Makefile
-	   src/xkb/Makefile
-	   nls/Makefile
-	   specs/Makefile
-	   specs/i18n/Makefile
-	   specs/i18n/framework/Makefile
-	   specs/i18n/localedb/Makefile
-	   specs/i18n/trans/Makefile
-	   specs/libX11/Makefile
-	   specs/XIM/Makefile
-	   specs/XKB/Makefile
-	   x11.pc
-	   x11-xcb.pc])
+AC_CONFIG_FILES([Makefile
+		include/Makefile
+		man/Makefile
+		man/xkb/Makefile
+		src/Makefile
+		src/util/Makefile
+		src/xcms/Makefile
+		src/xlibi18n/Makefile
+		modules/Makefile
+		modules/im/Makefile
+		modules/im/ximcp/Makefile
+		modules/lc/Makefile
+		modules/lc/def/Makefile
+		modules/lc/gen/Makefile
+		modules/lc/Utf8/Makefile
+		modules/lc/xlocale/Makefile
+		modules/om/Makefile
+		modules/om/generic/Makefile
+		src/xkb/Makefile
+		nls/Makefile
+		specs/Makefile
+		specs/i18n/Makefile
+		specs/i18n/framework/Makefile
+		specs/i18n/localedb/Makefile
+		specs/i18n/trans/Makefile
+		specs/libX11/Makefile
+		specs/XIM/Makefile
+		specs/XKB/Makefile
+		x11.pc
+		x11-xcb.pc])
+AC_OUTPUT
 
 echo ""
 echo "X11 will be built with the following settings:"
