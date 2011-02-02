@@ -762,6 +762,7 @@ bool MakeDirs(const fileinfo *pDir)
       cerr << "mkdir function failed for directory " << QuoteFileName(pDir->GetFullFileName()) << endl; 
       return false;
     }
+    pDir->InvalidateDate(); // Directory created successfully, so invalidate the date
   }
   return true;
 }
