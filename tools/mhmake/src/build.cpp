@@ -683,7 +683,7 @@ string mhmakefileparser::GetFullCommand(string Command)
       if (!FullCommand.empty())
       {
         Found=true;
-        Command=FullCommand;
+        Command=QuoteFileName(FullCommand);
       }
     }
     else
@@ -700,7 +700,7 @@ string mhmakefileparser::GetFullCommand(string Command)
       if (!FullCommand.empty())
       {
         Found=true;
-        Command=FullCommand;
+        Command=QuoteFileName(FullCommand);
       }
       else
       {
@@ -708,7 +708,7 @@ string mhmakefileparser::GetFullCommand(string Command)
         if (!FullCommand.empty())
         {
           Found=true;
-            Command=GetPythonExe()+QuoteFileName(FullCommand);
+          Command=GetPythonExe()+QuoteFileName(FullCommand);
         }
       }
     }
@@ -771,7 +771,7 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
     string tmpCommand=Command.substr(ComSpec.size(),Command.size());
     FullCommandLine=ComSpec;
 
-    string ComspecCommandLine=QuoteFileName(tmpCommand)+Params;
+    string ComspecCommandLine=tmpCommand+Params;
     int NextBegin=0;
     int EndPos=0;
     CommandSep(ComspecCommandLine,EndPos,NextBegin);
@@ -806,11 +806,7 @@ mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Par
   }
   else
   {
-    const string PythonExe=GetPythonExe();
-    if (!(Command.substr(0,PythonExe.size())==PythonExe))
-      FullCommandLine=QuoteFileName(Command)+Params;
-    else
-      FullCommandLine=Command+Params;
+    FullCommandLine=Command+Params;
   }
   char *pFullCommand=new char[FullCommandLine.length()+1];
   strcpy(pFullCommand,FullCommandLine.c_str());
