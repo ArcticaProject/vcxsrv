@@ -92,7 +92,7 @@ endif
 .PHONY: all cleanall clean clean$(CLEANRULEPOSTFIX)
 
 ### Implicit rules ###
-CREATEDIR=if not exist $@ mkdir $@
+CREATEDIR=mkdir $@
 
 $(OBJDIR) :
 	$(CREATEDIR)
