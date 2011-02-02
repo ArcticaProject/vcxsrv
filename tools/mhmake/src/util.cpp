@@ -747,7 +747,7 @@ void loadedmakefile::LoadMakefile()
 }
 
 /*****************************************************************************/
-bool MakeDirs(const fileinfo *pDir)
+bool MakeDirs(fileinfo *pDir)
 {
   fileinfo *pParentDir=pDir->GetDir();
   if (!pParentDir->GetDate().DoesExist())

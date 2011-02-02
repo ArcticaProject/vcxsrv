@@ -232,7 +232,7 @@ public:
 
 extern LOADEDMAKEFILES g_LoadedMakefiles;
 
-bool MakeDirs(const fileinfo *pDir); // Creates a directory tree
+bool MakeDirs(fileinfo *pDir); // Creates a directory tree
 void DumpVarsAndRules();
 
 #endif
