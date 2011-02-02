@@ -6,7 +6,11 @@ UCS2ANY = perl ucstoany.pl
 
 INC_BDF_RULES=1
 
-all: $(BDFTOPCF)
+   # The following rule is to avoid parallel build problems
+.PHONY: buildtoolsfirst
+buildtoolsfirst: $(BDFTOPCF)
+
+all: buildtoolsfirst
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\terminus-font
 

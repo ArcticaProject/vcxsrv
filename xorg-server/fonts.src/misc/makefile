@@ -4,7 +4,17 @@ endif
 
 INC_BDF_RULES=1
 
-all: $(BDFTOPCF)
+UTIL_DIR = ..\font-util
+
+load_makefile $(UTIL_DIR)\makefile MAKESERVER=0 DEBUG=$(DEBUG)
+
+UCS2ANY = $(UTIL_DIR)\$(OBJDIR)\ucs2any.exe
+
+   # The following rule is to avoid parallel build problems
+.PHONY: buildtoolsfirst
+buildtoolsfirst: $(BDFTOPCF) $(UCS2ANY)
+
+all: buildtoolsfirst
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\misc
 
@@ -185,11 +195,6 @@ KOI8_R_PCF_FILES = $(BDF2UCS_KOI8_FONT_FILES:%=$(DESTDIR)\%-KOI8-R.pcf.gz)
 
 JISX0201_PCF_FILES = $(BDF2UCS_JISX0201_FONT_FILES:%=$(DESTDIR)\%-JISX0201.1976-0.pcf.gz)
 
-UTIL_DIR = ..\font-util
-UCS2ANY = $(UTIL_DIR)\$(OBJDIR)\ucs2any.exe
-
-load_makefile $(UTIL_DIR)\makefile MAKESERVER=0 DEBUG=$(DEBUG)
-
 $(DESTDIR)\%-ISO8859-1.pcf.gz: %.bdf
 	@del -e $(<:%.bdf=%-ISO8859-1.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-1 ISO8859-1
@@ -321,7 +326,7 @@ font_DATA = \
 	$(KOI8_R_PCF_FILES) \
 	$(JISX0201_PCF_FILES)
 
-all: $(DESTDIR) $(UCS2ANY) $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
+all: $(DESTDIR) $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
 
 MKFONTSCALE=$(MHMAKECONF)\mkfontscale\$(OBJDIR)\mkfontscale.exe
 
