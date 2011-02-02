@@ -4,7 +4,7 @@ Prerequisits:
   Microsoft Visual C++ 2008 (Express Edition) with SP1 (http://www.microsoft.com/express/vc/) is probably still working
   but is not actively supported anymore
 - Perl (cygwin perl (http://www.cygwin.com/), strawberry perl (http://strawberryperl.com)  or activestate perl (http://www.activestate.com/activeperl/) )
-- Python (2.5 used: http://www.python.org/)
+- Python (2.7 used: http://www.python.org/)
 - Gnuwin32 gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/)
 - nasm (http://nasm.sourceforge.net). Make sure the nasm directory is in your path
 - Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
@@ -33,7 +33,7 @@ Building pthreads:
 - run 'nmake VC-static-debug'
 
 Building mhmake
-- open tools\mhmake\mhmake.sln in Visual C++
+- open tools\mhmake\mhmake.sln in Visual C++ 2008 or tools\mhmake\mhmakevc10.sln in Visual C++ 2010
 - Build the Debug and Release configurations
 - Copy Debug\mhmake_dbg.exe and Release\mhmake.exe to a directory in your environment PATH
 
