@@ -1,6 +1,6 @@
 LIBRARY=libwinglx
 
-INCLUDES += ..\..\..\glx .. ..\..\..
+INCLUDES += $(OBJDIR) ..\..\..\glx .. ..\..\..
 DEFINES += GLAPIENTRY=__stdcall _GLAPI_NO_EXPORTS
 
 DEFINES += XWIN_CLIPBOARD
@@ -15,13 +15,6 @@ CSRCS = \
 	glwrap.c \
 	indirect.c \
 	wgl_ext_api.c
-
-glwrap.c: generated_gl_wrappers.c
-wgl_ext_api.c: generated_wgl_wrappers.c wglext.h
-wgl_ext_api.h: wglext.h
-indirect.c: wgl_ext_api.h
-
-SPEC_FILES = gl.spec gl.tm wglext.spec wgl.tm
 
 .PHONY: getspecfiles
 
@@ -44,12 +37,9 @@ getspecfiles:
 	wget http://www.opengl.org/registry/api/glext.h
 	wget http://www.opengl.org/registry/api/glxext.h
 
-generated_gl_wrappers.c: gen_gl_wrappers.py gl.spec gl.tm
-	gen_gl_wrappers --spec=gl.spec --typemap=gl.tm --dispatch-header=../../../glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
+$(OBJDIR)\generated_gl_wrappers.c: gen_gl_wrappers.py gl.spec gl.tm
+	gen_gl_wrappers --spec=gl.spec --typemap=gl.tm --dispatch-header=../../../glx/dispatch.h --staticwrappers > $@
 
-generated_wgl_wrappers.c: gen_gl_wrappers.py wglext.spec wgl.tm
-	gen_gl_wrappers --spec=wglext.spec --typemap=wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
-
-
-BUILT_SOURCES = generated_gl_wrappers.c generated_wgl_wrappers.c
+$(OBJDIR)\generated_wgl_wrappers.c: gen_gl_wrappers.py wglext.spec wgl.tm
+	gen_gl_wrappers --spec=wglext.spec --typemap=wgl.tm --prefix=wgl --preresolve > $@
 
