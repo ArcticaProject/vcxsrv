@@ -115,6 +115,8 @@ exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
     exaSetAccelBlock(pExaScr, pExaPixmap,
                      w, h, bpp);
 
+    pExaPixmap->use_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
+
     /* During a fallback we must prepare access. */
     if (pExaScr->fallback_counter)
 	exaPrepareAccess(&pPixmap->drawable, EXA_PREPARE_AUX_DEST);

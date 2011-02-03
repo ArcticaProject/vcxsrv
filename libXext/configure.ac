@@ -1,16 +1,17 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
 
+# Initialize Autoconf
 AC_PREREQ([2.60])
-AC_INIT([libXext],
-        [1.2.99.0],
-        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
-        [libXext])
-
+AC_INIT([libXext], [1.2.99.0],
+        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [libXext])
 AC_CONFIG_SRCDIR([Makefile.am])
-AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AC_CONFIG_HEADERS([config.h])
 
+# Initialize Automake
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
+
+# Initialize libtool
+AC_PROG_LIBTOOL
 
 # Require xorg-macros minimum of 1.10 for DocBook XML documentation
 m4_ifndef([XORG_MACROS_VERSION],
@@ -21,11 +22,10 @@ XORG_ENABLE_SPECS
 XORG_WITH_XMLTO(0.0.20)
 XORG_WITH_FOP
 XORG_CHECK_SGML_DOCTOOLS(1.5)
-AC_CONFIG_HEADERS([config.h])
+XORG_CHECK_MALLOC_ZERO
 
 # Determine .so library version per platform 
 # based on SharedXextRev in monolith xc/config/cf/*Lib.tmpl
-AC_CANONICAL_HOST
 if test "x$XEXT_SOREV" = "x" ; then
     case $host_os in
 	openbsd*)	XEXT_SOREV=8:0 		;;
@@ -35,22 +35,16 @@ if test "x$XEXT_SOREV" = "x" ; then
 fi
 AC_SUBST(XEXT_SOREV)
 
-# Checks for programs.
-AC_PROG_LIBTOOL
-
-# Checks for pkg-config packages
+# Obtain compiler/linker options for depedencies
 PKG_CHECK_MODULES(XEXT, [xproto >= 7.0.13] [x11 >= 1.1.99.1] [xextproto >= 7.1.99])
-AC_SUBST(XEXT_CFLAGS)
-AC_SUBST(XEXT_LIBS)
 
-XORG_CHECK_MALLOC_ZERO
-
-dnl Allow checking code with lint, sparse, etc.
+# Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 XORG_LINT_LIBRARY([Xext])
 
-AC_OUTPUT([Makefile
-           man/Makefile
-	   src/Makefile
-	   specs/Makefile
-	   xext.pc])
+AC_CONFIG_FILES([Makefile
+		man/Makefile
+		src/Makefile
+		specs/Makefile
+		xext.pc])
+AC_OUTPUT

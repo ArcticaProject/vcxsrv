@@ -46,7 +46,7 @@ XGetWindowProperty(
 {
     xGetPropertyReply reply;
     register xGetPropertyReq *req;
-    xError error;
+    xError error = {0};
 
     LockDisplay(dpy);
     GetReq (GetProperty, req);

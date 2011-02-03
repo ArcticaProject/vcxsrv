@@ -313,7 +313,7 @@ _XimAttributeToValue(
 	    INT16	 len = data[0];
 	    char	*base_name;
 	    XFontSet	 rep = (XFontSet)NULL;
-	    char	**missing_list;
+	    char	**missing_list = NULL;
 	    int		 missing_count;
 	    char	*def_string;
 
@@ -347,6 +347,7 @@ _XimAttributeToValue(
 	    }
 
 	    Xfree(base_name);
+	    Xfree(missing_list);
 	    *((XFontSet *)value) = rep;
 	    break;
 	}
@@ -956,6 +957,7 @@ _XimEncodePreeditValue(
 				&count, (Atom)p->value)))
 	    return False;
 
+	XFree(colormap_ret);
     } else if (res->xrm_name == XrmStringToQuark(XNFontSet)) {
 	int		  list_ret;
 	XFontStruct	**struct_list;
@@ -999,7 +1001,7 @@ _XimEncodeStatusValue(
     XIMArg		*p)
 {
     if (res->xrm_name == XrmStringToQuark(XNStdColormap)) {
-	XStandardColormap	*colormap_ret;
+	XStandardColormap	*colormap_ret = NULL;
 	int			 count;
 
 	if (!(XGetRGBColormaps(ic->core.im->core.display,
@@ -1007,6 +1009,7 @@ _XimEncodeStatusValue(
 				&count, (Atom)p->value)))
 	    return False;
 
+	XFree(colormap_ret);
     } else if (res->xrm_name == XrmStringToQuark(XNFontSet)) {
 	int		  list_ret;
 	XFontStruct	**struct_list;

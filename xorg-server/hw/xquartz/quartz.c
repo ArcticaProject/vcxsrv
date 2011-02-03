@@ -63,6 +63,7 @@
 #include <fcntl.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
 #include <pthread.h>
+#include <signal.h>
 
 #include <rootlessCommon.h>
 #include <Xplugin.h>
@@ -143,6 +144,26 @@ void QuartzInitOutput(
     int argc,
     char **argv )
 {
+    /* For XQuartz, we want to just use the default signal handler to work better with CrashTracer */
+    signal(SIGSEGV, SIG_DFL);
+    signal(SIGILL, SIG_DFL);
+#ifdef SIGEMT
+    signal(SIGEMT, SIG_DFL);
+#endif
+    signal(SIGFPE, SIG_DFL);
+#ifdef SIGBUS
+    signal(SIGBUS, SIG_DFL);
+#endif
+#ifdef SIGSYS
+    signal(SIGSYS, SIG_DFL);
+#endif
+#ifdef SIGXCPU
+    signal(SIGXCPU, SIG_DFL);
+#endif
+#ifdef SIGXFSZ
+    signal(SIGXFSZ, SIG_DFL);
+#endif
+
     if (!RegisterBlockAndWakeupHandlers(QuartzBlockHandler,
                                         QuartzWakeupHandler,
                                         NULL))
@@ -244,6 +265,9 @@ void QuartzUpdateScreens(void) {
     DeliverEvents(pRoot, &e, 1, NullWindow);
 
     quartzProcs->UpdateScreen(pScreen);
+
+    /* Tell RandR about the new size, so new connections get the correct info */
+    RRScreenSizeNotify(pScreen);
 }
 
 static void pokeActivityCallback(CFRunLoopTimerRef timer, void *info) {

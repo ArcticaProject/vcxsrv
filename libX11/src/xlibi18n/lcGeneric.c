@@ -428,7 +428,7 @@ read_charset_define(
     char name[BUFSIZ];
     XlcCharSet charsetd;
     char **value;
-    int num, new;
+    int num, new = 0;
     XlcSide side = XlcUnknown;
     char *tmp;
 

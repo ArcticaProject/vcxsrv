@@ -668,6 +668,7 @@ XAddConnectionWatch(
 	    UnlockDisplay(dpy);
 	    return 0;
 	}
+	info_list->watch_data = wd_array;
 	wd_array[dpy->watcher_count] = NULL;	/* for cleanliness */
     }
 
@@ -1444,9 +1445,10 @@ static int _XPrintDefaultError(
 	     ext && (ext->codes.major_opcode != event->request_code);
 	     ext = ext->next)
 	  ;
-	if (ext)
-	    strcpy(buffer, ext->name);
-	else
+	if (ext) {
+	    strncpy(buffer, ext->name, BUFSIZ);
+	    buffer[BUFSIZ - 1] = '\0';
+        } else
 	    buffer[0] = '\0';
     }
     (void) fprintf(fp, " (%s)\n", buffer);
