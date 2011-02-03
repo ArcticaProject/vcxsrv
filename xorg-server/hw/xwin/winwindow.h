@@ -45,8 +45,8 @@
 #endif
 #define EXECUTABLE_NAME         "VcXsrv"
 #define WINDOW_CLASS		"VcXsrv/x"
-#define WINDOW_TITLE		PROJECT_NAME " Server - %s:%s.%d"
-#define WINDOW_TITLE_XDMCP	PROJECT_NAME " Server - %s:%s.%d"
+#define WINDOW_TITLE		PROJECT_NAME " Server - Display %s:%s.%d"
+#define WINDOW_TITLE_XDMCP	PROJECT_NAME " Server - %s - Display %s:%s.%d"
 #define WIN_SCR_PROP		"vcxsrv_screen_prop rl"
 #define WINDOW_CLASS_X		"vcxsrv/x X rl"
 #define WINDOW_TITLE_X		PROJECT_NAME " X"

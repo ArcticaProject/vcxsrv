@@ -63,13 +63,27 @@ winInitNotifyIcon (winPrivScreenPtr pScreenPriv, Bool Modify)
   gethostname(HostName,256);
 
   /* Set display and screen-specific tooltip text */
-  snprintf (nid.szTip,
+  if (g_pszQueryHost)
+  {
+    snprintf (nid.szTip,
 	    sizeof (nid.szTip),
-	    PROJECT_NAME " Server - %s:%s.%d - %d clients",
+	    "%s - %s:%s.%d - %d clients",
+	    g_pszQueryHost,
 	    HostName,
 	    display, 
 	    (int) pScreenInfo->dwScreen,
             pScreenPriv->iConnectedClients);
+  }
+  else
+  {
+    snprintf (nid.szTip,
+	    sizeof (nid.szTip),
+	    "%s:%s.%d - %d clients",
+	    HostName,
+	    display, 
+	    (int) pScreenInfo->dwScreen,
+            pScreenPriv->iConnectedClients);
+  }
 
   /* Add the tray icon */
   if (!Shell_NotifyIcon ((Modify) ? NIM_MODIFY : NIM_ADD, &nid))

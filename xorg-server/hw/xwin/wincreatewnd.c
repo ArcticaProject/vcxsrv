@@ -65,6 +65,8 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
   HWND			*phwnd = &pScreenPriv->hwndScreen;
   WNDCLASSEX		wc;
   char			szTitle[256];
+  char			HostName[256];
+  gethostname(HostName,256);
 
   winDebug ("winCreateBoundingWindowFullScreen\n");
 
@@ -91,12 +93,11 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
 	    sizeof (szTitle),
 	    WINDOW_TITLE_XDMCP,
 	    g_pszQueryHost,
+	    HostName,
 	    display,
 	    (int) pScreenInfo->dwScreen);
   else
   {
-    char HostName[256];
-    gethostname(HostName,256);
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE,
@@ -163,6 +164,9 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
   DWORD			dwWindowStyle;
   BOOL			fForceShowWindow = FALSE;
   char			szTitle[256];
+  char			HostName[256];
+
+  gethostname(HostName,256);
   
   winDebug ("winCreateBoundingWindowWindowed - User w: %d h: %d\n",
 	  (int) pScreenInfo->dwUserWidth, (int) pScreenInfo->dwUserHeight);
@@ -332,12 +336,11 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	    sizeof (szTitle),
 	    WINDOW_TITLE_XDMCP,
 	    g_pszQueryHost,
+	    HostName,
 	    display,
 	    (int) pScreenInfo->dwScreen);
   else
   {
-    char HostName[256];
-    gethostname(HostName,256);
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE,

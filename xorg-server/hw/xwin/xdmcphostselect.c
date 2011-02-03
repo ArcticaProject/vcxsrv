@@ -6,6 +6,39 @@
 void XdmcpHostSelected(int HostIndex);
 
 static HWND g_hDlgHosts;
+static char HostToConnect[128];
+
+static void SelectHost(int Index)
+{
+  int i;
+  char HostName[128];
+  int HostIndex=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETITEMDATA, (WPARAM)Index, 0);
+
+  HostToConnect[0]=0;
+  SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETTEXT, (WPARAM)Index, (LPARAM)HostToConnect);
+  g_pszQueryHost=HostToConnect;
+
+  gethostname(HostName,128);
+
+  XdmcpHostSelected(HostIndex);
+
+  for (i = 0; i < g_iNumScreens; ++i)
+    {
+      /* Change the window title to reflect the host we are connecting to */
+      if (g_ScreenInfo[i].pScreen)
+      {
+        char szTitle[256];
+
+        winScreenPriv(g_ScreenInfo[i].pScreen);
+        winScreenInfo	*pScreenInfo = pScreenPriv->pScreenInfo;
+        snprintf (szTitle, sizeof (szTitle), WINDOW_TITLE_XDMCP, HostToConnect, HostName, display, (int) pScreenInfo->dwScreen);
+        SetWindowText(pScreenPriv->hwndScreen,szTitle);
+      }
+    }
+
+  DestroyWindow (g_hDlgHosts);
+  g_hDlgHosts = NULL;
+}
 
 /*
  * Process messages for the about dialog.
@@ -64,11 +97,7 @@ static wBOOL CALLBACK DisplayXdmcpHostsDlgProc (HWND hwndDialog, UINT message, W
           }
           else
           {
-            int HostIndex=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETITEMDATA, (WPARAM)Index, 0);
-            XdmcpHostSelected(HostIndex);
-
-            DestroyWindow (g_hDlgHosts);
-            g_hDlgHosts = NULL;
+            SelectHost(Index);
           }
 
           return TRUE;
@@ -87,11 +116,7 @@ static wBOOL CALLBACK DisplayXdmcpHostsDlgProc (HWND hwndDialog, UINT message, W
           if (HIWORD(wParam)==LBN_DBLCLK)
           {
             int Index=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETCURSEL, 0, 0);
-            int HostIndex=SendDlgItemMessage(g_hDlgHosts, IDC_HOSTLIST, LB_GETITEMDATA, (WPARAM)Index, 0);
-            XdmcpHostSelected(HostIndex);
-
-            DestroyWindow (g_hDlgHosts);
-            g_hDlgHosts = NULL;
+            SelectHost(Index);
             return TRUE;
           }
         break;
