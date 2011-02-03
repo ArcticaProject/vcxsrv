@@ -1373,8 +1373,8 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
   }
 
   mh_time_t TargetDate=pTarget->GetDate();
-  bool MakeTarget=false;
   mh_time_t YoungestDate=TargetDate;
+  bool MakeTarget=!TargetDate.DoesExist();
 
   if (!pRule || !pRule->GetCommands().size())
   {
@@ -1456,7 +1456,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
             pRule->PrintCommands(pTarget);
           }
           #endif
-          if (!TargetDate.DoesExist() || ThisYoungestDate.IsNewer(TargetDate))
+          if (ThisYoungestDate.IsNewer(TargetDate))
           {
             #ifdef _DEBUG
             if (pRule,g_pPrintDependencyCheck && ThisYoungestDate.IsExistingFile() && TargetDate.IsExistingFile())
