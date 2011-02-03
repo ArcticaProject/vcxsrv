@@ -183,6 +183,9 @@ union pixman_image
 };
 
 typedef struct pixman_iter_t pixman_iter_t;
+typedef uint32_t *(* pixman_iter_get_scanline_t) (pixman_iter_t *iter, const uint32_t *mask);
+typedef void      (* pixman_iter_write_back_t)   (pixman_iter_t *iter);
+
 typedef enum
 {
     ITER_NARROW =		(1 << 0),
@@ -209,13 +212,16 @@ typedef enum
 
 struct pixman_iter_t
 {
-    uint32_t *(* get_scanline) (pixman_iter_t *iter, const uint32_t *mask);
-    void      (* write_back)   (pixman_iter_t *iter);
+    pixman_iter_get_scanline_t	get_scanline;
+    pixman_iter_write_back_t	write_back;
 
-    pixman_image_t *    image;
-    uint32_t *          buffer;
-    int                 x, y;
-    int                 width;
+    pixman_image_t *		image;
+    uint32_t *			buffer;
+    int				x, y;
+    int				width;
+
+    uint8_t *			bits;
+    int				stride;
 };
 
 void

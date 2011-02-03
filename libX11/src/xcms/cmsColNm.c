@@ -567,7 +567,7 @@ stringSectionSize(
 	return(XcmsFailure);
     }
 
-    while((pBuf = fgets(buf, XCMSDB_MAXLINELEN, stream)) != NULL) {
+    while((fgets(buf, XCMSDB_MAXLINELEN, stream)) != NULL) {
 	if ((sscanf(buf, "%s", token)) && (strcmp(token, END_TOKEN) == 0)) {
 	    break;
 	}
@@ -651,7 +651,7 @@ ReadColornameDB(
      * Process lines between START_TOKEN to END_TOKEN
      */
 
-    while ((pBuf = fgets(buf, XCMSDB_MAXLINELEN, stream)) != NULL) {
+    while ((fgets(buf, XCMSDB_MAXLINELEN, stream)) != NULL) {
 	if ((sscanf(buf, "%s", token)) && (strcmp(token, END_TOKEN) == 0)) {
 	    /*
 	     * Found END_TOKEN so break out of for loop

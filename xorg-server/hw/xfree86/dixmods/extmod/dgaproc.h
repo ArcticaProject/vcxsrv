@@ -124,7 +124,6 @@ extern _X_EXPORT Bool DGAStealButtonEvent(DeviceIntPtr dev, int Index, int butto
                          int is_down);
 extern _X_EXPORT Bool DGAStealMotionEvent(DeviceIntPtr dev, int Index, int dx, int dy);
 extern _X_EXPORT Bool DGAStealKeyEvent(DeviceIntPtr dev, int Index, int key_code, int is_down);
-extern _X_EXPORT Bool DGAIsDgaEvent (xEvent *e);
 	    
 extern _X_EXPORT Bool DGAOpenFramebuffer(int Index, char **name, unsigned char **mem,
 			int *size, int *offset, int *flags);

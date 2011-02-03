@@ -2650,7 +2650,7 @@ create_conv(
     XlcConv conv;
     State state;
 
-    conv = (XlcConv) Xmalloc(sizeof(XlcConvRec));
+    conv = (XlcConv) Xcalloc(1, sizeof(XlcConvRec));
     if (conv == NULL)
 	return (XlcConv) NULL;
 

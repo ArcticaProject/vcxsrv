@@ -915,9 +915,14 @@ ProcXkbSetControls(ClientPtr client)
                                        stuff->axtOptsMask);
             }
 
-            if (stuff->changeCtrls & XkbPerKeyRepeatMask)
+            if (stuff->changeCtrls & XkbPerKeyRepeatMask) {
                 memcpy(new.per_key_repeat, stuff->perKeyRepeat,
                        XkbPerKeyBitArraySize);
+                if (xkbi->repeatKey &&
+                    !BitIsOn(new.per_key_repeat, xkbi->repeatKey)) {
+                    AccessXCancelRepeatKey(xkbi, xkbi->repeatKey);
+                }
+            }
 
             old= *ctrl;
             *ctrl= new;

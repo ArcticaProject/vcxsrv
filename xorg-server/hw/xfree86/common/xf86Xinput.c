@@ -1011,11 +1011,6 @@ xf86PostMotionEventM(DeviceIntPtr	device,
     DeviceEvent *event;
     int flags = 0;
 
-#if XFreeXDGA
-    int index;
-    int dx = 0, dy = 0;
-#endif
-
     if (valuator_mask_num_valuators(mask) > 0)
     {
         if (is_absolute)
@@ -1029,7 +1024,9 @@ xf86PostMotionEventM(DeviceIntPtr	device,
     if (valuator_mask_isset(mask, 0) ||
         valuator_mask_isset(mask, 1))
         if (miPointerGetScreen(device)) {
-            index = miPointerGetScreen(device)->myNum;
+            int index = miPointerGetScreen(device)->myNum;
+            int dx = 0, dy = 0;
+
             if (valuator_mask_isset(mask, 0))
             {
                 dx = valuator_mask_get(mask, 0);
@@ -1160,10 +1157,6 @@ xf86PostButtonEventM(DeviceIntPtr	device,
     int i = 0, nevents = 0;
     int flags = 0;
 
-#if XFreeXDGA
-    int index;
-#endif
-
     if (valuator_mask_num_valuators(mask) > 0)
     {
         if (is_absolute)
@@ -1174,7 +1167,8 @@ xf86PostButtonEventM(DeviceIntPtr	device,
 
 #if XFreeXDGA
     if (miPointerGetScreen(device)) {
-        index = miPointerGetScreen(device)->myNum;
+        int index = miPointerGetScreen(device)->myNum;
+
         if (DGAStealButtonEvent(device, index, button, is_down))
             return;
     }
@@ -1239,6 +1233,19 @@ xf86PostKeyEventM(DeviceIntPtr	device,
                   const ValuatorMask *mask)
 {
     int i = 0, nevents = 0;
+
+#if XFreeXDGA
+    DeviceIntPtr pointer;
+
+    /* Some pointers send key events, paired device is wrong then. */
+    pointer = IsPointerDevice(device) ? device : GetPairedDevice(device);
+    if (miPointerGetScreen(pointer)) {
+        int index = miPointerGetScreen(pointer)->myNum;
+
+        if (DGAStealKeyEvent(device, index, key_code, is_down))
+            return;
+    }
+#endif
 
     if (is_absolute) {
         nevents = GetKeyboardValuatorEvents(xf86Events, device,

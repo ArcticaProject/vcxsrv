@@ -137,51 +137,6 @@ CheckForShmSyscall(void)
 
 #endif
 
-void
-XFree86BigfontExtensionInit(void)
-{
-    if (AddExtension(XF86BIGFONTNAME,
-		     XF86BigfontNumberEvents,
-		     XF86BigfontNumberErrors,
-		     ProcXF86BigfontDispatch,
-		     SProcXF86BigfontDispatch,
-		     XF86BigfontResetProc,
-		     StandardMinorOpcode)) {
-#ifdef HAS_SHM
-#ifdef MUST_CHECK_FOR_SHM_SYSCALL
-	/*
-	 * Note: Local-clients will not be optimized without shared memory
-	 * support. Remote-client optimization does not depend on shared
-	 * memory support.  Thus, the extension is still registered even
-	 * when shared memory support is not functional.  
-	 */
-	if (!CheckForShmSyscall()) {
-	    ErrorF(XF86BIGFONTNAME " extension local-client optimization disabled due to lack of shared memory support in the kernel\n");
-	    return;
-	}
-#endif
-
-	srand((unsigned int) time(NULL));
-	signature = ((unsigned int) (65536.0/(RAND_MAX+1.0) * rand()) << 16)
-	           + (unsigned int) (65536.0/(RAND_MAX+1.0) * rand());
-	/* fprintf(stderr, "signature = 0x%08X\n", signature); */
-
-	FontShmdescIndex = AllocateFontPrivateIndex();
-
-#if !defined(CSRG_BASED) && !defined(__CYGWIN__)
-	pagesize = SHMLBA;
-#else
-# ifdef _SC_PAGESIZE
-	pagesize = sysconf(_SC_PAGESIZE);
-# else
-	pagesize = getpagesize();
-# endif
-#endif
-#endif
-    }
-}
-
-
 /* ========== Management of shared memory segments ========== */
 
 #ifdef HAS_SHM
@@ -747,5 +702,49 @@ SProcXF86BigfontDispatch(
 	    return SProcXF86BigfontQueryFont(client);
 	default:
 	    return BadRequest;
+    }
+}
+
+void
+XFree86BigfontExtensionInit(void)
+{
+    if (AddExtension(XF86BIGFONTNAME,
+		     XF86BigfontNumberEvents,
+		     XF86BigfontNumberErrors,
+		     ProcXF86BigfontDispatch,
+		     SProcXF86BigfontDispatch,
+		     XF86BigfontResetProc,
+		     StandardMinorOpcode)) {
+#ifdef HAS_SHM
+#ifdef MUST_CHECK_FOR_SHM_SYSCALL
+	/*
+	 * Note: Local-clients will not be optimized without shared memory
+	 * support. Remote-client optimization does not depend on shared
+	 * memory support.  Thus, the extension is still registered even
+	 * when shared memory support is not functional.
+	 */
+	if (!CheckForShmSyscall()) {
+	    ErrorF(XF86BIGFONTNAME " extension local-client optimization disabled due to lack of shared memory support in the kernel\n");
+	    return;
+	}
+#endif
+
+	srand((unsigned int) time(NULL));
+	signature = ((unsigned int) (65536.0/(RAND_MAX+1.0) * rand()) << 16)
+	           + (unsigned int) (65536.0/(RAND_MAX+1.0) * rand());
+	/* fprintf(stderr, "signature = 0x%08X\n", signature); */
+
+	FontShmdescIndex = AllocateFontPrivateIndex();
+
+#if !defined(CSRG_BASED) && !defined(__CYGWIN__)
+	pagesize = SHMLBA;
+#else
+# ifdef _SC_PAGESIZE
+	pagesize = sysconf(_SC_PAGESIZE);
+# else
+	pagesize = getpagesize();
+# endif
+#endif
+#endif
     }
 }

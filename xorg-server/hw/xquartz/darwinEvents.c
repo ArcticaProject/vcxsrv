@@ -280,10 +280,9 @@ static void DarwinEventHandler(int screenNum, InternalEvent *ie, DeviceIntPtr de
         case kXquartzDisplayChanged:
             DEBUG_LOG("kXquartzDisplayChanged\n");
             QuartzUpdateScreens();
-#ifdef RANDR
+
             /* Update our RandR info */
             QuartzRandRUpdateFakeModes(TRUE);
-#endif
             break;
             
         default:

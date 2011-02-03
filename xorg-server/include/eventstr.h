@@ -177,7 +177,7 @@ struct _DGAEvent
     Time time;            /**<  Time in ms */
     int subtype;          /**<  KeyPress, KeyRelease, ButtonPress,
                                 ButtonRelease, MotionNotify */
-    int detail;           /**<  Relative x coordinate */
+    int detail;           /**<  Button number or key code */
     int dx;               /**<  Relative x coordinate */
     int dy;               /**<  Relative y coordinate */
     int screen;           /**<  Screen number this event applies to */

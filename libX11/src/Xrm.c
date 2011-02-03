@@ -842,8 +842,10 @@ static void PutEntry(
 	nprev = NodeBuckets(table); \
     } else { \
 	table->leaf = 1; \
-	if (!(nprev = (NTable *)Xmalloc(sizeof(VEntry *)))) \
+	if (!(nprev = (NTable *)Xmalloc(sizeof(VEntry *)))) {\
+	    Xfree(table); \
 	    return; \
+        } \
 	((LTable)table)->buckets = (VEntry *)nprev; \
     } \
     *nprev = (NTable)NULL; \
@@ -1593,6 +1595,12 @@ ReadInFile(_Xconst char *filename)
      * to the size returned by fstat.
      */
     GetSizeOfFile(fd, size);
+
+    /* There might have been a problem trying to stat a file */
+    if (size == -1) {
+	close (fd);
+	return (char *)NULL;
+    }
 
     if (!(filebuf = Xmalloc(size + 1))) { /* leave room for '\0' */
 	close(fd);

@@ -372,6 +372,7 @@ XImage *XCreateImage (
 	if (image_bytes_per_line == 0) {
 	    image->bytes_per_line = min_bytes_per_line;
 	} else if (image_bytes_per_line < min_bytes_per_line) {
+	    Xfree(image);
 	    return NULL;
 	} else {
 	    image->bytes_per_line = image_bytes_per_line;

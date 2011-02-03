@@ -63,6 +63,10 @@ _XimLocalMbLookupString(XIC xic, XKeyEvent *ev, char *buffer, int bytes,
 	    unsigned char pattern = ic->private.local.brl_committed;
 	    char mb[XLC_PUBLIC(ic->core.im->core.lcd, mb_cur_max)];
 	    ret = _Xlcwctomb(ic->core.im->core.lcd, mb, BRL_UC_ROW | pattern);
+	    if(ret < 0) {
+		if(status) *status = XLookupNone;
+		return(0);
+	    }
 	    if(ret > bytes) {
 		if(status) *status = XBufferOverflow;
 		return(ret);

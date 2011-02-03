@@ -685,8 +685,7 @@ _XlcLocaleDirName(char *dir_name, size_t dir_len, char *lc_name)
  		Xfree(name);
  	    continue;
  	}
- 	if ((1 + (target_dir ? strlen (target_dir) : 0) +
- 	     strlen("locale.dir")) < PATH_MAX) {
+ 	if ((1 + strlen (target_dir) + strlen("locale.dir")) < PATH_MAX) {
  	    sprintf(buf, "%s/locale.dir", target_dir);
  	    target_name = resolve_name(name, buf, RtoL);
  	}
@@ -785,8 +784,7 @@ _XlcLocaleLibDirName(char *dir_name, size_t dir_len, char *lc_name)
  		Xfree(name);
  	    continue;
  	}
- 	if ((1 + (target_dir ? strlen (target_dir) : 0) +
- 	     strlen("locale.dir")) < PATH_MAX) {
+ 	if ((1 + strlen (target_dir) + strlen("locale.dir")) < PATH_MAX) {
  	    sprintf(buf, "%s/locale.dir", target_dir);
  	    target_name = resolve_name(name, buf, RtoL);
  	}

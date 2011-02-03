@@ -421,7 +421,8 @@ exaFinishAccess(DrawablePtr pDrawable, int index)
     /* We always hide the devPrivate.ptr. */
     pPixmap->devPrivate.ptr = NULL;
 
-    if (!pExaScr->info->FinishAccess || !exaPixmapHasGpuCopy(pPixmap))
+    /* Only call FinishAccess if PrepareAccess was called and succeeded. */
+    if (!pExaScr->info->FinishAccess || !pExaScr->access[i].retval)
 	return;
 
     if (i >= EXA_PREPARE_AUX_DEST &&

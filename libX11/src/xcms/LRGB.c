@@ -595,8 +595,7 @@ LINEAR_RGB_InitSCCData(
 	     *		intensity2
 	     */
 	    if (nitems < 9) {
-		Xfree ((char *)property_return);
-		goto FreeSCCData;
+		goto Free_property_return;
 	    }
 	    count = 3;
 	    break;
@@ -612,8 +611,7 @@ LINEAR_RGB_InitSCCData(
 	     *		intensity2
 	     */
 	    if (nitems < 7) {
-		Xfree ((char *)property_return);
-		goto FreeSCCData;
+		goto Free_property_return;
 	    }
 	    count = 1;
 	    break;
@@ -628,14 +626,12 @@ LINEAR_RGB_InitSCCData(
 	     *		intensity2
 	     */
 	    if (nitems < 6) {
-		Xfree ((char *)property_return);
-		goto FreeSCCData;
+		goto Free_property_return;
 	    }
 	    count = 0;
 	    break;
 	  default:
-	    Xfree ((char *)property_return);
-	    goto FreeSCCData;
+	    goto Free_property_return;
 	}
 
 	/*
@@ -687,7 +683,7 @@ LINEAR_RGB_InitSCCData(
 	    /* Red Intensity Table */
 	    if (!(pScreenData->pRedTbl = (IntensityTbl *)
 		    Xcalloc (1, sizeof(IntensityTbl)))) {
-		goto FreeSCCData;
+		goto Free_property_return;
 	    }
 	    if (_XcmsGetTableType0(pScreenData->pRedTbl, format_return, &pChar,
 		    &nitems) == XcmsFailure) {
@@ -724,7 +720,7 @@ LINEAR_RGB_InitSCCData(
 	    /* Red Intensity Table */
 	    if (!(pScreenData->pRedTbl = (IntensityTbl *)
 		    Xcalloc (1, sizeof(IntensityTbl)))) {
-		goto FreeSCCData;
+		goto Free_property_return;
 	    }
 	    if (_XcmsGetTableType1(pScreenData->pRedTbl, format_return, &pChar,
 		    &nitems) == XcmsFailure) {
@@ -761,8 +757,7 @@ LINEAR_RGB_InitSCCData(
 		}
 	    }
 	} else {
-	    Xfree ((char *)property_return);
-	    goto FreeSCCData;
+	    goto Free_property_return;
 	}
 
 #ifdef ALLDEBUG
@@ -818,6 +813,9 @@ FreeRedTblElements:
 
 FreeRedTbl:
     Xfree((char *)pScreenData->pRedTbl);
+
+Free_property_return:
+    Xfree ((char *)property_return);
 
 FreeSCCData:
     Xfree((char *)pScreenData);
