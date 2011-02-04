@@ -38,6 +38,9 @@
 #include "winclipboard.h"
 #include "misc.h"
 #include "winmsg.h"
+#include "objbase.h"
+#include "ddraw.h"
+#include "winwindow.h"
 
 /*
  * Constants
@@ -183,6 +186,14 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	
 	/* Add ourselves to the clipboard viewer chain */
 	s_hwndNextViewer = SetClipboardViewer (hwnd);
+	#ifdef _DEBUG
+	if (s_hwndNextViewer== hwnd)
+	{
+	  ErrorF("WM_CREATE: SetClipboardViewer returned own window. This causes an endless loop, so reset s_hwndNextViewer. ");
+	  s_hwndNextViewer=NULL;
+	}
+	#endif
+
       }
       return 0;
 
@@ -196,6 +207,11 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	if ((HWND) wParam == s_hwndNextViewer)
 	  {
 	    s_hwndNextViewer = (HWND) lParam;
+	    if (s_hwndNextViewer == hwnd)
+	    {
+	      winDebug("WM_CHANGECBCHAIN: trying to set s_hwndNextViewer to own window. Resetting it back to NULL. ");
+	      s_hwndNextViewer=NULL;  /* This would cause an endless loop, so break it by ending the loop here. I have seen this happening, why??? */
+	    }
 	  }
 	else if (s_hwndNextViewer)
 	  SendMessage (s_hwndNextViewer, message,
@@ -231,9 +247,16 @@ winClipboardWindowProc (HWND hwnd, UINT message,
         { 
           winDebug ("  WM_WM_REINIT: Replacing us(%x) with %x at head "
 		    "of chain\n", hwnd, s_hwndNextViewer);
-	  ChangeClipboardChain (hwnd, s_hwndNextViewer);
+	  if (!wParam) ChangeClipboardChain (hwnd, s_hwndNextViewer);   /* When wParam is set, the window was already removed from the chain */
 	  winDebug ("  WM_WM_REINIT: Putting us back at head of chain.\n");
 	  s_hwndNextViewer = SetClipboardViewer (hwnd);
+	  #ifdef _DEBUG
+	  if (s_hwndNextViewer== hwnd)
+	  {
+	    ErrorF("WM_WM_REINIT: SetClipboardViewer returned own window. This causes an endless loop, so reset s_hwndNextViewer. ");
+	    s_hwndNextViewer=NULL;
+	  }
+	  #endif
         }
         winDebug ("winClipboardWindowProc - WM_WM_REINIT: Exit\n");
       }
@@ -277,7 +300,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	  {
 	    /* Attempt to break the nesting by getting out of the chain, twice?, and then fix and bail */
 	    ChangeClipboardChain (hwnd, s_hwndNextViewer);
-	    winFixClipboardChain();
+	    winFixClipboardChain(1);
 	    ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 			   "Nested calls detected.  Re-initing.\n");
 	    winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD: Exit\n");

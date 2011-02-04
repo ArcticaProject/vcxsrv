@@ -116,6 +116,8 @@ typedef struct _winWMMessageRec{
 #define		WM_WM_MAP3		(WM_USER + 13)
 #define		WM_MANAGE		(WM_USER + 100)
 #define		WM_UNMANAGE		(WM_USER + 102)
+#define		WM_WM_REINIT		(WM_USER + 200)
+
 
 #define		MwmHintsDecorations	(1L << 1)
 

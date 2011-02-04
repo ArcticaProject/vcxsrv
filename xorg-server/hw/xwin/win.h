@@ -786,7 +786,7 @@ Bool
 winInitClipboard (void);
 
 void
-winFixClipboardChain (void);
+winFixClipboardChain (int Removed);
 #endif
 
 
