@@ -321,7 +321,6 @@ libX11_la_SOURCES = \
                   XomGeneric.h \
                   Xresinternal.h \
                   Xrm.c \
-                  XrmI.h \
                   Xxcbint.h
 
 #
