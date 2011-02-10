@@ -573,7 +573,6 @@ LINEAR_RGB_InitSCCData(
     if (CorrectAtom == None ||
 	!_XcmsGetProperty (dpy, RootWindow(dpy, screenNumber), CorrectAtom,
 	   &format_return, &nitems, &nbytes_return, &property_return)) {
-	Xfree ((char *)property_return);
 	goto FreeSCCData;
     }
 
