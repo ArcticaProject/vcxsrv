@@ -12,6 +12,11 @@ DEPS:=$(wildcard ..\..\..\src\mesa\swrast\*.c) \
       $(wildcard ..\..\..\src\mesa\swrast_setup\*.h) \
       $(wildcard ..\..\..\src\mesa\main\*.c) \
       $(wildcard ..\..\..\src\mesa\main\*.h) \
+      $(wildcard ..\..\..\src\mesa\math\*.c) \
+      $(wildcard ..\..\..\src\mesa\math\*.h) \
+      $(wildcard ..\..\..\src\mesa\program\*.c) \
+      $(wildcard ..\..\..\src\mesa\program\*.cpp) \
+      $(wildcard ..\..\..\src\mesa\program\*.h) \
       $(wildcard ..\..\..\src\mesa\shader\*.c) \
       $(wildcard ..\..\..\src\mesa\shader\*.h) \
       $(wildcard ..\..\..\src\mesa\shader\slang\*.c) \
@@ -26,12 +31,11 @@ DEPS:=$(wildcard ..\..\..\src\mesa\swrast\*.c) \
       $(wildcard ..\..\..\src\mesa\tnl\*.h) \
       $(wildcard ..\..\..\src\mesa\vbo\*.c) \
       $(wildcard ..\..\..\src\mesa\vbo\*.h) \
-      $(wildcard ..\..\..\src\glsl\cl\*.c) \
-      $(wildcard ..\..\..\src\glsl\cl\*.h) \
-      $(wildcard ..\..\..\src\glsl\pp\*.c) \
-      $(wildcard ..\..\..\src\glsl\pp\*.h) \
-      $(wildcard ..\..\..\src\glsl\apps\*.c) \
-      $(wildcard ..\..\..\src\glsl\apps\*.h) \
+      $(wildcard ..\..\..\src\glsl\glcpp\*.c) \
+      $(wildcard ..\..\..\src\glsl\glcpp\*.h) \
+      $(wildcard ..\..\..\src\glsl\*.c) \
+      $(wildcard ..\..\..\src\glsl\*.h) \
+      $(wildcard ..\..\..\src\glsl\*.cpp) \
       $(wildcard ..\..\..\src\mesa\drivers\dri\swrast\*.c) \
       $(wildcard ..\..\..\src\mesa\drivers\dri\swrast\*.h) \
       $(wildcard ..\..\..\src\mesa\drivers\dri\common\*.c) \
