@@ -443,14 +443,42 @@ winCreateWindowsWindow (WindowPtr pWin)
   iHeight = pWin->drawable.height;
 
   /* If it's an InputOutput window, and so is going to end up being made visible,
-     make sure the window actually ends up somewhere where it will be visible */
+     make sure the window actually ends up somewhere where it will be visible 
+     Dont't do it by making just one of the two iX and iY CW_USEDEFAULT since
+     this will create a window at place CW_USEDEFAULT which is 0x80000000 */
   if (pWin->drawable.class != InputOnly)
     {
-      if ((iX < GetSystemMetrics (SM_XVIRTUALSCREEN)) || (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN)))
-        iX = CW_USEDEFAULT;
+      while (1)
+      {
+        if (iX < GetSystemMetrics (SM_XVIRTUALSCREEN))
+        {
+          iX = GetSystemMetrics (SM_XVIRTUALSCREEN);
+          ErrorF("Resetting iX to %d\n",iX);
+        }
+        else if  (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN))
+        {
+          iX = GetSystemMetrics (SM_CXVIRTUALSCREEN)-iWidth;
+          ErrorF("Resetting iX to %d\n",iX);
+        }
+        else
+          break;
+      }
 
-      if ((iY < GetSystemMetrics (SM_YVIRTUALSCREEN)) || (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN)))
-        iY = CW_USEDEFAULT;
+      while (1)
+      {
+        if (iY < GetSystemMetrics (SM_YVIRTUALSCREEN))
+        {
+          iY = GetSystemMetrics (SM_YVIRTUALSCREEN);
+          ErrorF("Resetting iY to %d\n",iY);
+        }
+        else if (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN))
+        {
+          iY = GetSystemMetrics (SM_CYVIRTUALSCREEN)-iHeight;
+          ErrorF("Resetting iY to %d\n",iY);
+        }
+        else
+          break;
+      }
     }
 
   winDebug("winCreateWindowsWindow - %dx%d @ %dx%d\n", iWidth, iHeight, iX, iY);
@@ -517,7 +545,7 @@ winCreateWindowsWindow (WindowPtr pWin)
   if (hIconSmall) SendMessage (hWnd, WM_SETICON, ICON_SMALL, (LPARAM) hIconSmall);
  
   /* If we asked the native WM to place the window, synchronize the X window position */
-  if ((iX == CW_USEDEFAULT) || (iY == CW_USEDEFAULT))
+  if (iX == CW_USEDEFAULT)
     winAdjustXWindow(pWin, hWnd);
 
   /* Change style back to popup, already placed... */
