@@ -327,7 +327,7 @@ ChangeGC(ClientPtr client, GC *pGC, BITS32 mask, ChangeGCValPtr pUnion)
 		{
 			long Val;
 			NEXTVAL(long, Val);
-			if (abs(Val)>32767)
+			if (abs(Val)>65535)
 				ErrorF("Value received for GCClipXOrigin is too large %x\n",Val);
 			pGC->clipOrg.x=(INT16)(Val&0xffff);
 		}
@@ -340,7 +340,7 @@ ChangeGC(ClientPtr client, GC *pGC, BITS32 mask, ChangeGCValPtr pUnion)
 		{
 			long Val;
 			NEXTVAL(long, Val);
-			if (abs(Val)>32767)
+			if (abs(Val)>65535)
 				ErrorF("Value received for GCClipYOrigin is too large %x\n",Val);
 			pGC->clipOrg.y=(INT16)(Val&0xffff);
 		}
