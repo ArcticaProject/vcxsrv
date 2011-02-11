@@ -70,7 +70,7 @@ winRandRGetInfo (ScreenPtr pScreen, Rotation *pRotations)
   Why can't this be in DIX?
   Does union _Validate vary depending on DDX??
  */
-static void
+void
 xf86SetRootClip (ScreenPtr pScreen, Bool enable)
 {
     WindowPtr	pWin = pScreen->root;

@@ -47,6 +47,9 @@
 #define XKB_IN_SERVER
 #endif
 #include <xkbsrv.h>
+
+void xf86SetRootClip (ScreenPtr pScreen, Bool enable);
+
 /*
  * Global variables
  */
@@ -313,11 +316,19 @@ winWindowProc (HWND hwnd, UINT message,
 
               winDebug ("winWindowProc - WM_DISPLAYCHANGE - Releasing and recreating primary surface\n");
 
-              /* Release the old primary surface */
-              (*s_pScreenPriv->pwinReleasePrimarySurface) (s_pScreen);
+              /* Reallocate the framebuffer used by the drawing engine */
+              (*s_pScreenPriv->pwinFreeFB)(s_pScreen);
+              if (!(*s_pScreenPriv->pwinAllocateFB)(s_pScreen))
+              {
+                ErrorF ("winWindowProc - WM_DISPLAYCHANGE - Could not reallocate framebuffer\n");
+              }
+              /* Update the screen pixmap to point to the new framebuffer */
+              winUpdateFBPointer(s_pScreen, s_pScreenPriv->pScreenInfo->pfb);
+              // Restore the ability to update screen, now with new dimensions
+              xf86SetRootClip(s_pScreen, TRUE);
 
-              /* Create the new primary surface */
-              (*s_pScreenPriv->pwinCreatePrimarySurface) (s_pScreen);
+              // and arrange for it to be repainted
+              miPaintWindow(s_pScreen->root, &s_pScreen->root->borderClip,  PW_BACKGROUND);
             }
 	}
 
