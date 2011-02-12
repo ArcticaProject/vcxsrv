@@ -39,6 +39,7 @@
   grp:lalt_toggle	=	+group(lalt_toggle)
   grp:sclk_toggle	=	+group(sclk_toggle)
   grp:lctrl_rctrl_switch	=	+group(lctrl_rctrl_switch)
+  grp:lctrl_lwin_rctrl_menu	=	+group(lctrl_lwin_rctrl_menu)
   lv3:switch		=	+level3(switch)
   lv3:ralt_switch	=	+level3(ralt_switch)
   lv3:ralt_switch_multikey	=	+level3(ralt_switch_multikey)

@@ -82,7 +82,9 @@ sources = [
 ] 
 
 
-if env['platform'] == common.host_platform:
+if env['crosscompile'] and env['platform'] != 'embedded':
+    Import('builtin_glsl_function')
+else:
     if env['msvc']:
         env.Prepend(CPPPATH = ['#/src/getopt'])
         env.PrependUnique(LIBS = [getopt])
@@ -105,8 +107,9 @@ if env['platform'] == common.host_platform:
 
     Export('builtin_glsl_function')
 
-    if common.cross_compiling:
+    if env['hostonly']:
         Return()
+
 
 sources += builtin_glsl_function
 

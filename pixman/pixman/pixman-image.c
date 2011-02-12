@@ -211,7 +211,24 @@ compute_image_info (pixman_image_t *image)
 	    if (image->common.transform->matrix[0][1] == 0 &&
 		image->common.transform->matrix[1][0] == 0)
 	    {
+		if (image->common.transform->matrix[0][0] == -pixman_fixed_1 &&
+		    image->common.transform->matrix[1][1] == -pixman_fixed_1)
+		{
+		    flags |= FAST_PATH_ROTATE_180_TRANSFORM;
+		}
 		flags |= FAST_PATH_SCALE_TRANSFORM;
+	    }
+	    else if (image->common.transform->matrix[0][0] == 0 &&
+	             image->common.transform->matrix[1][1] == 0)
+	    {
+		pixman_fixed_t m01 = image->common.transform->matrix[0][1];
+		if (m01 == -image->common.transform->matrix[1][0])
+		{
+			if (m01 == -pixman_fixed_1)
+			    flags |= FAST_PATH_ROTATE_90_TRANSFORM;
+			else if (m01 == pixman_fixed_1)
+			    flags |= FAST_PATH_ROTATE_270_TRANSFORM;
+		}
 	    }
 	}
 

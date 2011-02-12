@@ -1616,6 +1616,272 @@ fast_composite_scaled_nearest (pixman_implementation_t *imp,
     }
 }
 
+#define CACHE_LINE_SIZE 64
+
+#define FAST_SIMPLE_ROTATE(suffix, pix_type)                                  \
+                                                                              \
+static void                                                                   \
+blt_rotated_90_trivial_##suffix (pix_type       *dst,                         \
+				 int             dst_stride,                  \
+				 const pix_type *src,                         \
+				 int             src_stride,                  \
+				 int             w,                           \
+				 int             h)                           \
+{                                                                             \
+    int x, y;                                                                 \
+    for (y = 0; y < h; y++)                                                   \
+    {                                                                         \
+	const pix_type *s = src + (h - y - 1);                                \
+	pix_type *d = dst + dst_stride * y;                                   \
+	for (x = 0; x < w; x++)                                               \
+	{                                                                     \
+	    *d++ = *s;                                                        \
+	    s += src_stride;                                                  \
+	}                                                                     \
+    }                                                                         \
+}                                                                             \
+                                                                              \
+static void                                                                   \
+blt_rotated_270_trivial_##suffix (pix_type       *dst,                        \
+				  int             dst_stride,                 \
+				  const pix_type *src,                        \
+				  int             src_stride,                 \
+				  int             w,                          \
+				  int             h)                          \
+{                                                                             \
+    int x, y;                                                                 \
+    for (y = 0; y < h; y++)                                                   \
+    {                                                                         \
+	const pix_type *s = src + src_stride * (w - 1) + y;                   \
+	pix_type *d = dst + dst_stride * y;                                   \
+	for (x = 0; x < w; x++)                                               \
+	{                                                                     \
+	    *d++ = *s;                                                        \
+	    s -= src_stride;                                                  \
+	}                                                                     \
+    }                                                                         \
+}                                                                             \
+                                                                              \
+static void                                                                   \
+blt_rotated_90_##suffix (pix_type       *dst,                                 \
+			 int             dst_stride,                          \
+			 const pix_type *src,                                 \
+			 int             src_stride,                          \
+			 int             W,                                   \
+			 int             H)                                   \
+{                                                                             \
+    int x;                                                                    \
+    int leading_pixels = 0, trailing_pixels = 0;                              \
+    const int TILE_SIZE = CACHE_LINE_SIZE / sizeof(pix_type);                 \
+                                                                              \
+    /*                                                                        \
+     * split processing into handling destination as TILE_SIZExH cache line   \
+     * aligned vertical stripes (optimistically assuming that destination     \
+     * stride is a multiple of cache line, if not - it will be just a bit     \
+     * slower)                                                                \
+     */                                                                       \
+                                                                              \
+    if ((uintptr_t)dst & (CACHE_LINE_SIZE - 1))                               \
+    {                                                                         \
+	leading_pixels = TILE_SIZE - (((uintptr_t)dst &                       \
+			    (CACHE_LINE_SIZE - 1)) / sizeof(pix_type));       \
+	if (leading_pixels > W)                                               \
+	    leading_pixels = W;                                               \
+                                                                              \
+	/* unaligned leading part NxH (where N < TILE_SIZE) */                \
+	blt_rotated_90_trivial_##suffix (                                     \
+	    dst,                                                              \
+	    dst_stride,                                                       \
+	    src,                                                              \
+	    src_stride,                                                       \
+	    leading_pixels,                                                   \
+	    H);                                                               \
+	                                                                      \
+	dst += leading_pixels;                                                \
+	src += leading_pixels * src_stride;                                   \
+	W -= leading_pixels;                                                  \
+    }                                                                         \
+                                                                              \
+    if ((uintptr_t)(dst + W) & (CACHE_LINE_SIZE - 1))                         \
+    {                                                                         \
+	trailing_pixels = (((uintptr_t)(dst + W) &                            \
+			    (CACHE_LINE_SIZE - 1)) / sizeof(pix_type));       \
+	if (trailing_pixels > W)                                              \
+	    trailing_pixels = W;                                              \
+	W -= trailing_pixels;                                                 \
+    }                                                                         \
+                                                                              \
+    for (x = 0; x < W; x += TILE_SIZE)                                        \
+    {                                                                         \
+	/* aligned middle part TILE_SIZExH */                                 \
+	blt_rotated_90_trivial_##suffix (                                     \
+	    dst + x,                                                          \
+	    dst_stride,                                                       \
+	    src + src_stride * x,                                             \
+	    src_stride,                                                       \
+	    TILE_SIZE,                                                        \
+	    H);                                                               \
+    }                                                                         \
+                                                                              \
+    if (trailing_pixels)                                                      \
+    {                                                                         \
+	/* unaligned trailing part NxH (where N < TILE_SIZE) */               \
+	blt_rotated_90_trivial_##suffix (                                     \
+	    dst + W,                                                          \
+	    dst_stride,                                                       \
+	    src + W * src_stride,                                             \
+	    src_stride,                                                       \
+	    trailing_pixels,                                                  \
+	    H);                                                               \
+    }                                                                         \
+}                                                                             \
+                                                                              \
+static void                                                                   \
+blt_rotated_270_##suffix (pix_type       *dst,                                \
+			  int             dst_stride,                         \
+			  const pix_type *src,                                \
+			  int             src_stride,                         \
+			  int             W,                                  \
+			  int             H)                                  \
+{                                                                             \
+    int x;                                                                    \
+    int leading_pixels = 0, trailing_pixels = 0;                              \
+    const int TILE_SIZE = CACHE_LINE_SIZE / sizeof(pix_type);                 \
+                                                                              \
+    /*                                                                        \
+     * split processing into handling destination as TILE_SIZExH cache line   \
+     * aligned vertical stripes (optimistically assuming that destination     \
+     * stride is a multiple of cache line, if not - it will be just a bit     \
+     * slower)                                                                \
+     */                                                                       \
+                                                                              \
+    if ((uintptr_t)dst & (CACHE_LINE_SIZE - 1))                               \
+    {                                                                         \
+	leading_pixels = TILE_SIZE - (((uintptr_t)dst &                       \
+			    (CACHE_LINE_SIZE - 1)) / sizeof(pix_type));       \
+	if (leading_pixels > W)                                               \
+	    leading_pixels = W;                                               \
+                                                                              \
+	/* unaligned leading part NxH (where N < TILE_SIZE) */                \
+	blt_rotated_270_trivial_##suffix (                                    \
+	    dst,                                                              \
+	    dst_stride,                                                       \
+	    src + src_stride * (W - leading_pixels),                          \
+	    src_stride,                                                       \
+	    leading_pixels,                                                   \
+	    H);                                                               \
+	                                                                      \
+	dst += leading_pixels;                                                \
+	W -= leading_pixels;                                                  \
+    }                                                                         \
+                                                                              \
+    if ((uintptr_t)(dst + W) & (CACHE_LINE_SIZE - 1))                         \
+    {                                                                         \
+	trailing_pixels = (((uintptr_t)(dst + W) &                            \
+			    (CACHE_LINE_SIZE - 1)) / sizeof(pix_type));       \
+	if (trailing_pixels > W)                                              \
+	    trailing_pixels = W;                                              \
+	W -= trailing_pixels;                                                 \
+	src += trailing_pixels * src_stride;                                  \
+    }                                                                         \
+                                                                              \
+    for (x = 0; x < W; x += TILE_SIZE)                                        \
+    {                                                                         \
+	/* aligned middle part TILE_SIZExH */                                 \
+	blt_rotated_270_trivial_##suffix (                                    \
+	    dst + x,                                                          \
+	    dst_stride,                                                       \
+	    src + src_stride * (W - x - TILE_SIZE),                           \
+	    src_stride,                                                       \
+	    TILE_SIZE,                                                        \
+	    H);                                                               \
+    }                                                                         \
+                                                                              \
+    if (trailing_pixels)                                                      \
+    {                                                                         \
+	/* unaligned trailing part NxH (where N < TILE_SIZE) */               \
+	blt_rotated_270_trivial_##suffix (                                    \
+	    dst + W,                                                          \
+	    dst_stride,                                                       \
+	    src - trailing_pixels * src_stride,                               \
+	    src_stride,                                                       \
+	    trailing_pixels,                                                  \
+	    H);                                                               \
+    }                                                                         \
+}                                                                             \
+                                                                              \
+static void                                                                   \
+fast_composite_rotate_90_##suffix (pixman_implementation_t *imp,              \
+				   pixman_op_t              op,               \
+				   pixman_image_t *         src_image,        \
+				   pixman_image_t *         mask_image,       \
+				   pixman_image_t *         dst_image,        \
+				   int32_t                  src_x,            \
+				   int32_t                  src_y,            \
+				   int32_t                  mask_x,           \
+				   int32_t                  mask_y,           \
+				   int32_t                  dest_x,           \
+				   int32_t                  dest_y,           \
+				   int32_t                  width,            \
+				   int32_t                  height)           \
+{                                                                             \
+    pix_type       *dst_line;                                                 \
+    pix_type       *src_line;                                                 \
+    int             dst_stride, src_stride;                                   \
+    int             src_x_t, src_y_t;                                         \
+                                                                              \
+    PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, pix_type,               \
+			   dst_stride, dst_line, 1);                          \
+    src_x_t = -src_y + pixman_fixed_to_int (                                  \
+				src_image->common.transform->matrix[0][2] +   \
+				pixman_fixed_1 / 2 - pixman_fixed_e) - height;\
+    src_y_t = src_x + pixman_fixed_to_int (                                   \
+				src_image->common.transform->matrix[1][2] +   \
+				pixman_fixed_1 / 2 - pixman_fixed_e);         \
+    PIXMAN_IMAGE_GET_LINE (src_image, src_x_t, src_y_t, pix_type,             \
+			   src_stride, src_line, 1);                          \
+    blt_rotated_90_##suffix (dst_line, dst_stride, src_line, src_stride,      \
+			     width, height);                                  \
+}                                                                             \
+                                                                              \
+static void                                                                   \
+fast_composite_rotate_270_##suffix (pixman_implementation_t *imp,             \
+				    pixman_op_t              op,              \
+				    pixman_image_t *         src_image,       \
+				    pixman_image_t *         mask_image,      \
+				    pixman_image_t *         dst_image,       \
+				    int32_t                  src_x,           \
+				    int32_t                  src_y,           \
+				    int32_t                  mask_x,          \
+				    int32_t                  mask_y,          \
+				    int32_t                  dest_x,          \
+				    int32_t                  dest_y,          \
+				    int32_t                  width,           \
+				    int32_t                  height)          \
+{                                                                             \
+    pix_type       *dst_line;                                                 \
+    pix_type       *src_line;                                                 \
+    int             dst_stride, src_stride;                                   \
+    int             src_x_t, src_y_t;                                         \
+                                                                              \
+    PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, pix_type,               \
+			   dst_stride, dst_line, 1);                          \
+    src_x_t = src_y + pixman_fixed_to_int (                                   \
+				src_image->common.transform->matrix[0][2] +   \
+				pixman_fixed_1 / 2 - pixman_fixed_e);         \
+    src_y_t = -src_x + pixman_fixed_to_int (                                  \
+				src_image->common.transform->matrix[1][2] +   \
+				pixman_fixed_1 / 2 - pixman_fixed_e) - width; \
+    PIXMAN_IMAGE_GET_LINE (src_image, src_x_t, src_y_t, pix_type,             \
+			   src_stride, src_line, 1);                          \
+    blt_rotated_270_##suffix (dst_line, dst_stride, src_line, src_stride,     \
+			      width, height);                                 \
+}
+
+FAST_SIMPLE_ROTATE (8, uint8_t)
+FAST_SIMPLE_ROTATE (565, uint16_t)
+FAST_SIMPLE_ROTATE (8888, uint32_t)
+
 static const pixman_fast_path_t c_fast_paths[] =
 {
     PIXMAN_STD_FAST_PATH (OVER, solid, a8, r5g6b5, fast_composite_over_n_8_0565),
@@ -1733,6 +1999,32 @@ static const pixman_fast_path_t c_fast_paths[] =
     NEAREST_FAST_PATH (OVER, a8r8g8b8, a8r8g8b8),
     NEAREST_FAST_PATH (OVER, x8b8g8r8, a8b8g8r8),
     NEAREST_FAST_PATH (OVER, a8b8g8r8, a8b8g8r8),
+
+#define SIMPLE_ROTATE_FLAGS(angle)					  \
+    (FAST_PATH_ROTATE_ ## angle ## _TRANSFORM	|			  \
+     FAST_PATH_NEAREST_FILTER			|			  \
+     FAST_PATH_SAMPLES_COVER_CLIP		|			  \
+     FAST_PATH_STANDARD_FLAGS)
+
+#define SIMPLE_ROTATE_FAST_PATH(op,s,d,suffix)				  \
+    {   PIXMAN_OP_ ## op,						  \
+	PIXMAN_ ## s, SIMPLE_ROTATE_FLAGS (90),				  \
+	PIXMAN_null, 0,							  \
+	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				  \
+	fast_composite_rotate_90_##suffix,				  \
+    },									  \
+    {   PIXMAN_OP_ ## op,						  \
+	PIXMAN_ ## s, SIMPLE_ROTATE_FLAGS (270),			  \
+	PIXMAN_null, 0,							  \
+	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				  \
+	fast_composite_rotate_270_##suffix,				  \
+    }
+
+    SIMPLE_ROTATE_FAST_PATH (SRC, a8r8g8b8, a8r8g8b8, 8888),
+    SIMPLE_ROTATE_FAST_PATH (SRC, a8r8g8b8, x8r8g8b8, 8888),
+    SIMPLE_ROTATE_FAST_PATH (SRC, x8r8g8b8, x8r8g8b8, 8888),
+    SIMPLE_ROTATE_FAST_PATH (SRC, r5g6b5, r5g6b5, 565),
+    SIMPLE_ROTATE_FAST_PATH (SRC, a8, a8, 8),
 
     {   PIXMAN_OP_NONE	},
 };

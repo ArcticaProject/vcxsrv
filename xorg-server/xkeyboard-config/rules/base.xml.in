@@ -4886,6 +4886,12 @@
           <_description>Scroll Lock</_description>
         </configItem>
       </option>
+      <option>
+        <configItem>
+          <name>grp:lctrl_lwin_rctrl_menu</name>
+          <_description>LeftCtrl+LeftWin (to first layout), RightCtrl+Menu (to second layout)</_description>
+        </configItem>
+      </option>
     </group>
     <group allowMultipleSelection="true">
       <!-- The key combination used to choose the 3rd (and 4th, together with Shift)
