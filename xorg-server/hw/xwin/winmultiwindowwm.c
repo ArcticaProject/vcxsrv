@@ -51,7 +51,6 @@ typedef int pid_t;
 #include <X11/X.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
-#include <X11/Xlocale.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -819,12 +818,6 @@ winMultiWindowXMsgProc (void *pArg)
 
   winDebug ("winMultiWindowXMsgProc - pthread_mutex_lock () returned.\n");
 
-  /* See if X supports the current locale */
-  if (XSupportsLocale () == False)
-    {
-      ErrorF ("winMultiWindowXMsgProc - Warning: locale not supported by X\n");
-    }
-
   /* Release the server started mutex */
   pthread_mutex_unlock (pProcArg->ppmServerStarted);
 
@@ -1228,12 +1221,6 @@ winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg)
     }
 
   winDebug ("winInitMultiWindowWM - pthread_mutex_lock () returned.\n");
-
-  /* See if X supports the current locale */
-  if (XSupportsLocale () == False)
-    {
-      ErrorF ("winInitMultiWindowWM - Warning: Locale not supported by X.\n");
-    }
 
   /* Release the server started mutex */
   pthread_mutex_unlock (pProcArg->ppmServerStarted);
