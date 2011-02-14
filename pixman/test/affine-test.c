@@ -112,10 +112,36 @@ test_composite (int      testnum,
 
     if (lcg_rand_n (4) > 0)
     {
-	int c = lcg_rand_N (2 * 65536) - 65536;
-	int s = lcg_rand_N (2 * 65536) - 65536;
-	
+	int c, s, tx = 0, ty = 0;
+	switch (lcg_rand_n (4))
+	{
+	case 0:
+	    /* 90 degrees */
+	    c = 0;
+	    s = pixman_fixed_1;
+	    tx = pixman_int_to_fixed (MAX_SRC_HEIGHT);
+	    break;
+	case 1:
+	    /* 180 degrees */
+	    c = -pixman_fixed_1;
+	    s = 0;
+	    tx = pixman_int_to_fixed (MAX_SRC_WIDTH);
+	    ty = pixman_int_to_fixed (MAX_SRC_HEIGHT);
+	    break;
+	case 2:
+	    /* 270 degrees */
+	    c = 0;
+	    s = -pixman_fixed_1;
+	    ty = pixman_int_to_fixed (MAX_SRC_WIDTH);
+	    break;
+	default:
+	    /* arbitrary rotation */
+	    c = lcg_rand_N (2 * 65536) - 65536;
+	    s = lcg_rand_N (2 * 65536) - 65536;
+	    break;
+	}
 	pixman_transform_rotate (&transform, NULL, c, s);
+	pixman_transform_translate (&transform, NULL, tx, ty);
     }
 
     pixman_image_set_transform (src_img, &transform);
@@ -256,6 +282,6 @@ main (int argc, const char *argv[])
 {
     pixman_disable_out_of_bounds_workaround ();
 
-    return fuzzer_test_main ("affine", 8000000, 0x46EC3C6A,
+    return fuzzer_test_main ("affine", 8000000, 0x4B5D1852,
 			     test_composite, argc, argv);
 }

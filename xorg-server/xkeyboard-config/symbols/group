@@ -387,3 +387,16 @@ xkb_symbols "sclk_toggle" {
     };
 };
 
+// Control_L+Win_L locks the first group (presumably Lat).
+// Control_R+Menu locks the second group (presumably Rus).
+partial modifier_keys
+xkb_symbols "lctrl_lwin_rctrl_menu" {
+    key <LWIN> {
+        type[ Group1 ]    = "PC_CONTROL_LEVEL2",
+        symbols[ Group1 ] = [ Super_L,    ISO_First_Group ]
+    };
+    key <MENU> {
+        type[ Group1 ]    = "PC_CONTROL_LEVEL2",
+        symbols[ Group1 ] = [ Menu,       ISO_Last_Group ]
+    };
+}; // lctrl_lwin_rctrl_menu

@@ -44,6 +44,7 @@ SOURCES =				\
 	pixman-timer.c			\
 	pixman-matrix.c			\
 	pixman-gradient-walker.c	\
+	pixman-conical-gradient.c	\
 	pixman-linear-gradient.c	\
 	pixman-radial-gradient.c	\
 	pixman-bits-image.c		\

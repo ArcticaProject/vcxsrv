@@ -611,6 +611,9 @@ _pixman_iter_get_scanline_noop (pixman_iter_t *iter, const uint32_t *mask);
 #define FAST_PATH_AFFINE_TRANSFORM		(1 << 18)
 #define FAST_PATH_Y_UNIT_ZERO			(1 << 19)
 #define FAST_PATH_BILINEAR_FILTER		(1 << 20)
+#define FAST_PATH_ROTATE_90_TRANSFORM		(1 << 21)
+#define FAST_PATH_ROTATE_180_TRANSFORM		(1 << 22)
+#define FAST_PATH_ROTATE_270_TRANSFORM		(1 << 23)
 
 #define FAST_PATH_PAD_REPEAT						\
     (FAST_PATH_NO_NONE_REPEAT		|				\
