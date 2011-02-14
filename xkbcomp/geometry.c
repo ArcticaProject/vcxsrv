@@ -179,7 +179,6 @@ typedef struct _OverlayInfo
     unsigned short nKeys;
     OverlayKeyInfo *keys;
 } OverlayInfo;
-#define	oiText(d,o)	((o)?XkbAtomText((d),(o)->name,XkbMessage):"default")
 
 
 #define	_GS_Default	(1<<0)
@@ -2575,7 +2574,8 @@ HandleOverlayDef(OverlayDef * def,
         {
             WSGO("Couldn't allocate OverlayKeyInfo\n");
             ACTION2("Overlay %s for section %s will be incomplete\n",
-                    oiText(info->dpy, &ol), scText(info->dpy, si));
+                    XkbAtomText(info->dpy, ol.name, XkbMessage),
+                    scText(info->dpy, si));
             return False;
         }
         strncpy(key->over, keyDef->over, XkbKeyNameLength);
