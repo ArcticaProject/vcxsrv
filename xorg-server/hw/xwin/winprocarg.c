@@ -1212,7 +1212,7 @@ winLogVersionInfo (void)
 
   winDebug ("Welcome to the VcXsrv X Server\n");
   winDebug ("Vendor: %s\n", XVENDORNAME);
-  winDebug ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
+  winDebug ("Release: %d.%d.%d.%d\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP);
   winDebug ("%s\n\n", BUILDERSTRING);
   winDebug ("Contact: %s\n\n", BUILDERADDR);
 #endif
