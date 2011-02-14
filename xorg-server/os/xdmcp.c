@@ -491,7 +491,7 @@ XdmcpRegisterConnection (
 	    }
 	}
 #endif
-	if (fromAddr && memcmp(regAddr, fromAddr, regAddrlen) != 0) {
+	if (!fromAddr || memcmp(regAddr, fromAddr, regAddrlen) != 0) {
 	    return;
 	}
     }
