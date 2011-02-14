@@ -655,11 +655,14 @@ winClipboardFlushXEvents (HWND hwnd,
 		case XNoMemory:
 		  ErrorF ("XNoMemory\n");
 		  break;
+		case XLocaleNotSupported:
+		  ErrorF ("XLocaleNotSupported\n");
+		  break;
 		case XConverterNotFound:
 		  ErrorF ("XConverterNotFound\n");
 		  break;
 		default:
-		  ErrorF ("%d", iReturn);
+		  ErrorF ("%d\n", iReturn);
 		  break;
 		}
 	      pszReturnData = (char *) malloc (1);
