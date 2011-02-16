@@ -1331,9 +1331,9 @@ damagePolyFillRect(DrawablePtr	pDrawable,
 	int	    nRectsTmp = nRects;
 
 	box.x1 = pRectsTmp->x;
-	box.x2 = box.x1 + pRectsTmp->width;
+	box.x2 = box.x1 + (short)pRectsTmp->width;
 	box.y1 = pRectsTmp->y;
-	box.y2 = box.y1 + pRectsTmp->height;
+	box.y2 = box.y1 + (short)pRectsTmp->height;
 
 	while(--nRectsTmp) 
 	{
