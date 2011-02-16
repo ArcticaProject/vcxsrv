@@ -1038,6 +1038,7 @@ winMultiWindowXMsgProc (void *pArg)
                   event_send.xreparent.parent = parent;
                   event_send.xreparent.x = attr.x;
                   event_send.xreparent.y = attr.y;
+                  event_send.xreparent.override_redirect = False;
 
                   XSendEvent(event.xmap.display,
                              event.xmap.window,
