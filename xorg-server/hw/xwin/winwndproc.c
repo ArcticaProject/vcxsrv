@@ -250,7 +250,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
                ))
 	    {
-              DWORD dwWidth, dwHeight;
+              DWORD dwWidth = 0, dwHeight = 0;
 
               if (s_pScreenInfo->fMultipleMonitors)
                 {
