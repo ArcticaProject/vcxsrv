@@ -692,8 +692,8 @@ XdmcpBlockHandler(
     if (timeOutTime == 0)
 	return;
     millisToGo = timeOutTime - GetTimeInMillis();
-    if ((int) millisToGo < 0)
-	millisToGo = 0;
+    if ((int) millisToGo <= 0)
+	millisToGo = 1;
     AdjustWaitForDelay (wt, millisToGo);
 }
 
@@ -737,18 +737,6 @@ XdmcpWakeupHandler(
 	    else if (state == XDM_RUN_SESSION)
 		keepaliveDormancy = defaultKeepaliveDormancy;
 	}
-	if (XFD_ANYSET(&AllClients) && state == XDM_RUN_SESSION)
-	    timeOutTime = GetTimeInMillis() +  keepaliveDormancy * 1000;
-    }
-    else if (timeOutTime && (int) (GetTimeInMillis() - timeOutTime) >= 0)
-    {
-    	if (state == XDM_RUN_SESSION)
-    	{
-	    state = XDM_KEEPALIVE;
-	    send_packet();
-    	}
-    	else
-	    timeout();
     }
 }
 
@@ -1185,15 +1173,15 @@ send_query_msg(void)
 	for (mcl = mcastlist; mcl != NULL; mcl = mcl->next) {
 	    for (ai = mcl->ai ; ai != NULL; ai = ai->ai_next) {
 		if (ai->ai_family == AF_INET) {
-		    unsigned char hopflag = (unsigned char) mcl->hops;
+		    int hopflag = mcl->hops;
 		    socketfd = xdmcpSocket;
 		    setsockopt(socketfd, IPPROTO_IP, IP_MULTICAST_TTL,
-		      &hopflag, sizeof(hopflag));
+		      (char*)&hopflag, sizeof(hopflag));
 		} else if (ai->ai_family == AF_INET6) {
 		    int hopflag6 = mcl->hops;
 		    socketfd = xdmcpSocket6;
 		    setsockopt(socketfd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS,
-		      &hopflag6, sizeof(hopflag6));
+		      (char*)&hopflag6, sizeof(hopflag6));
 		} else {
 		    continue;
 		}
@@ -1572,6 +1560,10 @@ get_addr_by_name(
     char portstr[6];
     char *pport = portstr;
     int gaierr;
+
+#if defined(WIN32) && defined(TCPCONN)
+    _XSERVTransWSAStartup();
+#endif
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = socktype;
