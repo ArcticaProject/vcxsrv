@@ -393,7 +393,6 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
         GetWindowRect(hwnd, &rWindow);
         hRgnWindow = CreateRectRgnIndirect(&rWindow);
         SetWindowRgn (hwnd, hRgnWindow, TRUE);
-        DeleteObject(hRgnWindow);
       }
 
       SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)VCXSRV_SIGNATURE);
