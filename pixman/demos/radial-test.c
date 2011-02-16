@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "../test/utils.h"
 #include "gtk-utils.h"
 
 #define NUM_GRADIENTS 7

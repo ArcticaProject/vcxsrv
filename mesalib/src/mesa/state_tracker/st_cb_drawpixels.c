@@ -522,10 +522,11 @@ draw_quad(struct gl_context *ctx, GLfloat x0, GLfloat y0, GLfloat z,
       /* allocate/load buffer object with vertex data */
       buf = pipe_buffer_create(pipe->screen,
 			       PIPE_BIND_VERTEX_BUFFER,
+			       PIPE_USAGE_STATIC,
                                sizeof(verts));
       pipe_buffer_write(st->pipe, buf, 0, sizeof(verts), verts);
 
-      util_draw_vertex_buffer(pipe, buf, 0,
+      util_draw_vertex_buffer(pipe, st->cso_context, buf, 0,
                               PIPE_PRIM_QUADS,
                               4,  /* verts */
                               3); /* attribs/vert */
@@ -570,6 +571,7 @@ draw_textured_quad(struct gl_context *ctx, GLint x, GLint y, GLfloat z,
    cso_save_fragment_shader(cso);
    cso_save_vertex_shader(cso);
    cso_save_vertex_elements(cso);
+   cso_save_vertex_buffers(cso);
    if (write_stencil) {
       cso_save_depth_stencil_alpha(cso);
       cso_save_blend(cso);
@@ -686,6 +688,7 @@ draw_textured_quad(struct gl_context *ctx, GLint x, GLint y, GLfloat z,
    cso_restore_fragment_shader(cso);
    cso_restore_vertex_shader(cso);
    cso_restore_vertex_elements(cso);
+   cso_restore_vertex_buffers(cso);
    if (write_stencil) {
       cso_restore_depth_stencil_alpha(cso);
       cso_restore_blend(cso);

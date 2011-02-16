@@ -5800,7 +5800,8 @@ scaled_nearest_scanline_sse2_8888_8888_OVER (uint32_t*       pd,
                                              int32_t         w,
                                              pixman_fixed_t  vx,
                                              pixman_fixed_t  unit_x,
-                                             pixman_fixed_t  max_vx)
+                                             pixman_fixed_t  max_vx,
+                                             pixman_bool_t   fully_transparent_src)
 {
     uint32_t s, d;
     const uint32_t* pm = NULL;
@@ -5808,6 +5809,9 @@ scaled_nearest_scanline_sse2_8888_8888_OVER (uint32_t*       pd,
     __m128i xmm_dst_lo, xmm_dst_hi;
     __m128i xmm_src_lo, xmm_src_hi;
     __m128i xmm_alpha_lo, xmm_alpha_hi;
+
+    if (fully_transparent_src)
+	return;
 
     /* Align dst on a 16-byte boundary */
     while (w && ((unsigned long)pd & 15))
@@ -5893,6 +5897,119 @@ FAST_NEAREST_MAINLOOP (sse2_8888_8888_none_OVER,
 FAST_NEAREST_MAINLOOP (sse2_8888_8888_pad_OVER,
 		       scaled_nearest_scanline_sse2_8888_8888_OVER,
 		       uint32_t, uint32_t, PAD)
+
+static force_inline void
+scaled_nearest_scanline_sse2_8888_n_8888_OVER (const uint32_t * mask,
+					       uint32_t *       dst,
+					       const uint32_t * src,
+					       int32_t          w,
+					       pixman_fixed_t   vx,
+					       pixman_fixed_t   unit_x,
+					       pixman_fixed_t   max_vx,
+					       pixman_bool_t    zero_src)
+{
+    __m128i xmm_mask;
+    __m128i xmm_src, xmm_src_lo, xmm_src_hi;
+    __m128i xmm_dst, xmm_dst_lo, xmm_dst_hi;
+    __m128i xmm_alpha_lo, xmm_alpha_hi;
+
+    if (zero_src || (*mask >> 24) == 0)
+	return;
+
+    xmm_mask = create_mask_16_128 (*mask >> 24);
+
+    while (w && (unsigned long)dst & 15)
+    {
+	uint32_t s = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+
+	if (s)
+	{
+	    uint32_t d = *dst;
+
+	    __m64 ms = unpack_32_1x64 (s);
+	    __m64 alpha     = expand_alpha_1x64 (ms);
+	    __m64 dest      = _mm_movepi64_pi64 (xmm_mask);
+	    __m64 alpha_dst = unpack_32_1x64 (d);
+
+	    *dst = pack_1x64_32 (
+		in_over_1x64 (&ms, &alpha, &dest, &alpha_dst));
+	}
+	dst++;
+	w--;
+    }
+
+    while (w >= 4)
+    {
+	uint32_t tmp1, tmp2, tmp3, tmp4;
+
+	tmp1 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp2 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp3 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+	tmp4 = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+
+	xmm_src = _mm_set_epi32 (tmp4, tmp3, tmp2, tmp1);
+
+	if (!is_zero (xmm_src))
+	{
+	    xmm_dst = load_128_aligned ((__m128i*)dst);
+
+	    unpack_128_2x128 (xmm_src, &xmm_src_lo, &xmm_src_hi);
+	    unpack_128_2x128 (xmm_dst, &xmm_dst_lo, &xmm_dst_hi);
+	    expand_alpha_2x128 (xmm_src_lo, xmm_src_hi,
+			        &xmm_alpha_lo, &xmm_alpha_hi);
+
+	    in_over_2x128 (&xmm_src_lo, &xmm_src_hi,
+			   &xmm_alpha_lo, &xmm_alpha_hi,
+			   &xmm_mask, &xmm_mask,
+			   &xmm_dst_lo, &xmm_dst_hi);
+
+	    save_128_aligned (
+		(__m128i*)dst, pack_2x128_128 (xmm_dst_lo, xmm_dst_hi));
+	}
+
+	dst += 4;
+	w -= 4;
+    }
+
+    while (w)
+    {
+	uint32_t s = src[pixman_fixed_to_int (vx)];
+	vx += unit_x;
+
+	if (s)
+	{
+	    uint32_t d = *dst;
+
+	    __m64 ms = unpack_32_1x64 (s);
+	    __m64 alpha = expand_alpha_1x64 (ms);
+	    __m64 mask  = _mm_movepi64_pi64 (xmm_mask);
+	    __m64 dest  = unpack_32_1x64 (d);
+
+	    *dst = pack_1x64_32 (
+		in_over_1x64 (&ms, &alpha, &mask, &dest));
+	}
+
+	dst++;
+	w--;
+    }
+
+    _mm_empty ();
+}
+
+FAST_NEAREST_MAINLOOP_COMMON (sse2_8888_n_8888_cover_OVER,
+			      scaled_nearest_scanline_sse2_8888_n_8888_OVER,
+			      uint32_t, uint32_t, uint32_t, COVER, TRUE, TRUE)
+FAST_NEAREST_MAINLOOP_COMMON (sse2_8888_n_8888_pad_OVER,
+			      scaled_nearest_scanline_sse2_8888_n_8888_OVER,
+			      uint32_t, uint32_t, uint32_t, PAD, TRUE, TRUE)
+FAST_NEAREST_MAINLOOP_COMMON (sse2_8888_n_8888_none_OVER,
+			      scaled_nearest_scanline_sse2_8888_n_8888_OVER,
+			      uint32_t, uint32_t, uint32_t, NONE, TRUE, TRUE)
 
 static const pixman_fast_path_t sse2_fast_paths[] =
 {
@@ -5989,6 +6106,11 @@ static const pixman_fast_path_t sse2_fast_paths[] =
     SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8b8g8r8, x8b8g8r8, sse2_8888_8888),
     SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8r8g8b8, a8r8g8b8, sse2_8888_8888),
     SIMPLE_NEAREST_FAST_PATH_PAD (OVER, a8b8g8r8, a8b8g8r8, sse2_8888_8888),
+
+    SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8r8g8b8, a8r8g8b8, sse2_8888_n_8888),
+    SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8b8g8r8, a8b8g8r8, sse2_8888_n_8888),
+    SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8r8g8b8, x8r8g8b8, sse2_8888_n_8888),
+    SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8b8g8r8, x8b8g8r8, sse2_8888_n_8888),
 
     { PIXMAN_OP_NONE },
 };
