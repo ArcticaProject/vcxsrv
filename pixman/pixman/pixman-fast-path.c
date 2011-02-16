@@ -1410,12 +1410,13 @@ FAST_NEAREST (8888_565_normal, 8888, 0565, uint32_t, uint16_t, OVER, NORMAL)
 
 /* Use more unrolling for src_0565_0565 because it is typically CPU bound */
 static force_inline void
-scaled_nearest_scanline_565_565_SRC (uint16_t *      dst,
-				     uint16_t *      src,
-				     int32_t         w,
-				     pixman_fixed_t  vx,
-				     pixman_fixed_t  unit_x,
-				     pixman_fixed_t  max_vx)
+scaled_nearest_scanline_565_565_SRC (uint16_t *       dst,
+				     const uint16_t * src,
+				     int32_t          w,
+				     pixman_fixed_t   vx,
+				     pixman_fixed_t   unit_x,
+				     pixman_fixed_t   max_vx,
+				     pixman_bool_t    fully_transparent_src)
 {
     uint16_t tmp1, tmp2, tmp3, tmp4;
     while ((w -= 4) >= 0)
