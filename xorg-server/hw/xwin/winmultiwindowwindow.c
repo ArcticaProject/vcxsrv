@@ -186,6 +186,11 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   if (!hWnd)
     {
       winDebug ("\timmediately return since hWnd is NULL\n");
+      if (pWin->redirectDraw != RedirectDrawNone)
+      {
+        winDebug("winPositionWindowMultiWindow: Calling compReallocPixmap to make sure the pixmap buffer is valid.\n");
+        compReallocPixmap(pWin, x, y, pWin->drawable.width, pWin->drawable.height, pWin->borderWidth);
+      }
       return fResult;
     }
 
