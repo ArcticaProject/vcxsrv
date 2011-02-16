@@ -139,9 +139,10 @@ winMultiWindowGetWMHints (WindowPtr pWin, WinXWMHints *hints)
   while (prop)
     {
       if (prop->propertyName == XA_WM_HINTS
+	  && prop->format == 32
 	  && prop->data)
 	{
-	  memcpy (hints, prop->data, sizeof (WinXWMHints));
+	  memcpy (hints, prop->data, 4*(int)prop->size); /* format/8 = 4 */
 	  return 1;
 	}
       else
@@ -224,9 +225,10 @@ winMultiWindowGetWMNormalHints (WindowPtr pWin, WinXSizeHints *hints)
   while (prop)
     {
       if (prop->propertyName == XA_WM_NORMAL_HINTS
+	  && prop->format == 32
 	  && prop->data)
 	{
-	  memcpy (hints, prop->data, sizeof (WinXSizeHints));
+	  memcpy (hints, prop->data, 4*(int)prop->size); /* format/8 = 4 */
 	  return 1;
 	}
       else
@@ -260,10 +262,12 @@ winMultiWindowGetTransientFor (WindowPtr pWin, WindowPtr *ppDaddy)
 
   while (prop)
     {
-      if (prop->propertyName == XA_WM_TRANSIENT_FOR)
+      if (prop->propertyName == XA_WM_TRANSIENT_FOR
+          && prop->format == 32
+          && prop->data)
         {
           if (ppDaddy)
-            memcpy (ppDaddy, prop->data, sizeof (WindowPtr));
+            memcpy (ppDaddy, prop->data, 4*(int)prop->size); /* format/8 = 4 */
           return 1;
         }
       else
