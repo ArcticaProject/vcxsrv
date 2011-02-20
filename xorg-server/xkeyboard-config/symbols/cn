@@ -1,6 +1,3 @@
-// $XKeyboardConfig$
-//
-
 //
 // Default Chinese is the same as American
 //
@@ -217,4 +214,3 @@ xkb_symbols "uig" {
 
     key <BKSL> { [ backslash,        bar                  ] };  // \ |
 };
-

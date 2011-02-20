@@ -288,7 +288,7 @@ int
 ProcRRCreateMode (ClientPtr client)
 {
     REQUEST(xRRCreateModeReq);
-    xRRCreateModeReply	rep;
+    xRRCreateModeReply	rep = {0};
     WindowPtr		pWin;
     ScreenPtr		pScreen;
     rrScrPrivPtr	pScrPriv;

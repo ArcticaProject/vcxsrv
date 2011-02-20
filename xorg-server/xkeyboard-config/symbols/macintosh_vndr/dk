@@ -1,5 +1,3 @@
-// $XConsortium: dk /main/3 1996/08/31 12:19:29 kaleb $
-// $XFree86: xc/programs/xkbcomp/symbols/dk,v 3.3.2.1 1999/12/20 12:56:01 hohndel Exp $
 partial alphanumeric_keys 
 xkb_symbols "basic" {
 
@@ -76,4 +74,3 @@ xkb_symbols "macbookpro" {
     key <BKSL>  { [apostrophe, asterisk,        at,        at ] };
     key <TLDE>  { [    dollar,  section,    dollar,    dollar ] };
 };
-

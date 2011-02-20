@@ -518,8 +518,3 @@ rules file described above the .lst file could look like:
        caps:internal_nocancel uses internal capitalization. Shift doesn't cancel Caps
 
 And that should be it. Enjoy creating your own xkb mapping.
-
-     Generated from XFree86: xc/programs/Xserver/hw/xfree86/doc/sgml/XKB-Enhancing.sgml,v 1.2 dawes Exp $
-
-
-$XFree86: xc/programs/xkbcomp/README.enhancing,v 1.5 2003/10/19 19:57:44 dawes Exp $

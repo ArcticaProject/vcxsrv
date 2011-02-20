@@ -1,4 +1,3 @@
-// $XdotOrg: $
 //
 // Copyright 2010 Sun Microsystems, Inc.  All rights reserved.
 //
@@ -27,7 +26,6 @@
 // or other dealings in this Software without prior written authorization
 // of the copyright holder.
 //
-// $TOG: us /main/5 1998/02/10 13:45:06 kaleb $
 //
 //Copyright 1996, 1998  The Open Group
 //
@@ -261,4 +259,3 @@ xkb_symbols "type5" {
     key <AD03> { [ e, E			], [ EuroSign	]	};
     key <BKSL> { [ backslash, bar	], [ brokenbar	]	};
 };
-

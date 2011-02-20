@@ -35,7 +35,7 @@ RRClientKnowsRates (ClientPtr	pClient)
 static int
 ProcRRQueryVersion (ClientPtr client)
 {
-    xRRQueryVersionReply rep;
+    xRRQueryVersionReply rep = {0};
     register int n;
     REQUEST(xRRQueryVersionReq);
     rrClientPriv(client);

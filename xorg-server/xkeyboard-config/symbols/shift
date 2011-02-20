@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 partial modifier_keys 
 xkb_symbols "breaks_caps" {
     key <LFSH> {

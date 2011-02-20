@@ -1,9 +1,3 @@
-// $XKeyboardConfig$
-
-//
-// $XdotOrg: xc/programs/xkbcomp/symbols/us,v 1.1.4.3 2004/03/05 13:41:33 eich Exp $
-// $XFree86: xc/programs/xkbcomp/symbols/us,v 1.6 2003/10/31 14:32:05 pascal Exp $
-
 default
 partial alphanumeric_keys modifier_keys 
 xkb_symbols "basic" {
@@ -196,8 +190,6 @@ xkb_symbols "alt-intl" {
 };
 
 // based on a keyboard map from an 'xkb/symbols/dk' file
-//
-// $XFree86: xc/programs/xkbcomp/symbols/dvorak,v 1.5 2004/01/03 16:35:07 herrb Exp $
 
 partial alphanumeric_keys
 xkb_symbols "dvorak" {

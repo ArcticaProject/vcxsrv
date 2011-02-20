@@ -264,14 +264,7 @@ fbdev_open_pci(struct pci_device * pPci, char **namep)
 {
     struct	fb_fix_screeninfo fix;
     char	filename[256];
-    int	fd,i,j;
-
-
-    /* There are two ways to that we can determine which fb device is
-     * associated with this PCI device.  The more modern way is to look in
-     * the sysfs directory for the PCI device for a file named
-     * "graphics/fb*"
-     */
+    int	fd, i;
 
     for (i = 0; i < 8; i++) {
 	sprintf(filename, 
@@ -304,55 +297,10 @@ fbdev_open_pci(struct pci_device * pPci, char **namep)
 	}
     }
 
-
-    /* The other way is to examine the resources associated with each fb
-     * device and see if there is a match with the PCI device.  This technique
-     * has some problems on certain mixed 64-bit / 32-bit architectures.
-     * There is a flaw in the fb_fix_screeninfo structure in that it only
-     * returns the low 32-bits of the address of the resources associated with
-     * a device.  However, on a mixed architecture the base addresses of PCI
-     * devices, even for 32-bit applications, may be higher than 0x0f0000000.
-     */
-
-    for (i = 0; i < 8; i++) {
-	sprintf(filename,"/dev/fb%d",i);
-	if (-1 == (fd = open(filename,O_RDWR,0))) {
-	    xf86DrvMsg(-1, X_WARNING,
-		       "open %s: %s\n", filename, strerror(errno));
-	    continue;
-	}
-	if (-1 == ioctl(fd,FBIOGET_FSCREENINFO,(void*)&fix)) {
-	    close(fd);
-	    continue;
-	}
-	for (j = 0; j < 6; j++) {
-	    const pciaddr_t res_start = pPci->regions[j].base_addr;
-	    const pciaddr_t res_end = res_start + pPci->regions[j].size;
-
-	    if ((0 != fix.smem_len &&
-		 (pciaddr_t) fix.smem_start >= res_start &&
-		 (pciaddr_t) fix.smem_start < res_end) ||
-		(0 != fix.mmio_len &&
-		 (pciaddr_t) fix.mmio_start >= res_start &&
-		 (pciaddr_t) fix.mmio_start < res_end))
-	      break;
-	}
-	if (j == 6) {
-	    close(fd);
-	    continue;
-	}
-	if (namep) {
-	    *namep = xnfalloc(16);
-	    strncpy(*namep,fix.id,16);
-	}
-	return fd;
-    }
-
     if (namep)
       *namep = NULL;
 
-    xf86DrvMsg(-1, X_ERROR,
-	       "Unable to find a valid framebuffer device\n");
+    xf86DrvMsg(-1, X_ERROR, "Unable to find a valid framebuffer device\n");
     return -1;
 }
 

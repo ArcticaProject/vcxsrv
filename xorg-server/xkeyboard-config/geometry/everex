@@ -1,5 +1,3 @@
-// $Xorg: everex,v 1.3 2000/08/17 19:54:35 cpqbld Exp $
-//
 default xkb_geometry "STEPnote" {
 
     description= "Everex STEPnote";

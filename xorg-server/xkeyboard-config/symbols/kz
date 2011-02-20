@@ -1,9 +1,6 @@
-// $XKeyboardConfig$
-
 // Based on http://www.sci.kz/~sairan/keyboard/kzkbd.html
 // Baurzhan Ismagulov <ibr@radix50.net>
 //
-// $XFree86: xc/programs/xkbcomp/symbols/pc/ru,v 1.4 2003/05/05 12:11:10 pascal Exp $
 
 // TODO:
 // 1. AltGr with TLDE and LSGT.

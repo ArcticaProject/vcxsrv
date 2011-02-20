@@ -73,6 +73,8 @@ winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode)
   int		iParam = HIWORD (lParam);
   int		iParamScanCode = LOBYTE (iParam);
 
+  winDebug("winTranslateKey: wParam %08x lParam %08x\n", wParam, lParam);
+
 /* WM_ key messages faked by Vista speech recognition (WSR) don't have a
  * scan code.
  *
@@ -114,6 +116,7 @@ winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode)
         break;
     }
 }
+
 
 /* Ring the keyboard bell (system speaker on PCs) */
 static void
@@ -488,7 +491,7 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
     mieqEnqueue(g_pwinKeyboard, (InternalEvent*)events[i].event);
 
   winDebug("winSendKeyEvent: dwKey: %d, fDown: %d, nEvents %d\n",
-          dwKey, fDown, nevents);
+           dwKey, fDown, nevents);
 }
 
 BOOL winCheckKeyPressed(WPARAM wParam, LPARAM lParam)

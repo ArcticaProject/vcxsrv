@@ -1,5 +1,3 @@
-// $Xorg: microsoft,v 1.3 2000/08/17 19:54:35 cpqbld Exp $
-//
 default xkb_geometry "natural" {
 
     // Approximate layout for a Microsoft Natural Keyboard
@@ -255,8 +253,7 @@ default xkb_geometry "natural" {
 
 // Approximate layout for a Microsoft Natural(R) Keyboard Elite
 // 
-// Modified from // $Xorg: microsoft,v 1.3 2000/08/17 19:54:35 cpqbld Exp $
-// by Pavel Kurashov <pavell@mail.ru> Mon Oct  8 22:08:20 NOVST 2007
+// Modified by Pavel Kurashov <pavell@mail.ru> Mon Oct  8 22:08:20 NOVST 2007
 //
 // * Function, editing and navigation keys are reduced height
 // * Navigation keys are repositioned in two column

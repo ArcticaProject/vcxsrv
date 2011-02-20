@@ -76,4 +76,3 @@ xkb_symbols "type5" {
     key <BKSL> { [ backslash, bar,  brokenbar	]		};
 
 };
-

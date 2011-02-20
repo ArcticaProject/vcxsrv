@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // Georgian Keyboard Layouts by Aiet Kolkhi <aietkolkhi@gmail.com>
 // Full layout descriptions available at http://www.gakartuleba.org/layouts/
 //
@@ -272,4 +270,3 @@ xkb_symbols "os" {
     name[Group1]= "Georgia - Ossetian";
 
 };
-

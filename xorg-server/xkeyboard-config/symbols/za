@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-//
 // based on the Latvian and GB keyboard maps
 
 partial default alphanumeric_keys modifier_keys

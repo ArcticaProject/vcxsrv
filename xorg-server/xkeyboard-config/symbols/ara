@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // based on a keyboard map from an 'xkb/symbols/ar' file
 
 partial default alphanumeric_keys 

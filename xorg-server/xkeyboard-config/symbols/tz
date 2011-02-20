@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // Keyboard layout for Swahili in Arabic script.
 // Based on Martin Vidner's Buckwalter transliteration variant of the Arabic keyboard
 // Please notify any corrections or omissions to
@@ -59,5 +57,3 @@ xkb_symbols "swa" {
     key <AB09> {  [  0x10006d4,         Arabic_hamzaonalef     ]  };
     key <AB10> {  [  VoidSymbol,        Arabic_question_mark   ]  };
 };
-
-

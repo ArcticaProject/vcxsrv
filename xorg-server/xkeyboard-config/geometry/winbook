@@ -1,4 +1,3 @@
-// $Xorg: winbook,v 1.3 2000/08/17 19:54:36 cpqbld Exp $
 default xkb_geometry "XP5" {
 
     description= "WinBook XP5";

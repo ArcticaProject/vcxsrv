@@ -1,11 +1,7 @@
-// $XKeyboardConfig$
-
 // based on
 // ukrainian standard keyboard 
 // AEN <aen@logic.ru> & Leon Kanter <leon@geon.donetsk.ua>
 // Last Changes 2007/10/03 by Andriy Rysin <arysin@yahoo.com>
-//
-// $XFree86: xc/programs/xkbcomp/symbols/ua,v 1.4 2003/05/15 11:29:47 pascal Exp $
 
 // Unicode - 3d level added with some Unicode symbols (typographic quotes, m-dash, n-dash etc), 
 // some often used cyrillics from other slavic languages and some ASCII symbols used often (slash, brackets...)

@@ -1,5 +1,4 @@
 // -*- indent-tabs-mode: nil -*-
-// $XFree86: xc/programs/xkbcomp/geometry/chicony,v 1.1 2003/05/29 12:41:57 pascal Exp $
 
 // Created by Alexander Pohoyda <alexander.pohoyda@gmx.net>
 // Geometry specification for Chicony KB-9820 keyboard.

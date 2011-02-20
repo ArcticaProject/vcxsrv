@@ -1,12 +1,8 @@
-// $XKeyboardConfig$
-
 // Basic layout based on converted file, from keytable file to xkb/symbols/ file
 // with mk_xkb by root@linux.chanae.stben.be Tue Sep 30 00:53:29 MET DST 1997
 
 // Converted from the nl-latin.map of the Linux kbd package by
 // Pablo Saratxaga <srtxg@f2219.n293.z2.fidonet.org>
-//
-// $XFree86: xc/programs/xkbcomp/symbols/nl,v 1.2 2002/11/22 04:03:28 dawes Exp $
 
 // Official layout by Benno Schulenberg <bensberg@justemail.net>, January 2007,
 // based on http://www.xs4all.nl/~koospol/public/Xmodmap-nl-deadkeys.gz
@@ -152,4 +148,3 @@ xkb_symbols "mac" {
 // do just nothing
 
 };
-

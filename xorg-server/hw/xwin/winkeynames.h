@@ -23,10 +23,6 @@
  *
  */
 
-#define XK_TECHNICAL
-#define	XK_KATAKANA
-#include <X11/keysym.h>
-
 #define GLYPHS_PER_KEY	4
 #define NUM_KEYCODES	248
 #define MIN_KEYCODE     8

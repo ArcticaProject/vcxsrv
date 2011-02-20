@@ -244,6 +244,9 @@ xf86XVFillKeyHelper (ScreenPtr pScreen, CARD32 key, RegionPtr clipboxes);
 extern _X_EXPORT void
 xf86XVFillKeyHelperDrawable (DrawablePtr pDraw, CARD32 key, RegionPtr clipboxes);
 
+extern _X_EXPORT void
+xf86XVFillKeyHelperPort (DrawablePtr pDraw, pointer data, CARD32 key, RegionPtr clipboxes, Bool fillEverything);
+
 extern _X_EXPORT Bool
 xf86XVClipVideoHelper(
     BoxPtr dst,

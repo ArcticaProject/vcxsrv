@@ -1,5 +1,3 @@
-// $Xorg: keypad,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
-
 // Interpretations needed to implement the numeric keypad
 // as an overlay instead of a modifier.
 

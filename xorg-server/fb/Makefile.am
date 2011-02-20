@@ -1,9 +1,5 @@
 noinst_LTLIBRARIES = libfb.la libwfb.la
 
-INCLUDES = \
-	-I$(top_srcdir)/hw/xfree86/os-support \
-	-I$(top_srcdir)/hw/xfree86/os-support/bus \
-	-I$(top_srcdir)/hw/xfree86/common
 AM_CFLAGS = $(DIX_CFLAGS)
 
 if XORG

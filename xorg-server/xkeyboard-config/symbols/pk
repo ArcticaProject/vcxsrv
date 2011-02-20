@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // Urdu keymap
 // Developed by:
 // Zaeem Arshad <zaeem@linux.net.pk>
@@ -8,7 +6,6 @@
 //Alt key combinations are yet to be put in. The unavailable keys are those which do not have a corresponding //glyph in unicode.
 
 // based on a keyboard map from an 'xkb/symbols/ur' file
-// $XFree86$
 
 partial default alphanumeric_keys
 xkb_symbols "urd-phonetic" {

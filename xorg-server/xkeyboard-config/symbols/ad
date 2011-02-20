@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 //
 // Catalan Keyboard, as manufactured by Large Format Computing, Inc.
 //
@@ -31,4 +29,3 @@ xkb_symbols "basic" {
 
     include "level3(ralt_switch)"
 };
-

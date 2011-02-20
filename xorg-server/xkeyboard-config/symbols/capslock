@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 default partial hidden modifier_keys
 xkb_symbols "capslock" {
     replace key <CAPS> {	[	Caps_Lock		]	};
@@ -62,4 +60,3 @@ partial hidden modifier_keys
 xkb_symbols "numlock" {
     key <CAPS> {        [       Num_Lock  ]       };
 };
-

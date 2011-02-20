@@ -239,6 +239,7 @@ Bool
 winConfigKeyboard (DeviceIntPtr pDevice)
 {
   char                          layoutName[KL_NAMELENGTH];
+  unsigned char                 layoutFriendlyName[256];
   static unsigned int           layoutNum = 0;
   int                           keyboardType;
 #ifdef XWIN_XF86CONFIG
@@ -298,11 +299,32 @@ winConfigKeyboard (DeviceIntPtr pDevice)
 	    if (LoadKeyboardLayout("00000409", KLF_ACTIVATE) != NULL)
 	      winDebug("Loading US keyboard layout.\n");
 	    else
-	      ErrorF ("LoadKeyboardLaout failed.\n");
+	      ErrorF ("LoadKeyboardLayout failed.\n");
 	  }
     }
-    winDebug ("winConfigKeyboard - Layout: \"%s\" (%08x) \n", 
-            layoutName, layoutNum);
+
+    /* Discover the friendly name of the current layout */
+    {
+      HKEY                regkey = NULL;
+      const char          regtempl[] = "SYSTEM\\CurrentControlSet\\Control\\Keyboard Layouts\\";
+      char                *regpath;
+      DWORD               namesize = sizeof(layoutFriendlyName);
+
+      regpath = malloc(sizeof(regtempl) + KL_NAMELENGTH + 1);
+      strcpy(regpath, regtempl);
+      strcat(regpath, layoutName);
+
+      if (!RegOpenKey(HKEY_LOCAL_MACHINE, regpath, &regkey))
+          RegQueryValueEx(regkey, "Layout Text", 0, NULL, layoutFriendlyName, &namesize);
+
+      /* Close registry key */
+      if (regkey)
+        RegCloseKey (regkey);
+      free(regpath);
+    }
+
+    winDebug ("Windows keyboard layout: \"%s\" (%08x) \"%s\", type %d\n",
+            layoutName, layoutNum, layoutFriendlyName, keyboardType);
 
     for (pLayout = winKBLayouts; pLayout->winlayout != -1; pLayout++)
       {
@@ -310,44 +332,35 @@ winConfigKeyboard (DeviceIntPtr pDevice)
 	  continue;
 	if (pLayout->winkbtype > 0 && pLayout->winkbtype != keyboardType)
 	  continue;
-	
+
         bfound = TRUE;
-	winDebug ("Using preset keyboard for \"%s\" (%x), type \"%d\"\n",
-		  pLayout->layoutname, pLayout->winlayout, keyboardType);
-	
+	winDebug (
+		"Found matching XKB configuration \"%s\"\n",
+		pLayout->layoutname);
+
+        winDebug(
+               "Model = \"%s\" Layout = \"%s\""
+               " Variant = \"%s\" Options = \"%s\"\n",
+               pLayout->xkbmodel ? pLayout->xkbmodel : "none",
+               pLayout->xkblayout ? pLayout->xkblayout : "none",
+               pLayout->xkbvariant ? pLayout->xkbvariant : "none",
+               pLayout->xkboptions ? pLayout->xkboptions : "none");
+
 	g_winInfo.xkb.model = pLayout->xkbmodel;
 	g_winInfo.xkb.layout = pLayout->xkblayout;
 	g_winInfo.xkb.variant = pLayout->xkbvariant;
-	g_winInfo.xkb.options = pLayout->xkboptions; 
+	g_winInfo.xkb.options = pLayout->xkboptions;
+
+
 	break;
       }
-    
+
     if (!bfound)
       {
-        HKEY                regkey = NULL;
-        const char          regtempl[] = 
-          "SYSTEM\\CurrentControlSet\\Control\\Keyboard Layouts\\";
-        char                *regpath;
-        unsigned char       lname[256];
-        DWORD               namesize = sizeof(lname);
-
-        regpath = malloc(sizeof(regtempl) + KL_NAMELENGTH + 1);
-        strcpy(regpath, regtempl);
-        strcat(regpath, layoutName);
-
-        if (!RegOpenKey(HKEY_LOCAL_MACHINE, regpath, &regkey) &&
-          !RegQueryValueEx(regkey, "Layout Text", 0, NULL, lname, &namesize))
-          {
-	    ErrorF ("Keyboardlayout \"%s\" (%s) is unknown\n", lname, layoutName);
-          }
-
-	/* Close registry key */
-	if (regkey)
-	  RegCloseKey (regkey);
-        free(regpath);
+        ErrorF ("Keyboardlayout \"%s\" (%s) is unknown, using X server default layout\n", layoutFriendlyName, layoutName);
       }
-  }  
-  
+  }
+
   /* parse the configuration */
 #ifdef XWIN_XF86CONFIG
   if (g_cmdline.keyboard)

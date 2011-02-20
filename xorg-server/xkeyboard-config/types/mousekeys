@@ -1,5 +1,3 @@
-// $Xorg: mousekeys,v 1.3 2000/08/17 19:54:48 cpqbld Exp $
-// 
 partial default xkb_types "default" {
     virtual_modifiers Alt;
 
@@ -10,4 +8,3 @@ partial default xkb_types "default" {
 	level_name[Level2] = "Shift+Alt";
     };
 };
-

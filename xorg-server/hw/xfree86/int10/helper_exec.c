@@ -504,7 +504,7 @@ pciCfg1in(CARD16 addr, CARD32 *val)
     }
     if (addr == 0xCFC) {
 	pci_device_cfg_read_u32(pci_device_for_cfg_address(PciCfg1Addr),
-			val, PCI_OFFSET(PciCfg1Addr));
+			(uint32_t *)val, PCI_OFFSET(PciCfg1Addr));
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" cfg_inl(%#lx) = %8.8lx\n", PciCfg1Addr, *val);
 	return 1;

@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
 

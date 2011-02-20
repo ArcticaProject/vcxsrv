@@ -56,4 +56,3 @@ xkb_symbols "chu"
 	    key	<AB09> {	[     Cyrillic_yu,     Cyrillic_YU, U2DFB	]	};
 	    key <AB10> {        [          period,    comma, semicolon, exclam      ]       };
 };
-

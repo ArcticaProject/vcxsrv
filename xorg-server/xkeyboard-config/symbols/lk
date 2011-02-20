@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // X Keyboard Extension file for Sinhala (Sri Lanka) (2004-04-22)
 // Maintainer  : Harshula Jayasuriya <harshula@gmail.com>
 // Last Updated: 2007-06-29
@@ -90,4 +88,3 @@ xkb_symbols "tam_TAB" {
     include "in(tam_TAB)"
     name[Group1]= "Sri Lanka - Tamil TAB Typewriter";
 };
-

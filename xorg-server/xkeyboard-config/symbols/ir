@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // Iranian keyboard layout
 
 ////////////////////////////////////////
@@ -240,4 +238,3 @@ xkb_symbols "ku_ara" {
     include "nbsp(zwnj2nb3)"
     include "level3(ralt_switch)"
 };
-

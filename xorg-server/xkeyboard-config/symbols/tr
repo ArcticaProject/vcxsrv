@@ -1,11 +1,7 @@
-// $XKeyboardConfig$
-
 // based on
 // Turkish keyboard symbols for PC and xkb
 // This file distributed without any expressed or implied warranty
 // Nilgün Belma Bugüner <nilgun@belgeler.org>, 2005
-//
-// $XFree86: xc/programs/xkbcomp/symbols/tr,v 1.5 2003/04/19 12:22:12 pascal Exp $
 
 //Default Layout (Turkish Q)
 default partial

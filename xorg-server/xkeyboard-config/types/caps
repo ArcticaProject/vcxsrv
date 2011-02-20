@@ -1,5 +1,3 @@
-// $XFree86: xc/programs/xkbcomp/types/caps,v 1.3 2002/11/26 02:14:02 dawes Exp $
-
 // CapsLock uses internal capitalization rules
 // Shift "pauses" CapsLock
 partial xkb_types "internal" {

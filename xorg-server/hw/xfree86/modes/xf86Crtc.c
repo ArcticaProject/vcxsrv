@@ -1542,7 +1542,6 @@ struct det_monrec_parameter {
 static void handle_detailed_monrec(struct detailed_monitor_section *det_mon,
                                    void *data)
 {
-    enum { sync_config, sync_edid, sync_default };
     struct det_monrec_parameter *p;
     p = (struct det_monrec_parameter *)data;
 

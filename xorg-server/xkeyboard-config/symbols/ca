@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 default partial
 xkb_symbols "fr" {
     name[Group1] = "Canada";
@@ -527,4 +525,3 @@ xkb_symbols "eng" {
     name[Group1] = "Canada - English";
     include "us(basic)"
 };
-

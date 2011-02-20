@@ -868,6 +868,7 @@ typedef struct pixman_edge pixman_edge_t;
 typedef struct pixman_trapezoid pixman_trapezoid_t;
 typedef struct pixman_trap pixman_trap_t;
 typedef struct pixman_span_fix pixman_span_fix_t;
+typedef struct pixman_triangle pixman_triangle_t;
 
 /*
  * An edge structure.  This represents a single polygon edge
@@ -895,6 +896,10 @@ struct pixman_trapezoid
     pixman_line_fixed_t	left, right;
 };
 
+struct pixman_triangle
+{
+    pixman_point_fixed_t p1, p2, p3;
+};
 
 /* whether 't' is a well defined not obviously empty trapezoid */
 #define pixman_trapezoid_valid(t)				   \
@@ -950,6 +955,31 @@ void           pixman_rasterize_trapezoid  (pixman_image_t            *image,
 					    const pixman_trapezoid_t  *trap,
 					    int                        x_off,
 					    int                        y_off);
+void          pixman_composite_trapezoids (pixman_op_t		       op,
+					   pixman_image_t *	       src,
+					   pixman_image_t *	       dst,
+					   pixman_format_code_t	       mask_format,
+					   int			       x_src,
+					   int			       y_src,
+					   int			       x_dst,
+					   int			       y_dst,
+					   int			       n_traps,
+					   const pixman_trapezoid_t *  traps);
+void          pixman_composite_triangles (pixman_op_t		       op,
+					  pixman_image_t *	       src,
+					  pixman_image_t *	       dst,
+					  pixman_format_code_t	       mask_format,
+					  int			       x_src,
+					  int			       y_src,
+					  int			       x_dst,
+					  int			       y_dst,
+					  int			       n_tris,
+					  const pixman_triangle_t *    tris);
+void	      pixman_add_triangles       (pixman_image_t              *image,
+					  int32_t	               x_off,
+					  int32_t	               y_off,
+					  int	                       n_tris,
+					  const pixman_triangle_t     *tris);
 
 PIXMAN_END_DECLS
 

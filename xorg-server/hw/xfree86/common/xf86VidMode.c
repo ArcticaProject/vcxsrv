@@ -634,7 +634,7 @@ VidModeSetModeValue(pointer mode, int valtyp, int val)
 vidMonitorValue
 VidModeGetMonitorValue(pointer monitor, int valtyp, int indx)
 {
-  vidMonitorValue ret;
+  vidMonitorValue ret = { NULL, };
   
   switch (valtyp) {
     case VIDMODE_MON_VENDOR:

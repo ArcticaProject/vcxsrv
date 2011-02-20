@@ -994,6 +994,3 @@ xkb_symbols "dvorak-bay" {
 // ┃Ctrl   ┃Super  ┃Alt    ┃ ␣ Space             Space ␣ ┃AltGr ⇮┃Meta   ┃Menu   ┃Ctrl   ┃
 // ┗━━━━━━━┻━━━━━━━┻━━━━━━━┹─────────────────────────────┺━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━━┛
 //
-
-
-

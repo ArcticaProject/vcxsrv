@@ -1,6 +1,3 @@
-// $XKeyboardConfig$
-// $Xorg: default,v 1.3 2000/08/17 19:54:48 cpqbld Exp $
-
 default xkb_types "default" {
     include "basic"
     include "pc"

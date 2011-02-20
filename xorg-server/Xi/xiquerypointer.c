@@ -129,7 +129,7 @@ ProcXIQueryPointer(ClientPtr client)
 
     if (kbd)
     {
-        state = &kbd->key->xkbInfo->prev_state;
+        state = &kbd->key->xkbInfo->state;
         rep.mods.base_mods = state->base_mods;
         rep.mods.latched_mods = state->latched_mods;
         rep.mods.locked_mods = state->locked_mods;

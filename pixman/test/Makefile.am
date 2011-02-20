@@ -16,6 +16,7 @@ TESTPROGRAMS =			\
 	gradient-crash-test	\
 	alphamap		\
 	stress-test		\
+	composite-traps-test	\
 	blitters-test		\
 	scaling-test		\
 	affine-test		\
@@ -24,6 +25,7 @@ TESTPROGRAMS =			\
 pdf_op_test_SOURCES = pdf-op-test.c utils.c utils.h
 region_test_SOURCES = region-test.c utils.c utils.h
 blitters_test_SOURCES = blitters-test.c utils.c utils.h
+composite_traps_test_SOURCES = composite-traps-test.c utils.c utils.h
 scaling_test_SOURCES = scaling-test.c utils.c utils.h
 affine_test_SOURCES = affine-test.c utils.c utils.h
 alphamap_SOURCES = alphamap.c utils.c utils.h
