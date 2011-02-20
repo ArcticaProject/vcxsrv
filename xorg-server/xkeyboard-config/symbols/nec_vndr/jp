@@ -1,4 +1,3 @@
-// $Xorg: jp,v 1.4 2001/02/09 02:05:53 xorgcvs Exp $
 //
 //Copyright 1996, 1998  The Open Group
 //
@@ -23,8 +22,6 @@
 //not be used in advertising or otherwise to promote the sale, use or
 //other dealings in this Software without prior written authorization
 //from The Open Group.
-//
-// $XFree86: xc/programs/xkbcomp/symbols/nec/jp,v 3.9 2001/01/17 23:46:03 dawes Exp $ 
 //
 // symbols for a NEC PC98 keyboard
 default xkb_symbols "pc98" {
@@ -164,4 +161,3 @@ default xkb_symbols "pc98" {
     modifier_map Mod1   { Alt_L };
     modifier_map Mod2   { Mode_switch };
 };
-

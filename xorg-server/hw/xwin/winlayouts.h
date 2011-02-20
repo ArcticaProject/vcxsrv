@@ -55,13 +55,15 @@ WinKBLayoutRec winKBLayouts[] =
     {  0x00010409, -1, "pc105",     "dvorak",    NULL,        NULL, "English (USA,Dvorak)"},
     {  0x00020409, -1, "pc105",     "us_intl",   NULL,        NULL, "English (USA,International)"},
     {  0x00000809, -1, "pc105",     "gb",        NULL,        NULL, "English (United Kingdom)"},
+    {  0x00001009, -1, "pc105",     "ca",        "fr",        NULL, "French (Canada)"},
+    {  0x00011009, -1, "pc105",     "ca",        "multix",    NULL, "Canadian Multilingual Standard"},
     {  0x00001809, -1, "pc105",     "ie",        NULL,        NULL, "Irish"},
     {  0x0000040a, -1, "pc105",     "es",        NULL,        NULL, "Spanish (Spain,Traditional Sort)"},
     {  0x0000080a, -1, "pc105",     "latam",     NULL,        NULL, "Latin American"},
     {  0x0000040b, -1, "pc105",     "fi",        NULL,        NULL, "Finnish"},
     {  0x0000040c, -1, "pc105",     "fr",        NULL,        NULL, "French (Standard)"},
     {  0x0000080c, -1, "pc105",     "be",        NULL,        NULL, "French (Belgian)"},
-    {  0x00000c0c, -1, "pc105",     "ca",        "fr",        NULL, "French (Canada)"},
+    {  0x00000c0c, -1, "pc105",     "ca",        "fr-legacy", NULL, "French (Canada, Legacy)"},
     {  0x0000100c, -1, "pc105",     "ch",        "fr",        NULL, "French (Switzerland)"},
     {  0x0000040d, -1, "pc105",     "il",        NULL,        NULL, "Hebrew"},
     {  0x0000040e, -1, "pc105",     "hu",        NULL,        NULL, "Hungarian"},
@@ -79,6 +81,8 @@ WinKBLayoutRec winKBLayouts[] =
     {  0x00000816, -1, "pc105",     "pt",        NULL,        NULL, "Portuguese (Portugal)"},
     {  0x0000041a, -1, "pc105",     "hr",        NULL,        NULL, "Croatian"},
     {  0x0000041d, -1, "pc105",     "se",        NULL,        NULL, "Swedish (Sweden)"},
+    {  0x0000041f, -1, "pc105",     "tr",        NULL,        NULL, "Turkish (Q)"},
+    {  0x0001041f, -1, "pc105",     "tr",        "f",         NULL, "Turkish (F)"},
     {  0x00000424, -1, "pc105",     "si",        NULL,        NULL, "Slovenian"},
     {  0x00000425, -1, "pc105",     "ee",        NULL,        NULL, "Estonian"},
     {  0x00000452, -1, "pc105",     "gb",        "intl",      NULL, "United Kingdom (Extended)"},
@@ -89,5 +93,3 @@ WinKBLayoutRec winKBLayouts[] =
   See http://technet.microsoft.com/en-us/library/cc766503%28WS.10%29.aspx
   for a listing of input locale (keyboard layout) codes
 */
-
-

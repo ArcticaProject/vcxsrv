@@ -1,8 +1,4 @@
-// $XKeyboardConfig$
-
 // based on a keyboard map from an 'xkb/symbols/fr' file
-//
-// $XFree86: xc/programs/xkbcomp/symbols/fr,v 1.2 2002/11/22 04:03:28 dawes Exp $
 
 partial default alphanumeric_keys
 xkb_symbols "basic" {
@@ -281,8 +277,6 @@ xkb_symbols "oss_nodeadkeys" {
 //                          Guylhem Aznar <clavier @ externe.net> (maintainer)
 //                          Nicolas Mailhot <Nicolas.Mailhot @ laposte.net>
 //                              (XFree86 submission)
-//
-//  $XFree86: xc/programs/xkbcomp/symbols/fr-latin9,v 1.1 2002/12/20 02:07:11 dawes Exp $
 //
 // This layout has long been distributed and refined outside official channels.
 // To this day it remains more feature-rich and popular than the 'fr' layout.
@@ -1025,4 +1019,3 @@ xkb_symbols "geo" {
     key <AB10> { [ 0x010010ed,  noSymbol        ] };
 
 };
-

@@ -1,4 +1,3 @@
-// $Xorg: xtest,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
 default xkb_compatibility "xtest"  {
 
     // Minimal set of symbol interpretations to provide

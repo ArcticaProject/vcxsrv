@@ -1,9 +1,3 @@
-// $Xorg: amiga,v 1.3 2000/08/17 19:54:35 cpqbld Exp $
-
-
-
-// $XFree86: xc/programs/xkbcomp/geometry/amiga,v 3.2 1997/10/26 13:25:34 dawes Exp $
-
 default xkb_geometry "usa1" {
 
     description= "Amiga (usa1)";

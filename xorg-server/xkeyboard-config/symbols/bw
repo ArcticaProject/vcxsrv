@@ -16,4 +16,3 @@ xkb_symbols "tswana" {
   	
     include "level3(ralt_switch)"
 };
-

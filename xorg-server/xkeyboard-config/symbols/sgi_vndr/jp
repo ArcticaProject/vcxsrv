@@ -1,4 +1,3 @@
-// $Xorg: jp,v 1.3 2000/08/17 19:54:45 cpqbld Exp $
 xkb_symbols "jp106" {
 
     name[group1]="Japan/ASCII";
@@ -43,4 +42,3 @@ xkb_symbols "alternate106" {
     key <AB11> {         [        underbar,      underscore ] };
     augment "sgi/jp(jp106)"
 };
-

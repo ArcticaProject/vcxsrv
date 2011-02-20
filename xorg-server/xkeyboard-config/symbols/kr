@@ -1,6 +1,3 @@
-// $XKeyboardConfig$
-//
-
 default  alphanumeric_keys
 xkb_symbols "kr106" {
     include "us"
@@ -27,4 +24,3 @@ xkb_symbols "koreankeys_raltctl" {
     key <RALT> { [ Hangul ] };
     key <RCTL> { [ Hangul_Hanja ] };    
 };
-

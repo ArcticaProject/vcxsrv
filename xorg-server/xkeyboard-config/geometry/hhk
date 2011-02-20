@@ -1,4 +1,3 @@
-//	$XKeyboardConfig$
 //
 //	XKB geometry for the Happy Hacking Keyboard (Lite).
 //	Different variants correspond to different switch
@@ -265,4 +264,3 @@ partial hidden xkb_geometry "basic" {
 
 	alias <AC00> = <LCTL>;
 };
-

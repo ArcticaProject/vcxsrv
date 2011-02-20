@@ -322,4 +322,3 @@ xkb_symbols "tifinagh-alt-phonetic" {
 
     include "level3(ralt_switch)"
 };
-

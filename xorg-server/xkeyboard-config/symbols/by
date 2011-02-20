@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // based on
 // belarusian standard keyboard 
 // Alexander Mikhailian <mikhailian@altern.org>
@@ -33,8 +31,6 @@ xkb_symbols "legacy" {
 };
 
 // based on a keyboard map from an 'xkb/symbols/iso3335-3' file
-//
-// $XFree86: xc/programs/xkbcomp/symbols/pc/en_US,v 1.3 2003/01/26 02:01:48 dawes Exp $
 
 partial alphanumeric_keys
 xkb_symbols "latin" {
@@ -53,4 +49,3 @@ xkb_symbols "latin" {
 	
 	include "level3(ralt_switch)"
 };
-

@@ -1,8 +1,3 @@
-// $XKeyboardConfig$
-
-// $XFree86: xc/programs/xkbcomp/symbols/sk,v 1.2 2002/11/22 04:02:22 dawes 
-// Exp $
-
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
      

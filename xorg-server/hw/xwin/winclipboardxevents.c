@@ -789,6 +789,9 @@ winClipboardFlushXEvents (HWND hwnd,
 	case PropertyNotify:
 	  break;
 
+	case MappingNotify:
+	  break;
+
 	default:
           ErrorF ("winClipboardFlushXEvents - unexpected event type %d\n", event.type);
 	  break;

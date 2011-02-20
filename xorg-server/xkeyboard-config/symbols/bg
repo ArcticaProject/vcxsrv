@@ -359,4 +359,3 @@ xkb_symbols "latin" {
   key <KPDL> {   type[Group1] = "KEYPAD",
                  [ KP_Delete,           KP_Decimal        ]    };
 };
-

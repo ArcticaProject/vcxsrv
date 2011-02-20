@@ -1,7 +1,3 @@
-// $XKeyboardConfig$
-
-// $XFree86: xc/programs/xkbcomp/symbols/srvr_ctrl,v 1.4 2003/12/18 14:14:38 pascal Exp $
-//
 // Actions which control the server's behavior
 
 partial keypad_keys function_keys
@@ -127,4 +123,3 @@ xkb_symbols "no_srvr_keys" {
     key <KPSU> { [ KP_Subtract,	KP_Subtract	] };
     key <KPAD> { [ KP_Add,	KP_Add		] };
 };
-

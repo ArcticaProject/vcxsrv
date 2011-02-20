@@ -1,11 +1,3 @@
-// $XKeyboardConfig$
-// $Xorg: complete,v 1.3 2000/08/17 19:54:48 cpqbld Exp $
-//
-//
-//
-//
-// $XFree86: xc/programs/xkbcomp/types/complete,v 1.2 2001/05/18 23:35:35 dawes Exp $
-
 default xkb_types "complete" {
     include "basic"
     include "mousekeys"

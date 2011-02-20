@@ -3061,7 +3061,24 @@
         <_description>Laos</_description>
         <languageList><iso639Id>lao</iso639Id></languageList>
       </configItem>
-      <variantList/>
+      <variantList>
+	<variant>
+	  <configItem>
+	    <name>basic</name>
+	    <_description>Laos</_description>
+            <languageList><iso639Id>lao</iso639Id>
+            </languageList>
+	  </configItem>
+	</variant>
+	<variant>
+	  <configItem>
+	    <name>stea</name>
+	    <_description>Laos - STEA (proposed standard layout)</_description>
+            <languageList><iso639Id>lao</iso639Id>
+            </languageList>
+	  </configItem>
+	</variant>
+      </variantList>
     </layout>
     <layout>
       <configItem>

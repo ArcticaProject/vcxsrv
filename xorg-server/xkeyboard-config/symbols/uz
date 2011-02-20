@@ -1,4 +1,3 @@
-// $XKeyboardConfig$
 // Uzbek standard keyboard
 //
 // Mashrab Kuvatov <kmashrab@uni-bremen.de>
@@ -30,7 +29,6 @@
 // official standard for it. It is a copy of "us" layout, where
 // apostrophe is replaced with U02BB.
 // 
-// $XFree86: xc/programs/xkbcomp/symbols/uz,v 1.2 2003/06/21 13:01:59 pascal Exp $
 
 partial default alphanumeric_keys 
 xkb_symbols "cyrillic" {

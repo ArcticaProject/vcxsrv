@@ -1,9 +1,3 @@
-// $Xorg: amiga,v 1.3 2000/08/17 19:54:37 cpqbld Exp $
-
-
-
-// $XFree86: xc/programs/xkbcomp/keycodes/amiga,v 3.2 1997/10/26 13:25:35 dawes Exp $
-
 default xkb_keycodes "usa1" {
 
     minimum= 8;

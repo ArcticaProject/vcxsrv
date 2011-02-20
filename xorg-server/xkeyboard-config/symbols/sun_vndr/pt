@@ -140,4 +140,3 @@ partial default alphanumeric_keys
 	xkb_symbols "basic" {
 	include "sun_vndr/pt(type6)"
 };
-

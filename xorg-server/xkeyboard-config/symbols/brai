@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // 10-dot patterns on the home row + v and n
 partial default alphanumeric_keys
 xkb_symbols "home_row" {
@@ -59,4 +57,3 @@ xkb_symbols "keypad" {
     key <KP6>	{ [ braille_dot_5 ] };
     key <KPAD>	{ [ braille_dot_6 ] };
 };
-

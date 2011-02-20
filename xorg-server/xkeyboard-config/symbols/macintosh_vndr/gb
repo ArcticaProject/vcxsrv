@@ -1,5 +1,3 @@
-// $XConsortium: gb /main/3 1996/08/31 12:19:51 kaleb $
-// $XFree86: xc/programs/xkbcomp/symbols/gb,v 3.3 1996/12/23 07:13:25 dawes Exp $
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
 
@@ -17,5 +15,3 @@ xkb_symbols "basic" {
     
     include "level3(ralt_switch)"
 };
-
-

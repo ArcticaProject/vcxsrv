@@ -1,10 +1,7 @@
-// $XKeyboardConfig$
-
 // based on
 // XKB keyboard by Hrafnkell Eiriksson - hkelle@rhi.hi.is
 //     fixes by Olafur Osvaldsson - oli@isnic.is
 //
-// $XFree86: xc/programs/xkbcomp/symbols/is,v 1.3 2002/11/26 01:57:25 dawes Exp $
 
 default partial alphanumeric_keys
 xkb_symbols "basic" {

@@ -1,5 +1,3 @@
-// $XConsortium: pt /main/3 1996/08/31 12:20:08 kaleb $
-// $XFree86: xc/programs/xkbcomp/symbols/pt,v 3.3.2.1 1999/11/18 15:37:37 hohndel Exp $
 // mac version from Ricardo Cabral <bfe00991@mail.telepac.pt>
 
 partial default alphanumeric_keys 

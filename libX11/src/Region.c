@@ -384,7 +384,12 @@ XShrinkRegion(
     int grow;
 
     if (!dx && !dy) return 0;
-    if ((! (s = XCreateRegion()))  || (! (t = XCreateRegion()))) return 0;
+    if (! (s = XCreateRegion()) )
+	return 0;
+    if (! (t = XCreateRegion()) ) {
+	XDestroyRegion(s);
+	return 0;
+    }
     if ((grow = (dx < 0))) dx = -dx;
     if (dx) Compress(r, s, t, (unsigned) 2*dx, TRUE, grow);
     if ((grow = (dy < 0))) dy = -dy;
@@ -1448,8 +1453,12 @@ XXorRegion(Region sra, Region srb, Region dr)
 {
     Region tra, trb;
 
-    if ((! (tra = XCreateRegion())) || (! (trb = XCreateRegion())))
+    if (! (tra = XCreateRegion()) )
 	return 0;
+    if (! (trb = XCreateRegion()) ) {
+	XDestroyRegion(tra);
+	return 0;
+    }
     (void) XSubtractRegion(sra,srb,tra);
     (void) XSubtractRegion(srb,sra,trb);
     (void) XUnionRegion(tra,trb,dr);

@@ -321,7 +321,8 @@ TransFileName(Xim im, char *name)
                      l += strlen(home);
    	         break;
    	      case 'L':
-                 lcCompose = _XlcFileName(im->core.lcd, COMPOSE_FILE);
+                 if (lcCompose == NULL)
+                     lcCompose = _XlcFileName(im->core.lcd, COMPOSE_FILE);
                  if (lcCompose)
                      l += strlen(lcCompose);
    	         break;
@@ -357,7 +358,6 @@ TransFileName(Xim im, char *name)
    	         if (lcCompose) {
                     strcpy(j, lcCompose);
                     j += strlen(lcCompose);
-                    Xfree(lcCompose);
                  }
    	         break;
    	      case 'S':
@@ -371,6 +371,7 @@ TransFileName(Xim im, char *name)
       }
    }
    *j = '\0';
+   Xfree(lcCompose);
    return ret;
 }
 

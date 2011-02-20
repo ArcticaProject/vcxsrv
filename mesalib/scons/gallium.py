@@ -195,7 +195,7 @@ def generate(env):
     # Determine whether we are cross compiling; in particular, whether we need
     # to compile code generators with a different compiler as the target code.
     host_platform = _platform.system().lower()
-    host_machine = os.environ.get('PROCESSOR_ARCHITECTURE', _platform.machine())
+    host_machine = os.environ.get('PROCESSOR_ARCHITEW6432', os.environ.get('PROCESSOR_ARCHITECTURE', _platform.machine()))
     host_machine = {
         'x86': 'x86',
         'i386': 'x86',
@@ -203,6 +203,7 @@ def generate(env):
         'i586': 'x86',
         'i686': 'x86',
         'ppc' : 'ppc',
+        'AMD64': 'x86_64',
         'x86_64': 'x86_64',
     }.get(host_machine, 'generic')
     env['crosscompile'] = platform != host_platform

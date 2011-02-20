@@ -88,9 +88,7 @@ winKeyboardMessageHookLL (int iCode, WPARAM wParam, LPARAM lParam)
   /* Pass keystrokes on to our main message loop */
   if (iCode == HC_ACTION)
     {
-#if 0
-      ErrorF ("vkCode: %08x\tscanCode: %08x\n", p->vkCode, p->scanCode);
-#endif
+      winDebug("winKeyboardMessageHook: vkCode: %08x scanCode: %08x\n", p->vkCode, p->scanCode);
 
       switch (wParam)
 	{

@@ -1,5 +1,3 @@
-// $XKeyboardConfig$
-
 // 17/07/2008
 // -------------------------------------------------------------
 // Standard Tojiki Keyboard Layout, Official Standard
@@ -136,4 +134,3 @@ xkb_symbols "legacy"
 	key <LSGT> { [          slash,            bar                                 ] }; // / | 
 	key <TLDE> { [    Cyrillic_io,    Cyrillic_IO                                 ] }; // ё Ё 
 };
-

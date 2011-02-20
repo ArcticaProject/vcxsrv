@@ -398,4 +398,3 @@ xkb_symbols "US101A_Sun" {
     key <RALT> { [ Alt_L		]				};
     key <RCTL> { [ Multi_key		]				};
 };
-

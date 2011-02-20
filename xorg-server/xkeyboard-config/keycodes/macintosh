@@ -1,4 +1,3 @@
-// $XConsortium: macintosh /main/10 1996/01/24 12:17:35 kaleb $
 //
 //Copyright (c) 1996  X Consortium
 //
@@ -26,7 +25,6 @@
 //other dealings in this Software without prior written authorization
 //from the X Consortium.
 //
-// $XFree86: xc/programs/xkbcomp/keycodes/macintosh,v 1.4 2001/10/02 19:57:00 alanh Exp $
 //
 default xkb_keycodes "macintosh" {
    include "xfree86"
@@ -208,4 +206,3 @@ xkb_keycodes "jisevdev" {
     alias <KANA> = <HJCV>;   // Switch to kana mode
     alias <EISU> = <HNGL>;   // Switch to alphanumeric mode
 };
-

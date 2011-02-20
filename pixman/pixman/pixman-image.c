@@ -502,13 +502,19 @@ pixman_image_set_transform (pixman_image_t *          image,
     if (common->transform == transform)
 	return TRUE;
 
-    if (memcmp (&id, transform, sizeof (pixman_transform_t)) == 0)
+    if (!transform || memcmp (&id, transform, sizeof (pixman_transform_t)) == 0)
     {
 	free (common->transform);
 	common->transform = NULL;
 	result = TRUE;
 
 	goto out;
+    }
+
+    if (common->transform &&
+	memcmp (common->transform, transform, sizeof (pixman_transform_t) == 0))
+    {
+	return TRUE;
     }
 
     if (common->transform == NULL)
@@ -535,6 +541,9 @@ PIXMAN_EXPORT void
 pixman_image_set_repeat (pixman_image_t *image,
                          pixman_repeat_t repeat)
 {
+    if (image->common.repeat == repeat)
+	return;
+
     image->common.repeat = repeat;
 
     image_property_changed (image);
@@ -579,6 +588,9 @@ PIXMAN_EXPORT void
 pixman_image_set_source_clipping (pixman_image_t *image,
                                   pixman_bool_t   clip_sources)
 {
+    if (image->common.clip_sources == clip_sources)
+	return;
+
     image->common.clip_sources = clip_sources;
 
     image_property_changed (image);
@@ -593,6 +605,9 @@ pixman_image_set_indexed (pixman_image_t *        image,
                           const pixman_indexed_t *indexed)
 {
     bits_image_t *bits = (bits_image_t *)image;
+
+    if (bits->indexed == indexed)
+	return;
 
     bits->indexed = indexed;
 
@@ -656,6 +671,9 @@ PIXMAN_EXPORT void
 pixman_image_set_component_alpha   (pixman_image_t *image,
                                     pixman_bool_t   component_alpha)
 {
+    if (image->common.component_alpha == component_alpha)
+	return;
+
     image->common.component_alpha = component_alpha;
 
     image_property_changed (image);

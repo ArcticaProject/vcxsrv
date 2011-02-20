@@ -1,4 +1,3 @@
-// $Xorg: O2,v 1.3 2000/08/17 19:54:36 cpqbld Exp $
 //
 // Copyright (c) 1996 by Silicon Graphics Computer Systems, Inc.
 //
@@ -613,4 +612,3 @@ xkb_geometry "jp106" {
     alias <AA00> = <LCTL>;
 
 }; // End of "jp106" geometry
-

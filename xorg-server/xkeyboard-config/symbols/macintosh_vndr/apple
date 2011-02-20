@@ -1,7 +1,6 @@
 //
 // Keyboard modification for Apple keyboards
 //
-// $XFree86: xc/programs/xkbcomp/symbols/apple,v 1.2 2003/10/24 20:38:20 tsi Exp $
 
 partial default modifier_keys
 xkb_symbols "extended" {

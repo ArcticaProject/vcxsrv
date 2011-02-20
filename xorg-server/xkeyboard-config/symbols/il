@@ -1,8 +1,4 @@
-// $XKeyboardConfig$
-
 // based on a keyboard map from an 'xkb/symbols/il' file
-//
-// $XFree86: xc/programs/xkbcomp/symbols/il,v 1.3 2003/01/07 02:03:44 dawes Exp $
 
 // This is a partial implemetation of the Israeli standard SI-1452
 // It does not implement changes to the English layout ("Alt-English"), 

@@ -69,7 +69,7 @@ extern _X_EXPORT int XIChangeDeviceProperty(
         int                     /* format*/,
         int                     /* mode*/,
         unsigned long           /* len*/,
-        pointer                 /* value*/,
+        const pointer           /* value*/,
         Bool                    /* sendevent*/
         );
 

@@ -1089,4 +1089,3 @@ xkb_keymap "US_UNIX6_usb" {
     xkb_symbols 	{ include "sun/us(type6)"	};
     xkb_geometry	{ include "sun(type6unix)"	};
 };
-

@@ -1,9 +1,3 @@
-// $Xorg: amiga,v 1.3 2000/08/17 19:54:46 cpqbld Exp $
-
-
-
-// $XFree86: xc/programs/xkbcomp/symbols/xfree68/amiga,v 1.2 2000/06/23 00:44:37 dawes Exp $
-
 default xkb_symbols "usa1" {
 
     name[Group1]= "usa1";

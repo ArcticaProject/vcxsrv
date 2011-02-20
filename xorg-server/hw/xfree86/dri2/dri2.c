@@ -403,7 +403,7 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
 	&& (pDraw->height == pPriv->height)
 	&& (pPriv->serialNumber == DRI2DrawableSerial(pDraw));
 
-    buffers = malloc((count + 1) * sizeof(buffers[0]));
+    buffers = calloc((count + 1), sizeof(buffers[0]));
 
     for (i = 0; i < count; i++) {
 	const unsigned attachment = *(attachments++);

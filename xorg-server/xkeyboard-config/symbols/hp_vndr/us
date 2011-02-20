@@ -1,4 +1,3 @@
-// $Xorg: us,v 1.4 2001/02/09 02:05:53 xorgcvs Exp $
 //
 //Copyright 1996, 1998  The Open Group
 //
@@ -103,4 +102,3 @@ xkb_symbols "hil" {
     modifier_map Mod2   	{ Alt_L };
     modifier_map Mod3   	{ Mode_switch };
 };
-

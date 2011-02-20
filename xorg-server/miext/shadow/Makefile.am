@@ -2,8 +2,6 @@ noinst_LTLIBRARIES = libshadow.la
 
 AM_CFLAGS = $(DIX_CFLAGS)
 
-INCLUDES = -I$(top_srcdir)/hw/xfree86/os-support
-
 if XORG
 sdk_HEADERS = shadow.h
 endif

@@ -1,4 +1,3 @@
-
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
 
@@ -14,4 +13,3 @@ xkb_symbols "basic" {
 // do just nothing
 
 };
-

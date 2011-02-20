@@ -1,8 +1,4 @@
-
 // based on a keyboard map from an 'xkb/symbols/se' file
-//
-// $XKeyboardConfig$
-// $XFree86: xc/programs/xkbcomp/symbols/se,v 1.5 2003/01/26 02:01:48 dawes Exp $
 
 partial default alphanumeric_keys
 xkb_symbols "basic" {

@@ -1,5 +1,3 @@
-// $XFree86: xc/programs/xkbcomp/keymap/sun_vndr/se,v 1.2 1998/12/20 09:34:42 dawes Exp $
-
 default xkb_keymap "type5c_se_fixdollar" {
     xkb_keycodes	{ include "sun(type5_se)"	};
     xkb_types		{ include "default"		};

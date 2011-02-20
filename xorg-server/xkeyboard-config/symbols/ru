@@ -1,12 +1,8 @@
-// $XKeyboardConfig$
-
 // based on
 // russian standard keyboard
 // AEN <aen@logic.ru>
 // 2001/12/23 by Leon Kanter <leon@blackcatlinux.com>
 // 2005/12/09 Valery Inozemtsev <shrek@altlinux.ru>
-//
-// $XFree86: xc/programs/xkbcomp/symbols/ru,v 1.3 2003/02/15 22:27:05 dawes Exp $
 
 // Windows layout
 partial default alphanumeric_keys

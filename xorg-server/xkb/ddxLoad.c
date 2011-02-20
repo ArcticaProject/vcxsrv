@@ -425,34 +425,78 @@ XkbRF_RulesPtr	rules;
     return complete;
 }
 
-XkbDescPtr
-XkbCompileKeymap(DeviceIntPtr dev, XkbRMLVOSet *rmlvo)
+static Bool
+XkbRMLVOtoKcCGST(DeviceIntPtr dev, XkbRMLVOSet *rmlvo, XkbComponentNamesPtr kccgst)
 {
-    XkbComponentNamesRec kccgst;
     XkbRF_VarDefsRec mlvo;
-    XkbDescPtr xkb;
-    char name[PATH_MAX];
-
-    if (!dev || !rmlvo) {
-        LogMessage(X_ERROR, "XKB: No device or RMLVO specified\n");
-        return NULL;
-    }
 
     mlvo.model = rmlvo->model;
     mlvo.layout = rmlvo->layout;
     mlvo.variant = rmlvo->variant;
     mlvo.options = rmlvo->options;
 
-    /* XDNFR already logs for us. */
-    if (!XkbDDXNamesFromRules(dev, rmlvo->rules, &mlvo, &kccgst))
+    return XkbDDXNamesFromRules(dev, rmlvo->rules, &mlvo, kccgst);
+}
+
+/**
+ * Compile the given RMLVO keymap and return it. Returns the XkbDescPtr on
+ * success or NULL on failure. If the components compiled are not a superset
+ * or equal to need, the compiliation is treated as failure.
+ */
+static XkbDescPtr
+XkbCompileKeymapForDevice(DeviceIntPtr dev, XkbRMLVOSet *rmlvo, int need)
+{
+    XkbDescPtr xkb;
+    unsigned int provided;
+    XkbComponentNamesRec kccgst;
+    char name[PATH_MAX];
+
+    if (!XkbRMLVOtoKcCGST(dev, rmlvo, &kccgst))
         return NULL;
 
-    /* XDLKBN too, but it might return 0 as well as allocating. */
-    if (!XkbDDXLoadKeymapByNames(dev, &kccgst, XkmAllIndicesMask, 0, &xkb, name,
-                                 PATH_MAX)) {
-        if (xkb)
+    provided = XkbDDXLoadKeymapByNames(dev, &kccgst, XkmAllIndicesMask, need,
+                                       &xkb, name, PATH_MAX);
+    if ((need & provided) != need) {
+        if (xkb) {
             XkbFreeKeyboard(xkb, 0, TRUE);
+            xkb = NULL;
+        }
+    }
+
+    return xkb;
+}
+
+XkbDescPtr
+XkbCompileKeymap(DeviceIntPtr dev, XkbRMLVOSet *rmlvo)
+{
+    XkbDescPtr xkb;
+    unsigned int need;
+
+    if (!dev || !rmlvo) {
+        LogMessage(X_ERROR, "XKB: No device or RMLVO specified\n");
         return NULL;
+    }
+
+    /* These are the components we really really need */
+    need = XkmSymbolsMask | XkmCompatMapMask | XkmTypesMask |
+           XkmKeyNamesMask | XkmVirtualModsMask;
+
+
+    xkb = XkbCompileKeymapForDevice(dev, rmlvo, need);
+
+    if (!xkb) {
+        XkbRMLVOSet dflts;
+
+        /* we didn't get what we really needed. And that will likely leave
+         * us with a keyboard that doesn't work. Use the defaults instead */
+        LogMessage(X_ERROR, "XKB: Failed to load keymap. Loading default "
+                   "keymap instead.\n");
+
+        XkbGetRulesDflts(&dflts);
+
+        xkb = XkbCompileKeymapForDevice(dev, &dflts, 0);
+
+        XkbFreeRMLVOSet(&dflts, FALSE);
     }
 
     return xkb;

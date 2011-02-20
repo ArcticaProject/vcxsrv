@@ -1,11 +1,7 @@
-// $Xorg: basic,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
-
 // Minimal set of symbol interpretations to provide 
 // reasonable default behavior (Num lock, shift and 
 // caps lock and mode switch) and set up the 
 // automatic updating of common keyboard LEDs.
-
-// $XFree86: xc/programs/xkbcomp/compat/basic,v 1.2 2000/11/06 19:24:10 dawes Exp $
 
 default xkb_compatibility "basic"  {
     virtual_modifiers NumLock,AltGr;

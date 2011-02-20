@@ -1,10 +1,5 @@
-// $XKeyboardConfig$
-// $Xorg: level5,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
-
 // Fairly complete set of symbol interpretations 
 // to provide reasonable default behavior
-
-// $XFree86: xc/programs/xkbcomp/compat/iso9995,v 1.3 2003/02/21 03:16:34 dawes Exp $
 
 default partial xkb_compatibility "default"  {
     virtual_modifiers LevelFive;

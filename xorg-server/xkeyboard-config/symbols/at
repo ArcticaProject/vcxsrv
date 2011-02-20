@@ -1,8 +1,4 @@
-
 // based on a keyboard map from an 'xkb/symbols/de' file
-//
-// $XKeyboardConfig$
-// $XFree86: xc/programs/xkbcomp/symbols/de,v 1.6 2003/09/08 13:12:51 pascal Exp $
 
 default
 xkb_symbols "basic" {

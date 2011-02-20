@@ -1,6 +1,3 @@
-
-// $Xorg: mousekeys,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
-
 // Interpretations for arrow keys and a bunch of other 
 // common keysyms which make it possible to bind "mouse" 
 // keys using xmodmap and activate or deactivate them 

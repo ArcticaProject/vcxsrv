@@ -1,8 +1,4 @@
-// $XKeyboardConfig$
-
 // Separate keymaps merged into one file by Nerijus Baliūnas, 2002
-//
-// $XFree86: xc/programs/xkbcomp/symbols/lt,v 1.3 2002/12/14 22:26:11 dawes Exp $
 
 // Lithuanian Numeric layout - Lithuanian letters on the numeric row
 // based on Lithuanian keyboard map by Ričardas Čepas <rch@richard.eu.org>
@@ -298,4 +294,3 @@ xkb_symbols "lekpa" {
     key <AB09> {[      aogonek,             Aogonek,       greater ]};
     key <AB10> {[            h,                   H                ]};
 };
-

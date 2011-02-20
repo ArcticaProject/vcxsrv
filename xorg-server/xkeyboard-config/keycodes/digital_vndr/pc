@@ -1,4 +1,3 @@
-// $Xorg: pc,v 1.3 2000/08/17 19:54:38 cpqbld Exp $
 //
 //Copyright (c) 1996  Digital Equipment Corporation
 //
@@ -276,5 +275,3 @@ xkb_keycodes "lk411jj" {
     <KANJ>  = 134;
     <HIRA>  = 135;
 };
-
-

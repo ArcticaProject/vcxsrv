@@ -1045,7 +1045,7 @@ XFixesCursorInit (void)
 	ScreenPtr	pScreen = screenInfo.screens[i];
 	CursorScreenPtr	cs;
 
-	cs = (CursorScreenPtr) malloc(sizeof (CursorScreenRec));
+	cs = (CursorScreenPtr) calloc(1, sizeof (CursorScreenRec));
 	if (!cs)
 	    return FALSE;
 	Wrap (cs, pScreen, CloseScreen, CursorCloseScreen);

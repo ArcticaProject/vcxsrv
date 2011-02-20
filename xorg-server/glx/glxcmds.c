@@ -1132,7 +1132,8 @@ int __glXDisp_GetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc)
 {
     ClientPtr client = cl->client;
     xGLXGetFBConfigsSGIXReq *req = (xGLXGetFBConfigsSGIXReq *) pc;
-    REQUEST_SIZE_MATCH(xGLXGetFBConfigsSGIXReq);
+    /* work around mesa bug, don't use REQUEST_SIZE_MATCH */
+    REQUEST_AT_LEAST_SIZE(xGLXGetFBConfigsSGIXReq);
     return DoGetFBConfigs(cl, req->screen);
 }
 
@@ -1356,7 +1357,9 @@ int __glXDisp_DestroyPixmap(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client = cl->client;
     xGLXDestroyPixmapReq *req = (xGLXDestroyPixmapReq *) pc;
 
-    REQUEST_SIZE_MATCH(xGLXDestroyPixmapReq);
+    /* should be REQUEST_SIZE_MATCH, but mesa's glXDestroyPixmap used to set
+     * length to 3 instead of 2 */
+    REQUEST_AT_LEAST_SIZE(xGLXDestroyPixmapReq);
 
     return DoDestroyDrawable(cl, req->glxpixmap, GLX_DRAWABLE_PIXMAP);
 }
@@ -1436,7 +1439,7 @@ int __glXDisp_CreateGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client = cl->client;
     xGLXCreateGLXPbufferSGIXReq *req = (xGLXCreateGLXPbufferSGIXReq *) pc;
 
-    REQUEST_SIZE_MATCH(xGLXCreateGLXPbufferSGIXReq);
+    REQUEST_AT_LEAST_SIZE(xGLXCreateGLXPbufferSGIXReq);
 
     return DoCreatePbuffer(cl->client, req->screen, req->fbconfig,
 			   req->width, req->height, req->pbuffer);
@@ -1498,7 +1501,13 @@ int __glXDisp_ChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 	client->errorValue = req->numAttribs;
 	return BadValue;
     }
+#if 0
+    /* mesa sends an additional 8 bytes */
     REQUEST_FIXED_SIZE(xGLXChangeDrawableAttributesReq, req->numAttribs << 3);
+#else
+    if (((sizeof(xGLXChangeDrawableAttributesReq) + (req->numAttribs << 3)) >> 2) < client->req_len)
+	    return BadLength;
+#endif
 
     return DoChangeDrawableAttributes(cl->client, req->drawable,
 				      req->numAttribs, (CARD32 *) (req + 1));
@@ -1563,7 +1572,8 @@ int __glXDisp_DestroyWindow(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client = cl->client;
     xGLXDestroyWindowReq *req = (xGLXDestroyWindowReq *) pc;
 
-    REQUEST_SIZE_MATCH(xGLXDestroyWindowReq);
+    /* mesa's glXDestroyWindow used to set length to 3 instead of 2 */
+    REQUEST_AT_LEAST_SIZE(xGLXDestroyWindowReq);
 
     return DoDestroyDrawable(cl, req->glxwindow, GLX_DRAWABLE_WINDOW);
 }
@@ -1697,13 +1707,21 @@ int __glXDisp_BindTexImageEXT(__GLXclientState *cl, GLbyte *pc)
     GLXDrawable		 drawId;
     int			 buffer;
     int			 error;
+    CARD32		 num_attribs;
 
-    REQUEST_FIXED_SIZE(xGLXVendorPrivateReq, 8);
+    if ((sizeof(xGLXVendorPrivateReq) + 12) >> 2 > client->req_len)
+	return BadLength;
 
     pc += __GLX_VENDPRIV_HDR_SIZE;
 
     drawId = *((CARD32 *) (pc));
     buffer = *((INT32 *)  (pc + 4));
+    num_attribs = *((CARD32 *) (pc + 8));
+    if (num_attribs > (UINT32_MAX >> 3)) {
+	client->errorValue = num_attribs;
+	return BadValue;
+    }
+    REQUEST_FIXED_SIZE(xGLXVendorPrivateReq, 12 + (num_attribs << 3));
 
     if (buffer != GLX_FRONT_LEFT_EXT)
 	return __glXError(GLXBadPixmap);
@@ -1864,7 +1882,8 @@ int __glXDisp_GetDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client = cl->client;
     xGLXGetDrawableAttributesReq *req = (xGLXGetDrawableAttributesReq *)pc;
 
-    REQUEST_SIZE_MATCH(xGLXGetDrawableAttributesReq);
+    /* this should be REQUEST_SIZE_MATCH, but mesa sends an additional 4 bytes */
+    REQUEST_AT_LEAST_SIZE(xGLXGetDrawableAttributesReq);
 
     return DoGetDrawableAttributes(cl, req->drawable);
 }

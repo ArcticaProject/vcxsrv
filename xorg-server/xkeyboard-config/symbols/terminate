@@ -5,4 +5,3 @@ xkb_symbols "ctrl_alt_bksp" {
         symbols[Group1] = [ NoSymbol,        Terminate_Server ]
     };
 };
-

@@ -1,5 +1,3 @@
-// $Xorg: northgate,v 1.3 2000/08/17 19:54:36 cpqbld Exp $
-//
 default xkb_geometry "omnikey101" {
 
     description= "North Gate Omnikey 101";
