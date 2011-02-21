@@ -20,8 +20,7 @@ base.ml4v4_s.part \
 base.ml_s.part \
 base.ml1_s.part \
 base.mlv_s.part \
-base.ml1v1_s.part \
-base.ml_s.part
+base.ml1v1_s.part
 
 if USE_COMPAT_RULES
 

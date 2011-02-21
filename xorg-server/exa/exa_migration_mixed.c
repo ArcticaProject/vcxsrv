@@ -138,7 +138,6 @@ void
 exaDamageReport_mixed(DamagePtr pDamage, RegionPtr pRegion, void *closure)
 {
     PixmapPtr pPixmap = closure;
-    ScreenPtr pScreen = pPixmap->drawable.pScreen;
     ExaPixmapPriv(pPixmap);
 
     /* Move back results of software rendering on system memory copy of mixed driver
@@ -150,18 +149,10 @@ exaDamageReport_mixed(DamagePtr pDamage, RegionPtr pRegion, void *closure)
     if (!pExaPixmap->use_gpu_copy && exaPixmapHasGpuCopy(pPixmap)) {
 	ExaScreenPriv(pPixmap->drawable.pScreen);
 
-	/* Front buffer: Don't wait for the block handler to copy back the data.
-	 * This avoids annoying latency if you encounter a lot of software rendering.
-	 */
-	if (pPixmap == pScreen->GetScreenPixmap(pScreen))
-		exaMoveInPixmap_mixed(pPixmap);
-	else {
-		if (pExaScr->deferred_mixed_pixmap &&
-		    pExaScr->deferred_mixed_pixmap != pPixmap)
-		    exaMoveInPixmap_mixed(pExaScr->deferred_mixed_pixmap);
-
-		pExaScr->deferred_mixed_pixmap = pPixmap;
-	}
+	if (pExaScr->deferred_mixed_pixmap &&
+	    pExaScr->deferred_mixed_pixmap != pPixmap)
+	    exaMoveInPixmap_mixed(pExaScr->deferred_mixed_pixmap);
+	pExaScr->deferred_mixed_pixmap = pPixmap;
     }
 }
 
