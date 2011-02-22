@@ -180,7 +180,7 @@ _XimLocalCreateIC(
 			values, XIM_CREATEIC, True)) {
 	goto Set_Error;
     }
-    ic_values.filter_events = KeyPressMask;
+    ic_values.filter_events = KeyPressMask | KeyReleaseMask;
     _XimSetCurrentICValues(ic, &ic_values);
     if(_XimSetICDefaults(ic, (XPointer)&ic_values,
 				XIM_SETICDEFAULTS, res, num) == False) {

@@ -263,8 +263,20 @@ eventToKeyButtonPointer(DeviceEvent *ev, xEvent **xi, int *count)
     num_events = (countValuators(ev, &first) + 5)/6; /* valuator ev */
     if (num_events <= 0)
     {
-        *count = 0;
-        return BadMatch;
+        switch (ev->type)
+        {
+            case ET_KeyPress:
+            case ET_KeyRelease:
+            case ET_ButtonPress:
+            case ET_ButtonRelease:
+                /* no axes is ok */
+                break;
+            case ET_Motion:
+            case ET_ProximityIn:
+            case ET_ProximityOut:
+                *count = 0;
+                return BadMatch;
+        }
     }
 
     num_events++; /* the actual event event */

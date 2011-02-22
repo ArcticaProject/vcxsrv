@@ -36,6 +36,7 @@
 #include "inputstr.h"
 #include "eventconvert.h"
 #include "exevents.h"
+#include "exglobals.h"
 #include "dixgrabs.h"
 #include "eventstr.h"
 #include "inpututils.h"
@@ -284,6 +285,143 @@ static void dix_event_to_core_conversion(void)
     dix_event_to_core(ET_ButtonRelease);
     dix_event_to_core(ET_Motion);
 }
+
+static void
+_dix_test_xi_convert(DeviceEvent *ev, int expected_rc, int expected_count)
+{
+    xEvent *xi;
+    int count = 0;
+    int rc;
+
+    rc = EventToXI((InternalEvent*)ev, &xi, &count);
+    g_assert(rc == expected_rc);
+    g_assert(count >= expected_count);
+    if (count > 0){
+        deviceKeyButtonPointer *kbp = (deviceKeyButtonPointer*)xi;
+        g_assert(kbp->type == IEventBase + ev->type);
+        g_assert(kbp->detail == ev->detail.key);
+        g_assert(kbp->time == ev->time);
+        g_assert((kbp->deviceid & ~MORE_EVENTS) == ev->deviceid);
+        g_assert(kbp->root_x == ev->root_x);
+        g_assert(kbp->root_y == ev->root_y);
+        g_assert(kbp->state == ev->corestate);
+        g_assert(kbp->event_x == 0);
+        g_assert(kbp->event_y == 0);
+        g_assert(kbp->root == ev->root);
+        g_assert(kbp->event == 0);
+        g_assert(kbp->child == 0);
+        g_assert(kbp->same_screen == FALSE);
+
+        while (--count > 0) {
+            deviceValuator *v = (deviceValuator*)&xi[count];
+            g_assert(v->type == DeviceValuator);
+            g_assert(v->num_valuators <= 6);
+        }
+
+
+        free(xi);
+    }
+}
+
+/**
+ * This tests for internal event → XI1 event conversion
+ * - all conversions should generate the right XI event type
+ * - right number of events generated
+ * - extra events are valuators
+ */
+static void dix_event_to_xi1_conversion(void)
+{
+    DeviceEvent ev = {0};
+    int time;
+    int x, y;
+    int state;
+    int detail;
+    const int ROOT_WINDOW_ID = 0x100;
+    int deviceid;
+
+    IEventBase = 80;
+    DeviceValuator      = IEventBase - 1;
+    DeviceKeyPress      = IEventBase + ET_KeyPress;
+    DeviceKeyRelease    = IEventBase + ET_KeyRelease;
+    DeviceButtonPress   = IEventBase + ET_ButtonPress;
+    DeviceButtonRelease = IEventBase + ET_ButtonRelease;
+    DeviceMotionNotify  = IEventBase + ET_Motion;
+    DeviceFocusIn       = IEventBase + ET_FocusIn;
+    DeviceFocusOut      = IEventBase + ET_FocusOut;
+    ProximityIn         = IEventBase + ET_ProximityIn;
+    ProximityOut        = IEventBase + ET_ProximityOut;
+
+    /* EventToXI callocs */
+    x = 0;
+    y = 0;
+    time = 12345;
+    state = 0;
+    detail = 0;
+    deviceid = 4;
+
+    ev.header   = 0xFF;
+
+    ev.header           = 0xFF;
+    ev.length           = sizeof(DeviceEvent);
+    ev.time             = time;
+    ev.root_y           = x;
+    ev.root_x           = y;
+    SetBit(ev.valuators.mask, 0);
+    SetBit(ev.valuators.mask, 1);
+    ev.root             = ROOT_WINDOW_ID;
+    ev.corestate        = state;
+    ev.detail.key       = detail;
+    ev.deviceid         = deviceid;
+
+    /* test all types for bad match */
+    ev.type = ET_KeyPress;         _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_KeyRelease;       _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_ButtonPress;      _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_ButtonRelease;    _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_Motion;           _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_ProximityIn;      _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_ProximityOut;     _dix_test_xi_convert(&ev, Success, 1);
+
+    /* No axes */
+    ClearBit(ev.valuators.mask, 0);
+    ClearBit(ev.valuators.mask, 1);
+    ev.type = ET_KeyPress;         _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_KeyRelease;       _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_ButtonPress;      _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_ButtonRelease;    _dix_test_xi_convert(&ev, Success, 1);
+    ev.type = ET_Motion;           _dix_test_xi_convert(&ev, BadMatch, 0);
+    ev.type = ET_ProximityIn;      _dix_test_xi_convert(&ev, BadMatch, 0);
+    ev.type = ET_ProximityOut;     _dix_test_xi_convert(&ev, BadMatch, 0);
+
+    /* more than 6 axes → 2 valuator events */
+    SetBit(ev.valuators.mask, 0);
+    SetBit(ev.valuators.mask, 1);
+    SetBit(ev.valuators.mask, 2);
+    SetBit(ev.valuators.mask, 3);
+    SetBit(ev.valuators.mask, 4);
+    SetBit(ev.valuators.mask, 5);
+    SetBit(ev.valuators.mask, 6);
+    ev.type = ET_KeyPress;         _dix_test_xi_convert(&ev, Success, 2);
+    ev.type = ET_KeyRelease;       _dix_test_xi_convert(&ev, Success, 2);
+    ev.type = ET_ButtonPress;      _dix_test_xi_convert(&ev, Success, 2);
+    ev.type = ET_ButtonRelease;    _dix_test_xi_convert(&ev, Success, 2);
+    ev.type = ET_Motion;           _dix_test_xi_convert(&ev, Success, 2);
+    ev.type = ET_ProximityIn;      _dix_test_xi_convert(&ev, Success, 2);
+    ev.type = ET_ProximityOut;     _dix_test_xi_convert(&ev, Success, 2);
+
+
+    /* keycode too high */
+    ev.type = ET_KeyPress;
+    ev.detail.key = 256;
+    _dix_test_xi_convert(&ev, Success, 0);
+
+    /* deviceid too high */
+    ev.type = ET_KeyPress;
+    ev.detail.key = 18;
+    ev.deviceid = 128;
+    _dix_test_xi_convert(&ev, Success, 0);
+}
+
 
 static void xi2_struct_sizes(void)
 {
@@ -1070,6 +1208,7 @@ int main(int argc, char** argv)
     g_test_add_func("/dix/input/attributes", dix_input_attributes);
     g_test_add_func("/dix/input/init-valuators", dix_init_valuators);
     g_test_add_func("/dix/input/event-core-conversion", dix_event_to_core_conversion);
+    g_test_add_func("/dix/input/event-xi1-conversion", dix_event_to_xi1_conversion);
     g_test_add_func("/dix/input/check-grab-values", dix_check_grab_values);
     g_test_add_func("/dix/input/xi2-struct-sizes", xi2_struct_sizes);
     g_test_add_func("/dix/input/grab_matching", dix_grab_matching);

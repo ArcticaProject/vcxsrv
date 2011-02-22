@@ -326,7 +326,7 @@ if test "x$SSE2_CFLAGS" = "x" ; then
          SSE2_CFLAGS="-xarch=sse2"
       fi
    else
-      SSE2_CFLAGS="-mmmx -msse2 -Winline"
+      SSE2_CFLAGS="-msse2 -Winline"
    fi
 fi
 

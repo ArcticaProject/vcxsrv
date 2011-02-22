@@ -20,8 +20,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#include <cstdlib>
-#include <cstdio>
 #include <io.h>
 
 #ifdef _MSC_VER
