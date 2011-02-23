@@ -905,7 +905,7 @@
     <model>
       <configItem>
         <name>sanwaskbkg3</name>
-        <description>Sanwa Supply SKB-KG3</description>
+        <_description>Sanwa Supply SKB-KG3</_description>
         <vendor>Sanwa Supply Inc.</vendor>
       </configItem>
     </model>
@@ -2082,7 +2082,7 @@
         <variant>
           <configItem>
             <name>uig</name>
-            <description>Uyghur</description>
+            <_description>Uyghur</_description>
             <languageList><iso639Id>uig</iso639Id></languageList>
           </configItem>
         </variant>
@@ -4998,25 +4998,25 @@
       <option>
         <configItem>
           <name>lv3:lsgt_switch</name>
-	  <description>&lt;Less/Greater&gt;</description>
+	  <_description>&lt;Less/Greater&gt;</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv3:caps_switch_latch</name>
-          <description>Caps Lock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+          <_description>Caps Lock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv3:bksl_switch_latch</name>
-          <description>Backslash chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+          <_description>Backslash chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv3:lsgt_switch_latch</name>
-	  <description>&lt;Less/Greater&gt; (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+	  <_description>&lt;Less/Greater&gt; (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
         </configItem>
       </option>
     </group>
@@ -5065,7 +5065,7 @@
       <option>
         <configItem>
           <name>ctrl:ctrl_menu</name>
-          <description>Right Ctrl is mapped to Menu</description>
+          <_description>Right Ctrl is mapped to Menu</_description>
         </configItem>
       </option>
     </group>
@@ -5492,13 +5492,13 @@
       <option>
         <configItem>
           <name>shift:both_capslock_cancel</name>
-          <description>Both Shift-Keys together activate Caps Lock, one Shift-Key deactivates</description>
+          <_description>Both Shift-Keys together activate Caps Lock, one Shift-Key deactivates</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>shift:both_shiftlock</name>
-          <description>Both Shift-Keys together toggle ShiftLock</description>
+          <_description>Both Shift-Keys together toggle ShiftLock</_description>
         </configItem>
       </option>
       <option>
@@ -5601,13 +5601,13 @@
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock_cancel</name>
-	  <description>&lt;Less/Greater&gt; chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</description>
+	  <_description>&lt;Less/Greater&gt; chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:ralt_switch_lock_cancel</name>
-          <description>Right Alt chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</description>
+          <_description>Right Alt chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</_description>
         </configItem>
       </option>
     </group>
