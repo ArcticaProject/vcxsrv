@@ -11,7 +11,7 @@ Here are the steps to follow to create a new pixman release:
 	git log master...origin		(no output; note: *3* dots)
 
 2) Increment pixman_(major|minor|micro) in configure.ac according to
-   the directions in that file. Use git commit to record this.
+   the directions in that file.
 
 3) Make sure that new version works, including
 
@@ -23,7 +23,7 @@ Here are the steps to follow to create a new pixman release:
 	- the cairo test suite hasn't gained any new failures compared
 	  to last pixman version.
 
-4) Use "git commit" to record any changes made in step 3.
+4) Use "git commit" to record the changes made in step 2 and 3.
 
 5) Generate and publish the tar files by running 
 
