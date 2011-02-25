@@ -1038,12 +1038,7 @@ xf86SetRootClip (ScreenPtr pScreen, Bool enable)
 	RegionInit(&pWin->winSize, &box, 1);
 	RegionInit(&pWin->borderSize, &box, 1);
 	if (WasViewable)
-	{
-	    PixmapPtr	pPixmap = (*pScreen->GetScreenPixmap) (pScreen);
-	    box.x2 = pPixmap->drawable.width;
-	    box.y2 = pPixmap->drawable.height;
 	    RegionReset(&pWin->borderClip, &box);
-	}
 	pWin->drawable.width = pScreen->width;
 	pWin->drawable.height = pScreen->height;
         RegionBreak(&pWin->clipList);
@@ -1121,6 +1116,7 @@ xf86EnableDisableFBAccess(int scrnIndex, Bool enable)
 	 */
 	if (!xf86Resetting)
 	    xf86SetRootClip (pScreen, TRUE);
+
     }
     else
     {

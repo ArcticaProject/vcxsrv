@@ -23,11 +23,6 @@
 #include "randrstr.h"
 
 static const int padlength[4] = {0, 3, 2, 1};
-/* From render.h */
-#ifndef SubPixelUnknown
-#define SubPixelUnknown 0
-#endif
-
 
 static CARD16
 RR10CurrentSizeID (ScreenPtr pScreen);
@@ -173,8 +168,6 @@ Bool
 RRScreenSizeSet (ScreenPtr  pScreen,
 		 CARD16	    width,
 		 CARD16	    height,
-		 CARD16	    pixWidth,
-		 CARD16	    pixHeight,
 		 CARD32	    mmWidth,
 		 CARD32	    mmHeight)
 {
@@ -185,7 +178,6 @@ RRScreenSizeSet (ScreenPtr  pScreen,
     {
 	return (*pScrPriv->rrScreenSetSize) (pScreen,
 					     width, height,
-					     pixWidth, pixHeight,
 					     mmWidth, mmHeight);
     }
 #endif
@@ -196,24 +188,6 @@ RRScreenSizeSet (ScreenPtr  pScreen,
     }
 #endif
     return FALSE;
-}
-
-/*
- * Compute an RRScreenConfig from the current screen information
- */
-void
-RRScreenCurrentConfig(ScreenPtr screen,
-		      RRScreenConfigPtr screen_config)
-{
-    PixmapPtr		screen_pixmap = screen->GetScreenPixmap(screen);
-    WindowPtr		root = screen->root;
-
-    screen_config->screen_pixmap_width = screen_pixmap->drawable.width;
-    screen_config->screen_pixmap_height = screen_pixmap->drawable.height;
-    screen_config->screen_width = root->drawable.width;
-    screen_config->screen_height = root->drawable.height;
-    screen_config->mm_width = screen->mmWidth;
-    screen_config->mm_height = screen->mmHeight;
 }
 
 /*
@@ -325,7 +299,6 @@ ProcRRSetScreenSize (ClientPtr client)
 	return BadValue;
     }
     if (!RRScreenSizeSet (pScreen, 
-			  stuff->width, stuff->height,
 			  stuff->width, stuff->height,
 			  stuff->widthInMillimeters,
 			  stuff->heightInMillimeters))
@@ -803,10 +776,8 @@ ProcRRSetScreenConfig (ClientPtr client)
     }
     
     rc = dixLookupDrawable(&pDraw, stuff->drawable, client, 0, DixWriteAccess);
-    if (rc != Success) {
-	client->errorValue = stuff->drawable;
+    if (rc != Success)
 	return rc;
-    }
 
     pScreen = pDraw->pScreen;
 
@@ -963,14 +934,14 @@ ProcRRSetScreenConfig (ClientPtr client)
 	for (c = 0; c < pScrPriv->numCrtcs; c++)
 	{
 	    if (!RRCrtcSet (pScrPriv->crtcs[c], NULL, 0, 0, RR_Rotate_0,
-			    0, NULL, NULL))
+			    0, NULL))
 	    {
 		rep.status = RRSetConfigFailed;
 		/* XXX recover from failure */
 		goto sendReply;
 	    }
 	}
-	if (!RRScreenSizeSet (pScreen, width, height, width, height,
+	if (!RRScreenSizeSet (pScreen, width, height,
 			      pScreen->mmWidth, pScreen->mmHeight))
 	{
 	    rep.status = RRSetConfigFailed;
@@ -979,7 +950,7 @@ ProcRRSetScreenConfig (ClientPtr client)
 	}
     }
 
-    if (!RRCrtcSet (crtc, mode, 0, 0, stuff->rotation, 1, &output, NULL))
+    if (!RRCrtcSet (crtc, mode, 0, 0, stuff->rotation, 1, &output))
 	rep.status = RRSetConfigFailed;
     else {
 	pScrPriv->lastSetTime = time;

@@ -103,12 +103,12 @@ typedef struct _ColormapRec
 {
     VisualPtr	pVisual;
     short	class;		/* PseudoColor or DirectColor */
-#if defined(_XSERVER64)
+#if defined(_LP64)
     short	pad0;
     XID		pad1;
 #endif
     XID		mid;		/* client's name for colormap */
-#if defined(_XSERVER64) && (X_BYTE_ORDER == X_LITTLE_ENDIAN)
+#if defined(_LP64) && (X_BYTE_ORDER == X_LITTLE_ENDIAN)
     XID		pad2;
 #endif
     ScreenPtr	pScreen;	/* screen map is associated with */

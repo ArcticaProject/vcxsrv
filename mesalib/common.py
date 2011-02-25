@@ -15,6 +15,8 @@ import SCons.Script.SConscript
 # Defaults
 
 host_platform = _platform.system().lower()
+if host_platform.startswith('cygwin'):
+    host_platform = 'cygwin'
 
 # Search sys.argv[] for a "platform=foo" argument since we don't have
 # an 'env' variable at this point.

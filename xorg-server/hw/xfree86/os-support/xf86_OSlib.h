@@ -264,14 +264,6 @@
 #   define CONSOLE_X_MODE_OFF PCCONIOCCOOK
 #   define CONSOLE_X_BELL PCCONIOCBEEP
 #  else /* __bsdi__ */
-#   if defined(__OpenBSD__)
-#     ifdef PCCONS_SUPPORT
-#       include <machine/pccons.h>
-#       undef CONSOLE_X_MODE_ON
-#       undef CONSOLE_X_MODE_OFF
-#       undef CONSOLE_X_BELL
-#     endif
-#   endif
 #   ifdef SYSCONS_SUPPORT
 #    define COMPAT_SYSCONS
 #    if defined(__NetBSD__) || defined(__OpenBSD__)

@@ -1,19 +1,26 @@
 LIBRARY=librandr
+XINERAMA=1
 
-CSRCS =	\
- rrxinerama.c	\
+XINERAMA_SRCS = rrxinerama.c
+
+librandr_la_SOURCES =	\
 	randr.c		\
+	randrstr.h	\
 	rrcrtc.c	\
 	rrdispatch.c	\
 	rrinfo.c	\
 	rrmode.c	\
 	rroutput.c	\
-	rrpixmap.c	\
 	rrpointer.c	\
 	rrproperty.c	\
 	rrscreen.c	\
 	rrsdispatch.c	\
-	rrsprite.c	\
-	rrtransform.c	\
-	mirrcrtc.c
+	rrtransform.h	\
+	rrtransform.c
+
+if XINERAMA
+librandr_la_SOURCES += ${XINERAMA_SRCS}
+endif
+
+CSRCS = $(filter %.c,$(librandr_la_SOURCES))
 
