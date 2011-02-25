@@ -224,11 +224,5 @@ int (*ProcRandrVector[RRNumberRequests])(ClientPtr) = {
     ProcRRSetPanning,		/* 29 */
     ProcRRSetOutputPrimary,	/* 30 */
     ProcRRGetOutputPrimary,	/* 31 */
-/* V1.4 additions */
-    ProcRRQueryScanoutPixmaps,	/* 32 */
-    ProcRRCreateScanoutPixmap,	/* 33 */
-    ProcRRSetCrtcSpriteTransform,/* 34 */
-    ProcRRGetCrtcSpriteTransform,/* 35 */
-    ProcRRSetCrtcConfigs,	 /* 36 */
 };
 

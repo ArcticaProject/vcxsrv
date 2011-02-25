@@ -34,6 +34,8 @@
         <key>SUFeedURL</key>
                 <string>http://xquartz.macosforge.org/downloads/sparkle/release.xml</string>
 #endif
+	<key>LSApplicationCategoryType</key>
+		<string>public.app-category.utilities</string>
 	<key>NSHumanReadableCopyright</key>
 		<string>© 2003-2011 Apple Inc.
 © 2003 XFree86 Project, Inc.

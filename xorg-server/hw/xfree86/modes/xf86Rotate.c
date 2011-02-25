@@ -369,39 +369,6 @@ xf86CrtcFitsScreen (xf86CrtcPtr crtc, struct pict_f_transform *crtc_to_fb)
 	    0 <= b.y1 && b.y2 <= pScrn->virtualY);
 }
 
-/*
- * A subset of xf86CrtcRotate that just deals with
- * cursor image/position transforms. Used when changing
- * the cursor transform
- */
-void
-xf86CrtcRotateCursor (xf86CrtcPtr crtc)
-{
-    /* if this is called during ScreenInit() we don't have pScrn->pScreen yet */
-    RRTransformPtr	transform = NULL;
-    PictTransform	crtc_to_fb;
-    struct pict_f_transform f_crtc_to_fb, f_fb_to_crtc, f_screen_to_crtc, f_crtc_to_cursor;
-
-    if (crtc->transformPresent)
-	transform = &crtc->transform;
-
-    (void) RRTransformCompute (crtc->x, crtc->y,
-			       crtc->mode.HDisplay, crtc->mode.VDisplay,
-			       crtc->rotation,
-			       transform,
-			       &crtc->user_sprite_position_transform,
-			       &crtc->user_sprite_image_transform,
-
-			       &crtc_to_fb,
-			       &f_crtc_to_fb,
-			       &f_fb_to_crtc,
-			       &f_screen_to_crtc,
-			       &f_crtc_to_cursor,
-			       &crtc->sprite_transform_in_use);
-    crtc->f_screen_to_crtc = f_screen_to_crtc;
-    crtc->f_crtc_to_cursor = f_crtc_to_cursor;
-}
-
 Bool
 xf86CrtcRotate (xf86CrtcPtr crtc)
 {
@@ -410,7 +377,7 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
     /* if this is called during ScreenInit() we don't have pScrn->pScreen yet */
     ScreenPtr		pScreen = screenInfo.screens[pScrn->scrnIndex];
     PictTransform	crtc_to_fb;
-    struct pict_f_transform f_crtc_to_fb, f_fb_to_crtc, f_screen_to_crtc, f_crtc_to_cursor;
+    struct pict_f_transform f_crtc_to_fb, f_fb_to_crtc;
     xFixed		*new_params = NULL;
     int			new_nparams = 0;
     PictFilterPtr	new_filter = NULL;
@@ -426,15 +393,10 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
 			     crtc->mode.HDisplay, crtc->mode.VDisplay,
 			     crtc->rotation,
 			     transform,
-			     &crtc->user_sprite_position_transform,
-			     &crtc->user_sprite_image_transform,
 
 			     &crtc_to_fb,
 			     &f_crtc_to_fb,
-			     &f_fb_to_crtc,
-			     &f_screen_to_crtc,
-			     &f_crtc_to_cursor,
-			     &crtc->sprite_transform_in_use) &&
+			     &f_fb_to_crtc) &&
 	xf86CrtcFitsScreen (crtc, &f_crtc_to_fb))
     {
 	/*
@@ -543,8 +505,6 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
     crtc->crtc_to_framebuffer = crtc_to_fb;
     crtc->f_crtc_to_framebuffer = f_crtc_to_fb;
     crtc->f_framebuffer_to_crtc = f_fb_to_crtc;
-    crtc->f_screen_to_crtc = f_screen_to_crtc;
-    crtc->f_crtc_to_cursor = f_crtc_to_cursor;
     free(crtc->params);
     crtc->params = new_params;
     crtc->nparams = new_nparams;

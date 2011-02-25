@@ -72,25 +72,6 @@ typedef enum _xf86OutputStatus {
    XF86OutputStatusUnknown
 } xf86OutputStatus;
 
-typedef enum _xf86CrtcSetFlags {
-    XF86CrtcSetMode = 1,		/* mode */
-    XF86CrtcSetOutput = 2,		/* outputs */
-    XF86CrtcSetOrigin = 4,		/* x/y */
-    XF86CrtcSetTransform = 8,		/* transform */
-    XF86CrtcSetRotation = 16,		/* rotation */
-    XF86CrtcSetProperty = 32,		/* output property */
-    XF86CrtcSetScanoutPixmap = 64,	/* scanout pixmap */
-} xf86CrtcSetFlags;
-
-typedef struct _xf86CrtcSet {
-    xf86CrtcSetFlags	flags;
-    DisplayModePtr	mode;
-    Rotation		rotation;
-    RRTransformPtr	transform;
-    int			x, y;
-    PixmapPtr		scanout_pixmap;
-} xf86CrtcSetRec;
-
 typedef struct _xf86CrtcFuncs {
    /**
     * Turns the crtc on/off, or sets intermediate power levels if available.
@@ -240,12 +221,6 @@ typedef struct _xf86CrtcFuncs {
     void
     (*set_origin)(xf86CrtcPtr crtc, int x, int y);
 
-    /**
-     * General mode setting entry point that does everything
-     */
-    Bool
-    (*set)(xf86CrtcPtr crtc, xf86CrtcSetFlags flags);
-
 } xf86CrtcFuncsRec, *xf86CrtcFuncsPtr;
 
 #define XF86_CRTC_VERSION 3
@@ -279,7 +254,6 @@ struct _xf86Crtc {
     Rotation	    rotation;
     PixmapPtr	    rotatedPixmap;
     void	    *rotatedData;
-    PixmapPtr	    scanoutPixmap;
     
     /**
      * Position on screen
@@ -348,7 +322,6 @@ struct _xf86Crtc {
     int		    filter_width; /* ABI 2 */
     int		    filter_height; /* ABI 2 */
     Bool	    transform_in_use;
-    Bool	    sprite_transform_in_use;
     RRTransformRec  transform; /* ABI 2 */
     Bool	    transformPresent; /* ABI 2 */
     RRTransformRec  desiredTransform; /* ABI 2 */
@@ -388,22 +361,6 @@ struct _xf86Crtc {
      * Clear the shadow
      */
     Bool	    shadowClear;
-
-    /**
-     * Sprite position transforms
-     */
-
-    /* Transform a screen coordinate to a crtc coordinate */
-    struct pixman_f_transform f_screen_to_crtc;
-
-    /* The user-specified portion of the screen to crtc conversion */
-    struct pixman_f_transform user_sprite_position_transform;
-
-    /* Transform a hardware cursor coordinate to a cursor coordinate */
-    struct pixman_f_transform f_crtc_to_cursor;
-
-    /* The user-specified portion of the cursor to hardware transform */
-    struct pixman_f_transform user_sprite_image_transform;
 };
 
 typedef struct _xf86OutputFuncs {
@@ -650,37 +607,6 @@ struct _xf86Output {
     INT16           initialBorder[4];
 };
 
-typedef enum _xf86SetConfigResponse {
-    xf86SetConfigFailed,		/* set_config failed */
-    xf86SetConfigChecked,		/* set_config validated the configuration */
-    xf86SetConfigDone,			/* set_config finished the work */
-} xf86SetConfigResponse;
-
-typedef struct _xf86CrtcSetConfig {
-    xf86CrtcPtr			crtc;
-    int				x, y;
-    DisplayModeRec		mode;
-    Rotation			rotation;
-    int				numOutputs;
-    xf86OutputPtr		*outputs;
-    struct pict_f_transform	sprite_position_transform;
-    struct pict_f_transform	sprite_image_transform;
-
-    /* Probably want some internal structure for the pixmap so that
-     * this can be set before the server is running
-     */
-    PixmapPtr			pixmap;
-    int				pixmap_x, pixmap_y;
-} xf86CrtcSetConfigRec, *xf86CrtcSetConfigPtr;
-
-typedef struct _xf86CrtcScanoutFormat {
-    int		    depth;
-    int		    bitsPerPixel;
-    int		    maxWidth, maxHeight;
-    Rotation	    rotations;
-    PictFormatShort format;
-} xf86CrtcScanoutFormat;
-
 typedef struct _xf86CrtcConfigFuncs {
     /**
      * Requests that the driver resize the screen.
@@ -698,23 +624,6 @@ typedef struct _xf86CrtcConfigFuncs {
     (*resize)(ScrnInfoPtr	scrn,
 	      int		width,
 	      int		height);
-
-    xf86SetConfigResponse
-    (*set_config) (ScrnInfoPtr		scrn,
-		   RRScreenConfigPtr	screen_config,
-		   xf86CrtcSetConfigPtr	crtc_configs,
-		   int			num_configs);
-
-    /**
-     * Create a scanout pixmap
-     */
-    PixmapPtr
-    (*create_scanout_pixmap)(ScrnInfoPtr		scrn,
-			     int			width,
-			     int			height,
-			     Rotation			rotations,
-			     xf86CrtcScanoutFormat	*format);
-
 } xf86CrtcConfigFuncsRec, *xf86CrtcConfigFuncsPtr;
 
 typedef void (*xf86_crtc_notify_proc_ptr) (ScreenPtr pScreen);
@@ -774,11 +683,6 @@ typedef struct _xf86CrtcConfig {
     /* callback when crtc configuration changes */
     xf86_crtc_notify_proc_ptr  xf86_crtc_notify;
 
-    /*
-     * Supported scanout pixmap formats
-     */
-    int			num_scanout_formats;
-    xf86CrtcScanoutFormat	*scanout_formats;
 } xf86CrtcConfigRec, *xf86CrtcConfigPtr;
 
 extern _X_EXPORT int xf86CrtcConfigPrivateIndex;
@@ -824,11 +728,6 @@ xf86CrtcSetSizeRange (ScrnInfoPtr scrn,
 		      int minWidth, int minHeight,
 		      int maxWidth, int maxHeight);
 
-extern _X_EXPORT void
-xf86CrtcSetScanoutFormats (ScrnInfoPtr			scrn,
-			   int				num_formats,
-			   xf86CrtcScanoutFormat	*formats);
-
 /*
  * Crtc functions
  */
@@ -839,12 +738,18 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
 extern _X_EXPORT void
 xf86CrtcDestroy (xf86CrtcPtr		crtc);
 
+
 /**
- * Change a crtc configuration (modes, outputs, etc)
+ * Sets the given video mode on the given crtc
  */
 
 extern _X_EXPORT Bool
-xf86CrtcSet (xf86CrtcPtr crtc, xf86CrtcSetRec *set);
+xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
+			  RRTransformPtr transform, int x, int y);
+
+extern _X_EXPORT Bool
+xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
+		 int x, int y);
 
 extern _X_EXPORT void
 xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y);
@@ -854,14 +759,6 @@ xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y);
  */
 extern _X_EXPORT Bool
 xf86CrtcRotate (xf86CrtcPtr crtc);
-
-
-/*
- * Update cursor transform matrices after user changes
- * This is just the cursor subset of xf86CrtcRotate
- */
-extern _X_EXPORT void
-xf86CrtcRotateCursor (xf86CrtcPtr crtc);
 
 /*
  * Clean up any rotation data, used when a crtc is turned off

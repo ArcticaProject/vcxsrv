@@ -55,10 +55,9 @@
 #define RANDR_10_INTERFACE 1
 #define RANDR_12_INTERFACE 1
 #define RANDR_13_INTERFACE 1 /* requires RANDR_12_INTERFACE */
-#define RANDR_14_INTERFACE 1 /* requires RANDR_13_INTERFACE */
 #define RANDR_GET_CRTC_INTERFACE 1
 
-#define RANDR_INTERFACE_VERSION 0x0104
+#define RANDR_INTERFACE_VERSION 0x0103
 
 typedef XID	RRMode;
 typedef XID	RROutput;
@@ -78,8 +77,6 @@ typedef struct _rrMode		RRModeRec, *RRModePtr;
 typedef struct _rrPropertyValue	RRPropertyValueRec, *RRPropertyValuePtr;
 typedef struct _rrProperty	RRPropertyRec, *RRPropertyPtr;
 typedef struct _rrCrtc		RRCrtcRec, *RRCrtcPtr;
-typedef struct _rrScreenConfig	RRScreenConfigRec, *RRScreenConfigPtr;
-typedef struct _rrCrtcConfig	RRCrtcConfigRec, *RRCrtcConfigPtr;
 typedef struct _rrOutput	RROutputRec, *RROutputPtr;
 
 struct _rrMode {
@@ -123,43 +120,11 @@ struct _rrCrtc {
     CARD16	    *gammaGreen;
     void	    *devPrivate;
     Bool	    transforms;
-    PixmapPtr	    scanoutPixmap;
     RRTransformRec  client_pending_transform;
     RRTransformRec  client_current_transform;
-    PictTransform   client_sprite_position_transform;
-    PictTransform   client_sprite_image_transform;
-    struct pict_f_transform	client_sprite_f_position_transform;
-    struct pict_f_transform	client_sprite_f_image_transform;
-
     PictTransform   transform;
     struct pict_f_transform f_transform;
     struct pict_f_transform f_inverse;
-    struct pict_f_transform f_sprite_position;		/* crtc from screen */
-    struct pict_f_transform f_sprite_image_inverse;	/* image from crtc */
-};
-
-struct _rrScreenConfig {
-    CARD16			screen_pixmap_width;
-    CARD16			screen_pixmap_height;
-    CARD16			screen_width;
-    CARD16			screen_height;
-    CARD32			mm_width;
-    CARD32			mm_height;
-};
-
-struct _rrCrtcConfig {
-    RRCrtcPtr			crtc;
-    int				x, y;
-    RRModePtr			mode;
-    Rotation			rotation;
-    int				numOutputs;
-    RROutputPtr			*outputs;
-    PictTransform		sprite_position_transform;
-    PictTransform		sprite_image_transform;
-    struct pict_f_transform	sprite_position_f_transform;
-    struct pict_f_transform	sprite_image_f_transform;
-    PixmapPtr			pixmap;
-    int				pixmap_x, pixmap_y;
 };
 
 struct _rrOutput {
@@ -191,8 +156,6 @@ struct _rrOutput {
 typedef Bool (*RRScreenSetSizeProcPtr) (ScreenPtr	pScreen,
 					CARD16		width,
 					CARD16		height,
-					CARD16		pixWidth,
-					CARD16		pixHeight,
 					CARD32		mmWidth,
 					CARD32		mmHeight);
 					
@@ -203,8 +166,7 @@ typedef Bool (*RRCrtcSetProcPtr) (ScreenPtr		pScreen,
 				  int			y,
 				  Rotation		rotation,
 				  int			numOutputs,
-				  RROutputPtr		*outputs,
-				  PixmapPtr		scanout_pixmap);
+				  RROutputPtr		*outputs);
 
 typedef Bool (*RRCrtcSetGammaProcPtr) (ScreenPtr	pScreen,
 				       RRCrtcPtr	crtc);
@@ -270,35 +232,6 @@ typedef Bool (*RRSetConfigProcPtr) (ScreenPtr		pScreen,
 
 #endif
 	
-typedef struct {
-    PictFormatPtr	format;
-    int			maxWidth, maxHeight;
-    int			depth;
-    Rotation		rotations;
-} RRScanoutPixmapInfo;
-
-typedef RRScanoutPixmapInfo *(*RRQueryScanoutPixmapsPtr) (ScreenPtr pScreen,
-							  int *num_info);
-
-typedef PixmapPtr (*RRCreateScanoutPixmapPtr) (ScreenPtr pScreen,
-					       int width, int height, int depth,
-					       Rotation rotations,
-					       PictFormatPtr format);
-
-typedef void (*RRSetCrtcSpriteTransformPtr) (ScreenPtr pScreen,
-					     RRCrtcPtr randr_crtc,
-					     struct pict_f_transform *position_transform,
-					     struct pict_f_transform *image_transform);
-
-typedef void (*RRGetCrtcSpriteTransformPtr) (ScreenPtr pScreen,
-					     RRCrtcPtr randr_crtc,
-					     struct pict_f_transform *position_transform,
-					     struct pict_f_transform *image_transform);
-
-typedef Bool (*RRSetCrtcConfigsPtr) (ScreenPtr screen,
-				     RRScreenConfigPtr screen_config,
-				     RRCrtcConfigPtr crtc_configs,
-				     int num_configs);
 
 typedef struct _rrScrPriv {
     /*
@@ -323,12 +256,7 @@ typedef struct _rrScrPriv {
     RRGetPanningProcPtr	rrGetPanning;
     RRSetPanningProcPtr	rrSetPanning;
 #endif
-    RRQueryScanoutPixmapsPtr	rrQueryScanoutPixmaps;
-    RRCreateScanoutPixmapPtr	rrCreateScanoutPixmap;
-    RRSetCrtcSpriteTransformPtr	rrSetCrtcSpriteTransform;
-    RRGetCrtcSpriteTransformPtr	rrGetCrtcSpriteTransform;
-    RRSetCrtcConfigsPtr rrSetCrtcConfigs;
-
+    
     /*
      * Private part of the structure; not considered part of the ABI
      */
@@ -355,8 +283,6 @@ typedef struct _rrScrPriv {
     /* Last known pointer position */
     RRCrtcPtr		    pointerCrtc;
 
-    RRScanoutPixmapInfo	    *scanout_info;
-    int			    n_scanout_info;
 #ifdef RANDR_10_INTERFACE
     /*
      * Configuration information
@@ -371,7 +297,6 @@ typedef struct _rrScrPriv {
     int			    rate;
     int			    size;
 #endif
-
 } rrScrPrivRec, *rrScrPrivPtr;
 
 extern _X_EXPORT DevPrivateKeyRec rrPrivKeyRec;
@@ -480,14 +405,8 @@ extern _X_EXPORT Bool
 RRScreenSizeSet (ScreenPtr  pScreen,
 		 CARD16	    width,
 		 CARD16	    height,
-		 CARD16	    pixWidth,
-		 CARD16	    pixHeight,
 		 CARD32	    mmWidth,
 		 CARD32	    mmHeight);
-
-extern _X_EXPORT void
-RRScreenCurrentConfig(ScreenPtr screen,
-		      RRScreenConfigPtr screen_config);
 
 /*
  * Send ConfigureNotify event to root window when 'something' happens
@@ -547,9 +466,6 @@ RRGetRotation (ScreenPtr pScreen);
 
 extern _X_EXPORT CARD16
 RRVerticalRefresh (xRRModeInfo *mode);
-
-extern _X_EXPORT RRScanoutPixmapInfo *
-RRQueryScanoutPixmapInfo(ScreenPtr screen, int *n_info);
 
 #ifdef RANDR_10_INTERFACE					
 /*
@@ -629,8 +545,7 @@ RRCrtcNotify (RRCrtcPtr	    crtc,
 	      Rotation	    rotation,
 	      RRTransformPtr transform,
 	      int	    numOutputs,
-	      RROutputPtr   *outputs,
-	      PixmapPtr	    scanoutPixmap);
+	      RROutputPtr   *outputs);
 
 extern _X_EXPORT void
 RRDeliverCrtcEvent (ClientPtr client, WindowPtr pWin, RRCrtcPtr crtc);
@@ -645,8 +560,7 @@ RRCrtcSet (RRCrtcPtr    crtc,
 	   int		y,
 	   Rotation	rotation,
 	   int		numOutput,
-	   RROutputPtr  *outputs,
-	   PixmapPtr	scanout_pixmap);
+	   RROutputPtr  *outputs);
 
 /*
  * Request that the Crtc gamma be changed
@@ -675,10 +589,6 @@ RRCrtcGammaGet(RRCrtcPtr crtc);
 extern _X_EXPORT Bool
 RRCrtcGammaNotify (RRCrtcPtr	crtc);
 
-void
-RRModeGetScanoutSize (RRModePtr mode, struct pixman_f_transform *transform,
-		      int *width, int *height);
-
 /*
  * Set the size of the gamma table at server startup time
  */
@@ -694,6 +604,25 @@ RRCrtcGammaSetSize (RRCrtcPtr	crtc,
 
 extern _X_EXPORT void
 RRCrtcGetScanoutSize(RRCrtcPtr crtc, int *width, int *height);
+
+/*
+ * Compute the complete transformation matrix including
+ * client-specified transform, rotation/reflection values and the crtc 
+ * offset.
+ *
+ * Return TRUE if the resulting transform is not a simple translation.
+ */
+extern _X_EXPORT Bool
+RRTransformCompute (int			    x,
+		    int			    y,
+		    int			    width,
+		    int			    height,
+		    Rotation		    rotation,
+		    RRTransformPtr	    rr_transform,
+
+		    PictTransformPtr	    transform,
+		    struct pict_f_transform *f_transform,
+		    struct pict_f_transform *f_inverse);
 
 /*
  * Return crtc transform
@@ -741,38 +670,6 @@ extern _X_EXPORT void
 RRCrtcInitErrorValue (void);
 
 /*
- * Free a set of crtc configs and their attached output arrays
- */
-void
-RRFreeCrtcConfigs(RRCrtcConfigPtr configs, int num_configs);
-
-/*
- * Convert the current crtc configuration into an RRCrtcConfig
- */
-extern _X_EXPORT Bool
-RRCrtcCurrentConfig(RRCrtcPtr crtc,
-		    RRCrtcConfigPtr crtc_config);
-
-/*
- * Figure out whether the specific crtc_config can fit
- * within the screen_config
- */
-Bool
-RRScreenCoversCrtc(RRScreenConfigPtr screen_config,
-		   RRCrtcConfigPtr crtc_config,
-		   RRTransformPtr client_transform,
-		   XID *errorValue);
-
-/*
- * Set a screen and set of crtc configurations in one operation
- */
-Bool
-RRSetCrtcConfigs(ScreenPtr screen,
-		 RRScreenConfigPtr screen_config,
-		 RRCrtcConfigPtr crtc_configs,
-		 int num_configs);
-
-/*
  * Crtc dispatch
  */
 
@@ -797,39 +694,11 @@ ProcRRSetCrtcTransform (ClientPtr client);
 extern _X_EXPORT int
 ProcRRGetCrtcTransform (ClientPtr client);
 
-extern _X_EXPORT int
-ProcRRSetCrtcConfigs (ClientPtr client);
-
 int
 ProcRRGetPanning (ClientPtr client);
 
 int
 ProcRRSetPanning (ClientPtr client);
-
-void
-RRCrtcSpriteTransformSet(RRCrtcPtr crtc,
-			 PictTransform *position_transform,
-			 PictTransform *image_transform,
-			 struct pict_f_transform *f_position_transform,
-			 struct pict_f_transform *f_image_transform);
-
-int
-ProcRRQueryScanoutPixmaps (ClientPtr client);
-
-int
-ProcRRCreateScanoutPixmap (ClientPtr client);
-
-int
-ProcRRSetCrtcPixmapConfig (ClientPtr client);
-
-int
-ProcRRSetCrtcSpriteTransform (ClientPtr client);
-
-int
-ProcRRGetCrtcSpriteTransform (ClientPtr client);
-
-int
-ProcRRSetCrtcConfigs (ClientPtr client);
 
 /* rrdispatch.c */
 extern _X_EXPORT Bool
@@ -1020,39 +889,11 @@ ProcRRConfigureOutputProperty (ClientPtr client);
 extern _X_EXPORT int
 ProcRRDeleteOutputProperty (ClientPtr client);
 
-/* rrsprite.c */
-extern _X_EXPORT int
-ProcRRSetCrtcSpriteTransform (ClientPtr client);
-
-extern _X_EXPORT int
-ProcRRGetCrtcSpriteTransform (ClientPtr client);
-
 /* rrxinerama.c */
 #ifdef XINERAMA
 extern _X_EXPORT void
 RRXineramaExtensionInit(void);
 #endif
-
-/* mirrcrtc.c */
-Bool
-miRRSetScreenConfig(ScreenPtr screen,
-		    RRScreenConfigPtr screen_config);
-
-Bool
-miRRSetCrtcConfig(RRCrtcConfigPtr crtc_config);
-
-Bool
-miRRDisableCrtc(RRCrtcPtr crtc);
-
-Bool
-miRRCheckDisableCrtc(RRScreenConfigPtr new_screen_config,
-		     RRCrtcConfigPtr old_crtc_config);
-
-Bool
-miRRSetCrtcConfigs(ScreenPtr screen,
-		   RRScreenConfigPtr screen_config,
-		   RRCrtcConfigPtr crtc_configs,
-		   int num_configs);
 
 #endif /* _RANDRSTR_H_ */
 

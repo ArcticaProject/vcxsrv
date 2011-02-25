@@ -98,7 +98,6 @@ RRCloseScreen (int i, ScreenPtr pScreen)
     
     free(pScrPriv->crtcs);
     free(pScrPriv->outputs);
-    free(pScrPriv->scanout_info);
     free(pScrPriv);
     RRNScreens -= 1;	/* ok, one fewer screen with RandR running */
     return (*pScreen->CloseScreen) (i, pScreen);    
@@ -249,8 +248,6 @@ Bool RRScreenInit(ScreenPtr pScreen)
     pScrPriv->rrCrtcSet = NULL;
     pScrPriv->rrCrtcSetGamma = NULL;
 #endif
-    pScrPriv->scanout_info = NULL;
-    pScrPriv->n_scanout_info = 0;
 #if RANDR_10_INTERFACE    
     pScrPriv->rrSetConfig = 0;
     pScrPriv->rotations = RR_Rotate_0;
@@ -483,18 +480,6 @@ RRVerticalRefresh (xRRModeInfo *mode)
     if (refresh > 0xffff)
 	refresh = 0xffff;
     return (CARD16) refresh;
-}
-
-RRScanoutPixmapInfo *
-RRQueryScanoutPixmapInfo(ScreenPtr screen, int *n_info)
-{
-    rrScrPriv(screen);
-
-    if (!pScrPriv->scanout_info && pScrPriv->rrQueryScanoutPixmaps)
-	pScrPriv->scanout_info = pScrPriv->rrQueryScanoutPixmaps(screen,
-								 &pScrPriv->n_scanout_info);
-    *n_info = pScrPriv->n_scanout_info;
-    return pScrPriv->scanout_info;
 }
 
 static int

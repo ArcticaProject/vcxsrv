@@ -404,7 +404,7 @@ typedef    void (* DeviceCursorCleanupProcPtr)(
         ScreenPtr    /* pScreen */);
 
 typedef void (*ConstrainCursorHarderProcPtr)(
-       DeviceIntPtr, ScreenPtr, int *, int *);
+       DeviceIntPtr, ScreenPtr, int, int *, int *);
 
 typedef struct _Screen {
     int			myNum;	/* index of this instance in Screens[] */

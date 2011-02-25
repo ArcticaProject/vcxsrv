@@ -175,8 +175,10 @@ exaModifyPixmapHeader_mixed(PixmapPtr pPixmap, int width, int height, int depth,
 	depth != pPixmap->drawable.depth ||
 	bitsPerPixel != pPixmap->drawable.bitsPerPixel) {
 	if (pExaPixmap->driverPriv) {
-            exaSetFbPitch(pExaScr, pExaPixmap,
-                          width, height, bitsPerPixel);
+	    if (devKind > 0)
+		pExaPixmap->fb_pitch = devKind;
+	    else
+		exaSetFbPitch(pExaScr, pExaPixmap, width, height, bitsPerPixel);
 
             exaSetAccelBlock(pExaScr, pExaPixmap,
                              width, height, bitsPerPixel);
@@ -187,8 +189,7 @@ exaModifyPixmapHeader_mixed(PixmapPtr pPixmap, int width, int height, int depth,
 	if (has_gpu_copy && pExaPixmap->sys_ptr) {
 	    free(pExaPixmap->sys_ptr);
 	    pExaPixmap->sys_ptr = NULL;
-	    pExaPixmap->sys_pitch = devKind > 0 ? devKind :
-	        PixmapBytePad(width, depth);
+	    pExaPixmap->sys_pitch = PixmapBytePad(width, depth);
 	    DamageUnregister(&pPixmap->drawable, pExaPixmap->pDamage);
 	    DamageDestroy(pExaPixmap->pDamage);
 	    pExaPixmap->pDamage = NULL;

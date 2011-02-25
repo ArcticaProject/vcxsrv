@@ -338,7 +338,7 @@ xf86_crtc_set_cursor_position (xf86CrtcPtr crtc, int x, int y)
     /*
      * Transform position of cursor on screen
      */
-    if (crtc->sprite_transform_in_use)
+    if (crtc->transform_in_use)
     {
 	ScreenPtr	screen = scrn->pScreen;
 	xf86CursorScreenPtr ScreenPriv =
@@ -349,7 +349,7 @@ xf86_crtc_set_cursor_position (xf86CrtcPtr crtc, int x, int y)
 	v.v[0] = (x + ScreenPriv->HotX) + 0.5;
 	v.v[1] = (y + ScreenPriv->HotY) + 0.5;
 	v.v[2] = 1;
-	pixman_f_transform_point (&crtc->f_screen_to_crtc, &v);
+	pixman_f_transform_point (&crtc->f_framebuffer_to_crtc, &v);
 	/* cursor will have 0.5 added to it already so floor is sufficent */
 	x = floor (v.v[0]);
 	y = floor (v.v[1]);

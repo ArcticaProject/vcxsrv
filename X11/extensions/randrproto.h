@@ -661,6 +661,7 @@ typedef struct {
 
 typedef struct {
     RRCrtc crtc B32;
+    CARD32 set B32;
     INT16 x B16, y B16;
     RRMode mode B32;
     Rotation rotation B16;
@@ -670,7 +671,7 @@ typedef struct {
     Pixmap pixmap B32;
     INT16 xPixmap B16, yPixmap B16;
 } xRRCrtcConfig;
-#define sz_xRRCrtcConfig (2*sz_xRenderTransform + 24)
+#define sz_xRRCrtcConfig (2*sz_xRenderTransform + 28)
 
 typedef struct {
     CARD8 reqType;
@@ -740,6 +741,7 @@ typedef struct {
     CARD8 randrReqType;
     CARD16 length B16;
     Drawable drawable B32;
+    CARD32 set B32;
     CARD16 screenPixmapWidth B16, screenPixmapHeight B16;
     CARD16 screenWidth B16, screenHeight B16;
     CARD32 widthInMillimeters B32;
@@ -748,7 +750,7 @@ typedef struct {
     CARD16 pad0 B16;
     CARD32 pad1 B32;
 } xRRSetCrtcConfigsReq;
-#define sz_xRRSetCrtcConfigsReq 32
+#define sz_xRRSetCrtcConfigsReq 36
 
 typedef struct {
     BYTE	type;

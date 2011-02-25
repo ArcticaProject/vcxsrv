@@ -709,6 +709,6 @@ xf86SbusConfigureNewDev(void *busData, sbusDevicePtr sBus, GDevRec *GDev)
         XNFasprintf(&GDev->busID, "SBUS:%s", promPath);
         free(promPath);
     } else {
-        XNFsprintf(&GDev->busID, "SBUS:fb%d", sBus->fbNum);
+        XNFasprintf(&GDev->busID, "SBUS:fb%d", sBus->fbNum);
     }
 }

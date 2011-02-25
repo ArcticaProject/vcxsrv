@@ -157,9 +157,6 @@
 /* Name of X server */
 #undef __XSERVERNAME__
 
-/* Define to 1 if unsigned long is 64 bits. */
-#undef _XSERVER64
-
 /* Building vgahw module */
 #undef WITH_VGAHW
 
@@ -186,5 +183,9 @@
 
 /* X Access Control Extension */
 #undef XACE
+
+#ifdef _LP64
+#define _XSERVER64 1
+#endif
 
 #endif /* _XORG_SERVER_H_ */

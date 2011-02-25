@@ -261,60 +261,6 @@ void __glXDispSwap_CallLists(GLbyte *pc)
 
 }
 
-static void swapArray(GLint numVals, GLenum datatype,
-                      GLint stride, GLint numVertexes, GLbyte *pc)
-{
-    int i,j;
-    __GLX_DECLARE_SWAP_VARIABLES;
-
-    switch (datatype) {
-      case GL_BYTE:
-      case GL_UNSIGNED_BYTE:
-	/* don't need to swap */
-	return;
-      case GL_SHORT:
-      case GL_UNSIGNED_SHORT:
-	for (i=0; i<numVertexes; i++) {
-	    GLshort *pVal = (GLshort *) pc;
-	    for (j=0; j<numVals; j++) {
-		__GLX_SWAP_SHORT(&pVal[j]);
-	    }
-	    pc += stride;
-	}
-	break;
-      case GL_INT:
-      case GL_UNSIGNED_INT:
-	for (i=0; i<numVertexes; i++) {
-	    GLint *pVal = (GLint *) pc;
-	    for (j=0; j<numVals; j++) {
-		__GLX_SWAP_INT(&pVal[j]);
-	    }
-	    pc += stride;
-	}
-	break;
-      case GL_FLOAT:
-	for (i=0; i<numVertexes; i++) {
-	    GLfloat *pVal = (GLfloat *) pc;
-	    for (j=0; j<numVals; j++) {
-		__GLX_SWAP_FLOAT(&pVal[j]);
-	    }
-	    pc += stride;
-	}
-	break;
-      case GL_DOUBLE:
-	for (i=0; i<numVertexes; i++) {
-	    GLdouble *pVal = (GLdouble *) pc;
-	    for (j=0; j<numVals; j++) {
-		__GLX_SWAP_DOUBLE(&pVal[j]);
-	    }
-	    pc += stride;
-	}
-	break;
-      default:
-	return;
-    }
-}
-
 void __glXDispSwap_DrawArrays(GLbyte *pc)
 {
     __GLXdispatchDrawArraysHeader *hdr = (__GLXdispatchDrawArraysHeader *)pc;

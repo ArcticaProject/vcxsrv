@@ -101,8 +101,8 @@ static int CreateContext(__GLXclientState *cl,
     int from_screen = screen;
     int to_screen = screen;
     DMXScreenInfo *dmxScreen;
-    VisualID be_vid;
-    GLXFBConfigID be_fbconfigId;
+    VisualID be_vid = 0;
+    GLXFBConfigID be_fbconfigId = 0;
     int num_be_screens;
     Display *dpy;
     
@@ -1660,7 +1660,7 @@ static int CreateGLXPixmap(__GLXclientState *cl,
 	return BadMatch;
     }
 
-    if (fbconfigId == NULL && visual == NULL) {
+    if (fbconfigId == 0 && visual == 0) {
 	  return BadValue;
     }
 
@@ -1733,6 +1733,7 @@ static int CreateGLXPixmap(__GLXclientState *cl,
     else {
        pVisual = NULL;
        pGlxVisual = NULL;
+       pGlxScreen = &__glXActiveScreens[pDraw->pScreen->myNum];
     }
 
     pGlxPixmap = (__GLXpixmap *) malloc(sizeof(__GLXpixmap));
@@ -3295,27 +3296,23 @@ int __glXGetDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
    int screen, rc;
    DMXScreenInfo *dmxScreen;
    CARD32 *attribs = NULL;
-   int attribs_size;
+   int attribs_size = 0;
 #ifdef PANORAMIX
     PanoramiXRes *pXinDraw = NULL;
 #endif
 
    if (drawId != None) {
       rc = dixLookupDrawable(&pDraw, drawId, client, 0, DixGetAttrAccess);
-      if (rc == Success) {
-	 if (pDraw->type == DRAWABLE_WINDOW) {
-		WindowPtr pWin = (WindowPtr)pDraw;
-		be_drawable = 0;
-		screen = pWin->drawable.pScreen->myNum;
-
-	 }
-	 else {
-	    /*
-	     ** Drawable is not a Window , GLXWindow or a GLXPixmap.
-	     */
-	    client->errorValue = drawId;
-	    return __glXBadDrawable;
-	 }
+      if (rc == Success && pDraw->type == DRAWABLE_WINDOW) {
+	 WindowPtr pWin = (WindowPtr)pDraw;
+	 be_drawable = 0;
+	 screen = pWin->drawable.pScreen->myNum;
+      } else {
+	 /*
+	  ** Drawable is not a Window , GLXWindow or a GLXPixmap.
+	  */
+	 client->errorValue = drawId;
+	 return __glXBadDrawable;
       }
 
       if (!pDraw) {
@@ -3353,17 +3350,15 @@ int __glXGetDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 	    be_drawable = pGlxPbuffer->be_xids[screen];
 	 }
       }
-
-
-      if (!pDraw) {
-	 /*
-	  ** Drawable is not a Window , GLXWindow or a GLXPixmap.
-	  */
-	 client->errorValue = drawId;
-	 return __glXBadDrawable;
-      }
     }
 
+    if (!pDraw) {
+	/*
+	 ** Drawable is not a Window , GLXWindow or a GLXPixmap.
+	 */
+	client->errorValue = drawId;
+	return __glXBadDrawable;
+   }
 
    /* if the drawable is a window or GLXWindow - 
     * we need to find the base id on the back-end server
@@ -3466,20 +3461,15 @@ int __glXChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 
    if (drawId != None) {
       rc = dixLookupDrawable(&pDraw, drawId, client, 0, DixSetAttrAccess);
-      if (rc == Success) {
-	 if (pDraw->type == DRAWABLE_WINDOW) {
-		WindowPtr pWin = (WindowPtr)pDraw;
-		be_drawable = 0;
-		screen = pWin->drawable.pScreen->myNum;
-
-	 }
-	 else {
-	    /*
-	     ** Drawable is not a Window , GLXWindow or a GLXPixmap.
-	     */
-	    client->errorValue = drawId;
-	    return __glXBadDrawable;
-	 }
+      if (rc == Success && pDraw->type == DRAWABLE_WINDOW) {
+	  be_drawable = 0;
+	  screen = pDraw->pScreen->myNum;
+      } else {
+	 /*
+	  ** Drawable is not a Window , GLXWindow or a GLXPixmap.
+	  */
+	 client->errorValue = drawId;
+	 return __glXBadDrawable;
       }
 
       if (!pDraw) {
@@ -3517,17 +3507,15 @@ int __glXChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 	    be_drawable = pGlxPbuffer->be_xids[screen];
 	 }
       }
+   }
 
-
-      if (!pDraw) {
+   if (!pDraw) {
 	 /*
 	  ** Drawable is not a Window , GLXWindow or a GLXPixmap.
 	  */
 	 client->errorValue = drawId;
 	 return __glXBadDrawable;
-      }
-    }
-
+   }
 
    /* if the drawable is a window or GLXWindow - 
     * we need to find the base id on the back-end server
