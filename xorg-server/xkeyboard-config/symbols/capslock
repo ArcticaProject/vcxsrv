@@ -60,3 +60,15 @@ partial hidden modifier_keys
 xkb_symbols "numlock" {
     key <CAPS> {        [       Num_Lock  ]       };
 };
+
+// This changes the modifier behavior of the <CAPS> key.
+// The keysym will be reset to Caps_Lock
+partial hidden modifier_keys
+xkb_symbols "ctrl_modifier" {
+    replace key <CAPS> {
+        type[Group1] = "ONE_LEVEL",
+        symbols[Group1] = [ Caps_Lock ],
+        actions[Group1] = [ SetMods(modifiers=Control) ]    
+    };
+    modifier_map Control { <CAPS> };
+};

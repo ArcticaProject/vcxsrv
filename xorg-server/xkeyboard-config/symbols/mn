@@ -74,6 +74,8 @@ xkb_symbols "olpc" {
 
   include "mn(basic)"
 
+  key <AE07> { [ 7,                 semicolon,          ampersand       ] };
+
   key <BKSL> { [ backslash,         bar,     		exclam          ] };
 
   include "group(olpc)"

@@ -60,6 +60,7 @@
   caps:super		=	+capslock(super)
   caps:hyper		=	+capslock(hyper)
   caps:none		=	+capslock(none)
+  caps:ctrl_modifier	=	+capslock(ctrl_modifier)
   ctrl:nocaps		=	+ctrl(nocaps)
   ctrl:lctrl_meta	=	+ctrl(lctrl_meta)
   ctrl:swapcaps		=	+ctrl(swapcaps)

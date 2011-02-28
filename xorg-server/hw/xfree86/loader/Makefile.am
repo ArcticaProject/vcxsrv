@@ -26,4 +26,5 @@ CLEANFILES = sdksyms.c sdksyms.dep
 sdksyms.dep sdksyms.c: sdksyms.sh
 	CPP='$(CPP)' AWK='$(AWK)' $(srcdir)/sdksyms.sh $(top_srcdir) $(AM_CFLAGS) $(CFLAGS) $(INCLUDES)
 
-sinclude sdksyms.dep
+SDKSYMS_DEP = sdksyms.dep
+include $(SDKSYMS_DEP)

@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.9.99.903, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2011-2-24"
+AC_INIT([xorg-server], 1.10.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2011-2-25"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -2173,6 +2173,8 @@ AC_SUBST([libdir])
 AC_SUBST([exec_prefix])
 AC_SUBST([prefix])
 
+AC_CONFIG_COMMANDS([sdksyms], [touch hw/xfree86/loader/sdksyms.dep])
+
 AC_OUTPUT([
 Makefile
 glx/Makefile
@@ -2246,6 +2248,7 @@ hw/xfree86/utils/gtf/Makefile
 hw/dmx/config/Makefile
 hw/dmx/config/man/Makefile
 hw/dmx/doc/Makefile
+hw/dmx/doc/doxygen.conf
 hw/dmx/examples/Makefile
 hw/dmx/input/Makefile
 hw/dmx/glxProxy/Makefile
