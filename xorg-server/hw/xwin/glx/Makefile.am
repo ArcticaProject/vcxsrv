@@ -45,10 +45,10 @@ wgl.tm:
 	wget http://www.opengl.org/registry/api/wgl.tm
 
 generated_gl_wrappers.c: gen_gl_wrappers.py gl.spec gl.tm
-	$(srcdir)/gen_gl_wrappers.py --spec=$(srcdir)/gl.spec --typemap=$(srcdir)/gl.tm --dispatch-header=$(top_srcdir)/glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
+	$(srcdir)/gen_gl_wrappers.py --spec=`test -e gl.spec || echo $(srcdir)/`gl.spec --typemap=`test -e gl.tm || echo $(srcdir)/`gl.tm --dispatch-header=$(top_srcdir)/glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
 
 generated_wgl_wrappers.c: gen_gl_wrappers.py wglext.spec wgl.tm
-	$(srcdir)/gen_gl_wrappers.py --spec=$(srcdir)/wglext.spec --typemap=$(srcdir)/wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
+	$(srcdir)/gen_gl_wrappers.py --spec=`test -e wglext.spec || echo $(srcdir)/`wglext.spec --typemap=`test -e wgl.tm || echo $(srcdir)/`wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
 
 wglext.h:
 	wget http://www.opengl.org/registry/api/wglext.h

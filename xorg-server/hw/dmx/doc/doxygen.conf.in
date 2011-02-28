@@ -344,9 +344,9 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = .. \
-                         ../input \
-                         ../config
+INPUT                  = @srcdir@/.. \
+                         @srcdir@/../input \
+                         @srcdir@/../config
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -367,9 +367,9 @@ RECURSIVE              = NO
 # excluded from the INPUT source files. This way you can easily exclude a 
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
-EXCLUDE                = ../config/parser.c \
-                         ../config/parser.h \
-                         ../config/scanner.c
+EXCLUDE                = @srcdir@/../config/parser.c \
+                         @srcdir@/../config/parser.h \
+                         @srcdir@/../config/scanner.c
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or directories 
 # that are symbolic links (a Unix filesystem feature) are excluded from the input.
@@ -510,20 +510,20 @@ HTML_FILE_EXTENSION    = .html
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard header.
 
-HTML_HEADER            = doxygen.head
+HTML_HEADER            = @srcdir@/doxygen.head
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = doxygen.foot
+HTML_FOOTER            = @srcdir@/doxygen.foot
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
 # fine-tune the look of the HTML output. If the tag is left blank doxygen 
 # will generate a default style sheet
 
-HTML_STYLESHEET        = doxygen.css
+HTML_STYLESHEET        = @srcdir@/doxygen.css
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
 # files or namespaces will be aligned in HTML using tables. If set to 

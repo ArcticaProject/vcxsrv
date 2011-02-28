@@ -1394,14 +1394,14 @@
         </variant>
         <variant>
           <configItem>
-            <name>olpc-fa</name>
+            <name>fa-olpc</name>
             <_description>OLPC Dari</_description>
             <!-- No ISO code in ISO639-2, only draft ISO693-3 -->
           </configItem>
         </variant>
         <variant>
           <configItem>
-            <name>olpc-uz</name>
+            <name>uz-olpc</name>
             <_description>OLPC Southern Uzbek</_description>
             <languageList><iso639Id>uzb</iso639Id></languageList>
           </configItem>
@@ -5293,6 +5293,12 @@
         <configItem>
           <name>caps:none</name>
           <_description>Caps Lock is disabled</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>caps:ctrl_modifier</name>
+          <_description>Make Caps Lock an additional Control but keep the Caps_Lock keysym</_description>
         </configItem>
       </option>
     </group>

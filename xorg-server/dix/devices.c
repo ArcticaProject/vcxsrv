@@ -1225,6 +1225,7 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
 {
     int i;
     ValuatorClassPtr valc;
+    union align_u { ValuatorClassRec valc; double d; } *align;
 
     if (!dev)
         return FALSE;
@@ -1237,12 +1238,13 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
         numAxes = MAX_VALUATORS;
     }
 
-    valc = (ValuatorClassPtr)calloc(1, sizeof(ValuatorClassRec) +
-				    numAxes * sizeof(AxisInfo) +
-				    numAxes * sizeof(double));
-    if (!valc)
+    align = (union align_u *) calloc(1, sizeof(union align_u) +
+				     numAxes * sizeof(double) +
+				     numAxes * sizeof(AxisInfo));
+    if (!align)
 	return FALSE;
 
+    valc = &align->valc;
     valc->sourceid = dev->id;
     valc->motion = NULL;
     valc->first_motion = 0;
@@ -1251,8 +1253,8 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
     valc->numMotionEvents = numMotionEvents;
     valc->motionHintWindow = NullWindow;
     valc->numAxes = numAxes;
-    valc->axes = (AxisInfoPtr)(valc + 1);
-    valc->axisVal = (double *)(valc->axes + numAxes);
+    valc->axisVal = (double *)(align + 1);
+    valc->axes = (AxisInfoPtr)(valc->axisVal + numAxes);
 
     if (mode & OutOfProximity)
         InitProximityClassDeviceStruct(dev);

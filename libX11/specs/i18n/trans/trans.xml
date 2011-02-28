@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
-<book id="xtransportspec">
+<book id="trans">
 
 <bookinfo>
    <title>The XIM Transport Specification</title>

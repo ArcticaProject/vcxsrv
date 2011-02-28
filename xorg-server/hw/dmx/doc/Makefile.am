@@ -24,34 +24,14 @@ doc_sources = dmx.xml scaled.xml
 # Developer's documentation is not installed
 if ENABLE_DEVEL_DOCS
 include $(top_srcdir)/doc/xml/xmlrules-noinst.in
-
-if HAVE_DOXYGEN
-
-DOXYGEN_SRC=doxygen.head doxygen.foot doxygen.css doxygen.conf
-
-all-local: html/annotated.html
-
-dist-local: html/annotated.html
-
-html/annotated.html: $(DOXYGEN_SRC)
-	$(DOXYGEN) $(srcdir)/doxygen.conf
-
-maintainer-clean-local:
-	rm -rf html/
-endif
 endif ENABLE_DEVEL_DOCS
 
-EXTRA_DIST = \
-	$(XML_FILES) \
-	DMXSpec.txt \
-	DMXSpec-v1.txt \
+DOXYGEN_HEAD=\
+	html/annotated.html
+
+DOXYGEN_REST= \
 	dmx.txt \
-	doxygen.conf \
-	doxygen.css \
-	doxygen.foot \
-	doxygen.head \
 	scaled.txt \
-	html/annotated.html \
 	html/ChkNotMaskEv_8c.html \
 	html/ChkNotMaskEv_8h.html \
 	html/ChkNotMaskEv_8h_source.html \
@@ -253,6 +233,41 @@ EXTRA_DIST = \
 	html/usb-other_8h_source.html \
 	html/usb-private_8h.html \
 	html/usb-private_8h_source.html
+
+DOXYGEN_FILES=$(DOXYGEN_HEAD) $(DOXYGEN_REST)
+
+EXTRA_DIST = \
+	$(XML_FILES) \
+	DMXSpec.txt \
+	DMXSpec-v1.txt \
+	doxygen.conf \
+	doxygen.css \
+	doxygen.foot \
+	doxygen.head \
+	$(DOXYGEN_FILES)
+
+if ENABLE_DEVEL_DOCS
+if HAVE_DOXYGEN
+
+DOXYGEN_SRC=doxygen.head doxygen.foot doxygen.css doxygen.conf
+
+all-local: $(DOXYGEN_FILES)
+
+dist-local: $(DOXYGEN_FILES)
+
+$(DOXYGEN_HEAD): $(DOXYGEN_SRC)
+	$(DOXYGEN) doxygen.conf
+
+$(DOXYGEN_REST): $(DOXYGEN_HEAD)
+
+maintainer-clean-local:
+	rm -rf html/ scaled.txt dmx.txt
+
+distclean-local:
+	rm -rf html/ scaled.txt dmx.txt
+
+endif HAVE_DOXYGEN
+endif ENABLE_DEVEL_DOCS
 
 $(builddir)/doxygen.head:
 	$(LN_S) $(srcdir)/doxygen.head $@
