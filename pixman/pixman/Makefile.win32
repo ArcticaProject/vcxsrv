@@ -56,6 +56,8 @@ SOURCES =				\
 	pixman-general.c		\
 	$(NULL)
 
+BUILT_SOURCES = pixman-combine32.h pixman-combine32.c pixman-combine64.h pixman-combine64.c
+
 # MMX compilation flags
 ifeq ($(MMX_VAR),on)
 CFLAGS += $(MMX_CFLAGS)
@@ -122,7 +124,7 @@ endif
 endif
 
 # pixman compilation and linking
-$(CFG_VAR)/%.obj: %.c
+$(CFG_VAR)/%.obj: %.c $(BUILT_SOURCES)
 	@mkdir -p $(CFG_VAR)
 	@$(CC) -c $(CFLAGS) -Fo"$@" $<
 
@@ -141,4 +143,4 @@ pixman-combine64.h: pixman-combine.h.template make-combine.pl
 
 clean_r:
 	@rm -f $(CFG_VAR)/*.obj $(CFG_VAR)/*.lib $(CFG_VAR)/*.pdb $(CFG)/*.ilk || exit 0
-	@rm -f $(CFG)/*.obj $(CFG)/*.lib $(CFG)/*.pdb $(CFG)/*.ilk pixman-combine32.c pixman-combine64.c pixman-combine64.c pixman-combine64.h || exit 0
+	@rm -f $(CFG)/*.obj $(CFG)/*.lib $(CFG)/*.pdb $(CFG)/*.ilk $(BUILT_SOURCES) || exit 0

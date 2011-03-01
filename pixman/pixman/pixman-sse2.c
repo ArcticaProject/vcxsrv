@@ -5567,6 +5567,114 @@ FAST_NEAREST_MAINLOOP_COMMON (sse2_8888_n_8888_none_OVER,
 			      scaled_nearest_scanline_sse2_8888_n_8888_OVER,
 			      uint32_t, uint32_t, uint32_t, NONE, TRUE, TRUE)
 
+static void
+bilinear_interpolate_line_sse2 (uint32_t *       out,
+                                const uint32_t * top,
+                                const uint32_t * bottom,
+                                int              wt,
+                                int              wb,
+                                pixman_fixed_t   x,
+                                pixman_fixed_t   ux,
+                                int              width)
+{
+    const __m128i xmm_wt = _mm_set_epi16 (wt, wt, wt, wt, wt, wt, wt, wt);
+    const __m128i xmm_wb = _mm_set_epi16 (wb, wb, wb, wb, wb, wb, wb, wb);
+    const __m128i xmm_xorc = _mm_set_epi16 (0, 0, 0, 0, 0xff, 0xff, 0xff, 0xff);
+    const __m128i xmm_addc = _mm_set_epi16 (0, 0, 0, 0, 1, 1, 1, 1);
+    const __m128i xmm_ux = _mm_set_epi16 (ux, ux, ux, ux, ux, ux, ux, ux);
+    const __m128i xmm_zero = _mm_setzero_si128 ();
+    __m128i xmm_x = _mm_set_epi16 (x, x, x, x, x, x, x, x);
+    uint32_t pix1, pix2, pix3, pix4;
+
+    #define INTERPOLATE_ONE_PIXEL(pix)						\
+    do {									\
+	__m128i xmm_wh, xmm_lo, xmm_hi, a;					\
+	/* fetch 2x2 pixel block into sse2 register */				\
+	uint32_t tl = top [pixman_fixed_to_int (x)];				\
+	uint32_t tr = top [pixman_fixed_to_int (x) + 1];			\
+	uint32_t bl = bottom [pixman_fixed_to_int (x)];				\
+	uint32_t br = bottom [pixman_fixed_to_int (x) + 1];			\
+	a = _mm_set_epi32 (tr, tl, br, bl);					\
+        x += ux;								\
+	/* vertical interpolation */						\
+	a = _mm_add_epi16 (_mm_mullo_epi16 (_mm_unpackhi_epi8 (a, xmm_zero),	\
+					    xmm_wt),				\
+			   _mm_mullo_epi16 (_mm_unpacklo_epi8 (a, xmm_zero),	\
+					    xmm_wb));				\
+	/* calculate horizontal weights */					\
+	xmm_wh = _mm_add_epi16 (xmm_addc,					\
+				_mm_xor_si128 (xmm_xorc,			\
+					       _mm_srli_epi16 (xmm_x, 8)));	\
+	xmm_x = _mm_add_epi16 (xmm_x, xmm_ux);					\
+	/* horizontal interpolation */						\
+	xmm_lo = _mm_mullo_epi16 (a, xmm_wh);					\
+	xmm_hi = _mm_mulhi_epu16 (a, xmm_wh);					\
+	a = _mm_add_epi32 (_mm_unpacklo_epi16 (xmm_lo, xmm_hi),			\
+			   _mm_unpackhi_epi16 (xmm_lo, xmm_hi));		\
+	/* shift and pack the result */						\
+	a = _mm_srli_epi32 (a, 16);						\
+	a = _mm_packs_epi32 (a, a);						\
+	a = _mm_packus_epi16 (a, a);						\
+	pix = _mm_cvtsi128_si32 (a);						\
+    } while (0)
+
+    while ((width -= 4) >= 0)
+    {
+	INTERPOLATE_ONE_PIXEL (pix1);
+	INTERPOLATE_ONE_PIXEL (pix2);
+	INTERPOLATE_ONE_PIXEL (pix3);
+	INTERPOLATE_ONE_PIXEL (pix4);
+	*out++ = pix1;
+	*out++ = pix2;
+	*out++ = pix3;
+	*out++ = pix4;
+    }
+    if (width & 2)
+    {
+	INTERPOLATE_ONE_PIXEL (pix1);
+	INTERPOLATE_ONE_PIXEL (pix2);
+	*out++ = pix1;
+	*out++ = pix2;
+    }
+    if (width & 1)
+    {
+	INTERPOLATE_ONE_PIXEL (pix1);
+	*out = pix1;
+    }
+
+    #undef INTERPOLATE_ONE_PIXEL
+}
+
+static force_inline void
+scaled_bilinear_scanline_sse2_8888_8888_SRC (uint32_t *       dst,
+					     const uint32_t * mask,
+					     const uint32_t * src_top,
+					     const uint32_t * src_bottom,
+					     int32_t          w,
+					     int              wt,
+					     int              wb,
+					     pixman_fixed_t   vx,
+					     pixman_fixed_t   unit_x,
+					     pixman_fixed_t   max_vx,
+					     pixman_bool_t    zero_src)
+{
+    bilinear_interpolate_line_sse2 (dst, src_top, src_bottom,
+				    wt, wb, vx, unit_x, w);
+}
+
+FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_cover_SRC,
+			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
+			       uint32_t, uint32_t, uint32_t,
+			       COVER, FALSE, FALSE)
+FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_pad_SRC,
+			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
+			       uint32_t, uint32_t, uint32_t,
+			       PAD, FALSE, FALSE)
+FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_none_SRC,
+			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
+			       uint32_t, uint32_t, uint32_t,
+			       NONE, FALSE, FALSE)
+
 static const pixman_fast_path_t sse2_fast_paths[] =
 {
     /* PIXMAN_OP_OVER */
@@ -5667,6 +5775,10 @@ static const pixman_fast_path_t sse2_fast_paths[] =
     SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8b8g8r8, a8b8g8r8, sse2_8888_n_8888),
     SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8r8g8b8, x8r8g8b8, sse2_8888_n_8888),
     SIMPLE_NEAREST_SOLID_MASK_FAST_PATH (OVER, a8b8g8r8, x8b8g8r8, sse2_8888_n_8888),
+
+    SIMPLE_BILINEAR_FAST_PATH (SRC, a8r8g8b8, a8r8g8b8, sse2_8888_8888),
+    SIMPLE_BILINEAR_FAST_PATH (SRC, a8r8g8b8, x8r8g8b8, sse2_8888_8888),
+    SIMPLE_BILINEAR_FAST_PATH (SRC, x8r8g8b8, x8r8g8b8, sse2_8888_8888),
 
     { PIXMAN_OP_NONE },
 };

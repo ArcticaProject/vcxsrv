@@ -2391,3 +2391,200 @@ generate_composite_function_nearest_scanline \
     10,  /* dst_r_basereg */ \
     8,  /* src_basereg   */ \
     15  /* mask_basereg  */
+
+/******************************************************************************/
+
+/* Supplementary macro for setting function attributes */
+.macro pixman_asm_function fname
+    .func fname
+    .global fname
+#ifdef __ELF__
+    .hidden fname
+    .type fname, %function
+#endif
+fname:
+.endm
+
+.macro bilinear_interpolate_last_pixel
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d0}, [TMP1]
+    vshr.u16  d30, d24, #8
+    vld1.32   {d1}, [TMP2]
+    vmull.u8  q1, d0, d28
+    vmlal.u8  q1, d1, d29
+    /* 5 cycles bubble */
+    vshll.u16 q0, d2, #8
+    vmlsl.u16 q0, d2, d30
+    vmlal.u16 q0, d3, d30
+    /* 5 cycles bubble */
+    vshrn.u32 d0, q0, #16
+    /* 3 cycles bubble */
+    vmovn.u16 d0, q0
+    /* 1 cycle bubble */
+    vst1.32   {d0[0]}, [OUT, :32]!
+.endm
+
+.macro bilinear_interpolate_two_pixels
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       X, X, UX
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d0}, [TMP1]
+    vld1.32   {d1}, [TMP2]
+    vmull.u8  q1, d0, d28
+    vmlal.u8  q1, d1, d29
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       X, X, UX
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d20}, [TMP1]
+    vld1.32   {d21}, [TMP2]
+    vmull.u8  q11, d20, d28
+    vmlal.u8  q11, d21, d29
+    vshr.u16  q15, q12, #8
+    vadd.u16  q12, q12, q13
+    vshll.u16 q0, d2, #8
+    vmlsl.u16 q0, d2, d30
+    vmlal.u16 q0, d3, d30
+    vshll.u16 q10, d22, #8
+    vmlsl.u16 q10, d22, d31
+    vmlal.u16 q10, d23, d31
+    vshrn.u32 d30, q0, #16
+    vshrn.u32 d31, q10, #16
+    vmovn.u16 d0, q15
+    vst1.32   {d0}, [OUT]!
+.endm
+
+.macro bilinear_interpolate_four_pixels
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       X, X, UX
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d0}, [TMP1]
+    vld1.32   {d1}, [TMP2]
+    vmull.u8  q1, d0, d28
+    vmlal.u8  q1, d1, d29
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       X, X, UX
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d20}, [TMP1]
+    vld1.32   {d21}, [TMP2]
+    vmull.u8  q11, d20, d28
+    vmlal.u8  q11, d21, d29
+    vshr.u16  q15, q12, #8
+    vadd.u16  q12, q12, q13
+    vshll.u16 q0, d2, #8
+    vmlsl.u16 q0, d2, d30
+    vmlal.u16 q0, d3, d30
+    vshll.u16 q10, d22, #8
+    vmlsl.u16 q10, d22, d31
+    vmlal.u16 q10, d23, d31
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       X, X, UX
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d4}, [TMP1]
+    vld1.32   {d5}, [TMP2]
+    vmull.u8  q3, d4, d28
+    vmlal.u8  q3, d5, d29
+    mov       TMP1, X, asr #16
+    mov       TMP2, X, asr #16
+    add       X, X, UX
+    add       TMP1, TOP, TMP1, asl #2
+    add       TMP2, BOTTOM, TMP2, asl #2
+    vld1.32   {d16}, [TMP1]
+    vld1.32   {d17}, [TMP2]
+    vmull.u8  q9, d16, d28
+    vmlal.u8  q9, d17, d29
+    vshr.u16  q15, q12, #8
+    vadd.u16  q12, q12, q13
+    vshll.u16 q2, d6, #8
+    vmlsl.u16 q2, d6, d30
+    vmlal.u16 q2, d7, d30
+    vshll.u16 q8, d18, #8
+    vmlsl.u16 q8, d18, d31
+    vmlal.u16 q8, d19, d31
+    vshrn.u32 d0, q0, #16
+    vshrn.u32 d1, q10, #16
+    vshrn.u32 d4, q2, #16
+    vshrn.u32 d5, q8, #16
+    vmovn.u16 d0, q0
+    vmovn.u16 d1, q2
+    vst1.32   {d0, d1}, [OUT]!
+.endm
+
+
+/*
+ * pixman_scaled_bilinear_scanline_8888_8888_SRC (uint32_t *       out,
+ *                                                const uint32_t * top,
+ *                                                const uint32_t * bottom,
+ *                                                int              wt,
+ *                                                int              wb,
+ *                                                pixman_fixed_t   x,
+ *                                                pixman_fixed_t   ux,
+ *                                                int              width)
+ */
+
+pixman_asm_function pixman_scaled_bilinear_scanline_8888_8888_SRC_asm_neon
+    OUT       .req      r0
+    TOP       .req      r1
+    BOTTOM    .req      r2
+    WT        .req      r3
+    WB        .req      r4
+    X         .req      r5
+    UX        .req      r6
+    WIDTH     .req      ip
+    TMP1      .req      r3
+    TMP2      .req      r4
+
+    mov       ip, sp
+    push      {r4, r5, r6, r7}
+    ldmia     ip, {WB, X, UX, WIDTH}
+
+    cmp       WIDTH, #0
+    ble       3f
+    vdup.u16  q12, X
+    vdup.u16  q13, UX
+    vdup.u8   d28, WT
+    vdup.u8   d29, WB
+    vadd.u16  d25, d25, d26
+    vadd.u16  q13, q13, q13
+
+    subs      WIDTH, WIDTH, #4
+    blt       1f
+0:
+    bilinear_interpolate_four_pixels
+    subs      WIDTH, WIDTH, #4
+    bge       0b
+1:
+    tst       WIDTH, #2
+    beq       2f
+    bilinear_interpolate_two_pixels
+2:
+    tst       WIDTH, #1
+    beq       3f
+    bilinear_interpolate_last_pixel
+3:
+    pop       {r4, r5, r6, r7}
+    bx        lr
+
+    .unreq    OUT
+    .unreq    TOP
+    .unreq    BOTTOM
+    .unreq    WT
+    .unreq    WB
+    .unreq    X
+    .unreq    UX
+    .unreq    WIDTH
+    .unreq    TMP1
+    .unreq    TMP2
+.endfunc
