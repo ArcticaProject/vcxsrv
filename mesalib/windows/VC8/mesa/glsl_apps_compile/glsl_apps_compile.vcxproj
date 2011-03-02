@@ -172,6 +172,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\glsl_lexer.cpp ..\..\..\..\src\glsl\glcpp\glcpp-lex.c</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\doflex.bat</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\glsl_lexer.cpp ..\..\..\..\src\glsl\glcpp\glcpp-lex.c</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\glsl_parser.h;..\..\..\..\src\glsl\glcpp\glcpp-parse.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\glsl_parser.h;..\..\..\..\src\glsl\glcpp\glcpp-parse.h;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\..\src\glsl\glsl_parser.yy">
       <FileType>Document</FileType>
