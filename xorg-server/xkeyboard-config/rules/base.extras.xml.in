@@ -23,7 +23,7 @@
         <variant>
           <configItem>
             <name>ave</name>
-            <_description>Avestan</_description>
+            <_description>Iran Avestan</_description>
             <languageList><iso639Id>ave</iso639Id></languageList>
           </configItem>
         </variant>
@@ -40,26 +40,26 @@
         <variant>
           <configItem>
             <name>intl-unicode</name>
-            <_description>International (AltGr Unicode combining)</_description>
+            <_description>USA International (AltGr Unicode combining)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>alt-intl-unicode</name>
-            <_description>International (AltGr Unicode combining, alternative)</_description>
+            <_description>USA International (AltGr Unicode combining, alternative)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>ats</name>
-            <_description>Atsina</_description>
+            <_description>USA Atsina</_description>
             <!-- No ISO code in ISO639-2, only draft ISO693-3 -->
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>crd</name>
-            <_description>Couer D'alene Salish</_description>
+            <_description>USA Couer D'alene Salish</_description>
             <languageList><iso639Id>crd</iso639Id></languageList>
           </configItem>
         </variant>
@@ -76,7 +76,7 @@
         <variant>
           <configItem>
             <name>combiningkeys</name>
-            <_description>Combining accents instead of dead keys</_description>
+            <_description>Serbia Combining accents instead of dead keys</_description>
           </configItem>
         </variant>
       </variantList>
@@ -84,14 +84,14 @@
     <layout>
       <configItem>
         <name>ru</name>
-        <shortDescription>Rus</shortDescription>
-        <description>Russia</description>
+        <_shortDescription>Rus</_shortDescription>
+        <_description>Russia</_description>
       </configItem>
       <variantList>
         <variant>
           <configItem>
             <name>chu</name>
-            <description>Church Slavonic</description>
+            <description>Russia Church Slavonic</description>
             <languageList><iso639Id>chu</iso639Id></languageList>
           </configItem>
         </variant>

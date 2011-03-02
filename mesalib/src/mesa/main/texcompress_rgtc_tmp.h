@@ -29,6 +29,35 @@
 
 /* included by texcompress_rgtc to define byte/ubyte compressors */
 
+static void TAG(fetch_texel_rgtc)(unsigned srcRowStride, const TYPE *pixdata,
+				  unsigned i, unsigned j, TYPE *value, unsigned comps)
+{
+   TYPE decode;
+   const TYPE *blksrc = (pixdata + ((srcRowStride + 3) / 4 * (j / 4) + (i / 4)) * 8 * comps);
+   const TYPE alpha0 = blksrc[0];
+   const TYPE alpha1 = blksrc[1];
+   const char bit_pos = ((j&3) * 4 + (i&3)) * 3;
+   const TYPE acodelow = blksrc[2 + bit_pos / 8];
+   const TYPE acodehigh = (3 + bit_pos / 8) < 8 ? blksrc[3 + bit_pos / 8] : 0;
+   const TYPE code = (acodelow >> (bit_pos & 0x7) |
+      (acodehigh  << (8 - (bit_pos & 0x7)))) & 0x7;
+
+   if (code == 0)
+      decode = alpha0;
+   else if (code == 1)
+      decode = alpha1;
+   else if (alpha0 > alpha1)
+      decode = ((alpha0 * (8 - code) + (alpha1 * (code - 1))) / 7);
+   else if (code < 6)
+      decode = ((alpha0 * (6 - code) + (alpha1 * (code - 1))) / 5);
+   else if (code == 6)
+      decode = T_MIN;
+   else
+      decode = T_MAX;
+
+   *value = decode;
+}
+
 static void TAG(write_rgtc_encoded_channel)(TYPE *blkaddr,
 					    TYPE alphabase1,
 					    TYPE alphabase2,
@@ -43,26 +72,26 @@ static void TAG(write_rgtc_encoded_channel)(TYPE *blkaddr,
    *blkaddr++ = (alphaenc[10] >> 2) | (alphaenc[11] << 1) | (alphaenc[12] << 4) | ((alphaenc[13] & 1) << 7);
    *blkaddr++ = (alphaenc[13] >> 1) | (alphaenc[14] << 2) | (alphaenc[15] << 5);
 }
+
 static void TAG(encode_rgtc_chan)(TYPE *blkaddr, TYPE srccolors[4][4],
-			     GLint numxpixels, GLint numypixels)
+			     int numxpixels, int numypixels)
 {
    TYPE alphabase[2], alphause[2];
-   GLshort alphatest[2] = { 0 };
-   GLuint alphablockerror1, alphablockerror2, alphablockerror3;
+   short alphatest[2] = { 0 };
+   unsigned int alphablockerror1, alphablockerror2, alphablockerror3;
    TYPE i, j, aindex, acutValues[7];
    TYPE alphaenc1[16], alphaenc2[16], alphaenc3[16];
-   GLboolean alphaabsmin = GL_FALSE;
-   GLboolean alphaabsmax = GL_FALSE;
-   GLshort alphadist;
+   int alphaabsmin = 0, alphaabsmax = 0;
+   short alphadist;
 
    /* find lowest and highest alpha value in block, alphabase[0] lowest, alphabase[1] highest */
    alphabase[0] = T_MAX; alphabase[1] = T_MIN;
    for (j = 0; j < numypixels; j++) {
       for (i = 0; i < numxpixels; i++) {
 	 if (srccolors[j][i] == T_MIN)
-            alphaabsmin = GL_TRUE;
+            alphaabsmin = 1;
          else if (srccolors[j][i] == T_MAX)
-            alphaabsmax = GL_TRUE;
+            alphaabsmax = 1;
          else {
             if (srccolors[j][i] > alphabase[1])
                alphabase[1] = srccolors[j][i];
@@ -73,9 +102,9 @@ static void TAG(encode_rgtc_chan)(TYPE *blkaddr, TYPE srccolors[4][4],
    }
 
 
-   if ((alphabase[0] > alphabase[1]) && !(alphaabsmin && alphaabsmax)) { /* one color, either max or min */
+   if (((alphabase[0] > alphabase[1]) && !(alphaabsmin && alphaabsmax))
+       || (alphabase[0] == alphabase[1] && !alphaabsmin && !alphaabsmax)) { /* one color, either max or min */
       /* shortcut here since it is a very common case (and also avoids later problems) */
-      /* || (alphabase[0] == alphabase[1] && !alphaabsmin && !alphaabsmax) */
       /* could also thest for alpha0 == alpha1 (and not min/max), but probably not common, so don't bother */
 
       *blkaddr++ = srccolors[0][0];
@@ -219,12 +248,12 @@ static void TAG(encode_rgtc_chan)(TYPE *blkaddr, TYPE srccolors[4][4],
       /* skip this if the error is already very small
          this encoding is MUCH better on average than #2 though, but expensive! */
       if ((alphablockerror2 > 96) && (alphablockerror1 > 96)) {
-         GLshort blockerrlin1 = 0;
-         GLshort blockerrlin2 = 0;
+         short blockerrlin1 = 0;
+         short blockerrlin2 = 0;
          TYPE nralphainrangelow = 0;
          TYPE nralphainrangehigh = 0;
-         alphatest[0] = 0xff;
-         alphatest[1] = 0x0;
+         alphatest[0] = T_MAX;
+         alphatest[1] = T_MIN;
          /* if we have large range it's likely there are values close to 0/255, try to map them to 0/255 */
          for (j = 0; j < numypixels; j++) {
             for (i = 0; i < numxpixels; i++) {
@@ -236,8 +265,8 @@ static void TAG(encode_rgtc_chan)(TYPE *blkaddr, TYPE srccolors[4][4],
          }
           /* shouldn't happen too often, don't really care about those degenerated cases */
           if (alphatest[1] <= alphatest[0]) {
-             alphatest[0] = 1;
-             alphatest[1] = 254;
+             alphatest[0] = T_MIN+1;
+             alphatest[1] = T_MAX-1;
          }
          for (aindex = 0; aindex < 5; aindex++) {
          /* don't forget here is always rounded down */
@@ -305,7 +334,7 @@ static void TAG(encode_rgtc_chan)(TYPE *blkaddr, TYPE srccolors[4][4],
          }
          alphatest[1] = alphatest[1] + (blockerrlin2 / nralphainrangehigh);
          if (alphatest[1] > T_MAX) {
-            alphatest[1] = T_MIN;
+            alphatest[1] = T_MAX;
          }
 
          alphablockerror3 = 0;
@@ -354,23 +383,36 @@ static void TAG(encode_rgtc_chan)(TYPE *blkaddr, TYPE srccolors[4][4],
          }
       }
    }
+
   /* write the alpha values and encoding back. */
    if ((alphablockerror1 <= alphablockerror2) && (alphablockerror1 <= alphablockerror3)) {
 #if RGTC_DEBUG
       if (alphablockerror1 > 96) fprintf(stderr, "enc1 used, error %d\n", alphablockerror1);
+      fprintf(stderr,"w1: min %d max %d au0 %d au1 %d\n",
+	      T_MIN, T_MAX,
+	      alphause[1], alphause[0]);
 #endif
+
       TAG(write_rgtc_encoded_channel)( blkaddr, alphause[1], alphause[0], alphaenc1 );
    }
    else if (alphablockerror2 <= alphablockerror3) {
 #if RGTC_DEBUG
       if (alphablockerror2 > 96) fprintf(stderr, "enc2 used, error %d\n", alphablockerror2);
+      fprintf(stderr,"w2: min %d max %d au0 %d au1 %d\n",
+	      T_MIN, T_MAX,
+	      alphabase[0], alphabase[1]);
 #endif
+
       TAG(write_rgtc_encoded_channel)( blkaddr, alphabase[0], alphabase[1], alphaenc2 );
    }
    else {
 #if RGTC_DEBUG
       fprintf(stderr, "enc3 used, error %d\n", alphablockerror3);
+      fprintf(stderr,"w3: min %d max %d au0 %d au1 %d\n",
+	      T_MIN, T_MAX,
+	      alphatest[0], alphatest[1]);
 #endif
+
       TAG(write_rgtc_encoded_channel)( blkaddr, (TYPE)alphatest[0], (TYPE)alphatest[1], alphaenc3 );
    }
 }

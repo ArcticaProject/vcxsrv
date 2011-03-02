@@ -51,6 +51,12 @@ static void unsigned_encode_rgtc_chan(GLubyte *blkaddr, GLubyte srccolors[4][4],
 static void signed_encode_rgtc_chan(GLbyte *blkaddr, GLbyte srccolors[4][4],
 			     GLint numxpixels, GLint numypixels);
 
+static void unsigned_fetch_texel_rgtc(unsigned srcRowStride, const GLubyte *pixdata,
+				      unsigned i, unsigned j, GLubyte *value, unsigned comps);
+
+static void signed_fetch_texel_rgtc(unsigned srcRowStride, const GLbyte *pixdata,
+				      unsigned i, unsigned j, GLbyte *value, unsigned comps);
+
 static void extractsrc_u( GLubyte srcpixels[4][4], const GLchan *srcaddr,
 			  GLint srcRowStride, GLint numxpixels, GLint numypixels, GLint comps)
 {
@@ -312,73 +318,14 @@ _mesa_texstore_signed_rg_rgtc2(TEXSTORE_PARAMS)
    return GL_TRUE;
 }
 
-static void _fetch_texel_rgtc_u(GLint srcRowStride, const GLubyte *pixdata,
-				GLint i, GLint j, GLchan *value, int comps)
-{
-   GLchan decode;
-   const GLubyte *blksrc = (pixdata + ((srcRowStride + 3) / 4 * (j / 4) + (i / 4)) * 8 * comps);
-   const GLubyte alpha0 = blksrc[0];
-   const GLubyte alpha1 = blksrc[1];
-   const GLubyte bit_pos = ((j&3) * 4 + (i&3)) * 3;
-   const GLubyte acodelow = blksrc[2 + bit_pos / 8];
-   const GLubyte acodehigh = blksrc[3 + bit_pos / 8];
-   const GLubyte code = (acodelow >> (bit_pos & 0x7) |
-      (acodehigh  << (8 - (bit_pos & 0x7)))) & 0x7;
-
-   if (code == 0)
-      decode = UBYTE_TO_CHAN( alpha0 );
-   else if (code == 1)
-      decode = UBYTE_TO_CHAN( alpha1 );
-   else if (alpha0 > alpha1)
-      decode = UBYTE_TO_CHAN( ((alpha0 * (8 - code) + (alpha1 * (code - 1))) / 7) );
-   else if (code < 6)
-      decode = UBYTE_TO_CHAN( ((alpha0 * (6 - code) + (alpha1 * (code - 1))) / 5) );
-   else if (code == 6)
-      decode = 0;
-   else
-      decode = CHAN_MAX;
-
-   *value = decode;
-}
-
-
-static void _fetch_texel_rgtc_s(GLint srcRowStride, const GLbyte *pixdata,
-				GLint i, GLint j, GLbyte *value, int comps)
-{
-   GLbyte decode;
-   const GLbyte *blksrc = (pixdata + ((srcRowStride + 3) / 4 * (j / 4) + (i / 4)) * 8 * comps);
-   const GLbyte alpha0 = blksrc[0];
-   const GLbyte alpha1 = blksrc[1];
-   const GLbyte bit_pos = ((j&3) * 4 + (i&3)) * 3;
-   const GLbyte acodelow = blksrc[2 + bit_pos / 8];
-   const GLbyte acodehigh = blksrc[3 + bit_pos / 8];
-   const GLbyte code = (acodelow >> (bit_pos & 0x7) |
-      (acodehigh  << (8 - (bit_pos & 0x7)))) & 0x7;
-
-   if (code == 0)
-      decode = alpha0;
-   else if (code == 1)
-      decode = alpha1;
-   else if (alpha0 > alpha1)
-      decode = ((alpha0 * (8 - code) + (alpha1 * (code - 1))) / 7);
-   else if (code < 6)
-      decode = ((alpha0 * (6 - code) + (alpha1 * (code - 1))) / 5);
-   else if (code == 6)
-      decode = -128;
-   else
-      decode = 127;
-
-   *value = decode;
-}
-
 void
 _mesa_fetch_texel_2d_f_red_rgtc1(const struct gl_texture_image *texImage,
 				 GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   GLchan red;
-   _fetch_texel_rgtc_u(texImage->RowStride, (GLubyte *)(texImage->Data),
+   GLubyte red;
+   unsigned_fetch_texel_rgtc(texImage->RowStride, (GLubyte *)(texImage->Data),
 		       i, j, &red, 1);
-   texel[RCOMP] = CHAN_TO_FLOAT(red);
+   texel[RCOMP] = UBYTE_TO_FLOAT(red);
    texel[GCOMP] = 0.0;
    texel[BCOMP] = 0.0;
    texel[ACOMP] = 1.0;
@@ -389,7 +336,7 @@ _mesa_fetch_texel_2d_f_signed_red_rgtc1(const struct gl_texture_image *texImage,
 					GLint i, GLint j, GLint k, GLfloat *texel)
 {
    GLbyte red;
-   _fetch_texel_rgtc_s(texImage->RowStride, (GLbyte *)(texImage->Data),
+   signed_fetch_texel_rgtc(texImage->RowStride, (GLbyte *)(texImage->Data),
 		       i, j, &red, 1);
    texel[RCOMP] = BYTE_TO_FLOAT_TEX(red);
    texel[GCOMP] = 0.0;
@@ -401,13 +348,13 @@ void
 _mesa_fetch_texel_2d_f_rg_rgtc2(const struct gl_texture_image *texImage,
 				 GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   GLchan red, green;
-   _fetch_texel_rgtc_u(texImage->RowStride, (GLubyte *)(texImage->Data),
+   GLubyte red, green;
+   unsigned_fetch_texel_rgtc(texImage->RowStride, (GLubyte *)(texImage->Data),
 		     i, j, &red, 2);
-   _fetch_texel_rgtc_u(texImage->RowStride, (GLubyte *)(texImage->Data) + 8,
+   unsigned_fetch_texel_rgtc(texImage->RowStride, (GLubyte *)(texImage->Data) + 8,
 		     i, j, &green, 2);
-   texel[RCOMP] = CHAN_TO_FLOAT(red);
-   texel[GCOMP] = CHAN_TO_FLOAT(green);
+   texel[RCOMP] = UBYTE_TO_FLOAT(red);
+   texel[GCOMP] = UBYTE_TO_FLOAT(green);
    texel[BCOMP] = 0.0;
    texel[ACOMP] = 1.0;
 }
@@ -417,9 +364,9 @@ _mesa_fetch_texel_2d_f_signed_rg_rgtc2(const struct gl_texture_image *texImage,
 				       GLint i, GLint j, GLint k, GLfloat *texel)
 {
    GLbyte red, green;
-   _fetch_texel_rgtc_s(texImage->RowStride, (GLbyte *)(texImage->Data),
+   signed_fetch_texel_rgtc(texImage->RowStride, (GLbyte *)(texImage->Data),
 		     i, j, &red, 2);
-   _fetch_texel_rgtc_s(texImage->RowStride, (GLbyte *)(texImage->Data) + 8,
+   signed_fetch_texel_rgtc(texImage->RowStride, (GLbyte *)(texImage->Data) + 8,
 		     i, j, &green, 2);
    texel[RCOMP] = BYTE_TO_FLOAT_TEX(red);
    texel[GCOMP] = BYTE_TO_FLOAT_TEX(green);
@@ -442,7 +389,7 @@ _mesa_fetch_texel_2d_f_signed_rg_rgtc2(const struct gl_texture_image *texImage,
 
 #define TAG(x) signed_##x
 #define TYPE GLbyte
-#define T_MIN (GLbyte)-127
+#define T_MIN (GLbyte)-128
 #define T_MAX (GLbyte)127
 
 #include "texcompress_rgtc_tmp.h"
