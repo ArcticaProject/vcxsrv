@@ -238,8 +238,10 @@
     <CustomBuild Include="..\..\..\..\src\glsl\glsl_lexer.ll">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\..\..\src\glsl\glsl_parser.yy">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\src\glsl\glsl_parser.yy">
       <Filter>Source Files</Filter>
-    </CustomBuild>
+    </None>
   </ItemGroup>
 </Project>

@@ -672,8 +672,10 @@
     <CustomBuild Include="..\..\..\..\src\mesa\program\program_lexer.l">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\..\..\src\mesa\program\program_parse.y">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\src\mesa\program\program_parse.y">
       <Filter>Source Files</Filter>
-    </CustomBuild>
+    </None>
   </ItemGroup>
 </Project>
