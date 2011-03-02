@@ -36,8 +36,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pixman-private.h"
-#include "pixman-combine32.h"
-#include "pixman-private.h"
 
 static void
 general_src_iter_init (pixman_implementation_t *imp,

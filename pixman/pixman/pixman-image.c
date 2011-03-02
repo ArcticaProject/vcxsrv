@@ -30,7 +30,6 @@
 #include <assert.h>
 
 #include "pixman-private.h"
-#include "pixman-combine32.h"
 
 pixman_bool_t
 _pixman_init_gradient (gradient_t *                  gradient,

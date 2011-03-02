@@ -10,7 +10,7 @@
 <!ELEMENT xkbConfigRegistry (modelList,layoutList,optionList)>
 
 <!ATTLIST xkbConfigRegistry 
-          version CDATA "1.0">
+          version CDATA "1.1">
 
 <!ELEMENT modelList (model*)>
 
@@ -40,12 +40,8 @@
 <!ELEMENT name (#PCDATA)>
 
 <!ELEMENT shortDescription (#PCDATA)>
-<!ATTLIST shortDescription
-          xml:lang CDATA #IMPLIED>
 
 <!ELEMENT description (#PCDATA)>
-<!ATTLIST description
-          xml:lang CDATA #IMPLIED>
 
 <!ELEMENT vendor (#PCDATA)>
 

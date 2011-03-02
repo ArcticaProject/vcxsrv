@@ -8,7 +8,7 @@
 
 static pixman_indexed_t mono_palette =
 {
-    .rgba = { 0x00000000, 0x00ffffff },
+    0, { 0x00000000, 0x00ffffff },
 };
 
 
@@ -24,57 +24,53 @@ typedef struct {
 static testcase_t testcases[] =
 {
     {
-	.format = PIXMAN_a8r8g8b8,
-	.width = 2, .height = 2,
-	.stride = 8,
-	.src = { 0x00112233, 0x44556677,
-	         0x8899aabb, 0xccddeeff },
-	.dst = { 0x00112233, 0x44556677,
-	         0x8899aabb, 0xccddeeff },
-	.indexed = NULL,
+	PIXMAN_a8r8g8b8,
+	2, 2,
+	8,
+	{ 0x00112233, 0x44556677,
+	  0x8899aabb, 0xccddeeff },
+	{ 0x00112233, 0x44556677,
+	  0x8899aabb, 0xccddeeff },
+	NULL,
     },
     {
-	.format = PIXMAN_g1,
-	.width = 8, .height = 2,
-	.stride = 4,
+	PIXMAN_g1,
+	8, 2,
+	4,
 #ifdef WORDS_BIGENDIAN
-	.src =
 	{
 	    0xaa000000,
 	    0x55000000
 	},
 #else
-	.src =
 	{
 	    0x00000055,
 	    0x000000aa
 	},
 #endif
-	.dst =
 	{
 	    0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000,
 	    0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff
 	},
-	.indexed = &mono_palette,
+	&mono_palette,
     },
 #if 0
     {
-	.format = PIXMAN_g8,
-	.width = 4, .height = 2,
-	.stride = 4,
-	.src = { 0x01234567,
-	         0x89abcdef },
-	.dst = { 0x00010101, 0x00232323, 0x00454545, 0x00676767,
-	         0x00898989, 0x00ababab, 0x00cdcdcd, 0x00efefef, },
+	PIXMAN_g8,
+	4, 2,
+	4,
+	{ 0x01234567,
+	  0x89abcdef },
+	{ 0x00010101, 0x00232323, 0x00454545, 0x00676767,
+	  0x00898989, 0x00ababab, 0x00cdcdcd, 0x00efefef, },
     },
 #endif
     /* FIXME: make this work on big endian */
     {
-	.format = PIXMAN_yv12,
-	.width = 8, .height = 2,
-	.stride = 8,
+	PIXMAN_yv12,
+	8, 2,
+	8,
 #ifdef WORDS_BIGENDIAN
-	.src =
 	{
 	    0x00ff00ff, 0x00ff00ff,
 	    0xff00ff00, 0xff00ff00,
@@ -82,7 +78,6 @@ static testcase_t testcases[] =
 	    0x800080ff
 	},
 #else
-	.src =
 	{
 	    0xff00ff00, 0xff00ff00,
 	    0x00ff00ff, 0x00ff00ff,
@@ -90,7 +85,6 @@ static testcase_t testcases[] =
 	    0xff800080
 	},
 #endif
-	.dst =
 	{
 	    0xff000000, 0xffffffff, 0xffb80000, 0xffffe113,
 	    0xff000000, 0xffffffff, 0xff0023ee, 0xff4affff,
@@ -116,6 +110,7 @@ reader (const void *src, int size)
 	return *(uint32_t *)src;
     default:
 	assert(0);
+	return 0; /* silence MSVC */
     }
 }
 

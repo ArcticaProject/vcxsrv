@@ -165,6 +165,22 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\src\glsl\strtod.h" />
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\src\glsl\glsl_lexer.ll">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\doflex.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\glsl_lexer.cpp ..\..\..\..\src\glsl\glcpp\glcpp-lex.c</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\doflex.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\glsl_lexer.cpp ..\..\..\..\src\glsl\glcpp\glcpp-lex.c</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\src\glsl\glsl_parser.yy">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\dobison.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\glsl\glsl_parser.cpp;..\..\..\..\src\glsl\glsl_parser.h;..\..\..\..\src\glsl\glcpp\glcpp-parse.c;..\..\..\..\src\glsl\glcpp\glcpp-parse.h</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\dobison.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\glsl\glsl_parser.cpp;..\..\..\..\src\glsl\glsl_parser.h;..\..\..\..\src\glsl\glcpp\glcpp-parse.c;..\..\..\..\src\glsl\glcpp\glcpp-parse.h</Outputs>
+    </CustomBuild>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

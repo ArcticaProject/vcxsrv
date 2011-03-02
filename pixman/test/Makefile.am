@@ -13,6 +13,7 @@ TESTPROGRAMS =			\
 	trap-crasher		\
 	alpha-loop		\
 	scaling-crash-test	\
+	scaling-helpers-test	\
 	gradient-crash-test	\
 	alphamap		\
 	stress-test		\
@@ -33,6 +34,7 @@ alpha_loop_SOURCES = alpha-loop.c utils.c utils.h
 composite_SOURCES = composite.c utils.c utils.h
 gradient_crash_test_SOURCES = gradient-crash-test.c utils.c utils.h
 stress_test_SOURCES = stress-test.c utils.c utils.h
+scaling_helpers_test_SOURCES = scaling-helpers-test.c utils.c utils.h
 
 # Benchmarks
 

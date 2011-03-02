@@ -4,15 +4,9 @@
 #
 # Usage:
 #
-# perl xml2lst.pl [lang] < filename.xml > filename.lst
+# perl xml2lst.pl < filename.xml > filename.lst
 #
 # author Ivan Pascal
-
-if (@ARGV) {
-   $lang = shift @ARGV;
-} else {
-   $lang = '';
-}
 
 $doc = new_document( 0, '');
 parse('', $doc);
@@ -25,22 +19,14 @@ parse('', $doc);
 print "! model\n";
 for $i (@models) {
    ($name) = node_by_name($i, 'name');
-    @desc =  node_by_name($i, 'description');
-    $descr = with_attribute(\@desc, 'xml:lang='.$lang);
-    if (! defined $descr) {
-        $descr = with_attribute(\@desc, 'xml:lang=');
-    }
+   ($descr) = node_by_name($i, 'description');
     printf("  %-15s %s\n", text_child($name), text_child($descr));
 }
 
 print "\n! layout\n";
 for $i (@layouts) {
    ($name) = node_by_name($i, 'name');
-    @desc =  node_by_name($i, 'description');
-    $descr = with_attribute(\@desc, 'xml:lang='.$lang);
-    if (! defined $descr ) {
-        $descr = with_attribute(\@desc, 'xml:lang=');
-    }
+   ($descr) = node_by_name($i, 'description');
     printf("  %-15s %s\n", text_child($name), text_child($descr));
 }
 
@@ -50,11 +36,7 @@ for $l (@layouts) {
     @variants = node_by_name($l, '../variantList/variant/configItem');
     for $v (@variants) {
       ($name) = node_by_name($v, 'name');
-       @desc  = node_by_name($v, 'description');
-       $descr = with_attribute(\@desc, 'xml:lang='.$lang);
-       if (! defined $descr) {
-           $descr = with_attribute(\@desc, 'xml:lang=');
-       }
+      ($descr) = node_by_name($v, 'description');
        printf("  %-15s %s: %s\n",
                text_child($name), text_child($lname), text_child($descr));
     }
@@ -63,21 +45,13 @@ for $l (@layouts) {
 print "\n! option\n";
 for $g (@options) {
    ($name) = node_by_name($g, 'name');
-    @desc =  node_by_name($g, 'description');
-    $descr = with_attribute(\@desc, 'xml:lang='.$lang);
-    if (! defined $descr) {
-        $descr = with_attribute(\@desc, 'xml:lang=');
-    }
+   ($descr) = node_by_name($g, 'description');
     printf("  %-20s %s\n", text_child($name), text_child($descr));
 
     @opts = node_by_name($g, '../option/configItem');
     for $o (@opts) {
       ($name) = node_by_name($o, 'name');
-       @desc  = node_by_name($o, 'description');
-       $descr = with_attribute(\@desc, 'xml:lang='.$lang);
-       if (! defined $descr) {
-           $descr = with_attribute(\@desc, 'xml:lang=');
-       }
+      ($descr) = node_by_name($o, 'description');
        printf("  %-20s %s\n",
                text_child($name), text_child($descr));
     }

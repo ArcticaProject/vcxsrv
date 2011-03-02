@@ -265,6 +265,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\mipmap.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\mm.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\multisample.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\pbo.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\pixel.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\pixelstore.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\points.c" />
@@ -331,6 +332,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\src\glsl\strtod.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\src\mesa\program\program_lexer.l">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\program\doflex.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\program\lex.yy.c;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\program\doflex.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\program\lex.yy.c;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\src\mesa\program\program_parse.y">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\program\dobison.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\src\mesa\program\program_parse.tab.c;..\..\..\..\src\mesa\program\program_parse.tab.h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\program\dobison.bat</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\src\mesa\program\program_parse.tab.c;..\..\..\..\src\mesa\program\program_parse.tab.h;%(Outputs)</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
