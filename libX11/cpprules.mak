@@ -10,10 +10,10 @@ $(x11thislocaledir):
 all: $(x11thislocaledir)
 endif
 
-$(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\XLC_LOCALE : %\XLC_LOCALE.pre;	cl /nologo /EP $$< -DXCOMM\#\# > $$@;; ))
+$(eval $(locales:%=$(X11_LOCALEDATADIR)\%\XLC_LOCALE : %\XLC_LOCALE.pre$n	cl /nologo /EP $$< -DXCOMM\#\# > $$@$n))
 
-$(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\Compose : %\Compose.pre;	cl /nologo /EP $$< -DXCOMM\#\# > $$@;; ))
+$(eval $(locales:%=$(X11_LOCALEDATADIR)\%\Compose : %\Compose.pre$n	cl /nologo /EP $$< -DXCOMM\#\# > $$@$n))
 
-$(reparse $(locales:%=$(X11_LOCALEDATADIR)\%\XI18N_OBJS : $(X11_LOCALEDATADIR)\% %\XI18N_OBJS;	copy %\XI18N_OBJS $$@;; ))
+$(eval $(locales:%=$(X11_LOCALEDATADIR)\%\XI18N_OBJS : $(X11_LOCALEDATADIR)\% %\XI18N_OBJS$n	copy %\XI18N_OBJS $$@$n))
 
-$(reparse $(locales:%=$(X11_LOCALEDATADIR)\% : ;	mkdir $$@;; ))
+$(eval $(locales:%=$(X11_LOCALEDATADIR)\% :$n	mkdir $$@$n ))
