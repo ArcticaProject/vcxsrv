@@ -67,6 +67,22 @@
     </layout>
     <layout>
       <configItem>
+        <name>ro</name>
+        <_shortDescription>Rou</_shortDescription>
+        <_description>Romania</_description>
+        <languageList><iso639Id>rum</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>ergonomic</name>
+            <_description>Ergonomic Touchtype</_description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>rs</name>
         <_shortDescription>SRB</_shortDescription>
         <_description>Serbia</_description>

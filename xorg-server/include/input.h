@@ -150,6 +150,11 @@ typedef void (*PointerAccelSchemeProc)(
 typedef void (*DeviceCallbackProc)(
               DeviceIntPtr /*pDev*/);
 
+struct _ValuatorAccelerationRec;
+typedef Bool (*PointerAccelSchemeInitProc)(
+              DeviceIntPtr /*dev*/,
+              struct _ValuatorAccelerationRec* /*protoScheme*/);
+
 typedef struct _DeviceRec {
     pointer	devicePrivate;
     ProcessInputProc processInputProc;	/* current */
@@ -538,14 +543,15 @@ extern WindowPtr XYToWindow(SpritePtr pSprite, int x, int y);
 extern int EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event,
                               WindowPtr win);
 /**
- * Return masks for EventIsDeliverable.
+ * Masks specifying the type of event to deliver for an InternalEvent; used
+ * by EventIsDeliverable.
  * @defgroup EventIsDeliverable return flags
  * @{
  */
-#define XI_MASK                 (1 << 0) /**< XI mask set on window */
-#define CORE_MASK               (1 << 1) /**< Core mask set on window */
-#define DONT_PROPAGATE_MASK     (1 << 2) /**< DontPropagate mask set on window */
-#define XI2_MASK                (1 << 3) /**< XI2 mask set on window */
+#define EVENT_XI1_MASK                (1 << 0) /**< XI1.x event */
+#define EVENT_CORE_MASK               (1 << 1) /**< Core event */
+#define EVENT_DONT_PROPAGATE_MASK     (1 << 2) /**< DontPropagate mask set */
+#define EVENT_XI2_MASK                (1 << 3) /**< XI2 mask set on window */
 /* @} */
 
 /* Implemented by the DDX. */

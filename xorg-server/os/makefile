@@ -1,21 +1,28 @@
+LIBRARY=libos
+
 ifeq ($(DEBUG),1)
 DEFINES += XSERVER_DTRACE
 endif
+SECURE_RPC=1
+XDMCP=1
+NEED_STRLCAT=1
 
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
 STRLCAT_SRCS = strlcat.c strlcpy.c
 XORG_SRCS = log.c
 
-CSRCS = 	\
+libos_la_SOURCES = 	\
 	WaitFor.c	\
 	access.c	\
 	auth.c		\
 	backtrace.c	\
+	client.c	\
 	connection.c	\
 	io.c		\
 	mitauth.c	\
 	oscolor.c	\
+	osdep.h		\
 	osinit.c	\
 	utils.c		\
 	strcasecmp.c	\
@@ -26,11 +33,17 @@ CSRCS = 	\
 	xprintf.c	\
 	$(XORG_SRCS)
 
-CSRCS += $(SECURERPC_SRCS)
+if SECURE_RPC
+libos_la_SOURCES += $(SECURERPC_SRCS)
+endif
+if XDMCP
+libos_la_SOURCES += $(XDMCP_SRCS)
+endif
 
-CSRCS += $(XDMCP_SRCS)
+if NEED_STRLCAT
+libos_la_SOURCES += $(STRLCAT_SRCS)
+endif
 
-CSRCS += $(STRLCAT_SRCS)
+CSRCS = $(filter %.c,$(libos_la_SOURCES))
 
-LIBRARY=libos
 

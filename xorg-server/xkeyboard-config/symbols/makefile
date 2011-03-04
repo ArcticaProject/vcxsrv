@@ -1,4 +1,4 @@
-SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr nokia_vndr sgi_vndr sony_vndr sun_vndr xfree68_vndr extras
+SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr nokia_vndr sgi_vndr sony_vndr sun_vndr xfree68_vndr
 
 ifeq ($(MAKESERVER),1)
 $(error Please do not specify MAKESERVER=1)
@@ -8,9 +8,10 @@ THISDIR=symbols
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
 
-dist_xkbdata_symbols_DATA = \
+dist_symbols_DATA = \
 ad af al \
-am ara at az \
+am apl ara \
+at az \
 ba bd be \
 bg br brai \
 bt bw by \
@@ -42,10 +43,14 @@ za \
 altwin capslock compose ctrl empty eurosign rupeesign group inet \
 keypad kpdl level3 level5 nbsp olpc shift srvr_ctrl typo
 
-DATA_FILES=$(dist_xkbdata_symbols_DATA:%=$(DESTDIR)\%)
+DATA_FILES=$(dist_symbols_DATA:%=$(DESTDIR)\%)
 
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=0 DEBUG=$(DEBUG);)
 
 extrastuff: $(SUBDIRS:%=%\all)
 
 include ..\xkbrules.mak
+
+$(DESTDIR)\cd: cd.in
+	copy $< $@
+

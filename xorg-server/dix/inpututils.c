@@ -268,15 +268,15 @@ change_modmap(ClientPtr client, DeviceIntPtr dev, KeyCode *modkeymap,
     /* Change any attached masters/slaves. */
     if (IsMaster(dev)) {
         for (tmp = inputInfo.devices; tmp; tmp = tmp->next) {
-            if (!IsMaster(tmp) && tmp->u.master == dev)
+            if (!IsMaster(tmp) && GetMaster(tmp, MASTER_KEYBOARD) == dev)
                 if (check_modmap_change_slave(client, dev, tmp, modmap))
                     do_modmap_change(client, tmp, modmap);
         }
     }
-    else if (dev->u.master && dev->u.master->u.lastSlave == dev) {
+    else if (!IsFloating(dev) && GetMaster(dev, MASTER_KEYBOARD)->lastSlave == dev) {
         /* If this fails, expect the results to be weird. */
-        if (check_modmap_change(client, dev->u.master, modmap))
-            do_modmap_change(client, dev->u.master, modmap);
+        if (check_modmap_change(client, dev->master, modmap))
+            do_modmap_change(client, dev->master, modmap);
     }
 
     return Success;

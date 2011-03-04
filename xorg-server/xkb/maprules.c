@@ -391,8 +391,8 @@ Bool 		append = FALSE;
             }
             if (*words == '\0')
                 return FALSE;
-            group->name = _XkbDupString(gname);
-            group->words = _XkbDupString(words);
+            group->name = Xstrdup(gname);
+            group->words = Xstrdup(words);
             for (i = 1, words = group->words; *words; words++) {
                  if ( *words == ' ') {
                      *words++ = '\0';
@@ -443,16 +443,16 @@ Bool 		append = FALSE;
 	 rule->flags|= XkbRF_Append;
     else
 	 rule->flags|= XkbRF_Normal;
-    rule->model= _XkbDupString(tmp.name[MODEL]);
-    rule->layout= _XkbDupString(tmp.name[LAYOUT]);
-    rule->variant= _XkbDupString(tmp.name[VARIANT]);
-    rule->option= _XkbDupString(tmp.name[OPTION]);
+    rule->model= Xstrdup(tmp.name[MODEL]);
+    rule->layout= Xstrdup(tmp.name[LAYOUT]);
+    rule->variant= Xstrdup(tmp.name[VARIANT]);
+    rule->option= Xstrdup(tmp.name[OPTION]);
 
-    rule->keycodes= _XkbDupString(tmp.name[KEYCODES]);
-    rule->symbols= _XkbDupString(tmp.name[SYMBOLS]);
-    rule->types= _XkbDupString(tmp.name[TYPES]);
-    rule->compat= _XkbDupString(tmp.name[COMPAT]);
-    rule->geometry= _XkbDupString(tmp.name[GEOMETRY]);
+    rule->keycodes= Xstrdup(tmp.name[KEYCODES]);
+    rule->symbols= Xstrdup(tmp.name[SYMBOLS]);
+    rule->types= Xstrdup(tmp.name[TYPES]);
+    rule->compat= Xstrdup(tmp.name[COMPAT]);
+    rule->geometry= Xstrdup(tmp.name[GEOMETRY]);
 
     rule->layout_num = rule->variant_num = 0;
     for (i = 0; i < nread; i++) {
@@ -497,7 +497,7 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
 
    memset((char *)mdefs, 0, sizeof(XkbRF_MultiDefsRec));
    mdefs->model = defs->model;
-   mdefs->options = _XkbDupString(defs->options);
+   mdefs->options = Xstrdup(defs->options);
    if (mdefs->options) squeeze_spaces(mdefs->options); 
 
    if (defs->layout) {
@@ -506,7 +506,7 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
        } else {
            char *p;
            int i;
-           mdefs->layout[1] = _XkbDupString(defs->layout);
+           mdefs->layout[1] = Xstrdup(defs->layout);
 	   if (mdefs->layout[1] == NULL)
 	      return FALSE;
            squeeze_spaces(mdefs->layout[1]);
@@ -530,7 +530,7 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
        } else {
            char *p;
            int i;
-           mdefs->variant[1] = _XkbDupString(defs->variant);
+           mdefs->variant[1] = Xstrdup(defs->variant);
 	   if (mdefs->variant[1] == NULL)
 	      return FALSE;
            squeeze_spaces(mdefs->variant[1]);
@@ -566,7 +566,7 @@ Apply(char *src, char **dst)
 	    *dst= _Concat(*dst, src);
         } else {
             if (*dst == NULL)
-	        *dst= _XkbDupString(src);
+	        *dst= Xstrdup(src);
         }
     }
 }
@@ -945,9 +945,8 @@ Bool		ok;
     if ((!base)||(!rules))
 	return FALSE;
     if (locale) {
-	if (strlen(base)+strlen(locale)+2 > PATH_MAX)
+	if (snprintf(buf, PATH_MAX, "%s-%s", base, locale) >= PATH_MAX)
 	    return FALSE;
-	sprintf(buf,"%s-%s", base, locale);
     }
     else {
 	if (strlen(base)+1 > PATH_MAX)

@@ -3,6 +3,7 @@ sdk_HEADERS =		\
 	XIstubs.h	\
 	Xprintf.h	\
 	callback.h	\
+	client.h	\
 	closestr.h	\
 	closure.h	\
 	colormap.h	\

@@ -807,6 +807,7 @@ RecordADeviceEvent(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
     RecordContextPtr pContext;
     RecordClientsAndProtocolPtr pRCAP;
     int eci; /* enabled context index */
+    int count;
 
     for (eci = 0; eci < numEnabledContexts; eci++)
     {
@@ -821,9 +822,11 @@ RecordADeviceEvent(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
 		/* TODO check return values */
 		if (IsMaster(pei->device))
 		{
-		    xEvent xE;
-		    EventToCore(pei->event, &xE);
-		    RecordSendProtocolEvents(pRCAP, pContext, &xE, 1);
+		    xEvent *core_events;
+		    EventToCore(pei->event, &core_events, &count);
+		    RecordSendProtocolEvents(pRCAP, pContext, core_events,
+                                             count);
+		    free(core_events);
 		}
 
 		EventToXI(pei->event, &xi_events, &count);

@@ -145,7 +145,7 @@ static void test_XIWarpPointer(void)
     request.deviceid = devices.kbd->id;
     request_XIWarpPointer(&client_request, &request, BadDevice);
 
-    devices.mouse->u.master = NULL; /* Float, kind-of */
+    devices.mouse->master = NULL; /* Float, kind-of */
     request.deviceid = devices.mouse->id;
     request_XIWarpPointer(&client_request, &request, Success);
 

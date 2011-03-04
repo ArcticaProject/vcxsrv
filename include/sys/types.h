@@ -3,4 +3,6 @@
 
 #include <wchar.h>
 
+typedef int pid_t;
+
 #endif

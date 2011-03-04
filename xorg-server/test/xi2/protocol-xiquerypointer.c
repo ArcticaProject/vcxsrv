@@ -185,7 +185,7 @@ static void test_XIQueryPointer(void)
     request_XIQueryPointer(&client_request, &request, BadDevice);
 
     test_data.dev = devices.mouse;
-    devices.mouse->u.master = NULL; /* Float, kind-of */
+    devices.mouse->master = NULL; /* Float, kind-of */
     request.deviceid = devices.mouse->id;
     request_XIQueryPointer(&client_request, &request, Success);
 

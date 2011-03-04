@@ -12,18 +12,21 @@ EXTRA_DIST = \
 	loaderProcs.h \
 	sdksyms.sh
 
+nodist_libloader_la_SOURCES = \
+	sdksyms.c
+
 libloader_la_SOURCES = \
 	loader.c \
 	loaderProcs.h \
 	loadext.c \
         loadmod.c \
-	os.c \
-	sdksyms.c
+	os.c
+
 libloader_la_LIBADD = $(DLOPEN_LIBS)
 
 CLEANFILES = sdksyms.c sdksyms.dep
 
-sdksyms.dep sdksyms.c: sdksyms.sh
+sdksyms.dep sdksyms.c: sdksyms.sh $(top_builddir)/include/do-not-use-config.h
 	CPP='$(CPP)' AWK='$(AWK)' $(srcdir)/sdksyms.sh $(top_srcdir) $(AM_CFLAGS) $(CFLAGS) $(INCLUDES)
 
 SDKSYMS_DEP = sdksyms.dep

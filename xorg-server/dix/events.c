@@ -328,6 +328,13 @@ IsMaster(DeviceIntPtr dev)
     return dev->type == MASTER_POINTER || dev->type == MASTER_KEYBOARD;
 }
 
+Bool
+IsFloating(DeviceIntPtr dev)
+{
+    return GetMaster(dev, MASTER_KEYBOARD) == NULL;
+}
+
+
 /**
  * Max event opcode.
  */
@@ -1400,10 +1407,10 @@ CheckGrabForSyncs(DeviceIntPtr thisDev, Bool thisMode, Bool otherMode)
 static void
 DetachFromMaster(DeviceIntPtr dev)
 {
-    if (!dev->u.master)
+    if (!IsFloating(dev))
         return;
 
-    dev->saved_master_id = dev->u.master->id;
+    dev->saved_master_id = GetMaster(dev, MASTER_ATTACHED)->id;
 
     AttachDevice(NULL, dev, NULL);
 }
@@ -2290,8 +2297,8 @@ FixUpEventFromWindow(
  * @param[in] event The event that is to be sent.
  * @param[in] win The current event window.
  *
- * @return Bitmask of ::XI2_MASK, ::XI_MASK, ::CORE_MASK, and
- * ::DONT_PROPAGATE_MASK.
+ * @return Bitmask of ::EVENT_XI2_MASK, ::EVENT_XI1_MASK, ::EVENT_CORE_MASK, and
+ *         ::EVENT_DONT_PROPAGATE_MASK.
  */
 int
 EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event, WindowPtr win)
@@ -2312,7 +2319,7 @@ EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event, WindowPtr win)
         ((inputMasks->xi2mask[XIAllDevices][type/8] & filter) ||
          ((inputMasks->xi2mask[XIAllMasterDevices][type/8] & filter) && IsMaster(dev)) ||
          (inputMasks->xi2mask[dev->id][type/8] & filter)))
-        rc |= XI2_MASK;
+        rc |= EVENT_XI2_MASK;
 
     type = GetXIType(event);
     ev.u.u.type = type;
@@ -2322,22 +2329,22 @@ EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event, WindowPtr win)
     if (type && inputMasks &&
         (inputMasks->deliverableEvents[dev->id] & filter) &&
         (inputMasks->inputEvents[dev->id] & filter))
-        rc |= XI_MASK;
+        rc |= EVENT_XI1_MASK;
 
     /* Check for XI DontPropagate mask */
     if (type && inputMasks &&
         (inputMasks->dontPropagateMask[dev->id] & filter))
-        rc |= DONT_PROPAGATE_MASK;
+        rc |= EVENT_DONT_PROPAGATE_MASK;
 
     /* Check for core mask */
     type = GetCoreType(event);
     if (type && (win->deliverableEvents & filter) &&
         ((wOtherEventMasks(win) | win->eventMask) & filter))
-        rc |= CORE_MASK;
+        rc |= EVENT_CORE_MASK;
 
     /* Check for core DontPropagate mask */
     if (type && (filter & wDontPropagateMask(win)))
-        rc |= DONT_PROPAGATE_MASK;
+        rc |= EVENT_DONT_PROPAGATE_MASK;
 
     return rc;
 }
@@ -2369,8 +2376,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
     Window child = None;
     Mask filter;
     int deliveries = 0;
-    xEvent core;
-    xEvent *xE = NULL;
+    xEvent *xE = NULL, *core = NULL;
     int rc, mask, count = 0;
 
     CHECKEVENT(event);
@@ -2380,7 +2386,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
         if ((mask = EventIsDeliverable(dev, event, pWin)))
         {
             /* XI2 events first */
-            if (mask & XI2_MASK)
+            if (mask & EVENT_XI2_MASK)
             {
                 xEvent *xi2 = NULL;
                 rc = EventToXI2(event, &xi2);
@@ -2400,7 +2406,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
             }
 
             /* XI events */
-            if (mask & XI_MASK)
+            if (mask & EVENT_XI1_MASK)
             {
                 rc = EventToXI(event, &xE, &count);
                 if (rc == Success) {
@@ -2418,15 +2424,15 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
             }
 
             /* Core event */
-            if ((mask & CORE_MASK) && IsMaster(dev) && dev->coreEvents)
+            if ((mask & EVENT_CORE_MASK) && IsMaster(dev) && dev->coreEvents)
             {
-                rc = EventToCore(event, &core);
+                rc = EventToCore(event, &core, &count);
                 if (rc == Success) {
-                    if (XaceHook(XACE_SEND_ACCESS, NULL, dev, pWin, &core, 1) == Success) {
-                        filter = GetEventFilter(dev, &core);
-                        FixUpEventFromWindow(pSprite, &core, pWin, child, FALSE);
-                        deliveries = DeliverEventsToWindow(dev, pWin, &core, 1,
-                                                           filter, grab);
+                    if (XaceHook(XACE_SEND_ACCESS, NULL, dev, pWin, core, count) == Success) {
+                        filter = GetEventFilter(dev, core);
+                        FixUpEventFromWindow(pSprite, core, pWin, child, FALSE);
+                        deliveries = DeliverEventsToWindow(dev, pWin, core,
+                                                           count, filter, grab);
                         if (deliveries > 0)
                             goto unwind;
                     }
@@ -2436,7 +2442,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
             }
 
             if ((deliveries < 0) || (pWin == stopAt) ||
-                (mask & DONT_PROPAGATE_MASK))
+                (mask & EVENT_DONT_PROPAGATE_MASK))
             {
                 deliveries = 0;
                 goto unwind;
@@ -2448,13 +2454,10 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
     }
 
 unwind:
+    free(core);
     free(xE);
     return deliveries;
 }
-
-#undef XI_MASK
-#undef CORE_MASK
-#undef DONT_PROPAGATE_MASK
 
 /**
  * Deliver event to a window and it's immediate parent. Used for most window
@@ -2473,9 +2476,8 @@ int
 DeliverEvents(WindowPtr pWin, xEvent *xE, int count,
               WindowPtr otherParent)
 {
-    Mask filter;
-    int     deliveries;
     DeviceIntRec dummy;
+    int     deliveries;
 
 #ifdef PANORAMIX
     if(!noPanoramiXExtension && pWin->drawable.pScreen->myNum)
@@ -2486,11 +2488,42 @@ DeliverEvents(WindowPtr pWin, xEvent *xE, int count,
 	return 0;
 
     dummy.id = XIAllDevices;
-    filter = GetEventFilter(&dummy, xE);
-    if ((filter & SubstructureNotifyMask) && (xE->u.u.type != CreateNotify))
-	xE->u.destroyNotify.event = pWin->drawable.id;
-    if (filter != StructureAndSubMask)
-	return DeliverEventsToWindow(&dummy, pWin, xE, count, filter, NullGrab);
+
+    switch (xE->u.u.type)
+    {
+        case DestroyNotify:
+        case UnmapNotify:
+        case MapNotify:
+        case MapRequest:
+        case ReparentNotify:
+        case ConfigureNotify:
+        case ConfigureRequest:
+        case GravityNotify:
+        case CirculateNotify:
+        case CirculateRequest:
+            xE->u.destroyNotify.event = pWin->drawable.id;
+            break;
+    }
+
+    switch (xE->u.u.type)
+    {
+        case DestroyNotify:
+        case UnmapNotify:
+        case MapNotify:
+        case ReparentNotify:
+        case ConfigureNotify:
+        case GravityNotify:
+        case CirculateNotify:
+            break;
+        default:
+        {
+            Mask filter;
+            filter = GetEventFilter(&dummy, xE);
+            return DeliverEventsToWindow(&dummy, pWin, xE, count, filter,
+                                         NullGrab);
+        }
+    }
+
     deliveries = DeliverEventsToWindow(&dummy, pWin, xE, count,
                                        StructureNotifyMask, NullGrab);
     if (pWin->parent)
@@ -2805,7 +2838,7 @@ WindowsRestructured(void)
     DeviceIntPtr pDev = inputInfo.devices;
     while(pDev)
     {
-        if (IsMaster(pDev) || !pDev->u.master)
+        if (IsMaster(pDev) || IsFloating(pDev))
             CheckMotion(NULL, pDev);
         pDev = pDev->next;
     }
@@ -3236,15 +3269,15 @@ ProcWarpPointer(ClientPtr client)
     dev = PickPointer(client);
 
     for (tmp = inputInfo.devices; tmp; tmp = tmp->next) {
-        if ((tmp == dev) || (!IsMaster(tmp) && tmp->u.master == dev)) {
+        if (GetMaster(tmp, MASTER_ATTACHED) == dev) {
 	    rc = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixWriteAccess);
 	    if (rc != Success)
 		return rc;
 	}
     }
 
-    if (dev->u.lastSlave)
-        dev = dev->u.lastSlave;
+    if (dev->lastSlave)
+        dev = dev->lastSlave;
     pSprite = dev->spriteInfo->sprite;
 
 #ifdef PANORAMIX
@@ -3400,7 +3433,7 @@ CheckPassiveGrabsOnWindow(
              * attached master keyboard. Since the slave may have been
              * reattached after the grab, the modifier device may not be the
              * same. */
-            if (!IsMaster(grab->device) && device->u.master)
+            if (!IsMaster(grab->device) && !IsFloating(device))
                 gdev = GetMaster(device, MASTER_KEYBOARD);
         }
 
@@ -3440,7 +3473,6 @@ CheckPassiveGrabsOnWindow(
 	{
             int rc, count = 0;
             xEvent *xE = NULL;
-            xEvent core;
 
             event->corestate &= 0x1f00;
             event->corestate |= tempGrab.modifiersDetail.exact & (~0x1f00);
@@ -3492,7 +3524,7 @@ CheckPassiveGrabsOnWindow(
 
             if (match & CORE_MATCH)
             {
-                rc = EventToCore((InternalEvent*)event, &core);
+                rc = EventToCore((InternalEvent*)event, &xE, &count);
                 if (rc != Success)
                 {
                     if (rc != BadMatch)
@@ -3500,8 +3532,6 @@ CheckPassiveGrabsOnWindow(
                                 "(%d, %d).\n", device->name, event->type, rc);
                     continue;
                 }
-                xE = &core;
-                count = 1;
             } else if (match & XI2_MATCH)
             {
                 rc = EventToXI2((InternalEvent*)event, &xE);
@@ -3531,6 +3561,7 @@ CheckPassiveGrabsOnWindow(
             {
                 FixUpEventFromWindow(pSprite, xE, grab->window, None, TRUE);
 
+                /* XXX: XACE? */
                 TryClientEvents(rClient(grab), device, xE, count,
                                        GetEventFilter(device, xE),
                                        GetEventFilter(device, xE), grab);
@@ -3544,8 +3575,7 @@ CheckPassiveGrabsOnWindow(
 		grabinfo->sync.state = FROZEN_WITH_EVENT;
             }
 
-            if (match & (XI_MATCH | XI2_MATCH))
-                free(xE); /* on core match xE == &core */
+            free(xE);
 	    return grab;
 	}
     }
@@ -3588,6 +3618,7 @@ CheckDeviceGrabs(DeviceIntPtr device, DeviceEvent *event, WindowPtr ancestor)
     WindowPtr pWin = NULL;
     FocusClassPtr focus = IsPointerEvent((InternalEvent*)event) ? NULL : device->focus;
     BOOL sendCore = (IsMaster(device) && device->coreEvents);
+    Bool ret = FALSE;
 
     if (event->type != ET_ButtonPress &&
         event->type != ET_KeyPress)
@@ -3607,7 +3638,7 @@ CheckDeviceGrabs(DeviceIntPtr device, DeviceEvent *event, WindowPtr ancestor)
             if (device->spriteInfo->sprite->spriteTrace[i++] == ancestor)
                 break;
         if (i == device->spriteInfo->sprite->spriteTraceGood)
-            return FALSE;
+            goto out;
     }
 
     if (focus)
@@ -3616,23 +3647,32 @@ CheckDeviceGrabs(DeviceIntPtr device, DeviceEvent *event, WindowPtr ancestor)
 	{
 	    pWin = focus->trace[i];
 	    if (CheckPassiveGrabsOnWindow(pWin, device, event, sendCore, TRUE))
-		return TRUE;
+	    {
+		ret = TRUE;
+		goto out;
+	    }
 	}
 
 	if ((focus->win == NoneWin) ||
 	    (i >= device->spriteInfo->sprite->spriteTraceGood) ||
 	    (pWin && pWin != device->spriteInfo->sprite->spriteTrace[i-1]))
-	    return FALSE;
+	    goto out;
     }
 
     for (; i < device->spriteInfo->sprite->spriteTraceGood; i++)
     {
 	pWin = device->spriteInfo->sprite->spriteTrace[i];
 	if (CheckPassiveGrabsOnWindow(pWin, device, event, sendCore, TRUE))
-	    return TRUE;
+	{
+	    ret = TRUE;
+	    goto out;
+	}
     }
 
-    return FALSE;
+out:
+    if (ret == TRUE && event->type == ET_KeyPress)
+        device->deviceGrab.activatingKey = event->detail.key;
+    return ret;
 }
 
 /**
@@ -3652,8 +3692,7 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
     DeviceIntPtr ptr;
     WindowPtr focus = keybd->focus->win;
     BOOL sendCore = (IsMaster(keybd) && keybd->coreEvents);
-    xEvent core;
-    xEvent *xE = NULL, *xi2 = NULL;
+    xEvent *core = NULL, *xE = NULL, *xi2 = NULL;
     int count, rc;
     int deliveries = 0;
 
@@ -3707,13 +3746,13 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
 
     if (sendCore)
     {
-        rc = EventToCore(event, &core);
+        rc = EventToCore(event, &core, &count);
         if (rc == Success) {
-            if (XaceHook(XACE_SEND_ACCESS, NULL, keybd, focus, &core, 1) == Success) {
-                FixUpEventFromWindow(keybd->spriteInfo->sprite, &core, focus,
+            if (XaceHook(XACE_SEND_ACCESS, NULL, keybd, focus, core, count) == Success) {
+                FixUpEventFromWindow(keybd->spriteInfo->sprite, core, focus,
                                      None, FALSE);
-                deliveries = DeliverEventsToWindow(keybd, focus, &core, 1,
-                                                   GetEventFilter(keybd, &core),
+                deliveries = DeliverEventsToWindow(keybd, focus, core, count,
+                                                   GetEventFilter(keybd, core),
                                                    NullGrab);
             }
         } else if (rc != BadMatch)
@@ -3722,6 +3761,7 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
     }
 
 unwind:
+    free(core);
     free(xE);
     free(xi2);
     return;
@@ -3747,6 +3787,7 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
     int rc, count = 0;
     xEvent *xi = NULL;
     xEvent *xi2 = NULL;
+    xEvent *core = NULL;
 
     grabinfo = &thisDev->deviceGrab;
     grab = grabinfo->grab;
@@ -3796,22 +3837,20 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
         /* try core event */
         if (sendCore && grab->grabtype == GRABTYPE_CORE)
         {
-            xEvent core;
-
-            rc = EventToCore(event, &core);
+            rc = EventToCore(event, &core, &count);
             if (rc == Success)
             {
-                FixUpEventFromWindow(pSprite, &core, grab->window, None, TRUE);
+                FixUpEventFromWindow(pSprite, core, grab->window, None, TRUE);
                 if (XaceHook(XACE_SEND_ACCESS, 0, thisDev,
-                            grab->window, &core, 1) ||
+                            grab->window, core, count) ||
                         XaceHook(XACE_RECEIVE_ACCESS, rClient(grab),
-                            grab->window, &core, 1))
+                            grab->window, core, count))
                     deliveries = 1; /* don't send, but pretend we did */
-                else if (!IsInterferingGrab(rClient(grab), thisDev, &core))
+                else if (!IsInterferingGrab(rClient(grab), thisDev, core))
                 {
                     deliveries = TryClientEvents(rClient(grab), thisDev,
-                            &core, 1, mask,
-                            GetEventFilter(thisDev, &core),
+                            core, count, mask,
+                            GetEventFilter(thisDev, core),
                             grab);
                 }
             } else if (rc != BadMatch)
@@ -3878,16 +3917,15 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
 	switch (grabinfo->sync.state)
 	{
 	case FREEZE_BOTH_NEXT_EVENT:
-	    for (dev = inputInfo.devices; dev; dev = dev->next)
+	    dev = GetPairedDevice(thisDev);
+	    if (dev)
 	    {
-		if (dev == thisDev)
-		    continue;
 		FreezeThaw(dev, TRUE);
 		if ((dev->deviceGrab.sync.state == FREEZE_BOTH_NEXT_EVENT) &&
 		    (CLIENT_BITS(grab->resource) ==
 		     CLIENT_BITS(dev->deviceGrab.grab->resource)))
 		    dev->deviceGrab.sync.state = FROZEN_NO_EVENT;
-		else if (GetPairedDevice(thisDev) == dev)
+		else
                     dev->deviceGrab.sync.other = grab;
 	    }
 	    /* fall through */
@@ -3901,6 +3939,7 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
 	}
     }
 
+    free(core);
     free(xi);
     free(xi2);
 }
@@ -4283,7 +4322,7 @@ DeviceEnterLeaveEvent(
         if (BitIsOn(mouse->button->down, i))
             SetBit(&event[1], i);
 
-    kbd = (IsMaster(mouse) || mouse->u.master) ? GetPairedDevice(mouse) : NULL;
+    kbd = GetMaster(mouse, MASTER_KEYBOARD);
     if (kbd && kbd->key)
     {
         event->mods.base_mods = kbd->key->xkbInfo->state.base_mods;

@@ -162,10 +162,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
     if (!modifiers_failed)
         return BadAlloc;
 
-    if (!IsMaster(dev) && dev->u.master)
-        mod_dev = GetMaster(dev, MASTER_KEYBOARD);
-    else
-        mod_dev = dev;
+    mod_dev = (IsFloating(dev)) ? dev : GetMaster(dev, MASTER_KEYBOARD);
 
     for (i = 0; i < stuff->num_modifiers; i++, modifiers++)
     {
@@ -280,10 +277,7 @@ ProcXIPassiveUngrabDevice(ClientPtr client)
     if (rc != Success)
         return rc;
 
-    if (!IsMaster(dev) && dev->u.master)
-        mod_dev = GetMaster(dev, MASTER_KEYBOARD);
-    else
-        mod_dev = dev;
+    mod_dev = (IsFloating(dev)) ? dev : GetMaster(dev, MASTER_KEYBOARD);
 
     tempGrab.resource = client->clientAsMask;
     tempGrab.device = dev;

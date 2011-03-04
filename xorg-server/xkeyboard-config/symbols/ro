@@ -231,3 +231,25 @@ xkb_symbols "crh_dobruca2" {
     key <AC04>	{ [         f,          F,          iacute,          Iacute ]	};
     key <AC07>	{ [    ibreve,     Ibreve,               j,               J ]	};
 };
+
+// EXTRAS:
+
+partial alphanumeric_keys
+xkb_symbols "ergonomic" {
+    // This layout is optimized for fast touch-typing in Romanian on a
+    // US keyboard, and works by swapping out symbols infrequently used
+    // in written Romanian (q,w,y,k) in favor of native ones, thus reducing
+    // the need to use modifier keys.
+    // Created by Gabriel Somlo, <somlo@cmu.edu> (C) 2011
+
+    include "ro(basic)"
+
+    name[Group1]="Romania - Ergonomic Touchtype";
+
+    key <AD01> { [ abreve,            Abreve,  q,                       Q ] };
+    key <AD02> { [ 0x1000219,      0x1000218,  w,                       W ] };
+    key <AD06> { [ 0x100021b,      0x100021a,  y,                       Y ] };
+    key <AC01> { [ a,                      A,  acircumflex,   Acircumflex ] };
+    key <AC08> { [ icircumflex,  Icircumflex,  k,                       K ] };
+};
+

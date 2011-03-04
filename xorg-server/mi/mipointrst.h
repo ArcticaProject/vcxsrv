@@ -44,6 +44,7 @@ typedef struct {
     Bool		    confined;	/* pointer can't change screens */
     int			    x, y;	/* hot spot location */
     int			    devx, devy;	/* sprite position */
+    Bool		    generateEvent; /* generate an event during warping? */
 } miPointerRec, *miPointerPtr;
 
 typedef struct {

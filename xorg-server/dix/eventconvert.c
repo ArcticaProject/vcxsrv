@@ -97,8 +97,12 @@ EventIsKeyRepeat(xEvent *event)
  * @return Success or the matching error code.
  */
 int
-EventToCore(InternalEvent *event, xEvent *core)
+EventToCore(InternalEvent *event, xEvent **core_out, int *count_out)
 {
+    xEvent *core = NULL;
+    int count = 0;
+    int ret = BadImplementation;
+
     switch(event->any.type)
     {
         case ET_Motion:
@@ -108,7 +112,10 @@ EventToCore(InternalEvent *event, xEvent *core)
                  * present */
                 if (!BitIsOn(e->valuators.mask, 0) &&
                     !BitIsOn(e->valuators.mask, 1))
-                    return BadMatch;
+                {
+                    ret = BadMatch;
+                    goto out;
+                }
             }
             /* fallthrough */
         case ET_ButtonPress:
@@ -119,9 +126,15 @@ EventToCore(InternalEvent *event, xEvent *core)
                 DeviceEvent *e = &event->device_event;
 
                 if (e->detail.key > 0xFF)
-                    return BadMatch;
+                {
+                    ret = BadMatch;
+                    goto out;
+                }
 
-                memset(core, 0, sizeof(xEvent));
+                core = calloc(1, sizeof(*core));
+                if (!core)
+                    return BadAlloc;
+                count = 1;
                 core->u.u.type = e->type - ET_KeyPress + KeyPress;
                 core->u.u.detail = e->detail.key & 0xFF;
                 core->u.keyButtonPointer.time = e->time;
@@ -129,7 +142,10 @@ EventToCore(InternalEvent *event, xEvent *core)
                 core->u.keyButtonPointer.rootY = e->root_y;
                 core->u.keyButtonPointer.state = e->corestate;
                 core->u.keyButtonPointer.root = e->root;
-                EventSetKeyRepeatFlag(core, (e->type == ET_KeyPress && e->key_repeat));
+                EventSetKeyRepeatFlag(core,
+                                      (e->type == ET_KeyPress &&
+                                       e->key_repeat));
+                ret = Success;
             }
             break;
         case ET_ProximityIn:
@@ -139,13 +155,18 @@ EventToCore(InternalEvent *event, xEvent *core)
         case ET_RawButtonPress:
         case ET_RawButtonRelease:
         case ET_RawMotion:
-            return BadMatch;
+            ret = BadMatch;
+            goto out;
         default:
             /* XXX: */
             ErrorF("[dix] EventToCore: Not implemented yet \n");
-            return BadImplementation;
+            ret = BadImplementation;
     }
-    return Success;
+
+out:
+    *core_out = core;
+    *count_out = count;
+    return ret;
 }
 
 /**

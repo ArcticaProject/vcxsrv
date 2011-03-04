@@ -124,6 +124,8 @@ extern Bool XQuartzFullscreenMenu;   /* Show the menu bar (autohide) while in FS
 extern Bool XQuartzFullscreenDisableHotkeys;
 extern Bool XQuartzOptionSendsAlt;   /* Alt or Mode_switch? */
 
+extern int32_t XQuartzShieldingWindowLevel; /* CGShieldingWindowLevel() or 0 */
+
 Bool QuartzAddScreen(int index, ScreenPtr pScreen);
 Bool QuartzSetupScreen(int index, ScreenPtr pScreen);
 void QuartzInitOutput(int argc,char **argv);

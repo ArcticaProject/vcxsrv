@@ -279,6 +279,9 @@
 /* Support X resource extension */
 #undef RES
 
+/* Support client ID tracking in X resource extension */
+#undef CLIENTIDS
+
 /* Support MIT-SCREEN-SAVER extension */
 #undef SCREENSAVER
 

@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "propertyst.h"
 #include "extnsionst.h"
 #include "xacestr.h"
+#include "client.h"
 #include "../os/osdep.h"
 #define _XSELINUX_NEED_FLASK_MAP
 #include "xselinuxint.h"
@@ -129,26 +130,25 @@ SELinuxLabelClient(ClientPtr client)
 
     /* For local clients, try and determine the executable name */
     if (XaceIsLocal(client)) {
-	struct ucred creds;
-	socklen_t len = sizeof(creds);
-	char path[PATH_MAX + 1];
-	size_t bytes;
+	/* Get cached command name if CLIENTIDS is enabled. */
+	const char *cmdname = GetClientCmdName(client);
+	Bool cached = (cmdname != NULL);
+	/* If CLIENTIDS is disabled, figure out the command name from
+	 * scratch. */
+	if (!cmdname)
+	{
+	    pid_t pid = DetermineClientPid(client);
+	    if (pid != -1)
+		DetermineClientCmd(pid, &cmdname, NULL);
+	}
 
-	memset(&creds, 0, sizeof(creds));
-	if (getsockopt(fd, SOL_SOCKET, SO_PEERCRED, &creds, &len) < 0)
+	if (!cmdname)
 	    goto finish;
 
-	snprintf(path, PATH_MAX + 1, "/proc/%d/cmdline", creds.pid);
-	fd = open(path, O_RDONLY);
-	if (fd < 0)
-	    goto finish;
+	strncpy(subj->command, cmdname, COMMAND_LEN - 1);
 
-	bytes = read(fd, path, PATH_MAX + 1);
-	close(fd);
-	if (bytes <= 0)
-	    goto finish;
-
-	strncpy(subj->command, path, COMMAND_LEN - 1);
+	if (!cached)
+	    free((void *) cmdname); /* const char * */
     }
 
 finish:

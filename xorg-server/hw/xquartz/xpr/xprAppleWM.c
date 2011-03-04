@@ -69,6 +69,8 @@ static int xprSetWindowLevel(
     
     if(XQuartzIsRootless)
         wc.window_level = normal_window_levels[level];
+    else if(XQuartzShieldingWindowLevel)
+        wc.window_level = XQuartzShieldingWindowLevel + 1;
     else
         wc.window_level = rooted_window_levels[level];
     

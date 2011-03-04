@@ -94,12 +94,6 @@ if XCSECURITY
 BUILTIN_SRCS += $(XCSECURITY_SRCS)
 endif
 
-XCALIBRATE_SRCS = xcalibrate.c
-if XCALIBRATE
-BUILTIN_SRCS += $(XCALIBRATE_SRCS)
-# XCalibrate needs tslib
-endif
-
 # XF86 Big Font extension
 BIGFONT_SRCS = xf86bigfont.c xf86bigfontsrv.h
 if XF86BIGFONT
@@ -132,7 +126,6 @@ EXTRA_DIST = \
 	$(XACE_SRCS) \
 	$(XCSECURITY_SRCS) \
 	$(XSELINUX_SRCS) \
-	$(XCALIBRATE_SRCS) \
 	$(XINERAMA_SRCS) \
 	$(BIGFONT_SRCS) \
 	$(DPMS_SRCS) \
