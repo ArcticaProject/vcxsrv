@@ -23,9 +23,9 @@
 %require "2.4.1"
 %defines
 %define parser_class_name "mhmakeparser"
-%define parser_base_class_name "mhmakefileparser"
-%define parser_class_constructor_init ": mhmakefileparser(CommandLineVariables)"
-%define parser_class_constructor_param "const map<string,string> &CommandLineVariables"
+%define parser_base_class_name "mhmakeparserbase"
+%define parser_class_constructor_init ": mhmakeparserbase(pMakefile,pLexer)"
+%define parser_class_constructor_param "mhmakefileparser *pMakefile, mhmakeFlexLexer *pLexer"
 %error-verbose
 
 %code requires {
@@ -67,10 +67,10 @@ const char Test[]="dit is een test";
 %%
 file : statements
        {
-         if (m_pCurrentItems)
+         if (m_pMakefile->m_pCurrentItems)
          {
-           PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
-           AddRule();
+           PRINTF(("Adding rule : %s\n",(*m_pMakefile->m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
+           m_pMakefile->AddRule();
          }
        }
 ;
@@ -85,6 +85,9 @@ space : SPACE |
 
 statement: NEWLINE |
            SPACE |
+           DOLLAREXPR NEWLINE {
+             m_pMakefile->ExpandExpression($1);
+           } |
            includemak |
            ruledef |
            phonyrule |
@@ -97,46 +100,46 @@ statement: NEWLINE |
            vpathrule |
            COMMAND
            {
-             if (!m_pCurrentRule)
+             if (!m_pMakefile->m_pCurrentRule)
              {
-               m_pCurrentRule=refptr<rule>(new rule(this));
+               m_pMakefile->m_pCurrentRule=refptr<rule>(new rule(m_pMakefile));
              }
-             m_pCurrentRule->AddCommand($1);
+             m_pMakefile->m_pCurrentRule->AddCommand($1);
              PRINTF(("Adding command : %s\n",$1.c_str()));
            }
 ;
 
 includemak:
          {
-           if (m_pCurrentItems)
+           if (m_pMakefile->m_pCurrentItems)
            {
-             PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
-             AddRule();
+             PRINTF(("Adding rule : %s\n",(*m_pMakefile->m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
+             m_pMakefile->AddRule();
            }
          } INCLUDEMAK
 ;
 
 ruledef: expression_nocolorequal rulecolon maybeemptyexpression
          {
-           if (m_pCurrentItems)
+           if (m_pMakefile->m_pCurrentItems)
            {
-             PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
-             AddRule();
+             PRINTF(("Adding rule : %s\n",(*m_pMakefile->m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
+             m_pMakefile->AddRule();
            }
 
-           m_pCurrentItems=new fileinfoarray;
-           m_pCurrentDeps=new fileinfoarray;
+           m_pMakefile->m_pCurrentItems=new fileinfoarray;
+           m_pMakefile->m_pCurrentDeps=new fileinfoarray;
            #ifdef _DEBUG
-           if (!ExpandExpression($1).size())
+           if (!m_pMakefile->ExpandExpression($1).size())
            {
              throw string("Empty left hand side in rule: ") + $1 + " : " + $3;
            }
            #endif
-           SplitToItems(ExpandExpression($1),*m_pCurrentItems);
-           SplitToItems(ExpandExpression($3),*m_pCurrentDeps);
-           m_DoubleColonRule= ($2==1) ;
+           m_pMakefile->SplitToItems(m_pMakefile->ExpandExpression($1),*m_pMakefile->m_pCurrentItems);
+           m_pMakefile->SplitToItems(m_pMakefile->ExpandExpression($3),*m_pMakefile->m_pCurrentDeps);
+           m_pMakefile->m_DoubleColonRule= ($2==1) ;
            PRINTF(("Defining rule %s : %s\n",$1.c_str(),$3.c_str()));
-           PRINTF(("  Expanded to %s : %s\n",ExpandExpression($1).c_str(),ExpandExpression($3).c_str()));
+           PRINTF(("  Expanded to %s : %s\n",m_pMakefile->ExpandExpression($1).c_str(),m_pMakefile->ExpandExpression($3).c_str()));
          }
 ;
 
@@ -147,7 +150,7 @@ rulecolon: COLON {$$=0;} |
 phonyrule: PHONY COLON expression
            {
              vector<fileinfo*> Items;
-             SplitToItems(ExpandExpression($3),Items);
+             m_pMakefile->SplitToItems(m_pMakefile->ExpandExpression($3),Items);
              vector<fileinfo*>::iterator pIt=Items.begin();
              while (pIt!=Items.end())
              {
@@ -155,7 +158,7 @@ phonyrule: PHONY COLON expression
                pIt++;
              }
              PRINTF(("Defining phony rule : %s\n",$3.c_str()));
-             PRINTF(("  Expanded to : %s\n",ExpandExpression($3).c_str()));
+             PRINTF(("  Expanded to : %s\n",m_pMakefile->ExpandExpression($3).c_str()));
            }
            NEWLINE
 ;
@@ -163,20 +166,27 @@ phonyrule: PHONY COLON expression
 autodepsrule: AUTODEPS COLON expression
            {
              vector<fileinfo*> Items;
-             SplitToItems(ExpandExpression($3),Items);
+             m_pMakefile->SplitToItems(m_pMakefile->ExpandExpression($3),Items);
              vector<fileinfo*>::iterator pIt=Items.begin();
              while (pIt!=Items.end())
              {
-               (*pIt)->SetAutoDepsScan(this);
+               (*pIt)->SetAutoDepsScan(m_pMakefile);
                pIt++;
              }
              PRINTF(("Defining autodeps rule : %s\n",$3.c_str()));
-             PRINTF(("  Expanded to : %s\n",ExpandExpression($3).c_str()));
+             PRINTF(("  Expanded to : %s\n",m_pMakefile->ExpandExpression($3).c_str()));
            }
            NEWLINE
 ;
 
-exportrule: EXPORT space exportstrings NEWLINE
+exportrule: EXPORT space exportstrings NEWLINE |
+            EXPORT space STRING EQUAL maybeemptyexpression
+            {
+              string Val=m_pMakefile->ExpandExpression($5);
+              m_pMakefile->SetVariable($3,Val);
+              m_pMakefile->SetExport($3,Val);
+              PRINTF(("Exporting %s : %s\n",$3.c_str(), Val.c_str()));
+            }
 ;
 
 exportstrings : exportstring |
@@ -185,49 +195,49 @@ exportstrings : exportstring |
 
 exportstring : STRING
                {
-                 SetExport($1,ExpandExpression(ExpandVar($1)));
-                 PRINTF(("Exporting %s : %s\n",$1.c_str(),ExpandExpression(ExpandVar($1)).c_str()));
+                 m_pMakefile->SetExport($1,m_pMakefile->ExpandExpression(m_pMakefile->ExpandVar($1)));
+                 PRINTF(("Exporting %s : %s\n",$1.c_str(),m_pMakefile->ExpandExpression(m_pMakefile->ExpandVar($1)).c_str()));
                }
 ;
 
 vpathrule: VPATH space nonspaceexpression space expression NEWLINE
            {
-             SetvPath(ExpandExpression($3),ExpandExpression($5));
-             PRINTF(("Setting vpath %s to %s\n",$3.c_str(),ExpandExpression($5).c_str()));
+             m_pMakefile->SetvPath(m_pMakefile->ExpandExpression($3),m_pMakefile->ExpandExpression($5));
+             PRINTF(("Setting vpath %s to %s\n",$3.c_str(),m_pMakefile->ExpandExpression($5).c_str()));
            }
 ;
 
 varassignment: VARDEF VARVAL
                {
-                 m_Variables[f_strip($1,NULL)]=$2;
-                 PRINTF(("Defining variable %s to %s\n",f_strip($1,NULL).c_str(), $2.c_str()));
+                 m_pMakefile->m_Variables[m_pMakefile->f_strip($1)]=$2;
+                 PRINTF(("Defining variable %s to %s\n",m_pMakefile->f_strip($1).c_str(), $2.c_str()));
                }
                | STRING EQUAL maybeemptyexpression
                {
-                 m_Variables[$1]=$3;
+                 m_pMakefile->m_Variables[$1]=$3;
                  PRINTF(("Setting variable %s to %s\n",$1.c_str(), $3.c_str()));
                }
 ;
 
 imvarassignment: STRING IMEQUAL maybeemptyexpression
                {
-                 m_Variables[$1]=ExpandExpression($3);
-                 PRINTF(("Setting variable %s to %s\n",$1.c_str(), m_Variables[$1].c_str()));
+                 m_pMakefile->m_Variables[$1]=m_pMakefile->ExpandExpression($3);
+                 PRINTF(("Setting variable %s to %s\n",$1.c_str(), m_pMakefile->m_Variables[$1].c_str()));
                }
 ;
 
 pvarassignment: STRING PEQUAL maybeemptyexpression
                {
-                 m_Variables[$1]=ExpandVar($1)+g_SpaceString+$3;
+                 m_pMakefile->m_Variables[$1]=m_pMakefile->ExpandVar($1)+g_SpaceString+$3;
                  PRINTF(("Adding to variable %s: %s\n",$1.c_str(), $3.c_str()));
                }
 ;
 
 optvarassignment: STRING OPTEQUAL maybeemptyexpression
                {
-                 if (!IsDefined($1))
+                 if (!m_pMakefile->IsDefined($1))
                  {
-                   m_Variables[$1]=$3;
+                   m_pMakefile->m_Variables[$1]=$3;
                    PRINTF(("Setting variable %s to %s\n",$1.c_str(), $3.c_str()));
                  }
                }

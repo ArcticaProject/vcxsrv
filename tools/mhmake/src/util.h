@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "2.4.5"
+#define MHMAKEVER    "3.0.0"
 
 class makecommand
 {
@@ -139,6 +139,46 @@ inline const char *NextCharItem(const char *pTmp,string &Output,char Char)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+inline const char *SkipMakeExpr(const char *pMacro)
+{
+#ifdef _DEBUG
+  const char *pMacroIn=pMacro;
+#endif
+  char Char=*pMacro++;
+  char EndChar;
+  if (Char=='(')
+    EndChar=')';
+  else if (Char=='{')
+    EndChar='}';
+  else
+    return pMacro;
+  Char=*pMacro++;
+  while (Char!=EndChar)
+  {
+    if (Char=='$')
+    {
+      pMacro=SkipMakeExpr(pMacro);
+    } else if (Char=='(')
+    {
+      pMacro=SkipMakeExpr(pMacro-1);
+    }
+#ifdef _DEBUG
+    if (!*pMacro)
+      throw(string(1,EndChar)+" not found in "+pMacroIn);
+#endif
+    Char=*pMacro++;
+  }
+  return pMacro;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+inline size_t SkipMakeExpr(const string &Expr,size_t i)
+{
+  const char *pTmp=Expr.c_str();
+  return SkipMakeExpr(pTmp+i)-pTmp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 string Substitute(const string &ToSubst,const string &SrcStr,const string &ToStr);
 
@@ -170,7 +210,7 @@ struct loadedmakefile : public refbase
   map<string,string>   m_CommandLineVars;
 
   vector<string>       m_CommandLineTargets;
-  refptr<mhmakefileparser> m_pParser;
+  refptr<mhmakefileparser> m_pMakefileParser;
 
   loadedmakefile(const fileinfo *pDir, vector<string> &Args,const string &Makefile=g_EmptyString);
 

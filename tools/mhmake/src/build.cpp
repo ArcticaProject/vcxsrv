@@ -400,14 +400,33 @@ mh_pid_t mhmakefileparser::MakeDirsCommand(const string &Params) const
 }
 
 /*****************************************************************************/
-mh_pid_t mhmakefileparser::EchoCommand(const string &Params) const
+static string RemoveQuotes(const string &StrIn)
 {
+  char FirstChar=StrIn[0];
+  string Ret=StrIn;
+  if (FirstChar=='"')
+  {
+    int Len=Ret.length()-1;
+    if (Ret[Len]=='"')
+      Ret=Ret.substr(1,Len-1);
+  }
+  else if (FirstChar=='\'')
+  {
+    int Len=Ret.length()-1;
+    if (Ret[Len]=='\'')
+      Ret=Ret.substr(1,Len-1);
+  }
+  return Ret;
+}
+mh_pid_t mhmakefileparser::EchoCommand(const string &ParamsIn) const
+{
+  string Params=f_strip(ParamsIn);
     // Find the first > character
   size_t Pos=Params.find_first_of('>');
   if (Pos==string::npos)
   {
     // Just echo it
-    cout << Params << endl;
+    cout << RemoveQuotes(Params) << endl;
   }
   else
   {
@@ -432,9 +451,7 @@ mh_pid_t mhmakefileparser::EchoCommand(const string &Params) const
       cerr << "Error opening file "<<Filename<<endl;
       return (mh_pid_t)-1;
     }
-    int Begin=0;
-    while (Params[Begin]==' ' || Params[Begin] == '\t') Begin++;  // Strip leading white space
-    string EchoStr=Params.substr(Begin,Pos-1)+"\n";
+    string EchoStr=RemoveQuotes(Params.substr(0,Pos-1))+"\n";
     if (EchoStr.length()!=fwrite(EchoStr.c_str(),1,EchoStr.length(),pfFile))
     {
       cerr << "Error writing file "<<Filename<<endl;
@@ -656,10 +673,28 @@ static const string &GetComspec()
 }
 
 /*****************************************************************************/
-string mhmakefileparser::GetFullCommand(string Command)
+static string GetExecutableFromCommand(const string &FullCommand)
 {
-  map<string,string>::iterator pFound=m_CommandCache.find(Command);
-  string OriCommand=Command;
+  string Ret;
+  FILE *pFile=fopen(FullCommand.c_str(),"r");
+  if (!pFile)
+    return Ret;
+  char Line[MAX_PATH];
+  if (fgets(Line,MAX_PATH,pFile) && Line[0]=='#' && Line[1]=='!')
+  {
+    Ret=Line+2;
+    Ret.resize(Ret.length()-1);
+    Ret=QuoteFileName(Ret)+" ";
+  }
+  fclose(pFile);
+  return Ret;
+}
+
+/*****************************************************************************/
+string mhmakefileparser::GetFullCommand(const string &CommandIn)
+{
+  map<string,string>::iterator pFound=m_CommandCache.find(CommandIn);
+  string Command=CommandIn;
   if (pFound==m_CommandCache.end())
   {
     bool Found=false;
@@ -688,11 +723,10 @@ string mhmakefileparser::GetFullCommand(string Command)
     }
     else
     {
-      static bool s_Py2ExeInstalled=true;
       /* First check for special internal commands */
-      if (OriCommand=="del")
+      if (CommandIn=="del")
       {
-        m_CommandCache[OriCommand]="del";
+        m_CommandCache[CommandIn]="del";
         return Command;
       }
       // Try with different extensions
@@ -710,13 +744,23 @@ string mhmakefileparser::GetFullCommand(string Command)
           Found=true;
           Command=GetPythonExe()+QuoteFileName(FullCommand);
         }
+        else
+        {
+          // also search without extension, if found look inside the file if we find an executable to use
+          FullCommand=SearchCommand(Command);
+          if (!FullCommand.empty())
+          {
+            Found=true;
+            Command=GetExecutableFromCommand(FullCommand)+QuoteFileName(FullCommand);
+          }
+        }
       }
     }
     if (!Found)
     {
       Command=GetComspec()+QuoteFileName(Command);
     }
-    m_CommandCache[OriCommand]=Command;
+    m_CommandCache[CommandIn]=Command;
     return Command;
   }
   return pFound->second;
@@ -1374,7 +1418,7 @@ mh_time_t mhmakefileparser::StartBuildTarget(fileinfo* pTarget,bool bCheckTarget
 
   mh_time_t TargetDate=pTarget->GetDate();
   mh_time_t YoungestDate=TargetDate;
-  bool MakeTarget=!TargetDate.DoesExist();
+  bool MakeTarget=!TargetDate.DoesExist(); // When the target does not exist, always build when a rule is found. This also makes sure the autodepscan will be done in case the target does not exist yet
 
   if (!pRule || !pRule->GetCommands().size())
   {

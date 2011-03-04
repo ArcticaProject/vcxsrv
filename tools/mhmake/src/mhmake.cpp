@@ -105,9 +105,9 @@ int __CDECL main(int argc, char* argv[])
     LOADEDMAKEFILES::iterator LoadMakIt=g_LoadedMakefiles.begin();
     while (LoadMakIt!=g_LoadedMakefiles.end())
     {
-      (*LoadMakIt)->m_pParser->BuildIncludedMakefiles();
-      (*LoadMakIt)->m_pParser->ParseBuildedIncludeFiles();
-      (*LoadMakIt)->m_pParser->CheckEnv();
+      (*LoadMakIt)->m_pMakefileParser->BuildIncludedMakefiles();
+      (*LoadMakIt)->m_pMakefileParser->ParseBuildedIncludeFiles();
+      (*LoadMakIt)->m_pMakefileParser->CheckEnv();
       LoadMakIt++;
     }
 
@@ -121,16 +121,16 @@ int __CDECL main(int argc, char* argv[])
           g_Clean=true;
         }
         fileinfo *pTarget=GetFileInfo(*It,pFirstMakefile->m_MakeDir);
-        pFirstMakefile->m_pParser->BuildTarget(pTarget);
+        pFirstMakefile->m_pMakefileParser->BuildTarget(pTarget);
         It++;
       }
     }
     else
     {
-      fileinfo *pFirstTarget=pFirstMakefile->m_pParser->GetFirstTarget();
+      fileinfo *pFirstTarget=pFirstMakefile->m_pMakefileParser->GetFirstTarget();
       if (pFirstTarget)
       {
-        pFirstMakefile->m_pParser->BuildTarget(pFirstTarget);
+        pFirstMakefile->m_pMakefileParser->BuildTarget(pFirstTarget);
       }
       else
         cout << "Warning: no targets in makefile. Nothing to be build.\nMHMAKECONF defined?\n";
@@ -139,7 +139,7 @@ int __CDECL main(int argc, char* argv[])
   }
   catch (string Message)
   {
-    cerr << "Error occured: " << Message << endl;
+    cerr << "*** Error -> " << Message << endl;
     #ifdef _DEBUG
     if (g_DumpOnError)
     {

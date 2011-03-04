@@ -153,6 +153,11 @@ b4_user_stype
     void set_debug_level (debug_level_type l);
 #endif
 
+    position *GetCurPos(void)
+    {
+      return &yylocation_stack_[1].begin;
+    }
+
   private:
     /// Report a syntax error.
     /// \param loc    where the syntax error is found.

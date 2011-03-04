@@ -30,7 +30,7 @@ class rule;
 #include "flexlexer.h"
 
 class mhmakefileparser;
-typedef string (mhmakefileparser::*function_f)(const string &, const string *) const;
+typedef string (mhmakefileparser::*function_f)(const string &) const;
 
 struct funcdef
 {
@@ -49,16 +49,17 @@ typedef map<fileinfo*, autodeps_entry_t > autodeps_t;
 namespace yy
 {
   class location;
+  class mhmakeparser;
 }
 
 class mhmakefileparser : public refbase
 {
+  friend class yy::mhmakeparser;
+
 private:
   static commandqueue   sm_CommandQueue;
-protected:
-  mhmakeFlexLexer      *m_ptheLexer;
+  static stack<yy::mhmakeparser*> sm_ParserStack; // Keeps track of the currently active parser
 private:
-  int                   m_yyloc;
   fileinfo             *m_RuleThatIsBuild;
   vector<string>        m_ToBeIncludeAfterBuild;
   vector<string>        m_MakefilesToLoad;
@@ -185,14 +186,28 @@ public:
     SetAutoDepsDirty();  /* This is to be sure that all new calculated md5 strings are saved. */
   }
 
-  void SetVariable(string Var,string Val)
+  void SetVariable(const string &Var, const string &Val)
   {
     m_Variables[Var]=Val;
   }
-  void DeleteVariable(string Var)
+  void DeleteVariable(const string &Var)
   {
     m_Variables.erase(Var);
   }
+  bool GetVariable(const string &Var, string &Val)
+  {
+    map<string,string>::const_iterator pIt=m_Variables.find(Var);
+    if (pIt==m_Variables.end())
+    {
+      return false;
+    }
+    else
+    {
+      Val = pIt->second;
+      return true;
+    }
+  }
+
   void EnableAutoDepRescan(void)
   {
     m_ForceAutoDepRescan=true;
@@ -237,10 +252,6 @@ public:
 #endif
     free(m_pEnv);
   }
-  int yylex (YYSTYPE* yylval, yy::location* yylloc)
-  {
-    return m_ptheLexer->yylex(yylval,yylloc);
-  }
 
   virtual int parse()
   {
@@ -248,14 +259,14 @@ public:
   }
 
   int ParseFile(const fileinfo *pFileInfo,const fileinfo *pMakeDir=NULL);
+  int ParseString(const string &StringIn);
 
   /* Functions to handle variables */
   bool IsDefined(const string &Var) const;
   bool IsEqual(const string &EqualExpr) const;
   bool IsExprTrue(const string &EqualExpr) const;
   string ExpandExpression(const string &Expr) const;
-  string ExpandExpressionRecurse(const string &Expr, bool &Recurse) const;
-  string ExpandMacro(const string &Expr, bool &Recurse) const;
+  string ExpandMacro(const string &Expr) const;
   string ExpandVar(const string &Var) const;
 
   void PrintVariables(bool Expand=false) const;
@@ -265,33 +276,38 @@ public:
   static map<string,function_f> m_Functions;
   static bool m_FunctionsInitialised;
   static void InitFuncs(void);
-  string f_filter(const string &, const string *pOriExpr) const;
-  string f_call(const string &, const string *pOriExpr) const;
-  string f_if(const string &, const string *pOriExpr) const;
-  string f_findstring(const string &, const string *pOriExpr) const;
-  string f_firstword(const string &, const string *pOriExpr) const;
-  string f_wildcard(const string &, const string *pOriExpr) const;
-  string f_subst(const string &, const string *pOriExpr) const;
-  string f_patsubst(const string &, const string *pOriExpr) const;
-  string f_concat(const string &, const string *pOriExpr) const;
-  string f_basename(const string & Arg, const string *pOriExpr) const;
-  string f_notdir(const string & Arg, const string *pOriExpr) const;
-  string f_dir(const string & Arg, const string *pOriExpr) const;
-  string f_shell(const string & Arg, const string *pOriExpr) const;
-  string f_relpath(const string & Arg, const string *pOriExpr) const;
-  string f_toupper(const string & Arg, const string *pOriExpr) const;
-  string f_tolower(const string & Arg, const string *pOriExpr) const;
-  string f_exist(const string & Arg, const string *pOriExpr) const;
-  string f_filesindirs(const string & Arg, const string *pOriExpr) const;
-  string f_fullname(const string & Arg, const string *pOriExpr) const;
-  string f_addprefix(const string & Arg, const string *pOriExpr) const;
-  string f_addsuffix(const string & Arg, const string *pOriExpr) const;
-  string f_filterout(const string & Arg, const string *pOriExpr) const;
-  string f_word(const string & Arg, const string *pOriExpr) const;
-  string f_words(const string & Arg, const string *pOriExpr) const;
-  string f_strip(const string & Arg, const string *pOriExpr) const;
-  string f_which(const string & Arg, const string *pOriExpr) const;
-  string f_foreach(const string & Arg, const string *pOriExpr) const;
+  string f_filter(const string &) const;
+  string f_call(const string &) const;
+  string f_if(const string &) const;
+  string f_findstring(const string &) const;
+  string f_firstword(const string &) const;
+  string f_wildcard(const string &) const;
+  string f_subst(const string &) const;
+  string f_patsubst(const string &) const;
+  string f_concat(const string &) const;
+  string f_basename(const string & Arg) const;
+  string f_notdir(const string & Arg) const;
+  string f_dir(const string & Arg) const;
+  string f_shell(const string & Arg) const;
+  string f_relpath(const string & Arg) const;
+  string f_toupper(const string & Arg) const;
+  string f_tolower(const string & Arg) const;
+  string f_exist(const string & Arg) const;
+  string f_filesindirs(const string & Arg) const;
+  string f_fullname(const string & Arg) const;
+  string f_addprefix(const string & Arg) const;
+  string f_addsuffix(const string & Arg) const;
+  string f_filterout(const string & Arg) const;
+  string f_word(const string & Arg) const;
+  string f_words(const string & Arg) const;
+  string f_strip(const string & Arg) const;
+  string f_which(const string & Arg) const;
+  string f_foreach(const string & Arg) const;
+  string f_eval(const string & Arg) const;
+  string f_sort(const string & Arg) const;
+  string f_error(const string & Arg) const;
+  string f_info(const string & Arg) const;
+  string f_warning(const string & Arg) const;
 
   fileinfo* GetFirstTarget() const
   {
@@ -372,7 +388,7 @@ public:
     bool IgnoreError;
     return ExecuteCommand(Command, IgnoreError, pOutput);
   }
-  string GetFullCommand(string Command);
+  string GetFullCommand(const string &Command);
 
   static void InitBuildTime();
 
@@ -386,8 +402,30 @@ public:
   const string &GetPythonExe() const;
   int SearchPath(const char *szCommand, const char *pExt, size_t Len, char *szFullCommand,char **pFilePart) const;
   mh_pid_t OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const;
+
+  static string GetFileNameLineNo(void);
 };
 
+class mhmakeparserbase
+{
+protected:
+  mhmakefileparser *m_pMakefile;
+  mhmakeFlexLexer  *m_ptheLexer;
+public:
+  mhmakeparserbase(mhmakefileparser *pMakefile, mhmakeFlexLexer *pLexer)
+    : m_pMakefile(pMakefile), m_ptheLexer(pLexer)
+  {
+  }
+  int yylex (YYSTYPE* yylval, yy::location* yylloc)
+  {
+    return m_ptheLexer->yylex(yylval,yylloc);
+  }
+  string &GetInputFilename(void) const
+  {
+    return m_ptheLexer->GetInputFilename();
+  }
+
+};
 
 #endif
 

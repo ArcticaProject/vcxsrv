@@ -151,13 +151,13 @@ public:
   string m_InputFileName;
   string m_curtoken;
   mystack m_IncludeStack;
-  mhmakefileparser *m_pParser;
-  mhmakefileparser *GetParser()
+  mhmakefileparser *m_pMakefileParser;
+  mhmakefileparser *GetParser(void)
   {
-    return m_pParser;
+    return m_pMakefileParser;
   }
 public:
-  string &GetInputFilename()
+  string &GetInputFilename(void)
   {
     return m_InputFileName;
   }

@@ -95,7 +95,7 @@ static void ReplaceCurlyBraces(string &String)
 
 /* -------------- rules section -------------- */
 %x INCLUDE IFDEF IF IFNDEF SKIPUNTILELSEORENDIF QUOTE MAKEEXPRES SINGLEQUOTE COMMANDPARSE
-%x IFEQ IFNEQ ERRORMACRO MESSAGEMACRO REPARSEMACRO LOAD_MAKEFILE
+%x IFEQ IFNEQ LOAD_MAKEFILE
 %x DEFINE
 
 %{
@@ -463,7 +463,7 @@ load_makefile {
 
 <IF,IFEQ,IFNEQ>\r    /* skip */
 
-<IF,IFEQ,IFNEQ>[^\\\r\n\$]+ |
+<IF,IFEQ,IFNEQ>[^\\\r\n\$#]+ |
 <IF,IFEQ,IFNEQ>[\\\$]         { m_curtoken += (const char *)yytext; }
 
  /*****************************************************************************/
@@ -608,7 +608,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[ \t]*#[^\n]* {
+<INITIAL,COMMANDPARSE,IF,IFEQ,IFNEQ>[ \t]*#[^\n]* {
   PRINTF(("%s %d: -COMMENT: %s\n",m_InputFileName.c_str(),lineno(),yytext));
 }
 
@@ -678,7 +678,7 @@ export {
   return yy::mhmakeparser::token::STRING;
 }
 
-([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+  {
+([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|\[\]]|\\\ |\\#)+  {
   PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),lineno(),yytext));
   yylval->theString=(const char *)yytext;
   return yy::mhmakeparser::token::STRING;
@@ -699,6 +699,11 @@ export {
 <DEFINE>[ \t]*\\[ \t\r]*\n[ \t]* {
   inclineno();
   m_curtoken+=g_SpaceString;
+}
+
+<DEFINE>\n {
+  inclineno();
+  m_curtoken+=(const char *)yytext;
 }
 
 <DEFINE>. {
@@ -731,33 +736,6 @@ export {
   PRINTF(("%s %d: BEGIN MACRO $(: %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
   BEGIN(MAKEEXPRES);
   m_curtoken=(const char *)yytext;
-}
-
- /*---------------------------------------------------------------------------*/
-\$[\(\{][ \t]*error[ \t]+ {
-  m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN ERROR MACRO $(: %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
-  BEGIN(ERRORMACRO);
-  m_curtoken=g_EmptyString;
-  return yy::mhmakeparser::token::NEWLINE; // Make sure that the previous lines are matched by the bison parser (so that all variables until here are defined)
-}
-
- /*---------------------------------------------------------------------------*/
-\$[\(\{][ \t]*(message|info)[ \t]+ {
-  m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN MESSAGE MACRO $(: %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
-  BEGIN(MESSAGEMACRO);
-  m_curtoken=g_EmptyString;
-  return yy::mhmakeparser::token::NEWLINE; // Make sure that the previous lines are matched by the bison parser (so that all variables until here are defined)
-}
-
- /*---------------------------------------------------------------------------*/
-\$[\(\{][ \t]*reparse[ \t]+ {
-  m_BraceIndent++;
-  PRINTF(("%s %d: BEGIN REPARSE MACRO $(: %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
-  BEGIN(REPARSEMACRO);
-  m_curtoken=g_EmptyString;
-  return yy::mhmakeparser::token::NEWLINE;
 }
 
  /*---------------------------------------------------------------------------*/
@@ -833,11 +811,6 @@ export {
   m_curtoken+='#';
 }
 
- /*---------------------------------------------------------------------------*/
-<COMMANDPARSE>[ \t]*#[^\n]* {
-  PRINTF(("%s %d: -COMMENT: %s\n",m_InputFileName.c_str(),lineno(),yytext));
-}
-
  /*****************************************************************************/
 <QUOTE>\" {
   PRINTF(("%s %d: QUOTEDSTRING: %s\n",m_InputFileName.c_str(),lineno(),yytext));
@@ -875,58 +848,6 @@ export {
 }
 
  /*****************************************************************************/
-<ERRORMACRO>[\)\}] {
-  m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE ERROR MACRO ): %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
-  if (!m_BraceIndent)
-  {
-    PRINTF(("%s %d: ERRORMACRO: %s\n",m_InputFileName.c_str(),lineno(),m_curtoken.c_str()));
-    throw string("\n-> ")+m_InputFileName.c_str()+"("+stringify(lineno())+") : "+GetParser()->ExpandExpression(m_curtoken);
-  } else {
-    m_curtoken+=(const char *)yytext;
-}
-}
-
- /*****************************************************************************/
-<MESSAGEMACRO>[\)\}] {
-  m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE MESSAGE MACRO ): %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
-  if (!m_BraceIndent)
-  {
-    PRINTF(("%s %d: MESSAGEMACRO: %s\n",m_InputFileName.c_str(),lineno(),yytext));
-    cerr<<m_InputFileName.c_str()<<"("<<stringify(lineno())+") : "<<GetParser()->ExpandExpression(m_curtoken)<<endl;
-    BEGIN(INITIAL);
-  } else {
-    m_curtoken+=(const char *)yytext;
-  }
-}
-
- /*****************************************************************************/
-<REPARSEMACRO>[\)\}] {
-  m_BraceIndent--;
-  PRINTF(("%s %d: CLOSE BRACE REPARSE MACRO ): %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
-  if (!m_BraceIndent)
-  {
-    PRINTF(("%s %d: REPARSEMACRO: %s\n",m_InputFileName.c_str(),lineno(),yytext));
-    string Deps=GetParser()->ExpandExpression(m_curtoken);
-    PRINTF(("%s %d: REPARSEMACRO expanded: %s\n",m_InputFileName.c_str(),lineno(),Deps.c_str()));
-    string::const_reverse_iterator It=Deps.rbegin()+1; // +1 because we don't want the latest brace
-    string::const_reverse_iterator ItBeg=Deps.rend();
-    while (It!= ItBeg)
-    {
-      char Char=*It++;
-      if (Char==';') Char='\n';
-      unput(Char);
-    }
-    BEGIN(INITIAL);
-  }
-  else
-  {
-    m_curtoken+=(const char *)yytext;
-  }
-}
-
- /*****************************************************************************/
 <MAKEEXPRES>[\)\}] {
   m_BraceIndent--;
   PRINTF(("%s %d: CLOSE BRACE MAKEEXPRES MACRO ): %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
@@ -945,20 +866,30 @@ export {
 }
 
  /*---------------------------------------------------------------------------*/
-<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>\$[\(\{] {
+<MAKEEXPRES>\$[\(\{] {
   m_BraceIndent++;
   PRINTF(("%s %d: MACRO extra $(: %d\n",m_InputFileName.c_str(),lineno(),m_BraceIndent));
   m_curtoken+=(const char *)yytext;
 }
 
  /*---------------------------------------------------------------------------*/
-<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>[^$\(\)\{\}\r\n\\]+ |
-<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>[\(\$\\\{] {
+<MAKEEXPRES>[\(\{] {
+  m_BraceIndent++;
   m_curtoken+=(const char *)yytext;
 }
-<MAKEEXPRES,ERRORMACRO,MESSAGEMACRO,REPARSEMACRO>[ \t\r]*\\[ \t\r]*\n[ \t\r]* {
+
+ /*---------------------------------------------------------------------------*/
+<MAKEEXPRES>[^$\(\)\{\}\r\n\\]+ |
+<MAKEEXPRES>[\(\$\\\{] {
+  m_curtoken+=(const char *)yytext;
+}
+<MAKEEXPRES>[ \t\r]*\\[ \t\r]*\n[ \t\r]* {
   inclineno();
   m_curtoken+=g_SpaceString;
+}
+
+<MAKEEXPRES>\n {
+  throw m_InputFileName + "(" + stringify(lineno()) + "): End of line inside macro is not allowed";
 }
 
 <SKIPUNTILELSEORENDIF><<EOF>> {

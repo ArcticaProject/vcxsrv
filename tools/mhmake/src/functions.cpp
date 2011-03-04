@@ -54,11 +54,41 @@ funcdef mhmakefileparser::m_FunctionsDef[]= {
  ,{"strip"      ,&mhmakefileparser::f_strip}
  ,{"which"      ,&mhmakefileparser::f_which}
  ,{"foreach"    ,&mhmakefileparser::f_foreach}
+ ,{"eval"       ,&mhmakefileparser::f_eval}
+ ,{"sort"       ,&mhmakefileparser::f_sort}
+ ,{"error"      ,&mhmakefileparser::f_error}
+ ,{"info"       ,&mhmakefileparser::f_info}
+ ,{"warning"    ,&mhmakefileparser::f_warning}
 };
 
 map<string,function_f> mhmakefileparser::m_Functions;
 
 bool mhmakefileparser::m_FunctionsInitialised;
+
+inline const char *NextCharExprItem(const char *pTmp,string &Output,char Char)
+{
+  const char *pStart=pTmp;
+  while (*pTmp)
+  {
+    char CurChar=*pTmp;
+    if (CurChar==Char)
+      break;
+    pTmp++;
+    if (CurChar=='$' && *pTmp!='$')
+      pTmp=SkipMakeExpr(pTmp);
+  }
+
+  const char *pStop=pTmp;
+  if (*pTmp) pTmp++;
+
+  while (pStart<pStop && (*pStart==' ' || *pStart == '\t')) pStart++;
+  pStop--;
+  while (pStart<=pStop && (*pStop==' ' || *pStop == '\t')) pStop--;
+  pStop++;
+
+  Output=string(pStart,pStop);
+  return pTmp;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Loop over a list of filenames
@@ -100,11 +130,12 @@ void mhmakefileparser::InitFuncs(void)
 static string TrimString(const string &Input)
 {
   unsigned Start=0;
-  while (strchr(" \t",Input[Start])) Start++;
+  const char *pInput=Input.c_str();
+  while (strchr(" \t",pInput[Start])) Start++;
   if (Start>=Input.size())
     return g_EmptyString;
   size_t Stop=Input.size()-1;
-  while (strchr(" \t",Input[Stop])) Stop--;
+  while (strchr(" \t",pInput[Stop])) Stop--;
   return Input.substr(Start,Stop-Start+1);
 }
 
@@ -119,8 +150,9 @@ static string filter(const string &FileName, void *pvFilter)
     return g_EmptyString;
 }
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_filter(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_filter(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   size_t ipos=Arg.find(',');
   #ifdef _DEBUG
   if (ipos==string::npos) {
@@ -137,8 +169,9 @@ string mhmakefileparser::f_filter(const string & Arg, const string *pOriExpr) co
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_filterout(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_filterout(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   size_t ipos=Arg.find(',');
   #ifdef _DEBUG
   if (ipos==string::npos) {
@@ -175,9 +208,52 @@ string mhmakefileparser::f_filterout(const string & Arg, const string *pOriExpr)
   return Ret;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_call(const string & Arg, const string *pOriExpr) const
+class varstack_t : public vector< pair<bool,string> >
 {
+  mhmakefileparser *m_pMakefileParser;
+public:
+  varstack_t(mhmakefileparser *pMakefileParser)
+    : m_pMakefileParser(pMakefileParser)
+  {
+  }
+  void PushArg(int ArgNr, const string &Value)
+  {
+    char szVarName[10];
+    ::sprintf(szVarName,"%d",ArgNr);
+    string VarName(szVarName);
+    string VarVal;
+    if (m_pMakefileParser->GetVariable(VarName,VarVal))
+      vector< pair<bool,string> >::push_back(pair<bool,string>(true, VarVal));
+    else
+      vector< pair<bool,string> >::push_back(pair<bool,string>(false,g_EmptyString));
+    m_pMakefileParser->SetVariable(VarName,Value);
+  }
+  void RestoreArgs()
+  {
+    vector< pair<bool,string> >::iterator It=begin();
+    int ArgNr=0;
+    while (It!=end())
+    {
+      char szVarName[10];
+      ::sprintf(szVarName,"%d",ArgNr);
+      string VarName(szVarName);
+      if (It->first)
+        m_pMakefileParser->SetVariable(VarName, It->second);
+      else
+      {
+        m_pMakefileParser->DeleteVariable(VarName);
+      }
+      It++;
+      ArgNr++;
+    }
+  }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::f_call(const string & ArgIn) const
+{
+  string Arg=ExpandExpression(ArgIn);
+  varstack_t VarStack((mhmakefileparser*)this);
   const char *pTmp=Arg.c_str();
 
   bool LastCharIsComma=Arg[Arg.length()-1]==',';
@@ -191,6 +267,9 @@ string mhmakefileparser::f_call(const string & Arg, const string *pOriExpr) cons
     throw string("call to non existing function ")+Func;
   }
   #endif
+  // the 0 argument is the function itself
+  VarStack.PushArg(0,Func);
+
   Func=pFunc->second;
   int i=0;
   while (*pTmp || LastCharIsComma) {
@@ -199,23 +278,20 @@ string mhmakefileparser::f_call(const string & Arg, const string *pOriExpr) cons
     string Repl;
     pTmp=NextCharItem(pTmp,Repl,',');
     i++;
-    char Tmp[10];
-    ::sprintf(Tmp,"$(%d)",i);
-    size_t Len=::strlen(Tmp);
-    size_t Pos=Func.find(Tmp);
-    while (Func.npos!=Pos)
-    {
-      Func=Func.substr(0,Pos)+Repl+Func.substr(Pos+Len);
-      Pos=Func.find(Tmp,Pos+Len);
-    }
+    VarStack.PushArg(i,Repl);
   }
 
-  return ExpandExpression(Func);
+  string Ret=ExpandExpression(Func);
+
+  VarStack.RestoreArgs();
+
+  return Ret;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_subst(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_subst(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
 
   string FromString;
@@ -250,8 +326,9 @@ string mhmakefileparser::f_subst(const string & Arg, const string *pOriExpr) con
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_patsubst(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_patsubst(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
 
   string FromString;
@@ -274,8 +351,9 @@ string mhmakefileparser::f_patsubst(const string & Arg, const string *pOriExpr) 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_concat(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_concat(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
 
   string JoinString;
@@ -311,24 +389,27 @@ string mhmakefileparser::f_concat(const string & Arg, const string *pOriExpr) co
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_if(const string & Arg, const string *pOriExpr) const
+// Make sure to only expand the expression which the condition is true for
+string mhmakefileparser::f_if(const string & Arg) const
 {
   const char *pTmp=Arg.c_str();
 
   string Cond;
-  pTmp=NextCharItem(pTmp,Cond,',');
+  pTmp=NextCharExprItem(pTmp,Cond,',');
+  Cond=ExpandExpression(Cond);
   string Ret;
   if (Cond.empty())
   {
-    pTmp=NextCharItem(pTmp,Ret,',');
+    pTmp=NextCharExprItem(pTmp,Ret,',');
   }
-  NextCharItem(pTmp,Ret,',');
-  return Ret;
+  NextCharExprItem(pTmp,Ret,',');
+  return ExpandExpression(Ret);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_findstring(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_findstring(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
   string find;
   pTmp=NextCharItem(pTmp,find,',');
@@ -342,8 +423,9 @@ string mhmakefileparser::f_findstring(const string & Arg, const string *pOriExpr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_firstword(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_firstword(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   string FirstWord;
   NextItem(Arg.c_str(),FirstWord);
   return FirstWord;
@@ -402,15 +484,15 @@ static string wildcard(const string &Arg, void *pvVar)
   return Ret;
 }
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_wildcard(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_wildcard(const string & Arg) const
 {
-  return IterList(Arg, wildcard, (void*)this);
+  return IterList(ExpandExpression(Arg), wildcard, (void*)this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_exist(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_exist(const string & Arg) const
 {
-  string File=TrimString(Arg);
+  string File=TrimString(ExpandExpression(Arg));
   fileinfo *pFile=GetFileInfo(File,m_MakeDir);
   if (pFile->Exists())
   {
@@ -421,8 +503,9 @@ string mhmakefileparser::f_exist(const string & Arg, const string *pOriExpr) con
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_filesindirs(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_filesindirs(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
 
   string strFiles;
@@ -476,9 +559,9 @@ string mhmakefileparser::f_filesindirs(const string & Arg, const string *pOriExp
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_fullname(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_fullname(const string & Arg) const
 {
-  string File=TrimString(Arg);
+  string File=TrimString(ExpandExpression(Arg));
   fileinfo *pFile=GetFileInfo(File,m_MakeDir);
   return pFile->GetQuotedFullFileName();
 }
@@ -492,9 +575,9 @@ static string basename(const string &FileName,void*)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_basename(const string & FileNames, const string *pOriExpr) const
+string mhmakefileparser::f_basename(const string & FileNames) const
 {
-  return IterList(FileNames,basename);
+  return IterList(ExpandExpression(FileNames),basename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -515,9 +598,9 @@ static string notdir(const string &FileName,void*)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_notdir(const string & FileNames, const string *pOriExpr) const
+string mhmakefileparser::f_notdir(const string & FileNames) const
 {
-  return IterList(FileNames,notdir);
+  return IterList(ExpandExpression(FileNames),notdir);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -527,14 +610,15 @@ static string addprefix(const string &FileName,void *pPrefix)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_addprefix(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_addprefix(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
   string PreFix;
   pTmp=NextCharItem(pTmp,PreFix,',');
   #ifdef _DEBUG
   if (g_PrintAdditionalInfo && PreFix.empty()) {
-    cout << "Warning: empty prefix in expression: " << *pOriExpr << endl;
+    cout << "Warning: empty prefix in expression: " << ArgIn << endl;
   }
   #endif
   string FileNames;
@@ -549,8 +633,9 @@ static string addsuffix(const string &FileName,void *pSuffix)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_addsuffix(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_addsuffix(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
   string SufFix;
   pTmp=NextCharItem(pTmp,SufFix,',');
@@ -566,8 +651,9 @@ string mhmakefileparser::f_addsuffix(const string & Arg, const string *pOriExpr)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Returns the n-th word number
-string mhmakefileparser::f_word(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_word(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
 
   string strNum;
@@ -599,8 +685,9 @@ string mhmakefileparser::f_word(const string & Arg, const string *pOriExpr) cons
 
 ///////////////////////////////////////////////////////////////////////////////
 // Returns the number of words
-string mhmakefileparser::f_words(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_words(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   const char *pTmp=Arg.c_str();
   int NrWords=0;
   char szNumber[10];
@@ -617,15 +704,16 @@ string mhmakefileparser::f_words(const string & Arg, const string *pOriExpr) con
 
 ///////////////////////////////////////////////////////////////////////////////
 // Search for a command in the enivornment path
-string mhmakefileparser::f_which(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_which(const string & Arg) const
 {
-  return SearchCommand(Arg);
+  return SearchCommand(ExpandExpression(Arg));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Removes leading and trailing space
-string mhmakefileparser::f_strip(const string & Arg, const string *pOriExpr) const
+string mhmakefileparser::f_strip(const string & ArgIn) const
 {
+  string Arg=ExpandExpression(ArgIn);
   string::const_iterator pFirst=Arg.begin();
   string::const_iterator pLast=Arg.end();
   while (strchr(" \t\r\n",*pFirst) && pFirst!=pLast) pFirst++;
@@ -642,10 +730,13 @@ static string dir(const string &FileName, void *)
   size_t Pos=FileName.find_last_of(OSPATHSEP);
   if (Pos==string::npos)
   {
+    #ifdef _WIN32
+    Pos=FileName.find_last_of('/');
+    if (Pos==string::npos)
+    #endif
     return g_EmptyString;
   }
-  else
-  {
+
     string Ret=g_EmptyString;
     Ret+=FileName.substr(0,Pos+1);
     if (FileName[0]=='"' && FileName.end()[-1]=='"')
@@ -653,17 +744,16 @@ static string dir(const string &FileName, void *)
     return Ret;
   }
 
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::f_dir(const string & FileNames) const
+{
+  return IterList(ExpandExpression(FileNames),dir);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_dir(const string & FileNames, const string *pOriExpr) const
+string mhmakefileparser::f_shell(const string & CommandIn) const
 {
-  return IterList(FileNames,dir);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_shell(const string & Command, const string *pOriExpr) const
-{
+  string Command=ExpandExpression(CommandIn);
   string Output;
 
 #ifdef _DEBUG
@@ -733,9 +823,9 @@ static string relpath(const string &FileName,void *pvDir)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Make a path name relative to the current directory
-string mhmakefileparser::f_relpath(const string & FileNames, const string *pOriExpr) const
+string mhmakefileparser::f_relpath(const string & FileNames) const
 {
-  return IterList(FileNames,relpath,(void*)&m_MakeDir);
+  return IterList(ExpandExpression(FileNames),relpath,(void*)&m_MakeDir);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -752,9 +842,9 @@ static string makeupper(const string &FileName,void *)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_toupper(const string & FileNames, const string *pOriExpr) const
+string mhmakefileparser::f_toupper(const string & FileNames) const
 {
-  return IterList(FileNames,makeupper);
+  return IterList(ExpandExpression(FileNames),makeupper);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -771,9 +861,9 @@ static string makelower(const string &FileName, void *)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_tolower(const string & FileNames, const string *pOriExpr) const
+string mhmakefileparser::f_tolower(const string & FileNames) const
 {
-  return IterList(FileNames,makelower);
+  return IterList(ExpandExpression(FileNames),makelower);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -792,36 +882,26 @@ static string expandexpr(const string &VarVal, void *pvVar)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-string mhmakefileparser::f_foreach(const string & ExpandedArg, const string *pOriExpr) const
+string mhmakefileparser::f_foreach(const string & Arg) const
 {
-#ifdef _DEBUG
-  if (pOriExpr->substr(0,8)!="foreach ")
-    throw(string("wrong assumption in foreach expression: ")+*pOriExpr);
-#endif
-  const char *pTmp=ExpandedArg.c_str();
+  const char *pTmp=Arg.c_str();
 
   expanedexpr_arg Args;
   Args.pParser=(mhmakefileparser*)this;
-  pTmp=NextCharItem(pTmp,Args.Var,',');
+  pTmp=NextCharExprItem(pTmp,Args.Var,',');
+  Args.Var=ExpandExpression(Args.Var);
 
   if (Args.Var.empty())
-    throw(string("Wrong syntax in foreach instruction. Should give the variable a name."));
+    throw(string("Wrong syntax in foreach instruction: '")+Arg+"'. Variable may not be empty.");
 
   string Items;
-  pTmp=NextCharItem(pTmp,Items,',');
+  pTmp=NextCharExprItem(pTmp,Items,',');
+  Items=ExpandExpression(Items);
 
   if (Items.empty())
     return g_EmptyString; /* No items specified, so nothing needs to be done */
 
-  /* for the next item we need to use the original expression because we need to re-expand it using Var for each entry
-     in Items */
-  int Pos=pOriExpr->find_first_of(',',0);
-  if (Pos==string::npos)
-    throw(string("expected , in ")+*pOriExpr);
-  Pos=pOriExpr->find_first_of(',',Pos+1);
-  if (Pos==string::npos)
-    throw(string("expected two ,'s in ")+*pOriExpr);
-  Args.Expr=pOriExpr->substr(Pos+1);
+  pTmp=NextCharExprItem(pTmp,Args.Expr,',');
 
   /* Save the variable to be able to restore it after the foreach expansion */
   string VarVal;
@@ -838,5 +918,66 @@ string mhmakefileparser::f_foreach(const string & ExpandedArg, const string *pOr
     Args.pParser->DeleteVariable(Args.Var);
 
   return Ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::f_eval(const string & Arg) const
+{
+  ((mhmakefileparser*)this)->ParseString(ExpandExpression(Arg)+"\n");
+  return g_EmptyString;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+static string AddToList(const string &String, void *pvList)
+{
+  vector<string> *pList=(vector<string>*)pvList;
+  pList->push_back(String);
+  return g_EmptyString;
+}
+
+string mhmakefileparser::f_sort(const string & Arg) const
+{
+  string ExpandedArg=ExpandExpression(Arg);
+  vector<string> List;
+  IterList(ExpandedArg, AddToList, (void*)&List);
+  sort(List.begin(),List.end());
+  string Prev;
+  vector<string>::iterator It=List.begin();
+  string Ret;
+  bool First=true;
+  while (It!=List.end())
+  {
+    string This=*It++;
+    if (This!=Prev)
+    {
+      Prev=This;
+      if (!First)
+        Ret+=" ";
+      else
+        First=false;
+      Ret+=This;
+    }
+  }
+  return Ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::f_error(const string & Arg) const
+{
+  throw(GetFileNameLineNo()+ExpandExpression(Arg));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::f_warning(const string & Arg) const
+{
+  cout << GetFileNameLineNo() << ExpandExpression(Arg) << endl;
+  return g_EmptyString;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+string mhmakefileparser::f_info(const string & Arg) const
+{
+  cout << ExpandExpression(Arg) << endl;
+  return g_EmptyString;
 }
 
