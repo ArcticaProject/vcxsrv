@@ -93,7 +93,7 @@ ProcXIQueryPointer(ClientPtr client)
     }
 
     if (pDev->valuator == NULL || IsKeyboardDevice(pDev) ||
-        (!IsMaster(pDev) && pDev->u.master)) /* no attached devices */
+        (!IsMaster(pDev) && !IsFloating(pDev))) /* no attached devices */
     {
         client->errorValue = stuff->deviceid;
         return BadDevice;

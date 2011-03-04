@@ -1,25 +1,18 @@
-noinst_LTLIBRARIES = libos.la liblog.la
+noinst_LTLIBRARIES = libos.la
 
 AM_CFLAGS = $(DIX_CFLAGS) $(SHA1_CFLAGS)
 
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
 STRLCAT_SRCS = strlcat.c strlcpy.c
-
-# Build a convenience library liblog.la that will be added into
-# libos.la. The split is done so that log.c can be built with
-# different compiler options.
-liblog_la_SOURCES = log.c
-# Add flags needed for proper backtraces of functions marked with GCC
-# __attribute__((noreturn)). Currently those flags are needed for
-# FatalError and AbortServer in log.c.
-liblog_la_CFLAGS = $(AM_CFLAGS) $(ARM_BACKTRACE_CFLAGS)
+XORG_SRCS = log.c
 
 libos_la_SOURCES = 	\
 	WaitFor.c	\
 	access.c	\
 	auth.c		\
 	backtrace.c	\
+	client.c	\
 	connection.c	\
 	io.c		\
 	mitauth.c	\
@@ -32,8 +25,9 @@ libos_la_SOURCES = 	\
 	xdmauth.c	\
 	xsha1.c		\
 	xstrans.c	\
-	xprintf.c
-libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS) liblog.la
+	xprintf.c	\
+	$(XORG_SRCS)
+libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS)
 
 if SECURE_RPC
 libos_la_SOURCES += $(SECURERPC_SRCS)

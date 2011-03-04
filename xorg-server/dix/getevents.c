@@ -767,7 +767,7 @@ moveRelative(DeviceIntPtr dev, int *x, int *y, ValuatorMask *mask)
     /* if attached, clip both x and y to the defined limits (usually
      * co-ord space limit). If it is attached, we need x/y to go over the
      * limits to be able to change screens. */
-    if(dev->u.master && dev->valuator) {
+    if(dev->valuator && IsMaster(dev) || !IsFloating(dev)) {
         if (valuator_get_mode(dev, 0) == Absolute)
             clipAxis(dev, 0, x);
         if (valuator_get_mode(dev, 1) == Absolute)
@@ -865,11 +865,12 @@ positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
      * to the current screen. */
     miPointerSetPosition(dev, screenx, screeny);
 
-    if (dev->u.master) {
-        dev->u.master->last.valuators[0] = *screenx;
-        dev->u.master->last.valuators[1] = *screeny;
-        dev->u.master->last.remainder[0] = *screenx_frac;
-        dev->u.master->last.remainder[1] = *screeny_frac;
+    if(!IsMaster(dev) || !IsFloating(dev)) {
+        DeviceIntPtr master = GetMaster(dev, MASTER_POINTER);
+        master->last.valuators[0] = *screenx;
+        master->last.valuators[1] = *screeny;
+        master->last.remainder[0] = *screenx_frac;
+        master->last.remainder[1] = *screeny_frac;
     }
 
     if (dev->valuator)
@@ -911,7 +912,7 @@ updateHistory(DeviceIntPtr dev, ValuatorMask *mask, CARD32 ms)
         return;
 
     updateMotionHistory(dev, ms, mask, dev->last.valuators);
-    if (dev->u.master)
+    if(!IsMaster(dev) || !IsFloating(dev))
     {
         DeviceIntPtr master = GetMaster(dev, MASTER_POINTER);
         updateMotionHistory(master, ms, mask, dev->last.valuators);

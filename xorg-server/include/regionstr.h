@@ -318,16 +318,6 @@ extern _X_EXPORT Bool RegionIsValid(
 extern _X_EXPORT void RegionPrint(
     RegionPtr /*pReg*/);
 
-extern _X_EXPORT int RegionClipSpans(
-    RegionPtr /*prgnDst*/,
-    DDXPointPtr /*ppt*/,
-    int * /*pwidth*/,
-    int /*nspans*/,
-    DDXPointPtr /*pptNew*/,
-    int * /*pwidthNew*/,
-    int /*fSorted*/
-);
-
 #define INCLUDE_LEGACY_REGION_DEFINES
 #ifdef INCLUDE_LEGACY_REGION_DEFINES
 

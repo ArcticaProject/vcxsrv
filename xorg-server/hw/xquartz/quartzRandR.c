@@ -40,6 +40,8 @@
 #include "quartz.h"
 #include "darwin.h"
 
+#include "X11Application.h"
+
 #include <AvailabilityMacros.h>
 
 #include <X11/extensions/randr.h>
@@ -346,6 +348,16 @@ static int QuartzRandRRegisterModeCallback (ScreenPtr pScreen,
 static Bool QuartzRandRSetMode(ScreenPtr pScreen, QuartzModeInfoPtr pMode, BOOL doRegister) {
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
     CGDirectDisplayID screenId = pQuartzScreen->displayIDs[0];
+    Bool captureDisplay = (pMode->refresh != FAKE_REFRESH_FULLSCREEN && pMode->refresh != FAKE_REFRESH_ROOTLESS);
+
+    if(XQuartzShieldingWindowLevel == 0 && captureDisplay) {
+        if(!X11ApplicationCanEnterRandR())
+            return FALSE;
+        CGCaptureAllDisplays();
+        XQuartzShieldingWindowLevel = CGShieldingWindowLevel(); // 2147483630
+        DEBUG_LOG("Display captured.  ShieldWindowID: %u, Shield level: %d\n",
+                  CGShieldingWindowID(screenId), XQuartzShieldingWindowLevel);
+    }
 
     if (pQuartzScreen->currentMode.ref && CFEqual(pMode->ref, pQuartzScreen->currentMode.ref)) {
         DEBUG_LOG("Requested RandR resolution matches current CG mode\n");
@@ -369,6 +381,11 @@ static Bool QuartzRandRSetMode(ScreenPtr pScreen, QuartzModeInfoPtr pMode, BOOL 
     pQuartzScreen->currentMode = *pMode;
     CFRetain(pQuartzScreen->currentMode.ref);
     
+    if(XQuartzShieldingWindowLevel != 0 && !captureDisplay) {
+        CGReleaseAllDisplays();
+        XQuartzShieldingWindowLevel = 0;
+    }
+
     return TRUE;
 }
 
@@ -395,16 +412,6 @@ static Bool QuartzRandRGetInfo (ScreenPtr pScreen, Rotation *rotations) {
 
     if (pQuartzScreen->displayCount == 0)
         return FALSE;
-
-    if (pQuartzScreen->displayCount > 1) {
-        /* RandR operations are not well-defined for an X11 screen spanning
-           multiple CG displays. Create two entries for the current virtual
-           resolution including/excluding the menu bar. */
-
-        QuartzRandRRegisterMode(pScreen, &pQuartzScreen->rootlessMode);
-        QuartzRandRRegisterMode(pScreen, &pQuartzScreen->fullscreenMode);
-        return TRUE;
-    }
 
     return QuartzRandREnumerateModes(pScreen, QuartzRandRRegisterModeCallback, NULL);
 }

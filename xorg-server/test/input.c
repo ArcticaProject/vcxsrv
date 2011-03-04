@@ -149,29 +149,32 @@ static void dix_check_grab_values(void)
 static void dix_event_to_core(int type)
 {
     DeviceEvent ev;
-    xEvent core;
+    xEvent *core;
     int time;
     int x, y;
     int rc;
     int state;
     int detail;
+    int count;
     const int ROOT_WINDOW_ID = 0x100;
 
     /* EventToCore memsets the event to 0 */
 #define test_event() \
     g_assert(rc == Success); \
-    g_assert(core.u.u.type == type); \
-    g_assert(core.u.u.detail == detail); \
-    g_assert(core.u.keyButtonPointer.time == time); \
-    g_assert(core.u.keyButtonPointer.rootX == x); \
-    g_assert(core.u.keyButtonPointer.rootY == y); \
-    g_assert(core.u.keyButtonPointer.state == state); \
-    g_assert(core.u.keyButtonPointer.eventX == 0); \
-    g_assert(core.u.keyButtonPointer.eventY == 0); \
-    g_assert(core.u.keyButtonPointer.root == ROOT_WINDOW_ID); \
-    g_assert(core.u.keyButtonPointer.event == 0); \
-    g_assert(core.u.keyButtonPointer.child == 0); \
-    g_assert(core.u.keyButtonPointer.sameScreen == FALSE);
+    g_assert(core); \
+    g_assert(count == 1); \
+    g_assert(core->u.u.type == type); \
+    g_assert(core->u.u.detail == detail); \
+    g_assert(core->u.keyButtonPointer.time == time); \
+    g_assert(core->u.keyButtonPointer.rootX == x); \
+    g_assert(core->u.keyButtonPointer.rootY == y); \
+    g_assert(core->u.keyButtonPointer.state == state); \
+    g_assert(core->u.keyButtonPointer.eventX == 0); \
+    g_assert(core->u.keyButtonPointer.eventY == 0); \
+    g_assert(core->u.keyButtonPointer.root == ROOT_WINDOW_ID); \
+    g_assert(core->u.keyButtonPointer.event == 0); \
+    g_assert(core->u.keyButtonPointer.child == 0); \
+    g_assert(core->u.keyButtonPointer.sameScreen == FALSE);
 
     x = 0;
     y = 0;
@@ -192,30 +195,33 @@ static void dix_event_to_core(int type)
 
     ev.type = type;
     ev.detail.key = 0;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     x = 1;
     y = 2;
     ev.root_x = x;
     ev.root_y = y;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     x = 0x7FFF;
     y = 0x7FFF;
     ev.root_x = x;
     ev.root_y = y;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     x = 0x8000; /* too high */
     y = 0x8000; /* too high */
     ev.root_x = x;
     ev.root_y = y;
-    rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(core.u.keyButtonPointer.rootX != x);
-    g_assert(core.u.keyButtonPointer.rootY != y);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
+    g_assert(rc == Success);
+    g_assert(core);
+    g_assert(count == 1);
+    g_assert(core->u.keyButtonPointer.rootX != x);
+    g_assert(core->u.keyButtonPointer.rootY != y);
 
     x = 0x7FFF;
     y = 0x7FFF;
@@ -223,36 +229,39 @@ static void dix_event_to_core(int type)
     ev.root_y = y;
     time = 0;
     ev.time = time;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     detail = 1;
     ev.detail.key = detail;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     detail = 0xFF; /* highest value */
     ev.detail.key = detail;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     detail = 0xFFF; /* too big */
     ev.detail.key = detail;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     g_assert(rc == BadMatch);
 
     detail = 0xFF; /* too big */
     ev.detail.key = detail;
     state = 0xFFFF; /* highest value */
     ev.corestate = state;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     test_event();
 
     state = 0x10000; /* too big */
     ev.corestate = state;
-    rc = EventToCore((InternalEvent*)&ev, &core);
-    g_assert(core.u.keyButtonPointer.state != state);
-    g_assert(core.u.keyButtonPointer.state == (state & 0xFFFF));
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
+    g_assert(rc == Success);
+    g_assert(core);
+    g_assert(count == 1);
+    g_assert(core->u.keyButtonPointer.state != state);
+    g_assert(core->u.keyButtonPointer.state == (state & 0xFFFF));
 
 #undef test_event
 }
@@ -260,14 +269,15 @@ static void dix_event_to_core(int type)
 static void dix_event_to_core_fail(int evtype, int expected_rc)
 {
     DeviceEvent ev;
-    xEvent core;
+    xEvent *core;
     int rc;
+    int count;
 
     ev.header   = 0xFF;
     ev.length   = sizeof(DeviceEvent);
 
     ev.type     = evtype;
-    rc = EventToCore((InternalEvent*)&ev, &core);
+    rc = EventToCore((InternalEvent*)&ev, &core, &count);
     g_assert(rc == expected_rc);
 }
 

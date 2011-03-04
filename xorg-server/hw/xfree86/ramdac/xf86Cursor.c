@@ -317,8 +317,7 @@ xf86CursorSetCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCurs,
 
     /* only update for VCP, otherwise we get cursor jumps when removing a
        sprite. The second cursor is never HW rendered anyway. */
-    if (pDev == inputInfo.pointer ||
-        (!IsMaster(pDev) && pDev->u.master == inputInfo.pointer))
+    if (GetMaster(pDev, MASTER_POINTER) == inputInfo.pointer)
     {
 	pCurs->refcnt++;
 	if (ScreenPriv->CurrentCursor)
@@ -386,8 +385,7 @@ xf86CursorMoveCursor(DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 
     /* only update coordinate state for first sprite, otherwise we get jumps
        when removing a sprite. The second sprite is never HW rendered anyway */
-    if (pDev == inputInfo.pointer ||
-	(!IsMaster(pDev) && pDev->u.master == inputInfo.pointer))
+    if (GetMaster(pDev, MASTER_POINTER) == inputInfo.pointer)
     {
 	ScreenPriv->x = x;
 	ScreenPriv->y = y;

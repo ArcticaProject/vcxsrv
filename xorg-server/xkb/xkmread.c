@@ -51,19 +51,6 @@ XkbInternAtom(char *str,Bool only_if_exists)
     return MakeAtom(str,strlen(str),!only_if_exists);
 }
 
-char *
-_XkbDupString(const char *str)
-{
-char *new;
-   
-   if (str==NULL)
-	return NULL;
-   new= calloc(strlen(str)+1,sizeof(char));
-   if (new)
-	strcpy(new,str);
-   return new;
-}
-
 /***====================================================================***/
 
 static void *
@@ -845,9 +832,9 @@ int		nRead=0;
 	    doodad->text.height= doodadWire.text.height;
 	    doodad->text.color_ndx= doodadWire.text.color_ndx;
 	    nRead+= XkmGetCountedString(file,buf,100);
-	    doodad->text.text= _XkbDupString(buf);
+	    doodad->text.text= Xstrdup(buf);
 	    nRead+= XkmGetCountedString(file,buf,100);
-	    doodad->text.font= _XkbDupString(buf);
+	    doodad->text.font= Xstrdup(buf);
 	    break;
 	case XkbIndicatorDoodad:
 	    doodad->indicator.shape_ndx= doodadWire.indicator.shape_ndx;
@@ -859,7 +846,7 @@ int		nRead=0;
 	    doodad->logo.color_ndx= doodadWire.logo.color_ndx;
 	    doodad->logo.shape_ndx= doodadWire.logo.shape_ndx;
 	    nRead+= XkmGetCountedString(file,buf,100);
-	    doodad->logo.logo_name= _XkbDupString(buf);
+	    doodad->logo.logo_name= Xstrdup(buf);
 	    break;
 	default:
 	    /* report error? */
@@ -1021,7 +1008,7 @@ XkbGeometrySizesRec	sizes;
     geom->width_mm= wireGeom.width_mm;
     geom->height_mm= wireGeom.height_mm;
     nRead+= XkmGetCountedString(file,buf,100);
-    geom->label_font= _XkbDupString(buf);
+    geom->label_font= Xstrdup(buf);
     if (wireGeom.num_properties>0) {
 	char val[1024];
 	for (i=0;i<wireGeom.num_properties;i++) {

@@ -694,7 +694,7 @@ ProcessInputProc backupproc;
 xkbDeviceInfoPtr xkbPrivPtr = XKBDEVICEINFO(mouse);
 DeviceEvent     *event = &ev->device_event;
 
-    dev = (IsMaster(mouse) || mouse->u.master) ? GetMaster(mouse, MASTER_KEYBOARD) : mouse;
+    dev = IsFloating(mouse) ? mouse : GetMaster(mouse, MASTER_KEYBOARD);
 
     if (dev && dev->key)
     {

@@ -67,6 +67,10 @@ SimpleSmoothProfile(DeviceIntPtr dev, DeviceVelocityPtr vel, float velocity,
                     float threshold, float acc);
 static PointerAccelerationProfileFunc
 GetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
+static BOOL
+InitializePredictableAccelerationProperties(DeviceIntPtr dev);
+static BOOL
+DeletePredictableAccelerationProperties(DeviceIntPtr dev);
 
 /*#define PTRACCEL_DEBUGGING*/
 
@@ -85,7 +89,7 @@ GetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
 
 
 /**
- * Init struct so it should match the average case
+ * Init DeviceVelocity struct so it should match the average case
  */
 void
 InitVelocityData(DeviceVelocityPtr vel)
@@ -107,7 +111,7 @@ InitVelocityData(DeviceVelocityPtr vel)
 
 
 /**
- * Clean up
+ * Clean up DeviceVelocityRec
  */
 void
 FreeVelocityData(DeviceVelocityPtr vel){
@@ -116,8 +120,28 @@ FreeVelocityData(DeviceVelocityPtr vel){
 }
 
 
-/*
- *  dix uninit helper, called through scheme
+/**
+ * Init predictable scheme
+ */
+Bool
+InitPredictableAccelerationScheme(DeviceIntPtr dev,
+				  ValuatorAccelerationPtr protoScheme) {
+    DeviceVelocityPtr vel;
+    ValuatorAccelerationRec scheme;
+    scheme = *protoScheme;
+    vel = calloc(1, sizeof(DeviceVelocityRec));
+    if (!vel)
+	return FALSE;
+    InitVelocityData(vel);
+    scheme.accelData = vel;
+    dev->valuator->accelScheme = scheme;
+    InitializePredictableAccelerationProperties(dev);
+    return TRUE;
+}
+
+
+/**
+ *  Uninit scheme
  */
 void
 AccelerationDefaultCleanup(DeviceIntPtr dev)
@@ -1024,12 +1048,10 @@ acceleratePointerPredictable(
     int *valuators,
     int evtime)
 {
-    float mult = 0.0;
+    float fdx, fdy, tmp, mult; /* no need to init */
     int dx = 0, dy = 0;
     int *px = NULL, *py = NULL;
-    DeviceVelocityPtr velocitydata =
-	(DeviceVelocityPtr) dev->valuator->accelScheme.accelData;
-    float fdx, fdy, tmp; /* no need to init */
+    DeviceVelocityPtr velocitydata = GetDevicePredictableAccelData(dev);
     Bool soften = TRUE;
 
     if (!num_valuators || !valuators || !velocitydata)
@@ -1062,11 +1084,11 @@ acceleratePointerPredictable(
 					(float)dev->ptrfeed->ctrl.num /
 					(float)dev->ptrfeed->ctrl.den);
 
-            if(mult != 1.0 || velocitydata->const_acceleration != 1.0) {
+            if(mult != 1.0f || velocitydata->const_acceleration != 1.0f) {
                 ApplySofteningAndConstantDeceleration( velocitydata,
 						       dx, dy,
 						       &fdx, &fdy,
-						       (mult > 1.0) && soften);
+						       (mult > 1.0f) && soften);
 
                 if (dx) {
                     tmp = mult * fdx + dev->last.remainder[0];

@@ -212,7 +212,7 @@ LookupBoolOption(pointer optlist, const char *name, int deflt, Bool markUsed)
     return deflt;
 }
 
-static int
+static double
 LookupPercentOption(pointer optlist, const char *name, double deflt, Bool markUsed)
 {
     OptionInfoRec o;
@@ -496,27 +496,33 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	switch (p->type) {
 	case OPTV_INTEGER:
 	    if (*s == '\0') {
-		xf86DrvMsg(scrnIndex, X_WARNING,
-			   "Option \"%s\" requires an integer value\n",
-			   p->name);
+		if (markUsed) {
+		    xf86DrvMsg(scrnIndex, X_WARNING,
+			       "Option \"%s\" requires an integer value\n",
+			       p->name);
+		}
 		p->found = FALSE;
 	    } else {
 		p->value.num = strtoul(s, &end, 0);
 		if (*end == '\0') {
 		    p->found = TRUE;
 		} else {
-		    xf86DrvMsg(scrnIndex, X_WARNING,
-			       "Option \"%s\" requires an integer value\n",
-			        p->name);
+		    if (markUsed) {
+			xf86DrvMsg(scrnIndex, X_WARNING,
+				   "Option \"%s\" requires an integer value\n",
+				    p->name);
+		    }
 		    p->found = FALSE;
 		}
 	    }
 	    break;
 	case OPTV_STRING:
 	    if (*s == '\0') {
-		xf86DrvMsg(scrnIndex, X_WARNING,
-			   "Option \"%s\" requires an string value\n",
-			   p->name);
+		if (markUsed) {
+		    xf86DrvMsg(scrnIndex, X_WARNING,
+			       "Option \"%s\" requires an string value\n",
+			       p->name);
+		}
 		p->found = FALSE;
 	    } else {
 		p->value.str = s;
@@ -529,18 +535,22 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	    break;
 	case OPTV_REAL:	
 	    if (*s == '\0') {
-		xf86DrvMsg(scrnIndex, X_WARNING,
-			   "Option \"%s\" requires a floating point value\n",
-			   p->name);
+		if (markUsed) {
+		    xf86DrvMsg(scrnIndex, X_WARNING,
+			       "Option \"%s\" requires a floating point "
+			       "value\n", p->name);
+		}
 		p->found = FALSE;
 	    } else {
 		p->value.realnum = strtod(s, &end);
 		if (*end == '\0') {
 		    p->found = TRUE;
 		} else {
-		    xf86DrvMsg(scrnIndex, X_WARNING,
-			    "Option \"%s\" requires a floating point value\n",
-			    p->name);
+		    if (markUsed) {
+			xf86DrvMsg(scrnIndex, X_WARNING,
+				"Option \"%s\" requires a floating point "
+				"value\n", p->name);
+		    }
 		    p->found = FALSE;
 		}
 	    }
@@ -549,8 +559,11 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	    if (GetBoolValue(p, s)) {
 		p->found = TRUE;
 	    } else {
-		xf86DrvMsg(scrnIndex, X_WARNING,
-			   "Option \"%s\" requires a boolean value\n", p->name);
+		if (markUsed) {
+		    xf86DrvMsg(scrnIndex, X_WARNING,
+			       "Option \"%s\" requires a boolean value\n",
+			       p->name);
+		}
 		p->found = FALSE;
 	    }
 	    break;
@@ -561,8 +574,10 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 		 * hence 100 looks the same as 100% to the caller of sccanf
 		 */
 		if (sscanf(s, "%lf%c", &p->value.realnum, &tmp) != 2 || tmp != '%') {
-		    xf86DrvMsg(scrnIndex, X_WARNING,
+		    if (markUsed) {
+			xf86DrvMsg(scrnIndex, X_WARNING,
 			       "Option \"%s\" requires a percent value\n", p->name);
+		    }
 		    p->found = FALSE;
 		} else {
 		    p->found = TRUE;
@@ -571,9 +586,11 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	    break;
 	case OPTV_FREQ:	
 	    if (*s == '\0') {
-		xf86DrvMsg(scrnIndex, X_WARNING,
-			   "Option \"%s\" requires a frequency value\n",
-			   p->name);
+		if (markUsed) {
+		    xf86DrvMsg(scrnIndex, X_WARNING,
+			       "Option \"%s\" requires a frequency value\n",
+			       p->name);
+		}
 		p->found = FALSE;
 	    } else {
 		double freq = strtod(s, &end);
@@ -590,17 +607,21 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 			     !xf86NameCmp(end, "M"))
 			units = 1000000;
 		    else {
-			xf86DrvMsg(scrnIndex, X_WARNING,
-			    "Option \"%s\" requires a frequency value\n",
-			    p->name);
+			if (markUsed) {
+			    xf86DrvMsg(scrnIndex, X_WARNING,
+				"Option \"%s\" requires a frequency value\n",
+				p->name);
+			}
 			p->found = FALSE;
 		    }
 		    if (p->found)
 			freq *= (double)units;
 		} else {
-		    xf86DrvMsg(scrnIndex, X_WARNING,
-			    "Option \"%s\" requires a frequency value\n",
-			    p->name);
+		    if (markUsed) {
+			xf86DrvMsg(scrnIndex, X_WARNING,
+				"Option \"%s\" requires a frequency value\n",
+				p->name);
+		    }
 		    p->found = FALSE;
 		}
 		if (p->found) {

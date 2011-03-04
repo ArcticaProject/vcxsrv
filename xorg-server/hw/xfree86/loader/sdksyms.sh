@@ -259,6 +259,7 @@ cat > sdksyms.c << EOF
 #include "colormap.h"
 #include "colormapst.h"
 #include "hotplug.h"
+#include "client.h"
 #include "cursor.h"
 #include "cursorstr.h"
 #include "dix.h"

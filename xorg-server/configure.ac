@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.10.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2011-2-25"
+AC_INIT([xorg-server], 1.10.99.1, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="unreleased"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -311,19 +311,6 @@ AC_CHECK_HEADER([execinfo.h],[
         AC_DEFINE(HAVE_EXECINFO_H, 1, [Have execinfo.h])
     ])]
 )
-
-dnl ARM needs additional compiler flags for proper backtraces if GCC is
-dnl used. Compile a dummy program with the -mapcs-frame option. If it
-dnl succeeds, we know that we are building for ARM with GCC.
-old_CFLAGS="$CFLAGS"
-CFLAGS="-mapcs-frame"
-AC_COMPILE_IFELSE(
-        AC_LANG_PROGRAM([[ ]]),
-        ARM_BACKTRACE_CFLAGS="$CFLAGS",
-        ARM_BACKTRACE_CFLAGS=""
-)
-CFLAGS="$old_CFLAGS"
-AC_SUBST(ARM_BACKTRACE_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Bus options and CPU capabilities.  Replaces logic in
@@ -626,7 +613,6 @@ AC_ARG_ENABLE(xf86vidmode,    AS_HELP_STRING([--disable-xf86vidmode], [Build XF8
 AC_ARG_ENABLE(xace,           AS_HELP_STRING([--disable-xace], [Build X-ACE extension (default: enabled)]), [XACE=$enableval], [XACE=yes])
 AC_ARG_ENABLE(xselinux,       AS_HELP_STRING([--enable-xselinux], [Build SELinux extension (default: disabled)]), [XSELINUX=$enableval], [XSELINUX=no])
 AC_ARG_ENABLE(xcsecurity,     AS_HELP_STRING([--enable-xcsecurity], [Build Security extension (default: disabled)]), [XCSECURITY=$enableval], [XCSECURITY=no])
-AC_ARG_ENABLE(xcalibrate,     AS_HELP_STRING([--enable-xcalibrate], [Build XCalibrate extension (default: disabled)]), [XCALIBRATE=$enableval], [XCALIBRATE=no])
 AC_ARG_ENABLE(tslib,          AS_HELP_STRING([--enable-tslib], [Build kdrive tslib touchscreen support (default: disabled)]), [TSLIB=$enableval], [TSLIB=no])
 AC_ARG_ENABLE(dbe,            AS_HELP_STRING([--disable-dbe], [Build DBE extension (default: enabled)]), [DBE=$enableval], [DBE=yes])
 AC_ARG_ENABLE(xf86bigfont,    AS_HELP_STRING([--enable-xf86bigfont], [Build XF86 Big Font extension (default: disabled)]), [XF86BIGFONT=$enableval], [XF86BIGFONT=no])
@@ -641,6 +627,7 @@ AC_ARG_ENABLE(vbe,            AS_HELP_STRING([--enable-vbe], [Build Xorg with VB
 AC_ARG_ENABLE(int10-module,     AS_HELP_STRING([--enable-int10-module], [Build Xorg with int10 module (default: enabled)]), [INT10MODULE=$enableval], [INT10MODULE=yes])
 AC_ARG_ENABLE(windowswm,      AS_HELP_STRING([--enable-windowswm], [Build XWin with WindowsWM extension (default: no)]), [WINDOWSWM=$enableval], [WINDOWSWM=no])
 AC_ARG_ENABLE(libdrm,         AS_HELP_STRING([--enable-libdrm], [Build Xorg with libdrm support (default: enabled)]), [DRM=$enableval],[DRM=yes])
+AC_ARG_ENABLE(clientids,      AS_HELP_STRING([--disable-clientids], [Build Xorg with client ID tracking (default: enabled)]), [CLIENTIDS=$enableval], [CLIENTIDS=yes])
 
 dnl DDXes.
 AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
@@ -779,7 +766,6 @@ DRIPROTO="xf86driproto >= 2.1.0"
 DRI2PROTO="dri2proto >= 2.3"
 XINERAMAPROTO="xineramaproto"
 BIGFONTPROTO="xf86bigfontproto >= 1.2.0"
-XCALIBRATEPROTO="xcalibrateproto"
 DGAPROTO="xf86dgaproto >= 2.0.99.1"
 GLPROTO="glproto >= 1.4.10"
 DMXPROTO="dmxproto >= 2.2.99.1"
@@ -807,7 +793,7 @@ LIBGLIB="glib-2.0 >= 2.16"
 LIBUDEV="libudev >= 143"
 LIBSELINUX="libselinux >= 2.0.86"
 LIBDBUS="dbus-1 >= 1.0"
-LIBPIXMAN="pixman-1 >= 0.15.20"
+LIBPIXMAN="pixman-1 >= 0.21.6"
 
 dnl Pixman is always required, but we separate it out so we can link
 dnl specific modules against it
@@ -994,6 +980,18 @@ if test "x$RES" = xyes; then
 	REQUIRED_MODULES="$REQUIRED_MODULES $RESOURCEPROTO"
 fi
 
+# The XRes extension may support client ID tracking only if it has
+# been specifically enabled. Client ID tracking is implicitly not
+# supported if XRes extension is disabled.
+AC_MSG_CHECKING([whether to track client ids])
+if test "x$RES" = xyes && test "x$CLIENTIDS" = xyes; then
+	AC_DEFINE(CLIENTIDS, 1, [Support client ID tracking])
+else
+	CLIENTIDS=no
+fi
+AC_MSG_RESULT([$CLIENTIDS])
+AM_CONDITIONAL(CLIENTIDS, [test "x$CLIENTIDS" = xyes])
+
 if test "x$GLX" = xyes; then
 	PKG_CHECK_MODULES([XLIB], [x11])
 	PKG_CHECK_MODULES([GL], $GLPROTO $LIBGL)
@@ -1119,14 +1117,6 @@ AM_CONDITIONAL(DPMSExtension, [test "x$DPMSExtension" = xyes])
 if test "x$DPMSExtension" = xyes; then
 	AC_DEFINE(DPMSExtension, 1, [Support DPMS extension])
 fi
-
-if test "x$XCALIBRATE" = xyes && test "$KDRIVE" = yes; then
-   AC_DEFINE(XCALIBRATE, 1, [Build XCalibrate extension])
-   REQUIRED_MODULES="$REQUIRED_MODULES $XCALIBRATEPROTO"
-else
-   XCALIBRATE=no
-fi
-AM_CONDITIONAL(XCALIBRATE, [test "x$XCALIBRATE" = xyes])
 
 AC_DEFINE(RENDER, 1, [Support RENDER extension])
 RENDER_LIB='$(top_builddir)/render/librender.la'
@@ -1525,7 +1515,7 @@ if test "x$XNEST" = xyes; then
 	if test "x$have_xnest" = xno; then
 		AC_MSG_ERROR([Xnest build explicitly requested, but required modules not found.])
 	fi
-	XNEST_LIBS="$FB_LIB $FIXES_LIB $MI_LIB $XEXT_LIB $DBE_LIB $RECORD_LIB $GLX_LIBS $RANDR_LIB $RENDER_LIB $DAMAGE_LIB $MIEXT_SYNC_LIB $MIEXT_DAMAGE_LIB $MIEXT_SHADOW_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $COMPOSITE_LIB $DIX_LIB $MAIN_LIB $OS_LIB"
+	XNEST_LIBS="$FB_LIB $FIXES_LIB $MI_LIB $XEXT_LIB $DBE_LIB $RECORD_LIB $GLX_LIBS $RANDR_LIB $RENDER_LIB $DAMAGE_LIB $MIEXT_SYNC_LIB $MIEXT_DAMAGE_LIB $MIEXT_SHADOW_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $COMPOSITE_LIB $MAIN_LIB $DIX_LIB $OS_LIB"
 	XNEST_SYS_LIBS="$XNESTMODULES_LIBS $GLX_SYS_LIBS"
 	AC_SUBST([XNEST_LIBS])
 	AC_SUBST([XNEST_SYS_LIBS])
@@ -1923,7 +1913,7 @@ if test "x$XQUARTZ" = xyes; then
 
 	AC_CHECK_LIB([Xplugin],[xp_init],[:])
 
-	CFLAGS="${CFLAGS} -DROOTLESS_SAFEALPHA -DNO_ALLOCA"
+	CFLAGS="${CFLAGS} -DROOTLESS_WORKAROUND -DROOTLESS_SAFEALPHA -DNO_ALLOCA"
 
 	PKG_CHECK_MODULES(XPBPROXY, $APPLEWMPROTO $LIBAPPLEWM xfixes x11)
 

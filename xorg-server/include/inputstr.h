@@ -266,6 +266,7 @@ typedef struct _ValuatorAccelerationRec {
     int                         number;
     PointerAccelSchemeProc      AccelSchemeProc;
     void                       *accelData; /* at disposal of AccelScheme */
+    PointerAccelSchemeInitProc  AccelInitProc;
     DeviceCallbackProc          AccelCleanupProc;
 } ValuatorAccelerationRec, *ValuatorAccelerationPtr;
 
@@ -493,6 +494,7 @@ typedef struct _SpriteInfoRec {
 #define MASTER_POINTER          1
 #define MASTER_KEYBOARD         2
 #define SLAVE                   3
+#define MASTER_ATTACHED         4  /* special type for GetMaster */
 
 typedef struct _DeviceIntRec {
     DeviceRec	public;
@@ -529,10 +531,8 @@ typedef struct _DeviceIntRec {
     PrivateRec		*devPrivates;
     DeviceUnwrapProc    unwrapProc;
     SpriteInfoPtr       spriteInfo;
-    union {
-        DeviceIntPtr        master;     /* master device */
-        DeviceIntPtr        lastSlave;  /* last slave device used */
-    } u;
+    DeviceIntPtr        master;     /* master device */
+    DeviceIntPtr        lastSlave;  /* last slave device used */
 
     /* last valuator values recorded, not posted to client;
      * for slave devices, valuators is in device coordinates

@@ -570,6 +570,7 @@ extern Bool _X_EXPORT IsPointerDevice( DeviceIntPtr dev);
 extern Bool _X_EXPORT IsKeyboardDevice(DeviceIntPtr dev);
 extern Bool IsPointerEvent(InternalEvent *event);
 extern _X_EXPORT Bool IsMaster(DeviceIntPtr dev);
+extern _X_EXPORT Bool IsFloating(DeviceIntPtr dev);
 
 extern _X_HIDDEN void CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master);
 extern _X_HIDDEN int CorePointerProc(DeviceIntPtr dev, int what);

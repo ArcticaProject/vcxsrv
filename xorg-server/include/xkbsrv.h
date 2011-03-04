@@ -846,10 +846,6 @@ extern _X_EXPORT XkbGeometryPtr XkbLookupNamedGeometry(
 	Bool *			/* shouldFree */
 );
 
-extern _X_EXPORT char *	_XkbDupString(
-	const char *		/* str */
-);
-
 extern _X_EXPORT void	XkbConvertCase(
 	KeySym 			/* sym */,
 	KeySym *		/* lower */,

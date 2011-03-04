@@ -143,7 +143,7 @@ typedef struct {
 #endif
 
 #define MISPRITE(dev) \
-    ((!IsMaster(dev) && !dev->u.master) ? \
+    (IsFloating(dev) ? \
        (miCursorInfoPtr)dixLookupPrivate(&dev->devPrivates, miSpriteDevPrivatesKey) : \
        (miCursorInfoPtr)dixLookupPrivate(&(GetMaster(dev, MASTER_POINTER))->devPrivates, miSpriteDevPrivatesKey))
 
@@ -766,7 +766,7 @@ miSpriteRealizeCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
     miCursorInfoPtr pCursorInfo;
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return FALSE;
 
     pCursorInfo = MISPRITE(pDev);
@@ -790,7 +790,7 @@ miSpriteSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
     miCursorInfoPtr     pPointer;
     miSpriteScreenPtr   pScreenPriv;
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return;
 
     pPointer = MISPRITE(pDev);
@@ -848,7 +848,7 @@ miSpriteMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
     CursorPtr pCursor;
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return;
 
     pCursor = MISPRITE(pDev)->pCursor;
@@ -905,7 +905,7 @@ miSpriteRemoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen)
     miCursorInfoPtr     pCursorInfo;
 
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return;
 
     DamageDrawInternal (pScreen, TRUE);
@@ -944,7 +944,7 @@ miSpriteSaveUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen)
     CursorPtr		pCursor;
     miCursorInfoPtr     pCursorInfo;
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return;
 
     DamageDrawInternal (pScreen, TRUE);
@@ -985,7 +985,7 @@ miSpriteRestoreCursor (DeviceIntPtr pDev, ScreenPtr pScreen)
     CursorPtr		pCursor;
     miCursorInfoPtr     pCursorInfo;
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return;
 
     DamageDrawInternal (pScreen, TRUE);
@@ -1025,7 +1025,7 @@ miSpriteComputeSaved (DeviceIntPtr pDev, ScreenPtr pScreen)
     CursorPtr	    pCursor;
     miCursorInfoPtr pCursorInfo;
 
-    if (!IsMaster(pDev) && !pDev->u.master)
+    if (IsFloating(pDev))
         return;
 
     pCursorInfo = MISPRITE(pDev);

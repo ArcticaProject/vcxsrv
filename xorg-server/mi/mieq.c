@@ -321,11 +321,12 @@ CopyGetMasterEvent(DeviceIntPtr sdev,
     DeviceIntPtr mdev;
     int len = original->any.length;
     int type = original->any.type;
+    int mtype; /* which master type? */
 
     CHECKEVENT(original);
 
     /* ET_XQuartz has sdev == NULL */
-    if (!sdev || !sdev->u.master)
+    if (!sdev || IsMaster(sdev) || IsFloating(sdev))
         return NULL;
 
 #if XFreeXDGA
@@ -337,20 +338,21 @@ CopyGetMasterEvent(DeviceIntPtr sdev,
     {
         case ET_KeyPress:
         case ET_KeyRelease:
-            mdev = GetMaster(sdev, MASTER_KEYBOARD);
+            mtype = MASTER_KEYBOARD;
             break;
         case ET_ButtonPress:
         case ET_ButtonRelease:
         case ET_Motion:
         case ET_ProximityIn:
         case ET_ProximityOut:
-            mdev = GetMaster(sdev, MASTER_POINTER);
+            mtype = MASTER_POINTER;
             break;
         default:
-            mdev = sdev->u.master;
+            mtype = MASTER_ATTACHED;
             break;
     }
 
+    mdev = GetMaster(sdev, mtype);
     memcpy(copy, original, len);
     ChangeDeviceID(mdev, copy);
     FixUpEventForMaster(mdev, sdev, original, copy);
@@ -400,7 +402,7 @@ mieqProcessDeviceEvent(DeviceIntPtr dev,
     master = CopyGetMasterEvent(dev, event, &mevent);
 
     if (master)
-        master->u.lastSlave = dev;
+        master->lastSlave = dev;
 
     /* If someone's registered a custom event handler, let them
      * steal it. */
@@ -410,7 +412,7 @@ mieqProcessDeviceEvent(DeviceIntPtr dev,
         handler(screenNum, event, dev);
         /* Check for the SD's master in case the device got detached
          * during event processing */
-        if (master && dev->u.master)
+        if (master && !IsFloating(dev))
             handler(screenNum, &mevent, master);
     } else
     {
@@ -419,7 +421,7 @@ mieqProcessDeviceEvent(DeviceIntPtr dev,
 
         /* Check for the SD's master in case the device got detached
          * during event processing */
-        if (master && dev->u.master)
+        if (master && !IsFloating(dev))
             master->public.processInputProc(&mevent, master);
     }
 }
@@ -466,7 +468,7 @@ mieqProcessInputEvents(void)
         pthread_mutex_unlock(&miEventQueueMutex);
 #endif
 
-        master  = (dev && !IsMaster(dev) && dev->u.master) ? dev->u.master : NULL;
+        master = (dev) ? GetMaster(dev, MASTER_ATTACHED) : NULL;
 
         if (screenIsSaved == SCREEN_SAVER_ON)
             dixSaveScreens (serverClient, SCREEN_SAVER_OFF, ScreenSaverReset);

@@ -710,10 +710,13 @@ ChangeMasterDeviceClasses(DeviceIntPtr device, DeviceChangedEvent *dce)
     if (rc != Success)
         return; /* Device has disappeared */
 
-    if (!slave->u.master)
+    if (IsMaster(slave))
+        return;
+
+    if (IsFloating(slave))
         return; /* set floating since the event */
 
-    if (slave->u.master->id != dce->masterid)
+    if (GetMaster(slave, MASTER_ATTACHED)->id != dce->masterid)
         return; /* not our slave anymore, don't care */
 
     /* FIXME: we probably need to send a DCE for the new slave now */
@@ -866,7 +869,7 @@ UpdateDeviceState(DeviceIntPtr device, DeviceEvent* event)
              * event being delivered through the slave first
              */
             for (sd = inputInfo.devices; sd; sd = sd->next) {
-                if (IsMaster(sd) || sd->u.master != device)
+                if (IsMaster(sd) || GetMaster(sd, MASTER_POINTER) != device)
                     continue;
                 if (!sd->button)
                     continue;
@@ -1006,7 +1009,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     b = device->button;
     k = device->key;
 
-    if (IsMaster(device) || !device->u.master)
+    if (IsMaster(device) || IsFloating(device))
         CheckMotion(event, device);
 
     switch (event->type)
@@ -1047,10 +1050,8 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     switch(event->type)
     {
         case ET_KeyPress:
-            if (!grab && CheckDeviceGrabs(device, event, 0)) {
-                device->deviceGrab.activatingKey = key;
+            if (!grab && CheckDeviceGrabs(device, event, 0))
                 return;
-            }
             break;
         case ET_KeyRelease:
             if (grab && device->deviceGrab.fromPassiveGrab &&
@@ -1223,7 +1224,7 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
     DeviceIntPtr mouse;
     int btlen, len, i;
 
-    mouse = (IsMaster(dev) || dev->u.master) ? GetMaster(dev, MASTER_POINTER) : dev;
+    mouse = IsFloating(dev) ? dev : GetMaster(dev, MASTER_POINTER);
 
     /* XI 2 event */
     btlen = (mouse->button) ? bits_to_bytes(mouse->button->numButtons) : 0;
@@ -1280,7 +1281,7 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
     DeliverEventsToWindow(dev, pWin, (xEvent *) & event, 1,
 				DeviceFocusChangeMask, NullGrab);
 
-    if ((type == DeviceFocusIn) &&
+    if ((event.type == DeviceFocusIn) &&
 	(wOtherInputMasks(pWin)) &&
 	(wOtherInputMasks(pWin)->inputEvents[dev->id] & DeviceStateNotifyMask))
     {

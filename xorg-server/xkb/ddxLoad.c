@@ -303,15 +303,16 @@ FILE *	file;
                 &&(!isalpha(xkm_output_dir[0]) || xkm_output_dir[1]!=':')
 #endif
                 ) {
-	    if (strlen(XkbBaseDirectory)+strlen(xkm_output_dir)
-		     +strlen(mapName)+6 <= PATH_MAX)
-	    {
-	        sprintf(buf,"%s/%s%s.xkm",XkbBaseDirectory,
-					xkm_output_dir,mapName);
-	    }
+            if (snprintf(buf, PATH_MAX, "%s/%s%s.xkm", XkbBaseDirectory,
+                         xkm_output_dir, mapName) >= PATH_MAX)
+                buf[0] = '\0';
 	}
-	else if (strlen(xkm_output_dir)+strlen(mapName)+5 <= PATH_MAX)
-	    sprintf(buf,"%s%s.xkm",xkm_output_dir,mapName);
+	else
+	{
+            if (snprintf(buf, PATH_MAX, "%s%s.xkm", xkm_output_dir, mapName)
+                >= PATH_MAX)
+                buf[0] = '\0';
+	}
 	if (buf[0] != '\0')
 	    file= fopen(buf,"rb");
 	else file= NULL;
@@ -388,11 +389,11 @@ XkbRF_RulesPtr	rules;
     if (!rules_name)
 	return FALSE;
 
-    if (strlen(XkbBaseDirectory) + strlen(rules_name) + 8 > PATH_MAX) {
+    if (snprintf(buf, PATH_MAX, "%s/rules/%s", XkbBaseDirectory, rules_name)
+        >= PATH_MAX) {
         LogMessage(X_ERROR, "XKB: Rules name is too long\n");
         return FALSE;
     }
-    sprintf(buf,"%s/rules/%s", XkbBaseDirectory, rules_name);
 
     file = fopen(buf, "r");
     if (!file) {

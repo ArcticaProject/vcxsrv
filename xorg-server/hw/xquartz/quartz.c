@@ -82,6 +82,8 @@ Bool XQuartzIsRootless = TRUE;
 Bool XQuartzServerVisible = FALSE;
 Bool XQuartzFullscreenMenu = FALSE;
 
+int32_t XQuartzShieldingWindowLevel = 0;
+
 /*
 ===========================================================================
 

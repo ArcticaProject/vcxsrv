@@ -33,7 +33,9 @@
 
 #include "pbproxy.h"
 
+#define  Cursor X_Cursor
 #include <X11/extensions/Xfixes.h>
+#undef Cursor
 
 #include <AppKit/NSPasteboard.h>
 

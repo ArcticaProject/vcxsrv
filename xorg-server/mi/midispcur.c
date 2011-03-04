@@ -76,7 +76,7 @@ typedef struct {
 #define miGetDCDevice(dev, screen) \
  ((DevHasCursor(dev)) ? \
   (miDCBufferPtr)dixLookupScreenPrivate(&dev->devPrivates, miDCDeviceKey, screen) : \
-  (miDCBufferPtr)dixLookupScreenPrivate(&dev->u.master->devPrivates, miDCDeviceKey, screen))
+  (miDCBufferPtr)dixLookupScreenPrivate(&GetMaster(dev, MASTER_POINTER)->devPrivates, miDCDeviceKey, screen))
 
 /* 
  * The core pointer buffer will point to the index of the virtual core pointer

@@ -647,9 +647,7 @@ register XkbPropertyPtr prop;
     for (i=0,prop=geom->properties;i<geom->num_properties;i++,prop++) {
 	if ((prop->name)&&(strcmp(name,prop->name)==0)) {
 	    free(prop->value);
-	    prop->value= malloc(strlen(value)+1);
-	    if (prop->value)
-		strcpy(prop->value,value);
+	    prop->value= strdup(value);
 	    return prop;
 	}    
     }
@@ -658,17 +656,15 @@ register XkbPropertyPtr prop;
 	return NULL;
     }
     prop= &geom->properties[geom->num_properties];
-    prop->name= malloc(strlen(name)+1);
-    if (!name)
+    prop->name= strdup(name);
+    if (!prop->name)
 	return NULL;
-    strcpy(prop->name,name);
-    prop->value= malloc(strlen(value)+1);
-    if (!value) {
+    prop->value= strdup(value);
+    if (!prop->value) {
 	free(prop->name);
 	prop->name= NULL;
 	return NULL;
     }
-    strcpy(prop->value,value);
     geom->num_properties++;
     return prop;
 }
@@ -720,10 +716,9 @@ register XkbColorPtr color;
     }
     color= &geom->colors[geom->num_colors];
     color->pixel= pixel;
-    color->spec= malloc(strlen(spec)+1);
+    color->spec= strdup(spec);
     if (!color->spec)
 	return NULL;
-    strcpy(color->spec,spec);
     geom->num_colors++;
     return color;
 }

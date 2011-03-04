@@ -173,6 +173,8 @@ xprCreateFrame(RootlessWindowPtr pFrame, ScreenPtr pScreen,
 
     if(XQuartzIsRootless)
         wc.window_level = normal_window_levels[pFrame->level];
+    else if(XQuartzShieldingWindowLevel)
+        wc.window_level = XQuartzShieldingWindowLevel + 1;
     else
         wc.window_level = rooted_window_levels[pFrame->level];
     mask |= XP_WINDOW_LEVEL;
@@ -287,6 +289,8 @@ static void xprRestackFrame(RootlessFrameID wid, RootlessFrameID nextWid) {
         if(winRec) {
             if(XQuartzIsRootless)
                 wc.window_level = normal_window_levels[winRec->level];
+            else if(XQuartzShieldingWindowLevel)
+                wc.window_level = XQuartzShieldingWindowLevel + 1;
             else
                 wc.window_level = rooted_window_levels[winRec->level];
             mask |= XP_WINDOW_LEVEL;

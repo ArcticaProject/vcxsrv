@@ -110,12 +110,6 @@ BasicComputeAcceleration(DeviceIntPtr dev, DeviceVelocityPtr vel,
 extern _X_EXPORT void
 FreeVelocityData(DeviceVelocityPtr vel);
 
-extern _X_INTERNAL BOOL
-InitializePredictableAccelerationProperties(DeviceIntPtr dev);
-
-extern _X_INTERNAL BOOL
-DeletePredictableAccelerationProperties(DeviceIntPtr dev);
-
 extern _X_EXPORT int
 SetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
 
@@ -128,6 +122,10 @@ SetDeviceSpecificAccelerationProfile(DeviceVelocityPtr vel,
 
 extern _X_INTERNAL void
 AccelerationDefaultCleanup(DeviceIntPtr dev);
+
+extern _X_INTERNAL Bool
+InitPredictableAccelerationScheme(DeviceIntPtr dev,
+				  struct _ValuatorAccelerationRec* protoScheme);
 
 extern _X_INTERNAL void
 acceleratePointerPredictable(DeviceIntPtr dev, int first_valuator,

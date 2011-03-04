@@ -180,7 +180,7 @@ xkb_symbols "olpc" {
 
     key <AC10> { [       ntilde,        Ntilde                  ] };
     key <AC11> { [         plus,       asterisk,      dead_tilde ] };
-    key <BKSL> { [ bracketright,     braceright                  ] };
+    key <BKSL> { [ bracketright,     braceright,      section    ] };
 
     key <AB08> { [        comma,      semicolon                  ] };
     key <AB09> { [       period,          colon                  ] };
@@ -199,4 +199,19 @@ xkb_symbols "deadtilde" {
     name[Group1]="Spain - Include dead tilde";
 
     key <AE04>	{ [         4,     dollar,   dead_tilde,       dollar ]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "olpc2" {
+
+    // Modified variant of US International layout, specifically for Peru
+    // Contact: Sayamindu Dasgupta <sayamindu@laptop.org>
+
+    include "us(olpc)"
+    name[Group1]="Spain - OLPC2";
+
+    key <AE03> { [  3, numbersign,   dead_grave,  dead_grave] }; // combining grave
+    key <I236>  { [ XF86Start ] };
+
+    include "level3(ralt_switch)"
 };

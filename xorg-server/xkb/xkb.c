@@ -5619,17 +5619,17 @@ ProcXkbGetKbdByName(ClientPtr client)
     else fwant= stuff->want|stuff->need;
     if ((!names.compat)&&
         (fwant&(XkbGBN_CompatMapMask|XkbGBN_IndicatorMapMask))) {
-        names.compat= _XkbDupString("%");
+        names.compat= Xstrdup("%");
     }
     if ((!names.types)&&(fwant&(XkbGBN_TypesMask))) {
-        names.types= _XkbDupString("%");
+        names.types= Xstrdup("%");
     }
     if ((!names.symbols)&&(fwant&XkbGBN_SymbolsMask)) {
-        names.symbols= _XkbDupString("%");
+        names.symbols= Xstrdup("%");
     }
     geom_changed= ((names.geometry!=NULL)&&(strcmp(names.geometry,"%")!=0));
     if ((!names.geometry)&&(fwant&XkbGBN_GeometryMask)) {
-        names.geometry= _XkbDupString("%");
+        names.geometry= Xstrdup("%");
         geom_changed= FALSE;
     }
 
@@ -5883,12 +5883,10 @@ ProcXkbGetKbdByName(ClientPtr client)
 	    nkn.changed|= XkbNKN_GeometryMask;
 	XkbSendNewKeyboardNotify(dev,&nkn);
 
-	if (!IsMaster(dev) && dev->u.master)
-	{
-	    DeviceIntPtr master = dev->u.master;
-	    if (master->u.lastSlave == dev)
-	    {
-		XkbCopyDeviceKeymap(dev->u.master, dev);
+	if (!IsMaster(dev)) {
+	    DeviceIntPtr master = GetMaster(dev, MASTER_KEYBOARD);
+	    if (master && master->lastSlave == dev) {
+		XkbCopyDeviceKeymap(master, dev);
 		XkbSendNewKeyboardNotify(dev,&nkn);
 	    }
 	}
