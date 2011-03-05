@@ -30,7 +30,7 @@ ro rs ru \
 se si sk sn \
 sy th \
 terminate \
-tj tm tr tz \
+tj tm tr tw tz \
 ua us uz vn \
 za \
 altwin capslock compose ctrl empty eurosign rupeesign group inet \
