@@ -4434,6 +4434,46 @@
     </layout>
     <layout>
       <configItem>
+        <name>tw</name>
+        <_shortDescription>Twn</_shortDescription>
+        <_description>Taiwan</_description>
+        <languageList>
+          <iso639Id>trv</iso639Id>
+        </languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>indigenous</name>
+            <_description>Taiwan - Indigenous</_description>
+            <languageList>
+              <iso639Id>ami</iso639Id>
+              <iso639Id>tay</iso639Id>
+              <iso639Id>bnn</iso639Id>
+              <iso639Id>ckv</iso639Id>
+              <iso639Id>pwn</iso639Id>
+              <iso639Id>pyu</iso639Id>
+              <iso639Id>dru</iso639Id>
+              <iso639Id>ais</iso639Id>
+              <iso639Id>ssf</iso639Id>
+              <iso639Id>tao</iso639Id>
+              <iso639Id>tsu</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>saisiyat</name>
+            <_description>Taiwan - Saisiyat</_description>
+            <languageList>
+              <iso639Id>xsf</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>ua</name>
         <_shortDescription>Ukr</_shortDescription>
         <_description>Ukraine</_description>
