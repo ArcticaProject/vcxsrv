@@ -13,6 +13,8 @@ INCLUDELIBFILES = window\$(OBJDIR)\window.lib \
 
 CSRCS=config.cc main.cc
 
+INCLUDES += $(MHMAKECONF)\libxml2\include
+
 WINAPP = xlaunch
 
 RESOURCES = resources.rc
@@ -23,6 +25,8 @@ $(OBJDIR)\%.res : resources\%.rc
 LIBDIRS=$(dir $(INCLUDELIBFILES))
 
 load_makefile $(LIBDIRS:%$(OBJDIR)\=%makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG);)
+
+LINKLIBS += $(MHMAKECONF)\libxml2\lib\libxml2.lib
 
 ifeq ($(DEBUG),1)
 LINKLIBS += $(MHMAKECONF)\pthreads\pthreadVC2d.lib

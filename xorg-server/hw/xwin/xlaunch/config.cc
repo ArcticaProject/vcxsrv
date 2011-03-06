@@ -23,228 +23,125 @@
  * holders shall not be used in advertising or otherwise to promote the sale,
  * use or other dealings in this Software without prior written authorization.
  */
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include "config.h"
 #include "window/util.h"
-#include <msxml2.h>
 #include <stdexcept>
 
-const CLSID CLSID_DOMDocument40 = {0x88d969c0,0xf192,0x11d4,0xa6,0x5f,0x00,0x40,0x96,0x32,0x51,0xe5};
-const CLSID CLSID_DOMDocument30 = {0xf5078f32,0xc551,0x11d3,0x89,0xb9,0x00,0x00,0xf8,0x1f,0xe2,0x21};
-const IID IID_IXMLDOMDocument2 = {0x2933BF95,0x7B36,0x11d2,0xB2,0x0E,0x00,0xC0,0x4F,0x98,0x3E,0x60};
-
-#define HRCALL(x, msg) if (FAILED(x)) { throw std::runtime_error("OLE Error:" msg " failed"); };
-
-char *wcconvert(const wchar_t *wstr)
+xmlDocPtr CreateDocument()
 {
-    int chars = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
-    if (chars == 0)
-	throw win32_error("WideCharToMultiByte");
-    char *mbstr = new char[chars];
-    chars = WideCharToMultiByte(CP_ACP, 0, wstr, -1, mbstr, chars, NULL, NULL);
-    if (chars == 0)
-	throw win32_error("WideCharToMultiByte");
-    return mbstr;
-}
-
-wchar_t *mbconvert(const char *mbstr)
-{
-    int chars = MultiByteToWideChar(CP_ACP, 0, mbstr, -1, NULL, 0);
-    if (chars == 0)
-	throw win32_error("MultiByteToWideChar");
-    wchar_t *wstr = new wchar_t[chars];
-    chars = MultiByteToWideChar(CP_ACP, 0, mbstr, -1, wstr, chars);
-    if (chars == 0)
-	throw win32_error("MultiByteToWideChar");
-    return wstr;
-}
-
-VARIANT VariantString(const char *filename)
-{
-
-    wchar_t *str = mbconvert(filename);
-
-    VARIANT var;
-    VariantInit(&var);
-    V_BSTR(&var) = SysAllocString(str);
-    V_VT(&var) = VT_BSTR;
-
-    delete [] str;
-    return var;
-}
-
-VARIANT VariantString(const wchar_t *str)
-{
-   VARIANT var;
-   VariantInit(&var);
-   V_BSTR(&var) = SysAllocString(str);
-   V_VT(&var) = VT_BSTR;
-   return var;
-}
-
-IXMLDOMDocument2 *CreateDocument()
-{
-    IXMLDOMDocument2 *doc = NULL;
+  xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
+  xmlNodePtr root_node = xmlNewNode(NULL, BAD_CAST "XLaunch");
+  xmlDocSetRootElement(doc, root_node);
+  
+  return doc;
     
-    CoInitialize(NULL);
-
-    HRCALL(CoCreateInstance(CLSID_DOMDocument40, NULL, CLSCTX_INPROC_SERVER,
-                      IID_IXMLDOMDocument2, (void**)&doc), "CoCreateInstance");
-
-    try {
-      	HRCALL(doc->put_async(VARIANT_FALSE), "put_async");
-	HRCALL(doc->put_validateOnParse(VARIANT_FALSE), "put_validateOnParse");
-	HRCALL(doc->put_resolveExternals(VARIANT_FALSE), "put_resolveExternals");
-
-	IXMLDOMProcessingInstruction *pi = NULL;
-	IXMLDOMElement *root = NULL;
-     	BSTR xml = SysAllocString(L"xml");
-	BSTR ver = SysAllocString(L"version='1.0'");
-	HRCALL(doc->createProcessingInstruction(xml,ver, &pi), 
-		"createProcessingInstruction");
-	HRCALL(doc->appendChild(pi, NULL),
-		"appendChild");
-	pi->Release();
-	SysFreeString(xml);
-	SysFreeString(ver);
-
-	BSTR elemname = SysAllocString(L"XLaunch");
-	HRCALL(doc->createElement(elemname, &root), "createElement");
-	HRCALL(doc->appendChild(root, NULL), "appendChild");
-	SysFreeString(elemname);
-    } catch (...)
-    {
-	doc->Release();
-	throw;
-    }
-    return doc;
 }
 
-void setAttribute(IXMLDOMElement *elem, const wchar_t *name, const wchar_t *value)
+void setAttribute(xmlNodePtr elem, const char *name, const char *value)
 {
-    BSTR str = SysAllocString(name);
-    VARIANT var = VariantString(value);
-    HRCALL(elem->setAttribute(str, var), "setAttribute");
-    VariantClear(&var);
-    SysFreeString(str);
-}
-
-void setAttribute(IXMLDOMElement *elem, const wchar_t *name, const char *value)
-{
-    wchar_t *wstr = mbconvert(value);
-    setAttribute(elem, name, wstr);
-    delete [] wstr;
-    return;
+  xmlNewProp(elem, BAD_CAST name, BAD_CAST value);
 }
 
 void CConfig::Save(const char *filename)
 {
-    IXMLDOMDocument2 *doc = CreateDocument();
-    IXMLDOMElement *root = NULL;
-
-    HRCALL(doc->get_documentElement(&root), "get_documentElement");
+    xmlDocPtr doc = CreateDocument();
+    xmlNodePtr root = xmlDocGetRootElement(doc);
 
     switch (window)
     {
 	case MultiWindow:
-	    setAttribute(root, L"WindowMode", L"MultiWindow");
+	    setAttribute(root, "WindowMode", "MultiWindow");
 	    break;
 	case Fullscreen:
-	    setAttribute(root, L"WindowMode", L"Fullscreen");
+	    setAttribute(root, "WindowMode", "Fullscreen");
 	    break;
 	default:
 	case Windowed:
-	    setAttribute(root, L"WindowMode", L"Windowed");
+	    setAttribute(root, "WindowMode", "Windowed");
 	    break;
 	case Nodecoration:
-	    setAttribute(root, L"WindowMode", L"Nodecoration");
+	    setAttribute(root, "WindowMode", "Nodecoration");
 	    break;
     }
     switch (client)
     {
 	default:
 	case NoClient:
-	    setAttribute(root, L"ClientMode", L"NoClient");
+	    setAttribute(root, "ClientMode", "NoClient");
 	    break;
 	case StartProgram:
-	    setAttribute(root, L"ClientMode", L"StartProgram");
+	    setAttribute(root, "ClientMode", "StartProgram");
 	    break;
 	case XDMCP:
-	    setAttribute(root, L"ClientMode", L"XDMCP");
+	    setAttribute(root, "ClientMode", "XDMCP");
 	    break;
     }
-    setAttribute(root, L"LocalClient", local?L"True":L"False");
-    setAttribute(root, L"Display", display.c_str());
-    setAttribute(root, L"Program", program.c_str());
-    setAttribute(root, L"RemoteProtocol", protocol.c_str());
-    setAttribute(root, L"RemoteHost", host.c_str());
-    setAttribute(root, L"RemoteUser", user.c_str());
-    setAttribute(root, L"XDMCPHost", xdmcp_host.c_str());
-    setAttribute(root, L"XDMCPBroadcast", broadcast?L"True":L"False");
-    setAttribute(root, L"XDMCPIndirect", indirect?L"True":L"False");
-    setAttribute(root, L"Clipboard", clipboard?L"True":L"False");
-    setAttribute(root, L"ExtraParams", extra_params.c_str());
-    setAttribute(root, L"Wgl", wgl?L"True":L"False");
+    setAttribute(root, "LocalClient", local?"True":"False");
+    setAttribute(root, "Display", display.c_str());
+    setAttribute(root, "Program", program.c_str());
+    setAttribute(root, "RemoteProtocol", protocol.c_str());
+    setAttribute(root, "RemoteHost", host.c_str());
+    setAttribute(root, "RemoteUser", user.c_str());
+    setAttribute(root, "XDMCPHost", xdmcp_host.c_str());
+    setAttribute(root, "XDMCPBroadcast", broadcast?"True":"False");
+    setAttribute(root, "XDMCPIndirect", indirect?"True":"False");
+    setAttribute(root, "Clipboard", clipboard?"True":"False");
+    setAttribute(root, "ExtraParams", extra_params.c_str());
+    setAttribute(root, "Wgl", wgl?"True":"False");
 
-    VARIANT var = VariantString(filename);
-    HRCALL(doc->save(var), "save");
-    VariantClear(&var);
+    xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
 
+    /*free the document */
+    xmlFreeDoc(doc);
 
-    root->Release();
-    doc->Release();
+    /*
+     *Free the global variables that may
+     *have been allocated by the parser.
+     */
+    xmlCleanupParser();
 }
 
-BOOL getAttribute(IXMLDOMElement *elem, const wchar_t *name, std::string &ret)
+BOOL getAttribute(xmlNodePtr elem, const char *name, std::string &ret)
 {
-    VARIANT var;
-    HRCALL(elem->getAttribute((OLECHAR*)name, &var), "getAttribute"); 
-    if (V_VT(&var) != VT_NULL && V_VT(&var) == VT_BSTR)
-    {
-	char *str = wcconvert(V_BSTR(&var));
-	ret = str;
-	delete [] str;
-	return true;
-    }
-    return false;
+  ret=(char*)xmlGetProp(elem,BAD_CAST name);
+  return true;
 }
 
-BOOL getAttributeBool(IXMLDOMElement *elem, const wchar_t *name, bool &ret)
+BOOL getAttributeBool(xmlNodePtr elem, const char *name, bool &ret)
 {
-    std::string str;
-    if (getAttribute(elem, name, str))
-    {
-	if (str == "True")
-	    ret = true;
-	else
-	    ret = false;
-	return true;
-    }
+  const char *pVal=(char*)xmlGetProp(elem, BAD_CAST name);
+  if (!pVal)
     return false;
+
+  std::string str(pVal);
+
+  if (str == "True")
+    ret = true;
+  else
+    ret = false;
+  return true;
 }
 
 
 void CConfig::Load(const char *filename)
 {
-    IXMLDOMDocument2 *doc = CreateDocument();
-    IXMLDOMElement *root = NULL;
+  xmlDocPtr doc = xmlReadFile(filename, NULL, 0);
 
-    VARIANT var = VariantString(filename);
-    VARIANT_BOOL status;
-    HRCALL(doc->load(var, &status), "load");
-    VariantClear(&var);
+  xmlNodePtr root;
 
-    if (status == VARIANT_FALSE)
-    {
-	doc->Release();
-	return;
-    }
+  if (doc == NULL)
+  {
+    return;
+  }
 
-    HRCALL(doc->get_documentElement(&root), "get_documentElement");
+  root = xmlDocGetRootElement(doc);
 
-    std::string windowMode;
-    std::string clientMode;
+  std::string windowMode;
+  std::string clientMode;
 
-    if (getAttribute(root, L"WindowMode", windowMode))
+    if (getAttribute(root, "WindowMode", windowMode))
     {
 	if (windowMode == "MultiWindow")
 	    window = MultiWindow;
@@ -255,7 +152,7 @@ void CConfig::Load(const char *filename)
 	else if (windowMode == "Nodecoration")
 	    window = Nodecoration;
     }
-    if (getAttribute(root, L"ClientMode", clientMode))
+    if (getAttribute(root, "ClientMode", clientMode))
     {
 	if (clientMode == "NoClient")
 	    client = NoClient;
@@ -265,20 +162,26 @@ void CConfig::Load(const char *filename)
 	    client = XDMCP;
     }
     
-    getAttributeBool(root, L"LocalClient", local);
-    getAttribute(root, L"Display", display);
-    getAttribute(root, L"Program", program);
-    getAttribute(root, L"RemoteProtocol", protocol);
-    getAttribute(root, L"RemoteHost", host);
-    getAttribute(root, L"RemoteUser", user);
-    getAttribute(root, L"XDMCPHost", xdmcp_host);
-    getAttributeBool(root, L"XDMCPBroadcast", broadcast);
-    getAttributeBool(root, L"XDMCPIndirect", indirect);
-    getAttributeBool(root, L"Clipboard", clipboard);
-    getAttribute(root, L"ExtraParams", extra_params);
-    getAttributeBool(root, L"Wgl", wgl);
+    getAttributeBool(root, "LocalClient", local);
+    getAttribute(root, "Display", display);
+    getAttribute(root, "Program", program);
+    getAttribute(root, "RemoteProtocol", protocol);
+    getAttribute(root, "RemoteHost", host);
+    getAttribute(root, "RemoteUser", user);
+    getAttribute(root, "XDMCPHost", xdmcp_host);
+    getAttributeBool(root, "XDMCPBroadcast", broadcast);
+    getAttributeBool(root, "XDMCPIndirect", indirect);
+    getAttributeBool(root, "Clipboard", clipboard);
+    getAttribute(root, "ExtraParams", extra_params);
+    getAttributeBool(root, "Wgl", wgl);
 
+    /*free the document */
+    xmlFreeDoc(doc);
 
-    doc->Release();
+    /*
+     *Free the global variables that may
+     *have been allocated by the parser.
+     */
+    xmlCleanupParser();
 }
 
