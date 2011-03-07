@@ -44,6 +44,7 @@ from The Open Group.
 #ifdef XWIN_CLIPBOARD
 extern Bool			g_fUnicodeClipboard;
 extern Bool			g_fClipboard;
+extern Bool			g_fClipboardPrimary;
 #endif
 
 /*

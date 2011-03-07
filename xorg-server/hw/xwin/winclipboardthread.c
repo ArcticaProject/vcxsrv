@@ -56,6 +56,7 @@ extern Bool		g_fClipboardStarted;
 extern HWND		g_hwndClipboard;
 extern void		*g_pClipboardDisplay;
 extern Window		g_iClipboardWindow;
+extern Bool		g_fClipboardPrimary;
 
 
 /*

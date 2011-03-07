@@ -43,6 +43,7 @@
  */
 
 extern Bool		g_fUnicodeSupport;
+extern Bool		g_fClipboardPrimary;
 
 
 /*
