@@ -151,7 +151,7 @@ static void internal_mul(BignumInt *a, BignumInt *b,
 	for (j = len - 1; j >= 0; j--) {
 	    t += MUL_WORD(a[i], (BignumDblInt) b[j]);
 	    t += (BignumDblInt) c[i + j + 1];
-	    c[i + j + 1] = (BignumInt) t;
+	    c[i + j + 1] = (BignumInt) (t & 0xffffffff);
 	    t = t >> BIGNUM_INT_BITS;
 	}
 	c[i] = (BignumInt) t;
@@ -257,9 +257,9 @@ static void internal_mod(BignumInt *a, int alen,
 	    t = MUL_WORD(q, m[k]);
 	    t += c;
 	    c = (unsigned)(t >> BIGNUM_INT_BITS);
-	    if ((BignumInt) t > a[i + k])
+	    if (((BignumInt)(t&0xffffffff)) > a[i + k])
 		c++;
-	    a[i + k] -= (BignumInt) t;
+	    a[i + k] -= (BignumInt) (t&0xffffffff);
 	}
 
 	/* Add back m in case of borrow */

@@ -92,18 +92,18 @@ void debug_memdump(void *buf, int len, int L);
   ((unsigned long)(unsigned char)(cp)[3] << 24))
 
 #define PUT_32BIT_LSB_FIRST(cp, value) ( \
-  (cp)[0] = (unsigned char)(value), \
-  (cp)[1] = (unsigned char)((value) >> 8), \
-  (cp)[2] = (unsigned char)((value) >> 16), \
-  (cp)[3] = (unsigned char)((value) >> 24) )
+  (cp)[0] = (unsigned char)((value)&0xff), \
+  (cp)[1] = (unsigned char)(((value) >> 8)&0xff), \
+  (cp)[2] = (unsigned char)(((value) >> 16)&0xff), \
+  (cp)[3] = (unsigned char)(((value) >> 24)&0xff) )
 
 #define GET_16BIT_LSB_FIRST(cp) \
   (((unsigned long)(unsigned char)(cp)[0]) | \
   ((unsigned long)(unsigned char)(cp)[1] << 8))
 
 #define PUT_16BIT_LSB_FIRST(cp, value) ( \
-  (cp)[0] = (unsigned char)(value), \
-  (cp)[1] = (unsigned char)((value) >> 8) )
+  (cp)[0] = (unsigned char)((value)&0xff), \
+  (cp)[1] = (unsigned char)(((value) >> 8)&0xff) )
 
 #define GET_32BIT_MSB_FIRST(cp) \
   (((unsigned long)(unsigned char)(cp)[0] << 24) | \
@@ -114,16 +114,16 @@ void debug_memdump(void *buf, int len, int L);
 #define GET_32BIT(cp) GET_32BIT_MSB_FIRST(cp)
 
 #define PUT_32BIT_MSB_FIRST(cp, value) ( \
-  (cp)[0] = (unsigned char)((value) >> 24), \
-  (cp)[1] = (unsigned char)((value) >> 16), \
-  (cp)[2] = (unsigned char)((value) >> 8), \
-  (cp)[3] = (unsigned char)(value) )
+  (cp)[0] = (unsigned char)(((value) >> 24)&0xff), \
+  (cp)[1] = (unsigned char)(((value) >> 16)&0xff), \
+  (cp)[2] = (unsigned char)(((value) >> 8)&0xff), \
+  (cp)[3] = (unsigned char)((value)&0xff) )
 
 #define PUT_32BIT(cp, value) PUT_32BIT_MSB_FIRST(cp, value)
 
 #define GET_16BIT_MSB_FIRST(cp) \
-  (((unsigned long)(unsigned char)(cp)[0] << 8) | \
-  ((unsigned long)(unsigned char)(cp)[1]))
+  (((unsigned long)(unsigned char)((cp)[0] << 8)&0xff) | \
+  ((unsigned long)(unsigned char)((cp)[1])&0xff))
 
 #define PUT_16BIT_MSB_FIRST(cp, value) ( \
   (cp)[0] = (unsigned char)((value) >> 8), \

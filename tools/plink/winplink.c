@@ -729,6 +729,7 @@ int main(int argc, char **argv)
 #pragma warning(disable:4273)
 #endif
 
+#ifndef _DEBUG
 _Check_return_opt_ int __cdecl printf(_In_z_ _Printf_format_string_ const char * pFmt, ...)
 {
   static int ConsoleCreated=0;
@@ -776,3 +777,4 @@ _Check_return_opt_ int __cdecl printf(_In_z_ _Printf_format_string_ const char *
   va_start(arglist, pFmt );
   return vfprintf(stderr, pFmt, arglist);
 }
+#endif
