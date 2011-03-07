@@ -717,17 +717,37 @@ glxWinScreenProbe(ScreenPtr pScreen)
       screen->base.swapInterval = glxWinScreenSwapInterval;
       screen->base.pScreen = pScreen;
 
+      // Creating the fbConfigs initializes screen->base.fbconfigs and screen->base.numFBConfigs
       if (strstr(wgl_extensions, "WGL_ARB_pixel_format"))
         {
           glxWinCreateConfigsExt(hdc, screen);
-          screen->has_WGL_ARB_pixel_format = TRUE;
+
+          /*
+            Some graphics drivers appear to advertise WGL_ARB_pixel_format,
+            but it doesn't work usefully, so we have to be prepared for it
+            to fail and fall back to using DescribePixelFormat()
+          */
+          if (screen->base.numFBConfigs > 0)
+            {
+              screen->has_WGL_ARB_pixel_format = TRUE;
+            }
         }
-      else
+
+      if (screen->base.numFBConfigs <= 0)
         {
           glxWinCreateConfigs(hdc, screen);
           screen->has_WGL_ARB_pixel_format = FALSE;
         }
-      // Initializes screen->base.fbconfigs and screen->base.numFBConfigs
+
+      /*
+        If we still didn't get any fbConfigs, we can't provide GLX for this screen
+       */
+      if (screen->base.numFBConfigs <= 0)
+        {
+          free(screen);
+          LogMessage(X_ERROR,"AIGLX: No fbConfigs could be made from native OpenGL pixel formats\n");
+          return NULL;
+        }
 
       /* These will be set by __glXScreenInit */
       screen->base.visuals = NULL;
