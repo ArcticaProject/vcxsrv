@@ -34,9 +34,8 @@
 
 #include <X11/Xlib.h>
 
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#endif
+#include <stdlib.h>
+
 /// @brief Send WM_ENDSESSION to all program windows.
 /// This will shutdown the started xserver
 BOOL CALLBACK KillWindowsProc(HWND hwnd, LPARAM lParam)
@@ -327,11 +326,9 @@ class CMyWizard : public CWizard
 	    if (cbwnd == NULL)
 		return;
 	    SendMessage(cbwnd, CB_RESETCONTENT, 0, 0);
-	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xterm");
-	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "startkde");
-	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "gnome-session");
-	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) ".xinitrc");
-	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "wmaker");
+	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xcalc");
+	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xclock");
+	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xwininfo");
 	    SendMessage(cbwnd, CB_SETCURSEL, 0, 0);
 	}
         /// @brief Fill protocol box with default values.
@@ -529,7 +526,7 @@ class CMyWizard : public CWizard
 
             // Construct display strings
 	    std::string display_id = ":" + config.display;
-	    std::string display = "localhost" + display_id + ":0";
+	    std::string display = "DISPLAY=127.0.0.1" + display_id + ".0";
 
             // Build Xsrv commandline
 	    buffer = "vcxsrv " + display_id + " ";
@@ -584,14 +581,17 @@ class CMyWizard : public CWizard
                     if (!config.user.empty())
                         host = config.user + "@" + config.host;
 		    if (config.protocol == "Putty")
-			snprintf(cmdline,512,"plink -X %s %s", 
+			_snprintf(cmdline,512,"plink -X %s %s", 
                                 host.c_str(),config.program.c_str());
 		    else
-			snprintf(cmdline,512,"ssh -Y %s %s", 
+			_snprintf(cmdline,512,"ssh -Y %s %s", 
                                 host.c_str(),config.program.c_str());
 		    client += cmdline;
-		} else
+		}
+                else
+		{
 		    client += config.program.c_str();
+		}
 	    }
 
             // Prepare program startup
@@ -620,7 +620,7 @@ class CMyWizard : public CWizard
 	    if (!client.empty())
 	    {
                 // Set DISPLAY variable
-		SetEnvironmentVariable("DISPLAY",display.c_str());
+		_putenv(display.c_str());
 
                 // Wait for server to startup
                 dpy = WaitForServer(pi.hProcess);

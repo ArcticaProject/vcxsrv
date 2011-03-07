@@ -72,7 +72,7 @@ struct CConfig
     CConfig() : window(MultiWindow), client(NoClient), clientstart(NoXClient), display("0"), 
 #endif
                 local(false), protocol(""),
-                protocol_path(""), program("xeyes"), progs(PROG_NUMBER), compress(false), host(""), user("ago"),
+                protocol_path(""), program("xcalc"), progs(PROG_NUMBER), compress(false), host(""), user("ago"),
                 password(""), password_save(false), password_start(false), broadcast(false),
                 indirect(false), xdmcp_host(""), xhosts(HOST_NUMBER), clipboard(true), clipboardprimary(true), no_access_control(false),
                 font_server(), extra_params(), extra_ssh(), wgl(true) {};
