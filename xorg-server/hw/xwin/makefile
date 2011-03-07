@@ -159,6 +159,6 @@ INCLUDES += ..\..\miext\rootless
 
 INCLUDES += $(OBJDIR)
 
-$(OBJDIR)\winprefslex.c $(OBJDIR)\winprefsyacc.c $(OBJDIR)\winprefsyacc.h: winprefslex.l winprefsyacc.y $(OBJDIR)\winprefsyacc.h
+$(OBJDIR)\winprefslex.c $(OBJDIR)\winprefsyacc.c $(OBJDIR)\winprefsyacc.h: winprefslex.l winprefsyacc.y
 	doflexbison.bat $(subst \,/,$(OBJDIR))
 
