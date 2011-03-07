@@ -1535,7 +1535,6 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   Atom			type, *pAtom = NULL;
   int			format;
   unsigned long		hint = 0, maxmin = 0, style, nitems = 0 , left = 0;
-  WindowPtr		pWin = GetProp (hWnd, WIN_WINDOW_PROP);
   MwmHints              *mwm_hint = NULL;
   WinXSizeHints         SizeHints;
 
@@ -1629,7 +1628,25 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   }
 
   /* Override hint settings from above with settings from config file */
-  style = winOverrideStyle((unsigned long)pWin);
+  {
+    XClassHint class_hint = {0,0};
+
+    if (XGetClassHint(pDisplay, iWindow, &class_hint))
+      {
+        char *window_name = 0;
+        XFetchName(pDisplay, iWindow, &window_name);
+
+        style = winOverrideStyle(class_hint.res_name, class_hint.res_class, window_name);
+
+        if (class_hint.res_name) XFree(class_hint.res_name);
+        if (class_hint.res_class) XFree(class_hint.res_class);
+        if (window_name) XFree(window_name);
+      }
+    else
+      {
+        style = STYLE_NONE;
+      }
+  }
   if (style & STYLE_TOPMOST) *zstyle = HWND_TOPMOST;
   else if (style & STYLE_MAXIMIZE) maxmin = (hint & ~HINT_MIN) | HINT_MAX;
   else if (style & STYLE_MINIMIZE) maxmin = (hint & ~HINT_MAX) | HINT_MIN;
