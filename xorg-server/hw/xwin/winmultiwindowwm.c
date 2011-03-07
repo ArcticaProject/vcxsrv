@@ -1535,6 +1535,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   Atom			type, *pAtom = NULL;
   int			format;
   unsigned long		hint = 0, maxmin = 0, style, nitems = 0 , left = 0;
+  WindowPtr		pWin = GetProp (hWnd, WIN_WINDOW_PROP);
   MwmHints              *mwm_hint = NULL;
   WinXSizeHints         SizeHints;
 
