@@ -261,16 +261,19 @@ winClipboardProc (void *pvNotUsed)
   /* Assert ownership of selections if Win32 clipboard is owned */
   if (NULL != GetClipboardOwner ())
     {
-      /* PRIMARY */
-      winDebug("winClipboardProc - asserted ownership.\n");
-      iReturn = XSetSelectionOwner (pDisplay, XA_PRIMARY,
-				    iWindow, CurrentTime);
-      if (iReturn == BadAtom || iReturn == BadWindow /*||
-	  XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow*/)
+      if (g_fClipboardPrimary)
+      {
+	/* PRIMARY */
+	winDebug("winClipboardProc - asserted ownership.\n");
+	iReturn = XSetSelectionOwner (pDisplay, XA_PRIMARY,
+				      iWindow, CurrentTime);
+	if (iReturn == BadAtom || iReturn == BadWindow /*||
+	    XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow*/)
 	{
 	  ErrorF ("winClipboardProc - Could not set PRIMARY owner\n");
           goto thread_errorexit;
 	}
+      }
 
       /* CLIPBOARD */
       iReturn = XSetSelectionOwner (pDisplay, atomClipboard,

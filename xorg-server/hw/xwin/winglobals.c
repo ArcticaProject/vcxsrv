@@ -100,6 +100,7 @@ winDispatchProcPtr	winProcSetSelectionOwnerOrig = NULL;
 
 Bool			g_fUnicodeClipboard = TRUE;
 Bool			g_fClipboard = TRUE;
+Bool			g_fClipboardPrimary = TRUE;
 Bool			g_fClipboardLaunched = FALSE;
 Bool			g_fClipboardStarted = FALSE;
 pthread_t		g_ptClipboardProc;

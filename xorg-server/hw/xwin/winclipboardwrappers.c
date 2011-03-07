@@ -241,25 +241,28 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Save selection owners for monitored selections, ignore other selections */
   if (XA_PRIMARY == stuff->selection)
     {
+      if (g_fClipboardPrimary)
+      {
       /* Look for owned -> not owned transition */
-      if (None == stuff->window
-	  && None != s_iOwners[CLIP_OWN_PRIMARY])
-	{
-	  winDebug ("winProcSetSelectionOwner - PRIMARY - Going from "
-		  "owned to not owned.\n");
+	if (None == stuff->window
+	    && None != s_iOwners[CLIP_OWN_PRIMARY])
+	  {
+	    winDebug ("winProcSetSelectionOwner - PRIMARY - Going from "
+		      "owned to not owned.\n");
 
-	  /* Adjust last owned selection */
-	  if (None != s_iOwners[CLIP_OWN_CLIPBOARD])
-	    g_atomLastOwnedSelection = MakeAtom ("CLIPBOARD", 9, TRUE);
-	  else
-	    g_atomLastOwnedSelection = None;
-	}
-      
-      /* Save new selection owner or None */
-      s_iOwners[CLIP_OWN_PRIMARY] = stuff->window;
+	    /* Adjust last owned selection */
+	    if (None != s_iOwners[CLIP_OWN_CLIPBOARD])
+	      g_atomLastOwnedSelection = MakeAtom ("CLIPBOARD", 9, TRUE);
+	    else
+	      g_atomLastOwnedSelection = None;
+	  }
 
-      winDebug ("winProcSetSelectionOwner - PRIMARY - Now owned by: 0x%x (clipboard is 0x%x)\n",
-	      stuff->window,g_iClipboardWindow);
+	/* Save new selection owner or None */
+	s_iOwners[CLIP_OWN_PRIMARY] = stuff->window;
+
+	winDebug ("winProcSetSelectionOwner - PRIMARY - Now owned by: 0x%x (clipboard is 0x%x)\n",
+	          stuff->window,g_iClipboardWindow);
+      }
     }
   else if (MakeAtom ("CLIPBOARD", 9, TRUE) == stuff->selection)
     {
@@ -271,7 +274,7 @@ winProcSetSelectionOwner (ClientPtr client)
 		  "owned to not owned.\n");
 
 	  /* Adjust last owned selection */
-	  if (None != s_iOwners[CLIP_OWN_PRIMARY])
+	  if (None != s_iOwners[CLIP_OWN_PRIMARY] && g_fClipboardPrimary)
 	    g_atomLastOwnedSelection = XA_PRIMARY;
 	  else
 	    g_atomLastOwnedSelection = None;
@@ -291,7 +294,7 @@ winProcSetSelectionOwner (ClientPtr client)
    * clipboard manager then it should be marked as unowned since
    * we will be taking ownership of the Win32 clipboard.
    */
-  if (g_iClipboardWindow == s_iOwners[CLIP_OWN_PRIMARY])
+  if (g_iClipboardWindow == s_iOwners[CLIP_OWN_PRIMARY] && g_fClipboardPrimary)
     s_iOwners[CLIP_OWN_PRIMARY] = None;
   if (g_iClipboardWindow == s_iOwners[CLIP_OWN_CLIPBOARD])
     s_iOwners[CLIP_OWN_CLIPBOARD] = None;

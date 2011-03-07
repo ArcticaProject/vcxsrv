@@ -271,7 +271,7 @@ winClipboardFlushXEvents (HWND hwnd,
                         "The owner is the clipboard, but in reality it was"
                         "an X window\n");
                 /* Set the owner to None */
-		XSetSelectionOwner (pDisplay, XA_PRIMARY, None, CurrentTime);
+		if (g_fClipboardPrimary) XSetSelectionOwner (pDisplay, XA_PRIMARY, None, CurrentTime);
 		XSetSelectionOwner (pDisplay, XInternAtom (pDisplay, "CLIPBOARD", False), None, CurrentTime);
 	        }
 	        ErrorF ("winClipboardFlushXEvents - SelectionRequest - "

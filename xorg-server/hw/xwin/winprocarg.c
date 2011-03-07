@@ -729,6 +729,30 @@ ddxProcessArgument (int argc, char *argv[], int i)
       /* Indicate that we have processed this argument */
       return 1;
     }
+    
+  /*
+   * Look for the '-clipboard' argument
+   */
+  if (IS_OPTION ("-clipboardprimary"))
+    {
+      /* Now the default, we still accept the arg for backwards compatibility */
+      g_fClipboardPrimary = TRUE;
+
+      /* Indicate that we have processed this argument */
+      return 1;
+    }
+
+  /*
+   * Look for the '-noclipboard' argument
+   */
+  if (IS_OPTION ("-noclipboardprimary"))
+    {
+      g_fClipboardPrimary = FALSE;
+
+      /* Indicate that we have processed this argument */
+      return 1;
+    }
+    
 #endif
 
 

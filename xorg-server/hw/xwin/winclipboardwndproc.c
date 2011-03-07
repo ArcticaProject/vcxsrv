@@ -326,21 +326,23 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	     */
 	    XSync (pDisplay, FALSE);
 	    
-	    /* Release PRIMARY selection if owned */
-	    iReturn = XGetSelectionOwner (pDisplay, XA_PRIMARY);
-	    if (iReturn == g_iClipboardWindow)
-	      {
-		winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
-			"PRIMARY selection is owned by us.\n");
-		XSetSelectionOwner (pDisplay,
-				    XA_PRIMARY,
-				    None,
-				    CurrentTime);
-	      }
-	    else if (BadWindow == iReturn || BadAtom == iReturn)
-	      ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
-		      "XGetSelection failed for PRIMARY: %d\n", iReturn);
-
+	    if (g_fClipboardPrimary)
+	    {
+	    	    /* Release PRIMARY selection if owned */
+	      iReturn = XGetSelectionOwner (pDisplay, XA_PRIMARY);
+	      if (iReturn == g_iClipboardWindow)
+		{
+		  winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+			    "PRIMARY selection is owned by us.\n");
+		  XSetSelectionOwner (pDisplay,
+				      XA_PRIMARY,
+				      None,
+				      CurrentTime);
+		}
+	      else if (BadWindow == iReturn || BadAtom == iReturn)
+		ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+		        "XGetSelection failed for PRIMARY: %d\n", iReturn);
+	    }
 	    /* Release CLIPBOARD selection if owned */
 	    iReturn = XGetSelectionOwner (pDisplay,
 					  atomClipboard);
@@ -366,23 +368,25 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	  /* Only reassert ownership when we did not change the clipboard ourselves */
 	if (hwnd!=(HWND)wParam)
 	{
-	  /* Reassert ownership of PRIMARY */	  
-	  iReturn = XSetSelectionOwner (pDisplay,
-				        XA_PRIMARY,
-				        iWindow,
-				        CurrentTime);
-	  if (iReturn == BadAtom || iReturn == BadWindow ||
-	      XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow)
-	    {
-	      ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
-		      "Could not reassert ownership of PRIMARY\n");
-	    }
-	  else
-	    {
-	      winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
-		      "Reasserted ownership of PRIMARY\n");
-	    }
-	
+	  if (g_fClipboardPrimary)
+	  {
+	  	  /* Reassert ownership of PRIMARY */	  
+	    iReturn = XSetSelectionOwner (pDisplay,
+					  XA_PRIMARY,
+					  iWindow,
+					  CurrentTime);
+	    if (iReturn == BadAtom || iReturn == BadWindow ||
+	        XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow)
+	      {
+		ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+		        "Could not reassert ownership of PRIMARY\n");
+	      }
+	    else
+	      {
+		winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+			  "Reasserted ownership of PRIMARY\n");
+	      }
+	  }
 	  /* Reassert ownership of the CLIPBOARD */	  
 	  iReturn = XSetSelectionOwner (pDisplay,
 				        atomClipboard,
@@ -403,7 +407,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	
 	  /* Flush the pending SetSelectionOwner event now */
 	  XFlush (pDisplay);
-	  }
+	}
         
       s_fProcessingDrawClipboard = FALSE;
       winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD: Exit\n");
