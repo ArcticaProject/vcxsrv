@@ -157,18 +157,8 @@ DEFINES += $(DEFS:-D%=%) HAVE_XWIN_CONFIG_H PTW32_STATIC_LIB RELOCATE_PROJECTROO
 
 INCLUDES += ..\..\miext\rootless
 
-
-
-
 INCLUDES += $(OBJDIR)
 
-AM_YFLAGS = -d
-AM_LFLAGS = -i
+$(OBJDIR)\winprefslex.c $(OBJDIR)\winprefsyacc.c $(OBJDIR)\winprefsyacc.h: winprefslex.l winprefsyacc.y $(OBJDIR)\winprefsyacc.h
+	doflexbison.bat $(subst \,/,$(OBJDIR))
 
-$(OBJDIR)\winprefslex.c: winprefslex.l $(OBJDIR)\winprefsyacc.h
-	flex $(AM_LFLAGS) -o$@ $<
-
-$(OBJDIR)\winprefsyacc.c : $(OBJDIR)\winprefsyacc.h  # this is to avoid building at the same time of winprefsyacc.obj and winprefsyacc.h, this will give error during generation of winprefsyacc.h because winprefsyacc.c is locked
-
-$(OBJDIR)\winprefsyacc.c $(OBJDIR)\winprefsyacc.h: winprefsyacc.y
-	bison $(AM_YFLAGS) -o$(OBJDIR)\winprefsyacc.c $<
