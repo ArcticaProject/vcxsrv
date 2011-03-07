@@ -80,8 +80,9 @@ void CConfig::Save(const char *filename)
     }
     setAttribute(root, "LocalClient", local?"True":"False");
     setAttribute(root, "Display", display.c_str());
-    setAttribute(root, "Program", program.c_str());
-    setAttribute(root, "RemoteProtocol", protocol.c_str());
+    setAttribute(root, "LocalProgram", localprogram.c_str());
+    setAttribute(root, "RemoteProgram", remoteprogram.c_str());
+    setAttribute(root, "RemotePassword", remotepassword.c_str());
     setAttribute(root, "RemoteHost", host.c_str());
     setAttribute(root, "RemoteUser", user.c_str());
     setAttribute(root, "XDMCPHost", xdmcp_host.c_str());
@@ -91,6 +92,7 @@ void CConfig::Save(const char *filename)
     setAttribute(root, "ClipboardPrimary", clipboardprimary?"True":"False");
     setAttribute(root, "ExtraParams", extra_params.c_str());
     setAttribute(root, "Wgl", wgl?"True":"False");
+    setAttribute(root, "DisableAC", disableac?"True":"False");
 
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
 
@@ -106,7 +108,10 @@ void CConfig::Save(const char *filename)
 
 BOOL getAttribute(xmlNodePtr elem, const char *name, std::string &ret)
 {
-  ret=(char*)xmlGetProp(elem,BAD_CAST name);
+  char *pVal=(char*)xmlGetProp(elem,BAD_CAST name);
+  if (!pVal)
+    return false;
+  ret=pVal;
   return true;
 }
 
@@ -165,8 +170,9 @@ void CConfig::Load(const char *filename)
     
     getAttributeBool(root, "LocalClient", local);
     getAttribute(root, "Display", display);
-    getAttribute(root, "Program", program);
-    getAttribute(root, "RemoteProtocol", protocol);
+    getAttribute(root, "LocalProgram", localprogram);
+    getAttribute(root, "RemoteProgram", remoteprogram);
+    getAttribute(root, "RemotePassword", remotepassword);
     getAttribute(root, "RemoteHost", host);
     getAttribute(root, "RemoteUser", user);
     getAttribute(root, "XDMCPHost", xdmcp_host);
@@ -176,6 +182,7 @@ void CConfig::Load(const char *filename)
     getAttributeBool(root, "ClipboardPrimary", clipboardprimary);
     getAttribute(root, "ExtraParams", extra_params);
     getAttributeBool(root, "Wgl", wgl);
+    getAttributeBool(root, "DisableAC", disableac);
 
     /*free the document */
     xmlFreeDoc(doc);

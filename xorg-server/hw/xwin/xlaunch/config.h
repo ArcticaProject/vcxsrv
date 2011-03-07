@@ -42,40 +42,44 @@ struct CConfig
 {
     enum {MultiWindow, Fullscreen, Windowed, Nodecoration} window;
     enum {NoClient, StartProgram, XDMCP} client;
-    enum {NoXClient, Local, PuTTY, OpenSSH} clientstart;
     bool local;
     std::string display;
-    std::string protocol;
-    std::string protocol_path;
-    std::string program;
-    std::vector<std::string> progs;
+    std::string localprogram;
+    std::string remoteprogram;
     bool compress;
     std::string host;
     std::string user;
-    std::string password;
-    bool password_save;
-    bool password_start;
+    std::string remotepassword;
     bool broadcast;
     bool indirect;
     std::string xdmcp_host;
-    std::vector<std::string> xhosts;
     bool clipboard;
     bool clipboardprimary;
     bool wgl;
-    bool no_access_control;
-    std::string font_server;
+    bool disableac;
     std::string extra_params;
-    std::string extra_ssh;
 #ifdef _DEBUG
-    CConfig() : window(MultiWindow), client(NoClient), clientstart(NoXClient), display("1"), 
+    CConfig() : window(MultiWindow), client(NoClient), display("1"), 
 #else
-    CConfig() : window(MultiWindow), client(NoClient), clientstart(NoXClient), display("0"), 
+    CConfig() : window(MultiWindow), client(NoClient), display("0"), 
 #endif
-                local(false), protocol(""),
-                protocol_path(""), program("xcalc"), progs(PROG_NUMBER), compress(false), host(""), user("ago"),
-                password(""), password_save(false), password_start(false), broadcast(false),
-                indirect(false), xdmcp_host(""), xhosts(HOST_NUMBER), clipboard(true), clipboardprimary(true), no_access_control(false),
-                font_server(), extra_params(), extra_ssh(), wgl(true) {};
+                local(false),
+                remotepassword(""),
+                localprogram("xcalc"),
+                remoteprogram("xterm"),
+                compress(false),
+                host(""),
+                user(""),
+                broadcast(false),
+                indirect(false),
+                xdmcp_host(""),
+                clipboard(true),
+                clipboardprimary(true),
+                extra_params(),
+                disableac(false),
+                wgl(true)
+    {
+    };
     void Load(const char * filename);
     void Save(const char * filename);
 };

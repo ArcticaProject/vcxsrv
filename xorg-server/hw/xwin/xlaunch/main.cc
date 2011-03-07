@@ -158,10 +158,16 @@ class CMyWizard : public CWizard
 			config.host = buffer;
 			GetDlgItemText(hwndDlg, IDC_CLIENT_PROGRAM, buffer, 512);
 			buffer[511] = 0;
-			config.program = buffer;
+			config.localprogram = buffer;
+			GetDlgItemText(hwndDlg, IDC_CLIENT_REMOTEPROGRAM, buffer, 512);
+			buffer[511] = 0;
+			config.remoteprogram = buffer;
+			GetDlgItemText(hwndDlg, IDC_CLIENT_PASSWORD, buffer, 512);
+			buffer[511] = 0;
+			config.remotepassword = buffer;
 		    }
                     // Check for valid input
-		    if (!config.local && (config.host.empty() || config.program.empty()))
+		    if (!config.local && (config.host.empty() || config.localprogram.empty() || config.remoteprogram.empty()))
 			SetWindowLong(hwndDlg, DWL_MSGRESULT, -1);
 		    else
 			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_EXTRA);
@@ -211,6 +217,11 @@ class CMyWizard : public CWizard
                         config.wgl = true;
                     else
                         config.wgl = false;
+                    // check for wgl
+                    if (IsDlgButtonChecked(hwndDlg, IDC_DISABLEAC))
+                        config.disableac = true;
+                    else
+                        config.disableac = false;
                     // read parameters
 		    {
 			char buffer[512];
@@ -303,12 +314,16 @@ class CMyWizard : public CWizard
         /// @param state State of control group.
 	void EnableRemoteProgramGroup(HWND hwndDlg, BOOL state)
 	{
-	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_PROTOCOL), state);
+	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_PASSWORD), state);
 	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_HOST), state);
 	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_USER), state);
-	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_PROTOCOL_DESC), state);
+	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_PASSWORD_DESC), state);
 	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_HOST_DESC), state);
 	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_USER_DESC), state);
+	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_REMOTEPROGRAM), state);
+	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_REMOTEPROGRAM_DESC), state);
+	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_PROGRAM), !state);
+	    EnableWindow(GetDlgItem(hwndDlg, IDC_CLIENT_PROGRAM_DESC), !state);
 	}
         /// @brief Enable or disable the control for XDMCP connection.
         /// @param hwndDlg Handle to active page dialog.
@@ -329,18 +344,6 @@ class CMyWizard : public CWizard
 	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xcalc");
 	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xclock");
 	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "xwininfo");
-	    SendMessage(cbwnd, CB_SETCURSEL, 0, 0);
-	}
-        /// @brief Fill protocol box with default values.
-        /// @param hwndDlg Handle to active page dialog.
-	void FillProtocolBox(HWND hwndDlg)
-	{
-	    HWND cbwnd = GetDlgItem(hwndDlg, IDC_CLIENT_PROTOCOL);
-	    if (cbwnd == NULL)
-		return;
-	    SendMessage(cbwnd, CB_RESETCONTENT, 0, 0);
-	    SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "Putty");
-	    //SendMessage(cbwnd, CB_ADDSTRING, 0, (LPARAM) "OpenSSH");
 	    SendMessage(cbwnd, CB_SETCURSEL, 0, 0);
 	}
 	void ShowSaveDialog(HWND parent)
@@ -444,12 +447,14 @@ class CMyWizard : public CWizard
 			    EnableRemoteProgramGroup(hwndDlg, config.local?FALSE:TRUE);
                             // Fill combo boxes
 			    FillProgramBox(hwndDlg);
-			    FillProtocolBox(hwndDlg);
                             // Set edit fields
-			    if (!config.program.empty())
-			       	SetDlgItemText(hwndDlg, IDC_CLIENT_PROGRAM, config.program.c_str());
+			    if (!config.localprogram.empty())
+			       	SetDlgItemText(hwndDlg, IDC_CLIENT_PROGRAM, config.localprogram.c_str());
+			    if (!config.remoteprogram.empty())
+			       	SetDlgItemText(hwndDlg, IDC_CLIENT_REMOTEPROGRAM, config.remoteprogram.c_str());
 			    SetDlgItemText(hwndDlg, IDC_CLIENT_USER, config.user.c_str());
 			    SetDlgItemText(hwndDlg, IDC_CLIENT_HOST, config.host.c_str());
+			    SetDlgItemText(hwndDlg, IDC_CLIENT_PASSWORD, config.remotepassword.c_str());
 			    break;
 			case IDD_XDMCP:
                             // Init XDMCP dialog. Check broadcast and indirect button
@@ -463,6 +468,7 @@ class CMyWizard : public CWizard
                             CheckDlgButton(hwndDlg, IDC_CLIPBOARD, config.clipboard?BST_CHECKED:BST_UNCHECKED);
                             CheckDlgButton(hwndDlg, IDC_CLIPBOARDPRIMARY, config.clipboardprimary?BST_CHECKED:BST_UNCHECKED);
                             CheckDlgButton(hwndDlg, IDC_WGL, config.wgl?BST_CHECKED:BST_UNCHECKED);
+                            CheckDlgButton(hwndDlg, IDC_DISABLEAC, config.disableac?BST_CHECKED:BST_UNCHECKED);
                             SetDlgItemText(hwndDlg, IDC_EXTRA_PARAMS, config.extra_params.c_str());
                             break;
 
@@ -556,7 +562,7 @@ class CMyWizard : public CWizard
 		    else
 			buffer += "-query ";
 		    buffer += config.xdmcp_host;
-            buffer += " ";
+		    buffer += " ";
 		}
 	    }
             if (config.clipboard)
@@ -565,6 +571,8 @@ class CMyWizard : public CWizard
                 buffer += "-noclipboardprimary ";
             if (config.wgl)
                 buffer += "-wgl ";
+            if (config.disableac)
+                buffer += "-ac ";
             if (!config.extra_params.empty())
             {
                 buffer += config.extra_params;
@@ -578,19 +586,18 @@ class CMyWizard : public CWizard
 		{
 		    char cmdline[512];
                     std::string host = config.host;
+                    std::string remotepassword;
                     if (!config.user.empty())
                         host = config.user + "@" + config.host;
-		    if (config.protocol == "Putty")
-			_snprintf(cmdline,512,"plink -X %s %s", 
-                                host.c_str(),config.program.c_str());
-		    else
-			_snprintf(cmdline,512,"ssh -Y %s %s", 
-                                host.c_str(),config.program.c_str());
+                    if (!config.remotepassword.empty())
+                      remotepassword=std::string(" -pw ")+config.remotepassword;
+		    _snprintf(cmdline,512,"plink -ssh -X%s %s %s", 
+                                remotepassword.c_str(), host.c_str(),config.remoteprogram.c_str());
 		    client += cmdline;
 		}
                 else
 		{
-		    client += config.program.c_str();
+		    client += config.localprogram.c_str();
 		}
 	    }
 
@@ -639,7 +646,7 @@ class CMyWizard : public CWizard
                 // FIXME: This may make it impossible to enter the password
 		sic.dwFlags = STARTF_USESHOWWINDOW;
 		sic.wShowWindow = SW_HIDE;
-
+                
 		// Start the child process. 
 		if( !CreateProcess( NULL, (CHAR*)client.c_str(), NULL, NULL,
                             FALSE, 0, NULL, NULL, &sic, &pic )) 
@@ -658,7 +665,9 @@ class CMyWizard : public CWizard
 #ifdef _DEBUG
 	    printf("killing process!\n");
 #endif
-            // Check if Xsrv is still running
+            // Check if Xsrv is still running, but only when we started a local program
+            if (0)
+            {
 	    DWORD exitcode;
 	    GetExitCodeProcess(pi.hProcess, &exitcode);
 	    unsigned counter = 0;
@@ -673,7 +682,8 @@ class CMyWizard : public CWizard
 		GetExitCodeProcess(pi.hProcess, &exitcode);
 	    }
 	    // Kill the client
-    	    TerminateProcess(pic.hProcess, (DWORD)-1);
+	    TerminateProcess(pic.hProcess, (DWORD)-1);
+            }
 
 	    // Close process and thread handles. 
 	    CloseHandle( pi.hProcess );

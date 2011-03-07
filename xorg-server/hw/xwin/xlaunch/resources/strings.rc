@@ -40,12 +40,14 @@
 #define STR_XDMCP_DESC				"This will start a remote XDMCP session. Starting local clients later is limited. This option is not available with the ""Multiple windows"" mode."
 
 #define STR_CAPTION_PROGRAM         "Start program"
-#define STR_CLIENT_PROGRAM_DESC     "Start program"
+#define STR_CLIENT_PROGRAM_DESC     "Local program"
 #define STR_CLIENT_LOCAL            "Start program on this computer"
 #define STR_CLIENT_REMOTE           "Start program on remote computer"
-#define STR_CLIENT_PROTOCOL_DESC    "Connect using"
+#define STR_CLIENT_PASSWORD_DESC    "Password"
 #define STR_CLIENT_HOST_DESC        "Connect to computer"
 #define STR_CLIENT_USER_DESC        "Login as user"
+
+#define STR_CLIENT_REMOTEPROGRAM_DESC     "Remote program"
 
 
 #define STR_CAPTION_XDMCP           "XDMCP settings"
@@ -65,6 +67,9 @@
 #define STR_WGL                     "Native opengl"
 #define STR_WGL_DESC                "Use the native windows opengl library (wgl). Make sure to export the LIBGL_ALWAYS_INDIRECT environment variable."
 #define STR_EXTRA_PARAMS_DESC       "Additional parameters for VcXsrv"
+
+#define STR_DISABLEAC               "Disable access control"
+#define STR_DISABLEAC_DESC          "Use this when you want vcxsrv to accept connections from all clients."
 
 #define STR_CAPTION_FINISH          "Finish configuration"
 #define STR_FINISH_DESC	            "Configuration is complete. Click Finish to start VcXsrv."
