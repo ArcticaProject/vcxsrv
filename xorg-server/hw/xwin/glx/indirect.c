@@ -777,30 +777,26 @@ glxWinScreenProbe(ScreenPtr pScreen)
 
       //
       // Override the GLX version (__glXScreenInit() sets it to "1.2")
-      // if we have all the needed extensionsto operate as a higher version
+      // if we have all the needed extensions to operate as a higher version
       //
       // SGIX_fbconfig && SGIX_pbuffer && SGI_make_current_read -> 1.3
       // ARB_multisample -> 1.4
       //
       if (screen->has_WGL_ARB_pbuffer && glx_sgi_make_current_read)
         {
-          free(screen->base.GLXversion);
-
           if (screen->has_WGL_ARB_multisample)
             {
-              screen->base.GLXversion = strdup("1.4");
               screen->base.GLXmajor = 1;
               screen->base.GLXminor = 4;
             }
           else
             {
-              screen->base.GLXversion = strdup("1.3");
               screen->base.GLXmajor = 1;
               screen->base.GLXminor = 3;
             }
-          LogMessage(X_INFO, "AIGLX: Set GLX version to %s\n", screen->base.GLXversion);
         }
     }
+    LogMessage(X_INFO, "AIGLX: Set GLX version to %d.%d\n", screen->base.GLXmajor, screen->base.GLXminor);
 
     wglMakeCurrent(NULL, NULL);
     wglDeleteContext(hglrc);

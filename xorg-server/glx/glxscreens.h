@@ -142,7 +142,6 @@ struct __GLXscreen {
     char *GLextensions;
 
     char *GLXvendor;
-    char *GLXversion;
     char *GLXextensions;
 
     /**
