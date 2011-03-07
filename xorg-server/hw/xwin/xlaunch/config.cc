@@ -88,6 +88,7 @@ void CConfig::Save(const char *filename)
     setAttribute(root, "XDMCPBroadcast", broadcast?"True":"False");
     setAttribute(root, "XDMCPIndirect", indirect?"True":"False");
     setAttribute(root, "Clipboard", clipboard?"True":"False");
+    setAttribute(root, "ClipboardPrimary", clipboardprimary?"True":"False");
     setAttribute(root, "ExtraParams", extra_params.c_str());
     setAttribute(root, "Wgl", wgl?"True":"False");
 
@@ -172,6 +173,7 @@ void CConfig::Load(const char *filename)
     getAttributeBool(root, "XDMCPBroadcast", broadcast);
     getAttributeBool(root, "XDMCPIndirect", indirect);
     getAttributeBool(root, "Clipboard", clipboard);
+    getAttributeBool(root, "ClipboardPrimary", clipboardprimary);
     getAttribute(root, "ExtraParams", extra_params);
     getAttributeBool(root, "Wgl", wgl);
 

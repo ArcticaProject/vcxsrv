@@ -202,6 +202,11 @@ class CMyWizard : public CWizard
                         config.clipboard = true;
                     else
                         config.clipboard = false;
+                    // check for clipboard primary selection
+                    if (IsDlgButtonChecked(hwndDlg, IDC_CLIPBOARDPRIMARY))
+                        config.clipboardprimary = true;
+                    else
+                        config.clipboardprimary = false;
                     // check for wgl
                     if (IsDlgButtonChecked(hwndDlg, IDC_WGL))
                         config.wgl = true;
@@ -459,6 +464,7 @@ class CMyWizard : public CWizard
 			    break;
                         case IDD_EXTRA:
                             CheckDlgButton(hwndDlg, IDC_CLIPBOARD, config.clipboard?BST_CHECKED:BST_UNCHECKED);
+                            CheckDlgButton(hwndDlg, IDC_CLIPBOARDPRIMARY, config.clipboardprimary?BST_CHECKED:BST_UNCHECKED);
                             CheckDlgButton(hwndDlg, IDC_WGL, config.wgl?BST_CHECKED:BST_UNCHECKED);
                             SetDlgItemText(hwndDlg, IDC_EXTRA_PARAMS, config.extra_params.c_str());
                             break;
@@ -558,6 +564,8 @@ class CMyWizard : public CWizard
 	    }
             if (config.clipboard)
                 buffer += "-clipboard ";
+            if (!config.clipboardprimary)
+                buffer += "-noclipboardprimary ";
             if (config.wgl)
                 buffer += "-wgl ";
             if (!config.extra_params.empty())
