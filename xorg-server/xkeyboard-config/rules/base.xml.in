@@ -1770,6 +1770,13 @@
         </variant>
         <variant>
           <configItem>
+             <name>mal_enhanced</name>
+             <_description>India - Malayalam enhanced INSCRIPT with Rupee Sign</_description>
+             <languageList><iso639Id>mal</iso639Id></languageList>
+          </configItem>
+         </variant>
+         <variant>
+           <configItem>
             <name>ori</name>
             <_description>India - Oriya</_description>
             <languageList>
