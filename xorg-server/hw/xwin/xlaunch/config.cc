@@ -93,6 +93,7 @@ void CConfig::Save(const char *filename)
     setAttribute(root, "ExtraParams", extra_params.c_str());
     setAttribute(root, "Wgl", wgl?"True":"False");
     setAttribute(root, "DisableAC", disableac?"True":"False");
+    setAttribute(root, "XDMCPTerminate", xdmcpterminate?"True":"False");
 
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
 
@@ -183,6 +184,7 @@ void CConfig::Load(const char *filename)
     getAttribute(root, "ExtraParams", extra_params);
     getAttributeBool(root, "Wgl", wgl);
     getAttributeBool(root, "DisableAC", disableac);
+    getAttributeBool(root, "XDMCPTerminate", xdmcpterminate);
 
     /*free the document */
     xmlFreeDoc(doc);

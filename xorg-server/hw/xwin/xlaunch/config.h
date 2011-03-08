@@ -57,6 +57,7 @@ struct CConfig
     bool clipboardprimary;
     bool wgl;
     bool disableac;
+    bool xdmcpterminate;
     std::string extra_params;
 #ifdef _DEBUG
     CConfig() : window(MultiWindow), client(NoClient), display("1"), 
@@ -77,7 +78,8 @@ struct CConfig
                 clipboardprimary(true),
                 extra_params(),
                 disableac(false),
-                wgl(true)
+                wgl(true),
+                xdmcpterminate(false)
     {
     };
     void Load(const char * filename);

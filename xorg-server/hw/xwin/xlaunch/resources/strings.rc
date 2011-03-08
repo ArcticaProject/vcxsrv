@@ -71,6 +71,8 @@
 #define STR_DISABLEAC               "Disable access control"
 #define STR_DISABLEAC_DESC          "Use this when you want vcxsrv to accept connections from all clients."
 
+#define STR_XDMCP_TERMINATE          "Terminate on server reset."
+
 #define STR_CAPTION_FINISH          "Finish configuration"
 #define STR_FINISH_DESC	            "Configuration is complete. Click Finish to start VcXsrv."
 #define STR_FINISH_SAVE_DESC        "You may also save the configuration for later use."
