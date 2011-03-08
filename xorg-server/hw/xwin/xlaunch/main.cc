@@ -221,7 +221,7 @@ class CMyWizard : public CWizard
                         config.wgl = true;
                     else
                         config.wgl = false;
-                    // check for wgl
+                    // check for access control
                     if (IsDlgButtonChecked(hwndDlg, IDC_DISABLEAC))
                         config.disableac = true;
                     else
