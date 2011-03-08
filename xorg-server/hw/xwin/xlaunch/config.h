@@ -77,7 +77,7 @@ struct CConfig
                 clipboard(true),
                 clipboardprimary(true),
                 extra_params(),
-                disableac(false),
+                disableac(true),
                 wgl(true),
                 xdmcpterminate(false)
     {
