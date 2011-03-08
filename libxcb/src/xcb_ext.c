@@ -119,6 +119,8 @@ int _xcb_ext_init(xcb_connection_t *c)
 
 void _xcb_ext_destroy(xcb_connection_t *c)
 {
+    if (!c->ext.lock)
+      return; /* mutex is not initialised */
     pthread_mutex_destroy(&c->ext.lock);
     while(c->ext.extensions_size-- > 0)
         if(c->ext.extensions[c->ext.extensions_size].tag == LAZY_FORCED)

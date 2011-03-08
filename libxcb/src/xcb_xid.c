@@ -93,5 +93,7 @@ int _xcb_xid_init(xcb_connection_t *c)
 
 void _xcb_xid_destroy(xcb_connection_t *c)
 {
+    if (!c->xid.lock)
+      return; /* mutex was not initialised yet */
     pthread_mutex_destroy(&c->xid.lock);
 }
