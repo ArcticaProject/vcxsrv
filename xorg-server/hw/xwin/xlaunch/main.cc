@@ -609,7 +609,7 @@ class CMyWizard : public CWizard
             }
 
             // Prepare program startup
-                 STARTUPINFO si, sic;
+            STARTUPINFO si, sic;
             PROCESS_INFORMATION pi, pic;
             HANDLE handles[2];
             DWORD hcount = 0; 
@@ -626,8 +626,11 @@ class CMyWizard : public CWizard
 #ifdef _DEBUG
             printf("%s\n", buffer.c_str());
 #endif
+            char CurDir[MAX_PATH];
+            GetModuleFileName(NULL,CurDir,MAX_PATH);
+            *strrchr(CurDir,'\\')=0;
             if( !CreateProcess( NULL, (CHAR*)buffer.c_str(), NULL, NULL, 
-                        FALSE, 0, NULL, NULL, &si, &pi )) 
+                        FALSE, 0, NULL, CurDir, &si, &pi )) 
                 throw win32_error("CreateProcess failed");
             handles[hcount++] = pi.hProcess;
 
@@ -656,7 +659,7 @@ class CMyWizard : public CWizard
                 
                 // Start the child process. 
                 if( !CreateProcess( NULL, (CHAR*)client.c_str(), NULL, NULL,
-                            FALSE, 0, NULL, NULL, &sic, &pic )) 
+                            FALSE, 0, NULL, CurDir, &sic, &pic )) 
                 {
                     DWORD err = GetLastError();
                     while (hcount--)
@@ -673,7 +676,7 @@ class CMyWizard : public CWizard
             printf("killing process!\n");
 #endif
             // Check if Xsrv is still running, but only when we started a local program
-            if (0)
+            if (config.local)
             {
             DWORD exitcode;
             GetExitCodeProcess(pi.hProcess, &exitcode);
