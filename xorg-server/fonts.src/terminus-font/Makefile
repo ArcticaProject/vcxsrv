@@ -65,1045 +65,1047 @@ X_KOI8U	= uni/x11gr.uni uni/ascii-h.uni uni/koi8-u.uni
 X_PT154	= uni/x11gr.uni uni/ascii-h.uni uni/pt-154.uni
 X_10646	= uni/x11gr.uni uni/10646-1.uni
 
+BASETARGETNAME=$(notdir $(@:%.gz=%))
+
 $(DESTDIR)\ter-112n.pcf.gz: ter-u12n.bdf $(X_88591)
-	$(UCS2ANY) ter-u12n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-112b.pcf.gz: ter-u12b.bdf $(X_88591)
-	$(UCS2ANY) ter-u12b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-212n.pcf.gz: ter-u12n.bdf $(X_88592)
-	$(UCS2ANY) ter-u12n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-212b.pcf.gz: ter-u12b.bdf $(X_88592)
-	$(UCS2ANY) ter-u12b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-512n.pcf.gz: ter-u12n.bdf $(X_88595)
-	$(UCS2ANY) ter-u12n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-512b.pcf.gz: ter-u12b.bdf $(X_88595)
-	$(UCS2ANY) ter-u12b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-712n.pcf.gz: ter-u12n.bdf $(X_88597)
-	$(UCS2ANY) ter-u12n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-712b.pcf.gz: ter-u12b.bdf $(X_88597)
-	$(UCS2ANY) ter-u12b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-912n.pcf.gz: ter-u12n.bdf $(X_88599)
-	$(UCS2ANY) ter-u12n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-912b.pcf.gz: ter-u12b.bdf $(X_88599)
-	$(UCS2ANY) ter-u12b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c12n.pcf.gz: ter-u12n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u12n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c12b.pcf.gz: ter-u12b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u12b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d12n.pcf.gz: ter-u12n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u12n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d12b.pcf.gz: ter-u12b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u12b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f12n.pcf.gz: ter-u12n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u12n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f12b.pcf.gz: ter-u12b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u12b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g12n.pcf.gz: ter-u12n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u12n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g12b.pcf.gz: ter-u12b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u12b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k12n.pcf.gz: ter-u12n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u12n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k12b.pcf.gz: ter-u12b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u12b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p12n.pcf.gz: ter-u12n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u12n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p12b.pcf.gz: ter-u12b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u12b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u12n.pcf.gz: ter-u12n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u12n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u12b.pcf.gz: ter-u12b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u12b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x12n.pcf.gz: ter-u12n.bdf $(X_10646)
-	$(UCS2ANY) ter-u12n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x12b.pcf.gz: ter-u12b.bdf $(X_10646)
-	$(UCS2ANY) ter-u12b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u12b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-114n.pcf.gz: ter-u14n.bdf $(X_88591)
-	$(UCS2ANY) ter-u14n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-114b.pcf.gz: ter-u14b.bdf $(X_88591)
-	$(UCS2ANY) ter-u14b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-214n.pcf.gz: ter-u14n.bdf $(X_88592)
-	$(UCS2ANY) ter-u14n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-214b.pcf.gz: ter-u14b.bdf $(X_88592)
-	$(UCS2ANY) ter-u14b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-514n.pcf.gz: ter-u14n.bdf $(X_88595)
-	$(UCS2ANY) ter-u14n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-514b.pcf.gz: ter-u14b.bdf $(X_88595)
-	$(UCS2ANY) ter-u14b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-714n.pcf.gz: ter-u14n.bdf $(X_88597)
-	$(UCS2ANY) ter-u14n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-714b.pcf.gz: ter-u14b.bdf $(X_88597)
-	$(UCS2ANY) ter-u14b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-914n.pcf.gz: ter-u14n.bdf $(X_88599)
-	$(UCS2ANY) ter-u14n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-914b.pcf.gz: ter-u14b.bdf $(X_88599)
-	$(UCS2ANY) ter-u14b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c14n.pcf.gz: ter-u14n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u14n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c14b.pcf.gz: ter-u14b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u14b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d14n.pcf.gz: ter-u14n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u14n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d14b.pcf.gz: ter-u14b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u14b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f14n.pcf.gz: ter-u14n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u14n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f14b.pcf.gz: ter-u14b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u14b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g14n.pcf.gz: ter-u14n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u14n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g14b.pcf.gz: ter-u14b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u14b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k14n.pcf.gz: ter-u14n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u14n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k14b.pcf.gz: ter-u14b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u14b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p14n.pcf.gz: ter-u14n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u14n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p14b.pcf.gz: ter-u14b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u14b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u14n.pcf.gz: ter-u14n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u14n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u14b.pcf.gz: ter-u14b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u14b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x14n.pcf.gz: ter-u14n.bdf $(X_10646)
-	$(UCS2ANY) ter-u14n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x14b.pcf.gz: ter-u14b.bdf $(X_10646)
-	$(UCS2ANY) ter-u14b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u14b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-116n.pcf.gz: ter-u16n.bdf $(X_88591)
-	$(UCS2ANY) ter-u16n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-116b.pcf.gz: ter-u16b.bdf $(X_88591)
-	$(UCS2ANY) ter-u16b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-216n.pcf.gz: ter-u16n.bdf $(X_88592)
-	$(UCS2ANY) ter-u16n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-216b.pcf.gz: ter-u16b.bdf $(X_88592)
-	$(UCS2ANY) ter-u16b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-516n.pcf.gz: ter-u16n.bdf $(X_88595)
-	$(UCS2ANY) ter-u16n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-516b.pcf.gz: ter-u16b.bdf $(X_88595)
-	$(UCS2ANY) ter-u16b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-716n.pcf.gz: ter-u16n.bdf $(X_88597)
-	$(UCS2ANY) ter-u16n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-716b.pcf.gz: ter-u16b.bdf $(X_88597)
-	$(UCS2ANY) ter-u16b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-916n.pcf.gz: ter-u16n.bdf $(X_88599)
-	$(UCS2ANY) ter-u16n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-916b.pcf.gz: ter-u16b.bdf $(X_88599)
-	$(UCS2ANY) ter-u16b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c16n.pcf.gz: ter-u16n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u16n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c16b.pcf.gz: ter-u16b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u16b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d16n.pcf.gz: ter-u16n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u16n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d16b.pcf.gz: ter-u16b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u16b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f16n.pcf.gz: ter-u16n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u16n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f16b.pcf.gz: ter-u16b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u16b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g16n.pcf.gz: ter-u16n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u16n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g16b.pcf.gz: ter-u16b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u16b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k16n.pcf.gz: ter-u16n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u16n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k16b.pcf.gz: ter-u16b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u16b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p16n.pcf.gz: ter-u16n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u16n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p16b.pcf.gz: ter-u16b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u16b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u16n.pcf.gz: ter-u16n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u16n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u16b.pcf.gz: ter-u16b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u16b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x16n.pcf.gz: ter-u16n.bdf $(X_10646)
-	$(UCS2ANY) ter-u16n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x16b.pcf.gz: ter-u16b.bdf $(X_10646)
-	$(UCS2ANY) ter-u16b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u16b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-120n.pcf.gz: ter-u20n.bdf $(X_88591)
-	$(UCS2ANY) ter-u20n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-120b.pcf.gz: ter-u20b.bdf $(X_88591)
-	$(UCS2ANY) ter-u20b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-220n.pcf.gz: ter-u20n.bdf $(X_88592)
-	$(UCS2ANY) ter-u20n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-220b.pcf.gz: ter-u20b.bdf $(X_88592)
-	$(UCS2ANY) ter-u20b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-520n.pcf.gz: ter-u20n.bdf $(X_88595)
-	$(UCS2ANY) ter-u20n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-520b.pcf.gz: ter-u20b.bdf $(X_88595)
-	$(UCS2ANY) ter-u20b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-720n.pcf.gz: ter-u20n.bdf $(X_88597)
-	$(UCS2ANY) ter-u20n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-720b.pcf.gz: ter-u20b.bdf $(X_88597)
-	$(UCS2ANY) ter-u20b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-920n.pcf.gz: ter-u20n.bdf $(X_88599)
-	$(UCS2ANY) ter-u20n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-920b.pcf.gz: ter-u20b.bdf $(X_88599)
-	$(UCS2ANY) ter-u20b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c20n.pcf.gz: ter-u20n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u20n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c20b.pcf.gz: ter-u20b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u20b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d20n.pcf.gz: ter-u20n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u20n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d20b.pcf.gz: ter-u20b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u20b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f20n.pcf.gz: ter-u20n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u20n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f20b.pcf.gz: ter-u20b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u20b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g20n.pcf.gz: ter-u20n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u20n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g20b.pcf.gz: ter-u20b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u20b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k20n.pcf.gz: ter-u20n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u20n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k20b.pcf.gz: ter-u20b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u20b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p20n.pcf.gz: ter-u20n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u20n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p20b.pcf.gz: ter-u20b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u20b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u20n.pcf.gz: ter-u20n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u20n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u20b.pcf.gz: ter-u20b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u20b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x20n.pcf.gz: ter-u20n.bdf $(X_10646)
-	$(UCS2ANY) ter-u20n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x20b.pcf.gz: ter-u20b.bdf $(X_10646)
-	$(UCS2ANY) ter-u20b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u20b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-122n.pcf.gz: ter-u22n.bdf $(X_88591)
-	$(UCS2ANY) ter-u22n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-122b.pcf.gz: ter-u22b.bdf $(X_88591)
-	$(UCS2ANY) ter-u22b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-222n.pcf.gz: ter-u22n.bdf $(X_88592)
-	$(UCS2ANY) ter-u22n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-222b.pcf.gz: ter-u22b.bdf $(X_88592)
-	$(UCS2ANY) ter-u22b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-522n.pcf.gz: ter-u22n.bdf $(X_88595)
-	$(UCS2ANY) ter-u22n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-522b.pcf.gz: ter-u22b.bdf $(X_88595)
-	$(UCS2ANY) ter-u22b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-722n.pcf.gz: ter-u22n.bdf $(X_88597)
-	$(UCS2ANY) ter-u22n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-722b.pcf.gz: ter-u22b.bdf $(X_88597)
-	$(UCS2ANY) ter-u22b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-922n.pcf.gz: ter-u22n.bdf $(X_88599)
-	$(UCS2ANY) ter-u22n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-922b.pcf.gz: ter-u22b.bdf $(X_88599)
-	$(UCS2ANY) ter-u22b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c22n.pcf.gz: ter-u22n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u22n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c22b.pcf.gz: ter-u22b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u22b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d22n.pcf.gz: ter-u22n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u22n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d22b.pcf.gz: ter-u22b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u22b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f22n.pcf.gz: ter-u22n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u22n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f22b.pcf.gz: ter-u22b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u22b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g22n.pcf.gz: ter-u22n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u22n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g22b.pcf.gz: ter-u22b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u22b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k22n.pcf.gz: ter-u22n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u22n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k22b.pcf.gz: ter-u22b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u22b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p22n.pcf.gz: ter-u22n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u22n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p22b.pcf.gz: ter-u22b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u22b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u22n.pcf.gz: ter-u22n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u22n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u22b.pcf.gz: ter-u22b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u22b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x22n.pcf.gz: ter-u22n.bdf $(X_10646)
-	$(UCS2ANY) ter-u22n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x22b.pcf.gz: ter-u22b.bdf $(X_10646)
-	$(UCS2ANY) ter-u22b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u22b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-124n.pcf.gz: ter-u24n.bdf $(X_88591)
-	$(UCS2ANY) ter-u24n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-124b.pcf.gz: ter-u24b.bdf $(X_88591)
-	$(UCS2ANY) ter-u24b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-224n.pcf.gz: ter-u24n.bdf $(X_88592)
-	$(UCS2ANY) ter-u24n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-224b.pcf.gz: ter-u24b.bdf $(X_88592)
-	$(UCS2ANY) ter-u24b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-524n.pcf.gz: ter-u24n.bdf $(X_88595)
-	$(UCS2ANY) ter-u24n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-524b.pcf.gz: ter-u24b.bdf $(X_88595)
-	$(UCS2ANY) ter-u24b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-724n.pcf.gz: ter-u24n.bdf $(X_88597)
-	$(UCS2ANY) ter-u24n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-724b.pcf.gz: ter-u24b.bdf $(X_88597)
-	$(UCS2ANY) ter-u24b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-924n.pcf.gz: ter-u24n.bdf $(X_88599)
-	$(UCS2ANY) ter-u24n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-924b.pcf.gz: ter-u24b.bdf $(X_88599)
-	$(UCS2ANY) ter-u24b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c24n.pcf.gz: ter-u24n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u24n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c24b.pcf.gz: ter-u24b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u24b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d24n.pcf.gz: ter-u24n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u24n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d24b.pcf.gz: ter-u24b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u24b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f24n.pcf.gz: ter-u24n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u24n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f24b.pcf.gz: ter-u24b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u24b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g24n.pcf.gz: ter-u24n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u24n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g24b.pcf.gz: ter-u24b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u24b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k24n.pcf.gz: ter-u24n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u24n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k24b.pcf.gz: ter-u24b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u24b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p24n.pcf.gz: ter-u24n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u24n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p24b.pcf.gz: ter-u24b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u24b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u24n.pcf.gz: ter-u24n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u24n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u24b.pcf.gz: ter-u24b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u24b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x24n.pcf.gz: ter-u24n.bdf $(X_10646)
-	$(UCS2ANY) ter-u24n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x24b.pcf.gz: ter-u24b.bdf $(X_10646)
-	$(UCS2ANY) ter-u24b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u24b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-128n.pcf.gz: ter-u28n.bdf $(X_88591)
-	$(UCS2ANY) ter-u28n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-128b.pcf.gz: ter-u28b.bdf $(X_88591)
-	$(UCS2ANY) ter-u28b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-228n.pcf.gz: ter-u28n.bdf $(X_88592)
-	$(UCS2ANY) ter-u28n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-228b.pcf.gz: ter-u28b.bdf $(X_88592)
-	$(UCS2ANY) ter-u28b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-528n.pcf.gz: ter-u28n.bdf $(X_88595)
-	$(UCS2ANY) ter-u28n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-528b.pcf.gz: ter-u28b.bdf $(X_88595)
-	$(UCS2ANY) ter-u28b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-728n.pcf.gz: ter-u28n.bdf $(X_88597)
-	$(UCS2ANY) ter-u28n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-728b.pcf.gz: ter-u28b.bdf $(X_88597)
-	$(UCS2ANY) ter-u28b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-928n.pcf.gz: ter-u28n.bdf $(X_88599)
-	$(UCS2ANY) ter-u28n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-928b.pcf.gz: ter-u28b.bdf $(X_88599)
-	$(UCS2ANY) ter-u28b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c28n.pcf.gz: ter-u28n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u28n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c28b.pcf.gz: ter-u28b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u28b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d28n.pcf.gz: ter-u28n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u28n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d28b.pcf.gz: ter-u28b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u28b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f28n.pcf.gz: ter-u28n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u28n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f28b.pcf.gz: ter-u28b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u28b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g28n.pcf.gz: ter-u28n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u28n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g28b.pcf.gz: ter-u28b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u28b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k28n.pcf.gz: ter-u28n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u28n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k28b.pcf.gz: ter-u28b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u28b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p28n.pcf.gz: ter-u28n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u28n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p28b.pcf.gz: ter-u28b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u28b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u28n.pcf.gz: ter-u28n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u28n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u28b.pcf.gz: ter-u28b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u28b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x28n.pcf.gz: ter-u28n.bdf $(X_10646)
-	$(UCS2ANY) ter-u28n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x28b.pcf.gz: ter-u28b.bdf $(X_10646)
-	$(UCS2ANY) ter-u28b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u28b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-132n.pcf.gz: ter-u32n.bdf $(X_88591)
-	$(UCS2ANY) ter-u32n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-132b.pcf.gz: ter-u32b.bdf $(X_88591)
-	$(UCS2ANY) ter-u32b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_88591) $(X_88591) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-232n.pcf.gz: ter-u32n.bdf $(X_88592)
-	$(UCS2ANY) ter-u32n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-232b.pcf.gz: ter-u32b.bdf $(X_88592)
-	$(UCS2ANY) ter-u32b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_88592) $(X_88592) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-532n.pcf.gz: ter-u32n.bdf $(X_88595)
-	$(UCS2ANY) ter-u32n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-532b.pcf.gz: ter-u32b.bdf $(X_88595)
-	$(UCS2ANY) ter-u32b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_88595) $(X_88595) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-732n.pcf.gz: ter-u32n.bdf $(X_88597)
-	$(UCS2ANY) ter-u32n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-732b.pcf.gz: ter-u32b.bdf $(X_88597)
-	$(UCS2ANY) ter-u32b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_88597) $(X_88597) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-932n.pcf.gz: ter-u32n.bdf $(X_88599)
-	$(UCS2ANY) ter-u32n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-932b.pcf.gz: ter-u32b.bdf $(X_88599)
-	$(UCS2ANY) ter-u32b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_88599) $(X_88599) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c32n.pcf.gz: ter-u32n.bdf $(X_W1251)
-	$(UCS2ANY) ter-u32n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-c32b.pcf.gz: ter-u32b.bdf $(X_W1251)
-	$(UCS2ANY) ter-u32b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_W1251) $(X_W1251) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d32n.pcf.gz: ter-u32n.bdf $(X_8859D)
-	$(UCS2ANY) ter-u32n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-d32b.pcf.gz: ter-u32b.bdf $(X_8859D)
-	$(UCS2ANY) ter-u32b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_8859D) $(X_8859D) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f32n.pcf.gz: ter-u32n.bdf $(X_8859F)
-	$(UCS2ANY) ter-u32n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-f32b.pcf.gz: ter-u32b.bdf $(X_8859F)
-	$(UCS2ANY) ter-u32b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_8859F) $(X_8859F) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g32n.pcf.gz: ter-u32n.bdf $(X_8859G)
-	$(UCS2ANY) ter-u32n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-g32b.pcf.gz: ter-u32b.bdf $(X_8859G)
-	$(UCS2ANY) ter-u32b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_8859G) $(X_8859G) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k32n.pcf.gz: ter-u32n.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u32n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-k32b.pcf.gz: ter-u32b.bdf $(X_KOI8R)
-	$(UCS2ANY) ter-u32b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_KOI8R) $(X_KOI8R) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p32n.pcf.gz: ter-u32n.bdf $(X_PT154)
-	$(UCS2ANY) ter-u32n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-p32b.pcf.gz: ter-u32b.bdf $(X_PT154)
-	$(UCS2ANY) ter-u32b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_PT154) $(X_PT154) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u32n.pcf.gz: ter-u32n.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u32n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-u32b.pcf.gz: ter-u32b.bdf $(X_KOI8U)
-	$(UCS2ANY) ter-u32b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_KOI8U) $(X_KOI8U) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x32n.pcf.gz: ter-u32n.bdf $(X_10646)
-	$(UCS2ANY) ter-u32n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32n.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 $(DESTDIR)\ter-x32b.pcf.gz: ter-u32b.bdf $(X_10646)
-	$(UCS2ANY) ter-u32b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(@:$(DESTDIR)\%.gz=%)
-	gzip -c $(@:$(DESTDIR)\%.gz=%) > $@
-	del $(@:$(DESTDIR)\%.gz=%)
+	$(UCS2ANY) ter-u32b.bdf $(R_10646) $(X_10646) | $(BDFTOPCF) -t -o $(BASETARGETNAME)
+	gzip -c $(BASETARGETNAME) > $@
+	del $(BASETARGETNAME)
 
 
 font_DATA = $(PCF:%=$(DESTDIR)\%.gz) $(PCF_N12:%=$(DESTDIR)\%.gz)
