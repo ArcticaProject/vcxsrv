@@ -341,9 +341,8 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
   const char *pEnv=getenv(MHMAKECONF);
   if (pEnv)
   {
-    string Env(QuoteFileName(pEnv));
-    m_GlobalCommandLineVars[MHMAKECONF]=Env;
-    m_MhMakeConf=GetAbsFileInfo(Env);
+    m_MhMakeConf=GetAbsFileInfo(pEnv);
+    m_GlobalCommandLineVars[MHMAKECONF]=QuoteFileName(m_MhMakeConf->GetFullFileName());
 
     // Get the revision of the working copy
     // We do it with the svn info command

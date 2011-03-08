@@ -177,37 +177,37 @@ inline string mhmakefileparser::ExpandExpression(const string &ExprIn) const
     string Expr(Ret);
     Ret.clear();
 
-  size_t i=0;
-  size_t Length=Expr.size();
-  string ToAdd;
-  while (i<Length)
-  {
-    char Char=Expr[i++];
-    if (Char=='$')
+    size_t i=0;
+    size_t Length=Expr.size();
+    string ToAdd;
+    while (i<Length)
     {
-        size_t inew=SkipMakeExpr(Expr,i);
-        i++;
-        if (inew>i)
-        {
-          ToAdd=ExpandMacro(Expr.substr(i,inew-i-1));
-          i=inew;
+      char Char=Expr[i++];
+      if (Char=='$')
+      {
+          size_t inew=SkipMakeExpr(Expr,i);
+          i++;
+          if (inew>i)
+          {
+            ToAdd=ExpandMacro(Expr.substr(i,inew-i-1));
+            i=inew;
+          }
+          else
+          {
+            // This is a single character expression
+            ToAdd=ExpandMacro(string(1,Expr[i-1]));
+          }
+          if (ToAdd.find('$')!=string::npos && ToAdd.length()!=1)
+          {
+            Recurse=true;
         }
-        else
-        {
-          // This is a single character expression
-          ToAdd=ExpandMacro(string(1,Expr[i-1]));
-        }
-        if (ToAdd.find('$')!=string::npos && ToAdd.length()!=1)
-        {
-          Recurse=true;
+        Ret+=ToAdd;
       }
-      Ret+=ToAdd;
+      else
+      {
+        Ret+=Char;
+      }
     }
-    else
-    {
-      Ret+=Char;
-    }
-  }
   }
   return Ret;
 }
