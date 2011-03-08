@@ -15,8 +15,8 @@ devenv.com tools\mhmake\mhmakevc10.sln /build "Debug|Win32"
 
 set MHMAKECONF=%~dp0
 
-..\tools\mhmake\release\mhmake.exe -C xorg-server MAKESERVER=1 DEBUG=1 vcxsrv_dbg.exe
-..\tools\mhmake\release\mhmake.exe -C xorg-server MAKESERVER=1
+tools\mhmake\release\mhmake.exe -C xorg-server MAKESERVER=1 DEBUG=1 vcxsrv_dbg.exe
+tools\mhmake\release\mhmake.exe -C xorg-server MAKESERVER=1
 
 cd xorg-server\installer
 call packageall.bat
