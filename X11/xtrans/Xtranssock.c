@@ -647,7 +647,7 @@ TRANS(SocketOpenCOTSServer) (Xtransport *thistrans, char *protocol,
     if (Sockettrans2devtab[i].family == AF_INET6)
     {
 	int one = 1;
-	setsockopt(ciptr->fd, IPPROTO_IPV6, IPV6_V6ONLY, &one, sizeof(int));
+	setsockopt(ciptr->fd, IPPROTO_IPV6, IPV6_V6ONLY, (const char *)&one, sizeof(int));
     }
 #endif
     /* Save the index for later use */
@@ -732,7 +732,7 @@ TRANS(SocketOpenCLTSServer) (Xtransport *thistrans, char *protocol,
     if (Sockettrans2devtab[i].family == AF_INET6)
     {
 	int one = 1;
-	setsockopt(ciptr->fd, IPPROTO_IPV6, IPV6_V6ONLY, &one, sizeof(int));
+	setsockopt(ciptr->fd, IPPROTO_IPV6, IPV6_V6ONLY, (const char *)&one, sizeof(int));
     }
 #endif
     /* Save the index for later use */
