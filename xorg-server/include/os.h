@@ -392,7 +392,7 @@ extern _X_EXPORT void DisableLocalHost(void);
 
 extern _X_EXPORT void AccessUsingXdmcp(void);
 
-extern _X_EXPORT void DefineSelf(int /*fd*/);
+extern _X_EXPORT void DefineSelf(int /*fd*/, const int /*protocol*/);
 
 #if XDMCP
 extern _X_EXPORT void AugmentSelf(pointer /*from*/, int /*len*/);

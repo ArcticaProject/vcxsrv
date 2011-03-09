@@ -237,6 +237,9 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #define HAVE_SYS_TYPES_H 1
 
+/* Define to 1 if you have the <sys/utsname.h> header file. */
+#undef HAVE_SYS_UTSNAME_H
+
 /* Define to 1 if you have the <sys/vm86.h> header file. */
 #undef HAVE_SYS_VM86_H
 
@@ -255,8 +258,11 @@
 /* Define to 1 if you have the `vprintf' function. */
 #define HAVE_VPRINTF 1
 
+/* Define to 1 if you have the `vasprintf' function. */
+#undef HAVE_VASPRINTF
+
 /* Support IPv6 for TCP connections */
-#undef IPv6
+#define IPv6 1
 
 /* Support os-specific local connections */
 #undef LOCALCONN
@@ -290,6 +296,9 @@
 
 /* Support X resource extension */
 #define RES 1
+
+/* Support client ID tracking in X resource extension */
+#undef CLIENTIDS
 
 /* Support MIT-SCREEN-SAVER extension */
 #define SCREENSAVER 1
@@ -484,6 +493,10 @@
 
 #include <X11/Xwinsock.h>
 #include <X11/Xwindows.h>
+#if NTDDI_VERSION < NTDDI_VISTA
+int inet_pton(int af, const char *src, void *dst);
+const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt);
+#endif
 #include <assert.h>
 #define strcasecmp _stricmp
 

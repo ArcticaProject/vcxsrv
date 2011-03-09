@@ -149,11 +149,13 @@ int MaxClients = 0;
 Bool NewOutputPending;		/* not yet attempted to write some new output */
 Bool AnyClientsWriteBlocked;	/* true if some client blocked on write */
 
+#if !defined(_MSC_VER)
 static Bool RunFromSmartParent;	/* send SIGUSR1 to parent process */
+static Pid_t ParentProcess;
+#endif
 Bool RunFromSigStopParent;	/* send SIGSTOP to our own process; Upstart (or
 				   equivalent) will send SIGCONT back. */
 Bool PartialNetwork;	/* continue even if unable to bind all addrs */
-static Pid_t ParentProcess;
 
 static Bool debug_conns = FALSE;
 
@@ -424,16 +426,19 @@ CreateWellKnownSockets(void)
 	{
 	    ListenTransFds = malloc(ListenTransCount * sizeof (int));
 
-	    for (i = 0; i < ListenTransCount; i++)
+	    for (i = ListenTransCount; i > 0; i--)
 	    {
-		int fd = _XSERVTransGetConnectionNumber (ListenTransConns[i]);
+		int fd = _XSERVTransGetConnectionNumber (ListenTransConns[i-1]);
 		
-		ListenTransFds[i] = fd;
+		ListenTransFds[i-1] = fd;
 		FD_SET (fd, &WellKnownConnections);
 
-		if (!_XSERVTransIsLocal (ListenTransConns[i]))
+		if (!_XSERVTransIsLocal (ListenTransConns[i-1]))
 		{
-		    DefineSelf (fd);
+		    int protocol = 0;
+		    if (!strcmp("inet", ListenTransConns[i-1]->transptr->TransName)) protocol = 4;
+		    else if (!strcmp("inet6", ListenTransConns[i-1]->transptr->TransName)) protocol = 6;
+		    DefineSelf (fd, protocol);
 		}
 	    }
 	}
@@ -993,9 +998,10 @@ CheckConnections(void)
 {
 #ifndef WIN32
     fd_mask		mask;
+    int			curoff;
 #endif
     fd_set		tmask; 
-    int			curclient, curoff;
+    int			curclient;
     int			i;
     struct timeval	notime;
     int r;
@@ -1027,6 +1033,7 @@ CheckConnections(void)
 	}
     }	
 #else
+    /* First test AllSockets and then AllClients are valid sockets */
     XFD_COPYSET(&AllSockets, &savedAllSockets);
     for (j=0; j<2; j++)
     {
@@ -1037,7 +1044,7 @@ CheckConnections(void)
 		FD_SET(curclient, &tmask);
 		do {
 		    r = Select (curclient + 1, &tmask, NULL, NULL, &notime);
-		} while (r < 0 && (WSAGetLastError() == WSAEINTR || WSAGetLastError() == WSAEWOULDBLOCK));
+		} while (r == SOCKET_ERROR && (WSAGetLastError() == WSAEINTR || WSAGetLastError() == WSAEWOULDBLOCK));
 		if (r < 0)
 		    if (GetConnectionTranslation(curclient) > 0)
 			CloseDownClient(clients[GetConnectionTranslation(curclient)]);

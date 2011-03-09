@@ -510,7 +510,7 @@ VAuditF(const char *f, va_list args)
 	if (auditTimer != NULL)
 	    TimerForce(auditTimer);
 	ErrorF("%s%s", prefix != NULL ? prefix : "", buf);
-	strlcpy(oldbuf, buf, sizeof(oldbuf));
+	strncpy(oldbuf, buf, sizeof(oldbuf));
 	oldlen = len;
 	nrepeat = 0;
 	auditTimer = TimerSet(auditTimer, 0, AUDIT_TIMEOUT, AuditFlush, NULL);

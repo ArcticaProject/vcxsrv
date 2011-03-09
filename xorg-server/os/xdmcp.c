@@ -62,6 +62,8 @@
 
 static char *defaultDisplayClass = COMPILEDDISPLAYCLASS;
 
+extern void match_interface(u_long u_lQuery);
+
 static int		    xdmcpSocket, sessionSocket;
 static xdmcp_states	    state;
 #if defined(IPv6) && defined(AF_INET6)
@@ -1602,9 +1604,6 @@ get_addr_by_name(
 #ifdef XTHREADS_NEEDS_BYNAMEPARAMS
     _Xgethostbynameparams hparams;
 #endif
-#if defined(WIN32) && defined(TCPCONN)
-    _XSERVTransWSAStartup(); 
-#endif
     if (!(hep = _XGethostbyname(namestr, hparams)))
     {
 	FatalError("Xserver: %s unknown host: %s\n", argtype, namestr);
@@ -1630,6 +1629,9 @@ get_manager_by_name(
     int	    i)
 {
 
+    PSOCKADDR_IN queryAddr = NULL;
+    u_long u_lqueryAddr = 0;
+
     if ((i + 1) == argc)
     {
 	FatalError("Xserver: missing %s host name in command line\n", argv[i]);
@@ -1641,6 +1643,9 @@ get_manager_by_name(
       , &mgrAddr, &mgrAddrFirst
 #endif
 	);
+    queryAddr = (PSOCKADDR_IN)&ManagerAddress;
+    u_lqueryAddr = queryAddr->sin_addr.S_un.S_addr;
+    match_interface(u_lqueryAddr);
 }
 
 

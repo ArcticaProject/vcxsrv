@@ -494,7 +494,10 @@ AdjustWaitForDelay (pointer waitTime, unsigned long newdelay)
 
 void UseMsg(void)
 {
-    ErrorF("use: X [:<display>] [option]\n");
+    ErrorF("Usage...\nVcxsrv [:<display>] [option]\n\n");
+    ErrorF(":display-number\n\tVcxsrv runs as the given display-number, which defaults to 0.\n");
+    ErrorF("\tTo run multiple instances, use unique display-numbers.\n\n");
+
     ErrorF("-a #                   default pointer acceleration (factor)\n");
     ErrorF("-ac                    disable access control restrictions\n");
     ErrorF("-audit int             set audit trail level\n");	
@@ -502,12 +505,14 @@ void UseMsg(void)
     ErrorF("-br                    create root window with black background\n");
     ErrorF("+bs                    enable any backing store support\n");
     ErrorF("-bs                    disable any backing store support\n");
-    ErrorF("-c                     turns off key-click\n");
-    ErrorF("c #                    key-click volume (0-100)\n");
     ErrorF("-cc int                default color visual class\n");
     ErrorF("-nocursor              disable the cursor\n");
     ErrorF("-core                  generate core dump on fatal error\n");
+#ifdef _MSC_VER
+    ErrorF("-dpi [auto|int]        screen resolution set to native or this dpi\n");
+#else
     ErrorF("-dpi int               screen resolution in dots per inch\n");
+#endif
 #ifdef DPMSExtension
     ErrorF("-dpms                  disables VESA DPMS monitor control\n");
 #endif
@@ -532,31 +537,24 @@ void UseMsg(void)
     ErrorF("-noreset               don't reset after last client exists\n");
     ErrorF("-background [none]     create root window with no background\n");
     ErrorF("-reset                 reset after last client exists\n");
-    ErrorF("-p #                   screen-saver pattern duration (minutes)\n");
     ErrorF("-pn                    accept failure to listen on all ports\n");
     ErrorF("-nopn                  reject failure to listen on all ports\n");
     ErrorF("-r                     turns off auto-repeat\n");
     ErrorF("r                      turns on auto-repeat \n");
     ErrorF("-render [default|mono|gray|color] set render color alloc policy\n");
-    ErrorF("-retro                 start with classic stipple and cursor\n");
-    ErrorF("-s #                   screen-saver timeout (minutes)\n");
+    ErrorF("-retro                 start with classic stipple\n");
     ErrorF("-t #                   default pointer threshold (pixels/t)\n");
     ErrorF("-terminate             terminate at server reset\n");
     ErrorF("-to #                  connection time out\n");
     ErrorF("-tst                   disable testing extensions\n");
-    ErrorF("ttyxx                  server started from init on /dev/ttyxx\n");
-    ErrorF("v                      video blanking for screen-saver\n");
-    ErrorF("-v                     screen-saver without video blanking\n");
     ErrorF("-wm                    WhenMapped default backing-store\n");
     ErrorF("-wr                    create root window with white background\n");
-    ErrorF("-maxbigreqsize         set maximal bigrequest size \n");
 #ifdef PANORAMIX
     ErrorF("+xinerama              Enable XINERAMA extension\n");
     ErrorF("-xinerama              Disable XINERAMA extension\n");
 #endif
     ErrorF("-dumbSched             Disable smart scheduling, enable old behavior\n");
     ErrorF("-schedInterval int     Set scheduler interval in msec\n");
-    ErrorF("-sigstop               Enable SIGSTOP based startup\n");
     ErrorF("+extension name        Enable extension\n");
     ErrorF("-extension name        Disable extension\n");
 #ifdef XDMCP
@@ -650,17 +648,6 @@ ProcessCommandLine(int argc, char *argv[])
 	    enableBackingStore = TRUE;
 	else if ( strcmp( argv[i], "-bs") == 0)
 	    disableBackingStore = TRUE;
-	else if ( strcmp( argv[i], "c") == 0)
-	{
-	    if(++i < argc)
-	        defaultKeyboardControl.click = atoi(argv[i]);
-	    else
-		UseMsg();
-	}
-	else if ( strcmp( argv[i], "-c") == 0)
-	{
-	    defaultKeyboardControl.click = 0;
-	}
 	else if ( strcmp( argv[i], "-cc") == 0)
 	{
 	    if(++i < argc)
@@ -685,7 +672,24 @@ ProcessCommandLine(int argc, char *argv[])
         else if ( strcmp( argv[i], "-dpi") == 0)
 	{
 	    if(++i < argc)
+#ifdef _MSC_VER
+	    {
+		if (strcmp(argv[i], "auto") == 0)
+		{
+		    HDC hdc = GetDC(NULL);
+		    if (hdc)
+		    {
+			int dpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+			monitorResolution = dpiY;
+			ReleaseDC(NULL, hdc);
+		    }
+		}
+	        else if (isdigit(*argv[i])) /* Naively prevent a crash if not numeric */
+		    monitorResolution = atoi(argv[i]);
+	    }
+#else
 	        monitorResolution = atoi(argv[i]);
+#endif
 	    else
 		UseMsg();
 	}
@@ -853,10 +857,6 @@ ProcessCommandLine(int argc, char *argv[])
 	{
 	    noTestExtensions = TRUE;
 	}
-	else if ( strcmp( argv[i], "v") == 0)
-	    defaultScreenSaverBlanking = PreferBlanking;
-	else if ( strcmp( argv[i], "-v") == 0)
-	    defaultScreenSaverBlanking = DontPreferBlanking;
 	else if ( strcmp( argv[i], "-wm") == 0)
 	    defaultBackingStore = WhenMapped;
         else if ( strcmp( argv[i], "-wr") == 0)
@@ -949,10 +949,6 @@ ProcessCommandLine(int argc, char *argv[])
 	    }
 	    else
 		UseMsg ();
-	}
-	else if ( strcmp( argv[i], "-sigstop") == 0)
-	{
-	    RunFromSigStopParent = TRUE;
 	}
 	else if ( strcmp( argv[i], "+extension") == 0)
 	{

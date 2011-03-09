@@ -32,6 +32,10 @@
 #include <xwin-config.h>
 #endif
 
+#define GC X11_GC  /* To avoid compilation errors later when including win.h (which also defines the GC type) */
+#include <X11/Xlib.h>
+#undef GC
+
 #include "win.h"
 
 /* Includes for authorization */
@@ -136,7 +140,6 @@ GenerateAuthorization(
 Bool
 winGenerateAuthorization (void)
 {
-  Bool				fFreeAuth = FALSE;
   SecurityAuthorizationPtr	pAuth = NULL;
 
   /* Call OS layer to generate authorization key */
@@ -187,19 +190,16 @@ winGenerateAuthorization (void)
 		    pAuth))
     {
       ErrorF ("winGenerateAuthorization - AddResource failed for auth.\n");
-      fFreeAuth = TRUE;
       goto auth_bailout;
     }
   
   /* Don't free the auth data, since it is still used internally */
-  pAuth = NULL;
 #endif
 
   return TRUE;
 
  auth_bailout:
-  if (fFreeAuth)
-    free(pAuth);
+  free(pAuth);
   
   return FALSE;
 }
@@ -208,6 +208,7 @@ winGenerateAuthorization (void)
 void
 winSetAuthorization(void)
 {
+  if (g_pAuthData)
   XSetAuthorization (AUTH_NAME,
 		     strlen (AUTH_NAME),
 		     g_pAuthData,
