@@ -1259,7 +1259,11 @@ TRANS(SocketINETAccept) (XtransConnInfo ciptr, int *status)
 
 {
     XtransConnInfo	newciptr;
+#if defined(IPv6) && defined(AF_INET6)
+    struct sockaddr_storage	sockname;
+#else
     struct sockaddr_in	sockname;
+#endif
     SOCKLEN_T		namelen = sizeof(sockname);
 
     PRMSG (2, "SocketINETAccept(%p,%d)\n", ciptr, ciptr->fd, 0);
