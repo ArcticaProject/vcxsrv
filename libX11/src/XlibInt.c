@@ -146,6 +146,19 @@ xthread_t (*_Xthread_self_fn)(void) = NULL;
 
 #define POLLFD_CACHE_SIZE 5
 
+#if _WIN32_WINNT < _WIN32_WINNT_VISTA
+struct pollfd {
+
+    SOCKET  fd;
+    SHORT   events;
+    SHORT   revents;
+
+};
+#define POLLRDNORM  0x0100
+#define POLLRDBAND  0x0200
+#define POLLIN      (POLLRDNORM | POLLRDBAND)
+#endif
+
 /* initialize the struct array passed to poll() below */
 Bool _XPollfdCacheInit(
     Display *dpy)
