@@ -253,7 +253,7 @@ static Bool siAddrMatch(int family, pointer addr, int len, HOST *host,
 static int  siCheckAddr(const char *addrString, int length);
 static void siTypesInitialize(void);
 
-#if NTDDI_VERSION >= NTDDI_VISTA
+#if NTDDI_VERSION < NTDDI_VISTA
 const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
 {
     if (af == AF_INET)
