@@ -47,7 +47,7 @@ winGetDisplayName(char *szDisplay, unsigned int screen)
     }
   else if (TransIsListening("inet6"))
     {
-      snprintf(szDisplay, 512, "::1:%s.%d", display, screen);
+      snprintf(szDisplay, 512, "[::1]:%s.%d", display, screen);
     }
   else
     {
