@@ -4,16 +4,17 @@ endif
 
 LIBRARY=libdix
 
-CSRCS=\
+libdix_la_SOURCES = 	\
 	atom.c		\
 	colormap.c	\
 	cursor.c	\
-	deprecated.c	\
 	devices.c	\
 	dispatch.c	\
+	dispatch.h	\
 	dixfonts.c	\
 	dixutils.c	\
 	enterleave.c	\
+	enterleave.h	\
 	events.c	\
 	eventconvert.c  \
 	extension.c	\
@@ -25,7 +26,6 @@ CSRCS=\
 	grabs.c		\
 	initatoms.c	\
 	inpututils.c	\
-	main.c		\
 	pixmap.c	\
 	privates.c	\
 	property.c	\
@@ -39,3 +39,4 @@ CSRCS=\
 	tables.c	\
 	window.c
 
+CSRCS = $(filter %.c,$(libdix_la_SOURCES))
