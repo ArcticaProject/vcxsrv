@@ -1107,11 +1107,20 @@ get_xdmcp_sock(void)
 	sizeof(soopts)) < 0)
 	    XdmcpWarning("UDP set broadcast socket-option failed");
 #endif /* SO_BROADCAST */
-    if (xdmcpSocket >= 0 && xdm_from != NULL) {
+    if (xdm_from)
+    {
+      if (xdmcpSocket >= 0 && SOCKADDR_FAMILY(FromAddress)==AF_INET) {
 	if (bind(xdmcpSocket, (struct sockaddr *)&FromAddress, 
 		 FromAddressLen) < 0) {
-	    FatalError("Xserver: failed to bind to -from address: %s\n", xdm_from);
+	    FatalError("Xserver: failed to bind to -from address: %s error %d\n", xdm_from, WSAGetLastError());
 	}
+      }
+      else if (xdmcpSocket6 >= 0 && SOCKADDR_FAMILY(FromAddress)==AF_INET6) {
+	if (bind(xdmcpSocket6, (struct sockaddr *)&FromAddress, 
+		 FromAddressLen) < 0) {
+	    FatalError("Xserver: failed to bind to -from address: %s error %d\n", xdm_from, WSAGetLastError());
+	}
+      } 
     }
 #endif /* STREAMSCONN */
 }
