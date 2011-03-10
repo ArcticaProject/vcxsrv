@@ -64,12 +64,12 @@ extern _X_EXPORT int XvReqCode;
 extern _X_EXPORT int XvEventBase;
 extern _X_EXPORT int XvErrorBase;
 
-extern _X_EXPORT unsigned long XvRTPort;
-extern _X_EXPORT unsigned long XvRTEncoding;
-extern _X_EXPORT unsigned long XvRTGrab;
-extern _X_EXPORT unsigned long XvRTVideoNotify;
-extern _X_EXPORT unsigned long XvRTVideoNotifyList;
-extern _X_EXPORT unsigned long XvRTPortNotify;
+extern _X_EXPORT RESTYPE XvRTPort;
+extern _X_EXPORT RESTYPE XvRTEncoding;
+extern _X_EXPORT RESTYPE XvRTGrab;
+extern _X_EXPORT RESTYPE XvRTVideoNotify;
+extern _X_EXPORT RESTYPE XvRTVideoNotifyList;
+extern _X_EXPORT RESTYPE XvRTPortNotify;
 #endif
 
 typedef struct {

@@ -43,6 +43,6 @@ typedef unsigned int in_addr_t;
 #define HANDLE void *
 typedef int pid_t;
 
-#define STDERR_FILENO stderr
+#define STDERR_FILENO 2
 
 #endif /* xcb_windefs.h */

@@ -54,7 +54,7 @@ ExaGetPixmapAddress(PixmapPtr p)
  */
 PixmapPtr
 exaCreatePixmap_classic(ScreenPtr pScreen, int w, int h, int depth,
-		unsigned usage_hint)
+		unsigned class)
 {
     PixmapPtr pPixmap;
     ExaPixmapPrivPtr	pExaPixmap;
@@ -66,7 +66,7 @@ exaCreatePixmap_classic(ScreenPtr pScreen, int w, int h, int depth,
 	return NullPixmap;
 
     swap(pExaScr, pScreen, CreatePixmap);
-    pPixmap = pScreen->CreatePixmap (pScreen, w, h, depth, usage_hint);
+    pPixmap = pScreen->CreatePixmap (pScreen, w, h, depth, class);
     swap(pExaScr, pScreen, CreatePixmap);
 
     if (!pPixmap)

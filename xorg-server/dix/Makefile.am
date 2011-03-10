@@ -10,7 +10,6 @@ libdix_la_SOURCES = 	\
 	atom.c		\
 	colormap.c	\
 	cursor.c	\
-	deprecated.c	\
 	devices.c	\
 	dispatch.c	\
 	dispatch.h	\

@@ -155,7 +155,7 @@ static void VGAarbiterCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg,
 static void VGAarbiterClearToBackground (WindowPtr pWin, int x, int y, int w,
     int h, Bool generateExposures);
 static PixmapPtr VGAarbiterCreatePixmap(ScreenPtr pScreen, int w, int h,
-    int depth, unsigned int usage_hint);
+    int depth, unsigned int class);
 static Bool  VGAarbiterCreateGC(GCPtr pGC);
 static Bool VGAarbiterSaveScreen(ScreenPtr pScreen, Bool unblank);
 static void VGAarbiterStoreColors (ColormapPtr pmap, int ndef, xColorItem

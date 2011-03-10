@@ -220,8 +220,6 @@ PUBLIC const void *_glapi_Context = NULL;
 
 #if defined(THREADS)
 
-static GLboolean ThreadSafe = GL_FALSE;  /**< In thread-safe mode? */
-
 _glthread_TSD _gl_DispatchTSD;           /**< Per-thread dispatch pointer */
 
 static _glthread_TSD ContextTSD;         /**< Per-thread context pointer */
@@ -268,31 +266,11 @@ _glthread_DECLARE_STATIC_MUTEX(ThreadCheckMutex);
 #define CHECK_MULTITHREAD_UNLOCK() _glthread_UNLOCK_MUTEX(ThreadCheckMutex)
 #endif
 /**
- * We should call this periodically from a function such as glXMakeCurrent
- * in order to test if multiple threads are being used.
+ * xserver's gl is not multithreaded, we promise.
  */
 PUBLIC void
 _glapi_check_multithread(void)
 {
-   static unsigned long knownID;
-   static GLboolean firstCall = GL_TRUE;
-
-   if (ThreadSafe)
-      return;
-
-   CHECK_MULTITHREAD_LOCK();
-   if (firstCall) {
-      _glapi_init_multithread();
-
-      knownID = _glthread_GetID();
-      firstCall = GL_FALSE;
-   }
-   else if (knownID != _glthread_GetID()) {
-      ThreadSafe = GL_TRUE;
-      _glapi_set_dispatch(NULL);
-      _glapi_set_context(NULL);
-   }
-   CHECK_MULTITHREAD_UNLOCK();
 }
 #else
 
@@ -321,7 +299,7 @@ _glapi_set_context(void *context)
    _glapi_tls_Context = context;
 #elif defined(THREADS)
    _glthread_SetTSD(&ContextTSD, context);
-   _glapi_Context = (ThreadSafe) ? NULL : context;
+   _glapi_Context = context;
 #else
    _glapi_Context = context;
 #endif
@@ -339,8 +317,6 @@ _glapi_get_context(void)
 {
 #if defined(GLX_USE_TLS)
    return _glapi_tls_Context;
-#elif defined(THREADS)
-   return (ThreadSafe) ? _glthread_GetTSD(&ContextTSD) : _glapi_Context;
 #else
    return _glapi_Context;
 #endif
@@ -362,18 +338,9 @@ _glapi_set_dispatch(struct _glapi_table *dispatch)
       /* use the no-op functions */
       dispatch = (struct _glapi_table *) __glapi_noop_table;
    }
-#ifdef DEBUG
-   else {
-      _glapi_check_table_not_null(dispatch);
-      _glapi_check_table(dispatch);
-   }
-#endif
 
 #if defined(GLX_USE_TLS)
    _glapi_tls_Dispatch = dispatch;
-#elif defined(THREADS)
-   _glthread_SetTSD(&_gl_DispatchTSD, (void *) dispatch);
-   _glapi_Dispatch = (ThreadSafe) ? NULL : dispatch;
 #else
    _glapi_Dispatch = dispatch;
 #endif
@@ -389,10 +356,6 @@ _glapi_get_dispatch(void)
 {
 #if defined(GLX_USE_TLS)
    return _glapi_tls_Dispatch;
-#elif defined(THREADS)
-   return (ThreadSafe)
-     ? (struct _glapi_table *) _glthread_GetTSD(&_gl_DispatchTSD)
-     : _glapi_Dispatch;
 #else
    return _glapi_Dispatch;
 #endif
@@ -1128,84 +1091,3 @@ _glapi_get_dispatch_table_size(void)
    return FIRST_DYNAMIC_OFFSET + MAX_EXTENSION_FUNCS;
 }
 
-
-/**
- * Make sure there are no NULL pointers in the given dispatch table.
- * Intended for debugging purposes.
- */
-void
-_glapi_check_table_not_null(const struct _glapi_table *table)
-{
-#ifdef EXTRA_DEBUG /* set to DEBUG for extra DEBUG */
-   const GLuint entries = _glapi_get_dispatch_table_size();
-   const void **tab = (const void **) table;
-   GLuint i;
-   for (i = 1; i < entries; i++) {
-      assert(tab[i]);
-   }
-#else
-   (void) table;
-#endif
-}
-
-
-/**
- * Do some spot checks to be sure that the dispatch table
- * slots are assigned correctly. For debugging only.
- */
-void
-_glapi_check_table(const struct _glapi_table *table)
-{
-#ifdef EXTRA_DEBUG /* set to DEBUG for extra DEBUG */
-   {
-      GLuint BeginOffset = _glapi_get_proc_offset("glBegin");
-      char *BeginFunc = (char*) &table->Begin;
-      GLuint offset = (BeginFunc - (char *) table) / sizeof(void *);
-      assert(BeginOffset == offset);
-   }
-   {
-      GLuint viewportOffset = _glapi_get_proc_offset("glViewport");
-      char *viewportFunc = (char*) &table->Viewport;
-      GLuint offset = (viewportFunc - (char *) table) / sizeof(void *);
-      assert(viewportOffset == offset);
-   }
-   {
-      GLuint VertexPointerOffset = _glapi_get_proc_offset("glVertexPointer");
-      char *VertexPointerFunc = (char*) &table->VertexPointer;
-      GLuint offset = (VertexPointerFunc - (char *) table) / sizeof(void *);
-      assert(VertexPointerOffset == offset);
-   }
-   {
-      GLuint ResetMinMaxOffset = _glapi_get_proc_offset("glResetMinmax");
-      char *ResetMinMaxFunc = (char*) &table->ResetMinmax;
-      GLuint offset = (ResetMinMaxFunc - (char *) table) / sizeof(void *);
-      assert(ResetMinMaxOffset == offset);
-   }
-   {
-      GLuint blendColorOffset = _glapi_get_proc_offset("glBlendColor");
-      char *blendColorFunc = (char*) &table->BlendColor;
-      GLuint offset = (blendColorFunc - (char *) table) / sizeof(void *);
-      assert(blendColorOffset == offset);
-   }
-   {
-      GLuint secondaryColor3fOffset = _glapi_get_proc_offset("glSecondaryColor3fEXT");
-      char *secondaryColor3fFunc = (char*) &table->SecondaryColor3fEXT;
-      GLuint offset = (secondaryColor3fFunc - (char *) table) / sizeof(void *);
-      assert(secondaryColor3fOffset == offset);
-   }
-   {
-      GLuint pointParameterivOffset = _glapi_get_proc_offset("glPointParameterivNV");
-      char *pointParameterivFunc = (char*) &table->PointParameterivNV;
-      GLuint offset = (pointParameterivFunc - (char *) table) / sizeof(void *);
-      assert(pointParameterivOffset == offset);
-   }
-   {
-      GLuint setFenceOffset = _glapi_get_proc_offset("glSetFenceNV");
-      char *setFenceFunc = (char*) &table->SetFenceNV;
-      GLuint offset = (setFenceFunc - (char *) table) / sizeof(void *);
-      assert(setFenceOffset == offset);
-   }
-#else
-   (void) table;
-#endif
-}

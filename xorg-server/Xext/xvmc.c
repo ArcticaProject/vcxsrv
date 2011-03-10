@@ -42,9 +42,9 @@ unsigned long XvMCGeneration = 0;
 int XvMCReqCode;
 int XvMCEventBase;
 
-unsigned long XvMCRTContext;
-unsigned long XvMCRTSurface;
-unsigned long XvMCRTSubpicture;
+static RESTYPE XvMCRTContext;
+static RESTYPE XvMCRTSurface;
+static RESTYPE XvMCRTSubpicture;
 
 typedef struct {
    int num_adaptors;

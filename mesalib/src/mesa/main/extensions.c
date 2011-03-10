@@ -181,6 +181,7 @@ static const struct extension extension_table[] = {
    { "GL_EXT_texture3D",                           o(EXT_texture3D),                           GL             },
    { "GL_EXT_texture_array",                       o(EXT_texture_array),                       GL             },
    { "GL_EXT_texture_compression_dxt1",            o(EXT_texture_compression_s3tc),            GL | ES1 | ES2 },
+   { "GL_EXT_texture_compression_latc",            o(EXT_texture_compression_latc),            GL             },
    { "GL_EXT_texture_compression_rgtc",            o(ARB_texture_compression_rgtc),            GL             },
    { "GL_EXT_texture_compression_s3tc",            o(EXT_texture_compression_s3tc),            GL             },
    { "GL_EXT_texture_cube_map",                    o(ARB_texture_cube_map),                    GL             },
@@ -258,6 +259,7 @@ static const struct extension extension_table[] = {
    { "GL_ATI_envmap_bumpmap",                      o(ATI_envmap_bumpmap),                      GL             },
    { "GL_ATI_fragment_shader",                     o(ATI_fragment_shader),                     GL             },
    { "GL_ATI_separate_stencil",                    o(ATI_separate_stencil),                    GL             },
+   { "GL_ATI_texture_compression_3dc",             o(ATI_texture_compression_3dc),             GL             },
    { "GL_ATI_texture_env_combine3",                o(ATI_texture_env_combine3),                GL             },
    { "GL_ATI_texture_mirror_once",                 o(ATI_texture_mirror_once),                 GL             },
    { "GL_IBM_multimode_draw_arrays",               o(IBM_multimode_draw_arrays),               GL             },
@@ -448,6 +450,7 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
 #if FEATURE_ATI_fragment_shader
    ctx->Extensions.ATI_fragment_shader = GL_TRUE;
 #endif
+   ctx->Extensions.ATI_texture_compression_3dc = GL_TRUE;
    ctx->Extensions.ATI_texture_env_combine3 = GL_TRUE;
    ctx->Extensions.ATI_texture_mirror_once = GL_TRUE;
    ctx->Extensions.ATI_separate_stencil = GL_TRUE;
@@ -483,6 +486,7 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
    ctx->Extensions.EXT_stencil_wrap = GL_TRUE;
    ctx->Extensions.EXT_stencil_two_side = GL_TRUE;
    ctx->Extensions.EXT_texture_array = GL_TRUE;
+   ctx->Extensions.EXT_texture_compression_latc = GL_TRUE;
    ctx->Extensions.EXT_texture_env_add = GL_TRUE;
    ctx->Extensions.EXT_texture_env_combine = GL_TRUE;
    ctx->Extensions.EXT_texture_env_dot3 = GL_TRUE;

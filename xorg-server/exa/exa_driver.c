@@ -48,7 +48,7 @@ ExaGetPixmapAddress(PixmapPtr p)
  */
 PixmapPtr
 exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
-		unsigned usage_hint)
+		unsigned class)
 {
     PixmapPtr pPixmap;
     ExaPixmapPrivPtr	pExaPixmap;
@@ -60,7 +60,7 @@ exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
 	return NullPixmap;
 
     swap(pExaScr, pScreen, CreatePixmap);
-    pPixmap = pScreen->CreatePixmap(pScreen, 0, 0, depth, usage_hint);
+    pPixmap = pScreen->CreatePixmap(pScreen, 0, 0, depth, class);
     swap(pExaScr, pScreen, CreatePixmap);
 
     if (!pPixmap)
@@ -78,7 +78,7 @@ exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
 
     if (pExaScr->info->CreatePixmap2) {
 	int new_pitch = 0;
-	pExaPixmap->driverPriv = pExaScr->info->CreatePixmap2(pScreen, w, h, depth, usage_hint, bpp, &new_pitch);
+	pExaPixmap->driverPriv = pExaScr->info->CreatePixmap2(pScreen, w, h, depth, class, bpp, &new_pitch);
 	paddedWidth = pExaPixmap->fb_pitch = new_pitch;
     }
     else {

@@ -82,7 +82,7 @@ void dmxBECreatePixmap(PixmapPtr pPixmap)
 /** Create a pixmap for \a pScreen with the specified \a width, \a
  *  height, and \a depth. */
 PixmapPtr dmxCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
-			  unsigned usage_hint)
+			  unsigned class)
 {
     DMXScreenInfo *dmxScreen = &dmxScreens[pScreen->myNum];
     PixmapPtr      pPixmap;
@@ -104,7 +104,7 @@ PixmapPtr dmxCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
 	return NullPixmap;
 
     pPixmap->drawable.type = DRAWABLE_PIXMAP;
-    pPixmap->drawable.class = 0;
+    pPixmap->drawable.class = class;
     pPixmap->drawable.pScreen = pScreen;
     pPixmap->drawable.depth = depth;
     pPixmap->drawable.bitsPerPixel = bpp;
@@ -116,7 +116,6 @@ PixmapPtr dmxCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
     pPixmap->drawable.height = height;
     pPixmap->devKind = PixmapBytePad(width, bpp);
     pPixmap->refcnt = 1;
-    pPixmap->usage_hint = usage_hint;
 
     pPixPriv = DMX_GET_PIXMAP_PRIV(pPixmap);
     pPixPriv->pixmap = (Pixmap)0;

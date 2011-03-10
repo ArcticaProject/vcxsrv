@@ -395,7 +395,7 @@ VBEGetVBEInfo(vbeInfoPtr pVbe)
     i = 0;
     while (modes[i] != 0xffff)
 	i++;
-    block->VideoModePtr = malloc(sizeof(CARD16) * i + 1);
+    block->VideoModePtr = malloc(sizeof(CARD16) * (i + 1));
     memcpy(block->VideoModePtr, modes, sizeof(CARD16) * i);
     block->VideoModePtr[i] = 0xffff;
 

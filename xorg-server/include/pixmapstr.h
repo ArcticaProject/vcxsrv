@@ -78,7 +78,6 @@ typedef struct _Pixmap {
     DevUnion		devPrivate; /* When !NULL, devPrivate.ptr points to the raw pixel data. */
     short		screen_x;
     short		screen_y;
-    unsigned		usage_hint; /* see CREATE_PIXMAP_USAGE_* */
 } PixmapRec;
 
 #endif /* PIXMAPSTRUCT_H */

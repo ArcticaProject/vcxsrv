@@ -1787,9 +1787,11 @@ configScreen(confScreenPtr screenp, XF86ConfScreenPtr conf_screen, int scrnum,
     XF86ConfDisplayPtr dispptr;
     XF86ConfAdaptorLinkPtr conf_adaptor;
     Bool defaultMonitor = FALSE;
+    XF86ConfScreenRec local_conf_screen;
 
     if (!conf_screen) {
-        conf_screen = xnfcalloc(1, sizeof(XF86ConfScreenRec));
+        memset(&local_conf_screen, 0, sizeof(local_conf_screen));
+        conf_screen = &local_conf_screen;
         conf_screen->scrn_identifier = "Default Screen Section";
         xf86Msg(X_DEFAULT, "No screen section available. Using defaults.\n");
     }

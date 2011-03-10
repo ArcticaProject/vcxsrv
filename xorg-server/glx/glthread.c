@@ -25,15 +25,13 @@
 
 /*
  * XXX There's probably some work to do in order to make this file
- * truly reusable outside of Mesa.  First, the glheader.h include must go.
+ * truly reusable outside of Mesa.
  */
+
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #include <X11/Xfuncproto.h>
-#ifndef PUBLIC
-#define PUBLIC
-#endif
 #endif
 
 #include <stdlib.h>
@@ -74,7 +72,7 @@
  */
 #ifdef PTHREADS
 
-PUBLIC unsigned long
+_X_EXPORT unsigned long
 _glthread_GetID(void)
 {
    return (unsigned long) pthread_self();
@@ -116,8 +114,6 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
 
 #endif /* PTHREADS */
 
-
-
 /*
  * Win32 Threads.  The only available option for Windows 95/NT.
  * Be sure that you compile using the Multithreaded runtime, otherwise
@@ -125,12 +121,20 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
  */
 #ifdef WIN32_THREADS
 
-static void InsteadOf_exit(int nCode)
+void FreeTSD(_glthread_TSD *p)
 {
-   DWORD dwErr = GetLastError();
+   if (p->initMagic==INIT_MAGIC) {
+      TlsFree(p->key);
+      p->initMagic=0;
+   }
 }
 
-PUBLIC unsigned long
+void InsteadOf_exit(int nCode)
+{
+   DWORD dwErr=GetLastError();
+}
+
+unsigned long
 _glthread_GetID(void)
 {
    return GetCurrentThreadId();
@@ -142,21 +146,10 @@ _glthread_InitTSD(_glthread_TSD *tsd)
 {
    tsd->key = TlsAlloc();
    if (tsd->key == TLS_OUT_OF_INDEXES) {
-      perror(INIT_TSD_ERROR);
+      perror("Mesa:_glthread_InitTSD");
       InsteadOf_exit(-1);
    }
    tsd->initMagic = INIT_MAGIC;
-}
-
-
-void
-_glthread_DestroyTSD(_glthread_TSD *tsd)
-{
-   if (tsd->initMagic != INIT_MAGIC) {
-      return;
-   }
-   TlsFree(tsd->key);
-   tsd->initMagic = 0x0;
 }
 
 
@@ -179,61 +172,20 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
       _glthread_InitTSD(tsd);
    }
    if (TlsSetValue(tsd->key, ptr) == 0) {
-      perror(SET_TSD_ERROR);
-      InsteadOf_exit(-1);
+	  perror("Mesa:_glthread_SetTSD");
+	  InsteadOf_exit(-1);
    }
 }
 
 #endif /* WIN32_THREADS */
 
-/*
- * BeOS threads
- */
-#ifdef BEOS_THREADS
-
-PUBLIC unsigned long
-_glthread_GetID(void)
-{
-   return (unsigned long) find_thread(NULL);
-}
-
-void
-_glthread_InitTSD(_glthread_TSD *tsd)
-{
-   tsd->key = tls_allocate();
-   tsd->initMagic = INIT_MAGIC;
-}
-
-void *
-_glthread_GetTSD(_glthread_TSD *tsd)
-{
-   if (tsd->initMagic != (int) INIT_MAGIC) {
-      _glthread_InitTSD(tsd);
-   }
-   return tls_get(tsd->key);
-}
-
-void
-_glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
-{
-   if (tsd->initMagic != (int) INIT_MAGIC) {
-      _glthread_InitTSD(tsd);
-   }
-   tls_set(tsd->key, ptr);
-}
-
-#endif /* BEOS_THREADS */
-
-
-
 #else  /* THREADS */
-
 
 /*
  * no-op functions
  */
 
-PUBLIC unsigned long
+_X_EXPORT unsigned long
 _glthread_GetID(void)
 {
    return 0;

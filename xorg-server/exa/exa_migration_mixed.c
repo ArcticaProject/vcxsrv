@@ -39,7 +39,7 @@ exaCreateDriverPixmap_mixed(PixmapPtr pPixmap)
     ExaPixmapPriv(pPixmap);
     int w = pPixmap->drawable.width, h = pPixmap->drawable.height;
     int depth = pPixmap->drawable.depth, bpp = pPixmap->drawable.bitsPerPixel;
-    int usage_hint = pPixmap->usage_hint;
+    int class = pPixmap->drawable.class;
     int paddedWidth = pExaPixmap->sys_pitch;
 
     /* Already done. */
@@ -55,7 +55,7 @@ exaCreateDriverPixmap_mixed(PixmapPtr pPixmap)
 
     if (pExaScr->info->CreatePixmap2) {
 	int new_pitch = 0;
-        pExaPixmap->driverPriv = pExaScr->info->CreatePixmap2(pScreen, w, h, depth, usage_hint, bpp, &new_pitch);
+        pExaPixmap->driverPriv = pExaScr->info->CreatePixmap2(pScreen, w, h, depth, class, bpp, &new_pitch);
 	paddedWidth = pExaPixmap->fb_pitch = new_pitch;
     } else {
 	if (paddedWidth < pExaPixmap->fb_pitch)

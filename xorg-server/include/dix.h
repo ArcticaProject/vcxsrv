@@ -576,35 +576,4 @@ extern _X_HIDDEN void CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master);
 extern _X_HIDDEN int CorePointerProc(DeviceIntPtr dev, int what);
 extern _X_HIDDEN int CoreKeyboardProc(DeviceIntPtr dev, int what);
 
-
-/*
- * These are deprecated compatibility functions and will be removed soon!
- * Please use the noted replacements instead.
- */
-/* replaced by dixLookupWindow */
-extern _X_EXPORT WindowPtr SecurityLookupWindow(
-    XID id,
-    ClientPtr client,
-    Mask access_mode);
-/* replaced by dixLookupWindow */
-extern _X_EXPORT WindowPtr LookupWindow(
-    XID id,
-    ClientPtr client);
-
-/* replaced by dixLookupDrawable */
-extern _X_EXPORT pointer SecurityLookupDrawable(
-    XID id,
-    ClientPtr client,
-    Mask access_mode);
-
-/* replaced by dixLookupDrawable */
-extern _X_EXPORT pointer LookupDrawable(
-    XID id,
-    ClientPtr client);
-
-/* replaced by dixLookupClient */
-extern _X_EXPORT ClientPtr LookupClient(
-    XID id,
-    ClientPtr client);
-
 #endif /* DIX_H */
