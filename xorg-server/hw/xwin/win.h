@@ -1069,7 +1069,7 @@ winSetEngineFunctionsPrimaryDD (ScreenPtr pScreen);
 
 PixmapPtr
 winCreatePixmapNativeGDI (ScreenPtr pScreen, int width, int height, int depth,
-			  unsigned usage_hint);
+			  unsigned class);
 
 Bool
 winDestroyPixmapNativeGDI (PixmapPtr pPixmap);

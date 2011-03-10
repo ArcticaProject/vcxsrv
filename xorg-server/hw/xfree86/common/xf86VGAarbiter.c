@@ -369,13 +369,13 @@ VGAarbiterClearToBackground (
 }
 
 static PixmapPtr
-VGAarbiterCreatePixmap(ScreenPtr pScreen, int w, int h, int depth, unsigned usage_hint)
+VGAarbiterCreatePixmap(ScreenPtr pScreen, int w, int h, int depth, unsigned class)
 {
     PixmapPtr pPix;
 
     SCREEN_PROLOG ( CreatePixmap);
     VGAGet(pScreen);
-    pPix = (*pScreen->CreatePixmap) (pScreen, w, h, depth, usage_hint);
+    pPix = (*pScreen->CreatePixmap) (pScreen, w, h, depth, class);
     VGAPut();
     SCREEN_EPILOG (CreatePixmap, VGAarbiterCreatePixmap);
 

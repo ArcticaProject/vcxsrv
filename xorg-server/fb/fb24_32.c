@@ -546,7 +546,7 @@ fb24_32ReformatTile(PixmapPtr pOldTile, int bitsPerPixel)
     pNewTile = pScreen->CreatePixmap(pScreen, pOldTile->drawable.width,
 				     pOldTile->drawable.height,
 				     pOldTile->drawable.depth,
-				     pOldTile->usage_hint);
+				     pOldTile->drawable.class);
     if (!pNewTile)
 	return 0;
     fbGetDrawable (&pOldTile->drawable, 

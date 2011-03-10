@@ -588,7 +588,7 @@ extern const GCFuncs exaGCFuncs;
 /* exa_classic.c */
 PixmapPtr
 exaCreatePixmap_classic(ScreenPtr pScreen, int w, int h, int depth,
-		unsigned usage_hint);
+		unsigned class);
 
 Bool
 exaModifyPixmapHeader_classic(PixmapPtr pPixmap, int width, int height, int depth,
@@ -603,7 +603,7 @@ exaPixmapHasGpuCopy_classic(PixmapPtr pPixmap);
 /* exa_driver.c */
 PixmapPtr
 exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
-		unsigned usage_hint);
+		unsigned class);
 
 Bool
 exaModifyPixmapHeader_driver(PixmapPtr pPixmap, int width, int height, int depth,
@@ -618,7 +618,7 @@ exaPixmapHasGpuCopy_driver(PixmapPtr pPixmap);
 /* exa_mixed.c */
 PixmapPtr
 exaCreatePixmap_mixed(ScreenPtr pScreen, int w, int h, int depth,
-		unsigned usage_hint);
+		unsigned class);
 
 Bool
 exaModifyPixmapHeader_mixed(PixmapPtr pPixmap, int width, int height, int depth,

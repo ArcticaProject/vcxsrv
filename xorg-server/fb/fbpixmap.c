@@ -30,7 +30,7 @@
 
 PixmapPtr
 fbCreatePixmapBpp (ScreenPtr pScreen, int width, int height, int depth, int bpp,
-		   unsigned usage_hint)
+		   unsigned class)
 {
     PixmapPtr	pPixmap;
     size_t	datasize;
@@ -54,7 +54,7 @@ fbCreatePixmapBpp (ScreenPtr pScreen, int width, int height, int depth, int bpp,
     if (!pPixmap)
 	return NullPixmap;
     pPixmap->drawable.type = DRAWABLE_PIXMAP;
-    pPixmap->drawable.class = 0;
+    pPixmap->drawable.class = class;
     pPixmap->drawable.pScreen = pScreen;
     pPixmap->drawable.depth = depth;
     pPixmap->drawable.bitsPerPixel = bpp;
@@ -78,14 +78,12 @@ fbCreatePixmapBpp (ScreenPtr pScreen, int width, int height, int depth, int bpp,
     pPixmap->screen_y = 0;
 #endif
 
-    pPixmap->usage_hint = usage_hint;
-
     return pPixmap;
 }
 
 PixmapPtr
 fbCreatePixmap (ScreenPtr pScreen, int width, int height, int depth,
-		unsigned usage_hint)
+		unsigned class)
 {
     int	bpp;
     bpp = BitsPerPixel (depth);
@@ -93,7 +91,7 @@ fbCreatePixmap (ScreenPtr pScreen, int width, int height, int depth,
     if (bpp == 32 && depth <= 24)
 	bpp = fbGetScreenPrivate(pScreen)->pix32bpp;
 #endif
-    return fbCreatePixmapBpp (pScreen, width, height, depth, bpp, usage_hint);
+    return fbCreatePixmapBpp (pScreen, width, height, depth, bpp, class);
 }
 
 Bool

@@ -251,34 +251,5 @@ extern _X_EXPORT unsigned int GetXIDList(
 extern _X_EXPORT RESTYPE lastResourceType;
 extern _X_EXPORT RESTYPE TypeMask;
 
-/*
- * These are deprecated compatibility functions and will be removed soon!
- * Please use the noted replacements instead.
- */
-
-/* replaced by dixLookupResourceByType */
-extern _X_EXPORT pointer SecurityLookupIDByType(
-    ClientPtr client,
-    XID id,
-    RESTYPE rtype,
-    Mask access_mode) _X_DEPRECATED;
-
-/* replaced by dixLookupResourceByClass */
-extern _X_EXPORT pointer SecurityLookupIDByClass(
-    ClientPtr client,
-    XID id,
-    RESTYPE classes,
-    Mask access_mode) _X_DEPRECATED;
-
-/* replaced by dixLookupResourceByType */
-extern _X_EXPORT pointer LookupIDByType(
-    XID id,
-    RESTYPE rtype) _X_DEPRECATED;
-
-/* replaced by dixLookupResourceByClass */
-extern _X_EXPORT pointer LookupIDByClass(
-    XID id,
-    RESTYPE classes) _X_DEPRECATED;
-
 #endif /* RESOURCE_H */
 

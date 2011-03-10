@@ -358,7 +358,7 @@ int ChangeDeviceNotify;
 int DevicePresenceNotify;
 int DevicePropertyNotify;
 
-int RT_INPUTCLIENT;
+RESTYPE RT_INPUTCLIENT;
 
 /*****************************************************************
  *

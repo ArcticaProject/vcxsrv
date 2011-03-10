@@ -712,7 +712,7 @@ typedef struct _ExaDriver {
      * driver MUST fill out new_fb_pitch with valid pitch of pixmap
      */
     void *(*CreatePixmap2)(ScreenPtr pScreen, int width, int height,
-			   int depth, int usage_hint, int bitsPerPixel,
+			   int depth, int class, int bitsPerPixel,
 			   int *new_fb_pitch);
     /** @} */
 } ExaDriverRec, *ExaDriverPtr;

@@ -91,9 +91,7 @@ OF THIS SOFTWARE.
 #define EXTENSION_EVENT_BASE 64
 #define EXTENSION_BASE 128
 
-typedef unsigned long PIXEL;
 typedef unsigned long ATOM;
-
 
 #ifndef TRUE
 #define TRUE 1

@@ -115,14 +115,12 @@ int XvReqCode;
 int XvEventBase;
 int XvErrorBase;
 
-unsigned long XvRTPort;
-unsigned long XvRTEncoding;
-unsigned long XvRTGrab;
-unsigned long XvRTVideoNotify;
-unsigned long XvRTVideoNotifyList;
-unsigned long XvRTPortNotify;
-
-
+RESTYPE XvRTPort;
+RESTYPE XvRTEncoding;
+RESTYPE XvRTGrab;
+RESTYPE XvRTVideoNotify;
+RESTYPE XvRTVideoNotifyList;
+RESTYPE XvRTPortNotify;
 
 /* EXTERNAL */
 

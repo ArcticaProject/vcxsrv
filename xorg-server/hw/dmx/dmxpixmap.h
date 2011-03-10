@@ -50,7 +50,7 @@ extern Bool      dmxInitPixmap(ScreenPtr pScreen);
 
 extern PixmapPtr dmxCreatePixmap(ScreenPtr pScreen,
 				 int width, int height, int depth,
-				 unsigned usage_hint);
+				 unsigned class);
 extern Bool      dmxDestroyPixmap(PixmapPtr pPixmap);
 extern RegionPtr dmxBitmapToRegion(PixmapPtr pPixmap);
 

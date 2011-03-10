@@ -2802,6 +2802,7 @@ struct gl_extensions
    GLboolean EXT_texture_object;
    GLboolean EXT_texture3D;
    GLboolean EXT_texture_array;
+   GLboolean EXT_texture_compression_latc;
    GLboolean EXT_texture_compression_s3tc;
    GLboolean EXT_texture_env_add;
    GLboolean EXT_texture_env_combine;
@@ -2827,6 +2828,7 @@ struct gl_extensions
    GLboolean APPLE_vertex_array_object;
    GLboolean APPLE_object_purgeable;
    GLboolean ATI_envmap_bumpmap;
+   GLboolean ATI_texture_compression_3dc;
    GLboolean ATI_texture_mirror_once;
    GLboolean ATI_texture_env_combine3;
    GLboolean ATI_fragment_shader;

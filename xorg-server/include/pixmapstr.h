@@ -80,7 +80,6 @@ typedef struct _Pixmap {
     short		screen_x;
     short		screen_y;
 #endif
-    unsigned		usage_hint; /* see CREATE_PIXMAP_USAGE_* */
 } PixmapRec;
 
 #endif /* PIXMAPSTRUCT_H */
