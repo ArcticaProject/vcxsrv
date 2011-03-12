@@ -1262,15 +1262,22 @@ Private unsigned
 NumLockMask(Display *d)
 {
     int i;
-    XModifierKeymap *map = XGetModifierMapping (d);
+    XModifierKeymap *map;
     KeyCode numlock_keycode = XKeysymToKeycode (d, XK_Num_Lock);
     if (numlock_keycode == NoSymbol)
         return 0;
 
+    map = XGetModifierMapping (d);
+    if (!map)
+        return 0;
+
     for (i = 0; i < 8; i++) {
-        if (map->modifiermap[map->max_keypermod * i] == numlock_keycode)
+        if (map->modifiermap[map->max_keypermod * i] == numlock_keycode) {
+            XFreeModifiermap(map);
             return 1 << i;
+        }
     }
+    XFreeModifiermap(map);
     return 0;
 }
 

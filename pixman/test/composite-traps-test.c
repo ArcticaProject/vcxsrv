@@ -139,6 +139,8 @@ test_composite (int      testnum,
 	    pixman_image_set_source_clipping (src_img, 1);
 	    pixman_region_fini (&clip);
 	}
+
+	image_endian_swap (src_img);
     }
 
     /* Create destination image */
@@ -157,6 +159,8 @@ test_composite (int      testnum,
 	
 	dst_img = pixman_image_create_bits (
 	    dst_format, dst_width, dst_height, dst_bits, dst_stride);
+
+	image_endian_swap (dst_img);
     }
 
     /* Create traps */
@@ -218,7 +222,7 @@ test_composite (int      testnum,
 	    dst_bits[i] &= 0xFFFFFF;
     }
 
-    image_endian_swap (dst_img, dst_bpp * 8);
+    image_endian_swap (dst_img);
 
     if (verbose)
     {

@@ -133,11 +133,12 @@ compute_crc32 (uint32_t    in_crc32,
 /* perform endian conversion of pixel data
  */
 void
-image_endian_swap (pixman_image_t *img, int bpp)
+image_endian_swap (pixman_image_t *img)
 {
     int stride = pixman_image_get_stride (img);
     uint32_t *data = pixman_image_get_data (img);
     int height = pixman_image_get_height (img);
+    int bpp = PIXMAN_FORMAT_BPP (pixman_image_get_format (img));
     int i, j;
 
     /* swap bytes only on big endian systems */
@@ -145,10 +146,13 @@ image_endian_swap (pixman_image_t *img, int bpp)
     if (*(volatile uint8_t *)&endian_check_var != 0x12)
 	return;
 
+    if (bpp == 8)
+	return;
+
     for (i = 0; i < height; i++)
     {
 	uint8_t *line_data = (uint8_t *)data + stride * i;
-	/* swap bytes only for 16, 24 and 32 bpp for now */
+	
 	switch (bpp)
 	{
 	case 1:
@@ -208,6 +212,7 @@ image_endian_swap (pixman_image_t *img, int bpp)
 	    }
 	    break;
 	default:
+	    assert (FALSE);
 	    break;
 	}
     }
