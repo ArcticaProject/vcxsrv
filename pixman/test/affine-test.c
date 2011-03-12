@@ -95,8 +95,8 @@ test_composite (int      testnum,
     dst_img = pixman_image_create_bits (
         dst_fmt, dst_width, dst_height, dstbuf, dst_stride);
 
-    image_endian_swap (src_img, src_bpp * 8);
-    image_endian_swap (dst_img, dst_bpp * 8);
+    image_endian_swap (src_img);
+    image_endian_swap (dst_img);
 
     pixman_transform_init_identity (&transform);
     
@@ -251,7 +251,7 @@ test_composite (int      testnum,
 	    dstbuf[i] &= 0xFFFFFF;
     }
 
-    image_endian_swap (dst_img, dst_bpp * 8);
+    image_endian_swap (dst_img);
 
     if (verbose)
     {

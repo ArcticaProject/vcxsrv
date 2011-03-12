@@ -431,13 +431,10 @@ static void
 st_finish_render_texture(struct gl_context *ctx,
                          struct gl_renderbuffer_attachment *att)
 {
-   struct st_context *st = st_context(ctx);
    struct st_renderbuffer *strb = st_renderbuffer(att->Renderbuffer);
 
    if (!strb)
       return;
-
-   st_flush(st, PIPE_FLUSH_RENDER_CACHE, NULL);
 
    strb->rtt = NULL;
 
@@ -488,7 +485,7 @@ st_validate_attachment(struct gl_context *ctx,
 
    return screen->is_format_supported(screen, format,
                                       PIPE_TEXTURE_2D,
-                                      stObj->pt->nr_samples, bindings, 0);
+                                      stObj->pt->nr_samples, bindings);
 }
 
 

@@ -200,7 +200,8 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\attrib.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\blend.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\bufferobj.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\main\buffers.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\bufferobj.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\ff_fragment_shader.cpp" />
     <ClCompile Include="..\..\..\..\src\mesa\main\clear.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\clip.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\colortab.c" />
@@ -300,7 +301,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_rgtc.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_s3tc.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texenv.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\main\texenvprogram.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texfetch.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texformat.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texgen.c" />

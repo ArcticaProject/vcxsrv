@@ -60,7 +60,7 @@ compute_crc32 (uint32_t    in_crc32,
 /* perform endian conversion of pixel data
  */
 void
-image_endian_swap (pixman_image_t *img, int bpp);
+image_endian_swap (pixman_image_t *img);
 
 /* Allocate memory that is bounded by protected pages,
  * so that out-of-bounds access will cause segfaults

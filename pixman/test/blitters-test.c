@@ -61,7 +61,7 @@ create_random_image (pixman_format_code_t *allowed_formats,
 	pixman_image_set_indexed (img, &(y_palette[PIXMAN_FORMAT_BPP (fmt)]));
     }
 
-    image_endian_swap (img, PIXMAN_FORMAT_BPP (fmt));
+    image_endian_swap (img);
 
     if (used_fmt) *used_fmt = fmt;
     return img;
@@ -101,7 +101,7 @@ free_random_image (uint32_t initcrc,
 	/* swap endiannes in order to provide identical results on both big
 	 * and litte endian systems
 	 */
-	image_endian_swap (img, PIXMAN_FORMAT_BPP (fmt));
+	image_endian_swap (img);
 	crc32 = compute_crc32 (initcrc, data, stride * height);
     }
 

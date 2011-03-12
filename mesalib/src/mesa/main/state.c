@@ -43,6 +43,7 @@
 #include "pixel.h"
 #include "program/program.h"
 #include "program/prog_parameter.h"
+#include "shaderobj.h"
 #include "state.h"
 #include "stencil.h"
 #include "texenvprogram.h"
@@ -53,7 +54,7 @@
 static void
 update_separate_specular(struct gl_context *ctx)
 {
-   if (NEED_SECONDARY_COLOR(ctx))
+   if (_mesa_need_secondary_color(ctx))
       ctx->_TriangleCaps |= DD_SEPARATE_SPECULAR;
    else
       ctx->_TriangleCaps &= ~DD_SEPARATE_SPECULAR;
@@ -249,7 +250,7 @@ update_program(struct gl_context *ctx)
 {
    const struct gl_shader_program *vsProg = ctx->Shader.CurrentVertexProgram;
    const struct gl_shader_program *gsProg = ctx->Shader.CurrentGeometryProgram;
-   const struct gl_shader_program *fsProg = ctx->Shader.CurrentFragmentProgram;
+   struct gl_shader_program *fsProg = ctx->Shader.CurrentFragmentProgram;
    const struct gl_vertex_program *prevVP = ctx->VertexProgram._Current;
    const struct gl_fragment_program *prevFP = ctx->FragmentProgram._Current;
    const struct gl_geometry_program *prevGP = ctx->GeometryProgram._Current;
@@ -275,23 +276,31 @@ update_program(struct gl_context *ctx)
       /* Use shader programs */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
                                fsProg->FragmentProgram);
+      _mesa_reference_shader_program(ctx, &ctx->Shader._CurrentFragmentProgram,
+				     fsProg);
    }
    else if (ctx->FragmentProgram._Enabled) {
-      /* use user-defined vertex program */
+      /* use user-defined fragment program */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
                                ctx->FragmentProgram.Current);
+      _mesa_reference_shader_program(ctx, &ctx->Shader._CurrentFragmentProgram,
+				     NULL);
    }
    else if (ctx->FragmentProgram._MaintainTexEnvProgram) {
       /* Use fragment program generated from fixed-function state.
        */
+      struct gl_shader_program *f = _mesa_get_fixed_func_fragment_program(ctx);
+      _mesa_reference_shader_program(ctx,
+				     &ctx->Shader._CurrentFragmentProgram, f);
+
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
-                               _mesa_get_fixed_func_fragment_program(ctx));
-      _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._TexEnvProgram,
-                               ctx->FragmentProgram._Current);
+                               f->FragmentProgram);
    }
    else {
       /* no fragment program */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current, NULL);
+      _mesa_reference_shader_program(ctx, &ctx->Shader._CurrentFragmentProgram,
+				     NULL);
    }
 
    if (gsProg && gsProg->LinkStatus && gsProg->GeometryProgram) {
@@ -442,7 +451,7 @@ update_color(struct gl_context *ctx)
    /* This is needed to support 1.1's RGB logic ops AND
     * 1.0's blending logicops.
     */
-   ctx->Color._LogicOpEnabled = RGBA_LOGICOP_ENABLED(ctx);
+   ctx->Color._LogicOpEnabled = _mesa_rgba_logicop_enabled(ctx);
 }
 
 
@@ -524,7 +533,7 @@ update_tricaps(struct gl_context *ctx, GLbitfield new_state)
       ctx->_TriangleCaps |= DD_TRI_LIGHT_TWOSIDE;
    if (ctx->Light.ShadeModel == GL_FLAT)
       ctx->_TriangleCaps |= DD_FLATSHADE;
-   if (NEED_SECONDARY_COLOR(ctx))
+   if (_mesa_need_secondary_color(ctx))
       ctx->_TriangleCaps |= DD_SEPARATE_SPECULAR;
 
    /*
