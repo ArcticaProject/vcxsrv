@@ -792,6 +792,13 @@
     </model>
     <model>
       <configItem>
+        <name>microsoft4000</name>
+        <_description>Microsoft Natural Wireless Ergonomic Keyboard 4000</_description>
+        <vendor>Microsoft Inc.</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
         <name>microsoft7000</name>
         <_description>Microsoft Natural Wireless Ergonomic Keyboard 7000</_description>
         <vendor>Microsoft Inc.</vendor>

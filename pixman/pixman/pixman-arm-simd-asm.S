@@ -331,15 +331,29 @@ pixman_asm_function pixman_composite_over_n_8_8888_asm_armv6
 .endfunc
 
 /*
- * Note: This function is only using armv4t instructions (not even armv6),
+ * Note: This code is only using armv5te instructions (not even armv6),
  *       but is scheduled for ARM Cortex-A8 pipeline. So it might need to
  *       be split into a few variants, tuned for each microarchitecture.
  *
  * TODO: In order to get good performance on ARM9/ARM11 cores (which don't
  * have efficient write combining), it needs to be changed to use 16-byte
  * aligned writes using STM instruction.
+ *
+ * Nearest scanline scaler macro template uses the following arguments:
+ *  fname                     - name of the function to generate
+ *  bpp_shift                 - (1 << bpp_shift) is the size of pixel in bytes
+ *  t                         - type suffix for LDR/STR instructions
+ *  prefetch_distance         - prefetch in the source image by that many
+ *                              pixels ahead
+ *  prefetch_braking_distance - stop prefetching when that many pixels are
+ *                              remaining before the end of scanline
  */
-pixman_asm_function pixman_scaled_nearest_scanline_0565_0565_SRC_asm_armv6
+
+.macro generate_nearest_scanline_func fname, bpp_shift, t,      \
+                                      prefetch_distance,        \
+                                      prefetch_braking_distance
+
+pixman_asm_function fname
 	W	.req	r0
 	DST	.req	r1
 	SRC	.req	r2
@@ -348,30 +362,46 @@ pixman_asm_function pixman_scaled_nearest_scanline_0565_0565_SRC_asm_armv6
 	TMP1	.req	r4
 	TMP2	.req	r5
 	VXMASK	.req	r6
+	PF_OFFS	.req	r7
 
 	ldr	UNIT_X, [sp]
 	push	{r4, r5, r6, r7}
-	mvn	VXMASK, #1
+	mvn	VXMASK, #((1 << bpp_shift) - 1)
 
 	/* define helper macro */
 	.macro	scale_2_pixels
-		ldrh	TMP1, [SRC, TMP1]
-		and	TMP2, VXMASK, VX, lsr #15
+		ldr&t	TMP1, [SRC, TMP1]
+		and	TMP2, VXMASK, VX, lsr #(16 - bpp_shift)
 		add	VX, VX, UNIT_X
-		strh	TMP1, [DST], #2
+		str&t	TMP1, [DST], #(1 << bpp_shift)
 
-		ldrh	TMP2, [SRC, TMP2]
-		and	TMP1, VXMASK, VX, lsr #15
+		ldr&t	TMP2, [SRC, TMP2]
+		and	TMP1, VXMASK, VX, lsr #(16 - bpp_shift)
 		add	VX, VX, UNIT_X
-		strh	TMP2, [DST], #2
+		str&t	TMP2, [DST], #(1 << bpp_shift)
 	.endm
 
 	/* now do the scaling */
-	and	TMP1, VXMASK, VX, lsr #15
+	and	TMP1, VXMASK, VX, lsr #(16 - bpp_shift)
 	add	VX, VX, UNIT_X
-	subs	W, #4
+	subs	W, W, #(8 + prefetch_braking_distance)
 	blt	2f
-1: /* main loop, process 4 pixels per iteration */
+	/* calculate prefetch offset */
+	mov	PF_OFFS, #prefetch_distance
+	mla	PF_OFFS, UNIT_X, PF_OFFS, VX
+1:	/* main loop, process 8 pixels per iteration with prefetch */
+	subs	W, W, #8
+	add	PF_OFFS, UNIT_X, lsl #3
+	scale_2_pixels
+	scale_2_pixels
+	scale_2_pixels
+	scale_2_pixels
+	pld	[SRC, PF_OFFS, lsr #(16 - bpp_shift)]
+	bge	1b
+2:
+	subs	W, W, #(4 - 8 - prefetch_braking_distance)
+	blt	2f
+1:	/* process the remaining pixels */
 	scale_2_pixels
 	scale_2_pixels
 	subs	W, W, #4
@@ -382,8 +412,8 @@ pixman_asm_function pixman_scaled_nearest_scanline_0565_0565_SRC_asm_armv6
 	scale_2_pixels
 2:
 	tst	W, #1
-	ldrneh	TMP1, [SRC, TMP1]
-	strneh	TMP1, [DST], #2
+	ldrne&t	TMP1, [SRC, TMP1]
+	strne&t	TMP1, [DST]
 	/* cleanup helper macro */
 	.purgem	scale_2_pixels
 	.unreq	DST
@@ -394,7 +424,15 @@ pixman_asm_function pixman_scaled_nearest_scanline_0565_0565_SRC_asm_armv6
 	.unreq	TMP1
 	.unreq	TMP2
 	.unreq	VXMASK
+	.unreq	PF_OFFS
 	/* return */
 	pop	{r4, r5, r6, r7}
 	bx	lr
 .endfunc
+.endm
+
+generate_nearest_scanline_func \
+    pixman_scaled_nearest_scanline_0565_0565_SRC_asm_armv6, 1, h, 80, 32
+
+generate_nearest_scanline_func \
+    pixman_scaled_nearest_scanline_8888_8888_SRC_asm_armv6, 2,  , 48, 32
