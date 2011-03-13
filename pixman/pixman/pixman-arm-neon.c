@@ -127,6 +127,15 @@ PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_A8_DST (SKIP_ZERO_SRC, neon, 8888_8_0565,
 PIXMAN_ARM_BIND_SCALED_NEAREST_SRC_A8_DST (SKIP_ZERO_SRC, neon, 0565_8_0565,
                                            OVER, uint16_t, uint16_t)
 
+PIXMAN_ARM_BIND_SCALED_BILINEAR_SRC_DST (0, neon, 8888_8888, SRC,
+                                         uint32_t, uint32_t)
+PIXMAN_ARM_BIND_SCALED_BILINEAR_SRC_DST (0, neon, 8888_0565, SRC,
+                                         uint32_t, uint16_t)
+PIXMAN_ARM_BIND_SCALED_BILINEAR_SRC_DST (0, neon, 0565_x888, SRC,
+                                         uint16_t, uint32_t)
+PIXMAN_ARM_BIND_SCALED_BILINEAR_SRC_DST (0, neon, 0565_0565, SRC,
+                                         uint16_t, uint16_t)
+
 void
 pixman_composite_src_n_8_asm_neon (int32_t   w,
                                    int32_t   h,
@@ -231,47 +240,6 @@ pixman_blt_neon (uint32_t *src_bits,
 	return FALSE;
     }
 }
-
-void
-pixman_scaled_bilinear_scanline_8888_8888_SRC_asm_neon (uint32_t *       out,
-                                                        const uint32_t * top,
-                                                        const uint32_t * bottom,
-                                                        int              wt,
-                                                        int              wb,
-                                                        pixman_fixed_t   x,
-                                                        pixman_fixed_t   ux,
-                                                        int              width);
-
-static force_inline void
-scaled_bilinear_scanline_neon_8888_8888_SRC (uint32_t *       dst,
-					     const uint32_t * mask,
-					     const uint32_t * src_top,
-					     const uint32_t * src_bottom,
-					     int32_t          w,
-					     int              wt,
-					     int              wb,
-					     pixman_fixed_t   vx,
-					     pixman_fixed_t   unit_x,
-					     pixman_fixed_t   max_vx,
-					     pixman_bool_t    zero_src)
-{
-    pixman_scaled_bilinear_scanline_8888_8888_SRC_asm_neon (dst, src_top,
-                                                            src_bottom, wt, wb,
-                                                            vx, unit_x, w);
-}
-
-FAST_BILINEAR_MAINLOOP_COMMON (neon_8888_8888_cover_SRC,
-			       scaled_bilinear_scanline_neon_8888_8888_SRC,
-			       uint32_t, uint32_t, uint32_t,
-			       COVER, FALSE, FALSE)
-FAST_BILINEAR_MAINLOOP_COMMON (neon_8888_8888_pad_SRC,
-			       scaled_bilinear_scanline_neon_8888_8888_SRC,
-			       uint32_t, uint32_t, uint32_t,
-			       PAD, FALSE, FALSE)
-FAST_BILINEAR_MAINLOOP_COMMON (neon_8888_8888_none_SRC,
-			       scaled_bilinear_scanline_neon_8888_8888_SRC,
-			       uint32_t, uint32_t, uint32_t,
-			       NONE, FALSE, FALSE)
 
 static const pixman_fast_path_t arm_neon_fast_paths[] =
 {
@@ -387,6 +355,12 @@ static const pixman_fast_path_t arm_neon_fast_paths[] =
     SIMPLE_BILINEAR_FAST_PATH (SRC, a8r8g8b8, a8r8g8b8, neon_8888_8888),
     SIMPLE_BILINEAR_FAST_PATH (SRC, a8r8g8b8, x8r8g8b8, neon_8888_8888),
     SIMPLE_BILINEAR_FAST_PATH (SRC, x8r8g8b8, x8r8g8b8, neon_8888_8888),
+
+    SIMPLE_BILINEAR_FAST_PATH (SRC, a8r8g8b8, r5g6b5, neon_8888_0565),
+    SIMPLE_BILINEAR_FAST_PATH (SRC, x8r8g8b8, r5g6b5, neon_8888_0565),
+
+    SIMPLE_BILINEAR_FAST_PATH (SRC, r5g6b5, x8r8g8b8, neon_0565_x888),
+    SIMPLE_BILINEAR_FAST_PATH (SRC, r5g6b5, r5g6b5, neon_0565_0565),
 
     { PIXMAN_OP_NONE },
 };

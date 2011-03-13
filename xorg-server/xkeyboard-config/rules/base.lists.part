@@ -9,7 +9,7 @@
 ! $pcmodels = pc101 pc102 pc104 pc105
 
 // Microsoft models (using MS geometry)
-! $msmodels = microsoft microsoft7000 microsoftpro microsoftprousb microsoftprose
+! $msmodels = microsoft microsoft4000 microsoft7000 microsoftpro microsoftprousb microsoftprose
 
 // Nokia devices and keyboards
 ! $nokiamodels = nokiasu8w nokiarx44 nokiarx51
@@ -57,8 +57,8 @@
               logiinkse logiinkseusb logiitc logiik \
               logitech_base itouch logiultrax \
               logitech_g15 \
-	      logidinovo logidinovoedge \
-              microsoft7000 microsoftinet microsoftprousb microsoftprooem microsoftprose \
+              logidinovo logidinovoedge \
+              microsoft4000 microsoft7000 microsoftinet microsoftprousb microsoftprooem microsoftprose \
               microsoftoffice microsoftmult \
               mx1998 mx2500 mx2750 \
               oretec \

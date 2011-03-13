@@ -43,7 +43,6 @@
 #include "pixel.h"
 #include "program/program.h"
 #include "program/prog_parameter.h"
-#include "shaderobj.h"
 #include "state.h"
 #include "stencil.h"
 #include "texenvprogram.h"
@@ -250,7 +249,7 @@ update_program(struct gl_context *ctx)
 {
    const struct gl_shader_program *vsProg = ctx->Shader.CurrentVertexProgram;
    const struct gl_shader_program *gsProg = ctx->Shader.CurrentGeometryProgram;
-   struct gl_shader_program *fsProg = ctx->Shader.CurrentFragmentProgram;
+   const struct gl_shader_program *fsProg = ctx->Shader.CurrentFragmentProgram;
    const struct gl_vertex_program *prevVP = ctx->VertexProgram._Current;
    const struct gl_fragment_program *prevFP = ctx->FragmentProgram._Current;
    const struct gl_geometry_program *prevGP = ctx->GeometryProgram._Current;
@@ -276,31 +275,23 @@ update_program(struct gl_context *ctx)
       /* Use shader programs */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
                                fsProg->FragmentProgram);
-      _mesa_reference_shader_program(ctx, &ctx->Shader._CurrentFragmentProgram,
-				     fsProg);
    }
    else if (ctx->FragmentProgram._Enabled) {
-      /* use user-defined fragment program */
+      /* use user-defined vertex program */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
                                ctx->FragmentProgram.Current);
-      _mesa_reference_shader_program(ctx, &ctx->Shader._CurrentFragmentProgram,
-				     NULL);
    }
    else if (ctx->FragmentProgram._MaintainTexEnvProgram) {
       /* Use fragment program generated from fixed-function state.
        */
-      struct gl_shader_program *f = _mesa_get_fixed_func_fragment_program(ctx);
-      _mesa_reference_shader_program(ctx,
-				     &ctx->Shader._CurrentFragmentProgram, f);
-
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
-                               f->FragmentProgram);
+                               _mesa_get_fixed_func_fragment_program(ctx));
+      _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._TexEnvProgram,
+                               ctx->FragmentProgram._Current);
    }
    else {
       /* no fragment program */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current, NULL);
-      _mesa_reference_shader_program(ctx, &ctx->Shader._CurrentFragmentProgram,
-				     NULL);
    }
 
    if (gsProg && gsProg->LinkStatus && gsProg->GeometryProgram) {

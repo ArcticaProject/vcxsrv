@@ -36,8 +36,17 @@
 #include "xcbint.h"
 #include "bigreq.h"
 
-static int write_block(xcb_connection_t *c, struct iovec *vector, int count)
+static __inline void send_request(xcb_connection_t *c, int isvoid, enum workarounds workaround, int flags, struct iovec *vector, int count)
 {
+    if(c->has_error)
+        return;
+
+    ++c->out.request;
+    if(!isvoid)
+        c->in.request_expected = c->out.request;
+    if(workaround != WORKAROUND_NONE || flags != 0)
+        _xcb_in_expect_reply(c, c->out.request, workaround, flags);
+
     while(count && c->out.queue_len + vector[0].iov_len <= sizeof(c->out.queue))
     {
         memcpy(c->out.queue + c->out.queue_len, vector[0].iov_base, vector[0].iov_len);
@@ -47,13 +56,29 @@ static int write_block(xcb_connection_t *c, struct iovec *vector, int count)
         ++vector, --count;
     }
     if(!count)
-        return 1;
+        return;
 
     --vector, ++count;
     vector[0].iov_base = c->out.queue;
     vector[0].iov_len = c->out.queue_len;
     c->out.queue_len = 0;
-    return _xcb_out_send(c, vector, count);
+    _xcb_out_send(c, vector, count);
+}
+
+static void send_sync(xcb_connection_t *c)
+{
+    static const union {
+        struct {
+            uint8_t major;
+            uint8_t pad;
+            uint16_t len;
+        } fields;
+        uint32_t packet;
+    } sync_req = { { /* GetInputFocus */ 43, 0, 1 } };
+    struct iovec vector[2];
+    vector[1].iov_base = (char *) &sync_req;
+    vector[1].iov_len = sizeof(sync_req);
+    send_request(c, 0, WORKAROUND_NONE, XCB_REQUEST_DISCARD_REPLY, vector + 1, 1);
 }
 
 static void get_socket_back(xcb_connection_t *c)
@@ -124,16 +149,8 @@ uint32_t xcb_get_maximum_request_length(xcb_connection_t *c)
 
 unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vector, const xcb_protocol_request_t *req)
 {
-    static const union {
-        struct {
-            uint8_t major;
-            uint8_t pad;
-            uint16_t len;
-        } fields;
-        uint32_t packet;
-    } sync_req = { { /* GetInputFocus */ 43, 0, 1 } };
     uint64_t request;
-    uint32_t prefix[3] = { 0 };
+    uint32_t prefix[2];
     int veclen = req->count;
     enum workarounds workaround = WORKAROUND_NONE;
 
@@ -194,7 +211,15 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
         /* set the length field. */
         ((uint16_t *) vector[0].iov_base)[1] = shortlen;
         if(!shortlen)
-            prefix[2] = ++longlen;
+        {
+            prefix[0] = ((uint32_t *) vector[0].iov_base)[0];
+            prefix[1] = ++longlen;
+            vector[0].iov_base = (caddr_t)((uint32_t *) vector[0].iov_base + 1);
+            vector[0].iov_len -= sizeof(uint32_t);
+            --vector, ++veclen;
+            vector[0].iov_base = (caddr_t)prefix;
+            vector[0].iov_len = sizeof(prefix);
+        }
     }
     flags &= ~XCB_REQUEST_RAW;
 
@@ -213,45 +238,21 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
         pthread_cond_wait(&c->out.cond, &c->iolock);
     get_socket_back(c);
 
-    request = ++c->out.request;
     /* send GetInputFocus (sync_req) when 64k-2 requests have been sent without
-     * a reply.
-     * Also send sync_req (could use NoOp) at 32-bit wrap to avoid having
+     * a reply. */
+    if(req->isvoid && c->out.request == c->in.request_expected + (1 << 16) - 2)
+        send_sync(c);
+    /* Also send sync_req (could use NoOp) at 32-bit wrap to avoid having
      * applications see sequence 0 as that is used to indicate
      * an error in sending the request */
-    while((req->isvoid &&
-	c->out.request == c->in.request_expected + (1 << 16) - 1) ||
-       request == 0)
-    {
-        prefix[0] = sync_req.packet;
-        _xcb_in_expect_reply(c, request, WORKAROUND_NONE, XCB_REQUEST_DISCARD_REPLY);
-        c->in.request_expected = c->out.request;
-	request = ++c->out.request;
-    }
+    if((unsigned int) (c->out.request + 1) == 0)
+        send_sync(c);
 
-    if(workaround != WORKAROUND_NONE || flags != 0)
-        _xcb_in_expect_reply(c, request, workaround, flags);
-    if(!req->isvoid)
-        c->in.request_expected = c->out.request;
-
-    if(prefix[0] || prefix[2])
-    {
-        --vector, ++veclen;
-        if(prefix[2])
-        {
-            prefix[1] = ((uint32_t *) vector[1].iov_base)[0];
-            vector[1].iov_base = (caddr_t)((uint32_t *) vector[1].iov_base + 1);
-            vector[1].iov_len -= sizeof(uint32_t);
-        }
-        vector[0].iov_len = sizeof(uint32_t) * ((prefix[0] ? 1 : 0) + (prefix[2] ? 2 : 0));
-        vector[0].iov_base = (caddr_t)(prefix + !prefix[0]);
-    }
-
-    if(!write_block(c, vector, veclen))
-    {
-        _xcb_conn_shutdown(c);
-        request = 0;
-    }
+    /* The above send_sync calls could drop the I/O lock, but this
+     * thread will still exclude any other thread that tries to write,
+     * so the sequence number postconditions still hold. */
+    send_request(c, req->isvoid, workaround, flags, vector, veclen);
+    request = c->has_error ? 0 : c->out.request;
     pthread_mutex_unlock(&c->iolock);
     return request;
 }
@@ -341,6 +342,15 @@ int _xcb_out_send(xcb_connection_t *c, struct iovec *vector, int count)
     pthread_cond_broadcast(&c->out.cond);
     _xcb_in_wake_up_next_reader(c);
     return ret;
+}
+
+void _xcb_out_send_sync(xcb_connection_t *c)
+{
+    /* wait for other writing threads to get out of my way. */
+    while(c->out.writing)
+        pthread_cond_wait(&c->out.cond, &c->iolock);
+    get_socket_back(c);
+    send_sync(c);
 }
 
 int _xcb_out_flush_to(xcb_connection_t *c, uint64_t request)
