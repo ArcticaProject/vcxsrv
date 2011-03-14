@@ -735,7 +735,7 @@ XkbProcessArguments(int argc,char *argv[],int i)
 		    j++;
 		}
 		if ( ((i+1)<argc) && (isdigit(argv[i+1][0])) ) {
-		    XkbDfltAccessXOptions=(unsigned char)
+		    XkbDfltAccessXOptions=(unsigned short)
 					   strtol(argv[++i],NULL,16);
 		    j++;
 		}
