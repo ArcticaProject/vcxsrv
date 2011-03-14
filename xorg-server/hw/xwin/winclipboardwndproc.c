@@ -488,11 +488,14 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	  }
 
 	/* Process the SelectionNotify event */
-	iReturn = winProcessXEventsTimeout (hwnd,
+	do {
+	  iReturn = winProcessXEventsTimeout (hwnd,
 					    iWindow,
 					    pDisplay,
 					    fConvertToUnicode,
 					    WIN_POLL_TIMEOUT);
+	} while (WIN_XEVENTS_CONVERT == iReturn);
+
 	
 	/*
 	 * The last call to winProcessXEventsTimeout
