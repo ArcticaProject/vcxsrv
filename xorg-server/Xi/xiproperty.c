@@ -1051,11 +1051,11 @@ SProcXChangeDeviceProperty (ClientPtr client)
     char n;
     REQUEST(xChangeDevicePropertyReq);
 
+    REQUEST_AT_LEAST_SIZE(xChangeDevicePropertyReq);
     swaps(&stuff->length, n);
     swapl(&stuff->property, n);
     swapl(&stuff->type, n);
     swapl(&stuff->nUnits, n);
-    REQUEST_SIZE_MATCH(xChangeDevicePropertyReq);
     return (ProcXChangeDeviceProperty(client));
 }
 
@@ -1295,12 +1295,12 @@ SProcXIChangeProperty(ClientPtr client)
     char n;
     REQUEST(xXIChangePropertyReq);
 
+    REQUEST_AT_LEAST_SIZE(xXIChangePropertyReq);
     swaps(&stuff->length, n);
     swaps(&stuff->deviceid, n);
     swapl(&stuff->property, n);
     swapl(&stuff->type, n);
     swapl(&stuff->num_items, n);
-    REQUEST_SIZE_MATCH(xXIChangePropertyReq);
     return (ProcXIChangeProperty(client));
 }
 

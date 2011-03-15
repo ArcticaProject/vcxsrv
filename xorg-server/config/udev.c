@@ -197,10 +197,10 @@ device_added(struct udev_device *udev_device)
 
  unwind:
     free(config_info);
-    while (!dev && (tmpo = options)) {
+    while ((tmpo = options)) {
         options = tmpo->next;
-        free(tmpo->key);
-        free(tmpo->value);
+        free(tmpo->key);        /* NULL if dev != NULL */
+        free(tmpo->value);      /* NULL if dev != NULL */
         free(tmpo);
     }
 

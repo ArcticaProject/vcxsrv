@@ -54,9 +54,9 @@ fbComposite (CARD8      op,
     int msk_xoff, msk_yoff;
     int dst_xoff, dst_yoff;
     
-    miCompositeSourceValidate (pSrc, xSrc - xDst, ySrc - yDst, width, height);
+    miCompositeSourceValidate (pSrc);
     if (pMask)
-	miCompositeSourceValidate (pMask, xMask - xDst, yMask - yDst, width, height);
+	miCompositeSourceValidate (pMask);
     
     src = image_from_pict (pSrc, FALSE, &src_xoff, &src_yoff);
     mask = image_from_pict (pMask, FALSE, &msk_xoff, &msk_yoff);

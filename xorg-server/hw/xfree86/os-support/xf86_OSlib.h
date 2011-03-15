@@ -370,6 +370,9 @@
 
 #include <sys/wait.h>	/* May need to adjust this for other OSs */
 
+/* For PATH_MAX */
+#include "misc.h"
+
 /* 
  * Hack originally for ISC 2.2 POSIX headers, but may apply elsewhere,
  * and it's safe, so just do it.
@@ -389,14 +392,6 @@
 # include <limits.h>
 # undef _POSIX_SOURCE
 #endif /* _POSIX_SOURCE */
-
-#if !defined(PATH_MAX)
-# if defined(MAXPATHLEN)
-#  define PATH_MAX MAXPATHLEN
-# else
-#  define PATH_MAX 1024
-# endif /* MAXPATHLEN */
-#endif /* !PATH_MAX */
 
 
 #ifndef DEV_MEM

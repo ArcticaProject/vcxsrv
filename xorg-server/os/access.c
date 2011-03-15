@@ -165,17 +165,6 @@ SOFTWARE.
 
 #endif /* WIN32 */
 
-#ifndef PATH_MAX
-#include <sys/param.h>
-#ifndef PATH_MAX
-#ifdef MAXPATHLEN
-#define PATH_MAX MAXPATHLEN
-#else
-#define PATH_MAX 1024
-#endif
-#endif
-#endif 
-
 
 #define X_INCLUDE_NETDB_H
 #include <X11/Xos_r.h>
@@ -184,14 +173,6 @@ SOFTWARE.
 #include "osdep.h"
 
 #include "xace.h"
-
-#ifndef PATH_MAX
-#ifdef MAXPATHLEN
-#define PATH_MAX MAXPATHLEN
-#else
-#define PATH_MAX 1024
-#endif
-#endif
 
 Bool defeatAccessControl = FALSE;
 

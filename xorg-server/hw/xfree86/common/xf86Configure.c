@@ -39,6 +39,7 @@
 #include "xf86Bus.h"
 #include "xf86Sbus.h"
 #endif
+#include "misc.h"
 
 typedef struct _DevToConfig {
     GDevRec GDev;
@@ -513,10 +514,6 @@ configureDDCMonitorSection (int screennum)
 
     return ptr;
 }
-
-#if !defined(PATH_MAX)
-# define PATH_MAX 1024
-#endif
 
 void
 DoConfigure(void)

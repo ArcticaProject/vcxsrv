@@ -297,6 +297,9 @@ eventToKeyButtonPointer(DeviceEvent *ev, xEvent **xi, int *count)
             case ET_ProximityOut:
                 *count = 0;
                 return BadMatch;
+	    default:
+		*count = 0;
+		return BadImplementation;
         }
     }
 

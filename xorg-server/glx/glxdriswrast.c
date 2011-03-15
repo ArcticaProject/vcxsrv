@@ -201,6 +201,14 @@ __glXDRIbindTexImage(__GLXcontext *baseContext,
     if (texBuffer == NULL)
         return Success;
 
+#if __DRI_TEX_BUFFER_VERSION >= 2
+    if (texBuffer->base.version >= 2 && texBuffer->setTexBuffer2 != NULL) {
+	(*texBuffer->setTexBuffer2)(context->driContext,
+				    glxPixmap->target,
+				    glxPixmap->format,
+				    drawable->driDrawable);
+    } else
+#endif
     texBuffer->setTexBuffer(context->driContext,
 			    glxPixmap->target,
 			    drawable->driDrawable);
@@ -427,17 +435,12 @@ initializeExtensions(__GLXDRIscreen *screen)
     }
 }
 
-static const char dri_driver_path[] = DRI_DRIVER_PATH;
-
 static __GLXscreen *
 __glXDRIscreenProbe(ScreenPtr pScreen)
 {
     const char *driverName = "swrast";
     __GLXDRIscreen *screen;
-    char filename[128];
-    const __DRIextension **extensions;
     const __DRIconfig **driConfigs;
-    int i;
 
     screen = calloc(1, sizeof *screen);
     if (screen == NULL)
@@ -449,38 +452,13 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->base.swapInterval   = NULL;
     screen->base.pScreen       = pScreen;
 
-    snprintf(filename, sizeof filename,
-	     "%s/%s_dri.so", dri_driver_path, driverName);
-
-    screen->driver = dlopen(filename, RTLD_LAZY | RTLD_LOCAL);
+    screen->driver = glxProbeDriver(driverName,
+				    (void **)&screen->core,
+				    __DRI_CORE, __DRI_CORE_VERSION,
+				    (void **)&screen->swrast,
+				    __DRI_SWRAST, __DRI_SWRAST_VERSION);
     if (screen->driver == NULL) {
-	LogMessage(X_ERROR, "AIGLX error: dlopen of %s failed (%s)\n",
-		   filename, dlerror());
         goto handle_error;
-    }
-
-    extensions = dlsym(screen->driver, __DRI_DRIVER_EXTENSIONS);
-    if (extensions == NULL) {
-	LogMessage(X_ERROR, "AIGLX error: %s exports no extensions (%s)\n",
-		   driverName, dlerror());
-	goto handle_error;
-    }
-
-    for (i = 0; extensions[i]; i++) {
-        if (strcmp(extensions[i]->name, __DRI_CORE) == 0 &&
-	    extensions[i]->version >= __DRI_CORE_VERSION) {
-		screen->core = (const __DRIcoreExtension *) extensions[i];
-	}
-        if (strcmp(extensions[i]->name, __DRI_SWRAST) == 0 &&
-	    extensions[i]->version >= __DRI_SWRAST_VERSION) {
-		screen->swrast = (const __DRIswrastExtension *) extensions[i];
-	}
-    }
-
-    if (screen->core == NULL || screen->swrast == NULL) {
-	LogMessage(X_ERROR, "AIGLX error: %s exports no DRI extension\n",
-		   driverName);
-	goto handle_error;
     }
 
     screen->driScreen =
@@ -508,7 +486,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->base.GLXminor = 4;
 
     LogMessage(X_INFO,
-	       "AIGLX: Loaded and initialized %s\n", filename);
+	       "AIGLX: Loaded and initialized %s\n", driverName);
 
     return &screen->base;
 

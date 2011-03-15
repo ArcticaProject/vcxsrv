@@ -2354,6 +2354,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
     int			i = scrn->scrnIndex;
     Bool have_outputs = TRUE;
     Bool ret;
+    Bool success = FALSE;
 
     /* Set up the device options */
     config->options = xnfalloc (sizeof (xf86DeviceOptions));
@@ -2412,11 +2413,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
      * Set the position of each output
      */
     if (!xf86InitialOutputPositions (scrn, modes))
-    {
-	free(crtcs);
-	free(modes);
-	return FALSE;
-    }
+	goto bailout;
 
     /*
      * Set initial panning of each output
@@ -2427,11 +2424,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
      * Assign CRTCs to fit output configuration
      */
     if (have_outputs && !xf86PickCrtcs (scrn, crtcs, modes, 0, width, height))
-    {
-	free(crtcs);
-	free(modes);
-	return FALSE;
-    }
+	goto bailout;
     
     /* XXX override xf86 common frame computation code */
     
@@ -2508,7 +2501,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
      * Make sure the configuration isn't too small.
      */
     if (width < config->minWidth || height < config->minHeight)
-	return FALSE;
+	goto bailout;
 
     /*
      * Limit the crtc config to virtual[XY] if the driver can't grow the
@@ -2531,10 +2524,12 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 				   xf86CVTMode(width, height, 60, 0, 0));
     }
 
-    
+    success = TRUE;
+ bailout:
     free(crtcs);
     free(modes);
-    return TRUE;
+    free(enabled);
+    return success;
 }
 
 /*

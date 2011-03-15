@@ -79,6 +79,7 @@ OF THIS SOFTWARE.
 #include <X11/Xdefs.h>
 
 #include <stddef.h>
+#include <stdint.h>
 
 #ifndef MAXSCREENS
 #define MAXSCREENS	16
@@ -91,7 +92,7 @@ OF THIS SOFTWARE.
 #define EXTENSION_EVENT_BASE 64
 #define EXTENSION_BASE 128
 
-typedef unsigned long ATOM;
+typedef uint32_t ATOM;
 
 #ifndef TRUE
 #define TRUE 1
@@ -176,6 +177,17 @@ typedef struct _xReq *xReqPtr;
 #include <ctype.h>
 #include <stdio.h>     /* for fopen, etc... */
 
+#endif
+
+#ifndef PATH_MAX
+#include <sys/param.h>
+#ifndef PATH_MAX
+#ifdef MAXPATHLEN
+#define PATH_MAX MAXPATHLEN
+#else
+#define PATH_MAX 1024
+#endif
+#endif
 #endif
 
 /**

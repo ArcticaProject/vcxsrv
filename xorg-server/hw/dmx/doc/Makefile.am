@@ -30,8 +30,6 @@ DOXYGEN_HEAD=\
 	html/annotated.html
 
 DOXYGEN_REST= \
-	dmx.txt \
-	scaled.txt \
 	html/ChkNotMaskEv_8c.html \
 	html/ChkNotMaskEv_8h.html \
 	html/ChkNotMaskEv_8h_source.html \
@@ -237,7 +235,6 @@ DOXYGEN_REST= \
 DOXYGEN_FILES=$(DOXYGEN_HEAD) $(DOXYGEN_REST)
 
 EXTRA_DIST = \
-	$(XML_FILES) \
 	DMXSpec.txt \
 	DMXSpec-v1.txt \
 	doxygen.conf \
@@ -261,10 +258,10 @@ $(DOXYGEN_HEAD): $(DOXYGEN_SRC)
 $(DOXYGEN_REST): $(DOXYGEN_HEAD)
 
 maintainer-clean-local:
-	rm -rf html/ scaled.txt dmx.txt
+	rm -rf html/
 
 distclean-local:
-	rm -rf html/ scaled.txt dmx.txt
+	rm -rf html/
 
 endif HAVE_DOXYGEN
 endif ENABLE_DEVEL_DOCS

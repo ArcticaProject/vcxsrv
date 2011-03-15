@@ -858,8 +858,6 @@ static const __DRIextension *loader_extensions[] = {
 
 
 
-static const char dri_driver_path[] = DRI_DRIVER_PATH;
-
 static Bool
 glxDRIEnterVT (int index, int flags)
 {
@@ -971,13 +969,10 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     drm_handle_t  hFB;
     int        junk;
     __GLXDRIscreen *screen;
-    char filename[128];
     Bool isCapable;
     size_t buffer_size;
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     const __DRIconfig **driConfigs;
-    const __DRIextension **extensions;
-    int i;
 
     if (!xf86LoaderCheckSymbol("DRIQueryDirectRenderingCapable") ||
 	!DRIQueryDirectRenderingCapable(pScreen, &isCapable) ||
@@ -1052,42 +1047,15 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 	goto handle_error;
     }
 
-    snprintf(filename, sizeof filename, "%s/%s_dri.so",
-             dri_driver_path, driverName);
-
-    screen->driver = dlopen(filename, RTLD_LAZY | RTLD_LOCAL);
+    screen->driver = glxProbeDriver(driverName,
+				    (void **)&screen->core,
+				    __DRI_CORE, __DRI_CORE_VERSION,
+				    (void **)&screen->legacy,
+				    __DRI_LEGACY, __DRI_LEGACY_VERSION);
     if (screen->driver == NULL) {
-	LogMessage(X_ERROR, "AIGLX error: dlopen of %s failed (%s)\n",
-		   filename, dlerror());
         goto handle_error;
     }
-
-    extensions = dlsym(screen->driver, __DRI_DRIVER_EXTENSIONS);
-    if (extensions == NULL) {
-	LogMessage(X_ERROR, "AIGLX error: %s exports no extensions (%s)\n",
-		   driverName, dlerror());
-	goto handle_error;
-    }
     
-    for (i = 0; extensions[i]; i++) {
-	if (strcmp(extensions[i]->name, __DRI_CORE) == 0 &&
-	    extensions[i]->version >= __DRI_CORE_VERSION) {
-		screen->core = (__DRIcoreExtension *) extensions[i];
-	}
-
-	if (strcmp(extensions[i]->name, __DRI_LEGACY) == 0 &&
-	    extensions[i]->version >= __DRI_LEGACY_VERSION) {
-		screen->legacy = (__DRIlegacyExtension *) extensions[i];
-	}
-    }
-
-    if (screen->core == NULL || screen->legacy == NULL) {
-	LogMessage(X_ERROR,
-		   "AIGLX error: %s does not export required DRI extension\n",
-		   driverName);
-	goto handle_error;
-    }
-
     /*
      * Get device-specific info.  pDevPriv will point to a struct
      * (such as DRIRADEONRec in xfree86/driver/ati/radeon_dri.h) that
@@ -1172,7 +1140,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     pScrn->LeaveVT = glxDRILeaveVT;
 
     LogMessage(X_INFO,
-	       "AIGLX: Loaded and initialized %s\n", filename);
+	       "AIGLX: Loaded and initialized %s\n", driverName);
 
     return &screen->base;
 

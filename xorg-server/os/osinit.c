@@ -63,16 +63,9 @@ SOFTWARE.
 #include <execinfo.h>
 #endif
 
+#include "misc.h"
 
 #include "dixstruct.h"
-
-#ifndef PATH_MAX
-#ifdef MAXPATHLEN
-#define PATH_MAX MAXPATHLEN
-#else
-#define PATH_MAX 1024
-#endif
-#endif
 
 
 #if !defined(SYSV) && !defined(WIN32) 

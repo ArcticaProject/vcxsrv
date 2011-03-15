@@ -767,7 +767,7 @@ moveRelative(DeviceIntPtr dev, int *x, int *y, ValuatorMask *mask)
     /* if attached, clip both x and y to the defined limits (usually
      * co-ord space limit). If it is attached, we need x/y to go over the
      * limits to be able to change screens. */
-    if(dev->valuator && IsMaster(dev) || !IsFloating(dev)) {
+    if (dev->valuator && (IsMaster(dev) || !IsFloating(dev))) {
         if (valuator_get_mode(dev, 0) == Absolute)
             clipAxis(dev, 0, x);
         if (valuator_get_mode(dev, 1) == Absolute)
@@ -791,17 +791,14 @@ moveRelative(DeviceIntPtr dev, int *x, int *y, ValuatorMask *mask)
  * Accelerate the data in valuators based on the device's acceleration scheme.
  *
  * @param dev The device which's pointer is to be moved.
- * @param first The first valuator in @valuators
- * @param num Total number of valuators in @valuators.
- * @param valuators Valuator data for each axis between @first and
- *        @first+@num.
+ * @param valuators Valuator mask
  * @param ms Current time.
  */
 static void
-accelPointer(DeviceIntPtr dev, int first, int num, int *valuators, CARD32 ms)
+accelPointer(DeviceIntPtr dev, ValuatorMask* valuators, CARD32 ms)
 {
     if (dev->valuator->accelScheme.AccelSchemeProc)
-        dev->valuator->accelScheme.AccelSchemeProc(dev, first, num, valuators, ms);
+        dev->valuator->accelScheme.AccelSchemeProc(dev, valuators, ms);
 }
 
 /**
@@ -812,7 +809,11 @@ accelPointer(DeviceIntPtr dev, int first, int num, int *valuators, CARD32 ms)
  * miPointerSetPosition() and then scale back into device coordinates (if
  * needed). miPSP will change x/y if the screen was crossed.
  *
+ * The coordinates provided are always absolute. The parameter mode whether
+ * it was relative or absolute movement that landed us at those coordinates.
+ *
  * @param dev The device to be moved.
+ * @param mode Movement mode (Absolute or Relative)
  * @param x Pointer to current x-axis value, may be modified.
  * @param y Pointer to current y-axis value, may be modified.
  * @param x_frac Fractional part of current x-axis value, may be modified.
@@ -824,7 +825,8 @@ accelPointer(DeviceIntPtr dev, int first, int num, int *valuators, CARD32 ms)
  * @param screeny_frac Fractional part of screen y coordinate, as above.
  */
 static void
-positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
+positionSprite(DeviceIntPtr dev, int mode,
+               int *x, int *y, float x_frac, float y_frac,
                ScreenPtr scr, int *screenx, int *screeny, float *screenx_frac, float *screeny_frac)
 {
     int old_screenx, old_screeny;
@@ -863,7 +865,7 @@ positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
     old_screeny = *screeny;
     /* This takes care of crossing screens for us, as well as clipping
      * to the current screen. */
-    miPointerSetPosition(dev, screenx, screeny);
+    miPointerSetPosition(dev, mode, screenx, screeny);
 
     if(!IsMaster(dev) || !IsFloating(dev)) {
         DeviceIntPtr master = GetMaster(dev, MASTER_POINTER);
@@ -1170,20 +1172,7 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
         moveAbsolute(pDev, &x, &y, &mask);
     } else {
         if (flags & POINTER_ACCELERATE) {
-            /* FIXME: Pointer acceleration only requires X and Y values. This
-             * should be converted to masked valuators. */
-            int vals[2];
-            vals[0] = valuator_mask_isset(&mask, 0) ?
-                      valuator_mask_get(&mask, 0) : 0;
-            vals[1] = valuator_mask_isset(&mask, 1) ?
-                      valuator_mask_get(&mask, 1) : 0;
-            accelPointer(pDev, 0, 2, vals, ms);
-
-            if (valuator_mask_isset(&mask, 0))
-                valuator_mask_set(&mask, 0, vals[0]);
-            if (valuator_mask_isset(&mask, 1))
-                valuator_mask_set(&mask, 1, vals[1]);
-
+            accelPointer(pDev, &mask, ms);
             /* The pointer acceleration code modifies the fractional part
              * in-place, so we need to extract this information first */
             x_frac = pDev->last.remainder[0];
@@ -1194,7 +1183,8 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
 
     set_raw_valuators(raw, &mask, raw->valuators.data);
 
-    positionSprite(pDev, &x, &y, x_frac, y_frac, scr, &cx, &cy, &cx_frac, &cy_frac);
+    positionSprite(pDev, (flags & POINTER_ABSOLUTE) ? Absolute : Relative,
+                   &x, &y, x_frac, y_frac, scr, &cx, &cy, &cx_frac, &cy_frac);
     updateHistory(pDev, &mask, ms);
 
     /* Update the valuators with the true value sent to the client*/

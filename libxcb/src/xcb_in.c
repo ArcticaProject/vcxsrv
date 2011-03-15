@@ -211,9 +211,9 @@ static int read_packet(xcb_connection_t *c)
 	    XCB_SEQUENCE_COMPARE(reader->request, <=, c->in.request_read);
 	    reader = reader->next)
 	{
+            pthread_cond_signal(reader->data);
             if(reader->request == c->in.request_read)
             {
-                pthread_cond_signal(reader->data);
                 break;
             }
 	}

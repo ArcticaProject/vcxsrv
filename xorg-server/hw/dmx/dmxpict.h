@@ -100,16 +100,6 @@ extern void dmxTriangles(CARD8 op,
 			 PictFormatPtr maskFormat,
 			 INT16 xSrc, INT16 ySrc,
 			 int ntri, xTriangle *tris);
-extern void dmxTriStrip(CARD8 op,
-			PicturePtr pSrc, PicturePtr pDst,
-			PictFormatPtr maskFormat,
-			INT16 xSrc, INT16 ySrc,
-			int npoint, xPointFixed *points);
-extern void dmxTriFan(CARD8 op,
-		      PicturePtr pSrc, PicturePtr pDst,
-		      PictFormatPtr maskFormat,
-		      INT16 xSrc, INT16 ySrc,
-		      int npoint, xPointFixed *points);
 
 extern int dmxBECreateGlyphSet(int idx, GlyphSetPtr glyphSet);
 extern Bool dmxBEFreeGlyphSet(ScreenPtr pScreen, GlyphSetPtr glyphSet);

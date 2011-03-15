@@ -56,7 +56,7 @@ SOFTWARE.
 
 /* classes for Resource routines */
 
-typedef unsigned long RESTYPE;
+typedef uint32_t RESTYPE;
 
 #define RC_VANILLA	((RESTYPE)0)
 #define RC_CACHED	((RESTYPE)1<<31)

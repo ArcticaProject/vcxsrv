@@ -938,6 +938,8 @@ CloseDevice(DeviceIntPtr dev)
     }
 
     free(dev->deviceGrab.sync.event);
+    free(dev->config_info);     /* Allocated in xf86ActivateDevice. */
+    dev->config_info = NULL;
     dixFreeObjectWithPrivates(dev, PRIVATE_DEVICE);
 }
 

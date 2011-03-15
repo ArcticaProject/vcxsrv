@@ -29,6 +29,7 @@
 
 #include <stdint.h>
 #include <errno.h>
+#include <dlfcn.h>
 #include <sys/time.h>
 #include <GL/gl.h>
 #include <GL/glxtokens.h>
@@ -203,4 +204,60 @@ glxConvertConfigs(const __DRIcoreExtension *core,
     }
 
     return head.next;
+}
+
+static const char dri_driver_path[] = DRI_DRIVER_PATH;
+
+void *
+glxProbeDriver(const char *driverName,
+	       void **coreExt, const char *coreName, int coreVersion,
+	       void **renderExt, const char *renderName, int renderVersion)
+{
+    int i;
+    void *driver;
+    char filename[PATH_MAX];
+    const __DRIextension **extensions;
+
+    snprintf(filename, sizeof filename, "%s/%s_dri.so",
+             dri_driver_path, driverName);
+
+    driver = dlopen(filename, RTLD_LAZY | RTLD_LOCAL);
+    if (driver == NULL) {
+	LogMessage(X_ERROR, "AIGLX error: dlopen of %s failed (%s)\n",
+		   filename, dlerror());
+	goto cleanup_failure;
+    }
+
+    extensions = dlsym(driver, __DRI_DRIVER_EXTENSIONS);
+    if (extensions == NULL) {
+	LogMessage(X_ERROR, "AIGLX error: %s exports no extensions (%s)\n",
+		   driverName, dlerror());
+	goto cleanup_failure;
+    }
+
+    for (i = 0; extensions[i]; i++) {
+	if (strcmp(extensions[i]->name, coreName) == 0 &&
+	    extensions[i]->version >= coreVersion) {
+		*coreExt = (void *)extensions[i];
+	}
+
+	if (strcmp(extensions[i]->name, renderName) == 0 &&
+	    extensions[i]->version >= renderVersion) {
+		*renderExt = (void *)extensions[i];
+	}
+    }
+
+    if (*coreExt == NULL || *renderExt == NULL) {
+	LogMessage(X_ERROR,
+		   "AIGLX error: %s does not export required DRI extension\n",
+		   driverName);
+	goto cleanup_failure;
+    }
+    return driver;
+
+cleanup_failure:
+    if (driver)
+	dlclose(driver);
+    *coreExt = *renderExt = NULL;
+    return NULL;
 }

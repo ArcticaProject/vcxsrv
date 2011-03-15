@@ -308,7 +308,7 @@ miSpriteInitialize (ScreenPtr               pScreen,
     if (!dixRegisterPrivateKey(&miSpriteScreenKeyRec, PRIVATE_SCREEN, 0))
 	return FALSE;
 
-    if (!dixRegisterPrivateKey(&miSpriteDevPrivatesKeyRec, PRIVATE_DEVICE, 0))
+    if (!dixRegisterPrivateKey(&miSpriteDevPrivatesKeyRec, PRIVATE_DEVICE, sizeof(miCursorInfoRec)))
 	return FALSE;
 
     pScreenPriv = malloc(sizeof (miSpriteScreenRec));
@@ -860,38 +860,35 @@ miSpriteMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 static Bool
 miSpriteDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
-    miCursorInfoPtr pCursorInfo;
-    int ret = FALSE;
+    int ret = miDCDeviceInitialize(pDev, pScreen);
 
-    pCursorInfo = malloc(sizeof(miCursorInfoRec));
-    if (!pCursorInfo)
-        return FALSE;
-
-    pCursorInfo->pCursor = NULL;
-    pCursorInfo->x = 0;
-    pCursorInfo->y = 0;
-    pCursorInfo->isUp = FALSE;
-    pCursorInfo->shouldBeUp = FALSE;
-    pCursorInfo->pCacheWin = NullWindow;
-    pCursorInfo->isInCacheWin = FALSE;
-    pCursorInfo->checkPixels = TRUE;
-    pCursorInfo->pScreen = FALSE;
-
-    ret = miDCDeviceInitialize(pDev, pScreen);
-    if (!ret)
+    if (ret)
     {
-        free(pCursorInfo);
-        pCursorInfo = NULL;
+        miCursorInfoPtr pCursorInfo;
+        pCursorInfo = dixLookupPrivate(&pDev->devPrivates, miSpriteDevPrivatesKey);
+        pCursorInfo->pCursor = NULL;
+        pCursorInfo->x = 0;
+        pCursorInfo->y = 0;
+        pCursorInfo->isUp = FALSE;
+        pCursorInfo->shouldBeUp = FALSE;
+        pCursorInfo->pCacheWin = NullWindow;
+        pCursorInfo->isInCacheWin = FALSE;
+        pCursorInfo->checkPixels = TRUE;
+        pCursorInfo->pScreen = FALSE;
     }
-    dixSetPrivate(&pDev->devPrivates, miSpriteDevPrivatesKey, pCursorInfo);
+
     return ret;
 }
 
 static void
 miSpriteDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
+    miCursorInfoPtr pCursorInfo = dixLookupPrivate(&pDev->devPrivates, miSpriteDevPrivatesKey);
+
     if (DevHasCursor(pDev))
         miDCDeviceCleanup(pDev, pScreen);
+
+    memset(pCursorInfo, 0, sizeof(miCursorInfoRec));
 }
 
 /*
