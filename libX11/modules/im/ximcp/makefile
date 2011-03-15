@@ -30,6 +30,5 @@ CSRCS = \
 	imTransR.c \
 	imTrX.c
 
-DEFINES += XKB_IN_SERVER
 INCLUDES += ..\..\..\include\X11 ..\..\..\src\xlibi18n
 
