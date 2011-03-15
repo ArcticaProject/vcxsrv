@@ -106,7 +106,9 @@ typedef struct _WMMsgQueueRec {
   struct _WMMsgNodeRec	*pTail;
   pthread_mutex_t	pmMutex;
   pthread_cond_t	pcNotEmpty;
+#ifdef _DEBUG
   int			nQueueSize;
+#endif
 } WMMsgQueueRec, *WMMsgQueuePtr;
 
 typedef struct _WMInfo {
@@ -238,8 +240,10 @@ PushMessage (WMMsgQueuePtr pQueue, WMMsgNodePtr pNode)
       pQueue->pHead = pNode;
     }
 
-  /* Increase the count of elements in the queue by one */
+#ifdef _DEBUG
+    /* Increase the count of elements in the queue by one */
   ++(pQueue->nQueueSize);
+#endif
 
   /* Release the queue mutex */
   pthread_mutex_unlock (&pQueue->pmMutex);
@@ -298,10 +302,12 @@ PopMessage (WMMsgQueuePtr pQueue, WMInfoPtr pWMInfo)
       pQueue->pTail = NULL;
     }
 
-  /* Drop the number of elements in the queue by one */
+  #ifdef _DEBUG
+    /* Drop the number of elements in the queue by one */
   --(pQueue->nQueueSize);
 
   winDebug ("Queue Size %d %d\n", pQueue->nQueueSize, QueueSize(pQueue));
+  #endif
   
   /* Release the queue mutex */
   pthread_mutex_unlock (&pQueue->pmMutex);
@@ -351,10 +357,12 @@ InitQueue (WMMsgQueuePtr pQueue)
   pQueue->pTail = NULL;
 
   /* There are no elements initially */
+  #ifdef _DEBUG
   pQueue->nQueueSize = 0;
 
   winDebug ("InitQueue - Queue Size %d %d\n", pQueue->nQueueSize,
 	  QueueSize(pQueue));
+  #endif
 
   winDebug ("InitQueue - Calling pthread_mutex_init\n");
 
