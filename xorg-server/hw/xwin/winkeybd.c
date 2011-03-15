@@ -276,6 +276,21 @@ winRestoreModeKeyStates (void)
   internalKeyStates = XkbStateFieldFromRec(&inputInfo.keyboard->key->xkbInfo->state);
   winDebug("winRestoreModeKeyStates: state %d\n", internalKeyStates);
 
+  {
+    /* Make sure the message queue is empty, otherwise the GetKeyState will not always
+      return the correct state of the numlock key, capslock key, ... 
+      This is mainly because this function is called from the WM_SETFOCUS handler. 
+      From MSDN GetKeyState: The key status returned from this function changes as a thread
+      reads key messages from its message queue.*/
+    MSG msg;
+
+    /* Process all messages on our queue */
+    while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
+    {
+      DispatchMessage (&msg);
+    }
+  }
+
   /* 
    * NOTE: The C XOR operator, ^, will not work here because it is
    * a bitwise operator, not a logical operator.  C does not
