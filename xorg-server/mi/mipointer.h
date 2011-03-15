@@ -133,6 +133,7 @@ extern _X_EXPORT void miPointerGetPosition(
  * x and y are modified in-place. */
 extern _X_EXPORT void miPointerSetPosition(
     DeviceIntPtr pDev,
+    int mode,
     int *x,
     int *y);
 

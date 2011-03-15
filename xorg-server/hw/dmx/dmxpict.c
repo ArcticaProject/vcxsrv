@@ -165,8 +165,6 @@ Bool dmxPictureInit(ScreenPtr pScreen, PictFormatPtr formats, int nformats)
 
     DMX_WRAP(Trapezoids,         dmxTrapezoids,         dmxScreen, ps);
     DMX_WRAP(Triangles,          dmxTriangles,          dmxScreen, ps);
-    DMX_WRAP(TriStrip,           dmxTriStrip,           dmxScreen, ps);
-    DMX_WRAP(TriFan,             dmxTriFan,             dmxScreen, ps);
 
     return TRUE;
 }
@@ -1236,89 +1234,4 @@ void dmxTriangles(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
     }
 
     DMX_WRAP(Triangles, dmxTriangles, dmxScreen, ps);
-}
-
-/** Composite a triangle strip on the appropriate screen.  For a
- *  complete description see the protocol document of the RENDER
- *  library. */
-void dmxTriStrip(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
-		 PictFormatPtr maskFormat,
-		 INT16 xSrc, INT16 ySrc,
-		 int npoint, xPointFixed *points)
-{
-    ScreenPtr         pScreen   = pDst->pDrawable->pScreen;
-    DMXScreenInfo    *dmxScreen = &dmxScreens[pScreen->myNum];
-    PictureScreenPtr  ps        = GetPictureScreen(pScreen);
-    dmxPictPrivPtr    pSrcPriv  = DMX_GET_PICT_PRIV(pSrc);
-    dmxPictPrivPtr    pDstPriv  = DMX_GET_PICT_PRIV(pDst);
-
-    DMX_UNWRAP(TriStrip, dmxScreen, ps);
-#if 0
-    if (ps->TriStrip)
-	ps->TriStrip(op, pSrc, pDst, maskFormat, xSrc, ySrc, npoint, *points);
-#endif
-
-    /* Draw trapezoids on back-end server */
-    if (pDstPriv->pict) {
-	XRenderPictFormat *pFormat;
-
-	pFormat = dmxFindFormat(dmxScreen, maskFormat);
-	if (!pFormat) {
-	    /* FIXME: Error! */
-	}
-
-	XRenderCompositeTriStrip(dmxScreen->beDisplay,
-				 op,
-				 pSrcPriv->pict,
-				 pDstPriv->pict,
-				 pFormat,
-				 xSrc, ySrc,
-				 (XPointFixed *)points,
-				 npoint);
-	dmxSync(dmxScreen, FALSE);
-    }
-
-    DMX_WRAP(TriStrip, dmxTriStrip, dmxScreen, ps);
-}
-
-/** Composite a triangle fan on the appropriate screen.  For a complete
- *  description see the protocol document of the RENDER library. */
-void dmxTriFan(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
-	       PictFormatPtr maskFormat,
-	       INT16 xSrc, INT16 ySrc,
-	       int npoint, xPointFixed *points)
-{
-    ScreenPtr         pScreen   = pDst->pDrawable->pScreen;
-    DMXScreenInfo    *dmxScreen = &dmxScreens[pScreen->myNum];
-    PictureScreenPtr  ps        = GetPictureScreen(pScreen);
-    dmxPictPrivPtr    pSrcPriv  = DMX_GET_PICT_PRIV(pSrc);
-    dmxPictPrivPtr    pDstPriv  = DMX_GET_PICT_PRIV(pDst);
-
-    DMX_UNWRAP(TriFan, dmxScreen, ps);
-#if 0
-    if (ps->TriFan)
-	ps->TriFan(op, pSrc, pDst, maskFormat, xSrc, ySrc, npoint, *points);
-#endif
-
-    /* Draw trapezoids on back-end server */
-    if (pDstPriv->pict) {
-	XRenderPictFormat *pFormat;
-
-	pFormat = dmxFindFormat(dmxScreen, maskFormat);
-	if (!pFormat) {
-	    /* FIXME: Error! */
-	}
-
-	XRenderCompositeTriFan(dmxScreen->beDisplay,
-			       op,
-			       pSrcPriv->pict,
-			       pDstPriv->pict,
-			       pFormat,
-			       xSrc, ySrc,
-			       (XPointFixed *)points,
-			       npoint);
-	dmxSync(dmxScreen, FALSE);
-    }
-
-    DMX_WRAP(TriFan, dmxTriFan, dmxScreen, ps);
 }

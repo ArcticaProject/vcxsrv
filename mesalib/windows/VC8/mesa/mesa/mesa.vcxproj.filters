@@ -98,6 +98,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\extensions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\main\texturebarrier.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\fbobject.c">
       <Filter>Source Files</Filter>
     </ClCompile>

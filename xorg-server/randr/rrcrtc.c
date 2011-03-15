@@ -1,5 +1,6 @@
 /*
  * Copyright © 2006 Keith Packard
+ * Copyright 2010 Red Hat, Inc
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -22,6 +23,7 @@
 
 #include "randrstr.h"
 #include "swaprep.h"
+#include "mipointer.h"
 
 RESTYPE	RRCrtcType;
 
@@ -292,6 +294,92 @@ RRCrtcPendingProperties (RRCrtcPtr crtc)
     return FALSE;
 }
 
+static void
+crtc_bounds(RRCrtcPtr crtc, int *left, int *right, int *top, int *bottom)
+{
+    *left = crtc->x;
+    *top = crtc->y;
+
+    switch (crtc->rotation) {
+    case RR_Rotate_0:
+    case RR_Rotate_180:
+    default:
+       *right = crtc->x + crtc->mode->mode.width;
+       *bottom = crtc->y + crtc->mode->mode.height;
+       return;
+    case RR_Rotate_90:
+    case RR_Rotate_270:
+       *right = crtc->x + crtc->mode->mode.height;
+       *bottom = crtc->y + crtc->mode->mode.width;
+       return;
+    }
+}
+
+/* overlapping counts as adjacent */
+static Bool
+crtcs_adjacent(const RRCrtcPtr a, const RRCrtcPtr b)
+{
+    /* left, right, top, bottom... */
+    int al, ar, at, ab;
+    int bl, br, bt, bb;
+    int cl, cr, ct, cb; /* the overlap, if any */
+
+    crtc_bounds(a, &al, &ar, &at, &ab);
+    crtc_bounds(b, &bl, &br, &bt, &bb);
+
+    cl = max(al, bl);
+    cr = min(ar, br);
+    ct = max(at, bt);
+    cb = min(ab, bb);
+
+    return (cl <= cr) && (ct <= cb);
+}
+
+/* Depth-first search and mark all CRTCs reachable from cur */
+static void
+mark_crtcs (rrScrPrivPtr pScrPriv, int *reachable, int cur)
+{
+    int i;
+    reachable[cur] = TRUE;
+    for (i = 0; i < pScrPriv->numCrtcs; ++i) {
+        if (reachable[i] || !pScrPriv->crtcs[i]->mode)
+            continue;
+        if (crtcs_adjacent(pScrPriv->crtcs[cur], pScrPriv->crtcs[i]))
+            mark_crtcs(pScrPriv, reachable, i);
+    }
+}
+
+static void
+RRComputeContiguity (ScreenPtr pScreen)
+{
+    rrScrPriv(pScreen);
+    Bool discontiguous = TRUE;
+    int i, n = pScrPriv->numCrtcs;
+
+    int *reachable = calloc(n, sizeof(int));
+    if (!reachable)
+        goto out;
+
+    /* Find first enabled CRTC and start search for reachable CRTCs from it */
+    for (i = 0; i < n; ++i) {
+        if (pScrPriv->crtcs[i]->mode) {
+            mark_crtcs(pScrPriv, reachable, i);
+            break;
+        }
+    }
+
+    /* Check that all enabled CRTCs were marked as reachable */
+    for (i = 0; i < n; ++i)
+        if (pScrPriv->crtcs[i]->mode && !reachable[i])
+            goto out;
+
+    discontiguous = FALSE;
+
+out:
+    free(reachable);
+    pScrPriv->discontiguous = discontiguous;
+}
+
 /*
  * Request that the Crtc be reconfigured
  */
@@ -306,6 +394,7 @@ RRCrtcSet (RRCrtcPtr    crtc,
 {
     ScreenPtr	pScreen = crtc->pScreen;
     Bool	ret = FALSE;
+    Bool	recompute = TRUE;
     rrScrPriv(pScreen);
 
     /* See if nothing changed */
@@ -318,6 +407,7 @@ RRCrtcSet (RRCrtcPtr    crtc,
 	!RRCrtcPendingProperties (crtc) &&
 	!RRCrtcPendingTransform (crtc))
     {
+	recompute = FALSE;
 	ret = TRUE;
     }
     else
@@ -381,6 +471,10 @@ RRCrtcSet (RRCrtcPtr    crtc,
 		RRPostPendingProperties (outputs[o]);
 	}
     }
+
+    if (recompute)
+       RRComputeContiguity(pScreen);
+
     return ret;
 }
 
@@ -1348,4 +1442,65 @@ ProcRRGetCrtcTransform (ClientPtr client)
     WriteToClient (client, sizeof (xRRGetCrtcTransformReply) + nextra, (char *) reply);
     free(reply);
     return Success;
+}
+
+void
+RRConstrainCursorHarder(DeviceIntPtr pDev, ScreenPtr pScreen, int mode, int *x, int *y)
+{
+    rrScrPriv (pScreen);
+    int i;
+
+    /* intentional dead space -> let it float */
+    if (pScrPriv->discontiguous)
+       return;
+
+    /* if we're moving inside a crtc, we're fine */
+    for (i = 0; i < pScrPriv->numCrtcs; i++) {
+       RRCrtcPtr crtc = pScrPriv->crtcs[i];
+
+       int left, right, top, bottom;
+
+       if (!crtc->mode)
+           continue;
+
+       crtc_bounds(crtc, &left, &right, &top, &bottom);
+
+       if ((*x >= left) && (*x <= right) && (*y >= top) && (*y <= bottom))
+           return;
+    }
+
+    /* if we're trying to escape, clamp to the CRTC we're coming from */
+    for (i = 0; i < pScrPriv->numCrtcs; i++) {
+       RRCrtcPtr crtc = pScrPriv->crtcs[i];
+       int nx, ny;
+       int left, right, top, bottom;
+
+       if (!crtc->mode)
+           continue;
+
+       crtc_bounds(crtc, &left, &right, &top, &bottom);
+       miPointerGetPosition(pDev, &nx, &ny);
+
+       if ((nx >= left) && (nx <= right) && (ny >= top) && (ny <= bottom)) {
+           if ((*x <= left) || (*x >= right)) {
+               int dx = *x - nx;
+
+               if (dx > 0)
+                   *x = right;
+               else if (dx < 0)
+                   *x = left;
+           }
+
+           if ((*y <= top) || (*y >= bottom)) {
+               int dy = *y - ny;
+
+               if (dy > 0)
+                   *y = bottom;
+               else if (dy < 0)
+                   *y = top;
+           }
+
+           return;
+       }
+    }
 }

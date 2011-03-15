@@ -106,6 +106,8 @@ typedef struct _ClassesRec *ClassesPtr;
 typedef struct _SpriteRec *SpritePtr;
 typedef union _GrabMask GrabMask;
 
+typedef struct _ValuatorMask ValuatorMask;
+
 typedef struct _EventList {
     xEvent* event;
     int evlen; /* length of allocated memory for event in bytes.  This is not
@@ -141,11 +143,9 @@ typedef void (*DeviceUnwrapProc)(
 
 /* pointer acceleration handling */
 typedef void (*PointerAccelSchemeProc)(
-    DeviceIntPtr /*pDev*/,
-    int /*first_valuator*/,
-    int /*num_valuators*/,
-    int* /*valuators*/,
-    int /*evtime*/);
+    DeviceIntPtr /*device*/,
+    ValuatorMask* /*valuators*/,
+    CARD32 /*evtime*/);
 
 typedef void (*DeviceCallbackProc)(
               DeviceIntPtr /*pDev*/);
@@ -162,8 +162,6 @@ typedef struct _DeviceRec {
     ProcessInputProc enqueueInputProc;	/* enqueue */
     Bool	on;			/* used by DDX to keep state */
 } DeviceRec, *DevicePtr;
-
-typedef struct _ValuatorMask ValuatorMask;
 
 typedef struct {
     int			click, bell, bell_pitch, bell_duration;

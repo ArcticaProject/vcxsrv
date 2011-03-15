@@ -1,4 +1,4 @@
-SUBDIRS = devel man sgml
+SUBDIRS = devel sgml
 
 EXTRA_DIST = \
 	README.modes

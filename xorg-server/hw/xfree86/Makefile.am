@@ -27,17 +27,15 @@ if INT10MODULE
 INT10_SUBDIR = int10
 endif
 
-DOC_SUBDIR = doc
-
 SUBDIRS = common ddc i2c x86emu $(INT10_SUBDIR) fbdevhw os-support parser \
 	  ramdac shadowfb $(VBE_SUBDIR) $(VGAHW_SUBDIR) $(XAA_SUBDIR) \
 	  loader dixmods exa modes \
-	  $(DRI_SUBDIR) $(DRI2_SUBDIR) $(XF86UTILS_SUBDIR) $(DOC_SUBDIR)
+	  $(DRI_SUBDIR) $(DRI2_SUBDIR) $(XF86UTILS_SUBDIR) doc man
 
 DIST_SUBDIRS = common ddc i2c x86emu int10 fbdevhw os-support \
                parser ramdac shadowfb vbe vgahw xaa \
                loader dixmods dri dri2 exa modes \
-	       utils doc
+	       utils doc man
 
 bin_PROGRAMS = Xorg
 Xorg_SOURCES = xorg.c

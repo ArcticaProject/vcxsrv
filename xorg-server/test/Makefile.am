@@ -1,6 +1,6 @@
 if UNITTESTS
 SUBDIRS= . xi2
-check_PROGRAMS = xkb input xtest
+check_PROGRAMS = xkb input xtest list
 check_LTLIBRARIES = libxservertest.la
 
 TESTS=$(check_PROGRAMS)
@@ -16,6 +16,7 @@ endif
 xkb_LDADD=$(TEST_LDADD)
 input_LDADD=$(TEST_LDADD)
 xtest_LDADD=$(TEST_LDADD)
+list_LDADD=$(TEST_LDADD)
 
 libxservertest_la_LIBADD = \
             $(XSERVER_LIBS) \

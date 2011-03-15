@@ -297,6 +297,7 @@ typedef struct _rrScrPriv {
     int			    rate;
     int			    size;
 #endif
+    Bool                   discontiguous;
 } rrScrPrivRec, *rrScrPrivPtr;
 
 extern _X_EXPORT DevPrivateKeyRec rrPrivKeyRec;
@@ -699,6 +700,9 @@ ProcRRGetPanning (ClientPtr client);
 
 int
 ProcRRSetPanning (ClientPtr client);
+
+void
+RRConstrainCursorHarder (DeviceIntPtr, ScreenPtr, int, int *, int *);
 
 /* rrdispatch.c */
 extern _X_EXPORT Bool

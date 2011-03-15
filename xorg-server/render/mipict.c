@@ -333,12 +333,8 @@ miClipPictureSrc (RegionPtr	pRegion,
     return TRUE;
 }
 
-void
-miCompositeSourceValidate (PicturePtr	pPicture,
-			   INT16	x,
-			   INT16	y,
-			   CARD16	width,
-			   CARD16	height)
+static void
+SourceValidateOnePicture (PicturePtr pPicture)
 {
     DrawablePtr	pDrawable = pPicture->pDrawable;
     ScreenPtr	pScreen;
@@ -347,48 +343,20 @@ miCompositeSourceValidate (PicturePtr	pPicture,
         return;
 
     pScreen = pDrawable->pScreen;
-    
+
     if (pScreen->SourceValidate)
     {
-	if (pPicture->transform)
-	{
-	    xPoint	    points[4];
-	    int		    i;
-	    int		    xmin, ymin, xmax, ymax;
-
-#define VectorSet(i,_x,_y) { points[i].x = _x; points[i].y = _y; }
-	    VectorSet (0, x, y);
-	    VectorSet (1, x + width, y);
-	    VectorSet (2, x, y + height);
-	    VectorSet (3, x + width, y + height);
-	    xmin = ymin = 32767;
-	    xmax = ymax = -32737;
-	    for (i = 0; i < 4; i++)
-	    {
-		PictVector  t;
-		t.vector[0] = IntToxFixed (points[i].x);
-		t.vector[1] = IntToxFixed (points[i].y);
-		t.vector[2] = xFixed1;
-		if (pixman_transform_point (pPicture->transform, &t))
-		{
-		    int	tx = xFixedToInt (t.vector[0]);
-		    int ty = xFixedToInt (t.vector[1]);
-		    if (tx < xmin) xmin = tx;
-		    if (tx > xmax) xmax = tx;
-		    if (ty < ymin) ymin = ty;
-		    if (ty > ymax) ymax = ty;
-		}
-	    }
-	    x = xmin;
-	    y = ymin;
-	    width = xmax - xmin;
-	    height = ymax - ymin;
-	}
-        x += pPicture->pDrawable->x;
-        y += pPicture->pDrawable->y;
-	(*pScreen->SourceValidate) (pDrawable, x, y, width, height,
-				    pPicture->subWindowMode);
+	pScreen->SourceValidate (
+	    pDrawable, 0, 0, pDrawable->width, pDrawable->height, pPicture->subWindowMode);
     }
+}
+
+void
+miCompositeSourceValidate (PicturePtr pPicture)
+{
+    SourceValidateOnePicture (pPicture);
+    if (pPicture->alphaMap)
+	SourceValidateOnePicture (pPicture->alphaMap);
 }
 
 /*
@@ -480,9 +448,9 @@ miComputeCompositeRegion (RegionPtr	pRegion,
     }
 
     
-    miCompositeSourceValidate (pSrc, xSrc, ySrc, width, height);
+    miCompositeSourceValidate (pSrc);
     if (pMask)
-	miCompositeSourceValidate (pMask, xMask, yMask, width, height);
+	miCompositeSourceValidate (pMask);
 
     return TRUE;
 }
@@ -633,8 +601,6 @@ miPictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     ps->CompositeRects	= miCompositeRects;
     ps->Trapezoids	= 0;
     ps->Triangles	= 0;
-    ps->TriStrip	= miTriStrip;
-    ps->TriFan		= miTriFan;
     
     ps->RasterizeTrapezoid = 0;			/* requires DDX support */
     ps->AddTraps	= 0;			/* requires DDX support */

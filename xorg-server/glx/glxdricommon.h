@@ -38,4 +38,9 @@ glxConvertConfigs(const __DRIcoreExtension *core,
 
 extern const __DRIsystemTimeExtension systemTimeExtension;
 
+void *
+glxProbeDriver(const char *name,
+	       void **coreExt, const char *coreName, int coreVersion,
+	       void **renderExt, const char *renderName, int renderVersion);
+
 #endif

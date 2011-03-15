@@ -2205,7 +2205,6 @@ hw/xfree86/dixmods/Makefile
 hw/xfree86/dixmods/extmod/Makefile
 hw/xfree86/doc/Makefile
 hw/xfree86/doc/devel/Makefile
-hw/xfree86/doc/man/Makefile
 hw/xfree86/doc/sgml/Makefile
 hw/xfree86/dri/Makefile
 hw/xfree86/dri2/Makefile
@@ -2216,6 +2215,7 @@ hw/xfree86/fbdevhw/man/Makefile
 hw/xfree86/i2c/Makefile
 hw/xfree86/int10/Makefile
 hw/xfree86/loader/Makefile
+hw/xfree86/man/Makefile
 hw/xfree86/modes/Makefile
 hw/xfree86/os-support/Makefile
 hw/xfree86/os-support/bsd/Makefile

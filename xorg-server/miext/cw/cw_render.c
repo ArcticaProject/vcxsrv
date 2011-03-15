@@ -371,66 +371,6 @@ cwTriangles (CARD8	    op,
     cwPsWrap(Triangles, cwTriangles);
 }
 
-static void
-cwTriStrip (CARD8	    op,
-	    PicturePtr	    pSrcPicture,
-	    PicturePtr	    pDstPicture,
-	    PictFormatPtr   maskFormat,
-	    INT16	    xSrc,
-	    INT16	    ySrc,
-	    int		    npoint,
-	    xPointFixed    *points)
-{
-    ScreenPtr	pScreen = pDstPicture->pDrawable->pScreen;
-    cwPsDecl(pScreen);
-    cwSrcPictureDecl;
-    cwDstPictureDecl;
-    int i;
-
-    cwPsUnwrap(TriStrip);
-    if (dst_picture_x_off || dst_picture_y_off) {
-	for (i = 0; i < npoint; i++)
-	{
-	    points[i].x += dst_picture_x_off << 16;
-	    points[i].y += dst_picture_y_off << 16;
-	}
-    }
-    (*ps->TriStrip) (op, pBackingSrcPicture, pBackingDstPicture, maskFormat,
-		     xSrc + src_picture_x_off, ySrc + src_picture_y_off,
-		     npoint, points);
-    cwPsWrap(TriStrip, cwTriStrip);
-}
-
-static void
-cwTriFan (CARD8		 op,
-	  PicturePtr	 pSrcPicture,
-	  PicturePtr	 pDstPicture,
-	  PictFormatPtr  maskFormat,
-	  INT16		 xSrc,
-	  INT16		 ySrc,
-	  int		 npoint,
-	  xPointFixed   *points)
-{
-    ScreenPtr	pScreen = pDstPicture->pDrawable->pScreen;
-    cwPsDecl(pScreen);
-    cwSrcPictureDecl;
-    cwDstPictureDecl;
-    int i;
-
-    cwPsUnwrap(TriFan);
-    if (dst_picture_x_off || dst_picture_y_off) {
-	for (i = 0; i < npoint; i++)
-	{
-	    points[i].x += dst_picture_x_off << 16;
-	    points[i].y += dst_picture_y_off << 16;
-	}
-    }
-    (*ps->TriFan) (op, pBackingSrcPicture, pBackingDstPicture, maskFormat,
-		   xSrc + src_picture_x_off, ySrc + src_picture_y_off,
-		   npoint, points);
-    cwPsWrap(TriFan, cwTriFan);
-}
-
 void
 cwInitializeRender (ScreenPtr pScreen)
 {
@@ -443,8 +383,6 @@ cwInitializeRender (ScreenPtr pScreen)
     cwPsWrap(CompositeRects, cwCompositeRects);
     cwPsWrap(Trapezoids, cwTrapezoids);
     cwPsWrap(Triangles, cwTriangles);
-    cwPsWrap(TriStrip, cwTriStrip);
-    cwPsWrap(TriFan, cwTriFan);
     /* There is no need to wrap AddTraps as far as we can tell.  AddTraps can
      * only be done on alpha-only pictures, and we won't be getting
      * alpha-only window pictures, so there's no need to translate.
@@ -463,7 +401,5 @@ cwFiniRender (ScreenPtr pScreen)
     cwPsUnwrap(CompositeRects);
     cwPsUnwrap(Trapezoids);
     cwPsUnwrap(Triangles);
-    cwPsUnwrap(TriStrip);
-    cwPsUnwrap(TriFan);
 }
 

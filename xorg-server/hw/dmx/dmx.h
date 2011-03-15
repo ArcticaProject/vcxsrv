@@ -249,8 +249,6 @@ typedef struct _DMXScreenInfo {
 
     TrapezoidsProcPtr              Trapezoids;
     TrianglesProcPtr               Triangles;
-    TriStripProcPtr                TriStrip;
-    TriFanProcPtr                  TriFan;
 } DMXScreenInfo;
 
 /* Global variables available to all Xserver/hw/dmx routines. */

@@ -77,17 +77,12 @@
 #undef _POSIX_SOURCE
 #endif /* _POSIX_SOURCE */
 
-#if !defined(PATH_MAX)
-#if defined(MAXPATHLEN)
-#define PATH_MAX MAXPATHLEN
-#else
-#define PATH_MAX 1024
-#endif /* MAXPATHLEN */
-#endif /* !PATH_MAX */
-
 #if !defined(MAXHOSTNAMELEN)
 #define MAXHOSTNAMELEN 32
 #endif /* !MAXHOSTNAMELEN */
+
+/* For PATH_MAX */
+#include "misc.h"
 
 #include "Configint.h"
 #include "xf86tokens.h"

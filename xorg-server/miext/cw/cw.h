@@ -106,8 +106,6 @@ typedef struct {
 
     TrapezoidsProcPtr		Trapezoids;
     TrianglesProcPtr		Triangles;
-    TriStripProcPtr		TriStrip;
-    TriFanProcPtr		TriFan;
 
     RasterizeTrapezoidProcPtr	RasterizeTrapezoid;
 } cwScreenRec, *cwScreenPtr;

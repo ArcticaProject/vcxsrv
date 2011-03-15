@@ -68,20 +68,13 @@ xkbUnwrapProc(DeviceIntPtr device, DeviceHandleProc proc,
 Bool
 XkbInitPrivates(void)
 {
-    return dixRegisterPrivateKey(&xkbDevicePrivateKeyRec, PRIVATE_DEVICE, 0);
+    return dixRegisterPrivateKey(&xkbDevicePrivateKeyRec, PRIVATE_DEVICE, sizeof(xkbDeviceInfoRec));
 }
 
 void
 XkbSetExtension(DeviceIntPtr device, ProcessInputProc proc)
 {
-    xkbDeviceInfoPtr xkbPrivPtr;
-
-    xkbPrivPtr = (xkbDeviceInfoPtr) calloc(1, sizeof(xkbDeviceInfoRec));
-    if (!xkbPrivPtr)
-	return;
-    xkbPrivPtr->unwrapProc = NULL;
-
-    dixSetPrivate(&device->devPrivates, xkbDevicePrivateKey, xkbPrivPtr);
+    xkbDeviceInfoPtr xkbPrivPtr = XKBDEVICEINFO(device);
     WRAP_PROCESS_INPUT_PROC(device, xkbPrivPtr, proc, xkbUnwrapProc);
 }
 

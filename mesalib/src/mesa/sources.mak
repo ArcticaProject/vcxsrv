@@ -94,6 +94,7 @@ MAIN_SOURCES = \
 	main/texrender.c \
 	main/texstate.c \
 	main/texstore.c \
+	main/texturebarrier.c \
 	main/transformfeedback.c \
 	main/uniforms.c \
 	main/varray.c \
@@ -220,6 +221,7 @@ STATETRACKER_SOURCES = \
 	state_tracker/st_cb_syncobj.c \
 	state_tracker/st_cb_strings.c \
 	state_tracker/st_cb_texture.c \
+	state_tracker/st_cb_texturebarrier.c \
 	state_tracker/st_cb_viewport.c \
 	state_tracker/st_cb_xformfb.c \
 	state_tracker/st_context.c \

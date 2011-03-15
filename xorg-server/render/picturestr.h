@@ -381,8 +381,6 @@ typedef struct _PictureScreen {
 
     TrapezoidsProcPtr		Trapezoids;
     TrianglesProcPtr		Triangles;
-    TriStripProcPtr		TriStrip;
-    TriFanProcPtr		TriFan;
 
     RasterizeTrapezoidProcPtr	RasterizeTrapezoid;
 

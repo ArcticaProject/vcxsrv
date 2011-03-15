@@ -200,7 +200,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\attrib.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\blend.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\bufferobj.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\main\bufferobj.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\buffers.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\ff_fragment_shader.cpp" />
     <ClCompile Include="..\..\..\..\src\mesa\main\clear.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\clip.c" />
@@ -220,6 +220,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\eval.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\execmem.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\extensions.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\texturebarrier.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\fbobject.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\feedback.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\ffvertex_prog.c" />

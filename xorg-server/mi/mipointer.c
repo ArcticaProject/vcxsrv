@@ -272,6 +272,9 @@ miPointerSetCursorPosition(DeviceIntPtr pDev, ScreenPtr pScreen,
 
     pPointer->generateEvent = generateEvent;
 
+    if (pScreen->ConstrainCursorHarder)
+	pScreen->ConstrainCursorHarder(pDev, pScreen, Absolute, &x, &y);
+
     /* device dependent - must pend signal and call miPointerWarpCursor */
     (*pScreenPriv->screenFuncs->WarpCursor) (pDev, pScreen, x, y);
     if (!generateEvent)
@@ -560,14 +563,18 @@ miPointerMoveNoEvent (DeviceIntPtr pDev, ScreenPtr pScreen,
  * This function is called during the pointer update path in
  * GetPointerEvents and friends (and the same in the xwin DDX).
  *
+ * The coordinates provided are always absolute. The parameter mode whether
+ * it was relative or absolute movement that landed us at those coordinates.
+ *
  * @param pDev The device to move
+ * @param mode Movement mode (Absolute or Relative)
  * @param[in,out] x The x coordiante in screen coordinates (in regards to total
  * desktop size)
  * @param[in,out] y The y coordiante in screen coordinates (in regards to total
  * desktop size)
  */
 void
-miPointerSetPosition(DeviceIntPtr pDev, int *x, int *y)
+miPointerSetPosition(DeviceIntPtr pDev, int mode, int *x, int *y)
 {
     miPointerScreenPtr	pScreenPriv;
     ScreenPtr		pScreen;
@@ -611,6 +618,9 @@ miPointerSetPosition(DeviceIntPtr pDev, int *x, int *y)
 	*y = pPointer->limits.y1;
     if (*y >= pPointer->limits.y2)
 	*y = pPointer->limits.y2 - 1;
+
+    if (pScreen->ConstrainCursorHarder)
+       pScreen->ConstrainCursorHarder(pDev, pScreen, mode, x, y);
 
     if (pPointer->x == *x && pPointer->y == *y && 
             pPointer->pScreen == pScreen) 

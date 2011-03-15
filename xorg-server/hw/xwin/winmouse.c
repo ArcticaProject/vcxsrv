@@ -377,7 +377,7 @@ void winEnqueueMotion(int x, int y)
   ValuatorMask mask;
   EventListPtr events;
 
-  miPointerSetPosition(g_pwinPointer, &x, &y);
+  miPointerSetPosition(g_pwinPointer, Absolute, &x, &y);
   valuators[0] = x;
   valuators[1] = y;
 
