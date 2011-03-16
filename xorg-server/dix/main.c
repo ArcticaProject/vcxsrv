@@ -330,6 +330,11 @@ int main(int argc, char *argv[], char *envp[])
         
 	NotifyParentProcess();
 
+        #ifdef _MSC_VER
+        // initialise here because doing it in InitInput failes because keyboard device is not started yet then
+        winInitializeModeKeyStates ();
+        #endif
+
 	Dispatch();
 
         UndisplayDevices();

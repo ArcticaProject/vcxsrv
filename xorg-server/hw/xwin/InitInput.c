@@ -110,8 +110,8 @@ InitInput (int argc, char *argv[])
 
   mieqInit ();
 
-  /* Initialize the mode key states */
-  winInitializeModeKeyStates ();
+  /* Do not nitialize the mode key states here yet since the keyboard device is not started yet
+  winInitializeModeKeyStates (); */
 
 #ifdef HAS_DEVWINDOWS
   /* Only open the windows message queue device once */
