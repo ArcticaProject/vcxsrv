@@ -46,10 +46,10 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 typedef struct _XkbStateRec {
 	unsigned char   group; /* base + latched + locked */
+	unsigned char   locked_group;
 	/* FIXME: Why are base + latched short and not char?? */
 	unsigned short  base_group; /* physically ... down? */
 	unsigned short  latched_group;
-	unsigned char   locked_group;
 
 	unsigned char   mods; /* base + latched + locked */
 	unsigned char   base_mods; /* physically down */
