@@ -447,23 +447,23 @@ XkbRMLVOtoKcCGST(DeviceIntPtr dev, XkbRMLVOSet *rmlvo, XkbComponentNamesPtr kccg
 static XkbDescPtr
 XkbCompileKeymapForDevice(DeviceIntPtr dev, XkbRMLVOSet *rmlvo, int need)
 {
-    XkbDescPtr xkb;
+    XkbDescPtr xkb = NULL;
     unsigned int provided;
-    XkbComponentNamesRec kccgst;
+    XkbComponentNamesRec kccgst = {0};
     char name[PATH_MAX];
 
-    if (!XkbRMLVOtoKcCGST(dev, rmlvo, &kccgst))
-        return NULL;
-
-    provided = XkbDDXLoadKeymapByNames(dev, &kccgst, XkmAllIndicesMask, need,
-                                       &xkb, name, PATH_MAX);
-    if ((need & provided) != need) {
-        if (xkb) {
-            XkbFreeKeyboard(xkb, 0, TRUE);
-            xkb = NULL;
+    if (XkbRMLVOtoKcCGST(dev, rmlvo, &kccgst)) {
+        provided = XkbDDXLoadKeymapByNames(dev, &kccgst, XkmAllIndicesMask, need,
+                                           &xkb, name, PATH_MAX);
+        if ((need & provided) != need) {
+            if (xkb) {
+                XkbFreeKeyboard(xkb, 0, TRUE);
+                xkb = NULL;
+            }
         }
     }
 
+    XkbFreeComponentNames(&kccgst, FALSE);
     return xkb;
 }
 

@@ -1574,7 +1574,19 @@ int _XError (
 	!(*dpy->error_vec[rep->errorCode])(dpy, &event.xerror, rep))
 	return 0;
     if (_XErrorFunction != NULL) {
-	return (*_XErrorFunction)(dpy, (XErrorEvent *)&event); /* upcall */
+	int rtn_val;
+#ifdef XTHREADS
+	if (dpy->lock)
+	    (*dpy->lock->user_lock_display)(dpy);
+	UnlockDisplay(dpy);
+#endif
+	rtn_val = (*_XErrorFunction)(dpy, (XErrorEvent *)&event); /* upcall */
+#ifdef XTHREADS
+	LockDisplay(dpy);
+	if (dpy->lock)
+	    (*dpy->lock->user_unlock_display)(dpy);
+#endif
+	return rtn_val;
     } else {
 	return _XDefaultError(dpy, (XErrorEvent *)&event);
     }

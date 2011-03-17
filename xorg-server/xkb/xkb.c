@@ -4307,10 +4307,21 @@ ProcXkbSetNames(ClientPtr client)
 
 #define	XkbSizeCountedString(s)  ((s)?((((2+strlen(s))+3)/4)*4):4)
 
+/**
+ * Write the zero-terminated string str into wire as a pascal string with a
+ * 16-bit length field prefixed before the actual string.
+ *
+ * @param wire The destination array, usually the wire struct
+ * @param str The source string as zero-terminated C string
+ * @param swap If TRUE, the length field is swapped.
+ *
+ * @return The input string in the format <string length><string> with a
+ * (swapped) 16 bit string length, non-zero terminated.
+ */
 static char *
 XkbWriteCountedString(char *wire,char *str,Bool swap)
 {
-    CARD16 len,*pLen;
+    CARD16 len,*pLen, paddedLen;
 
     if (!str)
         return wire;
@@ -4322,8 +4333,9 @@ XkbWriteCountedString(char *wire,char *str,Bool swap)
 	register int n;
 	swaps(pLen,n);
     }
-    memcpy(&wire[2],str,len);
-    wire+= ((2+len+3)/4)*4;
+    paddedLen= pad_to_int32(sizeof(len)+len)-sizeof(len);
+    strncpy(&wire[sizeof(len)],str,paddedLen);
+    wire+= sizeof(len)+paddedLen;
     return wire;
 }
 
@@ -4434,6 +4446,7 @@ xkbShapeWireDesc *	shapeWire;
 	if (shape->approx!=NULL)
 	     shapeWire->approxNdx= XkbOutlineIndex(shape,shape->approx);
 	else shapeWire->approxNdx= XkbNoShape;
+	shapeWire->pad= 0;
 	if (swap) {
 	    register int n;
 	    swapl(&shapeWire->name,n);
@@ -4446,6 +4459,7 @@ xkbShapeWireDesc *	shapeWire;
 	    olWire= (xkbOutlineWireDesc *)wire;
 	    olWire->nPoints= ol->num_points;
 	    olWire->cornerRadius= ol->corner_radius;
+	    olWire->pad= 0;
 	    wire= (char *)&olWire[1];
 	    ptWire= (xkbPointWireDesc *)wire;
 	    for (p=0,pt=ol->points;p<ol->num_points;p++,pt++) {
@@ -4559,6 +4573,8 @@ xkbOverlayWireDesc *	olWire;
    olWire= (xkbOverlayWireDesc *)wire;
    olWire->name= ol->name;
    olWire->nRows= ol->num_rows;
+   olWire->pad1= 0;
+   olWire->pad2= 0;
    if (swap) {
 	register int n;
 	swapl(&olWire->name,n);
@@ -4571,6 +4587,7 @@ xkbOverlayWireDesc *	olWire;
 	rowWire= (xkbOverlayRowWireDesc *)wire;
 	rowWire->rowUnder= row->row_under;
 	rowWire->nKeys= row->num_keys;
+	rowWire->pad1= 0;
 	wire= (char *)&rowWire[1];
 	for (k=0,key=row->keys;k<row->num_keys;k++,key++) {
 	    xkbOverlayKeyWireDesc *	keyWire;
@@ -5895,16 +5912,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 	XkbFreeKeyboard(new,XkbAllComponentsMask,TRUE);
 	new= NULL;
     }
-    free(names.keycodes);
-    names.keycodes = NULL;
-    free(names.types);
-    names.types = NULL;
-    free(names.compat);
-    names.compat = NULL;
-    free(names.symbols);
-    names.symbols = NULL;
-    free(names.geometry);
-    names.geometry = NULL;
+    XkbFreeComponentNames(&names, FALSE);
     return Success;
 }
 

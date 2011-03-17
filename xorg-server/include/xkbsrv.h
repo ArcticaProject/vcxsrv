@@ -447,6 +447,11 @@ extern _X_EXPORT void	XkbFreeKeyboard(
 	Bool			/* freeDesc */
 );
 
+extern _X_EXPORT void	XkbFreeComponentNames(
+	XkbComponentNamesPtr	/* names */,
+	Bool			/* freeNames */
+);
+
 extern _X_EXPORT  void XkbSetActionKeyMods(
 	XkbDescPtr		/* xkb */,
 	XkbAction *		/* act */,

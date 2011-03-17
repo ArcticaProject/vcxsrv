@@ -333,3 +333,22 @@ XkbFreeKeyboard(XkbDescPtr xkb,unsigned which,Bool freeAll)
 	free(xkb);
     return;
 }
+
+
+/***====================================================================***/
+
+void
+XkbFreeComponentNames(XkbComponentNamesPtr names, Bool freeNames)
+{
+    if (names)
+    {
+        free(names->keycodes);
+        free(names->types);
+        free(names->compat);
+        free(names->symbols);
+        free(names->geometry);
+        memset(names, 0, sizeof(XkbComponentNamesRec));
+    }
+    if (freeNames)
+        free(names);
+}
