@@ -814,11 +814,18 @@ Example: the MIT-SHM extension can be disabled with the following entry:
 The config file may have multiple
 .B InputDevice
 sections.
-Recent X servers employ input hotplugging to add input devices, with the HAL
-backend being the default backend for X servers since 1.4. It is usually not
+Recent X servers employ HAL or udev backends for input device enumeration
+and input hotplugging. It is usually not
 necessary to provide
 .B InputDevice
-sections in the xorg.conf if hotplugging is enabled.
+sections in the xorg.conf if hotplugging is in use. If hotplugging is
+enabled,
+.B InputDevice
+sections using the
+.B mouse, kbd
+and
+.B vmmouse
+driver will be ignored.
 .PP
 If hotplugging is disabled, there will normally
 be at least two: one for the core (primary) keyboard
