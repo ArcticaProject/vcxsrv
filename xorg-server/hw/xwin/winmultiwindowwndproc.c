@@ -568,7 +568,10 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       break;
 
     case WM_MOUSELEAVE:
-      /* Mouse has left our client area */
+       /* We can't do anything without privates */
+      if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
+	break;
+     /* Mouse has left our client area */
 
       /* Flag that we are no longer tracking */
       s_fTracking = FALSE;
