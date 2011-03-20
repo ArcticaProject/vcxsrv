@@ -1362,12 +1362,9 @@ src_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
 }
 
 void
-_pixman_bits_image_src_iter_init (pixman_image_t *image,
-				  pixman_iter_t *iter,
-				  int x, int y, int width, int height,
-				  uint8_t *buffer, iter_flags_t flags)
+_pixman_bits_image_src_iter_init (pixman_image_t *image, pixman_iter_t *iter)
 {
-    if (flags & ITER_NARROW)
+    if (iter->flags & ITER_NARROW)
 	iter->get_scanline = src_get_scanline_narrow;
     else
 	iter->get_scanline = src_get_scanline_wide;
@@ -1472,28 +1469,25 @@ dest_write_back_direct (pixman_iter_t *iter)
 }
 
 void
-_pixman_bits_image_dest_iter_init (pixman_image_t *image,
-				   pixman_iter_t *iter,
-				   int x, int y, int width, int height,
-				   uint8_t *buffer, iter_flags_t flags)
+_pixman_bits_image_dest_iter_init (pixman_image_t *image, pixman_iter_t *iter)
 {
-    if (flags & ITER_NARROW)
+    if (iter->flags & ITER_NARROW)
     {
 	if (((image->common.flags &
 	      (FAST_PATH_NO_ALPHA_MAP | FAST_PATH_NO_ACCESSORS)) ==
 	     (FAST_PATH_NO_ALPHA_MAP | FAST_PATH_NO_ACCESSORS)) &&
 	    (image->bits.format == PIXMAN_a8r8g8b8	||
 	     (image->bits.format == PIXMAN_x8r8g8b8	&&
-	      (flags & ITER_LOCALIZED_ALPHA))))
+	      (iter->flags & ITER_LOCALIZED_ALPHA))))
 	{
-	    iter->buffer = image->bits.bits + y * image->bits.rowstride + x;
+	    iter->buffer = image->bits.bits + iter->y * image->bits.rowstride + iter->x;
 
 	    iter->get_scanline = _pixman_iter_get_scanline_noop;
 	    iter->write_back = dest_write_back_direct;
 	}
 	else
 	{
-	    if ((flags & (ITER_IGNORE_RGB | ITER_IGNORE_ALPHA)) ==
+	    if ((iter->flags & (ITER_IGNORE_RGB | ITER_IGNORE_ALPHA)) ==
 		(ITER_IGNORE_RGB | ITER_IGNORE_ALPHA))
 	    {
 		iter->get_scanline = _pixman_iter_get_scanline_noop;

@@ -233,18 +233,12 @@ linear_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
 }
 
 void
-_pixman_linear_gradient_iter_init (pixman_image_t *image,
-				   pixman_iter_t  *iter,
-				   int             x,
-				   int             y,
-				   int             width,
-				   int             height,
-				   uint8_t        *buffer,
-				   iter_flags_t    flags)
+_pixman_linear_gradient_iter_init (pixman_image_t *image, pixman_iter_t  *iter)
 {
-    if (linear_gradient_is_horizontal (image, x, y, width, height))
+    if (linear_gradient_is_horizontal (
+	    iter->image, iter->x, iter->y, iter->width, iter->height))
     {
-	if (flags & ITER_NARROW)
+	if (iter->flags & ITER_NARROW)
 	    linear_get_scanline_narrow (iter, NULL);
 	else
 	    linear_get_scanline_wide (iter, NULL);
@@ -253,7 +247,7 @@ _pixman_linear_gradient_iter_init (pixman_image_t *image,
     }
     else
     {
-	if (flags & ITER_NARROW)
+	if (iter->flags & ITER_NARROW)
 	    iter->get_scanline = linear_get_scanline_narrow;
 	else
 	    iter->get_scanline = linear_get_scanline_wide;

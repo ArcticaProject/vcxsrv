@@ -32,13 +32,20 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros minimum of 1.10 for XORG_CHECK_SGML_DOCTOOLS
+# Require xorg-macros minimum of 1.13 for XORG_ENABLE_UNIT_TESTS
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
+          [m4_fatal([must install xorg-macros 1.13 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.10)
 XORG_DEFAULT_OPTIONS
 XORG_WITH_DOXYGEN(1.6.1)
 XORG_CHECK_SGML_DOCTOOLS(1.5)
+XORG_ENABLE_DOCS
+XORG_ENABLE_DEVEL_DOCS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
+XORG_ENABLE_UNIT_TESTS
+XORG_WITH_GLIB
+XORG_LD_WRAP
 
 m4_ifndef([XORG_FONT_MACROS_VERSION], [m4_fatal([must install fontutil 1.1 or later before running autoconf/autogen])])
 XORG_FONT_MACROS_VERSION(1.1)
@@ -454,9 +461,6 @@ AC_ARG_ENABLE(werror,        AS_HELP_STRING([--enable-werror],
 AC_ARG_ENABLE(debug,         AS_HELP_STRING([--enable-debug],
 				  [Enable debugging (default: disabled)]),
 			        [DEBUGGING=$enableval], [DEBUGGING=no])
-AC_ARG_ENABLE(unit-tests,    AS_HELP_STRING([--enable-unit-tests],
-                                  [Enable unit-tests (default: auto)]),
-                                [UNITTESTS=$enableval], [UNITTESTS=auto])
 AC_ARG_ENABLE(use-sigio-by-default, AS_HELP_STRING([--enable-use-sigio-by-default]
   [Enable SIGIO input handlers by default (default: $USE_SIGIO_BY_DEFAULT)]),
                                 [USE_SIGIO_BY_DEFAULT=$enableval], [])
@@ -697,11 +701,6 @@ if test "x$INT10" = xyes; then
 	dnl VM86 headers
 	AC_CHECK_HEADERS([sys/vm86.h sys/io.h])
 fi
-
-XORG_ENABLE_DOCS
-XORG_ENABLE_DEVEL_DOCS
-XORG_WITH_XMLTO(0.0.20)
-XORG_WITH_FOP
 
 dnl Handle installing libxf86config
 AM_CONDITIONAL(INSTALL_LIBXF86CONFIG, [test "x$INSTALL_LIBXF86CONFIG" = xyes])
@@ -1270,50 +1269,6 @@ if test "x$DEBUGGING" = xyes; then
        AC_DEFINE(DEBUG, 1, [Enable debugging code])
 fi
 AM_CONDITIONAL(DEBUG, [test "x$DEBUGGING" = xyes])
-
-# If unittests aren't explicitly disabled, check for required support
-if test "x$UNITTESTS" != xno ; then
-       PKG_CHECK_MODULES([GLIB], $LIBGLIB,
-                         [HAVE_GLIB=yes], [HAVE_GLIB=no])
-
-       # Check if linker supports -wrap, passed via compiler flags
-       # When cross-compiling, reports no, since unit tests run from
-       # "make check", so would be running on build machine,  not target
-       AC_MSG_CHECKING([whether the linker supports -wrap])
-       save_LDFLAGS="$LDFLAGS"
-       LDFLAGS="$LDFLAGS -Wl,-wrap,exit"
-       AC_RUN_IFELSE([AC_LANG_PROGRAM([[
-	void __wrap_exit (int s)
-	{
-	    __real_exit (0);
-	}]],
-	[[exit (1);]])],
-                     [linker_can_wrap="yes"],
-                     [linker_can_wrap="no"],
-                     [linker_can_wrap="no"])
-       AC_MSG_RESULT([$linker_can_wrap])
-       LDFLAGS="$save_LDFLAGS"
-fi
-
-if test "x$UNITTESTS" = xauto; then
-       if test "x$HAVE_GLIB" = xyes && test "x$linker_can_wrap" = xyes; then
-           UNITTESTS=yes
-       else
-           UNITTESTS=no
-       fi
-fi
-if test "x$UNITTESTS" = xyes; then
-       if test "x$HAVE_GLIB" = xno; then
-           AC_MSG_ERROR([glib required to build unit tests])
-       fi
-       if test "x$linker_can_wrap" = xno; then
-           AC_MSG_ERROR([ld -wrap support required to build unit tests])
-       fi
-       AC_DEFINE(UNITTESTS, 1, [Enable unit tests])
-       AC_SUBST([GLIB_LIBS])
-       AC_SUBST([GLIB_CFLAGS])
-fi
-AM_CONDITIONAL(UNITTESTS, [test "x$UNITTESTS" = xyes])
 
 AC_DEFINE(XTEST, 1, [Support XTest extension])
 AC_DEFINE(XSYNC, 1, [Support XSync extension])

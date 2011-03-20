@@ -27,24 +27,21 @@
 #include "pixman-private.h"
 
 void
-_pixman_solid_fill_iter_init (pixman_image_t *image,
-			      pixman_iter_t  *iter,
-			      int x, int y, int width, int height,
-			      uint8_t *buffer, iter_flags_t flags)
+_pixman_solid_fill_iter_init (pixman_image_t *image, pixman_iter_t  *iter)
 {
-    if (flags & ITER_NARROW)
+    if (iter->flags & ITER_NARROW)
     {
-	uint32_t *b = (uint32_t *)buffer;
-	uint32_t *e = b + width;
-	uint32_t color = image->solid.color_32;
+	uint32_t *b = (uint32_t *)iter->buffer;
+	uint32_t *e = b + iter->width;
+	uint32_t color = iter->image->solid.color_32;
 
 	while (b < e)
 	    *(b++) = color;
     }
     else
     {
-	uint64_t *b = (uint64_t *)buffer;
-	uint64_t *e = b + width;
+	uint64_t *b = (uint64_t *)iter->buffer;
+	uint64_t *e = b + iter->width;
 	uint64_t color = image->solid.color_64;
 
 	while (b < e)

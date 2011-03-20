@@ -37,7 +37,7 @@ DevPrivateKeyRec xnestPixmapPrivateKeyRec;
 
 PixmapPtr
 xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
-		  unsigned class)
+		  unsigned usage_hint)
 {
   PixmapPtr pPixmap;
 
@@ -45,7 +45,7 @@ xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
   if (!pPixmap)
     return NullPixmap;
   pPixmap->drawable.type = DRAWABLE_PIXMAP;
-  pPixmap->drawable.class = class;
+  pPixmap->drawable.class = 0;
   pPixmap->drawable.depth = depth;
   pPixmap->drawable.bitsPerPixel = depth;
   pPixmap->drawable.id = 0;
@@ -57,6 +57,7 @@ xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
   pPixmap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
   pPixmap->refcnt = 1;
   pPixmap->devKind = PixmapBytePad(width, depth);
+  pPixmap->usage_hint = usage_hint;
   if (width && height)
       xnestPixmapPriv(pPixmap)->pixmap = 
 	  XCreatePixmap(xnestDisplay, 
