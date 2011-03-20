@@ -57,6 +57,7 @@
 #endif
 
 struct event_list {
+    uint64_t sequence;
     xcb_generic_event_t *event;
     struct event_list *next;
 };
@@ -79,6 +80,17 @@ typedef struct reader_list {
     pthread_cond_t *data;
     struct reader_list *next;
 } reader_list;
+
+static void remove_finished_readers(reader_list **prev_reader, uint64_t completed)
+{
+    while(*prev_reader && XCB_SEQUENCE_COMPARE((*prev_reader)->request, <=, completed))
+    {
+        /* If you don't have what you're looking for now, you never
+         * will. Wake up and leave me alone. */
+        pthread_cond_signal((*prev_reader)->data);
+        *prev_reader = (*prev_reader)->next;
+    }
+}
 
 static int read_packet(xcb_connection_t *c)
 {
@@ -114,7 +126,7 @@ static int read_packet(xcb_connection_t *c)
                 c->in.current_reply = 0;
                 c->in.current_reply_tail = &c->in.current_reply;
             }
-            c->in.request_completed = c->in.request_read - 1;
+            c->in.request_completed = c->in.event_responses_completed = c->in.request_read - 1;
         }
 
         while(c->in.pending_replies && 
@@ -129,7 +141,12 @@ static int read_packet(xcb_connection_t *c)
         }
 
         if(genrep.response_type == XCB_ERROR)
-            c->in.request_completed = c->in.request_read;
+            c->in.request_completed = c->in.event_responses_completed = c->in.request_read;
+        else if(genrep.response_type == XCB_REPLY)
+            c->in.event_responses_completed = c->in.request_read;
+
+        remove_finished_readers(&c->in.readers, c->in.request_completed);
+        remove_finished_readers(&c->in.event_readers, c->in.event_responses_completed);
     }
 
     if(genrep.response_type == XCB_ERROR || genrep.response_type == XCB_REPLY)
@@ -194,7 +211,6 @@ static int read_packet(xcb_connection_t *c)
     if( genrep.response_type == XCB_REPLY ||
        (genrep.response_type == XCB_ERROR && pend && (pend->flags & XCB_REQUEST_CHECKED)))
     {
-        reader_list *reader;
         struct reply_list *cur = malloc(sizeof(struct reply_list));
         if(!cur)
         {
@@ -206,17 +222,8 @@ static int read_packet(xcb_connection_t *c)
         cur->next = 0;
         *c->in.current_reply_tail = cur;
         c->in.current_reply_tail = &cur->next;
-        for(reader = c->in.readers; 
-	    reader && 
-	    XCB_SEQUENCE_COMPARE(reader->request, <=, c->in.request_read);
-	    reader = reader->next)
-	{
-            pthread_cond_signal(reader->data);
-            if(reader->request == c->in.request_read)
-            {
-                break;
-            }
-	}
+        if(c->in.readers && c->in.readers->request == c->in.request_read)
+            pthread_cond_signal(c->in.readers->data);
         return 1;
     }
 
@@ -228,11 +235,15 @@ static int read_packet(xcb_connection_t *c)
         free(buf);
         return 0;
     }
+    event->sequence = c->in.request_read;
     event->event = buf;
     event->next = 0;
     *c->in.events_tail = event;
     c->in.events_tail = &event->next;
-    pthread_cond_signal(&c->in.event_cond);
+    if(c->in.event_readers)
+        pthread_cond_signal(c->in.event_readers->data);
+    else
+        pthread_cond_signal(&c->in.event_cond);
     return 1; /* I have something for you... */
 }
 
@@ -356,6 +367,26 @@ static int poll_for_reply(xcb_connection_t *c, uint64_t request, void **reply, x
     return 1;
 }
 
+static void insert_reader(reader_list **prev_reader, reader_list *reader, uint64_t request, pthread_cond_t *cond)
+{
+    while(*prev_reader && XCB_SEQUENCE_COMPARE((*prev_reader)->request, <=, request))
+        prev_reader = &(*prev_reader)->next;
+    reader->request = request;
+    reader->data = cond;
+    reader->next = *prev_reader;
+    *prev_reader = reader;
+}
+
+static void remove_reader(reader_list **prev_reader, reader_list *reader)
+{
+    while(*prev_reader && XCB_SEQUENCE_COMPARE((*prev_reader)->request, <=, reader->request))
+        if(*prev_reader == reader)
+        {
+            *prev_reader = (*prev_reader)->next;
+            break;
+        }
+}
+
 static void *wait_for_reply(xcb_connection_t *c, uint64_t request, xcb_generic_error_t **e)
 {
     void *ret = 0;
@@ -365,35 +396,14 @@ static void *wait_for_reply(xcb_connection_t *c, uint64_t request, xcb_generic_e
     {
         pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
         reader_list reader;
-        reader_list **prev_reader;
 
-        for(prev_reader = &c->in.readers; 
-	    *prev_reader && 
-	    XCB_SEQUENCE_COMPARE((*prev_reader)->request, <=, request);
-	    prev_reader = &(*prev_reader)->next)
-	{
-            /* empty */;
-	}
-        reader.request = request;
-        reader.data = &cond;
-        reader.next = *prev_reader;
-        *prev_reader = &reader;
+        insert_reader(&c->in.readers, &reader, request, &cond);
 
         while(!poll_for_reply(c, request, &ret, e))
             if(!_xcb_conn_wait(c, &cond, 0, 0))
                 break;
 
-        for(prev_reader = &c->in.readers;
-	    *prev_reader && 
-	    XCB_SEQUENCE_COMPARE((*prev_reader)->request, <=, request);
-	    prev_reader = &(*prev_reader)->next)
-	{
-            if(*prev_reader == &reader)
-            {
-                *prev_reader = (*prev_reader)->next;
-                break;
-            }
-	}
+        remove_reader(&c->in.readers, &reader);
         pthread_cond_destroy(&cond);
     }
 
@@ -540,6 +550,35 @@ xcb_generic_event_t *xcb_poll_for_event(xcb_connection_t *c)
     return ret;
 }
 
+static xcb_generic_event_t *get_event_until(xcb_connection_t *c, uint64_t request)
+{
+    if(c->in.events && XCB_SEQUENCE_COMPARE(c->in.events->sequence, <=, request))
+        return get_event(c);
+    return 0;
+}
+
+xcb_generic_event_t *xcb_wait_for_event_until(xcb_connection_t *c, unsigned int request)
+{
+    pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+    reader_list reader;
+    xcb_generic_event_t *ret;
+    if(c->has_error)
+        return 0;
+    pthread_mutex_lock(&c->iolock);
+
+    insert_reader(&c->in.event_readers, &reader, widen(c, request), &cond);
+
+    while(!(ret = get_event_until(c, reader.request)) && XCB_SEQUENCE_COMPARE(c->in.event_responses_completed, <, reader.request))
+        if(!_xcb_conn_wait(c, &cond, 0, 0))
+            break;
+
+    remove_reader(&c->in.event_readers, &reader);
+    pthread_cond_destroy(&cond);
+    _xcb_in_wake_up_next_reader(c);
+    pthread_mutex_unlock(&c->iolock);
+    return ret;
+}
+
 xcb_generic_error_t *xcb_request_check(xcb_connection_t *c, xcb_void_cookie_t cookie)
 {
     uint64_t request;
@@ -610,6 +649,8 @@ void _xcb_in_wake_up_next_reader(xcb_connection_t *c)
     int pthreadret;
     if(c->in.readers)
         pthreadret = pthread_cond_signal(c->in.readers->data);
+    else if(c->in.event_readers)
+        pthreadret = pthread_cond_signal(c->in.event_readers->data);
     else
         pthreadret = pthread_cond_signal(&c->in.event_cond);
     assert(pthreadret == 0);

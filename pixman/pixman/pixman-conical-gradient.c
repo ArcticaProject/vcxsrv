@@ -171,12 +171,9 @@ conical_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
 }
 
 void
-_pixman_conical_gradient_iter_init (pixman_image_t *image,
-				    pixman_iter_t *iter,
-				    int x, int y, int width, int height,
-				    uint8_t *buffer, iter_flags_t flags)
+_pixman_conical_gradient_iter_init (pixman_image_t *image, pixman_iter_t *iter)
 {
-    if (flags & ITER_NARROW)
+    if (iter->flags & ITER_NARROW)
 	iter->get_scanline = conical_get_scanline_narrow;
     else
 	iter->get_scanline = conical_get_scanline_wide;

@@ -1,4 +1,6 @@
-if UNITTESTS
+if ENABLE_UNIT_TESTS
+if HAVE_GLIB
+if HAVE_LD_WRAP
 check_PROGRAMS =  \
 	protocol-xiqueryversion \
 	protocol-xiquerydevice \
@@ -48,4 +50,6 @@ protocol_xisetclientpointer_SOURCES=$(COMMON_SOURCES) protocol-xisetclientpointe
 protocol_xigetclientpointer_SOURCES=$(COMMON_SOURCES) protocol-xigetclientpointer.c
 protocol_xiquerypointer_SOURCES=$(COMMON_SOURCES) protocol-xiquerypointer.c
 protocol_xiwarppointer_SOURCES=$(COMMON_SOURCES) protocol-xiwarppointer.c
+endif
+endif
 endif

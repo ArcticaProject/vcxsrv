@@ -38,66 +38,30 @@
 #include "pixman-private.h"
 
 static void
-general_src_iter_init (pixman_implementation_t *imp,
-		       pixman_iter_t *iter,
-		       pixman_image_t *image,
-		       int x, int y, int width, int height,
-		       uint8_t *buffer, iter_flags_t flags)
+general_src_iter_init (pixman_implementation_t *imp, pixman_iter_t *iter)
 {
-    iter->image = image;
-    iter->x = x;
-    iter->y = y;
-    iter->width = width;
-    iter->buffer = (uint32_t *)buffer;
+    pixman_image_t *image = iter->image;
 
     if (image->type == SOLID)
-    {
-	_pixman_solid_fill_iter_init (
-	    image, iter, x, y, width, height, buffer, flags);
-    }
+	_pixman_solid_fill_iter_init (image, iter);
     else if (image->type == LINEAR)
-    {
-	_pixman_linear_gradient_iter_init (
-	    image, iter, x, y, width, height, buffer, flags);
-    }
+	_pixman_linear_gradient_iter_init (image, iter);
     else if (image->type == RADIAL)
-    {
-	_pixman_radial_gradient_iter_init (
-	    image, iter, x, y, width, height, buffer, flags);
-    }
+	_pixman_radial_gradient_iter_init (image, iter);
     else if (image->type == CONICAL)
-    {
-	_pixman_conical_gradient_iter_init (
-	    image, iter, x, y, width, height, buffer, flags);
-    }
+	_pixman_conical_gradient_iter_init (image, iter);
     else if (image->type == BITS)
-    {
-	_pixman_bits_image_src_iter_init (
-	    image, iter, x, y, width, height, buffer, flags);
-    }
+	_pixman_bits_image_src_iter_init (image, iter);
     else
-    {
 	_pixman_log_error (FUNC, "Pixman bug: unknown image type\n");
-    }
 }
 
 static void
-general_dest_iter_init (pixman_implementation_t *imp,
-			pixman_iter_t *iter,
-			pixman_image_t *image,
-			int x, int y, int width, int height,
-			uint8_t *buffer, iter_flags_t flags)
+general_dest_iter_init (pixman_implementation_t *imp, pixman_iter_t *iter)
 {
-    iter->image = image;
-    iter->x = x;
-    iter->y = y;
-    iter->width = width;
-    iter->buffer = (uint32_t *)buffer;
-
-    if (image->type == BITS)
+    if (iter->image->type == BITS)
     {
-	_pixman_bits_image_dest_iter_init (
-	    image, iter, x, y, width, height, buffer, flags);
+	_pixman_bits_image_dest_iter_init (iter->image, iter);
     }
     else
     {

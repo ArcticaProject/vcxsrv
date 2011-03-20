@@ -5978,19 +5978,21 @@ static const fetcher_info_t fetchers[] =
 };
 
 static void
-sse2_src_iter_init (pixman_implementation_t *imp,
-		    pixman_iter_t *iter,
-		    pixman_image_t *image,
-		    int x, int y, int width, int height,
-		    uint8_t *buffer, iter_flags_t flags)
+sse2_src_iter_init (pixman_implementation_t *imp, pixman_iter_t *iter)
 {
+    pixman_image_t *image = iter->image;
+    int x = iter->x;
+    int y = iter->y;
+    int width = iter->width;
+    int height = iter->height;
+
 #define FLAGS								\
     (FAST_PATH_STANDARD_FLAGS | FAST_PATH_ID_TRANSFORM)
 
-    if ((flags & ITER_NARROW)				&&
-	(image->common.flags & FLAGS) == FLAGS		&&
-	x >= 0 && y >= 0				&&
-	x + width <= image->bits.width			&&
+    if ((iter->flags & ITER_NARROW)				&&
+	(image->common.flags & FLAGS) == FLAGS			&&
+	x >= 0 && y >= 0					&&
+	x + width <= image->bits.width				&&
 	y + height <= image->bits.height)
     {
 	const fetcher_info_t *f;
@@ -6002,10 +6004,8 @@ sse2_src_iter_init (pixman_implementation_t *imp,
 		uint8_t *b = (uint8_t *)image->bits.bits;
 		int s = image->bits.rowstride * 4;
 
-		iter->bits = b + s * y + x * PIXMAN_FORMAT_BPP (f->format) / 8;
+		iter->bits = b + s * iter->y + x * PIXMAN_FORMAT_BPP (f->format) / 8;
 		iter->stride = s;
-		iter->width = width;
-		iter->buffer = (uint32_t *)buffer;
 
 		iter->get_scanline = f->get_scanline;
 		return;
@@ -6013,8 +6013,7 @@ sse2_src_iter_init (pixman_implementation_t *imp,
 	}
     }
 
-    _pixman_implementation_src_iter_init (
-	imp->delegate, iter, image, x, y, width, height, buffer, flags);
+    imp->delegate->src_iter_init (imp->delegate, iter);
 }
 
 #if defined(__GNUC__) && !defined(__x86_64__) && !defined(__amd64__)

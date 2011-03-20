@@ -121,6 +121,7 @@ typedef struct _xcb_in {
 
     uint64_t request_expected;
     uint64_t request_read;
+    uint64_t event_responses_completed;
     uint64_t request_completed;
     struct reply_list *current_reply;
     struct reply_list **current_reply_tail;
@@ -129,6 +130,7 @@ typedef struct _xcb_in {
     struct event_list *events;
     struct event_list **events_tail;
     struct reader_list *readers;
+    struct reader_list *event_readers;
 
     struct pending_reply *pending_replies;
     struct pending_reply **pending_replies_tail;

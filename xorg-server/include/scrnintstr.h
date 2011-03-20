@@ -208,7 +208,7 @@ typedef    PixmapPtr (* CreatePixmapProcPtr)(
 	int /*width*/,
 	int /*height*/,
 	int /*depth*/,
-	unsigned /*class*/);
+	unsigned /*usage_hint*/);
 
 typedef    Bool (* DestroyPixmapProcPtr)(
 	PixmapPtr /*pPixmap*/);

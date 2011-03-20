@@ -57,7 +57,7 @@ winCopyRotatePixmapNativeGDI (PixmapPtr psrcPix, PixmapPtr *ppdstPix,
 PixmapPtr
 winCreatePixmapNativeGDI (ScreenPtr pScreen,
 			  int iWidth, int iHeight,
-			  int iDepth, unsigned class)
+			  int iDepth, unsigned usage_hint)
 {
   winPrivPixmapPtr	pPixmapPriv = NULL;
   PixmapPtr		pPixmap = NULL;
@@ -72,13 +72,13 @@ winCreatePixmapNativeGDI (ScreenPtr pScreen,
 
 #if CYGDEBUG
   winDebug ("winCreatePixmap () - w %d h %d d %d uh %d bw %d\n",
-	  iWidth, iHeight, iDepth, class,
+	  iWidth, iHeight, iDepth, usage_hint,
 	  PixmapBytePad (iWidth, iDepth));
 #endif
 
   /* Setup pixmap values */
   pPixmap->drawable.type = DRAWABLE_PIXMAP;
-  pPixmap->drawable.class = class;
+  pPixmap->drawable.class = 0;
   pPixmap->drawable.pScreen = pScreen;
   pPixmap->drawable.depth = iDepth;
   pPixmap->drawable.bitsPerPixel = BitsPerPixel (iDepth);
@@ -91,6 +91,7 @@ winCreatePixmapNativeGDI (ScreenPtr pScreen,
   pPixmap->devKind = 0;
   pPixmap->refcnt = 1;
   pPixmap->devPrivate.ptr = NULL;
+  pPixmap->usage_hint = usage_hint;
 
   /* Pixmap privates are allocated by AllocatePixmap */
   pPixmapPriv = winGetPixmapPriv (pPixmap);

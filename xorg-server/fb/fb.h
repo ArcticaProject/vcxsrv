@@ -1625,11 +1625,11 @@ fbPictureInit (ScreenPtr pScreen,
 
 extern _X_EXPORT PixmapPtr
 fbCreatePixmapBpp (ScreenPtr pScreen, int width, int height, int depth, int bpp,
-		   unsigned class);
+		   unsigned usage_hint);
 
 extern _X_EXPORT PixmapPtr
 fbCreatePixmap (ScreenPtr pScreen, int width, int height, int depth,
-		unsigned class);
+		unsigned usage_hint);
 
 extern _X_EXPORT Bool
 fbDestroyPixmap (PixmapPtr pPixmap);
