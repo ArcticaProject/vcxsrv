@@ -455,6 +455,16 @@ gettime (void)
 #endif
 }
 
+uint32_t
+get_random_seed (void)
+{
+    double d = gettime();
+
+    lcg_srand (*(uint32_t *)&d);
+
+    return lcg_rand_u32 ();
+}
+
 static const char *global_msg;
 
 static void

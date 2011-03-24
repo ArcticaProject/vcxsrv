@@ -558,7 +558,7 @@ XineramaSetWindowPntrs(DeviceIntPtr pDev, WindowPtr pWin)
 
     if(pWin == screenInfo.screens[0]->root) {
 	int i;
-	for (i = 0; i < PanoramiXNumScreens; i++)
+	FOR_NSCREENS(i)
 	    pSprite->windows[i] = screenInfo.screens[i]->root;
     } else {
 	PanoramiXRes *win;
@@ -569,7 +569,7 @@ XineramaSetWindowPntrs(DeviceIntPtr pDev, WindowPtr pWin)
 	if (rc != Success)
 	    return FALSE;
 
-	for(i = 0; i < PanoramiXNumScreens; i++) {
+	FOR_NSCREENS(i) {
 	    rc = dixLookupWindow(pSprite->windows + i, win->info[i].id,
 				 serverClient, DixReadAccess);
 	    if (rc != Success)  /* window is being unmapped */
@@ -2554,7 +2554,7 @@ PointInBorderSize(WindowPtr pWin, int x, int y)
 	SpritePtr pSprite = inputInfo.pointer->spriteInfo->sprite;
 	int i;
 
-	for(i = 1; i < PanoramiXNumScreens; i++) {
+	FOR_NSCREENS_FORWARD_SKIP(i) {
 	   if(RegionContainsPoint(&pSprite->windows[i]->borderSize,
 				  x + screenInfo.screens[0]->x - screenInfo.screens[i]->x,
 				  y + screenInfo.screens[0]->y - screenInfo.screens[i]->y,
@@ -3153,7 +3153,7 @@ XineramaPointInWindowIsVisible(
     xoff = x + screenInfo.screens[0]->x;
     yoff = y + screenInfo.screens[0]->y;
 
-    for(i = 1; i < PanoramiXNumScreens; i++) {
+    FOR_NSCREENS_FORWARD_SKIP(i) {
 	pWin = inputInfo.pointer->spriteInfo->sprite->windows[i];
 	x = xoff - screenInfo.screens[i]->x;
 	y = yoff - screenInfo.screens[i]->y;
@@ -3360,7 +3360,7 @@ BorderSizeNotEmpty(DeviceIntPtr pDev, WindowPtr pWin)
      if(!noPanoramiXExtension && XineramaSetWindowPntrs(pDev, pWin)) {
 	int i;
 
-	for(i = 1; i < PanoramiXNumScreens; i++) {
+	FOR_NSCREENS_FORWARD_SKIP(i) {
 	    if(RegionNotEmpty(&pDev->spriteInfo->sprite->windows[i]->borderSize))
 		return TRUE;
 	}

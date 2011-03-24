@@ -529,7 +529,7 @@ static DMXScreenInfo *dmxFindAlternatePixmap(DrawablePtr pDrawable, XID *draw)
 					   NullClient, DixUnknownAccess))
         return NULL;
 
-    for (i = 1; i < PanoramiXNumScreens; i++) {
+    FOR_NSCREENS_FORWARD_SKIP(i) {
         dmxScreen = &dmxScreens[i];
         if (dmxScreen->beDisplay) {
             PixmapPtr     pSrc;

@@ -1918,7 +1918,7 @@ void XineramifyXv(void)
 
       MatchingAdaptors[0] = refAdapt;
       isOverlay = hasOverlay(refAdapt);
-      for(j = 1; j < PanoramiXNumScreens; j++)
+      FOR_NSCREENS_FORWARD_SKIP(j)
 	 MatchingAdaptors[j] = matchAdaptor(screenInfo.screens[j], refAdapt, isOverlay);
 
       /* now create a resource for each port */
@@ -1927,7 +1927,7 @@ void XineramifyXv(void)
 	 if(!port)
 	    break;
 
-	 for(k = 0; k < PanoramiXNumScreens; k++) {
+	 FOR_NSCREENS(k) {
 	    if(MatchingAdaptors[k] && (MatchingAdaptors[k]->nPorts > j)) 
 		port->info[k].id = MatchingAdaptors[k]->base_id + j;
 	    else

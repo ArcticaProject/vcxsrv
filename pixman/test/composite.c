@@ -868,7 +868,7 @@ main (int argc, char **argv)
 {
 #define N_TESTS (8 * 1024 * 1024)
     int result = 0;
-    int i;
+    uint32_t i;
 
     if (argc > 1)
     {
@@ -890,15 +890,22 @@ main (int argc, char **argv)
 	}
     }
 
+    uint32_t seed;
+    
+    if (getenv ("PIXMAN_RANDOMIZE_TESTS"))
+	seed = get_random_seed();
+    else
+	seed = 1;
+    
 #ifdef USE_OPENMP
-#   pragma omp parallel for default(none) shared(result) shared(argv) 
+#   pragma omp parallel for default(none) shared(result, argv, seed)
 #endif
-    for (i = 1; i <= N_TESTS; ++i)
+    for (i = seed; i <= N_TESTS; ++i)
     {
 	if (!result && !run_test (i))
 	{
-	    printf ("Test %d failed.\n", i);
-
+	    printf ("Test 0x%08X failed.\n", i);
+	    
 	    result = i;
 	}
     }

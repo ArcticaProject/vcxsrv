@@ -294,3 +294,25 @@ xkb_symbols "lekpa" {
     key <AB09> {[      aogonek,             Aogonek,       greater ]};
     key <AB10> {[            h,                   H                ]};
 };
+
+partial alphanumeric_keys modifier_keys
+xkb_symbols "dvorak" {
+
+    include "us(dvorak)"
+
+    name[Group1]="Lithuania - Dvorak";
+
+    key <AE01>	{ [   aogonek,      Aogonek,        1,      exclam ] };
+    key <AE02>	{ [    ccaron,       Ccaron,        2,          at ] };
+    key <AE03>	{ [   eogonek,      Eogonek,        3,  numbersign ] };
+    key <AE04>	{ [ eabovedot,    Eabovedot,        4,      dollar ] };
+    key <AE05>	{ [   iogonek,      Iogonek,        5,     percent ] };
+    key <AE06>	{ [    scaron,       Scaron,        6, asciicircum ] };
+    key <AE07>	{ [   uogonek,      Uogonek,        7,   ampersand ] };
+    key <AE08>	{ [   umacron,      Umacron,        8,    asterisk ] };
+    key <AE09>	{ [doublelowquotemark,  parenleft,  9,   parenleft ] };
+    key <AE10>	{ [leftdoublequotemark,parenright,  0,  parenright ] };
+    key <AD12>	{ [    zcaron,       Zcaron,    equal,        plus ] };
+
+    include "level3(ralt_switch)"
+};

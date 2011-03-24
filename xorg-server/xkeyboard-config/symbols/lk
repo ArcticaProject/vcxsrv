@@ -1,7 +1,7 @@
 // X Keyboard Extension file for Sinhala (Sri Lanka) (2004-04-22)
 // Maintainer  : Harshula Jayasuriya <harshula@gmail.com>
-// Last Updated: 2007-06-29
-// This is a static phonetic mapping for a standard US-English keyboard
+// Last Updated: 2011-03-20
+// This is a phonetic static mapping for a standard US-English keyboard
 // (qwerty)
 // http://www.nongnu.org/sinhala/doc/keymaps/sinhala-keyboard_3.html
 
@@ -37,42 +37,42 @@ xkb_symbols "sin_phonetic" {
   key.type[Group1] = "FOUR_LEVEL";
 
   // q - p
-  key <AD01> { [ 0x01000d8d, 0x01000d8e, 0x01000dd8, 0x01000df2 ] };
-  key <AD02> { [ 0x01000d87, 0x01000d88, 0x01000dd0, 0x01000dd1 ] };
-  key <AD03> { [ 0x01000d91, 0x01000d92, 0x01000dd9, 0x01000dda ] };
-  key <AD04> { [ 0x01000dbb, 0x01000dca, 0x01000dbb, NoSymbol ] };
-  key <AD05> { [ 0x01000dad, 0x01000dae, 0x01000da7, 0x01000da8 ] };
-  key <AD06> { [ 0x01000dba, 0x01000dca, NoSymbol, NoSymbol ] };
-  key <AD07> { [ 0x01000d8b, 0x01000d8c, 0x01000dd4, 0x01000dd6 ] };
-  key <AD08> { [ 0x01000d89, 0x01000d8a, 0x01000dd2, 0x01000dd3 ] };
-  key <AD09> { [ 0x01000d94, 0x01000d95, 0x01000ddc, 0x01000ddd ] };
-  key <AD10> { [ 0x01000db4, 0x01000db5, NoSymbol, NoSymbol ] };
+  key <AD01> { [ Sinh_ri, Sinh_rii, Sinh_ru2, Sinh_ruu2 ] };
+  key <AD02> { [ Sinh_ae, Sinh_aee, Sinh_ae2, Sinh_aee2 ] };
+  key <AD03> { [ Sinh_e, Sinh_ee, Sinh_e2, Sinh_ee2 ] };
+  key <AD04> { [ Sinh_ra, Sinh_al, Sinh_ra, NoSymbol ] };
+  key <AD05> { [ Sinh_tha, Sinh_thha, Sinh_tta, Sinh_ttha ] };
+  key <AD06> { [ Sinh_ya, Sinh_al, NoSymbol, NoSymbol ] };
+  key <AD07> { [ Sinh_u, Sinh_uu, Sinh_u2, Sinh_uu2 ] };
+  key <AD08> { [ Sinh_i, Sinh_ii, Sinh_i2, Sinh_ii2 ] };
+  key <AD09> { [ Sinh_o, Sinh_oo, Sinh_o2, Sinh_oo2 ] };
+  key <AD10> { [ Sinh_pa, Sinh_pha, NoSymbol, NoSymbol ] };
 
   // a - l
-  key <AC01> { [ 0x01000d85, 0x01000d86, 0x01000dca, 0x01000dcf ] };
-  key <AC02> { [ 0x01000dc3, 0x01000dc1, 0x01000dc2, NoSymbol ] };
-  key <AC03> { [ 0x01000daf, 0x01000db0, 0x01000da9, 0x01000daa ] };
-  key <AC04> { [ 0x01000dc6, NoSymbol, 0x01000ddb, 0x01000d93 ] };
-  key <AC05> { [ 0x01000d9c, 0x01000d9d, 0x01000d9f, NoSymbol ] };
-  key <AC06> { [ 0x01000dc4, 0x01000d83, 0x01000dde, 0x01000d96 ] };
-  key <AC07> { [ 0x01000da2, 0x01000da3, 0x01000da6, NoSymbol ] };
-  key <AC08> { [ 0x01000d9a, 0x01000d9b, 0x01000d8f, 0x01000d90 ] };
-  key <AC09> { [ 0x01000dbd, 0x01000dc5, 0x01000ddf, 0x01000df3 ] };
+  key <AC01> { [ Sinh_a, Sinh_aa, Sinh_al, Sinh_aa2 ] };
+  key <AC02> { [ Sinh_sa, Sinh_sha, Sinh_ssha, NoSymbol ] };
+  key <AC03> { [ Sinh_dha, Sinh_dhha, Sinh_dda, Sinh_ddha ] };
+  key <AC04> { [ Sinh_fa, NoSymbol, Sinh_ai2, Sinh_ai ] };
+  key <AC05> { [ Sinh_ga, Sinh_gha, Sinh_nga, NoSymbol ] };
+  key <AC06> { [ Sinh_ha, Sinh_h2, Sinh_au2, Sinh_au ] };
+  key <AC07> { [ Sinh_ja, Sinh_jha, Sinh_nja, NoSymbol ] };
+  key <AC08> { [ Sinh_ka, Sinh_kha, Sinh_lu, Sinh_luu ] };
+  key <AC09> { [ Sinh_la, Sinh_lla, Sinh_lu2, Sinh_luu2 ] };
 
   // z - ?
-  key <AB01> { [ 0x01000da4, 0x01000da5, NoSymbol, NoSymbol ] };
-  key <AB02> { [ 0x01000db3, 0x01000dac, NoSymbol, NoSymbol ] };
-  key <AB03> { [ 0x01000da0, 0x01000da1, NoSymbol, NoSymbol ] };
-  key <AB04> { [ 0x01000dc0, NoSymbol, NoSymbol, NoSymbol ] };
-  key <AB05> { [ 0x01000db6, 0x01000db7, NoSymbol, NoSymbol ] };
-  key <AB06> { [ 0x01000db1, 0x01000dab, 0x01000d82, 0x01000d9e ] };
-  key <AB07> { [ 0x01000db8, 0x01000db9, NoSymbol, NoSymbol ] };
-  key <AB08> { [ any, any, 0x01000dca, NoSymbol ] };
-  key <AB09> { [ any, any, 0x01000df4, NoSymbol ] };
-  key <AB10> { [ any, any, 0x0100200d, NoSymbol ] };
+  key <AB01> { [ Sinh_nya, Sinh_jnya, NoSymbol, NoSymbol ] };
+  key <AB02> { [ Sinh_ndha, Sinh_ndda, NoSymbol, NoSymbol ] };
+  key <AB03> { [ Sinh_ca, Sinh_cha, NoSymbol, NoSymbol ] };
+  key <AB04> { [ Sinh_va, NoSymbol, NoSymbol, NoSymbol ] };
+  key <AB05> { [ Sinh_ba, Sinh_bha, NoSymbol, NoSymbol ] };
+  key <AB06> { [ Sinh_na, Sinh_nna, Sinh_ng, Sinh_ng2 ] };
+  key <AB07> { [ Sinh_ma, Sinh_mba, NoSymbol, NoSymbol ] };
+  key <AB08> { [ any, any, Sinh_al, NoSymbol ] };
+  key <AB09> { [ any, any, Sinh_kunddaliya, NoSymbol ] };
+  key <AB10> { [ any, any, 0x100200d, NoSymbol ] };
 
   // Space
-  include "nbsp(zwnj2nb3s)"
+  include "nbsp(nb2zwnj3s)"
 
   include "level3(ralt_switch)"
 };
@@ -88,3 +88,4 @@ xkb_symbols "tam_TAB" {
     include "in(tam_TAB)"
     name[Group1]= "Sri Lanka - Tamil TAB Typewriter";
 };
+

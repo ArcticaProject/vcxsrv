@@ -3067,7 +3067,7 @@ SendVisibilityNotify(WindowPtr pWin)
 
 	switch(visibility) {
 	case VisibilityUnobscured:
-	    for(i = 0; i < PanoramiXNumScreens; i++) {
+	    FOR_NSCREENS(i) {
 		if(i == Scrnum) continue;
 
 		rc = dixLookupWindow(&pWin2, win->info[i].id, serverClient,
@@ -3089,7 +3089,7 @@ SendVisibilityNotify(WindowPtr pWin)
 	    }
 	    break;
 	case VisibilityFullyObscured:
-	    for(i = 0; i < PanoramiXNumScreens; i++) {
+	    FOR_NSCREENS(i) {
 		if(i == Scrnum) continue;
 
 		rc = dixLookupWindow(&pWin2, win->info[i].id, serverClient,

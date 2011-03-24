@@ -1351,7 +1351,7 @@ xkb_symbols "eng" {
 partial alphanumeric_keys 
 xkb_symbols "mal_enhanced" {
 
-    name[Group1] = "India - Malayalam Modified Inscript with Rupee Sign";
+    name[Group1] = "India - Malayalam enhanced Inscript with Rupee Sign";
 
    //From grave to backslash (\)
     

@@ -703,10 +703,7 @@ PanoramiXCompositeNameWindowPixmap (ClientPtr client)
 
     newPix->type = XRT_PIXMAP;
     newPix->u.pix.shared = FALSE;
-    newPix->info[0].id = stuff->pixmap;
-
-    for (i = 1; i < PanoramiXNumScreens; i++)
-	newPix->info[i].id = FakeClientID (client->index);
+    panoramix_setup_ids(newPix, client, stuff->pixmap);
 
     FOR_NSCREENS(i) {
 	rc = dixLookupResourceByType ((void **) &pWin, win->info[i].id,

@@ -46,6 +46,7 @@
 extern int     connBlockScreenStart;
 
 #ifdef PANORAMIX
+#include "panoramiXsrv.h"
 extern int     PanoramiXPixWidth;
 extern int     PanoramiXPixHeight;
 extern int     PanoramiXNumScreens;
@@ -137,7 +138,7 @@ void dmxConnectionBlockCallback(void)
         }
         dmxLog(dmxInfo, "%d screens configured with Xinerama (%d %d)\n",
                PanoramiXNumScreens, PanoramiXPixWidth, PanoramiXPixHeight);
-	for (i = 0; i < PanoramiXNumScreens; i++) found[i] = FALSE;
+	FOR_NSCREENS(i) found[i] = FALSE;
     } else {
 #endif
                                 /* This never happens because we're
@@ -177,7 +178,7 @@ void dmxConnectionBlockCallback(void)
 #ifdef PANORAMIX
 	    if (!noPanoramiXExtension) {
 		int  k;
-		for (k = 0; k < PanoramiXNumScreens; k++) {
+		FOR_NSCREENS(k) {
 		    DMXScreenInfo *dmxScreen = &dmxScreens[k];
 
 		    if (dmxScreen->beDisplay) {
@@ -203,7 +204,7 @@ void dmxConnectionBlockCallback(void)
 #ifdef PANORAMIX
     if (!noPanoramiXExtension) {
 	Bool fatal = FALSE;
-	for (i = 0; i < PanoramiXNumScreens; i++) {
+	FOR_NSCREENS(i) {
 	    fatal |= !found[i];
 	    if (!found[i]) {
 		dmxLog(dmxError,
