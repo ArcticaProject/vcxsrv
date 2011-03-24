@@ -703,7 +703,7 @@ static void dmxBERestorePixmapImage(pointer value, XID id, RESTYPE type,
 				RT_PIXMAP, NullClient, DixUnknownAccess);
 	if (pPix != pDst) return; /* Not a match.... Next! */
 
-	for (i = 0; i < PanoramiXNumScreens; i++) {
+	FOR_NSCREENS(i) {
 	    PixmapPtr      pSrc;
 	    dmxPixPrivPtr  pSrcPriv = NULL;
 
@@ -1372,7 +1372,7 @@ static void dmxBEFindPixmapImage(pointer value, XID id, RESTYPE type,
 				RT_PIXMAP, NullClient, DixUnknownAccess);
 	if (pPix != pDst) return; /* Not a match.... Next! */
 
-	for (i = 0; i < PanoramiXNumScreens; i++) {
+	FOR_NSCREENS(i) {
 	    PixmapPtr      pSrc;
 	    dmxPixPrivPtr  pSrcPriv = NULL;
 

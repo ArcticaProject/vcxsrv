@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "utils.h"
+#include <sys/types.h>
 
 #if 0
 #define fence_malloc malloc
@@ -730,11 +732,17 @@ static const pixman_op_t op_list[] =
 };
 
 static void
-run_test (uint32_t seed)
+run_test (uint32_t seed, pixman_bool_t verbose, uint32_t mod)
 {
     pixman_image_t *source, *mask, *dest;
     pixman_op_t op;
 
+    if (verbose)
+    {
+	if (mod == 0 || (seed % mod) == 0)
+	    printf ("Seed 0x%08x\n", seed);
+    }
+	    
     lcg_srand (seed);
 
     source = create_random_image ();
@@ -787,6 +795,7 @@ main (int argc, char **argv)
     uint32_t seed = 1;
     uint32_t n_tests = 0xffffffff;
     uint32_t mod = 0;
+    pixman_bool_t use_threads = TRUE;
     uint32_t i;
 
     pixman_disable_out_of_bounds_workaround ();
@@ -811,6 +820,7 @@ main (int argc, char **argv)
 	else if (strcmp (argv[i], "-s") == 0 && i + 1 < argc)
 	{
 	    get_int (argv[i + 1], &seed);
+	    use_threads = FALSE;
 	    i++;
 	}
 	else if (strcmp (argv[i], "-n") == 0 && i + 1 < argc)
@@ -825,7 +835,7 @@ main (int argc, char **argv)
 
 	    printf ("Options:\n\n"
 		    "-n <number>        Number of tests to run\n"
-		    "-s <seed> 	        Seed of first test\n"
+		    "-s <seed> 	        Seed of first test (ignored if PIXMAN_RANDOMIZE_TESTS is set)\n"
 		    "-v                 Print out seeds\n"
 		    "-v <n>             Print out every n'th seed\n\n");
 
@@ -836,19 +846,24 @@ main (int argc, char **argv)
     if (n_tests == 0xffffffff)
 	n_tests = 8000;
 
-    /* FIXME: seed 2005763 fails in set_lum() with divide by zero */
+    if (getenv ("PIXMAN_RANDOMIZE_TESTS"))
+    {
+	seed = get_random_seed();
+	printf ("First seed: 0x%08x\n", seed);
+    }
+
+    if (use_threads)
+    {
 #ifdef USE_OPENMP
 #   pragma omp parallel for default(none) shared(verbose, n_tests, mod, seed)
 #endif
-    for (i = seed; i < seed + n_tests; ++i)
+	for (i = seed; i < seed + n_tests; ++i)
+	    run_test (i, verbose, mod);
+    }
+    else
     {
-	if (verbose)
-	{
-	    if (mod == 0 || (i % mod) == 0)
-		printf ("Seed %d\n", i);
-	}
-
-	run_test (i);
+	for (i = seed; i < seed + n_tests; ++i)
+	    run_test (i, verbose, mod);
     }
 
     return 0;

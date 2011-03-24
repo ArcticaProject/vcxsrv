@@ -120,9 +120,7 @@ int PanoramiXCreateWindow(ClientPtr client)
     newWin->u.win.visibility = VisibilityNotViewable;
     newWin->u.win.class = stuff->class;
     newWin->u.win.root = FALSE;
-    newWin->info[0].id = stuff->wid;
-    for(j = 1; j < PanoramiXNumScreens; j++)
-        newWin->info[j].id = FakeClientID(client->index);
+    panoramix_setup_ids(newWin, client, stuff->wid);
 
     if (stuff->class == InputOnly)
 	stuff->visual = CopyFromParent;
@@ -663,9 +661,7 @@ int PanoramiXCreatePixmap(ClientPtr client)
 
     newPix->type = XRT_PIXMAP;
     newPix->u.pix.shared = FALSE;
-    newPix->info[0].id = stuff->pid;
-    for(j = 1; j < PanoramiXNumScreens; j++)
-	newPix->info[j].id = FakeClientID(client->index);
+    panoramix_setup_ids(newPix, client, stuff->pid);
    
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->pid = newPix->info[j].id;
@@ -767,9 +763,7 @@ int PanoramiXCreateGC(ClientPtr client)
         return BadAlloc;
 
     newGC->type = XRT_GC;
-    newGC->info[0].id = stuff->gc;
-    for(j = 1; j < PanoramiXNumScreens; j++)
-        newGC->info[j].id = FakeClientID(client->index);
+    panoramix_setup_ids(newGC, client, stuff->gc);
 
     FOR_NSCREENS_BACKWARD(j) {
         stuff->gc = newGC->info[j].id;
@@ -1334,7 +1328,7 @@ int PanoramiXPolyLine(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
     npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyLineReq));
     if (npoint > 0){
         origPts = malloc(npoint * sizeof(xPoint));
@@ -1394,7 +1388,7 @@ int PanoramiXPolySegment(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     nsegs = (client->req_len << 2) - sizeof(xPolySegmentReq);
     if(nsegs & 4) return BadLength;
@@ -1457,7 +1451,7 @@ int PanoramiXPolyRectangle(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     nrects = (client->req_len << 2) - sizeof(xPolyRectangleReq);
     if(nrects & 4) return BadLength;
@@ -1519,7 +1513,7 @@ int PanoramiXPolyArc(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     narcs = (client->req_len << 2) - sizeof(xPolyArcReq);
     if(narcs % sizeof(xArc)) return BadLength;
@@ -1579,7 +1573,7 @@ int PanoramiXFillPoly(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     count = bytes_to_int32((client->req_len << 2) - sizeof(xFillPolyReq));
     if (count > 0){
@@ -1640,7 +1634,7 @@ int PanoramiXPolyFillRectangle(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     things = (client->req_len << 2) - sizeof(xPolyFillRectangleReq);
     if(things & 4) return BadLength;
@@ -1701,7 +1695,7 @@ int PanoramiXPolyFillArc(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     narcs = (client->req_len << 2) - sizeof(xPolyFillArcReq);
     if (narcs % sizeof(xArc)) return BadLength;
@@ -1761,7 +1755,7 @@ int PanoramiXPutImage(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     orig_x = stuff->dstX;
     orig_y = stuff->dstY;
@@ -1824,7 +1818,7 @@ int PanoramiXGetImage(ClientPtr client)
     format = stuff->format;
     planemask = stuff->planeMask;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     if(isRoot) {
       if( /* check for being onscreen */
@@ -1846,7 +1840,7 @@ int PanoramiXGetImage(ClientPtr client)
     }
 
     drawables[0] = pDraw;
-    for(i = 1; i < PanoramiXNumScreens; i++) {
+    FOR_NSCREENS_FORWARD_SKIP(i) {
 	rc = dixLookupDrawable(drawables+i, draw->info[i].id, client, 0,
 			       DixGetAttrAccess);
 	if (rc != Success)
@@ -1962,7 +1956,7 @@ PanoramiXPolyText8(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     orig_x = stuff->x;
     orig_y = stuff->y;
@@ -2003,7 +1997,7 @@ PanoramiXPolyText16(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     orig_x = stuff->x;
     orig_y = stuff->y;
@@ -2044,7 +2038,7 @@ int PanoramiXImageText8(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     orig_x = stuff->x;
     orig_y = stuff->y;
@@ -2085,7 +2079,7 @@ int PanoramiXImageText16(ClientPtr client)
     if (result != Success)
 	return result;
 
-    isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
+    isRoot = IS_ROOT_DRAWABLE(draw);
 
     orig_x = stuff->x;
     orig_y = stuff->y;
@@ -2121,9 +2115,7 @@ int PanoramiXCreateColormap(ClientPtr client)
         return BadAlloc;
 
     newCmap->type = XRT_COLORMAP;
-    newCmap->info[0].id = stuff->mid;
-    for(j = 1; j < PanoramiXNumScreens; j++)
-        newCmap->info[j].id = FakeClientID(client->index);
+    panoramix_setup_ids(newCmap, client, stuff->mid);
 
     orig_visual = stuff->visual;
     FOR_NSCREENS_BACKWARD(j){
@@ -2192,11 +2184,9 @@ PanoramiXCopyColormapAndFree(ClientPtr client)
         return BadAlloc;
 
     newCmap->type = XRT_COLORMAP;
-    newCmap->info[0].id = stuff->mid;
-    for(j = 1; j < PanoramiXNumScreens; j++)
-        newCmap->info[j].id = FakeClientID(client->index);
+    panoramix_setup_ids(newCmap, client, stuff->mid);
 
-    FOR_NSCREENS_BACKWARD(j){
+    FOR_NSCREENS_BACKWARD(j) {
         stuff->srcCmap = cmap->info[j].id;
 	stuff->mid = newCmap->info[j].id;
         result = (* SavedProcVector[X_CopyColormapAndFree])(client);

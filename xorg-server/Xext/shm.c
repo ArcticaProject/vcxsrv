@@ -867,7 +867,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 	return BadAlloc;
 
     drawables[0] = pDraw;
-    for(i = 1; i < PanoramiXNumScreens; i++) {
+    FOR_NSCREENS_FORWARD_SKIP(i) {
 	rc = dixLookupDrawable(drawables+i, draw->info[i].id, client, 0, 
 			       DixReadAccess);
 	if (rc != Success)
@@ -991,9 +991,7 @@ CreatePmap:
 
     newPix->type = XRT_PIXMAP;
     newPix->u.pix.shared = TRUE;
-    newPix->info[0].id = stuff->pid;
-    for(j = 1; j < PanoramiXNumScreens; j++)
-	newPix->info[j].id = FakeClientID(client->index);
+    panoramix_setup_ids(newPix, client, stuff->pid);
 
     result = Success;
 

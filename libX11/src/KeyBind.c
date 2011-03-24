@@ -44,6 +44,7 @@ in this Software without prior written authorization from The Open Group.
 #define XK_CAUCASUS
 #define XK_VIETNAMESE
 #define XK_XKB_KEYS
+#define XK_SINHALA
 #include <X11/keysymdef.h>
 #include <stdio.h>
 

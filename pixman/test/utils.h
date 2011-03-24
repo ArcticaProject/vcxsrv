@@ -79,6 +79,9 @@ make_random_bytes (int n_bytes);
 double
 gettime (void);
 
+uint32_t
+get_random_seed (void);
+
 /* main body of the fuzzer test */
 int
 fuzzer_test_main (const char *test_name,

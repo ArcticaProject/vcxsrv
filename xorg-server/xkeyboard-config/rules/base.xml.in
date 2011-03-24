@@ -1778,7 +1778,7 @@
         <variant>
           <configItem>
              <name>mal_enhanced</name>
-             <_description>India - Malayalam enhanced INSCRIPT with Rupee Sign</_description>
+             <_description>India - Malayalam enhanced Inscript with Rupee Sign</_description>
              <languageList><iso639Id>mal</iso639Id></languageList>
           </configItem>
          </variant>
@@ -3925,7 +3925,7 @@
     <layout>
       <configItem>
         <name>rs</name>
-        <_shortDescription>SRB</_shortDescription>
+        <_shortDescription>Srb</_shortDescription>
         <_description>Serbia</_description>
         <languageList>
           <iso639Id>srp</iso639Id>
