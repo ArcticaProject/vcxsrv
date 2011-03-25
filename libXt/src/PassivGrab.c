@@ -1,7 +1,6 @@
-/* $Xorg: PassivGrab.c,v 1.5 2001/02/09 02:03:56 xorgcvs Exp $ */
 /*
 
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -46,7 +45,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ********************************************************/
-/* $XFree86$ */
 
 /*
 

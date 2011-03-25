@@ -1,7 +1,3 @@
-/*
- * $Xorg: TextSrc.h,v 1.4 2001/02/09 02:03:47 xorgcvs Exp $
- */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -48,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/TextSrc.h,v 1.11 2001/01/17 19:42:35 dawes Exp $ */
 
 #ifndef _XawTextSrc_h
 #define _XawTextSrc_h

@@ -1,5 +1,3 @@
-/* $Xorg: Composite.h,v 1.4 2001/02/09 02:03:54 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86$ */
 
 #ifndef _XtComposite_h
 #define _XtComposite_h

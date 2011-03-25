@@ -1,5 +1,3 @@
-/* $Xorg: Simple.h,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/Simple.h,v 1.8 2001/01/17 19:42:30 dawes Exp $ */
 
 #ifndef _Simple_h
 #define _Simple_h

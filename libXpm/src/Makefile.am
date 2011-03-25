@@ -2,7 +2,7 @@
 
 lib_LTLIBRARIES=libXpm.la
 
-AM_CPPFLAGS = -I. -I$(top_srcdir)/include/X11/
+AM_CPPFLAGS = -I$(top_srcdir)/include/X11/
 AM_CFLAGS = $(CWARNFLAGS) $(XPM_CFLAGS)
 
 libXpm_la_LDFLAGS = -version-number 4:11:0 -no-undefined
@@ -39,8 +39,5 @@ libXpm_la_SOURCES =					\
 	rgb.c						\
 	rgbtab.h					\
 	scan.c
-
-libXpmincludedir = $(includedir)/X11
-libXpminclude_HEADERS = $(top_srcdir)/include/X11/xpm.h
 
 EXTRA_DIST = amigax.c amigax.h simx.c simx.h

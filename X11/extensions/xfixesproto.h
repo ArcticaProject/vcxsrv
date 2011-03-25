@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2010 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -500,6 +501,38 @@ typedef struct {
 
 #define sz_xXFixesShowCursorReq	sizeof(xXFixesShowCursorReq)
 
+/*************** Version 5.0 ******************/
+
+#define Barrier CARD32
+
+typedef struct {
+    CARD8   reqType;
+    CARD8   xfixesReqType;
+    CARD16  length B16;
+    Barrier barrier B32;
+    Window  window B32;
+    INT16   x1 B16;
+    INT16   y1 B16;
+    INT16   x2 B16;
+    INT16   y2 B16;
+    CARD32  directions;
+    CARD16  pad B16;
+    CARD16  num_devices B16;
+    /* array of CARD16 devices */
+} xXFixesCreatePointerBarrierReq;
+
+#define sz_xXFixesCreatePointerBarrierReq 28
+
+typedef struct {
+    CARD8   reqType;
+    CARD8   xfixesReqType;
+    CARD16  length B16;
+    Barrier barrier B32;
+} xXFixesDestroyPointerBarrierReq;
+
+#define sz_xXFixesDestroyPointerBarrierReq 8
+
+#undef Barrier
 #undef Region
 #undef Picture
 #undef Window

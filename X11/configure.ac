@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([Xproto], [7.0.20],
+AC_INIT([Xproto], [7.0.21],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE

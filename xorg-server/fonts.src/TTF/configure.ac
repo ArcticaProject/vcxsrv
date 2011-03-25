@@ -22,7 +22,9 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(font-bh-ttf, [1.0.1], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-bh-ttf)
+AC_INIT([font-bh-ttf], [1.0.3],
+        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
+        [font-bh-ttf])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
@@ -34,12 +36,13 @@ XORG_DEFAULT_OPTIONS
 
 AC_PROG_INSTALL
 
-# Require X.Org's font util macros 1.1 or later
+# Require X.Org's font util macros 1.2 or later
 m4_ifndef([XORG_FONT_MACROS_VERSION],
-	  [m4_fatal([must install X.Org font-util 1.1 or later before running autoconf/autogen])])
-XORG_FONT_MACROS_VERSION(1.1)
+	  [m4_fatal([must install X.Org font-util 1.2 or later before running autoconf/autogen])])
+XORG_FONT_MACROS_VERSION(1.2)
 
 XORG_FONTDIR([TTF])
 XORG_FONT_SCALED_UTILS
+XORG_FONT_FC_CONFDIR
 
 AC_OUTPUT([Makefile])

@@ -1,5 +1,3 @@
-/* $Xorg: MultiSrc.c,v 1.4 2001/02/09 02:03:44 xorgcvs Exp $ */
-
 /*
  * Copyright 1991 by OMRON Corporation
  *
@@ -27,7 +25,6 @@
  *
  * Much code taken from X11R3 String and Disk Sources.
  */
-/* $XFree86: xc/lib/Xaw/MultiSrc.c,v 1.28 2002/11/21 16:22:52 paulo Exp $ */
 
 /*
 

@@ -282,22 +282,6 @@ TRANS(ParseAddress) (char *address, char **protocol, char **host, char **port)
 	return 0;
     }
 
-    /* Check for DECnet */
-
-    if ((mybuf != _host) && (*(mybuf - 1) == ':')
-#if defined(IPv6) && defined(AF_INET6)
-      /* An IPv6 address can end in :: so three : in a row is assumed to be
-	 an IPv6 host and not a DECnet node with a : in it's name, unless
-         DECnet is specifically requested */
-      && ( ((mybuf - 1) == _host) || (*(mybuf - 2) != ':') ||
-	((_protocol != NULL) && (strcmp(_protocol, "dnet") == 0)) )
-#endif
-	)
-    {
-	_protocol = "dnet";
-	*(mybuf - 1) = '\0';
-    }
-
     *mybuf ++= '\0';
 
     _host_len = strlen(_host);

@@ -1,5 +1,3 @@
-.\" $Xorg: XtMalloc.man,v 1.3 2000/08/17 19:42:01 cpqbld Exp $
-.\"
 .\" Copyright 1993 X Consortium
 .\"
 .\" Permission is hereby granted, free of charge, to any person obtaining
@@ -25,8 +23,6 @@
 .\" not be used in advertising or otherwise to promote the sale, use or
 .\" other dealings in this Software without prior written authorization
 .\" from the X Consortium.
-.\"
-.\" $XFree86: xc/doc/man/Xt/XtMalloc.man,v 1.2 2001/01/27 18:20:28 dawes Exp $
 .\"
 .ds tk X Toolkit
 .ds xT X Toolkit Intrinsics \- C Language Interface
@@ -143,6 +139,8 @@ void XtFree(char *\fIptr\fP);
 \fItype\fP *XtNew(\fItype\fP); 
 .HP
 String XtNewString(String \fIstring\fP); 
+.HP
+Cardinal XtAsprintf(String *\fInew_string\fP, const char *\fIformat\fP, ...);
 .SH ARGUMENTS
 .IP \fInum\fP 1i
 Specifies the number of bytes or array elements.
@@ -156,6 +154,10 @@ desired.
 Specifies a previously declared string.
 .IP \fItype\fP 1i
 Specifies a previously declared data type.
+.IP \fInew_string\fP 1i
+Specifies a pointer to write a newly allocated string to.
+.IP \fIformat\fP 1i
+Specifies a formatting string as defined by sprintf(3c)
 .SH DESCRIPTION
 The
 .ZN XtMalloc
@@ -230,6 +232,18 @@ with the following arguments specified:
 .ta .5i
 (strcpy(XtMalloc((unsigned) strlen(str) + 1), str))
 .De
+.LP
+The
+.ZN XtAsprintf
+function allocates space for a string large enough to hold the string
+specified by the sprintf(3c) format pattern when used with the remaining
+arguments, and fills it with the formatted results.
+The address of the allocated string is placed into the pointer passed as ret.
+The length of the string (not including the terminating null byte) is returned.
+If there is insufficient memory to allocate the new block,
+.ZN XtAsprintf
+calls
+.ZN XtErrorMsg .
 .SH "SEE ALSO"
 .br
 \fI\*(xT\fP

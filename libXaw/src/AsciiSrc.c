@@ -1,5 +1,3 @@
-/* $Xorg: AsciiSrc.c,v 1.4 2001/02/09 02:03:42 xorgcvs Exp $ */
-
 /*
 
 Copyright 1989, 1994, 1998  The Open Group
@@ -25,8 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-
-/* $XFree86: xc/lib/Xaw/AsciiSrc.c,v 1.33 2002/07/04 17:04:20 paulo Exp $ */
 
 /*
  * AsciiSrc.c - AsciiSrc object. (For use with the text widget).
@@ -1292,9 +1288,13 @@ WriteToFile(String string, String name, unsigned length)
 {
     int fd;
 
-    if ((fd = creat(name, 0666)) == -1
-	|| write(fd, string, length) == -1)
+    if ((fd = creat(name, 0666)) == -1)
 	return (False);
+
+    if (write(fd, string, length) == -1) {
+	close(fd);
+	return (False);
+    }
 
     if (close(fd) == -1)
 	return (False);
@@ -1349,8 +1349,10 @@ WritePiecesToFile(AsciiSrcObject src, String name)
 	return (False);
 
     for (piece = src->ascii_src.first_piece; piece; piece = piece->next)
-	if (write(fd, piece->text, piece->used) == -1)
+	if (write(fd, piece->text, piece->used) == -1) {
+	    close(fd);
 	    return (False);
+	}
 
     if (close(fd) == -1)
 	return (False);

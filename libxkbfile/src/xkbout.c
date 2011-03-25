@@ -1,4 +1,3 @@
-/* $Xorg: xkbout.c,v 1.3 2000/08/17 19:46:44 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/lib/xkbfile/xkbout.c,v 3.9 2001/10/28 03:32:47 tsi Exp $ */
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
@@ -49,7 +47,6 @@
 #else
 
 #include <X11/X.h>
-#define	NEED_EVENTS
 #include <X11/keysym.h>
 #include <X11/Xproto.h>
 #include "misc.h"

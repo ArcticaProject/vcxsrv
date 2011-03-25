@@ -1,5 +1,3 @@
-/* $Xorg: XawIm.c,v 1.6 2001/02/09 02:03:47 xorgcvs Exp $ */
-
 /*
  * Copyright 1991 by OMRON Corporation
  *
@@ -52,7 +50,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xaw/XawIm.c,v 1.14tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

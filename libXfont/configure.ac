@@ -23,7 +23,7 @@ dnl Process this file with autoconf to create configure.
 AC_PREREQ([2.60])
 
 AC_INIT([libXfont],
-	1.4.2,
+	[1.4.3],
 	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
 	libXfont)
 # Autoheader generates config.h.in. No new lines allowed in the list.
@@ -37,14 +37,15 @@ dnl
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros: XORG_DEFAULT_OPTIONS
+# Require xorg-macros minimum of 1.10 for DocBook XML documentation
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.6 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.6)
+          [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.10)
 XORG_DEFAULT_OPTIONS
 XORG_ENABLE_DEVEL_DOCS
 XORG_WITH_XMLTO(0.0.20)
 XORG_WITH_FOP
+XORG_CHECK_SGML_DOCTOOLS(1.5)
 
 # Check for progs
 AC_PROG_CC
@@ -200,6 +201,7 @@ esac
 AC_SUBST([OS_CFLAGS])
 
 AC_OUTPUT([Makefile
+	   doc/Makefile
 	   src/Makefile
 	   src/fontfile/Makefile
 	   src/FreeType/Makefile

@@ -1,5 +1,3 @@
-/* $Xorg: Command.c,v 1.5 2001/02/09 02:03:43 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/Command.c,v 1.15tsi Exp $ */
 
 /*
  * Command.c - Command button widget

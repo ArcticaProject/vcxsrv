@@ -34,6 +34,16 @@ static testcase_t testcases[] =
 	NULL,
     },
     {
+	PIXMAN_r8g8b8a8,
+	2, 2,
+	8,
+	{ 0x11223300, 0x55667744,
+	  0x99aabb88, 0xddeeffcc },
+	{ 0x00112233, 0x44556677,
+	  0x8899aabb, 0xccddeeff },
+	NULL,
+    },
+    {
 	PIXMAN_g1,
 	8, 2,
 	4,

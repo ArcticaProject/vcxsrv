@@ -7,9 +7,9 @@
 # documentation for any purpose is hereby granted without fee, provided that
 # the above copyright notice appear in all copies and that both that
 # copyright notice and this permission notice appear in supporting
-# documentation, and that the name of Keith Packard not be used in
+# documentation, and that the name of the author(s) not be used in
 # advertising or publicity pertaining to distribution of the software without
-# specific, written prior permission.  Keith Packard makes no
+# specific, written prior permission.  The authors make no
 # representations about the suitability of this software for any purpose.  It
 # is provided "as is" without express or implied warranty.
 #
@@ -22,10 +22,6 @@
 # PERFORMANCE OF THIS SOFTWARE.
 #
 
-CC = @CC_FOR_BUILD@
-EXEEXT = @EXEEXT_FOR_BUILD@
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-
 INCLUDES=-I${top_srcdir}/src -I${top_srcdir} $(WARN_CFLAGS)
 
 TMPL=fclang.tmpl.h
@@ -36,21 +32,28 @@ noinst_PROGRAMS=fc-lang
 
 noinst_MANS=fc-lang.man
 
-EXTRA_DIST=$(TMPL) $(ORTH)
+EXTRA_DIST = $(TARG) $(TMPL) $(ORTH)
 
+if CROSS_COMPILING
+$(TARG):$(ORTH) fc-lang.c $(STMPL)
+	@echo Warning: cannot rebuild $(TARG) when cross-compiling
+else
 $(TARG):$(ORTH) fc-lang${EXEEXT} $(STMPL)
 	$(AM_V_GEN) $(RM) $(TARG); \
 	./fc-lang${EXEEXT} -d ${srcdir} $(ORTH) < $(STMPL) > $(TARG).tmp && \
 	mv $(TARG).tmp $(TARG)
+endif
 
 ALIAS_FILES = fcalias.h fcaliastail.h
 
 BUILT_SOURCES = $(ALIAS_FILES) $(TARG)
 
-$(ALIAS_FILES): 
+$(ALIAS_FILES):
 	touch $(ALIAS_FILES)
 
-CLEANFILES = $(TARG) $(ALIAS_FILES)
+CLEANFILES = $(ALIAS_FILES)
+
+MAINTAINERCLEANFILES = $(TARG)
 
 # NOTE:
 #

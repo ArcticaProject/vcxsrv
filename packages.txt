@@ -1,75 +1,74 @@
-bdftopcf-1.0.2
+bdftopcf-1.0.3
 bigreqsproto-1.1.1
 compositeproto-0.4.2
 damageproto-1.2.1
-encodings-1.0.3
+encodings-1.0.4
 evieext-1.0.2
-fixesproto-4.1.1
-fixesproto-4.1.2
-font-adobe-100dpi-1.0.1
-font-adobe-75dpi-1.0.1
-font-adobe-utopia-100dpi-1.0.2
-font-adobe-utopia-75dpi-1.0.2
-font-adobe-utopia-type1-1.0.2
-font-alias-1.0.2
-font-arabic-misc-1.0.1
-font-bh-100dpi-1.0.1
-font-bh-75dpi-1.0.1
-font-bh-lucidatypewriter-100dpi-1.0.1
-font-bh-lucidatypewriter-75dpi-1.0.1
-font-bh-ttf-1.0.1
-font-bh-type1-1.0.1
-font-bitstream-100dpi-1.0.1
-font-bitstream-75dpi-1.0.1
-font-bitstream-speedo-1.0.1
-font-bitstream-type1-1.0.1
-font-cronyx-cyrillic-1.0.1
-font-cursor-misc-1.0.1
-font-daewoo-misc-1.0.1
-font-dec-misc-1.0.1
-font-ibm-type1-1.0.1
-font-isas-misc-1.0.1
-font-jis-misc-1.0.1
-font-micro-misc-1.0.1
-font-misc-cyrillic-1.0.1
-font-misc-ethiopic-1.0.1
-font-misc-meltho-1.0.1
-font-misc-misc-1.1.0
-font-mutt-misc-1.0.2
-font-schumacher-misc-1.1.0
-font-screen-cyrillic-1.0.2
-font-sony-misc-1.0.1
-font-sun-misc-1.0.2
-font-util-1.1.1
-font-winitzki-cyrillic-1.0.1
-font-xfree86-type1-1.0.2
-fontconfig-2.8.0
+fixesproto-5.0
+font-adobe-100dpi-1.0.3
+font-adobe-75dpi-1.0.3
+font-adobe-utopia-100dpi-1.0.4
+font-adobe-utopia-75dpi-1.0.4
+font-adobe-utopia-type1-1.0.4
+font-alias-1.0.3
+font-arabic-misc-1.0.3
+font-bh-100dpi-1.0.3
+font-bh-75dpi-1.0.3
+font-bh-lucidatypewriter-100dpi-1.0.3
+font-bh-lucidatypewriter-75dpi-1.0.3
+font-bh-ttf-1.0.3
+font-bh-type1-1.0.3
+font-bitstream-100dpi-1.0.3
+font-bitstream-75dpi-1.0.3
+font-bitstream-speedo-1.0.2
+font-bitstream-type1-1.0.3
+font-cronyx-cyrillic-1.0.3
+font-cursor-misc-1.0.3
+font-daewoo-misc-1.0.3
+font-dec-misc-1.0.3
+font-ibm-type1-1.0.3
+font-isas-misc-1.0.3
+font-jis-misc-1.0.3
+font-micro-misc-1.0.3
+font-misc-cyrillic-1.0.3
+font-misc-ethiopic-1.0.3
+font-misc-meltho-1.0.3
+font-misc-misc-1.1.2
+font-mutt-misc-1.0.3
+font-schumacher-misc-1.1.2
+font-screen-cyrillic-1.0.4
+font-sony-misc-1.0.3
+font-sun-misc-1.0.3
+font-util-1.2.0
+font-winitzki-cyrillic-1.0.3
+font-xfree86-type1-1.0.4
+fontconfig git version
 fontsproto-2.1.1
 freetype-2.4.4
-glproto-1.4.12
+glproto git version
 inputproto-2.0.1
 kbproto-1.0.5
-libX11-1.3.6
-libXau-1.0.6
-libXaw-1.0.7
-libXdmcp-1.0.3
-libXext-1.1.2
-libXfont-1.4.2
-libXft-2.2.0
-libXinerama-1.1
-libXmu-1.0.5
-libXpm-3.5.8
+libX11 git version
+libXau git version
+libXaw-1.0.9
+libXdmcp git version
+libXext git version
+libXfont-1.4.3
+libXft git version
+libXinerama git version
+libXmu git version
+libXpm-3.5.9
 libXrender-0.9.6
-libXt-1.0.8
-libfontenc-1.0.5
-libxcb-1.5
-libxkbfile-1.0.6
-mesa-7.9
-mkfontscale-1.0.7
+libXt-1.1.1
+libfontenc git version
+libxcb git version
+libxkbfile-1.0.7
+mesa git version
+mkfontscale git version
 openssl-1.0.0c
-pixman-0.19.2
+pixman git version
 pthreads-w32-2-8-0-release
-randrproto-1.3.2
+randrproto git version
 recordproto-1.14.1
 renderproto-0.11.1
 resourceproto-1.1.1
@@ -79,15 +78,15 @@ ttf-bitstream-vera-1.10
 windowswmproto-1.0.4
 xbitmaps-1.1.1
 xcalc-1.0.4.1
-xcb-proto-1.6
+xcb-proto git version
 xclock-1.0.5
 xcmiscproto-1.2.1
-xextproto-7.1.2
-xineramaproto-1.2
-xkbcomp-1.1.1
-xkeyboard-config-1.8
-xorg-server-1.8.0
-xproto-7.0.20
-xtrans-1.2.6
-xwininfo-1.1.0
+xextproto git version
+xineramaproto-1.2.1
+xkbcomp git version
+xkeyboard-config git version
+xproto-7.0.21
+xserver git version
+xtrans git version
+xwininfo git version
 zlib-1.2.3

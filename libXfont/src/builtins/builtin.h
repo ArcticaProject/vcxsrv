@@ -1,5 +1,4 @@
 /*
- * Id: builtin.h,v 1.2 1999/11/02 06:16:47 keithp Exp $
  *
  * Copyright 1999 SuSE, Inc.
  *
@@ -22,7 +21,6 @@
  *
  * Author:  Keith Packard, SuSE, Inc.
  */
-/* $XFree86: xc/lib/font/builtins/builtin.h,v 1.3 1999/12/30 02:29:49 robin Exp $ */
 
 #include <X11/Xdefs.h>
 #include <X11/fonts/font.h>

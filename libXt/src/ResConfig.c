@@ -1,4 +1,3 @@
-/* $Xorg: ResConfig.c,v 1.5 2001/02/09 02:03:56 xorgcvs Exp $ */
 /*
 
 Copyright 1987, 1988, 1998  The Open Group
@@ -52,7 +51,6 @@ dealings in this Software without prior written authorization from the IBM
 Corporation.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xt/ResConfig.c,v 3.7 2001/08/22 22:52:19 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -176,18 +174,13 @@ _set_resource_values (
 		 * create resource name string
 		 */
 		if (resource_name) {
-			temp = XtMalloc (sizeof(char) *
-				(2 + strlen(cur->core.name)
-			   	+ strlen(resource_name)));
-			sprintf (temp, ".%s%s", cur->core.name, resource_name);
+			XtAsprintf (&temp, ".%s%s", cur->core.name, resource_name);
 			XtFree (resource_name);
 		} else if (!XtIsWidget (cur) || !cur->core.name) {
 			cur = XtParent(cur);
 			continue;
 		} else {
-			temp = XtMalloc (sizeof(char) *
-				(2 + strlen(cur->core.name)));
-			sprintf (temp, ".%s", cur->core.name);
+			XtAsprintf (&temp, ".%s", cur->core.name);
 		}
 		resource_name = temp;
 
@@ -199,31 +192,19 @@ _set_resource_values (
 				(ApplicationShellWidget) (cur);
 
 			if (resource_class) {
-				temp = XtMalloc (sizeof(char) *
-					(2 + strlen(top->application.class)
-					+ strlen(resource_class)));
-				sprintf (temp, ".%s%s",
+				XtAsprintf (&temp, ".%s%s",
 					top->application.class, resource_class);
 			} else {
-				temp = XtMalloc (sizeof(char) *
-					(2 + strlen(top->application.class)));
-				sprintf (temp, ".%s",
+				XtAsprintf (&temp, ".%s",
 					top->application.class);
 			}
 		} else {
 			if (resource_class) {
-				temp = XtMalloc (sizeof(char) *
-					(2 + strlen(
-					cur->core.widget_class->core_class.class_name)
-					+ strlen(resource_class)));
-				sprintf (temp, ".%s%s",
+				XtAsprintf (&temp, ".%s%s",
 					cur->core.widget_class->core_class.class_name,
 					resource_class);
 			} else {
-				temp = XtMalloc (sizeof(char) *
-					(2 + strlen(
-					cur->core.widget_class->core_class.class_name)));
-				sprintf (temp, ".%s",
+				XtAsprintf (&temp, ".%s",
 					cur->core.widget_class->core_class.class_name);
 			}
 		}
@@ -237,9 +218,7 @@ _set_resource_values (
 	/*
 	 * add the resource name to the end of the resource name string
 	 */
-	temp = XtMalloc (2 + strlen(resource_name) +
-		strlen(resources_return[res_index].resource_name));
-	sprintf (temp, "%s.%s", resource_name,
+	XtAsprintf (&temp, "%s.%s", resource_name,
 		resources_return[res_index].resource_name);
 	if (resource_name != NULL)
 		XtFree (resource_name);
@@ -248,9 +227,7 @@ _set_resource_values (
 	/*
 	 * add the resource class to the end of the resource class string
 	 */
-	temp = XtMalloc (2 + strlen(resource_class) +
-		strlen(resources_return[res_index].resource_class));
-	sprintf (temp, "%s.%s", resource_class,
+	XtAsprintf (&temp, "%s.%s", resource_class,
 		resources_return[res_index].resource_class);
 	if (resource_class != NULL)
 		XtFree (resource_class);
@@ -748,7 +725,7 @@ _search_widget_tree (
 	/*
 	 * this case covers resources of only one level (eg. *background)
 	 */
-	if (strcmp (remainder, "") == 0) {
+	if (remainder[0] == 0) {
 		_set_resource_values (w, resource, value, last_part);
 		if (last_token == '*')
 			_apply_values_to_children (parent, remainder, resource,
@@ -759,8 +736,7 @@ _search_widget_tree (
 	 */
 	} else {
 		if (remainder[0] != '*' && remainder[0] != '.') {
-			copy = XtMalloc (strlen(remainder) + 2);
-			sprintf (copy, ".%s", remainder);
+			XtAsprintf (&copy, ".%s", remainder);
 			XtFree (remainder);
 			remainder = copy;
 		}

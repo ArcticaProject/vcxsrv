@@ -1,7 +1,5 @@
-/* $Xorg: Shell.c,v 1.4 2001/02/09 02:03:58 xorgcvs Exp $ */
-
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -43,7 +41,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xt/Shell.c,v 3.16tsi Exp $ */
 
 /*
 
@@ -1783,7 +1780,8 @@ static void GetGeometry(
 	}
 	else hints.flags = 0;
 
-	sprintf( def_geom, "%dx%d+%d+%d", width, height, x, y );
+	snprintf( def_geom, sizeof(def_geom), "%dx%d+%d+%d",
+		  width, height, x, y );
 	flag = XWMGeometry( XtDisplay(W),
 			    XScreenNumberOfScreen(XtScreen(W)),
 			    w->shell.geometry, def_geom,
@@ -2484,6 +2482,10 @@ static Boolean TopLevelSetValues(
 		XFree((XPointer)icon_name.value);
 	}
     }
+    else if (new->topLevel.iconic != old->topLevel.iconic) {
+	if (new->topLevel.iconic)
+	    new->wm.wm_hints.initial_state = IconicState;
+    }
     return False;
 }
 
@@ -3016,7 +3018,7 @@ static void SetSessionProperties(
 	user_name = _XtGetUserName(nam_buf, sizeof nam_buf);
 	if (user_name)
 	    props[num_props++] = ArrayPack(SmUserID, &user_name);
-	sprintf(pid, "%ld", (long)getpid());
+	snprintf(pid, sizeof(pid), "%ld", (long)getpid());
 	props[num_props++] = ArrayPack(SmProcessID, &pidp);
 
 	if (num_props) {

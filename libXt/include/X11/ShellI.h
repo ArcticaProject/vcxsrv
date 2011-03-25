@@ -1,5 +1,3 @@
-/* $XFree86$ */
-
 #ifndef _XtShellInternal_h
 #define _XtShellInternal_h
 

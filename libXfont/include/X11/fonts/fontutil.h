@@ -1,5 +1,3 @@
-/* $XFree86: xc/lib/font/include/fontutil.h,v 1.1 1999/03/14 11:17:49 dawes Exp $ */
-
 #ifndef _FONTUTIL_H_
 #define _FONTUTIL_H_
 

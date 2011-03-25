@@ -160,7 +160,7 @@ _XftDisplayInfoGet (Display *dpy, FcBool createIfNecessary)
     info->next = _XftDisplayInfo;
     _XftDisplayInfo = info;
 
-    info->glyph_memory = NULL;
+    info->glyph_memory = 0;
     info->max_glyph_memory = XftDefaultGetInteger (dpy,
 						   XFT_MAX_GLYPH_MEMORY, 0,
 						   XFT_DPY_MAX_GLYPH_MEMORY);

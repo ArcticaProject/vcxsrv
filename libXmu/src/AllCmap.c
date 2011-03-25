@@ -1,5 +1,3 @@
-/* $Xorg: AllCmap.c,v 1.4 2001/02/09 02:03:51 xorgcvs Exp $ */
-
 /* 
  
 Copyright 1989, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xmu/AllCmap.c,v 1.7 2001/01/17 19:42:53 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

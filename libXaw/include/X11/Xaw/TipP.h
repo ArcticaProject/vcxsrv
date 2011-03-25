@@ -27,8 +27,6 @@
  * Author: Paulo César Pereira de Andrade
  */
 
-/* $XFree86$ */
-
 #ifndef _XawTipP_h
 #define _XawTipP_h
 

@@ -1,4 +1,3 @@
-/* $Xorg: sharedlib.c,v 1.4 2001/02/09 02:03:47 xorgcvs Exp $ */
 /*
 
 Copyright 1991, 1994, 1998  The Open Group
@@ -62,9 +61,6 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xaw/TreeP.h>
 #include <X11/VendorP.h>
 #include <X11/Xaw/ViewportP.h>
-#if !defined(OLDXAW) && !defined(XAW7)
-#include <X11/Xaw/PrintSP.h>
-#endif
 
 extern AsciiSinkClassRec asciiSinkClassRec;
 WidgetClass asciiSinkObjectClass = (WidgetClass)&asciiSinkClassRec;
@@ -174,9 +170,4 @@ WidgetClass vendorShellWidgetClass = (WidgetClass) &vendorShellClassRec;
 extern ViewportClassRec viewportClassRec;
 WidgetClass viewportWidgetClass = (WidgetClass)&viewportClassRec;
 
-#if !defined(OLDXAW) && !defined(XAW7)
-extern XawPrintShellClassRec xawPrintShellClassRec;
-WidgetClass xawPrintShellWidgetClass = (WidgetClass) &xawPrintShellClassRec;
-#endif
- 
 #endif /* SUNSHLIB */

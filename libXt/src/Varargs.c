@@ -1,5 +1,3 @@
-/* $Xorg: Varargs.c,v 1.4 2001/02/09 02:03:59 xorgcvs Exp $ */
-
 /*
 
 Copyright 1985, 1986, 1987, 1988, 1989, 1994, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/Varargs.c,v 3.10 2001/12/14 19:56:32 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -321,7 +318,7 @@ _XtFreeArgList(
     if (args) {
 	if (typed_count)
 	    for (p = args + total_count; total_count--; ++p) {
-		if (p->value) XtFree((char *)p->value);
+		XtFree((char *)p->value);
 	    }
 	XtFree((char *)args);
     }
@@ -401,8 +398,7 @@ _XtVaToArgList(
 	}
     }
 
-    if (resources != NULL)
-	XtFree((XtPointer)resources);
+    XtFree((XtPointer)resources);
 
     *num_args_return = (Cardinal)count;
     *args_return = (ArgList)args;

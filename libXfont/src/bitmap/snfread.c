@@ -1,4 +1,3 @@
-/* $Xorg: snfread.c,v 1.5 2001/02/09 02:04:02 xorgcvs Exp $ */
 /************************************************************************
 Copyright 1989 by Digital Equipment Corporation, Maynard, Massachusetts.
 
@@ -49,7 +48,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/snfread.c,v 1.12 2003/11/17 22:20:22 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -1,5 +1,4 @@
 /*
- * $Xorg: Panner.c,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $
  *
 Copyright 1989, 1994, 1998  The Open Group
 
@@ -25,8 +24,6 @@ in this Software without prior written authorization from The Open Group.
  *
  * Author:  Jim Fulton, MIT X Consortium
  */
-
-/* $XFree86: xc/lib/Xaw/Panner.c,v 3.8 2001/07/25 15:04:49 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

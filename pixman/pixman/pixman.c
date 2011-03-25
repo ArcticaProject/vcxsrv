@@ -873,6 +873,8 @@ color_to_pixel (pixman_color_t *     color,
           format == PIXMAN_x8b8g8r8     ||
           format == PIXMAN_b8g8r8a8     ||
           format == PIXMAN_b8g8r8x8     ||
+          format == PIXMAN_r8g8b8a8     ||
+          format == PIXMAN_r8g8b8x8     ||
           format == PIXMAN_r5g6b5       ||
           format == PIXMAN_b5g6r5       ||
           format == PIXMAN_a8           ||
@@ -895,6 +897,8 @@ color_to_pixel (pixman_color_t *     color,
 	    ((c & 0x0000ff00) <<  8) |
 	    ((c & 0x000000ff) << 24);
     }
+    if (PIXMAN_FORMAT_TYPE (format) == PIXMAN_TYPE_RGBA)
+	c = ((c & 0xff000000) >> 24) | (c << 8);
 
     if (format == PIXMAN_a1)
 	c = c >> 31;
@@ -1105,6 +1109,8 @@ pixman_format_supported_source (pixman_format_code_t format)
     case PIXMAN_x8b8g8r8:
     case PIXMAN_b8g8r8a8:
     case PIXMAN_b8g8r8x8:
+    case PIXMAN_r8g8b8a8:
+    case PIXMAN_r8g8b8x8:
     case PIXMAN_r8g8b8:
     case PIXMAN_b8g8r8:
     case PIXMAN_r5g6b5:

@@ -1,7 +1,5 @@
-/* $Xorg: Initialize.c,v 1.8 2001/02/09 02:03:55 xorgcvs Exp $ */
-
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -43,7 +41,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xt/Initialize.c,v 3.21 2003/04/21 16:34:27 herrb Exp $ */
 
 /*
 
@@ -383,7 +380,7 @@ static void CombineAppUserDefaults(
     XrmDatabase *pdb)
 {
     char* filename;
-    char* path;
+    char* path = NULL;
     Boolean deallocate = False;
 
     if (!(path = getenv("XUSERFILESEARCHPATH"))) {
@@ -392,20 +389,14 @@ static void CombineAppUserDefaults(
 	char homedir[PATH_MAX];
 	GetRootDirName(homedir, PATH_MAX);
 	if (!(old_path = getenv("XAPPLRESDIR"))) {
-	    char *path_default = "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N";
-	    if (!(path =
-		  ALLOCATE_LOCAL(6*strlen(homedir) + strlen(path_default))))
-		_XtAllocError(NULL);
-	    sprintf( path, path_default,
-		    homedir, homedir, homedir, homedir, homedir, homedir );
+	    XtAsprintf(&path,
+		       "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N",
+		       homedir, homedir, homedir, homedir, homedir, homedir);
 	} else {
-	    char *path_default = "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N:%s/%%N";
-	    if (!(path =
-		  ALLOCATE_LOCAL( 6*strlen(old_path) + 2*strlen(homedir)
-				 + strlen(path_default))))
-		_XtAllocError(NULL);
-	    sprintf(path, path_default, old_path, old_path, old_path, homedir,
-		    old_path, old_path, old_path, homedir );
+	    XtAsprintf(&path,
+		       "%s/%%L/%%N%%C:%s/%%l/%%N%%C:%s/%%N%%C:%s/%%N%%C:%s/%%L/%%N:%s/%%l/%%N:%s/%%N:%s/%%N",
+		       old_path, old_path, old_path, homedir,
+		       old_path, old_path, old_path, homedir);
 	}
 	deallocate = True;
 #endif
@@ -417,7 +408,8 @@ static void CombineAppUserDefaults(
 	XtFree(filename);
     }
 
-    if (deallocate) DEALLOCATE_LOCAL(path);
+    if (deallocate)
+	XtFree(path);
 }
 
 static void CombineUserDefaults(

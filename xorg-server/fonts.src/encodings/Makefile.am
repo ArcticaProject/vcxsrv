@@ -37,7 +37,9 @@ ENCODING_FILES =		\
 	tis620-2.enc		\
 	viscii1.1-1.enc
 
-EXTRA_DIST = $(ENCODING_FILES) ChangeLog
+EXTRA_DIST = $(ENCODING_FILES)
+
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 
 COMPRESSED = $(ENCODING_FILES:%=%.gz)
 
@@ -60,12 +62,12 @@ encodings.dir: $(DATA_FILES)
 
 encodings_DATA = $(DATA_FILES) encodings.dir
 
-MAINTAINERCLEANFILES=ChangeLog
+.PHONY: ChangeLog INSTALL
 
-.PHONY: ChangeLog
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
-
+dist-hook: ChangeLog INSTALL

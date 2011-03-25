@@ -2387,3 +2387,91 @@ SOFTWARE.
 #define XK_braille_dots_2345678       0x10028fe  /* U+28fe BRAILLE PATTERN DOTS-2345678 */
 #define XK_braille_dots_12345678      0x10028ff  /* U+28ff BRAILLE PATTERN DOTS-12345678 */
 #endif /* XK_BRAILLE */
+
+/*
+ * Sinhala (http://unicode.org/charts/PDF/U0D80.pdf)
+ * http://www.nongnu.org/sinhala/doc/transliteration/sinhala-transliteration_6.html
+ */
+
+#ifdef XK_SINHALA
+#define XK_Sinh_ng            0x1000d82  /* U+0D82 SINHALA ANUSVARAYA */
+#define XK_Sinh_h2            0x1000d83  /* U+0D83 SINHALA VISARGAYA */
+#define XK_Sinh_a             0x1000d85  /* U+0D85 SINHALA AYANNA */
+#define XK_Sinh_aa            0x1000d86  /* U+0D86 SINHALA AAYANNA */
+#define XK_Sinh_ae            0x1000d87  /* U+0D87 SINHALA AEYANNA */
+#define XK_Sinh_aee           0x1000d88  /* U+0D88 SINHALA AEEYANNA */
+#define XK_Sinh_i             0x1000d89  /* U+0D89 SINHALA IYANNA */
+#define XK_Sinh_ii            0x1000d8a  /* U+0D8A SINHALA IIYANNA */
+#define XK_Sinh_u             0x1000d8b  /* U+0D8B SINHALA UYANNA */
+#define XK_Sinh_uu            0x1000d8c  /* U+0D8C SINHALA UUYANNA */
+#define XK_Sinh_ri            0x1000d8d  /* U+0D8D SINHALA IRUYANNA */
+#define XK_Sinh_rii           0x1000d8e  /* U+0D8E SINHALA IRUUYANNA */
+#define XK_Sinh_lu            0x1000d8f  /* U+0D8F SINHALA ILUYANNA */
+#define XK_Sinh_luu           0x1000d90  /* U+0D90 SINHALA ILUUYANNA */
+#define XK_Sinh_e             0x1000d91  /* U+0D91 SINHALA EYANNA */
+#define XK_Sinh_ee            0x1000d92  /* U+0D92 SINHALA EEYANNA */
+#define XK_Sinh_ai            0x1000d93  /* U+0D93 SINHALA AIYANNA */
+#define XK_Sinh_o             0x1000d94  /* U+0D94 SINHALA OYANNA */
+#define XK_Sinh_oo            0x1000d95  /* U+0D95 SINHALA OOYANNA */
+#define XK_Sinh_au            0x1000d96  /* U+0D96 SINHALA AUYANNA */
+#define XK_Sinh_ka            0x1000d9a  /* U+0D9A SINHALA KAYANNA */
+#define XK_Sinh_kha           0x1000d9b  /* U+0D9B SINHALA MAHA. KAYANNA */
+#define XK_Sinh_ga            0x1000d9c  /* U+0D9C SINHALA GAYANNA */
+#define XK_Sinh_gha           0x1000d9d  /* U+0D9D SINHALA MAHA. GAYANNA */
+#define XK_Sinh_ng2           0x1000d9e  /* U+0D9E SINHALA KANTAJA NAASIKYAYA */
+#define XK_Sinh_nga           0x1000d9f  /* U+0D9F SINHALA SANYAKA GAYANNA */
+#define XK_Sinh_ca            0x1000da0  /* U+0DA0 SINHALA CAYANNA */
+#define XK_Sinh_cha           0x1000da1  /* U+0DA1 SINHALA MAHA. CAYANNA */
+#define XK_Sinh_ja            0x1000da2  /* U+0DA2 SINHALA JAYANNA */
+#define XK_Sinh_jha           0x1000da3  /* U+0DA3 SINHALA MAHA. JAYANNA */
+#define XK_Sinh_nya           0x1000da4  /* U+0DA4 SINHALA TAALUJA NAASIKYAYA */
+#define XK_Sinh_jnya          0x1000da5  /* U+0DA5 SINHALA TAALUJA SANYOOGA NAASIKYAYA */
+#define XK_Sinh_nja           0x1000da6  /* U+0DA6 SINHALA SANYAKA JAYANNA */
+#define XK_Sinh_tta           0x1000da7  /* U+0DA7 SINHALA TTAYANNA */
+#define XK_Sinh_ttha          0x1000da8  /* U+0DA8 SINHALA MAHA. TTAYANNA */
+#define XK_Sinh_dda           0x1000da9  /* U+0DA9 SINHALA DDAYANNA */
+#define XK_Sinh_ddha          0x1000daa  /* U+0DAA SINHALA MAHA. DDAYANNA */
+#define XK_Sinh_nna           0x1000dab  /* U+0DAB SINHALA MUURDHAJA NAYANNA */
+#define XK_Sinh_ndda          0x1000dac  /* U+0DAC SINHALA SANYAKA DDAYANNA */
+#define XK_Sinh_tha           0x1000dad  /* U+0DAD SINHALA TAYANNA */
+#define XK_Sinh_thha          0x1000dae  /* U+0DAE SINHALA MAHA. TAYANNA */
+#define XK_Sinh_dha           0x1000daf  /* U+0DAF SINHALA DAYANNA */
+#define XK_Sinh_dhha          0x1000db0  /* U+0DB0 SINHALA MAHA. DAYANNA */
+#define XK_Sinh_na            0x1000db1  /* U+0DB1 SINHALA DANTAJA NAYANNA */
+#define XK_Sinh_ndha          0x1000db3  /* U+0DB3 SINHALA SANYAKA DAYANNA */
+#define XK_Sinh_pa            0x1000db4  /* U+0DB4 SINHALA PAYANNA */
+#define XK_Sinh_pha           0x1000db5  /* U+0DB5 SINHALA MAHA. PAYANNA */
+#define XK_Sinh_ba            0x1000db6  /* U+0DB6 SINHALA BAYANNA */
+#define XK_Sinh_bha           0x1000db7  /* U+0DB7 SINHALA MAHA. BAYANNA */
+#define XK_Sinh_ma            0x1000db8  /* U+0DB8 SINHALA MAYANNA */
+#define XK_Sinh_mba           0x1000db9  /* U+0DB9 SINHALA AMBA BAYANNA */
+#define XK_Sinh_ya            0x1000dba  /* U+0DBA SINHALA YAYANNA */
+#define XK_Sinh_ra            0x1000dbb  /* U+0DBB SINHALA RAYANNA */
+#define XK_Sinh_la            0x1000dbd  /* U+0DBD SINHALA DANTAJA LAYANNA */
+#define XK_Sinh_va            0x1000dc0  /* U+0DC0 SINHALA VAYANNA */
+#define XK_Sinh_sha           0x1000dc1  /* U+0DC1 SINHALA TAALUJA SAYANNA */
+#define XK_Sinh_ssha          0x1000dc2  /* U+0DC2 SINHALA MUURDHAJA SAYANNA */
+#define XK_Sinh_sa            0x1000dc3  /* U+0DC3 SINHALA DANTAJA SAYANNA */
+#define XK_Sinh_ha            0x1000dc4  /* U+0DC4 SINHALA HAYANNA */
+#define XK_Sinh_lla           0x1000dc5  /* U+0DC5 SINHALA MUURDHAJA LAYANNA */
+#define XK_Sinh_fa            0x1000dc6  /* U+0DC6 SINHALA FAYANNA */
+#define XK_Sinh_al            0x1000dca  /* U+0DCA SINHALA AL-LAKUNA */
+#define XK_Sinh_aa2           0x1000dcf  /* U+0DCF SINHALA AELA-PILLA */
+#define XK_Sinh_ae2           0x1000dd0  /* U+0DD0 SINHALA AEDA-PILLA */
+#define XK_Sinh_aee2          0x1000dd1  /* U+0DD1 SINHALA DIGA AEDA-PILLA */
+#define XK_Sinh_i2            0x1000dd2  /* U+0DD2 SINHALA IS-PILLA */
+#define XK_Sinh_ii2           0x1000dd3  /* U+0DD3 SINHALA DIGA IS-PILLA */
+#define XK_Sinh_u2            0x1000dd4  /* U+0DD4 SINHALA PAA-PILLA */
+#define XK_Sinh_uu2           0x1000dd6  /* U+0DD6 SINHALA DIGA PAA-PILLA */
+#define XK_Sinh_ru2           0x1000dd8  /* U+0DD8 SINHALA GAETTA-PILLA */
+#define XK_Sinh_e2            0x1000dd9  /* U+0DD9 SINHALA KOMBUVA */
+#define XK_Sinh_ee2           0x1000dda  /* U+0DDA SINHALA DIGA KOMBUVA */
+#define XK_Sinh_ai2           0x1000ddb  /* U+0DDB SINHALA KOMBU DEKA */
+#define XK_Sinh_o2            0x1000ddc  /* U+0DDC SINHALA KOMBUVA HAA AELA-PILLA*/
+#define XK_Sinh_oo2           0x1000ddd  /* U+0DDD SINHALA KOMBUVA HAA DIGA AELA-PILLA*/
+#define XK_Sinh_au2           0x1000dde  /* U+0DDE SINHALA KOMBUVA HAA GAYANUKITTA */
+#define XK_Sinh_lu2           0x1000ddf  /* U+0DDF SINHALA GAYANUKITTA */
+#define XK_Sinh_ruu2          0x1000df2  /* U+0DF2 SINHALA DIGA GAETTA-PILLA */
+#define XK_Sinh_luu2          0x1000df3  /* U+0DF3 SINHALA DIGA GAYANUKITTA */
+#define XK_Sinh_kunddaliya    0x1000df4  /* U+0DF4 SINHALA KUNDDALIYA */
+#endif /* XK_SINHALA */

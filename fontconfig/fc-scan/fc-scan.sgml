@@ -144,6 +144,7 @@ manpage.1: manpage.sgml
       <command>fc-cache</command>(1)
       <command>fc-list</command>(1)
       <command>fc-match</command>(1)
+      <command>fc-pattern</command>(1)
     </para>
 
     <para>The fontconfig user's guide, in HTML format:

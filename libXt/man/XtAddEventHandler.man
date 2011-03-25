@@ -1,5 +1,3 @@
-.\" $Xorg: XtAddEHand.man,v 1.3 2000/08/17 19:41:57 cpqbld Exp $
-.\"
 .\" Copyright (c) 1993, 1994  X Consortium
 .\" 
 .\" Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,8 +22,6 @@
 .\" be used in advertising or otherwise to promote the sale, use or other 
 .\" dealing in this Software without prior written authorization from the 
 .\" X Consortium.
-.\"
-.\" $XFree86: xc/doc/man/Xt/XtAddEHand.man,v 1.3 2001/02/09 03:47:49 tsi Exp $
 .\"
 .ds tk X Toolkit
 .ds xT X Toolkit Intrinsics \- C Language Interface
@@ -234,8 +230,8 @@ for the specified events. If the procedure is already registered with the
 same \fIclient_data\fP value, the specified mask augments the existing
 mask and the procedure is repositioned in the list.
 .SH "SEE ALSO"
-XtAppNextEvent(3Xt),
-XtBuildEventMask(3Xt)
+XtAppNextEvent(__libmansuffix__),
+XtBuildEventMask(__libmansuffix__)
 .br
 \fI\*(xT\fP
 .br

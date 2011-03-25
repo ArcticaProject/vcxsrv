@@ -7,9 +7,9 @@
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Keith Packard not be used in
+ * documentation, and that the name of the author(s) not be used in
  * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Keith Packard makes no
+ * specific, written prior permission.  The authors make no
  * representations about the suitability of this software for any purpose.  It
  * is provided "as is" without express or implied warranty.
  *
@@ -79,7 +79,7 @@ FcAtomicCreate (const FcChar8   *file)
     if (!atomic)
 	return 0;
     FcMemAlloc (FC_MEM_ATOMIC, total_len);
-    
+
     atomic->file = (FcChar8 *) (atomic + 1);
     strcpy ((char *) atomic->file, (char *) file);
 
@@ -142,7 +142,7 @@ FcAtomicLock (FcAtomic *atomic)
 	 * machines sharing the same filesystem will have clocks
 	 * reasonably close to each other.
 	 */
-	if (FcStat ((char *) atomic->lck, &lck_stat) >= 0)
+	if (FcStat (atomic->lck, &lck_stat) >= 0)
 	{
 	    time_t  now = time (0);
 	    if ((long int) (now - lck_stat.st_mtime) > 10 * 60)
@@ -206,7 +206,7 @@ FcAtomicDestroy (FcAtomic *atomic)
 {
     FcMemFree (FC_MEM_ATOMIC, sizeof (FcAtomic) +
 	       strlen ((char *) atomic->file) * 4 + 4 +
-	       sizeof (NEW_NAME) + sizeof (LCK_NAME) + 
+	       sizeof (NEW_NAME) + sizeof (LCK_NAME) +
 	       sizeof (TMP_NAME));
 
     free (atomic);

@@ -1,4 +1,3 @@
-/* $Xorg: Cardinals.h,v 1.4 2001/02/09 02:03:43 xorgcvs Exp $ */
 /*
 
 Copyright 1985, 1986, 1987, 1998  The Open Group

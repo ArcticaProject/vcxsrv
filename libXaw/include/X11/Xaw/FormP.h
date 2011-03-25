@@ -1,5 +1,3 @@
-/* $Xorg: FormP.h,v 1.4 2001/02/09 02:03:43 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/FormP.h,v 1.13 2001/12/14 19:54:40 dawes Exp $ */
 
 /* Form widget private definitions */
 

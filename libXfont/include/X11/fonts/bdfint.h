@@ -1,5 +1,3 @@
-/* $Xorg: bdfint.h,v 1.4 2001/02/09 02:04:01 xorgcvs Exp $ */
-
 /*
 
 Copyright 1990, 1998  The Open Group
@@ -27,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/bdfint.h,v 1.4 2001/01/17 19:43:26 dawes Exp $ */
 
 #ifndef BDFINT_H
 #define BDFINT_H

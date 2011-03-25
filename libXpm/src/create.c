@@ -1,4 +1,3 @@
-/* $XdotOrg: lib/Xpm/src/create.c,v 1.6 2005/05/19 15:02:48 sandmann Exp $ */
 /*
  * Copyright (C) 1989-95 GROUPE BULL
  *
@@ -33,7 +32,6 @@
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
-/* $XFree86: xc/extras/Xpm/lib/create.c,v 1.4 2003/05/27 22:26:20 tsi Exp $ */
 
 /*
  * The code related to FOR_MSW has been added by

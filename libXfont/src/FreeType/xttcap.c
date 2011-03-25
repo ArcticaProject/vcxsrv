@@ -30,7 +30,6 @@
 
 Notice===
  */
-/* $XFree86: xc/lib/font/FreeType/xttcap.c,v 1.1 2003/10/19 18:53:50 dawes Exp $ */
 
 /*
 #include "xttversion.h"

@@ -1,5 +1,3 @@
-/* $Xorg: XawI18n.c,v 1.4 2001/02/09 02:03:47 xorgcvs Exp $ */
-
 /* Copyright 1991 NCR Corporation - Dayton, Ohio, USA */
 
 /*
@@ -53,7 +51,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xaw/XawI18n.c,v 1.7 2001/01/17 19:42:36 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

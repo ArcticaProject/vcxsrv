@@ -7,9 +7,9 @@
 # documentation for any purpose is hereby granted without fee, provided that
 # the above copyright notice appear in all copies and that both that
 # copyright notice and this permission notice appear in supporting
-# documentation, and that the name of Keith Packard not be used in
+# documentation, and that the name of the author(s) not be used in
 # advertising or publicity pertaining to distribution of the software without
-# specific, written prior permission.  Keith Packard makes no
+# specific, written prior permission.  The authors make no
 # representations about the suitability of this software for any purpose.  It
 # is provided "as is" without express or implied warranty.
 #
@@ -20,10 +20,6 @@
 # DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
-
-CC = @CC_FOR_BUILD@
-EXEEXT = @EXEEXT_FOR_BUILD@
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 
 DOC_SRC = $(srcdir)
 DOC_MODULE = fontconfig
@@ -83,7 +79,7 @@ DOC_FUNCS_SGML=\
 	fcstrset.sgml \
 	fcvalue.sgml
 
-man5_MANS=fonts-conf.5 
+man5_MANS=fonts-conf.5
 man3_MANS=$(DOCMAN3)
 
 noinst_PROGRAMS=edit-sgml
@@ -96,15 +92,20 @@ check_SCRIPTS=check-missing-doc
 TESTS_ENVIRONMENT=top_srcdir=${top_srcdir} sh
 TESTS=check-missing-doc
 
-EXTRA_DIST=$(LOCAL_DOCS) $(SGML) $(DOC_FUNCS_FNCS) $(check_SCRIPTS) func.sgml confdir.sgml.in
+EXTRA_DIST=$(LOCAL_DOCS) $(SGML) $(DOC_FUNCS_FNCS) $(DOC_FUNCS_SGML) $(check_SCRIPTS) func.sgml confdir.sgml.in
 
 SUFFIXES=.fncs .sgml .txt .html
 
 if USEDOCBOOK
 
+if CROSS_COMPILING
+.fncs.sgml:
+	@echo Warning: cannot rebuild $@ when cross-compiling
+else
 .fncs.sgml:
 	$(RM) $@
 	./edit-sgml$(EXEEXT) $(FNCS_TMPL) < '$<' > $*.sgml
+endif
 
 .sgml.txt:
 	$(RM) $@
@@ -127,7 +128,7 @@ func.refs: local-fontconfig-devel.sgml $(DOC_FUNCS_SGML) version.sgml confdir.sg
 local-fontconfig-devel.sgml: fontconfig-devel.sgml
 	$(LN_S) $< $@
 
-$(DOC_FUNCS_SGML): edit-sgml$(EXEEXT) $(FNCS_TMPL)
+$(DOC_FUNCS_SGML): edit-sgml.c $(FNCS_TMPL)
 
 fonts-conf.5: local-fontconfig-user.sgml version.sgml confdir.sgml
 	$(RM) $@
@@ -140,8 +141,10 @@ local-fontconfig-user.sgml: fontconfig-user.sgml
 all-local: $(LOCAL_DOCS)
 
 clean-local:
-	$(RM) $(man3_MANS) $(man5_MANS) $(DOC_FILES) $(DOC_FUNCS_SGML) func.refs
+	$(RM) $(man3_MANS) $(man5_MANS) $(DOC_FILES) func.refs
 	$(RM) -r $(HTML_DIR)
+
+MAINTAINERCLEANFILES = $(DOC_FUNCS_SGML)
 
 $(HTML_DIR): local-fontconfig-devel.sgml $(DOC_FUNCS_SGML) version.sgml confdir.sgml
 	$(RM) -r $(HTML_DIR)

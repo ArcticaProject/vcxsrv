@@ -1,4 +1,4 @@
-SUBDIRS = include src man spec
+SUBDIRS = include src man specs
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = 
@@ -25,23 +25,25 @@ endif
 
 endif
 
-EXTRA_DIST = xaw6.pc.in \
-	xaw7.pc.in \
-	autogen.sh \
-	old-doc/Changelog \
-	old-doc/CHANGES \
-	ChangeLog
+MAINTAINERCLEANFILES = ChangeLog INSTALL
+EXTRA_DIST = 		   \
+        autogen.sh	   \
+	old-doc/Changelog  \
+	old-doc/CHANGES
 
-if !PLATFORM_WIN32
 install-exec-hook:
-	cd $(DESTDIR)$(libdir) && rm -f libXaw.@LIBEXT@ && ln -s $(DEFAULT_LIB) libXaw.@LIBEXT@
-endif
+	cd $(DESTDIR)$(libdir) && rm -f libXaw.@LIBEXT@ && $(LN_S) $(DEFAULT_LIB) libXaw.@LIBEXT@
 
-MAINTAINERCLEANFILES=ChangeLog
+uninstall-local:
+	-rm -f $(DESTDIR)$(libdir)/libXaw.@LIBEXT@
 
-.PHONY: ChangeLog
+
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL

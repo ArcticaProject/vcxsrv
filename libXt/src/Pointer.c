@@ -1,5 +1,3 @@
-/* $Xorg: Pointer.c,v 1.4 2001/02/09 02:03:56 xorgcvs Exp $ */
-
 /********************************************************
 
 Copyright 1988 by Hewlett-Packard Company

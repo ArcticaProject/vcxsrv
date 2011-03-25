@@ -7,9 +7,9 @@
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Keith Packard not be used in
+ * documentation, and that the name of the author(s) not be used in
  * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Keith Packard makes no
+ * specific, written prior permission.  The authors make no
  * representations about the suitability of this software for any purpose.  It
  * is provided "as is" without express or implied warranty.
  *
@@ -45,7 +45,7 @@ higher level functions.
 @FUNC@          FcFreeTypeCharSet 
 @TYPE1@         FT_Face%			@ARG1@          face      
 @TYPE2@         FcBlanks *			@ARG2@          blanks
-@PURPOSE@	compute unicode coverage
+@PURPOSE@	compute Unicode coverage
 @DESC@
 Scans a FreeType face and returns the set of encoded Unicode chars.  This scans
 several encoding tables to build as complete a list as possible.  
@@ -61,7 +61,7 @@ not in 'blanks' are not placed in the returned FcCharSet.
 @TYPE1@         FT_Face%			@ARG1@          face      
 @TYPE2@         FcBlanks *			@ARG2@          blanks
 @TYPE3@		int *				@ARG3@		spacing
-@PURPOSE@	compute unicode coverage and spacing type
+@PURPOSE@	compute Unicode coverage and spacing type
 @DESC@
 Scans a FreeType face and returns the set of encoded Unicode chars.
 This scans

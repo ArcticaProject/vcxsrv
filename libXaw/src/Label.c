@@ -1,5 +1,3 @@
-/* $Xorg: Label.c,v 1.5 2001/02/09 02:03:43 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/Label.c,v 1.12 2001/01/17 19:42:27 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

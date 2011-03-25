@@ -7,8 +7,10 @@ may choose not to distribute this library if they wish.  Therefore,
 applications developers who depend on this library should be prepared to
 treat it as part of their software base when porting.
 
-API documentation for this library is provided in the xorg-docs module,
-in the file specs/Xmu/Xmu.ms.
+API documentation for this library is provided in the docs directory in
+DocBook format.  If xmlto is installed, it will be converted to supported
+formats and installed in $(docdir) unless --disable-docs is passed to
+configure.
 
 All questions regarding this software should be directed at the
 Xorg mailing list:

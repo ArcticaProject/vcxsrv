@@ -1,4 +1,3 @@
-/* $Xorg: xkbconfig.c,v 1.4 2000/08/17 19:46:43 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/lib/xkbfile/xkbconfig.c,v 3.7 2001/11/30 12:11:51 eich Exp $ */
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
@@ -51,7 +49,6 @@
 #else
 
 #include <X11/X.h>
-#define	NEED_EVENTS
 #include <X11/keysym.h>
 #include <X11/Xproto.h>
 #include "misc.h"

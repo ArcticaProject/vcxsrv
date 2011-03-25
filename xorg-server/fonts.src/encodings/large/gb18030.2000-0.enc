@@ -1,5 +1,4 @@
 # Contributed by James Su <suzhe@turbolinux.com.cn>
-# $XFree86$
 STARTENCODING gb18030.2000-0
 SIZE 0xFF 0xFF
 FIRSTINDEX 0x81 0x40

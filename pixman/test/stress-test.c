@@ -19,6 +19,8 @@ static const pixman_format_code_t image_formats[] =
     PIXMAN_x8b8g8r8,
     PIXMAN_b8g8r8a8,
     PIXMAN_b8g8r8x8,
+    PIXMAN_r8g8b8a8,
+    PIXMAN_r8g8b8x8,
     PIXMAN_x14r6g6b6,
     PIXMAN_r8g8b8,
     PIXMAN_b8g8r8,

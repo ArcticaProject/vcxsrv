@@ -1,4 +1,3 @@
-/* $Xorg: TextSink.c,v 1.4 2001/02/09 02:03:46 xorgcvs Exp $ */
 /*
 
 Copyright 1989, 1994, 1998  The Open Group
@@ -24,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xaw/TextSink.c,v 1.21 2002/06/03 21:39:24 paulo Exp $ */
 
 /*
  * Author:  Chris Peterson, MIT X Consortium.

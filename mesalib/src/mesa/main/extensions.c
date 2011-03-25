@@ -753,7 +753,7 @@ _mesa_extension_is_enabled( struct gl_context *ctx, const char *name )
 static char *
 get_extension_override( struct gl_context *ctx )
 {
-   const char *env_const= _mesa_getenv("MESA_EXTENSION_OVERRIDE");
+   const char *env_const = _mesa_getenv("MESA_EXTENSION_OVERRIDE");
    char *env;
    char *ext;
    char *extra_exts;
@@ -794,7 +794,7 @@ get_extension_override( struct gl_context *ctx )
    }
 
    /* Remove trailing space. */
-   len  = strlen(extra_exts);
+   len = strlen(extra_exts);
    if (extra_exts[len - 1] == ' ')
       extra_exts[len - 1] = '\0';
 
@@ -875,12 +875,24 @@ _mesa_make_extension_string(struct gl_context *ctx)
    GLboolean *base = (GLboolean *) &ctx->Extensions;
    const struct extension *i;
    unsigned j;
+   unsigned maxYear = ~0;
 
+   /* Check if the MESA_EXTENSION_MAX_YEAR env var is set */
+   {
+      const char *env = getenv("MESA_EXTENSION_MAX_YEAR");
+      if (env) {
+         maxYear = atoi(env);
+         _mesa_debug(ctx, "Note: limiting GL extensions to %u or earlier\n",
+                     maxYear);
+      }
+   }
 
    /* Compute length of the extension string. */
    count = 0;
    for (i = extension_table; i->name != 0; ++i) {
-      if (base[i->offset] && (i->api_set & (1 << ctx->API))) {
+      if (base[i->offset] &&
+          i->year <= maxYear &&
+          (i->api_set & (1 << ctx->API))) {
 	 length += strlen(i->name) + 1; /* +1 for space */
 	 ++count;
       }
@@ -908,7 +920,9 @@ _mesa_make_extension_string(struct gl_context *ctx)
     */
    j = 0;
    for (i = extension_table; i->name != 0; ++i) {
-      if (base[i->offset] && (i->api_set & (1 << ctx->API))) {
+      if (base[i->offset] &&
+          i->year <= maxYear &&
+          (i->api_set & (1 << ctx->API))) {
          extension_indices[j++] = i - extension_table;
       }
    }

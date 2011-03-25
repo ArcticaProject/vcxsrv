@@ -1,5 +1,3 @@
-/* $Xorg: ConstrainP.h,v 1.4 2001/02/09 02:03:54 xorgcvs Exp $ */
-/* $oHeader: ConstrainP.h,v 1.2 88/08/18 15:54:15 asente Exp $ */
 /***********************************************************
 
 Copyright 1987, 1988, 1998  The Open Group

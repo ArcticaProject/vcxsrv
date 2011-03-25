@@ -31,7 +31,6 @@
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
-/* $XFree86$ */
 
 /* October 2004, source code review by Thomas Biege <thomas@suse.de> */
 

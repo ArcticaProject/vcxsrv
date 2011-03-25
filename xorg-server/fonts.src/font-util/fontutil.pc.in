@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 datarootdir=@datarootdir@
 datadir=@datadir@
-fontrootdir=@FONTROOTDIR@
+fontrootdir=@fontrootdir@
 mapdir=@MAPDIR@
  
 Name: FontUtil

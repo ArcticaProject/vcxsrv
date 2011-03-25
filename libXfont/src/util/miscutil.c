@@ -1,5 +1,3 @@
-/* $Xorg: miscutil.c,v 1.4 2001/02/09 02:04:04 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1994, 1998  The Open Group
@@ -27,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/util/miscutil.c,v 1.7 2001/07/25 15:04:57 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -48,8 +45,10 @@ from The Open Group.
 
 extern void BuiltinRegisterFpeFunctions(void);
 
+#ifndef NO_WEAK_SYMBOLS
 /* make sure everything initializes themselves at least once */
 weak long serverGeneration = 1;
+#endif
 
 weak void
 register_fpe_functions (void)

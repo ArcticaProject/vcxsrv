@@ -63,22 +63,14 @@ from The Open Group.
  */
 
 #ifdef X11_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _X11Trans##func
-#else
-#define TRANS(func) _X11Trans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_X11Trans";
 #endif
 #endif /* X11_t */
 
 #ifdef XSERV_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _XSERVTrans##func
-#else
-#define TRANS(func) _XSERVTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_XSERVTrans";
 #endif
@@ -86,66 +78,42 @@ static char* __xtransname = "_XSERVTrans";
 #endif /* XSERV_t */
 
 #ifdef XIM_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _XimXTrans##func
-#else
-#define TRANS(func) _XimXTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_XimTrans";
 #endif
 #endif /* XIM_t */
 
 #ifdef FS_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _FSTrans##func
-#else
-#define TRANS(func) _FSTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_FSTrans";
 #endif
 #endif /* FS_t */
 
 #ifdef FONT_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _FontTrans##func
-#else
-#define TRANS(func) _FontTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_FontTrans";
 #endif
 #endif /* FONT_t */
 
 #ifdef ICE_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _IceTrans##func
-#else
-#define TRANS(func) _IceTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_IceTrans";
 #endif
 #endif /* ICE_t */
 
 #ifdef TEST_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _TESTTrans##func
-#else
-#define TRANS(func) _TESTTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_TESTTrans";
 #endif
 #endif /* TEST_t */
 
 #ifdef LBXPROXY_t
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _LBXPROXYTrans##func
-#else
-#define TRANS(func) _LBXPROXYTrans/**/func
-#endif
 #define X11_t		/* The server defines this - so should the LBX proxy */
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_LBXPROXYTrans";
@@ -153,11 +121,7 @@ static char* __xtransname = "_LBXPROXYTrans";
 #endif /* LBXPROXY_t */
 
 #if !defined(TRANS)
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _XTrans##func
-#else
-#define TRANS(func) _XTrans/**/func
-#endif
 #ifdef XTRANSDEBUG
 static char* __xtransname = "_XTrans";
 #endif

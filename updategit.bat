@@ -15,6 +15,13 @@ if not isdir xkbcomp          git clone git://anongit.freedesktop.org/xorg/app/x
 if not isdir pixman           git clone git://anongit.freedesktop.org/pixman
 if not isdir xextproto        git clone git://anongit.freedesktop.org/xorg/proto/xextproto
 if not isdir randrproto       git clone git://anongit.freedesktop.org/xorg/proto/randrproto
+if not isdir glproto          git clone git://anongit.freedesktop.org/xorg/proto/glproto
+if not isdir mkfontscale      git clone git://anongit.freedesktop.org/xorg/app/mkfontscale
+if not isdir xwininfo         git clone git://anongit.freedesktop.org/xorg/app/xwininfo
+if not isdir libXft           git clone git://anongit.freedesktop.org/xorg/lib/libXft
+if not isdir libXmu           git clone git://anongit.freedesktop.org/xorg/lib/libXmu
+if not isdir libxtrans        git clone git://anongit.freedesktop.org/xorg/lib/libxtrans
+if not isdir fontconfig       git clone git://anongit.freedesktop.org/fontconfig
 if not isdir mesa             git clone git://anongit.freedesktop.org/git/mesa/mesa
 
 pushd .
@@ -72,6 +79,34 @@ git pull                 |& tee /a d:\updategit.log
 popd
 echo Updating randrproto |& tee /a d:\updategit.log
 pushd randrproto         |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating glproto    |& tee /a d:\updategit.log
+pushd glproto            |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating mkfontscale|& tee /a d:\updategit.log
+pushd mkfontscale        |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating xwininfo   |& tee /a d:\updategit.log
+pushd xwininfo           |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating libXft     |& tee /a d:\updategit.log
+pushd libXft             |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating libXmu     |& tee /a d:\updategit.log
+pushd libXmu             |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating libxtrans  |& tee /a d:\updategit.log
+pushd libxtrans          |& tee /a d:\updategit.log
+git pull                 |& tee /a d:\updategit.log
+popd
+echo Updating fontconfig |& tee /a d:\updategit.log
+pushd fontconfig         |& tee /a d:\updategit.log
 git pull                 |& tee /a d:\updategit.log
 popd
 echo Updating mesa       |& tee /a d:\updategit.log

@@ -51,8 +51,9 @@
 #define GLXBadPbuffer		10
 #define GLXBadCurrentDrawable	11
 #define GLXBadWindow		12
+#define GLXBadProfileARB        13
 
-#define __GLX_NUMBER_ERRORS 13
+#define __GLX_NUMBER_ERRORS 14
 
 /*
 ** Events.
@@ -1287,6 +1288,65 @@ typedef struct {
 } xGLXHyperpipeConfigSGIXReply;
 #define sz_xGLXHyperpipeConfigSGIXReply 32
 
+/*
+ * GLX_ARB_create_context
+ * GLX_ARB_create_context_profile
+ */
+
+/*
+ * glXSetClientInfoARB
+ */
+typedef struct {
+    CARD8	reqType;
+    CARD8	glxCode;
+    CARD16	length B16;
+    CARD32	major B32;
+    CARD32	minor B32;
+    CARD32	n0 B32;
+    CARD32	n1 B32;
+    CARD32	n2 B32;
+    /*
+    ** More data may follow; this is just the header.
+    */
+} xGLXSetClientInfoARB;
+#define sz_xGLXSetClientInfoARB 24
+
+/*
+** glXCreateContextAttribsARB
+*/
+typedef struct {
+    CARD8	reqType;
+    CARD8	glxCode;
+    CARD16	length B16;
+    GLXContextID	context B32;
+    GLXFBConfigID	fbconfig B32;
+    CARD32	screen;
+    GLXContextID	shareList B32;
+    BOOL	isDirect;
+    CARD8	reserved1;
+    CARD16	reserved2 B16;
+    CARD32	numAttribs B32;
+    /* followed by attribute list */
+} xGLXCreateContextAttribsARB;
+#define sz_xGLXCreateContextAttribsARB 28
+
+/*
+ * glXSetClientInfo2ARB
+ */
+typedef struct {
+    CARD8	reqType;
+    CARD8	glxCode;
+    CARD16	length B16;
+    CARD32	major B32;
+    CARD32	minor B32;
+    CARD32	n0 B32;
+    CARD32	n1 B32;
+    CARD32	n2 B32;
+    /*
+    ** More data may follow; this is just the header.
+    */
+} xGLXSetClientInfo2ARB;
+#define sz_xGLXSetClientInfo2ARB 24
 /************************************************************************/
 
 /*
@@ -2049,7 +2109,9 @@ typedef struct {
 #define X_GLXChangeDrawableAttributes    30
 #define X_GLXCreateWindow                31
 #define X_GLXDestroyWindow               32
-
+#define X_GLXSetClientInfoARB            33
+#define X_GLXCreateContextAtrribsARB     34
+#define X_GLXSetConfigInfo2ARB           35
 
 /* Opcodes for single commands (part of GLX command space) */
 

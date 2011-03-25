@@ -1,7 +1,5 @@
-/* $Xorg: Alloc.c,v 1.4 2001/02/09 02:03:53 xorgcvs Exp $ */
-
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, 2011, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -69,7 +67,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/Alloc.c,v 1.9 2001/12/14 19:56:07 dawes Exp $ */
 
 /*
  * X Toolkit Memory Allocation Routines
@@ -85,6 +82,8 @@ in this Software without prior written authorization from The Open Group.
 #undef _XBCOPYFUNC
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 #define Xmalloc(size) malloc((size))
 #define Xrealloc(ptr, size) realloc((ptr), (size))
@@ -123,6 +122,43 @@ void _XtHeapInit(
     heap->start = NULL;
     heap->bytes_remaining = 0;
 }
+
+/* Version of asprintf() using XtMalloc
+ * Not currently available in XTTRACEMEMORY version, since that would
+ * require varargs macros everywhere, which are only standard in C99 & later.
+ */
+Cardinal XtAsprintf(
+    String *new_string,
+    _Xconst char * _X_RESTRICT_KYWD format,
+    ...)
+{
+    char buf[256];
+    Cardinal len;
+    va_list ap;
+
+    va_start(ap, format);
+    len = vsnprintf(buf, sizeof(buf), format, ap);
+    va_end(ap);
+
+    if (len < 0)
+	_XtAllocError("vsnprintf");
+
+    *new_string = XtMalloc(len + 1); /* snprintf doesn't count trailing '\0' */
+    if (len < sizeof(buf))
+    {
+	strncpy(*new_string, buf, len);
+	(*new_string)[len] = '\0';
+    }
+    else
+    {
+	va_start(ap, format);
+	if (vsnprintf(*new_string, len + 1, format, ap) < 0)
+	    _XtAllocError("vsnprintf");
+	va_end(ap);
+    }
+    return len;
+}
+
 
 #ifndef XTTRACEMEMORY
 

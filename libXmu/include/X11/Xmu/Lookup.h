@@ -1,7 +1,3 @@
-/*
- * $XFree86$
- */
-
 /************************************************************
 
 Copyright 1999 by Thomas E. Dickey <dickey@clark.net>

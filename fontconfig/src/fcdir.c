@@ -7,9 +7,9 @@
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Keith Packard not be used in
+ * documentation, and that the name of the author(s) not be used in
  * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Keith Packard makes no
+ * specific, written prior permission.  The authors make no
  * representations about the suitability of this software for any purpose.  It
  * is provided "as is" without express or implied warranty.
  *
@@ -30,7 +30,7 @@ FcFileIsDir (const FcChar8 *file)
 {
     struct stat	    statb;
 
-    if (FcStat ((const char *) file, &statb) != 0)
+    if (FcStat (file, &statb) != 0)
 	return FcFalse;
     return S_ISDIR(statb.st_mode);
 }
@@ -45,7 +45,7 @@ FcFileScanFontConfig (FcFontSet		*set,
     FcBool	ret = FcTrue;
     int		id;
     int		count = 0;
-    
+
     id = 0;
     do
     {
@@ -164,7 +164,7 @@ FcDirScanConfig (FcFontSet	*set,
     strcpy ((char *) file, (char *) dir);
     strcat ((char *) file, "/");
     base = file + strlen ((char *) file);
-    
+
     if (FcDebug () & FC_DBG_SCAN)
 	printf ("\tScanning dir %s\n", dir);
 	
@@ -205,7 +205,7 @@ FcDirScanConfig (FcFontSet	*set,
      */
     for (i = 0; i < files->num; i++)
 	FcFileScanConfig (set, dirs, blanks, files->strs[i], config);
-    
+
 bail2:
     FcStrSetDestroy (files);
 bail1:
@@ -243,7 +243,7 @@ FcDirCacheScan (const FcChar8 *dir, FcConfig *config)
     if (FcDebug () & FC_DBG_FONTSET)
 	printf ("cache scan dir %s\n", dir);
 
-    if (FcStat ((char *) dir, &dir_stat) < 0)
+    if (FcStat (dir, &dir_stat) < 0)
     {
 	if (errno != ENOENT)
 	    ret = FcFalse;
@@ -282,12 +282,12 @@ FcDirCacheScan (const FcChar8 *dir, FcConfig *config)
 	ret = FcFalse;
 	goto bail2;
     }
-    
+
     /*
      * Write out the cache file, ignoring any troubles
      */
     FcDirCacheWrite (cache, config);
-    
+
  bail2:
     FcStrSetDestroy (dirs);
  bail1:
@@ -310,11 +310,11 @@ FcDirCacheRead (const FcChar8 *dir, FcBool force, FcConfig *config)
     /* Try to use existing cache file */
     if (!force)
 	cache = FcDirCacheLoad (dir, config, NULL);
-    
+
     /* Not using existing cache file, construct new cache */
     if (!cache)
 	cache = FcDirCacheScan (dir, config);
-    
+
     return cache;
 }
 

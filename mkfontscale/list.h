@@ -19,7 +19,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 */
-/* $XFree86: xc/programs/mkfontscale/list.h,v 1.2 2003/06/20 15:49:52 eich Exp $ */
 
 #ifndef _MKS_LIST_H_
 #define _MKS_LIST_H_ 1
@@ -40,6 +39,7 @@ int listLength(ListPtr list);
 ListPtr appendList(ListPtr first, ListPtr second);
 ListPtr makeList(char **a, int n, ListPtr old, int begin);
 ListPtr reverseList(ListPtr old);
+ListPtr sortList(ListPtr old);
 void destroyList(ListPtr old);
 void deepDestroyList(ListPtr old);
 

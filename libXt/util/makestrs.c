@@ -1,5 +1,3 @@
-/* $XdotOrg: $ */
-
 /*
 
 Copyright (c) 1991, 1998 The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/config/util/makestrs.c,v 3.6 2001/07/25 15:04:41 dawes Exp $ */
 
 /* Constructs string definitions */
 
@@ -33,9 +30,6 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xos.h>
 #include <stdlib.h>
 #include <unistd.h>
-#if defined(macII) && !defined(__STDC__)  /* stdlib.h fails to define these */
-char *malloc();
-#endif /* macII */
 
 typedef struct _TableEnt {
     struct _TableEnt* next;

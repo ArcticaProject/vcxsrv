@@ -301,7 +301,7 @@ XftDrawSrcPicture (XftDraw *draw, _Xconst XftColor *color)
     int		    i;
     XftColor	    bitmapColor;
 
-    if (!info)
+    if (!info || !info->solidFormat)
 	return 0;
     
     /*

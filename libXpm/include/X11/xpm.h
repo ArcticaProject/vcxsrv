@@ -22,7 +22,6 @@
  * used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from GROUPE BULL.
  */
-/* $XFree86: xc/extras/Xpm/lib/xpm.h,v 1.2 2001/08/22 23:36:44 dawes Exp $ */
 
 /*****************************************************************************\
 * xpm.h:                                                                      *

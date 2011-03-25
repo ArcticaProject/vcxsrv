@@ -2,7 +2,12 @@ Fontconfig is built with the traditional configure script:
 
 	$ ./configure --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
 
-This should generate valid Makefiles, then:
+If you checked out from the git repository (as opposed to downloading a
+tarball), you need to run autogen.sh instead of configure:
+
+	$ ./autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
+
+Either way, that should generate valid Makefiles, then:
 
 	$ make
 	$ make install
@@ -14,9 +19,9 @@ important steps:
  		sh new-version.sh 2.xx.xx
 		
  2. 	rebuild the configuration files with autogen.sh
- 		sh autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man --localstatedir=/var
+		./autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man --localstatedir=/var
 		
- 3.	make distcheck (NB: won't work without docbook-utils -PL)
+ 3.	make distcheck
  
  4.	Copy ChangeLog-2.x.y and fontconfig-2.x.y.tar.gz to
  

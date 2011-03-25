@@ -7,9 +7,9 @@
 # documentation for any purpose is hereby granted without fee, provided that
 # the above copyright notice appear in all copies and that both that
 # copyright notice and this permission notice appear in supporting
-# documentation, and that the name of Keith Packard not be used in
+# documentation, and that the name of the author(s) not be used in
 # advertising or publicity pertaining to distribution of the software without
-# specific, written prior permission.  Keith Packard makes no
+# specific, written prior permission.  The authors make no
 # representations about the suitability of this software for any purpose.  It
 # is provided "as is" without express or implied warranty.
 #
@@ -84,13 +84,12 @@ noinst_HEADERS=fcint.h fcftint.h fcdeprecate.h
 ALIAS_FILES = fcalias.h fcaliastail.h fcftalias.h fcftaliastail.h
 
 BUILT_SOURCES = $(ALIAS_FILES) \
-	../fc-arch/fcarch.h \
 	../fc-case/fccase.h \
 	../fc-glyphname/fcglyphname.h \
 	../fc-lang/fclang.h
 
-../fc-arch/fcarch.h:
-	cd ../fc-arch && $(MAKE) $(AM_MAKEFLAGS) fcarch.h
+noinst_PROGRAMS = fcarch
+
 ../fc-case/fccase.h:
 	cd ../fc-case && $(MAKE) $(AM_MAKEFLAGS) fccase.h
 ../fc-glyphname/fcglyphname.h:
@@ -99,6 +98,7 @@ BUILT_SOURCES = $(ALIAS_FILES) \
 	cd ../fc-lang && $(MAKE) $(AM_MAKEFLAGS) fclang.h
 
 libfontconfig_la_SOURCES = \
+	fcarch.h \
 	fcatomic.c \
 	fcblanks.c \
 	fccache.c \
@@ -140,7 +140,7 @@ PUBLIC_FILES = \
 	$(top_srcdir)/fontconfig/fontconfig.h \
 	$(top_srcdir)/src/fcdeprecate.h \
 	$(top_srcdir)/fontconfig/fcprivate.h
-	
+
 PUBLIC_FT_FILES = \
 	$(top_srcdir)/fontconfig/fcfreetype.h
 
@@ -160,7 +160,7 @@ fontconfig.def: $(PUBLIC_FILES) $(PUBLIC_FT_FILES)
 	echo Generating $@
 	(echo EXPORTS; \
 	(cat $(PUBLIC_FILES) $(PUBLIC_FT_FILES) || echo 'FcERROR ()' ) | \
- 	grep '^Fc[^ ]* *(' | sed -e 's/ *(.*$$//' -e 's/^/	/' | \
+	grep '^Fc[^ ]* *(' | sed -e 's/ *(.*$$//' -e 's/^/	/' | \
 	sort; \
 	echo LIBRARY libfontconfig-@LIBT_CURRENT_MINUS_AGE@.dll; \
 	echo VERSION @LIBT_CURRENT@.@LIBT_REVISION@) >$@

@@ -1,6 +1,8 @@
-AC_PREREQ([2.57])
-AC_INIT([encodings], [1.0.3], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
+AC_PREREQ([2.60])
+AC_INIT([encodings], [1.0.4],
+        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AM_MAINTAINER_MODE
 
 # Require xorg-macros: XORG_DEFAULT_OPTIONS
 m4_ifndef([XORG_MACROS_VERSION],
@@ -10,10 +12,10 @@ XORG_DEFAULT_OPTIONS
 
 AC_PROG_INSTALL
 
-# Require X.Org's font util macros 1.1 or later
+# Require X.Org's font util macros 1.2 or later
 m4_ifndef([XORG_FONT_MACROS_VERSION],
-	  [m4_fatal([must install X.Org font-util 1.1 or later before running autoconf/autogen])])
-XORG_FONT_MACROS_VERSION(1.1)
+	  [m4_fatal([must install X.Org font-util 1.2 or later before running autoconf/autogen])])
+XORG_FONT_MACROS_VERSION(1.2)
 
 # mkfontscale
 XORG_FONT_REQUIRED_PROG(MKFONTSCALE, mkfontscale)

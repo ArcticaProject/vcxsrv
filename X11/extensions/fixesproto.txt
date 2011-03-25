@@ -1,7 +1,7 @@
                         The XFIXES Extension
-			    Version 4.0
-			 Document Revision 2
-			     2006-12-14
+			    Version 5.0
+			 Document Revision 1
+			     2010-11-15
 			    Keith Packard
 			  keithp@keithp.com
 
@@ -19,7 +19,7 @@ developers, in particular,
 
  +	Owen Taylor for describing the issues raised with the XEMBED
  	mechanisms and SaveSet processing and his initial extension
-	to handle this issue.
+	to handle this issue, and for pointer barriers
 
  +	Bill Haneman for the design for cursor image tracking.
 
@@ -565,6 +565,90 @@ ShowCursor
 
 	Servers supporting the X Input Extension Version 2.0 or higher show
 	all visible cursors in response to a ShowCursor request.
+
+************* XFIXES VERSION 5 OR BETTER ***********
+
+12. Pointer Barriers
+
+Compositing managers and desktop environments may have UI elements in
+particular screen locations such that for a single-headed display they
+correspond to easy targets according to Fitt's Law, for example, the top
+left corner.  For a multi-headed environment these corners should still be
+semi-impermeable.  Pointer barriers allow the application to define
+additional constraint on cursor motion so that these areas behave as
+expected even in the face of multiple displays.
+
+Absolute positioning devices like touchscreens do not obey pointer barriers.
+There's no advantage to target acquisition to do so, since on a touchscreen
+all points are in some sense equally large, whereas for a relative
+positioning device the edges and corners are infinitely large.
+
+WarpPointer and similar requests do not obey pointer barriers, for
+essentially the same reason.
+
+12.1 Types
+
+	BARRIER:	XID
+
+	BarrierDirections
+
+		BarrierPositiveX:	    1 << 0
+		BarrierPositiveY:	    1 << 1
+		BarrierNegativeX:	    1 << 2
+		BarrierNegativeY:	    1 << 3
+
+12.2 Errors
+
+	Barrier
+
+12.3 Requests
+
+CreatePointerBarrier
+
+		barrier:		    BARRIER
+		drawable:		    DRAWABLE
+		x1, y2, x2, y2:		    INT16
+		directions:		    CARD32
+		devices:		    LISTofDEVICEID
+
+	Creates a pointer barrier along the line specified by the given
+	coordinates on the screen associated with the given drawable.  The
+	barrier has no spatial extent; it is simply a line along the left
+	or top edge of the specified pixels.  Barrier coordinates are in
+	screen space.
+
+	The coordinates must be axis aligned, either x1 == x2, or
+	y1 == y2, but not both.  The varying coordinates may be specified
+	in any order.  For x1 == x2, either y1 > y2 or y1 < y2 is valid.
+	If the coordinates are not valid BadValue is generated.
+
+	Motion is allowed through the barrier in the directions specified:
+	setting the BarrierPositiveX bit allows travel through the barrier
+	in the positive X direction, etc.  Nonsensical values (forbidding Y
+	axis travel through a vertical barrier, for example) and excess set
+	bits are ignored.
+
+	If the server supports the X Input Extension version 2 or higher,
+	the devices element names a set of master device to apply the
+	barrier to.  If XIAllDevices or XIAllMasterDevices are given, the
+	barrier applies to all master devices.  If a slave device is named,
+	BadDevice is generated; this does not apply to slave devices named
+	implicitly by XIAllDevices.  Naming a device multiple times is
+	legal, and is treated as though it were named only once.  If a
+	device is removed, the barrier continues to apply to the remaining
+	devices, but will not apply to any future device with the same ID
+	as the removed device.  Nothing special happens when all matching
+	devices are removed; barriers must be explicitly destroyed.
+
+	Errors: IDChoice, Window, Value, Device
+
+DestroyPointerBarrier
+
+		barrier:		    BARRIER
+
+	Destroys the named barrier.
+
+	Errors: Barrier 
 
 99. Future compatibility
 

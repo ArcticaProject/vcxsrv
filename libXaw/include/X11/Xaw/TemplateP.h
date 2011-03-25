@@ -1,5 +1,3 @@
-/* $Xorg: TemplateP.h,v 1.5 2001/02/09 02:03:46 xorgcvs Exp $ */
-
 /*
 
 Copyright 1987, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xaw/TemplateP.h,v 1.6 2001/01/17 19:42:32 dawes Exp $ */
 
 #ifndef _TemplateP_h
 #define _TemplateP_h

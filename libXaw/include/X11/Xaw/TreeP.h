@@ -1,6 +1,4 @@
 /*
- * $Xorg: TreeP.h,v 1.4 2001/02/09 02:03:47 xorgcvs Exp $
- *
 
 Copyright 1990, 1998  The Open Group
 
@@ -48,8 +46,6 @@ in this Software without prior written authorization from The Open Group.
  * additional blank space to make the structure of the graph easier to see
  * as well as to support vertical trees.
  */
-/* $XFree86: xc/lib/Xaw/TreeP.h,v 1.6 2001/01/17 19:42:35 dawes Exp $ */
-
 
 #ifndef _XawTreeP_h
 #define _XawTreeP_h

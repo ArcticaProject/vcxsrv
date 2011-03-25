@@ -68,6 +68,7 @@ SOFTWARE.
 #define XK_CURRENCY
 #define XK_MATHEMATICAL
 #define XK_BRAILLE
+#define XK_SINHALA
 
 #include <X11/keysymdef.h>
 

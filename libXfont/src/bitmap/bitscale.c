@@ -25,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/bitscale.c,v 3.29tsi Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

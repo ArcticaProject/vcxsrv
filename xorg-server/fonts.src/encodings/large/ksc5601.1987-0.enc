@@ -1,6 +1,5 @@
 STARTENCODING ksc5601.1987-0
 # This file is partially derived from data provided by the Unicode consortium
-# $XFree86: xc/fonts/encodings/large/ksc5601.1987-0.enc,v 1.4 2001/12/24 23:17:15 dawes Exp $
 ALIAS ksx1001.1998-0
 ALIAS ksx1001.1997-0
 SIZE 0x7E 0x80

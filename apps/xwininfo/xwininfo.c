@@ -277,7 +277,7 @@ static size_t strlcat (char *dst, const char *src, size_t dstsize)
 /*
  * Report the syntax for calling xwininfo:
  */
-void
+static void
 usage (void)
 {
     fprintf (stderr,
@@ -630,8 +630,9 @@ main (int argc, char **argv)
 	    w->wm_pid_cookie = xcb_get_property
 		(dpy, False, window, atom_net_wm_pid,
 		 XCB_ATOM_CARDINAL, 0, BUFSIZ);
-	    w->wm_client_machine_cookie =
-		GET_TEXT_PROPERTY(dpy, window, XCB_ATOM_WM_CLIENT_MACHINE);
+	    w->wm_client_machine_cookie = xcb_get_property
+		(dpy, False, window, XCB_ATOM_WM_CLIENT_MACHINE,
+		 XCB_GET_PROPERTY_TYPE_ANY, 0, BUFSIZ);
 	}
 
 	atom_net_frame_extents = Get_Atom (dpy, "_NET_FRAME_EXTENTS");
@@ -785,9 +786,9 @@ Display_Window_Id (struct wininfo *w, Bool newline_wanted)
 {
 #ifdef USE_XCB_ICCCM
     xcb_get_text_property_reply_t wmn_reply;
+    uint8_t got_reply = False;
 #endif
     xcb_get_property_reply_t *prop;
-    uint8_t got_reply = False;
     const char *wm_name = NULL;
     unsigned int wm_name_len = 0;
     xcb_atom_t wm_name_encoding = XCB_NONE;
@@ -806,10 +807,7 @@ Display_Window_Id (struct wininfo *w, Bool newline_wanted)
 	    wm_name = xcb_get_property_value (prop);
 	    wm_name_len = xcb_get_property_value_length (prop);
 	    wm_name_encoding = prop->type;
-	    got_reply = True;
-	}
-
-	if (!got_reply) { /* No _NET_WM_NAME, check WM_NAME */
+	} else { /* No _NET_WM_NAME, check WM_NAME */
 #ifdef USE_XCB_ICCCM
 	    got_reply = xcb_get_wm_name_reply (dpy, w->wm_name_cookie,
 					       &wmn_reply, NULL);
@@ -824,11 +822,10 @@ Display_Window_Id (struct wininfo *w, Bool newline_wanted)
 		wm_name = xcb_get_property_value (prop);
 		wm_name_len = xcb_get_property_value_length (prop);
 		wm_name_encoding = prop->type;
-		got_reply = True;
 	    }
 #endif
 	}
-	if (!got_reply || wm_name_len == 0) {
+	if (wm_name_len == 0) {
 	    printf (" (has no name)");
         } else {
 	    if (wm_name_encoding == XCB_ATOM_STRING) {
@@ -939,8 +936,8 @@ Display_Stats_Info (struct wininfo *w)
     if (!trans_coords)
 	Fatal_Error ("Can't get translated coordinates.");
 
-    rx = trans_coords->dst_x;
-    ry = trans_coords->dst_y;
+    rx = (int16_t)trans_coords->dst_x;
+    ry = (int16_t)trans_coords->dst_y;
     free (trans_coords);
 
     xright = (dw - rx - w->geometry->border_width * 2 -

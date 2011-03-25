@@ -1,8 +1,3 @@
-/*
-* $Xorg: Vendor.h,v 1.5 2001/02/09 02:03:59 xorgcvs Exp $
-* $oHeader: Vendor.h,v 1.2 88/08/18 15:56:44 asente Exp $
-*/
-
 /***********************************************************
 
 Copyright 1987, 1988, 1998  The Open Group
