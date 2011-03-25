@@ -21,4 +21,5 @@ xmuinclude_HEADERS = \
 	X11/Xmu/SysUtil.h \
 	X11/Xmu/WidgetNode.h \
 	X11/Xmu/WinUtil.h \
-	X11/Xmu/Xct.h
+	X11/Xmu/Xct.h \
+	X11/Xmu/WhitePoint.h

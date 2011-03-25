@@ -7,9 +7,9 @@ dnl  Permission to use, copy, modify, distribute, and sell this software and its
 dnl  documentation for any purpose is hereby granted without fee, provided that
 dnl  the above copyright notice appear in all copies and that both that
 dnl  copyright notice and this permission notice appear in supporting
-dnl  documentation, and that the name of Keith Packard not be used in
+dnl  documentation, and that the name of the author(s) not be used in
 dnl  advertising or publicity pertaining to distribution of the software without
-dnl  specific, written prior permission.  Keith Packard makes no
+dnl  specific, written prior permission.  The authors make no
 dnl  representations about the suitability of this software for any purpose.  It
 dnl  is provided "as is" without express or implied warranty.
 dnl 
@@ -33,9 +33,8 @@ dnl This is the package version number, not the shared library
 dnl version.  This same version number must appear in fontconfig/fontconfig.h
 dnl Yes, it is a pain to synchronize version numbers.  Unfortunately, it's
 dnl not possible to extract the version number here from fontconfig.h
-AM_INIT_AUTOMAKE(fontconfig, 2.8.0)
+AM_INIT_AUTOMAKE(fontconfig, 2.8.90)
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-AM_MAINTAINER_MODE
 
 dnl libtool versioning
 
@@ -56,14 +55,13 @@ AC_SUBST(LIBT_CURRENT_MINUS_AGE)
 
 dnl ==========================================================================
 
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
 
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
-DOLT
 AC_PROG_MAKE_SET
 
 dnl ==========================================================================
@@ -99,59 +97,12 @@ AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
 
 dnl ==========================================================================
 
-# Setup for compiling build tools (fc-glyphname, etc)
-AC_MSG_CHECKING([for a C compiler for build tools])
-if test $cross_compiling = yes; then
-  AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
-else
-  CC_FOR_BUILD=$CC
-fi
-AC_MSG_RESULT([$CC_FOR_BUILD])
-AC_SUBST(CC_FOR_BUILD)
-
-AC_MSG_CHECKING([for suffix of executable build tools])
-if test $cross_compiling = yes; then
-  cat >conftest.c <<\_______EOF
-int
-main ()
-{
-  exit (0);
-}
-_______EOF
-  for i in .exe ""; do
-    compile="$CC_FOR_BUILD conftest.c -o conftest$i"
-    if AC_TRY_EVAL(compile); then
-      if (./conftest) 2>&AC_FD_CC; then
-	EXEEXT_FOR_BUILD=$i
-	break
-      fi
-    fi
-  done
-  rm -f conftest*
-  if test "${EXEEXT_FOR_BUILD+set}" != set; then
-    AC_MSG_ERROR([Cannot determine suffix of executable build tools])
-  fi
-else
-  EXEEXT_FOR_BUILD=$EXEEXT
-fi
-AC_MSG_RESULT([$EXEEXT_FOR_BUILD])
-AC_SUBST(EXEEXT_FOR_BUILD)
-
-dnl ==========================================================================
-
 AC_ARG_WITH(arch,      [  --with-arch=ARCH      Force architecture to ARCH], arch="$withval", arch=auto)
 
-if test $cross_compiling = yes; then
-	case "$arch" in
-	auto)
-		AC_MSG_ERROR([Cannot autodetect architecture in cross compile environment]
-			     [Use --with-arch=ARCH to specify architecture])
-		;;
-	esac
+if test "x$arch" != xauto; then
+	AC_DEFINE_UNQUOTED([FC_ARCHITECTURE], "$arch", [Architecture prefix to use for cache file names])
 fi
 
-ARCHITECTURE=$arch
-AC_SUBST(ARCHITECTURE)
 
 dnl ==========================================================================
 
@@ -530,19 +481,27 @@ fi
 AC_SUBST(DOCSRC)
 AC_SUBST(DOCMAN3)
 
+
+dnl Figure out what cache format suffix to use for this architecture
+AC_C_BIGENDIAN
+AC_CHECK_SIZEOF([void *])
+AC_CHECK_ALIGNOF([double])
+
+
+
 AC_OUTPUT([
-Makefile 
+Makefile
 fontconfig/Makefile
 fc-lang/Makefile
 fc-glyphname/Makefile
 fc-case/Makefile
-fc-arch/Makefile
 src/Makefile
 conf.d/Makefile
 fc-cache/Makefile
 fc-cat/Makefile
 fc-list/Makefile
 fc-match/Makefile
+fc-pattern/Makefile
 fc-query/Makefile
 fc-scan/Makefile
 doc/Makefile

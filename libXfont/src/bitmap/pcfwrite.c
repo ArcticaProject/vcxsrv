@@ -1,4 +1,3 @@
-/* $Xorg: pcfwrite.c,v 1.5 2001/02/09 02:04:02 xorgcvs Exp $ */
 /*
 
 Copyright 1990, 1994, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/pcfwrite.c,v 1.11 2003/11/17 22:20:22 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

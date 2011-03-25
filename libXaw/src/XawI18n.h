@@ -1,6 +1,3 @@
-/* $XdotOrg: xc/lib/Xaw/XawI18n.h,v 1.2 2004/04/23 18:43:38 eich Exp $ */
-/* $Xorg: XawI18n.h,v 1.4 2001/02/09 02:03:47 xorgcvs Exp $ */
-
 /************************************************************
 
 Copyright 1993, 1994, 1998  The Open Group
@@ -26,11 +23,10 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 ********************************************************/
-/* $XFree86: xc/lib/Xaw/XawI18n.h,v 3.14 2001/12/14 19:54:46 dawes Exp $ */
 
-#ifdef HAS_WCTYPE_H
+#ifdef HAVE_WCTYPE_H
 #include <wctype.h>
-#ifndef NO_WIDEC_H
+#ifdef HAVE_WIDEC_H
 #include <widec.h>
 #define wcslen(c) wslen(c)
 #define wcscpy(d, s)		wscpy(d, s)
@@ -38,7 +34,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #endif
 
-#ifdef HAS_WCHAR_H
+#ifdef HAVE_WCHAR_H
 #include <wchar.h>
 #endif
 

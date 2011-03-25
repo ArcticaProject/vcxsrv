@@ -22,7 +22,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.60])
-AC_INIT([xwininfo], [1.1.0],
+AC_INIT([xwininfo], [1.1.1],
 	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [xwininfo])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -32,12 +32,9 @@ m4_ifndef([XORG_MACROS_VERSION],
 	  [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.8)
 
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 AC_USE_SYSTEM_EXTENSIONS
-
-AC_PROG_CC
-AC_PROG_INSTALL
 
 XORG_DEFAULT_OPTIONS
 
@@ -74,4 +71,7 @@ PKG_CHECK_MODULES(XWININFO, [xcb >= 1.6] xcb-shape ${xcb_icccm_pc})
 PKG_CHECK_MODULES(XLIB, x11 [xproto >= 7.0.17])
 XWININFO_CFLAGS="${XWININFO_CFLAGS} ${XLIB_CFLAGS}"
 
-AC_OUTPUT([Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	man/Makefile])
+AC_OUTPUT

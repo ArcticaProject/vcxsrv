@@ -1,5 +1,3 @@
-/* $Xorg: fontnames.c,v 1.4 2001/02/09 02:04:04 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -27,12 +25,10 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/util/fontnames.c,v 1.4 2001/01/17 19:43:33 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium
  *
- *	@(#)fontnames.c	3.1	91/04/10
  */
 
 #ifdef HAVE_CONFIG_H

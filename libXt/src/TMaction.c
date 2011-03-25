@@ -1,8 +1,7 @@
-/* $Xorg: TMaction.c,v 1.5 2001/02/09 02:03:58 xorgcvs Exp $ */
 /*LINTLIBRARY*/
 
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -70,7 +69,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/TMaction.c,v 3.7 2001/12/14 19:56:30 dawes Exp $ */
 
 /* TMaction.c -- maintains the state table of actions for the translation 
  *              manager.
@@ -808,9 +806,11 @@ void XtGetActionList(
 	list = *actions_return = (XtActionList)
 	    __XtMalloc(*num_actions_return * sizeof(XtActionsRec));
 	table = GetClassActions(widget_class);
-	for (i= (*num_actions_return); --i >= 0; list++, table++) {
-	    list->string = XrmQuarkToString(table->signature);
-	    list->proc = table->proc;
+	if (table != NULL) {
+	    for (i= (*num_actions_return); --i >= 0; list++, table++) {
+		list->string = XrmQuarkToString(table->signature);
+		list->proc = table->proc;
+	    }
 	}
     }
     UNLOCK_PROCESS;

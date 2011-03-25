@@ -1,4 +1,4 @@
-/* $Xorg: XawInit.h,v 1.5 2001/02/09 02:03:47 xorgcvs Exp $
+/*
  *
 Copyright 1989, 1994, 1998  The Open Group
 Copyright 2003-2004 Roland Mainz <roland.mainz@nrubsig.org>
@@ -23,9 +23,6 @@ Except as contained in this notice, the name of The Open Group shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
  */
-/* $XFree86: xc/lib/Xaw/XawInit.h,v 1.12 2001/01/17 19:42:36 dawes Exp $ */
-
-/* $XdotOrg: xc/lib/Xaw/XawInit.h,v 1.2 2004/04/23 18:43:38 eich Exp $ */
 #ifndef _XawInit_h
 #define _XawInit_h
 
@@ -39,6 +36,7 @@ in this Software without prior written authorization from The Open Group.
 typedef struct _XawDL XawDisplayList;
 #endif /* OLDXAW */
 
+#include <X11/Intrinsic.h>
 #include <X11/Xfuncproto.h>
 
 _XFUNCPROTOBEGIN

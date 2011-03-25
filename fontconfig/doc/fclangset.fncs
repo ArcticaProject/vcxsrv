@@ -58,6 +58,36 @@ two or three letter language from ISO 639 and Tt is a territory from ISO
 3166.
 @@
 
+@RET@		FcBool
+@FUNC@		FcLangSetDel
+@TYPE1@		FcLangSet *			@ARG1@		ls
+@TYPE2@		const FcChar8 *			@ARG2@		lang
+@PURPOSE@	delete a language from a langset
+@DESC@
+<parameter>lang</parameter> is removed from <parameter>ls</parameter>.
+<parameter>lang</parameter> should be of the form Ll-Tt where Ll is a
+two or three letter language from ISO 639 and Tt is a territory from ISO
+3166.
+@@
+
+@RET@		FcLangSet *
+@FUNC@		FcLangSetUnion
+@TYPE1@		const FcLangSet *		@ARG1@		ls_a
+@TYPE2@		const FcLangSet *		@ARG2@		ls_b
+@PURPOSE@	Add langsets
+@DESC@
+Returns a set including only those languages found in either <parameter>ls_a</parameter> or <parameter>ls_b</parameter>.
+@@
+
+@RET@		FcLangSet *
+@FUNC@		FcLangSetSubtract
+@TYPE1@		const FcLangSet *		@ARG1@		ls_a
+@TYPE2@		const FcLangSet *		@ARG2@		ls_b
+@PURPOSE@	Subtract langsets
+@DESC@
+Returns a set including only those languages found in <parameter>ls_a</parameter> but not in <parameter>ls_b</parameter>.
+@@
+
 @RET@		FcLangResult
 @FUNC@		FcLangSetCompare
 @TYPE1@		const FcLangSet *		@ARG1@		ls_a
@@ -68,7 +98,7 @@ two or three letter language from ISO 639 and Tt is a territory from ISO
 <parameter>ls_a</parameter> and <parameter>ls_b</parameter>. If they share
 any language and territory pair, this function returns FcLangEqual. If they
 share a language but differ in which territory that language is for, this
-function returns FcLangDiffentTerritory. If they share no languages in
+function returns FcLangDifferentTerritory. If they share no languages in
 common, this function returns FcLangDifferentLang.
 @@
 
@@ -119,7 +149,7 @@ value may not be equal.
 <parameter>ls</parameter> has a matching language and territory pair,
 this function returns FcLangEqual. If <parameter>ls</parameter> has
 a matching language but differs in which territory that language is for, this
-function returns FcLangDiffentTerritory. If <parameter>ls</parameter> 
+function returns FcLangDifferentTerritory. If <parameter>ls</parameter> 
 has no matching language, this function returns FcLangDifferentLang.
 @@
 

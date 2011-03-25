@@ -1,4 +1,3 @@
-/* $Xorg: snfstr.h,v 1.4 2001/02/09 02:04:02 xorgcvs Exp $ */
 /***********************************************************
 Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts.
 
@@ -49,7 +48,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/snfstr.h,v 1.5 2001/12/14 19:56:47 dawes Exp $ */
 
 #ifndef SNFSTR_H
 #define SNFSTR_H 1

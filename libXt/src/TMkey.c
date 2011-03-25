@@ -1,8 +1,7 @@
-/* $Xorg: TMkey.c,v 1.4 2001/02/09 02:03:58 xorgcvs Exp $ */
 /*LINTLIBRARY*/
 
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -70,7 +69,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/TMkey.c,v 3.10 2001/12/14 19:56:30 dawes Exp $ */
 
 #define XK_MISCELLANY
 #define XK_LATIN1

@@ -1,5 +1,3 @@
-/* $Xorg: fontscale.c,v 1.5 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fontfile/fontscale.c,v 3.9 2001/08/27 19:49:54 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

@@ -2,7 +2,6 @@ STARTENCODING jisx0208.1990-0
 ALIAS jisx0208.1983-0
 # This file is partly derived from data provided by the Unicode Consortium
 # Original data Copyright (c) 1991-1994 Unicode, Inc.
-# $XFree86: xc/fonts/encodings/large/jisx0208.1990-0.enc,v 1.4 2003/11/02 04:30:55 dawes Exp $
 SIZE 0x75 0x7f
 FIRSTINDEX 0x21 0x21
 STARTMAPPING cmap 3 1

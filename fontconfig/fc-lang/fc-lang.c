@@ -7,9 +7,9 @@
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Keith Packard not be used in
+ * documentation, and that the name of the author(s) not be used in
  * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Keith Packard makes no
+ * specific, written prior permission.  The authors make no
  * representations about the suitability of this software for any purpose.  It
  * is provided "as is" without express or implied warranty.
  *
@@ -76,10 +76,14 @@ fatal (const char *file, int lineno, const char *msg)
 }
 
 static char *
-get_line (FILE *f, char *line, int *lineno)
+get_line (FILE *f, char *buf, int *lineno)
 {
     char    *hash;
+    char    *line;
     int	    end;
+
+next:
+    line = buf;
     if (!fgets (line, 1024, f))
 	return 0;
     ++(*lineno);
@@ -87,12 +91,15 @@ get_line (FILE *f, char *line, int *lineno)
     if (hash)
 	*hash = '\0';
 
+    while (line[0] && isspace (line[0]))
+      line++;
     end = strlen (line);
     while (end > 0 && isspace (line[end-1]))
       line[--end] = '\0';
 
-    if (line[0] == '\0' || line[0] == '\n' || line[0] == '\032' || line[0] == '\r')
-	return get_line (f, line, lineno);
+    if (line[0] == '\0' || line[0] == '\n' || line[0] == '\r')
+      goto next;
+
     return line;
 }
 
@@ -125,16 +132,18 @@ scanopen (char *file)
  * Comments begin with '#'
  */
 
-static const FcCharSet *
+static FcCharSet *
 scan (FILE *f, char *file, FcCharSetFreezer *freezer)
 {
     FcCharSet	    *c = 0;
     FcCharSet	    *n;
+    FcBool	    del;
     int		    start, end, ucs4;
-    char	    line[1024];
+    char	    buf[1024];
+    char	    *line;
     int		    lineno = 0;
 
-    while (get_line (f, line, &lineno))
+    while ((line = get_line (f, buf, &lineno)))
     {
 	if (!strncmp (line, "include", 7))
 	{
@@ -158,6 +167,12 @@ scan (FILE *f, char *file, FcCharSetFreezer *freezer)
 	    FcCharSetDestroy (n);
 	    continue;
 	}
+	del = FcFalse;
+	if (line[0] == '-')
+	{
+	  del = FcTrue;
+	  line++;
+	}
 	if (strchr (line, '-'))
 	{
 	    if (sscanf (line, "%x-%x", &start, &end) != 2)
@@ -173,11 +188,11 @@ scan (FILE *f, char *file, FcCharSetFreezer *freezer)
 	    c = FcCharSetCreate ();
 	for (ucs4 = start; ucs4 <= end; ucs4++)
 	{
-	    if (!FcCharSetAddChar (c, ucs4))
+	    if (!((del ? FcCharSetDelChar : FcCharSetAddChar) (c, ucs4)))
 		fatal (file, lineno, "out of memory");
 	}
     }
-    n = FcCharSetFreeze (freezer, c);
+    n = (FcCharSet *) FcCharSetFreeze (freezer, c);
     FcCharSetDestroy (c);
     return n;
 }
@@ -231,8 +246,8 @@ typedef struct _Entry {
 
 static int compare (const void *a, const void *b)
 {
-    const Entry const *as = a, *bs = b;
-    return FcStrCmpIgnoreCase (as->file, bs->file);
+    const Entry *as = a, *bs = b;
+    return FcStrCmpIgnoreCase ((const FcChar8 *) as->file, (const FcChar8 *) bs->file);
 }
 
 #define MAX_LANG	    1024
@@ -245,7 +260,7 @@ int
 main (int argc, char **argv)
 {
     static Entry	entries[MAX_LANG];
-    static const FcCharSet	*sets[MAX_LANG];
+    static FcCharSet	*sets[MAX_LANG];
     static int		duplicate[MAX_LANG];
     static int		country[MAX_LANG];
     static char		*names[MAX_LANG];
@@ -363,9 +378,9 @@ main (int argc, char **argv)
 
     printf ("#define LEAF0       (%d * sizeof (FcLangCharSet))\n", nsets);
     printf ("#define OFF0        (LEAF0 + %d * sizeof (FcCharLeaf))\n", tl);
-    printf ("#define NUM0        (OFF0 + %d * sizeof (intptr_t))\n", tn);
+    printf ("#define NUM0        (OFF0 + %d * sizeof (uintptr_t))\n", tn);
     printf ("#define SET(n)      (n * sizeof (FcLangCharSet) + offsetof (FcLangCharSet, charset))\n");
-    printf ("#define OFF(s,o)    (OFF0 + o * sizeof (intptr_t) - SET(s))\n");
+    printf ("#define OFF(s,o)    (OFF0 + o * sizeof (uintptr_t) - SET(s))\n");
     printf ("#define NUM(s,n)    (NUM0 + n * sizeof (FcChar16) - SET(s))\n");
     printf ("#define LEAF(o,l)   (LEAF0 + l * sizeof (FcCharLeaf) - (OFF0 + o * sizeof (intptr_t)))\n");
     printf ("#define fcLangCharSets (fcLangData.langCharSets)\n");
@@ -376,7 +391,7 @@ main (int argc, char **argv)
     printf ("static const struct {\n"
 	    "    FcLangCharSet  langCharSets[%d];\n"
 	    "    FcCharLeaf     leaves[%d];\n"
-	    "    intptr_t       leaf_offsets[%d];\n"
+	    "    uintptr_t      leaf_offsets[%d];\n"
 	    "    FcChar16       numbers[%d];\n"
 	    "    FcChar%s       langIndices[%d];\n"
 	    "    FcChar%s       langIndicesInv[%d];\n"

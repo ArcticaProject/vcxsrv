@@ -1,5 +1,4 @@
 /*
- * $Xorg: Repeater.h,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $
  *
 Copyright 1989, 1998  The Open Group
 
@@ -25,7 +24,6 @@ in this Software without prior written authorization from The Open Group.
  *
  * Author:  Jim Fulton, MIT X Consortium
  */
-/* $XFree86: xc/lib/Xaw/Repeater.h,v 1.5 2001/01/17 19:42:29 dawes Exp $ */
 
 #ifndef _XawRepeater_h
 #define _XawRepeater_h

@@ -1,5 +1,3 @@
-/* $Xorg: MenuButton.c,v 1.4 2001/02/09 02:03:44 xorgcvs Exp $ */
-
 /*
 Copyright 1989, 1994, 1998  The Open Group
 
@@ -24,8 +22,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
  *
  */
-
-/* $XFree86: xc/lib/Xaw/MenuButton.c,v 3.9 2001/10/11 21:17:00 paulo Exp $ */
 
 /*
  * MenuButton.c - Source code for MenuButton widget.

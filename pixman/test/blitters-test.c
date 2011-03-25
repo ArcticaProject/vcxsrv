@@ -88,8 +88,11 @@ free_random_image (uint32_t initcrc,
 	    uint32_t *data = pixman_image_get_data (img);
 	    uint32_t mask = (1 << PIXMAN_FORMAT_DEPTH (fmt)) - 1;
 
-	    if (PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_BGRA)
+	    if (PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_BGRA ||
+		PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_RGBA)
+	    {
 		mask <<= (PIXMAN_FORMAT_BPP (fmt) - PIXMAN_FORMAT_DEPTH (fmt));
+	    }
 
 	    for (i = 0; i < 32; i++)
 		mask |= mask << (i * PIXMAN_FORMAT_BPP (fmt));
@@ -182,6 +185,8 @@ static pixman_format_code_t img_fmt_list[] = {
     PIXMAN_x8b8g8r8,
     PIXMAN_b8g8r8a8,
     PIXMAN_b8g8r8x8,
+    PIXMAN_r8g8b8a8,
+    PIXMAN_r8g8b8x8,
     PIXMAN_x14r6g6b6,
     PIXMAN_r8g8b8,
     PIXMAN_b8g8r8,
@@ -412,6 +417,6 @@ main (int argc, const char *argv[])
     }
 
     return fuzzer_test_main("blitters", 2000000,
-			    0x1DB8BDF8,
+			    0x265CDFEB,
 			    test_composite, argc, argv);
 }

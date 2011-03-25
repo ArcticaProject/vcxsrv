@@ -1,53 +1,34 @@
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
+# Initialize Autoconf
+AC_PREREQ([2.60])
+AC_INIT([libXaw], [1.0.9],
+        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [libXaw])
+AC_CONFIG_SRCDIR([Makefile.am])
+AC_CONFIG_HEADERS([config.h])
 
-AC_INIT([libXaw],
-	1.0.7,
-	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
-	libXaw)
+# Initialize Automake
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AM_MAINTAINER_MODE
 
-AM_INIT_AUTOMAKE([dist-bzip2])
-
-AM_CONFIG_HEADER(config.h)
-
-# Require xorg-macros: XORG_WITH_LINT, XORG_DEFAULT_OPTIONS
+# Require xorg-macros minimum of 1.10 for HAVE_STYLESHEETS in XORG_CHECK_SGML_DOCTOOLS
 m4_ifndef([XORG_MACROS_VERSION],
-	  [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
+	  [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.10)
+XORG_DEFAULT_OPTIONS
+XORG_ENABLE_SPECS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
+XORG_CHECK_SGML_DOCTOOLS(1.5)
 
 # Check for progs
-AC_PROG_CC
 AC_PROG_LIBTOOL
 AC_PROG_AWK
-AC_PROG_SED
-
-AC_PATH_PROGS([GROFF], [groff], [none], [$PATH:/usr/gnu/bin])
-
-AC_MSG_CHECKING([whether to build documentation])
-AC_ARG_ENABLE(docs, AC_HELP_STRING([--enable-docs],
-				   [Enable building of Xaw documentation]),
-	      [build_docs="${enableval}"], [build_docs="auto"])
-
-if test "x${build_docs}" = xauto; then
-    if test "x${GROFF}" = xnone ; then
-	build_docs=no
-    else
-	build_docs=yes
-    fi
-fi
-AC_MSG_RESULT([${build_docs}])
-if test "x${build_docs}" = xyes && test "x${GROFF}" = xnone ; then
-    AC_MSG_ERROR([can't build documentation without groff])
-fi
-
-AM_CONDITIONAL(BUILD_DOCS, [test x$build_docs = xyes])
+AM_PROG_CC_C_O
 
 # Need to call this explicitly since the first call to PKG_CHECK_MODULES
 # is in an if statement, and later calls would break if it's skipped.
 PKG_PROG_PKG_CONFIG
-
-XORG_DEFAULT_OPTIONS
 
 #
 # fix libtool to set SONAME to libXaw.so.$major
@@ -70,6 +51,7 @@ platform_darwin=no
 LIBEXT=so
 case $host_os in
     cygwin*|mingw*)
+	LIBEXT=dll.a
 	platform_win32=yes
 	;;
     darwin*)
@@ -89,8 +71,6 @@ AC_ARG_ENABLE(xaw6, AC_HELP_STRING([--disable-xaw6],
 
 if test "x$build_v6" = xyes; then
    PKG_CHECK_MODULES(XAW6, xproto x11 xext xextproto xt xmu)
-   AC_SUBST(XAW6_CFLAGS)
-   AC_SUBST(XAW6_LIBS)
 fi
 
 
@@ -102,8 +82,6 @@ AC_ARG_ENABLE(xaw7, AC_HELP_STRING([--disable-xaw7],
 
 if test "x$build_v7" = xyes; then
    PKG_CHECK_MODULES(XAW7, xproto x11 xext xextproto xt xmu xpm)
-   AC_SUBST(XAW7_CFLAGS)
-   AC_SUBST(XAW7_LIBS)
 fi
 
 
@@ -112,29 +90,23 @@ AM_CONDITIONAL(BUILD_XAW7, [test x$build_v7 = xyes])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADER(wctype.h,
-       	AC_DEFINE([HAS_WCTYPE_H],1,
-			[Define to 1 if you have the <wctype.h> header file.]))
-AC_CHECK_HEADER(wchar.h,
-       	AC_DEFINE([HAS_WCHAR_H],1,
-			[Define to 1 if you have the <wchar.h> header file.]))
-AC_CHECK_HEADER(widec.h, [],
-       	AC_DEFINE([NO_WIDEC_H],1,
-			[Define to 1 if you DO NOT have the <widec.h> header file.]))
+AC_CHECK_HEADERS([wctype.h wchar.h widec.h])
 
 # Checks for functions
-AC_CHECK_FUNCS([iswalnum])
+AC_CHECK_FUNCS([iswalnum getpagesize])
 
-AC_OUTPUT([Makefile
-	  include/Makefile
-	  man/Makefile
-	  spec/Makefile
-	  src/Makefile])
+AC_CONFIG_FILES([Makefile
+		include/Makefile
+		man/Makefile
+		specs/Makefile
+		src/Makefile])
 
 if test "x$build_v6" = xyes; then
-   AC_OUTPUT(xaw6.pc)
+   AC_CONFIG_FILES(xaw6.pc)
 fi
 
 if test "x$build_v7" = xyes; then
-   AC_OUTPUT(xaw7.pc)
+   AC_CONFIG_FILES(xaw7.pc)
 fi
+
+AC_OUTPUT

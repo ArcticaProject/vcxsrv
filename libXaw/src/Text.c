@@ -1,5 +1,3 @@
-/* $Xorg: Text.c,v 1.4 2001/02/09 02:03:46 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -73,8 +71,6 @@ SOFTWARE.
  * dealings in this Software without prior written authorization from the
  * XFree86 Project.
  */
-
-/* $XFree86: xc/lib/Xaw/Text.c,v 3.53tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -2,8 +2,6 @@ STARTENCODING big5hkscs-0
 # This file is generated from  Anthony Fok's  (<anthony@thizlinux.com>)
 # http://www.thizlinux.com/~anthony/hkscs/Correct-Big5HKSCS-to-Unicode-by-b5.txt
 # by Jungshik Shin <jshin@mailaps.org>
-# $XFree86: xc/fonts/encodings/large/big5hkscs-0.enc,v 1.1 2003/08/26 11:34:53 eich Exp $
-# $XdotOrg: xc/fonts/encodings/large/big5hkscs-0.enc,v 1.2 2004/04/23 18:43:03 eich Exp $
 SIZE 0xFF 0xFF
 FIRSTINDEX 0x81 0x40
 STARTMAPPING unicode

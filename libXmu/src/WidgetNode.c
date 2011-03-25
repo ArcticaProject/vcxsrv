@@ -1,5 +1,3 @@
-/* $Xorg: WidgetNode.c,v 1.5 2001/02/09 02:03:53 xorgcvs Exp $ */
-
 /*
  
 Copyright 1989, 1998  The Open Group
@@ -25,8 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-
-/* $XFree86: xc/lib/Xmu/WidgetNode.c,v 1.12 2002/09/19 13:21:58 tsi Exp $ */
 
 /*
  * Author:  Jim Fulton, MIT X Consortium

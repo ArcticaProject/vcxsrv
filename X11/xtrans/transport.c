@@ -47,16 +47,11 @@ from The Open Group.
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
-#ifdef XSERV_t
-#include "os.h"
-#else
 #include <stdlib.h>
 #define xalloc(_size)		malloc(_size)
 #define xcalloc(_num,_size)	calloc(_num,_size)
 #define xrealloc(_ptr,_size)	realloc(_ptr,_size)
 #define xfree(_ptr)		free(_ptr)
-#endif
 
 #include "Xtransint.h"
 

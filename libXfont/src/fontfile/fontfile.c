@@ -1,6 +1,3 @@
-/* $XdotOrg: xc/lib/font/fontfile/fontfile.c,v 1.4 2005/07/03 07:01:00 daniels Exp $ */
-/* $Xorg: fontfile.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -26,12 +23,10 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fontfile/fontfile.c,v 3.21 2003/12/02 19:50:40 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium
  */
-/* $NCDXorg: @(#)fontfile.c,v 1.6 1991/07/02 17:00:46 lemke Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -25,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/pcfread.c,v 1.21 2003/11/17 22:20:22 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

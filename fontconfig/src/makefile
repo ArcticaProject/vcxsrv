@@ -9,7 +9,6 @@
 #	-DFC_CACHEDIR='"$(FC_CACHEDIR)"'                \
 #	-DFONTCONFIG_PATH='"$(CONFDIR)"'
 
-load_makefile NORELDBG=1 ..\fc-arch\makefile
 load_makefile NORELDBG=1 ..\fc-case\makefile
 load_makefile NORELDBG=1 ..\fc-glyphname\makefile
 load_makefile NORELDBG=1 ..\fc-lang\makefile

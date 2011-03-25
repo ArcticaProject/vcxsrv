@@ -262,7 +262,7 @@ static struct sockaddr *get_peer_sock_name(LPFN_GETPEERNAME socket_func,
 {
     socklen_t socknamelen = sizeof(struct sockaddr) + INITIAL_SOCKNAME_SLACK;
     socklen_t actual_socknamelen = socknamelen;
-    struct sockaddr *sockname = malloc(socknamelen), *new_sockname = NULL;
+    struct sockaddr *sockname = malloc(socknamelen);
 
     if (sockname == NULL)
         return NULL;
@@ -275,14 +275,17 @@ static struct sockaddr *get_peer_sock_name(LPFN_GETPEERNAME socket_func,
 
     if (actual_socknamelen > socknamelen)
     {
+        struct sockaddr *new_sockname = NULL;
         socknamelen = actual_socknamelen;
 
-        if ((new_sockname = realloc(sockname, actual_socknamelen)) == NULL ||
-            socket_func(fd, new_sockname, &actual_socknamelen) == -1 ||
-            actual_socknamelen > socknamelen) 
+        if ((new_sockname = realloc(sockname, actual_socknamelen)) == NULL)
             goto sock_or_realloc_error;
 
         sockname = new_sockname;
+
+        if (socket_func(fd, sockname, &actual_socknamelen) == -1 ||
+            actual_socknamelen > socknamelen)
+            goto sock_or_realloc_error;
     }
 
     return sockname;

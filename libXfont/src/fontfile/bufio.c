@@ -1,5 +1,3 @@
-/* $Xorg: bufio.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -27,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fontfile/bufio.c,v 3.9 2001/12/14 19:56:50 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

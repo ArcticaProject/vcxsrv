@@ -1,5 +1,3 @@
-/* $Xorg: Paned.c,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/Paned.c,v 1.11 2001/08/23 00:03:19 dawes Exp $ */
 
 /*
  * Updated and significantly modified from the Athena VPaned Widget.

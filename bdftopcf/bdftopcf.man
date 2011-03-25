@@ -1,4 +1,3 @@
-.\" $Xorg: bdftopcf.man,v 1.4 2001/02/09 02:05:28 xorgcvs Exp $
 .\" Copyright 1993, 1994, 1998  The Open Group
 .\" 
 .\" Permission to use, copy, modify, distribute, and sell this software and its
@@ -22,8 +21,6 @@
 .\" not be used in advertising or otherwise to promote the sale, use or
 .\" other dealings in this Software without prior written authorization
 .\" from The Open Group.
-.\"
-.\" $XFree86: xc/programs/bdftopcf/bdftopcf.man,v 1.7 2001/01/27 18:21:00 dawes Exp $
 .\"
 .TH BDFTOPCF 1 __xorgversion__
 .SH NAME

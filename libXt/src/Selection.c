@@ -1,7 +1,5 @@
-/* $Xorg: Selection.c,v 1.4 2001/02/09 02:03:56 xorgcvs Exp $ */
-
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -69,7 +67,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/Selection.c,v 3.9 2001/12/14 19:56:29 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -229,7 +226,7 @@ static Atom GetSelectionProperty(
  propCount = sarray->propCount++;
  sarray->list = (SelectionProp) XtRealloc((XtPointer)sarray->list,
   		(unsigned)(sarray->propCount*sizeof(SelectionPropRec)));
- (void) sprintf(propname, "%s%d", "_XT_SELECTION_", propCount);
+ (void) snprintf(propname, sizeof(propname), "_XT_SELECTION_%d", propCount);
  sarray->list[propCount].prop = XInternAtom(dpy, propname, FALSE);
  sarray->list[propCount].avail = FALSE;
  return(sarray->list[propCount].prop);
@@ -831,9 +828,10 @@ static void HandleSelectionEvents(
 	   event->xselectionrequest.property = event->xselectionrequest.target;
 	if (ctx->widget != widget || ctx->was_disowned
 	   || ((event->xselectionrequest.time != CurrentTime)
-	        && (event->xselectionrequest.time < ctx->time)))
+	        && (event->xselectionrequest.time < ctx->time))) {
 	    ev.property = None;
-         else {
+	    StartProtectedSection(ev.display, ev.requestor);
+	} else {
 	   if (ev.target == ctx->prop_list->indirect_atom) {
 	      IndirectPair *p;
 	      int format;

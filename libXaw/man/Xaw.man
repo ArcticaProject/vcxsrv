@@ -26,8 +26,6 @@
 .\"
 .\" Author: Paulo César Pereira de Andrade
 .\"
-.\" $XFree86: xc/lib/Xaw/Xaw.man,v 1.7 2001/11/04 21:16:39 paulo Exp $
-.\"
 .de EX
 .sp
 .nf
@@ -49,10 +47,13 @@
 .SH DESCRIPTION
 .B Xaw
 is a widget set based on the X Toolkit Intrinsics (Xt) Library.  This
-release by the X.org Foundation includes additions and modifications
+release by the X.Org Foundation includes additions and modifications
 originally made for The XFree86 Project, Inc.  This manual page describes
 these changes as well as some of the common interfaces between its version
 and the previous X Consortium release (Xaw6).
+.PP
+The bulk of the Xaw documentation is located in the API specification
+which may be installed in __docdir__, or found on the X.Org website.
 .SH ACTIONS
 All of the \fIXaw\fR widgets now have the additional translations
 .B call-proc, declare, get-values

@@ -25,8 +25,6 @@
  * XFree86 Project.
  */
 
-/* $XFree86: xc/lib/Xaw/Pixmap.c,v 3.17 2002/05/18 02:05:39 paulo Exp $ */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

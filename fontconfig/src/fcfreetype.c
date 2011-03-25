@@ -7,9 +7,9 @@
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Keith Packard not be used in
+ * documentation, and that the name of the author(s) not be used in
  * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Keith Packard makes no
+ * specific, written prior permission.  The authors make no
  * representations about the suitability of this software for any purpose.  It
  * is provided "as is" without express or implied warranty.
  *
@@ -115,18 +115,19 @@ typedef struct {
 #define FC_ENCODING_MAC_ROMAN	"MACINTOSH"
 
 static const FcFtEncoding   fcFtEncoding[] = {
- {  TT_PLATFORM_APPLE_UNICODE,	TT_ENCODING_DONT_CARE,	"UCS-2BE" },
+ {  TT_PLATFORM_APPLE_UNICODE,	TT_ENCODING_DONT_CARE,	"UTF-16BE" },
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_ID_ROMAN,	"MACINTOSH" },
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_ID_JAPANESE,	"SJIS" },
+ {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_SYMBOL_CS,	"UTF-16BE" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_UNICODE_CS,	"UTF-16BE" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_SJIS,		"SJIS-WIN" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_GB2312,	"GB2312" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_BIG_5,		"BIG-5" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_WANSUNG,	"Wansung" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_JOHAB,		"Johab" },
- {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_UCS_4,		"UCS-2BE" },
+ {  TT_PLATFORM_MICROSOFT,	TT_MS_ID_UCS_4,		"UTF-16BE" },
  {  TT_PLATFORM_ISO,		TT_ISO_ID_7BIT_ASCII,	"ASCII" },
- {  TT_PLATFORM_ISO,		TT_ISO_ID_10646,	"UCS-2BE" },
+ {  TT_PLATFORM_ISO,		TT_ISO_ID_10646,	"UTF-16BE" },
  {  TT_PLATFORM_ISO,		TT_ISO_ID_8859_1,	"ISO-8859-1" },
 };
 
@@ -251,14 +252,14 @@ static const FcFtLanguage   fcFtLanguage[] = {
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_DZONGKHA,		    "dz" },
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_JAVANESE,		    "jw" },
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_SUNDANESE,	    "su" },
-    
+
 #if 0  /* these seem to be errors that have been dropped */
 
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_SCOTTISH_GAELIC },
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_IRISH_GAELIC },
 
 #endif
-    
+
   /* The following codes are new as of 2000-03-10 */
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_GALICIAN,		    "gl" },
  {  TT_PLATFORM_MACINTOSH,	TT_MAC_LANGID_AFRIKAANS,	    "af" },
@@ -494,7 +495,7 @@ static const FcFtLanguage   fcFtLanguage[] = {
  {  TT_PLATFORM_MICROSOFT,	TT_MS_LANGID_PASHTO_AFGHANISTAN,	"ps" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_LANGID_FILIPINO_PHILIPPINES,	"phi" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_LANGID_DHIVEHI_MALDIVES,		"div" },
-    
+
  {  TT_PLATFORM_MICROSOFT,	TT_MS_LANGID_OROMO_ETHIOPIA,		"om" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_LANGID_TIGRIGNA_ETHIOPIA,		"ti" },
  {  TT_PLATFORM_MICROSOFT,	TT_MS_LANGID_TIGRIGNA_ERYTHREA,		"ti" },
@@ -743,7 +744,7 @@ FcSfntNameTranscode (FT_SfntName *sname)
 	
 	while (in_bytes_left)
 	{
-	    size_t	did = iconv (cd, 
+	    size_t	did = iconv (cd,
 				 &inbuf, &in_bytes_left,
 				 &outbuf, &out_bytes_left);
 	    if (did == (size_t) (-1))
@@ -785,7 +786,7 @@ FcSfntNameLanguage (FT_SfntName *sname)
     {
 	language_id = TT_MAC_LANGID_JAPANESE;
     }
-    
+
     for (i = 0; i < NUM_FC_FT_LANGUAGE; i++)
 	if (fcFtLanguage[i].platform_id == platform_id &&
 	    (fcFtLanguage[i].language_id == TT_LANGUAGE_DONT_CARE ||
@@ -870,7 +871,7 @@ FcVendorMatch(const FT_Char vendor[4], const FT_Char *vendor_string)
 {
     /* vendor is not necessarily NUL-terminated. */
     int i, len;
-    
+
     len = strlen((char *) vendor_string);
     if (memcmp(vendor, vendor_string, len) != 0)
         return FcFalse;
@@ -926,7 +927,7 @@ static const FcChar8 *
 FcVendorFoundry(const FT_Char vendor[4])
 {
     int i;
-    
+
     if (vendor)
 	for(i = 0; i < NUM_VENDOR_FOUNDRIES; i++)
 	    if (FcVendorMatch (vendor, FcVendorFoundries[i].vendor))
@@ -1139,7 +1140,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
     const FcChar8   *exclusiveLang = 0;
     FT_SfntName	    sname;
     FT_UInt    	    snamei, snamec;
-    
+
     int		    nfamily = 0;
     int		    nfamily_lang = 0;
     int		    nstyle = 0;
@@ -1151,7 +1152,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 
     FcChar8	    *style = 0;
     int		    st;
-    
+
     pat = FcPatternCreate ();
     if (!pat)
 	goto bail0;
@@ -1177,7 +1178,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
      * the Postscript FontInfo dictionary.  Finally, the
      * BDF properties will queried.
      */
-    
+
     if (os2 && os2->version >= 0x0001 && os2->version != 0xffff)
         foundry = FcVendorFoundry(os2->achVendID);
 
@@ -1247,7 +1248,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 #endif
 		case TT_NAME_ID_PREFERRED_FAMILY:
 		case TT_NAME_ID_FONT_FAMILY:
-#if 0	    
+#if 0	
 		case TT_NAME_ID_PS_NAME:
 		case TT_NAME_ID_UNIQUE_ID:
 #endif
@@ -1334,7 +1335,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 	}
     }
 
-    if (!nfamily && face->family_name && 
+    if (!nfamily && face->family_name &&
 	FcStrCmpIgnoreBlanksAndCase ((FcChar8 *) face->family_name, (FcChar8 *) "") != 0)
     {
 	if (FcDebug () & FC_DBG_SCANV)
@@ -1343,7 +1344,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 	    goto bail1;
 	++nfamily;
     }
-    
+
     if (!nstyle && face->style_name &&
 	FcStrCmpIgnoreBlanksAndCase ((FcChar8 *) face->style_name, (FcChar8 *) "") != 0)
     {
@@ -1353,7 +1354,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 	    goto bail1;
 	++nstyle;
     }
-    
+
     if (!nfamily)
     {
 	FcChar8	*start, *end;
@@ -1432,7 +1433,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 	    }
 	    if (bits & (1 << bit))
 	    {
-		/* 
+		/*
 		 * If the font advertises support for multiple
 		 * "exclusive" languages, then include support
 		 * for any language found to have coverage
@@ -1504,7 +1505,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
      * Type 1: Check for FontInfo dictionary information
      * Code from g2@magestudios.net (Gerard Escalante)
      */
-    
+
 #if HAVE_FT_GET_PS_FONT_INFO
     if (FT_Get_PS_Font_Info(face, &psfontinfo) == 0)
     {
@@ -1515,23 +1516,23 @@ FcFreeTypeQueryFace (const FT_Face  face,
     		printf ("\tType1 weight %s maps to %d\n",
 			psfontinfo.weight, weight);
 	}
-     
+
 #if 0
-	/* 
+	/*
 	 * Don't bother with italic_angle; FreeType already extracts that
 	 * information for us and sticks it into style_flags
 	 */
         if (psfontinfo.italic_angle)
-            slant = FC_SLANT_ITALIC; 
+            slant = FC_SLANT_ITALIC;
         else
-            slant = FC_SLANT_ROMAN; 
+            slant = FC_SLANT_ROMAN;
 #endif
 
         if(!foundry)
             foundry = FcNoticeFoundry(psfontinfo.notice);
     }
 #endif /* HAVE_FT_GET_PS_FONT_INFO */
-    
+
 #if HAVE_FT_GET_BDF_PROPERTY
     /*
      * Finally, look for a FOUNDRY BDF property if no other
@@ -1553,7 +1554,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
 	     prop.type == BDF_PROPERTY_TYPE_CARDINAL))
 	{
 	    FT_Int32	value;
-	    
+	
 	    if (prop.type == BDF_PROPERTY_TYPE_INTEGER)
 		value = prop.u.integer;
 	    else
@@ -1730,7 +1731,7 @@ FcFreeTypeQueryFace (const FT_Face  face,
      * Drop our reference to the charset
      */
     FcCharSetDestroy (cs);
-    
+
     return pat;
 
 bail2:
@@ -1750,10 +1751,10 @@ FcFreeTypeQuery(const FcChar8	*file,
     FT_Face	    face;
     FT_Library	    ftLibrary;
     FcPattern	    *pat = NULL;
-    
+
     if (FT_Init_FreeType (&ftLibrary))
 	return NULL;
-    
+
     if (FT_New_Face (ftLibrary, (char *) file, id, &face))
 	goto bail;
 
@@ -2225,7 +2226,7 @@ static const FcCharMap AdobeSymbol = {
     AdobeSymbolEnt,
     sizeof (AdobeSymbolEnt) / sizeof (AdobeSymbolEnt[0]),
 };
-    
+
 static const FcFontDecode fcFontDecoders[] = {
     { ft_encoding_unicode,	0,		(1 << 21) - 1 },
     { ft_encoding_symbol,	&AdobeSymbol,	(1 << 16) - 1 },
@@ -2310,7 +2311,7 @@ static FcBool
 FcFreeTypeUseNames (FT_Face face)
 {
     FT_Int  map;
-    
+
     if (!FT_Has_PS_Glyph_Names (face))
 	return FcFalse;
     for (map = 0; map < face->num_charmaps; map++)
@@ -2330,7 +2331,7 @@ FcUcs4ToGlyphName (FcChar32 ucs4)
     {
 	if (_fc_glyph_names[gn].ucs == ucs4)
 	    return _fc_glyph_names[gn].name;
-	if (!r) 
+	if (!r)
 	{
 	    r = (int) (ucs4 % FC_GLYPHNAME_REHASH);
 	    if (!r)
@@ -2355,7 +2356,7 @@ FcGlyphNameToUcs4 (FcChar8 *name)
     {
 	if (!strcmp ((char *) name, (char *) _fc_glyph_names[gn].name))
 	    return _fc_glyph_names[gn].ucs;
-	if (!r) 
+	if (!r)
 	{
 	    r = (int) (h % FC_GLYPHNAME_REHASH);
 	    if (!r)
@@ -2478,14 +2479,14 @@ FcFreeTypeCharIndex (FT_Face face, FcChar32 ucs4)
 }
 
 static FcBool
-FcFreeTypeCheckGlyph (FT_Face face, FcChar32 ucs4, 
+FcFreeTypeCheckGlyph (FT_Face face, FcChar32 ucs4,
 		      FT_UInt glyph, FcBlanks *blanks,
 		      FT_Pos *advance,
 		      FcBool using_strike)
 {
     FT_Int	    load_flags = FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH | FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
     FT_GlyphSlot    slot;
-    
+
     if (using_strike)
 	load_flags &= ~FT_LOAD_NO_SCALE;
 
@@ -2498,14 +2499,14 @@ FcFreeTypeCheckGlyph (FT_Face face, FcChar32 ucs4,
      */
     if (face->face_flags & FT_FACE_FLAG_SCALABLE)
 	load_flags |= FT_LOAD_NO_BITMAP;
-    
+
     if (FT_Load_Glyph (face, glyph, load_flags))
 	return FcFalse;
-    
+
     slot = face->glyph;
     if (!glyph)
 	return FcFalse;
-    
+
     *advance = slot->metrics.horiAdvance;
 
     switch (slot->format) {
@@ -2559,7 +2560,7 @@ FcFreeTypeCharSetAndSpacingForSize (FT_Face face, FcBlanks *blanks, int *spacing
     fcs = FcCharSetCreate ();
     if (!fcs)
 	goto bail0;
-    
+
 #if HAVE_FT_SELECT_SIZE
     if (strike_index >= 0) {
 	if (FT_Select_Size (face, strike_index) != FT_Err_Ok)
@@ -2586,10 +2587,10 @@ FcFreeTypeCharSetAndSpacingForSize (FT_Face face, FcBlanks *blanks, int *spacing
 	    {
 		ucs4 = map->ent[i].bmp;
 		glyph = FT_Get_Char_Index (face, map->ent[i].encode);
-		if (glyph && 
+		if (glyph &&
 		    FcFreeTypeCheckGlyph (face, ucs4, glyph, blanks, &advance, using_strike))
 		{
-		    /* 
+		    /*
 		     * ignore glyphs with zero advance. They’re
 		     * combining characters, and while their behaviour
 		     * isn’t well defined for monospaced applications in
@@ -2701,7 +2702,7 @@ FcFreeTypeCharSetAndSpacingForSize (FT_Face face, FcBlanks *blanks, int *spacing
 	    if (FT_Get_Glyph_Name (face, glyph, name_buf, FC_GLYPHNAME_BUFLEN+1) == 0)
 	    {
 		ucs4 = FcGlyphNameToUcs4 (name_buf);
-		if (ucs4 != 0xffff && 
+		if (ucs4 != 0xffff &&
 		    FcFreeTypeCheckGlyph (face, ucs4, glyph, blanks, &advance, using_strike))
 		{
 		    if (advance)
@@ -2771,13 +2772,13 @@ FcCharSet *
 FcFreeTypeCharSetAndSpacing (FT_Face face, FcBlanks *blanks, int *spacing)
 {
     FcCharSet	*cs;
-    
+
     cs = FcFreeTypeCharSetAndSpacingForSize (face, blanks, spacing, -1);
     /*
      * Check for bitmap-only ttf fonts that are missing the glyf table.
      * In that case, pick a size and look for glyphs in that size instead
      */
-    if (FcCharSetCount (cs) == 0) 
+    if (FcCharSetCount (cs) == 0)
     {
 	/* Check for non-scalable TT fonts */
 	if (!(face->face_flags & FT_FACE_FLAG_SCALABLE) &&
@@ -2789,7 +2790,7 @@ FcFreeTypeCharSetAndSpacing (FT_Face face, FcBlanks *blanks, int *spacing)
 
 	    /* Select the face closest to 16 pixels tall */
 	    for (i = 1; i < face->num_fixed_sizes; i++) {
-		if (abs (face->available_sizes[i].height - 16) < 
+		if (abs (face->available_sizes[i].height - 16) <
 		    abs (face->available_sizes[strike_index].height - 16))
 		    strike_index = i;
 	    }
@@ -2825,7 +2826,7 @@ FcFreeTypeCharSet (FT_Face face, FcBlanks *blanks)
  */
 #define FcIsSpace(x)	    (040 == (x))
 #define FcIsValidScript(x)  (FcIsLower(x) || FcIsUpper (x) || FcIsSpace(x))
-			     
+			
 static void
 addtag(FcChar8 *complex_, FT_ULong tag)
 {
@@ -2836,7 +2837,7 @@ addtag(FcChar8 *complex_, FT_ULong tag)
     tagstring[2] = (FcChar8)(tag >> 8),
     tagstring[3] = (FcChar8)(tag);
     tagstring[4] = '\0';
-    
+
     /* skip tags which aren't alphabetic, under the assumption that
      * they're probably broken
      */
@@ -2964,7 +2965,7 @@ FcFontCapabilities(FT_Face face)
     if (!issilgraphitefont && !gsub_count && !gpos_count)
     	goto bail;
 
-    maxsize = (((FT_ULong) gpos_count + (FT_ULong) gsub_count) * OTLAYOUT_LEN + 
+    maxsize = (((FT_ULong) gpos_count + (FT_ULong) gsub_count) * OTLAYOUT_LEN +
 	       (issilgraphitefont ? 13 : 0));
     complex_ = malloc (sizeof (FcChar8) * maxsize);
     if (!complex_)

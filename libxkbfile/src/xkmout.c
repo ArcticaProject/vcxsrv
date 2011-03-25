@@ -1,4 +1,3 @@
-/* $Xorg: xkmout.c,v 1.3 2000/08/17 19:46:44 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/lib/xkbfile/xkmout.c,v 1.5 2001/07/25 15:04:58 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

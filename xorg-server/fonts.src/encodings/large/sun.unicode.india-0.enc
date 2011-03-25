@@ -1,4 +1,3 @@
-# $XFree86: xc/fonts/encodings/large/sun.unicode.india-0.enc,v 1.1 2003/12/07 18:20:11 dawes Exp $
 STARTENCODING sun.unicode.india-0
 SIZE 0xF8 0x100
 FIRSTINDEX 0x00 0x20

@@ -1,5 +1,3 @@
-/* $Xorg: StrToCurs.c,v 1.4 2001/02/09 02:03:53 xorgcvs Exp $ */
-
 /*
 
 Copyright 1987, 1988, 1998  The Open Group
@@ -49,8 +47,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-
-/* $XFree86: xc/lib/Xmu/StrToCurs.c,v 1.11 2002/09/19 13:21:58 tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -159,25 +155,29 @@ XmuCvtStringToCursor(XrmValuePtr args, Cardinal *num_args,
 
     if (0 == strncmp(FONTSPECIFIER, name, strlen(FONTSPECIFIER))) {
 	char source_name[PATH_MAX], mask_name[PATH_MAX];
-	int source_char, mask_char, fields;
+	int source_char, mask_char, fields = 0;
 	Font source_font, mask_font;
 	XrmValue fromString, toFont;
 	XrmValue cvtArg;
 	Boolean success;
 	Display *dpy = DisplayOfScreen(screen);
-        char *strspec = NULL;
+	char *strspec = NULL;
+	int strspeclen;
 #ifdef XMU_KLUDGE
 	Cardinal num;
 #endif
 
-	strspec = XtMalloc(strlen("FONT %s %d %s %d") + 21);
-	sprintf(strspec, "FONT %%%lds %%d %%%lds %%d",
-		(unsigned long)sizeof(source_name) - 1,
-		(unsigned long)sizeof(mask_name) - 1);
-	fields = sscanf(name, strspec,
-			source_name, &source_char,
-			mask_name, &mask_char);
-	XtFree(strspec);
+	strspeclen = strlen("FONT %s %d %s %d") + 21;
+	strspec = XtMalloc(strspeclen);
+	if (strspec != NULL) {
+	    snprintf(strspec, strspeclen, "FONT %%%lds %%d %%%lds %%d",
+		     (unsigned long)sizeof(source_name) - 1,
+		     (unsigned long)sizeof(mask_name) - 1);
+	    fields = sscanf(name, strspec,
+			    source_name, &source_char,
+			    mask_name, &mask_char);
+	    XtFree(strspec);
+	}
 	if (fields < 2) {
 	    XtStringConversionWarning(name, XtRCursor);
 	    return;

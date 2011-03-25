@@ -1,5 +1,4 @@
 /*
- * $Xorg: XawInit.c,v 1.4 2001/02/09 02:03:47 xorgcvs Exp $
  *
 Copyright 1989, 1998  The Open Group
 Copyright 2003-2004 Roland Mainz <roland.mainz@nrubsig.org>
@@ -33,8 +32,6 @@ in this Software without prior written authorization from The Open Group.
  * call this routine from their ClassInitialize procs (this routine may be
  * used as the class init proc).
  */
-/* $XFree86: xc/lib/Xaw/XawInit.c,v 1.9 2001/01/17 19:42:36 dawes Exp $ */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

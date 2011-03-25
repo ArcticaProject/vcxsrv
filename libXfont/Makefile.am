@@ -19,7 +19,7 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 #  PERFORMANCE OF THIS SOFTWARE.
 
-SUBDIRS=src
+SUBDIRS=doc src
 
 libXfontincludedir = $(includedir)/X11/fonts
 libXfontinclude_HEADERS = \
@@ -54,28 +54,3 @@ ChangeLog:
 	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog INSTALL
-
-# Developer documentation - not installed on system
-EXTRA_DIST = doc/fontlib.xml doc/fontlib.xsl doc/fontlib.css
-
-if ENABLE_DEVEL_DOCS
-if HAVE_XMLTO
-noinst_DATA = doc/fontlib.txt doc/fontlib.html $(srcdir)/doc/fontlib.css
-if HAVE_FOP
-noinst_DATA += doc/fontlib.pdf doc/fontlib.ps
-endif
-CLEANFILES = doc/fontlib.txt doc/fontlib.html doc/fontlib.pdf doc/fontlib.ps
-
-doc/fontlib.txt: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
-	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc txt $(srcdir)/doc/fontlib.xml
-
-doc/fontlib.html: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
-	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc xhtml-nochunks $(srcdir)/doc/fontlib.xml
-
-doc/fontlib.pdf: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
-	$(AM_V_GEN)$(XMLTO) --with-fop -m $(srcdir)/doc/fontlib.xsl -o doc pdf $(srcdir)/doc/fontlib.xml
-
-doc/fontlib.ps: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
-	$(AM_V_GEN)$(XMLTO) --with-fop -m $(srcdir)/doc/fontlib.xsl -o doc ps $(srcdir)/doc/fontlib.xml
-endif HAVE_XMLTO
-endif ENABLE_DEVEL_DOCS

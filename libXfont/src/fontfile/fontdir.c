@@ -1,6 +1,3 @@
-/* $XdotOrg: xc/lib/font/fontfile/fontdir.c,v 1.4 2005/07/03 07:01:00 daniels Exp $ */
-/* $Xorg: fontdir.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -26,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fontfile/fontdir.c,v 3.22 2003/07/07 16:40:11 eich Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium
@@ -347,7 +343,7 @@ SetupWildMatch(FontTablePtr table, FontNamePtr pat,
 	    result = strcmpn(name, table->entries[center].name.name);
 	    if (result == 0)
 		return center;
- 	    if (result < 0)
+	    if (result < 0)
 		right = center;
 	    else
 		left = center + 1;

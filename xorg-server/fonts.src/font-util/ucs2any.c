@@ -26,7 +26,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-/* $XFree86$ */
 /*
  * This utility allows you to generate from an ISO10646-1 encoded
  * BDF font other BDF fonts in any possible encoding. This way, you can

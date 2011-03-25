@@ -1,5 +1,4 @@
 /*
- * $Xorg: Reports.h,v 1.5 2001/02/09 02:03:45 xorgcvs Exp $
  *
 Copyright 1990, 1998  The Open Group
 

@@ -31,7 +31,6 @@
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
-/* $XFree86$ */
 
 /*
  * The code related to AMIGA has been added by

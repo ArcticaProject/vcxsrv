@@ -7,9 +7,9 @@
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Keith Packard not be used in
+ * documentation, and that the name of the author(s) not be used in
  * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Keith Packard makes no
+ * specific, written prior permission.  The authors make no
  * representations about the suitability of this software for any purpose.  It
  * is provided "as is" without express or implied warranty.
  *
@@ -36,7 +36,7 @@ caller using free(), or NULL if <parameter>format</parameter> is invalid.
 
 </para><para>
 
-The format is loosely modelled after printf-style format string.
+The format is loosely modeled after printf-style format string.
 The format string is composed of zero or more  directives: ordinary
 characters (not "%"), which are copied unchanged to the output stream;
 and tags which are interpreted to construct text from the pattern in a
@@ -50,7 +50,7 @@ are meant to be copied to the output as ordinary characters.
 
 </para><para>
 
-Each tags is introduced by the character "%",
+Each tag is introduced by the character "%",
 followed by an optional minimum field width,
 followed by tag contents in curly braces ({}).
 If the minimum field width value is provided the tag
@@ -66,7 +66,7 @@ A <firstterm>simple</firstterm> tag
 is one where the content is an identifier.  When simple
 tags are expanded, the named identifier will be looked up in
 <parameter>pattern</parameter> and the resulting list of values returned,
-joined together using comma.  For example, to print the family name and style the
+joined together using comma.  For example, to print the family name and style of the
 pattern, use the format "%{family} %{style}\n".  To extend the family column
 to forty characters use "%-40{family}%{style}\n".
 
@@ -112,7 +112,7 @@ A <firstterm>sub-expression</firstterm> tag
 is one that expands a sub-expression.  The tag contents
 are the sub-expression to expand placed inside another set of curly braces.
 Sub-expression tags are useful for aligning an entire sub-expression, or to
-apply converters (explained later) on an entire sub-expression.
+apply converters (explained later) to the entire sub-expression output.
 For example, the format "%40{{%{family} %{style}}}" expands the sub-expression
 to construct the family name followed by the style, then takes the entire
 string and pads it on the left to be at least forty characters.
@@ -164,7 +164,7 @@ a single value for those elements, starting from the first value and
 continuing as long as any of those elements has a value.
 For example, the format "%{[]family,familylang{%{family} (%{familylang})\n}}"
 will expand the pattern "%{family} (%{familylang})\n" with a pattern
-having only the first value of the family and familylang elemtns, then expands
+having only the first value of the family and familylang elements, then expands
 it with the second values, then the third, etc.
 
 </para><para>

@@ -20,8 +20,6 @@
   THE SOFTWARE.
 */
 
-/* $XFree86$ */
-
 #ifndef _MKS_IDENT_H_
 #define _MKS_IDENT_H_ 1
 

@@ -1,5 +1,4 @@
 STARTENCODING gbk-0
-# $XFree86: xc/fonts/encodings/large/gbk-0.enc,v 1.2 2002/09/27 02:04:21 dawes Exp $
 SIZE 0xFF 0xFF
 FIRSTINDEX 0x80 0x40
 STARTMAPPING unicode

@@ -1,5 +1,4 @@
 # Contributed by James Su <suzhe@turbolinux.com.cn>
-# $XFree86$
 STARTENCODING gb18030.2000-1
 SIZE 0x9A 0x100
 STARTMAPPING unicode

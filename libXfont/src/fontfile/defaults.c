@@ -1,5 +1,3 @@
-/* $Xorg: defaults.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1990, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fontfile/defaults.c,v 1.7 2001/01/17 19:43:29 dawes Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

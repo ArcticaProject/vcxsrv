@@ -63,8 +63,9 @@ manpage.1: manpage.sgml
     <cmdsynopsis>
       <command>&dhpackage;</command>
 
-      <arg><option>-fsvVh</option></arg>
+      <arg><option>-frsvVh</option></arg>
       <arg><option>--force</option></arg>
+      <arg><option>--really-force</option></arg>
       <arg><option>--system-only</option></arg>
       <arg><option>--verbose</option></arg>
       <arg><option>--version</option></arg>
@@ -108,6 +109,14 @@ manpage.1: manpage.sgml
         <listitem>
           <para>Force re-generation of apparently up-to-date cache files,
             overriding the timestamp checking.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-r</option>
+          <option>--really-force</option>
+        </term>
+        <listitem>
+          <para>Erase all existing cache files and rescan.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
@@ -175,6 +184,7 @@ manpage.1: manpage.sgml
       <command>fc-cat</command>(1)
       <command>fc-list</command>(1)
       <command>fc-match</command>(1)
+      <command>fc-pattern</command>(1)
       <command>fc-query</command>(1)
       <command>fc-scan</command>(1)
     </para>

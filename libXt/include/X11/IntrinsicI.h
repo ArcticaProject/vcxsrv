@@ -1,5 +1,3 @@
-/* $Xorg: IntrinsicI.h,v 1.4 2001/02/09 02:03:55 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xt/IntrinsicI.h,v 3.8 2001/12/14 19:56:25 dawes Exp $ */
 
 #ifndef _XtintrinsicI_h
 #define _XtintrinsicI_h
@@ -111,37 +108,6 @@ SOFTWARE.
 #define _XBCOPYFUNC _XtBcopy
 #include <X11/Xfuncs.h>
 
-/* If the alignment characteristics of your machine are right, these may be
-   faster */
-
-#ifdef UNALIGNED
-
-#define XtMemmove(dst, src, size)			    \
-    if ((char *)(dst) != (char *)(src)) {		    \
-	if (size == sizeof(int))			    \
-	    *((int *) (dst)) = *((int *) (src));	    \
-	else if (size == sizeof(char))			    \
-	    *((char *) (dst)) = *((char *) (src));	    \
-	else if (size == sizeof(short))			    \
-	    *((short *) (dst)) = *((short *) (src));	    \
-	else						    \
-	    (void) memcpy((char *) (dst), (char *) (src), (int) (size)); \
-    }
-
-#define XtBZero(dst, size)				    \
-    if (size == sizeof(int))				    \
-	*((int *) (dst)) = 0;				    \
-    else						    \
-	bzero((char *) (dst), (int) (size))
-
-#define XtMemcmp(b1, b2, size)				    \
-    (size == sizeof(int) ?				    \
-	*((int *) (b1)) != *((int *) (b2))		    \
-    :   memcmp((char *) (b1), (char *) (b2), (int) (size))  \
-    )
-
-#else
-
 #define XtMemmove(dst, src, size)	\
     if ((char *)(dst) != (char *)(src)) {		    \
 	(void) memcpy((char *) (dst), (char *) (src), (int) (size)); \
@@ -152,8 +118,6 @@ SOFTWARE.
 
 #define XtMemcmp(b1, b2, size) 		\
 	memcmp((char *) (b1), (char *) (b2), (int) (size))
-
-#endif
 
 
 /****************************************************************

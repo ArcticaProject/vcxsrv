@@ -9,9 +9,9 @@
     documentation for any purpose is hereby granted without fee, provided that
     the above copyright notice appear in all copies and that both that
     copyright notice and this permission notice appear in supporting
-    documentation, and that the name of Keith Packard not be used in
+    documentation, and that the name of the author(s) not be used in
     advertising or publicity pertaining to distribution of the software without
-    specific, written prior permission.  Keith Packard makes no
+    specific, written prior permission.  The authors make no
     representations about the suitability of this software for any purpose.  It
     is provided "as is" without express or implied warranty.
    
@@ -216,9 +216,9 @@ Here are some examples:
                                   with artificial obliquing
     </programlisting>
     <para>
-The '\', '-', ':' and ',' characters in family names must be preceeded by a
+The '\', '-', ':' and ',' characters in family names must be preceded by a
 '\' character to avoid having them misinterpreted. Similarly, values
-containing '\', '=', '_', ':' and ',' must also have them preceeded by a
+containing '\', '=', '_', ':' and ',' must also have them preceded by a
 '\' character. The '\' characters are stripped out of the family name and
 values as the font name is read.
     </para>
@@ -431,6 +431,18 @@ instead of -.5).
   <refsect2><title><literal>&lt;matrix&gt;</literal></title><para>
 This element holds the four <literal>&lt;double&gt;</literal> elements of an affine
 transformation.
+  </para></refsect2>
+  <refsect2><title><literal>&lt;range&gt;</literal></title><para>
+This element holds the two <literal>&lt;int&gt;</literal> elements of a range
+representation.
+  </para></refsect2>
+  <refsect2><title><literal>&lt;charset&gt;</literal></title><para>
+This element holds at least one <literal>&lt;int&gt;</literal> element of
+an Unicode code point or more.
+  </para></refsect2>
+  <refsect2><title><literal>&lt;langset&gt;</literal></title><para>
+This element holds at least one <literal>&lt;string&gt;</literal> element of
+a RFC-3066-style languages or more.
   </para></refsect2>
   <refsect2><title><literal>&lt;name&gt;</literal></title><para>
 Holds a property name.  Evaluates to the first value from the property of
@@ -647,14 +659,14 @@ This is an example of a per-user configuration file that lives in
 contains configuration information for the fontconfig library
 consisting of directories to look at for font information as well as
 instructions on editing program specified font patterns before attempting to
-match the available fonts.  It is in xml format.
+match the available fonts.  It is in XML format.
   </para>
   <para>
 <emphasis>conf.d</emphasis>
 is the conventional name for a directory of additional configuration files
 managed by external applications or the local administrator.  The
 filenames starting with decimal digits are sorted in lexicographic order
-and used as additional configuration files.  All of these files are in xml
+and used as additional configuration files.  All of these files are in XML
 format.  The master fonts.conf file references this directory in an 
 &lt;include&gt; directive.
   </para>

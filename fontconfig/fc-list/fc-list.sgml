@@ -179,6 +179,7 @@ manpage.1: manpage.sgml
       <function>FcPatternFormat</function>(3)
       <command>fc-cat</command>(1)
       <command>fc-cache</command>(1)
+      <command>fc-pattern</command>(1)
       <command>fc-query</command>(1)
       <command>fc-scan</command>(1)
     </para>

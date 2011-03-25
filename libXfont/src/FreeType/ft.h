@@ -21,8 +21,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/* $XFree86: xc/lib/font/FreeType/ft.h,v 1.22 2003/06/08 15:41:13 herrb Exp $ */
-
 #ifndef _FT_H_
 #define _FT_H_
 
@@ -33,11 +31,9 @@ THE SOFTWARE.
 #undef DEBUG_TRUETYPE
 
 #ifdef DEBUG_TRUETYPE
-#define MUMBLE(s) (ErrorF((s)))
-#define MUMBLE1(s,x) (ErrorF((s),(x)))
+#define MUMBLE ErrorF
 #else
-#define MUMBLE(s)
-#define MUMBLE1(s,x)
+#define MUMBLE(...)
 #endif
 
 #undef MAX

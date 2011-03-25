@@ -1,5 +1,3 @@
-/* $Xorg: fontutil.c,v 1.4 2001/02/09 02:04:04 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -27,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/util/fontutil.c,v 3.6 2001/10/28 03:32:46 tsi Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

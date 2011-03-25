@@ -1,7 +1,5 @@
-/* $Xorg: Error.c,v 1.5 2001/02/09 02:03:54 xorgcvs Exp $ */
-
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -43,7 +41,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xt/Error.c,v 3.13tsi Exp $ */
 
 /*
 
@@ -236,11 +233,6 @@ static void DefaultMsg (
     void (*fn)(_Xconst _XtString))
 {
 #define BIGBUF 1024
-#ifdef notyet /* older versions don't, might want to wait until more do */
-#if defined(__linux__)  || defined(CSRG_BASED) /* everyone else needs to get with the program */
-#define USE_SNPRINTF
-#endif
-#endif
     char buffer[BIGBUF];
     char* message;
     XtGetErrorDatabaseText(name,type,class,defaultp, buffer, BIGBUF);
@@ -305,18 +297,9 @@ program as a non-root user or by removing the suid bit on the executable.");
 	 * to be a performance issue.
 	 */
 	if ((message = __XtMalloc (BIGBUF))) {
-#ifndef USE_SNPRINTF
-	    message[BIGBUF-1] = 0;
-	    (void) sprintf (message, buffer,
-#else
 	    (void) snprintf (message, BIGBUF, buffer,
-#endif
-			    par[0], par[1], par[2], par[3], par[4],
-			    par[5], par[6], par[7], par[8], par[9]);
-#ifndef USE_SNPRINTF
-	    if (message[BIGBUF-1] != '\0')
-		XtWarning ("Possible heap corruption in Xt{Error,Warning}MsgHandler");
-#endif
+			     par[0], par[1], par[2], par[3], par[4],
+			     par[5], par[6], par[7], par[8], par[9]);
 	    (*fn)(message);
 	    XtFree(message);
 	} else {

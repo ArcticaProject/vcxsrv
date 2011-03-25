@@ -1,5 +1,3 @@
-/* $Xorg: MultiSrcP.h,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $ */
-
 /*
  * Copyright 1991 by OMRON Corporation
  *
@@ -71,7 +69,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/MultiSrcP.h,v 1.8 2001/01/17 19:42:28 dawes Exp $ */
 
 /*
  * MultiSrcP.h - Private Header for Multi Text Source.

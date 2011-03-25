@@ -97,9 +97,9 @@ all-local: $(BUILT_FILES)
 $(BUILT_HEADER): $(BUILT_SOURCE)
 
 $(BUILT_SOURCE):
-	$(top_builddir)/util/makestrs -i $(top_srcdir) $(STRINGSABIOPTIONS) < $(STRING_LIST) > StringDefs.c
-	mkdir -p $(top_builddir)/src
-	mkdir -p $(top_builddir)/include/X11
-	cp StringDefs.h $(top_builddir)/include/X11
-	cp Shell.h $(top_builddir)/include/X11
-	rm StringDefs.h Shell.h
+	$(AM_V_GEN)$(top_builddir)/util/makestrs -i $(top_srcdir) $(STRINGSABIOPTIONS) < $(STRING_LIST) > StringDefs.c
+	$(AM_V_at)mkdir -p $(top_builddir)/src
+	$(AM_V_at)mkdir -p $(top_builddir)/include/X11
+	$(AM_V_at)cp StringDefs.h $(top_builddir)/include/X11
+	$(AM_V_at)cp Shell.h $(top_builddir)/include/X11
+	$(AM_V_at)rm StringDefs.h Shell.h

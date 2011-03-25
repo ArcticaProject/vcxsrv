@@ -1,5 +1,3 @@
-/* $Xorg: StrToOrnt.c,v 1.4 2001/02/09 02:03:53 xorgcvs Exp $ */
-
 /* 
  
 Copyright 1988, 1998  The Open Group
@@ -25,8 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-
-/* $XFree86: xc/lib/Xmu/StrToOrnt.c,v 1.6 2001/01/17 19:42:57 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

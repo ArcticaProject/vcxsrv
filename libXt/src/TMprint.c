@@ -1,7 +1,5 @@
-/* $Xorg: TMprint.c,v 1.4 2001/02/09 02:03:58 xorgcvs Exp $ */
-
 /***********************************************************
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -69,7 +67,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/TMprint.c,v 1.6 2001/12/14 19:56:31 dawes Exp $ */
 
 /*LINTLIBRARY*/
 #ifdef HAVE_CONFIG_H
@@ -782,12 +779,16 @@ void _XtDisplayInstalledAccelerators(
     PrintRec		stackPrints[STACKPRINTSIZE];
     PrintRec		*prints;
     TMShortCard		numPrints, maxPrints;
-    TMBindData	bindData = (TMBindData) eventWidget->core.tm.proc_table;
+    TMBindData	bindData ;
     TMComplexBindProcs	complexBindProcs;
 
     if ((eventWidget == NULL) ||
-	((xlations = eventWidget->core.tm.translations) == NULL) ||
-	(bindData->simple.isComplex == False))
+	(eventWidget->core.tm.translations == NULL) )
+      return;
+
+    xlations = eventWidget->core.tm.translations;
+    bindData = (TMBindData) eventWidget->core.tm.proc_table;
+    if (bindData->simple.isComplex == False)
       return;
 
     sb->current = sb->start = __XtMalloc((Cardinal)1000);

@@ -1,5 +1,3 @@
-/* $Xorg: CvtCache.c,v 1.5 2001/02/09 02:03:52 xorgcvs Exp $ */
-
 /*
  
 Copyright 1989, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xmu/CvtCache.c,v 3.6 2001/08/23 00:03:21 dawes Exp $ */
 
 /* 
  * Author:  Jim Fulton, MIT X Consortium

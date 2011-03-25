@@ -1,5 +1,3 @@
-/* $Xorg: StrToBmap.c,v 1.4 2001/02/09 02:03:53 xorgcvs Exp $ */
-
 /*
 
 Copyright 1987, 1988, 1998  The Open Group
@@ -49,7 +47,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xmu/StrToBmap.c,v 1.5 2001/01/17 19:42:57 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

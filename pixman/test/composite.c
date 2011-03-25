@@ -102,6 +102,8 @@ static const format_t formats[] =
     P(x8b8g8r8),
     P(b8g8r8a8),
     P(b8g8r8x8),
+    P(r8g8b8a8),
+    P(r8g8b8x8),
     P(x2r10g10b10),
     P(x2b10g10r10),
     P(a2r10g10b10),
@@ -556,6 +558,13 @@ get_pixel (pixman_image_t *image,
         bs = g + gs;
 	break;
 
+    case PIXMAN_TYPE_RGBA:
+	as = 0;
+	bs = PIXMAN_FORMAT_BPP (format) - (b + g + r);
+	gs = b + bs;
+	rs = g + gs;
+	break;
+
     case PIXMAN_TYPE_A:
         as = 0;
         rs = 0;
@@ -900,13 +909,13 @@ main (int argc, char **argv)
 #ifdef USE_OPENMP
 #   pragma omp parallel for default(none) shared(result, argv, seed)
 #endif
-    for (i = seed; i <= N_TESTS; ++i)
+    for (i = 0; i <= N_TESTS; ++i)
     {
-	if (!result && !run_test (i))
+	if (!result && !run_test (i + seed))
 	{
-	    printf ("Test 0x%08X failed.\n", i);
+	    printf ("Test 0x%08X failed.\n", seed + i);
 	    
-	    result = i;
+	    result = seed + i;
 	}
     }
     

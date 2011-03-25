@@ -1,5 +1,3 @@
-/* $Xorg: bitmaputil.c,v 1.5 2001/02/09 02:04:02 xorgcvs Exp $ */
-
 /*
 
 Copyright 1990, 1994, 1998  The Open Group
@@ -27,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/bitmap/bitmaputil.c,v 1.10 2002/09/24 20:52:48 tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

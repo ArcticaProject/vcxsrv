@@ -1,5 +1,3 @@
-/* $Xorg: RectObj.h,v 1.4 2001/02/09 02:03:56 xorgcvs Exp $ */
-/* $oHeader: RectObj.h,v 1.2 88/08/18 17:39:17 asente Exp $ */
 /***********************************************************
 
 Copyright 1987, 1988, 1998  The Open Group

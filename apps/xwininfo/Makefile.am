@@ -19,6 +19,7 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 #  PERFORMANCE OF THIS SOFTWARE.
 
+SUBDIRS = man
 bin_PROGRAMS = xwininfo
 
 AM_CFLAGS = $(CWARNFLAGS) $(XWININFO_CFLAGS)
@@ -31,17 +32,8 @@ xwininfo_SOURCES =	\
         dsimple.h \
         xwininfo.c
 
-appman_PRE = \
-        xwininfo.man
-
-
-appmandir = $(APP_MAN_DIR)
-
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-EXTRA_DIST = $(appman_PRE) autogen.sh strnlen.h
+EXTRA_DIST = strnlen.h
 MAINTAINERCLEANFILES = ChangeLog INSTALL
-CLEANFILES = $(appman_DATA)
 
 .PHONY: ChangeLog INSTALL
 
@@ -52,9 +44,3 @@ ChangeLog:
 	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog INSTALL
-
-SUFFIXES = .$(APP_MAN_SUFFIX) .man
-
-# String replacements in MAN_SUBSTS now come from xorg-macros.m4 via configure
-.man.$(APP_MAN_SUFFIX):
-	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@

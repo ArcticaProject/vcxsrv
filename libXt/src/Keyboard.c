@@ -1,7 +1,6 @@
-/* $Xorg: Keyboard.c,v 1.5 2001/02/09 02:03:55 xorgcvs Exp $ */
 /*
 
-Copyright 1993 Sun Microsystems, Inc.  All rights reserved.
+Copyright (c) 1993, Oracle and/or its affiliates. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -72,7 +71,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/Xt/Keyboard.c,v 3.3 2001/08/22 22:52:19 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -729,18 +727,22 @@ static void QueryEventMask(
      */
     Widget ancestor = (Widget)client_data;
     XtPerWidgetInput pwi = _XtGetPerWidgetInput(ancestor, FALSE);
-    Widget target = pwi->queryEventDescendant;
 
-    /* use of 'target' is non-standard hackery; allows focus to non-widget */
-    if (pwi && (pwi->focusKid == target)) {
-	AddFocusHandler(ancestor, target, pwi,
-			_XtGetPerWidgetInput(GetShell(ancestor), TRUE),
-			_XtGetPerDisplayInput(XtDisplay(ancestor)),
-			(EventMask)0);
+    if (pwi) {
+	Widget target = pwi->queryEventDescendant;
+
+	/* use of 'target' is non-standard hackery;
+	   allows focus to non-widget */
+	if ( pwi->focusKid == target ) {
+	    AddFocusHandler(ancestor, target, pwi,
+			    _XtGetPerWidgetInput(GetShell(ancestor), TRUE),
+			    _XtGetPerDisplayInput(XtDisplay(ancestor)),
+			    (EventMask)0);
+	}
+	XtRemoveEventHandler(widget, XtAllEvents, True,
+			     QueryEventMask, client_data);
+	pwi->map_handler_added = FALSE;
     }
-    XtRemoveEventHandler(widget, XtAllEvents, True,
-			 QueryEventMask, client_data);
-    pwi->map_handler_added = FALSE;
 }
 
 

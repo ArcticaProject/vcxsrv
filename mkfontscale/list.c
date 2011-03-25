@@ -19,19 +19,12 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 */
-/* $XFree86: xc/programs/mkfontscale/list.c,v 1.5 2003/07/04 16:24:30 eich Exp $ */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include "list.h"
-
-#ifdef NEED_SNPRINTF
-#undef SCOPE
-#define SCOPE static
-#include "snprintf.c"
-#endif
 
 int
 listMember(char *elt, ListPtr list)
@@ -195,8 +188,10 @@ makeList(char **a, int n, ListPtr old, int begin)
     current = first;
     for(i = 1; i < n; i++) {
         next = malloc(sizeof(ListRec));
-        if(!next)
+        if(!next) {
+            destroyList(first);
             return NULL;
+        }
         next->value = a[i];
         next->next = NULL;
 
@@ -222,6 +217,40 @@ reverseList(ListPtr old)
         new = current;
     }
     return new;
+}
+
+/* qsort helper for sorting list entries */
+static int
+compareListEntries(const void *a, const void *b)
+{
+    const ListPtr lista = *(const ListPtr *) a;
+    const ListPtr listb = *(const ListPtr *) b;
+
+    return strcmp(lista->value, listb->value);
+}
+
+ListPtr
+sortList(ListPtr old)
+{
+    int i;
+    int l = listLength(old);
+    ListPtr n;
+    ListPtr *sorted = malloc(l * sizeof(ListPtr));
+
+    if (sorted == NULL)
+        return old;
+
+    for (n = old, i = 0; n != NULL; n = n->next) {
+        sorted[i++] = n;
+    }
+    qsort(sorted, i, sizeof(ListPtr), compareListEntries);
+    n = sorted[0];
+    for (i = 0; i < (l - 1); i++) {
+        sorted[i]->next = sorted[i+1];
+    }
+    sorted[i]->next = NULL;
+    free(sorted);
+    return n;
 }
 
 void

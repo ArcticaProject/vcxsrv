@@ -1,5 +1,3 @@
-/* $Xorg: SmeLine.c,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $ */
-
 /*
 Copyright 1989, 1998  The Open Group
 
@@ -25,7 +23,6 @@ in this Software without prior written authorization from The Open Group.
  *
  * Author:  Chris D. Peterson, MIT X Consortium
  */
-/* $XFree86: xc/lib/Xaw/SmeLine.c,v 1.7 2001/01/17 19:42:31 dawes Exp $ */
 
 /*
  * Sme.c - Source code for the generic menu entry

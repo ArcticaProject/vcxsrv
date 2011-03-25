@@ -3,7 +3,6 @@ STARTENCODING ksc5601.1992-3
 #  at ftp://ftp.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT.
 #  The up-to-date mapping table JOHAB.TXT with two new characters
 #  is available  at http://jshin.net/faq/JOHAB.TXT.gz.  
-#  $XFree86: xc/fonts/encodings/large/ksc5601.1992-3.enc,v 1.1 2001/11/02 03:06:39 dawes Exp $
 ALIAS ksx1001.1998-3
 ALIAS ksxjohab-1
 SIZE  0xFA 0xFF

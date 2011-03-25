@@ -1,5 +1,3 @@
-/* $Xorg: fntfilio.h,v 1.4 2001/02/09 02:04:04 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/include/fntfilio.h,v 1.6 2001/10/31 22:50:26 tsi Exp $ */
 
 /*
  * Author:  Keith Packard, MIT X Consortium

@@ -1,5 +1,3 @@
-.\" $Xorg: XtAppGEDB.man,v 1.3 2000/08/17 19:41:58 cpqbld Exp $
-.\"
 .\" Copyright 1993 X Consortium
 .\"
 .\" Permission is hereby granted, free of charge, to any person obtaining
@@ -25,8 +23,6 @@
 .\" not be used in advertising or otherwise to promote the sale, use or
 .\" other dealings in this Software without prior written authorization
 .\" from the X Consortium.
-.\"
-.\" $XFree86: xc/doc/man/Xt/XtAppGEDB.man,v 1.2 2001/01/27 18:20:24 dawes Exp $
 .\"
 .ds tk X Toolkit
 .ds xT X Toolkit Intrinsics \- C Language Interface
@@ -172,8 +168,8 @@ returns the appropriate message from the error database
 or returns the specified default message if one is not found in the
 error database.
 .SH "SEE ALSO"
-XtAppError(3Xt),
-XtAppErrorMsg(3Xt)
+XtAppError(__libmansuffix__),
+XtAppErrorMsg(__libmansuffix__)
 .br
 \fI\*(xT\fP
 .br

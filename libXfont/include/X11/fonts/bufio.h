@@ -1,5 +1,3 @@
-/* $Xorg: bufio.h,v 1.4 2001/02/09 02:04:04 xorgcvs Exp $ */
-
 /*
 
 Copyright 1993, 1998  The Open Group
@@ -27,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/include/bufio.h,v 1.6 2001/07/31 16:44:55 alanh Exp $ */
 
 #ifndef ___BUFIO_H___
 #define ___BUFIO_H___ 1

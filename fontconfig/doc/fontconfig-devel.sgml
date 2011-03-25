@@ -30,9 +30,9 @@
     documentation for any purpose is hereby granted without fee, provided that
     the above copyright notice appear in all copies and that both that
     copyright notice and this permission notice appear in supporting
-    documentation, and that the name of Keith Packard not be used in
+    documentation, and that the name of the author(s) not be used in
     advertising or publicity pertaining to distribution of the software without
-    specific, written prior permission.  Keith Packard makes no
+    specific, written prior permission.  The authors make no
     representations about the suitability of this software for any purpose.  It
     is provided "as is" without express or implied warranty.
    
@@ -65,9 +65,9 @@ Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
 the above copyright notice appear in all copies and that both that
 copyright notice and this permission notice appear in supporting
-documentation, and that the name of Keith Packard not be used in
+documentation, and that the name of the author(s) not be used in
 advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Keith Packard makes no
+specific, written prior permission.  The authors make no
 representations about the suitability of this software for any purpose.  It
 is provided "as is" without express or implied warranty.
 			</simpara><simpara>
@@ -96,7 +96,7 @@ which accepts font patterns and returns the nearest matching font.
   <sect2><title>FONT CONFIGURATION</title>
     <para>
 The configuration module consists of the FcConfig datatype, libexpat and
-FcConfigParse which walks over an XML tree and ammends a configuration with
+FcConfigParse which walks over an XML tree and amends a configuration with
 data found within.  From an external perspective, configuration of the
 library consists of generating a valid XML tree and feeding that to
 FcConfigParse.  The only other mechanism provided to applications for
@@ -126,83 +126,83 @@ simplify and regularize font installation and customization.
 While font patterns may contain essentially any properties, there are some
 well known properties with associated types.  Fontconfig uses some of these
 properties for font matching and font completion.  Others are provided as a
-convenience for the applications rendering mechanism.
+convenience for the application's rendering mechanism.
     </para>
     <programlisting>
                  Property Definitions
 
-    Property       CPP Symbol           Type    Description
+    Property       C Preprocessor Symbol  Type    Description
     ----------------------------------------------------
-    family         FC_FAMILY            String  Font family names
-    familylang     FC_FAMILYLANG        String  Language cooresponding to
-                                                each family name
-    style          FC_STYLE             String  Font style. Overrides weight
-                                                and slant
-    stylelang      FC_STYLELANG         String  Language cooresponding to
-                                                each style name
-    fullname       FC_FULLNAME          String  Font face full name where
-                                                different from family and
-                                                family + style
-    fullnamelang   FC_FULLNAMELANG      String  Language cooresponding to
-                                                each fullname
-    slant          FC_SLANT             Int     Italic, oblique or roman
-    weight         FC_WEIGHT            Int     Light, medium, demibold,
-                                                bold or black
-    size           FC_SIZE              Double  Point size
-    width          FC_WIDTH             Int     Condensed, normal or expanded
-    aspect         FC_ASPECT            Double  Stretches glyphs horizontally
-                                                before hinting
-    pixelsize      FC_PIXEL_SIZE        Double  Pixel size
-    spacing        FC_SPACING           Int     Proportional, dual-width,
-                                                monospace or charcell
-    foundry        FC_FOUNDRY           String  Font foundry name
-    antialias      FC_ANTIALIAS         Bool    Whether glyphs can be
-                                                antialiased
-    hinting        FC_HINTING           Bool    Whether the rasterizer should
-                                                use hinting
-    hintstyle      FC_HINT_STYLE        Int     Automatic hinting style
-    verticallayout FC_VERTICAL_LAYOUT   Bool    Use vertical layout
-    autohint       FC_AUTOHINT          Bool    Use autohinter instead of
-                                                normal hinter
-    globaladvance  FC_GLOBAL_ADVANCE    Bool    Use font global advance data
-    file           FC_FILE              String  The filename holding the font
-    index          FC_INDEX             Int     The index of the font within
-                                                the file
-    ftface         FC_FT_FACE           FT_Face Use the specified FreeType
-                                                face object
-    rasterizer     FC_RASTERIZER        String  Which rasterizer is in use
-    outline        FC_OUTLINE           Bool    Whether the glyphs are outlines
-    scalable       FC_SCALABLE          Bool    Whether glyphs can be scaled
-    scale          FC_SCALE             Double  Scale factor for point->pixel
-                                                conversions
-    dpi            FC_DPI               Double  Target dots per inch
-    rgba           FC_RGBA              Int     unknown, rgb, bgr, vrgb,
-                                                vbgr, none - subpixel geometry
-    lcdfilter      FC_LCD_FILTER        Int     Type of LCD filter
-    minspace       FC_MINSPACE          Bool    Eliminate leading from line
-                                                spacing
-    charset        FC_CHARSET           CharSet Unicode chars encoded by
-                                                the font
-    lang           FC_LANG              LangSet Set of RFC-3066-style
-                                                languages this font supports
-    fontversion    FC_FONTVERSION       Int     Version number of the font
-    capability     FC_CAPABILITY        String  List of layout capabilities in
-                                                the font
-    embolden       FC_EMBOLDEN          Bool    Rasterizer should
-                                                synthetically embolden the font
+    family         FC_FAMILY              String  Font family names
+    familylang     FC_FAMILYLANG          String  Language corresponding to
+                                                  each family name
+    style          FC_STYLE               String  Font style. Overrides weight
+                                                  and slant
+    stylelang      FC_STYLELANG           String  Language corresponding to
+                                                  each style name
+    fullname       FC_FULLNAME            String  Font face full name where
+                                                  different from family and
+                                                  family + style
+    fullnamelang   FC_FULLNAMELANG        String  Language corresponding to
+                                                  each fullname
+    slant          FC_SLANT               Int     Italic, oblique or roman
+    weight         FC_WEIGHT              Int     Light, medium, demibold,
+                                                  bold or black
+    size           FC_SIZE                Double  Point size
+    width          FC_WIDTH               Int     Condensed, normal or expanded
+    aspect         FC_ASPECT              Double  Stretches glyphs horizontally
+                                                  before hinting
+    pixelsize      FC_PIXEL_SIZE          Double  Pixel size
+    spacing        FC_SPACING             Int     Proportional, dual-width,
+                                                  monospace or charcell
+    foundry        FC_FOUNDRY             String  Font foundry name
+    antialias      FC_ANTIALIAS           Bool    Whether glyphs can be
+                                                  antialiased
+    hinting        FC_HINTING             Bool    Whether the rasterizer should
+                                                  use hinting
+    hintstyle      FC_HINT_STYLE          Int     Automatic hinting style
+    verticallayout FC_VERTICAL_LAYOUT     Bool    Use vertical layout
+    autohint       FC_AUTOHINT            Bool    Use autohinter instead of
+                                                  normal hinter
+    globaladvance  FC_GLOBAL_ADVANCE      Bool    Use font global advance data
+    file           FC_FILE                String  The filename holding the font
+    index          FC_INDEX               Int     The index of the font within
+                                                  the file
+    ftface         FC_FT_FACE             FT_Face Use the specified FreeType
+                                                  face object
+    rasterizer     FC_RASTERIZER          String  Which rasterizer is in use
+    outline        FC_OUTLINE             Bool    Whether the glyphs are outlines
+    scalable       FC_SCALABLE            Bool    Whether glyphs can be scaled
+    scale          FC_SCALE               Double  Scale factor for point->pixel
+                                                  conversions
+    dpi            FC_DPI                 Double  Target dots per inch
+    rgba           FC_RGBA                Int     unknown, rgb, bgr, vrgb,
+                                                  vbgr, none - subpixel geometry
+    lcdfilter      FC_LCD_FILTER          Int     Type of LCD filter
+    minspace       FC_MINSPACE            Bool    Eliminate leading from line
+                                                  spacing
+    charset        FC_CHARSET             CharSet Unicode chars encoded by
+                                                  the font
+    lang           FC_LANG                LangSet Set of RFC-3066-style
+                                                  languages this font supports
+    fontversion    FC_FONTVERSION         Int     Version number of the font
+    capability     FC_CAPABILITY          String  List of layout capabilities in
+                                                  the font
+    embolden       FC_EMBOLDEN            Bool    Rasterizer should
+                                                  synthetically embolden the font
     </programlisting>
   </sect2>
 </sect1>
 <sect1><title>Datatypes</title>
   <para>
-Fontconfig uses abstract datatypes to hide internal implementation details
+Fontconfig uses abstract data types to hide internal implementation details
 for most data structures.  A few structures are exposed where appropriate.
   </para>
   <sect2><title>FcChar8, FcChar16, FcChar32, FcBool</title>
     <para>
-These are primitive datatypes; the FcChar* types hold precisely the number
+These are primitive data types; the FcChar* types hold precisely the number
 of bits stated (if supported by the C implementation).  FcBool holds
-one of two CPP symbols: FcFalse or FcTrue.
+one of two C preprocessor symbols: FcFalse or FcTrue.
     </para>
   </sect2>
   <sect2><title>FcMatrix</title>
@@ -218,7 +218,7 @@ A small set of matrix operations are provided to manipulate these.
   </sect2>
   <sect2><title>FcCharSet</title>
     <para>
-An FcCharSet is an abstract type that holds the set of encoded unicode chars
+An FcCharSet is an abstract type that holds the set of encoded Unicode chars
 in a font.  Operations to build and compare these sets are provided.
     </para>
   </sect2>
@@ -378,7 +378,7 @@ public entry points that need global data can take an optional FcConfig*
 argument; passing 0 uses the default configuration.  FcConfig objects hold two
 sets of fonts, the first contains those specified by the configuration, the
 second set holds those added by the application at run-time.  Interfaces
-that need to reference a particulat set use one of the FcSetName enumerated
+that need to reference a particular set use one of the FcSetName enumerated
 values.
     </para>
   </sect2>
@@ -401,13 +401,13 @@ Used as a return type for functions manipulating FcPattern objects.
         FcResultTypeMismatch    Object exists, but the type doesn't match
         FcResultNoId            Object exists, but has fewer values
                                 than specified
-        FcResultOutOfMemory     Malloc failed
+        FcResultOutOfMemory     malloc failed
     </programlisting>
     </para>
   </sect2>
   <sect2><title>FcAtomic</title>
     <para>
-Used for locking access to config files.  Provides a safe way to update
+Used for locking access to configuration files.  Provides a safe way to update
 configuration files.
     </para>
   </sect2>
@@ -423,7 +423,7 @@ included 'fc-cache' program generally suffices for all of that.
 </sect1>
 <sect1><title>FUNCTIONS</title>
   <para>
-These are grouped by functionality, often using the main datatype being
+These are grouped by functionality, often using the main data type being
 manipulated.
   </para>
   <sect2><title>Initialization</title>
@@ -450,7 +450,7 @@ results of listing available fonts.
   <sect2><title>FcObjectSet</title>
     <para>
 An FcObjectSet holds a list of pattern property names; it is used to
-indiciate which properties are to be returned in the patterns from
+indicate which properties are to be returned in the patterns from
 FcFontList.
     </para>
     &fcobjectset;
@@ -475,7 +475,7 @@ typechecking, although that depends on careful programming.
   </sect2>
   <sect2><title>FcCharSet</title>
     <para>
-An FcCharSet is a boolean array indicating a set of unicode chars.  Those
+An FcCharSet is a boolean array indicating a set of Unicode chars.  Those
 associated with a font are marked constant and cannot be edited.
 FcCharSets may be reference counted internally to reduce memory consumption;
 this may be visible to applications as the result of FcCharSetCopy may
@@ -509,7 +509,7 @@ any function using the data within an FcConfig.
   </sect2>
   <sect2><title>FcObjectType</title>
     <para>
-Provides for applcation-specified font name object types so that new
+Provides for application-specified font name object types so that new
 pattern elements can be generated from font names.
     </para>
     &fcobjecttype;
@@ -532,9 +532,9 @@ accurate CharSet for applications.
   </sect2>
   <sect2><title>FcAtomic</title>
     <para>
-These functions provide a safe way to update config files, allowing ongoing
-reading of the old config file while locked for writing and ensuring that a
-consistent and complete version of the config file is always available.
+These functions provide a safe way to update configuration files, allowing ongoing
+reading of the old configuration file while locked for writing and ensuring that a
+consistent and complete version of the configuration file is always available.
     </para>
     &fcatomic;
   </sect2>

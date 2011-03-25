@@ -7,8 +7,6 @@ STARTENCODING iso8859-6.8x
 # - http://www.langbox.com/arabic/FontSet_ISO8859-6-8X.html
 # - http://bugs.xfree86.org/show_bug.cgi?id=420
 # - http://bugzilla.mozilla.org/show_bug.cgi?id=78201
-# $XdotOrg: xc/fonts/encodings/iso8859-6.8x.enc,v 1.2 2003/12/08 15:35:04 dawes Exp $
-# $XFree86$
 STARTMAPPING unicode
 UNDEFINE 0x00 0xFF
 0x8D	0xFEEF

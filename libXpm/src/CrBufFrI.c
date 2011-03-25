@@ -34,8 +34,6 @@
 
 /* October 2004, source code review by Thomas Biege <thomas@suse.de> */
 
-/* $XFree86$ */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

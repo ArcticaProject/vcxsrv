@@ -1,4 +1,3 @@
-/* $Xorg: maprules.c,v 1.4 2000/08/17 19:46:43 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1996 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/lib/xkbfile/maprules.c,v 3.17 2002/11/26 01:43:25 dawes Exp $ */
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>

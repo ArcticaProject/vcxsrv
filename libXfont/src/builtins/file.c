@@ -1,6 +1,4 @@
 /*
- * Id: file.c,v 1.2 1999/11/02 06:16:47 keithp Exp $
- *
  * Copyright 1999 SuSE, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
@@ -22,7 +20,6 @@
  *
  * Author:  Keith Packard, SuSE, Inc.
  */
-/* $XFree86: xc/lib/font/builtins/file.c,v 1.3 1999/12/30 02:29:49 robin Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
