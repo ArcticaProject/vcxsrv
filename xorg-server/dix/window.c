@@ -116,6 +116,7 @@ Equipment Corporation.
 #include "dixstruct.h"
 #include "gcstruct.h"
 #include "servermd.h"
+#include "mivalidate.h"
 #ifdef PANORAMIX
 #include "panoramiX.h"
 #include "panoramiXsrv.h"
@@ -3683,4 +3684,106 @@ WindowParentHasDeviceCursor(WindowPtr pWin,
             return FALSE;
     }
     return FALSE;
+}
+
+/*
+ * SetRootClip --
+ *	Enable or disable rendering to the screen by
+ *	setting the root clip list and revalidating
+ *	all of the windows
+ */
+void
+SetRootClip(ScreenPtr pScreen, Bool enable)
+{
+    WindowPtr	pWin = pScreen->root;
+    WindowPtr	pChild;
+    Bool	WasViewable;
+    Bool	anyMarked = FALSE;
+    WindowPtr   pLayerWin;
+    BoxRec	box;
+
+    if (!pWin)
+	return;
+    WasViewable = (Bool)(pWin->viewable);
+    if (WasViewable)
+    {
+	for (pChild = pWin->firstChild; pChild; pChild = pChild->nextSib)
+	{
+	    (void) (*pScreen->MarkOverlappedWindows)(pChild,
+						     pChild,
+						     &pLayerWin);
+	}
+	(*pScreen->MarkWindow) (pWin);
+	anyMarked = TRUE;
+	if (pWin->valdata)
+	{
+	    if (HasBorder (pWin))
+	    {
+		RegionPtr	borderVisible;
+
+		borderVisible = RegionCreate(NullBox, 1);
+		RegionSubtract(borderVisible,
+				&pWin->borderClip, &pWin->winSize);
+		pWin->valdata->before.borderVisible = borderVisible;
+	    }
+	    pWin->valdata->before.resized = TRUE;
+	}
+    }
+
+    /*
+     * Use REGION_BREAK to avoid optimizations in ValidateTree
+     * that assume the root borderClip can't change well, normally
+     * it doesn't...)
+     */
+    if (enable)
+    {
+	box.x1 = 0;
+	box.y1 = 0;
+	box.x2 = pScreen->width;
+	box.y2 = pScreen->height;
+	RegionInit(&pWin->winSize, &box, 1);
+	RegionInit(&pWin->borderSize, &box, 1);
+	if (WasViewable)
+	    RegionReset(&pWin->borderClip, &box);
+	pWin->drawable.width = pScreen->width;
+	pWin->drawable.height = pScreen->height;
+	RegionBreak(&pWin->clipList);
+    }
+    else
+    {
+	RegionEmpty(&pWin->borderClip);
+	RegionBreak(&pWin->clipList);
+    }
+
+    ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
+
+    if (WasViewable)
+    {
+	if (pWin->firstChild)
+	{
+	    anyMarked |= (*pScreen->MarkOverlappedWindows)(pWin->firstChild,
+							   pWin->firstChild,
+							   (WindowPtr *)NULL);
+	}
+	else
+	{
+	    (*pScreen->MarkWindow) (pWin);
+	    anyMarked = TRUE;
+	}
+
+
+	if (anyMarked)
+	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
+    }
+
+    if (WasViewable)
+    {
+	if (anyMarked)
+	    (*pScreen->HandleExposures)(pWin);
+	if (anyMarked && pScreen->PostValidateTree)
+	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
+    }
+    if (pWin->realized)
+	WindowsRestructured ();   
+    FlushAllOutput();
 }

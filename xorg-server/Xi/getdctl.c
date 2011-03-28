@@ -118,64 +118,6 @@ CopySwapDeviceResolution(ClientPtr client, ValuatorClassPtr v, char *buf,
     }
 }
 
-static void CopySwapDeviceAbsCalib (ClientPtr client, AbsoluteClassPtr dts,
-                                char *buf)
-{
-    char n;
-    xDeviceAbsCalibState *calib = (xDeviceAbsCalibState *) buf;
-
-    calib->control = DEVICE_ABS_CALIB;
-    calib->length = sizeof(xDeviceAbsCalibState);
-    calib->min_x = dts->min_x;
-    calib->max_x = dts->max_x;
-    calib->min_y = dts->min_y;
-    calib->max_y = dts->max_y;
-    calib->flip_x = dts->flip_x;
-    calib->flip_y = dts->flip_y;
-    calib->rotation = dts->rotation;
-    calib->button_threshold = dts->button_threshold;
-
-    if (client->swapped) {
-        swaps(&calib->control, n);
-        swaps(&calib->length, n);
-        swapl(&calib->min_x, n);
-        swapl(&calib->max_x, n);
-        swapl(&calib->min_y, n);
-        swapl(&calib->max_y, n);
-        swapl(&calib->flip_x, n);
-        swapl(&calib->flip_y, n);
-        swapl(&calib->rotation, n);
-        swapl(&calib->button_threshold, n);
-    }
-}
-
-static void CopySwapDeviceAbsArea (ClientPtr client, AbsoluteClassPtr dts,
-                                char *buf)
-{
-    char n;
-    xDeviceAbsAreaState *area = (xDeviceAbsAreaState *) buf;
-
-    area->control = DEVICE_ABS_AREA;
-    area->length = sizeof(xDeviceAbsAreaState);
-    area->offset_x = dts->offset_x;
-    area->offset_y = dts->offset_y;
-    area->width = dts->width;
-    area->height = dts->height;
-    area->screen = dts->screen;
-    area->following = dts->following;
-
-    if (client->swapped) {
-        swaps(&area->control, n);
-        swaps(&area->length, n);
-        swapl(&area->offset_x, n);
-        swapl(&area->offset_y, n);
-        swapl(&area->width, n);
-        swapl(&area->height, n);
-        swapl(&area->screen, n);
-        swapl(&area->following, n);
-    }
-}
-
 static void CopySwapDeviceCore (ClientPtr client, DeviceIntPtr dev, char *buf)
 {
     char n;
@@ -260,17 +202,8 @@ ProcXGetDeviceControl(ClientPtr client)
 	    (3 * sizeof(int) * dev->valuator->numAxes);
 	break;
     case DEVICE_ABS_CALIB:
-        if (!dev->absolute)
-	    return BadMatch;
-
-        total_length = sizeof(xDeviceAbsCalibState);
-        break;
     case DEVICE_ABS_AREA:
-        if (!dev->absolute)
-	    return BadMatch;
-
-        total_length = sizeof(xDeviceAbsAreaState);
-        break;
+        return BadMatch;
     case DEVICE_CORE:
         total_length = sizeof(xDeviceCoreState);
         break;
@@ -290,12 +223,6 @@ ProcXGetDeviceControl(ClientPtr client)
     case DEVICE_RESOLUTION:
 	CopySwapDeviceResolution(client, dev->valuator, buf, total_length);
 	break;
-    case DEVICE_ABS_CALIB:
-        CopySwapDeviceAbsCalib(client, dev->absolute, buf);
-        break;
-    case DEVICE_ABS_AREA:
-        CopySwapDeviceAbsArea(client, dev->absolute, buf);
-        break;
     case DEVICE_CORE:
         CopySwapDeviceCore(client, dev, buf);
         break;

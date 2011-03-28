@@ -184,11 +184,11 @@ static GLint NoOpUnused(void)
 /*@{*/
 #if defined(GLX_USE_TLS)
 
-PUBLIC __thread struct _glapi_table * _glapi_tls_Dispatch
+PUBLIC TLS struct _glapi_table * _glapi_tls_Dispatch
     __attribute__((tls_model("initial-exec")))
     = (struct _glapi_table *) __glapi_noop_table;
 
-PUBLIC __thread void * _glapi_tls_Context
+PUBLIC TLS void * _glapi_tls_Context
     __attribute__((tls_model("initial-exec")));
 
 PUBLIC const struct _glapi_table *_glapi_Dispatch = NULL;

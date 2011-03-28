@@ -63,106 +63,6 @@ winRandRGetInfo (ScreenPtr pScreen, Rotation *pRotations)
   return TRUE;
 }
 
-
-/*
-  Copied from the xfree86 DDX
-
-  Why can't this be in DIX?
-  Does union _Validate vary depending on DDX??
- */
-static void
-xf86SetRootClip (ScreenPtr pScreen, Bool enable)
-{
-    WindowPtr	pWin = pScreen->root;
-    WindowPtr	pChild;
-    Bool	WasViewable = (Bool)(pWin->viewable);
-    Bool	anyMarked = FALSE;
-    WindowPtr   pLayerWin;
-    BoxRec	box;
-
-    if (WasViewable)
-    {
-	for (pChild = pWin->firstChild; pChild; pChild = pChild->nextSib)
-	{
-	    (void) (*pScreen->MarkOverlappedWindows)(pChild,
-						     pChild,
-						     &pLayerWin);
-	}
-	(*pScreen->MarkWindow) (pWin);
-	anyMarked = TRUE;
-	if (pWin->valdata)
-	{
-	    if (HasBorder (pWin))
-	    {
-		RegionPtr	borderVisible;
-
-		borderVisible = REGION_CREATE(pScreen, NullBox, 1);
-		REGION_SUBTRACT(pScreen, borderVisible,
-				&pWin->borderClip, &pWin->winSize);
-		pWin->valdata->before.borderVisible = borderVisible;
-	    }
-	    pWin->valdata->before.resized = TRUE;
-	}
-    }
-
-    /*
-     * Use REGION_BREAK to avoid optimizations in ValidateTree
-     * that assume the root borderClip can't change well, normally
-     * it doesn't...)
-     */
-    if (enable)
-    {
-	box.x1 = 0;
-	box.y1 = 0;
-	box.x2 = pScreen->width;
-	box.y2 = pScreen->height;
-	REGION_INIT (pScreen, &pWin->winSize, &box, 1);
-	REGION_INIT (pScreen, &pWin->borderSize, &box, 1);
-	if (WasViewable)
-	    REGION_RESET(pScreen, &pWin->borderClip, &box);
-	pWin->drawable.width = pScreen->width;
-	pWin->drawable.height = pScreen->height;
-        REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
-    }
-    else
-    {
-	REGION_EMPTY(pScreen, &pWin->borderClip);
-	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
-    }
-
-    ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
-
-    if (WasViewable)
-    {
-	if (pWin->firstChild)
-	{
-	    anyMarked |= (*pScreen->MarkOverlappedWindows)(pWin->firstChild,
-							   pWin->firstChild,
-							   (WindowPtr *)NULL);
-	}
-	else
-	{
-	    (*pScreen->MarkWindow) (pWin);
-	    anyMarked = TRUE;
-	}
-
-
-	if (anyMarked)
-	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
-    }
-
-    if (WasViewable)
-    {
-	if (anyMarked)
-	    (*pScreen->HandleExposures)(pWin);
-	if (anyMarked && pScreen->PostValidateTree)
-	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
-    }
-    if (pWin->realized)
-	WindowsRestructured ();
-    FlushAllOutput ();
-}
-
 /*
 
 */
@@ -178,7 +78,7 @@ winDoRandRScreenSetSize (ScreenPtr  pScreen,
   WindowPtr pRoot = pScreen->root;
 
   // Prevent screen updates while we change things around
-  xf86SetRootClip(pScreen, FALSE);
+  SetRootClip(pScreen, FALSE);
 
   /* Update the screen size as requested */
   pScreenInfo->dwWidth = width;
@@ -205,7 +105,7 @@ winDoRandRScreenSetSize (ScreenPtr  pScreen,
   // does this emit a ConfigureNotify??
 
   // Restore the ability to update screen, now with new dimensions
-  xf86SetRootClip(pScreen, TRUE);
+  SetRootClip(pScreen, TRUE);
 
   // and arrange for it to be repainted
   miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);

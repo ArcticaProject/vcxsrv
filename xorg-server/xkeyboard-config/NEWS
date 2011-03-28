@@ -1,3 +1,6 @@
+2.1.99	Prerelease for 2.2. Major changes in descriptions: for GNOME3 release
+	Some new layouts and models. Translations are not updated.
+	Checking runtime dependencies at build time
 2.1	Bugfixes (13). Updated/new translations. Some new layouts and models.
 2.0	Bugfixes (17). Updated/new translations. Some new layouts and models.
 1.9	Bugfixes (27). Updated/new translations. Some new layouts and models.

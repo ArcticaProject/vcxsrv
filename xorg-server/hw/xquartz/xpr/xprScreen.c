@@ -326,7 +326,9 @@ xprAddScreen(int index, ScreenPtr pScreen)
 #endif
     }
     
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
 have_depth:
+#endif
     switch(depth) {
         case 8: // pseudo-working
             dfb->visuals = PseudoColorMask;

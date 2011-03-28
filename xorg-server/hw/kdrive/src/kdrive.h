@@ -387,9 +387,6 @@ KdStoreColors (ColormapPtr pCmap, int ndef, xColorItem *pdefs);
 extern miPointerScreenFuncRec kdPointerScreenFuncs;
 
 void
-KdSetRootClip (ScreenPtr pScreen, BOOL enable);
-
-void
 KdDisableScreen (ScreenPtr pScreen);
 
 void

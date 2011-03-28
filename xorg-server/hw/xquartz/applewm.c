@@ -437,7 +437,7 @@ ProcAppleWMSetWindowLevel(register ClientPtr client)
 				   DixReadAccess))
         return BadValue;
 
-    if (stuff->level < 0 || stuff->level >= AppleWMNumWindowLevels) {
+    if (stuff->level >= AppleWMNumWindowLevels) {
         return BadValue;
     }
 

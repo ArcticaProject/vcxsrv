@@ -140,9 +140,8 @@ void DetermineClientCmd(pid_t pid, const char **cmdname, const char **cmdargs)
     /* Read the contents of /proc/pid/cmdline. It should contain the
      * process name and arguments. */
     totsize = read(fd, path, sizeof(path));
+    close(fd);
     if (totsize <= 0)
-        return;
-    if (close(fd) < 0)
         return;
     path[totsize - 1] = '\0';
 

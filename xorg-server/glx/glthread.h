@@ -233,7 +233,7 @@ _glthread_SetTSD(_glthread_TSD *, void *);
 
 #if defined(GLX_USE_TLS)
 
-extern __thread struct _glapi_table * _glapi_tls_Dispatch
+extern TLS struct _glapi_table * _glapi_tls_Dispatch
     __attribute__((tls_model("initial-exec")));
 
 #define GET_DISPATCH() _glapi_tls_Dispatch

@@ -2,10 +2,10 @@ if ENABLE_UNIT_TESTS
 if HAVE_GLIB
 if HAVE_LD_WRAP
 SUBDIRS= . xi2
-check_PROGRAMS = xkb input xtest list
+noinst_PROGRAMS = xkb input xtest list
 check_LTLIBRARIES = libxservertest.la
 
-TESTS=$(check_PROGRAMS)
+TESTS=$(noinst_PROGRAMS)
 
 AM_CFLAGS = $(DIX_CFLAGS) $(GLIB_CFLAGS) @XORG_CFLAGS@
 INCLUDES = @XORG_INCS@

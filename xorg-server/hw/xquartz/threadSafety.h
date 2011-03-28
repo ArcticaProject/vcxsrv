@@ -53,4 +53,4 @@ const char *threadSafetyID(pthread_t tid);
 #define TA_APPKIT() 
 #endif
 
-#endif _XQ_THREAD_SAFETY_H_
+#endif /* _XQ_THREAD_SAFETY_H_ */

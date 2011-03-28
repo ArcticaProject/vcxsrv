@@ -626,30 +626,6 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
         classes->proximity = to->proximity;
         to->proximity      = NULL;
     }
-
-    if (from->absolute)
-    {
-        if (!to->absolute)
-        {
-            classes = to->unused_classes;
-            to->absolute = classes->absolute;
-            if (!to->absolute)
-            {
-                to->absolute = calloc(1, sizeof(AbsoluteClassRec));
-                if (!to->absolute)
-                    FatalError("[Xi] no memory for class shift.\n");
-            } else
-                classes->absolute = NULL;
-        }
-        memcpy(to->absolute, from->absolute, sizeof(AbsoluteClassRec));
-        to->absolute->sourceid = from->id;
-    } else if (to->absolute)
-    {
-        ClassesPtr classes;
-        classes = to->unused_classes;
-        classes->absolute = to->absolute;
-        to->absolute      = NULL;
-    }
 }
 
 /**

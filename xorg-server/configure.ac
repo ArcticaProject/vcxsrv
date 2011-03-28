@@ -590,7 +590,10 @@ AC_ARG_ENABLE(aiglx,          AS_HELP_STRING([--enable-aiglx], [Build accelerate
                                 [AIGLX=yes])
 AX_TLS
 AC_ARG_ENABLE(glx-tls,        AS_HELP_STRING([--enable-glx-tls], [Build GLX with TLS support (default: auto)]),
-                                [GLX_USE_TLS=$enableval],
+                                [GLX_USE_TLS=$enableval
+                                 if test "x$GLX_USE_TLS" = "xyes" && test "${ac_cv_tls}" = "none" ; then
+                                   AC_MSG_ERROR([GLX with TLS support requested, but the compiler does not support it.])
+                                 fi],
                                 [GLX_USE_TLS=no
                                  if test "${ac_cv_tls}" != "none" ; then
                                    GLX_USE_TLS=yes

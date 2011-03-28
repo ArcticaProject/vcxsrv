@@ -1336,34 +1336,10 @@ InitPointerAccelerationScheme(DeviceIntPtr dev,
 Bool
 InitAbsoluteClassDeviceStruct(DeviceIntPtr dev)
 {
-    AbsoluteClassPtr abs;
-
-    abs = malloc(sizeof(AbsoluteClassRec));
-    if (!abs)
-        return FALSE;
-
-    /* we don't do anything sensible with these, but should */
-    abs->min_x = NO_AXIS_LIMITS;
-    abs->min_y = NO_AXIS_LIMITS;
-    abs->max_x = NO_AXIS_LIMITS;
-    abs->max_y = NO_AXIS_LIMITS;
-    abs->flip_x = 0;
-    abs->flip_y = 0;
-    abs->rotation = 0;
-    abs->button_threshold = 0;
-
-    abs->offset_x = 0;
-    abs->offset_y = 0;
-    abs->width = NO_AXIS_LIMITS;
-    abs->height = NO_AXIS_LIMITS;
-    abs->following = 0;
-    abs->screen = 0;
-
-    abs->sourceid = dev->id;
-
-    dev->absolute = abs;
-
-    return TRUE;
+    /* This is an API-preserving noop. Instructions: Kill when no more drivers
+     * call it. The infrastructure behind hasn't really been used, so any calls
+     * are likely just a declaration that the device is absolute. */
+    return FALSE;
 }
 
 Bool

@@ -405,10 +405,10 @@ ChangeDeviceControl (ClientPtr client, DeviceIntPtr dev, xDeviceCtl *control)
   if (!pInfo->control_proc) {
       switch (control->control) {
       case DEVICE_CORE:
-          return BadMatch;
-      case DEVICE_RESOLUTION:
       case DEVICE_ABS_CALIB:
       case DEVICE_ABS_AREA:
+          return BadMatch;
+      case DEVICE_RESOLUTION:
       case DEVICE_ENABLE:
         return Success;
       default:
@@ -774,6 +774,8 @@ xf86NewInputDevice(InputInfoPtr pInfo, DeviceIntPtr *pdev, BOOL enable)
         rval = BadName;
         goto unwind;
     }
+
+    xf86Msg(X_INFO, "Using input driver '%s' for '%s'\n", drv->driverName, pInfo->name);
 
     if (!drv->PreInit) {
         xf86Msg(X_ERROR,

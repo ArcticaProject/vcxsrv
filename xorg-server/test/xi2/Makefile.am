@@ -1,7 +1,7 @@
 if ENABLE_UNIT_TESTS
 if HAVE_GLIB
 if HAVE_LD_WRAP
-check_PROGRAMS =  \
+noinst_PROGRAMS =  \
 	protocol-xiqueryversion \
 	protocol-xiquerydevice \
 	protocol-xiselectevents \
@@ -12,7 +12,7 @@ check_PROGRAMS =  \
         protocol-xiwarppointer \
         protocol-eventconvert
 
-TESTS=$(check_PROGRAMS)
+TESTS=$(noinst_PROGRAMS)
 
 AM_CFLAGS = $(DIX_CFLAGS) $(GLIB_CFLAGS) @XORG_CFLAGS@
 INCLUDES = @XORG_INCS@
