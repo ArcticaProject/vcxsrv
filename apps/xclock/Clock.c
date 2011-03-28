@@ -113,7 +113,7 @@ SOFTWARE.
 #include <locale.h>
 extern Boolean no_locale; /* if True, use old (unlocalized) behaviour */
 #endif
-
+#include <unistd.h>
 
 /* Private Definitions */
 

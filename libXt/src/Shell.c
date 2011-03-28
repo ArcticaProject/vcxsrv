@@ -89,6 +89,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #ifdef EDITRES
 #include <X11/Xmu/Editres.h>

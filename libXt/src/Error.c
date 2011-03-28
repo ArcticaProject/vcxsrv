@@ -74,6 +74,7 @@ in this Software without prior written authorization from The Open Group.
 #include "IntrinsicI.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /* The error handlers in the application context aren't used since we can't
    come up with a uniform way of using them.  If you can, define

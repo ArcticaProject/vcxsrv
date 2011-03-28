@@ -48,6 +48,7 @@ from The Open Group.
  */
 
 #include <ctype.h>
+#include <unistd.h>
 
 #ifdef _MSC_VER
 #include <X11\Xwinsock.h>
