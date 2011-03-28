@@ -266,4 +266,5 @@ extern _X_EXPORT void DisableMapUnmapEvents(
 extern _X_EXPORT void EnableMapUnmapEvents(
     WindowPtr /* pWin */ );
 
+extern _X_EXPORT void SetRootClip(ScreenPtr pScreen, Bool enable);
 #endif /* WINDOW_H */

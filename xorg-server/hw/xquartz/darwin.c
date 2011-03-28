@@ -314,7 +314,6 @@ static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
                                     (PtrCtrlProcPtr)NoopDDA,
                                     GetMotionHistorySize(), NAXES,
                                     axes_labels);
-            InitAbsoluteClassDeviceStruct(pPointer);
 //            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
 //            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
             break;
@@ -362,7 +361,6 @@ static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
                                     GetMotionHistorySize(), NAXES,
                                     axes_labels);
             InitProximityClassDeviceStruct(pPointer);
-			InitAbsoluteClassDeviceStruct(pPointer);
 
             InitValuatorAxisStruct(pPointer, 0, axes_labels[0], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
             InitValuatorAxisStruct(pPointer, 1, axes_labels[1], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
@@ -769,113 +767,3 @@ void AbortDDX( void )
     OsAbort();
 }
 
-#include "mivalidate.h" // for union _Validate used by windowstr.h
-#include "windowstr.h"  // for struct _Window
-#include "scrnintstr.h" // for struct _Screen
-
-// This is copied from Xserver/hw/xfree86/common/xf86Helper.c.
-// Quartz mode uses this when switching in and out of Quartz.
-// Quartz or IOKit can use this when waking from sleep.
-// Copyright (c) 1997-1998 by The XFree86 Project, Inc.
-
-/*
- * xf86SetRootClip --
- *	Enable or disable rendering to the screen by
- *	setting the root clip list and revalidating
- *	all of the windows
- */
-
-void
-xf86SetRootClip (ScreenPtr pScreen, int enable)
-{
-    WindowPtr	pWin = pScreen->root;
-    WindowPtr	pChild;
-    Bool	WasViewable = (Bool)(pWin->viewable);
-    Bool	anyMarked = TRUE;
-    RegionPtr	pOldClip = NULL;
-    WindowPtr   pLayerWin;
-    BoxRec	box;
-
-    if (WasViewable)
-    {
-	for (pChild = pWin->firstChild; pChild; pChild = pChild->nextSib)
-	{
-	    (void) (*pScreen->MarkOverlappedWindows)(pChild,
-						     pChild,
-						     &pLayerWin);
-	}
-	(*pScreen->MarkWindow) (pWin);
-	anyMarked = TRUE;
-	if (pWin->valdata)
-	{
-	    if (HasBorder (pWin))
-	    {
-		RegionPtr	borderVisible;
-
-		borderVisible = RegionCreate(NullBox, 1);
-		RegionSubtract(borderVisible,
-				&pWin->borderClip, &pWin->winSize);
-		pWin->valdata->before.borderVisible = borderVisible;
-	    }
-	    pWin->valdata->before.resized = TRUE;
-	}
-    }
-
-    /*
-     * Use REGION_BREAK to avoid optimizations in ValidateTree
-     * that assume the root borderClip can't change well, normally
-     * it doesn't...)
-     */
-    if (enable)
-    {
-	box.x1 = 0;
-	box.y1 = 0;
-	box.x2 = pScreen->width;
-	box.y2 = pScreen->height;
-	RegionReset(&pWin->borderClip, &box);
-	RegionBreak(&pWin->clipList);
-    }
-    else
-    {
-	RegionEmpty(&pWin->borderClip);
-	RegionBreak(&pWin->clipList);
-    }
-
-    ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
-
-    if (WasViewable)
-    {
-	if (pWin->backStorage)
-	{
-	    pOldClip = RegionCreate(NullBox, 1);
-	    RegionCopy(pOldClip, &pWin->clipList);
-	}
-
-	if (pWin->firstChild)
-	{
-	    anyMarked |= (*pScreen->MarkOverlappedWindows)(pWin->firstChild,
-							   pWin->firstChild,
-							   (WindowPtr *)NULL);
-	}
-	else
-	{
-	    (*pScreen->MarkWindow) (pWin);
-	    anyMarked = TRUE;
-	}
-
-
-	if (anyMarked)
-	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
-    }
-
-    if (WasViewable)
-    {
-	if (anyMarked)
-	    (*pScreen->HandleExposures)(pWin);
-	if (anyMarked && pScreen->PostValidateTree)
-	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
-    }
-    if (pWin->realized)
-	WindowsRestructured ();
-    FlushAllOutput ();
-}

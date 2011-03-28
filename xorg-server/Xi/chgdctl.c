@@ -76,8 +76,6 @@ SProcXChangeDeviceControl(ClientPtr client)
 {
     char n;
     xDeviceCtl *ctl;
-    xDeviceAbsCalibCtl *calib;
-    xDeviceAbsAreaCtl *area;
 
     REQUEST(xChangeDeviceControlReq);
     swaps(&stuff->length, n);
@@ -88,26 +86,7 @@ SProcXChangeDeviceControl(ClientPtr client)
     swaps(&ctl->length, n);
     switch(stuff->control) {
         case DEVICE_ABS_CALIB:
-            calib = (xDeviceAbsCalibCtl*)ctl;
-            swaps(&calib->length, n);
-            swapl(&calib->min_x, n);
-            swapl(&calib->max_x, n);
-            swapl(&calib->min_y, n);
-            swapl(&calib->max_y, n);
-            swapl(&calib->flip_x, n);
-            swapl(&calib->flip_y, n);
-            swapl(&calib->rotation, n);
-            swapl(&calib->button_threshold, n);
-            break;
         case DEVICE_ABS_AREA:
-            area = (xDeviceAbsAreaCtl*)ctl;
-            swapl(&area->offset_x, n);
-            swapl(&area->offset_y, n);
-            swapl(&area->width, n);
-            swapl(&area->height, n);
-            swapl(&area->screen, n);
-            swapl(&area->following, n);
-            break;
         case DEVICE_CORE:
         case DEVICE_ENABLE:
         case DEVICE_RESOLUTION:
@@ -134,8 +113,6 @@ ProcXChangeDeviceControl(ClientPtr client)
     xChangeDeviceControlReply rep;
     AxisInfoPtr a;
     CARD32 *resolution;
-    xDeviceAbsCalibCtl *calib;
-    xDeviceAbsAreaCtl *area;
     xDeviceEnableCtl *e;
     devicePresenceNotify dpn;
 
@@ -193,53 +170,10 @@ ProcXChangeDeviceControl(ClientPtr client)
 	}
 	break;
     case DEVICE_ABS_CALIB:
-        calib = (xDeviceAbsCalibCtl *)&stuff[1];
-
-        if (calib->button_threshold < 0 || calib->button_threshold > 255) {
-            ret = BadValue;
-            goto out;
-        }
-
-        status = ChangeDeviceControl(client, dev, (xDeviceCtl *) calib);
-
-        if (status == Success) {
-            dev->absolute->min_x = calib->min_x;
-            dev->absolute->max_x = calib->max_x;
-            dev->absolute->min_y = calib->min_y;
-            dev->absolute->max_y = calib->max_y;
-            dev->absolute->flip_x = calib->flip_x;
-            dev->absolute->flip_y = calib->flip_y;
-            dev->absolute->rotation = calib->rotation;
-            dev->absolute->button_threshold = calib->button_threshold;
-            ret = Success;
-        } else if (status == DeviceBusy || status == BadValue) {
-            rep.status = status;
-            ret = Success;
-        } else {
-            ret = BadMatch;
-        }
-
-        break;
     case DEVICE_ABS_AREA:
-        area = (xDeviceAbsAreaCtl *)&stuff[1];
-
-        status = ChangeDeviceControl(client, dev, (xDeviceCtl *) area);
-
-        if (status == Success) {
-            dev->absolute->offset_x = area->offset_x;
-            dev->absolute->offset_y = area->offset_y;
-            dev->absolute->width = area->width;
-            dev->absolute->height = area->height;
-            dev->absolute->screen = area->screen;
-            dev->absolute->following = area->following;
-            ret = Success;
-        } else if (status == DeviceBusy || status == BadValue) {
-            rep.status = status;
-            ret = Success;
-        } else {
-            ret = Success;
-        }
-
+        /* Calibration is now done through properties, and never had any effect
+         * on anything (in the open-source world). Thus, be honest. */
+        ret = BadMatch;
         break;
     case DEVICE_CORE:
         /* Sorry, no device core switching no more. If you want a device to

@@ -442,7 +442,7 @@ void QuartzSetRootClip(
 
     for (i = 0; i < screenInfo.numScreens; i++) {
         if (screenInfo.screens[i]) {
-            xf86SetRootClip(screenInfo.screens[i], enable);
+            SetRootClip(screenInfo.screens[i], enable);
         }
     }
 }

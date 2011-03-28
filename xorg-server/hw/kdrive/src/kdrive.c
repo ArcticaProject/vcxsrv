@@ -92,95 +92,6 @@ static Bool         kdCaughtSignal = FALSE;
 KdOsFuncs	*kdOsFuncs;
 
 void
-KdSetRootClip (ScreenPtr pScreen, BOOL enable)
-{
-    WindowPtr	pWin = pScreen->root;
-    WindowPtr	pChild;
-    Bool	WasViewable;
-    Bool	anyMarked = FALSE;
-    WindowPtr   pLayerWin;
-    BoxRec	box;
-
-    if (!pWin)
-	return;
-    WasViewable = (Bool)(pWin->viewable);
-    if (WasViewable)
-    {
-	for (pChild = pWin->firstChild; pChild; pChild = pChild->nextSib)
-	{
-	    (void) (*pScreen->MarkOverlappedWindows)(pChild,
-						     pChild,
-						     &pLayerWin);
-	}
-	(*pScreen->MarkWindow) (pWin);
-	anyMarked = TRUE;
-	if (pWin->valdata)
-	{
-	    if (HasBorder (pWin))
-	    {
-		RegionPtr	borderVisible;
-
-		borderVisible = RegionCreate(NullBox, 1);
-		RegionSubtract(borderVisible,
-				&pWin->borderClip, &pWin->winSize);
-		pWin->valdata->before.borderVisible = borderVisible;
-	    }
-	    pWin->valdata->before.resized = TRUE;
-	}
-    }
-
-    if (enable)
-    {
-	box.x1 = 0;
-	box.y1 = 0;
-	box.x2 = pScreen->width;
-	box.y2 = pScreen->height;
-	pWin->drawable.width = pScreen->width;
-	pWin->drawable.height = pScreen->height;
-	RegionInit(&pWin->winSize, &box, 1);
-	RegionInit(&pWin->borderSize, &box, 1);
-	RegionReset(&pWin->borderClip, &box);
-	RegionBreak(&pWin->clipList);
-    }
-    else
-    {
-	RegionEmpty(&pWin->borderClip);
-	RegionBreak(&pWin->clipList);
-    }
-
-    ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
-
-    if (WasViewable)
-    {
-	if (pWin->firstChild)
-	{
-	    anyMarked |= (*pScreen->MarkOverlappedWindows)(pWin->firstChild,
-							   pWin->firstChild,
-							   (WindowPtr *)NULL);
-	}
-	else
-	{
-	    (*pScreen->MarkWindow) (pWin);
-	    anyMarked = TRUE;
-	}
-
-
-	if (anyMarked)
-	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
-    }
-
-    if (WasViewable)
-    {
-	if (anyMarked)
-	    (*pScreen->HandleExposures)(pWin);
-	if (anyMarked && pScreen->PostValidateTree)
-	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
-    }
-    if (pWin->realized)
-	WindowsRestructured ();
-}
-
-void
 KdDisableScreen (ScreenPtr pScreen)
 {
     KdScreenPriv(pScreen);
@@ -188,7 +99,7 @@ KdDisableScreen (ScreenPtr pScreen)
     if (!pScreenPriv->enabled)
 	return;
     if (!pScreenPriv->closed)
-	KdSetRootClip (pScreen, FALSE);
+	SetRootClip (pScreen, FALSE);
     KdDisableColormap (pScreen);
     if (!pScreenPriv->screen->dumb && pScreenPriv->card->cfuncs->disableAccel)
 	(*pScreenPriv->card->cfuncs->disableAccel) (pScreen);
@@ -271,7 +182,7 @@ KdEnableScreen (ScreenPtr pScreen)
     if (!pScreenPriv->screen->dumb && pScreenPriv->card->cfuncs->enableAccel)
 	(*pScreenPriv->card->cfuncs->enableAccel) (pScreen);
     KdEnableColormap (pScreen);
-    KdSetRootClip (pScreen, TRUE);
+    SetRootClip (pScreen, TRUE);
     if (pScreenPriv->card->cfuncs->dpms)
 	(*pScreenPriv->card->cfuncs->dpms) (pScreen, pScreenPriv->dpmsState);
     return TRUE;

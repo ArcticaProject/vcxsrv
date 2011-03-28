@@ -48,8 +48,6 @@
 #endif
 #include <xkbsrv.h>
 
-void xf86SetRootClip (ScreenPtr pScreen, Bool enable);
-
 /*
  * Global variables
  */
@@ -325,7 +323,7 @@ winWindowProc (HWND hwnd, UINT message,
               /* Update the screen pixmap to point to the new framebuffer */
               winUpdateFBPointer(s_pScreen, s_pScreenPriv->pScreenInfo->pfb);
               // Restore the ability to update screen, now with new dimensions
-              xf86SetRootClip(s_pScreen, TRUE);
+              SetRootClip(s_pScreen, TRUE);
 
               // and arrange for it to be repainted
               miPaintWindow(s_pScreen->root, &s_pScreen->root->borderClip,  PW_BACKGROUND);

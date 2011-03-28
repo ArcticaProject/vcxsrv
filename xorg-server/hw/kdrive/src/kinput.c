@@ -497,7 +497,6 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
         free(axes_labels);
 
         if (pi->inputClass == KD_TOUCHSCREEN) {
-            InitAbsoluteClassDeviceStruct(pDevice);
             xiclass = AtomFromName(XI_TOUCHSCREEN);
         }
         else {
@@ -2229,8 +2228,6 @@ ChangeDeviceControl(register ClientPtr client, DeviceIntPtr pDev,
 
     case DEVICE_ABS_CALIB:
     case DEVICE_ABS_AREA:
-        return Success;
-
     case DEVICE_CORE:
         return BadMatch;
     case DEVICE_ENABLE:
