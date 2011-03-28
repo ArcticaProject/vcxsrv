@@ -1,5 +1,3 @@
-/* $Xorg: MultiSink.h,v 1.4 2001/02/09 02:03:44 xorgcvs Exp $ */
-
 /*
  * Copyright 1991 by OMRON Corporation
  *
@@ -70,7 +68,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/MultiSink.h,v 1.5 2001/01/17 19:42:27 dawes Exp $ */
 
 #ifndef _XawMultiSink_h
 #define _XawMultiSink_h

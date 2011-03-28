@@ -77,10 +77,10 @@ struct _glapi_table;
 
 #if defined (GLX_USE_TLS)
 
-_GLAPI_EXPORT extern TLS struct _glapi_table * _glapi_tls_Dispatch
+_GLAPI_EXPORT extern __thread struct _glapi_table * _glapi_tls_Dispatch
     __attribute__((tls_model("initial-exec")));
 
-_GLAPI_EXPORT extern TLS void * _glapi_tls_Context
+_GLAPI_EXPORT extern __thread void * _glapi_tls_Context
     __attribute__((tls_model("initial-exec")));
 
 _GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;

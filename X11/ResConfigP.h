@@ -1,4 +1,3 @@
-/* $Xorg: ResConfigP.h,v 1.5 2001/02/09 02:03:56 xorgcvs Exp $ */
 /*
 
 Copyright 1987, 1988, 1998  The Open Group
@@ -52,7 +51,6 @@ dealings in this Software without prior written authorization from the IBM
 Corporation.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xt/ResConfigP.h,v 3.7 2001/12/20 19:40:59 tsi Exp $ */
 
 #ifndef _RESCONFIGP_H
 #define _RESCONFIGP_H

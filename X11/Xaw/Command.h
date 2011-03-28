@@ -1,5 +1,3 @@
-/* $Xorg: Command.h,v 1.4 2001/02/09 02:03:43 xorgcvs Exp $ */
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -46,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/Command.h,v 1.5 2001/01/17 19:42:26 dawes Exp $ */
 
 #ifndef _XawCommand_h
 #define _XawCommand_h

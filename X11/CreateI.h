@@ -1,5 +1,3 @@
-/* $XFree86$ */
-
 #ifndef _XtcreateI_h
 #define _XtcreateI_h
 

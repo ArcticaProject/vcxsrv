@@ -1,8 +1,5 @@
 /***********************************************************
 
-  $Xorg: PanedP.h,v 1.4 2001/02/09 02:03:45 xorgcvs Exp $
-
-
 Copyright 1987, 1988, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -47,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/PanedP.h,v 1.7 2001/01/17 19:42:28 dawes Exp $ */
 
 /*
  * Updated and significantly modified from the Athena VPaned Widget.

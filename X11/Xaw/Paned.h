@@ -1,8 +1,3 @@
-/*
-* $Xorg: Paned.h,v 1.5 2001/02/09 02:03:45 xorgcvs Exp $
-*/
-
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -49,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/Paned.h,v 1.6 2001/01/17 19:42:28 dawes Exp $ */
 
 /*
  * Paned.h - Paned Composite Widget's public header file.

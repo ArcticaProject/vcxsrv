@@ -1,8 +1,3 @@
-/*
-* $Xorg: BoxP.h,v 1.4 2001/02/09 02:03:43 xorgcvs Exp $
-*/
-
-
 /***********************************************************
 
 Copyright 1987, 1988, 1994, 1998  The Open Group
@@ -49,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/Xaw/BoxP.h,v 1.10 2001/01/17 19:42:25 dawes Exp $ */
 
 #ifndef _XawBoxP_h
 #define _XawBoxP_h
