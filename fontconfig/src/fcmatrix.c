@@ -30,10 +30,10 @@
 const FcMatrix    FcIdentityMatrix = { 1, 0, 0, 1 };
 
 FcMatrix *
-FcMatrixCopy (const FcMatrix *mat) 
+FcMatrixCopy (const FcMatrix *mat)
 {
     FcMatrix *r;
-    if(!mat) 
+    if(!mat)
 	return 0;
     r = (FcMatrix *) malloc (sizeof (*r) );
     if (!r)
@@ -58,7 +58,7 @@ FcMatrixEqual (const FcMatrix *mat1, const FcMatrix *mat2)
 {
     if(mat1 == mat2) return FcTrue;
     if(mat1 == 0 || mat2 == 0) return FcFalse;
-    return mat1->xx == mat2->xx && 
+    return mat1->xx == mat2->xx &&
 	   mat1->xy == mat2->xy &&
 	   mat1->yx == mat2->yx &&
 	   mat1->yy == mat2->yy;

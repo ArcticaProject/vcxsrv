@@ -50,5 +50,5 @@ FcFreeTypePrivateToUcs4 (FcChar32 private, const FcCharMap *map);
 
 FcPrivate const FcCharMap *
 FcFreeTypeGetPrivateMap (FT_Encoding encoding);
-    
+
 #endif /* _FCFTINT_H_ */
