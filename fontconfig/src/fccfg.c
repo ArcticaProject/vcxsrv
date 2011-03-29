@@ -1689,10 +1689,19 @@ static FcChar8 *
 FcConfigFileExists (const FcChar8 *dir, const FcChar8 *file)
 {
     FcChar8    *path;
+    int         size;
 
     if (!dir)
 	dir = (FcChar8 *) "";
-    path = malloc (strlen ((char *) dir) + 1 + strlen ((char *) file) + 1);
+
+    size = strlen ((char *) dir) + 1 + strlen ((char *) file) + 1;
+    /*
+     * workaround valgrind warning because glibc takes advantage of how it knows memory is
+     * allocated to implement strlen by reading in groups of 4
+     */
+    size = (size + 3) & ~3;
+
+    path = malloc (size);
     if (!path)
 	return 0;
 
@@ -1711,7 +1720,7 @@ FcConfigFileExists (const FcChar8 *dir, const FcChar8 *file)
 #endif
     strcat ((char *) path, (char *) file);
 
-    FcMemAlloc (FC_MEM_STRING, strlen ((char *) path) + 1);
+    FcMemAlloc (FC_MEM_STRING, size);
     if (access ((char *) path, R_OK) == 0)
 	return path;
 

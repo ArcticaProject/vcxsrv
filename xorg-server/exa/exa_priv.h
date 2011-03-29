@@ -228,10 +228,10 @@ extern DevPrivateKeyRec exaPixmapPrivateKeyRec;
 extern DevPrivateKeyRec exaGCPrivateKeyRec;
 #define exaGCPrivateKey (&exaGCPrivateKeyRec)
 
-#define ExaGetScreenPriv(s) ((ExaScreenPrivPtr)dixLookupPrivate(&(s)->devPrivates, exaScreenPrivateKey))
+#define ExaGetScreenPriv(s) ((ExaScreenPrivPtr)dixGetPrivate(&(s)->devPrivates, exaScreenPrivateKey))
 #define ExaScreenPriv(s)	ExaScreenPrivPtr    pExaScr = ExaGetScreenPriv(s)
 
-#define ExaGetGCPriv(gc) ((ExaGCPrivPtr)dixLookupPrivate(&(gc)->devPrivates, exaGCPrivateKey))
+#define ExaGetGCPriv(gc) ((ExaGCPrivPtr)dixGetPrivateAddr(&(gc)->devPrivates, exaGCPrivateKey))
 #define ExaGCPriv(gc) ExaGCPrivPtr pExaGC = ExaGetGCPriv(gc)
 
 /*
@@ -282,8 +282,7 @@ extern DevPrivateKeyRec exaGCPrivateKeyRec;
 #define EXA_PIXMAP_SCORE_PINNED	    1000
 #define EXA_PIXMAP_SCORE_INIT	    1001
 
-#define ExaGetPixmapPriv(p) ((ExaPixmapPrivPtr)dixLookupPrivate(&(p)->devPrivates, exaPixmapPrivateKey))
-#define ExaSetPixmapPriv(p,a) dixSetPrivate(&(p)->devPrivates, exaPixmapPrivateKey, a)
+#define ExaGetPixmapPriv(p) ((ExaPixmapPrivPtr)dixGetPrivateAddr(&(p)->devPrivates, exaPixmapPrivateKey))
 #define ExaPixmapPriv(p)	ExaPixmapPrivPtr pExaPixmap = ExaGetPixmapPriv(p)
 
 #define EXA_RANGE_PITCH (1 << 0)
