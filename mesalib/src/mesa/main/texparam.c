@@ -38,6 +38,7 @@
 #include "main/macros.h"
 #include "main/mfeatures.h"
 #include "main/mtypes.h"
+#include "main/state.h"
 #include "main/texcompress.h"
 #include "main/texparam.h"
 #include "main/teximage.h"
@@ -533,10 +534,18 @@ set_tex_parameterf(struct gl_context *ctx,
 
    case GL_TEXTURE_BORDER_COLOR:
       flush(ctx);
-      texObj->BorderColor.f[RCOMP] = params[0];
-      texObj->BorderColor.f[GCOMP] = params[1];
-      texObj->BorderColor.f[BCOMP] = params[2];
-      texObj->BorderColor.f[ACOMP] = params[3];
+      /* ARB_texture_float disables clamping */
+      if (ctx->Extensions.ARB_texture_float) {
+         texObj->BorderColor.f[RCOMP] = params[0];
+         texObj->BorderColor.f[GCOMP] = params[1];
+         texObj->BorderColor.f[BCOMP] = params[2];
+         texObj->BorderColor.f[ACOMP] = params[3];
+      } else {
+         texObj->BorderColor.f[RCOMP] = CLAMP(params[0], 0.0F, 1.0F);
+         texObj->BorderColor.f[GCOMP] = CLAMP(params[1], 0.0F, 1.0F);
+         texObj->BorderColor.f[BCOMP] = CLAMP(params[2], 0.0F, 1.0F);
+         texObj->BorderColor.f[ACOMP] = CLAMP(params[3], 0.0F, 1.0F);
+      }
       return GL_TRUE;
 
    default:
@@ -1107,10 +1116,22 @@ _mesa_GetTexParameterfv( GLenum target, GLenum pname, GLfloat *params )
          *params = ENUM_TO_FLOAT(obj->WrapR);
          break;
       case GL_TEXTURE_BORDER_COLOR:
-         params[0] = CLAMP(obj->BorderColor.f[0], 0.0F, 1.0F);
-         params[1] = CLAMP(obj->BorderColor.f[1], 0.0F, 1.0F);
-         params[2] = CLAMP(obj->BorderColor.f[2], 0.0F, 1.0F);
-         params[3] = CLAMP(obj->BorderColor.f[3], 0.0F, 1.0F);
+         if(ctx->NewState & (_NEW_BUFFERS | _NEW_FRAG_CLAMP))
+            _mesa_update_state_locked(ctx);
+         if(ctx->Color._ClampFragmentColor)
+         {
+            params[0] = CLAMP(obj->BorderColor.f[0], 0.0F, 1.0F);
+            params[1] = CLAMP(obj->BorderColor.f[1], 0.0F, 1.0F);
+            params[2] = CLAMP(obj->BorderColor.f[2], 0.0F, 1.0F);
+            params[3] = CLAMP(obj->BorderColor.f[3], 0.0F, 1.0F);
+         }
+         else
+         {
+            params[0] = obj->BorderColor.f[0];
+            params[1] = obj->BorderColor.f[1];
+            params[2] = obj->BorderColor.f[2];
+            params[3] = obj->BorderColor.f[3];
+         }
          break;
       case GL_TEXTURE_RESIDENT:
          {
