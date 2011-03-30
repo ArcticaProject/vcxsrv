@@ -66,7 +66,7 @@ typedef XID GLXDrawable;
 
 typedef struct __GLXclientStateRec __GLXclientState;
 typedef struct __GLXdrawable __GLXdrawable;
-typedef struct glx_context glx_context;
+typedef struct __GLXcontext __GLXcontext;
 
 #include "glxscreens.h"
 #include "glxdrawable.h"
@@ -94,20 +94,10 @@ void __glXScreenInitVisuals(__GLXscreen *screen);
 /*
 ** The last context used (from the server's persective) is cached.
 */
-extern struct glx_context *__glXLastContext;
-extern struct glx_context *__glXForceCurrent(__GLXclientState*, GLXContextTag, int*);
-
-extern ClientPtr __pGlxClient;
+extern __GLXcontext *__glXLastContext;
+extern __GLXcontext *__glXForceCurrent(__GLXclientState*, GLXContextTag, int*);
 
 int __glXError(int error);
-
-/*
-** Macros to set, unset, and retrieve the flag that says whether a context
-** has unflushed commands.
-*/
-#define __GLX_NOTE_UNFLUSHED_CMDS(glxc) glxc->hasUnflushedCommands = GL_TRUE
-#define __GLX_NOTE_FLUSHED_CMDS(glxc) glxc->hasUnflushedCommands = GL_FALSE
-#define __GLX_HAS_UNFLUSHED_CMDS(glxc) (glxc->hasUnflushedCommands)
 
 /************************************************************************/
 
@@ -158,13 +148,6 @@ struct __GLXclientStateRec {
     GLint largeCmdRequestsTotal;	/* total requests expected	*/
     GLbyte *largeCmdBuf;
     GLint largeCmdBufSize;
-
-    /*
-    ** Keep a list of all the contexts that are current for this client's
-    ** threads.
-    */
-    struct glx_context **currentContexts;
-    GLint numCurrentContexts;
 
     /* Back pointer to X client record */
     ClientPtr client;

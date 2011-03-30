@@ -37,25 +37,23 @@
 
 typedef struct __GLXtextureFromPixmap __GLXtextureFromPixmap;
 struct __GLXtextureFromPixmap {
-    int (*bindTexImage)		(struct glx_context  *baseContext,
+    int (*bindTexImage)		(__GLXcontext  *baseContext,
 				 int            buffer,
 				 __GLXdrawable *pixmap);
-    int (*releaseTexImage)	(struct glx_context  *baseContext,
+    int (*releaseTexImage)	(__GLXcontext  *baseContext,
 				 int            buffer,
 				 __GLXdrawable *pixmap);
 };
 
 
-struct glx_context {
-    void           (*destroy)       (struct glx_context *context);
-    int            (*makeCurrent)   (struct glx_context *context);
-    int            (*loseCurrent)   (struct glx_context *context);
-    int            (*copy)          (struct glx_context *dst,
-				     struct glx_context *src,
+struct __GLXcontext {
+    void           (*destroy)       (__GLXcontext *context);
+    int            (*makeCurrent)   (__GLXcontext *context);
+    int            (*loseCurrent)   (__GLXcontext *context);
+    int            (*copy)          (__GLXcontext *dst,
+				     __GLXcontext *src,
 				     unsigned long mask);
-    int            (*forceCurrent)  (struct glx_context *context);
-
-    Bool           (*wait)          (struct glx_context *context,
+    Bool           (*wait)          (__GLXcontext *context,
 				     __GLXclientState *cl,
 				     int *error);
 
@@ -64,8 +62,8 @@ struct glx_context {
     /*
     ** list of context structs
     */
-    struct glx_context *last;
-    struct glx_context *next;
+    __GLXcontext *last;
+    __GLXcontext *next;
 
     /*
     ** config struct for this context
@@ -128,6 +126,6 @@ struct glx_context {
     __GLXdrawable *readPriv;
 };
 
-void __glXContextDestroy(struct glx_context *context);
+void __glXContextDestroy(__GLXcontext *context);
 
 #endif /* !__GLX_context_h__ */

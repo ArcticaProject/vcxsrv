@@ -115,9 +115,9 @@ typedef struct __GLXscreen __GLXscreen;
 struct __GLXscreen {
     void          (*destroy)       (__GLXscreen *screen);
 
-    struct glx_context *(*createContext) (__GLXscreen *screen,
+    __GLXcontext *(*createContext) (__GLXscreen *screen,
 				    __GLXconfig *modes,
-				    struct glx_context *shareContext);
+				    __GLXcontext *shareContext);
 
     __GLXdrawable *(*createDrawable)(ClientPtr client,
 				     __GLXscreen *context,
@@ -142,6 +142,7 @@ struct __GLXscreen {
     char *GLextensions;
 
     char *GLXvendor;
+    char *GLXversion;
     char *GLXextensions;
 
     /**

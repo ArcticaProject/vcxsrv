@@ -174,7 +174,6 @@ static __GLXdrawable * __glXAquaScreenCreateDrawable(ClientPtr client, __GLXscre
 static void __glXAquaContextDestroy(__GLXcontext *baseContext);
 static int __glXAquaContextMakeCurrent(__GLXcontext *baseContext);
 static int __glXAquaContextLoseCurrent(__GLXcontext *baseContext);
-static int __glXAquaContextForceCurrent(__GLXcontext *baseContext);
 static int __glXAquaContextCopy(__GLXcontext *baseDst, __GLXcontext *baseSrc, unsigned long mask);
 
 static CGLPixelFormatObj makeFormat(__GLXconfig *conf);
@@ -235,7 +234,6 @@ __glXAquaScreenCreateContext(__GLXscreen *screen,
     context->base.makeCurrent    = __glXAquaContextMakeCurrent;
     context->base.loseCurrent    = __glXAquaContextLoseCurrent;
     context->base.copy           = __glXAquaContextCopy;
-    context->base.forceCurrent   = __glXAquaContextForceCurrent;
     /*FIXME verify that the context->base is fully initialized. */
     
     context->pixelFormat = makeFormat(conf);
@@ -458,19 +456,6 @@ static int __glXAquaContextCopy(__GLXcontext *baseDst, __GLXcontext *baseSrc, un
     return gl_err == 0;
 }
 
-static int __glXAquaContextForceCurrent(__GLXcontext *baseContext)
-{
-    CGLError gl_err;
-    __GLXAquaContext *context = (__GLXAquaContext *) baseContext;
-    GLAQUA_DEBUG_MSG("glAquaForceCurrent (ctx %p)\n", context->ctx);
-
-    gl_err = CGLSetCurrentContext(context->ctx);
-    if (gl_err != 0)
-        ErrorF("CGLSetCurrentContext error: %s\n", CGLErrorString(gl_err));
-
-    return gl_err == 0;
-}
-
 /* Drawing surface notification callbacks */
 static GLboolean __glXAquaDrawableSwapBuffers(ClientPtr client, __GLXdrawable *base) {
     CGLError err;
@@ -681,17 +666,8 @@ GLuint __glFloorLog2(GLuint val)
     return c;
 }
 
-void warn_func(void * p1, char *format, ...) {
-    va_list v;
-    va_start(v, format);
-    vfprintf(stderr, format, v);
-    va_end(v);
-}
-
 static void setup_dispatch_table(void) {
     struct _glapi_table *disp=_glapi_get_dispatch();
-    _glapi_set_warning_func((_glapi_warning_func)warn_func);
-    _glapi_noop_enable_warnings(TRUE);
 
     /* to update:
      * for f in $(grep 'define SET_' ../../../glx/dispatch.h  | cut -f2 -d' ' | cut -f1 -d\( | sort -u); do grep -q $f indirect.c || echo $f ; done | grep -v by_offset | sed 's:SET_\(.*\)$:SET_\1(disp, gl\1)\;:' | pbcopy

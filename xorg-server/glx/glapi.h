@@ -39,6 +39,8 @@
  * This module is intended to be non-Mesa-specific so it can be used
  * with the X/DRI libGL also.
  */
+
+
 #ifndef _GLAPI_H
 #define _GLAPI_H
 
@@ -58,36 +60,48 @@
 #  endif
 #endif /* _GLAPI_NO_EXPORTS */
 
+#include "GL/gl.h"
+#include "GL/glext.h"
+#include "glthread.h"
 
-/* Is this needed?  It is incomplete anyway. */
-#ifdef USE_MGL_NAMESPACE
+
+struct _glapi_table;
+
+typedef void (*_glapi_proc)(void); /* generic function pointer */
+
+typedef void (*_glapi_warning_func)(void *ctx, const char *str, ...);
+
+
+#if defined(USE_MGL_NAMESPACE)
 #define _glapi_set_dispatch _mglapi_set_dispatch
 #define _glapi_get_dispatch _mglapi_get_dispatch
 #define _glapi_set_context _mglapi_set_context
 #define _glapi_get_context _mglapi_get_context
-#define _glapi_Dispatch _mglapi_Dispatch
 #define _glapi_Context _mglapi_Context
+#define _glapi_Dispatch _mglapi_Dispatch
 #endif
 
-#include "glthread.h"
 
-typedef void (*_glapi_proc)(void);
-struct _glapi_table;
+/*
+ * Number of extension functions which we can dynamically add at runtime.
+ */
+#define MAX_EXTENSION_FUNCS 300
 
 
+/**
+ ** Define the GET_CURRENT_CONTEXT() macro.
+ ** \param C local variable which will hold the current context.
+ **/
 #if defined (GLX_USE_TLS)
 
-_GLAPI_EXPORT extern __thread struct _glapi_table * _glapi_tls_Dispatch
-    __attribute__((tls_model("initial-exec")));
+
+_GLAPI_EXPORT extern const void *_glapi_Context;
+_GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
 
 _GLAPI_EXPORT extern __thread void * _glapi_tls_Context
     __attribute__((tls_model("initial-exec")));
 
-_GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
-_GLAPI_EXPORT extern const void *_glapi_Context;
-
-# define GET_DISPATCH() _glapi_tls_Dispatch
-# define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_tls_Context
+# define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_tls_Context
 
 #else
 
@@ -97,30 +111,21 @@ _GLAPI_EXPORT extern const void *_glapi_Context;
 #define SERVEXTERN _declspec(dllexport)
 #endif
 
-SERVEXTERN struct _glapi_table *_glapi_Dispatch;
 SERVEXTERN void *_glapi_Context;
+SERVEXTERN struct _glapi_table *_glapi_Dispatch;
 
 # ifdef THREADS
-
-#  define GET_DISPATCH() \
-     (likely(_glapi_Dispatch) ? _glapi_Dispatch : _glapi_get_dispatch())
-
-#  define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) \
-     (likely(_glapi_Context) ? _glapi_Context : _glapi_get_context())
-
+#  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) (_glapi_Context ? _glapi_Context : _glapi_get_context())
 # else
-
-#  define GET_DISPATCH() _glapi_Dispatch
-#  define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_Context
-
+#  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_Context
 # endif
 
 #endif /* defined (GLX_USE_TLS) */
 
 
-void
-_glapi_destroy_multithread(void);
-
+/**
+ ** GL API public functions
+ **/
 
 SERVEXTERN void
 _glapi_check_multithread(void);
@@ -141,8 +146,16 @@ _glapi_set_dispatch(struct _glapi_table *dispatch);
 SERVEXTERN struct _glapi_table *
 _glapi_get_dispatch(void);
 
+SERVEXTERN int
+_glapi_begin_dispatch_override(struct _glapi_table *override);
 
-SERVEXTERN unsigned int
+SERVEXTERN void
+_glapi_end_dispatch_override(int layer);
+
+struct _glapi_table *
+_glapi_get_override_dispatch(int layer);
+
+SERVEXTERN GLuint
 _glapi_get_dispatch_table_size(void);
 
 
@@ -150,31 +163,7 @@ SERVEXTERN int
 _glapi_add_dispatch( const char * const * function_names,
 		     const char * parameter_signature );
 
-_GLAPI_EXPORT int
-_glapi_get_proc_offset(const char *funcName);
-
-
 _GLAPI_EXPORT _glapi_proc
 _glapi_get_proc_address(const char *funcName);
 
-
-_GLAPI_EXPORT const char *
-_glapi_get_proc_name(unsigned int offset);
-
-
-_GLAPI_EXPORT unsigned long
-_glthread_GetID(void);
-
-
-/*
- * These stubs are kept so that the old DRI drivers still load.
- */
-SERVEXTERN void
-_glapi_noop_enable_warnings(unsigned char enable);
-
-
-_GLAPI_EXPORT void
-_glapi_set_warning_func(_glapi_proc func);
-
-
-#endif /* _GLAPI_H */
+#endif

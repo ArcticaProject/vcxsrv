@@ -53,7 +53,7 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
     GLenum format, type;
     GLboolean swapBytes, lsbFirst;
     GLint compsize;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];
@@ -95,7 +95,7 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 	__GLX_SEND_HEADER();
 	__GLX_SEND_VOID_ARRAY(compsize);
     }
-    __GLX_NOTE_FLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_FALSE;
     return Success;
 }
 
@@ -104,7 +104,7 @@ int __glXDisp_GetTexImage(__GLXclientState *cl, GLbyte *pc)
     GLint level, compsize;
     GLenum format, type, target;
     GLboolean swapBytes;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];
@@ -162,7 +162,7 @@ int __glXDisp_GetTexImage(__GLXclientState *cl, GLbyte *pc)
 int __glXDisp_GetPolygonStipple(__GLXclientState *cl, GLbyte *pc)
 {
     GLboolean lsbFirst;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     GLubyte answerBuffer[200];
@@ -198,7 +198,7 @@ static int GetSeparableFilter(__GLXclientState *cl, GLbyte *pc, GLXContextTag ta
     GLint compsize, compsize2;
     GLenum format, type, target;
     GLboolean swapBytes;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];
@@ -277,7 +277,7 @@ static int GetConvolutionFilter(__GLXclientState *cl, GLbyte *pc,
     GLint compsize;
     GLenum format, type, target;
     GLboolean swapBytes;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];
@@ -351,7 +351,7 @@ static int GetHistogram(__GLXclientState *cl, GLbyte *pc, GLXContextTag tag)
     GLint compsize;
     GLenum format, type, target;
     GLboolean swapBytes, reset;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];
@@ -414,7 +414,7 @@ static int GetMinmax(__GLXclientState *cl, GLbyte *pc, GLXContextTag tag)
     GLint compsize;
     GLenum format, type, target;
     GLboolean swapBytes, reset;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];
@@ -469,7 +469,7 @@ static int GetColorTable(__GLXclientState *cl, GLbyte *pc, GLXContextTag tag)
     GLint compsize;
     GLenum format, type, target;
     GLboolean swapBytes;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client = cl->client;
     int error;
     char *answer, answerBuffer[200];

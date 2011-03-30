@@ -563,6 +563,17 @@ RebuildTable(int client)
     clientTable[client].resources = resources;
 }
 
+static void
+doFreeResource(ResourcePtr res, Bool skip)
+{
+    CallResourceStateCallback(ResourceStateFreeing, res);
+
+    if (!skip)
+	resourceTypes[res->type & TypeMask].deleteFunc(res->value, res->id);
+
+    free(res);
+}
+
 void
 FreeResource(XID id, RESTYPE skipDeleteFuncType)
 {
@@ -591,11 +602,8 @@ FreeResource(XID id, RESTYPE skipDeleteFuncType)
 		*prev = res->next;
 		elements = --*eltptr;
 
-		CallResourceStateCallback(ResourceStateFreeing, res);
+		doFreeResource(res, rtype == skipDeleteFuncType);
 
-		if (rtype != skipDeleteFuncType)
-		    (*resourceTypes[rtype & TypeMask].deleteFunc)(res->value, res->id);
-		free(res);
 		if (*eltptr != elements)
 		    prev = head; /* prev may no longer be valid */
 	    }
@@ -604,7 +612,6 @@ FreeResource(XID id, RESTYPE skipDeleteFuncType)
         }
     }
 }
-
 
 void
 FreeResourceByType(XID id, RESTYPE type, Bool skipFree)
@@ -628,11 +635,8 @@ FreeResourceByType(XID id, RESTYPE type, Bool skipFree)
 		*prev = res->next;
 		clientTable[cid].elements--;
 
-		CallResourceStateCallback(ResourceStateFreeing, res);
+		doFreeResource(res, skipFree);
 
-		if (!skipFree)
-		    (*resourceTypes[type & TypeMask].deleteFunc)(res->value, res->id);
-		free(res);
 		break;
 	    }
 	    else
@@ -794,12 +798,10 @@ FreeClientNeverRetainResources(ClientPtr client)
 #endif		    
 		*prev = this->next;
 		clientTable[client->index].elements--;
-
-		CallResourceStateCallback(ResourceStateFreeing, this);
-
 		elements = *eltptr;
-		(*resourceTypes[rtype & TypeMask].deleteFunc)(this->value, this->id);
-		free(this);
+
+		doFreeResource(this, FALSE);
+
 		if (*eltptr != elements)
 		    prev = &resources[j]; /* prev may no longer be valid */
 	    }
@@ -842,7 +844,6 @@ FreeClientResources(ClientPtr client)
 
         for (this = *head; this; this = *head)
 	{
-	    RESTYPE rtype = this->type;
 #ifdef XSERVER_DTRACE
 	    XSERVER_RESOURCE_FREE(this->id, this->type,
 			  this->value, TypeNameString(this->type));
@@ -850,10 +851,7 @@ FreeClientResources(ClientPtr client)
 	    *head = this->next;
 	    clientTable[client->index].elements--;
 
-	    CallResourceStateCallback(ResourceStateFreeing, this);
-
-	    (*resourceTypes[rtype & TypeMask].deleteFunc)(this->value, this->id);
-	    free(this);
+	    doFreeResource(this, FALSE);
 	}
     }
     free(clientTable[client->index].resources);

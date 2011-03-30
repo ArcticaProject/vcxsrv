@@ -96,7 +96,7 @@ typedef struct __GLXWinScreen glxWinScreen;
 typedef struct __GLXWinConfig GLXWinConfig;
 
 struct __GLXWinContext {
-  glx_context base;
+  __GLXcontext base;
   HGLRC ctx;                         /* Windows GL Context */
   HDC hDC;                           /* Windows device context */
   HDC hreadDC;                     /* Windows device read context */
@@ -415,9 +415,9 @@ fbConfigsDump(unsigned int n, __GLXconfig *c)
  */
 
 static __GLXscreen *glxWinScreenProbe(ScreenPtr pScreen);
-static glx_context *glxWinCreateContext(__GLXscreen *screen,
+static __GLXcontext *glxWinCreateContext(__GLXscreen *screen,
                                         __GLXconfig *modes,
-                                        glx_context *baseShareContext);
+                                        __GLXcontext *baseShareContext);
 static __GLXdrawable *glxWinCreateDrawable(ClientPtr client,
                                           __GLXscreen *screen,
                                           DrawablePtr pDraw,
@@ -1013,7 +1013,7 @@ glxWinDrawableDestroy(__GLXdrawable *base)
       // on the next context change)
       // (GLX core considers it an error when we try to select a new current context if the old one
       // has unflushed commands, but the window has disappeared..)
-      __GLX_NOTE_FLUSHED_CMDS(__glXLastContext);
+      __glXLastContext->hasUnflushedCommands = FALSE;
       __glXLastContext = NULL;
     }
 
@@ -1086,7 +1086,7 @@ glxWinCreateDrawable(ClientPtr client,
  */
 
 static
-int glxWinBindTexImage(glx_context  *baseContext,
+int glxWinBindTexImage(__GLXcontext  *baseContext,
                       int            buffer,
                       __GLXdrawable *pixmap)
 {
@@ -1095,7 +1095,7 @@ int glxWinBindTexImage(glx_context  *baseContext,
 }
 
 static
-int glxWinReleaseTexImage(glx_context  *baseContext,
+int glxWinReleaseTexImage(__GLXcontext  *baseContext,
                          int            buffer,
                          __GLXdrawable *pixmap)
 {
@@ -1566,7 +1566,7 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
 
 /* Context manipulation routines should return TRUE on success, FALSE on failure */
 static int
-glxWinContextMakeCurrent(glx_context *base)
+glxWinContextMakeCurrent(__GLXcontext *base)
 {
   __GLXWinContext *gc = (__GLXWinContext *)base;
   BOOL ret;
@@ -1641,7 +1641,7 @@ glxWinContextMakeCurrent(glx_context *base)
 }
 
 static int
-glxWinContextLoseCurrent(glx_context *base)
+glxWinContextLoseCurrent(__GLXcontext *base)
 {
   BOOL ret=TRUE;
   __GLXWinContext *gc = (__GLXWinContext *)base;
@@ -1670,7 +1670,7 @@ glxWinContextLoseCurrent(glx_context *base)
 }
 
 static int
-glxWinContextCopy(glx_context *dst_base, glx_context *src_base, unsigned long mask)
+glxWinContextCopy(__GLXcontext *dst_base, __GLXcontext *src_base, unsigned long mask)
 {
   __GLXWinContext *dst = (__GLXWinContext *)dst_base;
   __GLXWinContext *src = (__GLXWinContext *)src_base;
@@ -1687,15 +1687,8 @@ glxWinContextCopy(glx_context *dst_base, glx_context *src_base, unsigned long ma
   return ret;
 }
 
-static int
-glxWinContextForceCurrent(glx_context *base)
-{
-  /* wglMakeCurrent always flushes the previous context, so this is equivalent to glxWinContextMakeCurrent */
-  return glxWinContextMakeCurrent(base);
-}
-
 static void
-glxWinContextDestroy(glx_context *base)
+glxWinContextDestroy(__GLXcontext *base)
 {
   __GLXWinContext *gc = (__GLXWinContext *)base;
 
@@ -1726,10 +1719,10 @@ glxWinContextDestroy(glx_context *base)
     }
 }
 
-static glx_context *
+static __GLXcontext *
 glxWinCreateContext(__GLXscreen *screen,
                    __GLXconfig *modes,
-                   glx_context *baseShareContext)
+                   __GLXcontext *baseShareContext)
 {
     __GLXWinContext *context;
     __GLXWinContext *shareContext = (__GLXWinContext *)baseShareContext;
@@ -1750,7 +1743,6 @@ glxWinCreateContext(__GLXscreen *screen,
     context->base.makeCurrent    = glxWinContextMakeCurrent;
     context->base.loseCurrent    = glxWinContextLoseCurrent;
     context->base.copy           = glxWinContextCopy;
-    context->base.forceCurrent   = glxWinContextForceCurrent;
     context->base.textureFromPixmap = &glxWinTextureFromPixmap;
     context->base.config = modes;
     context->base.pGlxScreen = screen;

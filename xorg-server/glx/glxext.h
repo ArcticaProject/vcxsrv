@@ -35,10 +35,10 @@
  * Silicon Graphics, Inc.
  */
 
-extern GLboolean __glXFreeContext(struct glx_context *glxc);
+extern GLboolean __glXFreeContext(__GLXcontext *glxc);
 extern void __glXFlushContextCache(void);
 
-extern void __glXAddToContextList(struct glx_context *cx);
+extern void __glXAddToContextList(__GLXcontext *cx);
 extern void __glXErrorCallBack(GLenum code);
 extern void __glXClearErrorOccured(void);
 extern GLboolean __glXErrorOccured(void);

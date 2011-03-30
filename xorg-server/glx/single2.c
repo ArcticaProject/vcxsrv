@@ -54,7 +54,7 @@ int __glXDisp_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
 {
     GLsizei size;
     GLenum type;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     int error;
 
     cx = __glXForceCurrent(cl, __GLX_GET_SINGLE_CONTEXT_TAG(pc), &error);
@@ -76,13 +76,13 @@ int __glXDisp_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
 	cx->feedbackBufSize = size;
     }
     CALL_FeedbackBuffer( GET_DISPATCH(), (size, type, cx->feedbackBuf) );
-    __GLX_NOTE_UNFLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_TRUE;
     return Success;
 }
 
 int __glXDisp_SelectBuffer(__GLXclientState *cl, GLbyte *pc)
 {
-    struct glx_context *cx;
+    __GLXcontext *cx;
     GLsizei size;
     int error;
 
@@ -104,7 +104,7 @@ int __glXDisp_SelectBuffer(__GLXclientState *cl, GLbyte *pc)
 	cx->selectBufSize = size;
     }
     CALL_SelectBuffer( GET_DISPATCH(), (size, cx->selectBuf) );
-    __GLX_NOTE_UNFLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_TRUE;
     return Success;
 }
 
@@ -112,7 +112,7 @@ int __glXDisp_RenderMode(__GLXclientState *cl, GLbyte *pc)
 {
     ClientPtr client;
     xGLXRenderModeReply reply;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     GLint nitems=0, retBytes=0, retval, newModeCheck;
     GLubyte *retBuffer = NULL;
     GLenum newMode;
@@ -208,7 +208,7 @@ int __glXDisp_RenderMode(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDisp_Flush(__GLXclientState *cl, GLbyte *pc)
 {
-	struct glx_context *cx;
+	__GLXcontext *cx;
 	int error;
 
 	cx = __glXForceCurrent(cl, __GLX_GET_SINGLE_CONTEXT_TAG(pc), &error);
@@ -217,13 +217,13 @@ int __glXDisp_Flush(__GLXclientState *cl, GLbyte *pc)
 	}
 
 	CALL_Flush( GET_DISPATCH(), () );
-	__GLX_NOTE_FLUSHED_CMDS(cx);
+	cx->hasUnflushedCommands = GL_FALSE;
 	return Success;
 }
 
 int __glXDisp_Finish(__GLXclientState *cl, GLbyte *pc)
 {
-    struct glx_context *cx;
+    __GLXcontext *cx;
     ClientPtr client;
     int error;
 
@@ -234,7 +234,7 @@ int __glXDisp_Finish(__GLXclientState *cl, GLbyte *pc)
 
     /* Do a local glFinish */
     CALL_Finish( GET_DISPATCH(), () );
-    __GLX_NOTE_FLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_FALSE;
 
     /* Send empty reply packet to indicate finish is finished */
     client = cl->client;
@@ -311,7 +311,7 @@ char *__glXcombine_strings(const char *cext_string, const char *sext_string)
 int DoGetString(__GLXclientState *cl, GLbyte *pc, GLboolean need_swap)
 {
     ClientPtr client;
-    struct glx_context *cx;
+    __GLXcontext *cx;
     GLenum name;
     const char *string;
     __GLX_DECLARE_SWAP_VARIABLES;

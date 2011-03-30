@@ -1755,6 +1755,7 @@ xf86RandR12EnterVT (int screen_index, int flags)
     XF86RandRInfoPtr randrp  = XF86RANDRINFO(pScreen);
     rrScrPrivPtr     rp = rrGetScrPriv(pScreen);
     Bool	     ret;
+    int              i;
 
     if (randrp->orig_EnterVT) {
 	pScrn->EnterVT = randrp->orig_EnterVT;
@@ -1766,7 +1767,6 @@ xf86RandR12EnterVT (int screen_index, int flags)
     }
 
     /* reload gamma */
-    int i;
     for (i = 0; i < rp->numCrtcs; i++)
 	xf86RandR12CrtcSetGamma(pScreen, rp->crtcs[i]);
 

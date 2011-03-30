@@ -49,14 +49,13 @@
 #include "indirect_table.h"
 #include "indirect_util.h"
 
-extern void FlushContext(struct glx_context *cx);
+extern void FlushContext(__GLXcontext *cx);
 
 /*
 ** The last context used by the server.  It is the context that is current
 ** from the server's perspective.
 */
-struct glx_context *__glXLastContext;
-struct glx_context *__glXContextList;
+__GLXcontext *__glXLastContext;
 
 /*
 ** X resources.
@@ -71,11 +70,6 @@ xGLXSingleReply __glXReply;
 
 static DevPrivateKeyRec glxClientPrivateKeyRec;
 #define glxClientPrivateKey (&glxClientPrivateKeyRec)
-
-/*
-** Client that called into GLX dispatch.
-*/
-ClientPtr __pGlxClient;
 
 /*
 ** Forward declarations.
@@ -107,7 +101,7 @@ void __glXResetLargeCommandStatus(__GLXclientState *cl)
 ** flag that the ID is no longer valid, and (maybe) free the context.
 ** use.
 */
-static int ContextGone(struct glx_context* cx, XID id)
+static int ContextGone(__GLXcontext* cx, XID id)
 {
     cx->idExists = GL_FALSE;
     if (!cx->isCurrent) {
@@ -117,8 +111,8 @@ static int ContextGone(struct glx_context* cx, XID id)
     return True;
 }
 
-static struct glx_context *glxPendingDestroyContexts;
-static struct glx_context *glxAllContexts;
+static __GLXcontext *glxPendingDestroyContexts;
+static __GLXcontext *glxAllContexts;
 static int glxServerLeaveCount;
 static int glxBlockClients;
 
@@ -128,7 +122,7 @@ static int glxBlockClients;
 */
 static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 {
-    struct glx_context *c, *next;
+    __GLXcontext *c, *next;
 
     /* If this drawable was created using glx 1.3 drawable
      * constructors, we added it as a glx drawable resource under both
@@ -144,37 +138,17 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
     for (c = glxAllContexts; c; c = next) {
 	next = c->next;
 	if (c->isCurrent && (c->drawPriv == glxPriv || c->readPriv == glxPriv)) {
-	    int i;
-
 	    FlushContext(c);
 
 	    (*c->loseCurrent)(c);
 	    c->isCurrent = GL_FALSE;
 	    if (c == __glXLastContext)
 		__glXFlushContextCache();
-	    if (!c->idExists) {
-	      for (i = 1; i < currentMaxClients; i++) {
-		if (clients[i]) {
-		    __GLXclientState *cl = glxGetClient(clients[i]);
-
-		    if (cl->inUse) {
-			int j;
-
-			for (j = 0; j < cl->numCurrentContexts; j++) {
-			    if (cl->currentContexts[j] == c)
-				cl->currentContexts[j] = NULL;
-			}
-		    }
-		}
-	      }
-	    }
 	}
 	if (c->drawPriv == glxPriv)
 	    c->drawPriv = NULL;
 	if (c->readPriv == glxPriv)
 	    c->readPriv = NULL;
-	if (!c->idExists && !c->isCurrent)
-	    __glXFreeContext(c);
     }
 
     glxPriv->destroy(glxPriv);
@@ -182,15 +156,15 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
     return True;
 }
 
-void __glXAddToContextList(struct glx_context *cx)
+void __glXAddToContextList(__GLXcontext *cx)
 {
     cx->next = glxAllContexts;
     glxAllContexts = cx;
 }
 
-static void __glXRemoveFromContextList(struct glx_context *cx)
+static void __glXRemoveFromContextList(__GLXcontext *cx)
 {
-    struct glx_context *c, *prev;
+    __GLXcontext *c, *prev;
 
     if (cx == glxAllContexts)
 	glxAllContexts = cx->next;
@@ -207,7 +181,7 @@ static void __glXRemoveFromContextList(struct glx_context *cx)
 /*
 ** Free a context.
 */
-GLboolean __glXFreeContext(struct glx_context *cx)
+GLboolean __glXFreeContext(__GLXcontext *cx)
 {
     if (cx->idExists || cx->isCurrent) return GL_FALSE;
     
@@ -292,8 +266,6 @@ glxClientCallback (CallbackListPtr	*list,
     NewClientInfoRec	*clientinfo = (NewClientInfoRec *) data;
     ClientPtr		pClient = clientinfo->client;
     __GLXclientState	*cl = glxGetClient(pClient);
-    struct glx_context	*cx;
-    int i;
 
     switch (pClient->clientState) {
     case ClientStateRunning:
@@ -307,18 +279,8 @@ glxClientCallback (CallbackListPtr	*list,
 	break;
 
     case ClientStateGone:
-	for (i = 0; i < cl->numCurrentContexts; i++) {
-	    cx = cl->currentContexts[i];
-	    if (cx) {
-		cx->isCurrent = GL_FALSE;
-		if (!cx->idExists)
-		    __glXFreeContext(cx);
-	    }
-	}
-
 	free(cl->returnBuf);
 	free(cl->largeCmdBuf);
-	free(cl->currentContexts);
 	free(cl->GLClientextensions);
 	break;
 
@@ -420,18 +382,18 @@ void __glXFlushContextCache(void)
 ** Make a context the current one for the GL (in this implementation, there
 ** is only one instance of the GL, and we use it to serve all GL clients by
 ** switching it between different contexts).  While we are at it, look up
-** a context by its tag and return its (struct glx_context *).
+** a context by its tag and return its (__GLXcontext *).
 */
-struct glx_context *__glXForceCurrent(__GLXclientState *cl, GLXContextTag tag,
+__GLXcontext *__glXForceCurrent(__GLXclientState *cl, GLXContextTag tag,
 				int *error)
 {
-    struct glx_context *cx;
+    __GLXcontext *cx;
 
     /*
     ** See if the context tag is legal; it is managed by the extension,
     ** so if it's invalid, we have an implementation error.
     */
-    cx = (struct glx_context *) __glXLookupContextByTag(cl, tag);
+    cx = __glXLookupContextByTag(cl, tag);
     if (!cx) {
 	cl->client->errorValue = tag;
 	*error = __glXError(GLXBadContextTag);
@@ -460,7 +422,7 @@ struct glx_context *__glXForceCurrent(__GLXclientState *cl, GLXContextTag tag,
 
     /* Make this context the current one for the GL. */
     if (!cx->isDirect) {
-	if (!(*cx->forceCurrent)(cx)) {
+	if (!(*cx->makeCurrent)(cx)) {
 	    /* Bind failed, and set the error code.  Bummer */
 	    cl->client->errorValue = cx->id;
 	    *error = __glXError(GLXBadContextState);
@@ -487,7 +449,7 @@ void glxSuspendClients(void)
 
 void glxResumeClients(void)
 {
-    struct glx_context *cx, *next;
+    __GLXcontext *cx, *next;
     int i;
 
     glxBlockClients = FALSE;
@@ -580,14 +542,11 @@ static int __glXDispatch(ClientPtr client)
     /*
     ** Use the opcode to index into the procedure table.
     */
-    proc = (__GLXdispatchSingleProcPtr) __glXGetProtocolDecodeFunction(& Single_dispatch_info,
-								       opcode,
-								       client->swapped);
+    proc = __glXGetProtocolDecodeFunction(& Single_dispatch_info, opcode,
+                                          client->swapped);
     if (proc != NULL) {
 	GLboolean rendering = opcode <= X_GLXRenderLarge;
 	__glXleaveServer(rendering);
-
-	__pGlxClient = client;
 
 	retval = (*proc)(cl, (GLbyte *) stuff);
 

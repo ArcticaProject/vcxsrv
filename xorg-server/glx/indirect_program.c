@@ -70,7 +70,7 @@ int DoGetProgramString(struct __GLXclientStateRec *cl, GLbyte *pc,
     xGLXVendorPrivateWithReplyReq * const req = 
       (xGLXVendorPrivateWithReplyReq *) pc;
     int error;
-    struct glx_context * const cx = __glXForceCurrent(cl, req->contextTag, & error);
+    __GLXcontext * const cx = __glXForceCurrent(cl, req->contextTag, & error);
     ClientPtr client = cl->client;
 
 

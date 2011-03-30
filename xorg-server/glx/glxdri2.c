@@ -78,7 +78,7 @@ struct __GLXDRIscreen {
 };
 
 struct __GLXDRIcontext {
-    struct glx_context	 base;
+    __GLXcontext	 base;
     __DRIcontext	*driContext;
 };
 
@@ -239,7 +239,7 @@ __glXDRIdrawableSwapInterval(__GLXdrawable *drawable, int interval)
 }
 
 static void
-__glXDRIcontextDestroy(struct glx_context *baseContext)
+__glXDRIcontextDestroy(__GLXcontext *baseContext)
 {
     __GLXDRIcontext *context = (__GLXDRIcontext *) baseContext;
     __GLXDRIscreen *screen = (__GLXDRIscreen *) context->base.pGlxScreen;
@@ -250,7 +250,7 @@ __glXDRIcontextDestroy(struct glx_context *baseContext)
 }
 
 static int
-__glXDRIcontextMakeCurrent(struct glx_context *baseContext)
+__glXDRIcontextMakeCurrent(__GLXcontext *baseContext)
 {
     __GLXDRIcontext *context = (__GLXDRIcontext *) baseContext;
     __GLXDRIdrawable *draw = (__GLXDRIdrawable *) baseContext->drawPriv;
@@ -263,7 +263,7 @@ __glXDRIcontextMakeCurrent(struct glx_context *baseContext)
 }					      
 
 static int
-__glXDRIcontextLoseCurrent(struct glx_context *baseContext)
+__glXDRIcontextLoseCurrent(__GLXcontext *baseContext)
 {
     __GLXDRIcontext *context = (__GLXDRIcontext *) baseContext;
     __GLXDRIscreen *screen = (__GLXDRIscreen *) context->base.pGlxScreen;
@@ -272,7 +272,7 @@ __glXDRIcontextLoseCurrent(struct glx_context *baseContext)
 }
 
 static int
-__glXDRIcontextCopy(struct glx_context *baseDst, struct glx_context *baseSrc,
+__glXDRIcontextCopy(__GLXcontext *baseDst, __GLXcontext *baseSrc,
 		    unsigned long mask)
 {
     __GLXDRIcontext *dst = (__GLXDRIcontext *) baseDst;
@@ -283,21 +283,8 @@ __glXDRIcontextCopy(struct glx_context *baseDst, struct glx_context *baseSrc,
 					src->driContext, mask);
 }
 
-static int
-__glXDRIcontextForceCurrent(struct glx_context *baseContext)
-{
-    __GLXDRIcontext *context = (__GLXDRIcontext *) baseContext;
-    __GLXDRIdrawable *draw = (__GLXDRIdrawable *) baseContext->drawPriv;
-    __GLXDRIdrawable *read = (__GLXDRIdrawable *) baseContext->readPriv;
-    __GLXDRIscreen *screen = (__GLXDRIscreen *) context->base.pGlxScreen;
-
-    return (*screen->core->bindContext)(context->driContext,
-					draw->driDrawable,
-					read->driDrawable);
-}
-
 static Bool
-__glXDRIcontextWait(struct glx_context *baseContext,
+__glXDRIcontextWait(__GLXcontext *baseContext,
 		    __GLXclientState *cl, int *error)
 {
     if (DRI2WaitSwap(cl->client, baseContext->drawPriv->pDraw)) {
@@ -311,7 +298,7 @@ __glXDRIcontextWait(struct glx_context *baseContext,
 #ifdef __DRI_TEX_BUFFER
 
 static int
-__glXDRIbindTexImage(struct glx_context *baseContext,
+__glXDRIbindTexImage(__GLXcontext *baseContext,
 		     int buffer,
 		     __GLXdrawable *glxPixmap)
 {
@@ -340,7 +327,7 @@ __glXDRIbindTexImage(struct glx_context *baseContext,
 }
 
 static int
-__glXDRIreleaseTexImage(struct glx_context *baseContext,
+__glXDRIreleaseTexImage(__GLXcontext *baseContext,
 			int buffer,
 			__GLXdrawable *pixmap)
 {
@@ -351,7 +338,7 @@ __glXDRIreleaseTexImage(struct glx_context *baseContext,
 #else
 
 static int
-__glXDRIbindTexImage(struct glx_context *baseContext,
+__glXDRIbindTexImage(__GLXcontext *baseContext,
 		     int buffer,
 		     __GLXdrawable *glxPixmap)
 {
@@ -359,7 +346,7 @@ __glXDRIbindTexImage(struct glx_context *baseContext,
 }
 
 static int
-__glXDRIreleaseTexImage(struct glx_context *baseContext,
+__glXDRIreleaseTexImage(__GLXcontext *baseContext,
 			int buffer,
 			__GLXdrawable *pixmap)
 {
@@ -387,10 +374,10 @@ __glXDRIscreenDestroy(__GLXscreen *baseScreen)
     free(screen);
 }
 
-static struct glx_context *
+static __GLXcontext *
 __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
 			    __GLXconfig *glxConfig,
-			    struct glx_context *baseShareContext)
+			    __GLXcontext *baseShareContext)
 {
     __GLXDRIscreen *screen = (__GLXDRIscreen *) baseScreen;
     __GLXDRIcontext *context, *shareContext;
@@ -411,7 +398,6 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
     context->base.makeCurrent       = __glXDRIcontextMakeCurrent;
     context->base.loseCurrent       = __glXDRIcontextLoseCurrent;
     context->base.copy              = __glXDRIcontextCopy;
-    context->base.forceCurrent      = __glXDRIcontextForceCurrent;
     context->base.textureFromPixmap = &__glXDRItextureFromPixmap;
     context->base.wait              = __glXDRIcontextWait;
 
