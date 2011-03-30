@@ -919,6 +919,8 @@ extern HIDDEN void __glXDisp_Translatef(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_Translatef(GLbyte * pc);
 extern HIDDEN void __glXDisp_StencilMask(GLbyte * pc);
 extern HIDDEN void __glXDispSwap_StencilMask(GLbyte * pc);
+extern HIDDEN void __glXDisp_ClampColorARB(GLbyte * pc);
+extern HIDDEN void __glXDispSwap_ClampColorARB(GLbyte * pc);
 extern HIDDEN int __glXDisp_CreateWindow(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN int __glXDispSwap_CreateWindow(struct __GLXclientStateRec *, GLbyte *);
 extern HIDDEN int __glXDisp_GetLightiv(struct __GLXclientStateRec *, GLbyte *);

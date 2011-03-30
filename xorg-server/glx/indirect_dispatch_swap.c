@@ -4894,6 +4894,14 @@ void __glXDispSwap_DrawBuffersARB(GLbyte * pc)
     ) );
 }
 
+void __glXDispSwap_ClampColorARB(GLbyte * pc)
+{
+    CALL_ClampColorARB( GET_DISPATCH(), (
+         (GLenum  )bswap_ENUM   ( pc +  0 ),
+         (GLenum  )bswap_ENUM   ( pc +  4 )
+    ) );
+}
+
 void __glXDispSwap_RenderbufferStorageMultisample(GLbyte * pc)
 {
     CALL_RenderbufferStorageMultisample( GET_DISPATCH(), (

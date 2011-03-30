@@ -4736,6 +4736,14 @@ void __glXDisp_DrawBuffersARB(GLbyte * pc)
     ) );
 }
 
+void __glXDisp_ClampColorARB(GLbyte * pc)
+{
+    CALL_ClampColorARB( GET_DISPATCH(), (
+        *(GLenum   *)(pc +  0),
+        *(GLenum   *)(pc +  4)
+    ) );
+}
+
 void __glXDisp_RenderbufferStorageMultisample(GLbyte * pc)
 {
     CALL_RenderbufferStorageMultisample( GET_DISPATCH(), (
