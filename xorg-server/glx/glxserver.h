@@ -96,17 +96,7 @@ void __glXScreenInitVisuals(__GLXscreen *screen);
 extern __GLXcontext *__glXLastContext;
 extern __GLXcontext *__glXForceCurrent(__GLXclientState*, GLXContextTag, int*);
 
-extern ClientPtr __pGlxClient;
-
 int __glXError(int error);
-
-/*
-** Macros to set, unset, and retrieve the flag that says whether a context
-** has unflushed commands.
-*/
-#define __GLX_NOTE_UNFLUSHED_CMDS(glxc) glxc->hasUnflushedCommands = GL_TRUE
-#define __GLX_NOTE_FLUSHED_CMDS(glxc) glxc->hasUnflushedCommands = GL_FALSE
-#define __GLX_HAS_UNFLUSHED_CMDS(glxc) (glxc->hasUnflushedCommands)
 
 /************************************************************************/
 
@@ -157,13 +147,6 @@ struct __GLXclientStateRec {
     GLint largeCmdRequestsTotal;	/* total requests expected	*/
     GLbyte *largeCmdBuf;
     GLint largeCmdBufSize;
-
-    /*
-    ** Keep a list of all the contexts that are current for this client's
-    ** threads.
-    */
-    __GLXcontext **currentContexts;
-    GLint numCurrentContexts;
 
     /* Back pointer to X client record */
     ClientPtr client;

@@ -53,8 +53,6 @@ struct __GLXcontext {
     int            (*copy)          (__GLXcontext *dst,
 				     __GLXcontext *src,
 				     unsigned long mask);
-    int            (*forceCurrent)  (__GLXcontext *context);
-
     Bool           (*wait)          (__GLXcontext *context,
 				     __GLXclientState *cl,
 				     int *error);

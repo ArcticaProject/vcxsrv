@@ -102,7 +102,7 @@ int __glXDispSwap_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 	__GLX_SEND_HEADER();
 	__GLX_SEND_VOID_ARRAY(compsize);
     }
-    __GLX_NOTE_FLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_FALSE;
     return Success;
 }
 

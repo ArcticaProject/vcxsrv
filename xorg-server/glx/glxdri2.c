@@ -283,19 +283,6 @@ __glXDRIcontextCopy(__GLXcontext *baseDst, __GLXcontext *baseSrc,
 					src->driContext, mask);
 }
 
-static int
-__glXDRIcontextForceCurrent(__GLXcontext *baseContext)
-{
-    __GLXDRIcontext *context = (__GLXDRIcontext *) baseContext;
-    __GLXDRIdrawable *draw = (__GLXDRIdrawable *) baseContext->drawPriv;
-    __GLXDRIdrawable *read = (__GLXDRIdrawable *) baseContext->readPriv;
-    __GLXDRIscreen *screen = (__GLXDRIscreen *) context->base.pGlxScreen;
-
-    return (*screen->core->bindContext)(context->driContext,
-					draw->driDrawable,
-					read->driDrawable);
-}
-
 static Bool
 __glXDRIcontextWait(__GLXcontext *baseContext,
 		    __GLXclientState *cl, int *error)
@@ -411,7 +398,6 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
     context->base.makeCurrent       = __glXDRIcontextMakeCurrent;
     context->base.loseCurrent       = __glXDRIcontextLoseCurrent;
     context->base.copy              = __glXDRIcontextCopy;
-    context->base.forceCurrent      = __glXDRIcontextForceCurrent;
     context->base.textureFromPixmap = &__glXDRItextureFromPixmap;
     context->base.wait              = __glXDRIcontextWait;
 

@@ -189,7 +189,7 @@ xf86parsePointerSection (void)
 				if (xf86getSubToken (&(ptr->inp_comment)) != NUMBER || val.num < 0) {
 					Error (ZAXISMAPPING_MSG, NULL);
 				}
-				if (asprintf(&s, "%ul %ul", val1, val.num) == -1)
+				if (asprintf(&s, "%lu %u", val1, val.num) == -1)
 				    s = NULL;
 				break;
 			case XAXIS:

@@ -72,7 +72,7 @@ int __glXDispSwap_FeedbackBuffer(__GLXclientState *cl, GLbyte *pc)
 	cx->feedbackBufSize = size;
     }
     CALL_FeedbackBuffer( GET_DISPATCH(), (size, type, cx->feedbackBuf) );
-    __GLX_NOTE_UNFLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_TRUE;
     return Success;
 }
 
@@ -103,7 +103,7 @@ int __glXDispSwap_SelectBuffer(__GLXclientState *cl, GLbyte *pc)
 	cx->selectBufSize = size;
     }
     CALL_SelectBuffer( GET_DISPATCH(), (size, cx->selectBuf) );
-    __GLX_NOTE_UNFLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_TRUE;
     return Success;
 }
 
@@ -229,7 +229,7 @@ int __glXDispSwap_Flush(__GLXclientState *cl, GLbyte *pc)
 	}
 
 	CALL_Flush( GET_DISPATCH(), () );
-	__GLX_NOTE_FLUSHED_CMDS(cx);
+	cx->hasUnflushedCommands = GL_FALSE;
 	return Success;
 }
 
@@ -248,7 +248,7 @@ int __glXDispSwap_Finish(__GLXclientState *cl, GLbyte *pc)
 
     /* Do a local glFinish */
     CALL_Finish( GET_DISPATCH(), () );
-    __GLX_NOTE_FLUSHED_CMDS(cx);
+    cx->hasUnflushedCommands = GL_FALSE;
 
     /* Send empty reply packet to indicate finish is finished */
     client = cl->client;

@@ -136,9 +136,9 @@ validGlxContext(ClientPtr client, XID id, int access_mode,
 {
     *err = dixLookupResourceByType((pointer *) context, id,
 				   __glXContextRes, client, access_mode);
-    if (*err != Success) {
+    if (*err != Success || (*context)->idExists == GL_FALSE) {
 	client->errorValue = id;
-	if (*err == BadValue)
+	if (*err == BadValue || *err == Success)
 	    *err = __glXError(GLXBadContext);
 	return FALSE;
     }
@@ -369,6 +369,7 @@ int __glXDisp_CreateContextWithConfigSGIX(__GLXclientState *cl, GLbyte *pc)
     return DoCreateContext(cl, req->context, req->shareList,
 			   config, pGlxScreen, req->isDirect);
 }
+
 int __glXDisp_DestroyContext(__GLXclientState *cl, GLbyte *pc)
 {
     ClientPtr client = cl->client;
@@ -382,77 +383,31 @@ int __glXDisp_DestroyContext(__GLXclientState *cl, GLbyte *pc)
 			 &glxc, &err))
 	    return err;
 
-    FreeResourceByType(req->context, __glXContextRes, FALSE);
+    glxc->idExists = GL_FALSE;
+    if (!glxc->isCurrent)
+        FreeResourceByType(req->context, __glXContextRes, FALSE);
+
     return Success;
 }
 
-/*****************************************************************************/
-
 /*
-** For each client, the server keeps a table of all the contexts that are
-** current for that client (each thread of a client may have its own current
-** context).  These routines add, change, and lookup contexts in the table.
-*/
-
-/*
-** Add a current context, and return the tag that will be used to refer to it.
-*/
-static int AddCurrentContext(__GLXclientState *cl, __GLXcontext *glxc)
-{
-    int i;
-    int num = cl->numCurrentContexts;
-    __GLXcontext **table = cl->currentContexts;
-
-    if (!glxc) return -1;
-    
-    /*
-    ** Try to find an empty slot and use it.
-    */
-    for (i=0; i < num; i++) {
-	if (!table[i]) {
-	    table[i] = glxc;
-	    return i+1;
-	}
-    }
-    /*
-    ** Didn't find a free slot, so we'll have to grow the table.
-    */
-    if (!num) {
-	table = (__GLXcontext **) malloc(sizeof(__GLXcontext *));
-    } else {
-	table = (__GLXcontext **) realloc(table,
-					   (num+1)*sizeof(__GLXcontext *));
-    }
-    table[num] = glxc;
-    cl->currentContexts = table;
-    cl->numCurrentContexts++;
-    return num+1;
-}
-
-/*
-** Given a tag, change the current context for the corresponding entry.
-*/
-static void ChangeCurrentContext(__GLXclientState *cl, __GLXcontext *glxc,
-				GLXContextTag tag)
-{
-    __GLXcontext **table = cl->currentContexts;
-    table[tag-1] = glxc;
-}
-
-/*
-** For this implementation we have chosen to simply use the index of the
-** context's entry in the table as the context tag.  A tag must be greater
-** than 0.
-*/
+ * This will return "deleted" contexts, ie, where idExists is GL_FALSE.
+ * Contrast validGlxContext, which will not.  We're cheating here and
+ * using the XID as the context tag, which is fine as long as we defer
+ * actually destroying the context until it's no longer referenced, and
+ * block clients from trying to MakeCurrent on contexts that are on the
+ * way to destruction.  Notice that DoMakeCurrent calls validGlxContext
+ * for new contexts but __glXLookupContextByTag for previous contexts.
+ */
 __GLXcontext *__glXLookupContextByTag(__GLXclientState *cl, GLXContextTag tag)
 {
-    int num = cl->numCurrentContexts;
+    __GLXcontext *ret;
 
-    if (tag < 1 || tag > num) {
-	return 0;
-    } else {
-	return cl->currentContexts[tag-1];
-    }
+    if (dixLookupResourceByType((void **)&ret, tag, __glXContextRes,
+                                cl->client, DixUseAccess) == Success)
+        return ret;
+
+    return NULL;
 }
 
 /*****************************************************************************/
@@ -466,7 +421,7 @@ static void StopUsingContext(__GLXcontext *glxc)
 	}
 	glxc->isCurrent = GL_FALSE;
 	if (!glxc->idExists) {
-	    __glXFreeContext(glxc);
+            FreeResourceByType(glxc->id, __glXContextRes, FALSE);
 	}
     }
 }
@@ -631,10 +586,10 @@ DoMakeCurrent(__GLXclientState *cl,
 	/*
 	** Flush the previous context if needed.
 	*/
-	if (__GLX_HAS_UNFLUSHED_CMDS(prevglxc)) {
+	if (prevglxc->hasUnflushedCommands) {
 	    if (__glXForceCurrent(cl, tag, (int *)&error)) {
 		CALL_Flush( GET_DISPATCH(), () );
-		__GLX_NOTE_FLUSHED_CMDS(prevglxc);
+		prevglxc->hasUnflushedCommands = GL_FALSE;
 	    } else {
 		return error;
 	    }
@@ -669,16 +624,11 @@ DoMakeCurrent(__GLXclientState *cl,
 	glxc->isCurrent = GL_TRUE;
     }
 
-    if (prevglxc) {
-	ChangeCurrentContext(cl, glxc, tag);
-	StopUsingContext(prevglxc);
-    } else {
-	tag = AddCurrentContext(cl, glxc);
-    }
+    StopUsingContext(prevglxc);
 
     if (glxc) {
 	StartUsingContext(cl, glxc);
-	reply.contextTag = tag;
+	reply.contextTag = glxc->id;
     } else {
 	reply.contextTag = 0;
     }
@@ -905,7 +855,7 @@ int __glXDisp_CopyContext(__GLXclientState *cl, GLbyte *pc)
 	    ** in both streams are completed before the copy is executed.
 	    */
 	    CALL_Finish( GET_DISPATCH(), () );
-	    __GLX_NOTE_FLUSHED_CMDS(tagcx);
+	    tagcx->hasUnflushedCommands = GL_FALSE;
 	} else {
 	    return error;
 	}
@@ -1616,7 +1566,7 @@ int __glXDisp_SwapBuffers(__GLXclientState *cl, GLbyte *pc)
 	    ** in both streams are completed before the swap is executed.
 	    */
 	    CALL_Finish( GET_DISPATCH(), () );
-	    __GLX_NOTE_FLUSHED_CMDS(glxc);
+	    glxc->hasUnflushedCommands = GL_FALSE;
 	} else {
 	    return error;
 	}
@@ -1815,7 +1765,7 @@ int __glXDisp_CopySubBufferMESA(__GLXclientState *cl, GLbyte *pc)
 	    ** in both streams are completed before the swap is executed.
 	    */
 	    CALL_Finish( GET_DISPATCH(), () );
-	    __GLX_NOTE_FLUSHED_CMDS(glxc);
+	    glxc->hasUnflushedCommands = GL_FALSE;
 	} else {
 	    return error;
 	}
@@ -2002,7 +1952,7 @@ int __glXDisp_Render(__GLXclientState *cl, GLbyte *pc)
 	left -= cmdlen;
 	commandsDone++;
     }
-    __GLX_NOTE_UNFLUSHED_CMDS(glxc);
+    glxc->hasUnflushedCommands = GL_TRUE;
     return Success;
 }
 
@@ -2199,7 +2149,7 @@ int __glXDisp_RenderLarge(__GLXclientState *cl, GLbyte *pc)
 	    ** Skip over the header and execute the command.
 	    */
 	    (*proc)(cl->largeCmdBuf + __GLX_RENDER_LARGE_HDR_SIZE);
-	    __GLX_NOTE_UNFLUSHED_CMDS(glxc);
+	    glxc->hasUnflushedCommands = GL_TRUE;
 
 	    /*
 	    ** Reset for the next RenderLarge series.

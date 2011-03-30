@@ -1773,8 +1773,6 @@ CompositeTriStrip (CARD8	    op,
 		   int		    npoints,
 		   xPointFixed	    *points)
 {
-    ScreenPtr           pScreen = pDst->pDrawable->pScreen;
-    PictureScreenPtr    ps = GetPictureScreen(pScreen);
     xTriangle           *tris, *tri;
     int                 ntri;
     
@@ -1804,7 +1802,6 @@ CompositeTriFan (CARD8		op,
 		 int		npoints,
 		 xPointFixed	*points)
 {
-    ScreenPtr		pScreen = pDst->pDrawable->pScreen;
     xTriangle		*tris, *tri;
     xPointFixed		*first;
     int			ntri;
