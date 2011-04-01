@@ -94,6 +94,8 @@ typedef void (*_glapi_warning_func)(void *ctx, const char *str, ...);
  **/
 #if defined (GLX_USE_TLS)
 
+_GLAPI_EXPORT extern __thread struct _glapi_table * _glapi_tls_Dispatch
+    __attribute__((tls_model("initial-exec")));
 
 _GLAPI_EXPORT extern const void *_glapi_Context;
 _GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
@@ -101,7 +103,8 @@ _GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
 _GLAPI_EXPORT extern __thread void * _glapi_tls_Context
     __attribute__((tls_model("initial-exec")));
 
-# define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_tls_Context
+# define GET_DISPATCH() _glapi_tls_Dispatch
+# define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_tls_Context
 
 #else
 
@@ -115,9 +118,16 @@ SERVEXTERN void *_glapi_Context;
 SERVEXTERN struct _glapi_table *_glapi_Dispatch;
 
 # ifdef THREADS
-#  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) (_glapi_Context ? _glapi_Context : _glapi_get_context())
+
+#  define GET_DISPATCH() \
+     (likely(_glapi_Dispatch) ? _glapi_Dispatch : _glapi_get_dispatch())
+
+
+#  define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) \
+     (likely(_glapi_Context) ? _glapi_Context : _glapi_get_context())
 # else
-#  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_Context
+#  define GET_DISPATCH() _glapi_Dispatch
+#  define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_Context
 # endif
 
 #endif /* defined (GLX_USE_TLS) */

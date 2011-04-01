@@ -88,7 +88,6 @@ gl\gl_mangle.h                                    mesalib\include\gl\gl_mangle.h
 gl\internal\dri_interface.h                       mesalib\include\gl\internal\dri_interface.h
 
 xorg-server\glx\glprocs.h                         mesalib\src\mapi\glapi\glprocs.h
-xorg-server\glx\glapitemp.h                       mesalib\src\mapi\glapi\glapitemp.h
 xorg-server\glx\glapi.h                           mesalib\src\mapi\glapi\glapi.h
 xorg-server\glx\glapitable.h                      mesalib\src\mapi\glapi\glapitable.h
 
