@@ -35,15 +35,16 @@ AM_MAINTAINER_MODE
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
-# Require xorg-macros minimum of 1.10 for HAVE_STYLESHEETS in XORG_CHECK_SGML_DOCTOOLS
+# Require xorg-macros minimum of 1.12 for DocBook external references
 m4_ifndef([XORG_MACROS_VERSION],
-	  [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.10)
+          [m4_fatal([must install xorg-macros 1.12 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.12)
 XORG_DEFAULT_OPTIONS
 XORG_ENABLE_DOCS
-XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_XMLTO(0.0.22)
 XORG_WITH_FOP
-XORG_CHECK_SGML_DOCTOOLS(1.5)
+XORG_WITH_XSLTPROC
+XORG_CHECK_SGML_DOCTOOLS(1.7)
 
 # Checks for programs.
 AC_PROG_LN_S

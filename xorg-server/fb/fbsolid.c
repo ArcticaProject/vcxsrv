@@ -44,13 +44,11 @@ fbSolid (FbBits	    *dst,
     int	    n, nmiddle;
     int	    startbyte, endbyte;
 
-#ifdef FB_24BIT
     if (bpp == 24 && (!FbCheck24Pix(and) || !FbCheck24Pix(xor)))
     {
 	fbSolid24 (dst, dstStride, dstX, width, height, and, xor);
 	return;
     }
-#endif
     dst += dstX >> FB_SHIFT;
     dstX &= FB_MASK;
     FbMaskBitsBytes(dstX, width, and == 0, startmask, startbyte, 
@@ -81,7 +79,6 @@ fbSolid (FbBits	    *dst,
     }
 }
 
-#ifdef FB_24BIT
 void
 fbSolid24 (FbBits   *dst,
 	   FbStride dstStride,
@@ -210,4 +207,3 @@ fbSolid24 (FbBits   *dst,
 	dst += dstStride;
     }
 }
-#endif

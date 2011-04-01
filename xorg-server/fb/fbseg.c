@@ -330,7 +330,6 @@ fbBresFillDash (DrawablePtr pDrawable,
 	fbSetFg (pDrawable, pGC, fg);
 }
 
-#ifdef FB_24BIT
 static void
 fbBresSolid24RRop (DrawablePtr  pDrawable,
 		   GCPtr	pGC,
@@ -507,7 +506,6 @@ fbBresDash24RRop (DrawablePtr	pDrawable,
 
     fbFinishAccess (pDrawable);
 }
-#endif
 
 /*
  * For drivers that want to bail drawing some lines, this
@@ -529,23 +527,17 @@ fbSelectBres (DrawablePtr   pDrawable,
 	if (pGC->fillStyle == FillSolid)
 	{
 	    bres = fbBresSolid;
-#ifdef FB_24BIT
 	    if (dstBpp == 24)
 		bres = fbBresSolid24RRop;
-#endif
-#ifndef FBNOPIXADDR
 	    if (pPriv->and == 0)
 	    {
 		switch (dstBpp) {
 		case 8:	bres = fbBresSolid8; break;
 		case 16: bres = fbBresSolid16; break;
-#ifdef FB_24BIT
 		case 24: bres = fbBresSolid24; break;
-#endif
 		case 32: bres = fbBresSolid32; break;
 		}
 	    }
-#endif
 	}
     }
     else
@@ -554,24 +546,18 @@ fbSelectBres (DrawablePtr   pDrawable,
 	if (pGC->fillStyle == FillSolid)
 	{
 	    bres = fbBresDash;
-#ifdef FB_24BIT
 	    if (dstBpp == 24)
 		bres = fbBresDash24RRop;
-#endif
-#ifndef FBNOPIXADDR
 	    if (pPriv->and == 0 && 
 		(pGC->lineStyle == LineOnOffDash || pPriv->bgand == 0))
 	    {
 		switch (dstBpp) {
 		case 8:	bres = fbBresDash8; break;
 		case 16: bres = fbBresDash16; break;
-#ifdef FB_24BIT
 		case 24: bres = fbBresDash24; break;
-#endif
 		case 32: bres = fbBresDash32; break;
 		}
 	    }
-#endif
 	}
     }
     return bres;

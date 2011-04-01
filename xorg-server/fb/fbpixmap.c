@@ -89,10 +89,8 @@ fbCreatePixmap (ScreenPtr pScreen, int width, int height, int depth,
 {
     int	bpp;
     bpp = BitsPerPixel (depth);
-#ifdef FB_SCREEN_PRIVATE
     if (bpp == 32 && depth <= 24)
 	bpp = fbGetScreenPrivate(pScreen)->pix32bpp;
-#endif
     return fbCreatePixmapBpp (pScreen, width, height, depth, bpp, usage_hint);
 }
 

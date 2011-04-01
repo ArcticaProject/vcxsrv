@@ -335,11 +335,9 @@ fbCopyArea (DrawablePtr	pSrcDrawable,
 {
     miCopyProc	copy;
 
-#ifdef FB_24_32BIT
     if (pSrcDrawable->bitsPerPixel != pDstDrawable->bitsPerPixel)
 	copy = fb24_32CopyMtoN;
     else
-#endif
 	copy = fbCopyNtoN;
     return miDoCopy (pSrcDrawable, pDstDrawable, pGC, xIn, yIn,
 		     widthSrc, heightSrc, xOut, yOut, copy, 0, 0);

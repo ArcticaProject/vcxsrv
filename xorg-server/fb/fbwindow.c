@@ -33,10 +33,8 @@ fbCreateWindow(WindowPtr pWin)
 {
     dixSetPrivate(&pWin->devPrivates, fbGetWinPrivateKey(),
 		  fbGetScreenPixmap(pWin->drawable.pScreen));
-#ifdef FB_SCREEN_PRIVATE
     if (pWin->drawable.bitsPerPixel == 32)
 	pWin->drawable.bitsPerPixel = fbGetScreenPrivate(pWin->drawable.pScreen)->win32bpp;
-#endif
     return TRUE;
 }
 
@@ -148,55 +146,36 @@ fbCopyWindow(WindowPtr	    pWin,
     fbValidateDrawable (&pWin->drawable);
 }
 
+static void
+fbFixupWindowPixmap(DrawablePtr pDrawable, PixmapPtr *ppPixmap)
+{
+    PixmapPtr pPixmap = *ppPixmap;
+
+    if (pPixmap->drawable.bitsPerPixel != pDrawable->bitsPerPixel)
+    {
+	pPixmap = fb24_32ReformatTile (pPixmap, pDrawable->bitsPerPixel);
+	if (!pPixmap)
+	    return;
+	(*pDrawable->pScreen->DestroyPixmap) (*ppPixmap);
+	*ppPixmap = pPixmap;
+    }
+    if (FbEvenTile (pPixmap->drawable.width *
+		    pPixmap->drawable.bitsPerPixel))
+	fbPadPixmap (pPixmap);
+}
+
 Bool
 fbChangeWindowAttributes(WindowPtr pWin, unsigned long mask)
 {
-    PixmapPtr	pPixmap;
-    
     if (mask & CWBackPixmap)
     {
 	if (pWin->backgroundState == BackgroundPixmap)
-	{
-	    pPixmap = pWin->background.pixmap;
-#ifdef FB_24_32BIT
-	    if (pPixmap->drawable.bitsPerPixel != pWin->drawable.bitsPerPixel)
-	    {
-		pPixmap = fb24_32ReformatTile (pPixmap,
-					       pWin->drawable.bitsPerPixel);
-		if (pPixmap)
-		{
-		    (*pWin->drawable.pScreen->DestroyPixmap) (pWin->background.pixmap);
-		    pWin->background.pixmap = pPixmap;
-		}
-	    }
-#endif
-	    if (FbEvenTile (pPixmap->drawable.width *
-			    pPixmap->drawable.bitsPerPixel))
-		fbPadPixmap (pPixmap);
-	}
+	    fbFixupWindowPixmap(&pWin->drawable, &pWin->background.pixmap);
     }
     if (mask & CWBorderPixmap)
     {
 	if (pWin->borderIsPixel == FALSE)
-	{
-	    pPixmap = pWin->border.pixmap;
-#ifdef FB_24_32BIT
-	    if (pPixmap->drawable.bitsPerPixel !=
-		pWin->drawable.bitsPerPixel)
-	    {
-		pPixmap = fb24_32ReformatTile (pPixmap,
-					       pWin->drawable.bitsPerPixel);
-		if (pPixmap)
-		{
-		    (*pWin->drawable.pScreen->DestroyPixmap) (pWin->border.pixmap);
-		    pWin->border.pixmap = pPixmap;
-		}
-	    }
-#endif
-	    if (FbEvenTile (pPixmap->drawable.width *
-			    pPixmap->drawable.bitsPerPixel))
-		fbPadPixmap (pPixmap);
-	}
+	    fbFixupWindowPixmap(&pWin->drawable, &pWin->border.pixmap);
     }
     return TRUE;
 }

@@ -26,7 +26,6 @@
 
 #include "fb.h"
 
-#ifndef FBNOPIXADDR
 /*
  * This is a slight abuse of the preprocessor to generate repetitive
  * code, the idea is to generate code for each case of a copy-mode
@@ -78,7 +77,6 @@ fbTransparentSpan (FbBits   *dst,
 	LaneCases(dst);
     }
 }
-#endif
 
 void
 fbEvenStipple (FbBits	*dst,
@@ -170,7 +168,6 @@ fbEvenStipple (FbBits	*dst,
 	and = (fgand & mask) | (bgand & ~mask);
 	xor = (fgxor & mask) | (bgxor & ~mask);
 	
-#ifndef FBNOPIXADDR
 	if (transparent)
 	{
 	    if (startmask)
@@ -184,7 +181,6 @@ fbEvenStipple (FbBits	*dst,
 		fbTransparentSpan(dst, mask&endmask, fgxor, 1);
 	}
 	else
-#endif
 	{
 	    /*
 	     * Fill scanline

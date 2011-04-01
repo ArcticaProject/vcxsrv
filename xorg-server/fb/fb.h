@@ -97,21 +97,10 @@
 #if GLYPHPADBYTES != 4
 #error "GLYPHPADBYTES must be 4"
 #endif
-/* whether to bother to include 24bpp support */
-#ifndef FBNO24BIT
+
+/* for driver compat - intel UXA needs the second one at least */
 #define FB_24BIT
-#endif
-
-/*
- * Unless otherwise instructed, fb includes code to advertise 24bpp
- * windows with 32bpp image format for application compatibility
- */
-
-#ifdef FB_24BIT
-#ifndef FBNO24_32
 #define FB_24_32BIT
-#endif
-#endif
 
 #define FB_STIP_SHIFT	LOG2_BITMAP_PAD
 #define FB_STIP_UNIT	(1 << FB_STIP_SHIFT)
@@ -234,15 +223,6 @@ extern _X_EXPORT void fbSetBits (FbStip *bits, int stride, FbStip data);
     n >>= FB_SHIFT; \
 }
 
-#ifdef FBNOPIXADDR
-#define FbMaskBitsBytes(x,w,copy,l,lb,n,r,rb) FbMaskBits(x,w,l,n,r)
-#define FbDoLeftMaskByteRRop(dst,lb,l,and,xor) { \
-    *dst = FbDoMaskRRop(*dst,and,xor,l); \
-}
-#define FbDoRightMaskByteRRop(dst,rb,r,and,xor) { \
-    *dst = FbDoMaskRRop(*dst,and,xor,r); \
-}
-#else
 
 #define FbByteMaskInvalid   0x10
 
@@ -454,7 +434,6 @@ extern _X_EXPORT void fbSetBits (FbStip *bits, int stride, FbStip data);
 	WRITE(dst, FbDoMaskRRop (READ(dst), and, xor, r)); \
     } \
 }
-#endif
 
 #define FbMaskStip(x,w,l,n,r) { \
     n = (w); \
@@ -612,9 +591,6 @@ fbGetWinPrivateKey (void);
 extern _X_EXPORT const GCOps	fbGCOps;
 extern _X_EXPORT const GCFuncs	fbGCFuncs;
 
-#ifdef FB_24_32BIT
-#define FB_SCREEN_PRIVATE
-#endif
 
 /* Framebuffer access wrapper */
 typedef FbBits (*ReadMemoryProcPtr)(const void *src, int size);
@@ -642,7 +618,6 @@ typedef void (*FinishWrapProcPtr)(DrawablePtr pDraw);
 #endif
 
 
-#ifdef FB_SCREEN_PRIVATE
 extern _X_EXPORT DevPrivateKey
 fbGetScreenPrivateKey(void);
 
@@ -658,7 +633,6 @@ typedef struct {
 
 #define fbGetScreenPrivate(pScreen) ((FbScreenPrivPtr) \
 				     dixLookupPrivate(&(pScreen)->devPrivates, fbGetScreenPrivateKey()))
-#endif
 
 /* private field of GC */
 typedef struct {
@@ -1223,7 +1197,6 @@ fbBltOne (FbStip   *src,
 	  FbBits   bgand,
 	  FbBits   bgxor);
  
-#ifdef FB_24BIT
 extern _X_EXPORT void
 fbBltOne24 (FbStip    *src,
 	  FbStride  srcStride,	    /* FbStip units per scanline */
@@ -1240,7 +1213,6 @@ fbBltOne24 (FbStip    *src,
 	  FbBits    fgxor,
 	  FbBits    bgand,
 	  FbBits    bgxor);
-#endif
 
 extern _X_EXPORT void
 fbBltPlane (FbBits	    *src,
@@ -1868,7 +1840,6 @@ fbSolid (FbBits	    *dst,
 	 FbBits	    and,
 	 FbBits	    xor);
 
-#ifdef FB_24BIT
 extern _X_EXPORT void
 fbSolid24 (FbBits   *dst,
 	   FbStride dstStride,
@@ -1879,7 +1850,6 @@ fbSolid24 (FbBits   *dst,
 
 	   FbBits   and,
 	   FbBits   xor);
-#endif
 
 /*
  * fbstipple.c

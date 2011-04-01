@@ -47,13 +47,11 @@ fbGetSpans(DrawablePtr	pDrawable,
     if (!fbDrawableEnabled(pDrawable))
 	return;
     
-#ifdef FB_24_32BIT
     if (pDrawable->bitsPerPixel != BitsPerPixel(pDrawable->depth))
     {
 	fb24_32GetSpans (pDrawable, wMax, ppt, pwidth, nspans, pchardstStart);
 	return;
     }
-#endif
     
     fbGetDrawable (pDrawable, src, srcStride, srcBpp, srcXoff, srcYoff);
     

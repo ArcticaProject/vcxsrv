@@ -26,11 +26,9 @@
 
 #include "fb.h"
 
-#ifdef FB_SCREEN_PRIVATE
 static DevPrivateKeyRec fbScreenPrivateKeyRec;
 DevPrivateKey
 fbGetScreenPrivateKey(void) { return &fbScreenPrivateKeyRec; }
-#endif
 
 static DevPrivateKeyRec fbGCPrivateKeyRec;
 DevPrivateKey
@@ -48,10 +46,8 @@ fbAllocatePrivates(ScreenPtr pScreen, DevPrivateKey *pGCKey)
     
     if (!dixRegisterPrivateKey(&fbGCPrivateKeyRec, PRIVATE_GC, sizeof(FbGCPrivRec)))
 	return FALSE;
-#ifdef FB_SCREEN_PRIVATE
     if (!dixRegisterPrivateKey(&fbScreenPrivateKeyRec, PRIVATE_SCREEN, sizeof (FbScreenPrivRec)))
 	return FALSE;
-#endif
     if (!dixRegisterPrivateKey(&fbWinPrivateKeyRec, PRIVATE_WINDOW, 0))
 	return FALSE;
 

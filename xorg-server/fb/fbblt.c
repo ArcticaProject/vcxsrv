@@ -67,14 +67,12 @@ fbBlt (FbBits   *srcLine,
     int	    startbyte, endbyte;
     FbDeclareMergeRop ();
 
-#ifdef FB_24BIT
     if (bpp == 24 && !FbCheck24Pix (pm))
     {
 	fbBlt24 (srcLine, srcStride, srcX, dstLine, dstStride, dstX,
 		 width, height, alu, pm, reverse, upsidedown);
 	return;
     }
-#endif
 
     if (alu == GXcopy && pm == FB_ALLONES && !reverse &&
             !(srcX & 7) && !(dstX & 7) && !(width & 7)) {
@@ -338,7 +336,6 @@ fbBlt (FbBits   *srcLine,
     }
 }
 
-#ifdef FB_24BIT
 
 #undef DEBUG_BLT24
 #ifdef DEBUG_BLT24
@@ -603,7 +600,6 @@ fbBlt24 (FbBits	    *srcLine,
     ErrorF ("\n");
 #endif
 }
-#endif /* FB_24BIT */
 
 #if FB_SHIFT == FB_STIP_SHIFT + 1
 
@@ -784,7 +780,6 @@ fbBltOdd (FbBits    *srcLine,
     }
 }
 
-#ifdef FB_24BIT
 void
 fbBltOdd24 (FbBits	*srcLine,
 	    FbStride	srcStrideEven,
@@ -826,7 +821,6 @@ fbBltOdd24 (FbBits	*srcLine,
 	}
     }
 }
-#endif
 
 #endif
 
@@ -915,7 +909,6 @@ fbBltStip (FbStip   *src,
 		     &dstStrideEven, &dstStrideOdd,
 		     &dstXEven, &dstXOdd);
 		     
-#ifdef FB_24BIT
 	if (bpp == 24 && !FbCheck24Pix (pm))
 	{
 	    fbBltOdd24  (s, srcStrideEven, srcStrideOdd,
@@ -927,7 +920,6 @@ fbBltStip (FbStip   *src,
 			 width, height, alu, pm);
 	}
 	else
-#endif
 	{
 	    fbBltOdd (s, srcStrideEven, srcStrideOdd,
 		      srcXEven, srcXOdd,

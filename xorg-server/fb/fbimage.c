@@ -86,7 +86,6 @@ fbPutImage (DrawablePtr	pDrawable,
 	}
 	break;
     case ZPixmap:
-#ifdef FB_24_32BIT
 	if (pDrawable->bitsPerPixel != BitsPerPixel(pDrawable->depth))
 	{
 	    srcStride = PixmapBytePad(w, pDrawable->depth);
@@ -99,7 +98,6 @@ fbPutImage (DrawablePtr	pDrawable,
 			      srcStride);
 	}
 	else
-#endif
 	{
 	    srcStride = PixmapBytePad(w, pDrawable->depth) / sizeof (FbStip);
 	    fbPutZImage (pDrawable,
@@ -305,14 +303,12 @@ fbGetImage (DrawablePtr	    pDrawable,
     if (!fbDrawableEnabled(pDrawable))
 	return;
     
-#ifdef FB_24_32BIT
     if (format == ZPixmap &&
 	pDrawable->bitsPerPixel != BitsPerPixel (pDrawable->depth))
     {
 	fb24_32GetImage (pDrawable, x, y, w, h, format, planeMask, d);
 	return;
     }
-#endif
     
     fbGetDrawable (pDrawable, src, srcStride, srcBpp, srcXoff, srcYoff);
     

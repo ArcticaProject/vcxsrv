@@ -47,7 +47,6 @@ fbPolyArc (DrawablePtr	pDrawable,
     
     if (pGC->lineWidth == 0)
     {
-#ifndef FBNOPIXADDR
 	arc = 0;
 	if (pGC->lineStyle == LineSolid && pGC->fillStyle == FillSolid)
 	{
@@ -55,9 +54,7 @@ fbPolyArc (DrawablePtr	pDrawable,
 	    {
 	    case 8:	arc = fbArc8; break;
 	    case 16:    arc = fbArc16; break;
-#ifdef FB_24BIT
 	    case 24:	arc = fbArc24; break;
-#endif
 	    case 32:    arc = fbArc32; break;
 	    }
 	}
@@ -141,7 +138,6 @@ fbPolyArc (DrawablePtr	pDrawable,
 #endif
 	}
 	else
-#endif
 	    miZeroPolyArc (pDrawable, pGC, narcs, parcs);
     }
     else
