@@ -51,7 +51,7 @@ typedef struct {
    int offset;
 } AEarray;
 
-typedef void (*attrib_func)( GLuint indx, const void *data );
+typedef void (GLAPIENTRY *attrib_func)( GLuint indx, const void *data );
 
 typedef struct {
    const struct gl_client_array *array;
