@@ -185,7 +185,6 @@ fbFinishScreenInit(ScreenPtr	pScreen,
      * pixels.  If you want real 24bit images, include a 24bpp
      * format in the pixmap formats
      */
-#ifdef FB_24_32BIT
     if (bpp == 24)
     {
 	int	f;
@@ -205,8 +204,6 @@ fbFinishScreenInit(ScreenPtr	pScreen,
 	    }
 	}	    
     }
-#endif
-#ifdef FB_SCREEN_PRIVATE
     if (imagebpp == 32)
     {
 	fbGetScreenPrivate(pScreen)->win32bpp = bpp;
@@ -220,7 +217,6 @@ fbFinishScreenInit(ScreenPtr	pScreen,
 #ifdef FB_ACCESS_WRAPPER
     fbGetScreenPrivate(pScreen)->setupWrap = setupWrap;
     fbGetScreenPrivate(pScreen)->finishWrap = finishWrap;
-#endif
 #endif
     rootdepth = 0;
     if (!fbInitVisuals (&visuals, &depths, &nvisuals, &ndepths, &rootdepth,
@@ -236,13 +232,11 @@ fbFinishScreenInit(ScreenPtr	pScreen,
 	return FALSE;
     /* overwrite miCloseScreen with our own */
     pScreen->CloseScreen = fbCloseScreen;
-#ifdef FB_24_32BIT
     if (bpp == 24 && imagebpp == 32)
     {
 	pScreen->ModifyPixmapHeader = fb24_32ModifyPixmapHeader;
 	pScreen->CreateScreenResources = fb24_32CreateScreenResources;
     }
-#endif
     return TRUE;
 }
 

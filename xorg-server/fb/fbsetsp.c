@@ -46,13 +46,11 @@ fbSetSpans (DrawablePtr	    pDrawable,
     int		    xoff;
     int		    x1, x2;
     
-#ifdef FB_24_32BIT
     if (pDrawable->bitsPerPixel != BitsPerPixel(pDrawable->depth))
     {
 	fb24_32SetSpans (pDrawable, pGC, src, ppt, pwidth, nspans, fSorted);
 	return;
     }
-#endif
     fbGetDrawable (pDrawable, dst, dstStride, dstBpp, dstXoff, dstYoff);
     while (nspans--)
     {

@@ -55,10 +55,8 @@ fbOverlayCreateWindow(WindowPtr pWin)
     if (pWin->drawable.class != InputOutput)
 	return TRUE;
 
-#ifdef FB_SCREEN_PRIVATE
     if (pWin->drawable.bitsPerPixel == 32)
 	pWin->drawable.bitsPerPixel = fbGetScreenPrivate(pWin->drawable.pScreen)->win32bpp;
-#endif
 
     for (i = 0; i < pScrPriv->nlayers; i++)
     {
@@ -349,7 +347,6 @@ fbOverlayFinishScreenInit(ScreenPtr	pScreen,
     if (!pScrPriv)
 	return FALSE;
  
-#ifdef FB_24_32BIT
     if (bpp1 == 32 || bpp2 == 32)
 	bpp = 32;
     else if (bpp1 == 24 || bpp2 == 24)
@@ -374,8 +371,6 @@ fbOverlayFinishScreenInit(ScreenPtr	pScreen,
 	    }
 	}	    
     }
-#endif
-#ifdef FB_SCREEN_PRIVATE
     if (imagebpp == 32)
     {
 	fbGetScreenPrivate(pScreen)->win32bpp = bpp;
@@ -386,7 +381,6 @@ fbOverlayFinishScreenInit(ScreenPtr	pScreen,
 	fbGetScreenPrivate(pScreen)->win32bpp = 32;
 	fbGetScreenPrivate(pScreen)->pix32bpp = 32;
     }
-#endif
    
     if (!fbInitVisuals (&visuals, &depths, &nvisuals, &ndepths, &depth1,
 			&defaultVisual, ((unsigned long)1<<(bpp1-1)) |
@@ -421,13 +415,11 @@ fbOverlayFinishScreenInit(ScreenPtr	pScreen,
     pScreen->CreateWindow = fbOverlayCreateWindow;
     pScreen->WindowExposures = fbOverlayWindowExposures;
     pScreen->CopyWindow = fbOverlayCopyWindow;
-#ifdef FB_24_32BIT
     if (bpp == 24 && imagebpp == 32)
     {
 	pScreen->ModifyPixmapHeader = fb24_32ModifyPixmapHeader;
   	pScreen->CreateScreenResources = fb24_32OverlayCreateScreenResources;
     }
-#endif
 
     return TRUE;
 }

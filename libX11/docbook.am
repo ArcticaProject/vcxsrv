@@ -1,0 +1,95 @@
+#
+# Generate output formats for a single DocBook/XML with/without chapters
+#
+# Variables set by the calling Makefile:
+# shelfdir: the location where the docs/specs are installed. Typically $(docdir)
+# docbook:  the main DocBook/XML file, no chapters, appendix or image files
+# chapters: all files pulled in by an XInclude statement and images.
+#
+
+#
+# This makefile is intended for Users Documentation and Functional Specifications.
+# Do not use for Developer Documentation which is not installed and does not require olink.
+# Refer to http://www.x.org/releases/X11R7.6/doc/xorg-docs/ReleaseNotes.html#id2584393
+# for an explanation on documents classification.
+#
+
+# DocBook/XML generated output formats to be installed
+shelf_DATA =
+
+# DocBook/XML file with chapters, appendix and images it includes
+dist_shelf_DATA = $(docbook) $(chapters)
+
+#
+# Generate DocBook/XML output formats with or without stylesheets
+#
+
+# Stylesheets are available if the package xorg-sgml-doctools is installed
+if HAVE_STYLESHEETS
+
+# The location where all cross reference databases are installed
+sgmldbsdir = $(XORG_SGML_PATH)/X11/dbs
+masterdb = "$(sgmldbsdir)/masterdb$(suffix $@).xml"
+XMLTO_FLAGS =							\
+	--searchpath "$(XORG_SGML_PATH)/X11"			\
+	--stringparam target.database.document=$(masterdb)	\
+	--stringparam current.docid="$(<:.xml=)"		\
+	--stringparam collect.xref.targets="no"
+
+XMLTO_XHTML_FLAGS = \
+	-x $(STYLESHEET_SRCDIR)/xorg-xhtml.xsl \
+	--stringparam html.stylesheet=$(STYLESHEET_SRCDIR)/xorg.css
+
+XMLTO_FO_FLAGS = \
+	-x $(STYLESHEET_SRCDIR)/xorg-fo.xsl
+endif HAVE_STYLESHEETS
+
+shelf_DATA += $(docbook:.xml=.html)
+%.html: %.xml  $(chapters)
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) $(XMLTO_XHTML_FLAGS) xhtml-nochunks $<
+
+if HAVE_FOP
+shelf_DATA += $(docbook:.xml=.pdf) $(docbook:.xml=.ps)
+%.pdf: %.xml $(chapters)
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) $(XMLTO_FO_FLAGS) --with-fop pdf $<
+%.ps: %.xml $(chapters)
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) $(XMLTO_FO_FLAGS) --with-fop ps $<
+endif HAVE_FOP
+
+if HAVE_XMLTO_TEXT
+shelf_DATA += $(docbook:.xml=.txt)
+%.txt: %.xml $(chapters)
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) $(XMLTO_XHTML_FLAGS) txt $<
+endif HAVE_XMLTO_TEXT
+
+#
+# Generate documents cross-reference target databases
+#
+
+# This is only possible if the xorg-sgml-doctools package is installed
+if HAVE_STYLESHEETS
+if HAVE_XSLTPROC
+
+# DocBook/XML generated document cross-reference database
+sgmldbs_DATA = $(docbook:.xml=.html.db) $(docbook:.xml=.fo.db)
+
+# Generate DocBook/XML document cross-reference database
+# Flags for the XSL Transformation processor generating xref target databases
+XSLTPROC_FLAGS =					\
+	--path "$(XORG_SGML_PATH)/X11"			\
+	--stringparam targets.filename "$@"		\
+	--stringparam collect.xref.targets "only"	\
+	--nonet --xinclude
+
+%.html.db: %.xml  $(chapters)
+	$(AM_V_GEN)$(XSLTPROC) $(XSLTPROC_FLAGS) \
+	http://docbook.sourceforge.net/release/xsl/current/xhtml/docbook.xsl $<
+
+%.fo.db: %.xml $(chapters)
+	$(AM_V_GEN)$(XSLTPROC) $(XSLTPROC_FLAGS) \
+	http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl $<
+
+endif HAVE_XSLTPROC
+endif HAVE_STYLESHEETS
+
+CLEANFILES = $(shelf_DATA) $(sgmldbs_DATA)

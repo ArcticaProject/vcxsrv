@@ -75,7 +75,6 @@ fbDots (FbBits	    *dstOrig,
 	    x = (x + xoff) * dstBpp;
 	    d = dst + ((y + yoff) * dstStride) + (x >> FB_STIP_SHIFT);
 	    x &= FB_STIP_MASK;
-#ifdef FB_24BIT
 	    if (dstBpp == 24)
 	    {
 		FbStip	leftMask, rightMask;
@@ -97,7 +96,6 @@ fbDots (FbBits	    *dstOrig,
 		    WRITE(d, FbDoMaskRRop(READ(d), andT, xorT, rightMask));
 	    }
 	    else
-#endif
 	    {
 		FbStip	mask;
 		mask = FbStipMask(x, dstBpp);
@@ -144,16 +142,12 @@ fbPolyPoint (DrawablePtr    pDrawable,
     and = pPriv->and;
     xor = pPriv->xor;
     dots = fbDots;
-#ifndef FBNOPIXADDR
     switch (dstBpp) {
     case 8:	dots = fbDots8; break;
     case 16:    dots = fbDots16; break;
-#ifdef FB_24BIT
     case 24:    dots = fbDots24; break;
-#endif
     case 32:    dots = fbDots32; break;
     }
-#endif
     for (nBox = RegionNumRects (pClip), pBox = RegionRects (pClip);
 	 nBox--; pBox++)
 	(*dots) (dst, dstStride, dstBpp, pBox, pptInit, nptInit, 

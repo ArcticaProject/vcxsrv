@@ -114,7 +114,6 @@ fbPolyLine (DrawablePtr	pDrawable,
     if (pGC->lineWidth == 0)
     {
 	line = fbZeroLine;
-#ifndef FBNOPIXADDR
 	if (pGC->fillStyle == FillSolid &&
 	    pGC->lineStyle == LineSolid &&
 	    RegionNumRects (fbGetCompositeClip(pGC)) == 1)
@@ -122,13 +121,10 @@ fbPolyLine (DrawablePtr	pDrawable,
 	    switch (pDrawable->bitsPerPixel) {
 	    case 8:  line = fbPolyline8; break;
 	    case 16: line = fbPolyline16; break;
-#ifdef FB_24BIT
 	    case 24: line = fbPolyline24; break;
-#endif
 	    case 32: line = fbPolyline32; break;
 	    }
 	}
-#endif
     }
     else
     {
@@ -151,7 +147,6 @@ fbPolySegment (DrawablePtr  pDrawable,
     if (pGC->lineWidth == 0)
     {
 	seg = fbZeroSegment;
-#ifndef FBNOPIXADDR
 	if (pGC->fillStyle == FillSolid &&
 	    pGC->lineStyle == LineSolid &&
 	    RegionNumRects (fbGetCompositeClip(pGC)) == 1)
@@ -159,13 +154,10 @@ fbPolySegment (DrawablePtr  pDrawable,
 	    switch (pDrawable->bitsPerPixel) {
 	    case 8:  seg = fbPolySegment8; break;
 	    case 16: seg = fbPolySegment16; break;
-#ifdef FB_24BIT
 	    case 24: seg = fbPolySegment24; break;
-#endif
 	    case 32: seg = fbPolySegment32; break;
 	    }
 	}
-#endif
     }
     else
     {

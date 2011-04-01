@@ -57,8 +57,6 @@ fbGlyphIn (RegionPtr	pRegion,
     return RegionContainsRect(pRegion, &box) == rgnIN;
 }
 
-#ifdef FB_24BIT
-#ifndef FBNOPIXADDR
 
 #define WRITE1(d,n,fg)	WRITE((d) + (n), (CARD8) fg)
 #define WRITE2(d,n,fg)	WRITE((CARD16 *) &(d[n]), (CARD16) fg)
@@ -248,8 +246,6 @@ fbGlyph24 (FbBits   *dstBits,
 	dstLine += dstStride;
     }
 }
-#endif
-#endif
 
 void
 fbPolyGlyphBlt (DrawablePtr	pDrawable,
@@ -266,7 +262,6 @@ fbPolyGlyphBlt (DrawablePtr	pDrawable,
     int		    gx, gy;
     int		    gWidth, gHeight;	/* width and height of glyph */
     FbStride	    gStride;		/* stride of glyph */
-#ifndef FBNOPIXADDR
     void	    (*glyph) (FbBits *,
 			      FbStride,
 			      int,
@@ -286,13 +281,10 @@ fbPolyGlyphBlt (DrawablePtr	pDrawable,
 	switch (dstBpp) {
 	case 8:	    glyph = fbGlyph8; break;
 	case 16:    glyph = fbGlyph16; break;
-#ifdef FB_24BIT
 	case 24:    glyph = fbGlyph24; break;
-#endif
 	case 32:    glyph = fbGlyph32; break;
 	}
     }
-#endif
     x += pDrawable->x;
     y += pDrawable->y;
 
@@ -306,7 +298,6 @@ fbPolyGlyphBlt (DrawablePtr	pDrawable,
 	{
 	    gx = x + pci->metrics.leftSideBearing;
 	    gy = y - pci->metrics.ascent; 
-#ifndef FBNOPIXADDR
 	    if (glyph && gWidth <= sizeof (FbStip) * 8 &&
 		fbGlyphIn (fbGetCompositeClip(pGC), gx, gy, gWidth, gHeight))
 	    {
@@ -321,7 +312,6 @@ fbPolyGlyphBlt (DrawablePtr	pDrawable,
 		fbFinishAccess (pDrawable);
 	    }
 	    else
-#endif
 	    {
 		gStride = GLYPHWIDTHBYTESPADDED(pci) / sizeof (FbStip);
 		fbPushImage (pDrawable,
@@ -359,7 +349,6 @@ fbImageGlyphBlt (DrawablePtr	pDrawable,
     Bool	    opaque;
     int		    n;
     int		    gx, gy;
-#ifndef FBNOPIXADDR
     void	    (*glyph) (FbBits *,
 			      FbStride,
 			      int,
@@ -379,21 +368,16 @@ fbImageGlyphBlt (DrawablePtr	pDrawable,
 	switch (dstBpp) {
 	case 8:	    glyph = fbGlyph8; break;
 	case 16:    glyph = fbGlyph16; break;
-#ifdef FB_24BIT
 	case 24:    glyph = fbGlyph24; break;
-#endif
 	case 32:    glyph = fbGlyph32; break;
 	}
     }
-#endif
     
     x += pDrawable->x;
     y += pDrawable->y;
 
     if (TERMINALFONT (pGC->font)
-#ifndef FBNOPIXADDR
 	&& !glyph
-#endif
 	)
     {
 	opaque = TRUE;
@@ -439,7 +423,6 @@ fbImageGlyphBlt (DrawablePtr	pDrawable,
 	{
 	    gx = x + pci->metrics.leftSideBearing;
 	    gy = y - pci->metrics.ascent; 
-#ifndef FBNOPIXADDR
 	    if (glyph && gWidth <= sizeof (FbStip) * 8 &&
 		fbGlyphIn (fbGetCompositeClip(pGC), gx, gy, gWidth, gHeight))
 	    {
@@ -454,7 +437,6 @@ fbImageGlyphBlt (DrawablePtr	pDrawable,
 		fbFinishAccess (pDrawable);
 	    }
 	    else
-#endif
 	    {
 		gStride = GLYPHWIDTHBYTESPADDED(pci) / sizeof (FbStip);
 		fbPutXYImage (pDrawable,

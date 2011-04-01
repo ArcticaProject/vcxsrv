@@ -206,7 +206,6 @@ fbValidateGC(GCPtr pGC, unsigned long changes, DrawablePtr pDrawable)
 	miComputeCompositeClip (pGC, pDrawable);
     }
     
-#ifdef FB_24_32BIT    
     if (pPriv->bpp != pDrawable->bitsPerPixel)
     {
 	changes |= GCStipple|GCForeground|GCBackground|GCPlaneMask;
@@ -240,7 +239,6 @@ fbValidateGC(GCPtr pGC, unsigned long changes, DrawablePtr pDrawable)
 	    }
 	}
     }
-#endif
     if (changes & GCTile)
     {
 	if (!pGC->tileIsPixel && 
