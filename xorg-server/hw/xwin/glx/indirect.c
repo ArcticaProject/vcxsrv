@@ -74,6 +74,8 @@
 #include <glx/glxutil.h>
 #include <glx/extension_string.h>
 #include <GL/glxtokens.h>
+#include <glx/glapitable.h>
+#include <glx/glapi.h>
 
 #include <winpriv.h>
 #include <wgl_ext_api.h>
@@ -103,6 +105,7 @@ struct __GLXWinContext {
   __GLXWinContext *shareContext;     /* Context with which we will share display lists and textures */
   HWND hwnd;                         /* For detecting when HWND has changed */
   HWND hreadwnd;
+  struct _glapi_table *Dispatch;
 };
 
 struct __GLXWinDrawable
@@ -1715,6 +1718,7 @@ glxWinContextDestroy(__GLXcontext *base)
           gc->ctx = NULL;
         }
 
+      free(gc->Dispatch);
       free(gc);
     }
 }
@@ -1750,6 +1754,9 @@ glxWinCreateContext(__GLXscreen *screen,
     // actual native GL context creation is deferred until attach()
     //context->ctx = NULL; already done with memset
     context->shareContext = shareContext;
+    
+    context->Dispatch=calloc(sizeof(void*), (sizeof(struct _glapi_table) / sizeof(void *) + MAX_EXTENSION_FUNCS));
+    _glapi_set_dispatch(context->Dispatch);
 
     glWinSetupDispatchTable();
 
