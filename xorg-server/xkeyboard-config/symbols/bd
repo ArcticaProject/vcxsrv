@@ -15,9 +15,8 @@
 //
 
 default partial alphanumeric_keys
-
 xkb_symbols "basic" {
-   name[Group1]= "Bangladesh";
+   name[Group1]= "Bengali";
    key <ESC>  { [ Escape ] };
 
 // numbers
@@ -93,5 +92,5 @@ xkb_symbols "basic" {
 
 xkb_symbols "probhat" {
     include "in(ben_probhat)"
-    name[Group1]= "Bangladesh - Probhat";
+    name[Group1]= "Bengali (Probhat)";
 };

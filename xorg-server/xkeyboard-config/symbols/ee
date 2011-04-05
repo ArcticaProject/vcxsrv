@@ -11,7 +11,7 @@ xkb_symbols "basic" {
 
     include "latin(type4)"
 
-    name[Group1]="Estonia";
+    name[Group1]="Estonian";
 
     key <AE03>	{ [         3, numbersign,     sterling,     sterling ]	};
     key <AE04>	{ [         4,   currency,       dollar,       dollar ]	};
@@ -41,7 +41,7 @@ xkb_symbols "nodeadkeys" {
     // Modifies the basic Estonian layout to eliminate all dead keys
 
     include "ee(basic)"
-    name[Group1]="Estonia - Eliminate dead keys";
+    name[Group1]="Estonian (eliminate dead keys)";
 
     key <TLDE>	{ [asciicircum,asciitilde ]	};
     key <AE12>	{ [apostrophe,      grave ]	};
@@ -57,7 +57,7 @@ xkb_symbols "nodeadkeys" {
 partial alphanumeric_keys
 xkb_symbols "dvorak" {
    include "us(dvorak)"
-   name[Group1]= "Estonia - Dvorak";
+   name[Group1]= "Estonian (Dvorak)";
    
     key <AE03>	{ [         3, numbersign,   sterling ]	};
     key <AE04>	{ [         4,     dollar,    section,   currency ]	};
@@ -80,7 +80,7 @@ xkb_symbols "dvorak" {
 partial alphanumeric_keys
 xkb_symbols "us" {
     include "us(euro)"
-    name[Group1] = "Estonia - US keyboard with Estonian letters";
+    name[Group1] = "Estonian (US keyboard with Estonian letters)";
 
     // ž, Ž
     key <AB01>	{ [           z,  Z,          zcaron,     Zcaron     ]	};

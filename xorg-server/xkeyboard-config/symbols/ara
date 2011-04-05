@@ -70,13 +70,13 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "qwerty" {
     include "ara(basic)"
-    name[Group1]= "Arabic - qwerty";
+    name[Group1]= "Arabic (qwerty)";
 };
 
 partial alphanumeric_keys
 xkb_symbols "azerty" {
     include "ara(basic)"
-    name[Group1]= "Arabic - azerty";
+    name[Group1]= "Arabic (azerty)";
 
 	// the north african arabic keyboard differs from the middle east one
 	// by the numeric row; it follows French keyboard style
@@ -104,7 +104,7 @@ xkb_symbols "azerty" {
 partial alphanumeric_keys
 xkb_symbols "digits" {
     include "ara(basic)"
-    name[Group1]= "Arabic - digits";
+    name[Group1]= "Arabic (digits)";
 
 	// use arabic script digits
 
@@ -123,13 +123,13 @@ xkb_symbols "digits" {
 partial alphanumeric_keys
 xkb_symbols "qwerty_digits" {
     include "ara(digits)"
-    name[Group1]= "Arabic - qwerty/digits";
+    name[Group1]= "Arabic (qwerty/digits)";
 };
 
 partial alphanumeric_keys
 xkb_symbols "azerty_digits" {
     include "ara(azerty)"
-    name[Group1]= "Arabic - azerty/digits";
+    name[Group1]= "Arabic (azerty/digits)";
 	
     key <AE01> {  [       ampersand,       0x1000661      ]       };
     key <AE02> {  [          eacute,       0x1000662      ]       };
@@ -151,7 +151,7 @@ xkb_symbols "azerty_digits" {
 
 partial alphanumeric_keys 
 xkb_symbols "buckwalter" {
-    name[Group1]= "Arabic - Buckwalter";
+    name[Group1]= "Arabic (Buckwalter)";
 
     // ARABIC LETTER SUPERSCRIPT ALEF
     key <TLDE> {  [       0x1000670,  Arabic_shadda       ]       };

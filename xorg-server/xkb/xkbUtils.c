@@ -1398,41 +1398,25 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
 
         /* properties */
         if (src->geom->num_properties) {
-            if (src->geom->num_properties != dst->geom->sz_properties) {
-                /* If we've got more properties in the destination than
-                 * the source, run through and free all the excess ones
-                 * first. */
-                if (src->geom->num_properties < dst->geom->sz_properties) {
-                    for (i = src->geom->num_properties,
-                         dprop = dst->geom->properties + i;
-                         i < dst->geom->num_properties;
-                         i++, dprop++) {
-                        free(dprop->name);
-                        free(dprop->value);
-                    }
+            /* If we've got more properties in the destination than
+             * the source, run through and free all the excess ones
+             * first. */
+            if (src->geom->num_properties < dst->geom->sz_properties) {
+                for (i = src->geom->num_properties, dprop = dst->geom->properties + i;
+                     i < dst->geom->num_properties;
+                     i++, dprop++) {
+                    free(dprop->name);
+                    free(dprop->value);
                 }
-
-                if (dst->geom->sz_properties)
-                    tmp = realloc(dst->geom->properties,
-                                   src->geom->num_properties *
-                                    sizeof(XkbPropertyRec));
-                else
-                    tmp = malloc(src->geom->num_properties *
-                                  sizeof(XkbPropertyRec));
-                if (!tmp)
-                    return FALSE;
-                dst->geom->properties = tmp;
             }
 
+            /* Reallocate and clear all new items if the buffer grows. */
+            if (!XkbGeomRealloc((void **)&dst->geom->properties, dst->geom->sz_properties, src->geom->num_properties,
+                                sizeof(XkbPropertyRec), XKB_GEOM_CLEAR_EXCESS))
+                return FALSE;
             /* We don't set num_properties as we need it to try and avoid
              * too much reallocing. */
             dst->geom->sz_properties = src->geom->num_properties;
-
-            if (dst->geom->sz_properties > dst->geom->num_properties) {
-                memset(dst->geom->properties + dst->geom->num_properties, 0,
-                      (dst->geom->sz_properties - dst->geom->num_properties) *
-                      sizeof(XkbPropertyRec));
-            }
 
             for (i = 0,
                   sprop = src->geom->properties,
@@ -1482,35 +1466,19 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
 
         /* colors */
         if (src->geom->num_colors) {
-            if (src->geom->num_colors != dst->geom->sz_colors) {
-                if (src->geom->num_colors < dst->geom->sz_colors) {
-                    for (i = src->geom->num_colors,
-                         dcolor = dst->geom->colors + i;
-                         i < dst->geom->num_colors;
-                         i++, dcolor++) {
-                        free(dcolor->spec);
-                    }
+            if (src->geom->num_colors < dst->geom->sz_colors) {
+                for (i = src->geom->num_colors, dcolor = dst->geom->colors + i;
+                     i < dst->geom->num_colors;
+                     i++, dcolor++) {
+                    free(dcolor->spec);
                 }
-
-                if (dst->geom->sz_colors)
-                    tmp = realloc(dst->geom->colors,
-                                   src->geom->num_colors *
-                                    sizeof(XkbColorRec));
-                else
-                    tmp = malloc(src->geom->num_colors *
-                                  sizeof(XkbColorRec));
-                if (!tmp)
-                    return FALSE;
-                dst->geom->colors = tmp;
             }
 
+            /* Reallocate and clear all new items if the buffer grows. */
+            if (!XkbGeomRealloc((void **)&dst->geom->colors, dst->geom->sz_colors, src->geom->num_colors,
+                                sizeof(XkbColorRec), XKB_GEOM_CLEAR_EXCESS))
+                return FALSE;
             dst->geom->sz_colors = src->geom->num_colors;
-
-            if (dst->geom->sz_colors > dst->geom->num_colors) {
-                memset(dst->geom->colors + dst->geom->num_colors, 0,
-                      (dst->geom->sz_colors - dst->geom->num_colors) *
-                      sizeof(XkbColorRec));
-            }
 
             for (i = 0,
                   scolor = src->geom->colors,
@@ -1573,10 +1541,10 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
         }
 
         if (src->geom->num_shapes) {
-            tmp = calloc(src->geom->num_shapes, sizeof(XkbShapeRec));
-            if (!tmp)
+            /* Reallocate and clear all items. */
+            if (!XkbGeomRealloc((void **)&dst->geom->shapes, dst->geom->sz_shapes, src->geom->num_shapes,
+                                sizeof(XkbShapeRec), XKB_GEOM_CLEAR_ALL))
                 return FALSE;
-            dst->geom->shapes = tmp;
 
             for (i = 0, sshape = src->geom->shapes, dshape = dst->geom->shapes;
                  i < src->geom->num_shapes;
@@ -1693,20 +1661,13 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
             }
 
             dst->geom->num_sections = 0;
-            dst->geom->sections = NULL;
         }
 
         if (src->geom->num_sections) {
-            if (dst->geom->sz_sections)
-                tmp = realloc(dst->geom->sections,
-                               src->geom->num_sections *
-                                sizeof(XkbSectionRec));
-            else
-                tmp = malloc(src->geom->num_sections * sizeof(XkbSectionRec));
-            if (!tmp)
+            /* Reallocate and clear all items. */
+            if (!XkbGeomRealloc((void **)&dst->geom->sections, dst->geom->sz_sections, src->geom->num_sections,
+                                sizeof(XkbSectionRec), XKB_GEOM_CLEAR_ALL))
                 return FALSE;
-            memset(tmp, 0, src->geom->num_sections * sizeof(XkbSectionRec));
-            dst->geom->sections = tmp;
             dst->geom->num_sections = src->geom->num_sections;
             dst->geom->sz_sections = src->geom->num_sections;
 
@@ -1809,21 +1770,13 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                 }
             }
             dst->geom->num_doodads = 0;
-            dst->geom->doodads = NULL;
         }
 
         if (src->geom->num_doodads) {
-            if (dst->geom->sz_doodads)
-                tmp = realloc(dst->geom->doodads,
-                               src->geom->num_doodads *
-                                sizeof(XkbDoodadRec));
-            else
-                tmp = malloc(src->geom->num_doodads *
-                              sizeof(XkbDoodadRec));
-            if (!tmp)
+            /* Reallocate and clear all items. */
+            if (!XkbGeomRealloc((void **)&dst->geom->doodads, dst->geom->sz_doodads, src->geom->num_doodads,
+                                sizeof(XkbDoodadRec), XKB_GEOM_CLEAR_ALL))
                 return FALSE;
-            memset(tmp, 0, src->geom->num_doodads * sizeof(XkbDoodadRec));
-            dst->geom->doodads = tmp;
 
             dst->geom->sz_doodads = src->geom->num_doodads;
 
@@ -1860,20 +1813,14 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
 
         /* key aliases */
         if (src->geom->num_key_aliases) {
-            if (src->geom->num_key_aliases != dst->geom->sz_key_aliases) {
-                if (dst->geom->sz_key_aliases)
-                    tmp = realloc(dst->geom->key_aliases,
-                                   src->geom->num_key_aliases *
-                                    2 * XkbKeyNameLength);
-                else
-                    tmp = malloc(src->geom->num_key_aliases *
-                                  2 * XkbKeyNameLength);
-                if (!tmp)
-                    return FALSE;
-                dst->geom->key_aliases = tmp;
+            /* Reallocate but don't clear any items. There is no need
+             * to clear anything because data is immediately copied
+             * over the whole memory area with memcpy. */
+            if (!XkbGeomRealloc((void **)&dst->geom->key_aliases, dst->geom->sz_key_aliases, src->geom->num_key_aliases,
+                                2 * XkbKeyNameLength, XKB_GEOM_CLEAR_NONE))
+                return FALSE;
 
-                dst->geom->sz_key_aliases = src->geom->num_key_aliases;
-            }
+            dst->geom->sz_key_aliases = src->geom->num_key_aliases;
 
             memcpy(dst->geom->key_aliases, src->geom->key_aliases,
                    src->geom->num_key_aliases * 2 * XkbKeyNameLength);

@@ -106,6 +106,10 @@ AC_CHECK_MEMBER([struct sockaddr_un.sun_len],
 		  #include <sys/un.h>
 		])
 
+dnl check for support for Solaris Trusted Extensions
+AC_CHECK_HEADERS([tsol/label.h])
+AC_CHECK_FUNCS([is_system_labeled])
+
 xcbincludedir='${includedir}/xcb'
 AC_SUBST(xcbincludedir)
 

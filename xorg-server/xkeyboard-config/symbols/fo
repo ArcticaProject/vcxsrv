@@ -3,7 +3,7 @@ xkb_symbols "basic" {
 
     include "latin(type2)"
 
-    name[Group1]= "Faroe Islands";
+    name[Group1]= "Faroese";
 
     key <TLDE>	{ [   onehalf,   section, threequarters,    paragraph ]	};
     key <LSGT>	{ [      less,    greater,    backslash,      notsign ]	};
@@ -35,7 +35,7 @@ xkb_symbols "nodeadkeys" {
 
     include "fo(basic)"
 
-    name[Group1]= "Faroe Islands - Eliminate dead keys";
+    name[Group1]= "Faroese (eliminate dead keys)";
 
     key <AE12>	{ [     acute,      grave,          bar,       ogonek ]	};
     key <AD11>	{ [     aring,      Aring,    diaeresis,       degree ]	};

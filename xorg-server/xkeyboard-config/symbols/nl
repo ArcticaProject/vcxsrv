@@ -13,7 +13,7 @@ xkb_symbols "basic" {
 
     include "latin"
 
-    name[Group1]="Netherlands";
+    name[Group1]="Dutch";
 
     key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
     key <AE06>	{ [         6,  ampersand, threequarters, fiveeighths ]	};
@@ -56,7 +56,7 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "std" {
 
-    name[Group1]= "Netherlands - Standard";
+    name[Group1]= "Dutch (standard)";
 
     key <TLDE>  { [             at,        section,        notsign ] };
     key <AE01>  { [              1,         exclam,    onesuperior ] };
@@ -129,7 +129,7 @@ xkb_symbols "sundeadkeys" {
      // For naming consistency
 
     include "nl(Sundeadkeys)"
-    name[Group1]="Netherlands - Sun dead keys";
+    name[Group1]="Dutch (Sun dead keys)";
 };
 
 // Copied from macintosh_vndr/nl
@@ -141,7 +141,7 @@ xkb_symbols "mac" {
 
     include "latin"
 
-    name[Group1]= "Netherlands - Macintosh";
+    name[Group1]= "Dutch (Macintosh)";
 
     include "level3(ralt_switch)"
 

@@ -602,7 +602,6 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, int *x, int *y)
 		pScreen = newScreen;
 		(*pScreenPriv->screenFuncs->NewEventScreen) (pDev, pScreen,
 							     FALSE);
-		pScreenPriv = GetScreenPrivate (pScreen);
 	    	/* Smash the confine to the new screen */
                 pPointer->limits.x2 = pScreen->width;
                 pPointer->limits.y2 = pScreen->height;

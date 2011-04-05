@@ -8,7 +8,7 @@
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
 	include "ru(winkeys)"
-	name[Group1]= "Belarus";
+	name[Group1]= "Belarusian";
 
 	key	<AD09> {	[	Byelorussian_shortu,	Byelorussian_SHORTU	]	};
 	key	<AD12> {	[	apostrophe,	apostrophe	]	};
@@ -18,7 +18,7 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "legacy" {
 	include "by(basic)"
-	name[Group1]= "Belarus - Legacy";
+	name[Group1]= "Belarusian (legacy)";
 	
 	key <AE03> {        [               3,      numbersign      ]       };
 	key <AE04> {        [               4,        asterisk      ]       };
@@ -35,7 +35,7 @@ xkb_symbols "legacy" {
 partial alphanumeric_keys
 xkb_symbols "latin" {
 	include "latin"
-	name[Group1]= "Belarus - Latin";
+	name[Group1]= "Belarusian (Latin)";
 	
 	key <AD02> {        [    w,    W,    scaron,    Scaron    ]       };
 	key <AD07> {        [    u,    U,    ubreve,    Ubreve    ]       };

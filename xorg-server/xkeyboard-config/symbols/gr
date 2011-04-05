@@ -11,7 +11,7 @@ default partial alphanumeric_keys alternate_group
 xkb_symbols "basic" {
 	include "gr(simple)"
 
-	name[Group1] = "Greece";
+	name[Group1] = "Greek";
 
 	include "eurosign(e)"
 	include "eurosign(5)"
@@ -56,7 +56,7 @@ xkb_symbols "simple" {
 
     include "gr(bare)"
 
-    name[Group1] = "Greece - Simple";
+    name[Group1] = "Greek (simple)";
 
     key <TLDE> { [        grave,  asciitilde ] }; // ` ~
     key <AE01> { [            1,      exclam ] }; // 1 !
@@ -147,7 +147,7 @@ xkb_symbols "extended" {
 
     include "gr(simple)"
 
-    name[Group1] = "Greece - Extended";
+    name[Group1] = "Greek (extended)";
 
     key.type[Group1] = "THREE_LEVEL";
 
@@ -172,7 +172,7 @@ xkb_symbols "polytonic" {
 
     include "gr(extended)"
 
-    name[Group1] = "Greece - Polytonic";
+    name[Group1] = "Greek (polytonic)";
 
     key.type[Group1] = "THREE_LEVEL";
 
@@ -188,7 +188,7 @@ xkb_symbols "nodeadkeys" {
 
     include "gr(simple)"
 
-    name[Group1] = "Greece - Eliminate dead keys";
+    name[Group1] = "Greek (eliminate dead keys)";
 
     key <AC10> { [ semicolon, colon ] }; // ; :
 };

@@ -311,6 +311,17 @@ typedef struct _XkbGeometrySizes {
 	unsigned short	num_key_aliases;
 } XkbGeometrySizesRec,*XkbGeometrySizesPtr;
 
+/**
+ * Specifies which items should be cleared in an XKB geometry array
+ * when the array is reallocated.
+ */
+typedef enum
+{
+    XKB_GEOM_CLEAR_NONE,   /* Don't clear any items, just reallocate.   */
+    XKB_GEOM_CLEAR_EXCESS, /* Clear new extra items after reallocation. */
+    XKB_GEOM_CLEAR_ALL     /* Clear all items after reallocation.       */
+} XkbGeomClearance;
+
 extern	XkbPropertyPtr
 XkbAddGeomProperty(
     XkbGeometryPtr	/* geom */,
@@ -505,6 +516,15 @@ XkbFreeGeometry(
     XkbGeometryPtr	/* geom */,
     unsigned int	/* which */,
     Bool		/* freeMap */
+);
+
+extern Bool
+XkbGeomRealloc(
+    void **		/* buffer */,
+    int			/* szItems */,
+    int			/* nrItems */,
+    int			/* itemSize */,
+    XkbGeomClearance	/* clearance */
 );
 
 extern Status

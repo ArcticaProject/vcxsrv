@@ -221,11 +221,16 @@ DRI2AddDrawableRef(DRI2DrawablePtr pPriv, XID id, XID dri2_id,
     if (ref == NULL)
 	return BadAlloc;
 	
-    if (!AddResource(dri2_id, dri2DrawableRes, pPriv))
+    if (!AddResource(dri2_id, dri2DrawableRes, pPriv)) {
+	free(ref);
 	return BadAlloc;
+    }
     if (!DRI2LookupDrawableRef(pPriv, id))
-	if (!AddResource(id, dri2DrawableRes, pPriv))
+	if (!AddResource(id, dri2DrawableRes, pPriv)) {
+	    FreeResourceByType(dri2_id, dri2DrawableRes, TRUE);
+	    free(ref);
 	    return BadAlloc;
+        }
 
     ref->id = id;
     ref->dri2_id = dri2_id; 

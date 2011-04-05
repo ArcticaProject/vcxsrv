@@ -157,9 +157,11 @@ miZeroLine(
     list_len = (height >= width) ? height : width;
     pspanInit = malloc(list_len * sizeof(DDXPointRec));
     pwidthInit = malloc(list_len * sizeof(int));
-    if (!pspanInit || !pwidthInit)
+    if (!pspanInit || !pwidthInit) {
+	free(pspanInit);
+	free(pwidthInit);
 	return;
-
+    }
     Nspans = 0;
     new_span = TRUE;
     spans  = pspanInit - 1;

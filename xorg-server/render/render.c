@@ -1372,8 +1372,10 @@ ProcRenderCompositeGlyphs (ClientPtr client)
     else
     {
 	listsBase = (GlyphListPtr) malloc(nlist * sizeof (GlyphListRec));
-	if (!listsBase)
-	    return BadAlloc;
+	if (!listsBase) {
+	    rc = BadAlloc;
+	    goto bail;
+	}
     }
     buffer = (CARD8 *) (stuff + 1);
     glyphs = glyphsBase;
@@ -1392,13 +1394,7 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 					     GlyphSetType, client,
 					     DixUseAccess);
 		if (rc != Success)
-		{
-		    if (glyphsBase != glyphsLocal)
-			free(glyphsBase);
-		    if (listsBase != listsLocal)
-			free(listsBase);
-		    return rc;
-		}
+		    goto bail;
 	    }
 	    buffer += 4;
 	}
@@ -1436,8 +1432,10 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 	    lists++;
 	}
     }
-    if (buffer > end)
-	return BadLength;
+    if (buffer > end) {
+	rc = BadLength;
+	goto bail;
+    }
 
     CompositeGlyphs (stuff->op,
 		     pSrc,
@@ -1448,13 +1446,14 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 		     nlist,
 		     listsBase,
 		     glyphsBase);
+    rc = Success;
 
+bail:
     if (glyphsBase != glyphsLocal)
 	free(glyphsBase);
     if (listsBase != listsLocal)
 	free(listsBase);
-    
-    return Success;
+    return rc;
 }
 
 static int

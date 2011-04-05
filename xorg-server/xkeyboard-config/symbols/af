@@ -12,8 +12,7 @@
 
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
-   //name[Group1]= "Afghanistan Dari";
-   name[Group1]= "Afghanistan";
+   name[Group1]= "Afghani";
 
    key <TLDE> { [ 0x100200d, 0x10000f7, dead_tilde ] };
    key <AE01> { [ 0x10006f1, exclam, 0x1000060 ] };
@@ -84,7 +83,7 @@ xkb_symbols "basic" {
 
 partial alphanumeric_keys 
 xkb_symbols "ps" {
-   name[Group1]= "Afghanistan - Pashto";
+   name[Group1]= "Pashto";
 
    key <TLDE> { [ 0x100200d, 0x10000f7, dead_tilde ] };
    key <AE01> { [ 0x10006f1, exclam, 0x1000060 ] };
@@ -155,7 +154,7 @@ xkb_symbols "ps" {
 
 partial alphanumeric_keys 
 xkb_symbols "uz" {
-   name[Group1]= "Afghanistan - Southern Uzbek";
+   name[Group1]= "Uzbek (Afghanistan)";
 
    key <TLDE> { [ 0x100200d, 0x10000f7, dead_tilde ] };
    key <AE01> { [ 0x10006f1, exclam, 0x1000060 ] };
@@ -216,7 +215,7 @@ xkb_symbols "uz" {
 partial alphanumeric_keys 
 xkb_symbols "olpc-ps" {
 
-   name[Group1]= "Afghanistan - OLPC Pashto";
+   name[Group1]= "Pashto (Afghanistan, OLPC)";
 
    key <TLDE> { [ 0x100200D, 0x1000654, grave ] }; // zero width joiner, Arabic hamza above
    key <AE01> { [ 0x10006F1, exclam, asciitilde ] }; // Arabic one
@@ -277,7 +276,7 @@ xkb_symbols "olpc-ps" {
 partial alphanumeric_keys 
 xkb_symbols "fa-olpc" {
 
-   name[Group1]= "Afghanistan - OLPC Dari";
+   name[Group1]= "Persian (Afghanistan, Dari OLPC)";
 
    key <TLDE> { [ 0x100200D, division, asciitilde ] }; // zero width joiner
    key <AE01> { [ 0x10006F1, exclam, grave ] }; // Arabic one
@@ -338,7 +337,7 @@ xkb_symbols "fa-olpc" {
 partial alphanumeric_keys 
 xkb_symbols "uz-olpc" {
 
-   name[Group1]= "Afghanistan - OLPC Southern Uzbek";
+   name[Group1]= "Uzbek (Afghanistan, OLPC)";
 
    key <TLDE> { [ 0x100200D, division, asciitilde ] }; // zero width joiner
    key <AE01> { [ 0x10006F1, exclam, grave ] }; // Arabic one

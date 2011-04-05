@@ -2,7 +2,7 @@ default
 partial alphanumeric_keys modifier_keys 
 xkb_symbols "basic" {
 
-    name[Group1]= "USA";
+    name[Group1]= "English (USA)";
 
     // Alphanumeric section
     key <TLDE> {	[     grave,	asciitilde	]	};
@@ -62,7 +62,7 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "euro" {
 
-    name[Group1]= "USA - With EuroSign on 5";
+    name[Group1]= "English (US, with euro on 5)";
 
     include "us(basic)"
 
@@ -75,7 +75,7 @@ xkb_symbols "euro" {
 partial alphanumeric_keys
 xkb_symbols "intl" {
 
-    name[Group1]= "USA - International (with dead keys)";
+    name[Group1]= "English (US, international with dead keys)";
 
     include "us(basic)"
 
@@ -165,7 +165,7 @@ xkb_symbols "intl" {
 partial alphanumeric_keys
 xkb_symbols "alt-intl" {
 
-  name[Group1]= "USA - Alternative international";
+  name[Group1]= "English (US, alternative international)";
 
   include "us"
 
@@ -194,7 +194,7 @@ xkb_symbols "alt-intl" {
 partial alphanumeric_keys
 xkb_symbols "dvorak" {
 
-    name[Group1]= "USA - Dvorak";
+    name[Group1]= "English (Dvorak)";
 
     // Alphanumeric section
 
@@ -259,7 +259,7 @@ xkb_symbols "dvorak" {
 partial alphanumeric_keys
 xkb_symbols "dvorak-intl" {
 
-    name[Group1]= "USA - Dvorak international (with dead keys)";
+    name[Group1]= "English (Dvorak international with dead keys)";
 
     include "us(dvorak)"
 
@@ -338,7 +338,7 @@ xkb_symbols "dvorak-intl" {
 partial alphanumeric_keys
 xkb_symbols "dvorak-alt-intl" {
 
-    name[Group1]= "USA - Dvorak alternative international (no dead keys)";
+    name[Group1]= "English (Dvorak alternative international no dead keys)";
 
     include "us(dvorak)"
 
@@ -373,7 +373,7 @@ partial alphanumeric_keys
 xkb_symbols "dvorak-l" {
 
     include "us(dvorak)"
-    name[Group1]= "USA - Left handed Dvorak";
+    name[Group1]= "English (left handed Dvorak)";
 
     key <AE01> {	[ bracketleft,	braceleft	]	};
     key <AE02> {	[ bracketright,	braceright	]	};
@@ -429,7 +429,7 @@ partial alphanumeric_keys
 xkb_symbols "dvorak-r" {
     
     include "us(dvorak)"
-    name[Group1]= "USA - Right handed Dvorak";
+    name[Group1]= "English (right handed Dvorak)";
 
     key <AE01> {	[	    1,	exclam 		]	};
     key <AE02> {	[	    2,	at		]	};
@@ -488,7 +488,7 @@ xkb_symbols "dvorak-r" {
 partial alphanumeric_keys
 xkb_symbols "dvorak-classic" {
 
-    name[Group1]= "USA - Classic Dvorak";
+    name[Group1]= "English (classic Dvorak)";
 
     // Alphanumeric section
 
@@ -620,7 +620,7 @@ xkb_symbols "dvp" {
 partial alphanumeric_keys
 xkb_symbols "rus" {
 
-    name[Group1]= "USA - Russian phonetic";
+    name[Group1]= "Russian (US, phonetic)";
 
     include "us(basic)"
 
@@ -667,7 +667,7 @@ partial alphanumeric_keys
 xkb_symbols "mac" {
 
     include "us(basic)"
-    name[Group1]= "USA - Macintosh";
+    name[Group1]= "English (Macintosh)";
     key.type[group1]="FOUR_LEVEL";
 
     // Slightly improvised from http://homepage.mac.com/thgewecke/kblayout.jpg
@@ -734,7 +734,7 @@ xkb_symbols "mac" {
 partial alphanumeric_keys
 xkb_symbols "colemak" {
     include "us"
-    name[Group1]= "USA - Colemak";
+    name[Group1]= "English (Colemak)";
 
     // Alphanumeric section
     key <TLDE> { [        grave,   asciitilde,      dead_tilde,       asciitilde ] };
@@ -814,7 +814,7 @@ xkb_symbols "colemak" {
 partial alphanumeric_keys
 xkb_symbols "altgr-intl" {
 
-   name[Group1]= "USA - International (AltGr dead keys)";
+   name[Group1]= "English (international AltGr dead keys)";
 
    include "us(intl)"
 
@@ -1050,7 +1050,7 @@ xkb_symbols "olpc" {
 partial alphanumeric_keys
 xkb_symbols "olpc2" {
    include "us(olpc)"
-   name[Group1]= "USA - Layout toggle on multiply/divide key";
+   name[Group1]= "English (layout toggle on multiply/divide key)";
    include "group(olpc)"
 };
 
@@ -1060,7 +1060,7 @@ xkb_symbols "olpc2" {
 partial alphanumeric_keys modifier_keys
 xkb_symbols "chr" {
 
-    name[Group1]= "USA - Cherokee";
+    name[Group1]= "Cherokee";
     key.type[group1]="ALPHABETIC";
 
     // Alphanumeric section
@@ -1123,7 +1123,7 @@ xkb_symbols "chr" {
 partial alphanumeric_keys
 xkb_symbols "hbs" {
 
-  name[Group1]= "USA - Serbo-Croatian";
+  name[Group1]= "Serbo-Croatian (USA)";
 
   include "us"
 
@@ -1146,7 +1146,7 @@ xkb_symbols "hbs" {
 partial alphanumeric_keys
 xkb_symbols "htcdream" {
         include "inet(htcdream)"
-        name[Group1]= "USA - htcdream";
+        name[Group1]= "English (USA)";
 
         //second row
         key <AD01> { [ q, Q, Tab, Tab ] };

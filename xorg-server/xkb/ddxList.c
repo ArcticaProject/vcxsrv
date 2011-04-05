@@ -222,8 +222,8 @@ char	tmpname[PATH_MAX];
     list->nFound[what]= 0;
     free(buf);
     buf = malloc(PATH_MAX * sizeof(char));
-    if (!buf)
-    {
+    if (!buf) {
+        fclose(in);
 #ifdef WIN32
 	unlink(tmpname);
 #endif

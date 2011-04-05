@@ -192,44 +192,24 @@ xkb_symbols "winkeys" {
 
 };
 
-// Crimean Tatar (Crimean Turkish) layouts.
 partial
-xkb_symbols "crh_f" {
-    include "tr(crh_f)"
+xkb_symbols "crh_dobruja" {
+    // Romania-specific Crimean Tatar (Crimean Turkish) Q layout.
+    // This layout is not yet standard. Common Alt-Q and F layouts are now also 
+    // available right next to this layout in the new language-centric UI.
+    // Reşat SABIQ <tilde.birlik @ gmail . com>, 2009, 2011
+    // Özgür Qarahan <qarahan @ gmail . com>, 2009
 
-    name[Group1]="Romania - Crimean Tatar (Turkish F)";
-};
-
-partial
-xkb_symbols "crh_alt" {
-    include "tr(crh_alt)"
-
-    name[Group1]="Romania - Crimean Tatar (Turkish Alt-Q)";
-};
-
-partial
-xkb_symbols "crh_dobruca1" {
     include "tr(crh)"
 
-    name[Group1]="Romania - Crimean Tatar (Dobruca-1 Q)";
+    name[Group1]="Romania - Crimean Tatar (Dobruja Q)";
 
-    key <AD05>	{ [         t,          T,       tcedilla,       Tcedilla ]	};
-    key <AD10>	{ [         p,          P,         abreve,         Abreve ]	};
-
-    key <AC04>	{ [         f,          F,         ibreve,         Ibreve ]	};
-    key <AC07>	{ [    iacute,     Iacute,              j,              J ]	};
-
-    key <AB07>	{ [         m,          M,      trademark,      masculine ]	};
-};
-
-partial
-xkb_symbols "crh_dobruca2" {
-    include "ro(crh_dobruca1)"
-
-    name[Group1]="Romania - Crimean Tatar (Dobruca-2 Q)";
-
-    key <AC04>	{ [         f,          F,          iacute,          Iacute ]	};
-    key <AC07>	{ [    ibreve,     Ibreve,               j,               J ]	};
+    key <AD02>	{ [         w,          W,         abreve,         Abreve ] };
+    key <AD05>	{ [         t,          T,      0x100021b,      0x100021a ] };
+    key <AD10>	{ [         p,          P,        section 	          ] };
+    key <AC02>	{ [         s,          S,      0x1000219,      0x1000218 ] };
+    key <AC07>	{ [    ibreve,     Ibreve,              j,              J ] };
+    key <AB07>	{ [         m,          M,      trademark,      masculine ] };
 };
 
 // EXTRAS:

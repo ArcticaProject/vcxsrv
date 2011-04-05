@@ -6,7 +6,7 @@ xkb_symbols "basic" {
 
     include "latin(type4)"
 
-    name[Group1]="Italy";
+    name[Group1]="Italian";
 
     key <TLDE>	{ [ backslash,        bar,      notsign,    brokenbar ]	};
 
@@ -43,7 +43,7 @@ xkb_symbols "nodeadkeys" {
 
     include "it(basic)"
 
-    name[Group1]="Italy - Eliminate dead keys";
+    name[Group1]="Italian (eliminate dead keys)";
 
     key <AE02>	{ [         2,   quotedbl,  twosuperior,  doubleacute ] };
     key <AE03>	{ [         3,   sterling,threesuperior,   asciitilde ]	};
@@ -65,7 +65,7 @@ xkb_symbols "nodeadkeys" {
 partial alphanumeric_keys
 xkb_symbols "mac" {
 
-    name[Group1]= "Italy - Macintosh";
+    name[Group1]= "Italian (Macintosh)";
 
     // Alphanumeric section
     key <LSGT> {	[        less,  greater   	]	};
@@ -133,7 +133,7 @@ xkb_symbols "geo" {
     include "it"
     include "ge(basic)"
 
-    name[Group1]= "Italy - Georgian";
+    name[Group1]= "Georgian (Italy)";
     key <TLDE> { [ backslash, bar, notsign, brokenbar ] };
     key <AE01> { [ 1, exclam, onesuperior ] };
     key <AE02> { [ 2, quotedbl, twosuperior, dead_doubleacute ] };
@@ -175,7 +175,7 @@ xkb_symbols "olpc" {
 partial alphanumeric_keys modifier_keys
 xkb_symbols "us" {
 
-    name[Group1]= "Italy - US keyboard with Italian letters";
+    name[Group1]= "Italian (US keyboard with Italian letters)";
     
     include "us(euro)"
     
@@ -215,7 +215,7 @@ xkb_symbols "us" {
 partial alphanumeric_keys
 xkb_symbols "htcdream" {
         include "inet(htcdream)"
-        name[Group1]= "Italy - htcdream";
+        name[Group1]= "Italian";
 
         //second row
         key <AD01> { [ q, Q, Tab, Tab ] };

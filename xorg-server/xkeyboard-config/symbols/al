@@ -8,7 +8,7 @@ xkb_symbols "basic" {
 
     include "latin(type3)"
 
-    name[Group1]="Albania";
+    name[Group1]="Albanian";
 
     key <AE01>	{ [         1,     exclam,   asciitilde,   dead_tilde ]	};
     key <AE02>	{ [         2,   quotedbl,   dead_caron,    oneeighth ]	};
