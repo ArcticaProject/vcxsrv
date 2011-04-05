@@ -294,12 +294,14 @@ xkb_symbols "olpc" {
 
 };
 
-// Crimean Tatar (Crimean Turkish) layouts. 
-// First released: 2009.
-// These layouts are currently experimental. In particular, the mapping of letter 'x', 
-// included for foreign words and shortcuts, might change in the future...
-// Reşat SABIQ <tilde.birlik @ gmail . com>
-// Özgür Qarahan <qarahan @ gmail . com>
+// Crimean Tatar (Crimean Turkish) layouts.
+// First released (by Ubuntu): 2009-02-24.
+// These layouts are not yet standard. In particular, the mapping of 
+// letter 'x' might change in the future. This letter is not used in the 
+// current official alphabet, but is included in the layouts for foreign words
+// and shortcuts.
+// Reşat SABIQ <tilde.birlik @ gmail . com>, 2009
+// Özgür Qarahan <qarahan @ gmail . com>, 2009
 
 // Crimean Tatar (Crimean Turkish) Q Layout
 partial

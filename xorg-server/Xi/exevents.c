@@ -1607,14 +1607,18 @@ AddExtensionClient(WindowPtr pWin, ClientPtr client, Mask mask, int mskidx)
     if (!others)
 	return BadAlloc;
     if (!pWin->optional->inputMasks && !MakeInputMasks(pWin))
-	return BadAlloc;
+	goto bail;
     others->mask[mskidx] = mask;
     others->resource = FakeClientID(client->index);
     others->next = pWin->optional->inputMasks->inputClients;
     pWin->optional->inputMasks->inputClients = others;
     if (!AddResource(others->resource, RT_INPUTCLIENT, (pointer) pWin))
-	return BadAlloc;
+	goto bail;
     return Success;
+
+bail:
+    free(others);
+    return BadAlloc;
 }
 
 static Bool

@@ -397,7 +397,6 @@ Bool
 miDCPutUpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
                  int x, int y, unsigned long source, unsigned long mask)
 {
-    miDCScreenPtr   pScreenPriv;
     miDCCursorPtr   pPriv;
     miDCBufferPtr   pBuffer;
     WindowPtr	    pWin;
@@ -410,8 +409,7 @@ miDCPutUpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
 	if (!pPriv)
 	    return FALSE;
     }
-    pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
-						  miDCScreenKey);
+
     pWin = pScreen->root;
     pBuffer = miGetDCDevice(pDev, pScreen);
 
@@ -444,14 +442,11 @@ Bool
 miDCSaveUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
                      int x, int y, int w, int h)
 {
-    miDCScreenPtr   pScreenPriv;
     miDCBufferPtr   pBuffer;
     PixmapPtr	    pSave;
     WindowPtr	    pWin;
     GCPtr	    pGC;
 
-    pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
-						  miDCScreenKey);
     pBuffer = miGetDCDevice(pDev, pScreen);
 
     pSave = pBuffer->pSave;
@@ -478,14 +473,11 @@ Bool
 miDCRestoreUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
                         int x, int y, int w, int h)
 {
-    miDCScreenPtr   pScreenPriv;
     miDCBufferPtr   pBuffer;
     PixmapPtr	    pSave;
     WindowPtr	    pWin;
     GCPtr	    pGC;
 
-    pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
-						  miDCScreenKey);
     pBuffer = miGetDCDevice(pDev, pScreen);
     pSave = pBuffer->pSave;
 

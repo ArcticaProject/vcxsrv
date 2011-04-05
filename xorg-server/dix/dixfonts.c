@@ -66,15 +66,9 @@ Equipment Corporation.
 #include "dixfont.h"
 #include "xace.h"
 
-#ifdef DEBUG
-#include	<stdio.h>
-#endif
-
 #ifdef XF86BIGFONT
 #include "xf86bigfontsrv.h"
 #endif
-
-#define QUERYCHARINFO(pci, pr)  *(pr) = (pci)->metrics
 
 extern pointer fosNaturalParams;
 extern FontPtr defaultFont;
@@ -391,14 +385,6 @@ OpenFont(ClientPtr client, XID fid, Mask flags, unsigned lenfname, char *pfontna
     int         i;
     FontPtr     cached = (FontPtr)0;
 
-#ifdef FONTDEBUG
-    char *f;
-    f = malloc(lenfname + 1);
-    memmove(f, pfontname, lenfname);
-    f[lenfname] = '\0';
-    ErrorF("[dix] OpenFont: fontname is \"%s\"\n", f);
-    free(f);
-#endif
     if (!lenfname || lenfname > XLFDMAXFONTNAMELEN)
 	return BadName;
     if (patternCache)
@@ -1829,8 +1815,10 @@ SetDefaultFontPath(char *path)
     /* get enough for string, plus values -- use up commas */
     len = strlen(temp_path) + 1;
     nump = cp = newpath = malloc(len);
-    if (!newpath)
+    if (!newpath) {
+	free(temp_path);
 	return BadAlloc;
+    }
     pp = (unsigned char *) temp_path;
     cp++;
     while (*pp) {

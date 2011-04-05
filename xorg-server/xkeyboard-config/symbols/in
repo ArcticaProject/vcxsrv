@@ -22,7 +22,7 @@
 default partial alphanumeric_keys
 xkb_symbols "deva" {
 	// March 2004 -- David Holl <smyrph+dev_xkb@ece.wpi.edu>
-	name[Group1]="India";
+	name[Group1]="Indian";
 
 	key.type="FOUR_LEVEL";
 
@@ -97,7 +97,7 @@ xkb_symbols "deva" {
 
 partial alphanumeric_keys
 xkb_symbols "bolnagri" {
-     name[Group1] = "India - Hindi Bolnagri";
+     name[Group1] = "Hindi (Bolnagri)";
      key.type="FOUR_LEVEL";
     //Top Alphanumeric row
     // Roman digits
@@ -167,7 +167,7 @@ xkb_symbols "bolnagri" {
 
 partial alphanumeric_keys
 xkb_symbols "ben" {
-    name[Group1]= "India - Bengali";
+    name[Group1]= "Bengali";
 
       // Mainly numbers.
       key <AE01> { [      U09E7 		]	};
@@ -232,7 +232,7 @@ xkb_symbols "ben" {
 };
 
 xkb_symbols "ben_probhat" {
- name[Group1]= "India - Bengali Probhat";
+ name[Group1]= "Bengali (Probhat)";
    key <ESC>  { [ Escape ] };
 
 // numbers
@@ -306,7 +306,7 @@ xkb_symbols "ben_probhat" {
 
 partial alphanumeric_keys 
 xkb_symbols "guj" {
-      name[Group1]= "India - Gujarati";
+      name[Group1]= "Gujarati";
 
       // Mainly numbers.
       key <AE01> { [      U0AE7, U0A8D 	]	};
@@ -377,7 +377,7 @@ xkb_symbols "kan" {
     // Date   : Wed Nov 13 17:22:58 IST 2002
     // Kannada digits mapped in basic only
 
-    name[Group1]= "India - Kannada";
+    name[Group1]= "Kannada";
 
     key <TLDE> { [  U0cca, U0c92	] };
     key <AE01> { [  U0ce7			] };
@@ -445,7 +445,7 @@ xkb_symbols "kan" {
 partial alphanumeric_keys 
 xkb_symbols "mal" {
 
-    name[Group1] = "India - Malayalam";
+    name[Group1] = "Malayalam";
 
     //From grave to backslash (\)
     
@@ -534,7 +534,7 @@ xkb_symbols "mal" {
 
 partial alphanumeric_keys
 xkb_symbols "mal_lalitha" {
-     name[Group1] = "India - Malayalam Lalitha";
+     name[Group1] = "Malayalam (Lalitha)";
      key.type="FOUR_LEVEL";
     //Top Alphanumeric row
     // Roman digits
@@ -607,7 +607,7 @@ xkb_symbols "ori" {
     // Author: G Karunakar <karunakar@freedomink.org>
     // Date: Wed Nov 13 18:16:19 IST 2002
 
-    name[Group1]= "India - Oriya";
+    name[Group1]= "Oriya";
     
     key <AE01> { [  U0b67			] };
     key <AE02> { [  U0b68			] };
@@ -667,7 +667,7 @@ xkb_symbols "ori" {
 // INSCRIPT
 partial alphanumeric_keys 
 xkb_symbols "tam" {
-      name[Group1]= "India - Tamil";
+      name[Group1]= "Tamil";
 
       key <TLDE> { [      U0BCA, U0B92	]	};
 
@@ -739,7 +739,7 @@ xkb_symbols "tam_unicode" {
 // Date  : Fri Sep 4 11:32:00 CST 2009
 // Mapping:
   
-    name[Group1]= "India - Tamil Unicode";
+    name[Group1]= "Tamil (Unicode)";
 
     // granthas
     key <TLDE> {  [ apostrophe, asciitilde ] };
@@ -804,7 +804,7 @@ xkb_symbols "tam_keyboard_with_numerals" {
 // Date  : Fri Sep 4 11:33:00 CST 2009
 // Mapping:
 
-      name[Group1]= "India - Tamil Keyboard with Numerals";
+      name[Group1]= "Tamil (keyboard with numerals)";
 
       // Mainly numbers.
       key <TLDE> { [ apostrophe, asciitilde ] };
@@ -868,7 +868,7 @@ xkb_symbols "tam_TSCII" {
 // Author	: Thuraiappah Vaseeharan <vasee@ieee.org>
 // Last Modified: Sat Jan  5 17:11:26 CST 2002
 
-    name[Group1]= "India - Tamil TSCII Typewriter";
+    name[Group1]= "Tamil (TSCII typewriter)";
 
     key <AE01> {  [ 0x10000b7, 0x10000a4 ] }; // aytham
     key <AE02> {  [ 0x1000082, 0x10000a5 ] }; // shri
@@ -924,7 +924,7 @@ xkb_symbols "tam_TAB" {
 // Author: Thuraiappah Vaseeharan <t_vasee@yahoo.com>
 // Date  : Sun Aug 12 02:23:00 CDT 2001
 
-    name[Group1]= "India - Tamil TAB Typewriter";
+    name[Group1]= "Tamil (TAB typewriter)";
 
     // numeral row
     key <AE01> {  [ 0x10000e7, 0x10000a7 ] } ;
@@ -980,7 +980,7 @@ xkb_symbols "tel" {
     // Date:
     // See layout at http://www.indlinux.org/keymap/telugu.php
 
-    name[Group1]= "India - Telugu";
+    name[Group1]= "Telugu";
 
     key <TLDE> { [  U0c4a, U0c12	] };
     key <AE01> { [  U0c67			] };
@@ -1042,26 +1042,26 @@ xkb_symbols "tel" {
 partial alphanumeric_keys 
 xkb_symbols "urd-phonetic" {
     include "pk(urd-phonetic)"
-    name[Group1]= "India - Urdu, Phonetic";
+    name[Group1]= "Urdu (phonetic)";
 };
 
 partial alphanumeric_keys 
 xkb_symbols "urd-phonetic3" {
     include "pk(urd-crulp)"
-    name[Group1]= "India - Urdu, Alternative phonetic";
+    name[Group1]= "Urdu (alternative phonetic)";
 };
 
 partial alphanumeric_keys 
 xkb_symbols "urd-winkeys" {
     include "pk(urd-nla)"
-    name[Group1]= "India - Urdu, Winkeys";
+    name[Group1]= "Urdu (WinKeys)";
 };
 
 // based on a keyboard map from an 'xkb/symbols/gur' file
 
 partial alphanumeric_keys
 xkb_symbols "guru" {
-      name[Group1]= "India - Gurmukhi";
+      name[Group1]= "Punjabi (Gurmukhi)";
 
       // Mainly numbers.
       key <AE01> { [      U0A67 		]	};
@@ -1132,7 +1132,7 @@ xkb_symbols "guru" {
  
 partial alphanumeric_keys
 xkb_symbols "jhelum" {
-      name[Group1] = "India - Gurmukhi Jhelum";
+      name[Group1] = "Punjabi (Gurmukhi Jhelum)";
           key.type="FOUR_LEVEL";
      //Top Alphanumeric row
      // Roman digits
@@ -1265,7 +1265,7 @@ xkb_symbols "olpc" {
 partial alphanumeric_keys 
 xkb_symbols "hin-wx" {
 
-    name[Group1]= "India - Hindi Wx";
+    name[Group1]= "Hindi (Wx)";
 
       key <TLDE> {	 [     grave, asciitilde, 2, 3    ]	};
 
@@ -1330,7 +1330,7 @@ xkb_symbols "hin-wx" {
 partial alphanumeric_keys
 xkb_symbols "eng" {
 
-    name[Group1]= "India - English with RupeeSign";
+    name[Group1]= "English (India, with RupeeSign)";
 
     include "us(basic)"
 
@@ -1351,7 +1351,7 @@ xkb_symbols "eng" {
 partial alphanumeric_keys 
 xkb_symbols "mal_enhanced" {
 
-    name[Group1] = "India - Malayalam enhanced Inscript with Rupee Sign";
+    name[Group1] = "Malayalam (enhanced Inscript with Rupee Sign)";
 
    //From grave to backslash (\)
     

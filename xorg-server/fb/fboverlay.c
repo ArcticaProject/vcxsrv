@@ -384,12 +384,16 @@ fbOverlayFinishScreenInit(ScreenPtr	pScreen,
    
     if (!fbInitVisuals (&visuals, &depths, &nvisuals, &ndepths, &depth1,
 			&defaultVisual, ((unsigned long)1<<(bpp1-1)) |
-			((unsigned long)1<<(bpp2-1)), 8))
+			((unsigned long)1<<(bpp2-1)), 8)) {
+	free(pScrPriv);
 	return FALSE;
+    }
     if (! miScreenInit(pScreen, 0, xsize, ysize, dpix, dpiy, 0,
 			depth1, ndepths, depths,
-			defaultVisual, nvisuals, visuals))
+			defaultVisual, nvisuals, visuals)) {
+	free(pScrPriv);
 	return FALSE;
+    }
     /* MI thinks there's no frame buffer */
 #ifdef MITSHM
     ShmRegisterFbFuncs(pScreen);

@@ -353,9 +353,8 @@ ProcListExtensions(ClientPtr client)
     }
     WriteReplyToClient(client, sizeof(xListExtensionsReply), &reply);
     if (reply.length)
-    {
         WriteToClient(client, total_length, buffer);
-        free(buffer);
-    }
+
+    free(buffer);
     return Success;
 }

@@ -54,6 +54,12 @@
 #include "xcbext.h"
 #include "xcbint.h"
 
+/* must be after "xcbint.h" to get autoconf #defines */
+#if defined(HAVE_TSOL_LABEL_H) && defined(HAVE_IS_SYSTEM_LABELED)
+# include <tsol/label.h>
+# include <sys/stat.h>
+#endif
+
 int xcb_popcount(uint32_t mask)
 {
     uint32_t y;
@@ -204,6 +210,21 @@ static int _xcb_open(const char *host, char *protocol, const int display)
     }
 
 #ifndef _WIN32
+#if defined(HAVE_TSOL_LABEL_H) && defined(HAVE_IS_SYSTEM_LABELED)
+    /* Check special path for Unix sockets under Solaris Trusted Extensions */
+    if (is_system_labeled())
+    {
+        struct stat sbuf;
+        const char *tsol_base = "/var/tsol/doors/.X11-unix/X";
+        char tsol_socket[PATH_MAX];
+
+        snprintf(tsol_socket, sizeof(tsol_socket), "%s%d", tsol_base, display);
+
+        if (stat(tsol_socket, &sbuf) == 0)
+            base = tsol_base;
+    }
+#endif
+
     filelen = strlen(base) + 1 + sizeof(display) * 3 + 1;
     file = malloc(filelen);
     if(file == NULL)

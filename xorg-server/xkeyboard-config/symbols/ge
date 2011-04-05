@@ -18,7 +18,7 @@
 partial default alphanumeric_keys
 xkb_symbols "basic" {
 
-    name[Group1]= "Georgia";
+    name[Group1]= "Georgian";
 
     key <TLDE> { [ 0x0100201e, 0x0100201c, 0x0100201e, asciitilde ] };
     key <AE01> { [ 1, exclam, apostrophe ] };
@@ -85,7 +85,7 @@ partial alphanumeric_keys
 xkb_symbols "ergonomic" {
     include "ge(basic)"
 
-    name[Group1]= "Georgia - Ergonomic";
+    name[Group1]= "Georgian (ergonomic)";
 
     key <TLDE> { [ 0x0100201e, apostrophe, 0x0100201e, asciitilde ] };
     key <AE01> { [ exclam, 1, exclam      ] };
@@ -147,7 +147,7 @@ partial alphanumeric_keys
 xkb_symbols "mess" {
     include "ge(basic)"
 
-    name[Group1]= "Georgia - MESS";
+    name[Group1]= "Georgian (MESS)";
 
     key <TLDE> { [ 0x010010ed, backslash, quoteleft ] };
     key <AE01> { [ 1, exclam, apostrophe ] };
@@ -206,7 +206,7 @@ xkb_symbols "mess" {
 partial alphanumeric_keys
 xkb_symbols "ru" {
 
-    name[Group1]= "Georgia - Russian";
+    name[Group1]= "Russian (Georgia)";
 
     key <TLDE> { [ asciicircum, asciitilde      ]       };
     key <AE01> { [         1,    exclam         ]       };
@@ -267,6 +267,6 @@ xkb_symbols "os" {
 
     include "ru(os_legacy)"
 
-    name[Group1]= "Georgia - Ossetian";
+    name[Group1]= "Ossetian (Georgia)";
 
 };

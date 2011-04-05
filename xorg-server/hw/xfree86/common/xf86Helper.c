@@ -1831,6 +1831,7 @@ xf86ConfigFbEntity(ScrnInfoPtr pScrn, int scrnFlag, int entityIndex,
 
     xf86SetEntityFuncs(entityIndex,init,enter,leave,private);
 
+    free(pEnt);
     return pScrn;
 }
 

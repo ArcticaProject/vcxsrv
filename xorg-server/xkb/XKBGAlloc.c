@@ -435,6 +435,57 @@ XkbFreeGeometry(XkbGeometryPtr geom,unsigned which,Bool freeMap)
 
 /***====================================================================***/
 
+/**
+ * Resize and clear an XKB geometry item array. The array size may
+ * grow or shrink unlike in _XkbGeomAlloc.
+ *
+ * @param buffer[in,out]  buffer to reallocate and clear
+ * @param szItems[in]     currently allocated item count for "buffer"
+ * @param nrItems[in]     required item count for "buffer"
+ * @param itemSize[in]    size of a single item in "buffer"
+ * @param clearance[in]   items to clear after reallocation
+ *
+ * @see _XkbGeomAlloc
+ *
+ * @return TRUE if reallocation succeeded. Otherwise FALSE is returned
+ *         and contents of "buffer" aren't touched.
+ */
+Bool
+XkbGeomRealloc(void **buffer, int szItems, int nrItems,
+               int itemSize, XkbGeomClearance clearance)
+{
+    void *items;
+    int clearBegin;
+    /* Check validity of arguments. */
+    if (!buffer)
+        return FALSE;
+    items = *buffer;
+    if (!((items && (szItems > 0)) || (!items && !szItems)))
+        return FALSE;
+    /* Check if there is need to resize. */
+    if (nrItems != szItems)
+        if (!(items = realloc(items, nrItems * itemSize)))
+            return FALSE;
+    /* Clear specified items to zero. */
+    switch (clearance)
+    {
+    case XKB_GEOM_CLEAR_EXCESS:
+        clearBegin = szItems;
+        break;
+    case XKB_GEOM_CLEAR_ALL:
+        clearBegin = 0;
+        break;
+    case XKB_GEOM_CLEAR_NONE:
+    default:
+        clearBegin = nrItems;
+        break;
+    }
+    if (items && (clearBegin < nrItems))
+        memset((char *)items + (clearBegin * itemSize), 0, (nrItems - clearBegin) * itemSize);
+    *buffer = items;
+    return TRUE;
+}
+
 static Status
 _XkbGeomAlloc(	void **		old,
 		unsigned short *	num,
@@ -451,18 +502,15 @@ _XkbGeomAlloc(	void **		old,
 	return Success;
 
     *total= (*num)+num_new;
-    if ((*old)!=NULL)
-	 (*old)= realloc((*old),(*total)*sz_elem);
-    else (*old)= calloc((*total),sz_elem);
-    if ((*old)==NULL) {
+
+    if (!XkbGeomRealloc(old, *num, *total, sz_elem, XKB_GEOM_CLEAR_EXCESS))
+    {
+	free(*old);
+	(*old)= NULL;
 	*total= *num= 0;
 	return BadAlloc;
     }
 
-    if (*num>0) {
-	char *tmp= (char *)(*old);
-	memset(&tmp[sz_elem*(*num)], 0, (num_new*sz_elem));
-    }
     return Success;
 }
 

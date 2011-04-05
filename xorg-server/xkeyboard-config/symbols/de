@@ -5,7 +5,7 @@ xkb_symbols "basic" {
 
     include "latin(type4)"
 
-    name[Group1]="Germany";
+    name[Group1]="German";
 
     key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
     key <AE03>	{ [         3,    section, threesuperior,    sterling ]	};
@@ -55,7 +55,7 @@ xkb_symbols "nodeadkeys" {
     // modify the basic German layout to not have any dead keys
 
     include "de(basic)"
-    name[Group1]="Germany - Eliminate dead keys";
+    name[Group1]="German (eliminate dead keys)";
 
     key <TLDE>	{ [asciicircum,    degree,      notsign,      notsign ]	};
     key <AE12>	{ [     acute,      grave,      cedilla,      cedilla ]	};
@@ -74,7 +74,7 @@ xkb_symbols "deadgraveacute" {
     // in many programming languages)
 
     include "de(basic)"
-    name[Group1]="Germany - Dead grave acute";
+    name[Group1]="German (dead grave acute)";
 
     key <TLDE>	{ [asciicircum,    degree,      notsign,      notsign ]	};
     key <AD12>	{ [      plus,   asterisk,   asciitilde,  dead_macron ]	};
@@ -89,7 +89,7 @@ xkb_symbols "deadacute" {
 
     include "de(deadgraveacute)"
 
-    name[Group1]="Germany - Dead acute";
+    name[Group1]="German (dead acute)";
 
     key <AE12>	{ [dead_acute,      grave, dead_cedilla,  dead_ogonek ]	};
     key <BKSL>	{ [numbersign, apostrophe,   dead_grave,   dead_grave ]	};
@@ -105,7 +105,7 @@ xkb_symbols "ro" {
 
     include "de(basic)"
 
-    name[Group1]="Germany - Romanian keyboard with German letters";
+    name[Group1]="Romanian (Germany)";
 
     key <AD05> { [         t,    T,           tcedilla,     Tcedilla    ] };
     key <AD08> { [         i,    I,        icircumflex,  Icircumflex    ] };
@@ -120,7 +120,7 @@ xkb_symbols "ro_nodeadkeys" {
     // Read the comment for de_ro !
 
     include "de(nodeadkeys)"
-    name[Group1]="Germany - Romanian keyboard with German letters, eliminate dead keys";
+    name[Group1]="Romanian (Germany, eliminate dead keys)";
 
     key <AD05> { [         t,    T,           tcedilla,     Tcedilla    ] };
     key <AD08> { [         i,    I,        icircumflex,  Icircumflex    ] };
@@ -138,7 +138,7 @@ partial alphanumeric_keys
 xkb_symbols "dvorak" {
     include "us(dvorak)"
 
-    name[Group1]="Germany - Dvorak";
+    name[Group1]="German (Dvorak)";
 
     key <TLDE> { [ asciicircum, degree ] };
 
@@ -204,7 +204,7 @@ xkb_symbols "sundeadkeys" {
 
     include "de(Sundeadkeys)"
 
-    name[Group1]="Germany - Sun dead keys";
+    name[Group1]="German (Sun dead keys)";
 };
 
 
@@ -380,7 +380,7 @@ xkb_symbols "neo" {
 
     include "de(neo_base)"
 
-    name[Group1]= "Germany - Neo 2";
+    name[Group1]= "German (Neo 2)";
 
     include "shift(both_capslock)"
     include "level3(caps_switch)"
@@ -396,7 +396,7 @@ partial alphanumeric_keys
 xkb_symbols "mac" {
 
     include "de"
-    name[Group1]= "Germany - Macintosh";
+    name[Group1]= "German (Macintosh)";
 
     // Alphanumeric section
     key <AE01>	{ [         1,     exclam,   exclamdown,           at ]	};
@@ -424,7 +424,7 @@ partial alphanumeric_keys
 xkb_symbols "mac_nodeadkeys" {
     // modify the standard German mac layout to not have any dead keys
     include "de(mac)"
-    name[Group1]= "Germany - Macintosh, eliminate dead keys";
+    name[Group1]= "German (Macintosh, eliminate dead keys)";
     key <AE04>	{ [         4,     dollar,   onequarter,     currency ]	};
 
     key <TLDE>	{ [ asciicircum,    degree,     notsign       ]	};
@@ -440,7 +440,7 @@ xkb_symbols "mac_nodeadkeys" {
 partial alphanumeric_keys
 xkb_symbols "dsb"
 {
-	name[Group1] = "Germany - Lower Sorbian";
+	name[Group1] = "Lower Sorbian";
 	include "latin(basic)"
 	include "level3(ralt_switch)"
 	include "kpdl(comma)"
@@ -463,7 +463,7 @@ xkb_symbols "dsb"
 partial alphanumeric_keys
 xkb_symbols "dsb_qwertz"
 {
-	name[Group1] = "Germany - Lower Sorbian (qwertz)";
+	name[Group1] = "Lower Sorbian (qwertz)";
 	include "latin(basic)"
 	include "level3(ralt_switch)"
 	include "kpdl(comma)"
@@ -494,7 +494,7 @@ xkb_symbols "qwerty" {
     
     include "de(basic)"
 
-    name[Group1] = "Germany - qwerty";
+    name[Group1] = "German (qwerty)";
 
     key <AB01>	{ [         z,          Z,     leftarrow,         yen ]	};
     key <AD06>	{ [         y,          Y, guillemotleft,        less ]	};
@@ -509,7 +509,7 @@ xkb_symbols "ru" {
 
     include "de(basic)"
  
-    name[Group1]= "Germany - Russian phonetic";
+    name[Group1]= "Russian (Germany, phonetic)";
 
 key.type[group1]="FOUR_LEVEL_ALPHABETIC";
 
@@ -554,7 +554,7 @@ partial alphanumeric_keys
 xkb_symbols "htcdream" {
         include "inet(htcdream)"
 
-        name[Group1]= "Germany - htcdream";
+        name[Group1]= "German";
 
         //second row
         key <AD01> { [ q, Q, Tab, Tab ] };

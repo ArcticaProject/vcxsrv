@@ -221,11 +221,7 @@ fbFinishScreenInit(ScreenPtr	pScreen,
     rootdepth = 0;
     if (!fbInitVisuals (&visuals, &depths, &nvisuals, &ndepths, &rootdepth,
 			&defaultVisual,((unsigned long)1<<(imagebpp-1)), 8))
-    {
-	free(visuals);
-	free(depths);
 	return FALSE;
-    }
     if (! miScreenInit(pScreen, pbits, xsize, ysize, dpix, dpiy, width,
 			rootdepth, ndepths, depths,
 			defaultVisual, nvisuals, visuals))

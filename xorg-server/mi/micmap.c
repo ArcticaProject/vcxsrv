@@ -564,6 +564,8 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 	{
 	    vid = malloc(nvtype * sizeof (VisualID));
 	    if (!vid) {
+	        free(depth);
+	        free(visual);
 		free(preferredCVCs);
 		return FALSE;
 	    }

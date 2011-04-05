@@ -1256,10 +1256,7 @@ System(char *command)
       perror("signal");
       return -1;
     }
-
-#ifdef DEBUG
-    ErrorF("System: `%s'\n", command);
-#endif
+    DebugF("System: `%s'\n", command);
 
     switch (pid = fork()) {
     case -1:	/* error */
@@ -1318,6 +1315,9 @@ Popen(char *command, char *type)
     /* Ignore the smart scheduler while this is going on */
     old_alarm = OsSignal(SIGALRM, SIG_IGN);
     if (old_alarm == SIG_ERR) {
+      close(pdes[0]);
+      close(pdes[1]);
+      free(cur);
       perror("signal");
       return NULL;
     }
@@ -1371,9 +1371,7 @@ Popen(char *command, char *type)
     cur->next = pidlist;
     pidlist = cur;
 
-#ifdef DEBUG
-    ErrorF("Popen: `%s', fp = %p\n", command, iop);
-#endif
+    DebugF("Popen: `%s', fp = %p\n", command, iop);
 
     return iop;
 }
@@ -1448,9 +1446,7 @@ Fopen(char *file, char *type)
     cur->next = pidlist;
     pidlist = cur;
 
-#ifdef DEBUG
-    ErrorF("Fopen(%s), fp = %p\n", file, iop);
-#endif
+    DebugF("Fopen(%s), fp = %p\n", file, iop);
 
     return iop;
 #else
@@ -1479,10 +1475,7 @@ Pclose(pointer iop)
     int pstat;
     int pid;
 
-#ifdef DEBUG
-    ErrorF("Pclose: fp = %p\n", iop);
-#endif
-
+    DebugF("Pclose: fp = %p\n", iop);
     fclose(iop);
 
     for (last = NULL, cur = pidlist; cur; last = cur, cur = cur->next)

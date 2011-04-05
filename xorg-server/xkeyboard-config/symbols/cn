@@ -5,7 +5,7 @@ partial default alphanumeric_keys
 xkb_symbols "basic" {
     include "us(basic)"
 
-    name[Group1]= "China";
+    name[Group1]= "Chinese";
 };
 
 // Tibetan Standard Keyboard map for XKB/X.org
@@ -61,7 +61,7 @@ xkb_symbols "basic" {
 partial alphanumeric_keys 
 xkb_symbols "tib" {
 
-    name[Group1]= "China - Tibetan";
+    name[Group1]= "Tibetan";
 
     key <TLDE> { [ 0x1000f68, 0x1000f01, 0x1000fb8, 0x1000f00 ] }; # ཨ ༁ ྸ ༀ
     key <AE01> { [ 0x1000f21, 0x1000f2a, 0x1000f04, 0x1000f76 ] }; # ༡ ༪ ༄ ྲྀ
@@ -135,7 +135,7 @@ partial alphanumeric_keys
 xkb_symbols "tib_asciinum" {
     include "cn(tib)"
 
-    name[Group1]= "China - Tibetan (with ASCII numerals)";
+    name[Group1]= "Tibetan (with ASCII numerals)";
 
     key <AE01> { [ 1, 0x1000f21, 0x1000f04, 0x1000f76 ] }; # 1 ༡ ༄ ྲྀ
     key <AE02> { [ 2, 0x1000f22, 0x1000f05, 0x1000f77 ] }; # 2 ༢ ༅ ཷ
@@ -159,7 +159,7 @@ xkb_symbols "tib_asciinum" {
 partial alphanumeric_keys 
 xkb_symbols "uig" {
 
-    name[Group1]= "China - Uyghur";
+    name[Group1]= "Uyghur";
 
     key <TLDE> { [ grave,            asciitilde           ] };
 

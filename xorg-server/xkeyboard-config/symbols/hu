@@ -28,28 +28,28 @@
 default partial
 xkb_symbols "basic" {
     include "hu(102_qwertz_comma_dead)"
-    name[Group1] = "Hungary";
+    name[Group1] = "Hungarian";
 };
 
 // Standard layout
 partial
 xkb_symbols "standard" {
     include "hu(102_qwertz_comma_dead)"
-    name[Group1] = "Hungary - Standard";
+    name[Group1] = "Hungarian (standard)";
 };
 
 // Standard layout without dead key support
 partial
 xkb_symbols "nodeadkeys" {
     include "hu(102_qwertz_comma_nodead)"
-    name[Group1] = "Hungary - Eliminate dead keys";
+    name[Group1] = "Hungarian (eliminate dead keys)";
 };
 
 // Qwerty layout
 partial
 xkb_symbols "qwerty" {
     include "hu(101_qwerty_comma_dead)"
-    name[Group1] = "Hungary - qwerty";
+    name[Group1] = "Hungarian (qwerty)";
 };
 
 // Main layouts
@@ -60,7 +60,7 @@ xkb_symbols "qwerty" {
 // and with dead key support
 partial
 xkb_symbols "101_qwertz_comma_dead" {
-    name[Group1] = "Hungary - 101/qwertz/comma/Dead keys";
+    name[Group1] = "Hungarian (101/qwertz/comma/dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwertz)"
@@ -76,7 +76,7 @@ xkb_symbols "101_qwertz_comma_dead" {
 // and without dead key support
 partial
 xkb_symbols "101_qwertz_comma_nodead" {
-    name[Group1] = "Hungary - 101/qwertz/comma/Eliminate dead keys";
+    name[Group1] = "Hungarian (101/qwertz/comma/eliminate dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwertz)"
@@ -92,7 +92,7 @@ xkb_symbols "101_qwertz_comma_nodead" {
 // and with dead key support
 partial
 xkb_symbols "101_qwertz_dot_dead" {
-    name[Group1] = "Hungary - 101/qwertz/dot/Dead keys";
+    name[Group1] = "Hungarian (101/qwertz/dot/dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwertz)"
@@ -108,7 +108,7 @@ xkb_symbols "101_qwertz_dot_dead" {
 // and without dead key support
 partial
 xkb_symbols "101_qwertz_dot_nodead" {
-    name[Group1] = "Hungary - 101/qwertz/dot/Eliminate dead keys";
+    name[Group1] = "Hungarian (101/qwertz/dot/eliminate dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwertz)"
@@ -124,7 +124,7 @@ xkb_symbols "101_qwertz_dot_nodead" {
 // and with dead key support
 partial
 xkb_symbols "101_qwerty_comma_dead" {
-    name[Group1] = "Hungary - 101/qwerty/comma/Dead keys";
+    name[Group1] = "Hungarian (101/qwerty/comma/dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwerty)"
@@ -140,7 +140,7 @@ xkb_symbols "101_qwerty_comma_dead" {
 // and without dead key support
 partial
 xkb_symbols "101_qwerty_comma_nodead" {
-    name[Group1] = "Hungary - 101/qwerty/comma/Eliminate dead keys";
+    name[Group1] = "Hungarian (101/qwerty/comma/eliminate dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwerty)"
@@ -156,7 +156,7 @@ xkb_symbols "101_qwerty_comma_nodead" {
 // and with dead key support
 partial
 xkb_symbols "101_qwerty_dot_dead" {
-    name[Group1] = "Hungary - 101/qwerty/dot/Dead keys";
+    name[Group1] = "Hungarian (101/qwerty/dot/dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwerty)"
@@ -172,7 +172,7 @@ xkb_symbols "101_qwerty_dot_dead" {
 // and without dead key support
 partial
 xkb_symbols "101_qwerty_dot_nodead" {
-    name[Group1] = "Hungary - 101/qwerty/dot/Eliminate dead keys";
+    name[Group1] = "Hungarian (101/qwerty/dot/eliminate dead keys)";
     include "latin"
     include "hu(def_101)"
     include "hu(def_qwerty)"
@@ -188,7 +188,7 @@ xkb_symbols "101_qwerty_dot_nodead" {
 // and with dead key support
 partial
 xkb_symbols "102_qwertz_comma_dead" {
-    name[Group1] = "Hungary - 102/qwertz/comma/Dead keys";
+    name[Group1] = "Hungarian (102/qwertz/comma/dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwertz)"
@@ -204,7 +204,7 @@ xkb_symbols "102_qwertz_comma_dead" {
 // and without dead key support
 partial
 xkb_symbols "102_qwertz_comma_nodead" {
-    name[Group1] = "Hungary - 102/qwertz/comma/Eliminate dead keys";
+    name[Group1] = "Hungarian (102/qwertz/comma/eliminate dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwertz)"
@@ -220,7 +220,7 @@ xkb_symbols "102_qwertz_comma_nodead" {
 // and with dead key support
 partial
 xkb_symbols "102_qwertz_dot_dead" {
-    name[Group1] = "Hungary - 102/qwertz/dot/Dead keys";
+    name[Group1] = "Hungarian (102/qwertz/dot/dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwertz)"
@@ -236,7 +236,7 @@ xkb_symbols "102_qwertz_dot_dead" {
 // and without dead key support
 partial
 xkb_symbols "102_qwertz_dot_nodead" {
-    name[Group1] = "Hungary - 102/qwertz/dot/Eliminate dead keys";
+    name[Group1] = "Hungarian (102/qwertz/dot/eliminate dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwertz)"
@@ -252,7 +252,7 @@ xkb_symbols "102_qwertz_dot_nodead" {
 // and with dead key support
 partial
 xkb_symbols "102_qwerty_comma_dead" {
-    name[Group1] = "Hungary - 102/qwerty/comma/Dead keys";
+    name[Group1] = "Hungarian (102/qwerty/comma/dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwerty)"
@@ -268,7 +268,7 @@ xkb_symbols "102_qwerty_comma_dead" {
 // and without dead key support
 partial
 xkb_symbols "102_qwerty_comma_nodead" {
-    name[Group1] = "Hungary - 102/qwerty/comma/Eliminate dead keys";
+    name[Group1] = "Hungarian (102/qwerty/comma/eliminate dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwerty)"
@@ -284,7 +284,7 @@ xkb_symbols "102_qwerty_comma_nodead" {
 // and with dead key support
 partial
 xkb_symbols "102_qwerty_dot_dead" {
-    name[Group1] = "Hungary - 102/qwerty/dot/Dead keys";
+    name[Group1] = "Hungarian (102/qwerty/dot/dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwerty)"
@@ -300,7 +300,7 @@ xkb_symbols "102_qwerty_dot_dead" {
 // and without dead key support
 partial
 xkb_symbols "102_qwerty_dot_nodead" {
-    name[Group1] = "Hungary - 102/qwerty/dot/Eliminate dead keys";
+    name[Group1] = "Hungarian (102/qwerty/dot/eliminate dead keys)";
     include "latin"
     include "hu(def_102)"
     include "hu(def_qwerty)"

@@ -1414,8 +1414,10 @@ xf86LoadModules(char **list, pointer *optlist)
 	name = xf86NormalizeName(list[i]);
 
 	/* Skip empty names */
-	if (name == NULL || *name == '\0')
+	if (name == NULL || *name == '\0') {
+	    free(name);
 	    continue;
+	}
 
 	/* Replace obsolete keyboard driver with kbd */
 	if (!xf86NameCmp(name, "keyboard")) {

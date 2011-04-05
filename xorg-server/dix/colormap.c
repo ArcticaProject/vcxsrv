@@ -1879,6 +1879,7 @@ AllocPseudo (int client, ColormapPtr pmap, int c, int r, Bool contig,
 	{
 	    for (p = ppixTemp; p < ppixTemp + npix; p++)
 		pmap->red[*p].refcnt = 0;
+	    free(ppixTemp);
 	    return BadAlloc;
 	}
 	pmap->clientPixelsRed[client] = ppix;
@@ -2104,6 +2105,7 @@ AllocShared (ColormapPtr pmap, Pixel *ppix, int c, int r, int g, int b,
 	{
 	    for (z++ ; z < npixShared; z++)
 		free(ppshared[z]);
+	    free(psharedList);
 	    return FALSE;
 	}
     }

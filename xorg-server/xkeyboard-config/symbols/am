@@ -3,7 +3,7 @@
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
 
-    name[Group1]= "Armenia";
+    name[Group1]= "Armenian";
 
     // Alphanumeric section
     key <TLDE> {	[ 0x100055d, 0x100055c	]	};
@@ -65,14 +65,14 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "olpc" {
     include "am(basic)"
-    name[Group1]= "Armenia";
+    name[Group1]= "Armenian";
 
     include "group(olpc)"
 };
 
 xkb_symbols "phonetic" {
     include "am(basic)"
-    name[Group1]= "Armenia - Phonetic";
+    name[Group1]= "Armenian (phonetic)";
 	
     key <BKSL> {	[ 0x1000577,  0x1000547 ]	};
 	
@@ -130,7 +130,7 @@ xkb_symbols "phonetic" {
 partial alphanumeric_keys
 xkb_symbols "phonetic-alt" {
     include "am(phonetic)"
-    name[Group1]= "Armenia - Alternative Phonetic";
+    name[Group1]= "Armenian (alternative phonetic)";
 
     key <AE08> {	[ 0x1000580,  0x1000550 ]	};
     key <LatR> {	[ 0x100057c,  0x100054c ]	};
@@ -140,7 +140,7 @@ xkb_symbols "phonetic-alt" {
 partial alphanumeric_keys
 xkb_symbols "eastern" {
 
-    name[Group1]="Armenia - Eastern";
+    name[Group1]="Armenian (eastern)";
 
     // This is the closer phonetic transliteration for Eastern Armenian
     // than the Windows XP layout for Eastern Armenian, which seems
@@ -205,7 +205,7 @@ xkb_symbols "eastern" {
 partial alphanumeric_keys
 xkb_symbols "western" {
     include "am(eastern)"
-    name[Group1]="Armenia - Western";
+    name[Group1]="Armenian (western)";
 
     // This is exactly the same layout for Western Armenian
     // as in Windows XP, except:
@@ -227,7 +227,7 @@ xkb_symbols "western" {
 partial alphanumeric_keys
 xkb_symbols "eastern-alt" {
     include "am(eastern)"
-    name[Group1]="Armenia - Alternative Eastern";
+    name[Group1]="Armenian (alternative eastern)";
 
 	// This replicates the Windows XP keyboard layout for Eastern
 	// Armenian exactly (including the bug), except:

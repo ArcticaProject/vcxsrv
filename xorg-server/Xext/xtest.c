@@ -374,10 +374,7 @@ ProcXTestFakeInput(ClientPtr client)
             if (!dev->valuator)
                 return BadDevice;
 
-            /* broken lib, XI events have root uninitialized */
-            if (extension || ev->u.keyButtonPointer.root == None)
-                root = GetCurrentRootWindow(dev);
-            else
+            if (!(extension || ev->u.keyButtonPointer.root == None))
             {
                 rc = dixLookupWindow(&root, ev->u.keyButtonPointer.root,
                                      client, DixGetAttrAccess);

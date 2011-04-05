@@ -7,7 +7,7 @@ xkb_symbols "basic" {
 
     include "latin"
 
-    name[Group1]= "Czechia";
+    name[Group1]= "Czech";
 
     key <TLDE>	{ [ semicolon, dead_abovering,    grave,   asciitilde ]	};
     key <AE01>	{ [      plus,          1,       exclam,   dead_tilde ]	};
@@ -72,7 +72,7 @@ xkb_symbols "basic" {
 // Use <BKSL> instead of <LSGT> (useful for keyboard without <LSGT> key)
 xkb_symbols "bksl" {
     include "cz(basic)"
-    name[Group1]= "Czechia - With <\|> key";
+    name[Group1]= "Czech (with <\|> key)";
 
     key <BKSL>	{ [ backslash,        bar,        slash,     NoSymbol ]	};
 };
@@ -85,7 +85,7 @@ xkb_symbols "qwerty" {
     // 2001 by Kamil Toman <ktoman@email.cz>
     
     include "cz(basic)"
-    name[Group1]= "Czechia - qwerty";
+    name[Group1]= "Czech (qwerty)";
 
     key <AB01>	{ [         z,          Z,       degree,     NoSymbol ]	};
     key <AD06>	{ [         y,          Y,     NoSymbol,     NoSymbol ]	};
@@ -95,7 +95,7 @@ xkb_symbols "qwerty" {
 xkb_symbols "qwerty_bksl" {
     include "cz(qwerty)"
 
-    name[Group1]= "Czechia - qwerty, extended Backslash";
+    name[Group1]= "Czech (qwerty, extended Backslash)";
 
     key <BKSL>	{ [ backslash,        bar,        slash,     NoSymbol ]	};
 };
@@ -107,7 +107,7 @@ xkb_symbols "ucw" {
     // accented characters only, no 'latin' set.
     // 2008 by Milan Vancura <mvancura@suse.cz>
 
-    name[Group1]= "Czechia - UCW layout (accented letters only)";
+    name[Group1]= "Czech (UCW layout, accented letters only)";
 
     key <AB01> { [zcaron,      Zcaron      ] };
     key <AB02> { [ssharp                   ] };
@@ -146,7 +146,7 @@ xkb_symbols "dvorak-ucw" {
 
     include "us(dvorak)"
 
-    name[Group1]= "Czechia - US Dvorak with CZ UCW support";
+    name[Group1]= "Czech (US Dvorak with CZ UCW support)";
 
     key <AB03> { [ j, J, eacute, Eacute ] };
     key <AB04> { [ k, K, uacute, Uacute ] };

@@ -47,7 +47,7 @@
 partial default alphanumeric_keys
 xkb_symbols "bds" {
 
-  name[Group1]= "Bulgaria";
+  name[Group1]= "Bulgarian";
   
   key <TLDE> {   [ parenleft,         parenright,
 		   bracketleft,       bracketright        ]    };
@@ -138,7 +138,7 @@ xkb_symbols "bds" {
 // symbols in levels 3 and 4 are added.
 partial alphanumeric_keys 
 xkb_symbols "phonetic" {
-  name[Group1]= "Bulgaria - Traditional phonetic";
+  name[Group1]= "Bulgarian (traditional phonetic)";
   
   key <TLDE> {   [ Cyrillic_che,      Cyrillic_CHE        ]    };
   key <AE01> {   [ 1,                 exclam              ]    };
@@ -230,7 +230,7 @@ xkb_symbols "phonetic" {
 partial alphanumeric_keys 
 xkb_symbols "bas_phonetic" {
   include "bg(phonetic)"
-  name[Group1]= "Bulgaria - New phonetic";
+  name[Group1]= "Bulgarian (new phonetic)";
   
   key <TLDE> {   [ Cyrillic_yu,       Cyrillic_YU         ]    };
   key <AD01> {   [ Cyrillic_che,      Cyrillic_CHE        ]    };

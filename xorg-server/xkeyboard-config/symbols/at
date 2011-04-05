@@ -5,7 +5,7 @@ xkb_symbols "basic" {
 
     include "de(basic)"
 
-    name[Group1]="Austria";
+    name[Group1]="German (Austria)";
 };
 
 partial alphanumeric_keys
@@ -13,7 +13,7 @@ xkb_symbols "nodeadkeys" {
 
     include "de(nodeadkeys)"
 
-    name[Group1]="Austria - Eliminate dead keys";
+    name[Group1]="German (Austria, eliminate dead keys)";
 };
 
 partial alphanumeric_keys 
@@ -21,7 +21,7 @@ xkb_symbols "mac" {
 
     include "de(mac)"
 
-    name[Group1]= "Austria - Macintosh";
+    name[Group1]= "German (Austria, Macintosh)";
 };
 
 partial alphanumeric_keys
@@ -29,6 +29,6 @@ xkb_symbols "sundeadkeys" {
 
     include "de(Sundeadkeys)"
 
-    name[Group1]="Austria - Sun dead keys";
+    name[Group1]="German (Austria, Sun dead keys)";
 };
 

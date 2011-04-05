@@ -49,6 +49,7 @@ SOFTWARE.
  *  Dispatch routines and initialization routines for the X input extension.
  *
  */
+#define ARRAY_SIZE(_a)        (sizeof((_a)) / sizeof((_a)[0]))
 
 #define	 NUMTYPES 15
 
@@ -410,7 +411,7 @@ static int
 ProcIDispatch(ClientPtr client)
 {
     REQUEST(xReq);
-    if (stuff->data > (IREQUESTS + XI2REQUESTS) || !ProcIVector[stuff->data])
+    if (stuff->data > ARRAY_SIZE(ProcIVector) || !ProcIVector[stuff->data])
         return BadRequest;
 
     return (*ProcIVector[stuff->data])(client);
@@ -429,7 +430,7 @@ static int
 SProcIDispatch(ClientPtr client)
 {
     REQUEST(xReq);
-    if (stuff->data > IREQUESTS || !SProcIVector[stuff->data])
+    if (stuff->data > ARRAY_SIZE(SProcIVector) || !SProcIVector[stuff->data])
         return BadRequest;
 
     return (*SProcIVector[stuff->data])(client);
@@ -863,6 +864,8 @@ XI2EventSwap(xGenericEvent *from, xGenericEvent *to)
     {
         case XI_Enter:
         case XI_Leave:
+        case XI_FocusIn:
+        case XI_FocusOut:
             SDeviceLeaveNotifyEvent((xXILeaveEvent*)from, (xXILeaveEvent*)to);
             break;
         case XI_DeviceChanged:

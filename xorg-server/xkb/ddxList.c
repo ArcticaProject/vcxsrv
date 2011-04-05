@@ -222,8 +222,10 @@ char	tmpname[PATH_MAX];
     list->nFound[what]= 0;
     free(buf);
     buf = malloc(PATH_MAX * sizeof(char));
-    if (!buf)
+    if (!buf) {
+        fclose(in);
         return BadAlloc;
+    }
     while ((status==Success)&&((tmp=fgets(buf,PATH_MAX,in))!=NULL)) {
 	unsigned flags;
 	register unsigned int i;

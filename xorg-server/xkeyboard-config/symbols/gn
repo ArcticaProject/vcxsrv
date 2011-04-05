@@ -4,7 +4,7 @@
 partial default alphanumeric_keys
 xkb_symbols "basic" {
 
-    name[Group1]="Guinea";
+    name[Group1]="French (Guinea)";
 
     key <AE01>	{ [0x010007F1, 0x010007C1 ]	};
     key <AE02>	{ [0x010007EB, 0x010007C2 ]	};

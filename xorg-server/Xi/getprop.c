@@ -115,7 +115,7 @@ ProcXGetDeviceDontPropagateList(ClientPtr client)
 
     if ((others = wOtherInputMasks(pWin)) != 0) {
 	for (i = 0; i < EMASKSIZE; i++)
-	    tbuf = ClassFromMask(NULL, others->dontPropagateMask[i], i,
+	    ClassFromMask(NULL, others->dontPropagateMask[i], i,
 				 &count, COUNT);
 	if (count) {
 	    rep.count = count;
