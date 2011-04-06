@@ -44,6 +44,7 @@
 #ifdef _WIN32
 #include "xcb_windefs.h"
 #else
+#include <sys/socket.h>
 #include <netinet/in.h>
 #endif /* _WIN32 */
 

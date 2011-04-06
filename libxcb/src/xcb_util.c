@@ -28,10 +28,6 @@
 #include <assert.h>
 #include <sys/types.h>
 #include <limits.h>
-#ifdef DNETCONN
-#include <netdnet/dnetdb.h>
-#include <netdnet/dn.h>
-#endif
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -168,9 +164,6 @@ static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short 
 #ifndef _WIN32
 static int _xcb_open_unix(char *protocol, const char *file);
 #endif /* !WIN32 */
-#ifdef DNETCONN
-static int _xcb_open_decnet(const char *host, char *protocol, const unsigned short port);
-#endif
 #ifdef HAVE_ABSTRACT_SOCKETS
 static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen);
 #endif
@@ -194,26 +187,13 @@ static int _xcb_open(const char *host, char *protocol, const int display)
 
     if(*host || protocol)
     {
-#ifdef DNETCONN
-        /* DECnet displays have two colons, so _xcb_parse_display will have
-           left one at the end.  However, an IPv6 address can end with *two*
-           colons, so only treat this as a DECnet display if host ends with
-           exactly one colon. */
-        char *colon = strchr(host, ':');
-        if(colon && *(colon+1) == '\0')
-        {
-            *colon = '\0';
-            return _xcb_open_decnet(host, protocol, display);
-        }
-        else
-#endif
-            if (protocol
-                || strcmp("unix",host)) { /* follow the old unix: rule */
+        if (protocol
+            || strcmp("unix",host)) { /* follow the old unix: rule */
 
-                /* display specifies TCP */
-                unsigned short port = X_TCP_PORT + display;
-                return _xcb_open_tcp(host, protocol, port);
-            }
+            /* display specifies TCP */
+            unsigned short port = X_TCP_PORT + display;
+            return _xcb_open_tcp(host, protocol, port);
+        }
     }
 
 #ifndef _WIN32
@@ -286,45 +266,6 @@ static int _xcb_socket(int family, int type, int proto)
     return fd;
 }
 
-#ifdef DNETCONN
-static int _xcb_open_decnet(const char *host, const char *protocol, const unsigned short port)
-{
-    int fd;
-    struct sockaddr_dn addr;
-    struct accessdata_dn accessdata;
-    struct nodeent *nodeaddr = getnodebyname(host);
-
-    if(!nodeaddr)
-        return -1;
-    if (protocol && strcmp("dnet",protocol))
-        return -1;
-    addr.sdn_family = AF_DECnet;
-
-    addr.sdn_add.a_len = nodeaddr->n_length;
-    memcpy(addr.sdn_add.a_addr, nodeaddr->n_addr, addr.sdn_add.a_len);
-
-    addr.sdn_objnamel = sprintf((char *)addr.sdn_objname, "X$X%d", port);
-    if(addr.sdn_objnamel < 0)
-        return -1;
-    addr.sdn_objnum = 0;
-
-    fd = _xcb_socket(PF_DECnet, SOCK_STREAM, 0);
-    if(fd == -1)
-        return -1;
-
-    memset(&accessdata, 0, sizeof(accessdata));
-    accessdata.acc_accl = sprintf((char*)accessdata.acc_acc, "%d", getuid());
-    if(accessdata.acc_accl < 0)
-        return -1;
-    setsockopt(fd, DNPROTO_NSP, SO_CONACCESS, &accessdata, sizeof(accessdata));
-
-    if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
-        close(fd);
-        return -1;
-    }
-    return fd;
-}
-#endif
 
 #ifdef WIN32
 int InitWSA(void)

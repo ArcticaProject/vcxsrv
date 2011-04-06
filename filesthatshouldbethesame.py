@@ -37,10 +37,8 @@ libXt\include\X11\RectObjP.h                      X11\RectObjP.h
 libXt\include\X11\ResConfigP.h                    X11\ResConfigP.h 
 libXt\include\X11\ResourceI.h                     X11\ResourceI.h  
 libXt\include\X11\SelectionI.h                    X11\SelectionI.h 
-libXt\include\X11\Shell.h                         X11\Shell.h      
 libXt\include\X11\ShellI.h                        X11\ShellI.h     
 libXt\include\X11\ShellP.h                        X11\ShellP.h     
-libXt\include\X11\StringDefs.h                    X11\StringDefs.h 
 libXt\include\X11\ThreadsI.h                      X11\ThreadsI.h   
 libXt\include\X11\TranslateI.h                    X11\TranslateI.h 
 libXt\include\X11\VarargsI.h                      X11\VarargsI.h   
