@@ -37,7 +37,8 @@ AC_ARG_ENABLE( runtime-deps,
 
 if test "x$enable_runtime_deps" = "xyes"; then
     PKG_CHECK_MODULES(DEPS, [xproto >= 7.0.20] [x11 >= 1.4.3], [have_deps=yes], [have_deps=no])
-    AC_MSG_WARN([
+    if test "x$have_deps" = "xno" ; then
+        AC_MSG_WARN([
                  Required dependencies not found. These dependencies are
                  run-time dependencies only and not required for building.
                  Skip this check with --disable-runtime-deps.
@@ -47,7 +48,8 @@ if test "x$enable_runtime_deps" = "xyes"; then
                  keyboard layouts.
                  ])
 
-    AC_MSG_ERROR([$DEPS_PKG_ERRORS])
+        AC_MSG_ERROR([$DEPS_PKG_ERRORS])
+    fi
 fi
 
 AM_CONDITIONAL(CREATE_RULES_SYMLINK, test "x$xkb_rules_symlink" != "x")
