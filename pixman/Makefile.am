@@ -12,10 +12,10 @@ snapshot:
 
 GPGKEY=6FF7C1A8
 USERNAME=$$USER
-RELEASE_OR_SNAPSHOT = $$(if test "x$(CAIRO_VERSION_MINOR)" = "x$$(echo "$(CAIRO_VERSION_MINOR)/2*2" | bc)" ; then echo release; else echo snapshot; fi)
+RELEASE_OR_SNAPSHOT = $$(if test "x$(PIXMAN_VERSION_MINOR)" = "x$$(echo "$(PIXMAN_VERSION_MINOR)/2*2" | bc)" ; then echo release; else echo snapshot; fi)
 RELEASE_CAIRO_HOST =	$(USERNAME)@cairographics.org
-RELEASE_CAIRO_DIR =	/srv/cairo.freedesktop.org/www/releases
-RELEASE_CAIRO_URL = 	http://cairographics.org/releases
+RELEASE_CAIRO_DIR =	/srv/cairo.freedesktop.org/www/$(RELEASE_OR_SNAPSHOT)s
+RELEASE_CAIRO_URL = 	http://cairographics.org/$(RELEASE_OR_SNAPSHOT)s
 RELEASE_XORG_URL =	http://xorg.freedesktop.org/archive/individual/lib
 RELEASE_XORG_HOST =	$(USERNAME)@xorg.freedesktop.org
 RELEASE_XORG_DIR =	/srv/xorg.freedesktop.org/archive/individual/lib
@@ -83,7 +83,6 @@ release-tag:
 	git tag -u $(GPGKEY) -m "$(PACKAGE) $(VERSION) release" $(PACKAGE)-$(VERSION)
 
 release-upload: release-check $(tar_gz) $(tar_bz2) $(sha1_tgz) $(sha1_tbz2) $(md5_tgz) $(gpg_file)
-	mkdir -p releases
 	scp $(tar_gz) $(sha1_tgz) $(gpg_file) $(RELEASE_CAIRO_HOST):$(RELEASE_CAIRO_DIR)
 	scp $(tar_gz) $(tar_bz2) $(RELEASE_XORG_HOST):$(RELEASE_XORG_DIR)
 	ssh $(RELEASE_CAIRO_HOST) "rm -f $(RELEASE_CAIRO_DIR)/LATEST-$(PACKAGE)-[0-9]* && ln -s $(tar_gz) $(RELEASE_CAIRO_DIR)/LATEST-$(PACKAGE)-$(VERSION)"

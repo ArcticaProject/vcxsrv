@@ -5459,7 +5459,7 @@
       <option>
         <configItem>
           <name>lv3:bksl_switch_latch</name>
-          <_description>Backslash chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
+          <_description>Backslash (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
         </configItem>
       </option>
       <option>

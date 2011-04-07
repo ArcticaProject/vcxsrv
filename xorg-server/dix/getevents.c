@@ -205,6 +205,8 @@ set_valuators(DeviceIntPtr dev, DeviceEvent* event, ValuatorMask *mask)
 {
     int i;
 
+    /* Set the data to the previous value for unset absolute axes. The values
+     * may be used when sent as part of an XI 1.x valuator event. */
     for (i = 0; i < valuator_mask_size(mask); i++)
     {
         if (valuator_mask_isset(mask, i))
@@ -216,6 +218,8 @@ set_valuators(DeviceIntPtr dev, DeviceEvent* event, ValuatorMask *mask)
             event->valuators.data_frac[i] =
                 dev->last.remainder[i] * (1 << 16) * (1 << 16);
         }
+        else if (valuator_get_mode(dev, i) == Absolute)
+            event->valuators.data[i] = dev->valuator->axisVal[i];
     }
 }
 

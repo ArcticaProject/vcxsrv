@@ -1358,11 +1358,10 @@ generate_composite_function \
      *
      * output: updated dest in {d28, d29, d30, d31}
      */
-    vmvn.8      d24, d24
-    vmvn.8      d25, d25
+    vmvn.8      q12, q12
+    vmvn.8      d26, d26
     vmull.u8    q8,  d24, d4
     vmull.u8    q9,  d25, d5
-    vmvn.8      d26, d26
     vmvn.8      d27, d3
     vmull.u8    q10, d26, d6
     vmull.u8    q11, d27, d7
