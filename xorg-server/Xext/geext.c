@@ -49,6 +49,7 @@ static const int version_requests[] = {
 static void SGEGenericEvent(xEvent* from, xEvent* to);
 
 #define NUM_VERSION_REQUESTS	(sizeof (version_requests) / sizeof (version_requests[0]))
+#define EXT_MASK(ext) ((ext) & 0x7F)
 
 /************************************************************/
 /*                request handlers                          */
@@ -191,8 +192,8 @@ SGEGenericEvent(xEvent* from, xEvent* to)
         return;
     }
 
-    if (GEExtensions[gefrom->extension & 0x7F].evswap)
-        GEExtensions[gefrom->extension & 0x7F].evswap(gefrom, geto);
+    if (GEExtensions[EXT_MASK(gefrom->extension)].evswap)
+        GEExtensions[EXT_MASK(gefrom->extension)].evswap(gefrom, geto);
 }
 
 /* Init extension, register at server.
@@ -241,11 +242,11 @@ void
 GERegisterExtension(int extension,
                     void (*ev_swap)(xGenericEvent* from, xGenericEvent* to))
 {
-    if ((extension & 0x7F) >=  MAXEXTENSIONS)
+    if (EXT_MASK(extension) >=  MAXEXTENSIONS)
         FatalError("GE: extension > MAXEXTENSIONS. This should not happen.\n");
 
     /* extension opcodes are > 128, might as well save some space here */
-    GEExtensions[extension & 0x7f].evswap = ev_swap;
+    GEExtensions[EXT_MASK(extension)].evswap = ev_swap;
 }
 
 

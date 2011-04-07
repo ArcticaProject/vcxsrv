@@ -383,12 +383,12 @@ getValuatorEvents(DeviceEvent *ev, deviceValuator *xv)
     int i;
     int state = 0;
     int first_valuator, num_valuators;
-    DeviceIntPtr dev = NULL;
 
 
     num_valuators = countValuators(ev, &first_valuator);
     if (num_valuators > 0)
     {
+        DeviceIntPtr dev = NULL;
         dixLookupDevice(&dev, ev->deviceid, serverClient, DixUseAccess);
         /* State needs to be assembled BEFORE the device is updated. */
         state = (dev && dev->key) ? XkbStateFieldFromRec(&dev->key->xkbInfo->state) : 0;
@@ -405,14 +405,10 @@ getValuatorEvents(DeviceEvent *ev, deviceValuator *xv)
         xv->deviceid = ev->deviceid;
         xv->device_state = state;
 
-        for (j = 0; j < xv->num_valuators; j++) {
-            if (BitIsOn(ev->valuators.mask, xv->first_valuator + j))
-                valuators[j] = ev->valuators.data[xv->first_valuator + j];
-            else if (dev->valuator->axes[xv->first_valuator + j].mode == Absolute)
-                valuators[j] = dev->valuator->axisVal[xv->first_valuator + j];
-            else
-                valuators[j] = 0;
-        }
+        /* Unset valuators in masked valuator events have the proper data values
+         * in the case of an absolute axis in between two set valuators. */
+        for (j = 0; j < xv->num_valuators; j++)
+            valuators[j] = ev->valuators.data[xv->first_valuator + j];
 
         if (i + 6 < num_valuators)
             xv->deviceid |= MORE_EVENTS;
