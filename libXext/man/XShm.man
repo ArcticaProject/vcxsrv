@@ -70,14 +70,14 @@ Bool XShmQueryVersion(
 	int *major, *minor;
 	Bool *pixmaps);
 .LP
-Status XShmPixmapFormat(
+int XShmPixmapFormat(
 	Display *display);
 .LP
-Status XShmAttach(
+Bool XShmAttach(
 	Display *display;
 	XShmSegmentInfo *shminfo);
 .LP
-Status XShmDetach(
+Bool XShmDetach(
 	Display *display;
 	XShmSegmentInfo *shminfo);
 
@@ -91,7 +91,7 @@ XImage *XShmCreateImage (
 	XShmSegmentInfo *shminfo;
 	unsigned int width, height);
 .LP
-Status XShmPutImage(
+Bool XShmPutImage(
 	Display *display;
 	Drawable d;
 	GC gc;
@@ -100,7 +100,7 @@ Status XShmPutImage(
 	unsigned int width, height;
 	bool send_event);
 .LP
-Status XShmGetImage (
+Bool XShmGetImage (
 	Display *display;
 	Drawable d;
 	XImage *image;

@@ -223,7 +223,7 @@ int XShmPixmapFormat(Display *dpy)
 }
 
 
-Status XShmAttach(Display *dpy, XShmSegmentInfo *shminfo)
+Bool XShmAttach(Display *dpy, XShmSegmentInfo *shminfo)
 {
     XExtDisplayInfo *info = find_display (dpy);
     register xShmAttachReq *req;
@@ -243,7 +243,7 @@ Status XShmAttach(Display *dpy, XShmSegmentInfo *shminfo)
 }
 
 
-Status XShmDetach(Display *dpy, XShmSegmentInfo *shminfo)
+Bool XShmDetach(Display *dpy, XShmSegmentInfo *shminfo)
 {
     XExtDisplayInfo *info = find_display (dpy);
     register xShmDetachReq *req;
@@ -312,7 +312,7 @@ XImage *XShmCreateImage (
     return image;
 }
 
-Status XShmPutImage (
+Bool XShmPutImage (
     register Display *dpy,
     Drawable d,
     GC gc,
@@ -354,7 +354,7 @@ Status XShmPutImage (
 }
 
 
-Status XShmGetImage(
+Bool XShmGetImage(
     register Display *dpy,
     Drawable d,
     XImage *image,

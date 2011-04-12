@@ -75,17 +75,17 @@ int XShmPixmapFormat(
     Display*		/* dpy */
 );
 
-Status XShmAttach(
+Bool XShmAttach(
     Display*		/* dpy */,
     XShmSegmentInfo*	/* shminfo */
 );
 
-Status XShmDetach(
+Bool XShmDetach(
     Display*		/* dpy */,
     XShmSegmentInfo*	/* shminfo */
 );
 
-Status XShmPutImage(
+Bool XShmPutImage(
     Display*		/* dpy */,
     Drawable		/* d */,
     GC			/* gc */,
@@ -99,7 +99,7 @@ Status XShmPutImage(
     Bool		/* send_event */
 );
 
-Status XShmGetImage(
+Bool XShmGetImage(
     Display*		/* dpy */,
     Drawable		/* d */,
     XImage*		/* image */,

@@ -78,6 +78,9 @@
 #include "polygon.h"
 #include "queryobj.h"
 #include "readpix.h"
+#if FEATURE_ARB_sampler_objects
+#include "samplerobj.h"
+#endif
 #include "scissor.h"
 #include "stencil.h"
 #include "texenv.h"
@@ -104,6 +107,7 @@
 
 
 #if FEATURE_GL
+
 
 /**
  * Initialize a dispatch table with pointers to Mesa's immediate-mode
@@ -727,6 +731,10 @@ _mesa_create_exec_table(void)
  
    /* GL_ARB_texture_buffer_object */
    SET_TexBufferARB(exec, _mesa_TexBuffer);
+
+#if FEATURE_ARB_sampler_objects
+   _mesa_init_sampler_object_dispatch(exec);
+#endif
 
    return exec;
 }

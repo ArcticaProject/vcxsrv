@@ -734,6 +734,7 @@ __glGetBooleanv_size( GLenum e )
         case GL_MAX_ARRAY_TEXTURE_LAYERS_EXT:
         case GL_STENCIL_TEST_TWO_SIDE_EXT:
         case GL_ACTIVE_STENCIL_FACE_EXT:
+        case GL_SAMPLER_BINDING:
         case GL_TEXTURE_BINDING_1D_ARRAY_EXT:
         case GL_TEXTURE_BINDING_2D_ARRAY_EXT:
         case GL_FRAMEBUFFER_BINDING:
