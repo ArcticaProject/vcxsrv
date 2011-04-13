@@ -13,7 +13,7 @@
 partial default alphanumeric_keys 
 xkb_symbols "basic" {
 
-    name[Group1] = "Kazakhstan";
+    name[Group1] = "Kazakh";
 
 key.type[group1] = "FOUR_LEVEL";
 
@@ -77,7 +77,7 @@ key.type[group1]="TWO_LEVEL";
 partial alphanumeric_keys
 xkb_symbols "ruskaz" {
 
-    name[Group1] = "Kazakhstan - Russian with Kazakh";
+    name[Group1] = "Russian (Kazakhstan, with Kazakh)";
 
 key.type[group1] = "FOUR_LEVEL";
 
@@ -138,7 +138,7 @@ key.type[group1] = "FOUR_LEVEL_ALPHABETIC";
 partial alphanumeric_keys
 xkb_symbols "kazrus" {
 
-    name[Group1] = "Kazakhstan - Kazakh with Russian";
+    name[Group1] = "Kazakh (with Russian)";
 
 key.type[group1] = "FOUR_LEVEL";
 
@@ -206,7 +206,7 @@ xkb_symbols "olpc" {
 
    include "kz(basic)"
 
-   name[Group1] = "Kazakhstan";
+   name[Group1] = "Kazakh";
 
    key <TLDE> { [ parenleft,               parenright ] };
    key <BKSL> { [ Cyrillic_io,             Cyrillic_IO ] };

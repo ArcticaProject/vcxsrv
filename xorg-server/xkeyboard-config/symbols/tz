@@ -5,7 +5,7 @@
 
 partial default alphanumeric_keys 
 xkb_symbols "swa" {
-    name[Group1]= "Tanzania";
+    name[Group1]= "Swahili (Tanzania)";
 
     key <TLDE> {  [  0x1000670,         VoidSymbol             ]  };
 

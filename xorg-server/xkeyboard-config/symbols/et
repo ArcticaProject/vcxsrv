@@ -8,7 +8,7 @@
 partial default alphanumeric_keys
 xkb_symbols "basic" {
     include "et(olpc)"
-    name[Group1]="Ethiopia";
+    name[Group1]="Amharic";
 };
 
 partial alphanumeric_keys

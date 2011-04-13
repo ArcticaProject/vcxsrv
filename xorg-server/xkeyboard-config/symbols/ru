@@ -9,7 +9,7 @@ partial default alphanumeric_keys
 xkb_symbols "winkeys" {
     include "ru(common)"
 
-    name[Group1]= "Russia";
+    name[Group1]= "Russian";
 
     key <AE03> {        [               3,      numerosign      ]       };
     key <AE04> {        [               4,       semicolon      ]       };
@@ -84,7 +84,7 @@ partial alphanumeric_keys
 xkb_symbols "legacy" {
     include "ru(common)"
 
-    name[Group1]= "Russia - Legacy";
+    name[Group1]= "Russian (legacy)";
 };
 
 partial alphanumeric_keys
@@ -106,7 +106,7 @@ xkb_symbols "olpc" {
 partial alphanumeric_keys
 xkb_symbols "typewriter" {
     include "ru(common)"
-    name[Group1]= "Russia - Typewriter";
+    name[Group1]= "Russian (typewriter)";
     key	<TLDE> {	[	      bar,	      plus	] 	};
     key	<AE01> {	[      numerosign,		 1 	]	};
     key	<AE02> {	[           minus,		 2	]	};
@@ -130,7 +130,7 @@ xkb_symbols "typewriter" {
 partial alphanumeric_keys
 xkb_symbols "typewriter-legacy" {
     include "ru(common)"
-    name[Group1]= "Russia - Typewriter, legacy";
+    name[Group1]= "Russian (typewriter, legacy)";
     key	<TLDE> {	[      apostrophe,	  quotedbl	] 	};
     key	<AE01> {	[	   exclam,		 1 	]	};
     key	<AE02> {	[      numerosign,		 2	]	};
@@ -151,7 +151,7 @@ xkb_symbols "typewriter-legacy" {
 partial alphanumeric_keys
 xkb_symbols "phonetic" {
 
-    name[Group1]= "Russia - Phonetic";
+    name[Group1]= "Russian (phonetic)";
 
     key	<AE01> {	[		1,	    exclam 	]	};
     key	<AE02> {	[		2,        	at	]	};
@@ -210,7 +210,7 @@ partial alphanumeric_keys
 xkb_symbols "phonetic_winkeys" {
 
     include "ru(phonetic)"
-    name[Group1]= "Russia - Phonetic Winkeys";
+    name[Group1]= "Russian (phonetic WinKeys)";
 
     key	<LatX> {	[     Cyrillic_ha,     Cyrillic_HA	]	};
     key	<LatH> {	[     Cyrillic_che,     Cyrillic_CHE	]	};
@@ -221,7 +221,7 @@ xkb_symbols "phonetic_winkeys" {
 partial alphanumeric_keys
 xkb_symbols "tt" {
     include "ru(winkeys)"
-    name[Group1]= "Russia - Tatar";
+    name[Group1]= "Tatar";
 
     key.type[group1]="FOUR_LEVEL";
 
@@ -246,7 +246,7 @@ partial alphanumeric_keys
 xkb_symbols "os_legacy" {
     include "ru(common)"
 
-    name[Group1]= "Russia - Ossetian, legacy";
+    name[Group1]= "Ossetian (legacy)";
 
     key	<TLDE> {	[      Cyrillic_e,      Cyrillic_E	]	};
     key	<AC07> {	[      Cyrillic_o,	Cyrillic_O, Cyrillic_io, Cyrillic_IO	]	};
@@ -257,7 +257,7 @@ partial alphanumeric_keys
 xkb_symbols "os_winkeys" {
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Ossetian, Winkeys";
+    name[Group1]= "Ossetian (WinKeys)";
 
     key	<TLDE> {	[      Cyrillic_e,      Cyrillic_E	]	};
     key	<AC07> {	[      Cyrillic_o,	Cyrillic_O, Cyrillic_io, Cyrillic_IO	]	};
@@ -268,7 +268,7 @@ partial alphanumeric_keys
 xkb_symbols "cv" {
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Chuvash";
+    name[Group1]= "Chuvash";
 
     key.type[group1]="FOUR_LEVEL";
 
@@ -288,7 +288,7 @@ partial alphanumeric_keys
 xkb_symbols "udm" {
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Udmurt";
+    name[Group1]= "Udmurt";
 
     key.type[group1]="FOUR_LEVEL";
 
@@ -310,7 +310,7 @@ partial alphanumeric_keys
 xkb_symbols "cv_latin" {
     include "us(alt-intl)"
 
-    name[Group1]= "Russia - Chuvash Latin";
+    name[Group1]= "Chuvash (Latin)";
 
     key.type[group1]="FOUR_LEVEL";
 
@@ -341,7 +341,7 @@ xkb_symbols "kom" {
 
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Komi";
+    name[Group1]= "Komi";
 
     key.type[group1]="FOUR_LEVEL_ALPHABETIC";
 
@@ -365,7 +365,7 @@ xkb_symbols "sah" {
 
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Yakut";
+    name[Group1]= "Yakut";
 
     key.type[group1]="FOUR_LEVEL_ALPHABETIC";
 
@@ -409,7 +409,7 @@ partial alphanumeric_keys
 xkb_symbols "xal" {
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Kalmyk";
+    name[Group1]= "Kalmyk";
 
     key.type[group1]="FOUR_LEVEL";
 
@@ -445,7 +445,7 @@ xkb_symbols "dos" {
 
     include "ru(common)"
 
-    name[Group1]= "Russia - DOS";
+    name[Group1]= "Russian (DOS)";
 
     key        <TLDE> {        [   parenright,  parenleft   ] };
     key        <AE04> {        [   4,           currency    ] };
@@ -459,7 +459,7 @@ partial alphanumeric_keys
 xkb_symbols "bak" {
     include "ru(winkeys)"
 
-    name[Group1]= "Russia - Bashkirian";
+    name[Group1]= "Bashkirian";
     key.type[group1]="FOUR_LEVEL";
 
     key <TLDE> { [     0x010004d9,       0x010004d8,   Cyrillic_io,   Cyrillic_IO      ] };
@@ -487,7 +487,7 @@ xkb_symbols "srp" {
     include "ru(common)"
     include "level3(ralt_switch)"
 
-    name[Group1]= "Russia - Serbian";
+    name[Group1]= "Serbian (Russia)";
 
     key <AE03> { [ 3, numerosign ] };
     key <AE04> { [ 4, semicolon ] };
@@ -512,7 +512,7 @@ partial alphanumeric_keys
 xkb_symbols "chm" {
     include "ru(common)"
     
-    name[Group1]= "Russia - Mari";
+    name[Group1]= "Mari";
 
     key.type[group1]="FOUR_LEVEL_ALPHABETIC";
     key <AC04> { [      Cyrillic_a,     Cyrillic_A,    U04D3,       U04D2     ] };
@@ -537,7 +537,7 @@ xkb_symbols "chm" {
 partial alphanumeric_keys
 xkb_symbols "chu"
 {
-	    name[Group1]= "Russia - Church Slavonic";
+	    name[Group1]= "Church Slavonic";
 	    key <TLDE> { [ U0457, U0407, U0482, U20DD ] }; // ї Ї ҂ e.g: а⃝ where the last is a combining ten thousands sign
 	    key <AE01> { [ U0461, U0460, U047D, U047C] }; // ѡ Ѡ ѽ Ѽ
 	    key <AE02> { [ U0454, U0404, U0465, U0464] }; // є Є ѥ Ѥ

@@ -16,7 +16,7 @@
 default partial alphanumeric_keys
 xkb_symbols "basic" {
 
-  name[Group1]= "Serbia";
+  name[Group1]= "Serbian";
 
   include "rs(cyrlevel3)"
   include "rs(common)"
@@ -28,7 +28,7 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "latin" {
 
-  name[Group1]= "Serbia - Latin";
+  name[Group1]= "Serbian (Latin)";
 
   include "latin(type3)"
   include "rs(latalpha)"
@@ -42,7 +42,7 @@ partial alphanumeric_keys
 xkb_symbols "yz" {
   // Cyrillic_zhe and Cyrillic_ze swapped.
 
-  name[Group1]= "Serbia - Z and ZHE swapped";
+  name[Group1]= "Serbian (Z and ZHE swapped)";
 
   include "rs(basic)"
 
@@ -247,7 +247,7 @@ xkb_symbols "latinunicode" {
   // This mapping supports the Unicode characters 0x1c4-0x1cc (dz, lj, and nj
   // as single character). You get the title form with AltGr+Shift.
 
-  name[Group1]= "Serbia - Latin Unicode";
+  name[Group1]= "Serbian (Latin Unicode)";
 
   include "rs(latin)"
   include "rs(twoletter)"
@@ -257,7 +257,7 @@ partial alphanumeric_keys
 xkb_symbols "latinyz" {
   // For those who insist on using "english-position" Z and Y.
 
-  name[Group1]= "Serbia - Latin qwerty";
+  name[Group1]= "Serbian (Latin qwerty)";
 
   include "rs(latin)"
 
@@ -269,7 +269,7 @@ partial alphanumeric_keys
 xkb_symbols "latinunicodeyz" {
   // Unicode, ZHE and Z swapped.
 
-  name[Group1]= "Serbia - Latin Unicode qwerty";
+  name[Group1]= "Serbian (Latin Unicode qwerty)";
 
   include "rs(latinunicode)"
 
@@ -280,7 +280,7 @@ xkb_symbols "latinunicodeyz" {
 xkb_symbols "alternatequotes" {
   // Another acceptable »pair of quotes« for Serbian 
 
-  name[Group1]= "Serbia - With guillemets";
+  name[Group1]= "Serbian (with guillemets)";
 
   include "rs(basic)"
 
@@ -291,7 +291,7 @@ xkb_symbols "alternatequotes" {
 xkb_symbols "latinalternatequotes" {
   // Another acceptable »pair of quotes« for Serbian 
 
-  name[Group1]= "Serbia - Latin with guillemets";
+  name[Group1]= "Serbian (Latin with guillemets)";
 
   include "rs(latin)"
 
@@ -304,7 +304,7 @@ xkb_symbols "rue" {
   // Croatia by the Rusyn people), based on Ukrainian homophonic.
   // Author: Ljubomir J. Papuga (Любомир Я. Папуґа) <papuga.rs@gmail.com>
 
-  name[Group1]= "Serbia - Pannonian Rusyn Homophonic";
+  name[Group1]= "Pannonian Rusyn (homophonic)";
 
   include "ua(homophonic)"
 
@@ -332,7 +332,7 @@ xkb_symbols "combiningkeys" {
   // Raw combining characters instead of dead keys,
   // especially good for post-accenting texts.
 
-  name[Group1]= "Serbia - Combining accents instead of dead keys";
+  name[Group1]= "Serbian (combining accents instead of dead keys)";
 
   include "rs(basic)"
 

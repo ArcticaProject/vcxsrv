@@ -25,7 +25,7 @@ xkb_symbols "basic" {
 
     include "us"
 
-    name[Group1]="Romania";
+    name[Group1]="Romanian";
 
     key <AE01> { [ 1,                 exclam,  dead_tilde		  ] };
     key <AE02> { [ 2,                     at,  dead_caron		  ] };
@@ -67,7 +67,7 @@ xkb_symbols "cedilla" {
 
     include "ro(basic)"
 
-    name[Group1]="Romania - Cedilla";
+    name[Group1]="Romanian (cedilla)";
 
     key <AD05> { [ t,                      T,  tcedilla,	 Tcedilla ] };
     key <AC02> { [ s,                      S,  scedilla,	 Scedilla ] };
@@ -82,7 +82,7 @@ xkb_symbols "std" {
 
     include "us"
 
-    name[Group1]="Romania - Standard";
+    name[Group1]="Romanian (standard)";
 
     key <TLDE> { [ doublelowquotemark, rightdoublequotemark, grave, asciitilde ] };
     key <AE01> { [ 1,                 exclam,  dead_tilde		  ] };
@@ -126,7 +126,7 @@ xkb_symbols "std_cedilla" {
 
     include "ro(std)"
 
-    name[Group1]="Romania - Standard (Cedilla)";
+    name[Group1]="Romanian (standard cedilla)";
 
     key <AC10> { [ scedilla, 	    Scedilla ] };
     key <AC11> { [ tcedilla, 	    Tcedilla ] };
@@ -141,7 +141,7 @@ xkb_symbols "winkeys" {
 
     include "latin"
 
-    name[Group1]="Romania - Winkeys";
+    name[Group1]="Romanian (WinKeys)";
 
     // Alphanumeric section
     key <TLDE> { [ bracketright, bracketleft            ]       };
@@ -202,7 +202,7 @@ xkb_symbols "crh_dobruja" {
 
     include "tr(crh)"
 
-    name[Group1]="Romania - Crimean Tatar (Dobruja Q)";
+    name[Group1]="Crimean Tatar (Dobruja Q)";
 
     key <AD02>	{ [         w,          W,         abreve,         Abreve ] };
     key <AD05>	{ [         t,          T,      0x100021b,      0x100021a ] };
@@ -224,7 +224,7 @@ xkb_symbols "ergonomic" {
 
     include "ro(basic)"
 
-    name[Group1]="Romania - Ergonomic Touchtype";
+    name[Group1]="Romanian (ergonomic Touchtype)";
 
     key <AD01> { [ abreve,            Abreve,  q,                       Q ] };
     key <AD02> { [ 0x1000219,      0x1000218,  w,                       W ] };

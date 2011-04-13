@@ -14,7 +14,7 @@ xkb_symbols "basic" {
     include "eurosign(e)"
     include "level3(ralt_switch)"
 
-    name[Group1]="Lithuania";
+    name[Group1]="Lithuanian";
 
     key <TLDE> {[               grave,   asciitilde,    acute                ]};
     key <AE01> {[             aogonek,      Aogonek,        1,        exclam ]};
@@ -42,7 +42,7 @@ xkb_symbols "us" {
     include "eurosign(e)"
     include "level3(ralt_switch)"
 
-    name[Group1]="Lithuania - US keyboard with Lithuanian letters";
+    name[Group1]="Lithuanian (US keyboard with Lithuanian letters)";
 
     key <TLDE> {[    grave,    asciitilde,               acute               ]};
     key <AE01> {[        1,        exclam,             aogonek,      Aogonek ]};
@@ -78,7 +78,7 @@ xkb_symbols "std" {
     include "kpdl(comma)"
     include "level3(ralt_switch)"
 
-    name[Group1]="Lithuania - Standard";
+    name[Group1]="Lithuanian (standard)";
 
     key <TLDE> {[        grave,  asciitilde,               acute ]};
     key <AE01> {[       exclam,           1,                  at ]};
@@ -130,7 +130,7 @@ xkb_symbols "ibm" {
     include "nbsp(level3)"
     include "level3(ralt_switch)"
 
-    name[Group1]="Lithuania - IBM (LST 1205-92)";
+    name[Group1]="Lithuanian (IBM LST 1205-92)";
 
     key <TLDE> {[              grave,          asciitilde,          acute               ]};
     key <AE01> {[             exclam,                   1                               ]};
@@ -180,7 +180,7 @@ xkb_symbols "lekp" {
     include "capslock(backspace)"
     include "level3(ralt_switch)"
     
-    name[Group1]="Lithuania - LEKP";
+    name[Group1]="Lithuanian (LEKP)";
     
     key <TLDE> {[        grave,          asciitilde,         acute ]};
     key <AE01> {[        slash,          numbersign,           bar ]};
@@ -241,7 +241,7 @@ xkb_symbols "lekpa" {
     include "capslock(backspace)"
     include "level3(ralt_switch)"
 
-    name[Group1]="Lithuania - LEKPa";
+    name[Group1]="Lithuanian (LEKPa)";
 
     key <TLDE> {[        grave,          asciitilde,         acute ]};
     key <AE01> {[        slash,            quotedbl,           bar ]};
@@ -300,7 +300,7 @@ xkb_symbols "dvorak" {
 
     include "us(dvorak)"
 
-    name[Group1]="Lithuania - Dvorak";
+    name[Group1]="Lithuanian (Dvorak)";
 
     key <AE01>	{ [   aogonek,      Aogonek,        1,      exclam ] };
     key <AE02>	{ [    ccaron,       Ccaron,        2,          at ] };

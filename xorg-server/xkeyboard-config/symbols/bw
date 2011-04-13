@@ -3,7 +3,7 @@ xkb_symbols "tswana" {
 
     include "us"
 
-    name[Group1]= "Botswana";
+    name[Group1]= "Tswana";
         
     key <AC10> { [ semicolon,	    colon,  0x01000324,  0x01000324 ] };	//COMBINING DIAERESIS BELOW	
     key <AC11> { [apostrophe,    quotedbl,  0x01000301,  0x01000308 ] };	//COMBINING ACUTE ACCENT, COMBINING DIAERESIS

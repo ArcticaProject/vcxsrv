@@ -272,39 +272,20 @@ xcb_generic_event_t *xcb_wait_for_event(xcb_connection_t *c);
 xcb_generic_event_t *xcb_poll_for_event(xcb_connection_t *c);
 
 /**
- * @brief Returns the next event or error that precedes the given request.
+ * @brief Returns the next event without reading from the connection.
  * @param c: The connection to the X server.
- * @param request: The limiting sequence number.
- * @return The next event from the server.
+ * @return The next already queued event from the server.
  *
- * Returns the next event or error with a sequence number less than or
- * equal to the given sequence number, or returns NULL if no such event can
- * ever arrive. Blocks until either a suitable event or error arrive, or a
- * response arrives that proves no such event is coming, or an I/O error
- * occurs.
+ * This is a version of xcb_poll_for_event that only examines the
+ * event queue for new events. The function doesn't try to read new
+ * events from the connection if no queued events are found.
  *
- * After processing a request, the X server sends responses in a specific
- * order. First come any events that the request generated, then any
- * replies for the request, then the error response if there is one. After
- * that, the server may spontaneously send more events with the same
- * sequence number, which are not related to that request.
- *
- * This function will always return events from the pre-reply phase of the
- * specified request. It may also return events from the unrelated
- * post-reply stream, as long as they have the same sequence number.
- *
- * This function is useful for callers that need to process responses in
- * wire-order.
- *
- * Implementation note: You cannot currently use this function to ensure
- * that you process responses in exactly wire-order, because depending on
- * the sequence of calls you make and the timing of server responses,
- * post-reply events with the same sequence number may be returned as part
- * of the pre-reply event stream, even though they were separated by a
- * reply or error. In practice this kind of error is unlikely to matter,
- * but it may be fixed in the future.
+ * This function is useful for callers that know in advance that all
+ * interesting events have already been read from the connection. For
+ * example, callers might use xcb_wait_for_reply and be interested
+ * only of events that preceded a specific reply.
  */
-xcb_generic_event_t *xcb_wait_for_event_until(xcb_connection_t *c, unsigned int request);
+xcb_generic_event_t *xcb_poll_for_queued_event(xcb_connection_t *c);
 
 /**
  * @brief Return the error for a request, or NULL if none can ever arrive.

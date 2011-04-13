@@ -47,7 +47,7 @@ xkb_symbols "nodeadkeys" {
 
     include "pt(basic)" // for consistent naming
 
-    name[Group1]="Portugal - Eliminate dead keys";
+    name[Group1]="Portuguese (eliminate dead keys)";
 
     key <AE12>	{ [guillemotleft, guillemotright, cedilla,     ogonek ]	};
     key <AD11>	{ [      plus,   asterisk,     quotedbl,     quotedbl ]	};
@@ -67,7 +67,7 @@ xkb_symbols "mac" {
     // keyboard and a very simple Portuguese keybaord
 
     include "pt"
-    name[Group1]= "Portugal - Macintosh";
+    name[Group1]= "Portuguese (Macintosh)";
 
     key <AE06>	{ [         6,  ampersand, threequarters, fiveeighths ]	};
     key <AE08>	{ [         8,  parenleft,  bracketleft,    braceleft ]	};
@@ -82,7 +82,7 @@ xkb_symbols "mac" {
 partial alphanumeric_keys 
 xkb_symbols "mac_sundeadkeys" {
     include "pt(mac)"
-    name[Group1]= "Portugal - Macintosh, Sun dead keys";
+    name[Group1]= "Portuguese (Macintosh, Sun dead keys)";
     
     key <AE12> {	[	     plus,        asterisk,  dead_diaeresis, dead_diaeresis      ]	};
     key <AC11> {	[     dead_tilde,    dead_circumflex	]	};
@@ -92,7 +92,7 @@ xkb_symbols "mac_sundeadkeys" {
 partial alphanumeric_keys 
 xkb_symbols "mac_nodeadkeys" {
     include "pt(mac)"
-    name[Group1]= "Portugal - Macintosh, eliminate dead keys";
+    name[Group1]= "Portuguese (Macintosh, eliminate dead keys)";
 
     key <AE12> {	[	     plus,        asterisk, 	 quotedbl,        quotedbl      ]	};
     key <AC11> {	[      asciitilde,     asciicircum	]	};
@@ -110,7 +110,7 @@ xkb_symbols "mac_nodeadkeys" {
 partial alphanumeric_keys
 xkb_symbols "nativo" {
 
-    name[Group1]="Portugal - Nativo";
+    name[Group1]="Portuguese (Nativo)";
 
 // Numeric row
     key <TLDE> { [         plus,        asterisk,       dead_diaeresis,        plusminus ] };
@@ -186,7 +186,7 @@ partial alphanumeric_keys
 xkb_symbols "nativo-us" {
     include "pt(nativo)"
 
-    name[Group1]="Portugal - Nativo for USA keyboards";
+    name[Group1]="Portuguese (Nativo for USA keyboards)";
 
 // Lower row
     key <AB01> { [            y,               Y,              ccedilla,        Ccedilla ] };
@@ -205,7 +205,7 @@ partial alphanumeric_keys
 xkb_symbols "nativo-epo" {
     include "pt(nativo)"
 
-    name[Group1]="Portugal - Nativo for Esperanto";
+    name[Group1]="Esperanto (Portugal, Nativo)";
 
 // Upper row Esperanto
     key <AD04> { [            h,               H,          hcircumflex,      Hcircumflex ] };

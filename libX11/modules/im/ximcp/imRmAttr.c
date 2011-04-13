@@ -1384,7 +1384,7 @@ _XimCountNumberOfAttr(
 {
     unsigned int n;
     INT16	 len;
-    INT16	 min_len = sizeof(CARD16)	/* sizeof attrinute ID */
+    INT16	 min_len = sizeof(CARD16)	/* sizeof attribute ID */
 			 + sizeof(CARD16)	/* sizeof type of value */
 			 + sizeof(INT16);	/* sizeof length of attribute */
 
@@ -1417,7 +1417,7 @@ _XimGetAttributeID(
     int			  values_len;
     register int	  i;
     INT16		  len;
-    INT16		  min_len = sizeof(CARD16) /* sizeof attrinute ID */
+    INT16		  min_len = sizeof(CARD16) /* sizeof attribute ID */
 				  + sizeof(CARD16) /* sizeof type of value */
 				  + sizeof(INT16); /* sizeof length of attr */
     /*

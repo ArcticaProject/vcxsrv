@@ -7,7 +7,7 @@ xkb_symbols "basic" {
 
     include "latin"
 
-    name[Group1] = "Slovakia";
+    name[Group1] = "Slovak";
 
     key <TLDE>	{ [ semicolon, dead_abovering,    grave,   asciitilde ]	};
     key <AE01>	{ [      plus,          1,       exclam,   dead_tilde ]	};
@@ -73,7 +73,7 @@ xkb_symbols "basic" {
 xkb_symbols "bksl" {
     include "sk(basic)"
 
-    name[Group1] = "Slovakia - Extended Backslash";
+    name[Group1] = "Slovak (extended Backslash)";
 
     key <BKSL>	{ [ backslash,        bar,        slash,     NoSymbol ]	};
 };
@@ -87,7 +87,7 @@ xkb_symbols "qwerty" {
     
     include "sk(basic)"
 
-    name[Group1] = "Slovakia - qwerty";
+    name[Group1] = "Slovak (qwerty)";
 
     key <AB01>	{ [         z,          Z,       degree,     NoSymbol ]	};
     key <AD06>	{ [         y,          Y,     NoSymbol,     NoSymbol ]	};
@@ -97,7 +97,7 @@ xkb_symbols "qwerty" {
 xkb_symbols "qwerty_bksl" {
     include "sk(qwerty)"
 
-    name[Group1] = "Slovakia - qwerty, extended Backslash";
+    name[Group1] = "Slovak (qwerty, extended Backslash)";
 
     key <BKSL>	{ [ backslash,        bar,        slash,     NoSymbol ]	};
 };

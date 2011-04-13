@@ -7,7 +7,7 @@ xkb_symbols "basic" {
     // keyboard and a Lao keyboard
     // This keymap uses the Lao keyboard standard [kind of] widely used inLaos
 
-    name[Group1]= "Laos";
+    name[Group1]= "Lao";
 
     // Alphanumeric section
     key <TLDE> { [ 0x100200D			]};
@@ -87,7 +87,7 @@ xkb_symbols "stea" {
     // have been omitted.
 
 
-    name[Group1]= "Laos - STEA (proposed standard layout)";
+    name[Group1]= "Lao (STEA proposed standard layout)";
 
     // Alphanumeric section
     key <TLDE> { [  quotedbl,      apostrophe           	]};

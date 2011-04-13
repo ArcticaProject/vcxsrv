@@ -251,7 +251,7 @@ xkb_symbols "ku_ara" {
 // Layout by Ernst Tremel, http://ubuntuforums.org/showpost.php?p=9365469&postcount=32
 // Creation of this file by Simos Xenitellis.
 
-partial default alphanumeric_keys
+partial alphanumeric_keys
 xkb_symbols "ave"
 {
 	name[Group1] = "Avestan";

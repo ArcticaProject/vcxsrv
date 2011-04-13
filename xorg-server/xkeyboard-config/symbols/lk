@@ -33,7 +33,7 @@ xkb_symbols "sin_phonetic" {
 
   include "us"
 // it is default - no details in the name
-  name[Group1] = "Sri Lanka";
+  name[Group1] = "Sinhala";
   key.type[Group1] = "FOUR_LEVEL";
 
   // q - p
@@ -80,12 +80,12 @@ xkb_symbols "sin_phonetic" {
 partial alphanumeric_keys
 xkb_symbols "tam_unicode" {
     include "in(tam_unicode)"
-    name[Group1]= "Sri Lanka - Tamil Unicode";
+    name[Group1]= "Tamil (Sri Lanka, Unicode)";
 };
 
 partial alphanumeric_keys
 xkb_symbols "tam_TAB" {
     include "in(tam_TAB)"
-    name[Group1]= "Sri Lanka - Tamil TAB Typewriter";
+    name[Group1]= "Tamil (Sri Lanka, TAB Typewriter)";
 };
 

@@ -3,7 +3,7 @@ xkb_symbols "basic" {
 
     include "fr(basic)"
 
-    name[Group1]="Mali";
+    name[Group1]="Bambara";
 
     key <AB06>	{ [         n,          N,         U0272,       U019D ]	}; // n N ɲ Ɲ
     key <AC02>	{ [         s,          S,         U0161,       U0160 ]	}; // s S š Š
@@ -19,7 +19,7 @@ xkb_symbols "fr-oss" {
 
     include "fr(oss)"
 
-    name[Group1]="Mali - Français (France Alternative)";
+    name[Group1]="French (Mali, alternative)";
 
     // š Š on d replaces ë Ë
     // ɲ Ɲ on j replaces ü Ü
@@ -41,7 +41,7 @@ xkb_symbols "us-mac" {
 
     include "us(mac)"
 
-    name[Group1]="Mali - English (USA Macintosh)";
+    name[Group1]="English (Mali, US Macintosh)";
 
     // ž Ž on z replaces Ω ¸
     // ɛ Ɛ on a replaces å Å
@@ -64,7 +64,7 @@ xkb_symbols "us-intl" {
 
     include "us(intl)"
 
-    name[Group1]="Mali - English (USA International)";
+    name[Group1]="English (Mali, US international)";
 
     // ž Ž on x replaces
     // š Š on s replaces ß §
