@@ -65,7 +65,7 @@ libxcb git version
 libxkbfile-1.0.7
 mesa git version
 mkfontscale git version
-openssl-1.0.0c
+openssl-1.0.0d
 pixman git version
 pthreads-w32-2-8-0-release
 randrproto git version
