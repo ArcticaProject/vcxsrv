@@ -8,7 +8,7 @@ xkb_symbols "swa" {
 
     include "us"
 
-    name[Group1]= "Kenya";
+    name[Group1]= "Swahili (Kenya)";
     
     key <AC10> { [ semicolon,	    colon,  0x01000324,  0x01000324 ] };	//COMBINING DIAERESIS BELOW	
     key <AC11> { [apostrophe,    quotedbl,  0x01000301,  0x01000308 ] };	//COMBINING ACUTE ACCENT, COMBINING DIAERESIS
@@ -27,7 +27,7 @@ xkb_symbols "kik" {
 
     include "us"
 
-    name[Group1]= "Kenya - Kikuyu";
+    name[Group1]= "Kikuyu";
     
     key <AC10> { [ semicolon,	    colon,  0x01000324,  0x01000324 ] };	//COMBINING DIAERESIS BELOW	
     key <AC11> { [apostrophe,    quotedbl,  0x01000301,  0x01000308 ] };	//COMBINING ACUTE ACCENT, COMBINING DIAERESIS

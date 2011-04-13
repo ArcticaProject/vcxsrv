@@ -9,7 +9,7 @@ xkb_symbols "basic" {
 
     include "latin"
 
-    name[Group1]="South Africa";
+    name[Group1]="English (South Africa)";
 
     key <TLDE>  { [     grave,  asciitilde,  dead_grave ] };
     key <AE02>	{ [         2,         at,      yen ]	};

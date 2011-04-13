@@ -9,7 +9,7 @@ xkb_symbols "basic" {
 partial alphanumeric_keys
 xkb_symbols "se" {
 
-    name[Group1]="Sweden";
+    name[Group1]="Swedish";
 
     key <AE05>	{ [         5,    percent,     EuroSign,         cent ]	};
     key <AE11>	{ [      plus,   question,    backslash, questiondown ]	};
@@ -39,7 +39,7 @@ xkb_symbols "nodeadkeys" {
     include "latin(type2_nodeadkeys)"
     include "se(se)"
 
-    name[Group1]="Sweden - Eliminate dead keys";
+    name[Group1]="Swedish (eliminate dead keys)";
 
     key <AE12>	{ [     acute,      grave,    plusminus,      notsign ]	};
 
@@ -49,7 +49,7 @@ xkb_symbols "nodeadkeys" {
 partial alphanumeric_keys 
 xkb_symbols "dvorak" {
 
-    name[Group1]="Sweden - Dvorak";
+    name[Group1]="Swedish (Dvorak)";
 
     include "se(basic)"
 
@@ -105,7 +105,7 @@ partial alphanumeric_keys
 xkb_symbols "rus" {
     include "se(basic)"
 
-    name[Group1]="Sweden - Russian phonetic";
+    name[Group1]="Russian (Sweden, phonetic)";
     key.type[group1]="ALPHABETIC";
 
     key <TLDE> {	[ Cyrillic_io, Cyrillic_IO ]	};
@@ -152,7 +152,7 @@ xkb_symbols "rus_nodeadkeys" {
     include "se(nodeadkeys)"
     include "se(rus)"
 
-    name[Group1]="Sweden - Russian phonetic, eliminate dead keys";
+    name[Group1]="Russian (Sweden, phonetic, eliminate dead keys)";
 
     key <AE12> {	[ Cyrillic_hardsign, Cyrillic_HARDSIGN ]	};
 };
@@ -166,7 +166,7 @@ xkb_symbols "smi" {
 
     include "fi(smi)"
 
-    name[Group1]= "Sweden - Northern Saami";
+    name[Group1]= "Northern Saami (Sweden)";
 };
 
 // Copied from macintosh_vndr/se
@@ -177,7 +177,7 @@ xkb_symbols "mac" {
     // keyboard and a very simple Swedish(Sweden) keybaord
 
     include "latin"
-    name[Group1]= "Sweden - Macintosh";
+    name[Group1]= "Swedish (Macintosh)";
 
     key <TLDE> {	[         section,         degree	]	};
     key <AE01> {	[               1,          exclam,        copyright,      exclamdown	]	};
@@ -210,7 +210,7 @@ xkb_symbols "mac" {
 partial alphanumeric_keys
 xkb_symbols "svdvorak" {
 
-   name[Group1]="Sweden - Svdvorak";
+   name[Group1]="Swedish (Svdvorak)";
 
    include "se(basic)"
 

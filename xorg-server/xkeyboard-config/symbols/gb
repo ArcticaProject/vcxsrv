@@ -10,7 +10,7 @@ xkb_symbols "basic" {
 
     include "latin"
 
-    name[Group1]="United Kingdom";
+    name[Group1]="English (UK)";
 
     key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
     key <AE03>	{ [         3,   sterling, threesuperior,    sterling ]	};
@@ -41,7 +41,7 @@ xkb_symbols "intl" {
 
     include "latin" 
 
-    name[Group1]="United Kingdom - International (with dead keys)"; 
+    name[Group1]="English (UK, international with dead keys)"; 
 
     key <AE02>  { [   2,  dead_diaeresis,      twosuperior,     onehalf ] };
     key <AE03>  { [   3,        sterling,    threesuperior,    onethird ] };
@@ -59,7 +59,7 @@ xkb_symbols "intl" {
 
 partial alphanumeric_keys 
 xkb_symbols "extd" {
-    // Clone of the Microsoft "United Kingdom - Extended" layout, which
+    // Clone of the Microsoft "English (UK, Extended" layout, which
     // includes dead keys for: grave; diaeresis; circumflex; tilde; and
     // accute. It also enables direct access to accute characters using
     // the Multi_key (Alt Gr).
@@ -72,7 +72,7 @@ xkb_symbols "extd" {
 
     include "latin"
 
-    name[Group1]="United Kingdom - Extended - Winkeys";
+    name[Group1]="English (UK, extended WinKeys)";
     
     // Alphanumeric section
     key <TLDE> { [ dead_grave,    notsign,       brokenbar,    NoSymbol ] };
@@ -108,7 +108,7 @@ partial alphanumeric_keys
 xkb_symbols "colemak" {
     include "us(colemak)"
 
-    name[Group1]="United Kingdom - Colemak";
+    name[Group1]="English (UK, Colemak)";
 
     key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
     key <AE03>	{ [         3,   sterling, threesuperior,    sterling ]	};
@@ -131,7 +131,7 @@ partial alphanumeric_keys
 xkb_symbols "dvorak" {
     include "us(dvorak-alt-intl)"
 
-    name[Group1]="United Kingdom - Dvorak";
+    name[Group1]="English (UK, Dvorak)";
 
     key <AD01> { [ apostrophe,	at		] };
     key <AE02> { [	    2,	quotedbl,  twosuperior,   NoSymbol	] };
@@ -146,7 +146,7 @@ partial alphanumeric_keys
 xkb_symbols "dvorakukp" {
     include "gb(dvorak)"
 
-    name[Group1]="United Kingdom - Dvorak (UK Punctuation)";
+    name[Group1]="English (UK, Dvorak with UK punctuation)";
 
     key <AE11> {        [     minus,    underscore      ]       };
     key <AE12> {        [     equal,    plus            ]       };
@@ -165,7 +165,7 @@ xkb_symbols "mac" {
 
     include "latin"
 
-    name[Group1]= "United Kingdom - Macintosh";
+    name[Group1]= "English (UK, Macintosh)";
 
     key <AE02> {	[               2,              at,         EuroSign	]	};
     key <AE03> {	[               3,        sterling,       numbersign	]	};
@@ -181,7 +181,7 @@ xkb_symbols "mac_intl" {
 
     include "latin" 
 
-    name[Group1]="United Kingdom - Macintosh (International)"; 
+    name[Group1]="English (UK, Macintosh international)"; 
 
     key <AE02>  { [   2,                       at,           EuroSign,    onehalf ] };
     key <AE03>  { [   3,                 sterling,        twosuperior,   onethird ] };

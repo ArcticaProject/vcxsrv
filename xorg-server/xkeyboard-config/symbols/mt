@@ -6,7 +6,7 @@ xkb_symbols "basic" {
 
     include "latin"
 
-    name[Group1]="Malta";
+    name[Group1]="Maltese";
 
     // Copied from GB layout
     key <AE02> { [         2,   quotedbl,  twosuperior,    oneeighth ] };
@@ -48,7 +48,7 @@ xkb_symbols "us" {
     // Describes the differences between the mt
     // keyboard and a US-based physical keyboard
 
-    name[Group1]="Malta - Maltese keyboard with US layout";
+    name[Group1]="Maltese (with US layout)";
 
     // The following four sets are the four additional letters, with the US
     // equivalents

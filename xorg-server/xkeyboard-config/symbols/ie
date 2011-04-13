@@ -32,7 +32,7 @@ xkb_symbols "basic" {
     //  - non-breaking space as AltGr+Space and AltGr+Shift+Space
     //  - matches hardware (keys and engraved symbols) for Irish keyboards
 
-    name[Group1] = "Ireland";
+    name[Group1] = "Irish";
 
     //
     // Numeric row `1234567890-=
@@ -130,7 +130,7 @@ xkb_symbols "CloGaelach" {
 
     include "ie(basic)"
 
-    name[Group1] = "Ireland - CloGaelach";
+    name[Group1] = "CloGaelach";
 
     key <TLDE> { [     grave, notsign,  brokenbar,       ssharp ] };
     key <AD04> { [         r,       R,  0x100027C,   registered ] };
@@ -157,7 +157,7 @@ xkb_symbols "UnicodeExpert" {
 
 // This should eventually be a "Unicode Expert" layout like the Mac one.
 
-    name[Group1] = "Ireland - UnicodeExpert";
+    name[Group1] = "Irish (UnicodeExpert)";
 
     //
     // Numeric row `1234567890-=
@@ -247,7 +247,7 @@ xkb_symbols "UnicodeExpert" {
 partial alphanumeric_keys
 xkb_symbols "ogam" {
 
-    name[Group1] = "Ireland - Ogham";
+    name[Group1] = "Ogham";
 
     key.type[Group1] = "ONE_LEVEL";
 
@@ -315,7 +315,7 @@ xkb_symbols "ogam_is434" {
     // This has the full layout of IS434 with an Irish QWERTY keyboard,
     // and the Ogham characters accessed when CAPS LOCK is on.
 
-    name[Group1] = "Ireland - Ogham IS434";
+    name[Group1] = "Ogham (IS434)";
 
     key.type[Group1] = "THREE_LEVEL";
 

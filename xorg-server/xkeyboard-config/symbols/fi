@@ -189,7 +189,7 @@ xkb_symbols "smi" {
 
     include "no(smi)"
 
-    name[Group1]="Saami (Finland)";
+    name[Group1]="Northern Saami (Finland)";
 
     key <AC10> { [  odiaeresis,      Odiaeresis,       oslash,                Oslash                ] };
     key <AC11> { [  adiaeresis,      Adiaeresis,       ae,                    AE                    ] };

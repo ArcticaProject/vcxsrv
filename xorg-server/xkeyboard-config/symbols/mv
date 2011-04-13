@@ -6,7 +6,7 @@
 partial default alphanumeric_keys
 xkb_symbols "basic" {
 
-    name[Group1]="Maldives";
+    name[Group1]="Dhivehi";
 
 // The key <TLDE> should have the same values as US_en keyboard
 

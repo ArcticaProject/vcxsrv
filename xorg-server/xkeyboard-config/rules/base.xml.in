@@ -1602,7 +1602,7 @@
         <variant>
           <configItem>
             <name>cyrillic</name>
-            <_description>Azerbaijan (Cyrillic)</_description>
+            <_description>Azerbaijani (Cyrillic)</_description>
           </configItem>
         </variant>
       </variantList>
@@ -2589,7 +2589,7 @@
         <variant>
           <configItem>
             <name>smi</name>
-            <_description>Saami (Finland)</_description>
+	    <_description>Northern Saami (Finland)</_description>
             <languageList><iso639Id>sme</iso639Id></languageList>
           </configItem>
         </variant>
@@ -3285,7 +3285,7 @@
       <configItem>
         <name>kh</name>
         <_shortDescription>km</_shortDescription>
-        <_description>Khmer (Cambodian)</_description>
+        <_description>Khmer (Cambodia)</_description>
         <languageList>
           <iso639Id>khm</iso639Id>
         </languageList>
@@ -3389,7 +3389,7 @@
         <variant>
           <configItem>
             <name>sundeadkeys</name>
-            <_description>Spanish (Latin American, sun dead keys)</_description>
+            <_description>Spanish (Latin American, Sun dead keys)</_description>
           </configItem>
         </variant>
       </variantList>
@@ -3449,13 +3449,13 @@
         <variant>
           <configItem>
             <name>apostrophe</name>
-            <_description>Latvian (Apostrophe ' variant)</_description>
+            <_description>Latvian (apostrophe variant)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>tilde</name>
-            <_description>Latvian (Tilde ~ variant)</_description>
+            <_description>Latvian (tilde variant)</_description>
           </configItem>
         </variant>
         <variant>
@@ -3464,13 +3464,31 @@
             <_description>Latvian (F variant)</_description>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>modern</name>
+            <_description>Latvian (modern)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>ergonomic</name>
+            <_description>Latvian (ergonomic, ŪGJRMV)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>adapted</name>
+            <_description>Latvian (adapted)</_description>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>
       <configItem>
         <name>mao</name>
         <_shortDescription>mi</_shortDescription>
-        <_description>Māori</_description>
+        <_description>Maori</_description>
         <languageList>
           <iso639Id>mao</iso639Id>
         </languageList>
@@ -3603,7 +3621,7 @@
         <variant>
           <configItem>
             <name>smi</name>
-            <_description>Saami (Norway)</_description>
+            <_description>Northern Saami (Norway)</_description>
             <languageList>
               <iso639Id>sme</iso639Id>
             </languageList>
@@ -3612,7 +3630,7 @@
         <variant>
           <configItem>
             <name>smi_nodeadkeys</name>
-            <_description>Saami (Norway, eliminate dead keys)</_description>
+            <_description>Northern Saami (Norway, eliminate dead keys)</_description>
             <languageList>
               <iso639Id>sme</iso639Id>
             </languageList>
@@ -3657,19 +3675,19 @@
         <variant>
           <configItem>
             <name>dvorak_quotes</name>
-            <_description>Polish (Dvorak, polish quotes on quotemark key)</_description>
+            <_description>Polish (Dvorak, Polish quotes on quotemark key)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>dvorak_altquotes</name>
-            <_description>Polish (Dvorak, polish quotes on key 1)</_description>
+            <_description>Polish (Dvorak, Polish quotes on key 1)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>csb</name>
-            <_description>Polish (Kashubian)</_description>
+            <_description>Kashubian</_description>
             <languageList>
               <iso639Id>csb</iso639Id>
             </languageList>
@@ -3748,7 +3766,7 @@
         <variant>
           <configItem>
             <name>nativo-epo</name>
-            <_description>Portuguese (Nativo for Esperanto)</_description>
+            <_description>Esperanto (Portugal, Nativo)</_description>
             <languageList>
               <iso639Id>epo</iso639Id>
             </languageList>
@@ -3845,7 +3863,7 @@
         <variant>
           <configItem>
             <name>tt</name>
-            <_description>Russian (Tatar)</_description>
+            <_description>Tatar</_description>
             <languageList>
               <iso639Id>tat</iso639Id>
             </languageList>
@@ -3854,7 +3872,7 @@
         <variant>
           <configItem>
             <name>os_legacy</name>
-            <_description>Russian (Ossetian, legacy)</_description>
+            <_description>Ossetian (legacy)</_description>
             <languageList>
               <iso639Id>oss</iso639Id>
             </languageList>
@@ -3863,7 +3881,7 @@
         <variant>
           <configItem>
             <name>os_winkeys</name>
-            <_description>Russian (Ossetian, WinKeys)</_description>
+            <_description>Ossetian (WinKeys)</_description>
             <languageList>
               <iso639Id>oss</iso639Id>
             </languageList>
@@ -3872,7 +3890,7 @@
         <variant>
           <configItem>
             <name>cv</name>
-            <_description>Russian (Chuvash)</_description>
+            <_description>Chuvash</_description>
             <languageList>
               <iso639Id>chv</iso639Id>
             </languageList>
@@ -3881,7 +3899,7 @@
         <variant>
           <configItem>
             <name>cv_latin</name>
-            <_description>Russian (Chuvash Latin)</_description>
+            <_description>Chuvash (Latin)</_description>
             <languageList>
               <iso639Id>chv</iso639Id>
             </languageList>
@@ -3890,7 +3908,7 @@
         <variant>
           <configItem>
             <name>udm</name>
-            <_description>Russian (Udmurt)</_description>
+            <_description>Udmurt</_description>
             <languageList>
               <iso639Id>udm</iso639Id>
             </languageList>
@@ -3899,7 +3917,7 @@
         <variant>
           <configItem>
             <name>kom</name>
-            <_description>Russian (Komi)</_description>
+            <_description>Komi</_description>
             <languageList>
               <iso639Id>kom</iso639Id>
             </languageList>
@@ -3908,7 +3926,7 @@
         <variant>
           <configItem>
             <name>sah</name>
-            <_description>Russian (Yakut)</_description>
+            <_description>Yakut</_description>
             <languageList>
               <iso639Id>sah</iso639Id>
             </languageList>
@@ -3917,7 +3935,7 @@
         <variant>
           <configItem>
             <name>xal</name>
-            <_description>Russian (Kalmyk)</_description>
+            <_description>Kalmyk</_description>
             <languageList>
               <iso639Id>xal</iso639Id>
             </languageList>
@@ -3932,7 +3950,7 @@
         <variant>
           <configItem>
             <name>srp</name>
-            <_description>Russian (Serbian)</_description>
+            <_description>Serbian (Russia)</_description>
             <languageList><iso639Id>rus</iso639Id>
                           <iso639Id>srp</iso639Id></languageList>
           </configItem>
@@ -3940,7 +3958,7 @@
         <variant>
           <configItem>
             <name>bak</name>
-            <_description>Russian (Bashkirian)</_description>
+            <_description>Bashkirian</_description>
             <languageList>
               <iso639Id>bak</iso639Id>
             </languageList>
@@ -3949,7 +3967,7 @@
         <variant>
           <configItem>
             <name>chm</name>
-            <_description>Russian (Mari)</_description>
+            <_description>Mari</_description>
             <languageList>
               <iso639Id>chm</iso639Id>
             </languageList>
@@ -4012,7 +4030,7 @@
         <variant>
           <configItem>
             <name>rue</name>
-            <_description>Serbian (Pannonian Rusyn Homophonic)</_description>
+            <_description>Pannonian Rusyn (homophonic)</_description>
             <languageList>
               <iso639Id>rue</iso639Id>
             </languageList>
@@ -4024,7 +4042,7 @@
       <configItem>
         <name>si</name>
         <_shortDescription>sl</_shortDescription>
-        <_description>Slovene</_description>
+        <_description>Slovenian</_description>
         <languageList>
           <iso639Id>slv</iso639Id>
         </languageList>
@@ -4033,13 +4051,13 @@
         <variant>
           <configItem>
             <name>alternatequotes</name>
-            <_description>Slovene (use guillemets for quotes)</_description>
+            <_description>Slovenian (use guillemets for quotes)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>us</name>
-            <_description>Slovene (US keyboard with Slovenian letters)</_description>
+            <_description>Slovenian (US keyboard with Slovenian letters)</_description>
           </configItem>
         </variant>
       </variantList>
@@ -4111,7 +4129,7 @@
         <variant>
           <configItem>
             <name>ast</name>
-            <_description>Spanish (Asturian variant with bottom-dot H and bottom-dot L)</_description>
+            <_description>Asturian (Spain, with bottom-dot H and bottom-dot L)</_description>
             <languageList>
               <iso639Id>ast</iso639Id>
             </languageList>
@@ -4120,7 +4138,7 @@
         <variant>
           <configItem>
             <name>cat</name>
-            <_description>Spanish (Catalan variant with middle-dot L)</_description>
+            <_description>Catalan (Spain, with middle-dot L)</_description>
             <languageList>
               <iso639Id>cat</iso639Id>
             </languageList>
@@ -4179,7 +4197,7 @@
         <variant>
           <configItem>
             <name>smi</name>
-            <_description>Saami (Sweden)</_description>
+            <_description>Northern Saami (Sweden)</_description>
             <languageList>
               <iso639Id>sme</iso639Id>
             </languageList>
@@ -4203,7 +4221,7 @@
       <configItem>
         <name>ch</name>
         <_shortDescription>che</_shortDescription>
-        <_description>German</_description>
+        <_description>German (Switzerland)</_description>
         <languageList><iso639Id>ger</iso639Id>
                       <iso639Id>gsw</iso639Id></languageList>
       </configItem>
@@ -4586,7 +4604,7 @@
         <variant>
           <configItem>
             <name>rstu_ru</name>
-            <_description>Ukrainian (standard RSTU on Russian layout)</_description>
+            <_description>Russian (Ukraine, standard RSTU)</_description>
           </configItem>
         </variant>
         <variant>
@@ -4610,7 +4628,7 @@
         <variant>
           <configItem>
             <name>extd</name>
-            <_description>English (UK, extended, WinKeys)</_description>
+            <_description>English (UK, extended WinKeys)</_description>
           </configItem>
         </variant>
         <variant>
@@ -4628,7 +4646,7 @@
         <variant>
           <configItem>
             <name>dvorakukp</name>
-            <_description>English (UK, Dvorak UK punctuation)</_description>
+            <_description>English (UK, Dvorak with UK punctuation)</_description>
           </configItem>
         </variant>
         <variant>
@@ -4725,7 +4743,7 @@
         <variant>
           <configItem>
             <name>CloGaelach</name>
-            <_description>Irish (CloGaelach)</_description>
+            <_description>CloGaelach</_description>
             <languageList>
               <iso639Id>gla</iso639Id>
             </languageList>
@@ -4740,13 +4758,19 @@
         <variant>
           <configItem>
             <name>ogam</name>
-            <_description>Irish (Ogham)</_description>
+            <_description>Ogham</_description>
+            <languageList>
+              <iso639Id>sga</iso639Id>
+            </languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>ogam_is434</name>
-            <_description>Irish (Ogham IS434)</_description>
+            <_description>Ogham (IS434)</_description>
+            <languageList>
+              <iso639Id>sga</iso639Id>
+            </languageList>
           </configItem>
         </variant>
       </variantList>
@@ -4765,18 +4789,12 @@
           <configItem>
             <name>urd-crulp</name>
             <_description>Urdu (Pakistan, CRULP)</_description>
-            <languageList>
-              <iso639Id>urd</iso639Id>
-            </languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>urd-nla</name>
             <_description>Urdu (Pakistan, NLA)</_description>
-            <languageList>
-              <iso639Id>urd</iso639Id>
-            </languageList>
           </configItem>
         </variant>
         <variant>
@@ -4968,20 +4986,23 @@
             <name>fr-oss</name>
             <_shortDescription>fr</_shortDescription>
             <_description>French (Mali, alternative)</_description>
+            <languageList>
+              <iso639Id>fr</iso639Id>
+            </languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>us-mac</name>
             <_shortDescription>en</_shortDescription>
-            <_description>English (Mali, USA Macintosh)</_description>
+            <_description>English (Mali, US Macintosh)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>us-intl</name>
             <_shortDescription>en</_shortDescription>
-            <_description>English (Mali, USA international)</_description>
+            <_description>English (Mali, US international)</_description>
           </configItem>
         </variant>
       </variantList>
@@ -5137,7 +5158,7 @@
         <variant>
           <configItem>
             <name>dvorak-bay</name>
-            <_description>Philippines - Dvorak (Baybayin)</_description>
+            <_description>Filipino (Dvorak Baybayin)</_description>
             <languageList><iso639Id>bik</iso639Id>
                           <iso639Id>ceb</iso639Id>
                           <iso639Id>fil</iso639Id>

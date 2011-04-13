@@ -3,7 +3,7 @@
 // Default layout (based on Vista Turkmen layout)
 default partial
 xkb_symbols "basic" {
-    name[Group1]="Turkmenistan";
+    name[Group1]="Turkmen";
     
     include "us"
     key <TLDE> {	[    zcaron, 	Zcaron,		grave,	asciitilde	]	};
@@ -25,7 +25,7 @@ xkb_symbols "basic" {
 // This layout provides turkmen letter via the AltGr key
 partial
 xkb_symbols "alt" {
-    name[Group1]="Turkmenistan - Alt-Q";
+    name[Group1]="Turkmen (Alt-Q)";
 
     include "us"
 
