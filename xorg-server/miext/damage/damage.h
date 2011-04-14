@@ -110,6 +110,10 @@ DamageRegionProcessPending (DrawablePtr pDrawable);
 extern _X_EXPORT void
 DamageRegionRendered (DrawablePtr pDrawable, DamagePtr pDamage, RegionPtr pOldDamage, RegionPtr pRegion);
 
+/* Call this when you create a new Damage and you wish to send an initial damage message (to it). */
+extern _X_EXPORT void
+DamageReportDamage (DamagePtr pDamage, RegionPtr pDamageRegion);
+
 /* Avoid using this call, it only exists for API compatibility. */
 extern _X_EXPORT void
 DamageDamageRegion (DrawablePtr	    pDrawable,

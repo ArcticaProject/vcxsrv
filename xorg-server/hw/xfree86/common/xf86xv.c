@@ -313,6 +313,7 @@ xf86XVFreeAdaptor(XvAdaptorPtr pAdaptor)
    int i;
 
    free(pAdaptor->name);
+   pAdaptor->name = NULL;
 
    if(pAdaptor->pEncodings) {
       XvEncodingPtr pEncode = pAdaptor->pEncodings;
@@ -320,9 +321,11 @@ xf86XVFreeAdaptor(XvAdaptorPtr pAdaptor)
       for(i = 0; i < pAdaptor->nEncodings; i++, pEncode++)
 	  free(pEncode->name);
       free(pAdaptor->pEncodings);
+      pAdaptor->pEncodings = NULL;
    }
 
    free(pAdaptor->pFormats);
+   pAdaptor->pFormats = NULL;
 
    if(pAdaptor->pPorts) {
       XvPortPtr pPort = pAdaptor->pPorts;
@@ -341,18 +344,22 @@ xf86XVFreeAdaptor(XvAdaptorPtr pAdaptor)
 	  }
       }
       free(pAdaptor->pPorts);
+      pAdaptor->pPorts = NULL;
    }
 
-   if(pAdaptor->nAttributes) {
+   if(pAdaptor->pAttributes) {
       XvAttributePtr pAttribute = pAdaptor->pAttributes;
 
       for(i = 0; i < pAdaptor->nAttributes; i++, pAttribute++)
 	  free(pAttribute->name);
       free(pAdaptor->pAttributes);
+      pAdaptor->pAttributes = NULL;
    }
 
    free(pAdaptor->pImages);
    free(pAdaptor->devPriv.ptr);
+   pAdaptor->pImages = NULL;
+   pAdaptor->devPriv.ptr = NULL;
 }
 
 static Bool

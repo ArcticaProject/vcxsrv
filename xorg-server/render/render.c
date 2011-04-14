@@ -1705,11 +1705,17 @@ ProcRenderCreateCursor (ClientPtr client)
 			 GetColor(twocolor[1], 0),
 			 &pCursor, client, stuff->cid);
     if (rc != Success)
-	return rc;
-    if (!AddResource(stuff->cid, RT_CURSOR, (pointer)pCursor))
-	return BadAlloc;
+	goto bail;
+    if (!AddResource(stuff->cid, RT_CURSOR, (pointer)pCursor)) {
+	rc = BadAlloc;
+	goto bail;
+    }
 
     return Success;
+bail:
+    free(srcbits);
+    free(mskbits);
+    return rc;
 }
 
 static int
