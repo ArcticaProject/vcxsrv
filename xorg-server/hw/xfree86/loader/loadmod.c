@@ -483,19 +483,15 @@ LoaderListDirs(const char **subdirlist, const char **patternlist)
     char *fp;
     char **listing = NULL;
     char **save;
+    char **ret = NULL;
     int n = 0;
 
     if (!(pathlist = InitPathList(NULL)))
 	return NULL;
-    if (!(subdirs = InitSubdirs(subdirlist))) {
-	FreePathList(pathlist);
-	return NULL;
-    }
-    if (!(patterns = InitPatterns(patternlist))) {
-	FreePathList(pathlist);
-	FreeSubdirs(subdirs);
-	return NULL;
-    }
+    if (!(subdirs = InitSubdirs(subdirlist)))
+	goto bail;
+    if (!(patterns = InitPatterns(patternlist)))
+	goto bail;
 
     for (elem = pathlist; *elem; elem++) {
 	for (s = subdirs; *s; s++) {
@@ -529,20 +525,14 @@ LoaderListDirs(const char **subdirlist, const char **patternlist)
 				    save[n] = NULL;
 				    FreeStringList(save);
 				}
-				FreePathList(pathlist);
-				FreeSubdirs(subdirs);
-				FreePatterns(patterns);
 				closedir(d);
-				return NULL;
+				goto bail;
 			    }
 			    listing[n] = malloc(len + 1);
 			    if (!listing[n]) {
 				FreeStringList(listing);
-				FreePathList(pathlist);
-				FreeSubdirs(subdirs);
-				FreePatterns(patterns);
 				closedir(d);
-				return NULL;
+				goto bail;
 			    }
 			    strncpy(listing[n], dp->d_name + match[1].rm_so,
 				    len);
@@ -558,11 +548,13 @@ LoaderListDirs(const char **subdirlist, const char **patternlist)
     }
     if (listing)
 	listing[n] = NULL;
+    ret = listing;
 
-    FreePathList(pathlist);
-    FreeSubdirs(subdirs);
+bail:
     FreePatterns(patterns);
-    return listing;
+    FreeSubdirs(subdirs);
+    FreePathList(pathlist);
+    return ret;
 }
 
 void

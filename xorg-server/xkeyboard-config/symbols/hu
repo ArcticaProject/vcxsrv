@@ -425,7 +425,7 @@ xkb_symbols "def_common" {
     key <AB06>  { [            n,            N,        braceright                  ] };
     key <AB07>  { [            m,            M,              less                  ] };
     key <AB08>  { [        comma,     question,         semicolon                  ] };
-    key <AB09>  { [       period,        colon,          ellipsis                  ] };
+    key <AB09>  { [       period,        colon,           greater                  ] };
     key <AB10>  { [        minus,   underscore,          asterisk                  ] };
 
 };

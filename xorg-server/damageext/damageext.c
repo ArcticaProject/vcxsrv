@@ -223,7 +223,7 @@ ProcDamageCreate (ClientPtr client)
     if (pDrawable->type == DRAWABLE_WINDOW)
     {
 	pRegion = &((WindowPtr) pDrawable)->borderClip;
-	DamageDamageRegion(pDrawable, pRegion);
+	DamageReportDamage(pDamageExt->pDamage, pRegion);
     }
 
     return Success;

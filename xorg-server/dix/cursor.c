@@ -241,11 +241,8 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
     *ppCurs = NULL;
     pCurs = (CursorPtr)calloc(CURSOR_REC_SIZE + CURSOR_BITS_SIZE, 1);
     if (!pCurs)
-    {
-	free(psrcbits);
-	free(pmaskbits);
 	return BadAlloc;
-    }
+
     bits = (CursorBitsPtr)((char *)pCurs + CURSOR_REC_SIZE);
     dixInitPrivates(pCurs, pCurs + 1, PRIVATE_CURSOR);
     dixInitPrivates(bits, bits + 1, PRIVATE_CURSOR_BITS)
