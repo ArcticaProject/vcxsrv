@@ -247,6 +247,8 @@ _XimCbDispatch(Xim xim,
 	    /* status = XimCbQueued; */
 	} else {
 	    /* status = XimCbError; */
+	    Xfree(pcb);
+	    Xfree(proto_buf);
 	}
     }
     else {

@@ -1433,8 +1433,10 @@ _XimGetAttributeID(
     bzero((char *)res, res_len);
 
     values_len = sizeof(XIMValuesList) + (sizeof(char **) * n) + names_len;
-    if (!(tmp = (XPointer)Xmalloc(values_len)))
+    if (!(tmp = (XPointer)Xmalloc(values_len))) {
+	Xfree(res);
 	return False;
+    }
     bzero(tmp, values_len);
 
     values_list = (XIMValuesList *)tmp;
@@ -1480,8 +1482,10 @@ _XimGetAttributeID(
     bzero((char *)res, res_len);
 
     values_len = sizeof(XIMValuesList) + (sizeof(char **) * n) + names_len;
-    if (!(tmp = (XPointer)Xmalloc(values_len)))
+    if (!(tmp = (XPointer)Xmalloc(values_len))) {
+	Xfree(res);
 	return False;
+    }
     bzero(tmp, values_len);
 
     values_list = (XIMValuesList *)tmp;

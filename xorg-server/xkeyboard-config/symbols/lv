@@ -42,7 +42,7 @@
 
 //============================================================================
 // Latvian QWERTY layout
-// http://en.wikipedia.org/wiki/QWERTY 
+// http://en.wikipedia.org/wiki/QWERTY
 //
 partial default alphanumeric_keys modifier_keys
 xkb_symbols "basic" {
@@ -262,7 +262,7 @@ xkb_symbols "modern" {
 
 	name[Group1]= "Latvian (modern)";
 
-	key <TLDE> {[ grave,		asciitilde,	acute,		asciitilde		]};
+	key <TLDE> {[ grave,		asciitilde,	acute,		copyright		]};
 	key <AE01> {[ 1,		exclam,		onesuperior,	exclamdown		]};
 	key <AE02> {[ 2,		at,		twosuperior,	oneeighth		]};
 	key <AE03> {[ 3,		numbersign,	threesuperior,	sterling		]};
@@ -273,8 +273,8 @@ xkb_symbols "modern" {
 	key <AE08> {[ 8,		asterisk,	bracketleft,	trademark		]};
 	key <AE09> {[ 9,		parenleft,	bracketright,	plusminus		]};
 	key <AE10> {[ 0,		parenright,	braceright,	degree			]};
-	key <AE11> {[ minus,		underscore,	backslash,	endash			]};
-	key <AE12> {[ equal,		plus,		bar,		emdash			]};
+	key <AE11> {[ minus,		underscore,	backslash,	questiondown		]};
+	key <AE12> {[ equal,		plus,		endash,		emdash			]};
 
 	key <AD01> {[ emacron,		Emacron,	emacron,	Emacron			]};
 	key <AD02> {[ o,		O,		omacron,	Omacron			]};
@@ -285,8 +285,8 @@ xkb_symbols "modern" {
 	key <AD07> {[ d,		D,		d,		D			]};
 	key <AD08> {[ imacron,		Imacron,	imacron,	Imacron			]};
 	key <AD09> {[ l,		L,		lcedilla,	Lcedilla		]};
-	key <AD10> {[ g,		G,		gcedilla,	Gcedilla		]}; 
-	key <AD11> {[ bracketleft,	braceleft,	guillemotleft,	leftdoublequotemark	]};
+	key <AD10> {[ g,		G,		gcedilla,	Gcedilla		]};
+	Key <AD11> {[ bracketleft,	braceleft,	guillemotleft,	leftdoublequotemark	]};
 	key <AD12> {[ bracketright,	braceright,	guillemotright,	rightdoublequotemark	]};
 
 	key <AC01> {[ e,		E,		e,		E			]};
@@ -299,8 +299,8 @@ xkb_symbols "modern" {
 	key <AC08> {[ i,		I,		i,		I			]};
 	key <AC09> {[ t,		T,		t,		T			]};
 	key <AC10> {[ r,		R,		rcedilla,	Rcedilla		]};
-	key <AC11> {[ m,		M,		m,		M			]}; 
-	key <AC12> {[ slash,		question,	backslash,	bar			]};
+	key <AC11> {[ m,		M,		bar,		M			]};
+	key <AC12> {[ slash,		question,	backslash,	U263A			]};
 
 	key <LSGT> {[ q,		Q,		q,		Q			]};
 	key <AB01> {[ x,		X,		q,		Q			]};
@@ -310,7 +310,7 @@ xkb_symbols "modern" {
 	key <AB05> {[ w,		W,		w,		W			]};
 	key <AB06> {[ f,		F,		f,		F			]};
 	key <AB07> {[ y,		Y,		y,		Y			]};
-	key <AB08> {[ h,		H,		h,		H			]}; 
+	key <AB08> {[ h,		H,		h,		H			]};
 	key <AB09> {[ comma,		semicolon,	less,		multiply		]};
 	key <AB10> {[ period,		colon,		greater,	division		]};
 	key <SPCE> {[ space,		space,		apostrophe				]};

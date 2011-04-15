@@ -489,10 +489,13 @@ _XimWriteCachedDefaultTree(
 
     /* This STILL might be racy on NFS */
     if ( (fd = _XOpenFileMode (cachename, O_WRONLY | O_CREAT | O_EXCL,
-			       0600)) < 0)
+			       0600)) < 0) {
+       Xfree(m);
        return;
+    }
     if (! (fp = fdopen (fd, "wb")) ) {
        close (fd);
+       Xfree(m);
        return;
     }
     fwrite (m, msize, 1, fp);

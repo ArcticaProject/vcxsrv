@@ -1713,11 +1713,8 @@ _XimEncodingNegotiation(
     if (!(_XimSetEncodingByName(im, &name_ptr, &name_len)))
 	return False;
 
-    if (!(_XimSetEncodingByDetail(im, &detail_ptr, &detail_len))) {
-	if (name_ptr)
-	    Xfree(name_ptr);
-	return False;
-    }
+    if (!(_XimSetEncodingByDetail(im, &detail_ptr, &detail_len)))
+	goto free_name_ptr;
 
     len = sizeof(CARD16)
 	+ sizeof(INT16)
@@ -1727,13 +1724,9 @@ _XimEncodingNegotiation(
 	+ sizeof(CARD16)
 	+ detail_len;
 
-    if (!(buf = (CARD8 *)Xmalloc(XIM_HEADER_SIZE + len))) {
-	if (name_ptr)
-	    Xfree(name_ptr);
-	if (detail_ptr)
-	    Xfree(detail_ptr);
-	return False;
-    }
+    if (!(buf = (CARD8 *)Xmalloc(XIM_HEADER_SIZE + len)))
+	goto free_detail_ptr;
+
     buf_s = (CARD16 *)&buf[XIM_HEADER_SIZE];
 
     buf_s[0] = im->private.proto.imid;
@@ -1750,7 +1743,7 @@ _XimEncodingNegotiation(
     _XimSetHeader((XPointer)buf, XIM_ENCODING_NEGOTIATION, 0, &len);
     if (!(_XimWrite(im, len, (XPointer)buf))) {
 	Xfree(buf);
-	return False;
+	goto free_detail_ptr;
     }
     _XimFlush(im);
     Xfree(buf);
@@ -1767,27 +1760,21 @@ _XimEncodingNegotiation(
 	    preply = (XPointer)Xmalloc(buf_size);
 	    ret_code = _XimRead(im, &len, preply, buf_size,
 					_XimEncodingNegoCheck, 0);
-	    if(ret_code != XIM_TRUE) {
-		Xfree(preply);
-		return False;
-	    }
+	    if(ret_code != XIM_TRUE)
+		goto free_preply;
 	}
     } else
-	return False;
+	goto free_detail_ptr;
     buf_s = (CARD16 *)((char *)preply + XIM_HEADER_SIZE);
     if (*((CARD8 *)preply) == XIM_ERROR) {
 	_XimProcError(im, 0, (XPointer)&buf_s[3]);
-	if(reply != preply)
-	    Xfree(preply);
-	return False;
+	goto free_preply;
     }
 
     if (!(_XimGetEncoding(im, &buf_s[1], name_ptr, name_len,
-						detail_ptr, detail_len))) {
-	if(reply != preply)
-	    Xfree(preply);
-	return False;
-    }
+						detail_ptr, detail_len)))
+	goto free_preply;
+
     if (name_ptr)
 	Xfree(name_ptr);
     if (detail_ptr)
@@ -1797,6 +1784,18 @@ _XimEncodingNegotiation(
 	Xfree(preply);
 
     return True;
+
+free_preply:
+    if (reply != preply)
+	Xfree(preply);
+
+free_detail_ptr:
+    Xfree(detail_ptr);
+
+free_name_ptr:
+    Xfree(name_ptr);
+
+    return False;
 }
 
 #ifdef XIM_CONNECTABLE

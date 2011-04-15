@@ -14,6 +14,30 @@
     </layout>
     <layout>
       <configItem>
+        <name>ca</name>
+        <_shortDescription>fr</_shortDescription>
+        <_description>French (Canada)</_description>
+        <languageList><iso639Id>fr</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>kut</name>
+            <_shortDescription>kut</_shortDescription>
+            <_description>Kutenai</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>shs</name>
+            <_shortDescription>shs</_shortDescription>
+            <_description>Secwepemctsin</_description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>ir</name>
         <_shortDescription>Iran</_shortDescription>
         <_description>Iran</_description>
