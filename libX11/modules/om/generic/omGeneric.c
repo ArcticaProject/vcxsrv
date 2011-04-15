@@ -575,7 +575,7 @@ get_rotate_fontname(
     }
 
     if(field_num < CHARSET_ENCODING_FIELD)
-	return NULL;
+	goto free_pattern;
 
     /* Pixel Size field : fields[6] */
     for(ptr = fields[PIXEL_SIZE_FIELD - 1] ; ptr && *ptr; ptr++) {
@@ -584,9 +584,7 @@ get_rotate_fontname(
 	        strcpy(pattern, font_name);
 		return(pattern);
 	    }
-	    if(pattern)
-		Xfree(pattern);
-	    return NULL;
+	    goto free_pattern;
 	}
     }
     pixel_size = atoi(fields[PIXEL_SIZE_FIELD - 1]);
@@ -605,11 +603,11 @@ get_rotate_fontname(
 
     /* Max XLFD length is 255 */
     if (len > XLFD_MAX_LEN)
-	return NULL;
+	goto free_pattern;
 
     rotate_font_ptr = (char *)Xmalloc(len + 1);
     if(!rotate_font_ptr)
-	return NULL;
+	goto free_pattern;
 
     rotate_font_ptr[0] = '\0';
 
@@ -619,8 +617,8 @@ get_rotate_fontname(
 	strcat(rotate_font_ptr, fields[field_num]);
     }
 
-    if(pattern)
-	Xfree(pattern);
+free_pattern:
+    Xfree(pattern);
 
     return rotate_font_ptr;
 }
@@ -1932,8 +1930,10 @@ read_EncodingInfo(
 	} else
             len = strlen(buf);
         font_data->name = (char *) Xmalloc(len + 1);
-        if (font_data->name == NULL)
+        if (font_data->name == NULL) {
+            Xfree(font_data);
             return NULL;
+	}
         strncpy(font_data->name, buf,len);
 	font_data->name[len] = 0;
         if (bufptr && _XlcCompareISOLatin1(bufptr, "GL") == 0)
@@ -2117,22 +2117,24 @@ init_om(
     if (required_list == NULL)
 	return False;
 
-    bufptr = (char *) Xmalloc(length);
-    if (bufptr == NULL) {
-	Xfree(required_list);
-	return False;
-    }
-
     om->core.required_charset.charset_list = required_list;
     om->core.required_charset.charset_count = gen->data_num;
 
     count = gen->data_num;
     data = gen->data;
 
-    for ( ; count-- > 0; data++) {
-	strcpy(bufptr, data->font_data->name);
-	*required_list++ = bufptr;
-	bufptr += strlen(bufptr) + 1;
+    if (count > 0) {
+	bufptr = (char *) Xmalloc(length);
+	if (bufptr == NULL) {
+	    Xfree(required_list);
+	    return False;
+	}
+
+	for ( ; count-- > 0; data++) {
+	    strcpy(bufptr, data->font_data->name);
+	    *required_list++ = bufptr;
+	    bufptr += strlen(bufptr) + 1;
+	}
     }
 
     /* orientation list */

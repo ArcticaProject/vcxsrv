@@ -358,7 +358,7 @@ allocate_or_reuse_buffer(DrawablePtr pDraw, DRI2ScreenPtr ds,
 
 static void
 update_dri2_drawable_buffers(DRI2DrawablePtr pPriv, DrawablePtr pDraw,
-			     DRI2BufferPtr *buffers, int *out_count, int *width, int *height)
+			     DRI2BufferPtr *buffers, int out_count, int *width, int *height)
 {
     DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
     int i;
@@ -374,7 +374,7 @@ update_dri2_drawable_buffers(DRI2DrawablePtr pPriv, DrawablePtr pDraw,
     }
 
     pPriv->buffers = buffers;
-    pPriv->bufferCount = *out_count;
+    pPriv->bufferCount = out_count;
     pPriv->width = pDraw->width;
     pPriv->height = pDraw->height;
     *width = pPriv->width;
@@ -409,6 +409,8 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
 	&& (pPriv->serialNumber == DRI2DrawableSerial(pDraw));
 
     buffers = calloc((count + 1), sizeof(buffers[0]));
+    if (!buffers)
+	goto err_out;
 
     for (i = 0; i < count; i++) {
 	const unsigned attachment = *(attachments++);
@@ -475,7 +477,7 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
 
     *out_count = i;
 
-    update_dri2_drawable_buffers(pPriv, pDraw, buffers, out_count, width, height);
+    update_dri2_drawable_buffers(pPriv, pDraw, buffers, *out_count, width, height);
 
     /* If the client is getting a fake front-buffer, pre-fill it with the
      * contents of the real front-buffer.  This ensures correct operation of
@@ -501,15 +503,17 @@ err_out:
 
     *out_count = 0;
 
-    for (i = 0; i < count; i++) {
+    if (buffers) {
+	for (i = 0; i < count; i++) {
 	    if (buffers[i] != NULL)
-		    (*ds->DestroyBuffer)(pDraw, buffers[i]);
+		(*ds->DestroyBuffer)(pDraw, buffers[i]);
+	}
+
+	free(buffers);
+	buffers = NULL;
     }
 
-    free(buffers);
-    buffers = NULL;
-
-    update_dri2_drawable_buffers(pPriv, pDraw, buffers, out_count, width, height);
+    update_dri2_drawable_buffers(pPriv, pDraw, buffers, *out_count, width, height);
 
     return buffers;
 }

@@ -451,31 +451,6 @@ xkb_symbols "multix" {
     include "level5(rctrl_switch)"
 };
 
-// Secwepemctsin keyboard for X11
-// written by Neskie Manuel <neskiem@gmail.com>
-
-partial alphanumeric_keys  
-xkb_symbols "shs" {
-
-    include "us"
-
-    name[Group1]= "Secwepemctsin";
-
-    //Using Dead key to get COMBINING COMMA ABOVE for ejectives on
-    //q, l, t, s, m, g, k, p, w, y, r
-    //XCompose key is used for the other accute and grave.
-
-    key <AB08>	{ [ comma, less, U0313    ]	};
-    key <AC01>	{ [ a, A, aacute, Aacute  ]	};
-    key <AD03>	{ [ e, E, eacute, Eacute  ]	};
-    key <AD07>	{ [ u, U, uacute, Uacute  ]	};
-    key <AD08>	{ [ i, I, iacute, Iacute  ]	};
-    key <AD09>	{ [ o, O, oacute, Oacute  ]	};
-
-    include "level3(ralt_switch)"
-    include "compose(rctrl)"
-};
-
 // OLPC Section
 xkb_symbols "olpc" {
 
@@ -490,6 +465,14 @@ xkb_symbols "olpc" {
     
     key <I219>  { [  guillemotleft,  guillemotright, degree, VoidSymbol ] };
 };
+
+partial alphanumeric_keys 
+xkb_symbols "eng" {
+    name[Group1] = "English (Canada)";
+    include "us(basic)"
+};
+
+// EXTRAS:
 
 partial alphanumeric_keys 
 xkb_symbols "kut" {
@@ -520,8 +503,28 @@ xkb_symbols "kut" {
     key <AC10> {	[ semicolon,	colon,U02BE,U02BE	]	};
 };
 
-partial alphanumeric_keys 
-xkb_symbols "eng" {
-    name[Group1] = "English (Canada)";
-    include "us(basic)"
+// Secwepemctsin keyboard for X11
+// written by Neskie Manuel <neskiem@gmail.com>
+
+partial alphanumeric_keys  
+xkb_symbols "shs" {
+
+    include "us"
+
+    name[Group1]= "Secwepemctsin";
+
+    //Using Dead key to get COMBINING COMMA ABOVE for ejectives on
+    //q, l, t, s, m, g, k, p, w, y, r
+    //XCompose key is used for the other accute and grave.
+
+    key <AB08>	{ [ comma, less, U0313    ]	};
+    key <AC01>	{ [ a, A, aacute, Aacute  ]	};
+    key <AD03>	{ [ e, E, eacute, Eacute  ]	};
+    key <AD07>	{ [ u, U, uacute, Uacute  ]	};
+    key <AD08>	{ [ i, I, iacute, Iacute  ]	};
+    key <AD09>	{ [ o, O, oacute, Oacute  ]	};
+
+    include "level3(ralt_switch)"
+    include "compose(rctrl)"
 };
+

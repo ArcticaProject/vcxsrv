@@ -691,8 +691,10 @@ _XimCommitRecv(
 	    return False;
 
 	if (!(_XimProcCommit(ic, (BYTE *)&buf_s[5],
-			 		(int)buf_s[4], &string, &string_len)))
+					(int)buf_s[4], &string, &string_len))) {
+	    Xfree(keysym);
 	    return False;
+	}
     }
 
     if (!(_XimRegCommitInfo(ic, string, string_len, keysym, keysym_len))) {

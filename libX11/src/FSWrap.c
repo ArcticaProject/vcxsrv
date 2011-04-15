@@ -131,7 +131,7 @@ copy_string_list(
     char **string_list_ret, **list_src, **list_dst, *dst;
     int length, count;
 
-    if (string_list == NULL)
+    if (string_list == NULL || list_count == 0)
 	return (char **) NULL;
 
     string_list_ret = (char **) Xmalloc(sizeof(char *) * list_count);

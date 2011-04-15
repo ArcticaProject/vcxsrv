@@ -216,6 +216,11 @@ XReadBitmapFileData (
 		*ptr=value;
 	    }
 	}
+
+	/* If we got to this point, we read a full bitmap file. Break so we don't
+	 * start reading another one from the same file and leak the memory
+	 * allocated for the previous one. */
+	break;
     }					/* end while */
 
     fclose(fstream);

@@ -2179,20 +2179,6 @@
         </variant>
         <variant>
           <configItem>
-            <name>shs</name>
-            <_shortDescription>shs</_shortDescription>
-            <_description>Secwepemctsin</_description>
-          </configItem>
-        </variant>
-        <variant>
-          <configItem>
-            <name>kut</name>
-            <_shortDescription>kut</_shortDescription>
-            <_description>Kutenai</_description>
-          </configItem>
-        </variant>
-        <variant>
-          <configItem>
             <name>eng</name>
             <_shortDescription>en</_shortDescription>
             <_description>English (Canada)</_description>
