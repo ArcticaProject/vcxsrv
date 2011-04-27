@@ -85,10 +85,9 @@ _XParseBaseFontNameList(
     if (!*str)
 	return (char **)NULL;
 
-    if (!(ptr = Xmalloc((unsigned)strlen(str) + 1))) {
+    if (!(ptr = strdup(str))) {
 	return (char **)NULL;
     }
-    strcpy(ptr, str);
 
     psave = ptr;
     /* somebody who specifies more than XMAXLIST basefontnames will lose */

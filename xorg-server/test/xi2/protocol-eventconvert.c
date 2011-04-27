@@ -25,14 +25,12 @@
 #endif
 
 #include <stdint.h>
-#include <glib.h>
 
 #include "inputstr.h"
 #include "eventstr.h"
 #include "eventconvert.h"
 #include "exevents.h"
 #include <X11/extensions/XI2proto.h>
-
 
 static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
                                    BOOL swap)
@@ -58,21 +56,21 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
     }
 
 
-    g_assert(out->type == GenericEvent);
-    g_assert(out->extension == 0); /* IReqCode defaults to 0 */
-    g_assert(out->evtype == GetXI2Type((InternalEvent*)in));
-    g_assert(out->time == in->time);
-    g_assert(out->detail == in->detail.button);
-    g_assert(out->deviceid == in->deviceid);
-    g_assert(out->valuators_len >= bytes_to_int32(bits_to_bytes(sizeof(in->valuators.mask))));
-    g_assert(out->flags == 0); /* FIXME: we don't set the flags yet */
+    assert(out->type == GenericEvent);
+    assert(out->extension == 0); /* IReqCode defaults to 0 */
+    assert(out->evtype == GetXI2Type((InternalEvent*)in));
+    assert(out->time == in->time);
+    assert(out->detail == in->detail.button);
+    assert(out->deviceid == in->deviceid);
+    assert(out->valuators_len >= bytes_to_int32(bits_to_bytes(sizeof(in->valuators.mask))));
+    assert(out->flags == 0); /* FIXME: we don't set the flags yet */
 
     ptr = (unsigned char*)&out[1];
     bits_set = 0;
 
     for (i = 0; out->valuators_len && i < sizeof(in->valuators.mask) * 8; i++)
     {
-        g_assert (XIMaskIsSet(in->valuators.mask, i) == XIMaskIsSet(ptr, i));
+        assert (XIMaskIsSet(in->valuators.mask, i) == XIMaskIsSet(ptr, i));
         if (XIMaskIsSet(in->valuators.mask, i))
             bits_set++;
     }
@@ -81,13 +79,13 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
      * set. Each bit set represents 2 8-byte values, hence the
      * 'bits_set * 4' */
     len = out->valuators_len + bits_set * 4;
-    g_assert(out->length == len);
+    assert(out->length == len);
 
     nvals = 0;
 
     for (i = 0; out->valuators_len && i < MAX_VALUATORS; i++)
     {
-        g_assert (XIMaskIsSet(in->valuators.mask, i) == XIMaskIsSet(ptr, i));
+        assert (XIMaskIsSet(in->valuators.mask, i) == XIMaskIsSet(ptr, i));
         if (XIMaskIsSet(in->valuators.mask, i))
         {
             FP3232 vi, vo;
@@ -106,8 +104,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
                 swapl(&vo.frac, n);
             }
 
-            g_assert(vi.integral == vo.integral);
-            g_assert(vi.frac == vo.frac);
+            assert(vi.integral == vo.integral);
+            assert(vi.frac == vo.frac);
 
             raw_value = value + bits_set;
 
@@ -123,8 +121,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
                 swapl(&vo.frac, n);
             }
 
-            g_assert(vi.integral == vo.integral);
-            g_assert(vi.frac == vo.frac);
+            assert(vi.integral == vo.integral);
+            assert(vi.frac == vo.frac);
 
             nvals++;
         }
@@ -137,7 +135,7 @@ static void test_XIRawEvent(RawDeviceEvent *in)
     int rc;
 
     rc = EventToXI2((InternalEvent*)in, (xEvent**)&out);
-    g_assert(rc == Success);
+    assert(rc == Success);
 
     test_values_XIRawEvent(in, out, FALSE);
 
@@ -158,24 +156,24 @@ static void test_convert_XIFocusEvent(void)
     in.header = ET_Internal;
     in.type = ET_Enter;
     rc = EventToXI2((InternalEvent*)&in, &out);
-    g_assert(rc == Success);
-    g_assert(out == NULL);
+    assert(rc == Success);
+    assert(out == NULL);
 
     in.header = ET_Internal;
     in.type = ET_FocusIn;
     rc = EventToXI2((InternalEvent*)&in, &out);
-    g_assert(rc == Success);
-    g_assert(out == NULL);
+    assert(rc == Success);
+    assert(out == NULL);
 
     in.header = ET_Internal;
     in.type = ET_FocusOut;
     rc = EventToXI2((InternalEvent*)&in, &out);
-    g_assert(rc == BadImplementation);
+    assert(rc == BadImplementation);
 
     in.header = ET_Internal;
     in.type = ET_Leave;
     rc = EventToXI2((InternalEvent*)&in, &out);
-    g_assert(rc == BadImplementation);
+    assert(rc == BadImplementation);
 }
 
 
@@ -186,7 +184,7 @@ static void test_convert_XIRawEvent(void)
 
     memset(&in, 0, sizeof(in));
 
-    g_test_message("Testing all event types");
+    printf("Testing all event types\n");
     in.header = ET_Internal;
     in.type = ET_RawMotion;
     test_XIRawEvent(&in);
@@ -207,7 +205,7 @@ static void test_convert_XIRawEvent(void)
     in.type = ET_RawButtonRelease;
     test_XIRawEvent(&in);
 
-    g_test_message("Testing details and other fields");
+    printf("Testing details and other fields\n");
     in.detail.button = 1L;
     test_XIRawEvent(&in);
     in.detail.button = 1L << 8;
@@ -239,7 +237,7 @@ static void test_convert_XIRawEvent(void)
     in.deviceid = ~0 & 0xFF;
     test_XIRawEvent(&in);
 
-    g_test_message("Testing valuator masks");
+    printf("Testing valuator masks\n");
     for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
     {
         XISetMask(in.valuators.mask, i);
@@ -301,14 +299,14 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
         swapl(&out->flags, n);
     }
 
-    g_assert(out->extension == 0); /* IReqCode defaults to 0 */
-    g_assert(out->evtype == GetXI2Type((InternalEvent*)in));
-    g_assert(out->time == in->time);
-    g_assert(out->detail == in->detail.button);
-    g_assert(out->length >= 12);
+    assert(out->extension == 0); /* IReqCode defaults to 0 */
+    assert(out->evtype == GetXI2Type((InternalEvent*)in));
+    assert(out->time == in->time);
+    assert(out->detail == in->detail.button);
+    assert(out->length >= 12);
 
-    g_assert(out->deviceid == in->deviceid);
-    g_assert(out->sourceid == in->sourceid);
+    assert(out->deviceid == in->deviceid);
+    assert(out->sourceid == in->sourceid);
 
     switch (in->type) {
         case ET_KeyPress:
@@ -318,41 +316,41 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
             flagmask = 0;
             break;
     }
-    g_assert((out->flags & ~flagmask) == 0);
+    assert((out->flags & ~flagmask) == 0);
 
-    g_assert(out->root == in->root);
-    g_assert(out->event == None); /* set in FixUpEventFromWindow */
-    g_assert(out->child == None); /* set in FixUpEventFromWindow */
+    assert(out->root == in->root);
+    assert(out->event == None); /* set in FixUpEventFromWindow */
+    assert(out->child == None); /* set in FixUpEventFromWindow */
 
-    g_assert(out->mods.base_mods == in->mods.base);
-    g_assert(out->mods.latched_mods == in->mods.latched);
-    g_assert(out->mods.locked_mods == in->mods.locked);
-    g_assert(out->mods.effective_mods == in->mods.effective);
+    assert(out->mods.base_mods == in->mods.base);
+    assert(out->mods.latched_mods == in->mods.latched);
+    assert(out->mods.locked_mods == in->mods.locked);
+    assert(out->mods.effective_mods == in->mods.effective);
 
-    g_assert(out->group.base_group == in->group.base);
-    g_assert(out->group.latched_group == in->group.latched);
-    g_assert(out->group.locked_group == in->group.locked);
-    g_assert(out->group.effective_group == in->group.effective);
+    assert(out->group.base_group == in->group.base);
+    assert(out->group.latched_group == in->group.latched);
+    assert(out->group.locked_group == in->group.locked);
+    assert(out->group.effective_group == in->group.effective);
 
-    g_assert(out->event_x == 0); /* set in FixUpEventFromWindow */
-    g_assert(out->event_y == 0); /* set in FixUpEventFromWindow */
+    assert(out->event_x == 0); /* set in FixUpEventFromWindow */
+    assert(out->event_y == 0); /* set in FixUpEventFromWindow */
 
-    g_assert(out->root_x == FP1616(in->root_x, in->root_x_frac));
-    g_assert(out->root_y == FP1616(in->root_y, in->root_y_frac));
+    assert(out->root_x == FP1616(in->root_x, in->root_x_frac));
+    assert(out->root_y == FP1616(in->root_y, in->root_y_frac));
 
     buttons = 0;
     for (i = 0; i < bits_to_bytes(sizeof(in->buttons)); i++)
     {
         if (XIMaskIsSet(in->buttons, i))
         {
-            g_assert(out->buttons_len >= bytes_to_int32(bits_to_bytes(i)));
+            assert(out->buttons_len >= bytes_to_int32(bits_to_bytes(i)));
             buttons++;
         }
     }
 
     ptr = (unsigned char*)&out[1];
     for (i = 0; i < sizeof(in->buttons) * 8; i++)
-        g_assert(XIMaskIsSet(in->buttons, i) == XIMaskIsSet(ptr, i));
+        assert(XIMaskIsSet(in->buttons, i) == XIMaskIsSet(ptr, i));
 
 
     valuators = 0;
@@ -360,7 +358,7 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
         if (XIMaskIsSet(in->valuators.mask, i))
             valuators++;
 
-    g_assert(out->valuators_len >= bytes_to_int32(bits_to_bytes(valuators)));
+    assert(out->valuators_len >= bytes_to_int32(bits_to_bytes(valuators)));
 
     ptr += out->buttons_len * 4;
     values = (FP3232*)(ptr + out->valuators_len * 4);
@@ -368,11 +366,11 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
                 i < (out->valuators_len * 4) * 8; i++)
     {
         if (i > sizeof(in->valuators.mask) * 8)
-            g_assert(!XIMaskIsSet(ptr, i));
+            assert(!XIMaskIsSet(ptr, i));
         else if (i > out->valuators_len * 4 * 8)
-            g_assert(!XIMaskIsSet(in->valuators.mask, i));
+            assert(!XIMaskIsSet(in->valuators.mask, i));
         else {
-            g_assert(XIMaskIsSet(in->valuators.mask, i) ==
+            assert(XIMaskIsSet(in->valuators.mask, i) ==
                      XIMaskIsSet(ptr, i));
 
             if (XIMaskIsSet(ptr, i))
@@ -392,8 +390,8 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
                 }
 
 
-                g_assert(vi.integral == vo.integral);
-                g_assert(vi.frac == vo.frac);
+                assert(vi.integral == vo.integral);
+                assert(vi.frac == vo.frac);
                 values++;
             }
         }
@@ -406,7 +404,7 @@ static void test_XIDeviceEvent(DeviceEvent *in)
     int rc;
 
     rc = EventToXI2((InternalEvent*)in, (xEvent**)&out);
-    g_assert(rc == Success);
+    assert(rc == Success);
 
     test_values_XIDeviceEvent(in, out, FALSE);
 
@@ -425,7 +423,7 @@ static void test_convert_XIDeviceEvent(void)
 
     memset(&in, 0, sizeof(in));
 
-    g_test_message("Testing simple field values");
+    printf("Testing simple field values\n");
     in.header = ET_Internal;
     in.type = ET_Motion;
     in.length = sizeof(DeviceEvent);
@@ -449,7 +447,7 @@ static void test_convert_XIDeviceEvent(void)
 
     test_XIDeviceEvent(&in);
 
-    g_test_message("Testing field ranges");
+    printf("Testing field ranges\n");
     /* 32 bit */
     in.detail.button = 1L;
     test_XIDeviceEvent(&in);
@@ -597,7 +595,7 @@ static void test_convert_XIDeviceEvent(void)
     in.mods.effective = ~0 & 0xFF;
     test_XIDeviceEvent(&in);
 
-    g_test_message("Testing button masks");
+    printf("Testing button masks\n");
     for (i = 0; i < sizeof(in.buttons) * 8; i++)
     {
         XISetMask(in.buttons, i);
@@ -611,7 +609,7 @@ static void test_convert_XIDeviceEvent(void)
         test_XIDeviceEvent(&in);
     }
 
-    g_test_message("Testing valuator masks");
+    printf("Testing valuator masks\n");
     for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
     {
         XISetMask(in.valuators.mask, i);
@@ -656,12 +654,12 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
         swaps(&out->num_classes, n);
     }
 
-    g_assert(out->type == GenericEvent);
-    g_assert(out->extension == 0); /* IReqCode defaults to 0 */
-    g_assert(out->evtype == GetXI2Type((InternalEvent*)in));
-    g_assert(out->time == in->time);
-    g_assert(out->deviceid == in->deviceid);
-    g_assert(out->sourceid == in->sourceid);
+    assert(out->type == GenericEvent);
+    assert(out->extension == 0); /* IReqCode defaults to 0 */
+    assert(out->evtype == GetXI2Type((InternalEvent*)in));
+    assert(out->time == in->time);
+    assert(out->deviceid == in->deviceid);
+    assert(out->sourceid == in->sourceid);
 
     ptr = (unsigned char*)&out[1];
     for (i = 0; i < out->num_classes; i++)
@@ -689,11 +687,11 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
                         swaps(&b->num_buttons, n);
                     }
 
-                    g_assert(b->length ==
+                    assert(b->length ==
                             bytes_to_int32(sizeof(xXIButtonInfo)) +
                             bytes_to_int32(bits_to_bytes(b->num_buttons)) +
                             b->num_buttons);
-                    g_assert(b->num_buttons == in->buttons.num_buttons);
+                    assert(b->num_buttons == in->buttons.num_buttons);
 
                     names = (Atom*)((char*)&b[1] +
                             pad_to_int32(bits_to_bytes(b->num_buttons)));
@@ -704,7 +702,7 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
                             char n;
                             swapl(&names[j], n);
                         }
-                        g_assert(names[j] == in->buttons.names[j]);
+                        assert(names[j] == in->buttons.names[j]);
                     }
                 }
                 break;
@@ -719,10 +717,10 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
                         swaps(&k->num_keycodes, n);
                     }
 
-                    g_assert(k->length ==
+                    assert(k->length ==
                             bytes_to_int32(sizeof(xXIKeyInfo)) +
                             k->num_keycodes);
-                    g_assert(k->num_keycodes == in->keys.max_keycode -
+                    assert(k->num_keycodes == in->keys.max_keycode -
                             in->keys.min_keycode + 1);
 
                     kc = (uint32_t*)&k[1];
@@ -733,21 +731,22 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
                             char n;
                             swapl(&kc[j], n);
                         }
-                        g_assert(kc[j] >= in->keys.min_keycode);
-                        g_assert(kc[j] <= in->keys.max_keycode);
+                        assert(kc[j] >= in->keys.min_keycode);
+                        assert(kc[j] <= in->keys.max_keycode);
                     }
                 }
                 break;
             case XIValuatorClass:
                 {
                     xXIValuatorInfo *v = (xXIValuatorInfo*)any;
-                    g_assert(v->length ==
+                    assert(v->length ==
                              bytes_to_int32(sizeof(xXIValuatorInfo)));
 
                 }
                 break;
             default:
-                g_error("Invalid class type.\n");
+                printf("Invalid class type.\n\n");
+                assert(1);
                 break;
         }
 
@@ -762,7 +761,7 @@ static void test_XIDeviceChangedEvent(DeviceChangedEvent *in)
     int rc;
 
     rc = EventToXI2((InternalEvent*)in, (xEvent**)&out);
-    g_assert(rc == Success);
+    assert(rc == Success);
 
     test_values_XIDeviceChangedEvent(in, out, FALSE);
 
@@ -779,7 +778,7 @@ static void test_convert_XIDeviceChangedEvent(void)
     DeviceChangedEvent in;
     int i;
 
-    g_test_message("Testing simple field values");
+    printf("Testing simple field values\n");
     memset(&in, 0, sizeof(in));
     in.header = ET_Internal;
     in.type = ET_DeviceChanged;
@@ -905,13 +904,10 @@ static void test_convert_XIDeviceChangedEvent(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
+    test_convert_XIRawEvent();
+    test_convert_XIFocusEvent();
+    test_convert_XIDeviceEvent();
+    test_convert_XIDeviceChangedEvent();
 
-    g_test_add_func("/xi2/eventconvert/XIRawEvent", test_convert_XIRawEvent);
-    g_test_add_func("/xi2/eventconvert/XIFocusEvent", test_convert_XIFocusEvent);
-    g_test_add_func("/xi2/eventconvert/XIDeviceEvent", test_convert_XIDeviceEvent);
-    g_test_add_func("/xi2/eventconvert/XIDeviceChangedEvent", test_convert_XIDeviceChangedEvent);
-
-    return g_test_run();
+    return 0;
 }

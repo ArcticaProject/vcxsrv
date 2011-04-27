@@ -66,7 +66,6 @@ XcmsPrefixOfFormat(
  */
 {
     XcmsColorSpace	**papColorSpaces;
-    char *prefix;
 
     /*
      * First try Device-Independent color spaces
@@ -75,10 +74,7 @@ XcmsPrefixOfFormat(
     if (papColorSpaces != NULL) {
 	while (*papColorSpaces != NULL) {
 	    if ((*papColorSpaces)->id == id) {
-		prefix = (char *)Xmalloc((strlen((*papColorSpaces)->prefix) +
-		1) * sizeof(char));
-		strcpy(prefix, (*papColorSpaces)->prefix);
-		return(prefix);
+		return strdup((*papColorSpaces)->prefix);
 	    }
 	    papColorSpaces++;
 	}
@@ -91,10 +87,7 @@ XcmsPrefixOfFormat(
     if (papColorSpaces != NULL) {
 	while (*papColorSpaces != NULL) {
 	    if ((*papColorSpaces)->id == id) {
-		prefix = (char *)Xmalloc((strlen((*papColorSpaces)->prefix) +
-		1) * sizeof(char));
-		strcpy(prefix, (*papColorSpaces)->prefix);
-		return(prefix);
+		return strdup((*papColorSpaces)->prefix);
 	    }
 	    papColorSpaces++;
 	}

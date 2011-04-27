@@ -57,6 +57,11 @@ from The Open Group.
 #include <sys/socket.h>
 #endif
 
+#ifdef __clang__
+/* Not all clients make use of all provided statics */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#endif
 
 /*
  * Set the functions names according to where this code is being compiled.
@@ -127,6 +132,9 @@ static char* __xtransname = "_XTrans";
 #endif
 #endif /* !TRANS */
 
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 /*
  * Create a single address structure that can be used wherever

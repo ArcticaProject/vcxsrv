@@ -115,6 +115,7 @@ libpixman_arm_neon_la_SOURCES = \
         pixman-arm-neon.c	\
         pixman-arm-common.h	\
         pixman-arm-neon-asm.S	\
+		pixman-arm-neon-asm-bilinear.S \
         pixman-arm-neon-asm.h
 libpixman_arm_neon_la_CFLAGS = $(DEP_CFLAGS)
 libpixman_arm_neon_la_LIBADD = $(DEP_LIBS)

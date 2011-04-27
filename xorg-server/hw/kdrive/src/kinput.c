@@ -1804,7 +1804,7 @@ KdReleaseAllKeys (void)
             if (key_is_down(ki->dixdev, key, KEY_POSTED | KEY_PROCESSED)) {
                 KdHandleKeyboardEvent(ki, KeyRelease, key);
                 GetEventList(&kdEvents);
-                nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, KeyRelease, key);
+                nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, KeyRelease, key, NULL);
                 for (i = 0; i < nEvents; i++)
                     KdQueueEvent (ki->dixdev, (kdEvents + i)->event);
             }
@@ -1864,7 +1864,7 @@ KdEnqueueKeyboardEvent(KdKeyboardInfo   *ki,
 
         GetEventList(&kdEvents);
 
-        nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, type, key_code);
+        nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, type, key_code, NULL);
         for (i = 0; i < nEvents; i++)
             KdQueueEvent(ki->dixdev, (InternalEvent *)((kdEvents + i)->event));
     }

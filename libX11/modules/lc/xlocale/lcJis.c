@@ -545,10 +545,9 @@ create_conv(
     if (XLC_PUBLIC(lcd, is_state_depend))
 	conv->methods->reset = init_state;
 
-    conv->state = (XPointer) Xmalloc(sizeof(StateRec));
+    conv->state = Xcalloc(1, sizeof(StateRec));
     if (conv->state == NULL)
 	goto err;
-    bzero((char *) conv->state, sizeof(StateRec));
 
     state = (State) conv->state;
     state->lcd = lcd;

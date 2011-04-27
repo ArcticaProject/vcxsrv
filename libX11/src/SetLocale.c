@@ -103,13 +103,12 @@ _Xsetlocale(
     if (!methods)
 	return NULL;
     name = (*methods->lcname)(state);
-    xsl_name = Xmalloc(strlen(name) + 1);
+    xsl_name = strdup(name);
     if (!xsl_name) {
 	xsl_name = old_name;
 	(*methods->destroy)(state);
 	return NULL;
     }
-    strcpy(xsl_name, name);
     if (old_name)
 	Xfree(old_name);
     (*methods->destroy)(state);

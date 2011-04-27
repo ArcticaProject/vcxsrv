@@ -9,8 +9,13 @@
 ROOT="`dirname $0`/.."
 F1=reg2ll.lst
 F2=gn2ll.lst
+F1b=${F1}base
+F1e=${F1}extras
 
-xsltproc $ROOT/xslt/reg2ll.xsl $ROOT/rules/base.xml | sort | uniq > $F1
+xsltproc $ROOT/xslt/reg2ll.xsl $ROOT/rules/base.xml > $F1b
+xsltproc $ROOT/xslt/reg2ll.xsl $ROOT/rules/base.extras.xml > $F1e
+cat $F1b $F1e | sort | uniq > $F1
+rm -f $F1e $F1e
 
 for i in $ROOT/symbols/*; do
   if [ -f $i ]; then
@@ -34,7 +39,10 @@ for i in $ROOT/symbols/*; do
   } else
   {
     name=$2;
-    printf "%s(%s):\"%s\"\n", id, variant, name;
+    if (variant == "olpc" || variant == "htcdream")
+      printf "%s:\"%s\"\n", id, name;
+    else
+      printf "%s(%s):\"%s\"\n", id, variant, name;
   }
 }' $i
   fi

@@ -376,7 +376,15 @@ typedef enum
 {
    FRAG_RESULT_DEPTH = 0,
    FRAG_RESULT_STENCIL = 1,
+   /* If a single color should be written to all render targets, this
+    * register is written.  No FRAG_RESULT_DATAn will be written.
+    */
    FRAG_RESULT_COLOR = 2,
+
+   /* FRAG_RESULT_DATAn are the per-render-target (GLSL gl_FragData[n]
+    * or ARB_fragment_program fragment.color[n]) color results.  If
+    * any are written, FRAG_RESULT_COLOR will not be written.
+    */
    FRAG_RESULT_DATA0 = 3,
    FRAG_RESULT_MAX = (FRAG_RESULT_DATA0 + MAX_DRAW_BUFFERS)
 } gl_frag_result;
@@ -1923,7 +1931,6 @@ struct gl_geometry_program
 struct gl_fragment_program
 {
    struct gl_program Base;   /**< base class */
-   GLenum FogOption;
    GLboolean UsesKill;          /**< shader uses KIL instruction */
    GLboolean OriginUpperLeft;
    GLboolean PixelCenterInteger;
@@ -2406,26 +2413,25 @@ struct gl_shared_state
  */
 struct gl_renderbuffer
 {
-#define RB_MAGIC 0xaabbccdd
-   int Magic; /** XXX TEMPORARY DEBUG INFO */
    _glthread_Mutex Mutex;		   /**< for thread safety */
    GLuint ClassID;        /**< Useful for drivers */
    GLuint Name;
    GLint RefCount;
    GLuint Width, Height;
+   GLint RowStride;       /**< Padded width in units of pixels */
    GLboolean Purgeable;   /**< Is the buffer purgeable under memory pressure? */
+
+   GLboolean AttachedAnytime; /**< TRUE if it was attached to a framebuffer */
+
+   GLubyte NumSamples;
 
    GLenum InternalFormat; /**< The user-specified format */
    GLenum _BaseFormat;    /**< Either GL_RGB, GL_RGBA, GL_DEPTH_COMPONENT or
                                GL_STENCIL_INDEX. */
    gl_format Format;      /**< The actual renderbuffer memory format */
 
-   GLubyte NumSamples;
-
    GLenum DataType;      /**< Type of values passed to the Get/Put functions */
    GLvoid *Data;        /**< This may not be used by some kinds of RBs */
-
-   GLboolean AttachedAnytime; /**< TRUE if it was attached to a framebuffer */
 
    /* Used to wrap one renderbuffer around another: */
    struct gl_renderbuffer *Wrapped;
@@ -2740,6 +2746,9 @@ struct gl_constants
 
    /* GL_EXT_framebuffer_sRGB */
    GLboolean sRGBCapable; /* can enable sRGB blend/update on FBOs */
+
+   /* GL_ARB_robustness */
+   GLenum ResetStrategy;
 };
 
 
@@ -3298,6 +3307,9 @@ struct gl_context
    struct gl_renderbuffer *CurrentRenderbuffer;
 
    GLenum ErrorValue;        /**< Last error code */
+
+   /* GL_ARB_robustness */
+   GLenum ResetStatus;
 
    /**
     * Recognize and silence repeated error debug messages in buggy apps.

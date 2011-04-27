@@ -485,7 +485,7 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
   g_winKeyState[dwKey] = fDown;
 
   GetEventList(&events);
-  nevents = GetKeyboardEvents(events, g_pwinKeyboard, fDown ? KeyPress : KeyRelease, dwKey + MIN_KEYCODE);
+  nevents = GetKeyboardEvents(events, g_pwinKeyboard, fDown ? KeyPress : KeyRelease, dwKey + MIN_KEYCODE, NULL);
 
   for (i = 0; i < nevents; i++)
     mieqEnqueue(g_pwinKeyboard, (InternalEvent*)events[i].event);

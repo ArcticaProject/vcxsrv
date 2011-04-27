@@ -1,5 +1,4 @@
 if ENABLE_UNIT_TESTS
-if HAVE_GLIB
 if HAVE_LD_WRAP
 SUBDIRS= . xi2
 noinst_PROGRAMS = xkb input xtest list
@@ -7,9 +6,9 @@ check_LTLIBRARIES = libxservertest.la
 
 TESTS=$(noinst_PROGRAMS)
 
-AM_CFLAGS = $(DIX_CFLAGS) $(GLIB_CFLAGS) @XORG_CFLAGS@
+AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
 INCLUDES = @XORG_INCS@
-TEST_LDADD=libxservertest.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS) $(GLIB_LIBS)
+TEST_LDADD=libxservertest.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
 
 if SPECIAL_DTRACE_OBJECTS
 TEST_LDADD += $(OS_LIB) $(DIX_LIB)
@@ -36,7 +35,6 @@ libxservertest_la_LIBADD = \
             $(top_builddir)/mi/libmi.la \
             $(top_builddir)/os/libos.la \
             @XORG_LIBS@
-endif
 endif
 endif
 

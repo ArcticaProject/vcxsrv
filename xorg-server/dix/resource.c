@@ -489,7 +489,7 @@ AddResource(XID id, RESTYPE type, pointer value)
     rrec = &clientTable[client];
     if (!rrec->buckets)
     {
-	ErrorF("[dix] AddResource(%lx, %lx, %lx), client=%d \n",
+	ErrorF("[dix] AddResource(%lx, %x, %lx), client=%d \n",
 		(unsigned long)id, type, (unsigned long)value, client);
         FatalError("client not in use\n");
     }

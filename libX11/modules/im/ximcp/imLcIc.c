@@ -143,10 +143,9 @@ _XimLocalCreateIC(
     unsigned int	 num;
     int			 len;
 
-    if((ic = (Xic)Xmalloc(sizeof(XicRec))) == (Xic)NULL) {
+    if((ic = Xcalloc(1, sizeof(XicRec))) == (Xic)NULL) {
 	return ((XIC)NULL);
     }
-    bzero((char *)ic, sizeof(XicRec));
 
     ic->methods = &Local_ic_methods;
     ic->core.im = im;

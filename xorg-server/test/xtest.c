@@ -33,8 +33,6 @@
 #include "xkbsrv.h"
 #include "xserver-properties.h"
 
-#include <glib.h>
-
 /**
  */
 
@@ -65,14 +63,14 @@ static void xtest_init_devices(void)
     /* this also inits the xtest devices */
     InitCoreDevices();
 
-    g_assert(xtestpointer);
-    g_assert(xtestkeyboard);
-    g_assert(IsXTestDevice(xtestpointer, NULL));
-    g_assert(IsXTestDevice(xtestkeyboard, NULL));
-    g_assert(IsXTestDevice(xtestpointer, inputInfo.pointer));
-    g_assert(IsXTestDevice(xtestkeyboard, inputInfo.keyboard));
-    g_assert(GetXTestDevice(inputInfo.pointer) == xtestpointer);
-    g_assert(GetXTestDevice(inputInfo.keyboard) == xtestkeyboard);
+    assert(xtestpointer);
+    assert(xtestkeyboard);
+    assert(IsXTestDevice(xtestpointer, NULL));
+    assert(IsXTestDevice(xtestkeyboard, NULL));
+    assert(IsXTestDevice(xtestpointer, inputInfo.pointer));
+    assert(IsXTestDevice(xtestkeyboard, inputInfo.keyboard));
+    assert(GetXTestDevice(inputInfo.pointer) == xtestpointer);
+    assert(GetXTestDevice(inputInfo.keyboard) == xtestkeyboard);
 }
 
 /**
@@ -87,32 +85,29 @@ static void xtest_properties(void)
     Atom xtest_prop = XIGetKnownProperty(XI_PROP_XTEST_DEVICE);
 
     rc = XIGetDeviceProperty(xtestpointer, xtest_prop, &prop);
-    g_assert(rc == Success);
-    g_assert(prop);
+    assert(rc == Success);
+    assert(prop);
 
     rc = XIGetDeviceProperty(xtestkeyboard, xtest_prop, &prop);
-    g_assert(rc == Success);
-    g_assert(prop != NULL);
+    assert(rc == Success);
+    assert(prop != NULL);
 
     rc = XIChangeDeviceProperty(xtestpointer, xtest_prop,
                                 XA_INTEGER, 8, PropModeReplace, 1, &value, FALSE);
-    g_assert(rc == BadAccess);
+    assert(rc == BadAccess);
     rc = XIChangeDeviceProperty(xtestkeyboard, xtest_prop,
                                 XA_INTEGER, 8, PropModeReplace, 1, &value, FALSE);
-    g_assert(rc == BadAccess);
+    assert(rc == BadAccess);
 }
 
 
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
+    xtest_init_devices();
+    xtest_properties();
 
-    g_test_add_func("/dix/xtest/init", xtest_init_devices);
-    g_test_add_func("/dix/xtest/properties", xtest_properties);
-
-    return g_test_run();
+    return 0;
 }
 
 

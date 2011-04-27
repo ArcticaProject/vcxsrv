@@ -122,7 +122,7 @@ xkb_symbols "unified" {
 default
 partial alphanumeric_keys modifier_keys 
 xkb_symbols "sax" {
-	name[Group1]= "APL Keyboard Symbols: Sharp APL for Unix";
+	name[Group1]= "APL Keyboard Symbols";
 
 	include "apl(unified)"
 

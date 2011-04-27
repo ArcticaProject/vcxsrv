@@ -1426,6 +1426,175 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_over_n_8888_0565_ca_process_pixblock_head
+    /*
+     * 'combine_mask_ca' replacement
+     *
+     * input:  solid src (n) in {d8,  d9,  d10, d11}  [B, G, R, A]
+     *         mask in          {d24, d25, d26}       [B, G, R]
+     * output: updated src in   {d0,  d1,  d2 }       [B, G, R]
+     *         updated mask in  {d24, d25, d26}       [B, G, R]
+     */
+    vmull.u8    q0,  d24, d8
+    vmull.u8    q1,  d25, d9
+    vmull.u8    q6,  d26, d10
+    vmull.u8    q9,  d11, d25
+    vmull.u8    q12, d11, d24
+    vmull.u8    q13, d11, d26
+    vrshr.u16   q8,  q0,  #8
+    vrshr.u16   q10, q1,  #8
+    vrshr.u16   q11, q6,  #8
+    vraddhn.u16 d0,  q0,  q8
+    vraddhn.u16 d1,  q1,  q10
+    vraddhn.u16 d2,  q6,  q11
+    vrshr.u16   q11, q12, #8
+    vrshr.u16   q8,  q9,  #8
+    vrshr.u16   q6,  q13, #8
+    vraddhn.u16 d24, q12, q11
+    vraddhn.u16 d25, q9,  q8
+    /*
+     * convert 8 r5g6b5 pixel data from {d4, d5} to planar 8-bit format
+     * and put data into d16 - blue, d17 - green, d18 - red
+     */
+       vshrn.u16   d17, q2,  #3
+       vshrn.u16   d18, q2,  #8
+    vraddhn.u16 d26, q13, q6
+       vsli.u16    q2,  q2,  #5
+       vsri.u8     d18, d18, #5
+       vsri.u8     d17, d17, #6
+    /*
+     * 'combine_over_ca' replacement
+     *
+     * output: updated dest in d16 - blue, d17 - green, d18 - red
+     */
+    vmvn.8      q12, q12
+       vshrn.u16   d16, q2,  #2
+    vmvn.8      d26, d26
+    vmull.u8    q6,  d16, d24
+    vmull.u8    q7,  d17, d25
+    vmull.u8    q11, d18, d26
+.endm
+
+.macro pixman_composite_over_n_8888_0565_ca_process_pixblock_tail
+    /* ... continue 'combine_over_ca' replacement */
+    vrshr.u16   q10, q6,  #8
+    vrshr.u16   q14, q7,  #8
+    vrshr.u16   q15, q11, #8
+    vraddhn.u16 d16, q10, q6
+    vraddhn.u16 d17, q14, q7
+    vraddhn.u16 d18, q15, q11
+    vqadd.u8    q8,  q0,  q8
+    vqadd.u8    d18, d2,  d18
+    /*
+     * convert the results in d16, d17, d18 to r5g6b5 and store
+     * them into {d28, d29}
+     */
+    vshll.u8    q14, d18, #8
+    vshll.u8    q10, d17, #8
+    vshll.u8    q15, d16, #8
+    vsri.u16    q14, q10, #5
+    vsri.u16    q14, q15, #11
+.endm
+
+.macro pixman_composite_over_n_8888_0565_ca_process_pixblock_tail_head
+    fetch_mask_pixblock
+        vrshr.u16   q10, q6, #8
+        vrshr.u16   q14, q7, #8
+    vld1.16     {d4, d5}, [DST_R, :128]!
+        vrshr.u16   q15, q11, #8
+        vraddhn.u16 d16, q10, q6
+        vraddhn.u16 d17, q14, q7
+        vraddhn.u16 d22, q15, q11
+            /* process_pixblock_head */
+            /*
+             * 'combine_mask_ca' replacement
+             *
+             * input:  solid src (n) in {d8,  d9,  d10, d11}  [B, G, R, A]
+             *         mask in          {d24, d25, d26}       [B, G, R]
+             * output: updated src in   {d0,  d1,  d2 }       [B, G, R]
+             *         updated mask in  {d24, d25, d26}       [B, G, R]
+             */
+            vmull.u8    q1,  d25, d9
+        vqadd.u8    q8,  q0, q8
+            vmull.u8    q0,  d24, d8
+        vqadd.u8    d22, d2, d22
+            vmull.u8    q6,  d26, d10
+        /*
+         * convert the result in d16, d17, d22 to r5g6b5 and store
+         * it into {d28, d29}
+         */
+        vshll.u8    q14, d22, #8
+        vshll.u8    q10, d17, #8
+        vshll.u8    q15, d16, #8
+            vmull.u8    q9,  d11, d25
+        vsri.u16    q14, q10, #5
+            vmull.u8    q12, d11, d24
+            vmull.u8    q13, d11, d26
+        vsri.u16    q14, q15, #11
+    cache_preload 8, 8
+            vrshr.u16   q8,  q0,  #8
+            vrshr.u16   q10, q1,  #8
+            vrshr.u16   q11, q6,  #8
+            vraddhn.u16 d0,  q0,  q8
+            vraddhn.u16 d1,  q1,  q10
+            vraddhn.u16 d2,  q6,  q11
+            vrshr.u16   q11, q12, #8
+            vrshr.u16   q8,  q9,  #8
+            vrshr.u16   q6,  q13, #8
+            vraddhn.u16 d25, q9,  q8
+                /*
+                 * convert 8 r5g6b5 pixel data from {d4, d5} to planar
+	         * 8-bit format and put data into d16 - blue, d17 - green,
+	         * d18 - red
+                 */
+                vshrn.u16   d17, q2,  #3
+                vshrn.u16   d18, q2,  #8
+            vraddhn.u16 d24, q12, q11
+            vraddhn.u16 d26, q13, q6
+                vsli.u16    q2,  q2,  #5
+                vsri.u8     d18, d18, #5
+                vsri.u8     d17, d17, #6
+            /*
+             * 'combine_over_ca' replacement
+             *
+             * output: updated dest in d16 - blue, d17 - green, d18 - red
+             */
+            vmvn.8      q12, q12
+                vshrn.u16   d16, q2,  #2
+            vmvn.8      d26, d26
+            vmull.u8    q7,  d17, d25
+            vmull.u8    q6,  d16, d24
+            vmull.u8    q11, d18, d26
+    vst1.16     {d28, d29}, [DST_W, :128]!
+.endm
+
+.macro pixman_composite_over_n_8888_0565_ca_init
+    add         DUMMY, sp, #ARGS_STACK_OFFSET
+    vpush       {d8-d15}
+    vld1.32     {d11[0]}, [DUMMY]
+    vdup.8      d8, d11[0]
+    vdup.8      d9, d11[1]
+    vdup.8      d10, d11[2]
+    vdup.8      d11, d11[3]
+.endm
+
+.macro pixman_composite_over_n_8888_0565_ca_cleanup
+    vpop        {d8-d15}
+.endm
+
+generate_composite_function \
+    pixman_composite_over_n_8888_0565_ca_asm_neon, 0, 32, 16, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_over_n_8888_0565_ca_init, \
+    pixman_composite_over_n_8888_0565_ca_cleanup, \
+    pixman_composite_over_n_8888_0565_ca_process_pixblock_head, \
+    pixman_composite_over_n_8888_0565_ca_process_pixblock_tail, \
+    pixman_composite_over_n_8888_0565_ca_process_pixblock_tail_head
+
+/******************************************************************************/
+
 .macro pixman_composite_in_n_8_process_pixblock_head
     /* expecting source data in {d0, d1, d2, d3} */
     /* and destination data in {d4, d5, d6, d7} */

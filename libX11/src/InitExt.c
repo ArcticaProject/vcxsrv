@@ -50,14 +50,13 @@ XExtCodes *XInitExtension (
 
 	LockDisplay (dpy);
 	if (! (ext = (_XExtension *) Xcalloc (1, sizeof (_XExtension))) ||
-	    ! (ext->name = Xmalloc((unsigned) strlen(name) + 1))) {
+	    ! (ext->name = strdup(name))) {
 	    if (ext) Xfree((char *) ext);
 	    UnlockDisplay(dpy);
 	    return (XExtCodes *) NULL;
 	}
 	codes.extension = dpy->ext_number++;
 	ext->codes = codes;
-	(void) strcpy(ext->name, name);
 
 	/* chain it onto the display list */
 	ext->next = dpy->ext_procs;

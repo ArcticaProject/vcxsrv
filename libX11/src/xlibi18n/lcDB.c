@@ -591,26 +591,23 @@ store_to_database(
 	goto err;
     }
 
-    new = (Database)Xmalloc(sizeof(DatabaseRec));
+    new = Xcalloc(1, sizeof(DatabaseRec));
     if (new == (Database)NULL) {
 	goto err;
     }
-    bzero(new, sizeof(DatabaseRec));
 
-    new->category = (char *)Xmalloc(strlen(parse_info.category) + 1);
+    new->category = strdup(parse_info.category);
     if (new->category == NULL) {
 	goto err;
     }
-    strcpy(new->category, parse_info.category);
 
     if (! construct_name(name, sizeof(name))) {
 	goto err;
     }
-    new->name = (char *)Xmalloc(strlen(name) + 1);
+    new->name = strdup(name);
     if (new->name == NULL) {
 	goto err;
     }
-    strcpy(new->name, name);
     new->next = *db;
     new->value = parse_info.value;
     new->value_num = parse_info.value_num;
@@ -944,10 +941,9 @@ f_default(
     case S_NULL:
 	if (parse_info.category != NULL)
 	    goto err;
-	p = (char *)Xmalloc(strlen(wordp) + 1);
+	p = strdup(wordp);
 	if (p == NULL)
 	    goto err;
-	strcpy(p, wordp);
 	parse_info.category = p;
 	parse_info.pre_state = S_CATEGORY;
 	break;
@@ -961,10 +957,9 @@ f_default(
 		break;
 	    }
 	}
-	p = (char *)Xmalloc(strlen(wordp) + 1);
+	p = strdup(wordp);
 	if (p == NULL)
 	    goto err;
-	strcpy(p, wordp);
 	if (parse_info.name[parse_info.nest_depth] != NULL) {
 	    Xfree(parse_info.name[parse_info.nest_depth]);
 	}
@@ -1309,10 +1304,9 @@ _XlcCreateLocaleDataBase(
 	return (XPointer)NULL;
     }
     n = CountDatabase(database);
-    lc_db = (XlcDatabase)Xmalloc(sizeof(XlcDatabaseRec) * (n + 1));
+    lc_db = Xcalloc(n + 1, sizeof(XlcDatabaseRec));
     if (lc_db == (XlcDatabase)NULL)
 	goto err;
-    bzero(lc_db, sizeof(XlcDatabaseRec) * (n + 1));
     for (p = database, i = 0; p && i < n; p = p->next, ++i) {
 	lc_db[i].category_q = XrmStringToQuark(p->category);
 	lc_db[i].name_q = XrmStringToQuark(p->name);

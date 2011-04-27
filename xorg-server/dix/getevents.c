@@ -616,8 +616,8 @@ updateMotionHistory(DeviceIntPtr pDev, CARD32 ms, ValuatorMask *mask,
 
 
 /**
- * Returns the maximum number of events GetKeyboardEvents,
- * GetKeyboardValuatorEvents, and GetPointerEvents will ever return.
+ * Returns the maximum number of events GetKeyboardEvents
+ * and GetPointerEvents will ever return.
  *
  * This MUST be absolutely constant, from init until exit.
  */
@@ -926,19 +926,6 @@ updateHistory(DeviceIntPtr dev, ValuatorMask *mask, CARD32 ms)
 }
 
 /**
- * Convenience wrapper around GetKeyboardValuatorEvents, that takes no
- * valuators.
- */
-int
-GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type, int key_code) {
-    ValuatorMask mask;
-
-    valuator_mask_zero(&mask);
-    return GetKeyboardValuatorEvents(events, pDev, type, key_code, &mask);
-}
-
-
-/**
  * Returns a set of InternalEvents for KeyPress/KeyRelease, optionally
  * also with valuator events.
  *
@@ -947,8 +934,8 @@ GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type, int key_code) 
  * place via GetMaximumEventsNum(), and for freeing it.
  */
 int
-GetKeyboardValuatorEvents(EventList *events, DeviceIntPtr pDev, int type,
-                          int key_code, const ValuatorMask *mask_in) {
+GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type,
+                  int key_code, const ValuatorMask *mask_in) {
     int num_events = 0;
     CARD32 ms = 0;
     DeviceEvent *event;

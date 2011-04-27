@@ -1425,10 +1425,9 @@ _XimProtoCreateIC(
     if (!(_XimGetInputStyle(arg, &input_style)))
 	return (XIC)NULL;
 
-    if ((ic = (Xic)Xmalloc(sizeof(XicRec))) == (Xic)NULL)
+    if ((ic = Xcalloc(1, sizeof(XicRec))) == (Xic)NULL)
 	return (XIC)NULL;
 
-    bzero((char *)ic, sizeof(XicRec));
     ic->methods = &ic_methods;
     ic->core.im = (XIM)im;
     ic->core.input_style = input_style;

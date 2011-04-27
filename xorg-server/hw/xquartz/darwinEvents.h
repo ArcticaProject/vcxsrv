@@ -37,7 +37,8 @@ void DarwinEQPointerPost(DeviceIntPtr pDev, xEventPtr e);
 void DarwinEQSwitchScreen(ScreenPtr pScreen, Bool fromDIX);
 void DarwinSendPointerEvents(DeviceIntPtr pDev, int ev_type, int ev_button, float pointer_x, float pointer_y,
 			     float pressure, float tilt_x, float tilt_y);
-void DarwinSendProximityEvents(int ev_type, float pointer_x, float pointer_y);
+void DarwinSendProximityEvents(DeviceIntPtr pDev, int ev_type, float pointer_x, float pointer_y,
+                               float pressure, float tilt_x, float tilt_y);
 void DarwinSendKeyboardEvents(int ev_type, int keycode);
 void DarwinSendScrollEvents(float count_x, float count_y, float pointer_x, float pointer_y,
 			    float pressure, float tilt_x, float tilt_y);

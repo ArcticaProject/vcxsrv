@@ -106,7 +106,7 @@ InitVelocityData(DeviceVelocityPtr vel);
 extern _X_EXPORT void
 InitTrackers(DeviceVelocityPtr vel, int ntracker);
 
-extern _X_EXPORT short
+extern _X_EXPORT BOOL
 ProcessVelocityData2D(DeviceVelocityPtr vel, int dx, int dy, int time);
 
 extern _X_EXPORT float

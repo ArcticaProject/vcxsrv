@@ -36,7 +36,7 @@ main (int argc, char **argv)
 				dest_img,
 				PIXMAN_a8,
 				200, 200,
-				35, 5,
+				-5, 5,
 				ARRAY_LENGTH (tris), tris);
     show_image (dest_img);
     

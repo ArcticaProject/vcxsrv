@@ -1221,13 +1221,46 @@ InitButtonClassDeviceStruct(DeviceIntPtr dev, int numButtons, Atom* labels,
     return TRUE;
 }
 
+/**
+ * Allocate a valuator class and set up the pointers for the axis values
+ * appropriately.
+ *
+ * @param src If non-NULL, the memory is reallocated from src. If NULL, the
+ * memory is calloc'd.
+ * @parma numAxes Number of axes to allocate.
+ * @return The allocated valuator struct.
+ */
+ValuatorClassPtr
+AllocValuatorClass(ValuatorClassPtr src, int numAxes)
+{
+    ValuatorClassPtr v;
+    /* force alignment with double */
+    union align_u { ValuatorClassRec valc; double d; } *align;
+    int size;
+
+    size = sizeof(union align_u) + numAxes * (sizeof(double) + sizeof(AxisInfo));
+    align = (union align_u *) realloc(src, size);
+
+    if (!align)
+        return NULL;
+
+    if (!src)
+        memset(align, 0, size);
+
+    v = &align->valc;
+    v->numAxes = numAxes;
+    v->axisVal = (double*)(align + 1);
+    v->axes = (AxisInfoPtr)(v->axisVal + numAxes);
+
+    return v;
+}
+
 Bool
 InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
                               int numMotionEvents, int mode)
 {
     int i;
     ValuatorClassPtr valc;
-    union align_u { ValuatorClassRec valc; double d; } *align;
 
     if (!dev)
         return FALSE;
@@ -1240,13 +1273,10 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
         numAxes = MAX_VALUATORS;
     }
 
-    align = (union align_u *) calloc(1, sizeof(union align_u) +
-				     numAxes * sizeof(double) +
-				     numAxes * sizeof(AxisInfo));
-    if (!align)
-	return FALSE;
+    valc = AllocValuatorClass(NULL, numAxes);
+    if (!valc)
+        return FALSE;
 
-    valc = &align->valc;
     valc->sourceid = dev->id;
     valc->motion = NULL;
     valc->first_motion = 0;
@@ -1254,9 +1284,6 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
 
     valc->numMotionEvents = numMotionEvents;
     valc->motionHintWindow = NullWindow;
-    valc->numAxes = numAxes;
-    valc->axisVal = (double *)(align + 1);
-    valc->axes = (AxisInfoPtr)(valc->axisVal + numAxes);
 
     if (mode & OutOfProximity)
         InitProximityClassDeviceStruct(dev);
@@ -2365,7 +2392,7 @@ ReleaseButtonsAndKeys(DeviceIntPtr dev)
     {
         if (BitIsOn(k->down, i))
         {
-            nevents = GetKeyboardEvents(eventlist, dev, KeyRelease, i);
+            nevents = GetKeyboardEvents(eventlist, dev, KeyRelease, i, NULL);
             for (j = 0; j < nevents; j++)
                 mieqProcessDeviceEvent(dev, (InternalEvent*)(eventlist+j)->event, NULL);
         }

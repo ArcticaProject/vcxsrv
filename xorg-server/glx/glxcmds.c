@@ -1127,10 +1127,11 @@ DoCreateGLXDrawable(ClientPtr client, __GLXscreen *pGlxScreen,
 	return BadAlloc;
     }
 
-    /* Add the glx drawable under the XID of the underlying X drawable
-     * too.  That way we'll get a callback in DrawableGone and can
-     * clean up properly when the drawable is destroyed. */
-    if (drawableId != glxDrawableId &&
+    /*
+     * Windows aren't refcounted, so track both the X and the GLX window
+     * so we get called regardless of destruction order.
+     */
+    if (drawableId != glxDrawableId && type == GLX_DRAWABLE_WINDOW &&
 	!AddResource(pDraw->id, __glXDrawableRes, pGlxDraw)) {
 	pGlxDraw->destroy (pGlxDraw);
 	return BadAlloc;
@@ -1160,6 +1161,8 @@ DoCreateGLXPixmap(ClientPtr client, __GLXscreen *pGlxScreen, __GLXconfig *config
 
     err = DoCreateGLXDrawable(client, pGlxScreen, config, pDraw, drawableId,
 			      glxDrawableId, GLX_DRAWABLE_PIXMAP);
+
+    ((PixmapPtr)pDraw)->refcnt++;
 
     return err;
 }

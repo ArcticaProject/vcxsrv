@@ -496,9 +496,8 @@ _XimXConf(Xim im, char *address)
 {
     XSpecRec	*spec;
 
-    if (!(spec = (XSpecRec *)Xmalloc(sizeof(XSpecRec))))
+    if (!(spec = Xcalloc(1, sizeof(XSpecRec))))
 	return False;
-    bzero(spec, sizeof(XSpecRec));
 
     spec->improtocolid = XInternAtom(im->core.display, _XIM_PROTOCOL, False);
     spec->imconnectid  = XInternAtom(im->core.display, _XIM_XCONNECT, False);

@@ -117,7 +117,6 @@ unsigned int            windowItemModMask = NX_COMMANDMASK;
 // devices
 DeviceIntPtr            darwinKeyboard = NULL;
 DeviceIntPtr            darwinPointer = NULL;
-DeviceIntPtr            darwinTabletCurrent = NULL;
 DeviceIntPtr            darwinTabletStylus = NULL;
 DeviceIntPtr            darwinTabletCursor = NULL;
 DeviceIntPtr            darwinTabletEraser = NULL;
@@ -491,8 +490,6 @@ void InitInput( int argc, char **argv )
 
     darwinTabletEraser = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
     darwinTabletEraser->name = strdup("eraser");
-
-    darwinTabletCurrent = darwinTabletStylus;
 
     DarwinEQInit();
 

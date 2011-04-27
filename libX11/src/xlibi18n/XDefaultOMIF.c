@@ -128,10 +128,9 @@ init_fontset(
 
     data = XOM_GENERIC(oc->core.om)->data;
 
-    font_set = (FontSet) Xmalloc(sizeof(FontSetRec));
+    font_set = Xcalloc(1, sizeof(FontSetRec));
     if (font_set == NULL)
 	return False;
-    bzero((char *) font_set, sizeof(FontSetRec));
 
     gen = XOC_GENERIC(oc);
     gen->font_set = font_set;
@@ -217,9 +216,8 @@ check_fontname(
 		fname = prop_fname;
 	}
 	if (data) {
-	    font_set->font_name = (char *) Xmalloc(strlen(fname) + 1);
+	    font_set->font_name = strdup(fname);
 	    if (font_set->font_name) {
-		strcpy(font_set->font_name, fname);
 		found_num++;
 	    }
 	}
@@ -388,9 +386,7 @@ get_font_name(
 
     list = XListFonts(dpy, pattern, 1, &count);
     if (list != NULL) {
-	name = (char *) Xmalloc(strlen(*list) + 1);
-	if (name)
-	    strcpy(name, *list);
+	name = strdup(*list);
 
 	XFreeFontNames(list);
     } else {
@@ -460,13 +456,11 @@ parse_fontname(
 	    if (font_data == NULL)
 		continue;
 
-	    font_set->font_name = (char *) Xmalloc(strlen(font_name) + 1);
+	    font_set->font_name = strdup(font_name);
+	    Xfree(font_name);
 	    if (font_set->font_name == NULL) {
-		Xfree(font_name);
 		goto err;
 	    }
-	    strcpy(font_set->font_name, font_name);
-	    Xfree(font_name);
 	    found_num++;
 	    goto found;
 	}
@@ -549,11 +543,10 @@ Limit the length of the string copy to prevent stack corruption.
 	}
     }
   found:
-    base_name = (char *) Xmalloc(strlen(oc->core.base_name_list) + 1);
+    base_name = strdup(oc->core.base_name_list);
     if (base_name == NULL)
 	goto err;
 
-    strcpy(base_name, oc->core.base_name_list);
     oc->core.base_name_list = base_name;
 
     XFreeStringList(name_list);
@@ -1005,10 +998,9 @@ create_oc(
 {
     XOC oc;
 
-    oc = (XOC) Xmalloc(sizeof(XOCGenericRec));
+    oc = Xcalloc(1, sizeof(XOCGenericRec));
     if (oc == NULL)
 	return (XOC) NULL;
-    bzero((char *) oc, sizeof(XOCGenericRec));
 
     oc->core.om = om;
 
@@ -1126,14 +1118,12 @@ add_data(
     XOMGenericPart *gen = XOM_GENERIC(om);
     OMData new;
 
-    new = (OMData) Xmalloc(sizeof(OMDataRec));
+    new = Xcalloc(1, sizeof(OMDataRec));
 
     if (new == NULL)
         return NULL;
 
     gen->data = new;
-
-    bzero((char *) new, sizeof(OMDataRec));
 
     return new;
 }
@@ -1168,10 +1158,9 @@ init_om(
     if (data == NULL)
 	return False;
 
-    font_data = (FontData) Xmalloc(sizeof(FontDataRec) * count);
+    font_data = Xcalloc(count, sizeof(FontDataRec));
     if (font_data == NULL)
 	return False;
-    bzero((char *) font_data, sizeof(FontDataRec) * count);
     data->font_data = font_data;
     data->font_data_count = count;
 
@@ -1182,10 +1171,9 @@ This one is fine.  *value points to one of the local strings in
 supported_charset_list[].
 */
 	strcpy(buf, *value++);
-	font_data->name = (char *) Xmalloc(strlen(buf) + 1);
+	font_data->name = strdup(buf);
 	if (font_data->name == NULL)
 	    return False;
-	strcpy(font_data->name, buf);
     }
 
     length += strlen(data->font_data->name) + 1;
@@ -1237,26 +1225,23 @@ _XDefaultOpenOM(XLCd lcd, Display *dpy, XrmDatabase rdb,
 {
     XOM om;
 
-    om = (XOM) Xmalloc(sizeof(XOMGenericRec));
+    om = Xcalloc(1, sizeof(XOMGenericRec));
     if (om == NULL)
 	return (XOM) NULL;
-    bzero((char *) om, sizeof(XOMGenericRec));
 
     om->methods = (XOMMethods)&methods;
     om->core.lcd = lcd;
     om->core.display = dpy;
     om->core.rdb = rdb;
     if (res_name) {
-	om->core.res_name = (char *)Xmalloc(strlen(res_name) + 1);
+	om->core.res_name = strdup(res_name);
 	if (om->core.res_name == NULL)
 	    goto err;
-	strcpy(om->core.res_name, res_name);
     }
     if (res_class) {
-	om->core.res_class = (char *)Xmalloc(strlen(res_class) + 1);
+	om->core.res_class = strdup(res_class);
 	if (om->core.res_class == NULL)
 	    goto err;
-	strcpy(om->core.res_class, res_class);
     }
 
     if (om_resources[0].xrm_name == NULLQUARK)

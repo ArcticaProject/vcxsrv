@@ -118,15 +118,15 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 {
     __GLXcontext *c, *next;
 
-    /* If this drawable was created using glx 1.3 drawable
-     * constructors, we added it as a glx drawable resource under both
-     * its glx drawable ID and it X drawable ID.  Remove the other
-     * resource now so we don't a callback for freed memory. */
-    if (glxPriv->drawId != glxPriv->pDraw->id) {
-	if (xid == glxPriv->drawId)
-	    FreeResourceByType(glxPriv->pDraw->id, __glXDrawableRes, TRUE);
-	else
-	    FreeResourceByType(glxPriv->drawId, __glXDrawableRes, TRUE);
+    if (glxPriv->type == GLX_DRAWABLE_WINDOW) {
+        /* If this was created by glXCreateWindow, free the matching resource */
+        if (glxPriv->drawId != glxPriv->pDraw->id) {
+            if (xid == glxPriv->drawId)
+                FreeResourceByType(glxPriv->pDraw->id, __glXDrawableRes, TRUE);
+            else
+                FreeResourceByType(glxPriv->drawId, __glXDrawableRes, TRUE);
+        }
+        /* otherwise this window was implicitly created by MakeCurrent */
     }
 
     for (c = glxAllContexts; c; c = next) {
@@ -142,6 +142,10 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 	if (c->readPriv == glxPriv)
 	    c->readPriv = NULL;
     }
+
+    /* drop our reference to any backing pixmap */
+    if (glxPriv->type == GLX_DRAWABLE_PIXMAP)
+        glxPriv->pDraw->pScreen->DestroyPixmap((PixmapPtr)glxPriv->pDraw);
 
     glxPriv->destroy(glxPriv);
 

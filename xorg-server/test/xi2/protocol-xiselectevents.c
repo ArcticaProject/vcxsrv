@@ -58,7 +58,6 @@
 #include "xiselectev.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 
 static unsigned char *data[4096 * 20]; /* the request data buffer */
 
@@ -107,7 +106,7 @@ static void request_XISelectEvent(xXISelectEventsReq *req, int error)
     client = init_client(req->length, req);
 
     rc = ProcXISelectEvents(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     client.swapped = TRUE;
 
@@ -124,7 +123,7 @@ static void request_XISelectEvent(xXISelectEventsReq *req, int error)
     swaps(&req->length, n);
     swaps(&req->num_masks, n);
     rc = SProcXISelectEvents(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 }
 
 static void request_XISelectEvents_masks(xXISelectEventsReq *req)
@@ -250,7 +249,7 @@ static void test_XISelectEvents(void)
 
     request_init(req, XISelectEvents);
 
-    g_test_message("Testing for BadValue on zero-length masks");
+    printf("Testing for BadValue on zero-length masks\n");
     /* zero masks are BadValue, regardless of the window */
     req->num_masks = 0;
 
@@ -263,7 +262,7 @@ static void test_XISelectEvents(void)
     req->win = CLIENT_WINDOW_ID;
     request_XISelectEvent(req, BadValue);
 
-    g_test_message("Testing for BadWindow.");
+    printf("Testing for BadWindow.\n");
     /* None window is BadWindow, regardless of the masks.
      * We don't actually need to set the masks here, BadWindow must occur
      * before checking the masks.
@@ -283,7 +282,7 @@ static void test_XISelectEvents(void)
     req->num_masks = 0xFFFC;
     request_XISelectEvent(req, BadWindow);
 
-    g_test_message("Triggering num_masks/length overflow");
+    printf("Triggering num_masks/length overflow\n");
     req->win = ROOT_WINDOW_ID;
     /* Integer overflow - req->length can't hold that much */
     req->num_masks = 0xFFFF;
@@ -292,14 +291,14 @@ static void test_XISelectEvents(void)
     req->win = ROOT_WINDOW_ID;
     req->num_masks = 1;
 
-    g_test_message("Triggering bogus mask length error");
+    printf("Triggering bogus mask length error\n");
     mask = (xXIEventMask*)&req[1];
     mask->deviceid = 0;
     mask->mask_len = 0xFFFF;
     request_XISelectEvent(req, BadLength);
 
     /* testing various device ids */
-    g_test_message("Testing existing device ids.");
+    printf("Testing existing device ids.\n");
     for (i = 0; i < 6; i++)
     {
         mask = (xXIEventMask*)&req[1];
@@ -310,7 +309,7 @@ static void test_XISelectEvents(void)
         request_XISelectEvent(req, Success);
     }
 
-    g_test_message("Testing non-existing device ids.");
+    printf("Testing non-existing device ids.\n");
     for (i = 6; i <= 0xFFFF; i++)
     {
         req->win = ROOT_WINDOW_ID;
@@ -326,13 +325,10 @@ static void test_XISelectEvents(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
 
-    g_test_add_func("/xi2/protocol/XISelectEvents", test_XISelectEvents);
+    test_XISelectEvents();
 
-    return g_test_run();
+    return 0;
 }
 

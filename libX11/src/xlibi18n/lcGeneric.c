@@ -60,15 +60,13 @@ create(
     XLCd lcd;
     XLCdPublicMethods new;
 
-    lcd = (XLCd) Xmalloc(sizeof(XLCdRec));
+    lcd = Xcalloc(1, sizeof(XLCdRec));
     if (lcd == NULL)
         return (XLCd) NULL;
-    bzero((char *) lcd, sizeof(XLCdRec));
 
-    lcd->core = (XLCdCore) Xmalloc(sizeof(XLCdGenericRec));
+    lcd->core = Xcalloc(1, sizeof(XLCdGenericRec));
     if (lcd->core == NULL)
 	goto err;
-    bzero((char *) lcd->core, sizeof(XLCdGenericRec));
 
     new = (XLCdPublicMethods) Xmalloc(sizeof(XLCdPublicMethodsRec));
     if (new == NULL)
@@ -180,10 +178,9 @@ add_codeset(
     CodeSet new, *new_list;
     int num;
 
-    new = (CodeSet) Xmalloc(sizeof(CodeSetRec));
+    new = Xcalloc(1, sizeof(CodeSetRec));
     if (new == NULL)
         return NULL;
-    bzero((char *) new, sizeof(CodeSetRec));
 
     if ((num = gen->codeset_num))
         new_list = (CodeSet *) Xrealloc(gen->codeset_list,
@@ -218,21 +215,18 @@ add_parse_list(
     unsigned char ch;
     int num;
 
-    str = (char *) Xmalloc(strlen(encoding) + 1);
+    str = strdup(encoding);
     if (str == NULL)
         return False;
-    strcpy(str, encoding);
 
-    new = (ParseInfo) Xmalloc(sizeof(ParseInfoRec));
+    new = Xcalloc(1, sizeof(ParseInfoRec));
     if (new == NULL)
         goto err;
-    bzero((char *) new, sizeof(ParseInfoRec));
 
     if (gen->mb_parse_table == NULL) {
-        gen->mb_parse_table = (unsigned char *) Xmalloc(256); /* 2^8 */
+        gen->mb_parse_table = Xcalloc(1, 256); /* 2^8 */
         if (gen->mb_parse_table == NULL)
             goto err;
-        bzero((char *) gen->mb_parse_table, 256);
     }
 
     if ((num = gen->mb_parse_list_num))
@@ -468,10 +462,9 @@ read_charset_define(
                 break;
         }
         if (new) {
-            tmp = (char *)Xmalloc(strlen(cset_name)+1);
+            tmp = strdup(cset_name);
             if (tmp == NULL)
                 return;
-            strcpy(tmp,cset_name);
             charsetd->name = tmp;
         }
         /* side   */
@@ -527,8 +520,7 @@ read_charset_define(
                 Xfree(charsetd->encoding_name);
             }
 */
-            tmp = (char *)Xmalloc(strlen(value[0])+1);
-            strcpy(tmp,value[0]);
+            tmp = strdup(value[0]);
             charsetd->encoding_name = tmp;
             charsetd->xrm_encoding_name = XrmStringToQuark(tmp);
         }
@@ -598,10 +590,9 @@ read_segmentconversion(
         if (num > 0) {
             char *tmp;
             _XlcDbg_printValue(name,value,num);
-            tmp = (char *)Xmalloc(strlen(value[0])+1);
+            tmp = strdup(value[0]);
             if (tmp == NULL)
                 return;
-            strcpy(tmp,value[0]);
             conversion->source_encoding = tmp;
             conversion->source = srch_charset_define(tmp,&new);
         }
@@ -611,10 +602,9 @@ read_segmentconversion(
         if (num > 0) {
             char *tmp;
             _XlcDbg_printValue(name,value,num);
-            tmp = (char *)Xmalloc(strlen(value[0])+1);
+            tmp = strdup(value[0]);
             if (tmp == NULL)
                 return;
-            strcpy(tmp,value[0]);
             conversion->destination_encoding = tmp;
             conversion->dest = srch_charset_define(tmp,&new);
         }
@@ -650,12 +640,11 @@ create_ctextseg(
     ret = (ExtdSegment)Xmalloc(sizeof(ExtdSegmentRec));
     if (ret == NULL)
         return NULL;
-    ret->name = (char *)Xmalloc(strlen(value[0]) + 1);
+    ret->name = strdup(value[0]);
     if (ret->name == NULL) {
         Xfree (ret);
         return NULL;
     }
-    strcpy(ret->name,value[0]);
     cset_name = (char*) Xmalloc (strlen(ret->name) + 1);
     if (cset_name == NULL) {
         Xfree (ret->name);

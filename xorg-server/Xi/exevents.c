@@ -535,6 +535,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     if (from->valuator)
     {
         ValuatorClassPtr v;
+
         if (!to->valuator)
         {
             classes = to->unused_classes;
@@ -543,18 +544,14 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
                 classes->valuator = NULL;
         }
 
-        to->valuator = realloc(to->valuator, sizeof(ValuatorClassRec) +
-                from->valuator->numAxes * sizeof(AxisInfo) +
-                from->valuator->numAxes * sizeof(double));
-        v = to->valuator;
+        v = AllocValuatorClass(to->valuator, from->valuator->numAxes);
+
         if (!v)
             FatalError("[Xi] no memory for class shift.\n");
 
-        v->numAxes = from->valuator->numAxes;
-        v->axes = (AxisInfoPtr)&v[1];
+        to->valuator = v;
         memcpy(v->axes, from->valuator->axes, v->numAxes * sizeof(AxisInfo));
 
-        v->axisVal = (double*)(v->axes + from->valuator->numAxes);
         v->sourceid = from->id;
     } else if (to->valuator && !from->valuator)
     {
