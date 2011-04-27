@@ -66,17 +66,12 @@ To open a connection to the X server that controls a display, use
 <function>XOpenDisplay</function>.
 <indexterm significance="preferred"><primary>XOpenDisplay</primary></indexterm>
 </para>
-<para>
-<!-- .LP -->
-<!-- .sM -->
-</para>
-<para>
-AllPlanes()
-</para>
-<para>
-XAllPlanes
-</para>
-
+<funcsynopsis>
+<funcprototype>
+  <funcdef>Display *<function>XOpenDisplay</function></funcdef>
+  <paramdef>char *<parameter>display_name</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
 <variablelist>
   <varlistentry>
     <term>

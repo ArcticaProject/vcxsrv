@@ -43,6 +43,7 @@
 #include "exevents.h"
 #include "xipassivegrab.h"
 #include "dixgrabs.h"
+#include "misc.h"
 
 int
 SProcXIPassiveGrabDevice(ClientPtr client)
@@ -87,6 +88,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
     GrabParameters param;
     void *tmp;
     int mask_len;
+    int n;
 
     REQUEST(xXIPassiveGrabDeviceReq);
     REQUEST_AT_LEAST_SIZE(xXIPassiveGrabDeviceReq);
@@ -99,7 +101,10 @@ ProcXIPassiveGrabDevice(ClientPtr client)
     {
         ret = dixLookupDevice(&dev, stuff->deviceid, client, DixGrabAccess);
         if (ret != Success)
+        {
+            client->errorValue = stuff->deviceid;
             return ret;
+        }
     }
 
     if (stuff->grab_type != XIGrabtypeButton &&
@@ -156,6 +161,8 @@ ProcXIPassiveGrabDevice(ClientPtr client)
 	return status;
 
     status = CheckGrabValues(client, &param);
+    if (status != Success)
+        return status;
 
     modifiers = (uint32_t*)&stuff[1] + stuff->mask_len;
     modifiers_failed = calloc(stuff->num_modifiers, sizeof(xXIGrabModifierInfo));
@@ -190,6 +197,9 @@ ProcXIPassiveGrabDevice(ClientPtr client)
 
             info->status = status;
             info->modifiers = *modifiers;
+            if (client->swapped)
+                swapl(&info->modifiers, n);
+
             rep.num_modifiers++;
             rep.length += bytes_to_int32(sizeof(xXIGrabModifierInfo));
         }
@@ -197,10 +207,8 @@ ProcXIPassiveGrabDevice(ClientPtr client)
 
     WriteReplyToClient(client, sizeof(rep), &rep);
     if (rep.num_modifiers)
-    {
-	client->pSwapReplyFunc = (ReplySwapPtr) Swap32Write;
-        WriteSwappedDataToClient(client, rep.length * 4, (char*)modifiers_failed);
-    }
+        WriteToClient(client, rep.length * 4, (char*)modifiers_failed);
+
     free(modifiers_failed);
     return ret;
 }

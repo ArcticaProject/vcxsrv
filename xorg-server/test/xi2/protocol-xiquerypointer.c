@@ -39,7 +39,6 @@
 #include "exevents.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 
 static ClientRec client_request;
 static void reply_XIQueryPointer_data(ClientPtr client, int len,
@@ -96,18 +95,18 @@ static void reply_XIQueryPointer(ClientPtr client, int len, char *data,
 
     reply_check_defaults(rep, len, XIQueryPointer);
 
-    g_assert(rep->root == root.drawable.id);
-    g_assert(rep->same_screen == xTrue);
+    assert(rep->root == root.drawable.id);
+    assert(rep->same_screen == xTrue);
 
     sprite = test_data.dev->spriteInfo->sprite;
-    g_assert((rep->root_x >> 16) == sprite->hot.x);
-    g_assert((rep->root_y >> 16) == sprite->hot.y);
+    assert((rep->root_x >> 16) == sprite->hot.x);
+    assert((rep->root_y >> 16) == sprite->hot.y);
 
     if (test_data.win == &root)
     {
-        g_assert(rep->root_x == rep->win_x);
-        g_assert(rep->root_y == rep->win_y);
-        g_assert(rep->child == window.drawable.id);
+        assert(rep->root_x == rep->win_x);
+        assert(rep->root_y == rep->win_y);
+        assert(rep->child == window.drawable.id);
     } else
     {
         int x, y;
@@ -115,13 +114,13 @@ static void reply_XIQueryPointer(ClientPtr client, int len, char *data,
         x = sprite->hot.x - window.drawable.x;
         y = sprite->hot.y - window.drawable.y;
 
-        g_assert((rep->win_x >> 16) == x);
-        g_assert((rep->win_y >> 16) == y);
-        g_assert(rep->child == None);
+        assert((rep->win_x >> 16) == x);
+        assert((rep->win_y >> 16) == y);
+        assert(rep->child == None);
     }
 
 
-    g_assert(rep->same_screen == xTrue);
+    assert(rep->same_screen == xTrue);
 
     reply_handler = reply_XIQueryPointer_data;
 }
@@ -137,19 +136,19 @@ static void request_XIQueryPointer(ClientPtr client, xXIQueryPointerReq* req, in
     int rc;
 
     rc = ProcXIQueryPointer(&client_request);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc == BadDevice)
-        g_assert(client_request.errorValue == req->deviceid);
+        assert(client_request.errorValue == req->deviceid);
 
     client_request.swapped = TRUE;
     swaps(&req->deviceid, n);
     swaps(&req->length, n);
     rc = SProcXIQueryPointer(&client_request);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc == BadDevice)
-        g_assert(client_request.errorValue == req->deviceid);
+        assert(client_request.errorValue == req->deviceid);
 }
 
 static void test_XIQueryPointer(void)
@@ -209,12 +208,9 @@ static void test_XIQueryPointer(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
 
-    g_test_add_func("/xi2/protocol/XIQueryPointer", test_XIQueryPointer);
+    test_XIQueryPointer();
 
-    return g_test_run();
+    return 0;
 }

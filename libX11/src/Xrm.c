@@ -581,23 +581,21 @@ static void GrowTable(
 	ltable = (LTable)table;
 	/* cons up a copy to make MoveValues look symmetric */
 	otable = *ltable;
-	ltable->buckets = (VEntry *)Xmalloc(i * sizeof(VEntry));
+	ltable->buckets = Xcalloc(i, sizeof(VEntry));
 	if (!ltable->buckets) {
 	    ltable->buckets = otable.buckets;
 	    return;
 	}
 	ltable->table.mask = i - 1;
-	bzero((char *)ltable->buckets, i * sizeof(VEntry));
 	MoveValues(&otable, ltable);
     } else {
 	register NTable ntable;
 
-	ntable = (NTable)Xmalloc(sizeof(NTableRec) + i * sizeof(NTable));
+	ntable = Xcalloc(1, sizeof(NTableRec) + (i * sizeof(NTable)));
 	if (!ntable)
 	    return;
 	*ntable = *table;
 	ntable->mask = i - 1;
-	bzero((char *)NodeBuckets(ntable), i * sizeof(NTable));
 	*prev = ntable;
 	MoveTables(table, ntable);
     }

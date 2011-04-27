@@ -38,7 +38,6 @@
 #include "xiquerydevice.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 /*
  * Protocol testing for XIQueryDevice request and reply.
  *
@@ -74,11 +73,11 @@ static void reply_XIQueryDevice(ClientPtr client, int len, char* data, void *use
     reply_check_defaults(rep, len, XIQueryDevice);
 
     if (querydata->which_device == XIAllDevices)
-        g_assert(rep->num_devices == devices.num_devices);
+        assert(rep->num_devices == devices.num_devices);
     else if (querydata->which_device == XIAllMasterDevices)
-        g_assert(rep->num_devices == devices.num_master_devices);
+        assert(rep->num_devices == devices.num_master_devices);
     else
-        g_assert(rep->num_devices == 1);
+        assert(rep->num_devices == 1);
 
     querydata->num_devices_in_reply = rep->num_devices;
     reply_handler = reply_XIQueryDevice_data;
@@ -107,46 +106,46 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
         }
 
         if (querydata->which_device > XIAllMasterDevices)
-            g_assert(info->deviceid == querydata->which_device);
+            assert(info->deviceid == querydata->which_device);
 
-        g_assert(info->deviceid >=  2); /* 0 and 1 is reserved */
+        assert(info->deviceid >=  2); /* 0 and 1 is reserved */
 
 
         switch(info->deviceid)
         {
             case 2:  /* VCP */
                 dev = devices.vcp;
-                g_assert(info->use == XIMasterPointer);
-                g_assert(info->attachment == devices.vck->id);
-                g_assert(info->num_classes == 3); /* 2 axes + button */
+                assert(info->use == XIMasterPointer);
+                assert(info->attachment == devices.vck->id);
+                assert(info->num_classes == 3); /* 2 axes + button */
                 break;
             case 3:  /* VCK */
                 dev = devices.vck;
-                g_assert(info->use == XIMasterKeyboard);
-                g_assert(info->attachment == devices.vcp->id);
-                g_assert(info->num_classes == 1);
+                assert(info->use == XIMasterKeyboard);
+                assert(info->attachment == devices.vcp->id);
+                assert(info->num_classes == 1);
                 break;
             case 4:  /* mouse */
                 dev = devices.mouse;
-                g_assert(info->use == XISlavePointer);
-                g_assert(info->attachment == devices.vcp->id);
-                g_assert(info->num_classes == 3); /* 2 axes + button */
+                assert(info->use == XISlavePointer);
+                assert(info->attachment == devices.vcp->id);
+                assert(info->num_classes == 3); /* 2 axes + button */
                 break;
             case 5:  /* keyboard */
                 dev = devices.kbd;
-                g_assert(info->use == XISlaveKeyboard);
-                g_assert(info->attachment == devices.vck->id);
-                g_assert(info->num_classes == 1);
+                assert(info->use == XISlaveKeyboard);
+                assert(info->attachment == devices.vck->id);
+                assert(info->num_classes == 1);
                 break;
 
             default:
                 /* We shouldn't get here */
-                g_assert(0);
+                assert(0);
                 break;
         }
-        g_assert(info->enabled == dev->enabled);
-        g_assert(info->name_len == strlen(dev->name));
-        g_assert(strncmp((char*)&info[1], dev->name, info->name_len) == 0);
+        assert(info->enabled == dev->enabled);
+        assert(info->name_len == strlen(dev->name));
+        assert(strncmp((char*)&info[1], dev->name, info->name_len) == 0);
 
         any = (xXIAnyInfo*)((char*)&info[1] + ((info->name_len + 3)/4) * 4);
         for (j = 0; j < info->num_classes; j++)
@@ -171,9 +170,9 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                         if (client->swapped)
                             swaps(&ki->num_keycodes, n);
 
-                        g_assert(any->type == XIKeyClass);
-                        g_assert(ki->num_keycodes == (xkb->max_key_code - xkb->min_key_code + 1));
-                        g_assert(any->length == (2 + ki->num_keycodes));
+                        assert(any->type == XIKeyClass);
+                        assert(ki->num_keycodes == (xkb->max_key_code - xkb->min_key_code + 1));
+                        assert(any->length == (2 + ki->num_keycodes));
 
                         kc = (uint32_t*)&ki[1];
                         for (k = 0; k < ki->num_keycodes; k++, kc++)
@@ -181,15 +180,15 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                             if (client->swapped)
                                 swapl(kc, n);
 
-                            g_assert(*kc >= xkb->min_key_code);
-                            g_assert(*kc <= xkb->max_key_code);
+                            assert(*kc >= xkb->min_key_code);
+                            assert(*kc <= xkb->max_key_code);
                         }
                         break;
                     }
                 case 2: /* VCP and mouse have the same properties */
                 case 4:
                     {
-                        g_assert(any->type == XIButtonClass ||
+                        assert(any->type == XIButtonClass ||
                                 any->type == XIValuatorClass);
 
                         if (any->type == XIButtonClass)
@@ -200,10 +199,10 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                             if (client->swapped)
                                 swaps(&bi->num_buttons, n);
 
-                            g_assert(bi->num_buttons == devices.vcp->button->numButtons);
+                            assert(bi->num_buttons == devices.vcp->button->numButtons);
 
                             len = 2 + bi->num_buttons + bytes_to_int32(bits_to_bytes(bi->num_buttons));
-                            g_assert(bi->length == len);
+                            assert(bi->length == len);
                         } else if (any->type == XIValuatorClass)
                         {
                             xXIValuatorInfo *vi = (xXIValuatorInfo*)any;
@@ -219,17 +218,17 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                                 swapl(&vi->resolution, n);
                             }
 
-                            g_assert(vi->length == 11);
-                            g_assert(vi->number == 0 ||
+                            assert(vi->length == 11);
+                            assert(vi->number == 0 ||
                                      vi->number == 1);
-                            g_assert(vi->mode == XIModeRelative);
+                            assert(vi->mode == XIModeRelative);
                             /* device was set up as relative, so standard
                              * values here. */
-                            g_assert(vi->min.integral == -1);
-                            g_assert(vi->min.frac == 0);
-                            g_assert(vi->max.integral == -1);
-                            g_assert(vi->max.frac == 0);
-                            g_assert(vi->resolution == 0);
+                            assert(vi->min.integral == -1);
+                            assert(vi->min.frac == 0);
+                            assert(vi->max.integral == -1);
+                            assert(vi->max.frac == 0);
+                            assert(vi->resolution == 0);
                         }
                     }
                     break;
@@ -257,10 +256,10 @@ static void request_XIQueryDevice(struct test_data *querydata,
 
     request.deviceid = deviceid;
     rc = ProcXIQueryDevice(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc != Success)
-        g_assert(client.errorValue == deviceid);
+        assert(client.errorValue == deviceid);
 
     reply_handler = reply_XIQueryDevice;
 
@@ -268,10 +267,10 @@ static void request_XIQueryDevice(struct test_data *querydata,
     swaps(&request.length, n);
     swaps(&request.deviceid, n);
     rc = SProcXIQueryDevice(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc != Success)
-        g_assert(client.errorValue == deviceid);
+        assert(client.errorValue == deviceid);
 }
 
 static void test_XIQueryDevice(void)
@@ -284,16 +283,16 @@ static void test_XIQueryDevice(void)
     userdata = &data;
     request_init(&request, XIQueryDevice);
 
-    g_test_message("Testing XIAllDevices.");
+    printf("Testing XIAllDevices.\n");
     request_XIQueryDevice(&data, XIAllDevices, Success);
-    g_test_message("Testing XIAllMasterDevices.");
+    printf("Testing XIAllMasterDevices.\n");
     request_XIQueryDevice(&data, XIAllMasterDevices, Success);
 
-    g_test_message("Testing existing device ids.");
+    printf("Testing existing device ids.\n");
     for (i = 2; i < 6; i++)
         request_XIQueryDevice(&data, i, Success);
 
-    g_test_message("Testing non-existing device ids.");
+    printf("Testing non-existing device ids.\n");
     for (i = 6; i <= 0xFFFF; i++)
         request_XIQueryDevice(&data, i, BadDevice);
 
@@ -304,13 +303,10 @@ static void test_XIQueryDevice(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
 
-    g_test_add_func("/dix/xi2protocol/XIQueryDevice", test_XIQueryDevice);
+    test_XIQueryDevice();
 
-    return g_test_run();
+    return 0;
 }
 

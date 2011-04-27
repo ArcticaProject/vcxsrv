@@ -7,7 +7,7 @@
       <configItem>
         <name>apl</name>
         <_shortDescription>APL</_shortDescription>
-        <_description>APL</_description>
+        <_description>APL Keyboard Symbols</_description>
         <languageList><iso639Id>eng</iso639Id></languageList>
       </configItem>
       <variantList/>
@@ -40,7 +40,7 @@
       <configItem>
         <name>ir</name>
         <_shortDescription>Iran</_shortDescription>
-        <_description>Iran</_description>
+        <_description>Persian</_description>
         <languageList><iso639Id>per</iso639Id></languageList>
       </configItem>
       <variantList>
@@ -88,13 +88,13 @@
         <variant>
           <configItem>
             <name>ykeydvorak</name>
-            <_description>Latvian (US Dvorak, Y-letter variant)</_description>
+            <_description>Latvian (US Dvorak, Y variant)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>minuskeydvorak</name>
-            <_description>Latvian (US Dvorak, minus-letter variant)</_description>
+            <_description>Latvian (US Dvorak, minus variant)</_description>
           </configItem>
         </variant>
         <variant>
@@ -106,13 +106,13 @@
         <variant>
           <configItem>
             <name>ykeydvorakprogr</name>
-            <_description>Latvian (programmer US Dvorak, Y-letter variant)</_description>
+            <_description>Latvian (programmer US Dvorak, Y variant)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>minuskeydvorakprogr</name>
-	    <_description>Latvian (programmer US Dvorak - minus-letter variant)</_description>
+	    <_description>Latvian (programmer US Dvorak, minus variant)</_description>
           </configItem>
         </variant>
         <variant>
@@ -132,15 +132,15 @@
     <layout>
       <configItem>
         <name>us</name>
-        <_shortDescription>USA</_shortDescription>
-        <_description>USA</_description>
+        <_shortDescription>en</_shortDescription>
+        <_description>English (US)</_description>
         <languageList><iso639Id>eng</iso639Id></languageList>
       </configItem>
       <variantList>
         <variant>
           <configItem>
             <name>intl-unicode</name>
-            <_description>English (US, international (AltGr Unicode combining)</_description>
+            <_description>English (US, international AltGr Unicode combining)</_description>
           </configItem>
         </variant>
         <variant>
@@ -185,7 +185,7 @@
       <configItem>
         <name>rs</name>
         <_shortDescription>Srb</_shortDescription>
-        <_description>Serbia</_description>
+        <_description>Serbian</_description>
         <languageList><iso639Id>srp</iso639Id></languageList>
       </configItem>
       <variantList>

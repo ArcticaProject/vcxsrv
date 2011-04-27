@@ -1636,6 +1636,7 @@ yes)
 		PKG_CHECK_MODULES([WAYLAND], [wayland-client wayland-server],, \
 				  [AC_MSG_ERROR([cannot find libwayland-client])])
 		WAYLAND_EGL_LIB_DEPS="$WAYLAND_LIBS $LIBDRM_LIBS"
+                GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/wayland"
 	fi
     done
     EGL_PLATFORMS="$egl_platforms"
@@ -1687,9 +1688,14 @@ dnl Gallium LLVM
 dnl
 AC_ARG_ENABLE([gallium-llvm],
     [AS_HELP_STRING([--enable-gallium-llvm],
-        [build gallium LLVM support @<:@default=disabled@:>@])],
+        [build gallium LLVM support @<:@default=enabled on x86/x86_64@:>@])],
     [enable_gallium_llvm="$enableval"],
     [enable_gallium_llvm=auto])
+if test "x$enable_gallium_llvm" = xauto; then
+    case "$host_cpu" in
+    i*86|x86_64) enable_gallium_llvm=yes;;
+    esac
+fi
 if test "x$enable_gallium_llvm" = xyes; then
     if test "x$LLVM_CONFIG" != xno; then
 	LLVM_VERSION=`$LLVM_CONFIG --version`
@@ -1773,16 +1779,22 @@ fi
 dnl
 dnl Gallium Radeon r300g configuration
 dnl
-AC_ARG_ENABLE([gallium-radeon],
-    [AS_HELP_STRING([--enable-gallium-radeon],
-        [build gallium radeon @<:@default=disabled@:>@])],
-    [enable_gallium_radeon="$enableval"],
-    [enable_gallium_radeon=auto])
-if test "x$enable_gallium_radeon" = xauto; then
+AC_ARG_ENABLE([gallium-r300],
+    [AS_HELP_STRING([--enable-gallium-r300],
+        [build gallium r300 @<:@default=build DRI driver only@:>@])],
+    [enable_gallium_r300="$enableval"],
+    [enable_gallium_r300=auto])
+if test "x$enable_gallium_r300" != xno; then
+    if test "x$MESA_LLVM" = x0; then
+        case "$host_cpu" in
+        i*86|x86_64) AC_MSG_ERROR([LLVM is required to build Gallium R300 on x86 and x86_64]);;
+        esac
+    fi
+fi
+if test "x$enable_gallium_r300" = xauto; then
     GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS r300"
     gallium_check_st "radeon/drm" "dri-r300"
-fi
-if test "x$enable_gallium_radeon" = xyes; then
+elif test "x$enable_gallium_r300" = xyes; then
     GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS r300"
     gallium_check_st "radeon/drm" "dri-r300" "xorg-radeon"
 fi
@@ -1792,7 +1804,7 @@ dnl Gallium Radeon r600g configuration
 dnl
 AC_ARG_ENABLE([gallium-r600],
     [AS_HELP_STRING([--enable-gallium-r600],
-        [build gallium radeon @<:@default=disabled@:>@])],
+        [build gallium r600 @<:@default=disabled@:>@])],
     [enable_gallium_r600="$enableval"],
     [enable_gallium_r600=auto])
 if test "x$enable_gallium_r600" = xyes; then

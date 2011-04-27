@@ -157,10 +157,9 @@ _XimThaiCreateIC(
     int			 len;
     DefTree             *tree;
 
-    if((ic = (Xic)Xmalloc(sizeof(XicRec))) == (Xic)NULL) {
+    if((ic = Xcalloc(1, sizeof(XicRec))) == (Xic)NULL) {
 	return ((XIC)NULL);
     }
-    bzero((char *)ic,      sizeof(XicRec));
 
     ic->methods = &Thai_ic_methods;
     ic->core.im = im;

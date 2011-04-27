@@ -56,7 +56,6 @@ extern io_connect_t     darwinParamConnect;
 extern int              darwinEventReadFD;
 extern int              darwinEventWriteFD;
 extern DeviceIntPtr     darwinPointer;
-extern DeviceIntPtr     darwinTabletCurrent;
 extern DeviceIntPtr     darwinTabletCursor;
 extern DeviceIntPtr     darwinTabletStylus;
 extern DeviceIntPtr     darwinTabletEraser;

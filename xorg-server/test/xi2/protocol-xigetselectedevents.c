@@ -48,7 +48,6 @@
 #include "exevents.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 
 static void reply_XIGetSelectedEvents(ClientPtr client, int len, char *data, void *userdata);
 static void reply_XIGetSelectedEvents_data(ClientPtr client, int len, char *data, void *userdata);
@@ -100,7 +99,7 @@ static void reply_XIGetSelectedEvents(ClientPtr client, int len, char *data, voi
 
     reply_check_defaults(rep, len, XIGetSelectedEvents);
 
-    g_assert(rep->num_masks == test_data.num_masks_expected);
+    assert(rep->num_masks == test_data.num_masks_expected);
 
     reply_handler = reply_XIGetSelectedEvents_data;
 }
@@ -121,11 +120,11 @@ static void reply_XIGetSelectedEvents_data(ClientPtr client, int len, char *data
             swaps(&mask->mask_len, n);
         }
 
-        g_assert(mask->deviceid < 6);
-        g_assert(mask->mask_len <= (((XI2LASTEVENT + 8)/8) + 3)/4) ;
+        assert(mask->deviceid < 6);
+        assert(mask->mask_len <= (((XI2LASTEVENT + 8)/8) + 3)/4) ;
 
         bitmask = (unsigned char*)&mask[1];
-        g_assert(memcmp(bitmask,
+        assert(memcmp(bitmask,
                     test_data.mask[mask->deviceid],
                     mask->mask_len * 4) == 0);
 
@@ -145,14 +144,14 @@ static void request_XIGetSelectedEvents(xXIGetSelectedEventsReq* req, int error)
     reply_handler = reply_XIGetSelectedEvents;
 
     rc = ProcXIGetSelectedEvents(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     reply_handler = reply_XIGetSelectedEvents;
     client.swapped = TRUE;
     swapl(&req->win, n);
     swaps(&req->length, n);
     rc = SProcXIGetSelectedEvents(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 }
 
 static void test_XIGetSelectedEvents(void)
@@ -165,11 +164,11 @@ static void test_XIGetSelectedEvents(void)
 
     request_init(&request, XIGetSelectedEvents);
 
-    g_test_message("Testing for BadWindow on invalid window.");
+    printf("Testing for BadWindow on invalid window.\n");
     request.win = None;
     request_XIGetSelectedEvents(&request, BadWindow);
 
-    g_test_message("Testing for zero-length (unset) masks.");
+    printf("Testing for zero-length (unset) masks.\n");
     /* No masks set yet */
     test_data.num_masks_expected = 0;
     request.win = ROOT_WINDOW_ID;
@@ -181,7 +180,7 @@ static void test_XIGetSelectedEvents(void)
     memset(test_data.mask, 0,
            sizeof(test_data.mask));
 
-    g_test_message("Testing for valid masks");
+    printf("Testing for valid masks\n");
     memset(&dev, 0, sizeof(dev)); /* dev->id is enough for XISetEventMask */
     request.win = ROOT_WINDOW_ID;
 
@@ -210,7 +209,7 @@ static void test_XIGetSelectedEvents(void)
         }
     }
 
-    g_test_message("Testing removing all masks");
+    printf("Testing removing all masks\n");
     /* Unset all masks one-by-one */
     for (j = MAXDEVICES - 1; j >= 0; j--)
     {
@@ -229,13 +228,10 @@ static void test_XIGetSelectedEvents(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
 
-    g_test_add_func("/xi2/protocol/XIGetSelectedEvents", test_XIGetSelectedEvents);
+    test_XIGetSelectedEvents();
 
-    return g_test_run();
+    return 0;
 }
 

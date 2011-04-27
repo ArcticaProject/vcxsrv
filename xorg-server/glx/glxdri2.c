@@ -184,6 +184,7 @@ __glXdriSwapEvent(ClientPtr client, void *data, int type, CARD64 ust,
 	break;
     default:
 	/* unknown swap completion type */
+	wire.event_type = 0;
 	break;
     }
     wire.drawable = drawable->drawId;

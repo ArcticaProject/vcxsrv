@@ -46,7 +46,6 @@
 #include "xiqueryversion.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 
 extern XExtensionVersion XIVersion;
 
@@ -74,14 +73,14 @@ static void reply_XIQueryVersion(ClientPtr client, int len, char* data, void *us
 
     reply_check_defaults(rep, len, XIQueryVersion);
 
-    g_assert(rep->length == 0);
+    assert(rep->length == 0);
 
     sver = versions->major_server * 1000 + versions->minor_server;
     cver = versions->major_client * 1000 + versions->minor_client;
     ver = rep->major_version * 1000 + rep->minor_version;
 
-    g_assert(ver >= 2000);
-    g_assert((sver > cver) ? ver == cver : ver == sver);
+    assert(ver >= 2000);
+    assert((sver > cver) ? ver == cver : ver == sver);
 }
 
 /**
@@ -115,7 +114,7 @@ static void request_XIQueryVersion(int smaj, int smin, int cmaj, int cmin, int e
     request.major_version = versions.major_client;
     request.minor_version = versions.minor_client;
     rc = ProcXIQueryVersion(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     client.swapped = TRUE;
 
@@ -124,7 +123,7 @@ static void request_XIQueryVersion(int smaj, int smin, int cmaj, int cmin, int e
     swaps(&request.minor_version, n);
 
     rc = SProcXIQueryVersion(&client);
-    g_assert(rc == error);
+    assert(rc == error);
 }
 
 /* Client version less than 2.0 must return BadValue, all other combinations
@@ -133,23 +132,23 @@ static void test_XIQueryVersion(void)
 {
     reply_handler = reply_XIQueryVersion;
 
-    g_test_message("Server version 2.0 - client versions [1..3].0");
+    printf("Server version 2.0 - client versions [1..3].0\n");
     /* some simple tests to catch common errors quickly */
     request_XIQueryVersion(2, 0, 1, 0, BadValue);
     request_XIQueryVersion(2, 0, 2, 0, Success);
     request_XIQueryVersion(2, 0, 3, 0, Success);
 
-    g_test_message("Server version 3.0 - client versions [1..3].0");
+    printf("Server version 3.0 - client versions [1..3].0\n");
     request_XIQueryVersion(3, 0, 1, 0, BadValue);
     request_XIQueryVersion(3, 0, 2, 0, Success);
     request_XIQueryVersion(3, 0, 3, 0, Success);
 
-    g_test_message("Server version 2.0 - client versions [1..3].[1..3]");
+    printf("Server version 2.0 - client versions [1..3].[1..3]\n");
     request_XIQueryVersion(2, 0, 1, 1, BadValue);
     request_XIQueryVersion(2, 0, 2, 2, Success);
     request_XIQueryVersion(2, 0, 3, 3, Success);
 
-    g_test_message("Server version 2.2 - client versions [1..3].0");
+    printf("Server version 2.2 - client versions [1..3].0\n");
     request_XIQueryVersion(2, 2, 1, 0, BadValue);
     request_XIQueryVersion(2, 2, 2, 0, Success);
     request_XIQueryVersion(2, 2, 3, 0, Success);
@@ -158,7 +157,7 @@ static void test_XIQueryVersion(void)
     /* this one takes a while */
     unsigned int cmin, cmaj, smin, smaj;
 
-    g_test_message("Testing all combinations.");
+    printf("Testing all combinations.\n");
     for (smaj = 2; smaj <= 0xFFFF; smaj++)
         for (smin = 0; smin <= 0xFFFF; smin++)
             for (cmin = 0; cmin <= 0xFFFF; cmin++)
@@ -175,12 +174,9 @@ static void test_XIQueryVersion(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
 
-    g_test_add_func("/xi2/protocol/XIQueryVersion", test_XIQueryVersion);
+    test_XIQueryVersion();
 
-    return g_test_run();
+    return 0;
 }

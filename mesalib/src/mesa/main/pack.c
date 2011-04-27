@@ -37,7 +37,6 @@
 #include "mtypes.h"
 #include "pack.h"
 #include "pixeltransfer.h"
-#include "imports.h"
 
 
 /**
@@ -3973,7 +3972,8 @@ _mesa_unpack_dudv_span_byte( struct gl_context *ctx,
                              GLbitfield transferOps )
 {
    ASSERT(dstFormat == GL_DUDV_ATI);
-   ASSERT(srcFormat == GL_DUDV_ATI);
+   ASSERT(srcFormat == GL_DUDV_ATI ||
+	  srcFormat == GL_DU8DV8_ATI);
 
    ASSERT(srcType == GL_UNSIGNED_BYTE ||
           srcType == GL_BYTE ||

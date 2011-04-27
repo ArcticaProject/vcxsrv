@@ -226,12 +226,10 @@ _XDefaultOpenIM(
     local_impart->ctow_conv = ctow_conv;
 
     if ((res_name != NULL) && (*res_name != '\0')){
-	im->core.res_name  = (char *)Xmalloc(strlen(res_name)+1);
-	strcpy(im->core.res_name,res_name);
+	im->core.res_name  = strdup(res_name);
     }
     if ((res_class != NULL) && (*res_class != '\0')){
-	im->core.res_class = (char *)Xmalloc(strlen(res_class)+1);
-	strcpy(im->core.res_class,res_class);
+	im->core.res_class = strdup(res_class);
     }
 
     return (XIM)im;

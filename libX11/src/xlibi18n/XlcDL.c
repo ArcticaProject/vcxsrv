@@ -86,16 +86,6 @@ Sun Microsystems, Inc. or its licensors is granted.
 #include "XlcPublic.h"
 #include "XlcPubI.h"
 
-#if defined(_LP64)  && defined(__sparcv9)
-# define	_MACH64_NAME		"sparcv9"
-#else
-# undef _MACH64_NAME
-#endif /* defined(_LP64)  && defined(__sparcv9) */
-
-#ifdef _MACH64_NAME
-#  define	_MACH64_NAME_LEN	(sizeof (_MACH64_NAME) - 1)
-#endif
-
 #define XI18N_DLREL		2
 
 #define	iscomment(ch)	((ch) == '\0' || (ch) == '#')
@@ -269,35 +259,6 @@ __lc_path(const char *dl_name, const char *lc_dir)
     if (strstr (dl_name, "../"))
 	return NULL;
 
-#if defined (_LP64) && defined (_MACH64_NAME)
-    len = (lc_dir ? strlen(lc_dir) : 0 ) +
-	(dl_name ? strlen(dl_name) : 0) + _MACH64_NAME_LEN + 10;
-    path = Xmalloc(len + 1);
-
-    if (strchr(dl_name, '/') != NULL) {
-	char *tmp = strdup(dl_name);
-	char *dl_dir, *dl_file;
-	char *slash_p;
-	slash_p = strchr(tmp, '/');
-	*slash_p = '\0';
-	dl_dir = tmp;
-	dl_file = ++slash_p;
-
-	slash_p = strrchr(lc_dir, '/');
-	*slash_p = '\0';
-	strcpy(path, lc_dir); strcat(path, "/");
-	strcat(path, dl_dir); strcat(path, "/");
-	strcat(path, _MACH64_NAME); strcat(path, "/");
-	strcat(path, dl_file); strcat(path, ".so.2");
-
-	*slash_p = '/';
-	Xfree(tmp);
-    } else {
-	strcpy(path, lc_dir); strcat(path, "/");
-	strcat(path, _MACH64_NAME); strcat(path, "/");
-	strcat(path, dl_name); strcat(path, ".so.2");
-    }
-#else
     len = (lc_dir ? strlen(lc_dir) : 0 ) +
 	(dl_name ? strlen(dl_name) : 0) + 10;
 #if defined POSTLOCALELIBDIR
@@ -322,7 +283,6 @@ __lc_path(const char *dl_name, const char *lc_dir)
 #endif
 	strcat(path, dl_name); strcat(path, ".so.2");
     }
-#endif
     return path;
 }
 

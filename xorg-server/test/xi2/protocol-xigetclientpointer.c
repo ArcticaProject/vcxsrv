@@ -39,7 +39,6 @@
 #include "exevents.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 
 struct {
     int cp_is_set;
@@ -79,9 +78,9 @@ static void reply_XIGetClientPointer(ClientPtr client, int len, char *data, void
 
     reply_check_defaults(rep, len, XIGetClientPointer);
 
-    g_assert(rep->set == test_data.cp_is_set);
+    assert(rep->set == test_data.cp_is_set);
     if (rep->set)
-        g_assert(rep->deviceid == test_data.dev->id);
+        assert(rep->deviceid == test_data.dev->id);
 }
 
 static void request_XIGetClientPointer(ClientPtr client, xXIGetClientPointerReq* req, int error)
@@ -92,19 +91,19 @@ static void request_XIGetClientPointer(ClientPtr client, xXIGetClientPointerReq*
     test_data.win = req->win;
 
     rc = ProcXIGetClientPointer(&client_request);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc == BadWindow)
-        g_assert(client_request.errorValue == req->win);
+        assert(client_request.errorValue == req->win);
 
     client_request.swapped = TRUE;
     swapl(&req->win, n);
     swaps(&req->length, n);
     rc = SProcXIGetClientPointer(&client_request);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc == BadWindow)
-        g_assert(client_request.errorValue == req->win);
+        assert(client_request.errorValue == req->win);
 
 }
 
@@ -121,21 +120,21 @@ static void test_XIGetClientPointer(void)
 
     client_request = init_client(request.length, &request);
 
-    g_test_message("Testing invalid window");
+    printf("Testing invalid window\n");
     request.win = INVALID_WINDOW_ID;
     request_XIGetClientPointer(&client_request, &request, BadWindow);
 
     test_data.cp_is_set = FALSE;
 
-    g_test_message("Testing window None, unset ClientPointer.");
+    printf("Testing window None, unset ClientPointer.\n");
     request.win = None;
     request_XIGetClientPointer(&client_request, &request, Success);
 
-    g_test_message("Testing valid window, unset ClientPointer.");
+    printf("Testing valid window, unset ClientPointer.\n");
     request.win = CLIENT_WINDOW_ID;
     request_XIGetClientPointer(&client_request, &request, Success);
 
-    g_test_message("Testing valid window, set ClientPointer.");
+    printf("Testing valid window, set ClientPointer.\n");
     client_window.clientPtr = devices.vcp;
     test_data.dev = devices.vcp;
     test_data.cp_is_set = TRUE;
@@ -144,7 +143,7 @@ static void test_XIGetClientPointer(void)
 
     client_window.clientPtr = NULL;
 
-    g_test_message("Testing window None, set ClientPointer.");
+    printf("Testing window None, set ClientPointer.\n");
     client_request.clientPtr = devices.vcp;
     test_data.dev = devices.vcp;
     test_data.cp_is_set = TRUE;
@@ -154,14 +153,10 @@ static void test_XIGetClientPointer(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
     client_window = init_client(0, NULL);
 
+    test_XIGetClientPointer();
 
-    g_test_add_func("/xi2/protocol/XIGetClientPointer", test_XIGetClientPointer);
-
-    return g_test_run();
+    return 0;
 }

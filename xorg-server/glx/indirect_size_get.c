@@ -51,7 +51,7 @@
 #    define FASTCALL
 #  endif
 
-#  if defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590)) && defined(__ELF__)
+#  if (defined(__GNUC__) && !defined(__CYGWIN__) && !defined(__MINGW32__)) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590) && defined(__ELF__))
 #    define INTERNAL  __attribute__((visibility("internal")))
 #  else
 #    define INTERNAL
@@ -604,6 +604,7 @@ __glGetBooleanv_size( GLenum e )
         case GL_OCCLUSION_TEST_HP:
         case GL_OCCLUSION_TEST_RESULT_HP:
         case GL_LIGHT_MODEL_COLOR_CONTROL:
+        case GL_RESET_NOTIFICATION_STRATEGY_ARB:
         case GL_CURRENT_FOG_COORD:
         case GL_FOG_COORDINATE_ARRAY_TYPE:
         case GL_FOG_COORDINATE_ARRAY_STRIDE:

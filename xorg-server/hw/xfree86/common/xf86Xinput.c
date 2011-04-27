@@ -1013,7 +1013,6 @@ xf86PostMotionEventM(DeviceIntPtr	device,
                      const ValuatorMask	*mask)
 {
     int i = 0, nevents = 0;
-    DeviceEvent *event;
     int flags = 0;
 
     if (valuator_mask_num_valuators(mask) > 0)
@@ -1054,7 +1053,6 @@ xf86PostMotionEventM(DeviceIntPtr	device,
     nevents = GetPointerEvents(xf86Events, device, MotionNotify, 0, flags, mask);
 
     for (i = 0; i < nevents; i++) {
-        event = (DeviceEvent*)((xf86Events + i)->event);
         mieqEnqueue(device, (InternalEvent*)((xf86Events + i)->event));
     }
 }
@@ -1252,16 +1250,9 @@ xf86PostKeyEventM(DeviceIntPtr	device,
     }
 #endif
 
-    if (is_absolute) {
-        nevents = GetKeyboardValuatorEvents(xf86Events, device,
-                                            is_down ? KeyPress : KeyRelease,
-                                            key_code, mask);
-    }
-    else {
-        nevents = GetKeyboardEvents(xf86Events, device,
-                                    is_down ? KeyPress : KeyRelease,
-                                    key_code);
-    }
+    nevents = GetKeyboardEvents(xf86Events, device,
+                                is_down ? KeyPress : KeyRelease,
+                                key_code, mask);
 
     for (i = 0; i < nevents; i++)
         mieqEnqueue(device, (InternalEvent*)((xf86Events + i)->event));

@@ -61,6 +61,7 @@ in this Software without prior written authorization from The Open Group.
 #include <unistd.h>
 #include <pthread.h>
 #include <errno.h>
+#include <time.h>
 
 #include <IOKit/hidsystem/IOLLEvent.h>
 
@@ -93,7 +94,7 @@ static pthread_mutex_t mieq_lock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mieq_ready_cond = PTHREAD_COND_INITIALIZER;
 
 /*** Pthread Magics ***/
-static pthread_t create_thread(void *func, void *arg) {
+static pthread_t create_thread(void *(*func)(void *), void *arg) {
     pthread_attr_t attr;
     pthread_t tid;
 
@@ -304,7 +305,28 @@ void DarwinListenOnOpenFD(int fd) {
     pthread_mutex_unlock(&fd_add_lock);
 }
 
-static void DarwinProcessFDAdditionQueue_thread(void *args) {
+static void *DarwinProcessFDAdditionQueue_thread(void *args) {
+    /* TODO: Possibly adjust this to no longer be a race... maybe trigger this
+     *       once a client connects and claims to be the WM.
+     *
+     * From ajax:
+     * There's already an internal callback chain for setting selection [in 1.5]
+     * ownership.  See the CallSelectionCallback at the bottom of
+     * ProcSetSelectionOwner, and xfixes/select.c for an example of how to hook
+     * into it.
+     */
+
+    struct timespec sleep_for;
+    struct timespec sleep_remaining;
+
+    sleep_for.tv_sec = 3;
+    sleep_for.tv_nsec = 0;
+
+    ErrorF("X11.app: DarwinProcessFDAdditionQueue_thread: Sleeping to allow xinitrc to catchup.\n");
+    while(nanosleep(&sleep_for, &sleep_remaining) != 0) {
+        sleep_for = sleep_remaining;
+    }
+
     pthread_mutex_lock(&fd_add_lock);
     while(true) {
         while(fd_add_count) {
@@ -312,6 +334,8 @@ static void DarwinProcessFDAdditionQueue_thread(void *args) {
         }
         pthread_cond_wait(&fd_add_ready_cond, &fd_add_lock);
     }
+
+    return NULL;
 }
 
 Bool DarwinEQInit(void) { 
@@ -465,7 +489,7 @@ void DarwinSendPointerEvents(DeviceIntPtr pDev, int ev_type, int ev_button, floa
     DarwinPrepareValuators(pDev, valuators, screen, pointer_x, pointer_y, pressure, tilt_x, tilt_y);
     darwinEvents_lock(); {
         ValuatorMask mask;
-        valuator_mask_set_range(&mask, 0, (pDev == darwinTabletCurrent) ? 5 : 2, valuators);
+        valuator_mask_set_range(&mask, 0, (pDev == darwinPointer) ? 2 : 5, valuators);
         num_events = GetPointerEvents(darwinEvents, pDev, ev_type, ev_button, 
                                       POINTER_ABSOLUTE, &mask);
         for(i=0; i<num_events; i++) mieqEnqueue (pDev, (InternalEvent*)darwinEvents[i].event);
@@ -482,24 +506,24 @@ void DarwinSendKeyboardEvents(int ev_type, int keycode) {
 	}
 
     darwinEvents_lock(); {
-        num_events = GetKeyboardEvents(darwinEvents, darwinKeyboard, ev_type, keycode + MIN_KEYCODE);
+        num_events = GetKeyboardEvents(darwinEvents, darwinKeyboard, ev_type, keycode + MIN_KEYCODE, NULL);
         for(i=0; i<num_events; i++) mieqEnqueue(darwinKeyboard, (InternalEvent*)darwinEvents[i].event);
         if(num_events > 0) DarwinPokeEQ();
     } darwinEvents_unlock();
 }
 
-void DarwinSendProximityEvents(int ev_type, float pointer_x, float pointer_y) {
-	int i, num_events;
+void DarwinSendProximityEvents(DeviceIntPtr pDev, int ev_type, float pointer_x, float pointer_y,  
+                               float pressure, float tilt_x, float tilt_y) {
+    int i, num_events;
     ScreenPtr screen;
-    DeviceIntPtr pDev = darwinTabletCurrent;
     int valuators[5];
 
-	DEBUG_LOG("DarwinSendProximityEvents(%d, %f, %f)\n", ev_type, pointer_x, pointer_y);
+    DEBUG_LOG("DarwinSendProximityEvents: %d l:%f,%f p:%f t:%f,%f\n", ev_type, pointer_x, pointer_y, pressure, tilt_x, tilt_y);
 
-	if(!darwinEvents) {
-		DEBUG_LOG("DarwinSendProximityEvents called before darwinEvents was initialized\n");
-		return;
-	}
+    if(!darwinEvents) {
+        DEBUG_LOG("DarwinSendProximityEvents called before darwinEvents was initialized\n");
+        return;
+    }
     
     screen = miPointerGetScreen(pDev);
     if(!screen) {
@@ -507,7 +531,7 @@ void DarwinSendProximityEvents(int ev_type, float pointer_x, float pointer_y) {
         return;
     }    
 
-    DarwinPrepareValuators(pDev, valuators, screen, pointer_x, pointer_y, 0.0f, 0.0f, 0.0f);
+    DarwinPrepareValuators(pDev, valuators, screen, pointer_x, pointer_y, pressure, tilt_x, tilt_y);
     darwinEvents_lock(); {
         ValuatorMask mask;
         valuator_mask_set_range(&mask, 0, 5, valuators);

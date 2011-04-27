@@ -508,17 +508,6 @@ compUnredirectOneSubwindow (WindowPtr pParent, WindowPtr pWin)
     return Success;
 }
 
-static int
-bgNoneVisitWindow(WindowPtr pWin, void *null)
-{
-    if (pWin->backgroundState != BackgroundPixmap)
-	return WT_WALKCHILDREN;
-    if (pWin->background.pixmap != None)
-	return WT_WALKCHILDREN;
-
-    return WT_STOPWALKING;
-}
-
 static PixmapPtr
 compNewPixmap (WindowPtr pWin, int x, int y, int w, int h, Bool map)
 {
@@ -539,21 +528,6 @@ compNewPixmap (WindowPtr pWin, int x, int y, int w, int h, Bool map)
     if (!map)
 	return pPixmap;
 
-    /*
-     * If there's no bg=None in the tree, we're done.
-     *
-     * We could optimize this more by collection the regions of all the
-     * bg=None subwindows and feeding that in as the clip for the
-     * CopyArea below, but since window trees are shallow these days it
-     * might not be worth the effort.
-     */
-    if (TraverseTree(pWin, bgNoneVisitWindow, NULL) == WT_NOMATCH)
-	return pPixmap;
-
-    /*
-     * Copy bits from the parent into the new pixmap so that it will
-     * have "reasonable" contents in case for background None areas.
-     */
     if (pParent->drawable.depth == pWin->drawable.depth)
     {
 	GCPtr	pGC = GetScratchGC (pWin->drawable.depth, pScreen);

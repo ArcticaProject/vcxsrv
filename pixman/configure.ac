@@ -54,7 +54,7 @@ AC_PREREQ([2.57])
 
 m4_define([pixman_major], 0)
 m4_define([pixman_minor], 21)
-m4_define([pixman_micro], 7)
+m4_define([pixman_micro], 9)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -119,7 +119,7 @@ for w in -Werror -errwarn; do
 		[CFLAGS=$w],
 		[int main(int c, char **v) { (void)c; (void)v; return 0; }],
 		[WERROR=$w; yesno=yes], [yesno=no])
-	AC_MSG_RESULT($_yesno)
+	AC_MSG_RESULT($yesno)
     fi
 done
 
@@ -192,35 +192,43 @@ dnl =========================================================================
 dnl OpenMP for the test suite?
 dnl
 
-# Check for OpenMP support (only supported by autoconf >=2.62)
+# Check for OpenMP support only when autoconf support that (require autoconf >=2.62)
 OPENMP_CFLAGS=
 m4_ifdef([AC_OPENMP], [AC_OPENMP])
 
-m4_define([openmp_test_program],[dnl
-#include <stdio.h>
+if test "x$enable_openmp" = "xyes" && test "x$ac_cv_prog_c_openmp" = "xunsupported" ; then
+  AC_MSG_WARN([OpenMP support requested but found unsupported])
+fi
 
-extern unsigned int lcg_seed;
-#pragma omp threadprivate(lcg_seed)
-unsigned int lcg_seed;
+dnl May not fail to link without -Wall -Werror added
+dnl So try to link only when openmp is supported
+dnl ac_cv_prog_c_openmp is not defined when --disable-openmp is used
+if test "x$ac_cv_prog_c_openmp" != "xunsupported" && test "x$ac_cv_prog_c_openmp" != "x"; then
+  m4_define([openmp_test_program],[dnl
+  #include <stdio.h>
 
-unsigned function(unsigned a, unsigned b)
-{
+  extern unsigned int lcg_seed;
+  #pragma omp threadprivate(lcg_seed)
+  unsigned int lcg_seed;
+
+  unsigned function(unsigned a, unsigned b)
+  {
 	lcg_seed ^= b;
 	return ((a + b) ^ a ) + lcg_seed;
-}
+  }
 
-int main(int argc, char **argv)
-{
+  int main(int argc, char **argv)
+  {
 	int i;
 	int n1 = 0, n2 = argc;
 	unsigned checksum = 0;
 	int verbose = argv != NULL;
 	unsigned (*test_function)(unsigned, unsigned);
 	test_function = function;
-    #pragma omp parallel for reduction(+:checksum) default(none) \
+	#pragma omp parallel for reduction(+:checksum) default(none) \
 					shared(n1, n2, test_function, verbose)
 	for (i = n1; i < n2; i++)
-    	{
+	{
 		unsigned crc = test_function (i, 0);
 		if (verbose)
 			printf ("%d: %08X\n", i, crc);
@@ -228,18 +236,17 @@ int main(int argc, char **argv)
 	}
 	printf("%u\n", checksum);
 	return 0;
-}
-])
+  }
+  ])
 
-PIXMAN_LINK_WITH_ENV(
+  PIXMAN_LINK_WITH_ENV(
 	[CFLAGS="$OPENMP_CFLAGS" LDFLAGS="$OPENMP_CFLAGS"],
 	[openmp_test_program],
 	[have_openmp=yes],
 	[have_openmp=no])
-if test "x$have_openmp" = "xyes"; then
-   AC_DEFINE(USE_OPENMP, 1, [use OpenMP in the test suite])
-else
-   OPENMP_CFLAGS=""
+  if test "x$have_openmp" = "xyes" ; then
+    AC_DEFINE(USE_OPENMP, 1, [use OpenMP in the test suite])
+  fi
 fi
 AC_SUBST(OPENMP_CFLAGS)
 

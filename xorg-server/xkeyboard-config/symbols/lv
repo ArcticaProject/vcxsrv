@@ -452,7 +452,7 @@ xkb_symbols "ykeydvorakprogr" {
 
 	include "lv(dvorakprogr)"
 
-	name[Group1]= "Latvian (programmer US-Dvorak, Y variant)";
+	name[Group1]= "Latvian (programmer US Dvorak, Y variant)";
 
 	key <AD05> {[ISO_Level3_Latch, ISO_Level3_Latch, y, Y]};
 	key <SPCE> {[space, space, y, Y]};

@@ -39,7 +39,6 @@
 #include "exevents.h"
 
 #include "protocol-common.h"
-#include <glib.h>
 
 static int expected_x = SPRITE_X;
 static int expected_y = SPRITE_Y;
@@ -70,8 +69,8 @@ int __wrap_dixLookupWindow(WindowPtr *win, XID id, ClientPtr client, Mask access
 static Bool ScreenSetCursorPosition(DeviceIntPtr dev, ScreenPtr screen,
                                     int x, int y, Bool generateEvent)
 {
-    g_assert(x == expected_x);
-    g_assert(y == expected_y);
+    assert(x == expected_x);
+    assert(y == expected_y);
     return TRUE;
 }
 
@@ -83,12 +82,12 @@ static void request_XIWarpPointer(ClientPtr client, xXIWarpPointerReq* req,
     int rc;
 
     rc = ProcXIWarpPointer(client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc == BadDevice)
-        g_assert(client->errorValue == req->deviceid);
+        assert(client->errorValue == req->deviceid);
     else if (rc == BadWindow)
-        g_assert(client->errorValue == req->dst_win ||
+        assert(client->errorValue == req->dst_win ||
                  client->errorValue == req->src_win);
 
 
@@ -105,12 +104,12 @@ static void request_XIWarpPointer(ClientPtr client, xXIWarpPointerReq* req,
     swaps(&req->deviceid, n);
 
     rc = SProcXIWarpPointer(client);
-    g_assert(rc == error);
+    assert(rc == error);
 
     if (rc == BadDevice)
-        g_assert(client->errorValue == req->deviceid);
+        assert(client->errorValue == req->deviceid);
     else if (rc == BadWindow)
-        g_assert(client->errorValue == req->dst_win ||
+        assert(client->errorValue == req->dst_win ||
                  client->errorValue == req->src_win);
 
     client->swapped = FALSE;
@@ -204,13 +203,10 @@ static void test_XIWarpPointer(void)
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
-
     init_simple();
     screen.SetCursorPosition = ScreenSetCursorPosition;
 
-    g_test_add_func("/xi2/protocol/XIWarpPointer", test_XIWarpPointer);
+    test_XIWarpPointer();
 
-    return g_test_run();
+    return 0;
 }

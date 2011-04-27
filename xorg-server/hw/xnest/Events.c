@@ -108,7 +108,7 @@ xnestQueueKeyEvent(int type, unsigned int keycode)
 
   GetEventList(&xnestEvents);
   lastEventTime = GetTimeInMillis();
-  n = GetKeyboardEvents(xnestEvents, xnestKeyboardDevice, type, keycode);
+  n = GetKeyboardEvents(xnestEvents, xnestKeyboardDevice, type, keycode, NULL);
   for (i = 0; i < n; i++)
     mieqEnqueue(xnestKeyboardDevice, (InternalEvent*)(xnestEvents + i)->event);
 }

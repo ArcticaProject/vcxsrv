@@ -102,6 +102,7 @@ typedef unsigned long Leds;
 typedef struct _OtherClients *OtherClientsPtr;
 typedef struct _InputClients *InputClientsPtr;
 typedef struct _DeviceIntRec *DeviceIntPtr;
+typedef struct _ValuatorClassRec *ValuatorClassPtr;
 typedef struct _ClassesRec *ClassesPtr;
 typedef struct _SpriteRec *SpritePtr;
 typedef union _GrabMask GrabMask;
@@ -300,6 +301,10 @@ extern _X_EXPORT Bool InitButtonClassDeviceStruct(
     Atom* /* labels */,
     CARD8* /*map*/);
 
+extern _X_INTERNAL ValuatorClassPtr AllocValuatorClass(
+    ValuatorClassPtr src,
+    int numAxes);
+
 extern _X_EXPORT Bool InitValuatorClassDeviceStruct(
     DeviceIntPtr /*device*/,
     int /*numAxes*/,
@@ -457,12 +462,6 @@ extern _X_EXPORT int GetPointerEvents(
     const ValuatorMask *mask);
 
 extern _X_EXPORT int GetKeyboardEvents(
-    EventListPtr events,
-    DeviceIntPtr pDev,
-    int type,
-    int key_code);
-
-extern int GetKeyboardValuatorEvents(
     EventListPtr events,
     DeviceIntPtr pDev,
     int type,

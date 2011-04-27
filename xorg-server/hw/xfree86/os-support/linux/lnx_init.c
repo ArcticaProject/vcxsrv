@@ -62,17 +62,21 @@ drain_console(int fd, void *closure)
 static void
 switch_to(int vt, const char *from)
 {
-    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, vt) < 0)
-        FatalError("%s: VT_ACTIVATE failed: %s\n", from, strerror(errno));
+    int ret;
 
-    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, vt) < 0)
-        FatalError("%s: VT_WAITACTIVE failed: %s\n", from, strerror(errno));
+    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_ACTIVATE, vt));
+    if (ret < 0)
+	FatalError("%s: VT_ACTIVATE failed: %s\n", from, strerror(errno));
+
+    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_WAITACTIVE, vt));
+    if (ret < 0)
+	FatalError("%s: VT_WAITACTIVE failed: %s\n", from, strerror(errno));
 }
 
 void
 xf86OpenConsole(void)
 {
-    int i, fd = -1;
+    int i, fd = -1, ret;
     struct vt_mode VT;
     struct vt_stat vts;
     MessageType from = X_PROBED;
@@ -107,17 +111,19 @@ xf86OpenConsole(void)
 
             if (ShareVTs)
             {
-                if (ioctl(fd, VT_GETSTATE, &vts) == 0)
-                    xf86Info.vtno = vts.v_active;
-                else
-                    FatalError("xf86OpenConsole: Cannot find the current"
-                               " VT (%s)\n", strerror(errno));
+		SYSCALL(ret = ioctl(fd, VT_GETSTATE, &vts));
+		if (ret < 0)
+		    FatalError("xf86OpenConsole: Cannot find the current"
+			       " VT (%s)\n", strerror(errno));
+                xf86Info.vtno = vts.v_active;
             } else {
-	        if ((ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
-		    (xf86Info.vtno == -1))
-		    FatalError("xf86OpenConsole: Cannot find a free VT: %s\n",
-                               strerror(errno));
-            }
+		SYSCALL(ret = ioctl(fd, VT_OPENQRY, &xf86Info.vtno));
+		if (ret < 0)
+		    FatalError("xf86OpenConsole: Cannot find a free VT: "
+			       "%s\n", strerror(errno));
+		if (xf86Info.vtno == -1)
+		    FatalError("xf86OpenConsole: Cannot find a free VT\n");
+	    }
 	    close(fd);
 	}
 
@@ -159,7 +165,8 @@ xf86OpenConsole(void)
 	 * Linux doesn't switch to an active vt after the last close of a vt,
 	 * so we do this ourselves by remembering which is active now.
 	 */
-	if (ioctl(xf86Info.consoleFd, VT_GETSTATE, &vts) < 0)
+	SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_GETSTATE, &vts));
+	if (ret < 0)
 	    xf86Msg(X_WARNING,"xf86OpenConsole: VT_GETSTATE failed: %s\n",
 		    strerror(errno));
 	else
@@ -171,7 +178,7 @@ xf86OpenConsole(void)
 	     * Detach from the controlling tty to avoid char loss
 	     */
 	    if ((i = open("/dev/tty",O_RDWR)) >= 0) {
-		ioctl(i, TIOCNOTTY, 0);
+		SYSCALL(ioctl(i, TIOCNOTTY, 0));
 		close(i);
 	    }
 	}
@@ -186,9 +193,10 @@ xf86OpenConsole(void)
 	     */
             switch_to(xf86Info.vtno, "xf86OpenConsole");
 
-	    if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) < 0)
-	        FatalError("xf86OpenConsole: VT_GETMODE failed %s\n",
-		           strerror(errno));
+	    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_GETMODE, &VT));
+	    if (ret < 0)
+		FatalError("xf86OpenConsole: VT_GETMODE failed %s\n",
+			   strerror(errno));
 
 	    signal(SIGUSR1, xf86VTRequest);
 
@@ -196,20 +204,23 @@ xf86OpenConsole(void)
 	    VT.relsig = SIGUSR1;
 	    VT.acqsig = SIGUSR1;
 
-	    if (ioctl(xf86Info.consoleFd, VT_SETMODE, &VT) < 0)
-	        FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed: %s\n",
+	    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_SETMODE, &VT));
+	    if (ret < 0)
+		FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed: %s\n",
 		    strerror(errno));
-	
-	    if (ioctl(xf86Info.consoleFd, KDSETMODE, KD_GRAPHICS) < 0)
-	        FatalError("xf86OpenConsole: KDSETMODE KD_GRAPHICS failed %s\n",
-		           strerror(errno));
+
+	    SYSCALL(ret = ioctl(xf86Info.consoleFd, KDSETMODE, KD_GRAPHICS));
+	    if (ret < 0)
+		FatalError("xf86OpenConsole: KDSETMODE KD_GRAPHICS failed %s\n",
+			   strerror(errno));
 
             tcgetattr(xf86Info.consoleFd, &tty_attr);
-            ioctl(xf86Info.consoleFd, KDGKBMODE, &tty_mode);
+	    SYSCALL(ioctl(xf86Info.consoleFd, KDGKBMODE, &tty_mode));
 
-            if (ioctl(xf86Info.consoleFd, KDSKBMODE, K_RAW) < 0)
-                FatalError("xf86OpenConsole: KDSKBMODE K_RAW failed %s\n",
-                        strerror(errno));
+	    SYSCALL(ret = ioctl(xf86Info.consoleFd, KDSKBMODE, K_RAW));
+	    if (ret < 0)
+		FatalError("xf86OpenConsole: KDSKBMODE K_RAW failed %s\n",
+			strerror(errno));
 
             nTty = tty_attr;
             nTty.c_iflag = (IGNPAR | IGNBRK) & (~PARMRK) & (~ISTRIP);
@@ -241,6 +252,7 @@ void
 xf86CloseConsole(void)
 {
     struct vt_mode   VT;
+    int ret;
 
     if (ShareVTs) {
         close(xf86Info.consoleFd);
@@ -253,20 +265,23 @@ xf86CloseConsole(void)
     };
 
     /* Back to text mode ... */
-    if (ioctl(xf86Info.consoleFd, KDSETMODE, KD_TEXT) < 0)
+    SYSCALL(ret = ioctl(xf86Info.consoleFd, KDSETMODE, KD_TEXT));
+    if (ret < 0)
 	xf86Msg(X_WARNING, "xf86CloseConsole: KDSETMODE failed: %s\n",
 		strerror(errno));
 
-    ioctl(xf86Info.consoleFd, KDSKBMODE, tty_mode);
+    SYSCALL(ioctl(xf86Info.consoleFd, KDSKBMODE, tty_mode));
     tcsetattr(xf86Info.consoleFd, TCSANOW, &tty_attr);
 
-    if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) < 0) 
+    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_GETMODE, &VT));
+    if (ret < 0)
 	xf86Msg(X_WARNING, "xf86CloseConsole: VT_GETMODE failed: %s\n",
 		strerror(errno));
     else {
 	/* set dflt vt handling */
 	VT.mode = VT_AUTO;
-	if (ioctl(xf86Info.consoleFd, VT_SETMODE, &VT) < 0) 
+	SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_SETMODE, &VT));
+	if (ret < 0)
 	    xf86Msg(X_WARNING, "xf86CloseConsole: VT_SETMODE failed: %s\n",
 		    strerror(errno));
     }

@@ -28,7 +28,7 @@
 #include <X11/Xlib.h>
 #include <list.h>
 #include <string.h>
-#include <glib.h>
+#include <assert.h>
 
 struct parent {
     int a;
@@ -56,10 +56,10 @@ test_list_init(void)
     list_init(&parent.children);
 
     /* test we haven't touched anything else. */
-    g_assert(parent.a == tmp.a);
-    g_assert(parent.b == tmp.b);
+    assert(parent.a == tmp.a);
+    assert(parent.b == tmp.b);
 
-    g_assert(list_is_empty(&parent.children));
+    assert(list_is_empty(&parent.children));
 }
 
 static void
@@ -72,19 +72,19 @@ test_list_add(void)
     list_init(&parent.children);
 
     list_add(&child[0].node, &parent.children);
-    g_assert(!list_is_empty(&parent.children));
+    assert(!list_is_empty(&parent.children));
 
     c = list_first_entry(&parent.children, struct child, node);
-    g_assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
+    assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
 
     /* note: list_add prepends */
     list_add(&child[1].node, &parent.children);
     c = list_first_entry(&parent.children, struct child, node);
-    g_assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
+    assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
 
     list_add(&child[2].node, &parent.children);
     c = list_first_entry(&parent.children, struct child, node);
-    g_assert(memcmp(c, &child[2], sizeof(struct child)) == 0);
+    assert(memcmp(c, &child[2], sizeof(struct child)) == 0);
 };
 
 static void
@@ -97,40 +97,40 @@ test_list_del(void)
     list_init(&parent.children);
 
     list_add(&child[0].node, &parent.children);
-    g_assert(!list_is_empty(&parent.children));
+    assert(!list_is_empty(&parent.children));
 
     list_del(&parent.children);
-    g_assert(list_is_empty(&parent.children));
+    assert(list_is_empty(&parent.children));
 
     list_add(&child[0].node, &parent.children);
     list_del(&child[0].node);
-    g_assert(list_is_empty(&parent.children));
+    assert(list_is_empty(&parent.children));
 
     list_add(&child[0].node, &parent.children);
     list_add(&child[1].node, &parent.children);
 
     c = list_first_entry(&parent.children, struct child, node);
-    g_assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
+    assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
 
     /* delete first node */
     list_del(&child[1].node);
-    g_assert(!list_is_empty(&parent.children));
-    g_assert(list_is_empty(&child[1].node));
+    assert(!list_is_empty(&parent.children));
+    assert(list_is_empty(&child[1].node));
     c = list_first_entry(&parent.children, struct child, node);
-    g_assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
+    assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
 
     /* delete last node */
     list_add(&child[1].node, &parent.children);
     list_del(&child[0].node);
     c = list_first_entry(&parent.children, struct child, node);
-    g_assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
+    assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
 
     /* delete list head */
     list_add(&child[0].node, &parent.children);
     list_del(&parent.children);
-    g_assert(list_is_empty(&parent.children));
-    g_assert(!list_is_empty(&child[1].node));
-    g_assert(!list_is_empty(&child[2].node));
+    assert(list_is_empty(&parent.children));
+    assert(!list_is_empty(&child[1].node));
+    assert(!list_is_empty(&child[2].node));
 }
 
 static void
@@ -148,29 +148,26 @@ test_list_for_each(void)
     list_add(&child[0].node, &parent.children);
 
     list_for_each_entry(c, &parent.children, node) {
-        g_assert(memcmp(c, &child[i], sizeof(struct child)) == 0);
+        assert(memcmp(c, &child[i], sizeof(struct child)) == 0);
         i++;
     }
 
     /* foreach on empty list */
     list_del(&parent.children);
-    g_assert(list_is_empty(&parent.children));
+    assert(list_is_empty(&parent.children));
 
     list_for_each_entry(c, &parent.children, node) {
-        g_assert(0); /* we must not get here */
+        assert(0); /* we must not get here */
     }
 }
 
 
 int main(int argc, char** argv)
 {
-    g_test_init(&argc, &argv,NULL);
-    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
+    test_list_init();
+    test_list_add();
+    test_list_del();
+    test_list_for_each();
 
-    g_test_add_func("/list/init", test_list_init);
-    g_test_add_func("/list/add", test_list_add);
-    g_test_add_func("/list/del", test_list_del);
-    g_test_add_func("/list/for_each", test_list_for_each);
-
-    return g_test_run();
+    return 0;
 }

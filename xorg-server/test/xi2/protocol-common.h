@@ -29,6 +29,7 @@
 #include "windowstr.h"
 #include "scrnintstr.h"
 #include "exevents.h"
+#include <assert.h>
 
 #ifndef PROTOCOL_COMMON_H
 #define PROTOCOL_COMMON_H
@@ -38,11 +39,11 @@ extern int BadDevice;
 /* Check default values in a reply */
 #define reply_check_defaults(rep, len, type) \
     { \
-        g_assert((len) >= sz_x##type##Reply); \
-        g_assert((rep)->repType == X_Reply); \
-        g_assert((rep)->RepType == X_##type); \
-        g_assert((rep)->sequenceNumber == CLIENT_SEQUENCE); \
-        g_assert((rep)->length >= (sz_x##type##Reply - 32)/4); \
+        assert((len) >= sz_x##type##Reply); \
+        assert((rep)->repType == X_Reply); \
+        assert((rep)->RepType == X_##type); \
+        assert((rep)->sequenceNumber == CLIENT_SEQUENCE); \
+        assert((rep)->length >= (sz_x##type##Reply - 32)/4); \
     }
 
 /* initialise default values for request */

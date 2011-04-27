@@ -210,10 +210,9 @@ ExpandQuarkTable(void)
 #endif
 	newmask = 0x1ff;
     }
-    entries = (Entry *)Xmalloc(sizeof(Entry) * (newmask + 1));
+    entries = Xcalloc(newmask + 1, sizeof(Entry));
     if (!entries)
 	return False;
-    bzero((char *)entries, sizeof(Entry) * (newmask + 1));
     quarkTable = entries;
     quarkMask = newmask;
     quarkRehash = quarkMask - 2;

@@ -453,8 +453,8 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
         if (block)
             dmxSigioBlock();
         GetEventList(&events);
-        nevents = GetKeyboardValuatorEvents(events, pDevice, event,
-                                            ke->keycode, &mask);
+        nevents = GetKeyboardEvents(events, pDevice, event,
+                                    ke->keycode, &mask);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
 
@@ -685,7 +685,7 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
 
         GetEventList(&events);
         /*ErrorF("KEY %d  sym %d\n", detail, (int) keySym);*/
-        nevents = GetKeyboardEvents(events, p, type, detail);
+        nevents = GetKeyboardEvents(events, p, type, detail, NULL);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(p, (InternalEvent*)(events + i)->event);
         return;

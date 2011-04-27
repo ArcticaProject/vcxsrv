@@ -511,7 +511,7 @@ SReplyIDispatch(ClientPtr client, int len, xGrabDeviceReply * rep)
         SRepXIQueryDevice(client, len, (xXIQueryDeviceReply*)rep);
     else if (rep->RepType == X_XIGrabDevice)
 	SRepXIGrabDevice(client, len, (xXIGrabDeviceReply *) rep);
-    else if (rep->RepType == X_XIGrabDevice)
+    else if (rep->RepType == X_XIPassiveGrabDevice)
 	SRepXIPassiveGrabDevice(client, len, (xXIPassiveGrabDeviceReply *) rep);
     else if (rep->RepType == X_XIListProperties)
 	SRepXIListProperties(client, len, (xXIListPropertiesReply *) rep);

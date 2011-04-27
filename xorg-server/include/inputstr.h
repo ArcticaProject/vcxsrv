@@ -283,7 +283,7 @@ typedef struct _ValuatorClassRec {
     unsigned short	  numAxes;
     double		  *axisVal; /* always absolute, but device-coord system */
     ValuatorAccelerationRec	accelScheme;
-} ValuatorClassRec, *ValuatorClassPtr;
+} ValuatorClassRec;
 
 typedef struct _ButtonClassRec {
     int			sourceid;

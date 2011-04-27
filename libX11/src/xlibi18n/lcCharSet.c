@@ -176,10 +176,9 @@ _XlcCreateDefaultCharSet(
     const char *colon;
     char *tmp;
 
-    charset = (XlcCharSet) Xmalloc(sizeof(XlcCharSetRec));
+    charset = Xcalloc(1, sizeof(XlcCharSetRec));
     if (charset == NULL)
 	return (XlcCharSet) NULL;
-    bzero((char *) charset, sizeof(XlcCharSetRec));
 
     name_len = strlen(name);
     ct_sequence_len = strlen(ct_sequence);

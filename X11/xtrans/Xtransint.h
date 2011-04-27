@@ -307,6 +307,12 @@ typedef struct _Xtransport_table {
 /* Flags to preserve when setting others */
 #define TRANS_KEEPFLAGS	(TRANS_NOUNLINK|TRANS_ABSTRACT)
 
+#ifdef __clang__
+/* Not all clients make use of all provided statics */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#endif
+
 /*
  * readv() and writev() don't exist or don't work correctly on some
  * systems, so they may be emulated.
@@ -355,6 +361,10 @@ static int trans_mkdir (
     const char *,	/* path */
     int			/* mode */
 );
+#endif
+
+#ifdef __clang__
+#pragma clang diagnostic pop
 #endif
 
 /*

@@ -80,15 +80,13 @@ create(
     XLCd lcd;
     XLCdPublicMethods new;
 
-    lcd = (XLCd) Xmalloc(sizeof(XLCdRec));
+    lcd = Xcalloc(1, sizeof(XLCdRec));
     if (lcd == NULL)
         return (XLCd) NULL;
-    bzero((char *) lcd, sizeof(XLCdRec));
 
-    lcd->core = (XLCdCore) Xmalloc(sizeof(XLCdPublicRec));
+    lcd->core = Xcalloc(1, sizeof(XLCdPublicRec));
     if (lcd->core == NULL)
 	goto err;
-    bzero((char *) lcd->core, sizeof(XLCdPublicRec));
 
     new = (XLCdPublicMethods) Xmalloc(sizeof(XLCdPublicMethodsRec));
     if (new == NULL)
@@ -130,10 +128,9 @@ load_public(
 
     _XlcGetResource(lcd, "XLC_XLOCALE", "encoding_name", &values, &num);
     str = (num > 0) ? values[0] : "STRING";
-    pub->encoding_name = (char*) Xmalloc(strlen(str) + 1);
+    pub->encoding_name = strdup(str);
     if (pub->encoding_name == NULL)
 	return False;
-    strcpy(pub->encoding_name, str);
 
     return True;
 }
