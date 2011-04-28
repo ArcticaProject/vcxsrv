@@ -817,10 +817,19 @@ static void __glXReportDamage(__DRIdrawable *driDraw,
 
     __glXenterServer(GL_FALSE);
 
-    RegionInit(&region, (BoxPtr) rects, num_rects);
-    RegionTranslate(&region, pDraw->x, pDraw->y);
-    DamageDamageRegion(pDraw, &region);
-    RegionUninit(&region);
+    if (RegionInitBoxes(&region, (BoxPtr) rects, num_rects)) {
+	RegionTranslate(&region, pDraw->x, pDraw->y);
+	DamageDamageRegion(pDraw, &region);
+	RegionUninit(&region);
+    }
+    else {
+	while (num_rects--) {
+	    RegionInit (&region, (BoxPtr) rects++, 1);
+	    RegionTranslate(&region, pDraw->x, pDraw->y);
+	    DamageDamageRegion(pDraw, &region);
+	    RegionUninit(&region);
+	}
+    }
 
     __glXleaveServer(GL_FALSE);
 }

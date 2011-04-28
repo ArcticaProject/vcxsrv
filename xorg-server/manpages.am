@@ -24,7 +24,7 @@ MAN_SUBSTS += 	-e 's|__logdir__|$(logdir)|g' \
 		-e 's|__sysconfdir__|$(sysconfdir)|g' \
 		-e 's|__xconfigdir__|$(__XCONFIGDIR__)|g' \
 		-e 's|__xkbdir__|$(XKB_BASE_DIRECTORY)|g' \
-		-e 's|__laucnd_id_prefix__|$(LAUNCHD_ID_PREFIX)|g' \
+		-e 's|__laucnd_id_prefix__|$(BUNDLE_ID_PREFIX)|g' \
 		-e 's|__modulepath__|$(DEFAULT_MODULE_PATH)|g' \
 		-e 's|__default_font_path__|$(COMPILEDDEFAULTFONTPATH)|g' \
 		-e '\|$(COMPILEDDEFAULTFONTPATH)| s|/,|/, |g'

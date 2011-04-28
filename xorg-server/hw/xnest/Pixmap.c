@@ -21,7 +21,6 @@ is" without express or implied warranty.
 #include "regionstr.h"
 #include "pixmapstr.h"
 #include "scrnintstr.h"
-#include "regionstr.h"
 #include "gc.h"
 #include "servermd.h"
 #include "privates.h"

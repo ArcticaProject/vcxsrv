@@ -7,11 +7,11 @@
 	<key>CFBundleExecutable</key>
 		<string>X11</string>
 	<key>CFBundleGetInfoString</key>
-		<string>LAUNCHD_ID_PREFIX.X11</string>
+		<string>BUNDLE_ID_PREFIX.X11</string>
 	<key>CFBundleIconFile</key>
 		<string>X11.icns</string>
 	<key>CFBundleIdentifier</key>
-		<string>LAUNCHD_ID_PREFIX.X11</string>
+		<string>BUNDLE_ID_PREFIX.X11</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 	<key>CFBundleName</key>
@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 		<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-		<string>2.6.1</string>
+		<string>2.7.0</string>
 	<key>CFBundleVersion</key>
-		<string>2.6.1</string>
+		<string>2.7.0</string>
 	<key>CFBundleSignature</key>
 		<string>x11a</string>
 	<key>CSResourcesFileMapped</key>

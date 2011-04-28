@@ -133,28 +133,12 @@ static PixmapFormatRec formats[] = {
 };
 const int NUMFORMATS = sizeof(formats)/sizeof(formats[0]);
 
-#ifndef OSNAME
-#define OSNAME " Darwin"
-#endif
-#ifndef OSVENDOR
-#define OSVENDOR ""
-#endif
-#ifndef PRE_RELEASE
-#define PRE_RELEASE XORG_VERSION_SNAP
-#endif
-#ifndef BUILD_DATE
-#define BUILD_DATE ""
-#endif
-#ifndef XORG_RELEASE
-#define XORG_RELEASE "?"
-#endif
-
 void
 DarwinPrintBanner(void)
 { 
-  // this should change depending on which specific server we are building
   ErrorF("Xquartz starting:\n");
-  ErrorF("X.Org X Server %s\nBuild Date: %s\n", XSERVER_VERSION, BUILD_DATE );
+  ErrorF("X.Org X Server %s\n", XSERVER_VERSION);
+  ErrorF("Build Date: %s\n", BUILD_DATE );
 }
 
 
@@ -605,6 +589,13 @@ void OsVendorFatalError( void )
 void OsVendorInit(void)
 {
     if (serverGeneration == 1) {
+        char *lf;
+        char *home = getenv("HOME");
+        assert(home);
+        assert(0 < asprintf(&lf, "%s/Library/Logs/X11.%s.log", home, bundle_id_prefix));
+        LogInit(lf, ".old");
+        free(lf);
+
         DarwinPrintBanner();
 #ifdef ENABLE_DEBUG_LOG
 	{

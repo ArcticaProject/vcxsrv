@@ -1489,7 +1489,7 @@ InvalidHost (
     }
     for (host = validhosts; host; host = host->next)
     {
-	if ((host->family == FamilyServerInterpreted)) {
+	if (host->family == FamilyServerInterpreted) {
 	    if (siAddrMatch (family, addr, len, host, client)) {
 		return 0;
 	    }

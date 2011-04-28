@@ -325,7 +325,7 @@ RootlessGlyphs(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
                 box.x1 = x - glyph->info.x;
                 box.y1 = y - glyph->info.y;
                 box.x2 = box.x1 + glyph->info.width;
-                box.y2 = box.y2 + glyph->info.height;
+                box.y2 = box.y1 + glyph->info.height;
 
                 x += glyph->info.xOff;
                 y += glyph->info.yOff;
@@ -453,7 +453,6 @@ RootlessMarkOverlappedWindows(WindowPtr pWin, WindowPtr pFirst,
                 pChild = pChild->nextSib;
             }
             anyMarked = TRUE;
-            pFirst = pFirst->nextSib;
         }
         if (anyMarked)
             (* MarkWindow)(pWin->parent);

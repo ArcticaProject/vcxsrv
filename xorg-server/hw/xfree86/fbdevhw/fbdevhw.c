@@ -48,7 +48,6 @@ _X_EXPORT XF86ModuleData fbdevhwModuleData = {
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
 
 /* -------------------------------------------------------------------- */
 /* our private data, and two functions to allocate/free this            */

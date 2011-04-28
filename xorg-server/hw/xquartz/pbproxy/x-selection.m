@@ -81,19 +81,19 @@ static struct propdata null_propdata = {NULL, 0, 0};
 
 #ifdef DEBUG
 static void
-dump_prefs (FILE *fp) {
-    fprintf(fp, 
-	    "pbproxy preferences:\n"
-	    "\tactive %u\n"
-	    "\tprimary_on_grab %u\n"
-	    "\tclipboard_to_pasteboard %u\n"
-	    "\tpasteboard_to_primary %u\n"
-	    "\tpasteboard_to_clipboard %u\n",
-	    pbproxy_prefs.active,
-	    pbproxy_prefs.primary_on_grab,
-	    pbproxy_prefs.clipboard_to_pasteboard,
-	    pbproxy_prefs.pasteboard_to_primary,
-	    pbproxy_prefs.pasteboard_to_clipboard);
+dump_prefs() {
+    ErrorF(fp, 
+	   "pbproxy preferences:\n"
+	   "\tactive %u\n"
+	   "\tprimary_on_grab %u\n"
+	   "\tclipboard_to_pasteboard %u\n"
+	   "\tpasteboard_to_primary %u\n"
+	   "\tpasteboard_to_clipboard %u\n",
+	   pbproxy_prefs.active,
+	   pbproxy_prefs.primary_on_grab,
+	   pbproxy_prefs.clipboard_to_pasteboard,
+	   pbproxy_prefs.pasteboard_to_primary,
+	   pbproxy_prefs.pasteboard_to_clipboard);
 }
 #endif
 
@@ -152,7 +152,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	unsigned char *newbuf = NULL;
 	
 #ifdef TEST   
-	printf("bytesleft %lu\n", bytesleft);
+	ErrorF("bytesleft %lu\n", bytesleft);
 #endif
 
 	if (Success != XGetWindowProperty (xpbproxy_dpy, win, property,
@@ -161,24 +161,29 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 					   type, &format, &numitems, 
 					   &bytesleft, &chunk)) 
 	{
-	    DB ("Error while getting window property.\n");
+	    DebugF ("Error while getting window property.\n");
 	    *pdata = null_propdata;
 	    free (buf);
 	    return True;
 	}
 	
 #ifdef TEST
-	printf("format %d numitems %lu bytesleft %lu\n",
+	ErrorF("format %d numitems %lu bytesleft %lu\n",
 	       format, numitems, bytesleft);
 	
-	printf("type %s\n", XGetAtomName (xpbproxy_dpy, *type));
+	ErrorF("type %s\n", XGetAtomName (xpbproxy_dpy, *type));
 #endif
 	
 	/* Format is the number of bits. */
-	chunkbytesize = numitems * (format / 8);
+	if (format == 8)
+	  chunkbytesize = numitems;
+	else if (format == 16)
+	  chunkbytesize = numitems * sizeof(short);
+	else if (format == 32)
+	  chunkbytesize = numitems * sizeof(long);
 
 #ifdef TEST
-	printf("chunkbytesize %zu\n", chunkbytesize);
+	ErrorF("chunkbytesize %zu\n", chunkbytesize);
 #endif
  	newbuflen = buflen + chunkbytesize;
 	if (newbuflen > 0) 
@@ -206,7 +211,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	}
 	
 #ifdef TEST
-	printf("bytesleft %lu\n", bytesleft);
+	ErrorF("bytesleft %lu\n", bytesleft);
 #endif
     } while (bytesleft > 0);
     
@@ -231,13 +236,13 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     if (pdata->format != 32)
     {
-	fprintf(stderr, "Atom list is expected to be formatted as an array of 32bit values.\n");
+	ErrorF("Atom list is expected to be formatted as an array of 32bit values.\n");
 	return None;
     }
 
-    for (i = 0, step = pdata->format >> 3; i < pdata->length; i += step)
+    for (i = 0, step = sizeof(long); i < pdata->length; i += step)
     {
-	a = (Atom)*(uint32_t *)(pdata->data + i);
+	a = (Atom)*(long *)(pdata->data + i);
 
 	if (a == atoms->image_png)
 	{
@@ -260,7 +265,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	    char *type = XGetAtomName(xpbproxy_dpy, a);
 	    if (type)
 	    {
-		DB("Unhandled X11 mime type: %s", type);
+		DebugF("Unhandled X11 mime type: %s", type);
 		XFree(type);
 	    }
 	}
@@ -373,7 +378,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     if (countNow != changeCount)
     {
-        DB ("changed pasteboard!\n");
+        DebugF ("changed pasteboard!\n");
         changeCount = countNow;
         
         if (pbproxy_prefs.pasteboard_to_primary)
@@ -457,9 +462,8 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
             return TRUE;
 
         if(owner != None) {
-            fprintf (stderr, "A clipboard manager using window 0x%lx "
-		     "already owns the clipboard selection.  "
-		     "pbproxy will not sync clipboard to pasteboard.\n", owner);
+            ErrorF("A clipboard manager using window 0x%lx already owns the clipboard selection.  "
+		   "pbproxy will not sync clipboard to pasteboard.\n", owner);
             return FALSE;
         }
         
@@ -486,7 +490,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     TRACE ();
         
-    DB ("e->selection %s\n", XGetAtomName (xpbproxy_dpy, e->selection));
+    DebugF ("e->selection %s\n", XGetAtomName (xpbproxy_dpy, e->selection));
     
     if(e->selection == atoms->clipboard) {
         /* 
@@ -503,7 +507,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
             /* Another CLIPBOARD_MANAGER has set itself as owner.  Disable syncing
              * to avoid a race.
              */
-            fprintf(stderr, "Another clipboard manager was started!  "
+            ErrorF("Another clipboard manager was started!  "
 		    "xpbproxy is disabling syncing with clipboard.\n"); 
             pbproxy_prefs.clipboard_to_pasteboard = NO;
         }
@@ -528,7 +532,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
          * The owner probably died or we are just starting up pbproxy.
          * Set pbproxy's _selection_window as the owner, and continue.
          */
-        DB ("No clipboard owner.\n");
+        DebugF ("No clipboard owner.\n");
         [self copy_completed:atoms->clipboard];
         return;
     } else if (owner == _selection_window) {
@@ -536,7 +540,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
         return;
     }
     
-    DB ("requesting targets\n");
+    DebugF ("requesting targets\n");
     
     request_atom = atoms->targets;
     XConvertSelection (xpbproxy_dpy, atoms->clipboard, atoms->targets,
@@ -576,7 +580,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
      * We are supposed to use an empty event mask, and not propagate
      * the event, according to the ICCCM.
      */
-    DB ("reply->xselection.requestor 0x%lx\n", reply->xselection.requestor);
+    DebugF ("reply->xselection.requestor 0x%lx\n", reply->xselection.requestor);
   
     XSendEvent (xpbproxy_dpy, reply->xselection.requestor, False, 0, reply);
     XFlush (xpbproxy_dpy);
@@ -613,7 +617,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	if ([pbtypes containsObject:NSStringPboardType])
 	{
 	    /* We have a string type that we can convert to UTF8, or Latin-1... */
-	    DB ("NSStringPboardType\n");
+	    DebugF ("NSStringPboardType\n");
 	    list[count] = atoms->utf8_string;
 	    ++count;
 	    list[count] = atoms->string;
@@ -625,17 +629,25 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	/* TODO add the NSPICTPboardType back again, once we have conversion
 	 * functionality in send_image.
 	 */
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // NSPICTPboardType
+#endif
 
 	if ([pbtypes containsObject:NSPICTPboardType] 
 	    || [pbtypes containsObject:NSTIFFPboardType]) 
 	{
 	    /* We can convert a TIFF to a PNG or JPEG. */
-	    DB ("NSTIFFPboardType\n");
+	    DebugF ("NSTIFFPboardType\n");
 	    list[count] = atoms->image_png;
 	    ++count;
 	    list[count] = atoms->image_jpeg;
 	    ++count;
 	} 
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 	if (count)
 	{
@@ -671,7 +683,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	return;
     }
 
-    DB ("pbtypes retainCount after containsObject: %u\n", [pbtypes retainCount]);
+    DebugF ("pbtypes retainCount after containsObject: %u\n", [pbtypes retainCount]);
 
     data = [pb stringForType:NSStringPboardType];
 
@@ -691,19 +703,19 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	length = strlen (bytes);
 	
 	if (length < 50) {
-	    DB ("UTF-8: %s\n", bytes);
-	    DB ("UTF-8 length: %u\n", length); 
+	    DebugF ("UTF-8: %s\n", bytes);
+	    DebugF ("UTF-8 length: %u\n", length); 
 	}
     } 
     else 
     {
-	DB ("Latin-1\n");
+	DebugF ("Latin-1\n");
 	bytes = [data cStringUsingEncoding:NSISOLatin1StringEncoding];
 	/*WARNING: bytes is not NUL-terminated. */
 	length = [data lengthOfBytesUsingEncoding:NSISOLatin1StringEncoding];
     }
 
-    DB ("e->target %s\n", XGetAtomName (xpbproxy_dpy, e->target));
+    DebugF ("e->target %s\n", XGetAtomName (xpbproxy_dpy, e->target));
     
     XChangeProperty (xpbproxy_dpy, e->requestor, e->property, e->target,
 		     8, PropModeReplace, (unsigned char *) bytes, length);
@@ -745,7 +757,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	    {
 		
 		if (8 != textprop.format)
-		    DB ("textprop.format is unexpectedly not 8 - it's %d instead\n",
+		    DebugF ("textprop.format is unexpectedly not 8 - it's %d instead\n",
 			textprop.format);
 
 		XChangeProperty (xpbproxy_dpy, e->requestor, e->property, 
@@ -837,7 +849,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     if (nil == data)
     {
 	[img autorelease];
-	fprintf(stderr, "unable to convert PICT to TIFF!\n");
+	ErrorF("unable to convert PICT to TIFF!\n");
 	return YES;
     }
         
@@ -913,7 +925,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	imagetype = NSJPEGFileType;
     else 
     {
-	fprintf(stderr, "internal failure in xpbproxy!  imagetype being sent isn't PNG or JPEG.\n");
+	ErrorF("internal failure in xpbproxy!  imagetype being sent isn't PNG or JPEG.\n");
     }
 
     pbtypes = [pb types];
@@ -925,7 +937,14 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	    if (NO == [self send_image_tiff_reply:e pasteboard:pb type:imagetype]) 
 	  	return;
 	} 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // NSPICTPboardType
+#endif
      	else if ([pbtypes containsObject:NSPICTPboardType])
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	{
 	    if (NO == [self send_image_pict_reply:e pasteboard:pb type:imagetype]) 
 		return;
@@ -977,7 +996,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     
 
     if (None != e->target)
-	DB ("e->target %s\n", XGetAtomName (xpbproxy_dpy, e->target));
+	DebugF ("e->target %s\n", XGetAtomName (xpbproxy_dpy, e->target));
 
     if (e->target == atoms->targets) 
     {
@@ -1029,15 +1048,15 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     [self release_pending];
  
     if (None == e->property) {
-	DB ("e->property is None.\n");
+	DebugF ("e->property is None.\n");
 	[self copy_completed:e->selection];
 	/* Nothing is selected. */
 	return;
     }
 
 #if 0
-    printf ("e->selection %s\n", XGetAtomName (xpbproxy_dpy, e->selection));
-    printf ("e->property %s\n", XGetAtomName (xpbproxy_dpy, e->property));
+    ErrorF("e->selection %s\n", XGetAtomName (xpbproxy_dpy, e->selection));
+    ErrorF("e->property %s\n", XGetAtomName (xpbproxy_dpy, e->property));
 #endif
 
     if ([self is_incr_type:e]) 
@@ -1046,7 +1065,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	 * This is an INCR-style transfer, which means that we 
 	 * will get the data after a series of PropertyNotify events.
 	 */
-	DB ("is INCR\n");
+	DebugF ("is INCR\n");
 
 	if (get_property (e->requestor, e->property, &pdata, /*Delete*/ True, &type)) 
 	{
@@ -1063,7 +1082,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
       	pending.requestor = e->requestor;
 	pending.selection = e->selection;
 
-	DB ("set pending.requestor to 0x%lx\n", pending.requestor);
+	DebugF ("set pending.requestor to 0x%lx\n", pending.requestor);
     }
     else
     {
@@ -1076,7 +1095,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	/* We have the complete selection data.*/
 	[self handle_selection:e->selection type:type propdata:&pdata];
 	
-	DB ("handled selection with the first notify_event\n");
+	DebugF ("handled selection with the first notify_event\n");
     }
 }
 
@@ -1096,7 +1115,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
 	if (name) 
 	{
-	    DB ("e->atom %s\n", name);
+	    DebugF ("e->atom %s\n", name);
 	    XFree(name);
 	}
 #endif
@@ -1104,7 +1123,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     if (None != pending.requestor && PropertyNewValue == e->state) 
     {
-	DB ("pending.requestor 0x%lx\n", pending.requestor);
+	DebugF ("pending.requestor 0x%lx\n", pending.requestor);
 
 	if (get_property (e->window, e->atom, &pdata, /*Delete*/ True, &type))
         {
@@ -1146,7 +1165,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
         case XFixesSelectionWindowDestroyNotify:
         case XFixesSelectionClientCloseNotify:
         default:
-            fprintf(stderr, "Unhandled XFixesSelectionNotifyEvent: subtype=%d\n", e->subtype);
+            ErrorF("Unhandled XFixesSelectionNotifyEvent: subtype=%d\n", e->subtype);
             break;
     }
 }
@@ -1176,7 +1195,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     if (name)
     {
-	DB ("requesting %s\n", name);
+	DebugF ("requesting %s\n", name);
     }
 #endif
     request_atom = preferred;
@@ -1200,11 +1219,11 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     if (nil == data)
     {
-	DB ("unable to create NSData object!\n");
+	DebugF ("unable to create NSData object!\n");
 	return;
     }
 
-    DB ("data retainCount before NSBitmapImageRep initWithData: %u\n",
+    DebugF ("data retainCount before NSBitmapImageRep initWithData: %u\n",
 	[data retainCount]);
 
     bmimage = [[NSBitmapImageRep alloc] initWithData:data];
@@ -1212,11 +1231,11 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     if (nil == bmimage)
     {
 	[data autorelease];
-	DB ("unable to create NSBitmapImageRep!\n");
+	DebugF ("unable to create NSBitmapImageRep!\n");
 	return;
     }
 
-    DB ("data retainCount after NSBitmapImageRep initWithData: %u\n", 
+    DebugF ("data retainCount after NSBitmapImageRep initWithData: %u\n", 
 	[data retainCount]);
 
     @try 
@@ -1226,13 +1245,13 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     @catch (NSException *e) 
     {
-	DB ("NSTIFFException!\n");
+	DebugF ("NSTIFFException!\n");
 	[data autorelease];
 	[bmimage autorelease];
 	return;
     }
     
-    DB ("bmimage retainCount after TIFFRepresentation %u\n", [bmimage retainCount]);
+    DebugF ("bmimage retainCount after TIFFRepresentation %u\n", [bmimage retainCount]);
 
     pbtypes = [NSArray arrayWithObjects:NSTIFFPboardType, nil];
 
@@ -1246,12 +1265,12 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     [pb declareTypes:pbtypes owner:nil];
     if (YES != [pb setData:tiff forType:NSTIFFPboardType])
     {
-	DB ("writing pasteboard data failed!\n");
+	DebugF ("writing pasteboard data failed!\n");
     }
 
     [data autorelease];
 
-    DB ("bmimage retainCount before release %u\n", [bmimage retainCount]);
+    DebugF ("bmimage retainCount before release %u\n", [bmimage retainCount]);
     [bmimage autorelease];
 }
 
@@ -1279,10 +1298,10 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     [pb declareTypes:pbtypes owner:nil];
     
     if (YES != [pb setString:string forType:NSStringPboardType]) {
-	fprintf(stderr, "pasteboard setString:forType: failed!\n");
+	ErrorF("pasteboard setString:forType: failed!\n");
     }
     [string autorelease];
-    DB ("done handling utf8 string\n");
+    DebugF ("done handling utf8 string\n");
 }
 
 /* This handles the STRING type, which should be in Latin-1. */
@@ -1308,7 +1327,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     [pb declareTypes:pbtypes owner:nil];
     if (YES != [pb setString:string forType:NSStringPboardType]) {
-	fprintf(stderr, "pasteboard setString:forType failed in handle_string!\n");
+	ErrorF("pasteboard setString:forType failed in handle_string!\n");
     }
     [string autorelease];
 }
@@ -1374,7 +1393,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     name = XGetAtomName (xpbproxy_dpy, selection);
     if (name)
     {
-	DB ("copy_completed: %s\n", name);
+	DebugF ("copy_completed: %s\n", name);
 	XFree (name);
     }
 #endif
@@ -1435,10 +1454,10 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     pbproxy_prefs.pasteboard_to_clipboard =  prefs_get_bool(CFSTR("sync_pasteboard_to_clipboard"), pbproxy_prefs.pasteboard_to_clipboard);
 
     /* This is used for debugging. */
-    //dump_prefs(stdout);
+    //dump_prefs();
 
     if(pbproxy_prefs.active && pbproxy_prefs.primary_on_grab && !xpbproxy_have_xfixes) {
-        fprintf(stderr, "Disabling sync_primary_on_select functionality due to missing XFixes extension.\n");
+        ErrorF("Disabling sync_primary_on_select functionality due to missing XFixes extension.\n");
         pbproxy_prefs.primary_on_grab = NO;
     }
 

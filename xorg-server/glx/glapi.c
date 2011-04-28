@@ -78,11 +78,9 @@ static void init_glapi_relocs(void);
 /*@{*/
 #if defined(GLX_USE_TLS)
 
-PUBLIC TLS struct _glapi_table * _glapi_tls_Dispatch
-    __attribute__((tls_model("initial-exec"))) = NULL;
+PUBLIC TLS struct _glapi_table * _glapi_tls_Dispatch = NULL;
 
-PUBLIC TLS void * _glapi_tls_Context
-    __attribute__((tls_model("initial-exec")));
+PUBLIC TLS void * _glapi_tls_Context;
 
 PUBLIC const struct _glapi_table *_glapi_Dispatch = NULL;
 PUBLIC const void *_glapi_Context = NULL;

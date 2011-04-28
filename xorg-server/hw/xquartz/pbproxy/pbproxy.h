@@ -77,14 +77,16 @@ extern BOOL xpbproxy_have_xfixes;
 /* from x-input.m */
 extern BOOL xpbproxy_input_register (void);
 
+/* os/log.c or app-main.m */
+extern void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
+
 #ifdef DEBUG
 /* BEWARE: this can cause a string memory leak, according to the leaks program. */
-# define DB(msg, args...) debug_printf("%s:%s:%d " msg, __FILE__, __FUNCTION__, __LINE__, ##args)
+# define DebugF(msg, args...) ErrorF("%s:%s:%d " msg, __FILE__, __FUNCTION__, __LINE__, ##args)
 #else
-# define DB(msg, args...) do {} while (0)
+# define DebugF(...) /* */
 #endif
 
-#define TRACE() DB("TRACE\n")
-extern void debug_printf (const char *fmt, ...);
+#define TRACE() DebugF("TRACE\n")
 
 #endif /* PBPROXY_H */

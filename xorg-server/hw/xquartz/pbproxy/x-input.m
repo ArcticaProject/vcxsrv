@@ -87,7 +87,7 @@ static void xpbproxy_process_xevents(void) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     if(pool == nil) {
-        fprintf(stderr, "unable to allocate/init auto release pool!\n");
+        ErrorF("unable to allocate/init auto release pool!\n");
         return;
     }
     

@@ -102,6 +102,10 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "xf86bigfontsrv.h"
 #endif
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
+
 #ifdef DDXOSVERRORF
 void (*OsVendorVErrorFProc)(const char *, va_list args) = NULL;
 #endif

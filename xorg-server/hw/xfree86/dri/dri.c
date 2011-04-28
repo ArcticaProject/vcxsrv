@@ -63,8 +63,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dri.h"
 #include "sarea.h"
 #include "dristruct.h"
-#include "xf86.h"
-#include "xf86drm.h"
 #include "mi.h"
 #include "mipointer.h"
 #include "xf86_OSproc.h"

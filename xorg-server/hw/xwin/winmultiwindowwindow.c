@@ -506,12 +506,16 @@ winCreateWindowsWindow (WindowPtr pWin)
   iWidth = pWin->drawable.width;
   iHeight = pWin->drawable.height;
 
-  /* ensure window actually ends up somewhere visible */
-  if (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN))
-    iX = CW_USEDEFAULT;
+  /* If it's an InputOutput window, and so is going to end up being made visible,
+     make sure the window actually ends up somewhere where it will be visible */
+  if (pWin->drawable.class != InputOnly)
+    {
+      if ((iX < GetSystemMetrics (SM_XVIRTUALSCREEN)) || (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN)))
+        iX = CW_USEDEFAULT;
 
-  if (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN))
-    iY = CW_USEDEFAULT;
+      if ((iY < GetSystemMetrics (SM_YVIRTUALSCREEN)) || (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN)))
+        iY = CW_USEDEFAULT;
+    }
 
   if (winMultiWindowGetTransientFor (pWin, &pDaddy))
     {
@@ -592,7 +596,9 @@ winDestroyWindowsWindow (WindowPtr pWin)
   MSG			msg;
   winWindowPriv(pWin);
   BOOL			oldstate = winInDestroyWindowsWindow;
-  
+  HICON hIcon;
+  HICON hIconSm;
+
 #if CYGMULTIWINDOW_DEBUG
   ErrorF ("winDestroyWindowsWindow\n");
 #endif
@@ -603,12 +609,21 @@ winDestroyWindowsWindow (WindowPtr pWin)
 
   winInDestroyWindowsWindow = TRUE;
 
+  /* Store the info we need to destroy after this window is gone */
+  hIcon = (HICON)SendMessage(pWinPriv->hWnd, WM_GETICON, ICON_BIG, 0);
+  hIconSm = (HICON)SendMessage(pWinPriv->hWnd, WM_GETICON, ICON_SMALL, 0);
+
   SetProp (pWinPriv->hWnd, WIN_WINDOW_PROP, NULL);
+
   /* Destroy the Windows window */
   DestroyWindow (pWinPriv->hWnd);
 
   /* Null our handle to the Window so referencing it will cause an error */
   pWinPriv->hWnd = NULL;
+
+  /* Destroy any icons we created for this window */
+  winDestroyIcon(hIcon);
+  winDestroyIcon(hIconSm);
 
   /* Process all messages on our queue */
   while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
@@ -655,7 +670,8 @@ winUpdateWindowsWindow (WindowPtr pWin)
 	}
 
       /* Display the window without activating it */
-      ShowWindow (pWinPriv->hWnd, SW_SHOWNOACTIVATE);
+      if (pWin->drawable.class != InputOnly)
+        ShowWindow (pWinPriv->hWnd, SW_SHOWNOACTIVATE);
 
       /* Send first paint message */
       UpdateWindow (pWinPriv->hWnd);

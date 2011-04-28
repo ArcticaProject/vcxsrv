@@ -67,7 +67,7 @@ The default behaviour is to create a single screen 0 that is roughly the
 size of useful area of the primary monitor (allowing for any window
 decorations and the task-bar).
 
-Screen specific parameters, such as \fB\-fullscreen\fP, can be applied as a
+Screen specific parameters can be applied as a
 default to all screens by placing those screen specific parameters
 before any \fB\-screen\fP parameter.  Screen specific parameters placed after
 the first \fB\-screen\fP parameter will apply only to the immediately
@@ -108,6 +108,7 @@ in \fB-multiwindow\fP or \fB-rootless\fP mode.
 .B "\-fullscreen"
 The X server window takes the full screen, covering completely the
 \fIWindows\fP desktop.
+Currently \fB\-fullscreen\fP may only be applied to one X screen.
 .TP 8
 .B \-nodecoration
 Do not give the Cygwin/X window a \fIWindows\fP window border, title bar,

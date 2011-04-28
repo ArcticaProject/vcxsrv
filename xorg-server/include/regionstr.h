@@ -132,6 +132,11 @@ static inline void RegionInit(RegionPtr _pReg, BoxPtr _rect, int _size)
     }
 }
 
+static inline Bool RegionInitBoxes(RegionPtr pReg, BoxPtr boxes, int nBoxes)
+{
+    return pixman_region_init_rects (pReg, boxes, nBoxes);
+}
+
 static inline void RegionUninit(RegionPtr _pReg)
 {
     if ((_pReg)->data && (_pReg)->data->size) {

@@ -62,7 +62,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
-#include <pthread.h>
+#include <libkern/OSAtomic.h>
 #include <signal.h>
 
 #include <rootlessCommon.h>
@@ -279,10 +279,10 @@ static void pokeActivityCallback(CFRunLoopTimerRef timer, void *info) {
 static void QuartzScreenSaver(int state) {
     static CFRunLoopTimerRef pokeActivityTimer = NULL;
     static CFRunLoopTimerContext pokeActivityContext = { 0, NULL, NULL, NULL, NULL };
-    static pthread_mutex_t pokeActivityMutex = PTHREAD_MUTEX_INITIALIZER;
+    static OSSpinLock pokeActivitySpinLock = OS_SPINLOCK_INIT;
 
-    pthread_mutex_lock(&pokeActivityMutex);
-    
+    OSSpinLockLock(&pokeActivitySpinLock);
+
     if(state) {
         if(pokeActivityTimer == NULL)
             goto QuartzScreenSaverEnd;
@@ -303,7 +303,7 @@ static void QuartzScreenSaver(int state) {
         CFRunLoopAddTimer(CFRunLoopGetMain(), pokeActivityTimer, kCFRunLoopCommonModes);
     }
 QuartzScreenSaverEnd:
-    pthread_mutex_unlock(&pokeActivityMutex);
+    OSSpinLockUnlock(&pokeActivitySpinLock);
 }
 
 void QuartzShowFullscreen(int state) {

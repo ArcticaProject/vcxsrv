@@ -84,10 +84,7 @@ void QuartzInitServer(int argc, char **argv, char **envp) {
     args->argv = argv;
     args->envp = envp;
     
-    APPKIT_THREAD_ID = pthread_self();
-    SERVER_THREAD_ID = create_thread(server_thread, args);
-
-    if (!SERVER_THREAD_ID) {
+    if (!create_thread(server_thread, args)) {
         FatalError("can't create secondary thread\n");
     }
 }

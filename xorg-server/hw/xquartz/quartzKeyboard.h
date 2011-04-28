@@ -32,8 +32,6 @@
 #include "X11/keysym.h"
 #include "inputstr.h"
 
-#include <pthread.h>
-
 // Each key can generate 4 glyphs. They are, in order:
 // unshifted, shifted, modeswitch unshifted, modeswitch shifted
 #define GLYPHS_PER_KEY  4

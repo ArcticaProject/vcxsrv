@@ -510,17 +510,17 @@ typedef enum {
 extern _X_EXPORT const char *LogInit(const char *fname, const char *backup);
 extern _X_EXPORT void LogClose(void);
 extern _X_EXPORT Bool LogSetParameter(LogParameter param, int value);
-extern _X_EXPORT void LogVWrite(int verb, const char *f, va_list args);
+extern _X_EXPORT void LogVWrite(int verb, const char *f, va_list args) _X_ATTRIBUTE_PRINTF(2,0);
 extern _X_EXPORT void LogWrite(int verb, const char *f, ...) _X_ATTRIBUTE_PRINTF(2,3);
 extern _X_EXPORT void LogVMessageVerb(MessageType type, int verb, const char *format,
-			    va_list args);
+			    va_list args) _X_ATTRIBUTE_PRINTF(3,0);
 extern _X_EXPORT void LogMessageVerb(MessageType type, int verb, const char *format,
 			   ...) _X_ATTRIBUTE_PRINTF(3,4);
 extern _X_EXPORT void LogMessage(MessageType type, const char *format, ...)
 			_X_ATTRIBUTE_PRINTF(2,3);
 extern _X_EXPORT void FreeAuditTimer(void);
 extern _X_EXPORT void AuditF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
-extern _X_EXPORT void VAuditF(const char *f, va_list args);
+extern _X_EXPORT void VAuditF(const char *f, va_list args) _X_ATTRIBUTE_PRINTF(1,0);
 extern _X_EXPORT void FatalError(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2) _X_NORETURN;
 
 #ifdef DEBUG
@@ -529,7 +529,7 @@ extern _X_EXPORT void FatalError(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2) _X
 #define DebugF(...) /* */
 #endif
 
-extern _X_EXPORT void VErrorF(const char *f, va_list args);
+extern _X_EXPORT void VErrorF(const char *f, va_list args) _X_ATTRIBUTE_PRINTF(1,0);
 extern _X_EXPORT void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
 extern _X_EXPORT void Error(const char *str);
 extern _X_EXPORT void LogPrintMarkers(void);

@@ -83,8 +83,7 @@ typedef void (*_glapi_warning_func)(void *ctx, const char *str, ...);
 const extern void *_glapi_Context;
 const extern struct _glapi_table *_glapi_Dispatch;
 
-extern TLS void * _glapi_tls_Context
-    __attribute__((tls_model("initial-exec")));
+extern TLS void * _glapi_tls_Context;
 
 # define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) _glapi_tls_Context
 

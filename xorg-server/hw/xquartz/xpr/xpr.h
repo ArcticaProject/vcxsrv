@@ -38,7 +38,7 @@ Bool QuartzModeBundleInit(void);
 void AppleDRIExtensionInit(void);
 void xprAppleWMInit(void);
 Bool xprInit(ScreenPtr pScreen);
-Bool xprIsX11Window(void *nsWindow, int windowNumber);
+Bool xprIsX11Window(int windowNumber);
 WindowPtr xprGetXWindow(xp_window_id wid);
 
 void xprHideWindows(Bool hide);

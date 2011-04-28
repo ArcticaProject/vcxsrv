@@ -3506,7 +3506,7 @@
         <variant>
           <configItem>
             <name>latinunicode</name>
-            <_description>Montenegrin (Latin unicode)</_description>
+            <_description>Montenegrin (Latin Unicode)</_description>
           </configItem>
         </variant>
         <variant>
@@ -3518,7 +3518,7 @@
         <variant>
           <configItem>
             <name>latinunicodeyz</name>
-            <_description>Montenegrin (Latin unicode qwerty)</_description>
+            <_description>Montenegrin (Latin Unicode qwerty)</_description>
           </configItem>
         </variant>
         <variant>
@@ -5583,13 +5583,13 @@
       <option>
         <configItem>
           <name>keypad:oss_wang</name>
-          <_description>Wang 724 keypad with unicode additions (arrows and math operators)</_description>
+          <_description>Wang 724 keypad with Unicode additions (arrows and math operators)</_description>
        </configItem>
       </option>
       <option>
         <configItem>
           <name>keypad:future_wang</name>
-          <_description>Wang 724 keypad with unicode additions (arrows and math operators). Math operators on default level</_description>
+          <_description>Wang 724 keypad with Unicode additions (arrows and math operators). Math operators on default level</_description>
        </configItem>
       </option>
       <option>

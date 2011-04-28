@@ -180,7 +180,7 @@ HICON
 winOverrideIcon (unsigned long longpWin);
 
 unsigned long
-winOverrideStyle (unsigned long longpWin);
+winOverrideStyle (char *res_name, char *res_class, char *wmName);
 
 HICON
 winTaskbarIcon(void);

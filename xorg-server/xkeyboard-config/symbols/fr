@@ -581,7 +581,7 @@ xkb_symbols "bepo_latin9" {
 
 // Author   : Francis Leboutte, http://www.algo.be/ergo/dvorak-fr.html
 //            thanks to Fabien Cazenave for his help
-// Licence  : X11 (the layout itself is released under CC-NC-ND licence)
+// Licence  : X11
 // Version  : 0.3
 
 // Base layer + dead AltGr key (`):

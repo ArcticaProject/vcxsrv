@@ -30,7 +30,6 @@
 #include <X11/Xatom.h>
 #include "property.h"
 #include "propertyst.h"
-#include "xf86DDC.h"
 #include <string.h>
 
 #define EDID1_ATOM_NAME         "XFree86_DDC_EDID1_RAWDATA"

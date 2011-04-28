@@ -27,7 +27,6 @@
 
 #include "scrnintstr.h"
 #include "windowstr.h"
-#include "scrnintstr.h"
 #include "exevents.h"
 #include <assert.h>
 

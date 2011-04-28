@@ -802,7 +802,8 @@ winCloseScreenShadowDDNL (int nIndex, ScreenPtr pScreen)
 
   /* Call the wrapped CloseScreen procedure */
   WIN_UNWRAP(CloseScreen);
-  fReturn = (*pScreen->CloseScreen) (nIndex, pScreen);
+  if (pScreen->CloseScreen)
+    fReturn = (*pScreen->CloseScreen) (nIndex, pScreen);
 
   winFreeFBShadowDDNL(pScreen);
 

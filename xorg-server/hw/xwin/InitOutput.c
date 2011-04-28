@@ -49,7 +49,7 @@ from The Open Group.
 #endif
 #ifdef RELOCATE_PROJECTROOT
 #include <shlobj.h>
-typedef HRESULT (*SHGETFOLDERPATHPROC)(
+typedef WINAPI HRESULT (*SHGETFOLDERPATHPROC)(
     HWND hwndOwner,
     int nFolder,
     HANDLE hToken,

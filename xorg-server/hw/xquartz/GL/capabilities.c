@@ -507,7 +507,7 @@ bool getGlCapabilities(struct glCapabilities *cap) {
 
 	err = CGLQueryRendererInfo((GLuint)-1, &info, &numRenderers);
     if(err) {
-	    fprintf(stderr, "CGLQueryRendererInfo error: %s\n", CGLErrorString(err));
+	    ErrorF("CGLQueryRendererInfo error: %s\n", CGLErrorString(err));
         return err;
 	}
 
@@ -518,8 +518,8 @@ bool getGlCapabilities(struct glCapabilities *cap) {
 
 	    err = handleRendererDescriptions(info, r, &tmpconf);
 	    if(err) {
-            fprintf(stderr, "handleRendererDescriptions returned error: %s\n", CGLErrorString(err));
-            fprintf(stderr, "trying to continue...\n");
+            ErrorF("handleRendererDescriptions returned error: %s\n", CGLErrorString(err));
+            ErrorF("trying to continue...\n");
             continue;
 	    }
 

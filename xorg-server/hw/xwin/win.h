@@ -172,7 +172,6 @@
 #include "input.h"
 #include "mipointer.h"
 #include "X11/keysym.h"
-#include "mibstore.h"
 #include "micoord.h"
 #include "dix.h"
 #include "miline.h"
