@@ -139,7 +139,6 @@
 #include <glxcontext.h>
 #include <glxext.h>
 #include <glxutil.h>
-#include <glxscreens.h>
 #include <GL/internal/glcore.h>
 #include "x-hash.h"
 #include "x-list.h"

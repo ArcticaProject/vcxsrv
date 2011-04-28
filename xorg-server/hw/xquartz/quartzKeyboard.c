@@ -56,8 +56,6 @@
 
 #include "X11Application.h"
 
-#include "threadSafety.h"
-
 #ifdef NDEBUG
 #undef NDEBUG
 #include <assert.h>
@@ -369,9 +367,9 @@ static void DarwinKeyboardSetRepeat(DeviceIntPtr pDev, int initialKeyRepeatValue
         if (pDev->kbdfeed)
             memcpy(pDev->kbdfeed->ctrl.autoRepeats, ctrl->per_key_repeat, XkbPerKeyBitArraySize);
 
-        //fprintf(stderr, "per_key_repeat =\n");
+        //ErrorF("per_key_repeat =\n");
         //for(i=0; i < XkbPerKeyBitArraySize; i++)
-        //    fprintf(stderr, "%02x%s", ctrl->per_key_repeat[i], (i + 1) & 7 ? "" : "\n");
+        //    ErrorF("%02x%s", ctrl->per_key_repeat[i], (i + 1) & 7 ? "" : "\n");
 
         /* And now we notify the puppies about the changes */
         XkbDDXChangeControls(pDev, &old, ctrl);
@@ -686,6 +684,11 @@ static Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
     }
 #endif
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // KLGetCurrentKeyboardLayout, KLGetKeyboardLayoutProperty
+#endif
+
 #if !defined(__LP64__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1050
     if (chr_data == NULL) {
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
@@ -717,6 +720,10 @@ static Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
         }
 #endif
     }
+#endif
+
+#ifdef __clang__
+#pragma clang diagnostic pop
 #endif
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
@@ -775,10 +782,16 @@ static Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
                 }
 #if !defined(__LP64__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1050
             } else { // kchr
-	      UInt32 c, state = 0, state2 = 0;
+                UInt32 c, state = 0, state2 = 0;
                 UInt16 code;
 
                 code = i | mods[j];
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // KeyTranslate
+#endif
+
                 c = KeyTranslate (chr_data, code, &state);
 
                 /* Dead keys are only processed on key-down, so ask
@@ -788,6 +801,10 @@ static Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
 
                 if (state != 0)
                     c = KeyTranslate (chr_data, code | 128, &state2);
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
                 /* Characters seem to be in MacRoman encoding. */
 

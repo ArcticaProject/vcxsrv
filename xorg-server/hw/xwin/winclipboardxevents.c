@@ -830,7 +830,7 @@ winClipboardFlushXEvents (HWND hwnd,
 	  break;
     
 	case MappingNotify:
-    XRefreshKeyboardMapping((XMappingEvent *)&event);
+          XRefreshKeyboardMapping((XMappingEvent *)&event);
 	  break;
 
 	default:

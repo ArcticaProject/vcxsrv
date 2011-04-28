@@ -586,7 +586,7 @@ winDestroyWindowsWindow (WindowPtr pWin)
   BOOL			oldstate = winInDestroyWindowsWindow;
   HICON hIcon;
   HICON hIconSm;
-  
+
 #if CYGMULTIWINDOW_DEBUG
   winDebug ("winDestroyWindowsWindow\n");
 #endif
@@ -602,6 +602,7 @@ winDestroyWindowsWindow (WindowPtr pWin)
   hIconSm = (HICON)SendMessage(pWinPriv->hWnd, WM_GETICON, ICON_SMALL, 0);
 
   SetProp (pWinPriv->hWnd, WIN_WINDOW_PROP, NULL);
+
   /* Destroy the Windows window */
   DestroyWindow (pWinPriv->hWnd);
 

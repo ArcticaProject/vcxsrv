@@ -453,7 +453,6 @@ RootlessMarkOverlappedWindows(WindowPtr pWin, WindowPtr pFirst,
                 pChild = pChild->nextSib;
             }
             anyMarked = TRUE;
-            pFirst = pFirst->nextSib;
         }
         if (anyMarked)
             (* MarkWindow)(pWin->parent);

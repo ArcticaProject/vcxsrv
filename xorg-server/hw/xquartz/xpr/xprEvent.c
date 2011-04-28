@@ -57,8 +57,6 @@
 #include "xprEvent.h"
 
 Bool QuartzModeEventHandler(int screenNum, XQuartzEvent *e, DeviceIntPtr dev) {
-    TA_SERVER();
-    
     switch(e->subtype) {
         case kXquartzWindowState:
             DEBUG_LOG("kXquartzWindowState\n");

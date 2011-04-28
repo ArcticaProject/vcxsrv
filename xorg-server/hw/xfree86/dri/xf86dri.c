@@ -58,7 +58,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dri.h"
 #include "sarea.h"
 #include "dristruct.h"
-#include "xf86.h"
 #include "xf86drm.h"
 #include "protocol-versions.h"
 

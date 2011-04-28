@@ -61,7 +61,6 @@
 #include <pixman.h>
 #include "exglobals.h"
 #include "exevents.h"
-#include "exglobals.h"
 #include "extnsionst.h"
 #include "listdev.h" /* for sizing up DeviceClassesChangedEvent */
 

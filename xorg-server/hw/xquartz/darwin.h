@@ -34,8 +34,6 @@
 #include <X11/extensions/XKB.h>
 #include <assert.h>
 
-#include "threadSafety.h"
-
 #include "darwinfb.h"
 
 // From darwin.c
@@ -75,12 +73,15 @@ extern int              darwinDesiredDepth;
 extern int              darwinMainScreenX;
 extern int              darwinMainScreenY;
 
+// bundle-main.c
+extern char *bundle_id_prefix;
+
 #define ENABLE_DEBUG_LOG 1
 
 #ifdef ENABLE_DEBUG_LOG
 extern FILE *debug_log_fp;
 #define DEBUG_LOG_NAME "x11-debug.txt"
-#define DEBUG_LOG(msg, args...) if (debug_log_fp) fprintf(debug_log_fp, "%s:%s:%s:%d " msg, threadSafetyID(pthread_self()), __FILE__, __FUNCTION__, __LINE__, ##args ); fflush(debug_log_fp);
+#define DEBUG_LOG(msg, args...) if (debug_log_fp) fprintf(debug_log_fp, "%s:%s:%d " msg, __FILE__, __FUNCTION__, __LINE__, ##args ); fflush(debug_log_fp);
 #else
 #define DEBUG_LOG(msg, args...) 
 #endif

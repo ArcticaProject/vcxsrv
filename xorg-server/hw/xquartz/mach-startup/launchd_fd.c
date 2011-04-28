@@ -69,11 +69,11 @@ int launchd_display_fd(void) {
         return ERROR_FD;
     }
     
-    listening_fd_array = launch_data_dict_lookup(sockets_dict, LAUNCHD_ID_PREFIX":0");
+    listening_fd_array = launch_data_dict_lookup(sockets_dict, BUNDLE_ID_PREFIX":0");
     if (NULL == listening_fd_array) {
         listening_fd_array = launch_data_dict_lookup(sockets_dict, ":0");
         if (NULL == listening_fd_array) {
-            fprintf(stderr,"launchd check-in: No known sockets found to answer requests on! \"%s:0\" and \":0\" failed.\n", LAUNCHD_ID_PREFIX);
+            fprintf(stderr,"launchd check-in: No known sockets found to answer requests on! \"%s:0\" and \":0\" failed.\n", BUNDLE_ID_PREFIX);
             return ERROR_FD;
         }
     }

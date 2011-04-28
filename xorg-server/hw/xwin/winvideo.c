@@ -69,8 +69,6 @@ winInitVideo (ScreenPtr pScreen)
 #include <X11/extensions/Xv.h>
 #endif
 
-#include "win.h"
-
 
 
 #if 0

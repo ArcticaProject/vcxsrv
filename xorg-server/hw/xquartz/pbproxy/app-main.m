@@ -34,7 +34,7 @@
 #include <unistd.h> /*for getpid*/
 #include <Cocoa/Cocoa.h>
 
-static const char *app_prefs_domain = 	LAUNCHD_ID_PREFIX".xpbproxy";
+static const char *app_prefs_domain = 	BUNDLE_ID_PREFIX".xpbproxy";
 CFStringRef app_prefs_domain_cfstr;
 
 /* Stubs */
@@ -53,12 +53,22 @@ static void signal_handler (int sig) {
     }
 }
 
+void
+ErrorF(const char * f, ...)
+{
+    va_list args;
+
+    va_start(args, f);
+    vfprintf(stderr, f, args);
+    va_end(args);
+}
+
 int main (int argc, const char *argv[]) {
     const char *s;
     int i;
 
 #ifdef DEBUG
-    printf("pid: %u\n", getpid());
+    ErrorF("pid: %u\n", getpid());
 #endif
 
     xpbproxy_is_standalone = YES;
@@ -70,13 +80,13 @@ int main (int argc, const char *argv[]) {
         if(strcmp (argv[i], "--prefs-domain") == 0 && i+1 < argc) {
             app_prefs_domain = argv[++i];
         } else if (strcmp (argv[i], "--help") == 0) {
-            printf("usage: xpbproxy OPTIONS\n"
+            ErrorF("usage: xpbproxy OPTIONS\n"
                    "Pasteboard proxying for X11.\n\n"
                    "--prefs-domain <domain>   Change the domain used for reading preferences\n"
                    "                          (default: %s)\n", app_prefs_domain);
             return 0;
         } else {
-            fprintf(stderr, "usage: xpbproxy OPTIONS...\n"
+            ErrorF("usage: xpbproxy OPTIONS...\n"
                     "Try 'xpbproxy --help' for more information.\n");
             return 1;
         }

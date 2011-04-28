@@ -160,7 +160,7 @@ create_bits_picture (PicturePtr pict,
     fbGetPixmapBitsData(pixmap, bits, stride, bpp);
 
     image = pixman_image_create_bits (
-	pict->format,
+	(pixman_format_code_t)pict->format,
 	pixmap->drawable.width, pixmap->drawable.height,
 	(uint32_t *)bits, stride * sizeof (FbStride));
     

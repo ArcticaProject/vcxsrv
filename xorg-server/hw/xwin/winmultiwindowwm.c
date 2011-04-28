@@ -1656,6 +1656,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
         style = STYLE_NONE;
       }
   }
+
   if (style & STYLE_TOPMOST) *zstyle = HWND_TOPMOST;
   else if (style & STYLE_MAXIMIZE) maxmin = (hint & ~HINT_MIN) | HINT_MAX;
   else if (style & STYLE_MINIMIZE) maxmin = (hint & ~HINT_MAX) | HINT_MIN;

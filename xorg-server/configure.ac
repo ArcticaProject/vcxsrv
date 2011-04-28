@@ -562,11 +562,14 @@ AC_ARG_WITH(apple-application-name,AS_HELP_STRING([--with-apple-application-name
 				[ APPLE_APPLICATION_NAME="${withval}" ],
 				[ APPLE_APPLICATION_NAME="X11" ])
 AC_SUBST([APPLE_APPLICATION_NAME])
-AC_ARG_WITH(launchd-id-prefix,  AS_HELP_STRING([--with-launchd-id-prefix=PATH], [Prefix to use for launchd identifiers (default: org.x)]),
-                                [ LAUNCHD_ID_PREFIX="${withval}" ],
-                                [ LAUNCHD_ID_PREFIX="org.x" ])
-AC_SUBST([LAUNCHD_ID_PREFIX])
-AC_DEFINE_UNQUOTED(LAUNCHD_ID_PREFIX, "$LAUNCHD_ID_PREFIX", [Prefix to use for launchd identifiers])
+AC_ARG_WITH(launchd-id-prefix,  AS_HELP_STRING([--with-launchd-id-prefix=PATH], [Deprecated: Use --with-bundle-id-prefix.]),
+                                [ BUNDLE_ID_PREFIX="${withval}" ],
+                                [ BUNDLE_ID_PREFIX="org.x" ])
+AC_ARG_WITH(bundle-id-prefix,  AS_HELP_STRING([--with-bundle-id-prefix=PATH], [Prefix to use for bundle identifiers (default: org.x)]),
+                               [ BUNDLE_ID_PREFIX="${withval}" ],
+                               [ BUNDLE_ID_PREFIX="org.x" ])
+AC_SUBST([BUNDLE_ID_PREFIX])
+AC_DEFINE_UNQUOTED(BUNDLE_ID_PREFIX, "$BUNDLE_ID_PREFIX", [Prefix to use for bundle identifiers])
 AC_ARG_ENABLE(sparkle,AS_HELP_STRING([--enable-sparkle], [Enable updating of X11.app using the Sparkle Framework (default: disabled)]),
 				[ XQUARTZ_SPARKLE="${enableval}" ],
 				[ XQUARTZ_SPARKLE="no" ])
@@ -587,7 +590,7 @@ dnl GLX build options
 AC_ARG_ENABLE(aiglx,          AS_HELP_STRING([--enable-aiglx], [Build accelerated indirect GLX (default: enabled)]),
                                 [AIGLX=$enableval],
                                 [AIGLX=yes])
-AX_TLS
+XORG_TLS
 AC_ARG_ENABLE(glx-tls,        AS_HELP_STRING([--enable-glx-tls], [Build GLX with TLS support (default: auto)]),
                                 [GLX_USE_TLS=$enableval
                                  if test "x$GLX_USE_TLS" = "xyes" && test "${ac_cv_tls}" = "none" ; then
@@ -797,7 +800,7 @@ LIBPCIACCESS="pciaccess >= 0.8.0"
 LIBUDEV="libudev >= 143"
 LIBSELINUX="libselinux >= 2.0.86"
 LIBDBUS="dbus-1 >= 1.0"
-LIBPIXMAN="pixman-1 >= 0.21.6"
+LIBPIXMAN="pixman-1 >= 0.21.8"
 
 dnl Pixman is always required, but we separate it out so we can link
 dnl specific modules against it

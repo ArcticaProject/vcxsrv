@@ -114,8 +114,8 @@ static int xprAttachTransient(WindowPtr pWinChild, WindowPtr pWinParent) {
 
 static int xprFrameDraw(
     WindowPtr pWin,
-    int class,
-    unsigned int attr,
+    xp_frame_class class,
+    xp_frame_attr attr,
     const BoxRec *outer,
     const BoxRec *inner,
     unsigned int title_len,

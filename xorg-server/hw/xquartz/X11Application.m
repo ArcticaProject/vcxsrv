@@ -41,7 +41,6 @@
 #include "quartz.h"
 #include "darwinEvents.h"
 #include "quartzKeyboard.h"
-#include "quartz.h"
 #include <X11/extensions/applewmconst.h>
 #include "micmap.h"
 #include "exglobals.h"
@@ -237,8 +236,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                 
                 if ([self isActive]) {
                     [self deactivate];
-                    if (!_x_active && quartzProcs->IsX11Window([e window],
-                                                               [e windowNumber]))
+                    if (!_x_active && quartzProcs->IsX11Window([e windowNumber]))
                         [self activateX:YES];
                 }
             }
@@ -980,7 +978,7 @@ static inline pthread_t create_thread(void *(*func)(void *), void *arg) {
 static void *xpbproxy_x_thread(void *args) {
     xpbproxy_run();
 
-    fprintf(stderr, "xpbproxy thread is terminating unexpectedly.\n");
+    ErrorF("xpbproxy thread is terminating unexpectedly.\n");
     return NULL;
 }
 
@@ -1014,7 +1012,7 @@ void X11ApplicationMain (int argc, char **argv, char **envp) {
     NSMaxY([[NSScreen mainScreen] visibleFrame]);
 
 #ifdef HAVE_LIBDISPATCH
-    eventTranslationQueue = dispatch_queue_create(LAUNCHD_ID_PREFIX".X11.NSEventsToX11EventsQueue", NULL);
+    eventTranslationQueue = dispatch_queue_create(BUNDLE_ID_PREFIX".X11.NSEventsToX11EventsQueue", NULL);
     assert(eventTranslationQueue != NULL);
 #endif
     
@@ -1023,15 +1021,15 @@ void X11ApplicationMain (int argc, char **argv, char **envp) {
     last_key_layout = TISCopyCurrentKeyboardLayoutInputSource();    
 
     if(!last_key_layout)
-        fprintf(stderr, "X11ApplicationMain: Unable to determine TISCopyCurrentKeyboardLayoutInputSource() at startup.\n");
+        ErrorF("X11ApplicationMain: Unable to determine TISCopyCurrentKeyboardLayoutInputSource() at startup.\n");
 #else
     KLGetCurrentKeyboardLayout(&last_key_layout);
     if(!last_key_layout)
-        fprintf(stderr, "X11ApplicationMain: Unable to determine KLGetCurrentKeyboardLayout() at startup.\n");
+        ErrorF("X11ApplicationMain: Unable to determine KLGetCurrentKeyboardLayout() at startup.\n");
 #endif
 
     if (!QuartsResyncKeymap(FALSE)) {
-        fprintf(stderr, "X11ApplicationMain: Could not build a valid keymap.\n");
+        ErrorF("X11ApplicationMain: Could not build a valid keymap.\n");
     }
 
     /* Tell the server thread that it can proceed */
@@ -1372,7 +1370,7 @@ static const char *untrusted_str(NSEvent *e) {
 #endif
                     /* Update keyInfo */
                     if (!QuartsResyncKeymap(TRUE)) {
-                        fprintf(stderr, "sendX11NSEvent: Could not build a valid keymap.\n");
+                        ErrorF("sendX11NSEvent: Could not build a valid keymap.\n");
                     }
                 }
             }

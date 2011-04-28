@@ -70,7 +70,7 @@ typedef void (*UpdateScreenProc)(ScreenPtr pScreen);
 /*
  * Rootless helper functions
  */
-typedef Bool (*IsX11WindowProc)(void *nsWindow, int windowNumber);
+typedef Bool (*IsX11WindowProc)(int windowNumber);
 typedef void (*HideWindowsProc)(Bool hide);
 
 /*

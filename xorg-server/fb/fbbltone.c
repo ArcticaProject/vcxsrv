@@ -26,6 +26,11 @@
 
 #include "fb.h"
 
+#ifdef __clang__
+/* shift overflow is intentional */
+#pragma clang diagnostic ignored "-Wshift-overflow"
+#endif
+
 /*
  *  Example: srcX = 13 dstX = 8	(FB unit 32 dstBpp 8)
  *

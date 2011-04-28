@@ -138,7 +138,6 @@ typedef const char *string;
 #include <X11/extensions/XI2.h>
 #include "exglobals.h"
 #include "exevents.h"
-#include "exglobals.h"
 #include "extnsionst.h"
 
 #include "dixevents.h"

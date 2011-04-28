@@ -101,7 +101,6 @@ _GLAPI_EXPORT extern const void *_glapi_Context;
 _GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
 
 _GLAPI_EXPORT extern __thread void * _glapi_tls_Context
-    __attribute__((tls_model("initial-exec")));
 
 # define GET_DISPATCH() _glapi_tls_Dispatch
 # define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_tls_Context

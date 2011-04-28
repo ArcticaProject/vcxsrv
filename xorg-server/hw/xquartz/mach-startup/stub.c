@@ -40,7 +40,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-#define kX11AppBundleId LAUNCHD_ID_PREFIX".X11"
+#define kX11AppBundleId BUNDLE_ID_PREFIX".X11"
 #define kX11AppBundlePath "/Contents/MacOS/X11"
 
 static char *server_bootstrap_name = kX11AppBundleId;
@@ -55,15 +55,6 @@ static char *server_bootstrap_name = kX11AppBundleId;
 #include <AvailabilityMacros.h>
 
 #include "launchd_fd.h"
-
-#ifndef BUILD_DATE
-#define BUILD_DATE "?"
-#endif
-#ifndef XSERVER_VERSION
-#define XSERVER_VERSION "?"
-#endif
-
-#define DEBUG 1
 
 static char x11_path[PATH_MAX + 1];
 
@@ -197,13 +188,6 @@ int main(int argc, char **argv, char **envp) {
     string_t handoff_socket_filename;
     sig_t handler;
 
-    if(argc == 2 && !strcmp(argv[1], "-version")) {
-        fprintf(stderr, "X.org Release 7.5\n");
-        fprintf(stderr, "X.Org X Server %s\n", XSERVER_VERSION);
-        fprintf(stderr, "Build Date: %s\n", BUILD_DATE);
-        return EXIT_SUCCESS;
-    }
-
     if(getenv("X11_PREFS_DOMAIN"))
         server_bootstrap_name = getenv("X11_PREFS_DOMAIN");
     
@@ -300,8 +284,8 @@ int main(int argc, char **argv, char **envp) {
     /* We have fixed-size string lengths due to limitations in IPC,
      * so we need to copy our argv and envp.
      */
-    newargv = (string_array_t)malloc(argc * sizeof(string_t));
-    newenvp = (string_array_t)malloc(envpc * sizeof(string_t));
+    newargv = (string_array_t)calloc((1 + argc), sizeof(string_t));
+    newenvp = (string_array_t)calloc((1 + envpc), sizeof(string_t));
 
     if(!newargv || !newenvp) {
         fprintf(stderr, "Xquartz: Memory allocation failure\n");

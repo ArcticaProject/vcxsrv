@@ -1110,12 +1110,7 @@ XvdiMatchPort(
 
   while (nf--)
     {
-      if ((pf->depth == pDraw->depth) 
-#if 0
-         && ((pDraw->type == DRAWABLE_PIXMAP) || 
-	   (wVisual(((WindowPtr)pDraw)) == pf->visual))
-#endif
-	)
+      if (pf->depth == pDraw->depth)
 	return Success;
       pf++;
     }

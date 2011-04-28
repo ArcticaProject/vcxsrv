@@ -64,6 +64,9 @@
 /* From darwinEvents.c ... but don't want to pull in all the server cruft */
 void DarwinListenOnOpenFD(int fd);
 
+/* Ditto, from os/log.c */
+extern void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
+
 extern int noPanoramiXExtension;
 
 #define DEFAULT_CLIENT X11BINDIR "/xterm"
@@ -88,7 +91,7 @@ asm (".desc ___crashreporter_info__, 0x10");
 
 static const char *__crashreporter_info__base = "X.Org X Server " XSERVER_VERSION " Build Date: " BUILD_DATE;
 
-static char *launchd_id_prefix = NULL;
+char *bundle_id_prefix = NULL;
 static char *server_bootstrap_name = NULL;
 
 #define DEBUG 1
@@ -134,19 +137,27 @@ static mach_port_t checkin_or_register(char *bname) {
     /* We probably were not started by launchd or the old mach_init */
     kr = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &mp);
     if (kr != KERN_SUCCESS) {
-        fprintf(stderr, "mach_port_allocate(): %s\n", mach_error_string(kr));
+        ErrorF("mach_port_allocate(): %s\n", mach_error_string(kr));
         exit(EXIT_FAILURE);
     }
 
     kr = mach_port_insert_right(mach_task_self(), mp, mp, MACH_MSG_TYPE_MAKE_SEND);
     if (kr != KERN_SUCCESS) {
-        fprintf(stderr, "mach_port_insert_right(): %s\n", mach_error_string(kr));
+        ErrorF("mach_port_insert_right(): %s\n", mach_error_string(kr));
         exit(EXIT_FAILURE);
     }
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // bootstrap_register
+#endif
     kr = bootstrap_register(bootstrap_port, bname, mp);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
     if (kr != KERN_SUCCESS) {
-        fprintf(stderr, "bootstrap_register(): %s\n", mach_error_string(kr));
+        ErrorF("bootstrap_register(): %s\n", mach_error_string(kr));
         exit(EXIT_FAILURE);
     }
 
@@ -189,7 +200,7 @@ static int accept_fd_handoff(int connected_fd) {
     *((int*)CMSG_DATA(cmsg)) = -1;
     
     if(recvmsg(connected_fd, &msg, 0) < 0) {
-        fprintf(stderr, "X11.app: Error receiving $DISPLAY file descriptor.  recvmsg() error: %s\n", strerror(errno));
+        ErrorF("X11.app: Error receiving $DISPLAY file descriptor.  recvmsg() error: %s\n", strerror(errno));
         return -1;
     }
     
@@ -222,14 +233,14 @@ static void *socket_handoff_thread(void *arg) {
     while(launchd_fd == -1) {
         connected_fd = accept(handoff_data->fd, NULL, NULL);
         if(connected_fd == -1) {
-            fprintf(stderr, "X11.app: Failed to accept incoming connection on socket (fd=%d): %s\n", handoff_data->fd, strerror(errno));
+            ErrorF("X11.app: Failed to accept incoming connection on socket (fd=%d): %s\n", handoff_data->fd, strerror(errno));
             sleep(2);
             continue;
         }
 
         launchd_fd = accept_fd_handoff(connected_fd);
         if(launchd_fd == -1)
-            fprintf(stderr, "X11.app: Error receiving $DISPLAY file descriptor, no descriptor received?  Waiting for another connection.\n");
+            ErrorF("X11.app: Error receiving $DISPLAY file descriptor, no descriptor received?  Waiting for another connection.\n");
 
         close(connected_fd);
     }
@@ -238,7 +249,7 @@ static void *socket_handoff_thread(void *arg) {
     unlink(handoff_data->filename);
     free(handoff_data);
         
-    fprintf(stderr, "X11.app Handing off fd to server thread via DarwinListenOnOpenFD(%d)\n", launchd_fd);
+    ErrorF("X11.app Handing off fd to server thread via DarwinListenOnOpenFD(%d)\n", launchd_fd);
     DarwinListenOnOpenFD(launchd_fd);
 
 #ifndef HAVE_LIBDISPATCH
@@ -266,24 +277,24 @@ static int create_socket(char *filename_out) {
         
         ret_fd = socket(PF_UNIX, SOCK_STREAM, 0);
         if(ret_fd == -1) {
-            fprintf(stderr, "X11.app: Failed to create socket (try %d / %d): %s - %s\n", (int)try+1, (int)try_max, filename_out, strerror(errno));
+            ErrorF("X11.app: Failed to create socket (try %d / %d): %s - %s\n", (int)try+1, (int)try_max, filename_out, strerror(errno));
             continue;
         }
         
         if(bind(ret_fd, servaddr, servaddr_len) != 0) {
-            fprintf(stderr, "X11.app: Failed to bind socket: %d - %s\n", errno, strerror(errno));
+            ErrorF("X11.app: Failed to bind socket: %d - %s\n", errno, strerror(errno));
             close(ret_fd);
             return 0;
         }
         
         if(listen(ret_fd, 10) != 0) {
-            fprintf(stderr, "X11.app: Failed to listen to socket: %s - %d - %s\n", filename_out, errno, strerror(errno));
+            ErrorF("X11.app: Failed to listen to socket: %s - %d - %s\n", filename_out, errno, strerror(errno));
             close(ret_fd);
             return 0;
         }
         
 #ifdef DEBUG
-        fprintf(stderr, "X11.app: Listening on socket for fd handoff:  (%d) %s\n", ret_fd, filename_out);
+        ErrorF("X11.app: Listening on socket for fd handoff:  (%d) %s\n", ret_fd, filename_out);
 #endif
         
         return ret_fd;
@@ -301,7 +312,7 @@ kern_return_t do_request_fd_handoff_socket(mach_port_t port, string_t filename) 
 
     handoff_data = (socket_handoff_t *)calloc(1,sizeof(socket_handoff_t));
     if(!handoff_data) {
-        fprintf(stderr, "X11.app: Error allocating memory for handoff_data\n");
+        ErrorF("X11.app: Error allocating memory for handoff_data\n");
         return KERN_FAILURE;
     }
 
@@ -322,7 +333,7 @@ kern_return_t do_request_fd_handoff_socket(mach_port_t port, string_t filename) 
 #endif
     
 #ifdef DEBUG
-    fprintf(stderr, "X11.app: Thread created for handoff.  Returning success to tell caller to connect and push the fd.\n");
+    ErrorF("X11.app: Thread created for handoff.  Returning success to tell caller to connect and push the fd.\n");
 #endif
 
     return KERN_SUCCESS;
@@ -347,7 +358,7 @@ kern_return_t do_start_x11_server(mach_port_t port, string_array_t argv,
      * unset DISPLAY or we can run into problems with pbproxy
      */
     if(!launchd_socket_handed_off) {
-        fprintf(stderr, "X11.app: No launchd socket handed off, unsetting DISPLAY\n");
+        ErrorF("X11.app: No launchd socket handed off, unsetting DISPLAY\n");
         unsetenv("DISPLAY");
     }
     
@@ -355,10 +366,10 @@ kern_return_t do_start_x11_server(mach_port_t port, string_array_t argv,
         return KERN_FAILURE;
     }
 
-    fprintf(stderr, "X11.app: do_start_x11_server(): argc=%d\n", argvCnt);
+    ErrorF("X11.app: do_start_x11_server(): argc=%d\n", argvCnt);
     for(i=0; i < argvCnt; i++) {
         _argv[i] = argv[i];
-        fprintf(stderr, "\targv[%u] = %s\n", (unsigned)i, argv[i]);
+        ErrorF("\targv[%u] = %s\n", (unsigned)i, argv[i]);
     }
     _argv[argvCnt] = NULL;
     
@@ -396,7 +407,7 @@ static int startup_trigger(int argc, char **argv, char **envp) {
         newenvp = (string_array_t)alloca(envpc * sizeof(string_t));
         
         if(!newargv || !newenvp) {
-            fprintf(stderr, "Memory allocation failure\n");
+            ErrorF("Memory allocation failure\n");
             exit(EXIT_FAILURE);
         }
         
@@ -410,16 +421,16 @@ static int startup_trigger(int argc, char **argv, char **envp) {
         kr = bootstrap_look_up(bootstrap_port, server_bootstrap_name, &mp);
         if (kr != KERN_SUCCESS) {
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
-            fprintf(stderr, "bootstrap_look_up(%s): %s\n", server_bootstrap_name, bootstrap_strerror(kr));
+            ErrorF("bootstrap_look_up(%s): %s\n", server_bootstrap_name, bootstrap_strerror(kr));
 #else
-            fprintf(stderr, "bootstrap_look_up(%s): %ul\n", server_bootstrap_name, (unsigned long)kr);
+            ErrorF("bootstrap_look_up(%s): %ul\n", server_bootstrap_name, (unsigned long)kr);
 #endif
             exit(EXIT_FAILURE);
         }
 
         kr = start_x11_server(mp, newargv, argc, newenvp, envpc);
         if (kr != KERN_SUCCESS) {
-            fprintf(stderr, "start_x11_server: %s\n", mach_error_string(kr));
+            ErrorF("start_x11_server: %s\n", mach_error_string(kr));
             exit(EXIT_FAILURE);
         }
         exit(EXIT_SUCCESS);
@@ -441,10 +452,10 @@ static int startup_trigger(int argc, char **argv, char **envp) {
 
     /* Start the server */
     if((s = getenv("DISPLAY"))) {
-        fprintf(stderr, "X11.app: Could not connect to server (DISPLAY=\"%s\", unsetting).  Starting X server.\n", s);
+        ErrorF("X11.app: Could not connect to server (DISPLAY=\"%s\", unsetting).  Starting X server.\n", s);
         unsetenv("DISPLAY");
     } else {
-        fprintf(stderr, "X11.app: Could not connect to server (DISPLAY is not set).  Starting X server.\n");
+        ErrorF("X11.app: Could not connect to server (DISPLAY is not set).  Starting X server.\n");
     }
     return execute(command_from_prefs("startx_script", DEFAULT_STARTX));
 }
@@ -483,23 +494,23 @@ static void setup_env(void) {
 
     /* fallback to hardcoded value if we can't discover it */
     if(!pds) {
-        pds = LAUNCHD_ID_PREFIX".X11";
+        pds = BUNDLE_ID_PREFIX".X11";
     }
 
     server_bootstrap_name = strdup(pds);
     if(!server_bootstrap_name) {
-        fprintf(stderr, "X11.app: Memory allocation error.\n");
+        ErrorF("X11.app: Memory allocation error.\n");
         exit(1);
     }
     setenv("X11_PREFS_DOMAIN", server_bootstrap_name, 1);
     
     len = strlen(server_bootstrap_name);
-    launchd_id_prefix = malloc(sizeof(char) * (len - 3));
-    if(!launchd_id_prefix) {
-        fprintf(stderr, "X11.app: Memory allocation error.\n");
+    bundle_id_prefix = malloc(sizeof(char) * (len - 3));
+    if(!bundle_id_prefix) {
+        ErrorF("X11.app: Memory allocation error.\n");
         exit(1);
     }
-    strlcpy(launchd_id_prefix, server_bootstrap_name, len - 3);
+    strlcpy(bundle_id_prefix, server_bootstrap_name, len - 3);
     
     /* We need to unset DISPLAY if it is not our socket */
     if(disp) {
@@ -511,27 +522,27 @@ static void setup_env(void) {
         }
 
         if(s && *s) {
-            if(strcmp(launchd_id_prefix, "org.x") == 0 && strcmp(s, ":0") == 0) {
-                fprintf(stderr, "X11.app: Detected old style launchd DISPLAY, please update xinit.\n");
+            if(strcmp(bundle_id_prefix, "org.x") == 0 && strcmp(s, ":0") == 0) {
+                ErrorF("X11.app: Detected old style launchd DISPLAY, please update xinit.\n");
             } else {
                 temp = (char *)malloc(sizeof(char) * len);
                 if(!temp) {
-                    fprintf(stderr, "X11.app: Memory allocation error creating space for socket name test.\n");
+                    ErrorF("X11.app: Memory allocation error creating space for socket name test.\n");
                     exit(1);
                 }
-                strlcpy(temp, launchd_id_prefix, len);
+                strlcpy(temp, bundle_id_prefix, len);
                 strlcat(temp, ":0", len);
             
                 if(strcmp(temp, s) != 0) {
                     /* If we don't have a match, unset it. */
-                    fprintf(stderr, "X11.app: DISPLAY (\"%s\") does not match our id (\"%s\"), unsetting.\n", disp, launchd_id_prefix);
+                    ErrorF("X11.app: DISPLAY (\"%s\") does not match our id (\"%s\"), unsetting.\n", disp, bundle_id_prefix);
                     unsetenv("DISPLAY");
                 }
                 free(temp);
             }
         } else {
             /* The DISPLAY environment variable is not formatted like a launchd socket, so reset. */
-            fprintf(stderr, "X11.app: DISPLAY does not look like a launchd set variable, unsetting.\n");
+            ErrorF("X11.app: DISPLAY does not look like a launchd set variable, unsetting.\n");
             unsetenv("DISPLAY");
         }
     }
@@ -562,9 +573,9 @@ int main(int argc, char **argv, char **envp) {
     /* Setup the initial crasherporter info */
     strlcpy(__crashreporter_info_buff__, __crashreporter_info__base, sizeof(__crashreporter_info_buff__));
     
-    fprintf(stderr, "X11.app: main(): argc=%d\n", argc);
+    ErrorF("X11.app: main(): argc=%d\n", argc);
     for(i=0; i < argc; i++) {
-        fprintf(stderr, "\targv[%u] = %s\n", (unsigned)i, argv[i]);
+        ErrorF("\targv[%u] = %s\n", (unsigned)i, argv[i]);
         if(!strcmp(argv[i], "--listenonly")) {
             listenOnly = TRUE;
         }
@@ -572,7 +583,7 @@ int main(int argc, char **argv, char **envp) {
 
     mp = checkin_or_register(server_bootstrap_name);
     if(mp == MACH_PORT_NULL) {
-        fprintf(stderr, "NULL mach service: %s", server_bootstrap_name);
+        ErrorF("NULL mach service: %s", server_bootstrap_name);
         return EXIT_FAILURE;
     }
     
@@ -621,10 +632,10 @@ int main(int argc, char **argv, char **envp) {
     }
     
     /* Main event loop */
-    fprintf(stderr, "Waiting for startup parameters via Mach IPC.\n");
+    ErrorF("Waiting for startup parameters via Mach IPC.\n");
     kr = mach_msg_server(mach_startup_server, mxmsgsz, mp, 0);
     if (kr != KERN_SUCCESS) {
-        fprintf(stderr, "%s.X11(mp): %s\n", LAUNCHD_ID_PREFIX, mach_error_string(kr));
+        ErrorF("%s.X11(mp): %s\n", BUNDLE_ID_PREFIX, mach_error_string(kr));
         return EXIT_FAILURE;
     }
     
@@ -640,9 +651,9 @@ static int execute(const char *command) {
     newargv[2] = command;
     newargv[3] = NULL;
     
-    fprintf(stderr, "X11.app: Launching %s:\n", command);
+    ErrorF("X11.app: Launching %s:\n", command);
     for(p=newargv; *p; p++) {
-        fprintf(stderr, "\targv[%ld] = %s\n", (long int)(p - newargv), *p);
+        ErrorF("\targv[%ld] = %s\n", (long int)(p - newargv), *p);
     }
 
     execvp (newargv[0], (char * const *) newargv);

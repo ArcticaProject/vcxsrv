@@ -158,7 +158,7 @@ addFormat (FormatInitRec    formats[256],
     return ++nformat;
 }
 
-#define Mask(n)	((n) == 32 ? 0xffffffff : ((1 << (n))-1))
+#define Mask(n) ((1 << (n)) - 1)
 
 PictFormatPtr
 PictureCreateDefaultFormats (ScreenPtr pScreen, int *nformatp)
@@ -811,51 +811,6 @@ static CARD32 xRenderColorToCard32(xRenderColor c)
         (c.blue >> 8);
 }
 
-static unsigned int premultiply(unsigned int x)
-{
-    unsigned int a = x >> 24;
-    unsigned int t = (x & 0xff00ff) * a + 0x800080;
-    t = (t + ((t >> 8) & 0xff00ff)) >> 8;
-    t &= 0xff00ff;
-
-    x = ((x >> 8) & 0xff) * a + 0x80;
-    x = (x + ((x >> 8) & 0xff));
-    x &= 0xff00;
-    x |= t | (a << 24);
-    return x;
-}
-
-static unsigned int INTERPOLATE_PIXEL_256(unsigned int x, unsigned int a,
-                                          unsigned int y, unsigned int b)
-{
-    CARD32 t = (x & 0xff00ff) * a + (y & 0xff00ff) * b;
-    t >>= 8;
-    t &= 0xff00ff;
-
-    x = ((x >> 8) & 0xff00ff) * a + ((y >> 8) & 0xff00ff) * b;
-    x &= 0xff00ff00;
-    x |= t;
-    return x;
-}
-
-CARD32
-PictureGradientColor (PictGradientStopPtr stop1,
-		      PictGradientStopPtr stop2,
-		      CARD32	          x)
-{
-     CARD32 current_color, next_color;
-     int	   dist, idist;
-
-     current_color = xRenderColorToCard32 (stop1->color);
-     next_color    = xRenderColorToCard32 (stop2->color);
-
-     dist  = (int) (256 * (x - stop1->x) / (stop2->x - stop1->x));
-     idist = 256 - dist;
-
-     return premultiply (INTERPOLATE_PIXEL_256 (current_color, idist,
-					       next_color, dist));
-}
-
 static void initGradient(SourcePictPtr pGradient, int stopCount,
                          xFixed *stopPoints, xRenderColor *stopColors, int *error)
 {
@@ -888,11 +843,6 @@ static void initGradient(SourcePictPtr pGradient, int stopCount,
         pGradient->gradient.stops[i].x = stopPoints[i];
         pGradient->gradient.stops[i].color = stopColors[i];
     }
-
-    pGradient->gradient.class	       = SourcePictClassUnknown;
-    pGradient->gradient.stopRange      = 0xffff;
-    pGradient->gradient.colorTable     = NULL;
-    pGradient->gradient.colorTableSize = 0;
 }
 
 static PicturePtr createSourcePicture(void)
@@ -967,8 +917,6 @@ CreateLinearGradientPicture (Picture pid, xPointFixed *p1, xPointFixed *p2,
     return pPicture;
 }
 
-#define FixedToDouble(x) ((x)/65536.)
-
 PicturePtr
 CreateRadialGradientPicture (Picture pid, xPointFixed *inner, xPointFixed *outer,
                              xFixed innerRadius, xFixed outerRadius,
@@ -1004,12 +952,6 @@ CreateRadialGradientPicture (Picture pid, xPointFixed *inner, xPointFixed *outer
     radial->c2.x = outer->x;
     radial->c2.y = outer->y;
     radial->c2.radius = outerRadius;
-    radial->cdx = (radial->c2.x - radial->c1.x) / 65536.;
-    radial->cdy = (radial->c2.y - radial->c1.y) / 65536.;
-    radial->dr = (radial->c2.radius - radial->c1.radius) / 65536.;
-    radial->A = (  radial->cdx * radial->cdx
-		   + radial->cdy * radial->cdy
-		   - radial->dr  * radial->dr);
     
     initGradient(pPicture->pSourcePict, nStops, stops, colors, error);
     if (*error) {

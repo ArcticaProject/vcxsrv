@@ -30,9 +30,6 @@
 /* Support Damage extension */
 #undef DAMAGE
 
-/* Build for darwin with Quartz support */
-#undef DARWIN_WITH_QUARTZ
-
 /* Use OsVendorVErrorF */
 #undef DDXOSVERRORF
 
@@ -127,8 +124,8 @@
 /* Support application updating through sparkle. */
 #undef XQUARTZ_SPARKLE
 
-/* Prefix to use for launchd identifiers */
-#undef LAUNCHD_ID_PREFIX
+/* Prefix to use for bundle identifiers */
+#undef BUNDLE_ID_PREFIX
 
 /* Build a standalone xpbproxy */
 #undef STANDALONE_XPBPROXY
@@ -447,7 +444,7 @@
 /* Define to 1 if you have the `ffs' function. */
 #undef HAVE_FFS
 
-/* If the compiler supports a TLS storage class define it to that here */
+/* The compiler supported TLS storage class, prefering initial-exec if tls_model is supported */
 #undef TLS
 
 /* Correctly set _XSERVER64 for OSX fat binaries */
