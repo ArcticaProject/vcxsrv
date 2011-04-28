@@ -432,7 +432,7 @@ pixman_composite_trapezoids (pixman_op_t		op,
 	    if (!pixman_trapezoid_valid (trap))
 		continue;
 	    
-	    pixman_rasterize_trapezoid (dst, trap, x_dst, y_dst);
+	    pixman_rasterize_trapezoid (dst, trap, 0, 0);
 	}
     }
     else
@@ -495,9 +495,9 @@ pixman_composite_trapezoids (pixman_op_t		op,
 	}
 	
 	pixman_image_composite (op, src, tmp, dst,
-				x_src + box.x1, y_src + box.y1,
+				x_src + box.x1 - x_dst, y_src + box.y1 - y_dst,
 				0, 0,
-				x_dst + box.x1, y_dst + box.y1,
+				box.x1, box.y1,
 				box.x2 - box.x1, box.y2 - box.y1);
 	
 	pixman_image_unref (tmp);
