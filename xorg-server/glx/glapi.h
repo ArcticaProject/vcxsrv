@@ -94,13 +94,12 @@ typedef void (*_glapi_warning_func)(void *ctx, const char *str, ...);
  **/
 #if defined (GLX_USE_TLS)
 
-_GLAPI_EXPORT extern __thread struct _glapi_table * _glapi_tls_Dispatch
-    __attribute__((tls_model("initial-exec")));
+_GLAPI_EXPORT extern __thread struct _glapi_table * _glapi_tls_Dispatch;
 
 _GLAPI_EXPORT extern const void *_glapi_Context;
 _GLAPI_EXPORT extern const struct _glapi_table *_glapi_Dispatch;
 
-_GLAPI_EXPORT extern __thread void * _glapi_tls_Context
+_GLAPI_EXPORT extern __thread void * _glapi_tls_Context;
 
 # define GET_DISPATCH() _glapi_tls_Dispatch
 # define GET_CURRENT_CONTEXT(C)  struct gl_context *C = (struct gl_context *) _glapi_tls_Context
