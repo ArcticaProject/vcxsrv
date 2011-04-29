@@ -34,20 +34,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "window.h"
 #include <Xplugin.h>
 
+#if XPLUGIN_VERSION < 4
+typedef xp_frame_attr int;
+typedef xp_frame_class int;
+typedef xp_frame_rect int;
+#endif
+
 typedef int (*DisableUpdateProc)(void);
 typedef int (*EnableUpdateProc)(void);
 typedef int (*SetWindowLevelProc)(WindowPtr pWin, int level);
-#if XPLUGIN_VERSION < 4
-typedef int (*FrameGetRectProc)(int type, int class, const BoxRec *outer,
-                                const BoxRec *inner, BoxRec *ret);
-typedef int (*FrameHitTestProc)(int class, int x, int y,
-                                const BoxRec *outer,
-                                const BoxRec *inner, int *ret);
-typedef int (*FrameDrawProc)(WindowPtr pWin, int class, unsigned int attr,
-                             const BoxRec *outer, const BoxRec *inner,
-                             unsigned int title_len,
-                             const unsigned char *title_bytes);
-#else
 typedef int (*FrameGetRectProc)(xp_frame_rect type, xp_frame_class class, const BoxRec *outer,
                                 const BoxRec *inner, BoxRec *ret);
 typedef int (*FrameHitTestProc)(xp_frame_class class, int x, int y,
@@ -57,7 +52,6 @@ typedef int (*FrameDrawProc)(WindowPtr pWin, xp_frame_class class, xp_frame_attr
                              const BoxRec *outer, const BoxRec *inner,
                              unsigned int title_len,
                              const unsigned char *title_bytes);
-#endif
 typedef int (*SendPSNProc)(uint32_t hi, uint32_t lo);
 typedef int (*AttachTransientProc)(WindowPtr pWinChild, WindowPtr pWinParent);
 
