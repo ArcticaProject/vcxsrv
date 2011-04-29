@@ -163,7 +163,7 @@ void commandqueue::RemoveActiveEntry(unsigned Entry)
     }
   }
   m_pActiveEntries[Entry]=NULL;
-  m_pActiveProcesses[Entry]=NULL;
+  m_pActiveProcesses[Entry]=0;
   m_NrActiveEntries--;
 }
 

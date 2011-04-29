@@ -393,6 +393,8 @@ mh_pid_t mhmakefileparser::MakeDirsCommand(const string &Params) const
   for (size_t i=0; i<NrDirs; i++)
   {
     fileinfo* pDir=Dirs[i];
+    if (pDir->GetName()=="-p")
+      continue;
     if (!MakeDirs(pDir))
       return (mh_pid_t)-1;
   }
@@ -451,7 +453,7 @@ mh_pid_t mhmakefileparser::EchoCommand(const string &ParamsIn) const
       cerr << "Error opening file "<<Filename<<endl;
       return (mh_pid_t)-1;
     }
-    string EchoStr=RemoveQuotes(Params.substr(0,Pos-1))+"\n";
+    string EchoStr=RemoveQuotes(Params.substr(0,Pos))+"\n";
     if (EchoStr.length()!=fwrite(EchoStr.c_str(),1,EchoStr.length(),pfFile))
     {
       cerr << "Error writing file "<<Filename<<endl;

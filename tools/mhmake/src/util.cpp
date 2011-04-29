@@ -44,7 +44,7 @@ typedef struct {
 static char s_UsageString[]=
 "\
 Usage: mhmake [-f <Makefile>] [-[c|C] <RunDir>] [<Var>=<Value>]\n\
-              [-a] [-q] [-s] [-v] [-P <Nr Parallel Builds>] [targets]+\n"
+              [-a] [-q] [-s] [-S] [-v] [-P <Nr Parallel Builds>] [targets]+\n"
 #ifdef _DEBUG
 "\
               [-p] [-n] [-e] [-l] [-w] [-d] [-CD] [-m] [-b]\n"
@@ -57,6 +57,8 @@ Usage: mhmake [-f <Makefile>] [-[c|C] <RunDir>] [<Var>=<Value>]\n\
   <Value>     : Value of the variable\n\
   -a          : Rebuild all targets\n\
   -s          : Rescan automatic dependencies\n\
+  -S          : SKip checking if mhmake is started in a subdirectory of the\n\
+                %MHMAKECONF dir \n\
   -v          : Print version information\n\
   -q          : Quiet. Disable all output \n\
   -P <Nr Parallel Builds> :\n\
@@ -104,6 +106,7 @@ bool g_PrintMultipleDefinedRules=false;
 bool g_Quiet=false;
 bool g_RebuildAll=false;
 bool g_ForceAutoDepRescan=false;
+bool g_SkipMhMakeConfDirCheck=false;
 
 const string g_EmptyString;
 const string g_SpaceString(" ");
@@ -494,6 +497,9 @@ loadedmakefile::loadedmakefile(const fileinfo *pDir, vector<string> &Args,const 
         case 's':
           g_ForceAutoDepRescan=true;
           break;
+        case 'S':
+          g_SkipMhMakeConfDirCheck=true;
+          break;
         case 'v':
           PrintVersionInfo();
           break;
@@ -572,14 +578,17 @@ loadedmakefile::loadedmakefile(const fileinfo *pDir, vector<string> &Args,const 
       m_MakeDir=curdir::GetCurDir(); /* This means that this is the main makefile given on the command line, so we take the current directory */
   }
 
-  if (loadedmakefile::sm_Statics.m_MhMakeConf)
+  if (!g_SkipMhMakeConfDirCheck)
   {
-    const string &RootDir=loadedmakefile::sm_Statics.m_MhMakeConf->GetFullFileName();
-    string MakeDir=m_MakeDir->GetFullFileName();
-    if (RootDir.length()>MakeDir.length() || _strnicmp(RootDir.c_str(),MakeDir.c_str(),RootDir.length()))
+    if (loadedmakefile::sm_Statics.m_MhMakeConf)
     {
-      cerr<<"mhmake needs to run in a directory that is a subdirectory of the directory specified with %MHMAKECONF : "<<RootDir<<", make dir : "<<m_MakeDir->GetFullFileName()<<endl;
-      exit(1);
+      const string &RootDir=loadedmakefile::sm_Statics.m_MhMakeConf->GetFullFileName();
+      string MakeDir=m_MakeDir->GetFullFileName();
+      if (RootDir.length()>MakeDir.length() || _strnicmp(RootDir.c_str(),MakeDir.c_str(),RootDir.length()))
+      {
+        cerr<<"mhmake needs to run in a directory that is a subdirectory of the directory specified with %MHMAKECONF : "<<RootDir<<", make dir : "<<m_MakeDir->GetFullFileName()<<endl;
+        exit(1);
+      }
     }
   }
 }
@@ -758,7 +767,7 @@ bool MakeDirs(fileinfo *pDir)
   { /* Create directory */
     if (-1==mkdir(pDir->GetFullFileName().c_str(),S_IRWXU))
     {
-      cerr << "mkdir function failed for directory " << QuoteFileName(pDir->GetFullFileName()) << endl; 
+      cerr << "mkdir function failed for directory " << QuoteFileName(pDir->GetFullFileName()) << endl;
       return false;
     }
     pDir->InvalidateDate(); // Directory created successfully, so invalidate the date
