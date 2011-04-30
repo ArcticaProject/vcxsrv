@@ -162,9 +162,9 @@ xkb_symbols "ibm" {
 };
 
 // LEKP and LEKPa layouts 1.0
-// Copyright (C) 2007 Tautrimas Pajarskas
 // For more info visit http://lekp.info
-// Made by Ernestas Lukoševičius
+// Created by Tautrimas Pajarskas, 2007
+// Made by Ernestas Lukoševičius, 2007
 // Minor cleanup by Rimas Kudelis, 2010
 
 partial alphanumeric_keys modifier_keys

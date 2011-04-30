@@ -35,9 +35,6 @@
 /* Support Damage extension */
 #define DAMAGE 1
 
-/* Build for darwin with Quartz support */
-#undef DARWIN_WITH_QUARTZ
-
 /* Use OsVendorVErrorF */
 #define DDXOSVERRORF 1
 
@@ -150,6 +147,9 @@
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
+
+/* Define to 1 if you have the libdispatch (GCD) available */
+#undef HAVE_LIBDISPATCH
 
 /* Define to 1 if you have the `link' function. */
 #define HAVE_LINK 1
@@ -483,6 +483,9 @@
 
 /* Define to 1 if you have the `ffs' function. */
 #undef HAVE_FFS
+
+/* The compiler supported TLS storage class, prefering initial-exec if tls_model is supported */
+#undef TLS
 
 /* Correctly set _XSERVER64 for OSX fat binaries */
 #ifdef __APPLE__

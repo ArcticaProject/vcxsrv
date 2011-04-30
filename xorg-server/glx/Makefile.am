@@ -1,4 +1,4 @@
-if AIGLX
+if AIGLX_DRI_LOADER
 GLXDRI_LIBRARY = libglxdri.la
 endif
 

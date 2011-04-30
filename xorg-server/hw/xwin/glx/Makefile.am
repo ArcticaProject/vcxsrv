@@ -25,36 +25,16 @@ AM_CFLAGS = -DHAVE_XWIN_CONFIG_H $(DIX_CFLAGS) \
             -I$(top_srcdir) \
             -I$(top_srcdir)/hw/xwin/
 
-glwrap.c: generated_gl_wrappers.c
-wgl_ext_api.c: generated_wgl_wrappers.c wglext.h
-wgl_ext_api.h: wglext.h
-indirect.c: wgl_ext_api.h
+if XWIN_GLX_WINDOWS
 
-SPEC_FILES = gl.spec gl.tm wglext.spec wgl.tm
+generated_gl_wrappers.c: gen_gl_wrappers.py $(KHRONOS_SPEC_DIR)/gl.spec $(KHRONOS_SPEC_DIR)/gl.tm
+	$(srcdir)/gen_gl_wrappers.py --spec=$(KHRONOS_SPEC_DIR)/gl.spec --typemap=$(KHRONOS_SPEC_DIR)/gl.tm --dispatch-header=$(top_srcdir)/glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
 
-gl.spec:
-	wget http://www.opengl.org/registry/api/gl.spec
-
-gl.tm:
-	wget http://www.opengl.org/registry/api/gl.tm
-
-wglext.spec:
-	wget http://www.opengl.org/registry/api/wglext.spec
-
-wgl.tm:
-	wget http://www.opengl.org/registry/api/wgl.tm
-
-generated_gl_wrappers.c: gen_gl_wrappers.py gl.spec gl.tm
-	$(srcdir)/gen_gl_wrappers.py --spec=`test -e gl.spec || echo $(srcdir)/`gl.spec --typemap=`test -e gl.tm || echo $(srcdir)/`gl.tm --dispatch-header=$(top_srcdir)/glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
-
-generated_wgl_wrappers.c: gen_gl_wrappers.py wglext.spec wgl.tm
-	$(srcdir)/gen_gl_wrappers.py --spec=`test -e wglext.spec || echo $(srcdir)/`wglext.spec --typemap=`test -e wgl.tm || echo $(srcdir)/`wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
-
-wglext.h:
-	wget http://www.opengl.org/registry/api/wglext.h
+generated_wgl_wrappers.c: gen_gl_wrappers.py $(KHRONOS_SPEC_DIR)/wglext.spec $(KHRONOS_SPEC_DIR)/wgl.tm
+	$(srcdir)/gen_gl_wrappers.py --spec=$(KHRONOS_SPEC_DIR)/wglext.spec --typemap=$(KHRONOS_SPEC_DIR)/wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
+endif
 
 BUILT_SOURCES = generated_gl_wrappers.c generated_wgl_wrappers.c
 CLEANFILES = $(BUILT_SOURCES)
-DISTCLEANFILES = $(SPEC_FILES) wglext.h
 
-EXTRA_DIST = gen_gl_wrappers.py $(SPEC_FILES) wglext.h
+EXTRA_DIST = gen_gl_wrappers.py
