@@ -515,6 +515,12 @@ void st_init_extensions(struct st_context *st)
       ctx->Extensions.ARB_half_float_vertex = GL_TRUE;
    }
 
+   if (screen->is_format_supported(screen, PIPE_FORMAT_R32G32B32A32_FIXED,
+                                   PIPE_BUFFER, 0,
+                                   PIPE_BIND_VERTEX_BUFFER)) {
+      ctx->Extensions.ARB_ES2_compatibility = GL_TRUE;
+   }
+
    if (screen->get_shader_param(screen, PIPE_SHADER_GEOMETRY, PIPE_SHADER_CAP_MAX_INSTRUCTIONS) > 0) {
 #if 0 /* XXX re-enable when GLSL compiler again supports geometry shaders */
       ctx->Extensions.ARB_geometry_shader4 = GL_TRUE;
@@ -575,5 +581,18 @@ void st_init_extensions(struct st_context *st)
 
    if (st->pipe->texture_barrier) {
       ctx->Extensions.NV_texture_barrier = GL_TRUE;
+   }
+
+   if (screen->is_format_supported(screen, PIPE_FORMAT_R9G9B9E5_FLOAT,
+                                   PIPE_TEXTURE_2D, 0,
+                                   PIPE_BIND_SAMPLER_VIEW)) {
+      ctx->Extensions.EXT_texture_shared_exponent = GL_TRUE;
+   }
+
+   if (screen->is_format_supported(screen, PIPE_FORMAT_R11G11B10_FLOAT,
+                                   PIPE_TEXTURE_2D, 0,
+                                   PIPE_BIND_RENDER_TARGET |
+                                   PIPE_BIND_SAMPLER_VIEW)) {
+      ctx->Extensions.EXT_packed_float = GL_TRUE;
    }
 }

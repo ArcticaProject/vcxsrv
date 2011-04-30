@@ -35,7 +35,7 @@
 #include <GL/glext.h>
 #include <glx/glxserver.h>
 #include <glx/glxext.h>
-#include "wglext.h"
+#include <GL/wglext.h>
 #include <wgl_ext_api.h>
 #include "glwindows.h"
 

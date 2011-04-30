@@ -29,7 +29,7 @@
 #ifndef wgl_ext_api_h
 #define wgl_ext_api_h
 
-#include "wglext.h"
+#include <GL/wglext.h>
 
 void wglResolveExtensionProcs(void);
 

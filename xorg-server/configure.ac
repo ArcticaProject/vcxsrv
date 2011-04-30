@@ -601,6 +601,9 @@ AC_ARG_ENABLE(glx-tls,        AS_HELP_STRING([--enable-glx-tls], [Build GLX with
                                    GLX_USE_TLS=yes
                                  fi])
 AC_SUBST(GLX_TLS, ${GLX_USE_TLS})
+AC_ARG_WITH(khronos-spec-dir, AS_HELP_STRING([--with-khronos-spec-dir=PATH], [Path to Khronos OpenGL registry database files (default: auto)]),
+				[KHRONOS_SPEC_DIR="${withval}"],
+				[KHRONOS_SPEC_DIR=auto])
 
 dnl Extensions.
 AC_ARG_ENABLE(registry,       AS_HELP_STRING([--disable-registry], [Build string registry module (default: enabled)]), [XREGISTRY=$enableval], [XREGISTRY=yes])
@@ -1011,12 +1014,14 @@ else
 fi
 AM_CONDITIONAL(GLX, test "x$GLX" = xyes)
 
-if test "x$AIGLX" = xyes -a "x$GLX" = xyes -a \( "x$DRI" = xyes -o "x$DRI2" = xyes \); then
-	AC_DEFINE(AIGLX, 1, [Build AIGLX loader])
-else
-	AIGLX=no
+if test "x$GLX" = xno; then
+        AIGLX=no
 fi
-AM_CONDITIONAL(AIGLX, test "x$AIGLX" = xyes)
+
+if test "x$AIGLX" = xyes -a \( "x$DRI" = xyes -o "x$DRI2" = xyes \); then
+	AC_DEFINE(AIGLX, 1, [Build AIGLX loader])
+fi
+AM_CONDITIONAL(AIGLX_DRI_LOADER, { test "x$DRI" = xyes || test "x$DRI2" = xyes; } && test "x$AIGLX" = xyes)
 
 if test "x$GLX_USE_TLS" = xyes ; then
 	GLX_DEFINES="-DGLX_USE_TLS -DPTHREADS"
@@ -1855,12 +1860,22 @@ if test "x$XWIN" = xyes; then
 
 	AC_DEFINE(DDXOSVERRORF, 1, [Use OsVendorVErrorF])
 	AC_DEFINE(DDXBEFORERESET, 1, [Use ddxBeforeReset ])
+
+dnl XWin with AIGLX requires OpenGL spec files in order to generate wrapper code for native GL functions
+	if [test "x$XWIN" = xyes && test "x$AIGLX" = xyes] ; then
+           if test "x$KHRONOS_SPEC_DIR" = "xauto" ; then
+		PKG_CHECK_MODULES([KHRONOS_OPENGL_REGISTRY], [khronos-opengl-registry])
+		KHRONOS_SPEC_DIR=`pkg-config khronos-opengl-registry --variable=specdir`
+           fi
+           AC_SUBST(KHRONOS_SPEC_DIR)
+	fi
+
 fi
 AM_CONDITIONAL(XWIN, [test "x$XWIN" = xyes])
 AM_CONDITIONAL(XWIN_MULTIWINDOW, [test "x$XWIN" = xyes])
 AM_CONDITIONAL(XWIN_MULTIWINDOWEXTWM, [test "x$XWIN" = xyes && test "x$WINDOWSWM" = xyes])
 AM_CONDITIONAL(XWIN_CLIPBOARD, [test "x$XWIN" = xyes])
-AM_CONDITIONAL(XWIN_GLX_WINDOWS, [test "x$XWIN" = xyes && false])
+AM_CONDITIONAL(XWIN_GLX_WINDOWS, [test "x$XWIN" = xyes && test "x$AIGLX" = xyes])
 AM_CONDITIONAL(XWIN_NATIVEGDI, [test "x$XWIN" = xyes])
 AM_CONDITIONAL(XWIN_PRIMARYFB, [test "x$XWIN" = xyes])
 AM_CONDITIONAL(XWIN_RANDR, [test "x$XWIN" = xyes])

@@ -382,6 +382,26 @@ _mesa_choose_tex_format( struct gl_context *ctx, GLint internalFormat,
       }
    }
 
+   if (ctx->Extensions.EXT_texture_shared_exponent) {
+      switch (internalFormat) {
+         case GL_RGB9_E5:
+            ASSERT(ctx->TextureFormatSupported[MESA_FORMAT_RGB9_E5_FLOAT]);
+            return MESA_FORMAT_RGB9_E5_FLOAT;
+         default:
+            ; /* fallthrough */
+      }
+   }
+
+   if (ctx->Extensions.EXT_packed_float) {
+      switch (internalFormat) {
+         case GL_R11F_G11F_B10F:
+            ASSERT(ctx->TextureFormatSupported[MESA_FORMAT_R11_G11_B10_FLOAT]);
+            return MESA_FORMAT_R11_G11_B10_FLOAT;
+         default:
+            ; /* fallthrough */
+      }
+   }
+
    if (ctx->Extensions.EXT_packed_depth_stencil) {
       switch (internalFormat) {
          case GL_DEPTH_STENCIL_EXT:

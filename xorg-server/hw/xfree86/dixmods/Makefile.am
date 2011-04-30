@@ -45,7 +45,7 @@ libwfb_la_SOURCES = $(top_builddir)/fb/fbcmap_mi.c fbmodule.c
 libwfb_la_CFLAGS = $(AM_CFLAGS) -DFB_ACCESS_WRAPPER
 
 libglx_la_LDFLAGS = -avoid-version
-if AIGLX
+if AIGLX_DRI_LOADER
 GLXDRI_LIBRARY = $(top_builddir)/glx/libglxdri.la
 endif
 libglx_la_LIBADD = \
