@@ -26,7 +26,7 @@ xkb_symbols "cyrillicyz" {
 partial alphanumeric_keys
 xkb_symbols "latinunicode" {
   include "rs(latinunicode)"
-  name[Group1]= "Montenegrin (Latin unicode)";
+  name[Group1]= "Montenegrin (Latin Unicode)";
 };
 
 partial alphanumeric_keys
@@ -38,7 +38,7 @@ xkb_symbols "latinyz" {
 partial alphanumeric_keys
 xkb_symbols "latinunicodeyz" {
   include "rs(latinunicodeyz)"
-  name[Group1]= "Montenegrin (Latin unicode qwerty)";
+  name[Group1]= "Montenegrin (Latin Unicode qwerty)";
 };
 
 xkb_symbols "cyrillicalternatequotes" {

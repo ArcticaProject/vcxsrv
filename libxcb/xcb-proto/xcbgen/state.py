@@ -4,9 +4,9 @@ This module contains the namespace class and the singleton module class.
 from os.path import dirname, basename
 from xml.etree.cElementTree import parse
 
-import matcher
-from error import *
-from xtypes import *
+from xcbgen import matcher
+from xcbgen.error import *
+from xcbgen.xtypes import *
 
 import __main__
 

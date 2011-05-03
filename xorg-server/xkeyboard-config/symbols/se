@@ -251,3 +251,62 @@ xkb_symbols "svdvorak" {
    key <AB09> { [ v, V ] };
    key <AB10> { [ z, Z ] };
 };
+
+partial alphanumeric_keys
+xkb_symbols "swl" {
+
+//
+// Swedish Sign Language
+// ISO_639-3 language code: swl
+// (called “svenskt teckenspråk” in swedish)
+//
+// Author: Saašha Metsärantala saasha@acc.umu.se
+//
+// A sans-serif font is available at
+// http://www.acc.umu.se/home/saasha/typsnitt/swl_sans.ttf
+//
+
+  include "se(basic)"
+
+  name[Group1]="Swedish Sign Language";
+
+  key <AB01> { [ 0x110c925, 0x110c95f, 0x110c940, 0x110c99a ] };
+  key <AB02> { [ 0x110c96b, 0x110c933, 0x110c920, 0x110c98e ] };
+  key <AB03> { [ 0x110c949, 0x110c94b, 0x110c921, 0x110c99f ] };
+  key <AB04> { [ 0x110c923, 0x110c92d, 0x110c95c, 0x110c96e ] };
+  key <AB05> { [ 0x110c93b, 0x110c927, 0x110c908, 0x110c9a6 ] };
+  key <AB06> { [ 0x110c93a, 0x110c94c, 0x110c93e, 0x110c9a7 ] };
+  key <AB07> { [ 0x110c95b, 0x110c93f, 0x110c907, 0x110c992 ] };
+  key <AC01> { [ 0x110c973, 0x110c924, 0x110c93c, 0x110c9a4 ] };
+  key <AC02> { [ 0x110c972, 0x110c945, 0x110c91a, 0x110c99c ] };
+  key <AC03> { [ 0x110c979, 0x110c929, 0x110c916, 0x110c999 ] };
+  key <AC04> { [ 0x110c976, 0x110c975, 0x110c917, 0x110c994 ] };
+  key <AC05> { [ 0x110c95a, 0x110c926, 0x110c918, 0x110c996 ] };
+  key <AC06> { [ 0x110c96f, 0x110c932, 0x110c915, 0x110c998 ] };
+  key <AC07> { [ 0x110c942, 0x110c922, 0x110c913, 0x110c9a2 ] };
+  key <AC08> { [ 0x110c985, 0x110c94e, 0x110c914, 0x110c97a ] };
+  key <AC09> { [ 0x110c928, 0x110c948, 0x110c919, 0x110c9a5 ] };
+  key <AC10> { [ 0x110c970, 0x110c92b, 0x110c905, 0x110c991 ] };
+  key <AC11> { [ 0x110c92e, 0x110c944, 0x110c904, VoidSymbol ] };
+  key <AD01> { [ 0x110c96c, 0x110c92a, 0x110c900, 0x110c9a1 ] };
+  key <AD02> { [ 0x110c971, 0x110c930, 0x110c903, 0x110c99e ] };
+  key <AD03> { [ 0x110c987, 0x110c947, 0x110c90c, 0x110c96d ] };
+  key <AD04> { [ 0x110c986, 0x110c92c, 0x110c91b, 0x110c993 ] };
+  key <AD05> { [ 0x110c939, 0x110c94a, 0x110c911, 0x110c995 ] };
+  key <AD06> { [ 0x110c952, 0x110c943, 0x110c912, 0x110c99b ] };
+  key <AD07> { [ 0x110c978, 0x110c977, 0x110c95e, 0x110c9a3 ] };
+  key <AD08> { [ 0x110c951, 0x110c931, 0x110c91e, 0x110c997 ] };
+  key <AD09> { [ 0x110c90e, 0x110c946, 0x110c906, 0x110c9a0 ] };
+  key <AD10> { [ 0x110c91f, 0x110c961, 0x110c91c, VoidSymbol ] };
+  key <AD11> { [ 0x110c93d, 0x110c92f, 0x110c902, VoidSymbol ] };
+  key <AE01> { [ 0x110c953, 0x110c936, 0x110c988, 0x110c962 ] };
+  key <AE02> { [ 0x110c954, 0x110c957, 0x110c97d, 0x110c963 ] };
+  key <AE03> { [ 0x110c934, 0x110c937, 0x110c97e, 0x110c983 ] };
+  key <AE04> { [ 0x110c955, 0x110c958, 0x110c98a, 0x110c984 ] };
+  key <AE05> { [ 0x110c935, 0x110c938, 0x110c97f, 0x110c966 ] };
+  key <AE06> { [ 0x110c956, 0x110c959, 0x110c980, 0x110c967 ] };
+  key <AE07> { [ 0x110c960, 0x110c969, 0x110c982, 0x110c96a ] };
+  key <AE08> { [ 0x110c97c, 0x110c90b, 0x110c989, 0x110c964 ] };
+  key <AE09> { [ 0x110c97b, 0x110c90a, 0x110c98b, 0x110c965 ] };
+  key <AE10> { [ 0x110c974, 0x110c909, 0x110c98c, 0x110c968 ] };
+};
