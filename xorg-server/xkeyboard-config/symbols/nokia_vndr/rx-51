@@ -3,6 +3,8 @@ xkb_symbols "common" {
     include "nokia_vndr/rx-51(common_keys)"
     include "nokia_vndr/rx-51(modifiers)"
 
+	key <BKSP>	{ [	BackSpace,	Delete,		BackSpace,	Delete		] };
+	
     // This section should not be included by any other section.
     // It's referenced only once by rule file to allow multiple layout configurations.
 
@@ -488,4 +490,899 @@ xkb_symbols "arrows_4btns" {
     key <LEFT>	{ type[Group1] = "ONE_LEVEL", symbols[Group1] = [	Left	] };
     key <DOWN>	{ type[Group1] = "ONE_LEVEL", symbols[Group1] = [	Down	] };
     key <RGHT>	{ type[Group1] = "ONE_LEVEL", symbols[Group1] = [	Right	] };
+};
+
+// author: Roman Moravcik
+xkb_symbols "sk" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_2btns)"
+
+    name[Group1] = "Slovak QWERTZ (CZ HW)";
+
+    // 1. row
+    key <AD06>	{ [	z,		Z,		6,		6		] };
+    key <AB08>	{ [	dead_acute,	dead_acute,	sterling,	sterling	] };
+
+    // 2. row
+    key <AC08>	{ [	k,		K,		semicolon,	semicolon	] };
+    key <AC09>	{ [	l,		L,		colon,		colon		] };
+    key <AB09>	{ [	ocircumflex,	adiaeresis,	EuroSign,	EuroSign	] };
+    key <UP>	{ [	dead_caron,	bar,		dollar,		dollar		] };
+
+    // 3. row
+    key <AB01>	{ [	y,		Y,		equal,		equal		] };
+    key <AB02>	{ [	x,		X,		slash,		slash		] };
+    key <AB03>	{ [	c,		C,		backslash,	backslash	] };
+    key <AB04>	{ [	v,		V,		apostrophe,	apostrophe	] };
+    key <AB05>	{ [	b,		B,		quotedbl,	quotedbl	] };
+    key <AB06>	{ [	n,		N,		exclam,		exclam		] };
+    key <AB07>	{ [	m,		M,		question,	question	] };
+    key <LEFT>	{ [	period,		Tab,		comma,		comma		] };
+};
+
+xkb_symbols "sk_qwerty" {
+    include "nokia_vndr/rx-51(sk)"
+
+    name[Group1] = "Slovak QWERTY (CZ hw)";
+
+    // 1. row
+    key <AD06>	{ [	y,		Y,		6,		6		] };
+
+    // 3. row
+    key <AB01>	{ [	z,		Z,		equal,		equal		] };
+};
+
+// author: Roman Moravcik
+partial alphanumeric_keys
+xkb_symbols "aren" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Arabic";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	Arabic_dad,		Arabic_fatha,		0x1000661,		0x1000661		] };
+    key <AD02>	{ symbols[Group2] = [	Arabic_sad,		Arabic_fathatan,	0x1000662,		0x1000662		] };
+    key <AD03>	{ symbols[Group2] = [	Arabic_theh,		Arabic_damma,		0x1000663,		0x1000663		] };
+    key <AD04>	{ symbols[Group2] = [	Arabic_qaf,		Arabic_dammatan,	0x1000664,		0x1000664		] };
+    key <AD05>	{ symbols[Group2] = [	Arabic_feh,		0x100fef9,		0x1000665,		0x1000665		] };
+    key <AD06>	{ symbols[Group2] = [	Arabic_ghain,		Arabic_hamzaunderalef,	0x1000666,		0x1000666		] };
+    key <AD07>	{ symbols[Group2] = [	Arabic_ain,		rightsinglequotemark,	0x1000667,		0x1000667		] };
+    key <AD08>	{ symbols[Group2] = [	Arabic_ha,		Arabic_tehmarbuta,	0x1000668,		0x1000668		] };
+    key <AD09>	{ symbols[Group2] = [	Arabic_khah,		division,		0x1000669,		0x1000669		] };
+    key <AD10>	{ symbols[Group2] = [	Arabic_hah,		multiply,		0x1000660,		0x1000660		] };
+    key <AB08>	{ symbols[Group2] = [	Arabic_jeem,		period,			equal,			equal			] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Arabic_sheen,		Arabic_kasra,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Arabic_seen,		Arabic_kasratan,	plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Arabic_yeh,		Arabic_alefmaksura,	numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Arabic_beh,		Arabic_hamzaonyeh,	minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Arabic_lam,		0x100fef7,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Arabic_alef,		Arabic_hamzaonalef,	parenright,		parenright		] };
+    key <AC07>	{ symbols[Group2] = [	Arabic_teh,		Arabic_tatweel,		parenleft,		parenleft		] };
+    key <AC08>	{ symbols[Group2] = [	Arabic_noon,		Arabic_comma,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	Arabic_meem,		Arabic_semicolon,	exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	Arabic_kaf,		colon,			Arabic_question_mark,	Arabic_question_mark	] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Arabic_thal,		Arabic_shadda,		sterling,		sterling		] };
+    key <AB02>	{ symbols[Group2] = [	Arabic_dal,		Arabic_sukun,		dollar,			dollar			] };
+    key <AB03>	{ symbols[Group2] = [	Arabic_waw,		Arabic_hamzaonwaw,	EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	Arabic_ra,		0x100fef5,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	Arabic_zain,		0x100fefb,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	Arabic_tah,		Arabic_maddaonalef,	quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	Arabic_zah,		Arabic_hamza,		apostrophe,		apostrophe		] };
+};
+
+// author: Hessam Farhang
+partial alphanumeric_keys
+xkb_symbols "faen" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Persian";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	Arabic_dad,		Arabic_sukun,		0x10006f1,		0x1000661		] };
+    key <AD02>	{ symbols[Group2] = [	Arabic_sad,		Arabic_dammatan,	0x10006f2,		0x1000662		] };
+    key <AD03>	{ symbols[Group2] = [	Arabic_theh,		Arabic_kasratan,	0x10006f3,		0x1000663		] };
+    key <AD04>	{ symbols[Group2] = [	Arabic_qaf,		Arabic_fathatan,	0x10006f4,		0x1000664		] };
+    key <AD05>	{ symbols[Group2] = [	Arabic_feh,		Arabic_damma,		0x10006f5,		0x1000665		] };
+    key <AD06>	{ symbols[Group2] = [	Arabic_ghain,		Arabic_kasra,		0x10006f6,		0x1000666		] };
+    key <AD07>	{ symbols[Group2] = [	Arabic_ain,		Arabic_fatha,		0x10006f7,		0x1000667		] };
+    key <AD08>	{ symbols[Group2] = [	Arabic_heh,		Arabic_shadda,		0x10006f8,		0x1000668		] };
+    key <AD09>	{ symbols[Group2] = [	Arabic_khah,		0x10006af,		0x10006f9,		0x1000669		] };
+    key <AD10>	{ symbols[Group2] = [	Arabic_hah,		0x1000686,		0x10006f0,		0x1000660		] };
+    key <AB08>	{ symbols[Group2] = [	Arabic_jeem,		Arabic_comma,		comma,			Arabic_semicolon	] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Arabic_sheen,		Arabic_hamzaonwaw,	asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Arabic_seen,		Arabic_hamzaonyeh,	plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	0x10006cc,		period,			numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Arabic_beh,		colon,			minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Arabic_lam,		Arabic_hamzaonalef,	underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Arabic_alef,		Arabic_maddaonalef,	parenleft,		parenleft		] };
+    key <AC07>	{ symbols[Group2] = [	Arabic_teh,		Arabic_tehmarbuta,	parenright,		parenright		] };
+    key <AC08>	{ symbols[Group2] = [	Arabic_noon,		guillemotright,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	Arabic_meem,		guillemotleft,		exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	0x10006a9,		Arabic_waw,		Arabic_question_mark,	colon			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Arabic_zah,		Arabic_kaf,		sterling,		period			] };
+    key <AB02>	{ symbols[Group2] = [	Arabic_tah,		0x1000653,		dollar,			dollar			] };
+    key <AB03>	{ symbols[Group2] = [	Arabic_zain,		0x1000698,		EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	Arabic_ra,		0x1000670,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	Arabic_thal,		0x100200c,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	Arabic_dal,		0x1000654,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	0x100067e,		Arabic_hamza,		apostrophe,		apostrophe		] };
+};
+
+// author: Jaroslav Poriz
+xkb_symbols "dv" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "Dvorak";
+
+    // 1. row
+    key <AD01>	{ [	colon,		semicolon,	1,		1		] };
+    key <AD02>	{ [	w,		W,		2,		2		] };
+    key <AD03>	{ [	v,		V,		3,		3		] };
+    key <AD04>	{ [	p,		P,		4,		4		] };
+    key <AD05>	{ [	y,		Y,		5,		5		] };
+    key <AD06>	{ [	f,		F,		6,		6		] };
+    key <AD07>	{ [	g,		G,		7,		7		] };
+    key <AD08>	{ [	c,		C,		8,		8		] };
+    key <AD09>	{ [	r,		R,		9,		9		] };
+    key <AD10>	{ [	l,		L,		0,		0		] };
+    key <AB08>	{ [	period,		comma,		equal,		equal		] };
+
+    // 2. row
+    key <AC01>	{ [	a,		A,		asterisk,	asterisk	] };
+    key <AC02>	{ [	o,		O,		plus,		plus		] };
+    key <AC03>	{ [	e,		E,		numbersign,	numbersign	] };
+    key <AC04>	{ [	u,		U,		minus,		minus		] };
+    key <AC05>	{ [	i,		I,		underscore,	underscore	] };
+    key <AC06>	{ [	d,		D,		exclam,		parenleft	] };
+    key <AC07>	{ [	h,		H,		question,	parenright	] };
+    key <AC08>	{ [	t,		T,		ampersand,	ampersand	] };
+    key <AC09>	{ [	n,		N,		less,		exclam		] };
+    key <AB09>	{ [	s,		S,		greater,	question	] };
+
+    // 3. row
+    key <AB01>	{ [	z,		Z,		asciitilde,	asciitilde	] };
+    key <AB02>	{ [	q,		Q,		dollar,		dollar		] };
+    key <AB03>	{ [	j,		J,		backslash,	bar		] };
+    key <AB04>	{ [	k,		K,		grave,		slash		] };
+    key <AB05>	{ [	x,		X,		parenleft,	backslash	] };
+    key <AB06>	{ [	b,		B,		parenright,	quotedbl	] };
+    key <AB07>	{ [	m,		M,		apostrophe,	apostrophe	] };
+    key <SPCE>	{ [	space,		slash,		at,		at		] };
+};
+
+// author: Porfyras <porfyras@gmail.com>
+// author: Roman Moravcik
+// author: Faidon Liambotis
+partial alphanumeric_keys
+xkb_symbols "gr" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Greek";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	period,			colon,			1,			1		] };
+    key <AD02>	{ symbols[Group2] = [	Greek_finalsmallsigma,	Greek_SIGMA,		2,			2		] };
+    key <AD03>	{ symbols[Group2] = [	Greek_epsilon,		Greek_EPSILON,		3,			3		] };
+    key <AD04>	{ symbols[Group2] = [	Greek_rho,		Greek_RHO,		4,			4		] };
+    key <AD05>	{ symbols[Group2] = [	Greek_tau,		Greek_TAU,		5,			5		] };
+    key <AD06>	{ symbols[Group2] = [	Greek_upsilon,		Greek_UPSILON,		6,			6		] };
+    key <AD07>	{ symbols[Group2] = [	Greek_theta,		Greek_THETA,		7,			7		] };
+    key <AD08>	{ symbols[Group2] = [	Greek_iota,		Greek_IOTA,		8,			8		] };
+    key <AD09>	{ symbols[Group2] = [	Greek_omicron,		Greek_OMICRON,		9,			9		] };
+    key <AD10>	{ symbols[Group2] = [	Greek_pi,		Greek_PI,		0,			0		] };
+    key <AB08>	{ symbols[Group2] = [	comma,			semicolon,		equal,			equal		] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Greek_alpha,		Greek_ALPHA,		asterisk,		asterisk	] };
+    key <AC02>	{ symbols[Group2] = [	Greek_sigma,		Greek_SIGMA,		plus,			plus		] };
+    key <AC03>	{ symbols[Group2] = [	Greek_delta,		Greek_DELTA,		numbersign,		numbersign	] };
+    key <AC04>	{ symbols[Group2] = [	Greek_phi,		Greek_PHI,		minus,			minus		] };
+    key <AC05>	{ symbols[Group2] = [	Greek_gamma,		Greek_GAMMA,		underscore,		underscore	] };
+    key <AC06>	{ symbols[Group2] = [	Greek_eta,		Greek_ETA,		parenleft,		parenleft	] };
+    key <AC07>	{ symbols[Group2] = [	Greek_xi,		Greek_XI,		parenright,		parenright	] };
+    key <AC08>	{ symbols[Group2] = [	Greek_kappa,		Greek_KAPPA,		ampersand,		ampersand	] };
+    key <AC09>	{ symbols[Group2] = [	Greek_lamda,		Greek_LAMDA,		exclam,			exclam		] };
+    key <AB09>	{ symbols[Group2] = [	dead_acute,		dead_diaeresis,		question,		question	] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Greek_zeta,		Greek_ZETA,		sterling,		sterling	] };
+    key <AB02>	{ symbols[Group2] = [	Greek_chi,		Greek_CHI,		dollar,			dollar		] };
+    key <AB03>	{ symbols[Group2] = [	Greek_psi,		Greek_PSI,		EuroSign,		EuroSign	] };
+    key <AB04>	{ symbols[Group2] = [	Greek_omega,		Greek_OMEGA,		slash,			slash		] };
+    key <AB05>	{ symbols[Group2] = [	Greek_beta,		Greek_BETA,		backslash,		backslash	] };
+    key <AB06>	{ symbols[Group2] = [	Greek_nu,		Greek_NU,		quotedbl,		quotedbl	] };
+    key <AB07>	{ symbols[Group2] = [	Greek_mu,		Greek_MU,		apostrophe,		apostrophe	] };
+};
+
+// author: Ognian Samokovliyski
+// author: Kostadin Bashev
+// author: Roman Moravcik
+partial alphanumeric_keys
+xkb_symbols "bg_phonetic" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Bulgarian - Phonetic";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	Cyrillic_ya,		Cyrillic_YA,		1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	Cyrillic_ve,		Cyrillic_VE,		2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	Cyrillic_ie,		Cyrillic_IE,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	Cyrillic_er,		Cyrillic_ER,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	Cyrillic_te,		Cyrillic_TE,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	Cyrillic_hardsign,	Cyrillic_HARDSIGN,	6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	Cyrillic_u,		Cyrillic_U,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	Cyrillic_i,		Cyrillic_I,		8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	Cyrillic_o,		Cyrillic_O,		9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	Cyrillic_pe,		Cyrillic_PE,		0,			0			] };
+    key <AB08>	{ symbols[Group2] = [	comma,			semicolon,		equal,			equal			] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Cyrillic_a,		Cyrillic_A,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Cyrillic_es,		Cyrillic_ES,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Cyrillic_de,		Cyrillic_DE,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Cyrillic_ef,		Cyrillic_EF,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Cyrillic_ghe,		Cyrillic_GHE,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Cyrillic_ha,		Cyrillic_HA,		parenleft,		parenleft		] };
+    key <AC07>	{ symbols[Group2] = [	Cyrillic_shorti,	Cyrillic_SHORTI,	parenright,		parenright		] };
+    key <AC08>	{ symbols[Group2] = [	Cyrillic_ka,		Cyrillic_KA,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	Cyrillic_el,		Cyrillic_EL,		exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	period,			colon,			question,		question		] };
+    key <UP>	{ symbols[Group2] = [	Cyrillic_yu,		Cyrillic_YU,		Up,			Up			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Cyrillic_ze,		Cyrillic_ZE,		sterling,		sterling		] };
+    key <AB02>	{ symbols[Group2] = [	Cyrillic_softsign,	Cyrillic_SOFTSIGN,	dollar,			dollar			] };
+    key <AB03>	{ symbols[Group2] = [	Cyrillic_tse,		Cyrillic_TSE,		EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	Cyrillic_zhe,		Cyrillic_ZHE,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	Cyrillic_be,		Cyrillic_BE,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	Cyrillic_en,		Cyrillic_EN,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	Cyrillic_em,		Cyrillic_EM,		apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group2] = [	Cyrillic_sha,		Cyrillic_SHA,		Left,			Left			] };
+    key <DOWN>	{ symbols[Group2] = [	Cyrillic_shcha,		Cyrillic_SHCHA,		Down,			Down			] };
+    key <RGHT>	{ symbols[Group2] = [	Cyrillic_che,		Cyrillic_CHE,		Right,			Right			] };
+};
+
+// author: Nikola Kovachevski
+partial alphanumeric_keys
+xkb_symbols "mk" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Macedonian";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	Cyrillic_lje,		Cyrillic_LJE,		1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	Cyrillic_nje,		Cyrillic_NJE,		2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	Cyrillic_ie,		Cyrillic_IE,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	Cyrillic_er,		Cyrillic_ER,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	Cyrillic_te,		Cyrillic_TE,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	Macedonia_dse,		Macedonia_DSE,		6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	Cyrillic_u,		Cyrillic_U,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	Cyrillic_i,		Cyrillic_I,		8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	Cyrillic_o,		Cyrillic_O,		9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	Cyrillic_pe,		Cyrillic_PE,		0,			0			] };
+    key <AB08>	{ symbols[Group2] = [	Cyrillic_sha,		Cyrillic_SHA,		equal,			equal			] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Cyrillic_a,		Cyrillic_A,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Cyrillic_es,		Cyrillic_ES,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Cyrillic_de,		Cyrillic_DE,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Cyrillic_ef,		Cyrillic_EF,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Cyrillic_ghe,		Cyrillic_GHE,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Cyrillic_ha,		Cyrillic_HA,		parenleft,		parenleft		] };
+    key <AC07>	{ symbols[Group2] = [	Cyrillic_je,		Cyrillic_JE,		parenright,		parenright		] };
+    key <AC08>	{ symbols[Group2] = [	Cyrillic_ka,		Cyrillic_KA,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	Cyrillic_el,		Cyrillic_EL,		exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	period,			comma,			question,		question		] };
+    key <UP>	{ symbols[Group2] = [	Cyrillic_che,		Cyrillic_CHE,		Up,			Up			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Cyrillic_ze,		Cyrillic_ZE,		colon,			colon			] };
+    key <AB02>	{ symbols[Group2] = [	Cyrillic_dzhe,		Cyrillic_DZHE,		semicolon,		semicolon		] };
+    key <AB03>	{ symbols[Group2] = [	Cyrillic_tse,		Cyrillic_TSE,		EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	Cyrillic_ve,		Cyrillic_VE,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	Cyrillic_be,		Cyrillic_BE,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	Cyrillic_en,		Cyrillic_EN,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	Cyrillic_em,		Cyrillic_EM,		apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group2] = [	Macedonia_kje,		Macedonia_KJE,		Left,			Left			] };
+    key <DOWN>	{ symbols[Group2] = [	Cyrillic_zhe,		Cyrillic_ZHE,		Down,			Down			] };
+    key <RGHT>	{ symbols[Group2] = [	Macedonia_gje,		Macedonia_GJE,		Right,			Right			] };
+};
+
+// author: Roman Moravcik
+partial alphanumeric_keys
+xkb_symbols "ru_phonetic" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_2btns)"
+
+    name[Group1] = "Russian - Phonetic";
+    name[Group2] = "U.S. English";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group1] = [	Cyrillic_ya,		Cyrillic_YA,		1,			1			] };
+    key <AD02>	{ symbols[Group1] = [	Cyrillic_ve,		Cyrillic_VE,		2,			2			] };
+    key <AD03>	{ symbols[Group1] = [	Cyrillic_ie,		Cyrillic_IE,		3,			3			] };
+    key <AD04>	{ symbols[Group1] = [	Cyrillic_er,		Cyrillic_ER,		4,			4			] };
+    key <AD05>	{ symbols[Group1] = [	Cyrillic_te,		Cyrillic_TE,		5,			5			] };
+    key <AD06>	{ symbols[Group1] = [	Cyrillic_yeru,		Cyrillic_YERU,		6,			6			] };
+    key <AD07>	{ symbols[Group1] = [	Cyrillic_u,		Cyrillic_U,		7,			7			] };
+    key <AD08>	{ symbols[Group1] = [	Cyrillic_i,		Cyrillic_I,		8,			8			] };
+    key <AD09>	{ symbols[Group1] = [	Cyrillic_o,		Cyrillic_O,		9,			9			] };
+    key <AD10>	{ symbols[Group1] = [	Cyrillic_pe,		Cyrillic_PE,		0,			0			] };
+    key <AB08>  { symbols[Group1] = [	Cyrillic_sha,		Cyrillic_SHA,		Cyrillic_shcha,		Cyrillic_SHCHA		] };
+
+    key <AD01>	{ symbols[Group2] = [	q,			Q,			1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	w,			W,			2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	e,			E,			3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	r,			R,			4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	t,			T,			5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	y,			Y,			6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	u,			U,			7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	i,			I,			8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	o,			O,			9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	p,			P,			0,			0			] };
+    key <AB08>  { symbols[Group2] = [	Cyrillic_sha,		Cyrillic_SHA,		Cyrillic_shcha,		Cyrillic_SHCHA		] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group1] = [	Cyrillic_a,		Cyrillic_A,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group1] = [	Cyrillic_es,		Cyrillic_ES,		plus,			plus			] };
+    key <AC03>	{ symbols[Group1] = [	Cyrillic_de,		Cyrillic_DE,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group1] = [	Cyrillic_ef,		Cyrillic_EF,		minus,			minus			] };
+    key <AC05>	{ symbols[Group1] = [	Cyrillic_ghe,		Cyrillic_GHE,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group1] = [	Cyrillic_ha,		Cyrillic_HA,		exclam,			exclam			] };
+    key <AC07>	{ symbols[Group1] = [	Cyrillic_shorti,	Cyrillic_SHORTI,	question,		question		] };
+    key <AC08>	{ symbols[Group1] = [	Cyrillic_ka,		Cyrillic_KA,		semicolon,		semicolon		] };
+    key <AC09>	{ symbols[Group1] = [	Cyrillic_el,		Cyrillic_EL,		colon,			colon			] };
+    key <AB09>	{ symbols[Group1] = [	Cyrillic_yu,		Cyrillic_YU,		comma,			comma			] };
+    key <UP>	{ symbols[Group1] = [	Cyrillic_e,		Cyrillic_E,		period,			period			] };
+
+    key <AC01>	{ symbols[Group2] = [	a,			A,			asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	s,			S,			plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	d,			D,			numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	f,			F,			minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	g,			G,			underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	h,			H,			exclam,			exclam			] };
+    key <AC07>	{ symbols[Group2] = [	j,			J,			question,		question		] };
+    key <AC08>	{ symbols[Group2] = [	k,			K,			semicolon,		semicolon		] };
+    key <AC09>	{ symbols[Group2] = [	l,			L,			colon,			colon			] };
+    key <AB09>	{ symbols[Group2] = [	comma,			comma,			comma,			comma			] };
+    key <UP>	{ symbols[Group2] = [	period,			period,			period,			period			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group1] = [	Cyrillic_ze,		Cyrillic_ZE,		dollar,			dollar			] };
+    key <AB02>	{ symbols[Group1] = [	Cyrillic_softsign,	Cyrillic_SOFTSIGN,	EuroSign,		EuroSign		] };
+    key <AB03>	{ symbols[Group1] = [	Cyrillic_tse,		Cyrillic_TSE,		slash,			slash			] };
+    key <AB04>	{ symbols[Group1] = [	Cyrillic_zhe,		Cyrillic_ZHE,		parenleft,		parenleft		] };
+    key <AB05>	{ symbols[Group1] = [	Cyrillic_be,		Cyrillic_BE,		parenright,		parenright		] };
+    key <AB06>	{ symbols[Group1] = [	Cyrillic_en,		Cyrillic_EN,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group1] = [	Cyrillic_em,		Cyrillic_EM,		apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group1] = [	Cyrillic_che,		Cyrillic_CHE,		Cyrillic_hardsign,	Cyrillic_HARDSIGN	] };
+
+    key <AB01>	{ symbols[Group2] = [	z,			Z,			dollar,			dollar			] };
+    key <AB02>	{ symbols[Group2] = [	x,			X,			EuroSign,		EuroSign		] };
+    key <AB03>	{ symbols[Group2] = [	c,			C,			slash,			slash			] };
+    key <AB04>	{ symbols[Group2] = [	v,			V,			parenleft,		parenleft		] };
+    key <AB05>	{ symbols[Group2] = [	b,			B,			parenright,		parenright		] };
+    key <AB06>	{ symbols[Group2] = [	n,			N,			quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	m,			M,			apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group2] = [	Cyrillic_che,		Cyrillic_CHE,		Cyrillic_hardsign,	Cyrillic_HARDSIGN	] };
+};
+
+// author: Roman Moravcik
+partial alphanumeric_keys
+xkb_symbols "he_phonetic" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Hebrew - Phonetic";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	hebrew_qoph,		hebrew_qoph,		1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	hebrew_waw,		hebrew_waw,		2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	hebrew_aleph,		hebrew_aleph,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	hebrew_resh,		hebrew_resh,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	hebrew_taw,		hebrew_tet,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	hebrew_ayin,		hebrew_ayin,		6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	hebrew_waw,		hebrew_waw,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	hebrew_yod,		hebrew_yod,		8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	hebrew_samech,		hebrew_samech,		9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	hebrew_pe,		hebrew_finalpe,		0,			0			] };
+    key <AB08>	{ symbols[Group2] = [	comma,          	semicolon,		equal,			equal			] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	hebrew_aleph,		hebrew_aleph,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	hebrew_shin,		hebrew_shin,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	hebrew_dalet,		hebrew_dalet,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	hebrew_pe,		hebrew_finalpe,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	hebrew_gimel,		hebrew_gimel,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	hebrew_he,		hebrew_he,		parenleft,		parenleft		] };
+    key <AC07>	{ symbols[Group2] = [	hebrew_yod,		hebrew_yod,		parenright,		parenright		] };
+    key <AC08>	{ symbols[Group2] = [	hebrew_kaph,		hebrew_finalkaph,	ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	hebrew_lamed,		hebrew_lamed,		exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	period,			colon,			question,		question		] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	hebrew_zain,		hebrew_zain,		sterling,       	sterling		] };
+    key <AB02>	{ symbols[Group2] = [	hebrew_chet,		hebrew_chet,		dollar,         	dollar			] };
+    key <AB03>	{ symbols[Group2] = [	hebrew_zade,		hebrew_finalzade,	EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	hebrew_waw,		hebrew_waw,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	hebrew_bet,		hebrew_bet,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	hebrew_nun,		hebrew_finalnun,	quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	hebrew_mem,		hebrew_finalmem,	apostrophe,		apostrophe		] };
+};
+
+// author: Roman Moravcik
+partial alphanumeric_keys
+xkb_symbols "he" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Hebrew";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	hebrew_taw,		hebrew_taw,		1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	hebrew_finalzade,	hebrew_finalzade,	2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	hebrew_qoph,		hebrew_qoph,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	hebrew_resh,		hebrew_resh,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	hebrew_aleph,		hebrew_aleph,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	hebrew_tet,		hebrew_tet,		6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	hebrew_waw,		hebrew_waw,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	hebrew_finalnun,	hebrew_finalnun,	8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	hebrew_finalmem,	hebrew_finalmem,	9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	hebrew_pe,		hebrew_pe,		0,			0			] };
+    key <AB08>	{ symbols[Group2] = [	comma,			semicolon,		equal,			equal			] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	hebrew_shin,		hebrew_shin,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	hebrew_dalet,		hebrew_dalet,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	hebrew_gimel,		hebrew_gimel,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	hebrew_kaph,		hebrew_kaph,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	hebrew_ayin,		hebrew_ayin,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	hebrew_yod,		hebrew_yod,		parenleft,		parenleft		] };
+    key <AC07>	{ symbols[Group2] = [	hebrew_chet,		hebrew_chet,		parenright,		parenright		] };
+    key <AC08>	{ symbols[Group2] = [	hebrew_lamed,		hebrew_lamed,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	hebrew_finalkaph,	period,			exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	hebrew_finalpe,		colon,			question,		question		] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	hebrew_zain,		hebrew_zain,		sterling,		sterling		] };
+    key <AB02>	{ symbols[Group2] = [	hebrew_samech,		hebrew_samech,		dollar,			dollar			] };
+    key <AB03>	{ symbols[Group2] = [	hebrew_bet,		hebrew_bet,		EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	hebrew_he,		hebrew_he,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	hebrew_nun,		hebrew_nun,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	hebrew_mem,		hebrew_mem,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	hebrew_zade,		hebrew_zade,		apostrophe,		apostrophe		] };
+};
+
+// author: David Gegechkori
+partial alphanumeric_keys
+xkb_symbols "ge" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Georgian - Latin";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+   key <AD01> { symbols[Group2] = [ 0x010010e5,		Q,		1,		1		] };
+   key <AD02> { symbols[Group2] = [ 0x010010ec, 	0x010010ed, 	2,		2		] };
+   key <AD03> { symbols[Group2] = [ 0x010010d4,		E,		3,		3		] };
+   key <AD04> { symbols[Group2] = [ 0x010010e0,		0x010010e6,	4,		4		] };
+   key <AD05> { symbols[Group2] = [ 0x010010e2,		0x010010d7,	5,		5		] };
+   key <AD06> { symbols[Group2] = [ 0x010010e7,		Y,		6,		6		] };
+   key <AD07> { symbols[Group2] = [ 0x010010e3,		U,		7,		7		] };
+   key <AD08> { symbols[Group2] = [ 0x010010d8,		I,		8,		8		] };
+   key <AD09> { symbols[Group2] = [ 0x010010dd,		O,		9,		9		] };
+   key <AD10> { symbols[Group2] = [ 0x010010de,		P,		0,		0		] };
+   key <AB08> { symbols[Group2] = [ comma,		semicolon,	equal,		equal		] };
+
+    // 2. row
+   key <AC01> { symbols[Group2] = [ 0x010010d0,		A,		asterisk,	asterisk	] };
+   key <AC02> { symbols[Group2] = [ 0x010010e1,		0x010010e8,	plus,		plus		] };
+   key <AC03> { symbols[Group2] = [ 0x010010d3,		D,		numbersign,	numbersign	] };
+   key <AC04> { symbols[Group2] = [ 0x010010e4,		F,		minus,		minus   	] };
+   key <AC05> { symbols[Group2] = [ 0x010010d2,		G,		underscore,	underscore   	] };
+   key <AC06> { symbols[Group2] = [ 0x010010f0,		H,		parenleft,	parenleft 	] };
+   key <AC07> { symbols[Group2] = [ 0x010010ef,		0x010010df,	parenright,	parenright 	] };
+   key <AC08> { symbols[Group2] = [ 0x010010d9,		K,		ampersand,	ampersand	] };
+   key <AC09> { symbols[Group2] = [ 0x010010da,		L,		exclam,		exclam		] };
+   key <AB09> { symbols[Group2] = [	period,		colon,		question,	question	] };
+
+    // 3. row
+   key <AB01> { symbols[Group2] = [ 0x010010d6,		0x010010eb,	sterling,	sterling	] };
+   key <AB02> { symbols[Group2] = [ 0x010010ee,		X,		dollar,		dollar 		] };
+   key <AB03> { symbols[Group2] = [ 0x010010ea,		0x010010e9,	EuroSign,	EuroSign 	] };
+   key <AB04> { symbols[Group2] = [ 0x010010d5,		V,		slash,		slash   	] };
+   key <AB05> { symbols[Group2] = [ 0x010010d1,		B,		backslash,	backslash	] };
+   key <AB06> { symbols[Group2] = [ 0x010010dc,		N,		quotedbl,	quotedbl	] };
+   key <AB07> { symbols[Group2] = [ 0x010010db,		M,		apostrophe,	apostrophe	] };
+};
+
+// author: Eriks Jansons
+partial alphanumeric_keys
+xkb_symbols "lv" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Latvian";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>  { symbols[Group2] = [   q,                      Q,                      1,                      1                       ] };
+    key <AD02>  { symbols[Group2] = [   w,                      W,                      2,                      2                       ] };
+    key <AD03>  { symbols[Group2] = [   emacron,                Emacron,                3,                      3                       ] };
+    key <AD04>  { symbols[Group2] = [   rcedilla,               Rcedilla,               4,                      4                       ] };
+    key <AD05>  { symbols[Group2] = [   t,                      T,                      5,                      5                       ] };
+    key <AD06>  { symbols[Group2] = [   y,                      Y,                      6,                      6                       ] };
+    key <AD07>  { symbols[Group2] = [   umacron,                Umacron,                7,                      7                       ] };
+    key <AD08>  { symbols[Group2] = [   imacron,                Imacron,                8,                      8                       ] };
+    key <AD09>  { symbols[Group2] = [   omacron,                Omacron,                9,                      9                       ] };
+    key <AD10>  { symbols[Group2] = [   p,                      P,                      0,                      0                       ] };
+    key <AB08>  { symbols[Group1] = [   ISO_Group_Latch,        semicolon,              equal,                  equal], 
+                  symbols[Group2] = [   comma,                  semicolon,              equal,                  equal                   ] };
+
+    // 2. row
+    key <AC01>  { symbols[Group2] = [   amacron,                Amacron,                asterisk,               asterisk                ] };
+    key <AC02>  { symbols[Group2] = [   scaron,                 Scaron,                 plus,                   plus                    ] };
+    key <AC03>  { symbols[Group2] = [   d,                      D,                      numbersign,             numbersign              ] };
+    key <AC04>  { symbols[Group2] = [   f,                      F,                      minus,                  minus                   ] };
+    key <AC05>  { symbols[Group2] = [   gcedilla,               Gcedilla,               underscore,             underscore              ] };
+    key <AC06>  { symbols[Group2] = [   h,                      H,                      parenleft,              parenleft               ] };
+    key <AC07>  { symbols[Group2] = [   j,                      J,                      parenright,             parenright              ] };
+    key <AC08>  { symbols[Group2] = [   kcedilla,               Kcedilla,               ampersand,              ampersand               ] };
+    key <AC09>  { symbols[Group2] = [   lcedilla,               Lcedilla,               exclam,                 exclam                  ] };
+    key <AB09>  { symbols[Group2] = [   period,                 colon,                  question,               question                ] };
+
+    // 3. row
+    key <AB01>  { symbols[Group2] = [   zcaron,                 Zcaron,                 sterling,               sterling                ] };
+    key <AB02>  { symbols[Group2] = [   x,                      X,                      dollar,                 dollar                  ] };
+    key <AB03>  { symbols[Group2] = [   ccaron,                 Ccaron,                 EuroSign,               EuroSign                ] };
+    key <AB04>  { symbols[Group2] = [   v,                      V,                      slash,                  slash                   ] };
+    key <AB05>  { symbols[Group2] = [   b,                      B,                      backslash,              backslash               ] };
+    key <AB06>  { symbols[Group2] = [   ncedilla,               Ncedilla,               quotedbl,               quotedbl                ] };
+    key <AB07>  { symbols[Group2] = [   m,                      M,                      apostrophe,             apostrophe              ] };
+};
+
+// author: Aleksandar Urosevic
+partial alphanumeric_keys
+xkb_symbols "sr_cyrillic" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Serbian - Cyrillic";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	Cyrillic_lje,		Cyrillic_LJE,		1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	Cyrillic_nje,		Cyrillic_NJE,		2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	Cyrillic_ie,		Cyrillic_IE,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	Cyrillic_er,		Cyrillic_ER,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	Cyrillic_te,		Cyrillic_TE,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	Cyrillic_ze,		Cyrillic_ZE,		6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	Cyrillic_u,		Cyrillic_U,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	Cyrillic_i,		Cyrillic_I,		8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	Cyrillic_o,		Cyrillic_O,		9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	Cyrillic_pe,		Cyrillic_PE,		0,			0			] };
+    key <AB08>	{ symbols[Group2] = [	Cyrillic_sha,		Cyrillic_SHA,		equal,			equal			] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Cyrillic_a,		Cyrillic_A,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Cyrillic_es,		Cyrillic_ES,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Cyrillic_de,		Cyrillic_DE,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Cyrillic_ef,		Cyrillic_EF,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Cyrillic_ghe,		Cyrillic_GHE,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Cyrillic_ha,		Cyrillic_HA,		parenleft,		parenleft		] };
+    key <AC07>	{ symbols[Group2] = [	Cyrillic_je,		Cyrillic_JE,		parenright,		parenright		] };
+    key <AC08>	{ symbols[Group2] = [	Cyrillic_ka,		Cyrillic_KA,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	Cyrillic_el,		Cyrillic_EL,		exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	period,			comma,			question,		question		] };
+    key <UP>	{ symbols[Group2] = [	Serbian_dje,		Serbian_DJE,		Up,			Up			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Cyrillic_ze,		Cyrillic_ZE,		colon,			colon			] };
+    key <AB02>	{ symbols[Group2] = [	Cyrillic_dzhe,		Cyrillic_DZHE,		semicolon,		semicolon		] };
+    key <AB03>	{ symbols[Group2] = [	Cyrillic_tse,		Cyrillic_TSE,		EuroSign,		EuroSign		] };
+    key <AB04>	{ symbols[Group2] = [	Cyrillic_ve,		Cyrillic_VE,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	Cyrillic_be,		Cyrillic_BE,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	Cyrillic_en,		Cyrillic_EN,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	Cyrillic_em,		Cyrillic_EM,		apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group2] = [	Cyrillic_che,		Cyrillic_CHE,		Left,			Left			] };
+    key <DOWN>	{ symbols[Group2] = [	Serbian_tshe,		Serbian_TSHE,		Down,			Down			] };
+    key <RGHT>	{ symbols[Group2] = [	Cyrillic_zhe,		Cyrillic_ZHE,		Right,			Right			] };
+};
+
+// author: Roman Moravcik
+// author: Tarick
+partial alphanumeric_keys
+xkb_symbols "ua_phonetic" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_2btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Ukrainian - Phonetic";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group1] = [	q,			Q,			1,			1			] };
+    key <AD02>	{ symbols[Group1] = [	w,			W,			2,			2			] };
+    key <AD03>	{ symbols[Group1] = [	e,			E,			3,			3			] };
+    key <AD04>	{ symbols[Group1] = [	r,			R,			4,			4			] };
+    key <AD05>	{ symbols[Group1] = [	t,			T,			5,			5			] };
+    key <AD06>	{ symbols[Group1] = [	y,			Y,			6,			6			] };
+    key <AD07>	{ symbols[Group1] = [	u,			U,			7,			7			] };
+    key <AD08>	{ symbols[Group1] = [	i,			I,			8,			8			] };
+    key <AD09>	{ symbols[Group1] = [	o,			O,			9,			9			] };
+    key <AD10>	{ symbols[Group1] = [	p,			P,			0,			0			] };
+    key <AB08>  { symbols[Group1] = [	Cyrillic_sha,		Cyrillic_SHA,		Cyrillic_shcha,		Cyrillic_SHCHA		] };
+
+    key <AD01>	{ symbols[Group2] = [	Cyrillic_ya,		Cyrillic_YA,		1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	Cyrillic_ve,		Cyrillic_VE,		2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	Cyrillic_ie,		Cyrillic_IE,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	Cyrillic_er,		Cyrillic_ER,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	Cyrillic_te,		Cyrillic_TE,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	Cyrillic_i,		Cyrillic_I,		6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	Cyrillic_u,		Cyrillic_U,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	Ukrainian_i,		Ukrainian_I,		8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	Cyrillic_o,		Cyrillic_O,		9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	Cyrillic_pe,		Cyrillic_PE,		0,			0			] };
+    key <AB08>  { symbols[Group2] = [	Cyrillic_sha,		Cyrillic_SHA,		Cyrillic_shcha,		Cyrillic_SHCHA		] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group1] = [	a,			A,			asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group1] = [	s,			S,			plus,			plus			] };
+    key <AC03>	{ symbols[Group1] = [	d,			D,			numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group1] = [	f,			F,			minus,			minus			] };
+    key <AC05>	{ symbols[Group1] = [	g,			G,			underscore,		underscore		] };
+    key <AC06>	{ symbols[Group1] = [	h,			H,			exclam,			exclam			] };
+    key <AC07>	{ symbols[Group1] = [	j,			J,			question,		question		] };
+    key <AC08>	{ symbols[Group1] = [	k,			K,			semicolon,		semicolon		] };
+    key <AC09>	{ symbols[Group1] = [	l,			L,			colon,			colon			] };
+    key <AB09>	{ symbols[Group1] = [	comma,			comma,			comma,			comma			] };
+    key <UP>	{ symbols[Group1] = [	period,			period,			period,			period			] };
+
+    key <AC01>	{ symbols[Group2] = [	Cyrillic_a,		Cyrillic_A,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Cyrillic_es,		Cyrillic_ES,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Cyrillic_de,		Cyrillic_DE,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Cyrillic_ef,		Cyrillic_EF,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Cyrillic_ghe,		Cyrillic_GHE,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Cyrillic_ha,		Cyrillic_HA,		exclam,			exclam			] };
+    key <AC07>	{ symbols[Group2] = [	Cyrillic_shorti,	Cyrillic_SHORTI,	question,		question		] };
+    key <AC08>	{ symbols[Group2] = [	Cyrillic_ka,		Cyrillic_KA,		semicolon,		semicolon		] };
+    key <AC09>	{ symbols[Group2] = [	Cyrillic_el,		Cyrillic_EL,		colon,			colon			] };
+    key <AB09>	{ symbols[Group2] = [	Cyrillic_yu,		Cyrillic_YU,		comma,			comma			] };
+    key <UP>	{ symbols[Group2] = [	Ukrainin_ie,		Ukrainian_IE,		period,			period			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group1] = [	z,			Z,			dollar,			dollar			] };
+    key <AB02>	{ symbols[Group1] = [	x,			X,			EuroSign,		EuroSign		] };
+    key <AB03>	{ symbols[Group1] = [	c,			C,			slash,			slash			] };
+    key <AB04>	{ symbols[Group1] = [	v,			V,			parenleft,		parenleft		] };
+    key <AB05>	{ symbols[Group1] = [	b,			B,			parenright,		parenright		] };
+    key <AB06>	{ symbols[Group1] = [	n,			N,			quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group1] = [	m,			M,			apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group1] = [	Cyrillic_che,		Cyrillic_CHE,		Ukrainian_yi,		Ukrainian_YI		] };
+
+    key <AB01>	{ symbols[Group2] = [	Cyrillic_ze,		Cyrillic_ZE,		dollar,			dollar			] };
+    key <AB02>	{ symbols[Group2] = [	Cyrillic_softsign,	Cyrillic_SOFTSIGN,	EuroSign,		EuroSign		] };
+    key <AB03>	{ symbols[Group2] = [	Cyrillic_tse,		Cyrillic_TSE,		slash,			slash			] };
+    key <AB04>	{ symbols[Group2] = [	Cyrillic_zhe,		Cyrillic_ZHE,		parenleft,		parenleft		] };
+    key <AB05>	{ symbols[Group2] = [	Cyrillic_be,		Cyrillic_BE,		parenright,		parenright		] };
+    key <AB06>	{ symbols[Group2] = [	Cyrillic_en,		Cyrillic_EN,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	Cyrillic_em,		Cyrillic_EM,		apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group2] = [	Cyrillic_che,		Cyrillic_CHE,		Ukrainian_yi,		Ukrainian_YI		] };
+};
+
+
+// author: Roman Moravcik
+// author: Tarick
+partial alphanumeric_keys
+xkb_symbols "ua" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_2btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Ukrainian";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+     // 1. row
+    key <AD01>	{ symbols[Group1] = [	q,			Q,			1,			1			] };
+    key <AD02>	{ symbols[Group1] = [	w,			W,			2,			2			] };
+    key <AD03>	{ symbols[Group1] = [	e,			E,			3,			3			] };
+    key <AD04>	{ symbols[Group1] = [	r,			R,			4,			4			] };
+    key <AD05>	{ symbols[Group1] = [	t,			T,			5,			5			] };
+    key <AD06>	{ symbols[Group1] = [	y,			Y,			6,			6			] };
+    key <AD07>	{ symbols[Group1] = [	u,			U,			7,			7			] };
+    key <AD08>	{ symbols[Group1] = [	i,			I,			8,			8			] };
+    key <AD09>	{ symbols[Group1] = [	o,			O,			9,			9			] };
+    key <AD10>	{ symbols[Group1] = [	p,			P,			0,			0			] };
+    key <AB08>	{ symbols[Group1] = [	Cyrillic_ha,		Cyrillic_HA,		Ukrainian_yi,		Ukrainian_YI		] };
+
+    key <AD01>	{ symbols[Group2] = [	Cyrillic_shorti,	Cyrillic_SHORTI,	1,			1			] };
+    key <AD02>	{ symbols[Group2] = [	Cyrillic_tse,		Cyrillic_TSE,		2,			2			] };
+    key <AD03>	{ symbols[Group2] = [	Cyrillic_u,		Cyrillic_U,		3,			3			] };
+    key <AD04>	{ symbols[Group2] = [	Cyrillic_ka,		Cyrillic_KA,		4,			4			] };
+    key <AD05>	{ symbols[Group2] = [	Cyrillic_ie,		Cyrillic_IE,		5,			5			] };
+    key <AD06>	{ symbols[Group2] = [	Cyrillic_en,		Cyrillic_EN,		6,			6			] };
+    key <AD07>	{ symbols[Group2] = [	Cyrillic_ghe,		Cyrillic_GHE,		7,			7			] };
+    key <AD08>	{ symbols[Group2] = [	Cyrillic_sha,		Cyrillic_SHA,		8,			8			] };
+    key <AD09>	{ symbols[Group2] = [	Cyrillic_shcha,		Cyrillic_SHCHA,		9,			9			] };
+    key <AD10>	{ symbols[Group2] = [	Cyrillic_ze,		Cyrillic_ZE,		0,			0			] };
+    key <AB08>	{ symbols[Group2] = [	Cyrillic_ha,		Cyrillic_HA,		Ukrainian_yi,		Ukrainian_YI		] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group1] = [	a,			A,			asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group1] = [	s,			S,			plus,			plus			] };
+    key <AC03>	{ symbols[Group1] = [	d,			D,			numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group1] = [	f,			F,			minus,			minus			] };
+    key <AC05>	{ symbols[Group1] = [	g,			G,			underscore,		underscore		] };
+    key <AC06>	{ symbols[Group1] = [	h,			H,			exclam,			exclam			] };
+    key <AC07>	{ symbols[Group1] = [	j,			J,			question,		question		] };
+    key <AC08>	{ symbols[Group1] = [	k,			K,			semicolon,		semicolon		] };
+    key <AC09>	{ symbols[Group1] = [	l,			L,			colon,			colon			] };
+    key <AB09>	{ symbols[Group1] = [	comma,			comma,			comma,			comma			] };
+    key <UP>	{ symbols[Group1] = [	period,			period,			period,			period			] };
+
+    key <AC01>	{ symbols[Group2] = [	Cyrillic_ef,		Cyrillic_EF,		asterisk,		asterisk		] };
+    key <AC02>	{ symbols[Group2] = [	Ukrainian_i,		Ukrainian_I,		plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Cyrillic_ve,		Cyrillic_VE,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Cyrillic_a,		Cyrillic_A,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Cyrillic_pe,		Cyrillic_PE,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Cyrillic_er,		Cyrillic_ER,		exclam,			exclam			] };
+    key <AC07>	{ symbols[Group2] = [	Cyrillic_o,		Cyrillic_O,		question,		question		] };
+    key <AC08>	{ symbols[Group2] = [	Cyrillic_el,		Cyrillic_EL,		semicolon,		semicolon		] };
+    key <AC09>	{ symbols[Group2] = [	Cyrillic_de,		Cyrillic_DE,		colon,			colon			] };
+    key <AB09>	{ symbols[Group2] = [	Cyrillic_zhe,		Cyrillic_ZHE,		comma,			comma			] };
+    key <UP>	{ symbols[Group2] = [	Ukrainian_ie,		Ukrainian_IE,		period,			period			] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group1] = [	z,			Z,			dollar,			dollar			] };
+    key <AB02>	{ symbols[Group1] = [	x,			X,			EuroSign,		EuroSign		] };
+    key <AB03>	{ symbols[Group1] = [	c,			C,			slash,			slash			] };
+    key <AB04>	{ symbols[Group1] = [	v,			V,			parenleft,		parenleft		] };
+    key <AB05>	{ symbols[Group1] = [	b,			B,			parenright,		parenright		] };
+    key <AB06>	{ symbols[Group1] = [	n,			N,			quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group1] = [	m,			M,			apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group1] = [	Cyrillic_be,		Cyrillic_BE,		Cyrillic_yu,		Cyrillic_YU		] };
+
+    key <AB01>	{ symbols[Group2] = [	Cyrillic_ya,		Cyrillic_YA,		dollar,			dollar			] };
+    key <AB02>	{ symbols[Group2] = [	Cyrillic_che,		Cyrillic_CHE,		EuroSign,		EuroSign		] };
+    key <AB03>	{ symbols[Group2] = [	Cyrillic_es,		Cyrillic_ES,		slash,			slash			] };
+    key <AB04>	{ symbols[Group2] = [	Cyrillic_em,		Cyrillic_EM,		parenleft,		parenleft		] };
+    key <AB05>	{ symbols[Group2] = [	Cyrillic_i,		Cyrillic_I,		parenright,		parenright		] };
+    key <AB06>	{ symbols[Group2] = [	Cyrillic_te,		Cyrillic_TE,		quotedbl,		quotedbl		] };
+    key <AB07>	{ symbols[Group2] = [	Cyrillic_softsign,	Cyrillic_SOFTSIGN,	apostrophe,		apostrophe		] };
+    key <LEFT>	{ symbols[Group2] = [	Cyrillic_be,		Cyrillic_BE,		Cyrillic_yu,		Cyrillic_YU		] };
+};
+
+// author: Mihai C.
+// created on 2010-10-31
+partial alphanumeric_keys
+xkb_symbols "ro" {
+    include "nokia_vndr/rx-51(english_base)"
+
+    name[Group1] = "Romanian";
+
+    key <UP>    { type[Group1] = "PC_FN_LEVEL2", symbols[Group1] = [ Up, abreve ] };
+    key <LEFT>  { type[Group1] = "PC_FN_LEVEL2", symbols[Group1] = [ Left, 0x1000219 ] };
+    key <DOWN>  { type[Group1] = "PC_FN_LEVEL2", symbols[Group1] = [ Down, 0x100021b ] };
+    key <RGHT>  { type[Group1] = "PC_FN_LEVEL2", symbols[Group1] = [ Right, acircumflex ] };
+
+    key <AB01>	{ [	z,		Z,		icircumflex,	Icircumflex] };
+};
+
+// author: Thanawit Lertruengpanya
+partial alphanumeric_keys
+xkb_symbols "th" {
+    include "nokia_vndr/rx-51(english_base)"
+    include "nokia_vndr/rx-51(arrows_4btns)"
+
+    name[Group1] = "U.S. English";
+    name[Group2] = "Thai Kedmanee";
+
+    key <SPCE>	{ type[Group1] = "PC_FN_LEVEL2_BREAK", [ space, at, ISO_Prev_Group, at ] };
+
+    key.type[Group2] = "FOUR_LEVEL_SEMIALPHABETIC";
+
+    // 1. row
+    key <AD01>	{ symbols[Group2] = [	Thai_maiyamok,		Thai_leksun,		Thai_lakkhangyao,	plus			] };
+    key <AD02>	{ symbols[Group2] = [	Thai_saraaimaimalai,	quotedbl,		slash,			Thai_leknung		] };
+    key <AD03>	{ symbols[Group2] = [	Thai_saraam,		Thai_dochada,		minus,			Thai_leksong		] };
+    key <AD04>	{ symbols[Group2] = [	Thai_phophan,		Thai_thonangmontho,	Thai_phosamphao,	Thai_leksam		] };
+    key <AD05>	{ symbols[Group2] = [	Thai_saraa,		Thai_thothong,		Thai_thothung,		Thai_leksi		] };
+    key <AD06>	{ symbols[Group2] = [	Thai_maihanakat,	Thai_nikhahit,		Thai_sarau,		Thai_sarauu		] };
+    key <AD07>	{ symbols[Group2] = [	Thai_saraii,		Thai_maitri,		Thai_saraue,		Thai_baht		] };
+    key <AD08>	{ symbols[Group2] = [	Thai_rorua,		Thai_nonen,		Thai_khokhwai,		Thai_lekha		] };
+    key <AD09>	{ symbols[Group2] = [	Thai_nonu,		Thai_paiyannoi,		Thai_totao,		Thai_lekhok		] };
+    key <AD10>	{ symbols[Group2] = [	Thai_yoyak,		Thai_yoying,		Thai_chochan,		Thai_lekchet		] };
+    key <AB08>	{ symbols[Group2] = [	Thai_bobaimai,		Thai_thothan,		Thai_khokhai,		Thai_lekpaet		] };
+
+    // 2. row
+    key <AC01>	{ symbols[Group2] = [	Thai_fofan,		Thai_ru,		Thai_chochang,		Thai_lekkao		] };
+    key <AC02>	{ symbols[Group2] = [	Thai_hohip,		Thai_khorakhang,	plus,			plus			] };
+    key <AC03>	{ symbols[Group2] = [	Thai_kokai,		Thai_topatak,		numbersign,		numbersign		] };
+    key <AC04>	{ symbols[Group2] = [	Thai_dodek,		Thai_sarao,		minus,			minus			] };
+    key <AC05>	{ symbols[Group2] = [	Thai_sarae,		Thai_chochoe,		underscore,		underscore		] };
+    key <AC06>	{ symbols[Group2] = [	Thai_maitho,		Thai_maitaikhu,		Thai_ngongu,		period			] };
+    key <AC07>	{ symbols[Group2] = [	Thai_maiek,		Thai_maichattawa,	Thai_loling,		comma			] };
+    key <AC08>	{ symbols[Group2] = [	Thai_saraaa,		Thai_sorusi,		ampersand,		ampersand		] };
+    key <AC09>	{ symbols[Group2] = [	Thai_sosua,		Thai_sosala,		exclam,			exclam			] };
+    key <AB09>	{ symbols[Group2] = [	Thai_wowaen,		Thai_soso,		question,		question		] };
+
+    // 3. row
+    key <AB01>	{ symbols[Group2] = [	Thai_phophung,		parenleft,		Thai_moma,		Thai_thophuthao		] };
+    key <AB02>	{ symbols[Group2] = [	Thai_popla,		parenright,		Thai_saraaimaimuan,	Thai_lochula		] };
+    key <AB03>	{ symbols[Group2] = [	Thai_saraae,		Thai_choching,		Thai_fofa,		Thai_lu			] };
+    key <AB04>	{ symbols[Group2] = [	Thai_oang,		Thai_honokhuk,		slash,			slash			] };
+    key <AB05>	{ symbols[Group2] = [	Thai_sarai,		Thai_phinthu,		backslash,		backslash		] };
+    key <AB06>	{ symbols[Group2] = [	Thai_sarauee,		Thai_thanthakhat,	Thai_khokhuat,		Thai_khokhon		] };
+    key <AB07>	{ symbols[Group2] = [	Thai_thothahan,		question,		apostrophe,		apostrophe		] };
 };

@@ -4201,6 +4201,13 @@
             <_description>Swedish (Svdvorak)</_description>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>swl</name>
+            <_description>Swedish Sign Language</_description>
+            <languageList><iso639Id>swl</iso639Id></languageList>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>

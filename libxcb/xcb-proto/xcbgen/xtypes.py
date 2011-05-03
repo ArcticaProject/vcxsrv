@@ -1,7 +1,7 @@
 '''
 This module contains the classes which represent XCB data types.
 '''
-from expr import Field, Expression
+from xcbgen.expr import Field, Expression
 import __main__
 
 class Type(object):
