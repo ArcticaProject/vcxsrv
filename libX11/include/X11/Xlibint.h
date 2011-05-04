@@ -336,7 +336,7 @@ extern LockInfoPtr _Xglobal_lock;
  * define MALLOC_0_RETURNS_NULL.  This is necessary because some
  * Xlib code expects malloc(0) to return a valid pointer to storage.
  */
-#ifdef MALLOC_0_RETURNS_NULL
+#if defined(MALLOC_0_RETURNS_NULL) || defined(__clang_analyzer__)
 
 # define Xmalloc(size) malloc(((size) == 0 ? 1 : (size)))
 # define Xrealloc(ptr, size) realloc((ptr), ((size) == 0 ? 1 : (size)))
