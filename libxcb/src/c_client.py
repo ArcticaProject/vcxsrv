@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from xml.etree.cElementTree import *
 from os.path import basename
+from functools import reduce
 import getopt
 import sys
 import re
@@ -324,7 +325,7 @@ def _c_type_setup(self, name, postfix):
             field.c_field_type = _t(field.field_type)
             field.c_field_const_type = ('' if field.type.nmemb == 1 else 'const ') + field.c_field_type
             field.c_field_name = _cpp(field.field_name)
-            field.c_subscript = '[%d]' % field.type.nmemb if (field.type.nmemb > 1) else ''
+            field.c_subscript = '[%d]' % field.type.nmemb if (field.type.nmemb and field.type.nmemb > 1) else ''
             field.c_pointer = ' ' if field.type.nmemb == 1 else '*'
 
             # correct the c_pointer field for variable size non-list types
@@ -444,7 +445,7 @@ def _c_helper_field_mapping(complex_type, prefix, flat=False):
     else:
         for f in complex_type.fields:
             fname = _c_helper_absolute_name(prefix, f)
-            if all_fields.has_key(f.field_name):
+            if f.field_name in all_fields:
                 raise Exception("field name %s has been registered before" % f.field_name)
 
             all_fields[f.field_name] = (fname, f)
@@ -525,7 +526,7 @@ def get_expr_fields(self):
         prefix.append(('', '', self))
 
     all_fields = _c_helper_resolve_field_names (prefix)
-    resolved_fields_names = filter(lambda x: x in all_fields.keys(), unresolved_fields_names)
+    resolved_fields_names = list(filter(lambda x: x in all_fields.keys(), unresolved_fields_names))
     if len(unresolved_fields_names) != len(resolved_fields_names):
         raise Exception("could not resolve all fields for %s" % self.name)
     
@@ -744,8 +745,8 @@ def _c_serialize_helper_list_field(context, self, field,
     param_names = [p[2] for p in params]
     
     expr_fields_names = [f.field_name for f in get_expr_fields(field.type)]
-    resolved = filter(lambda x: x in param_names, expr_fields_names)
-    unresolved = filter(lambda x: x not in param_names, expr_fields_names)
+    resolved = list(filter(lambda x: x in param_names, expr_fields_names))
+    unresolved = list(filter(lambda x: x not in param_names, expr_fields_names))
     
     field_mapping = {}
     for r in resolved:
@@ -758,8 +759,8 @@ def _c_serialize_helper_list_field(context, self, field,
                             field.c_field_name)        
         
         field_mapping.update(_c_helper_resolve_field_names(prefix))
-        resolved += filter(lambda x: x in field_mapping, unresolved)
-        unresolved = filter(lambda x: x not in field_mapping, unresolved)
+        resolved += list(filter(lambda x: x in field_mapping, unresolved))
+        unresolved = list(filter(lambda x: x not in field_mapping, unresolved))
         if len(unresolved)>0:
             raise Exception('could not resolve the length fields required for list %s' % field.c_field_name)
 
@@ -1084,7 +1085,7 @@ def _c_serialize(context, self):
         param_str.append("%s%s%s  %s%s  /**< */" % (indent, typespec, spacing, pointerspec, field_name))
     # insert function name
     param_str[0] = "%s (%s" % (func_name, param_str[0].strip())
-    param_str = map(lambda x: "%s," % x, param_str)
+    param_str = list(map(lambda x: "%s," % x, param_str))
     for s in param_str[:-1]:
         _hc(s)
     _h("%s);" % param_str[-1].rstrip(','))
@@ -1160,7 +1161,7 @@ def _c_serialize(context, self):
         if not (self.is_switch or self.var_followed_by_fixed_fields):
 
             # look if we have to declare an '_aux' variable at all
-            if len(filter(lambda x: x.find('_aux')!=-1, code_lines))>0: 
+            if len(list(filter(lambda x: x.find('_aux')!=-1, code_lines)))>0:
                 if not self.var_followed_by_fixed_fields:
                     _c('    const %s *_aux = (%s *)_buffer;', self.c_type, self.c_type)
                 else:
@@ -2283,9 +2284,9 @@ output = {'open'    : c_open,
 # Check for the argument that specifies path to the xcbgen python package.
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'p:')
-except getopt.GetoptError, err:
-    print str(err)
-    print 'Usage: c_client.py [-p path] file.xml'
+except getopt.GetoptError as err:
+    print(err)
+    print('Usage: c_client.py [-p path] file.xml')
     sys.exit(1)
 
 for (opt, arg) in opts:
@@ -2296,13 +2297,13 @@ for (opt, arg) in opts:
 try:
     from xcbgen.state import Module
 except ImportError:
-    print ''
-    print 'Failed to load the xcbgen Python package!'
-    print 'Make sure that xcb/proto installed it on your Python path.'
-    print 'If not, you will need to create a .pth file or define $PYTHONPATH'
-    print 'to extend the path.'
-    print 'Refer to the README file in xcb/proto for more info.'
-    print ''
+    print('''
+Failed to load the xcbgen Python package!
+Make sure that xcb/proto installed it on your Python path.
+If not, you will need to create a .pth file or define $PYTHONPATH
+to extend the path.
+Refer to the README file in xcb/proto for more info.
+''')
     raise
 
 # Parse the xml header
