@@ -9,7 +9,7 @@ AC_CONFIG_SRCDIR([xcb.pc.in])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AM_PATH_PYTHON([2.5])
+AM_PATH_PYTHON([2.6])
 
 PKG_CHECK_MODULES(CHECK, [check >= 0.9.4], [HAVE_CHECK=yes], [HAVE_CHECK=no])
 AM_CONDITIONAL(HAVE_CHECK, test x$HAVE_CHECK = xyes)

@@ -112,7 +112,6 @@ XkbBoundsPtr	bounds,sbounds;
 
     if ((!geom)||(!section)||(!row))
 	return False;
-    pos= 0;
     bounds= &row->bounds;
     bzero(bounds,sizeof(XkbBoundsRec));
     for (key=row->keys,pos=k=0;k<row->num_keys;k++,key++) {
@@ -147,7 +146,7 @@ register int	i;
 XkbShapePtr	shape;
 XkbRowPtr	row;
 XkbDoodadPtr	doodad;
-XkbBoundsPtr	bounds,rbounds=NULL;
+XkbBoundsPtr	bounds,rbounds;
 
     if ((!geom)||(!section))
 	return False;
@@ -186,6 +185,7 @@ XkbBoundsPtr	bounds,rbounds=NULL;
 	    default:
 		tbounds.x1= tbounds.x2= doodad->any.left;
 		tbounds.y1= tbounds.y2= doodad->any.top;
+		rbounds= &tbounds;
 		break;
 	}
 	_XkbCheckBounds(bounds,rbounds->x1,rbounds->y1);
