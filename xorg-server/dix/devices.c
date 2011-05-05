@@ -1841,7 +1841,7 @@ DoChangeKeyboardControl (ClientPtr client, DeviceIntPtr keybd, XID *vlist,
 	vmask &= ~index2;
 	switch (index2) {
 	case KBKeyClickPercent:
-	    t = (INT8)*vlist;
+	    t = *vlist;
 	    vlist++;
 	    if (t == -1) {
 		t = defaultKeyboardControl.click;
