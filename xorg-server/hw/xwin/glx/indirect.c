@@ -1045,6 +1045,7 @@ glxWinDrawableDestroy(__GLXdrawable *base)
         }
 
       ((PixmapPtr)glxPriv->base.pDraw)->devPrivate.ptr = glxPriv->pOldBits;
+      glxPriv->base.pDraw->pScreen->DestroyPixmap((PixmapPtr)glxPriv->base.pDraw); /* Decrement reference count since we do not use it any more */
     }
 
   GLWIN_DEBUG_MSG("glxWinDestroyDrawable");
@@ -1514,6 +1515,8 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
           draw->pOldBits = ((PixmapPtr)draw->base.pDraw)->devPrivate.ptr;
           ((PixmapPtr)draw->base.pDraw)->devPrivate.ptr = pBits;
 
+          ((PixmapPtr)draw->base.pDraw)->refcnt++;  /* Increment reference count to be sure it is not freed before the glxdrawable is destroyed */
+
           // Select the DIB into the DC
           draw->hOldDIB = SelectObject(draw->dibDC, draw->hDIB);
           if (!draw->hOldDIB)
@@ -1592,6 +1595,7 @@ glxWinContextMakeCurrent(__GLXcontext *base)
   if (gc->ctx == NULL)
     {
       ErrorF("glxWinContextMakeCurrent: Native context is NULL\n");
+      drawPriv->drawContext = NULL; /* clear last active context because we return error */
       return FALSE;
     }
 
@@ -1607,6 +1611,7 @@ glxWinContextMakeCurrent(__GLXcontext *base)
       if (gc->hreadDC == NULL)
         {
           ErrorF("glxWinMakeDC failed for readDC\n");
+          drawPriv->drawContext = NULL; /* clear last active context because we return error */
           return FALSE;
         }
 
@@ -1639,6 +1644,8 @@ glxWinContextMakeCurrent(__GLXcontext *base)
 
   // apparently make current could fail if the context is current in a different thread,
   // but that shouldn't be able to happen in the current server...
+  if (!ret)
+    drawPriv->drawContext = NULL; /* clear last active context because we return error */
 
   return ret;
 }
@@ -1648,12 +1655,15 @@ glxWinContextLoseCurrent(__GLXcontext *base)
 {
   BOOL ret=TRUE;
   __GLXWinContext *gc = (__GLXWinContext *)base;
+  __GLXWinDrawable *drawPriv = (__GLXWinDrawable *)gc->base.drawPriv;
 
 #ifdef _DEBUG
   GLWIN_TRACE_MSG("glxWinContextLoseCurrent context %p (native ctx %p)", gc, gc->ctx);
   glWinCallDelta();
 #endif
 
+   /* Clear the last active context in the drawable */
+  drawPriv->drawContext = NULL;
 
   if (wglGetCurrentContext()==gc->ctx)
   {
@@ -1697,6 +1707,8 @@ glxWinContextDestroy(__GLXcontext *base)
 
   if (gc != NULL)
     {
+      __GLXWinDrawable *drawPriv = (__GLXWinDrawable *)gc->base.drawPriv;
+
       GLWIN_DEBUG_MSG("GLXcontext %p destroyed (native ctx %p)", base, gc->ctx);
 
       if (gc->ctx)
@@ -1704,19 +1716,22 @@ glxWinContextDestroy(__GLXcontext *base)
           BOOL ret;
           /* It's bad style to delete the context while it's still current */
           if (wglGetCurrentContext() == gc->ctx)
-            {
-              wglMakeCurrent(NULL, NULL);
-            }
+          {
+            wglMakeCurrent(NULL, NULL);
+          }
 
           ret = wglDeleteContext(gc->ctx);
           if (!ret)
             ErrorF("wglDeleteContext error: %s\n", glxWinErrorMessage());
-          if (gc->base.drawPriv && gc->hDC) glxWinReleaseDC(gc->hwnd, gc->hDC, (__GLXWinDrawable *)gc->base.drawPriv);
+          if (drawPriv && gc->hDC) glxWinReleaseDC(gc->hwnd, gc->hDC, drawPriv);
           if (gc->base.readPriv && gc->hreadDC) glxWinReleaseDC(gc->hreadwnd, gc->hreadDC, (__GLXWinDrawable *)gc->base.readPriv);
           gc->hDC=NULL;
           gc->hreadDC=NULL;
           gc->ctx = NULL;
         }
+
+      /* Clear the last active context in the drawable */
+      if (drawPriv) drawPriv->drawContext = NULL;
 
       free(gc->Dispatch);
       free(gc);
