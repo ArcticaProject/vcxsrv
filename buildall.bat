@@ -1,4 +1,4 @@
-nasm >& nul
+nasm -h >& nul
 if errorlevel NE 0 goto nasmerror
 
 echo on
