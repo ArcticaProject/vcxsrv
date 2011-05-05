@@ -899,7 +899,7 @@ extern int _XError(
 );
 extern int _XIOError(
     Display*	/* dpy */
-);
+) _X_NORETURN;
 extern int (*_XIOErrorFunction)(
     Display*	/* dpy */
 );
