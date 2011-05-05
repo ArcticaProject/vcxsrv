@@ -1,4 +1,8 @@
+nasm >& nul
+if errorlevel NE 0 goto nasmerror
+
 echo on
+
 devenv.com freetype\freetypevc10.sln /build "Release Multithreaded|Win32"
 devenv.com freetype\freetypevc10.sln /build "Debug Multithreaded|Win32"
 cd openssl
@@ -20,3 +24,9 @@ tools\mhmake\release\mhmake.exe -C xorg-server MAKESERVER=1
 
 cd xorg-server\installer
 call packageall.bat
+
+goto end
+
+:nasmerror
+echo Please put nasm in the path
+:end
