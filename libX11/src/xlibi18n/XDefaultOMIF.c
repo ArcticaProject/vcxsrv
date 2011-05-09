@@ -69,6 +69,7 @@ Sun Microsystems, Inc. or its licensors is granted.
 #include <X11/Xos.h>
 #include <X11/Xatom.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <stdint.h>
 
 #define MAXFONTS		100
