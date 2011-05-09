@@ -64,6 +64,7 @@ Sun Microsystems, Inc. or its licensors is granted.
 #include <config.h>
 #endif
 #include <stdio.h>
+#include <unistd.h>
 #include "Xlibint.h"
 #include "Xlcint.h"
 #include "XlcGeneric.h"

@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
+#include <unistd.h>
 #include "Xlibint.h"
 #include "XlcGeneric.h"
 

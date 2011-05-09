@@ -65,6 +65,7 @@
 #endif
 
 #include <stdio.h>
+#include <unistd.h>
 
 typedef struct _DatabaseRec {
     char *category;
