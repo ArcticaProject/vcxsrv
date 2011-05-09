@@ -940,10 +940,8 @@ doDirectory(char *dirname_given, int numEncodings, ListPtr encodingsToDo)
             }
         }
     done:
-        if(have_face) {
+        if(have_face)
             FT_Done_Face(face);
-            have_face = 0;
-        }
         deepDestroyList(xlfd);
         xlfd = NULL;
         free(filename);
