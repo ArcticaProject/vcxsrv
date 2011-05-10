@@ -63,7 +63,7 @@ from The Open Group.
 #include "Xlcint.h"
 #include <ctype.h>
 #include <X11/Xos.h>
-
+#include <unistd.h>
 
 #define	XMAXLIST	256
 

@@ -32,6 +32,7 @@ from The Open Group.
 #include <X11/Xlibint.h>
 #include <X11/Xos.h>
 #include <stdio.h>
+#include <unistd.h>
 
 /*
  * This routine is used to link a extension in so it will be called
