@@ -747,7 +747,6 @@ error:
         for(i = first; i <= last; i++)
             free(nam[i]);
         free(nam);
-        namsize = 0;
     }
     if(mapping) {
         free(mapping->client_data);

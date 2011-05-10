@@ -229,7 +229,7 @@ typedef struct
     int n_bytes;
 } info_t;
 
-#if defined(HAVE_MPROTECT) && defined(HAVE_GETPAGESIZE) && defined(HAVE_SYS_MMAN_H)
+#if defined(HAVE_MPROTECT) && defined(HAVE_GETPAGESIZE) && defined(HAVE_SYS_MMAN_H) && defined(HAVE_MMAP)
 
 /* This is apparently necessary on at least OS X */
 #ifndef MAP_ANONYMOUS
