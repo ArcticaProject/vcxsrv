@@ -127,7 +127,7 @@ load_makefile xkeyboard-config\makefile MAKESERVER=0 DEBUG=0
 
 all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XErrorDB \
      ..\libX11\nls\all fonts.src\all xkeyboard-config\all plink.exe xclock.exe xcalc.exe \
-     xwininfo.exe swrast_dri.dll swrast_dri_dbg.dll dxtn.dll dxtn_dbg.dll
+     xwininfo.exe swrast_dri_dbg.dll swrast_dri.dll dxtn.dll dxtn_dbg.dll
 
 
 load_makefile ..\mesalib\windows\VC8\mesa\makefile MAKESERVER=0 DEBUG=0
