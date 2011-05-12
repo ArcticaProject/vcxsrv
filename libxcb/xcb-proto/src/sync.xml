@@ -5,7 +5,7 @@ All Rights Reserved.  See the file COPYING in this directory
 for licensing information.
 -->
 <xcb header="sync" extension-xname="SYNC" extension-name="Sync"
-    major-version="3" minor-version="0">
+    major-version="3" minor-version="1">
   <import>xproto</import>
 
   <xidtype name="ALARM" />
@@ -17,6 +17,8 @@ for licensing information.
   </enum>
 
   <xidtype name="COUNTER" />
+
+  <xidtype name="FENCE" />
 
   <enum name="TESTTYPE">
     <item name="PositiveTransition" />
@@ -171,6 +173,37 @@ for licensing information.
       <pad bytes="1" />
       <field type="INT32" name="priority" />
     </reply>
+  </request>
+
+  <request name="CreateFence" opcode="14">
+    <field type="DRAWABLE" name="drawable" />
+    <field type="FENCE" name="fence" />
+    <field type="BOOL" name="initially_triggered" />
+  </request>
+
+  <request name="TriggerFence" opcode="15">
+    <field type="FENCE" name="fence" />
+  </request>
+
+  <request name="ResetFence" opcode="16">
+    <field type="FENCE" name="fence" />
+  </request>
+
+  <request name="DestroyFence" opcode="17">
+    <field type="FENCE" name="fence" />
+  </request>
+
+  <request name="QueryFence" opcode="18">
+    <field type="FENCE" name="fence" />
+    <reply>
+      <pad bytes="1" />
+      <field type="BOOL" name="triggered" />
+      <pad bytes="23" />
+    </reply>
+  </request>
+
+  <request name="AwaitFence" opcode="19">
+    <list type="FENCE" name="fence_list" />
   </request>
 
   <event name="CounterNotify" number="0">

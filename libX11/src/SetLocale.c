@@ -63,6 +63,7 @@ from The Open Group.
 #include <X11/Xlocale.h>
 #include <X11/Xos.h>
 #include "XlcPubI.h"
+#include <unistd.h>
 
 #define MAXLOCALE	64	/* buffer size of locale name */
 

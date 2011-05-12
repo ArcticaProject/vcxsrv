@@ -2291,7 +2291,7 @@ except getopt.GetoptError as err:
 
 for (opt, arg) in opts:
     if opt == '-p':
-        sys.path.append(arg)
+        sys.path.insert(1, arg)
 
 # Import the module class
 try:
