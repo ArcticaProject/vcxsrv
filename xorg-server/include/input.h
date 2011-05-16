@@ -109,19 +109,8 @@ typedef union _GrabMask GrabMask;
 
 typedef struct _ValuatorMask ValuatorMask;
 
-typedef struct _EventList {
-    xEvent* event;
-    int evlen; /* length of allocated memory for event in bytes.  This is not
-                  the actual length of the event. The event's actual length is
-                  32 for standard events or 32 +
-                  ((xGenericEvent*)event)->length * 4 for GenericEvents.
-                  For events in the EQ, the length is
-                  ((InternalEvent*)event)->u.any.length */
-} EventList, *EventListPtr;
-
 /* The DIX stores incoming input events in this list */
-extern EventListPtr InputEventList;
-extern int InputEventListLen;
+extern InternalEvent* InputEventList;
 
 typedef int (*DeviceProc)(
     DeviceIntPtr /*device*/,
@@ -439,22 +428,28 @@ extern _X_EXPORT void CloseInput(void);
 
 extern _X_EXPORT int GetMaximumEventsNum(void);
 
-extern _X_EXPORT int GetEventList(EventListPtr* list);
-extern _X_EXPORT EventListPtr InitEventList(int num_events);
-extern _X_EXPORT void FreeEventList(EventListPtr list, int num_events);
+extern _X_EXPORT InternalEvent *InitEventList(int num_events);
+extern _X_EXPORT void FreeEventList(InternalEvent *list, int num_events);
 
-extern void CreateClassesChangedEvent(EventListPtr event,
+extern void CreateClassesChangedEvent(InternalEvent *event,
                                       DeviceIntPtr master,
                                       DeviceIntPtr slave,
                                       int type);
-extern EventListPtr UpdateFromMaster(
-    EventListPtr events,
+extern InternalEvent * UpdateFromMaster(
+    InternalEvent *events,
     DeviceIntPtr pDev,
     int type,
     int *num_events);
 
 extern _X_EXPORT int GetPointerEvents(
-    EventListPtr events,
+    InternalEvent *events,
+    DeviceIntPtr pDev,
+    int type,
+    int buttons,
+    int flags,
+    const ValuatorMask *mask);
+
+extern _X_EXPORT void QueuePointerEvents(
     DeviceIntPtr pDev,
     int type,
     int buttons,
@@ -462,14 +457,25 @@ extern _X_EXPORT int GetPointerEvents(
     const ValuatorMask *mask);
 
 extern _X_EXPORT int GetKeyboardEvents(
-    EventListPtr events,
+    InternalEvent *events,
+    DeviceIntPtr pDev,
+    int type,
+    int key_code,
+    const ValuatorMask *mask);
+
+extern _X_EXPORT void QueueKeyboardEvents(
     DeviceIntPtr pDev,
     int type,
     int key_code,
     const ValuatorMask *mask);
 
 extern int GetProximityEvents(
-    EventListPtr events,
+    InternalEvent *events,
+    DeviceIntPtr pDev,
+    int type,
+    const ValuatorMask *mask);
+
+extern void QueueProximityEvents(
     DeviceIntPtr pDev,
     int type,
     const ValuatorMask *mask);
@@ -494,6 +500,8 @@ extern _X_EXPORT int GetMotionHistory(
     unsigned long stop,
     ScreenPtr pScreen,
     BOOL core);
+
+extern void ReleaseButtonsAndKeys(DeviceIntPtr dev);
 
 extern int AttachDevice(ClientPtr client,
                         DeviceIntPtr slave,

@@ -156,7 +156,7 @@ EventToCore(InternalEvent *event, xEvent **core_out, int *count_out)
         case ET_RawButtonRelease:
         case ET_RawMotion:
             ret = BadMatch;
-            goto out;
+            break;
         default:
             /* XXX: */
             ErrorF("[dix] EventToCore: Not implemented yet \n");

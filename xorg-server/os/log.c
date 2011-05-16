@@ -528,7 +528,12 @@ FatalError(const char *f, ...)
 
     va_start(args, f);
 #ifdef __APPLE__
-    (void)vsnprintf(__crashreporter_info_buff__, sizeof(__crashreporter_info_buff__), f, args);
+    {
+        va_list args2;
+        va_copy(args2, args);
+        (void)vsnprintf(__crashreporter_info_buff__, sizeof(__crashreporter_info_buff__), f, args2);
+        va_end(args2);
+    }
 #endif
     VErrorF(f, args);
     va_end(args);

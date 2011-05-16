@@ -591,4 +591,14 @@ typedef struct _EventSyncInfo {
 
 extern EventSyncInfoRec syncEvents;
 
+/**
+ * Given a sprite, returns the window at the bottom of the trace (i.e. the
+ * furthest window from the root).
+ */
+static inline WindowPtr DeepestSpriteWin(SpritePtr sprite)
+{
+    assert(sprite->spriteTraceGood > 0);
+    return sprite->spriteTrace[sprite->spriteTraceGood - 1];
+}
+
 #endif /* INPUTSTRUCT_H */

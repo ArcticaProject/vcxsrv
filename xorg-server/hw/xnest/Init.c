@@ -45,8 +45,6 @@ is" without express or implied warranty.
 
 Bool xnestDoFullGeneration = True;
 
-EventList *xnestEvents = NULL;
-
 void
 InitOutput(ScreenInfo *screenInfo, int argc, char *argv[])
 {
@@ -99,8 +97,6 @@ InitInput(int argc, char *argv[])
 
   if (rc != Success)
       FatalError("Failed to init Xnest default devices.\n");
-
-  GetEventList(&xnestEvents);
 
   mieqInit();
 

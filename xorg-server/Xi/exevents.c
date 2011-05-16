@@ -77,6 +77,7 @@ SOFTWARE.
 #include "xiquerydevice.h" /* For List*Info */
 #include "eventconvert.h"
 #include "eventstr.h"
+#include "inpututils.h"
 
 #include <X11/extensions/XKBproto.h>
 #include "xkbsrv.h"
@@ -920,7 +921,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     DeviceIntPtr mouse = NULL, kbd = NULL;
     DeviceEvent *event = &ev->device_event;
 
-    CHECKEVENT(ev);
+    verify_internal_event(ev);
 
     if (ev->any.type == ET_RawKeyPress ||
         ev->any.type == ET_RawKeyRelease ||
@@ -1188,6 +1189,108 @@ FixDeviceValuator(DeviceIntPtr dev, deviceValuator * ev, ValuatorClassPtr v,
     first += ev->num_valuators;
 }
 
+static void
+DeliverStateNotifyEvent(DeviceIntPtr dev, WindowPtr win)
+{
+    int evcount = 1;
+    deviceStateNotify *ev, *sev;
+    deviceKeyStateNotify *kev;
+    deviceButtonStateNotify *bev;
+
+    KeyClassPtr k;
+    ButtonClassPtr b;
+    ValuatorClassPtr v;
+    int nval = 0, nkeys = 0, nbuttons = 0, first = 0;
+
+    if (!(wOtherInputMasks(win)) ||
+        !(wOtherInputMasks(win)->inputEvents[dev->id] & DeviceStateNotifyMask))
+        return;
+
+    if ((b = dev->button) != NULL) {
+        nbuttons = b->numButtons;
+        if (nbuttons > 32)
+            evcount++;
+    }
+    if ((k = dev->key) != NULL) {
+        nkeys = k->xkbInfo->desc->max_key_code -
+            k->xkbInfo->desc->min_key_code;
+        if (nkeys > 32)
+            evcount++;
+        if (nbuttons > 0) {
+            evcount++;
+        }
+    }
+    if ((v = dev->valuator) != NULL) {
+        nval = v->numAxes;
+
+        if (nval > 3)
+            evcount++;
+        if (nval > 6) {
+            if (!(k && b))
+                evcount++;
+            if (nval > 9)
+                evcount += ((nval - 7) / 3);
+        }
+    }
+
+    sev = ev = (deviceStateNotify *) malloc(evcount * sizeof(xEvent));
+    FixDeviceStateNotify(dev, ev, NULL, NULL, NULL, first);
+
+    if (b != NULL) {
+        FixDeviceStateNotify(dev, ev++, NULL, b, v, first);
+        first += 3;
+        nval -= 3;
+        if (nbuttons > 32) {
+            (ev - 1)->deviceid |= MORE_EVENTS;
+            bev = (deviceButtonStateNotify *) ev++;
+            bev->type = DeviceButtonStateNotify;
+            bev->deviceid = dev->id;
+            memcpy((char*)&bev->buttons[4], (char*)&b->down[4], DOWN_LENGTH - 4);
+        }
+        if (nval > 0) {
+            (ev - 1)->deviceid |= MORE_EVENTS;
+            FixDeviceValuator(dev, (deviceValuator *) ev++, v, first);
+            first += 3;
+            nval -= 3;
+        }
+    }
+
+    if (k != NULL) {
+        FixDeviceStateNotify(dev, ev++, k, NULL, v, first);
+        first += 3;
+        nval -= 3;
+        if (nkeys > 32) {
+            (ev - 1)->deviceid |= MORE_EVENTS;
+            kev = (deviceKeyStateNotify *) ev++;
+            kev->type = DeviceKeyStateNotify;
+            kev->deviceid = dev->id;
+            memmove((char *)&kev->keys[0], (char *)&k->down[4], 28);
+        }
+        if (nval > 0) {
+            (ev - 1)->deviceid |= MORE_EVENTS;
+            FixDeviceValuator(dev, (deviceValuator *) ev++, v, first);
+            first += 3;
+            nval -= 3;
+        }
+    }
+
+    while (nval > 0) {
+        FixDeviceStateNotify(dev, ev++, NULL, NULL, v, first);
+        first += 3;
+        nval -= 3;
+        if (nval > 0) {
+            (ev - 1)->deviceid |= MORE_EVENTS;
+            FixDeviceValuator(dev, (deviceValuator *) ev++, v, first);
+            first += 3;
+            nval -= 3;
+        }
+    }
+
+    DeliverEventsToWindow(dev, win, (xEvent *) sev, evcount,
+                          DeviceStateNotifyMask, NullGrab);
+    free(sev);
+}
+
 void
 DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
 		 WindowPtr pWin)
@@ -1254,104 +1357,8 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
     DeliverEventsToWindow(dev, pWin, (xEvent *) & event, 1,
 				DeviceFocusChangeMask, NullGrab);
 
-    if ((event.type == DeviceFocusIn) &&
-	(wOtherInputMasks(pWin)) &&
-	(wOtherInputMasks(pWin)->inputEvents[dev->id] & DeviceStateNotifyMask))
-    {
-	int evcount = 1;
-	deviceStateNotify *ev, *sev;
-	deviceKeyStateNotify *kev;
-	deviceButtonStateNotify *bev;
-
-	KeyClassPtr k;
-	ButtonClassPtr b;
-	ValuatorClassPtr v;
-	int nval = 0, nkeys = 0, nbuttons = 0, first = 0;
-
-	if ((b = dev->button) != NULL) {
-	    nbuttons = b->numButtons;
-	    if (nbuttons > 32)
-		evcount++;
-	}
-	if ((k = dev->key) != NULL) {
-	    nkeys = k->xkbInfo->desc->max_key_code -
-                    k->xkbInfo->desc->min_key_code;
-	    if (nkeys > 32)
-		evcount++;
-	    if (nbuttons > 0) {
-		evcount++;
-	    }
-	}
-	if ((v = dev->valuator) != NULL) {
-	    nval = v->numAxes;
-
-	    if (nval > 3)
-		evcount++;
-	    if (nval > 6) {
-		if (!(k && b))
-		    evcount++;
-		if (nval > 9)
-		    evcount += ((nval - 7) / 3);
-	    }
-	}
-
-	sev = ev = (deviceStateNotify *) malloc(evcount * sizeof(xEvent));
-	FixDeviceStateNotify(dev, ev, NULL, NULL, NULL, first);
-
-	if (b != NULL) {
-	    FixDeviceStateNotify(dev, ev++, NULL, b, v, first);
-	    first += 3;
-	    nval -= 3;
-	    if (nbuttons > 32) {
-		(ev - 1)->deviceid |= MORE_EVENTS;
-		bev = (deviceButtonStateNotify *) ev++;
-		bev->type = DeviceButtonStateNotify;
-		bev->deviceid = dev->id;
-		memcpy((char*)&bev->buttons[4], (char*)&b->down[4], DOWN_LENGTH - 4);
-	    }
-	    if (nval > 0) {
-		(ev - 1)->deviceid |= MORE_EVENTS;
-		FixDeviceValuator(dev, (deviceValuator *) ev++, v, first);
-		first += 3;
-		nval -= 3;
-	    }
-	}
-
-	if (k != NULL) {
-	    FixDeviceStateNotify(dev, ev++, k, NULL, v, first);
-	    first += 3;
-	    nval -= 3;
-	    if (nkeys > 32) {
-		(ev - 1)->deviceid |= MORE_EVENTS;
-		kev = (deviceKeyStateNotify *) ev++;
-		kev->type = DeviceKeyStateNotify;
-		kev->deviceid = dev->id;
-		memmove((char *)&kev->keys[0], (char *)&k->down[4], 28);
-	    }
-	    if (nval > 0) {
-		(ev - 1)->deviceid |= MORE_EVENTS;
-		FixDeviceValuator(dev, (deviceValuator *) ev++, v, first);
-		first += 3;
-		nval -= 3;
-	    }
-	}
-
-	while (nval > 0) {
-	    FixDeviceStateNotify(dev, ev++, NULL, NULL, v, first);
-	    first += 3;
-	    nval -= 3;
-	    if (nval > 0) {
-		(ev - 1)->deviceid |= MORE_EVENTS;
-		FixDeviceValuator(dev, (deviceValuator *) ev++, v, first);
-		first += 3;
-		nval -= 3;
-	    }
-	}
-
-	DeliverEventsToWindow(dev, pWin, (xEvent *) sev, evcount,
-				    DeviceStateNotifyMask, NullGrab);
-	free(sev);
-    }
+    if (event.type == DeviceFocusIn)
+        DeliverStateNotifyEvent(dev, pWin);
 }
 
 int

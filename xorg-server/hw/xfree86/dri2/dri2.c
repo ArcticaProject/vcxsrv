@@ -83,6 +83,7 @@ typedef struct _DRI2Drawable {
     CARD64		 last_swap_ust; /* ust at completion of most recent swap */
     int			 swap_limit; /* for N-buffering */
     unsigned long	 serialNumber;
+    Bool		 needInvalidate;
 } DRI2DrawableRec, *DRI2DrawablePtr;
 
 typedef struct _DRI2Screen {
@@ -497,6 +498,8 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
 		       DRI2BufferFrontLeft);
     }
 
+    pPriv->needInvalidate = TRUE;
+
     return pPriv->buffers;
 
 err_out:
@@ -540,8 +543,10 @@ DRI2InvalidateDrawable(DrawablePtr pDraw)
     DRI2DrawablePtr pPriv = DRI2GetDrawable(pDraw);
     DRI2DrawableRefPtr ref;
 
-    if (!pPriv)
+    if (!pPriv || !pPriv->needInvalidate)
         return;
+
+    pPriv->needInvalidate = FALSE;
 
     list_for_each_entry(ref, &pPriv->reference_list, link)
 	ref->invalidate(pDraw, ref->priv);

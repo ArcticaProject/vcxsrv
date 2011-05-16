@@ -1958,7 +1958,7 @@ ProcRecordCreateContext(ClientPtr client)
     else
     {
 	RecordDeleteContext((pointer)pContext, pContext->id);
-	err = BadAlloc;
+	return BadAlloc;
     }
 bailout:
     free(pContext);

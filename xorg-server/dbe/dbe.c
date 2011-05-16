@@ -690,8 +690,7 @@ ProcDbeGetVisualInfo(ClientPtr client)
     }
 
     count = (stuff->n == 0) ? screenInfo.numScreens : stuff->n;
-    if (!(pScrVisInfo = (XdbeScreenVisualInfo *)malloc(count *
-                        sizeof(XdbeScreenVisualInfo))))
+    if (!(pScrVisInfo = calloc(count, sizeof(XdbeScreenVisualInfo))))
     {
         free(pDrawables);
 
@@ -707,21 +706,16 @@ ProcDbeGetVisualInfo(ClientPtr client)
         pDbeScreenPriv = DBE_SCREEN_PRIV(pScreen);
 
 	rc = XaceHook(XACE_SCREEN_ACCESS, client, pScreen, DixGetAttrAccess);
-	if ((rc != Success) ||
-	    !(*pDbeScreenPriv->GetVisualInfo)(pScreen, &pScrVisInfo[i]))
+        if (rc != Success)
+            goto freeScrVisInfo;
+
+        if (!(*pDbeScreenPriv->GetVisualInfo)(pScreen, &pScrVisInfo[i]))
         {
             /* We failed to alloc pScrVisInfo[i].visinfo. */
+            rc = BadAlloc;
 
             /* Free visinfos that we allocated for previous screen infos.*/
-            for (j = 0; j < i; j++)
-            {
-                free(pScrVisInfo[j].visinfo);
-            }
-
-            /* Free pDrawables if we needed to allocate it above. */
-            free(pDrawables);
-
-            return (rc == Success) ? BadAlloc : rc;
+            goto freeScrVisInfo;
         }
 
         /* Account for n, number of xDbeVisInfo items in list. */
@@ -790,6 +784,9 @@ ProcDbeGetVisualInfo(ClientPtr client)
         }
     }
 
+    rc = Success;
+
+  freeScrVisInfo:
     /* Clean up memory. */
     for (i = 0; i < count; i++)
     {
@@ -799,7 +796,7 @@ ProcDbeGetVisualInfo(ClientPtr client)
 
     free(pDrawables);
 
-    return Success;
+    return rc;
 
 } /* ProcDbeGetVisualInfo() */
 

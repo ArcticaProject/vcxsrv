@@ -88,11 +88,15 @@ XkbSendLegacyMapNotify(DeviceIntPtr kbd, CARD16 xkb_event, CARD16 changed,
         if (!clients[i] || clients[i]->clientState != ClientStateRunning)
             continue;
 
-        /* Ignore clients which will have already received this.
-         * Inconsistent with themselves, but consistent with previous
-         * behaviour.*/
-        if (xkb_event == XkbMapNotify && (clients[i]->mapNotifyMask & changed))
+        /* XKB allows clients to restrict the MappingNotify events sent to
+         * them.  This was broken for three years.  Sorry. */
+        if (xkb_event == XkbMapNotify &&
+            (clients[i]->xkbClientFlags & _XkbClientInitialized) &&
+            !(clients[i]->mapNotifyMask & changed))
             continue;
+        /* Emulate previous server behaviour: any client which has activated
+         * XKB will not receive core events emulated from a NewKeyboardNotify
+         * at all. */
         if (xkb_event == XkbNewKeyboardNotify &&
             (clients[i]->xkbClientFlags & _XkbClientInitialized))
             continue;
@@ -164,9 +168,6 @@ XkbSendNewKeyboardNotify(DeviceIntPtr kbd,xkbNewKeyboardNotify *pNKN)
         if (!(clients[i]->newKeyboardNotifyMask & changed))
             continue;
 
-        if (!XIShouldNotify(clients[i], kbd))
-            continue;
-
         pNKN->sequenceNumber = clients[i]->sequence;
         pNKN->time = time;
         pNKN->changed = changed;
@@ -232,8 +233,7 @@ register CARD16	changed,bState;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->stateNotifyMask&changed) &&
-            XIShouldNotify(interest->client,kbd)) {
+	    (interest->stateNotifyMask&changed)) {
 	    pSN->sequenceNumber = interest->client->sequence;
 	    pSN->time = time;
 	    pSN->changed = changed;
@@ -278,9 +278,6 @@ XkbSendMapNotify(DeviceIntPtr kbd, xkbMapNotify *pMN)
             continue;
 
         if (!(clients[i]->mapNotifyMask & changed))
-            continue;
-
-        if (!XIShouldNotify(clients[i], kbd))
             continue;
 
         pMN->time = time;
@@ -401,8 +398,7 @@ Time 		 	time = 0;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->ctrlsNotifyMask&changedControls) &&
-            XIShouldNotify(interest->client, kbd)) {
+	    (interest->ctrlsNotifyMask&changedControls)) {
 	    if (!initialized) {
 		pCN->type = XkbEventCode + XkbEventBase;
 		pCN->xkbType = XkbControlsNotify;
@@ -450,7 +446,6 @@ CARD32		state,changed;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-            XIShouldNotify(interest->client, kbd) &&
 	    (((xkbType==XkbIndicatorStateNotify)&&
 				(interest->iStateNotifyMask&changed))||
 	     ((xkbType==XkbIndicatorMapNotify)&&
@@ -534,8 +529,7 @@ XID		winID = 0;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->bellNotifyMask) &&
-            XIShouldNotify(interest->client,kbd)) {
+	    (interest->bellNotifyMask)) {
 	    if (!initialized) {
 		time = GetTimeInMillis();
 		bn.type = XkbEventCode + XkbEventBase;
@@ -589,8 +583,7 @@ CARD16		sk_delay,db_delay;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->accessXNotifyMask&(1<<pEv->detail)) &&
-            XIShouldNotify(interest->client, kbd)) {
+	    (interest->accessXNotifyMask&(1<<pEv->detail))) {
 	    if (!initialized) {
 		pEv->type = XkbEventCode + XkbEventBase;
 		pEv->xkbType = XkbAccessXNotify;
@@ -637,8 +630,7 @@ CARD32		changedIndicators;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->namesNotifyMask&pEv->changed) &&
-            XIShouldNotify(interest->client, kbd)) {
+	    (interest->namesNotifyMask&pEv->changed)) {
 	    if (!initialized) {
 		pEv->type = XkbEventCode + XkbEventBase;
 		pEv->xkbType = XkbNamesNotify;
@@ -683,8 +675,7 @@ CARD16		firstSI = 0, nSI = 0, nTotalSI = 0;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->compatNotifyMask) &&
-            XIShouldNotify(interest->client, kbd)) {
+	    (interest->compatNotifyMask)) {
 	    if (!initialized) {
 		pEv->type = XkbEventCode + XkbEventBase;
 		pEv->xkbType = XkbCompatMapNotify;
@@ -736,8 +727,7 @@ Time 		 time = 0;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->actionMessageMask) &&
-            XIShouldNotify(interest->client, kbd)) {
+	    (interest->actionMessageMask)) {
 	    if (!initialized) {
 		pEv->type = XkbEventCode + XkbEventBase;
 		pEv->xkbType = XkbActionMessage;
@@ -783,8 +773,7 @@ CARD16		 reason;
 	if ((!interest->client->clientGone) &&
 	    (interest->client->requestVector != InitialVector) &&
 	    (interest->client->xkbClientFlags&_XkbClientInitialized) &&
-	    (interest->extDevNotifyMask&reason) &&
-            XIShouldNotify(interest->client, dev)) {
+	    (interest->extDevNotifyMask&reason)) {
 	    if (!initialized) {
 		pEv->type = XkbEventCode + XkbEventBase;
 		pEv->xkbType = XkbExtensionDeviceNotify;

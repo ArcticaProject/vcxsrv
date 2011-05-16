@@ -72,17 +72,17 @@ ProcXFixesQueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    if (stuff->majorVersion < SERVER_XFIXES_MAJOR_VERSION) {
+
+    if (version_compare(stuff->majorVersion, stuff->minorVersion,
+                        SERVER_XFIXES_MAJOR_VERSION, SERVER_XFIXES_MAJOR_VERSION) < 0)
+    {
 	rep.majorVersion = stuff->majorVersion;
 	rep.minorVersion = stuff->minorVersion;
     } else {
 	rep.majorVersion = SERVER_XFIXES_MAJOR_VERSION;
-	if (stuff->majorVersion == SERVER_XFIXES_MAJOR_VERSION &&
-	    stuff->minorVersion < SERVER_XFIXES_MINOR_VERSION)
-	    rep.minorVersion = stuff->minorVersion;
-	else
-	    rep.minorVersion = SERVER_XFIXES_MINOR_VERSION;
+        rep.minorVersion = SERVER_XFIXES_MINOR_VERSION;
     }
+
     pXFixesClient->major_version = rep.majorVersion;
     pXFixesClient->minor_version = rep.minorVersion;
     if (client->swapped) {

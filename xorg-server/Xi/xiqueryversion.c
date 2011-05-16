@@ -58,7 +58,6 @@ ProcXIQueryVersion(ClientPtr client)
     xXIQueryVersionReply rep;
     XIClientPtr pXIClient;
     int major, minor;
-    unsigned int sversion, cversion;
 
     REQUEST(xXIQueryVersionReq);
     REQUEST_SIZE_MATCH(xXIQueryVersionReq);
@@ -72,10 +71,8 @@ ProcXIQueryVersion(ClientPtr client)
 
     pXIClient = dixLookupPrivate(&client->devPrivates, XIClientPrivateKey);
 
-    sversion = XIVersion.major_version * 1000 + XIVersion.minor_version;
-    cversion = stuff->major_version * 1000 + stuff->minor_version;
-
-    if (sversion > cversion)
+    if (version_compare(XIVersion.major_version, XIVersion.minor_version,
+                        stuff->major_version, stuff->minor_version) > 0)
     {
         major = stuff->major_version;
         minor = stuff->minor_version;

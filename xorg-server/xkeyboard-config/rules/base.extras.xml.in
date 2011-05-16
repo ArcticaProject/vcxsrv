@@ -167,6 +167,22 @@
     </layout>
     <layout>
       <configItem>
+        <name>pl</name>
+        <_shortDescription>pl</_shortDescription>
+        <_description>Polish</_description>
+        <languageList><iso639Id>pol</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>intl</name>
+            <_description>Polish (international with dead keys)</_description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>ro</name>
         <_shortDescription>Rou</_shortDescription>
         <_description>Romanian</_description>

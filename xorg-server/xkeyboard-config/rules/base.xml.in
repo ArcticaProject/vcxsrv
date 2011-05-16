@@ -2116,6 +2116,103 @@
     </layout>
     <layout>
       <configItem>
+        <name>cm</name>
+        <_shortDescription>cm</_shortDescription>
+        <_description>English (Cameroon)</_description>
+        <languageList><iso639Id>eng</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>french</name>
+            <_description>French (Cameroon)</_description>
+            <languageList><iso639Id>fra</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>qwerty</name>
+            <_description>English (Cameroon qwerty)</_description>
+            <languageList>
+              <iso639Id>eng</iso639Id>
+              <iso639Id>bas</iso639Id>
+              <iso639Id>nmg</iso639Id>
+              <iso639Id>fub</iso639Id>
+              <iso639Id>ewo</iso639Id>
+              <iso639Id>xmd</iso639Id>
+              <iso639Id>mfh</iso639Id>
+              <iso639Id>bkm</iso639Id>
+              <iso639Id>ozm</iso639Id>
+              <iso639Id>lns</iso639Id>
+              <iso639Id>sox</iso639Id>
+              <iso639Id>pny</iso639Id>
+              <iso639Id>wes</iso639Id>
+              <iso639Id>lem</iso639Id>
+              <iso639Id>nyj</iso639Id>
+              <iso639Id>mfk</iso639Id>
+              <iso639Id>mcp</iso639Id>
+              <iso639Id>ass</iso639Id>
+              <iso639Id>xed</iso639Id>
+              <iso639Id>dua</iso639Id>
+              <iso639Id>anv</iso639Id>
+              <iso639Id>bum</iso639Id>
+              <iso639Id>btb</iso639Id>
+              <iso639Id>bfd</iso639Id>
+              <iso639Id>azo</iso639Id>
+              <iso639Id>ken</iso639Id>
+              <iso639Id>yam</iso639Id>
+              <iso639Id>yat</iso639Id>
+              <iso639Id>yas</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>azerty</name>
+            <_description>French (Cameroon azerty)</_description>
+            <languageList>
+              <iso639Id>fra</iso639Id>
+              <iso639Id>bas</iso639Id>
+              <iso639Id>nmg</iso639Id>
+              <iso639Id>fub</iso639Id>
+              <iso639Id>ewo</iso639Id>
+              <iso639Id>xmd</iso639Id>
+              <iso639Id>mfh</iso639Id>
+              <iso639Id>bkm</iso639Id>
+              <iso639Id>ozm</iso639Id>
+              <iso639Id>lns</iso639Id>
+              <iso639Id>sox</iso639Id>
+              <iso639Id>pny</iso639Id>
+              <iso639Id>wes</iso639Id>
+              <iso639Id>lem</iso639Id>
+              <iso639Id>nyj</iso639Id>
+              <iso639Id>mfk</iso639Id>
+              <iso639Id>mcp</iso639Id>
+              <iso639Id>ass</iso639Id>
+              <iso639Id>xed</iso639Id>
+              <iso639Id>dua</iso639Id>
+              <iso639Id>anv</iso639Id>
+              <iso639Id>bum</iso639Id>
+              <iso639Id>btb</iso639Id>
+              <iso639Id>bfd</iso639Id>
+              <iso639Id>azo</iso639Id>
+              <iso639Id>ken</iso639Id>
+              <iso639Id>yam</iso639Id>
+              <iso639Id>yat</iso639Id>
+              <iso639Id>yas</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>dvorak</name>
+            <_description>English (Cameroon Dvorak)</_description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>mm</name>
         <_shortDescription>my</_shortDescription>
         <_description>Burmese</_description>

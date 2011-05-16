@@ -19,6 +19,7 @@ endif
 
 SUBDIRS = \
 	doc \
+	man \
 	include \
 	dix  \
 	fb \
@@ -68,6 +69,7 @@ dist-hook: ChangeLog INSTALL
 
 DIST_SUBDIRS = \
 	doc \
+	man \
 	include \
 	dix  \
 	fb \

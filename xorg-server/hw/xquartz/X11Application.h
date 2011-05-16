@@ -43,11 +43,12 @@
 - (void) set_controller:controller;
 - (void) set_window_menu:(NSArray *)list;
 
+- (CFPropertyListRef) prefs_get_copy:(NSString *)key CF_RETURNS_RETAINED;
 - (int) prefs_get_integer:(NSString *)key default:(int)def;
 - (const char *) prefs_get_string:(NSString *)key default:(const char *)def;
 - (float) prefs_get_float:(NSString *)key default:(float)def;
 - (int) prefs_get_boolean:(NSString *)key default:(int)def;
-- (NSURL *) prefs_copy_url:(NSString *)key default:(NSURL *)def;
+- (NSURL *) prefs_copy_url:(NSString *)key default:(NSURL *)def NS_RETURNS_RETAINED;
 - (NSArray *) prefs_get_array:(NSString *)key;
 - (void) prefs_set_integer:(NSString *)key value:(int)value;
 - (void) prefs_set_float:(NSString *)key value:(float)value;

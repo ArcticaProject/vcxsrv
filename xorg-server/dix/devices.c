@@ -2365,10 +2365,10 @@ RecalculateMasterButtons(DeviceIntPtr slave)
  * Generate release events for all keys/button currently down on this
  * device.
  */
-static void
+void
 ReleaseButtonsAndKeys(DeviceIntPtr dev)
 {
-    EventListPtr        eventlist = InitEventList(GetMaximumEventsNum());
+    InternalEvent*      eventlist = InitEventList(GetMaximumEventsNum());
     ButtonClassPtr      b = dev->button;
     KeyClassPtr         k = dev->key;
     int                 i, j, nevents;
@@ -2383,7 +2383,7 @@ ReleaseButtonsAndKeys(DeviceIntPtr dev)
         {
             nevents = GetPointerEvents(eventlist, dev, ButtonRelease, i, 0, NULL);
             for (j = 0; j < nevents; j++)
-                mieqProcessDeviceEvent(dev, (InternalEvent*)(eventlist+j)->event, NULL);
+                mieqProcessDeviceEvent(dev, &eventlist[j], NULL);
         }
     }
 
@@ -2394,7 +2394,7 @@ ReleaseButtonsAndKeys(DeviceIntPtr dev)
         {
             nevents = GetKeyboardEvents(eventlist, dev, KeyRelease, i, NULL);
             for (j = 0; j < nevents; j++)
-                mieqProcessDeviceEvent(dev, (InternalEvent*)(eventlist+j)->event, NULL);
+                mieqProcessDeviceEvent(dev, &eventlist[j], NULL);
         }
     }
 
@@ -2433,8 +2433,6 @@ AttachDevice(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr master)
         screen->DeviceCursorCleanup(dev, screen);
         free(dev->spriteInfo->sprite);
     }
-
-    ReleaseButtonsAndKeys(dev);
 
     oldmaster = GetMaster(dev, MASTER_ATTACHED);
     dev->master = master;

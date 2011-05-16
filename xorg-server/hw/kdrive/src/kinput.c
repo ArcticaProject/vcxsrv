@@ -66,8 +66,6 @@ static struct KdConfigDevice *kdConfigPointers    = NULL;
 static KdKeyboardDriver *kdKeyboardDrivers = NULL;
 static KdPointerDriver  *kdPointerDrivers  = NULL;
 
-static EventListPtr     kdEvents = NULL;
-
 static Bool		kdInputEnabled;
 static Bool		kdOffScreen;
 static unsigned long	kdOffScreenTime;
@@ -1793,7 +1791,7 @@ void
 KdReleaseAllKeys (void)
 {
 #if 0
-    int	key, nEvents, i;
+    int	key;
     KdKeyboardInfo *ki;
 
     KdBlockSigio ();
@@ -1803,10 +1801,7 @@ KdReleaseAllKeys (void)
              key++) {
             if (key_is_down(ki->dixdev, key, KEY_POSTED | KEY_PROCESSED)) {
                 KdHandleKeyboardEvent(ki, KeyRelease, key);
-                GetEventList(&kdEvents);
-                nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, KeyRelease, key, NULL);
-                for (i = 0; i < nEvents; i++)
-                    KdQueueEvent (ki->dixdev, (kdEvents + i)->event);
+                QueueGetKeyboardEvents(ki->dixdev, KeyRelease, key, NULL);
             }
         }
     }
@@ -1842,7 +1837,7 @@ KdEnqueueKeyboardEvent(KdKeyboardInfo   *ki,
     unsigned char key_code;
     KeyClassPtr	keyc = NULL;
     KeybdCtrl *ctrl = NULL;
-    int type, nEvents, i;
+    int type;
 
     if (!ki || !ki->dixdev || !ki->dixdev->kbdfeed || !ki->dixdev->key)
 	return;
@@ -1862,11 +1857,7 @@ KdEnqueueKeyboardEvent(KdKeyboardInfo   *ki,
 	else
 	    type = KeyPress;
 
-        GetEventList(&kdEvents);
-
-        nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, type, key_code, NULL);
-        for (i = 0; i < nEvents; i++)
-            KdQueueEvent(ki->dixdev, (InternalEvent *)((kdEvents + i)->event));
+        QueueKeyboardEvents(ki->dixdev, type, key_code, NULL);
     }
     else {
         ErrorF("driver %s wanted to post scancode %d outside of [%d, %d]!\n",
@@ -1965,7 +1956,6 @@ void
 _KdEnqueuePointerEvent (KdPointerInfo *pi, int type, int x, int y, int z,
                         int b, int absrel, Bool force)
 {
-    int nEvents = 0, i = 0;
     int valuators[3] = { x, y, z };
     ValuatorMask mask;
 
@@ -1975,10 +1965,7 @@ _KdEnqueuePointerEvent (KdPointerInfo *pi, int type, int x, int y, int z,
 
     valuator_mask_set_range(&mask, 0, 3, valuators);
 
-    GetEventList(&kdEvents);
-    nEvents = GetPointerEvents(kdEvents, pi->dixdev, type, b, absrel, &mask);
-    for (i = 0; i < nEvents; i++)
-        KdQueueEvent(pi->dixdev, (InternalEvent *)((kdEvents + i)->event));
+    QueuePointerEvents(pi->dixdev, type, b, absrel, &mask);
 }
 
 void

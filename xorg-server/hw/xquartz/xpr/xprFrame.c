@@ -69,7 +69,7 @@ static x_hash_table *window_hash;
 #ifdef HAVE_LIBDISPATCH
 static dispatch_queue_t window_hash_serial_q;
 #else
-static pthread_mutex_t window_hash_mutex;
+static pthread_rwlock_t window_hash_rwlock;
 #endif
 
 /* Prototypes for static functions */
@@ -192,9 +192,9 @@ xprCreateFrame(RootlessWindowPtr pFrame, ScreenPtr pScreen,
         x_hash_table_insert(window_hash, pFrame->wid, pFrame);
     });
 #else
-    pthread_mutex_lock(&window_hash_mutex);
+    pthread_rwlock_wrlock(&window_hash_rwlock);
     x_hash_table_insert(window_hash, pFrame->wid, pFrame);
-    pthread_mutex_unlock(&window_hash_mutex);
+    pthread_rwlock_wrlock(&window_hash_rwlock);
 #endif
 
     xprSetNativeProperty(pFrame);
@@ -216,9 +216,9 @@ xprDestroyFrame(RootlessFrameID wid)
         x_hash_table_remove(window_hash, wid);
     });
 #else
-    pthread_mutex_lock(&window_hash_mutex);
+    pthread_rwlock_wrlock(&window_hash_rwlock);
     x_hash_table_remove(window_hash, wid);
-    pthread_mutex_unlock(&window_hash_mutex);
+    pthread_rwlock_unlock(&window_hash_rwlock);
 #endif
 
     err = xp_destroy_window(x_cvt_vptr_to_uint(wid));
@@ -292,9 +292,9 @@ static void xprRestackFrame(RootlessFrameID wid, RootlessFrameID nextWid) {
         winRec = x_hash_table_lookup(window_hash, wid, NULL);
     });
 #else
-    pthread_mutex_lock(&window_hash_mutex);
+    pthread_rwlock_rdlock(&window_hash_rwlock);
     winRec = x_hash_table_lookup(window_hash, wid, NULL);
-    pthread_mutex_unlock(&window_hash_mutex);
+    pthread_rwlock_unlock(&window_hash_rwlock);
 #endif
     
     if(winRec) {
@@ -479,7 +479,7 @@ xprInit(ScreenPtr pScreen)
 #ifdef HAVE_LIBDISPATCH
     assert((window_hash_serial_q = dispatch_queue_create(BUNDLE_ID_PREFIX".X11.xpr_window_hash", NULL)));
 #else
-    assert(0 == pthread_mutex_init(&window_hash_mutex, NULL));
+    assert(0 == pthread_rwlock_init(&window_hash_rwlock, NULL));
 #endif
     
     return TRUE;
@@ -500,9 +500,9 @@ xprGetXWindow(xp_window_id wid)
     });
 #else
     RootlessWindowRec *winRec;
-    pthread_mutex_lock(&window_hash_mutex);
+    pthread_rwlock_rdlock(&window_hash_rwlock);
     winRec = x_hash_table_lookup(window_hash, x_cvt_uint_to_vptr(wid), NULL);
-    pthread_mutex_unlock(&window_hash_mutex);
+    pthread_rwlock_unlock(&window_hash_rwlock);
 #endif
 
     return winRec != NULL ? winRec->win : NULL;

@@ -1351,7 +1351,7 @@ static void
 InjectPointerKeyEvents(DeviceIntPtr dev, int type, int button, int flags, ValuatorMask *mask)
 {
     ScreenPtr           pScreen;
-    EventListPtr        events;
+    InternalEvent*      events;
     int                 nevents, i;
     DeviceIntPtr        ptr, mpointer, lastSlave = NULL;
     Bool                saveWait;
@@ -1377,7 +1377,7 @@ InjectPointerKeyEvents(DeviceIntPtr dev, int type, int button, int flags, Valuat
     OsReleaseSignals();
 
     for (i = 0; i < nevents; i++)
-        mieqProcessDeviceEvent(ptr, (InternalEvent*)events[i].event, NULL);
+        mieqProcessDeviceEvent(ptr, &events[i], NULL);
 
     FreeEventList(events, GetMaximumEventsNum());
 

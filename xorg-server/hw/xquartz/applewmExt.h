@@ -35,9 +35,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <Xplugin.h>
 
 #if XPLUGIN_VERSION < 4
-typedef xp_frame_attr int;
-typedef xp_frame_class int;
-typedef xp_frame_rect int;
+typedef int xp_frame_attr;
+typedef int xp_frame_class;
+typedef int xp_frame_rect;
 #endif
 
 typedef int (*DisableUpdateProc)(void);

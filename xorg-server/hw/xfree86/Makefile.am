@@ -112,7 +112,7 @@ CONF_SUBSTS =	-e 's|__filemansuffix__|$(FILE_MAN_SUFFIX)|g' \
 		-e 's|DEFAULTFONTPATH|$(COMPILEDDEFAULTFONTPATH)|g'
 
 xorg.conf.example: xorgconf.cpp
-	$(AM_V_GEN)$(SED) $(CONF_SUBSTS) < $< > $@
+	$(AM_V_GEN)$(SED) $(CONF_SUBSTS) < $(srcdir)/xorgconf.cpp > $@
 
 relink:
 	$(AM_V_at)rm -f Xorg && $(MAKE) Xorg

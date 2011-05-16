@@ -148,9 +148,6 @@ extern _X_EXPORT int xf86SetVerbosity(int verb);
 extern _X_EXPORT int xf86SetLogVerbosity(int verb);
 extern _X_EXPORT Bool xf86CallDriverProbe( struct _DriverRec * drv, Bool detect_only );
 
-/* xf86Xinput.c */
-extern _X_EXPORT EventList *xf86Events;
-
 #endif /* _NO_XF86_PROTOTYPES */
 
 

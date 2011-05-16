@@ -36,6 +36,7 @@
 #endif
 
 #include <X11/Xlib.h>
+#include <assert.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -60,12 +61,14 @@
 #include "mach_startup.h"
 #include "mach_startupServer.h"
 
-#include "launchd_fd.h"
+#include "console_redirect.h"
+
 /* From darwinEvents.c ... but don't want to pull in all the server cruft */
 void DarwinListenOnOpenFD(int fd);
 
 /* Ditto, from os/log.c */
 extern void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
+extern void FatalError(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2) _X_NORETURN;
 
 extern int noPanoramiXExtension;
 
@@ -101,6 +104,10 @@ int server_main(int argc, char **argv, char **envp);
 
 static int execute(const char *command);
 static char *command_from_prefs(const char *key, const char *default_value);
+
+static char *pref_app_to_run;
+static char *pref_login_shell;
+static char *pref_startx_script;
 
 #ifndef HAVE_LIBDISPATCH
 /*** Pthread Magics ***/
@@ -446,7 +453,7 @@ static int startup_trigger(int argc, char **argv, char **envp) {
             /* Could open the display, start the launcher */
             XCloseDisplay(display);
 
-            return execute(command_from_prefs("app_to_run", DEFAULT_CLIENT));
+            return execute(pref_app_to_run);
         }
     }
 
@@ -457,7 +464,7 @@ static int startup_trigger(int argc, char **argv, char **envp) {
     } else {
         ErrorF("X11.app: Could not connect to server (DISPLAY is not set).  Starting X server.\n");
     }
-    return execute(command_from_prefs("startx_script", DEFAULT_STARTX));
+    return execute(pref_startx_script);
 }
 
 /** Setup the environment we want our child processes to inherit */
@@ -473,6 +480,28 @@ static void ensure_path(const char *dir) {
         snprintf(buf, sizeof(buf), "%s:%s", temp, dir);
         setenv("PATH", buf, TRUE);
     }
+}
+
+static void setup_console_redirect(const char *bundle_id) {
+    char *asl_sender;
+    char *asl_facility;
+    aslclient aslc;
+
+    asprintf(&asl_sender, "%s.server", bundle_id);
+    assert(asl_sender);
+
+    asl_facility = strdup(bundle_id);
+    assert(asl_facility);
+    if(strcmp(asl_facility + strlen(asl_facility) - 4, ".X11") == 0)
+        asl_facility[strlen(asl_facility) - 4] = '\0';
+
+    assert(aslc = asl_open(asl_sender, asl_facility, ASL_OPT_NO_DELAY));
+    free(asl_sender);
+    free(asl_facility);
+
+    asl_set_filter(aslc, ASL_FILTER_MASK_UPTO(ASL_LEVEL_WARNING));
+    xq_asl_capture_fd(aslc, NULL, ASL_LEVEL_INFO, STDOUT_FILENO);
+    xq_asl_capture_fd(aslc, NULL, ASL_LEVEL_NOTICE, STDERR_FILENO);
 }
 
 static void setup_env(void) {
@@ -496,6 +525,8 @@ static void setup_env(void) {
     if(!pds) {
         pds = BUNDLE_ID_PREFIX".X11";
     }
+
+    setup_console_redirect(pds);
 
     server_bootstrap_name = strdup(pds);
     if(!server_bootstrap_name) {
@@ -594,11 +625,20 @@ int main(int argc, char **argv, char **envp) {
         pid_t child1, child2;
         int status;
 
+        pref_app_to_run = command_from_prefs("app_to_run", DEFAULT_CLIENT);
+        assert(pref_app_to_run);
+
+        pref_login_shell = command_from_prefs("login_shell", DEFAULT_SHELL);
+        assert(pref_login_shell);
+
+        pref_startx_script = command_from_prefs("startx_script", DEFAULT_STARTX);
+        assert(pref_startx_script);
+
         /* Do the fork-twice trick to avoid having to reap zombies */
         child1 = fork();
         switch (child1) {
             case -1:                                /* error */
-                break;
+                FatalError("fork() failed: %s\n", strerror(errno));
 
             case 0:                                 /* child1 */
                 child2 = fork();
@@ -607,7 +647,7 @@ int main(int argc, char **argv, char **envp) {
                     int max_files, i;
 
                     case -1:                            /* error */
-                        break;
+                        FatalError("fork() failed: %s\n", strerror(errno));
 
                     case 0:                             /* child2 */
                         /* close all open files except for standard streams */
@@ -629,6 +669,10 @@ int main(int argc, char **argv, char **envp) {
             default:                                /* parent */
               waitpid(child1, &status, 0);
         }
+
+        free(pref_app_to_run);
+        free(pref_login_shell);
+        free(pref_startx_script);
     }
     
     /* Main event loop */
@@ -646,7 +690,7 @@ static int execute(const char *command) {
     const char *newargv[4];
     const char **p;
     
-    newargv[0] = command_from_prefs("login_shell", DEFAULT_SHELL);
+    newargv[0] = pref_login_shell;
     newargv[1] = "-c";
     newargv[2] = command;
     newargv[3] = NULL;

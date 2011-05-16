@@ -223,6 +223,24 @@ pad_to_int32(const int bytes) {
 extern char**
 xstrtokenize(const char *str, const char* separators);
 
+/**
+ * Compare the two version numbers comprising of major.minor.
+ *
+ * @return A value less than 0 if a is less than b, 0 if a is equal to b,
+ * or a value greater than 0
+ */
+static inline int
+version_compare(uint16_t a_major, uint16_t a_minor,
+                uint16_t b_major, uint16_t b_minor)
+{
+    int a, b;
+
+    a = a_major << 16 | a_minor;
+    b = b_major << 16 | b_minor;
+
+    return (a - b);
+}
+
 /* some macros to help swap requests, replies, and events */
 
 #define LengthRestB(stuff) \

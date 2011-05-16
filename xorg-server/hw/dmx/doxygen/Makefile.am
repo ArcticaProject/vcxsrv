@@ -20,15 +20,17 @@
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 if ENABLE_DEVEL_DOCS
-if HAVE_XMLTO
+if HAVE_DOXYGEN
 
-# Main DocBook/XML files (DOCTYPE book)
-docbook = dmx.xml scaled.xml
+# Developers documentation is not installed
+noinst_DATA = html/index.html
+dist_noinst_DATA = doxygen.conf.in footer.html
 
-# Generate DocBook/XML output formats with or without stylesheets
-include $(top_srcdir)/devbook.am
+html/index.html:
+	$(AM_V_GEN)$(DOXYGEN) doxygen.conf
 
-endif HAVE_XMLTO
+clean-local:
+	$(AM_V_at)rm -fr html/
+
+endif HAVE_DOXYGEN
 endif ENABLE_DEVEL_DOCS
-
-EXTRA_DIST = DMXSpec.txt DMXSpec-v1.txt
