@@ -63,6 +63,7 @@ in this Software without prior written authorization from The Open Group.
 # include   "dixstruct.h"
 # include   "inputstr.h"
 # include   "inpututils.h"
+# include   "eventstr.h"
 
 DevPrivateKeyRec miPointerScreenKeyRec;
 
@@ -99,7 +100,7 @@ static void miPointerDeviceCleanup(DeviceIntPtr pDev,
                                    ScreenPtr pScreen);
 static void miPointerMoveNoEvent (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y);
 
-static EventList* events; /* for WarpPointer MotionNotifies */
+static InternalEvent* events; /* for WarpPointer MotionNotifies */
 
 Bool
 miPointerInitialize (ScreenPtr                  pScreen,
@@ -689,7 +690,7 @@ miPointerMove (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
     darwinEvents_lock();
 #endif
     for (i = 0; i < nevents; i++)
-        mieqEnqueue(pDev, (InternalEvent*)events[i].event);
+        mieqEnqueue(pDev, &events[i]);
 #ifdef XQUARTZ
     darwinEvents_unlock();
 #endif

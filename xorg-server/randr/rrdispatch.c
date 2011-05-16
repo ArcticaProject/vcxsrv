@@ -28,8 +28,8 @@ RRClientKnowsRates (ClientPtr	pClient)
 {
     rrClientPriv(pClient);
 
-    return (pRRClient->major_version > 1 ||
-	    (pRRClient->major_version == 1 && pRRClient->minor_version >= 1));
+    return version_compare(pRRClient->major_version, pRRClient->minor_version,
+                           1, 1) >= 0;
 }
 
 static int
@@ -47,8 +47,8 @@ ProcRRQueryVersion (ClientPtr client)
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
 
-    if ((stuff->majorVersion * 1000 + stuff->minorVersion) <
-        (SERVER_RANDR_MAJOR_VERSION * 1000 + SERVER_RANDR_MINOR_VERSION))
+    if (version_compare(stuff->majorVersion, stuff->minorVersion,
+                        SERVER_RANDR_MAJOR_VERSION, SERVER_RANDR_MINOR_VERSION) < 0)
     {
 	rep.majorVersion = stuff->majorVersion;
 	rep.minorVersion = stuff->minorVersion;

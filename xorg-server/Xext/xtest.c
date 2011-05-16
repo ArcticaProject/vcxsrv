@@ -52,6 +52,7 @@
 #include "mipointer.h"
 #include "xserver-properties.h"
 #include "exevents.h"
+#include "eventstr.h"
 #include "inpututils.h"
 
 #include "modinit.h"
@@ -61,7 +62,7 @@ extern int DeviceValuator;
 /* XTest events are sent during request processing and may be interruped by
  * a SIGIO. We need a separate event list to avoid events overwriting each
  * other's memory */
-static EventListPtr xtest_evlist;
+static InternalEvent* xtest_evlist;
 
 /**
  * xtestpointer
@@ -428,7 +429,7 @@ ProcXTestFakeInput(ClientPtr client)
     }
 
     for (i = 0; i < nevents; i++)
-        mieqProcessDeviceEvent(dev, (InternalEvent*)(xtest_evlist+i)->event, NULL);
+        mieqProcessDeviceEvent(dev, &xtest_evlist[i], NULL);
 
     if (need_ptr_update)
         miPointerUpdateSprite(dev);

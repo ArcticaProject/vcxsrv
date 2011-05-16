@@ -37,4 +37,6 @@ struct _ValuatorMask {
     int         valuators[MAX_VALUATORS]; /* valuator data */
 };
 
+extern void verify_internal_event(const InternalEvent *ev);
+
 #endif

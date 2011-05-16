@@ -5586,6 +5586,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 {
     DeviceIntPtr 		dev;
     DeviceIntPtr                tmpd;
+    DeviceIntPtr                master;
     xkbGetKbdByNameReply 	rep = {0};
     xkbGetMapReply		mrep = {0};
     xkbGetCompatMapReply	crep = {0};
@@ -5613,6 +5614,7 @@ ProcXkbGetKbdByName(ClientPtr client)
     memset(&mrep,0,sizeof(mrep));  //MH
     
     CHK_KBD_DEVICE(dev, stuff->deviceSpec, client, access_mode);
+    master = GetMaster(dev, MASTER_KEYBOARD);
 
     xkb = dev->key->xkbInfo->desc;
     status= Success;
@@ -5871,25 +5873,6 @@ ProcXkbGetKbdByName(ClientPtr client)
 	}
 	xkb->ctrls->num_groups= nTG;
 
-        for (tmpd = inputInfo.devices; tmpd; tmpd = tmpd->next) {
-            if ((tmpd == dev) || (!IsMaster(tmpd) && GetMaster(tmpd, MASTER_KEYBOARD) == dev)) {
-                if (tmpd != dev)
-                    XkbCopyDeviceKeymap(tmpd, dev);
-
-                if (tmpd->kbdfeed && tmpd->kbdfeed->xkb_sli) {
-                    old_sli = tmpd->kbdfeed->xkb_sli;
-                    tmpd->kbdfeed->xkb_sli = NULL;
-                    sli = XkbAllocSrvLedInfo(tmpd, tmpd->kbdfeed, NULL, 0);
-                    if (sli) {
-                        sli->explicitState = old_sli->explicitState;
-                        sli->effectiveState = old_sli->effectiveState;
-                    }
-                    tmpd->kbdfeed->xkb_sli = sli;
-                    XkbFreeSrvLedInfo(old_sli);
-                }
-            }
-        }
-
 	nkn.deviceID= nkn.oldDeviceID= dev->id;
 	nkn.minKeyCode= new->min_key_code;
 	nkn.maxKeyCode= new->max_key_code;
@@ -5902,13 +5885,29 @@ ProcXkbGetKbdByName(ClientPtr client)
 	    nkn.changed|= XkbNKN_GeometryMask;
 	XkbSendNewKeyboardNotify(dev,&nkn);
 
-	if (!IsMaster(dev)) {
-	    DeviceIntPtr master = GetMaster(dev, MASTER_KEYBOARD);
-	    if (master && master->lastSlave == dev) {
-		XkbCopyDeviceKeymap(master, dev);
-		XkbSendNewKeyboardNotify(dev,&nkn);
-	    }
-	}
+        /* Update the map and LED info on the device itself, as well as
+         * any slaves if it's an MD, or its MD if it's an SD and was the
+         * last device used on that MD. */
+        for (tmpd = inputInfo.devices; tmpd; tmpd = tmpd->next) {
+            if (tmpd != dev && GetMaster(tmpd, MASTER_KEYBOARD) != dev &&
+                (tmpd != master || dev != master->lastSlave))
+                continue;
+
+            if (tmpd != dev)
+                XkbCopyDeviceKeymap(tmpd, dev);
+
+            if (tmpd->kbdfeed && tmpd->kbdfeed->xkb_sli) {
+                old_sli = tmpd->kbdfeed->xkb_sli;
+                tmpd->kbdfeed->xkb_sli = NULL;
+                sli = XkbAllocSrvLedInfo(tmpd, tmpd->kbdfeed, NULL, 0);
+                if (sli) {
+                    sli->explicitState = old_sli->explicitState;
+                    sli->effectiveState = old_sli->effectiveState;
+                }
+                tmpd->kbdfeed->xkb_sli = sli;
+                XkbFreeSrvLedInfo(old_sli);
+            }
+        }
     }
     if ((new!=NULL)&&(new!=xkb)) {
 	XkbFreeKeyboard(new,XkbAllComponentsMask,TRUE);

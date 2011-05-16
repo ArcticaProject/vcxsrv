@@ -164,8 +164,18 @@ compCheckRedirect (WindowPtr pWin)
     {
 	if (should)
 	    return compAllocPixmap (pWin);
+	else {
+	    ScreenPtr pScreen = pWin->drawable.pScreen;
+	    PixmapPtr pPixmap = (*pScreen->GetWindowPixmap) (pWin);
+	    compSetParentPixmap (pWin);
+	    compRestoreWindow (pWin, pPixmap);
+	    (*pScreen->DestroyPixmap) (pPixmap);
+	}
+    } else if (should) {
+	if (cw->update == CompositeRedirectAutomatic)
+	    pWin->redirectDraw = RedirectDrawAutomatic;
 	else
-	    compFreePixmap (pWin);
+	    pWin->redirectDraw = RedirectDrawManual;
     }
     return TRUE;
 }
@@ -583,8 +593,11 @@ compDestroyWindow (WindowPtr pWin)
     while ((csw = GetCompSubwindows (pWin)))
 	FreeResource (csw->clients->id, RT_NONE);
 
-    if (pWin->redirectDraw != RedirectDrawNone)
-	compFreePixmap (pWin);
+    if (pWin->redirectDraw != RedirectDrawNone) {
+	PixmapPtr pPixmap = (*pScreen->GetWindowPixmap) (pWin);
+	compSetParentPixmap (pWin);
+	(*pScreen->DestroyPixmap) (pPixmap);
+    }
     ret = (*pScreen->DestroyWindow) (pWin);
     cs->DestroyWindow = pScreen->DestroyWindow;
     pScreen->DestroyWindow = compDestroyWindow;

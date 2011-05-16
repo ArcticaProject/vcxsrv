@@ -1,4 +1,5 @@
 AM_CPPFLAGS = \
+	-I$(srcdir)/.. \
 	-DBUILD_DATE=\"$(BUILD_DATE)\" \
 	-DXSERVER_VERSION=\"$(VERSION)\" \
 	-DX11BINDIR=\"$(bindir)\"

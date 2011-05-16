@@ -31,10 +31,12 @@
 #endif
 
 #include <launch.h>
-#include <stdio.h>
+#include <asl.h>
 #include <errno.h>
 
 #include "launchd_fd.h"
+
+extern aslclient aslc;
 
 int launchd_display_fd(void) {
     launch_data_t sockets_dict, checkin_request, checkin_response;
@@ -42,30 +44,30 @@ int launchd_display_fd(void) {
 
     /* Get launchd fd */
     if ((checkin_request = launch_data_new_string(LAUNCH_KEY_CHECKIN)) == NULL) {
-        fprintf(stderr,"launch_data_new_string(\"" LAUNCH_KEY_CHECKIN "\") Unable to create string.\n");
+        asl_log(aslc, NULL, ASL_LEVEL_ERR, "launch_data_new_string(\"" LAUNCH_KEY_CHECKIN "\") Unable to create string.\n");
         return ERROR_FD;
     }
     
     if ((checkin_response = launch_msg(checkin_request)) == NULL) {
-        fprintf(stderr,"launch_msg(\"" LAUNCH_KEY_CHECKIN "\") IPC failure: %s\n",strerror(errno));
+        asl_log(aslc, NULL, ASL_LEVEL_WARNING, "launch_msg(\"" LAUNCH_KEY_CHECKIN "\") IPC failure: %s\n",strerror(errno));
         return ERROR_FD;
     }
     
     if (LAUNCH_DATA_ERRNO == launch_data_get_type(checkin_response)) {
         // ignore EACCES, which is common if we weren't started by launchd
         if (launch_data_get_errno(checkin_response) != EACCES)
-            fprintf(stderr,"launchd check-in failed: %s\n", strerror(launch_data_get_errno(checkin_response)));
+            asl_log(aslc, NULL, ASL_LEVEL_ERR, "launchd check-in failed: %s\n", strerror(launch_data_get_errno(checkin_response)));
         return ERROR_FD;
     } 
     
     sockets_dict = launch_data_dict_lookup(checkin_response, LAUNCH_JOBKEY_SOCKETS);
     if (NULL == sockets_dict) {
-        fprintf(stderr,"launchd check-in: no sockets found to answer requests on!\n");
+        asl_log(aslc, NULL, ASL_LEVEL_ERR, "launchd check-in: no sockets found to answer requests on!\n");
         return ERROR_FD;
     }
     
     if (launch_data_dict_get_count(sockets_dict) > 1) {
-        fprintf(stderr,"launchd check-in: some sockets will be ignored!\n");
+        asl_log(aslc, NULL, ASL_LEVEL_ERR, "launchd check-in: some sockets will be ignored!\n");
         return ERROR_FD;
     }
     
@@ -73,13 +75,13 @@ int launchd_display_fd(void) {
     if (NULL == listening_fd_array) {
         listening_fd_array = launch_data_dict_lookup(sockets_dict, ":0");
         if (NULL == listening_fd_array) {
-            fprintf(stderr,"launchd check-in: No known sockets found to answer requests on! \"%s:0\" and \":0\" failed.\n", BUNDLE_ID_PREFIX);
+            asl_log(aslc, NULL, ASL_LEVEL_ERR, "launchd check-in: No known sockets found to answer requests on! \"%s:0\" and \":0\" failed.\n", BUNDLE_ID_PREFIX);
             return ERROR_FD;
         }
     }
     
     if (launch_data_array_get_count(listening_fd_array)!=1) {
-        fprintf(stderr,"launchd check-in: Expected 1 socket from launchd, got %u)\n",
+        asl_log(aslc, NULL, ASL_LEVEL_ERR, "launchd check-in: Expected 1 socket from launchd, got %u)\n",
                 (unsigned)launch_data_array_get_count(listening_fd_array));
         return ERROR_FD;
     }

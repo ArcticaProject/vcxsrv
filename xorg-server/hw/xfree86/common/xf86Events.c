@@ -376,7 +376,7 @@ static void
 xf86ReleaseKeys(DeviceIntPtr pDev)
 {
     KeyClassPtr keyc;
-    int i, j, nevents, sigstate;
+    int i, sigstate;
 
     if (!pDev || !pDev->key)
         return;
@@ -399,9 +399,7 @@ xf86ReleaseKeys(DeviceIntPtr pDev)
          i++) {
         if (key_is_down(pDev, i, KEY_POSTED)) {
             sigstate = xf86BlockSIGIO ();
-            nevents = GetKeyboardEvents(xf86Events, pDev, KeyRelease, i, NULL);
-            for (j = 0; j < nevents; j++)
-                mieqEnqueue(pDev, (InternalEvent*)(xf86Events + j)->event);
+            QueueKeyboardEvents(pDev, KeyRelease, i, NULL);
             xf86UnblockSIGIO(sigstate);
         }
     }

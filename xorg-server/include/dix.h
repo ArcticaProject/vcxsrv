@@ -375,7 +375,7 @@ extern void ReleaseActiveGrabs(
 extern GrabPtr CheckPassiveGrabsOnWindow(
     WindowPtr /* pWin */,
     DeviceIntPtr /* device */,
-    DeviceEvent * /* event */,
+    InternalEvent * /* event */,
     BOOL /* checkCore */,
     BOOL /* activate */);
 
@@ -415,7 +415,7 @@ extern void DeliverFocusedEvent(
     InternalEvent* /* event */,
     WindowPtr /* window */);
 
-extern void DeliverGrabbedEvent(
+extern int DeliverGrabbedEvent(
     InternalEvent* /* event */,
     DeviceIntPtr /* thisDev */,
     Bool /* deactivateGrab */);

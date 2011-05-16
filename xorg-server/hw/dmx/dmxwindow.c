@@ -115,7 +115,7 @@ Window dmxCreateRootWindow(WindowPtr pWindow)
 }
 
 /** Change the location and size of the "screen" window.  Called from
- *  #dmxConfigureScreenWindow(). */
+ *  dmxextension.c dmxConfigureScreenWindow(). */
 void dmxResizeScreenWindow(ScreenPtr pScreen,
 			   int x, int y, int w, int h)
 {
@@ -138,7 +138,7 @@ void dmxResizeScreenWindow(ScreenPtr pScreen,
 }
 
 /** Change the location and size of the "root" window.  Called from
- *  #dmxConfigureRootWindow. */
+ *  #dmxCreateWindow. */
 void dmxResizeRootWindow(WindowPtr pRoot,
 			 int x, int y, int w, int h)
 {

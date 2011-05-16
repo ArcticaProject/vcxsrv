@@ -38,11 +38,12 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.13)
 XORG_DEFAULT_OPTIONS
 XORG_WITH_DOXYGEN(1.6.1)
-XORG_CHECK_SGML_DOCTOOLS(1.5)
+XORG_CHECK_SGML_DOCTOOLS(1.7)
 XORG_ENABLE_DOCS
 XORG_ENABLE_DEVEL_DOCS
 XORG_WITH_XMLTO(0.0.20)
 XORG_WITH_FOP
+XORG_WITH_XSLTPROC
 XORG_ENABLE_UNIT_TESTS
 XORG_LD_WRAP
 
@@ -566,8 +567,7 @@ AC_ARG_WITH(launchd-id-prefix,  AS_HELP_STRING([--with-launchd-id-prefix=PATH], 
                                 [ BUNDLE_ID_PREFIX="${withval}" ],
                                 [ BUNDLE_ID_PREFIX="org.x" ])
 AC_ARG_WITH(bundle-id-prefix,  AS_HELP_STRING([--with-bundle-id-prefix=PATH], [Prefix to use for bundle identifiers (default: org.x)]),
-                               [ BUNDLE_ID_PREFIX="${withval}" ],
-                               [ BUNDLE_ID_PREFIX="org.x" ])
+                               [ BUNDLE_ID_PREFIX="${withval}" ])
 AC_SUBST([BUNDLE_ID_PREFIX])
 AC_DEFINE_UNQUOTED(BUNDLE_ID_PREFIX, "$BUNDLE_ID_PREFIX", [Prefix to use for bundle identifiers])
 AC_ARG_ENABLE(sparkle,AS_HELP_STRING([--enable-sparkle], [Enable updating of X11.app using the Sparkle Framework (default: disabled)]),
@@ -2152,10 +2152,8 @@ damageext/Makefile
 dbe/Makefile
 dix/Makefile
 doc/Makefile
-doc/man/Makefile
-doc/xml/Makefile
-doc/xml/dtrace/Makefile
-doc/xml/xserver.ent
+doc/dtrace/Makefile
+man/Makefile
 fb/Makefile
 record/Makefile
 config/Makefile
@@ -2182,8 +2180,6 @@ hw/xfree86/ddc/Makefile
 hw/xfree86/dixmods/Makefile
 hw/xfree86/dixmods/extmod/Makefile
 hw/xfree86/doc/Makefile
-hw/xfree86/doc/devel/Makefile
-hw/xfree86/doc/sgml/Makefile
 hw/xfree86/dri/Makefile
 hw/xfree86/dri2/Makefile
 hw/xfree86/exa/Makefile
@@ -2216,7 +2212,8 @@ hw/xfree86/utils/gtf/Makefile
 hw/dmx/config/Makefile
 hw/dmx/config/man/Makefile
 hw/dmx/doc/Makefile
-hw/dmx/doc/doxygen.conf
+hw/dmx/doxygen/doxygen.conf
+hw/dmx/doxygen/Makefile
 hw/dmx/examples/Makefile
 hw/dmx/input/Makefile
 hw/dmx/glxProxy/Makefile
@@ -2245,5 +2242,6 @@ hw/kdrive/linux/Makefile
 hw/kdrive/src/Makefile
 test/Makefile
 test/xi2/Makefile
+xserver.ent
 xorg-server.pc
 ])

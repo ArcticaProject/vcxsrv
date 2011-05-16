@@ -1,5 +1,5 @@
 
-SUBDIRS = input config examples doc man
+SUBDIRS = input config examples doc doxygen man
 bin_PROGRAMS = Xdmx
 
 if XINERAMA

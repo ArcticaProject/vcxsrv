@@ -215,7 +215,10 @@ Bool
 compAllocPixmap (WindowPtr pWin);
 
 void
-compFreePixmap (WindowPtr pWin);
+compSetParentPixmap (WindowPtr pWin);
+
+void
+compRestoreWindow (WindowPtr pWin, PixmapPtr pPixmap);
 
 Bool
 compReallocPixmap (WindowPtr pWin, int x, int y,
