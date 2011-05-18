@@ -141,7 +141,7 @@
 .ny0
 .TH XChangeKeyboardMapping __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
 .SH NAME
-XChangeKeyboardMapping, XGetKeyboardMapping, XDisplayKeycodes, XSetModifierMapping, XGetModifierMapping, XNewModifiermap, XInsertModifiermapEntry, XDeleteModifiermapEntry, XFreeModifierMap XModifierKeymap \- manipulate keyboard encoding and keyboard encoding structure
+XChangeKeyboardMapping, XGetKeyboardMapping, XDisplayKeycodes, XSetModifierMapping, XGetModifierMapping, XNewModifiermap, XInsertModifiermapEntry, XDeleteModifiermapEntry, XFreeModifiermap, XModifierKeymap \- manipulate keyboard encoding and keyboard encoding structure
 .SH SYNTAX
 .HP
 int XChangeKeyboardMapping(\^Display *\fIdisplay\fP, int \fIfirst_keycode\fP,

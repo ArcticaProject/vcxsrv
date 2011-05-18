@@ -288,24 +288,27 @@ xkb_symbols "lekpa" {
     key <AB10> {[            h,                   H                ]};
 };
 
+// EXTRAS:
+
 partial alphanumeric_keys modifier_keys
-xkb_symbols "dvorak" {
+xkb_symbols "us_dvorak" {
 
     include "us(dvorak)"
 
-    name[Group1]="Lithuanian (Dvorak)";
+    name[Group1]="Lithuanian (US Dvorak with Lithuanian letters)";
 
-    key <AE01>	{ [   aogonek,      Aogonek,        1,      exclam ] };
-    key <AE02>	{ [    ccaron,       Ccaron,        2,          at ] };
-    key <AE03>	{ [   eogonek,      Eogonek,        3,  numbersign ] };
-    key <AE04>	{ [ eabovedot,    Eabovedot,        4,      dollar ] };
-    key <AE05>	{ [   iogonek,      Iogonek,        5,     percent ] };
-    key <AE06>	{ [    scaron,       Scaron,        6, asciicircum ] };
-    key <AE07>	{ [   uogonek,      Uogonek,        7,   ampersand ] };
-    key <AE08>	{ [   umacron,      Umacron,        8,    asterisk ] };
-    key <AE09>	{ [doublelowquotemark,  parenleft,  9,   parenleft ] };
-    key <AE10>	{ [leftdoublequotemark,parenright,  0,  parenright ] };
-    key <AD12>	{ [    zcaron,       Zcaron,    equal,        plus ] };
+    key <AE01>	{ [        1,      exclam,    aogonek,      Aogonek ] };
+    key <AE02>	{ [        2,          at,     ccaron,       Ccaron ] };
+    key <AE03>	{ [        3,  numbersign,    eogonek,      Eogonek ] };
+    key <AE04>	{ [        4,      dollar,  eabovedot,    Eabovedot ] };
+    key <AE05>	{ [        5,     percent,    iogonek,      Iogonek ] };
+    key <AE06>	{ [        6, asciicircum,     scaron,       Scaron ] };
+    key <AE07>	{ [        7,   ampersand,    uogonek,      Uogonek ] };
+    key <AE08>	{ [        8,    asterisk,    umacron,      Umacron ] };
+    key <AE09>	{ [        9,   parenleft, doublelowquotemark,  parenleft ] };
+    key <AE10>	{ [        0,  parenright, leftdoublequotemark,parenright ] };
+    key <AD12>	{ [    equal,        plus,     zcaron,       Zcaron ] };
 
     include "level3(ralt_switch)"
 };
+

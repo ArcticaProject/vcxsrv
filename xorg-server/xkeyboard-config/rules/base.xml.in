@@ -1384,7 +1384,7 @@
     <layout>
       <configItem>
         <name>af</name>
-        <_shortDescription>Afg</_shortDescription>
+        <_shortDescription>fa</_shortDescription>
         <_description>Afghani</_description>
       </configItem>
       <variantList>
@@ -2581,7 +2581,7 @@
     <layout>
       <configItem>
         <name>iq</name>
-        <_shortDescription>irq</_shortDescription>
+        <_shortDescription>ar</_shortDescription>
         <_description>Iraqi</_description>
         <languageList><iso639Id>ara</iso639Id>
                       <iso639Id>kur</iso639Id></languageList>
@@ -3581,7 +3581,7 @@
     <layout>
       <configItem>
         <name>me</name>
-        <_shortDescription>srp</_shortDescription>
+        <_shortDescription>sr</_shortDescription>
         <_description>Montenegrin</_description>
         <languageList>
           <iso639Id>srp</iso639Id>
@@ -4310,7 +4310,7 @@
     <layout>
       <configItem>
         <name>ch</name>
-        <_shortDescription>che</_shortDescription>
+        <_shortDescription>de</_shortDescription>
         <_description>German (Switzerland)</_description>
         <languageList><iso639Id>ger</iso639Id>
                       <iso639Id>gsw</iso639Id></languageList>
@@ -4613,7 +4613,7 @@
     <layout>
       <configItem>
         <name>tw</name>
-        <_shortDescription>twn</_shortDescription>
+        <_shortDescription>zh</_shortDescription>
         <_description>Taiwanese</_description>
         <languageList>
           <iso639Id>trv</iso639Id>
@@ -4708,7 +4708,7 @@
     <layout>
       <configItem>
         <name>gb</name>
-        <_shortDescription>GBr</_shortDescription>
+        <_shortDescription>en</_shortDescription>
         <_description>English (UK)</_description>
         <languageList>
           <iso639Id>eng</iso639Id>

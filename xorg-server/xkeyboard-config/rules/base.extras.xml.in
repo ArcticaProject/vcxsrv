@@ -6,7 +6,7 @@
     <layout>
       <configItem>
         <name>apl</name>
-        <_shortDescription>APL</_shortDescription>
+        <_shortDescription>apl</_shortDescription>
         <_description>APL Keyboard Symbols</_description>
         <languageList><iso639Id>eng</iso639Id></languageList>
       </configItem>
@@ -39,7 +39,7 @@
     <layout>
       <configItem>
         <name>ir</name>
-        <_shortDescription>Iran</_shortDescription>
+        <_shortDescription>fa</_shortDescription>
         <_description>Persian</_description>
         <languageList><iso639Id>per</iso639Id></languageList>
       </configItem>
@@ -56,15 +56,15 @@
     <layout>
       <configItem>
         <name>lt</name>
-        <_shortDescription>Ltu</_shortDescription>
+        <_shortDescription>lt</_shortDescription>
         <_description>Lithuanian</_description>
         <languageList><iso639Id>lit</iso639Id></languageList>
       </configItem>
       <variantList>
         <variant>
           <configItem>
-            <name>dvorak</name>
-            <_description>Lithuanian (Dvorak)</_description>
+            <name>us_dvorak</name>
+            <_description>Lithuanian (US Dvorak with Lithuanian letters)</_description>
           </configItem>
         </variant>
       </variantList>
@@ -184,7 +184,7 @@
     <layout>
       <configItem>
         <name>ro</name>
-        <_shortDescription>Rou</_shortDescription>
+        <_shortDescription>ro</_shortDescription>
         <_description>Romanian</_description>
         <languageList><iso639Id>rum</iso639Id></languageList>
       </configItem>
@@ -200,7 +200,7 @@
     <layout>
       <configItem>
         <name>rs</name>
-        <_shortDescription>Srb</_shortDescription>
+        <_shortDescription>sr</_shortDescription>
         <_description>Serbian</_description>
         <languageList><iso639Id>srp</iso639Id></languageList>
       </configItem>
@@ -216,7 +216,7 @@
     <layout>
       <configItem>
         <name>ru</name>
-        <_shortDescription>Rus</_shortDescription>
+        <_shortDescription>ru</_shortDescription>
         <_description>Russian</_description>
       </configItem>
       <variantList>
@@ -225,6 +225,34 @@
             <name>chu</name>
             <description>Church Slavonic</description>
             <languageList><iso639Id>chu</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>ruu</name>
+            <_shortDescription>ru</_shortDescription>
+            <_description>Russian (with UKR and BEL layout)</_description>
+            <languageList><iso639Id>rus</iso639Id>
+                          <iso639Id>ukr</iso639Id>
+                          <iso639Id>bel</iso639Id></languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
+        <name>am</name>
+        <_shortDescription>hy</_shortDescription>
+        <_description>Armenian</_description>
+        <languageList>
+          <iso639Id>hye</iso639Id>
+        </languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>olpc-phonetic</name>
+            <_description>Armenian (alternative phonetic for OLPC)</_description>
           </configItem>
         </variant>
       </variantList>

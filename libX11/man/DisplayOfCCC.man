@@ -175,7 +175,7 @@ macro returns the screen white point of the screen associated with
 the specified CCC.
 .LP
 The
-.ZN ClientWhitePointOfCC
+.ZN ClientWhitePointOfCCC
 macro returns the client white point of the screen associated with
 the specified CCC.
 .SH "SEE ALSO"

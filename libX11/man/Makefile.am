@@ -498,7 +498,7 @@ XChangeKeyboardMapping_shadows =            \
     XNewModifiermap                         \
     XInsertModifiermapEntry                 \
     XDeleteModifiermapEntry                 \
-    XFreeModifierMap                        \
+    XFreeModifiermap                        \
     XModifierKeymap
 
 XChangePointerControl_shadows =             \
