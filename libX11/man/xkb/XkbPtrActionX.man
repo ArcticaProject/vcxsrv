@@ -80,7 +80,7 @@ determine the new pointer Y coordinate.
 T}
 .TE
 
-Each of the X and Y coordinantes of the XkbPtrAction structure is composed of 
+Each of the X and Y coordinates of the XkbPtrAction structure is composed of
 two signed 16-bit values, that is, the X coordinate is composed of 
 .I high_XXX 
 and 

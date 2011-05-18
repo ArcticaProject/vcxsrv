@@ -586,3 +586,68 @@ xkb_symbols "chu"
 	    key	<AB09> {	[     Cyrillic_yu,     Cyrillic_YU, U2DFB	]	};
 	    key <AB10> {        [          period,    comma, semicolon, exclam      ]       };
 };
+
+
+// RUU (Russian-Ukrainian United keyboard layout).
+// Modified Russian standart keyboard with third level contains ukrainian
+// and belorusian alphabetic letters and commonly used Unicode symbols.
+// Description http://wiki.opennet.ru/RUU [russian]
+// Vasyĺ V. Vercynśkyj <fuckel@ukr.net>
+// Last Changes 2011/05/11
+//
+// ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┲━━━━━━━━━┓
+// │ ' ~ │ ! ≈ │ " ∞ │ № ₴ │ ; € │ % ‰ │ : ≤ │ ? ≥ │ * × │ ( { │ ) } │ _ – │ + ± ┃ ⌫       ┃
+// │ ’  ́ │ 1 ÷ │ 2 ¤ │ 3 § │ 4 $ │ 5 ° │ 6 < │ 7 > │ 8 • │ 9 [ │ 0 ] │ - — │ = ≠ ┃Backspace┃
+// ┢━━━━━┷━┱───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┺━┳━━━━━━━┫
+// ┃       ┃ Й   │ Ц   │ У Ў │ К   │ Е Ё │ Н   │ Г Ґ │ Ш   │ Щ   │ З   │ Х   │ Ъ Ї ┃ Enter ┃
+// ┃ Tab ↹ ┃ й   │ ц   │ у ў │ к ® │ е ё │ н   │ г ґ │ ш   │ щ   │ з   │ х   │ ъ ї ┃   ⏎   ┃
+// ┣━━━━━━━┻┱────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┺┓      ┃
+// ┃ Caps   ┃ Ф   │ Ы І │ В   │ А   │ П   │ Р   │ О   │ Л   │ Д   │ Ж   │ Э Є │ | ¦ ┃      ┃
+// ┃ Lock ⇬ ┃ ф   │ ы і │ в   │ а   │ п   │ р   │ о   │ л   │ д   │ ж   │ э є │ / \ ┃      ┃
+// ┣━━━━━━━━┻━┱───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┬───┴─┲━━━┷━━━━━┻━━━━━━┫
+// ┃          ┃ Я   │ Ч   │ С   │ М   │ И   │ Т   │ Ь   │ Б „ │ Ю “ │ , … ┃                ┃
+// ┃  Shift ⇧ ┃ я   │ ч   │ с © │ м   │ и   │ т ™ │ ь µ │ б « │ ю » │ . / ┃     Shift ⇧    ┃
+// ┣━━━━━━━┳━━┻━━━━┳┷━━━━━┷┱────┴─────┴─────┴─────┴─────┴─────┴┲━━━━┷━━┳━━┻━━━━┳━━━━━━━┳━━━┛
+// ┃       ┃       ┃       ┃                                   ┃       ┃       ┃       ┃
+// ┃ Ctrl  ┃ Meta  ┃  Alt  ┃                Space              ┃AltGr ⇮┃ Menu  ┃ Ctrl  ┃
+// ┗━━━━━━━┻━━━━━━━┻━━━━━━━┹───────────────────────────────────┺━━━━━━━┻━━━━━━━┻━━━━━━━┛
+
+
+
+partial alphanumeric_keys
+xkb_symbols "ruu" {
+    include "ru(common)"
+
+    name[Group1]= "Russian (with UKR and BEL layout)";
+
+    key <TLDE> {    [	U2019,		apostrophe,	U0301,		asciitilde	]	};	// Apostrophe and Stress symbol
+    key <AE01> {    [	1,		exclam,		U00F7,		U2248		]	};	// Division Sign and Almost Equal To
+    key <AE02> {    [	2,		quotedbl,	currency,	infinity	]	};
+    key <AE03> {    [	3,		numerosign,	U00A7,		U20B4		]	};	// Paragraph and Hryvnia sign
+    key <AE04> {    [	4,		semicolon,	dollar,		EuroSign	]	};
+    key <AE05> {    [	5,		percent,	degree,		U2030		]	};	// Per Mille Sign
+    key <AE06> {    [	6,		colon,		less,		U2264		]	};	// Less-Than Or Equal To
+    key <AE07> {    [	7,		question,	greater,	U2265		]	};	// Greater-Than Or Equal To
+    key <AE08> {    [	8,		asterisk,	enfilledcircbullet, U00D7	]	};	// Multiplication Sign
+    key <AE09> {    [	9,		parenleft,	bracketleft,	braceleft	]	};
+    key <AE10> {    [	0,		parenright,	bracketright,	braceright	]	};
+    key <AE11> {    [	minus,		underscore,	emdash,		endash		]	};
+    key <AE12> {    [	equal,		plus,		notequal,	plusminus	]	};
+    key <AD03> {    [	Cyrillic_u,	Cyrillic_U, Byelorussian_shortu, Byelorussian_SHORTU ]	};
+    key <AD04> {    [	Cyrillic_ka,	Cyrillic_KA,	registered			]	};	// Registered tm
+    key <AD05> {    [	Cyrillic_ie,	Cyrillic_IE,	Cyrillic_io,	Cyrillic_IO	]	};
+    key <AD07> {    [Cyrillic_ge, Cyrillic_GE, Ukrainian_ghe_with_upturn, Ukrainian_GHE_WITH_UPTURN ] };
+    key <AD10> {    [	Cyrillic_ze,	Cyrillic_ZE,	U00B6				]	};	// Pilcrow Sign
+    key <AD12> {    [Cyrillic_hardsign,	Cyrillic_HARDSIGN, Ukrainian_yi, Ukrainian_YI	]	};
+    key <AC02> {    [	Cyrillic_yeru,	Cyrillic_YERU,	Ukrainian_i,  Ukrainian_I	]	};
+    key <AC11> {    [	Cyrillic_e,	Cyrillic_E,	Ukrainian_ie,Ukrainian_IE	]	};
+    key <BKSL> {    [	slash,		bar,		backslash,	U00A6		]	};	// Broken Bar
+    key <AB03> {    [	Cyrillic_es,	Cyrillic_ES,	copyright			]	};
+    key <AB06> {    [	Cyrillic_te,	Cyrillic_TE,	trademark			]	};
+    key <AB07> {    [	Cyrillic_softsign, Cyrillic_SOFTSIGN, U00B5			]	};	// Micro Sign
+    key <AB08> {    [	Cyrillic_be,	Cyrillic_BE,	guillemotleft,	doublelowquotemark ]	};
+    key <AB09> {    [	Cyrillic_yu,	Cyrillic_YU,	guillemotright,	leftdoublequotemark ]	};
+    key <AB10> {    [	period,		comma,		slash,		ellipsis	]	};
+
+    include "level3(ralt_switch)"
+};

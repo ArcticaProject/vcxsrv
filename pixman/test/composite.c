@@ -877,7 +877,7 @@ main (int argc, char **argv)
 {
 #define N_TESTS (8 * 1024 * 1024)
     int result = 0;
-    uint32_t i;
+    uint32_t i, seed;
 
     if (argc > 1)
     {
@@ -899,8 +899,6 @@ main (int argc, char **argv)
 	}
     }
 
-    uint32_t seed;
-    
     if (getenv ("PIXMAN_RANDOMIZE_TESTS"))
 	seed = get_random_seed();
     else
