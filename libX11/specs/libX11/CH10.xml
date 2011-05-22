@@ -6,8 +6,8 @@
 
 <para>
 A client application communicates with the X server through the connection you establish with
-the XOpenDisplay function. A client application sends requests to the X server over this con-
-nection. These requests are made by the Xlib functions that are called in the client application.
+the XOpenDisplay function. A client application sends requests to the X server over this
+connection. These requests are made by the Xlib functions that are called in the client application.
 Many Xlib functions cause the X server to generate events, and the user’s typing or moving the
 pointer can generate events asynchronously. The X server returns events to the client on the same
 connection.

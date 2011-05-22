@@ -14,7 +14,7 @@ Sharing of GCs is highly discouraged because the library may cache GC state.
 </para>
 <para>
 Graphics operations can be performed to either windows or pixmaps, which collectively are
-called drawables. Each drawable exists on a single screen. A GC is created for a speciﬁc screen
+called drawables. Each drawable exists on a single screen. A GC is created for a specific screen
 and drawable depth and can only be used with drawables of matching screen and depth.
 </para>
 <para>

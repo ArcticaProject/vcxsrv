@@ -15,12 +15,35 @@
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
+
+#define xcb_fail_assert(_message, _var) { \
+	unsigned int _var = 1; \
+	fprintf(stderr, "[xcb] Aborting, sorry about that.\n"); \
+	assert(!_var); \
+}
+
+#define throw_thread_fail_assert(_message, _var) { \
+	fprintf(stderr, "[xcb] " _message "\n"); \
+	fprintf(stderr, "[xcb] Most likely this is a multi-threaded client " \
+	                "and XInitThreads has not been called\n"); \
+	xcb_fail_assert(_message, _var); \
+}
+
+/* XXX: It would probably be most useful if we stored the last-processed
+ *      request, so we could find the offender from the message. */
+#define throw_extlib_fail_assert(_message, _var) { \
+	fprintf(stderr, "[xcb] " _message "\n"); \
+	fprintf(stderr, "[xcb] This is most likely caused by a broken X " \
+	                "extension library\n"); \
+	xcb_fail_assert(_message, _var); \
+}
 
 static void return_socket(void *closure)
 {
@@ -51,9 +74,14 @@ static void require_socket(Display *dpy)
 		 * happens while Xlib does not own the socket.  A
 		 * complete fix would be to make XCB's public API use
 		 * 64-bit sequence numbers. */
-		assert(!(sizeof(unsigned long) > sizeof(unsigned int)
-		         && dpy->xcb->event_owner == XlibOwnsEventQueue
-		         && (sent - dpy->last_request_read >= (UINT64_C(1) << 32))));
+		if (sizeof(unsigned long) > sizeof(unsigned int) &&
+		    dpy->xcb->event_owner == XlibOwnsEventQueue &&
+		    (sent - dpy->last_request_read >= (UINT64_C(1) << 32))) {
+			throw_thread_fail_assert("Sequence number wrapped "
+			                         "beyond 32 bits while Xlib "
+						 "did not own the socket",
+			                         xcb_xlib_seq_number_wrapped);
+		}
 		dpy->xcb->last_flushed = dpy->request = sent;
 		dpy->bufmax = dpy->xcb->real_bufmax;
 	}
@@ -125,8 +153,15 @@ static PendingRequest *append_pending_request(Display *dpy, unsigned long sequen
 	node->reply_waiter = 0;
 	if(dpy->xcb->pending_requests_tail)
 	{
-		assert(XLIB_SEQUENCE_COMPARE(dpy->xcb->pending_requests_tail->sequence, <, node->sequence));
-		assert(dpy->xcb->pending_requests_tail->next == NULL);
+		if (XLIB_SEQUENCE_COMPARE(dpy->xcb->pending_requests_tail->sequence,
+		                          >=, node->sequence))
+			throw_thread_fail_assert("Unknown sequence number "
+			                         "while appending request",
+			                         xcb_xlib_unknown_seq_number);
+		if (dpy->xcb->pending_requests_tail->next != NULL)
+			throw_thread_fail_assert("Unknown request in queue "
+			                         "while appending request",
+			                         xcb_xlib_unknown_req_pending);
 		dpy->xcb->pending_requests_tail->next = node;
 	}
 	else
@@ -137,15 +172,26 @@ static PendingRequest *append_pending_request(Display *dpy, unsigned long sequen
 
 static void dequeue_pending_request(Display *dpy, PendingRequest *req)
 {
-	assert(req == dpy->xcb->pending_requests);
+	if (req != dpy->xcb->pending_requests)
+		throw_thread_fail_assert("Unknown request in queue while "
+		                         "dequeuing",
+		                         xcb_xlib_unknown_req_in_deq);
+
 	dpy->xcb->pending_requests = req->next;
 	if(!dpy->xcb->pending_requests)
 	{
-		assert(req == dpy->xcb->pending_requests_tail);
+		if (req != dpy->xcb->pending_requests_tail)
+			throw_thread_fail_assert("Unknown request in queue "
+			                         "while dequeuing",
+			                         xcb_xlib_unknown_req_in_deq);
 		dpy->xcb->pending_requests_tail = NULL;
 	}
-	else
-		assert(XLIB_SEQUENCE_COMPARE(req->sequence, <, dpy->xcb->pending_requests->sequence));
+	else if (XLIB_SEQUENCE_COMPARE(req->sequence, >=,
+	                               dpy->xcb->pending_requests->sequence))
+		throw_thread_fail_assert("Unknown sequence number while "
+		                         "dequeuing request",
+		                         xcb_xlib_threads_sequence_lost);
+
 	free(req);
 }
 
@@ -218,7 +264,14 @@ static xcb_generic_reply_t *poll_for_event(Display *dpy)
 		if(!req || XLIB_SEQUENCE_COMPARE(event_sequence, <, req->sequence)
 		        || (event->response_type != X_Error && event_sequence == req->sequence))
 		{
-			assert(XLIB_SEQUENCE_COMPARE(event_sequence, <=, dpy->request));
+			if (XLIB_SEQUENCE_COMPARE(event_sequence, >,
+			                          dpy->request))
+			{
+				throw_thread_fail_assert("Unknown sequence "
+				                         "number while "
+							 "processing queue",
+				                xcb_xlib_threads_sequence_lost);
+			}
 			dpy->last_request_read = event_sequence;
 			dpy->xcb->next_event = NULL;
 			return (xcb_generic_reply_t *) event;
@@ -237,7 +290,12 @@ static xcb_generic_reply_t *poll_for_response(Display *dpy)
 	      !req->reply_waiter &&
 	      xcb_poll_for_reply(dpy->xcb->connection, req->sequence, &response, &error))
 	{
-		assert(XLIB_SEQUENCE_COMPARE(req->sequence, <=, dpy->request));
+		if(XLIB_SEQUENCE_COMPARE(req->sequence, >, dpy->request))
+		{
+			throw_thread_fail_assert("Unknown sequence number "
+			                         "while awaiting reply",
+			                        xcb_xlib_threads_sequence_lost);
+		}
 		dpy->last_request_read = req->sequence;
 		if(response)
 			break;
@@ -512,7 +570,9 @@ Status _XReply(Display *dpy, xReply *rep, int extra, Bool discard)
 	char *reply;
 	PendingRequest *current;
 
-	assert(!dpy->xcb->reply_data);
+	if (dpy->xcb->reply_data)
+		throw_extlib_fail_assert("Extra reply data still left in queue",
+		                         xcb_xlib_extra_reply_data_left);
 
 	if(dpy->flags & XlibDisplayIOError)
 		return 0;
@@ -568,7 +628,11 @@ Status _XReply(Display *dpy, xReply *rep, int extra, Bool discard)
 
 		req->reply_waiter = 0;
 		ConditionBroadcast(dpy, dpy->xcb->reply_notify);
-		assert(XLIB_SEQUENCE_COMPARE(req->sequence, <=, dpy->request));
+		if(XLIB_SEQUENCE_COMPARE(req->sequence, >, dpy->request)) {
+			throw_thread_fail_assert("Unknown sequence number "
+			                         "while processing reply",
+			                        xcb_xlib_threads_sequence_lost);
+		}
 		dpy->last_request_read = req->sequence;
 		if(!response)
 			dequeue_pending_request(dpy, req);
@@ -665,8 +729,10 @@ int _XRead(Display *dpy, char *data, long size)
 	assert(size >= 0);
 	if(size == 0)
 		return 0;
-	assert(dpy->xcb->reply_data != NULL);
-	assert(dpy->xcb->reply_consumed + size <= dpy->xcb->reply_length);
+	if(dpy->xcb->reply_data == NULL ||
+	   dpy->xcb->reply_consumed + size > dpy->xcb->reply_length)
+		throw_extlib_fail_assert("Too much data requested from _XRead",
+		                         xcb_xlib_too_much_data_requested);
 	memcpy(data, dpy->xcb->reply_data + dpy->xcb->reply_consumed, size);
 	dpy->xcb->reply_consumed += size;
 	_XFreeReplyData(dpy, False);

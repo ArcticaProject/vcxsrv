@@ -1384,6 +1384,20 @@ typedef struct {
     CARD32 sbc_lo B32;
 } xGLXBufferSwapComplete;
 
+typedef struct {
+    BYTE type;
+    BYTE pad;
+    CARD16 sequenceNumber B16;
+    CARD16 event_type B16;
+    CARD16 pad2;
+    CARD32 drawable;
+    CARD32 ust_hi B32;
+    CARD32 ust_lo B32;
+    CARD32 msc_hi B32;
+    CARD32 msc_lo B32;
+    CARD32 sbc B32;
+} xGLXBufferSwapComplete2;
+
 /************************************************************************/
 
 /*

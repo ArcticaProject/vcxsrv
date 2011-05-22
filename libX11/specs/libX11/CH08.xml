@@ -15,9 +15,9 @@ Once you have established a connection to a display, you can use the Xlib graphi
   <listitem><para>Transfer images between clients and the server</para></listitem>
 </itemizedlist>
 <para>
-If the same drawable and GC is used for each call, Xlib batches back-to-back calls to XDraw-
-Point, XDrawLine, XDrawRectangle, XFillArc, and XFillRectangle. Note that this reduces
-the total number of requests sent to the server.
+If the same drawable and GC is used for each call, Xlib batches back-to-back
+calls to XDrawPoint, XDrawLine, XDrawRectangle, XFillArc, and XFillRectangle.
+Note that this reduces the total number of requests sent to the server.
 </para>
 <sect1 id="Clearing_Areas">
 <title>Clearing Areas</title>

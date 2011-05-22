@@ -8,22 +8,21 @@
 An internationalized application is one that is adaptable to the requirements of different native
 languages, local customs, and character string encodings. The process of adapting the operation
 to a particular native language, local custom, or string encoding is called localization. A goal of
-internationalization is to permit localization without program source modiﬁcations or recompila-
-tion.
+internationalization is to permit localization without program source modifications or recompilation.
 </para>
 <para>
-As one of the localization mechanisms, Xlib provides an X Input Method (<acronym>XIM</acronym>) functional inter-
-face for internationalized text input and an X Output Method (<acronym>XOM</acronym>) functional interface for
-internationalized text output.
+As one of the localization mechanisms, Xlib provides an X Input Method (<acronym>XIM</acronym>)
+functional interface for internationalized text input and an X Output Method
+(<acronym>XOM</acronym>) functional interface for internationalized text output.
 </para>
 <para>
-Internationalization in X is based on the concept of a locale. A locale deﬁnes the localized
+Internationalization in X is based on the concept of a locale. A locale defines the localized
 behavior of a program at run time. Locales affect Xlib in its:
 </para>
 
 <itemizedlist>
   <listitem><para>Encoding and processing of input method text</para></listitem>
-  <listitem><para>Encoding of resource ﬁles and values</para></listitem>
+  <listitem><para>Encoding of resource files and values</para></listitem>
   <listitem><para>Encoding and imaging of text strings</para></listitem>
   <listitem><para>Encoding and decoding for inter-client text communication</para></listitem>
 </itemizedlist>
@@ -32,22 +31,22 @@ behavior of a program at run time. Locales affect Xlib in its:
 <para>
 •
 Encoding and decoding for inter-client text communication
-Characters from various languages are represented in a computer using an encoding. Different
-languages have different encodings, and there are even different encodings for the same charac-
-ters in the same language.
+Characters from various languages are represented in a computer using an encoding.
+Different languages have different encodings, and there are even different
+encodings for the same characters in the same language.
 </para>
 <para>
-This chapter deﬁnes support for localized text imaging and text input and describes the locale
+This chapter defines support for localized text imaging and text input and describes the locale
 mechanism that controls all locale-dependent Xlib functions. Sets of functions are provided for
 multibyte (char *) text as well as wide character (wchar_t) text in the form supported by the host
 C language environment. The multibyte and wide character functions are equivalent except for
 the form of the text argument.
 </para>
 <para>
-The Xlib internationalization functions are not meant to provide support for multilingual applica-
-tions (mixing multiple languages within a single piece of text), but they make it possible to imple-
-ment applications that work in limited fashion with more than one language in independent con-
-texts.
+The Xlib internationalization functions are not meant to provide support for
+multilingual applications (mixing multiple languages within a single piece of text),
+but they make it possible to implement applications that work in limited
+fashion with more than one language in independent contexts.
 </para>
 <para>
 The remainder of this chapter discusses:
@@ -55,7 +54,7 @@ The remainder of this chapter discusses:
 
 <itemizedlist>
   <listitem><para>X locale management</para></listitem>
-  <listitem><para>Locale and modiﬁer dependencies</para></listitem>
+  <listitem><para>Locale and modifier dependencies</para></listitem>
   <listitem><para>Variable argument lists</para></listitem>
   <listitem><para>Output methods</para></listitem>
   <listitem><para>Input methods</para></listitem>
@@ -9360,10 +9359,11 @@ typedef unsigned long XIMFeedback;
 #define     XIMVisibleToBackward           (1L&lt;&lt;9)
 #define     XIMVisibleToCenter               (1L&lt;&lt;10)
 
-*† The values for XIMPrimary, XIMSecondary, and XIMTertiary were incorrectly deﬁned in
-the R5 speciﬁcation. The X Consortium’s X11R5 implementation correctly implemented the val-
-ues for these highlights. The value of these highlights has been corrected in this speciﬁcation to
-agree with the values in the Consortium’s X11R5 and X11R6 implementations.
+*† The values for XIMPrimary, XIMSecondary, and XIMTertiary were incorrectly defined in
+the R5 specification. The X Consortium’s X11R5 implementation correctly
+implemented the values for these highlights. The value of these highlights has
+been corrected in this specification to agree with the values in the
+Consortium’s X11R5 and X11R6 implementations.
 
 </literallayout>
 

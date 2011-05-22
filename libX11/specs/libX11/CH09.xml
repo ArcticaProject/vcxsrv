@@ -5,10 +5,11 @@
 <title>Window and Session Manager Functions</title>
 
 <para>
-Although it is difﬁcult to categorize functions as exclusively for an application, a window man-
-ager, or a session manager, the functions in this chapter are most often used by window managers
-and session managers. It is not expected that these functions will be used by most application
-programs. Xlib provides management functions to:
+Although it is difficult to categorize functions as exclusively for an application,
+a window manager, or a session manager, the functions in this chapter are most
+often used by window managers and session managers. It is not expected that
+these functions will be used by most application programs. Xlib provides
+management functions to:
 </para>
 
 <itemizedlist>

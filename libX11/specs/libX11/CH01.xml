@@ -27,7 +27,7 @@ those provided by the toolkits for X) are built on top of the Xlib
 library. For further information about these higher-level libraries,
 see the appropriate toolkit documentation.
 The <citetitle>X Window System Protocol</citetitle> provides the
-deﬁnitive word on the behavior of X.
+definitive word on the behavior of X.
 Although additional information appears here, the protocol document is
 the ruling document.
   </para>

@@ -1462,43 +1462,22 @@ dest_write_back_wide (pixman_iter_t *iter)
     iter->y++;
 }
 
-static void
-dest_write_back_direct (pixman_iter_t *iter)
-{
-    iter->buffer += iter->image->bits.rowstride;
-}
-
 void
 _pixman_bits_image_dest_iter_init (pixman_image_t *image, pixman_iter_t *iter)
 {
     if (iter->flags & ITER_NARROW)
     {
-	if (((image->common.flags &
-	      (FAST_PATH_NO_ALPHA_MAP | FAST_PATH_NO_ACCESSORS)) ==
-	     (FAST_PATH_NO_ALPHA_MAP | FAST_PATH_NO_ACCESSORS)) &&
-	    (image->bits.format == PIXMAN_a8r8g8b8	||
-	     (image->bits.format == PIXMAN_x8r8g8b8	&&
-	      (iter->flags & ITER_LOCALIZED_ALPHA))))
+	if ((iter->flags & (ITER_IGNORE_RGB | ITER_IGNORE_ALPHA)) ==
+	    (ITER_IGNORE_RGB | ITER_IGNORE_ALPHA))
 	{
-	    iter->buffer = image->bits.bits + iter->y * image->bits.rowstride + iter->x;
-
 	    iter->get_scanline = _pixman_iter_get_scanline_noop;
-	    iter->write_back = dest_write_back_direct;
 	}
 	else
 	{
-	    if ((iter->flags & (ITER_IGNORE_RGB | ITER_IGNORE_ALPHA)) ==
-		(ITER_IGNORE_RGB | ITER_IGNORE_ALPHA))
-	    {
-		iter->get_scanline = _pixman_iter_get_scanline_noop;
-	    }
-	    else
-	    {
-		iter->get_scanline = dest_get_scanline_narrow;
-	    }
-
-	    iter->write_back = dest_write_back_narrow;
+	    iter->get_scanline = dest_get_scanline_narrow;
 	}
+	
+	iter->write_back = dest_write_back_narrow;
     }
     else
     {

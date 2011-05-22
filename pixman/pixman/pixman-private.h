@@ -523,6 +523,9 @@ _pixman_implementation_create_general (void);
 pixman_implementation_t *
 _pixman_implementation_create_fast_path (pixman_implementation_t *fallback);
 
+pixman_implementation_t *
+_pixman_implementation_create_noop (pixman_implementation_t *fallback);
+
 #ifdef USE_MMX
 pixman_implementation_t *
 _pixman_implementation_create_mmx (pixman_implementation_t *fallback);
