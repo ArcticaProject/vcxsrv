@@ -606,6 +606,8 @@ _pixman_choose_implementation (void)
 	imp = _pixman_implementation_create_vmx (imp);
 #endif
 
+    imp = _pixman_implementation_create_noop (imp);
+    
     return imp;
 }
 

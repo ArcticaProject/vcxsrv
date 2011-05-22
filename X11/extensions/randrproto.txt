@@ -105,11 +105,6 @@ the hardware will probably impose restrictions on the possible
 configurations. The protocol doesn't try to describe these restrictions,
 instead it provides a mechanism to find out what combinations are supported.
 
-For instance, dual-link DVI gangs two CRTC outputs together to provide higher
-bandwidth for large resolution screens. This is exposed in RandR by
-requiring that nothing be connected to the second CRTC when driving a high
-resolution screen on the first.
-
 1.3 Introduction to version 1.3 of the extension
 
 Version 1.3 builds on the changes made with version 1.2 and adds some new

@@ -761,8 +761,6 @@ pixman_image_composite32 (pixman_op_t      op,
      * mathematically equivalent to the source.
      */
     op = optimize_operator (op, src_flags, mask_flags, dest_flags);
-    if (op == PIXMAN_OP_DST)
-	goto out;
 
     if (lookup_composite_function (op,
 				   src_format, src_flags,

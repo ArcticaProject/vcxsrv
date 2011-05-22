@@ -241,12 +241,6 @@ _pixman_implementation_fill (pixman_implementation_t *imp,
     return (*imp->fill) (imp, bits, stride, bpp, x, y, width, height, xor);
 }
 
-static uint32_t *
-get_scanline_null (pixman_iter_t *iter, const uint32_t *mask)
-{
-    return NULL;
-}
-
 void
 _pixman_implementation_src_iter_init (pixman_implementation_t	*imp,
 				      pixman_iter_t             *iter,
@@ -266,19 +260,7 @@ _pixman_implementation_src_iter_init (pixman_implementation_t	*imp,
     iter->height = height;
     iter->flags = flags;
 
-    if (!image)
-    {
-	iter->get_scanline = get_scanline_null;
-    }
-    else if ((flags & (ITER_IGNORE_ALPHA | ITER_IGNORE_RGB)) ==
-	     (ITER_IGNORE_ALPHA | ITER_IGNORE_RGB))
-    {
-	iter->get_scanline = _pixman_iter_get_scanline_noop;
-    }
-    else
-    {
-	(*imp->src_iter_init) (imp, iter);
-    }
+    (*imp->src_iter_init) (imp, iter);
 }
 
 void

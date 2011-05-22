@@ -7,14 +7,14 @@
 The Inter-Client Communication Conventions Manual, hereafter referred to as the <acronym>ICCCM</acronym>,
 details the X Consortium approved conventions that govern inter-client communications. These
 conventions ensure peer-to-peer client cooperation in the use of selections, cut buffers, and shared
-resources as well as client cooperation with window and session managers. For further informa-
-tion, see the Inter-Client Communication Conventions Manual.
+resources as well as client cooperation with window and session managers. For further information,
+see the Inter-Client Communication Conventions Manual.
 </para>
 <para>
-Xlib provides a number of standard properties and programming interfaces that are <acronym>ICCCM</acronym> com-
-pliant. The predeﬁned atoms for some of these properties are deﬁned in the &lt;X11/Xatom.h&gt;
-header ﬁle, where to avoid name conﬂicts with user symbols their #deﬁne name has an XA_ pre-
-ﬁx. For further information about atoms and properties, see section 4.3.
+Xlib provides a number of standard properties and programming interfaces that are <acronym>ICCCM</acronym>
+compliant. The predefined atoms for some of these properties are defined in the &lt;X11/Xatom.h&gt;
+header file, where to avoid name conflicts with user symbols their #define name has an XA_ prefix.
+For further information about atoms and properties, see section 4.3.
 </para>
 <para>
 Xlib’s selection and cut buffer mechanisms provide the primary programming interfaces by which
@@ -57,8 +57,7 @@ managers are:
       <entry>TEXT</entry>
       <entry></entry>
       <entry>The string name of the machine on
-      which the client application is run-
-      ning.
+      which the client application is running.
       </entry>
     </row>
     <row>
@@ -74,7 +73,7 @@ managers are:
       <entry><property>WM_COMMAND</property></entry>
       <entry>TEXT</entry>
       <entry></entry>
-      <entry>The command and arguments, null-
+      <entry>The command and arguments, null
       separated, used to invoke the application.
       </entry>
     </row>
@@ -134,8 +133,7 @@ managers are:
       <entry><property>WM_STATE</property></entry>
       <entry>32</entry>
       <entry>Intended for communication
-      between window and session man-
-      agers only.
+      between window and session managers only.
       </entry>
     </row>
     <row>

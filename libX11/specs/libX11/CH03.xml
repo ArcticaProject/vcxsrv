@@ -2295,7 +2295,7 @@ structure are:
 <!-- .LP -->
 
 <literallayout class="monospaced">
-/* Conﬁgure window value mask bits */
+/* Configure window value mask bits */
 #define      CWX              (1&lt;&lt;0)
 #define      CWY              (1&lt;&lt;1)
 #define      CWWidth          (1&lt;&lt;2)

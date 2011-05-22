@@ -20,6 +20,7 @@ libpixman_1_la_SOURCES =			\
 	pixman-combine64.h			\
 	pixman-general.c			\
 	pixman.c				\
+	pixman-noop.c				\
 	pixman-fast-path.c			\
 	pixman-fast-path.h			\
 	pixman-solid-fill.c			\

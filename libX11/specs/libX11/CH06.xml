@@ -273,7 +273,7 @@ The following macros define standard formats.
 </para>
 
 <literallayout class="monospaced">
-#define          XcmsUndeﬁnedFormat    0x00000000  
+#define          XcmsUndefinedFormat   0x00000000
 #define          XcmsCIEXYZFormat      0x00000001  /* CIE XYZ */
 #define          XcmsCIEuvYFormat      0x00000002  /* CIE u'v'Y */
 #define          XcmsCIExyYFormat      0x00000003  /* CIE xyY */

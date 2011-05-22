@@ -15,6 +15,7 @@ CSRCS =			\
 	pixman-combine64.c			\
 	pixman-general.c			\
 	pixman.c				\
+	pixman-noop.c				\
 	pixman-fast-path.c			\
 	pixman-solid-fill.c			\
 	pixman-conical-gradient.c		\
