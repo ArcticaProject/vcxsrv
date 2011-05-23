@@ -66,6 +66,8 @@
 /* From darwinEvents.c ... but don't want to pull in all the server cruft */
 void DarwinListenOnOpenFD(int fd);
 
+extern aslclient aslc;
+
 /* Ditto, from os/log.c */
 extern void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
 extern void FatalError(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2) _X_NORETURN;
@@ -485,7 +487,6 @@ static void ensure_path(const char *dir) {
 static void setup_console_redirect(const char *bundle_id) {
     char *asl_sender;
     char *asl_facility;
-    aslclient aslc;
 
     asprintf(&asl_sender, "%s.server", bundle_id);
     assert(asl_sender);
@@ -644,7 +645,7 @@ int main(int argc, char **argv, char **envp) {
                 child2 = fork();
 
                 switch (child2) {
-                    int max_files, i;
+                    int max_files;
 
                     case -1:                            /* error */
                         FatalError("fork() failed: %s\n", strerror(errno));

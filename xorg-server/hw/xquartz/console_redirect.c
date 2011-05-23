@@ -116,7 +116,7 @@ static inline int _read_redirect(int fd, int flush) {
                 *s='\0';
                 asl_log(aslr->asl, aslr->msg, aslr->level, "%s", p);
             } else if(aslr->buf != p) {
-                memmove(aslr->buf, p, BUF_SIZE);
+                memmove(aslr->buf, p, BUF_SIZE - (p - aslr->buf));
                 aslr->w = aslr->buf + (s - p);
                 break;
             } else if(nbytes == BUF_SIZE - 1) {

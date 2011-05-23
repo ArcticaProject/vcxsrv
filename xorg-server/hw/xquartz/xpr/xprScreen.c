@@ -193,6 +193,7 @@ xprAddPseudoramiXScreens(int *x, int *y, int *width, int *height, ScreenPtr pScr
         *width = 800;
         *height = 600;
         PseudoramiXAddScreen(*x, *y, *width, *height);
+        QuartzCopyDisplayIDs(pScreen, 0, NULL);
         return;
     }
 
@@ -253,7 +254,7 @@ xprDisplayInit(void)
 {
     CGDisplayCount displayCount;
 
-    DEBUG_LOG("");
+    TRACE();
 
     CGGetActiveDisplayList(0, NULL, &displayCount);
 

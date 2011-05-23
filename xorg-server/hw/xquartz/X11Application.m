@@ -1269,7 +1269,7 @@ static const char *untrusted_str(NSEvent *e) {
 #if defined(XPLUGIN_VERSION) && XPLUGIN_VERSION > 0
 /* Older libXplugin (Tiger/"Stock" Leopard) aren't thread safe, so we can't call xp_find_window from the Appkit thread */
                 xp_window_id wid = 0;
-                xp_error e;
+                xp_error err;
 
                 /* Sigh. Need to check that we're really over one of
                  * our windows. (We need to receive pointer events while
@@ -1277,9 +1277,9 @@ static const char *untrusted_str(NSEvent *e) {
                  * when another window is over us or we might show a tooltip)
                  */
 
-                e = xp_find_window(location.x, location.y, 0, &wid);
+                err = xp_find_window(location.x, location.y, 0, &wid);
 
-                if (e != XP_Success || (e == XP_Success && wid == 0))
+                if (err != XP_Success || (err == XP_Success && wid == 0))
 #endif
                 {
                     bgMouseLocation = location;

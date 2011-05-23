@@ -32,7 +32,7 @@
 #include "inputstr.h"
 #include "scrnintstr.h"
 #include <X11/extensions/XKB.h>
-#include <assert.h>
+#include <asl.h>
 
 #include "darwinfb.h"
 
@@ -76,16 +76,9 @@ extern int              darwinMainScreenY;
 // bundle-main.c
 extern char *bundle_id_prefix;
 
-#define ENABLE_DEBUG_LOG 1
+extern void debug_asl (const char *file, const char *function, int line, const char *fmt, ...) _X_ATTRIBUTE_PRINTF(4,5);
 
-#ifdef ENABLE_DEBUG_LOG
-extern FILE *debug_log_fp;
-#define DEBUG_LOG_NAME "x11-debug.txt"
-#define DEBUG_LOG(msg, args...) if (debug_log_fp) fprintf(debug_log_fp, "%s:%s:%d " msg, __FILE__, __FUNCTION__, __LINE__, ##args ); fflush(debug_log_fp);
-#else
-#define DEBUG_LOG(msg, args...) 
-#endif
-
-#define TRACE() DEBUG_LOG("\n")
+#define DEBUG_LOG(msg, args...) debug_asl(__FILE__, __FUNCTION__, __LINE__, msg, ##args);
+#define TRACE() DEBUG_LOG("TRACE")
 
 #endif  /* _DARWIN_H */
