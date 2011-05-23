@@ -56,6 +56,7 @@ struct arg {
     char **envp;
 };
 
+_X_NORETURN
 static void server_thread (void *arg) {
     struct arg args = *((struct arg *)arg);
     free(arg);

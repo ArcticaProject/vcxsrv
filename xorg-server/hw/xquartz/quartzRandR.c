@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2001-2004 Greg Parker and Torrey T. Lyons,
  *               2010      Jan Hauffa.
- *               2010      Apple Inc.
+ *               2010-2011 Apple Inc.
  *                 All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -124,44 +124,48 @@ static Bool QuartzRandRSetCGMode (CGDirectDisplayID screenId,
 static Bool QuartzRandREnumerateModes (ScreenPtr pScreen,
                                        QuartzModeCallback callback,
                                        void *data) {
-    CFDictionaryRef curModeRef, modeRef;
-    long curBpp;
-    CFArrayRef modes;
-    QuartzModeInfo modeInfo;
-    int i;
-    BOOL retval = FALSE;
+    Bool retval = FALSE;
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
-    CGDirectDisplayID screenId = pQuartzScreen->displayIDs[0];
 
-    curModeRef = CGDisplayCurrentMode(screenId);
-    if (!curModeRef)
-        return FALSE;
-    curBpp = getDictLong(curModeRef, kCGDisplayBitsPerPixel);
+    /* Just an 800x600 fallback if we have no attached heads */
+    if(pQuartzScreen->displayIDs) {
+        CFDictionaryRef curModeRef, modeRef;
+        long curBpp;
+        CFArrayRef modes;
+        QuartzModeInfo modeInfo;
+        int i;
+        CGDirectDisplayID screenId = pQuartzScreen->displayIDs[0];
 
-    modes = CGDisplayAvailableModes(screenId);
-    if (!modes)
-        return FALSE;
-    for (i = 0; i < CFArrayGetCount(modes); i++) {
-        int cb;
-        modeRef = (CFDictionaryRef) CFArrayGetValueAtIndex(modes, i);
-
-        /* Skip modes that are not usable on the current display or have a
-           different pixel encoding than the current mode. */
-        if (((unsigned long) getDictLong(modeRef, kCGDisplayIOFlags) &
-             kDisplayModeUsableFlags) != kDisplayModeUsableFlags)
-            continue;
-        if (getDictLong(modeRef, kCGDisplayBitsPerPixel) != curBpp)
-            continue;
-
-        QuartzRandRGetModeInfo(modeRef, &modeInfo);
-        modeInfo.ref = (void *)modeRef;
-        cb = callback(pScreen, &modeInfo, data);
-        if (cb == CALLBACK_CONTINUE)
-            retval = TRUE;
-        else if (cb == CALLBACK_SUCCESS)
-            return TRUE;
-        else if (cb == CALLBACK_ERROR)
+        curModeRef = CGDisplayCurrentMode(screenId);
+        if (!curModeRef)
             return FALSE;
+        curBpp = getDictLong(curModeRef, kCGDisplayBitsPerPixel);
+
+        modes = CGDisplayAvailableModes(screenId);
+        if (!modes)
+            return FALSE;
+        for (i = 0; i < CFArrayGetCount(modes); i++) {
+            int cb;
+            modeRef = (CFDictionaryRef) CFArrayGetValueAtIndex(modes, i);
+
+            /* Skip modes that are not usable on the current display or have a
+               different pixel encoding than the current mode. */
+            if (((unsigned long) getDictLong(modeRef, kCGDisplayIOFlags) &
+                 kDisplayModeUsableFlags) != kDisplayModeUsableFlags)
+                continue;
+            if (getDictLong(modeRef, kCGDisplayBitsPerPixel) != curBpp)
+                continue;
+
+            QuartzRandRGetModeInfo(modeRef, &modeInfo);
+            modeInfo.ref = (void *)modeRef;
+            cb = callback(pScreen, &modeInfo, data);
+            if (cb == CALLBACK_CONTINUE)
+                retval = TRUE;
+            else if (cb == CALLBACK_SUCCESS)
+                return TRUE;
+            else if (cb == CALLBACK_ERROR)
+                return FALSE;
+        }
     }
 
     switch(callback(pScreen, &pQuartzScreen->rootlessMode, data)) {
@@ -225,61 +229,64 @@ static Bool QuartzRandRSetCGMode (CGDirectDisplayID screenId,
 static Bool QuartzRandREnumerateModes (ScreenPtr pScreen,
                                        QuartzModeCallback callback,
                                        void *data) {
-    CGDisplayModeRef curModeRef, modeRef;
-    CFStringRef curPixelEnc, pixelEnc;
-    CFComparisonResult pixelEncEqual;
-    CFArrayRef modes;
-    QuartzModeInfo modeInfo;
-    int i;
     Bool retval = FALSE;
-
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
-    CGDirectDisplayID screenId = pQuartzScreen->displayIDs[0];
 
-    curModeRef = CGDisplayCopyDisplayMode(screenId);
-    if (!curModeRef)
-        return FALSE;
-    curPixelEnc = CGDisplayModeCopyPixelEncoding(curModeRef);
-    CGDisplayModeRelease(curModeRef);
+    /* Just an 800x600 fallback if we have no attached heads */
+    if(pQuartzScreen->displayIDs) {
+        CGDisplayModeRef curModeRef, modeRef;
+        CFStringRef curPixelEnc, pixelEnc;
+        CFComparisonResult pixelEncEqual;
+        CFArrayRef modes;
+        QuartzModeInfo modeInfo;
+        int i;
+        CGDirectDisplayID screenId = pQuartzScreen->displayIDs[0];
 
-    modes = CGDisplayCopyAllDisplayModes(screenId, NULL);
-    if (!modes) {
-        CFRelease(curPixelEnc);
-        return FALSE;
-    }
-    for (i = 0; i < CFArrayGetCount(modes); i++) {
-        int cb;
-        modeRef = (CGDisplayModeRef) CFArrayGetValueAtIndex(modes, i);
+        curModeRef = CGDisplayCopyDisplayMode(screenId);
+        if (!curModeRef)
+            return FALSE;
+        curPixelEnc = CGDisplayModeCopyPixelEncoding(curModeRef);
+        CGDisplayModeRelease(curModeRef);
 
-        /* Skip modes that are not usable on the current display or have a
-           different pixel encoding than the current mode. */
-        if ((CGDisplayModeGetIOFlags(modeRef) & kDisplayModeUsableFlags) !=
-            kDisplayModeUsableFlags)
-            continue;
-        pixelEnc = CGDisplayModeCopyPixelEncoding(modeRef);
-        pixelEncEqual = CFStringCompare(pixelEnc, curPixelEnc, 0);
-        CFRelease(pixelEnc);
-        if (pixelEncEqual != kCFCompareEqualTo)
-            continue;
-
-        QuartzRandRGetModeInfo(modeRef, &modeInfo);
-        modeInfo.ref = modeRef;
-        cb = callback(pScreen, &modeInfo, data);
-        if (cb == CALLBACK_CONTINUE) {
-            retval = TRUE;
-        } else if (cb == CALLBACK_SUCCESS) {
-            CFRelease(modes);
-            CFRelease(curPixelEnc);
-            return TRUE;
-        } else if (cb == CALLBACK_ERROR) {
-            CFRelease(modes);
+        modes = CGDisplayCopyAllDisplayModes(screenId, NULL);
+        if (!modes) {
             CFRelease(curPixelEnc);
             return FALSE;
         }
-    }
+        for (i = 0; i < CFArrayGetCount(modes); i++) {
+            int cb;
+            modeRef = (CGDisplayModeRef) CFArrayGetValueAtIndex(modes, i);
 
-    CFRelease(modes);
-    CFRelease(curPixelEnc);
+            /* Skip modes that are not usable on the current display or have a
+               different pixel encoding than the current mode. */
+            if ((CGDisplayModeGetIOFlags(modeRef) & kDisplayModeUsableFlags) !=
+                kDisplayModeUsableFlags)
+                continue;
+            pixelEnc = CGDisplayModeCopyPixelEncoding(modeRef);
+            pixelEncEqual = CFStringCompare(pixelEnc, curPixelEnc, 0);
+            CFRelease(pixelEnc);
+            if (pixelEncEqual != kCFCompareEqualTo)
+                continue;
+
+            QuartzRandRGetModeInfo(modeRef, &modeInfo);
+            modeInfo.ref = modeRef;
+            cb = callback(pScreen, &modeInfo, data);
+            if (cb == CALLBACK_CONTINUE) {
+                retval = TRUE;
+            } else if (cb == CALLBACK_SUCCESS) {
+                CFRelease(modes);
+                CFRelease(curPixelEnc);
+                return TRUE;
+            } else if (cb == CALLBACK_ERROR) {
+                CFRelease(modes);
+                CFRelease(curPixelEnc);
+                return FALSE;
+            }
+        }
+
+        CFRelease(modes);
+        CFRelease(curPixelEnc);
+    }
 
     switch(callback(pScreen, &pQuartzScreen->rootlessMode, data)) {
         case CALLBACK_SUCCESS:
@@ -347,9 +354,13 @@ static int QuartzRandRRegisterModeCallback (ScreenPtr pScreen,
 
 static Bool QuartzRandRSetMode(ScreenPtr pScreen, QuartzModeInfoPtr pMode, BOOL doRegister) {
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
-    CGDirectDisplayID screenId = pQuartzScreen->displayIDs[0];
     Bool captureDisplay = (pMode->refresh != FAKE_REFRESH_FULLSCREEN && pMode->refresh != FAKE_REFRESH_ROOTLESS);
+    CGDirectDisplayID screenId;
 
+    if(pQuartzScreen->displayIDs == NULL)
+        return FALSE;
+
+    screenId = pQuartzScreen->displayIDs[0];
     if(XQuartzShieldingWindowLevel == 0 && captureDisplay) {
         if(!X11ApplicationCanEnterRandR())
             return FALSE;
@@ -379,7 +390,8 @@ static Bool QuartzRandRSetMode(ScreenPtr pScreen, QuartzModeInfoPtr pMode, BOOL 
     if(pQuartzScreen->currentMode.ref)
         CFRelease(pQuartzScreen->currentMode.ref);
     pQuartzScreen->currentMode = *pMode;
-    CFRetain(pQuartzScreen->currentMode.ref);
+    if(pQuartzScreen->currentMode.ref)
+        CFRetain(pQuartzScreen->currentMode.ref);
     
     if(XQuartzShieldingWindowLevel != 0 && !captureDisplay) {
         CGReleaseAllDisplays();
@@ -406,12 +418,7 @@ static int QuartzRandRSetModeCallback (ScreenPtr pScreen,
 }
 
 static Bool QuartzRandRGetInfo (ScreenPtr pScreen, Rotation *rotations) {
-    QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
-
     *rotations = RR_Rotate_0;  /* TODO: support rotation */
-
-    if (pQuartzScreen->displayCount == 0)
-        return FALSE;
 
     return QuartzRandREnumerateModes(pScreen, QuartzRandRRegisterModeCallback, NULL);
 }
@@ -427,9 +434,6 @@ static Bool QuartzRandRSetConfig (ScreenPtr           pScreen,
     reqMode.height = pSize->height;
     reqMode.refresh = rate;
 
-    if (pQuartzScreen->displayCount == 0)
-        return FALSE;
-
     /* Do not switch modes if requested mode is equal to current mode. */
     if (QuartzRandRModesEqual(&reqMode, &pQuartzScreen->currentMode))
         return TRUE;
@@ -444,26 +448,36 @@ static Bool QuartzRandRSetConfig (ScreenPtr           pScreen,
 
 static Bool _QuartzRandRUpdateFakeModes (ScreenPtr pScreen) {
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
+    QuartzModeInfo activeMode;
+
+    if(pQuartzScreen->displayCount > 0) {
+        if(!QuartzRandRCopyCurrentModeInfo(pQuartzScreen->displayIDs[0], &activeMode)) {
+            ErrorF("Unable to determine current display mode.\n");
+            return FALSE;
+        }
+    } else {
+        memset(&activeMode, 0, sizeof(activeMode));
+        activeMode.width = 800;
+        activeMode.height = 600;
+        activeMode.refresh = 60;
+    }
 
     if(pQuartzScreen->fullscreenMode.ref)
         CFRelease(pQuartzScreen->fullscreenMode.ref);
     if(pQuartzScreen->currentMode.ref)
         CFRelease(pQuartzScreen->currentMode.ref);
-        
-    if (!QuartzRandRCopyCurrentModeInfo(pQuartzScreen->displayIDs[0],
-                                        &pQuartzScreen->fullscreenMode))
-        return FALSE;
 
-    if (pQuartzScreen->displayCount > 1) {
-        pQuartzScreen->fullscreenMode.width = pScreen->width;
-        pQuartzScreen->fullscreenMode.height = pScreen->height;
+    if(pQuartzScreen->displayCount > 1) {
+        activeMode.width = pScreen->width;
+        activeMode.height = pScreen->height;
         if(XQuartzIsRootless)
-            pQuartzScreen->fullscreenMode.height += aquaMenuBarHeight;
+            activeMode.height += aquaMenuBarHeight;
     }
 
+    pQuartzScreen->fullscreenMode = activeMode; 
     pQuartzScreen->fullscreenMode.refresh = FAKE_REFRESH_FULLSCREEN;
 
-    pQuartzScreen->rootlessMode = pQuartzScreen->fullscreenMode;
+    pQuartzScreen->rootlessMode = activeMode;
     pQuartzScreen->rootlessMode.refresh = FAKE_REFRESH_ROOTLESS;
     pQuartzScreen->rootlessMode.height -= aquaMenuBarHeight;
 
@@ -476,7 +490,8 @@ static Bool _QuartzRandRUpdateFakeModes (ScreenPtr pScreen) {
     /* This extra retain is for currentMode's copy.
      * fullscreen and rootless share a retain.
      */
-    CFRetain(pQuartzScreen->currentMode.ref);
+    if(pQuartzScreen->currentMode.ref)
+        CFRetain(pQuartzScreen->currentMode.ref);
     
     DEBUG_LOG("rootlessMode: %d x %d\n", (int)pQuartzScreen->rootlessMode.width, (int)pQuartzScreen->rootlessMode.height);
     DEBUG_LOG("fullscreenMode: %d x %d\n", (int)pQuartzScreen->fullscreenMode.width, (int)pQuartzScreen->fullscreenMode.height);

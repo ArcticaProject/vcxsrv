@@ -164,6 +164,7 @@ static void send_fd_handoff(int connected_fd, int launchd_fd) {
     close(connected_fd);
 }
 
+__attribute__((__noreturn__))
 static void signal_handler(int sig) {
     if(x11app_pid)
         kill(x11app_pid, sig);

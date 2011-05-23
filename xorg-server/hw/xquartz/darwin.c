@@ -60,6 +60,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdarg.h>
 
 #define HAS_UTSNAME 1
 #include <sys/utsname.h>
@@ -76,9 +77,31 @@
 #include "quartzKeyboard.h"
 #include "quartz.h"
 
-#ifdef ENABLE_DEBUG_LOG
-FILE *debug_log_fp = NULL;
-#endif
+aslclient aslc;
+
+void debug_asl (const char *file, const char *function, int line, const char *fmt, ...) {
+    va_list args;
+    aslmsg msg = asl_new(ASL_TYPE_MSG);
+
+    if(msg) {
+        char *_line;
+
+        asl_set(msg, "File", file);
+        asl_set(msg, "Function", function);
+        asprintf(&_line, "%d", line);
+        if(_line) {
+            asl_set(msg, "Line", _line);
+            free(_line);
+        }
+    }
+
+    va_start(args, fmt);
+    asl_vlog(aslc, msg, ASL_LEVEL_DEBUG, fmt, args);
+    va_end(args);
+
+    if(msg)
+        asl_free(msg);
+}
 
 /*
  * X server shared global variables
@@ -749,8 +772,8 @@ void ddxGiveUp( void )
  *      made to restore all original setting of the displays. Also all devices
  *      are closed.
  */
-void AbortDDX( void )
-{
+_X_NORETURN
+void AbortDDX( void ) {
     ErrorF( "   AbortDDX\n" );
     OsAbort();
 }

@@ -111,7 +111,11 @@ In addition to this server log, XQuartz sends messages to syslogd(8) using
 asl(3).  These logs are sent to the __bundle_id_prefix__ facility, and you can
 watch these logs using the following syslog(1) command:
 .TP 8
-.B $ syslog -w -k Facility __bundle_id_prefix__
+.B $ syslog -w -k Facility eq __bundle_id_prefix__
+.PP
+or you can include extra information such as the file, line, and function where the message originated:
+.TP 8
+.B $ syslog -w -F '$(Time) $(Sender) <$(Level)> $(File):$(Line) $(Function) :: $(Message)' -k Facility eq __bundle_id_prefix__
 .PP
 By default, XQaurtz sets an ASL mask which prevents it from logging messages
 below the ASL_LEVEL_WARNING level (meaning almost all logging is done strictly

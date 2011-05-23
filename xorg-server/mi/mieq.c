@@ -83,17 +83,17 @@ static EventQueueRec miEventQueue;
 #include  <pthread.h>
 static pthread_mutex_t miEventQueueMutex = PTHREAD_MUTEX_INITIALIZER;
 
-extern BOOL serverInitComplete;
-extern pthread_mutex_t serverInitCompleteMutex;
-extern pthread_cond_t serverInitCompleteCond;
+extern BOOL serverRunning;
+extern pthread_mutex_t serverRunningMutex;
+extern pthread_cond_t serverRunningCond;
 
 static inline void wait_for_server_init(void) {
     /* If the server hasn't finished initializing, wait for it... */
-    if(!serverInitComplete) {
-        pthread_mutex_lock(&serverInitCompleteMutex);
-        while(!serverInitComplete)
-            pthread_cond_wait(&serverInitCompleteCond, &serverInitCompleteMutex);
-        pthread_mutex_unlock(&serverInitCompleteMutex);
+    if(!serverRunning) {
+        pthread_mutex_lock(&serverRunningMutex);
+        while(!serverRunning)
+            pthread_cond_wait(&serverRunningCond, &serverRunningMutex);
+        pthread_mutex_unlock(&serverRunningMutex);
     }
 }
 #endif

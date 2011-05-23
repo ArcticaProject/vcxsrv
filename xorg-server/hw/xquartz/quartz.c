@@ -239,8 +239,6 @@ void QuartzUpdateScreens(void) {
     AppleWMSetScreenOrigin(pRoot);
     pScreen->ResizeWindow(pRoot, x - sx, y - sy, width, height, NULL);
 
-    miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
-
     /* <rdar://problem/7770779> pointer events are clipped to old display region after display reconfiguration
      * http://xquartz.macosforge.org/trac/ticket/346
      */
@@ -267,6 +265,9 @@ void QuartzUpdateScreens(void) {
     DeliverEvents(pRoot, &e, 1, NullWindow);
 
     quartzProcs->UpdateScreen(pScreen);
+
+    /* miPaintWindow needs to be called after RootlessUpdateScreenPixmap (from xprUpdateScreen) */
+    miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
 
     /* Tell RandR about the new size, so new connections get the correct info */
     RRScreenSizeNotify(pScreen);
@@ -464,11 +465,15 @@ void QuartzSpaceChanged(uint32_t space_id) {
 void QuartzCopyDisplayIDs(ScreenPtr pScreen,
                           int displayCount, CGDirectDisplayID *displayIDs) {
     QuartzScreenPtr pQuartzScreen = QUARTZ_PRIV(pScreen);
-    int size = displayCount * sizeof(CGDirectDisplayID);
 
     free(pQuartzScreen->displayIDs);
-    pQuartzScreen->displayIDs = malloc(size);
-    memcpy(pQuartzScreen->displayIDs, displayIDs, size);
+    if(displayCount) {
+        size_t size = displayCount * sizeof(CGDirectDisplayID);
+        pQuartzScreen->displayIDs = malloc(size);
+        memcpy(pQuartzScreen->displayIDs, displayIDs, size);
+    } else {
+       pQuartzScreen->displayIDs = NULL;
+    }
     pQuartzScreen->displayCount = displayCount;
 }
 
