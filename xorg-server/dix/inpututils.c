@@ -239,10 +239,10 @@ static int build_modmap_from_modkeymap(CARD8 *modmap, KeyCode *modkeymap,
         if (modkeymap[i] >= MAP_LENGTH)
             return BadValue;
 
-        //if (modmap[modkeymap[i]])  It looks like it needlessly gives errors back
-        //    return BadValue;
+        if (modmap[modkeymap[i]])
+            return BadValue;
 
-        modmap[modkeymap[i]] |= 1 << (i / max_keys_per_mod); // Now or it because of previous line removal
+        modmap[modkeymap[i]] = 1 << (i / max_keys_per_mod);
     }
 
     return Success;
