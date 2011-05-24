@@ -1000,6 +1000,11 @@
 #define driDispatchRemapTable_size 520
 extern int driDispatchRemapTable[ driDispatchRemapTable_size ];
 
+#if FEATURE_remap_table
+#define driDispatchRemapTable remap_table
+static int remap_table[driDispatchRemapTable_size];
+#endif
+
 #define AttachShader_remap_index 0
 #define CreateProgram_remap_index 1
 #define CreateShader_remap_index 2
