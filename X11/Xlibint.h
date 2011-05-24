@@ -572,6 +572,7 @@ extern LockInfoPtr _Xglobal_lock;
 #endif
 #endif
 
+#ifndef __clang_analyzer__
 #define SetReqLen(req,n,badlen) \
     if ((req->length + n) > (unsigned)65535) { \
 	if (dpy->bigreq_size) { \
@@ -582,6 +583,10 @@ extern LockInfoPtr _Xglobal_lock;
 	} \
     } else \
 	req->length += n
+#else
+#define SetReqLen(req,n,badlen) \
+    req->length += n
+#endif
 
 #define SyncHandle() \
 	if (dpy->synchandler) (*dpy->synchandler)(dpy)
@@ -787,7 +792,7 @@ typedef int (*FreeModmapType) (
  */
 typedef struct _XFreeFuncs {
     FreeFuncType atoms;		/* _XFreeAtomTable */
-    FreeModmapType modifiermap;	/* XFreeModifierMap */
+    FreeModmapType modifiermap;	/* XFreeModifiermap */
     FreeFuncType key_bindings;	/* _XFreeKeyBindings */
     FreeFuncType context_db;	/* _XFreeContextDB */
     FreeFuncType defaultCCCs;	/* _XcmsFreeDefaultCCCs */
