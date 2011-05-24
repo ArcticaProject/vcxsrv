@@ -1685,6 +1685,11 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   if (hint & HINT_NOMAXIMIZE)
     style = style & ~WS_MAXIMIZEBOX;
 
+  if (!IsWindow (hWnd))
+  {
+    ErrorF("Windows window 0x%x has become invalid, so returning without applying hints\n",hWnd);
+    return;
+  }
                 
   if (winMultiWindowGetWMNormalHints(pWin, &SizeHints))
   {
