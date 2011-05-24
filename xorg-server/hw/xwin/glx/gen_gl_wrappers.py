@@ -67,7 +67,7 @@ if dispatchheader :
         fh = open(dispatchheader)
         dispatchh = fh.readlines()
 
-        dispatch_regex = re.compile(r'#define\sSET_(\S*)\(')
+        dispatch_regex = re.compile(r'(?:#define|static\s+INLINE\s+void)\s+SET_([^\()]+)\(')
 
         for line in dispatchh :
                 line = line.strip()
