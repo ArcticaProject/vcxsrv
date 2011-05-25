@@ -257,7 +257,7 @@ To request that a top-level window be iconified, use
 <function>XIconifyWindow</function>.
 <indexterm significance="preferred"><primary>XIconifyWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xiconifywindow'>
 <funcprototype>
   <funcdef>Status <function>XIconifyWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -331,7 +331,7 @@ To request that a top-level window be withdrawn, use
 <function>XWithdrawWindow</function>.
 <indexterm significance="preferred"><primary>XWithdrawWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xwithdrawwindow'>
 <funcprototype>
   <funcdef>Status <function>XWithdrawWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -405,7 +405,7 @@ To request that a top-level window be reconfigured, use
 <function>XReconfigureWMWindow</function>.
 <indexterm significance="preferred"><primary>XReconfigureWMWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xreconfigurewmwindow'>
 <funcprototype>
   <funcdef>Status <function>XReconfigureWMWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -579,7 +579,7 @@ or
 <indexterm significance="preferred"><primary>XmbTextListToTextProperty</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextListToTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbtextlisttotextproperty'>
 <funcprototype>
   <funcdef>int <function>XmbTextListToTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -590,7 +590,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwctextlisttotextproperty'>
 <funcprototype>
   <funcdef>int <function>XwcTextListToTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -741,7 +741,7 @@ or
 <indexterm significance="preferred"><primary>XmbTextPropertyToTextList</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextPropertyToTextList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbtextpropertytotextlist'>
 <funcprototype>
   <funcdef>int <function>XmbTextPropertyToTextList</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -751,7 +751,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwctextpropertytotextlist'>
 <funcprototype>
   <funcdef>int <function>XwcTextPropertyToTextList</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -899,7 +899,7 @@ wide character string list, use
 <function>XwcFreeStringList</function>.
 <indexterm significance="preferred"><primary>XwcFreeStringList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xwcfreestringlist'>
 <funcprototype>
   <funcdef>void <function>XwcFreeStringList</function></funcdef>
   <paramdef>wchar_t<parameter> **list</parameter></paramdef>
@@ -983,7 +983,7 @@ structure, use
 <function>XStringListToTextProperty</function>.
 <indexterm significance="preferred"><primary>XStringListToTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xstringlisttotextproperty'>
 <funcprototype>
   <funcdef>Status <function>XStringListToTextProperty</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -1058,7 +1058,7 @@ structure in the STRING encoding, use
 <function>XTextPropertyToStringList</function>.
 <indexterm significance="preferred"><primary>XTextPropertyToStringList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xtextpropertytostringlist'>
 <funcprototype>
   <funcdef>Status <function>XTextPropertyToStringList</function></funcdef>
   <paramdef>XTextProperty<parameter> *text_prop</parameter></paramdef>
@@ -1131,7 +1131,7 @@ To free the in-memory data associated with the specified string list, use
 <function>XFreeStringList</function>.
 <indexterm significance="preferred"><primary>XFreeStringList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreestringlist'>
 <funcprototype>
   <funcdef>void <function>XFreeStringList</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -1188,7 +1188,7 @@ To set one of a window's text properties, use
 <function>XSetTextProperty</function>.
 <indexterm significance="preferred"><primary>XSetTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsettextproperty'>
 <funcprototype>
   <funcdef>void <function>XSetTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1276,7 +1276,7 @@ To read one of a window's text properties, use
 <function>XGetTextProperty</function>.
 <indexterm significance="preferred"><primary>XGetTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgettextproperty'>
 <funcprototype>
   <funcdef>Status <function>XGetTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1392,7 +1392,7 @@ To set a window's <property>WM_NAME</property> property with the supplied conven
 <function>XSetWMName</function>.
 <indexterm significance="preferred"><primary>XSetWMName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmname'>
 <funcprototype>
   <funcdef>void <function>XSetWMName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1452,7 +1452,7 @@ To read a window's <property>WM_NAME</property> property with the supplied conve
 <function>XGetWMName</function>.
 <indexterm significance="preferred"><primary>XGetWMName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmname'>
 <funcprototype>
   <funcdef>Status <function>XGetWMName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1525,7 +1525,7 @@ To assign a name to a window, use
 <indexterm><primary>Window</primary><secondary>name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XStoreName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xstorename'>
 <funcprototype>
   <funcdef><function>XStoreName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1598,7 +1598,7 @@ To get the name of a window, use
 <function>XFetchName</function>.
 <indexterm significance="preferred"><primary>XFetchName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfetchname'>
 <funcprototype>
   <funcdef>Status <function>XFetchName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1686,7 +1686,7 @@ use
 <function>XSetWMIconName</function>.
 <indexterm significance="preferred"><primary>XSetWMIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmiconname'>
 <funcprototype>
   <funcdef>void <function>XSetWMIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1747,7 +1747,7 @@ use
 <function>XGetWMIconName</function>.
 <indexterm significance="preferred"><primary>XGetWMIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmiconname'>
 <funcprototype>
   <funcdef>Status <function>XGetWMIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1821,7 +1821,7 @@ To set the name to be displayed in a window's icon, use
 <indexterm><primary>Window</primary><secondary>icon name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xseticonname'>
 <funcprototype>
   <funcdef><function>XSetIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1883,7 +1883,7 @@ To get the name a window wants displayed in its icon, use
 <function>XGetIconName</function>.
 <indexterm significance="preferred"><primary>XGetIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgeticonname'>
 <funcprototype>
   <funcdef>Status <function>XGetIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2121,7 +2121,7 @@ To set a window's <property>WM_HINTS</property> property, use
 <function>XSetWMHints</function>.
 <indexterm significance="preferred"><primary>XSetWMHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmhints'>
 <funcprototype>
   <funcdef><function>XSetWMHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2190,7 +2190,7 @@ To read a window's <property>WM_HINTS</property> property, use
 <function>XGetWMHints</function>.
 <indexterm significance="preferred"><primary>XGetWMHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmhints'>
 <funcprototype>
   <funcdef>XWMHints *<function>XGetWMHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2387,7 +2387,7 @@ To set a window's <property>WM_NORMAL_HINTS</property> property, use
 <function>XSetWMNormalHints</function>.
 <indexterm significance="preferred"><primary>XSetWMNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmnormalhints'>
 <funcprototype>
   <funcdef>void <function>XSetWMNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2457,7 +2457,7 @@ To read a window's <property>WM_NORMAL_HINTS</property> property, use
 <function>XGetWMNormalHints</function>.
 <indexterm significance="preferred"><primary>XGetWMNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmnormalhints'>
 <funcprototype>
   <funcdef>Status <function>XGetWMNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2568,7 +2568,7 @@ To set a window's <property>WM_SIZE_HINTS</property> property, use
 <function>XSetWMSizeHints</function>.
 <indexterm significance="preferred"><primary>XSetWMSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmsizehints'>
 <funcprototype>
   <funcdef>void <function>XSetWMSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2657,7 +2657,7 @@ To read a window's <property>WM_SIZE_HINTS</property> property, use
 <function>XGetWMSizeHints</function>.
 <indexterm significance="preferred"><primary>XGetWMSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmsizehints'>
 <funcprototype>
   <funcdef>Status <function>XGetWMSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2873,7 +2873,7 @@ To set a window's <property>WM_CLASS</property> property, use
 <function>XSetClassHint</function>.
 <indexterm significance="preferred"><primary>XSetClassHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetclasshint'>
 <funcprototype>
   <funcdef><function>XSetClassHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2942,7 +2942,7 @@ To read a window's <property>WM_CLASS</property> property, use
 <function>XGetClassHint</function>.
 <indexterm significance="preferred"><primary>XGetClassHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetclasshint'>
 <funcprototype>
   <funcdef>Status <function>XGetClassHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3028,7 +3028,7 @@ To set a window's <property>WM_TRANSIENT_FOR</property> property, use
 <function>XSetTransientForHint</function>.
 <indexterm significance="preferred"><primary>XSetTransientForHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsettransientforhint'>
 <funcprototype>
   <funcdef><function>XSetTransientForHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3094,7 +3094,7 @@ To read a window's <property>WM_TRANSIENT_FOR</property> property, use
 <function>XGetTransientForHint</function>.
 <indexterm significance="preferred"><primary>XGetTransientForHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgettransientforhint'>
 <funcprototype>
   <funcdef>Status <function>XGetTransientForHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3170,7 +3170,7 @@ To set a window's <property>WM_PROTOCOLS</property> property, use
 <function>XSetWMProtocols</function>.
 <indexterm significance="preferred"><primary>XSetWMProtocols</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmprotocols'>
 <funcprototype>
   <funcdef>Status <function>XSetWMProtocols</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3257,7 +3257,7 @@ To read a window's <property>WM_PROTOCOLS</property> property, use
 <function>XGetWMProtocols</function>.
 <indexterm significance="preferred"><primary>XGetWMProtocols</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmprotocols'>
 <funcprototype>
   <funcdef>Status <function>XGetWMProtocols</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3356,7 +3356,7 @@ To set a window's <property>WM_COLORMAP_WINDOWS</property> property, use
 <function>XSetWMColormapWindows</function>.
 <indexterm significance="preferred"><primary>XSetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmcolormapwindows'>
 <funcprototype>
   <funcdef>Status <function>XSetWMColormapWindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3443,7 +3443,7 @@ To read a window's <property>WM_COLORMAP_WINDOWS</property> property, use
 <function>XGetWMColormapWindows</function>.
 <indexterm significance="preferred"><primary>XGetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmcolormapwindows'>
 <funcprototype>
   <funcdef>Status <function>XGetWMColormapWindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3608,7 +3608,7 @@ To set a window's <property>WM_ICON_SIZE</property> property, use
 <function>XSetIconSizes</function>.
 <indexterm significance="preferred"><primary>XSetIconSizes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xseticonsizes'>
 <funcprototype>
   <funcdef><function>XSetIconSizes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3684,7 +3684,7 @@ To read a window's <property>WM_ICON_SIZE</property> property, use
 <function>XGetIconSizes</function>.
 <indexterm significance="preferred"><primary>XGetIconSizes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgeticonsizes'>
 <funcprototype>
   <funcdef>Status <function>XGetIconSizes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3781,7 +3781,7 @@ The standard window manager properties for a given window are
 <property>WM_COMMAND</property>, <property>WM_CLIENT_MACHINE</property>, and <property>WM_LOCALE_NAME</property>.
 <indexterm significance="preferred"><primary>XmbSetWMProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbsetwmproperties'>
 <funcprototype>
   <funcdef>void <function>XmbSetWMProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3999,7 +3999,7 @@ The standard window manager properties for a given window are
 <property>WM_COMMAND</property>, and <property>WM_CLIENT_MACHINE</property>.
 <indexterm significance="preferred"><primary>XSetWMProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmproperties'>
 <funcprototype>
   <funcdef>void <function>XSetWMProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4225,7 +4225,7 @@ To set a window's <property>WM_COMMAND</property> property, use
 <function>XSetCommand</function>.
 <indexterm significance="preferred"><primary>XSetCommand</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetcommand'>
 <funcprototype>
   <funcdef><function>XSetCommand</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4305,7 +4305,7 @@ To read a window's <property>WM_COMMAND</property> property, use
 <function>XGetCommand</function>.
 <indexterm significance="preferred"><primary>XGetCommand</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetcommand'>
 <funcprototype>
   <funcdef>Status <function>XGetCommand</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4396,7 +4396,7 @@ To set a window's <property>WM_CLIENT_MACHINE</property> property, use
 <function>XSetWMClientMachine</function>.
 <indexterm significance="preferred"><primary>XSetWMClientMachine</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwmclientmachine'>
 <funcprototype>
   <funcdef>void <function>XSetWMClientMachine</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4456,7 +4456,7 @@ To read a window's <property>WM_CLIENT_MACHINE</property> property, use
 <function>XGetWMClientMachine</function>.
 <indexterm significance="preferred"><primary>XGetWMClientMachine</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetwmclientmachine'>
 <funcprototype>
   <funcdef>Status <function>XGetWMClientMachine</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4918,7 +4918,7 @@ structure, use
 <function>XSetRGBColormaps</function>.
 <indexterm significance="preferred"><primary>XSetRGBColormaps</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetrgbcolormaps'>
 <funcprototype>
   <funcdef>void <function>XSetRGBColormaps</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5098,7 +5098,7 @@ structure associated with the specified property, use
 <function>XGetRGBColormaps</function>.
 <indexterm significance="preferred"><primary>XGetRGBColormaps</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetrgbcolormaps'>
 <funcprototype>
   <funcdef>Status <function>XGetRGBColormaps</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>

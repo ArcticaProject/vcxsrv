@@ -35,7 +35,7 @@ To change a window's parent to another window on the same screen, use
 There is no way to move a window between screens.
 <indexterm significance="preferred"><primary>XReparentWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xreparentwindow'>
 <funcprototype>
   <funcdef><function>XReparentWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -219,7 +219,7 @@ To add or remove a window from the client's save-set, use
 <function>XChangeSaveSet</function>.
 <indexterm significance="preferred"><primary>XChangeSaveSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchangesaveset'>
 <funcprototype>
   <funcdef><function>XChangeSaveSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -294,7 +294,7 @@ To add a window to the client's save-set, use
 <function>XAddToSaveSet</function>.
 <indexterm significance="preferred"><primary>XAddToSaveSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xaddtosaveset'>
 <funcprototype>
   <funcdef><function>XAddToSaveSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -353,7 +353,7 @@ To remove a window from the client's save-set, use
 <function>XRemoveFromSaveSet</function>.
 <indexterm significance="preferred"><primary>XRemoveFromSaveSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xremovefromsaveset'>
 <funcprototype>
   <funcdef><function>XRemoveFromSaveSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -450,7 +450,7 @@ To install a colormap, use
 <function>XInstallColormap</function>.
 <indexterm significance="preferred"><primary>XInstallColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xinstallcolormap'>
 <funcprototype>
   <funcdef><function>XInstallColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -523,7 +523,7 @@ To uninstall a colormap, use
 <function>XUninstallColormap</function>.
 <indexterm significance="preferred"><primary>XUninstallColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xuninstallcolormap'>
 <funcprototype>
   <funcdef><function>XUninstallColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -594,7 +594,7 @@ To obtain a list of the currently installed colormaps for a given screen, use
 <function>XListInstalledColormaps</function>.
 <indexterm significance="preferred"><primary>XListInstalledColormaps</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlistinstalledcolormaps'>
 <funcprototype>
   <funcdef>Colormap *<function>XListInstalledColormaps</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -676,7 +676,7 @@ To set the font search path, use
 <function>XSetFontPath</function>.
 <indexterm significance="preferred"><primary>XSetFontPath</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetfontpath'>
 <funcprototype>
   <funcdef><function>XSetFontPath</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -754,7 +754,7 @@ To get the current font search path, use
 <function>XGetFontPath</function>.
 <indexterm significance="preferred"><primary>XGetFontPath</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetfontpath'>
 <funcprototype>
   <funcdef>char **<function>XGetFontPath</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -806,7 +806,7 @@ use
 <function>XFreeFontPath</function>.
 <indexterm significance="preferred"><primary>XFreeFontPath</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreefontpath'>
 <funcprototype>
   <funcdef><function>XFreeFontPath</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -862,7 +862,7 @@ To grab the server, use
 <indexterm><primary>Grabbing</primary><secondary>server</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabServer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgrabserver'>
 <funcprototype>
   <funcdef><function>XGrabServer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -898,7 +898,7 @@ To ungrab the server, use
 <function>XUngrabServer</function>.
 <indexterm significance="preferred"><primary>XUngrabServer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xungrabserver'>
 <funcprototype>
   <funcdef><function>XUngrabServer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -940,7 +940,7 @@ To destroy a client, use
 <function>XKillClient</function>.
 <indexterm significance="preferred"><primary>XKillClient</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xkillclient'>
 <funcprototype>
   <funcdef><function>XKillClient</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1027,7 +1027,7 @@ To set the screen saver mode, use
 <function>XSetScreenSaver</function>.
 <indexterm significance="preferred"><primary>XSetScreenSaver</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetscreensaver'>
 <funcprototype>
   <funcdef><function>XSetScreenSaver</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1162,7 +1162,7 @@ To force the screen saver on or off, use
 <function>XForceScreenSaver</function>.
 <indexterm significance="preferred"><primary>XForceScreenSaver</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xforcescreensaver'>
 <funcprototype>
   <funcdef><function>XForceScreenSaver</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1228,7 +1228,7 @@ To activate the screen saver, use
 <function>XActivateScreenSaver</function>.
 <indexterm significance="preferred"><primary>XActivateScreenSaver</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xactivatescreensaver'>
 <funcprototype>
   <funcdef><function>XActivateScreenSaver</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1256,7 +1256,7 @@ To reset the screen saver, use
 <function>XResetScreenSaver</function>.
 <indexterm significance="preferred"><primary>XResetScreenSaver</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xresetscreensaver'>
 <funcprototype>
   <funcdef><function>XResetScreenSaver</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1284,7 +1284,7 @@ To get the current screen saver values, use
 <function>XGetScreenSaver</function>.
 <indexterm significance="preferred"><primary>XGetScreenSaver</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetscreensaver'>
 <funcprototype>
   <funcdef><function>XGetScreenSaver</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1531,7 +1531,7 @@ To add a single host, use
 <function>XAddHost</function>.
 <indexterm significance="preferred"><primary>XAddHost</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xaddhost'>
 <funcprototype>
   <funcdef><function>XAddHost</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1589,7 +1589,7 @@ To add multiple hosts at one time, use
 <function>XAddHosts</function>.
 <indexterm significance="preferred"><primary>XAddHosts</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xaddhosts'>
 <funcprototype>
   <funcdef><function>XAddHosts</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1658,7 +1658,7 @@ To obtain a host list, use
 <function>XListHosts</function>.
 <indexterm significance="preferred"><primary>XListHosts</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlisthosts'>
 <funcprototype>
   <funcdef>XHostAddress *<function>XListHosts</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1722,7 +1722,7 @@ To remove a single host, use
 <function>XRemoveHost</function>.
 <indexterm significance="preferred"><primary>XRemoveHost</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xremovehost'>
 <funcprototype>
   <funcdef><function>XRemoveHost</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1784,7 +1784,7 @@ To remove multiple hosts at one time, use
 <function>XRemoveHosts</function>.
 <indexterm significance="preferred"><primary>XRemoveHosts</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xremovehosts'>
 <funcprototype>
   <funcdef><function>XRemoveHosts</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1875,7 +1875,7 @@ To change access control, use
 <function>XSetAccessControl</function>.
 <indexterm significance="preferred"><primary>XSetAccessControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetaccesscontrol'>
 <funcprototype>
   <funcdef><function>XSetAccessControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1934,7 +1934,7 @@ To enable access control, use
 <function>XEnableAccessControl</function>.
 <indexterm significance="preferred"><primary>XEnableAccessControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xenableaccesscontrol'>
 <funcprototype>
   <funcdef><function>XEnableAccessControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1975,7 +1975,7 @@ To disable access control, use
 <function>XDisableAccessControl</function>.
 <indexterm significance="preferred"><primary>XDisableAccessControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdisableaccesscontrol'>
 <funcprototype>
   <funcdef><function>XDisableAccessControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>

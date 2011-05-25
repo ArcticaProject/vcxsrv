@@ -43,7 +43,7 @@ To clear a rectangular area of a given window, use
 <indexterm><primary>Clearing</primary><secondary>areas</secondary></indexterm>
 <indexterm significance="preferred"><primary>XClearArea</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcleararea'>
 <funcprototype>
   <funcdef><function>XClearArea</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -185,7 +185,7 @@ To clear the entire area in a given window, use
 <indexterm><primary>Clearing</primary><secondary>windows</secondary></indexterm>
 <indexterm significance="preferred"><primary>XClearWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xclearwindow'>
 <funcprototype>
   <funcdef><function>XClearWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -269,7 +269,7 @@ root and depth, use
 <indexterm><primary>Copying</primary><secondary>areas</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCopyArea</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcopyarea'>
 <funcprototype>
   <funcdef><function>XCopyArea</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -464,7 +464,7 @@ To copy a single bit plane of a given drawable, use
 <indexterm><primary>Copying</primary><secondary>planes</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCopyPlane</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcopyplane'>
 <funcprototype>
   <funcdef><function>XCopyPlane</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -768,7 +768,7 @@ To draw a single point in a given drawable, use
 <function>XDrawPoint</function>.
 <indexterm significance="preferred"><primary>XDrawPoint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawpoint'>
 <funcprototype>
   <funcdef><function>XDrawPoint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -840,7 +840,7 @@ To draw multiple points in a given drawable, use
 <function>XDrawPoints</function>.
 <indexterm significance="preferred"><primary>XDrawPoints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawpoints'>
 <funcprototype>
   <funcdef><function>XDrawPoints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -981,7 +981,7 @@ To draw a single line between two points in a given drawable, use
 <function>XDrawLine</function>.
 <indexterm significance="preferred"><primary>XDrawLine</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawline'>
 <funcprototype>
   <funcdef><function>XDrawLine</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1075,7 +1075,7 @@ To draw multiple lines in a given drawable, use
 <function>XDrawLines</function>.
 <indexterm significance="preferred"><primary>XDrawLines</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawlines'>
 <funcprototype>
   <funcdef><function>XDrawLines</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1163,7 +1163,7 @@ use
 <function>XDrawSegments</function>.
 <indexterm significance="preferred"><primary>XDrawSegments</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawsegments'>
 <funcprototype>
   <funcdef><function>XDrawSegments</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1333,7 +1333,7 @@ To draw the outline of a single rectangle in a given drawable, use
 <function>XDrawRectangle</function>.
 <indexterm significance="preferred"><primary>XDrawRectangle</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawrectangle'>
 <funcprototype>
   <funcdef><function>XDrawRectangle</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1430,7 +1430,7 @@ in a given drawable, use
 <function>XDrawRectangles</function>.
 <indexterm significance="preferred"><primary>XDrawRectangles</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawrectangles'>
 <funcprototype>
   <funcdef><function>XDrawRectangles</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1564,7 +1564,7 @@ To draw a single arc in a given drawable, use
 <function>XDrawArc</function>.
 <indexterm significance="preferred"><primary>XDrawArc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawarc'>
 <funcprototype>
   <funcdef><function>XDrawArc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1684,7 +1684,7 @@ To draw multiple arcs in a given drawable, use
 <function>XDrawArcs</function>.
 <indexterm significance="preferred"><primary>XDrawArcs</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawarcs'>
 <funcprototype>
   <funcdef><function>XDrawArcs</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1922,7 +1922,7 @@ To fill a single rectangular area in a given drawable, use
 <function>XFillRectangle</function>.
 <indexterm significance="preferred"><primary>XFillRectangle</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfillrectangle'>
 <funcprototype>
   <funcdef><function>XFillRectangle</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2019,7 +2019,7 @@ To fill multiple rectangular areas in a given drawable, use
 <function>XFillRectangles</function>.
 <indexterm significance="preferred"><primary>XFillRectangles</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfillrectangles'>
 <funcprototype>
   <funcdef><function>XFillRectangles</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2154,7 +2154,7 @@ To fill a polygon area in a given drawable, use
 <indexterm><primary>Filling</primary><secondary>polygon</secondary></indexterm>
 <indexterm significance="preferred"><primary>XFillPolygon</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfillpolygon'>
 <funcprototype>
   <funcdef><function>XFillPolygon</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2353,7 +2353,7 @@ To fill a single arc in a given drawable, use
 <function>XFillArc</function>.
 <indexterm significance="preferred"><primary>XFillArc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfillarc'>
 <funcprototype>
   <funcdef><function>XFillArc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2473,7 +2473,7 @@ To fill multiple arcs in a given drawable, use
 <function>XFillArcs</function>.
 <indexterm significance="preferred"><primary>XFillArcs</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfillarcs'>
 <funcprototype>
   <funcdef><function>XFillArcs</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3020,7 +3020,7 @@ To load a given font, use
 <function>XLoadFont</function>.
 <indexterm significance="preferred"><primary>XLoadFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xloadfont'>
 <funcprototype>
   <funcdef>Font <function>XLoadFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3096,7 +3096,7 @@ To return information about an available font, use
 <function>XQueryFont</function>.
 <indexterm significance="preferred"><primary>XQueryFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xqueryfont'>
 <funcprototype>
   <funcdef>XFontStruct *<function>XQueryFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3162,7 +3162,7 @@ in a single operation, use
 <function>XLoadQueryFont</function>.
 <indexterm significance="preferred"><primary>XLoadQueryFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xloadqueryfont'>
 <funcprototype>
   <funcdef>XFontStruct *<function>XLoadQueryFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3230,7 +3230,7 @@ use
 <function>XFreeFont</function>.
 <indexterm significance="preferred"><primary>XFreeFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreefont'>
 <funcprototype>
   <funcdef><function>XFreeFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3287,7 +3287,7 @@ To return a given font property, use
 <function>XGetFontProperty</function>.
 <indexterm significance="preferred"><primary>XGetFontProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetfontproperty'>
 <funcprototype>
   <funcdef>Bool <function>XGetFontProperty</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3362,7 +3362,7 @@ use
 <function>XUnloadFont</function>.
 <indexterm significance="preferred"><primary>XUnloadFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunloadfont'>
 <funcprototype>
   <funcdef><function>XUnloadFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3427,7 +3427,7 @@ To return a list of the available font names, use
 <function>XListFonts</function>.
 <indexterm significance="preferred"><primary>XListFonts</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlistfonts'>
 <funcprototype>
   <funcdef>char **<function>XListFonts</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3514,7 +3514,7 @@ To free a font name array, use
 <function>XFreeFontNames</function>.
 <indexterm significance="preferred"><primary>XFreeFontNames</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreefontnames'>
 <funcprototype>
   <funcdef><function>XFreeFontNames</function></funcdef>
   <paramdef>char<parameter> *list[]</parameter></paramdef>
@@ -3551,7 +3551,7 @@ To obtain the names and information about available fonts, use
 <function>XListFontsWithInfo</function>.
 <indexterm significance="preferred"><primary>XListFontsWithInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlistfontswithinfo'>
 <funcprototype>
   <funcdef>char **<function>XListFontsWithInfo</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3658,7 +3658,7 @@ To free font structures and font names, use
 <function>XFreeFontInfo</function>.
 <indexterm significance="preferred"><primary>XFreeFontInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreefontinfo'>
 <funcprototype>
   <funcdef><function>XFreeFontInfo</function></funcdef>
   <paramdef>char<parameter> **names</parameter></paramdef>
@@ -3742,7 +3742,7 @@ To determine the width of an 8-bit character string, use
 <function>XTextWidth</function>.
 <indexterm significance="preferred"><primary>XTextWidth</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xtextwidth'>
 <funcprototype>
   <funcdef>int <function>XTextWidth</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3792,7 +3792,7 @@ To determine the width of a 2-byte character string, use
 <function>XTextWidth16</function>.
 <indexterm significance="preferred"><primary>XTextWidth16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xtextwidth16'>
 <funcprototype>
   <funcdef>int <function>XTextWidth16</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3850,7 +3850,7 @@ To compute the bounding box of an 8-bit character string in a given font, use
 <function>XTextExtents</function>.
 <indexterm significance="preferred"><primary>XTextExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xtextextents'>
 <funcprototype>
   <funcdef><function>XTextExtents</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3950,7 +3950,7 @@ To compute the bounding box of a 2-byte character string in a given font, use
 <function>XTextExtents16</function>.
 <indexterm significance="preferred"><primary>XTextExtents16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xtextextents16'>
 <funcprototype>
   <funcdef><function>XTextExtents16</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -4097,7 +4097,7 @@ given font, use
 <function>XQueryTextExtents</function>.
 <indexterm significance="preferred"><primary>XQueryTextExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xquerytextextents'>
 <funcprototype>
   <funcdef><function>XQueryTextExtents</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4209,7 +4209,7 @@ in a given font, use
 <function>XQueryTextExtents16</function>.
 <indexterm significance="preferred"><primary>XQueryTextExtents16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xquerytextextents16'>
 <funcprototype>
   <funcdef><function>XQueryTextExtents16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4482,7 +4482,7 @@ To draw 8-bit characters in a given drawable, use
 <function>XDrawText</function>.
 <indexterm significance="preferred"><primary>XDrawText</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawtext'>
 <funcprototype>
   <funcdef><function>XDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4578,7 +4578,7 @@ To draw 2-byte characters in a given drawable, use
 <function>XDrawText16</function>.
 <indexterm significance="preferred"><primary>XDrawText16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawtext16'>
 <funcprototype>
   <funcdef><function>XDrawText16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4738,7 +4738,7 @@ To draw 8-bit characters in a given drawable, use
 <function>XDrawString</function>.
 <indexterm significance="preferred"><primary>XDrawString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawstring'>
 <funcprototype>
   <funcdef><function>XDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4834,7 +4834,7 @@ To draw 2-byte characters in a given drawable, use
 <function>XDrawString16</function>.
 <indexterm significance="preferred"><primary>XDrawString16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawstring16'>
 <funcprototype>
   <funcdef><function>XDrawString16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4978,7 +4978,7 @@ To draw 8-bit image text characters in a given drawable, use
 <function>XDrawImageString</function>.
 <indexterm significance="preferred"><primary>XDrawImageString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawimagestring'>
 <funcprototype>
   <funcdef><function>XDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5074,7 +5074,7 @@ To draw 2-byte image text characters in a given drawable, use
 <function>XDrawImageString16</function>.
 <indexterm significance="preferred"><primary>XDrawImageString16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdrawimagestring16'>
 <funcprototype>
   <funcdef><function>XDrawImageString16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5319,7 +5319,7 @@ To initialize the image manipulation routines of an image structure, use
 <function>XInitImage</function>.
 <indexterm significance="preferred"><primary>XInitImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xinitimage'>
 <funcprototype>
   <funcdef>Status <function>XInitImage</function></funcdef>
   <paramdef>XImage<parameter> *image</parameter></paramdef>
@@ -5377,7 +5377,7 @@ use
 <function>XPutImage</function>.
 <indexterm significance="preferred"><primary>XPutImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xputimage'>
 <funcprototype>
   <funcdef><function>XPutImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5566,7 +5566,7 @@ use
 This function specifically supports rudimentary screen dumps.
 <indexterm significance="preferred"><primary>XGetImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetimage'>
 <funcprototype>
   <funcdef>XImage *<function>XGetImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5753,7 +5753,7 @@ to a location within a preexisting image structure, use
 <function>XGetSubImage</function>.
 <indexterm significance="preferred"><primary>XGetSubImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetsubimage'>
 <funcprototype>
   <funcdef>XImage *<function>XGetSubImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>

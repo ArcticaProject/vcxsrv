@@ -45,7 +45,7 @@ Another way is to use
 <function>XSelectInput</function>.
 <indexterm significance="preferred"><primary>XSelectInput</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xselectinput'>
 <funcprototype>
   <funcdef><function>XSelectInput</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -183,7 +183,7 @@ To flush the output buffer, use
 <function>XFlush</function>.
 <indexterm significance="preferred"><primary>XFlush</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xflush'>
 <funcprototype>
   <funcdef><function>XFlush</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -229,7 +229,7 @@ use
 <function>XSync</function>.
 <indexterm significance="preferred"><primary>XSync</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsync'>
 <funcprototype>
   <funcdef><function>XSync</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -312,7 +312,7 @@ To check the number of events in the event queue, use
 <function>XEventsQueued</function>.
 <indexterm significance="preferred"><primary>XEventsQueued</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xeventsqueued'>
 <funcprototype>
   <funcdef>int <function>XEventsQueued</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -398,7 +398,7 @@ To return the number of events that are pending, use
 <function>XPending</function>.
 <indexterm significance="preferred"><primary>XPending</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xpending'>
 <funcprototype>
   <funcdef>int <function>XPending</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -472,7 +472,7 @@ To get the next event and remove it from the queue, use
 <function>XNextEvent</function>.
 <indexterm significance="preferred"><primary>XNextEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xnextevent'>
 <funcprototype>
   <funcdef><function>XNextEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -522,7 +522,7 @@ To peek at the event queue, use
 <function>XPeekEvent</function>.
 <indexterm significance="preferred"><primary>XPeekEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xpeekevent'>
 <funcprototype>
   <funcdef><function>XPeekEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -659,7 +659,7 @@ and, if found, remove the event from the queue, use
 <function>XIfEvent</function>.
 <indexterm significance="preferred"><primary>XIfEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xifevent'>
 <funcprototype>
   <funcdef><function>XIfEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -738,7 +738,7 @@ To check the event queue for a matching event without blocking, use
 <function>XCheckIfEvent</function>.
 <indexterm significance="preferred"><primary>XCheckIfEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcheckifevent'>
 <funcprototype>
   <funcdef>Bool <function>XCheckIfEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -817,7 +817,7 @@ without removing the event from the queue, use
 <function>XPeekIfEvent</function>.
 <indexterm significance="preferred"><primary>XPeekIfEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xpeekifevent'>
 <funcprototype>
   <funcdef><function>XPeekIfEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -906,7 +906,7 @@ To remove the next event that matches both a window and an event mask, use
 <function>XWindowEvent</function>.
 <indexterm significance="preferred"><primary>XWindowEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xwindowevent'>
 <funcprototype>
   <funcdef><function>XWindowEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -991,7 +991,7 @@ except that it never blocks and it returns a
 indicating if the event was returned.
 <indexterm significance="preferred"><primary>XCheckWindowEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcheckwindowevent'>
 <funcprototype>
   <funcdef>Bool <function>XCheckWindowEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1073,7 +1073,7 @@ To remove the next event that matches an event mask, use
 <function>XMaskEvent</function>.
 <indexterm significance="preferred"><primary>XMaskEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmaskevent'>
 <funcprototype>
   <funcdef><function>XMaskEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1144,7 +1144,7 @@ except that it never blocks and it returns a
 indicating if the event was returned.
 <indexterm significance="preferred"><primary>XCheckMaskEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcheckmaskevent'>
 <funcprototype>
   <funcdef>Bool <function>XCheckMaskEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1213,7 +1213,7 @@ To return and remove the next event in the queue that matches an event type, use
 <function>XCheckTypedEvent</function>.
 <indexterm significance="preferred"><primary>XCheckTypedEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchecktypedevent'>
 <funcprototype>
   <funcdef>Bool <function>XCheckTypedEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1284,7 +1284,7 @@ and a window, use
 <function>XCheckTypedWindowEvent</function>.
 <indexterm significance="preferred"><primary>XCheckTypedWindowEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchecktypedwindowevent'>
 <funcprototype>
   <funcdef>Bool <function>XCheckTypedWindowEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1372,7 +1372,7 @@ To push an event back into the event queue, use
 <function>XPutBackEvent</function>.
 <indexterm significance="preferred"><primary>XPutBackEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xputbackevent'>
 <funcprototype>
   <funcdef><function>XPutBackEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1435,7 +1435,7 @@ event to a requestor when a selection has been converted
 and stored as a property.
 <indexterm significance="preferred"><primary>XSendEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsendevent'>
 <funcprototype>
   <funcdef>Status <function>XSendEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1633,7 +1633,7 @@ use
 <function>XDisplayMotionBufferSize</function>.
 <indexterm significance="preferred"><primary>XDisplayMotionBufferSize</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdisplaymotionbuffersize'>
 <funcprototype>
   <funcdef>unsigned <type>long</type></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1671,7 +1671,7 @@ To get the motion history for a specified window and time, use
 <function>XGetMotionEvents</function>.
 <indexterm significance="preferred"><primary>XGetMotionEvents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetmotionevents'>
 <funcprototype>
   <funcdef>XTimeCoord *<function>XGetMotionEvents</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1827,7 +1827,7 @@ an after function.
 sets which function is to be called.
 <indexterm significance="preferred"><primary>XSetAfterFunction</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetafterfunction'>
 <funcprototype>
   <funcdef><type>int</type></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1872,7 +1872,7 @@ To enable or disable synchronization, use
 <indexterm><primary>Debugging</primary><secondary>synchronous mode</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSynchronize</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsynchronize'>
 <funcprototype>
   <funcdef><type>int</type></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1948,7 +1948,7 @@ To set the error handler, use
 <function>XSetErrorHandler</function>.
 <indexterm significance="preferred"><primary>XSetErrorHandler</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xseterrorhandler'>
 <funcprototype>
   <funcdef>int *<function>XSetErrorHandler</function></funcdef>
   <paramdef>int <parameter> *handler</parameter></paramdef>
@@ -2238,7 +2238,7 @@ To obtain textual descriptions of the specified error code, use
 <indexterm significance="preferred"><primary>XGetErrorText</primary></indexterm>
 <indexterm><primary>Debugging</primary><secondary>error message strings</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgeterrortext'>
 <funcprototype>
   <funcdef><function>XGetErrorText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2310,7 +2310,7 @@ To obtain error messages from the error database, use
 <function>XGetErrorDatabaseText</function>.
 <indexterm significance="preferred"><primary>XGetErrorDatabaseText</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgeterrordatabasetext'>
 <funcprototype>
   <funcdef><function>XGetErrorDatabaseText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2455,7 +2455,7 @@ To report an error to the user when the requested display does not exist, use
 <function>XDisplayName</function>.
 <indexterm significance="preferred"><primary>XDisplayName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdisplayname'>
 <funcprototype>
   <funcdef>char *<function>XDisplayName</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
@@ -2498,7 +2498,7 @@ To handle fatal I/O errors, use
 <function>XSetIOErrorHandler</function>.
 <indexterm significance="preferred"><primary>XSetIOErrorHandler</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetioerrorhandler'>
 <funcprototype>
   <funcdef><type>int</type></funcdef>
   <paramdef>int(*handler)(Display<parameter> *)</parameter></paramdef>

@@ -145,7 +145,7 @@ To configure Xlib locale modifiers for the current locale, use
 <function>XSetLocaleModifiers</function>.
 <indexterm significance="preferred"><primary>XSetLocaleModifiers</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetlocalemodifiers'>
 <funcprototype>
   <funcdef>char *<function>XSetLocaleModifiers</function></funcdef>
   <paramdef>char<parameter> *modifier_list</parameter></paramdef>
@@ -544,7 +544,7 @@ To allocate a nested variable argument list dynamically, use
 <function>XVaCreateNestedList</function>.
 <indexterm significance="preferred"><primary>XVaCreateNestedList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xvacreatenestedlist'>
 <funcprototype>
   <funcdef>XVaNestedList <function>XVaCreateNestedList</function></funcdef>
   <paramdef>int<parameter> dummy</parameter></paramdef>
@@ -731,7 +731,7 @@ To open an output method, use
 <function>XOpenOM</function>.
 <indexterm significance="preferred"><primary>XOpenOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xopenom'>
 <funcprototype>
   <funcdef>XOM <function>XOpenOM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -849,7 +849,7 @@ To close an output method, use
 <function>XCloseOM</function>.
 <indexterm significance="preferred"><primary>XCloseOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcloseom'>
 <funcprototype>
   <funcdef>Status <function>XCloseOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -883,7 +883,7 @@ To set output method attributes, use
 <function>XSetOMValues</function>.
 <indexterm significance="preferred"><primary>XSetOMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetomvalues'>
 <funcprototype>
   <funcdef>char *<function>XSetOMValues</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -936,7 +936,7 @@ To query an output method, use
 <function>XGetOMValues</function>.
 <indexterm significance="preferred"><primary>XGetOMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetomvalues'>
 <funcprototype>
   <funcdef>char *<function>XGetOMValues</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -984,7 +984,7 @@ To obtain the display associated with an output method, use
 <function>XDisplayOfOM</function>.
 <indexterm significance="preferred"><primary>XDisplayOfOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdisplayofom'>
 <funcprototype>
   <funcdef>Display *<function>XDisplayOfOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -1018,7 +1018,7 @@ To get the locale associated with an output method, use
 <function>XLocaleOfOM</function>.
 <indexterm significance="preferred"><primary>XLocaleOfOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlocaleofom'>
 <funcprototype>
   <funcdef>char *<function>XLocaleOfOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -1354,7 +1354,7 @@ To create an output context, use
 <function>XCreateOC</function>.
 <indexterm significance="preferred"><primary>XCreateOC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreateoc'>
 <funcprototype>
   <funcdef>XOC <function>XCreateOC</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -1440,7 +1440,7 @@ To destroy an output context, use
 <function>XDestroyOC</function>.
 <indexterm significance="preferred"><primary>XDestroyOC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroyoc'>
 <funcprototype>
   <funcdef>void <function>XDestroyOC</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1474,7 +1474,7 @@ To get the output method associated with an output context, use
 <function>XOMOfOC</function>.
 <indexterm significance="preferred"><primary>XOMOfOC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xomofoc'>
 <funcprototype>
   <funcdef>XOM <function>XOMOfOC</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1521,7 +1521,7 @@ To set <acronym>XOC</acronym> values, use
 <function>XSetOCValues</function>.
 <indexterm significance="preferred"><primary>XSetOCValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetocvalues'>
 <funcprototype>
   <funcdef>char *<function>XSetOCValues</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1598,7 +1598,7 @@ To obtain <acronym>XOC</acronym> values, use
 <function>XGetOCValues</function>.
 <indexterm significance="preferred"><primary>XGetOCValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetocvalues'>
 <funcprototype>
   <funcdef>char *<function>XGetOCValues</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -2146,7 +2146,7 @@ or
 <function>XCreateFontSet</function>.
 <indexterm significance="preferred"><primary>XCreateFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreatefontset'>
 <funcprototype>
   <funcdef>XFontSet <function>XCreateFontSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2476,7 +2476,7 @@ use
 <function>XFontsOfFontSet</function>.
 <indexterm significance="preferred"><primary>XFontsOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfontsoffontset'>
 <funcprototype>
   <funcdef>int <function>XFontsOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2585,7 +2585,7 @@ use
 <function>XBaseFontNameListOfFontSet</function>.
 <indexterm significance="preferred"><primary>XBaseFontNameListOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xbasefontnamelistoffontset'>
 <funcprototype>
   <funcdef>char *<function>XBaseFontNameListOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2647,7 +2647,7 @@ use
 <function>XLocaleOfFontSet</function>.
 <indexterm significance="preferred"><primary>XLocaleOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlocaleoffontset'>
 <funcprototype>
   <funcdef>char *<function>XLocaleOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2700,7 +2700,7 @@ if the output context was created by
 <function>XCreateFontSet</function>.
 <indexterm significance="preferred"><primary>XFreeFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreefontset'>
 <funcprototype>
   <funcdef>void <function>XFreeFontSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2804,7 +2804,7 @@ To find out about direction-dependent rendering, use
 <function>XDirectionalDependentDrawing</function>.
 <indexterm significance="preferred"><primary>XDirectionalDependentDrawing</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdirectionaldependentdrawing'>
 <funcprototype>
   <funcdef>Bool <function>XDirectionalDependentDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2842,7 +2842,7 @@ To find out about context-dependent rendering, use
 <function>XContextualDrawing</function>.
 <indexterm significance="preferred"><primary>XContextualDrawing</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcontextualdrawing'>
 <funcprototype>
   <funcdef>Bool <function>XContextualDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2880,7 +2880,7 @@ To find out about context-dependent or direction-dependent rendering, use
 <function>XContextDependentDrawing</function>.
 <indexterm significance="preferred"><primary>XContextDependentDrawing</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcontextdependentdrawing'>
 <funcprototype>
   <funcdef>Bool <function>XContextDependentDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2994,7 +2994,7 @@ use
 <function>XExtentsOfFontSet</function>.
 <indexterm significance="preferred"><primary>XExtentsOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xextentsoffontset'>
 <funcprototype>
   <funcdef>XFontSetExtents *<function>XExtentsOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3047,7 +3047,7 @@ or
 <indexterm significance="preferred"><primary>XmbTextEscapement</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextEscapement</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbtextescapement'>
 <funcprototype>
   <funcdef>int <function>XmbTextEscapement</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3056,7 +3056,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwctextescapement'>
 <funcprototype>
   <funcdef>int <function>XwcTextEscapement</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3139,7 +3139,7 @@ use
 <indexterm significance="preferred"><primary>XmbTextExtents</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbtextextents'>
 <funcprototype>
   <funcdef>int <function>XmbTextExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3151,7 +3151,7 @@ use
 </funcsynopsis>
 <!-- .FN -->
 <funcsynopsis>
-<funcprototype>
+<funcprototype id='xwctextextents'>
   <funcdef>int <function>XwcTextExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
   <paramdef>wchar_t<parameter> *string</parameter></paramdef>
@@ -3299,7 +3299,7 @@ or
 <indexterm significance="preferred"><primary>XmbTextPerCharExtents</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextPerCharExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbtextpercharextents'>
 <funcprototype>
   <funcdef>Status <function>XmbTextPerCharExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3314,7 +3314,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwctextpercharextents'>
 <funcprototype>
   <funcdef>Status <function>XwcTextPerCharExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3581,7 +3581,7 @@ or
 <indexterm significance="preferred"><primary>XmbDrawText</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawText</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbdrawtext'>
 <funcprototype>
   <funcdef>void <function>XmbDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3593,7 +3593,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwcdrawtext'>
 <funcprototype>
   <funcdef>void <function>XwcDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3732,7 +3732,7 @@ or
 <indexterm significance="preferred"><primary>XmbDrawString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbdrawstring'>
 <funcprototype>
   <funcdef>void <function>XmbDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3745,7 +3745,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwcdrawstring'>
 <funcprototype>
   <funcdef>void <function>XwcDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3878,7 +3878,7 @@ or
 <indexterm significance="preferred"><primary>XmbDrawImageString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawImageString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbdrawimagestring'>
 <funcprototype>
   <funcdef>void <function>XmbDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3891,7 +3891,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwcdrawimagestring'>
 <funcprototype>
   <funcdef>void <function>XwcDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5184,7 +5184,7 @@ To open a connection, use
 <function>XOpenIM</function>.
 <indexterm significance="preferred"><primary>XOpenIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xopenim'>
 <funcprototype>
   <funcdef>XIM <function>XOpenIM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5305,7 +5305,7 @@ To close a connection, use
 <function>XCloseIM</function>.
 <indexterm significance="preferred"><primary>XCloseIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcloseim'>
 <funcprototype>
   <funcdef>Status <function>XCloseIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5339,7 +5339,7 @@ To set input method attributes, use
 <function>XSetIMValues</function>.
 <indexterm significance="preferred"><primary>XSetIMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetimvalues'>
 <funcprototype>
   <funcdef>char *<function>XSetIMValues</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5392,7 +5392,7 @@ To query an input method, use
 <function>XGetIMValues</function>.
 <indexterm significance="preferred"><primary>XGetIMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetimvalues'>
 <funcprototype>
   <funcdef>char *<function>XGetIMValues</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5455,7 +5455,7 @@ To obtain the display associated with an input method, use
 <function>XDisplayOfIM</function>.
 <indexterm significance="preferred"><primary>XDisplayOfIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdisplayofim'>
 <funcprototype>
   <funcdef>Display *<function>XDisplayOfIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5489,7 +5489,7 @@ To get the locale associated with an input method, use
 <function>XLocaleOfIM</function>.
 <indexterm significance="preferred"><primary>XLocaleOfIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlocaleofim'>
 <funcprototype>
   <funcdef>char *<function>XLocaleOfIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5523,7 +5523,7 @@ To register an input method instantiate callback, use
 <function>XRegisterIMInstantiateCallback</function>.
 <indexterm significance="preferred"><primary>XRegisterIMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xregisteriminstantiatecallback'>
 <funcprototype>
   <funcdef>Bool <function>XRegisterIMInstantiateCallback</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5619,7 +5619,7 @@ The function returns
 The generic prototype is as follows:
 <indexterm significance="preferred"><primary>IMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='iminstantiatecallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>IMInstantiateCallback</replaceable></function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5668,7 +5668,7 @@ To unregister an input method instantiation callback, use
 <function>XUnregisterIMInstantiateCallback</function>.
 <indexterm significance="preferred"><primary>XUnregisterIMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunregisteriminstantiatecallback'>
 <funcprototype>
   <funcdef>Bool <function>XUnregisterIMInstantiateCallback</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -6108,7 +6108,7 @@ or
 The generic prototype of this callback function is as follows:
 <indexterm significance="preferred"><primary>DestroyCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='destroycallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>DestroyCallback</replaceable></function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -6344,7 +6344,7 @@ To create an input context, use
 <function>XCreateIC</function>.
 <indexterm significance="preferred"><primary>XCreateIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreateic'>
 <funcprototype>
   <funcdef>XIC <function>XCreateIC</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -6437,7 +6437,7 @@ To destroy an input context, use
 <function>XDestroyIC</function>.
 <indexterm significance="preferred"><primary>XDestroyIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroyic'>
 <funcprototype>
   <funcdef>void <function>XDestroyIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6474,7 +6474,7 @@ and
 <function>XUnsetICFocus</function>.
 <indexterm significance="preferred"><primary>XSetICFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xseticfocus'>
 <funcprototype>
   <funcdef>void <function>XSetICFocus</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6515,7 +6515,7 @@ does not affect the focus window value.
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XUnsetICFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunseticfocus'>
 <funcprototype>
   <funcdef>void <function>XUnsetICFocus</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6564,14 +6564,14 @@ or
 <indexterm significance="preferred"><primary>XmbResetIC</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcResetIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmbresetic'>
 <funcprototype>
   <funcdef>char *<function>XmbResetIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwcresetic'>
 <funcprototype>
   <funcdef>wchar_t *<function>XwcResetIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6639,7 +6639,7 @@ To get the input method associated with an input context, use
 <function>XIMOfIC</function>.
 <indexterm significance="preferred"><primary>XIMOfIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='ximofic'>
 <funcprototype>
   <funcdef>XIM <function>XIMOfIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6684,7 +6684,7 @@ To set <acronym>XIC</acronym> values, use
 <function>XSetICValues</function>.
 <indexterm significance="preferred"><primary>XSetICValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xseticvalues'>
 <funcprototype>
   <funcdef>char *<function>XSetICValues</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6767,7 +6767,7 @@ To obtain <acronym>XIC</acronym> values, use
 <function>XGetICValues</function>.
 <indexterm significance="preferred"><primary>XGetICValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgeticvalues'>
 <funcprototype>
   <funcdef>char *<function>XGetICValues</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8320,7 +8320,7 @@ argument is a pointer to a structure of type
 The generic prototype is as follows:
 <indexterm significance="preferred"><primary>PreeditStateNotifyCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='preeditstatenotifycallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditStateNotifyCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8671,7 +8671,7 @@ After the callback is invoked, the input context will be freed by Xlib.
 The generic prototype is as follows:
 <indexterm significance="preferred"><primary>DestroyCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='destroycallback_xic'>
 <funcprototype>
   <funcdef>void <function><replaceable>DestroyCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8733,7 +8733,7 @@ with an encoding matching the locale bound to the input context.
 The callback prototype is as follows:
 <indexterm significance="preferred"><primary>StringConversionCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='stringconversioncallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StringConversionCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8894,7 +8894,7 @@ callback is triggered to let the toolkit do the setup
 or the cleanup for the preedit region.
 <indexterm significance="preferred"><primary>PreeditStartCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='preeditstartcallback'>
 <funcprototype>
   <funcdef>int <function><replaceable>PreeditStartCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8948,7 +8948,7 @@ in the preedit string,
 and a value of -1 indicates there is no limit.
 <indexterm significance="preferred"><primary>PreeditDoneCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='preeditdonecallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditDoneCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9029,7 +9029,7 @@ The callback prototype
 is as follows:
 <indexterm significance="preferred"><primary>PreeditDrawCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='preeditdrawcallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditDrawCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9416,7 +9416,7 @@ should move the text insertion point.
 It then calls the PreeditCaretCallback.
 <indexterm significance="preferred"><primary>PreeditCaretCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='preeditcaretcallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditCaretCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9632,7 +9632,7 @@ When the input context is created or gains focus,
 the input method calls the StatusStartCallback callback.
 <indexterm significance="preferred"><primary>StatusStartCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='statusstartcallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StatusStartCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9689,7 +9689,7 @@ When an input context
 is destroyed or when it loses focus, the input method calls StatusDoneCallback.
 <indexterm significance="preferred"><primary>StatusDoneCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='statusdonecallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StatusDoneCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9744,7 +9744,7 @@ When an input context status has to be updated, the input method calls
 StatusDrawCallback.
 <indexterm significance="preferred"><primary>StatusDrawCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='statusdrawcallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StatusDrawCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9882,7 +9882,7 @@ To filter an event, use
 <function>XFilterEvent</function>.
 <indexterm significance="preferred"><primary>XFilterEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfilterevent'>
 <funcprototype>
   <funcdef>Bool <function>XFilterEvent</function></funcdef>
   <paramdef>XEvent<parameter> *event</parameter></paramdef>
@@ -9966,7 +9966,7 @@ or
 <indexterm significance="preferred"><primary>XmbLookupString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcLookupString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmblookupstring'>
 <funcprototype>
   <funcdef>int <function>XmbLookupString</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9978,7 +9978,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis>
+<funcsynopsis id='xwclookupstring'>
 <funcprototype>
   <funcdef>int <function>XwcLookupString</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>

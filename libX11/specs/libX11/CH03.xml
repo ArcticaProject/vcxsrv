@@ -176,7 +176,7 @@ use
 <function>XVisualIDFromVisual</function>.
 <indexterm significance="preferred"><primary>XVisualIDFromVisual</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xvisualidfromvisual'>
 <funcprototype>
   <funcdef>VisualID <function>XVisualIDFromVisual</function></funcdef>
   <paramdef>Visual *<parameter>visual</parameter></paramdef>
@@ -1241,7 +1241,7 @@ To create an unmapped window and set its window attributes, use
 <function>XCreateWindow</function>.
 <indexterm significance="preferred"><primary>XCreateWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreatewindow'>
 <funcprototype>
   <funcdef>Window <function>XCreateWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1506,7 +1506,7 @@ subwindow of a given parent window, use
 <function>XCreateSimpleWindow</function>.
 <indexterm significance="preferred"><primary>XCreateSimpleWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreatesimplewindow'>
 <funcprototype>
   <funcdef>Window <function>XCreateSimpleWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1676,7 +1676,7 @@ To destroy a window and all of its subwindows, use
 <function>XDestroyWindow</function>.
 <indexterm significance="preferred"><primary>XDestroyWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroywindow'>
 <funcprototype>
   <funcdef><function>XDestroyWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1746,7 +1746,7 @@ To destroy all subwindows of a specified window, use
 <function>XDestroySubwindows</function>.
 <indexterm significance="preferred"><primary>XDestroySubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroysubwindows'>
 <funcprototype>
   <funcdef><function>XDestroySubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1889,7 +1889,7 @@ To map a given window, use
 <function>XMapWindow</function>.
 <indexterm significance="preferred"><primary>XMapWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmapwindow'>
 <funcprototype>
   <funcdef><function>XMapWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2015,7 +2015,7 @@ To map and raise a window, use
 <function>XMapRaised</function>.
 <indexterm significance="preferred"><primary>XMapRaised</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmapraised'>
 <funcprototype>
   <funcdef><function>XMapRaised</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2075,7 +2075,7 @@ To map all subwindows for a specified window, use
 <function>XMapSubwindows</function>.
 <indexterm significance="preferred"><primary>XMapSubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmapsubwindows'>
 <funcprototype>
   <funcdef><function>XMapSubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2145,7 +2145,7 @@ To unmap a window, use
 <function>XUnmapWindow</function>.
 <indexterm significance="preferred"><primary>XUnmapWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunmapwindow'>
 <funcprototype>
   <funcdef><function>XUnmapWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2212,7 +2212,7 @@ To unmap all subwindows for a specified window, use
 <function>XUnmapSubwindows</function>.
 <indexterm significance="preferred"><primary>XUnmapSubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunmapsubwindows'>
 <funcprototype>
   <funcdef><function>XUnmapSubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2517,7 +2517,7 @@ To configure a window's size, location, stacking, or border, use
 <function>XConfigureWindow</function>.
 <indexterm significance="preferred"><primary>XConfigureWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xconfigurewindow'>
 <funcprototype>
   <funcdef><function>XConfigureWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2623,7 +2623,7 @@ To move a window without changing its size, use
 <function>XMoveWindow</function>.
 <indexterm significance="preferred"><primary>XMoveWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmovewindow'>
 <funcprototype>
   <funcdef><function>XMoveWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2725,7 +2725,7 @@ To change a window's size without changing the upper-left coordinate, use
 <function>XResizeWindow</function>.
 <indexterm significance="preferred"><primary>XResizeWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xresizewindow'>
 <funcprototype>
   <funcdef><function>XResizeWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2828,7 +2828,7 @@ To change the size and location of a window, use
 <function>XMoveResizeWindow</function>.
 <indexterm significance="preferred"><primary>XMoveResizeWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmoveresizewindow'>
 <funcprototype>
   <funcdef><function>XMoveResizeWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2949,7 +2949,7 @@ To change the border width of a given window, use
 <function>XSetWindowBorderWidth</function>.
 <indexterm significance="preferred"><primary>XSetWindowBorderWidth</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwindowborderwidth'>
 <funcprototype>
   <funcdef><function>XSetWindowBorderWidth</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3026,7 +3026,7 @@ To raise a window so that no sibling window obscures it, use
 <function>XRaiseWindow</function>.
 <indexterm significance="preferred"><primary>XRaiseWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xraisewindow'>
 <funcprototype>
   <funcdef><function>XRaiseWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3099,7 +3099,7 @@ To lower a window so that it does not obscure any sibling windows, use
 <function>XLowerWindow</function>.
 <indexterm significance="preferred"><primary>XLowerWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlowerwindow'>
 <funcprototype>
   <funcdef><function>XLowerWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3173,7 +3173,7 @@ To circulate a subwindow up or down, use
 <function>XCirculateSubwindows</function>.
 <indexterm significance="preferred"><primary>XCirculateSubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcirculatesubwindows'>
 <funcprototype>
   <funcdef><function>XCirculateSubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3265,7 +3265,7 @@ occluded by another child, use
 <function>XCirculateSubwindowsUp</function>.
 <indexterm significance="preferred"><primary>XCirculateSubwindowsUp</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcirculatesubwindowsup'>
 <funcprototype>
   <funcdef><function>XCirculateSubwindowsUp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3327,7 +3327,7 @@ completely occludes another child, use
 <function>XCirculateSubwindowsDown</function>.
 <indexterm significance="preferred"><primary>XCirculateSubwindowsDown</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcirculatesubwindowsdown'>
 <funcprototype>
   <funcdef><function>XCirculateSubwindowsDown</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3386,7 +3386,7 @@ To restack a set of windows from top to bottom, use
 <function>XRestackWindows</function>.
 <indexterm significance="preferred"><primary>XRestackWindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xrestackwindows'>
 <funcprototype>
   <funcdef><function>XRestackWindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3491,7 +3491,7 @@ To change one or more attributes for a given window, use
 <function>XChangeWindowAttributes</function>.
 <indexterm significance="preferred"><primary>XChangeWindowAttributes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchangewindowattributes'>
 <funcprototype>
   <funcdef><function>XChangeWindowAttributes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3649,7 +3649,7 @@ To set the background of a window to a given pixel, use
 <function>XSetWindowBackground</function>.
 <indexterm significance="preferred"><primary>XSetWindowBackground</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwindowbackground'>
 <funcprototype>
   <funcdef><function>XSetWindowBackground</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3726,7 +3726,7 @@ To set the background of a window to a given pixmap, use
 <indexterm><primary>Window</primary><secondary>background</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetWindowBackgroundPixmap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwindowbackgroundpixmap'>
 <funcprototype>
   <funcdef><function>XSetWindowBackgroundPixmap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3818,7 +3818,7 @@ To change and repaint a window's border to a given pixel, use
 <function>XSetWindowBorder</function>.
 <indexterm significance="preferred"><primary>XSetWindowBorder</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwindowborder'>
 <funcprototype>
   <funcdef><function>XSetWindowBorder</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3888,7 +3888,7 @@ To change and repaint the border tile of a given window, use
 <function>XSetWindowBorderPixmap</function>.
 <indexterm significance="preferred"><primary>XSetWindowBorderPixmap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwindowborderpixmap'>
 <funcprototype>
   <funcdef><function>XSetWindowBorderPixmap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3967,7 +3967,7 @@ To set the colormap of a given window, use
 <function>XSetWindowColormap</function>.
 <indexterm significance="preferred"><primary>XSetWindowColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetwindowcolormap'>
 <funcprototype>
   <funcdef><function>XSetWindowColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4038,7 +4038,7 @@ To define which cursor will be used in a window, use
 <indexterm><primary>Window</primary><secondary>defining the cursor</secondary></indexterm>
 <indexterm significance="preferred"><primary>XDefineCursor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdefinecursor'>
 <funcprototype>
   <funcdef><function>XDefineCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4107,7 +4107,7 @@ To undefine the cursor in a given window, use
 <indexterm><primary>Window</primary><secondary>undefining the cursor</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUndefineCursor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xundefinecursor'>
 <funcprototype>
   <funcdef><function>XUndefineCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>

@@ -1217,7 +1217,7 @@ xkb_symbols "logitech_g15" {
     key  <K72> {         [     XF86LaunchC ] };
     key  <K74> {         [         XF86WWW ] };
     key  <K75> {         [     XF86LaunchE ] };
-    key <MDSW> {         [     XF86Launch1 ] };
+    key <II5D> {         [     XF86Launch1 ] };
     key <NFER> {         [     XF86Launch2 ] };
     key <XFER> {         [     XF86Launch8 ] };
 };
@@ -1728,7 +1728,7 @@ xkb_symbols "apple" {
     key <K5E>	{	[ F14 ]    };
     key <K5F>	{	[ F15 ]    };
     key <K6C>	{	[ XF86Eject ]    };
-    key <MDSW>	{	[ F16 ]    };
+    key <II5D>	{	[ F16 ]    };
     key <KPEQ>  {       [ KP_Equal ] };
 };
 

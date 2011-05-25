@@ -55,7 +55,7 @@ and sets all or portions of the
 and <property>WM_NORMAL_HINTS</property> properties.
 <indexterm significance="preferred"><primary>XSetStandardProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetstandardproperties'>
 <funcprototype>
   <funcdef><function>XSetStandardProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -204,7 +204,7 @@ This function has been superseded by
 <function>XSetWMNormalHints</function>.
 <indexterm significance="preferred"><primary>XSetNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetnormalhints'>
 <funcprototype>
   <funcdef><function>XSetNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -293,7 +293,7 @@ This function has been superseded by
 <function>XGetWMNormalHints</function>.
 <indexterm significance="preferred"><primary>XGetNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetnormalhints'>
 <funcprototype>
   <funcdef>Status <function>XGetNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -364,7 +364,7 @@ This function is no longer supported by the
 <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
 <indexterm significance="preferred"><primary>XSetZoomHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetzoomhints'>
 <funcprototype>
   <funcdef><function>XSetZoomHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -434,7 +434,7 @@ This function is no longer supported by the
 <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
 <indexterm significance="preferred"><primary>XGetZoomHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetzoomhints'>
 <funcprototype>
   <funcdef>Status <function>XGetZoomHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -501,7 +501,7 @@ This function has been superseded by
 <function>XSetWMSizeHints</function>.
 <indexterm significance="preferred"><primary>XSetSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetsizehints'>
 <funcprototype>
   <funcdef><function>XSetSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -588,7 +588,7 @@ This function has been superseded by
 <function>XGetWMSizeHints</function>.
 <indexterm significance="preferred"><primary>XGetSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetsizehints'>
 <funcprototype>
   <funcdef>Status <function>XGetSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -681,7 +681,7 @@ This function has been superseded by
 <function>XGetRGBColormaps</function>.
 <indexterm significance="preferred"><primary>XGetStandardColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetstandardcolormap'>
 <funcprototype>
   <funcdef>Status <function>XGetStandardColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -773,7 +773,7 @@ This function has been superseded by
 <function>XSetRGBColormaps</function>.
 <indexterm significance="preferred"><primary>XSetStandardColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetstandardcolormap'>
 <funcprototype>
   <funcdef><function>XSetStandardColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -856,7 +856,7 @@ This function has been superseded by
 <indexterm><primary>Window</primary><secondary>determining location</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGeometry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgeometry'>
 <funcprototype>
   <funcdef>int <function>XGeometry</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1058,7 +1058,7 @@ It is only useful in very simple applications.
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XGetDefault</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetdefault'>
 <funcprototype>
   <funcdef>char *<function>XGetDefault</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1253,7 +1253,7 @@ use
 #include &lt;X11/X10.h&gt;
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdraw'>
 <funcprototype>
   <funcdef>Status <function>XDraw</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1460,7 +1460,7 @@ use
 
 <para>#include &lt;X11/X10.h&gt;</para>
 
-<funcsynopsis>
+<funcsynopsis id='xdrawfilled'>
 <funcprototype>
   <funcdef>Status <function>XDrawFilled</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1616,7 +1616,7 @@ use
 <indexterm significance="preferred"><primary>XCreateAssocTable</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis>
+<funcsynopsis id='xcreateassoctable'>
 <funcprototype>
   <funcdef>XAssocTable *<function>XCreateAssocTable</function></funcdef>
   <paramdef>int<parameter> size</parameter></paramdef>
@@ -1662,7 +1662,7 @@ use
 <indexterm significance="preferred"><primary>XMakeAssoc</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis>
+<funcsynopsis id='xmakeassoc'>
 <funcprototype>
   <funcdef><function>XMakeAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1736,7 +1736,7 @@ use
 <function>XLookUpAssoc</function>.
 <indexterm significance="preferred"><primary>XLookUpAssoc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlookupassoc'>
 <funcprototype>
   <funcdef>char *<function>XLookUpAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1801,7 +1801,7 @@ use
 <function>XDeleteAssoc</function>.
 <indexterm significance="preferred"><primary>XDeleteAssoc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdeleteassoc'>
 <funcprototype>
   <funcdef><function>XDeleteAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1865,7 +1865,7 @@ use
 </para>
 <indexterm significance="preferred"><primary>XDestroyAssocTable</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroyassoctable'>
 <funcprototype>
   <funcdef><function>XDestroyAssocTable</function></funcdef>
   <paramdef>XAssocTable<parameter> *table</parameter></paramdef>

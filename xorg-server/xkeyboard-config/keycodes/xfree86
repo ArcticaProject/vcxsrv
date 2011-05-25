@@ -294,6 +294,9 @@ xkb_keycodes "basic" {
     // MacBooks generate 0x65 for the lower brightness key
     <II65> =  101;
 
+    // Required for apple/logitech_g15 keyboard
+    <II5D> = 93;
+
     // Codes generated for scancodes 0x59-0x5f, 0x62-0x76
     <K59> =   157;		// <I1D>
     <K5A> =   170;		// <I2A>
@@ -352,7 +355,7 @@ xkb_keycodes "basic" {
     // Other codes never generated.  The XFree86 ddx never generates
     // these codes.
     // Thus we can use them as fake keys
-    <MDSW> =    93; // <U5D>
+    <MDSW> =     8;
     <LVL3> =   124; // <U7C>
     <ALT>  =   125; // <U7D>
     <META> =   156; // <I1C>

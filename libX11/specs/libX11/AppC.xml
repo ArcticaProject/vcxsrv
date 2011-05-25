@@ -48,7 +48,7 @@ and
 </para>
 <indexterm significance="preferred"><primary>XQueryExtension</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xqueryextension'>
 <funcprototype>
   <funcdef>Bool <function>XQueryExtension</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -133,7 +133,7 @@ the strings ``thing'', ``Thing'', and ``thinG''
 are all considered different names.
 <indexterm significance="preferred"><primary>XListExtensions</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlistextensions'>
 <funcprototype>
   <funcdef>char **<function>XListExtensions</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -175,7 +175,7 @@ then the returned strings are in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 <indexterm significance="preferred"><primary>XFreeExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreeextensionlist'>
 <funcprototype>
   <funcdef><function>XFreeExtensionList</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -258,7 +258,7 @@ typedef struct _XExtCodes {	/* public to extension, cannot be changed */
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XInitExtension</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xinitextension'>
 <funcprototype>
   <funcdef>XExtCodes *<function>XInitExtension</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -324,7 +324,7 @@ This extension number is unique only to a single connection.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XAddExtension</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xaddextension'>
 <funcprototype>
   <funcdef>XExtCodes *<function>XAddExtension</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -372,7 +372,7 @@ All of these functions return the previous procedure defined for this
 extension.
 <indexterm significance="preferred"><primary>XESetCloseDisplay</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetclosedisplay'>
 <funcprototype>
   <funcdef>int <function>XESetCloseDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -442,7 +442,7 @@ with these arguments:
 <para>
 <indexterm significance="preferred"><primary>XESetCreateGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetcreategc'>
 <funcprototype>
   <funcdef>int *<function>XESetCreateGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -510,7 +510,7 @@ your procedure is called with these arguments:
 </para>
 <indexterm significance="preferred"><primary>XESetCopyGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetcopygc'>
 <funcprototype>
   <funcdef>int *<function>XESetCopyGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -573,7 +573,7 @@ your procedure is called with these arguments:
 </funcprototype>
 </funcsynopsis>
 </para>
-<funcsynopsis>
+<funcsynopsis id='xesetfreegc'>
 <funcprototype>
   <funcdef>int *<function>XESetFreeGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -645,7 +645,7 @@ your procedure is called with these arguments:
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XESetCreateFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetcreatefont'>
 <funcprototype>
   <funcdef>int *<function>XESetCreateFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -726,7 +726,7 @@ your procedure is called with these arguments:
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XESetFreeFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetfreefont'>
 <funcprototype>
   <funcdef>int *<function>XESetFreeFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -838,7 +838,7 @@ in the structure will be fully portable between machines.
 <!-- .NE -->
 <indexterm significance="preferred"><primary>XESetWireToEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetwiretoevent'>
 <funcprototype>
   <funcdef>int *<function>XESetWireToEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -948,7 +948,7 @@ with the event and use the return value.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>_XSetLastRequestRead</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetlastrequestread'>
 <funcprototype>
   <funcdef>unsigned long<function>_XSetLastRequestRead</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -992,7 +992,7 @@ serial number in the event.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XESetEventToWire</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xeseteventtowire'>
 <funcprototype>
   <funcdef>Status *<function>XESetEventToWire</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1084,7 +1084,7 @@ All other members then should be copied from the host format to the
 structure.
 <indexterm significance="preferred"><primary>XESetWireToError</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetwiretoerror'>
 <funcprototype>
   <funcdef>Bool *<function>XESetWireToError</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1179,7 +1179,7 @@ otherwise, it should return
 <symbol>True</symbol>.
 <indexterm significance="preferred"><primary>XESetError</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xeseterror'>
 <funcprototype>
   <funcdef>int *<function>XESetError</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1269,7 +1269,7 @@ the error is suppressed, and
 returns the value of ret_code.
 <indexterm significance="preferred"><primary>XESetErrorString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xeseterrorstring'>
 <funcprototype>
   <funcdef>char *<function>XESetErrorString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1345,7 +1345,7 @@ You should copy nbytes of a null-terminated string containing the
 error message into buffer.
 <indexterm significance="preferred"><primary>XESetPrintErrorValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetprinterrorvalues'>
 <funcprototype>
   <funcdef>void *<function>XESetPrintErrorValues</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1427,7 +1427,7 @@ The underlying type of the fp argument is system dependent;
 on a <acronym>POSIX</acronym>-compliant system, fp should be cast to type FILE*.
 <indexterm significance="preferred"><primary>XESetFlushGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xesetflushgc'>
 <funcprototype>
   <funcdef>int *<function>XESetFlushGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1617,7 +1617,7 @@ union {	Display *display;
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XEHeadOfExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xeheadofextensionlist'>
 <funcprototype>
   <funcdef>XExtData **<function>XEHeadOfExtensionList</function></funcdef>
   <paramdef>XEDataObject<parameter> object</parameter></paramdef>
@@ -1655,7 +1655,7 @@ of types contained in
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XAddToExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xaddtoextensionlist'>
 <funcprototype>
   <funcdef><function>XAddToExtensionList</function></funcdef>
   <paramdef>XExtData<parameter> **structure</parameter></paramdef>
@@ -1695,7 +1695,7 @@ You must initialize ext_data-&gt;number with the extension number
 before calling this function.
 <indexterm significance="preferred"><primary>XFindOnExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfindonextensionlist'>
 <funcprototype>
   <funcdef>XExtData *<function>XFindOnExtensionList</function></funcdef>
   <paramdef>struct_XExtData<parameter> **structure</parameter></paramdef>
@@ -1746,7 +1746,7 @@ macro, which allocates and returns a resource ID, is defined in
 &lt;X11/Xlib.h&gt;.
 <indexterm significance="preferred"><primary>XAllocID</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xallocid'>
 <funcprototype>
   <funcdef><function>XAllocID</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1781,7 +1781,7 @@ The
 macro allocates and returns an array of resource ID.
 <indexterm significance="preferred"><primary>XAllocIDs</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xallocids'>
 <funcprototype>
   <funcdef><function>XAllocIDs</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1858,7 +1858,7 @@ The
 macro is defined as follows:
 <indexterm significance="preferred"><primary>FlushGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='flushgc'>
 <funcprototype>
   <funcdef><function>FlushGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1908,7 +1908,7 @@ procedure
 is defined as follows:
 <indexterm significance="preferred"><primary>_XFlushGCCache</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xflushgccache'>
 <funcprototype>
   <funcdef><function>_XFlushGCCache</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2331,7 +2331,7 @@ architecture.
 Two calls, which are generally implemented as macros, have been provided.
 <indexterm significance="preferred"><primary>LockDisplay</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='lockdisplay'>
 <funcprototype>
   <funcdef><function>LockDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2342,7 +2342,7 @@ Two calls, which are generally implemented as macros, have been provided.
 <para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>UnlockDisplay</primary></indexterm>
-<funcsynopsis>
+<funcsynopsis id='unlockdisplay'>
 <funcprototype>
   <funcdef><function>UnlockDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2526,7 +2526,7 @@ macros take three arguments:
 the display, a pointer to the beginning of the data, 
 and the number of bytes to be sent.
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='data'>
 <funcprototype>
   <funcdef><function>Data</function></funcdef>
   <paramdef><parameter> display</parameter></paramdef>
@@ -2582,7 +2582,7 @@ If any events arrive in the meantime,
 places them in the queue for later use.
 <indexterm significance="preferred"><primary>_XReply</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xreply'>
 <funcprototype>
   <funcdef>Status <function>_XReply</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2750,7 +2750,7 @@ function to read the variable-length data.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xread'>
 <funcprototype>
   <funcdef><function>_XRead</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2802,7 +2802,7 @@ function reads the specified number of bytes into data_return.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xread16'>
 <funcprototype>
   <funcdef><function>_XRead16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2856,7 +2856,7 @@ into the specified array as shorts.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xread32'>
 <funcprototype>
   <funcdef><function>_XRead32</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2910,7 +2910,7 @@ into the specified array as longs.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xread16pad'>
 <funcprototype>
   <funcdef><function>_XRead16Pad</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2967,7 +2967,7 @@ reads and discards up to two additional pad bytes.
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xreadpad'>
 <funcprototype>
   <funcdef><function>_XReadPad</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3067,7 +3067,7 @@ The following function returns a scratch buffer for use within a
 critical section:
 <indexterm significance="preferred"><primary>_XAllocScratch</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xallocscratch'>
 <funcprototype>
   <funcdef>char *<function>_XAllocScratch</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3124,7 +3124,7 @@ The following function returns a scratch buffer for use across
 critical sections:
 <indexterm significance="preferred"><primary>_XAllocTemp</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xalloctemp'>
 <funcprototype>
   <funcdef>char *<function>_XAllocTemp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3163,7 +3163,7 @@ execute inside Xlib.  The storage must be explicitly returned to Xlib.
 The following function returns the storage:
 <indexterm significance="preferred"><primary>_XFreeTemp</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='_xfreetemp'>
 <funcprototype>
   <funcdef>void <function>_XFreeTemp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
