@@ -100,7 +100,7 @@ To obtain a KeySym for the KeyCode of an event, use
 <function>XLookupKeysym</function>.
 <indexterm significance="preferred"><primary>XLookupKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlookupkeysym'>
 <funcprototype>
   <funcdef>KeySym <function>XLookupKeysym</function></funcdef>
   <paramdef>XKeyEvent<parameter> *key_event</parameter></paramdef>
@@ -158,7 +158,7 @@ To obtain a KeySym for a specific KeyCode, use
 <function>XKeycodeToKeysym</function>.
 <indexterm significance="preferred"><primary>XKeycodeToKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xkeycodetokeysym'>
 <funcprototype>
   <funcdef>KeySym <function>XKeycodeToKeysym</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -220,7 +220,7 @@ To obtain a KeyCode for a key having a specific KeySym, use
 <function>XKeysymToKeycode</function>.
 <indexterm significance="preferred"><primary>XKeysymToKeycode</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xkeysymtokeycode'>
 <funcprototype>
   <funcdef>KeyCode <function>XKeysymToKeycode</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -268,7 +268,7 @@ To refresh the stored modifier and keymap information, use
 <function>XRefreshKeyboardMapping</function>.
 <indexterm significance="preferred"><primary>XRefreshKeyboardMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xrefreshkeyboardmapping'>
 <funcprototype>
   <funcdef><function>XRefreshKeyboardMapping</function></funcdef>
   <paramdef>XMappingEvent<parameter> *event_map</parameter></paramdef>
@@ -310,7 +310,7 @@ To obtain the uppercase and lowercase forms of a KeySym, use
 <function>XConvertCase</function>.
 <indexterm significance="preferred"><primary>XConvertCase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xconvertcase'>
 <funcprototype>
   <funcdef>void <function>XConvertCase</function></funcdef>
   <paramdef>KeySym<parameter> keysym</parameter></paramdef>
@@ -373,7 +373,7 @@ To convert the name of the KeySym to the KeySym code, use
 <function>XStringToKeysym</function>.
 <indexterm significance="preferred"><primary>XStringToKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xstringtokeysym'>
 <funcprototype>
   <funcdef>KeySym <function>XStringToKeysym</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
@@ -423,7 +423,7 @@ To convert a KeySym code to the name of the KeySym, use
 <function>XKeysymToString</function>.
 <indexterm significance="preferred"><primary>XKeysymToString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xkeysymtostring'>
 <funcprototype>
   <funcdef>char *<function>XKeysymToString</function></funcdef>
   <paramdef>KeySym<parameter> keysym</parameter></paramdef>
@@ -671,7 +671,7 @@ To map a key event to an ISO Latin-1 string, use
 <function>XLookupString</function>.
 <indexterm significance="preferred"><primary>XLookupString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xlookupstring'>
 <funcprototype>
   <funcdef>int <function>XLookupString</function></funcdef>
   <paramdef>XKeyEvent<parameter> *event_struct</parameter></paramdef>
@@ -793,7 +793,7 @@ use
 <function>XRebindKeysym</function>.
 <indexterm significance="preferred"><primary>XRebindKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xrebindkeysym'>
 <funcprototype>
   <funcdef><function>XRebindKeysym</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -898,7 +898,7 @@ To allocate some memory you will never give back, use
 <function>Xpermalloc</function>.
 <indexterm significance="preferred"><primary>Xpermalloc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xpermalloc'>
 <funcprototype>
   <funcdef>char *<function>Xpermalloc</function></funcdef>
   <paramdef>unsignedint<parameter> size</parameter></paramdef>
@@ -932,7 +932,7 @@ To parse standard window geometry strings, use
 <para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xparsegeometry'>
 <funcprototype>
   <funcdef>int <function>XParseGeometry</function></funcdef>
   <paramdef>char<parameter> *parsestring</parameter></paramdef>
@@ -1066,7 +1066,7 @@ To construct a window's geometry information, use
 <function>XWMGeometry</function>.
 <indexterm significance="preferred"><primary>XWMGeometry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xwmgeometry'>
 <funcprototype>
   <funcdef>int <function>XWMGeometry</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1305,7 +1305,7 @@ To generate a region from a polygon, use
 </para>
 <indexterm significance="preferred"><primary>XPolygonRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xpolygonregion'>
 <funcprototype>
   <funcdef>Region <function>XPolygonRegion</function></funcdef>
   <paramdef>XPoint<parameter> points[]</parameter></paramdef>
@@ -1368,7 +1368,7 @@ To set the clip-mask of a GC to a region, use
 <function>XSetRegion</function>.
 <indexterm significance="preferred"><primary>XSetRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetregion'>
 <funcprototype>
   <funcdef><function>XSetRegion</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1428,7 +1428,7 @@ To deallocate the storage associated with a specified region, use
 <function>XDestroyRegion</function>.
 <indexterm significance="preferred"><primary>XDestroyRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroyregion'>
 <funcprototype>
   <funcdef><function>XDestroyRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1464,7 +1464,7 @@ To move a region by a specified amount, use
 <function>XOffsetRegion</function>.
 <indexterm significance="preferred"><primary>XOffsetRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xoffsetregion'>
 <funcprototype>
   <funcdef><function>XOffsetRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1516,7 +1516,7 @@ To reduce a region by a specified amount, use
 <function>XShrinkRegion</function>.
 <indexterm significance="preferred"><primary>XShrinkRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xshrinkregion'>
 <funcprototype>
   <funcdef><function>XShrinkRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1579,7 +1579,7 @@ To generate the smallest rectangle enclosing a region, use
 <function>XClipBox</function>.
 <indexterm significance="preferred"><primary>XClipBox</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xclipbox'>
 <funcprototype>
   <funcdef><function>XClipBox</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1624,7 +1624,7 @@ To compute the intersection of two regions, use
 <function>XIntersectRegion</function>.
 <indexterm significance="preferred"><primary>XIntersectRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xintersectregion'>
 <funcprototype>
   <funcdef><function>XIntersectRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1673,7 +1673,7 @@ To compute the union of two regions, use
 <function>XUnionRegion</function>.
 <indexterm significance="preferred"><primary>XUnionRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunionregion'>
 <funcprototype>
   <funcdef><function>XUnionRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1722,7 +1722,7 @@ To create a union of a source region and a rectangle, use
 <function>XUnionRectWithRegion</function>.
 <indexterm significance="preferred"><primary>XUnionRectWithRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xunionrectwithregion'>
 <funcprototype>
   <funcdef><function>XUnionRectWithRegion</function></funcdef>
   <paramdef>XRectangle<parameter> *rectangle</parameter></paramdef>
@@ -1779,7 +1779,7 @@ To subtract two regions, use
 <function>XSubtractRegion</function>.
 <indexterm significance="preferred"><primary>XSubtractRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsubtractregion'>
 <funcprototype>
   <funcdef><function>XSubtractRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1835,7 +1835,7 @@ of two regions, use
 <function>XXorRegion</function>.
 <indexterm significance="preferred"><primary>XXorRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xxorregion'>
 <funcprototype>
   <funcdef><function>XXorRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1892,7 +1892,7 @@ To determine if the specified region is empty, use
 <function>XEmptyRegion</function>.
 <indexterm significance="preferred"><primary>XEmptyRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xemptyregion'>
 <funcprototype>
   <funcdef>Bool <function>XEmptyRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1928,7 +1928,7 @@ To determine if two regions have the same offset, size, and shape, use
 <function>XEqualRegion</function>.
 <indexterm significance="preferred"><primary>XEqualRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xequalregion'>
 <funcprototype>
   <funcdef>Bool <function>XEqualRegion</function></funcdef>
   <paramdef>Regionr1,<parameter> r2</parameter></paramdef>
@@ -1980,7 +1980,7 @@ To determine if a specified point resides in a specified region, use
 <function>XPointInRegion</function>.
 <indexterm significance="preferred"><primary>XPointInRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xpointinregion'>
 <funcprototype>
   <funcdef>Bool <function>XPointInRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -2039,7 +2039,7 @@ To determine if a specified rectangle is inside a region, use
 <function>XRectInRegion</function>.
 <indexterm significance="preferred"><primary>XRectInRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xrectinregion'>
 <funcprototype>
   <funcdef>int <function>XRectInRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -2151,7 +2151,7 @@ To store data in cut buffer 0, use
 <function>XStoreBytes</function>.
 <indexterm significance="preferred"><primary>XStoreBytes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xstorebytes'>
 <funcprototype>
   <funcdef><function>XStoreBytes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2216,7 +2216,7 @@ To store data in a specified cut buffer, use
 <function>XStoreBuffer</function>.
 <indexterm significance="preferred"><primary>XStoreBuffer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xstorebuffer'>
 <funcprototype>
   <funcdef><function>XStoreBuffer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2291,7 +2291,7 @@ To return data from cut buffer 0, use
 <function>XFetchBytes</function>.
 <indexterm significance="preferred"><primary>XFetchBytes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfetchbytes'>
 <funcprototype>
   <funcdef>char *<function>XFetchBytes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2343,7 +2343,7 @@ To return data from a specified cut buffer, use
 <function>XFetchBuffer</function>.
 <indexterm significance="preferred"><primary>XFetchBuffer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfetchbuffer'>
 <funcprototype>
   <funcdef>char *<function>XFetchBuffer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2402,7 +2402,7 @@ To rotate the cut buffers, use
 <function>XRotateBuffers</function>.
 <indexterm significance="preferred"><primary>XRotateBuffers</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xrotatebuffers'>
 <funcprototype>
   <funcdef><function>XRotateBuffers</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2522,7 +2522,7 @@ template, use
 <function>XGetVisualInfo</function>.
 <indexterm significance="preferred"><primary>XGetVisualInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetvisualinfo'>
 <funcprototype>
   <funcdef>XVisualInfo *<function>XGetVisualInfo</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2597,7 +2597,7 @@ class of the screen, use
 <function>XMatchVisualInfo</function>.
 <indexterm significance="preferred"><primary>XMatchVisualInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xmatchvisualinfo'>
 <funcprototype>
   <funcdef>Status <function>XMatchVisualInfo</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2747,7 +2747,7 @@ structure and initialize it with image format values from a display, use
 <function>XCreateImage</function>.
 <indexterm significance="preferred"><primary>XCreateImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreateimage'>
 <funcprototype>
   <funcdef>XImage *<function>XCreateImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2930,7 +2930,7 @@ To obtain a pixel value in an image, use
 <function>XGetPixel</function>.
 <indexterm significance="preferred"><primary>XGetPixel</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetpixel'>
 <funcprototype>
   <funcdef>unsigned long <function>XGetPixel</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -2991,7 +2991,7 @@ To set a pixel value in an image, use
 <function>XPutPixel</function>.
 <indexterm significance="preferred"><primary>XPutPixel</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xputpixel'>
 <funcprototype>
   <funcdef><function>XPutPixel</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -3063,7 +3063,7 @@ To create a subimage, use
 <function>XSubImage</function>.
 <indexterm significance="preferred"><primary>XSubImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsubimage'>
 <funcprototype>
   <funcdef>XImage *<function>XSubImage</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -3149,7 +3149,7 @@ To increment each pixel in an image by a constant value, use
 <function>XAddPixel</function>.
 <indexterm significance="preferred"><primary>XAddPixel</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xaddpixel'>
 <funcprototype>
   <funcdef><function>XAddPixel</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -3198,7 +3198,7 @@ use
 <function>XDestroyImage</function>.
 <indexterm significance="preferred"><primary>XDestroyImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdestroyimage'>
 <funcprototype>
   <funcdef><function>XDestroyImage</function></funcdef>
   <paramdef>XImage *<parameter>ximage</parameter></paramdef>
@@ -3285,7 +3285,7 @@ To read a bitmap from a file and store it in a pixmap, use
 <function>XReadBitmapFile</function>.
 <indexterm significance="preferred"><primary>XReadBitmapFile</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xreadbitmapfile'>
 <funcprototype>
   <funcdef>int <function>XReadBitmapFile</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3440,7 +3440,7 @@ To read a bitmap from a file and return it as data, use
 <function>XReadBitmapFileData</function>.
 <indexterm significance="preferred"><primary>XReadBitmapFileData</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xreadbitmapfiledata'>
 <funcprototype>
   <funcdef>int <function>XReadBitmapFileData</function></funcdef>
   <paramdef>char<parameter> *filename</parameter></paramdef>
@@ -3537,7 +3537,7 @@ To write out a bitmap from a pixmap to a file, use
 <function>XWriteBitmapFile</function>.
 <indexterm significance="preferred"><primary>XWriteBitmapFile</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xwritebitmapfile'>
 <funcprototype>
   <funcdef>int <function>XWriteBitmapFile</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3664,7 +3664,7 @@ To create a pixmap and then store bitmap-format data into it, use
 <function>XCreatePixmapFromBitmapData</function>.
 <indexterm significance="preferred"><primary>XCreatePixmapFromBitmapData</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreatepixmapfrombitmapdata'>
 <funcprototype>
   <funcdef>Pixmap <function>XCreatePixmapFromBitmapData</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3796,7 +3796,7 @@ in a program directly, as opposed to reading it in every time at run time, use
 <function>XCreateBitmapFromData</function>.
 <indexterm significance="preferred"><primary>XCreateBitmapFromData</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xcreatebitmapfromdata'>
 <funcprototype>
   <funcdef>Pixmap <function>XCreateBitmapFromData</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3942,7 +3942,7 @@ To save a data value that corresponds to a resource ID and context type, use
 <function>XSaveContext</function>.
 <indexterm significance="preferred"><primary>XSaveContext</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsavecontext'>
 <funcprototype>
   <funcdef>int <function>XSaveContext</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4016,7 +4016,7 @@ To get the data associated with a resource ID and type, use
 <function>XFindContext</function>.
 <indexterm significance="preferred"><primary>XFindContext</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfindcontext'>
 <funcprototype>
   <funcdef>int <function>XFindContext</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4089,7 +4089,7 @@ To delete an entry for a given resource ID and type, use
 <function>XDeleteContext</function>.
 <indexterm significance="preferred"><primary>XDeleteContext</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdeletecontext'>
 <funcprototype>
   <funcdef>int <function>XDeleteContext</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>

@@ -437,7 +437,7 @@ combine_saturate_u (pixman_implementation_t *imp,
  * PDF_NON_SEPARABLE_BLEND_MODE macros, which take the blend function as an
  * argument. Note that this implementation operates on premultiplied colors,
  * while the PDF specification does not. Therefore the code uses the formula
- * ar.Cra = (1 – as) . Dca + (1 – ad) . Sca + B(Dca, ad, Sca, as)
+ * Cra = (1 – as) . Dca + (1 – ad) . Sca + B(Dca, ad, Sca, as)
  */
 
 /*
@@ -849,7 +849,7 @@ PDF_SEPARABLE_BLEND_MODE (exclusion)
  *
  *    r * set_sat (C, s) = set_sat (x * C, r * s)
  *
- * The above holds for all non-zero x, because they x'es in the fraction for
+ * The above holds for all non-zero x, because the x'es in the fraction for
  * C_mid cancel out. Specifically, it holds for x = r:
  *
  *    r * set_sat (C, s) = set_sat (r_c, rs)
@@ -885,8 +885,7 @@ PDF_SEPARABLE_BLEND_MODE (exclusion)
  *
  *     a_s * a_d * B(s, d)
  *   = a_s * a_d * set_lum (set_sat (S/a_s, SAT (D/a_d)), LUM (D/a_d), 1)
- *   = a_s * a_d * set_lum (set_sat (a_d * S, a_s * SAT (D)),
- *                                        a_s * LUM (D), a_s * a_d)
+ *   = set_lum (set_sat (a_d * S, a_s * SAT (D)), a_s * LUM (D), a_s * a_d)
  *
  */
 

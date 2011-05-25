@@ -159,7 +159,7 @@ To grab the pointer, use
 <indexterm><primary>Pointer</primary><secondary>grabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgrabpointer'>
 <funcprototype>
   <funcdef>int <function>XGrabPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -425,7 +425,7 @@ To ungrab the pointer, use
 <indexterm><primary>Pointer</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xungrabpointer'>
 <funcprototype>
   <funcdef><function>XUngrabPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -493,7 +493,7 @@ To change an active pointer grab, use
 <indexterm ><primary>Changing</primary><secondary>pointer grab</secondary></indexterm>
 <indexterm significance="preferred"><primary>XChangeActivePointerGrab</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchangeactivepointergrab'>
 <funcprototype>
   <funcdef><function>XChangeActivePointerGrab</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -581,7 +581,7 @@ To grab a pointer button, use
 <indexterm><primary>Button</primary><secondary>grabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabButton</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgrabbutton'>
 <funcprototype>
   <funcdef><function>XGrabButton</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -825,7 +825,7 @@ To ungrab a pointer button, use
 <indexterm><primary>Button</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabButton</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xungrabbutton'>
 <funcprototype>
   <funcdef><function>XUngrabButton</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -946,7 +946,7 @@ To grab the keyboard, use
 <indexterm><primary>Grabbing</primary><secondary>keyboard</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabKeyboard</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgrabkeyboard'>
 <funcprototype>
   <funcdef>int <function>XGrabKeyboard</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1134,7 +1134,7 @@ To ungrab the keyboard, use
 <indexterm><primary>Ungrabbing</primary><secondary>keyboard</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabKeyboard</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xungrabkeyboard'>
 <funcprototype>
   <funcdef><function>XUngrabKeyboard</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1201,7 +1201,7 @@ To passively grab a single key of the keyboard, use
 <indexterm><primary>Grabbing</primary><secondary>keys</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabKey</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgrabkey'>
 <funcprototype>
   <funcdef><function>XGrabKey</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1405,7 +1405,7 @@ To ungrab a key, use
 <indexterm><primary>Ungrabbing</primary><secondary>keys</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabKey</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xungrabkey'>
 <funcprototype>
   <funcdef><function>XUngrabKey</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1506,7 +1506,7 @@ To allow further events to be processed when the device has been frozen, use
 <function>XAllowEvents</function>.
 <indexterm significance="preferred"><primary>XAllowEvents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xallowevents'>
 <funcprototype>
   <funcdef><function>XAllowEvents</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1761,7 +1761,7 @@ To move the pointer to an arbitrary point in a window, use
 <function>XWarpPointer</function>.
 <indexterm significance="preferred"><primary>XWarpPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xwarppointer'>
 <funcprototype>
   <funcdef><function>XWarpPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1935,7 +1935,7 @@ To set the input focus, use
 <function>XSetInputFocus</function>.
 <indexterm significance="preferred"><primary>XSetInputFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetinputfocus'>
 <funcprototype>
   <funcdef><function>XSetInputFocus</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2109,7 +2109,7 @@ To obtain the current input focus, use
 <function>XGetInputFocus</function>.
 <indexterm significance="preferred"><primary>XGetInputFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetinputfocus'>
 <funcprototype>
   <funcdef><function>XGetInputFocus</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2324,7 +2324,7 @@ If an error is generated, a subset of the controls may have been altered.
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XChangeKeyboardControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchangekeyboardcontrol'>
 <funcprototype>
   <funcdef><function>XChangeKeyboardControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2393,7 +2393,7 @@ To obtain the current control values for the keyboard, use
 <function>XGetKeyboardControl</function>.
 <indexterm significance="preferred"><primary>XGetKeyboardControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetkeyboardcontrol'>
 <funcprototype>
   <funcdef><function>XGetKeyboardControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2477,7 +2477,7 @@ To turn on keyboard auto-repeat, use
 <function>XAutoRepeatOn</function>.
 <indexterm significance="preferred"><primary>XAutoRepeatOn</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xautorepeaton'>
 <funcprototype>
   <funcdef><function>XAutoRepeatOn</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2511,7 +2511,7 @@ To turn off keyboard auto-repeat, use
 <function>XAutoRepeatOff</function>.
 <indexterm significance="preferred"><primary>XAutoRepeatOff</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xautorepeatoff'>
 <funcprototype>
   <funcdef><function>XAutoRepeatOff</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2545,7 +2545,7 @@ To ring the bell, use
 <function>XBell</function>.
 <indexterm significance="preferred"><primary>XBell</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xbell'>
 <funcprototype>
   <funcdef><function>XBell</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2629,7 +2629,7 @@ To obtain a bit vector that describes the state of the keyboard, use
 <function>XQueryKeymap</function>.
 <indexterm significance="preferred"><primary>XQueryKeymap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xquerykeymap'>
 <funcprototype>
   <funcdef><function>XQueryKeymap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2685,7 +2685,7 @@ To set the mapping of the pointer buttons, use
 <function>XSetPointerMapping</function>.
 <indexterm significance="preferred"><primary>XSetPointerMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetpointermapping'>
 <funcprototype>
   <funcdef>int <function>XSetPointerMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2773,7 +2773,7 @@ To get the pointer mapping, use
 <function>XGetPointerMapping</function>.
 <indexterm significance="preferred"><primary>XGetPointerMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetpointermapping'>
 <funcprototype>
   <funcdef>int <function>XGetPointerMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2836,7 +2836,7 @@ To control the pointer's interactive feel, use
 <function>XChangePointerControl</function>.
 <indexterm significance="preferred"><primary>XChangePointerControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchangepointercontrol'>
 <funcprototype>
   <funcdef><function>XChangePointerControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2949,7 +2949,7 @@ To get the current pointer parameters, use
 <function>XGetPointerControl</function>.
 <indexterm significance="preferred"><primary>XGetPointerControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetpointercontrol'>
 <funcprototype>
   <funcdef><function>XGetPointerControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3224,7 +3224,7 @@ To obtain the legal KeyCodes for a display, use
 <function>XDisplayKeycodes</function>.
 <indexterm significance="preferred"><primary>XDisplayKeycodes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdisplaykeycodes'>
 <funcprototype>
   <funcdef><function>XDisplayKeycodes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3283,7 +3283,7 @@ To obtain the symbols for the specified KeyCodes, use
 <function>XGetKeyboardMapping</function>.
 <indexterm significance="preferred"><primary>XGetKeyboardMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetkeyboardmapping'>
 <funcprototype>
   <funcdef>KeySym *<function>XGetKeyboardMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3408,7 +3408,7 @@ To change the keyboard mapping, use
 <function>XChangeKeyboardMapping</function>.
 <indexterm significance="preferred"><primary>XChangeKeyboardMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xchangekeyboardmapping'>
 <funcprototype>
   <funcdef><function>XChangeKeyboardMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3580,7 +3580,7 @@ structure, use
 <function>XNewModifiermap</function>.
 <indexterm significance="preferred"><primary>XNewModifiermap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xnewmodifiermap'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XNewModifiermap</function></funcdef>
   <paramdef>int<parameter> max_keys_per_mod</parameter></paramdef>
@@ -3619,7 +3619,7 @@ structure, use
 <function>XInsertModifiermapEntry</function>.
 <indexterm significance="preferred"><primary>XInsertModifiermapEntry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xinsertmodifiermapentry'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XInsertModifiermapEntry</function></funcdef>
   <paramdef>XModifierKeymap<parameter> *modmap</parameter></paramdef>
@@ -3682,7 +3682,7 @@ structure, use
 <function>XDeleteModifiermapEntry</function>.
 <indexterm significance="preferred"><primary>XDeleteModifiermapEntry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xdeletemodifiermapentry'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XDeleteModifiermapEntry</function></funcdef>
   <paramdef>XModifierKeymap<parameter> *modmap</parameter></paramdef>
@@ -3745,7 +3745,7 @@ structure, use
 <function>XFreeModifiermap</function>.
 <indexterm significance="preferred"><primary>XFreeModifiermap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xfreemodifiermap'>
 <funcprototype>
   <funcdef><function>XFreeModifiermap</function></funcdef>
   <paramdef>XModifierKeymap<parameter> *modmap</parameter></paramdef>
@@ -3783,7 +3783,7 @@ To set the KeyCodes to be used as modifiers, use
 <function>XSetModifierMapping</function>.
 <indexterm significance="preferred"><primary>XSetModifierMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xsetmodifiermapping'>
 <funcprototype>
   <funcdef>int <function>XSetModifierMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3897,7 +3897,7 @@ To obtain the KeyCodes used as modifiers, use
 <function>XGetModifierMapping</function>.
 <indexterm significance="preferred"><primary>XGetModifierMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis>
+<funcsynopsis id='xgetmodifiermapping'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XGetModifierMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
