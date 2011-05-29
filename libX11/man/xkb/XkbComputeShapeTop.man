@@ -47,7 +47,7 @@ a number of points. The bounding box of a shape is a rectangle that contains all
 the outlines of that shape. 
 
 .I XkbComputeShapeTop 
-returns a BoundsRec that contains two x and y coordinates. These coordinates 
+returns a BoundsRec that contains two x and y coordinates. These coordinates
 describe the corners of a rectangle that contains the outline that describes the 
 top surface of the shape. The top surface is defined to be the approximating 
 outline if the 

@@ -244,8 +244,8 @@ winMouseButtonsSendEvent (int iEventType, int iButton)
 		     POINTER_RELATIVE, &mask);
 
 #if CYGDEBUG
-  ErrorF("winMouseButtonsSendEvent: iEventType: %d, iButton: %d, nEvents %d\n",
-          iEventType, iButton, nevents);
+  ErrorF("winMouseButtonsSendEvent: iEventType: %d, iButton: %d\n",
+          iEventType, iButton);
 #endif
 }
 

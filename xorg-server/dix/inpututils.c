@@ -574,7 +574,7 @@ void verify_internal_event(const InternalEvent *ev)
 
         for (i = 0; i < sizeof(xEvent); i++, data++)
         {
-            ErrorF("%02hx ", *data);
+            ErrorF("%02hhx ", *data);
 
             if ((i % 8) == 7)
                 ErrorF("\n");

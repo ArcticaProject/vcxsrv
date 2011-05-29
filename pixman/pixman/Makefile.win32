@@ -49,6 +49,7 @@ SOURCES =				\
 	pixman-radial-gradient.c	\
 	pixman-bits-image.c		\
 	pixman.c			\
+	pixman-noop.c			\
 	pixman-cpu.c			\
 	pixman-fast-path.c		\
 	pixman-implementation.c		\

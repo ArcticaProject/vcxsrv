@@ -4744,7 +4744,8 @@ To draw 8-bit characters in a given drawable, use
   <paramdef>Display<parameter> *display</parameter></paramdef>
   <paramdef>Drawable<parameter> d</parameter></paramdef>
   <paramdef>GC<parameter> gc</parameter></paramdef>
-  <paramdef>intx,<parameter> y</parameter></paramdef>
+  <paramdef>int<parameter> x</parameter></paramdef>
+  <paramdef>int<parameter> y</parameter></paramdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
   <paramdef>int<parameter> length</parameter></paramdef>
 </funcprototype>

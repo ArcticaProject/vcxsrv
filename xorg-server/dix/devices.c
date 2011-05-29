@@ -1361,15 +1361,6 @@ InitPointerAccelerationScheme(DeviceIntPtr dev,
 }
 
 Bool
-InitAbsoluteClassDeviceStruct(DeviceIntPtr dev)
-{
-    /* This is an API-preserving noop. Instructions: Kill when no more drivers
-     * call it. The infrastructure behind hasn't really been used, so any calls
-     * are likely just a declaration that the device is absolute. */
-    return FALSE;
-}
-
-Bool
 InitFocusClassDeviceStruct(DeviceIntPtr dev)
 {
     FocusClassPtr focc;

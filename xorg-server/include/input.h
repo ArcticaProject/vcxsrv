@@ -305,12 +305,6 @@ extern _X_EXPORT Bool InitPointerAccelerationScheme(
     DeviceIntPtr /*dev*/,
     int /*scheme*/);
 
-/**
- * This is not implemented and just returns FALSE.
- */
-extern _X_EXPORT _X_DEPRECATED Bool InitAbsoluteClassDeviceStruct(
-    DeviceIntPtr /*device*/);
-
 extern _X_EXPORT Bool InitFocusClassDeviceStruct(
     DeviceIntPtr /*device*/);
 

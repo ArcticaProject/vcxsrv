@@ -52,6 +52,7 @@ Bool ephyrNoDRI=FALSE ;
 Bool ephyrNoXV=FALSE ;
 
 static int mouseState = 0;
+static Rotation ephyrRandr = RR_Rotate_0;
 
 typedef struct _EphyrInputPrivate {
     Bool    enabled;
@@ -249,7 +250,11 @@ ephyrMapFramebuffer (KdScreenInfo *screen)
   EPHYR_LOG("screen->width: %d, screen->height: %d index=%d",
 	     screen->width, screen->height, screen->mynum);
   
-  KdComputePointerMatrix (&m, scrpriv->randr, screen->width, screen->height);
+  /*
+   * Use the rotation last applied to ourselves (in the Xephyr case the fb
+   * coordinate system moves independently of the pointer coordiante system).
+   */
+  KdComputePointerMatrix (&m, ephyrRandr, screen->width, screen->height);
   KdSetPointerMatrix (&m);
   
   priv->bytes_per_line = ((screen->width * screen->fb.bitsPerPixel + 31) >> 5) << 2;
@@ -530,7 +535,15 @@ ephyrRandRSetConfig (ScreenPtr		pScreen,
    * Set new configuration
    */
   
-  scrpriv->randr = KdAddRotation (screen->randr, randr);
+  /*
+   * We need to store the rotation value for pointer coords transformation;
+   * though initially the pointer and fb rotation are identical, when we map
+   * the fb, the screen will be reinitialized and return into an unrotated
+   * state (presumably the HW is taking care of the rotation of the fb), but the
+   * pointer still needs to be transformed.
+   */
+  ephyrRandr = KdAddRotation (screen->randr, randr);
+  scrpriv->randr = ephyrRandr;
   
   ephyrUnmapFramebuffer (screen); 
   
@@ -1058,6 +1071,14 @@ MouseInit (KdPointerInfo *pi)
     pi->nButtons = 32;
     free(pi->name);
     pi->name = strdup("Xephyr virtual mouse");
+
+    /*
+     * Must transform pointer coords since the pointer position
+     * relative to the Xephyr window is controlled by the host server and
+     * remains constant regardless of any rotation applied to the Xephyr screen.
+     */
+    pi->transformCoordinates = TRUE;
+
     ephyrMouse = pi;
     return Success;
 }

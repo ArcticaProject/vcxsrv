@@ -112,6 +112,7 @@ Equipment Corporation.
 #include <X11/Xproto.h>
 #include "windowstr.h"
 #include "inputstr.h"
+#include "inpututils.h"
 #include "scrnintstr.h"
 #include "cursorstr.h"
 
@@ -2195,7 +2196,7 @@ DeliverEventsToWindow(DeviceIntPtr pDev, WindowPtr pWin, xEvent
          */
         if (!grab && ActivateImplicitGrab(pDev, client, pWin, pEvents, deliveryMask))
             /* grab activated */;
-        else if ((type == MotionNotify))
+        else if (type == MotionNotify)
             pDev->valuator->motionHintWindow = pWin;
         else if (type == DeviceMotionNotify || type == DeviceButtonPress)
                 CheckDeviceGrabAndHintWindow (pWin, type,
@@ -2832,7 +2833,7 @@ CheckMotion(DeviceEvent *ev, DeviceIntPtr pDev)
     WindowPtr prevSpriteWin, newSpriteWin;
     SpritePtr pSprite = pDev->spriteInfo->sprite;
 
-    verify_internal_event(ev);
+    verify_internal_event((InternalEvent *)ev);
 
     prevSpriteWin = pSprite->win;
 
@@ -5906,7 +5907,7 @@ PickPointer(ClientPtr client)
 
     if (!client->clientPtr)
     {
-        DeviceIntPtr it = inputInfo.devices;
+        it = inputInfo.devices;
         while (it)
         {
             if (IsMaster(it) && it->spriteInfo->spriteOwner)
