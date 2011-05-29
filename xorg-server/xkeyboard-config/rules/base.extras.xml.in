@@ -191,6 +191,16 @@
       <variantList>
         <variant>
           <configItem>
+            <name>crh_dobruja</name>
+            <_shortDescription>crh</_shortDescription>
+            <_description>Crimean Tatar (Dobruja Q)</_description>
+            <languageList>
+              <iso639Id>crh</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
             <name>ergonomic</name>
             <_description>Romanian (ergonomic Touchtype)</_description>
           </configItem>
@@ -252,7 +262,7 @@
         <variant>
           <configItem>
             <name>olpc-phonetic</name>
-            <_description>Armenian (alternative phonetic for OLPC)</_description>
+            <_description>Armenian (OLPC phonetic)</_description>
           </configItem>
         </variant>
       </variantList>

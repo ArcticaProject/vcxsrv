@@ -52,6 +52,7 @@ xf86ConfigSymTabRec InputClassTab[] =
     {MATCH_USBID, "matchusbid"},
     {MATCH_DRIVER, "matchdriver"},
     {MATCH_TAG, "matchtag"},
+    {MATCH_LAYOUT, "matchlayout"},
     {MATCH_IS_KEYBOARD, "matchiskeyboard"},
     {MATCH_IS_POINTER, "matchispointer"},
     {MATCH_IS_JOYSTICK, "matchisjoystick"},
@@ -94,6 +95,7 @@ xf86parseInputClassSection(void)
     list_init(&ptr->match_usbid);
     list_init(&ptr->match_driver);
     list_init(&ptr->match_tag);
+    list_init(&ptr->match_layout);
 
     while ((token = xf86getToken(InputClassTab)) != ENDSECTION) {
         switch (token) {
@@ -167,6 +169,12 @@ xf86parseInputClassSection(void)
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchTag");
             add_group_entry(&ptr->match_tag,
+                            xstrtokenize(val.str, TOKEN_SEP));
+            break;
+        case MATCH_LAYOUT:
+            if (xf86getSubToken(&(ptr->comment)) != STRING)
+                Error(QUOTE_MSG, "MatchLayout");
+            add_group_entry(&ptr->match_layout,
                             xstrtokenize(val.str, TOKEN_SEP));
             break;
         case MATCH_IS_KEYBOARD:
@@ -307,6 +315,13 @@ xf86printInputClassSection (FILE * cf, XF86ConfInputClassPtr ptr)
                         *cur);
             fprintf(cf, "\"\n");
         }
+        list_for_each_entry(group, &ptr->match_layout, entry) {
+            fprintf(cf, "\tMatchLayout     \"");
+            for (cur = group->values; *cur; cur++)
+                fprintf(cf, "%s%s", cur == group->values ? "" : TOKEN_SEP,
+                        *cur);
+            fprintf(cf, "\"\n");
+        }
 
         if (ptr->is_keyboard.set)
             fprintf(cf, "\tIsKeyboard      \"%s\"\n",
@@ -387,6 +402,12 @@ xf86freeInputClassList (XF86ConfInputClassPtr ptr)
             free(group);
         }
         list_for_each_entry_safe(group, next, &ptr->match_tag, entry) {
+            list_del(&group->entry);
+            for (list = group->values; *list; list++)
+                free(*list);
+            free(group);
+        }
+        list_for_each_entry_safe(group, next, &ptr->match_layout, entry) {
             list_del(&group->entry);
             for (list = group->values; *list; list++)
                 free(*list);

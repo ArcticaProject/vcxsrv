@@ -470,6 +470,20 @@ match_path_pattern(const char *attr, const char *pattern)
 #endif
 
 /*
+ * If no Layout section is found, xf86ServerLayout.id becomes "(implicit)"
+ * It is convenient that "" in patterns means "no explicit layout"
+ */
+static int
+match_string_implicit(const char *attr, const char *pattern)
+{
+    if (strlen(pattern)) {
+        return strcmp(attr, pattern);
+    } else {
+        return strcmp(attr,"(implicit)");
+    }
+}
+
+/*
  * Match an attribute against a list of NULL terminated arrays of patterns.
  * If a pattern in each list entry is matched, return TRUE.
  */
@@ -561,6 +575,13 @@ InputClassMatches(const XF86ConfInputClassPtr iclass, const InputInfoPtr idev,
             }
         }
         if (!match)
+            return FALSE;
+    }
+
+    /* MatchLayout string */
+    if (!list_is_empty(&iclass->match_layout)) {
+        if (!MatchAttrToken(xf86ConfigLayout.id,
+                            &iclass->match_layout, match_string_implicit))
             return FALSE;
     }
 

@@ -428,8 +428,8 @@ fbBltOne (FbStip    *src,
 
 #define Mask24(x,r) (Mask24Pos(x,r) < FB_UNIT ? \
 		     (Mask24Pos(x,r) < 0 ? \
-		      0xffffff >> Mask24Neg (x,r) : \
-		      0xffffff << Mask24Check(x,r)) : 0)
+		      0xffffffU >> Mask24Neg (x,r) : \
+		      0xffffffU << Mask24Check(x,r)) : 0)
 
 #define SelMask24(b,n,r)	((((b) >> n) & 1) * Mask24(n,r))
 

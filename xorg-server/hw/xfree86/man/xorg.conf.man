@@ -1140,6 +1140,16 @@ matches the
 pattern. A match is found if at least one of the tags given in
 .RI \*q matchtag \*q
 matches at least one of the tags assigned by the backend.
+.TP 7
+.BI "MatchLayout \*q" matchlayout \*q
+Check the case-sensitive string
+.RI \*q matchlayout \*q
+against the currently active
+.B ServerLayout
+section. The empty string "" matches an implicit layout which appears
+if no named
+.B ServerLayout
+sections have been found.
 .PP
 The second type of entry is used to match device types. These entries take a
 boolean argument similar to

@@ -43,6 +43,7 @@ in this Software without prior written authorization from The Open Group.
 # include   "windowstr.h"
 # include   "pixmapstr.h"
 # include   "inputstr.h"
+# include   "inpututils.h"
 # include   "mi.h"
 # include   "mipointer.h"
 # include   "scrnintstr.h"

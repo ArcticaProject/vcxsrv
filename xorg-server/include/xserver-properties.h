@@ -35,12 +35,20 @@
 /* BOOL. If present, device is a virtual XTEST device */
 #define XI_PROP_XTEST_DEVICE  "XTEST Device"
 
+/* CARD32, 2 values, vendor, product.
+ * This property is set by the driver and may not be available for some
+ * drivers. Read-Only */
+#define XI_PROP_PRODUCT_ID "Device Product ID"
+
 /* Coordinate transformation matrix for absolute input devices
  * FLOAT, 9 values in row-major order, coordinates in 0..1 range:
  * [c0 c1 c2]   [x]
  * [c3 c4 c5] * [y]
  * [c6 c7 c8]   [1] */
 #define XI_PROP_TRANSFORM "Coordinate Transformation Matrix"
+
+/* STRING. Device node path of device */
+#define XI_PROP_DEVICE_NODE "Device Node"
 
 /* Pointer acceleration properties */
 /* INTEGER of any format */

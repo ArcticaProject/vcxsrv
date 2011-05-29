@@ -370,13 +370,18 @@ ephyrDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
   return TRUE;
 }
 
+static void
+ephyrDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+}
+
 miPointerSpriteFuncRec EphyrPointerSpriteFuncs = {
 	ephyrRealizeCursor,
 	ephyrUnrealizeCursor,
 	ephyrSetCursor,
 	ephyrMoveCursor,
 	ephyrDeviceCursorInitialize,
-	NULL
+	ephyrDeviceCursorCleanup
 };
 
 
