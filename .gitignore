@@ -1,0 +1,12 @@
+obj
+obj_d
+objs
+*.exe
+*.dll
+Debug
+Release
+*.vcxproj.user
+*.lib
+*.pyc
+*.res
+*.pdb
