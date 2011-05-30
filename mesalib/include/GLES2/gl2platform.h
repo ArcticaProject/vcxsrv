@@ -1,7 +1,7 @@
 #ifndef __gl2platform_h_
 #define __gl2platform_h_
 
-/* $Revision$ on $Date:: 2010-03-04 22:35:34 -0800 #$ */
+/* $Revision: 10602 $ on $Date:: 2010-03-04 22:35:34 -0800 #$ */
 
 /*
  * This document is licensed under the SGI Free Software B License Version
