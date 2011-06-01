@@ -1,3 +1,4 @@
+*.orig
 obj
 obj_d
 objs
