@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: xkeyboard-config 2.1.99\n"
 "Report-Msgid-Bugs-To: svu@users.sourceforge.net\n"
 "POT-Creation-Date: 2011-03-25 22:27+0000\n"
-"PO-Revision-Date: 2011-03-27 23:35+0100\n"
+"PO-Revision-Date: 2011-04-04 18:56+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -19,23 +19,23 @@ msgstr ""
 
 #: ../rules/base.xml.in.h:1
 msgid "&lt;Less/Greater&gt;"
-msgstr "&lt;Mindre än/Större än&gt;"
+msgstr "‹Mindre än/Större än›"
 
 #: ../rules/base.xml.in.h:2
 msgid "&lt;Less/Greater&gt; (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)"
-msgstr "&lt;Mindre än/Större än&gt; (väljer tredje nivån, låses när nedtryckt tillsammans med annan 3rd-level-chooser)"
+msgstr "‹Mindre än/Större än› (väljer tredje nivån, låses när nedtryckt tillsammans med annan tredjenivåväljare)"
 
 #: ../rules/base.xml.in.h:3
 msgid "&lt;Less/Greater&gt; chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr "&lt;Mindre än/Större än&gt; väljer femte nivån och aktiverar level5-Lock när nedtryckt tillsammans med en annan 5th-level-chooser, ett tryck släpper på låset"
+msgstr "‹Mindre än/Större än› väljer femte nivån och aktiverar level5-Lock när nedtryckt tillsammans med en annan femtenivåväljare, ett tryck släpper på låset"
 
 #: ../rules/base.xml.in.h:4
 msgid "&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr "&lt;Mindre än/Större än&gt; väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser"
+msgstr "‹Mindre än/Större än› väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare"
 
 #: ../rules/base.xml.in.h:5
 msgid "&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr "&lt;Mindre än/Större än&gt; väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser, ett tryck släpper på låset"
+msgstr "‹Mindre än/Större än› väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare, ett tryck släpper på låset"
 
 #: ../rules/base.xml.in.h:6
 msgid "A4Tech KB-21"
@@ -259,7 +259,7 @@ msgstr "Azerbajdzjansk"
 
 #: ../rules/base.xml.in.h:61
 msgid "Azona RF2300 wireless Internet Keyboard"
-msgstr "Azona RF2300 wireless Internet Keyboard"
+msgstr "Azona RF2300 trådlöst internettangentbord"
 
 #: ../rules/base.xml.in.h:62
 msgid "BTC 5090"
@@ -303,7 +303,7 @@ msgstr "Omvänt snedstreck"
 
 #: ../rules/base.xml.in.h:72
 msgid "Backslash chooses 3rd level, latches when pressed together with another 3rd-level-chooser)"
-msgstr "Omvänt snedstreck väljer tredje nivån, låses när nedtryckt tillsammans med en annan 3rd-level-chooser)"
+msgstr "Omvänt snedstreck väljer tredje nivån, låses när nedtryckt tillsammans med en annan tredjenivåväljare)"
 
 #: ../rules/base.xml.in.h:73
 msgid "Bambara"
@@ -475,7 +475,7 @@ msgstr "Burmesisk"
 
 #: ../rules/base.xml.in.h:115
 msgid "Canadian Multilingual"
-msgstr "Kanadensisk (flerspråkig)"
+msgstr "Kanadensisk flerspråkig"
 
 #: ../rules/base.xml.in.h:116
 msgid "Canadian Multilingual (first part)"
@@ -491,7 +491,7 @@ msgstr "Caps Lock"
 
 #: ../rules/base.xml.in.h:119
 msgid "Caps Lock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)"
-msgstr "Caps Lock (väljer tredje nivån, låses när nedtryckt tillsammans med en annan 3rd-level-chooser)"
+msgstr "Caps Lock (väljer tredje nivån, låses när nedtryckt tillsammans med en annan tredjenivåväljare)"
 
 #: ../rules/base.xml.in.h:120
 msgid "Caps Lock (to first layout), Shift+Caps Lock (to last layout)"
@@ -635,7 +635,7 @@ msgstr "Control + Alt + Backsteg"
 
 #: ../rules/base.xml.in.h:155
 msgid "Control is mapped to Alt keys, Alt is mapped to Win keys"
-msgstr "Control är mappad till Win-tangenterna, Alt-tangenten är mappad till Win-tangenterna"
+msgstr "Control är mappad till Alt-tangenterna, Alt-tangenten är mappad till Win-tangenterna"
 
 #: ../rules/base.xml.in.h:156
 msgid "Control is mapped to Win keys (and the usual Ctrl keys)"
@@ -687,7 +687,7 @@ msgstr "Tjeckisk (US Dvorak med CZ UCW-stöd)"
 
 #: ../rules/base.xml.in.h:168
 msgid "Czech (With &lt;\\|&gt; key)"
-msgstr "Tjeckisk (Med &lt;\\|&gt;-tangent)"
+msgstr "Tjeckisk (Med ‹\\|›-tangent)"
 
 #: ../rules/base.xml.in.h:169
 msgid "Czech (qwerty)"
@@ -831,7 +831,7 @@ msgstr "Engelsk (Ghana, flerspråkig)"
 
 #: ../rules/base.xml.in.h:204
 msgid "English (India, with RupeeSign)"
-msgstr "Engelsk (Indien, med RupeeSign)"
+msgstr "Engelsk (Indien, med rupietecken)"
 
 #: ../rules/base.xml.in.h:205
 msgid "English (Macintosh)"
@@ -1874,11 +1874,11 @@ msgstr "Vänster Win-tangent (då den trycks ned)"
 
 #: ../rules/base.xml.in.h:466
 msgid "Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr "Vänster Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser"
+msgstr "Vänster Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare"
 
 #: ../rules/base.xml.in.h:467
 msgid "Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr "Vänster Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser, ett tryck släpper på låset"
+msgstr "Vänster Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare, ett tryck släpper på låset"
 
 #: ../rules/base.xml.in.h:468
 msgid "LeftCtrl+LeftWin (to first layout), RightCtrl+Menu (to second layout)"
@@ -2460,15 +2460,15 @@ msgstr "Höger Alt-tangent (då den trycks ned)"
 
 #: ../rules/base.xml.in.h:613
 msgid "Right Alt chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr "Höger Alt-tangent väljer femte nivån och aktiverar level5-Lock när nedtryckt tillsammans med en annan 5th-level-chooser, ett tryck släpper på låset"
+msgstr "Höger Alt-tangent väljer femte nivån och aktiverar level5-Lock när nedtryckt tillsammans med en annan femtenivåväljare, ett tryck släpper på låset"
 
 #: ../rules/base.xml.in.h:614
 msgid "Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr "Höger Alt-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser"
+msgstr "Höger Alt-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare"
 
 #: ../rules/base.xml.in.h:615
 msgid "Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr "Höger Alt-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser, ett tryck släpper på låset"
+msgstr "Höger Alt-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare, ett tryck släpper på låset"
 
 #: ../rules/base.xml.in.h:616
 msgid "Right Alt key never chooses 3rd level"
@@ -2512,11 +2512,11 @@ msgstr "Höger Win-tangent (då den trycks ned)"
 
 #: ../rules/base.xml.in.h:626
 msgid "Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser"
-msgstr "Höger Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser"
+msgstr "Höger Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare"
 
 #: ../rules/base.xml.in.h:627
 msgid "Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
-msgstr "Höger Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan 5th-level-chooser, ett tryck släpper på låset"
+msgstr "Höger Win-tangent väljer femte nivån, låses när nedtryckt tillsammans med en annan femtenivåväljare, ett tryck släpper på låset"
 
 #: ../rules/base.xml.in.h:628
 msgid "Romanian"
@@ -2860,7 +2860,7 @@ msgstr "Spansk (Inkludera dött tilde-tecken)"
 
 #: ../rules/base.xml.in.h:713
 msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server"
-msgstr "Specialtangenter (Ctrl+Alt+&lt;tangent&gt;) hanteras i en server"
+msgstr "Specialtangenter (Ctrl+Alt+‹tangent›) hanteras i en server"
 
 #: ../rules/base.xml.in.h:714
 msgid "Sun Type 5/6"

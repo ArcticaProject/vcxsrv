@@ -36,10 +36,12 @@ main (int argc, char **argv)
     };
 #endif
 
+#if 0
     pixman_point_fixed_t c_inner;
     pixman_point_fixed_t c_outer;
     pixman_fixed_t r_inner;
     pixman_fixed_t r_outer;
+#endif
     
     for (i = 0; i < WIDTH * HEIGHT; ++i)
 	dest[i] = 0x4f00004f; /* pale blue */
@@ -49,6 +51,7 @@ main (int argc, char **argv)
 					 dest,
 					 WIDTH * 4);
 
+#if 0
     c_inner.x = pixman_double_to_fixed (50.0);
     c_inner.y = pixman_double_to_fixed (50.0);
     c_outer.x = pixman_double_to_fixed (50.0);
@@ -58,6 +61,7 @@ main (int argc, char **argv)
     
     src_img = pixman_image_create_conical_gradient (&c_inner, r_inner,
 						    stops, 2);
+#endif
 #if 0
     src_img = pixman_image_create_conical_gradient (&c_inner, r_inner,
 						    stops, 2);
