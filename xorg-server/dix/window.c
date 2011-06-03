@@ -475,6 +475,7 @@ InitRootWindow(WindowPtr pWin)
         pWin->background.pixel = pScreen->whitePixel;
         backFlag |= CWBackPixmap;
     } else {
+        pWin->backgroundState = BackgroundPixel;
 	if (whiteRoot)
             pWin->background.pixel = pScreen->whitePixel;
         else
@@ -973,6 +974,7 @@ SetRootWindowBackground(WindowPtr pWin, ScreenPtr pScreen, Mask *index2)
     else if (party_like_its_1989)
 	MakeRootTile(pWin);
     else {
+        pWin->backgroundState = BackgroundPixel;
 	if (whiteRoot)
 	    pWin->background.pixel = pScreen->whitePixel;
 	else

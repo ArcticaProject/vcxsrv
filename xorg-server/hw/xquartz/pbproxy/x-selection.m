@@ -683,7 +683,11 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	return;
     }
 
+#ifdef __LP64__
+    DebugF ("pbtypes retainCount after containsObject: %lu\n", [pbtypes retainCount]);
+#else
     DebugF ("pbtypes retainCount after containsObject: %u\n", [pbtypes retainCount]);
+#endif
 
     data = [pb stringForType:NSStringPboardType];
 
@@ -704,7 +708,11 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	
 	if (length < 50) {
 	    DebugF ("UTF-8: %s\n", bytes);
+#ifdef __LP64__
+	    DebugF ("UTF-8 length: %lu\n", length); 
+#else
 	    DebugF ("UTF-8 length: %u\n", length); 
+#endif
 	}
     } 
     else 
@@ -1223,8 +1231,13 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	return;
     }
 
+#ifdef __LP64__
+    DebugF ("data retainCount before NSBitmapImageRep initWithData: %lu\n",
+	[data retainCount]);
+#else
     DebugF ("data retainCount before NSBitmapImageRep initWithData: %u\n",
 	[data retainCount]);
+#endif
 
     bmimage = [[NSBitmapImageRep alloc] initWithData:data];
 
@@ -1235,8 +1248,13 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	return;
     }
 
+#ifdef __LP64__
+    DebugF ("data retainCount after NSBitmapImageRep initWithData: %lu\n", 
+	[data retainCount]);
+#else
     DebugF ("data retainCount after NSBitmapImageRep initWithData: %u\n", 
 	[data retainCount]);
+#endif
 
     @try 
     {
@@ -1251,7 +1269,11 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	return;
     }
     
+#ifdef __LP64__
+    DebugF ("bmimage retainCount after TIFFRepresentation %lu\n", [bmimage retainCount]);
+#else
     DebugF ("bmimage retainCount after TIFFRepresentation %u\n", [bmimage retainCount]);
+#endif
 
     pbtypes = [NSArray arrayWithObjects:NSTIFFPboardType, nil];
 
@@ -1270,7 +1292,12 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 
     [data autorelease];
 
+#ifdef __LP64__
+    DebugF ("bmimage retainCount before release %lu\n", [bmimage retainCount]);
+#else
     DebugF ("bmimage retainCount before release %u\n", [bmimage retainCount]);
+#endif
+
     [bmimage autorelease];
 }
 

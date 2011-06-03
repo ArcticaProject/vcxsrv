@@ -1,6 +1,6 @@
 // X Keyboard Extension file for Sinhala (Sri Lanka) (2004-04-22)
 // Maintainer  : Harshula Jayasuriya <harshula@gmail.com>
-// Last Updated: 2011-03-20
+// Last Updated: 2011-05-25
 // This is a phonetic static mapping for a standard US-English keyboard
 // (qwerty)
 // http://www.nongnu.org/sinhala/doc/keymaps/sinhala-keyboard_3.html
@@ -32,8 +32,7 @@ partial default alphanumeric_keys
 xkb_symbols "sin_phonetic" {
 
   include "us"
-// it is default - no details in the name
-  name[Group1] = "Sinhala";
+  name[Group1] = "Sinhala (phonetic)";
   key.type[Group1] = "FOUR_LEVEL";
 
   // q - p

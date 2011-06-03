@@ -38,6 +38,27 @@
     </layout>
     <layout>
       <configItem>
+        <name>de</name>
+        <_shortDescription>de</_shortDescription>
+        <_description>German</_description>
+        <languageList>
+          <iso639Id>ger</iso639Id>
+        </languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>us</name>
+            <_description>German (US keyboard with German letters)</_description>
+            <languageList>
+              <iso639Id>eng</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
         <name>ir</name>
         <_shortDescription>fa</_shortDescription>
         <_description>Persian</_description>
@@ -241,7 +262,7 @@
           <configItem>
             <name>ruu</name>
             <_shortDescription>ru</_shortDescription>
-            <_description>Russian (with UKR and BEL layout)</_description>
+            <_description>Russian (with Ukrainian-Belorussian layout)</_description>
             <languageList><iso639Id>rus</iso639Id>
                           <iso639Id>ukr</iso639Id>
                           <iso639Id>bel</iso639Id></languageList>

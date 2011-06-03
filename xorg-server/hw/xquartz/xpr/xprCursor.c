@@ -37,7 +37,6 @@
 
 #include "quartz.h"
 #include "xpr.h"
-#include "darwin.h"
 #include "darwinEvents.h"
 #include <Xplugin.h>
 

@@ -139,8 +139,6 @@ int main(int argc, char *argv[], char *envp[])
 
     InitRegions();
 
-    pixman_disable_out_of_bounds_workaround();
-
     CheckUserParameters(argc, argv, envp);
 
     CheckUserAuthorization();

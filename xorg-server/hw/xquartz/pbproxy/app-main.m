@@ -63,6 +63,17 @@ ErrorF(const char * f, ...)
     va_end(args);
 }
 
+/* TODO: Have this actually log to ASL */
+void xq_asl_log (int level, const char *subsystem, const char *file, const char *function, int line, const char *fmt, ...) {
+#ifdef DEBUG
+    va_list args;
+
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+#endif
+}
+
 int main (int argc, const char *argv[]) {
     const char *s;
     int i;
