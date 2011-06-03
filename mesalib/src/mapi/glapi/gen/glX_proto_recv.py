@@ -277,7 +277,10 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 			if param.is_image():
 				offset = f.offset_of( param.name )
 
-				print '%s    %s const %s = (%s) (%s(pc + %s));' % (indent, type_string, param.name, type_string, cond, offset)
+				if cond:
+					print '%s    %s const %s = (%s) (%s(pc + %s));' % (indent, type_string, param.name, type_string, cond, offset)
+				else:
+					print '%s    %s const %s = (%s) (pc + %s);' % (indent, type_string, param.name, type_string, offset)
 				
 				if param.depth:
 					print '%s    __GLXpixel3DHeader * const hdr = (__GLXpixel3DHeader *)(pc);' % (indent)
@@ -364,8 +367,9 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 		else:
 			for param in f.parameterIterateGlxSend():
 				if param.count_parameter_list:
-					print '%s    %s = (%s) (pc + %s);' % (indent, param.name, param.type_string(), param.offset)
-					need_blank = 1
+					if param.size() != 1 or self.do_swap:
+						print '%s    %s = (%s) (pc + %s);' % (indent, param.name, param.type_string(), param.offset)
+						need_blank = 1
 
 
 		if need_blank:
