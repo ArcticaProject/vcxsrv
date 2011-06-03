@@ -155,12 +155,8 @@ typedef long long GLint64EXT;
 
 __GLXprovider * GlxGetDRISWrastProvider (void);
 
-// Write debugging output, or not
-#ifdef GLAQUA_DEBUG
-#define GLAQUA_DEBUG_MSG ErrorF
-#else
-#define GLAQUA_DEBUG_MSG(a, ...)
-#endif
+#include "darwin.h"
+#define GLAQUA_DEBUG_MSG(msg, args...) ASL_LOG(ASL_LEVEL_DEBUG, "GLXAqua", msg, ##args)
 
 static void setup_dispatch_table(void);
 GLuint __glFloorLog2(GLuint val);
@@ -666,7 +662,15 @@ GLuint __glFloorLog2(GLuint val)
 }
 
 static void setup_dispatch_table(void) {
-    struct _glapi_table *disp=_glapi_get_dispatch();
+    static struct _glapi_table *disp = NULL;
+
+    if(disp)  {
+        _glapi_set_dispatch(disp);
+        return;
+    }
+
+    disp=calloc(1,sizeof(struct _glapi_table));
+    assert(disp);
 
     /* to update:
      * for f in $(grep 'define SET_' ../../../glx/dispatch.h  | cut -f2 -d' ' | cut -f1 -d\( | sort -u); do grep -q $f indirect.c || echo $f ; done | grep -v by_offset | sed 's:SET_\(.*\)$:SET_\1(disp, gl\1)\;:' | pbcopy
@@ -1610,4 +1614,6 @@ static void setup_dispatch_table(void) {
     SET_PixelTexGenParameterivSGIS(disp, glPixelTexGenParameterivSGIS);
     SET_PixelTexGenSGIX(disp, glPixelTexGenSGIX);
 #endif
+
+    _glapi_set_dispatch(disp);
 }

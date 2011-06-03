@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2010 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -47,10 +48,6 @@
 
 #include "xfixesint.h"
 #include "protocol-versions.h"
-/*
- * Must use these instead of the constants from xfixeswire.h.  They advertise
- * what we implement, not what the protocol headers define.
- */
 
 static unsigned char	XFixesReqCode;
 int		XFixesEventBase;
@@ -97,11 +94,12 @@ ProcXFixesQueryVersion(ClientPtr client)
 
 /* Major version controls available requests */
 static const int version_requests[] = {
-    X_XFixesQueryVersion,	/* before client sends QueryVersion */
-    X_XFixesGetCursorImage,	/* Version 1 */
-    X_XFixesChangeCursorByName,	/* Version 2 */
-    X_XFixesExpandRegion,	/* Version 3 */
-    X_XFixesShowCursor,	        /* Version 4 */
+    X_XFixesQueryVersion,	    /* before client sends QueryVersion */
+    X_XFixesGetCursorImage,	    /* Version 1 */
+    X_XFixesChangeCursorByName,	    /* Version 2 */
+    X_XFixesExpandRegion,	    /* Version 3 */
+    X_XFixesShowCursor,		    /* Version 4 */
+    X_XFixesDestroyPointerBarrier,  /* Version 5 */
 };
 
 #define NUM_VERSION_REQUESTS	(sizeof (version_requests) / sizeof (version_requests[0]))
@@ -142,6 +140,9 @@ int	(*ProcXFixesVector[XFixesNumberRequests])(ClientPtr) = {
 /*************** Version 4 ****************/
     ProcXFixesHideCursor,
     ProcXFixesShowCursor,
+/*************** Version 5 ****************/
+    ProcXFixesCreatePointerBarrier,
+    ProcXFixesDestroyPointerBarrier,
 };
 
 static int
@@ -205,6 +206,9 @@ static int (*SProcXFixesVector[XFixesNumberRequests])(ClientPtr) = {
 /*************** Version 4 ****************/
     SProcXFixesHideCursor,
     SProcXFixesShowCursor,
+/*************** Version 5 ****************/
+    SProcXFixesCreatePointerBarrier,
+    SProcXFixesDestroyPointerBarrier,
 };
 
 static int
@@ -260,6 +264,8 @@ XFixesExtensionInit(void)
 	EventSwapVector[XFixesEventBase + XFixesCursorNotify] =
 	    (EventSwapPtr) SXFixesCursorNotifyEvent;
 	SetResourceTypeErrorValue(RegionResType, XFixesErrorBase + BadRegion);
+	SetResourceTypeErrorValue(PointerBarrierType,
+				  XFixesErrorBase + BadBarrier);
     }
 }
 

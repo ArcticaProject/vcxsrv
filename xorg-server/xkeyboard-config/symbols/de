@@ -594,3 +594,23 @@ xkb_symbols "htcdream" {
 
         include "level3(alt_switch)"
 };
+
+partial alphanumeric_keys
+xkb_symbols "us" {
+    include "us"
+
+    name[Group1]="German (US keyboard with German letters)";
+
+    key <AC01> { [           a,          A, adiaeresis, Adiaeresis ] };
+    key <AC02> { [           s,          S,     ssharp,     ssharp ] };
+    key <AC10> { [   semicolon,      colon, odiaeresis, Odiaeresis ] };
+    key <AC11> { [  apostrophe,   quotedbl, adiaeresis, Adiaeresis ] };
+    key <AD03> { [           e,          E,   EuroSign,   EuroSign ] };
+    key <AD07> { [           u,          U, udiaeresis, Udiaeresis ] };
+    key <AD09> { [           o,          O, odiaeresis, Odiaeresis ] };
+    key <AD11> { [ bracketleft,  braceleft, udiaeresis, Udiaeresis ] };
+    key <AE03> { [           3, numbersign,    section,    section ] };
+    key <AE11> { [       minus, underscore,     ssharp,   question ] };
+
+    include "level3(ralt_switch)"
+};

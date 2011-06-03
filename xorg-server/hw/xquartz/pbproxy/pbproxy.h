@@ -32,6 +32,8 @@
 
 #import  <Foundation/Foundation.h>
 
+#include <asl.h>
+
 #include <AvailabilityMacros.h>
 #if MAC_OS_X_VERSION_MIN_REQUIRED < 1050
 #if __LP64__ || NS_BUILD_32_LIKE_64
@@ -80,13 +82,12 @@ extern BOOL xpbproxy_input_register (void);
 /* os/log.c or app-main.m */
 extern void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
 
-#ifdef DEBUG
-/* BEWARE: this can cause a string memory leak, according to the leaks program. */
-# define DebugF(msg, args...) ErrorF("%s:%s:%d " msg, __FILE__, __FUNCTION__, __LINE__, ##args)
-#else
-# define DebugF(...) /* */
-#endif
+/* from darwin.h */
+_X_ATTRIBUTE_PRINTF(6,7)
+extern void xq_asl_log (int level, const char *subsystem, const char *file, const char *function, int line, const char *fmt, ...);
 
-#define TRACE() DebugF("TRACE\n")
+#define ASL_LOG(level, subsystem, msg, args...) xq_asl_log(level, subsystem, __FILE__, __FUNCTION__, __LINE__, msg, ##args)
+#define DebugF(msg, args...) ASL_LOG(ASL_LEVEL_DEBUG, "xpbproxy", msg, ##args)
+#define TRACE() DebugF("TRACE")
 
 #endif /* PBPROXY_H */

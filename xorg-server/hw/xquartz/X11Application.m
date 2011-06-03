@@ -188,7 +188,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
 
 - (void) activateX:(OSX_BOOL)state {
     size_t i;
-    DEBUG_LOG("state=%d, _x_active=%d, \n", state, _x_active)
+    DEBUG_LOG("state=%d, _x_active=%d, \n", state, _x_active);
     if (state) {
         if(bgMouseLocationUpdated) {
             DarwinSendPointerEvents(darwinPointer, MotionNotify, 0, bgMouseLocation.x, bgMouseLocation.y, 0.0, 0.0, 0.0);

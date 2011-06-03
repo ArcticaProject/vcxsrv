@@ -44,7 +44,6 @@
 #include   "scrnintstr.h"
 #include   "mipointer.h"
 
-#include "darwin.h"
 #include "quartz.h"
 #include "quartzKeyboard.h"
 #include "darwinEvents.h"

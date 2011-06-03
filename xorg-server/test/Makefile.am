@@ -1,7 +1,7 @@
 if ENABLE_UNIT_TESTS
 if HAVE_LD_WRAP
 SUBDIRS= . xi2
-noinst_PROGRAMS = xkb input xtest list misc
+noinst_PROGRAMS = xkb input xtest list misc fixes
 check_LTLIBRARIES = libxservertest.la
 
 TESTS=$(noinst_PROGRAMS)
@@ -19,6 +19,7 @@ input_LDADD=$(TEST_LDADD)
 xtest_LDADD=$(TEST_LDADD)
 list_LDADD=$(TEST_LDADD)
 misc_LDADD=$(TEST_LDADD)
+fixes_LDADD=$(TEST_LDADD)
 
 libxservertest_la_LIBADD = \
             $(XSERVER_LIBS) \

@@ -22,6 +22,7 @@ dnl
 dnl Authors: Jeremy Huddleston <jeremyhu@apple.com>
 
 AC_DEFUN([XORG_TLS], [
+    AC_REQUIRE([XORG_STRICT_OPTION])
     AC_MSG_CHECKING(for thread local storage (TLS) support)
     AC_CACHE_VAL(ac_cv_tls, [
         ac_cv_tls=none
@@ -36,10 +37,7 @@ AC_DEFUN([XORG_TLS], [
         AC_MSG_CHECKING(for tls_model attribute support)
         AC_CACHE_VAL(ac_cv_tls_model, [
             save_CFLAGS="$CFLAGS"
-            dnl -Werror causes clang's default -Wunknown-attributes to become an error
-            dnl We can't use -Werror=unknown-attributes because gcc doesn't understand it
-            dnl -Werror=attributes is for gcc, clang seems to ignore it
-            CFLAGS="$CFLAGS -Werror -Werror=attributes"
+            CFLAGS="$CFLAGS $STRICT_CFLAGS"
             AC_TRY_COMPILE([int $ac_cv_tls __attribute__((tls_model("initial-exec"))) test;], [],
                            ac_cv_tls_model=yes, ac_cv_tls_model=no)
             CFLAGS="$save_CFLAGS"

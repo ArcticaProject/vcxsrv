@@ -76,9 +76,11 @@ extern int              darwinMainScreenY;
 // bundle-main.c
 extern char *bundle_id_prefix;
 
-extern void debug_asl (const char *file, const char *function, int line, const char *fmt, ...) _X_ATTRIBUTE_PRINTF(4,5);
+_X_ATTRIBUTE_PRINTF(6,7)
+extern void xq_asl_log (int level, const char *subsystem, const char *file, const char *function, int line, const char *fmt, ...);
 
-#define DEBUG_LOG(msg, args...) debug_asl(__FILE__, __FUNCTION__, __LINE__, msg, ##args);
+#define ASL_LOG(level, subsystem, msg, args...) xq_asl_log(level, subsystem, __FILE__, __FUNCTION__, __LINE__, msg, ##args)
+#define DEBUG_LOG(msg, args...) ASL_LOG(ASL_LEVEL_DEBUG, "XQuartz", msg, ##args)
 #define TRACE() DEBUG_LOG("TRACE")
 
 #endif  /* _DARWIN_H */

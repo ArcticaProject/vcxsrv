@@ -2132,7 +2132,7 @@
         <variant>
           <configItem>
             <name>qwerty</name>
-            <_description>English (Cameroon qwerty)</_description>
+            <_description>Cameroon Multilingual (qwerty)</_description>
             <languageList>
               <iso639Id>eng</iso639Id>
               <iso639Id>bas</iso639Id>
@@ -2169,7 +2169,7 @@
         <variant>
           <configItem>
             <name>azerty</name>
-            <_description>French (Cameroon azerty)</_description>
+            <_description>Cameroon Multilingual (azerty)</_description>
             <languageList>
               <iso639Id>fra</iso639Id>
               <iso639Id>bas</iso639Id>
@@ -4453,7 +4453,7 @@
       <configItem>
         <name>lk</name>
         <_shortDescription>si</_shortDescription>
-        <_description>Sinhala</_description>
+        <_description>Sinhala (phonetic)</_description>
         <languageList>
           <iso639Id>sin</iso639Id>
         </languageList>
