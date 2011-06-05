@@ -473,7 +473,7 @@ start of the function name with DBE. All functions that have return type
 zero for failure.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdbequeryextension'>
 <funcprototype>
   <funcdef>Status <function>XdbeQueryExtension</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -494,7 +494,7 @@ violates this rule, the effects of all subsequent Xdbe calls that it makes
 are undefined.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdbegetvisualinfo'>
 <funcprototype>
   <funcdef>XdbeScreenVisualInfo *<function>XdbeGetVisualInfo</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -555,7 +555,7 @@ int              perflevel  performance level of visual
 </para>
 
 
-<funcsynopsis>
+<funcsynopsis id='xdbeallocatebackbuffername'>
 <funcprototype>
   <funcdef>XdbeBackBuffer <function>XdbeAllocateBackBufferName</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -575,7 +575,7 @@ the same as the swap_action passed to this function, though clients are
 encouraged to provide accurate information whenever possible.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdbedeallocatebackbuffername'>
 <funcprototype>
   <funcdef>Status <function>XdbeDeallocateBackBufferName</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -591,7 +591,7 @@ name for the back buffer of a window, or an
 <function>XdbeBadBuffer</function> error results.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdbeswapbuffers'>
 <funcprototype>
   <funcdef>Status <function>XdbeSwapBuffers</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -616,7 +616,7 @@ Window              swap_window    window for which to swap buffers
 XdbeSwapAction      swap_action    swap action to use for this swap window
 </literallayout>
 
-<funcsynopsis>
+<funcsynopsis id='xdbebeginidiom'>
 <funcprototype>
   <funcdef>Status <function>XdbeBeginIdiom</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -631,7 +631,7 @@ sequence. See
 for a complete discussion of idioms.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdbeendidiom'>
 <funcprototype>
   <funcdef>Status <function>XdbeEndIdiom</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -642,7 +642,7 @@ for a complete discussion of idioms.
 <function>XdbeEndIdiom</function> marks the end of an idiom sequence.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xdbegetbackbufferattributes'>
 <funcprototype>
   <funcdef>XdbeBackBufferAttributes *<function>XdbeGetBackBufferAttributes</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>

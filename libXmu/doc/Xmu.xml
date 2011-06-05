@@ -204,7 +204,7 @@ another round-trip to the server.
       <indexterm zone="XmuMakeAtom">
 	<primary><function>XmuMakeAtom</function></primary>
       </indexterm>
-      <funcsynopsis>
+      <funcsynopsis id='xmumakeatom'>
 	<funcprototype>
 	  <funcdef>AtomPtr <function>XmuMakeAtom</function></funcdef>
 	  <paramdef>const char *<parameter>name</parameter></paramdef>
@@ -233,7 +233,7 @@ can be used to cache the Atom value for one or more displays.
       <indexterm zone="XmuNameOfAtom">
 	<primary><function>XmuNameOfAtom</function></primary>
       </indexterm>
-      <funcsynopsis>
+      <funcsynopsis id='xmunameofatom'>
 	<funcprototype>
 	  <funcdef>char *<function>XmuNameOfAtom</function></funcdef>
 	  <paramdef>AtomPtr <parameter>atom_ptr</parameter></paramdef>
@@ -255,7 +255,7 @@ The function returns the name of an AtomPtr.
       <indexterm zone="XmuInternAtom">
 	<primary><function>XmuInternAtom</function></primary>
       </indexterm>
-      <funcsynopsis>
+      <funcsynopsis id='xmuinternatom'>
 	<funcprototype>
 	  <funcdef>Atom <function>XmuInternAtom</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -291,7 +291,7 @@ such that subsequent requests do not cause another round-trip to the server.
       <indexterm zone="XmuGetAtomName">
 	<primary><function>XmuGetAtomName</function></primary>
       </indexterm>
-      <funcsynopsis>
+      <funcsynopsis id='xmugetatomname'>
 	<funcprototype>
 	  <funcdef>char *<function>XmuGetAtomName</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -323,7 +323,7 @@ requests do not cause another round-trip to the server.
       <indexterm zone="XmuInternStrings">
 	<primary><function>XmuInternStrings</function></primary>
       </indexterm>
-      <funcsynopsis>
+      <funcsynopsis id='xmuinternstrings'>
 	<funcprototype>
 	  <funcdef>void <function>XmuInternStrings</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -385,7 +385,7 @@ and link against the libXmu or libXmuu library.
       <indexterm zone="XmuPrintDefaultErrorMessage">
 	<primary><function>XmuPrintDefaultErrorMessage</function></primary>
       </indexterm>
-      <funcsynopsis>
+      <funcsynopsis id='xmuprintdefaulterrormessage'>
 	<funcprototype>
 	  <funcdef>int <function>XmuPrintDefaultErrorMessage</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
