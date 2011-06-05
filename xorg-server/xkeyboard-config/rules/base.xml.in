@@ -627,6 +627,7 @@
         <name>logii350</name>
         <_description>Logitech Internet 350 Keyboard</_description>
         <vendor>Logitech</vendor>
+        <hwList> <hwId>046d:c313</hwId></hwList>
       </configItem>
     </model>
     <model>
@@ -3024,12 +3025,6 @@
             <languageList>
               <iso639Id>dsb</iso639Id>
             </languageList>
-          </configItem>
-        </variant>
-        <variant>
-          <configItem>
-            <name>qwerty</name>
-            <_description>German (qwerty)</_description>
           </configItem>
         </variant>
         <variant>

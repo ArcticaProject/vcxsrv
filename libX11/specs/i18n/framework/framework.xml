@@ -195,7 +195,7 @@ typedef int XlcPosition;
 #define   XlcTail
 </literallayout>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcaddloader'>
 <funcprototype>
   <funcdef>Bool <function> _XlcAddLoader</function></funcdef>
   <paramdef>XLCdLoadProc<parameter> proc</parameter></paramdef>
@@ -221,7 +221,7 @@ when calling time.
 <function>Remove a loader</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcremoveloader'>
 <funcprototype>
   <funcdef>void <function> _XlcRemoveLoader</function></funcdef>
   <paramdef>XLCdLoadProc<parameter> proc</parameter></paramdef>
@@ -274,7 +274,7 @@ independently each other.
 <function>Open a Locale Method</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xopenlc'>
 <funcprototype>
   <funcdef>XLCd <function> _XOpenLC</function></funcdef>
   <paramdef>char<parameter> *name</parameter></paramdef>
@@ -310,7 +310,7 @@ function returns an XLCd that are bound to current locale.
 <emphasis role="bold">Close a Locale Method</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xcloselc'>
 <funcprototype>
   <funcdef>void <function> _XCloseLC</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -328,7 +328,7 @@ function close a locale method the specified lcd.
 <emphasis role="bold">Obtain Locale Method values</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xgetlcvalues'>
 <funcprototype>
   <funcdef>char *<function>_XGetLCValues</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -439,7 +439,7 @@ typedef struct _XlcCharSetRec {
 <emphasis role="bold">Get an XlcCharSet</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcgetcharset'>
 <funcprototype>
   <funcdef>XlcCharSet <function> _XlcGetCharSet</function></funcdef>
   <paramdef>char<parameter> *name</parameter></paramdef>
@@ -594,7 +594,7 @@ The following character sets are pre-registered.
 <emphasis role="bold">Add an XlcCharSet</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcaddcharset'>
 <funcprototype>
   <funcdef>Bool <function> _XlcAddCharSet</function></funcdef>
   <paramdef>XlcCharSet<parameter> charset</parameter></paramdef>
@@ -613,7 +613,7 @@ function registers XlcCharSet specified by "<emphasis remap='I'>charset</emphasi
 <function>Obtain Character Set values</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcgetcsvalues'>
 <funcprototype>
   <funcdef>char * <function> _XlcGetCSValues</function></funcdef>
   <paramdef>XlcCharSet<parameter> charset</parameter></paramdef>
@@ -720,7 +720,7 @@ typedef struct _XlcConvRec {
 <function>Open a converter</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcopenconverter'>
 <funcprototype>
   <funcdef>XlcConv <function> _XlcOpenConverter</function></funcdef>
   <paramdef>XLCd<parameter> from_lcd</parameter></paramdef>
@@ -803,7 +803,7 @@ dependent.
 <emphasis role="bold">Close a converter</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlccloseconverter'>
 <funcprototype>
   <funcdef>void <function> _XlcCloseConverter</function></funcdef>
   <paramdef>XlcConv<parameter> conv</parameter></paramdef>
@@ -820,7 +820,7 @@ function closes the specified converter "<emphasis remap='I'>conv</emphasis>".
 <emphasis role="bold">Code conversion</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcconvert'>
 <funcprototype>
   <funcdef>int <function> _XlcConvert</function></funcdef>
   <paramdef>XlcConv<parameter> conv</parameter></paramdef>
@@ -894,7 +894,7 @@ More than one segment cannot be converted in a call.
 <emphasis role="bold">Reset a converter</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcresetconverter'>
 <funcprototype>
   <funcdef>void <function> _XlcResetConverter</function></funcdef>
   <paramdef>XlcConv<parameter> conv</parameter></paramdef>
@@ -919,7 +919,7 @@ typedef XlcConv (*XlcOpenConverterProc)(<emphasis remap='I'>from_lcd</emphasis>,
       char <emphasis remap='I'>*to_type</emphasis>;
 </literallayout>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcsetconverter'>
 <funcprototype>
   <funcdef>Bool <function> _XlcSetConverter</function></funcdef>
   <paramdef>XLCd<parameter> from_lcd</parameter></paramdef>
@@ -954,7 +954,7 @@ X Locale Database Definition document.
 <emphasis role="bold">Get a resource from database</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcgetresource'>
 <funcprototype>
   <funcdef>void <function> _XlcGetResource</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -993,7 +993,7 @@ or freed by caller.
 <emphasis role="bold">Get a locale relative file name</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcfilename'>
 <funcprototype>
   <funcdef>char *<function>_XlcFileName</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -1028,14 +1028,14 @@ strings, a full locale name and a corresponding file name.
 <emphasis role="bold">Compare Latin-1 strings</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlccompareisolatin1'>
 <funcprototype>
   <funcdef>int <function> _XlcCompareISOLatin1</function></funcdef>
   <paramdef>char*str1,<parameter> *str2</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcncompareisolatin1'>
 <funcprototype>
   <funcdef>int <function> _XlcNCompareISOLatin1</function></funcdef>
   <paramdef>char*str1,<parameter> *str2</parameter></paramdef>
@@ -1065,7 +1065,7 @@ except that at most "<emphasis remap='I'>len</emphasis>" bytes are compared.
 <emphasis role="bold">Resource Utility</emphasis>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xlcnumber'>
 <funcprototype>
   <funcdef>int <function> XlcNumber</function></funcdef>
   <paramdef>ArrayType<parameter> array</parameter></paramdef>
@@ -1076,7 +1076,7 @@ except that at most "<emphasis remap='I'>len</emphasis>" bytes are compared.
 Similar to XtNumber.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlccopyfromarg'>
 <funcprototype>
   <funcdef>void <function> _XlcCopyFromArg</function></funcdef>
   <paramdef>char<parameter> *src</parameter></paramdef>
@@ -1085,7 +1085,7 @@ Similar to XtNumber.
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis>
+<funcsynopsis id='_xlccopytoarg'>
 <funcprototype>
   <funcdef>void <function> _XlcCopyToArg</function></funcdef>
   <paramdef>char<parameter> *src</parameter></paramdef>
@@ -1101,7 +1101,7 @@ and
 <function>_XtCopyToArg.</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlccountvalist'>
 <funcprototype>
   <funcdef>void <function> _XlcCountVaList</function></funcdef>
   <paramdef>va_list<parameter> var</parameter></paramdef>
@@ -1114,7 +1114,7 @@ Similar to
 <function>_XtCountVaList.</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcvatoarglist'>
 <funcprototype>
   <funcdef>void <function> _XlcVaToArgList</function></funcdef>
   <paramdef>va_list<parameter> var</parameter></paramdef>
@@ -1146,7 +1146,7 @@ typedef struct _XlcResource {
 #define    XlcIgnoreMask   (1L&lt;&lt;4)
 </literallayout>
 
-<funcsynopsis>
+<funcsynopsis id='_xlccompileresourcelist'>
 <funcprototype>
   <funcdef>void <function> _XlcCompileResourceList</function></funcdef>
   <paramdef>XlcResourceList<parameter> resources</parameter></paramdef>
@@ -1159,7 +1159,7 @@ Similar to
 <function>_XtCompileResourceList.</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcgetvalues'>
 <funcprototype>
   <funcdef>char * <function> _XlcGetValues</function></funcdef>
   <paramdef>XPointer<parameter> base</parameter></paramdef>
@@ -1175,7 +1175,7 @@ Similar to
 Similar to XtGetSubvalues.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcsetvalues'>
 <funcprototype>
   <funcdef>char * <function> _XlcSetValues</function></funcdef>
   <paramdef>XPointer<parameter> base</parameter></paramdef>
@@ -1199,7 +1199,7 @@ Similar to XtSetSubvalues.
 The following are ANSI C/MSE Compatible Functions for non-ANSI C environment.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xmblen'>
 <funcprototype>
   <funcdef>int <function> _Xmblen</function></funcdef>
   <paramdef>char<parameter> *str</parameter></paramdef>
@@ -1223,7 +1223,7 @@ is equivalent to
 _Xmbtowc(_Xmbtowc((<emphasis remap='I'>wchar_t*</emphasis>)NULL, <emphasis remap='I'>str</emphasis>, <emphasis remap='I'>len</emphasis>))
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xmbtowc'>
 <funcprototype>
   <funcdef>int <function> _Xmbtowc</function></funcdef>
   <paramdef>wchar_t<parameter> *wstr</parameter></paramdef>
@@ -1248,7 +1248,7 @@ is equivalent to
 _Xlcmbtowc((XLCd)NULL, <emphasis remap='I'>wstr</emphasis>, <emphasis remap='I'>str</emphasis>, <emphasis remap='I'>len</emphasis>)
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcmbtowc'>
 <funcprototype>
   <funcdef>int <function> _Xlcmbtowc</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -1271,7 +1271,7 @@ calls
 to determine the current locale.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xwctomb'>
 <funcprototype>
   <funcdef>int <function> _Xwctomb</function></funcdef>
   <paramdef>char<parameter> *str</parameter></paramdef>
@@ -1294,7 +1294,7 @@ is equivalent to
 _Xlcwctomb((XLCd)NULL, <emphasis remap='I'>str</emphasis>, <emphasis remap='I'>wstr</emphasis>)
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcwctomb'>
 <funcprototype>
   <funcdef>int <function> _Xlcwctomb</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -1314,7 +1314,7 @@ calls
 to determine the current locale.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xmbstowcs'>
 <funcprototype>
   <funcdef>int <function> _Xmbstowcs</function></funcdef>
   <paramdef>wchar_t<parameter> *wstr</parameter></paramdef>
@@ -1338,7 +1338,7 @@ is equivalent to
 _Xlcmbstowcs((XLCd)NULL, <emphasis remap='I'>wstr</emphasis>, <emphasis remap='I'>str</emphasis>, <emphasis remap='I'>len</emphasis>)
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcmbstowcs'>
 <funcprototype>
   <funcdef>int <function> _Xlcmbstowcs</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -1359,7 +1359,7 @@ calls
 to determine the current locale.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xwcstombs'>
 <funcprototype>
   <funcdef>int <function> _Xwcstombs</function></funcdef>
   <paramdef>char<parameter> *str</parameter></paramdef>
@@ -1383,7 +1383,7 @@ is equivalent to
 _Xlcwcstombs((XLCd)NULL, <emphasis remap='I'>str</emphasis>, <emphasis remap='I'>wstr</emphasis>, <emphasis remap='I'>len</emphasis>)
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xlcwcstombs'>
 <funcprototype>
   <funcdef>int <function> _Xlcwcstombs</function></funcdef>
   <paramdef>XLCd<parameter> lcd</parameter></paramdef>
@@ -1404,7 +1404,7 @@ calls
 to determine the current locale.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xwcslen'>
 <funcprototype>
   <funcdef>int <function> _Xwcslen</function></funcdef>
   <paramdef>wchar_t<parameter> *wstr</parameter></paramdef>
@@ -1418,7 +1418,7 @@ function returns the count of wide characters in the (wchar_t) NULL
 terminated wide character string pointed to by "<emphasis remap='I'>wstr</emphasis>".
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xwcscpy'>
 <funcprototype>
   <funcdef>wchar_t *<function> _Xwcscpy</function></funcdef>
   <paramdef>wchar_t<parameter> *wstr1</parameter></paramdef>
@@ -1426,7 +1426,7 @@ terminated wide character string pointed to by "<emphasis remap='I'>wstr</emphas
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis>
+<funcsynopsis id='_xwcsncpy'>
 <funcprototype>
   <funcdef>wchar_t * <function> _Xwcsncpy</function></funcdef>
   <paramdef>wchar_t<parameter> *wstr1</parameter></paramdef>
@@ -1453,14 +1453,14 @@ except that it copies "<emphasis remap='I'>len</emphasis>" wide characters from 
 pointed to by "<emphasis remap='I'>wstr2</emphasis>" to the object pointed to "<emphasis remap='I'>wstr1</emphasis>".
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_xwcscmp'>
 <funcprototype>
   <funcdef>int <function> _Xwcscmp</function></funcdef>
   <paramdef>wchar_t*wstr1,<parameter> *wstr2</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis>
+<funcsynopsis id='_xwcsncmp'>
 <funcprototype>
   <funcdef>int <function> _Xwcsncmp</function></funcdef>
   <paramdef>wchar_t*wstr1,<parameter> *wstr2</parameter></paramdef>

@@ -253,7 +253,7 @@ The defined region operations are
 and
 <function>ShapeInvert</function>.</para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapequeryextension'>
 <funcprototype>
 <funcdef>Bool<function> XShapeQueryExtension</function></funcdef>
 <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -275,7 +275,7 @@ this extension.  Because no errors are defined for this version of
 the extension, the value returned here is not defined (nor useful).
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapequeryversion'>
 <funcprototype>
 <funcdef>Status<function> XShapeQueryVersion</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -292,7 +292,7 @@ extension supported by the display and returns a nonzero value.
 Otherwise, the arguments are not set and zero is returned.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapecombineregion'>
 <funcprototype>
 <funcdef><function>XShapeCombineRegion</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -312,7 +312,7 @@ converts the specified region into a list of rectangles and calls
 <function>XShapeCombineRectangles</function>
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapecombinerectangles'>
 <funcprototype>
 <funcdef><function>XShapeCombineRectangles</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -335,7 +335,7 @@ performs a
 operation; otherwise, the request is ignored.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapecombinemask'>
 <funcprototype>
 <funcdef><function>XShapeCombineMask</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -356,7 +356,7 @@ performs a
 operation; otherwise, the request is ignored.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapecombineshape'>
 <funcprototype>
 <funcdef><function>XShapeCombineShape</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -378,7 +378,7 @@ performs a
 operation; otherwise, the request is ignored.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapeoffsetshape'>
 <funcprototype>
 <funcdef><function>XShapeOffsetShape</function></funcdef>
 <paramdef><parameter>display</parameter></paramdef>
@@ -397,7 +397,7 @@ performs a
 operation; otherwise, the request is ignored.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapequeryextents'>
 <funcprototype>
 <funcdef>Status <function>XShapeQueryExtents</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -429,7 +429,7 @@ If the extension is supported, a nonzero value is returned; otherwise,
 zero is returned.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapeselectinput'>
 <funcprototype>
 <funcdef><function>XShapeSelectInput</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -464,7 +464,7 @@ typedef struct {
 } XShapeEvent;
 </literallayout>
 
-<funcsynopsis>
+<funcsynopsis id='xshapeinputselected'>
 <funcprototype>
 <funcdef>unsigned long <function>XShapeInputSelected</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -483,7 +483,7 @@ otherwise, it returns zero.
 If the extension is not supported, it returns zero.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='xshapegetrectangles'>
 <funcprototype>
 <funcdef>XRectangle<function> *XShapeGetRectangles</function></funcdef>
 <paramdef>Display<parameter> *display</parameter></paramdef>

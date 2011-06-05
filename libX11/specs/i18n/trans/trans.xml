@@ -359,7 +359,7 @@ connection is established successfully, this function returns True.
 The Alternative Entry for this function is:
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximconnect'>
 <funcprototype>
   <funcdef>Bool <function> _XimConnect</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -419,7 +419,7 @@ connection is closed successfully, this function returns True. The
 Alternative Entry for this function is:
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximshutdown'>
 <funcprototype>
   <funcdef>Bool <function>_XimShutdown</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -448,7 +448,7 @@ The following function is called, when Xlib needs to write data to the
 IM Server.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximwrite'>
 <funcprototype>
   <funcdef>Bool <function> _XimWrite</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -549,7 +549,7 @@ The following function is called when Xlib waits for response from IM
 server synchronously.
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximread'>
 <funcprototype>
   <funcdef>Bool <function> _XimRead</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -788,7 +788,7 @@ transport layer. If data transfer is completed, the function returns
 True.  The Alternative Entry for this function is:
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximflush'>
 <funcprototype>
   <funcdef>void <function> _XimFlush</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -943,7 +943,7 @@ that the data has been processed by the upper layer.  The Alternative
 Entry for this function is:
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximregisterdispatcher'>
 <funcprototype>
   <funcdef>Bool <function> _XimRegisterDispatcher</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -1052,7 +1052,7 @@ Protocol packet unit or not.
 The Alternative Entry for this function is:
 </para>
 
-<funcsynopsis>
+<funcsynopsis id='_ximcalldispatcher'>
 <funcprototype>
   <funcdef>Bool <function> _XimCallDispatcher</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
