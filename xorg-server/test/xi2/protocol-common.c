@@ -121,7 +121,7 @@ ClientRec init_client(int len, void *data)
 
 void init_window(WindowPtr window, WindowPtr parent, int id)
 {
-    memset(window, 0, sizeof(window));
+    memset(window, 0, sizeof(*window));
 
     window->drawable.id = id;
     if (parent)
