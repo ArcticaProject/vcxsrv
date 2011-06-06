@@ -39,7 +39,6 @@ X11_bin_LDADD += \
 	$(top_builddir)/glx/libglx.la
 
 X11_bin_LDFLAGS += \
-	-L/System/Library/Frameworks/OpenGL.framework/Libraries -lGL \
 	-Wl,-framework,OpenGL
 endif
 
