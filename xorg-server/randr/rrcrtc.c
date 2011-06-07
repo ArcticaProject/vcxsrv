@@ -632,7 +632,7 @@ RRModeGetScanoutSize (RRModePtr mode, PictTransformPtr transform,
 void
 RRCrtcGetScanoutSize(RRCrtcPtr crtc, int *width, int *height)
 {
-    return RRModeGetScanoutSize (crtc->mode, &crtc->transform, width, height);
+    RRModeGetScanoutSize (crtc->mode, &crtc->transform, width, height);
 }
 
 /*
