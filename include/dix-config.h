@@ -12,7 +12,7 @@
 #define BIGREQS 1
 
 /* Builder address */
-#define BUILDERADDR "marc@hc-consult.be"
+#define BUILDERADDR "marha@users.sourceforge.net"
 
 /* Operating System Name */
 #define OSNAME "Win32"
