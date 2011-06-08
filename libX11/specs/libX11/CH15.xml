@@ -566,7 +566,7 @@ The
 function converts the null-terminated string (generally a fully qualified name)
 to a list of quarks.
 Note that the string must be in the valid ResourceName format 
-(see section 15.1).
+(see <link linkend="Resource_File_Syntax">section 15.1</link>).
 If the string is not in the Host Portable Character Encoding,
 the conversion is implementation-dependent.
 </para>
@@ -650,7 +650,8 @@ The caller must allocate sufficient space for the quarks list before calling
 <!-- .eM -->
 Component names in the list are separated by a period or 
 an asterisk character.
-The string must be in the format of a valid ResourceName (see section 15.1).
+The string must be in the format of a valid ResourceName
+(see <link linkend="Resource_File_Syntax">section 15.1</link>).
 If the string does not start with a period or an asterisk, 
 a tight binding is assumed.
 For example, the string ``*a.b*c'' becomes:
@@ -752,7 +753,8 @@ function opens the specified file,
 creates a new resource database, and loads it with the specifications
 read in from the specified file.
 The specified file should contain a sequence of entries in valid ResourceLine
-format (see section 15.1); the database that results from reading a file
+format (see <link linkend="Resource_File_Syntax">section 15.1</link>);
+the database that results from reading a file
 with incorrect syntax is implementation-dependent.
 The file is parsed in the current locale, 
 and the database is created in the current locale.
@@ -805,7 +807,8 @@ The
 <function>XrmPutFileDatabase</function>
 function stores a copy of the specified database in the specified file.
 Text is written to the file as a sequence of entries in valid
-ResourceLine format (see section 15.1).
+ResourceLine format
+(see <link linkend="Resource_File_Syntax">section 15.1</link>).
 The file is written in the locale of the database.
 Entries containing resource names that are not in the Host Portable Character
 Encoding or containing values that are not in the encoding of the database
@@ -940,7 +943,8 @@ is similar to
 <function>XrmGetFileDatabase</function>
 except that it reads the information out of a string instead of out of a file.
 The string should contain a sequence of entries in valid ResourceLine
-format (see section 15.1) terminated by a null character;
+format (see <link linkend="Resource_File_Syntax">section 15.1</link>)
+terminated by a null character;
 the database that results from using a string
 with incorrect syntax is implementation-dependent.
 The string is parsed in the current locale, 
@@ -2077,7 +2081,8 @@ If database contains NULL,
 creates a new database and returns a pointer to it.
 <function>XrmPutLineResource</function>
 adds a single resource entry to the specified database.
-The line should be in valid ResourceLine format (see section 15.1)
+The line should be in valid ResourceLine format
+(see <link linkend="Resource_File_Syntax">section 15.1</link>)
 terminated by a newline or null character;
 the database that results from using a string
 with incorrect syntax is implementation-dependent.

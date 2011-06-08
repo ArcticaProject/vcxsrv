@@ -23,7 +23,8 @@ Because default windows and visual types are defined for each screen,
 most simple applications need not deal with this complexity.
 Xlib provides macros and functions that return the default root window, 
 the default depth of the default root window, and the default visual type
-(see sections 2.2.1 and 16.7).
+(see sections <link linkend="Display_Macros_">2.2.1</link>
+and <link linkend="Determining_the_Appropriate_Visual_Type">16.7</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -31,7 +32,9 @@ Xlib uses an opaque
 <structname>Visual</structname>
 <indexterm significance="preferred"><primary>Visual</primary></indexterm>
 structure that contains information about the possible color mapping.
-The visual utility functions (see section 16.7) use an
+The visual utility functions
+(see <link linkend="Determining_the_Appropriate_Visual_Type">section 16.7</link>)
+use an
 <structname>XVisualInfo</structname>
 structure to return this information to an application.
 The members of this structure pertinent to this discussion are class, red_mask,
@@ -217,7 +220,8 @@ All
 <symbol>InputOutput</symbol>
 windows have a border width of zero or more pixels, an optional background, 
 an event suppression mask (which suppresses propagation of events from 
-children), and a property list (see section 4.3).
+children), and a property list
+(see <link linkend="Properties_and_Atoms">section 4.3</link>).
 The window border and background can be a solid color or a pattern, called
 a tile.
 All windows except the root have a parent and are clipped by their parent.
@@ -231,7 +235,8 @@ obscured area.
 </para>
 <para>
 <!-- .LP -->
-Windows also have associated property lists (see section 4.3).
+Windows also have associated property lists
+(see <link linkend="Properties_and_Atoms">section 4.3</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -644,7 +649,7 @@ Otherwise, the initial contents of the exposed regions are undefined.
 events are then generated for the regions, even if the background-pixmap
 is
 <symbol>None</symbol>
-(see section 10.9).
+(see <link linkend="Exposure_Events">section 10.9</link>).
 </para>
 </sect2>
 <sect2 id="Border_Attribute">
@@ -813,7 +818,8 @@ the corresponding pair defines the change in position of the window
 within the parent.
 When a window is so repositioned, a
 <symbol>GravityNotify</symbol>
-event is generated (see section 10.10.5).
+event is generated
+(see <link linkend="GravityNotify_Events">section 10.10.5</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -1066,7 +1072,7 @@ or
 <symbol>False</symbol>
 (default).
 Window managers use this information to avoid tampering with pop-up windows
-(see also chapter 14).
+(see also <link linkend="inter_client_communication_functions">chapter 14</link>).
 </para>
 </sect2>
 <sect2 id="Colormap_Attribute">
@@ -1161,7 +1167,7 @@ which are discussed in the appropriate toolkit documentation.
 If you do not use a toolkit, however,
 you must provide some standard information or hints for the window
 manager by using the Xlib inter-client communication functions
-(see chapter 14).
+(see <link linkend="inter_client_communication_functions">chapter 14</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -1205,7 +1211,8 @@ you should set these properties for top-level windows before mapping them.
 <para>
 <!-- .LP -->
 For further information,
-see chapter 14 and the <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
+see <link linkend="inter_client_communication_functions">chapter 14</link> and
+the <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
 </para>
 <para>
 <!-- .LP -->
@@ -1868,7 +1875,8 @@ windows and then decide to map the window to its final location.
 A window manager that wants to provide decoration might
 reparent the child into a frame first.
 For further information,
-see sections 3.2.8 and 10.10.
+see <link linkend="Override_Redirect_Flag">sections 3.2.8</link>
+and <link linkend="Window_State_Change_Events_">10.10</link>.
 Only a single client at a time can select for 
 <symbol>SubstructureRedirectMask</symbol>.
 </para>
@@ -2398,7 +2406,8 @@ children of the window are affected as specified.
 If a window's size actually changes,
 the window's subwindows move according to their window gravity.
 Depending on the window's bit gravity,
-the contents of the window also may be moved (see section 3.2.3).
+the contents of the window also may be moved
+(see <link linkend="Gravity_Attributes">section 3.2.3</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -3558,7 +3567,7 @@ Specifies the structure from which the values (as specified by the value mask)
 are to be taken.
 The value mask should have the appropriate bits
 set to indicate which attributes have been set in the structure 
-(see section 3.2).
+(see <link linkend="Window_Attributes">section 3.2</link>).
     </para>
   </listitem>
   </varlistentry>

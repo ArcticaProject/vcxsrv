@@ -36,7 +36,7 @@ and should use minor opcodes to distinguish the requests.
 <para>
 <!-- .LP -->
 The symbols and macros used for writing stubs to Xlib are listed in
-&lt;X11/Xlibint.h&gt; .
+<filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename>.
 <!-- .SH -->
 Basic Protocol Support Routines
 </para>
@@ -236,7 +236,7 @@ The
 structure returns the information from 
 <function>XInitExtension</function>
 and is defined in
-&lt;X11/Xlib.h&gt; :
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>:
 </para>
 <para>
 <!-- .LP -->
@@ -1262,7 +1262,8 @@ returned to.
 If your procedure returns a zero value, 
 the error is not suppressed, and 
 the client's error handler is called.
-(For further information, see section 11.8.2.)
+(For further information,
+see <link linkend="Using_the_Default_Error_Handlers">section 11.8.2</link>.)
 If your procedure returns nonzero, 
 the error is suppressed, and 
 <function>_XReply</function>
@@ -1572,7 +1573,7 @@ on these lists.
 <!-- .LP -->
 The following structure is used in the functions in this section
 and is defined in 
-&lt;X11/Xlib.h&gt;
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>
 </para>
 <para>
 <!-- .LP -->
@@ -1743,7 +1744,7 @@ There is no way to find additional structures.
 The 
 <function>XAllocID</function>
 macro, which allocates and returns a resource ID, is defined in 
-&lt;X11/Xlib.h&gt;.
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
 <indexterm significance="preferred"><primary>XAllocID</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xallocid'>
@@ -2020,7 +2021,7 @@ XDrawPoint(dpy, d, gc, x, y)
 To keep clients from generating very long requests that may monopolize the 
 server,
 there is a symbol defined in
-&lt;X11/Xlibint.h&gt;
+<filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename>
 of EPERBATCH on the number of requests batched.
 Most of the performance benefit occurs in the first few merged requests.
 Note that 
@@ -2047,7 +2048,7 @@ Requests, Replies, and Xproto.h
 <para>
 <!-- .LP -->
 The 
-&lt;X11/Xproto.h&gt;
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>
 file contains three sets of definitions that
 are of interest to the stub implementor:  
 request names, request structures, and reply structures.
@@ -2055,10 +2056,10 @@ request names, request structures, and reply structures.
 <para>
 <!-- .LP -->
 You need to generate a file equivalent to 
-&lt;X11/Xproto.h&gt;
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>
 for your extension and need to include it in your stub procedure.
 Each stub procedure also must include 
-&lt;X11/Xlibint.h&gt; .
+<filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename>.
 </para>
 <para>
 <!-- .LP -->
@@ -2066,14 +2067,14 @@ The identifiers are deliberately chosen in such a way that, if the
 request is called X_DoSomething, then its request structure is
 xDoSomethingReq, and its reply is xDoSomethingReply.  
 The GetReq family of macros, defined in 
-&lt;X11/Xlibint.h&gt; ,
+<filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename>,
 takes advantage of this naming scheme.
 </para>
 <para>
 <!-- .LP -->
 For each X request, 
 there is a definition in 
-&lt;X11/Xproto.h&gt;
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>
 that looks similar to this:
 </para>
 <para>
@@ -2134,7 +2135,7 @@ these should be used for all 16-bit and 32-bit quantities, as discussed below.
 <para>
 <!-- .LP -->
 Most protocol requests have a corresponding structure typedef in
-&lt;X11/Xproto.h&gt;,
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>,
 which looks like:
 </para>
 <para>
@@ -2162,7 +2163,7 @@ you need not declare a request structure in your extension header file.
 Instead, such requests use the
 <structname>xResourceReq</structname>
 structure in
-&lt;X11/Xproto.h&gt;.
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>.
 This structure is used for any request whose single argument is a 
 <type>Window</type>,
 <type>Pixmap</type>,
@@ -2215,14 +2216,14 @@ A few protocol requests take no arguments at all.
 Instead, they use the
 <structname>xReq</structname>
 structure in
-&lt;X11/Xproto.h&gt;,
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>,
 which contains only a reqType and a length (and a pad byte).
 </para>
 <para>
 <!-- .LP  -->
 If the protocol request requires a reply, 
 then
-&lt;X11/Xproto.h&gt;
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>
 also contains a reply structure typedef:
 </para>
 <para>
@@ -2280,7 +2281,7 @@ have reply structures longer than 32 bytes in the core protocol.
 <para>
 <!-- .LP -->
 A few protocol requests return replies that contain no data.  
-&lt;X11/Xproto.h&gt;
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>
 does not define reply structures for these.
 Instead, they use the 
 <structname>xGenericReply</structname>
@@ -2372,7 +2373,7 @@ Sending the Protocol Request and Arguments
 <!-- .LP -->
 After the variable declarations, 
 a stub procedure should call one of four macros defined in 
-&lt;X11/Xlibint.h&gt;:
+<filename class="headerfile">&lt;X11/Xlibint.h&gt;</filename>:
 <function>GetReq</function>,
 <function>GetReqExtra</function>,
 <function>GetResReq</function>,
@@ -2380,7 +2381,7 @@ or
 <function>GetEmptyReq</function>.
 All of these macros take, as their first argument,
 the name of the protocol request as declared in 
-&lt;X11/Xproto.h&gt;
+<filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>
 except with X_ removed.   
 Each one declares a 
 <type>Display</type>
@@ -3297,7 +3298,7 @@ the simplest and fastest is outlined below.
     <para>
 Declare an array of pointers, _NFILE long (this is normally found
 in 
-&lt;stdio.h&gt;
+<filename class="headerfile">&lt;stdio.h&gt;</filename>
 and is the number of file descriptors supported on the system)
 of type 
 <structname>XExtCodes</structname>.

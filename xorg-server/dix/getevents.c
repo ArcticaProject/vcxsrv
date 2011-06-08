@@ -879,7 +879,7 @@ positionSprite(DeviceIntPtr dev, int mode,
      * to the current screen. */
     miPointerSetPosition(dev, mode, screenx, screeny);
 
-    if(!IsMaster(dev) || !IsFloating(dev)) {
+    if(!IsMaster(dev) && !IsFloating(dev)) {
         DeviceIntPtr master = GetMaster(dev, MASTER_POINTER);
         master->last.valuators[0] = *screenx;
         master->last.valuators[1] = *screeny;
@@ -926,7 +926,7 @@ updateHistory(DeviceIntPtr dev, ValuatorMask *mask, CARD32 ms)
         return;
 
     updateMotionHistory(dev, ms, mask, dev->last.valuators);
-    if(!IsMaster(dev) || !IsFloating(dev))
+    if(!IsMaster(dev) && !IsFloating(dev))
     {
         DeviceIntPtr master = GetMaster(dev, MASTER_POINTER);
         updateMotionHistory(master, ms, mask, dev->last.valuators);
@@ -1067,8 +1067,12 @@ FreeEventList(InternalEvent *list, int num_events)
     free(list);
 }
 
+/**
+ * Transform vector x/y according to matrix m and drop the rounded coords
+ * back into x/y.
+ */
 static void
-transformAbsolute(DeviceIntPtr dev, ValuatorMask *mask, int *x, int *y)
+transform(struct pixman_f_transform *m, int *x, int *y)
 {
     struct pixman_f_vector p;
     
@@ -1076,10 +1080,30 @@ transformAbsolute(DeviceIntPtr dev, ValuatorMask *mask, int *x, int *y)
     p.v[1] = *y;
     p.v[2] = 1;
 
-    pixman_f_transform_point(&dev->transform, &p);
+    pixman_f_transform_point(m, &p);
+
 
     *x = lround(p.v[0]);
     *y = lround(p.v[1]);
+}
+
+static void
+transformAbsolute(DeviceIntPtr dev, ValuatorMask *mask)
+{
+    int x, y, ox, oy;
+
+    ox = x = valuator_mask_isset(mask, 0) ? valuator_mask_get(mask, 0) :
+                                            dev->last.valuators[0];
+    oy = y = valuator_mask_isset(mask, 1) ? valuator_mask_get(mask, 1) :
+                                            dev->last.valuators[1];
+
+    transform(&dev->transform, &x, &y);
+
+    if (valuator_mask_isset(mask, 0) || ox != x)
+        valuator_mask_set(mask, 0, x);
+
+    if (valuator_mask_isset(mask, 1) || oy != y)
+        valuator_mask_set(mask, 1, y);
 }
 
 /**
@@ -1194,16 +1218,7 @@ GetPointerEvents(InternalEvent *events, DeviceIntPtr pDev, int type, int buttons
             }
         }
 
-        x = (valuator_mask_isset(&mask, 0) ? valuator_mask_get(&mask, 0) :
-             pDev->last.valuators[0]);
-        y = (valuator_mask_isset(&mask, 1) ? valuator_mask_get(&mask, 1) :
-             pDev->last.valuators[1]);
-        transformAbsolute(pDev, &mask, &x, &y);
-        if (valuator_mask_isset(&mask, 0))
-            valuator_mask_set(&mask, 0, x);
-        if (valuator_mask_isset(&mask, 1))
-            valuator_mask_set(&mask, 1, y);
-
+        transformAbsolute(pDev, &mask);
         moveAbsolute(pDev, &x, &y, &mask);
     } else {
         if (flags & POINTER_ACCELERATE) {

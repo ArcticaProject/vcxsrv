@@ -3197,7 +3197,7 @@ errors.
 Xlib provides a set of basic functions for performing
 region arithmetic.
 For information about these functions,
-see section 16.5.
+see <link linkend="Manipulating_Regions">section 16.5</link>.
 </para>
 </sect2>
 <sect2 id="Setting_the_Arc_Mode_Subwindow_Mode_and_Graphics_Exposure_">

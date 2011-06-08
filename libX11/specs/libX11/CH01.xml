@@ -255,7 +255,7 @@ Because Xlib usually does not transmit requests to the server immediately
 actually occur.
 For debugging purposes, however,
 Xlib provides a mechanism for forcing synchronous behavior
-(see section 11.8.1). <!-- xref -->
+(see <link linkend="Enabling_or_Disabling_Synchronization">section 11.8.1</link>).
 When synchronization is enabled,
 errors are reported as they are generated.
     </para>
@@ -316,8 +316,8 @@ reference this file directly.
       <indexterm><primary>Headers</primary><secondary>&lt;X11/Xcms.h&gt;</secondary></indexterm>
       <para>
 This file contains symbols for much of the color management facilities
-described in chapter 6.  All functions, types, and symbols with the
-prefix "Xcms", <!-- xref -->
+described in <link linkend="color_management_functions">chapter 6</link>.
+All functions, types, and symbols with the prefix "Xcms",
 plus the Color Conversion Contexts macros, are declared in this file.
 <filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>
 must be included before including this file.
@@ -333,7 +333,9 @@ must be included before including this file.
       <para>
 This file declares various functions, types, and symbols used for
 inter-client communication and application utility functions,
-which are described in chapters 14 and 16. <!-- xref -->
+which are described in chapters
+<link linkend="inter_client_communication_functions">14</link> and
+<link linkend="application_utility_functions">16</link>.
 <filename class="headerfile">&lt;X11/Xlib.h&gt;</filename> must be included before including this file.
       </para>
     </listitem>
@@ -346,7 +348,8 @@ which are described in chapters 14 and 16. <!-- xref -->
       <indexterm><primary>Headers</primary><secondary>&lt;X11/Xresource.h&gt;</secondary></indexterm>
       <para>
 This file declares all functions, types, and symbols for the
-resource manager facilities, which are described in chapter 15.
+resource manager facilities, which are described in
+<link linkend="resource_manager_functions">chapter 15</link>.
 <filename class="headerfile">&lt;X11/Xlib.h&gt;</filename> <!-- xref -->
 must be included before including this file.
       </para>
@@ -680,7 +683,7 @@ rather than presume control of the entire screen.
 What you do inside of your top-level window, however,
 is up to your application.
 For further information,
-see chapter 14 <!-- xref -->
+see <link linkend="inter_client_communication_functions">chapter 14</link>
 and the <citetitle>Inter-Client Communication Conventions Manual</citetitle>.
     </para>
   </listitem>
@@ -812,7 +815,7 @@ Where applicable,
 the last paragraph of the explanation lists the possible
 Xlib error codes that the function can generate.
 For a complete discussion of the Xlib error codes,
-see section 11.8.2. <!-- xref -->
+see <link linkend="Using_the_Default_Error_Handlers">section 11.8.2</link>.
 	  </para>
 	</listitem>
 	<listitem>

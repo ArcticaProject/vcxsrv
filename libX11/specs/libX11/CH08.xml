@@ -5268,7 +5268,7 @@ frequently used data formats by replacing
 functions in the procedure vector with special case functions.
 Supported operations include destroying the image, getting a pixel,
 storing a pixel, extracting a subimage of an image, and adding a constant
-to an image (see section 16.8).
+to an image (see <link linkend="Manipulating_Images">section 16.8</link>).
 </para>
 <para>
 <!-- .LP -->

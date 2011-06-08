@@ -194,7 +194,7 @@ The save-set of a client is a list of other clients' windows that,
 if they are inferiors of one of the client's windows at connection close,
 should not be destroyed and should be remapped if they are unmapped.
 For further information about close-connection processing,
-see section 2.6.
+see <link linkend="Using_X_Server_Connection_Close_Operations_">section 2.6</link>.
 To allow an application's window to survive when a window manager that
 has reparented a window fails,
 Xlib provides the save-set functions that you can 
@@ -992,7 +992,7 @@ If
 <symbol>AllTemporary</symbol>
 is specified, the resources of all clients that have terminated in
 <symbol>RetainTemporary</symbol>
-are destroyed (see section 2.5).
+are destroyed (see <link linkend="Closing_the_Display">section 2.5</link>).
 This permits implementation of window manager facilities that aid debugging.
 A client can set its close-down mode to
 <symbol>RetainTemporary</symbol>.

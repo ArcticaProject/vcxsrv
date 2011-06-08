@@ -24,7 +24,8 @@ This chapter discusses the following topics associated with events:
 </itemizedlist>
 
 <para>
-Functions for handling events are dealt with in the next chapter.
+Functions for handling events are dealt with in
+<link linkend="event_handling_functions">the next chapter</link>.
 </para>
 
 <sect1 id="Event_Types">
@@ -226,8 +227,8 @@ dispatchers.
 The X server can send events at any time in the input stream. 
 Xlib stores any events received while waiting for a reply in an event queue 
 for later use.
-Xlib also provides functions that allow you to check events 
-in the event queue (see section 11.3).
+Xlib also provides functions that allow you to check events in the event queue
+(see <link linkend="Event_Queue_Management">section 11.3</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -350,7 +351,8 @@ or
 <symbol>ClientMessage</symbol>
 cannot be masked.
 Selection-related events are only sent to clients cooperating
-with selections (see section 4.5).
+with selections
+(see <link linkend="Obtaining_and_Changing_Window_Properties">section 4.5</link>).
 When the keyboard or pointer mapping is changed,
 <symbol>MappingNotify</symbol>
 is always sent to clients.
@@ -998,7 +1000,7 @@ and the pointer events
 and
 <symbol>MotionNotify</symbol>.
 For information about the keyboard event-handling utilities,
-see chapter 11.
+see <link linkend="event_handling_functions">chapter 11</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -1282,7 +1284,8 @@ and
 structures, this member is called a keycode.
 It is set to a number that represents a physical key on the keyboard.
 The keycode is an arbitrary representation for any key on the keyboard
-(see sections 12.7 and 16.1).
+(see sections <link linkend="Manipulating_the_Keyboard_Encoding">12.7</link>
+ and <link linkend="Using_Keyboard_Utility_Functions">16.1</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -1900,7 +1903,7 @@ It generates
 <symbol>EnterNotify</symbol>
 and
 <symbol>LeaveNotify</symbol>
-events (see section 10.6.1)
+events (see <link linkend="Normal_Entry_Exit_Events">section 10.6.1</link>)
 with the mode members of the 
 <type>XEnterWindowEvent</type>
 and
@@ -1932,7 +1935,7 @@ It generates
 <symbol>EnterNotify</symbol>
 and
 <symbol>LeaveNotify</symbol>
-events (see section 10.6.1)
+events (see <link linkend="Normal_Entry_Exit_Events">section 10.6.1</link>)
 with the mode members of the
 <type>XEnterWindowEvent</type>
 and

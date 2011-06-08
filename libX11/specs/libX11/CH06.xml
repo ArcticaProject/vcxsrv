@@ -172,7 +172,7 @@ Possible visual types are
 <symbol>TrueColor</symbol>,
 or 
 <symbol>DirectColor</symbol>
-(see section 3.1).
+(see <link linkend="Visual_Types">section 3.1</link>).
 </para>
 <sect1 id="Color_Structures">
 <title>Color Structures</title>
@@ -294,7 +294,7 @@ it indicates that the color specification is in a device-dependent form;
 otherwise, it is in a device-independent form.
 If the 31st bit is set,
 this indicates that the color space has been added to Xlib at run time
-(see section 6.12.4).
+(see <link linkend="Creating_Additional_Color_Spaces">section 6.12.4</link>).
 The format value for a color space added at run time may be different each
 time the program is executed.
 If references to such a color space must be made outside the client
@@ -917,7 +917,7 @@ if alloc is
 the colormap initially has no allocated entries,
 and clients can allocate them.
 For information about the visual types,
-see section 3.1.
+see <link linkend="Visual_Types">section 3.1</link>.
 </para>
 <para>
 <!-- .LP -->

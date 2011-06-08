@@ -3520,7 +3520,8 @@ and
 except that they work with font sets instead of single fonts
 and interpret the text based on the locale of the font set
 instead of treating the bytes of the string as direct font indexes.
-See section 8.6 for details of the use of Graphics Contexts (GCs)
+See <link linkend="Drawing_Text">section 8.6</link> for details
+of the use of Graphics Contexts (GCs)
 and possible protocol errors.
 If a 
 <errorname>BadFont</errorname>
@@ -4553,7 +4554,7 @@ is being used to do input for
 multiple text entry areas, it will also be necessary
 to set the focus window of the
 input context whenever the focus window changes
-(see section 13.5.6.3).
+(see <link linkend="Focus_Window">section 13.5.6.3</link>).
 </para>
 </sect3>
 <sect3 id="Geometry_Management">
@@ -4671,7 +4672,8 @@ may change the geometry desired by the input method.
 </para>
 <para>
 <!-- .LP -->
-The table of <acronym>XIC</acronym> values (see section 13.5.6)
+The table of <acronym>XIC</acronym> values
+(see <link linkend="Input_Context_Values">section 13.5.6</link>)
 indicates the values that can cause the desired geometry to change
 when they are set.
 It is the responsibility of the client to renegotiate the geometry
@@ -5857,7 +5859,8 @@ The following keys apply to this table.
 <para>
 <!-- .LP -->
 <symbol>XNR6PreeditCallback</symbol>
-is obsolete and its use is not recommended (see section 13.5.4.6).
+is obsolete and its use is not recommended
+(see <link linkend="Preedit_Callback_Behavior">section 13.5.4.6</link>).
 </para>
 
 <sect3 id="Query_Input_Style">
@@ -7506,7 +7509,7 @@ The
 <symbol>XNGeometryCallback</symbol>
 argument is a structure of type 
 <structname>XIMCallback</structname>
-(see section 13.5.6.13.12).
+(see <link linkend="Preedit_and_Status_Callbacks">section 13.5.6.13.12</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -7561,7 +7564,8 @@ The
 <symbol>XNDestroyCallback</symbol>
 argument is a pointer to a structure of type
 <structname>XIMCallback</structname>
-(see section 13.5.6.13.12).  This callback is triggered when the input method 
+(see <link linkend="Preedit_and_Status_Callbacks">section 13.5.6.13.12</link>).
+This callback is triggered when the input method
 stops its service for any reason; for example, when a connection to an IM
 server is broken.  After the destroy callback is called, 
 the input context is destroyed and the input method is closed.
@@ -7585,7 +7589,7 @@ The
 <symbol>XNStringConversionCallback</symbol>
 argument is a structure of type
 <structname>XIMCallback</structname>
-(see section 13.5.6.13.12).
+(see <link linkend="Preedit_and_Status_Callbacks">section 13.5.6.13.12</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -8034,7 +8038,7 @@ or
 <symbol>XIMStatusArea</symbol>.
 It is used for geometry negotiation between the client and the input method
 and has no other effect on the input method 
-(see section 13.5.1.5).
+(see <link linkend="Geometry_Management">section 13.5.1.5</link>).
 </para>
 </sect4>
 <sect4 id="Spot_Location">
@@ -8783,7 +8787,8 @@ The callback is passed an
 structure in the call_data argument.
 The text member is an
 <structname>XIMStringConversionText</structname>
-structure (see section 13.5.6.9) to be filled in by the client
+structure (see <link linkend="String_Conversion_">section 13.5.6.9</link>)
+to be filled in by the client
 and describes the text to be sent to the input method.
 The data pointed to by the 
 string and feedback elements of the
@@ -10285,7 +10290,7 @@ called back the client and obtained no response
 <para>
 <!-- .LP -->
 The following symbols for string constants are defined in
-&lt;X11/Xlib.h&gt; .
+<filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
 Although they are shown here with particular macro definitions,
 they may be implemented as macros, as global symbols, or as a
 mixture of the two.  The string pointer value itself
