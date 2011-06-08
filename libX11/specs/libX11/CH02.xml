@@ -158,7 +158,8 @@ using the
 <function>DefaultScreen</function>
 macro or the 
 <function>XDefaultScreen</function>
-function if you are using languages other than C (see section 2.2.1).
+function if you are using languages other than C
+(see <link linkend="Display_Macros_">section 2.2.1</link>).
     </para>
   </listitem>
   </varlistentry>
@@ -242,12 +243,12 @@ For information about using macros and functions to obtain information from
 the
 <type>Display</type>
 structure,
-see section 2.2.1.
+see <link linkend="Display_Macros_">section 2.2.1</link>.
 </para>
 <para>
 <!-- .LP -->
 X servers may implement various types of access control mechanisms
-(see section 9.8).
+(see <link linkend="Controlling_Host_Access">section 9.8</link>).
 </para>
 </sect1>
 <sect1 id="Obtaining_Information_about_the_Display_Image_Formats_or_Screens">
@@ -886,7 +887,7 @@ Specifies the appropriate screen number on the host server.
 <indexterm significance="preferred"><primary>XDefaultVisual</primary></indexterm>
 Both return the default visual type for the specified screen.
 For further information about visual types,
-see section 3.1.
+see <link linkend="Visual_Types">section 3.1</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -1476,7 +1477,9 @@ Applications are required to present data to the X server
 in a format that the server demands.
 To help simplify applications,
 most of the work required to convert the data is provided by Xlib
-(see sections 8.7 and 16.8).
+(see sections
+<link linkend="Transferring_Images_between_Client_and_Server">8.7</link> and
+<link linkend="Manipulating_Images">16.8</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -2166,7 +2169,7 @@ structure.
 <indexterm significance="preferred"><primary>XDefaultVisualOfScreen</primary></indexterm>
 Both return the default visual of the specified screen.
 For information on visual types,
-see section 3.1.
+see <link linkend="Visual_Types">section 3.1</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -2209,7 +2212,7 @@ The value returned can be one of
 <symbol>NotUseful</symbol>,
 or
 <symbol>Always</symbol>
-(see section 3.2.4).
+(see <link linkend="Backing_Store_Attribute">section 3.2.4</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -2252,7 +2255,8 @@ If
 the screen supports save unders.
 If
 <symbol>False</symbol>,
-the screen does not support save unders (see section 3.2.5).
+the screen does not support save unders
+(see <link linkend="Save_Under_Flag">section 3.2.5</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -2543,7 +2547,8 @@ structure.
 <indexterm significance="preferred"><primary>MaxCmapsOfScreen</primary></indexterm>
 <indexterm significance="preferred"><primary>XMaxCmapsOfScreen</primary></indexterm>
 Both return the maximum number of installed colormaps supported 
-by the specified screen (see section 9.3).
+by the specified screen
+(see <link linkend="Managing_Installed_Colormaps">section 9.3</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -2580,7 +2585,8 @@ structure.
 <indexterm significance="preferred"><primary>MinCmapsOfScreen</primary></indexterm>
 <indexterm significance="preferred"><primary>XMinCmapsOfScreen</primary></indexterm>
 Both return the minimum number of installed colormaps supported 
-by the specified screen (see section 9.3).
+by the specified screen
+(see <link linkend="Managing_Installed_Colormaps">section 9.3</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -2871,7 +2877,7 @@ close_mode argument is
 <symbol>RetainPermanent</symbol>
 or
 <symbol>RetainTemporary</symbol>,
-see section 2.6.
+see <link linkend="Using_X_Server_Connection_Close_Operations_">section 2.6</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -3020,7 +3026,8 @@ It deletes all but the predefined atom identifiers.
   </listitem>
   <listitem>
     <para>
-It deletes all properties on all root windows (see section 4.3).
+It deletes all properties on all root windows
+(see <link linkend="Properties_and_Atoms">section 4.3</link>).
     </para>
   </listitem>
   <listitem>
@@ -3198,7 +3205,9 @@ for threads using
 <!-- .LP -->
 In addition to the connection to the X server, an Xlib implementation
 may require connections to other kinds of servers (for example, to
-input method servers as described in chapter 13).  Toolkits and clients
+input method servers as described in
+<link linkend="locales_and_internationalized_text_functions">chapter 13</link>).
+Toolkits and clients
 that use multiple displays, or that use displays in combination with
 other inputs, need to obtain these additional connections to correctly
 block until input is available and need to process that input

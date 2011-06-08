@@ -432,7 +432,7 @@ GetEventFilter(DeviceIntPtr dev, xEvent *event)
         return filters[dev ? dev->id : 0][event->u.u.type];
     else if ((evtype = xi2_get_type(event)))
         return (1 << (evtype % 8));
-    ErrorF("[dix] Unknown device type %d. No filter\n", event->u.u.type);
+    ErrorF("[dix] Unknown event type %d. No filter\n", event->u.u.type);
     return 0;
 }
 
@@ -1421,7 +1421,7 @@ CheckGrabForSyncs(DeviceIntPtr thisDev, Bool thisMode, Bool otherMode)
 static void
 DetachFromMaster(DeviceIntPtr dev)
 {
-    if (!IsFloating(dev))
+    if (IsFloating(dev))
         return;
 
     dev->saved_master_id = GetMaster(dev, MASTER_ATTACHED)->id;
@@ -3997,7 +3997,7 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
             rc = EventToXI2(event, &xi2);
             if (rc == Success)
             {
-                int evtype = ((xGenericEvent*)xi2)->evtype;
+                int evtype = xi2_get_type(xi2);
                 mask = grab->xi2mask[XIAllDevices][evtype/8] |
                     grab->xi2mask[XIAllMasterDevices][evtype/8] |
                     grab->xi2mask[thisDev->id][evtype/8];

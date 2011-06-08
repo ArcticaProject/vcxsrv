@@ -753,7 +753,8 @@ with the following syntax:
 <programlisting>
 XGetStandardColormap(dpy, DefaultRootWindow(dpy), &amp;cmap, XA_RGB_GRAY_MAP);
 </programlisting>
-See section 14.3 for the semantics of standard colormaps.
+See <link linkend="Standard_Colormaps">section 14.3</link> for the
+semantics of standard colormaps.
 </para>
 <para>
 <!-- .LP -->
@@ -1050,7 +1051,7 @@ geometry specifications.
 The
 <function>XGetDefault</function>
 function provides a primitive interface to the resource manager facilities 
-discussed in chapter 15. <!-- xref -->
+discussed in <link linkend="resource_manager_functions">chapter 15</link>.
 It is only useful in very simple applications.
 </para>
 <para>
@@ -1548,7 +1549,7 @@ dash-offset, dash-list, fill-style, and fill-rule.
 <para>
 <!-- .LP -->
 These functions have been superseded by the context management functions
-(see section 16.10). 
+(see <link linkend="Using_the_Context_Manager">section 16.10</link>).
 It is often necessary to associate arbitrary information with resource IDs.
 Xlib provides the 
 <function>XAssocTable</function>

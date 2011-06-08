@@ -14,11 +14,14 @@ see the Inter-Client Communication Conventions Manual.
 Xlib provides a number of standard properties and programming interfaces that are <acronym>ICCCM</acronym>
 compliant. The predefined atoms for some of these properties are defined in the &lt;X11/Xatom.h&gt;
 header file, where to avoid name conflicts with user symbols their #define name has an XA_ prefix.
-For further information about atoms and properties, see section 4.3.
+For further information about atoms and properties,
+see <link linkend="Properties_and_Atoms">section 4.3</link>.
 </para>
 <para>
 Xlib’s selection and cut buffer mechanisms provide the primary programming interfaces by which
-peer client applications communicate with each other (see sections 4.5 and 16.6). The functions
+peer client applications communicate with each other
+(see sections <link linkend="Selections">4.5</link> and
+<link linkend="Using_Cut_Buffers">16.6</link>). The functions
 discussed in this chapter provide the primary programming interfaces by which client applications
 communicate with their window and session managers as well as share standard colormaps.
 </para>
@@ -248,7 +251,8 @@ of top-level windows (that is, those that were created as children
 of the root window).
 Note that the subwindows that you create are ignored by window managers.
 Therefore,
-you should use the basic window functions described in chapter 3
+you should use the basic window functions described in
+<link linkend="window_functions">chapter 3</link>
 to manipulate your application's subwindows.
 </para>
 <para>
@@ -1179,7 +1183,12 @@ In addition,
 Xlib provides separate convenience functions that you can use to set each 
 of these properties.
 For further information about these convenience functions,
-see sections 14.1.4, 14.1.5, 14.2.1, and 14.2.2, respectively.
+see sections
+<link linkend="Setting_and_Reading_the_WM_NAME_Property">14.1.4</link>,
+<link linkend="Setting_and_Reading_the_WM_ICON_NAME_Property">14.1.5</link>,
+<link linkend="Setting_and_Reading_the_WM_COMMAND_Property">14.2.1</link>, and
+<link linkend="Setting_and_Reading_the_WM_CLIENT_MACHINE_Property">14.2.2</link>,
+respectively.
 <!-- .sp -->
 </para>
 <para>
@@ -3926,12 +3935,14 @@ If the normal_hints argument is non-NULL,
 <function>XmbSetWMProperties</function>
 calls
 <function>XSetWMNormalHints</function>,
-which sets the <property>WM_NORMAL_HINTS</property> property (see section 14.1.7).
+which sets the <property>WM_NORMAL_HINTS</property> property
+(see <link linkend="Setting_and_Reading_the_WM_NORMAL_HINTS_Property">section 14.1.7</link>).
 If the wm_hints argument is non-NULL, 
 <function>XmbSetWMProperties</function>
 calls
 <function>XSetWMHints</function>,
-which sets the <property>WM_HINTS</property> property (see section 14.1.6).
+which sets the <property>WM_HINTS</property> property
+(see <link linkend="Setting_and_Reading_the_WM_HINTS_Property">section 14.1.6</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -3944,7 +3955,7 @@ An argc of zero indicates a zero-length command.
 <!-- .LP -->
 The hostname of the machine is stored using 
 <function>XSetWMClientMachine</function>
-(see section 14.2.2).
+(see <link linkend="Setting_and_Reading_the_WM_CLIENT_MACHINE_Property">section 14.2.2</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -4129,21 +4140,24 @@ If the window_name argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMName</function>,
-which, in turn, sets the <property>WM_NAME</property> property (see section 14.1.4).
+which, in turn, sets the <property>WM_NAME</property> property
+(see <link linkend="Setting_and_Reading_the_WM_NAME_Property">section 14.1.4</link>).
 If the icon_name argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMIconName</function>,
-which sets the <property>WM_ICON_NAME</property> property (see section 14.1.5).
+which sets the <property>WM_ICON_NAME</property> property
+(see <link linkend="Setting_and_Reading_the_WM_ICON_NAME_Property">section 14.1.5</link>).
 If the argv argument is non-NULL, 
 <function>XSetWMProperties</function>
 calls
 <function>XSetCommand</function>,
-which sets the <property>WM_COMMAND</property> property (see section 14.2.1).
+which sets the <property>WM_COMMAND</property> property
+(see <link linkend="Setting_and_Reading_the_WM_COMMAND_Property">section 14.2.1</link>).
 Note that an argc of zero is allowed to indicate a zero-length command.
 Note also that the hostname of this machine is stored using
 <function>XSetWMClientMachine</function>
-(see section 14.2.2).
+(see <link linkend="Setting_and_Reading_the_WM_CLIENT_MACHINE_Property">section 14.2.2</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -4151,12 +4165,14 @@ If the normal_hints argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMNormalHints</function>,
-which sets the <property>WM_NORMAL_HINTS</property> property (see section 14.1.7).
+which sets the <property>WM_NORMAL_HINTS</property> property
+(see <link linkend="Setting_and_Reading_the_WM_NORMAL_HINTS_Property">section 14.1.7</link>).
 If the wm_hints argument is non-NULL, 
 <function>XSetWMProperties</function>
 calls
 <function>XSetWMHints</function>,
-which sets the <property>WM_HINTS</property> property (see section 14.1.6).
+which sets the <property>WM_HINTS</property> property
+(see <link linkend="Setting_and_Reading_the_WM_HINTS_Property">section 14.1.6</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -4164,7 +4180,8 @@ If the class_hints argument is non-NULL,
 <function>XSetWMProperties</function>
 calls
 <function>XSetClassHint</function>,
-which sets the <property>WM_CLASS</property> property (see section 14.1.8).
+which sets the <property>WM_CLASS</property> property
+(see <link linkend="Setting_and_Reading_the_WM_CLASS_Property">section 14.1.8</link>).
 If the res_name member in the
 <structname>XClassHint</structname>
 structure is set to the NULL pointer and the RESOURCE_NAME environment 

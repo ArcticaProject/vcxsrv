@@ -62,7 +62,7 @@ unsigned	set,rtrn;
 		rtrn|= _XkbKSUpper;
 	    }
 	    if (((ks>=XK_a)&&(ks<=XK_z))||
-		((ks>=XK_agrave)&&(ks<=XK_ydiaeresis))) {
+		((ks>=XK_ssharp)&&(ks<=XK_ydiaeresis)&&(ks!=XK_division))) {
 		rtrn|= _XkbKSLower;
 	    }
 	    break;
@@ -71,7 +71,7 @@ unsigned	set,rtrn;
 		((ks>=XK_Racute)&&(ks<=XK_Tcedilla))) {
 		rtrn|= _XkbKSUpper;
 	    }
-	    if (((ks>=XK_aogonek)&&(ks<=XK_zabovedot)&&(ks!=XK_caron))||
+	    if (((ks>=XK_aogonek)&&(ks<=XK_zabovedot)&&(ks!=XK_ogonek)&&(ks!=XK_caron)&&(ks!=XK_doubleacute))||
 		((ks>=XK_racute)&&(ks<=XK_tcedilla))) {
 		rtrn|= _XkbKSLower;
 	    }
@@ -92,7 +92,8 @@ unsigned	set,rtrn;
 		((ks>=XK_Amacron)&&(ks<=XK_Umacron))) {
 		rtrn|= _XkbKSUpper;
 	    }
-	    if (((ks>=XK_rcedilla)&&(ks<=XK_tslash))||
+	    if ((ks==XK_kra)||
+	        ((ks>=XK_rcedilla)&&(ks<=XK_tslash))||
 	        (ks==XK_eng)||
 		((ks>=XK_amacron)&&(ks<=XK_umacron))) {
 		rtrn|= _XkbKSLower;

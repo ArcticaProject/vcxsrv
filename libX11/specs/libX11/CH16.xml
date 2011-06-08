@@ -655,7 +655,8 @@ if the specified KeySym is a PF key.
 <!-- .XE -->
 <para>
 <!-- .LP -->
-Chapter 13 describes internationalized text input facilities,
+<link linkend="locales_and_internationalized_text_functions">Chapter 13</link>
+describes internationalized text input facilities,
 but sometimes it is expedient to write an application that
 only deals with Latin-1 characters and ASCII controls,
 so Xlib provides a simple function for that purpose.
@@ -2132,7 +2133,8 @@ if the rectangle is partially in the specified region.
 Xlib provides functions to manipulate cut buffers,
 a very simple form of cut-and-paste inter-client communication.
 Selections are a much more powerful and useful mechanism for
-interchanging data between clients (see section 4.5)
+interchanging data between client
+(see <link linkend="Selections">section 4.5</link>)
 and generally should be used instead of cut buffers.
 </para>
 <para>
@@ -2736,7 +2738,7 @@ plane n must be located at the address (data + (n * height * bytes_per_line)).
 For a description of the 
 <structname>XImage</structname>
 structure,
-see section 8.7.
+see <link linkend="Transferring_Images_between_Client_and_Server">section 8.7</link>.
 </para>
 <para>
 <!-- .LP -->

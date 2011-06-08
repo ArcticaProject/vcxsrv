@@ -277,7 +277,7 @@ The initial colors of a cursor are a black foreground and a white
 background (see
 <function>XRecolorCursor</function>).
 For further information about cursor shapes,
-see appendix B.
+see <link linkend="x_font_cursors">appendix B</link>.
 </para>
 <para>
 <!-- .LP -->
