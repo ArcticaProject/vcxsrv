@@ -33,7 +33,7 @@
 
 #define INCL_WINSOCK_API_TYPEDEFS 1 /* Needed for LPFN_GETPEERNAME */
 
-#define FD_SETSIZE 256
+#define FD_SETSIZE 1024
 
 #include <X11/Xwinsock.h>
 #include <winsock2.h>

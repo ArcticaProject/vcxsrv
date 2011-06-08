@@ -39,7 +39,7 @@ The Open Group.
 # undef XFree86Server
 #endif
 
-#define FD_SETSIZE 256
+#define FD_SETSIZE 1024
 
 #define BOOL wBOOL
 #define INT32 wINT32
