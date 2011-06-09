@@ -25,13 +25,13 @@
  * SOFTWARE.
  */
 
-#if !defined( _GLAPI_DISPATCH_H_ )
-#  define _GLAPI_DISPATCH_H_
+#if !defined( _DISPATCH_H_ )
+#  define _DISPATCH_H_
 
 
 #include "glapitable.h"
 /**
- * \file glapidispatch.h
+ * \file main/dispatch.h
  * Macros for handling GL dispatch tables.
  *
  * For each known GL function, there are 3 macros in this file.  The first
@@ -472,7 +472,7 @@
 #define _gloffset_MultiTexCoord4sARB 406
 #define _gloffset_MultiTexCoord4svARB 407
 
-#if !defined(_GLAPI_USE_REMAP_TABLE)
+#if !FEATURE_remap_table
 
 #define _gloffset_AttachShader 408
 #define _gloffset_CreateProgram 409
@@ -996,15 +996,10 @@
 #define _gloffset_EGLImageTargetRenderbufferStorageOES 927
 #define _gloffset_EGLImageTargetTexture2DOES 928
 
-#else /* !_GLAPI_USE_REMAP_TABLE */
+#else /* !FEATURE_remap_table */
 
 #define driDispatchRemapTable_size 521
 extern int driDispatchRemapTable[ driDispatchRemapTable_size ];
-
-#if FEATURE_remap_table
-#define driDispatchRemapTable remap_table
-static int remap_table[driDispatchRemapTable_size];
-#endif
 
 #define AttachShader_remap_index 0
 #define CreateProgram_remap_index 1
@@ -2050,7 +2045,7 @@ static int remap_table[driDispatchRemapTable_size];
 #define _gloffset_EGLImageTargetRenderbufferStorageOES driDispatchRemapTable[EGLImageTargetRenderbufferStorageOES_remap_index]
 #define _gloffset_EGLImageTargetTexture2DOES driDispatchRemapTable[EGLImageTargetTexture2DOES_remap_index]
 
-#endif /* _GLAPI_USE_REMAP_TABLE */
+#endif /* !FEATURE_remap_table */
 
 typedef void (GLAPIENTRYP _glptr_NewList)(GLuint, GLenum);
 #define CALL_NewList(disp, parameters) \
@@ -12272,4 +12267,4 @@ static INLINE void SET_EGLImageTargetTexture2DOES(struct _glapi_table *disp, voi
 }
 
 
-#endif /* !defined( _GLAPI_DISPATCH_H_ ) */
+#endif /* !defined( _DISPATCH_H_ ) */
