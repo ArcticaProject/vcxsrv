@@ -3,6 +3,13 @@ AC_CONFIG_SRCDIR(rules/base.xml.in)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
+# Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.8 or later before
+          running autoconf/autogen])])
+XORG_MACROS_VERSION(1.8)
+XORG_MANPAGE_SECTIONS
+
 AC_SUBST(VERSION)
 
 AC_PATH_PROG([XKBCOMP], [xkbcomp], [not_found])
@@ -23,6 +30,13 @@ AC_ARG_ENABLE( compat_rules,
                [  --enable-compat-rules      create compatibility rules],
                enable_compat_rules="$enableval",
                enable_compat_rules="yes" )
+
+AC_PATH_PROG(SED, [sed])
+AC_PATH_PROG(XSLTPROC, [xsltproc])
+AM_CONDITIONAL([HAVE_XSLTPROC], [test "x$XSLTPROC" != "x"])
+if test "x$XSLTPROC" = "x"; then
+    AC_MSG_WARN([xsltproc not found, needed to generate man page.])
+fi
 
 # xkeyboard-config does not have build-time dependencies. However, it does
 # have run-time dependencies and keyboard layouts may not work without the
