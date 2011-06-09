@@ -71,15 +71,6 @@ static wBOOL CALLBACK DisplayXdmcpHostsDlgProc (HWND hwndDialog, UINT message, W
       return TRUE;
     }
     break;
-    case WM_MOUSEMOVE:
-    case WM_NCMOUSEMOVE:
-      /* Show the cursor if it is hidden */
-      if (g_fSoftwareCursor && !g_fCursor)
-      {
-        g_fCursor = TRUE;
-        ShowCursor (TRUE);
-      }
-      return TRUE;
 
     case WM_COMMAND:
       switch (LOWORD (wParam))
@@ -165,6 +156,12 @@ void DisplayXdmcpHostsDialog(void)
     SetForegroundWindow (g_hDlgHosts);
 
     return;
+  }
+
+  /* Show an arrow cursor as long as the selection dialog is shown */
+  {
+    winScreenPriv(screenInfo.screens[0]);
+    pScreenPriv->cursor.handle=LoadCursor(NULL,IDC_ARROW);
   }
 
   /*
