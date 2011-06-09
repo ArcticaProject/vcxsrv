@@ -234,3 +234,11 @@ rulesdir = $(xkb_base)/rules
 xmldir = $(rulesdir)
 
 @INTLTOOL_XML_NOMERGE_RULE@
+
+xkeyboard-config.man: evdev.xml
+	$(XSLTPROC) $(top_srcdir)/xslt/man.xsl evdev.xml > $@
+
+xkeyboard-config.7: xkeyboard-config.man
+	$(SED) $(MAN_SUBSTS) < $< > $@
+
+dist_man_MANS = xkeyboard-config.7

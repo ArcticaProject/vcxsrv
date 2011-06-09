@@ -11,6 +11,11 @@
 // Links:
 // - Indic INSCRIPT keyboard layout diagrams:
 //     http://java.sun.com/products/jfc/tsc/articles/InputMethod/indiclayout.html
+// - Bengali Baishakhi (Bengali layouts):
+// - Bengali Baishakhi Inscript (Bengali layouts):
+// - Bengali Bornona (Bengali layouts):
+// - Uni Gitanjali (Bengali layouts):
+//     http://nltr.org
 // - Ekusheyr Shadhinota (Bengali layouts):
 //     http://ekushey.org/projects/shadhinota/index.html
 // - Microsoft Windows XP SP2: Indic Language Standards - an Introduction:
@@ -301,6 +306,304 @@ xkb_symbols "ben_probhat" {
 //   modifier_map Shift  { Shift_L };
 //   modifier_map Lock   { Caps_Lock };
 //   modifier_map Control{ Control_L };
+
+};
+
+// Bengali Baishakhi, Bengali Baishakhi Inscript, Bengali Bornona, Uni Gitanjali Layouts are added by Promathesh Mandal <promathesh812004@gmail.com>
+
+xkb_symbols "ben_baishakhi" {
+ name[Group1]= "Bengali (Baishakhi)";
+   key <ESC>   { [ Escape 					] };
+
+// numbers
+   key <TLDE> { [ 0x100200D, 0x100200C	] };
+   key <AE01> { [ 0x10009E7, exclam		] };
+   key <AE02> { [ 0x10009E8, at		] };
+   key <AE03> { [ 0x10009E9, numbersign	] };
+   key <AE04> { [ 0x10009EA, dollar, 0x10009F2	] };
+   key <AE05> { [ 0x10009EB, percent		] };
+   key <AE06> { [ 0x10009EC, asciicircum, 0x10009D7    ] };
+   key <AE07> { [ 0x10009ED, ampersand ] };
+   key <AE08> { [ 0x10009EE,   asterisk,0x10009FA       		] };
+   key <AE09> { [ 0x10009EF, parenleft    	] };
+   key <AE10> { [ 0x10009E6, parenright   	] };
+   key <AE11> { [ minus, underscore   	] };
+   key <AE12> { [ equal,     plus 	] };
+   key <BKSP> { [ BackSpace               		] };
+
+// tab, q to ] 
+   key <TAB>   { [   Tab,  ISO_Left_Tab		] };
+   key <AD01> { [   0x10009A1,  0x10009A2  ] };
+   key <AD02> { [  0x10009C0 ,  0x10009C2  ] };
+   key <AD03> { [   0x10009C7,  0x100098F, 0x1000990 ] };
+   key <AD04> { [   0x10009B0 , 0x10009C3, 0x100098B             		] };
+   key <AD05> { [   0x100099F,  0x10009A0	] };
+   key <AD06> { [   0x10009AF,  0x10009DF	] };
+   key <AD07> { [   0x10009C1,  0x1000989, 0x100098A  ] };
+   key <AD08> { [   0x10009BF,  0x1000987, 0x1000988  ] };
+   key <AD09> { [   0x10009CB,  0x1000993, 0x1000994	] };
+   key <AD10> { [   0x10009AA,  0x10009AB	] };
+   key <AD11> { [   bracketleft,  braceleft] };
+   key <AD12> { [   bracketright,	braceright	] };
+   key <RTRN> { [   Return                 		] };
+
+// caps, a to ' 
+// key <CAPS> { [   Caps_Lock            		] };
+   key <AC01> { [   0x10009BE,  0x1000985, 0x1000986  ] };
+   key <AC02> { [   0x10009B8,  0x10009B6,  0x10009B7  ] };
+   key <AC03> { [   0x10009A6,  0x10009A7  ] };
+   key <AC04> { [   0x10009A4,   0x10009A5, 0x10009CE  ] };
+   key <AC05> { [   0x1000997,  0x1000998	] };
+   key <AC06> { [   0x10009CD,  0x10009B9, 0x1000983  ] };
+   key <AC07> { [   0x100099C,  0x100099D	] };
+   key <AC08> { [   0x1000995,  0x1000996  	] };
+  key <AC09> { [   0x10009B2,  0x1000964, 0x100098C  ] };
+   key <AC10> { [   semicolon,  colon  	] };
+   key <AC11> { [   quoteright, quotedbl   	] };
+
+// shift, z to /
+// key <LFSH> { [   Shift_L              			] };
+   key <AB01> { [   0x10009C8, 0x10009CC              		] };
+   key <AB02> { [   0x10009DC, 0x10009DD              		] };
+   key <AB03> { [   0x100099A,  0x100099B  ] };
+   key <AB04> { [   0x10009F1,  0x10009F0	] };
+   key <AB05> { [   0x10009AC,  0x10009AD  ] };
+   key <AB06> { [   0x10009A8,  0x10009A3, 0x100099E  ] };
+   key <AB07> { [   0x10009AE,  0x1000999, 0x1000981  ] };
+   key <AB08> { [   comma,      less	] };
+   key <AB09> { [    period,	greater,0x10009BC 		] };
+   key <AB10> { [   slash,  question, 0x1000982   	] };
+   key <BKSL> { [   backslash,        bar	] };
+
+// third level with right-alt
+    include "level3(ralt_switch)"
+
+//   key <LCTL> { [   Control_L              ] };
+//   key <SPCE> { [   space                  ] };
+
+//   modifier_map Shift  { Shift_L };
+//   modifier_map Lock   { Caps_Lock };
+//   modifier_map Control{ Control_L };
+
+
+};
+
+xkb_symbols "ben_inscript" {
+    name[Group1]= "Bengali (Baishakhi Inscript)";
+
+      // Mainly numbers.
+      key <TLDE> { [      0x100200D, 0x100200C	] 	};
+      key <AE01> { [      0x10009E7  		]	};
+      key <AE02> { [      0x10009E8 		]	};
+      key <AE03> { [      0x10009E9 		]	};
+      key <AE04> { [      0x10009EA 		]	};
+      key <AE05> { [      0x10009EB		]	};
+      key <AE06> { [      0x10009EC 		]	};
+      key <AE07> { [      0x10009ED	        ]	};
+      key <AE08> { [      0x10009EE 		]	};
+      key <AE09> { [      0x10009EF, parenleft	]	};
+      key <AE10> { [      0x10009E6, parenright	]	};
+      key <AE11> { [      minus, 0x1000983 	]	};
+      key <AE12> { [      0x10009C3, 0x100098B 	]	};
+
+// Mainly long vowels
+
+      key <AD01> { [      0x10009CC,  0x1000994	]	};
+      key <AD02> { [      0x10009C8,  0x1000990	]	};
+      key <AD03> { [      0x10009BE,  0x1000986	]	};
+      key <AD04> { [      0x10009C0,  0x1000988	]	};
+      key <AD05> { [      0x10009C2,  0x100098A	]	};
+
+// Mainly voiced consonants
+
+      key <AD06> { [      0x10009AC,  0x10009AD	]	};
+      key <AD07> { [      0x10009B9,  0x1000999 ]	};
+      key <AD08> { [      0x1000997,  0x1000998 ]	};
+      key <AD09> { [      0x10009A6,  0x10009A7 ]	};
+      key <AD10> { [      0x100099C,  0x100099D ]	};
+      key <AD11> { [      0x10009A1,  0x10009A2 ]	};
+      key <AD12> { [      0x10009BC,  0x100099E ]	};
+
+// Mainly short vowels
+      key <AC01> { [      0x10009CB,  0x1000993 ]	};
+      key <AC02> { [      0x10009C7,  0x100098F ]	};
+      key <AC03> { [      0x10009CD,  0x1000985 ]	};
+      key <AC04> { [      0x10009BF,  0x1000987 ]	};
+      key <AC05> { [      0x10009C1,  0x1000989 ]	};
+
+
+// Mainly unvoiced consonants
+
+      key <AC06> { [      0x10009AA,  0x10009AB ]	};
+      key <AC07> { [      0x10009B0,  0x10009DD ]	};
+      key <AC08> { [      0x1000995,  0x1000996 ]	};
+      key <AC09> { [      0x10009A4,  0x10009A5 ]	};
+      key <AC10> { [      0x100099A,  0x100099B ]	};
+      key <AC11> { [      0x100099F, 0x10009A0 	]	};
+      key <BKSL> { [      backslash, bar 	]	};
+
+      key <AB01> { [      0x10009CE  		]       };
+      key <AB02> { [      0x1000982,  0x1000981 ]       };
+      key <AB03> { [      0x10009AE,  0x10009A3 ]       };
+      key <AB04> { [      0x10009A8,  0x10009A8 ]       };
+      key <AB05> { [      0x10009AC,  0x10009AC ]       };
+      key <AB06> { [      0x10009B2,  0x10009B2 ]       };
+      key <AB07> { [      0x10009B8,  0x10009B6 ]       };
+      key <AB08> { [      comma,      0x10009B7 ]       };
+      key <AB09> { [      period,     0x1000964 ]       };
+      key <AB10> { [      0x10009DF,  0x10009AF	]       };
+};
+
+xkb_symbols "ben_gitanjali" {
+ name[Group1]= "Bengali (Uni Gitanjali)";
+   key <ESC>   { [ Escape			] };
+
+// numbers
+   key <TLDE> { [ colon, question	] };
+   key <AE01> { [ 0x10009E7, 0x10009CE	] };
+   key <AE02> { [ 0x10009E8, quoteright	] };
+   key <AE03> { [ 0x10009E9, numbersign	] };
+   key <AE04> { [ 0x10009EA, 0x10009F3	] };
+   key <AE05> { [ 0x10009EB, slash	] };
+   key <AE06> { [ 0x10009EC, period	] };
+   key <AE07> { [ 0x10009ED, ampersand 	] };
+   key <AE08> { [ 0x10009EE, asterisk 	] };
+   key <AE09> { [ 0x10009EF, parenleft  ] };
+   key <AE10> { [ 0x10009E6, parenright	] };
+   key <AE11> { [ minus, 0x1000983   	] };
+   key <AE12> { [ 0x10009C3, 0x100098B 	] };
+   key <BKSP> { [ BackSpace		] };
+
+// tab, q to ] 
+   key <TAB>   { [   Tab,  ISO_Left_Tab	] };
+   key <AD01> { [   0x10009D7,  0x1000994 ] };
+   key <AD02> { [   0x10009C8,  0x1000990 ] };
+   key <AD03> { [   0x10009BE,  0x1000985 ] };
+   key <AD04> { [   0x10009C0,  0x1000988 ] };
+   key <AD05> { [   0x10009C2,  0x100098A ] };
+   key <AD06> { [   0x10009AC,  0x10009AD ] };
+   key <AD07> { [   0x10009B9,  0x1000999 ] };
+   key <AD08> { [   0x1000997,  0x1000998 ] };
+   key <AD09> { [   0x10009A6,  0x10009A7 ] };
+   key <AD10> { [   0x100099C,  0x100099D ] };
+   key <AD11> { [   0x10009A1,  0x10009A2 ] };
+   key <AD12> { [   0x100200C,  0x100099E ] };
+   key <RTRN> { [   Return		  ] };
+
+// caps, a to ' 
+// key <CAPS> { [   Caps_Lock            		] };
+   key <AC01> { [   0x100200D,  0x1000993 ] };
+   key <AC02> { [   0x10009C7,  0x100098F ] };
+   key <AC03> { [   0x10009CD		  ] };
+   key <AC04> { [   0x10009BF,  0x1000987 ] };
+   key <AC05> { [   0x10009C1,  0x1000989 ] };
+   key <AC06> { [   0x10009AA,  0x10009AB ] };
+   key <AC07> { [   0x10009B0,  0x10009F0 ] };
+   key <AC08> { [   0x1000995,  0x1000996 ] };
+   key <AC09> { [   0x10009A4,  0x10009A5 ] };
+   key <AC10> { [   0x100099A,  0x100099B ] };
+   key <AC11> { [   0x100099F,  0x10009A0 ] };
+
+// shift, z to /
+// key <LFSH> { [   Shift_L              			] };
+   key <AB01> { [   0x10009C7, 0x100098F ] };
+   key <AB02> { [   0x1000982, 0x1000981 ] };
+   key <AB03> { [   0x10009AE, 0x10009A3 ] };
+   key <AB04> { [   0x10009A8, 0x10009DC ] };
+   key <AB05> { [   0x10009F1, 0x10009DD ] };
+   key <AB06> { [   0x10009B2		 ] };
+   key <AB07> { [   0x10009B8, 0x10009B6 ] };
+   key <AB08> { [   comma,     0x10009B7 ] };
+   key <AB09> { [   0x1000964, 0x10009FA ] };
+   key <AB10> { [   0x10009AF, 0x10009DF ] };
+   key <BKSL> { [   backslash, bar	 ] };
+
+// third level with right-win
+//    include "level3(lwin_switch)"
+
+//   key <LCTL> { [   Control_L              ] };
+//   key <SPCE> { [   space                  ] };
+
+//   modifier_map Shift  { Shift_L };
+//   modifier_map Lock   { Caps_Lock };
+//   modifier_map Control{ Control_L };
+
+
+};
+
+
+xkb_symbols "ben_bornona" {
+ name[Group1]= "Bengali (Bornona)";
+   key <ESC>  { [ Escape 					] };
+
+// numbers
+   key <TLDE> { [ 0x100200D, 0x100200C   	] };
+   key <AE01> { [ 0x10009E7, exclam         	] };
+   key <AE02> { [ 0x10009E8, 0x1000981 	] };
+   key <AE03> { [ 0x10009E9, numbersign   	] };
+   key <AE04> { [ 0x10009EA, 0x10009F3    	] };
+   key <AE05> { [ 0x10009EB, percent      	] };
+   key <AE06> { [ 0x10009EC, 0x1000983    	] };
+   key <AE07> { [ 0x10009ED, 0x10009CE	] };
+   key <AE08> { [ 0x10009EE, asterisk		] };
+   key <AE09> { [ 0x10009EF, parenleft    	] };
+   key <AE10> { [ 0x10009E6, parenright	] };
+   key <AE11> { [ minus,	   underscore	] };
+   key <AE12> { [ equal,          plus			] };
+   key <BKSP> { [ BackSpace               		] };
+
+// tab, q to ] 
+   key <TAB>   { [   Tab,  	ISO_Left_Tab	] };
+   key <AD01> { [   0x1000982,  0x1000999, 0x10009D7	] };
+   key <AD02> { [   0x10009A2,  0x10009A0, 0x100098A ] };
+   key <AD03> { [   0x10009C7,  0x10009C8, 0x1000988	] };
+   key <AD04> { [   0x10009B0,  0x10009C3, 0x100098B	] };
+   key <AD05> { [   0x10009A4,  0x100099F	] };
+   key <AD06> { [   0x10009A7,  0x10009A5, 0x100098F  ] };
+   key <AD07> { [   0x10009C1,  0x10009C2, 0x1000989	] };
+   key <AD08> { [   0x10009BF,  0x10009C0, 0x1000987	] };
+   key <AD09> { [   0x10009CB,  0x10009CC, 0x1000993	] };
+   key <AD10> { [   0x10009AA, 0x1000990, 0x1000994		] };
+   key <AD11> { [   0x100005B,  0x100007B, 0x10009DC  ] };
+   key <AD12> { [   0x100005D,  0x100007D  ] };
+   key <RTRN> { [   Return					] };
+
+// caps, a to ' 
+// key <CAPS> { [   Caps_Lock            		] };
+   key <AC01> { [   0x10009BE,  0x1000985, 0x10009F4  ] };
+   key <AC02> { [   0x10009B8,  0x10009B6, 0x10009F5  ] };
+   key <AC03> { [   0x10009A6,  0x10009A1, 0x10009F8  ] };
+   key <AC04> { [   0x10009AB				] };
+   key <AC05> { [   0x1000997,  0x1000998	] };
+   key <AC06> { [   0x10009CD, 0x10009B9	] };
+   key <AC07> { [   0x100099C,  0x100099D	] };
+   key <AC08> { [   0x1000995,  0x1000996	] };
+   key <AC09> { [   0x10009B2,  0x1000964  ] };
+   key <AC10> { [   semicolon,  0x100003A	] };
+   key <AC11> { [   quoteright, quotedbl   	] };
+
+// shift, z to /
+// key <LFSH> { [   Shift_L              			] };
+   key <AB01> { [   0x10009AF, 0x10009DC	] };
+   key <AB02> { [   0x10009B7, 0x10009DD, 0x10009FA	] };
+   key <AB03> { [   0x100099A,  0x100099B  ] };
+   key <AB04> { [   0x10009AD				] };
+   key <AB05> { [   0x10009AC,  0x10009DF	] };
+   key <AB06> { [   0x10009A8,  0x10009A3	] };
+   key <AB07> { [   0x10009AE,  0x100099E	] };
+   key <AB08> { [   comma,      0x100003C	] };
+   key <AB09> { [   0x100002E,  0x100003E  ] };
+   key <AB10> { [   0x100002F,  question   	] };
+   key <BKSL> { [   0x10009F1,  0x10009F0	] };
+
+//   key <LCTL> { [   Control_L              ] };
+//   key <SPCE> { [   space                  ] };
+
+//   modifier_map Shift  { Shift_L };
+//   modifier_map Lock   { Caps_Lock };
+//   modifier_map Control{ Control_L };
+// third level with right-alt
+    include "level3(ralt_switch)"
 
 };
 

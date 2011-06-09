@@ -80,15 +80,21 @@ xkb_symbols "bksl" {
 partial alphanumeric_keys 
 xkb_symbols "qwerty" {
  
-    // This layout should work exactly as a cz with the exception 
-    // of 'Z' and 'Y' keys, which are in the qwerty style (ie. swapped).
-    // 2001 by Kamil Toman <ktoman@email.cz>
+    // This layout represent actual keyboard layout. It complies with symbols
+    // printed on keys.
+    // -----------------------------------------------------------------------
+    // This layout was created in 2011 by Lukáš Mojžíš <lmojzis@grenames.cz>
     
     include "cz(basic)"
     name[Group1]= "Czech (qwerty)";
 
-    key <AB01>	{ [         z,          Z,       degree,     NoSymbol ]	};
-    key <AD06>	{ [         y,          Y,     NoSymbol,     NoSymbol ]	};
+    key <AB01>	{ [         z,          Z,       degree,         NoSymbol ] };
+    key <AC10>	{ [     uring,   quotedbl,    semicolon,         NoSymbol ] };
+    key <AD06>	{ [         y,          Y,     NoSymbol,         NoSymbol ] };
+    key <AD11>	{ [    uacute,      slash,  bracketleft,        braceleft ] };
+    key <AD12>	{ [parenright,  parenleft, bracketright,       braceright ] };
+    key <AE09>	{ [    iacute,          9,    parenleft,       dead_acute ] };
+    key <AE10>	{ [    eacute,          0,   parenright, dead_doubleacute ] };
 };
 
 // Use <BKSL> instead of <LSGT> (useful for keyboard without <LSGT> key)
