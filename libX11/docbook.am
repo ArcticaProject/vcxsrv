@@ -72,7 +72,7 @@ if HAVE_STYLESHEETS
 if HAVE_XSLTPROC
 
 # DocBook/XML generated document cross-reference database
-sgmldbs_DATA = $(docbook:.xml=.html.db) $(docbook:.xml=.fo.db)
+shelf_DATA += $(docbook:.xml=.html.db) $(docbook:.xml=.fo.db)
 
 # Generate DocBook/XML document cross-reference database
 # Flags for the XSL Transformation processor generating xref target databases
@@ -94,4 +94,4 @@ endif HAVE_XSLTPROC
 endif HAVE_STYLESHEETS
 endif HAVE_XMLTO
 
-CLEANFILES = $(shelf_DATA) $(sgmldbs_DATA)
+CLEANFILES = $(shelf_DATA)

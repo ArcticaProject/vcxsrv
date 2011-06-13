@@ -20,6 +20,7 @@ shelf_DATA =
 # DocBook/XML file with chapters, appendix and images it includes
 dist_shelf_DATA = $(docbook) $(chapters)
 
+if HAVE_XMLTO
 #
 # Generate DocBook/XML output formats with or without stylesheets
 #
@@ -71,7 +72,7 @@ if HAVE_STYLESHEETS
 if HAVE_XSLTPROC
 
 # DocBook/XML generated document cross-reference database
-sgmldbs_DATA = $(docbook:.xml=.html.db) $(docbook:.xml=.fo.db)
+shelf_DATA += $(docbook:.xml=.html.db) $(docbook:.xml=.fo.db)
 
 # Generate DocBook/XML document cross-reference database
 # Flags for the XSL Transformation processor generating xref target databases
@@ -91,5 +92,6 @@ XSLTPROC_FLAGS =					\
 
 endif HAVE_XSLTPROC
 endif HAVE_STYLESHEETS
+endif HAVE_XMLTO
 
-CLEANFILES = $(shelf_DATA) $(sgmldbs_DATA)
+CLEANFILES = $(shelf_DATA)
