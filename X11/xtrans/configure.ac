@@ -38,7 +38,7 @@ XORG_ENABLE_DOCS
 XORG_WITH_XMLTO(0.0.22)
 XORG_WITH_FOP
 XORG_WITH_XSLTPROC
-XORG_CHECK_SGML_DOCTOOLS(1.7)
+XORG_CHECK_SGML_DOCTOOLS(1.8)
 
 # Because xtrans is included into other modules rather than being linked
 # with, these defines have to be added to the cflags line

@@ -55,6 +55,16 @@
             </languageList>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>hu</name>
+            <_description>German (with Hungarian letters and no dead keys)</_description>
+            <languageList>
+              <iso639Id>ger</iso639Id>
+              <iso639Id>hun</iso639Id>
+            </languageList>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>

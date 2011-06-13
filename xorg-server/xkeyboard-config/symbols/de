@@ -580,6 +580,8 @@ xkb_symbols "htcdream" {
         include "level3(alt_switch)"
 };
 
+// EXTRAS:
+
 partial alphanumeric_keys
 xkb_symbols "us" {
     include "us"
@@ -598,4 +600,29 @@ xkb_symbols "us" {
     key <AE11> { [       minus, underscore,     ssharp,   question ] };
 
     include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "hu" {
+
+    // modify the basic German layout to not have any dead keys and add Hungarian letters
+
+    include "de(basic)"
+    name[Group1]="German (with Hungarian letters and no dead keys)";
+
+    key <AB01> { [         y,          Y, guillemotleft,        less ] };
+    key <AC10> { [odiaeresis, Odiaeresis,        eacute,      Eacute ] };
+    key <AC11> { [adiaeresis, Adiaeresis,        aacute,       Aacute] };
+    key <AD03> { [         e,          E,      EuroSign,    EuroSign ] };
+    key <AD06> { [         z,          Z,     leftarrow,         yen ] };
+    key <AD07> { [         u,          U,        uacute,      Uacute ] };
+    key <AD08> { [         i,          I,        iacute,      Iacute ] };
+    key <AD09> { [         o,          O,  odoubleacute,Odoubleacute ] };
+    key <AD11> { [udiaeresis, Udiaeresis,  udoubleacute,Udoubleacute ] };
+    key <AD12> { [      plus,   asterisk,    asciitilde,      macron ] };
+    key <AE12> { [     acute,      grave,        oacute,      Oacute ] };
+    key <BKSL> { [numbersign, apostrophe,         grave,       grave ] };
+    key <TLDE> { [asciicircum,    degree,       notsign,     notsign ] };
+    
+    
 };

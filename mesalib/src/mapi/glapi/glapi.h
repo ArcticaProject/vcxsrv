@@ -175,3 +175,7 @@ _GLAPI_EXPORT _glapi_proc
 _glapi_get_proc_address(const char *funcName);
 
 #endif
+_GLAPI_EXPORT struct _glapi_table *
+_glapi_create_table_from_handle(void *handle, const char *symbol_prefix);
+
+
