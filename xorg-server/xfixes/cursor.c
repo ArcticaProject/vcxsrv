@@ -1182,7 +1182,7 @@ static struct PointerBarrier*
 barrier_find_nearest(CursorScreenPtr cs, int dir,
 		     int x1, int y1, int x2, int y2)
 {
-    struct PointerBarrierClient *c;
+    struct PointerBarrierClient *c = NULL;
     struct PointerBarrier *nearest = NULL;
     double min_distance = INT_MAX; /* can't get higher than that in X anyway */
 
