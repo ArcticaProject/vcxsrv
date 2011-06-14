@@ -310,7 +310,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\teximage.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texobj.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texparam.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\main\texrender.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texstate.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texstore.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\varray.c" />

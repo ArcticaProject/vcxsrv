@@ -120,6 +120,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texcombine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texrender.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\src\mesa\drivers\dri\swrast\swrast_priv.h">

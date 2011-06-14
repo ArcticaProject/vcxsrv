@@ -296,9 +296,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texparam.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\main\texrender.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\texstate.c">
       <Filter>Source Files</Filter>
     </ClCompile>

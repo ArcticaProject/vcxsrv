@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_span.c" />
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_stencil.c" />
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texcombine.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texrender.c" />
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texfilter.c" />
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_triangle.c" />
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_zoom.c" />
