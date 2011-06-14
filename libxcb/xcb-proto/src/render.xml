@@ -5,8 +5,8 @@ All Rights Reserved.  See the file COPYING in this directory
 for licensing information.
 -->
 <xcb header="render" extension-xname="RENDER" extension-name="Render"
-    major-version="0" minor-version="10">
-  <!-- supports version 0.10 -->
+    major-version="0" minor-version="11">
+  <!-- supports version 0.11 -->
 
   <import>xproto</import>
 
@@ -20,6 +20,7 @@ for licensing information.
   </enum>
 
   <!-- Disjoint* and Conjoint* are new in version 0.2 -->
+  <!-- PDF blend modes are new in version 0.11 -->
   <enum name="PictOp">
     <item name="Clear" />
     <item name="Src" />
@@ -61,6 +62,23 @@ for licensing information.
     <item name="ConjointAtop" />
     <item name="ConjointAtopReverse" />
     <item name="ConjointXor" />
+
+    <!-- PDF blend modes are new in version 0.11 -->
+    <item name="Multiply"><value>48</value></item>
+    <item name="Screen" />
+    <item name="Overlay" />
+    <item name="Darken" />
+    <item name="Lighten" />
+    <item name="ColorDodge" />
+    <item name="ColorBurn" />
+    <item name="HardLight" />
+    <item name="SoftLight" />
+    <item name="Difference" />
+    <item name="Exclusion" />
+    <item name="HSLHue" />
+    <item name="HSLSaturation" />
+    <item name="HSLColor" />
+    <item name="HSLLuminosity" />
   </enum>
 
   <enum name="PolyEdge">
