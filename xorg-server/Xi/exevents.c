@@ -878,33 +878,6 @@ UpdateDeviceState(DeviceIntPtr device, DeviceEvent* event)
     return DEFAULT;
 }
 
-static void
-ProcessRawEvent(RawDeviceEvent *ev, DeviceIntPtr device)
-{
-    GrabPtr grab = device->deviceGrab.grab;
-
-    if (grab)
-        DeliverGrabbedEvent((InternalEvent*)ev, device, FALSE);
-    else { /* deliver to all root windows */
-        xEvent *xi;
-        int i;
-
-        i = EventToXI2((InternalEvent*)ev, (xEvent**)&xi);
-        if (i != Success)
-        {
-            ErrorF("[Xi] %s: XI2 conversion failed in %s (%d)\n",
-                    __FUNCTION__, device->name, i);
-            return;
-        }
-
-        for (i = 0; i < screenInfo.numScreens; i++)
-          if (screenInfo.screens[i] && screenInfo.screens[i]->root)
-            DeliverEventsToWindow(device, screenInfo.screens[i]->root, xi, 1,
-                                  GetEventFilter(device, xi), NULL);
-        free(xi);
-    }
-}
-
 /**
  * Main device event processing function.
  * Called from when processing the events from the event queue.
@@ -932,7 +905,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
         ev->any.type == ET_RawButtonRelease ||
         ev->any.type == ET_RawMotion)
     {
-        ProcessRawEvent(&ev->raw_event, device);
+        DeliverRawEvent(&ev->raw_event, device);
         return;
     }
 

@@ -2040,31 +2040,29 @@ DeliverToWindowOwner(DeviceIntPtr dev, WindowPtr win,
     return EVENT_NOT_DELIVERED;
 }
 
+
 /**
- * Deliver events to clients registered on the window.
+ * Get the list of clients that should be tried for event delivery on the
+ * given window.
  *
- * @param client_return On successful delivery, set to the recipient.
- * @param mask_return On successful delivery, set to the recipient's event
- * mask for this event.
+ * @return 1 if the client list should be traversed, zero if the event
+ * should be skipped.
  */
-static enum EventDeliveryState
-DeliverEventToClients(DeviceIntPtr dev, WindowPtr win, xEvent *events,
-                      int count, Mask filter, GrabPtr grab,
-                      ClientPtr *client_return, Mask *mask_return)
+static Bool
+GetClientsForDelivery(DeviceIntPtr dev, WindowPtr win,
+                      xEvent *events, Mask filter, InputClients **clients)
 {
-    int attempt;
-    enum EventDeliveryState rc = EVENT_SKIP;
-    InputClients *other;
+    int rc = 0;
 
     if (core_get_type(events) != 0)
-        other = (InputClients *)wOtherClients(win);
+        *clients = (InputClients *)wOtherClients(win);
     else if (xi2_get_type(events) != 0)
     {
         OtherInputMasks *inputMasks = wOtherInputMasks(win);
         /* Has any client selected for the event? */
         if (!GetWindowXI2Mask(dev, win, events))
             goto out;
-        other = inputMasks->inputClients;
+        *clients = inputMasks->inputClients;
     } else {
         OtherInputMasks *inputMasks = wOtherInputMasks(win);
         /* Has any client selected for the event? */
@@ -2072,20 +2070,36 @@ DeliverEventToClients(DeviceIntPtr dev, WindowPtr win, xEvent *events,
             !(inputMasks->inputEvents[dev->id] & filter))
             goto out;
 
-        other = inputMasks->inputClients;
+        *clients = inputMasks->inputClients;
     }
 
-    rc = EVENT_NOT_DELIVERED;
+    rc = 1;
+out:
+    return rc;
+}
 
-    for (; other; other = other->next)
+/**
+ * Try delivery on each client in inputclients, provided the event mask
+ * accepts it and there is no interfering core grab..
+ */
+static enum EventDeliveryState
+DeliverEventToInputClients(DeviceIntPtr dev, InputClients *inputclients,
+                           WindowPtr win, xEvent *events,
+                           int count, Mask filter, GrabPtr grab,
+                           ClientPtr *client_return, Mask *mask_return)
+{
+    int attempt;
+    enum EventDeliveryState rc = EVENT_NOT_DELIVERED;
+
+    for (; inputclients; inputclients = inputclients->next)
     {
         Mask mask;
-        ClientPtr client = rClient(other);
+        ClientPtr client = rClient(inputclients);
 
         if (IsInterferingGrab(client, dev, events))
             continue;
 
-        mask = GetEventMask(dev, events, other);
+        mask = GetEventMask(dev, events, inputclients);
 
         if (XaceHook(XACE_RECEIVE_ACCESS, client, win,
                     events, count))
@@ -2106,8 +2120,30 @@ DeliverEventToClients(DeviceIntPtr dev, WindowPtr win, xEvent *events,
         }
     }
 
-out:
     return rc;
+}
+
+
+/**
+ * Deliver events to clients registered on the window.
+ *
+ * @param client_return On successful delivery, set to the recipient.
+ * @param mask_return On successful delivery, set to the recipient's event
+ * mask for this event.
+ */
+static enum EventDeliveryState
+DeliverEventToWindowMask(DeviceIntPtr dev, WindowPtr win, xEvent *events,
+                         int count, Mask filter, GrabPtr grab,
+                         ClientPtr *client_return, Mask *mask_return)
+{
+    InputClients *clients;
+
+    if (!GetClientsForDelivery(dev, win, events, filter, &clients))
+        return EVENT_SKIP;
+
+    return DeliverEventToInputClients(dev, clients, win, events, count, filter,
+                                      grab, client_return, mask_return);
+
 }
 
 
@@ -2173,8 +2209,8 @@ DeliverEventsToWindow(DeviceIntPtr pDev, WindowPtr pWin, xEvent
     {
         enum EventDeliveryState rc;
 
-        rc = DeliverEventToClients(pDev, pWin, pEvents, count, filter, grab,
-                                   &client, &deliveryMask);
+        rc = DeliverEventToWindowMask(pDev, pWin, pEvents, count, filter,
+                                      grab, &client, &deliveryMask);
 
         switch(rc)
         {
@@ -2208,6 +2244,35 @@ DeliverEventsToWindow(DeviceIntPtr pDev, WindowPtr pWin, xEvent
 	return deliveries;
     }
     return nondeliveries;
+}
+
+void
+DeliverRawEvent(RawDeviceEvent *ev, DeviceIntPtr device)
+{
+    GrabPtr grab = device->deviceGrab.grab;
+
+    if (grab)
+        DeliverGrabbedEvent((InternalEvent*)ev, device, FALSE);
+    else { /* deliver to all root windows */
+        xEvent *xi;
+        int i;
+        int filter;
+
+        i = EventToXI2((InternalEvent*)ev, (xEvent**)&xi);
+        if (i != Success)
+        {
+            ErrorF("[Xi] %s: XI2 conversion failed in %s (%d)\n",
+                    __func__, device->name, i);
+            return;
+        }
+
+        filter = GetEventFilter(device, xi);
+
+        for (i = 0; i < screenInfo.numScreens; i++)
+            DeliverEventsToWindow(device, screenInfo.screens[i]->root, xi, 1,
+                                  filter, NullGrab);
+        free(xi);
+    }
 }
 
 /* If the event goes to dontClient, don't send it and return 0.  if
