@@ -2262,7 +2262,7 @@ DeliverRawEvent(RawDeviceEvent *ev, DeviceIntPtr device)
         if (i != Success)
         {
             ErrorF("[Xi] %s: XI2 conversion failed in %s (%d)\n",
-                    __func__, device->name, i);
+                    __FUNCTION__, device->name, i);
             return;
         }
 
