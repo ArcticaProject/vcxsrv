@@ -387,6 +387,11 @@ extern _X_EXPORT int DeliverEventsToWindow(
     Mask /* filter */,
     GrabPtr /* grab */);
 
+extern _X_EXPORT void DeliverRawEvent(
+    RawDeviceEvent* /* ev */,
+    DeviceIntPtr /* dev */
+);
+
 extern int DeliverDeviceEvents(
     WindowPtr /* pWin */,
     InternalEvent* /* event */,
