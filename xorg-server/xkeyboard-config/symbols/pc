@@ -10,7 +10,7 @@ xkb_symbols "pc105" {
     key <BKSL> {	[ backslash,	bar		]	};
     key <SPCE> {	[ 	 space			]	};
 
-    include "pc(function)"
+    include "srvr_ctrl(fkey2vt)"
     include "pc(editing)"
     include "keypad(x11)"
 
@@ -63,58 +63,6 @@ xkb_symbols "pc105" {
     key <KITG> { [ XF86KbdLightOnOff ] };
     key <KIDN> { [ XF86KbdBrightnessDown ] };
     key <KIUP> { [ XF86KbdBrightnessUp ] };
-};
-
-partial hidden alphanumeric_keys
-xkb_symbols "function" {
-    key <FK01> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F1,	XF86_Switch_VT_1 ]
-    };
-    key <FK02> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F2,	XF86_Switch_VT_2 ]
-    };
-    key <FK03> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F3,	XF86_Switch_VT_3 ]
-    };
-    key <FK04> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F4,	XF86_Switch_VT_4 ]
-    };
-    key <FK05> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F5,	XF86_Switch_VT_5 ]
-    };
-    key <FK06> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F6,	XF86_Switch_VT_6 ]
-    };
-    key <FK07> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F7,	XF86_Switch_VT_7 ]
-    };
-    key <FK08> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F8,	XF86_Switch_VT_8 ]
-    };
-    key <FK09> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F9,	XF86_Switch_VT_9 ]
-    };
-    key <FK10> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F10,	XF86_Switch_VT_10 ]
-    };
-    key <FK11> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F11,	XF86_Switch_VT_11 ]
-    };
-    key <FK12> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ F12,	XF86_Switch_VT_12 ]
-    };
 };
 
 partial hidden alphanumeric_keys

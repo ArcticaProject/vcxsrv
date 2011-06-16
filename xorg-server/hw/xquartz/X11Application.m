@@ -49,6 +49,8 @@
 #include <unistd.h>
 #include <AvailabilityMacros.h>
 
+#include <pthread.h>
+
 #include <Xplugin.h>
 
 // pbproxy/pbproxy.h
