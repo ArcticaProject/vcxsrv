@@ -59,10 +59,17 @@ partial default xkb_types "default" {
     };
 
     type "CTRL+ALT" {
-	modifiers = Control+Alt;
-	map[Control+Alt] = Level2;
-	level_name[Level1] = "Base";
-	level_name[Level2] = "Ctrl+Alt";
+	modifiers = Control+Alt+Shift+LevelThree;
+        map[None] = Level1;
+        map[Shift] = Level2;
+        map[LevelThree] = Level3;
+        map[Shift+LevelThree] = Level4;
+	map[Control+Alt] = Level5;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Shift";
+        level_name[Level3] = "Alt Base";
+        level_name[Level4] = "Shift Alt";
+	level_name[Level5] = "Ctrl+Alt";
     };
 
    // Local eight level

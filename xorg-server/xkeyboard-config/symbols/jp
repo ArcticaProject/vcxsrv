@@ -118,7 +118,7 @@ xkb_symbols "OADG109A" {
 partial alphanumeric_keys
 xkb_symbols "kana86" {
 
-    include "pc(function)"
+    include "srvr_ctrl(fkey2vt)"
     include "pc(editing)"
     include "keypad(numoperdecsep)"
     include "altwin(menu)"

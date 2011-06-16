@@ -79,7 +79,7 @@ xkb_symbols "sunbasic" {
     include "inet(evdev)"
 
     include "us(basic)"
-    include "pc(function)"
+    include "srvr_ctrl(fkey2vt)"
     include "pc(editing)"
     include "keypad(x11)"
 
