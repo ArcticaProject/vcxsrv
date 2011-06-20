@@ -33,13 +33,13 @@ spec_DATA += $(doc_sources:.xml=.txt)
 endif
 
 if HAVE_STYLESHEETS
-XMLTO_FLAGS = 			\
+XMLTO_FLAGS += 			\
 	-m $(XSL_STYLESHEET)	\
 	--stringparam img.src.path=$(abs_builddir)/	\
 	--stringparam html.stylesheet=$(STYLESHEET_SRCDIR)/xorg.css
 endif
 
-CLEANFILES = $(spec_DATA)
+CLEANFILES += $(spec_DATA)
 
 %.txt: %.xml $(dist_spec_DATA)
 	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) txt $<

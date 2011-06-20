@@ -1108,7 +1108,7 @@ static struct format_mapping format_map[] = {
  * Return first supported format from the given list.
  */
 static enum pipe_format
-find_supported_format(struct pipe_screen *screen, 
+find_supported_format(struct pipe_screen *screen,
                       const enum pipe_format formats[],
                       enum pipe_texture_target target,
                       unsigned sample_count,
@@ -1188,9 +1188,6 @@ st_choose_renderbuffer_format(struct pipe_screen *screen,
 }
 
 
-/**
- * Called via ctx->Driver.chooseTextureFormat().
- */
 gl_format
 st_ChooseTextureFormat_renderable(struct gl_context *ctx, GLint internalFormat,
 				  GLenum format, GLenum type, GLboolean renderable)
@@ -1206,11 +1203,10 @@ st_ChooseTextureFormat_renderable(struct gl_context *ctx, GLint internalFormat,
     * that in advance.  Specify potential render target flags now.
     */
    bindings = PIPE_BIND_SAMPLER_VIEW;
-   if (renderable == GL_TRUE) {
-      if (_mesa_is_depth_format(internalFormat) ||
-	  _mesa_is_depth_or_stencil_format(internalFormat))
+   if (renderable) {
+      if (_mesa_is_depth_or_stencil_format(internalFormat))
 	 bindings |= PIPE_BIND_DEPTH_STENCIL;
-      else 
+      else
 	 bindings |= PIPE_BIND_RENDER_TARGET;
    }
 
@@ -1231,6 +1227,10 @@ st_ChooseTextureFormat_renderable(struct gl_context *ctx, GLint internalFormat,
    return st_pipe_format_to_mesa_format(pFormat);
 }
 
+
+/**
+ * Called via ctx->Driver.ChooseTextureFormat().
+ */
 gl_format
 st_ChooseTextureFormat(struct gl_context *ctx, GLint internalFormat,
                        GLenum format, GLenum type)

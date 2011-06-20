@@ -247,6 +247,8 @@ def generate(env):
     # configuration. See also http://www.scons.org/wiki/AdvancedBuildExample
     build_topdir = 'build'
     build_subdir = env['platform']
+    if env['embedded']:
+        build_subdir =  'embedded-' + build_subdir
     if env['machine'] != 'generic':
         build_subdir += '-' + env['machine']
     if env['build'] != 'release':
@@ -277,6 +279,18 @@ def generate(env):
         cppdefines += ['NDEBUG']
     if env['build'] == 'profile':
         cppdefines += ['PROFILE']
+    if env['platform'] in ('posix', 'linux', 'freebsd', 'darwin'):
+        cppdefines += [
+            '_POSIX_SOURCE',
+            ('_POSIX_C_SOURCE', '199309L'),
+            '_SVID_SOURCE',
+            '_BSD_SOURCE',
+            '_GNU_SOURCE',
+            'PTHREADS',
+            'HAVE_POSIX_MEMALIGN',
+        ]
+    if env['platform'] == 'darwin':
+        cppdefines += ['_DARWIN_C_SOURCE']
     if platform == 'windows':
         cppdefines += [
             'WIN32',
@@ -349,8 +363,8 @@ def generate(env):
     if platform == 'wince':
         cppdefines += ['PIPE_SUBSYSTEM_WINDOWS_CE']
         cppdefines += ['PIPE_SUBSYSTEM_WINDOWS_CE_OGL']
-    if platform == 'embedded':
-        cppdefines += ['PIPE_OS_EMBEDDED']
+    if env['embedded']:
+        cppdefines += ['PIPE_SUBSYSTEM_EMBEDDED']
     env.Append(CPPDEFINES = cppdefines)
 
     # C compiler options
@@ -403,6 +417,8 @@ def generate(env):
             ccflags += ['-m64']
             if platform == 'darwin':
                 ccflags += ['-fno-common']
+        if env['platform'] != 'windows':
+            ccflags += ['-fvisibility=hidden']
         # See also:
         # - http://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
         ccflags += [
@@ -595,7 +611,10 @@ def generate(env):
         env['LINK'] = env['CXX']
 
     # Default libs
-    env.Append(LIBS = [])
+    libs = []
+    if env['platform'] in ('posix', 'linux', 'freebsd', 'darwin'):
+        libs += ['m', 'pthread', 'dl']
+    env.Append(LIBS = libs)
 
     # Load tools
     env.Tool('lex')

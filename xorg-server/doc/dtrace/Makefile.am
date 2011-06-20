@@ -1,6 +1,5 @@
 
 if ENABLE_DOCS
-if HAVE_XMLTO
 if XSERVER_DTRACE
 
 # Main DocBook/XML files (DOCTYPE book)
@@ -13,5 +12,4 @@ shelfdir = $(docdir)
 include $(top_srcdir)/docbook.am
 
 endif XSERVER_DTRACE
-endif HAVE_XMLTO
 endif ENABLE_DOCS
