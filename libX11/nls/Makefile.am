@@ -1,8 +1,11 @@
 
 x11localedir = $(X11_LOCALEDATADIR)
 specdir = $(docdir)/Compose
+CLEANFILES =
+XMLTO_FLAGS =
+SUFFIXES =
 
-include $(top_srcdir)/specs/xmlrules.in
+include $(top_srcdir)/nls/xmlrules.in
 
 EXTRA_DIST = locale.alias.pre compose.dir.pre locale.dir.pre \
 	compose-check.pl compose-chart.pl
