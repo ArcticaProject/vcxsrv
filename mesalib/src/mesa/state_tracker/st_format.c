@@ -608,7 +608,7 @@ struct format_mapping
  * Multiple GL enums might map to multiple pipe_formats.
  * The first pipe format in the list that's supported is the one that's chosen.
  */
-static struct format_mapping format_map[] = {
+static const struct format_mapping format_map[] = {
    /* Basic RGB, RGBA formats */
    {
       { GL_RGB10, GL_RGB10_A2, 0 },
@@ -616,7 +616,7 @@ static struct format_mapping format_map[] = {
    },
    {
       { 4, GL_RGBA, GL_RGBA8, 0 },
-      { DEFAULT_RGBA_FORMATS, 0 }
+      { DEFAULT_RGBA_FORMATS }
    },
    {
       { GL_BGRA, 0 },
@@ -624,7 +624,7 @@ static struct format_mapping format_map[] = {
    },
    {
       { 3, GL_RGB, GL_RGB8, 0 },
-      { DEFAULT_RGB_FORMATS, 0 }
+      { DEFAULT_RGB_FORMATS }
    },
    {
       { GL_RGB12, GL_RGB16, GL_RGBA12, GL_RGBA16, 0 },

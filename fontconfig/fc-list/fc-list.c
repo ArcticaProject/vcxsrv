@@ -156,7 +156,9 @@ main (int argc, char **argv)
     if (quiet && !os)
 	os = FcObjectSetCreate ();
     if (!verbose && !format && !os)
-	os = FcObjectSetBuild (FC_FAMILY, FC_STYLE, (char *) 0);
+	os = FcObjectSetBuild (FC_FAMILY, FC_STYLE, FC_FILE, (char *) 0);
+    if (!format)
+        format = "%{=fclist}\n";
     fs = FcFontList (0, pat, os);
     if (os)
 	FcObjectSetDestroy (os);
@@ -173,7 +175,7 @@ main (int argc, char **argv)
 	    {
 		FcPatternPrint (fs->fonts[j]);
 	    }
-	    else if (format)
+	    else
 	    {
 	        FcChar8 *s;
 
@@ -183,17 +185,6 @@ main (int argc, char **argv)
 		    printf ("%s", s);
 		    free (s);
 		}
-	    }
-	    else
-	    {
-		FcChar8 *str;
-		FcChar8 *file;
-
-		str = FcNameUnparse (fs->fonts[j]);
-		if (FcPatternGetString (fs->fonts[j], FC_FILE, 0, &file) == FcResultMatch)
-		    printf ("%s: ", file);
-		printf ("%s\n", str);
-		free (str);
 	    }
 	}
     }

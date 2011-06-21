@@ -202,6 +202,13 @@ command on the pattern, without the final newline.
 </para></listitem></varlistentry>
 
 <varlistentry><term>
+fccat
+</term><listitem><para>
+Expands to the output of the default output format of the fc-cat
+command on the pattern, without the final newline.
+</para></listitem></varlistentry>
+
+<varlistentry><term>
 pkgkit
 </term><listitem><para>
 Expands to the list of PackageKit font() tags for the pattern.

@@ -194,11 +194,9 @@ file_base_name (const FcChar8 *cache, const FcChar8 *file)
 static FcBool
 cache_print_set (FcFontSet *set, FcStrSet *dirs, const FcChar8 *base_name, FcBool verbose)
 {
-    FcChar8	    *name, *dir;
-    const FcChar8   *file, *base;
-    int		    ret;
+    FcChar8	    *dir;
+    const FcChar8   *base;
     int		    n;
-    int		    id;
     int		    ndir = 0;
     FcStrList	    *list;
 
@@ -227,37 +225,22 @@ cache_print_set (FcFontSet *set, FcStrSet *dirs, const FcChar8 *base_name, FcBoo
     for (n = 0; n < set->nfont; n++)
     {
 	FcPattern   *font = set->fonts[n];
+	FcChar8 *s;
 
-	if (FcPatternGetString (font, FC_FILE, 0, (FcChar8 **) &file) != FcResultMatch)
-	    goto bail3;
-	base = file_base_name (base_name, file);
-	if (FcPatternGetInteger (font, FC_INDEX, 0, &id) != FcResultMatch)
-	    goto bail3;
-	if (!write_string (stdout, base))
-	    goto bail3;
-	if (PUTC (' ', stdout) == EOF)
-	    goto bail3;
-	if (!write_int (stdout, id))
-	    goto bail3;
-        if (PUTC (' ', stdout) == EOF)
-	    goto bail3;
-	name = FcNameUnparse (font);
-	if (!name)
-	    goto bail3;
-	ret = write_string (stdout, name);
-	FcStrFree (name);
-	if (!ret)
-	    goto bail3;
-	if (PUTC ('\n', stdout) == EOF)
-	    goto bail3;
+	s = FcPatternFormat (font, "%{=fccat}\n");
+	if (s)
+	{
+	    printf ("%s", s);
+	    free (s);
+	}
     }
     if (verbose && !set->nfont && !ndir)
 	printf ("<empty>\n");
-    
+
     FcStrListDone (list);
 
     return FcTrue;
-    
+
 bail3:
     FcStrListDone (list);
 bail2:

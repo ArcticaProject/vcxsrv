@@ -65,7 +65,7 @@ FcFileScanFontConfig (FcFontSet		*set,
 	/*
 	 * Edit pattern with user-defined rules
 	 */
-	if (font && config && !FcConfigSubstituteWithPat (config, font, NULL, FcMatchScan))
+	if (font && config && !FcConfigSubstitute (config, font, FcMatchScan))
 	{
 	    FcPatternDestroy (font);
 	    font = NULL;
@@ -75,7 +75,7 @@ FcFileScanFontConfig (FcFontSet		*set,
 	/*
 	 * Add the font
 	 */
-	if (font && (!config || FcConfigAcceptFont (config, font)))
+	if (font)
 	{
 	    if (FcDebug() & FC_DBG_SCANV)
 	    {
@@ -303,9 +303,6 @@ FcCache *
 FcDirCacheRead (const FcChar8 *dir, FcBool force, FcConfig *config)
 {
     FcCache		*cache = NULL;
-
-    if (config && !FcConfigAcceptFilename (config, dir))
-	return NULL;
 
     /* Try to use existing cache file */
     if (!force)
