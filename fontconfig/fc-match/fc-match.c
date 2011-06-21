@@ -195,6 +195,14 @@ main (int argc, char **argv)
     }
     FcPatternDestroy (pat);
 
+    if (!format)
+    {
+	if (os)
+	    format = "%{=unparse}\n";
+	else
+	    format = "%{=fcmatch}\n";
+    }
+
     if (fs)
     {
 	int	j;
@@ -209,7 +217,7 @@ main (int argc, char **argv)
 	    {
 		FcPatternPrint (font);
 	    }
-	    else if (format)
+	    else
 	    {
 	        FcChar8 *s;
 
@@ -219,34 +227,6 @@ main (int argc, char **argv)
 		    printf ("%s", s);
 		    free (s);
 		}
-	    }
-	    else if (os)
-	    {
-		FcChar8 *str;
-		str = FcNameUnparse (font);
-		printf ("%s\n", str);
-		free (str);
-	    }
-	    else
-	    {
-		FcChar8	*family;
-		FcChar8	*style;
-		FcChar8	*file;
-
-		if (FcPatternGetString (font, FC_FILE, 0, &file) != FcResultMatch)
-		    file = (FcChar8 *) "<unknown filename>";
-		else
-		{
-		    FcChar8 *slash = (FcChar8 *) strrchr ((char *) file, '/');
-		    if (slash)
-			file = slash+1;
-		}
-		if (FcPatternGetString (font, FC_FAMILY, 0, &family) != FcResultMatch)
-		    family = (FcChar8 *) "<unknown family>";
-		if (FcPatternGetString (font, FC_STYLE, 0, &style) != FcResultMatch)
-		    style = (FcChar8 *) "<unknown style>";
-
-		printf ("%s: \"%s\" \"%s\"\n", file, family, style);
 	    }
 
 	    FcPatternDestroy (font);

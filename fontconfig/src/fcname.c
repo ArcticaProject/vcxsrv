@@ -874,8 +874,7 @@ FcNameUnparseEscaped (FcPattern *pat, FcBool escape)
 	{
 	    o = &l->types[i];
 	    if (!strcmp (o->object, FC_FAMILY) ||
-		!strcmp (o->object, FC_SIZE) ||
-		!strcmp (o->object, FC_FILE))
+		!strcmp (o->object, FC_SIZE))
 		continue;
 	
 	    e = FcPatternObjectFindElt (pat, FcObjectFromName (o->object));
