@@ -12,3 +12,5 @@ Release
 *.pyc
 *.res
 *.pdb
+*.suo
+*.sdf
