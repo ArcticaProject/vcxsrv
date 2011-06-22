@@ -119,6 +119,7 @@ Usage(int argc, char *argv[])
         M1("Usage: %s [options] file[(map)] ...\n", argv[0]);
     M("Legal options:\n");
     M("-?,-help             Print this message\n");
+    M("-version             Print the version number\n");
     if (!xkblist)
     {
         M("-a                   Show all actions\n");
@@ -252,7 +253,11 @@ parseArgs(int argc, char *argv[])
             Usage(argc, argv);
             exit(0);
         }
-        else if ((strcmp(argv[i], "-a") == 0) && (!xkblist))
+        else if (strcmp(argv[i], "-version") == 0)
+        {
+            printf("xkbcomp %s\n", PACKAGE_VERSION);
+            exit(0);
+        } else if ((strcmp(argv[i], "-a") == 0) && (!xkblist))
         {
             showImplicit = True;
         }

@@ -244,6 +244,7 @@ typedef struct _InterpDef
     KeySym sym;
     ExprDef *match;
     VarDef *def;
+    Bool ignore;
 } InterpDef;
 
 typedef struct _IndicatorNameDef
