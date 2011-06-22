@@ -88,7 +88,7 @@ extern VarDef *BoolVarCreate(Atom /* nameToken */ ,
                              unsigned   /* set */
     );
 
-extern InterpDef *InterpCreate(KeySym /* sym */ ,
+extern InterpDef *InterpCreate(const char * /* sym_str */ ,
                                ExprDef *        /* match */
     );
 
@@ -164,7 +164,7 @@ extern ExprDef *AppendKeysymList(ExprDef * /* list */ ,
                                  char * /* sym */
     );
 
-extern int LookupKeysym(char * /* str */ ,
+extern int LookupKeysym(const char * /* str */ ,
                         KeySym *        /* sym_rtrn */
     );
 

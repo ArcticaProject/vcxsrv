@@ -220,7 +220,7 @@ BoolVarCreate(Atom nameToken, unsigned set)
 }
 
 InterpDef *
-InterpCreate(KeySym sym, ExprDef * match)
+InterpCreate(const char *sym_str, ExprDef * match)
 {
     InterpDef *def;
 
@@ -229,7 +229,10 @@ InterpCreate(KeySym sym, ExprDef * match)
     {
         def->common.stmtType = StmtInterpDef;
         def->common.next = NULL;
-        def->sym = sym;
+        if (LookupKeysym(sym_str, &def->sym) == 0)
+            def->ignore = True;
+        else
+            def->ignore = False;
         def->match = match;
     }
     else
@@ -622,7 +625,7 @@ AppendKeysymList(ExprDef * list, char *sym)
 }
 
 int
-LookupKeysym(char *str, KeySym * sym_rtrn)
+LookupKeysym(const char *str, KeySym * sym_rtrn)
 {
     KeySym sym;
     char *tmp;

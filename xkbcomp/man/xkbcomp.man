@@ -88,6 +88,9 @@ Specifies the root directory for relative path names.
 .B -synch
 Force synchronization for X requests.
 .TP 8
+.B -version
+Print version number.
+.TP 8
 .B \-w\ \fIlvl\fP
 Controls the reporting of warnings during compilation.  A warning level
 of 0 disables all warnings; a warning level of 10 enables them all.

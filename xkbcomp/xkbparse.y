@@ -374,9 +374,9 @@ InterpretDecl	:	INTERPRET InterpretMatch OBRACE
 		;
 
 InterpretMatch	:	KeySym PLUS Expr	
-			{ $$= InterpCreate(XStringToKeysym($1), $3); }
+			{ $$= InterpCreate($1, $3); }
 		|	KeySym			
-			{ $$= InterpCreate(XStringToKeysym($1), NULL); }
+			{ $$= InterpCreate($1, NULL); }
 		;
 
 VarDeclList	:	VarDeclList VarDecl
