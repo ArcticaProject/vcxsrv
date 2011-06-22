@@ -139,6 +139,10 @@ uInformation(const char * /* s */ , ...
      extern void uWarning(const char * /* s  */ , ...
     ) _X_ATTRIBUTE_PRINTF(1, 2);
 
+#ifdef ERROR
+#undef ERROR
+#endif
+
 #define ERROR6			uError
 #define ERROR5			uError
 #define ERROR4			uError
