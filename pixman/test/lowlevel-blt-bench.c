@@ -89,40 +89,56 @@ bench_memcpy ()
 
 static void
 pixman_image_composite_wrapper (pixman_implementation_t *impl,
-                                pixman_op_t              op,
-                                pixman_image_t *         src_image,
-                                pixman_image_t *         mask_image,
-                                pixman_image_t *         dst_image,
-                                int32_t                  src_x,
-                                int32_t                  src_y,
-                                int32_t                  mask_x,
-                                int32_t                  mask_y,
-                                int32_t                  dest_x,
-                                int32_t                  dest_y,
-                                int32_t                  width,
-                                int32_t                  height)
+				pixman_composite_info_t *info)
 {
-    pixman_image_composite (op, src_image, mask_image, dst_image, src_x,
-                            src_y, mask_x, mask_y, dest_x, dest_y, width, height);
+    pixman_image_composite (info->op,
+			    info->src_image, info->mask_image, info->dest_image,
+			    info->src_x, info->src_y,
+			    info->mask_x, info->mask_y,
+			    info->dest_x, info->dest_y,
+			    info->width, info->height);
 }
 
 static void
 pixman_image_composite_empty (pixman_implementation_t *impl,
-                              pixman_op_t              op,
-                              pixman_image_t *         src_image,
-                              pixman_image_t *         mask_image,
-                              pixman_image_t *         dst_image,
-                              int32_t                  src_x,
-                              int32_t                  src_y,
-                              int32_t                  mask_x,
-                              int32_t                  mask_y,
-                              int32_t                  dest_x,
-                              int32_t                  dest_y,
-                              int32_t                  width,
-                              int32_t                  height)
+			      pixman_composite_info_t *info)
 {
-    pixman_image_composite (op, src_image, mask_image, dst_image, 0,
-                            0, 0, 0, 0, 0, 1, 1);
+    pixman_image_composite (info->op,
+			    info->src_image, info->mask_image, info->dest_image,
+			    0, 0, 0, 0, 0, 0, 1, 1);
+}
+
+static inline void
+call_func (pixman_composite_func_t func,
+	   pixman_op_t             op,
+	   pixman_image_t *        src_image,
+	   pixman_image_t *        mask_image,
+	   pixman_image_t *        dest_image,
+	   int32_t		   src_x,
+	   int32_t		   src_y,
+	   int32_t                 mask_x,
+	   int32_t                 mask_y,
+	   int32_t                 dest_x,
+	   int32_t                 dest_y,
+	   int32_t                 width,
+	   int32_t                 height)
+{
+    pixman_composite_info_t info;
+
+    info.op = op;
+    info.src_image = src_image;
+    info.mask_image = mask_image;
+    info.dest_image = dest_image;
+    info.src_x = src_x;
+    info.src_y = src_y;
+    info.mask_x = mask_x;
+    info.mask_y = mask_y;
+    info.dest_x = dest_x;
+    info.dest_y = dest_y;
+    info.width = width;
+    info.height = height;
+
+    func (0, &info);
 }
 
 void
@@ -150,7 +166,7 @@ bench_L  (pixman_op_t              op,
 	}
 	if (++x >= 64)
 	    x = 0;
-	func (0, op, src_img, mask_img, dst_img, x, 0, x, 0, 63 - x, 0, width, lines_count);
+	call_func (func, op, src_img, mask_img, dst_img, x, 0, x, 0, 63 - x, 0, width, lines_count);
     }
     qx = q;
 }
@@ -171,7 +187,7 @@ bench_M (pixman_op_t              op,
     {
 	if (++x >= 64)
 	    x = 0;
-	func (0, op, src_img, mask_img, dst_img, x, 0, x, 0, 1, 0, WIDTH - 64, HEIGHT);
+	call_func (func, op, src_img, mask_img, dst_img, x, 0, x, 0, 1, 0, WIDTH - 64, HEIGHT);
     }
 }
 
@@ -203,7 +219,7 @@ bench_HT (pixman_op_t              op,
 	{
 	    y = 0;
 	}
-	func (0, op, src_img, mask_img, dst_img, x, y, x, y, x, y, w, h);
+	call_func (func, op, src_img, mask_img, dst_img, x, y, x, y, x, y, w, h);
 	x += w;
 	pix_cnt += w * h;
     }
@@ -238,7 +254,7 @@ bench_VT (pixman_op_t              op,
 	{
 	    x = 0;
 	}
-	func (0, op, src_img, mask_img, dst_img, x, y, x, y, x, y, w, h);
+	call_func (func, op, src_img, mask_img, dst_img, x, y, x, y, x, y, w, h);
 	y += h;
 	pix_cnt += w * h;
     }
@@ -274,7 +290,7 @@ bench_R (pixman_op_t              op,
 	int sy = rand () % (maxh - TILEWIDTH * 2);
 	int dx = rand () % (maxw - TILEWIDTH * 2);
 	int dy = rand () % (maxh - TILEWIDTH * 2);
-	func (0, op, src_img, mask_img, dst_img, sx, sy, sx, sy, dx, dy, w, h);
+	call_func (func, op, src_img, mask_img, dst_img, sx, sy, sx, sy, dx, dy, w, h);
 	pix_cnt += w * h;
     }
     return pix_cnt;
@@ -309,7 +325,7 @@ bench_RT (pixman_op_t              op,
 	int sy = rand () % (maxh - TINYWIDTH * 2);
 	int dx = rand () % (maxw - TINYWIDTH * 2);
 	int dy = rand () % (maxh - TINYWIDTH * 2);
-	func (0, op, src_img, mask_img, dst_img, sx, sy, sx, sy, dx, dy, w, h);
+	call_func (func, op, src_img, mask_img, dst_img, sx, sy, sx, sy, dx, dy, w, h);
 	pix_cnt += w * h;
     }
     return pix_cnt;

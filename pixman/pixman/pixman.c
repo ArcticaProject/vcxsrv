@@ -238,7 +238,7 @@ static pixman_bool_t
 pixman_compute_composite_region32 (pixman_region32_t * region,
                                    pixman_image_t *    src_image,
                                    pixman_image_t *    mask_image,
-                                   pixman_image_t *    dst_image,
+                                   pixman_image_t *    dest_image,
                                    int32_t             src_x,
                                    int32_t             src_y,
                                    int32_t             mask_x,
@@ -255,8 +255,8 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
 
     region->extents.x1 = MAX (region->extents.x1, 0);
     region->extents.y1 = MAX (region->extents.y1, 0);
-    region->extents.x2 = MIN (region->extents.x2, dst_image->bits.width);
-    region->extents.y2 = MIN (region->extents.y2, dst_image->bits.height);
+    region->extents.x2 = MIN (region->extents.x2, dest_image->bits.width);
+    region->extents.y2 = MIN (region->extents.y2, dest_image->bits.height);
 
     region->data = 0;
 
@@ -271,29 +271,29 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
 	return FALSE;
     }
 
-    if (dst_image->common.have_clip_region)
+    if (dest_image->common.have_clip_region)
     {
-	if (!clip_general_image (region, &dst_image->common.clip_region, 0, 0))
+	if (!clip_general_image (region, &dest_image->common.clip_region, 0, 0))
 	    return FALSE;
     }
 
-    if (dst_image->common.alpha_map)
+    if (dest_image->common.alpha_map)
     {
 	if (!pixman_region32_intersect_rect (region, region,
-					     dst_image->common.alpha_origin_x,
-					     dst_image->common.alpha_origin_y,
-					     dst_image->common.alpha_map->width,
-					     dst_image->common.alpha_map->height))
+					     dest_image->common.alpha_origin_x,
+					     dest_image->common.alpha_origin_y,
+					     dest_image->common.alpha_map->width,
+					     dest_image->common.alpha_map->height))
 	{
 	    return FALSE;
 	}
 	if (!pixman_region32_not_empty (region))
 	    return FALSE;
-	if (dst_image->common.alpha_map->common.have_clip_region)
+	if (dest_image->common.alpha_map->common.have_clip_region)
 	{
-	    if (!clip_general_image (region, &dst_image->common.alpha_map->common.clip_region,
-				     -dst_image->common.alpha_origin_x,
-				     -dst_image->common.alpha_origin_y))
+	    if (!clip_general_image (region, &dest_image->common.alpha_map->common.clip_region,
+				     -dest_image->common.alpha_origin_x,
+				     -dest_image->common.alpha_origin_y))
 	    {
 		return FALSE;
 	    }
@@ -768,24 +768,30 @@ pixman_image_composite32 (pixman_op_t      op,
 				   dest_format, dest_flags,
 				   &imp, &func))
     {
+	pixman_composite_info_t info;
 	const pixman_box32_t *pbox;
 	int n;
 
+	info.op = op;
+	info.src_image = src;
+	info.mask_image = mask;
+	info.dest_image = dest;
+
 	pbox = pixman_region32_rectangles (&region, &n);
-	
+
 	while (n--)
 	{
-	    func (imp, op,
-		  src, mask, dest,
-		  pbox->x1 + src_x - dest_x,
-		  pbox->y1 + src_y - dest_y,
-		  pbox->x1 + mask_x - dest_x,
-		  pbox->y1 + mask_y - dest_y,
-		  pbox->x1,
-		  pbox->y1,
-		  pbox->x2 - pbox->x1,
-		  pbox->y2 - pbox->y1);
-	    
+	    info.src_x = pbox->x1 + src_x - dest_x;
+	    info.src_y = pbox->y1 + src_y - dest_y;
+	    info.mask_x = pbox->x1 + mask_x - dest_x;
+	    info.mask_y = pbox->y1 + mask_y - dest_y;
+	    info.dest_x = pbox->x1;
+	    info.dest_y = pbox->y1;
+	    info.width = pbox->x2 - pbox->x1;
+	    info.height = pbox->y2 - pbox->y1;
+
+	    func (imp, &info);
+
 	    pbox++;
 	}
     }
@@ -821,8 +827,8 @@ pixman_blt (uint32_t *src_bits,
             int       dst_bpp,
             int       src_x,
             int       src_y,
-            int       dst_x,
-            int       dst_y,
+            int       dest_x,
+            int       dest_y,
             int       width,
             int       height)
 {
@@ -830,7 +836,7 @@ pixman_blt (uint32_t *src_bits,
 				       src_bits, dst_bits, src_stride, dst_stride,
                                        src_bpp, dst_bpp,
                                        src_x, src_y,
-                                       dst_x, dst_y,
+                                       dest_x, dest_y,
                                        width, height);
 }
 
@@ -1184,7 +1190,7 @@ PIXMAN_EXPORT pixman_bool_t
 pixman_compute_composite_region (pixman_region16_t * region,
                                  pixman_image_t *    src_image,
                                  pixman_image_t *    mask_image,
-                                 pixman_image_t *    dst_image,
+                                 pixman_image_t *    dest_image,
                                  int16_t             src_x,
                                  int16_t             src_y,
                                  int16_t             mask_x,
@@ -1200,7 +1206,7 @@ pixman_compute_composite_region (pixman_region16_t * region,
     pixman_region32_init (&r32);
 
     retval = pixman_compute_composite_region32 (
-	&r32, src_image, mask_image, dst_image,
+	&r32, src_image, mask_image, dest_image,
 	src_x, src_y, mask_x, mask_y, dest_x, dest_y,
 	width, height);
 

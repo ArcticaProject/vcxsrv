@@ -574,6 +574,7 @@ Initial access control list for display
 .SH "SEE ALSO"
 X(__miscmansuffix__), Xserver(__appmansuffix__), xdm(__appmansuffix__), xinit(__appmansuffix__),
 __xconfigfile__(__filemansuffix__), xvidtune(__appmansuffix__),
+xkeyboard-config (__miscmansuffix__),
 apm(__drivermansuffix__),
 ati(__drivermansuffix__),
 chips(__drivermansuffix__),
