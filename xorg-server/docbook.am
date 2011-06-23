@@ -79,6 +79,7 @@ shelf_DATA += $(docbook:.xml=.html.db) $(docbook:.xml=.fo.db)
 # Flags for the XSL Transformation processor generating xref target databases
 XSLTPROC_FLAGS =					\
 	--path "$(XORG_SGML_PATH)/X11"			\
+	--path "$(abs_top_builddir)"			\
 	--stringparam targets.filename "$@"		\
 	--stringparam collect.xref.targets "only"	\
 	--nonet --xinclude

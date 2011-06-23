@@ -32,18 +32,7 @@
 
 static void
 noop_composite (pixman_implementation_t *imp,
-		pixman_op_t              op,
-		pixman_image_t *         src,
-		pixman_image_t *         mask,
-		pixman_image_t *         dest,
-		int32_t                  src_x,
-		int32_t                  src_y,
-		int32_t                  mask_x,
-		int32_t                  mask_y,
-		int32_t                  dest_x,
-		int32_t                  dest_y,
-		int32_t                  width,
-		int32_t                  height)
+		pixman_composite_info_t *info)
 {
     return;
 }
@@ -111,7 +100,7 @@ noop_dest_iter_init (pixman_implementation_t *imp, pixman_iter_t *iter)
     pixman_image_t *image = iter->image;
     uint32_t image_flags = image->common.flags;
     uint32_t iter_flags = iter->flags;
-
+    
     if ((image_flags & FAST_PATH_STD_DEST_FLAGS) == FAST_PATH_STD_DEST_FLAGS	&&
 	(iter_flags & ITER_NARROW) == ITER_NARROW				&&
 	((image->common.extended_format_code == PIXMAN_a8r8g8b8)	||

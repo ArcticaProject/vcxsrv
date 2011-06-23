@@ -229,8 +229,8 @@ pixman_blt_neon (uint32_t *src_bits,
                  int       dst_bpp,
                  int       src_x,
                  int       src_y,
-                 int       dst_x,
-                 int       dst_y,
+                 int       dest_x,
+                 int       dest_y,
                  int       width,
                  int       height)
 {
@@ -243,7 +243,7 @@ pixman_blt_neon (uint32_t *src_bits,
 	pixman_composite_src_0565_0565_asm_neon (
 		width, height,
 		(uint16_t *)(((char *) dst_bits) +
-		dst_y * dst_stride * 4 + dst_x * 2), dst_stride * 2,
+		dest_y * dst_stride * 4 + dest_x * 2), dst_stride * 2,
 		(uint16_t *)(((char *) src_bits) +
 		src_y * src_stride * 4 + src_x * 2), src_stride * 2);
 	return TRUE;
@@ -251,7 +251,7 @@ pixman_blt_neon (uint32_t *src_bits,
 	pixman_composite_src_8888_8888_asm_neon (
 		width, height,
 		(uint32_t *)(((char *) dst_bits) +
-		dst_y * dst_stride * 4 + dst_x * 4), dst_stride,
+		dest_y * dst_stride * 4 + dest_x * 4), dst_stride,
 		(uint32_t *)(((char *) src_bits) +
 		src_y * src_stride * 4 + src_x * 4), src_stride);
 	return TRUE;
@@ -418,20 +418,20 @@ arm_neon_blt (pixman_implementation_t *imp,
               int                      dst_bpp,
               int                      src_x,
               int                      src_y,
-              int                      dst_x,
-              int                      dst_y,
+              int                      dest_x,
+              int                      dest_y,
               int                      width,
               int                      height)
 {
     if (!pixman_blt_neon (
             src_bits, dst_bits, src_stride, dst_stride, src_bpp, dst_bpp,
-            src_x, src_y, dst_x, dst_y, width, height))
+            src_x, src_y, dest_x, dest_y, width, height))
 
     {
 	return _pixman_implementation_blt (
 	    imp->delegate,
 	    src_bits, dst_bits, src_stride, dst_stride, src_bpp, dst_bpp,
-	    src_x, src_y, dst_x, dst_y, width, height);
+	    src_x, src_y, dest_x, dest_y, width, height);
     }
 
     return TRUE;

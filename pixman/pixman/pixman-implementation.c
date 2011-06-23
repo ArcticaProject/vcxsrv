@@ -85,14 +85,14 @@ delegate_blt (pixman_implementation_t * imp,
               int                       dst_bpp,
               int                       src_x,
               int                       src_y,
-              int                       dst_x,
-              int                       dst_y,
+              int                       dest_x,
+              int                       dest_y,
               int                       width,
               int                       height)
 {
     return _pixman_implementation_blt (
 	imp->delegate, src_bits, dst_bits, src_stride, dst_stride,
-	src_bpp, dst_bpp, src_x, src_y, dst_x, dst_y,
+	src_bpp, dst_bpp, src_x, src_y, dest_x, dest_y,
 	width, height);
 }
 
@@ -217,13 +217,13 @@ _pixman_implementation_blt (pixman_implementation_t * imp,
                             int                       dst_bpp,
                             int                       src_x,
                             int                       src_y,
-                            int                       dst_x,
-                            int                       dst_y,
+                            int                       dest_x,
+                            int                       dest_y,
                             int                       width,
                             int                       height)
 {
     return (*imp->blt) (imp, src_bits, dst_bits, src_stride, dst_stride,
-			src_bpp, dst_bpp, src_x, src_y, dst_x, dst_y,
+			src_bpp, dst_bpp, src_x, src_y, dest_x, dest_y,
 			width, height);
 }
 

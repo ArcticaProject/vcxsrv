@@ -561,6 +561,8 @@ Fonts: \fIbdftopcf\fP(1), \fImkfontdir\fP(1), \fImkfontscale\fP(1),
 \fIxfs\fP(1), \fIxlsfonts\fP(1), \fIxfontsel\fP(1), \fIxfd\fP(1),
 .I "X Logical Font Description Conventions"
 .PP
+Keyboards: \fIxkeyboard-config\fP(__miscmansuffix__)
+.PP
 Security: \fIXsecurity\fP(__miscmansuffix__), \fIxauth\fP(1), \fIXau\fP(1),
 \fIxdm\fP(1), \fIxhost\fP(1), \fIxfwp\fP(1),
 .I "Security Extension Specification"

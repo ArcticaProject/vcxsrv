@@ -346,6 +346,36 @@ pixman_rasterize_edges_accessors (pixman_image_t *image,
  */
 typedef struct pixman_implementation_t pixman_implementation_t;
 
+typedef struct
+{
+    pixman_op_t              op;
+    pixman_image_t *         src_image;
+    pixman_image_t *         mask_image;
+    pixman_image_t *         dest_image;
+    int32_t                  src_x;
+    int32_t                  src_y;
+    int32_t                  mask_x;
+    int32_t                  mask_y;
+    int32_t                  dest_x;
+    int32_t                  dest_y;
+    int32_t                  width;
+    int32_t                  height;
+} pixman_composite_info_t;
+
+#define PIXMAN_COMPOSITE_ARGS(info)					\
+    MAYBE_UNUSED pixman_op_t        op = info->op;			\
+    MAYBE_UNUSED pixman_image_t *   src_image = info->src_image;	\
+    MAYBE_UNUSED pixman_image_t *   mask_image = info->mask_image;	\
+    MAYBE_UNUSED pixman_image_t *   dest_image = info->dest_image;	\
+    MAYBE_UNUSED int32_t            src_x = info->src_x;		\
+    MAYBE_UNUSED int32_t            src_y = info->src_y;		\
+    MAYBE_UNUSED int32_t            mask_x = info->mask_x;		\
+    MAYBE_UNUSED int32_t            mask_y = info->mask_y;		\
+    MAYBE_UNUSED int32_t            dest_x = info->dest_x;		\
+    MAYBE_UNUSED int32_t            dest_y = info->dest_y;		\
+    MAYBE_UNUSED int32_t            width = info->width;		\
+    MAYBE_UNUSED int32_t            height = info->height
+
 typedef void (*pixman_combine_32_func_t) (pixman_implementation_t *imp,
 					  pixman_op_t              op,
 					  uint32_t *               dest,
@@ -361,18 +391,7 @@ typedef void (*pixman_combine_64_func_t) (pixman_implementation_t *imp,
 					  int                      width);
 
 typedef void (*pixman_composite_func_t) (pixman_implementation_t *imp,
-					 pixman_op_t              op,
-					 pixman_image_t *         src,
-					 pixman_image_t *         mask,
-					 pixman_image_t *         dest,
-					 int32_t                  src_x,
-					 int32_t                  src_y,
-					 int32_t                  mask_x,
-					 int32_t                  mask_y,
-					 int32_t                  dest_x,
-					 int32_t                  dest_y,
-					 int32_t                  width,
-					 int32_t                  height);
+					 pixman_composite_info_t *info);
 typedef pixman_bool_t (*pixman_blt_func_t) (pixman_implementation_t *imp,
 					    uint32_t *               src_bits,
 					    uint32_t *               dst_bits,
@@ -382,8 +401,8 @@ typedef pixman_bool_t (*pixman_blt_func_t) (pixman_implementation_t *imp,
 					    int                      dst_bpp,
 					    int                      src_x,
 					    int                      src_y,
-					    int                      dst_x,
-					    int                      dst_y,
+					    int                      dest_x,
+					    int                      dest_y,
 					    int                      width,
 					    int                      height);
 typedef pixman_bool_t (*pixman_fill_func_t) (pixman_implementation_t *imp,
@@ -478,8 +497,8 @@ _pixman_implementation_blt (pixman_implementation_t *imp,
                             int                      dst_bpp,
                             int                      src_x,
                             int                      src_y,
-                            int                      dst_x,
-                            int                      dst_y,
+                            int                      dest_x,
+                            int                      dest_y,
                             int                      width,
                             int                      height);
 

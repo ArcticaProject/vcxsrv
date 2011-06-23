@@ -1,4 +1,3 @@
-.\" $XFree86$
 .\"
 .\" Copyright 2001-2004 Red Hat Inc., Durham, North Carolina.
 .\" All Rights Reserved.
@@ -11,7 +10,7 @@
 .\" and to permit persons to whom the Software is furnished to do so,
 .\" subject to the following conditions:
 .\"
-.\" he above copyright notice and this permission notice (including the
+.\" The above copyright notice and this permission notice (including the
 .\" next paragraph) shall be included in all copies or substantial
 .\" portions of the Software.
 .\"
@@ -49,7 +48,7 @@ communicates to the back-end X servers using the standard X11 protocol,
 and standard and/or commonly available X server extensions.
 .SH OPTIONS
 In addition to the normal X server options described in the
-.I Xserver(1)
+.I Xserver(__appmansuffix__)
 manual page,
 .I Xdmx
 accepts the following command line switches:
@@ -140,7 +139,10 @@ the "xfree86" keycodes and the "pc104" symbols should be used to
 initialize the keyboard.  For an SGI keyboard, ",xkb,sgi/indy(pc102)"
 might be useful.  A list of keycodes, symbols, and geometries can be
 found in
-.IR /usr/X11R6/lib/X11/xkb .
+.IR __xkbdir__ .
+Use of keycodes, symbols and geometries for XKB configuration is
+deprecated in favor of the rules, layout, model, variant and options
+settings available via the -param command line switch.
 If this option is not specified, the input device will be queried,
 perhaps using the XKEYBOARD extension.
 .RE
@@ -352,31 +354,31 @@ This option specifies parameters on the command line.  Currently, only
 parameters dealing with XKEYBOARD configuration are supported.  These
 parameters apply only to the core keyboard.  Parameter values are
 installation-dependent.  Please see
-.I /usr/X11R6/lib/X11/xkb
+.I __xkbdir__
 or a similar directory for complete information.
 .RS
 .TP 8
 .B XkbRules
-Defaults to "xfree86".  Other values may include "sgi" and "sun".
+Defaults to "__XKB_DFLT_RULES__".  Other values may include "sgi" and "sun".
 .sp
 .TP 8
 .B XkbModel
-Defaults to "pc101".  When used with "xfree86" rules, other values may
-include "pc102", "pc104", "pc105", "microsoft", and many others.  When
+Defaults to "__XKB_DFLT_MODEL__".  When used with "base" rules, other values
+may include "pc102", "pc104", "microsoft", and many others.  When
 used with "sun" rules, other values may include "type4" and "type5".
 .sp
 .TP 8
 .B XkbLayout
-Defaults to "us".  Other country codes and "dvorak" are usually
+Defaults to "__XKB_DFLT_LAYOUT__".  Other country codes and "dvorak" are usually
 available.
 .sp
 .TP 8
 .B XkbVariant
-Defaults to "".
+Defaults to "__XKB_DFLT_VARIANT__".
 .sp
 .TP 8
 .B XkbOptions
-Defaults to "".
+Defaults to "__XKB_DFLT_OPTIONS__".
 .RE
 .SH "CONFIGURATION FILE GRAMMAR"
 The following words and tokens are reserved:
@@ -722,8 +724,10 @@ translated if it was the first core keyboard.
 .SH FILES
 ..
 .SH "SEE ALSO"
-.BR DMX "(3X), " X "(__miscmansuffix__), " Xserver "(1), " xdmxconfig "(1), "
-.BR vdltodmx "(1), " xfs "(1), " xkbcomp (1)
+.BR DMX "(__libmansuffix__), " X "(__miscmansuffix__), "
+.BR Xserver "(__appmansuffix__), " xdmxconfig "(__appmansuffix__), "
+.BR vdltodmx "(__appmansuffix__), " xfs "(__appmansuffix__), "
+.BR xkbcomp "(__appmansuffix__), " xkeyboard-config "(__miscmansuffix__)"
 .SH AUTHORS
 Kevin E. Martin
 .I <kem@redhat.com>,

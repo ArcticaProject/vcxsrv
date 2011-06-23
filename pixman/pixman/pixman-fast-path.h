@@ -253,20 +253,10 @@ scanline_func_name (dst_type_t       *dst,							\
 				  dst_type_t, repeat_mode, have_mask, mask_is_solid)		\
 static void											\
 fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,		\
-						   pixman_op_t              op,			\
-						   pixman_image_t *         src_image,		\
-						   pixman_image_t *         mask_image,		\
-						   pixman_image_t *         dst_image,		\
-						   int32_t                  src_x,		\
-						   int32_t                  src_y,		\
-						   int32_t                  mask_x,		\
-						   int32_t                  mask_y,		\
-						   int32_t                  dst_x,		\
-						   int32_t                  dst_y,		\
-						   int32_t                  width,		\
-						   int32_t                  height)		\
+						   pixman_composite_info_t *info)               \
 {												\
-    dst_type_t *dst_line;									\
+    PIXMAN_COMPOSITE_ARGS (info);					                        \
+    dst_type_t *dst_line;						                        \
     mask_type_t *mask_line;									\
     src_type_t *src_first_line;									\
     int       y;										\
@@ -283,11 +273,11 @@ fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,
     const mask_type_t *mask = &solid_mask;							\
     int src_stride, mask_stride, dst_stride;							\
 												\
-    PIXMAN_IMAGE_GET_LINE (dst_image, dst_x, dst_y, dst_type_t, dst_stride, dst_line, 1);	\
+    PIXMAN_IMAGE_GET_LINE (dest_image, dest_x, dest_y, dst_type_t, dst_stride, dst_line, 1);	\
     if (have_mask)										\
     {												\
 	if (mask_is_solid)									\
-	    solid_mask = _pixman_image_get_solid (imp, mask_image, dst_image->bits.format);	\
+	    solid_mask = _pixman_image_get_solid (imp, mask_image, dest_image->bits.format);	\
 	else											\
 	    PIXMAN_IMAGE_GET_LINE (mask_image, mask_x, mask_y, mask_type_t,			\
 				   mask_stride, mask_line, 1);					\
@@ -664,19 +654,9 @@ bilinear_pad_repeat_get_scanline_bounds (int32_t         source_image_width,
 				  dst_type_t, repeat_mode, have_mask, mask_is_solid)		\
 static void											\
 fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,		\
-						   pixman_op_t              op,			\
-						   pixman_image_t *         src_image,		\
-						   pixman_image_t *         mask_image,		\
-						   pixman_image_t *         dst_image,		\
-						   int32_t                  src_x,		\
-						   int32_t                  src_y,		\
-						   int32_t                  mask_x,		\
-						   int32_t                  mask_y,		\
-						   int32_t                  dst_x,		\
-						   int32_t                  dst_y,		\
-						   int32_t                  width,		\
-						   int32_t                  height)		\
+						   pixman_composite_info_t *info)		\
 {												\
+    PIXMAN_COMPOSITE_ARGS (info);								\
     dst_type_t *dst_line;									\
     mask_type_t *mask_line;									\
     src_type_t *src_first_line;									\
@@ -692,12 +672,12 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
     const mask_type_t *mask = &solid_mask;							\
     int src_stride, mask_stride, dst_stride;							\
 												\
-    PIXMAN_IMAGE_GET_LINE (dst_image, dst_x, dst_y, dst_type_t, dst_stride, dst_line, 1);	\
+    PIXMAN_IMAGE_GET_LINE (dest_image, dest_x, dest_y, dst_type_t, dst_stride, dst_line, 1);	\
     if (have_mask)										\
     {												\
 	if (mask_is_solid)									\
 	{											\
-	    solid_mask = _pixman_image_get_solid (imp, mask_image, dst_image->bits.format);	\
+	    solid_mask = _pixman_image_get_solid (imp, mask_image, dest_image->bits.format);	\
 	    mask_stride = 0;									\
 	}											\
 	else											\

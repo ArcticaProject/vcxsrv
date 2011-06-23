@@ -18,6 +18,12 @@
 #  define FUNC     ((const char*) ("???"))
 #endif
 
+#if defined (__GNUC__)
+#  define MAYBE_UNUSED  __attribute__((unused))
+#else
+#  define MAYBE_UNUSED
+#endif
+
 #ifndef INT16_MIN
 # define INT16_MIN              (-32767-1)
 #endif

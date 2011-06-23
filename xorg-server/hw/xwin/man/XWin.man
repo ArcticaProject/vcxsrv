@@ -372,7 +372,8 @@ Need some examples
 
 
 .SH "SEE ALSO"
-X(__miscmansuffix__), Xserver(1), xdm(1), xinit(1), XWinrc(__filemansuffix__), setxkbmap(1)
+X(__miscmansuffix__), Xserver(1), xdm(1), xinit(1), XWinrc(__filemansuffix__),
+setxkbmap(1), xkeyboard-config (__miscmansuffix__).
 
 
 .SH BUGS
