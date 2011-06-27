@@ -352,6 +352,7 @@ GLESv2_LIB_NAME='lib$(GLESv2_LIB).'${LIB_EXTENSION}
 VG_LIB_NAME='lib$(VG_LIB).'${LIB_EXTENSION}
 GLAPI_LIB_NAME='lib$(GLAPI_LIB).'${LIB_EXTENSION}
 WAYLAND_EGL_LIB_NAME='lib$(WAYLAND_EGL_LIB).'${LIB_EXTENSION}
+GBM_LIB_NAME='lib$(GBM_LIB).'${LIB_EXTENSION}
 
 GL_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GL_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 GLU_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GLU_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
@@ -365,6 +366,7 @@ GLESv2_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GLESv2_LIB)'${LIB_VERSION_SEPARATOR}'*'${LI
 VG_LIB_GLOB=${LIB_PREFIX_GLOB}'$(VG_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 GLAPI_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GLAPI_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 WAYLAND_EGL_LIB_GLOB=${LIB_PREFIX_GLOB}'$(WAYLAND_EGL_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
+GBM_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GBM_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 
 AC_SUBST([GL_LIB_NAME])
 AC_SUBST([GLU_LIB_NAME])
@@ -377,6 +379,7 @@ AC_SUBST([GLESv2_LIB_NAME])
 AC_SUBST([VG_LIB_NAME])
 AC_SUBST([GLAPI_LIB_NAME])
 AC_SUBST([WAYLAND_EGL_LIB_NAME])
+AC_SUBST([GBM_LIB_NAME])
 
 AC_SUBST([GL_LIB_GLOB])
 AC_SUBST([GLU_LIB_GLOB])
@@ -389,6 +392,7 @@ AC_SUBST([GLESv2_LIB_GLOB])
 AC_SUBST([VG_LIB_GLOB])
 AC_SUBST([GLAPI_LIB_GLOB])
 AC_SUBST([WAYLAND_EGL_LIB_GLOB])
+AC_SUBST([GBM_LIB_GLOB])
 
 dnl
 dnl Arch/platform-specific settings
@@ -543,6 +547,11 @@ AC_ARG_ENABLE([egl],
         [disable EGL library @<:@default=enabled@:>@])],
     [enable_egl="$enableval"],
     [enable_egl=yes])
+AC_ARG_ENABLE([gbm],
+   [AS_HELP_STRING([--enable-gbm],
+         [enable gbm library @<:@default=auto@:>@])],
+   [enable_gbm="$enableval"],
+   [enable_gbm=auto])
 AC_ARG_ENABLE([gallium_egl],
     [AS_HELP_STRING([--enable-gallium-egl],
         [enable optional EGL state tracker (not required
@@ -550,6 +559,13 @@ AC_ARG_ENABLE([gallium_egl],
          @<:@default=disable@:>@])],
     [enable_gallium_egl="$enableval"],
     [enable_gallium_egl=no])
+AC_ARG_ENABLE([gallium_gbm],
+    [AS_HELP_STRING([--enable-gallium-gbm],
+        [enable optional gbm state tracker (not required for
+         gbm support in Gallium)
+         @<:@default=disable@:>@])],
+    [enable_gallium_gbm="$enableval"],
+    [enable_gallium_gbm=no])
 
 # Option for Gallium drivers
 GALLIUM_DRIVERS_DEFAULT="r300,r600,swrast"
@@ -1245,6 +1261,41 @@ AC_SUBST([EGL_LIB_DEPS])
 AC_SUBST([EGL_DRIVERS_DIRS])
 
 dnl
+dnl gbm configuration
+dnl
+if test "x$enable_gbm" = xauto; then
+    case "$with_egl_platforms" in
+        *drm*)
+            enable_gbm=yes ;;
+         *)
+            enable_gbm=no ;;
+    esac
+fi
+if test "x$enable_gbm" = xyes; then
+    SRC_DIRS="$SRC_DIRS gbm"
+    GBM_BACKEND_DIRS=""
+
+    PKG_CHECK_MODULES([LIBUDEV], [libudev], [],
+                      AC_MSG_ERROR([gbm needs udev]))
+    GBM_LIB_DEPS="$DLOPEN_LIBS $LIBUDEV_LIBS"
+
+    if test "$mesa_driver" = dri; then
+        GBM_BACKEND_DIRS="$GBM_BACKEND_DIRS dri"
+        if test "$SHARED_GLAPI" -eq 0; then
+            AC_MSG_ERROR([gbm_dri requires --enable-shared-glapi])
+        fi
+    fi
+fi
+AC_SUBST([GBM_LIB_DEPS])
+AC_SUBST([GBM_BACKEND_DIRS])
+GBM_PC_REQ_PRIV="libudev"
+GBM_PC_LIB_PRIV="$DLOPEN_LIBS"
+GBM_PC_CFLAGS=
+AC_SUBST([GBM_PC_REQ_PRIV])
+AC_SUBST([GBM_PC_LIB_PRIV])
+AC_SUBST([GBM_PC_CFLAGS])
+
+dnl
 dnl EGL Gallium configuration
 dnl
 if test "x$enable_gallium_egl" = xyes; then
@@ -1256,8 +1307,24 @@ if test "x$enable_gallium_egl" = xyes; then
     fi
 
     GALLIUM_STATE_TRACKERS_DIRS="egl $GALLIUM_STATE_TRACKERS_DIRS"
-    GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS egl"
+    GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS egl-static"
     HAVE_ST_EGL="yes"
+fi
+
+dnl
+dnl gbm Gallium configuration
+dnl
+if test "x$enable_gallium_gbm" = xyes; then
+    if test "x$with_gallium_drivers" = x; then
+        AC_MSG_ERROR([cannot enable gbm_gallium without Gallium])
+    fi
+    if test "x$enable_gbm" = xno; then
+        AC_MSG_ERROR([cannot enable gbm_gallium without gbm])
+    fi
+
+    GALLIUM_STATE_TRACKERS_DIRS="gbm $GALLIUM_STATE_TRACKERS_DIRS"
+    GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS gbm"
+    HAVE_ST_GBM="yes"
 fi
 
 dnl
@@ -1563,9 +1630,6 @@ case "$with_egl_platforms" in
 yes)
     if test "x$enable_egl" = xyes && test "x$mesa_driver" != xosmesa; then
         EGL_PLATFORMS="x11"
-        if test "$mesa_driver" = dri; then
-            EGL_PLATFORMS="$EGL_PLATFORMS drm"
-        fi
     fi
     ;;
 *)
@@ -1586,6 +1650,9 @@ yes)
 		WAYLAND_EGL_LIB_DEPS="$WAYLAND_LIBS $LIBDRM_LIBS"
                 GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/wayland"
 	fi
+        if test "$plat" = "drm" && test "x$enable_gbm" = no; then
+                AC_MSG_ERROR([EGL platform drm needs gbm])
+        fi
     done
     EGL_PLATFORMS="$egl_platforms"
     ;;
@@ -1746,6 +1813,12 @@ if test -f configs/current || test -L configs/current; then
 fi
 ln -s autoconf configs/current
 ])
+
+dnl Sort the dirs alphabetically
+GALLIUM_TARGET_DIRS=`echo $GALLIUM_TARGET_DIRS|tr " " "\n"|sort|tr "\n" " "`
+GALLIUM_WINSYS_DIRS=`echo $GALLIUM_WINSYS_DIRS|tr " " "\n"|sort|tr "\n" " "`
+GALLIUM_DRIVERS_DIRS=`echo $GALLIUM_DRIVERS_DIRS|tr " " "\n"|sort|tr "\n" " "`
+GALLIUM_STATE_TRACKERS_DIRS=`echo $GALLIUM_STATE_TRACKERS_DIRS|tr " " "\n"|sort|tr "\n" " "`
 
 AC_OUTPUT
 

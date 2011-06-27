@@ -1514,11 +1514,11 @@ generate_composite_function \
              * output: updated src in   {d0,  d1,  d2 }       [B, G, R]
              *         updated mask in  {d24, d25, d26}       [B, G, R]
              */
-            vmull.u8    q1,  d25, d9
+            vmull.u8    q6,  d26, d10
         vqadd.u8    q8,  q0, q8
             vmull.u8    q0,  d24, d8
         vqadd.u8    d22, d2, d22
-            vmull.u8    q6,  d26, d10
+            vmull.u8    q1,  d25, d9
         /*
          * convert the result in d16, d17, d22 to r5g6b5 and store
          * it into {d28, d29}
@@ -1541,6 +1541,7 @@ generate_composite_function \
             vrshr.u16   q11, q12, #8
             vrshr.u16   q8,  q9,  #8
             vrshr.u16   q6,  q13, #8
+            vraddhn.u16 d24, q12, q11
             vraddhn.u16 d25, q9,  q8
                 /*
                  * convert 8 r5g6b5 pixel data from {d4, d5} to planar
@@ -1549,11 +1550,10 @@ generate_composite_function \
                  */
                 vshrn.u16   d17, q2,  #3
                 vshrn.u16   d18, q2,  #8
-            vraddhn.u16 d24, q12, q11
             vraddhn.u16 d26, q13, q6
                 vsli.u16    q2,  q2,  #5
-                vsri.u8     d18, d18, #5
                 vsri.u8     d17, d17, #6
+                vsri.u8     d18, d18, #5
             /*
              * 'combine_over_ca' replacement
              *

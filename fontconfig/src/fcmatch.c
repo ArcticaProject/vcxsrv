@@ -749,7 +749,7 @@ FcFontSetSort (FcConfig	    *config,
 	 * If this node matches any language, go check
 	 * which ones and satisfy those entries
 	 */
-	if (nodeps[f]->score[MATCH_LANG_INDEX] < 200)
+	if (nodeps[f]->score[MATCH_LANG_INDEX] < 2000)
 	{
 	    for (i = 0; i < nPatternLang; i++)
 	    {
