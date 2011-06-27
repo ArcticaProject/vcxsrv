@@ -60,7 +60,7 @@ AC_MSG_RESULT([$with_xcb_icccm])
 if test "x$with_xcb_icccm" != xno ; then
 	AC_DEFINE([USE_XCB_ICCCM], 1,
 		  [Define to 1 to call xcb-icccm library functions instead of local replacements])
-	xcb_icccm_pc="xcb-icccm"
+	xcb_icccm_pc='xcb-icccm >= 0.3.8'
 fi
 
 # Checks for pkg-config packages

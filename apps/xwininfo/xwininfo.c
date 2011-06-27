@@ -143,49 +143,50 @@ typedef struct {
   xcb_window_t window_group;
 } wm_hints_t;
 
-#define xcb_wm_hints_t wm_hints_t
+#define xcb_icccm_wm_hints_t wm_hints_t
 
 enum {
   /* xcb_size_hints_flags_t */
-  XCB_SIZE_HINT_US_POSITION = 1 << 0,
-  XCB_SIZE_HINT_US_SIZE = 1 << 1,
-  XCB_SIZE_HINT_P_POSITION = 1 << 2,
-  XCB_SIZE_HINT_P_SIZE = 1 << 3,
-  XCB_SIZE_HINT_P_MIN_SIZE = 1 << 4,
-  XCB_SIZE_HINT_P_MAX_SIZE = 1 << 5,
-  XCB_SIZE_HINT_P_RESIZE_INC = 1 << 6,
-  XCB_SIZE_HINT_P_ASPECT = 1 << 7,
-  XCB_SIZE_HINT_BASE_SIZE = 1 << 8,
-  XCB_SIZE_HINT_P_WIN_GRAVITY = 1 << 9,
+  XCB_ICCCM_SIZE_HINT_US_POSITION = 1 << 0,
+  XCB_ICCCM_SIZE_HINT_US_SIZE = 1 << 1,
+  XCB_ICCCM_SIZE_HINT_P_POSITION = 1 << 2,
+  XCB_ICCCM_SIZE_HINT_P_SIZE = 1 << 3,
+  XCB_ICCCM_SIZE_HINT_P_MIN_SIZE = 1 << 4,
+  XCB_ICCCM_SIZE_HINT_P_MAX_SIZE = 1 << 5,
+  XCB_ICCCM_SIZE_HINT_P_RESIZE_INC = 1 << 6,
+  XCB_ICCCM_SIZE_HINT_P_ASPECT = 1 << 7,
+  XCB_ICCCM_SIZE_HINT_BASE_SIZE = 1 << 8,
+  XCB_ICCCM_SIZE_HINT_P_WIN_GRAVITY = 1 << 9,
   /* xcb_wm_state_t */
-  XCB_WM_STATE_WITHDRAWN = 0,
-  XCB_WM_STATE_NORMAL = 1,
-  XCB_WM_STATE_ICONIC = 3,
+  XCB_ICCCM_WM_STATE_WITHDRAWN = 0,
+  XCB_ICCCM_WM_STATE_NORMAL = 1,
+  XCB_ICCCM_WM_STATE_ICONIC = 3,
   /* xcb_wm_t */
-  XCB_WM_HINT_INPUT = (1L << 0),
-  XCB_WM_HINT_STATE = (1L << 1),
-  XCB_WM_HINT_ICON_PIXMAP = (1L << 2),
-  XCB_WM_HINT_ICON_WINDOW = (1L << 3),
-  XCB_WM_HINT_ICON_POSITION = (1L << 4),
-  XCB_WM_HINT_ICON_MASK = (1L << 5),
-  XCB_WM_HINT_WINDOW_GROUP = (1L << 6),
-  XCB_WM_HINT_X_URGENCY = (1L << 8)
+  XCB_ICCCM_WM_HINT_INPUT = (1L << 0),
+  XCB_ICCCM_WM_HINT_STATE = (1L << 1),
+  XCB_ICCCM_WM_HINT_ICON_PIXMAP = (1L << 2),
+  XCB_ICCCM_WM_HINT_ICON_WINDOW = (1L << 3),
+  XCB_ICCCM_WM_HINT_ICON_POSITION = (1L << 4),
+  XCB_ICCCM_WM_HINT_ICON_MASK = (1L << 5),
+  XCB_ICCCM_WM_HINT_WINDOW_GROUP = (1L << 6),
+  XCB_ICCCM_WM_HINT_X_URGENCY = (1L << 8)
 };
 
 /* Once xcb-icccm's API is stable, these should be replaced by calls to it */
 # define GET_TEXT_PROPERTY(Dpy, Win, Atom) \
     xcb_get_property (Dpy, False, Win, Atom, XCB_GET_PROPERTY_TYPE_ANY, 0, BUFSIZ)
-# define xcb_get_wm_name(Dpy, Win)	GET_TEXT_PROPERTY(Dpy, Win, XCB_ATOM_WM_NAME)
+# define xcb_icccm_get_wm_name(Dpy, Win) \
+    GET_TEXT_PROPERTY(Dpy, Win, XCB_ATOM_WM_NAME)
 
-# define xcb_get_wm_class(Dpy, Win) \
+# define xcb_icccm_get_wm_class(Dpy, Win) \
     xcb_get_property (Dpy, False, Win, XCB_ATOM_WM_CLASS, XCB_ATOM_STRING, 0, BUFSIZ)
-# define xcb_get_wm_hints(Dpy, Win) \
+# define xcb_icccm_get_wm_hints(Dpy, Win) \
     xcb_get_property(Dpy, False, Win, XCB_ATOM_WM_HINTS, XCB_ATOM_WM_HINTS, 0, 9)
 
-# define xcb_get_wm_size_hints(Dpy, Win, Atom) \
+# define xcb_icccm_get_wm_size_hints(Dpy, Win, Atom) \
     xcb_get_property (Dpy, False, Win, Atom, XCB_ATOM_WM_SIZE_HINTS, 0, 18)
-# define xcb_get_wm_normal_hints(Dpy, Win) \
-    xcb_get_wm_size_hints(Dpy, Win, XCB_ATOM_WM_NORMAL_HINTS)
+# define xcb_icccm_get_wm_normal_hints(Dpy, Win) \
+    xcb_icccm_get_wm_size_hints(Dpy, Win, XCB_ATOM_WM_NORMAL_HINTS)
 #endif
 
 /* Possibly in xcb-emwh in the future? */
@@ -588,7 +589,7 @@ main (int argc, char **argv)
     /* Send requests to prefetch data we'll need */
     w->window = window;
     w->net_wm_name_cookie = get_net_wm_name (dpy, window);
-    w->wm_name_cookie = xcb_get_wm_name (dpy, window);
+    w->wm_name_cookie = xcb_icccm_get_wm_name (dpy, window);
     if (children || tree)
 	w->tree_cookie = xcb_query_tree (dpy, window);
     if (stats) {
@@ -600,9 +601,9 @@ main (int argc, char **argv)
     if (stats || bits || events)
 	w->attr_cookie = xcb_get_window_attributes (dpy, window);
     if (stats || size)
-	w->normal_hints_cookie = xcb_get_wm_normal_hints (dpy, window);
+	w->normal_hints_cookie = xcb_icccm_get_wm_normal_hints (dpy, window);
     if (wm) {
-	w->hints_cookie = xcb_get_wm_hints(dpy, window);
+	w->hints_cookie = xcb_icccm_get_wm_hints(dpy, window);
 
 	atom_net_wm_desktop = Get_Atom (dpy, "_NET_WM_DESKTOP");
 	if (atom_net_wm_desktop) {
@@ -643,8 +644,8 @@ main (int argc, char **argv)
 	}
     }
     if (size)
-	w->zoom_cookie = xcb_get_wm_size_hints (dpy, window,
-						XCB_ATOM_WM_ZOOM_HINTS);
+	w->zoom_cookie = xcb_icccm_get_wm_size_hints (dpy, window,
+						      XCB_ATOM_WM_ZOOM_HINTS);
     xcb_flush (dpy);
 
     printf ("\nxwininfo: Window id: ");
@@ -716,8 +717,8 @@ wm_size_hints_reply (xcb_connection_t *dpy, xcb_get_property_cookie_t cookie,
     return True;
 }
 
-#define xcb_get_wm_normal_hints_reply wm_size_hints_reply
-#define xcb_get_wm_size_hints_reply wm_size_hints_reply
+#define xcb_icccm_get_wm_normal_hints_reply wm_size_hints_reply
+#define xcb_icccm_get_wm_size_hints_reply wm_size_hints_reply
 #endif
 
 
@@ -729,8 +730,8 @@ fetch_normal_hints (struct wininfo *w, xcb_size_hints_t *hints_return)
     xcb_size_hints_t hints;
 
     if (!w->normal_hints) {
-	if (xcb_get_wm_normal_hints_reply (dpy, w->normal_hints_cookie,
-					   &hints, NULL)) {
+	if (xcb_icccm_get_wm_normal_hints_reply (dpy, w->normal_hints_cookie,
+						 &hints, NULL)) {
 	    w->normal_hints = malloc (sizeof(xcb_size_hints_t));
 	    if (w->normal_hints)
 		memcpy(w->normal_hints, &hints, sizeof(xcb_size_hints_t));
@@ -785,7 +786,7 @@ static void
 Display_Window_Id (struct wininfo *w, Bool newline_wanted)
 {
 #ifdef USE_XCB_ICCCM
-    xcb_get_text_property_reply_t wmn_reply;
+    xcb_icccm_get_text_property_reply_t wmn_reply;
     uint8_t got_reply = False;
 #endif
     xcb_get_property_reply_t *prop;
@@ -809,8 +810,8 @@ Display_Window_Id (struct wininfo *w, Bool newline_wanted)
 	    wm_name_encoding = prop->type;
 	} else { /* No _NET_WM_NAME, check WM_NAME */
 #ifdef USE_XCB_ICCCM
-	    got_reply = xcb_get_wm_name_reply (dpy, w->wm_name_cookie,
-					       &wmn_reply, NULL);
+	    got_reply = xcb_icccm_get_wm_name_reply (dpy, w->wm_name_cookie,
+						     &wmn_reply, NULL);
 	    if (got_reply) {
 		wm_name = wmn_reply.name;
 		wm_name_len = wmn_reply.name_len;
@@ -845,7 +846,7 @@ Display_Window_Id (struct wininfo *w, Bool newline_wanted)
 	}
 #ifdef USE_XCB_ICCCM
 	if (got_reply)
-	    xcb_get_text_property_reply_wipe (&wmn_reply);
+	    xcb_icccm_get_text_property_reply_wipe (&wmn_reply);
 #else
 	free (prop);
 #endif
@@ -1010,10 +1011,11 @@ Display_Stats_Info (struct wininfo *w)
     if (!fetch_normal_hints (w, &hints))
 	hints.flags = 0;
 
-    if ((hints.flags & XCB_SIZE_HINT_P_RESIZE_INC)  &&
+    if ((hints.flags & XCB_ICCCM_SIZE_HINT_P_RESIZE_INC)  &&
 	(hints.width_inc != 0)  && (hints.height_inc != 0)) {
-	if (hints.flags & (XCB_SIZE_HINT_BASE_SIZE|XCB_SIZE_HINT_P_MIN_SIZE)) {
-	    if (hints.flags & XCB_SIZE_HINT_BASE_SIZE) {
+	if (hints.flags &
+	    (XCB_ICCCM_SIZE_HINT_BASE_SIZE|XCB_ICCCM_SIZE_HINT_P_MIN_SIZE)) {
+	    if (hints.flags & XCB_ICCCM_SIZE_HINT_BASE_SIZE) {
 		w->geometry->width -= hints.base_width;
 		w->geometry->height -= hints.base_height;
 	    } else {
@@ -1027,7 +1029,7 @@ Display_Stats_Info (struct wininfo *w)
     } else
 	printf ("%dx%d", w->geometry->width, w->geometry->height);
 
-    if (!(hints.flags & XCB_SIZE_HINT_P_WIN_GRAVITY))
+    if (!(hints.flags & XCB_ICCCM_SIZE_HINT_P_WIN_GRAVITY))
 	hints.win_gravity = XCB_GRAVITY_NORTH_WEST; /* per ICCCM */
     /* find our window manager frame, if any */
     for (wmframe = parent = w->window; parent != 0 ; wmframe = parent) {
@@ -1274,10 +1276,10 @@ display_tree_info_1 (struct wininfo *w, int recurse, int level)
 	struct wininfo rw, pw;
 	rw.window = tree->root;
 	rw.net_wm_name_cookie = get_net_wm_name (dpy, rw.window);
-	rw.wm_name_cookie = xcb_get_wm_name (dpy, rw.window);
+	rw.wm_name_cookie = xcb_icccm_get_wm_name (dpy, rw.window);
 	pw.window = tree->parent;
 	pw.net_wm_name_cookie = get_net_wm_name (dpy, pw.window);
-	pw.wm_name_cookie = xcb_get_wm_name (dpy, pw.window);
+	pw.wm_name_cookie = xcb_icccm_get_wm_name (dpy, pw.window);
 	xcb_flush (dpy);
 
 	printf ("\n");
@@ -1309,8 +1311,8 @@ display_tree_info_1 (struct wininfo *w, int recurse, int level)
 
 	    cw->window = child_list[i];
 	    cw->net_wm_name_cookie = get_net_wm_name (dpy, child_list[i]);
-	    cw->wm_name_cookie = xcb_get_wm_name (dpy, child_list[i]);
-	    cw->wm_class_cookie = xcb_get_wm_class (dpy, child_list[i]);
+	    cw->wm_name_cookie = xcb_icccm_get_wm_name (dpy, child_list[i]);
+	    cw->wm_class_cookie = xcb_icccm_get_wm_class (dpy, child_list[i]);
 	    cw->geometry_cookie = xcb_get_geometry (dpy, child_list[i]);
 	    cw->trans_coords_cookie = xcb_translate_coordinates
 		(dpy, child_list[i], tree->root, 0, 0);
@@ -1325,7 +1327,7 @@ display_tree_info_1 (struct wininfo *w, int recurse, int level)
 	    char *instance_name = NULL, *class_name = NULL;
 	    int instance_name_len, class_name_len;
 #ifdef USE_XCB_ICCCM
-	    xcb_get_wm_class_reply_t classhint;
+	    xcb_icccm_get_wm_class_reply_t classhint;
 #else
 	    xcb_get_property_reply_t *classprop;
 #endif
@@ -1337,7 +1339,7 @@ display_tree_info_1 (struct wininfo *w, int recurse, int level)
 	    printf (": (");
 
 #ifdef USE_XCB_ICCCM
-	    if (xcb_get_wm_class_reply (dpy, cw->wm_class_cookie,
+	    if (xcb_icccm_get_wm_class_reply (dpy, cw->wm_class_cookie,
 					&classhint, NULL)) {
 		got_wm_class = True;
 		instance_name = classhint.instance_name;
@@ -1380,7 +1382,7 @@ display_tree_info_1 (struct wininfo *w, int recurse, int level)
 		    printf ("(none)) ");
 
 #ifdef USE_XCB_ICCCM
-		xcb_get_wm_class_reply_wipe (&classhint);
+		xcb_icccm_get_wm_class_reply_wipe (&classhint);
 #else
 		free (classprop);
 #endif
@@ -1436,68 +1438,68 @@ Display_Hints (xcb_size_hints_t *hints)
 
     flags = hints->flags;
 
-    if (flags & XCB_SIZE_HINT_US_POSITION)
+    if (flags & XCB_ICCCM_SIZE_HINT_US_POSITION)
 	printf ("      User supplied location: %s, %s\n",
 		xscale (hints->x), yscale (hints->y));
 
-    if (flags & XCB_SIZE_HINT_P_POSITION)
+    if (flags & XCB_ICCCM_SIZE_HINT_P_POSITION)
 	printf ("      Program supplied location: %s, %s\n",
 		xscale (hints->x), yscale (hints->y));
 
-    if (flags & XCB_SIZE_HINT_US_SIZE) {
+    if (flags & XCB_ICCCM_SIZE_HINT_US_SIZE) {
 	printf ("      User supplied size: %s by %s\n",
 		xscale (hints->width), yscale (hints->height));
     }
 
-    if (flags & XCB_SIZE_HINT_P_SIZE)
+    if (flags & XCB_ICCCM_SIZE_HINT_P_SIZE)
 	printf ("      Program supplied size: %s by %s\n",
 		xscale (hints->width), yscale (hints->height));
 
-    if (flags & XCB_SIZE_HINT_P_MIN_SIZE)
+    if (flags & XCB_ICCCM_SIZE_HINT_P_MIN_SIZE)
 	printf ("      Program supplied minimum size: %s by %s\n",
 		xscale (hints->min_width), yscale (hints->min_height));
 
-    if (flags & XCB_SIZE_HINT_P_MAX_SIZE)
+    if (flags & XCB_ICCCM_SIZE_HINT_P_MAX_SIZE)
 	printf ("      Program supplied maximum size: %s by %s\n",
 		xscale (hints->max_width), yscale (hints->max_height));
 
-    if (flags & XCB_SIZE_HINT_BASE_SIZE) {
+    if (flags & XCB_ICCCM_SIZE_HINT_BASE_SIZE) {
 	printf ("      Program supplied base size: %s by %s\n",
 		xscale (hints->base_width), yscale (hints->base_height));
     }
 
-    if (flags & XCB_SIZE_HINT_P_RESIZE_INC) {
+    if (flags & XCB_ICCCM_SIZE_HINT_P_RESIZE_INC) {
 	printf ("      Program supplied x resize increment: %s\n",
 		xscale (hints->width_inc));
 	printf ("      Program supplied y resize increment: %s\n",
 		yscale (hints->height_inc));
 	if (hints->width_inc != 0 && hints->height_inc != 0) {
-	    if (flags & XCB_SIZE_HINT_US_SIZE)
+	    if (flags & XCB_ICCCM_SIZE_HINT_US_SIZE)
 		printf ("      User supplied size in resize increments:  %s by %s\n",
 			(xscale (hints->width / hints->width_inc)),
 			(yscale (hints->height / hints->height_inc)));
-	    if (flags & XCB_SIZE_HINT_P_SIZE)
+	    if (flags & XCB_ICCCM_SIZE_HINT_P_SIZE)
 		printf ("      Program supplied size in resize increments:  %s by %s\n",
 			(xscale (hints->width / hints->width_inc)),
 			(yscale (hints->height / hints->height_inc)));
-	    if (flags & XCB_SIZE_HINT_P_MIN_SIZE)
+	    if (flags & XCB_ICCCM_SIZE_HINT_P_MIN_SIZE)
 		printf ("      Program supplied minimum size in resize increments: %s by %s\n",
 			xscale (hints->min_width / hints->width_inc), yscale (hints->min_height / hints->height_inc));
-	    if (flags & XCB_SIZE_HINT_BASE_SIZE)
+	    if (flags & XCB_ICCCM_SIZE_HINT_BASE_SIZE)
 		printf ("      Program supplied base size in resize increments:  %s by %s\n",
 			(xscale (hints->base_width / hints->width_inc)),
 			(yscale (hints->base_height / hints->height_inc)));
 	}
     }
 
-    if (flags & XCB_SIZE_HINT_P_ASPECT) {
+    if (flags & XCB_ICCCM_SIZE_HINT_P_ASPECT) {
 	printf ("      Program supplied min aspect ratio: %s/%s\n",
 		xscale (hints->min_aspect_num), yscale (hints->min_aspect_den));
 	printf ("      Program supplied max aspect ratio: %s/%s\n",
 		xscale (hints->max_aspect_num), yscale (hints->max_aspect_den));
     }
 
-    if (flags & XCB_SIZE_HINT_P_WIN_GRAVITY) {
+    if (flags & XCB_ICCCM_SIZE_HINT_P_WIN_GRAVITY) {
 	printf ("      Program supplied window gravity: %s\n",
 		Lookup (hints->win_gravity, _gravities));
     }
@@ -1520,7 +1522,7 @@ Display_Size_Hints (struct wininfo *w)
 	Display_Hints (&hints);
     }
 
-    if (!xcb_get_wm_size_hints_reply (dpy, w->zoom_cookie, &hints, NULL))
+    if (!xcb_icccm_get_wm_size_hints_reply (dpy, w->zoom_cookie, &hints, NULL))
 	printf ("  No zoom window size hints defined\n");
     else {
 	printf ("  Zoom window size hints:\n");
@@ -1587,9 +1589,9 @@ Display_Window_Shape (xcb_window_t window)
  *   window, hints_cookie
  */
 static const binding _state_hints[] = {
-	{ XCB_WM_STATE_WITHDRAWN, "Withdrawn State" },
-	{ XCB_WM_STATE_NORMAL, "Normal State" },
-	{ XCB_WM_STATE_ICONIC, "Iconic State" },
+	{ XCB_ICCCM_WM_STATE_WITHDRAWN, "Withdrawn State" },
+	{ XCB_ICCCM_WM_STATE_NORMAL, "Normal State" },
+	{ XCB_ICCCM_WM_STATE_ICONIC, "Iconic State" },
 /* xwininfo previously also reported the ZoomState & InactiveState,
    but ICCCM declared those obsolete long ago */
 	{ 0, NULL } };
@@ -1618,19 +1620,19 @@ wm_hints_reply (xcb_connection_t *dpy, xcb_get_property_cookie_t cookie,
     return True;
 }
 
-#define xcb_get_wm_hints_reply wm_hints_reply
+#define xcb_icccm_get_wm_hints_reply wm_hints_reply
 #endif
 
 static void
 Display_WM_Info (struct wininfo *w)
 {
-    xcb_wm_hints_t wmhints;
+    xcb_icccm_wm_hints_t wmhints;
     long flags;
     xcb_get_property_reply_t *prop;
     int i;
 
     printf ("\n");
-    if (!xcb_get_wm_hints_reply(dpy, w->hints_cookie, &wmhints, &err))
+    if (!xcb_icccm_get_wm_hints_reply(dpy, w->hints_cookie, &wmhints, &err))
     {
 	printf ("  No window manager hints defined\n");
 	if (err)
@@ -1641,25 +1643,25 @@ Display_WM_Info (struct wininfo *w)
 
     printf ("  Window manager hints:\n");
 
-    if (flags & XCB_WM_HINT_INPUT)
+    if (flags & XCB_ICCCM_WM_HINT_INPUT)
 	printf ("      Client accepts input or input focus: %s\n",
 		Lookup (wmhints.input, _bool));
 
-    if (flags & XCB_WM_HINT_ICON_WINDOW) {
+    if (flags & XCB_ICCCM_WM_HINT_ICON_WINDOW) {
 	struct wininfo iw;
 	iw.window = wmhints.icon_window;
 	iw.net_wm_name_cookie = get_net_wm_name (dpy, iw.window);
-	iw.wm_name_cookie = xcb_get_wm_name (dpy, iw.window);
+	iw.wm_name_cookie = xcb_icccm_get_wm_name (dpy, iw.window);
 
 	printf ("      Icon window id: ");
 	Display_Window_Id (&iw, True);
     }
 
-    if (flags & XCB_WM_HINT_ICON_POSITION)
+    if (flags & XCB_ICCCM_WM_HINT_ICON_POSITION)
 	printf ("      Initial icon position: %s, %s\n",
 		xscale (wmhints.icon_x), yscale (wmhints.icon_y));
 
-    if (flags & XCB_WM_HINT_STATE)
+    if (flags & XCB_ICCCM_WM_HINT_STATE)
 	printf ("      Initial state is %s\n",
 		Lookup (wmhints.initial_state, _state_hints));
 

@@ -90,7 +90,7 @@ AC_DEFUN([PIXMAN_LINK_WITH_ENV],[dnl
 	LIBS=""
 	$1
 	AC_LINK_IFELSE(
-		[$2],
+		[AC_LANG_SOURCE([$2])],
 		[pixman_cc_stderr=`test -f conftest.err && cat conftest.err`
 		 pixman_cc_flag=yes],
 		[pixman_cc_stderr=`test -f conftest.err && cat conftest.err`
@@ -290,7 +290,7 @@ have_mmx_intrinsics=no
 AC_MSG_CHECKING(whether to use MMX intrinsics)
 xserver_save_CFLAGS=$CFLAGS
 CFLAGS="$MMX_CFLAGS $CFLAGS"
-AC_COMPILE_IFELSE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #if defined(__GNUC__) && (__GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4))
 error "Need GCC >= 3.4 for MMX intrinsics"
 #endif
@@ -298,7 +298,7 @@ error "Need GCC >= 3.4 for MMX intrinsics"
 int main () {
     __m64 v = _mm_cvtsi32_si64 (1);
     return _mm_cvtsi64_si32 (v);
-}], have_mmx_intrinsics=yes)
+}]])], have_mmx_intrinsics=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(mmx,
@@ -342,7 +342,7 @@ AC_MSG_CHECKING(whether to use SSE2 intrinsics)
 xserver_save_CFLAGS=$CFLAGS
 CFLAGS="$SSE2_CFLAGS $CFLAGS"
 
-AC_COMPILE_IFELSE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 2))
 #   if !defined(__amd64__) && !defined(__x86_64__)
 #      error "Need GCC >= 4.2 for SSE2 intrinsics on x86"
@@ -355,7 +355,7 @@ int main () {
     __m128i a = _mm_set1_epi32 (0), b = _mm_set1_epi32 (0), c;
 	c = _mm_xor_si128 (a, b);
     return 0;
-}], have_sse2_intrinsics=yes)
+}]])], have_sse2_intrinsics=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(sse2,
@@ -392,7 +392,7 @@ case $host_os in
 	 hwcap_save_LDFLAGS="$LDFLAGS"
 	 HWCAP_LDFLAGS='-Wl,-M,$(srcdir)/solaris-hwcap.mapfile'
 	 LDFLAGS="$LDFLAGS -Wl,-M,pixman/solaris-hwcap.mapfile"
-	 AC_LINK_IFELSE([int main() { return 0; }],
+	 AC_LINK_IFELSE([AC_LANG_SOURCE([[int main() { return 0; }]])],
 			use_hwcap_mapfile=yes,
 			HWCAP_LDFLAGS="")
 	 LDFLAGS="$hwcap_save_LDFLAGS"
@@ -424,7 +424,7 @@ have_vmx_intrinsics=no
 AC_MSG_CHECKING(whether to use VMX/Altivec intrinsics)
 xserver_save_CFLAGS=$CFLAGS
 CFLAGS="$VMX_CFLAGS $CFLAGS"
-AC_COMPILE_IFELSE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #if defined(__GNUC__) && (__GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4))
 error "Need GCC >= 3.4 for sane altivec support"
 #endif
@@ -433,7 +433,7 @@ int main () {
     vector unsigned int v = vec_splat_u32 (1);
     v = vec_sub (v, v);
     return 0;
-}], have_vmx_intrinsics=yes)
+}]])], have_vmx_intrinsics=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(vmx,
@@ -466,7 +466,7 @@ have_arm_simd=no
 AC_MSG_CHECKING(whether to use ARM SIMD assembler)
 xserver_save_CFLAGS=$CFLAGS
 CFLAGS="-x assembler-with-cpp $CFLAGS"
-AC_COMPILE_IFELSE([[
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 .text
 .arch armv6
 .object_arch armv4
@@ -476,7 +476,7 @@ AC_COMPILE_IFELSE([[
 #error EABI is required (to be sure that calling conventions are compatible)
 #endif
 pld [r0]
-uqadd8 r0, r0, r0]], have_arm_simd=yes)
+uqadd8 r0, r0, r0]])], have_arm_simd=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(arm-simd,
@@ -505,7 +505,7 @@ have_arm_neon=no
 AC_MSG_CHECKING(whether to use ARM NEON assembler)
 xserver_save_CFLAGS=$CFLAGS
 CFLAGS="-x assembler-with-cpp $CFLAGS"
-AC_COMPILE_IFELSE([[
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 .text
 .fpu neon
 .arch armv7a
@@ -517,7 +517,7 @@ AC_COMPILE_IFELSE([[
 #error EABI is required (to be sure that calling conventions are compatible)
 #endif
 pld [r0]
-vmovn.u16 d0, q0]], have_arm_neon=yes)
+vmovn.u16 d0, q0]])], have_arm_neon=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(arm-neon,
@@ -545,12 +545,12 @@ dnl Check for GNU-style inline assembly support
 
 have_gcc_inline_asm=no
 AC_MSG_CHECKING(whether to use GNU-style inline assembler)
-AC_COMPILE_IFELSE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 int main () {
     /* Most modern architectures have a NOP instruction, so this is a fairly generic test. */
 	asm volatile ( "\tnop\n" : : : "cc", "memory" );
     return 0;
-}], have_gcc_inline_asm=yes)
+}]])], have_gcc_inline_asm=yes)
 
 AC_ARG_ENABLE(gcc-inline-asm,
    [AC_HELP_STRING([--disable-gcc-inline-asm],
@@ -685,7 +685,7 @@ dnl Thread local storage
 support_for__thread=no
 
 AC_MSG_CHECKING(for __thread)
-AC_LINK_IFELSE([
+AC_LINK_IFELSE([AC_LANG_SOURCE([[
 #if defined(__MINGW32__) && !(__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
 #error This MinGW version has broken __thread support
 #endif
@@ -694,7 +694,7 @@ AC_LINK_IFELSE([
 #endif
 static __thread int x ;
 int main () { x = 123; return x; }
-], support_for__thread=yes)
+]])], support_for__thread=yes)
 
 if test $support_for__thread = yes; then 
    AC_DEFINE([TOOLCHAIN_SUPPORTS__THREAD],[],[Whether the tool chain supports __thread])
@@ -706,7 +706,7 @@ dnl
 dnl posix tls
 dnl
 
-m4_define([pthread_test_program],[dnl
+m4_define([pthread_test_program],AC_LANG_SOURCE([[dnl
 #include <stdlib.h>
 #include <pthread.h>
 
@@ -739,7 +739,7 @@ main ()
     }
     return 0;
 }
-])
+]]))
 
 AC_DEFUN([PIXMAN_CHECK_PTHREAD],[dnl
     if test "z$support_for_pthread_setspecific" != "zyes"; then
@@ -780,7 +780,7 @@ dnl __attribute__((constructor))
 support_for_attribute_constructor=no
 
 AC_MSG_CHECKING(for __attribute__((constructor)))
-AC_LINK_IFELSE([
+AC_LINK_IFELSE([AC_LANG_SOURCE([[
 #if defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7))
 /* attribute 'constructor' is supported since gcc 2.7, but some compilers
  * may only pretend to be gcc, so let's try to actually use it
@@ -791,7 +791,7 @@ int main (void) { return x; }
 #else
 #error not gcc or gcc version is older than 2.7
 #endif
-], support_for_attribute_constructor=yes)
+]])], support_for_attribute_constructor=yes)
 
 if test x$support_for_attribute_constructor = xyes; then
    AC_DEFINE([TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR],
