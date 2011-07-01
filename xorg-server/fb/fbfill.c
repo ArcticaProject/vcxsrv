@@ -69,7 +69,7 @@ fbFill (DrawablePtr pDrawable,
 	    FbBits	*stip;
 	    FbStride    stipStride;
 	    int		stipBpp;
-	    int		stipXoff, stipYoff; /* XXX assumed to be zero */
+	    _X_UNUSED int	stipXoff, stipYoff;
 
 	    if (pGC->fillStyle == FillStippled)
 		alu = FbStipple1Rop(pGC->alu,pGC->fgPixel);
@@ -97,7 +97,7 @@ fbFill (DrawablePtr pDrawable,
 	    FbStip	*stip;
 	    FbStride    stipStride;
 	    int		stipBpp;
-	    int		stipXoff, stipYoff; /* XXX assumed to be zero */
+	    _X_UNUSED int	stipXoff, stipYoff;
 	    FbBits	fgand, fgxor, bgand, bgxor;
 
 	    fgand = pPriv->and;
@@ -139,7 +139,7 @@ fbFill (DrawablePtr pDrawable,
 	int	    tileBpp;
 	int	    tileWidth;
 	int	    tileHeight;
-	int	    tileXoff, tileYoff; /* XXX assumed to be zero */
+	_X_UNUSED int	tileXoff, tileYoff;
 	
 	fbGetDrawable (&pTile->drawable, tile, tileStride, tileBpp, tileXoff, tileYoff);
 	tileWidth = pTile->drawable.width;

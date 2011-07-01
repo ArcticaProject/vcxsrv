@@ -26,23 +26,23 @@ xkb_symbols "tifinagh" {
 
     name[Group1]="Berber (Morocco, Tifinagh)";
 
-    key <TLDE>	{ [ twosuperior, NoAction ]	};
+    key <TLDE>	{ [ twosuperior, NoSymbol ]	};
     key <AE01>	{ [ ampersand,          1 ]	};
-    key <AE02>	{ [ NoAction,          2, asciitilde	]	};
+    key <AE02>	{ [ NoSymbol,          2, asciitilde	]	};
     key <AE03>	{ [  quotedbl,          3, numbersign	]	};
     key <AE04>	{ [apostrophe,          4, braceleft	]	};
     key <AE05>	{ [ parenleft,          5, bracketleft	]	};
     key <AE06>	{ [     minus,          6, bar	]	};
-    key <AE07>	{ [         NoAction ,  7 ]	};
+    key <AE07>	{ [         NoSymbol ,  7 ]	};
     key <AE08>	{ [underscore,          8, backslash	]	};
-    key <AE09>	{ [NoAction,         9, asciicircum	]	};
-    key <AE10>	{ [       NoAction ,          0, at		]	};
+    key <AE09>	{ [NoSymbol,         9, asciicircum	]	};
+    key <AE10>	{ [       NoSymbol ,          0, at		]	};
     key <AE11>	{ [parenright,     degree, bracketright	]	};
     key <AE12>	{ [     equal,       plus, braceright	]	};
 
     key <AD01>	{ [ 0x1002d30 ]	};
     key <AD02>	{ [ 0x1002d63, 0x1002d65 ]	};
-    key <AD03>	{ [ 0x1002d3b, NoAction,0x10020ac ]	};
+    key <AD03>	{ [ 0x1002d3b, NoSymbol,0x10020ac ]	};
     key <AD04>	{ [ 0x1002d54, 0x1002d55 ]	};
     key <AD05>	{ [ 0x1002d5c, 0x1002d5f ]	};
     key <AD06>	{ [ 0x1002d62 ]	};
@@ -63,7 +63,7 @@ xkb_symbols "tifinagh" {
     key <AC08>	{ [ 0x1002d3d,  0x1002d3d  ]	};
     key <AC09>	{ [ 0x1002d4d ]	};
     key <AC10>	{ [ 0x1002d4e ]	};
-    key <AC11>	{ [    NoAction ,   percent ]	};
+    key <AC11>	{ [    NoSymbol ,   percent ]	};
     key <BKSL>	{ [  asterisk,         mu ]	};
 
     key <AB01>	{ [ 0x1002d61 ]	};
@@ -88,7 +88,7 @@ xkb_symbols "tifinagh-phonetic" {
 
     key <LatA>	{ [ 0x1002d30 ]	};
     key <LatZ>	{ [ 0x1002d63, 0x1002d65 ]	};
-    key <LatE>	{ [ 0x1002d3b, NoAction,0x10020ac ]	};
+    key <LatE>	{ [ 0x1002d3b, NoSymbol,0x10020ac ]	};
     key <LatR>	{ [ 0x1002d54, 0x1002d55 ]	};
     key <LatT>	{ [ 0x1002d5c, 0x1002d5f ]	};
     key <LatY>	{ [ 0x1002d62 ]	};
@@ -192,7 +192,7 @@ xkb_symbols "tifinagh-extended-phonetic" {
 
     key <LatA>	{ [ 0x1002d30 ]	};
     key <LatZ>	{ [ 0x1002d63, 0x1002d65 ]	};
-    key <LatE>	{ [ 0x1002d3b, NoAction,0x10020ac ]	};
+    key <LatE>	{ [ 0x1002d3b, NoSymbol,0x10020ac ]	};
     key <LatR>	{ [ 0x1002d54, 0x1002d55 ]	};
     key <LatT>	{ [ 0x1002d5c, 0x1002d5f ]	};
     key <LatY>	{ [ 0x1002d62 ]	};

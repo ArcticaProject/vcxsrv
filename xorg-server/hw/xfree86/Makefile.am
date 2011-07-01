@@ -38,18 +38,18 @@ DIST_SUBDIRS = common ddc i2c x86emu int10 fbdevhw os-support \
 	       utils doc man
 
 bin_PROGRAMS = Xorg
-Xorg_SOURCES = xorg.c
+nodist_Xorg_SOURCES = sdksyms.c
 
 AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
-INCLUDES = @XORG_INCS@ 
+INCLUDES = $(XORG_INCS) -I$(srcdir)/parser -I$(top_srcdir)/miext/cw \
+	-I$(srcdir)/ddc -I$(srcdir)/i2c -I$(srcdir)/modes -I$(srcdir)/ramdac
 
-noinst_LTLIBRARIES = libxorg.la
-libxorg_la_SOURCES = libxorg.c
-libxorg_la_LIBADD = \
+LOCAL_LIBS = \
+            $(MAIN_LIB) \
             $(XSERVER_LIBS) \
             loader/libloader.la \
-            os-support/libxorgos.la \
             common/libcommon.la \
+            os-support/libxorgos.la \
             parser/libxf86config_internal.la \
             dixmods/libdixmods.la \
             modes/libxf86modes.la \
@@ -57,30 +57,20 @@ libxorg_la_LIBADD = \
             ddc/libddc.la \
             i2c/libi2c.la \
             dixmods/libxorgxkb.la \
+            $(XORG_LIBS) \
             $(top_builddir)/mi/libmi.la \
-            $(top_builddir)/os/libos.la \
-            @XORG_LIBS@
-
-libxorg_la_DEPENDENCIES = $(libxorg_la_LIBADD)
-
-libxorg.c xorg.c:
-	touch $@
-
-DISTCLEANFILES = libxorg.c xorg.c
-
-Xorg_DEPENDENCIES = libxorg.la
-Xorg_LDADD = $(MAIN_LIB) libxorg.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
+            $(top_builddir)/os/libos.la
+Xorg_LDADD = \
+            $(LOCAL_LIBS) \
+            $(XORG_SYS_LIBS) \
+            $(XSERVER_SYS_LIBS)
+Xorg_DEPENDENCIES = $(LOCAL_LIBS)
 
 Xorg_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 
 BUILT_SOURCES = xorg.conf.example
-DISTCLEANFILES += xorg.conf.example
+DISTCLEANFILES = xorg.conf.example
 EXTRA_DIST = xorgconf.cpp
-
-if SPECIAL_DTRACE_OBJECTS
-# Re-add dtrace object code that gets lost when building static libraries
-Xorg_LDADD += $(XSERVER_LIBS)
-endif
 
 if SOLARIS_ASM_INLINE
 # Needs to be built before any files are compiled when using Sun compilers
@@ -116,3 +106,12 @@ xorg.conf.example: xorgconf.cpp
 
 relink:
 	$(AM_V_at)rm -f Xorg && $(MAKE) Xorg
+
+CLEANFILES = sdksyms.c sdksyms.dep
+EXTRA_DIST += sdksyms.sh
+
+sdksyms.dep sdksyms.c: sdksyms.sh
+	CPP='$(CPP)' AWK='$(AWK)' $(srcdir)/sdksyms.sh $(top_srcdir) $(CFLAGS) $(AM_CFLAGS) $(INCLUDES)
+
+SDKSYMS_DEP = sdksyms.dep
+include $(SDKSYMS_DEP)

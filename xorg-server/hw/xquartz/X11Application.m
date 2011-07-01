@@ -338,18 +338,21 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
             
         case NSAppKitDefined:
             switch ([e subtype]) {
+                static BOOL x_was_active = NO;
+
                 case NSApplicationActivatedEventType:
                     for_x = NO;
-                    if ([self modalWindow] == nil) {
+                    if ([e window] == nil && x_was_active) {
                         BOOL order_all_windows = YES, workspaces, ok;
                         for_appkit = NO;
-                        
-                        /* FIXME: hack to avoid having to pass the event to appkit,
-                         which would cause it to raise one of its windows. */
+
+                        /* FIXME: This is a hack to avoid passing the event to AppKit which
+                         *        would result in it raising one of its windows.
+                         */
                         _appFlags._active = YES;
-                        
-                        [self activateX:YES];
-                        
+
+                        X11ApplicationSetFrontProcess();
+
                         /* Get the Spaces preference for SwitchOnActivate */
                         (void)CFPreferencesAppSynchronize(CFSTR("com.apple.dock"));
                         workspaces = CFPreferencesGetAppBooleanValue(CFSTR("workspaces"), CFSTR("com.apple.dock"), &ok);
@@ -370,8 +373,9 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                          *       If there are no active windows, and there are minimized windows, we should
                          *       be restoring one of them.
                          */
-                        if ([e data2] & 0x10) // 0x10 is set when we use cmd-tab or the dock icon
+                        if ([e data2] & 0x10) { // 0x10 (bfCPSOrderAllWindowsForward) is set when we use cmd-tab or the dock icon
                             DarwinSendDDXEvent(kXquartzBringAllToFront, 1, order_all_windows);
+                        }
                     }
                     break;
                     
@@ -381,7 +385,10 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                     
                 case NSApplicationDeactivatedEventType:
                     for_x = NO;
-                    [self activateX:NO];
+
+                    x_was_active = _x_active;
+                    if(_x_active)
+                        [self activateX:NO];
                     break;
             }
             break;

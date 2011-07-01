@@ -31,7 +31,7 @@
 #include <dix-config.h>
 #endif
 
-#if defined(DEBUG) && !defined(_WIN32_WCE)
+#ifdef HAVE_BACKTRACE
 #include <execinfo.h>
 #endif
 
@@ -51,6 +51,8 @@ __glapi_gentable_NoOp(void) {
 #if defined(DEBUG) && !defined(_WIN32_WCE)
     if (getenv("MESA_DEBUG") || getenv("LIBGL_DEBUG")) {
         const char *fstr = "Unknown";
+
+#ifdef HAVE_BACKTRACE
         void *frames[2];
 
         if(backtrace(frames, 2) == 2) {
@@ -59,6 +61,7 @@ __glapi_gentable_NoOp(void) {
             if(info.dli_sname)
                 fstr = info.dli_sname;
         }
+#endif
 
         LogMessage(X_ERROR, "GLX: Call to unimplemented API: %s\n", fstr);
     }

@@ -404,7 +404,7 @@ xf86WriteSerial (int fd, const void *buf, int count)
 
 	DebugF("WritingSerial: 0x%x",(unsigned char)*(((unsigned char *)buf)));
 	for (i = 1; i < count; i++)
-	    ErrorF(", 0x%x",(unsigned char)*(((unsigned char *)buf) + i));
+	    DebugF(", 0x%x",(unsigned char)*(((unsigned char *)buf) + i));
 	DebugF("\n");
 	SYSCALL (r = write (fd, buf, count));
 	return r;

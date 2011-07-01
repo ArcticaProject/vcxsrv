@@ -487,8 +487,8 @@ ProcXvMCListSubpictureTypes(ClientPtr client)
 
     pScreen = pPort->pAdaptor->pScreen;
 
-    if(XvMCScreenKey == NULL) /* No XvMC adaptors */
-        return BadMatch;
+    if (!dixPrivateKeyRegistered(XvMCScreenKey))
+        return BadMatch;   /* No XvMC adaptors */
 
     if(!(pScreenPriv = XVMC_GET_PRIVATE(pScreen)))
         return BadMatch;   /* None this screen */
@@ -668,8 +668,8 @@ XvMCExtensionInit(void)
 {
    ExtensionEntry *extEntry;
 
-   if(XvMCScreenKey == NULL) /* nobody supports it */
-	return; 
+   if (!dixPrivateKeyRegistered(XvMCScreenKey))
+	return;
 
    if(!(XvMCRTContext = CreateNewResourceType(XvMCDestroyContextRes,
 					      "XvMCRTContext")))
@@ -746,7 +746,8 @@ XvImagePtr XvMCFindXvImage(XvPortPtr pPort, CARD32 id)
     XvMCAdaptorPtr adaptor = NULL;
     int i;
 
-    if(XvMCScreenKey == NULL) return NULL;
+    if (!dixPrivateKeyRegistered(XvMCScreenKey))
+        return NULL;
 
     if(!(pScreenPriv = XVMC_GET_PRIVATE(pScreen))) 
         return NULL;

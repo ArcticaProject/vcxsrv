@@ -64,11 +64,9 @@ dtrace-dix.o: $(top_srcdir)/dix/Xserver.d $(am_libdix_la_OBJECTS)
 
 noinst_PROGRAMS = dix.O
 
+dix_O_SOURCES =
 dix.O: dtrace-dix.o $(am_libdix_la_OBJECTS)
 	$(AM_V_GEN)ld -r -o $@ $(am_libdix_la_OBJECTS:%.lo=.libs/%.o)
 endif
 
-dix.c:
-	touch $@
-
-CLEANFILES = dix.c Xserver-dtrace.h
+CLEANFILES = Xserver-dtrace.h

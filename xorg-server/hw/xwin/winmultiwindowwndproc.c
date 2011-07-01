@@ -988,14 +988,61 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       if (wParam == SIZE_MINIMIZED) winReorderWindowsMultiWindow();
       return 0; /* end of WM_SIZE handler */
 
-    case WM_STYLECHANGED:
-      /* when the style changes, adjust the window size so the client area remains the same */
+    case WM_STYLECHANGING:
+      /*
+        When the style changes, adjust the Windows window size so the client area remains the same size,
+        and adjust the Windows window position so that the client area remains in the same place.
+      */
       {
-	LONG x,y;
-	DrawablePtr pDraw = &pWin->drawable;
-	x =  pDraw->x - wBorderWidth(pWin);
-	y = pDraw->y - wBorderWidth(pWin);
-	winPositionWindowMultiWindow(pWin, x, y);
+        RECT newWinRect;
+        DWORD dwExStyle;
+        DWORD dwStyle;
+        DWORD newStyle = ((STYLESTRUCT *)lParam)->styleNew;
+        WINDOWINFO wi;
+
+        dwExStyle = GetWindowLongPtr (hwnd, GWL_EXSTYLE);
+        dwStyle = GetWindowLongPtr (hwnd, GWL_STYLE);
+
+        winDebug("winTopLevelWindowProc - WM_STYLECHANGING from %08x %08x\n", dwStyle, dwExStyle);
+
+        if (wParam == GWL_EXSTYLE)
+          dwExStyle = newStyle;
+
+        if (wParam == GWL_STYLE)
+          dwStyle = newStyle;
+
+        winDebug("winTopLevelWindowProc - WM_STYLECHANGING to %08x %08x\n", dwStyle, dwExStyle);
+
+        /* Get client rect in screen coordinates */
+        wi.cbSize = sizeof(WINDOWINFO);
+        GetWindowInfo(hwnd, &wi);
+
+        winDebug("winTopLevelWindowProc - WM_STYLECHANGING client area {%d, %d, %d, %d}, {%d x %d}\n", wi.rcClient.left, wi.rcClient.top, wi.rcClient.right, wi.rcClient.bottom, wi.rcClient.right - wi.rcClient.left, wi.rcClient.bottom - wi.rcClient.top);
+
+        newWinRect = wi.rcClient;
+        if (!AdjustWindowRectEx(&newWinRect, dwStyle, FALSE, dwExStyle))
+          winDebug("winTopLevelWindowProc - WM_STYLECHANGING AdjustWindowRectEx failed\n");
+
+        winDebug("winTopLevelWindowProc - WM_STYLECHANGING window area should be {%d, %d, %d, %d}, {%d x %d}\n", newWinRect.left, newWinRect.top, newWinRect.right, newWinRect.bottom, newWinRect.right - newWinRect.left, newWinRect.bottom - newWinRect.top);
+
+        /*
+          Style change hasn't happened yet, so we can't adjust the window size yet, as the winAdjustXWindow()
+          which WM_SIZE does will use the current (unchanged) style.  Instead make a note to change it when
+          WM_STYLECHANGED is received...
+        */
+        pWinPriv->hDwp = BeginDeferWindowPos(1);
+        pWinPriv->hDwp = DeferWindowPos(pWinPriv->hDwp, hwnd, NULL, newWinRect.left, newWinRect.top, newWinRect.right - newWinRect.left, newWinRect.bottom - newWinRect.top, SWP_NOACTIVATE | SWP_NOZORDER);
+      }
+      return 0;
+
+    case WM_STYLECHANGED:
+      {
+        if (pWinPriv->hDwp)
+          {
+            EndDeferWindowPos(pWinPriv->hDwp);
+            pWinPriv->hDwp = NULL;
+          }
+        winDebug("winTopLevelWindowProc - WM_STYLECHANGED done\n");
       }
       return 0;
 

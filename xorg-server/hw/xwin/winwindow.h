@@ -75,6 +75,7 @@ typedef struct
   BOOL			OpenGlWindow;
   winPrivScreenPtr	pScreenPriv;
   Bool			fXKilled;
+  HDWP                  hDwp;
 
   /* Privates used by primary fb DirectDraw server */
   LPDDSURFACEDESC	pddsdPrimary;

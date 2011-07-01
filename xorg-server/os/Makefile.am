@@ -51,11 +51,7 @@ dtrace.o: $(top_srcdir)/dix/Xserver.d $(am_libos_la_OBJECTS)
 
 noinst_PROGRAMS = os.O
 
+os_O_SOURCES =
 os.O: dtrace.o $(am_libos_la_OBJECTS)
 	$(AM_V_GEN)ld -r -o $@ dtrace.o .libs/*.o
 endif
-
-os.c:
-	touch $@
-
-CLEANFILES = os.c

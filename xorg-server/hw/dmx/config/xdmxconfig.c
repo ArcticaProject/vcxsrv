@@ -877,8 +877,8 @@ int main(int argc, char **argv)
     Widget         parent, menubox, bottombox, databox, canvasbox;
     Widget         filebutton, helpbutton;
     Widget         filemenu, openbutton, savebutton, quitbutton;
-    Widget         helpmenu, aboutbutton, aboutbox, abouttext, aboutok;
-    Widget         quitbox, quittext, quitok, quitcan;
+    Widget         helpmenu, aboutbutton, aboutbox, aboutok;
+    Widget         quitbox, quitok, quitcan;
     Widget         ncbutton;
     Widget         canbutton;
     Widget         ecbox, ecokbutton, eccanbutton;
@@ -1096,7 +1096,7 @@ int main(int argc, char **argv)
                                         toplevel, NULL);
     aboutbox     = XtVaCreateManagedWidget("aboutbox", boxWidgetClass,
                                            aboutpopup, NULL);
-    abouttext    = XtVaCreateManagedWidget("abouttext", labelWidgetClass,
+                   XtVaCreateManagedWidget("abouttext", labelWidgetClass,
                                            aboutbox,
                                            XtNlabel, DMX_INFO,
                                            NULL);
@@ -1108,7 +1108,7 @@ int main(int argc, char **argv)
                                         toplevel, NULL);
     quitbox      = XtVaCreateManagedWidget("quitbox", boxWidgetClass,
                                            quitpopup, NULL);
-    quittext     = XtVaCreateManagedWidget("quittext", labelWidgetClass,
+                   XtVaCreateManagedWidget("quittext", labelWidgetClass,
                                            quitbox,
                                            XtNlabel,
                                            "Changes to the configuration\n"

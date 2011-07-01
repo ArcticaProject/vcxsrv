@@ -48,9 +48,7 @@ glapi_sources =					\
 	glthread.c				\
 	glthread.h
 
-libglxdri_la_SOURCES = \
-        extension_string.c \
-        extension_string.h
+libglxdri_la_SOURCES =
 
 if DRI
 libglxdri_la_SOURCES += glxdri.c
@@ -65,6 +63,8 @@ libglxdri_la_LIBADD = $(DLOPEN_LIBS)
 libglx_la_SOURCES = \
 	$(indirect_sources) \
 	$(glapi_sources) \
+	extension_string.c \
+	extension_string.h \
 	indirect_util.c \
 	indirect_util.h \
 	indirect_program.c \

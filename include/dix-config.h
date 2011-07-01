@@ -3,6 +3,8 @@
 #ifndef _DIX_CONFIG_H_
 #define _DIX_CONFIG_H_
 
+#define _X_UNUSED
+
 #define GLYPHPADBYTES 4
 
 /* Use XCB for low-level protocol implementation */

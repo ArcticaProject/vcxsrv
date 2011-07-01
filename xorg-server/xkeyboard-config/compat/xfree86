@@ -47,6 +47,13 @@ default partial xkb_compatibility "basic"  {
     interpret XF86_ClearGrab {
         action = Private(type=0x86, data="ClsGrb");
     };
+    interpret XF86LogGrabInfo {
+        action = Private(type=0x86, data="PrGrbs");
+    };
+    interpret XF86LogWindowTree {
+        action = Private(type=0x86, data="PrWins");
+    };
+
     interpret XF86_Next_VMode {
         action = Private(type=0x86, data="+VMode");
     };

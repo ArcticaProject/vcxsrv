@@ -59,7 +59,7 @@ shadowUpdateRotatePacked (ScreenPtr	pScreen,
     FbBits	*shaBits;
     FbStride	shaStride;
     int		shaBpp;
-    int		shaXoff, shaYoff;
+    _X_UNUSED int	shaXoff, shaYoff;
     int		box_x1, box_x2, box_y1, box_y2;
     int		sha_x1 = 0, sha_y1 = 0;
     int		scr_x1 = 0, scr_x2 = 0, scr_y1 = 0, scr_y2 = 0, scr_w, scr_h;
