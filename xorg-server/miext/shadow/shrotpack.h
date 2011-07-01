@@ -106,7 +106,7 @@ FUNC (ScreenPtr	    pScreen,
     FbStride	shaStride;
     int		scrBase, scrLine, scr;
     int		shaBpp;
-    int		shaXoff, shaYoff;   /* XXX assumed to be zero */
+    _X_UNUSED int	shaXoff, shaYoff;
     int		x, y, w, h, width;
     int         i;
     Data	*winBase = NULL, *win;

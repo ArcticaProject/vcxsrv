@@ -20,17 +20,18 @@ AM_MAINTAINER_MODE
 # Initialize libtool
 AC_PROG_LIBTOOL
 
-# Require xorg-macros minimum of 1.12 for DocBook external references
+# Require xorg-macros minimum of 1.15 for fop minimum version
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.12 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.12)
+          [m4_fatal([must install xorg-macros 1.15 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.15)
 XORG_DEFAULT_OPTIONS
 XORG_ENABLE_SPECS
 XORG_WITH_XMLTO(0.0.22)
-XORG_WITH_FOP([no])
+XORG_WITH_FOP([],[no])
 XORG_WITH_XSLTPROC
 XORG_CHECK_SGML_DOCTOOLS(1.8)
 XORG_PROG_RAWCPP
+XORG_WITH_PERL
 
 # Required when PKG_CHECK_MODULES called within an if statement
 PKG_PROG_PKG_CONFIG
@@ -64,15 +65,6 @@ if test x"$LDFLAGS_FOR_BUILD" = x; then
 	fi
 fi
 AC_SUBST(LDFLAGS_FOR_BUILD)
-
-# Find perl for "make check" tests in nls/Makefile.am
-AC_ARG_WITH(perl,
-	AS_HELP_STRING([--with-perl=<path>],
-			[path to perl interpreter for build-time tests]),
-	[PERL=$withval ; AC_MSG_CHECKING([perl]) ;
-	 AC_MSG_RESULT([(from --with-perl) $PERL])],
-	AC_CHECK_PROGS([PERL], [perl], [no]))
-AM_CONDITIONAL(HAVE_PERL, test x$PERL != xno)
 
 # Checks for pkg-config packages
 

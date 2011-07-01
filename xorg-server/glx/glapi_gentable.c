@@ -31,7 +31,10 @@
 #include <dix-config.h>
 #endif
 
+#ifdef HAVE_BACKTRACE
 #include <execinfo.h>
+#endif
+
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -46,6 +49,8 @@
 static void
 __glapi_gentable_NoOp(void) {
     const char *fstr = "Unknown";
+
+#ifdef HAVE_BACKTRACE
     void *frames[2];
 
     if(backtrace(frames, 2) == 2) {
@@ -54,6 +59,7 @@ __glapi_gentable_NoOp(void) {
         if(info.dli_sname)
             fstr = info.dli_sname;
     }
+#endif
 
     LogMessage(X_ERROR, "GLX: Call to unimplemented API: %s\n", fstr);
 }

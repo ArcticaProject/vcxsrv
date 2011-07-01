@@ -177,8 +177,10 @@ if test "x$GXX" = xyes; then
     AC_MSG_CHECKING([whether $CXX supports -fvisibility=hidden])
     VISIBILITY_CXXFLAGS="-fvisibility=hidden"
     CXXFLAGS="$CXXFLAGS $VISIBILITY_CXXFLAGS"
+    AC_LANG_PUSH([C++])
     AC_LINK_IFELSE([AC_LANG_PROGRAM()], AC_MSG_RESULT([yes]),
 		   [VISIBILITY_CXXFLAGS="" ; AC_MSG_RESULT([no])]);
+    AC_LANG_POP([C++])
 
     # Restore CXXFLAGS; VISIBILITY_CXXFLAGS are added to it where needed.
     CXXFLAGS=$save_CXXFLAGS
@@ -186,6 +188,15 @@ if test "x$GXX" = xyes; then
     # Work around aliasing bugs - developers should comment this out
     CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
 fi
+
+dnl even if the compiler appears to support it, using visibility attributes isn't
+dnl going to do anything useful currently on cygwin apart from emit lots of warnings
+case "$host_os" in
+cygwin*)
+    VISIBILITY_CFLAGS=""
+    VISIBILITY_CXXFLAGS=""
+    ;;
+esac
 
 AC_SUBST([VISIBILITY_CFLAGS])
 AC_SUBST([VISIBILITY_CXXFLAGS])
@@ -872,7 +883,11 @@ dri|no) # these checks are still desired when there is no mesa_driver
     else
         # should check these...
         X11_INCLUDES="$X11_INCLUDES $X_CFLAGS"
-        GL_LIB_DEPS="$X_LIBS -lX11 -lXext -lXxf86vm -lXdamage -lXfixes"
+        if test "x$HAVE_XF86VIDMODE" == xyes; then
+           GL_LIB_DEPS="$X_LIBS -lX11 -lXext -lXxf86vm -lXdamage -lXfixes"
+	else
+           GL_LIB_DEPS="$X_LIBS -lX11 -lXext -lXdamage -lXfixes"
+	fi
         GL_PC_LIB_PRIV="$GL_LIB_DEPS"
         GL_PC_CFLAGS="$X11_INCLUDES"
 

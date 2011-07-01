@@ -196,8 +196,8 @@ CursorCloseScreen (int index, ScreenPtr pScreen)
 {
     CursorScreenPtr	cs = GetCursorScreen (pScreen);
     Bool		ret;
-    CloseScreenProcPtr	close_proc;
-    DisplayCursorProcPtr display_proc;
+    _X_UNUSED CloseScreenProcPtr	close_proc;
+    _X_UNUSED DisplayCursorProcPtr	display_proc;
     ConstrainCursorHarderProcPtr constrain_proc;
 
     Unwrap (cs, pScreen, CloseScreen, close_proc);

@@ -115,7 +115,7 @@ winDrawURLWindow (LPARAM lParam)
   /* Draw it */
   SetBkMode (draw->hDC, OPAQUE);
   SelectObject (draw->hDC, font);
-  DrawText (draw->hDC, str, strlen (str),&rect,DT_CENTER | DT_VCENTER);
+  DrawText (draw->hDC, str, strlen (str),&rect,DT_LEFT | DT_VCENTER);
   /* Delete the created font, replace it with stock font */
   DeleteObject (SelectObject (draw->hDC, GetStockObject (ANSI_VAR_FONT)));
 }

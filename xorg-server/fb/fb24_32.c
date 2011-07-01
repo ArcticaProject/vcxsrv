@@ -540,8 +540,8 @@ fb24_32ReformatTile(PixmapPtr pOldTile, int bitsPerPixel)
     FbStride	oldStride, newStride;
     int		oldBpp, newBpp;
     fb24_32BltFunc  blt;
-    int		oldXoff, oldYoff;
-    int		newXoff, newYoff;
+    _X_UNUSED int   oldXoff, oldYoff;
+    _X_UNUSED int   newXoff, newYoff;
 
     pNewTile = pScreen->CreatePixmap(pScreen, pOldTile->drawable.width,
 				     pOldTile->drawable.height,

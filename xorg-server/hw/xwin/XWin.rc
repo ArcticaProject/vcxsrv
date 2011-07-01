@@ -50,7 +50,7 @@ BEGIN
   LTEXT			BUILDERSTRING, IDC_STATIC, 36, 28, 220, 8
   LTEXT			"This software is licensed under the terms of the MIT/X11 License.", IDC_STATIC, 36, 48, 220, 20
   CONTROL               __VENDORDWEBSUPPORT__, ID_ABOUT_WEBSITE, "Button",
-                        BS_OWNERDRAW | WS_TABSTOP, 36, 68, 68, 8
+                        BS_OWNERDRAW | WS_TABSTOP, 36, 68, 220, 8
   DEFPUSHBUTTON		"&OK", IDOK, 105, 85, 50, 15
 END
 

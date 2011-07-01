@@ -51,7 +51,7 @@ extern CARD8 dri2_minor;
 
 typedef DRI2BufferRec DRI2Buffer2Rec, *DRI2Buffer2Ptr;
 typedef void (*DRI2SwapEventPtr)(ClientPtr client, void *data, int type,
-				 CARD64 ust, CARD64 msc, CARD64 sbc);
+				 CARD64 ust, CARD64 msc, CARD32 sbc);
 
 
 typedef DRI2BufferPtr	(*DRI2CreateBuffersProcPtr)(DrawablePtr pDraw,

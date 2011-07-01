@@ -395,8 +395,15 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 	    if (depth == pScreen->visuals[i].nplanes)
 		break;
 	}
+	/* if it can't, fix up the fbconfig to not advertise window support */
 	if (i == pScreen->numVisuals)
+	    config->drawableType &= ~(GLX_WINDOW_BIT);
+
+       /* fbconfig must support window drawables */
+	if (!(config->drawableType & GLX_WINDOW_BIT)) {
+	    config->visualID = 0;
 	    continue;
+	}
 
 	/* Create a new X visual for our FBconfig. */
 	visual = AddScreenVisuals(pScreen, 1, depth);

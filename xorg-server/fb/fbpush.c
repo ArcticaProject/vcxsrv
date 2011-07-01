@@ -235,7 +235,7 @@ fbPushPixels (GCPtr	    pGC,
     FbStip	*stip;
     FbStride	stipStride;
     int		stipBpp;
-    int		stipXoff, stipYoff; /* Assumed to be zero */
+    _X_UNUSED int	stipXoff, stipYoff;
 
     fbGetStipDrawable (&pBitmap->drawable, stip, stipStride, stipBpp, stipXoff, stipYoff);
 

@@ -69,7 +69,7 @@ FUNC (ScreenPtr	    pScreen,
     Data	*shaBase, *shaLine, *sha;
     FbStride	shaStride, winStride;
     int		shaBpp;
-    int		shaXoff, shaYoff;   /* XXX assumed to be zero */
+    _X_UNUSED int	shaXoff, shaYoff;
     int		x, y, w, h;
     Data	*winBase, *win, *winLine;
     CARD32	winSize;

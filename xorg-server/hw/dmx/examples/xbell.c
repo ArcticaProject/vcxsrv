@@ -71,7 +71,6 @@ int main(int argc, char **argv)
     XKeyboardControl kc;
     XKeyboardState   ks;
     unsigned long    vm;
-    int              percent;
 
     if (argc != 5) {
         printf("Usage: xbell percent baseVolume pitch duration\n");
@@ -81,7 +80,7 @@ int main(int argc, char **argv)
     vm               = (KBBellPercent
                         | KBBellPitch
                         | KBBellDuration);
-    percent          = atoi(argv[1]);
+    kc.key_click_percent = atoi(argv[1]);
     kc.bell_percent  = atoi(argv[2]);
     kc.bell_pitch    = atoi(argv[3]);
     kc.bell_duration = atoi(argv[4]);
