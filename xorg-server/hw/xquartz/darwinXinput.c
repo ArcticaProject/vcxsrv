@@ -149,8 +149,3 @@ DeleteInputDeviceRequest(DeviceIntPtr dev)
   DEBUG_LOG("DeleteInputDeviceRequest(%p)\n", dev);
 }
 
-void
-CloseInput (void)
-{
-}
-

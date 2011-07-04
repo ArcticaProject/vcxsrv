@@ -70,6 +70,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
 
     for (i = 0; out->valuators_len && i < sizeof(in->valuators.mask) * 8; i++)
     {
+        if (i >= MAX_VALUATORS)
+            assert (!XIMaskIsSet(in->valuators.mask, i));
         assert (XIMaskIsSet(in->valuators.mask, i) == XIMaskIsSet(ptr, i));
         if (XIMaskIsSet(in->valuators.mask, i))
             bits_set++;
@@ -238,7 +240,7 @@ static void test_convert_XIRawEvent(void)
     test_XIRawEvent(&in);
 
     printf("Testing valuator masks\n");
-    for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
     {
         XISetMask(in.valuators.mask, i);
         test_XIRawEvent(&in);
@@ -257,7 +259,7 @@ static void test_convert_XIRawEvent(void)
         XIClearMask(in.valuators.mask, i);
     }
 
-    for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
     {
         XISetMask(in.valuators.mask, i);
         test_XIRawEvent(&in);
@@ -354,7 +356,7 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
 
 
     valuators = 0;
-    for (i = 0; i < sizeof(in->valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
         if (XIMaskIsSet(in->valuators.mask, i))
             valuators++;
 
@@ -365,7 +367,9 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
     for (i = 0; i < sizeof(in->valuators.mask) * 8 ||
                 i < (out->valuators_len * 4) * 8; i++)
     {
-        if (i > sizeof(in->valuators.mask) * 8)
+        if (i >= MAX_VALUATORS)
+            assert(!XIMaskIsSet(in->valuators.mask, i) && !XIMaskIsSet(ptr, i));
+        else if (i > sizeof(in->valuators.mask) * 8)
             assert(!XIMaskIsSet(ptr, i));
         else if (i > out->valuators_len * 4 * 8)
             assert(!XIMaskIsSet(in->valuators.mask, i));
@@ -610,14 +614,14 @@ static void test_convert_XIDeviceEvent(void)
     }
 
     printf("Testing valuator masks\n");
-    for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
     {
         XISetMask(in.valuators.mask, i);
         test_XIDeviceEvent(&in);
         XIClearMask(in.valuators.mask, i);
     }
 
-    for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
     {
         XISetMask(in.valuators.mask, i);
 
@@ -627,7 +631,7 @@ static void test_convert_XIDeviceEvent(void)
         XIClearMask(in.valuators.mask, i);
     }
 
-    for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
     {
         XISetMask(in.valuators.mask, i);
         test_XIDeviceEvent(&in);

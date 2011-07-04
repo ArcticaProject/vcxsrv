@@ -505,6 +505,10 @@ void InitInput( int argc, char **argv )
     QuartzInitInput(argc, argv);
 }
 
+void CloseInput(void)
+{
+    DarwinEQFini();
+}
 
 /*
  * DarwinAdjustScreenOrigins

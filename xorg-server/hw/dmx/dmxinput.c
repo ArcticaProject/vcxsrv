@@ -77,6 +77,7 @@ void InitInput(int argc, char **argv)
 
 void CloseInput(void)
 {
+    mieqFini();
 }
 
 /** Called from dix/dispatch.c in Dispatch() whenever input events

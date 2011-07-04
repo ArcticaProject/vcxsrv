@@ -683,7 +683,7 @@ miPointerMove (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 
     valuator_mask_set_range(&mask, 0, 2, valuators);
     nevents = GetPointerEvents(events, pDev, MotionNotify, 0,
-                               POINTER_SCREEN | POINTER_ABSOLUTE, &mask);
+                               POINTER_SCREEN | POINTER_ABSOLUTE | POINTER_NORAW, &mask);
 
     OsBlockSignals();
 #ifdef XQUARTZ

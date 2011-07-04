@@ -320,6 +320,8 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
      * position of the pointer */
     pDev->last.valuators[0] = master->last.valuators[0];
     pDev->last.valuators[1] = master->last.valuators[1];
+    pDev->last.remainder[0] = master->last.remainder[0];
+    pDev->last.remainder[1] = master->last.remainder[1];
 
     if (!pDev->valuator)
         return;
@@ -339,14 +341,19 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
     if ((lastSlave = master->last.slave) && lastSlave->valuator) {
         for (i = 2; i < pDev->valuator->numAxes; i++) {
             if (i >= lastSlave->valuator->numAxes)
+            {
                 pDev->last.valuators[i] = 0;
+                pDev->last.remainder[i] = 0;
+            }
             else
+            {
                 pDev->last.valuators[i] =
                     rescaleValuatorAxis(pDev->last.valuators[i],
                             pDev->last.remainder[i],
                             &pDev->last.remainder[i],
                             lastSlave->valuator->axes + i,
                             pDev->valuator->axes + i, 0);
+            }
         }
     }
 
@@ -1164,14 +1171,17 @@ GetPointerEvents(InternalEvent *events, DeviceIntPtr pDev, int type, int buttons
 
     events = UpdateFromMaster(events, pDev, DEVCHANGE_POINTER_EVENT, &num_events);
 
-    raw = &events->raw_event;
-    events++;
-    num_events++;
-
     valuator_mask_copy(&mask, mask_in);
 
-    init_raw(pDev, raw, ms, type, buttons);
-    set_raw_valuators(raw, &mask, raw->valuators.data_raw);
+    if ((flags & POINTER_NORAW) == 0)
+    {
+	raw = &events->raw_event;
+	events++;
+	num_events++;
+
+	init_raw(pDev, raw, ms, type, buttons);
+	set_raw_valuators(raw, &mask, raw->valuators.data_raw);
+    }
 
     if (flags & POINTER_ABSOLUTE)
     {
@@ -1210,7 +1220,8 @@ GetPointerEvents(InternalEvent *events, DeviceIntPtr pDev, int type, int buttons
         moveRelative(pDev, &x, &y, &mask);
     }
 
-    set_raw_valuators(raw, &mask, raw->valuators.data);
+    if ((flags & POINTER_NORAW) == 0)
+	set_raw_valuators(raw, &mask, raw->valuators.data);
 
     positionSprite(pDev, (flags & POINTER_ABSOLUTE) ? Absolute : Relative,
                    &x, &y, x_frac, y_frac, scr, &cx, &cy, &cx_frac, &cy_frac);

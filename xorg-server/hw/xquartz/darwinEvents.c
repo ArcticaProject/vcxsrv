@@ -371,6 +371,10 @@ Bool DarwinEQInit(void) {
     return TRUE;
 }
 
+Bool DarwinEQFini(void) {
+    mieqFini();
+}
+
 /*
  * ProcessInputEvents
  *  Read and process events from the event queue until it is empty.
