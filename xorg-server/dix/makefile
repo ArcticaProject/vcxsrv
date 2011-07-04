@@ -2,6 +2,8 @@ ifeq ($(DEBUG),1)
 DEFINES += FONTDEBUG XSERVER_DTRACE
 endif
 
+INCLUDES += ..\composite
+
 LIBRARY=libdix
 
 libdix_la_SOURCES = 	\
