@@ -1185,6 +1185,7 @@ void
 DRI2CloseScreen(ScreenPtr pScreen)
 {
     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
+    pScreen->ConfigNotify = ds->ConfigNotify;
 
     free(ds->driverNames);
     free(ds);

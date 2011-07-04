@@ -1,5 +1,5 @@
 /*
- * Copyright © 1999 Keith Packard
+ * Copyright Â© 1999 Keith Packard
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -500,6 +500,8 @@ KdScreenInfoDispose (KdScreenInfo *si);
 /* kinput.c */
 void
 KdInitInput(void);
+void
+KdCloseInput(void);
 
 void
 KdAddPointerDriver(KdPointerDriver *);

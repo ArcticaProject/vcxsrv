@@ -137,6 +137,7 @@ InitInput (int argc, char *argv[])
 void
 CloseInput (void)
 {
+  mieqFini ();
   g_pwinPointer=NULL;
   g_pwinKeyboard=NULL;
 }

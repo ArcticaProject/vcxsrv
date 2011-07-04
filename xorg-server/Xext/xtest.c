@@ -679,12 +679,19 @@ GetXTestDevice(DeviceIntPtr master)
     return NULL;
 }
 
+static void
+XTestExtensionTearDown(ExtensionEntry *e)
+{
+    FreeEventList(xtest_evlist, GetMaximumEventsNum());
+    xtest_evlist = NULL;
+}
+
 void
 XTestExtensionInit(INITARGS)
 {
     AddExtension(XTestExtensionName, 0, 0,
             ProcXTestDispatch, SProcXTestDispatch,
-            NULL, StandardMinorOpcode);
+            XTestExtensionTearDown, StandardMinorOpcode);
 
     xtest_evlist = InitEventList(GetMaximumEventsNum());
 }

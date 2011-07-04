@@ -1,7 +1,7 @@
 /*
- * Copyright © 2001 Keith Packard
+ * Copyright Â© 2001 Keith Packard
  *
- * Partly based on code that is Copyright © The XFree86 Project Inc.
+ * Partly based on code that is Copyright Â© The XFree86 Project Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -23,7 +23,7 @@
  *
  * Authors:
  *    Eric Anholt <eric@anholt.net>
- *    Michel Dänzer <michel@tungstengraphics.com>
+ *    Michel DÃ¤nzer <michel@tungstengraphics.com>
  *
  */
 

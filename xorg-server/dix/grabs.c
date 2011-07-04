@@ -68,6 +68,118 @@ SOFTWARE.
 #define BITCLEAR(buf, i) MASKWORD(buf, i) &= ~BITMASK(i)
 #define GETBIT(buf, i) (MASKWORD(buf, i) & BITMASK(i))
 
+void
+PrintDeviceGrabInfo(DeviceIntPtr dev)
+{
+    ClientPtr client;
+    LocalClientCredRec *lcc;
+    int i, j;
+    GrabInfoPtr devGrab = &dev->deviceGrab;
+    GrabPtr grab = devGrab->grab;
+
+    ErrorF("Active grab 0x%lx (%s) on device '%s' (%d):",
+           (unsigned long) grab->resource,
+           (grab->grabtype == GRABTYPE_XI2) ? "xi2" :
+            ((grab->grabtype == GRABTYPE_CORE) ? "core" : "xi1"),
+           dev->name, dev->id);
+
+    client = clients[CLIENT_ID(grab->resource)];
+    if (client && GetLocalClientCreds(client, &lcc) != -1)
+    {
+        ErrorF("      client pid %ld uid %ld gid %ld\n",
+               (lcc->fieldsSet & LCC_PID_SET) ? (long) lcc->pid : 0,
+               (lcc->fieldsSet & LCC_UID_SET) ? (long) lcc->euid : 0,
+               (lcc->fieldsSet & LCC_GID_SET) ? (long) lcc->egid : 0);
+        FreeLocalClientCreds(lcc);
+    }
+    else
+    {
+        ErrorF("      (no client information available)\n");
+    }
+
+    /* XXX is this even correct? */
+    if (devGrab->sync.other)
+        ErrorF("      grab ID 0x%lx from paired device\n",
+               (unsigned long) devGrab->sync.other->resource);
+
+    ErrorF("      at %ld (from %s grab)%s (device %s, state %d)\n",
+           (unsigned long) devGrab->grabTime.milliseconds,
+           devGrab->fromPassiveGrab ? "passive" : "active",
+           devGrab->implicitGrab ? " (implicit)" : "",
+           devGrab->sync.frozen ? "frozen" : "thawed",
+           devGrab->sync.state);
+
+    if (grab->grabtype == GRABTYPE_CORE)
+    {
+        ErrorF("        core event mask 0x%lx\n",
+               (unsigned long) grab->eventMask);
+    }
+    else if (grab->grabtype == GRABTYPE_XI)
+    {
+        ErrorF("      xi1 event mask 0x%lx\n",
+               devGrab->implicitGrab ? (unsigned long) grab->deviceMask :
+                                       (unsigned long) grab->eventMask);
+    }
+    else if (grab->grabtype == GRABTYPE_XI2)
+    {
+        for (i = 0; i < EMASKSIZE; i++)
+        {
+            int print;
+            print = 0;
+            for (j = 0; j < XI2MASKSIZE; j++)
+            {
+                if (grab->xi2mask[i][j])
+                {
+                    print = 1;
+                    break;
+                }
+            }
+            if (!print)
+                continue;
+            ErrorF("      xi2 event mask for device %d: 0x", dev->id);
+            for (j = 0; j < XI2MASKSIZE; j++)
+                ErrorF("%x", grab->xi2mask[i][j]);
+            ErrorF("\n");
+        }
+    }
+
+    if (devGrab->fromPassiveGrab)
+    {
+        ErrorF("      passive grab type %d, detail 0x%x, "
+               "activating key %d\n", grab->type, grab->detail.exact,
+               devGrab->activatingKey);
+    }
+
+    ErrorF("      owner-events %s, kb %d ptr %d, confine %lx, cursor 0x%lx\n",
+           grab->ownerEvents ? "true" : "false",
+           grab->keyboardMode, grab->pointerMode,
+           grab->confineTo ? (unsigned long) grab->confineTo->drawable.id : 0,
+           grab->cursor ? (unsigned long) grab->cursor->id : 0);
+}
+
+void
+UngrabAllDevices(Bool kill_client)
+{
+    DeviceIntPtr dev;
+    ClientPtr client;
+
+    ErrorF("Ungrabbing all devices%s; grabs listed below:\n",
+           kill_client ? " and killing their owners" : "");
+
+    for (dev = inputInfo.devices; dev; dev = dev->next)
+    {
+        if (!dev->deviceGrab.grab)
+            continue;
+        PrintDeviceGrabInfo(dev);
+        client = clients[CLIENT_ID(dev->deviceGrab.grab->resource)];
+        if (!client || client->clientGone)
+            dev->deviceGrab.DeactivateGrab(dev);
+        CloseDownClient(client);
+    }
+
+    ErrorF("End list of ungrabbed devices\n");
+}
+
 GrabPtr
 CreateGrab(
     int client,

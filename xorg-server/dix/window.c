@@ -108,6 +108,7 @@ Equipment Corporation.
 #include "regionstr.h"
 #include "validate.h"
 #include "windowstr.h"
+#include "propertyst.h"
 #include "input.h"
 #include "inputstr.h"
 #include "resource.h"
@@ -124,9 +125,12 @@ Equipment Corporation.
 #include "dixevents.h"
 #include "globals.h"
 #include "mi.h" /* miPaintWindow */
+#include "compint.h"
 
 #include "privates.h"
 #include "xace.h"
+
+#include <X11/Xatom.h> /* must come after server includes */
 
 /******
  * Window stuff for server 
@@ -176,46 +180,129 @@ static Bool TileScreenSaver(ScreenPtr pScreen, int kind);
 
 #define SubStrSend(pWin,pParent) (StrSend(pWin) || SubSend(pParent))
 
-#ifdef DEBUG
-/******
- * PrintWindowTree
- *    For debugging only
- ******/
+static const char *overlay_win_name = "<composite overlay>";
 
-static void
-PrintChildren(WindowPtr p1, int indent)
+static const char *
+get_window_name(WindowPtr pWin)
 {
-    WindowPtr p2;
-    int i;
+#define WINDOW_NAME_BUF_LEN 512
+    PropertyPtr prop;
+    CompScreenPtr comp_screen = GetCompScreen(pWin->drawable.pScreen);
+    static char buf[WINDOW_NAME_BUF_LEN];
+    int len;
 
-    while (p1)
+    if (comp_screen && pWin == comp_screen->pOverlayWin)
+        return overlay_win_name;
+
+    for (prop = wUserProps(pWin); prop; prop = prop->next)
     {
-	p2 = p1->firstChild;
-        ErrorF("[dix] ");
-	for (i=0; i<indent; i++) ErrorF(" ");
-	ErrorF("%lx\n", p1->drawable.id);
-	RegionPrint(&p1->clipList);
-	PrintChildren(p2, indent+4);
-	p1 = p1->nextSib;
+        if (prop->propertyName == XA_WM_NAME && prop->type == XA_STRING &&
+            prop->data)
+        {
+            len = min(prop->size, WINDOW_NAME_BUF_LEN - 1);
+            memcpy(buf, prop->data, len);
+            buf[len] = '\0';
+            return buf;
+        }
     }
+
+    return NULL;
+#undef WINDOW_NAME_BUF_LEN
 }
 
-static void
+static void log_window_info(WindowPtr pWin, int depth)
+{
+    int i;
+    const char *win_name, *visibility;
+    BoxPtr rects;
+    ScreenPtr pScreen = pWin->drawable.pScreen;
+
+    for (i = 0; i < (depth << 2); i++)
+        ErrorF(" ");
+
+    win_name = get_window_name(pWin);
+    ErrorF("win 0x%.8x (%s), [%d, %d] to [%d, %d]",
+           pWin->drawable.id,
+           win_name ? win_name : "no name",
+           pWin->drawable.x, pWin->drawable.y,
+           pWin->drawable.x + pWin->drawable.width,
+           pWin->drawable.y + pWin->drawable.height);
+
+    if (pWin->overrideRedirect)
+        ErrorF(" (override redirect)");
+    if (pWin->redirectDraw)
+        ErrorF(" (%s compositing: pixmap %x)",
+               (pWin->redirectDraw == RedirectDrawAutomatic) ?
+                "automatic" : "manual",
+               pScreen->GetWindowPixmap(pWin)->drawable.id);
+
+    switch (pWin->visibility)
+    {
+    case VisibilityUnobscured:
+         visibility = "unobscured";
+         break;
+    case VisibilityPartiallyObscured:
+         visibility = "partially obscured";
+         break;
+    case VisibilityFullyObscured:
+         visibility = "fully obscured";
+         break;
+    case VisibilityNotViewable:
+         visibility = "unviewable";
+         break;
+    }
+    ErrorF(", %s", visibility);
+
+    if (REGION_NOTEMPTY(pScreen, &pWin->clipList))
+    {
+        ErrorF(", clip list:");
+        rects = REGION_RECTS(&pWin->clipList);
+        for (i = 0; i < REGION_NUM_RECTS(&pWin->clipList); i++)
+            ErrorF(" [(%d, %d) to (%d, %d)]",
+                   rects[i].x1, rects[i].y1,
+                   rects[i].x2, rects[i].y2);
+        ErrorF("; extents [(%d, %d) to (%d, %d)]",
+               pWin->clipList.extents.x1, pWin->clipList.extents.y1,
+               pWin->clipList.extents.x2, pWin->clipList.extents.y2);
+    }
+
+    ErrorF("\n");
+}
+
+void
 PrintWindowTree(void)
 {
-    int i;
-    WindowPtr pWin, p1;
+    int scrnum, depth;
+    ScreenPtr pScreen;
+    WindowPtr pWin;
 
-    for (i=0; i<screenInfo.numScreens; i++)
+    for (scrnum = 0; scrnum < screenInfo.numScreens; scrnum++)
     {
-	ErrorF("[dix] WINDOW %d\n", i);
-	pWin = screenInfo.screens[i]->root;
-	RegionPrint(&pWin->clipList);
-	p1 = pWin->firstChild;
-	PrintChildren(p1, 4);
+        pScreen = screenInfo.screens[scrnum];
+        ErrorF("[dix] Dumping windows for screen %d (pixmap %x):\n", scrnum,
+               pScreen->GetScreenPixmap(pScreen)->drawable.id);
+        pWin = pScreen->root;
+        depth = 1;
+        while (pWin)
+        {
+            log_window_info(pWin, depth);
+            if (pWin->firstChild)
+            {
+                pWin = pWin->firstChild;
+                depth++;
+                continue;
+            }
+            while (pWin && !pWin->nextSib)
+            {
+                pWin = pWin->parent;
+                depth--;
+            }
+            if (!pWin)
+                break;
+            pWin = pWin->nextSib;
+	}
     }
 }
-#endif
 
 int
 TraverseTree(WindowPtr pWin, VisitWindowProcPtr func, pointer data)

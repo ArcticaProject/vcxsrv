@@ -1,5 +1,5 @@
 /*
- * Copyright © 2006 Intel Corporation
+ * Copyright Â© 2006 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  *
  * Authors:
  *    Eric Anholt <eric@anholt.net>
- *    Michel Dänzer <michel@tungstengraphics.com>
+ *    Michel DÃ¤nzer <michel@tungstengraphics.com>
  *
  */
 

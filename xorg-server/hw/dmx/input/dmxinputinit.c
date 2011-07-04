@@ -546,9 +546,6 @@ static void dmxProcessInputEvents(DMXInputInfo *dmxInput)
         return;
     for (i = 0; i < dmxInput->numDevs; i += dmxInput->devs[i]->binding)
         if (dmxInput->devs[i]->process_input) {
-#if 11 /*BP*/
-            miPointerUpdateSprite(dmxInput->devs[i]->pDevice);
-#endif
             dmxInput->devs[i]->process_input(dmxInput->devs[i]->private);
         }
 

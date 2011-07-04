@@ -40,5 +40,6 @@ libxservertest_la_LIBADD = \
             $(top_builddir)/mi/libmi.la \
             $(top_builddir)/os/libos.la \
             @XORG_LIBS@
+libxservertest_la_DEPENDENCIES = $(libxservertest_la_LIBADD)
 endif
 endif

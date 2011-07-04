@@ -62,10 +62,11 @@ SOFTWARE.
 #define DEVICE_OFF	2
 #define DEVICE_CLOSE	3
 
-#define POINTER_RELATIVE (1 << 1)
-#define POINTER_ABSOLUTE (1 << 2)
-#define POINTER_ACCELERATE (1 << 3)
-#define POINTER_SCREEN (1 << 4) /* Data in screen coordinates */
+#define POINTER_RELATIVE	(1 << 1)
+#define POINTER_ABSOLUTE	(1 << 2)
+#define POINTER_ACCELERATE	(1 << 3)
+#define POINTER_SCREEN		(1 << 4)	/* Data in screen coordinates */
+#define POINTER_NORAW		(1 << 5)	/* Don't generate RawEvents */
 
 /*int constants for pointer acceleration schemes*/
 #define PtrAccelNoOp            0

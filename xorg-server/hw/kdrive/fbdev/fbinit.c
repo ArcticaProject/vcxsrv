@@ -1,5 +1,5 @@
 /*
- * Copyright © 1999 Keith Packard
+ * Copyright Â© 1999 Keith Packard
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -47,6 +47,7 @@ InitInput (int argc, char **argv)
 void
 CloseInput (void)
 {
+    KdCloseInput ();
 }
 
 void

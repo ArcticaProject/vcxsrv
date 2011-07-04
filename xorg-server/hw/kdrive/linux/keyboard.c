@@ -1,10 +1,10 @@
 /*
- * Copyright © 1999 Keith Packard
- * XKB integration © 2006 Nokia Corporation, author: Tomas Frydrych <tf@o-hand.com>
+ * Copyright Â© 1999 Keith Packard
+ * XKB integration Â© 2006 Nokia Corporation, author: Tomas Frydrych <tf@o-hand.com>
  *
  * LinuxKeyboardRead() XKB code based on xf86KbdLnx.c:
- * Copyright © 1990,91 by Thomas Roell, Dinkelscherben, Germany.
- * Copyright © 1994-2001 by The XFree86 Project, Inc.
+ * Copyright Â© 1990,91 by Thomas Roell, Dinkelscherben, Germany.
+ * Copyright Â© 1994-2001 by The XFree86 Project, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
