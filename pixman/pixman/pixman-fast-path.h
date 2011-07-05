@@ -30,6 +30,29 @@
 
 #define PIXMAN_REPEAT_COVER -1
 
+/* Flags describing input parameters to fast path macro template.
+ * Turning on some flag values may indicate that
+ * "some property X is available so template can use this" or
+ * "some property X should be handled by template".
+ *
+ * FLAG_HAVE_SOLID_MASK
+ *  Input mask is solid so template should handle this.
+ *
+ * FLAG_HAVE_NON_SOLID_MASK
+ *  Input mask is bits mask so template should handle this.
+ *
+ * FLAG_HAVE_SOLID_MASK and FLAG_HAVE_NON_SOLID_MASK are mutually
+ * exclusive. (It's not allowed to turn both flags on)
+ */
+#define FLAG_NONE				(0)
+#define FLAG_HAVE_SOLID_MASK			(1 <<   1)
+#define FLAG_HAVE_NON_SOLID_MASK		(1 <<   2)
+
+/* To avoid too short repeated scanline function calls, extend source
+ * scanlines having width less than below constant value.
+ */
+#define REPEAT_NORMAL_MIN_WIDTH			64
+
 static force_inline pixman_bool_t
 repeat (pixman_repeat_t repeat, int *c, int size)
 {
@@ -651,7 +674,7 @@ bilinear_pad_repeat_get_scanline_bounds (int32_t         source_image_width,
  *       multiplication instructions.
  */
 #define FAST_BILINEAR_MAINLOOP_INT(scale_func_name, scanline_func, src_type_t, mask_type_t,	\
-				  dst_type_t, repeat_mode, have_mask, mask_is_solid)		\
+				  dst_type_t, repeat_mode, flags)				\
 static void											\
 fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,		\
 						   pixman_composite_info_t *info)		\
@@ -672,20 +695,23 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
     const mask_type_t *mask = &solid_mask;							\
     int src_stride, mask_stride, dst_stride;							\
 												\
+    int src_width;										\
+    pixman_fixed_t src_width_fixed;								\
+    int max_x;											\
+    pixman_bool_t need_src_extension;								\
+												\
     PIXMAN_IMAGE_GET_LINE (dest_image, dest_x, dest_y, dst_type_t, dst_stride, dst_line, 1);	\
-    if (have_mask)										\
+    if (flags & FLAG_HAVE_SOLID_MASK)								\
     {												\
-	if (mask_is_solid)									\
-	{											\
-	    solid_mask = _pixman_image_get_solid (imp, mask_image, dest_image->bits.format);	\
-	    mask_stride = 0;									\
-	}											\
-	else											\
-	{											\
-	    PIXMAN_IMAGE_GET_LINE (mask_image, mask_x, mask_y, mask_type_t,			\
-				   mask_stride, mask_line, 1);					\
-	}											\
+	solid_mask = _pixman_image_get_solid (imp, mask_image, dest_image->bits.format);	\
+	mask_stride = 0;									\
     }												\
+    else if (flags & FLAG_HAVE_NON_SOLID_MASK)							\
+    {												\
+	PIXMAN_IMAGE_GET_LINE (mask_image, mask_x, mask_y, mask_type_t,				\
+			       mask_stride, mask_line, 1);					\
+    }												\
+												\
     /* pass in 0 instead of src_x and src_y because src_x and src_y need to be			\
      * transformed from destination space to source space */					\
     PIXMAN_IMAGE_GET_LINE (src_image, 0, 0, src_type_t, src_stride, src_first_line, 1);		\
@@ -722,13 +748,37 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 	v.vector[0] += left_pad * unit_x;							\
     }												\
 												\
+    if (PIXMAN_REPEAT_ ## repeat_mode == PIXMAN_REPEAT_NORMAL)					\
+    {												\
+	vx = v.vector[0];									\
+	repeat (PIXMAN_REPEAT_NORMAL, &vx, pixman_int_to_fixed(src_image->bits.width));		\
+	max_x = pixman_fixed_to_int (vx + (width - 1) * unit_x) + 1;				\
+												\
+	if (src_image->bits.width < REPEAT_NORMAL_MIN_WIDTH)					\
+	{											\
+	    src_width = 0;									\
+												\
+	    while (src_width < REPEAT_NORMAL_MIN_WIDTH && src_width <= max_x)			\
+		src_width += src_image->bits.width;						\
+												\
+	    need_src_extension = TRUE;								\
+	}											\
+	else											\
+	{											\
+	    src_width = src_image->bits.width;							\
+	    need_src_extension = FALSE;								\
+	}											\
+												\
+	src_width_fixed = pixman_int_to_fixed (src_width);					\
+    }												\
+												\
     while (--height >= 0)									\
     {												\
 	int weight1, weight2;									\
 	dst = dst_line;										\
 	dst_line += dst_stride;									\
 	vx = v.vector[0];									\
-	if (have_mask && !mask_is_solid)							\
+	if (flags & FLAG_HAVE_NON_SOLID_MASK)							\
 	{											\
 	    mask = mask_line;									\
 	    mask_line += mask_stride;								\
@@ -766,7 +816,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 		scanline_func (dst, mask,							\
 			       buf1, buf2, left_pad, weight1, weight2, 0, 0, 0, FALSE);		\
 		dst += left_pad;								\
-		if (have_mask && !mask_is_solid)						\
+		if (flags & FLAG_HAVE_NON_SOLID_MASK)						\
 		    mask += left_pad;								\
 	    }											\
 	    if (width > 0)									\
@@ -774,7 +824,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 		scanline_func (dst, mask,							\
 			       src1, src2, width, weight1, weight2, vx, unit_x, 0, FALSE);	\
 		dst += width;									\
-		if (have_mask && !mask_is_solid)						\
+		if (flags & FLAG_HAVE_NON_SOLID_MASK)						\
 		    mask += width;								\
 	    }											\
 	    if (right_pad > 0)									\
@@ -821,7 +871,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 		scanline_func (dst, mask,							\
 			       buf1, buf2, left_pad, weight1, weight2, 0, 0, 0, TRUE);		\
 		dst += left_pad;								\
-		if (have_mask && !mask_is_solid)						\
+		if (flags & FLAG_HAVE_NON_SOLID_MASK)						\
 		    mask += left_pad;								\
 	    }											\
 	    if (left_tz > 0)									\
@@ -834,7 +884,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 			       buf1, buf2, left_tz, weight1, weight2,				\
 			       pixman_fixed_frac (vx), unit_x, 0, FALSE);			\
 		dst += left_tz;									\
-		if (have_mask && !mask_is_solid)						\
+		if (flags & FLAG_HAVE_NON_SOLID_MASK)						\
 		    mask += left_tz;								\
 		vx += left_tz * unit_x;								\
 	    }											\
@@ -843,7 +893,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 		scanline_func (dst, mask,							\
 			       src1, src2, width, weight1, weight2, vx, unit_x, 0, FALSE);	\
 		dst += width;									\
-		if (have_mask && !mask_is_solid)						\
+		if (flags & FLAG_HAVE_NON_SOLID_MASK)						\
 		    mask += width;								\
 		vx += width * unit_x;								\
 	    }											\
@@ -857,7 +907,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 			       buf1, buf2, right_tz, weight1, weight2,				\
 			       pixman_fixed_frac (vx), unit_x, 0, FALSE);			\
 		dst += right_tz;								\
-		if (have_mask && !mask_is_solid)						\
+		if (flags & FLAG_HAVE_NON_SOLID_MASK)						\
 		    mask += right_tz;								\
 	    }											\
 	    if (right_pad > 0)									\
@@ -866,6 +916,106 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 		buf2[0] = buf2[1] = 0;								\
 		scanline_func (dst, mask,							\
 			       buf1, buf2, right_pad, weight1, weight2, 0, 0, 0, TRUE);		\
+	    }											\
+	}											\
+	else if (PIXMAN_REPEAT_ ## repeat_mode == PIXMAN_REPEAT_NORMAL)				\
+	{											\
+	    int32_t	    num_pixels;								\
+	    int32_t	    width_remain;							\
+	    src_type_t *    src_line_top;							\
+	    src_type_t *    src_line_bottom;							\
+	    src_type_t	    buf1[2];								\
+	    src_type_t	    buf2[2];								\
+	    src_type_t	    extended_src_line0[REPEAT_NORMAL_MIN_WIDTH*2];			\
+	    src_type_t	    extended_src_line1[REPEAT_NORMAL_MIN_WIDTH*2];			\
+	    int		    i, j;								\
+												\
+	    repeat (PIXMAN_REPEAT_NORMAL, &y1, src_image->bits.height);				\
+	    repeat (PIXMAN_REPEAT_NORMAL, &y2, src_image->bits.height);				\
+	    src_line_top = src_first_line + src_stride * y1;					\
+	    src_line_bottom = src_first_line + src_stride * y2;					\
+												\
+	    if (need_src_extension)								\
+	    {											\
+		for (i=0; i<src_width;)								\
+		{										\
+		    for (j=0; j<src_image->bits.width; j++, i++)				\
+		    {										\
+			extended_src_line0[i] = src_line_top[j];				\
+			extended_src_line1[i] = src_line_bottom[j];				\
+		    }										\
+		}										\
+												\
+		src_line_top = &extended_src_line0[0];						\
+		src_line_bottom = &extended_src_line1[0];					\
+	    }											\
+												\
+	    /* Top & Bottom wrap around buffer */						\
+	    buf1[0] = src_line_top[src_width - 1];						\
+	    buf1[1] = src_line_top[0];								\
+	    buf2[0] = src_line_bottom[src_width - 1];						\
+	    buf2[1] = src_line_bottom[0];							\
+												\
+	    width_remain = width;								\
+												\
+	    while (width_remain > 0)								\
+	    {											\
+		/* We use src_width_fixed because it can make vx in original source range */	\
+		repeat (PIXMAN_REPEAT_NORMAL, &vx, src_width_fixed);				\
+												\
+		/* Wrap around part */								\
+		if (pixman_fixed_to_int (vx) == src_width - 1)					\
+		{										\
+		    /* for positive unit_x							\
+		     * num_pixels = max(n) + 1, where vx + n*unit_x < src_width_fixed		\
+		     *										\
+		     * vx is in range [0, src_width_fixed - pixman_fixed_e]			\
+		     * So we are safe from overflow.						\
+		     */										\
+		    num_pixels = ((src_width_fixed - vx - pixman_fixed_e) / unit_x) + 1;	\
+												\
+		    if (num_pixels > width_remain)						\
+			num_pixels = width_remain;						\
+												\
+		    scanline_func (dst, mask, buf1, buf2, num_pixels,				\
+				   weight1, weight2, pixman_fixed_frac(vx),			\
+				   unit_x, src_width_fixed, FALSE);				\
+												\
+		    width_remain -= num_pixels;							\
+		    vx += num_pixels * unit_x;							\
+		    dst += num_pixels;								\
+												\
+		    if (flags & FLAG_HAVE_NON_SOLID_MASK)					\
+			mask += num_pixels;							\
+												\
+		    repeat (PIXMAN_REPEAT_NORMAL, &vx, src_width_fixed);			\
+		}										\
+												\
+		/* Normal scanline composite */							\
+		if (pixman_fixed_to_int (vx) != src_width - 1 && width_remain > 0)		\
+		{										\
+		    /* for positive unit_x							\
+		     * num_pixels = max(n) + 1, where vx + n*unit_x < (src_width_fixed - 1)	\
+		     *										\
+		     * vx is in range [0, src_width_fixed - pixman_fixed_e]			\
+		     * So we are safe from overflow here.					\
+		     */										\
+		    num_pixels = ((src_width_fixed - pixman_fixed_1 - vx - pixman_fixed_e)	\
+				  / unit_x) + 1;						\
+												\
+		    if (num_pixels > width_remain)						\
+			num_pixels = width_remain;						\
+												\
+		    scanline_func (dst, mask, src_line_top, src_line_bottom, num_pixels,	\
+				   weight1, weight2, vx, unit_x, src_width_fixed, FALSE);	\
+												\
+		    width_remain -= num_pixels;							\
+		    vx += num_pixels * unit_x;							\
+		    dst += num_pixels;								\
+												\
+		    if (flags & FLAG_HAVE_NON_SOLID_MASK)					\
+		        mask += num_pixels;							\
+		}										\
 	    }											\
 	}											\
 	else											\
@@ -879,9 +1029,9 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 
 /* A workaround for old sun studio, see: https://bugs.freedesktop.org/show_bug.cgi?id=32764 */
 #define FAST_BILINEAR_MAINLOOP_COMMON(scale_func_name, scanline_func, src_type_t, mask_type_t,	\
-				  dst_type_t, repeat_mode, have_mask, mask_is_solid)		\
+				  dst_type_t, repeat_mode, flags)				\
 	FAST_BILINEAR_MAINLOOP_INT(_ ## scale_func_name, scanline_func, src_type_t, mask_type_t,\
-				  dst_type_t, repeat_mode, have_mask, mask_is_solid)
+				  dst_type_t, repeat_mode, flags)
 
 #define SCALED_BILINEAR_FLAGS						\
     (FAST_PATH_SCALE_TRANSFORM	|					\
@@ -921,6 +1071,17 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 	fast_composite_scaled_bilinear_ ## func ## _cover ## _ ## op,	\
     }
 
+#define SIMPLE_BILINEAR_FAST_PATH_NORMAL(op,s,d,func)			\
+    {   PIXMAN_OP_ ## op,						\
+	PIXMAN_ ## s,							\
+	(SCALED_BILINEAR_FLAGS		|				\
+	 FAST_PATH_NORMAL_REPEAT	|				\
+	 FAST_PATH_X_UNIT_POSITIVE),					\
+	PIXMAN_null, 0,							\
+	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
+	fast_composite_scaled_bilinear_ ## func ## _normal ## _ ## op,	\
+    }
+
 #define SIMPLE_BILINEAR_A8_MASK_FAST_PATH_PAD(op,s,d,func)		\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
@@ -950,6 +1111,17 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 	PIXMAN_a8, MASK_FLAGS (a8, FAST_PATH_UNIFIED_ALPHA),		\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_bilinear_ ## func ## _cover ## _ ## op,	\
+    }
+
+#define SIMPLE_BILINEAR_A8_MASK_FAST_PATH_NORMAL(op,s,d,func)		\
+    {   PIXMAN_OP_ ## op,						\
+	PIXMAN_ ## s,							\
+	(SCALED_BILINEAR_FLAGS		|				\
+	 FAST_PATH_NORMAL_REPEAT	|				\
+	 FAST_PATH_X_UNIT_POSITIVE),					\
+	PIXMAN_a8, MASK_FLAGS (a8, FAST_PATH_UNIFIED_ALPHA),		\
+	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
+	fast_composite_scaled_bilinear_ ## func ## _normal ## _ ## op,	\
     }
 
 #define SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_PAD(op,s,d,func)		\
@@ -983,20 +1155,34 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 	fast_composite_scaled_bilinear_ ## func ## _cover ## _ ## op,	\
     }
 
+#define SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_NORMAL(op,s,d,func)	\
+    {   PIXMAN_OP_ ## op,						\
+	PIXMAN_ ## s,							\
+	(SCALED_BILINEAR_FLAGS		|				\
+	 FAST_PATH_NORMAL_REPEAT	|				\
+	 FAST_PATH_X_UNIT_POSITIVE),					\
+	PIXMAN_solid, MASK_FLAGS (solid, FAST_PATH_UNIFIED_ALPHA),	\
+	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
+	fast_composite_scaled_bilinear_ ## func ## _normal ## _ ## op,	\
+    }
+
 /* Prefer the use of 'cover' variant, because it is faster */
 #define SIMPLE_BILINEAR_FAST_PATH(op,s,d,func)				\
     SIMPLE_BILINEAR_FAST_PATH_COVER (op,s,d,func),			\
     SIMPLE_BILINEAR_FAST_PATH_NONE (op,s,d,func),			\
-    SIMPLE_BILINEAR_FAST_PATH_PAD (op,s,d,func)
+    SIMPLE_BILINEAR_FAST_PATH_PAD (op,s,d,func),			\
+    SIMPLE_BILINEAR_FAST_PATH_NORMAL (op,s,d,func)
 
 #define SIMPLE_BILINEAR_A8_MASK_FAST_PATH(op,s,d,func)			\
     SIMPLE_BILINEAR_A8_MASK_FAST_PATH_COVER (op,s,d,func),		\
     SIMPLE_BILINEAR_A8_MASK_FAST_PATH_NONE (op,s,d,func),		\
-    SIMPLE_BILINEAR_A8_MASK_FAST_PATH_PAD (op,s,d,func)
+    SIMPLE_BILINEAR_A8_MASK_FAST_PATH_PAD (op,s,d,func),		\
+    SIMPLE_BILINEAR_A8_MASK_FAST_PATH_NORMAL (op,s,d,func)
 
 #define SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH(op,s,d,func)		\
     SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_COVER (op,s,d,func),		\
     SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_NONE (op,s,d,func),		\
-    SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_PAD (op,s,d,func)
+    SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_PAD (op,s,d,func),		\
+    SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_NORMAL (op,s,d,func)
 
 #endif
