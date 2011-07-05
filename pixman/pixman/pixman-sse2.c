@@ -5385,15 +5385,20 @@ scaled_bilinear_scanline_sse2_8888_8888_SRC (uint32_t *       dst,
 FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_cover_SRC,
 			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
 			       uint32_t, uint32_t, uint32_t,
-			       COVER, FALSE, FALSE)
+			       COVER, FLAG_NONE)
 FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_pad_SRC,
 			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
 			       uint32_t, uint32_t, uint32_t,
-			       PAD, FALSE, FALSE)
+			       PAD, FLAG_NONE)
 FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_none_SRC,
 			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
 			       uint32_t, uint32_t, uint32_t,
-			       NONE, FALSE, FALSE)
+			       NONE, FLAG_NONE)
+FAST_BILINEAR_MAINLOOP_COMMON (sse2_8888_8888_normal_SRC,
+			       scaled_bilinear_scanline_sse2_8888_8888_SRC,
+			       uint32_t, uint32_t, uint32_t,
+			       NORMAL, FLAG_NONE)
+
 
 static const pixman_fast_path_t sse2_fast_paths[] =
 {

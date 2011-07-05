@@ -19,7 +19,7 @@ RELEASE_CAIRO_URL = 	http://cairographics.org/$(RELEASE_OR_SNAPSHOT)s
 RELEASE_XORG_URL =	http://xorg.freedesktop.org/archive/individual/lib
 RELEASE_XORG_HOST =	$(USERNAME)@xorg.freedesktop.org
 RELEASE_XORG_DIR =	/srv/xorg.freedesktop.org/archive/individual/lib
-RELEASE_ANNOUNCE_LIST = cairo-announce@cairographics.org, xorg-announce@lists.freedesktop.org
+RELEASE_ANNOUNCE_LIST = cairo-announce@cairographics.org, xorg-announce@lists.freedesktop.org, pixman@lists.freedesktop.org
 
 tar_gz = $(PACKAGE)-$(VERSION).tar.gz
 tar_bz2 = $(PACKAGE)-$(VERSION).tar.bz2
