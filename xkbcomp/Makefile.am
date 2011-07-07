@@ -60,6 +60,9 @@ xkbcomp_SOURCES = \
         xkbpath.h \
         xkbscan.c
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = xkbcomp.pc
+
 MAINTAINERCLEANFILES = ChangeLog INSTALL
 
 .PHONY: ChangeLog INSTALL

@@ -45,8 +45,11 @@ fi
 
 AC_CHECK_FUNCS([strdup strcasecmp])
 
+REQUIRED_MODULES="x11 xkbfile"
+
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XKBCOMP, x11 xkbfile)
+PKG_CHECK_MODULES(XKBCOMP, [$REQUIRED_MODULES])
+AC_SUBST(REQUIRED_MODULES)
 
 AC_ARG_WITH([xkb_config_root],
     [AS_HELP_STRING([--with-xkb-config-root=<paths>],
@@ -58,5 +61,6 @@ AC_SUBST([XKBCONFIGROOT])
 
 AC_CONFIG_FILES([
 	Makefile
-	man/Makefile])
+	man/Makefile
+	xkbcomp.pc])
 AC_OUTPUT
