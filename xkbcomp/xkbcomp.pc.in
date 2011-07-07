@@ -1,0 +1,9 @@
+prefix=@prefix@
+datarootdir=@datarootdir@
+datadir=@datadir@
+xkbconfigdir=@XKBCONFIGROOT@
+
+Name: xkbcomp
+Description: XKB keymap compiler
+Version: @PACKAGE_VERSION@
+Requires.private: @REQUIRED_MODULES@
