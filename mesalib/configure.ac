@@ -617,6 +617,13 @@ AC_ARG_WITH([gallium-drivers],
     [with_gallium_drivers="$withval"],
     [with_gallium_drivers="$GALLIUM_DRIVERS_DEFAULT"])
 
+# Doing '--without-gallium-drivers' will set this variable to 'no'.  Clear it
+# here so that the script doesn't choke on an unknown driver name later.
+case "$with_gallium_drivers" in
+    yes) with_gallium_drivers="$GALLIUM_DRIVERS_DEFAULT" ;;
+    no) with_gallium_drivers='' ;;
+esac
+
 if test "x$enable_opengl" = xno -a \
         "x$enable_gles1" = xno -a \
         "x$enable_gles2" = xno -a \
@@ -791,7 +798,7 @@ esac
 if test "x$enable_dri" = xyes; then
     DRIVER_DIRS="$DRIVER_DIRS dri"
 
-    GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/xlib sw/dri"
+    GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/dri"
     GALLIUM_STATE_TRACKERS_DIRS="dri $GALLIUM_STATE_TRACKERS_DIRS"
     HAVE_ST_DRI="yes"
 fi
@@ -1806,7 +1813,7 @@ fi
 if test "x$enable_gallium_llvm" = xyes; then
     if test "x$LLVM_CONFIG" != xno; then
 	LLVM_VERSION=`$LLVM_CONFIG --version`
-	LLVM_CFLAGS=`$LLVM_CONFIG --cppflags`
+	LLVM_CFLAGS=`$LLVM_CONFIG --cppflags|sed 's/-DNDEBUG\>//g'`
 	LLVM_LIBS="`$LLVM_CONFIG --libs` -lstdc++"
 
 	LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags`

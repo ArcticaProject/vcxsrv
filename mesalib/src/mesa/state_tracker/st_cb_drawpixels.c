@@ -273,26 +273,6 @@ make_passthrough_vertex_shader(struct st_context *st,
 
 
 /**
- * Return a texture base format for drawing/copying an image
- * of the given format.
- */
-static GLenum
-base_format(GLenum format)
-{
-   switch (format) {
-   case GL_DEPTH_COMPONENT:
-      return GL_DEPTH_COMPONENT;
-   case GL_DEPTH_STENCIL:
-      return GL_DEPTH_STENCIL;
-   case GL_STENCIL_INDEX:
-      return GL_STENCIL_INDEX;
-   default:
-      return GL_RGBA;
-   }
-}
-
-
-/**
  * Return a texture internalFormat for drawing/copying an image
  * of the given format and type.
  */
@@ -301,11 +281,36 @@ internal_format(struct gl_context *ctx, GLenum format, GLenum type)
 {
    switch (format) {
    case GL_DEPTH_COMPONENT:
-      return GL_DEPTH_COMPONENT;
+      switch (type) {
+      case GL_UNSIGNED_SHORT:
+         return GL_DEPTH_COMPONENT16;
+
+      case GL_UNSIGNED_INT:
+         return GL_DEPTH_COMPONENT32;
+
+      case GL_FLOAT:
+         if (ctx->Extensions.ARB_depth_buffer_float)
+            return GL_DEPTH_COMPONENT32F;
+         else
+            return GL_DEPTH_COMPONENT;
+
+      default:
+         return GL_DEPTH_COMPONENT;
+      }
+
    case GL_DEPTH_STENCIL:
-      return GL_DEPTH_STENCIL;
+      switch (type) {
+      case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
+         return GL_DEPTH32F_STENCIL8;
+
+      case GL_UNSIGNED_INT_24_8:
+      default:
+         return GL_DEPTH24_STENCIL8;
+      }
+
    case GL_STENCIL_INDEX:
       return GL_STENCIL_INDEX;
+
    default:
       if (_mesa_is_integer_format(format)) {
          switch (type) {
@@ -999,7 +1004,6 @@ st_DrawPixels(struct gl_context *ctx, GLint x, GLint y,
    GLboolean write_stencil = GL_FALSE, write_depth = GL_FALSE;
    struct pipe_sampler_view *sv[2];
    int num_sampler_view = 1;
-   enum pipe_format stencil_format = PIPE_FORMAT_NONE;
    struct st_fp_variant *fpv;
 
    if (format == GL_DEPTH_STENCIL)
@@ -1009,33 +1013,12 @@ st_DrawPixels(struct gl_context *ctx, GLint x, GLint y,
    else if (format == GL_DEPTH_COMPONENT)
       write_depth = GL_TRUE;
 
-   if (write_stencil) {
-      enum pipe_format tex_format;
-      /* can we write to stencil if not fallback */
-      if (!pipe->screen->get_param(pipe->screen, PIPE_CAP_SHADER_STENCIL_EXPORT))
-	 goto stencil_fallback;
-
-      tex_format = st_choose_format(st->pipe->screen, base_format(format),
-                                    GL_NONE, GL_NONE,
-                                    PIPE_TEXTURE_2D,
-				    0, PIPE_BIND_SAMPLER_VIEW);
-
-      switch (tex_format) {
-      case PIPE_FORMAT_Z24_UNORM_S8_USCALED:
-         stencil_format = PIPE_FORMAT_X24S8_USCALED;
-         break;
-      case PIPE_FORMAT_S8_USCALED_Z24_UNORM:
-         stencil_format = PIPE_FORMAT_S8X24_USCALED;
-         break;
-      case PIPE_FORMAT_Z32_FLOAT_S8X24_USCALED:
-         stencil_format = PIPE_FORMAT_X32_S8X24_USCALED;
-         break;
-      case PIPE_FORMAT_S8_USCALED:
-         stencil_format = PIPE_FORMAT_S8_USCALED;
-         break;
-      default:
-         goto stencil_fallback;
-      }
+   if (write_stencil &&
+       !pipe->screen->get_param(pipe->screen, PIPE_CAP_SHADER_STENCIL_EXPORT)) {
+      /* software fallback */
+      draw_stencil_pixels(ctx, x, y, width, height, format, type,
+                          unpack, pixels);
+      return;
    }
 
    /* Mesa state should be up to date by now */
@@ -1080,7 +1063,32 @@ st_DrawPixels(struct gl_context *ctx, GLint x, GLint y,
          sv[0] = st_create_texture_sampler_view(st->pipe, pt);
 
          if (sv[0]) {
-	    if (write_stencil) {
+            /* Create a second sampler view to read stencil.
+             * The stencil is written using the shader stencil export
+             * functionality. */
+            if (write_stencil) {
+               enum pipe_format stencil_format = PIPE_FORMAT_NONE;
+
+               switch (pt->format) {
+               case PIPE_FORMAT_Z24_UNORM_S8_USCALED:
+               case PIPE_FORMAT_X24S8_USCALED:
+                  stencil_format = PIPE_FORMAT_X24S8_USCALED;
+                  break;
+               case PIPE_FORMAT_S8_USCALED_Z24_UNORM:
+               case PIPE_FORMAT_S8X24_USCALED:
+                  stencil_format = PIPE_FORMAT_S8X24_USCALED;
+                  break;
+               case PIPE_FORMAT_Z32_FLOAT_S8X24_USCALED:
+               case PIPE_FORMAT_X32_S8X24_USCALED:
+                  stencil_format = PIPE_FORMAT_X32_S8X24_USCALED;
+                  break;
+               case PIPE_FORMAT_S8_USCALED:
+                  stencil_format = PIPE_FORMAT_S8_USCALED;
+                  break;
+               default:
+                  assert(0);
+               }
+
 	       sv[1] = st_create_texture_sampler_view_format(st->pipe, pt,
                                                              stencil_format);
 	       num_sampler_view++;
@@ -1101,11 +1109,6 @@ st_DrawPixels(struct gl_context *ctx, GLint x, GLint y,
          pipe_resource_reference(&pt, NULL);
       }
    }
-   return;
-
-stencil_fallback:
-   draw_stencil_pixels(ctx, x, y, width, height, format, type,
-		       unpack, pixels);
 }
 
 
