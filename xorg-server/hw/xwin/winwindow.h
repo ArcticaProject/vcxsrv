@@ -80,6 +80,9 @@ typedef struct
   winPrivScreenPtr	pScreenPriv;
   Bool			fXKilled;
   HDWP                  hDwp;
+#ifdef XWIN_GLX_WINDOWS
+  Bool			fWglUsed;
+#endif
 
   /* Privates used by primary fb DirectDraw server */
   LPDDSURFACEDESC	pddsdPrimary;

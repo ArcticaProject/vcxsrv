@@ -312,7 +312,7 @@ if dispatchheader :
 
         for d in sorted(dispatch.keys()) :
                 if wrappers.has_key(d) :
-                        print '  SET_'+ d + '(disp, ' + prefix + d + 'Wrapper);'
+                        print '  SET_'+ d + '(disp, (void *)' + prefix + d + 'Wrapper);'
                 else :
                         print '#warning  No wrapper for ' + prefix + d + ' !'
 

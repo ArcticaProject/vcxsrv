@@ -208,6 +208,10 @@ Enable or disable the \fICtrl-Alt-Backspace\fP key combination as a
 signal to exit the X Server.  The \fICtrl-Alt-Backspace\fP key combination
 is disabled by default.
 .TP 8
+.B \-[no]wgl
+Enable [disable] the GLX extension to use the native Windows WGL interface
+for hardware accelerated OpenGL (AIGLX). (Experimental)
+.TP 8
 .B \-[no]winkill
 Enable or disable the \fIAlt-F4\fP key combination as a signal to exit the
 X Server.

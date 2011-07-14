@@ -472,6 +472,20 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	return 0;
       }
 
+#ifdef XWIN_GLX_WINDOWS
+      if (pWinPriv->fWglUsed)
+        {
+          /*
+             For regions which are being drawn by GL, the shadow framebuffer doesn't have the
+             correct bits, so don't bitblt from the shadow framebuffer
+
+             XXX: For now, just leave it alone, but ideally we want to send an expose event to
+             the window so it really redraws the affected region...
+          */
+          ValidateRect(hwnd, &(ps.rcPaint));
+        }
+      else
+#endif
       /* Try to copy from the shadow buffer */
       if (!BitBlt (hdcUpdate,
 		   ps.rcPaint.left, ps.rcPaint.top,
