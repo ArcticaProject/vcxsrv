@@ -477,7 +477,8 @@ static __GLXscreen * __glXAquaScreenProbe(ScreenPtr pScreen) {
 
     __glXScreenInit(&screen->base, pScreen);
 
-    screen->base.GLXversion = strdup("1.4");
+    screen->base.GLXmajor = 1;
+    screen->base.GLXminor = 4;
     screen->base.GLXextensions = strdup("GLX_SGIX_fbconfig "
                                         "GLX_SGIS_multisample "
                                         "GLX_ARB_multisample "

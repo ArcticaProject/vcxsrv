@@ -1,4 +1,4 @@
-.TH XWIN 5 __vendorversion__
+.TH XWIN __filemansuffix__ __vendorversion__
 
 
 .SH NAME

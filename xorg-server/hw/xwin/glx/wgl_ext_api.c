@@ -44,11 +44,7 @@
 
 #ifdef _DEBUG
 #define PRERESOLVE(type, symbol) \
-    type##proc = (type)wglGetProcAddress(symbol); \
-    if (type##proc == NULL) \
-        ErrorF("wglwrap: Can't resolve \"%s\"\n", symbol); \
-    else \
-        ErrorF("wglwrap: Resolved \"%s\"\n", symbol);
+    type##proc = (type)wglGetProcAddress(symbol);
 #else
 #define PRERESOLVE(type, symbol) \
     type##proc = (type)wglGetProcAddress(symbol);
@@ -56,9 +52,10 @@
 
 #define RESOLVE_RET(type, symbol, retval) \
   if (type##proc == NULL) { \
-  __glXErrorCallBack(0); \
-  return retval; \
-      }
+    ErrorF("wglwrap: Can't resolve \"%s\"\n", symbol); \
+    __glXErrorCallBack(0); \
+    return retval; \
+  }
 
 #define RESOLVE(procname, symbol) RESOLVE_RET(procname, symbol,)
 

@@ -43,7 +43,6 @@ typedef struct {
     GLint *isGLXvis;
 
     char *GLXvendor;
-    char *GLXversion;
     char *GLXextensions;
 
 } __GLXscreenInfo;

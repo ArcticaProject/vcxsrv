@@ -22,7 +22,7 @@ winCreateWindowsWindow (WindowPtr pWin);
 HWND winGetWindowInfo(WindowPtr pWin)
 {
     HWND hwnd = NULL;
-    winDebug("%s:%d pWin=%p\n", __FUNCTION__, __LINE__, pWin);
+    winDebug("%s:%d pWin %p XID 0x%x\n", __FUNCTION__, __LINE__, pWin, pWin->drawable.id);
 
     /* a real window was requested */
     if (pWin != NULL)
@@ -95,7 +95,7 @@ HWND winGetWindowInfo(WindowPtr pWin)
                              GetModuleHandle(NULL),
                              NULL);
                 winDebug("Window created %x %x %d %d %d %d\n",pWinPriv->hWnd,hWndParent,pWin->drawable.x-offsetx,pWin->drawable.y-offsety,pWin->drawable.width, pWin->drawable.height);
-                pWinPriv->GlCtxWnd=TRUE;
+                pWinPriv->fWglUsed=TRUE;
               }
               else
               {
@@ -107,6 +107,9 @@ HWND winGetWindowInfo(WindowPtr pWin)
             {
                 /* copy window handle */
                 hwnd = pWinPriv->hWnd;
+
+                /* mark GLX active on that hwnd */
+                pWinPriv->fWglUsed = TRUE;
             }
         }
         else if (g_fXdmcpEnabled)
@@ -140,7 +143,7 @@ HWND winGetWindowInfo(WindowPtr pWin)
                              NULL,
                              GetModuleHandle(NULL),
                              NULL);
-                pWinPriv->GlCtxWnd=TRUE;
+                pWinPriv->fWglUsed=TRUE;
                 /* copy size and window handle */
                 hwnd = pWinPriv->hWnd;
               }

@@ -7,7 +7,7 @@ XWIN_MULTIWINDOWINTWM=0  # currently not working correctly
 XWIN_RANDR=1
 XWIN_NATIVEGDI=0         # currently not working correctly
 XWIN_PRIMARYFB=0         # currently not working correctly
-XWIN_GLX_WINDOWS=0       # everything is in the glx makefile
+XWIN_GLX_WINDOWS=1       # everything is in the glx makefile
 
 if XWIN_CLIPBOARD
 SRCS_CLIPBOARD = \

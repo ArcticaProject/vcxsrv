@@ -49,8 +49,17 @@
   - pbuffer clobbering: we don't get async notification, but can we arrange to emit the
     event when we notice it's been clobbered? at the very least, check if it's been clobbered
     before using it?
-  - are the __GLXConfig * we get handed back ones we are made (so we can extend the structure
-    with privates?) Or are they created inside the GLX core as well?
+  - XGetImage() doesn't work on pixmaps; need to do more work to make the format and location
+    of the native pixmap compatible
+  - implement GLX_EXT_texture_from_pixmap in terms of WGL_ARB_render_texture
+    (not quite straightforward as we will have to create a pbuffer and copy the pixmap texture
+     into it)
+*/
+
+/*
+  Assumptions:
+  - the __GLXConfig * we get handed back ones we are made (so we can extend the structure
+    with privates) and never get created inside the GLX core
 */
 
 /*
@@ -86,6 +95,17 @@ extern Bool			g_fXdmcpEnabled;
 extern Bool g_fNativeGl;
 
 #define NUM_ELEMENTS(x) (sizeof(x)/ sizeof(x[1]))
+
+/* Not yet in w32api */
+#ifndef PFD_SUPPORT_DIRECTDRAW
+#define PFD_SUPPORT_DIRECTDRAW   0x00002000
+#endif
+#ifndef PFD_DIRECT3D_ACCELERATED
+#define PFD_DIRECT3D_ACCELERATED 0x00004000
+#endif
+#ifndef PFD_SUPPORT_COMPOSITION
+#define PFD_SUPPORT_COMPOSITION  0x00008000
+#endif
 
 /* ---------------------------------------------------------------------- */
 /*
@@ -235,26 +255,24 @@ static
 const char *glxWinErrorMessage(void)
 {
   static char errorbuffer[1024];
-  DWORD Error=GetLastError();
-  int offset;
-  
-  sprintf(errorbuffer, "%p ",Error);
-  offset=strlen(errorbuffer);
+  unsigned int last_error = GetLastError();
 
   if (!FormatMessage(
-                     FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                     FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_MAX_WIDTH_MASK,
                      NULL,
-                     Error,
-                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                     (LPTSTR) &errorbuffer[offset],
+                     last_error,
+                     0,
+                     (LPTSTR) &errorbuffer,
                      sizeof(errorbuffer),
                      NULL ))
     {
-      snprintf(errorbuffer, sizeof(errorbuffer), "Unknown error in FormatMessage: %08x!", (unsigned)GetLastError());
+      snprintf(errorbuffer, sizeof(errorbuffer), "Unknown error");
     }
 
-  if (errorbuffer[strlen(errorbuffer)-1] == '\n')
+  if ((errorbuffer[strlen(errorbuffer)-1] == '\n') || (errorbuffer[strlen(errorbuffer)-1] == '\r'))
     errorbuffer[strlen(errorbuffer)-1] = 0;
+
+  sprintf(errorbuffer + strlen(errorbuffer), " (%08x)", last_error);
 
   return errorbuffer;
 }
@@ -373,7 +391,7 @@ fbConfigsDump(unsigned int n, __GLXconfig *c)
     {
       unsigned int i = ((GLXWinConfig *)c)->pixelFormatIndex;
 
-      ErrorF("%3d  %3x  %3x "
+      ErrorF("%3d %3x %3x "
              "%-11s"
              " %3d %3d   %s   %s  %s %s  %s  "
              "%2d %2d %2d %2d  "
@@ -830,7 +848,7 @@ glxWinRealizeWindow(WindowPtr pWin)
     pScreen->RealizeWindow = glxWinRealizeWindow;
     
     // Check if ze need to move the window\n
-    if (pWinPriv->GlCtxWnd && pWinPriv->hWnd)
+    if (pWinPriv->fWglUsed && pWinPriv->hWnd)
     {
        ShowWindow(pWinPriv->hWnd,SW_SHOWNOACTIVATE);
     }
@@ -884,7 +902,7 @@ glxWinPositionWindow(WindowPtr pWin, int x, int y)
     result = pScreen->PositionWindow(pWin, x, y);
     pScreen->PositionWindow = glxWinPositionWindow;
 
-    if (pWinPriv->GlCtxWnd && pWinPriv->hWnd)
+    if (pWinPriv->fWglUsed && pWinPriv->hWnd)
     {
        MoveWindow(pWinPriv->hWnd,
                   pWin->drawable.x,
@@ -908,7 +926,7 @@ glxWinUnrealizeWindow(WindowPtr pWin)
 
     GLWIN_DEBUG_MSG("glxWinUnrealizeWindow");
 
-    if (pWinPriv->GlCtxWnd && pWinPriv->hWnd)
+    if (pWinPriv->fWglUsed && pWinPriv->hWnd)
     {
       ShowWindow(pWinPriv->hWnd,SW_HIDE);
       result = TRUE;
@@ -945,11 +963,11 @@ glxWinDestroyWindow(WindowPtr pWin)
       pGlxDraw->drawContext->hDC=NULL;
       pGlxDraw->drawContext->hwnd=NULL;
     }
-    if (pWinPriv->GlCtxWnd && pWinPriv->hWnd)
+    if (pWinPriv->fWglUsed && pWinPriv->hWnd)
     {
       DestroyWindow(pWinPriv->hWnd);
       pWinPriv->hWnd=NULL;
-      pWinPriv->GlCtxWnd=0;
+      pWinPriv->fWglUsed=0;
     }
 
     pScreen->DestroyWindow = screenPriv->DestroyWindow;
@@ -1126,7 +1144,7 @@ int glxWinReleaseTexImage(__GLXcontext  *baseContext,
  * lists with the old one...
  */
 
-static void
+static Bool
 glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawableTypeOverride)
 {
   __GLXscreen *screen = gc->base.pGlxScreen;
@@ -1144,7 +1162,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
     if (pWinPriv->OpenGlWindow)
     {
       ErrorF("Not Setting pixel format to  %d on hdc %x for window %x (not allowed on windows)\n",winConfig->pixelFormatIndex,hdc,pWinPriv->hWnd);
-      return; /* Pixel format is already set on this window so it cannot be changed anymore */
+      return TRUE; /* Pixel format is already set on this window so it cannot be changed anymore */
     }
   }
   GLWIN_DEBUG_MSG("glxWinSetPixelFormat: pixelFormatIndex %d", winConfig->pixelFormatIndex);
@@ -1182,7 +1200,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
       if (fbConfigToPixelFormat(gc->base.config, &pfd, drawableTypeOverride))
         {
           ErrorF("glxWinSetPixelFormat: fbConfigToPixelFormat failed\n");
-          return;
+          return FALSE;
         }
 
 #ifdef _DEBUG
@@ -1200,7 +1218,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
       if (pixelFormat == 0)
         {
           ErrorF("ChoosePixelFormat error: %s\n", glxWinErrorMessage());
-          return;
+          return FALSE;
         }
 
       GLWIN_DEBUG_MSG("ChoosePixelFormat: chose pixelFormatIndex %d", pixelFormat);
@@ -1210,7 +1228,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
       if (!SetPixelFormat(hdc, pixelFormat, &pfd))
         {
           ErrorF("SetPixelFormat error: %s\n", glxWinErrorMessage());
-          return;
+          return FALSE;
         }
     }
   else
@@ -1224,9 +1242,9 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
           if (!SetPixelFormat(hdc, pixelFormat, NULL))
             {
               ErrorF("SetPixelFormat error: %s\n", glxWinErrorMessage());
-              return;
+              return FALSE;
             }
-          return;
+          return TRUE;
         }
       else
       {
@@ -1261,11 +1279,11 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
         if (!SetPixelFormat(hdc, iPixelFormat, &pfd))
           {
             ErrorF("SetPixelFormat error: %s\n", glxWinErrorMessage());
-            return;
+            return FALSE;
           }
       }
     }
-
+  return TRUE;
 }
 
 static HDC
