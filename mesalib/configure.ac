@@ -17,6 +17,10 @@ AC_INIT([Mesa],[mesa_version],
 AC_CONFIG_AUX_DIR([bin])
 AC_CANONICAL_HOST
 
+dnl Save user CFLAGS and CXXFLAGS so one can override the default ones
+USER_CFLAGS="$CFLAGS"
+USER_CXXFLAGS="$CXXFLAGS"
+
 dnl Versions for external dependencies
 LIBDRM_REQUIRED=2.4.24
 LIBDRM_RADEON_REQUIRED=2.4.24
@@ -85,7 +89,7 @@ if test "x$GCC" = xyes -a "x$CLANG" = xno; then
     GCC_VERSION=`$CC -dumpversion`
     if test $? -eq 0; then
         major=`echo $GCC_VERSION | cut -d. -f1`
-        minor=`echo $GCC_VERSION | cut -d. -f1`
+        minor=`echo $GCC_VERSION | cut -d. -f2`
     fi
 
     if test $major -lt 3 -o $major -eq 3 -a $minor -lt 3 ; then
@@ -807,6 +811,7 @@ xyesyes)
     GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/xlib"
     GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS libgl-xlib"
     GALLIUM_STATE_TRACKERS_DIRS="glx $GALLIUM_STATE_TRACKERS_DIRS"
+    HAVE_WINSYS_XLIB="yes"
     ;;
 xyesno)
     # DRI-based GLX
@@ -1511,40 +1516,37 @@ if test "x$enable_gallium_g3dvl" = xyes; then
     fi
 
     if test "x$enable_xvmc" = xauto; then
-        enable_xvmc=yes
+	PKG_CHECK_EXISTS([xvmc], [enable_xvmc=yes], [enable_xvmc=no])
     fi
 
     if test "x$enable_vdpau" = xauto; then
-        enable_vdpau=yes
+	PKG_CHECK_EXISTS([vdpau], [enable_vdpau=yes], [enable_vdpau=no])
     fi
 
     if test "x$enable_va" = xauto; then
+	#don't enable vaapi state tracker even if package exists
+	#PKG_CHECK_EXISTS([libva], [enable_vdpau=yes], [enable_vdpau=no])
         enable_va=no
     fi
 fi
 
-#TODO: Check for xvmc libs/headers
 if test "x$enable_xvmc" = xyes; then
+    PKG_CHECK_MODULES([XVMC], [xvmc >= 1.0.6 xorg-server])
     GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS xorg/xvmc"
     HAVE_ST_XVMC="yes"
 fi
 
-#TODO: Check for vdpau libs/headers
 if test "x$enable_vdpau" = xyes; then
+    PKG_CHECK_MODULES([VDPAU], [vdpau >= 0.4.1])
     GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS vdpau"
     HAVE_ST_VDPAU="yes"
 fi
 
-#TODO: Check for va libs/headers
 if test "x$enable_va" = xyes; then
+    PKG_CHECK_MODULES([LIBVA], [libva = 0.31.1])
+    AC_MSG_WARN([vaapi state tracker currently unmaintained])
     GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS va"
     HAVE_ST_VA="yes"
-fi
-
-if test "x$enable_xvmc" = xyes || 
-    test "x$enable_vdpau" = xyes ||
-    test "x$enable_va" = xyes; then
-    GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS g3dvl/dri"
 fi
 
 dnl
@@ -1670,65 +1672,6 @@ AC_SUBST([MOTIF_CFLAGS])
 AC_SUBST([GLW_PC_REQ_PRIV])
 AC_SUBST([GLW_PC_LIB_PRIV])
 AC_SUBST([GLW_PC_CFLAGS])
-
-dnl
-dnl GLUT configuration
-dnl
-if test -f "$srcdir/include/GL/glut.h"; then
-    default_glut=yes
-else
-    default_glut=no
-fi
-AC_ARG_ENABLE([glut],
-    [AS_HELP_STRING([--disable-glut],
-        [enable GLUT library @<:@default=enabled if source available@:>@])],
-    [enable_glut="$enableval"],
-    [enable_glut="$default_glut"])
-
-dnl Don't build glut without GLX
-if test "x$enable_glut" = xyes -a "x$enable_glx" = xno; then
-    AC_MSG_NOTICE([Disabling glut since there is no OpenGL driver])
-    enable_glut=no
-fi
-dnl Can't build glut if GLU not available
-if test "x$enable_glu$enable_glut" = xnoyes; then
-    AC_MSG_WARN([Disabling glut since GLU is disabled])
-    enable_glut=no
-fi
-
-if test "x$enable_glut" = xyes; then
-    SRC_DIRS="$SRC_DIRS glut/glx"
-    if test "$x11_pkgconfig" = yes; then
-        PKG_CHECK_MODULES([GLUT],[x11 xmu xi])
-        GLUT_PC_REQ_PRIV="x11 xmu xi"
-        GLUT_LIB_DEPS="$GLUT_LIBS"
-    else
-        # should check these...
-        GLUT_LIB_DEPS="$X_LIBS -lX11 -lXmu -lXi"
-        GLUT_PC_LIB_PRIV="$GLUT_LIB_DEPS"
-        GLUT_PC_CFLAGS="$X11_INCLUDES"
-    fi
-    if test "x$GCC" = xyes; then
-        GLUT_CFLAGS="$GLUT_CFLAGS -fexceptions"
-    fi
-    GLUT_LIB_DEPS="$GLUT_LIB_DEPS -lm"
-    GLUT_PC_LIB_PRIV="$GLUT_PC_LIB_PRIV -lm"
-
-    # If static, empty GLUT_LIB_DEPS and add libs for programs to link
-    if test "$enable_static" = no; then
-        GLUT_MESA_DEPS='-l$(GLU_LIB) -l$(GL_LIB)'
-    else
-        APP_LIB_DEPS="$APP_LIB_DEPS $GLUT_LIB_DEPS"
-        GLUT_LIB_DEPS=""
-        GLUT_MESA_DEPS=""
-    fi
-fi
-AC_SUBST([GLUT_LIB_DEPS])
-AC_SUBST([GLUT_MESA_DEPS])
-AC_SUBST([GLUT_CFLAGS])
-AC_SUBST([GLUT_PC_REQ_PRIV])
-AC_SUBST([GLUT_PC_LIB_PRIV])
-AC_SUBST([GLUT_PC_CFLAGS])
 
 dnl
 dnl Program library dependencies
@@ -1932,12 +1875,15 @@ gallium_check_st() {
     fi
     if test "x$HAVE_ST_XVMC" = xyes && test "x$5" != x; then
          GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS $5"
+         NEED_G3DVL_DRI="yes"
     fi
     if test "x$HAVE_ST_VDPAU" = xyes && test "x$6" != x; then
          GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS $6"
+         NEED_G3DVL_DRI="yes"
     fi
     if test "x$HAVE_ST_VA" = xyes && test "x$7" != x; then
          GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS $7"
+         NEED_G3DVL_DRI="yes"
     fi
 }
 
@@ -2004,6 +1950,16 @@ if test "x$with_gallium_drivers" != x; then
             if test "x$HAVE_ST_VA" = xyes; then
                 GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS va-softpipe"
             fi
+            if test "x$HAVE_ST_VDPAU" == xyes ||
+               test "x$HAVE_ST_XVMC" == xyes ||
+               test "x$HAVE_ST_VA" == xyes; then
+               if test "x$HAVE_WINSYS_XLIB" != xyes; then
+                  GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/xlib"
+               fi
+               if test "x$HAVE_ST_DRI" != xyes; then
+                GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS softpipe"
+               fi
+            fi
             ;;
         *)
             AC_MSG_ERROR([Unknown Gallium driver: $driver])
@@ -2012,12 +1968,20 @@ if test "x$with_gallium_drivers" != x; then
     done
 fi
 
+if test "x$NEED_G3DVL_DRI" = xyes; then
+    GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS g3dvl/dri"
+fi
+
 dnl prepend CORE_DIRS to SRC_DIRS
 SRC_DIRS="$CORE_DIRS $SRC_DIRS"
 
 dnl Restore LDFLAGS and CPPFLAGS
 LDFLAGS="$_SAVE_LDFLAGS"
 CPPFLAGS="$_SAVE_CPPFLAGS"
+
+dnl Add user CFLAGS and CXXFLAGS
+CFLAGS="$CFLAGS $USER_CFLAGS"
+CXXFLAGS="$CXXFLAGS $USER_CXXFLAGS"
 
 dnl Substitute the config
 AC_CONFIG_FILES([configs/autoconf])
@@ -2088,7 +2052,6 @@ esac
 echo ""
 echo "        GLU:             $enable_glu"
 echo "        GLw:             $enable_glw (Motif: $enable_motif)"
-echo "        glut:            $enable_glut"
 
 dnl EGL
 echo ""

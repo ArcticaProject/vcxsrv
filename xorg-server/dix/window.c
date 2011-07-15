@@ -125,7 +125,9 @@ Equipment Corporation.
 #include "dixevents.h"
 #include "globals.h"
 #include "mi.h" /* miPaintWindow */
+#ifdef COMPOSITE
 #include "compint.h"
+#endif
 
 #include "privates.h"
 #include "xace.h"
@@ -180,19 +182,23 @@ static Bool TileScreenSaver(ScreenPtr pScreen, int kind);
 
 #define SubStrSend(pWin,pParent) (StrSend(pWin) || SubSend(pParent))
 
+#ifdef COMPOSITE
 static const char *overlay_win_name = "<composite overlay>";
+#endif
 
 static const char *
 get_window_name(WindowPtr pWin)
 {
 #define WINDOW_NAME_BUF_LEN 512
     PropertyPtr prop;
-    CompScreenPtr comp_screen = GetCompScreen(pWin->drawable.pScreen);
     static char buf[WINDOW_NAME_BUF_LEN];
     int len;
+#ifdef COMPOSITE
+    CompScreenPtr comp_screen = GetCompScreen(pWin->drawable.pScreen);
 
     if (comp_screen && pWin == comp_screen->pOverlayWin)
         return overlay_win_name;
+#endif
 
     for (prop = wUserProps(pWin); prop; prop = prop->next)
     {
@@ -230,11 +236,13 @@ static void log_window_info(WindowPtr pWin, int depth)
 
     if (pWin->overrideRedirect)
         ErrorF(" (override redirect)");
+#ifdef COMPOSITE
     if (pWin->redirectDraw)
         ErrorF(" (%s compositing: pixmap %x)",
                (pWin->redirectDraw == RedirectDrawAutomatic) ?
                 "automatic" : "manual",
                pScreen->GetWindowPixmap(pWin)->drawable.id);
+#endif
 
     switch (pWin->visibility)
     {

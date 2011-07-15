@@ -279,7 +279,7 @@ AM_CONDITIONAL(THRSTUBS, test x$thrstubs = xyes)
 # XXX incomplete, please fill this in
 if test x$xthreads = xyes ; then
     case $host_os in
-    linux*|openbsd*|gnu*|k*bsd*-gnu)
+    linux*|gnu*|k*bsd*-gnu)
         XTHREADLIB=-lpthread ;;
     netbsd*)
 	XTHREAD_CFLAGS="-D_POSIX_THREAD_SAFE_FUNCTIONS"
@@ -287,7 +287,7 @@ if test x$xthreads = xyes ; then
     freebsd*)
         XTHREAD_CFLAGS="-D_THREAD_SAFE"
         XTHREADLIB="-pthread" ;;
-    dragonfly*)
+    dragonfly*|openbsd*)
         XTHREADLIB="-pthread" ;;
     solaris*)
 	XTHREAD_CFLAGS="-D_REENTRANT -D_POSIX_PTHREAD_SEMANTICS" ;;
