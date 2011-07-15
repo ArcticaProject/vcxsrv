@@ -296,6 +296,9 @@ miComputeClips (
 	((pParent->eventMask | wOtherEventMasks(pParent)) & VisibilityChangeMask))
 	SendVisibilityNotify(pParent);
 
+    if (pParent->valdata==UnmapValData)
+      return; // return if no valid valdata
+
     dx = pParent->drawable.x - pParent->valdata->before.oldAbsCorner.x;
     dy = pParent->drawable.y - pParent->valdata->before.oldAbsCorner.y;
 
@@ -779,9 +782,11 @@ miValidateTree (
 	RegionUninit(&childUnion);
     }
 
-    RegionNull(&pParent->valdata->after.exposed);
-    RegionNull(&pParent->valdata->after.borderExposed);
-
+    if (pParent->valdata && pParent->valdata!=UnmapValData)
+    {
+      RegionNull(&pParent->valdata->after.exposed);
+      RegionNull(&pParent->valdata->after.borderExposed);
+    }
     /*
      * each case below is responsible for updating the
      * clipList and serial number for the parent window
@@ -796,7 +801,8 @@ miValidateTree (
 	 * exposures and obscures as per miComputeClips and reset the parent's
 	 * clipList.
 	 */
-	RegionSubtract(&pParent->valdata->after.exposed,
+	if (pParent->valdata && pParent->valdata!=UnmapValData)
+          RegionSubtract(&pParent->valdata->after.exposed,
 			       &totalClip, &pParent->clipList);
 	/* fall through */
     case VTMap:

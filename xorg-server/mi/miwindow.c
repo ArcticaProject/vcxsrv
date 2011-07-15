@@ -228,7 +228,7 @@ miHandleValidateExposures(WindowPtr pWin)
     WindowExposures = pChild->drawable.pScreen->WindowExposures;
     while (1)
     {
-	if ( (val = pChild->valdata) )
+	if ( (val = pChild->valdata) && val!=UnmapValData)
 	{
 	    if (RegionNotEmpty(&val->after.borderExposed))
 		miPaintWindow(pChild, &val->after.borderExposed, PW_BORDER);
