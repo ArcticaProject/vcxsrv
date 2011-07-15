@@ -107,9 +107,6 @@ HWND winGetWindowInfo(WindowPtr pWin)
             {
                 /* copy window handle */
                 hwnd = pWinPriv->hWnd;
-
-                /* mark GLX active on that hwnd */
-                pWinPriv->fWglUsed = TRUE;
             }
         }
         else if (g_fXdmcpEnabled)
