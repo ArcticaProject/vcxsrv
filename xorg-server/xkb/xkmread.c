@@ -425,9 +425,9 @@ XkbAction               *act;
     if (XkbAllocCompatMap(xkb,XkbAllCompatMask,num_si)!=Success)
 	return -1;
     compat= xkb->compat;
-    compat->num_si= num_si;
+    compat->num_si= 0;
     interp= compat->sym_interpret;
-    for (i=0;i<num_si;i++,interp++) {
+    for (i=0;i<num_si;i++) {
 	tmp= fread(&wire,SIZEOF(xkmSymInterpretDesc),1,file);
 	nRead+= tmp*SIZEOF(xkmSymInterpretDesc);
 	interp->sym= wire.sym;
@@ -520,6 +520,29 @@ XkbAction               *act;
             break;
 
         case XkbSA_XFree86Private:
+            /*
+             * Bugfix for broken xkbcomp: if we encounter an XFree86Private
+             * action with Any+AnyOfOrNone(All), then we skip the interp as
+             * broken.  Versions of xkbcomp below 1.2.2 had a bug where they
+             * would interpret a symbol that couldn't be found in an interpret
+             * as Any.  So, an XF86LogWindowTree+AnyOfOrNone(All) interp that
+             * triggered the PrWins action would make every key without an
+             * action trigger PrWins if libX11 didn't yet know about the
+             * XF86LogWindowTree keysym.  None too useful.
+             *
+             * We only do this for XFree86 actions, as the current XKB
+             * dataset relies on Any+AnyOfOrNone(All) -> SetMods for Ctrl in
+             * particular.
+             *
+             * See xkbcomp commits 2a473b906943ffd807ad81960c47530ee7ae9a60 and
+             * 3caab5aa37decb7b5dc1642a0452efc3e1f5100e for more details.
+             */
+            if (interp->sym == NoSymbol && interp->match == XkbSI_AnyOfOrNone &&
+                (interp->mods & 0xff) == 0xff) {
+                ErrorF("XKB: Skipping broken Any+AnyOfOrNone(All) -> Private "
+                       "action from compiled keymap\n");
+                continue;
+            }
             /* copy the kind of action */
             memcpy(act->any.data, wire.actionData, XkbAnyActionDataSize);
             break ;
@@ -531,10 +554,12 @@ XkbAction               *act;
             /* unsupported. */
             break;
         }
+        interp++;
+        compat->num_si++;
     }
     if ((num_si>0)&&(changes)) {
 	changes->compat.first_si= 0;
-	changes->compat.num_si= num_si;
+	changes->compat.num_si= compat->num_si;
     }
     if (groups) {
 	register unsigned bit;

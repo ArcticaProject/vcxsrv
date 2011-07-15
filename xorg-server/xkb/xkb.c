@@ -2786,6 +2786,7 @@ _XkbSetCompatMap(ClientPtr client, DeviceIntPtr dev,
     if (req->nSI>0) {
 	xkbSymInterpretWireDesc *wire = (xkbSymInterpretWireDesc *)data;
 	XkbSymInterpretPtr	sym;
+	unsigned int		skipped = 0;
 	if ((unsigned)(req->firstSI+req->nSI)>compat->num_si) {
 	    compat->num_si= req->firstSI+req->nSI;
 	    compat->sym_interpret= realloc(compat->sym_interpret,
@@ -2799,10 +2800,18 @@ _XkbSetCompatMap(ClientPtr client, DeviceIntPtr dev,
 	    compat->num_si = req->firstSI+req->nSI;
 	}
 	sym = &compat->sym_interpret[req->firstSI];
-	for (i=0;i<req->nSI;i++,wire++,sym++) {
+	for (i=0;i<req->nSI;i++,wire++) {
 	    if (client->swapped) {
 		int n;
 		swapl(&wire->sym,n);
+	    }
+	    if (wire->sym == NoSymbol && wire->match == XkbSI_AnyOfOrNone &&
+		(wire->mods & 0xff) == 0xff &&
+		wire->act.type == XkbSA_XFree86Private) {
+		ErrorF("XKB: Skipping broken Any+AnyOfOrNone(All) -> Private "
+		       "action from client\n");
+		skipped++;
+		continue;
 	    }
 	    sym->sym= wire->sym;
 	    sym->mods= wire->mods;
@@ -2811,6 +2820,14 @@ _XkbSetCompatMap(ClientPtr client, DeviceIntPtr dev,
 	    sym->virtual_mod= wire->virtualMod;
 	    memcpy((char *)&sym->act,(char *)&wire->act,
                    SIZEOF(xkbActionWireDesc));
+            sym++;
+	}
+	if (skipped) {
+	    if (req->firstSI + req->nSI < compat->num_si)
+		memmove(sym, sym + skipped,
+	                (compat->num_si - req->firstSI - req->nSI) *
+			 sizeof(*sym));
+	    compat->num_si -= skipped;
 	}
 	data = (char *)wire;
     }
