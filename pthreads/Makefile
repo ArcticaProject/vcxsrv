@@ -13,9 +13,9 @@ DLL_VERD= $(DLL_VER)d
 
 DEVROOT	= C:\pthreads
 
-DLLDEST	= $(DEVROOT)\DLL
-LIBDEST	= $(DEVROOT)\LIB
-HDRDEST	= $(DEVROOT)\INCLUDE
+DLLDEST	= $(DEVROOT)\dll
+LIBDEST	= $(DEVROOT)\lib
+HDRDEST	= $(DEVROOT)\include
 
 DLLS	= pthreadVCE$(DLL_VER).dll pthreadVSE$(DLL_VER).dll pthreadVC$(DLL_VER).dll \
 		  pthreadVCE$(DLL_VERD).dll pthreadVSE$(DLL_VERD).dll pthreadVC$(DLL_VERD).dll
@@ -24,11 +24,11 @@ INLINED_STAMPS	= pthreadVCE$(DLL_VER).stamp pthreadVSE$(DLL_VER).stamp pthreadVC
 STATIC_STAMPS	= pthreadVCE$(DLL_VER).static pthreadVSE$(DLL_VER).static pthreadVC$(DLL_VER).static \
 				  pthreadVCE$(DLL_VERD).static pthreadVSE$(DLL_VERD).static pthreadVC$(DLL_VERD).static
 
-OPTIM	= /O2 /Ob2
-OPTIMD	=
-
-CFLAGS	= /W3 /MD /nologo /I. /D_WIN32_WINNT=0x400 /DHAVE_CONFIG_H
-CFLAGSD	= /Zi $(CFLAGS)
+CC	= cl
+CPPFLAGS = /I. /DHAVE_PTW32_CONFIG_H
+XCFLAGS = /W3 /MD /nologo
+CFLAGS	= /O2 /Ob2 $(XCFLAGS)
+CFLAGSD	= /Z7 $(XCFLAGS)
 
 # Uncomment this if config.h defines RETAIN_WSALASTERROR
 #XLIBS = wsock32.lib
@@ -37,14 +37,14 @@ CFLAGSD	= /Zi $(CFLAGS)
 CLEANUP	= __CLEANUP_C
 
 # C++ Exceptions
-VCEFLAGS	= /GX /TP $(CFLAGS)
-VCEFLAGSD	= /GX /TP $(CFLAGSD)
+VCEFLAGS	= /EHsc /TP $(CPPFLAGS) $(CFLAGS)
+VCEFLAGSD	= /EHsc /TP $(CPPFLAGS) $(CFLAGSD)
 #Structured Exceptions
-VSEFLAGS	= $(CFLAGS)
-VSEFLAGSD	= $(CFLAGSD)
+VSEFLAGS	= $(CPPFLAGS) $(CFLAGS)
+VSEFLAGSD	= $(CPPFLAGS) $(CFLAGSD)
 #C cleanup code
-VCFLAGS	= $(CFLAGS)
-VCFLAGSD= $(CFLAGSD)
+VCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+VCFLAGSD	= $(CPPFLAGS) $(CFLAGSD)
 
 DLL_INLINED_OBJS = \
 		pthread.obj \
@@ -130,13 +130,17 @@ SMALL_STATIC_OBJS	= \
 		pthread_mutexattr_setpshared.obj \
 		pthread_mutexattr_settype.obj \
 		pthread_mutexattr_gettype.obj \
+		pthread_mutexattr_setrobust.obj \
+		pthread_mutexattr_getrobust.obj \
 		pthread_mutex_lock.obj \
 		pthread_mutex_timedlock.obj \
 		pthread_mutex_unlock.obj \
 		pthread_mutex_trylock.obj \
+		pthread_mutex_consistent.obj \
 		pthread_mutexattr_setkind_np.obj \
 		pthread_mutexattr_getkind_np.obj \
 		pthread_getw32threadhandle_np.obj \
+		pthread_getunique_np.obj \
 		pthread_delay_np.obj \
 		pthread_num_processors_np.obj \
 		pthread_win32_attach_detach_np.obj \
@@ -169,7 +173,6 @@ SMALL_STATIC_OBJS	= \
 		ptw32_callUserDestroyRoutines.obj \
 		ptw32_timespec.obj \
 		ptw32_throw.obj \
-		ptw32_InterlockedCompareExchange.obj \
 		ptw32_getprocessors.obj \
 		ptw32_calloc.obj \
 		ptw32_new.obj \
@@ -280,15 +283,19 @@ MUTEX_SRCS	= \
 		pthread_mutexattr_setpshared.c \
 		pthread_mutexattr_settype.c \
 		pthread_mutexattr_gettype.c \
+		pthread_mutexattr_setrobust.c \
+		pthread_mutexattr_getrobust.c \
 		pthread_mutex_lock.c \
 		pthread_mutex_timedlock.c \
 		pthread_mutex_unlock.c \
-		pthread_mutex_trylock.c
+		pthread_mutex_trylock.c \
+		pthread_mutex_consistent.c
 
 NONPORTABLE_SRCS = \
 		pthread_mutexattr_setkind_np.c \
 		pthread_mutexattr_getkind_np.c \
 		pthread_getw32threadhandle_np.c \
+		pthread_getunique_np.c \
 		pthread_delay_np.c \
 		pthread_num_processors_np.c \
 		pthread_win32_attach_detach_np.c \
@@ -306,7 +313,6 @@ PRIVATE_SRCS	= \
 		ptw32_semwait.c \
 		ptw32_timespec.c \
 		ptw32_throw.c \
-		ptw32_InterlockedCompareExchange.c \
 		ptw32_getprocessors.c
 
 RWLOCK_SRCS	= \
@@ -391,66 +397,68 @@ help:
 	@ echo nmake clean VC-static-debug     (to build the debug MSVC static lib with C cleanup code)
 
 all:
-	@ nmake clean VCE-inlined
-	@ nmake clean VSE-inlined
-	@ nmake clean VC-inlined
-	@ nmake clean VCE-inlined-debug
-	@ nmake clean VSE-inlined-debug
-	@ nmake clean VC-inlined-debug
+	@ $(MAKE) /E clean VCE-inlined
+	@ $(MAKE) /E clean VSE-inlined
+	@ $(MAKE) /E clean VC-inlined
+	@ $(MAKE) /E clean VCE-inlined-debug
+	@ $(MAKE) /E clean VSE-inlined-debug
+	@ $(MAKE) /E clean VC-inlined-debug
 
 VCE:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VCEFLAGS)" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VER).dll
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCEFLAGS)" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VER).dll
 
 VCE-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VCEFLAGSD)" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VERD).dll
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCEFLAGSD)" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VERD).dll
 
 VSE:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VSEFLAGS)" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VER).dll
+	@ $(MAKE) /E /nologo EHFLAGS="$(VSEFLAGS)" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VER).dll
 
 VSE-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VSEFLAGSD)" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VERD).dll
+	@ $(MAKE) /E /nologo EHFLAGS="$(VSEFLAGSD)" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VERD).dll
 
 VC:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VCFLAGS)" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).dll
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCFLAGS)" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).dll
 
 VC-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VCFLAGSD)" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).dll
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCFLAGSD)" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).dll
 
 #
 # The so-called inlined DLL is just a single translation unit with
 # inlining optimisation turned on.
 #
 VCE-inlined:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VCEFLAGS) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VER).stamp
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCEFLAGS) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VER).stamp
 
 VCE-inlined-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VCEFLAGSD) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VERD).stamp
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCEFLAGSD) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_CXX pthreadVCE$(DLL_VERD).stamp
 
 VSE-inlined:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VSEFLAGS) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VER).stamp
+	@ $(MAKE) /E /nologo EHFLAGS="$(VSEFLAGS) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VER).stamp
 
 VSE-inlined-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VSEFLAGSD) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VERD).stamp
+	@ $(MAKE) /E /nologo EHFLAGS="$(VSEFLAGSD) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_SEH pthreadVSE$(DLL_VERD).stamp
 
 VC-inlined:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VCFLAGS) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).stamp
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCFLAGS) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).stamp
 
 VC-inlined-debug:
-	nmake /nologo EHFLAGS="$(OPTIMD) $(VCFLAGSD) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).stamp
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCFLAGSD) /DPTW32_BUILD_INLINED" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).stamp
 
 VC-static:
-	@ nmake /nologo EHFLAGS="$(OPTIM) $(VCFLAGS) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).static
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCFLAGS) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).static
 
 VC-static-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VCFLAGSD) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).static
+	@ $(MAKE) /E /nologo EHFLAGS="$(VCFLAGSD) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).static
 
 realclean: clean
 	if exist pthread*.dll del pthread*.dll
 	if exist pthread*.lib del pthread*.lib
+	if exist *.manifest del *.manifest
 	if exist *.stamp del *.stamp
 
 clean:
 	if exist *.obj del *.obj
+	if exist *.def del *.def
 	if exist *.ilk del *.ilk
 	if exist *.pdb del *.pdb
 	if exist *.exp del *.exp
@@ -460,7 +468,7 @@ clean:
 	if exist *.res del *.res
 
 
-install: $(DLLS)
+install:
 	copy pthread*.dll $(DLLDEST)
 	copy pthread*.lib $(LIBDEST)
 	copy pthread.h $(HDRDEST)
@@ -468,27 +476,23 @@ install: $(DLLS)
 	copy semaphore.h $(HDRDEST)
 
 $(DLLS): $(DLL_OBJS)
-	cl /LDd /Zi /nologo $(DLL_OBJS) \
-		/link /nodefaultlib:libcmt /implib:$*.lib \
-		msvcrt.lib $(XLIBS) /out:$@
+	$(CC) /LDd /Zi /nologo $(DLL_OBJS) /link /implib:$*.lib $(XLIBS) /out:$@
 
 $(INLINED_STAMPS): $(DLL_INLINED_OBJS)
-	cl /LDd /Zi /nologo $(DLL_INLINED_OBJS) \
-		/link /nodefaultlib:libcmt /implib:$*.lib \
-		msvcrt.lib $(XLIBS) /out:$*.dll
+	$(CC) /LDd /Zi /nologo $(DLL_INLINED_OBJS) /link /implib:$*.lib $(XLIBS) /out:$*.dll
 
 $(STATIC_STAMPS): $(DLL_INLINED_OBJS)
 	if exist $*.lib del $*.lib
 	lib $(DLL_INLINED_OBJS) /out:$*.lib
 
 .c.obj:
-	cl $(EHFLAGS) /D$(CLEANUP) -c $<
+	$(CC) $(EHFLAGS) /D$(CLEANUP) -c $<
 
 .rc.res:
 	rc /dPTW32_RC_MSC /d$(CLEANUP) $<
 
 .c.i:
-	cl /P /O2 /Ob1 $(VCFLAGS) $<
+	$(CC) /P /O2 /Ob1 $(VCFLAGS) $<
 
 attr.obj:	attr.c $(ATTR_SRCS) $(INCL)
 barrier.obj:	barrier.c $(BARRIER_SRCS) $(INCL)

@@ -48,7 +48,7 @@ CP	= cp -f
 #CP	= copy
 
 # For cross compiling use e.g.
-# make CROSS=i386-mingw32msvc- clean GC-inlined
+# make CROSS=x86_64-w64-mingw32- clean GC-inlined
 CROSS	= 
 
 AR	= $(CROSS)ar
@@ -58,13 +58,12 @@ CXX     = $(CROSS)g++
 RANLIB  = $(CROSS)ranlib
 RC	= $(CROSS)windres
 
-OPT	= $(CLEANUP) -O3 -finline-functions
-DOPT	= $(CLEANUP) -g -O0
+OPT	= $(CLEANUP) -O3 # -finline-functions -findirect-inlining
 XOPT	=
 
 RCFLAGS		= --include-dir=.
 # Uncomment this if config.h defines RETAIN_WSALASTERROR
-#LFLAGS		= -lwsock32
+#LFLAGS		= -lws2_32
 
 # ----------------------------------------------------------------------
 # The library can be built with some alternative behaviour to
@@ -99,7 +98,7 @@ GCE_CFLAGS	= $(PTW32_FLAGS) -mthreads
 
 ## Mingw32
 MAKE		?= make
-CFLAGS	= $(OPT) $(XOPT) -I. -DHAVE_CONFIG_H -Wall
+CFLAGS	= $(OPT) $(XOPT) -I. -DHAVE_PTW32_CONFIG_H -Wall
 
 DLL_INLINED_OBJS	= \
 		pthread.o \
@@ -184,13 +183,17 @@ SMALL_STATIC_OBJS	= \
 		pthread_mutexattr_setpshared.o \
 		pthread_mutexattr_settype.o \
 		pthread_mutexattr_gettype.o \
+		pthread_mutexattr_setrobust.o \
+		pthread_mutexattr_getrobust.o \
 		pthread_mutex_lock.o \
 		pthread_mutex_timedlock.o \
 		pthread_mutex_unlock.o \
 		pthread_mutex_trylock.o \
+		pthread_mutex_consistent.o \
 		pthread_mutexattr_setkind_np.o \
 		pthread_mutexattr_getkind_np.o \
 		pthread_getw32threadhandle_np.o \
+		pthread_getunique_np.o \
 		pthread_delay_np.o \
 		pthread_num_processors_np.o \
 		pthread_win32_attach_detach_np.o \
@@ -226,7 +229,6 @@ SMALL_STATIC_OBJS	= \
 		ptw32_callUserDestroyRoutines.o \
 		ptw32_timespec.o \
 		ptw32_throw.o \
-		ptw32_InterlockedCompareExchange.o \
 		ptw32_getprocessors.o \
 		ptw32_calloc.o \
 		ptw32_new.o \
@@ -338,15 +340,19 @@ MUTEX_SRCS	= \
 		pthread_mutexattr_setpshared.c \
 		pthread_mutexattr_settype.c \
 		pthread_mutexattr_gettype.c \
+		pthread_mutexattr_setrobust.c \
+		pthread_mutexattr_getrobust.c \
 		pthread_mutex_lock.c \
 		pthread_mutex_timedlock.c \
 		pthread_mutex_unlock.c \
-		pthread_mutex_trylock.c
+		pthread_mutex_trylock.c \
+		pthread_mutex_consistent.c
 
 NONPORTABLE_SRCS = \
 		pthread_mutexattr_setkind_np.c \
 		pthread_mutexattr_getkind_np.c \
 		pthread_getw32threadhandle_np.c \
+                pthread_getunique_np.c \
 		pthread_delay_np.c \
 		pthread_num_processors_np.c \
 		pthread_win32_attach_detach_np.c \
@@ -365,7 +371,6 @@ PRIVATE_SRCS	= \
 		ptw32_relmillisecs.c \
 		ptw32_timespec.c \
 		ptw32_throw.c \
-		ptw32_InterlockedCompareExchange.c \
 		ptw32_getprocessors.c
 
 RWLOCK_SRCS	= \
@@ -473,31 +478,31 @@ GC:
 		$(MAKE) CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_OBJS)" $(GC_DLL)
 
 GC-debug:
-		$(MAKE) CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_OBJS)" DLL_VER=$(DLL_VERD) OPT="$(DOPT)" $(GCD_DLL)
+		$(MAKE) CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_OBJS)" DLL_VER=$(DLL_VERD) OPT="-D__CLEANUP_C -g -O0" $(GCD_DLL)
 
 GCE:
 		$(MAKE) CC=$(CXX) CLEANUP=-D__CLEANUP_CXX XC_FLAGS="$(GCE_CFLAGS)" OBJ="$(DLL_OBJS)" $(GCE_DLL)
 
 GCE-debug:
-		$(MAKE) CC=$(CXX) CLEANUP=-D__CLEANUP_CXX XC_FLAGS="$(GCE_CFLAGS)" OBJ="$(DLL_OBJS)" DLL_VER=$(DLL_VERD) OPT="$(DOPT)" $(GCED_DLL)
+		$(MAKE) CC=$(CXX) CLEANUP=-D__CLEANUP_CXX XC_FLAGS="$(GCE_CFLAGS)" OBJ="$(DLL_OBJS)" DLL_VER=$(DLL_VERD) OPT="-D__CLEANUP_CXX -g -O0" $(GCED_DLL)
 
 GC-inlined:
 		$(MAKE) XOPT="-DPTW32_BUILD_INLINED" CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" $(GC_INLINED_STAMP)
 
 GC-inlined-debug:
-		$(MAKE) XOPT="-DPTW32_BUILD_INLINED" CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" DLL_VER=$(DLL_VERD) OPT="$(DOPT)" $(GCD_INLINED_STAMP)
+		$(MAKE) XOPT="-DPTW32_BUILD_INLINED" CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" DLL_VER=$(DLL_VERD) OPT="-D__CLEANUP_C -g -O0" $(GCD_INLINED_STAMP)
 
 GCE-inlined:
 		$(MAKE) CC=$(CXX) XOPT="-DPTW32_BUILD_INLINED" CLEANUP=-D__CLEANUP_CXX XC_FLAGS="$(GCE_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" $(GCE_INLINED_STAMP)
 
 GCE-inlined-debug:
-		$(MAKE) CC=$(CXX) XOPT="-DPTW32_BUILD_INLINED" CLEANUP=-D__CLEANUP_CXX XC_FLAGS="$(GCE_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" DLL_VER=$(DLL_VERD) OPT="$(DOPT)" $(GCED_INLINED_STAMP)
+		$(MAKE) CC=$(CXX) XOPT="-DPTW32_BUILD_INLINED" CLEANUP=-D__CLEANUP_CXX XC_FLAGS="$(GCE_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" DLL_VER=$(DLL_VERD) OPT="-D__CLEANUP_CXX -g -O0" $(GCED_INLINED_STAMP)
 
 GC-static:
 		$(MAKE) XOPT="-DPTW32_BUILD_INLINED -DPTW32_STATIC_LIB" CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" $(GC_STATIC_STAMP)
 
 GC-static-debug:
-		$(MAKE) XOPT="-DPTW32_BUILD_INLINED -DPTW32_STATIC_LIB" CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" DLL_VER=$(DLL_VERD) OPT="$(DOPT)" $(GCD_STATIC_STAMP)
+		$(MAKE) XOPT="-DPTW32_BUILD_INLINED -DPTW32_STATIC_LIB" CLEANUP=-D__CLEANUP_C XC_FLAGS="$(GC_CFLAGS)" OBJ="$(DLL_INLINED_OBJS)" DLL_VER=$(DLL_VERD) OPT="-D__CLEANUP_C -g -O0" $(GCD_STATIC_STAMP)
 
 tests:
 	@ cd tests
@@ -548,6 +553,7 @@ $(GC_STATIC_STAMP) $(GCD_STATIC_STAMP): $(DLL_INLINED_OBJS)
 clean:
 	-$(RM) *~
 	-$(RM) *.i
+	-$(RM) *.s
 	-$(RM) *.o
 	-$(RM) *.obj
 	-$(RM) *.exe

@@ -37,25 +37,36 @@ CP	= cp -f
 MV	= mv -f
 RM	= rm -f
 CAT	= cat
-#CP	= copy
-#MV	= rename
-#RM	= erase
-#CAT	= type
 MKDIR	= mkdir
 TOUCH	= echo Passed >
 ECHO	= @echo
 MAKE	= make -k
+
+# For cross compiling use e.g.
+# # make CROSS=i386-mingw32msvc- clean GC
+CROSS   =
+
+AR      = $(CROSS)ar
+DLLTOOL = $(CROSS)dlltool
+CC      = $(CROSS)gcc
+CXX     = $(CROSS)g++
+RANLIB  = $(CROSS)ranlib
 
 #
 # Mingw32
 #
 XXCFLAGS	= 
 XXLIBS	= -lws2_32 -lgomp
+OPT	= -O3
+DOPT	= -g -O0
 #CFLAGS	= -O3 -UNDEBUG -Wall $(XXCFLAGS)
-CFLAGS	= -O3 -UNDEBUG -Wall $(XXCFLAGS)
+CFLAGS	= ${OPT} -UNDEBUG -Wall $(XXCFLAGS)
 BUILD_DIR	= ..
 INCLUDES	= -I.
 
+.INTERMEDIATE: %.exe %.pass
+.SECONDARY: %.exe %.pass
+.PRECIOUS: %.exe %.pass
 
 TEST	= GC
 
@@ -68,7 +79,7 @@ HDR	= pthread.h semaphore.h sched.h
 LIB	= libpthread$(GCX).a
 DLL	= pthread$(GCX).dll
 # The next path is relative to $BUILD_DIR
-QAPC	= ../QueueUserAPCEx/User/quserex.dll
+QAPC	=  # ../QueueUserAPCEx/User/quserex.dll
 
 COPYFILES	= $(HDR) $(LIB) $(DLL) $(QAPC)
 
@@ -81,13 +92,14 @@ TESTS	= \
 	  semaphore1 semaphore2 semaphore3 \
 	  condvar1 condvar1_1 condvar1_2 condvar2 condvar2_1 exit1 \
 	  create1 create2 reuse1 reuse2 equal1 \
-	  kill1 valid1 valid2 \
+	  sequence1 kill1 valid1 valid2 \
 	  exit2 exit3 exit4 exit5 \
 	  join0 join1 detach1 join2 join3 \
 	  mutex2 mutex2r mutex2e mutex3 mutex3r mutex3e \
 	  mutex4 mutex6 mutex6n mutex6e mutex6r \
 	  mutex6s mutex6es mutex6rs \
 	  mutex7 mutex7n mutex7e mutex7r mutex8 mutex8n mutex8e mutex8r \
+	  robust1 robust2 robust3 robust4 robust5 \
 	  count1 \
 	  once1 once2 once3 once4 self2 \
 	  cancel1 cancel2 \
@@ -105,13 +117,13 @@ TESTS	= \
 	  priority1 priority2 inherit1 \
 	  spin1 spin2 spin3 spin4 \
 	  exception1 exception2 exception3 \
-	  cancel9 create3 stress1
+	  cancel9 stress1
 
 STRESSTESTS = \
 	stress1
 
 BENCHTESTS = \
-	benchtest1 benchtest2 benchtest3 benchtest4 benchtest5 benchtest6
+	benchtest1 benchtest2 benchtest3 benchtest4 benchtest5
 
 STATICTESTS = \
 	  sizes \
@@ -119,13 +131,14 @@ STATICTESTS = \
 	  semaphore1 semaphore2 semaphore3 \
 	  condvar1 condvar1_1 condvar1_2 condvar2 condvar2_1 exit1 \
 	  create1 create2 reuse1 reuse2 equal1 \
-	  kill1 valid1 valid2 \
+	  sequence1 kill1 valid1 valid2 \
 	  exit2 exit3 exit4 exit5 \
 	  join0 join1 detach1 join2 join3 \
 	  mutex2 mutex2r mutex2e mutex3 mutex3r mutex3e \
 	  mutex4 mutex6 mutex6n mutex6e mutex6r \
 	  mutex6s mutex6es mutex6rs \
 	  mutex7 mutex7n mutex7e mutex7r mutex8 mutex8n mutex8e mutex8r \
+	  robust1 robust2 robust3 robust4 robust5 \
 	  count1 \
 	  once1 once2 once3 once4 self2 \
 	  cancel1 cancel2 \
@@ -143,8 +156,11 @@ STATICTESTS = \
 	  priority1 priority2 inherit1 \
 	  spin1 spin2 spin3 spin4 \
 	  exception1 exception2 exception3 \
-	  cancel9 create3 stress1
+	  cancel9 stress1
 
+ALLTESTS = $(TESTS) $(BENCHTESTS)
+
+ASM		= $(ALLTESTS:%=%.s)
 PASSES		= $(TESTS:%=%.pass)
 BENCHRESULTS	= $(BENCHTESTS:%=%.bench)
 STRESSRESULTS	= $(STRESSTESTS:%=%.pass)
@@ -160,6 +176,7 @@ help:
 	@ $(ECHO) "make clean GC-stress	  (to stresstest using GNU C dll with C cleanup code)"
 	@ $(ECHO) "make clean GCE-stress   (to stresstest using GNU C dll with C++ exception handling)"
 	@ $(ECHO) "make clean GC-static   (to test using GC static lib with C (no EH) applications)"
+	@ $(ECHO) "make clean GC-debug    (to test using GC dll with C (no EH) applications)"
 
 all:
 	@ $(MAKE) clean GC
@@ -167,34 +184,46 @@ all:
 	@ $(MAKE) clean GCE
 
 GC:
-	$(MAKE) TEST=GC CC=gcc XXCFLAGS="-fopenmp -D__CLEANUP_C" all-pass
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-fopenmp -D__CLEANUP_C" all-pass
+
+GC-asm:
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-fopenmp -D__CLEANUP_C" all-asm
 
 GCE:
-	$(MAKE) TEST=GCE CC=g++ XXCFLAGS="-fopenmp -mthreads -D__CLEANUP_CXX" all-pass
+	$(MAKE) TEST=GCE CC=$(CXX) XXCFLAGS="-fopenmp -mthreads -D__CLEANUP_CXX" all-pass
 
 GCX:
-	$(MAKE) TEST=GC CC=g++ XXCFLAGS="-fopenmp -mthreads -D__CLEANUP_C" all-pass
+	$(MAKE) TEST=GC CC=$(CXX) XXCFLAGS="-fopenmp -mthreads -D__CLEANUP_C" all-pass
 
 GC-bench:
-	$(MAKE) TEST=GC CC=gcc XXCFLAGS="-D__CLEANUP_C" XXLIBS="benchlib.o" all-bench
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-D__CLEANUP_C" XXLIBS="benchlib.o" all-bench
 
 GCE-bench:
-	$(MAKE) TEST=GCE  CC=g++ XXCFLAGS="-mthreads -D__CLEANUP_CXX" XXLIBS="benchlib." all-bench
+	$(MAKE) TEST=GCE  CC=$(CXX) XXCFLAGS="-mthreads -D__CLEANUP_CXX" XXLIBS="benchlib." all-bench
 
 GC-debug:
-	$(MAKE) TEST=GC CC=gcc XXCFLAGS="-fopenmp -D__CLEANUP_C" DLL_VER="$(DLL_VER)d" all-pass
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-fopenmp -D__CLEANUP_C" OPT="${DOPT}" DLL_VER="$(DLL_VER)d" all-pass
+
+GCE-debug:
+	$(MAKE) TEST=GCE CC=$(CXX) XXCFLAGS="-fopenmp -D__CLEANUP_CXX" OPT="${DOPT}" DLL_VER="$(DLL_VER)d" all-pass
+
+GC-bench-debug:
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-D__CLEANUP_C" XXLIBS="benchlib.o" OPT="${OPT}" DLL_VER="$(DLL_VER)d" all-bench
 
 GC-static:
-	$(MAKE) TEST=GC CC=gcc XXCFLAGS="-D__CLEANUP_C -DPTW32_STATIC_LIB" XXLIBS="-lws2_32" DLL="" all-static
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-D__CLEANUP_C -DPTW32_STATIC_LIB" XXLIBS="-lws2_32" DLL="" all-static
 
 GC-stress:
 	$(ECHO) Stress tests can take a long time since they are trying to
 	$(ECHO) expose weaknesses that may be intermittant or statistically rare.
 	$(ECHO) A pass does not prove correctness, but may give greater confidence.
-	$(MAKE) TEST=GC CC=gcc XXCFLAGS="-D__CLEANUP_C" XXLIBS="" all-stress
+	$(MAKE) TEST=GC CC=$(CC) XXCFLAGS="-D__CLEANUP_C" XXLIBS="" all-stress
 
 GCE-stress:
-	$(MAKE) TEST=GCE  CC=g++ XXCFLAGS="-mthreads -D__CLEANUP_CXX" XXLIBS="" all-stress
+	$(MAKE) TEST=GCE  CC=$(CXX) XXCFLAGS="-mthreads -D__CLEANUP_CXX" XXLIBS="" all-stress
+
+all-asm: $(ASM)
+	@ $(ECHO) ALL TESTS PASSED! Congratulations!
 
 all-pass: $(PASSES)
 	@ $(ECHO) ALL TESTS PASSED! Congratulations!
@@ -213,7 +242,6 @@ benchtest2.bench:
 benchtest3.bench:
 benchtest4.bench:
 benchtest5.bench:
-benchtest6.bench:
 
 barrier1.pass: semaphore4.pass
 barrier2.pass: barrier1.pass
@@ -223,7 +251,6 @@ barrier5.pass: barrier4.pass
 barrier6.pass: barrier5.pass
 cancel1.pass: create1.pass
 cancel2.pass: cancel1.pass
-cancel2_1.pass: cancel2.pass
 cancel3.pass: context1.pass
 cancel4.pass: cancel3.pass
 cancel5.pass: cancel3.pass
@@ -251,12 +278,11 @@ condvar6.pass: condvar5.pass
 condvar7.pass: condvar6.pass cleanup1.pass
 condvar8.pass: condvar7.pass
 condvar9.pass: condvar8.pass
-context1.pass: cancel2.pass
+context1.pass: cancel1.pass
 count1.pass: join1.pass
 create1.pass: mutex2.pass
 create2.pass: create1.pass
-create3.pass:
-delay1.pass: cancel2.pass
+delay1.pass:
 delay2.pass: delay1.pass
 detach1.pass: join0.pass
 equal1.pass: create1.pass
@@ -313,9 +339,14 @@ priority1.pass: join1.pass
 priority2.pass: priority1.pass barrier3.pass
 reuse1.pass: create2.pass
 reuse2.pass: reuse1.pass
+robust1.pass: mutex8r.pass
+robust2.pass: mutex8r.pass
+robust3.pass: robust2.pass
+robust4.pass: robust3.pass
+robust5.pass: robust4.pass
 rwlock1.pass: condvar6.pass
 rwlock2.pass: rwlock1.pass
-rwlock3.pass: rwlock2.pass
+rwlock3.pass: rwlock2.pass join2.pass
 rwlock4.pass: rwlock3.pass
 rwlock5.pass: rwlock4.pass
 rwlock6.pass: rwlock5.pass
@@ -335,6 +366,7 @@ semaphore3.pass: semaphore2.pass
 semaphore4.pass: semaphore3.pass cancel1.pass
 semaphore4t.pass: semaphore4.pass
 semaphore5.pass: semaphore4.pass
+sequence1.pass: reuse2.pass
 sizes.pass:
 spin1.pass:
 spin2.pass: spin1.pass
@@ -348,20 +380,20 @@ valid2.pass: valid1.pass
 
 sizes.pass: sizes.exe
 	@ $(ECHO) Running $*
-	$< > SIZES.$(TEST)
+	./$< > SIZES.$(TEST)
 	@ $(CAT) SIZES.$(TEST)
 	@ $(ECHO) Passed
 	@ $(TOUCH) $@
 
 %.pass: %.exe
 	@ $(ECHO) Running $*
-	$*
+	./$*
 	@ $(ECHO) Passed
 	@ $(TOUCH) $@
 
 %.bench: $(LIB) $(DLL) $(HDR) $(QAPC) $(XXLIBS) %.exe
 	@ $(ECHO) Running $*
-	$*
+	./$*
 	@ $(ECHO) Done
 	@ $(TOUCH) $@
 
@@ -374,6 +406,7 @@ sizes.pass: sizes.exe
 	@ $(CC) -E $(CFLAGS) -o $@ $< $(INCLUDES)
 
 %.s: %.c $(HDR)
+	@ $(ECHO) Compiling $@
 	@ $(CC) -S $(CFLAGS) -o $@ $< $(INCLUDES)
 
 $(COPYFILES):
@@ -398,6 +431,7 @@ clean:
 	- $(RM) *.e
 	- $(RM) *.i
 	- $(RM) *.o
+	- $(RM) *.s
 	- $(RM) *.so
 	- $(RM) *.obj
 	- $(RM) *.pdb
