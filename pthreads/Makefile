@@ -28,7 +28,7 @@ CC	= cl
 CPPFLAGS = /I. /DHAVE_PTW32_CONFIG_H
 XCFLAGS = /W3 /Zi /Gy /GF /nologo
 CFLAGS	= /O2 /Ob2 /Oi /Ox /Oy /Ot /MD /GL $(XCFLAGS)
-CFLAGSD	= /Z7 /MDd $(XCFLAGS) 
+CFLAGSD	= /MDd $(XCFLAGS) 
 
 
 # Uncomment this if config.h defines RETAIN_WSALASTERROR
@@ -490,7 +490,7 @@ $(INLINED_STAMPS): $(OUTDIR) $(DLL_INLINED_OBJS)
 
 $(STATIC_STAMPS): $(OUTDIR) $(DLL_INLINED_OBJS)
 	if exist $*.lib del $*.lib
-	lib $(DLL_INLINED_OBJS) /out:$*.lib
+	lib /LTCG $(DLL_INLINED_OBJS) /out:$*.lib
   
 $(OUTDIR):
 	mkdir $(OUTDIR)
