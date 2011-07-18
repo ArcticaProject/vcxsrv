@@ -49,7 +49,7 @@ pthread_barrier_destroy (pthread_barrier_t * barrier)
       return EINVAL;
     }
 
-  if (0 != ptw32_mcs_lock_try_acquire((ptw32_mcs_lock_t *)&(*barrier)->lock, &node))
+  if (0 != ptw32_mcs_lock_try_acquire(&(*barrier)->lock, &node))
     {
       return EBUSY;
     }

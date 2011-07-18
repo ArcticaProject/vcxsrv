@@ -56,7 +56,7 @@ func(void * crossings)
   int result;
   int serialThreads = 0;
 
-  while ((LONG)crossings >= (LONG)InterlockedIncrement((LPLONG)&totalThreadCrossings))
+  while ((LONG)(size_t)crossings >= (LONG)InterlockedIncrement((LPLONG)&totalThreadCrossings))
     {
       result = pthread_barrier_wait(&barrier);
 
@@ -72,14 +72,14 @@ func(void * crossings)
         }
     }
 
-  return (void *) serialThreads;
+  return (void*)(size_t)serialThreads;
 }
 
 int
 main()
 {
   int i, j;
-  int result;
+  void* result;
   int serialThreadsTotal;
   LONG Crossings;
   pthread_t t[NUMTHREADS + 1];
@@ -97,14 +97,14 @@ main()
 
       for (i = 1; i <= j; i++)
         {
-          assert(pthread_create(&t[i], NULL, func, (void *) Crossings) == 0);
+          assert(pthread_create(&t[i], NULL, func, (void *)(size_t)Crossings) == 0);
         }
 
       serialThreadsTotal = 0;
       for (i = 1; i <= j; i++)
         {
-          assert(pthread_join(t[i], (void **) &result) == 0);
-          serialThreadsTotal += result;
+          assert(pthread_join(t[i], &result) == 0);
+          serialThreadsTotal += (int)(size_t)result;
         }
 
       assert(serialThreadsTotal == BARRIERMULTIPLE);

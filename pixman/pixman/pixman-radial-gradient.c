@@ -78,11 +78,11 @@ radial_compute_color (double                    a,
 {
     /*
      * In this function error propagation can lead to bad results:
-     *  - det can have an unbound error (if b*b-a*c is very small),
+     *  - discr can have an unbound error (if b*b-a*c is very small),
      *    potentially making it the opposite sign of what it should have been
      *    (thus clearing a pixel that would have been colored or vice-versa)
-     *    or propagating the error to sqrtdet;
-     *    if det has the wrong sign or b is very small, this can lead to bad
+     *    or propagating the error to sqrtdiscr;
+     *    if discr has the wrong sign or b is very small, this can lead to bad
      *    results
      *
      *  - the algorithm used to compute the solutions of the quadratic
@@ -92,7 +92,7 @@ radial_compute_color (double                    a,
      *
      *  - the above problems are worse if a is small (as inva becomes bigger)
      */
-    double det;
+    double discr;
 
     if (a == 0)
     {
@@ -116,15 +116,26 @@ radial_compute_color (double                    a,
 	return 0;
     }
 
-    det = fdot (b, a, 0, b, -c, 0);
-    if (det >= 0)
+    discr = fdot (b, a, 0, b, -c, 0);
+    if (discr >= 0)
     {
-	double sqrtdet, t0, t1;
+	double sqrtdiscr, t0, t1;
 
-	sqrtdet = sqrt (det);
-	t0 = (b + sqrtdet) * inva;
-	t1 = (b - sqrtdet) * inva;
+	sqrtdiscr = sqrt (discr);
+	t0 = (b + sqrtdiscr) * inva;
+	t1 = (b - sqrtdiscr) * inva;
 
+	/*
+	 * The root that must be used if the biggest one that belongs
+	 * to the valid range ([0,1] for PIXMAN_REPEAT_NONE, any
+	 * solution that results in a positive radius otherwise).
+	 *
+	 * If a > 0, t0 is the biggest solution, so if it is valid, it
+	 * is the correct result.
+	 *
+	 * If a < 0, only one of the solutions can be valid, so the
+	 * order in which they are tested is not important.
+	 */
 	if (repeat == PIXMAN_REPEAT_NONE)
 	{
 	    if (0 <= t0 && t0 <= pixman_fixed_1)

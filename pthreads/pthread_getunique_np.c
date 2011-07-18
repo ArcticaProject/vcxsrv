@@ -1,12 +1,14 @@
 /*
- * File: create3.c
+ * pthread_getunique_np.c
  *
+ * Description:
+ * This translation unit implements non-portable thread functions.
  *
  * --------------------------------------------------------------------------
  *
  *      Pthreads-win32 - POSIX Threads Library for Win32
  *      Copyright(C) 1998 John E. Bossom
- *      Copyright(C) 1999,2003 Pthreads-win32 contributors
+ *      Copyright(C) 1999,2005 Pthreads-win32 contributors
  * 
  *      Contact Email: rpj@callisto.canberra.edu.au
  * 
@@ -30,93 +32,16 @@
  *      License along with this library in the file COPYING.LIB;
  *      if not, write to the Free Software Foundation, Inc.,
  *      59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
- *
- * --------------------------------------------------------------------------
- *
- * Test Synopsis: Test passing NULL as thread id arg to pthread_create.
- *
- * Test Method (Validation or Falsification):
- * - 
- *
- * Requirements Tested:
- * -
- *
- * Features Tested:
- * - 
- *
- * Cases Tested:
- * - 
- *
- * Description:
- * - 
- *
- * Environment:
- * - 
- *
- * Input:
- * - None.
- *
- * Output:
- * - File name, Line number, and failed expression on failure.
- * - No output on success.
- *
- * Assumptions:
- * - 
- *
- * Pass Criteria:
- * - Process returns zero exit status.
- *
- * Fail Criteria:
- * - Process returns non-zero exit status.
  */
 
-
-#ifdef __GNUC__
-#include <stdlib.h>
-#endif
-
-#include "test.h"
+#include "pthread.h"
+#include "implement.h"
 
 /*
- * Create NUMTHREADS threads in addition to the Main thread.
+ *
  */
-enum {
-  NUMTHREADS = 1
-};
-
-
-void *
-threadFunc(void * arg)
+unsigned __int64
+pthread_getunique_np (pthread_t thread)
 {
-  return (void *) 0;
+  return ((ptw32_thread_t*)thread.p)->seqNumber;
 }
-
-int
-main(int argc, char * argv[])
-{
-  int i;
-  pthread_t mt;
-
-  if (argc <= 1)
-    {
-      int result;
-
-      printf("You should see an application memory write error message\n");
-      fflush(stdout);
-      result = system("create3.exe die");
-      exit(0);
-    }
-
-  assert((mt = pthread_self()).p != NULL);
-
-  for (i = 0; i < NUMTHREADS; i++)
-    {
-      assert(pthread_create(NULL, NULL, threadFunc, NULL) == 0);
-    }
-
-  /*
-   * Success.
-   */
-  return 0;
-}
-

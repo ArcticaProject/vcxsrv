@@ -1,3 +1,302 @@
+commit 42c16165df536f74d1177eae2b94f96b3ebbdfb2
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 23 09:28:57 2011 +1000
+
+    xproto 7.0.22
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 13799852a8b8116094a885809782604fa7507115
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 16 11:01:39 2011 +1000
+
+    Add two more symbols for logging grab and window trees
+    
+    These two keysyms provide exciting new possibilities of a close relationship
+    between our valued users and hard-working developers through innovative
+    logging solutions. Such keysyms truly pave new ground in the reponsiveness
+    to bug reports and and debug-ability of grabs.
+    
+    For unprecedented uses of these keysyms, see the patches here:
+    http://patchwork.freedesktop.org/patch/5936/
+    http://patchwork.freedesktop.org/patch/5935/
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 7c3c4332d63d9003f7115173b7ece6ab1297cc15
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Jun 12 17:54:50 2011 -0400
+
+    Install xml versions of specs even if HAVE_XMLTO is false
+    
+    DocBook/XML input source is also a usefull output format that can be viewed
+    with an XML viewer or editor and by some O/S help system.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit c10589c12f45bfb8c0134d0370cf5f36ac7262bf
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Jun 5 16:27:37 2011 -0400
+
+    Install target dbs alongside generated documents
+    
+    This matches a change in xorg-sgml-docs whereby the masterdb will look for
+    the target dbs into the same location as the generated documents.
+    
+    The target dbs are now installed alongside the generated documents.
+    Previously they are installed in $prefix/sgml/X11/dbs alongside masterdb which
+    has the potential of installing outside the package prefix and cause
+    distcheck to fail when user does not have write permission in this package.
+    
+    Requires XORG_CHECK_SGML_DOCTOOLS(1.8) which was released 2011-06-11
+
+commit 951295cceb72e929c55f639bbb91314fa276b2aa
+Author: Cyril Brulebois <kibi@debian.org>
+Date:   Sun Jun 5 09:26:33 2011 +0000
+
+    Fix sorting by codepoint in Latin 2.
+    
+    Sort performed by calling “sort -k 3” on the part between #ifdef
+    XK_LATIN8 and #endif.
+    
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Signed-off-by: Cyril Brulebois <kibi@debian.org>
+
+commit d8920f71b68fe3fabd4ba04e2a4308579a8fe333
+Author: Cyril Brulebois <kibi@debian.org>
+Date:   Fri Jun 3 14:27:45 2011 +0200
+
+    build: Add SIAddresses as a subdir of specs.
+    
+    Fix the following distcheck failure:
+    | configure: creating ./config.status
+    | config.status: creating Makefile
+    | config.status: creating specs/Makefile
+    | config.status: error: cannot find input file: `specs/SIAddresses/Makefile.in'
+    | make: *** [distcheck] Error 1
+    
+    Signed-off-by: Cyril Brulebois <kibi@debian.org>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 2ef6cb7ced5812975b3630cf201e75db439936e6
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 17:31:36 2011 -0700
+
+    spec: Add more indexterm & glossterm links
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 0ffb15d69844f1a653d51e29e0c6a1140cd52c3e
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 13:53:10 2011 -0700
+
+    spec: move id attributes for event definitions so fop can find them
+    
+    FOP gives 'Unresolved ID reference "events:FocusOut" found.' errors
+    when the id attribute is on the emphasis tag, so moved up to the
+    surrounding entry tag.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 41da11426e0ad420952fbd329527c2ae267e232b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 13:39:37 2011 -0700
+
+    spec: Add zone attributes to indexterm tags for more stable link ids
+    
+    Use named id's instead of autogenerating idXXXXXX values that change
+    in different versions so that it's easier to have stable links.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 58897af838482f52abc8a70fc1e1d39c89736bfb
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 11:04:17 2011 -0700
+
+    spec: move &gt; outside emphasis to match &lt; in note after error list
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 19b35215c9cff167c62dabecef89e3d5f8df2853
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 10:56:36 2011 -0700
+
+    spec: Syntactic Conventions examples should not be separate list entries
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit e6ad4dd8d054caf6cd63575167db468929532089
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 09:54:07 2011 -0700
+
+    spec: Add cross-reference links in glossary to InputOnly & InputOutput
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 2fc4719ba4f122ce5604d693442fa041114526ac
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 28 09:43:04 2011 -0700
+
+    spec: Markup VoidSymbol and NoSymbol with <keysym> instead of <emphasis>
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 9bbb6e3f835219110ec0f7bd72ba7fa92974bae8
+Author: Cyril Brulebois <kibi@debian.org>
+Date:   Tue May 24 13:08:27 2011 +0200
+
+    Sort Latin 8 keysyms by codepoints.
+    
+    The overall chaos misled implementors into writing interval checks to
+    determine the case, but that doesn't work too well when lines aren't
+    sorted.
+    
+    Sort performed by calling “sort -k 3” on the part between #ifdef
+    XK_LATIN8 and #endif.
+    
+    Signed-off-by: Cyril Brulebois <kibi@debian.org>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit b283f6cba77987b215556f80b6b2f1da45672d8b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Mon May 23 16:01:02 2011 -0700
+
+    Add comments to Xfuncproto.h noting required xproto versions for each macro
+    
+    Saves time trawling git logs to determine what to put in the call to
+    PKG_CHECK_MODULES in configure.ac when you start using one of these.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Acked-by: Cyril Brulebois <kibi@debian.org>
+
+commit 217d1dae0093ccaaac59a4fa42000e732492cb66
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Wed Apr 27 17:25:53 2011 -0700
+
+    Add _X_NONNULL macro to annotate when a function expects arguments to be non-null
+    
+    This will allow with compiler optimization and better static analysis.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 6648db8f910fb74c100cf24436bf0df12cba7fd7
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Wed Apr 27 17:25:40 2011 -0700
+
+    Add _X_UNUSED attribute to designate unused variables and silence warnings
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 19c12c60c22d5a23039bc90845a6ecacdd64f2db
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Wed Apr 20 22:57:05 2011 +0200
+
+    Fix __STDC_VERSION__ tests.
+    
+    the existing test:
+    defined(__STDC__) && (__STDC_VERSION__ - 0 >= 199901L) causes an
+    warning when building X stuff with gcc -Wundef. Other tests for
+     __STDC_VERSION__ in the X sources all use
+    defined(__STDC_VERSION__) && (__STDC_VERSION__ -0 >= 199901L)
+    
+    Signed-off-by: Matthieu Herrb <matthieu.herrb@laas.fr>
+    Reviewed-by: Matt Turner <mattst88@gmail.com>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit da46c2d0e11c1709b7dd6b2c79253ce8751c81bb
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Feb 27 15:06:18 2011 -0500
+
+    Documentation: add Docbook external references support
+    
+    When writing technical documentation, it is often necessary to cross
+    reference to other information. When that other information is not in the
+    current document, additional support is needed, namely <olink>.
+    
+    A new feature with version 1.7 of xorg-sgml-doctools adds references to
+    other documents within or outside this package.
+    
+    This patch adds technical support for this feature but does not change
+    the content of the documentation as seen by the end user.
+    
+    Each book or article must generate a database containing the href
+    of sections that can be referred to from another document. This database
+    is installed in DATAROOTDIR/sgml/X11/dbs. There is a requirement that
+    the value of DATAROOTDIR for xorg-sgml-doctools and for the package
+    documentation is the same. This forms a virtual document tree.
+    
+    This database is consulted by other documents while they are being generated
+    in order to fulfill the missing information for linking.
+    Refer to the xorg-sgml-doctools for further technical information.
+    
+    Co-authored-by: Matt Dew <marcoz@osource.org>
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 452ae1076b4ad8ccd60e218a3676baa274c083ff
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Mar 23 11:44:18 2011 +1000
+
+    xproto 7.0.21
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 423f5faddbb1023d0c1cf55b9d1da4397aa1aa26
+Author: Harshula Jayasuriya <harshula@gmail.com>
+Date:   Tue Mar 15 10:46:48 2011 +0000
+
+    Add #defines for Unicode Sinhala to keysymdef.h
+    
+    Add #defines for Unicode Sinhala so that they can be used in the lk XKB
+    keyboard layout.
+    
+    Signed-off-by: Harshula Jayasuriya <harshula@gmail.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit f0c5b701a5f8fe6be24229dea35c35b50afe8646
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Feb 24 20:13:20 2011 -0800
+
+    Support _X_INLINE in any C99-compliant compiler
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 6eed63f7455d718bf6238ca2f24515329b2a3895
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Jan 6 22:24:33 2011 -0800
+
+    Add missing notices to COPYING
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 1870ec9ce40e8852e1cdce473afa90d21d780e52
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Mon Dec 13 16:25:31 2010 -0800
+
+    Xfuncproto.h: Add _X_RESTRICT_KEYWORD for C99 & gcc in non-strict-C89 mode
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit e5604f04482350eb922a31ad4342aab91ab3b412
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Dec 9 16:04:52 2010 -0800
+
+    Enable gcc attribute(__format__) on gcc versions older than 4.0
+    
+    Enabled on 2.3 and up, since that's where it's available according to
+    http://www.ohse.de/uwe/articles/gcc-attributes.html#func-format
+    
+    Tested with gcc 3.4.3 on Solaris.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+
 commit d25f90fe260f546cdea0ec2ebc84df446eef5f47
 Author: Alan Coopersmith <alan.coopersmith@oracle.com>
 Date:   Tue Dec 7 19:05:26 2010 -0800

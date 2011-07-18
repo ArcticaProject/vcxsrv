@@ -60,6 +60,7 @@
 #include <X11/Xproto.h>
 #include <X11/X.h>
 #include <X11/extensions/XI2.h>
+#include <stdint.h>
 
 /* make sure types have right sizes for protocol structures. */
 #define Window  uint32_t
