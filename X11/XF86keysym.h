@@ -229,4 +229,5 @@
 #define XF86XK_ClearGrab	0x1008FE21   /* kill application with grab */
 #define XF86XK_Next_VMode	0x1008FE22   /* next video mode available  */
 #define XF86XK_Prev_VMode	0x1008FE23   /* prev. video mode available */
-
+#define XF86XK_LogWindowTree	0x1008FE24   /* print window tree to log   */
+#define XF86XK_LogGrabInfo	0x1008FE25   /* print all active grabs to log */
