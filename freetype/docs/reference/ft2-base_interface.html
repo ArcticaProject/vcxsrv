@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>FreeType-2.4.4 API Reference</title>
+<title>FreeType-2.4.5 API Reference</title>
 <style type="text/css">
   body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
          color: #000000;
@@ -35,7 +35,7 @@
 <table align=center><tr><td><font size=-1>[<a href="ft2-index.html">Index</a>]</font></td>
 <td width="100%"></td>
 <td><font size=-1>[<a href="ft2-toc.html">TOC</a>]</font></td></tr></table>
-<center><h1>FreeType-2.4.4 API Reference</h1></center>
+<center><h1>FreeType-2.4.5 API Reference</h1></center>
 
 <center><h1>
 Base Interface
@@ -382,10 +382,10 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 <p>Left side bearing for vertical layout.</p>
 </td></tr>
 <tr valign=top><td><b>vertBearingY</b></td><td>
-<p>Top side bearing for vertical layout.</p>
+<p>Top side bearing for vertical layout. Larger positive values mean further below the vertical glyph origin.</p>
 </td></tr>
 <tr valign=top><td><b>vertAdvance</b></td><td>
-<p>Advance height for vertical layout.</p>
+<p>Advance height for vertical layout. Positive values mean the glyph has a positive advance downward.</p>
 </td></tr>
 </table>
 </td></tr></table>
@@ -872,7 +872,7 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 </td></tr>
 <tr valign=top><td><b>FT_FACE_FLAG_TRICKY</b></td><td>
 <p>Set if the font is &lsquo;tricky&rsquo;, this is, it always needs the font format's native hinting engine to get a reasonable result. A typical example is the Chinese font &lsquo;mingli.ttf&rsquo; which uses TrueType bytecode instructions to move and scale all of its subglyphs.</p>
-<p>It is not possible to autohint such fonts using <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_FORCE_AUTOHINT</a>; it will also ignore <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_HINTING</a>. You have to set both FT_LOAD_NO_HINTING and <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_AUTOHINT</a> to really disable hinting; however, you probably never want this except for demonstration purposes.</p>
+<p>It is not possible to autohint such fonts using <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_FORCE_AUTOHINT</a>; it will also ignore <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_HINTING</a>. You have to set both <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_HINTING</a> and <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_AUTOHINT</a> to really disable hinting; however, you probably never want this except for demonstration purposes.</p>
 <p>Currently, there are six TrueType fonts in the list of tricky fonts; they are hard-coded in file &lsquo;ttobjs.c&rsquo;.</p>
 </td></tr>
 </table>
@@ -2517,8 +2517,7 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 </td></tr>
 <tr valign=top><td colspan=0><b>FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH</b></td></tr>
 <tr valign=top><td></td><td>
-<p>Indicates that the font driver should ignore the global advance width defined in the font. By default, that value is used as the advance width for all glyphs when the face has <a href="ft2-base_interface.html#FT_FACE_FLAG_XXX">FT_FACE_FLAG_FIXED_WIDTH</a> set.</p>
-<p>This flag exists for historical reasons (to support buggy CJK fonts).</p>
+<p>Ignored. Deprecated.</p>
 </td></tr>
 <tr valign=top><td><b>FT_LOAD_NO_RECURSE</b></td><td>
 <p>This flag is only used internally. It merely indicates that the font driver should not load composite glyphs recursively. Instead, it should set the &lsquo;num_subglyph&rsquo; and &lsquo;subglyphs&rsquo; values of the glyph slot accordingly, and set &lsquo;glyph-&gt;format&rsquo; to <a href="ft2-basic_types.html#FT_Glyph_Format">FT_GLYPH_FORMAT_COMPOSITE</a>.</p>
