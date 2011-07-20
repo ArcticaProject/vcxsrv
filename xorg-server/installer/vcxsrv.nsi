@@ -101,8 +101,6 @@ Section "VcXsrv (required)"
   File "msvcp100.dll"
   File "msvcr100d.dll"
 !endif
-  SetOutPath $INSTDIR\fonts
-  File /r "..\fonts\*.*"
   SetOutPath $INSTDIR\xkbdata
   File /r "..\xkbdata\*.*"
   SetOutPath $INSTDIR\locale
@@ -194,6 +192,16 @@ faildebugcrt:
   Goto end
 end:
 !endif
+SectionEnd
+
+; Optional section (can be disabled by the user)
+Section "Fonts"
+  SectionIn 1
+
+  SetOutPath $INSTDIR\fonts
+  CreateDirectory "$SMPROGRAMS\VcXsrv"
+  File /r "..\fonts\*.*"
+
 SectionEnd
 
 ; Optional section (can be disabled by the user)
