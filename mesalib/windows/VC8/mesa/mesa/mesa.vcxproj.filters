@@ -470,6 +470,9 @@
     <ClCompile Include="..\..\..\..\src\glsl\ir_function_can_inline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\glsl\ir_function_detect_recursion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\ir_rvalue_visitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

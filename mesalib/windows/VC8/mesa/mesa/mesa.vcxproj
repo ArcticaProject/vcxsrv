@@ -124,6 +124,7 @@
     <ClCompile Include="..\..\..\..\src\glsl\ir_expression_flattening.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_function.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_function_can_inline.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\ir_function_detect_recursion.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_hierarchical_visitor.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_hv_accept.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_import_prototypes.cpp" />
