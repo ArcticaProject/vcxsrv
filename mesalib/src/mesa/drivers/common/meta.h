@@ -43,6 +43,9 @@ extern void
 _mesa_meta_Clear(struct gl_context *ctx, GLbitfield buffers);
 
 extern void
+_mesa_meta_glsl_Clear(struct gl_context *ctx, GLbitfield buffers);
+
+extern void
 _mesa_meta_CopyPixels(struct gl_context *ctx, GLint srcx, GLint srcy,
                       GLsizei width, GLsizei height,
                       GLint dstx, GLint dsty, GLenum type);
@@ -67,16 +70,6 @@ _mesa_meta_check_generate_mipmap_fallback(struct gl_context *ctx, GLenum target,
 extern void
 _mesa_meta_GenerateMipmap(struct gl_context *ctx, GLenum target,
                           struct gl_texture_object *texObj);
-
-extern void
-_mesa_meta_CopyTexImage1D(struct gl_context *ctx, GLenum target, GLint level,
-                          GLenum internalFormat, GLint x, GLint y,
-                          GLsizei width, GLint border);
-
-extern void
-_mesa_meta_CopyTexImage2D(struct gl_context *ctx, GLenum target, GLint level,
-                          GLenum internalFormat, GLint x, GLint y,
-                          GLsizei width, GLsizei height, GLint border);
 
 extern void
 _mesa_meta_CopyTexSubImage1D(struct gl_context *ctx, GLenum target, GLint level,

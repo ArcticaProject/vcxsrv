@@ -62,6 +62,7 @@
 #include "main/teximage.h"
 #include "main/texparam.h"
 #include "main/texstate.h"
+#include "main/uniforms.h"
 #include "main/varray.h"
 #include "main/viewport.h"
 #include "program/program.h"
@@ -235,6 +236,8 @@ struct clear_state
 {
    GLuint ArrayObj;
    GLuint VBO;
+   GLuint ShaderProg;
+   GLint ColorLocation;
 };
 
 
@@ -1589,10 +1592,165 @@ _mesa_meta_Clear(struct gl_context *ctx, GLbitfield buffers)
    _mesa_meta_end(ctx);
 }
 
+static void
+meta_glsl_clear_init(struct gl_context *ctx, struct clear_state *clear)
+{
+   const char *vs_source =
+      "attribute vec4 position;\n"
+      "void main()\n"
+      "{\n"
+      "   gl_Position = position;\n"
+      "}\n";
+   const char *fs_source =
+      "uniform vec4 color;\n"
+      "void main()\n"
+      "{\n"
+      "   gl_FragColor = color;\n"
+      "}\n";
+   GLuint vs, fs;
+
+   if (clear->ArrayObj != 0)
+      return;
+
+   /* create vertex array object */
+   _mesa_GenVertexArrays(1, &clear->ArrayObj);
+   _mesa_BindVertexArray(clear->ArrayObj);
+
+   /* create vertex array buffer */
+   _mesa_GenBuffersARB(1, &clear->VBO);
+   _mesa_BindBufferARB(GL_ARRAY_BUFFER_ARB, clear->VBO);
+
+   /* setup vertex arrays */
+   _mesa_VertexAttribPointerARB(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+   _mesa_EnableVertexAttribArrayARB(0);
+
+   vs = _mesa_CreateShaderObjectARB(GL_VERTEX_SHADER);
+   _mesa_ShaderSourceARB(vs, 1, &vs_source, NULL);
+   _mesa_CompileShaderARB(vs);
+
+   fs = _mesa_CreateShaderObjectARB(GL_FRAGMENT_SHADER);
+   _mesa_ShaderSourceARB(fs, 1, &fs_source, NULL);
+   _mesa_CompileShaderARB(fs);
+
+   clear->ShaderProg = _mesa_CreateProgramObjectARB();
+   _mesa_AttachShader(clear->ShaderProg, fs);
+   _mesa_AttachShader(clear->ShaderProg, vs);
+   _mesa_BindAttribLocationARB(clear->ShaderProg, 0, "position");
+   _mesa_LinkProgramARB(clear->ShaderProg);
+
+   clear->ColorLocation = _mesa_GetUniformLocationARB(clear->ShaderProg,
+						      "color");
+}
+
+/**
+ * Meta implementation of ctx->Driver.Clear() in terms of polygon rendering.
+ */
+void
+_mesa_meta_glsl_Clear(struct gl_context *ctx, GLbitfield buffers)
+{
+   struct clear_state *clear = &ctx->Meta->Clear;
+   GLbitfield metaSave;
+   const GLuint stencilMax = (1 << ctx->DrawBuffer->Visual.stencilBits) - 1;
+   struct gl_framebuffer *fb = ctx->DrawBuffer;
+   const float x0 = ((float)fb->_Xmin / fb->Width)  * 2.0f - 1.0f;
+   const float y0 = ((float)fb->_Ymin / fb->Height) * 2.0f - 1.0f;
+   const float x1 = ((float)fb->_Xmax / fb->Width)  * 2.0f - 1.0f;
+   const float y1 = ((float)fb->_Ymax / fb->Height) * 2.0f - 1.0f;
+   const float z = -invert_z(ctx->Depth.Clear);
+   struct vertex {
+      GLfloat x, y, z;
+   } verts[4];
+
+   metaSave = (META_ALPHA_TEST |
+	       META_BLEND |
+	       META_DEPTH_TEST |
+	       META_RASTERIZATION |
+	       META_SHADER |
+	       META_STENCIL_TEST |
+	       META_VERTEX |
+	       META_VIEWPORT |
+	       META_CLAMP_FRAGMENT_COLOR);
+
+   if (!(buffers & BUFFER_BITS_COLOR)) {
+      /* We'll use colormask to disable color writes.  Otherwise,
+       * respect color mask
+       */
+      metaSave |= META_COLOR_MASK;
+   }
+
+   _mesa_meta_begin(ctx, metaSave);
+
+   meta_glsl_clear_init(ctx, clear);
+
+   _mesa_UseProgramObjectARB(clear->ShaderProg);
+   _mesa_Uniform4fvARB(clear->ColorLocation, 1,
+		       ctx->Color.ClearColorUnclamped);
+
+   _mesa_BindVertexArray(clear->ArrayObj);
+   _mesa_BindBufferARB(GL_ARRAY_BUFFER_ARB, clear->VBO);
+
+   /* GL_COLOR_BUFFER_BIT */
+   if (buffers & BUFFER_BITS_COLOR) {
+      /* leave colormask, glDrawBuffer state as-is */
+
+      /* Clears never have the color clamped. */
+      _mesa_ClampColorARB(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+   }
+   else {
+      ASSERT(metaSave & META_COLOR_MASK);
+      _mesa_ColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+   }
+
+   /* GL_DEPTH_BUFFER_BIT */
+   if (buffers & BUFFER_BIT_DEPTH) {
+      _mesa_set_enable(ctx, GL_DEPTH_TEST, GL_TRUE);
+      _mesa_DepthFunc(GL_ALWAYS);
+      _mesa_DepthMask(GL_TRUE);
+   }
+   else {
+      assert(!ctx->Depth.Test);
+   }
+
+   /* GL_STENCIL_BUFFER_BIT */
+   if (buffers & BUFFER_BIT_STENCIL) {
+      _mesa_set_enable(ctx, GL_STENCIL_TEST, GL_TRUE);
+      _mesa_StencilOpSeparate(GL_FRONT_AND_BACK,
+                              GL_REPLACE, GL_REPLACE, GL_REPLACE);
+      _mesa_StencilFuncSeparate(GL_FRONT_AND_BACK, GL_ALWAYS,
+                                ctx->Stencil.Clear & stencilMax,
+                                ctx->Stencil.WriteMask[0]);
+   }
+   else {
+      assert(!ctx->Stencil.Enabled);
+   }
+
+   /* vertex positions */
+   verts[0].x = x0;
+   verts[0].y = y0;
+   verts[0].z = z;
+   verts[1].x = x1;
+   verts[1].y = y0;
+   verts[1].z = z;
+   verts[2].x = x1;
+   verts[2].y = y1;
+   verts[2].z = z;
+   verts[3].x = x0;
+   verts[3].y = y1;
+   verts[3].z = z;
+
+   /* upload new vertex data */
+   _mesa_BufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(verts), verts,
+		       GL_DYNAMIC_DRAW_ARB);
+
+   /* draw quad */
+   _mesa_DrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+   _mesa_meta_end(ctx);
+}
 
 /**
  * Meta implementation of ctx->Driver.CopyPixels() in terms
- * of texture mapping and polygon rendering.
+ * of texture mapping and polygon rendering and GLSL shaders.
  */
 void
 _mesa_meta_CopyPixels(struct gl_context *ctx, GLint srcX, GLint srcY,
@@ -2675,119 +2833,6 @@ get_temp_image_type(struct gl_context *ctx, GLenum baseFormat)
       return 0;
    }
 }
-
-
-/**
- * Helper for _mesa_meta_CopyTexImage1/2D() functions.
- * Have to be careful with locking and meta state for pixel transfer.
- */
-static void
-copy_tex_image(struct gl_context *ctx, GLuint dims, GLenum target, GLint level,
-               GLenum internalFormat, GLint x, GLint y,
-               GLsizei width, GLsizei height, GLint border)
-{
-   struct gl_texture_object *texObj;
-   struct gl_texture_image *texImage;
-   GLenum format, type;
-   GLint bpp;
-   void *buf;
-   struct gl_renderbuffer *read_rb = ctx->ReadBuffer->_ColorReadBuffer;
-
-   texObj = _mesa_get_current_tex_object(ctx, target);
-   texImage = _mesa_get_tex_image(ctx, texObj, target, level);
-
-   /* Choose format/type for temporary image buffer */
-   format = _mesa_base_tex_format(ctx, internalFormat);
-
-   if (format == GL_LUMINANCE &&
-       _mesa_get_format_base_format(read_rb->Format) != GL_LUMINANCE) {
-      /* The glReadPixels() path will convert RGB to luminance by
-       * summing R+G+B.  glCopyTexImage() is supposed to behave as
-       * glCopyPixels, which doesn't do that change, and instead
-       * leaves it up to glTexImage which converts RGB to luminance by
-       * just taking the R channel.  To avoid glReadPixels() trashing
-       * our data, use RGBA for our temporary image.
-       */
-      format = GL_RGBA;
-   }
-
-   type = get_temp_image_type(ctx, format);
-   bpp = _mesa_bytes_per_pixel(format, type);
-   if (bpp <= 0) {
-      _mesa_problem(ctx, "Bad bpp in meta copy_tex_image()");
-      return;
-   }
-
-   /*
-    * Alloc image buffer (XXX could use a PBO)
-    */
-   buf = malloc(width * height * bpp);
-   if (!buf) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCopyTexImage%uD", dims);
-      return;
-   }
-
-   _mesa_unlock_texture(ctx, texObj); /* need to unlock first */
-
-   /*
-    * Read image from framebuffer (disable pixel transfer ops)
-    */
-   _mesa_meta_begin(ctx, META_PIXEL_STORE | META_PIXEL_TRANSFER);
-   ctx->Driver.ReadPixels(ctx, x, y, width, height,
-			  format, type, &ctx->Pack, buf);
-   _mesa_meta_end(ctx);
-
-   if (texImage->Data) {
-      ctx->Driver.FreeTexImageData(ctx, texImage);
-   }
-
-   /* The texture's format was already chosen in _mesa_CopyTexImage() */
-   ASSERT(texImage->TexFormat != MESA_FORMAT_NONE);
-
-   /*
-    * Store texture data (with pixel transfer ops)
-    */
-   _mesa_meta_begin(ctx, META_PIXEL_STORE);
-
-   _mesa_update_state(ctx); /* to update pixel transfer state */
-
-   if (target == GL_TEXTURE_1D) {
-      ctx->Driver.TexImage1D(ctx, target, level, internalFormat,
-                             width, border, format, type,
-                             buf, &ctx->Unpack, texObj, texImage);
-   }
-   else {
-      ctx->Driver.TexImage2D(ctx, target, level, internalFormat,
-                             width, height, border, format, type,
-                             buf, &ctx->Unpack, texObj, texImage);
-   }
-   _mesa_meta_end(ctx);
-
-   _mesa_lock_texture(ctx, texObj); /* re-lock */
-
-   free(buf);
-}
-
-
-void
-_mesa_meta_CopyTexImage1D(struct gl_context *ctx, GLenum target, GLint level,
-                          GLenum internalFormat, GLint x, GLint y,
-                          GLsizei width, GLint border)
-{
-   copy_tex_image(ctx, 1, target, level, internalFormat, x, y,
-                  width, 1, border);
-}
-
-
-void
-_mesa_meta_CopyTexImage2D(struct gl_context *ctx, GLenum target, GLint level,
-                          GLenum internalFormat, GLint x, GLint y,
-                          GLsizei width, GLsizei height, GLint border)
-{
-   copy_tex_image(ctx, 2, target, level, internalFormat, x, y,
-                  width, height, border);
-}
-
 
 
 /**
