@@ -104,6 +104,9 @@ void X11ApplicationMain(int argc, char **argv, char **envp);
 #define PREFS_FFM                   "wm_ffm"
 #define PREFS_FOCUS_ON_NEW_WINDOW   "wm_focus_on_new_window"
 
+#define PREFS_SCROLL_IN_DEV_DIRECTION "scroll_in_device_direction"
+extern Bool XQuartzScrollInDeviceDirection;
+
 #define PREFS_SYNC_PB                "sync_pasteboard"
 #define PREFS_SYNC_PB_TO_CLIPBOARD   "sync_pasteboard_to_clipboard"
 #define PREFS_SYNC_PB_TO_PRIMARY     "sync_pasteboard_to_primary"

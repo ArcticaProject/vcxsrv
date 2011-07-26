@@ -612,6 +612,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     XQuartzRootlessDefault = ![enable_fullscreen intValue];
 
     [enable_fullscreen_menu setEnabled:!XQuartzRootlessDefault];
+    [enable_fullscreen_menu_text setTextColor:XQuartzRootlessDefault ? [NSColor disabledControlTextColor] : [NSColor controlTextColor]];
 
     DarwinSendDDXEvent(kXquartzSetRootless, 1, XQuartzRootlessDefault);
 
@@ -686,6 +687,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
         [NSApp prefs_set_boolean:@PREFS_SYNC_CLIPBOARD_TO_PB value:[sync_clipboard_to_pasteboard intValue]];
     } else if(sender == sync_primary_immediately) {
         [NSApp prefs_set_boolean:@PREFS_SYNC_PRIMARY_ON_SELECT value:[sync_primary_immediately intValue]];
+    } else if(sender == scroll_in_device_direction) {
+        XQuartzScrollInDeviceDirection = [scroll_in_device_direction intValue];
+        [NSApp prefs_set_boolean:@PREFS_SCROLL_IN_DEV_DIRECTION value:XQuartzScrollInDeviceDirection];
     }
 
     [NSApp prefs_synchronize];
@@ -696,6 +700,15 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 - (IBAction) prefs_show:sender
 {
     BOOL pbproxy_active = [NSApp prefs_get_boolean:@PREFS_SYNC_PB default:YES];
+
+    // Remove preferences from the GUI which are not supported
+    // TODO: Change 1117 to NSAppKitVersionNumber10_7 when it is defined
+    if(scroll_in_device_direction && NSAppKitVersionNumber < 1117) {
+        [scroll_in_device_direction removeFromSuperview];
+        scroll_in_device_direction = nil;
+    } else {
+        [scroll_in_device_direction setIntValue:XQuartzScrollInDeviceDirection];
+    }
     
     [fake_buttons setIntValue:darwinFakeButtons];
     [enable_keyequivs setIntValue:XQuartzEnableKeyEquivalents];
@@ -726,9 +739,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     [sync_text2 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
 	
     [enable_fullscreen setIntValue:!XQuartzRootlessDefault];
-    [enable_fullscreen_menu setEnabled:!XQuartzRootlessDefault];
     [enable_fullscreen_menu setIntValue:XQuartzFullscreenMenu];
-    
+    [enable_fullscreen_menu setEnabled:!XQuartzRootlessDefault];
+    [enable_fullscreen_menu_text setTextColor:XQuartzRootlessDefault ? [NSColor disabledControlTextColor] : [NSColor controlTextColor]];
+
     [prefs_panel makeKeyAndOrderFront:sender];
 }
 

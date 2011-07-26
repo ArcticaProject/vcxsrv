@@ -763,6 +763,7 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
 
 /* Trivial versions that are useful in macros */
 #define CONVERT_8888_TO_8888(s) (s)
+#define CONVERT_x888_TO_8888(s) ((s) | 0xff000000)
 #define CONVERT_0565_TO_0565(s) (s)
 
 #define PIXMAN_FORMAT_IS_WIDE(f)					\
