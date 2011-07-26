@@ -90,6 +90,7 @@ void DDXRingBell(int volume, int pitch, int duration)
 void
 InitInput (int argc, char *argv[])
 {
+  int rc;
   winDebug ("InitInput\n");
 
 #ifdef XWIN_CLIPBOARD
@@ -103,10 +104,15 @@ InitInput (int argc, char *argv[])
     }
 #endif
 
-  g_pwinPointer = AddInputDevice (serverClient, winMouseProc, TRUE);
-  g_pwinKeyboard = AddInputDevice (serverClient, winKeybdProc, TRUE);
-  g_pwinPointer->name = strdup("Windows mouse");
-  g_pwinKeyboard->name = strdup("Windows keyboard");
+  rc = AllocDevicePair(serverClient, "Windows",
+                       &g_pwinPointer,
+                       &g_pwinKeyboard,
+                       winMouseProc,
+                       winKeybdProc,
+                       FALSE);
+
+  if (rc != Success)
+      FatalError("Failed to init vcxsrv default devices.\n");
 
   mieqInit ();
 
