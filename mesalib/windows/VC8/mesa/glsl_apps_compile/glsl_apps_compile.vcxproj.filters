@@ -210,6 +210,9 @@
     <ClCompile Include="..\..\..\..\src\glsl\opt_tree_grafting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\glsl\standalone_scaffolding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\opt_noop_swizzle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
