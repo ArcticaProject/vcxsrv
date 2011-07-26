@@ -88,6 +88,15 @@ typedef struct __GLXAquaScreen   __GLXAquaScreen;
 typedef struct __GLXAquaContext  __GLXAquaContext;
 typedef struct __GLXAquaDrawable __GLXAquaDrawable;
 
+/*
+ * The following structs must keep the base as the first member.
+ * It's used to treat the start of the struct as a different struct
+ * in GLX.  
+ *
+ * Note: these structs should be initialized with xcalloc or memset 
+ * prior to usage, and some of them require initializing
+ * the base with function pointers.
+ */
 struct __GLXAquaScreen {
     __GLXscreen base;
     int index;
@@ -196,7 +205,11 @@ static int __glXAquaContextLoseCurrent(__GLXcontext *baseContext) {
     if (gl_err != 0)
       ErrorF("CGLSetCurrentContext error: %s\n", CGLErrorString(gl_err));
 
-    __glXLastContext = NULL; // Mesa does this; why?
+    /* 
+     * There should be no need to set __glXLastContext to NULL here, because
+     * glxcmds.c does it as part of the context cache flush after calling 
+     * this.
+     */
 
     return GL_TRUE;
 }

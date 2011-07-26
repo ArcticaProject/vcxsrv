@@ -79,6 +79,11 @@ static TISInputSourceRef last_key_layout;
 static KeyboardLayoutRef last_key_layout;
 #endif
 
+/* This preference is only tested on Lion or later as it's not relevant to
+ * earlier OS versions.
+ */
+Bool XQuartzScrollInDeviceDirection = FALSE;
+
 extern int darwinFakeButtons;
 
 /* Store the mouse location while in the background, and update X11's pointer
@@ -787,6 +792,9 @@ static NSMutableArray * cfarray_to_nsarray (CFArrayRef in) {
     
     noTestExtensions = ![self prefs_get_boolean:@PREFS_TEST_EXTENSIONS
                                         default:FALSE];
+    
+    XQuartzScrollInDeviceDirection = [self prefs_get_boolean:@PREFS_SCROLL_IN_DEV_DIRECTION
+                                                     default:XQuartzScrollInDeviceDirection];
 
 #if XQUARTZ_SPARKLE
     NSURL *url =  [self prefs_copy_url:@PREFS_UPDATE_FEED default:nil];
@@ -1003,6 +1011,11 @@ void X11ApplicationMain (int argc, char **argv, char **envp) {
     init_ports ();
     
     app_prefs_domain_cfstr = (CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
+
+    if (app_prefs_domain_cfstr == NULL) {
+        ErrorF("X11ApplicationMain: Unable to determine bundle identifier.  Your installation of XQuartz may be broken.\n");
+        app_prefs_domain_cfstr = @BUNDLE_ID_PREFIX".X11";
+    }
 
     [NSApp read_defaults];
     [NSBundle loadNibNamed:@"main" owner:NSApp];
@@ -1334,20 +1347,30 @@ static const char *untrusted_str(NSEvent *e) {
             break;
             
 		case NSScrollWheel:
+            {
+                float deltaX = [e deltaX];
+                float deltaY = [e deltaY];
 #if !defined(XPLUGIN_VERSION) || XPLUGIN_VERSION == 0
-            /* If we're in the background, we need to send a MotionNotify event
-             * first, since we aren't getting them on background mouse motion
-             */
-            if(!XQuartzServerVisible && noTestExtensions) {
-                bgMouseLocationUpdated = FALSE;
-                DarwinSendPointerEvents(darwinPointer, MotionNotify, 0, location.x,
-                                        location.y, pressure, tilt.x, tilt.y);
-            }
+                /* If we're in the background, we need to send a MotionNotify event
+                * first, since we aren't getting them on background mouse motion
+                */
+                if(!XQuartzServerVisible && noTestExtensions) {
+                    bgMouseLocationUpdated = FALSE;
+                    DarwinSendPointerEvents(darwinPointer, MotionNotify, 0, location.x,
+                                            location.y, pressure, tilt.x, tilt.y);
+                }
 #endif
-			DarwinSendScrollEvents([e deltaX], [e deltaY], location.x, location.y,
-                                   pressure, tilt.x, tilt.y);
-            break;
-            
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+                // TODO: Change 1117 to NSAppKitVersionNumber10_7 when it is defined
+                if(NSAppKitVersionNumber >= 1117 && XQuartzScrollInDeviceDirection && [e isDirectionInvertedFromDevice]) {
+                    deltaX *= -1;
+                    deltaY *= -1;
+                }
+#endif
+                DarwinSendScrollEvents(deltaX, deltaY, location.x, location.y,
+                                       pressure, tilt.x, tilt.y);
+                break;
+            }
         case NSKeyDown: case NSKeyUp:
             {
                 /* XKB clobbers our keymap at startup, so we need to force it on the first keypress.

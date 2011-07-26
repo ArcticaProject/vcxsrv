@@ -2061,7 +2061,7 @@ chapter:
   </thead>
   <tbody>
     <row>
-      <entry><errorname>BadAccess</errorname></entry>
+      <entry><errorname id='BadAccess'>BadAccess</errorname></entry>
       <entry>A client attempts to grab a key/button combination already grabbed
       by another client.</entry>
     </row>
@@ -2085,7 +2085,7 @@ chapter:
       has already selected.</entry>
     </row>
     <row>
-      <entry><errorname>BadAlloc</errorname></entry>
+      <entry><errorname id='BadAlloc'>BadAlloc</errorname></entry>
       <entry>The server fails to allocate the requested resource.
       Note that the explicit listing of
       <errorname>BadAlloc</errorname>
@@ -2100,42 +2100,42 @@ chapter:
       them.</entry>
     </row>
     <row>
-      <entry><errorname>BadAtom</errorname></entry>
+      <entry><errorname id='BadAtom'>BadAtom</errorname></entry>
       <entry>A value for an atom argument does not name a defined atom.</entry>
     </row>
     <row>
-      <entry><errorname>BadColor</errorname></entry>
+      <entry><errorname id='BadColor'>BadColor</errorname></entry>
       <entry>A value for a colormap argument does not name a defined colormap.</entry>
     </row>
     <row>
-      <entry><errorname>BadCursor</errorname></entry>
+      <entry><errorname id='BadCursor'>BadCursor</errorname></entry>
       <entry>A value for a cursor argument does not name a defined cursor.</entry>
     </row>
     <row>
-      <entry><errorname>BadDrawable</errorname></entry>
+      <entry><errorname id='BadDrawable'>BadDrawable</errorname></entry>
       <entry>A value for a drawable argument does not name a defined window or pixmap.</entry>
     </row>
     <row>
-      <entry><errorname>BadFont</errorname></entry>
+      <entry><errorname id='BadFont'>BadFont</errorname></entry>
       <entry>A value for a font argument does not name a defined font (or, in some cases,
       <type>GContext</type>).</entry>
     </row>
     <row>
-      <entry><errorname>BadGC</errorname></entry>
+      <entry><errorname id='BadGC'>BadGC</errorname></entry>
       <entry>A value for a
       <type>GContext</type>
       argument does not name a defined 
       <type>GContext</type>.</entry>
     </row>
     <row>
-      <entry><errorname>BadIDChoice</errorname></entry>
+      <entry><errorname id='BadIDChoice'>BadIDChoice</errorname></entry>
       <entry>The value chosen for a resource identifier either is not included in the
       range assigned to the client or is already in use.
       Under normal circumstances,
       this cannot occur and should be considered a server or Xlib error.</entry>
     </row>
     <row>
-      <entry><errorname>BadImplementation</errorname></entry>
+      <entry><errorname id='BadImplementation'>BadImplementation</errorname></entry>
       <entry>The server does not implement some aspect of the request.
       A server that generates this error for a core request is deficient.
       As such, this error is not listed for any of the requests,
@@ -2143,7 +2143,7 @@ chapter:
       and handle or discard them.</entry>
     </row>
     <row>
-      <entry><errorname>BadLength</errorname></entry>
+      <entry><errorname id='BadLength'>BadLength</errorname></entry>
       <entry>The length of a request is shorter or longer than that required to
       contain the arguments.
       This is an internal Xlib or server error.</entry>
@@ -2154,7 +2154,7 @@ chapter:
       The length of a request exceeds the maximum length accepted by the server.</entry>
     </row>
     <row>
-      <entry><errorname>BadMatch</errorname></entry>
+      <entry><errorname id='BadMatch'>BadMatch</errorname></entry>
       <entry>In a graphics request,
       the root and depth of the graphics context do not match those of the drawable.</entry>
     </row>
@@ -2174,20 +2174,20 @@ chapter:
       window lacks this attribute.</entry>
     </row>
     <row>
-      <entry><errorname>BadName</errorname></entry>
+      <entry><errorname id='BadName'>BadName</errorname></entry>
       <entry>A font or color of the specified name does not exist.</entry>
     </row>
     <row>
-      <entry><errorname>BadPixmap</errorname></entry>
+      <entry><errorname id='BadPixmap'>BadPixmap</errorname></entry>
       <entry>A value for a pixmap argument does not name a defined pixmap.</entry>
     </row>
     <row>
-      <entry><errorname>BadRequest</errorname></entry>
+      <entry><errorname id='BadRequest'>BadRequest</errorname></entry>
       <entry>The major or minor opcode does not specify a valid request.
       This usually is an Xlib or server error.</entry>
     </row>
     <row>
-      <entry><errorname>BadValue</errorname></entry>
+      <entry><errorname id='BadValue'>BadValue</errorname></entry>
       <entry>Some numeric value falls outside of the range of values accepted
       by the request.
       Unless a specific range is specified for an argument,
@@ -2196,7 +2196,7 @@ chapter:
       this error (due to the encoding).</entry>
     </row>
     <row>
-      <entry><errorname>BadWindow</errorname></entry>
+      <entry><errorname id='BadWindow'>BadWindow</errorname></entry>
       <entry>A value for a window argument does not name a defined window.</entry>
     </row>
   </tbody>

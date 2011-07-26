@@ -157,6 +157,7 @@ pad_repeat_get_scanline_bounds (int32_t         source_image_width,
  /* This is not actually used since we don't have an OVER with
     565 source, but it is needed to build. */
 #define GET_0565_ALPHA(s) 0xff
+#define GET_x888_ALPHA(s) 0xff
 
 #define FAST_NEAREST_SCANLINE(scanline_func_name, SRC_FORMAT, DST_FORMAT,			\
 			      src_type_t, dst_type_t, OP, repeat_mode)				\

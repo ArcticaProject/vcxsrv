@@ -30,6 +30,7 @@ xkb_symbols "basic" {
     key <AB01>	{ [         z,          Z,       zcaron,       Zcaron ]	};
     key <AB08>	{ [     comma,  semicolon,         less,     multiply ]	};
     key <AB09>	{ [    period,      colon,      greater,     division ]	};
+    key <AB10>	{ [     minus, underscore,          bar,     abovedot ] };
 
     include "level3(ralt_switch)"
     include "eurosign(e)"

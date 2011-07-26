@@ -94,8 +94,10 @@ window manager.
 
 <para>
 Each window (even with no shapes specified) is defined by two regions:  the
-<emphasis remap='I'>bounding region</emphasis> and the
-<emphasis remap='I'>clip region</emphasis>.  The bounding region is the
+<olink targetdoc='shapelib' targetptr='bounding_region'>bounding region</olink>
+and the
+<olink targetdoc='shapelib' targetptr='clip_region'>clip region</olink>.
+The bounding region is the
 area of the parent window that the window will occupy (including border).
 The clip region is the subset of the bounding region that is available for
 subwindows and graphics.  The area between the bounding region and the
@@ -107,8 +109,10 @@ A nonshaped window will have a bounding region that is a rectangle spanning
 the window, including its border; the clip region will be a rectangle
 filling the inside dimensions (not including the border).  In this document,
 these areas are referred to as the
-<emphasis remap='I'>default bounding region</emphasis> and the
-<emphasis remap='I'>default clip region</emphasis>.  For a window with
+<olink targetdoc='shapelib' targetptr='default_bounding_region'>
+default bounding region</olink> and the
+<olink targetdoc='shapelib' targetptr='default_clip_region'>
+default clip region</olink>.  For a window with
 inside size of <emphasis remap='I'>width</emphasis> by
 <emphasis remap='I'>height</emphasis> and border width
 <emphasis remap='I'>bwidth</emphasis>, the default bounding and clip
@@ -131,8 +135,10 @@ clip.height = <emphasis remap='I'>height</emphasis>
 This extension allows a client to modify either or both of the bounding or
 clip regions by specifying new regions that combine with the default
 regions.  These new regions are called the
-<emphasis remap='I'>client bounding region</emphasis> and the
-<emphasis remap='I'>client clip region</emphasis>.  They are specified
+<olink targetdoc='shapelib' targetptr='client_bounding_region'>
+client bounding region</olink> and the
+<olink targetdoc='shapelib' targetptr='client_clip_region'>
+client clip region</olink>.  They are specified
 relative to the origin of the window and are always defined by offsets
 relative to the window origin (that is, region adjustments are not
 required when the window is moved).  Three mechanisms for specifying
@@ -149,7 +155,8 @@ default region is used instead.
 </para>
 
 <para>
-The <emphasis remap='I'>effective bounding region</emphasis> of a window is
+The <olink targetdoc='shapelib' targetptr='effective_bounding_region'>
+effective bounding region</olink> of a window is
 defined to be the intersection of the client bounding region with the default
 bounding region.  Any portion of the client bounding region that is not
 included in the default bounding region will not be included in the
@@ -167,7 +174,8 @@ be enlarged to include more of the client bounding region.
 </para>
 
 <para>
-The <emphasis remap='I'>effective clip region</emphasis> of a window is
+The <olink targetdoc='shapelib' targetptr='effective_clip_region'>
+effective clip region</olink> of a window is
 defined to be the intersection of the client clip region with both the
 default clip region and the client bounding region.  Any portion of the
 client clip region that is not included in both the default clip region
@@ -214,11 +222,12 @@ as for events that occur in a normal rectangular border.
 </para>
 
 <para>An
-<function>InputOnly</function>
+<olink targetdoc='libX11' targetptr='glossary:InputOnly_window'>
+InputOnly</olink>
 window can have its bounding region set, but it is a
-<function>Match</function>
+<olink targetdoc='libX11' targetptr='BadMatch'>Match</olink>
 error to attempt to set a clip region on an
-<function>InputOnly</function>
+<olink targetdoc='libX11' targetptr='glossary:InputOnly_window'>InputOnly</olink>
 window or to specify its clip region as a source to a request
 in this extension.
 </para>

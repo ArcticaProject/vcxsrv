@@ -134,7 +134,7 @@ src_reg::src_reg(dst_reg reg)
    this->index = reg.index;
    this->swizzle = SWIZZLE_XYZW;
    this->negate = 0;
-   this->reladdr = NULL;
+   this->reladdr = reg.reladdr;
 }
 
 dst_reg::dst_reg(src_reg reg)
@@ -1415,9 +1415,9 @@ ir_to_mesa_visitor::visit(ir_dereference_variable *ir)
       case ir_var_in:
       case ir_var_inout:
 	 /* The linker assigns locations for varyings and attributes,
-	  * including deprecated builtins (like gl_Color), user-assign
-	  * generic attributes (glBindVertexLocation), and
-	  * user-defined varyings.
+	  * including deprecated builtins (like gl_Color),
+	  * user-assigned generic attributes (glBindVertexLocation),
+	  * and user-defined varyings.
 	  *
 	  * FINISHME: We would hit this path for function arguments.  Fix!
 	  */
@@ -1494,6 +1494,18 @@ ir_to_mesa_visitor::visit(ir_dereference_array *ir)
 
 	 emit(ir, OPCODE_MUL, dst_reg(index_reg),
 	      this->result, src_reg_for_float(element_size));
+      }
+
+      /* If there was already a relative address register involved, add the
+       * new and the old together to get the new offset.
+       */
+      if (src.reladdr != NULL)  {
+	 src_reg accum_reg = get_temp(glsl_type::float_type);
+
+	 emit(ir, OPCODE_ADD, dst_reg(accum_reg),
+	      index_reg, *src.reladdr);
+
+	 index_reg = accum_reg;
       }
 
       src.reladdr = ralloc(mem_ctx, src_reg);

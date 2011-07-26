@@ -371,7 +371,7 @@ Bool DarwinEQInit(void) {
     return TRUE;
 }
 
-Bool DarwinEQFini(void) {
+void DarwinEQFini(void) {
     mieqFini();
 }
 
