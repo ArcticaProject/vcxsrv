@@ -555,15 +555,20 @@ winCreateWindowsWindow (WindowPtr pWin)
   if (hIcon) SendMessage (hWnd, WM_SETICON, ICON_BIG, (LPARAM) hIcon);
   if (hIconSmall) SendMessage (hWnd, WM_SETICON, ICON_SMALL, (LPARAM) hIconSmall);
  
+  /* If we asked the native WM to place the window, synchronize the X window position.
+     Do this before the next SetWindowPos because this one is generating a WM_STYLECHANGED
+     message which is causing a window move, which is wrong if the Xwindow does not
+     have the correct coordinates yet */
+  if (iX == CW_USEDEFAULT)
+  {
+    winAdjustXWindow(pWin, hWnd);
+  }
+ 
   /* Change style back to popup, already placed... */
   SetWindowLongPtr(hWnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
   SetWindowPos (hWnd, 0, 0, 0, 0, 0,
 		SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
   
-  /* If we asked the native WM to place the window, synchronize the X window position */
-  if (iX == CW_USEDEFAULT)
-    winAdjustXWindow(pWin, hWnd);
-
   /* Make sure it gets the proper system menu for a WS_POPUP, too */
   GetSystemMenu (hWnd, TRUE);
 
