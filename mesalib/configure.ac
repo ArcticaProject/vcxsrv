@@ -951,7 +951,7 @@ xyesyes)
         GL_PC_LIB_PRIV="$GL_LIB_DEPS"
         GL_PC_CFLAGS="$X11_INCLUDES"
     fi
-    GL_LIB_DEPS="$GL_LIB_DEPS $SELINUX_LIBS -lm -lpthread"
+    GL_LIB_DEPS="$GL_LIB_DEPS $SELINUX_LIBS -lm -lpthread $DLOPEN_LIBS"
     GL_PC_LIB_PRIV="$GL_PC_LIB_PRIV $SELINUX_LIBS -lm -lpthread"
 
     # if static, move the external libraries to the programs
@@ -1936,11 +1936,12 @@ if test "x$with_gallium_drivers" != x; then
             gallium_check_st "nouveau/drm" "dri-nouveau" "xorg-nouveau" "" "xvmc-nouveau"
             ;;
         xswrast)
+            GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS softpipe"
+            if test "x$MESA_LLVM" = x1; then
+                GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS llvmpipe"
+            fi
+
             if test "x$HAVE_ST_DRI" = xyes; then
-                GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS softpipe"
-                if test "x$MESA_LLVM" = x1; then
-                    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS llvmpipe"
-                fi
                 GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS dri-swrast"
             fi
             if test "x$HAVE_ST_VDPAU" = xyes; then
@@ -1957,9 +1958,6 @@ if test "x$with_gallium_drivers" != x; then
                test "x$HAVE_ST_VA" == xyes; then
                if test "x$HAVE_WINSYS_XLIB" != xyes; then
                   GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/xlib"
-               fi
-               if test "x$HAVE_ST_DRI" != xyes; then
-                GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS softpipe"
                fi
             fi
             ;;
