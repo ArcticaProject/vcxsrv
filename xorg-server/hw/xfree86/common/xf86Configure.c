@@ -749,7 +749,7 @@ DoConfigure(void)
 
 bail:
     OsCleanup(TRUE);
-    AbortDDX();
+    AbortDDX(EXIT_ERR_CONFIGURE);
     fflush(stderr);
     exit(0);
 }

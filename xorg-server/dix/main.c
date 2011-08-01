@@ -396,7 +396,7 @@ int main(int argc, char *argv[], char *envp[])
 
 	if (dispatchException & DE_TERMINATE)
 	{
-	    ddxGiveUp();
+	    ddxGiveUp(EXIT_NO_ERROR);
 	    break;
 	}
 

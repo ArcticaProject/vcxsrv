@@ -1222,6 +1222,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 	    devs = xnfrealloc(servlayoutp->inputs,
 			      (count + 1) * sizeof(InputInfoPtr));
             devs[count - 1] = xnfalloc(sizeof(InputInfoRec));
+            Pointer.fd = -1;
 	    *devs[count - 1] = Pointer;
 	    devs[count - 1]->options =
 				xf86addNewOption(devs[count -1]->options,
@@ -1267,6 +1268,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 	    devs = xnfrealloc(servlayoutp->inputs,
 			      (count + 1) * sizeof(InputInfoPtr));
             devs[count - 1] = xnfalloc(sizeof(InputInfoRec));
+            Pointer.fd = -1;
 	    *devs[count - 1] = Pointer;
 	    devs[count - 1]->options =
 				xf86addNewOption(NULL, xnfstrdup("AlwaysCore"), NULL);
@@ -1363,6 +1365,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 	    devs = xnfrealloc(servlayoutp->inputs,
 			      (count + 1) * sizeof(InputInfoPtr));
             devs[count - 1] = xnfalloc(sizeof(InputInfoRec));
+            Keyboard.fd = -1;
 	    *devs[count - 1] = Keyboard;
 	    devs[count - 1]->options =
 				xf86addNewOption(devs[count - 1]->options,

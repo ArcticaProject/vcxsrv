@@ -251,14 +251,12 @@ wakeup_handler(pointer data, int err, pointer read_mask)
             return;
         action = udev_device_get_action(udev_device);
         if (action) {
-            if (!strcmp(action, "add"))
-                device_added(udev_device);
-            else if (!strcmp(action, "remove"))
-                device_removed(udev_device);
-            else if (!strcmp(action, "change")) {
+            if (!strcmp(action, "add") || !strcmp(action, "change")) {
                 device_removed(udev_device);
                 device_added(udev_device);
             }
+            else if (!strcmp(action, "remove"))
+                device_removed(udev_device);
         }
         udev_device_unref(udev_device);
     }
@@ -283,6 +281,9 @@ config_udev_init(void)
     if (!udev_monitor)
         return 0;
 
+    udev_monitor_filter_add_match_subsystem_devtype(udev_monitor, "input", NULL);
+    udev_monitor_filter_add_match_subsystem_devtype(udev_monitor, "tty", NULL); /* For Wacom serial devices */
+
     if (udev_monitor_enable_receiving(udev_monitor)) {
         ErrorF("config/udev: failed to bind the udev monitor\n");
         return 0;
@@ -291,11 +292,20 @@ config_udev_init(void)
     enumerate = udev_enumerate_new(udev);
     if (!enumerate)
         return 0;
+
+    udev_enumerate_add_match_subsystem(enumerate, "input");
+    udev_enumerate_add_match_subsystem(enumerate, "tty");
+
     udev_enumerate_scan_devices(enumerate);
     devices = udev_enumerate_get_list_entry(enumerate);
     udev_list_entry_foreach(device, devices) {
         const char *syspath = udev_list_entry_get_name(device);
         struct udev_device *udev_device = udev_device_new_from_syspath(udev, syspath);
+
+        /* Device might be gone by the time we try to open it */
+        if (!udev_device)
+            continue;
+
         device_added(udev_device);
         udev_device_unref(udev_device);
     }

@@ -237,9 +237,11 @@ LogInit(const char *fname, const char *backup)
 }
 
 void
-LogClose(void)
+LogClose(enum ExitCode error)
 {
     if (logFile) {
+	ErrorF("Server terminated %s (%d). Closing log file.\n",
+		(error == EXIT_NO_ERROR) ? "successfully" : "with error", error);
 	fclose(logFile);
 	logFile = NULL;
     }
@@ -418,7 +420,7 @@ AbortServer(void)
     CloseWellKnownConnections();
     OsCleanup(TRUE);
     CloseDownDevices();
-    AbortDDX();
+    AbortDDX(EXIT_ERR_ABORT);
     fflush(stderr);
     if (CoreDump)
 	OsAbort();

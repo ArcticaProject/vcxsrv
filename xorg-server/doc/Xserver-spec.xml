@@ -4680,8 +4680,8 @@ An Example implementation is miPushPixels() in Xserver/mi/mipushpxl.c.</para>
   <title>Shutdown Procedures</title>
 <para>
 <blockquote><programlisting>
-	void AbortDDX()
-	void ddxGiveUp()
+	void AbortDDX(enum ExitCode error)
+	void ddxGiveUp(enum ExitCode error)
 </programlisting></blockquote>
 Some hardware may require special work to be done before the server
 exits so that it is not left in an intermediate state.  As explained

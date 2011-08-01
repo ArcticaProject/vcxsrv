@@ -283,7 +283,7 @@ RRPostPendingProperties (RROutputPtr output)
 	    pending_value->format == current_value->format &&
 	    pending_value->size == current_value->size &&
 	    !memcmp (pending_value->data, current_value->data,
-		     pending_value->size))
+		     pending_value->size * (pending_value->format / 8)))
 	    continue;
 
 	if (RRChangeOutputProperty (output, property->propertyName,

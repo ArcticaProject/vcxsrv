@@ -299,18 +299,18 @@ xkb_symbols "modern" {
 	key <AC08> {[ i,		I,		i,		I			]};
 	key <AC09> {[ t,		T,		t,		T			]};
 	key <AC10> {[ r,		R,		rcedilla,	Rcedilla		]};
-	key <AC11> {[ m,		M,		bar,		M			]};
-	key <AC12> {[ slash,		question,	backslash,	U263A			]};
+	key <AC11> {[ m,		M,		m,		M			]};
+	key <BKSL> {[ slash,		question,	backslash,	bar			]};
 
 	key <LSGT> {[ q,		Q,		q,		Q			]};
 	key <AB01> {[ x,		X,		q,		Q			]};
 	key <AB02> {[ z,		Z,		zcaron,		Zcaron			]};
 	key <AB03> {[ c,		C,		ccaron,		Ccaron			]};
-	key <AB04> {[ v,		V,		v,		V			]};
-	key <AB05> {[ w,		W,		w,		W			]};
-	key <AB06> {[ f,		F,		f,		F			]};
-	key <AB07> {[ y,		Y,		y,		Y			]};
-	key <AB08> {[ h,		H,		h,		H			]};
+	key <AB04> {[ v,		V,		period,		V			]};
+	key <AB05> {[ w,		W,		slash,		W			]};
+	key <AB06> {[ f,		F,		bar,		F			]};
+	key <AB07> {[ y,		Y,		backslash,	Y			]};
+	key <AB08> {[ h,		H,		U263A,		U2639			]};
 	key <AB09> {[ comma,		semicolon,	less,		multiply		]};
 	key <AB10> {[ period,		colon,		greater,	division		]};
 	key <SPCE> {[ space,		space,		apostrophe				]};

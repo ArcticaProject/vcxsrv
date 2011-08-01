@@ -233,7 +233,7 @@ KdProcessSwitch (void)
 
 #ifndef _MSC_VER
 void
-AbortDDX(void)
+AbortDDX(enum ExitCode error)
 {
     KdDisableScreens ();
     if (kdOsFuncs)
@@ -250,9 +250,9 @@ AbortDDX(void)
 }
 
 void
-ddxGiveUp (void)
+ddxGiveUp (enum ExitCode error)
 {
-    AbortDDX ();
+    AbortDDX (error);
 }
 #endif
 

@@ -140,7 +140,7 @@ extern _X_EXPORT pmWait (*xf86PMConfirmEventToOs)(int fd,pmEvent event);
 
 /* xf86Helper.c */
 extern _X_EXPORT void xf86LogInit(void);
-extern _X_EXPORT void xf86CloseLog(void);
+extern _X_EXPORT void xf86CloseLog(enum ExitCode error);
 
 /* xf86Init.c */
 extern _X_EXPORT Bool xf86LoadModules(char **list, pointer *optlist);

@@ -791,6 +791,21 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 				 NULL);
 }
 
+static InputInfoPtr
+duplicateDevice(InputInfoPtr pInfo)
+{
+    InputInfoPtr dup = calloc(1, sizeof(InputInfoRec));
+    if (dup) {
+        dup->name = strdup(pInfo->name);
+        dup->driver = strdup(pInfo->driver);
+        dup->options = xf86OptionListDuplicate(pInfo->options);
+        /* type_name is a const string */
+        dup->type_name = pInfo->type_name;
+        dup->fd = -1;
+    }
+    return dup;
+}
+
 /*
  * InitInput --
  *      Initialize all supported input devices.
@@ -799,7 +814,7 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 void
 InitInput(int argc, char **argv)
 {
-    InputInfoPtr* pDev;
+    InputInfoPtr* pInfo;
     DeviceIntPtr dev;
 
     xf86Info.vtRequestsPending = FALSE;
@@ -807,14 +822,21 @@ InitInput(int argc, char **argv)
     mieqInit();
 
     /* Initialize all configured input devices */
-    for (pDev = xf86ConfigLayout.inputs; pDev && *pDev; pDev++) {
+    for (pInfo = xf86ConfigLayout.inputs; pInfo && *pInfo; pInfo++) {
+        InputInfoPtr dup;
         /* Replace obsolete keyboard driver with kbd */
-        if (!xf86NameCmp((*pDev)->driver, "keyboard")) {
-            strcpy((*pDev)->driver, "kbd");
+        if (!xf86NameCmp((*pInfo)->driver, "keyboard")) {
+            strcpy((*pInfo)->driver, "kbd");
         }
 
+        /* Data passed into xf86NewInputDevice will be freed on shutdown.
+         * Duplicate from xf86ConfigLayout.inputs, otherwise we don't have any
+         * xorg.conf input devices in the second generation
+         */
+        dup = duplicateDevice(*pInfo);
+
         /* If one fails, the others will too */
-        if (xf86NewInputDevice(*pDev, &dev, TRUE) == BadAlloc)
+        if (xf86NewInputDevice(dup, &dev, TRUE) == BadAlloc)
             break;
     }
 
@@ -880,7 +902,7 @@ OsVendorInit(void)
  */
 
 void
-ddxGiveUp(void)
+ddxGiveUp(enum ExitCode error)
 {
     int i;
 
@@ -907,7 +929,7 @@ ddxGiveUp(void)
     if (xorgHWOpenConsole)
 	xf86CloseConsole();
 
-    xf86CloseLog();
+    xf86CloseLog(error);
 
     /* If an unexpected signal was caught, dump a core for debugging */
     if (xf86Info.caughtSignal)
@@ -924,7 +946,7 @@ ddxGiveUp(void)
  */
 
 void
-AbortDDX(void)
+AbortDDX(enum ExitCode error)
 {
   int i;
 
@@ -957,7 +979,7 @@ AbortDDX(void)
    * This is needed for an abnormal server exit, since the normal exit stuff
    * MUST also be performed (i.e. the vt must be left in a defined state)
    */
-  ddxGiveUp();
+  ddxGiveUp(error);
 }
 
 void

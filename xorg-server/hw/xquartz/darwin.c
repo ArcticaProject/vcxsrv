@@ -766,9 +766,9 @@ void ddxUseMsg( void )
  * ddxGiveUp --
  *      Device dependent cleanup. Called by dix before normal server death.
  */
-void ddxGiveUp( void )
+void ddxGiveUp( enum ExitCode error )
 {
-    ErrorF( "Quitting Xquartz\n" );
+    LogClose(error);
 }
 
 
@@ -779,7 +779,7 @@ void ddxGiveUp( void )
  *      are closed.
  */
 _X_NORETURN
-void AbortDDX( void ) {
+void AbortDDX( enum ExitCode error ) {
     ErrorF( "   AbortDDX\n" );
     OsAbort();
 }
