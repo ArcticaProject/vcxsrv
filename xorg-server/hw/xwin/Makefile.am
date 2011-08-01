@@ -175,27 +175,7 @@ install-exec-hook:
 EXTRA_DIST = \
 	$(xwinconfig_DATA) \
 	X.ico \
-	XWin.rc \
-	xlaunch/config.cc \
-	xlaunch/COPYING \
-	xlaunch/main.cc \
-	xlaunch/resources/dialog.rc \
-	xlaunch/resources/fullscreen.bmp \
-	xlaunch/resources/images.rc \
-	xlaunch/resources/multiwindow.bmp \
-	xlaunch/resources/nodecoration.bmp \
-	xlaunch/resources/resources.h \
-	xlaunch/resources/resources.rc \
-	xlaunch/resources/strings.rc \
-	xlaunch/resources/windowed.bmp \
-	xlaunch/window/dialog.cc \
-	xlaunch/window/dialog.h \
-	xlaunch/window/util.cc \
-	xlaunch/window/util.h \
-	xlaunch/window/window.cc \
-	xlaunch/window/window.h \
-	xlaunch/window/wizard.cc \
-	xlaunch/window/wizard.h
+	XWin.rc
 
 relink:
 	$(AM_V_at)rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)

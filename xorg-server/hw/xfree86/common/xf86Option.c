@@ -340,7 +340,7 @@ pointer
 xf86AddNewOption(pointer head, const char *name, const char *val)
 {
     /* XXX These should actually be allocated in the parser library. */
-    char *tmp = strdup(val);
+    char *tmp = val ? strdup(val) : NULL;
     char *tmp_name = strdup(name);
 
     return xf86addNewOption(head, tmp_name, tmp);

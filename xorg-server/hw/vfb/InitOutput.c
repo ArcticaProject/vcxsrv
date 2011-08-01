@@ -150,7 +150,7 @@ vfbBitsPerPixel(int depth)
 }
 
 void
-ddxGiveUp(void)
+ddxGiveUp(enum ExitCode error)
 {
     int i;
 
@@ -201,9 +201,9 @@ ddxGiveUp(void)
 }
 
 void
-AbortDDX(void)
+AbortDDX(enum ExitCode error)
 {
-    ddxGiveUp();
+    ddxGiveUp(error);
 }
 
 #ifdef __APPLE__

@@ -459,8 +459,15 @@ typedef struct {
 /* stuff for FlushCallback */
 extern _X_EXPORT CallbackListPtr FlushCallback;
 
-extern _X_EXPORT void AbortDDX(void);
-extern _X_EXPORT void ddxGiveUp(void);
+enum ExitCode {
+    EXIT_NO_ERROR	= 0,
+    EXIT_ERR_ABORT	= 1,
+    EXIT_ERR_CONFIGURE	= 2,
+    EXIT_ERR_DRIVERS	= 3,
+};
+
+extern _X_EXPORT void AbortDDX(enum ExitCode error);
+extern _X_EXPORT void ddxGiveUp(enum ExitCode error);
 extern _X_EXPORT int TimeSinceLastInputEvent(void);
 
 /* strcasecmp.c */
@@ -508,7 +515,7 @@ typedef enum {
 } MessageType;
 
 extern _X_EXPORT const char *LogInit(const char *fname, const char *backup);
-extern _X_EXPORT void LogClose(void);
+extern _X_EXPORT void LogClose(enum ExitCode error);
 extern _X_EXPORT Bool LogSetParameter(LogParameter param, int value);
 extern _X_EXPORT void LogVWrite(int verb, const char *f, va_list args) _X_ATTRIBUTE_PRINTF(2,0);
 extern _X_EXPORT void LogWrite(int verb, const char *f, ...) _X_ATTRIBUTE_PRINTF(2,3);

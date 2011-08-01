@@ -124,7 +124,7 @@ void DoShowOptions (void) {
 	}
 	bail:
 	OsCleanup (TRUE);                             
-	AbortDDX ();                                                           
+	AbortDDX (EXIT_ERR_DRIVERS);
 	fflush (stderr);                        
 	exit (0);
 }

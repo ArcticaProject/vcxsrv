@@ -126,7 +126,7 @@ radial_compute_color (double                    a,
 	t1 = (b - sqrtdiscr) * inva;
 
 	/*
-	 * The root that must be used if the biggest one that belongs
+	 * The root that must be used is the biggest one that belongs
 	 * to the valid range ([0,1] for PIXMAN_REPEAT_NONE, any
 	 * solution that results in a positive radius otherwise).
 	 *
@@ -162,7 +162,7 @@ radial_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
      * Implementation of radial gradients following the PDF specification.
      * See section 8.7.4.5.4 Type 3 (Radial) Shadings of the PDF Reference
      * Manual (PDF 32000-1:2008 at the time of this writing).
-     * 
+     *
      * In the radial gradient problem we are given two circles (c₁,r₁) and
      * (c₂,r₂) that define the gradient itself.
      *
@@ -179,7 +179,7 @@ radial_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
      *
      * The graphical result is the same as drawing the valid (radius > 0)
      * circles with increasing t in [-inf, +inf] (or in [0,1] if the gradient
-     * is not repeated) using SOURCE operatior composition.
+     * is not repeated) using SOURCE operator composition.
      *
      * It looks like a cone pointing towards the viewer if the ending circle
      * is smaller than the starting one, a cone pointing inside the page if
@@ -190,14 +190,14 @@ radial_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
      * in, compute the t values for that point, solving for t in:
      *
      *     length((1-t)·c₁ + t·(c₂) - p) = (1-t)·r₁ + t·r₂
-     * 
+     *
      * Let's rewrite it in a simpler way, by defining some auxiliary
      * variables:
      *
      *     cd = c₂ - c₁
      *     pd = p - c₁
      *     dr = r₂ - r₁
-     *     lenght(t·cd - pd) = r₁ + t·dr
+     *     length(t·cd - pd) = r₁ + t·dr
      *
      * which actually means
      *
@@ -223,7 +223,7 @@ radial_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
      *     B = pdx·cdx + pdy·cdy + r₁·dr
      *     C = pdx² + pdy² - r₁²
      *     At² - 2Bt + C = 0
-     * 
+     *
      * The solutions (unless the equation degenerates because of A = 0) are:
      *
      *     t = (B ± ⎷(B² - A·C)) / A
@@ -262,7 +262,7 @@ radial_get_scanline_narrow (pixman_iter_t *iter, const uint32_t *mask)
     {
 	if (!pixman_transform_point_3d (image->common.transform, &v))
 	    return iter->buffer;
-	
+
 	unit.vector[0] = image->common.transform->matrix[0][0];
 	unit.vector[1] = image->common.transform->matrix[1][0];
 	unit.vector[2] = image->common.transform->matrix[2][0];
@@ -468,4 +468,3 @@ pixman_image_create_radial_gradient (pixman_point_fixed_t *        inner,
 
     return image;
 }
-

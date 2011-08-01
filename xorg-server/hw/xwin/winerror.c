@@ -81,7 +81,7 @@ OsVendorFatalError (void)
     g_fLogInited = TRUE;
     g_pszLogFile = LogInit (g_pszLogFile, NULL);
   }
-  LogClose ();
+  LogClose (EXIT_ERR_ABORT);
 
   winMessageBoxF (
           "A fatal error has occurred and " PROJECT_NAME " will now exit.\n" \

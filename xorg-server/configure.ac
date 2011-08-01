@@ -1187,11 +1187,7 @@ if test "x$XKB_DFLT_RULES" = x; then
     case $host_os in
     linux*)
         dnl doesn't take AutoAddDevices into account, but whatever.
-        if test "x$CONFIG_HAL" = xyes; then
-            XKB_DFLT_RULES="evdev"
-        else
-            XKB_DFLT_RULES="base"
-        fi
+        XKB_DFLT_RULES="evdev"
         ;;
     *)
         XKB_DFLT_RULES="base"

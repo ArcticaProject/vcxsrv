@@ -1198,9 +1198,9 @@ xf86LogInit(void)
 }
 
 void
-xf86CloseLog(void)
+xf86CloseLog(enum ExitCode error)
 {
-    LogClose();
+    LogClose(error);
 }
 
 

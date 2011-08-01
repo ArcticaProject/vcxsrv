@@ -191,7 +191,7 @@ ddxBeforeReset (void)
 
 /* See Porting Layer Definition - p. 57 */
 void
-ddxGiveUp (void)
+ddxGiveUp (enum ExitCode error)
 {
   int		i;
 
@@ -228,7 +228,7 @@ ddxGiveUp (void)
     g_pszLogFile = LogInit (g_pszLogFile, NULL);
     g_fLogInited = TRUE;
   }  
-  LogClose ();
+  LogClose (error);
 
   /*
    * At this point we aren't creating any new screens, so
@@ -258,12 +258,12 @@ ddxGiveUp (void)
 
 /* See Porting Layer Definition - p. 57 */
 void
-AbortDDX (void)
+AbortDDX (enum ExitCode error)
 {
 #if CYGDEBUG
   winDebug ("AbortDDX\n");
 #endif
-  ddxGiveUp ();
+  ddxGiveUp (error);
 }
 
 #ifdef __CYGWIN__
@@ -901,7 +901,7 @@ ddxUseMsg(void)
     g_pszLogFile = LogInit (g_pszLogFile, NULL);
     g_fLogInited = TRUE;
   }  
-  LogClose ();
+  LogClose (EXIT_NO_ERROR);
 
   /* Notify user where UseMsg text can be found.*/
   if (!g_fNoHelpMessageBox)
