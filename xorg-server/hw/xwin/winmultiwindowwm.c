@@ -1464,7 +1464,7 @@ winMultiWindowXMsgProcIOErrorHandler (Display *pDisplay)
 static void
 winMultiWindowThreadExit(void *arg)
 {
-  AbortDDX();
+  AbortDDX(EXIT_ERR_ABORT);
 
   /* multiwindow client thread has exited, stop server as well */
   TerminateProcess(GetCurrentProcess(),1);

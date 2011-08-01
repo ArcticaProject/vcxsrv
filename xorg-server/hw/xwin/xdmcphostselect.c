@@ -98,7 +98,7 @@ static wBOOL CALLBACK DisplayXdmcpHostsDlgProc (HWND hwndDialog, UINT message, W
           winDebug ("DisplayXdmcpHostsDlgProc - WM_COMMAND - IDCANCEL\n");
 
           DestroyWindow (g_hDlgHosts);
-          AbortDDX();
+          AbortDDX(EXIT_ERR_ABORT);
           TerminateProcess(GetCurrentProcess(),1);  /* Exit the application */
 
           return TRUE;
@@ -119,7 +119,7 @@ static wBOOL CALLBACK DisplayXdmcpHostsDlgProc (HWND hwndDialog, UINT message, W
 
       DestroyWindow (g_hDlgHosts);
       g_hDlgHosts = NULL;
-      AbortDDX();
+      AbortDDX(EXIT_ERR_ABORT);
       TerminateProcess(GetCurrentProcess(),1);  /* Exit the application */
 
       return TRUE;
