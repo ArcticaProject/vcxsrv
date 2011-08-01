@@ -357,7 +357,10 @@ exit:
           Error = false;
           goto exit;
         }
-        if (-1==mkdir(pNewDest->GetFullFileName().c_str(),S_IRWXU))
+        struct stat statbuf;
+        if ( (-1==stat(pDest->GetFullFileName().c_str(),&statbuf)) ||
+             (-1==mkdir(pNewDest->GetFullFileName().c_str(),statbuf.st_mode))
+           )
         {
           cerr << "Error creating directory " << pNewDest->GetQuotedFullFileName() << endl;
           Error = false;

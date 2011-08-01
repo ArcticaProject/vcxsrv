@@ -765,7 +765,10 @@ bool MakeDirs(fileinfo *pDir)
   }
   if (!pDir->GetDate().DoesExist())
   { /* Create directory */
-    if (-1==mkdir(pDir->GetFullFileName().c_str(),S_IRWXU))
+    struct stat statbuf;
+    if ( (-1==stat(pParentDir->GetFullFileName().c_str(),&statbuf)) ||
+         (-1==mkdir(pDir->GetFullFileName().c_str(),statbuf.st_mode))
+       )
     {
       cerr << "mkdir function failed for directory " << QuoteFileName(pDir->GetFullFileName()) << endl;
       return false;
