@@ -223,7 +223,7 @@ xprDestroyFrame(RootlessFrameID wid)
 
     err = xp_destroy_window(x_cvt_vptr_to_uint(wid));
     if (err != Success)
-        FatalError("Could not destroy window %i.", (int)x_cvt_vptr_to_uint(wid));
+        FatalError("Could not destroy window %d (%d).", (int)x_cvt_vptr_to_uint(wid), (int)err);
 }
 
 
@@ -364,7 +364,7 @@ xprStartDrawing(RootlessFrameID wid, char **pixelData, int *bytesPerRow)
 
     err = xp_lock_window(x_cvt_vptr_to_uint(wid), NULL, NULL, data, rowbytes, NULL);
     if (err != Success)
-        FatalError("Could not lock window %i for drawing.", (int)x_cvt_vptr_to_uint(wid));
+        FatalError("Could not lock window %d for drawing (%d).", (int)x_cvt_vptr_to_uint(wid), (int)err);
 
     *pixelData = data[0];
     *bytesPerRow = rowbytes[0];
@@ -380,8 +380,11 @@ xprStopDrawing(RootlessFrameID wid, Bool flush)
     xp_error err;
 
     err = xp_unlock_window(x_cvt_vptr_to_uint(wid), flush);
+    /* This should be a FatalError, but we started tripping over it.  Make it a
+     * FatalError after http://xquartz.macosforge.org/trac/ticket/482 is fixed.
+     */
     if(err != Success)
-        FatalError("Could not unlock window %i after drawing.", (int)x_cvt_vptr_to_uint(wid));
+        ErrorF("Could not unlock window %d after drawing (%d).", (int)x_cvt_vptr_to_uint(wid), (int)err);
 }
 
 

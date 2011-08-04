@@ -1014,7 +1014,7 @@ void X11ApplicationMain (int argc, char **argv, char **envp) {
 
     if (app_prefs_domain_cfstr == NULL) {
         ErrorF("X11ApplicationMain: Unable to determine bundle identifier.  Your installation of XQuartz may be broken.\n");
-        app_prefs_domain_cfstr = @BUNDLE_ID_PREFIX".X11";
+        app_prefs_domain_cfstr = CFSTR(BUNDLE_ID_PREFIX".X11");
     }
 
     [NSApp read_defaults];
