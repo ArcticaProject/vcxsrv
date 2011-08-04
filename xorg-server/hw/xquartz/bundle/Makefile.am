@@ -40,6 +40,9 @@ EXTRA_DIST = \
 	Resources/Dutch.lproj/InfoPlist.strings \
 	Resources/Dutch.lproj/Localizable.strings \
 	Resources/Dutch.lproj/main.nib/keyedobjects.nib \
+	Resources/el.lproj/InfoPlist.strings \
+	Resources/el.lproj/Localizable.strings \
+	Resources/el.lproj/main.nib/keyedobjects.nib \
 	Resources/English.lproj/InfoPlist.strings \
 	Resources/English.lproj/Localizable.strings \
 	Resources/English.lproj/main.nib/designable.nib \
@@ -53,6 +56,9 @@ EXTRA_DIST = \
 	Resources/German.lproj/InfoPlist.strings \
 	Resources/German.lproj/Localizable.strings \
 	Resources/German.lproj/main.nib/keyedobjects.nib \
+	Resources/he.lproj/InfoPlist.strings \
+	Resources/he.lproj/Localizable.strings \
+	Resources/he.lproj/main.nib/keyedobjects.nib \
 	Resources/Italian.lproj/InfoPlist.strings \
 	Resources/Italian.lproj/Localizable.strings \
 	Resources/Italian.lproj/main.nib/keyedobjects.nib \
@@ -77,6 +83,9 @@ EXTRA_DIST = \
 	Resources/ru.lproj/InfoPlist.strings \
 	Resources/ru.lproj/Localizable.strings \
 	Resources/ru.lproj/main.nib/keyedobjects.nib \
+	Resources/sk.lproj/InfoPlist.strings \
+	Resources/sk.lproj/Localizable.strings \
+	Resources/sk.lproj/main.nib/keyedobjects.nib \
 	Resources/Spanish.lproj/InfoPlist.strings \
 	Resources/Spanish.lproj/Localizable.strings \
 	Resources/Spanish.lproj/main.nib/keyedobjects.nib \

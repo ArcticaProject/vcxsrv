@@ -169,6 +169,7 @@ typedef struct _Window {
 #endif
 #ifdef COMPOSITE
     unsigned		damagedDescendants:1;	/* some descendants are damaged */
+    unsigned		inhibitBGPaint:1;	/* paint the background? */
 #endif
 } WindowRec;
 

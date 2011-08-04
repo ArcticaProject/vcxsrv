@@ -575,6 +575,10 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 	tile_x_off = pWin->drawable.x - draw_x_off;
 	tile_y_off = pWin->drawable.y - draw_y_off;
 	fill = pWin->background;
+#ifdef COMPOSITE
+	if (pWin->inhibitBGPaint)
+	    return;
+#endif
 	switch (pWin->backgroundState) {
 	case None:
 	    return;

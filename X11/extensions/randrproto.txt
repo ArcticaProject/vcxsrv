@@ -1637,7 +1637,9 @@ doesn't handle a mandatory property correctly.
 9.1 Known properties
 
     "Backlight"			aka RR_PROPERTY_BACKLIGHT
-	Type:			int32
+	Type:			INTEGER
+	Format:			32
+	Num. items:		1
 	Flags:			-
 	Range/List:		0-x (driver specific)
 
@@ -1647,7 +1649,9 @@ doesn't handle a mandatory property correctly.
 	backlight to minimum brightness, 0 SHOULD turn the backlight off.
 
     "CloneList"			aka RR_PROPERTY_CLONE_LIST
-	Type:			int32 [2*n] / Atom pairs
+	Type:			ATOM
+	Format:			32
+	Num. items:		2*n
 	Flags:			Immutable
 	Range/List:		0-
 
@@ -1664,7 +1668,9 @@ doesn't handle a mandatory property correctly.
 	CompatibilityList.
 
     "CompatibilityList"		aka RR_PROPERTY_COMPATIBILITY_LIST
-	Type:			int32 [2*n] / Atom pairs
+	Type:			ATOM
+	Format:			32
+	Num items:		2*n
 	Flags:			Immutable
 	Range/List:		0-
 
@@ -1679,7 +1685,9 @@ doesn't handle a mandatory property correctly.
 	available, VGA-1/VGA has to list DVI-1/TMDS as well.
 
     "ConnectorNumber"		aka RR_PROPERTY_CONNECTOR_NUMBER
-	Type:			int32
+	Type:			INTEGER
+	Format:			32
+	Num items:		1
 	Flags:			Immutable, Static
 	Range/List:		0-
 
@@ -1695,7 +1703,9 @@ doesn't handle a mandatory property correctly.
 	connector types is undefined at the moment.
 
     "ConnectorType"		aka RR_PROPERTY_CONNECTOR_TYPE
-	Type:			int32 / Atom
+	Type:			ATOM
+	Format:			32
+	Num items:		1
 	Flags:			Immutable, Static
 	Range/List:		unknown VGA DVI DVI‐I DVI‐A DVI‐D HDMI Panel
 				TV TV-Composite TV-SVideo TV-Component
@@ -1714,7 +1724,9 @@ doesn't handle a mandatory property correctly.
 	RGB TV signals.
 
     "EDID"			aka RR_PROPERTY_RANDR_EDID
-	Type:			int8 [n]
+	Type:			INTEGER
+	Format:			8
+	Num items:		n
 	Flags:			Immutable
 	Range/List:		-
 
@@ -1723,7 +1735,9 @@ doesn't handle a mandatory property correctly.
 	blocks. Previously known as EdidData.
 
     "SignalFormat"		aka RR_PROPERTY_SIGNAL_FORMAT
-	Type:			int32 / Atom
+	Type:			ATOM
+	Format:			32
+	Num items:		1
 	Flags:			-
 	Range/List:		unknown VGA TMDS LVDS Composite Composite-PAL
 				Composite-NTSC Composite-SECAM SVideo
@@ -1743,7 +1757,9 @@ doesn't handle a mandatory property correctly.
 	ConnectorType.
 
     "SignalProperties"		aka RR_PROPERTY_SIGNAL_FORMAT
-	Type:			int32 [n] / Atom
+	Type:			ATOM
+	Format:			32
+	Num items:		n
 	Flags:			-
 	Range/List:		For Composite signals:
 				  NTSC NTSC-M NTSC-J NTSC-N NTSC-4.43 NTSC-film
