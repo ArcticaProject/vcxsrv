@@ -2489,6 +2489,56 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_out_reverse_8_8888_process_pixblock_head
+    /* src is in d0 */
+    /* destination pixel data is in {d4, d5, d6, d7} */
+    vmvn.8      d1, d0 /* get inverted alpha */
+    /* now do alpha blending */
+    vmull.u8    q8, d1, d4
+    vmull.u8    q9, d1, d5
+    vmull.u8    q10, d1, d6
+    vmull.u8    q11, d1, d7
+.endm
+
+.macro pixman_composite_out_reverse_8_8888_process_pixblock_tail
+    vrshr.u16   q14, q8, #8
+    vrshr.u16   q15, q9, #8
+    vrshr.u16   q12, q10, #8
+    vrshr.u16   q13, q11, #8
+    vraddhn.u16 d28, q14, q8
+    vraddhn.u16 d29, q15, q9
+    vraddhn.u16 d30, q12, q10
+    vraddhn.u16 d31, q13, q11
+    /* 32bpp result is in {d28, d29, d30, d31} */
+.endm
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_out_reverse_8_8888_process_pixblock_tail_head
+    fetch_src_pixblock
+    pixman_composite_out_reverse_8_8888_process_pixblock_tail
+    vld4.8    {d4, d5, d6, d7}, [DST_R, :128]!
+    cache_preload 8, 8
+    pixman_composite_out_reverse_8_8888_process_pixblock_head
+    vst4.8    {d28, d29, d30, d31}, [DST_W, :128]!
+.endm
+
+generate_composite_function \
+    pixman_composite_out_reverse_8_8888_asm_neon, 8, 0, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_out_reverse_8_8888_process_pixblock_head, \
+    pixman_composite_out_reverse_8_8888_process_pixblock_tail, \
+    pixman_composite_out_reverse_8_8888_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    4, /* dst_r_basereg */ \
+    0, /* src_basereg   */ \
+    0   /* mask_basereg  */
+
+/******************************************************************************/
+
 generate_composite_function_nearest_scanline \
     pixman_scaled_nearest_scanline_8888_8888_OVER_asm_neon, 32, 0, 32, \
     FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
