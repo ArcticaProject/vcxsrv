@@ -5602,13 +5602,13 @@
       <option>
         <configItem>
           <name>ctrl:nocaps</name>
-          <_description>Make Caps Lock an additional Ctrl</_description>
+          <_description>Caps Lock as Ctrl</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>ctrl:lctrl_meta</name>
-          <_description>Meta on Left Ctrl</_description>
+          <_description>Left Ctrl as Meta</_description>
         </configItem>
       </option>
       <option>
@@ -5619,26 +5619,32 @@
       </option>
       <option>
         <configItem>
-          <name>ctrl:ctrl_ac</name>
+          <name>ctrl:ac_ctrl</name>
           <_description>At left of 'A'</_description>
         </configItem>
       </option>
       <option>
         <configItem>
-          <name>ctrl:ctrl_aa</name>
+          <name>ctrl:aa_ctrl</name>
           <_description>At bottom left</_description>
         </configItem>
       </option>
       <option>
         <configItem>
-          <name>ctrl:ctrl_ra</name>
+          <name>ctrl:rctrl_ralt</name>
           <_description>Right Ctrl as Right Alt</_description>
         </configItem>
       </option>
       <option>
         <configItem>
-          <name>ctrl:ctrl_menu</name>
-          <_description>Right Ctrl is mapped to Menu</_description>
+          <name>ctrl:menu_rctrl</name>
+          <_description>Menu as Right Ctrl</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>ctrl:ctrl_ralt</name>
+          <_description>Right Alt as Right Ctrl</_description>
         </configItem>
       </option>
     </group>
