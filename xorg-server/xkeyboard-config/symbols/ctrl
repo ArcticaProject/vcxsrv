@@ -21,7 +21,7 @@ xkb_symbols "swapcaps" {
 // to the bottom row.  Only works if the geometry or keycodes
 // file has defined appropriate aliases for the keys in question.
 partial modifier_keys 
-xkb_symbols "ctrl_ac" {
+xkb_symbols "ac_ctrl" {
     replace key <AC00>	{  [ Control_L ] };
     replace key <AA00>	{  [ Caps_Lock ] };
 };
@@ -30,20 +30,28 @@ xkb_symbols "ctrl_ac" {
 // to the middle row.  Only works if the geometry or keycodes
 // file has defined appropriate aliases for the keys in question.
 partial modifier_keys 
-xkb_symbols "ctrl_aa" {
+xkb_symbols "aa_ctrl" {
     replace key <AA00>	{  [ Control_L ] };
     replace key <AC00>	{  [ Caps_Lock ] };
 };
 
 // Right Ctrl works as Right Alt
 partial modifier_keys 
-xkb_symbols "ctrl_ra" {
+xkb_symbols "rctrl_ralt" {
     key <RCTL>	{  symbols[Group1]= [ Alt_R ] };
 };
 
 // Menu works as Right Ctrl
 partial modifier_keys
-xkb_symbols "ctrl_menu" {
+xkb_symbols "menu_rctrl" {
   replace key <MENU> { [ Control_R, Control_R ] };
   modifier_map Control { Control_L, <MENU> };
+};
+
+// right alt functions as another ctrl key
+partial modifier_keys 
+xkb_symbols "ralt_rctrl" {
+    replace key <RALT> { type[Group1]    = "TWO_LEVEL",
+                         symbols[Group1] = [ Control_R, Control_R ] };
+    modifier_map Control { <RALT> }; 
 };
