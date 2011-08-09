@@ -138,6 +138,12 @@ underlying hardware to clients
      providing the server a complete configuration for appropriate
      resource management.
 
+   • An optional Border property. This property allows a client to
+     specify that the viewport of the CRTC is smaller than the active
+     display region described its mode.  This is useful, for example,
+     for compensating for the overscan behavior of certain
+     televisions.
+
 The first two additions, per-crtc pixmaps and sprite transforms are
 designed to solve two problems:
 
@@ -1006,8 +1012,8 @@ dynamic changes in the display environment.
 
 	'width' and 'height' indicate the size of the area within the screen
 	presented by this CRTC. This may be different than the size of the
-	mode due to rotation. They will be set to 0 when the CRTC
-	is disabled.
+	mode due to rotation, the projective transform, and the Border property
+	described below.  They will be set to 0 when the CRTC is disabled.
 
 	'mode' indicates which mode is active, or None indicating that the
 	CRTC has been disabled and is not displaying the screen contents.
@@ -1585,8 +1591,8 @@ factors, such as re-cabling a monitor, etc.
 	rotation: ROTATION;		new rotation
 	x: INT16			x position of CRTC within screen
 	y: INT16			y position of CRTC within screen
-	width: CARD16			width of new mode
-	height: CARD16			height of new mode
+	width: CARD16			width of new configuration
+	height: CARD16			height of new configuration
 └───
 	This event is generated whenever the CRTC configuration is changed
 	and sent to requesting clients. 'timestamp' indicates when the
@@ -1594,7 +1600,9 @@ factors, such as re-cabling a monitor, etc.
 	event. 'mode' is the new mode, or None if the crtc is disabled.
 	'x' and 'y' mark the location in the screen where this CRTC
 	is reading data. 'width' and 'height' indicate the size of the
-	mode. 'x', 'y, 'width' and 'height' are all zero when 'mode' is None.
+	CRTC viewport, which is the mode size adjusted by the optional
+	Border output property described below. 'x', 'y, 'width' and
+	'height' are all zero when 'mode' is None.
 
 	This event is sent whenever the monitor's configuration changes
 	or if a new monitor configuration becomes available that was
@@ -1782,6 +1790,72 @@ doesn't handle a mandatory property correctly.
 	a signal change (e.g. TV formats).  Clients are allowed to change the
 	properties in order to select a different signal subformat.
 
+    "Border"			aka RR_PROPERTY_BORDER
+	Type:			CARDINAL
+	Format:			16
+	Num items:		0, 1, 2, or 4
+	Flags:			Immutable
+	Range/List:		0-
+
+	This property is a list of integers specifying adjustments for the edges
+	of the displayed image. How this property is applied depends on the
+	number of elements in the list:
+
+	  0 = No border is applied
+	  1 = A border of Border[0] is applied to all four sides of the image.
+	  2 = A border of Border[0] is applied to the left and right sides of
+	      the image, and a border of Border[1] is applied to the top and
+	      bottom.
+	  4 = The border dimensions are as follows:
+		Border[0]: left
+		Border[1]: top
+		Border[2]: right
+		Border[3]: bottom
+
+	Note that how many configuration dimensions are actually supported is
+	specified by the BorderDimensions property described below. If more than
+	BorderDimensions values are specified, the extra values are ignored.
+
+	These border dimensions shrink the region of pixels displayed by the
+	CRTC by the corresponding number of rows or columns, and is applied
+	after the CRTC transform. For example, a mode with a 1920x1080 active
+	region, border dimensions of [ 10, 20, 30, 40 ], and a ½x scaling
+	transform would display a rectangle of 940x510 pixels from the scanout
+	pixmap scaled to 1880x1020 raster pixels positioned at (10, 20) in
+	display raster space.
+
+	Raster pixels in the border are black.
+
+	This property is created with pending == TRUE, so changes are not
+	applied immediately and instead take effect at the next RRSetCrtcConfig.
+
+	If multiple outputs with different border settings are bound to the same
+	CRTC when the configuration is changed, the behavior is undefined.
+
+	If the length of the property is less than four when the CRTC is
+	configured, the missing values are assumed to be zero.  If the length is
+	greater than four, the extra values are ignored.
+
+	If the width of the mode is less than or equal to the sum of the left
+	and right borders, then the left and right border settings are ignored.
+	Likewise, if the height of the mode is less than or equal to the sum of
+	the top and bottom borders, the top and bottom borders are ignored.
+
+    "BorderDimensions"		aka RR_PROPERTY_BORDER_DIMENSIONS
+	Type:			CARDINAL
+	Format:			8
+	Num items:		1
+	Flags:			Immutable, Static
+	Range/List:		0, 1, 2, or 4
+
+	This property lists how many border adjustment parameters can actually
+	be used:
+
+	  0 = no borders are supported
+	  1 = a single border value is applied to all four sides of the image
+	  2 = left/right and top/bottom borders can be specified independently
+	  4 = all four borders can be specified independently
+
 
 9.2 Properties introduced with version 1.2 of the RandR extension
 
@@ -1808,6 +1882,13 @@ SignalProperties		no		not mandatory
 Property			Immutable	Mandatory since
 ────────			─────────	───────────────
 Backlight			no		not mandatory
+
+9.5 Properties introduced with version 1.4.0 of the RandR extension
+
+Property			Immutable	Mandatory since
+────────			─────────	───────────────
+Border				yes		not mandatory
+BorderDimensions		yes: static	not mandatory
 
 			      ❧❧❧❧❧❧❧❧❧❧❧
 
