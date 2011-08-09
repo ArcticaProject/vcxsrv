@@ -181,5 +181,7 @@ typedef unsigned long	XRandrModeFlags;
 #define RR_PROPERTY_CONNECTOR_NUMBER	"ConnectorNumber"
 #define RR_PROPERTY_COMPATIBILITY_LIST	"CompatibilityList"
 #define RR_PROPERTY_CLONE_LIST		"CloneList"
+#define RR_PROPERTY_BORDER		"Border"
+#define RR_PROPERTY_BORDER_DIMENSIONS	"BorderDimensions"
 
 #endif	/* _RANDR_H_ */
