@@ -7,11 +7,11 @@
 # This document is licensed under the SGI Free Software B License Version
 # 2.0. For details, see http://oss.sgi.com/projects/FreeB/ .
 #
-# $Revision: 12183 $ on $Date: 2010-08-06 02:53:05 -0700 (Fri, 06 Aug 2010) $
+# $Revision: 14504 $ on $Date: 2011-04-13 21:31:13 -0700 (Wed, 13 Apr 2011) $
 
 required-props:
 param:		retval retained
-category:	wgl ARB_buffer_region ARB_extensions_string ARB_pixel_format ARB_make_current_read ARB_pbuffer ARB_render_texture ARB_pixel_format_float EXT_display_color_table EXT_extensions_string EXT_make_current_read EXT_pbuffer EXT_pixel_format EXT_swap_control OML_sync_control I3D_digital_video_control I3D_gamma I3D_genlock I3D_image_buffer I3D_swap_frame_lock I3D_swap_frame_usage NV_vertex_array_range 3DL_stereo_control NV_swap_group NV_video_output NV_present_video ARB_create_context NV_gpu_affinity AMD_gpu_association NV_video_capture NV_copy_image ARB_framebuffer_sRGB
+category:	wgl ARB_buffer_region ARB_extensions_string ARB_pixel_format ARB_make_current_read ARB_pbuffer ARB_render_texture ARB_pixel_format_float EXT_display_color_table EXT_extensions_string EXT_make_current_read EXT_pbuffer EXT_pixel_format EXT_swap_control OML_sync_control I3D_digital_video_control I3D_gamma I3D_genlock I3D_image_buffer I3D_swap_frame_lock I3D_swap_frame_usage NV_vertex_array_range 3DL_stereo_control NV_swap_group NV_video_output NV_present_video ARB_create_context NV_gpu_affinity AMD_gpu_association NV_video_capture NV_copy_image ARB_framebuffer_sRGB NV_DX_interop
 # required-props in wgl.spec (which is not used for anything):
 # dlflags:	  notlistable handcode
 # wglflags:	  client-handcode server-handcode non-dispatch
@@ -1124,3 +1124,62 @@ CopyImageSubDataNV(hSrcRC, srcName, srcTarget, srcLevel, srcX, srcY, srcZ, hDstR
 
 # (none)
 newcategory: NV_multisample_coverage
+
+###############################################################################
+#
+# Extension #407
+# NV_DX_interop commands
+#
+###############################################################################
+
+DXSetResourceShareHandleNV(dxObject, shareHandle)
+	return		BOOL
+	param		dxObject	void out array [1]
+	param		shareHandle	HANDLE in value
+	category	NV_DX_interop
+
+DXOpenDeviceNV(dxDevice)
+	return		HANDLE
+	param		dxDevice	void out array [1]
+	category	NV_DX_interop
+
+DXCloseDeviceNV(hDevice)
+	return		BOOL
+	param		hDevice		HANDLE in value
+	category	NV_DX_interop
+
+DXRegisterObjectNV(hDevice, dxObject, name, type, access)
+	return		HANDLE
+	param		hDevice		HANDLE in value
+	param		dxObject	void out array [1]
+	param		name		GLuint in value
+	param		type		GLenum in value
+	param		access		GLenum in value
+	category	NV_DX_interop
+
+DXUnregisterObjectNV(hDevice, hObject)
+	return		BOOL
+	param		hDevice		HANDLE in value
+	param		hObject		HANDLE in value
+	category	NV_DX_interop
+
+DXObjectAccessNV(hObject, access)
+	return		BOOL
+	param		hObject		HANDLE in value
+	param		access		GLenum in value
+	category	NV_DX_interop
+
+DXLockObjectsNV(hDevice, count, hObjects)
+	return		BOOL
+	param		hDevice		HANDLE in value
+	param		count		GLint in value
+	param		hObjects	HANDLE out array [count]
+	category	NV_DX_interop
+
+DXUnlockObjectsNV(hDevice, count, hObjects)
+	return		BOOL
+	param		hDevice		HANDLE in value
+	param		count		GLint in value
+	param		hObjects	HANDLE out array [count]
+	category	NV_DX_interop
+
