@@ -45,9 +45,7 @@ if test "x$ac_cv_func_strnlen_working" = xyes; then
   AC_DEFINE(HAVE_STRNLEN, 1, [Define to 1 if you have a working strnlen function.])
 fi
 
-# Check for iconv in libc, then libiconv
-AC_SEARCH_LIBS([iconv], [iconv], [AC_DEFINE([HAVE_ICONV], 1,
-	[Define to 1 if you have the iconv() function])])
+AM_ICONV
 
 # Allow using xcb-icccm, but don't make it the default while the API is
 # still being changed.
@@ -70,6 +68,7 @@ PKG_CHECK_MODULES(XWININFO, [xcb >= 1.6] xcb-shape ${xcb_icccm_pc})
 # and libX11 headers for cursorfont.h
 PKG_CHECK_MODULES(XLIB, x11 [xproto >= 7.0.17])
 XWININFO_CFLAGS="${XWININFO_CFLAGS} ${XLIB_CFLAGS}"
+XWININFO_LIBS="${XWININFO_LIBS} ${LIBICONV}"
 
 AC_CONFIG_FILES([
 	Makefile

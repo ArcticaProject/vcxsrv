@@ -691,10 +691,13 @@ void *
 pixman_malloc_abc (unsigned int a, unsigned int b, unsigned int c);
 
 pixman_bool_t
-pixman_multiply_overflows_int (unsigned int a, unsigned int b);
+_pixman_multiply_overflows_size (size_t a, size_t b);
 
 pixman_bool_t
-pixman_addition_overflows_int (unsigned int a, unsigned int b);
+_pixman_multiply_overflows_int (unsigned int a, unsigned int b);
+
+pixman_bool_t
+_pixman_addition_overflows_int (unsigned int a, unsigned int b);
 
 /* Compositing utilities */
 void

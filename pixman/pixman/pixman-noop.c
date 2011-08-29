@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include "pixman-private.h"
 #include "pixman-combine32.h"
-#include "pixman-fast-path.h"
+#include "pixman-inlines.h"
 
 static void
 noop_composite (pixman_implementation_t *imp,

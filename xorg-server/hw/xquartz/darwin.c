@@ -322,8 +322,8 @@ static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
                                     (PtrCtrlProcPtr)NoopDDA,
                                     GetMotionHistorySize(), NAXES,
                                     axes_labels);
-//            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
-//            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1, Absolute);
+            InitValuatorAxisStruct(pPointer, 0, axes_labels[0], NO_AXIS_LIMITS, NO_AXIS_LIMITS, 0, 0, 0, Absolute);
+            InitValuatorAxisStruct(pPointer, 1, axes_labels[1], NO_AXIS_LIMITS, NO_AXIS_LIMITS, 0, 0, 0, Absolute);
             break;
         case DEVICE_ON:
             pPointer->public.on = TRUE;

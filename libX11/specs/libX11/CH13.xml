@@ -143,6 +143,7 @@ is selecting one of several styles of keyboard input method.
 <!-- .sp -->
 To configure Xlib locale modifiers for the current locale, use
 <function>XSetLocaleModifiers</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetLocaleModifiers</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetlocalemodifiers'>
@@ -164,7 +165,6 @@ Specifies the modifiers.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -287,63 +287,54 @@ the following table describes the locale (and modifiers) dependency:
 </para>
 
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='3'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
   <thead>
     <row>
-      <entry>Locale from</entry>
-      <entry>Affects the Function</entry>
-      <entry>In</entry>
+      <entry align='center'>Locale from</entry>
+      <entry align='center'>Affects the Function</entry>
+      <entry align='center'>In</entry>
     </row>
   </thead>
   <tbody>
     <row>
-      <entry></entry>
-      <entry>Locale Query/Configuration:</entry>
+      <entry nameend='c3' namest='c1'>
+      <emphasis role='bold'>Locale Query/Configuration:</emphasis></entry>
     </row>
     <row>
-      <entry><function>setlocale</function></entry>
+      <entry morerows='1'><function>setlocale</function></entry>
       <entry><function>XSupportsLocale</function></entry>
       <entry>Locale queried</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XSetLocaleModifiers</function></entry>
       <entry>Locale modified</entry>
     </row>
     <row>
-      <entry></entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry>Resources:</entry>
+      <entry nameend='c3' namest='c1'>
+      <emphasis role='bold'>Resources:</emphasis></entry>
     </row>
     <row>
       <entry><function>setlocale</function></entry>
-      <entry><function>XrmGetFileDatabase</function></entry>
+      <entry>
+        <para><function>XrmGetFileDatabase</function></para>
+        <para><function>XrmGetStringDatabase</function></para>
+      </entry>
       <entry>Locale of <type>XrmDatabase</type></entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry><function>XrmGetStringDatabase</function></entry>
     </row>
     <row>
       <entry><type>XrmDatabase</type></entry>
-      <entry><function>XrmPutFileDatabase</function></entry>
+      <entry>
+        <para><function>XrmPutFileDatabase</function></para>
+        <para><function>XrmLocaleOfDatabase</function></para>
+      </entry>
       <entry>Locale of <type>XrmDatabase</type></entry>
     </row>
     <row>
-      <entry></entry>
-      <entry><function>XrmLocaleOfDatabase</function></entry>
-    </row>
-    <row>
-      <entry></entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry>Setting Standard Properties:</entry>
+      <entry nameend='c3' namest='c1'>
+      <emphasis role='bold'>Setting Standard Properties:</emphasis></entry>
     </row>
     <row>
       <entry><function>setlocale</function></entry>
@@ -354,128 +345,99 @@ the following table describes the locale (and modifiers) dependency:
     </row>
     <row>
       <entry><function>setlocale</function></entry>
-      <entry><function>XmbTextPropertyToTextList</function></entry>
+      <entry>
+        <para><function>XmbTextPropertyToTextList</function></para>
+        <para><function>XwcTextPropertyToTextList</function></para>
+        <para><function>XmbTextListToTextProperty</function></para>
+        <para><function>XwcTextListToTextProperty</function></para>
+      </entry>
       <entry>Encoding of supplied/returned text</entry>
     </row>
     <row>
-      <entry></entry>
-      <entry><function>XwcTextPropertyToTextList</function></entry>
+      <entry nameend='c3' namest='c1'>
+      <emphasis role='bold'>Text Input:</emphasis></entry>
     </row>
     <row>
-      <entry></entry>
-      <entry><function>XmbTextListToTextProperty</function></entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry><function>XwcTextListToTextProperty</function></entry>
-    </row>
-    <row>
-      <entry></entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry>Text Input:</entry>
-    </row>
-    <row>
-      <entry><function>setlocale</function></entry>
+      <entry morerows='2'><function>setlocale</function></entry>
       <entry><function>XOpenIM</function></entry>
       <entry><acronym>XIM</acronym> input method selection</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XRegisterIMInstantiateCallback</function></entry>
       <entry><acronym>XIM</acronym> selection</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XUnregisterIMInstantiateCallback</function></entry>
       <entry><acronym>XIM</acronym> selection</entry>
     </row>
     <row>
-      <entry><type>XIM</type></entry>
+      <entry morerows='1'><type>XIM</type></entry>
       <entry><function>XCreateIC</function></entry>
       <entry><acronym>XIC</acronym> input method configuration</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XLocaleOfIM</function>,  and so on</entry>
       <entry>Queried locale</entry>
     </row>
     <row>
-      <entry><type>XIC</type></entry>
+      <entry morerows='1'><type>XIC</type></entry>
       <entry><function>XmbLookupString</function></entry>
       <entry>Keyboard layout</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XwcLookupString</function></entry>
       <entry>Encoding of returned text</entry>
     </row>
     <row>
-      <entry></entry>
+      <entry nameend='c3' namest='c1'>
+      <emphasis role='bold'>Text Drawing:</emphasis></entry>
     </row>
     <row>
-      <entry></entry>
-      <entry>Text Drawing:</entry>
-    </row>
-    <row>
-      <entry><function>setlocale</function></entry>
+      <entry morerows='1'><function>setlocale</function></entry>
       <entry><function>XOpenOM</function></entry>
       <entry><acronym>XOM</acronym> output method selection</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XCreateFontSet</function></entry>
       <entry>Charsets of fonts in XFontSet</entry>
     </row>
     <row>
-      <entry><type>XOM</type></entry>
+      <entry morerows='1'><type>XOM</type></entry>
       <entry><function>XCreateOC</function></entry>
       <entry><acronym>XOC</acronym> output method configuration</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XLocaleOfOM</function>,  and so on</entry>
       <entry>Queried locale</entry>
     </row>
     <row>
-      <entry><type>XFontSet</type></entry>
+      <entry morerows='2'><type>XFontSet</type></entry>
       <entry><function>XmbDrawText</function>,</entry>
       <entry>Locale of supplied text</entry>
     </row>
     <row>
-      <entry></entry>
       <entry><function>XwcDrawText</function>, and so on</entry>
       <entry>Locale of supplied text</entry>
     </row>
     <row>
-      <entry></entry>
-      <entry><function>XExtentsOfFontSet</function>, and so on</entry>
+      <entry>
+        <para><function>XExtentsOfFontSet</function>,  and so on</para>
+        <para><function>XmbTextExtents</function>,</para>
+        <para><function>XwcTextExtents</function>,  and so on</para>
+      </entry>
       <entry>Locale-dependent metrics</entry>
     </row>
     <row>
-      <entry></entry>
-      <entry><function>XmbTextExtents</function>,</entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry><function>XwcTextExtents</function>,  and so on</entry>
-    </row>
-    <row>
-      <entry></entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry>Xlib Errors:</entry>
+      <entry nameend='c3' namest='c1'>
+      <emphasis role='bold'>Xlib Errors:</emphasis></entry>
     </row>
     <row>
       <entry><function>setlocale</function></entry>
-      <entry><function>XGetErrorDatabaseText</function></entry>
+      <entry>
+        <para><function>XGetErrorDatabaseText</function>,</para>
+        <para><function>XGetErrorText</function>,  and so on</para>
+      </entry>
       <entry>Locale of error message</entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry><function>XGetErrorText</function></entry>
     </row>
   </tbody>
   </tgroup>
@@ -542,6 +504,7 @@ A NULL identifies the end of a nested list.
 <!-- .sp -->
 To allocate a nested variable argument list dynamically, use
 <function>XVaCreateNestedList</function>.
+</para>
 <indexterm significance="preferred"><primary>XVaCreateNestedList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xvacreatenestedlist'>
@@ -574,7 +537,6 @@ Specifies the variable length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -729,6 +691,7 @@ a broader, more generalized abstraction.
 <!-- .LP -->
 To open an output method, use
 <function>XOpenOM</function>.
+</para>
 <indexterm significance="preferred"><primary>XOpenOM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xopenom'>
@@ -783,7 +746,6 @@ Specifies the full class name of the application.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -847,6 +809,7 @@ returns NULL if no output method could be opened.
 <!-- .sp -->
 To close an output method, use
 <function>XCloseOM</function>.
+</para>
 <indexterm significance="preferred"><primary>XCloseOM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcloseom'>
@@ -868,7 +831,6 @@ Specifies the output method.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -881,6 +843,7 @@ function closes the specified output method.
 <!-- .sp -->
 To set output method attributes, use 
 <function>XSetOMValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetOMValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetomvalues'>
@@ -913,7 +876,6 @@ Specifies the variable-length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -934,6 +896,7 @@ No standard arguments are currently defined by Xlib.
 <!-- .sp -->
 To query an output method, use 
 <function>XGetOMValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetOMValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetomvalues'>
@@ -966,7 +929,6 @@ Specifies the variable-length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -982,6 +944,7 @@ it returns the name of the first argument that could not be obtained.
 <!-- .LP -->
 To obtain the display associated with an output method, use
 <function>XDisplayOfOM</function>.
+</para>
 <indexterm significance="preferred"><primary>XDisplayOfOM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdisplayofom'>
@@ -1003,7 +966,6 @@ Specifies the output method.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1016,6 +978,7 @@ function returns the display associated with the specified output method.
 <!-- .sp -->
 To get the locale associated with an output method, use
 <function>XLocaleOfOM</function>.
+</para>
 <indexterm significance="preferred"><primary>XLocaleOfOM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlocaleofom'>
@@ -1037,7 +1000,6 @@ Specifies the output method.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1067,13 +1029,13 @@ The following key applies to this table.
 </para>
 
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Key</entry>
-      <entry>Explanation</entry>
+      <entry align='left'>Key</entry>
+      <entry align='left'>Explanation</entry>
     </row>
   </thead>
   <tbody>
@@ -1085,14 +1047,16 @@ The following key applies to this table.
   </tgroup>
 </informaltable>
 
+<para></para>
+
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry><acronym>XOM</acronym> Value</entry>
-      <entry>Key</entry>
+      <entry align='left'><acronym>XOM</acronym> Value</entry>
+      <entry align='left'>Key</entry>
     </row>
   </thead>
   <tbody>
@@ -1352,6 +1316,7 @@ is defined as an upward compatible type of
 <!-- .sp -->
 To create an output context, use
 <function>XCreateOC</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateOC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreateoc'>
@@ -1384,7 +1349,6 @@ Specifies the variable-length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1438,6 +1402,7 @@ error.
 <!-- .sp -->
 To destroy an output context, use
 <function>XDestroyOC</function>.
+</para>
 <indexterm significance="preferred"><primary>XDestroyOC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdestroyoc'>
@@ -1459,7 +1424,6 @@ Specifies the output context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1472,6 +1436,7 @@ function destroys the specified output context.
 <!-- .sp -->
 To get the output method associated with an output context, use
 <function>XOMOfOC</function>.
+</para>
 <indexterm significance="preferred"><primary>XOMOfOC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xomofoc'>
@@ -1493,7 +1458,6 @@ Specifies the output context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1519,6 +1483,7 @@ with a character string using the X Portable Character Set.
 <!-- .sp -->
 To set <acronym>XOC</acronym> values, use
 <function>XSetOCValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetOCValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetocvalues'>
@@ -1551,7 +1516,6 @@ Specifies the variable-length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1596,6 +1560,7 @@ error.
 <!-- .sp -->
 To obtain <acronym>XOC</acronym> values, use
 <function>XGetOCValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetOCValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetocvalues'>
@@ -1628,7 +1593,6 @@ Specifies the variable-length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1676,13 +1640,13 @@ The third column indicates how each of the <acronym>XOC</acronym> values is trea
 The following keys apply to this table.
 </para>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Key</entry>
-      <entry>Explanation</entry>
+      <entry align='left'>Key</entry>
+      <entry align='left'>Explanation</entry>
     </row>
   </thead>
   <tbody>
@@ -1707,17 +1671,18 @@ The following keys apply to this table.
   </tgroup>
 </informaltable>
 
-<!-- .LP -->
+<para></para>
+
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='3'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
   <thead>
     <row>
-      <entry><acronym>XOC</acronym> Value</entry>
-      <entry>Alternative Interface</entry>
-      <entry>Key</entry>
+      <entry align='left'><acronym>XOC</acronym> Value</entry>
+      <entry align='left'>Alternative Interface</entry>
+      <entry align='left'>Key</entry>
     </row>
   </thead>
   <tbody>
@@ -2144,6 +2109,7 @@ so that the output context self indicates whether it was created by
 <function>XCreateOC</function>
 or
 <function>XCreateFontSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatefontset'>
@@ -2209,7 +2175,6 @@ Returns the string drawn for missing charsets.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2474,6 +2439,7 @@ structures and full font names given an
 <type>XFontSet</type>,
 use
 <function>XFontsOfFontSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XFontsOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfontsoffontset'>
@@ -2517,7 +2483,6 @@ Returns the list of font names.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2583,6 +2548,7 @@ To obtain the base font name list and the selected font name list given an
 <type>XFontSet</type>,
 use
 <function>XBaseFontNameListOfFontSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XBaseFontNameListOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xbasefontnamelistoffontset'>
@@ -2604,7 +2570,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2645,6 +2610,7 @@ To obtain the locale name given an
 <type>XFontSet</type>,
 use
 <function>XLocaleOfFontSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XLocaleOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlocaleoffontset'>
@@ -2666,7 +2632,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2698,6 +2663,7 @@ also frees its associated
 <type>XOM</type>
 if the output context was created by
 <function>XCreateFontSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreefontset'>
@@ -2730,7 +2696,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2802,6 +2767,7 @@ to obtain proper rendering.
 <!-- .sp -->
 To find out about direction-dependent rendering, use
 <function>XDirectionalDependentDrawing</function>.
+</para>
 <indexterm significance="preferred"><primary>XDirectionalDependentDrawing</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdirectionaldependentdrawing'>
@@ -2823,7 +2789,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2840,6 +2805,7 @@ otherwise, it returns
 <!-- .sp -->
 To find out about context-dependent rendering, use
 <function>XContextualDrawing</function>.
+</para>
 <indexterm significance="preferred"><primary>XContextualDrawing</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcontextualdrawing'>
@@ -2861,7 +2827,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2878,6 +2843,7 @@ otherwise, it returns
 <!-- .sp -->
 To find out about context-dependent or direction-dependent rendering, use
 <function>XContextDependentDrawing</function>.
+</para>
 <indexterm significance="preferred"><primary>XContextDependentDrawing</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcontextdependentdrawing'>
@@ -2899,7 +2865,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2992,6 +2957,7 @@ To obtain the maximum extents structure given an
 <type>XFontSet</type>,
 use
 <function>XExtentsOfFontSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XExtentsOfFontSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xextentsoffontset'>
@@ -3013,7 +2979,6 @@ Specifies the font set.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3044,6 +3009,7 @@ use
 <function>XmbTextEscapement</function>
 or 
 <function>XwcTextEscapement</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbTextEscapement</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextEscapement</primary></indexterm>
 <!-- .sM -->
@@ -3107,7 +3073,6 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3136,6 +3101,7 @@ use
 <function>XmbTextExtents</function>
  or
 <function>XwcTextExtents</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbTextExtents</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextExtents</primary></indexterm>
 <!-- .sM -->
@@ -3224,7 +3190,6 @@ Returns the overall logical dimensions.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3296,6 +3261,7 @@ use
 <function>XmbTextPerCharExtents</function>
 or
 <function>XwcTextPerCharExtents</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbTextPerCharExtents</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextPerCharExtents</primary></indexterm>
 <!-- .sM -->
@@ -3433,7 +3399,6 @@ Returns the overall logical dimensions.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3579,6 +3544,7 @@ To draw text using multiple font sets in a given drawable, use
 <function>XmbDrawText</function>
 or
 <function>XwcDrawText</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbDrawText</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawText</primary></indexterm>
 <!-- .sM -->
@@ -3680,7 +3646,6 @@ Specifies the number of text items in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3730,6 +3695,7 @@ To draw text using a single font set in a given drawable, use
 <function>XmbDrawString</function>
 or
 <function>XwcDrawString</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbDrawString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawString</primary></indexterm>
 <!-- .sM -->
@@ -3853,7 +3819,6 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3876,6 +3841,7 @@ To draw image text using a single font set in a given drawable, use
 <function>XmbDrawImageString</function>
 or
 <function>XwcDrawImageString</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbDrawImageString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawImageString</primary></indexterm>
 <!-- .sM -->
@@ -3999,7 +3965,6 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5037,7 +5002,7 @@ To support management of input methods in these cases, the following
 functions are provided:
 </para>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -5184,6 +5149,7 @@ IM value.
 <!-- .LP -->
 To open a connection, use
 <function>XOpenIM</function>.
+</para>
 <indexterm significance="preferred"><primary>XOpenIM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xopenim'>
@@ -5238,7 +5204,6 @@ Specifies the full class name of the application.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5305,6 +5270,7 @@ returns NULL if no input method could be opened.
 <!-- .sp -->
 To close a connection, use
 <function>XCloseIM</function>.
+</para>
 <indexterm significance="preferred"><primary>XCloseIM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcloseim'>
@@ -5326,7 +5292,6 @@ Specifies the input method.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5339,6 +5304,7 @@ function closes the specified input method.
 <!-- .sp -->
 To set input method attributes, use
 <function>XSetIMValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetIMValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetimvalues'>
@@ -5371,7 +5337,6 @@ Specifies the variable-length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5392,6 +5357,7 @@ correctly.
 <!-- .sp -->
 To query an input method, use 
 <function>XGetIMValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetIMValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetimvalues'>
@@ -5424,7 +5390,6 @@ Specifies the variable length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5455,6 +5420,7 @@ with the returned pointer.
 <!-- .sp -->
 To obtain the display associated with an input method, use
 <function>XDisplayOfIM</function>.
+</para>
 <indexterm significance="preferred"><primary>XDisplayOfIM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdisplayofim'>
@@ -5476,7 +5442,6 @@ Specifies the input method.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5489,6 +5454,7 @@ function returns the display associated with the specified input method.
 <!-- .sp -->
 To get the locale associated with an input method, use
 <function>XLocaleOfIM</function>.
+</para>
 <indexterm significance="preferred"><primary>XLocaleOfIM</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlocaleofim'>
@@ -5510,7 +5476,6 @@ Specifies the input method.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5523,6 +5488,7 @@ function returns the locale associated with the specified input method.
 <!-- .sp -->
 To register an input method instantiate callback, use
 <function>XRegisterIMInstantiateCallback</function>.
+</para>
 <indexterm significance="preferred"><primary>XRegisterIMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xregisteriminstantiatecallback'>
@@ -5599,7 +5565,6 @@ Specifies the additional client data.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5619,6 +5584,7 @@ The function returns
 <para>
 <!-- .LP -->
 The generic prototype is as follows:
+</para>
 <indexterm significance="preferred"><primary>IMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='iminstantiatecallback'>
@@ -5662,12 +5628,12 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 To unregister an input method instantiation callback, use
 <function>XUnregisterIMInstantiateCallback</function>.
+</para>
 <indexterm significance="preferred"><primary>XUnregisterIMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunregisteriminstantiatecallback'>
@@ -5744,7 +5710,6 @@ Specifies the additional client data.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5779,13 +5744,13 @@ are treated by that input style.
 The following keys apply to this table.
 </para>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Key</entry>
-      <entry>Explanation</entry>
+      <entry align='left'>Key</entry>
+      <entry align='left'>Explanation</entry>
     </row>
   </thead>
   <tbody>
@@ -5808,15 +5773,16 @@ The following keys apply to this table.
   </tgroup>
 </informaltable>
 
-<!-- .LP -->
+<para></para>
+
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry><acronym>XIM</acronym> Value</entry>
-      <entry>Key</entry>
+      <entry align='left'><acronym>XIM</acronym> Value</entry>
+      <entry align='left'>Key</entry>
     </row>
   </thead>
   <tbody>
@@ -5965,7 +5931,7 @@ by the input method for preedit information.
 <indexterm significance="preferred"><primary>XIMPreeditNothing</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMPreeditNone</primary></indexterm>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -6023,7 +5989,7 @@ by the input method for status information.
 <indexterm significance="preferred"><primary>XIMStatusNothing</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMStatusNone</primary></indexterm>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -6109,6 +6075,7 @@ or
 <para>
 <!-- .LP -->
 The generic prototype of this callback function is as follows:
+</para>
 <indexterm significance="preferred"><primary>DestroyCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='destroycallback'>
@@ -6152,7 +6119,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6345,6 +6311,7 @@ they should be registered with the X Consortium.
 <!-- .sp -->
 To create an input context, use
 <function>XCreateIC</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateIC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreateic'>
@@ -6377,7 +6344,6 @@ Specifies the variable length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6438,6 +6404,7 @@ errors.
 <!-- .sp -->
 To destroy an input context, use
 <function>XDestroyIC</function>.
+</para>
 <indexterm significance="preferred"><primary>XDestroyIC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdestroyic'>
@@ -6459,7 +6426,6 @@ Specifies the input context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6475,6 +6441,7 @@ use
 <function>XSetICFocus</function>
 and
 <function>XUnsetICFocus</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetICFocus</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xseticfocus'>
@@ -6496,7 +6463,6 @@ Specifies the input context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6513,9 +6479,6 @@ Calling
 <function>XSetICFocus</function>
 does not affect the focus window value.
 </para>
-<para>
-<!-- .LP -->
-<!-- .sp -->
 <indexterm significance="preferred"><primary>XUnsetICFocus</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunseticfocus'>
@@ -6537,7 +6500,6 @@ Specifies the input context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6564,6 +6526,7 @@ To reset the state of an input context to its initial state, use
 <function>XmbResetIC</function>
 or
 <function>XwcResetIC</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbResetIC</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcResetIC</primary></indexterm>
 <!-- .sM -->
@@ -6593,7 +6556,6 @@ Specifies the input context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6640,6 +6602,7 @@ The client should free the returned string by calling
 <!-- .sp -->
 To get the input method associated with an input context, use
 <function>XIMOfIC</function>.
+</para>
 <indexterm significance="preferred"><primary>XIMOfIC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='ximofic'>
@@ -6661,7 +6624,6 @@ Specifies the input context.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6685,6 +6647,7 @@ with a character string using the X Portable Character Set.
 <!-- .sp -->
 To set <acronym>XIC</acronym> values, use
 <function>XSetICValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetICValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xseticvalues'>
@@ -6717,7 +6680,6 @@ Specifies the variable length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6768,6 +6730,7 @@ errors.
 <!-- .sp -->
 To obtain <acronym>XIC</acronym> values, use
 <function>XGetICValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetICValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgeticvalues'>
@@ -6800,7 +6763,6 @@ Specifies the variable length argument list(Al.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6870,13 +6832,13 @@ are treated by that input style.
 The following keys apply to these tables.
 </para>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Key</entry>
-      <entry>Explanation</entry>
+      <entry align='left'>Key</entry>
+      <entry align='left'>Explanation</entry>
     </row>
   </thead>
   <tbody>
@@ -6930,9 +6892,11 @@ The following keys apply to these tables.
   </tgroup>
 </informaltable>
 
+<para></para>
+
 <!-- .LP -->
 <informaltable>
-  <tgroup cols='7' align='center'>
+  <tgroup cols='7'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
@@ -6940,7 +6904,7 @@ The following keys apply to these tables.
   <colspec colname='c5'/>
   <colspec colname='c6'/>
   <colspec colname='c7'/>
-  <tbody>
+  <thead>
     <row>
       <entry><acronym>XIC</acronym> Value</entry>
       <entry>Geometry Mangement</entry>
@@ -6950,6 +6914,8 @@ The following keys apply to these tables.
       <entry>Preedit Nothing</entry>
       <entry>Preedit None</entry>
     </row>
+    </thead>
+  <tbody>
     <row>
       <entry>Input Style</entry>
       <entry></entry>
@@ -7191,9 +7157,11 @@ The following keys apply to these tables.
   </tgroup>
 </informaltable>
 
+<para></para>
+
 <!-- .LP -->
 <informaltable>
-  <tgroup cols='6' align='center'>
+  <tgroup cols='6'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
@@ -7848,7 +7816,7 @@ is ignored when evaluating whether the key is hot or not.
 </para>
 
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='3'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
@@ -8322,6 +8290,7 @@ The value of the
 argument is a pointer to a structure of type
 <structname>XIMCallback</structname>.
 The generic prototype is as follows:
+</para>
 <indexterm significance="preferred"><primary>PreeditStateNotifyCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='preeditstatenotifycallback'>
@@ -8365,7 +8334,6 @@ Specifies the current preedit state.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -8415,7 +8383,7 @@ The set of preedit callbacks is as follows:
 <indexterm significance="preferred"><primary>XNPreeditDrawCallback</primary></indexterm>
 <indexterm significance="preferred"><primary>XNPreeditCaretCallback</primary></indexterm>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -8451,7 +8419,7 @@ The set of status callbacks is as follows:
 <indexterm significance="preferred"><primary>XNStatusDoneCallback</primary></indexterm>
 <indexterm significance="preferred"><primary>XNStatusDrawCallback</primary></indexterm>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -8540,6 +8508,7 @@ terminate preedit, or update the status area.
 <para>
 <!-- .LP -->
 All callback procedures follow the generic prototype:
+</para>
 <indexterm significance="preferred"><primary>CallbackPrototype</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
@@ -8583,7 +8552,6 @@ Specifies data specific to the callback.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -8612,6 +8580,7 @@ and specific data structure associated with the different reasons.
 The geometry callback is triggered by the input method 
 to indicate that it wants the client to negotiate geometry.
 The generic prototype is as follows:
+</para>
 <indexterm significance="preferred"><primary>GeometryCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
@@ -8655,7 +8624,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -8673,6 +8641,7 @@ The destroy callback is triggered by the input method
 when it stops service for any reason.
 After the callback is invoked, the input context will be freed by Xlib.
 The generic prototype is as follows:
+</para>
 <indexterm significance="preferred"><primary>DestroyCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='destroycallback_xic'>
@@ -8716,7 +8685,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -8735,6 +8703,7 @@ to request the client to return the string to be converted.  The
 returned string may be either a multibyte or wide character string,
 with an encoding matching the locale bound to the input context.
 The callback prototype is as follows:
+</para>
 <indexterm significance="preferred"><primary>StringConversionCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='stringconversioncallback'>
@@ -8778,7 +8747,6 @@ Specifies the amount of the string to be converted.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -8897,6 +8865,7 @@ or
 <function><replaceable>PreeditDoneCallback</replaceable></function>
 callback is triggered to let the toolkit do the setup
 or the cleanup for the preedit region.
+</para>
 <indexterm significance="preferred"><primary>PreeditStartCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='preeditstartcallback'>
@@ -8940,7 +8909,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -8951,6 +8919,7 @@ will return the maximum size of the preedit string.
 A positive number indicates the maximum number of bytes allowed
 in the preedit string, 
 and a value of -1 indicates there is no limit.
+</para>
 <indexterm significance="preferred"><primary>PreeditDoneCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='preeditdonecallback'>
@@ -8994,7 +8963,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9032,6 +9000,7 @@ That string is either a multibyte or wide character string,
 whose encoding matches the locale bound to the input context.
 The callback prototype
 is as follows:
+</para>
 <indexterm significance="preferred"><primary>PreeditDrawCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='preeditdrawcallback'>
@@ -9075,7 +9044,6 @@ Specifies the preedit drawing information.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9419,6 +9387,7 @@ to move the text insertion point in the preedit area
 Consequently, input method needs to indicate to the client that it
 should move the text insertion point.
 It then calls the PreeditCaretCallback.
+</para>
 <indexterm significance="preferred"><primary>PreeditCaretCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='preeditcaretcallback'>
@@ -9462,7 +9431,6 @@ Specifies the preedit caret information.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9553,7 +9521,7 @@ These values are defined as follows:
 <indexterm significance="preferred"><primary>XIMCaretUp</primary></indexterm>
 <indexterm significance="preferred"><primary>XIMCaretDown</primary></indexterm>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -9635,6 +9603,7 @@ callbacks:  StatusStartCallback, StatusDoneCallback, and StatusDrawCallback.
 <!-- .sp -->
 When the input context is created or gains focus, 
 the input method calls the StatusStartCallback callback.
+</para>
 <indexterm significance="preferred"><primary>StatusStartCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='statusstartcallback'>
@@ -9678,7 +9647,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9692,6 +9660,7 @@ it will not be called again before StatusDoneCallback has been called.
 <!-- .sp -->
 When an input context
 is destroyed or when it loses focus, the input method calls StatusDoneCallback.
+</para>
 <indexterm significance="preferred"><primary>StatusDoneCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='statusdonecallback'>
@@ -9735,7 +9704,6 @@ Not used for this callback and always passed as NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9747,6 +9715,7 @@ The callback may release any data allocated on
 <!-- .sp -->
 When an input context status has to be updated, the input method calls
 StatusDrawCallback.
+</para>
 <indexterm significance="preferred"><primary>StatusDrawCallback</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='statusdrawcallback'>
@@ -9790,7 +9759,6 @@ Specifies the status drawing information.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9885,6 +9853,7 @@ Clients should discard filtered events.
 <!-- .LP -->
 To filter an event, use
 <function>XFilterEvent</function>.
+</para>
 <indexterm significance="preferred"><primary>XFilterEvent</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfilterevent'>
@@ -9919,7 +9888,6 @@ Specifies the window (Wi.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -9968,6 +9936,7 @@ use
 <function>XmbLookupString</function>
 or
 <function>XwcLookupString</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbLookupString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcLookupString</primary></indexterm>
 <!-- .sM -->
@@ -10070,7 +10039,6 @@ Returns a value indicating what kind of data is returned.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -10137,7 +10105,7 @@ The possible values returned are:
 </para>
 
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>

@@ -171,10 +171,14 @@ def c_open(self):
     _c('#include <stdlib.h>')
     _c('#include <string.h>')
     _c('#include <assert.h>')
+    _c('#include <stddef.h>  /* for offsetof() */')
     _c('#include "xcbext.h"')
     _c('#include "%s.h"', _ns.header)
     _c('#include <X11/Xtrans/Xtrans.h>')
         
+    _c('')
+    _c('#define ALIGNOF(type) offsetof(struct { char dummy; type member; }, member)')
+
     if _ns.is_ext:
         for (n, h) in self.imports:
             _hc('#include "%s.h"', h)
@@ -638,7 +642,7 @@ def get_serialize_params(context, self, buffer_var='_buffer', aux_var='_aux'):
 
 def _c_serialize_helper_insert_padding(context, code_lines, space, postpone):
     code_lines.append('%s    /* insert padding */' % space)
-    code_lines.append('%s    xcb_pad = -xcb_block_len & 3;' % space)
+    code_lines.append('%s    xcb_pad = -xcb_block_len & (xcb_align_to - 1);' % space)
 #    code_lines.append('%s    printf("automatically inserting padding: %%%%d\\n", xcb_pad);' % space)
     code_lines.append('%s    xcb_buffer_len += xcb_block_len + xcb_pad;' % space)
 
@@ -994,6 +998,8 @@ def _c_serialize_helper_fields(context, self,
             code_lines.append('%s    xcb_parts_idx++;' % space)
             count += 1
 
+        code_lines.append('%s    xcb_align_to = ALIGNOF(%s);' % (space, 'char' if field.c_field_type == 'void' else field.c_field_type))
+
         need_padding = True
         if self.var_followed_by_fixed_fields:
             need_padding = False
@@ -1101,9 +1107,11 @@ def _c_serialize(context, self):
             _c('    %s *xcb_out = *_buffer;', self.c_type)
             _c('    unsigned int xcb_out_pad = -sizeof(%s) & 3;', self.c_type)
             _c('    unsigned int xcb_buffer_len = sizeof(%s) + xcb_out_pad;', self.c_type)
+            _c('    unsigned int xcb_align_to;')
         else:
             _c('    char *xcb_out = *_buffer;')
             _c('    unsigned int xcb_buffer_len = 0;')
+            _c('    unsigned int xcb_align_to;')
         prefix = [('_aux', '->', self)]
         aux_ptr = 'xcb_out'
 
@@ -1126,6 +1134,7 @@ def _c_serialize(context, self):
         _c('    unsigned int xcb_buffer_len = 0;')
         _c('    unsigned int xcb_block_len = 0;')
         _c('    unsigned int xcb_pad = 0;')
+        _c('    unsigned int xcb_align_to;')
 
     elif 'sizeof' == context:
         param_names = [p[2] for p in params]
@@ -1170,6 +1179,7 @@ def _c_serialize(context, self):
             _c('    unsigned int xcb_buffer_len = 0;')
             _c('    unsigned int xcb_block_len = 0;')
             _c('    unsigned int xcb_pad = 0;')        
+            _c('    unsigned int xcb_align_to;')
 
     _c('')
     for t in temp_vars:

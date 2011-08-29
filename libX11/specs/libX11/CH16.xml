@@ -98,6 +98,7 @@ use the functions described in section 12.7.
 <!-- .sp -->
 To obtain a KeySym for the KeyCode of an event, use
 <function>XLookupKeysym</function>.
+</para>
 <indexterm significance="preferred"><primary>XLookupKeysym</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlookupkeysym'>
@@ -134,7 +135,6 @@ Specifies the index into the KeySyms list for the event's KeyCode.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -156,6 +156,7 @@ returns
 <!-- .sp -->
 To obtain a KeySym for a specific KeyCode, use
 <function>XKeycodeToKeysym</function>.
+</para>
 <indexterm significance="preferred"><primary>XKeycodeToKeysym</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xkeycodetokeysym'>
@@ -199,7 +200,6 @@ Specifies the element of KeyCode vector.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -218,6 +218,7 @@ returns
 <!-- .sp -->
 To obtain a KeyCode for a key having a specific KeySym, use
 <function>XKeysymToKeycode</function>.
+</para>
 <indexterm significance="preferred"><primary>XKeysymToKeycode</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xkeysymtokeycode'>
@@ -250,7 +251,6 @@ Specifies the KeySym that is to be searched for.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -266,6 +266,7 @@ When this information is changed at the server, an Xlib function must
 be called to refresh the cache.
 To refresh the stored modifier and keymap information, use
 <function>XRefreshKeyboardMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XRefreshKeyboardMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrefreshkeyboardmapping'>
@@ -287,7 +288,6 @@ Specifies the mapping event that is to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -308,6 +308,7 @@ The result is to update Xlib's knowledge of the keyboard.
 <!-- .sp -->
 To obtain the uppercase and lowercase forms of a KeySym, use
 <function>XConvertCase</function>.
+</para>
 <indexterm significance="preferred"><primary>XConvertCase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xconvertcase'>
@@ -352,7 +353,6 @@ Returns the uppercase form of keysym, or keysym.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -371,6 +371,7 @@ implementation-dependent.
 KeySyms have string names as well as numeric codes.
 To convert the name of the KeySym to the KeySym code, use
 <function>XStringToKeysym</function>.
+</para>
 <indexterm significance="preferred"><primary>XStringToKeysym</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xstringtokeysym'>
@@ -392,7 +393,6 @@ Specifies the name of the KeySym that is to be converted.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -421,6 +421,7 @@ returns
 <!-- .sp -->
 To convert a KeySym code to the name of the KeySym, use
 <function>XKeysymToString</function>.
+</para>
 <indexterm significance="preferred"><primary>XKeysymToString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xkeysymtostring'>
@@ -443,7 +444,6 @@ Specifies the KeySym that is to be (Fn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -670,6 +670,7 @@ described in chapter 13 and does not depend on the current locale.
 <!-- .sp -->
 To map a key event to an ISO Latin-1 string, use
 <function>XLookupString</function>.
+</para>
 <indexterm significance="preferred"><primary>XLookupString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlookupstring'>
@@ -742,7 +743,6 @@ structure or NULL.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -792,6 +792,7 @@ To rebind the meaning of a KeySym for
 <function>XLookupString</function>,
 use
 <function>XRebindKeysym</function>.
+</para>
 <indexterm significance="preferred"><primary>XRebindKeysym</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrebindkeysym'>
@@ -870,7 +871,6 @@ Specifies the number of bytes in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -930,7 +930,6 @@ To parse standard window geometry strings, use
 <indexterm><primary>Window</primary><secondary>determining location</secondary></indexterm>
 <indexterm significance="preferred"><primary>XParseGeometry</primary></indexterm>
 </para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
 <funcsynopsis id='xparsegeometry'>
@@ -996,7 +995,6 @@ Return the width and height determined.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1065,6 +1063,7 @@ you should place the window at the requested position.
 <!-- .LP -->
 To construct a window's geometry information, use
 <function>XWMGeometry</function>.
+</para>
 <indexterm significance="preferred"><primary>XWMGeometry</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xwmgeometry'>
@@ -1197,7 +1196,6 @@ Returns the window gravity.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1367,6 +1365,7 @@ see
 <!-- .sp -->
 To set the clip-mask of a GC to a region, use
 <function>XSetRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetregion'>
@@ -1410,7 +1409,6 @@ Specifies the region.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1427,6 +1425,7 @@ the region can be destroyed.
 <!-- .sp -->
 To deallocate the storage associated with a specified region, use
 <function>XDestroyRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XDestroyRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdestroyregion'>
@@ -1448,7 +1447,6 @@ Specifies the region.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1463,6 +1461,7 @@ Specifies the region.
 <!-- .LP -->
 To move a region by a specified amount, use 
 <function>XOffsetRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XOffsetRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xoffsetregion'>
@@ -1508,13 +1507,13 @@ which define the amount you want to (Dy the specified region.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
 <!-- .sp -->
 To reduce a region by a specified amount, use
 <function>XShrinkRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XShrinkRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xshrinkregion'>
@@ -1560,7 +1559,6 @@ which define the amount you want to (Dy the specified region.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1578,6 +1576,7 @@ and negative values expand the region.
 <!-- .sp -->
 To generate the smallest rectangle enclosing a region, use
 <function>XClipBox</function>.
+</para>
 <indexterm significance="preferred"><primary>XClipBox</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xclipbox'>
@@ -1610,7 +1609,6 @@ Returns the smallest enclosing rectangle.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1623,6 +1621,7 @@ function returns the smallest rectangle enclosing the specified region.
 <!-- .LP -->
 To compute the intersection of two regions, use
 <function>XIntersectRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XIntersectRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xintersectregion'>
@@ -1665,13 +1664,13 @@ Returns the result of the computation.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To compute the union of two regions, use
 <function>XUnionRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XUnionRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunionregion'>
@@ -1714,13 +1713,13 @@ Returns the result of the computation.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To create a union of a source region and a rectangle, use
 <function>XUnionRectWithRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XUnionRectWithRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunionrectwithregion'>
@@ -1764,7 +1763,6 @@ Returns the destination region.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1778,6 +1776,7 @@ and the specified source region.
 <!-- .sp -->
 To subtract two regions, use
 <function>XSubtractRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XSubtractRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsubtractregion'>
@@ -1820,7 +1819,6 @@ Returns the result of the computation.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1834,6 +1832,7 @@ function subtracts srb from sra and stores the results in dr_return.
 To calculate the difference between the union and intersection 
 of two regions, use
 <function>XXorRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XXorRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xxorregion'>
@@ -1876,7 +1875,6 @@ Returns the result of the computation.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1891,6 +1889,7 @@ Returns the result of the computation.
 <!-- .LP -->
 To determine if the specified region is empty, use
 <function>XEmptyRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XEmptyRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xemptyregion'>
@@ -1912,7 +1911,6 @@ Specifies the region.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -1927,6 +1925,7 @@ if the region is empty.
 <!-- .sp -->
 To determine if two regions have the same offset, size, and shape, use
 <function>XEqualRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XEqualRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xequalregion'>
@@ -1959,7 +1958,6 @@ Specify the two regions.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1979,6 +1977,7 @@ if the two regions have the same offset, size, and shape.
 <!-- .LP -->
 To determine if a specified point resides in a specified region, use
 <function>XPointInRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XPointInRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xpointinregion'>
@@ -2023,7 +2022,6 @@ Specify the x and y coordinates(Xy.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2038,6 +2036,7 @@ if the point (x, y) is contained in the region r.
 <!-- .sp -->
 To determine if a specified rectangle is inside a region, use
 <function>XRectInRegion</function>.
+</para>
 <indexterm significance="preferred"><primary>XRectInRegion</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrectinregion'>
@@ -2105,7 +2104,6 @@ Specify the width and height(Wh.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -2151,6 +2149,7 @@ and can be accessed as a ring or as explicit buffers (numbered 0 through 7).
 <!-- .sp -->
 To store data in cut buffer 0, use 
 <function>XStoreBytes</function>.
+</para>
 <indexterm significance="preferred"><primary>XStoreBytes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xstorebytes'>
@@ -2194,7 +2193,6 @@ Specifies the number of bytes to be stored.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2216,6 +2214,7 @@ error.
 <!-- .sp -->
 To store data in a specified cut buffer, use
 <function>XStoreBuffer</function>.
+</para>
 <indexterm significance="preferred"><primary>XStoreBuffer</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xstorebuffer'>
@@ -2271,7 +2270,6 @@ Specifies the buffer (Fn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2291,6 +2289,7 @@ error.
 <!-- .sp -->
 To return data from cut buffer 0, use 
 <function>XFetchBytes</function>.
+</para>
 <indexterm significance="preferred"><primary>XFetchBytes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfetchbytes'>
@@ -2323,7 +2322,6 @@ Returns the number of bytes in the buffer.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2343,6 +2341,7 @@ The client must free this storage when finished with it by calling
 <!-- .sp -->
 To return data from a specified cut buffer, use 
 <function>XFetchBuffer</function>.
+</para>
 <indexterm significance="preferred"><primary>XFetchBuffer</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfetchbuffer'>
@@ -2387,7 +2386,6 @@ Specifies the buffer (Fn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2402,6 +2400,7 @@ buffer is specified.
 <!-- .sp -->
 To rotate the cut buffers, use 
 <function>XRotateBuffers</function>.
+</para>
 <indexterm significance="preferred"><primary>XRotateBuffers</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrotatebuffers'>
@@ -2434,7 +2433,6 @@ Specifies how much to rotate the cut buffers.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -2522,6 +2520,7 @@ typedef struct {
 To obtain a list of visual information structures that match a specified
 template, use
 <function>XGetVisualInfo</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetVisualInfo</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetvisualinfo'>
@@ -2577,7 +2576,6 @@ Returns the number of matching visual structures.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2597,6 +2595,7 @@ To free the data returned by this function, use
 To obtain the visual information that matches the specified depth and
 class of the screen, use
 <function>XMatchVisualInfo</function>.
+</para>
 <indexterm significance="preferred"><primary>XMatchVisualInfo</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmatchvisualinfo'>
@@ -2662,7 +2661,6 @@ Returns the matched visual information.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2747,6 +2745,7 @@ To allocate an
 <structname>XImage</structname>
 structure and initialize it with image format values from a display, use
 <function>XCreateImage</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreateimage'>
@@ -2877,7 +2876,6 @@ the start of one scanline and the start of the next.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2930,6 +2928,7 @@ in the image object and are defined in
 <!-- .sp -->
 To obtain a pixel value in an image, use
 <function>XGetPixel</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetPixel</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetpixel'>
@@ -2974,7 +2973,6 @@ Specify the x and y coordinates.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2991,6 +2989,7 @@ The image must contain the x and y coordinates.
 <!-- .sp -->
 To set a pixel value in an image, use
 <function>XPutPixel</function>.
+</para>
 <indexterm significance="preferred"><primary>XPutPixel</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xputpixel'>
@@ -3046,7 +3045,6 @@ Specifies the new pixel value.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3063,6 +3061,7 @@ The image must contain the x and y coordinates.
 <!-- .sp -->
 To create a subimage, use
 <function>XSubImage</function>.
+</para>
 <indexterm significance="preferred"><primary>XSubImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsubimage'>
@@ -3129,7 +3128,6 @@ Specifies the height of the new subimage, in pixels.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3149,6 +3147,7 @@ and subimage_height.
 <!-- .sp -->
 To increment each pixel in an image by a constant value, use
 <function>XAddPixel</function>.
+</para>
 <indexterm significance="preferred"><primary>XAddPixel</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xaddpixel'>
@@ -3181,7 +3180,6 @@ Specifies the constant value that is to be added.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3198,6 +3196,7 @@ To deallocate the memory allocated in a previous call to
 <function>XCreateImage</function>,
 use
 <function>XDestroyImage</function>.
+</para>
 <indexterm significance="preferred"><primary>XDestroyImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdestroyimage'>
@@ -3219,7 +3218,6 @@ Specifies the image.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3285,6 +3283,7 @@ The bitmap unit is 8.
 <!-- .sp -->
 To read a bitmap from a file and store it in a pixmap, use
 <function>XReadBitmapFile</function>.
+</para>
 <indexterm significance="preferred"><primary>XReadBitmapFile</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xreadbitmapfile'>
@@ -3385,7 +3384,6 @@ Return the hotspot coordinates.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3440,6 +3438,7 @@ errors.
 <!-- .sp -->
 To read a bitmap from a file and return it as data, use
 <function>XReadBitmapFileData</function>.
+</para>
 <indexterm significance="preferred"><primary>XReadBitmapFileData</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xreadbitmapfiledata'>
@@ -3517,7 +3516,6 @@ Return the hotspot coordinates.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3537,6 +3535,7 @@ The status and other return values are the same as for
 <!-- .sp -->
 To write out a bitmap from a pixmap to a file, use
 <function>XWriteBitmapFile</function>.
+</para>
 <indexterm significance="preferred"><primary>XWriteBitmapFile</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xwritebitmapfile'>
@@ -3626,7 +3625,6 @@ in the file.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3664,6 +3662,7 @@ errors.
 <!-- .sp -->
 To create a pixmap and then store bitmap-format data into it, use
 <function>XCreatePixmapFromBitmapData</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreatePixmapFromBitmapData</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatepixmapfrombitmapdata'>
@@ -3763,7 +3762,6 @@ Specifies the depth of the pixmap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3796,6 +3794,7 @@ To include a bitmap written out by
 <indexterm><primary>XWriteBitmapFile</primary></indexterm>
 in a program directly, as opposed to reading it in every time at run time, use
 <function>XCreateBitmapFromData</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateBitmapFromData</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatebitmapfromdata'>
@@ -3862,7 +3861,6 @@ Specify the width and height.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3942,6 +3940,7 @@ The symbols used are in
 <!-- .sp -->
 To save a data value that corresponds to a resource ID and context type, use
 <function>XSaveContext</function>.
+</para>
 <indexterm significance="preferred"><primary>XSaveContext</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsavecontext'>
@@ -3996,7 +3995,6 @@ Specifies the data to be associated with the window and type.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4016,6 +4014,7 @@ Possible errors are
 <!-- .sp -->
 To get the data associated with a resource ID and type, use
 <function>XFindContext</function>.
+</para>
 <indexterm significance="preferred"><primary>XFindContext</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfindcontext'>
@@ -4070,7 +4069,6 @@ Returns the data.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4089,6 +4087,7 @@ Possible errors are
 <!-- .sp -->
 To delete an entry for a given resource ID and type, use
 <function>XDeleteContext</function>.
+</para>
 <indexterm significance="preferred"><primary>XDeleteContext</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdeletecontext'>
@@ -4132,7 +4131,6 @@ Specifies the context type to which the data belongs.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

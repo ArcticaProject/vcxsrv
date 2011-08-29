@@ -33,6 +33,7 @@ management functions to:
 To change a window's parent to another window on the same screen, use
 <function>XReparentWindow</function>.
 There is no way to move a window between screens.
+</para>
 <indexterm significance="preferred"><primary>XReparentWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xreparentwindow'>
@@ -99,7 +100,6 @@ Specify the x and y coordinates(Xy.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -217,6 +217,7 @@ when they are destroyed.
 <!-- .sp -->
 To add or remove a window from the client's save-set, use
 <function>XChangeSaveSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XChangeSaveSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xchangesaveset'>
@@ -265,7 +266,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -292,6 +292,7 @@ errors.
 <!-- .sp -->
 To add a window to the client's save-set, use
 <function>XAddToSaveSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XAddToSaveSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xaddtosaveset'>
@@ -325,7 +326,6 @@ Specifies the window (Wi.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -351,6 +351,7 @@ errors.
 <!-- .sp -->
 To remove a window from the client's save-set, use
 <function>XRemoveFromSaveSet</function>.
+</para>
 <indexterm significance="preferred"><primary>XRemoveFromSaveSet</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xremovefromsaveset'>
@@ -384,7 +385,6 @@ Specifies the window (Wi.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -448,6 +448,7 @@ required list.
 <!-- .sp -->
 To install a colormap, use
 <function>XInstallColormap</function>.
+</para>
 <indexterm significance="preferred"><primary>XInstallColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xinstallcolormap'>
@@ -480,7 +481,6 @@ Specifies the colormap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -521,6 +521,7 @@ error.
 <!-- .sp -->
 To uninstall a colormap, use
 <function>XUninstallColormap</function>.
+</para>
 <indexterm significance="preferred"><primary>XUninstallColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xuninstallcolormap'>
@@ -553,7 +554,6 @@ Specifies the colormap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -592,6 +592,7 @@ error.
 <!-- .sp -->
 To obtain a list of the currently installed colormaps for a given screen, use
 <function>XListInstalledColormaps</function>.
+</para>
 <indexterm significance="preferred"><primary>XListInstalledColormaps</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlistinstalledcolormaps'>
@@ -636,7 +637,6 @@ Returns the number of currently installed colormaps.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -674,6 +674,7 @@ search path for a server.
 <!-- .sp -->
 To set the font search path, use
 <function>XSetFontPath</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetFontPath</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetfontpath'>
@@ -719,7 +720,6 @@ Specifies the number of directories in the path.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -752,6 +752,7 @@ error.
 <!-- .sp -->
 To get the current font search path, use
 <function>XGetFontPath</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetFontPath</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetfontpath'>
@@ -784,7 +785,6 @@ Returns the number of strings in the font path array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -804,6 +804,7 @@ To free data returned by
 <function>XGetFontPath</function>,
 use
 <function>XFreeFontPath</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeFontPath</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreefontpath'>
@@ -825,7 +826,6 @@ Specifies the array of strings you want to free.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -858,6 +858,7 @@ Although grabbing the server is highly discouraged, it is sometimes necessary.
 <!-- .sp -->
 To grab the server, use
 <function>XGrabServer</function>.
+</para>
 <indexterm><primary>Server</primary><secondary>grabbing</secondary></indexterm>
 <indexterm><primary>Grabbing</primary><secondary>server</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabServer</primary></indexterm>
@@ -881,7 +882,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -896,6 +896,7 @@ You should not grab the X server any more than is absolutely necessary.
 <!-- .sp -->
 To ungrab the server, use
 <function>XUngrabServer</function>.
+</para>
 <indexterm significance="preferred"><primary>XUngrabServer</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xungrabserver'>
@@ -917,7 +918,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -938,6 +938,7 @@ Xlib provides a function to cause the connection to
 a client to be closed and its resources to be destroyed.
 To destroy a client, use
 <function>XKillClient</function>.
+</para>
 <indexterm significance="preferred"><primary>XKillClient</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xkillclient'>
@@ -971,7 +972,6 @@ Specifies any resource associated with the client that you want to destroy or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1025,6 +1025,7 @@ or to obtain the current screen saver values.
 <!-- .sp -->
 To set the screen saver mode, use
 <function>XSetScreenSaver</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetScreenSaver</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetscreensaver'>
@@ -1099,7 +1100,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1160,6 +1160,7 @@ error.
 <!-- .sp -->
 To force the screen saver on or off, use
 <function>XForceScreenSaver</function>.
+</para>
 <indexterm significance="preferred"><primary>XForceScreenSaver</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xforcescreensaver'>
@@ -1196,7 +1197,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1226,6 +1226,7 @@ error.
 <!-- .sp -->
 To activate the screen saver, use
 <function>XActivateScreenSaver</function>.
+</para>
 <indexterm significance="preferred"><primary>XActivateScreenSaver</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xactivatescreensaver'>
@@ -1247,13 +1248,13 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To reset the screen saver, use
 <function>XResetScreenSaver</function>.
+</para>
 <indexterm significance="preferred"><primary>XResetScreenSaver</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xresetscreensaver'>
@@ -1275,13 +1276,13 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To get the current screen saver values, use
 <function>XGetScreenSaver</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetScreenSaver</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetscreensaver'>
@@ -1354,7 +1355,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1529,6 +1529,7 @@ specify the length in byte of the type and value strings.
 <!-- .sp -->
 To add a single host, use
 <function>XAddHost</function>.
+</para>
 <indexterm significance="preferred"><primary>XAddHost</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xaddhost'>
@@ -1562,7 +1563,6 @@ Specifies the host that is to be (Ho.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1587,6 +1587,7 @@ errors.
 <!-- .sp -->
 To add multiple hosts at one time, use
 <function>XAddHosts</function>.
+</para>
 <indexterm significance="preferred"><primary>XAddHosts</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xaddhosts'>
@@ -1631,7 +1632,6 @@ Specifies the number of hosts.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1656,6 +1656,7 @@ errors.
 <!-- .sp -->
 To obtain a host list, use
 <function>XListHosts</function>.
+</para>
 <indexterm significance="preferred"><primary>XListHosts</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlisthosts'>
@@ -1699,7 +1700,6 @@ Returns the state of the access control.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1720,6 +1720,7 @@ this memory should be freed by calling
 <!-- .sp -->
 To remove a single host, use
 <function>XRemoveHost</function>.
+</para>
 <indexterm significance="preferred"><primary>XRemoveHost</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xremovehost'>
@@ -1753,7 +1754,6 @@ Specifies the host that is to be (Ho.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1782,6 +1782,7 @@ errors.
 <!-- .sp -->
 To remove multiple hosts at one time, use
 <function>XRemoveHosts</function>.
+</para>
 <indexterm significance="preferred"><primary>XRemoveHosts</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xremovehosts'>
@@ -1826,7 +1827,6 @@ Specifies the number of hosts.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1873,6 +1873,7 @@ at connection setup.
 <!-- .sp -->
 To change access control, use
 <function>XSetAccessControl</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetAccessControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetaccesscontrol'>
@@ -1909,7 +1910,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1932,6 +1932,7 @@ errors.
 <!-- .sp -->
 To enable access control, use
 <function>XEnableAccessControl</function>.
+</para>
 <indexterm significance="preferred"><primary>XEnableAccessControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xenableaccesscontrol'>
@@ -1953,7 +1954,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1973,6 +1973,7 @@ error.
 <!-- .sp -->
 To disable access control, use
 <function>XDisableAccessControl</function>.
+</para>
 <indexterm significance="preferred"><primary>XDisableAccessControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdisableaccesscontrol'>
@@ -1994,7 +1995,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

@@ -39,6 +39,7 @@ which sets the pixmap to a known value.
 <!-- .sp -->
 To clear a rectangular area of a given window, use
 <function>XClearArea</function>.
+</para>
 <indexterm><primary>Areas</primary><secondary>clearing</secondary></indexterm>
 <indexterm><primary>Clearing</primary><secondary>areas</secondary></indexterm>
 <indexterm significance="preferred"><primary>XClearArea</primary></indexterm>
@@ -133,7 +134,6 @@ events are to be generated.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -181,6 +181,7 @@ errors.
 <!-- .sp -->
 To clear the entire area in a given window, use
 <function>XClearWindow</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>clearing</secondary></indexterm>
 <indexterm><primary>Clearing</primary><secondary>windows</secondary></indexterm>
 <indexterm significance="preferred"><primary>XClearWindow</primary></indexterm>
@@ -215,7 +216,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -265,6 +265,7 @@ Xlib provides functions that you can use to copy an area or a bit plane.
 To copy an area between drawables of the same
 root and depth, use
 <function>XCopyArea</function>.
+</para>
 <indexterm><primary>Areas</primary><secondary>copying</secondary></indexterm>
 <indexterm><primary>Copying</primary><secondary>areas</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCopyArea</primary></indexterm>
@@ -393,7 +394,6 @@ Specify the x and y coordinates(Dx.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -460,6 +460,7 @@ errors.
 <!-- .LP -->
 To copy a single bit plane of a given drawable, use
 <function>XCopyPlane</function>.
+</para>
 <indexterm><primary>Plane</primary><secondary>copying</secondary></indexterm>
 <indexterm><primary>Copying</primary><secondary>planes</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCopyPlane</primary></indexterm>
@@ -599,7 +600,6 @@ You must set exactly one bit to 1.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -766,6 +766,7 @@ for these values.
 <!-- .LP -->
 To draw a single point in a given drawable, use
 <function>XDrawPoint</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawPoint</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawpoint'>
@@ -831,13 +832,13 @@ Specify the x and y coordinates where you want the point drawn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To draw multiple points in a given drawable, use
 <function>XDrawPoints</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawPoints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawpoints'>
@@ -918,7 +919,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -979,6 +979,7 @@ errors.
 <!-- .LP -->
 To draw a single line between two points in a given drawable, use
 <function>XDrawLine</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawLine</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawline'>
@@ -1066,13 +1067,13 @@ Specify the points (x1, y1) and (x2, y2) to be connected.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To draw multiple lines in a given drawable, use
 <function>XDrawLines</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawLines</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawlines'>
@@ -1153,7 +1154,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1161,6 +1161,7 @@ or
 To draw multiple, unconnected lines in a given drawable,
 use
 <function>XDrawSegments</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawSegments</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawsegments'>
@@ -1226,7 +1227,6 @@ Specifies the number of segments in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1331,6 +1331,7 @@ errors.
 <!-- .LP -->
 To draw the outline of a single rectangle in a given drawable, use
 <function>XDrawRectangle</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawRectangle</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawrectangle'>
@@ -1420,7 +1421,6 @@ Specify the width and height(Wh.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1428,6 +1428,7 @@ Specify the width and height(Wh.
 To draw the outline of multiple rectangles
 in a given drawable, use
 <function>XDrawRectangles</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawRectangles</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawrectangles'>
@@ -1493,7 +1494,6 @@ Specifies the number of rectangles in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1562,6 +1562,7 @@ errors.
 <!-- .sp -->
 To draw a single arc in a given drawable, use
 <function>XDrawArc</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawArc</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawarc'>
@@ -1675,13 +1676,13 @@ arc, in units of degrees * 64.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To draw multiple arcs in a given drawable, use
 <function>XDrawArcs</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawArcs</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawarcs'>
@@ -1747,7 +1748,6 @@ Specifies the number of arcs in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1920,6 +1920,7 @@ A single arc or multiple arcs
 <!-- .sp -->
 To fill a single rectangular area in a given drawable, use
 <function>XFillRectangle</function>.
+</para>
 <indexterm significance="preferred"><primary>XFillRectangle</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfillrectangle'>
@@ -2010,13 +2011,13 @@ Specify the width and height(Wh.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To fill multiple rectangular areas in a given drawable, use
 <function>XFillRectangles</function>.
+</para>
 <indexterm significance="preferred"><primary>XFillRectangles</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfillrectangles'>
@@ -2082,7 +2083,6 @@ Specifies the number of rectangles in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2152,6 +2152,7 @@ To fill a polygon area in a given drawable, use
 <function>XFillPolygon</function>.
 <indexterm><primary>Polygons</primary><secondary>filling</secondary></indexterm>
 <indexterm><primary>Filling</primary><secondary>polygon</secondary></indexterm>
+</para>
 <indexterm significance="preferred"><primary>XFillPolygon</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfillpolygon'>
@@ -2248,7 +2249,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2351,6 +2351,7 @@ errors.
 <indexterm><primary>Filling</primary><secondary>arcs</secondary></indexterm>
 To fill a single arc in a given drawable, use
 <function>XFillArc</function>.
+</para>
 <indexterm significance="preferred"><primary>XFillArc</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfillarc'>
@@ -2464,13 +2465,13 @@ arc, in units of degrees * 64.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To fill multiple arcs in a given drawable, use
 <function>XFillArcs</function>.
+</para>
 <indexterm significance="preferred"><primary>XFillArcs</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfillarcs'>
@@ -2536,7 +2537,6 @@ Specifies the number of arcs in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3018,6 +3018,7 @@ resource ID or a font ID interchangeably.
 <!-- .sp -->
 To load a given font, use
 <function>XLoadFont</function>.
+</para>
 <indexterm significance="preferred"><primary>XLoadFont</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xloadfont'>
@@ -3051,7 +3052,6 @@ which is a null-terminated string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3094,6 +3094,7 @@ errors.
 <!-- .sp -->
 To return information about an available font, use
 <function>XQueryFont</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryFont</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xqueryfont'>
@@ -3128,7 +3129,6 @@ ID.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3160,6 +3160,7 @@ and
 <function>XQueryFont</function>
 in a single operation, use
 <function>XLoadQueryFont</function>.
+</para>
 <indexterm significance="preferred"><primary>XLoadQueryFont</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xloadqueryfont'>
@@ -3193,7 +3194,6 @@ which is a null-terminated string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3228,6 +3228,7 @@ or
 <function>XLoadQueryFont</function>,
 use
 <function>XFreeFont</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeFont</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreefont'>
@@ -3260,7 +3261,6 @@ Specifies the storage associated with the font.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -3285,6 +3285,7 @@ error.
 <!-- .sp -->
 To return a given font property, use
 <function>XGetFontProperty</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetFontProperty</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetfontproperty'>
@@ -3328,7 +3329,6 @@ Returns the value of the font property.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3360,6 +3360,7 @@ To unload a font that was loaded by
 <function>XLoadFont</function>,
 use
 <function>XUnloadFont</function>.
+</para>
 <indexterm significance="preferred"><primary>XUnloadFont</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunloadfont'>
@@ -3392,7 +3393,6 @@ Specifies the font.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3425,6 +3425,7 @@ when querying a font type for a list of available sizes and so on.
 <!-- .sp -->
 To return a list of the available font names, use
 <function>XListFonts</function>.
+</para>
 <indexterm significance="preferred"><primary>XListFonts</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlistfonts'>
@@ -3480,7 +3481,6 @@ Returns the actual number of font names.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3512,6 +3512,7 @@ when finished with the result to free the memory.
 <!-- .sp -->
 To free a font name array, use
 <function>XFreeFontNames</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeFontNames</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreefontnames'>
@@ -3533,7 +3534,6 @@ Specifies the array of strings you want to free.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3549,6 +3549,7 @@ or
 <!-- .sp -->
 To obtain the names and information about available fonts, use
 <function>XListFontsWithInfo</function>.
+</para>
 <indexterm significance="preferred"><primary>XListFontsWithInfo</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlistfontswithinfo'>
@@ -3615,7 +3616,6 @@ Returns the font information.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3656,6 +3656,7 @@ the client should call
 <!-- .sp -->
 To free font structures and font names, use
 <function>XFreeFontInfo</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeFontInfo</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreefontinfo'>
@@ -3702,7 +3703,6 @@ Specifies the actual number of font names.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3740,6 +3740,7 @@ These functions return the sum of the character metrics in pixels.
 <!-- .sp -->
 To determine the width of an 8-bit character string, use
 <function>XTextWidth</function>.
+</para>
 <indexterm significance="preferred"><primary>XTextWidth</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xtextwidth'>
@@ -3783,13 +3784,13 @@ Specifies the character count in the specified string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To determine the width of a 2-byte character string, use
 <function>XTextWidth16</function>.
+</para>
 <indexterm significance="preferred"><primary>XTextWidth16</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xtextwidth16'>
@@ -3833,7 +3834,6 @@ Specifies the character count in the specified string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3848,6 +3848,7 @@ Specifies the character count in the specified string.
 <!-- .LP -->
 To compute the bounding box of an 8-bit character string in a given font, use
 <function>XTextExtents</function>.
+</para>
 <indexterm significance="preferred"><primary>XTextExtents</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xtextextents'>
@@ -3941,13 +3942,13 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To compute the bounding box of a 2-byte character string in a given font, use
 <function>XTextExtents16</function>.
+</para>
 <indexterm significance="preferred"><primary>XTextExtents16</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xtextextents16'>
@@ -4041,7 +4042,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4095,6 +4095,7 @@ undefined characters in the string are taken to have all zero metrics.
 To query the server for the bounding box of an 8-bit character string in a 
 given font, use 
 <function>XQueryTextExtents</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryTextExtents</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerytextextents'>
@@ -4199,7 +4200,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4207,6 +4207,7 @@ structure.
 To query the server for the bounding box of a 2-byte character string
 in a given font, use
 <function>XQueryTextExtents16</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryTextExtents16</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerytextextents16'>
@@ -4311,7 +4312,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4480,6 +4480,7 @@ structure.
 <!-- .LP -->
 To draw 8-bit characters in a given drawable, use
 <function>XDrawText</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawText</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawtext'>
@@ -4569,13 +4570,13 @@ Specifies the number of text items in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To draw 2-byte characters in a given drawable, use
 <function>XDrawText16</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawText16</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawtext16'>
@@ -4665,7 +4666,6 @@ Specifies the number of text items in the array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4736,6 +4736,7 @@ errors.
 <indexterm><primary>Drawing</primary><secondary>strings</secondary></indexterm>
 To draw 8-bit characters in a given drawable, use
 <function>XDrawString</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawstring'>
@@ -4826,13 +4827,13 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To draw 2-byte characters in a given drawable, use
 <function>XDrawString16</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawString16</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawstring16'>
@@ -4922,7 +4923,6 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4977,6 +4977,7 @@ This prevents annoying flicker on many displays.
 <!-- .sp -->
 To draw 8-bit image text characters in a given drawable, use
 <function>XDrawImageString</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawImageString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawimagestring'>
@@ -5066,13 +5067,13 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 <!-- .sp -->
 To draw 2-byte image text characters in a given drawable, use
 <function>XDrawImageString16</function>.
+</para>
 <indexterm significance="preferred"><primary>XDrawImageString16</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdrawimagestring16'>
@@ -5162,7 +5163,6 @@ Specifies the number of characters in the string argument.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5318,6 +5318,7 @@ typedef struct _XImage {
 <!-- .sp -->
 To initialize the image manipulation routines of an image structure, use
 <function>XInitImage</function>.
+</para>
 <indexterm significance="preferred"><primary>XInitImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xinitimage'>
@@ -5339,7 +5340,6 @@ Specifies the image.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5376,6 +5376,7 @@ or inconsistency in the structure, in which case the image is not changed.
 To combine an image with a rectangle of a drawable on the display,
 use
 <function>XPutImage</function>.
+</para>
 <indexterm significance="preferred"><primary>XPutImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xputimage'>
@@ -5504,7 +5505,6 @@ Specify the width and height(Wh.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5565,6 +5565,7 @@ To return the contents of a rectangle in a given drawable on the display,
 use
 <function>XGetImage</function>.
 This function specifically supports rudimentary screen dumps.
+</para>
 <indexterm significance="preferred"><primary>XGetImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetimage'>
@@ -5671,7 +5672,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5752,6 +5752,7 @@ errors.
 To copy the contents of a rectangle on the display
 to a location within a preexisting image structure, use
 <function>XGetSubImage</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetSubImage</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetsubimage'>
@@ -5894,7 +5895,6 @@ Specify the x and y coordinates(Dx.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

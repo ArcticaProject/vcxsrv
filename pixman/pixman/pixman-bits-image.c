@@ -34,6 +34,7 @@
 #include <string.h>
 #include "pixman-private.h"
 #include "pixman-combine32.h"
+#include "pixman-inlines.h"
 
 /*
  * By default, just evaluate the image at 32bpp and expand.  Individual image
@@ -90,34 +91,6 @@ fetch_pixel_no_alpha (bits_image_t *image,
 typedef uint32_t (* get_pixel_t) (bits_image_t *image,
 				  int x, int y, pixman_bool_t check_bounds);
 
-static force_inline void
-repeat (pixman_repeat_t repeat, int size, int *coord)
-{
-    switch (repeat)
-    {
-    case PIXMAN_REPEAT_NORMAL:
-	*coord = MOD (*coord, size);
-	break;
-
-    case PIXMAN_REPEAT_PAD:
-	*coord = CLIP (*coord, 0, size - 1);
-	break;
-
-    case PIXMAN_REPEAT_REFLECT:
-	*coord = MOD (*coord, size * 2);
-
-	if (*coord >= size)
-	    *coord = size * 2 - *coord - 1;
-	break;
-
-    case PIXMAN_REPEAT_NONE:
-	break;
-
-    default:
-        break;
-    }
-}
-
 static force_inline uint32_t
 bits_image_fetch_pixel_nearest (bits_image_t   *image,
 				pixman_fixed_t  x,
@@ -129,8 +102,8 @@ bits_image_fetch_pixel_nearest (bits_image_t   *image,
 
     if (image->common.repeat != PIXMAN_REPEAT_NONE)
     {
-	repeat (image->common.repeat, image->width, &x0);
-	repeat (image->common.repeat, image->height, &y0);
+	repeat (image->common.repeat, &x0, image->width);
+	repeat (image->common.repeat, &y0, image->height);
 
 	return get_pixel (image, x0, y0, FALSE);
     }
@@ -139,97 +112,6 @@ bits_image_fetch_pixel_nearest (bits_image_t   *image,
 	return get_pixel (image, x0, y0, TRUE);
     }
 }
-
-#if SIZEOF_LONG > 4
-
-static force_inline uint32_t
-bilinear_interpolation (uint32_t tl, uint32_t tr,
-			uint32_t bl, uint32_t br,
-			int distx, int disty)
-{
-    uint64_t distxy, distxiy, distixy, distixiy;
-    uint64_t tl64, tr64, bl64, br64;
-    uint64_t f, r;
-
-    distxy = distx * disty;
-    distxiy = distx * (256 - disty);
-    distixy = (256 - distx) * disty;
-    distixiy = (256 - distx) * (256 - disty);
-
-    /* Alpha and Blue */
-    tl64 = tl & 0xff0000ff;
-    tr64 = tr & 0xff0000ff;
-    bl64 = bl & 0xff0000ff;
-    br64 = br & 0xff0000ff;
-
-    f = tl64 * distixiy + tr64 * distxiy + bl64 * distixy + br64 * distxy;
-    r = f & 0x0000ff0000ff0000ull;
-
-    /* Red and Green */
-    tl64 = tl;
-    tl64 = ((tl64 << 16) & 0x000000ff00000000ull) | (tl64 & 0x0000ff00ull);
-
-    tr64 = tr;
-    tr64 = ((tr64 << 16) & 0x000000ff00000000ull) | (tr64 & 0x0000ff00ull);
-
-    bl64 = bl;
-    bl64 = ((bl64 << 16) & 0x000000ff00000000ull) | (bl64 & 0x0000ff00ull);
-
-    br64 = br;
-    br64 = ((br64 << 16) & 0x000000ff00000000ull) | (br64 & 0x0000ff00ull);
-
-    f = tl64 * distixiy + tr64 * distxiy + bl64 * distixy + br64 * distxy;
-    r |= ((f >> 16) & 0x000000ff00000000ull) | (f & 0xff000000ull);
-
-    return (uint32_t)(r >> 16);
-}
-
-#else
-
-static force_inline uint32_t
-bilinear_interpolation (uint32_t tl, uint32_t tr,
-			uint32_t bl, uint32_t br,
-			int distx, int disty)
-{
-    int distxy, distxiy, distixy, distixiy;
-    uint32_t f, r;
-
-    distxy = distx * disty;
-    distxiy = (distx << 8) - distxy;	/* distx * (256 - disty) */
-    distixy = (disty << 8) - distxy;	/* disty * (256 - distx) */
-    distixiy =
-	256 * 256 - (disty << 8) -
-	(distx << 8) + distxy;		/* (256 - distx) * (256 - disty) */
-
-    /* Blue */
-    r = (tl & 0x000000ff) * distixiy + (tr & 0x000000ff) * distxiy
-      + (bl & 0x000000ff) * distixy  + (br & 0x000000ff) * distxy;
-
-    /* Green */
-    f = (tl & 0x0000ff00) * distixiy + (tr & 0x0000ff00) * distxiy
-      + (bl & 0x0000ff00) * distixy  + (br & 0x0000ff00) * distxy;
-    r |= f & 0xff000000;
-
-    tl >>= 16;
-    tr >>= 16;
-    bl >>= 16;
-    br >>= 16;
-    r >>= 16;
-
-    /* Red */
-    f = (tl & 0x000000ff) * distixiy + (tr & 0x000000ff) * distxiy
-      + (bl & 0x000000ff) * distixy  + (br & 0x000000ff) * distxy;
-    r |= f & 0x00ff0000;
-
-    /* Alpha */
-    f = (tl & 0x0000ff00) * distixiy + (tr & 0x0000ff00) * distxiy
-      + (bl & 0x0000ff00) * distixy  + (br & 0x0000ff00) * distxy;
-    r |= f & 0xff000000;
-
-    return r;
-}
-
-#endif
 
 static force_inline uint32_t
 bits_image_fetch_pixel_bilinear (bits_image_t   *image,
@@ -257,10 +139,10 @@ bits_image_fetch_pixel_bilinear (bits_image_t   *image,
 
     if (repeat_mode != PIXMAN_REPEAT_NONE)
     {
-	repeat (repeat_mode, width, &x1);
-	repeat (repeat_mode, height, &y1);
-	repeat (repeat_mode, width, &x2);
-	repeat (repeat_mode, height, &y2);
+	repeat (repeat_mode, &x1, width);
+	repeat (repeat_mode, &y1, height);
+	repeat (repeat_mode, &x2, width);
+	repeat (repeat_mode, &y2, height);
 
 	tl = get_pixel (image, x1, y1, FALSE);
 	bl = get_pixel (image, x1, y2, FALSE);
@@ -529,8 +411,8 @@ bits_image_fetch_pixel_convolution (bits_image_t   *image,
 
 		if (repeat_mode != PIXMAN_REPEAT_NONE)
 		{
-		    repeat (repeat_mode, width, &rx);
-		    repeat (repeat_mode, height, &ry);
+		    repeat (repeat_mode, &rx, width);
+		    repeat (repeat_mode, &ry, height);
 
 		    pixel = get_pixel (image, rx, ry, FALSE);
 		}
@@ -812,10 +694,10 @@ bits_image_fetch_bilinear_affine (pixman_image_t * image,
 
 	    mask = PIXMAN_FORMAT_A (format)? 0 : 0xff000000;
 
-	    repeat (repeat_mode, width, &x1);
-	    repeat (repeat_mode, height, &y1);
-	    repeat (repeat_mode, width, &x2);
-	    repeat (repeat_mode, height, &y2);
+	    repeat (repeat_mode, &x1, width);
+	    repeat (repeat_mode, &y1, height);
+	    repeat (repeat_mode, &x2, width);
+	    repeat (repeat_mode, &y2, height);
 
 	    row1 = (uint8_t *)bits->bits + bits->rowstride * 4 * y1;
 	    row2 = (uint8_t *)bits->bits + bits->rowstride * 4 * y2;
@@ -960,8 +842,8 @@ bits_image_fetch_nearest_affine (pixman_image_t * image,
 
 	    if (repeat_mode != PIXMAN_REPEAT_NONE)
 	    {
-		repeat (repeat_mode, width, &x0);
-		repeat (repeat_mode, height, &y0);
+		repeat (repeat_mode, &x0, width);
+		repeat (repeat_mode, &y0, height);
 	    }
 
 	    row = (uint8_t *)bits->bits + bits->rowstride * 4 * y0;
@@ -1490,10 +1372,10 @@ static uint32_t *
 create_bits (pixman_format_code_t format,
              int                  width,
              int                  height,
-             int *                rowstride_bytes)
+             int *		  rowstride_bytes)
 {
     int stride;
-    int buf_size;
+    size_t buf_size;
     int bpp;
 
     /* what follows is a long-winded way, avoiding any possibility of integer
@@ -1502,11 +1384,11 @@ create_bits (pixman_format_code_t format,
      */
 
     bpp = PIXMAN_FORMAT_BPP (format);
-    if (pixman_multiply_overflows_int (width, bpp))
+    if (_pixman_multiply_overflows_int (width, bpp))
 	return NULL;
 
     stride = width * bpp;
-    if (pixman_addition_overflows_int (stride, 0x1f))
+    if (_pixman_addition_overflows_int (stride, 0x1f))
 	return NULL;
 
     stride += 0x1f;
@@ -1514,7 +1396,7 @@ create_bits (pixman_format_code_t format,
 
     stride *= sizeof (uint32_t);
 
-    if (pixman_multiply_overflows_int (height, stride))
+    if (_pixman_multiply_overflows_size (height, stride))
 	return NULL;
 
     buf_size = height * stride;

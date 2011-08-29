@@ -31,17 +31,17 @@ managers are:
 </para>
 
 <informaltable>
-  <tgroup cols='4' align='center'>
+  <tgroup cols='4'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
   <colspec colname='c4'/>
   <thead>
     <row>
-      <entry>Name</entry>
-      <entry>Type</entry>
-      <entry>Format</entry>
-      <entry>Description</entry>
+      <entry align='center'>Name</entry>
+      <entry align='center'>Type</entry>
+      <entry align='center'>Format</entry>
+      <entry align='center'>Description</entry>
     </row>
   </thead>
   <tbody>
@@ -259,6 +259,7 @@ to manipulate your application's subwindows.
 <!-- .LP -->
 To request that a top-level window be iconified, use
 <function>XIconifyWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XIconifyWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xiconifywindow'>
@@ -302,7 +303,6 @@ Specifies the appropriate screen number on the host server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -333,6 +333,7 @@ otherwise, it returns a zero status.
 <!-- .LP -->
 To request that a top-level window be withdrawn, use
 <function>XWithdrawWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XWithdrawWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xwithdrawwindow'>
@@ -376,7 +377,6 @@ Specifies the appropriate screen number on the host server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -407,6 +407,7 @@ error.
 <!-- .LP -->
 To request that a top-level window be reconfigured, use
 <function>XReconfigureWMWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XReconfigureWMWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xreconfigurewmwindow'>
@@ -476,7 +477,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -580,6 +580,7 @@ structure, use
 <function>XmbTextListToTextProperty</function>
 or
 <function>XwcTextListToTextProperty</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbTextListToTextProperty</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextListToTextProperty</primary></indexterm>
 <!-- .sM -->
@@ -659,7 +660,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -742,6 +742,7 @@ structure, use
 <function>XmbTextPropertyToTextList</function>
 or
 <function>XwcTextPropertyToTextList</function>.
+</para>
 <indexterm significance="preferred"><primary>XmbTextPropertyToTextList</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextPropertyToTextList</primary></indexterm>
 <!-- .sM -->
@@ -810,7 +811,6 @@ Returns the number of (Cn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -901,6 +901,7 @@ use
 To free the in-memory data associated with the specified
 wide character string list, use
 <function>XwcFreeStringList</function>.
+</para>
 <indexterm significance="preferred"><primary>XwcFreeStringList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xwcfreestringlist'>
@@ -922,7 +923,6 @@ Specifies the list of strings to be freed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -985,6 +985,7 @@ To set the specified list of strings in the STRING encoding to a
 <structname>XTextProperty</structname>
 structure, use
 <function>XStringListToTextProperty</function>.
+</para>
 <indexterm significance="preferred"><primary>XStringListToTextProperty</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xstringlisttotextproperty'>
@@ -1031,7 +1032,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1060,6 +1060,7 @@ To obtain a list of strings from a specified
 <structname>XTextProperty</structname>
 structure in the STRING encoding, use
 <function>XTextPropertyToStringList</function>.
+</para>
 <indexterm significance="preferred"><primary>XTextPropertyToStringList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xtextpropertytostringlist'>
@@ -1106,7 +1107,6 @@ Returns the number of (Cn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1133,6 +1133,7 @@ To free the storage for the list and its contents, use
 <!-- .LP -->
 To free the in-memory data associated with the specified string list, use
 <function>XFreeStringList</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeStringList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreestringlist'>
@@ -1154,7 +1155,6 @@ Specifies the list of strings to be freed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1195,6 +1195,7 @@ respectively.
 <!-- .LP -->
 To set one of a window's text properties, use
 <function>XSetTextProperty</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetTextProperty</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsettextproperty'>
@@ -1251,7 +1252,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1283,6 +1283,7 @@ errors.
 <!-- .LP -->
 To read one of a window's text properties, use
 <function>XGetTextProperty</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetTextProperty</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgettextproperty'>
@@ -1339,7 +1340,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1399,6 +1399,7 @@ the <property>WM_NAME</property> property for a given window.
 <!-- .LP -->
 To set a window's <property>WM_NAME</property> property with the supplied convenience function, use
 <function>XSetWMName</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMName</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmname'>
@@ -1444,7 +1445,6 @@ structure to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1459,6 +1459,7 @@ to set the <property>WM_NAME</property> property.
 <!-- .LP -->
 To read a window's <property>WM_NAME</property> property with the supplied convenience function, use
 <function>XGetWMName</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMName</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmname'>
@@ -1504,7 +1505,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1531,6 +1531,7 @@ for window names that are encoded as STRING properties.
 <!-- .LP -->
 To assign a name to a window, use
 <function>XStoreName</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XStoreName</primary></indexterm>
 <!-- .sM -->
@@ -1576,7 +1577,6 @@ which should be a null-terminated string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1605,6 +1605,7 @@ errors.
 <!-- .sp -->
 To get the name of a window, use
 <function>XFetchName</function>.
+</para>
 <indexterm significance="preferred"><primary>XFetchName</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfetchname'>
@@ -1648,7 +1649,6 @@ Returns the window name, which is a null-terminated string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1693,6 +1693,7 @@ the <property>WM_ICON_NAME</property> property for a given window.
 To set a window's <property>WM_ICON_NAME</property> property,
 use
 <function>XSetWMIconName</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMIconName</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmiconname'>
@@ -1738,7 +1739,6 @@ structure to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1754,6 +1754,7 @@ to set the <property>WM_ICON_NAME</property> property.
 To read a window's <property>WM_ICON_NAME</property> property,
 use
 <function>XGetWMIconName</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMIconName</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmiconname'>
@@ -1799,7 +1800,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1827,6 +1827,7 @@ for window names that are encoded as STRING properties.
 <!-- .sp -->
 To set the name to be displayed in a window's icon, use
 <function>XSetIconName</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>icon name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetIconName</primary></indexterm>
 <!-- .sM -->
@@ -1872,7 +1873,6 @@ which should be a null-terminated string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1890,6 +1890,7 @@ errors.
 <!-- .sp -->
 To get the name a window wants displayed in its icon, use
 <function>XGetIconName</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetIconName</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgeticonname'>
@@ -1934,7 +1935,6 @@ which is a null-terminated string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2128,6 +2128,7 @@ or the window to be withdrawn.
 <!-- .sp -->
 To set a window's <property>WM_HINTS</property> property, use
 <function>XSetWMHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmhints'>
@@ -2173,7 +2174,6 @@ structure to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2197,6 +2197,7 @@ errors.
 <!-- .sp -->
 To read a window's <property>WM_HINTS</property> property, use
 <function>XGetWMHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmhints'>
@@ -2229,7 +2230,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2394,6 +2394,7 @@ macro is highly discouraged.
 <!-- .LP -->
 To set a window's <property>WM_NORMAL_HINTS</property> property, use
 <function>XSetWMNormalHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMNormalHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmnormalhints'>
@@ -2437,7 +2438,6 @@ Specifies the size hints for the window in its normal state.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2464,6 +2464,7 @@ errors.
 <!-- .LP -->
 To read a window's <property>WM_NORMAL_HINTS</property> property, use
 <function>XGetWMNormalHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMNormalHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmnormalhints'>
@@ -2518,7 +2519,6 @@ Returns the hints that were supplied by the user.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2575,6 +2575,7 @@ error.
 <!-- .LP -->
 To set a window's <property>WM_SIZE_HINTS</property> property, use
 <function>XSetWMSizeHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMSizeHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmsizehints'>
@@ -2631,7 +2632,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2664,6 +2664,7 @@ errors.
 <!-- .LP -->
 To read a window's <property>WM_SIZE_HINTS</property> property, use
 <function>XGetWMSizeHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMSizeHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmsizehints'>
@@ -2731,7 +2732,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2880,6 +2880,7 @@ resource database.
 <!-- .sp -->
 To set a window's <property>WM_CLASS</property> property, use
 <function>XSetClassHint</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetClassHint</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetclasshint'>
@@ -2925,7 +2926,6 @@ structure that is to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2949,6 +2949,7 @@ errors.
 <!-- .sp -->
 To read a window's <property>WM_CLASS</property> property, use
 <function>XGetClassHint</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetClassHint</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetclasshint'>
@@ -2994,7 +2995,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3035,6 +3035,7 @@ the <property>WM_TRANSIENT_FOR</property> property for a given window.
 <!-- .sp -->
 To set a window's <property>WM_TRANSIENT_FOR</property> property, use
 <function>XSetTransientForHint</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetTransientForHint</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsettransientforhint'>
@@ -3078,7 +3079,6 @@ Specifies the window that the <property>WM_TRANSIENT_FOR</property> property is 
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3101,6 +3101,7 @@ errors.
 <!-- .sp -->
 To read a window's <property>WM_TRANSIENT_FOR</property> property, use
 <function>XGetTransientForHint</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetTransientForHint</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgettransientforhint'>
@@ -3144,7 +3145,6 @@ Returns the <property>WM_TRANSIENT_FOR</property> property of the specified wind
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3177,6 +3177,7 @@ the <property>WM_PROTOCOLS</property> property for a given window.
 <!-- .sp -->
 To set a window's <property>WM_PROTOCOLS</property> property, use
 <function>XSetWMProtocols</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMProtocols</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmprotocols'>
@@ -3232,7 +3233,6 @@ Specifies the number of (Cn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3264,6 +3264,7 @@ errors.
 <!-- .LP -->
 To read a window's <property>WM_PROTOCOLS</property> property, use
 <function>XGetWMProtocols</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMProtocols</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmprotocols'>
@@ -3319,7 +3320,6 @@ Returns the number of (Cn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3363,6 +3363,7 @@ the <property>WM_COLORMAP_WINDOWS</property> property for a given window.
 <!-- .LP -->
 To set a window's <property>WM_COLORMAP_WINDOWS</property> property, use
 <function>XSetWMColormapWindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmcolormapwindows'>
@@ -3418,7 +3419,6 @@ Specifies the number of (Cn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3450,6 +3450,7 @@ errors.
 <!-- .LP -->
 To read a window's <property>WM_COLORMAP_WINDOWS</property> property, use
 <function>XGetWMColormapWindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmcolormapwindows'>
@@ -3505,7 +3506,6 @@ Returns the number of (Cn.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3615,6 +3615,7 @@ sizes (minimum to maximum) that represent the supported icon sizes.
 <!-- .sp -->
 To set a window's <property>WM_ICON_SIZE</property> property, use
 <function>XSetIconSizes</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetIconSizes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xseticonsizes'>
@@ -3669,7 +3670,6 @@ Specifies the number of items in the size list.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3691,6 +3691,7 @@ errors.
 <!-- .sp -->
 To read a window's <property>WM_ICON_SIZE</property> property, use
 <function>XGetIconSizes</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetIconSizes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgeticonsizes'>
@@ -3745,7 +3746,6 @@ Returns the number of items in the size list.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3788,6 +3788,7 @@ for internationalized text communication.
 The standard window manager properties for a given window are
 <property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_NORMAL_HINTS</property>, <property>WM_CLASS</property>,
 <property>WM_COMMAND</property>, <property>WM_CLIENT_MACHINE</property>, and <property>WM_LOCALE_NAME</property>.
+</para>
 <indexterm significance="preferred"><primary>XmbSetWMProperties</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmbsetwmproperties'>
@@ -3903,7 +3904,6 @@ structure to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4008,6 +4008,7 @@ with strings in client-specified encodings, use
 The standard window manager properties for a given window are
 <property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_NORMAL_HINTS</property>, <property>WM_CLASS</property>,
 <property>WM_COMMAND</property>, and <property>WM_CLIENT_MACHINE</property>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMProperties</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmproperties'>
@@ -4123,7 +4124,6 @@ structure to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4240,6 +4240,7 @@ the <property>WM_COMMAND</property> property for a given window.
 <!-- .LP -->
 To set a window's <property>WM_COMMAND</property> property, use
 <function>XSetCommand</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetCommand</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetcommand'>
@@ -4294,7 +4295,6 @@ Specifies the number of arguments.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4320,6 +4320,7 @@ errors.
 <!-- .LP -->
 To read a window's <property>WM_COMMAND</property> property, use
 <function>XGetCommand</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetCommand</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetcommand'>
@@ -4374,7 +4375,6 @@ Returns the number of arguments returned.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4411,6 +4411,7 @@ the <property>WM_CLIENT_MACHINE</property> property for a given window.
 <!-- .LP -->
 To set a window's <property>WM_CLIENT_MACHINE</property> property, use
 <function>XSetWMClientMachine</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWMClientMachine</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwmclientmachine'>
@@ -4456,7 +4457,6 @@ structure to be used.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4471,6 +4471,7 @@ to set the <property>WM_CLIENT_MACHINE</property> property.
 <!-- .LP -->
 To read a window's <property>WM_CLIENT_MACHINE</property> property, use
 <function>XGetWMClientMachine</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWMClientMachine</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwmclientmachine'>
@@ -4516,7 +4517,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4933,6 +4933,7 @@ To set an
 <structname>XStandardColormap</structname>
 structure, use
 <function>XSetRGBColormaps</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetRGBColormaps</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetrgbcolormaps'>
@@ -5001,7 +5002,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -5113,6 +5113,7 @@ To obtain the
 <structname>XStandardColormap</structname>
 structure associated with the specified property, use
 <function>XGetRGBColormaps</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetRGBColormaps</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetrgbcolormaps'>
@@ -5181,7 +5182,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

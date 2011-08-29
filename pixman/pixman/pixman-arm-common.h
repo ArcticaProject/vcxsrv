@@ -26,7 +26,7 @@
 #ifndef PIXMAN_ARM_COMMON_H
 #define PIXMAN_ARM_COMMON_H
 
-#include "pixman-fast-path.h"
+#include "pixman-inlines.h"
 
 /* Define some macros which can expand into proxy functions between
  * ARM assembly optimized functions and the rest of pixman fast path API.

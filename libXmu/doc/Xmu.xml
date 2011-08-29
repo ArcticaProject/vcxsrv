@@ -978,7 +978,13 @@ specifies the logo height
 	</varlistentry>
       </variablelist>
 
-      <figure id="xlogo" float="1" pgwide="0">
+This function draws the &ldquo;official&rdquo; X Window System logo
+(<xref linkend="xlogo"/>).  The bounding box
+of the logo in the drawable is given by x, y, width, and height.  The logo
+itself is filled using gcFore, and the rest of the rectangle is filled using
+gcBack.
+    </para>
+      <figure id="xlogo" pgwide="0">
 	<title>The X Logo</title>
 	<mediaobject>
 	  <imageobject>
@@ -986,14 +992,6 @@ specifies the logo height
 	  </imageobject>
 	</mediaobject>
       </figure>
-
-This function draws the &ldquo;official&rdquo; X Window System logo
-(<xref linkend="xlogo"/>).  The bounding box
-of the logo in the drawable is given by x, y, width, and height.  The logo
-itself is filled using gcFore, and the rest of the rectangle is filled using
-gcBack.
-    </para>
-
     <para id="XmuCreateStippledPixmap">
       <indexterm zone="XmuCreateStippledPixmap">
 	<primary><function>XmuCreateStippledPixmap</function></primary>

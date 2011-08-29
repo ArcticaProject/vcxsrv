@@ -34,6 +34,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 #ifdef _WIN32
 #include "xcb_windefs.h"
@@ -265,6 +266,18 @@ static int _xcb_socket(int family, int type, int proto)
 }
 
 
+static int _xcb_do_connect(int fd, const struct sockaddr* addr, int addrlen) {
+	char on = 1;
+
+	if(fd < 0)
+		return -1;
+
+	setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(on));
+	setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(on));
+
+	return connect(fd, addr, addrlen);
+}
+
 #ifdef WIN32
 int InitWSA(void)
 {
@@ -285,10 +298,12 @@ int InitWSA(void)
 static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short port)
 {
     int fd = -1;
+#if HAVE_GETADDRINFO
     struct addrinfo hints;
     char service[6]; /* "65535" with the trailing '\0' */
     struct addrinfo *results, *addr;
     char *bracket;
+#endif
 
     if (protocol && strcmp("tcp",protocol) && strcmp("inet",protocol)
 #ifdef AF_INET6
@@ -300,10 +315,8 @@ static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short 
     if (*host == '\0')
 	host = "localhost";
 
+#if HAVE_GETADDRINFO
     memset(&hints, 0, sizeof(hints));
-#ifdef AI_ADDRCONFIG
-    hints.ai_flags |= AI_ADDRCONFIG;
-#endif
 #ifdef AI_NUMERICSERV
     hints.ai_flags |= AI_NUMERICSERV;
 #endif
@@ -334,19 +347,42 @@ static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short 
     for(addr = results; addr; addr = addr->ai_next)
     {
         fd = _xcb_socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-        if(fd >= 0) {
-            char on = 1;
-            setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(on));
-	    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(on));
-
-            if (connect(fd, addr->ai_addr, addr->ai_addrlen) >= 0)
-                break;
-            close(fd);
-            fd = -1;
-        }
+        if (_xcb_do_connect(fd, addr->ai_addr, addr->ai_addrlen) >= 0)
+            break;
+        close(fd);
+        fd = -1;
     }
     freeaddrinfo(results);
     return fd;
+#else
+    {
+        struct hostent* _h;
+        struct sockaddr_in _s;
+        struct in_addr ** _c;
+
+        if((_h = gethostbyname(host)) == NULL)
+            return -1;
+
+        _c = (struct in_addr**)_h->h_addr_list;
+        fd = -1;
+
+        while(*_c) {
+            _s.sin_family = AF_INET;
+            _s.sin_port = htons(port);
+            _s.sin_addr = *(*_c);
+
+            fd = _xcb_socket(_s.sin_family, SOCK_STREAM, 0);
+            if(_xcb_do_connect(fd, (struct sockaddr*)&_s, sizeof(_s)) >= 0)
+                break;
+
+            close(fd);
+            fd = -1;
+            ++_c;
+        }
+
+        return fd;
+    }
+#endif
 }
 
 #ifndef _WIN32

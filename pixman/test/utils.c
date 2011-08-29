@@ -130,6 +130,14 @@ compute_crc32 (uint32_t    in_crc32,
     return (crc32 ^ 0xFFFFFFFF);
 }
 
+pixman_bool_t
+is_little_endian (void)
+{
+    volatile uint16_t endian_check_var = 0x1234;
+
+    return (*(volatile uint8_t *)&endian_check_var == 0x34);
+}
+
 /* perform endian conversion of pixel data
  */
 void
@@ -142,8 +150,7 @@ image_endian_swap (pixman_image_t *img)
     int i, j;
 
     /* swap bytes only on big endian systems */
-    volatile uint16_t endian_check_var = 0x1234;
-    if (*(volatile uint8_t *)&endian_check_var != 0x12)
+    if (is_little_endian())
 	return;
 
     if (bpp == 8)

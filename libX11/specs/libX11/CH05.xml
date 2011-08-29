@@ -22,6 +22,7 @@ A bitmap is a single bit-plane pixmap.
 <!-- .sp -->
 To create a pixmap of a given size, use
 <function>XCreatePixmap</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreatePixmap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatepixmap'>
@@ -88,7 +89,6 @@ Specifies the depth of the pixmap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -134,6 +134,7 @@ errors.
 <!-- .sp -->
 To free all storage associated with a specified pixmap, use
 <function>XFreePixmap</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreePixmap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreepixmap'>
@@ -166,7 +167,6 @@ Specifies the pixmap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -293,6 +293,7 @@ errors.
 <!-- .sp -->
 To create a cursor from font glyphs, use
 <function>XCreateGlyphCursor</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateGlyphCursor</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreateglyphcursor'>
@@ -379,7 +380,6 @@ Specifies the <acronym>RGB</acronym> values for the background of the source.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -432,6 +432,7 @@ errors.
 To create a cursor from two bitmaps,
 use
 <function>XCreatePixmapCursor</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreatePixmapCursor</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatepixmapcursor'>
@@ -522,7 +523,6 @@ Specify the x and y coordinates(Xy.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -579,6 +579,7 @@ errors.
 <!-- .sp -->
 To determine useful cursor sizes, use
 <function>XQueryBestCursor</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryBestCursor</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerybestcursor'>
@@ -658,7 +659,6 @@ and height.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -684,6 +684,7 @@ error.
 <!-- .sp -->
 To change the color of a given cursor, use
 <function>XRecolorCursor</function>.
+</para>
 <indexterm significance="preferred"><primary>XRecolorCursor</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrecolorcursor'>
@@ -737,7 +738,6 @@ Specifies the <acronym>RGB</acronym> values for the background of the source.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -762,6 +762,7 @@ error.
 <!-- .sp -->
 To free (destroy) a given cursor, use
 <function>XFreeCursor</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeCursor</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreecursor'>
@@ -794,7 +795,6 @@ Specifies the cursor.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->

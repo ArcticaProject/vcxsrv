@@ -297,11 +297,11 @@ public:
    /**
     * Emit the correct dot-product instruction for the type of arguments
     */
-   void emit_dp(ir_instruction *ir,
-	        dst_reg dst,
-	        src_reg src0,
-	        src_reg src1,
-	        unsigned elements);
+   ir_to_mesa_instruction * emit_dp(ir_instruction *ir,
+				    dst_reg dst,
+				    src_reg src0,
+				    src_reg src1,
+				    unsigned elements);
 
    void emit_scalar(ir_instruction *ir, enum prog_opcode op,
 		    dst_reg dst, src_reg src0);
@@ -312,9 +312,11 @@ public:
    void emit_scs(ir_instruction *ir, enum prog_opcode op,
 		 dst_reg dst, const src_reg &src);
 
-   GLboolean try_emit_mad(ir_expression *ir,
+   bool try_emit_mad(ir_expression *ir,
 			  int mul_operand);
-   GLboolean try_emit_sat(ir_expression *ir);
+   bool try_emit_mad_for_and_not(ir_expression *ir,
+				 int mul_operand);
+   bool try_emit_sat(ir_expression *ir);
 
    void emit_swz(ir_expression *ir);
 
@@ -408,7 +410,7 @@ ir_to_mesa_visitor::emit(ir_instruction *ir, enum prog_opcode op)
    return emit(ir, op, undef_dst, undef_src, undef_src, undef_src);
 }
 
-void
+ir_to_mesa_instruction *
 ir_to_mesa_visitor::emit_dp(ir_instruction *ir,
 			    dst_reg dst, src_reg src0, src_reg src1,
 			    unsigned elements)
@@ -417,7 +419,7 @@ ir_to_mesa_visitor::emit_dp(ir_instruction *ir,
       OPCODE_DP2, OPCODE_DP3, OPCODE_DP4
    };
 
-   emit(ir, dot_opcodes[elements - 2], dst, src0, src1);
+   return emit(ir, dot_opcodes[elements - 2], dst, src0, src1);
 }
 
 /**
@@ -579,7 +581,7 @@ ir_to_mesa_visitor::emit_scs(ir_instruction *ir, enum prog_opcode op,
    }
 }
 
-struct src_reg
+src_reg
 ir_to_mesa_visitor::src_reg_for_float(float val)
 {
    src_reg src(PROGRAM_CONSTANT, -1, NULL);
@@ -723,7 +725,7 @@ ir_to_mesa_visitor::visit(ir_variable *ir)
 	 }
       }
 
-      struct variable_storage *storage;
+      variable_storage *storage;
       dst_reg dst;
       if (i == ir->num_state_slots) {
 	 /* We'll set the index later. */
@@ -869,7 +871,7 @@ ir_to_mesa_visitor::visit(ir_function *ir)
    }
 }
 
-GLboolean
+bool
 ir_to_mesa_visitor::try_emit_mad(ir_expression *ir, int mul_operand)
 {
    int nonmul_operand = 1 - mul_operand;
@@ -892,7 +894,47 @@ ir_to_mesa_visitor::try_emit_mad(ir_expression *ir, int mul_operand)
    return true;
 }
 
-GLboolean
+/**
+ * Emit OPCODE_MAD(a, -b, a) instead of AND(a, NOT(b))
+ *
+ * The logic values are 1.0 for true and 0.0 for false.  Logical-and is
+ * implemented using multiplication, and logical-or is implemented using
+ * addition.  Logical-not can be implemented as (true - x), or (1.0 - x).
+ * As result, the logical expression (a & !b) can be rewritten as:
+ *
+ *     - a * !b
+ *     - a * (1 - b)
+ *     - (a * 1) - (a * b)
+ *     - a + -(a * b)
+ *     - a + (a * -b)
+ *
+ * This final expression can be implemented as a single MAD(a, -b, a)
+ * instruction.
+ */
+bool
+ir_to_mesa_visitor::try_emit_mad_for_and_not(ir_expression *ir, int try_operand)
+{
+   const int other_operand = 1 - try_operand;
+   src_reg a, b;
+
+   ir_expression *expr = ir->operands[try_operand]->as_expression();
+   if (!expr || expr->operation != ir_unop_logic_not)
+      return false;
+
+   ir->operands[other_operand]->accept(this);
+   a = this->result;
+   expr->operands[0]->accept(this);
+   b = this->result;
+
+   b.negate = ~b.negate;
+
+   this->result = get_temp(ir->type);
+   emit(ir, OPCODE_MAD, dst_reg(this->result), a, b, a);
+
+   return true;
+}
+
+bool
 ir_to_mesa_visitor::try_emit_sat(ir_expression *ir)
 {
    /* Saturates were only introduced to vertex programs in
@@ -1088,6 +1130,16 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
       if (try_emit_mad(ir, 0))
 	 return;
    }
+
+   /* Quick peephole: Emit OPCODE_MAD(-a, -b, a) instead of AND(a, NOT(b))
+    */
+   if (ir->operation == ir_binop_logic_and) {
+      if (try_emit_mad_for_and_not(ir, 1))
+	 return;
+      if (try_emit_mad_for_and_not(ir, 0))
+	 return;
+   }
+
    if (try_emit_sat(ir))
       return;
 
@@ -1135,7 +1187,13 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
 
    switch (ir->operation) {
    case ir_unop_logic_not:
-      emit(ir, OPCODE_SEQ, result_dst, op[0], src_reg_for_float(0.0));
+      /* Previously 'SEQ dst, src, 0.0' was used for this.  However, many
+       * older GPUs implement SEQ using multiple instructions (i915 uses two
+       * SGE instructions and a MUL instruction).  Since our logic values are
+       * 0.0 and 1.0, 1-x also implements !x.
+       */
+      op[0].negate = ~op[0].negate;
+      emit(ir, OPCODE_ADD, result_dst, op[0], src_reg_for_float(1.0));
       break;
    case ir_unop_neg:
       op[0].negate = ~op[0].negate;
@@ -1231,8 +1289,19 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
 	  ir->operands[1]->type->is_vector()) {
 	 src_reg temp = get_temp(glsl_type::vec4_type);
 	 emit(ir, OPCODE_SNE, dst_reg(temp), op[0], op[1]);
+
+	 /* After the dot-product, the value will be an integer on the
+	  * range [0,4].  Zero becomes 1.0, and positive values become zero.
+	  */
 	 emit_dp(ir, result_dst, temp, temp, vector_elements);
-	 emit(ir, OPCODE_SEQ, result_dst, result_src, src_reg_for_float(0.0));
+
+	 /* Negating the result of the dot-product gives values on the range
+	  * [-4, 0].  Zero becomes 1.0, and negative values become zero.  This
+	  * achieved using SGE.
+	  */
+	 src_reg sge_src = result_src;
+	 sge_src.negate = ~sge_src.negate;
+	 emit(ir, OPCODE_SGE, result_dst, sge_src, src_reg_for_float(0.0));
       } else {
 	 emit(ir, OPCODE_SEQ, result_dst, op[0], op[1]);
       }
@@ -1243,29 +1312,83 @@ ir_to_mesa_visitor::visit(ir_expression *ir)
 	  ir->operands[1]->type->is_vector()) {
 	 src_reg temp = get_temp(glsl_type::vec4_type);
 	 emit(ir, OPCODE_SNE, dst_reg(temp), op[0], op[1]);
-	 emit_dp(ir, result_dst, temp, temp, vector_elements);
-	 emit(ir, OPCODE_SNE, result_dst, result_src, src_reg_for_float(0.0));
+
+	 /* After the dot-product, the value will be an integer on the
+	  * range [0,4].  Zero stays zero, and positive values become 1.0.
+	  */
+	 ir_to_mesa_instruction *const dp =
+	    emit_dp(ir, result_dst, temp, temp, vector_elements);
+	 if (this->prog->Target == GL_FRAGMENT_PROGRAM_ARB) {
+	    /* The clamping to [0,1] can be done for free in the fragment
+	     * shader with a saturate.
+	     */
+	    dp->saturate = true;
+	 } else {
+	    /* Negating the result of the dot-product gives values on the range
+	     * [-4, 0].  Zero stays zero, and negative values become 1.0.  This
+	     * achieved using SLT.
+	     */
+	    src_reg slt_src = result_src;
+	    slt_src.negate = ~slt_src.negate;
+	    emit(ir, OPCODE_SLT, result_dst, slt_src, src_reg_for_float(0.0));
+	 }
       } else {
 	 emit(ir, OPCODE_SNE, result_dst, op[0], op[1]);
       }
       break;
 
-   case ir_unop_any:
+   case ir_unop_any: {
       assert(ir->operands[0]->type->is_vector());
-      emit_dp(ir, result_dst, op[0], op[0],
-	      ir->operands[0]->type->vector_elements);
-      emit(ir, OPCODE_SNE, result_dst, result_src, src_reg_for_float(0.0));
+
+      /* After the dot-product, the value will be an integer on the
+       * range [0,4].  Zero stays zero, and positive values become 1.0.
+       */
+      ir_to_mesa_instruction *const dp =
+	 emit_dp(ir, result_dst, op[0], op[0],
+		 ir->operands[0]->type->vector_elements);
+      if (this->prog->Target == GL_FRAGMENT_PROGRAM_ARB) {
+	 /* The clamping to [0,1] can be done for free in the fragment
+	  * shader with a saturate.
+	  */
+	 dp->saturate = true;
+      } else {
+	 /* Negating the result of the dot-product gives values on the range
+	  * [-4, 0].  Zero stays zero, and negative values become 1.0.  This
+	  * is achieved using SLT.
+	  */
+	 src_reg slt_src = result_src;
+	 slt_src.negate = ~slt_src.negate;
+	 emit(ir, OPCODE_SLT, result_dst, slt_src, src_reg_for_float(0.0));
+      }
       break;
+   }
 
    case ir_binop_logic_xor:
       emit(ir, OPCODE_SNE, result_dst, op[0], op[1]);
       break;
 
-   case ir_binop_logic_or:
-      /* This could be a saturated add and skip the SNE. */
-      emit(ir, OPCODE_ADD, result_dst, op[0], op[1]);
-      emit(ir, OPCODE_SNE, result_dst, result_src, src_reg_for_float(0.0));
+   case ir_binop_logic_or: {
+      /* After the addition, the value will be an integer on the
+       * range [0,2].  Zero stays zero, and positive values become 1.0.
+       */
+      ir_to_mesa_instruction *add =
+	 emit(ir, OPCODE_ADD, result_dst, op[0], op[1]);
+      if (this->prog->Target == GL_FRAGMENT_PROGRAM_ARB) {
+	 /* The clamping to [0,1] can be done for free in the fragment
+	  * shader with a saturate.
+	  */
+	 add->saturate = true;
+      } else {
+	 /* Negating the result of the addition gives values on the range
+	  * [-2, 0].  Zero stays zero, and negative values become 1.0.  This
+	  * is achieved using SLT.
+	  */
+	 src_reg slt_src = result_src;
+	 slt_src.negate = ~slt_src.negate;
+	 emit(ir, OPCODE_SLT, result_dst, slt_src, src_reg_for_float(0.0));
+      }
       break;
+   }
 
    case ir_binop_logic_and:
       /* the bool args are stored as float 0.0 or 1.0, so "mul" gives us "and". */
@@ -1981,7 +2104,10 @@ ir_to_mesa_visitor::visit(ir_texture *ir)
    ir_to_mesa_instruction *inst = NULL;
    prog_opcode opcode = OPCODE_NOP;
 
-   ir->coordinate->accept(this);
+   if (ir->op == ir_txs)
+      this->result = src_reg_for_float(0.0);
+   else
+      ir->coordinate->accept(this);
 
    /* Put our coords in a temp.  We'll need to modify them for shadow,
     * projection, or LOD, so the only case we'd use it as is is if
@@ -2005,6 +2131,7 @@ ir_to_mesa_visitor::visit(ir_texture *ir)
 
    switch (ir->op) {
    case ir_tex:
+   case ir_txs:
       opcode = OPCODE_TEX;
       break;
    case ir_txb:

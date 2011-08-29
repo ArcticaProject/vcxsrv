@@ -35,7 +35,6 @@
 
 #include "ast.h"
 #include "glsl_parser_extras.h"
-#include "glsl_parser.h"
 #include "ir_optimization.h"
 #include "ir_print_visitor.h"
 #include "program.h"

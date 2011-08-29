@@ -131,6 +131,7 @@ the result is implementation-dependent.
 Uppercase and lowercase matter;
 the strings ``thing'', ``Thing'', and ``thinG'' 
 are all considered different names.
+</para>
 <indexterm significance="preferred"><primary>XListExtensions</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlistextensions'>
@@ -163,7 +164,6 @@ Returns the number of extensions listed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -173,6 +173,7 @@ function returns a list of all extensions supported by the server.
 If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned strings are in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
+</para>
 <indexterm significance="preferred"><primary>XFreeExtensionList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreeextensionlist'>
@@ -194,7 +195,6 @@ Specifies the list of extension names.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -253,7 +253,6 @@ typedef struct _XExtCodes {	/* public to extension, cannot be changed */
 } XExtCodes;
 </synopsis>
 </para>
-<para>
 <!-- .LP -->
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XInitExtension</primary></indexterm>
@@ -288,7 +287,6 @@ Specifies the extension name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -320,7 +318,6 @@ structure is
 needed in the other calls that follow.  
 This extension number is unique only to a single connection.
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XAddExtension</primary></indexterm>
 <!-- .sM -->
@@ -343,7 +340,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -370,6 +366,7 @@ format, and the handling of errors.
 <!-- .LP -->
 All of these functions return the previous procedure defined for this
 extension.
+</para>
 <indexterm significance="preferred"><primary>XESetCloseDisplay</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xesetclosedisplay'>
@@ -413,7 +410,6 @@ Specifies the procedure to call when the display is closed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -439,7 +435,6 @@ with these arguments:
 </funcprototype>
 </funcsynopsis>
 </para>
-<para>
 <indexterm significance="preferred"><primary>XESetCreateGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xesetcreategc'>
@@ -483,7 +478,6 @@ Specifies the procedure to call when a GC is closed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -640,7 +634,6 @@ your procedure is called with these arguments:
 </funcprototype>
 </funcsynopsis>
 </para>
-<para>
 <!-- .LP -->
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XESetCreateFont</primary></indexterm>
@@ -686,7 +679,6 @@ Specifies the procedure to call when a font is created.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -721,7 +713,6 @@ your procedure is called with these arguments:
 </funcprototype>
 </funcsynopsis>
 </para>
-<para>
 <!-- .LP -->
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XESetFreeFont</primary></indexterm>
@@ -767,7 +758,6 @@ Specifies the procedure to call when a font is freed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -835,6 +825,7 @@ structure size cannot be bigger than the size of the
 union of structures.
 There also is no way to guarantee that more than 24 elements or 96 characters
 in the structure will be fully portable between machines.
+</para>
 <!-- .NE -->
 <indexterm significance="preferred"><primary>XESetWireToEvent</primary></indexterm>
 <!-- .sM -->
@@ -879,7 +870,6 @@ Specifies the procedure to call when converting an event.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -944,7 +934,6 @@ To initialize the serial number component of the event, call
 <function>_XSetLastRequestRead</function>
 with the event and use the return value.
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>_XSetLastRequestRead</primary></indexterm>
 <!-- .sM -->
@@ -978,7 +967,6 @@ Specifies the wire event structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -988,7 +976,6 @@ function computes and returns a complete serial number from the partial
 serial number in the event.
 <!-- .sp -->
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XESetEventToWire</primary></indexterm>
 <!-- .sM -->
@@ -1033,7 +1020,6 @@ Specifies the procedure to call when converting an event.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1082,6 +1068,7 @@ structure.
 All other members then should be copied from the host format to the 
 <structname>xEvent</structname>
 structure.
+</para>
 <indexterm significance="preferred"><primary>XESetWireToError</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xesetwiretoerror'>
@@ -1125,7 +1112,6 @@ Specifies the procedure to call when an error is received.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1177,6 +1163,7 @@ then the function should return
 <symbol>False</symbol>;
 otherwise, it should return
 <symbol>True</symbol>.
+</para>
 <indexterm significance="preferred"><primary>XESetError</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xeseterror'>
@@ -1220,7 +1207,6 @@ Specifies the procedure to call when an error is received.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1268,6 +1254,7 @@ If your procedure returns nonzero,
 the error is suppressed, and 
 <function>_XReply</function>
 returns the value of ret_code.
+</para>
 <indexterm significance="preferred"><primary>XESetErrorString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xeseterrorstring'>
@@ -1311,7 +1298,6 @@ Specifies the procedure to call to obtain an error string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1344,6 +1330,7 @@ The following is an example.
 Your procedure is called with the error code for every error detected.
 You should copy nbytes of a null-terminated string containing the
 error message into buffer.
+</para>
 <indexterm significance="preferred"><primary>XESetPrintErrorValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xesetprinterrorvalues'>
@@ -1387,7 +1374,6 @@ Specifies the procedure to call when an error is printed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1426,6 +1412,7 @@ to obtain additional values set by using
 <function>XESetWireToError</function>.
 The underlying type of the fp argument is system dependent;
 on a <acronym>POSIX</acronym>-compliant system, fp should be cast to type FILE*.
+</para>
 <indexterm significance="preferred"><primary>XESetFlushGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xesetflushgc'>
@@ -1469,7 +1456,6 @@ Specifies the procedure to call when a GC is flushed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1478,6 +1464,7 @@ The procedure set by the
 function has the same interface as the procedure set by the
 <function>XESetCopyGC</function>
 function, but is called when a GC cache needs to be updated in the server.
+</para>
 <indexterm significance="preferred"><primary>XESetBeforeFlush</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis>
@@ -1521,7 +1508,6 @@ Specifies the procedure to call when a buffer is flushed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1613,7 +1599,6 @@ union {	Display *display;
 	XFontStruct *font } XEDataObject;
 </synopsis>
 </para>
-<para>
 <!-- .LP -->
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XEHeadOfExtensionList</primary></indexterm>
@@ -1637,7 +1622,6 @@ Specifies the object.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1652,7 +1636,6 @@ allows an extension to attach arbitrary data to any of the structures
 of types contained in
 <structname>XEDataObject</structname>.
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XAddToExtensionList</primary></indexterm>
 <!-- .sM -->
@@ -1686,7 +1669,6 @@ Specifies the extension data structure to add.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1694,6 +1676,7 @@ The structure argument is a pointer to one of the data structures
 enumerated above.
 You must initialize ext_data-&gt;number with the extension number
 before calling this function.
+</para>
 <indexterm significance="preferred"><primary>XFindOnExtensionList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfindonextensionlist'>
@@ -1727,7 +1710,6 @@ Specifies the extension number from
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1745,6 +1727,7 @@ The
 <function>XAllocID</function>
 macro, which allocates and returns a resource ID, is defined in 
 <filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
+</para>
 <indexterm significance="preferred"><primary>XAllocID</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xallocid'>
@@ -1766,7 +1749,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1780,6 +1762,7 @@ It returns a resource ID that you can use when creating new resources.
 The 
 <function>XAllocIDs</function>
 macro allocates and returns an array of resource ID.
+</para>
 <indexterm significance="preferred"><primary>XAllocIDs</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xallocids'>
@@ -1823,7 +1806,6 @@ Specifies the number of resource IDs requested.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1857,6 +1839,7 @@ if any elements have changed.
 The
 <function>FlushGC</function>
 macro is defined as follows:
+</para>
 <indexterm significance="preferred"><primary>FlushGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='flushgc'>
@@ -1889,7 +1872,6 @@ Specifies the GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1907,6 +1889,7 @@ The
 <function>_XFlushGCCache</function>
 procedure
 is defined as follows:
+</para>
 <indexterm significance="preferred"><primary>_XFlushGCCache</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='_xflushgccache'>
@@ -1939,7 +1922,6 @@ Specifies the GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2340,7 +2322,6 @@ Two calls, which are generally implemented as macros, have been provided.
 </funcsynopsis>
 <!-- .FN -->
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>UnlockDisplay</primary></indexterm>
 <funcsynopsis id='unlockdisplay'>
@@ -2362,7 +2343,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2581,6 +2561,7 @@ packet to arrive.
 If any events arrive in the meantime,
 <function>_XReply</function>
 places them in the queue for later use.
+</para>
 <indexterm significance="preferred"><primary>_XReply</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='_xreply'>
@@ -2636,7 +2617,6 @@ should be discarded.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2748,7 +2728,6 @@ and use the appropriate
 <function>_XRead</function>
 function to read the variable-length data.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
 <funcsynopsis id='_xread'>
@@ -2792,7 +2771,6 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2800,7 +2778,6 @@ The
 <function>_XRead</function>
 function reads the specified number of bytes into data_return.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
 <funcsynopsis id='_xread16'>
@@ -2844,7 +2821,6 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2854,7 +2830,6 @@ function reads the specified number of bytes,
 unpacking them as 16-bit quantities,
 into the specified array as shorts.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
 <funcsynopsis id='_xread32'>
@@ -2898,7 +2873,6 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2908,7 +2882,6 @@ function reads the specified number of bytes,
 unpacking them as 32-bit quantities,
 into the specified array as longs.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
 <funcsynopsis id='_xread16pad'>
@@ -2952,7 +2925,6 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2965,7 +2937,6 @@ If the number of bytes is not a multiple of four,
 <function>_XRead16Pad</function>
 reads and discards up to two additional pad bytes.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sM -->
 <funcsynopsis id='_xreadpad'>
@@ -3009,7 +2980,6 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3066,6 +3036,7 @@ the general memory allocators may be too expensive to use
 (particularly in output functions, which are performance critical).  
 The following function returns a scratch buffer for use within a
 critical section:
+</para>
 <indexterm significance="preferred"><primary>_XAllocScratch</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='_xallocscratch'>
@@ -3098,7 +3069,6 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3123,6 +3093,7 @@ families of functions.
 <!-- .sp -->
 The following function returns a scratch buffer for use across
 critical sections:
+</para>
 <indexterm significance="preferred"><primary>_XAllocTemp</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='_xalloctemp'>
@@ -3155,13 +3126,13 @@ Specifies the number of bytes required.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
 This storage can be used across calls that might permit another thread to
 execute inside Xlib.  The storage must be explicitly returned to Xlib.
 The following function returns the storage:
+</para>
 <indexterm significance="preferred"><primary>_XFreeTemp</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='_xfreetemp'>
@@ -3205,7 +3176,6 @@ Specifies the size of the buffer.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

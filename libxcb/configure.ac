@@ -135,6 +135,8 @@ AC_PREREQ([2.59c], [], [AC_SUBST([htmldir], [m4_ifset([AC_PACKAGE_TARNAME],
 
 XCB_CHECK_DOXYGEN()
 
+AC_CHECK_FUNC(getaddrinfo, [AC_DEFINE(HAVE_GETADDRINFO, 1, [getaddrinfo() function is available])], )
+
 case $host_os in
 	# darwin through Snow Leopard has poll() but can't be used to poll character devices.
 	darwin@<:@789@:>@*|darwin10*) ;;
