@@ -359,7 +359,6 @@ fi
 GL_LIB_NAME='lib$(GL_LIB).'${LIB_EXTENSION}
 GLU_LIB_NAME='lib$(GLU_LIB).'${LIB_EXTENSION}
 GLUT_LIB_NAME='lib$(GLUT_LIB).'${LIB_EXTENSION}
-GLW_LIB_NAME='lib$(GLW_LIB).'${LIB_EXTENSION}
 OSMESA_LIB_NAME='lib$(OSMESA_LIB).'${LIB_EXTENSION}
 EGL_LIB_NAME='lib$(EGL_LIB).'${LIB_EXTENSION}
 GLESv1_CM_LIB_NAME='lib$(GLESv1_CM_LIB).'${LIB_EXTENSION}
@@ -372,7 +371,6 @@ GBM_LIB_NAME='lib$(GBM_LIB).'${LIB_EXTENSION}
 GL_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GL_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 GLU_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GLU_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 GLUT_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GLUT_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
-GLW_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GLW_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 OSMESA_LIB_GLOB=${LIB_PREFIX_GLOB}'$(OSMESA_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 EGL_LIB_GLOB=${LIB_PREFIX_GLOB}'$(EGL_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
 EGL_LIB_GLOB=${LIB_PREFIX_GLOB}'$(EGL_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTENSION}'*'
@@ -386,7 +384,6 @@ GBM_LIB_GLOB=${LIB_PREFIX_GLOB}'$(GBM_LIB)'${LIB_VERSION_SEPARATOR}'*'${LIB_EXTE
 AC_SUBST([GL_LIB_NAME])
 AC_SUBST([GLU_LIB_NAME])
 AC_SUBST([GLUT_LIB_NAME])
-AC_SUBST([GLW_LIB_NAME])
 AC_SUBST([OSMESA_LIB_NAME])
 AC_SUBST([EGL_LIB_NAME])
 AC_SUBST([GLESv1_CM_LIB_NAME])
@@ -399,7 +396,6 @@ AC_SUBST([GBM_LIB_NAME])
 AC_SUBST([GL_LIB_GLOB])
 AC_SUBST([GLU_LIB_GLOB])
 AC_SUBST([GLUT_LIB_GLOB])
-AC_SUBST([GLW_LIB_GLOB])
 AC_SUBST([OSMESA_LIB_GLOB])
 AC_SUBST([EGL_LIB_GLOB])
 AC_SUBST([GLESv1_CM_LIB_GLOB])
@@ -1165,25 +1161,20 @@ if test "x$enable_dri" = xyes; then
 
         case "$host_cpu" in
         x86_64)
-            # sis is missing because they have not be converted to use
-            # the new interface.  i810 are missing because there is no
-            # x86-64 system where they could *ever* be used.
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="i915 i965 mach64 mga nouveau r128 r200 r300 r600 \
-                    radeon savage tdfx unichrome swrast"
+                DRI_DIRS="i915 i965 nouveau r200 r300 r600 radeon swrast"
             fi
             ;;
         powerpc*)
             # Build only the drivers for cards that exist on PowerPC.
-            # At some point MGA will be added, but not yet.
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="mach64 r128 r200 r300 r600 radeon tdfx swrast"
+                DRI_DIRS="r200 r300 r600 radeon swrast"
             fi
             ;;
         sparc*)
-            # Build only the drivers for cards that exist on sparc`
+            # Build only the drivers for cards that exist on sparc
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="mach64 r128 r200 r300 r600 radeon swrast"
+                DRI_DIRS="r200 r300 r600 radeon swrast"
             fi
             ;;
         esac
@@ -1193,8 +1184,7 @@ if test "x$enable_dri" = xyes; then
         DEFINES="$DEFINES -DIN_DRI_DRIVER -DHAVE_ALIAS"
 
         if test "x$DRI_DIRS" = "xyes"; then
-            DRI_DIRS="i810 i915 i965 mach64 mga nouveau r128 r200 r300 r600 \
-                radeon tdfx unichrome savage sis swrast"
+            DRI_DIRS="i915 i965 nouveau r200 r300 r600 radeon swrast"
         fi
         ;;
     gnu*)
@@ -1214,8 +1204,7 @@ if test "x$enable_dri" = xyes; then
 
     # default drivers
     if test "x$DRI_DIRS" = "xyes"; then
-        DRI_DIRS="i810 i915 i965 mach64 mga nouveau r128 r200 r300 r600 radeon \
-            savage sis tdfx unichrome swrast"
+        DRI_DIRS="i915 i965 nouveau r200 r300 r600 radeon swrast"
     fi
 
     DRI_DIRS=`echo "$DRI_DIRS" | $SED 's/  */ /g'`
@@ -1369,6 +1358,8 @@ if test "x$enable_egl" = xyes; then
     SRC_DIRS="$SRC_DIRS egl"
     EGL_LIB_DEPS="$DLOPEN_LIBS $SELINUX_LIBS -lpthread"
     EGL_DRIVERS_DIRS=""
+
+    AC_CHECK_FUNC(mincore, [DEFINES="$DEFINES -DHAVE_MINCORE"])
 
     if test "$enable_static" != yes; then
         # build egl_glx when libGL is built
@@ -1601,77 +1592,6 @@ AC_SUBST([GLU_PC_REQ])
 AC_SUBST([GLU_PC_REQ_PRIV])
 AC_SUBST([GLU_PC_LIB_PRIV])
 AC_SUBST([GLU_PC_CFLAGS])
-
-dnl
-dnl GLw configuration
-dnl
-AC_ARG_ENABLE([glw],
-    [AS_HELP_STRING([--disable-glw],
-        [enable Xt/Motif widget library @<:@default=enabled@:>@])],
-    [enable_glw="$enableval"],
-    [enable_glw=yes])
-dnl Don't build GLw on osmesa
-if test "x$enable_glw" = xyes -a "x$enable_glx" = xno; then
-    AC_MSG_NOTICE([Disabling GLw since there is no OpenGL driver])
-    enable_glw=no
-fi
-AC_ARG_ENABLE([motif],
-    [AS_HELP_STRING([--enable-motif],
-        [use Motif widgets in GLw @<:@default=disabled@:>@])],
-    [enable_motif="$enableval"],
-    [enable_motif=no])
-
-if test "x$enable_glw" = xyes; then
-    SRC_DIRS="$SRC_DIRS glw"
-    if test "$x11_pkgconfig" = yes; then
-        PKG_CHECK_MODULES([GLW],[x11 xt])
-        GLW_PC_REQ_PRIV="x11 xt"
-        GLW_LIB_DEPS="$GLW_LIBS"
-    else
-        # should check these...
-        GLW_LIB_DEPS="$X_LIBS -lXt -lX11"
-        GLW_PC_LIB_PRIV="$GLW_LIB_DEPS"
-        GLW_PC_CFLAGS="$X11_INCLUDES"
-    fi
-
-    GLW_SOURCES="GLwDrawA.c"
-    MOTIF_CFLAGS=
-    if test "x$enable_motif" = xyes; then
-        GLW_SOURCES="$GLW_SOURCES GLwMDrawA.c"
-        AC_PATH_PROG([MOTIF_CONFIG], [motif-config], [no])
-        if test "x$MOTIF_CONFIG" != xno; then
-            MOTIF_CFLAGS=`$MOTIF_CONFIG --cflags`
-            MOTIF_LIBS=`$MOTIF_CONFIG --libs`
-        else
-            AC_CHECK_HEADER([Xm/PrimitiveP.h], [],
-                [AC_MSG_ERROR([Can't locate Motif headers])])
-            AC_CHECK_LIB([Xm], [XmGetPixmap], [MOTIF_LIBS="-lXm"],
-                [AC_MSG_ERROR([Can't locate Motif Xm library])])
-        fi
-        # MOTIF_LIBS is prepended to GLW_LIB_DEPS since Xm needs Xt/X11
-        GLW_LIB_DEPS="$MOTIF_LIBS $GLW_LIB_DEPS"
-        GLW_PC_LIB_PRIV="$MOTIF_LIBS $GLW_PC_LIB_PRIV"
-        GLW_PC_CFLAGS="$MOTIF_CFLAGS $GLW_PC_CFLAGS"
-    fi
-
-    # If static, empty GLW_LIB_DEPS and add libs for programs to link
-    GLW_PC_LIB_PRIV="$GLW_PC_LIB_PRIV"
-    if test "$enable_static" = no; then
-        GLW_MESA_DEPS='-l$(GL_LIB)'
-        GLW_LIB_DEPS="$GLW_LIB_DEPS"
-    else
-        APP_LIB_DEPS="$APP_LIB_DEPS $GLW_LIB_DEPS"
-        GLW_LIB_DEPS=""
-        GLW_MESA_DEPS=""
-    fi
-fi
-AC_SUBST([GLW_LIB_DEPS])
-AC_SUBST([GLW_MESA_DEPS])
-AC_SUBST([GLW_SOURCES])
-AC_SUBST([MOTIF_CFLAGS])
-AC_SUBST([GLW_PC_REQ_PRIV])
-AC_SUBST([GLW_PC_LIB_PRIV])
-AC_SUBST([GLW_PC_CFLAGS])
 
 dnl
 dnl Program library dependencies
@@ -1928,7 +1848,7 @@ if test "x$with_gallium_drivers" != x; then
             ;;
         xr600)
             GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS r600"
-            gallium_check_st "r600/drm" "dri-r600" "" "" "xvmc-r600" "vdpau-r600" "va-r600"
+            gallium_check_st "r600/drm radeon/drm" "dri-r600" "xorg-r600" "" "xvmc-r600" "vdpau-r600" "va-r600"
             ;;
         xnouveau)
             PKG_CHECK_MODULES([NOUVEAU], [libdrm_nouveau >= $LIBDRM_NOUVEAU_REQUIRED])
@@ -2051,7 +1971,6 @@ esac
 
 echo ""
 echo "        GLU:             $enable_glu"
-echo "        GLw:             $enable_glw (Motif: $enable_motif)"
 
 dnl EGL
 echo ""

@@ -36,6 +36,7 @@ exists.
 To obtain the parent, a list of children, and number of children for 
 a given window, use 
 <function>XQueryTree</function>.
+</para>
 <indexterm><primary>Child Window</primary></indexterm>
 <indexterm><primary>Parent Window</primary></indexterm>
 <indexterm significance="preferred"><primary>XQueryTree</primary></indexterm>
@@ -116,7 +117,6 @@ Returns the number of children.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -145,6 +145,7 @@ error.
 <!-- .sp -->
 To obtain the current attributes of a given window, use 
 <function>XGetWindowAttributes</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetWindowAttributes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetwindowattributes'>
@@ -191,7 +192,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -370,6 +370,7 @@ errors.
 <!-- .sp -->
 To obtain the current geometry of a given drawable, use 
 <function>XGetGeometry</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetGeometry</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetgeometry'>
@@ -487,7 +488,6 @@ Returns the depth of the drawable (bits per pixel for the object).
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -531,6 +531,7 @@ asking the X server to perform these operations.
 To translate a coordinate in one window to the coordinate
 space of another window, use
 <function>XTranslateCoordinates</function>.
+</para>
 <indexterm significance="preferred"><primary>XTranslateCoordinates</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xtranslatecoordinates'>
@@ -629,7 +630,6 @@ destination window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -665,6 +665,7 @@ error.
 To obtain the screen coordinates of the pointer
 or to determine the pointer coordinates relative to a specified window, use 
 <function>XQueryPointer</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryPointer</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerypointer'>
@@ -774,7 +775,6 @@ Returns the current state of the modifier keys and pointer buttons.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1047,6 +1047,7 @@ see <link linkend="Font_Metrics">section 8.5</link>.
 <!-- .sp -->
 To return an atom for a given name, use 
 <function>XInternAtom</function>.
+</para>
 <indexterm><primary>Atom</primary><secondary>interning</secondary></indexterm>
 <indexterm significance="preferred"><primary>XInternAtom</primary></indexterm>
 <!-- .sM -->
@@ -1091,7 +1092,6 @@ Specifies a Boolean value that indicates whether the atom must be created.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1129,6 +1129,7 @@ errors.
 <!-- .sp -->
 To return atoms for an array of names, use 
 <function>XInternAtoms</function>.
+</para>
 <indexterm><primary>Atom</primary><secondary>interning</secondary></indexterm>
 <indexterm significance="preferred"><primary>XInternAtoms</primary></indexterm>
 <!-- .sM -->
@@ -1196,7 +1197,6 @@ Returns the atoms.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1230,6 +1230,7 @@ errors.
 <!-- .sp -->
 To return a name for a given atom identifier, use 
 <function>XGetAtomName</function>.
+</para>
 <indexterm><primary>Atom</primary><secondary>getting name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGetAtomName</primary></indexterm>
 <!-- .sM -->
@@ -1263,7 +1264,6 @@ Specifies the atom for the property name you want returned.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1289,6 +1289,7 @@ error.
 <!-- .sp -->
 To return the names for an array of atom identifiers, use 
 <function>XGetAtomNames</function>.
+</para>
 <indexterm><primary>Atom</primary><secondary>getting name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGetAtomNames</primary></indexterm>
 <!-- .sM -->
@@ -1345,7 +1346,6 @@ Returns the atom names.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1407,7 +1407,6 @@ To obtain the type, format, and value of a property of a given window, use
 <function>XGetWindowProperty</function>.
 <indexterm><primary>Property</primary><secondary>getting</secondary></indexterm>
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XGetWindowProperty</primary></indexterm>
 <!-- .sM -->
@@ -1556,7 +1555,6 @@ Returns the data in the specified format.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1688,6 +1686,7 @@ errors.
 <!-- .sp -->
 To obtain a given window's property list, use 
 <function>XListProperties</function>.
+</para>
 <indexterm><primary>Property</primary><secondary>listing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XListProperties</primary></indexterm>
 <!-- .sM -->
@@ -1733,7 +1732,6 @@ Returns the length of the properties array.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1756,6 +1754,7 @@ error.
 <!-- .sp -->
 To change a property of a given window, use
 <function>XChangeProperty</function>.
+</para>
 <indexterm><primary>Property</primary><secondary>changing</secondary></indexterm>
 <indexterm><primary>Property</primary><secondary>appending</secondary></indexterm>
 <indexterm><primary>Property</primary><secondary>prepending</secondary></indexterm>
@@ -1877,7 +1876,6 @@ Specifies the number of elements of the specified data format.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1961,7 +1959,6 @@ errors.
 To rotate a window's property list, use
 <function>XRotateWindowProperties</function>.
 </para>
-<para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XRotateWindowProperties</primary></indexterm>
 <!-- .sM -->
@@ -2028,7 +2025,6 @@ Specifies the rotation amount.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2076,6 +2072,7 @@ errors.
 <!-- .sp -->
 To delete a property on a given window, use 
 <function>XDeleteProperty</function>.
+</para>
 <indexterm><primary>Property</primary><secondary>deleting</secondary></indexterm>
 <indexterm significance="preferred"><primary>XDeleteProperty</primary></indexterm>
 <!-- .sM -->
@@ -2121,7 +2118,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2199,6 +2195,7 @@ The protocol does not constrain the semantics.
 <!-- .sp -->
 To set the selection owner, use 
 <function>XSetSelectionOwner</function>.
+</para>
 <indexterm><primary>Selection</primary><secondary>setting the owner</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetSelectionOwner</primary></indexterm>
 <!-- .sM -->
@@ -2258,7 +2255,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2322,6 +2318,7 @@ errors.
 <!-- .sp -->
 To return the selection owner, use 
 <function>XGetSelectionOwner</function>.
+</para>
 <indexterm><primary>Selection</primary><secondary>getting the owner</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGetSelectionOwner</primary></indexterm>
 <!-- .sM -->
@@ -2356,7 +2353,6 @@ Specifies the selection atom (Se.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2384,6 +2380,7 @@ error.
 <!-- .sp -->
 To request conversion of a selection, use 
 <function>XConvertSelection</function>.
+</para>
 <indexterm><primary>Selection</primary><secondary>converting</secondary></indexterm>
 <indexterm significance="preferred"><primary>XConvertSelection</primary></indexterm>
 <!-- .sM -->
@@ -2464,7 +2461,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

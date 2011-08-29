@@ -14,8 +14,8 @@ and the corresponding protocol request that it generates.
   <tgroup cols="2">
     <thead>
       <row>
-	<entry>Xlib Function</entry>
-	<entry>Protocol Request</entry>
+	<entry align='left'>Xlib Function</entry>
+	<entry align='left'>Protocol Request</entry>
       </row>
     </thead>
     <tbody>
@@ -1062,8 +1062,8 @@ order) and the Xlib functions that reference it.
   <tgroup cols="2">
     <thead>
       <row>
-	<entry>Protocol Request</entry>
-	<entry>Xlib Function</entry>
+	<entry align='left'>Protocol Request</entry>
+	<entry align='left'>Xlib Function</entry>
       </row>
     </thead>
     <tbody>

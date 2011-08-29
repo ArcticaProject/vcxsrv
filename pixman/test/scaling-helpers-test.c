@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "utils.h"
-#include "pixman-fast-path.h"
+#include "pixman-inlines.h"
 
 /* A trivial reference implementation for
  * 'bilinear_pad_repeat_get_scanline_bounds'

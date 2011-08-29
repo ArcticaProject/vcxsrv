@@ -1900,7 +1900,7 @@ print_utf8 (const char *prefix, char *u8str, size_t length, const char *suffix)
 
     if (iconv_from_utf8 != (iconv_t) -1) {
 	Bool done = True;
-	char *inp = u8str;
+	ICONV_CONST char *inp = u8str;
 	char convbuf[BUFSIZ];
 	int convres;
 

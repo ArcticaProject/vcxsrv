@@ -80,13 +80,13 @@ The processing associated with these events is discussed in section 10.5.
 <para>
 <!-- .LP -->
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Event Category</entry>
-      <entry>Event Type</entry>
+      <entry align='left'>Event Category</entry>
+      <entry align='left'>Event Type</entry>
     </row>
   </thead>
   <tbody>
@@ -370,13 +370,13 @@ event mask:
 <!-- .\" .CP T 2 -->
 <!-- .\"Event Mask Definitions -->
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Event Mask</entry>
-      <entry>Circumstances</entry>
+      <entry align='left'>Event Mask</entry>
+      <entry align='left'>Circumstances</entry>
     </row>
   </thead>
   <tbody>
@@ -558,40 +558,32 @@ Note that N.A. appears in columns for which the information is not applicable.
 <!-- .ps 9 -->
 <!-- .nr PS 9 -->
 <informaltable>
-  <tgroup cols='4' align='center'>
+  <tgroup cols='4'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
   <colspec colname='c4'/>
   <thead>
     <row>
-      <entry>Event Mask</entry>
-      <entry>Event Type</entry>
-      <entry>Structure</entry>
-      <entry>Generic Structure</entry>
+      <entry align='left'>Event Mask</entry>
+      <entry align='left'>Event Type</entry>
+      <entry align='left'>Structure</entry>
+      <entry align='left'>Generic Structure</entry>
     </row>
   </thead>
   <tbody>
     <row>
-      <entry>ButtonMotionMask</entry>
+      <entry>
+      <para>ButtonMotionMask</para>
+      <para>Button1MotionMask</para>
+      <para>Button2MotionMask</para>
+      <para>Button3MotionMask</para>
+      <para>Button4MotionMask</para>
+      <para>Button5MotionMask</para>
+      </entry>
       <entry>MotionNotify</entry>
       <entry>XPointerMovedEvent</entry>
       <entry>XMotionEvent</entry>
-    </row>
-    <row>
-      <entry>Button1MotionMask</entry>
-    </row>
-    <row>
-      <entry>Button2MotionMask</entry>
-    </row>
-    <row>
-      <entry>Button3MotionMask</entry>
-    </row>
-    <row>
-      <entry>Button4MotionMask</entry>
-    </row>
-    <row>
-      <entry>Button5MotionMask</entry>
     </row>
     <row>
       <entry>ButtonPressMask</entry>
@@ -628,23 +620,21 @@ Note that N.A. appears in columns for which the information is not applicable.
       <entry>XExposeEvent </entry>
     </row>
     <row>
-      <entry>GCGraphicsExposures in GC</entry>
+      <entry morerows='1'>GCGraphicsExposures in GC</entry>
       <entry>GraphicsExpose</entry>
       <entry>XGraphicsExposeEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>NoExpose</entry>
       <entry>XNoExposeEvent</entry>
     </row>
     <row>
-      <entry>FocusChangeMask</entry>
+      <entry morerows='1'>FocusChangeMask</entry>
       <entry>FocusIn</entry>
       <entry>XFocusInEvent</entry>
       <entry>XFocusChangeEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>FocusOut</entry>
       <entry>XFocusOutEvent</entry>
       <entry>XFocusChangeEvent</entry>
@@ -693,92 +683,77 @@ Note that N.A. appears in columns for which the information is not applicable.
       <entry>XResizeRequestEvent</entry>
     </row>
     <row>
-      <entry>StructureNotifyMask</entry>
+      <entry morerows='6'>StructureNotifyMask</entry>
       <entry>CirculateNotify</entry>
       <entry>XCirculateEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>ConfigureNotify</entry>
       <entry>XConfigureEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>DestroyNotify</entry>
       <entry>XDestroyWindowEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>GravityNotify</entry>
       <entry>XGravityEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>MapNotify</entry>
       <entry>XMapEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>ReparentNotify</entry>
       <entry>XReparentEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>UnmapNotify</entry>
       <entry>XUnmapEvent</entry>
     </row>
     <row>
-      <entry>SubstructureNotifyMask</entry>
+      <entry morerows='7'>SubstructureNotifyMask</entry>
       <entry>CirculateNotify</entry>
       <entry>XCirculateEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>ConfigureNotify</entry>
       <entry>XConfigureEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>CreateNotify</entry>
       <entry>XCreateWindowEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>DestroyNotify</entry>
       <entry>XDestroyWindowEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>GravityNotify</entry>
       <entry>XGravityEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>MapNotify</entry>
       <entry>XMapEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>ReparentNotify</entry>
       <entry>XReparentEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>UnmapNotify</entry>
       <entry>XUnmapEvent</entry>
     </row>
     <row>
-      <entry>SubstructureRedirectMask</entry>
+      <entry morerows='2'>SubstructureRedirectMask</entry>
       <entry>CirculateRequest</entry>
       <entry>XCirculateRequestEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>ConfigureRequest</entry>
       <entry>XConfigureRequestEvent</entry>
     </row>
     <row>
-      <entry></entry>
       <entry>MapRequest</entry>
       <entry>XMapRequestEvent</entry>
     </row>
@@ -811,9 +786,6 @@ Note that N.A. appears in columns for which the information is not applicable.
       <entry>VisibilityChangeMask</entry>
       <entry>VisibilityNotify</entry>
       <entry>XVisibilityEvent</entry>
-    </row>
-    <row>
-      <entry>_</entry>
     </row>
   </tbody>
   </tgroup>
@@ -919,13 +891,13 @@ The effect is essentially equivalent to an
 with these client passed arguments:
 </para>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Argument</entry>
-      <entry>Value</entry>
+      <entry align='left'>Argument</entry>
+      <entry align='left'>Value</entry>
     </row>
   </thead>
   <tbody>
@@ -1316,13 +1288,13 @@ Some of the symbols mentioned in this section have fixed values, as
 follows:
 </para>
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <thead>
     <row>
-      <entry>Symbol</entry>
-      <entry>Value</entry>
+      <entry align='left'>Symbol</entry>
+      <entry align='left'>Value</entry>
     </row>
   </thead>
   <tbody>

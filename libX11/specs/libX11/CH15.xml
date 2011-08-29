@@ -596,6 +596,7 @@ indicates that an asterisk separates the components.
 To convert a string with one or more components to a binding list
 and a quark list, use
 <function>XrmStringToBindingQuarkList</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmStringToBindingQuarkList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmstringtobindingquarklist'>
@@ -644,7 +645,6 @@ The caller must allocate sufficient space for the quarks list before calling
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -722,6 +722,7 @@ To initialize the resource manager, use
 <!-- .eM -->
 To retrieve a database from disk, use
 <function>XrmGetFileDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmGetFileDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmgetfiledatabase'>
@@ -743,7 +744,6 @@ Specifies the resource database file name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -767,6 +767,7 @@ returns NULL.
 <!-- .sp -->
 To store a copy of a database to disk, use
 <function>XrmPutFileDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmPutFileDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmputfiledatabase'>
@@ -799,7 +800,6 @@ Specifies the file name for the stored database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -821,6 +821,7 @@ Entries with representation types other than ``String'' are ignored.
 <!-- .sp -->
 To obtain a pointer to the screen-independent resources of a display, use
 <function>XResourceManagerString</function>.
+</para>
 <indexterm significance="preferred"><primary>XResourceManagerString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xresourcemanagerstring'>
@@ -842,7 +843,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -865,6 +865,7 @@ If no property exists, NULL is returned.
 <!-- .sp -->
 To obtain a pointer to the screen-specific resources of a screen, use
 <function>XScreenResourceString</function>.
+</para>
 <indexterm significance="preferred"><primary>XScreenResourceString</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xscreenresourcestring'>
@@ -886,7 +887,6 @@ Specifies the screen.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -909,6 +909,7 @@ The caller is responsible for freeing the returned string by using
 <!-- .sp -->
 To create a database from a string, use
 <function>XrmGetStringDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmGetStringDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmgetstringdatabase'>
@@ -930,7 +931,6 @@ Specifies the database contents using a string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -955,6 +955,7 @@ and the database is created in the current locale.
 <!-- .sp -->
 To obtain the locale name of a database, use
 <function>XrmLocaleOfDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmLocaleOfDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmlocaleofdatabase'>
@@ -976,7 +977,6 @@ Specifies the resource database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -995,6 +995,7 @@ it will not be modified by Xlib.
 <!-- .sp -->
 To destroy a resource database and free its allocated memory, use
 <function>XrmDestroyDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmDestroyDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmdestroydatabase'>
@@ -1016,7 +1017,6 @@ Specifies the resource database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1029,6 +1029,7 @@ returns immediately.
 <!-- .sp -->
 To associate a resource database with a display, use
 <function>XrmSetDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmSetDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmsetdatabase'>
@@ -1061,7 +1062,6 @@ Specifies the resource database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1078,6 +1078,7 @@ once it is constructed.
 <!-- .sp -->
 To get the resource database associated with a display, use
 <function>XrmGetDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmGetDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmgetdatabase'>
@@ -1099,7 +1100,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1118,6 +1118,7 @@ It returns NULL if a database has not yet been set.
 <!-- .LP -->
 To merge the contents of a resource file into a database, use
 <function>XrmCombineFileDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmCombineFileDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmcombinefiledatabase'>
@@ -1162,7 +1163,6 @@ Specifies whether source entries override target ones.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -1192,6 +1192,7 @@ The locale of the target database is not modified.
 <!-- .sp -->
 To merge the contents of one database into another database, use
 <function>XrmCombineDatabase</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmCombineDatabase</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmcombinedatabase'>
@@ -1235,7 +1236,6 @@ Specifies whether source entries override target ones.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -1262,6 +1262,7 @@ The locale of the target database is not modified.
 To merge the contents of one database into another database with override
 semantics, use
 <function>XrmMergeDatabases</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmMergeDatabases</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmmergedatabases'>
@@ -1294,7 +1295,6 @@ database is to be merged.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -1319,9 +1319,6 @@ To retrieve a resource from a resource database, use
 or
 <function>XrmQGetSearchResource</function>.
 </para>
-<para>
-<!-- .LP -->
-<!-- .sp -->
 <indexterm significance="preferred"><primary>XrmGetResource</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmgetresource'>
@@ -1387,11 +1384,6 @@ Returns the value in the database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
-<para>
-<!-- .LP -->
-<!-- .eM -->
-<!-- .sp -->
 <indexterm significance="preferred"><primary>XrmQGetResource</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmqgetresource'>
@@ -1457,7 +1449,6 @@ Returns the value in the database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1512,6 +1503,7 @@ of database levels that might match the first part of a name/class list.
 <!-- .sp -->
 To obtain a list of database levels, use
 <function>XrmQGetSearchList</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmQGetSearchList</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmqgetsearchlist'>
@@ -1579,7 +1571,6 @@ Specifies the number of entries (not the byte size) allocated for list_return.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1621,6 +1612,7 @@ only the common prefix should be specified in the name and class list to
 <!-- .sp -->
 To search resource database levels for a given resource, use
 <function>XrmQGetSearchResource</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmQGetSearchResource</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmqgetsearchresource'>
@@ -1687,7 +1679,6 @@ Returns the value in the database.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1732,7 +1723,6 @@ Both functions take a partial resource specification, a
 representation type, and a value.
 This value is copied into the specified database.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XrmPutResource</primary></indexterm>
@@ -1789,7 +1779,6 @@ Specifies the value of the resource, which is specified as a string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1810,7 +1799,6 @@ If the specifier and type are not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 The value is stored in the database without modification.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XrmQPutResource</primary></indexterm>
@@ -1878,7 +1866,6 @@ Specifies the value of the resource, which is specified as a string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1895,6 +1882,7 @@ The value is stored in the database without modification.
 <!-- .sp -->
 To add a resource that is specified as a string, use
 <function>XrmPutStringResource</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmPutStringResource</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmputstringresource'>
@@ -1938,7 +1926,6 @@ Specifies the value of the resource, which is specified as a string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1962,6 +1949,7 @@ The value is stored in the database without modification.
 <!-- .sp -->
 To add a string resource using quarks as a specification, use
 <function>XrmQPutStringResource</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmQPutStringResource</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmqputstringresource'>
@@ -2016,7 +2004,6 @@ Specifies the value of the resource, which is specified as a string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2040,6 +2027,7 @@ The value is stored in the database without modification.
 To add a single resource entry that is specified as a string that contains
 both a name and a value, use
 <function>XrmPutLineResource</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmPutLineResource</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmputlineresource'>
@@ -2072,7 +2060,6 @@ Specifies the resource name and value pair as a single string.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2314,6 +2301,7 @@ typedef struct {
 <!-- .sp -->
 To load a resource database from a C command line, use
 <function>XrmParseCommand</function>.
+</para>
 <indexterm significance="preferred"><primary>XrmParseCommand</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrmparsecommand'>
@@ -2391,7 +2379,6 @@ and returns the remaining arguments.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

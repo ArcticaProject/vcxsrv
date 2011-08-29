@@ -64,7 +64,6 @@ xkb_symbols "nodeadkeys" {
     key <AC10>	{ [odiaeresis, Odiaeresis,  doubleacute,  doubleacute ]	};
     key <AC11>	{ [adiaeresis, Adiaeresis,  asciicircum,  asciicircum ]	};
     key <BKSL>	{ [numbersign, apostrophe,        grave,        grave ]	};
-    key <AB10>	{ [     minus, underscore, dead_belowdot,    abovedot ]	};
 };
 
 partial alphanumeric_keys

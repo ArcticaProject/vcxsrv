@@ -178,6 +178,7 @@ To obtain the visual ID from a
 use
 <function>XVisualIDFromVisual</function>.
 <indexterm significance="preferred"><primary>XVisualIDFromVisual</primary></indexterm>
+</para>
 <!-- .sM -->
 <funcsynopsis id='xvisualidfromvisual'>
 <funcprototype>
@@ -198,7 +199,6 @@ Specifies the visual type.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -426,17 +426,17 @@ and
 windows:
 </para>
 <informaltable>
-  <tgroup cols='4' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
-  <colspec colname='c3'/>
-  <colspec colname='c4'/>
+  <tgroup cols='4'>
+  <colspec colname='c1' align='left'/>
+  <colspec colname='c2' align='left'/>
+  <colspec colname='c3' align='center'/>
+  <colspec colname='c4' align='center'/>
   <thead>
     <row>
       <entry>Attribute</entry>
       <entry>Default</entry>
       <entry>InputOutput</entry>
-      <entry>nputOnly</entry>
+      <entry>InputOnly</entry>
     </row>
   </thead>
   <tbody>
@@ -758,9 +758,9 @@ change of width and height, the (x, y) pairs are defined:
 <para>
 <!-- .LP -->
 <informaltable>
-  <tgroup cols='2' align='center'>
-  <colspec colname='c1'/>
-  <colspec colname='c2'/>
+  <tgroup cols='2'>
+  <colspec colname='c1' align='left'/>
+  <colspec colname='c2' align='left'/>
   <thead>
     <row>
       <entry>Gravity Direction</entry>
@@ -1246,6 +1246,7 @@ Extension packages can define other classes of windows.
 <!-- .LP -->
 To create an unmapped window and set its window attributes, use
 <function>XCreateWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatewindow'>
@@ -1419,7 +1420,6 @@ set to indicate which attributes have been set in the structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1511,6 +1511,7 @@ To create an unmapped
 <symbol>InputOutput</symbol>
 subwindow of a given parent window, use
 <function>XCreateSimpleWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XCreateSimpleWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcreatesimplewindow'>
@@ -1629,7 +1630,6 @@ Specifies the background pixel value of the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1681,6 +1681,7 @@ subwindows of a window.
 <!-- .sp -->
 To destroy a window and all of its subwindows, use
 <function>XDestroyWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XDestroyWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdestroywindow'>
@@ -1713,7 +1714,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1751,6 +1751,7 @@ error.
 <!-- .sp -->
 To destroy all subwindows of a specified window, use 
 <function>XDestroySubwindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XDestroySubwindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdestroysubwindows'>
@@ -1783,7 +1784,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1895,6 +1895,7 @@ event.
 <!-- .sp -->
 To map a given window, use 
 <function>XMapWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XMapWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmapwindow'>
@@ -1927,7 +1928,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2021,6 +2021,7 @@ error.
 <!-- .sp -->
 To map and raise a window, use
 <function>XMapRaised</function>.
+</para>
 <indexterm significance="preferred"><primary>XMapRaised</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmapraised'>
@@ -2053,7 +2054,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2081,6 +2081,7 @@ errors.
 <!-- .sp -->
 To map all subwindows for a specified window, use 
 <function>XMapSubwindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XMapSubwindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmapsubwindows'>
@@ -2113,7 +2114,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2151,6 +2151,7 @@ Xlib provides functions that you can use to unmap a window or all subwindows.
 <!-- .sp -->
 To unmap a window, use 
 <function>XUnmapWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XUnmapWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunmapwindow'>
@@ -2183,7 +2184,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2218,6 +2218,7 @@ error.
 <!-- .sp -->
 To unmap all subwindows for a specified window, use 
 <function>XUnmapSubwindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XUnmapSubwindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xunmapsubwindows'>
@@ -2250,7 +2251,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2437,8 +2437,8 @@ error results.
 If a sibling and a stack_mode are specified, 
 the window is restacked as follows:
 </para>
-<informaltable>
-  <tgroup cols='2' align='center'>
+<informaltable  frame="none">
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -2476,8 +2476,8 @@ If a stack_mode is specified but no sibling is specified,
 the window is restacked as follows:
 </para>
 
-<informaltable>
-  <tgroup cols='2' align='center'>
+<informaltable  frame="none">
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -2497,6 +2497,7 @@ the top of the stack.
       </entry>
     </row>
     <row>
+      <entry><symbol>BottomIf</symbol></entry>
       <entry>
 If the window occludes any sibling, the window is placed at
 the bottom of the stack.
@@ -2524,6 +2525,7 @@ Attempts to configure a root window have no effect.
 <!-- .sp -->
 To configure a window's size, location, stacking, or border, use
 <function>XConfigureWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XConfigureWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xconfigurewindow'>
@@ -2583,7 +2585,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2630,6 +2631,7 @@ errors.
 <!-- .sp -->
 To move a window without changing its size, use 
 <function>XMoveWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XMoveWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmovewindow'>
@@ -2687,7 +2689,6 @@ Specify the x and y coordinates(Xy.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2732,6 +2733,7 @@ error.
 <!-- .sp -->
 To change a window's size without changing the upper-left coordinate, use 
 <function>XResizeWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XResizeWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xresizewindow'>
@@ -2788,7 +2790,6 @@ Specify the width and height(Wh.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2835,6 +2836,7 @@ errors.
 <!-- .sp -->
 To change the size and location of a window, use 
 <function>XMoveResizeWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XMoveResizeWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xmoveresizewindow'>
@@ -2914,7 +2916,6 @@ Specify the width and height(Wh.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2956,6 +2957,7 @@ errors.
 <!-- .sp -->
 To change the border width of a given window, use
 <function>XSetWindowBorderWidth</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWindowBorderWidth</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwindowborderwidth'>
@@ -2999,7 +3001,6 @@ Specifies the width of the window border.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3033,6 +3034,7 @@ or restack windows.
 <!-- .sp -->
 To raise a window so that no sibling window obscures it, use 
 <function>XRaiseWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XRaiseWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xraisewindow'>
@@ -3065,7 +3067,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3106,6 +3107,7 @@ error.
 <!-- .sp -->
 To lower a window so that it does not obscure any sibling windows, use 
 <function>XLowerWindow</function>.
+</para>
 <indexterm significance="preferred"><primary>XLowerWindow</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlowerwindow'>
@@ -3138,7 +3140,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3180,6 +3181,7 @@ error.
 <!-- .sp -->
 To circulate a subwindow up or down, use
 <function>XCirculateSubwindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XCirculateSubwindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcirculatesubwindows'>
@@ -3228,7 +3230,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3272,6 +3273,7 @@ errors.
 To raise the lowest mapped child of a window that is partially or completely
 occluded by another child, use
 <function>XCirculateSubwindowsUp</function>.
+</para>
 <indexterm significance="preferred"><primary>XCirculateSubwindowsUp</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcirculatesubwindowsup'>
@@ -3304,7 +3306,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3334,6 +3335,7 @@ error.
 To lower the highest mapped child of a window that partially or 
 completely occludes another child, use 
 <function>XCirculateSubwindowsDown</function>.
+</para>
 <indexterm significance="preferred"><primary>XCirculateSubwindowsDown</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcirculatesubwindowsdown'>
@@ -3366,7 +3368,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3393,6 +3394,7 @@ error.
 <!-- .sp -->
 To restack a set of windows from top to bottom, use 
 <function>XRestackWindows</function>.
+</para>
 <indexterm significance="preferred"><primary>XRestackWindows</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xrestackwindows'>
@@ -3436,7 +3438,6 @@ Specifies the number of windows to be restacked.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3498,6 +3499,7 @@ window attribute, such as a window's background.
 <!-- .sp -->
 To change one or more attributes for a given window, use
 <function>XChangeWindowAttributes</function>.
+</para>
 <indexterm significance="preferred"><primary>XChangeWindowAttributes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xchangewindowattributes'>
@@ -3572,7 +3574,6 @@ set to indicate which attributes have been set in the structure
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3656,6 +3657,7 @@ errors.
 <!-- .sp -->
 To set the background of a window to a given pixel, use 
 <function>XSetWindowBackground</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWindowBackground</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwindowbackground'>
@@ -3699,7 +3701,6 @@ Specifies the pixel that is to be used for the background.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3732,6 +3733,7 @@ errors.
 <!-- .LP -->
 To set the background of a window to a given pixmap, use 
 <function>XSetWindowBackgroundPixmap</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>background</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetWindowBackgroundPixmap</primary></indexterm>
 <!-- .sM -->
@@ -3779,7 +3781,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3825,6 +3826,7 @@ do not change the current contents of the window.
 <!-- .sp -->
 To change and repaint a window's border to a given pixel, use 
 <function>XSetWindowBorder</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWindowBorder</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwindowborder'>
@@ -3868,7 +3870,6 @@ Specifies the entry in the colormap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3895,6 +3896,7 @@ errors.
 <!-- .sp -->
 To change and repaint the border tile of a given window, use 
 <function>XSetWindowBorderPixmap</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWindowBorderPixmap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwindowborderpixmap'>
@@ -3939,7 +3941,6 @@ Specifies the border pixmap or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3974,6 +3975,7 @@ errors.
 <!-- .sp -->
 To set the colormap of a given window, use
 <function>XSetWindowColormap</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetWindowColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetwindowcolormap'>
@@ -4017,7 +4019,6 @@ Specifies the colormap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4044,6 +4045,7 @@ errors.
 <!-- .sp -->
 To define which cursor will be used in a window, use
 <function>XDefineCursor</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>defining the cursor</secondary></indexterm>
 <indexterm significance="preferred"><primary>XDefineCursor</primary></indexterm>
 <!-- .sM -->
@@ -4089,7 +4091,6 @@ Specifies the cursor that is to be displayed or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -4113,6 +4114,7 @@ errors.
 <!-- .sp -->
 To undefine the cursor in a given window, use
 <function>XUndefineCursor</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>undefining the cursor</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUndefineCursor</primary></indexterm>
 <!-- .sM -->
@@ -4146,7 +4148,6 @@ Specifies the window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

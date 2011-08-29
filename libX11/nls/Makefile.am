@@ -1,14 +1,10 @@
 
 x11localedir = $(X11_LOCALEDATADIR)
-specdir = $(docdir)/Compose
 CLEANFILES =
-XMLTO_FLAGS =
 SUFFIXES =
 
-include $(top_srcdir)/nls/xmlrules.in
-
 EXTRA_DIST = locale.alias.pre compose.dir.pre locale.dir.pre \
-	compose-check.pl compose-chart.pl
+	compose-check.pl
 
 x11locale_DATA = locale.alias locale.dir compose.dir
 
@@ -17,68 +13,6 @@ CLEANFILES += \
 	compose.dir compose.dir.l1 compose.dir.l2 \
 	locale.dir locale.dir.l1 locale.dir.l2 \
 	XLC_LOCALE
-
-locales = \
-	am_ET.UTF-8		\
-	armscii-8		\
-	C			\
-	el_GR.UTF-8		\
-	en_US.UTF-8		\
-	fi_FI.UTF-8		\
-	georgian-academy	\
-	georgian-ps		\
-	ibm-cp1133		\
-	iscii-dev		\
-	isiri-3342		\
-	iso8859-1		\
-	iso8859-10		\
-	iso8859-11		\
-	iso8859-13		\
-	iso8859-14		\
-	iso8859-15		\
-	iso8859-2		\
-	iso8859-3		\
-	iso8859-4		\
-	iso8859-5		\
-	iso8859-6		\
-	iso8859-7		\
-	iso8859-8		\
-	iso8859-9		\
-	iso8859-9e		\
-	ja			\
-	ja.JIS			\
-	ja_JP.UTF-8		\
-	ja.S90			\
-	ja.SJIS			\
-	ja.U90			\
-	ko			\
-	koi8-c			\
-	koi8-r			\
-	koi8-u			\
-	ko_KR.UTF-8		\
-	microsoft-cp1251	\
-	microsoft-cp1255	\
-	microsoft-cp1256	\
-	mulelao-1		\
-	nokhchi-1		\
-	pt_BR.UTF-8		\
-	ru_RU.UTF-8		\
-	tatar-cyr		\
-	th_TH			\
-	th_TH.UTF-8		\
-	tscii-0			\
-	vi_VN.tcvn		\
-	vi_VN.viscii		\
-	zh_CN			\
-	zh_CN.gb18030		\
-	zh_CN.gbk		\
-	zh_CN.UTF-8		\
-	zh_HK.big5		\
-	zh_HK.big5hkscs		\
-	zh_HK.UTF-8		\
-	zh_TW			\
-	zh_TW.big5		\
-	zh_TW.UTF-8
 
 include $(top_srcdir)/cpprules.in
 
@@ -103,16 +37,8 @@ locale.dir: locale.dir.pre
 	cat locale.dir.l2 locale.dir.l1 > locale.dir
 
 if HAVE_PERL
-doc_sources = Compose/index.xml
-
-Compose/index.xml:
-	@$(MKDIR_P) $(@D)
-	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl \
-	 --index --output="$@" $(locales)
-
-clean-local: clean-Compose-dir
-clean-Compose-dir:
-	-rm -rf Compose
+TESTS_ENVIRONMENT = $(PERL)
+TESTS = $(srcdir)/compose-check.pl
 endif HAVE_PERL
 
 
@@ -124,21 +50,3 @@ nobase_x11locale_DATA = $(locales:%=%/XLC_LOCALE) $(locales:%=%/Compose)
 EXTRA_DIST += $(nobase_x11locale_DATA:%=%.pre)
 CLEANFILES += $(nobase_x11locale_DATA)
 
-if HAVE_PERL
-TESTS_ENVIRONMENT = $(PERL)
-TESTS = $(srcdir)/compose-check.pl
-
-COMPOSE_CHARTS = $(locales:%=%/Compose.xml)
-doc_sources += $(locales:%=Compose/%.xml)
-CLEANFILES += $(COMPOSE_CHARTS) $(doc_sources)
-
-XMLTO_FLAGS += -o $(@D)
-
-%/Compose.xml: %/Compose
-	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl \
-	 --locale="$(@D)" --output="$@" $<
-
-Compose/%.xml: %/Compose.xml
-	$(AM_V_GEN)cp $< $@
-
-endif HAVE_PERL

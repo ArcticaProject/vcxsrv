@@ -295,6 +295,7 @@ public:
    bool indirect_addr_consts;
    
    int glsl_version;
+   bool native_integers;
 
    variable_storage *find_variable_storage(ir_variable *var);
 
@@ -372,11 +373,11 @@ public:
    /**
     * Emit the correct dot-product instruction for the type of arguments
     */
-   void emit_dp(ir_instruction *ir,
-                st_dst_reg dst,
-                st_src_reg src0,
-                st_src_reg src1,
-                unsigned elements);
+   glsl_to_tgsi_instruction *emit_dp(ir_instruction *ir,
+                                     st_dst_reg dst,
+                                     st_src_reg src0,
+                                     st_src_reg src1,
+                                     unsigned elements);
 
    void emit_scalar(ir_instruction *ir, unsigned op,
         	    st_dst_reg dst, st_src_reg src0);
@@ -389,9 +390,11 @@ public:
    void emit_scs(ir_instruction *ir, unsigned op,
         	 st_dst_reg dst, const st_src_reg &src);
 
-   GLboolean try_emit_mad(ir_expression *ir,
-        		  int mul_operand);
-   GLboolean try_emit_sat(ir_expression *ir);
+   bool try_emit_mad(ir_expression *ir,
+              int mul_operand);
+   bool try_emit_mad_for_and_not(ir_expression *ir,
+              int mul_operand);
+   bool try_emit_sat(ir_expression *ir);
 
    void emit_swz(ir_expression *ir);
 
@@ -600,7 +603,7 @@ glsl_to_tgsi_visitor::get_opcode(ir_instruction *ir, unsigned op,
    
    if (src0.type == GLSL_TYPE_FLOAT || src1.type == GLSL_TYPE_FLOAT)
       type = GLSL_TYPE_FLOAT;
-   else if (glsl_version >= 130)
+   else if (native_integers)
       type = src0.type;
 
 #define case4(c, f, i, u) \
@@ -641,7 +644,7 @@ glsl_to_tgsi_visitor::get_opcode(ir_instruction *ir, unsigned op,
    return op;
 }
 
-void
+glsl_to_tgsi_instruction *
 glsl_to_tgsi_visitor::emit_dp(ir_instruction *ir,
         		    st_dst_reg dst, st_src_reg src0, st_src_reg src1,
         		    unsigned elements)
@@ -650,7 +653,7 @@ glsl_to_tgsi_visitor::emit_dp(ir_instruction *ir,
       TGSI_OPCODE_DP2, TGSI_OPCODE_DP3, TGSI_OPCODE_DP4
    };
 
-   emit(ir, dot_opcodes[elements - 2], dst, src0, src1);
+   return emit(ir, dot_opcodes[elements - 2], dst, src0, src1);
 }
 
 /**
@@ -863,7 +866,7 @@ glsl_to_tgsi_visitor::add_constant(gl_register_file file,
    }
 }
 
-struct st_src_reg
+st_src_reg
 glsl_to_tgsi_visitor::st_src_reg_for_float(float val)
 {
    st_src_reg src(PROGRAM_IMMEDIATE, -1, GLSL_TYPE_FLOAT);
@@ -875,13 +878,13 @@ glsl_to_tgsi_visitor::st_src_reg_for_float(float val)
    return src;
 }
 
-struct st_src_reg
+st_src_reg
 glsl_to_tgsi_visitor::st_src_reg_for_int(int val)
 {
    st_src_reg src(PROGRAM_IMMEDIATE, -1, GLSL_TYPE_INT);
    union gl_constant_value uval;
    
-   assert(glsl_version >= 130);
+   assert(native_integers);
 
    uval.i = val;
    src.index = add_constant(src.file, &uval, 1, GL_INT, &src.swizzle);
@@ -889,10 +892,10 @@ glsl_to_tgsi_visitor::st_src_reg_for_int(int val)
    return src;
 }
 
-struct st_src_reg
+st_src_reg
 glsl_to_tgsi_visitor::st_src_reg_for_type(int type, int val)
 {
-   if (glsl_version >= 130)
+   if (native_integers)
       return type == GLSL_TYPE_FLOAT ? st_src_reg_for_float(val) : 
                                        st_src_reg_for_int(val);
    else
@@ -950,7 +953,7 @@ glsl_to_tgsi_visitor::get_temp(const glsl_type *type)
 {
    st_src_reg src;
 
-   src.type = glsl_version >= 130 ? type->base_type : GLSL_TYPE_FLOAT;
+   src.type = native_integers ? type->base_type : GLSL_TYPE_FLOAT;
    src.file = PROGRAM_TEMPORARY;
    src.index = next_temp;
    src.reladdr = NULL;
@@ -1032,7 +1035,7 @@ glsl_to_tgsi_visitor::visit(ir_variable *ir)
          }
       }
 
-      struct variable_storage *storage;
+      variable_storage *storage;
       st_dst_reg dst;
       if (i == ir->num_state_slots) {
          /* We'll set the index later. */
@@ -1053,7 +1056,7 @@ glsl_to_tgsi_visitor::visit(ir_variable *ir)
          this->next_temp += type_size(ir->type);
 
          dst = st_dst_reg(st_src_reg(PROGRAM_TEMPORARY, storage->index,
-               glsl_version >= 130 ? ir->type->base_type : GLSL_TYPE_FLOAT));
+               native_integers ? ir->type->base_type : GLSL_TYPE_FLOAT));
       }
 
 
@@ -1069,7 +1072,7 @@ glsl_to_tgsi_visitor::visit(ir_variable *ir)
             }
          } else {
             st_src_reg src(PROGRAM_STATE_VAR, index,
-                  glsl_version >= 130 ? ir->type->base_type : GLSL_TYPE_FLOAT);
+                  native_integers ? ir->type->base_type : GLSL_TYPE_FLOAT);
             src.swizzle = slots[i].swizzle;
             emit(ir, TGSI_OPCODE_MOV, dst, src);
             /* even a float takes up a whole vec4 reg in a struct/array. */
@@ -1183,7 +1186,7 @@ glsl_to_tgsi_visitor::visit(ir_function *ir)
    }
 }
 
-GLboolean
+bool
 glsl_to_tgsi_visitor::try_emit_mad(ir_expression *ir, int mul_operand)
 {
    int nonmul_operand = 1 - mul_operand;
@@ -1209,7 +1212,47 @@ glsl_to_tgsi_visitor::try_emit_mad(ir_expression *ir, int mul_operand)
    return true;
 }
 
-GLboolean
+/**
+ * Emit MAD(a, -b, a) instead of AND(a, NOT(b))
+ *
+ * The logic values are 1.0 for true and 0.0 for false.  Logical-and is
+ * implemented using multiplication, and logical-or is implemented using
+ * addition.  Logical-not can be implemented as (true - x), or (1.0 - x).
+ * As result, the logical expression (a & !b) can be rewritten as:
+ *
+ *     - a * !b
+ *     - a * (1 - b)
+ *     - (a * 1) - (a * b)
+ *     - a + -(a * b)
+ *     - a + (a * -b)
+ *
+ * This final expression can be implemented as a single MAD(a, -b, a)
+ * instruction.
+ */
+bool
+glsl_to_tgsi_visitor::try_emit_mad_for_and_not(ir_expression *ir, int try_operand)
+{
+   const int other_operand = 1 - try_operand;
+   st_src_reg a, b;
+
+   ir_expression *expr = ir->operands[try_operand]->as_expression();
+   if (!expr || expr->operation != ir_unop_logic_not)
+      return false;
+
+   ir->operands[other_operand]->accept(this);
+   a = this->result;
+   expr->operands[0]->accept(this);
+   b = this->result;
+
+   b.negate = ~b.negate;
+
+   this->result = get_temp(ir->type);
+   emit(ir, TGSI_OPCODE_MAD, st_dst_reg(this->result), a, b, a);
+
+   return true;
+}
+
+bool
 glsl_to_tgsi_visitor::try_emit_sat(ir_expression *ir)
 {
    /* Saturates were only introduced to vertex programs in
@@ -1290,6 +1333,16 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
       if (try_emit_mad(ir, 0))
          return;
    }
+
+   /* Quick peephole: Emit OPCODE_MAD(-a, -b, a) instead of AND(a, NOT(b))
+    */
+   if (ir->operation == ir_binop_logic_and) {
+      if (try_emit_mad_for_and_not(ir, 1))
+	 return;
+      if (try_emit_mad_for_and_not(ir, 0))
+	 return;
+   }
+
    if (try_emit_sat(ir))
       return;
 
@@ -1335,7 +1388,17 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
 
    switch (ir->operation) {
    case ir_unop_logic_not:
-      emit(ir, TGSI_OPCODE_SEQ, result_dst, op[0], st_src_reg_for_type(result_dst.type, 0));
+      if (result_dst.type != GLSL_TYPE_FLOAT)
+         emit(ir, TGSI_OPCODE_SEQ, result_dst, op[0], st_src_reg_for_type(result_dst.type, 0));
+      else {
+         /* Previously 'SEQ dst, src, 0.0' was used for this.  However, many
+          * older GPUs implement SEQ using multiple instructions (i915 uses two
+          * SGE instructions and a MUL instruction).  Since our logic values are
+          * 0.0 and 1.0, 1-x also implements !x.
+          */
+         op[0].negate = ~op[0].negate;
+         emit(ir, TGSI_OPCODE_ADD, result_dst, op[0], st_src_reg_for_float(1.0));
+      }
       break;
    case ir_unop_neg:
       assert(result_dst.type == GLSL_TYPE_FLOAT || result_dst.type == GLSL_TYPE_INT);
@@ -1444,13 +1507,31 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
       /* "==" operator producing a scalar boolean. */
       if (ir->operands[0]->type->is_vector() ||
           ir->operands[1]->type->is_vector()) {
-         st_src_reg temp = get_temp(glsl_version >= 130 ? 
+         st_src_reg temp = get_temp(native_integers ?
                glsl_type::get_instance(ir->operands[0]->type->base_type, 4, 1) :
                glsl_type::vec4_type);
          assert(ir->operands[0]->type->base_type == GLSL_TYPE_FLOAT);
          emit(ir, TGSI_OPCODE_SNE, st_dst_reg(temp), op[0], op[1]);
+         
+         /* After the dot-product, the value will be an integer on the
+          * range [0,4].  Zero becomes 1.0, and positive values become zero.
+          */
          emit_dp(ir, result_dst, temp, temp, vector_elements);
-         emit(ir, TGSI_OPCODE_SEQ, result_dst, result_src, st_src_reg_for_float(0.0));
+         
+         if (result_dst.type == GLSL_TYPE_FLOAT) {
+            /* Negating the result of the dot-product gives values on the range
+             * [-4, 0].  Zero becomes 1.0, and negative values become zero.
+             * This is achieved using SGE.
+             */
+            st_src_reg sge_src = result_src;
+            sge_src.negate = ~sge_src.negate;
+            emit(ir, TGSI_OPCODE_SGE, result_dst, sge_src, st_src_reg_for_float(0.0));
+         } else {
+            /* The TGSI negate flag doesn't work for integers, so use SEQ 0
+             * instead.
+             */
+            emit(ir, TGSI_OPCODE_SEQ, result_dst, result_src, st_src_reg_for_int(0));
+         }
       } else {
          emit(ir, TGSI_OPCODE_SEQ, result_dst, op[0], op[1]);
       }
@@ -1459,34 +1540,102 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
       /* "!=" operator producing a scalar boolean. */
       if (ir->operands[0]->type->is_vector() ||
           ir->operands[1]->type->is_vector()) {
-         st_src_reg temp = get_temp(glsl_version >= 130 ? 
+         st_src_reg temp = get_temp(native_integers ?
                glsl_type::get_instance(ir->operands[0]->type->base_type, 4, 1) :
                glsl_type::vec4_type);
          assert(ir->operands[0]->type->base_type == GLSL_TYPE_FLOAT);
          emit(ir, TGSI_OPCODE_SNE, st_dst_reg(temp), op[0], op[1]);
-         emit_dp(ir, result_dst, temp, temp, vector_elements);
-         emit(ir, TGSI_OPCODE_SNE, result_dst, result_src, st_src_reg_for_float(0.0));
+
+         /* After the dot-product, the value will be an integer on the
+          * range [0,4].  Zero stays zero, and positive values become 1.0.
+          */
+         glsl_to_tgsi_instruction *const dp =
+               emit_dp(ir, result_dst, temp, temp, vector_elements);
+         if (this->prog->Target == GL_FRAGMENT_PROGRAM_ARB &&
+             result_dst.type == GLSL_TYPE_FLOAT) {
+            /* The clamping to [0,1] can be done for free in the fragment
+             * shader with a saturate.
+             */
+            dp->saturate = true;
+         } else if (result_dst.type == GLSL_TYPE_FLOAT) {
+            /* Negating the result of the dot-product gives values on the range
+             * [-4, 0].  Zero stays zero, and negative values become 1.0.  This
+             * achieved using SLT.
+             */
+            st_src_reg slt_src = result_src;
+            slt_src.negate = ~slt_src.negate;
+            emit(ir, TGSI_OPCODE_SLT, result_dst, slt_src, st_src_reg_for_float(0.0));
+         } else {
+            emit(ir, TGSI_OPCODE_SNE, result_dst, result_src, st_src_reg_for_int(0));
+         }
       } else {
          emit(ir, TGSI_OPCODE_SNE, result_dst, op[0], op[1]);
       }
       break;
 
-   case ir_unop_any:
+   case ir_unop_any: {
       assert(ir->operands[0]->type->is_vector());
-      emit_dp(ir, result_dst, op[0], op[0],
-              ir->operands[0]->type->vector_elements);
-      emit(ir, TGSI_OPCODE_SNE, result_dst, result_src, st_src_reg_for_float(0.0));
+
+      /* After the dot-product, the value will be an integer on the
+       * range [0,4].  Zero stays zero, and positive values become 1.0.
+       */
+      glsl_to_tgsi_instruction *const dp =
+         emit_dp(ir, result_dst, op[0], op[0],
+                 ir->operands[0]->type->vector_elements);
+      if (this->prog->Target == GL_FRAGMENT_PROGRAM_ARB &&
+          result_dst.type == GLSL_TYPE_FLOAT) {
+	      /* The clamping to [0,1] can be done for free in the fragment
+	       * shader with a saturate.
+	       */
+	      dp->saturate = true;
+      } else if (result_dst.type == GLSL_TYPE_FLOAT) {
+	      /* Negating the result of the dot-product gives values on the range
+	       * [-4, 0].  Zero stays zero, and negative values become 1.0.  This
+	       * is achieved using SLT.
+	       */
+	      st_src_reg slt_src = result_src;
+	      slt_src.negate = ~slt_src.negate;
+	      emit(ir, TGSI_OPCODE_SLT, result_dst, slt_src, st_src_reg_for_float(0.0));
+      }
+      else {
+         /* Use SNE 0 if integers are being used as boolean values. */
+         emit(ir, TGSI_OPCODE_SNE, result_dst, result_src, st_src_reg_for_int(0));
+      }
       break;
+   }
 
    case ir_binop_logic_xor:
       emit(ir, TGSI_OPCODE_SNE, result_dst, op[0], op[1]);
       break;
 
-   case ir_binop_logic_or:
-      /* This could be a saturated add and skip the SNE. */
-      emit(ir, TGSI_OPCODE_ADD, result_dst, op[0], op[1]);
-      emit(ir, TGSI_OPCODE_SNE, result_dst, result_src, st_src_reg_for_float(0.0));
+   case ir_binop_logic_or: {
+      /* After the addition, the value will be an integer on the
+       * range [0,2].  Zero stays zero, and positive values become 1.0.
+       */
+      glsl_to_tgsi_instruction *add =
+         emit(ir, TGSI_OPCODE_ADD, result_dst, op[0], op[1]);
+      if (this->prog->Target == GL_FRAGMENT_PROGRAM_ARB &&
+          result_dst.type == GLSL_TYPE_FLOAT) {
+         /* The clamping to [0,1] can be done for free in the fragment
+          * shader with a saturate if floats are being used as boolean values.
+          */
+         add->saturate = true;
+      } else if (result_dst.type == GLSL_TYPE_FLOAT) {
+         /* Negating the result of the addition gives values on the range
+          * [-2, 0].  Zero stays zero, and negative values become 1.0.  This
+          * is achieved using SLT.
+          */
+         st_src_reg slt_src = result_src;
+         slt_src.negate = ~slt_src.negate;
+         emit(ir, TGSI_OPCODE_SLT, result_dst, slt_src, st_src_reg_for_float(0.0));
+      } else {
+         /* Use an SNE on the result of the addition.  Zero stays zero,
+          * 1 stays 1, and 2 becomes 1.
+          */
+         emit(ir, TGSI_OPCODE_SNE, result_dst, result_src, st_src_reg_for_int(0));
+      }
       break;
+   }
 
    case ir_binop_logic_and:
       /* the bool args are stored as float 0.0 or 1.0, so "mul" gives us "and". */
@@ -1514,7 +1663,7 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
       break;
    case ir_unop_i2f:
    case ir_unop_b2f:
-      if (glsl_version >= 130) {
+      if (native_integers) {
          emit(ir, TGSI_OPCODE_I2F, result_dst, op[0]);
          break;
       }
@@ -1526,7 +1675,7 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
       result_src = op[0];
       break;
    case ir_unop_f2i:
-      if (glsl_version >= 130)
+      if (native_integers)
          emit(ir, TGSI_OPCODE_F2I, result_dst, op[0]);
       else
          emit(ir, TGSI_OPCODE_TRUNC, result_dst, op[0]);
@@ -1567,7 +1716,7 @@ glsl_to_tgsi_visitor::visit(ir_expression *ir)
          break;
       }
    case ir_unop_u2f:
-      if (glsl_version >= 130) {
+      if (native_integers) {
          emit(ir, TGSI_OPCODE_U2F, result_dst, op[0]);
          break;
       }
@@ -1719,7 +1868,7 @@ glsl_to_tgsi_visitor::visit(ir_dereference_variable *ir)
    }
 
    this->result = st_src_reg(entry->file, entry->index, var->type);
-   if (glsl_version <= 120)
+   if (!native_integers)
       this->result.type = GLSL_TYPE_FLOAT;
 }
 
@@ -2109,27 +2258,27 @@ glsl_to_tgsi_visitor::visit(ir_constant *ir)
       }
       break;
    case GLSL_TYPE_UINT:
-      gl_type = glsl_version >= 130 ? GL_UNSIGNED_INT : GL_FLOAT;
+      gl_type = native_integers ? GL_UNSIGNED_INT : GL_FLOAT;
       for (i = 0; i < ir->type->vector_elements; i++) {
-         if (glsl_version >= 130)
+         if (native_integers)
             values[i].u = ir->value.u[i];
          else
             values[i].f = ir->value.u[i];
       }
       break;
    case GLSL_TYPE_INT:
-      gl_type = glsl_version >= 130 ? GL_INT : GL_FLOAT;
+      gl_type = native_integers ? GL_INT : GL_FLOAT;
       for (i = 0; i < ir->type->vector_elements; i++) {
-         if (glsl_version >= 130)
+         if (native_integers)
             values[i].i = ir->value.i[i];
          else
             values[i].f = ir->value.i[i];
       }
       break;
    case GLSL_TYPE_BOOL:
-      gl_type = glsl_version >= 130 ? GL_BOOL : GL_FLOAT;
+      gl_type = native_integers ? GL_BOOL : GL_FLOAT;
       for (i = 0; i < ir->type->vector_elements; i++) {
-         if (glsl_version >= 130)
+         if (native_integers)
             values[i].b = ir->value.b[i];
          else
             values[i].f = ir->value.b[i];
@@ -2277,16 +2426,18 @@ glsl_to_tgsi_visitor::visit(ir_texture *ir)
    glsl_to_tgsi_instruction *inst = NULL;
    unsigned opcode = TGSI_OPCODE_NOP;
 
-   ir->coordinate->accept(this);
+   if (ir->coordinate) {
+      ir->coordinate->accept(this);
 
-   /* Put our coords in a temp.  We'll need to modify them for shadow,
-    * projection, or LOD, so the only case we'd use it as is is if
-    * we're doing plain old texturing.  The optimization passes on
-    * glsl_to_tgsi_visitor should handle cleaning up our mess in that case.
-    */
-   coord = get_temp(glsl_type::vec4_type);
-   coord_dst = st_dst_reg(coord);
-   emit(ir, TGSI_OPCODE_MOV, coord_dst, this->result);
+      /* Put our coords in a temp.  We'll need to modify them for shadow,
+       * projection, or LOD, so the only case we'd use it as is is if
+       * we're doing plain old texturing.  The optimization passes on
+       * glsl_to_tgsi_visitor should handle cleaning up our mess in that case.
+       */
+      coord = get_temp(glsl_type::vec4_type);
+      coord_dst = st_dst_reg(coord);
+      emit(ir, TGSI_OPCODE_MOV, coord_dst, this->result);
+   }
 
    if (ir->projector) {
       ir->projector->accept(this);
@@ -2320,8 +2471,15 @@ glsl_to_tgsi_visitor::visit(ir_texture *ir)
       ir->lod_info.grad.dPdy->accept(this);
       dy = this->result;
       break;
-   case ir_txf: /* TODO: use TGSI_OPCODE_TXF here */
-      assert(!"GLSL 1.30 features unsupported");
+   case ir_txs:
+      opcode = TGSI_OPCODE_TXQ;
+      ir->lod_info.lod->accept(this);
+      lod_info = this->result;
+      break;
+   case ir_txf:
+      opcode = TGSI_OPCODE_TXF;
+      ir->lod_info.lod->accept(this);
+      lod_info = this->result;
       break;
    }
 
@@ -2385,7 +2543,8 @@ glsl_to_tgsi_visitor::visit(ir_texture *ir)
       coord_dst.writemask = WRITEMASK_XYZW;
    }
 
-   if (opcode == TGSI_OPCODE_TXL || opcode == TGSI_OPCODE_TXB) {
+   if (opcode == TGSI_OPCODE_TXL || opcode == TGSI_OPCODE_TXB ||
+       opcode == TGSI_OPCODE_TXF) {
       /* TGSI stores LOD or LOD bias in the last channel of the coords. */
       coord_dst.writemask = WRITEMASK_W;
       emit(ir, TGSI_OPCODE_MOV, coord_dst, lod_info);
@@ -2394,6 +2553,8 @@ glsl_to_tgsi_visitor::visit(ir_texture *ir)
 
    if (opcode == TGSI_OPCODE_TXD)
       inst = emit(ir, opcode, result_dst, coord, dx, dy);
+   else if (opcode == TGSI_OPCODE_TXQ)
+      inst = emit(ir, opcode, result_dst, lod_info);
    else
       inst = emit(ir, opcode, result_dst, coord);
 
@@ -2800,36 +2961,6 @@ set_uniform_initializer(struct gl_context *ctx, void *mem_ctx,
          loc += type_size(element_type);
       }
    }
-}
-
-static void
-set_uniform_initializers(struct gl_context *ctx,
-        		 struct gl_shader_program *shader_program)
-{
-   void *mem_ctx = NULL;
-
-   for (unsigned int i = 0; i < MESA_SHADER_TYPES; i++) {
-      struct gl_shader *shader = shader_program->_LinkedShaders[i];
-
-      if (shader == NULL)
-         continue;
-
-      foreach_iter(exec_list_iterator, iter, *shader->ir) {
-         ir_instruction *ir = (ir_instruction *)iter.get();
-         ir_variable *var = ir->as_variable();
-
-         if (!var || var->mode != ir_var_uniform || !var->constant_value)
-            continue;
-
-         if (!mem_ctx)
-            mem_ctx = ralloc_context(NULL);
-
-         set_uniform_initializer(ctx, mem_ctx, shader_program, var->name,
-        			 var->type, var->constant_value);
-      }
-   }
-
-   ralloc_free(mem_ctx);
 }
 
 /*
@@ -3443,7 +3574,7 @@ glsl_to_tgsi_visitor::eliminate_dead_code_advanced(void)
          /* Continuing the block, clear any channels from the write array that
           * are read by this instruction.
           */
-         for (int i = 0; i < 4; i++) {
+         for (unsigned i = 0; i < Elements(inst->src); i++) {
             if (inst->src[i].file == PROGRAM_TEMPORARY && inst->src[i].reladdr){
                /* Any temporary might be read, so no dead code elimination 
                 * across this instruction.
@@ -3611,6 +3742,7 @@ get_pixel_transfer_visitor(struct st_fragment_program *fp,
    v->ctx = original->ctx;
    v->prog = prog;
    v->glsl_version = original->glsl_version;
+   v->native_integers = original->native_integers;
    v->options = original->options;
    v->next_temp = original->next_temp;
    v->num_address_regs = original->num_address_regs;
@@ -3739,6 +3871,7 @@ get_bitmap_visitor(struct st_fragment_program *fp,
    v->ctx = original->ctx;
    v->prog = prog;
    v->glsl_version = original->glsl_version;
+   v->native_integers = original->native_integers;
    v->options = original->options;
    v->next_temp = original->next_temp;
    v->num_address_regs = original->num_address_regs;
@@ -4085,7 +4218,7 @@ translate_src(struct st_translate *t, const st_src_reg *src_reg)
 
 static void
 compile_tgsi_instruction(struct st_translate *t,
-                         const struct glsl_to_tgsi_instruction *inst)
+                         const glsl_to_tgsi_instruction *inst)
 {
    struct ureg_program *ureg = t->ureg;
    GLuint i;
@@ -4124,6 +4257,8 @@ compile_tgsi_instruction(struct st_translate *t,
    case TGSI_OPCODE_TXD:
    case TGSI_OPCODE_TXL:
    case TGSI_OPCODE_TXP:
+   case TGSI_OPCODE_TXQ:
+   case TGSI_OPCODE_TXF:
       src[num_src++] = t->samplers[inst->sampler];
       ureg_tex_insn(ureg,
                     inst->op,
@@ -4674,6 +4809,7 @@ get_mesa_program(struct gl_context *ctx,
    v->shader_program = shader_program;
    v->options = options;
    v->glsl_version = ctx->Const.GLSLVersion;
+   v->native_integers = ctx->Const.NativeIntegers;
 
    add_uniforms_to_parameters_list(shader_program, shader, prog);
 
@@ -4922,55 +5058,6 @@ st_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
    }
 
    return GL_TRUE;
-}
-
-
-/**
- * Link a GLSL shader program.  Called via glLinkProgram().
- */
-void
-st_glsl_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
-{
-   unsigned int i;
-
-   _mesa_clear_shader_program_data(ctx, prog);
-
-   prog->LinkStatus = GL_TRUE;
-
-   for (i = 0; i < prog->NumShaders; i++) {
-      if (!prog->Shaders[i]->CompileStatus) {
-         fail_link(prog, "linking with uncompiled shader");
-         prog->LinkStatus = GL_FALSE;
-      }
-   }
-
-   prog->Varying = _mesa_new_parameter_list();
-   _mesa_reference_vertprog(ctx, &prog->VertexProgram, NULL);
-   _mesa_reference_fragprog(ctx, &prog->FragmentProgram, NULL);
-   _mesa_reference_geomprog(ctx, &prog->GeometryProgram, NULL);
-
-   if (prog->LinkStatus) {
-      link_shaders(ctx, prog);
-   }
-
-   if (prog->LinkStatus) {
-      if (!ctx->Driver.LinkShader(ctx, prog)) {
-         prog->LinkStatus = GL_FALSE;
-      }
-   }
-
-   set_uniform_initializers(ctx, prog);
-
-   if (ctx->Shader.Flags & GLSL_DUMP) {
-      if (!prog->LinkStatus) {
-         printf("GLSL shader program %d failed to link\n", prog->Name);
-      }
-
-      if (prog->InfoLog && prog->InfoLog[0] != 0) {
-         printf("GLSL shader program %d info log:\n", prog->Name);
-         printf("%s\n", prog->InfoLog);
-      }
-   }
 }
 
 } /* extern "C" */

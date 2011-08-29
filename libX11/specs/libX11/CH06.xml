@@ -961,6 +961,7 @@ errors.
 To create a new colormap when the allocation out of a previously
 shared colormap has failed because of resource exhaustion, use
 <function>XCopyColormapAndFree</function>.
+</para>
 <indexterm significance="preferred"><primary>XCopyColormapAndFree</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcopycolormapandfree'>
@@ -993,7 +994,6 @@ Specifies the colormap.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -6996,15 +6996,15 @@ spaces.
 The conversion functions provided by Xlib are:
 </para>
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='3'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
   <thead>
     <row>
-      <entry>Function</entry>
-      <entry>Converts from</entry>
-      <entry>Converts to</entry>
+      <entry align='center'>Function</entry>
+      <entry align='center'>Converts from</entry>
+      <entry align='center'>Converts to</entry>
     </row>
   </thead>
   <tbody>

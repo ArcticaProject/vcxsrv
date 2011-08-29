@@ -186,17 +186,20 @@ exaModifyPixmapHeader_mixed(PixmapPtr pPixmap, int width, int height, int depth,
         }
 
 	/* Need to re-create system copy if there's also a GPU copy */
-	if (has_gpu_copy && pExaPixmap->sys_ptr) {
-	    free(pExaPixmap->sys_ptr);
-	    pExaPixmap->sys_ptr = NULL;
-	    pExaPixmap->sys_pitch = PixmapBytePad(width, depth);
-	    DamageUnregister(&pPixmap->drawable, pExaPixmap->pDamage);
-	    DamageDestroy(pExaPixmap->pDamage);
-	    pExaPixmap->pDamage = NULL;
-	    RegionEmpty(&pExaPixmap->validSys);
+	if (has_gpu_copy) {
+	    if (pExaPixmap->sys_ptr) {
+		free(pExaPixmap->sys_ptr);
+		pExaPixmap->sys_ptr = NULL;
+		DamageUnregister(&pPixmap->drawable, pExaPixmap->pDamage);
+		DamageDestroy(pExaPixmap->pDamage);
+		pExaPixmap->pDamage = NULL;
+		RegionEmpty(&pExaPixmap->validSys);
 
-	    if (pExaScr->deferred_mixed_pixmap == pPixmap)
-		pExaScr->deferred_mixed_pixmap = NULL;
+		if (pExaScr->deferred_mixed_pixmap == pPixmap)
+		    pExaScr->deferred_mixed_pixmap = NULL;
+	    }
+
+	    pExaPixmap->sys_pitch = PixmapBytePad(width, depth);
 	}
     }
 

@@ -41,8 +41,10 @@ XMLTO_XHTML_FLAGS = \
 	-x $(STYLESHEET_SRCDIR)/xorg-xhtml.xsl \
 	--stringparam html.stylesheet=$(STYLESHEET_SRCDIR)/xorg.css
 
+# Caution: img.src.path *must* not be used for html. Pdf copies the image.
 XMLTO_FO_FLAGS = \
-	-x $(STYLESHEET_SRCDIR)/xorg-fo.xsl
+	-x $(STYLESHEET_SRCDIR)/xorg-fo.xsl	\
+	--stringparam img.src.path=$(abs_builddir)/
 endif HAVE_STYLESHEETS
 
 shelf_DATA += $(docbook:.xml=.html)

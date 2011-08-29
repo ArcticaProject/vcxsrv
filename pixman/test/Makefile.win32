@@ -35,6 +35,7 @@ SOURCES =			\
 	scaling-test.c		\
 	affine-test.c		\
 	composite.c		\
+	lowlevel-blt-bench.c	\
 	utils.c
 
 TESTS =						\
@@ -56,6 +57,8 @@ TESTS =						\
 	$(CFG_VAR)/affine-test.exe		\
 	$(CFG_VAR)/composite.exe
 
+BENCHMARKS =					\
+	$(CFG_VAR)/lowlevel-blt-bench.exe
 
 OBJECTS     = $(patsubst %.c, $(CFG_VAR)/%.obj, $(SOURCES))
 
@@ -66,7 +69,7 @@ $(CFG_VAR)/%.obj: %.c
 $(CFG_VAR)/%.exe: $(CFG_VAR)/%.obj
 	$(LINK) /NOLOGO /OUT:$@ $< $(CFG_VAR)/utils.obj $(TEST_LDADD)
 
-all: $(OBJECTS) $(TESTS)
+all: $(OBJECTS) $(TESTS) $(BENCHMARKS)
 	@exit 0
 
 clean:

@@ -53,6 +53,7 @@ This function has been superseded by
 and sets all or portions of the 
 <property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_COMMAND</property>, 
 and <property>WM_NORMAL_HINTS</property> properties.
+</para>
 <indexterm significance="preferred"><primary>XSetStandardProperties</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetstandardproperties'>
@@ -154,7 +155,6 @@ Specifies a pointer to the size hints for the window in its normal state.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -202,6 +202,7 @@ To set the size hints for a given window in its normal state, use
 <function>XSetNormalHints</function>.
 This function has been superseded by
 <function>XSetWMNormalHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetNormalHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetnormalhints'>
@@ -245,7 +246,6 @@ Specifies a pointer to the size hints for the window in its normal state.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -291,6 +291,7 @@ To return the size hints for a window in its normal state, use
 <function>XGetNormalHints</function>.
 This function has been superseded by
 <function>XGetWMNormalHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetNormalHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetnormalhints'>
@@ -334,7 +335,6 @@ Returns the size hints for the window in its normal state.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -362,6 +362,7 @@ To set the zoom hints for a window, use
 <function>XSetZoomHints</function>.
 This function is no longer supported by the
 <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
+</para>
 <indexterm significance="preferred"><primary>XSetZoomHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetzoomhints'>
@@ -405,7 +406,6 @@ Specifies a pointer to the zoom hints.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -432,6 +432,7 @@ To read the zoom hints for a window, use
 <function>XGetZoomHints</function>.
 This function is no longer supported by the
 <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
+</para>
 <indexterm significance="preferred"><primary>XGetZoomHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetzoomhints'>
@@ -475,7 +476,6 @@ Returns the zoom hints.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -499,6 +499,7 @@ To set the value of any property of type <property>WM_SIZE_HINTS</property>, use
 <function>XSetSizeHints</function>.
 This function has been superseded by
 <function>XSetWMSizeHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetSizeHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetsizehints'>
@@ -553,7 +554,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -586,6 +586,7 @@ To read the value of any property of type <property>WM_SIZE_HINTS</property>, us
 <function>XGetSizeHints</function>.
 This function has been superseded by
 <function>XGetWMSizeHints</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetSizeHints</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetsizehints'>
@@ -640,7 +641,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -679,6 +679,7 @@ structure associated with one of the described atoms, use
 <function>XGetStandardColormap</function>.
 This function has been superseded by
 <function>XGetRGBColormaps</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetStandardColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetstandardcolormap'>
@@ -733,7 +734,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -772,6 +772,7 @@ To set a standard colormap, use
 <function>XSetStandardColormap</function>.
 This function has been superseded by
 <function>XSetRGBColormaps</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetStandardColormap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetstandardcolormap'>
@@ -826,7 +827,6 @@ Specifies the property name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -854,6 +854,7 @@ and a default position, use
 <function>XGeometry</function>.
 This function has been superseded by
 <function>XWMGeometry</function>.
+</para>
 <indexterm><primary>Window</primary><secondary>determining location</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGeometry</primary></indexterm>
 <!-- .sM -->
@@ -1008,7 +1009,6 @@ Return the width and height determined.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1054,7 +1054,6 @@ function provides a primitive interface to the resource manager facilities
 discussed in <link linkend="resource_manager_functions">chapter 15</link>.
 It is only useful in very simple applications.
 </para>
-<para>
 <!-- .LP -->
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XGetDefault</primary></indexterm>
@@ -1101,7 +1100,6 @@ Specifies the option name.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1735,6 +1733,7 @@ To obtain data from a given
 <function>XAssocTable</function>,
 use 
 <function>XLookUpAssoc</function>.
+</para>
 <indexterm significance="preferred"><primary>XLookUpAssoc</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xlookupassoc'>
@@ -1778,7 +1777,6 @@ Specifies the X resource ID.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1800,6 +1798,7 @@ To delete an entry from a given
 <function>XAssocTable</function>,
 use 
 <function>XDeleteAssoc</function>.
+</para>
 <indexterm significance="preferred"><primary>XDeleteAssoc</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdeleteassoc'>
@@ -1843,7 +1842,6 @@ Specifies the X resource ID.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

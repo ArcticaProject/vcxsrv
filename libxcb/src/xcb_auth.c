@@ -30,6 +30,12 @@
 #include <sys/param.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
+
+#ifdef __INTERIX
+/* _don't_ ask. interix has INADDR_LOOPBACK in here. */
+#include <rpc/types.h>
+#endif
 
 #ifdef _WIN32
 #include "xcb_windefs.h"

@@ -22,16 +22,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#define PIXMAN_USE_INTERNAL_API
+#include <pixman.h>
 
-#include "pixman-private.h"
 #include "utils.h"
 
 #define SOLID_FLAG 1

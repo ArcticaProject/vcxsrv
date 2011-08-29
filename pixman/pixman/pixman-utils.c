@@ -31,15 +31,19 @@
 #include "pixman-private.h"
 
 pixman_bool_t
-pixman_multiply_overflows_int (unsigned int a,
-                               unsigned int b)
+_pixman_multiply_overflows_size (size_t a, size_t b)
+{
+    return a >= SIZE_MAX / b;
+}
+
+pixman_bool_t
+_pixman_multiply_overflows_int (unsigned int a, unsigned int b)
 {
     return a >= INT32_MAX / b;
 }
 
 pixman_bool_t
-pixman_addition_overflows_int (unsigned int a,
-                               unsigned int b)
+_pixman_addition_overflows_int (unsigned int a, unsigned int b)
 {
     return a > INT32_MAX - b;
 }

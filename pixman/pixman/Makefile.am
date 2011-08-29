@@ -22,7 +22,6 @@ libpixman_1_la_SOURCES =			\
 	pixman.c				\
 	pixman-noop.c				\
 	pixman-fast-path.c			\
-	pixman-fast-path.h			\
 	pixman-solid-fill.c			\
 	pixman-conical-gradient.c		\
 	pixman-linear-gradient.c		\
@@ -32,6 +31,7 @@ libpixman_1_la_SOURCES =			\
 	pixman-edge.c				\
 	pixman-edge-accessors.c			\
 	pixman-edge-imp.h			\
+	pixman-inlines.h			\
 	pixman-trap.c				\
 	pixman-timer.c				\
 	pixman-matrix.c

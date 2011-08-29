@@ -34,7 +34,7 @@
 #include <emmintrin.h> /* for SSE2 intrinsics */
 #include "pixman-private.h"
 #include "pixman-combine32.h"
-#include "pixman-fast-path.h"
+#include "pixman-inlines.h"
 
 static __m128i mask_0080;
 static __m128i mask_00ff;

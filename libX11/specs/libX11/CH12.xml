@@ -155,6 +155,7 @@ and
 <!-- .sp -->
 To grab the pointer, use
 <function>XGrabPointer</function>.
+</para>
 <indexterm><primary>Grabbing</primary><secondary>pointer</secondary></indexterm>
 <indexterm><primary>Pointer</primary><secondary>grabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabPointer</primary></indexterm>
@@ -280,7 +281,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -421,6 +421,7 @@ errors.
 <!-- .sp -->
 To ungrab the pointer, use
 <function>XUngrabPointer</function>.
+</para>
 <indexterm><primary>Ungrabbing</primary><secondary>pointer</secondary></indexterm>
 <indexterm><primary>Pointer</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabPointer</primary></indexterm>
@@ -457,7 +458,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -489,6 +489,7 @@ outside the boundaries of the root window.
 <!-- .sp -->
 To change an active pointer grab, use
 <function>XChangeActivePointerGrab</function>.
+</para>
 <indexterm><primary>Pointer</primary><secondary>grabbing</secondary></indexterm>
 <indexterm ><primary>Changing</primary><secondary>pointer grab</secondary></indexterm>
 <indexterm significance="preferred"><primary>XChangeActivePointerGrab</primary></indexterm>
@@ -549,7 +550,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -577,6 +577,7 @@ errors.
 <!-- .sp -->
 To grab a pointer button, use
 <function>XGrabButton</function>.
+</para>
 <indexterm><primary>Grabbing</primary><secondary>buttons</secondary></indexterm>
 <indexterm><primary>Button</primary><secondary>grabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabButton</primary></indexterm>
@@ -715,7 +716,6 @@ Specifies the cursor that is to be displayed or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -821,6 +821,7 @@ errors.
 <!-- .sp -->
 To ungrab a pointer button, use
 <function>XUngrabButton</function>.
+</para>
 <indexterm><primary>Ungrabbing</primary><secondary>buttons</secondary></indexterm>
 <indexterm><primary>Button</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabButton</primary></indexterm>
@@ -881,7 +882,6 @@ Specifies the grab window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -942,6 +942,7 @@ and
 <!-- .sp -->
 To grab the keyboard, use
 <function>XGrabKeyboard</function>.
+</para>
 <indexterm><primary>Keyboard</primary><secondary>grabbing</secondary></indexterm>
 <indexterm><primary>Grabbing</primary><secondary>keyboard</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabKeyboard</primary></indexterm>
@@ -1030,7 +1031,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1130,6 +1130,7 @@ errors.
 <!-- .sp -->
 To ungrab the keyboard, use
 <function>XUngrabKeyboard</function>.
+</para>
 <indexterm><primary>Keyboard</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm><primary>Ungrabbing</primary><secondary>keyboard</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabKeyboard</primary></indexterm>
@@ -1166,7 +1167,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1197,6 +1197,7 @@ active keyboard grab becomes not viewable.
 <!-- .sp -->
 To passively grab a single key of the keyboard, use
 <function>XGrabKey</function>.
+</para>
 <indexterm><primary>Key</primary><secondary>grabbing</secondary></indexterm>
 <indexterm><primary>Grabbing</primary><secondary>keys</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabKey</primary></indexterm>
@@ -1297,7 +1298,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1401,6 +1401,7 @@ errors.
 <!-- .sp -->
 To ungrab a key, use
 <function>XUngrabKey</function>.
+</para>
 <indexterm><primary>Key</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm><primary>Ungrabbing</primary><secondary>keys</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabKey</primary></indexterm>
@@ -1460,7 +1461,6 @@ Specifies the grab window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1504,6 +1504,7 @@ describes the mechanism for resuming event processing.
 <!-- .sp -->
 To allow further events to be processed when the device has been frozen, use
 <function>XAllowEvents</function>.
+</para>
 <indexterm significance="preferred"><primary>XAllowEvents</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xallowevents'>
@@ -1559,7 +1560,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1572,8 +1572,8 @@ time of the most recent active grab for the client or if the specified time
 is later than the current X server time.
 Depending on the event_mode argument, the following occurs:
 </para>
-<informaltable>
-  <tgroup cols='2' align='center'>
+<informaltable frame='none'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -1759,6 +1759,7 @@ pointer to a new position under program control.
 <!-- .sp -->
 To move the pointer to an arbitrary point in a window, use
 <function>XWarpPointer</function>.
+</para>
 <indexterm significance="preferred"><primary>XWarpPointer</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xwarppointer'>
@@ -1870,7 +1871,6 @@ Specify the x and y coordinates within the destination window.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1933,6 +1933,7 @@ for input focus policy.
 <!-- .sp -->
 To set the input focus, use
 <function>XSetInputFocus</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetInputFocus</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetinputfocus'>
@@ -1998,7 +1999,6 @@ You can pass either a timestamp or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2107,6 +2107,7 @@ errors.
 <!-- .sp -->
 To obtain the current input focus, use
 <function>XGetInputFocus</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetInputFocus</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetinputfocus'>
@@ -2157,7 +2158,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2322,6 +2322,7 @@ If an error is generated, a subset of the controls may have been altered.
 <para>
 <!-- .LP -->
 <!-- .sp -->
+</para>
 <indexterm significance="preferred"><primary>XChangeKeyboardControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xchangekeyboardcontrol'>
@@ -2366,7 +2367,6 @@ Specifies one value for each bit set to 1 in the mask.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2391,6 +2391,7 @@ errors.
 <!-- .sp -->
 To obtain the current control values for the keyboard, use
 <function>XGetKeyboardControl</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetKeyboardControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetkeyboardcontrol'>
@@ -2425,7 +2426,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2475,6 +2475,7 @@ with the least significant bit in the byte representing key 8N.
 <!-- .sp -->
 To turn on keyboard auto-repeat, use
 <function>XAutoRepeatOn</function>.
+</para>
 <indexterm significance="preferred"><primary>XAutoRepeatOn</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xautorepeaton'>
@@ -2496,7 +2497,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2509,6 +2509,7 @@ function turns on auto-repeat for the keyboard on the specified display.
 <!-- .sp -->
 To turn off keyboard auto-repeat, use
 <function>XAutoRepeatOff</function>.
+</para>
 <indexterm significance="preferred"><primary>XAutoRepeatOff</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xautorepeatoff'>
@@ -2530,7 +2531,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2543,6 +2543,7 @@ function turns off auto-repeat for the keyboard on the specified display.
 <!-- .sp -->
 To ring the bell, use
 <function>XBell</function>.
+</para>
 <indexterm significance="preferred"><primary>XBell</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xbell'>
@@ -2576,7 +2577,6 @@ which can range from -100 to 100 inclusive.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2627,6 +2627,7 @@ error.
 <!-- .sp -->
 To obtain a bit vector that describes the state of the keyboard, use
 <function>XQueryKeymap</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryKeymap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerykeymap'>
@@ -2660,7 +2661,6 @@ Each bit represents one key of the keyboard.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2683,6 +2683,7 @@ may lag the physical state if device event processing is frozen.
 <!-- .sp -->
 To set the mapping of the pointer buttons, use
 <function>XSetPointerMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetPointerMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetpointermapping'>
@@ -2726,7 +2727,6 @@ Specifies the number of items in the mapping list.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2771,6 +2771,7 @@ error.
 <!-- .sp -->
 To get the pointer mapping, use
 <function>XGetPointerMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetPointerMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetpointermapping'>
@@ -2814,7 +2815,6 @@ Specifies the number of items in the mapping list.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2834,6 +2834,7 @@ in map_return.
 <!-- .sp -->
 To control the pointer's interactive feel, use
 <function>XChangePointerControl</function>.
+</para>
 <indexterm significance="preferred"><primary>XChangePointerControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xchangepointercontrol'>
@@ -2910,7 +2911,6 @@ Specifies the acceleration threshold.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2947,6 +2947,7 @@ error.
 <!-- .sp -->
 To get the current pointer parameters, use
 <function>XGetPointerControl</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetPointerControl</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetpointercontrol'>
@@ -3000,7 +3001,6 @@ Returns the acceleration threshold.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3222,6 +3222,7 @@ Rather, it merely stores it for reading and writing by clients.
 <!-- .LP -->
 To obtain the legal KeyCodes for a display, use
 <function>XDisplayKeycodes</function>.
+</para>
 <indexterm significance="preferred"><primary>XDisplayKeycodes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdisplaykeycodes'>
@@ -3264,7 +3265,6 @@ Returns the maximum number of KeyCodes.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3281,6 +3281,7 @@ Not all KeyCodes in this range are required to have corresponding keys.
 <!-- .LP -->
 To obtain the symbols for the specified KeyCodes, use
 <function>XGetKeyboardMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetKeyboardMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetkeyboardmapping'>
@@ -3336,7 +3337,6 @@ Returns the number of KeySyms per KeyCode.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3406,6 +3406,7 @@ error.
 <!-- .sp -->
 To change the keyboard mapping, use
 <function>XChangeKeyboardMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XChangeKeyboardMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xchangekeyboardmapping'>
@@ -3472,7 +3473,6 @@ Specifies the number of KeyCodes that are to be changed.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3578,6 +3578,7 @@ To create an
 <structname>XModifierKeymap</structname>
 structure, use
 <function>XNewModifiermap</function>.
+</para>
 <indexterm significance="preferred"><primary>XNewModifiermap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xnewmodifiermap'>
@@ -3600,7 +3601,6 @@ in the map.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3617,6 +3617,7 @@ To add a new entry to an
 <structname>XModifierKeymap</structname>
 structure, use
 <function>XInsertModifiermapEntry</function>.
+</para>
 <indexterm significance="preferred"><primary>XInsertModifiermapEntry</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xinsertmodifiermapentry'>
@@ -3662,7 +3663,6 @@ Specifies the modifier.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3680,6 +3680,7 @@ To delete an entry from an
 <structname>XModifierKeymap</structname>
 structure, use
 <function>XDeleteModifiermapEntry</function>.
+</para>
 <indexterm significance="preferred"><primary>XDeleteModifiermapEntry</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xdeletemodifiermapentry'>
@@ -3725,7 +3726,6 @@ Specifies the modifier.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3743,6 +3743,7 @@ To destroy an
 <structname>XModifierKeymap</structname>
 structure, use
 <function>XFreeModifiermap</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeModifiermap</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreemodifiermap'>
@@ -3766,7 +3767,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3781,6 +3781,7 @@ structure.
 <!-- .sp -->
 To set the KeyCodes to be used as modifiers, use
 <function>XSetModifierMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetModifierMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetmodifiermapping'>
@@ -3815,7 +3816,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3895,6 +3895,7 @@ errors.
 <!-- .sp -->
 To obtain the KeyCodes used as modifiers, use
 <function>XGetModifierMapping</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetModifierMapping</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetmodifiermapping'>
@@ -3916,7 +3917,6 @@ Specifies the connection to the X server.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->

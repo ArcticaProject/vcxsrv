@@ -137,14 +137,13 @@ typedef struct {
 The default GC values are:
 </para>
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
-  <colspec colname='c3'/>
   <thead>
     <row>
-      <entry>Component</entry>
-      <entry>Default</entry>
+      <entry align='center'>Component</entry>
+      <entry align='center'>Default</entry>
     </row>
   </thead>
   <tbody>
@@ -194,15 +193,11 @@ The default GC values are:
     </row>
     <row>
       <entry>tile</entry>
-      <entry>Pixmap of unspecified size filled with foreground pixel</entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry>(that is, client specified pixel if any, else 0)</entry>
-    </row>
-    <row>
-      <entry></entry>
-      <entry>(subsequent changes to foreground do not affect this pixmap)</entry>
+      <entry>
+      <para>Pixmap of unspecified size filled with foreground pixel</para>
+      <para>(that is, client specified pixel if any, else 0)</para>
+      <para>(subsequent changes to foreground do not affect this pixmap)</para>
+      </entry>
     </row>
     <row>
       <entry>stipple</entry>
@@ -284,15 +279,15 @@ are:
 <!-- .\".CP T 1 -->
 <!-- .\"Display Functions -->
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='3'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
   <thead>
     <row>
-      <entry>Function Name</entry>
-      <entry>Value</entry>
-      <entry>Operation</entry>
+      <entry align='center'>Function Name</entry>
+      <entry align='center'>Value</entry>
+      <entry align='center'>Operation</entry>
     </row>
   </thead>
   <tbody>
@@ -632,7 +627,7 @@ the semantics depends on the line-width and the cap-style:
 </para>
 
 <informaltable>
-  <tgroup cols='3' align='center'>
+  <tgroup cols='3'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <colspec colname='c3'/>
@@ -747,7 +742,7 @@ the following apply:
 </para>
 
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -781,7 +776,7 @@ the odd dashes are controlled by the fill-style in the following manner:
 </para>
 
 <informaltable>
-  <tgroup cols='2' align='center'>
+  <tgroup cols='2'>
   <colspec colname='c1'/>
   <colspec colname='c2'/>
   <tbody>
@@ -962,6 +957,7 @@ requests (and any similar requests defined by extensions).
 To create a new GC that is usable on a given screen with a 
 depth of drawable, use
 <function>XCreateGC</function>.
+</para>
 <indexterm><primary>Graphics context</primary><secondary>initializing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCreateGC</primary></indexterm>
 <!-- .sM -->
@@ -1020,7 +1016,6 @@ Specifies any values as specified by the valuemask.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1051,6 +1046,7 @@ errors.
 <!-- .sp -->
 To copy components from a source GC to a destination GC, use
 <function>XCopyGC</function>.
+</para>
 <indexterm significance="preferred"><primary>XCopyGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xcopygc'>
@@ -1107,7 +1103,6 @@ Specifies the destination GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -1137,6 +1132,7 @@ errors.
 <!-- .sp -->
 To change the components in a given GC, use
 <function>XChangeGC</function>.
+</para>
 <indexterm significance="preferred"><primary>XChangeGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xchangegc'>
@@ -1194,7 +1190,6 @@ Specifies any values as specified by the valuemask.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1233,6 +1228,7 @@ errors.
 <!-- .sp -->
 To obtain components of a given GC, use
 <function>XGetGCValues</function>.
+</para>
 <indexterm significance="preferred"><primary>XGetGCValues</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgetgcvalues'>
@@ -1292,7 +1288,6 @@ structure.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1345,6 +1340,7 @@ if the component has never been explicitly set by the client.
 <!-- .sp -->
 To free a given GC, use
 <function>XFreeGC</function>.
+</para>
 <indexterm significance="preferred"><primary>XFreeGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xfreegc'>
@@ -1377,7 +1373,6 @@ Specifies the GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1399,6 +1394,7 @@ To obtain the
 <type>GContext</type>
 resource ID for a given GC, use 
 <function>XGContextFromGC</function>.
+</para>
 <indexterm significance="preferred"><primary>XGContextFromGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xgcontextfromgc'>
@@ -1421,7 +1417,6 @@ Specifies the GC (Gc.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1435,6 +1430,7 @@ An example might be when a protocol extension uses the GC indirectly,
 in such a way that the extension interface cannot know what GC will be used.
 To force sending GC component changes, use
 <function>XFlushGC</function>.
+</para>
 <indexterm significance="preferred"><primary>XFlushGC</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xflushgc'>
@@ -1467,7 +1463,6 @@ Specifies the GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1529,6 +1524,7 @@ Arc mode, subwindow mode, and graphics exposure components
 To set the foreground, background, plane mask, and function components
 for a given GC, use
 <function>XSetState</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetState</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetstate'>
@@ -1605,7 +1601,6 @@ Specifies the plane mask.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1622,6 +1617,7 @@ errors.
 <!-- .sp -->
 To set the foreground of a given GC, use
 <function>XSetForeground</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetForeground</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetforeground'>
@@ -1665,7 +1661,6 @@ Specifies the foreground you want to set for the specified GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1681,6 +1676,7 @@ errors.
 <!-- .sp -->
 To set the background of a given GC, use
 <function>XSetBackground</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetBackground</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetbackground'>
@@ -1724,7 +1720,6 @@ Specifies the background you want to set for the specified GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1740,6 +1735,7 @@ errors.
 <!-- .sp -->
 To set the display function in a given GC, use
 <function>XSetFunction</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetFunction</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetfunction'>
@@ -1783,7 +1779,6 @@ Specifies the function you want to set for the specified GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1800,6 +1795,7 @@ errors.
 <!-- .sp -->
 To set the plane mask of a given GC, use
 <function>XSetPlaneMask</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetPlaneMask</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetplanemask'>
@@ -1844,7 +1840,6 @@ Specifies the plane mask.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1865,6 +1860,7 @@ errors.
 <!-- .LP -->
 To set the line drawing components of a given GC, use
 <function>XSetLineAttributes</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetLineAttributes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetlineattributes'>
@@ -1957,7 +1953,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -1974,6 +1969,7 @@ errors.
 <!-- .sp -->
 To set the dash-offset and dash-list for dashed line styles of a given GC, use
 <function>XSetDashes</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetDashes</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetdashes'>
@@ -2041,7 +2037,6 @@ Specifies the number of elements in dash_list.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM  -->
@@ -2103,6 +2098,7 @@ errors.
 <!-- .LP -->
 To set the fill-style of a given GC, use
 <function>XSetFillStyle</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetFillStyle</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetfillstyle'>
@@ -2152,7 +2148,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2169,6 +2164,7 @@ errors.
 <!-- .sp -->
 To set the fill-rule of a given GC, use
 <function>XSetFillRule</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetFillRule</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetfillrule'>
@@ -2216,7 +2212,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2249,6 +2244,7 @@ as well as to set the tile or stipple shape and the tile or stipple origin.
 <!-- .sp -->
 To obtain the best size of a tile, stipple, or cursor, use
 <function>XQueryBestSize</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryBestSize</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerybestsize'>
@@ -2342,7 +2338,6 @@ by the display hardware.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2392,6 +2387,7 @@ errors.
 <!-- .sp -->
 To obtain the best fill tile shape, use
 <function>XQueryBestTile</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryBestTile</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerybesttile'>
@@ -2469,7 +2465,6 @@ by the display hardware.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2498,6 +2493,7 @@ errors.
 <!-- .sp -->
 To obtain the best stipple shape, use
 <function>XQueryBestStipple</function>.
+</para>
 <indexterm significance="preferred"><primary>XQueryBestStipple</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xquerybeststipple'>
@@ -2575,7 +2571,6 @@ by the display hardware.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2604,6 +2599,7 @@ errors.
 <!-- .sp -->
 To set the fill tile of a given GC, use
 <function>XSetTile</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetTile</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsettile'>
@@ -2647,7 +2643,6 @@ Specifies the fill tile you want to set for the specified GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2672,6 +2667,7 @@ errors.
 <!-- .sp -->
 To set the stipple of a given GC, use
 <function>XSetStipple</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetStipple</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetstipple'>
@@ -2715,7 +2711,6 @@ Specifies the stipple you want to set for the specified GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2740,6 +2735,7 @@ errors.
 <!-- .sp -->
 To set the tile or stipple origin of a given GC, use
 <function>XSetTSOrigin</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetTSOrigin</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsettsorigin'>
@@ -2794,7 +2790,6 @@ Specify the x and y coordinates of the tile and stipple origin.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2821,6 +2816,7 @@ errors.
 <!-- .LP -->
 To set the current font of a given GC, use
 <function>XSetFont</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetFont</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetfont'>
@@ -2864,7 +2860,6 @@ Specifies the font.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2892,6 +2887,7 @@ and the clip-mask or set the clip-mask to a list of rectangles.
 <!-- .sp -->
 To set the clip-origin of a given GC, use
 <function>XSetClipOrigin</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetClipOrigin</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetcliporigin'>
@@ -2946,7 +2942,6 @@ Specify the x and y coordinates of the clip-mask origin.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -2967,6 +2962,7 @@ errors.
 <!-- .sp -->
 To set the clip-mask of a given GC to the specified pixmap, use
 <function>XSetClipMask</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetClipMask</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetclipmask'>
@@ -3011,7 +3007,6 @@ Specifies the pixmap or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3035,6 +3030,7 @@ errors.
 <!-- .sp -->
 To set the clip-mask of a given GC to the specified list of rectangles, use
 <function>XSetClipRectangles</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetClipRectangles</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetcliprectangles'>
@@ -3128,7 +3124,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3209,6 +3204,7 @@ see <link linkend="Manipulating_Regions">section 16.5</link>.
 <!-- .LP -->
 To set the arc mode of a given GC, use
 <function>XSetArcMode</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetArcMode</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetarcmode'>
@@ -3256,7 +3252,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3273,6 +3268,7 @@ errors.
 <!-- .sp -->
 To set the subwindow mode of a given GC, use
 <function>XSetSubwindowMode</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetSubwindowMode</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetsubwindowmode'>
@@ -3320,7 +3316,6 @@ or
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
@@ -3337,6 +3332,7 @@ errors.
 <!-- .sp -->
 To set the graphics-exposures flag of a given GC, use
 <function>XSetGraphicsExposures</function>.
+</para>
 <indexterm significance="preferred"><primary>XSetGraphicsExposures</primary></indexterm>
 <!-- .sM -->
 <funcsynopsis id='xsetgraphicsexposures'>
@@ -3388,7 +3384,6 @@ with this GC.
   </listitem>
   </varlistentry>
 </variablelist>
-</para>
 <para>
 <!-- .LP -->
 <!-- .eM -->
