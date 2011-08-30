@@ -395,6 +395,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_optimize.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\program\prog_opt_constant_fold.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_parameter.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -636,9 +639,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\opt_tree_grafting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\glsl\standalone_scaffolding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\opt_noop_swizzle.cpp">

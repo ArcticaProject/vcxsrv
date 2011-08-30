@@ -178,7 +178,6 @@
     <ClCompile Include="..\..\..\..\src\glsl\opt_structure_splitting.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\opt_swizzle_swizzle.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\opt_tree_grafting.cpp" />
-    <ClCompile Include="..\..\..\..\src\glsl\standalone_scaffolding.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ralloc.c" />
     <ClCompile Include="..\..\..\..\src\glsl\strtod.c" />
     <ClCompile Include="..\..\..\..\src\glsl\s_expression.cpp" />
@@ -247,6 +246,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_instruction.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_noise.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_optimize.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\program\prog_opt_constant_fold.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_parameter.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_parameter_layout.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_print.c" />

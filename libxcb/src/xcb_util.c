@@ -34,7 +34,9 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <string.h>
+#ifndef _MSC_VER
 #include <arpa/inet.h>
+#endif
 
 #ifdef _WIN32
 #include "xcb_windefs.h"
