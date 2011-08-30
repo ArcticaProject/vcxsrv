@@ -87,6 +87,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texfilter.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\swrast\s_texture.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_aatriangle.c">
       <Filter>Source Files</Filter>
     </ClCompile>
