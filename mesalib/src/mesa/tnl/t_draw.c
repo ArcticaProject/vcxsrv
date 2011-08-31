@@ -26,6 +26,7 @@
  */
 
 #include "main/glheader.h"
+#include "main/bufferobj.h"
 #include "main/condrender.h"
 #include "main/context.h"
 #include "main/imports.h"
@@ -339,14 +340,15 @@ static void bind_indices( struct gl_context *ctx,
    TNLcontext *tnl = TNL_CONTEXT(ctx);
    struct vertex_buffer *VB = &tnl->vb;
    GLuint i;
-   void *ptr;
+   const void *ptr;
 
    if (!ib) {
       VB->Elts = NULL;
       return;
    }
 
-   if (ib->obj->Name && !ib->obj->Pointer) {
+   if (_mesa_is_bufferobj(ib->obj) && !_mesa_bufferobj_mapped(ib->obj)) {
+      /* if the buffer object isn't mapped yet, map it now */
       unsigned map_size;
 
       switch (ib->type) {
@@ -370,7 +372,8 @@ static void bind_indices( struct gl_context *ctx,
 				       GL_MAP_READ_BIT, ib->obj);
       assert(ib->obj->Pointer);
    } else {
-      ptr = ib->ptr;
+      /* user-space elements, or buffer already mapped */
+      ptr = ADD_POINTERS(ib->obj->Pointer, ib->ptr);
    }
 
    if (ib->type == GL_UNSIGNED_INT && VB->Primitive[0].basevertex == 0) {
