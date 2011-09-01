@@ -31,6 +31,11 @@ include $(LOCAL_PATH)/common/Makefile.sources
 MESA_DRI_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/dri
 MESA_DRI_MODULE_UNSTRIPPED_PATH := $(TARGET_OUT_SHARED_LIBRARIES_UNSTRIPPED)/dri
 
+MESA_DRI_CFLAGS := \
+	-DFEATURE_GL=1 \
+	-DFEATURE_ES1=1 \
+	-DFEATURE_ES2=1
+
 MESA_DRI_C_INCLUDES := \
 	$(addprefix $(MESA_TOP)/, $(mesa_dri_common_INCLUDES)) \
 	$(DRM_TOP) \
@@ -54,6 +59,10 @@ MESA_DRI_SHARED_LIBRARIES := \
 # Build drivers and libmesa_dri_common
 
 SUBDIRS := common
+
+ifneq ($(filter i915, $(MESA_GPU_DRIVERS)),)
+	SUBDIRS += i915
+endif
 
 ifneq ($(filter i965, $(MESA_GPU_DRIVERS)),)
 	SUBDIRS += i965

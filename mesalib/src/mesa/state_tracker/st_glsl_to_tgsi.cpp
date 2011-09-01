@@ -4982,7 +4982,7 @@ st_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
          /* Lowering */
          do_mat_op_to_vec(ir);
          lower_instructions(ir, (MOD_TO_FRACT | DIV_TO_MUL_RCP | EXP_TO_EXP2
-        			 | LOG_TO_LOG2
+				 | LOG_TO_LOG2 | INT_DIV_TO_MUL_RCP
         			 | ((options->EmitNoPow) ? POW_TO_EXP2 : 0)));
 
          progress = do_lower_jumps(ir, true, true, options->EmitNoMainReturn, options->EmitNoCont, options->EmitNoLoops) || progress;
@@ -4991,10 +4991,10 @@ st_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
 
          progress = lower_quadop_vector(ir, false) || progress;
 
-         if (options->EmitNoIfs) {
+         if (options->MaxIfDepth == 0)
             progress = lower_discard(ir) || progress;
-            progress = lower_if_to_cond_assign(ir) || progress;
-         }
+
+         progress = lower_if_to_cond_assign(ir, options->MaxIfDepth) || progress;
 
          if (options->EmitNoNoise)
             progress = lower_noise(ir) || progress;
