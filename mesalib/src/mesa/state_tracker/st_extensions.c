@@ -173,7 +173,7 @@ void st_init_limits(struct st_context *st)
       options->EmitNoNoise = TRUE;
 
       /* TODO: make these more fine-grained if anyone needs it */
-      options->EmitNoIfs = !screen->get_shader_param(screen, sh, PIPE_SHADER_CAP_MAX_CONTROL_FLOW_DEPTH);
+      options->MaxIfDepth = screen->get_shader_param(screen, sh, PIPE_SHADER_CAP_MAX_CONTROL_FLOW_DEPTH);
       options->EmitNoLoops = !screen->get_shader_param(screen, sh, PIPE_SHADER_CAP_MAX_CONTROL_FLOW_DEPTH);
       options->EmitNoFunctions = !screen->get_shader_param(screen, sh, PIPE_SHADER_CAP_SUBROUTINES);
       options->EmitNoMainReturn = !screen->get_shader_param(screen, sh, PIPE_SHADER_CAP_SUBROUTINES);
@@ -203,6 +203,9 @@ void st_init_limits(struct st_context *st)
 
    /* XXX we'll need a better query here someday */
    if (screen->get_param(screen, PIPE_CAP_GLSL)) {
+      c->MinProgramTexelOffset = screen->get_param(screen, PIPE_CAP_MIN_TEXEL_OFFSET);
+      c->MaxProgramTexelOffset = screen->get_param(screen, PIPE_CAP_MAX_TEXEL_OFFSET);
+
       c->GLSLVersion = 120;
    }
 }
