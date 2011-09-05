@@ -259,6 +259,8 @@ BufCompressedFill (BufFilePtr f)
      	 */
     	while ( code >= 256 )
     	{
+	    if (stackp - de_stack >= STACK_SIZE - 1)
+		return BUFFILEEOF;
 	    *stackp++ = file->tab_suffix[code];
 	    code = file->tab_prefix[code];
     	}

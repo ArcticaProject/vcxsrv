@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>FreeType-2.4.5 API Reference</title>
+<title>FreeType-2.4.6 API Reference</title>
 <style type="text/css">
   body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
          color: #000000;
@@ -35,7 +35,7 @@
 <table align=center><tr><td><font size=-1>[<a href="ft2-index.html">Index</a>]</font></td>
 <td width="100%"></td>
 <td><font size=-1>[<a href="ft2-toc.html">TOC</a>]</font></td></tr></table>
-<center><h1>FreeType-2.4.5 API Reference</h1></center>
+<center><h1>FreeType-2.4.6 API Reference</h1></center>
 
 <center><h1>
 Base Interface
@@ -873,7 +873,7 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 <tr valign=top><td><b>FT_FACE_FLAG_TRICKY</b></td><td>
 <p>Set if the font is &lsquo;tricky&rsquo;, this is, it always needs the font format's native hinting engine to get a reasonable result. A typical example is the Chinese font &lsquo;mingli.ttf&rsquo; which uses TrueType bytecode instructions to move and scale all of its subglyphs.</p>
 <p>It is not possible to autohint such fonts using <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_FORCE_AUTOHINT</a>; it will also ignore <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_HINTING</a>. You have to set both <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_HINTING</a> and <a href="ft2-base_interface.html#FT_LOAD_XXX">FT_LOAD_NO_AUTOHINT</a> to really disable hinting; however, you probably never want this except for demonstration purposes.</p>
-<p>Currently, there are six TrueType fonts in the list of tricky fonts; they are hard-coded in file &lsquo;ttobjs.c&rsquo;.</p>
+<p>Currently, there are about a dozen TrueType fonts in the list of tricky fonts; they are hard-coded in file &lsquo;ttobjs.c&rsquo;.</p>
 </td></tr>
 </table>
 </td></tr></table>
@@ -2115,7 +2115,7 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 </td></tr>
 <tr valign=top><td colspan=0><b>FT_SIZE_REQUEST_TYPE_REAL_DIM</b></td></tr>
 <tr valign=top><td></td><td>
-<p>The real dimension. The sum of the the &lsquo;Ascender&rsquo; and (minus of) the &lsquo;Descender&rsquo; fields of <a href="ft2-base_interface.html#FT_FaceRec">FT_FaceRec</a> are used to determine both scaling values.</p>
+<p>The real dimension. The sum of the the &lsquo;ascender&rsquo; and (minus of) the &lsquo;descender&rsquo; fields of <a href="ft2-base_interface.html#FT_FaceRec">FT_FaceRec</a> are used to determine both scaling values.</p>
 </td></tr>
 <tr valign=top><td colspan=0><b>FT_SIZE_REQUEST_TYPE_BBOX</b></td></tr>
 <tr valign=top><td></td><td>
@@ -3044,6 +3044,7 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 <table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>note</b></em></td></tr><tr><td>
 <p>An error is returned if the face doesn't provide glyph names or if the glyph index is invalid. In all cases of failure, the first byte of &lsquo;buffer&rsquo; is set to&nbsp;0 to indicate an empty name.</p>
 <p>The glyph name is truncated to fit within the buffer if it is too long. The returned string is always zero-terminated.</p>
+<p>Be aware that FreeType reorders glyph indices internally so that glyph index&nbsp;0 always corresponds to the &lsquo;missing glyph&rsquo; (called &lsquo;.notdef&rsquo;).</p>
 <p>This function is not compiled within the library if the config macro &lsquo;FT_CONFIG_OPTION_NO_GLYPH_NAMES&rsquo; is defined in &lsquo;include/freetype/config/ftoptions.h&rsquo;.</p>
 </td></tr></table>
 </td></tr></table>
@@ -3586,6 +3587,9 @@ Defined in FT_FREETYPE_H (freetype/freetype.h).
 </td></tr></table>
 <table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>note</b></em></td></tr><tr><td>
 <p>Use this function rather than directly reading the &lsquo;fs_type&rsquo; field in the <a href="ft2-type1_tables.html#PS_FontInfoRec">PS_FontInfoRec</a> structure which is only guaranteed to return the correct results for Type&nbsp;1 fonts.</p>
+</td></tr></table>
+<table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>since</b></em></td></tr><tr><td>
+<p>2.3.8</p>
 </td></tr></table>
 </td></tr></table>
 <hr width="75%">

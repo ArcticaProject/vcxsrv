@@ -1,41 +1,43 @@
-dnl  Copyright © 2003 Keith Packard
-dnl 
-dnl  Permission to use, copy, modify, distribute, and sell this software and its
-dnl  documentation for any purpose is hereby granted without fee, provided that
-dnl  the above copyright notice appear in all copies and that both that
-dnl  copyright notice and this permission notice appear in supporting
-dnl  documentation, and that the name of Keith Packard not be used in
-dnl  advertising or publicity pertaining to distribution of the software without
-dnl  specific, written prior permission.  Keith Packard makes no
-dnl  representations about the suitability of this software for any purpose.  It
-dnl  is provided "as is" without express or implied warranty.
-dnl 
-dnl  KEITH PACKARD DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-dnl  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-dnl  EVENT SHALL KEITH PACKARD BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-dnl  CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-dnl  DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-dnl  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-dnl  PERFORMANCE OF THIS SOFTWARE.
-dnl
-dnl Process this file with autoconf to create configure.
+#  Copyright © 2003 Keith Packard
+#
+#  Permission to use, copy, modify, distribute, and sell this software and its
+#  documentation for any purpose is hereby granted without fee, provided that
+#  the above copyright notice appear in all copies and that both that
+#  copyright notice and this permission notice appear in supporting
+#  documentation, and that the name of Keith Packard not be used in
+#  advertising or publicity pertaining to distribution of the software without
+#  specific, written prior permission.  Keith Packard makes no
+#  representations about the suitability of this software for any purpose.  It
+#  is provided "as is" without express or implied warranty.
+#
+#  KEITH PACKARD DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+#  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+#  EVENT SHALL KEITH PACKARD BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+#  CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+#  DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+#  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+#  PERFORMANCE OF THIS SOFTWARE.
+#
 
+# Initialize Autoconf
 AC_PREREQ([2.60])
-
-AC_INIT([libXfont],
-	[1.4.3],
-	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
-	libXfont)
-# Autoheader generates config.h.in. No new lines allowed in the list.
+#
+# This is the package version number, not the shared library
+# version.  This same version number must appear in Xfont.h
+# Yes, it is a pain to synchronize version numbers.  Unfortunately, it's
+# not possible to extract the version number here from Xfont.h
+#
+AC_INIT([libXfont], [1.4.4],
+	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [libXfont])
+AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS([config.h include/X11/fonts/fontconf.h])
-dnl
-dnl This is the package version number, not the shared library
-dnl version.  This same version number must appear in Xfont.h
-dnl Yes, it is a pain to synchronize version numbers.  Unfortunately, it's
-dnl not possible to extract the version number here from Xfont.h
-dnl
+
+# Initialize Automake
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
+
+# Initialize libtool
+AC_PROG_LIBTOOL
 
 # Require xorg-macros minimum of 1.10 for DocBook XML documentation
 m4_ifndef([XORG_MACROS_VERSION],
@@ -43,20 +45,19 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.10)
 XORG_DEFAULT_OPTIONS
 XORG_ENABLE_DEVEL_DOCS
-XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_XMLTO(0.0.22)
 XORG_WITH_FOP
-XORG_CHECK_SGML_DOCTOOLS(1.5)
+XORG_CHECK_SGML_DOCTOOLS(1.7)
 
-# Check for progs
-AC_PROG_CC
-AC_PROG_LIBTOOL
-dnl If the first PKG_CHECK_MODULES appears inside a conditional, pkg-config
-dnl must first be located explicitly.
-PKG_PROG_PKG_CONFIG
-
-# Look for headers
+# Checks for header files.
 AC_CHECK_HEADERS([endian.h poll.h sys/poll.h])
+
+# Checks for library functions.
 AC_CHECK_FUNCS([poll])
+
+# If the first PKG_CHECK_MODULES appears inside a conditional, pkg-config
+# must first be located explicitly.
+PKG_PROG_PKG_CONFIG
 
 #
 # select libraries to include
@@ -200,14 +201,15 @@ case $host_os in
 esac
 AC_SUBST([OS_CFLAGS])
 
-AC_OUTPUT([Makefile
-	   doc/Makefile
-	   src/Makefile
-	   src/fontfile/Makefile
-	   src/FreeType/Makefile
-	   src/builtins/Makefile
-	   src/bitmap/Makefile
-	   src/fc/Makefile
-	   src/util/Makefile
-	   src/stubs/Makefile
-           xfont.pc])
+AC_CONFIG_FILES([Makefile
+		doc/Makefile
+		src/Makefile
+		src/fontfile/Makefile
+		src/FreeType/Makefile
+		src/builtins/Makefile
+		src/bitmap/Makefile
+		src/fc/Makefile
+		src/util/Makefile
+		src/stubs/Makefile
+		xfont.pc])
+AC_OUTPUT
