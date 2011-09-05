@@ -1620,18 +1620,15 @@ BitmapOpenScalable (FontPathElementPtr fpe,
     if (!sourceFont->refcnt)
 	FontFileCloseFont((FontPathElementPtr) 0, sourceFont);
 
-    if (propCount && (!props || !isStringProp))
-    {
-	font->info.nprops = 0;
-	font->info.props = (FontPropPtr)0;
-	font->info.isStringProp = (char *)0;
-	bitmapUnloadScalable(font);
-	return AllocError;
-    }
-
     font->info.props = props;
     font->info.nprops = propCount;
     font->info.isStringProp = isStringProp;
+
+    if (propCount && (!props || !isStringProp))
+    {
+	bitmapUnloadScalable(font);
+	return AllocError;
+    }
 
     *pFont = font;
     return Successful;
