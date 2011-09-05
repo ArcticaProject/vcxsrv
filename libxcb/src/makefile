@@ -5,7 +5,7 @@ CSRCS = \
 		xcb_conn.c xcb_out.c xcb_in.c xcb_ext.c xcb_xid.c \
 		xcb_list.c xcb_util.c xcb_auth.c
 
-DEFINES += PTW32_STATIC_LIB
+DEFINES += PTW32_STATIC_LIB HAVE_GETADDRINFO
 
 XCBPROTO_XCBINCLUDEDIR = ..\xcb-proto\src
 
