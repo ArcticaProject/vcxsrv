@@ -34,10 +34,10 @@ load_makefile $(LIBDIRS:%$(OBJDIR)\=%makefile MAKESERVER=$(MAKESERVER) DEBUG=$(D
 
 ifeq ($(DEBUG),1)
 LINKLIBS += $(MHMAKECONF)\pthreads\pthreadVC2d.lib \
-            $(MHMAKECONF)\freetype\lib\freetype245MT_D.lib
+            $(MHMAKECONF)\freetype\lib\freetype246MT_D.lib
 else
 LINKLIBS += $(MHMAKECONF)\pthreads\pthreadVC2.lib \
-            $(MHMAKECONF)\freetype\lib\freetype245MT.lib
+            $(MHMAKECONF)\freetype\lib\freetype246MT.lib
 endif
 
 LINKLIBS += $(MHMAKECONF)\libxml2\lib\libxml2.lib
