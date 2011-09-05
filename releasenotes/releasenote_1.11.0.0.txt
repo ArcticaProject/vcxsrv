@@ -13,6 +13,8 @@ Changes in 1.11.0.0
           randrproto
           xwininfo
           libXmu
+     libXfont-1.4.4
+     freetype 2.4.6
 - Installer: installation of fonts is optional now
 - xserver: Use AllocDevicePair for create the mouse and keyboard devices
 - xserver: Solved problem of window not taking the default window position when
