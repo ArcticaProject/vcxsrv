@@ -535,7 +535,7 @@ static xcb_generic_event_t *poll_for_next_event(xcb_connection_t *c, int queued)
         pthread_mutex_lock(&c->iolock);
         /* FIXME: follow X meets Z architecture changes. */
         ret = get_event(c);
-        if(!ret && !queued && _xcb_in_read(c)) /* _xcb_in_read shuts down the connection on error */
+        if(!ret && !queued && c->in.reading == 0 && _xcb_in_read(c)) /* _xcb_in_read shuts down the connection on error */
             ret = get_event(c);
         pthread_mutex_unlock(&c->iolock);
     }
