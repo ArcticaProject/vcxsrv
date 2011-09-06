@@ -59,6 +59,9 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define MAT_ATTR( A, N, V ) ATTR( A, N, (V)[0], (V)[1], (V)[2], (V)[3] )
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
 static inline float conv_ui10_to_norm_float(unsigned ui10)
 {
    return (float)(ui10) / 1023.0;
