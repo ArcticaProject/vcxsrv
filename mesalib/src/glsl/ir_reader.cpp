@@ -777,7 +777,7 @@ ir_reader::read_constant(s_expression *expr)
    ir_constant_data data = { { 0 } };
 
    // Read in list of values (at most 16).
-   int k = 0;
+   unsigned k = 0;
    foreach_iter(exec_list_iterator, it, values->subexpressions) {
       if (k >= 16) {
 	 ir_read_error(values, "expected at most 16 numbers");
@@ -819,6 +819,11 @@ ir_reader::read_constant(s_expression *expr)
 	 }
       }
       ++k;
+   }
+   if (k != type->components()) {
+      ir_read_error(values, "expected %u constant values, found %u",
+		    type->components(), k);
+      return NULL;
    }
 
    return new(mem_ctx) ir_constant(type, &data);
