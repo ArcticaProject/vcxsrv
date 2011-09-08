@@ -215,7 +215,9 @@ typedef enum
 
 
 /**
- * Indexes for vertex program result attributes
+ * Indexes for vertex program result attributes.  Note that
+ * _mesa_vert_result_to_frag_attrib() and _mesa_frag_attrib_to_vert_result() make
+ * assumptions about the layout of this enum.
  */
 typedef enum
 {
@@ -313,7 +315,9 @@ typedef enum
 
 
 /**
- * Indexes for fragment program input attributes.
+ * Indexes for fragment program input attributes.  Note that
+ * _mesa_vert_result_to_frag_attrib() and frag_attrib_to_vert_result() make
+ * assumptions about the layout of this enum.
  */
 typedef enum
 {
@@ -334,6 +338,48 @@ typedef enum
    FRAG_ATTRIB_VAR0 = 14,  /**< shader varying */
    FRAG_ATTRIB_MAX = (FRAG_ATTRIB_VAR0 + MAX_VARYING)
 } gl_frag_attrib;
+
+
+/**
+ * Convert from a gl_vert_result value to the corresponding gl_frag_attrib.
+ *
+ * VERT_RESULT_HPOS is converted to FRAG_ATTRIB_WPOS.
+ *
+ * gl_vert_result values which have no corresponding gl_frag_attrib
+ * (VERT_RESULT_PSIZ, VERT_RESULT_BFC0, VERT_RESULT_BFC1, and
+ * VERT_RESULT_EDGE) are converted to a value of -1.
+ */
+static INLINE int
+_mesa_vert_result_to_frag_attrib(gl_vert_result vert_result)
+{
+   if (vert_result >= VERT_RESULT_VAR0)
+      return vert_result - VERT_RESULT_VAR0 + FRAG_ATTRIB_VAR0;
+   else if (vert_result <= VERT_RESULT_TEX7)
+      return vert_result;
+   else
+      return -1;
+}
+
+
+/**
+ * Convert from a gl_frag_attrib value to the corresponding gl_vert_result.
+ *
+ * FRAG_ATTRIB_WPOS is converted to VERT_RESULT_HPOS.
+ *
+ * gl_frag_attrib values which have no corresponding gl_vert_result
+ * (FRAG_ATTRIB_FACE and FRAG_ATTRIB_PNTC) are converted to a value of -1.
+ */
+static INLINE int
+_mesa_frag_attrib_to_vert_result(gl_frag_attrib frag_attrib)
+{
+   if (frag_attrib <= FRAG_ATTRIB_TEX7)
+      return frag_attrib;
+   else if (frag_attrib >= FRAG_ATTRIB_VAR0)
+      return frag_attrib - FRAG_ATTRIB_VAR0 + VERT_RESULT_VAR0;
+   else
+      return -1;
+}
+
 
 /**
  * Bitflags for fragment program input attributes.
@@ -520,25 +566,6 @@ struct gl_config
 
    /* EXT_framebuffer_sRGB */
    GLint sRGBCapable;
-};
-
-
-/**
- * Data structure for color tables
- */
-struct gl_color_table
-{
-   GLenum InternalFormat;      /**< The user-specified format */
-   GLenum _BaseFormat;         /**< GL_ALPHA, GL_RGBA, GL_RGB, etc */
-   GLuint Size;                /**< number of entries in table */
-   GLfloat *TableF;            /**< Color table, floating point values */
-   GLubyte *TableUB;           /**< Color table, ubyte values */
-   GLubyte RedSize;
-   GLubyte GreenSize;
-   GLubyte BlueSize;
-   GLubyte AlphaSize;
-   GLubyte LuminanceSize;
-   GLubyte IntensitySize;
 };
 
 
@@ -1255,9 +1282,9 @@ struct gl_texture_image
    GLint InternalFormat;	/**< Internal format as given by the user */
    GLenum _BaseFormat;		/**< Either GL_RGB, GL_RGBA, GL_ALPHA,
 				 *   GL_LUMINANCE, GL_LUMINANCE_ALPHA,
-				 *   GL_INTENSITY, GL_COLOR_INDEX,
-				 *   GL_DEPTH_COMPONENT or GL_DEPTH_STENCIL_EXT
-                                 *   only. Used for choosing TexEnv arithmetic.
+				 *   GL_INTENSITY, GL_DEPTH_COMPONENT or
+				 *   GL_DEPTH_STENCIL_EXT only. Used for
+				 *   choosing TexEnv arithmetic.
 				 */
    gl_format TexFormat;         /**< The actual texture memory format */
 
@@ -1354,8 +1381,7 @@ struct gl_sampler_object
 
 /**
  * Texture object state.  Contains the array of mipmap images, border color,
- * wrap modes, filter modes, shadow/texcompare state, and the per-texture
- * color palette.
+ * wrap modes, filter modes, and shadow/texcompare state.
  */
 struct gl_texture_object
 {
@@ -1385,9 +1411,6 @@ struct gl_texture_object
    /** GL_ARB_texture_buffer_object */
    struct gl_buffer_object *BufferObject;
    GLenum BufferObjectFormat;
-
-   /** GL_EXT_paletted_texture */
-   struct gl_color_table Palette;
 
    /**
     * \name For device driver.
@@ -1503,10 +1526,6 @@ struct gl_texture_attrib
 
    /** GL_ARB_seamless_cubemap */
    GLboolean CubeMapSeamless;
-
-   /** GL_EXT_shared_texture_palette */
-   GLboolean SharedPalette;
-   struct gl_color_table Palette;
 
    /** Texture units/samplers used by vertex or fragment texturing */
    GLbitfield _EnabledUnits;
@@ -2852,7 +2871,6 @@ struct gl_extensions
    GLboolean EXT_gpu_program_parameters;
    GLboolean EXT_gpu_shader4;
    GLboolean EXT_multi_draw_arrays;
-   GLboolean EXT_paletted_texture;
    GLboolean EXT_packed_depth_stencil;
    GLboolean EXT_packed_float;
    GLboolean EXT_packed_pixels;
@@ -2865,7 +2883,6 @@ struct gl_extensions
    GLboolean EXT_secondary_color;
    GLboolean EXT_separate_shader_objects;
    GLboolean EXT_separate_specular_color;
-   GLboolean EXT_shared_texture_palette;
    GLboolean EXT_stencil_wrap;
    GLboolean EXT_stencil_two_side;
    GLboolean EXT_subtexture;

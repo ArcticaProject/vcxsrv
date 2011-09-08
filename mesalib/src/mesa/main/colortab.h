@@ -32,7 +32,6 @@
 #include "mfeatures.h"
 
 struct _glapi_table;
-struct gl_color_table;
 
 #if FEATURE_colortable
 
@@ -73,12 +72,5 @@ _mesa_init_colortable_dispatch(struct _glapi_table *disp)
 }
 
 #endif /* FEATURE_colortable */
-
-
-extern void
-_mesa_init_colortable( struct gl_color_table *table );
-
-extern void
-_mesa_free_colortable_data( struct gl_color_table *table );
 
 #endif /* COLORTAB_H */
