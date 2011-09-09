@@ -228,6 +228,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\ffvertex_prog.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\fog.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\formats.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\format_unpack.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\framebuffer.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\get.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\getstring.c" />

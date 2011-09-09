@@ -116,6 +116,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\formats.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\main\format_unpack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\framebuffer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
