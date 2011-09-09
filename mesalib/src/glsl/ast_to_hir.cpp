@@ -679,14 +679,18 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
                           lhs->variable_referenced()->name);
          error_emitted = true;
 
+      } else if (state->language_version <= 110 && lhs->type->is_array()) {
+	 /* From page 32 (page 38 of the PDF) of the GLSL 1.10 spec:
+	  *
+	  *    "Other binary or unary expressions, non-dereferenced
+	  *     arrays, function names, swizzles with repeated fields,
+	  *     and constants cannot be l-values."
+	  */
+	 _mesa_glsl_error(&lhs_loc, state, "whole array assignment is not "
+			  "allowed in GLSL 1.10 or GLSL ES 1.00.");
+	 error_emitted = true;
       } else if (!lhs->is_lvalue()) {
 	 _mesa_glsl_error(& lhs_loc, state, "non-lvalue in assignment");
-	 error_emitted = true;
-      }
-
-      if (state->es_shader && lhs->type->is_array()) {
-	 _mesa_glsl_error(&lhs_loc, state, "whole array assignment is not "
-			  "allowed in GLSL ES 1.00.");
 	 error_emitted = true;
       }
    }
@@ -723,6 +727,7 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
 						   rhs->type->array_size());
 	 d->type = var->type;
       }
+      mark_whole_array_access(rhs);
       mark_whole_array_access(lhs);
    }
 
@@ -891,6 +896,44 @@ get_scalar_boolean_operand(exec_list *instructions,
    }
 
    return new(ctx) ir_constant(true);
+}
+
+/**
+ * If name refers to a builtin array whose maximum allowed size is less than
+ * size, report an error and return true.  Otherwise return false.
+ */
+static bool
+check_builtin_array_max_size(const char *name, unsigned size,
+                             YYLTYPE loc, struct _mesa_glsl_parse_state *state)
+{
+   if ((strcmp("gl_TexCoord", name) == 0)
+       && (size > state->Const.MaxTextureCoords)) {
+      /* From page 54 (page 60 of the PDF) of the GLSL 1.20 spec:
+       *
+       *     "The size [of gl_TexCoord] can be at most
+       *     gl_MaxTextureCoords."
+       */
+      _mesa_glsl_error(&loc, state, "`gl_TexCoord' array size cannot "
+                       "be larger than gl_MaxTextureCoords (%u)\n",
+                       state->Const.MaxTextureCoords);
+      return true;
+   } else if (strcmp("gl_ClipDistance", name) == 0
+              && size > state->Const.MaxClipPlanes) {
+      /* From section 7.1 (Vertex Shader Special Variables) of the
+       * GLSL 1.30 spec:
+       *
+       *   "The gl_ClipDistance array is predeclared as unsized and
+       *   must be sized by the shader either redeclaring it with a
+       *   size or indexing it only with integral constant
+       *   expressions. ... The size can be at most
+       *   gl_MaxClipDistances."
+       */
+      _mesa_glsl_error(&loc, state, "`gl_ClipDistance' array size cannot "
+                       "be larger than gl_MaxClipDistances (%u)\n",
+                       state->Const.MaxClipPlanes);
+      return true;
+   }
+   return false;
 }
 
 ir_rvalue *
@@ -1550,8 +1593,15 @@ ast_expression::hir(exec_list *instructions,
 	     * FINISHME: array access limits be added to ir_dereference?
 	     */
 	    ir_variable *const v = array->whole_variable_referenced();
-	    if ((v != NULL) && (unsigned(idx) > v->max_array_access))
+	    if ((v != NULL) && (unsigned(idx) > v->max_array_access)) {
 	       v->max_array_access = idx;
+
+               /* Check whether this access will, as a side effect, implicitly
+                * cause the size of a built-in array to be too large.
+                */
+               if (check_builtin_array_max_size(v->name, idx+1, loc, state))
+                  error_emitted = true;
+            }
 	 }
       } else if (array->type->array_size() == 0) {
 	 _mesa_glsl_error(&loc, state, "unsized array index must be constant");
@@ -2071,6 +2121,21 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
    else
        var->depth_layout = ir_depth_layout_none;
 
+   /* From page 46 (page 52 of the PDF) of the GLSL ES specification:
+    *
+    *    "Array variables are l-values and may be passed to parameters
+    *     declared as out or inout. However, they may not be used as
+    *     the target of an assignment."
+    *
+    * From page 32 (page 38 of the PDF) of the GLSL 1.10 spec:
+    *
+    *    "Other binary or unary expressions, non-dereferenced arrays,
+    *     function names, swizzles with repeated fields, and constants
+    *     cannot be l-values."
+    *
+    * So we only mark 1.10 as non-lvalues, and check for array
+    * assignment in 100 specifically in do_assignment.
+    */
    if (var->type->is_array() && state->language_version != 110) {
       var->array_lvalue = true;
    }
@@ -2121,18 +2186,9 @@ get_variable_being_redeclared(ir_variable *var, ast_declaration *decl,
        * FINISHME: required or not.
        */
 
-      /* From page 54 (page 60 of the PDF) of the GLSL 1.20 spec:
-       *
-       *     "The size [of gl_TexCoord] can be at most
-       *     gl_MaxTextureCoords."
-       */
       const unsigned size = unsigned(var->type->array_size());
-      if ((strcmp("gl_TexCoord", var->name) == 0)
-	  && (size > state->Const.MaxTextureCoords)) {
-	 _mesa_glsl_error(& loc, state, "`gl_TexCoord' array size cannot "
-			  "be larger than gl_MaxTextureCoords (%u)\n",
-			  state->Const.MaxTextureCoords);
-      } else if ((size > 0) && (size <= earlier->max_array_access)) {
+      check_builtin_array_max_size(var->name, size, loc, state);
+      if ((size > 0) && (size <= earlier->max_array_access)) {
 	 _mesa_glsl_error(& loc, state, "array size must be > %u due to "
 			  "previous access",
 			  earlier->max_array_access);
