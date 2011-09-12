@@ -935,6 +935,41 @@ MAKE_FETCHERS (reflect_r5g6b5,   r5g6b5,   PIXMAN_REPEAT_REFLECT)
 MAKE_FETCHERS (normal_r5g6b5,    r5g6b5,   PIXMAN_REPEAT_NORMAL)
 
 static void
+replicate_pixel_32 (bits_image_t *   bits,
+		    int              x,
+		    int              y,
+		    int              width,
+		    uint32_t *       buffer)
+{
+    uint32_t color;
+    uint32_t *end;
+
+    color = bits->fetch_pixel_32 (bits, x, y);
+
+    end = buffer + width;
+    while (buffer < end)
+	*(buffer++) = color;
+}
+
+static void
+replicate_pixel_64 (bits_image_t *   bits,
+		    int              x,
+		    int              y,
+		    int              width,
+		    uint32_t *       b)
+{
+    uint64_t color;
+    uint64_t *buffer = (uint64_t *)b;
+    uint64_t *end;
+
+    color = bits->fetch_pixel_64 (bits, x, y);
+
+    end = buffer + width;
+    while (buffer < end)
+	*(buffer++) = color;
+}
+
+static void
 bits_image_fetch_solid_32 (pixman_image_t * image,
                            int              x,
                            int              y,
@@ -942,14 +977,7 @@ bits_image_fetch_solid_32 (pixman_image_t * image,
                            uint32_t *       buffer,
                            const uint32_t * mask)
 {
-    uint32_t color;
-    uint32_t *end;
-
-    color = image->bits.fetch_pixel_32 (&image->bits, 0, 0);
-
-    end = buffer + width;
-    while (buffer < end)
-	*(buffer++) = color;
+    replicate_pixel_32 (&image->bits, 0, 0, width, buffer);
 }
 
 static void
@@ -960,15 +988,7 @@ bits_image_fetch_solid_64 (pixman_image_t * image,
                            uint32_t *       b,
                            const uint32_t * unused)
 {
-    uint64_t color;
-    uint64_t *buffer = (uint64_t *)b;
-    uint64_t *end;
-
-    color = image->bits.fetch_pixel_64 (&image->bits, 0, 0);
-
-    end = buffer + width;
-    while (buffer < end)
-	*(buffer++) = color;
+    replicate_pixel_64 (&image->bits, 0, 0, width, b);
 }
 
 static void
@@ -1030,6 +1050,16 @@ bits_image_fetch_untransformed_repeat_normal (bits_image_t *image,
 
     while (y >= image->height)
 	y -= image->height;
+
+    if (image->width == 1)
+    {
+	if (wide)
+	    replicate_pixel_64 (image, 0, y, width, buffer);
+	else
+	    replicate_pixel_32 (image, 0, y, width, buffer);
+
+	return;
+    }
 
     while (width)
     {

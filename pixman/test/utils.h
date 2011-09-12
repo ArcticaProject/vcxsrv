@@ -105,6 +105,9 @@ fail_after (int seconds, const char *msg);
 /* If possible, enable traps for floating point exceptions */
 void enable_fp_exceptions(void);
 
+pixman_bool_t
+write_png (pixman_image_t *image, const char *filename);
+
 /* A pair of macros which can help to detect corruption of
  * floating point registers after a function call. This may
  * happen if _mm_empty() call is forgotten in MMX/SSE2 fast

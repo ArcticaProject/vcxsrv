@@ -1,6 +1,6 @@
 AM_CFLAGS = @OPENMP_CFLAGS@
 AM_LDFLAGS = @OPENMP_CFLAGS@ @TESTPROGS_EXTRA_LDFLAGS@
-LDADD = $(top_builddir)/pixman/libpixman-1.la -lm
+LDADD = $(top_builddir)/pixman/libpixman-1.la -lm -lpng
 INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman
 
 TESTPROGRAMS =			\
