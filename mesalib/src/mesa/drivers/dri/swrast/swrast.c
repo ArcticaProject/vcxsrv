@@ -135,6 +135,9 @@ swrastFillInModes(__DRIscreen *psp,
     uint8_t stencil_bits_array[4];
     uint8_t msaa_samples_array[1];
 
+    (void) psp;
+    (void) have_back_buffer;
+
     depth_bits_array[0] = 0;
     depth_bits_array[1] = 0;
     depth_bits_array[2] = depth_bits;
@@ -215,6 +218,7 @@ static void
 dri_destroy_screen(__DRIscreen * sPriv)
 {
     TRACE;
+    (void) sPriv;
 }
 
 
@@ -277,6 +281,9 @@ swrast_alloc_front_storage(struct gl_context *ctx, struct gl_renderbuffer *rb,
     struct swrast_renderbuffer *xrb = swrast_renderbuffer(rb);
 
     TRACE;
+
+    (void) ctx;
+    (void) internalFormat;
 
     rb->Data = NULL;
     rb->Width = width;
@@ -375,6 +382,9 @@ dri_create_buffer(__DRIscreen * sPriv,
     struct swrast_renderbuffer *frontrb, *backrb;
 
     TRACE;
+
+    (void) sPriv;
+    (void) isPixmap;
 
     drawable = CALLOC_STRUCT(dri_drawable);
     if (drawable == NULL)
@@ -537,6 +547,10 @@ viewport(struct gl_context *ctx, GLint x, GLint y, GLsizei w, GLsizei h)
     struct gl_framebuffer *draw = ctx->WinSysDrawBuffer;
     struct gl_framebuffer *read = ctx->WinSysReadBuffer;
 
+    (void) x;
+    (void) y;
+    (void) w;
+    (void) h;
     swrast_check_and_update_window_size(ctx, draw);
     swrast_check_and_update_window_size(ctx, read);
 }
@@ -609,9 +623,6 @@ InitExtensionsES2(struct gl_context *ctx)
 {
    int i;
 
-   /* Can't use driInitExtensions() since it uses extensions from
-    * main/remap_helper.h when called the first time. */
-
    for (i = 0; es2_extensions[i]; i++)
       _mesa_enable_extension(ctx, es2_extensions[i]);
 }
@@ -681,8 +692,6 @@ dri_create_context(gl_api api,
         _mesa_enable_1_5_extensions(mesaCtx);
         _mesa_enable_2_0_extensions(mesaCtx);
         _mesa_enable_2_1_extensions(mesaCtx);
-
-        driInitExtensions( mesaCtx, NULL, GL_FALSE );
         break;
     case API_OPENGLES:
         _mesa_enable_1_3_extensions(mesaCtx);

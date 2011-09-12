@@ -54,7 +54,7 @@ AC_PREREQ([2.57])
 
 m4_define([pixman_major], 0)
 m4_define([pixman_minor], 23)
-m4_define([pixman_micro], 3)
+m4_define([pixman_micro], 5)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -800,6 +800,17 @@ fi
 
 AC_MSG_RESULT($support_for_attribute_constructor)
 AC_SUBST(TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR)
+
+dnl ==================
+dnl libpng
+
+AC_CHECK_LIB([png], [png_write_info], [have_libpng=yes], [have_libpng=no])
+
+if test x$have_libpng = xyes; then
+    AC_DEFINE([HAVE_LIBPNG], [1], [Whether we have libpng])
+fi
+
+AC_SUBST(HAVE_LIBPNG)
 
 AC_OUTPUT([pixman-1.pc
            pixman-1-uninstalled.pc

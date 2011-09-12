@@ -85,6 +85,9 @@ void st_init_limits(struct st_context *st)
    c->MaxTextureRectSize
       = _min(1 << (c->MaxTextureLevels - 1), MAX_TEXTURE_RECT_SIZE);
 
+   c->MaxArrayTextureLayers
+      = screen->get_param(screen, PIPE_CAP_MAX_TEXTURE_ARRAY_LAYERS);
+
    c->MaxTextureImageUnits
       = _min(screen->get_param(screen, PIPE_CAP_MAX_TEXTURE_IMAGE_UNITS),
             MAX_TEXTURE_IMAGE_UNITS);
@@ -169,6 +172,12 @@ void st_init_limits(struct st_context *st)
       pc->MaxUniformComponents     = 4 * MIN2(pc->MaxNativeParameters, MAX_UNIFORMS);
       /* raise MaxParameters if native support is higher */
       pc->MaxParameters            = MAX2(pc->MaxParameters, pc->MaxNativeParameters);
+
+      /* Gallium doesn't really care about local vs. env parameters so use the
+       * same limits.
+       */
+      pc->MaxLocalParams = pc->MaxParameters;
+      pc->MaxEnvParams = pc->MaxParameters;
 
       options->EmitNoNoise = TRUE;
 
@@ -499,7 +508,7 @@ void st_init_extensions(struct st_context *st)
    }
 
    /* GL_EXT_texture_array */
-   if (screen->get_param(screen, PIPE_CAP_ARRAY_TEXTURES)) {
+   if (screen->get_param(screen, PIPE_CAP_MAX_TEXTURE_ARRAY_LAYERS) > 1) {
       ctx->Extensions.EXT_texture_array = GL_TRUE;
       ctx->Extensions.MESA_texture_array = GL_TRUE;
    }

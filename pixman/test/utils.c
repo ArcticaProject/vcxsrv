@@ -21,6 +21,10 @@
 #include <fenv.h>
 #endif
 
+#ifdef HAVE_LIBPNG
+#include <png.h>
+#endif
+
 /* Random number seed
  */
 
@@ -334,6 +338,114 @@ make_random_bytes (int n_bytes)
 
     return bytes;
 }
+
+#ifdef HAVE_LIBPNG
+
+static void
+pngify_pixels (uint32_t *pixels, int n_pixels)
+{
+    int i;
+
+    for (i = 0; i < n_pixels; ++i)
+    {
+	uint32_t p = pixels[i];
+	uint8_t *out = (uint8_t *)&(pixels[i]);
+	uint8_t a, r, g, b;
+
+	a = (p & 0xff000000) >> 24;
+	r = (p & 0x00ff0000) >> 16;
+	g = (p & 0x0000ff00) >> 8;
+	b = (p & 0x000000ff) >> 0;
+
+	if (a != 0)
+	{
+	    r = (r * 255) / a;
+	    g = (g * 255) / a;
+	    b = (b * 255) / a;
+	}
+
+	*out++ = r;
+	*out++ = g;
+	*out++ = b;
+	*out++ = a;
+    }
+}
+
+pixman_bool_t
+write_png (pixman_image_t *image, const char *filename)
+{
+    int width = pixman_image_get_width (image);
+    int height = pixman_image_get_height (image);
+    int stride = width * 4;
+    uint32_t *data = malloc (height * stride);
+    pixman_image_t *copy;
+    png_struct *write_struct;
+    png_info *info_struct;
+    pixman_bool_t result = FALSE;
+    FILE *f = fopen (filename, "wb");
+    png_bytep *row_pointers;
+    int i;
+
+    if (!f)
+	return FALSE;
+
+    row_pointers = malloc (height * sizeof (png_bytep));
+
+    copy = pixman_image_create_bits (
+	PIXMAN_a8r8g8b8, width, height, data, stride);
+
+    pixman_image_composite32 (
+	PIXMAN_OP_SRC, image, NULL, copy, 0, 0, 0, 0, 0, 0, width, height);
+
+    pngify_pixels (data, height * width);
+
+    for (i = 0; i < height; ++i)
+	row_pointers[i] = (png_bytep)(data + i * width);
+
+    if (!(write_struct = png_create_write_struct (
+	      PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)))
+	goto out1;
+
+    if (!(info_struct = png_create_info_struct (write_struct)))
+	goto out2;
+
+    png_init_io (write_struct, f);
+
+    png_set_IHDR (write_struct, info_struct, width, height,
+		  8, PNG_COLOR_TYPE_RGB_ALPHA,
+		  PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE,
+		  PNG_FILTER_TYPE_BASE);
+
+    png_write_info (write_struct, info_struct);
+
+    png_write_image (write_struct, row_pointers);
+
+    png_write_end (write_struct, NULL);
+
+    result = TRUE;
+
+out2:
+    png_destroy_write_struct (&write_struct, &info_struct);
+
+out1:
+    if (fclose (f) != 0)
+	result = FALSE;
+
+    pixman_image_unref (copy);
+    free (row_pointers);
+    free (data);
+    return result;
+}
+
+#else /* no libpng */
+
+pixman_bool_t
+write_png (pixman_image_t *image, const char *filename)
+{
+    return FALSE;
+}
+
+#endif
 
 /*
  * A function, which can be used as a core part of the test programs,
