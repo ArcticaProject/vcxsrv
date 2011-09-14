@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
+]>
 
 <book id="trans">
 
 <bookinfo>
    <title>The XIM Transport Specification</title>
    <subtitle>Revision 0.1</subtitle>
-   <releaseinfo>X Version 11, Release 7</releaseinfo>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
    <authorgroup>
       <author>
          <firstname>Takashi</firstname><surname>Fujiwara</surname>
@@ -17,7 +20,6 @@
    <copyright><year>1994</year><holder>FUJITSU LIMITED</holder></copyright>
    <copyright><year>1994</year><holder>X Consortium</holder></copyright>
 
-   <productnumber>Revision 0.1</productnumber>
 
 
 <abstract>

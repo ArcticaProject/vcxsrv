@@ -1,0 +1,328 @@
+<chapter id='replacing_a_keyboard_on_the_fly'>
+<title>Replacing a Keyboard "On the Fly"</title>
+
+<para>
+Some operating system and X server implementations allow "hot plugging" of
+input devices. When using these implementations, input devices can be unplugged
+and new ones plugged in without restarting the software that is using those
+devices. There is no provision in the standard X server for notification of
+client programs if input devices are unplugged and/or new ones plugged in. In
+the case of the X keyboard, this could result in the X server having a keymap
+that does not match the new keyboard.
+</para>
+
+
+<para>
+If the X server implementation supports the X input device extension, a client
+program may also change the X keyboard programmatically. The
+XChangeKeyboardDevice input extension request allows a client to designate an
+input extension keyboard device as the X keyboard, in which case the old X
+keyboard device becomes inaccessible except via the input device extension. In
+this case, core protocol <emphasis>
+XMappingNotify</emphasis>
+ and input extension <emphasis>
+XChangeDeviceNotify</emphasis>
+ events are generated to notify all clients that a new keyboard with a new
+keymap has been designated.
+</para>
+
+
+<para>
+When a client opens a connection to the X server, the server reports the
+minimum and maximum keycodes. The server keeps track of the minimum and maximum
+keycodes last reported to each client. When delivering events to a particular
+client, the server filters out any events that fall outside of the valid range
+for the client.
+</para>
+
+
+<para>
+Xkb provides an <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event that reports a change in keyboard geometry and/or the range of supported
+keycodes. The server can generate an <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event when it detects a new keyboard or in response to an <emphasis>
+XkbGetKeyboardByName</emphasis>
+ request that loads a new keyboard description. Selecting for <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ events allows Xkb-aware clients to be notified whenever a keyboard change
+occurs that may affect the keymap.
+</para>
+
+
+<para>
+When a client requests <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ events, the server compares the range of keycodes for the current keyboard to
+the range of keycodes that are valid for the client. If they are not the same,
+the server immediately sends the client an <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event. Even if the "new" keyboard is not new to the server, it is new to this
+particular client.
+</para>
+
+
+<para>
+When the server sends an <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event to a client to inform it of a new keycode range, it resets the stored
+range of legal keycodes for the client to the keycode range reported in the
+event; it does not reset this range for the client if it does not sent an
+<emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event to a client. Because Xkb-unaware clients and Xkb-aware clients that do
+not request <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ events are never sent these events, the server’s notion of the legal keycode
+range never changes, and these clients never receive events from keys that fall
+outside of their notion of the legal keycode range.
+</para>
+
+
+<para>
+Clients that have not selected to receive <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ events do, however, receive the <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event when a keyboard change occurs. Clients that have not selected to receive
+this event also receive numerous other events detailing the individual changes
+that occur when a keyboard change occurs.
+</para>
+
+
+<para>
+Clients wishing to track changes in <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ must watch for both <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ and <emphasis>
+XkbMapNotify</emphasis>
+ events, because a simple mapping change causes an <emphasis>
+XkbMapNotify</emphasis>
+ event and may change the range of valid keycodes, but does not cause an
+<emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event. If a client does not select for <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ events, the server restricts the range of keycodes reported to the client.
+</para>
+
+
+<para>
+In addition to filtering out-of-range key events, Xkb:
+</para>
+
+<itemizedlist>
+<listitem>
+  <para>
+Adjusts core protocol <emphasis>
+MappingNotify</emphasis>
+ events to refer only to keys that match the stored legal range.
+  </para>
+</listitem>
+<listitem>
+  <para>
+Reports keyboard mappings for keys that match the stored legal range to clients
+that issue a core protocol <emphasis>
+GetKeyboardMapping</emphasis>
+ request.
+  </para>
+</listitem>
+<listitem>
+  <para>
+Reports modifier mappings only for keys that match the stored legal range to
+clients that issue a core protocol <emphasis>
+GetModifierMapping</emphasis>
+ request.
+  </para>
+</listitem>
+<listitem>
+  <para>
+Restricts the core protocol <emphasis>
+ChangeKeyboardMapping</emphasis>
+ and <emphasis>
+SetModifierMapping</emphasis>
+ requests to keys that fall inside the stored legal range.
+  </para>
+</listitem>
+</itemizedlist>
+
+<para>
+In short, Xkb does everything possible to hide from Xkb-unaware clients the
+fact that the range of legal keycodes has changed, because such clients cannot
+be expected to deal with them. Xkb events and requests are not modified in this
+manner; all Xkb events report the full range of legal keycodes. No requested
+Xkb events are discarded, and no Xkb requests have their keycode range clamped.
+</para>
+
+
+<para>
+The structure for the <emphasis>
+XkbNewKeyboardNotify</emphasis>
+ event is defined as follows:
+</para>
+
+<para><programlisting>
+typedef struct _XkbNewKeyboardNotify {
+      int            type;         /* Xkb extension base event code */
+      unsigned long  serial;       /* X server serial number for event*/
+      Bool           send_event;   /* <emphasis>True</emphasis>
+                                      =&gt; synthetically generated */
+      Display *      display;      /* server connection where event generated */
+      Time           time;         /* server time when event generated */
+      int            xkb_type;  /* <emphasis>XkbNewKeyboardNotify</emphasis> */
+      int            device;       /* device ID of new keyboard */
+      int            old_device;   /* device ID of old keyboard */
+      int            min_key_code; /* min keycode of new keyboard */
+      int            max_key_code; /* max keycode of new keyboard */
+      int            old_min_key_code; /* min keycode of old keyboard */
+      int            old_max_key_code; /* max keycode of old keyboard */
+      unsigned int            changed; /* changed aspects - see masks below */
+      char            req_major;   /* major request that caused change */
+      char            req_minor;   /* minor request that caused change */
+} <emphasis>XkbNewKeyboardNotifyEvent</emphasis>;
+</programlisting></para>
+
+<para>
+To receive name notify events, use <emphasis>
+XkbSelectEvents</emphasis>
+ (see section 4.3) with <emphasis>
+XkbNewKeyboardNotifyMask</emphasis>
+ in both the <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits</emphasis>
+ parameters. To receive events for only specific names, use <emphasis>
+XkbSelectEventDetails</emphasis>
+. Set the <emphasis>
+event_type</emphasis>
+ parameter to <emphasis>
+XkbNewKeyboardNotify</emphasis>
+, and set both the <emphasis>
+bits_to_change </emphasis>
+and<emphasis>
+ values_for_bits</emphasis>
+ detail parameter to a mask composed of a bitwise OR of masks in Table 19.1.
+</para>
+
+<table frame='none'>
+<title>XkbNewKeyboardNotifyEvent Details</title>
+<tgroup cols='3'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='1'>
+  <entry>XkbNewKeyboardNotify Event Details</entry>
+  <entry>Value</entry>
+  <entry>Circumstances</entry>
+  </row>
+</thead>
+<tbody>
+  <row rowsep='1'>
+    <entry><emphasis>XkbNKN_KeycodesMask</emphasis></entry>
+    <entry>(1L&lt;&lt;0)</entry>
+    <entry>Notification of keycode range changes wanted</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbNKN_GeometryMask</emphasis></entry>
+    <entry>(1L&lt;&lt;1)</entry>
+    <entry>Notification of geometry changes wanted</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbNKN_DeviceIDMask</entry>
+    <entry>(1L&lt;&lt;2)</entry>
+    <entry>Notification of device ID changes wanted</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbNKN_AllChangesMask</emphasis></entry>
+    <entry>(0x7)</entry>
+    <entry>Includes all of the above masks</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+req_major</emphasis>
+ and <emphasis>
+req_minor</emphasis>
+ fields indicate what type of keyboard change has occurred.
+</para>
+
+
+<para>
+If <emphasis>
+req_major</emphasis>
+ and <emphasis>
+req_minor</emphasis>
+ are zero, the device change was not caused by a software request to the server
+— a spontaneous change has occurred, such as hot-plugging a new device. In
+this case, <emphasis>
+device</emphasis>
+ is the device identifier for the new, current X keyboard device, but no
+implementation-independent guarantee can be made about <emphasis>
+old_device</emphasis>
+. <emphasis>
+old_device</emphasis>
+ may be identical to <emphasis>
+device</emphasis>
+ (an implementor is permitted to reuse the device specifier when the device
+changes); or it may be different. Note that <emphasis>
+req_major</emphasis>
+ and <emphasis>
+req_minor</emphasis>
+ being zero do not necessarily mean that the physical keyboard device has
+changed; rather, they only imply a spontaneous change outside of software
+control (some systems have keyboards that can change personality at the press
+of a key).
+</para>
+
+
+<para>
+If the keyboard change is the result of an X Input Extension <emphasis>
+ChangeKeyboardDevice</emphasis>
+ request, <emphasis>
+req_major</emphasis>
+ contains the input extension major opcode, and <emphasis>
+req_minor</emphasis>
+ contains the input extension request number for <emphasis>
+X_ChangeKeyboardDevice</emphasis>
+. In this case, <emphasis>
+device</emphasis>
+ and <emphasis>
+old_device</emphasis>
+ are different, with <emphasis>
+device</emphasis>
+ being the identifier for the new, current X keyboard device, and <emphasis>
+old_device</emphasis>
+ being the identifier for the former device.
+</para>
+
+
+<para>
+If the keyboard change is the result of an <emphasis>
+XkbGetKeyboardByName</emphasis>
+ function call, which generates an <emphasis>
+X_kbGetKbdByName</emphasis>
+ request, <emphasis>
+req_major</emphasis>
+ contains the Xkb extension base event code (see section 2.4), and <emphasis>
+req_minor</emphasis>
+ contains the event code for the Xkb extension request <emphasis>
+X_kbGetKbdByName</emphasis>
+. <emphasis>
+device</emphasis>
+ contains the device identifier for the new device, but nothing definitive can
+be said for <emphasis>
+old_device</emphasis>
+; it may be identical to <emphasis>
+device</emphasis>
+, or it may be different, depending on the implementation.
+</para>
+
+</chapter>

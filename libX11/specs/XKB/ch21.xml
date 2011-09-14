@@ -1,0 +1,2043 @@
+<chapter id='attaching_xkb_actions_to_x_input_extension_devices'>
+<title>Attaching Xkb Actions to X Input Extension Devices</title>
+
+<para>
+The X input extension allows an X server to support multiple keyboards, as well
+as other input devices, in addition to the core X keyboard and pointer. The
+input extension categorizes devices by grouping them into classes. Keyboards
+and other input devices with keys are classified as KeyClass devices by the
+input extension. Other types of devices supported by the input extension
+include, but are not limited to: mice, tablets, touchscreens, barcode readers,
+button boxes, trackballs, identifier devices, data gloves, and eye trackers.
+Xkb provides additional control over all X input extension devices, whether
+they are <emphasis>KeyClass</emphasis>
+ devices or not, as well as the core keyboard and pointer.
+</para>
+
+
+<para>
+If an X server implements support for both the input extension and Xkb, the
+server implementor determines whether interaction between Xkb and the input
+extension is allowed. Implementors are free to restrict the effects of Xkb to
+only the core X keyboard device or allow interaction between Xkb and the input
+extension.
+</para>
+
+
+<para>
+Several types of interaction between Xkb and the input extension are defined by
+Xkb. Some or all may be allowed by the X server implementation.
+</para>
+
+
+<para>
+Regardless of whether the server allows interaction between Xkb and the input
+extension, the following access is provided:
+</para>
+
+<itemizedlist>
+<listitem>
+  <para>
+Xkb functionality for the core X keyboard device and its mapping is accessed
+via the functions described in the other chapters of this specification.
+  </para>
+</listitem>
+<listitem>
+  <para>
+Xkb functionality for the core X pointer device is accessed via the
+XkbGetDeviceInfo and XkbSetDeviceInfo functions described in this chapter.
+  </para>
+</listitem>
+</itemizedlist>
+
+<para>
+If all types of interaction are allowed between Xkb and the input extension,
+the following additional access is provided:
+</para>
+
+<itemizedlist>
+<listitem>
+  <para>
+If allowed, Xkb functionality for additional <emphasis>
+KeyClass</emphasis>
+ devices supported by the input extension is accessed via those same functions.
+  </para>
+</listitem>
+<listitem>
+  <para>
+If allowed, Xkb functionality for non-<emphasis>
+KeyClass</emphasis>
+ devices supported by the input extension is also accessed via the
+XkbGetDeviceInfo and XkbSetDeviceInfo functions described in this chapter.
+  </para>
+</listitem>
+</itemizedlist>
+
+<para>
+Each device has an X Input Extension device ID. Each device may have several
+classes of feedback. For example, there are two types of feedbacks that can
+generate bells: bell feedback and keyboard feedback (<emphasis>
+BellFeedbackClass</emphasis>
+ and <emphasis>
+KbdFeedbackClass</emphasis>
+). A device can have more than one feedback of each type; the feedback ID
+identifies the particular feedback within its class.
+</para>
+
+
+<para>
+A keyboard feedback has:
+</para>
+
+<itemizedlist>
+<listitem>
+  <para>
+Auto-repeat status (global and per key)
+  </para>
+</listitem>
+<listitem>
+  <para>
+32 LEDs
+  </para>
+</listitem>
+<listitem>
+  <para>
+A bell
+  </para>
+</listitem>
+</itemizedlist>
+
+<para>
+An indicator feedback has:
+</para>
+
+<itemizedlist>
+<listitem>
+  <para>
+Up to 32 LEDs
+  </para>
+</listitem>
+</itemizedlist>
+
+<para>
+If the input extension is present and the server allows interaction between the
+input extension and Xkb, then the core keyboard, the core keyboard indicators,
+and the core keyboard bells may each be addressed using an appropriate device
+spec, class, and ID. The constant <emphasis>
+XkbXIDfltID</emphasis>
+ may be used as the device ID to specify the core keyboard indicators for the
+core indicator feedback. The particular device ID corresponding to the core
+keyboard feedback and the core indicator feedback may be obtained by calling
+<emphasis>
+XkbGetDeviceInfo</emphasis>
+ and specifying <emphasis>
+XkbUseCoreKbd</emphasis>
+ as the <emphasis>
+device_spec</emphasis>
+; the values will be returned in <emphasis>
+dflt_kbd_id</emphasis>
+ and <emphasis>
+dflt_led_id</emphasis>
+.
+</para>
+
+
+<para>
+If the server does not allow Xkb access to input extension <emphasis>
+KeyClass</emphasis>
+ devices, attempts to use Xkb requests with those devices fail with a
+Bad<emphasis>
+Keyboard</emphasis>
+ error. Attempts to access non-<emphasis>
+KeyClass</emphasis>
+ input extension devices via XkbGetDeviceInfo and XkbSetDeviceInfo fail
+silently if Xkb access to those devices is not supported by the X server.
+</para>
+
+<sect1 id='xkbdeviceinforec'>
+<title>XkbDeviceInfoRec</title>
+
+<para>
+Information about X Input Extension devices is transferred between a client
+program and the Xkb extension in an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure:
+</para>
+
+<para><programlisting>
+typedef struct {
+      char *          name;          /* name for device */
+      Atom            type;          /* name for class of devices */
+      unsigned short  device_spec;   /* device of interest */
+      Bool            has_own_state; /* <emphasis> True</emphasis> =&gt;this
+                                        device has its own state */
+      unsigned short  supported;     /* bits indicating supported capabilities */
+      unsigned short  unsupported;   /* bits indicating unsupported capabilities */
+      unsigned short  num_btns;      /* number of entries in <emphasis> btn_acts</emphasis> */
+      XkbAction *     btn_acts;      /* button actions */
+      unsigned short  sz_leds;       /* total number of entries in LEDs vector */
+      unsigned short  num_leds;      /* number of valid entries in LEDs vector */
+      unsigned short  dflt_kbd_fb;   /* input extension ID of default (core kbd) indicator */
+      unsigned short  dflt_led_fb;   /* input extension ID of default indicator feedback */
+      XkbDeviceLedInfoPtr  leds;     /* LED descriptions */
+} <emphasis>XkbDeviceInfoRec</emphasis>, *XkbDeviceInfoPtr;
+</programlisting></para>
+
+<para><programlisting>
+typedef struct {
+      unsigned short   led_class;         /* class for this LED device*/
+      unsigned short   led_id;            /* ID for this LED device */
+      unsigned int     phys_indicators;   /* bits for which LEDs physically
+                                             present */
+      unsigned int     maps_present;      /* bits for which LEDs have maps in
+                                             <emphasis>maps</emphasis> */
+      unsigned int     names_present;     /* bits for which LEDs are in
+                                             <emphasis> names</emphasis> */
+      unsigned int     state;            /* 1 bit =&gt; corresponding LED is on */
+      Atom             names[XkbNumIndicators];  /* names for LEDs */
+      XkbIndicatorMapRec  maps;          /* indicator maps for each LED */
+} <emphasis>XkbDeviceLedInfoRec</emphasis>, *XkbDeviceLedInfoPtr;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field is a registered symbolic name for a class of devices (for example,
+"TABLET"). If a device is a keyboard (that is, is a member of <emphasis>
+KeyClass</emphasis>
+), it has its own state, and <emphasis>
+has_own_state</emphasis>
+ is <emphasis>
+True</emphasis>
+. If <emphasis>
+has_own_state</emphasis>
+ is <emphasis>
+False</emphasis>
+, the state of the core keyboard is used. The <emphasis>
+supported</emphasis>
+ and <emphasis>
+unsupported</emphasis>
+ fields are masks where each bit indicates a capability. The meaning of the
+mask bits is listed in Table 21.1, together with the fields in the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure that are associated with the capability represented by each bit. The
+same bits are used to indicate the specific information desired in many of the
+functions described subsequently in this section.
+</para>
+
+<table frame='none'>
+<title>XkbDeviceInfoRec Mask Bits</title>
+<tgroup cols='4'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+  <row rowsep='0'>
+    <entry>Name</entry>
+    <entry>XkbDeviceInfoRec Fields Effected</entry>
+    <entry>Value</entry>
+    <entry>Capability If Set</entry>
+  </row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry>XkbXI_KeyboardsMask</entry>
+    <entry></entry>
+    <entry>(1L &lt;&lt; 0)</entry>
+    <entry>
+Clients can use all Xkb requests and events with
+<emphasis>KeyClass</emphasis>
+devices supported by the input device extension.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_ButtonActionsMask</entry>
+    <entry>
+<para>num_btns</para>
+<para>btn_acts</para>
+    </entry>
+    <entry>(1L &lt;&lt;1)</entry>
+    <entry>
+Clients can assign key actions to buttons on non-<emphasis>
+KeyClass</emphasis>
+input extension devices.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_IndicatorNamesMask</entry>
+    <entry>leds-&gt;names</entry>
+    <entry>(1L &lt;&lt;2)</entry>
+    <entry>
+Clients can assign names to indicators on non-<emphasis>
+KeyClass</emphasis>
+ input extension devices.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_IndicatorMapsMask</entry>
+    <entry>leds-&gt;maps</entry>
+    <entry>(1L &lt;&lt;3)</entry>
+    <entry>
+Clients can assign indicator maps to indicators on non-<emphasis>
+KeyClass</emphasis>
+ input extension devices.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_IndicatorStateMask</entry>
+    <entry>leds-&gt;state</entry>
+    <entry>(1L &lt;&lt;4)</entry>
+    <entry>
+Clients can request the status of indicators on non-<emphasis>
+KeyClass</emphasis>
+ input extension devices.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_IndicatorsMask</entry>
+    <entry>
+<para>sz_leds</para>
+<para>num_leds</para>
+<para>leds-&gt;*</para>
+    </entry>
+    <entry>(0x1c)</entry>
+    <entry>
+<para>XkbXI_IndicatorNamesMask |</para>
+<para>XkbXI_IndicatorMapsMask |</para>
+<para>XkbXI_IndicatorStateMask</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_UnsupportedFeaturesMask</entry>
+    <entry>unsupported</entry>
+    <entry>(1L &lt;&lt;15)</entry>
+    <entry></entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_AllDeviceFeaturesMask</entry>
+    <entry>Those selected by Value column masks</entry>
+    <entry>(0x1e)</entry>
+    <entry>
+<para>XkbXI_IndicatorsMask | </para>
+<para>XkbSI_ButtonActionsMask</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_AllFeaturesMask</entry>
+    <entry>Those selected by Value column masks</entry>
+    <entry>(0x1f)</entry>
+    <entry>
+<para>XkbSI_AllDeviceFeaturesMask |</para>
+<para>XkbSI_KeyboardsMask</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbXI_AllDetailsMask</entry>
+    <entry>Those selected by Value column masks</entry>
+    <entry>(0x801f)</entry>
+    <entry>
+<para>XkbXI_AllFeaturesMask | </para>
+<para>XkbXI_UnsupportedFeaturesMask</para>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+name</emphasis>
+, <emphasis>
+type</emphasis>
+, <emphasis>
+has_own_state</emphasis>
+, <emphasis>
+supported</emphasis>
+, and <emphasis>
+unsupported</emphasis>
+ fields are always filled in when a valid reply is returned from the server
+involving an <emphasis>
+XkbDeviceInfoRec</emphasis>
+. All of the other fields are modified only if the particular function asks for
+them.
+</para>
+
+</sect1>
+<sect1 id='querying_xkb_features_for_non_keyclass_input_extension_devices'>
+<title>Querying Xkb Features for Non-KeyClass Input Extension Devices</title>
+
+<para>
+To determine whether the X server allows Xkb access to particular capabilities
+of input devices other than the core X keyboard, or to determine the status of
+indicator maps, indicator names or button actions on a non-<emphasis>
+KeyClass</emphasis>
+ extension device, use XkbGetDeviceInfo.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbDeviceInfoPtr <emphasis>
+XkbGetDeviceInfo</emphasis>
+(<emphasis>
+dpy</emphasis>
+, which, device_spec, ind_class, ind_id)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            which;            /* mask indicating information to
+return */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+device_spec</emphasis>
+;            /* device ID, or <emphasis>
+XkbUseCoreKbd</emphasis>
+ */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+ind_class</emphasis>
+;            /* feedback class for indicator requests */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+ind_id</emphasis>
+;            /* feedback ID for indicator requests */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetDeviceInfo</emphasis>
+ returns information about the input device specified by <emphasis>
+device_spec</emphasis>
+. Unlike the <emphasis>
+device_spec</emphasis>
+ parameter of most Xkb functions, <emphasis>
+device_spec</emphasis>
+ does not need to be a keyboard device. It must, however, indicate either the
+core keyboard or a valid X Input Extension device.
+</para>
+
+
+<para>
+The <emphasis>
+which </emphasis>
+parameter<emphasis>
+ </emphasis>
+is a mask specifying optional information to be returned. It is an inclusive OR
+of one or more of the values from Table 21.1 and causes the returned <emphasis>
+XkbDeviceInfoRec</emphasis>
+ to contain values for the corresponding fields specified in the table.
+</para>
+
+
+<para>
+The <emphasis>
+XkbDeviceInfoRec</emphasis>
+ returned by <emphasis>
+XkbGetDeviceInfo</emphasis>
+ always has values for <emphasis>
+name</emphasis>
+ (may be a null string, ""), <emphasis>
+type</emphasis>
+, <emphasis>
+supported</emphasis>
+, <emphasis>
+unsupported</emphasis>
+, <emphasis>
+has_own_state</emphasis>
+, <emphasis>
+dflt_kbd_fd</emphasis>
+, and <emphasis>
+dflt_kbd_fb</emphasis>
+. Other fields are filled in as specified by <emphasis>
+which</emphasis>
+.
+</para>
+
+
+<para>
+Upon return, the <emphasis>
+supported</emphasis>
+ field will be set to the inclusive OR of zero or more bits from Table 21.1;
+each bit set indicates an optional Xkb extension device feature supported by
+the server implementation, and a client may modify the associated behavior.
+</para>
+
+
+<para>
+If the <emphasis>
+XkbButtonActionsMask</emphasis>
+ bit is set in <emphasis>
+which</emphasis>
+, the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ returned will have the button actions (<emphasis>
+btn_acts</emphasis>
+ field) filled in for all buttons.
+</para>
+
+
+<para>
+If <emphasis>
+which</emphasis>
+ includes one of the bits in XkbXI_IndicatorsMask, the feedback class of the
+indicators must be specified in ind_class, and the feedback ID of the
+indicators must be specified in ind_id. If the request does not include any of
+the bits in XkbXI_IndicatorsMask, the ind_class and ind_id parameters are
+ignored. The class and ID can be obtained via the input device extension
+XListInputDevices request.
+</para>
+
+
+<para>
+If any of the <emphasis>
+XkbXI_IndicatorsMask</emphasis>
+ bits are set in <emphasis>
+which</emphasis>
+, the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ returned will have filled in the portions of the <emphasis>
+leds</emphasis>
+ structure corresponding to the indicator feedback identified by <emphasis>
+ind_class</emphasis>
+ and <emphasis>
+ind_id</emphasis>
+. The <emphasis>
+leds</emphasis>
+ vector of the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ is allocated if necessary and <emphasis>
+sz_leds</emphasis>
+ and <emphasis>
+num_leds</emphasis>
+ filled in. The <emphasis>
+led_class</emphasis>
+, <emphasis>
+led_id</emphasis>
+ and <emphasis>
+phys_indicators</emphasis>
+ fields of the <emphasis>
+leds</emphasis>
+ entry corresponding to <emphasis>
+ind_class</emphasis>
+ and <emphasis>
+ind_id</emphasis>
+ are always filled in. If <emphasis>
+which</emphasis>
+ contains <emphasis>
+XkbXI_IndicatorNamesMask</emphasis>
+, the <emphasis>
+names_present</emphasis>
+ and <emphasis>
+names</emphasis>
+ fields of the <emphasis>
+leds</emphasis>
+ structure corresponding to <emphasis>
+ind_class</emphasis>
+ and <emphasis>
+ind_id</emphasis>
+ are returned.<emphasis>
+ </emphasis>
+If <emphasis>
+which</emphasis>
+ contains <emphasis>
+XkbXI_IndicatorStateMask</emphasis>
+<emphasis>
+,</emphasis>
+ the corresponding <emphasis>
+state</emphasis>
+ field is updated. If <emphasis>
+which</emphasis>
+ contains <emphasis>
+XkbXI_IndicatorMapsMask</emphasis>
+, the <emphasis>
+maps_present</emphasis>
+ and <emphasis>
+maps</emphasis>
+ fields are updated.
+</para>
+
+
+<para>
+Xkb provides convenience functions to request subsets of the information
+available via <emphasis>
+XkbGetDeviceInfo</emphasis>
+. These convenience functions mirror some of the mask bits. The functions all
+take an <emphasis>
+XkbDeviceInfoPtr</emphasis>
+ as an input argument and operate on the X Input Extension device specified by
+the <emphasis>
+device_spec</emphasis>
+ field of the structure. Only the parts of the structure indicated in the
+function description are updated. The <emphasis>
+XkbDeviceInfo</emphasis>
+Rec structure used in the function call can be obtained by calling
+XkbGetDeviceInfo or can be allocated by calling XkbAllocDeviceInfo (see section
+21.3).
+</para>
+
+
+<para>
+These convenience functions are described as follows.
+</para>
+
+
+<para>
+To query the button actions associated with an X Input Extension device, use
+XkbGetDeviceButtonActions.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetDeviceButtonActions</emphasis>
+(<emphasis>
+dpy, device_info, all_buttons, first_button, num_buttons</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure to update with
+results */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Bool            <emphasis>
+all_buttons</emphasis>
+;            /* <emphasis>
+True</emphasis>
+ =&gt; get information for all buttons */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            first_button;            /* number of first button for
+which info is desired */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            num_buttons;            /* number of buttons for which
+info is desired */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetDeviceButtonActions</emphasis>
+ queries the server for the desired button information for the device indicated
+by the <emphasis>
+device_spec</emphasis>
+ field of <emphasis>
+device_info</emphasis>
+ and waits for a reply. If successful,<emphasis>
+ XkbGetDeviceButtonActions</emphasis>
+ backfills the button actions (<emphasis>
+btn_acts</emphasis>
+ field of <emphasis>
+device_info</emphasis>
+) for only the requested buttons, updates the <emphasis>
+name</emphasis>
+, <emphasis>
+type</emphasis>
+, <emphasis>
+supported</emphasis>
+, and <emphasis>
+unsupported</emphasis>
+ fields, and returns <emphasis>
+Success</emphasis>
+.
+</para>
+
+
+<para>
+<emphasis>
+all_buttons</emphasis>
+, <emphasis>
+first_button</emphasis>
+ and <emphasis>
+num_buttons</emphasis>
+ specify the device buttons for which actions should be returned. Setting
+<emphasis>
+all_buttons</emphasis>
+ to <emphasis>
+True</emphasis>
+ requests actions for all device buttons; if <emphasis>
+all_buttons</emphasis>
+ is <emphasis>
+False</emphasis>
+, <emphasis>
+first_button</emphasis>
+ and <emphasis>
+num_buttons</emphasis>
+ specify a range of buttons for which actions are requested.
+</para>
+
+
+<para>
+If a compatible version of Xkb is not available in the server or the Xkb
+extension has not been properly initialized, XkbGetDeviceButtonActions returns
+<emphasis>
+BadAccess</emphasis>
+. If allocation errors occur, a <emphasis>
+BadAlloc</emphasis>
+ status is returned. If the specified device (<emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+device_spec</emphasis>
+) is invalid, a BadKeyboard status is returned. If the device has no buttons, a
+Bad<emphasis>
+Match</emphasis>
+ status is returned. If <emphasis>
+first_button</emphasis>
+ and <emphasis>
+num_buttons</emphasis>
+ specify illegal buttons, a Bad<emphasis>
+Value</emphasis>
+ status is returned.
+</para>
+
+
+<para>
+To query the indicator names, maps, and state associated with an LED feedback
+of an input extension device, use XkbGetDeviceLedInfo.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetDeviceLedInfo</emphasis>
+(<emphasis>
+dpy, device_i</emphasis>
+nfo, led_class, led_id, which)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure to update with
+results */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+led_class</emphasis>
+;            /* LED feedback class assigned by input extension */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            led_id;            /* LED feedback ID assigned by input
+extension */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            which;            /* mask indicating desired
+information */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetDeviceLedInfo</emphasis>
+ queries the server for the desired LED information for the feedback specified
+by <emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+ for the X input extension device indicated by <emphasis>
+device_spec</emphasis>
+-&gt;<emphasis>
+device_info</emphasis>
+ and waits for a reply. If successful, <emphasis>
+XkbGetDeviceLedInfo</emphasis>
+ backfills the relevant fields of <emphasis>
+device_info</emphasis>
+ as determined by <emphasis>
+which</emphasis>
+ with the results and returns <emphasis>
+Success</emphasis>
+. Valid values for <emphasis>
+which</emphasis>
+ are the inclusive OR of any of <emphasis>
+XkbXI_IndicatorNamesMask</emphasis>
+, <emphasis>
+XkbXI_IndicatorMapsMask</emphasis>
+, and <emphasis>
+XkbXI_IndicatorStateMask</emphasis>
+.
+</para>
+
+
+<para>
+The fields of <emphasis>
+device_info</emphasis>
+ that are filled in when this request succeeds are <emphasis>
+name, type, supported</emphasis>
+, and <emphasis>
+unsupported</emphasis>
+, and portions of the <emphasis>
+leds</emphasis>
+ structure corresponding to <emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+ as indicated by the bits set in <emphasis>
+which</emphasis>
+. The <emphasis>
+device_info-&gt;leds</emphasis>
+ vector is allocated if necessary and <emphasis>
+sz_leds</emphasis>
+ and <emphasis>
+num_leds</emphasis>
+ filled in. The <emphasis>
+led_class</emphasis>
+, <emphasis>
+led_id</emphasis>
+ and <emphasis>
+phys_indicators</emphasis>
+ fields of the <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+ entry corresponding to <emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+ are always filled in.
+</para>
+
+
+<para>
+If <emphasis>
+which</emphasis>
+ contains <emphasis>
+XkbXI_IndicatorNamesMask</emphasis>
+, the <emphasis>
+names_present</emphasis>
+ and <emphasis>
+names</emphasis>
+ fields of the <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+ structure corresponding to <emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+ are updated, if <emphasis>
+which</emphasis>
+ contains <emphasis>
+XkbXI_IndicatorStateMask</emphasis>
+<emphasis>
+,</emphasis>
+ the corresponding <emphasis>
+state</emphasis>
+ field is updated, and if <emphasis>
+which</emphasis>
+ contains <emphasis>
+XkbXI_IndicatorMapsMask</emphasis>
+, the <emphasis>
+maps_present</emphasis>
+ and <emphasis>
+maps</emphasis>
+ fields are updated.
+</para>
+
+
+<para>
+If a compatible version of Xkb is not available in the server or the Xkb
+extension has not been properly initialized, <emphasis>
+XkbGetDeviceLedInfo</emphasis>
+ returns <emphasis>
+BadAccess</emphasis>
+. If allocation errors occur, a BadAlloc status is returned. If the device has
+no indicators, a BadMatch error is returned. If <emphasis>
+ledClass</emphasis>
+ or <emphasis>
+ledID</emphasis>
+ have illegal values, a Bad<emphasis>
+Value</emphasis>
+ error is returned. If they have legal values but do not specify a feedback
+that contains LEDs and is associated with the specified device, a Bad<emphasis>
+Match</emphasis>
+ error is returned.
+</para>
+
+
+</sect1>
+<sect1
+id='allocating_initializing_and_freeing_the_xkbdeviceinforec_structure'>
+<title>Allocating, Initializing, and Freeing the XkbDeviceInfoRec
+Structure</title>
+
+<para>
+To obtain an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure, use XkbGetDeviceInfo or XkbAllocDeviceInfo.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbDeviceInfoPtr <emphasis>
+XkbAllocDeviceInfo</emphasis>
+(device_spec, n_buttons, sz_leds)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            device_spec;            /* device ID with which
+structure will be used */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+n_buttons</emphasis>
+;            /* number of button actions to allocate space for*/
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+sz_leds</emphasis>
+;            /* number of LED feedbacks to allocate space for */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbAllocDeviceInfo</emphasis>
+ allocates space for an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure and initializes that structure’s <emphasis>
+device_spec</emphasis>
+ field with the device ID specified by device_spec. If <emphasis>
+n_buttons</emphasis>
+ is nonzero, <emphasis>
+n_buttons</emphasis>
+ <emphasis>
+XkbActions</emphasis>
+ are linked into the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure and initialized to zero. If sz_leds is nonzero, <emphasis>
+sz_leds</emphasis>
+ <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structures are also allocated and linked into the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure. If you request <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structures be allocated using this request, you must initialize them
+explicitly.
+</para>
+
+
+<para>
+To obtain an <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structure, use XkbAllocDeviceLedInfo.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbAllocDeviceLedInfo</emphasis>
+(devi, num_needed)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            <emphasis>
+device_info</emphasis>
+;            /* structure in which to allocate LED space */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+num_needed</emphasis>
+;            /* number of indicators to allocate space for */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbAllocDeviceLedInfo</emphasis>
+ allocates space for an <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ and places it in <emphasis>
+device_info</emphasis>
+. If num_needed is nonzero, <emphasis>
+num_needed</emphasis>
+ <emphasis>
+XkbIndicatorMapRec</emphasis>
+ structures are also allocated and linked into the <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structure. If you request <emphasis>
+XkbIndicatorMapRec</emphasis>
+ structures be allocated using this request, you must initialize them
+explicitly. All other fields are initialized to zero.
+</para>
+
+
+<para>
+To initialize an <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structure, use XkbAddDeviceLedInfo.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbDeviceLedInfoPtr <emphasis>
+XkbAddDeviceLedInfo</emphasis>
+(device_info, led_class, led_id)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure in which to
+add LED info */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+led_class</emphasis>
+;            /* input extension class for LED device of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+led_id</emphasis>
+;            /* input extension ID for LED device of interest */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbAddDeviceLedInfo</emphasis>
+ first checks to see whether an entry matching <emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+ already exists in the <emphasis>
+device_info-&gt;leds</emphasis>
+ array. If it finds a matching entry, it returns a pointer to that entry.
+Otherwise, it checks to be sure there is at least one empty entry in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+ and extends it if there is not enough room. It then increments <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+num_leds</emphasis>
+ and fills in the next available entry in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+ with <emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+.
+</para>
+
+
+<para>
+If successful, <emphasis>
+XkbAddDeviceLedInfo</emphasis>
+ returns a pointer to the <emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structure that was initialized. If unable to allocate sufficient storage, or
+if <emphasis>
+device_info</emphasis>
+ points to an invalid <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure, or if <emphasis>
+led_class</emphasis>
+ or <emphasis>
+led_id</emphasis>
+ are inappropriate, <emphasis>
+XkbAddDeviceLedInfo</emphasis>
+ returns <emphasis>
+NULL</emphasis>
+.
+</para>
+
+
+<para>
+To allocate additional space for button actions in an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure, use XkbResizeDeviceButtonActions.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbResizeDeviceButtonActions</emphasis>
+(device_info, new_total)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure in which to
+allocate button actions */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+new_total</emphasis>
+;            /* new total number of button actions needed */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbResizeDeviceButton</emphasis>
+ reallocates space, if necessary, to make sure there is room for a total of
+<emphasis>
+new_total</emphasis>
+ button actions in the <emphasis>
+device_info</emphasis>
+ structure. Any new entries allocated are zeroed. If successful, <emphasis>
+XkbResizeDeviceButton</emphasis>
+ returns Success. If new_total is zero, all button actions are deleted,
+<emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+num_btns</emphasis>
+ is set to zero, and <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+btn_acts</emphasis>
+ is set to <emphasis>
+NULL</emphasis>
+. If device_info is invalid or new_total is greater than 255, BadValue is
+returned. If a memory allocation failure occurs, a <emphasis>
+BadAlloc</emphasis>
+ is returned.
+</para>
+
+
+<para>
+To free an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure, use XkbFreeDeviceInfo.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbFreeDeviceInfo</emphasis>
+(device_info, which, free_all)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* pointer to <emphasis>
+XkbDeviceInfoRec</emphasis>
+ in which to free items */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+which</emphasis>
+;            /* mask of components of <emphasis>
+device_info</emphasis>
+ to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Bool            <emphasis>
+free_all</emphasis>
+;            /* <emphasis>
+True</emphasis>
+ =&gt; free everything, including device_info */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+If free_all is <emphasis>
+True</emphasis>
+, the <emphasis>
+XkbFreeDeviceInfo</emphasis>
+ frees all components of <emphasis>
+device_info</emphasis>
+ and the <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure pointed to by <emphasis>
+device_info</emphasis>
+ itself. If free_all is <emphasis>
+False</emphasis>
+, the value of which determines which subcomponents are freed. <emphasis>
+which </emphasis>
+is an inclusive OR of one or more of the values from Table 21.1. If which
+contains XkbXI_ButtonActionsMask, all button actions associated with <emphasis>
+device_info</emphasis>
+ are freed, <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+btn_acts</emphasis>
+ is set to <emphasis>
+NULL</emphasis>
+, and <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+num_btns</emphasis>
+ is set to zero. If which contains all bits in XkbXI_IndicatorsMask, all
+<emphasis>
+XkbDeviceLedInfoRec</emphasis>
+ structures associated with <emphasis>
+device_info</emphasis>
+ are freed, <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+ is set to <emphasis>
+NULL</emphasis>
+, and <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+sz_leds</emphasis>
+ and <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+num_leds</emphasis>
+ are set to zero. If which contains XkbXI_IndicatorMapsMask, all indicator maps
+associated with <emphasis>
+device_info</emphasis>
+ are cleared, but the number of LEDs and the leds structures themselves are
+preserved. If which contains XkbXI_IndicatorNamesMask, all indicator names
+associated with device_info are cleared, but the number of LEDs and the leds
+structures themselves are preserved. If which contains
+XkbXI_IndicatorStateMask, the indicator state associated with the <emphasis>
+device_info</emphasis>
+ leds are set to zeros but the number of LEDs and the leds structures
+themselves are preserved.
+</para>
+
+
+</sect1>
+<sect1 id='setting_xkb_features_for_non_keyclass_input_extension_devices_'>
+<title>Setting Xkb Features for Non-KeyClass Input Extension Devices </title>
+
+<para>
+The Xkb extension allows clients to assign any key action to either core
+pointer or input extension device buttons. This makes it possible to control
+the keyboard or generate keyboard key events from extension devices or from the
+core pointer.
+</para>
+
+
+<para>
+Key actions assigned to core X pointer buttons or input extension device
+buttons cause key events to be generated as if they had originated from the
+core X keyboard.
+</para>
+
+
+<para>
+Xkb implementations are required to support key actions for the buttons of the
+core pointer device, but support for actions on extension devices is optional.
+Implementations that do not support button actions for extension devices must
+not set the <emphasis>
+XkbXI_ButtonActionsMask</emphasis>
+ bit in the <emphasis>
+supported</emphasis>
+ field of an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure.
+</para>
+
+
+<para>
+If a client attempts to modify valid characteristics of a device using an
+implementation that does not support modification of those characteristics, no
+protocol error is generated. Instead, the server reports a failure for the
+request; it also sends an <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ event to the client that issued the request if the client has selected to
+receive these events.
+</para>
+
+
+<para>
+To change characteristics of an X Input Extension device in the server, first
+modify a local copy of the device structure and then use either <emphasis>
+XkbSetDeviceInfo,</emphasis>
+ or, to save network traffic, use an <emphasis>
+XkbDeviceChangesRec</emphasis>
+ structure (see section 21.6) and call <emphasis>
+XkbChangeDeviceInfo</emphasis>
+ to download the changes to the server.
+</para>
+
+
+<para>
+To modify some or all of the characteristics of an X Input Extension device,
+use XkbSetDeviceInfo.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbSetDeviceInfo</emphasis>
+(<emphasis>
+dpy</emphasis>
+, which, device_info)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+which</emphasis>
+;            /* mask indicating characteristics to modify */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure defining the
+device and modifications */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSetDeviceInfo</emphasis>
+ sends a request to the server to modify the characteristics of the device
+specified in the <emphasis>
+device_info</emphasis>
+ structure. The particular characteristics modified are identified by the bits
+set in <emphasis>
+which</emphasis>
+ and take their values from the relevant fields in <emphasis>
+device_info</emphasis>
+ (see Table 21.1). <emphasis>
+XkbSetDeviceInfo</emphasis>
+ returns <emphasis>
+True</emphasis>
+ if the request was successfully sent to the server. If the X server
+implementation does not allow interaction between the X input extension and the
+Xkb Extension, the function does nothing and returns <emphasis>
+False</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+which</emphasis>
+ parameter specifies which aspects of the device should be changed and is a
+bitmask composed of an inclusive OR or one or more of the following bits:
+<emphasis>
+XkbXI_ButtonActionsMask</emphasis>
+, <emphasis>
+XkbXI_IndicatorNamesMask</emphasis>
+, <emphasis>
+XkbXI_IndicatorMapsMask</emphasis>
+. If the features requested to be manipulated in <emphasis>
+which</emphasis>
+ are valid for the device, but the server does not support assignment of one or
+more of them, that particular portion of the request is ignored.
+</para>
+
+
+<para>
+If the device specified in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+device_spec</emphasis>
+ does not contain buttons and a request affecting buttons is made, or the
+device does not contain indicators and a request affecting indicators is made,
+a <emphasis>
+BadMatch</emphasis>
+ protocol error results.
+</para>
+
+
+<para>
+If the <emphasis>
+XkbXI_ButtonActionsMask</emphasis>
+ bit is set in the supported mask returned by XkbGetDeviceInfo, the Xkb
+extension allows applications to assign key actions to buttons on input
+extension devices other than the core keyboard device. If the <emphasis>
+XkbXI_ButtonActionsMask</emphasis>
+ is set in <emphasis>
+which</emphasis>
+, the actions for all buttons specified in device_info are set to the <emphasis>
+XkbAction</emphasis>
+s specified in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+btn_acts</emphasis>
+. If the number of buttons requested to be updated is not valid for the device,
+<emphasis>
+XkbSetDeviceInfo</emphasis>
+ returns <emphasis>
+False</emphasis>
+ and a <emphasis>
+BadValue</emphasis>
+ protocol error results.
+</para>
+
+
+<para>
+If the <emphasis>
+XkbXI_IndicatorMaps</emphasis>
+ and / or <emphasis>
+XkbXI_IndicatorNamesMask</emphasis>
+ bit is set in the supported mask returned by XkbGetDeviceInfo, the Xkb
+extension allows applications to assign maps and / or names to the indicators
+of nonkeyboard extension devices. If supported, maps and / or names can be
+assigned to all extension device indicators, whether they are part of a
+keyboard feedback or part of an indicator feedback.
+</para>
+
+
+<para>
+If the <emphasis>
+XkbXI_IndicatorMapsMask</emphasis>
+ and / or <emphasis>
+XkbXI_IndicatorNamesMask</emphasis>
+ flag is set in <emphasis>
+which</emphasis>
+, the indicator maps and / or names for all <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+num_leds</emphasis>
+ indicator devices specified in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+ are set to the maps and / or names specified in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+. <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+-&gt;<emphasis>
+led_class</emphasis>
+ and <emphasis>
+led_id</emphasis>
+ specify the input extension class and device ID for each indicator device to
+modify; if they have invalid values, a <emphasis>
+BadValue</emphasis>
+ protocol error results and <emphasis>
+XkbSetDeviceInfo</emphasis>
+ returns <emphasis>
+False</emphasis>
+. If they have legal values but do not specify a keyboard or indicator class
+feedback for the device in question, a <emphasis>
+BadMatch</emphasis>
+ error results. If any of the values in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+leds</emphasis>
+<emphasis>
+-&gt;</emphasis>
+<emphasis>
+names</emphasis>
+ are not a valid Atom or <emphasis>
+None</emphasis>
+, a <emphasis>
+BadAtom</emphasis>
+ protocol error results.
+</para>
+
+
+<para>
+Xkb provides convenience functions to modify subsets of the information
+accessible via <emphasis>
+XkbSetDeviceInfo</emphasis>
+. Only the parts of the structure indicated in the function description are
+modified. These convenience functions are described as follows.
+</para>
+
+
+<para>
+To change only the button actions for an input extension device, use
+XkbSetDeviceButtonActions.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbSetDeviceButtonActions</emphasis>
+(<emphasis>
+dpy</emphasis>
+, device, first_button, num_buttons, actions)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure defining the
+device and modifications */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            first_button;            /* number of first button to
+update, 0 relative */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            num_buttons;            /* number of buttons to update
+*/
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSetDeviceButtonActions</emphasis>
+ assigns actions to the buttons of the device specified in
+device_info-&gt;<emphasis>
+device_spec</emphasis>
+. Actions are assigned to <emphasis>
+num_buttons</emphasis>
+ buttons beginning with <emphasis>
+first_button</emphasis>
+ and are taken from the actions specified in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+btn_acts</emphasis>
+.
+</para>
+
+
+<para>
+If the server does not support assignment of Xkb actions to extension device
+buttons, <emphasis>
+XkbSetDeviceButtonActions</emphasis>
+ has no effect and returns <emphasis>
+False</emphasis>
+. If the device has no buttons or if <emphasis>
+first_button</emphasis>
+ or <emphasis>
+num_buttons</emphasis>
+ specify buttons outside of the valid range as determined by <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+num_btns</emphasis>
+, the function has no effect and returns <emphasis>
+False</emphasis>
+. Otherwise, <emphasis>
+XkbSetDeviceButtonActions</emphasis>
+ sends a request to the server to change the actions for the specified buttons
+and returns <emphasis>
+True</emphasis>
+.
+</para>
+
+
+<para>
+If the actual request sent to the server involved illegal button numbers, a
+<emphasis>
+BadValue</emphasis>
+ protocol error is generated. If an invalid device identifier is specified in
+device_info-&gt;<emphasis>
+device_spec</emphasis>
+, a BadKeyboard protocol error results. If the actual device specified in
+<emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+device_spec</emphasis>
+ does not contain buttons and a request affecting buttons is made, a <emphasis>
+BadMatch</emphasis>
+ protocol error is generated.
+</para>
+
+
+</sect1>
+<sect1 id='xkbextensiondevicenotify_event'>
+<title>XkbExtensionDeviceNotify Event</title>
+
+<para>
+The Xkb extension generates <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ events when the status of an input extension device changes or when an attempt
+is made to use an Xkb feature that is not supported by a particular device.
+</para>
+
+<note><para>Events indicating an attempt to use an unsupported feature are
+delivered only to the client requesting the event.</para></note>
+
+<para>
+To track changes to the status of input extension devices or attempts to use
+unsupported features of a device, select to receive <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ events by calling either <emphasis>
+XkbSelectEvents</emphasis>
+ or <emphasis>
+XkbSelectEventDetails</emphasis>
+ (see section 4.3).
+</para>
+
+
+<para>
+To receive <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ events under all possible conditions, call <emphasis>
+XkbSelectEvents</emphasis>
+ and pass <emphasis>
+XkbExtensionDeviceNotifyMask</emphasis>
+ in both <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ event has no event details. However, you can call <emphasis>
+XkbSelectEventDetails</emphasis>
+ using <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ as the <emphasis>
+event_type</emphasis>
+ and specifying <emphasis>
+XkbAllExtensionDeviceMask</emphasis>
+ in <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits.</emphasis>
+ This has the same effect as a call to <emphasis>
+XkbSelectEvents</emphasis>
+.
+</para>
+
+
+<para>
+The structure for <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ events is:
+</para>
+
+<para><programlisting>
+typedef struct {
+      int      type;           /* Xkb extension base event code */
+      unsigned long  serial;   /* X server serial number for event */
+      Bool     send_event;     /* <emphasis>True</emphasis>
+                                  =&gt; synthetically generated*/
+      Display *      display;  /* server connection where event generated */
+      Time     time;           /* server time when event generated */
+      int      xkb_type;  /* <emphasis>XkbExtensionDeviceNotifyEvent</emphasis> */
+      int      device;         /* Xkb device ID, will not be
+                                  <emphasis>XkbUseCoreKbd</emphasis> */
+      unsigned int   reason;   /* reason for the event */
+      unsigned int   supported;  /* mask of supported features */
+      unsigned int   unsupported;  /* unsupported features this client
+                                      attempted to use */
+      int      first_btn;      /* first button that changed */
+      int      num_btns;       /* number of buttons that changed */
+      unsigned int   leds_defined;  /* indicators with names or maps */
+      unsigned int       led_state; /* current state of the indicators */
+      int       led_class;          /* feedback class for LED changes */
+      int       led_id;             /* feedback ID for LED changes */
+} <emphasis>XkbExtensionDeviceNotifyEvent</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ event has fields enabling it to report changes in the state (on/off) of all of
+the buttons for a device, but only for one LED feedback associated with a
+device. You will get multiple events when more than one LED feedback changes
+state or configuration.
+</para>
+
+
+</sect1>
+<sect1 id='tracking_changes_to_extension_devices'>
+<title>Tracking Changes to Extension Devices</title>
+
+<para>
+Changes to an Xkb extension device may be tracked by listening to <emphasis>
+XkbDeviceExtensionNotify</emphasis>
+ events and accumulating the changes in an <emphasis>
+XkbDeviceChangesRec</emphasis>
+ structure. The changes noted in the structure may then be used in subsequent
+operations to update either a server configuration or a local copy of an Xkb
+extension device configuration. The changes structure is defined as follows:
+</para>
+
+<para><programlisting>
+typedef struct _XkbDeviceChanges {
+      unsigned int    changed;   /* bits indicating what has changed */
+      unsigned short  first_btn; /* number of first button which changed,
+                                    if any */
+      unsigned short  num_btns;  /* number of buttons that have changed */
+      XkbDeviceLedChangesRec leds;
+} <emphasis>XkbDeviceChangesRec</emphasis>,*XkbDeviceChangesPtr;
+</programlisting></para>
+
+<para><programlisting>
+typedef struct _XkbDeviceLedChanges {
+      unsigned short  led_class; /* class of this indicator feedback bundle */
+      unsigned short  led_id;    /* ID of this indicator feedback bundle */
+      unsigned int    names;     /* bits indicating which names have changed */
+      unsigned int    maps;      /* bits indicating which maps have changed */
+      struct _XkbDeviceLedChanges *next; /* link to indicator change record
+                                            for next set */
+} <emphasis>XkbDeviceLedChangesRec</emphasis>,*XkbDeviceLedChangesPtr;
+</programlisting></para>
+
+<para>
+A local description of the configuration and state of a device may be kept in
+an <emphasis>
+XkbDeviceInfoRec</emphasis>
+ structure. The actual state or configuration of the device may change because
+of XkbSetDeviceInfo and XkbSetButtonActions requests made by clients or by user
+interaction with the device. The X server sends an XkbExtensionDeviceNotify
+event to all interested clients when the state of any buttons or indicators or
+the configuration of the buttons or indicators on the core keyboard or any
+input extension device changes. The event reports the state of indicators for a
+single indicator feedback, and the state of up to 128 buttons. If more than 128
+buttons or more than one indicator feedback are changed, the additional buttons
+and indicator feedbacks are reported in subsequent events. Xkb provides
+functions with which you can track changes to input extension devices by noting
+the changes that were made and then requesting the changed information from the
+server.
+</para>
+
+
+<para>
+To note device changes reported in an <emphasis>
+XkbExtensionDeviceNotify</emphasis>
+ event, use XkbNoteDeviceChanges.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbNoteDeviceChanges</emphasis>
+ (<emphasis>
+old, new, wanted</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceChangesPtr                        <emphasis>
+old</emphasis>
+;            /* structure tracking state changes */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbExtensionDeviceNotifyEvent             *            <emphasis>
+new</emphasis>
+;            /* event indicating state changes */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int                        <emphasis>
+wanted</emphasis>
+;            /* mask indicating changes to note */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The wanted field specifies the changes that should be noted in <emphasis>
+old</emphasis>
+, and is composed of the bitwise inclusive OR of one or more of the masks from
+Table 21.1<emphasis>
+.</emphasis>
+ The <emphasis>
+reason</emphasis>
+ field of the event in <emphasis>
+new</emphasis>
+ indicates the types of changes the event is reporting. <emphasis>
+XkbNoteDeviceChanges</emphasis>
+ updates the <emphasis>
+XkbDeviceChangesRec</emphasis>
+ specified by <emphasis>
+old</emphasis>
+ with the changes that are both specified in <emphasis>
+wanted</emphasis>
+ and contained in <emphasis>
+new</emphasis>
+-&gt;<emphasis>
+reason</emphasis>
+.
+</para>
+
+
+<para>
+To update a local copy of the state and configuration of an X input extension
+device with the changes previously noted in an <emphasis>
+XkbDeviceChangesRec</emphasis>
+ structure, use XkbGetDeviceInfoChanges.
+</para>
+
+
+<para>
+To query the changes that have occurred in the button actions or indicator
+names and indicator maps associated with an input extension device, use
+XkbGetDeviceInfoChanges.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetDeviceInfoChanges</emphasis>
+(<emphasis>
+dpy</emphasis>
+, <emphasis>
+device_info</emphasis>
+, changes)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            device_info;            /* structure to update with
+results */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceChangesPtr            <emphasis>
+changes</emphasis>
+;            /* contains notes of changes that have occurred */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The changes-&gt;changed field indicates which attributes of the device
+specified in <emphasis>
+changes</emphasis>
+-&gt;<emphasis>
+device</emphasis>
+ have changed. The parameters describing the changes are contained in the other
+fields of <emphasis>
+changes</emphasis>
+. <emphasis>
+XkbGetDeviceInfoChanges</emphasis>
+ uses that information to call XkbGetDeviceInfo to obtain the current status of
+those attributes that have changed. It then updates the local description of
+the device in <emphasis>
+device_info</emphasis>
+ with the new information.
+</para>
+
+
+<para>
+To update the server’s description of a device with the changes noted in an
+XkbDeviceChangesRec, use XkbChangeDeviceInfo.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbChangeDeviceInfo</emphasis>
+ (<emphasis>
+dpy, device_info, changes</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceInfoPtr            <emphasis>
+device_info</emphasis>
+;            /* local copy of device state and configuration */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDeviceChangesPtr            <emphasis>
+changes</emphasis>
+;            /* note specifying changes in <emphasis>
+device_info</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbChangeDeviceInfo</emphasis>
+ updates the server’s description of the device specified in <emphasis>
+device_info</emphasis>
+-&gt;<emphasis>
+device_spec</emphasis>
+ with the changes specified in <emphasis>
+changes</emphasis>
+ and contained in <emphasis>
+device_info</emphasis>
+. The update is made by an XkbSetDeviceInfo request.
+</para>
+
+</sect1>
+</chapter>

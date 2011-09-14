@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
+]>
 
 
 <!-- lifted from troff+ms+XMan by doclifter -->
@@ -9,7 +12,7 @@
 <articleinfo>
    <title>The Input Method Protocol</title>
    <subtitle>X Consortium Standard</subtitle>
-   <releaseinfo>X Version 11, Release 6.4</releaseinfo>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
    <authorgroup>
       <author>
          <firstname>Masahiko</firstname><surname>Narita</surname>
@@ -25,7 +28,6 @@
    <copyright><year>1993</year><year>1994</year><holder>Oracle and/or its affiliates</holder></copyright>
    <releaseinfo>Version 1.0</releaseinfo>
    <affiliation><orgname>X Consortium</orgname></affiliation>
-   <productnumber>X Version 11, Release 7</productnumber>
 
 <abstract>
 <para>

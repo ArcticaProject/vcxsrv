@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
+]>
 
 <book id="framework">
 
 <bookinfo>
    <title>X11R6 Sample Implementation Frame Work</title>
-   <releaseinfo>X Version 11, Release 7</releaseinfo>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
    <authorgroup>
       <othercredit>
          <firstname>Katsuhisa</firstname><surname>Yano</surname>
