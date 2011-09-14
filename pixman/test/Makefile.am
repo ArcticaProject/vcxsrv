@@ -1,7 +1,7 @@
 AM_CFLAGS = @OPENMP_CFLAGS@
 AM_LDFLAGS = @OPENMP_CFLAGS@ @TESTPROGS_EXTRA_LDFLAGS@
-LDADD = $(top_builddir)/pixman/libpixman-1.la -lm -lpng
-INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman
+LDADD = $(top_builddir)/pixman/libpixman-1.la -lm  @PNG_LIBS@
+INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman @PNG_CFLAGS@
 
 TESTPROGRAMS =			\
 	a1-trap-test		\

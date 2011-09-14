@@ -1,0 +1,1182 @@
+<chapter id='symbolic_names'>
+<title>Symbolic Names</title>
+
+<para>
+The core protocol does not provide any information to clients other than that
+actually used to interpret events. This makes it difficult to write an
+application that presents the keyboard to a user in an easy-to-understand way.
+Such applications have to examine the vendor string and keycodes to determine
+the type of keyboard connected to the server and then examine keysyms and
+modifier mappings to determine the effects of most modifiers (the <emphasis>
+Shift</emphasis>
+, <emphasis>
+Lock</emphasis>
+ and <emphasis>
+Control</emphasis>
+ modifiers are defined by the core protocol but no semantics are implied for
+any other modifiers).
+</para>
+
+
+<para>
+To make it easier for applications to present a keyboard to the user, Xkb
+supports symbolic names for most components of the keyboard extension. Most of
+these symbolic names are grouped into the <emphasis>
+names</emphasis>
+ component of the keyboard description.
+</para>
+
+<sect1 id='the_xkbnamesrec_structure'>
+<title>The XkbNamesRec Structure</title>
+
+<para>
+The names component of the keyboard description is defined as follows:
+</para>
+
+<para><programlisting>
+#define      XkbKeyNameLength      4
+#define      XkbKeyNumVirtualMods  16
+#define      XkbKeyNumIndicators   32
+#define      XkbKeyNumKbdGroups    4
+#define      XkbMaxRadioGroups     32
+</programlisting></para>
+
+<para><programlisting>
+typedef struct {
+      char      name[XkbKeyNameLength];      /* symbolic key names */
+} <emphasis>XkbKeyNameRec</emphasis>,*XkbKeyNamePtr;
+</programlisting></para>
+
+<para><programlisting>
+typedef struct {
+      char      real[XkbKeyNameLength];
+                /* this key name must be in the keys array */
+      char      alias[XkbKeyNameLength];
+                /* symbolic key name as alias for the key */
+} <emphasis>XkbKeyAliasRec</emphasis>,*XkbKeyAliasPtr;
+</programlisting></para>
+
+<para><programlisting>
+typedef struct _XkbNamesRec {
+      Atom      keycodes;      /* identifies range and meaning of keycodes */
+      Atom      geometry;      /* identifies physical location, size, and shape of keys */
+      Atom      symbols;       /* identifies the symbols logically bound to the keys */
+      Atom      types;         /* identifies the set of key types */
+      Atom      compat;        /* identifies actions for keys using core protocol */
+      Atom      vmods[XkbNumVirtualMods]; /* symbolic names for virtual modifiers */
+      Atom      indicators[XkbNumIndicators];   /* symbolic names for indicators */
+      Atom      groups[XkbNumKbdGroups]; /* symbolic names for keyboard groups */
+      XkbKeyNamePtr      keys;         /* symbolic key name array */
+      XkbKeyAliasPtr     key_aliases;  /* real/alias symbolic name pairs array */
+      Atom *    radio_groups;      /* radio group name array */
+      Atom      phys_symbols;      /* identifies the symbols engraved on the keyboard */
+      unsigned char      num_keys; /* number of keys in the <emphasis> keys</emphasis> array */
+      unsigned char      num_key_aliases;  /* number of keys in the
+                                              <emphasis> key_aliases</emphasis> array */
+      unsigned short     num_rg;      /* number of radio groups */
+} <emphasis>XkbNamesRec</emphasis>,*XkbNamesPtr;      /*
+</programlisting></para>
+
+<para>
+The <emphasis>
+keycodes</emphasis>
+ name identifies the range and meaning of the keycodes returned by the keyboard
+in question. The <emphasis>
+geometry</emphasis>
+ name, on the other hand, identifies the physical location, size and shape of
+the various keys on the keyboard. As an example to distinguish between these
+two names, consider function keys on PC-compatible keyboards. Function keys are
+sometimes above the main keyboard and sometimes to the left of the main
+keyboard, but the same keycode is used for the key that is logically F1
+regardless of physical position. Thus, all PC-compatible keyboards share a
+similar keycodes name but may have different geometry names.
+</para>
+
+<note><para>The keycodes name is intended to be a very general description of
+the keycodes returned by a keyboard; a single keycodes name might cover
+keyboards with differing numbers of keys provided all keys have the same
+semantics when present. For example, 101 and 102 key PC keyboards might use the
+same name. In these cases, applications can use the keyboard <emphasis>
+geometry</emphasis>
+ name to determine which subset of the named keycodes is in use.</para></note>
+
+<para>
+The <emphasis>
+symbols</emphasis>
+ name identifies the symbols logically bound to the keys. The symbols name is a
+human or application-readable description of the intended locale or usage of
+the keyboard with these symbols. The <emphasis>
+phys_symbols</emphasis>
+ name, on the other hand, identifies the symbols actually engraved on the
+keyboard. Given this, the <emphasis>
+symbols</emphasis>
+ name and <emphasis>
+phys_symbols</emphasis>
+ names might be different. For example, the description for a keyboard that has
+English US engravings, but that is using Swiss German symbols might have a
+<emphasis>
+phys_symbols</emphasis>
+ name of "en_US" and a <emphasis>
+symbols</emphasis>
+ name of "de_CH."
+</para>
+
+
+<para>
+The <emphasis>
+types</emphasis>
+ name provides some information about the set of key types (see section 15.2)
+that can be associated with the keyboard. In addition, each key type can have a
+name, and each shift level of a type can have a name. Although these names are
+stored in the map description with each of the types, they are accessed using
+the same methods as the other symbolic names.
+</para>
+
+
+<para>
+The <emphasis>
+compat</emphasis>
+ name provides some information about the rules used to bind actions to keys
+that are changed using core protocol requests.
+</para>
+
+
+<para>
+Xkb provides symbolic names for each of the 4 keyboard groups, 16 virtual
+modifiers, 32 keyboard indicators, and 4 keyboard groups. These names are held
+in the <emphasis>
+vmods</emphasis>
+, <emphasis>
+indicators</emphasis>
+, and <emphasis>
+groups</emphasis>
+ fixed-length arrays.
+</para>
+
+
+<para>
+Each key has a four-byte symbolic name. All of the symbolic key names are held
+in the <emphasis>
+keys</emphasis>
+ array, and <emphasis>
+num_keys</emphasis>
+ reports the number of entries that are in the keys array. For each key, the
+key name links keys with similar functions or in similar positions on keyboards
+that report different keycodes. For example, the <emphasis>
+F1</emphasis>
+ key may emit keycode 23 on one keyboard and keycode 86 on another. By naming
+this key "FK01" on both keyboards, the keyboard layout designer can reuse parts
+of keyboard descriptions for different keyboards.
+</para>
+
+
+<para>
+Key aliases allow the keyboard layout designer to assign multiple key names to
+a single key. This allows the keyboard layout designer to refer to keys using
+either their position or their "function." For example, a keyboard layout
+designer may wish to refer to the left arrow key on a PC keyboard using the
+ISO9995-5 positional specification of A31 or using the functional specification
+of LEFT. The <emphasis>
+key_aliases</emphasis>
+ field holds a variable-length array of real and alias key name pairs, and the
+total number of entries in the <emphasis>
+key_aliases</emphasis>
+ array is held in <emphasis>
+num_key_aliases</emphasis>
+. For each real and alias key name pair, the <emphasis>
+real</emphasis>
+ field refers to the a name in the keys array, and the <emphasis>
+alias</emphasis>
+ field refers to the alias for that key. Using the previous example, the
+keyboard designer may use the name A31 in the keys array, but also define the
+name LEFT as an alias for A31 in the <emphasis>
+key_aliases</emphasis>
+ array.
+</para>
+
+<note><para>Key aliases defined in the geometry component of a keyboard mapping
+(see Chapter 13) override those defined in the keycodes component of the server
+database, which are stored in the <emphasis>
+XkbNamesRec</emphasis>
+ (<emphasis>
+xkb-&gt;names</emphasis>
+). Therefore, consider the key aliases defined by the geometry before
+considering key aliases supplied by the <emphasis>
+XkbNamesRec</emphasis>
+.</para></note>
+
+<para>
+A radio group is a set of keys whose behavior simulates a set of radio buttons.
+Once a key in a radio group is pressed, it stays logically depressed until
+another key in the group is pressed, at which point the previously depressed
+key is logically released. Consequently, at most one key in a radio group can
+be logically depressed at one time.
+</para>
+
+
+<para>
+Each radio group in the keyboard description can have a name. These names are
+held in the variable-length array <emphasis>
+radio_groups</emphasis>
+, and <emphasis>
+num_rg</emphasis>
+ tells how many elements are in the <emphasis>
+radio_groups</emphasis>
+ array.
+</para>
+
+
+</sect1>
+<sect1 id='symbolic_names_masks'>
+<title>Symbolic Names Masks</title>
+
+<para>
+Xkb provides several functions that work with symbolic names. Each of these
+functions uses a mask to specify individual fields of the structures described
+above. These masks and their relationships to the fields in a keyboard
+description are shown in Table 18.1.
+</para>
+
+<table frame='none'>
+<title>Symbolic Names Masks</title>
+<tgroup cols='4'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask Bit</entry>
+  <entry>Value</entry>
+  <entry>Keyboard Component</entry>
+  <entry>Field</entry>
+</row>
+</thead>
+<tbody>
+<row rowsep='0'>
+    <entry>XkbKeycodesNameMask</entry>
+    <entry>(1&lt;&lt;0)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>keycodes</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbGeometryNameMask</entry>
+    <entry>(1&lt;&lt;1)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>geometry</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbSymbolsNameMask</entry>
+    <entry>(1&lt;&lt;2)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>symbols</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbPhysSymbolsNameMask</entry>
+    <entry>(1&lt;&lt;3)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>phys_symbols</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbTypesNameMask</entry>
+    <entry>(1&lt;&lt;4)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>type</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbCompatNameMask</entry>
+    <entry>(1&lt;&lt;5)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>compat</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKeyTypeNamesMask</entry>
+    <entry>(1&lt;&lt;6)</entry>
+    <entry>Xkb-&gt;map</entry>
+    <entry>type[*].name</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKTLevelNamesMask</entry>
+    <entry>(1&lt;&lt;7)</entry>
+    <entry>Xkb-&gt;map</entry>
+    <entry>type[*].lvl_names[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbIndicatorNamesMask</entry>
+    <entry>(1&lt;&lt;8)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>indicators[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKeyNamesMask</entry>
+    <entry>(1&lt;&lt;9)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>keys[*], num_keys</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKeyAliasesMask</entry>
+    <entry>(1&lt;&lt;10)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>key_aliases[*], num_key_aliases</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbVirtualModNamesMask</entry>
+    <entry>(1&lt;&lt;11)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>vmods[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbGroupNamesMask</entry>
+    <entry>(1&lt;&lt;12)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>groups[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbRGNamesMask</entry>
+    <entry>(1&lt;&lt;13)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>radio_groups[*], num_rg</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbComponentNamesMask</entry>
+    <entry>(0x3f)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>
+<para>keycodes,</para>
+<para>geometry,</para>
+<para>symbols,</para>
+<para>physical symbols,</para>
+<para>types, and</para>
+<para>compatibility map</para>
+    </entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbAllNamesMask</entry>
+    <entry>(0x3fff)</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>all name components</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+<sect1 id='getting_symbolic_names_from_the_server'>
+<title>Getting Symbolic Names From the Server</title>
+
+<para>
+To obtain symbolic names from the server, use <emphasis>
+XkbGetNames</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetNames</emphasis>
+(<emphasis>
+dpy, which, Xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *      <emphasis>
+dpy</emphasis>
+;      /* connection to the X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+which</emphasis>
+;      /* mask of names or map components to be updated */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr      <emphasis>
+xkb</emphasis>
+      /* keyboard description to be updated */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetNames</emphasis>
+ retrieves symbolic names for the components of the keyboard extension from the
+X server. The <emphasis>
+which</emphasis>
+ parameter specifies the name components to be updated in the <emphasis>
+xkb</emphasis>
+ parameter, and is the bitwise inclusive OR of the valid names mask bits
+defined in Table 18.1.
+</para>
+
+
+<para>
+If the <emphasis>
+names</emphasis>
+ field of the keyboard description <emphasis>
+xkb</emphasis>
+ is <emphasis>
+NULL</emphasis>
+, <emphasis>
+XkbGetNames</emphasis>
+ allocates and initializes the <emphasis>
+names</emphasis>
+ component of the keyboard description before obtaining the values specified by
+<emphasis>
+which</emphasis>
+. If the <emphasis>
+names</emphasis>
+ field of <emphasis>
+xkb</emphasis>
+ is not <emphasis>
+NULL</emphasis>
+, <emphasis>
+XkbGetNames</emphasis>
+ obtains the values specified by <emphasis>
+which</emphasis>
+ and copies them into the keyboard description <emphasis>
+Xkb</emphasis>
+.
+</para>
+
+
+<para>
+If the <emphasis>
+map</emphasis>
+ component of the <emphasis>
+xkb</emphasis>
+ parameter is <emphasis>
+NULL</emphasis>
+, <emphasis>
+XkbGetNames</emphasis>
+ does not retrieve type or shift level names, even if <emphasis>
+XkbKeyTypeNamesMask</emphasis>
+ or <emphasis>
+XkbKTLevelNamesMask</emphasis>
+ are set in <emphasis>
+which</emphasis>
+.
+</para>
+
+
+<para>
+<emphasis>
+XkbGetNames</emphasis>
+ can return <emphasis>
+Success</emphasis>
+, or <emphasis>
+BadAlloc</emphasis>
+, <emphasis>
+BadLength</emphasis>
+, <emphasis>
+BadMatch</emphasis>
+, and <emphasis>
+BadImplementation</emphasis>
+ errors.
+</para>
+
+
+<para>
+To free symbolic names, use <emphasis>
+XkbFreeNames</emphasis>
+ (see section 18.6)
+</para>
+
+
+</sect1>
+<sect1 id='changing_symbolic_names_on_the_server'>
+<title>Changing Symbolic Names on the Server</title>
+
+<para>
+To change the symbolic names in the server, first modify a local copy of the
+keyboard description and then use either <emphasis>
+XkbSetNames,</emphasis>
+ or, to save network traffic, use a <emphasis>
+XkbNameChangesRec</emphasis>
+structure and call <emphasis>
+XkbChangeNames</emphasis>
+ to download the changes to the server. <emphasis>
+XkbSetNames</emphasis>
+ and <emphasis>
+XkbChangeNames</emphasis>
+ can generate <emphasis>
+BadAlloc</emphasis>
+, <emphasis>
+BadAtom</emphasis>
+, <emphasis>
+BadLength</emphasis>
+, <emphasis>
+BadMatch,</emphasis>
+ and <emphasis>
+BadImplementation</emphasis>
+ errors.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbSetNames</emphasis>
+(<emphasis>
+dpy, which, first_type, num_types, xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *      <emphasis>
+dpy</emphasis>
+;            /* connection to the X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+which</emphasis>
+;            /* mask of names or map components to be changed */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+first_type</emphasis>
+      ;      /* first type whose name is to be changed */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+num_types</emphasis>
+;            /* number of types for which names are to be changed */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr      <emphasis>
+xkb</emphasis>
+;            /* keyboard description from which names are to be taken */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+Use<emphasis>
+ XkbSetNames</emphasis>
+ to change many names at the same time. For each bit set in <emphasis>
+which</emphasis>
+, <emphasis>
+XkbSetNames</emphasis>
+ takes the corresponding value (or values in the case of arrays) from the
+keyboard description <emphasis>
+xkb</emphasis>
+ and sends it to the server.
+</para>
+
+
+<para>
+The <emphasis>
+first_type</emphasis>
+ and <emphasis>
+num_types</emphasis>
+ arguments are used only if <emphasis>
+XkbKeyTypeNamesMask</emphasis>
+ or <emphasis>
+XkbKTLevelNamesMask</emphasis>
+ is set in <emphasis>
+which</emphasis>
+ and specify a subset of the types for which the corresponding names are to be
+changed. If either or both of these mask bits are set but the specified types
+are illegal, <emphasis>
+XkbSetNames</emphasis>
+ returns <emphasis>
+False</emphasis>
+ and does not update any of the names specified in <emphasis>
+which</emphasis>
+. The specified types are illegal if <emphasis>
+xkb</emphasis>
+ does not include a map component or if <emphasis>
+first_type</emphasis>
+ and <emphasis>
+num_types</emphasis>
+ specify types that are not defined in the keyboard description.
+</para>
+
+
+<sect2>
+<title/>
+
+<sect3 id='the_xkbnamechangesrec_structure'>
+<title>The XkbNameChangesRec Structure</title>
+
+<para>
+The <emphasis>
+XkbNameChangesRec</emphasis>
+ allows applications to identify small modifications to the symbolic names and
+effectively reduces the amount of traffic sent to the server:
+</para>
+
+<para><programlisting>
+typedef struct _XkbNameChanges {
+      unsigned int      changed;            /* name components that have
+                                               changed */
+      unsigned char      first_type;        /* first key type with a new
+                                               name */
+      unsigned char      num_types;         /* number of types with new
+                                               names */
+      unsigned char      first_lvl;         /* first key type with new level
+                                               names */
+      unsigned char      num_lvls;          /* number of key types with new
+                                               level names */
+      unsigned char      num_aliases;       /* if key aliases changed,
+                                               total number of key aliases */
+      unsigned char      num_rg;            /* if radio groups changed, total
+                                               number of radio groups */
+      unsigned char      first_key;         /* first key with a new name */
+      unsigned char      num_keys;          /* number of keys with new names
+                                               */
+      unsigned short      changed_vmods;    /* mask of virtual
+                                               modifiers for which names have changed */
+      unsigned long      changed_indicators;  /* mask of indicators
+                                                 for which names were changed */
+      unsigned char       changed_groups;   /* mask of groups for
+                                               which names were changed */
+} <emphasis>XkbNameChangesRec</emphasis>, *XkbNameChangesPtr
+</programlisting></para>
+
+<para>
+The <emphasis>
+changed</emphasis>
+ field specifies the name components that have changed and is the bitwise
+inclusive OR of the valid names mask bits defined in Table 18.1. The rest of
+the fields in the structure specify the ranges that have changed for the
+various kinds of symbolic names, as shown in Table 18.2.
+</para>
+
+<table frame='none'>
+<title>XkbNameChanges Fields</title>
+<tgroup cols='4'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask</entry>
+  <entry>Fields</entry>
+  <entry>Component</entry>
+  <entry>Field</entry>
+</row>
+</thead>
+<tbody>
+<row rowsep='0'>
+    <entry>XkbKeyTypeNamesMask</entry>
+    <entry>
+<para>first_type,</para>
+<para>num_types</para>
+    </entry>
+    <entry>Xkb-&gt;map</entry>
+    <entry>type[*].name</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKTLevelNamesMask</entry>
+    <entry>
+<para>first_lvl,</para>
+<para>num_lvls</para>
+    </entry>
+    <entry>Xkb-&gt;map</entry>
+    <entry>type[*].lvl_names[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKeyAliasesMask</entry>
+    <entry>num_aliases</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>key_aliases[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbRGNamesMask</entry>
+    <entry>num_rg</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>radio_groups[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbKeyNamesMask</entry>
+    <entry>
+<para>first_key,</para>
+<para>num_keys</para>
+    </entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>keys[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbVirtualModNamesMask</entry>
+    <entry>changed_vmods</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>vmods[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbIndicatorNamesMask</entry>
+    <entry>changed_indicators</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>indicators[*]</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbGroupNamesMask</entry>
+    <entry>changed_groups</entry>
+    <entry>Xkb-&gt;names</entry>
+    <entry>groups[*]</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+<emphasis>
+XkbChangeNames</emphasis>
+ provides a more flexible method for changing symbolic names than <emphasis>
+XkbSetNames</emphasis>
+ and requires the use of an <emphasis>
+XkbNameChangesRec</emphasis>
+ structure.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbChangeNames</emphasis>
+(<emphasis>
+dpy, xkb, changes</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to the X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr      <emphasis>
+      xkb</emphasis>
+;            /* keyboard description from which names are to be taken */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbNameChangesPtr      <emphasis>
+      changes</emphasis>
+;            /* names map components to be updated on the server */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbChangeNames</emphasis>
+ copies any names specified by <emphasis>
+changes</emphasis>
+ from the keyboard description, <emphasis>
+xkb</emphasis>
+, to the X server specified by <emphasis>
+dpy</emphasis>
+.<emphasis>
+ XkbChangeNames</emphasis>
+ aborts and returns <emphasis>
+False</emphasis>
+ if any illegal type names or type shift level names are specified by <emphasis>
+changes</emphasis>
+.
+</para>
+
+</sect3>
+</sect2>
+</sect1>
+<sect1 id='tracking_name_changes'>
+<title>Tracking Name Changes</title>
+
+<para>
+Whenever a symbolic name changes in the server’s keyboard description, the
+server sends a <emphasis>
+XkbNamesNotify</emphasis>
+ event to all interested clients. To receive name notify events, use <emphasis>
+XkbSelectEvents</emphasis>
+ (see section 4.3) with <emphasis>
+XkbNamesNotifyMask</emphasis>
+ in both the <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits</emphasis>
+ parameters.
+</para>
+
+
+<para>
+To receive events for only specific names, use <emphasis>
+XkbSelectEventDetails</emphasis>
+. Set the <emphasis>
+event_type</emphasis>
+ parameter to <emphasis>
+XkbNamesNotify</emphasis>
+, and set both the <emphasis>
+bits_to_change </emphasis>
+and<emphasis>
+ values_for_bits</emphasis>
+ detail parameter to a mask composed of a bitwise OR of masks in Table 18.1.
+</para>
+
+
+<para>
+The structure for the <emphasis>
+XkbNamesNotify</emphasis>
+ event is defined as follows:
+</para>
+
+<para><programlisting>
+typedef struct {
+      int      type;                  /* Xkb extension base event code */
+      unsigned long      serial;      /* X server serial number for
+                                         event */
+      Bool      send_event;           /* <emphasis>True</emphasis>
+                                         =&gt; synthetically generated */
+      Display *      display;         /* server connection where event
+                                         generated */
+      Time      time;                 /* server time when event generated */
+      int      xkb_type;              /* <emphasis>XkbNamesNotify</emphasis> */
+      int      device;                /* Xkb device ID, will not be
+                                         <emphasis>XkbUseCoreKbd</emphasis> */
+      unsigned int      changed;      /* mask of name components
+that have changed */
+      int      first_type;            /* first key type with a new name */
+      int      num_types;             /* number of types with new names */
+      int      first_lvl;             /* first key type with new level names */
+      int      num_lvls;              /* number of key types with new level names */
+      int      num_aliases;           /* if key aliases changed, total number
+                                         of key aliases */
+      int      num_radio_groups;      /* if radio groups changed,
+                                         total number of radio groups */
+      unsigned int      changed_vmods;  /* mask of virtual modifiers for
+                                           which names have changed */
+      unsigned int      changed_groups; /* mask of groups for
+                                           which names were changed */
+      unsigned int      changed_indicators;  /* mask of indicators for which
+                                                names were changed */
+      int      first_key;             /* first key with a new name */
+      int      num_keys;              /* number of keys with new names */
+} <emphasis>XkbNamesNotifyEvent</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+changed</emphasis>
+ field specifies the name components that have changed and is the bitwise
+inclusive OR of the valid names mask bits defined in Table 18.1. The other
+fields in this event are interpreted as the like-named fields in an <emphasis>
+XkbNameChangesRec</emphasis> , as previously defined.
+</para>
+
+
+<para>
+When your application receives a X<emphasis>
+kbNamesNotify</emphasis>
+ event, you can note the changed names in a changes structure using <emphasis>
+XkbNoteNameChanges</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbNoteNameChanges</emphasis>
+(<emphasis>
+old</emphasis>
+,<emphasis>
+ new</emphasis>
+,<emphasis>
+ wanted</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbNameChangesPtr            <emphasis>
+old</emphasis>
+;            /* <emphasis>
+XkbNameChanges</emphasis>
+ structure to be updated */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbNamesNotifyEvent *            <emphasis>
+new</emphasis>
+;            /* event from which changes are to be copied */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+wanted</emphasis>
+;            /* types of names for which changes are to be noted */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The <emphasis>
+wanted</emphasis>
+ parameter is the bitwise inclusive OR of the valid names mask bits shown in
+Table 18.1. <emphasis>
+XkbNoteNameChanges</emphasis>
+ copies any changes that are reported in <emphasis>
+new</emphasis>
+ and specified in <emphasis>
+wanted</emphasis>
+ into the changes record specified by <emphasis>
+old</emphasis>
+.
+</para>
+
+
+<para>
+To update the local copy of the keyboard description with the actual values,
+pass to <emphasis>
+XkbGetNameChanges</emphasis>
+ the results of one or more calls to <emphasis>
+XkbNoteNameChanges</emphasis>
+.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetNameChanges</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ xkb</emphasis>
+,<emphasis>
+ changes</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *            <emphasis>
+dpy</emphasis>
+;            /* connection to the X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;            /* keyboard description to which names are copied */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbNameChangesPtr            <emphasis>
+changes</emphasis>
+;            /* names components to be obtained from the server */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetNameChanges</emphasis>
+ examines the <emphasis>
+changes</emphasis>
+ parameter, retrieves the necessary information from the server, and places the
+results into the <emphasis>
+xkb</emphasis>
+ keyboard description.
+</para>
+
+
+<para>
+<emphasis>
+XkbGetNamesChanges</emphasis>
+ can generate <emphasis>
+BadAlloc</emphasis>
+, <emphasis>
+BadImplementation,</emphasis>
+ and <emphasis>
+BadMatch</emphasis>
+ errors.
+</para>
+
+
+</sect1>
+<sect1 id='allocating_and_freeing_symbolic_names'>
+<title>Allocating and Freeing Symbolic Names</title>
+
+<para>
+Most applications do not need to directly allocate symbolic names structures.
+Do not allocate a names structure directly using <emphasis>
+malloc</emphasis>
+ or <emphasis>
+Xmalloc</emphasis>
+ if your application changes the number of key aliases or radio groups or
+constructs a symbolic names structure without loading the necessary components
+from the X server. Instead use <emphasis>
+XkbAllocNames</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbAllocNames</emphasis>
+(<emphasis>
+xkb, which, num_rg, num_key_aliases)</emphasis>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr      <emphasis>
+xkb;</emphasis>
+      /* keyboard description for which names are to be allocated */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+which;</emphasis>
+      /* mask of names to be allocated */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int      <emphasis>
+num_rg;</emphasis>
+      /* total number of radio group names needed */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int      <emphasis>
+num_key_aliases;</emphasis>
+      /* total number of key aliases needed */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbAllocNames</emphasis>
+ can return <emphasis>
+BadAlloc</emphasis>
+, <emphasis>
+BadMatch,</emphasis>
+ and <emphasis>
+BadValue</emphasis>
+ errors.<emphasis>
+ </emphasis>
+The <emphasis>
+which</emphasis>
+ parameter is the bitwise inclusive OR of the valid names mask bits defined in
+Table 18.1.
+</para>
+
+
+<para>
+Do not free symbolic names structures directly using <emphasis>
+free</emphasis>
+ or <emphasis>
+XFree</emphasis>
+. Use <emphasis>
+XkbFreeNames</emphasis>
+ instead.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbFreeNames</emphasis>
+(<emphasis>
+xkb, which, free_map)</emphasis>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr      <emphasis>
+xkb</emphasis>
+;      /* keyboard description for which names are to be freed */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+which</emphasis>
+;      /* mask of names components to be freed */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Bool      <emphasis>
+free_map</emphasis>
+;      /* <emphasis>
+True</emphasis>
+ =&gt; XkbNamesRec structure itself should be freed */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The <emphasis>
+which</emphasis>
+ parameter is the bitwise inclusive OR of the valid names mask bits defined in
+Table 18.1.
+</para>
+</sect1>
+</chapter>

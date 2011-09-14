@@ -804,7 +804,7 @@ AC_SUBST(TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR)
 dnl ==================
 dnl libpng
 
-AC_CHECK_LIB([png], [png_write_info], [have_libpng=yes], [have_libpng=no])
+PKG_CHECK_MODULES(PNG, [libpng], have_libpng=yes, have_libpng=no)
 
 if test x$have_libpng = xyes; then
     AC_DEFINE([HAVE_LIBPNG], [1], [Whether we have libpng])

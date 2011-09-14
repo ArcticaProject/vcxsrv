@@ -1,0 +1,4794 @@
+<chapter id='xkb_server_keyboard_mapping'>
+<title>Xkb Server Keyboard Mapping</title>
+
+<para>
+The <emphasis>
+server</emphasis>
+ field of the complete Xkb keyboard description (see section 6.1) is a pointer
+to the Xkb server map.
+</para>
+
+
+<para>
+Figure 16.1 shows the relationships between elements in the server map:
+</para>
+
+<mediaobject>
+ <imageobject> <imagedata format="SVG" fileref="XKBlib-16.svg"/>
+ </imageobject>
+<caption>Server Map Relationships</caption>
+ </mediaobject>
+
+
+<!--
+<H5 CLASS="Figure">
+Server Map Relationships</H5>
+-->
+
+<para>
+The Xkb server map contains the information the server needs to interpret key
+events and is of type <emphasis>
+XkbServerMapRec</emphasis>
+:
+</para>
+
+<para><programlisting>
+#define XkbNumVirtualMods            16
+</programlisting></para>
+
+<para><programlisting>
+typedef struct {                         /* Server Map */
+      unsigned short     num_acts;       /* # of occupied entries in <emphasis> acts</emphasis> */
+      unsigned short     size_acts;      /* # of entries in <emphasis> acts</emphasis> */
+      XkbAction *        acts;           /* linear 2d tables of key actions, 1 per keycode */
+      XkbBehavior *      behaviors;      /* key behaviors,1 per keycode */
+      unsigned short *   key_acts;       /* index into <emphasis> acts</emphasis> , 1 per keycode */
+      unsigned char *    explicit;       /* explicit overrides of core remapping, 1 per key */
+      unsigned char      vmods[XkbNumVirtualMods];  /* real mods bound to virtual mods */
+      unsigned short *   vmodmap;        /* virtual mods bound to key, 1 per keycode*/
+} <emphasis>XkbServerMapRec</emphasis>, *XkbServerMapPtr;
+</programlisting></para>
+
+<para>
+The <emphasis>
+num_acts</emphasis>
+, <emphasis>
+size_acts</emphasis>
+, <emphasis>
+acts</emphasis>
+, and <emphasis>
+key_acts</emphasis>
+ fields specify the key actions, defined in section 16.1. The <emphasis>
+behaviors</emphasis>
+ field describes the behavior for each key and is defined in section 16.2. The
+<emphasis>
+explicit</emphasis>
+ field describes the explicit components for a key and is defined in section
+16.3. The <emphasis>
+vmods</emphasis>
+ and the <emphasis>
+vmodmap</emphasis>
+ fields describe the virtual modifiers and the per-key virtual modifier mapping
+and are defined in section 16.4.
+</para>
+
+<sect1 id='key_actions'>
+<title>Key Actions</title>
+
+<para>
+A key action defines the effect key presses and releases have on the internal
+state of the server. For example, the expected key action associated with
+pressing the <emphasis>
+Shift</emphasis>
+ key is to set the <emphasis>
+Shift</emphasis>
+ modifier. There is zero or one key action associated with each keysym bound to
+each key.
+</para>
+
+
+<para>
+Just as the entire list of key symbols for the keyboard mapping is held in the
+<emphasis>
+syms</emphasis>
+ field of the client map, the entire list of key actions for the keyboard
+mapping is held in the <emphasis>
+acts</emphasis>
+ array of the server map. The total size of <emphasis>
+acts</emphasis>
+ is specified by <emphasis>
+size_acts</emphasis>
+, and the number of entries is specified by <emphasis>
+num_acts</emphasis>.
+</para>
+
+
+<para>
+The <emphasis>
+key_acts</emphasis>
+ array, indexed by keycode, describes the actions associated with a key. The
+<emphasis>
+key_acts</emphasis>
+ array has <emphasis>
+min_key_code</emphasis>
+ unused entries at the start to allow direct indexing using a keycode. If a
+<emphasis>
+key_acts</emphasis>
+ entry is <emphasis>
+zero</emphasis>
+, it means the key does not have any actions associated with it. If an entry is
+not <emphasis>
+zero</emphasis>
+, the entry represents an index into the <emphasis>
+acts</emphasis>
+ field of the server map, much as the <emphasis>
+offset</emphasis>
+ field of a <emphasis>
+KeySymMapRec</emphasis>
+ structure is an index into the <emphasis>
+syms</emphasis>
+ field of the client map.
+</para>
+
+<para>
+The reason the <emphasis>
+acts</emphasis>
+ field is a linear list of <emphasis>
+XkbAction</emphasis>
+s is to reduce the memory consumption associated with a keymap. Because Xkb
+allows individual keys to have multiple shift levels and a different number of
+groups per key, a single two-dimensional array of <emphasis>
+KeySyms</emphasis>
+ would potentially be very large and sparse. Instead, Xkb provides a small
+two-dimensional array of <emphasis>
+XkbAction</emphasis>
+s for each key. To store all of these individual arrays, Xkb concatenates each
+array together in the <emphasis>
+acts</emphasis>
+ field of the server map.
+</para>
+
+
+<para>
+The key action structures consist only of fields of type char or unsigned char.
+This is done to optimize data transfer when the server sends bytes over the
+wire. If the fields are anything but bytes, the server has to sift through all
+of the actions and swap any nonbyte fields. Because they consist of nothing but
+bytes, it can just copy them out.
+</para>
+
+
+<para>
+Xkb provides the following macros, to simplify accessing information pertaining
+to key actions:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbKeyHasActions</emphasis>
+(<emphasis>
+xkb, keycode</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;                  /* Xkb description of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+KeyCode            <emphasis>
+keycode</emphasis>
+;                  /* keycode of interest */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbKeyHasActions</emphasis>
+ returns <emphasis>
+True</emphasis>
+ if the key corresponding to <emphasis>
+keycode</emphasis>
+ has any actions associated with it; otherwise, it returns <emphasis>
+False</emphasis>
+.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+int <emphasis>
+XkbKeyNumActions</emphasis>
+(<emphasis>
+xkb, keycode</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;                  /* Xkb description of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+KeyCode            <emphasis>
+keycode</emphasis>
+;                  /* keycode of interest */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbKeyNumActions</emphasis>
+ computes the number of actions associated with the key corresponding to
+<emphasis>
+keycode</emphasis>
+. This should be the same value as the result of <emphasis>
+XkbKeyNumSyms</emphasis>
+ (see section 15.3.3).
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbKeyActionPtr <emphasis>
+XkbKeyActionsPtr</emphasis>
+(<emphasis>
+xkb, keycode</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;                  /* Xkb description of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+KeyCode            <emphasis>
+keycode</emphasis>
+;                  /* keycode of interest */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbKeyActionsPtr</emphasis>
+ returns a pointer to the two-dimensional array of key actions associated with
+the key corresponding to <emphasis>
+keycode</emphasis>
+. Use<emphasis>
+ XkbKeyActionsPtr</emphasis>
+ only if the key actually has some actions associated with it, that is,
+<emphasis>
+XkbKeyNumActions</emphasis>
+(xkb, keycode) returns something greater than zero.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbAction <emphasis>
+XkbKeyAction</emphasis>
+(<emphasis>
+xkb, keycode, idx</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;                  /* Xkb description of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+KeyCode            <emphasis>
+keycode</emphasis>
+;                  /* keycode of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+idx</emphasis>
+;                  /* index for group and shift level */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbKeyAction</emphasis>
+ returns the key action indexed by <emphasis>
+idx</emphasis>
+ in the two-dimensional array of key actions associated with the key
+corresponding to <emphasis>
+keycode</emphasis>
+. <emphasis>
+idx</emphasis>
+ may be computed from the group and shift level of interest as follows:
+</para>
+
+<literallayout>
+     idx = group_index * key_width + shift_level
+</literallayout>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbAction <emphasis>
+XkbKeyActionEntry</emphasis>
+(<emphasis>
+xkb, keycode, shift, grp</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;                  /* Xkb description of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+KeyCode            <emphasis>
+keycode</emphasis>
+;                  /* keycode of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+shift</emphasis>
+;                  /* shift level within group */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+grp</emphasis>
+;                  /* group index for group of interest */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbKeyActionEntry</emphasis>
+ returns the key action corresponding to group <emphasis>
+grp</emphasis>
+ and shift level <emphasis>
+lvl</emphasis>
+ from the two-dimensional table of key actions associated with the key
+corresponding to <emphasis>
+keycode</emphasis>
+.
+</para>
+
+
+<sect2 id='the_xkbaction_structure'>
+<title>The XkbAction Structure</title>
+
+<para>
+The description for an action is held in an <emphasis>
+XkbAction</emphasis>
+ structure, which is a union of all possible Xkb action types:
+</para>
+
+<para><programlisting>
+typedef union _XkbAction {
+      XkbAnyAction              any;
+      XkbModAction              mods;
+      XkbGroupAction            group;
+      XkbISOAction              iso;
+      XkbPtrAction              ptr;
+      XkbPtrBtnAction           btn;
+      XkbPtrDfltAction          dflt;
+      XkbSwitchScreenAction     screen;
+      XkbCtrlsAction            ctrls;
+      XkbMessageAction          msg;
+      XkbRedirectKeyAction      redirect;
+      XkbDeviceBtnAction        devbtn;
+      XkbDeviceValuatorAction   devval;
+      unsigned char             type;
+} <emphasis>XkbAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field is provided for convenience and is the same as the type field in the
+individual structures. The following sections describe the individual
+structures for each action in detail.
+</para>
+
+
+</sect2>
+<sect2 id='the_xkbanyaction_structure'>
+<title>The XkbAnyAction Structure</title>
+
+<para>
+The <emphasis>
+XkbAnyAction</emphasis>
+ structure is a convenience structure that refers to any of the actions:
+</para>
+
+<para><programlisting>
+#define      XkbAnyActionDataSize       7
+</programlisting></para>
+
+<para><programlisting>
+typedef struct _XkbAnyAction {
+   unsigned char    type;            /* type of action; determines interpretation for data */
+   unsigned char    data[XkbAnyActionDataSize];
+} <emphasis>XkbAnyAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+data</emphasis>
+ field represents a structure for an action, and its interpretation depends on
+the <emphasis>
+type</emphasis>
+ field. The valid values for the <emphasis>
+type</emphasis>
+ field, and the data structures associated with them are shown in Table 16.1:
+</para>
+
+<table frame='none'>
+<title>Action Types</title>
+<tgroup cols='4'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Structure for Data</entry>
+  <entry>XkbAction Union Member</entry>
+  <entry>Section</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_NoAction</emphasis></entry>
+    <entry>
+<emphasis>XkbSA_NoAction</emphasis>
+ means the server does not perform an action for the key; this action does not
+have an associated data structure.
+    </entry>
+    <entry>any</entry>
+    <entry></entry>
+  </row>
+  <row rowsep='0'>
+    <entry>
+<para><emphasis>XkbSA_SetMods</emphasis></para>
+<para><emphasis>XkbSA_LatchMods</emphasis></para>
+<para><emphasis>XkbSA_LockMods</emphasis></para>
+    </entry>
+    <entry><para><emphasis>XkbModAction</emphasis></para></entry>
+    <entry>mods</entry>
+    <entry>16.1.3</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>
+<para><emphasis>XkbSA_SetGroup</emphasis></para>
+<para><emphasis>XkbSA_LatchGroup</emphasis></para>
+<para><emphasis>XkbSA_LockGroup</emphasis></para>
+    </entry>
+    <entry><emphasis>XkbGroupAction</emphasis></entry>
+    <entry>group</entry>
+    <entry>16.1.4</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_MovePtr</emphasis></entry>
+    <entry><emphasis>XkbPtrAction</emphasis></entry>
+    <entry>ptr</entry>
+    <entry>16.1.5</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>
+<para><emphasis>XKbSA_PtrBtn</emphasis></para>
+<para><emphasis>XkbSA_LockPtrBtn</emphasis></para>
+    </entry>
+    <entry><emphasis>XkbPtrBtnAction</emphasis></entry><entry>btn</entry>
+    <entry>16.1.6</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetPtrDflt</emphasis></entry>
+    <entry><emphasis>XkbPtrDfltAction</emphasis></entry>
+    <entry>dflt</entry>
+    <entry>16.1.7</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISOLock</emphasis></entry>
+    <entry><emphasis>XkbISOAction</emphasis></entry>
+    <entry>iso</entry>
+    <entry>16.1.8</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SwitchScreen</emphasis></entry>
+    <entry><emphasis>XkbSwitchScreenAction</emphasis></entry>
+    <entry>screen</entry>
+    <entry>16.1.9</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>
+<para><emphasis>XkbSA_SetControls</emphasis></para>
+<para><emphasis>XkbSA_LockControls</emphasis></para>
+    </entry>
+    <entry><emphasis>XkbCtrlsAction</emphasis></entry>
+    <entry>ctrls</entry>
+    <entry>16.1.10</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ActionMessage</emphasis></entry>
+    <entry><emphasis>XkbMessgeAction</emphasis></entry>
+    <entry>msg</entry>
+    <entry>16.1.11</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_RedirectKey</emphasis></entry>
+    <entry><emphasis>XkbRedirectKeyAction</emphasis></entry>
+    <entry>redirect</entry>
+    <entry>16.1.12</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>
+<para><emphasis>XkbSA_DeviceBtn</emphasis></para>
+<para><emphasis>XKbSA_LockDeviceBtn</emphasis></para>
+    </entry>
+    <entry><emphasis>XkbDeviceBtnAction</emphasis></entry>
+    <entry>devbtn</entry>
+    <entry>16.1.13</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_DeviceValuator</emphasis></entry>
+    <entry><emphasis>XkbDeviceValuatorAction</emphasis></entry>
+    <entry>devval</entry>
+    <entry>16.1.14</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect2>
+<sect2 id='actions_for_changing_modifiers_state'>
+<title>Actions for Changing Modifiers’ State</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbModAction</emphasis>
+ structure change the state of the modifiers when keys are pressed and released
+(see Chapter 7 for a discussion of modifiers):
+</para>
+
+<para><programlisting>
+typedef struct _XkbModAction {
+      unsigned char     type;         /* <emphasis> XkbSA_{Set|Latch|Lock}Mods</emphasis> */
+      unsigned char     flags;        /* with <emphasis> type</emphasis> , controls the effect on modifiers */
+      unsigned char     mask;         /* same as <emphasis> mask</emphasis> field of a modifier description */
+      unsigned char     real_mods;    /* same as <emphasis> real_mods</emphasis> field of a modifier description */
+      unsigned char     vmods1;       /* derived from <emphasis> vmods</emphasis> field of a modifier description */
+      unsigned char     vmods2;       /* derived from <emphasis> vmods</emphasis> field of a modifier description */
+} <emphasis>XkbModAction</emphasis>;
+</programlisting></para>
+
+<para>
+In the following description, the term <emphasis>
+action modifiers</emphasis>
+ means the real modifier bits associated with this action. Depending on the
+value of <emphasis>
+flags</emphasis>
+ (see Table 16.3), these are designated either in the <emphasis>
+mask</emphasis>
+ field of the <emphasis>
+XkbModAction</emphasis>
+ structure itself or the real modifiers bound to the key for which the action
+is being used. In the latter case, this is the client <emphasis>
+map</emphasis>
+-&gt;<emphasis>
+modmap</emphasis>
+[<emphasis>
+keycode</emphasis>
+] field.
+</para>
+
+
+<para>
+The <emphasis>
+type</emphasis>
+ field can have any of the values shown in Table 16.2.
+</para>
+
+<table frame='none'>
+<title>Modifier Action Types</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetMods</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+A key press adds any action modifiers to the keyboard’s base modifiers.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+A key release clears any action modifiers in the keyboard’s base modifiers,
+provided no other key affecting the same modifiers is logically down.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If no other keys are physically depressed when this key is released, and
+<emphasis>
+XkbSA_ClearLocks</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, the key release unlocks any action modifiers.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LatchMods</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+Key press and key release events have the same effect as for <emphasis>
+XkbSA_SetMods</emphasis>
+; if no keys are physically depressed when this key is released, key release
+events have the following additional effects:
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Modifiers unlocked due to <emphasis>
+XkbSA_ClearLocks</emphasis>
+ have no further effect.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If <emphasis>
+XkbSA_LatchToLock</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, a key release locks and then unlatches any remaining action modifiers
+that are already latched.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+A key release latches any action modifiers not used by the <emphasis>
+XkbSA_ClearLocks</emphasis>
+ and <emphasis>
+XkbSA_LatchToLock</emphasis>
+ flags.
+    </para>
+  </listitem>
+  </itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockMods</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+A key press sets the base state of any action modifiers. If <emphasis>
+XkbSA_LockNoLock</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, a key press also sets the locked state of any action modifiers.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+A key release clears any action modifiers in the keyboard’s base modifiers,
+provided no other key that affects the same modifiers is down. If <emphasis>
+XkbSA_LockNoUnlock</emphasis>
+ is not set in the <emphasis>
+flags</emphasis>
+ field, and any of the action modifiers were locked before the corresponding
+key press occurred, a key release unlocks them.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.3. A general meaning is given in the table, but the exact meaning depends on
+the action <emphasis>type</emphasis>.
+</para>
+
+<table frame='none'>
+<title>Modifier Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_UseModMapMods</emphasis></entry>
+    <entry>
+If set, the action modifiers are determined by the modifiers bound by the
+modifier mapping of the key. Otherwise, the action modifiers are set to the
+modifiers specified by the <emphasis>
+mask</emphasis>
+, <emphasis>
+real_mods</emphasis>
+, <emphasis>
+vmod1</emphasis>
+, and <emphasis>
+vmod2</emphasis>
+ fields.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ClearLocks</emphasis></entry>
+    <entry>
+If set and no keys are physically depressed when this key transition
+occurs, the server unlocks any action modifiers.
+   </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LatchToLock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LatchMods</emphasis>
+, the server locks the action modifiers if they are already latched.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoLock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockMods</emphasis>
+, the server only unlocks the action modifiers.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoUnlock</emphasis></entry>
+    <entry>
+If set, and the action is <emphasis>
+XkbSA_LockMods</emphasis>
+, the server only locks the action modifiers.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+If <emphasis>
+XkbSA_UseModMapMods</emphasis>
+ is not set in the <emphasis>
+flags</emphasis>
+ field, the <emphasis>
+mask</emphasis>
+, <emphasis>
+real_mods</emphasis>
+, <emphasis>
+vmods1</emphasis>
+, and <emphasis>
+vmods2 </emphasis>
+fields are used to determine the action modifiers. Otherwise they are ignored
+and the modifiers bound to the key (client <emphasis>
+map</emphasis>
+-&gt;<emphasis>
+modmap</emphasis>
+[<emphasis>
+keycode</emphasis>
+]) are used instead.
+</para>
+
+
+<para>
+The <emphasis>
+mask</emphasis>
+, <emphasis>
+real_mods</emphasis>
+, <emphasis>
+vmods1</emphasis>
+, and <emphasis>
+vmods2</emphasis>
+ fields represent the components of an Xkb modifier description (see section
+7.2). While the <emphasis>
+mask</emphasis>
+ and <emphasis>
+real_mods</emphasis>
+ fields correspond directly to the <emphasis>
+mask</emphasis>
+ and <emphasis>
+real_mods</emphasis>
+ fields of an Xkb modifier description, the <emphasis>
+vmods1</emphasis>
+ and <emphasis>
+vmods2</emphasis>
+ fields are combined to correspond to the <emphasis>
+vmods</emphasis>
+ field of an Xkb modifier description. Xkb provides the following macros, to
+convert between the two formats:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+unsigned short <emphasis>
+XkbModActionVMods</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbAction            <emphasis>
+act</emphasis>
+;                  /* action from which to extract virtual mods */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbModActionVMods</emphasis>
+ returns the <emphasis>
+vmods1</emphasis>
+ and <emphasis>
+vmods2</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ converted to the <emphasis>
+vmods</emphasis>
+ format of an Xkb modifier description.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSetModActionVMods</emphasis>
+(<emphasis>
+act, vmods</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbAction            <emphasis>
+act</emphasis>
+;                  /* action in which to set vmods */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned short            <emphasis>
+vmods</emphasis>
+;                  /* virtual mods to set */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSetModActionVMods</emphasis>
+ sets the <emphasis>
+vmods1</emphasis>
+ and <emphasis>
+vmods2</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ using the <emphasis>
+vmods</emphasis>
+ format of an Xkb modifier description.
+</para>
+
+<note><para>Despite the fact that the first parameter of these two macros is of
+type XkbAction, these macros may be used only with Actions of type <emphasis>
+XkbModAction</emphasis>
+ and <emphasis>
+XkbISOAction</emphasis>
+.</para></note>
+
+
+</sect2>
+<sect2 id='actions_for_changing_group_state'>
+<title>Actions for Changing Group State</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbGroupAction</emphasis>
+ structure change the current group state when keys are pressed and released
+(see Chapter 5 for a description of groups and keyboard state):
+</para>
+
+<para><programlisting>
+typedef struct _XkbGroupAction {
+      unsigned char   type;       /* <emphasis> XkbSA_{Set|Latch|Lock}Group</emphasis> */
+      unsigned char   flags;      /* with <emphasis> type</emphasis> , controls the effect on groups */
+      char            group_XXX;  /* represents a group index or delta */
+} <emphasis>XkbGroupAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field can have any of the following values:
+</para>
+
+<table frame='none'>
+<title>Group Action Types</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetGroup</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If the <emphasis>
+XkbSA_GroupAbsolute</emphasis>
+ bit is set in the <emphasis>
+flags</emphasis>
+ field, key press events change the base keyboard group to the group specified
+by the <emphasis>
+group_XXX</emphasis>
+ field. Otherwise, key press events change the base keyboard group by adding
+the <emphasis>
+group_XXX</emphasis>
+ field to the base keyboard group. In either case, the resulting effective
+keyboard group is brought back into range depending on the value of the
+<emphasis>
+groups_wrap</emphasis>
+ field of the controls structure (see section 10.7.1).
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If a key with an <emphasis>
+XkbSA_ISOLock</emphasis>
+ action (see section 16.1.8) is pressed while this key is down, the key release
+of this key has no effect. Otherwise, the key release cancels the effects of
+the key press.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If the <emphasis>
+XkbSA_ClearLocks</emphasis>
+ bit is set in the flags field, and no keys are physically depressed when this
+key is released, the key release also sets the locked keyboard group to
+<emphasis>
+Group1</emphasis>
+.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LatchGroup</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+Key press and key release events have the same effect as for <emphasis>
+XkbSA_SetGroup</emphasis>
+; if no keys are physically depressed when this key is released, key release
+events have the following additional effects.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If the <emphasis>
+XkbSA_LatchToLock</emphasis>
+ bit is set in the <emphasis>
+flags</emphasis>
+ field and the latched keyboard group index is nonzero, the key release adds
+the delta applied by the corresponding key press to the locked keyboard group
+and subtracts it from the latched keyboard group. The locked and effective
+keyboard group are brought back into range according to the value of the
+<emphasis>
+groups_wrap</emphasis>
+ field of the controls structure.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Otherwise, the key press adds the key press delta to the latched keyboard group.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockGroup</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If the <emphasis>
+XkbSA_GroupAbsolute</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, key press events set the locked keyboard group to the group specified
+by the <emphasis>
+group_XXX</emphasis>
+ field. Otherwise, key press events add the group specified by the <emphasis>
+group_XXX</emphasis>
+ field to the locked keyboard group. In either case, the resulting locked and
+effective keyboard groups are brought back into range depending on the value of
+the <emphasis>
+groups_wrap</emphasis>
+ field of the controls structure.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+A key release has no effect.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.5. A general meaning is given in the table, but the exact meaning depends on
+the action <emphasis>
+type</emphasis>
+.
+</para>
+
+<table frame='none'>
+<title>Group Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ClearLocks</emphasis></entry>
+    <entry>
+If set and no keys are physically depressed when this key transition occurs,
+the server sets the locked keyboard group to <emphasis>
+Group1</emphasis>
+ on a key release.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LatchToLock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+SA_LatchGroup</emphasis>
+, the server locks the action group if it is already latched.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_GroupAbsolute</emphasis></entry>
+    <entry>
+If set, the <emphasis>
+group_XXX</emphasis>
+ field represents an absolute group number. Otherwise, it represents a group
+delta to be added to the current group to determine the new group number.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+group_XXX</emphasis>
+ field represents a signed character. Xkb provides the following macros to
+convert between a signed integer value and a signed character:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+int <emphasis>
+XkbSAGroup</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbAction            <emphasis>
+act</emphasis>
+;                  /* action from which to extract group */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSAGroup</emphasis>
+ returns the <emphasis>
+group_XXX</emphasis>
+ field of <emphasis>
+act</emphasis>
+ converted to a signed int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSASetGroup</emphasis>
+(<emphasis>
+act, grp</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbAction            <emphasis>
+act</emphasis>
+;                  /* action from which to set group */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+grp</emphasis>
+;                  /* group index to set in <emphasis>
+group_XXX</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSASetGroup</emphasis>
+ sets the <emphasis>
+group_XXX</emphasis>
+ field of <emphasis>
+act</emphasis>
+ from the group index <emphasis>
+grp</emphasis>
+.
+</para>
+
+<note><para>Despite the fact that the first parameter of these two macros is of
+type XkbAction, these macros may only be used with Actions of type <emphasis>
+XkbGroupAction</emphasis>
+ and <emphasis>
+XkbISOAction</emphasis>
+.</para></note>
+
+
+</sect2>
+<sect2 id='actions_for_moving_the_pointer'>
+<title>Actions for Moving the Pointer</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbPtrAction</emphasis>
+ structure move the pointer when keys are pressed and released:
+</para>
+
+<para><programlisting>
+typedef struct _XkbPtrAction {
+      unsigned char      type;      /* <emphasis> XkbSA_MovePtr</emphasis> */
+      unsigned char      flags;     /* determines type of pointer motion */
+      unsigned char      high_XXX;  /* x coordinate, high bits*/
+      unsigned char      low_XXX;   /* y coordinate, low bits */
+      unsigned char      high_YYY;  /* x coordinate, high bits */
+      unsigned char      low_YYY;   /* y coordinate, low bits */
+} <emphasis>XkbPtrAction</emphasis>;
+</programlisting></para>
+
+<para>
+If the <emphasis>
+MouseKeys</emphasis>
+ control is not enabled (see section 10.5.1), <emphasis>
+KeyPress</emphasis>
+ and <emphasis>
+KeyRelease</emphasis>
+ events are treated as though the action is <emphasis>
+XkbSA_NoAction</emphasis>.
+</para>
+
+<para>
+If the <emphasis>
+MouseKeys</emphasis>
+ control is enabled, a server action of type <emphasis>
+XkbSA_MovePtr</emphasis>
+ instructs the server to generate core pointer <emphasis>
+MotionNotify</emphasis>
+ events rather than the usual <emphasis>
+KeyPress</emphasis>
+ event, and the corresponding <emphasis>
+KeyRelease</emphasis>
+ event disables any mouse keys timers that were created as a result of handling
+the <emphasis>
+XkbSA_MovePtr</emphasis>
+ action.
+</para>
+
+
+<para>
+The <emphasis>
+type</emphasis>
+ field of the <emphasis>
+XkbPtrAction</emphasis>
+ structure is always <emphasis>
+XkbSA_MovePtr</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is a bitwise inclusive OR of the masks shown in Table 16.6.
+</para>
+
+<table frame='none'>
+<title>Pointer Action Types</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Action Type</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_NoAcceleration</emphasis></entry>
+    <entry>
+If not set, and the <emphasis>
+MouseKeysAccel</emphasis>
+ control is enabled (see section 10.5.2), the <emphasis>
+KeyPress</emphasis>
+ initiates a mouse keys timer for this key; every time the timer expires, the
+cursor moves.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_MoveAbsoluteX</emphasis></entry>
+    <entry>If set, the X portion of the structure specifies the new pointer X
+coordinate. Otherwise, the X portion is added to the current pointer X
+coordinate to determine the new pointer X coordinate.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_MoveAbsoluteY</emphasis></entry>
+    <entry>
+If set, the Y portion of the structure specifies the new
+pointer Y coordinate. Otherwise, the Y portion is added
+to the current pointer Y coordinate to determine the new pointer Y coordinate.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Each of the X and Y coordinantes of the <emphasis>
+XkbPtrAction</emphasis>
+ structure is composed of two signed 16-bit values, that is, the X coordinate
+is composed of <emphasis>
+high_XXX</emphasis>
+ and <emphasis>
+low_XXX</emphasis>
+, and similarly for the Y coordinate. Xkb provides the following macros, to
+convert between a signed integer and two signed 16-bit values in <emphasis>
+XkbPtrAction</emphasis>
+ structures:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+int <emphasis>
+XkbPtrActionX</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbPtrAction            <emphasis>
+act</emphasis>
+;                  /* action from which to extract X */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbPtrActionX</emphasis>
+ returns the <emphasis>
+high_XXX</emphasis>
+ and <emphasis>
+low_XXX</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ converted to a signed int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+int <emphasis>
+XkbPtrActionY</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbPtrAction            <emphasis>
+act</emphasis>
+;                  /* action from which to extract Y */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbPtrActionY</emphasis>
+ returns the <emphasis>
+high_YYY</emphasis>
+ and <emphasis>
+low_YYY</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ converted to a signed int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSetPtrActionX</emphasis>
+(<emphasis>
+act</emphasis>
+, <emphasis>
+x</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbPtrAction            <emphasis>
+act</emphasis>
+;                  /* action in which to set X */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+x;      </emphasis>
+            /* new value to set */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSetPtrActionX</emphasis>
+ sets the <emphasis>
+high_XXX</emphasis>
+ and <emphasis>
+low_XXX</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ from the signed integer value <emphasis>
+x</emphasis>
+.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSetPtrActionY</emphasis>
+(<emphasis>
+act, y</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbPtrAction            <emphasis>
+act</emphasis>
+;                  /* action in which to set Y */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+y</emphasis>
+;                  /* new value to set */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSetPtrActionX</emphasis>
+ sets the <emphasis>
+high_YYY</emphasis>
+ and <emphasis>
+low_YYY</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ from the signed integer value <emphasis>
+y</emphasis>
+.
+</para>
+
+
+</sect2>
+<sect2 id='actions_for_simulating_pointer_button_press_and_release'>
+<title>Actions for Simulating Pointer Button Press and Release</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbPtrBtnAction</emphasis>
+ structure simulate the press and release of pointer buttons when keys are
+pressed and released:
+</para>
+
+<para><programlisting>
+typedef struct _XkbPtrBtnAction {
+      unsigned char   type;     /*<emphasis> XkbSA_PtrBtn, XkbSA_LockPtrBtn</emphasis> */
+      unsigned char   flags;    /* with <emphasis> type</emphasis> , controls the effect on pointer buttons*/
+      unsigned char   count;    /* controls number of ButtonPress and ButtonRelease events */
+      unsigned char   button;   /* pointer button to simulate */
+} <emphasis>XkbPtrBtnAction</emphasis>;
+</programlisting></para>
+
+<para>
+If the <emphasis>
+MouseKeys</emphasis>
+ (see section 10.5.1) control is not enabled, <emphasis>
+KeyPress</emphasis>
+ and <emphasis>
+KeyRelease</emphasis>
+ events are treated as though the action is <emphasis>
+XkbSA_NoAction</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+type</emphasis>
+ field can have any one of the values shown in Table 16.7.
+</para>
+
+<table frame='none'>
+<title>Pointer Button Action Types</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_PtrBtn</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If<emphasis>
+ XkbSA_UseDfltButton</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, the event is generated for the pointer button specified by the
+<emphasis>
+mk_dflt_btn</emphasis>
+ attribute of the <emphasis>
+MouseKeys</emphasis>
+ control (see section 10.5.1). Otherwise, the event is generated for the button
+specified by the <emphasis>
+button</emphasis>
+ field.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If the mouse button specified for this action is logically down, the key press
+and corresponding key release are ignored and have no effect. Otherwise, a key
+press causes one or more core pointer button events instead of the usual
+<emphasis>
+KeyPress</emphasis>
+ event. If <emphasis>
+count</emphasis>
+ is <emphasis>
+zero</emphasis>
+, a key press generates a single <emphasis>
+ButtonPress</emphasis>
+ event; if <emphasis>
+count</emphasis>
+ is greater than <emphasis>
+zero</emphasis>
+, a key press generates <emphasis>
+count</emphasis>
+ pairs of <emphasis>
+ButtonPress</emphasis>
+ and <emphasis>
+ButtonRelease</emphasis>
+ events.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If <emphasis>
+count</emphasis>
+ is <emphasis>
+zero</emphasis>
+, a key release generates a core pointer <emphasis>
+ButtonRelease</emphasis>
+ that matches the event generated by the corresponding <emphasis>
+KeyPress</emphasis>
+; if <emphasis>
+count</emphasis>
+ is nonzero, a key release does not cause a <emphasis>
+ButtonRelease</emphasis>
+ event. A key release never generates a key <emphasis>
+KeyRelease</emphasis>
+ event.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockPtrBtn</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If the button specified by the <emphasis>
+MouseKeys</emphasis>
+ default button<emphasis>
+ </emphasis>
+or <emphasis>
+button</emphasis>
+ is not locked, a key press causes a <emphasis>
+ButtonPress</emphasis>
+ event instead of a <emphasis>
+KeyPress</emphasis>
+ event and locks the button. If the button is already locked or if <emphasis>
+XkbSA_LockNoUnlock</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, a key press is ignored and has no effect.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If the corresponding key press was ignored, and if <emphasis>
+XkbSA_LockNoLock</emphasis>
+ is not set in the <emphasis>
+flags</emphasis>
+ field, a key release generates a <emphasis>
+ButtonRelease</emphasis>
+ event instead of a <emphasis>
+KeyRelease</emphasis>
+ event and unlocks the specified button. If the corresponding key press locked
+a button, the key release is ignored and has no effect.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.8. A general meaning is given in the table, but the exact meaning depends on
+the action <emphasis>
+type.</emphasis>
+:
+</para>
+
+<table frame='none'>
+<title>Pointer Button Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_UseDfltButton</emphasis></entry>
+    <entry>
+If set, the action uses the pointer button specified by the <emphasis>
+mk_dflt_btn</emphasis>
+ attribute of the <emphasis>
+MouseKeys</emphasis>
+ control (see section 10.5.1). Otherwise, the action uses the pointer button
+specified by the<emphasis>
+ button </emphasis>
+field.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoLock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockPtrBtn</emphasis>
+, the server only unlocks the pointer button.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoUnlock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockPtrBtn</emphasis>
+, the server only locks the pointer button.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect2>
+<sect2 id='actions_for_changing_the_pointer_button_simulated'>
+<title>Actions for Changing the Pointer Button Simulated</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbPtrDfltAction</emphasis>
+ structure change the <emphasis>
+mk_dflt_btn</emphasis>
+ attribute of the <emphasis>
+MouseKeys</emphasis>
+ control (see section 10.5.1):
+</para>
+
+<para><programlisting>
+typedef struct _XkbPtrDfltAction {
+      unsigned char   type;      /* <emphasis> XkbSA_SetPtrDflt</emphasis> */
+      unsigned char   flags;     /* controls the pointer button number */
+      unsigned char   affect;    /* <emphasis> XkbSA_AffectDfltBtn</emphasis> */
+      char            valueXXX;  /* new default button member */
+} <emphasis>XkbPtrDfltAction</emphasis>;
+</programlisting></para>
+
+<para>
+If the <emphasis>
+MouseKeys</emphasis>
+ control is not enabled, <emphasis>
+KeyPress</emphasis>
+ and <emphasis>
+KeyRelease</emphasis>
+ events are treated as though the action is <emphasis>
+XkbSA_NoAction</emphasis>
+. Otherwise, this action changes the <emphasis>
+mk_dflt_btn</emphasis>
+ attribute of the <emphasis>
+MouseKeys</emphasis>
+ control.
+</para>
+
+
+<para>
+The <emphasis>
+type</emphasis>
+ field of the <emphasis>
+XkbPtrDfltAction</emphasis>
+ structure should always be <emphasis>
+XkbSA_SetPtrDflt</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the values shown in Table
+16.9 (currently there is only one value defined).
+</para>
+
+<table frame='none'>
+<title>Pointer Default Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_DfltBtnAbsolute</emphasis></entry>
+    <entry>
+If set, the <emphasis>
+value</emphasis>
+ field represents an absolute pointer button. Otherwise, the <emphasis>
+value</emphasis>
+ field represents the amount to be added to the current default button.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+affect</emphasis>
+ field specifies what changes as a result of this action. The only valid value
+for the <emphasis>
+affect</emphasis>
+ field is <emphasis>XkbSA_AffectDfltBtn</emphasis>.
+</para>
+
+<para>
+The <emphasis>
+valueXXX</emphasis>
+ field is a signed character that represents the new button value for the
+<emphasis>
+mk_dflt_btn</emphasis>
+ attribute of the <emphasis>
+MouseKeys</emphasis>
+ control (see section 10.5.1). If <emphasis>
+XkbSA_DfltBtnAbsolute</emphasis>
+ is set in <emphasis>
+flags</emphasis>
+, <emphasis>
+valueXXX</emphasis>
+ specifies the button to be used; otherwise, <emphasis>
+valueXXX</emphasis>
+ specifies the amount to be added to the current default button. In either
+case, illegal button choices are wrapped back around into range. Xkb provides
+the following macros, to convert between the integer and signed character
+values in <emphasis>
+XkbPtrDfltAction</emphasis>
+ structures:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+int <emphasis>
+XkbSAPtrDfltValue</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbAction            <emphasis>
+act</emphasis>
+;                  /* action from which to extract group */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSAPtrDfltValue</emphasis>
+ returns the <emphasis>
+valueXXX</emphasis>
+ field of <emphasis>
+act</emphasis>
+ converted to a signed int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSASetPtrDfltValue</emphasis>
+(<emphasis>
+act, val</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbPtrDfltAction            <emphasis>
+act</emphasis>
+;                  /* action in which to set <emphasis>
+valueXXX</emphasis>
+ */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int            <emphasis>
+val</emphasis>
+;                  /* value to set in <emphasis>
+valueXXX</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSASetPtrDfltValue</emphasis>
+ sets the <emphasis>
+valueXXX</emphasis>
+ field of <emphasis>
+act</emphasis>
+ from <emphasis>
+val</emphasis>
+.
+</para>
+
+
+</sect2>
+<sect2 id='actions_for_locking_modifiers_and_group'>
+<title>Actions for Locking Modifiers and Group</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbISOAction</emphasis>
+ structure lock modifiers and the group according to the ISO9995 specification.
+</para>
+
+
+<para>
+Operated by itself, the <emphasis>
+XkbISOAction</emphasis>
+ is just a caps lock. Operated simultaneously with another modifier key, it
+transforms the other key into a locking key. For example, press <emphasis>
+ISO_Lock</emphasis>
+, press and release <emphasis>
+Control_L</emphasis>
+, release <emphasis>
+ISO_Lock</emphasis>
+ ends up locking the <emphasis>
+Control</emphasis>
+ modifier.
+</para>
+
+
+<para>
+The default behavior is to convert:
+</para>
+
+<literallayout>
+     {Set,Latch}Mods to: LockMods
+     {Set,Latch}Group to: LockGroup
+     SetPtrBtn to: LockPtrBtn
+     SetControls to: LockControls
+</literallayout>
+
+<para>
+The <emphasis>
+affects</emphasis>
+ field allows you to turn those effects on or off individually. Set <emphasis>
+XkbSA_ISONoAffectMods</emphasis>
+ to disable the first, <emphasis>
+XkbSA_ISONoAffectGroup</emphasis>
+ to disable the second, and so forth.
+</para>
+
+<para><programlisting>
+typedef struct _XkbISOAction {
+      unsigned char   type;        /* <emphasis>XkbSA_ISOLock</emphasis> */
+      unsigned char   flags;       /* controls changes to group or modifier state */
+      unsigned char   mask;        /* same as <emphasis>mask</emphasis> field of a modifier description */
+      unsigned char   real_mods;   /* same as <emphasis>real_mods</emphasis> field of a modifier description */
+      char            group_XXX;   /* group index or delta group */
+      unsigned char   affect;      /* specifies whether to affect mods, group, ptrbtn, or controls*/
+      unsigned char   vmods1;      /* derived from <emphasis>vmods</emphasis> field of a modifier description */
+      unsigned char   vmods2;      /* derived from <emphasis>vmods</emphasis> field of a modifier description */
+} <emphasis>XkbISOAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field of the <emphasis>
+XkbISOAction</emphasis>
+ structure should always be <emphasis>
+XkbSA_ISOLock</emphasis>
+.
+</para>
+
+
+<para>
+The interpretation of the <emphasis>
+flags</emphasis>
+ field depends on whether the <emphasis>
+XkbSA_ISODfltIsGroup</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field or not.
+</para>
+
+
+<para>
+If the <emphasis>
+XkbSA_ISODfltIsGroup</emphasis>
+ is set in the <emphasis>
+flags</emphasis>
+ field, the action is used to change the group state. The remaining valid bits
+of the <emphasis>
+flags</emphasis>
+ field are composed of a bitwise inclusive OR using the masks shown in Table
+16.10.
+</para>
+
+<table frame='none'>
+<title>ISO Action Flags when XkbSA_ISODfltIsGroup is Set</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISODfltIsGroup</emphasis></entry>
+    <entry>
+      <para>
+If set, the action is used to change the base group state. Must be set for the
+remaining bits in this table to carry their interpretations.
+      </para>
+      <para>
+A key press sets the base group as specified by the <emphasis>
+group_XXX</emphasis>
+ field and the <emphasis>
+XkbSA_GroupAbsolute</emphasis>
+ bit of the <emphasis>
+flags</emphasis>
+ field (see section Note). If no other actions are transformed by the <emphasis>
+XkbISO_Lock</emphasis>
+ action, a key release locks the group. Otherwise, a key release clears group
+set by the key press.
+      </para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_GroupAbsolute</emphasis></entry>
+    <entry>
+If set, the <emphasis>
+group_XXX</emphasis>
+ field represents an absolute group number. Otherwise, it represents a group
+delta to be added to the current group to determine the new group number.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectMods</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_SetMods</emphasis>
+ or <emphasis>
+XkbSA_LatchMods</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockMod</emphasis>
+ actions instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectGroup</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_SetGroup</emphasis>
+ or <emphasis>
+XkbSA_LatchGroup</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockGroup</emphasis>
+ actions instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectPtr</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_PtrBtn</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockPtrBtn</emphasis>
+ actions instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectCtrls</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_SetControls</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockControls</emphasis>
+ actions instead.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+If the <emphasis>
+XkbSA_ISODfltIsGroup</emphasis>
+ is not set in the <emphasis>
+flags</emphasis>
+ field, the action is used to change the modifier state and the remaining valid
+bits of the <emphasis>
+flags</emphasis>
+ field are composed of a bitwise inclusive OR using the masks shown in Table
+16.11.
+</para>
+
+<table frame='none'>
+<title>ISO Action Flags when XkbSA_ISODfltIsGroup is Not Set</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISODfltIsGroup</emphasis> </entry>
+    <entry>
+      <para>
+If not set, action is used to change the base modifier state. Must not be set
+for the remaining bits in this table to carry their interpretations.
+      </para>
+      <para>
+A key press sets the action modifiers in the keyboard’s base modifiers using
+the <emphasis>
+mask</emphasis>
+, <emphasis>
+real_mods</emphasis>
+, <emphasis>
+vmods1</emphasis>
+, and <emphasis>
+vmods2 </emphasis>
+fields (see section 16.1.3). If no other actions are transformed by the
+<emphasis>
+XkbISO_Lock</emphasis>
+ action, a key release locks the action modifiers. Otherwise, a key release
+clears the base modifiers set by the key press.
+      </para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_UseModMapMods</emphasis></entry>
+    <entry>
+If set, the action modifiers are determined by the modifiers bound by the
+modifier mapping of the key. Otherwise, the action modifiers are set to the
+modifiers specified by the <emphasis>
+mask</emphasis>
+, <emphasis>
+real_mods</emphasis>
+, <emphasis>
+vmod1</emphasis>
+, and <emphasis>
+vmod2</emphasis>
+ fields.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoLock</emphasis></entry>
+    <entry>If set, the server only unlocks the action modifiers.</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoUnlock</emphasis></entry>
+    <entry>If set, the server only locks the action modifiers. </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectMods</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_SetMods</emphasis>
+ or <emphasis>
+XkbSA_LatchMods</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockMod</emphasis>
+ actions instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectGroup</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_SetGroup</emphasis>
+ or <emphasis>
+XkbSA_LatchGroup</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockGroup</emphasis>
+ actions instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectPtr</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_PtrBtn</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockPtrBtn</emphasis>
+ actions instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectCtrls</emphasis></entry>
+    <entry>
+If not set, any <emphasis>
+XkbSA_SetControls</emphasis>
+ actions that occur simultaneously with the <emphasis>
+XkbSA_ISOLock</emphasis>
+ action are treated as <emphasis>
+XkbSA_LockControls</emphasis>
+ actions instead.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+group_XXX</emphasis>
+ field represents a signed character. Xkb provides macros to convert between a
+signed integer value and a signed character as shown in section Note.
+</para>
+
+
+<para>
+The <emphasis>
+mask</emphasis>
+, <emphasis>
+real_mods</emphasis>
+, <emphasis>
+vmods1</emphasis>
+, and <emphasis>
+vmods2</emphasis>
+ fields represent the components of an Xkb modifier description (see section
+7.2). While the <emphasis>
+mask</emphasis>
+ and <emphasis>
+real_mods</emphasis>
+ fields correspond directly to the <emphasis>
+mask</emphasis>
+ and <emphasis>
+real_mods</emphasis>
+ fields of an Xkb modifier description, the <emphasis>
+vmods1</emphasis>
+ and <emphasis>
+vmods2</emphasis>
+ fields are combined to correspond to the <emphasis>
+vmods</emphasis>
+ field of an Xkb modifier description. Xkb provides macros to convert between
+the two formats as shown in section 16.1.3.
+</para>
+
+
+<para>
+The <emphasis>
+affect</emphasis>
+ field is composed of a bitwise inclusive OR using the masks shown in Table
+16.11.
+</para>
+
+<table frame='none'>
+<title>ISO Action Affect Field Values</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Affect</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISODNoAffectMods</emphasis></entry>
+    <entry>
+If <emphasis>
+XkbSA_ISONoAffectMods</emphasis>
+ is not set, any <emphasis>
+SA_SetMods</emphasis>
+ or <emphasis>
+SA_LatchMods</emphasis>
+ actions occurring simultaneously with the <emphasis>
+XkbISOAction</emphasis>
+ are treated as <emphasis>
+SA_LockMods</emphasis>
+ instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectGroup</emphasis></entry>
+    <entry>
+If <emphasis>
+XkbSA_ISONoAffectGroup</emphasis>
+ is not set, any <emphasis>
+SA_SetGroup</emphasis>
+ or <emphasis>
+SA_LatchGroup</emphasis>
+ actions occurring simultaneously with the <emphasis>
+XkbISOAction</emphasis>
+ are treated as <emphasis>
+SA_LockGroup</emphasis>
+ instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectPtr</emphasis></entry>
+    <entry>
+If <emphasis>
+XkbSA_ISONoAffectPtr</emphasis>
+ is not set, any <emphasis>
+SA_PtrBtn</emphasis>
+ actions occurring simultaneously with the <emphasis>
+XkbISOAction</emphasis>
+ are treated as <emphasis>
+SA_LockPtrBtn</emphasis>
+ instead.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_ISONoAffectCtrls</emphasis></entry>
+    <entry>
+If <emphasis>
+XkbSA_ISONoAffectCtrls</emphasis>
+ is not set, any <emphasis>
+SA_SetControls</emphasis>
+ actions occurring simultaneously with the <emphasis>
+XkbISOAction</emphasis>
+ are treated as <emphasis>
+SA_LockControls</emphasis>
+ instead.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect2>
+<sect2 id='actions_for_changing_the_active_screen'>
+<title>Actions for Changing the Active Screen</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbSwitchScreen</emphasis>
+ action structure change the active screen on a multiscreen display:
+</para>
+
+<note><para>This action is optional. Servers are free to ignore the action or
+any of its flags if they do not support the requested behavior. If the action
+is ignored, it behaves like <emphasis>
+XkbSA_NoAction</emphasis>
+. Otherwise, key press and key release events do not generate an event.
+</para></note>
+
+<para><programlisting>
+typedef struct _XkbSwitchScreenAction {
+      unsigned char   type;        /* <emphasis> XkbSA_SwitchScreen</emphasis> */
+      unsigned char   flags;       /* controls screen switching */
+      char            screenXXX;   /* screen number or delta */
+} <emphasis>XkbSwitchScreenAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field of the <emphasis>
+XkbSwitchScreenAction</emphasis>
+ structure should always be <emphasis>
+XkbSA_SwitchScreen</emphasis>.
+</para>
+
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.13.
+</para>
+
+<table frame='none'>
+<title>Switch Screen Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SwitchAbsolute</emphasis></entry>
+    <entry>
+If set, the <emphasis>
+screenXXX</emphasis>
+ field represents the index of the new screen. Otherwise, it represents an
+offset from the current screen to the new screen.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SwitchApplication</emphasis></entry>
+    <entry>
+If not set, the action should switch to another screen on the same
+server. Otherwise, it should switch to another X server or application that
+shares the same physical display.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+screenXXX</emphasis>
+ field is a signed character value that represents either the relative or
+absolute screen index, depending on the state of the <emphasis>
+XkbSA_SwitchAbsolute</emphasis>
+ bit in the <emphasis>
+flags</emphasis>
+ field. Xkb provides the following macros to convert between the integer and
+signed character value for screen numbers in <emphasis>
+XkbSwitchScreenAction</emphasis>
+ structures:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+int <emphasis>
+XkbSAScreen</emphasis>
+(<emphasis>
+act</emphasis>
+)                        /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbSwitchScreenAction                  <emphasis>
+act</emphasis>
+;      /* action from which to extract screen */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSAScreen</emphasis>
+ returns the <emphasis>
+screenXXX</emphasis>
+ field of <emphasis>
+act</emphasis>
+ converted to a signed int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSASetScreen</emphasis>
+(<emphasis>
+act, s</emphasis>
+)                        /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbSwitchScreenAction                  <emphasis>
+act</emphasis>
+;      /* action in which to set <emphasis>
+screenXXX</emphasis>
+ */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int                  <emphasis>
+s</emphasis>
+;      /* value to set in <emphasis>
+screenXXX</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSASetScreen</emphasis>
+ sets the <emphasis>
+screenXXX</emphasis>
+ field of <emphasis>
+act</emphasis>
+ from <emphasis>
+s</emphasis>
+.
+</para>
+
+
+</sect2>
+<sect2 id='actions_for_changing_boolean_controls_state'>
+<title>Actions for Changing Boolean Controls State</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbCtrlsAction</emphasis>
+ structure change the state of the boolean controls (see section 10.1):
+</para>
+
+<para><programlisting>
+typedef struct _XkbCtrlsAction {
+      unsigned char     type;        /* <emphasis> XkbSA_SetControls,
+                                        XkbSA_LockControls</emphasis> */
+      unsigned char     flags;       /* with <emphasis> type</emphasis>,
+                                        controls enabling and disabling of controls */
+      unsigned char     ctrls3;      /* <emphasis>ctrls0</emphasis> through
+                                        <emphasis> ctrls3</emphasis> represent the boolean controls */
+      unsigned char     ctrls2;      /* <emphasis>ctrls0</emphasis> through
+                                        <emphasis> ctrls3</emphasis> represent the boolean controls */
+      unsigned char     ctrls1;      /* <emphasis>ctrls0</emphasis> through
+                                        <emphasis> ctrls3</emphasis> represent the boolean controls */
+      unsigned char     ctrls0;      /* <emphasis>ctrls0</emphasis> through
+                                        <emphasis> ctrls3</emphasis> represent the boolean controls */
+} <emphasis>XkbCtrlsAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field can have any one of the values shown in Table 16.14.
+</para>
+
+<table frame='none'>
+<title>Controls Action Types</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetControls</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+A key press enables any boolean controls specified in the <emphasis>
+ctrls</emphasis>
+ fields that were not already enabled at the time of the key press.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+A key release disables any controls enabled by the key press.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+This action can cause <emphasis>
+XkbControlsNotify</emphasis>
+ events (see section 10.1).
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockControls</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If the <emphasis>
+XkbSA_LockNoLock</emphasis>
+ bit is not set in the <emphasis>
+flags</emphasis>
+ field, a key press enables any controls specified in the <emphasis>
+ctrls</emphasis>
+ fields that were not already enabled at the time of the key press.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If the <emphasis>
+XkbSA_LockNoUnlock</emphasis>
+ bit is not set in the <emphasis>
+flags</emphasis>
+ field, a key release disables any controls specified in the <emphasis>
+ctrls</emphasis>
+ fields that were not already disabled at the time of the key press.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+This action can cause <emphasis>
+XkbControlsNotify</emphasis>
+ events (see section 10.1).
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.15.
+</para>
+
+<table frame='none'>
+<title>Control Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoLock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockControls</emphasis>
+, the server only disables controls.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoUnlock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockControls</emphasis>
+, the server only enables controls.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+XkbSA_SetControls</emphasis>
+ action implements a key that enables a boolean control when pressed and
+disables it when released. The <emphasis>
+XkbSA_LockControls</emphasis>
+ action is used to implement a key that toggles the state of a boolean control
+each time it is pressed and released. The <emphasis>
+XkbSA_LockNoLock</emphasis>
+ and <emphasis>
+XkbSA_LockNoUnlock</emphasis>
+ flags allow modifying the toggling behavior to only unlock or only lock the
+boolean control.
+</para>
+
+
+<para>
+The <emphasis>
+ctrls0</emphasis>
+, <emphasis>
+ctrls1</emphasis>
+, <emphasis>
+ctrls2</emphasis>
+, and <emphasis>
+ctrls3</emphasis>
+ fields represent the boolean controls in the <emphasis>
+enabled_ctrls</emphasis>
+ field of the controls structure (see section 10.1). Xkb provides the following
+macros, to convert between the two formats:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+unsigned int <emphasis>
+XkbActionCtrls</emphasis>
+(<emphasis>
+act</emphasis>
+)                        /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbCtrlsAction            <emphasis>
+act</emphasis>
+;            /* action from which to extract controls */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbActionCtrls</emphasis>
+ returns the <emphasis>
+ctrls</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ converted to an unsigned int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSAActionSetCtrls</emphasis>
+(<emphasis>
+act, ctrls</emphasis>
+)                        /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbCtrlsAction                  <emphasis>
+act</emphasis>
+;      /* action in which to set ctrls0-ctrls3 */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int                  <emphasis>
+ctrls</emphasis>
+;      /* value to set in ctrls0-ctrls3 */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSAActionSetCtrls</emphasis>
+ sets the <emphasis>
+ctrls0</emphasis>
+ through <emphasis>
+ctrls3</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ from <emphasis>
+ctrls</emphasis>
+.
+</para>
+
+
+</sect2>
+<sect2 id='actions_for_generating_messages'>
+<title>Actions for Generating Messages</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbMessageAction</emphasis>
+ structure generate <emphasis>
+XkbActionMessage</emphasis>
+ events:
+</para>
+
+<para><programlisting>
+#define            XkbActionMessageLength                  6
+</programlisting></para>
+<para><programlisting>
+typedef struct _XkbMessageAction {
+      unsigned char   type;             /* <emphasis> XkbSA_ActionMessage</emphasis> */
+      unsigned char   flags;            /* controls event generation via key presses and releases */
+      unsigned char   message[XkbActionMessageLength];    /* message */
+} <emphasis>XkbMessageAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field of the <emphasis>
+XkbMessageAction</emphasis>
+ structure should always be <emphasis>
+XkbSA_ActionMessage</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.16.
+</para>
+
+<table frame='none'>
+<title>Message Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_MessageOnPress</emphasis></entry>
+    <entry>
+If set, key press events generate an <emphasis>
+XkbActionMessage</emphasis>
+ event that reports the keycode, event type, and contents of the <emphasis>
+message</emphasis>
+ field.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_MessageOnRelease</emphasis></entry>
+    <entry>
+If set, key release events generate an <emphasis>
+XkbActionMessage</emphasis>
+ event that reports the keycode, event type, and contents of the <emphasis>
+message</emphasis>
+ field.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_MessageGenKeyEvent</emphasis></entry>
+    <entry>
+If set, key press and key release events generate <emphasis>
+KeyPress</emphasis>
+ and <emphasis>
+KeyRelease</emphasis>
+ events, regardless of whether they generate <emphasis>
+XkbActionMessage</emphasis>
+ events.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+message</emphasis>
+ field is an array of <emphasis>
+XkbActionMessageLength</emphasis>
+ unsigned characters and may be set to anything the keymap designer wishes.
+</para>
+
+<sect3 id='detecting_key_action_messages'>
+<title>Detecting Key Action Messages</title>
+
+<para>
+To receive <emphasis>
+XkbActionMessage</emphasis>
+ events by calling either <emphasis>
+XkbSelectEvents</emphasis>
+ or <emphasis>
+XkbSelectEventDetails</emphasis>
+ (see section 4.3).
+</para>
+
+
+<para>
+To receive <emphasis>
+XkbActionMessage</emphasis>
+ events under all possible conditions, use <emphasis>
+XkbSelectEvents</emphasis>
+ and pass <emphasis>
+XkbActionMessageMask</emphasis>
+ in both <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits</emphasis>
+.
+</para>
+
+
+<para>
+The <emphasis>
+XkbActionMessage</emphasis>
+ event has no event details. However, you can call <emphasis>
+XkbSelectEventDetails</emphasis>
+ using <emphasis>
+XkbActionMessage</emphasis>
+ as the <emphasis>
+event_type</emphasis>
+ and specifying <emphasis>
+XkbAllActionMessageMask</emphasis>
+ in <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits.</emphasis>
+ This has the same effect as a call to <emphasis>
+XkbSelectEvents</emphasis>.
+</para>
+
+
+<para>
+The structure for the <emphasis>
+XkbActionMessage</emphasis>
+ event is defined as follows:
+</para>
+
+<para><programlisting>
+typedef struct _XkbActionMessage {
+      int            type;            /* Xkb extension base event code */
+      unsigned long  serial;          /* X server serial number for event */
+      Bool           send_event;      /* <emphasis>True</emphasis> =&gt; synthetically generated */
+      Display *      display;         /* server connection where event generated */
+      Time           time;            /* server time when event generated */
+      int            xkb_type;        /* <emphasis>XkbActionMessage</emphasis> */
+      int            device;          /* Xkb device ID, will not be <emphasis> XkbUseCoreKbd</emphasis> */
+      KeyCode        keycode;         /* keycode of key triggering event */
+      Bool           press;           /* <emphasis>True</emphasis> =&gt; key press,
+                                         <emphasis>False</emphasis> =&gt; release */
+      Bool           key_event_follows; /* <emphasis>True</emphasis> =&gt; KeyPress/KeyRelease follows */
+      char           message[XkbActionMessageLength+1];                       /* message text */
+} <emphasis>XkbActionMessageEvent</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+keycode</emphasis>
+ is the keycode of the key that was pressed or released. The <emphasis>
+press</emphasis>
+ field specifies whether the event was the result of a key press or key
+release.
+</para>
+
+
+<para>
+The <emphasis>
+key_event_follows</emphasis>
+ specifies whether a <emphasis>
+KeyPress</emphasis>
+ (if <emphasis>
+press</emphasis>
+ is <emphasis>
+True</emphasis>
+) or <emphasis>
+KeyRelease</emphasis>
+ (if <emphasis>
+press</emphasis>
+ is <emphasis>
+False</emphasis>
+) event is also sent to the client. As with all other Xkb events, <emphasis>
+XkbActionMessageEvent</emphasis>
+s are delivered to all clients requesting them, regardless of the current
+keyboard focus. However, the <emphasis>
+KeyPress</emphasis>
+ or <emphasis>
+KeyRelease</emphasis>
+ event that conditionally follows an <emphasis>
+XkbActionMessageEvent</emphasis>
+ is sent only to the client selected by the current keyboard focus. <emphasis>
+key_event_follows</emphasis>
+ is <emphasis>
+True</emphasis>
+ only for the client that is actually sent the following <emphasis>
+KeyPress</emphasis>
+ or <emphasis>
+KeyRelease</emphasis>
+ event.
+</para>
+
+
+<para>
+The <emphasis>
+message</emphasis>
+ field is set to the message specified in the action and is guaranteed to be
+<emphasis>
+NULL</emphasis>
+-terminated; the Xkb extension forces a <emphasis>
+NULL</emphasis>
+ into <emphasis>
+message</emphasis>
+[<emphasis>
+XkbActionMessageLength</emphasis>
+].
+</para>
+
+
+</sect3>
+</sect2>
+<sect2 id='actions_for_generating_a_different_keycode'>
+<title>Actions for Generating a Different Keycode</title>
+
+<para>
+Actions associated with the <emphasis>
+XkbRedirectKeyAction</emphasis>
+ structure generate <emphasis>
+KeyPress</emphasis>
+ and <emphasis>
+KeyRelease</emphasis>
+ events containing a keycode different from the key that was pressed or
+released:
+</para>
+
+<para><programlisting>
+typedef struct      _XkbRedirectKeyAction {
+      unsigned char      type;          /* <emphasis> XkbSA_RedirectKey</emphasis> */
+      unsigned char      new_key;       /* keycode to be put in event */
+      unsigned char      mods_mask;     /* mask of real mods to be reset */
+      unsigned char      mods;          /* mask of real mods to take values from */
+      unsigned char      vmods_mask0;   /* first half of mask of virtual mods to be reset */
+      unsigned char      vmods_mask1;   /* other half of mask of virtual mods to be reset */
+      unsigned char      vmods0;        /* first half of mask of virtual mods to take values from */
+      unsigned char      vmods1;        /* other half of mask of virtual mods to take values from */
+} <emphasis>XkbRedirectKeyAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field for the <emphasis>
+XkbRedirectKeyAction</emphasis>
+ structure should always be <emphasis>
+XkbSA_RedirectKey</emphasis>
+.
+</para>
+
+
+<para>
+Key presses cause a <emphasis>
+KeyPress</emphasis>
+ event for the key specified by the <emphasis>
+new_key</emphasis>
+ field instead of the actual key. The state reported in this event reports the
+current effective modifiers changed as follows: any real modifiers selected by
+the <emphasis>
+mods_mask</emphasis>
+ field are set to corresponding values from the <emphasis>
+mods</emphasis>
+ field. Any real modifiers bound to the virtual modifiers specified by the
+<emphasis>
+vmods_mask0</emphasis>
+ and <emphasis>
+vmods_mask1</emphasis>
+ fields are either set or cleared, depending on the corresponding values in the
+<emphasis>
+vmods0</emphasis>
+ and <emphasis>
+vmods1</emphasis>
+ fields. If the real and virtual modifier definitions specify conflicting
+values for a single modifier, the real modifier definition has priority.
+</para>
+
+
+<para>
+Key releases cause a <emphasis>
+KeyRelease</emphasis>
+ event for the key specified by the <emphasis>
+new_key</emphasis>
+ field instead of the actual key. The state for this event consists of the
+effective keyboard modifiers at the time of the release, changed as described
+previously.
+</para>
+
+
+<para>
+The <emphasis>
+XkbSA_RedirectKey</emphasis>
+ action normally redirects to another key on the same device as the key that
+caused the event, unless that device does not belong to the input extension
+<emphasis>
+KeyClass</emphasis>
+, in which case this action causes an event on the core keyboard device. (The
+input extension categorizes devices by breaking them into classes. Keyboards,
+and other input devices with keys, are classified as KeyClass devices by the
+input extension.)
+</para>
+
+
+<para>
+The <emphasis>
+vmods_mask0</emphasis>
+ and <emphasis>
+vmods_mask1</emphasis>
+ fields actually represent one <emphasis>
+vmods_mask</emphasis>
+ value, as described in Chapter 7. Xkb provides the following macros, to
+convert between the two formats:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+unsigned int <emphasis>
+XkbSARedirectVModsMask</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbRedirectKeyAction                  <emphasis>
+act</emphasis>
+;            /* action from which to extract vmods */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSARedirectVModsMask</emphasis>
+ returns the <emphasis>
+vmods_mask0</emphasis>
+ and <emphasis>
+vmods_mask1</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ converted to an unsigned int.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSARedirectSetVModsMask</emphasis>
+(<emphasis>
+act, vm</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbRedirectKeyAction                  <emphasis>
+act</emphasis>
+;            /* action in which to set vmods */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int                  <emphasis>
+vm</emphasis>
+;            /* new value for virtual modifier mask */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbSARedirectSetVModsMask</emphasis>
+ sets the <emphasis>
+vmods_mask0</emphasis>
+ and <emphasis>
+vmods_mask1</emphasis>
+ fields of <emphasis>
+act</emphasis>
+ from <emphasis>
+vm</emphasis>
+.
+</para>
+
+
+<para>
+Similarly, the <emphasis>
+vmods0</emphasis>
+ and <emphasis>
+vmods1</emphasis>
+ fields actually represent one <emphasis>
+vmods </emphasis>
+value, as described in Chapter 7. To convert between the two formats, Xkb
+provides the following convenience macros:
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+unsigned int <emphasis>
+XkbSARedirectVMods</emphasis>
+(<emphasis>
+act</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbRedirectKeyAction                  <emphasis>
+act</emphasis>
+;            /* action from which to extract vmods */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<literallayout>
+     <emphasis>XkbSARedirectVModsMask</emphasis> returns the <emphasis>vmods0</emphasis>
+     and <emphasis>vmods1</emphasis> fields of <emphasis>act</emphasis>
+     converted to an unsigned int.
+</literallayout>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbSARedirectSetVMods</emphasis>
+(<emphasis>
+act, vm</emphasis>
+)                              /* macro */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbRedirectKeyAction                  <emphasis>
+act</emphasis>
+;            /* action in which to set vmods */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int                  <emphasis>
+v</emphasis>
+;            /* new value for virtual modifiers */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<literallayout>
+     <emphasis> XkbSARedirectSetVModsMask</emphasis> sets the <emphasis>vmods0</emphasis>
+     and <emphasis>vmods1</emphasis> of <emphasis>act</emphasis> from <emphasis>v</emphasis>.
+</literallayout>
+
+</sect2>
+<sect2 id='actions_for_generating_devicebuttonpress_and_devicebuttonrelease'>
+<title>Actions for Generating DeviceButtonPress and DeviceButtonRelease</title>
+
+<para>
+Actions associated with <emphasis>
+XkbDeviceBtnAction</emphasis>
+ structures generate <emphasis>
+DeviceButtonPress</emphasis>
+ and <emphasis>
+DeviceButtonRelease</emphasis>
+ events instead of normal <emphasis>
+KeyPress</emphasis>
+ and <emphasis>
+KeyRelease</emphasis>
+ events:
+</para>
+
+<para><programlisting>
+typedef struct _XkbDeviceBtnAction {
+      unsigned char    type;      /* <emphasis> XkbSA_DeviceBtn, XkbSA_LockDeviceBtn</emphasis> */
+      unsigned char    flags;     /* with <emphasis> type</emphasis> , specifies locking or unlocking */
+      unsigned char    count;     /* controls number of DeviceButtonPress and Release events */
+      unsigned char    button;    /* index of button on <emphasis> device</emphasis> */
+      unsigned char    device;    /* device ID of an X input extension device */
+} <emphasis>XkbDeviceBtnAction</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field can have any one of the values shown in Table 16.17.
+</para>
+
+<table frame='none'>
+<title>Device Button Action Types</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_DeviceBtn</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If the button specified by this action is logically down, the key press and
+corresponding release are ignored and have no effect. If the device or button
+specified by this action are illegal, this action behaves like <emphasis>
+XkbSA_NoAction</emphasis>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Otherwise, key presses cause one or more input extension device events instead
+of the usual key press event. If the <emphasis>
+count</emphasis>
+ field is zero, a key press generates a single <emphasis>
+DeviceButtonPress</emphasis>
+ event. If count is greater than zero, a key press event generates <emphasis>
+count</emphasis>
+ pairs of <emphasis>
+DeviceButtonPress</emphasis>
+ and <emphasis>
+DeviceButtonRelease</emphasis>
+ events.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If <emphasis>
+count</emphasis>
+ is zero, a key release generates an input extension <emphasis>
+DeviceButtonRelease</emphasis>
+ event that matches the event generated by the corresponding key press. If
+<emphasis>
+count</emphasis>
+ is nonzero, a key release does not cause a <emphasis>
+DeviceButtonRelease</emphasis>
+ event. Key releases never cause <emphasis>
+KeyRelease</emphasis>
+ events.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockDeviceBtn</emphasis></entry>
+    <entry>
+<itemizedlist>
+  <listitem>
+    <para>
+If the device or button specified by this action are illegal, this action
+behaves like <emphasis>XkbSA_NoAction</emphasis>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Otherwise, if the specified button is not locked and the <emphasis>
+XkbSA_LockNoLock</emphasis>
+ bit is not set in the <emphasis>
+flags</emphasis>
+ field, a key press generates an input extension <emphasis>
+DeviceButtonPress</emphasis>
+ event instead of a <emphasis>
+KeyPress</emphasis>
+ event and locks the button. If the button is already locked or if <emphasis>
+XkbSA_LockNoLock</emphasis>
+ bit is set in the <emphasis>
+flags</emphasis>
+ field, the key press is ignored and has no effect.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If the corresponding key press was ignored, and if the <emphasis>
+XkbSA_LockNoUnlock</emphasis>
+ bit is not set in the <emphasis>
+flags</emphasis>
+ field, a key release generates an input extension <emphasis>
+DeviceButtonRelease</emphasis>
+ event instead of a <emphasis>
+KeyRelease</emphasis>
+ event and unlocks the button. If the corresponding key press locked a button,
+the key release is ignored and has no effect.
+    </para>
+  </listitem>
+</itemizedlist>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+The <emphasis>
+flags</emphasis>
+ field is composed of the bitwise inclusive OR of the masks shown in Table
+16.18.
+</para>
+
+<table frame='none'>
+<title>Device Button Action Flags</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Flag</entry>
+  <entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoLock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockDeviceBtn</emphasis>
+, the server only unlocks the button.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_LockNoUnlock</emphasis></entry>
+    <entry>
+If set, and the action type is <emphasis>
+XkbSA_LockDeviceBtn</emphasis>
+, the server only locks the button.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect2>
+<sect2 id='actions_for_simulating_events_from_device_valuators'>
+<title>Actions for Simulating Events from Device Valuators</title>
+
+<para>
+A <emphasis>
+valuator</emphasis>
+ manipulates a range of values for some entity, like a mouse axis, a slider or
+a dial. Actions associated with <emphasis>
+XkbDeviceValuatorAction</emphasis>
+ structures are used to simulate events from one or two input extension device
+valuators.
+</para>
+
+<para><programlisting>
+typedef struct _XkbDeviceValuatorAction {
+      unsigned char    type;        /*<emphasis> XkbSA_DeviceValuator</emphasis> */
+      unsigned char    device;      /* device ID */
+      unsigned char    v1_what;     /* determines how valuator is to behave for valuator 1 */
+      unsigned char    v1_ndx;      /* specifies a real valuator */
+      unsigned char    v1_value;    /* the value for valuator 1 */
+      unsigned char    v2_what;     /* determines how valuator is to behave for valuator 2 */
+      unsigned char    v2_ndx;      /* specifies a real valuator */
+      unsigned char    v2_value;    /* the value for valuator 1 */
+} <emphasis>XkbDeviceValuatorAction</emphasis>;
+</programlisting></para>
+
+<para>
+If <emphasis>
+device</emphasis>
+ is illegal or if neither <emphasis>
+v1_ndx</emphasis>
+ nor <emphasis>
+v2_ndx</emphasis>
+ specifies a legal valuator, this action behaves like <emphasis>
+XkbSA_NoAction</emphasis>.
+</para>
+
+
+<para>
+The low four bits of <emphasis>
+v1_what</emphasis>
+ and <emphasis>
+v2_what</emphasis>
+ specify the corresponding scale value (denoted <emphasis>
+val&lt;n&gt;Scale</emphasis>
+ in Table 16.17), if needed. The high four bits of <emphasis>
+v1_what</emphasis>
+ and <emphasis>
+v2_what</emphasis>
+ specify the operation to perform to set the values. The high four bits of
+<emphasis>
+v1_what</emphasis>
+ and <emphasis>
+v2_what</emphasis>
+ can have the values shown in Table 16.17; the use of <emphasis>
+val&lt;n&gt;Scale</emphasis>
+ is shown in that table also.
+</para>
+
+<table frame='none'>
+<title>Device Valuator v&lt;n&gt;_what High Bits Values</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Value of high bits</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_IgnoreVal</emphasis></entry>
+    <entry>No action</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetValMin</emphasis></entry>
+    <entry>
+<emphasis>v&lt;n&gt;_value</emphasis> is set to its minimum legal value.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetValCenter</emphasis></entry>
+    <entry>
+<emphasis>v&lt;n&gt;_value</emphasis>is centered (to (max-min)/2).
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetValMax</emphasis></entry>
+    <entry>
+<emphasis>v&lt;n&gt;_value</emphasis> is set to its maximum legal value.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetValRelative</emphasis></entry>
+    <entry>
+<emphasis>v&lt;n&gt;_value</emphasis> * (2
+<emphasis>val&lt;n&gt;Scale</emphasis>) is added to
+<emphasis>v&lt;n&gt;_value</emphasis>.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbSA_SetValAbsolute</emphasis></entry>
+    <entry>
+<emphasis>v&lt;n&gt;_value</emphasis>
+ is set to (2 <emphasis>val&lt;n&gt;Scale</emphasis>).
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Illegal values for <emphasis>
+XkbSA_SetValRelative</emphasis>
+ or <emphasis>
+XkbSA_SetValAbsolute</emphasis>
+ are clamped into range. Note that all of these possibilities are legal for
+absolute valuators. For relative valuators, only <emphasis>
+XkbSA_SetValRelative</emphasis>
+ is permitted. Part of the input extension description of a device is the range
+of legal values for all absolute valuators, whence the maximum and minimum
+legal values shown in Table 16.17.
+</para>
+
+
+<para>
+The following two masks are provided as a convenience to select either portion
+of <emphasis>
+v1_what</emphasis>
+ or <emphasis>
+v2_what</emphasis>
+:
+</para>
+
+<literallayout>
+      #define XkbSA_ValOpMask      (0x70)
+      #define XkbSA_ValScaleMask      (0x07)
+</literallayout>
+
+<para>
+<emphasis>
+v1_ndx</emphasis>
+ and <emphasis>
+v2_ndx</emphasis>
+ specify valuators that actually exists. For example, most mice have two
+valuators (x and y axes) so the only legal values for a mouse would be 0 and 1.
+For a dial box with eight dials, any value in the range 0..7 would be correct.
+</para>
+
+
+</sect2>
+<sect2 id='obtaining_key_actions_for_keys_from_the_server'>
+<title>Obtaining Key Actions for Keys from the Server</title>
+
+<para>
+To update the actions (the <emphasis>
+key_acts</emphasis>
+ array) for a subset of the keys in a keyboard description, use <emphasis>
+XkbGetKeyActions</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetKeyActions</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ first</emphasis>
+, <emphasis>
+num</emphasis>
+,<emphasis>
+ xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+first</emphasis>
+;            /* keycode of first key of interest */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+num</emphasis>
+;            /* number of keys desired */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr             <emphasis>
+xkb</emphasis>
+;            /* pointer to keyboard description where result is stored */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetKeyActions</emphasis>
+ sends a request to the server to obtain the actions for <emphasis>
+num</emphasis>
+ keys on the keyboard starting with key <emphasis>
+first</emphasis>
+. It waits for a reply and returns the actions in the <emphasis>
+server</emphasis>
+-&gt;<emphasis>
+key_acts</emphasis>
+ field of <emphasis>
+xkb</emphasis>
+. If successful, <emphasis>
+XkbGetKeyActions</emphasis>
+ returns <emphasis>
+Success</emphasis>
+. The <emphasis>
+xkb</emphasis>
+ parameter must be a pointer to a valid Xkb keyboard description.
+</para>
+
+
+<para>
+If the <emphasis>
+server</emphasis>
+ map in the <emphasis>
+xkb</emphasis>
+ parameter has not been allocated, <emphasis>
+XkbGetKeyActions</emphasis>
+ allocates and initializes it before obtaining the actions.
+</para>
+
+
+<para>
+If the server does not have a compatible version of Xkb, or the Xkb extension
+has not been properly initialized, <emphasis>
+XkbGetKeyActions</emphasis>
+ returns <emphasis>
+BadAccess</emphasis>
+. If <emphasis>
+num</emphasis>
+ is less than 1 or greater than <emphasis>
+XkbMaxKeyCount</emphasis>
+, <emphasis>
+XkbGetKeyActions</emphasis>
+ returns <emphasis>
+BadValue</emphasis>
+. If any allocation errors occur, <emphasis>
+XkbGetKeyActions</emphasis>
+ returns <emphasis>
+BadAlloc</emphasis>
+.
+</para>
+
+
+</sect2>
+<sect2 id='changing_the_number_of_actions_bound_to_a_key'>
+<title>Changing the Number of Actions Bound to a Key</title>
+
+<para>
+To change the number of actions bound to a key, use <emphasis>
+XkbResizeKeyAction</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbAction *<emphasis>
+XkbResizeKeyActions</emphasis>
+(<emphasis>
+xkb</emphasis>
+,<emphasis>
+ key</emphasis>
+,<emphasis>
+ needed</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescRec *<emphasis>
+            xkb</emphasis>
+;            /* keyboard description to change */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int <emphasis>
+            key</emphasis>
+;            /* keycode of key to change */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+int <emphasis>
+            needed</emphasis>
+;            /* new number of actions required */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The <emphasis>
+xkb</emphasis>
+ parameter points to the keyboard description containing the <emphasis>
+key</emphasis>
+ whose number of actions is to be changed. The <emphasis>
+key</emphasis>
+ parameter is the keycode of the key to change, and <emphasis>
+needed</emphasis>
+ specifies the new number of actions required for the key.
+</para>
+
+
+<para>
+<emphasis>
+XkbResizeKeyActions</emphasis>
+ reserves the space needed for the actions and returns a pointer to the
+beginning of the new array that holds the actions. It can change the <emphasis>
+acts</emphasis>
+, <emphasis>
+num_acts</emphasis>
+, and <emphasis>
+size_acts</emphasis>
+ fields of <emphasis>
+xkb</emphasis>
+-&gt;<emphasis>
+server</emphasis>
+ if it is necessary to reallocate the <emphasis>
+acts </emphasis>
+array.
+</para>
+
+
+<para>
+If <emphasis>
+needed</emphasis>
+ is greater than the current number of keysyms for the key, <emphasis>
+XkbResizeKeyActions</emphasis>
+ initializes all new actions in the array to <emphasis>
+NoAction</emphasis>
+.
+</para>
+
+
+<para>
+Because the number of actions needed by a key is normally computed as width *
+number of groups, and <emphasis>
+XkbResizeKeyActions</emphasis>
+ does not modify either the width or number of groups for the key, a
+discrepancy exists on return from <emphasis>
+XkbResizeKeyActions</emphasis>
+ between the space allocated for the actions and the number required. The
+unused entries in the list of actions returned by <emphasis>
+XkbResizeKeyActions</emphasis>
+ are not preserved across future calls to any of the map editing functions, so
+you must update the key actions (which updates the width and number of groups
+for the key) before calling another allocator function. A call to <emphasis>
+XkbChangeTypesOfKey</emphasis>
+ updates these.
+</para>
+
+
+<para>
+If any allocation errors occur while resizing the number of actions bound to
+the key, <emphasis>
+XkbResizeKeyActions</emphasis>
+ returns <emphasis>
+NULL</emphasis>
+.
+</para>
+
+<note><para>A change to the number of actions bound to a key should be
+accompanied by a change in the number of symbols bound to a key. Refer to
+section 15.3.7 for more information on changing the number of symbols bound to
+a key.</para></note>
+
+
+</sect2>
+</sect1>
+<sect1 id='key_behavior'>
+<title>Key Behavior</title>
+
+<para>
+Key behavior refers to the demeanor of a key. For example, the expected
+behavior of the <emphasis>
+CapsLock</emphasis>
+ key is that it logically locks when pressed, and then logically unlocks when
+pressed again.
+</para>
+
+
+<sect2 id='radio_groups2'>
+<title>Radio Groups</title>
+
+<para>
+Keys that belong to the same radio group have the <emphasis>
+XkbKB_RadioGroup</emphasis>
+ type in the <emphasis>
+type</emphasis>
+ field and the radio group index specified in the <emphasis>
+data</emphasis>
+ field in the <emphasis>
+XkbBehavior</emphasis>
+ structure. If the radio group has a name in the <emphasis>
+XkbNamesRec</emphasis>
+ structure, the radio group index is the index into the <emphasis>
+radio_group</emphasis>
+ array in the <emphasis>
+XkbNamesRec</emphasis>
+ structure. A radio group key when pressed stays logically down until another
+key in the radio group is pressed, when the first key becomes logically up and
+the new key becomes logically down. Setting the <emphasis>
+XkbKB_RGAllowNone</emphasis>
+ bit in the behavior for all of the keys of the radio group means that pressing
+the logically down member of the radio group causes it to logically release, in
+which case none of the keys of the radio group would be logically down. If
+<emphasis>
+XkbKB_RGAllowNone</emphasis>
+ is not set, there is no way to release the logically down member of the group.
+</para>
+
+
+<para>
+The low five bits of the <emphasis>
+data</emphasis>
+ field of the <emphasis>
+XkbBehavior</emphasis>
+ structure are the group number, the high three bits are flags. The only flag
+currently defined is:
+</para>
+
+<para><programlisting>
+#define      XkbRG_AllowNone      0x80
+</programlisting></para>
+
+</sect2>
+<sect2 id='the_xkbbehavior_structure'>
+<title>The XkbBehavior Structure</title>
+
+<para>
+The <emphasis>
+behaviors</emphasis>
+ field of the server map is an array of <emphasis>
+XkbBehavior</emphasis>
+ structures, indexed by keycode, and contains the behavior for each key. The
+<emphasis>
+XkbBehavior</emphasis>
+ structure is defined as follows:
+</para>
+
+<para><programlisting>
+typedef struct _XkbBehavior {
+      unsigned char  type;                  /* behavior type + optional
+                                               <emphasis> XkbKB_Permanent</emphasis> bit */
+      unsigned char  data;
+} <emphasis>XkbBehavior</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+type</emphasis>
+ field specifies the Xkb behavior, and the value of the <emphasis>
+data</emphasis>
+ field depends on the <emphasis>
+type</emphasis>
+. Xkb supports the key behaviors shown in Table 16.20.
+</para>
+
+<table frame='none'>
+<title>Key Behaviors</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Type</entry>
+  <entry>Effect</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKB_Default</emphasis></entry>
+    <entry>
+Press and release events are processed normally. The <emphasis>
+data</emphasis>
+ field is unused.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKB_Lock</emphasis></entry>
+    <entry>
+If a key is logically up (that is, the corresponding bit of the core key map is
+cleared) when it is pressed, the key press is processed normally and the
+corresponding release is ignored. If the key is logically down when pressed,
+the key press is ignored but the corresponding release is processed normally.
+The <emphasis>
+data</emphasis>
+ field is unused.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKB_RadioGroup</emphasis></entry>
+    <entry>
+      <para>
+If another member of the radio group is logically down (all members of the
+radio group have the same index, specified in <emphasis>
+data</emphasis>
+) when a key is pressed, the server synthesizes a key release for the member
+that is logically down and then processes the new key press event normally.
+      </para>
+      <para>
+If the key itself is logically down when pressed, the key press event is
+ignored, but the processing of the corresponding key release depends on the
+value of the <emphasis>
+Xkb_RGAllowNone</emphasis>
+ bit in <emphasis>
+flags</emphasis>
+. If it is set, the key release is processed normally; otherwise, the key
+release is also ignored.
+      </para>
+      <para>
+All other key release events are ignored.
+      </para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKB_Overlay1</emphasis></entry>
+    <entry>
+If the <emphasis>
+Overlay1</emphasis>
+ control is enabled (see section 10.4), <emphasis>
+data</emphasis>
+ is interpreted as a keycode, and events from this key are reported as if they
+came from <emphasis>
+data</emphasis>
+’s keycode. Otherwise, press and release events are processed normally.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKB_Overlay2</emphasis></entry>
+    <entry>
+If the <emphasis>
+Overlay2</emphasis>
+ control is enabled (see section 10.4), <emphasis>
+data</emphasis>
+ is interpreted as a keycode, and events from this key are reported as if they
+came from <emphasis>
+data</emphasis>
+’s keycode. Otherwise, press and release events are processed normally.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Xkb also provides the mask, <emphasis>
+XkbKB_Permanent</emphasis>
+ to specify whether the key behavior type should be simulated by Xkb or whether
+the key behavior describes an unalterable physical, electrical, or software
+aspect of the keyboard. If the <emphasis>
+XkbKB_Permanent</emphasis>
+ bit is not set in the <emphasis>
+type</emphasis>
+ field, Xkb simulates the behavior in software. Otherwise, Xkb relies upon the
+keyboard to implement the behavior.
+</para>
+
+
+</sect2>
+<sect2 id='obtaining_key_behaviors_for_keys_from_the_server'>
+<title>Obtaining Key Behaviors for Keys from the Server</title>
+
+<para>
+To obtain the behaviors (the <emphasis>
+behaviors</emphasis>
+ array) for a subset of the keys in a keyboard description from the server, use
+<emphasis>
+XkbGetKeyBehaviors</emphasis>
+:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetKeyBehaviors</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ first</emphasis>
+,<emphasis>
+ num</emphasis>
+,<emphasis>
+ xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+first</emphasis>
+;            /* keycode of first key to get */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+num</emphasis>
+;            /* number of keys for which behaviors are desired */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr             <emphasis>
+xkb</emphasis>
+;            /* Xkb description to contain the result */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetKeyBehaviors</emphasis>
+ sends a request to the server to obtain the behaviors for <emphasis>
+num</emphasis>
+ keys on the keyboard starting with the key whose keycode is <emphasis>
+first</emphasis>
+. It waits for a reply and returns the behaviors in the <emphasis>
+server</emphasis>
+-&gt;<emphasis>
+behaviors</emphasis>
+ field of <emphasis>
+xkb</emphasis>
+. If successful, <emphasis>
+XkbGetKeyBehaviors</emphasis>
+ returns <emphasis>
+Success</emphasis>
+.
+</para>
+
+
+<para>
+If the <emphasis>
+server</emphasis>
+ map in the <emphasis>
+xkb</emphasis>
+ parameter has not been allocated, <emphasis>
+XkbGetKeyBehaviors</emphasis>
+ allocates and initializes it before obtaining the actions.
+</para>
+
+
+<para>
+If the server does not have a compatible version of Xkb, or the Xkb extension
+has not been properly initialized, <emphasis>
+XkbGetKeyBehaviors</emphasis>
+ returns <emphasis>
+BadAccess</emphasis>
+. If <emphasis>
+num</emphasis>
+ is less than 1 or greater than <emphasis>
+XkbMaxKeyCount</emphasis>
+, <emphasis>
+XkbGetKeyBehaviors</emphasis>
+ returns <emphasis>
+BadValue</emphasis>
+. If any allocation errors occur, <emphasis>
+XkbGetKeyBehaviors</emphasis>
+ returns <emphasis>
+BadAlloc</emphasis>
+.
+</para>
+
+
+</sect2>
+</sect1>
+<sect1 id='explicit_components_avoiding_automatic_remapping_by_the_server'>
+<title>Explicit Components—Avoiding Automatic Remapping by the Server</title>
+
+<para>
+Whenever a client remaps the keyboard using core protocol requests, Xkb
+examines the map to determine likely default values for the components that
+cannot be specified using the core protocol (see section 17.1.2 for more
+information on how Xkb chooses the default values).
+</para>
+
+
+<para>
+This automatic remapping might replace definitions explicitly requested by an
+application, so the Xkb keyboard description defines an explicit components
+mask for each key. Any aspects of the automatic remapping listed in the
+explicit components mask for a key are not changed by the automatic keyboard
+mapping.
+</para>
+
+
+<para>
+The explicit components masks are held in the <emphasis>
+explicit</emphasis>
+ field of the server map, which is an array indexed by keycode. Each entry in
+this array is a mask that is a bitwise inclusive OR of the values shown in
+Table 16.21.
+</para>
+
+<table frame='none'>
+<title>Explicit Component Masks</title>
+<tgroup cols='3'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Bit in Explicit Mask</entry>
+  <entry>Value</entry>
+  <entry>Protects Against</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitKeyType1</emphasis></entry>
+    <entry>(1&lt;&lt;0)</entry>
+    <entry>
+Automatic determination of the key type associated with <emphasis>
+Group1.</emphasis>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitKeyType2</emphasis></entry>
+    <entry>(1&lt;&lt;1)</entry>
+    <entry>
+Automatic determination of the key type associated with <emphasis>
+Group2.</emphasis>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitKeyType3</emphasis></entry>
+    <entry>(1&lt;&lt;2)</entry>
+    <entry>
+Automatic determination of the key type associated with <emphasis>
+Group3.</emphasis>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitKeyType4</emphasis></entry>
+    <entry>(1&lt;&lt;3)</entry>
+    <entry>
+Automatic determination of the key type associated with <emphasis>
+Group4.</emphasis>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitInterpret</emphasis></entry>
+    <entry>(1&lt;&lt;4)</entry>
+    <entry>
+Application of any of the fields of a symbol interpretation to the
+key in question.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitAutoRepeat</emphasis></entry>
+    <entry>(1&lt;&lt;5)</entry>
+    <entry>Automatic determination of auto-repeat status for the key, as
+specified in a symbol interpretation.</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitBehavior</emphasis></entry>
+    <entry>(1&lt;&lt;6)</entry>
+    <entry>
+Automatic assignment of the <emphasis>
+XkbKB_Lock</emphasis>
+ behavior to the key, if the <emphasis>
+XkbSI_LockingKey</emphasis>
+ flag is set in a symbol interpretation.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>ExplicitVModMap</emphasis></entry>
+    <entry>(1&lt;&lt;7)</entry>
+    <entry>
+Automatic determination of the virtual modifier map for the key
+based on the actions assigned to the key and the symbol interpretations that
+match the key.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<sect2 id='obtaining_explicit_components_for_keys_from_the_server'>
+<title>Obtaining Explicit Components for Keys from the Server</title>
+
+<para>
+To obtain the explicit components (the <emphasis>
+explicit</emphasis>
+ array) for a subset of the keys in a keyboard description, use <emphasis>
+XkbGetKeyExplicitComponents</emphasis>.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ first</emphasis>
+,<emphasis>
+ num</emphasis>
+,<emphasis>
+ xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+first</emphasis>
+;            /* keycode of first key to fetch */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+num</emphasis>
+;            /* number of keys for which to get explicit info */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr             <emphasis>
+xkb</emphasis>
+;            /* Xkb description in which to put results */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+ sends a request to the server to obtain the explicit components for <emphasis>
+num</emphasis>
+ keys on the keyboard starting with key <emphasis>
+first</emphasis>
+. It waits for a reply and returns the explicit components in the <emphasis>
+server</emphasis>
+-&gt;<emphasis>
+explicit</emphasis>
+ array of <emphasis>
+xkb</emphasis>
+. If successful, <emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+ returns <emphasis>
+Success</emphasis>
+. The <emphasis>
+xkb</emphasis>
+ parameter must be a pointer to a valid Xkb keyboard description.
+</para>
+
+
+<para>
+If the <emphasis>
+server</emphasis>
+ map in the <emphasis>
+xkb</emphasis>
+ parameter has not been allocated, <emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+ allocates and initializes it before obtaining the actions.
+</para>
+
+
+<para>
+If the server does not have a compatible version of Xkb, or the Xkb extension
+has not been properly initialized, <emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+ returns <emphasis>
+BadMatch</emphasis>
+. If <emphasis>
+num</emphasis>
+ is less than 1 or greater than <emphasis>
+XkbMaxKeyCount</emphasis>
+, <emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+ returns <emphasis>
+BadValue</emphasis>
+. If any allocation errors occur, <emphasis>
+XkbGetKeyExplicitComponents</emphasis>
+ returns <emphasis>
+BadAlloc</emphasis>
+.
+</para>
+
+
+</sect2>
+</sect1>
+<sect1 id='virtual_modifier_mapping'>
+<title>Virtual Modifier Mapping</title>
+
+<para>
+The <emphasis>
+vmods</emphasis>
+ member of the server map is a fixed-length array containing <emphasis>
+XkbNumVirtualMods</emphasis>
+ entries. Each entry corresponds to a virtual modifier and provides the binding
+of the virtual modifier to the real modifier bits. Each entry in the <emphasis>
+vmods</emphasis>
+ array is a bitwise inclusive OR of the legal modifier masks:
+</para>
+
+<literallayout>
+     <emphasis>ShiftMask</emphasis>
+     <emphasis>LockMask</emphasis>
+     <emphasis>ControlMask</emphasis>
+     <emphasis>Mod1Mask</emphasis>
+     <emphasis>Mod2Mask</emphasis>
+     <emphasis>Mod3Mask</emphasis>
+     <emphasis>Mod4Mask</emphasis>
+     <emphasis>Mod5Mask</emphasis>
+</literallayout>
+
+<para>
+The <emphasis>
+vmodmap</emphasis>
+ member of the server map is similar to the <emphasis>
+modmap</emphasis>
+ array of the client map (see section 15.4), but is used to define the virtual
+modifier mapping for each key. Like the <emphasis>
+modmap</emphasis>
+ member, it is indexed by keycode, and each entry is a mask representing the
+virtual modifiers bound to the corresponding key:
+</para>
+
+<itemizedlist>
+  <listitem>
+    <para>
+Each of the bits in a <emphasis>
+vmodmap</emphasis>
+ entry represents an index into the <emphasis>
+vmods</emphasis>
+ member. That is, bit 0 of a <emphasis>
+vmodmap</emphasis>
+ entry refers to index 0 of the <emphasis>
+vmods</emphasis>
+ array, bit 1 refers to index 1, and so on.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+If a bit is set in the <emphasis>
+vmodmap</emphasis>
+ entry for a key, that key is bound to the corresponding virtual modifier in
+the <emphasis>
+vmods</emphasis>
+ array.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>
+The <emphasis>
+vmodmap</emphasis>
+ and <emphasis>
+vmods</emphasis>
+ members of the server map are the "master" virtual modifier definitions. Xkb
+automatically propagates any changes to these fields to all other fields that
+use virtual modifier mappings.
+</para>
+
+
+<para>
+The overall relationship of fields dealing with virtual modifiers in an Xkb
+keyboard description are shown in Figure 16.2.
+</para>
+
+<mediaobject>
+ <imageobject> <imagedata format="SVG" fileref="XKBlib-17.svg"/>
+ </imageobject>
+<caption>Virtual Modifier Relationships</caption>
+</mediaobject>
+
+
+
+<!--
+<H5 CLASS="Figure">
+Virtual Modifier Relationships</H5>
+-->
+
+<sect2 id='obtaining_virtual_modifier_bindings_from_the_server'>
+<title>Obtaining Virtual Modifier Bindings from the Server</title>
+
+<para>
+To obtain a subset of the virtual modifier bindings (the <emphasis>
+vmods</emphasis>
+ array) in a keyboard description, use <emphasis>
+XkbGetVirtualMods</emphasis>
+:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetVirtualMods</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ which</emphasis>
+,<emphasis>
+ xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+which</emphasis>
+;            /* mask indicating virtual modifier bindings to get */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;            /* Xkb description where results will be placed */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetVirtualMods</emphasis>
+ sends a request to the server to obtain the <emphasis>
+vmods</emphasis>
+ entries for the virtual modifiers specified in the mask, <emphasis>
+which</emphasis>
+, and waits for a reply. See section 7.1 for a description of how to determine
+the virtual modifier mask. For each bit set in <emphasis>
+which</emphasis>
+, <emphasis>
+XkbGetVirtualMods</emphasis>
+ updates the corresponding virtual modifier definition in the <emphasis>
+server-&gt;vmods</emphasis>
+ array of <emphasis>
+xkb</emphasis>
+. The <emphasis>
+xkb</emphasis>
+ parameter must be a pointer to a valid Xkb keyboard description. If
+successful, <emphasis>
+XkbGetVirtualMods</emphasis>
+ returns <emphasis>
+Success</emphasis>
+.
+</para>
+
+
+<para>
+If the <emphasis>
+server</emphasis>
+ map has not been allocated in the <emphasis>
+xkb</emphasis>
+ parameter, <emphasis>
+XkbGetVirtualMods</emphasis>
+ allocates and initializes it before obtaining the virtual modifier bindings.
+</para>
+
+
+<para>
+If the server does not have a compatible version of Xkb, or the Xkb extension
+has not been properly initialized, <emphasis>
+XkbGetVirtualMods</emphasis>
+ returns <emphasis>
+BadMatch</emphasis>
+. Any errors in allocation cause <emphasis>
+XkbGetVirtualMods </emphasis>
+to return <emphasis>
+BadAlloc</emphasis>.
+</para>
+
+
+</sect2>
+<sect2 id='obtaining_per_key_virtual_modifier_mappings_from_the_server'>
+<title>Obtaining Per-Key Virtual Modifier Mappings from the Server</title>
+
+<para>
+To obtain the virtual modifier map (the <emphasis>
+vmodmap</emphasis>
+ array) for a subset of the keys in a keyboard description, use <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+:
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ first</emphasis>
+,<emphasis>
+ num</emphasis>
+,<emphasis>
+ xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+first</emphasis>
+;            /* keycode of first key to fetch */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int            <emphasis>
+num</emphasis>
+;            /* # keys for which virtual mod maps are desired */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr             <emphasis>
+xkb</emphasis>
+;            /* Xkb description where results will be placed */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetKeyVirutalModmap </emphasis>
+sends a request to the server to obtain the virtual modifier mappings for
+<emphasis>
+num</emphasis>
+ keys on the keyboard starting with key <emphasis>
+first</emphasis>
+. It waits for a reply and returns the virtual modifier mappings in the
+<emphasis>
+server</emphasis>
+-&gt;<emphasis>
+vmodmap</emphasis>
+ array of <emphasis>
+xkb</emphasis>
+. If successful, <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+ returns <emphasis>
+Success</emphasis>
+. The <emphasis>
+xkb</emphasis>
+ parameter must be a pointer to a valid Xkb keyboard description
+</para>
+
+
+<para>
+If the <emphasis>
+server</emphasis>
+ map in the <emphasis>
+xkb</emphasis>
+ parameter has not been allocated, <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+ allocates and initializes it before obtaining the virtual modifier mappings.
+</para>
+
+
+<para>
+If the server does not have a compatible version of Xkb, or the Xkb extension
+has not been properly initialized, <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+ returns <emphasis>
+BadMatch</emphasis>
+. If <emphasis>
+num</emphasis>
+ is less than 1 or greater than <emphasis>
+XkbMaxKeyCount</emphasis>
+, <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+ returns <emphasis>
+BadValue</emphasis>
+. If any allocation errors occur, <emphasis>
+XkbGetKeyVirtualModMap</emphasis>
+ returns <emphasis>
+BadAlloc</emphasis>
+.
+</para>
+
+</sect2>
+</sect1>
+</chapter>

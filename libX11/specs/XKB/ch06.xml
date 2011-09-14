@@ -1,0 +1,413 @@
+<chapter id='complete_keyboard_description'>
+<title>Complete Keyboard Description</title>
+
+<para>
+The complete Xkb description for a keyboard device is accessed using a single
+structure containing pointers to major Xkb components. This chapter describes
+this single structure and provides references to other sections of this
+document that discuss the major Xkb components in detail.
+</para>
+
+<sect1 id='the_xkbdescrec_structure'>
+<title>The XkbDescRec Structure</title>
+
+<para>
+The complete description of an Xkb keyboard is given by an <emphasis>
+XkbDescRec</emphasis>
+. The component structures in the <emphasis>
+XkbDescRec</emphasis>
+ represent the major Xkb components outlined in Figure 1.1. <!-- xref -->
+</para>
+
+<para><programlisting>
+typedef struct {
+      struct _XDisplay *                  display;            /* connection to
+X server */
+      unsigned short                  flags;            /* private to Xkb, do
+not modify */
+      unsigned short                  device_spec;            /* device of
+interest */
+      KeyCode                  min_key_code;            /* minimum keycode for
+device */
+      KeyCode                  max_key_code;            /* maximum keycode for
+device */
+      XkbControlsPtr                  ctrls;            /* controls */
+      XkbServerMapPtr                  server;            /* server keymap */
+      XkbClientMapPtr                  map;            /* client keymap */
+      XkbIndicatorPtr                  indicators;            /* indicator map
+*/
+      XkbNamesPtr                  names;            /* names for all
+components */
+      XkbCompatMapPtr                  compat;            /* compatibility map
+*/
+      XkbGeometryPtr                  geom;            /* physical geometry of
+keyboard */
+} <emphasis>
+XkbDescRec</emphasis>
+, *XkbDescPtr;
+</programlisting></para>
+
+<para>
+The <emphasis>
+display</emphasis>
+ field points to an X display structure. The <emphasis>
+flags</emphasis>
+ field is private to the library: modifying <emphasis>
+flags</emphasis>
+ may yield unpredictable results. The <emphasis>
+device_spec</emphasis>
+ field specifies the device identifier of the keyboard input device, or
+<emphasis>
+XkbUseCoreKeyboard</emphasis>
+, which specifies the core keyboard device. The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields specify the least and greatest keycode that can be returned by the
+keyboard.
+</para>
+
+
+<para>
+The other fields specify structure components of the keyboard description and
+are described in detail in other sections of this document. Table 6.1
+identifies the subsequent sections of this document that discuss the individual
+components of the <emphasis>
+XkbDescRec</emphasis>
+.
+</para>
+
+<table frame='none'>
+<title>XkbDescRec Component References</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>XkbDescRec Field</entry>
+  <entry>For more info</entry>
+</row>
+</thead>
+<tbody>
+<row rowsep='0'>
+    <entry>ctrls</entry>
+    <entry>Chapter 10</entry>
+</row>
+<row rowsep='0'>
+    <entry>server</entry>
+    <entry>Chapter 16</entry>
+</row>
+<row rowsep='0'>
+    <entry>map</entry>
+    <entry>Chapter 15</entry>
+</row>
+<row rowsep='0'>
+    <entry>indicators</entry>
+    <entry>Chapter 8</entry>
+</row>
+<row rowsep='0'>
+    <entry>names</entry>
+    <entry>Chapter 18</entry>
+</row>
+<row rowsep='0'>
+    <entry>compat</entry>
+    <entry>Chapter 17</entry>
+</row>
+<row rowsep='0'>
+    <entry>geom</entry>
+    <entry>Chapter 13</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Each structure component has a corresponding mask bit that is used in function
+calls to indicate that the structure should be manipulated in some manner, such
+as allocating it or freeing it. These masks and their relationships to the
+fields in the <emphasis>
+XkbDescRec</emphasis>
+ are shown in Table 6.2. <!-- xref -->
+</para>
+
+<table frame='none'>
+<title>Mask Bits for XkbDescRec</title>
+<tgroup cols='3'>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask Bit</entry>
+  <entry>XkbDescRec Field</entry>
+  <entry>Value</entry>
+</row>
+</thead>
+<tbody>
+<row rowsep='0'>
+    <entry>XkbControlsMask</entry>
+    <entry>ctrls</entry>
+    <entry>(1L&lt;&lt;0)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbServerMapMask</entry>
+    <entry>server</entry>
+    <entry>(1L&lt;&lt;1)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbIClientMapMask</entry>
+    <entry>map</entry>
+    <entry>(1L&lt;&lt;2)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbIndicatorMapMask</entry>
+    <entry>indicators</entry>
+    <entry>(1L&lt;&lt;3)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbNamesMask</entry>
+    <entry>names</entry>
+    <entry>(1L&lt;&lt;4)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbCompatMapMask</entry>
+    <entry>compat</entry>
+    <entry>(1L&lt;&lt;5)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbGeometryMask</entry>
+    <entry>geom</entry>
+    <entry>(1L&lt;&lt;6)</entry>
+</row>
+<row rowsep='0'>
+    <entry>XkbAllComponentsMask</entry>
+    <entry>All Fields</entry>
+    <entry>(0x7f)</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+<sect1 id='obtaining_a_keyboard_description_from_the_server'>
+<title>Obtaining a Keyboard Description from the Server</title>
+
+<para>
+To retrieve one or more components of a keyboard device description, use
+<emphasis>
+XkbGetKeyboard</emphasis>
+ (see also <emphasis>
+XkbGetKeyboardbyName</emphasis>
+).
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbDescPtr <emphasis>
+XkbGetKeyboard</emphasis>
+(<emphasis>
+display, which, device_spec</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display * <emphasis>
+      display</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+which</emphasis>
+;            /* mask indicating components to return */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+      device_spec</emphasis>
+;            /* device for which to fetch description, or <emphasis>
+XkbUseCoreKbd</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbGetKeyboard </emphasis>
+allocates and returns a pointer to a keyboard description. It queries the
+server for those components specified in the <emphasis>
+which</emphasis>
+ parameter for device <emphasis>
+device_spec</emphasis>
+ and copies the results to the <emphasis>
+XkbDescRec</emphasis>
+ it allocated. The remaining fields in the keyboard description are set to
+<emphasis>
+NULL</emphasis>
+. The valid masks for <emphasis>
+which</emphasis>
+ are those listed in Table 6.2. <!-- xref -->
+</para>
+
+
+<para>
+<emphasis>
+XkbGetKeyboard</emphasis>
+ can generate <emphasis>
+BadAlloc</emphasis>
+ protocol errors.
+</para>
+
+
+<para>
+To free the returned keyboard description, use <emphasis>
+XkbFreeKeyboard</emphasis>
+ (see section 6.4). <!-- xref -->
+</para>
+
+
+</sect1>
+<sect1 id='tracking_changes_to_the_keyboard_description_in_the_server'>
+<title>Tracking Changes to the Keyboard Description in the Server</title>
+
+<para>
+The server can generate events whenever its copy of the keyboard description
+for a device changes. Refer to section 14.4 for detailed information on  <!-- xref -->
+tracking changes to the keyboard description.
+</para>
+
+
+</sect1>
+<sect1 id='allocating_and_freeing_a_keyboard_description'>
+<title>Allocating and Freeing a Keyboard Description</title>
+
+<para>
+Applications seldom need to directly allocate a keyboard description; calling
+<emphasis>
+XkbGetKeyboard</emphasis>
+ usually suffices. In the event you need to create a keyboard description from
+scratch, however, use <emphasis>
+XkbAllocKeyboard</emphasis>
+ rather than directly calling <emphasis>
+malloc </emphasis>
+or <emphasis>
+Xmalloc</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbDescRec * <emphasis>
+XkbAllocKeyboard</emphasis>
+(void)
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+If <emphasis>
+XkbAllocKeyboard</emphasis>
+ fails to allocate the keyboard description, it returns <emphasis>
+NULL</emphasis>
+. Otherwise, it returns a pointer to an empty keyboard description structure.
+The <emphasis>
+device_spec</emphasis>
+ field will have been initialized to <emphasis>
+XkbUseCoreKbd</emphasis>
+. You may then either fill in the structure components or use Xkb functions to
+obtain values for the structure components from a keyboard device.
+</para>
+
+
+<para>
+To destroy either an entire an <emphasis>
+XkbDescRec</emphasis>
+ or just some of its members, use <emphasis>
+XkbFreeKeyboard.</emphasis>
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbFreeKeyboard</emphasis>
+<emphasis>
+(xkb, which, free_all</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+            xkb</emphasis>
+;            /* keyboard description with components to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+      which</emphasis>
+;            /* mask selecting components to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Bool <emphasis>
+            free_all</emphasis>
+;            /* <emphasis>
+True</emphasis>
+ =&gt; free all components and <emphasis>
+xkb</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbFreeKeyboard</emphasis>
+ frees the components of <emphasis>
+xkb</emphasis>
+ specified by <emphasis>
+which</emphasis>
+ and sets the corresponding values to <emphasis>
+NULL</emphasis>
+. If <emphasis>
+free_all</emphasis>
+ is <emphasis>
+True</emphasis>
+, <emphasis>
+XkbFreeKeyboard</emphasis>
+ frees every non-<emphasis>
+NULL</emphasis>
+ component of <emphasis>
+xkb</emphasis>
+ and then frees the <emphasis>
+xkb</emphasis>
+ structure itself.
+</para>
+
+</sect1>
+</chapter>

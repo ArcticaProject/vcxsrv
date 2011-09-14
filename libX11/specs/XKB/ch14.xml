@@ -1,0 +1,1637 @@
+<chapter id='xkb_keyboard_mapping'>
+<title>Xkb Keyboard Mapping</title>
+
+<para>
+The Xkb keyboard mapping contains all the information the server and clients
+need to interpret key events. This chapter provides an overview of the
+terminology used to describe an Xkb keyboard mapping and introduces common
+utilities for manipulating the keyboard mapping.
+</para>
+
+
+<para>
+The mapping consists of two components, a server map and a client map. The
+<emphasis>
+client</emphasis>
+ map is the collection of information a client needs to interpret key events
+from the keyboard. It contains a global list of key types and an array of key
+symbol maps, each of which describes the symbols bound to a key and the rules
+to be used to interpret those symbols. The <emphasis>
+server</emphasis>
+ map contains the information the server needs to interpret key events. This
+includes actions and behaviors for each key, explicit components for a key, and
+the virtual modifiers and the per-key virtual modifier mapping.
+</para>
+
+
+<para>
+For detailed information on particular components of the keyboard map, refer to
+Chapter 15, "Xkb Client Keyboard Mapping" and Chapter 16, "Xkb Server Keyboard
+Mapping."
+</para>
+
+<sect1 id='notation_and_terminology'>
+<title>Notation and Terminology</title>
+
+<para>
+The graphic characters or control functions that may be accessed by one key are
+logically arranged in groups and levels, where <emphasis>
+group</emphasis>
+ and <emphasis>
+level</emphasis>
+ are defined as in the ISO9995 standard:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term>Group:</term>
+    <listitem>
+      <para>
+A logical state of a keyboard providing access to a collection of
+graphic characters. Usually these graphic characters logically belong together
+and may be arranged on several levels within a group.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Level:</term>
+    <listitem>
+      <para>
+One of several states (normally 2 or 3) governing which graphic
+character is produced when a graphic key is actuated. In certain cases the
+level may also affect function keys.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+<para>
+These definitions, taken from the ISO standard, refer to graphic keys and
+characters. In the context of Xkb, Group and Level are not constrained to
+graphic keys and characters; they may be used with any key to access any
+character the key is capable of generating.
+</para>
+
+
+<para>
+Level is often referred to as "Shift Level". Levels are numbered sequentially
+starting at one.
+</para>
+
+<note><para>Shift level is derived from the modifier state, but not necessarily
+in the same way for all keys. For example, the <emphasis>
+Shift</emphasis>
+ modifier selects shift level 2 on most keys, but for keypad keys the modifier
+bound to <emphasis>
+Num_Lock</emphasis>
+ (that is, the <emphasis>
+NumLock</emphasis>
+ virtual modifier) also selects shift level 2.</para></note>
+
+<para>
+For example, consider the following key (the gray characters indicate symbols
+that are implied or expected but are not actually engraved on the key):
+</para>
+
+<mediaobject>
+ <imageobject> <imagedata format="SVG" fileref="XKBlib-14.svg"/>
+ </imageobject>
+<caption>Shift Levels and Groups</caption>
+ </mediaobject>
+
+
+<!--
+<H5 CLASS="Figure">
+Shift Levels and Groups</H5>
+-->
+
+<para>
+This key has two groups, indicated by the columns, and each group has two shift
+levels. For the first group (Group1), the symbol shift level one is <emphasis>
+a</emphasis>
+, and the symbol for shift level two is <emphasis>
+A</emphasis>
+. For the second group, the symbol for shift level one is <emphasis>
+æ</emphasis>
+, and the symbol for shift level two is <emphasis>
+Æ</emphasis>
+.
+</para>
+
+<sect2 id='core_implementation'>
+<title>Core Implementation</title>
+
+<para>
+The standard interpretation rules for the core X keymap only allow clients to
+access keys such as the one shown in Figure 14.1. That is, clients using the
+standard interpretation rules can only access one of four keysyms for any given
+<emphasis>
+KeyPress</emphasis>
+ event — two different symbols in two different groups.
+</para>
+
+
+<para>
+In general, the <emphasis>
+Shift</emphasis>
+ modifier, the <emphasis>
+Lock</emphasis>
+ modifier, and the modifier bound to the <emphasis>
+Num_Lock</emphasis>
+ key are used to change between shift level 1 and shift level 2. To switch
+between groups, the core implementation uses the modifier bound to the
+<emphasis>
+Mode_switch</emphasis>
+ key. When the <emphasis>
+Mode_switch</emphasis>
+ modifier is set, the keyboard is logically in Group 2. When the <emphasis>
+Mode_switch</emphasis>
+ modifier is not set, the keyboard is logically in Group 1.
+</para>
+
+
+<para>
+The core implementation does not clearly specify the behavior of keys. For
+example, the locking behavior of the <emphasis>
+CapsLock</emphasis>
+ and <emphasis>
+Num_Lock</emphasis>
+ keys depends on the vendor.
+</para>
+
+
+</sect2>
+<sect2 id='xkb_implementation'>
+<title>Xkb Implementation</title>
+
+<para>
+Xkb extends the core implementation by providing access to up to four keyboard
+groups with up to 63 shift levels per key
+<footnote><para>
+The core implementation restricts the number of symbols per key to 255.
+With four groups, this allows for up to 63 symbols (or shift levels) per
+group. Most keys will only have a few shift levels.
+</para></footnote>. In
+addition, Xkb provides precise specifications regarding the behavior of keys.
+In Xkb, modifier state and the current group are independent (with the
+exception of compatibility mapping, discussed in Chapter 17).
+</para>
+
+
+<para>
+Xkb handles switching between groups via key actions, independent of any
+modifier state information. Key actions are in the server map component and are
+described in detail in section 16.1.4.
+</para>
+
+
+<para>
+Xkb handles shift levels by associating a key type with each group on each key.
+Each key type defines the shift levels available for the groups on keys of its
+type and specifies the modifier combinations necessary to access each level.
+</para>
+
+
+<para>
+For example, Xkb allows key types where the <emphasis>
+Control</emphasis>
+ modifier can be used to access the shift level two of a key. Key types are in
+the client map component and are described in detail in section 15.2. <!-- xref -->
+</para>
+
+
+<para>
+Xkb provides precise specification of the behavior of a key using key
+behaviors. Key behaviors are in the server map component and are described in
+detail in section 16.2. <!-- xref -->
+</para>
+
+
+</sect2>
+</sect1>
+<sect1 id='getting_map_components_from_the_server'>
+<title>Getting Map Components from the Server</title>
+
+<para>
+Xkb provides two functions to obtain the keyboard mapping components from the
+server. The first function, <emphasis>
+XkbGetMap</emphasis>
+, allocates an <emphasis>
+XkbDescRec</emphasis>
+ structure, retrieves mapping components from the server, and stores them in
+the <emphasis>
+XkbDescRec</emphasis>
+ structure it just allocated. The second function, <emphasis>
+XkbGetUpdatedMap</emphasis>
+, retrieves mapping components from the server and stores them in an <emphasis>
+XkbDescRec</emphasis>
+ structure that has previously been allocated.
+</para>
+
+
+<para>
+To allocate an <emphasis>
+XkbDescRec</emphasis>
+ structure and populate it with the server’s keyboard client map and server
+map, use <emphasis>
+XkbGetMap. XkbGetMap </emphasis>
+is similar to <emphasis>
+XkbGetKeyboard</emphasis>
+ (see section 6.2), but is used only for obtaining the address of an <emphasis>
+XkbDescRec</emphasis>
+ structure that is populated with keyboard mapping components. It allows finer
+control over which substructures of the keyboard mapping components are to be
+populated. <emphasis>
+XkbGetKeyboard</emphasis>
+ always returns fully populated components, while <emphasis>
+XkbGetMap</emphasis>
+ can be instructed to return a partially populated component.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+XkbDescPtr <emphasis>
+XkbGetMap</emphasis>
+(<emphasis>
+display, which, device_spec</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *       <emphasis>
+      display</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+      which</emphasis>
+;            /* mask selecting subcomponents to populate */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int      <emphasis>
+      device_spec</emphasis>
+;            /* device_id, or <emphasis>
+XkbUseCoreKbd</emphasis>
+ */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The <emphasis>
+which</emphasis>
+ mask is a bitwise inclusive OR of the masks defined in Table 14.1. Only those
+portions of the keyboard server map and the keyboard client maps that are
+specified in <emphasis>
+which</emphasis>
+ are allocated and populated.
+</para>
+
+
+<para>
+In addition to allocating and obtaining the server map and the client map,
+<emphasis>
+XkbGetMap</emphasis>
+ also sets the <emphasis>
+device_spec</emphasis>
+, the <emphasis>
+min_key_code</emphasis>
+<emphasis>
+, </emphasis>
+and <emphasis>
+max_key_code</emphasis>
+ fields of the keyboard description.
+</para>
+
+
+<para>
+<emphasis>
+XkbGetMap</emphasis>
+ is synchronous; it queries the server for the desired information, waits for a
+reply, and then returns. If successful<emphasis>
+, XkbGetMap</emphasis>
+ returns a pointer to the <emphasis>
+XkbDescRec</emphasis>
+ structure it allocated. If unsuccessful, <emphasis>
+XkbGetMap</emphasis>
+ returns <emphasis>
+NULL</emphasis>
+. When unsuccessful, one of the following protocol errors is also generated:
+<emphasis>
+BadAlloc</emphasis>
+ (unable to allocate the <emphasis>
+XkbDescRec</emphasis>
+ structure), <emphasis>
+BadValue</emphasis>
+ (some mask bits in <emphasis>
+which</emphasis>
+ are undefined)<emphasis>
+,</emphasis>
+ or <emphasis>
+BadImplementation</emphasis>
+ (a compatible version of the Xkb extension is not available in the server). To
+free the returned data, use <emphasis>
+XkbFreeClientMap</emphasis>
+.
+</para>
+
+
+<para>
+Xkb also provides convenience functions to get partial component definitions
+from the server. These functions are specified in the "convenience functions"
+column in Table 14.1. Refer to the sections listed in the table for more
+information on these functions.
+</para>
+
+<table frame='none'>
+<title>Xkb Mapping Component Masks and Convenience Functions</title>
+<tgroup cols='6'>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask</entry>
+  <entry>Value</entry>
+  <entry>Map</entry>
+  <entry>Fields</entry>
+  <entry>Convenience Functions</entry>
+  <entry>Section</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeyTypesMask</emphasis></entry>
+    <entry>(1&lt;&lt;0)</entry>
+    <entry>client</entry>
+    <entry>
+      <para><emphasis>types</emphasis></para>
+      <para><emphasis>size_types</emphasis></para>
+      <para><emphasis>num_types</emphasis></para>
+    </entry>
+    <entry>
+      <para><emphasis>XkbGetKeyTypes</emphasis></para>
+      <para><emphasis>XkbResizeKeyType</emphasis></para>
+      <para><emphasis>XkbCopyKeyType</emphasis></para>
+      <para><emphasis>XkbCopyKeyTypes</emphasis></para>
+    </entry>
+    <entry>15.2</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeySymsMask</emphasis></entry>
+    <entry>(1&lt;&lt;1)</entry>
+    <entry>client</entry>
+    <entry>
+      <para><emphasis>syms</emphasis></para>
+      <para><emphasis>size_syms</emphasis></para>
+      <para><emphasis>num_syms</emphasis></para>
+      <para><emphasis>key_sym_map</emphasis></para>
+    </entry>
+    <entry>
+      <para><emphasis>XkbGetKeySyms</emphasis></para>
+      <para><emphasis>XkbResizeKeySyms</emphasis></para>
+      <para><emphasis>XkbChangeTypesOfKey</emphasis></para>
+    </entry>
+    <entry>15.3</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbModifierMapMask</emphasis></entry>
+    <entry>(1&lt;&lt;2)</entry>
+    <entry>client</entry>
+    <entry><emphasis>modmap</emphasis></entry>
+    <entry><emphasis>XkbGetKeyModifierMap</emphasis></entry>
+    <entry>15.4</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbExplicitComponentsMask</emphasis></entry>
+    <entry>(1&lt;&lt;3)</entry>
+    <entry>server</entry>
+    <entry><emphasis>explicit</emphasis></entry>
+    <entry><emphasis>XkbGetKeyExplicitComponents</emphasis></entry>
+    <entry>16.3</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeyActionsMask</emphasis></entry>
+    <entry>(1&lt;&lt;4)</entry>
+    <entry>server</entry>
+    <entry>
+      <para><emphasis>key_acts</emphasis></para>
+      <para><emphasis>acts</emphasis></para>
+      <para><emphasis>num_acts</emphasis></para>
+      <para><emphasis>size_acts</emphasis></para>
+    </entry>
+    <entry>
+      <para><emphasis>XkbGetKeyActions</emphasis></para>
+      <para><emphasis>XkbResizeKeyActions</emphasis></para>
+    </entry>
+    <entry>16.1</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeyBehaviorsMask</emphasis></entry>
+    <entry>(1&lt;&lt;5)</entry>
+    <entry>server</entry>
+    <entry><emphasis>behaviors</emphasis></entry>
+    <entry><emphasis>XkbGetKeyBehaviors</emphasis></entry>
+    <entry>16.2</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbVirtualModsMask</emphasis></entry>
+    <entry>(1&lt;&lt;6)</entry>
+    <entry>server</entry>
+    <entry><emphasis>vmods</emphasis></entry>
+    <entry><emphasis>XkbGetVirtualMods</emphasis></entry>
+    <entry>16.4</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbVirtualModMapMask</emphasis></entry>
+    <entry>(1&lt;&lt;7)</entry>
+    <entry>server</entry>
+    <entry><emphasis>vmodmap</emphasis></entry>
+    <entry><emphasis>XkbGetVirtualModMap</emphasis></entry>
+    <entry>16.4</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Xkb defines combinations of these masks for convenience:
+</para>
+
+<para><programlisting>
+#define  XkbResizableInfoMask      (XkbKeyTypesMask)
+#define  XkbAllClientInfoMask      (XkbKeyTypesMask | XkbKeySymsMask |
+                                    XkbModifierMapMask)
+#define  XkbAllServerInfoMask      (XkbExplicitComponentsMask |
+                                    XkbKeyActionsMask| XkbKeyBehaviorsMask |
+                                    XkbVirtualModsMask | XkbVirtualModMapMask)
+#define  XkbAllMapComponentsMask   (XkbAllClientInfoMask|XkbAllServerInfoMask)
+</programlisting></para>
+
+<para>
+Key types, symbol maps, and actions are all interrelated: changes in one
+require changes in the others. The convenience functions make it easier to edit
+these components and handle the interdependencies.
+</para>
+
+
+<para>
+To update the client or server map information in an existing keyboard
+description, use <emphasis>XkbGetUpdatedMap</emphasis>.
+</para>
+
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbGetUpdatedMap</emphasis>
+(<emphasis>
+display, which, xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display * <emphasis>
+            display</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            which</emphasis>
+;            /* mask selecting subcomponents to populate */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr            <emphasis>
+xkb</emphasis>
+;            /* keyboard description to be updated */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The <emphasis>
+which</emphasis>
+ parameter is a bitwise inclusive OR of the masks in Table 14.1. If the needed
+components of the <emphasis>
+xkb</emphasis>
+ structure are not already allocated, <emphasis>
+XkbGetUpdatedMap</emphasis>
+ allocates them. <emphasis>
+XkbGetUpdatedMap</emphasis>
+ fetches the requested information for the device specified in the <emphasis>
+XkbDescRec</emphasis>
+ passed in the <emphasis>
+xkb</emphasis>
+ parameter.
+</para>
+
+
+<para>
+<emphasis>
+XkbGetUpdatedMap</emphasis>
+ is synchronous; it queries the server for the desired information, waits for a
+reply, and then returns. If successful<emphasis>
+, XkbGetUpdatedMap</emphasis>
+ returns <emphasis>
+Success</emphasis>
+. If unsuccessful, <emphasis>
+XkbGetUpdatedMap</emphasis>
+ returns one of the following: <emphasis>
+BadAlloc</emphasis>
+ (unable to allocate a component in the <emphasis>
+XkbDescRec</emphasis>
+ structure), <emphasis>
+BadValue</emphasis>
+ (some mask bits in <emphasis>
+which</emphasis>
+ are undefined), <emphasis>
+BadImplementation</emphasis>
+ (a compatible version of the Xkb extension is not available in the server or
+the reply from the server was invalid).
+</para>
+
+</sect1>
+<sect1 id='changing_map_components_in_the_server'>
+<title>Changing Map Components in the Server</title>
+
+<para>
+There are two ways to make changes to map components: either change a local
+copy of the keyboard map and call <emphasis>
+XkbSetMap</emphasis>
+ to send the modified map to the server, or, to reduce network traffic, use
+an<emphasis>
+ XkbMapChangesRec</emphasis>
+ structure and call <emphasis>XkbChangeMap</emphasis>.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbSetMap</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ which</emphasis>
+,<emphasis>
+ xkb</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            which</emphasis>
+;            /* mask selecting subcomponents to update */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+            xkb</emphasis>
+;            /* description from which new values are taken */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+Use <emphasis>
+XkbSetMap</emphasis>
+ to send a complete new set of values for entire components (for example, all
+symbols, all actions, and so on) to the server. The <emphasis>
+which</emphasis>
+ parameter specifies the components to be sent to the server, and is a bitwise
+inclusive OR of the masks listed in Table 14.1. The <emphasis>
+xkb</emphasis>
+ parameter is a pointer to an <emphasis>
+XkbDescRec</emphasis>
+ structure and contains the information to be copied to the server. For each
+bit set in the <emphasis>
+which</emphasis>
+ parameter, <emphasis>
+XkbSetMap</emphasis>
+ takes the corresponding structure values from the <emphasis>
+xkb</emphasis>
+ parameter and sends it to the server specified by <emphasis>
+dpy</emphasis>.
+</para>
+
+<para>
+If any components specified by <emphasis>
+which</emphasis>
+ are not present in the <emphasis>
+xkb</emphasis>
+ parameter, <emphasis>
+XkbSetMap</emphasis>
+ returns <emphasis>
+False</emphasis>
+. Otherwise, it sends the update request to the server and returns <emphasis>
+True</emphasis>
+. <emphasis>
+XkbSetMap</emphasis>
+ can generate <emphasis>
+BadAlloc</emphasis>
+, <emphasis>
+BadLength</emphasis>
+, and <emphasis>
+BadValue</emphasis>
+ protocol errors.
+</para>
+
+
+<para>
+Key types, symbol maps, and actions are all interrelated; changes in one
+require changes in the others. Xkb provides functions to make it easier to edit
+these components and handle the interdependencies. Table 14.1 lists these
+helper functions and provides a pointer to where they are defined.
+</para>
+
+
+<sect2 id='the_xkbmapchangesrec_structure'>
+<title>The XkbMapChangesRec Structure</title>
+
+<para>
+Use the <emphasis>
+XkbMapChangesRec</emphasis>
+ structure to identify and track partial modifications to the mapping
+components and to reduce the amount of traffic between the server and clients.
+</para>
+
+<para><programlisting>
+typedef struct _XkbMapChanges {
+      unsigned short    changed;              /* identifies valid components
+                                                 in structure */
+      KeyCode           min_key_code;         /* lowest numbered keycode for
+                                                 device */
+      KeyCode           max_key_code;         /* highest numbered keycode for
+                                                 device */
+      unsigned char     first_type;           /* index of first key <emphasis>type</emphasis>
+                                                 modified */
+      unsigned char     num_types;            /* # types modified */
+      KeyCode           first_key_sym;        /* first key whose <emphasis>key_sym_map</emphasis>
+                                                 changed */
+      unsigned char     num_key_syms;         /* # <emphasis>key_sym_map</emphasis>
+                                                 entries changed */
+      KeyCode           first_key_act;        /* first key whose <emphasis>key_acts</emphasis>
+                                                 entry changed */
+      unsigned char     num_key_acts;         /* # <emphasis>key_acts</emphasis>
+                                                 entries changed */
+      KeyCode           first_key_behavior;   /* first key whose <emphasis>behaviors</emphasis>
+                                                 changed */
+      unsigned char     num_key_behaviors;    /* # <emphasis>behaviors</emphasis>
+                                                 entries changed */
+      KeyCode           first_key_explicit;   /* first key whose <emphasis>explicit</emphasis>
+                                                 entry changed */
+      unsigned char     num_key_explicit;     /* # <emphasis> explicit</emphasis>
+                                                 entries changed */
+      KeyCode           first_modmap_key;     /* first key whose <emphasis>modmap</emphasis>
+                                                 entry changed */
+      unsigned char     num_modmap_keys;      /* # <emphasis>modmap</emphasis>
+                                                 entries changed */
+      KeyCode           first_vmodmap_key;    /* first key whose <emphasis>vmodmap</emphasis>
+                                                 changed */
+      unsigned char     num_vmodmap_keys;     /* # <emphasis> vmodmap</emphasis>
+                                                 entries changed */
+      unsigned char     pad1;                 /* reserved */
+      unsigned short    vmods;                /* mask indicating which <emphasis>vmods</emphasis>
+                                                 changed */
+} <emphasis>XkbMapChangesRec</emphasis>,*XkbMapChangesPtr;
+</programlisting></para>
+
+<para>
+The <emphasis>
+changed</emphasis>
+ field identifies the map components that have changed in an <emphasis>
+XkbDescRec</emphasis>
+ structure and may contain any of the bits in Table 14.1, which are also shown
+in Table 14.2. Every 1 bit in <emphasis>
+changed</emphasis>
+ also identifies which other fields in the <emphasis>
+XkbMapChangesRec</emphasis>
+ structure contain valid values, as indicated in Table 14.2. The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields are for reference only; they are ignored on any requests sent to the
+server and are always updated by the server whenever it returns the data for an
+<emphasis>
+XkbMapChangesRec</emphasis>
+.
+</para>
+
+<table frame='none'>
+<title>XkbMapChangesRec Masks</title>
+<tgroup cols='3'>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask</entry>
+  <entry>Valid XkbMapChangesRec Fields</entry>
+  <entry>XkbDescRec Field Containing Changed Data</entry>
+</row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeyTypesMask</emphasis></entry>
+    <entry>
+<para>first_type</para>,
+<para>num_types</para>
+    </entry>
+    <entry>
+<para>map-&gt;type[first_type] ..</para>
+<para>map-&gt;type[first_type + num_types - 1]</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeySymsMask</emphasis></entry>
+    <entry>
+<para>first_key_sym</para>,
+<para>num_key_syms</para>
+    </entry>
+    <entry>
+<para>map-&gt;key_sym_map[first_key_sym] ..</para>
+<para>map-&gt;key_sym_map[first_key_sym + num_key_syms - 1]</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbModifierMapMask</emphasis></entry>
+    <entry>
+<para>first_modmap_key</para>,
+<para>num_modmap_keys</para>
+    </entry>
+    <entry>
+<para>map-&gt;modmap[first_modmap_key] ..</para>
+<para>map-&gt;modmap[first_modmap_key + num_modmap_keys-1]</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbExplicitComponentsMask</emphasis></entry>
+    <entry>
+<para>first_key_explicit</para>,
+<para>num_key_explicit</para>
+    </entry>
+    <entry>
+<para>server-&gt;explicit[first_key_explicit] ..</para>
+<para>server-&gt;explicit[first_key_explicit + num_key_explicit - 1]</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeyActionsMask</emphasis></entry>
+    <entry>
+<para>first_key_act,</para>
+<para>num_key_acts</para>
+    </entry>
+    <entry>
+<para>server-&gt;key_acts[first_key_act] ..</para>
+<para>server-&gt;key_acts[first_key_act + num_key_acts - 1]</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbKeyBehaviorsMask</emphasis></entry>
+    <entry>
+<para>first_key_behavior,</para>
+<para>num_key_behaviors</para>
+    </entry>
+    <entry>
+<para>server-&gt;behaviors[first_key_behavior] ..</para>
+<para>server-&gt;behaviors[first_key_behavior + num_key_behaviors - 1]</para>
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbVirtuawModsMask</emphasis></entry>
+    <entry>vmods</entry>
+    <entry>server-&gt;vmods[*]</entry>
+  </row>
+  <row rowsep='0'>
+    <entry><emphasis>XkbVirtualModMapMask</emphasis></entry>
+    <entry>
+<para>first_vmodmap_key,</para>
+<para>num_vmodmap_keys</para>
+    </entry>
+    <entry>
+<para>server-&gt;vmodmap[first_vmodmap_key] ..</para>
+<para>server-&gt;vmodmap[first_vmodmap_key + num_vmodmap_keys - 1]</para>
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+To update only partial components of a keyboard description, modify the
+appropriate fields in the server and map components of a local copy of the
+keyboard description, then call <emphasis>
+XkbChangeMap</emphasis>
+ with an <emphasis>
+XkbMapChangesRec</emphasis>
+ structure indicating which components have changed.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbChangeMap</emphasis>
+(<emphasis>
+dpy</emphasis>
+,<emphasis>
+ xkb</emphasis>
+,<emphasis>
+ changes</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Display *<emphasis>
+            dpy</emphasis>
+;            /* connection to X server */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+            xkb</emphasis>
+;            /* description from which new values are taken */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbMapChangesPtr <emphasis>
+            changes</emphasis>
+;            /*identifies component parts to update */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbChangeMap</emphasis>
+ copies any components specified by the <emphasis>
+changes</emphasis>
+ structure from the keyboard description, <emphasis>
+xkb</emphasis>
+, to the X server specified by <emphasis>
+dpy</emphasis>
+.
+</para>
+
+
+<para>
+If any components specified by <emphasis>
+changes</emphasis>
+ are not present in the <emphasis>
+xkb</emphasis>
+ parameter, <emphasis>
+XkbChangeMap</emphasis>
+ returns <emphasis>
+False</emphasis>
+. Otherwise, it sends a request to the server and returns <emphasis>
+True</emphasis>
+.
+</para>
+
+
+<para>
+<emphasis>
+XkbChangeMap</emphasis>
+ can generate <emphasis>
+BadAlloc</emphasis>
+, <emphasis>
+BadLength</emphasis>
+, and <emphasis>
+BadValue</emphasis>
+ protocol errors.
+</para>
+
+
+</sect2>
+</sect1>
+<sect1 id='tracking_changes_to_map_components'>
+<title>Tracking Changes to Map Components</title>
+
+<para>
+The Xkb extension reports <emphasis>
+XkbMapNotify</emphasis>
+ events to clients wanting notification whenever a map component of the Xkb
+description for a device changes. There are many different types of Xkb
+keyboard map changes. Xkb uses an event detail mask to identify each type of
+change. The event detail masks are identical to the masks listed in Table 14.1.
+</para>
+
+
+<para>
+To receive <emphasis>
+XkbMapNotify</emphasis>
+ events under all possible conditions, use <emphasis>
+XkbSelectEvents</emphasis>
+ (see section 4.3) and pass <emphasis>
+XkbMapNotifyMask</emphasis>
+ in both <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits</emphasis>
+.
+</para>
+
+
+<para>
+To receive <emphasis>
+XkbMapNotify</emphasis>
+ events only under certain conditions, use <emphasis>
+XkbSelectEventDetails</emphasis>
+ using <emphasis>
+XkbMapNotify</emphasis>
+ as the <emphasis>
+event_type</emphasis>
+ and specifying the desired map changes in <emphasis>
+bits_to_change</emphasis>
+ and <emphasis>
+values_for_bits</emphasis>
+ using mask bits from Table 14.1.
+</para>
+
+
+<para>
+The structure for <emphasis>
+XkbMapNotify</emphasis>
+ events is:
+</para>
+
+<para><programlisting>
+typedef struct {
+      int            type;         /* Xkb extension base event code */
+      unsigned long  serial;       /* X server serial number for event */
+      Bool           send_event;   /* <emphasis>True</emphasis> =&gt; synthetically generated */
+      Display *      display;      /* server connection where event generated */
+      Time           time;         /* server time when event generated */
+      int            xkb_type;     /* <emphasis> XkbMapNotify</emphasis> */
+      int            device;       /* Xkb device ID, will not be <emphasis>XkbUseCoreKbd</emphasis> */
+      unsigned int   changed;      /* identifies valid fields in rest of event */
+      unsigned int   resized;      /* reserved */
+      int            first_type;   /* index of first key <emphasis> type</emphasis> modified */
+      int            num_types     /* # types modified */
+      KeyCode        min_key_code; /* minimum keycode for device */
+      KeyCode        max_key_code; /* maximum keycode for device */
+      KeyCode        first_key_sym; /* first key whose <emphasis>key_sym_map</emphasis> changed */
+      KeyCode        first_key_act; /* first key whose <emphasis> key_acts</emphasis> entry changed */
+      KeyCode        first_key_behavior; /* first key whose <emphasis> behaviors</emphasis> changed */
+      KeyCode        first_key_explicit; /* first key whose <emphasis> explicit </emphasis> entry changed */
+      KeyCode        first_modmap_key;   /* first key whose <emphasis> modmap</emphasis> entry changed */
+      KeyCode        first_vmodmap_key;  /* # <emphasis> modmap</emphasis> entries changed */
+      int            num_key_syms;       /* # <emphasis>key_sym_map</emphasis> entries changed */
+      int            num_key_acts;       /* # <emphasis> key_acts</emphasis> entries changed */
+      int            num_key_behaviors;  /* # <emphasis> behaviors</emphasis> entries changed */
+      int            num_key_explicit;   /* # <emphasis> explicit</emphasis> entries changed */
+      int            num_modmap_keys;    /* # <emphasis> modmap</emphasis> entries changed */
+      int            num_vmodmap_keys;   /* # <emphasis> vmodmap</emphasis> entries changed */
+      unsigned in      t      vmods;     /* mask indicating which <emphasis> vmods</emphasis> changed */
+} <emphasis>XkbMapNotifyEvent</emphasis>;
+</programlisting></para>
+
+<para>
+The <emphasis>
+changed</emphasis>
+ field specifies the map components that have changed and is the bitwise
+inclusive OR of the mask bits defined in Table 14.1. The other fields in this
+event are interpreted as the like-named fields in an <emphasis>
+XkbMapChangesRec</emphasis>
+ (see section 14.3.1). The <emphasis>
+XkbMapNotifyEvent</emphasis>
+ structure also has an additional <emphasis>
+resized</emphasis>
+ field that is reserved for future use.
+</para>
+
+
+</sect1>
+<sect1 id='allocating_and_freeing_client_and_server_maps'>
+<title>Allocating and Freeing Client and Server Maps</title>
+
+<para>
+Calling <emphasis>
+XkbGetMap</emphasis>
+ (see section 14.2) should be sufficient for most applications to get client
+and server maps. As a result, most applications do not need to directly
+allocate client and server maps.
+</para>
+
+
+<para>
+If you change the number of key types or construct map components without
+loading the necessary components from the X server, do not allocate any map
+components directly using <emphasis>
+malloc</emphasis>
+ or <emphasis>
+Xmalloc</emphasis>
+. Instead, use the Xkb allocators, <emphasis>
+XkbAllocClientMap,</emphasis>
+ and <emphasis>
+XkbAllocServerMap</emphasis>
+.
+</para>
+
+
+<para>
+Similarly, use the Xkb destructors, <emphasis>
+XkbFreeClientMap,</emphasis>
+ and <emphasis>
+XkbFreeServerMap</emphasis>
+ instead of <emphasis>
+free</emphasis>
+ or <emphasis>
+Xfree</emphasis>
+.
+</para>
+
+
+<sect2 id='allocating_an_empty_client_map'>
+<title>Allocating an Empty Client Map</title>
+
+<para>
+To allocate and initialize an empty client map description record, use
+<emphasis>
+XkbAllocClientMap.</emphasis>
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbAllocClientMap</emphasis>
+(<emphasis>
+xkb, which, type_count</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+            xkb</emphasis>
+;            /* keyboard description in which to allocate client map */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            which</emphasis>
+;            /* mask selecting map components to allocate */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            type_count</emphasis>
+;            /* value of <emphasis>
+num_types</emphasis>
+ field in map to be allocated */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbAllocClientMap</emphasis>
+ allocates and initializes an empty client map in the <emphasis>
+map</emphasis>
+ field of the keyboard description specified by <emphasis>
+xkb</emphasis>
+. The <emphasis>
+which</emphasis>
+ parameter specifies the particular components of the client map structure to
+allocate and is a mask composed by a bitwise inclusive OR of one or more of the
+masks shown in Table 14.3.
+</para>
+
+<table frame='none'>
+<title>XkbAllocClientMap Masks</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask</entry>
+  <entry>Effect</entry>
+  </row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry>XkbKeyTypesMask</entry>
+    <entry>
+The <emphasis>
+type_count </emphasis>
+field specifies the number of entries to preallocate for the <emphasis>
+types</emphasis>
+ field of the client map. If the <emphasis>
+type_count </emphasis>
+field is less than <emphasis>
+XkbNumRequiredTypes</emphasis>
+ (see section 15.2.1), returns <emphasis>
+BadValue</emphasis>.
+</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbKeySymsMask</entry>
+<entry>
+The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter are used to allocate the <emphasis>
+syms</emphasis>
+ and <emphasis>
+key_sym_map</emphasis>
+ fields of the client map. The fields are allocated to contain the maximum
+number of entries necessary for <emphasis>
+max_key_code</emphasis>
+ - <emphasis>
+min_key_code</emphasis>
+ + 1 keys.
+</entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbModifierMapMask</entry>
+<entry>
+The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter are used to allocate the <emphasis>
+modmap</emphasis>
+ field of the client map. The field is allocated to contain the maximum number
+of entries necessary for <emphasis>
+max_key_code</emphasis>
+ - <emphasis>
+min_key_code</emphasis>
+ + 1 keys.
+</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<note><para>The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter must be legal values if the <emphasis>
+XkbKeySymsMask</emphasis>
+ or <emphasis>
+XkbModifierMapMask</emphasis>
+ masks are set in the <emphasis>
+which</emphasis>
+ parameter. If they are not valid, <emphasis>
+XkbAllocClientMap</emphasis>
+ returns <emphasis>
+BadValue</emphasis>
+. </para></note>
+
+<para>
+If the client map of the keyboard description is not <emphasis>
+NULL</emphasis>
+, and any fields are already allocated in the client map, <emphasis>
+XkbAllocClientMap</emphasis>
+ does not overwrite the existing values; it simply ignores that part of the
+request. The only exception is the <emphasis>
+types</emphasis>
+ array. If <emphasis>
+type_count</emphasis>
+ is greater than the current <emphasis>
+num_types</emphasis>
+ field of the client map, <emphasis>
+XkbAllocClientMap</emphasis>
+ resizes the <emphasis>
+types</emphasis>
+ array and resets the <emphasis>
+num_types</emphasis>
+ field accordingly.
+</para>
+
+
+<para>
+If <emphasis>
+XkbAllocClientMap</emphasis>
+ is successful, it returns <emphasis>
+Success</emphasis>
+. Otherwise, it can return either <emphasis>
+BadMatch</emphasis>
+, <emphasis>
+BadAlloc</emphasis>
+, or <emphasis>
+BadValue</emphasis>
+ errors.
+</para>
+
+
+</sect2>
+<sect2 id='freeing_a_client_map'>
+<title>Freeing a Client Map</title>
+
+<para>
+To free memory used by the client map member of an <emphasis>
+XkbDescRec</emphasis>
+ structure, use <emphasis>
+XkbFreeClientMap.</emphasis>
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbFreeClientMap</emphasis>
+(<emphasis>
+xkb, which, free_all</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+      xkb</emphasis>
+;            /* keyboard description containing client map to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+      which</emphasis>
+;            /* mask identifying components of map to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Bool <emphasis>
+      free_all</emphasis>
+;            /* <emphasis>
+True</emphasis>
+ =&gt; free all client components and map itself */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbFreeClientMap</emphasis>
+ frees the components of client map specified by <emphasis>
+which</emphasis>
+ in the <emphasis>
+XkbDescRec</emphasis>
+ structure specified by the <emphasis>
+xkb</emphasis>
+ parameter and sets the corresponding structure component values to <emphasis>
+NULL</emphasis>
+. The <emphasis>
+which</emphasis>
+ parameter specifies a combination of the client map masks shown in Table 14.3.
+</para>
+
+
+<para>
+If <emphasis>
+free_all</emphasis>
+ is <emphasis>
+True</emphasis>
+, <emphasis>
+which</emphasis>
+ is ignored; <emphasis>
+XkbFreeClientMap</emphasis>
+ frees every non-<emphasis>
+NULL</emphasis>
+ structure component in the client map, frees the <emphasis>
+XkbClientMapRec</emphasis>
+ structure referenced by the <emphasis>
+map</emphasis>
+ member of the <emphasis>
+xkb</emphasis>
+ parameter, and sets the <emphasis>
+map</emphasis>
+ member to <emphasis>
+NULL.</emphasis>
+</para>
+
+
+</sect2>
+<sect2 id='allocating_an_empty_server_map'>
+<title>Allocating an Empty Server Map</title>
+
+<para>
+To allocate and initialize an empty server map description record, use
+<emphasis>
+XkbAllocServerMap.</emphasis>
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Status <emphasis>
+XkbAllocServerMap</emphasis>
+(<emphasis>
+xkb, which, count_acts</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+            xkb</emphasis>
+;            /* keyboard description in which to allocate server map */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            which</emphasis>
+;            /* mask selecting map components to allocate */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            count_acts</emphasis>
+;            /* value of <emphasis>
+num_acts</emphasis>
+ field in map to be allocated */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+<emphasis>
+XkbAllocServerMap</emphasis>
+ allocates and initializes an empty server map in the <emphasis>
+server</emphasis>
+ field of the keyboard description specified by <emphasis>
+xkb</emphasis>
+. The <emphasis>
+which</emphasis>
+ parameter specifies the particular components of the server map structure to
+allocate, as specified in Table 14.4.
+</para>
+
+<table frame='none'>
+<title>XkbAllocServerMap Masks</title>
+<tgroup cols='2'>
+<colspec colsep='0'/>
+<thead>
+<row rowsep='0'>
+  <entry>Mask</entry>
+  <entry>Effect</entry>
+  </row>
+</thead>
+<tbody>
+  <row rowsep='0'>
+    <entry>XkbExplicitComponentsMask</entry>
+    <entry>
+The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter are used to allocate the <emphasis>
+explicit </emphasis>
+field of the server map.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbKeyActionsMask</entry>
+    <entry>
+The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter are used to allocate the <emphasis>
+key_acts </emphasis>
+field of the server map. The <emphasis>
+count_acts</emphasis>
+ parameter is used to allocate the <emphasis>
+acts</emphasis>
+ field of the server map.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbKeyBehaviorsMask</entry>
+    <entry>
+The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter are used to allocate the <emphasis>
+behaviors </emphasis>
+field of the server map.
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry>XkbVirtualModMapMask</entry>
+    <entry>
+The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb </emphasis>
+parameter are used to allocate the <emphasis>
+vmodmap </emphasis>
+field of the server map.
+    </entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<note><para>The <emphasis>
+min_key_code</emphasis>
+ and <emphasis>
+max_key_code</emphasis>
+ fields of the <emphasis>
+xkb</emphasis>
+ parameter must be legal values. If they are not valid, <emphasis>
+XkbAllocServerMap</emphasis>
+ returns <emphasis>
+BadValue</emphasis>
+. </para></note>
+
+<para>
+If the server map of the keyboard description is not <emphasis>
+NULL</emphasis>
+ and any fields are already allocated in the server map, <emphasis>
+XkbAllocServerMap</emphasis>
+ does not overwrite the existing values. The only exception is with the
+<emphasis>
+acts </emphasis>
+array. If the <emphasis>
+count_acts </emphasis>
+parameter is greater than the current <emphasis>
+num_acts </emphasis>
+field of the server map, <emphasis>
+XkbAllocServerMap</emphasis>
+ resizes the <emphasis>
+acts </emphasis>
+array and resets the <emphasis>
+num_acts </emphasis>
+field accordingly.
+</para>
+
+
+<para>
+If <emphasis>
+XkbAllocServerMap</emphasis>
+ is successful, it returns <emphasis>
+Success</emphasis>
+. Otherwise, it can return either <emphasis>
+BadMatch</emphasis>
+ or <emphasis>
+BadAlloc</emphasis>
+ errors.
+</para>
+
+
+</sect2>
+<sect2 id='freeing_a_server_map'>
+<title>Freeing a Server Map</title>
+
+<para>
+To free memory used by the server member of an <emphasis>
+XkbDescRec</emphasis>
+ structure, use <emphasis>
+XkbFreeServerMap.</emphasis>
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+void <emphasis>
+XkbFreeServerMap</emphasis>
+(<emphasis>
+xkb, which, free_all</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+      xkb</emphasis>
+;            /* keyboard description containing server map to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+      which</emphasis>
+;            /* mask identifying components of map to free */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+Bool <emphasis>
+      free_all</emphasis>
+;            /* <emphasis>
+True</emphasis>
+ =&gt; free all server map components and server itself */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+The <emphasis>
+XkbFreeServerMap</emphasis>
+ function frees the specified components of server map in the <emphasis>
+XkbDescRec</emphasis>
+ structure specified by the <emphasis>
+xkb</emphasis>
+ parameter and sets the corresponding structure component values to <emphasis>
+NULL</emphasis>
+. The <emphasis>
+which</emphasis>
+ parameter specifies a combination of the server map masks and is a bitwise
+inclusive OR of the masks listed in Table 14.4. If <emphasis>
+free_all</emphasis>
+ is <emphasis>
+True</emphasis>
+, <emphasis>
+which</emphasis>
+ is ignored and <emphasis>
+XkbFreeServerMap</emphasis>
+ frees every non-<emphasis>
+NULL</emphasis>
+ structure component in the server map, frees the <emphasis>
+XkbServerMapRec</emphasis>
+ structure referenced by the <emphasis>
+server</emphasis>
+ member of the <emphasis>
+xkb</emphasis>
+ parameter, and sets the <emphasis>
+server</emphasis>
+ member to <emphasis>
+NULL.</emphasis>
+</para>
+
+</sect2>
+</sect1>
+</chapter>

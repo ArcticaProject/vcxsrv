@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
+]>
+
 
 <book id="libX11" lang="en">
 
 <bookinfo>
    <title>Xlib - C Language X Interface</title>
    <subtitle>X Window System Standard</subtitle>
-   <releaseinfo>X Version 11, Release 7</releaseinfo>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
    <authorgroup>
       <author>
          <firstname>James</firstname><surname>Gettys</surname>
@@ -64,9 +68,6 @@
      <year>1988</year><year>1989</year><year>1991</year>
      <holder>Digital Equipment Corporation</holder>
    </copyright>
-
-   <affiliation><orgname>formerly MIT X Consortium</orgname></affiliation>
-   <productnumber>X Version 11, Release 7</productnumber>
 
 <legalnotice>
 

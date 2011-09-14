@@ -1,6 +1,10 @@
 #
 # Generate output formats for a single DocBook/XML with/without chapters
 #
+# This version of docbook.am handles cases where XML source is generated
+# and the html to be produced must be in chunks, one per chapter.
+# The generated source must be cleaned, installed but not distributed
+#
 # Variables set by the calling Makefile:
 # shelfdir: the location where the docs/specs are installed. Typically $(docdir)
 # docbook:  the main DocBook/XML file, no chapters, appendix or image files
@@ -15,10 +19,16 @@
 #
 
 # DocBook/XML generated output formats to be installed
-shelf_DATA =
+shelf_DATA = $(chapters) $(docbook)
 
-# DocBook/XML file with chapters, appendix and images it includes
-dist_shelf_DATA = $(docbook) $(chapters)
+# Generated DocBook/XML source files using a perl script
+%.xml: $(top_builddir)/nls/%/Compose
+	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl 		\
+	 --locale="$(@:.xml=)" --output="$@" $<
+
+libX11-keys.xml: $(locales:%=%.xml)
+	$(AM_V_GEN)$(PERL) $(srcdir)/compose-chart.pl 		\
+	 --index --output="$@" $(locales)
 
 if HAVE_XMLTO
 if HAVE_STYLESHEETS
@@ -29,32 +39,37 @@ XMLTO_SEARCHPATH_FLAGS = 				\
 XMLTO_HTML_OLINK_FLAGS = \
 	--stringparam target.database.document=$(XORG_SGML_PATH)/X11/dbs/masterdb.html.xml \
 	--stringparam current.docid="$(<:.xml=)"
-XMLTO_HTML_STYLESHEET_FLAGS = -x $(STYLESHEET_SRCDIR)/xorg-xhtml.xsl
-XMLTO_HTML_CSS_STYLESHEET_FLAGS = --stringparam html.stylesheet=$(STYLESHEET_SRCDIR)/xorg.css
+XMLTO_HTML_STYLESHEET_FLAGS = -x $(STYLESHEET_SRCDIR)/xorg-chunk.xsl
+XMLTO_TXT_STYLESHEET_FLAGS = -x $(STYLESHEET_SRCDIR)/xorg-xhtml.xsl
+XMLTO_HTML_CHUNKING_FLAGS = 				\
+	--stringparam root.filename="$(<:.xml=)"
 XMLTO_HTML_FLAGS = 					\
 	$(XMLTO_SEARCHPATH_FLAGS)			\
 	$(XMLTO_HTML_STYLESHEET_FLAGS)			\
-	$(XMLTO_HTML_CSS_STYLESHEET_FLAGS)		\
+	$(XMLTO_HTML_CHUNKING_FLAGS)			\
+	$(XMLTO_HTML_OLINK_FLAGS)
+XMLTO_TXT_FLAGS = 					\
+	$(XMLTO_SEARCHPATH_FLAGS)			\
+	$(XMLTO_TXT_STYLESHEET_FLAGS)			\
 	$(XMLTO_HTML_OLINK_FLAGS)
 
-shelf_DATA += $(docbook:.xml=.html)
-%.html: %.xml $(chapters)
-	$(AM_V_GEN)$(XMLTO) $(XMLTO_HTML_FLAGS) xhtml-nochunks $<
+shelf_DATA += $(docbook:.xml=.html) $(chapters:.xml=.html)
+%.html: %.xml  $(chapters)
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_HTML_FLAGS) xhtml $<
 
 if HAVE_XMLTO_TEXT
 
 shelf_DATA += $(docbook:.xml=.txt)
 %.txt: %.xml $(chapters)
-	$(AM_V_GEN)$(XMLTO) $(XMLTO_HTML_FLAGS) txt $<
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_TXT_FLAGS) txt $<
 endif HAVE_XMLTO_TEXT
 
 if HAVE_FOP
 XMLTO_FO_IMAGEPATH_FLAGS = --stringparam img.src.path=$(abs_builddir)/
+XMLTO_FO_STYLESHEET_FLAGS = -x $(STYLESHEET_SRCDIR)/xorg-fo.xsl
 XMLTO_PDF_OLINK_FLAGS = \
 	--stringparam target.database.document=$(XORG_SGML_PATH)/X11/dbs/masterdb.pdf.xml \
 	--stringparam current.docid="$(<:.xml=)"
-XMLTO_FO_STYLESHEET_FLAGS = -x $(STYLESHEET_SRCDIR)/xorg-fo.xsl
-
 XMLTO_FO_FLAGS = 					\
 	$(XMLTO_SEARCHPATH_FLAGS)			\
 	$(XMLTO_FO_STYLESHEET_FLAGS)			\
@@ -78,17 +93,23 @@ XSLT_SEARCHPATH_FLAGS = 				\
 	--path "$(abs_top_builddir)"
 XSLT_OLINK_FLAGS = 					\
 	--stringparam targets.filename "$@" 		\
-	--stringparam collect.xref.targets "only" 	\
+	--stringparam collect.xref.targets "only"
+XSLT_FO_OLINK_FLAGS = 					\
 	--stringparam olink.base.uri "$(@:.db=)"
+XSLT_HTML_CHUNKING_FLAGS = 				\
+	--stringparam root.filename "$(<:.xml=)"
 
-XSLT_HTML_FLAGS =					\
+XSLT_HTML_FLAGS = 					\
 	$(XSLT_SEARCHPATH_FLAGS) 			\
+	$(XSLT_HTML_CHUNKING_FLAGS)			\
 	$(XSLT_OLINK_FLAGS)				\
 	--nonet --xinclude				\
-	$(STYLESHEET_SRCDIR)/xorg-xhtml.xsl
+	$(STYLESHEET_SRCDIR)/xorg-chunk.xsl
+
 XSLT_PDF_FLAGS = 					\
 	$(XSLT_SEARCHPATH_FLAGS) 			\
 	$(XSLT_OLINK_FLAGS)				\
+	$(XSLT_FO_OLINK_FLAGS)				\
 	--nonet --xinclude				\
 	$(STYLESHEET_SRCDIR)/xorg-fo.xsl
 

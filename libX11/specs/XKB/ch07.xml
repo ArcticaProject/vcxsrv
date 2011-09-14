@@ -1,0 +1,446 @@
+<chapter id='virtual_modifiers'>
+<title>Virtual Modifiers</title>
+
+<para>
+The core protocol specifies that certain keysyms, when bound to modifiers,
+affect the rules of keycode to keysym interpretation for all keys; for example,
+when the <emphasis>
+Num_Lock</emphasis>
+ keysym is bound to some modifier, that modifier is used to select between
+shifted and unshifted state for the numeric keypad keys. The core protocol does
+not provide a convenient way to determine the mapping of modifier bits (in
+particular <emphasis>
+Mod1</emphasis>
+ through <emphasis>
+Mod5</emphasis>
+) to keysyms such as <emphasis>
+Num_Lock</emphasis>
+ and <emphasis>
+Mode_switch</emphasis>
+. Using the core protocol only, a client application must retrieve and search
+the modifier map to determine the keycodes bound to each modifier, and then
+retrieve and search the keyboard mapping to determine the keysyms bound to the
+keycodes. It must repeat this process for all modifiers whenever any part of
+the modifier mapping is changed.
+</para>
+
+
+<para>
+Xkb alleviates these problems by defining virtual modifiers. In addition to the
+eight core modifiers, referred to as the <emphasis>
+real modifiers</emphasis>
+, Xkb provides a set of sixteen named <emphasis>
+virtual modifiers</emphasis>
+. Each virtual modifier can be bound to any set of the real modifiers
+(<emphasis>
+Shift</emphasis>
+, <emphasis>
+Lock</emphasis>
+, <emphasis>
+Control,</emphasis>
+ and <emphasis>
+Mod1</emphasis>
+-<emphasis>
+Mod5</emphasis>
+).
+</para>
+
+
+<para>
+The separation of function from physical modifier bindings makes it easier to
+specify more clearly the intent of a binding. X servers do not all assign
+modifiers the same way — for example, <emphasis>
+Num_Lock</emphasis>
+ might be bound to <emphasis>
+Mod2</emphasis>
+ for one vendor and to <emphasis>
+Mod4</emphasis>
+ for another. This makes it cumbersome to automatically remap the keyboard to a
+desired configuration without some kind of prior knowledge about the keyboard
+layout and bindings. With XKB, applications can use virtual modifiers to
+specify the desired behavior, without regard for the actual physical bindings
+in effect.
+</para>
+
+<sect1 id='virtual_modifier_names_and_masks'>
+<title>Virtual Modifier Names and Masks</title>
+
+<para>
+Virtual modifiers are named by converting their string name to an X <emphasis>
+Atom</emphasis>
+ and storing the Atom in the <emphasis>
+names.vmods</emphasis>
+ array in an <emphasis>
+XkbDescRec</emphasis>
+ structure (see section 6.1). The position of a name Atom in the <emphasis>
+names.vmods</emphasis>
+ array defines the bit position used to represent the virtual modifier and also
+the index used when accessing virtual modifier information in arrays: the name
+in the i-th (0 relative) entry of <emphasis>
+names.vmods</emphasis>
+ is the i-th virtual modifier, represented by the mask (1&lt;&lt;i). Throughout
+Xkb, various functions have a parameter that is a mask representing virtual
+modifier choices. In each case, the i-th bit (0 relative) of the mask
+represents the i-th virtual modifier.
+</para>
+
+
+<para>
+To set the name of a virtual modifier, use <emphasis>
+XkbSetNames</emphasis>
+, using <emphasis>
+XkbVirtualModNamesMask</emphasis>
+ in <emphasis>
+which</emphasis>
+ and the name in the <emphasis>
+xkb</emphasis>
+ argument; to retrieve indicator names, use <emphasis>
+XkbGetNames</emphasis>
+. These functions are discussed in Chapter 18.
+</para>
+
+
+</sect1>
+<sect1 id='modifier_definitions'>
+<title>Modifier Definitions</title>
+
+<para>
+An Xkb<emphasis>
+ modifier definition</emphasis>
+ enumerates a collection of real and virtual modifiers but does not in itself
+bind those modifiers to any particular key or to each other. Modifier
+definitions are included in a number of structures in the keyboard description
+to define the collection of modifiers that affect or are affected by some other
+entity. A modifier definition is relevant only in the context of some other
+entity such as an indicator map, a control, or a key type. (See sections 8.2.2,
+10.8, and 15.2.) <!-- xref -->
+</para>
+
+<para><programlisting>
+typedef struct _XkbMods {
+      unsigned char            mask;            /* real_mods | vmods mapped to
+real modifiers */
+      unsigned char            real_mods;            /* real modifier bits */
+      unsigned short             vmods;            /* virtual modifier bits */
+} <emphasis>
+XkbModsRec</emphasis>
+,*XkbModsPtr;
+</programlisting></para>
+
+<para>
+An Xkb modifier definition consists of a set of bit masks corresponding to the
+eight real modifiers (<emphasis>
+real_mods</emphasis>
+); a similar set of bitmasks corresponding to the 16 named virtual modifiers
+(<emphasis>
+vmods</emphasis>
+); and an effective mask (<emphasis>
+mask</emphasis>
+). The effective mask represents the set of all real modifiers that can
+logically be set either by setting any of the real modifiers or by setting any
+of the virtual modifiers in the definition. <emphasis>
+mask</emphasis>
+ is derived from the real and virtual modifiers and should never be explicitly
+changed — it contains all of the real modifiers specified in the definition
+(<emphasis>
+real_mods</emphasis>
+)<emphasis>
+ plus</emphasis>
+ any real modifiers that are bound to the virtual modifiers specified in the
+definition (<emphasis>
+vmods</emphasis>
+). The binding of the virtual modifiers to real modifiers is exterior to the
+modifier definition. Xkb automatically recomputes the mask field of modifier
+definitions as necessary. Whenever you access a modifier definition that has
+been retrieved using an Xkb library function, the mask field will be correct
+for the keyboard mapping of interest.
+</para>
+
+
+</sect1>
+<sect1 id='binding_virtual_modifiers_to_real_modifiers'>
+<title>Binding Virtual Modifiers to Real Modifiers</title>
+
+<para>
+The binding of virtual modifiers to real modifiers is defined by the <emphasis>
+server.vmods</emphasis>
+ array in an <emphasis>
+XkbDescRec</emphasis>
+ structure. Each entry contains the real modifier bits that are bound to the
+virtual modifier corresponding to the entry. The overall relationship of fields
+dealing with virtual modifiers in the server keyboard description are shown in
+Figure 16.2. <!-- xref -->
+</para>
+
+
+</sect1>
+<sect1 id='virtual_modifier_key_mapping'>
+<title>Virtual Modifier Key Mapping</title>
+
+<para>
+Xkb maintains a <emphasis>
+virtual modifier mapping</emphasis>
+, which lists the virtual modifiers associated with, or bound to, each key. The
+real modifiers bound to a virtual modifier always include all of the modifiers
+bound to any of the keys that specify that virtual modifier in their virtual
+modifier mapping. The <emphasis>
+server.vmodmap</emphasis>
+ array indicates which virtual modifiers are bound to each key; each entry is a
+bitmask for the virtual modifier bits. The <emphasis>
+server.vmodmap</emphasis>
+ array is indexed by keycode.
+</para>
+
+
+<para>
+The <emphasis>
+vmodmap</emphasis>
+ and <emphasis>
+vmods</emphasis>
+ members of the server map are the "master" virtual modifier definitions. Xkb
+automatically propagates any changes to these fields to all other fields that
+use virtual modifier mappings (see section 16.4).
+</para>
+
+
+<para>
+For example, if <emphasis>
+Mod3</emphasis>
+ is bound to the <emphasis>
+Num_Lock</emphasis>
+ key by the core protocol modifier mapping, and the <emphasis>
+NumLock</emphasis>
+ virtual modifier is bound to they <emphasis>
+Num_Lock</emphasis>
+ key by the virtual modifier mapping, <emphasis>
+Mod3</emphasis>
+ is added to the set of modifiers associated with <emphasis>
+NumLock</emphasis>
+.
+</para>
+
+
+<para>
+The virtual modifier mapping is normally updated whenever actions are
+automatically applied to symbols (see section 16.4 for details), and few
+applications should need to change the virtual modifier mapping explicitly.
+</para>
+
+
+<para>
+Use <emphasis>
+XkbGetMap </emphasis>
+(see section 14.2) to get the virtual modifiers from the server or use  <!-- xref -->
+<emphasis>
+XkbGetVirtualMods</emphasis>
+ (see section 16.4.1) to update a local copy of the virtual modifiers bindings  <!-- xref -->
+from the server. To set the binding of a virtual modifier to a real modifier,
+use <emphasis>
+XkbSetMap</emphasis>
+ (see<emphasis>
+ </emphasis>
+section 14.3<emphasis> <!-- xref -->
+).</emphasis>
+</para>
+
+
+<para>
+To determine the mapping of virtual modifiers to core X protocol modifiers, use
+<emphasis>
+XkbVirtualModsToReal</emphasis>
+.
+</para>
+
+<informaltable frame='none'>
+<tgroup cols='1'>
+<colspec colsep='0'/>
+<tbody>
+  <row rowsep='0'>
+    <entry role='functiondecl'>
+Bool <emphasis>
+XkbVirtualModsToReal</emphasis>
+(<emphasis>
+xkb, virtual_mask, mask_rtrn</emphasis>
+)
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+XkbDescPtr <emphasis>
+            xkb</emphasis>
+;            /* keyboard description for input device */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int<emphasis>
+            virtual_mask</emphasis>
+;            /* virtual modifier mask to translate */
+    </entry>
+  </row>
+  <row rowsep='0'>
+    <entry role='functionargdecl'>
+unsigned int *             <emphasis>
+mask_rtrn</emphasis>
+;            /* backfilled with real modifiers */
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>
+If the keyboard description defined by <emphasis>
+xkb</emphasis>
+ includes bindings for virtual modifiers, <emphasis>
+XkbVirtualModsToReal</emphasis>
+ uses those bindings to determine the set of real modifiers that correspond to
+the set of virtual modifiers specified in <emphasis>
+virtual_mask</emphasis>
+. The <emphasis>
+virtual_mask</emphasis>
+ parameter is a mask specifying the virtual modifiers to translate; the i-th
+bit (0 relative) of the mask represents the i-th virtual modifier. If <emphasis>
+mask_rtrn</emphasis>
+ is non-<emphasis>
+NULL</emphasis>
+, <emphasis>
+XkbVirtualModsToReal</emphasis>
+ backfills it with the resulting real modifier mask. If the keyboard
+description in <emphasis>
+xkb</emphasis>
+ does not include virtual modifier bindings, <emphasis>
+XkbVirtualModsToReal</emphasis>
+ returns <emphasis>
+False</emphasis>
+; otherwise, it returns <emphasis>
+True</emphasis>
+.
+</para>
+
+<note><para>It is possible for a local (client-side) keyboard description (the
+<emphasis>
+xkb</emphasis>
+ parameter) to not contain any virtual modifier information (simply because the
+client has not requested it) while the server’s corresponding definition may
+contain virtual modifier information. </para></note>
+
+
+<sect2 id='inactive_modifier_sets'>
+<title>Inactive Modifier Sets</title>
+
+<para>
+An unbound virtual modifier is one that is not bound to any real modifier
+(<emphasis>
+server</emphasis>
+-&gt;<emphasis>
+vmods</emphasis>
+[virtual_modifier_index] is zero).
+</para>
+
+
+<para>
+Some Xkb operations ignore modifier definitions in which the virtual modifiers
+are unbound. Consider this example:
+</para>
+
+<literallayout>
+if (state matches {Shift}) Do OneThing;
+if (state matches {Shift+NumLock}) Do Another;
+</literallayout>
+
+<para>
+If the <emphasis>
+NumLock</emphasis>
+ virtual modifier is not bound to any real modifiers, the effective masks for
+these two cases are identical (that is, contain only <emphasis>
+Shift</emphasis>
+). When it is essential to distinguish between <emphasis>
+OneThing</emphasis>
+ and Another, Xkb considers only those modifier definitions for which all
+virtual modifiers are bound.
+</para>
+
+
+</sect2>
+</sect1>
+<sect1 id='conventions'>
+<title>Conventions</title>
+
+<para>
+The Xkb extension does not require any specific virtual modifier names.
+However, everyone benefits if the same names are used for common modifiers. The
+following names are suggested:
+</para>
+
+<literallayout class='monospaced'>
+     <emphasis>
+     NumLock
+     ScrollLock
+     Alt
+     Meta
+     AltGr
+     LevelThree</emphasis>
+</literallayout>
+
+</sect1>
+<sect1 id='example'>
+<title>Example</title>
+
+<para>
+If the second (0-relative) entry in <emphasis>
+names.vmods</emphasis>
+ contains the Atom for "NumLock", then 0x4 (1&lt;&lt;2) is the virtual modifier
+bit for the <emphasis>
+NumLock</emphasis>
+ virtual modifier. If <emphasis>
+server.vmods</emphasis>
+[2] contains <emphasis>
+Mod3Mask</emphasis>
+, then the <emphasis>
+NumLock</emphasis>
+ virtual modifier is bound to the <emphasis>
+Mod3</emphasis>
+ real modifier.
+</para>
+
+
+<para>
+A virtual modifier definition for this example would have:
+</para>
+
+<literallayout class='monospaced'>
+     real_mods = 0
+     vmods = 0x4 (NumLock named virtual modifier)
+     mask = 0x20 (Mod3Mask)
+</literallayout>
+
+<para>
+Continuing the example, if the keyboard has a <emphasis>
+Num_Lock</emphasis>
+ keysym bound to the key with keycode 14, and the <emphasis>
+NumLock</emphasis>
+ virtual modifier is bound to this key, <emphasis>
+server.vmodmap</emphasis>
+[14] contains 0x4.
+</para>
+
+
+<para>
+Finally, if the keyboard also used the real <emphasis>
+Mod1</emphasis>
+ modifier for numeric lock operations, the modifier definition below would
+represent the situation where either the key bound to <emphasis>
+Mod1</emphasis>
+ or the <emphasis>
+NumLock</emphasis>
+ virtual modifier could be used for this purpose:
+</para>
+
+<literallayout class='monospaced'>
+     real_mods = 0x8 (Mod1Mask)
+     vmods = 0x4 (NumLock named virtual modifier)
+     mask = 0x28 (Mod1Mask | Mod3Mask)
+</literallayout>
+</sect1>
+</chapter>
