@@ -1,0 +1,36 @@
+# Tests (sorted by expected completion time)
+TESTPROGRAMS =			\
+	a1-trap-test		\
+	pdf-op-test		\
+	region-test		\
+	region-translate-test	\
+	fetch-test		\
+	oob-test		\
+	trap-crasher		\
+	alpha-loop		\
+	scaling-crash-test	\
+	scaling-helpers-test	\
+	gradient-crash-test	\
+	region-contains-test	\
+	alphamap		\
+	stress-test		\
+	composite-traps-test	\
+	blitters-test		\
+	scaling-test		\
+	affine-test		\
+	composite		\
+	$(NULL)
+
+# Benchmarks
+BENCHMARKS =			\
+	lowlevel-blt-bench	\
+	$(NULL)
+
+# Utility functions
+libutils_sources =		\
+	utils.c			\
+	$(NULL)
+
+libutils_headers =		\
+	utils.h			\
+	$(NULL)

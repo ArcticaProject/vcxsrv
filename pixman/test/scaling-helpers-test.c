@@ -1,4 +1,3 @@
-#include <config.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,12 +19,12 @@ bilinear_pad_repeat_get_scanline_bounds_ref (int32_t        source_image_width,
 					     int32_t *      right_pad)
 {
     int w = *width;
+    int64_t vx = vx_;
     *left_pad = 0;
     *left_tz = 0;
     *width = 0;
     *right_tz = 0;
     *right_pad = 0;
-    int64_t vx = vx_;
     while (--w >= 0)
     {
 	if (vx < 0)

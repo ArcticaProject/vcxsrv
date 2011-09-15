@@ -8,7 +8,6 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <config.h>
 #include "utils.h"
 
 static pixman_indexed_t rgb_palette[9];

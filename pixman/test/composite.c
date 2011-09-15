@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <stdlib.h> /* abort() */
 #include <math.h>
-#include <config.h>
 #include <time.h>
 #include "utils.h"
 

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
- "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+ "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
+]>
 <!-- lifted from troff+ms+XMan by doclifter -->
 
 <article id='xmu'>
   <articleinfo>
     <title>Xmu and Xmuu Library API Reference</title>
+    <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
+    <copyright><year>1989</year><holder>X Consortium</holder>
+    </copyright>
     <abstract><para>&ldquo;Don't ask.&rdquo;</para></abstract>
 
     <legalnotice>
 
-      <para>
-Copyright &copy; 1989 X Consortium
-      </para>
       <para>
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the &ldquo;Software&rdquo;), to deal

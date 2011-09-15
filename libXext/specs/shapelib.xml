@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
+]>
 
 <!-- lifted from troff+ms+XMan by doclifter -->
 <book id="shapelib">
@@ -8,17 +11,16 @@
 <bookinfo>
    <title>X Nonrectangular Window Shape Extension Library</title>
    <subtitle>X Consortium Standard</subtitle>
-   <releaseinfo>X Version 11, Release 6.4</releaseinfo>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
+   <releaseinfo>Version 1.0</releaseinfo>
    <authorgroup>
       <author>
          <firstname>Keith</firstname><surname>Packard</surname>
+         <affiliation><orgname>MIT X Consortium</orgname></affiliation>
       </author>
    </authorgroup>
    <corpname>MIT X Consortium</corpname>
    <copyright><year>1989</year><holder>X Consortium</holder></copyright>
-   <releaseinfo>Version 1.0</releaseinfo>
-   <affiliation><orgname>MIT X Consortium</orgname></affiliation>
-   <productnumber>X Version 11, Release 6.4</productnumber>
 
 <legalnotice>
 
