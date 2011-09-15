@@ -11,6 +11,7 @@
 <bookinfo>
    <title>The X Keyboard Extension:</title>
    <subtitle>Library Specification</subtitle>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
    <authorgroup>
      <author>
        <firstname>Amber</firstname>
@@ -42,13 +43,12 @@
        <affiliation><orgname>Digital Equipment Corporation</orgname></affiliation>
      </author>
    </authorgroup>
-   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
+   <copyright><year>1995</year><year>1996</year><holder>X Consortium Inc.</holder></copyright>
+   <copyright><year>1995</year><year>1996</year><holder>Silicon Graphics Inc.</holder></copyright>
+   <copyright><year>1995</year><year>1996</year><holder>Hewlett-Packard Company</holder></copyright>
+   <copyright><year>1995</year><year>1996</year><holder>Digital Equipment Corporation</holder></copyright>   
 
 <legalnotice>
-<para>Copyright © 1995, 1996 X Consortium Inc.</para>
-<para>Copyright © 1995, 1996 Silicon Graphics Inc.</para>
-<para>Copyright © 1995, 1996 Hewlett-Packard Company</para>
-<para>Copyright © 1995, 1996 Digital Equipment Corporation</para>
 <para>
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the “Software”),

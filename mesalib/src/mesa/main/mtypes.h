@@ -721,16 +721,26 @@ struct gl_accum_attrib
 
 
 /**
+ * Used for storing clear color, texture border color, etc.
+ * The float values are typically unclamped.
+ */
+union gl_color_union
+{
+   GLfloat f[4];
+   GLint i[4];
+   GLuint ui[4];
+};
+
+
+/**
  * Color buffer attribute group (GL_COLOR_BUFFER_BIT).
  */
 struct gl_colorbuffer_attrib
 {
-   GLuint ClearIndex;			/**< Index to use for glClear */
-   GLfloat ClearColorUnclamped[4];              /**< Color to use for glClear*/
-   GLclampf ClearColor[4];               /**< Color to use for glClear */
-
-   GLuint IndexMask;			/**< Color index write mask */
-   GLubyte ColorMask[MAX_DRAW_BUFFERS][4];/**< Each flag is 0xff or 0x0 */
+   GLuint ClearIndex;                      /**< Index for glClear */
+   union gl_color_union ClearColor;        /**< Color for glClear, unclamped */
+   GLuint IndexMask;                       /**< Color index write mask */
+   GLubyte ColorMask[MAX_DRAW_BUFFERS][4]; /**< Each flag is 0xff or 0x0 */
 
    GLenum DrawBuffer[MAX_DRAW_BUFFERS];	/**< Which buffer to draw into */
 
@@ -750,8 +760,8 @@ struct gl_colorbuffer_attrib
    /*@{*/
    GLbitfield BlendEnabled;		/**< Per-buffer blend enable flags */
 
-   /* NOTE: this does _not_ depend on fragment clamping or any other clamping control,
-    * only on the fixed-pointness of the render target.
+   /* NOTE: this does _not_ depend on fragment clamping or any other clamping
+    * control, only on the fixed-pointness of the render target.
     * The query does however depend on fragment color clamping.
     */
    GLfloat BlendColorUnclamped[4];               /**< Blending color */
@@ -1356,11 +1366,7 @@ struct gl_sampler_object
    GLenum WrapR;		/**< R-axis texture image wrap mode */
    GLenum MinFilter;		/**< minification filter */
    GLenum MagFilter;		/**< magnification filter */
-   union {
-      GLfloat f[4];
-      GLuint ui[4];
-      GLint i[4];
-   } BorderColor;               /**< Interpreted according to texture format */
+   union gl_color_union BorderColor;  /**< Interpreted according to texture format */
    GLfloat MinLod;		/**< min lambda, OpenGL 1.2 */
    GLfloat MaxLod;		/**< max lambda, OpenGL 1.2 */
    GLfloat LodBias;		/**< OpenGL 1.4 */
