@@ -17,20 +17,30 @@
    <authorgroup>
       <author>
         <firstname>Tim</firstname><surname>Glauert</surname>
-        <affiliation><orgname>Olivetti Research/MultiWorks</orgname></affiliation>
+        <affiliation>
+          <orgname>Olivetti Research</orgname>
+          <orgdiv>MultiWorks</orgdiv>
+        </affiliation>
       </author>
       <author>
           <firstname>Dave</firstname>
           <surname>Carver</surname>
-          <affiliation><orgname>Digital Equipment Corporation, MIT/Project Athena</orgname></affiliation>
+          <affiliation>
+            <orgname>Digital Equipment Corporation</orgname>
+            <orgdiv>MIT/Project Athena</orgdiv>
+          </affiliation>
       </author>
       <author>
         <firstname>Jim</firstname>
         <surname>Gettys</surname>
-        <affiliation><orgname>Digital Equipment Corporation, Cambridge Research Laboratory</orgname></affiliation>
+        <affiliation>
+          <orgname>Digital Equipment Corporation</orgname>
+          <orgdiv>Cambridge Research Laboratory</orgdiv>
+        </affiliation>
       </author>
       <author>
         <firstname>David</firstname>
+        <othername>P.</othername>
         <surname>Wiggins</surname>
         <affiliation><orgname>X Consortium, Inc.</orgname></affiliation>
       </author>
