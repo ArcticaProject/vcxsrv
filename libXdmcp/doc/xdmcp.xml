@@ -15,6 +15,7 @@
 <!ENTITY variable.rho	"<emphasis role='italic'>&rho;</emphasis>">
 <!ENTITY variable.sigma	"<emphasis role='italic'>&sigma;</emphasis>">
 <!ENTITY variable.tau	"<emphasis role='italic'>&tau;</emphasis>">
+<!ENTITY % defs SYSTEM "defs.ent"> %defs;
 ]>
 
 <book id="xdmcp">
@@ -22,21 +23,21 @@
 <bookinfo>
    <title>X Display Manager Control Protocol</title>
    <subtitle>X.Org Standard</subtitle>
+   <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
    <releaseinfo>Version 1.1</releaseinfo>
    <authorgroup>
    <author>
       <firstname>Keith</firstname><surname>Packard</surname>
-      <affiliation><orgname>
-X Consortium,
-Laboratory for Computer Science,
-Massachusetts Institute of Technology
-      </orgname></affiliation>
+      <affiliation>
+        <orgname>Massachusetts Institute of Technology</orgname>
+        <orgdiv>Laboratory for Computer Science</orgdiv>
+        <orgdiv>X Consortium</orgdiv>
+      </affiliation>
    </author>
    </authorgroup>
 
    <copyright><year>1989</year><year>2004</year>
      <holder>The Open Group</holder></copyright>
-   <productnumber>X Version 11, Release 6.8</productnumber>
 
 <legalnotice>
 

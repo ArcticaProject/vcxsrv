@@ -13,22 +13,22 @@
    <title>Double Buffer Extension Library</title>
    <subtitle>X Consortium Standard</subtitle>
    <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
+   <releaseinfo>Version 1.0</releaseinfo>
    <authorgroup>
       <author>
          <firstname>Ian</firstname><surname>Elliot</surname>
+         <affiliation><orgname>Hewlett-Packard Company</orgname></affiliation>
       </author>
    </authorgroup>
    <othercredit>
-      <firstname>Davide</firstname><surname>Wiggins</surname>
+      <firstname>David</firstname><othername>P.</othername><surname>Wiggins</surname>
+      <affiliation><orgname>X Consortium, Inc</orgname></affiliation>
    </othercredit>
-   <corpname>Hewlett-Packard Company</corpname>
    <copyright><year>1989</year><holder>X Consortium, Inc and Digital Equipment Corporation</holder></copyright>
    <copyright><year>1992</year><holder>X Consortium, Inc and Intergraph Corporation</holder></copyright>
    <copyright><year>1993</year><holder>X Consortium, Inc and Silicon Graphics, Inc.</holder></copyright>
    <copyright><year>1994</year><holder>X Consortium, Inc and Hewlett-Packard Company</holder></copyright>
    <copyright><year>1995</year><holder>X Consortium, Inc and Hewlett-Packard Company</holder></copyright>
-   <releaseinfo>Version 1.0</releaseinfo>
-   <affiliation><orgname>X Consortium</orgname></affiliation>
 
 <legalnotice>
 <para>

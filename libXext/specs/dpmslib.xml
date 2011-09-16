@@ -12,15 +12,15 @@
    <title>X Display Power Management Signaling (DPMS) Extension</title>
    <subtitle>X Consortium Standard</subtitle>
    <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
+   <releaseinfo>Version 1.0</releaseinfo>
    <authorgroup>
       <author>
          <firstname>Rob</firstname><surname>Lembree</surname>
+         <affiliation><orgname>Digital Equipment Corporation</orgname></affiliation>
+         <email>lembree@zk3.dec.com</email>
       </author>
    </authorgroup>
-   <corpname>Digital Equipment Corporation</corpname>
-   <copyright><year>1996</year><holder>X Consortium</holder></copyright>
-   <releaseinfo>Version 1.0</releaseinfo>
-   <affiliation><orgname>X Consortium</orgname></affiliation>
+   <copyright><year>1996</year><holder>Digital Equipment Corporation</holder></copyright>
 
 <legalnotice>
 <para>
