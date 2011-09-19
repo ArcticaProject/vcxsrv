@@ -275,9 +275,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texenv.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\main\texfetch.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\samplerobj.c">
       <Filter>Source Files</Filter>
     </ClCompile>
