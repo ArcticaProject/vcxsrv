@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -28,27 +28,27 @@ in this Software without prior written authorization from The Open Group.
  *
  * *
  * Author:  Jim Fulton, MIT X Consortium
- * 
- * 
+ *
+ *
  *			      Public Entry Points
- * 
+ *
  * CloseHook XmuAddCloseDisplayHook (dpy, func, arg)
  *     Display *dpy;
  *     XmuCloseHookProc func;
  *     XPointer arg;
- * 
+ *
  * Bool XmuRemoveCloseDisplayHook (dpy, hook, func, arg)
  *     Display *dpy;
  *     CloseHook hook;
  *     XmuCloseHookProc func;
  *     XPointer arg;
- * 
+ *
  * Bool XmuLookupCloseDisplayHook (dpy, hook, func, arg)
  *     Display *dpy;
  *     CloseHook hook;
  *     XmuCloseHookProc func;
  *     XPointer arg;
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -188,8 +188,8 @@ XmuRemoveCloseDisplayHook(Display *dpy, CloseHook handle,
 
 
 /*
- * Lookup - see whether or not a handle has been installed.  If handle is 
- * non-NULL, look for an entry that matches it; otherwise look for an entry 
+ * Lookup - see whether or not a handle has been installed.  If handle is
+ * non-NULL, look for an entry that matches it; otherwise look for an entry
  * with the same function/argument pair.
  */
 Bool

@@ -1,4 +1,4 @@
-/* 
+/*
 
 Copyright 1989, 1994, 1998  The Open Group
 
@@ -52,11 +52,11 @@ static int icbrt(int);
 static int icbrt_with_bits(int, int);
 static int icbrt_with_guess(int, int);
 
-/* To determine the best allocation of reds, greens, and blues in a 
+/* To determine the best allocation of reds, greens, and blues in a
  * standard colormap, use XmuGetColormapAllocation.
  * 	vinfo		specifies visual information for a chosen visual
  *	property	specifies one of the standard colormap property names
- * 	red_max		returns maximum red value 
+ * 	red_max		returns maximum red value
  *      green_max	returns maximum green value
  * 	blue_max	returns maximum blue value
  *
@@ -115,15 +115,15 @@ gray_allocation(int n, unsigned long *red_max, unsigned long *green_max,
 		unsigned long *blue_max)
 {
     *red_max = (n * 30) / 100;
-    *green_max = (n * 59) / 100; 
-    *blue_max = (n * 11) / 100; 
+    *green_max = (n * 59) / 100;
+    *blue_max = (n * 11) / 100;
     *green_max += ((n - 1) - (*red_max + *green_max + *blue_max));
 }
 
 /****************************************************************************/
 /* Determine an appropriate color allocation for the RGB_DEFAULT_MAP.
  * If a map has less than a minimum number of definable entries, we do not
- * produce an allocation for an RGB_DEFAULT_MAP.  
+ * produce an allocation for an RGB_DEFAULT_MAP.
  *
  * For 16 planes, the default colormap will have 27 each RGB; for 12 planes,
  * 12 each.  For 8 planes, let n = the number of colormap entries, which may
@@ -183,7 +183,7 @@ default_allocation(XVisualInfo *vinfo, unsigned long *red,
 	    ngrays = 12;
 	gray_allocation(ngrays, red, green, blue);
 	break;
-	
+
       default:
 	return 0;
     }
@@ -207,7 +207,7 @@ default_allocation(XVisualInfo *vinfo, unsigned long *red,
  * Which, on a GPX, allows for 252 entries in the best map, out of 254
  * defineable colormap entries.
  */
- 
+
 static void
 best_allocation(XVisualInfo *vinfo, unsigned long *red, unsigned long *green,
 		unsigned long *blue)
@@ -228,7 +228,7 @@ best_allocation(XVisualInfo *vinfo, unsigned long *red, unsigned long *green,
     else
     {
 	register int bits, n;
-	
+
 	/* Determine n such that n is the least integral power of 2 which is
 	 * greater than or equal to the number of entries in the colormap.
          */
@@ -239,11 +239,11 @@ best_allocation(XVisualInfo *vinfo, unsigned long *red, unsigned long *green,
 	    n = n << 1;
 	    bits++;
 	}
-	
+
 	/* If the number of entries in the colormap is a power of 2, determine
 	 * the allocation by "dealing" the bits, first to green, then red, then
 	 * blue.  If not, find the maximum integral red, green, and blue values
-	 * which, when multiplied together, do not exceed the number of 
+	 * which, when multiplied together, do not exceed the number of
 
 	 * colormap entries.
 	 */
@@ -260,7 +260,7 @@ best_allocation(XVisualInfo *vinfo, unsigned long *red, unsigned long *green,
 	else
 	{
 	    *red = icbrt_with_bits(vinfo->colormap_size, bits);
-	    *blue = *red;	
+	    *blue = *red;
 	    *green = (vinfo->colormap_size / ((*red) * (*blue)));
 	}
 	(*red)--;

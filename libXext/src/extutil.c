@@ -24,23 +24,23 @@ in this Software without prior written authorization from The Open Group.
  *
  * Author:  Jim Fulton, MIT X Consortium
  *
- * 
+ *
  * 		       Xlib Extension-Writing Utilities
- * 
+ *
  * This package contains utilities for writing the client API for various
  * protocol extensions.  THESE INTERFACES ARE NOT PART OF THE X STANDARD AND
  * ARE SUBJECT TO CHANGE!
- * 
+ *
  *  Routines include:
- * 
+ *
  *         XextCreateExtension		called once per extension
  *         XextDestroyExtension		if no longer using extension
  *         XextAddDisplay		add another display
  *         XextRemoveDisplay		remove a display
  *         XextFindDisplay		is a display open
- * 
+ *
  * In addition, the following Xlib-style interfaces are provided:
- * 
+ *
  *         XSetExtensionErrorHandler	establish an extension error handler
  *         XMissingExtension		raise an error about missing ext
  */
@@ -55,12 +55,12 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/extensions/ge.h>
 
 /* defined in Xge.c */
-extern _X_HIDDEN Bool 
+extern _X_HIDDEN Bool
 xgeExtRegister(Display* dpy, int extension, XExtensionHooks* callbacks);
 
 /*
  * XextCreateExtension - return an extension descriptor containing context
- * information for this extension.  This object is passed to all Xext 
+ * information for this extension.  This object is passed to all Xext
  * routines.
  */
 XExtensionInfo *XextCreateExtension (void)
@@ -110,7 +110,7 @@ XExtDisplayInfo *XextAddDisplay (
     dpyinfo->codes = XInitExtension (dpy, ext_name);
 
     /*
-     * if the server has the extension, then we can initialize the 
+     * if the server has the extension, then we can initialize the
      * appropriate function vectors
      */
     if (dpyinfo->codes) {
@@ -138,7 +138,7 @@ XExtDisplayInfo *XextAddDisplay (
 	if (hooks->free_font)
 	  XESetFreeFont (dpy, dpyinfo->codes->extension, hooks->free_font);
 	if (hooks->close_display)
-	  XESetCloseDisplay (dpy, dpyinfo->codes->extension, 
+	  XESetCloseDisplay (dpy, dpyinfo->codes->extension,
 			     hooks->close_display);
 	if (hooks->error)
 	  XESetError (dpy, dpyinfo->codes->extension, hooks->error);
@@ -251,7 +251,7 @@ static int _default_exterror (Display *dpy, _Xconst char *ext_name, _Xconst char
 
 
 /*
- * XSetExtensionErrorHandler - sets the handler that gets called when a 
+ * XSetExtensionErrorHandler - sets the handler that gets called when a
  * requested extension is referenced.  This should eventually move into Xlib.
  */
 

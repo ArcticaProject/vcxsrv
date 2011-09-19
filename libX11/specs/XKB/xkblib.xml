@@ -43,10 +43,12 @@
        <affiliation><orgname>Digital Equipment Corporation</orgname></affiliation>
      </author>
    </authorgroup>
-   <copyright><year>1995</year><year>1996</year><holder>X Consortium Inc.</holder></copyright>
-   <copyright><year>1995</year><year>1996</year><holder>Silicon Graphics Inc.</holder></copyright>
-   <copyright><year>1995</year><year>1996</year><holder>Hewlett-Packard Company</holder></copyright>
-   <copyright><year>1995</year><year>1996</year><holder>Digital Equipment Corporation</holder></copyright>   
+   <copyright><year>1995</year><year>1996</year>
+      <holder>X Consortium Inc.</holder>
+      <holder>Silicon Graphics Inc.</holder>
+      <holder>Hewlett-Packard Company</holder>
+      <holder>Digital Equipment Corporation</holder>
+   </copyright>
 
 <legalnotice>
 <para>

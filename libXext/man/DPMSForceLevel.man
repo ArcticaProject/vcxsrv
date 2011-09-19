@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -30,7 +30,7 @@
 .\" DEALINGS IN THE SOFTWARE.
 .\"
 .\" X Window System is a trademark of The Open Group.
-.\" 
+.\"
 .TH DPMSForceLevel __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
 DPMSForceLevel \- forces a DPMS capable display into the
@@ -53,20 +53,20 @@ Specifies the connection to the X server
 Specifies the level to force power to
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSForceLevel 
-function forces a DPMS capable display into the specified power level.  The 
-\fIlevel\fP must be one of following four states: DPMSModeOn, DPMSModeStandby, 
-DPMSModeSuspend, or DPMSModeOff. Values other than these will result in a 
+The
+.I DPMSForceLevel
+function forces a DPMS capable display into the specified power level.  The
+\fIlevel\fP must be one of following four states: DPMSModeOn, DPMSModeStandby,
+DPMSModeSuspend, or DPMSModeOff. Values other than these will result in a
 BadValue error.  If DPMS
-is disabled on the display, trying to set the power level on the display will 
-result in a BadMatch 
+is disabled on the display, trying to set the power level on the display will
+result in a BadMatch
 protocol error.
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSForceLevel 
+The
+.I DPMSForceLevel
 function always returns TRUE.
 .SH ERRORS
 .TP 15

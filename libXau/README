@@ -38,7 +38,7 @@ This scheme involves changes to the following parts of the sample release:
 	-  add entries to user's auth file
 	-  remove entries from user's auth file
 
-This mechanism assumes that the superuser and the transport layer between 
+This mechanism assumes that the superuser and the transport layer between
 the client and the server is secure.
 
 
@@ -46,7 +46,7 @@ Description
 
 The sample implementation will use the xdm Display Manager to set up and
 control the server's authorization file.  Sites that do not run xdm will
-need to build their own mechanisms.  
+need to build their own mechanisms.
 
 Xdm uses a random key (seeded by the system time and check sum of /dev/kmem)
 to generate a unique sequence of characters at 16 bytes long.  This sequence
@@ -130,7 +130,7 @@ There are three types of input:
 	name non-NULL, data NULL	- use the named authorization; get
 					  data from that mechanism's default.
 	name non-NULL, data non-NULL	- use the given authorization and data.
-					
+
 This interface is used by xdm and might also be used by any other
 applications that wish to explicitly set the authorization information.
 

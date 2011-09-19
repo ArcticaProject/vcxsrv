@@ -43,7 +43,7 @@ from The Open Group.
  */
 #ifdef NULL_NOT_ZERO			/* then need to initialize */
 #define SetZero(t,var,z) t var = z
-#else 
+#else
 #define SetZero(t,var,z) t var
 #endif
 

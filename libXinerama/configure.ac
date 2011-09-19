@@ -46,7 +46,7 @@ PKG_CHECK_MODULES(XINERAMA, x11 xext xextproto [xineramaproto >= 1.1.99.1])
 # Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 LINT_FLAGS="${LINT_FLAGS} ${XINERAMA_CFLAGS}"
-		  
+
 AC_CONFIG_FILES([Makefile
 		src/Makefile
 		man/Makefile

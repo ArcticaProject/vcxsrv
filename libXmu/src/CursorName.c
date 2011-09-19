@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -121,7 +121,7 @@ XmuCursorNameToIndex(_Xconst char *name)
     register _Xconst struct _CursorName *table;
     register int i;
     char tmp[40];
-    
+
     if (strlen (name) >= sizeof tmp) return -1;
     XmuCopyISOLatin1Lowered (tmp, name);
 

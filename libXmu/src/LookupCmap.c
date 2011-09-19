@@ -1,5 +1,5 @@
-/* 
- 
+/*
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -45,7 +45,7 @@ static Status lookup(Display*, int, VisualID, Atom, XStandardColormap*, Bool);
 
 /*
  * To create a standard colormap if one does not currently exist, or
- * replace the currently existing standard colormap, use 
+ * replace the currently existing standard colormap, use
  * XmuLookupStandardColormap().
  *
  * Given a screen, a visual, and a property, XmuLookupStandardColormap()
@@ -54,14 +54,14 @@ static Status lookup(Display*, int, VisualID, Atom, XStandardColormap*, Bool);
  * the default colormap of the screen.  It will call XmuStandardColormap()
  * to create the standard colormap.
  *
- * If replace is true, any previous definition of the property will be 
+ * If replace is true, any previous definition of the property will be
  * replaced.  If retain is true, the property and the colormap will be
  * made permanent for the duration of the server session.  However,
  * pre-existing property definitions which are not replaced cannot be made
- * permanent by a call to XmuLookupStandardColormap(); a request to retain 
+ * permanent by a call to XmuLookupStandardColormap(); a request to retain
  * resources pertains to newly created resources.
  *
- * Returns 0 on failure, non-zero on success.  A request to create a 
+ * Returns 0 on failure, non-zero on success.  A request to create a
  * standard colormap upon a visual which cannot support such a map is
  * considered a failure.  An example of this would be requesting any
  * standard colormap property on a monochrome visual, or, requesting an
@@ -83,18 +83,18 @@ XmuLookupStandardColormap(Display *dpy, int screen, VisualID visualid,
       */
 {
     Display		*odpy;		/* original display connection */
-    XStandardColormap	*colormap;	
+    XStandardColormap	*colormap;
     XVisualInfo		vinfo_template, *vinfo;	/* visual */
     long		vinfo_mask;
     unsigned long	r_max, g_max, b_max;	/* allocation */
-    int			count;	
+    int			count;
     Colormap		cmap;			/* colormap ID */
     Status		status = 0;
 
 
     /* Match the requested visual */
 
-    vinfo_template.visualid = visualid;	
+    vinfo_template.visualid = visualid;
     vinfo_template.screen = screen;
     vinfo_template.depth = depth;
     vinfo_mask = VisualIDMask | VisualScreenMask | VisualDepthMask;
@@ -106,10 +106,10 @@ XmuLookupStandardColormap(Display *dpy, int screen, VisualID visualid,
 
     if (vinfo->colormap_size <= 2) {
 	XFree((char *) vinfo);
-	return 0;	
+	return 0;
     }
 
-    /* If the requested property already exists on this screen, and, 
+    /* If the requested property already exists on this screen, and,
      * if the replace flag has not been set to true, return success.
      * lookup() will remove a pre-existing map if replace is true.
      */
@@ -158,7 +158,7 @@ XmuLookupStandardColormap(Display *dpy, int screen, VisualID visualid,
 	    !replace) {
 	    /* Someone has defined the property since we last looked.
 	     * Since we will not replace it, release our own resources.
-	     * If this is the default map, our allocations will be freed 
+	     * If this is the default map, our allocations will be freed
 	     * when this connection closes.
 	     */
 	    if (colormap->killid == ReleaseByFreeingColormap)
@@ -190,7 +190,7 @@ XmuLookupStandardColormap(Display *dpy, int screen, VisualID visualid,
  *
  * If new is not NULL, new points to an XStandardColormap structure which
  * describes a standard colormap of the specified property.  It will be made
- * a standard colormap of the screen if none already exists, or if replace 
+ * a standard colormap of the screen if none already exists, or if replace
  * is true.
  */
 
@@ -232,7 +232,7 @@ lookup(Display *dpy, int screen, VisualID visualid, Atom property,
     }
 
     /* The property exists and is RGB_DEFAULT_MAP */
-    
+
     for (i=0, s=stdcmaps; (i < count) && (s->visualid != visualid); i++, s++)
 	;
 
@@ -278,9 +278,9 @@ lookup(Display *dpy, int screen, VisualID visualid, Atom property,
     /* Found an RGB_DEFAULT_MAP property with a matching visualid */
 
     if (replace) {
-	/* Free old resources first - we may need them, particularly in 
+	/* Free old resources first - we may need them, particularly in
 	 * the default colormap of the screen.  However, because of this,
-	 * it is possible that we will destroy the old resource and fail 
+	 * it is possible that we will destroy the old resource and fail
 	 * to create a new one if XmuStandardColormap() fails.
 	 */
 

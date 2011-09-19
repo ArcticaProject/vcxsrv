@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -75,10 +75,10 @@ static char **split_path_string(char*);
 
 Pixmap
 XmuLocateBitmapFile(Screen *screen, _Xconst char *name, char *srcname,
-			    int srcnamelen, int *widthp, int *heightp, 
+			    int srcnamelen, int *widthp, int *heightp,
 			    int *xhotp, int *yhotp)
 {
-    return XmuLocatePixmapFile (screen, name, 
+    return XmuLocatePixmapFile (screen, name,
 				(unsigned long) 1, (unsigned long) 0,
 				(unsigned int) 1, srcname, srcnamelen,
 				widthp, heightp, xhotp, yhotp);
@@ -89,9 +89,9 @@ XmuLocateBitmapFile(Screen *screen, _Xconst char *name, char *srcname,
  * version that reads pixmap data as well as bitmap data
  */
 Pixmap
-XmuLocatePixmapFile(Screen *screen, _Xconst char *name, 
-			    unsigned long fore, unsigned long back, 
-			    unsigned int depth, 
+XmuLocatePixmapFile(Screen *screen, _Xconst char *name,
+			    unsigned long fore, unsigned long back,
+			    unsigned int depth,
 			    char *srcname, int srcnamelen,
 			    int *widthp, int *heightp, int *xhotp, int *yhotp)
 {
@@ -131,10 +131,10 @@ XmuLocatePixmapFile(Screen *screen, _Xconst char *name,
 		/* what a hack; need to initialize it */
 		(void) XGetDefault (dpy, "", "");
 	    }
-	    if (XrmQGetResource (XrmGetDatabase(dpy), xrm_name, xrm_class, 
+	    if (XrmQGetResource (XrmGetDatabase(dpy), xrm_name, xrm_class,
 				 &rep_type, &value) &&
 		rep_type == XrmPermStringToQuark("String")) {
-		cache->string_to_bitmap.bitmapFilePath = 
+		cache->string_to_bitmap.bitmapFilePath =
 		  split_path_string (value.addr);
 	    }
 	}
@@ -262,7 +262,7 @@ void
 _XmuStringToBitmapFreeCache(register XmuCvtCache *c)
 {
     if (c->string_to_bitmap.bitmapFilePath) {
-	if (c->string_to_bitmap.bitmapFilePath[0]) 
+	if (c->string_to_bitmap.bitmapFilePath[0])
 	  free (c->string_to_bitmap.bitmapFilePath[0]);
 	free ((char *) (c->string_to_bitmap.bitmapFilePath));
     }

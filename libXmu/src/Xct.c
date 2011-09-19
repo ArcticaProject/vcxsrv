@@ -1,4 +1,4 @@
-/* 
+/*
 
 Copyright 1989, 1998  The Open Group
 
@@ -334,7 +334,7 @@ ShiftGRToGL(register XctData data, int hasCdata)
 	else
 	    priv->itembuf = (XctString)malloc(priv->buf_count);
     }
-    (void) memmove((char *)priv->itembuf, (char *)data->item, 
+    (void) memmove((char *)priv->itembuf, (char *)data->item,
 		   data->item_length);
     data->item = priv->itembuf;
     if (hasCdata) {

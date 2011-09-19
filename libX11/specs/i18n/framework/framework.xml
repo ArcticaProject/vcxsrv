@@ -20,8 +20,10 @@
          <affiliation><orgname>IBM Japan</orgname></affiliation>
       </othercredit>
    </authorgroup>
-   <copyright><year>1994</year><holder>TOSHIBA Corporation</holder></copyright>
-   <copyright><year>1994</year><holder>IBM Corporation</holder></copyright>
+   <copyright><year>1994</year>
+     <holder>TOSHIBA Corporation</holder>
+     <holder>IBM Corporation</holder>
+   </copyright>
 
 <legalnotice>
 

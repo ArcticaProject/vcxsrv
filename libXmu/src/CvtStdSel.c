@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright 1988, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -110,7 +110,7 @@ get_os_name(void)
 #ifdef OS_NAME
 	return XtNewString(OS_NAME);
 #else
-#if defined(X_OS_FILE) || defined(MOTD_FILE)	
+#if defined(X_OS_FILE) || defined(MOTD_FILE)
 	FILE *f = NULL;
 #endif
 

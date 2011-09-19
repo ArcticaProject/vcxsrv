@@ -58,7 +58,7 @@ static /* const */ XExtensionHooks panoramiX_extension_hooks = {
 };
 
 static XEXT_GENERATE_FIND_DISPLAY (find_display, panoramiX_ext_info,
-				   panoramiX_extension_name, 
+				   panoramiX_extension_name,
 				   &panoramiX_extension_hooks,
 				   0, NULL)
 
@@ -201,7 +201,7 @@ Status XPanoramiXGetScreenSize (
     req->reqType = info->codes->major_opcode;
     req->panoramiXReqType = X_PanoramiXGetScreenSize;
     req->window = drawable;
-    req->screen = screen_num;			/* need to define */ 
+    req->screen = screen_num;			/* need to define */
     if (!_XReply (dpy, (xReply *) &rep, 0, xTrue)) {
 	UnlockDisplay (dpy);
 	SyncHandle ();
@@ -263,7 +263,7 @@ Bool XineramaIsActive(Display *dpy)
     return rep.state;
 }
 
-XineramaScreenInfo * 
+XineramaScreenInfo *
 XineramaQueryScreens(
    Display *dpy,
    int     *number

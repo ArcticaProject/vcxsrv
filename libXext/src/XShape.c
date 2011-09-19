@@ -70,7 +70,7 @@ static /* const */ XExtensionHooks shape_extension_hooks = {
 };
 
 static XEXT_GENERATE_FIND_DISPLAY (find_display, shape_info,
-				   shape_extension_name, 
+				   shape_extension_name,
 				   &shape_extension_hooks,
 				   ShapeNumberEvents, NULL)
 
@@ -202,7 +202,7 @@ void XShapeCombineRegion(
 
     LockDisplay(dpy);
     GetReq(ShapeRectangles, req);
-    xr = (XRectangle *) 
+    xr = (XRectangle *)
     	_XAllocScratch(dpy, (unsigned long)(r->numRects * sizeof (XRectangle)));
     for (pr = xr, pb = r->rects, i = r->numRects; --i >= 0; pr++, pb++) {
         pr->x = pb->x1;
@@ -354,7 +354,7 @@ Status XShapeQueryExtents (
     XExtDisplayInfo *info = find_display (dpy);
     xShapeQueryExtentsReply	    rep;
     register xShapeQueryExtentsReq *req;
-    
+
     ShapeCheckExtension (dpy, info, 0);
 
     LockDisplay (dpy);

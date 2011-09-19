@@ -1,8 +1,9 @@
 /*
  * Mesa 3-D graphics library
- * Version:  7.1
+ * Version:  7.7
  *
  * Copyright (C) 1999-2008  Brian Paul   All Rights Reserved.
+ * Copyright (c) 2009 VMware, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,41 +23,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef TEXCOMPRESS_FXT1_H
-#define TEXCOMPRESS_FXT1_H
 
-#include "glheader.h"
-#include "mfeatures.h"
-#include "texstore.h"
+#ifndef S_TEXFETCH_H
+#define S_TEXFETCH_H
 
-struct swrast_texture_image;
+#include "swrast/s_context.h"
 
-#if FEATURE_texture_fxt1
+extern StoreTexelFunc
+_mesa_get_texel_store_func(gl_format format);
 
-extern GLboolean
-_mesa_texstore_rgb_fxt1(TEXSTORE_PARAMS);
+extern FetchTexelFuncF
+_mesa_get_texel_fetch_func(gl_format format, GLuint dims);
 
-extern GLboolean
-_mesa_texstore_rgba_fxt1(TEXSTORE_PARAMS);
+void
+_mesa_update_fetch_functions(struct gl_texture_object *texObj);
 
-extern void
-_mesa_fetch_texel_2d_f_rgba_fxt1(const struct swrast_texture_image *texImage,
-                                 GLint i, GLint j, GLint k, GLfloat *texel);
-
-extern void
-_mesa_fetch_texel_2d_f_rgb_fxt1(const struct swrast_texture_image *texImage,
-                                GLint i, GLint j, GLint k, GLfloat *texel);
-
-#else /* FEATURE_texture_fxt1 */
-
-/* these are used only in texstore_funcs[] */
-#define _mesa_texstore_rgb_fxt1 NULL
-#define _mesa_texstore_rgba_fxt1 NULL
-
-/* these are used only in texfetch_funcs[] */
-#define _mesa_fetch_texel_2d_f_rgba_fxt1 NULL
-#define _mesa_fetch_texel_2d_f_rgb_fxt1 NULL
-
-#endif /* FEATURE_texture_fxt1 */
-
-#endif /* TEXCOMPRESS_FXT1_H */
+#endif /* S_TEXFETCH_H */

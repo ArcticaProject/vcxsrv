@@ -25,7 +25,7 @@ XORG_WITH_XSLTPROC
 XORG_CHECK_SGML_DOCTOOLS(1.8)
 XORG_CHECK_MALLOC_ZERO
 
-# Determine .so library version per platform 
+# Determine .so library version per platform
 # based on SharedXextRev in monolith xc/config/cf/*Lib.tmpl
 if test "x$XEXT_SOREV" = "x" ; then
     case $host_os in

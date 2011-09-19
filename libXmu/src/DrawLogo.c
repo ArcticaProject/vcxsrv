@@ -27,7 +27,7 @@ in this Software without prior written authorization from The Open Group.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <X11/Xlib.h>  
+#include <X11/Xlib.h>
 #include <X11/Xmu/Drawing.h>
 
 /*
@@ -57,10 +57,10 @@ XmuDrawLogo(Display *dpy, Drawable drawable, GC gcFore, GC gcBack,
     x += (width - size) >> 1;
     y += (height - size) >> 1;
 
-/*    
+/*
  * Draw what will be the thin strokes.
  *
- *           ----- 
+ *           -----
  *          /    /
  *         /    /
  *        /    /
@@ -81,10 +81,10 @@ XmuDrawLogo(Display *dpy, Drawable drawable, GC gcFore, GC gcBack,
     poly[3].x = x + d31;               poly[3].y = y + size;
     XFillPolygon(dpy, drawable, gcFore, poly, 4, Convex, CoordModeOrigin);
 
-/*    
+/*
  * Erase area not needed for lower thin stroke.
  *
- *           ------ 
+ *           ------
  *          /     /
  *         /  __ /
  *        /  /  /
@@ -98,10 +98,10 @@ XmuDrawLogo(Display *dpy, Drawable drawable, GC gcFore, GC gcBack,
     poly[3].x = x + d31;                         poly[3].y = y + size;
     XFillPolygon(dpy, drawable, gcBack, poly, 4, Convex, CoordModeOrigin);
 
-/*    
+/*
  * Erase area not needed for upper thin stroke.
  *
- *           ------ 
+ *           ------
  *          /  /  /
  *         /--/  /
  *        /     /
@@ -134,7 +134,7 @@ XmuDrawLogo(Display *dpy, Drawable drawable, GC gcFore, GC gcBack,
     poly[3].x = x + size - size/4;     poly[3].y = y + size;
     XFillPolygon(dpy, drawable, gcFore, poly, 4, Convex, CoordModeOrigin);
 
-/*    
+/*
  * Erase to create gap.
  *
  *          /

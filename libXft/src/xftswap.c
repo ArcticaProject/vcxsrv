@@ -101,7 +101,7 @@ XftSwapImage (XImage *image)
 {
     switch (image->bits_per_pixel) {
     case 32:
-	XftSwapCARD32 ((CARD32 *) image->data, 
+	XftSwapCARD32 ((CARD32 *) image->data,
 		       image->height * image->bytes_per_line >> 2);
 	break;
     case 24:

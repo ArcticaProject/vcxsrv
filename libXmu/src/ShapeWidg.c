@@ -1,5 +1,5 @@
-/* 
- 
+/*
+
 Copyright 1988, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -142,7 +142,7 @@ ShapeOval(Widget w)
 	rad = height >> 1;
 	XDrawLine(dpy, p, gc, rad, rad, width - rad - 1, rad);
     }
-    XShapeCombineMask(dpy, XtWindow(w), ShapeBounding, 
+    XShapeCombineMask(dpy, XtWindow(w), ShapeBounding,
 		      -(int)w->core.border_width, -(int)w->core.border_width,
 		      p, ShapeSet);
     if (w->core.border_width)

@@ -51,7 +51,7 @@ AC_SUBST(fchown_define)
 
 # sticky bit
 #
-# if any system exists without sticky dir bits this 
+# if any system exists without sticky dir bits this
 # needs to be redone with a real autoconf test
 
 sticky_bit_define="-DHAS_STICKY_DIR_BIT"

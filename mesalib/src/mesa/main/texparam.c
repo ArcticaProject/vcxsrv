@@ -43,7 +43,6 @@
 #include "main/texparam.h"
 #include "main/teximage.h"
 #include "main/texstate.h"
-#include "main/texfetch.h"
 #include "program/prog_instruction.h"
 
 
@@ -432,7 +431,6 @@ set_tex_parameteri(struct gl_context *ctx,
 	    if (texObj->Sampler.sRGBDecode != decode) {
 	       flush(ctx);
 	       texObj->Sampler.sRGBDecode = decode;
-	       _mesa_update_fetch_functions(texObj);
 	    }
 	    return GL_TRUE;
 	 }

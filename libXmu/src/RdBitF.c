@@ -35,7 +35,7 @@ in this Software without prior written authorization from The Open Group.
  *					and return data
  *
  * Note that this file and ../X/XRdBitF.c look very similar....  Keep them
- * that way (but don't use common source code so that people can have one 
+ * that way (but don't use common source code so that people can have one
  * without the other).
  */
 
@@ -102,7 +102,7 @@ initHexTable(void)
     hexTable[' '] = -1;	hexTable[','] = -1;
     hexTable['}'] = -1;	hexTable['\n'] = -1;
     hexTable['\t'] = -1;
-	
+
     initialized = True;
 }
 
@@ -116,7 +116,7 @@ NextInt(FILE *fstream)
     int	value = 0;
     int gotone = 0;
     int done = 0;
-    
+
     /* loop, accumulate hex value until find delimiter  */
     /* skip any initial delimiters found in read stream */
 
@@ -196,7 +196,7 @@ XmuReadBitmapData(FILE *fstream, unsigned int *width, unsigned int *height,
 	    }
 	    continue;
 	}
-    
+
 	if (sscanf(line, "static short %s = {", name_and_type) == 1)
 	  version10p = 1;
 	else if (sscanf(line,"static unsigned char %s = {",name_and_type) == 1)
@@ -213,7 +213,7 @@ XmuReadBitmapData(FILE *fstream, unsigned int *width, unsigned int *height,
 
 	if (strcmp("bits[]", type))
 	  continue;
-    
+
 	if (!ww || !hh)
 	  RETURN (BitmapFileInvalid);
 
@@ -226,7 +226,7 @@ XmuReadBitmapData(FILE *fstream, unsigned int *width, unsigned int *height,
 
 	size = bytes_per_line * hh;
 	data = (unsigned char *) Xmalloc ((unsigned int) size);
-	if (!data) 
+	if (!data)
 	  RETURN (BitmapNoMemory);
 
 	if (version10p) {
@@ -245,7 +245,7 @@ XmuReadBitmapData(FILE *fstream, unsigned int *width, unsigned int *height,
 	    int bytes;
 
 	    for (bytes=0, ptr=data; bytes<size; bytes++, ptr++) {
-		if ((value = NextInt(fstream)) < 0) 
+		if ((value = NextInt(fstream)) < 0)
 		  RETURN (BitmapFileInvalid);
 		*ptr=value;
 	    }
@@ -319,7 +319,7 @@ AccessFile(char *path, char *pathbuf, int len_pathbuf, char **pathret)
 	return 1;
     }
 
-#ifndef __UNIXOS2__ 
+#ifndef __UNIXOS2__
     /* one last place to look */
     drive = getenv ("HOMEDRIVE");
     if (drive) {
@@ -382,7 +382,7 @@ fopen_file(char *path, char *mode)
 
 
 int
-XmuReadBitmapDataFromFile(_Xconst char *filename, unsigned int *width, 
+XmuReadBitmapDataFromFile(_Xconst char *filename, unsigned int *width,
 			       unsigned int *height, unsigned char **datap,
 			       int *x_hot, int *y_hot)
 {

@@ -1,5 +1,5 @@
-/* 
- 
+/*
+
 Copyright 1988, 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -40,12 +40,12 @@ struct InitializerList {
   XPointer data;		/* Data to pass the function. */
   XtAppContext * app_con_list;	/* a null terminated list of app_contexts. */
 };
-  
+
 /*
  * Prototypes
  */
 static Bool AddToAppconList(XtAppContext**, XtAppContext);
-  
+
 static struct InitializerList * init_list = NULL;
 static Cardinal init_list_length = 0;
 
@@ -53,8 +53,8 @@ void
 XmuAddInitializer(XmuInitializerProc func, XPointer data)
 {
   init_list_length++;
-  init_list = (struct InitializerList *) XtRealloc( (char *) init_list, 
-					    (sizeof(struct InitializerList) * 
+  init_list = (struct InitializerList *) XtRealloc( (char *) init_list,
+					    (sizeof(struct InitializerList) *
 					     init_list_length) );
 
   init_list[init_list_length - 1].function = func;
@@ -111,4 +111,4 @@ AddToAppconList(XtAppContext **app_list, XtAppContext app_con)
 
   return (True);
 }
-  
+

@@ -56,4 +56,4 @@ XmuUpdateMapHints(Display *dpy, Window w, XSizeHints *hints)
     XSetWMNormalHints (dpy, w, hints);
     return True;
 }
-    
+

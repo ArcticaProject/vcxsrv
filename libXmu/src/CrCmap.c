@@ -1,4 +1,4 @@
-/* 
+/*
 
 Copyright 1989, 1998  The Open Group
 
@@ -84,7 +84,7 @@ static Status readwrite_map(Display*, XVisualInfo*, XStandardColormap*);
  *
  * All colormaps are created with read only allocations, with the exception
  * of read only allocations of colors in the default map or otherwise
- * which fail to return the expected pixel value, and these are individually 
+ * which fail to return the expected pixel value, and these are individually
  * defined as read/write allocations.  This is done so that all the cells
  * defined in the default map are contiguous, for use in image processing.
  * This typically happens with White and Black in the default map.
@@ -93,7 +93,7 @@ static Status readwrite_map(Display*, XVisualInfo*, XStandardColormap*);
  * the map of the static visual matches the definition given in the
  * standard colormap structure.
  */
-   
+
 Status
 XmuCreateColormap(Display *dpy, XStandardColormap *colormap)
      /* dpy	 - specifies the connection under which the map is created
@@ -107,15 +107,15 @@ XmuCreateColormap(Display *dpy, XStandardColormap *colormap)
     XVisualInfo		*vpointer;	/* for freeing the entire list */
     long		vinfo_mask;	/* specifies the visual mask value */
     int 		n;		/* number of matching visuals */
-    int			status;		
+    int			status;
 
     vinfo_template.visualid = colormap->visualid;
     vinfo_mask = VisualIDMask;
     if ((vinfo = XGetVisualInfo(dpy, vinfo_mask, &vinfo_template, &n)) == NULL)
 	return 0;
 
-    /* A visual id may be valid on multiple screens.  Also, there may 
-     * be multiple visuals with identical visual ids at different depths.  
+    /* A visual id may be valid on multiple screens.  Also, there may
+     * be multiple visuals with identical visual ids at different depths.
      * If the colormap is the Default Colormap, use the Default Visual.
      * Otherwise, arbitrarily, use the deepest visual.
      */
@@ -158,9 +158,9 @@ XmuCreateColormap(Display *dpy, XStandardColormap *colormap)
 	status = TRUEMATCH(red_mult, red_max, red_mask) &&
 	         TRUEMATCH(green_mult, green_max, green_mask) &&
 		 TRUEMATCH(blue_mult, blue_max, blue_mask);
-    else 
+    else
 	status = readonly_map(dpy, vinfo, colormap);
-    
+
     XFree((char *) vpointer);
     return status;
 }
@@ -178,7 +178,7 @@ readwrite_map(Display *dpy, XVisualInfo *vinfo, XStandardColormap *colormap)
     unsigned long	*pixels;	/* array of colormap pixels */
     unsigned long	delta;
 
-    
+
     /* Determine ncolors, the number of colors to be defined.
      * Insure that 1 < ncolors <= the colormap size.
      */
@@ -201,16 +201,16 @@ readwrite_map(Display *dpy, XVisualInfo *vinfo, XStandardColormap *colormap)
     if (ncolors <= 1 || (int) ncolors > vinfo->colormap_size)	return 0;
 
     /* Allocate Read/Write as much of the colormap as we can possibly get.
-     * Then insure that the pixels we were allocated are given in 
+     * Then insure that the pixels we were allocated are given in
      * monotonically increasing order, using a quicksort.  Next, insure
      * that our allocation includes a subset of contiguous pixels at least
-     * as long as the number of colors to be defined.  Now we know that 
+     * as long as the number of colors to be defined.  Now we know that
      * these conditions are met:
      *	1) There are no free cells in the colormap.
-     *  2) We have a contiguous sequence of pixels, monotonically 
+     *  2) We have a contiguous sequence of pixels, monotonically
      *     increasing, of length >= the number of colors requested.
      *
-     * One cell at a time, we will free, compute the next color value, 
+     * One cell at a time, we will free, compute the next color value,
      * then allocate read only.  This takes a long time.
      * This is done to insure that cells are allocated read only in the
      * contiguous order which we prefer.  If the server has a choice of
@@ -319,7 +319,7 @@ readwrite_map(Display *dpy, XVisualInfo *vinfo, XStandardColormap *colormap)
      */
 
     if (first_index)
-	XFreeColors(dpy, colormap->colormap, pixels, first_index, 
+	XFreeColors(dpy, colormap->colormap, pixels, first_index,
 		    (unsigned long) 0);
     if (remainder)
 	XFreeColors(dpy, colormap->colormap,
@@ -345,7 +345,7 @@ ROmap(Display *dpy, Colormap cmap, unsigned long pixels[], int m, int n)
     register int	p;
 
     /* first try to allocate the entire colormap */
-    if (XAllocColorCells(dpy, cmap, 1, (unsigned long *) NULL, 
+    if (XAllocColorCells(dpy, cmap, 1, (unsigned long *) NULL,
 			 (unsigned) 0, pixels, (unsigned) m))
 	return m;
 
@@ -369,7 +369,7 @@ ROmap(Display *dpy, Colormap cmap, unsigned long pixels[], int m, int n)
     }
     return 0;
 }
-      
+
 
 /****************************************************************************/
 static Status
@@ -424,20 +424,20 @@ ROorRWcell(Display *dpy, Colormap cmap, unsigned long pixels[],
      * If the read only allocation is granted, but gives us a cell which
      * is not the one that we just freed, it is probably the case that
      * we are trying allocate White or Black or some other color which
-     * already has a read-only allocation in the map.  So we try to 
+     * already has a read-only allocation in the map.  So we try to
      * allocate the previously freed cell with a read/write allocation,
      * because we want contiguous cells for image processing algorithms.
      */
-     
+
     pixel = color->pixel;
     request.red = color->red;
     request.green = color->green;
     request.blue = color->blue;
 
     XFreeColors(dpy, cmap, &pixel, 1, (unsigned long) 0);
-    if (! XAllocColor(dpy, cmap, color) 
+    if (! XAllocColor(dpy, cmap, color)
 	|| (color->pixel != pixel &&
-	    (!RWcell(dpy, cmap, color, &request, &pixel)))) 
+	    (!RWcell(dpy, cmap, color, &request, &pixel))))
     {
 	free_cells(dpy, cmap, pixels, npixels, (int)p);
 	return 0;
@@ -507,7 +507,7 @@ readonly_map(Display *dpy, XVisualInfo *vinfo, XStandardColormap *colormap)
     int			i, last_pixel;
     XColor		color;
 
-    last_pixel = (colormap->red_max + 1) * (colormap->green_max + 1) * 
+    last_pixel = (colormap->red_max + 1) * (colormap->green_max + 1) *
 	(colormap->blue_max + 1) + colormap->base_pixel - 1;
 
     for(i=colormap->base_pixel; i <= last_pixel; i++) {

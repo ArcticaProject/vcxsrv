@@ -1,25 +1,25 @@
 .\" Copyright (c) 1997  Silicon Graphics, Inc.
-.\" 
+.\"
 .\" Permission is hereby granted, free of charge, to any person obtaining a
-.\" copy of this software and associated documentation files (the "Software"), 
-.\" to deal in the Software without restriction, including without limitation 
-.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" copy of this software and associated documentation files (the "Software"),
+.\" to deal in the Software without restriction, including without limitation
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense,
+.\" and/or sell copies of the Software, and to permit persons to whom the
 .\" Software furnished to do so, subject to the following conditions:
-.\" 
+.\"
 .\" The above copyright notice and this permission notice shall be included in
 .\" all copies or substantial portions of the Software.
-.\" 
+.\"
 .\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 .\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
-.\" SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
-.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+.\" SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .\" SOFTWARE.
-.\" 
-.\" Except as contained in this notice, the name of Silicon Graphics, Inc. shall not 
-.\" be used in advertising or otherwise to promote the sale, use or other 
+.\"
+.\" Except as contained in this notice, the name of Silicon Graphics, Inc. shall not
+.\" be used in advertising or otherwise to promote the sale, use or other
 .\" dealing in this Software without prior written authorization from
 .\" Silicon Graphics, Inc.
 .\"
@@ -33,7 +33,7 @@ Bool
 XeviQueryExtension (Display *dpy);
 .LP
 Bool
-XeviQueryVersion (Display *dpy, 
+XeviQueryVersion (Display *dpy,
     int *major_version_return,
     int *minor_version_return);
 .LP
@@ -59,7 +59,7 @@ and functions the same way as
 will be called and the function will then return.
 .PP
 .BR XeviQueryExtension
-returns 
+returns
 .BR True
 if the Extended Visual Information extension is available on the given display.
 A client must call
@@ -79,15 +79,15 @@ and
 .PP
 .BR XeviGetVisualInfo
 returns a list of ExtendedVisualInfo structures that describe
-visual information beyond that supported by the core protocol. This includes 
+visual information beyond that supported by the core protocol. This includes
 layer information relevant for systems supporting overlays and/or underlay
 planes, and information that allows applications better to determine the level
-of hardware support for multiple colormaps. XeviGetVisualInfo returns 
-.BR Success 
+of hardware support for multiple colormaps. XeviGetVisualInfo returns
+.BR Success
 if successful, or an X error otherwise.
 If the argument
 .I visual
-is NULL, then information for all visuals of all 
+is NULL, then information for all visuals of all
 screens is returned. Otherwise, it's a pointer to a list of visuals for which
 extended visual information is desired.
 .I n_visual
@@ -104,18 +104,18 @@ structure has the following fields:
 .in +.5i
 .nf
 .ta 1.6i
-VisualID	\fIcore_visual_id\fR    
-int 	\fIscreen\fR	    	
-int 	\fIlevel\fR 	    	
-unsigned int	\fItransparency_type\fR 
-unsigned int	\fItransparency_value\fR 
+VisualID	\fIcore_visual_id\fR
+int 	\fIscreen\fR
+int 	\fIlevel\fR
+unsigned int	\fItransparency_type\fR
+unsigned int	\fItransparency_value\fR
 unsigned int	\fImin_hw_colormaps\fR
 unsigned int	\fImax_hw_colormaps\fR
 unsigned int	\fInum_colormap_conflicts\fR
 VisualID *  	\fIcolormap_conflicts\fR
 .fi
 .LP
-The combination of 
+The combination of
 .I core_visual_id
 and
 .I screen
@@ -140,10 +140,10 @@ XEVI_TRANSPARENCY_NONE.
 and
 .I max_hw_colormaps
 return the minimum and maximum number of hardware colormaps backing up the
-visual. 
+visual.
 .LP
 .I num_colormap_conflicts
-returns the number of elements in 
+returns the number of elements in
 .I colormap_conflicts.
 This array returns a list of visuals that may cause conflicts in the use of the
 hardware colormap. For example, if a 12-bit hardware colormap is overloaded to

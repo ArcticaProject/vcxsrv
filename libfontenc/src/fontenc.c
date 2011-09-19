@@ -59,7 +59,7 @@ static FontMapRec iso10646[]=
    There's not much more we can do with fonts without a Unicode cmap
    unless we are willing to combine cmaps (which we are not). */
 
-static const unsigned short 
+static const unsigned short
 iso8859_1_apple_roman[]=
 { 0xCA, 0xC1, 0xA2, 0xA3, 0xDB, 0xB4, 0x00, 0xA4,
   0xAC, 0xA9, 0xBB, 0xC7, 0xC2, 0x00, 0xA8, 0xF8,
@@ -212,7 +212,7 @@ static const unsigned short iso8859_5_tophalf[]=
 static FontEncSimpleMapRec iso8859_5_to_unicode_map=
 { 0x60, 0, 0xA0, iso8859_5_tophalf };
 
-static const unsigned short 
+static const unsigned short
 iso8859_5_apple_cyrillic[]=
 { 0xCA, 0xDD, 0xAB, 0xAE, 0xB8, 0xC1, 0xA7, 0xBA,
   0xB7, 0xBC, 0xBE, 0xCB, 0xCD, 0x00, 0xD8, 0xDA,
@@ -253,7 +253,7 @@ iso8859_6_to_unicode(unsigned isocode, void *client_data)
 {
     if(isocode<=0xA0 || isocode==0xA4 || isocode==0xAD)
         return isocode;
-    else if(isocode==0xAC || isocode==0xBB || 
+    else if(isocode==0xAC || isocode==0xBB ||
             (isocode>=0xBF && isocode<=0xDA) ||
             (isocode>=0xE0 && isocode<=0xEF) ||
             (isocode>=0xF0 && isocode<=0xF2))
@@ -268,7 +268,7 @@ static FontMapRec iso8859_6[]=
     {0,0,0,NULL,NULL,NULL,NULL,NULL}
 };
 
-static unsigned 
+static unsigned
 iso8859_7_to_unicode(unsigned isocode, void *client_data)
 {
     if(isocode<=0xA0 ||
@@ -305,7 +305,7 @@ iso8859_8_to_unicode(unsigned isocode, void *client_data)
         return 0x2017;
     else if(isocode>=0xE0 && isocode<=0xFA)
         return isocode+0x04F0;
-    else 
+    else
         return 0;
 }
 
@@ -410,7 +410,7 @@ static FontMapRec koi8_r[]=
     {0,0,0,NULL,NULL,NULL,NULL,NULL}
 };
 
-static unsigned 
+static unsigned
 koi8_ru_to_unicode(unsigned koicode, void *client_data)
 {
     switch(koicode) {
@@ -458,7 +458,7 @@ koi8_e_to_unicode(unsigned koicode, void *client_data)
         return koicode;
     else if(koicode<0xC0)
         return koi8_e_A0_BF[koicode-0xA0];
-    else 
+    else
         return FontEncSimpleRecode(koicode, &koi8_r_to_unicode_map);
 }
 
@@ -480,7 +480,7 @@ static const unsigned short koi8_uni_80_BF[]=
   0x2116, 0x0402, 0x0403, 0x0401, 0x0404, 0x0405, 0x0406, 0x0407,
   0x0408, 0x0409, 0x040A, 0x040B, 0x040C, 0x0490, 0x040E, 0x040F };
 
-static unsigned 
+static unsigned
 koi8_uni_to_unicode(unsigned koicode, void *client_data)
 {
     if(koicode<0x80)
@@ -499,7 +499,7 @@ static FontMapRec koi8_uni[]=
 
 /* Ukrainian variant of Koi8-R; see RFC 2319 */
 
-static unsigned 
+static unsigned
 koi8_u_to_unicode(unsigned koicode, void *client_data)
 {
     switch(koicode) {
@@ -526,9 +526,9 @@ static FontMapRec koi8_u[]=
    the glyph index before applying the cmap.  Lovely design. */
 
 static FontMapRec microsoft_symbol[]=
-{{FONT_ENCODING_TRUETYPE,3,0,NULL,NULL,NULL,NULL,NULL}, 
+{{FONT_ENCODING_TRUETYPE,3,0,NULL,NULL,NULL,NULL,NULL},
  /* You never know */
- {FONT_ENCODING_TRUETYPE,3,1,NULL,NULL,NULL,NULL,NULL}, 
+ {FONT_ENCODING_TRUETYPE,3,1,NULL,NULL,NULL,NULL,NULL},
  {0,0,0,NULL,NULL,NULL,NULL,NULL}};
 
 static FontMapRec apple_roman[]=
@@ -619,15 +619,15 @@ FontEncFromXLFD(const char *name, int length)
 
     if(p == NULL)
         return NULL;
-    
+
     len = length - (p - name) - 1;
     memcpy(charset, p+1, len);
     charset[len] = 0;
-    
+
     /* check for a subset specification */
     if((q = strchr(charset, (int)'[')))
         *q = 0;
-    
+
     return charset;
 }
 
@@ -659,7 +659,7 @@ FontEncName(unsigned code, FontMapPtr mapping)
     if(encoding && mapping->name) {
         if((encoding->row_size == 0 && code >= encoding->size) ||
            (encoding->row_size != 0 &&
-            (code/0x100 >= encoding->size || 
+            (code/0x100 >= encoding->size ||
              (code&0xFF) >= encoding->row_size)))
             return NULL;
         return (*mapping->name)(code, mapping->client_data);
@@ -672,9 +672,9 @@ FontEncFind(const char *encoding_name, const char *filename)
 {
     FontEncPtr encoding;
     char **alias;
-    
+
     if(font_encodings == NULL) define_initial_encoding_info();
-    
+
     for(encoding = font_encodings; encoding; encoding = encoding->next) {
         if(!strcasecmp(encoding->name, encoding_name))
             return encoding;
@@ -725,14 +725,14 @@ static FontEncPtr
 FontEncLoad(const char *encoding_name, const char *filename)
 {
     FontEncPtr encoding;
-    
+
     encoding = FontEncReallyLoad(encoding_name, filename);
     if (encoding == NULL) {
         return NULL;
     } else {
         char **alias;
         int found = 0;
-        
+
         /* Check whether the name is already known for this encoding */
         if(strcasecmp(encoding->name, encoding_name) == 0) {
             found = 1;
@@ -745,14 +745,14 @@ FontEncLoad(const char *encoding_name, const char *filename)
                     }
             }
         }
-        
+
         if(!found) {
             /* Add a new alias.  This works because we know that this
                particular encoding has been allocated dynamically */
             char **new_aliases;
             char *new_name;
             int numaliases = 0;
-            
+
             new_name = strdup(encoding_name);
             if(new_name == NULL)
                 return NULL;
@@ -773,11 +773,11 @@ FontEncLoad(const char *encoding_name, const char *filename)
             new_aliases[numaliases+1] = NULL;
             encoding->aliases = new_aliases;
         }
-        
+
         /* register the new encoding */
         encoding->next=font_encodings;
         font_encodings=encoding;
-        
+
         return encoding;
     }
 }
@@ -798,7 +798,7 @@ FontEncSimpleRecode(unsigned code, void *client_data)
     else
         index = code;
 
-  if(map->map && index>=map->first && index<map->first+map->len)    
+  if(map->map && index>=map->first && index<map->first+map->len)
     return map->map[index-map->first];
   else
     return code;
@@ -865,7 +865,7 @@ tree_set(unsigned int **map, unsigned int i, unsigned int j)
     c = i % FONTENC_SEGMENT_SIZE;
 
     if(map[s] == NULL) {
-        map[s] = calloc(FONTENC_SEGMENT_SIZE, sizeof(int)); 
+        map[s] = calloc(FONTENC_SEGMENT_SIZE, sizeof(int));
         if(map[s] == NULL)
             return FALSE;
   }
@@ -923,7 +923,7 @@ FontMapReverseFree(FontMapReversePtr delendum)
 {
     unsigned int **map = (unsigned int**)delendum;
     int i;
-    
+
     if(map == NULL)
         return;
 

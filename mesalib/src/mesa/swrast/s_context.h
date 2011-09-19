@@ -109,6 +109,73 @@ typedef void (*validate_texture_image_func)(struct gl_context *ctx,
 			        _NEW_DEPTH)
 
 
+struct swrast_texture_image;
+
+
+typedef void (*FetchTexelFuncC)(const struct swrast_texture_image *texImage,
+                                GLint col, GLint row, GLint img,
+                                GLchan *texelOut);
+
+/**
+ * As above, but returns floats.
+ * Used for depth component images and for upcoming signed/float
+ * texture images.
+ */
+typedef void (*FetchTexelFuncF)(const struct swrast_texture_image *texImage,
+                                GLint col, GLint row, GLint img,
+                                GLfloat *texelOut);
+
+
+typedef void (*StoreTexelFunc)(struct swrast_texture_image *texImage,
+                               GLint col, GLint row, GLint img,
+                               const void *texel);
+
+/**
+ * Subclass of gl_texture_image.
+ * We need extra fields/info to keep tracking of mapped texture buffers,
+ * strides and Fetch/Store functions.
+ */
+struct swrast_texture_image
+{
+   struct gl_texture_image Base;
+
+#if 0
+   /** used for mipmap LOD computation */
+   GLfloat WidthScale, HeightScale, DepthScale;
+   GLboolean _IsPowerOfTwo;  /**< Are all dimensions powers of two? */
+
+   GLubyte *Data;    /**< The actual texture data in malloc'd memory */
+
+   GLint TexelSize;  /**< bytes per texel block */
+#endif
+
+   FetchTexelFuncC FetchTexelc;
+   FetchTexelFuncF FetchTexelf;
+   StoreTexelFunc Store;
+
+#if 0
+   /** These fields only valid when texture memory is mapped */
+   GLubyte **SliceMaps;  /**< points to OneMap or a malloc'd array */
+   GLint RowStride;  /**< bytes per row of blocks */
+#endif
+};
+
+
+/** cast wrapper */
+static INLINE struct swrast_texture_image *
+swrast_texture_image(struct gl_texture_image *img)
+{
+   return (struct swrast_texture_image *) img;
+}
+
+/** cast wrapper */
+static INLINE const struct swrast_texture_image *
+swrast_texture_image_const(const struct gl_texture_image *img)
+{
+   return (const struct swrast_texture_image *) img;
+}
+
+
 /**
  * \struct SWcontext
  * \brief  Per-context state that's private to the software rasterizer module.

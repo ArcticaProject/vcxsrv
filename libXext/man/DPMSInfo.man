@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -30,7 +30,7 @@
 .\" DEALINGS IN THE SOFTWARE.
 .\"
 .\" X Window System is a trademark of The Open Group.
-.\" 
+.\"
 .TH DPMSInfo __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
 DPMSInfo \- returns information about the current DPMS state
@@ -47,7 +47,7 @@ DPMSInfo \- returns information about the current DPMS state
 .br
       CARD16 \fI*power_level\fP\^,
 .br
-      BOOL \fI*state\fP\^ 
+      BOOL \fI*state\fP\^
 );
 .if n .ti +5n
 .if t .ti +.5i
@@ -63,24 +63,24 @@ Specifies the current power level
 Specifies the current DPMS state
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSInfo 
-function returns information about the current Display Power Management 
-Signaling (DPMS) state. The \fIstate\fP 
+The
+.I DPMSInfo
+function returns information about the current Display Power Management
+Signaling (DPMS) state. The \fIstate\fP
 return parameter indicates whether or not DPMS is enabled \^(TRUE\^) or
-disabled \^(FALSE\^). The \fIpower_level\fP return parameter indicates the 
+disabled \^(FALSE\^). The \fIpower_level\fP return parameter indicates the
 current power level \^(one of DPMSModeOn, DPMSModeStandby, DPMSModeSuspend, or
 DPMSModeOff.\^)
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSInfo 
+The
+.I DPMSInfo
 function returns TRUE, if values are returned.
 .TP 15
 FALSE
-The 
-.I DPMSInfo 
+The
+.I DPMSInfo
 function returns FALSE, if no values are returned.
 .SH "SEE ALSO"
 .BR DPMSEnable (__libmansuffix__)

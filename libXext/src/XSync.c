@@ -414,7 +414,7 @@ XSyncFreeSystemCounterList(XSyncSystemCounter *list)
 }
 
 
-XSyncCounter 
+XSyncCounter
 XSyncCreateCounter(Display *dpy, XSyncValue initial_value)
 {
     XExtDisplayInfo *info = find_display(dpy);

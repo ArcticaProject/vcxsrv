@@ -921,7 +921,11 @@ unpack_SIGNED_R16(const void *src, GLfloat dst[4])
 static void
 unpack_SIGNED_GR1616(const void *src, GLfloat dst[4])
 {
-   /* XXX TODO */
+   const GLuint s = *((const GLuint *) src);
+   dst[RCOMP] = SHORT_TO_FLOAT_TEX( s & 0xffff );
+   dst[GCOMP] = SHORT_TO_FLOAT_TEX( s >> 16 );
+   dst[BCOMP] = 0.0F;
+   dst[ACOMP] = 1.0F;
 }
 
 static void
@@ -947,7 +951,7 @@ unpack_SIGNED_RGBA_16(const void *src, GLfloat dst[4])
 static void
 unpack_RGBA_16(const void *src, GLfloat dst[4])
 {
-   const GLshort *s = (const GLshort *) src;
+   const GLushort *s = (const GLushort *) src;
    dst[RCOMP] = USHORT_TO_FLOAT( s[0] );
    dst[GCOMP] = USHORT_TO_FLOAT( s[1] );
    dst[BCOMP] = USHORT_TO_FLOAT( s[2] );

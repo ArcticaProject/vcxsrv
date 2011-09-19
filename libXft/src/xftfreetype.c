@@ -57,20 +57,20 @@ _XftGetFile (const FcChar8 *file, int id)
     f = malloc (sizeof (XftFtFile) + strlen ((char *) file) + 1);
     if (!f)
 	return NULL;
-    
+
     XftMemAlloc (XFT_MEM_FILE, sizeof (XftFtFile) + strlen ((char *) file) + 1);
     if (XftDebug () & XFT_DBG_REF)
     	printf ("FontFile %s/%d matches new\n",
 		file, id);
     f->next = _XftFtFiles;
     _XftFtFiles = f;
-    
+
     f->ref = 1;
-    
+
     f->file = (char *) (f+1);
     strcpy (f->file, (char *) file);
     f->id = id;
-    
+
     f->lock = 0;
     f->face = NULL;
     f->xsize = 0;
@@ -89,7 +89,7 @@ _XftGetFaceFile (FT_Face face)
 	return NULL;
     XftMemAlloc (XFT_MEM_FILE, sizeof(XftFtFile));
     f->next = NULL;
-    
+
     f->ref = 1;
 
     f->file = NULL;
@@ -154,7 +154,7 @@ _XftLockFile (XftFtFile *f)
 	    printf ("Loading file %s/%d\n", f->file, f->id);
 	if (FT_New_Face (_XftFTlibrary, f->file, f->id, &f->face))
 	    --f->lock;
-	    
+
 	f->xsize = 0;
 	f->ysize = 0;
 	f->matrix.xx = f->matrix.xy = f->matrix.yx = f->matrix.yy = 0;
@@ -188,11 +188,11 @@ _X_HIDDEN FcBool
 _XftSetFace (XftFtFile *f, FT_F26Dot6 xsize, FT_F26Dot6 ysize, FT_Matrix *matrix)
 {
     FT_Face face = f->face;
-    
+
     if (f->xsize != xsize || f->ysize != ysize)
     {
 	if (XftDebug() & XFT_DBG_GLYPH)
-	    printf ("Set face size to %dx%d (%dx%d)\n", 
+	    printf ("Set face size to %dx%d (%dx%d)\n",
 		    (int) (xsize >> 6), (int) (ysize >> 6), (int) xsize, (int) ysize);
 	/*
 	 * Bitmap only faces must match exactly, so find the closest
@@ -217,7 +217,7 @@ _XftSetFace (XftFtFile *f, FT_F26Dot6 xsize, FT_F26Dot6 ysize, FT_Matrix *matrix
 		    best = i;
 		}
 	    }
-	    /* 
+	    /*
 	     * Freetype 2.1.7 and earlier used width/height
 	     * for matching sizes in the BDF and PCF loaders.
 	     * This has been fixed for 2.1.8.  Because BDF and PCF
@@ -265,7 +265,7 @@ static void
 _XftReleaseFile (XftFtFile *f)
 {
     XftFtFile	**prev;
-    
+
     if (--f->ref != 0)
         return;
     if (f->lock)
@@ -283,7 +283,7 @@ _XftReleaseFile (XftFtFile *f)
 	if (f->face)
 	    FT_Done_Face (f->face);
     }
-    XftMemFree (XFT_MEM_FILE, 
+    XftMemFree (XFT_MEM_FILE,
 		sizeof (XftFtFile) + (f->file ? strlen (f->file) + 1 : 0));
     free (f);
 }
@@ -349,7 +349,7 @@ XftLockFace (XftFont *public)
     XftFontInt	*font = (XftFontInt *) public;
     XftFontInfo	*fi = &font->info;
     FT_Face	face;
-    
+
     face = _XftLockFile (fi->file);
     /*
      * Make sure the face is usable at the requested size
@@ -394,7 +394,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
      * Initialize the whole XftFontInfo so that padding doesn't interfere with
      * hash or XftFontInfoEqual().
      */
- 
+
     memset (fi, '\0', sizeof(*fi));
 
     /*
@@ -409,7 +409,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail0;
     }
-    
+
     switch (FcPatternGetInteger (pattern, FC_INDEX, 0, &id)) {
     case FcResultNoMatch:
 	id = 0;
@@ -419,7 +419,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail0;
     }
-    
+
     if (filename)
 	fi->file = _XftGetFile (filename, id);
     else if (FcPatternGetFTFace (pattern, FC_FT_FACE, 0, &face) == FcResultMatch
@@ -436,7 +436,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 
     if (FcPatternGetDouble (pattern, FC_ASPECT, 0, &aspect) != FcResultMatch)
 	aspect = 1.0;
-    
+
     fi->ysize = (FT_F26Dot6) (dsize * 64.0);
     fi->xsize = (FT_F26Dot6) (dsize * aspect * 64.0);
 
@@ -455,7 +455,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail1;
     }
-    
+
     /*
      * Get rgba value
      */
@@ -468,7 +468,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail1;
     }
-    
+
     /*
      * Get matrix and transform values
      */
@@ -489,8 +489,8 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 
     fi->transform = (fi->matrix.xx != 0x10000 || fi->matrix.xy != 0 ||
 		     fi->matrix.yx != 0 || fi->matrix.yy != 0x10000);
-    
-    /* 
+
+    /*
      * Get render value, set to false if no Render extension present
      */
     if (info->hasRender)
@@ -507,7 +507,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     }
     else
 	fi->render = FcFalse;
-    
+
     /*
      * Compute glyph load flags
      */
@@ -530,7 +530,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     /* disable bitmaps when anti-aliasing or transforming glyphs */
     if ((!bitmap && fi->antialias) || fi->transform)
 	fi->load_flags |= FT_LOAD_NO_BITMAP;
-    
+
     /* disable hinting if requested */
     switch (FcPatternGetBool (pattern, FC_HINTING, 0, &hinting)) {
     case FcResultNoMatch:
@@ -555,7 +555,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 #else
     fi->embolden = FcFalse;
 #endif
-    
+
 #ifdef FC_HINT_STYLE
     switch (FcPatternGetInteger (pattern, FC_HINT_STYLE, 0, &hint_style)) {
     case FcResultNoMatch:
@@ -615,7 +615,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     else
 	fi->load_flags |= FT_LOAD_TARGET_MONO;
 #endif
-    
+
     /* set vertical layout if requested */
     switch (FcPatternGetBool (pattern, FC_VERTICAL_LAYOUT, 0, &vertical_layout)) {
     case FcResultNoMatch:
@@ -657,7 +657,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 
     if (!global_advance)
 	fi->load_flags |= FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH;
-    
+
     /*
      * Get requested spacing value
      */
@@ -670,7 +670,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail1;
     }
-    
+
     /*
      * Check for minspace
      */
@@ -685,7 +685,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 	goto bail1;
     }
     /*
-     * Check for fixed pixel spacing 
+     * Check for fixed pixel spacing
      */
     switch (FcPatternGetInteger (pattern, FC_CHAR_WIDTH, 0, &fi->char_width)) {
     case FcResultNoMatch:
@@ -709,12 +709,12 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     while (nhash--)
 	hash += *hashp++;
     fi->hash = hash;
-    
+
     /*
      * All done
      */
     return FcTrue;
-    
+
 bail1:
     _XftReleaseFile (fi->file);
     fi->file = NULL;
@@ -736,7 +736,7 @@ XftFontInfoCreate (Display *dpy, _Xconst FcPattern *pattern)
 
     if (!fi)
 	return NULL;
-    
+
     if (!XftFontInfoFill (dpy, pattern, fi))
     {
 	free (fi);
@@ -759,7 +759,7 @@ XftFontInfoHash (_Xconst XftFontInfo *fi)
 {
     return fi->hash;
 }
-    
+
 _X_EXPORT FcBool
 XftFontInfoEqual (_Xconst XftFontInfo *a, _Xconst XftFontInfo *b)
 {
@@ -767,8 +767,8 @@ XftFontInfoEqual (_Xconst XftFontInfo *a, _Xconst XftFontInfo *b)
 }
 
 _X_EXPORT XftFont *
-XftFontOpenInfo (Display	*dpy, 
-		 FcPattern	*pattern, 
+XftFontOpenInfo (Display	*dpy,
+		 FcPattern	*pattern,
 		 XftFontInfo	*fi)
 {
     XftDisplayInfo	*info = _XftDisplayInfoGet (dpy, True);
@@ -803,14 +803,14 @@ XftFontOpenInfo (Display	*dpy,
 	}
 
     /*
-     * No existing font, create another.  
+     * No existing font, create another.
      */
-    
+
     if (XftDebug () & XFT_DBG_CACHE)
 	printf ("New font %s/%d size %dx%d\n",
 		fi->file->file, fi->file->id,
 		(int) fi->xsize >> 6, (int) fi->ysize >> 6);
-		
+
     if (FcPatternGetInteger (pattern, XFT_MAX_GLYPH_MEMORY, 0,
 			     &max_glyph_memory) != FcResultMatch)
 	max_glyph_memory = XFT_FONT_MAX_GLYPH_MEMORY;
@@ -832,7 +832,7 @@ XftFontOpenInfo (Display	*dpy,
 	charset = FcCharSetCopy (charset);
     else
 	charset = FcFreeTypeCharSet (face, FcConfigGetBlanks (NULL));
-    
+
     antialias = fi->antialias;
     if (!(face->face_flags & FT_FACE_FLAG_SCALABLE))
 	antialias = FcFalse;
@@ -860,13 +860,13 @@ XftFontOpenInfo (Display	*dpy,
 	{
 	    format = XRenderFindStandardFormat (dpy, PictStandardA1);
 	}
-	
+
 	if (!format)
 	    goto bail2;
     }
     else
 	format = NULL;
-    
+
     if (charset)
     {
 	num_unicode = FcCharSetCount (charset);
@@ -879,17 +879,17 @@ XftFontOpenInfo (Display	*dpy,
 	hash_value = 0;
 	rehash_value = 0;
     }
-    
+
     /*
      * Sometimes the glyphs are numbered 1..n, other times 0..n-1,
      * accept either numbering scheme by making room in the table
      */
     num_glyphs = face->num_glyphs + 1;
-    alloc_size = (sizeof (XftFontInt) + 
+    alloc_size = (sizeof (XftFontInt) +
 		  num_glyphs * sizeof (XftGlyph *) +
 		  hash_value * sizeof (XftUcsHash));
     font = malloc (alloc_size);
-    
+
     if (!font)
 	goto bail2;
 
@@ -901,12 +901,12 @@ XftFontOpenInfo (Display	*dpy,
     if (fi->transform)
     {
 	FT_Vector	vector;
-	
+
 	vector.x = 0;
 	vector.y = face->size->metrics.descender;
 	FT_Vector_Transform (&vector, &fi->matrix);
 	descent = -(vector.y >> 6);
-	
+
 	vector.x = 0;
 	vector.y = face->size->metrics.ascender;
 	FT_Vector_Transform (&vector, &fi->matrix);
@@ -934,7 +934,7 @@ XftFontOpenInfo (Display	*dpy,
     font->public.ascent = ascent;
     font->public.descent = descent;
     font->public.height = height;
-    
+
     if (fi->char_width)
 	font->public.max_advance_width = fi->char_width;
     else
@@ -952,7 +952,7 @@ XftFontOpenInfo (Display	*dpy,
     }
     font->public.charset = charset;
     font->public.pattern = pattern;
-    
+
     /*
      * Management fields
      */
@@ -960,10 +960,10 @@ XftFontOpenInfo (Display	*dpy,
 
     font->next = info->fonts;
     info->fonts = &font->public;
-    
+
     font->hash_next = *bucket;
     *bucket = &font->public;
-    
+
     /*
      * Copy the info over
      */
@@ -978,7 +978,7 @@ XftFontOpenInfo (Display	*dpy,
      * bump XftFile reference count
      */
     font->info.file->ref++;
-    
+
     /*
      * Per glyph information
      */
@@ -1001,18 +1001,18 @@ XftFontOpenInfo (Display	*dpy,
      */
     font->glyphset = 0;
     font->format = format;
-    
+
     /*
      * Glyph memory management fields
      */
     font->glyph_memory = 0;
     font->max_glyph_memory = max_glyph_memory;
     font->use_free_glyphs = info->use_free_glyphs;
-    
+
     _XftUnlockFile (fi->file);
 
     return &font->public;
-    
+
 bail2:
     FcCharSetDestroy (charset);
 bail1:
@@ -1050,7 +1050,7 @@ XftFontDestroy (Display *dpy, XftFont *public)
     XftDisplayInfo  *info = _XftDisplayInfoGet (dpy, False);
     XftFontInt	    *font = (XftFontInt *) public;
     int		    i;
-    
+
     /* note reduction in memory use */
     if (info)
 	info->glyph_memory -= font->glyph_memory;
@@ -1070,11 +1070,11 @@ XftFontDestroy (Display *dpy, XftFont *public)
 	    free (xftg);
 	}
     }
-    
+
     /* Free the pattern and the charset */
     FcPatternDestroy (font->public.pattern);
     FcCharSetDestroy (font->public.charset);
-    
+
     /* Finally, free the font structure */
     XftMemFree (XFT_MEM_FONT, sizeof (XftFontInt) +
 		font->num_glyphs * sizeof (XftGlyph *) +
@@ -1087,7 +1087,7 @@ XftFontFindNthUnref (XftDisplayInfo *info, int n)
 {
     XftFont	*public;
     XftFontInt	*font;
-    
+
     for (public = info->fonts; public; public = font->next)
     {
 	font = (XftFontInt*) public;
@@ -1148,10 +1148,10 @@ XftFontClose (Display *dpy, XftFont *public)
 {
     XftDisplayInfo  *info = _XftDisplayInfoGet (dpy, False);
     XftFontInt	    *font = (XftFontInt *) public;
-    
+
     if (--font->ref != 0)
 	return;
-    
+
     if (info)
     {
 	++info->num_unref_fonts;

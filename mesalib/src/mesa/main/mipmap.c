@@ -1955,23 +1955,17 @@ generate_mipmap_uncompressed(struct gl_context *ctx, GLenum target,
                                  dstDepth, border, srcImage->InternalFormat,
                                  srcImage->TexFormat);
       dstImage->DriverData = NULL;
-      dstImage->FetchTexelc = srcImage->FetchTexelc;
-      dstImage->FetchTexelf = srcImage->FetchTexelf;
 
-      /* Alloc new teximage data buffer */
-      {
-         GLuint size = _mesa_format_image_size(dstImage->TexFormat,
-                                               dstWidth, dstHeight, dstDepth);
-         dstImage->Data = _mesa_alloc_texmemory(size);
-         if (!dstImage->Data) {
-            _mesa_error(ctx, GL_OUT_OF_MEMORY, "generating mipmaps");
-            return;
-         }
+      /* Alloc storage for new texture image */
+      if (!ctx->Driver.AllocTextureImageBuffer(ctx, dstImage,
+                                               dstImage->TexFormat,
+                                               dstWidth, dstHeight,
+                                               dstDepth)) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "generating mipmaps");
+         return;
       }
 
       ASSERT(dstImage->TexFormat);
-      ASSERT(dstImage->FetchTexelc);
-      ASSERT(dstImage->FetchTexelf);
 
       _mesa_generate_mipmap_level(target, datatype, comps, border,
                                   srcWidth, srcHeight, srcDepth,

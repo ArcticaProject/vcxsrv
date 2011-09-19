@@ -15,7 +15,7 @@
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL NCD.
  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
- * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN 
+ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  * Author:  Keith Packard, Network Computing Devices
@@ -59,7 +59,7 @@ static /* const */ char *lbx_error_list[] = {
     "BadLbxClient",			/* BadLbxClient */
 };
 
-static XEXT_GENERATE_FIND_DISPLAY (find_display, lbx_info, lbx_extension_name, 
+static XEXT_GENERATE_FIND_DISPLAY (find_display, lbx_info, lbx_extension_name,
 				   &lbx_extension_hooks, LbxNumberEvents, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY (close_display, lbx_info)

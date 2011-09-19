@@ -1,4 +1,4 @@
-/* 
+/*
 
 Copyright 1989, 1998  The Open Group
 
@@ -41,7 +41,7 @@ in this Software without prior written authorization from The Open Group.
 /*
  * To create all of the appropriate standard colormaps for a given visual on
  * a given screen, use XmuVisualStandardColormaps.
- * 
+ *
  * Define all appropriate standard colormap properties for the given visual.
  * If replace is true, any previous definition will be removed.
  * If retain is true, new properties will be retained for the duration of
@@ -147,7 +147,7 @@ XmuVisualStandardColormaps(Display *dpy, int screen, VisualID visualid,
 
 	status = XmuLookupStandardColormap(dpy, screen, visualid, depth,
 					   XA_RGB_BEST_MAP, replace, retain);
-	if (!status && (vinfo->class == PseudoColor || 
+	if (!status && (vinfo->class == PseudoColor ||
 			vinfo->class == DirectColor)) {
 	    XmuDeleteStandardColormap(dpy, screen, XA_RGB_DEFAULT_MAP);
 	    XmuDeleteStandardColormap(dpy, screen, XA_RGB_GRAY_MAP);

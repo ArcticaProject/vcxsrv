@@ -39,6 +39,7 @@
 #include "s_lines.h"
 #include "s_points.h"
 #include "s_span.h"
+#include "s_texfetch.h"
 #include "s_triangle.h"
 #include "s_texfilter.h"
 
@@ -469,11 +470,14 @@ _swrast_update_texture_samplers(struct gl_context *ctx)
       return; /* pipe hack */
 
    for (u = 0; u < ctx->Const.MaxTextureImageUnits; u++) {
-      const struct gl_texture_object *tObj = ctx->Texture.Unit[u]._Current;
+      struct gl_texture_object *tObj = ctx->Texture.Unit[u]._Current;
       /* Note: If tObj is NULL, the sample function will be a simple
        * function that just returns opaque black (0,0,0,1).
        */
-      swrast->TextureSample[u] = _swrast_choose_texture_sample_func(ctx, tObj);
+      if (tObj) {
+         _mesa_update_fetch_functions(tObj);
+         swrast->TextureSample[u] = _swrast_choose_texture_sample_func(ctx, tObj);
+      }
    }
 }
 

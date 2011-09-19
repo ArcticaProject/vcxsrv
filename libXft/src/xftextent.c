@@ -21,7 +21,7 @@
  */
 
 #include "xftint.h"
-   
+
 _X_EXPORT void
 XftGlyphExtents (Display	    *dpy,
 		 XftFont	    *pub,
@@ -41,7 +41,7 @@ XftGlyphExtents (Display	    *dpy,
     int			left, right, top, bottom;
     int			overall_left, overall_right;
     int			overall_top, overall_bottom;
-    
+
     g = glyphs;
     n = nglyphs;
     nmissing = 0;
@@ -116,7 +116,7 @@ XftGlyphExtents (Display	    *dpy,
 _X_EXPORT void
 XftTextExtents8 (Display	    *dpy,
 		 XftFont	    *pub,
-		 _Xconst FcChar8    *string, 
+		 _Xconst FcChar8    *string,
 		 int		    len,
 		 XGlyphInfo	    *extents)
 {
@@ -144,7 +144,7 @@ XftTextExtents8 (Display	    *dpy,
 _X_EXPORT void
 XftTextExtents16 (Display	    *dpy,
 		  XftFont	    *pub,
-		  _Xconst FcChar16  *string, 
+		  _Xconst FcChar16  *string,
 		  int		    len,
 		  XGlyphInfo	    *extents)
 {
@@ -172,7 +172,7 @@ XftTextExtents16 (Display	    *dpy,
 _X_EXPORT void
 XftTextExtents32 (Display	    *dpy,
 		  XftFont	    *pub,
-		  _Xconst FcChar32  *string, 
+		  _Xconst FcChar32  *string,
 		  int		    len,
 		  XGlyphInfo	    *extents)
 {
@@ -200,7 +200,7 @@ XftTextExtents32 (Display	    *dpy,
 _X_EXPORT void
 XftTextExtentsUtf8 (Display	    *dpy,
 		    XftFont	    *pub,
-		    _Xconst FcChar8 *string, 
+		    _Xconst FcChar8 *string,
 		    int		    len,
 		    XGlyphInfo	    *extents)
 {
@@ -243,7 +243,7 @@ XftTextExtentsUtf8 (Display	    *dpy,
 _X_EXPORT void
 XftTextExtentsUtf16 (Display		*dpy,
 		     XftFont		*pub,
-		     _Xconst FcChar8	*string, 
+		     _Xconst FcChar8	*string,
 		     FcEndian		endian,
 		     int		len,
 		     XGlyphInfo		*extents)

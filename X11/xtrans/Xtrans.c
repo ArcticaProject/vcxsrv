@@ -215,7 +215,7 @@ TRANS(ParseAddress) (char *address, char **protocol, char **host, char **port)
     strcpy (mybuf, address);
 
     /* Parse the string to get each component */
-    
+
     /* Get the protocol part */
 
     _protocol = mybuf;
@@ -292,9 +292,9 @@ TRANS(ParseAddress) (char *address, char **protocol, char **host, char **port)
     }
 #if defined(IPv6) && defined(AF_INET6)
     /* hostname in IPv6 [numeric_addr]:0 form? */
-    else if ( (_host_len > 3) && 
+    else if ( (_host_len > 3) &&
       ((strcmp(_protocol, "tcp") == 0) || (strcmp(_protocol, "inet6") == 0))
-      && (*_host == '[') && (*(_host + _host_len - 1) == ']') ) { 
+      && (*_host == '[') && (*(_host + _host_len - 1) == ']') ) {
 	struct sockaddr_in6 sin6;
 
 	*(_host + _host_len - 1) = '\0';
@@ -406,7 +406,7 @@ TRANS(Open) (int type, char *address)
 
     PRMSG (2,"Open(%d,%s)\n", type, address, 0);
 
-#if defined(WIN32) && defined(TCPCONN) 
+#if defined(WIN32) && defined(TCPCONN)
     if (TRANS(WSAStartup)())
     {
 	PRMSG (1,"Open: WSAStartup failed\n", 0, 0, 0);
@@ -465,7 +465,7 @@ TRANS(Open) (int type, char *address)
 
     if (ciptr == NULL)
     {
-	if (!(thistrans->flags & TRANS_DISABLED)) 
+	if (!(thistrans->flags & TRANS_DISABLED))
 	{
 	    PRMSG (1,"Open: transport open failed for %s/%s:%s\n",
 	           protocol, host, port);
@@ -639,7 +639,7 @@ TRANS(ReopenCLTSServer) (int trans_id, int fd, char *port)
 
 
 int
-TRANS(GetReopenInfo) (XtransConnInfo ciptr, 
+TRANS(GetReopenInfo) (XtransConnInfo ciptr,
 		      int *trans_id, int *fd, char **port)
 
 {
@@ -695,7 +695,7 @@ TRANS(SetOption) (XtransConnInfo ciptr, int option, int arg)
 	    break;
 	case 1: /* Set to non-blocking mode */
 
-#if defined(O_NONBLOCK) && !defined(SCO325) 
+#if defined(O_NONBLOCK) && !defined(SCO325)
 	    ret = fcntl (fd, F_GETFL, 0);
 	    if (ret != -1)
 		ret = fcntl (fd, F_SETFL, ret | O_NONBLOCK);
@@ -707,7 +707,7 @@ TRANS(SetOption) (XtransConnInfo ciptr, int option, int arg)
 	    ret = ioctl (fd, FIOSNBIO, &arg);
 	}
 #else
-#if defined(WIN32) 
+#if defined(WIN32)
 	{
 #ifdef WIN32
 	    u_long arg;
@@ -745,7 +745,7 @@ TRANS(SetOption) (XtransConnInfo ciptr, int option, int arg)
 #endif /* F_SETFD */
 	break;
     }
-    
+
     return ret;
 }
 
@@ -760,14 +760,14 @@ TRANS(CreateListener) (XtransConnInfo ciptr, char *port, unsigned int flags)
 
 int
 TRANS(NoListen) (char * protocol)
-	
+
 {
    Xtransport *trans;
    int i = 0, ret = 0;
-   
-   if ((trans = TRANS(SelectTransport)(protocol)) == NULL) 
+
+   if ((trans = TRANS(SelectTransport)(protocol)) == NULL)
    {
-	PRMSG (1,"TransNoListen: unable to find transport: %s\n", 
+	PRMSG (1,"TransNoListen: unable to find transport: %s\n",
 	       protocol, 0, 0);
 
 	return -1;
@@ -852,7 +852,7 @@ TRANS(Connect) (XtransConnInfo ciptr, char *address)
     if (protocol) xfree (protocol);
     if (host) xfree (host);
     if (port) xfree (port);
-    
+
     return ret;
 }
 
@@ -940,7 +940,7 @@ TRANS(IsLocal) (XtransConnInfo ciptr)
 
 
 int
-TRANS(GetMyAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp, 
+TRANS(GetMyAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp,
 		  Xtransaddr **addrp)
 
 {
@@ -960,7 +960,7 @@ TRANS(GetMyAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp,
 }
 
 int
-TRANS(GetPeerAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp, 
+TRANS(GetPeerAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp,
 		    Xtransaddr **addrp)
 
 {
@@ -1029,7 +1029,7 @@ extern int xquartz_launchd_fd;
 #endif
 
 int
-TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret, 
+TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 				   XtransConnInfo **ciptrs_ret)
 
 {
@@ -1051,7 +1051,7 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
         if((ciptr = TRANS(ReopenCOTSServer(TRANS_SOCKET_LOCAL_INDEX,
                                            xquartz_launchd_fd, getenv("DISPLAY"))))==NULL)
             fprintf(stderr,"Got NULL while trying to Reopen launchd port\n");
-        else 
+        else
             temp_ciptrs[(*count_ret)++] = ciptr;
     }
 #endif
@@ -1122,7 +1122,7 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 	if (Xtransports[i].transport_id == TRANS_SOCKET_INET6_INDEX)
 	    ipv6_succ = 1;
 #endif
-	
+
 	PRMSG (5,
 	      "MakeAllCOTSServerListeners: opened listener for %s, %d\n",
 	      trans->TransName, ciptr->fd, 0);
@@ -1152,12 +1152,12 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
     }
     else
 	*ciptrs_ret = NULL;
- 
+
     return 0;
 }
 
 int
-TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret, 
+TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
 				   XtransConnInfo **ciptrs_ret)
 
 {
@@ -1251,7 +1251,7 @@ TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
     }
     else
 	*ciptrs_ret = NULL;
-    
+
     return 0;
 }
 
@@ -1265,7 +1265,7 @@ TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
  */
 
 
-#if defined(SYSV) && defined(__i386__) && !defined(__SCO__) && !defined(sun) || defined(WIN32) 
+#if defined(SYSV) && defined(__i386__) && !defined(__SCO__) && !defined(sun) || defined(WIN32)
 
 /*
  * emulate readv
@@ -1297,7 +1297,7 @@ static int TRANS(ReadV) (XtransConnInfo ciptr, struct iovec *iov, int iovcnt)
 
 #endif /* SYSV && __i386__ || WIN32 || __sxg__ */
 
-#if defined(SYSV) && defined(__i386__) && !defined(__SCO__) && !defined(sun) || defined(WIN32) 
+#if defined(SYSV) && defined(__i386__) && !defined(__SCO__) && !defined(sun) || defined(WIN32)
 
 /*
  * emulate writev

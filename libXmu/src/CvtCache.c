@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -24,7 +24,7 @@ in this Software without prior written authorization from The Open Group.
 
 */
 
-/* 
+/*
  * Author:  Jim Fulton, MIT X Consortium
  */
 
@@ -100,7 +100,7 @@ _XmuCCLookupDisplay(Display *dpy)
 	dq = XmuDQCreate (_CloseDisplay, _FreeCCDQ, NULL);
 	if (!dq) return NULL;
     }
-    
+
     /*
      * See if the display is already there
      */

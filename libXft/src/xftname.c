@@ -33,7 +33,7 @@ static const FcObjectType	_XftObjectTypes[] = {
 
 static FcBool _XftNameInitialized;
 
-_X_HIDDEN void 
+_X_HIDDEN void
 _XftNameInit (void)
 {
     if (_XftNameInitialized)
@@ -42,11 +42,11 @@ _XftNameInit (void)
     FcNameRegisterObjectTypes (_XftObjectTypes, NUM_OBJECT_TYPES);
 }
 
-_X_EXPORT FcPattern 
+_X_EXPORT FcPattern
 *XftNameParse (const char *name)
-{ 
+{
     _XftNameInit ();
-    return FcNameParse ((FcChar8 *) name); 
+    return FcNameParse ((FcChar8 *) name);
 }
 
 _X_EXPORT FcBool

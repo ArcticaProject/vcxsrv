@@ -22,7 +22,7 @@ shall not be used in advertising or otherwise to promote the sale, use or other
 dealings in this Software without prior written authorization from Digital
 Equipment Corporation.
 ******************************************************************/
-/*  
+/*
  *	PanoramiX definitions
  */
 
@@ -41,7 +41,7 @@ typedef struct {
     int     height;	    /* height of this screen */
     int     ScreenCount;    /* real physical number of screens */
     XID     eventMask;      /* selected events for this client */
-} XPanoramiXInfo;    
+} XPanoramiXInfo;
 
 _XFUNCPROTOBEGIN
 
