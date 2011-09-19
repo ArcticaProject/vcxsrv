@@ -1,5 +1,5 @@
-/* 
- 
+/*
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -32,7 +32,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/Xmu/StdCmap.h>
- 
+
 static XVisualInfo *getDeepestVisual(int, XVisualInfo*, int);
 
 /*
@@ -41,7 +41,7 @@ static XVisualInfo *getDeepestVisual(int, XVisualInfo*, int);
  *
  * Define and retain as permanent resources all standard colormaps which are
  * meaningful for the visuals of each screen of the display.  Return 0 on
- * failure, non-zero on success.  If the property of any standard colormap 
+ * failure, non-zero on success.  If the property of any standard colormap
  * is already defined, redefine it.
  *
  * This interface is intended to be used by window managers or a client
@@ -51,7 +51,7 @@ static XVisualInfo *getDeepestVisual(int, XVisualInfo*, int);
  * with the screen's root window.  Each screen has exactly one root window.
  * The property names of standard colormaps are predefined, and each property
  * name may describe at most one colormap.
- * 
+ *
  * The standard colormaps are
  *		RGB_BEST_MAP
  *		RGB_RED_MAP
@@ -71,8 +71,8 @@ static XVisualInfo *getDeepestVisual(int, XVisualInfo*, int);
  * how the standard colormap is defined.  Because a standard colormap is
  * associated with a specific visual, there must be a method of determining
  * which visuals take precedence in defining standard colormaps.
- * 
- * The method used here is: for the visual of greatest depth, define all 
+ *
+ * The method used here is: for the visual of greatest depth, define all
  * standard colormaps meaningful to that visual class, according to this
  * order of (descending) precedence:
  *	1. DirectColor
@@ -124,9 +124,9 @@ XmuAllStandardColormaps(Display *dpy)
 		NULL))
 		status = XmuVisualStandardColormaps(dpy, scr, v1->visualid,
 						   (unsigned) v1->depth, 1, 1);
-	    if (status && 
+	    if (status &&
 	       (((v1 = getDeepestVisual(GrayScale, vinfo, nvisuals)) != NULL)
-		|| ((v1 = getDeepestVisual(StaticGray, vinfo, nvisuals)) != 
+		|| ((v1 = getDeepestVisual(StaticGray, vinfo, nvisuals)) !=
 		    NULL)))
 		status = XmuVisualStandardColormaps(dpy, scr, v1->visualid,
 						   (unsigned) v1->depth, 1, 1);
@@ -143,7 +143,7 @@ getDeepestVisual(int visual_class, XVisualInfo *vinfo, int nvisuals)
     register int	i;
     register int	maxdepth = 0;
     XVisualInfo		*v = NULL;
-    
+
     for (i=0; i < nvisuals; i++, vinfo++)
 	if (vinfo->class == visual_class && vinfo->depth > maxdepth)
 	{

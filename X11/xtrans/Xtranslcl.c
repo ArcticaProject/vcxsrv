@@ -49,7 +49,7 @@ from The Open Group.
 
 /*
  *
- * The connection code/ideas in lib/X and server/os for SVR4/Intel 
+ * The connection code/ideas in lib/X and server/os for SVR4/Intel
  * environments was contributed by the following companies/groups:
  *
  *	MetroLink Inc
@@ -61,12 +61,12 @@ from The Open Group.
  *
  * The goal is to have common connection code among all SVR4/Intel vendors.
  *
- * ALL THE ABOVE COMPANIES DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
- * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, 
- * IN NO EVENT SHALL THESE COMPANIES * BE LIABLE FOR ANY SPECIAL, INDIRECT 
- * OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS 
- * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
+ * ALL THE ABOVE COMPANIES DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
+ * IN NO EVENT SHALL THESE COMPANIES * BE LIABLE FOR ANY SPECIAL, INDIRECT
+ * OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+ * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
  * OR PERFORMANCE OF THIS SOFTWARE.
  */
 
@@ -172,7 +172,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 	return 0;
     }
     strcpy (sunaddr->sun_path, sun_path);
-#if defined(BSD44SOCKETS) 
+#if defined(BSD44SOCKETS)
     sunaddr->sun_len = strlen (sunaddr->sun_path);
 #endif
 
@@ -200,7 +200,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 	return 0;
     }
     strcpy (p_sunaddr->sun_path, peer_sun_path);
-#if defined(BSD44SOCKETS) 
+#if defined(BSD44SOCKETS)
     p_sunaddr->sun_len = strlen (p_sunaddr->sun_path);
 #endif
 
@@ -214,7 +214,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 #ifdef LOCAL_TRANS_PTS
 /* PTS */
 
-#if defined(SYSV) && !defined(__SCO__) 
+#if defined(SYSV) && !defined(__SCO__)
 #define SIGNAL_T int
 #else
 #define SIGNAL_T void
@@ -640,7 +640,7 @@ TRANS(PTSAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
 
     sunaddr->sun_family=AF_UNIX;
     strcpy(sunaddr->sun_path,buf);
-#if defined(BSD44SOCKETS) 
+#if defined(BSD44SOCKETS)
     sunaddr->sun_len=strlen(sunaddr->sun_path);
 #endif
 
@@ -669,7 +669,7 @@ TRANS(NAMEDOpenClient)(XtransConnInfo ciptr, char *port)
     int			fd;
     char		server_path[64];
     struct stat		filestat;
-# ifndef sun    
+# ifndef sun
     extern int		isastream(int);
 # endif
 #endif
@@ -704,7 +704,7 @@ TRANS(NAMEDOpenClient)(XtransConnInfo ciptr, char *port)
     if ((filestat.st_mode & S_IFMT) != S_IFIFO) {
 	PRMSG(1,"NAMEDOpenClient: Device %s is not a FIFO\n", server_path, 0,0 );
 	/* Is this really a failure? */
-	(void) close(fd);	
+	(void) close(fd);
 	return -1;
     }
 
@@ -747,10 +747,10 @@ TRANS(NAMEDOpenPipe)(const char *server_path)
     int			fd, pipefd[2];
     struct stat		sbuf;
     int			mode;
-    
+
 #if defined(sun) && defined(X11_t)
     mode = 0775;	/* Solaris requires uid or gid 0 to create X11 pipes */
-#else    
+#else
 #ifdef HAS_STICKY_DIR_BIT
     mode = 01777;
 #else
@@ -833,7 +833,7 @@ TRANS(NAMEDOpenServer)(XtransConnInfo ciptr, char *port)
     if (fd < 0) {
 	return -1;
     }
-    
+
     /*
      * Everything looks good: fill in the XtransConnInfo structure.
      */
@@ -857,9 +857,9 @@ TRANS(NAMEDResetListener) (XtransConnInfo ciptr)
   int status = TRANS_RESET_NOOP;
   struct sockaddr_un      *sockname=(struct sockaddr_un *) ciptr->addr;
   struct stat     statb;
-  
+
   PRMSG(2,"NAMEDResetListener(%p, %d)\n", ciptr, ciptr->fd, 0 );
-  
+
   if (ciptr->fd != -1) {
     /*
      * see if the pipe has disappeared
@@ -2004,7 +2004,7 @@ TRANS(LocalReopenServer)(int type, int index, int fd, char *port)
 #ifdef TRANS_CLIENT
 
 static XtransConnInfo
-TRANS(LocalOpenCOTSClient)(Xtransport *thistrans, char *protocol, 
+TRANS(LocalOpenCOTSClient)(Xtransport *thistrans, char *protocol,
 			   char *host, char *port)
 
 {
@@ -2019,7 +2019,7 @@ TRANS(LocalOpenCOTSClient)(Xtransport *thistrans, char *protocol,
 #ifdef TRANS_SERVER
 
 static XtransConnInfo
-TRANS(LocalOpenCOTSServer)(Xtransport *thistrans, char *protocol, 
+TRANS(LocalOpenCOTSServer)(Xtransport *thistrans, char *protocol,
 			   char *host, char *port)
 
 {
@@ -2063,7 +2063,7 @@ TRANS(LocalOpenCOTSServer)(Xtransport *thistrans, char *protocol,
 #ifdef TRANS_CLIENT
 
 static XtransConnInfo
-TRANS(LocalOpenCLTSClient)(Xtransport *thistrans, char *protocol, 
+TRANS(LocalOpenCLTSClient)(Xtransport *thistrans, char *protocol,
 			   char *host, char *port)
 
 {
@@ -2078,7 +2078,7 @@ TRANS(LocalOpenCLTSClient)(Xtransport *thistrans, char *protocol,
 #ifdef TRANS_SERVER
 
 static XtransConnInfo
-TRANS(LocalOpenCLTSServer)(Xtransport *thistrans, char *protocol, 
+TRANS(LocalOpenCLTSServer)(Xtransport *thistrans, char *protocol,
 			   char *host, char *port)
 
 {
@@ -2170,7 +2170,7 @@ TRANS(LocalResetListener)(XtransConnInfo ciptr)
 
 {
     LOCALtrans2dev	*transptr;
-    
+
     PRMSG(2,"LocalResetListener(%x)\n",ciptr,0,0);
 
     transptr=(LOCALtrans2dev *)ciptr->priv;
@@ -2334,7 +2334,7 @@ TRANS(LocalCloseForCloning)(XtransConnInfo ciptr)
  * MakeAllCOTSServerListeners() will go through the entire Xtransports[]
  * array defined in Xtrans.c and try to OpenCOTSServer() for each entry.
  * We will add duplicate entries to that table so that the OpenCOTSServer()
- * function will get called once for each type of local transport. 
+ * function will get called once for each type of local transport.
  *
  * The TransName is in lowercase, so it will never match during a normal
  * call to SelectTransport() in Xtrans.c.
@@ -2348,8 +2348,8 @@ static char * local_aliases[] = {
 				  "named",
 # ifdef sun
 				  "pipe", /* compatibility with Solaris Xlib */
-# endif				  
-# ifdef LOCAL_TRANS_SCO				  
+# endif
+# ifdef LOCAL_TRANS_SCO
 				  "sco",
 # endif
 				  NULL };

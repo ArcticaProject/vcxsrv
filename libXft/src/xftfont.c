@@ -33,7 +33,7 @@ XftFontMatch (Display		*dpy,
 
     if (!XftInit (NULL))
 	return NULL;
-    
+
     new = FcPatternDuplicate (pattern);
     if (!new)
 	return NULL;
@@ -100,7 +100,7 @@ XftFontOpen (Display *dpy, int screen, ...)
     FcPatternDestroy (pat);
     if (!match)
 	return NULL;
-    
+
     font = XftFontOpenPattern (dpy, match);
     if (!font)
     {
@@ -129,7 +129,7 @@ XftFontOpenName (Display *dpy, int screen, const char *name)
 	else
 	    printf ("Invalid name\n");
     }
-			     
+
     if (!pat)
 	return NULL;
     match = XftFontMatch (dpy, screen, pat, &result);
@@ -146,7 +146,7 @@ XftFontOpenName (Display *dpy, int screen, const char *name)
     FcPatternDestroy (pat);
     if (!match)
 	return NULL;
-    
+
     font = XftFontOpenPattern (dpy, match);
     if (!font)
     {
@@ -154,7 +154,7 @@ XftFontOpenName (Display *dpy, int screen, const char *name)
 	    printf ("No Font\n");
 	FcPatternDestroy (match);
     }
-    
+
     return font;
 }
 
@@ -175,7 +175,7 @@ XftFontOpenXlfd (Display *dpy, int screen, const char *xlfd)
 	else
 	    FcPatternPrint (pat);
     }
-			     
+
     if (!pat)
 	return NULL;
     match = XftFontMatch (dpy, screen, pat, &result);
@@ -192,7 +192,7 @@ XftFontOpenXlfd (Display *dpy, int screen, const char *xlfd)
     FcPatternDestroy (pat);
     if (!match)
 	return NULL;
-    
+
     font = XftFontOpenPattern (dpy, match);
     if (!font)
     {
@@ -200,7 +200,7 @@ XftFontOpenXlfd (Display *dpy, int screen, const char *xlfd)
 	    printf ("No Font\n");
 	FcPatternDestroy (match);
     }
-    
+
     return font;
 }
 

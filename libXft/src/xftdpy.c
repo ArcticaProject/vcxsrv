@@ -32,19 +32,19 @@ _XftCloseDisplay (Display *dpy, XExtCodes *codes)
     info = _XftDisplayInfoGet (dpy, FcFalse);
     if (!info)
 	return 0;
-    
+
     /*
      * Get rid of any dangling unreferenced fonts
      */
     info->max_unref_fonts = 0;
     XftFontManageMemory (dpy);
-    
+
     /*
      * Clean up the default values
      */
     if (info->defaults)
 	FcPatternDestroy (info->defaults);
-    
+
     /*
      * Unhook from the global list
      */
@@ -52,7 +52,7 @@ _XftCloseDisplay (Display *dpy, XExtCodes *codes)
 	if (info->display == dpy)
 	    break;
     *prev = info->next;
-    
+
     free (info);
     return 0;
 }
@@ -126,8 +126,8 @@ _XftDisplayInfoGet (Display *dpy, FcBool createIfNecessary)
     {
 	Visual		    *visual = DefaultVisual (dpy, DefaultScreen (dpy));
 	XRenderPictFormat   *format = XRenderFindVisualFormat (dpy, visual);
-	
-	printf ("XftDisplayInfoGet Default visual 0x%x ", 
+
+	printf ("XftDisplayInfoGet Default visual 0x%x ",
 		(int) visual->visualid);
 	if (format)
 	{
@@ -146,7 +146,7 @@ _XftDisplayInfoGet (Display *dpy, FcBool createIfNecessary)
 	}
 	else
 	    printf ("No Render format for default visual\n");
-	
+
 	printf ("XftDisplayInfoGet initialized, hasRender set to \"%s\"\n",
 		info->hasRender ? "True" : "False");
     }
@@ -156,7 +156,7 @@ _XftDisplayInfoGet (Display *dpy, FcBool createIfNecessary)
 	info->colors[i].pict = 0;
     }
     info->fonts = NULL;
-    
+
     info->next = _XftDisplayInfo;
     _XftDisplayInfo = info;
 
@@ -167,7 +167,7 @@ _XftDisplayInfoGet (Display *dpy, FcBool createIfNecessary)
     if (XftDebug () & XFT_DBG_CACHE)
 	printf ("global max cache memory %ld\n", info->max_glyph_memory);
 
-    
+
     info->num_unref_fonts = 0;
     info->max_unref_fonts = XftDefaultGetInteger (dpy,
 						  XFT_MAX_UNREF_FONTS, 0,
@@ -177,7 +177,7 @@ _XftDisplayInfoGet (Display *dpy, FcBool createIfNecessary)
 
     memset (info->fontHash, '\0', sizeof (XftFont *) * XFT_NUM_FONT_HASH);
     return info;
-    
+
 bail1:
     free (info);
 bail0:
@@ -387,9 +387,9 @@ _XftDefaultInit (Display *dpy)
 	goto bail1;
     if (!_XftDefaultInitInteger (dpy, pat, XFT_MAX_GLYPH_MEMORY))
 	goto bail1;
-    
+
     return pat;
-    
+
 bail1:
     FcPatternDestroy (pat);
 bail0:
@@ -404,7 +404,7 @@ _XftDefaultGet (Display *dpy, const char *object, int screen, FcValue *v)
 
     if (!info)
 	return FcResultNoMatch;
-    
+
     if (!info->defaults)
     {
 	info->defaults = _XftDefaultInit (dpy);
@@ -462,7 +462,7 @@ XftDefaultSubstitute (Display *dpy, int screen, FcPattern *pattern)
     if (FcPatternGet (pattern, XFT_RENDER, 0, &v) == FcResultNoMatch)
     {
 	FcPatternAddBool (pattern, XFT_RENDER,
-			   XftDefaultGetBool (dpy, XFT_RENDER, screen, 
+			   XftDefaultGetBool (dpy, XFT_RENDER, screen,
 					      XftDefaultHasRender (dpy)));
     }
     if (FcPatternGet (pattern, FC_ANTIALIAS, 0, &v) == FcResultNoMatch)
@@ -518,7 +518,7 @@ XftDefaultSubstitute (Display *dpy, int screen, FcPattern *pattern)
 	}
 #endif
 	FcPatternAddInteger (pattern, FC_RGBA,
-			      XftDefaultGetInteger (dpy, FC_RGBA, screen, 
+			      XftDefaultGetInteger (dpy, FC_RGBA, screen,
 						    subpixel));
     }
     if (FcPatternGet (pattern, FC_MINSPACE, 0, &v) == FcResultNoMatch)
@@ -529,10 +529,10 @@ XftDefaultSubstitute (Display *dpy, int screen, FcPattern *pattern)
     }
     if (FcPatternGet (pattern, FC_DPI, 0, &v) == FcResultNoMatch)
     {
-	dpi = (((double) DisplayHeight (dpy, screen) * 25.4) / 
+	dpi = (((double) DisplayHeight (dpy, screen) * 25.4) /
 	       (double) DisplayHeightMM (dpy, screen));
-	FcPatternAddDouble (pattern, FC_DPI, 
-			    XftDefaultGetDouble (dpy, FC_DPI, screen, 
+	FcPatternAddDouble (pattern, FC_DPI,
+			    XftDefaultGetDouble (dpy, FC_DPI, screen,
 						 dpi));
     }
     if (FcPatternGet (pattern, FC_SCALE, 0, &v) == FcResultNoMatch)

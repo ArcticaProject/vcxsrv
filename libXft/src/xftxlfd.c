@@ -119,42 +119,42 @@ XftXlfdParse (const char *xlfd_orig, FcBool ignore_scalable, FcBool complete)
 
     if (!pixel)
 	return NULL;
-    
+
     pat = FcPatternCreate ();
     if (!pat)
 	return NULL;
-    
+
     save = (char *) malloc (strlen (foundry) + 1);
-    
+
     if (!save) {
 	FcPatternDestroy (pat);
 	return NULL;
     }
 
     if (!FcPatternAddString (pat, XFT_XLFD, (FcChar8 *) xlfd_orig)) goto bail;
-    
+
     XftSplitStr (foundry, save);
     if (save[0] && strcmp (save, "*") != 0)
 	if (!FcPatternAddString (pat, FC_FOUNDRY, (FcChar8 *) save)) goto bail;
-    
+
     XftSplitStr (family, save);
     if (save[0] && strcmp (save, "*") != 0)
 	if (!FcPatternAddString (pat, FC_FAMILY, (FcChar8 *) save)) goto bail;
-    
+
     weight_value = _XftMatchSymbolic (XftXlfdWeights, NUM_XLFD_WEIGHTS,
 				      XftSplitStr (weight_name, save),
 				      FC_WEIGHT_MEDIUM);
-    if (!FcPatternAddInteger (pat, FC_WEIGHT, weight_value)) 
+    if (!FcPatternAddInteger (pat, FC_WEIGHT, weight_value))
 	goto bail;
-    
+
     slant_value = _XftMatchSymbolic (XftXlfdSlants, NUM_XLFD_SLANTS,
 				     XftSplitStr (slant, save),
 				     FC_SLANT_ROMAN);
-    if (!FcPatternAddInteger (pat, FC_SLANT, slant_value)) 
+    if (!FcPatternAddInteger (pat, FC_SLANT, slant_value))
 	goto bail;
-    
+
     dpixel = (double) pixel;
-    
+
     if (point > 0)
     {
 	if (!FcPatternAddDouble (pat, FC_SIZE, ((double) point) / 10.0)) goto bail;
@@ -163,13 +163,13 @@ XftXlfdParse (const char *xlfd_orig, FcBool ignore_scalable, FcBool complete)
 	    dpixel = (double) point * (double) resy / 720.0;
 	}
     }
-    
+
     if (dpixel > 0)
 	if (!FcPatternAddDouble (pat, FC_PIXEL_SIZE, dpixel)) goto bail;
-    
+
     free (save);
     return pat;
-    
+
 bail:
     free (save);
     FcPatternDestroy (pat);

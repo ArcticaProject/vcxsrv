@@ -33,9 +33,9 @@ AC_DEFUN([XTRANS_TCP_FLAGS],[
  fi
 
  # Needs to come after above checks for libsocket & libnsl for SVR4 systems
- AC_ARG_ENABLE(ipv6, 
+ AC_ARG_ENABLE(ipv6,
 	AC_HELP_STRING([--enable-ipv6],[Enable IPv6 support]),
-	[IPV6CONN=$enableval], 
+	[IPV6CONN=$enableval],
 	[AC_CHECK_FUNC(getaddrinfo,[IPV6CONN=yes],[IPV6CONN=no])])
  AC_MSG_CHECKING([if IPv6 support should be built])
  if test "$IPV6CONN" = "yes"; then
@@ -44,7 +44,7 @@ AC_DEFUN([XTRANS_TCP_FLAGS],[
  AC_MSG_RESULT($IPV6CONN)
 
  # 4.3BSD-Reno added a new member to struct sockaddr_in
- AC_CHECK_MEMBER([struct sockaddr_in.sin_len], 
+ AC_CHECK_MEMBER([struct sockaddr_in.sin_len],
 	AC_DEFINE([BSD44SOCKETS],1,
  	    [Define to 1 if `struct sockaddr_in' has a `sin_len' member]), [], [
 #include <sys/types.h>
@@ -56,7 +56,7 @@ AC_DEFUN([XTRANS_TCP_FLAGS],[
  AC_CHECK_TYPES([socklen_t], [], [], [
 AC_INCLUDES_DEFAULT
 #include <sys/socket.h>])
- 
+
 ]) # XTRANS_TCP_FLAGS
 
 # XTRANS_CONNECTION_FLAGS()
@@ -78,7 +78,7 @@ AC_DEFUN([XTRANS_CONNECTION_FLAGS],[
 	AC_DEFINE(UNIXCONN,1,[Support UNIX socket connections])
  fi
  AC_MSG_RESULT($UNIXCONN)
- AC_ARG_ENABLE(tcp-transport, 
+ AC_ARG_ENABLE(tcp-transport,
 	AC_HELP_STRING([--enable-tcp-transport],[Enable TCP socket transport]),
 	[TCPCONN=$enableval], [TCPCONN=yes])
  AC_MSG_CHECKING([if Xtrans should support TCP socket connections])
@@ -99,7 +99,7 @@ AC_DEFUN([XTRANS_CONNECTION_FLAGS],[
  if test "$LOCALCONN" = "yes"; then
 	AC_DEFINE(LOCALCONN,1,[Support os-specific local connections])
  fi
- 
+
 ]) # XTRANS_CONNECTION_FLAGS
 
 
@@ -109,7 +109,7 @@ AC_DEFUN([XTRANS_CONNECTION_FLAGS],[
 # so that any necessary networking libraries are already found
 AC_DEFUN([XTRANS_SECURE_RPC_FLAGS],
 [AC_REQUIRE([XTRANS_TCP_FLAGS])
- AC_ARG_ENABLE(secure-rpc, 
+ AC_ARG_ENABLE(secure-rpc,
 	AC_HELP_STRING([--enable-secure-rpc],[Enable Secure RPC]),
         [SECURE_RPC=$enableval], [SECURE_RPC="try"])
 
@@ -120,7 +120,7 @@ AC_DEFUN([XTRANS_SECURE_RPC_FLAGS],
 	if test "x$FOUND_SECURE_RPC" = "xno" ; then
 		if test "x$SECURE_RPC" = "xyes" ; then
 	AC_MSG_ERROR([Secure RPC requested, but required functions not found])
-		fi	
+		fi
 		SECURE_RPC="no"
 	else
 		dnl FreeBSD keeps getsecretkey in librpcsvc

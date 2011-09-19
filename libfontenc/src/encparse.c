@@ -86,7 +86,7 @@ skipEndOfLine(FontFilePtr f, int c)
 {
     if(c == 0)
         c = FontFileGetc(f);
-  
+
     for(;;)
         if(c <= 0 || c == '\n')
             return;
@@ -126,7 +126,7 @@ getnum(FontFilePtr f, int c, int *cp)
 
     *cp = c; return n;
 }
- 
+
 /* Skip to beginning of new line; return 1 if only whitespace was found. */
 static int
 endOfLine(FontFilePtr f, int c)
@@ -363,7 +363,7 @@ getnextline(FontFilePtr f)
                 return ERROR_LINE;
             }
         } else if(!strcasecmp(keyword_value, "ENDENCODING")) {
-            if(endOfLine(f,c)) 
+            if(endOfLine(f,c))
                 return EOF_LINE;
             else
                 return ERROR_LINE;
@@ -381,7 +381,7 @@ getnextline(FontFilePtr f)
     }
 }
 
-static void 
+static void
 install_mapping(FontEncPtr encoding, FontMapPtr mapping)
 {
     FontMapPtr m;
@@ -638,7 +638,7 @@ parseEncodingFile(FontFilePtr f, int headerOnly)
                 goto error;
         }
         goto mapping;
-    
+
     case CODE_UNDEFINE_LINE:
         if(value1 > 0x10000)
             value1 = 0x10000;
@@ -659,7 +659,7 @@ parseEncodingFile(FontFilePtr f, int headerOnly)
 
     default: goto mapping;      /* ignore unknown lines */
     }
-    
+
   string_mapping:
     line = getnextline(f);
     switch(line) {
@@ -792,16 +792,16 @@ parseFontFileName(const char *fontFileName, char *buf, char *dir)
 {
     const char *p;
     char *q, *lastslash;
-    
+
     for(p = fontFileName, q = dir, lastslash = NULL; *p; p++, q++) {
         *q = *p;
         if(*p == '/')
             lastslash = q+1;
     }
-    
+
     if(!lastslash)
         lastslash = dir;
-    
+
     *lastslash = '\0';
 
     if(buf && strlen(dir) + 14 < MAXFONTFILENAMELEN) {
@@ -811,7 +811,7 @@ parseFontFileName(const char *fontFileName, char *buf, char *dir)
 }
 
 static FontEncPtr
-FontEncReallyReallyLoad(const char *charset, 
+FontEncReallyReallyLoad(const char *charset,
                         const char *dirname, const char *dir)
 {
     FontFilePtr f;
@@ -821,14 +821,14 @@ FontEncReallyReallyLoad(const char *charset,
         buf[MAXFONTFILENAMELEN];
     int count, n;
     static char format[24] = "";
-    
+
     /* As we don't really expect to open encodings that often, we don't
        take the trouble of caching encodings directories. */
 
     if((file = fopen(dirname, "r")) == NULL) {
         return NULL;
     }
-    
+
     count = fscanf(file, "%d\n", &n);
     if(count == EOF || count != 1) {
         fclose(file);
@@ -862,7 +862,7 @@ FontEncReallyReallyLoad(const char *charset,
 
             f = FontFileOpen(buf);
             if(f == NULL) {
-		fclose(file);		
+		fclose(file);
                 return NULL;
             }
             encoding = parseEncodingFile(f, 0);
@@ -876,7 +876,7 @@ FontEncReallyReallyLoad(const char *charset,
     return encoding;
 }
 
-/* Parser ntrypoint -- used by FontEncLoad */  
+/* Parser ntrypoint -- used by FontEncLoad */
 FontEncPtr
 FontEncReallyLoad(const char *charset, const char *fontFileName)
 {
@@ -890,14 +890,14 @@ FontEncReallyLoad(const char *charset, const char *fontFileName)
         if(encoding)
             return(encoding);
     }
-  
+
     d = FontEncDirectory();
     if(d) {
         parseFontFileName(d, NULL, dir);
         encoding = FontEncReallyReallyLoad(charset, d, dir);
         return encoding;
     }
-    
+
     return NULL;
 }
 
@@ -912,7 +912,7 @@ FontEncIdentify(const char *fileName)
     FontEncPtr encoding;
     char **names, **name, **alias;
     int numaliases;
-    
+
     if((f = FontFileOpen(fileName))==NULL) {
         return NULL;
     }

@@ -49,8 +49,8 @@
  * development or production of nuclear, chemical, biological weapons or
  * in missile technology programs as specified in the U.S. Export
  * Administration Regulations.
- * 
- * 
+ *
+ *
  * Local Country Import Requirements. The software you are about to
  * download contains cryptography technology. Some countries regulate the
  * import, use and/or export of certain products with cryptography. The

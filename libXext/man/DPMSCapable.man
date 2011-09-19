@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -47,19 +47,19 @@ DPMSCapable \- returns the DPMS capability of the X server
 Specifies the connection to the X server
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSCapable 
-function returns the Display Power Management Signaling (DPMS) capability of 
-the X server, either TRUE \^(capable of DPMS\^) or FALSE \^(incapable of 
+The
+.I DPMSCapable
+function returns the Display Power Management Signaling (DPMS) capability of
+the X server, either TRUE \^(capable of DPMS\^) or FALSE \^(incapable of
 DPMS\^).
 .SH "RETURN VALUES"
 .TP 15
 True
-The 
-.I DPMSCapable 
+The
+.I DPMSCapable
 function returns True if the X server is capable of DPMS.
 .TP 15
 False
-The 
-.I DPMSCapable 
+The
+.I DPMSCapable
 function returns True if the X server is incapable of DPMS.

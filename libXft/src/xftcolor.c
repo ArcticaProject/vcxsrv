@@ -30,7 +30,7 @@ XftColorAllocName (Display  *dpy,
 		   XftColor *result)
 {
     XColor  screen, exact;
-    
+
     if (!XAllocNamedColor (dpy, cmap, name, &screen, &exact))
     {
 	/* XXX stick standard colormap stuff here */
@@ -97,7 +97,7 @@ XftColorAllocValue (Display	    *dpy,
     else
     {
 	XColor  xcolor;
-	    
+
 	xcolor.red = color->red;
 	xcolor.green = color->green;
 	xcolor.blue = color->blue;
@@ -112,7 +112,7 @@ XftColorAllocValue (Display	    *dpy,
     return True;
 }
 
-_X_EXPORT void 
+_X_EXPORT void
 XftColorFree (Display	*dpy,
 	      Visual	*visual,
 	      Colormap	cmap,

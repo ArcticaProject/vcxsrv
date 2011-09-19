@@ -25,7 +25,7 @@
 _X_HIDDEN void
 XftRectCore (XftDraw		*draw,
 	     _Xconst XftColor	*color,
-	     int		x, 
+	     int		x,
 	     int		y,
 	     unsigned int	width,
 	     unsigned int	height)
@@ -63,10 +63,10 @@ _XftSharpGlyphMono (XftDraw	*draw,
 	src = srcLine;
 	srcLine += stride;
 	w = width;
-	
+
 	bitsMask = 0x80;    /* FreeType is always MSB first */
 	bits = *src++;
-	
+
 	xspan = x;
 	while (w)
 	{
@@ -85,7 +85,7 @@ _XftSharpGlyphMono (XftDraw	*draw,
 			bitsMask = 0x80;
 		    }
 		} while (bits & bitsMask);
-		XFillRectangle (draw->dpy, draw->drawable, 
+		XFillRectangle (draw->dpy, draw->drawable,
 				draw->core.gc, xspan, y, lenspan, 1);
 		xspan += lenspan;
 		w -= lenspan;
@@ -135,7 +135,7 @@ _XftSharpGlyphGray (XftDraw	*draw,
 	src = srcLine;
 	srcLine += stride;
 	w = width;
-	
+
 	bits = *src++;
 	xspan = x;
 	while (w)
@@ -150,7 +150,7 @@ _XftSharpGlyphGray (XftDraw	*draw,
 			break;
 		    bits = *src++;
 		} while (bits >= 0x80);
-		XFillRectangle (draw->dpy, draw->drawable, 
+		XFillRectangle (draw->dpy, draw->drawable,
 				draw->core.gc, xspan, y, lenspan, 1);
 		xspan += lenspan;
 		w -= lenspan;
@@ -191,7 +191,7 @@ _XftSharpGlyphRgba (XftDraw	*draw,
 	src = srcLine;
 	srcLine += stride;
 	w = width;
-	
+
 	bits = *src++;
 	xspan = x;
 	while (w)
@@ -206,7 +206,7 @@ _XftSharpGlyphRgba (XftDraw	*draw,
 			break;
 		    bits = *src++;
 		} while (bits >= 0x80000000);
-		XFillRectangle (draw->dpy, draw->drawable, 
+		XFillRectangle (draw->dpy, draw->drawable,
 				draw->core.gc, xspan, y, lenspan, 1);
 		xspan += lenspan;
 		w -= lenspan;
@@ -257,7 +257,7 @@ _XftSharpGlyphFind (XftDraw *draw, XftFont *public)
 /*
  * Primitives for converting between RGB values and TrueColor pixels
  */
- 
+
 static void
 _XftExamineBitfield (unsigned long mask, int *shift, int *len)
 {
@@ -283,7 +283,7 @@ static CARD32
 _XftGetField (unsigned long l_pixel, int shift, int len)
 {
     CARD32  pixel = (CARD32) l_pixel;
-    
+
     pixel = pixel & (((1 << (len)) - 1) << shift);
     pixel = pixel << (32 - (shift + len)) >> 24;
     while (len < 8)
@@ -346,10 +346,10 @@ _XftSmoothGlyphMono (XImage		*image,
 	src = srcLine;
 	srcLine += stride;
 	w = width;
-	
+
 	bitsMask = 0x80;    /* FreeType is always MSB first */
 	bits = *src++;
-	
+
 	xspan = x;
 	while (w--)
 	{
@@ -465,7 +465,7 @@ _XftSmoothGlyphGray8888 (XImage		    *image,
     int		w;
 
     srca = color->color.alpha >> 8;
-    
+
     /* This handles only RGB and BGR */
     g = (color->color.green & 0xff00);
     if (image->red_mask == 0xff0000)
@@ -479,10 +479,10 @@ _XftSmoothGlyphGray8888 (XImage		    *image,
 	b = (color->color.blue & 0xff00) << 8;
     }
     src = (srca << 24) | r | g | b;
-    
+
     width = xftg->metrics.width;
     height = xftg->metrics.height;
-    
+
     x -= xftg->metrics.x;
     y -= xftg->metrics.y;
 
@@ -490,7 +490,7 @@ _XftSmoothGlyphGray8888 (XImage		    *image,
     dstStride = image->bytes_per_line >> 2;
     maskLine = (unsigned char *) xftg->bitmap;
     maskStride = (width + 3) & ~3;
-    
+
     while (height--)
     {
 	dst = dstLine;
@@ -536,7 +536,7 @@ _XftSmoothGlyphGray565 (XImage		    *image,
     int		w;
 
     srca = color->color.alpha >> 8;
-    
+
     /* This handles only RGB and BGR */
     g = (color->color.green & 0xff00);
     if (image->red_mask == 0xf800)
@@ -550,10 +550,10 @@ _XftSmoothGlyphGray565 (XImage		    *image,
 	b = (color->color.blue & 0xff00) << 8;
     }
     src = (srca << 24) | r | g | b;
-    
+
     width = xftg->metrics.width;
     height = xftg->metrics.height;
-    
+
     x -= xftg->metrics.x;
     y -= xftg->metrics.y;
 
@@ -561,7 +561,7 @@ _XftSmoothGlyphGray565 (XImage		    *image,
     dstStride = image->bytes_per_line >> 1;
     maskLine = (unsigned char *) xftg->bitmap;
     maskStride = (width + 3) & ~3;
-    
+
     while (height--)
     {
 	dst = dstLine;
@@ -612,7 +612,7 @@ _XftSmoothGlyphGray555 (XImage		    *image,
     int		w;
 
     srca = color->color.alpha >> 8;
-    
+
     /* This handles only RGB and BGR */
     g = (color->color.green & 0xff00);
     if (image->red_mask == 0xf800)
@@ -626,10 +626,10 @@ _XftSmoothGlyphGray555 (XImage		    *image,
 	b = (color->color.blue & 0xff00) << 8;
     }
     src = (srca << 24) | r | g | b;
-    
+
     width = xftg->metrics.width;
     height = xftg->metrics.height;
-    
+
     x -= xftg->metrics.x;
     y -= xftg->metrics.y;
 
@@ -637,7 +637,7 @@ _XftSmoothGlyphGray555 (XImage		    *image,
     dstStride = image->bytes_per_line >> 1;
     maskLine = (unsigned char *) xftg->bitmap;
     maskStride = (width + 3) & ~3;
-    
+
     while (height--)
     {
 	dst = dstLine;
@@ -688,7 +688,7 @@ _XftSmoothGlyphGray (XImage		*image,
     unsigned long   pixel;
     int		    width, height;
     int		    w, tx;
-    
+
     srca = color->color.alpha >> 8;
     src = (srca << 24 |
 	   (color->color.red & 0xff00) << 8 |
@@ -698,7 +698,7 @@ _XftSmoothGlyphGray (XImage		*image,
     y -= xftg->metrics.y;
     width = xftg->metrics.width;
     height = xftg->metrics.height;
-    
+
     maskLine = (unsigned char *) xftg->bitmap;
     maskStride = (width + 3) & ~3;
 
@@ -711,7 +711,7 @@ _XftSmoothGlyphGray (XImage		*image,
 	maskLine += maskStride;
 	w = width;
 	tx = x;
-	
+
 	while (w--)
 	{
 	    m = *mask++;
@@ -766,7 +766,7 @@ _XftSmoothGlyphRgba (XImage		*image,
     unsigned long   pixel;
     int		    width, height;
     int		    w, tx;
-    
+
     srca = color->color.alpha >> 8;
     src = (srca << 24 |
 	   (color->color.red & 0xff00) << 8 |
@@ -776,7 +776,7 @@ _XftSmoothGlyphRgba (XImage		*image,
     y -= xftg->metrics.y;
     width = xftg->metrics.width;
     height = xftg->metrics.height;
-    
+
     mask = (CARD32 *) xftg->bitmap;
 
     _XftExamineBitfield (image->red_mask, &r_shift, &r_len);
@@ -786,7 +786,7 @@ _XftSmoothGlyphRgba (XImage		*image,
     {
 	w = width;
 	tx = x;
-	
+
 	while (w--)
 	{
 	    ma = *mask++;
@@ -849,7 +849,7 @@ _XftSmoothGlyphPossible (XftDraw *draw)
     return FcTrue;
 }
 
-typedef	void (*XftSmoothGlyph) (XImage		    *image, 
+typedef	void (*XftSmoothGlyph) (XImage		    *image,
 				_Xconst XftGlyph    *xftg,
 				int		    x,
 				int		    y,
@@ -960,7 +960,7 @@ XftGlyphCore (XftDraw		*draw,
 	    glyphs_loaded = FcTrue;
     if (nmissing)
 	XftFontLoadGlyphs (dpy, public, FcTrue, missing, nmissing);
-    
+
     g = glyphs;
     n = nglyphs;
     if ((font->info.antialias || color->color.alpha != 0xffff) &&
@@ -971,7 +971,7 @@ XftGlyphCore (XftDraw		*draw,
         unsigned int    depth;
 	int		ox, oy;
 	XftSmoothGlyph	smooth = _XftSmoothGlyphFind (draw, public);
-	
+
 	XftGlyphExtents (dpy, public, glyphs, nglyphs, &gi);
 	if (!gi.width || !gi.height)
 	    goto bail1;
@@ -1090,7 +1090,7 @@ XftGlyphSpecCore (XftDraw		*draw,
     {
 	XGlyphInfo	gi;
 	int		g_x1, g_x2, g_y1, g_y2;
-	
+
 	nmissing = 0;
 	if (XftFontCheckGlyph (dpy, public, FcTrue, glyphs[i].glyph, missing, &nmissing))
 	    glyphs_loaded = FcTrue;
@@ -1121,7 +1121,7 @@ XftGlyphSpecCore (XftDraw		*draw,
 	    y2 = g_y2;
 	}
     }
-    
+
     if (x1 == x2 || y1 == y2)
 	goto bail1;
 
@@ -1186,7 +1186,7 @@ XftGlyphSpecCore (XftDraw		*draw,
 		xftg = _XftGlyphDefault (dpy, public);
 	    if (xftg)
 	    {
-		(*smooth) (image, xftg, glyphs[i].x - x1, 
+		(*smooth) (image, xftg, glyphs[i].x - x1,
 			   glyphs[i].y - y1, color);
 	    }
 	}
@@ -1238,13 +1238,13 @@ XftGlyphFontSpecCore (XftDraw			*draw,
 	XftFont		*public = glyphs[i].font;
 	XGlyphInfo	gi;
 	int		g_x1, g_x2, g_y1, g_y2;
-	
+
 	nmissing = 0;
 	if (XftFontCheckGlyph (dpy, public, FcTrue, glyphs[i].glyph, missing, &nmissing))
 	    glyphs_loaded = FcTrue;
 	if (nmissing)
 	    XftFontLoadGlyphs (dpy, public, FcTrue, missing, nmissing);
-	
+
 	XftGlyphExtents (dpy, public, &glyphs[i].glyph, 1, &gi);
 	g_x1 = glyphs[i].x - gi.x;
 	g_y1 = glyphs[i].y - gi.y;
@@ -1279,14 +1279,14 @@ XftGlyphFontSpecCore (XftDraw			*draw,
 	    y2 = g_y2;
 	}
     }
-    
+
     if (x1 == x2 || y1 == y2)
 	goto bail1;
 
     for (i = 0; i < nglyphs; i++)
 	if (((XftFontInt *) glyphs[i].font)->info.antialias)
 	    break;
-    
+
     if ((i != nglyphs || color->color.alpha != 0xffff) &&
 	_XftSmoothGlyphPossible (draw))
     {
@@ -1346,12 +1346,12 @@ XftGlyphFontSpecCore (XftDraw			*draw,
 	    XftFontInt	    *font = (XftFontInt *) public;
 	    XftSmoothGlyph  smooth = _XftSmoothGlyphFind (draw, public);
 	    FT_UInt	    glyph = glyphs[i].glyph;
-	    
+
 	    if (glyph >= font->num_glyphs || !(xftg = font->glyphs[glyph]))
 		xftg = _XftGlyphDefault (dpy, public);
 	    if (xftg)
 	    {
-		(*smooth) (image, xftg, glyphs[i].x - x1, 
+		(*smooth) (image, xftg, glyphs[i].x - x1,
 			   glyphs[i].y - y1, color);
 	    }
 	}
@@ -1369,7 +1369,7 @@ XftGlyphFontSpecCore (XftDraw			*draw,
 	    XftFontInt		*font = (XftFontInt *) public;
 	    XftSharpGlyph	sharp = _XftSharpGlyphFind (draw, public);
 	    FT_UInt		glyph = glyphs[i].glyph;
-	    
+
 	    if (glyph >= font->num_glyphs || !(xftg = font->glyphs[glyph]))
 		xftg = _XftGlyphDefault (dpy, public);
 	    if (xftg)

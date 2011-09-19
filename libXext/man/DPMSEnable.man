@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -30,7 +30,7 @@
 .\" DEALINGS IN THE SOFTWARE.
 .\"
 .\" X Window System is a trademark of The Open Group.
-.\" 
+.\"
 .TH DPMSEnable __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
 DPMSEnable \- enables DPMS on the specified display
@@ -49,26 +49,26 @@ DPMSEnable \- enables DPMS on the specified display
 Specifies the connection to the X server
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSEnable 
-function enables Display Power Management Signaling (DPMS) on the specified 
-.I display. 
-When DPMS is enabled, DPMS will use the currently saved timeout values. It will 
-trigger the appropriate DPMS power level based on the timeout values. Refer to 
-.I DPMSSetTimeouts. 
-All physical screens are affected by 
-.I DPMSEnable 
+The
+.I DPMSEnable
+function enables Display Power Management Signaling (DPMS) on the specified
+.I display.
+When DPMS is enabled, DPMS will use the currently saved timeout values. It will
+trigger the appropriate DPMS power level based on the timeout values. Refer to
+.I DPMSSetTimeouts.
+All physical screens are affected by
+.I DPMSEnable
 at the same time.
 
-If 
-.I DPMSEnable 
-is invoked on a display which has DPMS already enabled, or on a display which 
+If
+.I DPMSEnable
+is invoked on a display which has DPMS already enabled, or on a display which
 does not support DPMS, no change is made and no error is returned.
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSEnable 
+The
+.I DPMSEnable
 function always returns TRUE.
 .SH "SEE ALSO"
 .BR DPMSCapable (__libmansuffix__),

@@ -59,7 +59,7 @@ if test "x$xthreads" = "xyes" ; then
 	AC_CHECK_LIB(nsl, gethostbyname_r, [mtsafe=yes])
     fi
     if test "x$mtsafe" = "xyes" ; then
-	AC_DEFINE(XUSE_MTSAFE_API, 1, 
+	AC_DEFINE(XUSE_MTSAFE_API, 1,
 		  [Whether libXau needs to use MT safe API's])
     fi
 

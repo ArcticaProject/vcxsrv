@@ -1,30 +1,30 @@
 .\" Copyright (c) 1989, 1994  X Consortium
-.\" 
+.\"
 .\" Permission is hereby granted, free of charge, to any person obtaining a
-.\" copy of this software and associated documentation files (the "Software"), 
-.\" to deal in the Software without restriction, including without limitation 
-.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" copy of this software and associated documentation files (the "Software"),
+.\" to deal in the Software without restriction, including without limitation
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense,
+.\" and/or sell copies of the Software, and to permit persons to whom the
 .\" Software furnished to do so, subject to the following conditions:
-.\" 
+.\"
 .\" The above copyright notice and this permission notice shall be included in
 .\" all copies or substantial portions of the Software.
-.\" 
+.\"
 .\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 .\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
-.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
-.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .\" SOFTWARE.
-.\" 
-.\" Except as contained in this notice, the name of the X Consortium shall not 
-.\" be used in advertising or otherwise to promote the sale, use or other 
-.\" dealing in this Software without prior written authorization from the 
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall not
+.\" be used in advertising or otherwise to promote the sale, use or other
+.\" dealing in this Software without prior written authorization from the
 .\" X Consortium.
 .\"
 .\" Copyright 1989, Digital Equipment Corporation.
-.\" Permission to use, copy, modify, distribute, and sell this documentation 
+.\" Permission to use, copy, modify, distribute, and sell this documentation
 .\" for any purpose and without fee is hereby granted, provided that the above
 .\" copyright notice and this permission notice appear in all copies.
 .\" Digital Equipment Corporation makes no representations
@@ -191,14 +191,14 @@ and functions the same way as
 will be called and the function will then return.
 .PP
 .ZN XmbufQueryExtension
-returns 
+returns
 .ZN True
-if the multibuffering/stereo 
+if the multibuffering/stereo
 extension is available on the
 given display.  If the extension exists, the value of the first event
 code (which should be added to the event type constants
 .ZN MultibufferClobberNotify
-and 
+and
 .ZN MultibufferUpdateNotify
 to get the actual
 values) is stored into event_base_return and the value of the first
@@ -207,19 +207,19 @@ error code (which should be added to the error type constant
 to get the actual value) is stored into error_base_return.
 .PP
 .ZN XmbufGetVersion
-gets the major and minor version numbers of the extension.  
+gets the major and minor version numbers of the extension.
 The return
 value is zero if an error occurs or non-zero if no error happens.
 .PP
 .ZN XmbufCreateBuffers
-requests that "count" buffers be 
+requests that "count" buffers be
 created with the given update_action
 and update_hint and be associated with the indicated window.  The
 number of buffers created is returned (zero if an error occurred)
 and buffers_update is filled in with that many Multibuffer identifiers.
 .PP
 .ZN XmbufDestroyBuffers
-destroys the buffers associated 
+destroys the buffers associated
 with the given window.
 .PP
 .ZN XmbufDisplayBuffers
@@ -230,15 +230,15 @@ No two buffers may be associated with the same window or else a Match
 error is generated.
 .PP
 .ZN XmbufGetWindowAttributes
-gets the multibuffering attributes that apply 
+gets the multibuffering attributes that apply
 to all buffers associated
 with the given window.
-The list of buffers returns may be freed with 
+The list of buffers returns may be freed with
 .ZN XFree .
 Returns non-zero on success and zero if an error occurs.
 .PP
 .ZN XmbufChangeWindowAttributes
-sets the multibuffering attributes 
+sets the multibuffering attributes
 that apply to all buffers associated
 with the given window.  This is currently limited to the update_hint.
 .PP
@@ -257,23 +257,23 @@ mono and stereo windows may be
 created on the screen of the given drawable.  The numbers of sets of
 visual and depths are returned in nmono_return and nstereo_return.  If
 nmono_return is greater than zero, then mono_info_return is set to the
-address of an array of 
+address of an array of
 .ZN XmbufBufferInfo
 structures describing the
 various visuals and depths that may be used.  Otherwise,
 mono_info_return is set to NULL.  Similarly, stereo_info_return is set
 according to nstereo_return.  The storage returned in mono_info_return
-and stereo_info_return may be released by 
+and stereo_info_return may be released by
 .ZN XFree .
 If no errors are
 encounted, non-zero will be returned.
 .PP
 .ZN XmbufCreateStereoWindow
-creates a stereo window in the same way that 
+creates a stereo window in the same way that
 .ZN XCreateWindow
 creates a mono window.  The buffer ids for the left and right buffers are
 returned in left_return and right_return, respectively.  If an
-extension error handler that returns is installed, 
+extension error handler that returns is installed,
 .ZN None
 will be returned if the extension is not available on this display.
 .SH PREDEFINED VALUES
@@ -281,7 +281,7 @@ will be returned if the extension is not available on this display.
 Update_action field:
 .in +.5i
 .nf
-.ZN MultibufferUpdateActionUndefined	
+.ZN MultibufferUpdateActionUndefined
 .ZN MultibufferUpdateActionBackground
 .ZN MultibufferUpdateActionUntouched
 .ZN MultibufferUpdateActionCopied
@@ -291,9 +291,9 @@ Update_action field:
 Update_hint field:
 .in +.5i
 .nf
-.ZN MultibufferUpdateHintFrequent		
+.ZN MultibufferUpdateHintFrequent
 .ZN MultibufferUpdateHintIntermittent
-.ZN MultibufferUpdateHintStatic	
+.ZN MultibufferUpdateHintStatic
 .in -.5i
 .sp
 .fi
@@ -308,20 +308,20 @@ Valuemask fields:
 Mono vs. stereo and left vs. right:
 .in +.5i
 .nf
-.ZN MultibufferModeMono	
+.ZN MultibufferModeMono
 .ZN MultibufferModeStereo
 .ZN MultibufferSideMono
 .ZN MultibufferSideLeft
-.ZN MultibufferSideRight		
+.ZN MultibufferSideRight
 .in -.5i
 .fi
 .sp
 Clobber state:
 .in +.5i
 .nf
-.ZN MultibufferUnclobbered	
+.ZN MultibufferUnclobbered
 .ZN MultibufferPartiallyClobbered
-.ZN MultibufferFullyClobbered	
+.ZN MultibufferFullyClobbered
 .in -.5i
 .fi
 .sp

@@ -64,11 +64,11 @@ AC_SUBST([XFT_LT_VERSION])
 #
 # Check for Xrender
 #
-PKG_CHECK_MODULES(XRENDER, xrender >= 0.8.2, [xrender_found_with_pkgconfig=yes], 
+PKG_CHECK_MODULES(XRENDER, xrender >= 0.8.2, [xrender_found_with_pkgconfig=yes],
                   [xrender_found_with_pkgconfig=no])
 case "$xrender_found_with_pkgconfig" in
 no)
-	PKG_CHECK_MODULES(XRENDER, xrender >= 0, [old_xrender_found_with_pkgconfig=yes], 
+	PKG_CHECK_MODULES(XRENDER, xrender >= 0, [old_xrender_found_with_pkgconfig=yes],
 			  [old_xrender_found_with_pkgconfig=no])
 	case "$old_xrender_found_with_pkgconfig" in
 	yes)
@@ -97,13 +97,13 @@ esac
 
 # Check freetype configuration
 AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=auto)
-	
+
 if test "$freetype_config" = "auto"; then
-	PKG_CHECK_MODULES(FREETYPE, freetype2, 
+	PKG_CHECK_MODULES(FREETYPE, freetype2,
 		freetype_config=no, freetype_config=yes)
 fi
 
-if test "$freetype_config" = "yes"; then 
+if test "$freetype_config" = "yes"; then
 	AC_PATH_PROG(ft_config,freetype-config,no)
 	if test "$ft_config" = "no"; then
 		AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
@@ -112,7 +112,7 @@ else
 	ft_config="$freetype_config"
 fi
 
-if test "$freetype_config" != "no"; then 	
+if test "$freetype_config" != "no"; then
 	FREETYPE_CFLAGS="`$ft_config --cflags`"
 	FREETYPE_LIBS="`$ft_config --libs`"
 fi

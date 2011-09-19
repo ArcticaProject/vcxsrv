@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -101,7 +101,7 @@ find_resource(XmuWidgetNode *node, char *name, Bool cons)
 #define nreslist (int) (cons ? sup->nconstraints : sup->nresources)
 
     res.resource_name = name;
-    for (sup = node->superclass; 
+    for (sup = node->superclass;
 	 sup && (XtResourceList) binsearch ((char *) &res,
 					    reslist, nreslist,
 					    sizeof(XtResource),
@@ -195,7 +195,7 @@ XmuWnInitializeNodes(XmuWidgetNode *nodearray, int nnodes)
 	     */
 	    superclass = superclass->core_class.superclass;
 	}
-      done: 
+      done:
 	if (wn->superclass) {
 	    wn->siblings = wn->superclass->children;
 	    wn->superclass->children = wn;

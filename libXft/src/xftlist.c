@@ -45,12 +45,12 @@ XftListFonts (Display	*dpy,
     va_start (va, screen);
 
     FcPatternVapBuild (pattern, NULL, va);
-    
+
     first = va_arg (va, const char *);
     FcObjectSetVapBuild (os, first, va);
-    
+
     va_end (va);
-    
+
     fs = XftListFontsPatternObjects (dpy, screen, pattern, os);
     FcPatternDestroy (pattern);
     FcObjectSetDestroy (os);

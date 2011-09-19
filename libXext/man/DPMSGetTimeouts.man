@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -30,10 +30,10 @@
 .\" DEALINGS IN THE SOFTWARE.
 .\"
 .\" X Window System is a trademark of The Open Group.
-.\" 
+.\"
 .TH DPMSGetTimeouts __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
-DPMSGetTimeouts \- retrieves the timeout values used by the X server for DPMS 
+DPMSGetTimeouts \- retrieves the timeout values used by the X server for DPMS
 timings
 .SH SYNOPSIS
 .PP
@@ -50,7 +50,7 @@ timings
 .br
       CARD16 *\fIsuspend\fP\^,
 .br
-      CARD16 *\fIoff\fP\^ 
+      CARD16 *\fIoff\fP\^
 );
 .if n .ti +5n
 .if t .ti +.5i
@@ -69,32 +69,32 @@ Specifies the current suspend timeout in seconds
 Specifies the current off timeout in seconds
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSGetTimeouts 
-function retrieves the timeout values used by the X server for DPMS timings.  
+The
+.I DPMSGetTimeouts
+function retrieves the timeout values used by the X server for DPMS timings.
 .LP
-The value 
-.I standby 
-is the amount of time of inactivity in seconds before standby mode is invoked. A 
+The value
+.I standby
+is the amount of time of inactivity in seconds before standby mode is invoked. A
 value of zero indicates that this mode has been disabled.
 .LP
-The value \fIsuspend\fP is the amount of time of inactivity in seconds before 
-the second level of power savings is invoked.  A value of zero indicates that 
+The value \fIsuspend\fP is the amount of time of inactivity in seconds before
+the second level of power savings is invoked.  A value of zero indicates that
 this mode has been disabled.
 .LP
-The value \fIoff\fP is the amount of time of inactivity in seconds before the 
-third and final level of power savings is invoked. A value of zero indicates 
+The value \fIoff\fP is the amount of time of inactivity in seconds before the
+third and final level of power savings is invoked. A value of zero indicates
 that this mode has been disabled.
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSGetTimeouts 
+The
+.I DPMSGetTimeouts
 function returns TRUE when values are returned.
 .TP 15
 FALSE
-The 
-.I DPMSGetTimeouts 
+The
+.I DPMSGetTimeouts
 function returns FALSE when no values returned.
 .SH "SEE ALSO"
 .BR DPMSCapable (__libmansuffix__),

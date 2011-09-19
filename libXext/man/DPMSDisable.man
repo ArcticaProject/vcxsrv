@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -47,18 +47,18 @@ DPMSDisable \- disables DPMS on the specified display
 Specifies the connection to the X server
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSDisable 
+The
+.I DPMSDisable
 function disables Display Power Management Signaling (DPMS) on the specified
-display.  When disabled, DPMS sets the display to DPMSModeOn.  If 
-.I DPMSDisable 
-is invoked on a display with DPMS already disabled or on a display which does 
+display.  When disabled, DPMS sets the display to DPMSModeOn.  If
+.I DPMSDisable
+is invoked on a display with DPMS already disabled or on a display which does
 not support DPMS, no change is made and no error is returned.
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSDisable 
+The
+.I DPMSDisable
 function always returns TRUE.
 .SH "SEE ALSO"
 .BR DPMSCapable (__libmansuffix__),

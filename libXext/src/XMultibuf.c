@@ -77,18 +77,18 @@ static /* const */ char *multibuf_error_list[] = {
 };
 
 static XEXT_GENERATE_FIND_DISPLAY (find_display, multibuf_info,
-				   multibuf_extension_name, 
-				   &multibuf_extension_hooks, 
+				   multibuf_extension_name,
+				   &multibuf_extension_hooks,
 				   MultibufferNumberEvents, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY (close_display, multibuf_info)
 
 static XEXT_GENERATE_ERROR_STRING (error_string, multibuf_extension_name,
-				   MultibufferNumberErrors, 
+				   MultibufferNumberErrors,
 				   multibuf_error_list)
 
 /*
- * wire_to_event - convert a wire event in network format to a C 
+ * wire_to_event - convert a wire event in network format to a C
  * event structure
  */
 static Bool wire_to_event (Display *dpy, XEvent *libevent, xEvent *netevent)
@@ -102,7 +102,7 @@ static Bool wire_to_event (Display *dpy, XEvent *libevent, xEvent *netevent)
 	{
 	    XmbufClobberNotifyEvent *ev;
 	    xMbufClobberNotifyEvent *event;
-    
+
     	    ev = (XmbufClobberNotifyEvent *) libevent;
 	    event = (xMbufClobberNotifyEvent *) netevent;
     	    ev->type = event->type & 0x7f;
@@ -147,7 +147,7 @@ static Status event_to_wire (Display *dpy, XEvent *libevent, xEvent *netevent)
 	{
 	    XmbufClobberNotifyEvent *ev;
 	    xMbufClobberNotifyEvent *event;
-    
+
     	    ev = (XmbufClobberNotifyEvent *) libevent;
 	    event = (xMbufClobberNotifyEvent *) netevent;
     	    event->type = ev->type;
@@ -226,15 +226,15 @@ static XmbufBufferInfo *read_buffer_info (Display *dpy, int nbufs)
  *****************************************************************************/
 
 
-/* 
- * XmbufQueryExtension - 
+/*
+ * XmbufQueryExtension -
  * 	Returns True if the multibuffering/stereo extension is available
  * 	on the given display.  If the extension exists, the value of the
  * 	first event code (which should be added to the event type constants
  * 	MultibufferClobberNotify and MultibufferUpdateNotify to get the
  * 	actual values) is stored into event_base and the value of the first
  * 	error code (which should be added to the error type constant
- * 	MultibufferBadBuffer to get the actual value) is stored into 
+ * 	MultibufferBadBuffer to get the actual value) is stored into
  * 	error_base.
  */
 Bool XmbufQueryExtension (
@@ -242,7 +242,7 @@ Bool XmbufQueryExtension (
     int *event_base_return, int *error_base_return)
 {
     XExtDisplayInfo *info = find_display (dpy);
-    
+
     if (XextHasExtension (info)) {
 	*event_base_return = info->codes->first_event;
 	*error_base_return = info->codes->first_error;
@@ -253,7 +253,7 @@ Bool XmbufQueryExtension (
 }
 
 
-/* 
+/*
  * XmbufGetVersion -
  * 	Gets the major and minor version numbers of the extension.  The return
  * 	value is zero if an error occurs or non-zero if no error happens.
@@ -285,7 +285,7 @@ Status XmbufGetVersion (
 
 
 /*
- * XmbufCreateBuffers - 
+ * XmbufCreateBuffers -
  * 	Requests that "count" buffers be created with the given update_action
  * 	and update_hint and be associated with the indicated window.  The
  * 	number of buffers created is returned (zero if an error occurred)
@@ -329,7 +329,7 @@ int XmbufCreateBuffers (
 
 
 /*
- * XmbufDestroyBuffers - 
+ * XmbufDestroyBuffers -
  * 	Destroys the buffers associated with the given window.
  */
 void XmbufDestroyBuffers (Display *dpy, Window window)
@@ -348,7 +348,7 @@ void XmbufDestroyBuffers (Display *dpy, Window window)
 
 
 /*
- * XmbufDisplayBuffers - 
+ * XmbufDisplayBuffers -
  * 	Displays the indicated buffers their appropriate windows within
  * 	max_delay milliseconds after min_delay milliseconds have passed.
  * 	No two buffers may be associated with the same window or else a Match
@@ -378,7 +378,7 @@ void XmbufDisplayBuffers (
 
 
 /*
- * XmbufGetWindowAttributes - 
+ * XmbufGetWindowAttributes -
  * 	Gets the multibuffering attributes that apply to all buffers associated
  * 	with the given window.  Returns non-zero on success and zero if an
  * 	error occurs.
@@ -402,7 +402,7 @@ Status XmbufGetWindowAttributes (
 	SyncHandle ();
 	return 0;
     }
-    attr->buffers = (Multibuffer *) NULL; 
+    attr->buffers = (Multibuffer *) NULL;
     if ((attr->nbuffers = rep.length)) {
 	int nbytes = rep.length * sizeof(Multibuffer);
 	attr->buffers = (Multibuffer *) Xmalloc((unsigned) nbytes);
@@ -427,7 +427,7 @@ Status XmbufGetWindowAttributes (
 
 
 /*
- * XmbufChangeWindowAttributes - 
+ * XmbufChangeWindowAttributes -
  * 	Sets the multibuffering attributes that apply to all buffers associated
  * 	with the given window.  This is currently limited to the update_hint.
  */
@@ -450,7 +450,7 @@ void XmbufChangeWindowAttributes (
 	unsigned long *v = values;
 	unsigned int nvalues;
 
-	if (valuemask & MultibufferWindowUpdateHint) 
+	if (valuemask & MultibufferWindowUpdateHint)
 	  *v++ = attr->update_hint;
 	req->length += (nvalues = v - values);
 	nvalues <<= 2;			/* watch out for macros... */
@@ -462,7 +462,7 @@ void XmbufChangeWindowAttributes (
 
 
 /*
- * XmbufGetBufferAttributes - 
+ * XmbufGetBufferAttributes -
  * 	Gets the attributes for the indicated buffer.  Returns non-zero on
  * 	success and zero if an error occurs.
  */
@@ -497,7 +497,7 @@ Status XmbufGetBufferAttributes (
 
 
 /*
- * XmbufChangeBufferAttributes - 
+ * XmbufChangeBufferAttributes -
  * 	Sets the attributes for the indicated buffer.  This is currently
  * 	limited to the event_mask.
  */
@@ -533,15 +533,15 @@ void XmbufChangeBufferAttributes (
 
 
 /*
- * XmbufGetScreenInfo - 
+ * XmbufGetScreenInfo -
  * 	Gets the parameters controlling how mono and stereo windows may be
- * 	created on the indicated screen.  The numbers of sets of visual and 
- * 	depths are returned in nmono_return and nstereo_return.  If 
+ * 	created on the indicated screen.  The numbers of sets of visual and
+ * 	depths are returned in nmono_return and nstereo_return.  If
  * 	nmono_return is greater than zero, then mono_info_return is set to
  * 	the address of an array of XmbufBufferInfo structures describing the
  * 	various visuals and depths that may be used.  Otherwise,
  * 	mono_info_return is set to NULL.  Similarly, stereo_info_return is
- * 	set according to nstereo_return.  The storage returned in 
+ * 	set according to nstereo_return.  The storage returned in
  * 	mono_info_return and stereo_info_return may be released by XFree.
  * 	If no errors are encounted, non-zero will be returned.
  */
@@ -595,10 +595,10 @@ Status XmbufGetScreenInfo (
 
 
 /*
- * XmbufCreateStereoWindow - 
+ * XmbufCreateStereoWindow -
  * 	Creates a stereo window in the same way that XCreateWindow creates
  * 	a mono window (in fact, use the same code, except for the request)
- *      and returns the left and right buffers that may be 
+ *      and returns the left and right buffers that may be
  */
 Window XmbufCreateStereoWindow (
     Display *dpy,

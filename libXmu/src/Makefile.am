@@ -80,8 +80,8 @@ lintlibdir = $(libdir)
 lintlib_DATA = $(LINTLIB) $(LINTLIBUU)
 
 $(LINTLIB): $(libXmu_la_SOURCES)
-	$(LINT) -y -oXmu -x $(ALL_LINT_FLAGS) $(libXmu_la_SOURCES) 
+	$(LINT) -y -oXmu -x $(ALL_LINT_FLAGS) $(libXmu_la_SOURCES)
 
 $(LINTLIBUU): $(libXmuu_la_SOURCES)
-	$(LINT) -y -oXmuu -x $(ALL_LINT_FLAGS) $(libXmuu_la_SOURCES) 
+	$(LINT) -y -oXmuu -x $(ALL_LINT_FLAGS) $(libXmuu_la_SOURCES)
 endif MAKE_LINT_LIB

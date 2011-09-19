@@ -25,14 +25,14 @@
 .ns
 .TP \\$1
 ..
-.TH XINERAMA __libmansuffix__ __vendorversion__ 
+.TH XINERAMA __libmansuffix__ __vendorversion__
 .SH NAME
 Xinerama \- API for Xinerama extension to X11 Protocol
 .SH SYNOPSIS
 \&#include <X11/extensions/Xinerama.h>
-.nf    
+.nf
 .sp
-Bool XineramaQueryExtension \^(\^Display *\fIdpy\fP, 
+Bool XineramaQueryExtension \^(\^Display *\fIdpy\fP,
 	int *\fIevent_base_return\fP, int *\fIerror_base_return\fP\^);
 .sp
 Status XineramaQueryVersion \^(\^Display *\fIdpy\fP,
@@ -41,7 +41,7 @@ Status XineramaQueryVersion \^(\^Display *\fIdpy\fP,
 .sp
 Bool XineramaIsActive \^(\^Display *\fIdpy\fP\^);
 .sp
-XineramaScreenInfo * XineramaQueryScreens \^(\^Display *\fIdpy\fP, 
+XineramaScreenInfo * XineramaQueryScreens \^(\^Display *\fIdpy\fP,
 	int *\fInumber\fP\^);
 .fi
 .SH ARGUMENTS
@@ -59,7 +59,7 @@ Returns the minor version supported by the server
 Returns the number of entries in the returned XineramaScreenInfo array.
 .SH DESCRIPTION
 .B Xinerama
-is a simple library designed to interface the Xinerama Extension for 
+is a simple library designed to interface the Xinerama Extension for
 retrieving information about physical output devices which may be combined
 into a single logical X screen.
 
@@ -68,8 +68,8 @@ into a single logical X screen.
 .SS \fBXineramaQueryExtension()\fR
 
 .LP
-The XineramaQueryExtension function queries the Xserver to determine the 
-availability of the Xinerama Extension. If the extension is available, the 
+The XineramaQueryExtension function queries the Xserver to determine the
+availability of the Xinerama Extension. If the extension is available, the
 return value is True, and event_base_return and error_base_return are set to
 the base event number and base error number for the extension, respectively.
 Otherwise, the return value is False, and the values of event_base_return and
@@ -82,7 +82,7 @@ error_base_return are undefined.
 The XineramaQueryVersion function returns the version of the Xinerama extension
 implemented by the Xserver. The version is returned in major_version_return
 and minor_version_return. The major version will be incremented for protocol
-incompatible changes, and the minor version will be incremented for small, 
+incompatible changes, and the minor version will be incremented for small,
 upwardly compatible changes.
 .LP
 If the Xinerama library is compatible with the version returned by the
@@ -95,8 +95,8 @@ incompatible, it returns zero.
 .SS \fBXineramaIsActive()\fR
 
 .LP
-The XineramaIsActive function returns a Boolean operator used to determine if 
-Xinerama is activated on the screen. Returns True for active and False for 
+The XineramaIsActive function returns a Boolean operator used to determine if
+Xinerama is activated on the screen. Returns True for active and False for
 not active.
 .sp
 
@@ -107,10 +107,10 @@ The \fBXineramaQueryScreens()\fR function returns info about each
 individual output device within the Xinerama Screen.  The integer
 pointed to by the \fInumber\fR argument is updated to the number of
 output devices listed in the returned array of \fIXineramaScreenInfo\fR
-structures.  \fBXineramaQueryScreens()\fR returns NULL and sets \fInumber\fR 
+structures.  \fBXineramaQueryScreens()\fR returns NULL and sets \fInumber\fR
 to 0 if Xinerama is not active.
 
-The pointer returned should be released with XFree(__libmansuffix__) 
+The pointer returned should be released with XFree(__libmansuffix__)
 when no longer needed.
 .sp
 

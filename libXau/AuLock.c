@@ -76,7 +76,7 @@ long	dead)
 	    (void) unlink (link_name);
 	}
     }
-    
+
     while (retries > 0) {
 	if (creat_fd == -1) {
 	    creat_fd = open (creat_name, O_WRONLY | O_CREAT | O_EXCL, 0600);

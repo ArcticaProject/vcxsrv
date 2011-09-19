@@ -106,7 +106,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 	return;
 
     face = XftLockFace (&font->public);
-    
+
     if (!face)
 	return;
 
@@ -137,7 +137,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 	xftg = font->glyphs[glyphindex];
 	if (!xftg)
 	    continue;
-	
+
 	if (XftDebug() & XFT_DBG_CACHE)
 	    _XftFontValidateMemory (dpy, pub);
 	/*
@@ -147,7 +147,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 	 */
 	if (xftg->glyph_memory)
 	    continue;
-	
+
 	error = FT_Load_Glyph (face, glyphindex, font->info.load_flags);
 	if (error)
 	{
@@ -168,7 +168,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 #define CEIL(x)	    (((x)+63) & -64)
 #define TRUNC(x)    ((x) >> 6)
 #define ROUND(x)    (((x)+32) & -64)
-		
+
 	glyphslot = face->glyph;
 
 #if HAVE_FT_GLYPHSLOT_EMBOLDEN
@@ -181,7 +181,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 	/*
 	 * Compute glyph metrics from FreeType information
 	 */
-	if(font->info.transform && glyphslot->format != ft_glyph_format_bitmap) 
+	if(font->info.transform && glyphslot->format != ft_glyph_format_bitmap)
 	{
 	    /*
 	     * calculate the true width by transforming all four corners.
@@ -192,9 +192,9 @@ XftFontLoadGlyphs (Display	    *dpy,
 		for(yc = 0; yc <= 1; yc++) {
 		    vector.x = glyphslot->metrics.horiBearingX + xc * glyphslot->metrics.width;
 		    vector.y = glyphslot->metrics.horiBearingY - yc * glyphslot->metrics.height;
-		    FT_Vector_Transform(&vector, &font->info.matrix);   
+		    FT_Vector_Transform(&vector, &font->info.matrix);
 		    if (XftDebug() & XFT_DBG_GLYPH)
-			printf("Trans %d %d: %d %d\n", (int) xc, (int) yc, 
+			printf("Trans %d %d: %d %d\n", (int) xc, (int) yc,
 			       (int) vector.x, (int) vector.y);
 		    if(xc == 0 && yc == 0) {
 			left = right = vector.x;
@@ -235,7 +235,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		if (TRUNC(bottom) > font->public.max_advance_width)
 		{
 		    int adjust;
-    
+
 		    adjust = bottom - (font->public.max_advance_width << 6);
 		    if (adjust > top)
 			adjust = top;
@@ -249,7 +249,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		if (TRUNC(right) > font->public.max_advance_width)
 		{
 		    int adjust;
-    
+
 		    adjust = right - (font->public.max_advance_width << 6);
 		    if (adjust > left)
 			adjust = left;
@@ -309,14 +309,14 @@ XftFontLoadGlyphs (Display	    *dpy,
 	    xftg->metrics.xOff = TRUNC(ROUND(glyphslot->advance.x));
 	    xftg->metrics.yOff = -TRUNC(ROUND(glyphslot->advance.y));
 	}
-	
+
 	/*
 	 * If the glyph is relatively large (> 1% of server memory),
 	 * don't send it until necessary
 	 */
 	if (!need_bitmaps && size > info->max_glyph_memory / 100)
 	    continue;
-	
+
 	/*
 	 * Make sure there's enough buffer space for the glyph
 	 */
@@ -343,9 +343,9 @@ XftFontLoadGlyphs (Display	    *dpy,
 		ftbit.pixel_mode = ft_pixel_mode_grays;
 	    else
 		ftbit.pixel_mode = ft_pixel_mode_mono;
-	    
+
 	    ftbit.buffer     = bufBitmap;
-	    
+
 	    if (subpixel)
 		FT_Outline_Transform (&glyphslot->outline, &matrix);
 
@@ -407,7 +407,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 			(int) glyphindex);
 	    continue;
 	}
-	
+
 	if (XftDebug() & XFT_DBG_GLYPH)
 	{
 	    printf ("glyph %d:\n", (int) glyphindex);
@@ -426,7 +426,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		line = bufBitmap;
 		for (y = 0; y < height * vmul; y++)
 		{
-		    if (font->info.antialias) 
+		    if (font->info.antialias)
 		    {
 			static char    den[] = { " .:;=+*#" };
 			for (x = 0; x < pitch; x++)
@@ -464,7 +464,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 	    int		    rf, gf, bf;
 	    int		    s;
 	    int		    o, os;
-	    
+
 	    /*
 	     * Filter the glyph to soften the color fringes
 	     */
@@ -525,7 +525,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		    *out++ = (green << 24) | (red << 16) | (green << 8) | blue;
 		}
 	    }
-	    
+
 	    xftg->glyph_memory = sizergba + sizeof (XftGlyph);
 	    if (font->format)
 	    {
@@ -534,7 +534,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		if (ImageByteOrder (dpy) != XftNativeByteOrder ())
 		    XftSwapCARD32 ((CARD32 *) bufBitmapRgba, sizergba >> 2);
 		XRenderAddGlyphs (dpy, font->glyphset, &glyph,
-				  &xftg->metrics, 1, 
+				  &xftg->metrics, 1,
 				  (char *) bufBitmapRgba, sizergba);
 	    }
 	    else
@@ -580,7 +580,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		if (!font->glyphset)
 		    font->glyphset = XRenderCreateGlyphSet (dpy, font->format);
 		XRenderAddGlyphs (dpy, font->glyphset, &glyph,
-				  &xftg->metrics, 1, 
+				  &xftg->metrics, 1,
 				  (char *) bufBitmap, size);
 	    }
 	    else
@@ -622,7 +622,7 @@ XftFontUnloadGlyphs (Display		*dpy,
     FT_UInt	    glyphindex;
     Glyph	    glyphBuf[1024];
     int		    nused;
-    
+
     nused = 0;
     while (nglyph--)
     {
@@ -656,7 +656,7 @@ XftFontUnloadGlyphs (Display		*dpy,
 	free (xftg);
 	XftMemFree (XFT_MEM_GLYPH, sizeof (XftGlyph));
 	font->glyphs[glyphindex] = NULL;
-    }    
+    }
     if (font->glyphset && nused)
 	XRenderFreeGlyphs (dpy, font->glyphset, glyphBuf, nused);
 }
@@ -672,7 +672,7 @@ XftFontCheckGlyph (Display	*dpy,
     XftFontInt	    *font = (XftFontInt *) pub;
     XftGlyph	    *xftg;
     int		    n;
-    
+
     if (glyph >= font->num_glyphs)
 	return FcFalse;
     xftg = font->glyphs[glyph];
@@ -715,14 +715,14 @@ XftCharExists (Display	    *dpy,
 #define Missing	    ((FT_UInt) ~0)
 
 _X_EXPORT FT_UInt
-XftCharIndex (Display	    *dpy, 
+XftCharIndex (Display	    *dpy,
 	      XftFont	    *pub,
 	      FcChar32	    ucs4)
 {
     XftFontInt	*font = (XftFontInt *) pub;
     FcChar32	ent, offset;
     FT_Face	face;
-    
+
     if (!font->hash_value)
 	return 0;
 
@@ -765,7 +765,7 @@ _XftFontUncacheGlyph (Display *dpy, XftFont *pub)
     unsigned long   glyph_memory;
     FT_UInt	    glyphindex;
     XftGlyph	    *xftg;
-    
+
     if (!font->glyph_memory)
 	return;
     if (font->use_free_glyphs)
@@ -781,7 +781,7 @@ _XftFontUncacheGlyph (Display *dpy, XftFont *pub)
 	}
 	glyph_memory = 0;
     }
-	
+
     if (XftDebug() & XFT_DBG_CACHE)
 	_XftFontValidateMemory (dpy, pub);
     for (glyphindex = 0; glyphindex < font->num_glyphs; glyphindex++)

@@ -115,14 +115,14 @@ typedef struct _XftUcsHash {
 typedef struct _XftFtFile {
     struct _XftFtFile	*next;
     int			ref;	    /* number of font infos using this file */
-    
+
     char		*file;	    /* file name */
     int			id;	    /* font index within that file */
 
     FT_F26Dot6		xsize;	    /* current xsize setting */
     FT_F26Dot6		ysize;	    /* current ysize setting */
     FT_Matrix		matrix;	    /* current matrix setting */
-    
+
     int			lock;	    /* lock count; can't unload unless 0 */
     FT_Face		face;	    /* pointer to face; only valid when lock */
 } XftFtFile;
@@ -337,7 +337,7 @@ FcFontSet *XftListFontSets (FcFontSet **sets, int nsets, FcPattern *p, FcObjectS
 void
 XftRectCore (XftDraw		*draw,
 	     _Xconst XftColor	*color,
-	     int		x, 
+	     int		x,
 	     int		y,
 	     unsigned int	width,
 	     unsigned int	height);
@@ -401,7 +401,7 @@ FcBool
 XftDrawRenderPrepare (XftDraw	*draw);
 
 /* xftextent.c */
-    
+
 /* xftfont.c */
 
 /* xftfreetype.c */
@@ -436,7 +436,7 @@ XftListFontsPatternObjects (Display	    *dpy,
 			    FcObjectSet    *os);
 
 /* xftname.c */
-void 
+void
 _XftNameInit (void);
 
 /* xftrender.c */

@@ -1,4 +1,4 @@
-/* 
+/*
 
 Copyright 1989, 1998  The Open Group
 
@@ -54,7 +54,7 @@ static Status valid_args(XVisualInfo*, unsigned long, unsigned long,
  * given standard property name.  Return a pointer to an XStandardColormap
  * structure which describes the newly created colormap, upon success.
  * Upon failure, return NULL.
- * 
+ *
  * XmuStandardColormap() calls XmuCreateColormap() to create the map.
  *
  * Resources created by this function are not made permanent; that is the
@@ -83,7 +83,7 @@ XmuStandardColormap(Display *dpy, int screen, VisualID visualid,
     int			n;
 
     /* Match the required visual information to an actual visual */
-    vinfo_template.visualid = visualid;	
+    vinfo_template.visualid = visualid;
     vinfo_template.screen = screen;
     vinfo_template.depth = depth;
     vinfo_mask = VisualIDMask | VisualScreenMask | VisualDepthMask;
@@ -120,7 +120,7 @@ XmuStandardColormap(Display *dpy, int screen, VisualID visualid,
     stdcmap->red_max = red_max;
     stdcmap->green_max = green_max;
     stdcmap->blue_max = blue_max;
-    if (property == XA_RGB_GRAY_MAP) 
+    if (property == XA_RGB_GRAY_MAP)
 	stdcmap->red_mult = stdcmap->green_mult = stdcmap->blue_mult = 1;
     else if (vinfo->class == TrueColor || vinfo->class == DirectColor) {
 	stdcmap->red_mult = lowbit(vinfo->red_mask);
@@ -149,7 +149,7 @@ XmuStandardColormap(Display *dpy, int screen, VisualID visualid,
 	    XFreeColormap(dpy, stdcmap->colormap);
 	else if (stdcmap->killid != None)
 	    XFreePixmap(dpy, stdcmap->killid);
-	
+
 	XFree((char *) stdcmap);
 	return (XStandardColormap *) NULL;
     }
@@ -197,7 +197,7 @@ valid_args(XVisualInfo *vinfo, unsigned long red_max, unsigned long green_max,
 	if (ncolors > vinfo->colormap_size)
 	    return 0;
     }
-    
+
     /* Determine that the allocation and visual make sense for the property */
 
     switch (property)
@@ -214,7 +214,7 @@ valid_args(XVisualInfo *vinfo, unsigned long red_max, unsigned long green_max,
 	if (green_max == 0)
 	    return 0;
 	break;
-      case XA_RGB_BLUE_MAP:	
+      case XA_RGB_BLUE_MAP:
 	if (blue_max == 0)
 	    return 0;
 	break;

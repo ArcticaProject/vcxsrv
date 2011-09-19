@@ -61,5 +61,5 @@ lintlibdir = $(libdir)
 lintlib_DATA = $(LINTLIB)
 
 $(LINTLIB): $(libXext_la_SOURCES)
-	$(LINT) -y -oXext -x $(ALL_LINT_FLAGS) $(libXext_la_SOURCES) 
+	$(LINT) -y -oXext -x $(ALL_LINT_FLAGS) $(libXext_la_SOURCES)
 endif MAKE_LINT_LIB

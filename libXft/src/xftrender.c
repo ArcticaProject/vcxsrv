@@ -55,10 +55,10 @@ XftGlyphRender (Display		*dpy,
     unsigned int    char_local[NUM_LOCAL];
     unsigned int    *chars;
     FcBool	    glyphs_loaded;
-    
+
     if (!font->format)
 	return;
-    
+
     /*
      * Load missing glyphs
      */
@@ -75,7 +75,7 @@ XftGlyphRender (Display		*dpy,
     }
     if (nmissing)
 	XftFontLoadGlyphs (dpy, pub, FcTrue, missing, nmissing);
-    
+
     if (!font->glyphset)
 	goto bail1;
     if (max < 0x100)
@@ -169,12 +169,12 @@ XftGlyphSpecRender (Display		    *dpy,
     FcBool	    glyphs_loaded;
     int		    nelt;
     int		    x, y;
-    
+
     if (!font->format)
 	return;
     if (!nglyphs)
 	return;
-    
+
     /*
      * Load missing glyphs
      */
@@ -192,7 +192,7 @@ XftGlyphSpecRender (Display		    *dpy,
     }
     if (nmissing)
 	XftFontLoadGlyphs (dpy, pub, FcTrue, missing, nmissing);
-    
+
     if (!font->glyphset)
 	goto bail1;
 
@@ -224,7 +224,7 @@ XftGlyphSpecRender (Display		    *dpy,
     char8 = (char *) chars;
     char16 = (unsigned short *) chars;
     char32 = (unsigned int *) chars;
-    
+
     /*
      * Compute the number of glyph elts needed
      */
@@ -249,7 +249,7 @@ XftGlyphSpecRender (Display		    *dpy,
 	/* Substitute default for non-existant glyphs */
 	if (g >= font->num_glyphs || !font->glyphs[g])
 	    g = 0;
-	/* 
+	/*
 	 * check to see if the glyph is placed where it would
 	 * fall using the normal spacing
 	 */
@@ -354,7 +354,7 @@ XftCharSpecRender (Display		*dpy,
 		   Picture		src,
 		   XftFont		*pub,
 		   Picture		dst,
-		   int			srcx, 
+		   int			srcx,
 		   int			srcy,
 		   _Xconst XftCharSpec	*chars,
 		   int			len)
@@ -396,7 +396,7 @@ static XRenderPictFormat *
 XftPreferFormat (Display *dpy, XRenderPictFormat *a, XRenderPictFormat *b)
 {
     XRenderPictFormat	*prefer = NULL;
-    
+
     if (a == b)
 	prefer = a;
     else if (XftIsARGBFormat(a) != XftIsARGBFormat(b))
@@ -439,10 +439,10 @@ XftGlyphFontSpecRender (Display			    *dpy,
     FcBool	    glyphs_loaded;
     int		    nelt;
     int		    x, y;
-    
+
     if (!nglyphs)
 	return;
-    
+
     /*
      * Load missing glyphs.  Have to load them
      * one at a time in case the font changes
@@ -467,7 +467,7 @@ XftGlyphFontSpecRender (Display			    *dpy,
 	if (!font->glyphset)
 	    goto bail1;
     }
-    
+
     /*
      * See what encoding size is needed
      */
@@ -496,7 +496,7 @@ XftGlyphFontSpecRender (Display			    *dpy,
     char8 = (char *) chars;
     char16 = (unsigned short *) chars;
     char32 = (unsigned int *) chars;
-    
+
     /*
      * Compute the number of glyph elts needed
      */
@@ -531,7 +531,7 @@ XftGlyphFontSpecRender (Display			    *dpy,
 	/* Substitute default for non-existant glyphs */
 	if (g >= font->num_glyphs || !font->glyphs[g])
 	    g = 0;
-	/* 
+	/*
 	 * check to see if the glyph is placed where it would
 	 * fall using the normal spacing
 	 */
@@ -571,7 +571,7 @@ XftGlyphFontSpecRender (Display			    *dpy,
     {
 	XftFont	    *pub = glyphs[i].font;
 	XftFontInt  *font = (XftFontInt *) pub;
-	
+
 	g = glyphs[i].glyph;
 	/* Substitute default for non-existant glyphs */
 	if (g >= font->num_glyphs || !font->glyphs[g])
@@ -699,7 +699,7 @@ XftTextRender8 (Display		*dpy,
     }
     for (i = 0; i < len; i++)
 	glyphs[i] = XftCharIndex (dpy, pub, string[i]);
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);
@@ -731,7 +731,7 @@ XftTextRender16 (Display	    *dpy,
     }
     for (i = 0; i < len; i++)
 	glyphs[i] = XftCharIndex (dpy, pub, string[i]);
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);
@@ -762,9 +762,9 @@ XftTextRender16BE (Display	    *dpy,
 	    return;
     }
     for (i = 0; i < len; i++)
-	glyphs[i] = XftCharIndex (dpy, pub, 
+	glyphs[i] = XftCharIndex (dpy, pub,
 				  (string[i*2]<<8) | string[i*2+1]);
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);
@@ -795,9 +795,9 @@ XftTextRender16LE (Display	    *dpy,
 	    return;
     }
     for (i = 0; i < len; i++)
-	glyphs[i] = XftCharIndex (dpy, pub, 
+	glyphs[i] = XftCharIndex (dpy, pub,
 				  string[i*2] | (string[i*2+1]<<8));
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);
@@ -829,7 +829,7 @@ XftTextRender32 (Display	    *dpy,
     }
     for (i = 0; i < len; i++)
 	glyphs[i] = XftCharIndex (dpy, pub, string[i]);
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);
@@ -860,12 +860,12 @@ XftTextRender32BE (Display	    *dpy,
 	    return;
     }
     for (i = 0; i < len; i++)
-	glyphs[i] = XftCharIndex (dpy, pub, 
+	glyphs[i] = XftCharIndex (dpy, pub,
 				  (string[i*4] << 24) |
 				  (string[i*4+1] << 16) |
 				  (string[i*4+2] << 8) |
 				  (string[i*4+3]));
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);
@@ -896,12 +896,12 @@ XftTextRender32LE (Display	    *dpy,
 	    return;
     }
     for (i = 0; i < len; i++)
-	glyphs[i] = XftCharIndex (dpy, pub, 
+	glyphs[i] = XftCharIndex (dpy, pub,
 				  (string[i*4]) |
 				  (string[i*4+1] << 8) |
 				  (string[i*4+2] << 16) |
 				  (string[i*4+3] << 24));
-    XftGlyphRender (dpy, op, src, pub, dst, 
+    XftGlyphRender (dpy, op, src, pub, dst,
 		     srcx, srcy, x, y, glyphs, len);
     if (glyphs != glyphs_local)
 	free (glyphs);

@@ -63,7 +63,7 @@ static /* const */ XExtensionHooks mit_extension_hooks = {
     NULL				/* error_string */
 };
 
-static XEXT_GENERATE_FIND_DISPLAY (find_display, mit_info, mit_extension_name, 
+static XEXT_GENERATE_FIND_DISPLAY (find_display, mit_info, mit_extension_name,
 				   &mit_extension_hooks, MITMiscNumberEvents,
 				   NULL)
 

@@ -44,6 +44,7 @@
 #include "texcompress.h"
 #include "texcompress_s3tc.h"
 #include "texstore.h"
+#include "swrast/s_context.h"
 
 
 #if FEATURE_texture_s3tc
@@ -392,14 +393,14 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
 
 
 static void
-fetch_texel_2d_rgb_dxt1( const struct gl_texture_image *texImage,
+fetch_texel_2d_rgb_dxt1( const struct swrast_texture_image *texImage,
                          GLint i, GLint j, GLint k, GLchan *texel )
 {
    (void) k;
    if (fetch_ext_rgb_dxt1) {
       ASSERT (sizeof(GLchan) == sizeof(GLubyte));
-      fetch_ext_rgb_dxt1(texImage->RowStride,
-                         (GLubyte *)(texImage)->Data, i, j, texel);
+      fetch_ext_rgb_dxt1(texImage->Base.RowStride,
+                         (GLubyte *)(texImage)->Base.Data, i, j, texel);
    }
    else
       _mesa_debug(NULL, "attempted to decode s3tc texture without library available: fetch_texel_2d_rgb_dxt1");
@@ -407,7 +408,7 @@ fetch_texel_2d_rgb_dxt1( const struct gl_texture_image *texImage,
 
 
 void
-_mesa_fetch_texel_2d_f_rgb_dxt1(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_rgb_dxt1(const struct swrast_texture_image *texImage,
                                 GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */
@@ -421,13 +422,13 @@ _mesa_fetch_texel_2d_f_rgb_dxt1(const struct gl_texture_image *texImage,
 
 
 static void
-fetch_texel_2d_rgba_dxt1( const struct gl_texture_image *texImage,
+fetch_texel_2d_rgba_dxt1( const struct swrast_texture_image *texImage,
                           GLint i, GLint j, GLint k, GLchan *texel )
 {
    (void) k;
    if (fetch_ext_rgba_dxt1) {
-      fetch_ext_rgba_dxt1(texImage->RowStride,
-                          (GLubyte *)(texImage)->Data, i, j, texel);
+      fetch_ext_rgba_dxt1(texImage->Base.RowStride,
+                          (GLubyte *)(texImage)->Base.Data, i, j, texel);
    }
    else
       _mesa_debug(NULL, "attempted to decode s3tc texture without library available: fetch_texel_2d_rgba_dxt1\n");
@@ -435,7 +436,7 @@ fetch_texel_2d_rgba_dxt1( const struct gl_texture_image *texImage,
 
 
 void
-_mesa_fetch_texel_2d_f_rgba_dxt1(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_rgba_dxt1(const struct swrast_texture_image *texImage,
                                  GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */
@@ -449,13 +450,14 @@ _mesa_fetch_texel_2d_f_rgba_dxt1(const struct gl_texture_image *texImage,
 
 
 static void
-fetch_texel_2d_rgba_dxt3( const struct gl_texture_image *texImage,
+fetch_texel_2d_rgba_dxt3( const struct swrast_texture_image *texImage,
                           GLint i, GLint j, GLint k, GLchan *texel )
 {
    (void) k;
    if (fetch_ext_rgba_dxt3) {
       ASSERT (sizeof(GLchan) == sizeof(GLubyte));
-      fetch_ext_rgba_dxt3(texImage->RowStride, (GLubyte *)(texImage)->Data,
+      fetch_ext_rgba_dxt3(texImage->Base.RowStride,
+                          (GLubyte *)(texImage)->Base.Data,
                           i, j, texel);
    }
    else
@@ -464,7 +466,7 @@ fetch_texel_2d_rgba_dxt3( const struct gl_texture_image *texImage,
 
 
 void
-_mesa_fetch_texel_2d_f_rgba_dxt3(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_rgba_dxt3(const struct swrast_texture_image *texImage,
                                  GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */
@@ -478,12 +480,13 @@ _mesa_fetch_texel_2d_f_rgba_dxt3(const struct gl_texture_image *texImage,
 
 
 static void
-fetch_texel_2d_rgba_dxt5( const struct gl_texture_image *texImage,
+fetch_texel_2d_rgba_dxt5( const struct swrast_texture_image *texImage,
                           GLint i, GLint j, GLint k, GLchan *texel )
 {
    (void) k;
    if (fetch_ext_rgba_dxt5) {
-      fetch_ext_rgba_dxt5(texImage->RowStride, (GLubyte *)(texImage)->Data,
+      fetch_ext_rgba_dxt5(texImage->Base.RowStride,
+                          (GLubyte *)(texImage)->Base.Data,
                           i, j, texel);
    }
    else
@@ -492,7 +495,7 @@ fetch_texel_2d_rgba_dxt5( const struct gl_texture_image *texImage,
 
 
 void
-_mesa_fetch_texel_2d_f_rgba_dxt5(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_rgba_dxt5(const struct swrast_texture_image *texImage,
                                  GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */
@@ -506,7 +509,7 @@ _mesa_fetch_texel_2d_f_rgba_dxt5(const struct gl_texture_image *texImage,
 
 #if FEATURE_EXT_texture_sRGB
 void
-_mesa_fetch_texel_2d_f_srgb_dxt1( const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_srgb_dxt1( const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel )
 {
    /* just sample as GLchan and convert to float here */
@@ -519,7 +522,7 @@ _mesa_fetch_texel_2d_f_srgb_dxt1( const struct gl_texture_image *texImage,
 }
 
 void
-_mesa_fetch_texel_2d_f_srgba_dxt1(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_srgba_dxt1(const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */
@@ -532,7 +535,7 @@ _mesa_fetch_texel_2d_f_srgba_dxt1(const struct gl_texture_image *texImage,
 }
 
 void
-_mesa_fetch_texel_2d_f_srgba_dxt3(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_srgba_dxt3(const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */
@@ -545,7 +548,7 @@ _mesa_fetch_texel_2d_f_srgba_dxt3(const struct gl_texture_image *texImage,
 }
 
 void
-_mesa_fetch_texel_2d_f_srgba_dxt5(const struct gl_texture_image *texImage,
+_mesa_fetch_texel_2d_f_srgba_dxt5(const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel)
 {
    /* just sample as GLchan and convert to float here */

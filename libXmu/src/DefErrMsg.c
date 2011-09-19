@@ -34,7 +34,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xmu/SysUtil.h>
 
 /*
- * XmuPrintDefaultErrorMessage - print a nice error that looks like the usual 
+ * XmuPrintDefaultErrorMessage - print a nice error that looks like the usual
  * message.  Returns 1 if the caller should consider exitting else 0.
  */
 int
@@ -49,7 +49,7 @@ XmuPrintDefaultErrorMessage(Display *dpy, XErrorEvent *event, FILE *fp)
     XGetErrorText(dpy, event->error_code, buffer, BUFSIZ);
     XGetErrorDatabaseText(dpy, mtype, "XError", "X Error", mesg, BUFSIZ);
     (void) fprintf(fp, "%s:  %s\n  ", mesg, buffer);
-    XGetErrorDatabaseText(dpy, mtype, "MajorCode", "Request Major code %d", 
+    XGetErrorDatabaseText(dpy, mtype, "MajorCode", "Request Major code %d",
 	mesg, BUFSIZ);
     (void) fprintf(fp, mesg, event->request_code);
     if (event->request_code < 128) {
@@ -84,7 +84,7 @@ XmuPrintDefaultErrorMessage(Display *dpy, XErrorEvent *event, FILE *fp)
 	/* kludge, try to find the extension that caused it */
 	buffer[0] = '\0';
 	for (ext = dpy->ext_procs; ext; ext = ext->next) {
-	    if (ext->error_string) 
+	    if (ext->error_string)
 		(*ext->error_string)(dpy, event->error_code, &ext->codes,
 				     buffer, BUFSIZ);
 	    if (buffer[0]) {
@@ -95,7 +95,7 @@ XmuPrintDefaultErrorMessage(Display *dpy, XErrorEvent *event, FILE *fp)
 		ext->codes.first_error < event->error_code &&
 		(!bext || ext->codes.first_error > bext->codes.first_error))
 		bext = ext;
-	}    
+	}
 	if (bext)
 	    XmuSnprintf(buffer, sizeof(buffer), "%s.%d", bext->name,
 			event->error_code - bext->codes.first_error);
@@ -134,7 +134,7 @@ XmuPrintDefaultErrorMessage(Display *dpy, XErrorEvent *event, FILE *fp)
 	(void) fprintf(fp, mesg, event->resourceid);
 	fputs("\n  ", fp);
     }
-    XGetErrorDatabaseText(dpy, mtype, "ErrorSerial", "Error Serial #%d", 
+    XGetErrorDatabaseText(dpy, mtype, "ErrorSerial", "Error Serial #%d",
 	mesg, BUFSIZ);
     (void) fprintf(fp, mesg, event->serial);
     fputs("\n  ", fp);
@@ -166,4 +166,4 @@ XmuSimpleErrorHandler(Display *dpy, XErrorEvent *errorp)
     }
     /* got a "real" X error */
     return XmuPrintDefaultErrorMessage (dpy, errorp, stderr);
-}	
+}

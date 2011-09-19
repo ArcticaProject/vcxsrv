@@ -78,9 +78,9 @@ static /* const */ XExtensionHooks xag_extension_hooks = {
     NULL,				/* error_string */
 };
 
-static XEXT_GENERATE_FIND_DISPLAY (find_display, xag_info, 
-				   xag_extension_name, 
-				   &xag_extension_hooks, 
+static XEXT_GENERATE_FIND_DISPLAY (find_display, xag_info,
+				   xag_extension_name,
+				   &xag_extension_hooks,
 				   0, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY (close_display, xag_info)
@@ -157,7 +157,7 @@ StuffToWire (Display *dpy, struct xagstuff *stuff, xXagCreateReq *req)
     Data32 (dpy, (long*) values, (long) nvalues);
 }
 
-Bool 
+Bool
 XagCreateEmbeddedApplicationGroup(
     Display* dpy,
     VisualID root_visual,
@@ -178,7 +178,7 @@ XagCreateEmbeddedApplicationGroup(
     stuff.default_root = RootWindow (dpy, DefaultScreen(dpy));
     stuff.root_visual = root_visual;
     stuff.default_colormap = default_colormap;
-    stuff.attrib_mask = 
+    stuff.attrib_mask =
 	XagAppGroupLeaderMask | XagSingleScreenMask | XagDefaultRootMask |
 	XagRootVisualMask | XagDefaultColormapMask;
     if (default_colormap != None) {
@@ -198,7 +198,7 @@ XagCreateEmbeddedApplicationGroup(
     return True;
 }
 
-Bool 
+Bool
 XagCreateNonembeddedApplicationGroup(
     Display* dpy,
     XAppGroup* app_group_return)
@@ -358,7 +358,7 @@ XagCreateAssociation(Display* dpy, Window* window_return, void* system_window)
     /* other platforms go here */
 
     /* this whole thing could be arranged better, but since X need
-     * only short-circuit the protocol and WIN32 is the only other 
+     * only short-circuit the protocol and WIN32 is the only other
      * platform the XC supports, it will suffice for now.
      */
     *window_return = *(Window*)system_window;

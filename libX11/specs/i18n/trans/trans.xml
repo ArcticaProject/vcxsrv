@@ -17,12 +17,15 @@
          <affiliation><orgname>FUJITSU LIMITED</orgname></affiliation>
       </author>
    </authorgroup>
-   <copyright><year>1994</year><holder>FUJITSU LIMITED</holder></copyright>
-   <copyright><year>1994</year><holder>X Consortium</holder></copyright>
-
+   <copyright>
+     <year>1994</year>
+     <holder>FUJITSU LIMITED</holder>
+     <holder>X Consortium</holder>
+   </copyright>
 
 
 <abstract>
+<title>Abstract</title>
 <para>
 This specification describes the transport layer interfaces between Xlib and IM Server,
 which makes various channels usable such as X protocol or TCP/IP, DECnet and etc.

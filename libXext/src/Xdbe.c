@@ -1,5 +1,5 @@
 /******************************************************************************
- * 
+ *
  * Copyright (c) 1994, 1995  Hewlett-Packard Company
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -9,10 +9,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -20,12 +20,12 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
+ *
  * Except as contained in this notice, the name of the Hewlett-Packard
  * Company shall not be used in advertising or otherwise to promote the
  * sale, use or other dealings in this Software without prior written
  * authorization from the Hewlett-Packard Company.
- * 
+ *
  *     Xlib DBE code
  *
  *****************************************************************************/
@@ -91,14 +91,14 @@ static char *dbe_error_list[] = {
 };
 
 static XEXT_GENERATE_FIND_DISPLAY (find_display, dbe_info,
-				   dbe_extension_name, 
-				   &dbe_extension_hooks, 
+				   dbe_extension_name,
+				   &dbe_extension_hooks,
 				   DbeNumberEvents, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY (close_display, dbe_info)
 
 static XEXT_GENERATE_ERROR_STRING (error_string, dbe_extension_name,
-				   DbeNumberErrors, 
+				   DbeNumberErrors,
 				   dbe_error_list)
 
 
@@ -108,7 +108,7 @@ static XEXT_GENERATE_ERROR_STRING (error_string, dbe_extension_name,
  *                                                                           *
  *****************************************************************************/
 
-/* 
+/*
  * XdbeQueryExtension -
  *	Sets major_version_return and minor_verion_return to the major and
  *	minor DBE protocol version supported by the server.  If the DBE
@@ -193,7 +193,7 @@ XdbeBackBuffer XdbeAllocateBackBufferName(
 } /* XdbeAllocateBackBufferName() */
 
 /*
- * XdbeDeallocateBackBufferName - 
+ * XdbeDeallocateBackBufferName -
  *	This function frees a drawable ID, buffer, that was obtained via
  *	XdbeAllocateBackBufferName.  The buffer must refer to the back buffer
  *	of the specified window, or a protocol error results.
@@ -218,7 +218,7 @@ Status XdbeDeallocateBackBufferName (
 
 
 /*
- * XdbeSwapBuffers - 
+ * XdbeSwapBuffers -
  *	This function swaps the front and back buffers for a list of windows.
  *	The argument num_windows specifies how many windows are to have their
  *	buffers swapped; it is the number of elements in the swap_info array.
@@ -385,7 +385,7 @@ XdbeScreenVisualInfo *XdbeGetVisualInfo (
             SyncHandle ();
             return NULL;
         }
-    
+
         /* Read the visual info item into the wire structure.  Then copy each
          * element into the library structure.  The element sizes and/or
          * padding may be different in the two structures.

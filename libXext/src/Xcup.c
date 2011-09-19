@@ -62,9 +62,9 @@ static /* const */ XExtensionHooks xcup_extension_hooks = {
     NULL,				/* error_string */
 };
 
-static XEXT_GENERATE_FIND_DISPLAY (find_display, xcup_info, 
-				   xcup_extension_name, 
-				   &xcup_extension_hooks, 
+static XEXT_GENERATE_FIND_DISPLAY (find_display, xcup_info,
+				   xcup_extension_name,
+				   &xcup_extension_hooks,
 				   0, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY (close_display, xcup_info)
@@ -111,7 +111,7 @@ XcupQueryVersion(
 #define TYP_RESERVED_ENTRIES 20
 #endif
 
-Status 
+Status
 XcupGetReservedColormapEntries(
     Display* dpy,
     int screen,

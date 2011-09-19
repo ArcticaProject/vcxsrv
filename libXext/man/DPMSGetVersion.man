@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -30,7 +30,7 @@
 .\" DEALINGS IN THE SOFTWARE.
 .\"
 .\" X Window System is a trademark of The Open Group.
-.\" 
+.\"
 .TH DPMSGetVersion __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
 DPMSGetVersion \- returns the version of the DPMS extension implemented by
@@ -48,7 +48,7 @@ the X server
 .br
       int *\fImajor_version\fP\^,
 .br
-      int *\fIminor_version\fP\^ 
+      int *\fIminor_version\fP\^
 );
 .if n .ti +5n
 .if t .ti +.5i
@@ -64,23 +64,23 @@ Specifies the return location for the extension major version
 Specifies the return location for the extension minor version
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSGetVersion 
+The
+.I DPMSGetVersion
 function returns the version of the Display Power Management Signaling (DPMS)
-extension implemented by the X server.  It returns a major and minor version 
+extension implemented by the X server.  It returns a major and minor version
 number. The major version number will be incremented for protocol incompatible
-changes, and the minor version number will be incremented for small, upward 
+changes, and the minor version number will be incremented for small, upward
 compatible changes.
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSGetVersion 
+The
+.I DPMSGetVersion
 function returns TRUE when the extension is supported and values are returned.
 .TP 15
 FALSE
-The 
-.I DPMSGetVersion 
+The
+.I DPMSGetVersion
 function returns FALSE when the extension is not supported.
 .SH "SEE ALSO"
 .BR DPMSCapable (__libmansuffix__),

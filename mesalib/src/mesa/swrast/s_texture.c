@@ -28,8 +28,73 @@
 
 #include "main/context.h"
 #include "main/fbobject.h"
+#include "main/teximage.h"
 #include "swrast/swrast.h"
 #include "swrast/s_context.h"
+
+
+/**
+ * Allocate a new swrast_texture_image (a subclass of gl_texture_image).
+ * Called via ctx->Driver.NewTextureImage().
+ */
+struct gl_texture_image *
+_swrast_new_texture_image( struct gl_context *ctx )
+{
+   (void) ctx;
+   return (struct gl_texture_image *) CALLOC_STRUCT(swrast_texture_image);
+}
+
+
+/**
+ * Free a swrast_texture_image (a subclass of gl_texture_image).
+ * Called via ctx->Driver.DeleteTextureImage().
+ */
+void
+_swrast_delete_texture_image(struct gl_context *ctx,
+                             struct gl_texture_image *texImage)
+{
+   /* Nothing special for the subclass yet */
+   _mesa_delete_texture_image(ctx, texImage);
+}
+
+
+/**
+ * Called via ctx->Driver.AllocTextureImageBuffer()
+ */
+GLboolean
+_swrast_alloc_texture_image_buffer(struct gl_context *ctx,
+                                   struct gl_texture_image *texImage,
+                                   gl_format format, GLsizei width,
+                                   GLsizei height, GLsizei depth)
+{
+   GLuint bytes = _mesa_format_image_size(format, width, height, depth);
+
+   /* This _should_ be true (revisit if these ever fail) */
+   assert(texImage->Width == width);
+   assert(texImage->Height == height);
+   assert(texImage->Depth == depth);
+
+   assert(!texImage->Data);
+   texImage->Data = _mesa_align_malloc(bytes, 512);
+
+   return texImage->Data != NULL;
+}
+
+
+/**
+ * Called via ctx->Driver.FreeTextureImageBuffer()
+ */
+void
+_swrast_free_texture_image_buffer(struct gl_context *ctx,
+                                  struct gl_texture_image *texImage)
+{
+   if (texImage->Data && !texImage->IsClientData) {
+      _mesa_align_free(texImage->Data);
+   }
+
+   texImage->Data = NULL;
+}
+
 
 /**
  * Error checking for debugging only.

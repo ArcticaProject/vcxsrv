@@ -444,7 +444,7 @@ XmuAreaAnd(XmuArea *dst, XmuArea *src)
 	  Z = Z->next;
 	  if (Z->y >= p->y)
 	    {
-	      XmuScanline *q = XmuNewScanline(Z->y, 0, 0); 
+	      XmuScanline *q = XmuNewScanline(Z->y, 0, 0);
 	      XmuScanlineCopy(q, Z);
 
 	      XmuScanlineAnd(q, top);

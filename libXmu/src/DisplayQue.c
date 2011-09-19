@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -65,7 +65,7 @@ XmuDQCreate(XmuCloseDisplayQueueProc closefunc,
 
 
 /*
- * XmuDQDestroy - free all storage associated with this display queue, 
+ * XmuDQDestroy - free all storage associated with this display queue,
  * optionally invoking the close callbacks.
  */
 

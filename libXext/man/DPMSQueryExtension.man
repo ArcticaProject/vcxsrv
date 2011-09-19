@@ -1,5 +1,5 @@
 .\" Copyright \(co Digital Equipment Corporation, 1996
-.\" 
+.\"
 .\" Permission to use, copy, modify, distribute, and sell this
 .\" documentation for any purpose is hereby granted without fee,
 .\" provided that the above copyright notice and this permission
@@ -30,7 +30,7 @@
 .\" DEALINGS IN THE SOFTWARE.
 .\"
 .\" X Window System is a trademark of The Open Group.
-.\" 
+.\"
 .TH DPMSQueryExtension __libmansuffix__ __xorgversion__ "X FUNCTIONS"
 .SH NAME
 DPMSQueryExtension \- queries the X server to determine the availability
@@ -48,7 +48,7 @@ of the DPMS Extension
 .br
       int \fI*event_base\fP\^,
 .br
-      int \fI*error_base\fP\^ 
+      int \fI*error_base\fP\^
 );
 .if n .ti +5n
 .if t .ti +.5i
@@ -64,41 +64,41 @@ Specifies the return location for the assigned base event
 Specifies the return location for the assigned base error
 .SH DESCRIPTION
 .LP
-The 
-.I DPMSQueryExtension 
+The
+.I DPMSQueryExtension
 function queries the X server to determine the availability of the
-Display Power Management Signaling (DPMS) 
+Display Power Management Signaling (DPMS)
 Extension.  If the extension is available, it returns TRUE, and the
 .I event_base
-and 
+and
 .I error_base
-are set to the base event and error numbers, respectively.  Otherwise, the 
-return value is FALSE, and the 
+are set to the base event and error numbers, respectively.  Otherwise, the
+return value is FALSE, and the
 values of
 .I event_base
-and 
-.I error_base 
+and
+.I error_base
 are undefined.
 .SH "RETURN VALUES"
 .TP 15
 TRUE
-The 
-.I DPMSQueryExtension 
-function returns TRUE if the extension is available, 
+The
+.I DPMSQueryExtension
+function returns TRUE if the extension is available,
 and
 .I event_base
-and 
+and
 .I error_base
-are set to the base event number and base error number for the extension, 
+are set to the base event number and base error number for the extension,
 respectively.
 .TP 15
 FALSE
-The 
-.I DPMSQueryExtension 
+The
+.I DPMSQueryExtension
 function returns FALSE if extension is not available, and the values of
 .I event_base
-and 
-.I error_base 
+and
+.I error_base
 are undefined.
 .SH "SEE ALSO"
 .BR DPMSGetVersion (__libmansuffix__)

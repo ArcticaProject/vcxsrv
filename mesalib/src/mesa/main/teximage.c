@@ -42,7 +42,6 @@
 #include "mfeatures.h"
 #include "state.h"
 #include "texcompress.h"
-#include "texfetch.h"
 #include "teximage.h"
 #include "texstate.h"
 #include "texpal.h"
@@ -602,7 +601,8 @@ _mesa_free_texture_image_data(struct gl_context *ctx,
 
 
 /**
- * Free texture image.
+ * Free a gl_texture_image and associated data.
+ * This function is a fallback called via ctx->Driver.DeleteTextureImage().
  *
  * \param texImage texture image.
  *
@@ -1076,8 +1076,6 @@ clear_teximage_fields(struct gl_texture_image *img)
    img->DepthLog2 = 0;
    img->Data = NULL;
    img->TexFormat = MESA_FORMAT_NONE;
-   img->FetchTexelc = NULL;
-   img->FetchTexelf = NULL;
 }
 
 
@@ -1104,7 +1102,7 @@ _mesa_init_teximage_fields(struct gl_context *ctx, GLenum target,
                            GLint border, GLenum internalFormat,
                            gl_format format)
 {
-   GLint i, dims;
+   GLint i;
 
    ASSERT(img);
    ASSERT(width >= 0);
@@ -1176,10 +1174,6 @@ _mesa_init_teximage_fields(struct gl_context *ctx, GLenum target,
    }
 
    img->TexFormat = format;
-
-   dims = _mesa_get_texture_dimensions(target);
-
-   _mesa_set_fetch_functions(img, dims);
 }
 
 

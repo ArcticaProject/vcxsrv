@@ -38,7 +38,6 @@
 #include "main/pbo.h"
 #include "main/pixeltransfer.h"
 #include "main/texcompress.h"
-#include "main/texfetch.h"
 #include "main/texgetimage.h"
 #include "main/teximage.h"
 #include "main/texobj.h"
@@ -103,6 +102,15 @@ st_NewTextureImage(struct gl_context * ctx)
    DBG("%s\n", __FUNCTION__);
    (void) ctx;
    return (struct gl_texture_image *) ST_CALLOC_STRUCT(st_texture_image);
+}
+
+
+/** called via ctx->Driver.DeleteTextureImage() */
+static void
+st_DeleteTextureImage(struct gl_context * ctx, struct gl_texture_image *img)
+{
+   /* nothing special (yet) for st_texture_image */
+   _mesa_delete_texture_image(ctx, img);
 }
 
 
@@ -552,8 +560,6 @@ st_TexImage(struct gl_context * ctx,
    stImage->base.Face = _mesa_tex_target_to_face(target);
    stImage->base.Level = level;
 
-   _mesa_set_fetch_functions(texImage, dims);
-
    /* Release the reference to a potentially orphaned buffer.   
     * Release any old malloced memory.
     */
@@ -974,8 +980,6 @@ st_get_tex_image(struct gl_context * ctx, GLenum target, GLint level,
    texImage->Depth = 1;
 
    dest = (GLubyte *) pixels;
-
-   _mesa_set_fetch_functions(texImage, get_texture_dims(target));
 
    for (i = 0; i < depth; i++) {
       if (compressed_dst) {
@@ -1923,6 +1927,7 @@ st_init_texture_functions(struct dd_function_table *functions)
 
    functions->NewTextureObject = st_NewTextureObject;
    functions->NewTextureImage = st_NewTextureImage;
+   functions->DeleteTextureImage = st_DeleteTextureImage;
    functions->DeleteTexture = st_DeleteTextureObject;
    functions->FreeTextureImageBuffer = st_FreeTextureImageBuffer;
    functions->MapTextureImage = st_MapTextureImage;

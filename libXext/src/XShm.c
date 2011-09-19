@@ -74,7 +74,7 @@ static /* const */ char *shm_error_list[] = {
     "BadShmSeg",			/* BadShmSeg */
 };
 
-static XEXT_GENERATE_FIND_DISPLAY (find_display, shm_info, shm_extension_name, 
+static XEXT_GENERATE_FIND_DISPLAY (find_display, shm_info, shm_extension_name,
 				   &shm_extension_hooks, ShmNumberEvents, NULL)
 
 static XEXT_GENERATE_CLOSE_DISPLAY (close_display, shm_info)
