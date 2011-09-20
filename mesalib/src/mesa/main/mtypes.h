@@ -789,7 +789,6 @@ struct gl_colorbuffer_attrib
    GLenum LogicOp;			/**< Logic operator */
    GLboolean IndexLogicOpEnabled;	/**< Color index logic op enabled flag */
    GLboolean ColorLogicOpEnabled;	/**< RGBA logic op enabled flag */
-   GLboolean _LogicOpEnabled;		/**< RGBA logic op + EXT_blend_logic_op enabled flag */
    /*@}*/
 
    GLboolean DitherFlag;		/**< Dither enable flag */
@@ -2826,7 +2825,6 @@ struct gl_extensions
    GLboolean EXT_blend_color;
    GLboolean EXT_blend_equation_separate;
    GLboolean EXT_blend_func_separate;
-   GLboolean EXT_blend_logic_op;
    GLboolean EXT_blend_minmax;
    GLboolean EXT_blend_subtract;
    GLboolean EXT_clip_volume_hint;

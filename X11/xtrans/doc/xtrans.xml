@@ -27,7 +27,7 @@
    <releaseinfo>Version 0.7</releaseinfo>
 
 <legalnotice>
-<para>
+<para role="multiLicensing">
 Copyright &copy; 1993, 1994 NCR Corporation - Dayton, Ohio, USA
 </para>
 
@@ -60,7 +60,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 </legalnotice>
 
 <legalnotice>
-<para>
+<para role="multiLicensing">
 Copyright &copy; 1993, 1994, 2002 The Open Group
 </para>
 
