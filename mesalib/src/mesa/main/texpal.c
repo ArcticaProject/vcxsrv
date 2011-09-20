@@ -92,25 +92,23 @@ paletted_to_color(const struct cpal_format_info *info, const GLubyte *palette,
    }
 }
 
-
-static const struct cpal_format_info *
-cpal_get_info(GLint level, GLenum internalFormat,
-              GLsizei width, GLsizei height, GLsizei imageSize)
+unsigned
+_mesa_cpal_compressed_size(int level, GLenum internalFormat,
+			   unsigned width, unsigned height)
 {
    const struct cpal_format_info *info;
-   GLint lvl, num_levels;
-   GLsizei w, h, expect_size;
+   const int num_levels = -level + 1;
+   int lvl;
+   unsigned w, h, expect_size;
+
+   if (internalFormat < GL_PALETTE4_RGB8_OES
+       || internalFormat > GL_PALETTE8_RGB5_A1_OES) {
+      return 0;
+   }
 
    info = &formats[internalFormat - GL_PALETTE4_RGB8_OES];
    ASSERT(info->cpal_format == internalFormat);
 
-   if (level > 0) {
-      _mesa_error(_mesa_get_current_context(), GL_INVALID_VALUE,
-            "glCompressedTexImage2D(level=%d)", level);
-      return NULL;
-   }
-
-   num_levels = -level + 1;
    expect_size = info->palette_size * info->size;
    for (lvl = 0; lvl < num_levels; lvl++) {
       w = width >> lvl;
@@ -125,12 +123,24 @@ cpal_get_info(GLint level, GLenum internalFormat,
       else
          expect_size += w * h;
    }
-   if (expect_size > imageSize) {
-      _mesa_error(_mesa_get_current_context(), GL_INVALID_VALUE,
-            "glCompressedTexImage2D(imageSize=%d)", imageSize);
-      return NULL;
+
+   return expect_size;
+}
+
+void
+_mesa_cpal_compressed_format_type(GLenum internalFormat, GLenum *format,
+				  GLenum *type)
+{
+   const struct cpal_format_info *info;
+
+   if (internalFormat < GL_PALETTE4_RGB8_OES
+       || internalFormat > GL_PALETTE8_RGB5_A1_OES) {
+      return;
    }
-   return info;
+
+   info = &formats[internalFormat - GL_PALETTE4_RGB8_OES];
+   *format = info->format;
+   *type = info->type;
 }
 
 /**
@@ -149,12 +159,13 @@ _mesa_cpal_compressed_teximage2d(GLenum target, GLint level,
    GLint saved_align, align;
    GET_CURRENT_CONTEXT(ctx);
 
-   info = cpal_get_info(level, internalFormat, width, height, imageSize);
-   if (!info)
-      return;
+   /* By this point, the internalFormat should have been validated.
+    */
+   assert(internalFormat >= GL_PALETTE4_RGB8_OES
+	  && internalFormat <= GL_PALETTE8_RGB5_A1_OES);
 
    info = &formats[internalFormat - GL_PALETTE4_RGB8_OES];
-   ASSERT(info->cpal_format == internalFormat);
+
    num_levels = -level + 1;
 
    /* first image follows the palette */

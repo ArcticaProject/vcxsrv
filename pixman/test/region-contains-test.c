@@ -13,14 +13,15 @@ make_random_region (pixman_region32_t *region)
     n_boxes = lcg_rand_n (64);
     while (n_boxes--)
     {
-	int32_t x1, y1, x2, y2;
+	int32_t x, y;
+	uint32_t w, h;
 
-	x1 = (int32_t)lcg_rand_u32();
-	y1 = (int32_t)lcg_rand_u32();
-	x2 = (int32_t)lcg_rand_u32();
-	y2 = (int32_t)lcg_rand_u32();
+	x = (int32_t)lcg_rand_u32() >> 2;
+	y = (int32_t)lcg_rand_u32() >> 2;
+	w = lcg_rand_u32() >> 2;
+	h = lcg_rand_u32() >> 2;
 
-	pixman_region32_union_rect (region, region, x1, y1, x2, y2);
+	pixman_region32_union_rect (region, region, x, y, w, h);
     }
 }
 
@@ -163,7 +164,7 @@ main (int argc, const char *argv[])
 {
     return fuzzer_test_main ("region_contains",
 			     1000000,
-			     0x86311506,
+			     0xD7C297CC,
 			     test_region_contains_rectangle,
 			     argc, argv);
 }

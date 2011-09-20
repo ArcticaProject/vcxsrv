@@ -74,8 +74,6 @@ struct extension {
 
 /**
  * \brief Table of supported OpenGL extensions for all API's.
- *
- * Note: The GL_MESAX_* extensions are placeholders for future ARB extensions.
  */
 static const struct extension extension_table[] = {
    /* ARB Extensions */
@@ -153,7 +151,6 @@ static const struct extension extension_table[] = {
    { "GL_EXT_blend_color",                         o(EXT_blend_color),                         GL,             1995 },
    { "GL_EXT_blend_equation_separate",             o(EXT_blend_equation_separate),             GL,             2003 },
    { "GL_EXT_blend_func_separate",                 o(EXT_blend_func_separate),                 GL,             1999 },
-   { "GL_EXT_blend_logic_op",                      o(EXT_blend_logic_op),                      GL,             1995 },
    { "GL_EXT_blend_minmax",                        o(EXT_blend_minmax),                        GL | ES1 | ES2, 1995 },
    { "GL_EXT_blend_subtract",                      o(EXT_blend_subtract),                      GL,             1995 },
    { "GL_EXT_clip_volume_hint",                    o(EXT_clip_volume_hint),                    GL,             1996 },
@@ -222,7 +219,7 @@ static const struct extension extension_table[] = {
    { "GL_OES_blend_func_separate",                 o(EXT_blend_func_separate),                      ES1,       2009 },
    { "GL_OES_blend_subtract",                      o(EXT_blend_subtract),                           ES1,       2009 },
    { "GL_OES_byte_coordinates",                    o(dummy_true),                                   ES1,       2002 },
-   { "GL_OES_compressed_paletted_texture",         o(dummy_false),                     DISABLE,                2003 },
+   { "GL_OES_compressed_paletted_texture",         o(dummy_true),                                   ES1,       2003 },
    { "GL_OES_depth24",                             o(EXT_framebuffer_object),                       ES1 | ES2, 2005 },
    { "GL_OES_depth32",                             o(dummy_false),                     DISABLE,                2005 },
    { "GL_OES_depth_texture",                       o(ARB_depth_texture),                                  ES2, 2006 },
@@ -471,7 +468,6 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
    ctx->Extensions.EXT_blend_color = GL_TRUE;
    ctx->Extensions.EXT_blend_equation_separate = GL_TRUE;
    ctx->Extensions.EXT_blend_func_separate = GL_TRUE;
-   ctx->Extensions.EXT_blend_logic_op = GL_TRUE;
    ctx->Extensions.EXT_blend_minmax = GL_TRUE;
    ctx->Extensions.EXT_blend_subtract = GL_TRUE;
    ctx->Extensions.EXT_depth_bounds_test = GL_TRUE;
@@ -552,20 +548,6 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
    }
 #endif
 }
-
-
-/**
- * Enable common EXT extensions in the ARB_imaging subset.
- */
-void
-_mesa_enable_imaging_extensions(struct gl_context *ctx)
-{
-   ctx->Extensions.EXT_blend_color = GL_TRUE;
-   ctx->Extensions.EXT_blend_logic_op = GL_TRUE;
-   ctx->Extensions.EXT_blend_minmax = GL_TRUE;
-   ctx->Extensions.EXT_blend_subtract = GL_TRUE;
-}
-
 
 
 /**
