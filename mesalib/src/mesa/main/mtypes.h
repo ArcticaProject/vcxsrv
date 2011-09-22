@@ -44,29 +44,6 @@
 
 
 /**
- * Color channel data type.
- */
-#if CHAN_BITS == 8
-   typedef GLubyte GLchan;
-#define CHAN_MAX 255
-#define CHAN_MAXF 255.0F
-#define CHAN_TYPE GL_UNSIGNED_BYTE
-#elif CHAN_BITS == 16
-   typedef GLushort GLchan;
-#define CHAN_MAX 65535
-#define CHAN_MAXF 65535.0F
-#define CHAN_TYPE GL_UNSIGNED_SHORT
-#elif CHAN_BITS == 32
-   typedef GLfloat GLchan;
-#define CHAN_MAX 1.0
-#define CHAN_MAXF 1.0F
-#define CHAN_TYPE GL_FLOAT
-#else
-#error "illegal number of color channel bits"
-#endif
-
-
-/**
  * Stencil buffer data type.
  */
 #if STENCIL_BITS==8
@@ -1950,6 +1927,8 @@ struct gl_vertex_program_state
    GLboolean _Enabled;           /**< Enabled and _valid_ user program? */
    GLboolean PointSizeEnabled;   /**< GL_VERTEX_PROGRAM_POINT_SIZE_ARB/NV */
    GLboolean TwoSideEnabled;     /**< GL_VERTEX_PROGRAM_TWO_SIDE_ARB/NV */
+   /** Computed two sided lighting for fixed function/programs. */
+   GLboolean _TwoSideEnabled;
    struct gl_vertex_program *Current;  /**< User-bound vertex program */
 
    /** Currently enabled and valid vertex program (including internal

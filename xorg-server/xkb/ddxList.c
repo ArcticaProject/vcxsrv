@@ -107,9 +107,8 @@ char *		tmp;
     wire16[1]= slen;
     memcpy(wire8,str,slen);
     if (client->swapped) {
-	register int n;
-	swaps(&wire16[0],n);
-	swaps(&wire16[1],n);
+	swaps(&wire16[0]);
+	swaps(&wire16[1]);
     }
     list->nPool+= wlen;
     list->nFound[what]++;

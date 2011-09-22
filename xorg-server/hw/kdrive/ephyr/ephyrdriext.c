@@ -541,7 +541,6 @@ static int
 ProcXF86DRIQueryVersion (register ClientPtr client)
 {
     xXF86DRIQueryVersionReply rep;
-    register int n;
     REQUEST_SIZE_MATCH(xXF86DRIQueryVersionReq);
 
     EPHYR_LOG ("enter\n") ;
@@ -553,11 +552,11 @@ ProcXF86DRIQueryVersion (register ClientPtr client)
     rep.minorVersion = SERVER_XF86DRI_MINOR_VERSION;
     rep.patchVersion = SERVER_XF86DRI_PATCH_VERSION;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swaps(&rep.majorVersion, n);
-	swaps(&rep.minorVersion, n);
-	swapl(&rep.patchVersion, n);
+    swaps(&rep.sequenceNumber);
+    swapl(&rep.length);
+	swaps(&rep.majorVersion);
+	swaps(&rep.minorVersion);
+	swapl(&rep.patchVersion);
     }
     WriteToClient(client, sizeof(xXF86DRIQueryVersionReply), (char *)&rep);
     EPHYR_LOG ("leave\n") ;
@@ -569,7 +568,6 @@ ProcXF86DRIQueryDirectRenderingCapable (register ClientPtr client)
 {
     xXF86DRIQueryDirectRenderingCapableReply	rep;
     Bool isCapable;
-    register int n;
     REQUEST(xXF86DRIQueryDirectRenderingCapableReq);
     REQUEST_SIZE_MATCH(xXF86DRIQueryDirectRenderingCapableReq);
 
@@ -592,8 +590,8 @@ ProcXF86DRIQueryDirectRenderingCapable (register ClientPtr client)
 	rep.isCapable = 0;
 
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
     }
 
     WriteToClient(client, sizeof(xXF86DRIQueryDirectRenderingCapableReply), (char *)&rep);
@@ -1311,19 +1309,17 @@ ProcXF86DRIDispatch (register ClientPtr	client)
 static int
 SProcXF86DRIQueryVersion (register ClientPtr	client)
 {
-    register int n;
     REQUEST(xXF86DRIQueryVersionReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return ProcXF86DRIQueryVersion(client);
 }
 
 static int
 SProcXF86DRIQueryDirectRenderingCapable (register ClientPtr client)
 {
-    register int n;
     REQUEST(xXF86DRIQueryDirectRenderingCapableReq);
-    swaps(&stuff->length, n);
-    swapl(&stuff->screen, n);
+    swaps(&stuff->length);
+    swapl(&stuff->screen);
     return ProcXF86DRIQueryDirectRenderingCapable(client);
 }
 

@@ -128,10 +128,6 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
     int screen;
     legacyVGARec vga;
  
-#if 0
-    CARD32 cs;
-#endif
-
     screen = (xf86FindScreenForEntity(entityIndex))->scrnIndex;
 
     options = xf86HandleInt10Options(xf86Screens[screen],entityIndex);
@@ -174,17 +170,9 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
 
     /*
      * Retrieve everything between V_BIOS and SYS_BIOS as some system BIOSes
-     * have executable code there.  Note that xf86ReadBIOS() can only read in
-     * 64kB at a time.
+     * have executable code there.
      */
     memset((char *)base + V_BIOS, 0, SYS_BIOS - V_BIOS);
-#if 0
-    for (cs = V_BIOS;  cs < SYS_BIOS;  cs += V_BIOS_SIZE)
-	if (xf86ReadBIOS(cs, 0, (unsigned char *)base + cs, V_BIOS_SIZE) <
-		V_BIOS_SIZE)
-	    xf86DrvMsg(screen, X_WARNING,
-		       "Unable to retrieve all of segment 0x%06X.\n", cs);
-#endif
     INTPriv(pInt)->highMemory = V_BIOS;
     
     if (xf86IsEntityPrimary(entityIndex) && !(initPrimary(options))) {

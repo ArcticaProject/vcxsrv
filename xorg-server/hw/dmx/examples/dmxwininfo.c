@@ -39,7 +39,6 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <X11/Xmu/SysUtil.h>
 #include <X11/extensions/dmxext.h>
 
 static const char *FontName = "fixed";
@@ -80,7 +79,7 @@ EventLoop(Display *dpy, Window win, GC gc)
             y += 20;
             for (i = 0; i < count; i++) {
                char str[500];
-               XmuSnprintf(str, sizeof(str),
+               snprintf(str, sizeof(str),
                        "screen %d:  pos: %dx%d+%d+%d  visible: %dx%d+%d+%d",
                        winInfo[i].screen,
                        winInfo[i].pos.width, winInfo[i].pos.height,

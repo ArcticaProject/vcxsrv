@@ -609,14 +609,15 @@ _pixman_iter_get_scanline_noop (pixman_iter_t *iter, const uint32_t *mask);
 #define FAST_PATH_IS_OPAQUE			(1 << 13)
 #define FAST_PATH_NO_NORMAL_REPEAT		(1 << 14)
 #define FAST_PATH_NO_NONE_REPEAT		(1 << 15)
-#define FAST_PATH_SAMPLES_COVER_CLIP		(1 << 16)
-#define FAST_PATH_X_UNIT_POSITIVE		(1 << 17)
-#define FAST_PATH_AFFINE_TRANSFORM		(1 << 18)
-#define FAST_PATH_Y_UNIT_ZERO			(1 << 19)
-#define FAST_PATH_BILINEAR_FILTER		(1 << 20)
-#define FAST_PATH_ROTATE_90_TRANSFORM		(1 << 21)
-#define FAST_PATH_ROTATE_180_TRANSFORM		(1 << 22)
-#define FAST_PATH_ROTATE_270_TRANSFORM		(1 << 23)
+#define FAST_PATH_X_UNIT_POSITIVE		(1 << 16)
+#define FAST_PATH_AFFINE_TRANSFORM		(1 << 17)
+#define FAST_PATH_Y_UNIT_ZERO			(1 << 18)
+#define FAST_PATH_BILINEAR_FILTER		(1 << 19)
+#define FAST_PATH_ROTATE_90_TRANSFORM		(1 << 20)
+#define FAST_PATH_ROTATE_180_TRANSFORM		(1 << 21)
+#define FAST_PATH_ROTATE_270_TRANSFORM		(1 << 22)
+#define FAST_PATH_SAMPLES_COVER_CLIP_NEAREST	(1 << 23)
+#define FAST_PATH_SAMPLES_COVER_CLIP_BILINEAR	(1 << 24)
 
 #define FAST_PATH_PAD_REPEAT						\
     (FAST_PATH_NO_NONE_REPEAT		|				\
@@ -652,7 +653,7 @@ _pixman_iter_get_scanline_noop (pixman_iter_t *iter, const uint32_t *mask);
 #define SOURCE_FLAGS(format)						\
     (FAST_PATH_STANDARD_FLAGS |						\
      ((PIXMAN_ ## format == PIXMAN_solid) ?				\
-      0 : (FAST_PATH_SAMPLES_COVER_CLIP | FAST_PATH_ID_TRANSFORM)))
+      0 : (FAST_PATH_SAMPLES_COVER_CLIP_NEAREST | FAST_PATH_NEAREST_FILTER | FAST_PATH_ID_TRANSFORM)))
 
 #define MASK_FLAGS(format, extra)					\
     ((PIXMAN_ ## format == PIXMAN_null) ? 0 : (SOURCE_FLAGS (format) | extra))
@@ -782,6 +783,49 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
 #   define SCREEN_SHIFT_LEFT(x,n)	((x) >> (n))
 #   define SCREEN_SHIFT_RIGHT(x,n)	((x) << (n))
 #endif
+
+static force_inline uint32_t
+unorm_to_unorm (uint32_t val, int from_bits, int to_bits)
+{
+    uint32_t result;
+
+    if (from_bits == 0)
+	return 0;
+
+    /* Delete any extra bits */
+    val &= ((1 << from_bits) - 1);
+
+    if (from_bits >= to_bits)
+	return val >> (from_bits - to_bits);
+
+    /* Start out with the high bit of val in the high bit of result. */
+    result = val << (to_bits - from_bits);
+
+    /* Copy the bits in result, doubling the number of bits each time, until
+     * we fill all to_bits. Unrolled manually because from_bits and to_bits
+     * are usually known statically, so the compiler can turn all of this
+     * into a few shifts.
+     */
+#define REPLICATE()							\
+    do									\
+    {									\
+	if (from_bits < to_bits)					\
+	{								\
+	    result |= result >> from_bits;				\
+									\
+	    from_bits *= 2;						\
+	}								\
+    }									\
+    while (0)
+
+    REPLICATE();
+    REPLICATE();
+    REPLICATE();
+    REPLICATE();
+    REPLICATE();
+
+    return result;
+}
 
 /*
  * Various debugging code

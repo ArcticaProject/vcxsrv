@@ -52,12 +52,10 @@ static void SwapDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info);
 int
 SProcXIQueryDevice(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIQueryDeviceReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
 
     return ProcXIQueryDevice(client);
 }
@@ -166,11 +164,9 @@ ProcXIQueryDevice(ClientPtr client)
 void
 SRepXIQueryDevice(ClientPtr client, int size, xXIQueryDeviceReply *rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->num_devices, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->num_devices);
 
     /* Device info is already swapped, see ProcXIQueryDevice */
 
@@ -278,17 +274,16 @@ ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info, Bool reportState)
 static void
 SwapButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info)
 {
-    char n;
     Atom *btn;
     int i;
-    swaps(&info->type, n);
-    swaps(&info->length, n);
-    swaps(&info->sourceid, n);
+    swaps(&info->type);
+    swaps(&info->length);
+    swaps(&info->sourceid);
 
     for (i = 0, btn = (Atom*)&info[1]; i < info->num_buttons; i++, btn++)
-        swaps(btn, n);
+        swapl(btn);
 
-    swaps(&info->num_buttons, n);
+    swaps(&info->num_buttons);
 }
 
 /**
@@ -317,17 +312,16 @@ ListKeyInfo(DeviceIntPtr dev, xXIKeyInfo* info)
 static void
 SwapKeyInfo(DeviceIntPtr dev, xXIKeyInfo* info)
 {
-    char n;
     uint32_t *key;
     int i;
-    swaps(&info->type, n);
-    swaps(&info->length, n);
-    swaps(&info->sourceid, n);
+    swaps(&info->type);
+    swaps(&info->length);
+    swaps(&info->sourceid);
 
     for (i = 0, key = (uint32_t*)&info[1]; i < info->num_keycodes; i++, key++)
-        swapl(key, n);
+        swapl(key);
 
-    swaps(&info->num_keycodes, n);
+    swaps(&info->num_keycodes);
 }
 
 /**
@@ -364,16 +358,15 @@ ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info, int axisnumber,
 static void
 SwapValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info)
 {
-    char n;
-    swaps(&info->type, n);
-    swaps(&info->length, n);
-    swapl(&info->label, n);
-    swapl(&info->min.integral, n);
-    swapl(&info->min.frac, n);
-    swapl(&info->max.integral, n);
-    swapl(&info->max.frac, n);
-    swaps(&info->number, n);
-    swaps(&info->sourceid, n);
+    swaps(&info->type);
+    swaps(&info->length);
+    swapl(&info->label);
+    swapl(&info->min.integral);
+    swapl(&info->min.frac);
+    swapl(&info->max.integral);
+    swapl(&info->max.frac);
+    swaps(&info->number);
+    swaps(&info->sourceid);
 }
 
 int GetDeviceUse(DeviceIntPtr dev, uint16_t *attachment)
@@ -471,7 +464,6 @@ ListDeviceClasses(ClientPtr client, DeviceIntPtr dev,
 static void
 SwapDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info)
 {
-    char n;
     char *any = (char*)&info[1];
     int i;
 
@@ -497,10 +489,10 @@ SwapDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info)
         any += len * 4;
     }
 
-    swaps(&info->deviceid, n);
-    swaps(&info->use, n);
-    swaps(&info->attachment, n);
-    swaps(&info->num_classes, n);
-    swaps(&info->name_len, n);
+    swaps(&info->deviceid);
+    swaps(&info->use);
+    swaps(&info->attachment);
+    swaps(&info->num_classes);
+    swaps(&info->name_len);
 
 }

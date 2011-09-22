@@ -49,11 +49,10 @@
 int
 SProcXIGetClientPointer(ClientPtr client)
 {
-    char n;
     REQUEST(xXIGetClientPointerReq);
 
-    swaps(&stuff->length, n);
-    swapl(&stuff->win, n);
+    swaps(&stuff->length);
+    swapl(&stuff->win);
     return ProcXIGetClientPointer(client);
 }
 
@@ -97,10 +96,9 @@ void
 SRepXIGetClientPointer(ClientPtr client, int size,
         xXIGetClientPointerReply* rep)
 {
-    char n;
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->deviceid, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->deviceid);
     WriteToClient(client, size, (char *)rep);
 }
 

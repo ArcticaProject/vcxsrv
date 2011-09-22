@@ -39,8 +39,6 @@
 #include <sys/stat.h>
 
 static Bool KeepTty = FALSE;
-static Bool VTSwitch = TRUE;
-static Bool ShareVTs = FALSE;
 static int activeVT = -1;
 
 static char vtname[11];
@@ -109,7 +107,7 @@ xf86OpenConsole(void)
 		    "xf86OpenConsole: Cannot open /dev/tty0 (%s)\n",
 		    strerror(errno));
 
-            if (ShareVTs)
+            if (xf86Info.ShareVTs)
             {
 		SYSCALL(ret = ioctl(fd, VT_GETSTATE, &vts));
 		if (ret < 0)
@@ -184,7 +182,7 @@ xf86OpenConsole(void)
 	}
 #endif
 
-        if (!ShareVTs)
+        if (!xf86Info.ShareVTs)
         {
             struct termios nTty;
 
@@ -240,7 +238,7 @@ xf86OpenConsole(void)
 	     * of Init?$#*&Device(). So I just place it here */
         }
     } else { 	/* serverGeneration != 1 */
-        if (!ShareVTs && VTSwitch)
+        if (!xf86Info.ShareVTs && xf86Info.autoVTSwitch)
         {
 	    /* now get the VT */
             switch_to(xf86Info.vtno, "xf86OpenConsole");
@@ -254,7 +252,7 @@ xf86CloseConsole(void)
     struct vt_mode   VT;
     int ret;
 
-    if (ShareVTs) {
+    if (xf86Info.ShareVTs) {
         close(xf86Info.consoleFd);
         return;
     }
@@ -286,7 +284,7 @@ xf86CloseConsole(void)
 		    strerror(errno));
     }
 
-    if (VTSwitch)
+    if (xf86Info.autoVTSwitch)
     {
         /*
          * Perform a switch back to the active VT when we were started
@@ -311,16 +309,7 @@ xf86ProcessArgument(int argc, char *argv[], int i)
 		KeepTty = TRUE;
 		return 1;
 	}
-        if (!strcmp(argv[i], "-novtswitch"))
-        {
-                VTSwitch = FALSE;
-                return 1;
-        }
-        if (!strcmp(argv[i], "-sharevts"))
-        {
-                ShareVTs = TRUE;
-                return 1;
-        }
+
 	if ((argv[i][0] == 'v') && (argv[i][1] == 't'))
 	{
 		if (sscanf(argv[i], "vt%2d", &xf86Info.vtno) == 0)
@@ -340,6 +329,4 @@ xf86UseMsg(void)
 	ErrorF("vtXX                   use the specified VT number\n");
 	ErrorF("-keeptty               ");
 	ErrorF("don't detach controlling tty (for debugging only)\n");
-	ErrorF("-novtswitch            don't immediately switch to new VT\n");
-	ErrorF("-sharevts              share VTs with another X server\n");
 }

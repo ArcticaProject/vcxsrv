@@ -1352,6 +1352,16 @@ ddxProcessArgument(int argc, char **argv, int i)
     xf86xkbdirFlag = TRUE;
     return 0;
   }
+  if (!strcmp(argv[i], "-novtswitch"))
+  {
+    xf86Info.autoVTSwitch = FALSE;
+    return 1;
+  }
+  if (!strcmp(argv[i], "-sharevts"))
+  {
+    xf86Info.ShareVTs = TRUE;
+    return 1;
+  }
 
   /* OS-specific processing */
   return xf86ProcessArgument(argc, argv, i);
@@ -1408,6 +1418,8 @@ ddxUseMsg(void)
   ErrorF("-version               show the server version\n");
   ErrorF("-showDefaultModulePath show the server default module path\n");
   ErrorF("-showDefaultLibPath    show the server default library path\n");
+  ErrorF("-novtswitch            don't automatically switch VT at reset & exit\n");
+  ErrorF("-sharevts              share VTs with another X server\n");
   /* OS-specific usage */
   xf86UseMsg();
   ErrorF("\n");

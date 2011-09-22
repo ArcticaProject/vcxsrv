@@ -72,11 +72,10 @@ SOFTWARE.
 int
 SProcXChangeDeviceKeyMapping(ClientPtr client)
 {
-    char n;
     unsigned int count;
 
     REQUEST(xChangeDeviceKeyMappingReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xChangeDeviceKeyMappingReq);
     count = stuff->keyCodes * stuff->keySymsPerKeyCode;
     REQUEST_FIXED_SIZE(xChangeDeviceKeyMappingReq, count * sizeof(CARD32));

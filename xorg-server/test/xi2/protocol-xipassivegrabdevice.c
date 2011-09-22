@@ -85,10 +85,9 @@ static void reply_XIPassiveGrabDevice(ClientPtr client, int len, char *data, voi
 
     if (client->swapped)
     {
-        char n;
-        swaps(&rep->sequenceNumber, n);
-        swapl(&rep->length, n);
-        swaps(&rep->num_modifiers, n);
+        swaps(&rep->sequenceNumber);
+        swapl(&rep->length);
+        swaps(&rep->num_modifiers);
 
         testdata.num_modifiers = rep->num_modifiers;
     }
@@ -104,14 +103,13 @@ static void reply_XIPassiveGrabDevice(ClientPtr client, int len, char *data, voi
 static void reply_XIPassiveGrabDevice_data(ClientPtr client, int len, char *data, void *userdata)
 {
     int i;
-    int n;
 
     xXIGrabModifierInfo *mods = (xXIGrabModifierInfo*)data;
 
     for (i = 0; i < testdata.num_modifiers; i++, mods++)
     {
         if (client->swapped)
-            swapl(&mods->modifiers, n);
+            swapl(&mods->modifiers);
 
         /* 1 - 7 is the range we use for the global modifiers array
          * above */
@@ -128,7 +126,6 @@ static void reply_XIPassiveGrabDevice_data(ClientPtr client, int len, char *data
 
 static void request_XIPassiveGrabDevice(ClientPtr client, xXIPassiveGrabDeviceReq* req, int error, int errval)
 {
-    char n;
     int rc;
     int modifiers;
 
@@ -139,20 +136,20 @@ static void request_XIPassiveGrabDevice(ClientPtr client, xXIPassiveGrabDeviceRe
         assert(client_request.errorValue == errval);
 
     client_request.swapped = TRUE;
-    swaps(&req->length, n);
-    swapl(&req->time, n);
-    swapl(&req->grab_window, n);
-    swapl(&req->cursor, n);
-    swapl(&req->detail, n);
-    swaps(&req->deviceid, n);
+    swaps(&req->length);
+    swapl(&req->time);
+    swapl(&req->grab_window);
+    swapl(&req->cursor);
+    swapl(&req->detail);
+    swaps(&req->deviceid);
     modifiers = req->num_modifiers;
-    swaps(&req->num_modifiers, n);
-    swaps(&req->mask_len, n);
+    swaps(&req->num_modifiers);
+    swaps(&req->mask_len);
 
     while(modifiers--)
     {
         CARD32 *mod = ((CARD32*)(req + 1)) + modifiers;
-        swapl(mod, n);
+        swapl(mod);
     }
 
     rc = SProcXIPassiveGrabDevice(&client_request);

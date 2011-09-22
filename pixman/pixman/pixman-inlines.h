@@ -585,7 +585,7 @@ fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,
 #define SIMPLE_NEAREST_FAST_PATH_COVER(op,s,d,func)			\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
-	SCALED_NEAREST_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP,		\
+	SCALED_NEAREST_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP_NEAREST,    \
 	PIXMAN_null, 0,							\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_nearest_ ## func ## _cover ## _ ## op,	\
@@ -627,7 +627,7 @@ fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,
 #define SIMPLE_NEAREST_A8_MASK_FAST_PATH_COVER(op,s,d,func)		\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
-	SCALED_NEAREST_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP,		\
+	SCALED_NEAREST_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP_NEAREST,	\
 	PIXMAN_a8, MASK_FLAGS (a8, FAST_PATH_UNIFIED_ALPHA),		\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_nearest_ ## func ## _cover ## _ ## op,	\
@@ -669,7 +669,7 @@ fast_composite_scaled_nearest  ## scale_func_name (pixman_implementation_t *imp,
 #define SIMPLE_NEAREST_SOLID_MASK_FAST_PATH_COVER(op,s,d,func)		\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
-	SCALED_NEAREST_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP,		\
+	SCALED_NEAREST_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP_NEAREST,	\
 	PIXMAN_solid, MASK_FLAGS (solid, FAST_PATH_UNIFIED_ALPHA),	\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_nearest_ ## func ## _cover ## _ ## op,	\
@@ -1157,7 +1157,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 #define SIMPLE_BILINEAR_FAST_PATH_COVER(op,s,d,func)			\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
-	SCALED_BILINEAR_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP,		\
+	SCALED_BILINEAR_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP_BILINEAR,	\
 	PIXMAN_null, 0,							\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_bilinear_ ## func ## _cover ## _ ## op,	\
@@ -1199,7 +1199,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 #define SIMPLE_BILINEAR_A8_MASK_FAST_PATH_COVER(op,s,d,func)		\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
-	SCALED_BILINEAR_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP,		\
+	SCALED_BILINEAR_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP_BILINEAR,	\
 	PIXMAN_a8, MASK_FLAGS (a8, FAST_PATH_UNIFIED_ALPHA),		\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_bilinear_ ## func ## _cover ## _ ## op,	\
@@ -1241,7 +1241,7 @@ fast_composite_scaled_bilinear ## scale_func_name (pixman_implementation_t *imp,
 #define SIMPLE_BILINEAR_SOLID_MASK_FAST_PATH_COVER(op,s,d,func)		\
     {   PIXMAN_OP_ ## op,						\
 	PIXMAN_ ## s,							\
-	SCALED_BILINEAR_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP,		\
+	SCALED_BILINEAR_FLAGS | FAST_PATH_SAMPLES_COVER_CLIP_BILINEAR,	\
 	PIXMAN_solid, MASK_FLAGS (solid, FAST_PATH_UNIFIED_ALPHA),	\
 	PIXMAN_ ## d, FAST_PATH_STD_DEST_FLAGS,				\
 	fast_composite_scaled_bilinear_ ## func ## _cover ## _ ## op,	\

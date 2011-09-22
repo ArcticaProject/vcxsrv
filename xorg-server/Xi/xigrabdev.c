@@ -45,16 +45,14 @@
 int
 SProcXIGrabDevice(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIGrabDeviceReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->grab_window, n);
-    swapl(&stuff->cursor, n);
-    swapl(&stuff->time, n);
-    swaps(&stuff->mask_len, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->grab_window);
+    swapl(&stuff->cursor);
+    swapl(&stuff->time);
+    swaps(&stuff->mask_len);
 
     return ProcXIGrabDevice(client);
 }
@@ -115,13 +113,11 @@ ProcXIGrabDevice(ClientPtr client)
 int
 SProcXIUngrabDevice(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIUngrabDeviceReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->time, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->time);
 
     return ProcXIUngrabDevice(client);
 }
@@ -153,9 +149,7 @@ ProcXIUngrabDevice(ClientPtr client)
 
 void SRepXIGrabDevice(ClientPtr client, int size, xXIGrabDeviceReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

@@ -64,11 +64,10 @@ static void reply_XIQueryVersion(ClientPtr client, int len, char* data, void *us
 
     if (client->swapped)
     {
-        char n;
-        swapl(&rep->length, n);
-        swaps(&rep->sequenceNumber, n);
-        swaps(&rep->major_version, n);
-        swaps(&rep->minor_version, n);
+        swapl(&rep->length);
+        swaps(&rep->sequenceNumber);
+        swaps(&rep->major_version);
+        swaps(&rep->minor_version);
     }
 
     reply_check_defaults(rep, len, XIQueryVersion);
@@ -91,7 +90,6 @@ static void reply_XIQueryVersion(ClientPtr client, int len, char* data, void *us
  */
 static void request_XIQueryVersion(int smaj, int smin, int cmaj, int cmin, int error)
 {
-    char n;
     int rc;
     struct test_data versions;
     xXIQueryVersionReq request;
@@ -118,9 +116,9 @@ static void request_XIQueryVersion(int smaj, int smin, int cmaj, int cmin, int e
 
     client.swapped = TRUE;
 
-    swaps(&request.length, n);
-    swaps(&request.major_version, n);
-    swaps(&request.minor_version, n);
+    swaps(&request.length);
+    swaps(&request.major_version);
+    swaps(&request.minor_version);
 
     rc = SProcXIQueryVersion(&client);
     assert(rc == error);

@@ -172,10 +172,9 @@ XkbSendNewKeyboardNotify(DeviceIntPtr kbd,xkbNewKeyboardNotify *pNKN)
         pNKN->time = time;
         pNKN->changed = changed;
         if (clients[i]->swapped) {
-            int n;
-            swaps(&pNKN->sequenceNumber,n);
-            swapl(&pNKN->time,n);
-            swaps(&pNKN->changed,n);
+            swaps(&pNKN->sequenceNumber);
+            swapl(&pNKN->time);
+            swaps(&pNKN->changed);
         }
         WriteToClient(clients[i], sizeof(xEvent), pNKN);
 
@@ -239,11 +238,10 @@ register CARD16	changed,bState;
 	    pSN->changed = changed;
 	    pSN->ptrBtnState = bState;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pSN->sequenceNumber,n);
-		swapl(&pSN->time,n);
-		swaps(&pSN->changed,n);
-		swaps(&pSN->ptrBtnState,n);
+		swaps(&pSN->sequenceNumber);
+		swapl(&pSN->time);
+		swaps(&pSN->changed);
+		swaps(&pSN->ptrBtnState);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pSN);
 	}
@@ -285,10 +283,9 @@ XkbSendMapNotify(DeviceIntPtr kbd, xkbMapNotify *pMN)
         pMN->changed = changed;
 
         if (clients[i]->swapped) {
-            int n;
-            swaps(&pMN->sequenceNumber, n);
-            swapl(&pMN->time, n);
-            swaps(&pMN->changed, n);
+            swaps(&pMN->sequenceNumber);
+            swapl(&pMN->time);
+            swaps(&pMN->changed);
         }
         WriteToClient(clients[i], sizeof(xEvent), pMN);
     }
@@ -413,12 +410,11 @@ Time 		 	time = 0;
 	    pCN->sequenceNumber = interest->client->sequence;
 	    pCN->time = time;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pCN->sequenceNumber,n);
-		swapl(&pCN->changedControls,n);
-		swapl(&pCN->enabledControls,n);
-		swapl(&pCN->enabledControlChanges,n);
-		swapl(&pCN->time,n);
+		swaps(&pCN->sequenceNumber);
+		swapl(&pCN->changedControls);
+		swapl(&pCN->enabledControls);
+		swapl(&pCN->enabledControlChanges);
+		swapl(&pCN->time);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pCN);
 	}
@@ -462,11 +458,10 @@ CARD32		state,changed;
 	    pEv->changed = changed;
 	    pEv->state = state;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pEv->sequenceNumber,n);
-		swapl(&pEv->time,n);
-		swapl(&pEv->changed,n);
-		swapl(&pEv->state,n);
+		swaps(&pEv->sequenceNumber);
+		swapl(&pEv->time);
+		swapl(&pEv->changed);
+		swapl(&pEv->state);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pEv);
 	}
@@ -549,13 +544,12 @@ XID		winID = 0;
 	    bn.name = name;
 	    bn.window=  winID;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&bn.sequenceNumber,n);
-		swapl(&bn.time,n);
-		swaps(&bn.pitch,n);
-		swaps(&bn.duration,n);
-		swapl(&bn.name,n);
-		swapl(&bn.window,n);
+		swaps(&bn.sequenceNumber);
+		swapl(&bn.time);
+		swaps(&bn.pitch);
+		swaps(&bn.duration);
+		swapl(&bn.name);
+		swapl(&bn.window);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)&bn);
 	}
@@ -596,11 +590,10 @@ CARD16		sk_delay,db_delay;
 	    pEv->slowKeysDelay = sk_delay;
 	    pEv->debounceDelay = db_delay;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pEv->sequenceNumber,n);
-		swapl(&pEv->time,n);
-		swaps(&pEv->slowKeysDelay,n);
-		swaps(&pEv->debounceDelay,n);
+		swaps(&pEv->sequenceNumber);
+		swapl(&pEv->time);
+		swaps(&pEv->slowKeysDelay);
+		swaps(&pEv->debounceDelay);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pEv);
 	}
@@ -644,12 +637,11 @@ CARD32		changedIndicators;
 	    pEv->changedIndicators = changedIndicators;
 	    pEv->changedVirtualMods= changedVirtualMods;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pEv->sequenceNumber,n);
-		swapl(&pEv->time,n);
-		swaps(&pEv->changed,n);
-		swapl(&pEv->changedIndicators,n);
-		swaps(&pEv->changedVirtualMods,n);
+		swaps(&pEv->sequenceNumber);
+		swapl(&pEv->time);
+		swaps(&pEv->changed);
+		swapl(&pEv->changedIndicators);
+		swaps(&pEv->changedVirtualMods);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pEv);
 	}
@@ -692,12 +684,11 @@ CARD16		firstSI = 0, nSI = 0, nTotalSI = 0;
 	    pEv->nSI = nSI;
 	    pEv->nTotalSI = nTotalSI;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pEv->sequenceNumber,n);
-		swapl(&pEv->time,n);
-		swaps(&pEv->firstSI,n);
-		swaps(&pEv->nSI,n);
-		swaps(&pEv->nTotalSI,n);
+		swaps(&pEv->sequenceNumber);
+		swapl(&pEv->time);
+		swaps(&pEv->firstSI);
+		swaps(&pEv->nSI);
+		swaps(&pEv->nTotalSI);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pEv);
 	}
@@ -739,9 +730,8 @@ Time 		 time = 0;
 	    pEv->sequenceNumber = interest->client->sequence;
 	    pEv->time = time;
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pEv->sequenceNumber,n);
-		swapl(&pEv->time,n);
+		swaps(&pEv->sequenceNumber);
+		swapl(&pEv->time);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pEv);
 	}
@@ -791,13 +781,12 @@ CARD16		 reason;
 		pEv->supported= XkbXI_AllFeaturesMask;
 	    }
 	    if ( interest->client->swapped ) {
-		register int n;
-		swaps(&pEv->sequenceNumber,n);
-		swapl(&pEv->time,n);
-		swapl(&pEv->ledsDefined,n);
-		swapl(&pEv->ledState,n);
-		swaps(&pEv->reason,n);
-		swaps(&pEv->supported,n);
+		swaps(&pEv->sequenceNumber);
+		swapl(&pEv->time);
+		swapl(&pEv->ledsDefined);
+		swapl(&pEv->ledState);
+		swaps(&pEv->reason);
+		swaps(&pEv->supported);
 	    }
 	    WriteToClient(interest->client, sizeof(xEvent), (char *)pEv);
 	}

@@ -281,12 +281,53 @@ add(char **p, char *new)
 
 /**
  * Print out a modeline.
+ *
+ * The mode type bits are informational except for the capitalized U
+ * and P bits which give sort order priority.  Letter map:
+ *
+ * USERPREF, U, user preferred is set from the xorg.conf Monitor
+ * Option "PreferredMode" or from the Screen Display Modes statement.
+ * This unique modeline is moved to the head of the list after sorting.
+ *
+ * DRIVER, e, is set by the video driver, EDID or flat panel native.
+ *
+ * USERDEF, z, a configured zoom mode Ctrl+Alt+Keypad-{Plus,Minus}.
+ *
+ * DEFAULT, d, a compiled-in default.
+ *
+ * PREFERRED, P, driver preferred is set by the video device driver,
+ * e.g. the EDID detailed timing modeline.  This is a true sort
+ * priority and multiple P modes form a sorted sublist at the list
+ * head.
+ *
+ * BUILTIN, b, a hardware fixed CRTC mode.
+ *
+ * See modes/xf86Crtc.c: xf86ProbeOutputModes().
  */
 void
-xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
+xf86PrintModeline(int scrnIndex, DisplayModePtr mode)
 {
     char tmp[256];
     char *flags = xnfcalloc(1, 1);
+#define TBITS 6
+    const char tchar[TBITS+1] = "UezdPb";
+    int tbit[TBITS] = {
+	M_T_USERPREF, M_T_DRIVER, M_T_USERDEF,
+	M_T_DEFAULT, M_T_PREFERRED, M_T_BUILTIN
+    };
+    char type[TBITS+2];   /* +1 for leading space */
+#undef TBITS
+    int tlen = 0;
+
+    if (mode->type) {
+	int i;
+
+	type[tlen++] = ' ';
+	for (i = 0; tchar[i]; i++)
+	    if (mode->type & tbit[i])
+		type[tlen++] = tchar[i];
+    }
+    type[tlen] = '\0';
 
     if (mode->HSkew) { 
 	snprintf(tmp, 256, "hskew %i", mode->HSkew); 
@@ -310,12 +351,12 @@ xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
     if (mode->Flags & V_CLKDIV2) add(&flags, "vclk/2");
 #endif
     xf86DrvMsg(scrnIndex, X_INFO,
-		   "Modeline \"%s\"x%.01f  %6.2f  %i %i %i %i  %i %i %i %i%s "
-		   "(%.01f kHz)\n",
-		   mode->name, mode->VRefresh, mode->Clock/1000., mode->HDisplay,
-		   mode->HSyncStart, mode->HSyncEnd, mode->HTotal,
-		   mode->VDisplay, mode->VSyncStart, mode->VSyncEnd,
-		   mode->VTotal, flags, xf86ModeHSync(mode));
+	       "Modeline \"%s\"x%.01f  %6.2f  %i %i %i %i  %i %i %i %i%s"
+	       " (%.01f kHz%s)\n",
+	       mode->name, mode->VRefresh, mode->Clock/1000.,
+	       mode->HDisplay, mode->HSyncStart, mode->HSyncEnd, mode->HTotal,
+	       mode->VDisplay, mode->VSyncStart, mode->VSyncEnd, mode->VTotal,
+	       flags, xf86ModeHSync(mode), type);
     free(flags);
 }
 

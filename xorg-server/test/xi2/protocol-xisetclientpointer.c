@@ -66,7 +66,6 @@ int __wrap_dixLookupClient(ClientPtr *pClient, XID rid, ClientPtr client, Mask a
 
 static void request_XISetClientPointer(xXISetClientPointerReq* req, int error)
 {
-    char n;
     int rc;
     client_request = init_client(req->length, req);
 
@@ -77,9 +76,9 @@ static void request_XISetClientPointer(xXISetClientPointerReq* req, int error)
         assert(client_request.errorValue == req->deviceid);
 
     client_request.swapped = TRUE;
-    swapl(&req->win, n);
-    swaps(&req->length, n);
-    swaps(&req->deviceid, n);
+    swapl(&req->win);
+    swaps(&req->length);
+    swaps(&req->deviceid);
     rc = SProcXISetClientPointer(&client_request);
     assert(rc == error);
 

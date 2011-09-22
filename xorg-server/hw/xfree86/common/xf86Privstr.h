@@ -66,6 +66,8 @@ typedef struct {
     int			vtPendingNum;
 #endif
     Bool		dontVTSwitch;
+    Bool		autoVTSwitch;
+    Bool		ShareVTs;
     Bool		dontZap;
     Bool		dontZoom;
     Bool		notrapSignals;	/* don't exit cleanly - die at fault */
@@ -91,9 +93,6 @@ typedef struct {
 						   input device events */
     Pix24Flags		pixmap24;
     MessageType		pix24From;
-#ifdef SUPPORT_PC98
-    Bool		pc98;
-#endif
     Bool		pmFlag;
     Log			log;
     Bool		disableRandR;

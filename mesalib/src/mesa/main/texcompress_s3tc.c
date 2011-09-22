@@ -101,7 +101,7 @@ dxtFetchTexelFuncExt fetch_ext_rgba_dxt3 = NULL;
 dxtFetchTexelFuncExt fetch_ext_rgba_dxt5 = NULL;
 
 typedef void (*dxtCompressTexFuncExt)(GLint srccomps, GLint width,
-                                      GLint height, const GLchan *srcPixData,
+                                      GLint height, const GLubyte *srcPixData,
                                       GLenum destformat, GLubyte *dest,
                                       GLint dstRowStride);
 
@@ -167,10 +167,10 @@ _mesa_init_texture_s3tc( struct gl_context *ctx )
 GLboolean
 _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
 {
-   const GLchan *pixels;
+   const GLubyte *pixels;
    GLubyte *dst;
    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
-   const GLchan *tempImage = NULL;
+   const GLubyte *tempImage = NULL;
 
    ASSERT(dstFormat == MESA_FORMAT_RGB_DXT1 ||
           dstFormat == MESA_FORMAT_SRGB_DXT1);
@@ -181,11 +181,11 @@ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
    (void) dstImageOffsets;
 
    if (srcFormat != GL_RGB ||
-       srcType != CHAN_TYPE ||
+       srcType != GL_UNSIGNED_BYTE ||
        ctx->_ImageTransferState ||
        srcPacking->SwapBytes) {
-      /* convert image to RGB/GLchan */
-      tempImage = _mesa_make_temp_chan_image(ctx, dims,
+      /* convert image to RGB/GLubyte */
+      tempImage = _mesa_make_temp_ubyte_image(ctx, dims,
                                              baseInternalFormat,
                                              _mesa_get_format_base_format(dstFormat),
                                              srcWidth, srcHeight, srcDepth,
@@ -197,7 +197,7 @@ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
       srcFormat = GL_RGB;
    }
    else {
-      pixels = (const GLchan *) srcAddr;
+      pixels = (const GLubyte *) srcAddr;
    }
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
@@ -226,10 +226,10 @@ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
 GLboolean
 _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
 {
-   const GLchan *pixels;
+   const GLubyte *pixels;
    GLubyte *dst;
    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
-   const GLchan *tempImage = NULL;
+   const GLubyte *tempImage = NULL;
 
    ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT1 ||
           dstFormat == MESA_FORMAT_SRGBA_DXT1);
@@ -240,11 +240,11 @@ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
    (void) dstImageOffsets;
 
    if (srcFormat != GL_RGBA ||
-       srcType != CHAN_TYPE ||
+       srcType != GL_UNSIGNED_BYTE ||
        ctx->_ImageTransferState ||
        srcPacking->SwapBytes) {
-      /* convert image to RGBA/GLchan */
-      tempImage = _mesa_make_temp_chan_image(ctx, dims,
+      /* convert image to RGBA/GLubyte */
+      tempImage = _mesa_make_temp_ubyte_image(ctx, dims,
                                              baseInternalFormat,
                                              _mesa_get_format_base_format(dstFormat),
                                              srcWidth, srcHeight, srcDepth,
@@ -256,7 +256,7 @@ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
       srcFormat = GL_RGBA;
    }
    else {
-      pixels = (const GLchan *) srcAddr;
+      pixels = (const GLubyte *) srcAddr;
    }
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
@@ -284,10 +284,10 @@ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
 GLboolean
 _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
 {
-   const GLchan *pixels;
+   const GLubyte *pixels;
    GLubyte *dst;
    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
-   const GLchan *tempImage = NULL;
+   const GLubyte *tempImage = NULL;
 
    ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT3 ||
           dstFormat == MESA_FORMAT_SRGBA_DXT3);
@@ -298,11 +298,11 @@ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
    (void) dstImageOffsets;
 
    if (srcFormat != GL_RGBA ||
-       srcType != CHAN_TYPE ||
+       srcType != GL_UNSIGNED_BYTE ||
        ctx->_ImageTransferState ||
        srcPacking->SwapBytes) {
-      /* convert image to RGBA/GLchan */
-      tempImage = _mesa_make_temp_chan_image(ctx, dims,
+      /* convert image to RGBA/GLubyte */
+      tempImage = _mesa_make_temp_ubyte_image(ctx, dims,
                                              baseInternalFormat,
                                              _mesa_get_format_base_format(dstFormat),
                                              srcWidth, srcHeight, srcDepth,
@@ -313,7 +313,7 @@ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
       pixels = tempImage;
    }
    else {
-      pixels = (const GLchan *) srcAddr;
+      pixels = (const GLubyte *) srcAddr;
    }
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
@@ -341,10 +341,10 @@ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
 GLboolean
 _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
 {
-   const GLchan *pixels;
+   const GLubyte *pixels;
    GLubyte *dst;
    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
-   const GLchan *tempImage = NULL;
+   const GLubyte *tempImage = NULL;
 
    ASSERT(dstFormat == MESA_FORMAT_RGBA_DXT5 ||
           dstFormat == MESA_FORMAT_SRGBA_DXT5);
@@ -355,11 +355,11 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
    (void) dstImageOffsets;
 
    if (srcFormat != GL_RGBA ||
-       srcType != CHAN_TYPE ||
+       srcType != GL_UNSIGNED_BYTE ||
        ctx->_ImageTransferState ||
        srcPacking->SwapBytes) {
-      /* convert image to RGBA/GLchan */
-      tempImage = _mesa_make_temp_chan_image(ctx, dims,
+      /* convert image to RGBA/GLubyte */
+      tempImage = _mesa_make_temp_ubyte_image(ctx, dims,
                                              baseInternalFormat,
                                    	     _mesa_get_format_base_format(dstFormat),
                                              srcWidth, srcHeight, srcDepth,
@@ -370,7 +370,7 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
       pixels = tempImage;
    }
    else {
-      pixels = (const GLchan *) srcAddr;
+      pixels = (const GLubyte *) srcAddr;
    }
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
@@ -394,11 +394,10 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
 
 static void
 fetch_texel_2d_rgb_dxt1( const struct swrast_texture_image *texImage,
-                         GLint i, GLint j, GLint k, GLchan *texel )
+                         GLint i, GLint j, GLint k, GLubyte *texel )
 {
    (void) k;
    if (fetch_ext_rgb_dxt1) {
-      ASSERT (sizeof(GLchan) == sizeof(GLubyte));
       fetch_ext_rgb_dxt1(texImage->Base.RowStride,
                          (GLubyte *)(texImage)->Base.Data, i, j, texel);
    }
@@ -411,19 +410,19 @@ void
 _mesa_fetch_texel_2d_f_rgb_dxt1(const struct swrast_texture_image *texImage,
                                 GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgb_dxt1(texImage, i, j, k, rgba);
-   texel[RCOMP] = CHAN_TO_FLOAT(rgba[RCOMP]);
-   texel[GCOMP] = CHAN_TO_FLOAT(rgba[GCOMP]);
-   texel[BCOMP] = CHAN_TO_FLOAT(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[RCOMP] = UBYTE_TO_FLOAT(rgba[RCOMP]);
+   texel[GCOMP] = UBYTE_TO_FLOAT(rgba[GCOMP]);
+   texel[BCOMP] = UBYTE_TO_FLOAT(rgba[BCOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 
 static void
 fetch_texel_2d_rgba_dxt1( const struct swrast_texture_image *texImage,
-                          GLint i, GLint j, GLint k, GLchan *texel )
+                          GLint i, GLint j, GLint k, GLubyte *texel )
 {
    (void) k;
    if (fetch_ext_rgba_dxt1) {
@@ -439,23 +438,22 @@ void
 _mesa_fetch_texel_2d_f_rgba_dxt1(const struct swrast_texture_image *texImage,
                                  GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgba_dxt1(texImage, i, j, k, rgba);
-   texel[RCOMP] = CHAN_TO_FLOAT(rgba[RCOMP]);
-   texel[GCOMP] = CHAN_TO_FLOAT(rgba[GCOMP]);
-   texel[BCOMP] = CHAN_TO_FLOAT(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[RCOMP] = UBYTE_TO_FLOAT(rgba[RCOMP]);
+   texel[GCOMP] = UBYTE_TO_FLOAT(rgba[GCOMP]);
+   texel[BCOMP] = UBYTE_TO_FLOAT(rgba[BCOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 
 static void
 fetch_texel_2d_rgba_dxt3( const struct swrast_texture_image *texImage,
-                          GLint i, GLint j, GLint k, GLchan *texel )
+                          GLint i, GLint j, GLint k, GLubyte *texel )
 {
    (void) k;
    if (fetch_ext_rgba_dxt3) {
-      ASSERT (sizeof(GLchan) == sizeof(GLubyte));
       fetch_ext_rgba_dxt3(texImage->Base.RowStride,
                           (GLubyte *)(texImage)->Base.Data,
                           i, j, texel);
@@ -469,19 +467,19 @@ void
 _mesa_fetch_texel_2d_f_rgba_dxt3(const struct swrast_texture_image *texImage,
                                  GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgba_dxt3(texImage, i, j, k, rgba);
-   texel[RCOMP] = CHAN_TO_FLOAT(rgba[RCOMP]);
-   texel[GCOMP] = CHAN_TO_FLOAT(rgba[GCOMP]);
-   texel[BCOMP] = CHAN_TO_FLOAT(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[RCOMP] = UBYTE_TO_FLOAT(rgba[RCOMP]);
+   texel[GCOMP] = UBYTE_TO_FLOAT(rgba[GCOMP]);
+   texel[BCOMP] = UBYTE_TO_FLOAT(rgba[BCOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 
 static void
 fetch_texel_2d_rgba_dxt5( const struct swrast_texture_image *texImage,
-                          GLint i, GLint j, GLint k, GLchan *texel )
+                          GLint i, GLint j, GLint k, GLubyte *texel )
 {
    (void) k;
    if (fetch_ext_rgba_dxt5) {
@@ -498,13 +496,13 @@ void
 _mesa_fetch_texel_2d_f_rgba_dxt5(const struct swrast_texture_image *texImage,
                                  GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgba_dxt5(texImage, i, j, k, rgba);
-   texel[RCOMP] = CHAN_TO_FLOAT(rgba[RCOMP]);
-   texel[GCOMP] = CHAN_TO_FLOAT(rgba[GCOMP]);
-   texel[BCOMP] = CHAN_TO_FLOAT(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[RCOMP] = UBYTE_TO_FLOAT(rgba[RCOMP]);
+   texel[GCOMP] = UBYTE_TO_FLOAT(rgba[GCOMP]);
+   texel[BCOMP] = UBYTE_TO_FLOAT(rgba[BCOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 #if FEATURE_EXT_texture_sRGB
@@ -512,52 +510,52 @@ void
 _mesa_fetch_texel_2d_f_srgb_dxt1( const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel )
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgb_dxt1(texImage, i, j, k, rgba);
    texel[RCOMP] = nonlinear_to_linear(rgba[RCOMP]);
    texel[GCOMP] = nonlinear_to_linear(rgba[GCOMP]);
    texel[BCOMP] = nonlinear_to_linear(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 void
 _mesa_fetch_texel_2d_f_srgba_dxt1(const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgba_dxt1(texImage, i, j, k, rgba);
    texel[RCOMP] = nonlinear_to_linear(rgba[RCOMP]);
    texel[GCOMP] = nonlinear_to_linear(rgba[GCOMP]);
    texel[BCOMP] = nonlinear_to_linear(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 void
 _mesa_fetch_texel_2d_f_srgba_dxt3(const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgba_dxt3(texImage, i, j, k, rgba);
    texel[RCOMP] = nonlinear_to_linear(rgba[RCOMP]);
    texel[GCOMP] = nonlinear_to_linear(rgba[GCOMP]);
    texel[BCOMP] = nonlinear_to_linear(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 
 void
 _mesa_fetch_texel_2d_f_srgba_dxt5(const struct swrast_texture_image *texImage,
                                   GLint i, GLint j, GLint k, GLfloat *texel)
 {
-   /* just sample as GLchan and convert to float here */
-   GLchan rgba[4];
+   /* just sample as GLubyte and convert to float here */
+   GLubyte rgba[4];
    fetch_texel_2d_rgba_dxt5(texImage, i, j, k, rgba);
    texel[RCOMP] = nonlinear_to_linear(rgba[RCOMP]);
    texel[GCOMP] = nonlinear_to_linear(rgba[GCOMP]);
    texel[BCOMP] = nonlinear_to_linear(rgba[BCOMP]);
-   texel[ACOMP] = CHAN_TO_FLOAT(rgba[ACOMP]);
+   texel[ACOMP] = UBYTE_TO_FLOAT(rgba[ACOMP]);
 }
 #endif /* FEATURE_EXT_texture_sRGB */
 

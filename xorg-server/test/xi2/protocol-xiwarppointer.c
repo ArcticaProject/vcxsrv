@@ -78,7 +78,6 @@ static Bool ScreenSetCursorPosition(DeviceIntPtr dev, ScreenPtr screen,
 static void request_XIWarpPointer(ClientPtr client, xXIWarpPointerReq* req,
         int error)
 {
-    char n;
     int rc;
 
     rc = ProcXIWarpPointer(client);
@@ -93,15 +92,15 @@ static void request_XIWarpPointer(ClientPtr client, xXIWarpPointerReq* req,
 
     client->swapped = TRUE;
 
-    swapl(&req->src_win, n);
-    swapl(&req->dst_win, n);
-    swapl(&req->src_x, n);
-    swapl(&req->src_y, n);
-    swapl(&req->dst_x, n);
-    swapl(&req->dst_y, n);
-    swaps(&req->src_width, n);
-    swaps(&req->src_height, n);
-    swaps(&req->deviceid, n);
+    swapl(&req->src_win);
+    swapl(&req->dst_win);
+    swapl(&req->src_x);
+    swapl(&req->src_y);
+    swapl(&req->dst_x);
+    swapl(&req->dst_y);
+    swaps(&req->src_width);
+    swaps(&req->src_height);
+    swaps(&req->deviceid);
 
     rc = SProcXIWarpPointer(client);
     assert(rc == error);

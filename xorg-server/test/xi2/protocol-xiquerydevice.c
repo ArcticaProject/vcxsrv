@@ -64,10 +64,9 @@ static void reply_XIQueryDevice(ClientPtr client, int len, char* data, void *use
 
     if (client->swapped)
     {
-        char n;
-        swapl(&rep->length, n);
-        swaps(&rep->sequenceNumber, n);
-        swaps(&rep->num_devices, n);
+        swapl(&rep->length);
+        swaps(&rep->sequenceNumber);
+        swaps(&rep->num_devices);
     }
 
     reply_check_defaults(rep, len, XIQueryDevice);
@@ -86,7 +85,6 @@ static void reply_XIQueryDevice(ClientPtr client, int len, char* data, void *use
 /* reply handling for the trailing bytes that constitute the device info */
 static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void *userdata)
 {
-    char n;
     int i, j;
     struct test_data *querydata = (struct test_data*)userdata;
 
@@ -98,11 +96,11 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
     {
         if (client->swapped)
         {
-            swaps(&info->deviceid, n);
-            swaps(&info->attachment, n);
-            swaps(&info->use, n);
-            swaps(&info->num_classes, n);
-            swaps(&info->name_len, n);
+            swaps(&info->deviceid);
+            swaps(&info->attachment);
+            swaps(&info->use);
+            swaps(&info->num_classes);
+            swaps(&info->name_len);
         }
 
         if (querydata->which_device > XIAllMasterDevices)
@@ -152,9 +150,9 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
         {
             if (client->swapped)
             {
-                swaps(&any->type, n);
-                swaps(&any->length, n);
-                swaps(&any->sourceid, n);
+                swaps(&any->type);
+                swaps(&any->length);
+                swaps(&any->sourceid);
             }
 
             switch(info->deviceid)
@@ -168,7 +166,7 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                         uint32_t *kc;
 
                         if (client->swapped)
-                            swaps(&ki->num_keycodes, n);
+                            swaps(&ki->num_keycodes);
 
                         assert(any->type == XIKeyClass);
                         assert(ki->num_keycodes == (xkb->max_key_code - xkb->min_key_code + 1));
@@ -178,7 +176,7 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                         for (k = 0; k < ki->num_keycodes; k++, kc++)
                         {
                             if (client->swapped)
-                                swapl(kc, n);
+                                swapl(kc);
 
                             assert(*kc >= xkb->min_key_code);
                             assert(*kc <= xkb->max_key_code);
@@ -197,7 +195,7 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
                             xXIButtonInfo *bi = (xXIButtonInfo*)any;
 
                             if (client->swapped)
-                                swaps(&bi->num_buttons, n);
+                                swaps(&bi->num_buttons);
 
                             assert(bi->num_buttons == devices.vcp->button->numButtons);
 
@@ -209,13 +207,13 @@ static void reply_XIQueryDevice_data(ClientPtr client, int len, char *data, void
 
                             if (client->swapped)
                             {
-                                swaps(&vi->number, n);
-                                swapl(&vi->label, n);
-                                swapl(&vi->min.integral, n);
-                                swapl(&vi->min.frac, n);
-                                swapl(&vi->max.integral, n);
-                                swapl(&vi->max.frac, n);
-                                swapl(&vi->resolution, n);
+                                swaps(&vi->number);
+                                swapl(&vi->label);
+                                swapl(&vi->min.integral);
+                                swapl(&vi->min.frac);
+                                swapl(&vi->max.integral);
+                                swapl(&vi->max.frac);
+                                swapl(&vi->resolution);
                             }
 
                             assert(vi->length == 11);
@@ -244,7 +242,6 @@ static void request_XIQueryDevice(struct test_data *querydata,
                                  int deviceid, int error)
 {
     int rc;
-    char n;
     ClientRec client;
     xXIQueryDeviceReq request;
 
@@ -264,8 +261,8 @@ static void request_XIQueryDevice(struct test_data *querydata,
     reply_handler = reply_XIQueryDevice;
 
     client.swapped = TRUE;
-    swaps(&request.length, n);
-    swaps(&request.deviceid, n);
+    swaps(&request.length);
+    swaps(&request.deviceid);
     rc = SProcXIQueryDevice(&client);
     assert(rc == error);
 

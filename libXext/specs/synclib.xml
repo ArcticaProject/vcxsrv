@@ -45,12 +45,12 @@
         <affiliation><orgname>X Consortium, Inc.</orgname></affiliation>
       </author>
    </authorgroup>
+   <copyright><year>1991</year>
+     <holder>Olivetti Research Limited, Cambridge England</holder>
+     <holder>Digital Equipment Corporation, Maynard, Massachusetts</holder>
+   </copyright>
+
 <legalnotice>
-
-<para>
-Copyright 1991 by Olivetti Research Limited, Cambridge England and Digital Equipment Corporation, Maynard, Massachusetts
-</para>
-
 <para>
 Permission to use, copy, modify, and distribute this documentation for any
 purpose and without fee is hereby granted, provided that the above
@@ -62,11 +62,7 @@ is without express or implied warranty.
 </legalnotice>
 
 <legalnotice>
-
-<para>
-Copyright &copy; 1991 X Consortium, Inc.
-</para>
-
+<para role="multiLicensing">Copyright &copy; 1991 X Consortium, Inc.</para>
 <para>
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files
@@ -82,7 +78,7 @@ The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 </para>
 
-<para>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+<para>THE SOFTWARE IS PROVIDED &ldquo;AS IS&rdquo;, WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
@@ -97,6 +93,7 @@ not be used in advertising or otherwise to promote the sale, use or other
 dealings in this Software without prior written authorization from the
 X Consortium.
 </para>
+<para>X Window System is a trademark of The OpenGroup.</para>
 
 </legalnotice>
 </bookinfo>

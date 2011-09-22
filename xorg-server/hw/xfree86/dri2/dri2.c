@@ -102,6 +102,8 @@ typedef struct _DRI2Screen {
     DRI2GetMSCProcPtr		 GetMSC;
     DRI2ScheduleWaitMSCProcPtr	 ScheduleWaitMSC;
     DRI2AuthMagicProcPtr	 AuthMagic;
+    DRI2ReuseBufferNotifyProcPtr ReuseBufferNotify;
+    DRI2SwapLimitValidateProcPtr SwapLimitValidate;
 
     HandleExposuresProcPtr       HandleExposures;
 
@@ -189,6 +191,36 @@ DRI2AllocateDrawable(DrawablePtr pDraw)
     }
 
     return pPriv;
+}
+
+Bool
+DRI2SwapLimit(DrawablePtr pDraw, int swap_limit)
+{
+    DRI2DrawablePtr pPriv = DRI2GetDrawable(pDraw);
+    DRI2ScreenPtr ds;
+    if (!pPriv)
+	return FALSE;
+
+    ds = pPriv->dri2_screen;
+
+    if (!ds->SwapLimitValidate
+	|| !ds->SwapLimitValidate(pDraw, swap_limit))
+	return FALSE;
+
+    pPriv->swap_limit = swap_limit;
+
+    /* Check throttling */
+    if (pPriv->swapsPending >= pPriv->swap_limit)
+	return TRUE;
+
+    if (pPriv->target_sbc == -1 && !pPriv->blockedOnMsc) {
+	if (pPriv->blockedClient) {
+	    AttendClient(pPriv->blockedClient);
+	    pPriv->blockedClient = NULL;
+	}
+    }
+
+    return TRUE;
 }
 
 typedef struct DRI2DrawableRefRec {
@@ -352,6 +384,10 @@ allocate_or_reuse_buffer(DrawablePtr pDraw, DRI2ScreenPtr ds,
 
     } else {
 	*buffer = pPriv->buffers[old_buf];
+
+	if (ds->ReuseBufferNotify)
+		(*ds->ReuseBufferNotify)(pDraw, *buffer);
+
 	pPriv->buffers[old_buf] = NULL;
 	return FALSE;
     }
@@ -1126,6 +1162,11 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 
     if (info->version >= 5) {
         ds->AuthMagic = info->AuthMagic;
+    }
+
+    if (info->version >= 6) {
+	ds->ReuseBufferNotify = info->ReuseBufferNotify;
+	ds->SwapLimitValidate = info->SwapLimitValidate;
     }
 
     /*

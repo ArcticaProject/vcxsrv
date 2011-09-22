@@ -74,12 +74,10 @@ SOFTWARE.
 int
 SProcXChangeFeedbackControl(ClientPtr client)
 {
-    char n;
-
     REQUEST(xChangeFeedbackControlReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xChangeFeedbackControlReq);
-    swapl(&stuff->mask, n);
+    swapl(&stuff->mask);
     return (ProcXChangeFeedbackControl(client));
 }
 
@@ -93,17 +91,16 @@ static int
 ChangeKbdFeedback(ClientPtr client, DeviceIntPtr dev, long unsigned int mask,
 		  KbdFeedbackPtr k, xKbdFeedbackCtl * f)
 {
-    char n;
     KeybdCtrl kctrl;
     int t;
     int key = DO_ALL;
 
     if (client->swapped) {
-	swaps(&f->length, n);
-	swaps(&f->pitch, n);
-	swaps(&f->duration, n);
-	swapl(&f->led_mask, n);
-	swapl(&f->led_values, n);
+	swaps(&f->length);
+	swaps(&f->pitch);
+	swaps(&f->duration);
+	swapl(&f->led_mask);
+	swapl(&f->led_values);
     }
 
     kctrl = k->ctrl;
@@ -210,14 +207,13 @@ static int
 ChangePtrFeedback(ClientPtr client, DeviceIntPtr dev, long unsigned int mask,
 		  PtrFeedbackPtr p, xPtrFeedbackCtl * f)
 {
-    char n;
     PtrCtrl pctrl;	/* might get BadValue part way through */
 
     if (client->swapped) {
-	swaps(&f->length, n);
-	swaps(&f->num, n);
-	swaps(&f->denom, n);
-	swaps(&f->thresh, n);
+	swaps(&f->length);
+	swaps(&f->num);
+	swaps(&f->denom);
+	swaps(&f->thresh);
     }
 
     pctrl = p->ctrl;
@@ -276,11 +272,9 @@ ChangeIntegerFeedback(ClientPtr client, DeviceIntPtr dev,
 		      long unsigned int mask, IntegerFeedbackPtr i,
 		      xIntegerFeedbackCtl * f)
 {
-    char n;
-
     if (client->swapped) {
-	swaps(&f->length, n);
-	swapl(&f->int_to_display, n);
+	swaps(&f->length);
+	swapl(&f->int_to_display);
     }
 
     i->ctrl.integer_displayed = f->int_to_display;
@@ -299,13 +293,12 @@ ChangeStringFeedback(ClientPtr client, DeviceIntPtr dev,
 		     long unsigned int mask, StringFeedbackPtr s,
 		     xStringFeedbackCtl * f)
 {
-    char n;
     int i, j;
     KeySym *syms, *sup_syms;
 
     syms = (KeySym *) (f + 1);
     if (client->swapped) {
-	swaps(&f->length, n);	/* swapped num_keysyms in calling proc */
+	swaps(&f->length);	/* swapped num_keysyms in calling proc */
 	SwapLongs((CARD32 *) syms, f->num_keysyms);
     }
 
@@ -339,14 +332,13 @@ ChangeBellFeedback(ClientPtr client, DeviceIntPtr dev,
 		   long unsigned int mask, BellFeedbackPtr b,
 		   xBellFeedbackCtl * f)
 {
-    char n;
     int t;
     BellCtrl bctrl;	/* might get BadValue part way through */
 
     if (client->swapped) {
-	swaps(&f->length, n);
-	swaps(&f->pitch, n);
-	swaps(&f->duration, n);
+	swaps(&f->length);
+	swaps(&f->pitch);
+	swaps(&f->duration);
     }
 
     bctrl = b->ctrl;
@@ -397,13 +389,12 @@ static int
 ChangeLedFeedback(ClientPtr client, DeviceIntPtr dev, long unsigned int mask,
 		  LedFeedbackPtr l, xLedFeedbackCtl * f)
 {
-    char n;
     LedCtrl lctrl;	/* might get BadValue part way through */
 
     if (client->swapped) {
-	swaps(&f->length, n);
-	swapl(&f->led_values, n);
-	swapl(&f->led_mask, n);
+	swaps(&f->length);
+	swapl(&f->led_values);
+	swapl(&f->led_mask);
     }
 
     f->led_mask &= l->ctrl.led_mask;	/* set only supported leds */
@@ -467,11 +458,10 @@ ProcXChangeFeedbackControl(ClientPtr client)
 	break;
     case StringFeedbackClass:
     {
-	char n;
 	xStringFeedbackCtl *f = ((xStringFeedbackCtl *) & stuff[1]);
 
 	if (client->swapped) {
-	    swaps(&f->num_keysyms, n);
+	    swaps(&f->num_keysyms);
 	}
 	if (len != (bytes_to_int32(sizeof(xStringFeedbackCtl)) + f->num_keysyms))
 	    return BadLength;

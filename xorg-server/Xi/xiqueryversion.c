@@ -103,23 +103,20 @@ ProcXIQueryVersion(ClientPtr client)
 int
 SProcXIQueryVersion(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIQueryVersionReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xXIQueryVersionReq);
-    swaps(&stuff->major_version, n);
-    swaps(&stuff->minor_version, n);
+    swaps(&stuff->major_version);
+    swaps(&stuff->minor_version);
     return (ProcXIQueryVersion(client));
 }
 
 void
 SRepXIQueryVersion(ClientPtr client, int size, xXIQueryVersionReply *rep)
 {
-    char n;
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->major_version, n);
-    swaps(&rep->minor_version, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->major_version);
+    swaps(&rep->minor_version);
     WriteToClient(client, size, (char *)rep);
 }

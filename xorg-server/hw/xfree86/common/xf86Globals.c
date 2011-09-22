@@ -103,6 +103,8 @@ xf86InfoRec xf86Info = {
     .vtPendingNum               = -1,
 #endif
     .dontVTSwitch               = FALSE,
+    .autoVTSwitch               = TRUE,
+    .ShareVTs                   = FALSE,
     .dontZap                    = FALSE,
     .dontZoom                   = FALSE,
     .notrapSignals              = FALSE,
@@ -119,9 +121,6 @@ xf86InfoRec xf86Info = {
     .miscModInDevAllowNonLocal  = FALSE,
     .pixmap24                   = Pix24DontCare,
     .pix24From                  = X_DEFAULT,
-#ifdef SUPPORT_PC98
-    .pc98                       = FALSE,
-#endif
     .pmFlag                     = TRUE,
     .log                        = LogNone,
     .disableRandR               = FALSE,

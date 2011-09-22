@@ -72,31 +72,6 @@ pixman_malloc_abc (unsigned int a,
 }
 
 /*
- * Helper routine to expand a color component from 0 < n <= 8 bits to 16
- * bits by replication.
- */
-static inline uint64_t
-expand16 (const uint8_t val, int nbits)
-{
-    /* Start out with the high bit of val in the high bit of result. */
-    uint16_t result = (uint16_t)val << (16 - nbits);
-
-    if (nbits == 0)
-	return 0;
-
-    /* Copy the bits in result, doubling the number of bits each time, until
-     * we fill all 16 bits.
-     */
-    while (nbits < 16)
-    {
-	result |= result >> nbits;
-	nbits *= 2;
-    }
-
-    return result;
-}
-
-/*
  * This function expands images from ARGB8 format to ARGB16.  To preserve
  * precision, it needs to know the original source format.  For example, if the
  * source was PIXMAN_x1r5g5b5 and the red component contained bits 12345, then
@@ -137,10 +112,11 @@ pixman_expand (uint64_t *           dst,
 	              r = (pixel >> r_shift) & r_mask,
 	              g = (pixel >> g_shift) & g_mask,
 	              b = (pixel >> b_shift) & b_mask;
-	const uint64_t a16 = a_size ? expand16 (a, a_size) : 0xffff,
-	               r16 = expand16 (r, r_size),
-	               g16 = expand16 (g, g_size),
-	               b16 = expand16 (b, b_size);
+	const uint64_t
+	    a16 = a_size ? unorm_to_unorm (a, a_size, 16) : 0xffff,
+	    r16 = unorm_to_unorm (r, r_size, 16),
+	    g16 = unorm_to_unorm (g, g_size, 16),
+	    b16 = unorm_to_unorm (b, b_size, 16);
 
 	dst[i] = a16 << 48 | r16 << 32 | g16 << 16 | b16;
     }

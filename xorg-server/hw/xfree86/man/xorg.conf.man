@@ -634,12 +634,6 @@ are 24 and 32.
 Default: 32 unless driver constraints don't allow this (which is rare).
 Note: some clients don't behave well when this value is set to 24.
 .TP 7
-.BI "Option \*qPC98\*q  \*q" boolean \*q
-Specify that the machine is a Japanese PC\-98 machine.
-This should not be enabled for anything other than the Japanese\-specific
-PC\-98 architecture.
-Default: auto\-detected.
-.TP 7
 .BI "Option \*qNoPM\*q  \*q" boolean \*q
 Disables something to do with power management events.
 Default: PM enabled on platforms that support it.

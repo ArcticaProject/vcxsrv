@@ -56,6 +56,7 @@
 #include "dmxpict.h"
 
 #include <X11/Xos.h>                /* For gettimeofday */
+#include <X11/Xmu/SysUtil.h>        /* For XmuGetHostname */
 #include "dixstruct.h"
 #ifdef PANORAMIX
 #include "panoramiXsrv.h"
@@ -131,7 +132,7 @@ static int dmxErrorHandler(Display *dpy, XErrorEvent *ev)
 
                                 /* Find major opcode name */
     if (ev->request_code < 128) {
-        XmuSnprintf(request, sizeof(request), "%d", ev->request_code);
+        snprintf(request, sizeof(request), "%d", ev->request_code);
         XGetErrorDatabaseText(dpy, "XRequest", request, "", buf, sizeof(buf));
     } else {
         for (ext = dpy->ext_procs;
@@ -145,8 +146,8 @@ static int dmxErrorHandler(Display *dpy, XErrorEvent *ev)
 
                                 /* Find minor opcode name */
     if (ev->request_code >= 128 && ext) {
-        XmuSnprintf(request, sizeof(request), "%d", ev->request_code);
-        XmuSnprintf(request, sizeof(request), "%s.%d",
+        snprintf(request, sizeof(request), "%d", ev->request_code);
+        snprintf(request, sizeof(request), "%s.%d",
                     ext->name, ev->minor_code);
         XGetErrorDatabaseText(dpy, "XRequest", request, "", buf, sizeof(buf));
         dmxLog(dmxWarning, "                 Minor opcode: %d (%s)\n",
@@ -515,7 +516,7 @@ static const char *dmxExecOS(void)
     if (!initialized++) {
         memset(buffer, 0, sizeof(buffer));
         uname(&u);
-        XmuSnprintf(buffer, sizeof(buffer)-1, "%s %s %s",
+        snprintf(buffer, sizeof(buffer)-1, "%s %s %s",
                     u.sysname, u.release, u.version);
     }
     return buffer;
@@ -530,7 +531,7 @@ static const char *dmxBuildCompiler(void)
     if (!initialized++) {
         memset(buffer, 0, sizeof(buffer));
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) &&defined(__GNUC_PATCHLEVEL__)
-        XmuSnprintf(buffer, sizeof(buffer)-1, "gcc %d.%d.%d",
+        snprintf(buffer, sizeof(buffer)-1, "gcc %d.%d.%d",
                     __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
 #endif
     }

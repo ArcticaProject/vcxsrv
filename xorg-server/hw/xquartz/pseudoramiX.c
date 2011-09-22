@@ -183,7 +183,7 @@ static int ProcPseudoramiXGetState(ClientPtr client)
     REQUEST(xPanoramiXGetStateReq);
     WindowPtr pWin;
     xPanoramiXGetStateReply rep;
-    register int n, rc;
+    register int rc;
 
     TRACE();
     
@@ -197,9 +197,9 @@ static int ProcPseudoramiXGetState(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     rep.state = !noPseudoramiXExtension;
     if (client->swapped) {
-        swaps (&rep.sequenceNumber, n);
-        swapl (&rep.length, n);
-        swaps (&rep.state, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swaps(&rep.state);
     }
     WriteToClient (client, sizeof (xPanoramiXGetStateReply), (char *) &rep);
     return Success;
@@ -212,7 +212,7 @@ static int ProcPseudoramiXGetScreenCount(ClientPtr client)
     REQUEST(xPanoramiXGetScreenCountReq);
     WindowPtr pWin;
     xPanoramiXGetScreenCountReply rep;
-    register int n, rc;
+    register int rc;
 
     TRACE();
     
@@ -226,9 +226,9 @@ static int ProcPseudoramiXGetScreenCount(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     rep.ScreenCount = pseudoramiXNumScreens;
     if (client->swapped) {
-        swaps (&rep.sequenceNumber, n);
-        swapl (&rep.length, n);
-        swaps (&rep.ScreenCount, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swaps(&rep.ScreenCount);
     }
     WriteToClient (client, sizeof(xPanoramiXGetScreenCountReply), (char *)&rep);
     return Success;
@@ -259,10 +259,10 @@ static int ProcPseudoramiXGetScreenSize(ClientPtr client)
     rep.height = pseudoramiXScreens[stuff->screen].h;
     // was screenInfo.screens[stuff->screen]->height;
     if (client->swapped) {
-        swaps (&rep.sequenceNumber, n);
-        swapl (&rep.length, n);
-        swaps (&rep.width, n);
-        swaps (&rep.height, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swaps(&rep.width);
+        swaps(&rep.height);
     }
     WriteToClient (client, sizeof(xPanoramiXGetScreenSizeReply), (char *)&rep);
     return Success;
@@ -284,10 +284,9 @@ static int ProcPseudoramiXIsActive(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     rep.state = !noPseudoramiXExtension;
     if (client->swapped) {
-	register int n;
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
-	swapl (&rep.state, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.state);
     }
     WriteToClient (client, sizeof (xXineramaIsActiveReply), (char *) &rep);
     return Success;
@@ -309,10 +308,9 @@ static int ProcPseudoramiXQueryScreens(ClientPtr client)
     rep.number = noPseudoramiXExtension ? 0 : pseudoramiXNumScreens;
     rep.length = bytes_to_int32(rep.number * sz_XineramaScreenInfo);
     if (client->swapped) {
-	register int n;
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
-	swapl (&rep.number, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.number);
     }
     WriteToClient (client, sizeof (xXineramaQueryScreensReply), (char *) &rep);
 
@@ -327,11 +325,10 @@ static int ProcPseudoramiXQueryScreens(ClientPtr client)
 	    scratch.height = pseudoramiXScreens[i].h;
 
 	    if(client->swapped) {
-		register int n;
-		swaps (&scratch.x_org, n);
-		swaps (&scratch.y_org, n);
-		swaps (&scratch.width, n);
-		swaps (&scratch.height, n);
+		swaps(&scratch.x_org);
+		swaps(&scratch.y_org);
+		swaps(&scratch.width);
+		swaps(&scratch.height);
 	    }
 	    WriteToClient (client, sz_XineramaScreenInfo, (char *) &scratch);
 	}
@@ -369,11 +366,10 @@ static int
 SProcPseudoramiXQueryVersion (ClientPtr client)
 {
 	REQUEST(xPanoramiXQueryVersionReq);
-	register int n;
 
     TRACE();
 
-	swaps(&stuff->length,n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH (xPanoramiXQueryVersionReq);
 	return ProcPseudoramiXQueryVersion(client);
 }
@@ -382,11 +378,10 @@ static int
 SProcPseudoramiXGetState(ClientPtr client)
 {
 	REQUEST(xPanoramiXGetStateReq);
-	register int n;
 
     TRACE();
 
- 	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xPanoramiXGetStateReq);
 	return ProcPseudoramiXGetState(client);
 }
@@ -395,11 +390,10 @@ static int
 SProcPseudoramiXGetScreenCount(ClientPtr client)
 {
 	REQUEST(xPanoramiXGetScreenCountReq);
-	register int n;
 
     TRACE();
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xPanoramiXGetScreenCountReq);
 	return ProcPseudoramiXGetScreenCount(client);
 }
@@ -408,11 +402,10 @@ static int
 SProcPseudoramiXGetScreenSize(ClientPtr client)
 {
 	REQUEST(xPanoramiXGetScreenSizeReq);
-	register int n;
 
     TRACE();
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xPanoramiXGetScreenSizeReq);
 	return ProcPseudoramiXGetScreenSize(client);
 }
@@ -422,11 +415,10 @@ static int
 SProcPseudoramiXIsActive(ClientPtr client)
 {
 	REQUEST(xXineramaIsActiveReq);
-	register int n;
 
     TRACE();
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xXineramaIsActiveReq);
 	return ProcPseudoramiXIsActive(client);
 }
@@ -436,11 +428,10 @@ static int
 SProcPseudoramiXQueryScreens(ClientPtr client)
 {
 	REQUEST(xXineramaQueryScreensReq);
-	register int n;
 
     TRACE();
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xXineramaQueryScreensReq);
 	return ProcPseudoramiXQueryScreens(client);
 }

@@ -32,7 +32,7 @@
 #include "unpack.h"
 #include "g_disptab.h"
 
-GLint __glEvalComputeK(GLenum target)
+static GLint __glEvalComputeK(GLenum target)
 {
     switch (target) {
     case GL_MAP1_VERTEX_4:

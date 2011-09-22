@@ -19,11 +19,11 @@
          <firstname>Ian</firstname><surname>Elliot</surname>
          <affiliation><orgname>Hewlett-Packard Company</orgname></affiliation>
       </author>
+      <othercredit>
+         <firstname>David</firstname><othername>P.</othername><surname>Wiggins</surname>
+         <affiliation><orgname>X Consortium, Inc</orgname></affiliation>
+      </othercredit>
    </authorgroup>
-   <othercredit>
-      <firstname>David</firstname><othername>P.</othername><surname>Wiggins</surname>
-      <affiliation><orgname>X Consortium, Inc</orgname></affiliation>
-   </othercredit>
    <copyright><year>1989</year>
      <holder>X Consortium Inc</holder>
      <holder>Digital Equipment Corporation</holder>

@@ -61,7 +61,6 @@ ProcXFixesQueryVersion(ClientPtr client)
 {
     XFixesClientPtr pXFixesClient = GetXFixesClient (client);
     xXFixesQueryVersionReply rep;
-    register int n;
     REQUEST(xXFixesQueryVersionReq);
 
     REQUEST_SIZE_MATCH(xXFixesQueryVersionReq);
@@ -83,10 +82,10 @@ ProcXFixesQueryVersion(ClientPtr client)
     pXFixesClient->major_version = rep.majorVersion;
     pXFixesClient->minor_version = rep.minorVersion;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.majorVersion, n);
-	swapl(&rep.minorVersion, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.majorVersion);
+	swapl(&rep.minorVersion);
     }
     WriteToClient(client, sizeof(xXFixesQueryVersionReply), (char *)&rep);
     return Success;
@@ -161,12 +160,11 @@ ProcXFixesDispatch (ClientPtr client)
 static int
 SProcXFixesQueryVersion(ClientPtr client)
 {
-    register int n;
     REQUEST(xXFixesQueryVersionReq);
 
-    swaps(&stuff->length, n);
-    swapl(&stuff->majorVersion, n);
-    swapl(&stuff->minorVersion, n);
+    swaps(&stuff->length);
+    swapl(&stuff->majorVersion);
+    swapl(&stuff->minorVersion);
     return (*ProcXFixesVector[stuff->xfixesReqType]) (client);
 }
 

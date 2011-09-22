@@ -109,7 +109,6 @@ ProcCompositeQueryVersion (ClientPtr client)
 {
     CompositeClientPtr pCompositeClient = GetCompositeClient (client);
     xCompositeQueryVersionReply rep;
-    register int n;
     REQUEST(xCompositeQueryVersionReq);
 
     REQUEST_SIZE_MATCH(xCompositeQueryVersionReq);
@@ -126,10 +125,10 @@ ProcCompositeQueryVersion (ClientPtr client)
     pCompositeClient->major_version = rep.majorVersion;
     pCompositeClient->minor_version = rep.minorVersion;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.majorVersion, n);
-	swapl(&rep.minorVersion, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.majorVersion);
+	swapl(&rep.minorVersion);
     }
     WriteToClient(client, sizeof(xCompositeQueryVersionReply), (char *)&rep);
     return Success;
@@ -315,10 +314,9 @@ ProcCompositeGetOverlayWindow (ClientPtr client)
 
     if (client->swapped)
     {
-	int n;
-	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.overlayWin, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.overlayWin);
     }
     (void) WriteToClient(client, sz_xCompositeGetOverlayWindowReply, (char *)&rep);
 
@@ -377,111 +375,102 @@ ProcCompositeDispatch (ClientPtr client)
 static int
 SProcCompositeQueryVersion (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeQueryVersionReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeQueryVersionReq);
-    swapl(&stuff->majorVersion, n);
-    swapl(&stuff->minorVersion, n);
+    swapl(&stuff->majorVersion);
+    swapl(&stuff->minorVersion);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeRedirectWindow (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeRedirectWindowReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeRedirectWindowReq);
-    swapl (&stuff->window, n);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeRedirectSubwindows (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeRedirectSubwindowsReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeRedirectSubwindowsReq);
-    swapl (&stuff->window, n);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeUnredirectWindow (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeUnredirectWindowReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeUnredirectWindowReq);
-    swapl (&stuff->window, n);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeUnredirectSubwindows (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeUnredirectSubwindowsReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeUnredirectSubwindowsReq);
-    swapl (&stuff->window, n);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeCreateRegionFromBorderClip (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeCreateRegionFromBorderClipReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeCreateRegionFromBorderClipReq);
-    swapl (&stuff->region, n);
-    swapl (&stuff->window, n);
+    swapl(&stuff->region);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeNameWindowPixmap (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeNameWindowPixmapReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeNameWindowPixmapReq);
-    swapl (&stuff->window, n);
-    swapl (&stuff->pixmap, n);
+    swapl(&stuff->window);
+    swapl(&stuff->pixmap);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeGetOverlayWindow (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeGetOverlayWindowReq);
 
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeGetOverlayWindowReq);
-    swapl(&stuff->window, n);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
 static int
 SProcCompositeReleaseOverlayWindow (ClientPtr client)
 {
-    int n;
     REQUEST(xCompositeReleaseOverlayWindowReq);
 
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xCompositeReleaseOverlayWindowReq);
-    swapl(&stuff->window, n);
+    swapl(&stuff->window);
     return (*ProcCompositeVector[stuff->compositeReqType]) (client);
 }
 
@@ -839,10 +828,9 @@ PanoramiXCompositeGetOverlayWindow (ClientPtr client)
 
     if (client->swapped)
     {
-	int n;
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.length, n);
-	swapl(&rep.overlayWin, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.overlayWin);
     }
     (void) WriteToClient(client, sz_xCompositeGetOverlayWindowReply, (char *)&rep);
 

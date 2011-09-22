@@ -760,8 +760,7 @@ vfbWriteXWDFileHeader(ScreenPtr pScreen)
 	SwapLongs((CARD32 *)pXWDHeader, SIZEOF(XWDheader)/4);
 	for (i = 0; i < pvfb->ncolors; i++)
 	{
-	    register char n;
-	    swapl(&pvfb->pXWDCmap[i].pixel, n);
+	    swapl(&pvfb->pXWDCmap[i].pixel);
 	}
     }
 }

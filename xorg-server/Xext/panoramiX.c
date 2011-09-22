@@ -388,7 +388,7 @@ XineramaRegisterConnectionBlockCallback(void (*func)(void))
     return TRUE;
 }
 
-static void XineramaInitData(ScreenPtr pScreen)
+static void XineramaInitData(void)
 {
     int i, w, h;
 
@@ -397,7 +397,7 @@ static void XineramaInitData(ScreenPtr pScreen)
 	BoxRec TheBox;
 	RegionRec ScreenRegion;
 
-        pScreen = screenInfo.screens[i];
+	ScreenPtr pScreen = screenInfo.screens[i];
 
 	TheBox.x1 = pScreen->x;
 	TheBox.x2 = TheBox.x1 + pScreen->width;
@@ -414,7 +414,7 @@ static void XineramaInitData(ScreenPtr pScreen)
     PanoramiXPixHeight = screenInfo.screens[0]->y + screenInfo.screens[0]->height;
 
     FOR_NSCREENS_FORWARD_SKIP(i) {
-	pScreen = screenInfo.screens[i];
+	ScreenPtr pScreen = screenInfo.screens[i];
 	w = pScreen->x + pScreen->width;
 	h = pScreen->y + pScreen->height;
 
@@ -425,10 +425,10 @@ static void XineramaInitData(ScreenPtr pScreen)
     }
 }
 
-void XineramaReinitData(ScreenPtr pScreen)
+void XineramaReinitData(void)
 {
     RegionUninit(&PanoramiXScreenRegion);
-    XineramaInitData(pScreen);
+    XineramaInitData();
 }
 
 /*
@@ -525,7 +525,7 @@ void PanoramiXExtensionInit(int argc, char *argv[])
 	return;
     }
   
-    XineramaInitData(pScreen);
+    XineramaInitData();
 
     /*
      *	Put our processes into the ProcVector
@@ -909,7 +909,6 @@ ProcPanoramiXQueryVersion (ClientPtr client)
 {
     /* REQUEST(xPanoramiXQueryVersionReq); */
     xPanoramiXQueryVersionReply		rep;
-    register 	int			n;
 
     REQUEST_SIZE_MATCH (xPanoramiXQueryVersionReq);
     rep.type = X_Reply;
@@ -918,10 +917,10 @@ ProcPanoramiXQueryVersion (ClientPtr client)
     rep.majorVersion = SERVER_PANORAMIX_MAJOR_VERSION;
     rep.minorVersion = SERVER_PANORAMIX_MINOR_VERSION;
     if (client->swapped) { 
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);     
-        swaps(&rep.majorVersion, n);
-        swaps(&rep.minorVersion, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swaps(&rep.majorVersion);
+        swaps(&rep.minorVersion);
     }
     WriteToClient(client, sizeof (xPanoramiXQueryVersionReply), (char *)&rep);
     return Success;
@@ -933,7 +932,7 @@ ProcPanoramiXGetState(ClientPtr client)
 	REQUEST(xPanoramiXGetStateReq);
     	WindowPtr			pWin;
 	xPanoramiXGetStateReply		rep;
-	int			n, rc;
+	int			rc;
 	
 	REQUEST_SIZE_MATCH(xPanoramiXGetStateReq);
 	rc = dixLookupWindow(&pWin, stuff->window, client, DixGetAttrAccess);
@@ -946,9 +945,9 @@ ProcPanoramiXGetState(ClientPtr client)
 	rep.state = !noPanoramiXExtension;
 	rep.window = stuff->window;
     	if (client->swapped) {
-	    swaps (&rep.sequenceNumber, n);
-	    swapl (&rep.length, n);
-	    swapl (&rep.window, n);
+	    swaps(&rep.sequenceNumber);
+	    swapl(&rep.length);
+	    swapl(&rep.window);
 	}	
 	WriteToClient (client, sizeof (xPanoramiXGetStateReply), (char *) &rep);
 	return Success;
@@ -961,7 +960,7 @@ ProcPanoramiXGetScreenCount(ClientPtr client)
 	REQUEST(xPanoramiXGetScreenCountReq);
     	WindowPtr			pWin;
 	xPanoramiXGetScreenCountReply	rep;
-	int			n, rc;
+	int			rc;
 
 	REQUEST_SIZE_MATCH(xPanoramiXGetScreenCountReq);
 	rc = dixLookupWindow(&pWin, stuff->window, client, DixGetAttrAccess);
@@ -974,9 +973,9 @@ ProcPanoramiXGetScreenCount(ClientPtr client)
 	rep.ScreenCount = PanoramiXNumScreens;
 	rep.window = stuff->window;
     	if (client->swapped) {
-	    swaps (&rep.sequenceNumber, n);
-	    swapl (&rep.length, n);
-	    swapl (&rep.window, n);
+	    swaps(&rep.sequenceNumber);
+	    swapl(&rep.length);
+	    swapl(&rep.window);
 	}	
 	WriteToClient (client, sizeof (xPanoramiXGetScreenCountReply), (char *) &rep);
 	return Success;
@@ -988,7 +987,7 @@ ProcPanoramiXGetScreenSize(ClientPtr client)
 	REQUEST(xPanoramiXGetScreenSizeReq);
     	WindowPtr			pWin;
 	xPanoramiXGetScreenSizeReply	rep;
-	int			n, rc;
+	int			rc;
 	
 	if (stuff->screen >= PanoramiXNumScreens)
 	    return BadMatch;
@@ -1007,12 +1006,12 @@ ProcPanoramiXGetScreenSize(ClientPtr client)
 	rep.window = stuff->window;
 	rep.screen = stuff->screen;
     	if (client->swapped) {
-	    swaps (&rep.sequenceNumber, n);
-	    swapl (&rep.length, n);
-	    swapl (&rep.width, n);
-	    swapl (&rep.height, n);
-	    swapl (&rep.window, n);
-	    swapl (&rep.screen, n);
+	    swaps(&rep.sequenceNumber);
+	    swapl(&rep.length);
+	    swapl(&rep.width);
+	    swapl(&rep.height);
+	    swapl(&rep.window);
+	    swapl(&rep.screen);
 	}	
 	WriteToClient (client, sizeof (xPanoramiXGetScreenSizeReply), (char *) &rep);
 	return Success;
@@ -1040,10 +1039,9 @@ ProcXineramaIsActive(ClientPtr client)
     rep.state = !noPanoramiXExtension;
 #endif
     if (client->swapped) {
-	int n;
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
-	swapl (&rep.state, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.state);
     }	
     WriteToClient (client, sizeof (xXineramaIsActiveReply), (char *) &rep);
     return Success;
@@ -1063,10 +1061,9 @@ ProcXineramaQueryScreens(ClientPtr client)
     rep.number = (noPanoramiXExtension) ? 0 : PanoramiXNumScreens;
     rep.length = bytes_to_int32(rep.number * sz_XineramaScreenInfo);
     if (client->swapped) {
-	int n;
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
-	swapl (&rep.number, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.number);
     }	
     WriteToClient (client, sizeof (xXineramaQueryScreensReply), (char *) &rep);
 
@@ -1081,11 +1078,10 @@ ProcXineramaQueryScreens(ClientPtr client)
 	    scratch.height = screenInfo.screens[i]->height;
 	
 	    if(client->swapped) {
-		int n;
-		swaps (&scratch.x_org, n);
-		swaps (&scratch.y_org, n);
-		swaps (&scratch.width, n);
-		swaps (&scratch.height, n);
+		swaps(&scratch.x_org);
+		swaps(&scratch.y_org);
+		swaps(&scratch.width);
+		swaps(&scratch.height);
 	    }
 	    WriteToClient (client, sz_XineramaScreenInfo, (char *) &scratch);
 	}

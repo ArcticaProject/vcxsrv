@@ -71,10 +71,8 @@ SOFTWARE.
 int
 SProcXSetDeviceButtonMapping(ClientPtr client)
 {
-    char n;
-
     REQUEST(xSetDeviceButtonMappingReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXSetDeviceButtonMapping(client));
 }
 
@@ -132,9 +130,7 @@ void
 SRepXSetDeviceButtonMapping(ClientPtr client, int size,
 			    xSetDeviceButtonMappingReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

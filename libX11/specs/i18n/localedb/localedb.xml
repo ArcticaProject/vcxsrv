@@ -16,10 +16,9 @@
          <affiliation><orgname>IBM Japan</orgname></affiliation>
       </author>
    </authorgroup>
+   <copyright><year>1994</year><holder>IBM Corporation</holder></copyright>
 
 <legalnotice>
-
-<para role="multiLicensing">Copyright © 1994 IBM Corporation</para>
 <para>
 License to use, copy, modify, and distribute this software and its documentation for
 any purpose and without fee is hereby granted, provided that the above copyright notice
@@ -36,7 +35,9 @@ OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER I
 AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
 WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 </para>
+</legalnotice>
 
+<legalnotice>
 <para role="multiLicensing">Copyright © 1994 X Consortium</para>
 <para>
 Permission is hereby granted, free of charge, to any person obtaining a copy

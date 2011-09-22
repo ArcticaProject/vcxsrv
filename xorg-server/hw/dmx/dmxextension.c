@@ -455,7 +455,7 @@ static void dmxSetRootWindowOrigin(int idx, int x, int y)
     pScreen->y = dmxScreen->rootYOrigin;
 
     /* Recalculate the Xinerama regions and data structs */
-    XineramaReinitData(pScreen);
+    XineramaReinitData();
 
     /* Adjust each of the root window's children */
     if (!idx) ReinitializeRootWindow(screenInfo.screens[0]->root, xoff, yoff);

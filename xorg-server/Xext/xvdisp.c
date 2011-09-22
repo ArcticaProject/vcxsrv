@@ -59,12 +59,10 @@ SWriteQueryExtensionReply(
    ClientPtr client,
    xvQueryExtensionReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swaps(&rep->version, n);
-  swaps(&rep->revision, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swaps(&rep->version);
+  swaps(&rep->revision);
   
   (void)WriteToClient(client, sz_xvQueryExtensionReply, (char *)rep);
 
@@ -76,11 +74,9 @@ SWriteQueryAdaptorsReply(
    ClientPtr client,
    xvQueryAdaptorsReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swaps(&rep->num_adaptors, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swaps(&rep->num_adaptors);
   
   (void)WriteToClient(client, sz_xvQueryAdaptorsReply, (char *)rep);
 
@@ -92,11 +88,9 @@ SWriteQueryEncodingsReply(
    ClientPtr client,
    xvQueryEncodingsReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swaps(&rep->num_encodings, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swaps(&rep->num_encodings);
   
   (void)WriteToClient(client, sz_xvQueryEncodingsReply, (char *)rep);
 
@@ -108,12 +102,10 @@ SWriteAdaptorInfo(
    ClientPtr client,
    xvAdaptorInfo *pAdaptor
 ){
-  char n;
-
-  swapl(&pAdaptor->base_id, n);
-  swaps(&pAdaptor->name_size, n);
-  swaps(&pAdaptor->num_ports, n);
-  swaps(&pAdaptor->num_formats, n);
+  swapl(&pAdaptor->base_id);
+  swaps(&pAdaptor->name_size);
+  swaps(&pAdaptor->num_ports);
+  swaps(&pAdaptor->num_formats);
 
   (void)WriteToClient(client, sz_xvAdaptorInfo, (char *)pAdaptor);
 
@@ -125,14 +117,13 @@ SWriteEncodingInfo(
    ClientPtr client,
    xvEncodingInfo *pEncoding
 ){
-  char n;
   
-  swapl(&pEncoding->encoding, n);
-  swaps(&pEncoding->name_size, n);
-  swaps(&pEncoding->width, n);
-  swaps(&pEncoding->height, n);
-  swapl(&pEncoding->rate.numerator, n);
-  swapl(&pEncoding->rate.denominator, n);
+  swapl(&pEncoding->encoding);
+  swaps(&pEncoding->name_size);
+  swaps(&pEncoding->width);
+  swaps(&pEncoding->height);
+  swapl(&pEncoding->rate.numerator);
+  swapl(&pEncoding->rate.denominator);
   (void)WriteToClient(client, sz_xvEncodingInfo, (char *)pEncoding);
 
   return Success;
@@ -143,9 +134,7 @@ SWriteFormat(
    ClientPtr client,
    xvFormat *pFormat
 ){
-  char n;
-
-  swapl(&pFormat->visual, n);
+  swapl(&pFormat->visual);
   (void)WriteToClient(client, sz_xvFormat, (char *)pFormat);
 
   return Success;
@@ -156,12 +145,10 @@ SWriteAttributeInfo(
    ClientPtr client,
    xvAttributeInfo *pAtt
 ){
-  char n;
-
-  swapl(&pAtt->flags, n);
-  swapl(&pAtt->size, n);
-  swapl(&pAtt->min, n);
-  swapl(&pAtt->max, n);
+  swapl(&pAtt->flags);
+  swapl(&pAtt->size);
+  swapl(&pAtt->min);
+  swapl(&pAtt->max);
   (void)WriteToClient(client, sz_xvAttributeInfo, (char *)pAtt);
 
   return Success;
@@ -172,21 +159,19 @@ SWriteImageFormatInfo(
    ClientPtr client,
    xvImageFormatInfo *pImage
 ){
-  char n;
-
-  swapl(&pImage->id, n);
-  swapl(&pImage->red_mask, n);
-  swapl(&pImage->green_mask, n);
-  swapl(&pImage->blue_mask, n);
-  swapl(&pImage->y_sample_bits, n);
-  swapl(&pImage->u_sample_bits, n);
-  swapl(&pImage->v_sample_bits, n);
-  swapl(&pImage->horz_y_period, n);
-  swapl(&pImage->horz_u_period, n);
-  swapl(&pImage->horz_v_period, n);
-  swapl(&pImage->vert_y_period, n);
-  swapl(&pImage->vert_u_period, n);
-  swapl(&pImage->vert_v_period, n);
+  swapl(&pImage->id);
+  swapl(&pImage->red_mask);
+  swapl(&pImage->green_mask);
+  swapl(&pImage->blue_mask);
+  swapl(&pImage->y_sample_bits);
+  swapl(&pImage->u_sample_bits);
+  swapl(&pImage->v_sample_bits);
+  swapl(&pImage->horz_y_period);
+  swapl(&pImage->horz_u_period);
+  swapl(&pImage->horz_v_period);
+  swapl(&pImage->vert_y_period);
+  swapl(&pImage->vert_u_period);
+  swapl(&pImage->vert_v_period);
 
   (void)WriteToClient(client, sz_xvImageFormatInfo, (char *)pImage);
 
@@ -198,10 +183,8 @@ SWriteGrabPortReply(
    ClientPtr client,
    xvGrabPortReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
 
   (void)WriteToClient(client, sz_xvGrabPortReply, (char *)rep);
 
@@ -213,11 +196,9 @@ SWriteGetPortAttributeReply(
    ClientPtr client,
    xvGetPortAttributeReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swapl(&rep->value, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swapl(&rep->value);
 
   (void)WriteToClient(client, sz_xvGetPortAttributeReply, (char *)rep);
 
@@ -229,12 +210,10 @@ SWriteQueryBestSizeReply(
    ClientPtr client,
    xvQueryBestSizeReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swaps(&rep->actual_width, n);
-  swaps(&rep->actual_height, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swaps(&rep->actual_width);
+  swaps(&rep->actual_height);
 
   (void)WriteToClient(client, sz_xvQueryBestSizeReply, (char *)rep);
 
@@ -246,12 +225,10 @@ SWriteQueryPortAttributesReply(
    ClientPtr client,
    xvQueryPortAttributesReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swapl(&rep->num_attributes, n);
-  swapl(&rep->text_size, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swapl(&rep->num_attributes);
+  swapl(&rep->text_size);
 
   (void)WriteToClient(client, sz_xvQueryPortAttributesReply, (char *)rep);
 
@@ -263,14 +240,12 @@ SWriteQueryImageAttributesReply(
    ClientPtr client,
    xvQueryImageAttributesReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swapl(&rep->num_planes, n);
-  swapl(&rep->data_size, n);
-  swaps(&rep->width, n);
-  swaps(&rep->height, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swapl(&rep->num_planes);
+  swapl(&rep->data_size);
+  swaps(&rep->width);
+  swaps(&rep->height);
 
   (void)WriteToClient(client, sz_xvQueryImageAttributesReply, (char *)rep);
 
@@ -282,11 +257,9 @@ SWriteListImageFormatsReply(
    ClientPtr client,
    xvListImageFormatsReply *rep
 ){
-  char n;
-
-  swaps(&rep->sequenceNumber, n);
-  swapl(&rep->length, n);
-  swapl(&rep->num_formats, n);
+  swaps(&rep->sequenceNumber);
+  swapl(&rep->length);
+  swapl(&rep->num_formats);
 
   (void)WriteToClient(client, sz_xvListImageFormatsReply, (char *)rep);
 
@@ -1278,154 +1251,144 @@ ProcXvDispatch(ClientPtr client)
 static int
 SProcXvQueryExtension(ClientPtr client)
 {
-  char n;
   REQUEST(xvQueryExtensionReq);
-  swaps(&stuff->length, n);
+  swaps(&stuff->length);
   return XvProcVector[xv_QueryExtension](client);
 }
 
 static int
 SProcXvQueryAdaptors(ClientPtr client)
 {
-  char n;
   REQUEST(xvQueryAdaptorsReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->window, n);
+  swaps(&stuff->length);
+  swapl(&stuff->window);
   return XvProcVector[xv_QueryAdaptors](client);
 }
 
 static int
 SProcXvQueryEncodings(ClientPtr client)
 {
-  char n;
   REQUEST(xvQueryEncodingsReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
   return XvProcVector[xv_QueryEncodings](client);
 }
 
 static int
 SProcXvGrabPort(ClientPtr client)
 {
-  char n;
   REQUEST(xvGrabPortReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->time, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->time);
   return XvProcVector[xv_GrabPort](client);
 }
 
 static int
 SProcXvUngrabPort(ClientPtr client)
 {
-  char n;
   REQUEST(xvUngrabPortReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->time, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->time);
   return XvProcVector[xv_UngrabPort](client);
 }
 
 static int
 SProcXvPutVideo(ClientPtr client)
 {
-  char n;
   REQUEST(xvPutVideoReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
-  swapl(&stuff->gc, n);
-  swaps(&stuff->vid_x, n);
-  swaps(&stuff->vid_y, n);
-  swaps(&stuff->vid_w, n);
-  swaps(&stuff->vid_h, n);
-  swaps(&stuff->drw_x, n);
-  swaps(&stuff->drw_y, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
+  swapl(&stuff->gc);
+  swaps(&stuff->vid_x);
+  swaps(&stuff->vid_y);
+  swaps(&stuff->vid_w);
+  swaps(&stuff->vid_h);
+  swaps(&stuff->drw_x);
+  swaps(&stuff->drw_y);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
   return XvProcVector[xv_PutVideo](client);
 }
 
 static int
 SProcXvPutStill(ClientPtr client)
 {
-  char n;
   REQUEST(xvPutStillReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
-  swapl(&stuff->gc, n);
-  swaps(&stuff->vid_x, n);
-  swaps(&stuff->vid_y, n);
-  swaps(&stuff->vid_w, n);
-  swaps(&stuff->vid_h, n);
-  swaps(&stuff->drw_x, n);
-  swaps(&stuff->drw_y, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
+  swapl(&stuff->gc);
+  swaps(&stuff->vid_x);
+  swaps(&stuff->vid_y);
+  swaps(&stuff->vid_w);
+  swaps(&stuff->vid_h);
+  swaps(&stuff->drw_x);
+  swaps(&stuff->drw_y);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
   return XvProcVector[xv_PutStill](client);
 }
 
 static int
 SProcXvGetVideo(ClientPtr client)
 {
-  char n;
   REQUEST(xvGetVideoReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
-  swapl(&stuff->gc, n);
-  swaps(&stuff->vid_x, n);
-  swaps(&stuff->vid_y, n);
-  swaps(&stuff->vid_w, n);
-  swaps(&stuff->vid_h, n);
-  swaps(&stuff->drw_x, n);
-  swaps(&stuff->drw_y, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
+  swapl(&stuff->gc);
+  swaps(&stuff->vid_x);
+  swaps(&stuff->vid_y);
+  swaps(&stuff->vid_w);
+  swaps(&stuff->vid_h);
+  swaps(&stuff->drw_x);
+  swaps(&stuff->drw_y);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
   return XvProcVector[xv_GetVideo](client);
 }
 
 static int
 SProcXvGetStill(ClientPtr client)
 {
-  char n;
   REQUEST(xvGetStillReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
-  swapl(&stuff->gc, n);
-  swaps(&stuff->vid_x, n);
-  swaps(&stuff->vid_y, n);
-  swaps(&stuff->vid_w, n);
-  swaps(&stuff->vid_h, n);
-  swaps(&stuff->drw_x, n);
-  swaps(&stuff->drw_y, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
+  swapl(&stuff->gc);
+  swaps(&stuff->vid_x);
+  swaps(&stuff->vid_y);
+  swaps(&stuff->vid_w);
+  swaps(&stuff->vid_h);
+  swaps(&stuff->drw_x);
+  swaps(&stuff->drw_y);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
   return XvProcVector[xv_GetStill](client);
 }
 
 static int
 SProcXvPutImage(ClientPtr client)
 {
-  char n;
   REQUEST(xvPutImageReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
-  swapl(&stuff->gc, n);
-  swapl(&stuff->id, n);
-  swaps(&stuff->src_x, n);
-  swaps(&stuff->src_y, n);
-  swaps(&stuff->src_w, n);
-  swaps(&stuff->src_h, n);
-  swaps(&stuff->drw_x, n);
-  swaps(&stuff->drw_y, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
-  swaps(&stuff->width, n);
-  swaps(&stuff->height, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
+  swapl(&stuff->gc);
+  swapl(&stuff->id);
+  swaps(&stuff->src_x);
+  swaps(&stuff->src_y);
+  swaps(&stuff->src_w);
+  swaps(&stuff->src_h);
+  swaps(&stuff->drw_x);
+  swaps(&stuff->drw_y);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
+  swaps(&stuff->width);
+  swaps(&stuff->height);
   return XvProcVector[xv_PutImage](client);
 }
 
@@ -1433,25 +1396,24 @@ SProcXvPutImage(ClientPtr client)
 static int
 SProcXvShmPutImage(ClientPtr client)
 {
-  char n;
   REQUEST(xvShmPutImageReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
-  swapl(&stuff->gc, n);
-  swapl(&stuff->shmseg, n);
-  swapl(&stuff->id, n);
-  swapl(&stuff->offset, n);
-  swaps(&stuff->src_x, n);
-  swaps(&stuff->src_y, n);
-  swaps(&stuff->src_w, n);
-  swaps(&stuff->src_h, n);
-  swaps(&stuff->drw_x, n);
-  swaps(&stuff->drw_y, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
-  swaps(&stuff->width, n);
-  swaps(&stuff->height, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
+  swapl(&stuff->gc);
+  swapl(&stuff->shmseg);
+  swapl(&stuff->id);
+  swapl(&stuff->offset);
+  swaps(&stuff->src_x);
+  swaps(&stuff->src_y);
+  swaps(&stuff->src_w);
+  swaps(&stuff->src_h);
+  swaps(&stuff->drw_x);
+  swaps(&stuff->drw_y);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
+  swaps(&stuff->width);
+  swaps(&stuff->height);
   return XvProcVector[xv_ShmPutImage](client);
 }
 #else /* MITSHM */
@@ -1461,101 +1423,92 @@ SProcXvShmPutImage(ClientPtr client)
 static int
 SProcXvSelectVideoNotify(ClientPtr client)
 {
-  char n;
   REQUEST(xvSelectVideoNotifyReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->drawable, n);
+  swaps(&stuff->length);
+  swapl(&stuff->drawable);
   return XvProcVector[xv_SelectVideoNotify](client);
 }
 
 static int
 SProcXvSelectPortNotify(ClientPtr client)
 {
-  char n;
   REQUEST(xvSelectPortNotifyReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
   return XvProcVector[xv_SelectPortNotify](client);
 }
 
 static int
 SProcXvStopVideo(ClientPtr client)
 {
-  char n;
   REQUEST(xvStopVideoReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->drawable, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->drawable);
   return XvProcVector[xv_StopVideo](client);
 }
 
 static int
 SProcXvSetPortAttribute(ClientPtr client)
 {
-  char n;
   REQUEST(xvSetPortAttributeReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->attribute, n);
-  swapl(&stuff->value, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->attribute);
+  swapl(&stuff->value);
   return XvProcVector[xv_SetPortAttribute](client);
 }
 
 static int
 SProcXvGetPortAttribute(ClientPtr client)
 {
-  char n;
   REQUEST(xvGetPortAttributeReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->attribute, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->attribute);
   return XvProcVector[xv_GetPortAttribute](client);
 }
 
 static int
 SProcXvQueryBestSize(ClientPtr client)
 {
-  char n;
   REQUEST(xvQueryBestSizeReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swaps(&stuff->vid_w, n);
-  swaps(&stuff->vid_h, n);
-  swaps(&stuff->drw_w, n);
-  swaps(&stuff->drw_h, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swaps(&stuff->vid_w);
+  swaps(&stuff->vid_h);
+  swaps(&stuff->drw_w);
+  swaps(&stuff->drw_h);
   return XvProcVector[xv_QueryBestSize](client);
 }
 
 static int
 SProcXvQueryPortAttributes(ClientPtr client)
 {
-  char n;
   REQUEST(xvQueryPortAttributesReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
   return XvProcVector[xv_QueryPortAttributes](client);
 }
 
 static int
 SProcXvQueryImageAttributes(ClientPtr client)
 {
-  char n;
   REQUEST(xvQueryImageAttributesReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
-  swapl(&stuff->id, n);
-  swaps(&stuff->width, n);
-  swaps(&stuff->height, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
+  swapl(&stuff->id);
+  swaps(&stuff->width);
+  swaps(&stuff->height);
   return XvProcVector[xv_QueryImageAttributes](client);
 }
 
 static int
 SProcXvListImageFormats(ClientPtr client)
 {
-  char n;
   REQUEST(xvListImageFormatsReq);
-  swaps(&stuff->length, n);
-  swapl(&stuff->port, n);
+  swaps(&stuff->length);
+  swapl(&stuff->port);
   return XvProcVector[xv_ListImageFormats](client);
 }
 

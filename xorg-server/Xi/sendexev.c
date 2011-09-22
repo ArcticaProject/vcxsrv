@@ -76,7 +76,6 @@ extern int lastEvent;	/* Defined in extension.c */
 int
 SProcXSendExtensionEvent(ClientPtr client)
 {
-    char n;
     CARD32 *p;
     int i;
     xEvent eventT;
@@ -84,10 +83,10 @@ SProcXSendExtensionEvent(ClientPtr client)
     EventSwapPtr proc;
 
     REQUEST(xSendExtensionEventReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xSendExtensionEventReq);
-    swapl(&stuff->destination, n);
-    swaps(&stuff->count, n);
+    swapl(&stuff->destination);
+    swaps(&stuff->count);
 
     if (stuff->length != bytes_to_int32(sizeof(xSendExtensionEventReq)) + stuff->count +
        bytes_to_int32(stuff->num_events * sizeof(xEvent)))

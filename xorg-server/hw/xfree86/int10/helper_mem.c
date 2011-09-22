@@ -241,9 +241,6 @@ int10_check_bios(int scrnIndex, int codeSeg, const unsigned char* vbiosMem)
 	((codeSeg << 4) >= SYS_SIZE))
 	return FALSE;
 
-    if (xf86IsPc98())
-	return FALSE;
-
     if ((*vbiosMem != 0x55) || (*(vbiosMem+1) != 0xAA) || !*(vbiosMem+2))
 	return FALSE;
 

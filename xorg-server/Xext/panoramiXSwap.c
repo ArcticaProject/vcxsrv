@@ -51,9 +51,8 @@ static int
 SProcPanoramiXQueryVersion (ClientPtr client)
 {
 	REQUEST(xPanoramiXQueryVersionReq);
-	int n;
 
-	swaps(&stuff->length,n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH (xPanoramiXQueryVersionReq);
 	return ProcPanoramiXQueryVersion(client);
 }
@@ -62,11 +61,10 @@ static int
 SProcPanoramiXGetState(ClientPtr client)
 {
 	REQUEST(xPanoramiXGetStateReq);
-	int n;
 
- 	swaps (&stuff->length, n);	
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xPanoramiXGetStateReq);
-	swapl (&stuff->window, n);
+	swapl(&stuff->window);
 	return ProcPanoramiXGetState(client);
 }
 
@@ -74,11 +72,10 @@ static int
 SProcPanoramiXGetScreenCount(ClientPtr client)
 {
 	REQUEST(xPanoramiXGetScreenCountReq);
-	int n;
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xPanoramiXGetScreenCountReq);
-	swapl (&stuff->window, n);
+	swapl(&stuff->window);
 	return ProcPanoramiXGetScreenCount(client);
 }
 
@@ -86,12 +83,11 @@ static int
 SProcPanoramiXGetScreenSize(ClientPtr client)
 {
 	REQUEST(xPanoramiXGetScreenSizeReq);
-	int n;
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xPanoramiXGetScreenSizeReq);
-	swapl (&stuff->window, n);
-	swapl (&stuff->screen, n);
+	swapl(&stuff->window);
+	swapl(&stuff->screen);
 	return ProcPanoramiXGetScreenSize(client);
 }
 
@@ -100,9 +96,8 @@ static int
 SProcXineramaIsActive(ClientPtr client)
 {
 	REQUEST(xXineramaIsActiveReq);
-	int n;
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xXineramaIsActiveReq);
 	return ProcXineramaIsActive(client);
 }
@@ -112,9 +107,8 @@ static int
 SProcXineramaQueryScreens(ClientPtr client)
 {
 	REQUEST(xXineramaQueryScreensReq);
-	int n;
 
-	swaps (&stuff->length, n);
+	swaps(&stuff->length);
 	REQUEST_SIZE_MATCH(xXineramaQueryScreensReq);
 	return ProcXineramaQueryScreens(client);
 }

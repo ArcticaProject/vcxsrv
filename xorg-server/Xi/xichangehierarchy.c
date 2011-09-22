@@ -133,10 +133,8 @@ void XISendDeviceHierarchyEvent(int flags[MAXDEVICES])
 
 int SProcXIChangeHierarchy(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIChangeHierarchyReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXIChangeHierarchy(client));
 }
 
@@ -424,7 +422,6 @@ ProcXIChangeHierarchy(ClientPtr client)
 {
     xXIAnyHierarchyChangeInfo *any;
     int required_len = sizeof(xXIChangeHierarchyReq);
-    char n;
     int rc = Success;
     int flags[MAXDEVICES] = {0};
 
@@ -437,8 +434,8 @@ ProcXIChangeHierarchy(ClientPtr client)
     any = (xXIAnyHierarchyChangeInfo*)&stuff[1];
     while(stuff->num_changes--)
     {
-        SWAPIF(swapl(&any->type, n));
-        SWAPIF(swaps(&any->length, n));
+        SWAPIF(swaps(&any->type));
+        SWAPIF(swaps(&any->length));
 
         required_len += any->length;
         if ((stuff->length * 4) < required_len)
@@ -449,7 +446,7 @@ ProcXIChangeHierarchy(ClientPtr client)
             case XIAddMaster:
                 {
                     xXIAddMasterInfo* c = (xXIAddMasterInfo*)any;
-                    SWAPIF(swaps(&c->name_len, n));
+                    SWAPIF(swaps(&c->name_len));
 
                     rc = add_master(client, c, flags);
                     if (rc != Success)

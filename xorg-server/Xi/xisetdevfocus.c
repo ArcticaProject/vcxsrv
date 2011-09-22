@@ -43,13 +43,11 @@
 int
 SProcXISetFocus(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXISetFocusReq);
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->focus, n);
-    swapl(&stuff->time, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->focus);
+    swapl(&stuff->time);
 
     return ProcXISetFocus(client);
 }
@@ -57,11 +55,9 @@ SProcXISetFocus(ClientPtr client)
 int
 SProcXIGetFocus(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIGetFocusReq);
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
 
     return ProcXIGetFocus(client);
 }
@@ -122,9 +118,8 @@ ProcXIGetFocus(ClientPtr client)
 void
 SRepXIGetFocus(ClientPtr client, int len, xXIGetFocusReply *rep)
 {
-    char n;
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swapl(&rep->focus, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swapl(&rep->focus);
     WriteToClient(client, len, (char *)rep);
 }

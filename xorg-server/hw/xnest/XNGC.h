@@ -19,7 +19,6 @@ is" without express or implied warranty.
 
 typedef struct {
   XlibGC gc;
-  int nClipRects;
 } xnestPrivGC;
 
 extern DevPrivateKeyRec xnestGCPrivateKeyRec;

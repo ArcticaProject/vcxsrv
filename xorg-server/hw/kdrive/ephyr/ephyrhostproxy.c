@@ -68,7 +68,7 @@ ephyrHostProxyDoForward (pointer a_request_buffer,
     EPHYR_LOG ("enter\n") ;
 
     if (a_do_swap) {
-        swaps (&in_req->length, n) ;
+        swaps(&in_req->length) ;
     }
     EPHYR_LOG ("Req {type:%d, data:%d, length:%d}\n",
                in_req->reqType, in_req->data, in_req->length) ;

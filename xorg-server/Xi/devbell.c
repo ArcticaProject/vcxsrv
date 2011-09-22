@@ -71,10 +71,8 @@ SOFTWARE.
 int
 SProcXDeviceBell(ClientPtr client)
 {
-    char n;
-
     REQUEST(xDeviceBellReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXDeviceBell(client));
 }
 

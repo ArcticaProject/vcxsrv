@@ -71,10 +71,8 @@ SOFTWARE.
 int
 SProcXGetFeedbackControl(ClientPtr client)
 {
-    char n;
-
     REQUEST(xGetFeedbackControlReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXGetFeedbackControl(client));
 }
 
@@ -88,7 +86,6 @@ static void
 CopySwapKbdFeedback(ClientPtr client, KbdFeedbackPtr k, char **buf)
 {
     int i;
-    char n;
     xKbdFeedbackState *k2;
 
     k2 = (xKbdFeedbackState *) * buf;
@@ -104,11 +101,11 @@ CopySwapKbdFeedback(ClientPtr client, KbdFeedbackPtr k, char **buf)
     for (i = 0; i < 32; i++)
 	k2->auto_repeats[i] = k->ctrl.autoRepeats[i];
     if (client->swapped) {
-	swaps(&k2->length, n);
-	swaps(&k2->pitch, n);
-	swaps(&k2->duration, n);
-	swapl(&k2->led_mask, n);
-	swapl(&k2->led_values, n);
+	swaps(&k2->length);
+	swaps(&k2->pitch);
+	swaps(&k2->duration);
+	swapl(&k2->led_mask);
+	swapl(&k2->led_values);
     }
     *buf += sizeof(xKbdFeedbackState);
 }
@@ -122,7 +119,6 @@ CopySwapKbdFeedback(ClientPtr client, KbdFeedbackPtr k, char **buf)
 static void
 CopySwapPtrFeedback(ClientPtr client, PtrFeedbackPtr p, char **buf)
 {
-    char n;
     xPtrFeedbackState *p2;
 
     p2 = (xPtrFeedbackState *) * buf;
@@ -133,10 +129,10 @@ CopySwapPtrFeedback(ClientPtr client, PtrFeedbackPtr p, char **buf)
     p2->accelDenom = p->ctrl.den;
     p2->threshold = p->ctrl.threshold;
     if (client->swapped) {
-	swaps(&p2->length, n);
-	swaps(&p2->accelNum, n);
-	swaps(&p2->accelDenom, n);
-	swaps(&p2->threshold, n);
+	swaps(&p2->length);
+	swaps(&p2->accelNum);
+	swaps(&p2->accelDenom);
+	swaps(&p2->threshold);
     }
     *buf += sizeof(xPtrFeedbackState);
 }
@@ -150,7 +146,6 @@ CopySwapPtrFeedback(ClientPtr client, PtrFeedbackPtr p, char **buf)
 static void
 CopySwapIntegerFeedback(ClientPtr client, IntegerFeedbackPtr i, char **buf)
 {
-    char n;
     xIntegerFeedbackState *i2;
 
     i2 = (xIntegerFeedbackState *) * buf;
@@ -161,10 +156,10 @@ CopySwapIntegerFeedback(ClientPtr client, IntegerFeedbackPtr i, char **buf)
     i2->min_value = i->ctrl.min_value;
     i2->max_value = i->ctrl.max_value;
     if (client->swapped) {
-	swaps(&i2->length, n);
-	swapl(&i2->resolution, n);
-	swapl(&i2->min_value, n);
-	swapl(&i2->max_value, n);
+	swaps(&i2->length);
+	swapl(&i2->resolution);
+	swapl(&i2->min_value);
+	swapl(&i2->max_value);
     }
     *buf += sizeof(xIntegerFeedbackState);
 }
@@ -179,7 +174,6 @@ static void
 CopySwapStringFeedback(ClientPtr client, StringFeedbackPtr s, char **buf)
 {
     int i;
-    char n;
     xStringFeedbackState *s2;
     KeySym *kptr;
 
@@ -195,12 +189,12 @@ CopySwapStringFeedback(ClientPtr client, StringFeedbackPtr s, char **buf)
     for (i = 0; i < s->ctrl.num_symbols_supported; i++)
 	*kptr++ = *(s->ctrl.symbols_supported + i);
     if (client->swapped) {
-	swaps(&s2->length, n);
-	swaps(&s2->max_symbols, n);
-	swaps(&s2->num_syms_supported, n);
+	swaps(&s2->length);
+	swaps(&s2->max_symbols);
+	swaps(&s2->num_syms_supported);
 	kptr = (KeySym *) (*buf);
 	for (i = 0; i < s->ctrl.num_symbols_supported; i++, kptr++) {
-	    swapl(kptr, n);
+	    swapl(kptr);
 	}
     }
     *buf += (s->ctrl.num_symbols_supported * sizeof(KeySym));
@@ -215,7 +209,6 @@ CopySwapStringFeedback(ClientPtr client, StringFeedbackPtr s, char **buf)
 static void
 CopySwapLedFeedback(ClientPtr client, LedFeedbackPtr l, char **buf)
 {
-    char n;
     xLedFeedbackState *l2;
 
     l2 = (xLedFeedbackState *) * buf;
@@ -225,9 +218,9 @@ CopySwapLedFeedback(ClientPtr client, LedFeedbackPtr l, char **buf)
     l2->led_values = l->ctrl.led_values;
     l2->led_mask = l->ctrl.led_mask;
     if (client->swapped) {
-	swaps(&l2->length, n);
-	swapl(&l2->led_values, n);
-	swapl(&l2->led_mask, n);
+	swaps(&l2->length);
+	swapl(&l2->led_values);
+	swapl(&l2->led_mask);
     }
     *buf += sizeof(xLedFeedbackState);
 }
@@ -241,7 +234,6 @@ CopySwapLedFeedback(ClientPtr client, LedFeedbackPtr l, char **buf)
 static void
 CopySwapBellFeedback(ClientPtr client, BellFeedbackPtr b, char **buf)
 {
-    char n;
     xBellFeedbackState *b2;
 
     b2 = (xBellFeedbackState *) * buf;
@@ -252,9 +244,9 @@ CopySwapBellFeedback(ClientPtr client, BellFeedbackPtr b, char **buf)
     b2->pitch = b->ctrl.pitch;
     b2->duration = b->ctrl.duration;
     if (client->swapped) {
-	swaps(&b2->length, n);
-	swaps(&b2->pitch, n);
-	swaps(&b2->duration, n);
+	swaps(&b2->length);
+	swaps(&b2->pitch);
+	swaps(&b2->duration);
     }
     *buf += sizeof(xBellFeedbackState);
 }
@@ -270,11 +262,9 @@ void
 SRepXGetFeedbackControl(ClientPtr client, int size,
 			xGetFeedbackControlReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->num_feedbacks, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->num_feedbacks);
     WriteToClient(client, size, (char *)rep);
 }
 

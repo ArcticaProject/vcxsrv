@@ -1,4 +1,3 @@
-.\" $XFree86$
 .TH GTF 1 __vendorversion__
 .SH NAME
 gtf - calculate VESA GTF mode lines
@@ -35,7 +34,7 @@ default format.
 Print the mode parameters in a format suitable for
 .BR fbset(8) .
 .SH "SEE ALSO"
-__xconfigfile__(__filemansuffix__)
+__xconfigfile__(__filemansuffix__), cvt(__appmansuffix__)
 .SH AUTHOR
 Andy Ritger.
 .PP

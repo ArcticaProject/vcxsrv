@@ -36,7 +36,6 @@ static int
 ProcRRQueryVersion (ClientPtr client)
 {
     xRRQueryVersionReply rep = {0};
-    register int n;
     REQUEST(xRRQueryVersionReq);
     rrClientPriv(client);
 
@@ -59,10 +58,10 @@ ProcRRQueryVersion (ClientPtr client)
     }
 
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.majorVersion, n);
-	swapl(&rep.minorVersion, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.majorVersion);
+	swapl(&rep.minorVersion);
     }
     WriteToClient(client, sizeof(xRRQueryVersionReply), (char *)&rep);
     return Success;

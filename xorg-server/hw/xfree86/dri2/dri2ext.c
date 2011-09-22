@@ -71,10 +71,9 @@ ProcDRI2QueryVersion(ClientPtr client)
 {
     REQUEST(xDRI2QueryVersionReq);
     xDRI2QueryVersionReply rep;
-    int n;
 
     if (client->swapped)
-	swaps(&stuff->length, n);
+	swaps(&stuff->length);
 
     REQUEST_SIZE_MATCH(xDRI2QueryVersionReq);
     rep.type = X_Reply;
@@ -84,10 +83,10 @@ ProcDRI2QueryVersion(ClientPtr client)
     rep.minorVersion = dri2_minor;
 
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.majorVersion, n);
-	swapl(&rep.minorVersion, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.majorVersion);
+	swapl(&rep.minorVersion);
     }
 
     WriteToClient(client, sizeof(xDRI2QueryVersionReply), &rep);
@@ -585,16 +584,15 @@ SProcDRI2Connect(ClientPtr client)
 {
     REQUEST(xDRI2ConnectReq);
     xDRI2ConnectReply rep;
-    int n;
 
     /* If the client is swapped, it's not local.  Talk to the hand. */
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     if (sizeof(*stuff) / 4 != client->req_len)
 	return BadLength;
 
     rep.sequenceNumber = client->sequence;
-    swaps(&rep.sequenceNumber, n);
+    swaps(&rep.sequenceNumber);
     rep.length = 0;
     rep.driverNameLength = 0;
     rep.deviceNameLength = 0;

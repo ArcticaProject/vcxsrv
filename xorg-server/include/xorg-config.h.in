@@ -136,9 +136,6 @@
 /* Use SIGIO handlers for input device events by default */
 #undef USE_SIGIO_BY_DEFAULT
 
-/* Support PC98 */
-#undef SUPPORT_PC98
-
 /* Build with libdrm support */
 #undef WITH_LIBDRM
 

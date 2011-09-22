@@ -671,9 +671,9 @@ static char *dmxMakeUniqueDeviceName(DMXLocalInputInfoPtr dmxLocal)
     }
 
     switch (dmxLocal->type) {
-    case DMX_LOCAL_KEYBOARD: XmuSnprintf(buf, LEN, "Keyboard%d", k++); break;
-    case DMX_LOCAL_MOUSE:    XmuSnprintf(buf, LEN, "Mouse%d", m++);    break;
-    default:                 XmuSnprintf(buf, LEN, "Other%d", o++);    break;
+    case DMX_LOCAL_KEYBOARD: snprintf(buf, LEN, "Keyboard%d", k++); break;
+    case DMX_LOCAL_MOUSE:    snprintf(buf, LEN, "Mouse%d", m++);    break;
+    default:                 snprintf(buf, LEN, "Other%d", o++);    break;
     }
 
     return buf;

@@ -33,10 +33,6 @@
 #include "picturestr.h"
 #include "mipict.h"
 
-#ifndef __GNUC__
-#define __inline
-#endif
-
 int
 miCreatePicture (PicturePtr pPicture)
 {
@@ -307,7 +303,7 @@ miClipPictureReg (pixman_region16_t *	pRegion,
     return pixman_region_not_empty(pRegion);
 }
 
-static __inline Bool
+static inline Bool
 miClipPictureSrc (RegionPtr	pRegion,
 		  PicturePtr	pPicture,
 		  int		dx,

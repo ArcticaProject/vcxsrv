@@ -42,12 +42,6 @@
 #include <scrnintstr.h>
 
 
-/*
-** The X header misc.h defines these math functions.
-*/
-#undef abs
-#undef fabs
-
 #define GL_GLEXT_PROTOTYPES /* we want prototypes */
 #include <GL/gl.h>
 #include <GL/glxproto.h>

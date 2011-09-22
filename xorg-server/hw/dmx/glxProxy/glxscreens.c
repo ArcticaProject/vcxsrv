@@ -326,45 +326,6 @@ char *__glXGetServerString( unsigned int name )
 
 }
 
-
-__GLXFBConfig *glxLookupFBConfig( GLXFBConfigID id )
-{
-   int i,j;
-
-   for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
-      if ( __glXFBConfigs[j]->id == id) 
-	 return __glXFBConfigs[j];
-   }
-
-   return NULL;
-}
-
-__GLXFBConfig *glxLookupFBConfigByVID( VisualID vid )
-{
-   int i,j;
-
-   for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
-      if ( __glXFBConfigs[j]->associatedVisualId == vid) 
-	 return __glXFBConfigs[j];
-   }
-
-   return NULL;
-}
-
-__GLXFBConfig *glxLookupBackEndFBConfig( GLXFBConfigID id, int screen )
-{
-   int i;
-   int j;
-
-   for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
-      if ( __glXFBConfigs[j]->id == id) 
-	 return __glXFBConfigs[j+screen+1];
-   }
-
-   return NULL;
-
-}
-
 int glxIsExtensionSupported( char *ext )
 {
    return( strstr(ExtensionsString, ext) != NULL );

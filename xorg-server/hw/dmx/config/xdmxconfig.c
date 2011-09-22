@@ -49,7 +49,6 @@
 #include <X11/Xaw/Viewport.h>
 #include <X11/Xaw/Dialog.h>
 #include <X11/keysym.h>
-#include <X11/Xmu/SysUtil.h>
 #include "Canvas.h"
 
 #include "dmxparse.h"
@@ -199,8 +198,8 @@ static void dmxConfigDataUpdate(void)
         XtVaSetValues(ndbutton1,                XtNsensitive, False, NULL);
     } else {
         name = dmxConfigCurrent->name;
-        XmuSnprintf(cnambuf, sizeof(cnambuf), "%s", name ? name : "");
-	XmuSnprintf(cdimbuf, sizeof(cdimbuf), "%dx%d",
+        snprintf(cnambuf, sizeof(cnambuf), "%s", name ? name : "");
+        snprintf(cdimbuf, sizeof(cdimbuf), "%dx%d",
                     dmxConfigWallWidth, dmxConfigWallHeight);
         XtVaSetValues(cnamebox,   XtNlabel, cnambuf, XtNsensitive, True, NULL);
         XtVaSetValues(cdimbox,    XtNlabel, cdimbuf, XtNsensitive, True, NULL);
@@ -219,22 +218,22 @@ static void dmxConfigDataUpdate(void)
         XtVaSetValues(ddbutton,              XtNsensitive, False, NULL);
     } else {
         name = dmxConfigCurrentDisplay->name;
-        XmuSnprintf(nambuf, sizeof(nambuf), "%s", name ? name : "");
-        XmuSnprintf(dimbuf, sizeof(dimbuf), "%dx%d%c%d%c%d",
+        snprintf(nambuf, sizeof(nambuf), "%s", name ? name : "");
+        snprintf(dimbuf, sizeof(dimbuf), "%dx%d%c%d%c%d",
                     dmxConfigCurrentDisplay->scrnWidth,
                     dmxConfigCurrentDisplay->scrnHeight,
                     dmxConfigCurrentDisplay->scrnXSign < 0 ? '-' : '+',
                     dmxConfigCurrentDisplay->scrnX,
                     dmxConfigCurrentDisplay->scrnYSign < 0 ? '-' : '+',
                     dmxConfigCurrentDisplay->scrnY);
-        XmuSnprintf(rtbuf, sizeof(dimbuf), "%dx%d%c%d%c%d",
+        snprintf(rtbuf, sizeof(dimbuf), "%dx%d%c%d%c%d",
                     dmxConfigCurrentDisplay->rootWidth,
                     dmxConfigCurrentDisplay->rootHeight,
                     dmxConfigCurrentDisplay->rootXSign < 0 ? '-' : '+',
                     dmxConfigCurrentDisplay->rootX,
                     dmxConfigCurrentDisplay->rootYSign < 0 ? '-' : '+',
                     dmxConfigCurrentDisplay->rootY);
-        XmuSnprintf(offbuf, sizeof(offbuf), "@%dx%d",
+        snprintf(offbuf, sizeof(offbuf), "@%dx%d",
                     dmxConfigCurrentDisplay->rootXOrigin,
                     dmxConfigCurrentDisplay->rootYOrigin);
         XtVaSetValues(namebox, XtNlabel, nambuf, XtNsensitive, True, NULL);
@@ -596,14 +595,14 @@ static void dmxConfigCanCallback(Widget w, XtPointer closure,
 static void dmxConfigECCallback(Widget w, XtPointer closure,
                                 XtPointer callData)
 {
-    char buf[256];              /* RATS: Only used in XmuSnprintf */
+    char buf[256];              /* RATS: Only used in snprintf */
     
     if (!dmxConfigCurrent) return;
     dmxConfigSetPopupPosition(ecpopup);
     XtVaSetValues(ecdialog0, XtNvalue,
                   dmxConfigCurrent->name ? dmxConfigCurrent->name : "",
                   NULL);
-    XmuSnprintf(buf, sizeof(buf), "%dx%d",
+    snprintf(buf, sizeof(buf), "%dx%d",
                 dmxConfigCurrent->width, dmxConfigCurrent->height);
     XtVaSetValues(ecdialog1, XtNvalue, buf, NULL);
     XtPopup(ecpopup, XtGrabExclusive);
@@ -692,7 +691,7 @@ static void dmxConfigECCanCallback(Widget w, XtPointer closure,
 static void dmxConfigEDCallback(Widget w, XtPointer closure,
                                 XtPointer callData)
 {
-    char buf[256];              /* RATS: Only used in XmuSnprintf */
+    char buf[256];              /* RATS: Only used in snprintf */
     
     if (!dmxConfigCurrent || !dmxConfigCurrentDisplay) return;
     dmxConfigSetPopupPosition(edpopup);
@@ -701,7 +700,7 @@ static void dmxConfigEDCallback(Widget w, XtPointer closure,
                   ? dmxConfigCurrentDisplay->name
                   : "",
                   NULL);
-    XmuSnprintf(buf, sizeof(buf), "%dx%d%c%d%c%d",
+    snprintf(buf, sizeof(buf), "%dx%d%c%d%c%d",
                 dmxConfigCurrentDisplay->scrnWidth,
                 dmxConfigCurrentDisplay->scrnHeight,
                 dmxConfigCurrentDisplay->scrnXSign < 0 ? '-' : '+',
@@ -709,7 +708,7 @@ static void dmxConfigEDCallback(Widget w, XtPointer closure,
                 dmxConfigCurrentDisplay->scrnYSign < 0 ? '-' : '+',
                 dmxConfigCurrentDisplay->scrnY);
     XtVaSetValues(eddialog1, XtNvalue, buf, NULL);
-    XmuSnprintf(buf, sizeof(buf), "@%dx%d",
+    snprintf(buf, sizeof(buf), "@%dx%d",
                 dmxConfigCurrentDisplay->rootXOrigin,
                 dmxConfigCurrentDisplay->rootYOrigin);
     XtVaSetValues(eddialog2, XtNvalue, buf, NULL);

@@ -49,7 +49,6 @@
 #include <string.h>
 #endif                                                                                           
 
-# ifndef NO_INLINE
 #  ifdef __GNUC__
 
 /* Define some packed structures to use with unaligned accesses */
@@ -139,7 +138,6 @@ static __inline__ void stw_u(u16 val, u16 *p)
 }
 
 #  endif /* __GNUC__ */
-# endif /* NO_INLINE */
 /*------------------------- Global Variables ------------------------------*/
 
 X86EMU_sysEnv		_X86EMU_env;		/* Global emulator machine state */

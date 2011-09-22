@@ -44,13 +44,11 @@
 int
 SProcXIAllowEvents(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIAllowEventsReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->time, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->time);
 
     return ProcXIAllowEvents(client);
 }
