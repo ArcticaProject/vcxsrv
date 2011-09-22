@@ -273,7 +273,7 @@ static inline void wrong_size(void)
 {
 }
 
-static inline void __builtin_constant_p(int x)
+static inline int __builtin_constant_p(int x)
 {
 	return 0;
 }
