@@ -123,13 +123,11 @@ HandleDevicePresenceMask(ClientPtr client, WindowPtr win,
 int
 SProcXSelectExtensionEvent(ClientPtr client)
 {
-    char n;
-
     REQUEST(xSelectExtensionEventReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xSelectExtensionEventReq);
-    swapl(&stuff->window, n);
-    swaps(&stuff->count, n);
+    swapl(&stuff->window);
+    swaps(&stuff->count);
     REQUEST_FIXED_SIZE(xSelectExtensionEventReq,
                       stuff->count * sizeof(CARD32));
     SwapLongs((CARD32 *) (&stuff[1]), stuff->count);

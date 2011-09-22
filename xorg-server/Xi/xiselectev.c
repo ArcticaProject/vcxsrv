@@ -63,21 +63,20 @@ int XICheckInvalidMaskBits(ClientPtr client, unsigned char *mask, int len)
 int
 SProcXISelectEvents(ClientPtr client)
 {
-    char n;
     int i;
     xXIEventMask* evmask;
 
     REQUEST(xXISelectEventsReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xXISelectEventsReq);
-    swapl(&stuff->win, n);
-    swaps(&stuff->num_masks, n);
+    swapl(&stuff->win);
+    swaps(&stuff->num_masks);
 
     evmask = (xXIEventMask*)&stuff[1];
     for (i = 0; i < stuff->num_masks; i++)
     {
-        swaps(&evmask->deviceid, n);
-        swaps(&evmask->mask_len, n);
+        swaps(&evmask->deviceid);
+        swaps(&evmask->mask_len);
         evmask = (xXIEventMask*)(((char*)&evmask[1]) + evmask->mask_len * 4);
     }
 
@@ -192,12 +191,10 @@ ProcXISelectEvents(ClientPtr client)
 int
 SProcXIGetSelectedEvents(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIGetSelectedEventsReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xXIGetSelectedEventsReq);
-    swapl(&stuff->win, n);
+    swapl(&stuff->win);
 
     return (ProcXIGetSelectedEvents(client));
 }
@@ -207,7 +204,6 @@ ProcXIGetSelectedEvents(ClientPtr client)
 {
     int rc, i;
     WindowPtr win;
-    char n;
     char *buffer = NULL;
     xXIGetSelectedEventsReply reply;
     OtherInputMasks *masks;
@@ -275,8 +271,8 @@ ProcXIGetSelectedEvents(ClientPtr client)
 
                 if (client->swapped)
                 {
-                    swaps(&evmask->deviceid, n);
-                    swaps(&evmask->mask_len, n);
+                    swaps(&evmask->deviceid);
+                    swaps(&evmask->mask_len);
                 }
 
                 memcpy(&evmask[1], devmask, j + 1);
@@ -299,11 +295,9 @@ ProcXIGetSelectedEvents(ClientPtr client)
 void SRepXIGetSelectedEvents(ClientPtr client,
                             int len, xXIGetSelectedEventsReply *rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->num_masks, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->num_masks);
     WriteToClient(client, len, (char *)rep);
 }
 

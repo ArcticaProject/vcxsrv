@@ -3392,7 +3392,7 @@ Unrepaired warnings are as follows:
 <orderedlist>
     <listitem><para>
         Fixed-size buffers are used in many areas, but code has been
-        added to protect against buffer overflows (e.g., XmuSnprint).
+        added to protect against buffer overflows (e.g., snprintf).
         The only instances that have not yet been fixed are in
         config/xdmxconfig.c (which is not part of the Xdmx server) and
         input/usb-common.c.

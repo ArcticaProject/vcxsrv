@@ -1,4 +1,3 @@
-.\" $XFree86$
 .TH CVT 1 __vendorversion__
 .SH NAME
 cvt - calculate VESA CVT mode lines
@@ -32,7 +31,7 @@ Create a mode with reduced blanking.  This allows for higher frequency signals,
 with a lower or equal dotclock. Not for Cathode Ray Tube based displays though.
 
 .SH "SEE ALSO"
-__xconfigfile__(__filemansuffix__)
+__xconfigfile__(__filemansuffix__), gtf(__appmansuffix__)
 .SH AUTHOR
 Luc Verhaegen.
 .PP

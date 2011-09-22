@@ -287,13 +287,6 @@ CreateColormap (Colormap mid, ScreenPtr pScreen, VisualPtr pVisual,
 	if (!pmap)
 	    return BadAlloc;
     }
-#if defined(_XSERVER64)
-    pmap->pad0 = 0;
-    pmap->pad1 = 0;
-#if (X_BYTE_ORDER == X_LITTLE_ENDIAN)
-    pmap->pad2 = 0;
-#endif
-#endif
     pmap->red = (EntryPtr)((char *)pmap + sizeof(ColormapRec));    
     sizebytes = size * sizeof(Entry);
     pmap->clientPixelsRed = (Pixel **)((char *)pmap->red + sizebytes);

@@ -70,10 +70,9 @@ static void reply_XIGetClientPointer(ClientPtr client, int len, char *data, void
 
     if (client->swapped)
     {
-        char n;
-        swapl(&rep->length, n);
-        swaps(&rep->sequenceNumber, n);
-        swaps(&rep->deviceid, n);
+        swapl(&rep->length);
+        swaps(&rep->sequenceNumber);
+        swaps(&rep->deviceid);
     }
 
     reply_check_defaults(rep, len, XIGetClientPointer);
@@ -85,7 +84,6 @@ static void reply_XIGetClientPointer(ClientPtr client, int len, char *data, void
 
 static void request_XIGetClientPointer(ClientPtr client, xXIGetClientPointerReq* req, int error)
 {
-    char n;
     int rc;
 
     test_data.win = req->win;
@@ -97,8 +95,8 @@ static void request_XIGetClientPointer(ClientPtr client, xXIGetClientPointerReq*
         assert(client_request.errorValue == req->win);
 
     client_request.swapped = TRUE;
-    swapl(&req->win, n);
-    swaps(&req->length, n);
+    swapl(&req->win);
+    swaps(&req->length);
     rc = SProcXIGetClientPointer(&client_request);
     assert(rc == error);
 

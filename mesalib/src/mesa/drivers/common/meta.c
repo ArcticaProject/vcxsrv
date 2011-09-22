@@ -740,6 +740,11 @@ _mesa_meta_end(struct gl_context *ctx)
 
       _mesa_reference_shader_program(ctx, &ctx->Shader.ActiveProgram,
 				     save->ActiveShader);
+
+      _mesa_reference_shader_program(ctx, &save->VertexShader, NULL);
+      _mesa_reference_shader_program(ctx, &save->GeometryShader, NULL);
+      _mesa_reference_shader_program(ctx, &save->FragmentShader, NULL);
+      _mesa_reference_shader_program(ctx, &save->ActiveShader, NULL);
    }
 
    if (state & MESA_META_STENCIL_TEST) {
@@ -1223,7 +1228,7 @@ blitframebuffer_texture(struct gl_context *ctx,
 				GL_SKIP_DECODE_EXT);
 	 }
          if (ctx->Extensions.EXT_framebuffer_sRGB) {
-            _mesa_Disable(GL_FRAMEBUFFER_SRGB_EXT);
+            _mesa_set_enable(ctx, GL_FRAMEBUFFER_SRGB_EXT, GL_FALSE);
          }
 
          _mesa_TexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -1291,7 +1296,7 @@ blitframebuffer_texture(struct gl_context *ctx,
 	    _mesa_TexParameteri(target, GL_TEXTURE_SRGB_DECODE_EXT, srgbSave);
 	 }
 	 if (ctx->Extensions.EXT_framebuffer_sRGB && fbo_srgb_save) {
-	    _mesa_Enable(GL_FRAMEBUFFER_SRGB_EXT);
+	    _mesa_set_enable(ctx, GL_FRAMEBUFFER_SRGB_EXT, GL_TRUE);
 	 }
 
          /* Done with color buffer */
@@ -2452,6 +2457,15 @@ _mesa_meta_check_generate_mipmap_fallback(struct gl_context *ctx, GLenum target,
       return GL_TRUE;
    }
 
+   if (_mesa_get_format_color_encoding(baseImage->TexFormat) == GL_SRGB &&
+       !ctx->Extensions.EXT_texture_sRGB_decode) {
+      /* The texture format is sRGB but we can't turn off sRGB->linear
+       * texture sample conversion.  So we won't be able to generate the
+       * right colors when rendering.  Need to use a fallback.
+       */
+      return GL_TRUE;
+   }
+
    /*
     * Test that we can actually render in the texture's format.
     */
@@ -2669,6 +2683,8 @@ _mesa_meta_GenerateMipmap(struct gl_context *ctx, GLenum target,
    const GLenum wrapSSave = texObj->Sampler.WrapS;
    const GLenum wrapTSave = texObj->Sampler.WrapT;
    const GLenum wrapRSave = texObj->Sampler.WrapR;
+   const GLenum srgbDecodeSave = texObj->Sampler.sRGBDecode;
+   const GLenum srgbBufferSave = ctx->Color.sRGBEnabled;
    const GLuint fboSave = ctx->DrawBuffer->Name;
    const GLuint original_active_unit = ctx->Texture.CurrentUnit;
    GLenum faceTarget;
@@ -2730,6 +2746,15 @@ _mesa_meta_GenerateMipmap(struct gl_context *ctx, GLenum target,
    _mesa_TexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    _mesa_TexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
    _mesa_TexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+   /* We don't want to encode or decode sRGB values; treat them as linear */
+   if (ctx->Extensions.EXT_texture_sRGB_decode) {
+      _mesa_TexParameteri(target, GL_TEXTURE_SRGB_DECODE_EXT,
+                          GL_SKIP_DECODE_EXT);
+   }
+   if (ctx->Extensions.EXT_framebuffer_sRGB) {
+      _mesa_set_enable(ctx, GL_FRAMEBUFFER_SRGB_EXT, GL_FALSE);
+   }
 
    _mesa_set_enable(ctx, target, GL_TRUE);
 
@@ -2873,6 +2898,14 @@ _mesa_meta_GenerateMipmap(struct gl_context *ctx, GLenum target,
       _mesa_set_viewport(ctx, 0, 0, dstWidth, dstHeight);
 
       _mesa_DrawArrays(GL_TRIANGLE_FAN, 0, 4);
+   }
+
+   if (ctx->Extensions.EXT_texture_sRGB_decode) {
+      _mesa_TexParameteri(target, GL_TEXTURE_SRGB_DECODE_EXT,
+                          srgbDecodeSave);
+   }
+   if (ctx->Extensions.EXT_framebuffer_sRGB && srgbBufferSave) {
+      _mesa_set_enable(ctx, GL_FRAMEBUFFER_SRGB_EXT, GL_TRUE);
    }
 
    _mesa_lock_texture(ctx, texObj); /* relock */
@@ -3154,7 +3187,7 @@ decompress_texture_image(struct gl_context *ctx,
 
    /* setup texture state */
    _mesa_BindTexture(target, texObj->Name);
-   _mesa_Enable(target);
+   _mesa_set_enable(ctx, target, GL_TRUE);
 
    {
       /* save texture object state */
@@ -3179,7 +3212,7 @@ decompress_texture_image(struct gl_context *ctx,
                              GL_SKIP_DECODE_EXT);
       }
       if (ctx->Extensions.EXT_framebuffer_sRGB) {
-         _mesa_Disable(GL_FRAMEBUFFER_SRGB_EXT);
+         _mesa_set_enable(ctx, GL_FRAMEBUFFER_SRGB_EXT, GL_FALSE);
       }
 
       /* render quad w/ texture into renderbuffer */
@@ -3204,6 +3237,9 @@ decompress_texture_image(struct gl_context *ctx,
    /* read pixels from renderbuffer */
    ctx->Pack.RowLength = destRowLength;
    _mesa_ReadPixels(0, 0, width, height, destFormat, destType, dest);
+
+   /* disable texture unit */
+   _mesa_set_enable(ctx, target, GL_FALSE);
 
    _mesa_meta_end(ctx);
 

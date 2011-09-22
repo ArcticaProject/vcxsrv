@@ -409,10 +409,9 @@ ProcRRListOutputProperties (ClientPtr client)
     rep.nAtoms = numProps;
     if (client->swapped) 
     {
-	int n;
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
-	swaps (&rep.nAtoms, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swaps(&rep.nAtoms);
     }
     temppAtoms = pAtoms;
     for (prop = output->properties; prop; prop = prop->next)
@@ -458,9 +457,8 @@ ProcRRQueryOutputProperty (ClientPtr client)
     rep.immutable = prop->immutable;
     if (client->swapped) 
     {
-	int n;
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
     }
     WriteToClient (client, sizeof (xRRQueryOutputPropertyReply), (char*)&rep);
     if (prop->num_valid)
@@ -615,13 +613,11 @@ ProcRRGetOutputProperty (ClientPtr client)
 	reply.propertyType = None;
 	reply.format = 0;
 	if (client->swapped) {
-	    int n;
-
-	    swaps(&reply.sequenceNumber, n);
-	    swapl(&reply.length, n);
-	    swapl(&reply.propertyType, n);
-	    swapl(&reply.bytesAfter, n);
-	    swapl(&reply.nItems, n);
+	    swaps(&reply.sequenceNumber);
+	    swapl(&reply.length);
+	    swapl(&reply.propertyType);
+	    swapl(&reply.bytesAfter);
+	    swapl(&reply.nItems);
 	}
 	WriteToClient(client, sizeof(xRRGetOutputPropertyReply), &reply);
 	return Success;
@@ -647,13 +643,11 @@ ProcRRGetOutputProperty (ClientPtr client)
 	reply.nItems = 0;
 	reply.propertyType = prop_value->type;
 	if (client->swapped) {
-	    int n;
-
-	    swaps(&reply.sequenceNumber, n);
-	    swapl(&reply.length, n);
-	    swapl(&reply.propertyType, n);
-	    swapl(&reply.bytesAfter, n);
-	    swapl(&reply.nItems, n);
+	    swaps(&reply.sequenceNumber);
+	    swapl(&reply.length);
+	    swapl(&reply.propertyType);
+	    swapl(&reply.bytesAfter);
+	    swapl(&reply.nItems);
 	}
 	WriteToClient(client, sizeof(xRRGetOutputPropertyReply), &reply);
 	return Success;
@@ -704,13 +698,11 @@ ProcRRGetOutputProperty (ClientPtr client)
     }
 
     if (client->swapped) {
-	int n;
-
-	swaps(&reply.sequenceNumber, n);
-	swapl(&reply.length, n);
-	swapl(&reply.propertyType, n);
-	swapl(&reply.bytesAfter, n);
-	swapl(&reply.nItems, n);
+	swaps(&reply.sequenceNumber);
+	swapl(&reply.length);
+	swapl(&reply.propertyType);
+	swapl(&reply.bytesAfter);
+	swapl(&reply.nItems);
     }
     WriteToClient(client, sizeof(xGenericReply), &reply);
     if (len)

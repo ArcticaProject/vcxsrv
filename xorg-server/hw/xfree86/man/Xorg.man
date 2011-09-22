@@ -334,6 +334,10 @@ as root (i.e, with real-uid 0).
 .B \-nosilk
 Disable Silken Mouse support.
 .TP 8
+.B \-novtswitch
+Disable the automatic switching on X server reset and shutdown to the
+VT that was active when the server started, if supported by the OS.
+.TP 8
 .B \-pixmap24
 Set the internal pixmap format for depth 24 pixmaps to 24 bits per pixel.
 The default is usually 32 bits per pixel.  There is normally little
@@ -375,6 +379,9 @@ this.  See also the
 and
 .B \-ggamma
 options.
+.TP 8
+.B \-sharevts
+Share virtual terminals with another X server, if supported by the OS.
 .TP 8
 .BI \-screen " screen-name"
 Use the __xconfigfile__(__filemansuffix__) file

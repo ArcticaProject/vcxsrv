@@ -74,16 +74,15 @@ SOFTWARE.
 int
 SProcXChangeDeviceControl(ClientPtr client)
 {
-    char n;
     xDeviceCtl *ctl;
 
     REQUEST(xChangeDeviceControlReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xChangeDeviceControlReq);
-    swaps(&stuff->control, n);
+    swaps(&stuff->control);
     ctl = (xDeviceCtl*)&stuff[1];
-    swaps(&ctl->control, n);
-    swaps(&ctl->length, n);
+    swaps(&ctl->control);
+    swaps(&ctl->length);
     switch(stuff->control) {
         case DEVICE_ABS_CALIB:
         case DEVICE_ABS_AREA:
@@ -230,9 +229,7 @@ void
 SRepXChangeDeviceControl(ClientPtr client, int size,
 			 xChangeDeviceControlReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

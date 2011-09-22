@@ -44,15 +44,13 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
 
     if (swap)
     {
-        char n;
-
-        swaps(&out->sequenceNumber, n);
-        swapl(&out->length, n);
-        swaps(&out->evtype, n);
-        swaps(&out->deviceid, n);
-        swapl(&out->time, n);
-        swapl(&out->detail, n);
-        swaps(&out->valuators_len, n);
+        swaps(&out->sequenceNumber);
+        swapl(&out->length);
+        swaps(&out->evtype);
+        swaps(&out->deviceid);
+        swapl(&out->time);
+        swapl(&out->detail);
+        swaps(&out->valuators_len);
     }
 
 
@@ -101,9 +99,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
             vo.frac = value->frac;
             if (swap)
             {
-                char n;
-                swapl(&vo.integral, n);
-                swapl(&vo.frac, n);
+                swapl(&vo.integral);
+                swapl(&vo.frac);
             }
 
             assert(vi.integral == vo.integral);
@@ -118,9 +115,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
             vo.frac = raw_value->frac;
             if (swap)
             {
-                char n;
-                swapl(&vo.integral, n);
-                swapl(&vo.frac, n);
+                swapl(&vo.integral);
+                swapl(&vo.frac);
             }
 
             assert(vi.integral == vo.integral);
@@ -276,29 +272,27 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
     FP3232 *values;
 
     if (swap) {
-        char n;
-
-        swaps(&out->sequenceNumber, n);
-        swapl(&out->length, n);
-        swaps(&out->evtype, n);
-        swaps(&out->deviceid, n);
-        swaps(&out->sourceid, n);
-        swapl(&out->time, n);
-        swapl(&out->detail, n);
-        swapl(&out->root, n);
-        swapl(&out->event, n);
-        swapl(&out->child, n);
-        swapl(&out->root_x, n);
-        swapl(&out->root_y, n);
-        swapl(&out->event_x, n);
-        swapl(&out->event_y, n);
-        swaps(&out->buttons_len, n);
-        swaps(&out->valuators_len, n);
-        swapl(&out->mods.base_mods, n);
-        swapl(&out->mods.latched_mods, n);
-        swapl(&out->mods.locked_mods, n);
-        swapl(&out->mods.effective_mods, n);
-        swapl(&out->flags, n);
+        swaps(&out->sequenceNumber);
+        swapl(&out->length);
+        swaps(&out->evtype);
+        swaps(&out->deviceid);
+        swaps(&out->sourceid);
+        swapl(&out->time);
+        swapl(&out->detail);
+        swapl(&out->root);
+        swapl(&out->event);
+        swapl(&out->child);
+        swapl(&out->root_x);
+        swapl(&out->root_y);
+        swapl(&out->event_x);
+        swapl(&out->event_y);
+        swaps(&out->buttons_len);
+        swaps(&out->valuators_len);
+        swapl(&out->mods.base_mods);
+        swapl(&out->mods.latched_mods);
+        swapl(&out->mods.locked_mods);
+        swapl(&out->mods.effective_mods);
+        swapl(&out->flags);
     }
 
     assert(out->extension == 0); /* IReqCode defaults to 0 */
@@ -388,9 +382,8 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
 
                 if (swap)
                 {
-                    char n;
-                    swapl(&vo.integral, n);
-                    swapl(&vo.frac, n);
+                    swapl(&vo.integral);
+                    swapl(&vo.frac);
                 }
 
 
@@ -647,15 +640,13 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
 
     if (swap)
     {
-        char n;
-
-        swaps(&out->sequenceNumber, n);
-        swapl(&out->length, n);
-        swaps(&out->evtype, n);
-        swaps(&out->deviceid, n);
-        swaps(&out->sourceid, n);
-        swapl(&out->time, n);
-        swaps(&out->num_classes, n);
+        swaps(&out->sequenceNumber);
+        swapl(&out->length);
+        swaps(&out->evtype);
+        swaps(&out->deviceid);
+        swaps(&out->sourceid);
+        swapl(&out->time);
+        swaps(&out->num_classes);
     }
 
     assert(out->type == GenericEvent);
@@ -672,10 +663,9 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
 
         if (swap)
         {
-            char n;
-            swaps(&any->length, n);
-            swaps(&any->type, n);
-            swaps(&any->sourceid, n);
+            swaps(&any->length);
+            swaps(&any->type);
+            swaps(&any->sourceid);
         }
 
         switch(any->type)
@@ -687,8 +677,7 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
 
                     if (swap)
                     {
-                        char n;
-                        swaps(&b->num_buttons, n);
+                        swaps(&b->num_buttons);
                     }
 
                     assert(b->length ==
@@ -703,8 +692,7 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
                     {
                         if (swap)
                         {
-                            char n;
-                            swapl(&names[j], n);
+                            swapl(&names[j]);
                         }
                         assert(names[j] == in->buttons.names[j]);
                     }
@@ -717,8 +705,7 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
 
                     if (swap)
                     {
-                        char n;
-                        swaps(&k->num_keycodes, n);
+                        swaps(&k->num_keycodes);
                     }
 
                     assert(k->length ==
@@ -732,8 +719,7 @@ static void test_values_XIDeviceChangedEvent(DeviceChangedEvent *in,
                     {
                         if (swap)
                         {
-                            char n;
-                            swapl(&kc[j], n);
+                            swapl(&kc[j]);
                         }
                         assert(kc[j] >= in->keys.min_keycode);
                         assert(kc[j] <= in->keys.max_keycode);

@@ -70,12 +70,10 @@ SOFTWARE.
 int
 SProcXUngrabDevice(ClientPtr client)
 {
-    char n;
-
     REQUEST(xUngrabDeviceReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xUngrabDeviceReq);
-    swapl(&stuff->time, n);
+    swapl(&stuff->time);
     return (ProcXUngrabDevice(client));
 }
 

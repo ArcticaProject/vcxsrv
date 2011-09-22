@@ -598,8 +598,7 @@ ResetCurrentRequest(ClientPtr client)
 	    ((xBigReq *)oci->bufptr)->length = client->req_len;
 	    if (client->swapped)
 	    {
-		char n;
-		swapl(&((xBigReq *)oci->bufptr)->length, n);
+		swapl(&((xBigReq *)oci->bufptr)->length);
 	    }
 	}
 	if (gotnow >= (needed << 2))
@@ -822,11 +821,10 @@ WriteToClient (ClientPtr who, int count, const void *__buf)
         { /* start of new reply */
 	    CARD32 replylen;
 	    unsigned long bytesleft;
-	    char n;
 
 	    replylen = ((xGenericReply *)buf)->length;
 	    if (who->swapped)
-		swapl(&replylen, n);
+		swapl(&replylen);
 	    bytesleft = (replylen * 4) + SIZEOF(xReply) - count - padBytes;
 	    replyinfo.startOfReply = TRUE;
 	    replyinfo.bytesRemaining = who->replyBytesRemaining = bytesleft;

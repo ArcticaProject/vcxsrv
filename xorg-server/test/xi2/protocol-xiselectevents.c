@@ -89,7 +89,6 @@ int __wrap_dixLookupWindow(WindowPtr *win, XID id, ClientPtr client, Mask access
 
 static void request_XISelectEvent(xXISelectEventsReq *req, int error)
 {
-    char n;
     int i;
     int rc;
     ClientRec client;
@@ -114,14 +113,14 @@ static void request_XISelectEvent(xXISelectEventsReq *req, int error)
     for (i = 0; i < req->num_masks; i++)
     {
         next = (xXIEventMask*)((char*)&mask[1] + mask->mask_len * 4);
-        swaps(&mask->deviceid, n);
-        swaps(&mask->mask_len, n);
+        swaps(&mask->deviceid);
+        swaps(&mask->mask_len);
         mask = next;
     }
 
-    swapl(&req->win, n);
-    swaps(&req->length, n);
-    swaps(&req->num_masks, n);
+    swapl(&req->win);
+    swaps(&req->length);
+    swaps(&req->num_masks);
     rc = SProcXISelectEvents(&client);
     assert(rc == error);
 }

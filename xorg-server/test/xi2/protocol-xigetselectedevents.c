@@ -91,10 +91,9 @@ static void reply_XIGetSelectedEvents(ClientPtr client, int len, char *data, voi
 
     if (client->swapped)
     {
-        char n;
-        swapl(&rep->length, n);
-        swaps(&rep->sequenceNumber, n);
-        swaps(&rep->num_masks, n);
+        swapl(&rep->length);
+        swaps(&rep->sequenceNumber);
+        swaps(&rep->num_masks);
     }
 
     reply_check_defaults(rep, len, XIGetSelectedEvents);
@@ -115,9 +114,8 @@ static void reply_XIGetSelectedEvents_data(ClientPtr client, int len, char *data
     {
         if (client->swapped)
         {
-            char n;
-            swaps(&mask->deviceid, n);
-            swaps(&mask->mask_len, n);
+            swaps(&mask->deviceid);
+            swaps(&mask->mask_len);
         }
 
         assert(mask->deviceid < 6);
@@ -136,7 +134,6 @@ static void reply_XIGetSelectedEvents_data(ClientPtr client, int len, char *data
 
 static void request_XIGetSelectedEvents(xXIGetSelectedEventsReq* req, int error)
 {
-    char n;
     int rc;
     ClientRec client;
     client = init_client(req->length, req);
@@ -148,8 +145,8 @@ static void request_XIGetSelectedEvents(xXIGetSelectedEventsReq* req, int error)
 
     reply_handler = reply_XIGetSelectedEvents;
     client.swapped = TRUE;
-    swapl(&req->win, n);
-    swaps(&req->length, n);
+    swapl(&req->win);
+    swaps(&req->length);
     rc = SProcXIGetSelectedEvents(&client);
     assert(rc == error);
 }

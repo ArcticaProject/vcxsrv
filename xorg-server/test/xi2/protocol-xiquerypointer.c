@@ -81,16 +81,15 @@ static void reply_XIQueryPointer(ClientPtr client, int len, char *data,
 
     if (client->swapped)
     {
-        char n;
-        swapl(&rep->length, n);
-        swaps(&rep->sequenceNumber, n);
-        swapl(&rep->root, n);
-        swapl(&rep->child, n);
-        swapl(&rep->root_x, n);
-        swapl(&rep->root_y, n);
-        swapl(&rep->win_x, n);
-        swapl(&rep->win_y, n);
-        swaps(&rep->buttons_len, n);
+        swapl(&rep->length);
+        swaps(&rep->sequenceNumber);
+        swapl(&rep->root);
+        swapl(&rep->child);
+        swapl(&rep->root_x);
+        swapl(&rep->root_y);
+        swapl(&rep->win_x);
+        swapl(&rep->win_y);
+        swaps(&rep->buttons_len);
     }
 
     reply_check_defaults(rep, len, XIQueryPointer);
@@ -132,7 +131,6 @@ static void reply_XIQueryPointer_data(ClientPtr client, int len, char *data, voi
 
 static void request_XIQueryPointer(ClientPtr client, xXIQueryPointerReq* req, int error)
 {
-    char n;
     int rc;
 
     rc = ProcXIQueryPointer(&client_request);
@@ -142,8 +140,8 @@ static void request_XIQueryPointer(ClientPtr client, xXIQueryPointerReq* req, in
         assert(client_request.errorValue == req->deviceid);
 
     client_request.swapped = TRUE;
-    swaps(&req->deviceid, n);
-    swaps(&req->length, n);
+    swaps(&req->deviceid);
+    swaps(&req->length);
     rc = SProcXIQueryPointer(&client_request);
     assert(rc == error);
 

@@ -1487,7 +1487,7 @@ miDatan2 (double dy, double dx)
 	if (dy > 0)
 	    return 90.0;
 	return -90.0;
-    } else if (Fabs (dy) == Fabs (dx)) {
+    } else if (fabs (dy) == fabs (dx)) {
 	if (dy > 0) {
 	    if (dx > 0)
 		return 45.0;

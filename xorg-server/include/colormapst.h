@@ -48,8 +48,6 @@ SOFTWARE.
 #ifndef CMAPSTRUCT_H
 #define CMAPSTRUCT_H 1
 
-#include <X11/Xarch.h>
-
 #include "colormap.h"
 #include "screenint.h"
 #include "privates.h"
@@ -91,26 +89,15 @@ typedef struct _CMEntry
     Bool	fShared;
 } Entry;
 
-/*
- * COLORMAPs can be used for either Direct or Pseudo color.  PseudoColor
+/* COLORMAPs can be used for either Direct or Pseudo color.  PseudoColor
  * only needs one cell table, we arbitrarily pick red.  We keep track
- * of that table with freeRed, numPixelsRed, and clientPixelsRed
- *
- * The padN variables are unfortunate ABI BC. See fdo bug #6924.
- */
+ * of that table with freeRed, numPixelsRed, and clientPixelsRed */
 
 typedef struct _ColormapRec
 {
     VisualPtr	pVisual;
     short	class;		/* PseudoColor or DirectColor */
-#if defined(_LP64)
-    short	pad0;
-    XID		pad1;
-#endif
     XID		mid;		/* client's name for colormap */
-#if defined(_LP64) && (X_BYTE_ORDER == X_LITTLE_ENDIAN)
-    XID		pad2;
-#endif
     ScreenPtr	pScreen;	/* screen map is associated with */
     short	flags;		/* 1 = IsDefault
 				 * 2 = AllAllocated */

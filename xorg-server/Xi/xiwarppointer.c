@@ -56,19 +56,17 @@
 int
 SProcXIWarpPointer(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIWarpPointerReq);
-    swaps(&stuff->length, n);
-    swapl(&stuff->src_win, n);
-    swapl(&stuff->dst_win, n);
-    swapl(&stuff->src_x, n);
-    swapl(&stuff->src_y, n);
-    swaps(&stuff->src_width, n);
-    swaps(&stuff->src_height, n);
-    swapl(&stuff->dst_x, n);
-    swapl(&stuff->dst_y, n);
-    swaps(&stuff->deviceid, n);
+    swaps(&stuff->length);
+    swapl(&stuff->src_win);
+    swapl(&stuff->dst_win);
+    swapl(&stuff->src_x);
+    swapl(&stuff->src_y);
+    swaps(&stuff->src_width);
+    swaps(&stuff->src_height);
+    swapl(&stuff->dst_x);
+    swapl(&stuff->dst_y);
+    swaps(&stuff->deviceid);
     return (ProcXIWarpPointer(client));
 }
 

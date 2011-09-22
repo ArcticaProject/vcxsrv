@@ -51,12 +51,10 @@
 int
 SProcXISetClientPointer(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXISetClientPointerReq);
-    swaps(&stuff->length, n);
-    swapl(&stuff->win, n);
-    swaps(&stuff->deviceid, n);
+    swaps(&stuff->length);
+    swapl(&stuff->win);
+    swaps(&stuff->deviceid);
     REQUEST_SIZE_MATCH(xXISetClientPointerReq);
     return (ProcXISetClientPointer(client));
 }

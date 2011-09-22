@@ -71,12 +71,10 @@ SOFTWARE.
 int
 SProcXGetDeviceControl(ClientPtr client)
 {
-    char n;
-
     REQUEST(xGetDeviceControlReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xGetDeviceControlReq);
-    swaps(&stuff->control, n);
+    swaps(&stuff->control);
     return (ProcXGetDeviceControl(client));
 }
 
@@ -90,7 +88,6 @@ static void
 CopySwapDeviceResolution(ClientPtr client, ValuatorClassPtr v, char *buf,
 			 int length)
 {
-    char n;
     AxisInfoPtr a;
     xDeviceResolutionState *r;
     int i, *iptr;
@@ -108,19 +105,18 @@ CopySwapDeviceResolution(ClientPtr client, ValuatorClassPtr v, char *buf,
     for (i = 0, a = v->axes; i < v->numAxes; i++, a++)
 	*iptr++ = a->max_resolution;
     if (client->swapped) {
-	swaps(&r->control, n);
-	swaps(&r->length, n);
-	swapl(&r->num_valuators, n);
+	swaps(&r->control);
+	swaps(&r->length);
+	swapl(&r->num_valuators);
 	iptr = (int *)buf;
 	for (i = 0; i < (3 * v->numAxes); i++, iptr++) {
-	    swapl(iptr, n);
+	    swapl(iptr);
 	}
     }
 }
 
 static void CopySwapDeviceCore (ClientPtr client, DeviceIntPtr dev, char *buf)
 {
-    char n;
     xDeviceCoreState *c = (xDeviceCoreState *) buf;
 
     c->control = DEVICE_CORE;
@@ -129,15 +125,13 @@ static void CopySwapDeviceCore (ClientPtr client, DeviceIntPtr dev, char *buf)
     c->iscore = (dev == inputInfo.keyboard || dev == inputInfo.pointer);
 
     if (client->swapped) {
-        swaps(&c->control, n);
-        swaps(&c->length, n);
-        swaps(&c->status, n);
+        swaps(&c->control);
+        swaps(&c->length);
     }
 }
 
 static void CopySwapDeviceEnable (ClientPtr client, DeviceIntPtr dev, char *buf)
 {
-    char n;
     xDeviceEnableState *e = (xDeviceEnableState *) buf;
 
     e->control = DEVICE_ENABLE;
@@ -145,9 +139,8 @@ static void CopySwapDeviceEnable (ClientPtr client, DeviceIntPtr dev, char *buf)
     e->enable = dev->enabled;
 
     if (client->swapped) {
-        swaps(&e->control, n);
-        swaps(&e->length, n);
-        swaps(&e->enable, n);
+        swaps(&e->control);
+        swaps(&e->length);
     }
 }
 
@@ -161,10 +154,8 @@ static void CopySwapDeviceEnable (ClientPtr client, DeviceIntPtr dev, char *buf)
 void
 SRepXGetDeviceControl(ClientPtr client, int size, xGetDeviceControlReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }
 

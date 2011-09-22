@@ -582,9 +582,6 @@ AC_ARG_ENABLE(install-libxf86config,
 AC_ARG_ENABLE(visibility,     AC_HELP_STRING([--enable-visibility], [Enable symbol visibility (default: auto)]),
 				[SYMBOL_VISIBILITY=$enableval],
 				[SYMBOL_VISIBILITY=auto])
-AC_ARG_ENABLE(pc98,     	AC_HELP_STRING([--enable-pc98], [Enable PC98 support in Xorg (default: auto)]),
-				[SUPPORT_PC98=$enableval],
-				[SUPPORT_PC98=auto])
 
 dnl GLX build options
 AC_ARG_ENABLE(aiglx,          AS_HELP_STRING([--enable-aiglx], [Build accelerated indirect GLX (default: enabled)]),
@@ -608,7 +605,7 @@ AC_ARG_WITH(khronos-spec-dir, AS_HELP_STRING([--with-khronos-spec-dir=PATH], [Pa
 dnl Extensions.
 AC_ARG_ENABLE(registry,       AS_HELP_STRING([--disable-registry], [Build string registry module (default: enabled)]), [XREGISTRY=$enableval], [XREGISTRY=yes])
 AC_ARG_ENABLE(composite,      AS_HELP_STRING([--disable-composite], [Build Composite extension (default: enabled)]), [COMPOSITE=$enableval], [COMPOSITE=yes])
-AC_ARG_ENABLE(mitshm,         AS_HELP_STRING([--disable-shm], [Build SHM extension (default: enabled)]), [MITSHM=$enableval], [MITSHM=yes])
+AC_ARG_ENABLE(mitshm,         AS_HELP_STRING([--disable-mitshm], [Build SHM extension (default: enabled)]), [MITSHM=$enableval], [MITSHM=yes])
 AC_ARG_ENABLE(xres,           AS_HELP_STRING([--disable-xres], [Build XRes extension (default: enabled)]), [RES=$enableval], [RES=yes])
 AC_ARG_ENABLE(record,         AS_HELP_STRING([--disable-record], [Build Record extension (default: enabled)]), [RECORD=$enableval], [RECORD=yes])
 AC_ARG_ENABLE(xv,             AS_HELP_STRING([--disable-xv], [Build Xv extension (default: enabled)]), [XV=$enableval], [XV=yes])
@@ -705,10 +702,6 @@ AM_CONDITIONAL(SECURE_RPC, [test "x$SECURE_RPC" = xyes])
 AM_CONDITIONAL(INT10_VM86, [test "x$INT10" = xvm86])
 AM_CONDITIONAL(INT10_X86EMU, [test "x$INT10" = xx86emu])
 AM_CONDITIONAL(INT10_STUB, [test "x$INT10" = xstub])
-if test "x$INT10" = xyes; then
-	dnl VM86 headers
-	AC_CHECK_HEADERS([sys/vm86.h sys/io.h])
-fi
 
 dnl Handle installing libxf86config
 AM_CONDITIONAL(INSTALL_LIBXF86CONFIG, [test "x$INSTALL_LIBXF86CONFIG" = xyes])
@@ -1573,7 +1566,6 @@ if test "x$XORG" = xyes; then
 		if test "x$LNXAPM" = xyes; then
 			XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
 		fi
-	  	XORG_OS="linux"
 		XORG_OS_SUBDIR="linux"
 		xorg_bus_linuxpci="yes"
 		linux_acpi="no"
@@ -1593,12 +1585,10 @@ if test "x$XORG" = xyes; then
 		esac
 		;;
 	  freebsd* | kfreebsd*-gnu | dragonfly*)
-	  	XORG_OS="freebsd"
 		XORG_OS_SUBDIR="bsd"
 		xorg_bus_bsdpci="yes"
 		;;
 	  netbsd*)
-	  	XORG_OS="netbsd"
 		XORG_OS_SUBDIR="bsd"
 		xorg_bus_bsdpci="yes"
 		;;
@@ -1607,12 +1597,10 @@ if test "x$XORG" = xyes; then
 			-o "x$ac_cv_BSD_KQUEUE_APM" = xyes; then
 			XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
 		fi
-	  	XORG_OS="openbsd"
 		XORG_OS_SUBDIR="bsd"
 		xorg_bus_bsdpci="yes"
 		;;
 	  solaris*)
-	  	XORG_OS="solaris"
 		XORG_OS_SUBDIR="solaris"
 		XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
 		# Use the same stubs as BSD for old functions, since we now
@@ -1659,19 +1647,14 @@ if test "x$XORG" = xyes; then
 			XORG_CFLAGS="${XORG_CFLAGS} "'$(SOLARIS_ASM_CFLAGS)'
 		fi
 		AC_SUBST([SOLARIS_ASM_CFLAGS])
-		if test "x$SUPPORT_PC98" = xauto; then
-			SUPPORT_PC98="no"
-		fi
 		;;
 	  gnu*)
-	  	XORG_OS="gnu"
 		XORG_OS_SUBDIR="hurd"
 		# Use the same stubs as BSD for old functions, since we now
 		# use libpciaccess for PCI
 		xorg_bus_bsdpci="yes"
 		;;
 	  *)
-	  	XORG_OS="unknown"
 		XORG_OS_SUBDIR="unknown"
 		AC_MSG_ERROR([m4_text_wrap(m4_join([ ],
 		[Your OS is unknown. Xorg currently only supports Linux,],
@@ -1686,21 +1669,9 @@ if test "x$XORG" = xyes; then
 		xorg_bus_sparc="yes"
 		;;
 	  i*86)
-		if test "x$SUPPORT_PC98" = xauto; then
-			SUPPORT_PC98="yes"
-		fi
 		;;
 	esac
 
-	if test "x$SUPPORT_PC98" = xauto; then
-		SUPPORT_PC98="no"
-	fi
-	if test "x$SUPPORT_PC98" = xyes; then
-		AC_DEFINE(SUPPORT_PC98, 1, [Support PC98])
-	fi
-	if test "x$XORG_OS_PCI" = x ; then
-		XORG_OS_PCI=$XORG_OS
-	fi
 	if test "x$DGA" = xauto; then
 		PKG_CHECK_MODULES(DGA, $DGAPROTO, [DGA=yes], [DGA=no])
 	fi
@@ -1729,7 +1700,6 @@ if test "x$XORG" = xyes; then
 	AC_SUBST([XORG_LIBS])
 	AC_SUBST([XORG_SYS_LIBS])
 	AC_SUBST([XORG_INCS])
-	AC_SUBST([XORG_OS])
 	AC_SUBST([XORG_OS_SUBDIR])
 	AC_SUBST([XORG_CFLAGS])
 

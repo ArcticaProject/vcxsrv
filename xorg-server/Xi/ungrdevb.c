@@ -76,13 +76,11 @@ SOFTWARE.
 int
 SProcXUngrabDeviceButton(ClientPtr client)
 {
-    char n;
-
     REQUEST(xUngrabDeviceButtonReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xUngrabDeviceButtonReq);
-    swapl(&stuff->grabWindow, n);
-    swaps(&stuff->modifiers, n);
+    swapl(&stuff->grabWindow);
+    swaps(&stuff->modifiers);
     return (ProcXUngrabDeviceButton(client));
 }
 

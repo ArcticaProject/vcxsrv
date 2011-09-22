@@ -71,10 +71,8 @@ SOFTWARE.
 int
 SProcXGetDeviceModifierMapping(ClientPtr client)
 {
-    char n;
-
     REQUEST(xGetDeviceModifierMappingReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXGetDeviceModifierMapping(client));
 }
 
@@ -129,9 +127,7 @@ void
 SRepXGetDeviceModifierMapping(ClientPtr client, int size,
 			      xGetDeviceModifierMappingReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

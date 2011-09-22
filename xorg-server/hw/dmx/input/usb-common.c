@@ -272,7 +272,7 @@ device. */
 void usbInit(DevicePtr pDev, usbType type)
 {
     GETPRIV;
-    char          name[64];            /* RATS: Only used in XmuSnprintf */
+    char          name[64];            /* RATS: Only used in snprintf */
     int           i, j, k;
     char          buf[256] = { 0, };   /* RATS: Use ok */
     int           version;
@@ -284,7 +284,7 @@ void usbInit(DevicePtr pDev, usbType type)
     if (priv->fd >=0) return;
 
     for (i = 0; i < 32; i++) {
-        XmuSnprintf(name, sizeof(name), "/dev/input/event%d", i);
+        snprintf(name, sizeof(name), "/dev/input/event%d", i);
         if ((priv->fd = open(name, O_RDWR | O_NONBLOCK, 0)) >= 0) {
             ioctl(priv->fd, EVIOCGVERSION, &version);
             ioctl(priv->fd, EVIOCGNAME(sizeof(buf)), buf);

@@ -71,10 +71,8 @@ SOFTWARE.
 int
 SProcXSetDeviceMode(ClientPtr client)
 {
-    char n;
-
     REQUEST(xSetDeviceModeReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXSetDeviceMode(client));
 }
 
@@ -138,9 +136,7 @@ ProcXSetDeviceMode(ClientPtr client)
 void
 SRepXSetDeviceMode(ClientPtr client, int size, xSetDeviceModeReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

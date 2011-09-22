@@ -44,32 +44,28 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 static int
 SProcXkbUseExtension(ClientPtr client)
 {
-register int n;
-
     REQUEST(xkbUseExtensionReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbUseExtensionReq);
-    swaps(&stuff->wantedMajor,n);
-    swaps(&stuff->wantedMinor,n);
+    swaps(&stuff->wantedMajor);
+    swaps(&stuff->wantedMinor);
     return ProcXkbUseExtension(client);
 }
 
 static int
 SProcXkbSelectEvents(ClientPtr client)
 {
-register int n;
-
     REQUEST(xkbSelectEventsReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSelectEventsReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->affectWhich,n);
-    swaps(&stuff->clear,n);
-    swaps(&stuff->selectAll,n);
-    swaps(&stuff->affectMap,n);
-    swaps(&stuff->map,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->affectWhich);
+    swaps(&stuff->clear);
+    swaps(&stuff->selectAll);
+    swaps(&stuff->affectMap);
+    swaps(&stuff->map);
     if ((stuff->affectWhich&(~XkbMapNotifyMask))!=0)  {
 	union {
 	    BOOL	*b;
@@ -113,12 +109,12 @@ register int n;
 	    if (dataLeft<(size*2))
 		return BadLength;
 	    if (size==2) {
-		swaps(&from.c16[0],n);
-		swaps(&from.c16[1],n);
+		swaps(&from.c16[0]);
+		swaps(&from.c16[1]);
 	    }
 	    else if (size==4) {
-		swapl(&from.c32[0],n);
-		swapl(&from.c32[1],n);
+		swapl(&from.c32[0]);
+		swapl(&from.c32[1]);
 	    }
 	    else {
 		size= 2;
@@ -137,128 +133,114 @@ register int n;
 static int
 SProcXkbBell(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbBellReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbBellReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->bellClass,n);
-    swaps(&stuff->bellID,n);
-    swapl(&stuff->name,n);
-    swapl(&stuff->window,n);
-    swaps(&stuff->pitch,n);
-    swaps(&stuff->duration,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->bellClass);
+    swaps(&stuff->bellID);
+    swapl(&stuff->name);
+    swapl(&stuff->window);
+    swaps(&stuff->pitch);
+    swaps(&stuff->duration);
     return ProcXkbBell(client);
 }
 
 static int
 SProcXkbGetState(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetStateReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetStateReq);
-    swaps(&stuff->deviceSpec,n);
+    swaps(&stuff->deviceSpec);
     return ProcXkbGetState(client);
 }
 
 static int
 SProcXkbLatchLockState(ClientPtr client)
 {
-register int 	n;
-
     REQUEST(xkbLatchLockStateReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbLatchLockStateReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->groupLatch,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->groupLatch);
     return ProcXkbLatchLockState(client);
 }
 
 static int
 SProcXkbGetControls(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetControlsReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetControlsReq);
-    swaps(&stuff->deviceSpec,n);
+    swaps(&stuff->deviceSpec);
     return ProcXkbGetControls(client);
 }
 
 static int
 SProcXkbSetControls(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetControlsReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbSetControlsReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->affectInternalVMods,n);
-    swaps(&stuff->internalVMods,n);
-    swaps(&stuff->affectIgnoreLockVMods,n);
-    swaps(&stuff->ignoreLockVMods,n);
-    swaps(&stuff->axOptions,n);
-    swapl(&stuff->affectEnabledCtrls,n);
-    swapl(&stuff->enabledCtrls,n);
-    swapl(&stuff->changeCtrls,n);
-    swaps(&stuff->repeatDelay,n);
-    swaps(&stuff->repeatInterval,n);
-    swaps(&stuff->slowKeysDelay,n);
-    swaps(&stuff->debounceDelay,n);
-    swaps(&stuff->mkDelay,n);
-    swaps(&stuff->mkInterval,n);
-    swaps(&stuff->mkTimeToMax,n);
-    swaps(&stuff->mkMaxSpeed,n);
-    swaps(&stuff->mkCurve,n);
-    swaps(&stuff->axTimeout,n);
-    swapl(&stuff->axtCtrlsMask,n);
-    swapl(&stuff->axtCtrlsValues,n);
-    swaps(&stuff->axtOptsMask,n);
-    swaps(&stuff->axtOptsValues,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->affectInternalVMods);
+    swaps(&stuff->internalVMods);
+    swaps(&stuff->affectIgnoreLockVMods);
+    swaps(&stuff->ignoreLockVMods);
+    swaps(&stuff->axOptions);
+    swapl(&stuff->affectEnabledCtrls);
+    swapl(&stuff->enabledCtrls);
+    swapl(&stuff->changeCtrls);
+    swaps(&stuff->repeatDelay);
+    swaps(&stuff->repeatInterval);
+    swaps(&stuff->slowKeysDelay);
+    swaps(&stuff->debounceDelay);
+    swaps(&stuff->mkDelay);
+    swaps(&stuff->mkInterval);
+    swaps(&stuff->mkTimeToMax);
+    swaps(&stuff->mkMaxSpeed);
+    swaps(&stuff->mkCurve);
+    swaps(&stuff->axTimeout);
+    swapl(&stuff->axtCtrlsMask);
+    swapl(&stuff->axtCtrlsValues);
+    swaps(&stuff->axtOptsMask);
+    swaps(&stuff->axtOptsValues);
     return ProcXkbSetControls(client);
 }
 
 static int
 SProcXkbGetMap(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetMapReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetMapReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->full,n);
-    swaps(&stuff->partial,n);
-    swaps(&stuff->virtualMods,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->full);
+    swaps(&stuff->partial);
+    swaps(&stuff->virtualMods);
     return ProcXkbGetMap(client);
 }
 
 static int
 SProcXkbSetMap(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetMapReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetMapReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->present,n);
-    swaps(&stuff->flags,n);
-    swaps(&stuff->totalSyms,n);
-    swaps(&stuff->totalActs,n);
-    swaps(&stuff->virtualMods,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->present);
+    swaps(&stuff->flags);
+    swaps(&stuff->totalSyms);
+    swaps(&stuff->totalActs);
+    swaps(&stuff->virtualMods);
     return ProcXkbSetMap(client);
 }
 
@@ -266,105 +248,91 @@ register int	n;
 static int
 SProcXkbGetCompatMap(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetCompatMapReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetCompatMapReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->firstSI,n);
-    swaps(&stuff->nSI,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->firstSI);
+    swaps(&stuff->nSI);
     return ProcXkbGetCompatMap(client);
 }
 
 static int
 SProcXkbSetCompatMap(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetCompatMapReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetCompatMapReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->firstSI,n);
-    swaps(&stuff->nSI,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->firstSI);
+    swaps(&stuff->nSI);
     return ProcXkbSetCompatMap(client);
 }
 
 static int
 SProcXkbGetIndicatorState(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetIndicatorStateReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetIndicatorStateReq);
-    swaps(&stuff->deviceSpec,n);
+    swaps(&stuff->deviceSpec);
     return ProcXkbGetIndicatorState(client);
 }
 
 static int
 SProcXkbGetIndicatorMap(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetIndicatorMapReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetIndicatorMapReq);
-    swaps(&stuff->deviceSpec,n);
-    swapl(&stuff->which,n);
+    swaps(&stuff->deviceSpec);
+    swapl(&stuff->which);
     return ProcXkbGetIndicatorMap(client);
 }
 
 static int
 SProcXkbSetIndicatorMap(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetIndicatorMapReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetIndicatorMapReq);
-    swaps(&stuff->deviceSpec,n);
-    swapl(&stuff->which,n);
+    swaps(&stuff->deviceSpec);
+    swapl(&stuff->which);
     return ProcXkbSetIndicatorMap(client);
 }
 
 static int
 SProcXkbGetNamedIndicator(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetNamedIndicatorReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetNamedIndicatorReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->ledClass,n);
-    swaps(&stuff->ledID,n);
-    swapl(&stuff->indicator,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->ledClass);
+    swaps(&stuff->ledID);
+    swapl(&stuff->indicator);
     return ProcXkbGetNamedIndicator(client);
 }
 
 static int
 SProcXkbSetNamedIndicator(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetNamedIndicatorReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbSetNamedIndicatorReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->ledClass,n);
-    swaps(&stuff->ledID,n);
-    swapl(&stuff->indicator,n);
-    swaps(&stuff->virtualMods,n);
-    swapl(&stuff->ctrls,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->ledClass);
+    swaps(&stuff->ledID);
+    swapl(&stuff->indicator);
+    swaps(&stuff->virtualMods);
+    swapl(&stuff->ctrls);
     return ProcXkbSetNamedIndicator(client);
 }
 
@@ -372,160 +340,140 @@ register int	n;
 static int
 SProcXkbGetNames(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetNamesReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetNamesReq);
-    swaps(&stuff->deviceSpec,n);
-    swapl(&stuff->which,n);
+    swaps(&stuff->deviceSpec);
+    swapl(&stuff->which);
     return ProcXkbGetNames(client);
 }
 
 static int
 SProcXkbSetNames(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetNamesReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetNamesReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->virtualMods,n);
-    swapl(&stuff->which,n);
-    swapl(&stuff->indicators,n);
-    swaps(&stuff->totalKTLevelNames,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->virtualMods);
+    swapl(&stuff->which);
+    swapl(&stuff->indicators);
+    swaps(&stuff->totalKTLevelNames);
     return ProcXkbSetNames(client);
 }
 
 static int
 SProcXkbGetGeometry(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetGeometryReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetGeometryReq);
-    swaps(&stuff->deviceSpec,n);
-    swapl(&stuff->name,n);
+    swaps(&stuff->deviceSpec);
+    swapl(&stuff->name);
     return ProcXkbGetGeometry(client);
 }
 
 static int
 SProcXkbSetGeometry(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetGeometryReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetGeometryReq);
-    swaps(&stuff->deviceSpec,n);
-    swapl(&stuff->name,n);
-    swaps(&stuff->widthMM,n);
-    swaps(&stuff->heightMM,n);
-    swaps(&stuff->nProperties,n);
-    swaps(&stuff->nColors,n);
-    swaps(&stuff->nDoodads,n);
-    swaps(&stuff->nKeyAliases,n);
+    swaps(&stuff->deviceSpec);
+    swapl(&stuff->name);
+    swaps(&stuff->widthMM);
+    swaps(&stuff->heightMM);
+    swaps(&stuff->nProperties);
+    swaps(&stuff->nColors);
+    swaps(&stuff->nDoodads);
+    swaps(&stuff->nKeyAliases);
     return ProcXkbSetGeometry(client);
 }
 
 static int
 SProcXkbPerClientFlags(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbPerClientFlagsReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbPerClientFlagsReq);
-    swaps(&stuff->deviceSpec,n);
-    swapl(&stuff->change,n);
-    swapl(&stuff->value,n);
-    swapl(&stuff->ctrlsToChange,n);
-    swapl(&stuff->autoCtrls,n);
-    swapl(&stuff->autoCtrlValues,n);
+    swaps(&stuff->deviceSpec);
+    swapl(&stuff->change);
+    swapl(&stuff->value);
+    swapl(&stuff->ctrlsToChange);
+    swapl(&stuff->autoCtrls);
+    swapl(&stuff->autoCtrlValues);
     return ProcXkbPerClientFlags(client);
 }
 
 static int
 SProcXkbListComponents(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbListComponentsReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbListComponentsReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->maxNames,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->maxNames);
     return ProcXkbListComponents(client);
 }
 
 static int
 SProcXkbGetKbdByName(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetKbdByNameReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbGetKbdByNameReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->want,n);
-    swaps(&stuff->need,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->want);
+    swaps(&stuff->need);
     return ProcXkbGetKbdByName(client);
 }
 
 static int
 SProcXkbGetDeviceInfo(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbGetDeviceInfoReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xkbGetDeviceInfoReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->wanted,n);
-    swaps(&stuff->ledClass,n);
-    swaps(&stuff->ledID,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->wanted);
+    swaps(&stuff->ledClass);
+    swaps(&stuff->ledID);
     return ProcXkbGetDeviceInfo(client);
 }
 
 static int
 SProcXkbSetDeviceInfo(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetDeviceInfoReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetDeviceInfoReq);
-    swaps(&stuff->deviceSpec,n);
-    swaps(&stuff->change,n);
-    swaps(&stuff->nDeviceLedFBs,n);
+    swaps(&stuff->deviceSpec);
+    swaps(&stuff->change);
+    swaps(&stuff->nDeviceLedFBs);
     return ProcXkbSetDeviceInfo(client);
 }
 
 static int
 SProcXkbSetDebuggingFlags(ClientPtr client)
 {
-register int	n;
-
     REQUEST(xkbSetDebuggingFlagsReq);
 
-    swaps(&stuff->length,n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xkbSetDebuggingFlagsReq);
-    swapl(&stuff->affectFlags,n);
-    swapl(&stuff->flags,n);
-    swapl(&stuff->affectCtrls,n);
-    swapl(&stuff->ctrls,n);
-    swaps(&stuff->msgLength,n);
+    swapl(&stuff->affectFlags);
+    swapl(&stuff->flags);
+    swapl(&stuff->affectCtrls);
+    swapl(&stuff->ctrls);
+    swaps(&stuff->msgLength);
     return ProcXkbSetDebuggingFlags(client);
 }
 

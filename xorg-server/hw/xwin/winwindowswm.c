@@ -91,8 +91,8 @@ ProcWindowsWMQueryVersion(ClientPtr client)
   rep.patchVersion = SERVER_WINDOWSWM_PATCH_VERSION;
   if (client->swapped)
     {
-      swaps(&rep.sequenceNumber, n);
-      swapl(&rep.length, n);
+      swaps(&rep.sequenceNumber);
+      swapl(&rep.length);
     }
   WriteToClient(client, sizeof(xWindowsWMQueryVersionReply), (char *)&rep);
   return Success;
@@ -588,7 +588,7 @@ SProcWindowsWMQueryVersion (ClientPtr client)
 {
   int n;
   REQUEST(xWindowsWMQueryVersionReq);
-  swaps(&stuff->length, n);
+  swaps(&stuff->length);
   return ProcWindowsWMQueryVersion(client);
 }
 

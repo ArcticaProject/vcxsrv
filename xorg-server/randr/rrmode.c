@@ -325,10 +325,9 @@ ProcRRCreateMode (ClientPtr client)
     rep.mode = mode->mode.id;
     if (client->swapped)
     {
-	int n;
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.mode, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.mode);
     }
     WriteToClient(client, sizeof(xRRCreateModeReply), (char *)&rep);
     /* Drop out reference to this mode */

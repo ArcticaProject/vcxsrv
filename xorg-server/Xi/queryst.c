@@ -56,10 +56,8 @@ from The Open Group.
 int
 SProcXQueryDeviceState(ClientPtr client)
 {
-    char n;
-
     REQUEST(xQueryDeviceStateReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXQueryDeviceState(client));
 }
 
@@ -72,7 +70,6 @@ SProcXQueryDeviceState(ClientPtr client)
 int
 ProcXQueryDeviceState(ClientPtr client)
 {
-    char n;
     int rc, i;
     int num_classes = 0;
     int total_length = 0;
@@ -159,7 +156,7 @@ ProcXQueryDeviceState(ClientPtr client)
 		*((int *)buf) = *values;
 	    values++;
 	    if (client->swapped) {
-		swapl((int *)buf, n);	/* macro - braces needed */
+		swapl((int *)buf);
 	    }
 	    buf += sizeof(int);
 	}
@@ -184,9 +181,7 @@ ProcXQueryDeviceState(ClientPtr client)
 void
 SRepXQueryDeviceState(ClientPtr client, int size, xQueryDeviceStateReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

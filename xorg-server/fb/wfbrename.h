@@ -160,6 +160,8 @@
 #define fbStippleTable wfbStippleTable
 #define fbTile wfbTile
 #define fbTransparentSpan wfbTransparentSpan
+#define fbTrapezoids wfbTrapezoids
+#define fbTriangles wfbTriangles
 #define fbUninstallColormap wfbUninstallColormap
 #define fbUnmapWindow wfbUnmapWindow
 #define fbUnrealizeFont wfbUnrealizeFont

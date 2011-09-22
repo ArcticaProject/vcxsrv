@@ -751,7 +751,7 @@ ProcRRGetCrtcInfo (ClientPtr client)
     RRModePtr			mode;
     RROutput			*outputs;
     RROutput			*possible;
-    int				i, j, k, n;
+    int				i, j, k;
     int				width, height;
     BoxRec			panned_area;
     
@@ -818,7 +818,7 @@ ProcRRGetCrtcInfo (ClientPtr client)
     {
 	outputs[i] = crtc->outputs[i]->id;
 	if (client->swapped)
-	    swapl (&outputs[i], n);
+	    swapl(&outputs[i]);
     }
     k = 0;
     for (i = 0; i < pScrPriv->numOutputs; i++)
@@ -827,23 +827,23 @@ ProcRRGetCrtcInfo (ClientPtr client)
 	    {
 		possible[k] = pScrPriv->outputs[i]->id;
 		if (client->swapped)
-		    swapl (&possible[k], n);
+		    swapl(&possible[k]);
 		k++;
 	    }
     
     if (client->swapped) {
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.length, n);
-	swapl(&rep.timestamp, n);
-	swaps(&rep.x, n);
-	swaps(&rep.y, n);
-	swaps(&rep.width, n);
-	swaps(&rep.height, n);
-	swapl(&rep.mode, n);
-	swaps(&rep.rotation, n);
-	swaps(&rep.rotations, n);
-	swaps(&rep.nOutput, n);
-	swaps(&rep.nPossibleOutput, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.timestamp);
+	swaps(&rep.x);
+	swaps(&rep.y);
+	swaps(&rep.width);
+	swaps(&rep.height);
+	swapl(&rep.mode);
+	swaps(&rep.rotation);
+	swaps(&rep.rotations);
+	swaps(&rep.nOutput);
+	swaps(&rep.nPossibleOutput);
     }
     WriteToClient(client, sizeof(xRRGetCrtcInfoReply), (char *)&rep);
     if (extraLen)
@@ -1058,10 +1058,9 @@ sendReply:
 
     if (client->swapped) 
     {
-	int n;
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
-	swapl(&rep.newTimestamp, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.newTimestamp);
     }
     WriteToClient(client, sizeof(xRRSetCrtcConfigReply), (char *)&rep);
     
@@ -1079,7 +1078,6 @@ ProcRRGetPanning (ClientPtr client)
     BoxRec		total;
     BoxRec		tracking;
     INT16		border[4];
-    int			n;
     
     REQUEST_SIZE_MATCH(xRRGetPanningReq);
     VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
@@ -1117,21 +1115,21 @@ ProcRRGetPanning (ClientPtr client)
     }
 
     if (client->swapped) {
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.length, n);
-	swaps(&rep.timestamp, n);
-	swaps(&rep.left, n);
-	swaps(&rep.top, n);
-	swaps(&rep.width, n);
-	swaps(&rep.height, n);
-	swaps(&rep.track_left, n);
-	swaps(&rep.track_top, n);
-	swaps(&rep.track_width, n);
-	swaps(&rep.track_height, n);
-	swaps(&rep.border_left, n);
-	swaps(&rep.border_top, n);
-	swaps(&rep.border_right, n);
-	swaps(&rep.border_bottom, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.timestamp);
+	swaps(&rep.left);
+	swaps(&rep.top);
+	swaps(&rep.width);
+	swaps(&rep.height);
+	swaps(&rep.track_left);
+	swaps(&rep.track_top);
+	swaps(&rep.track_width);
+	swaps(&rep.track_height);
+	swaps(&rep.border_left);
+	swaps(&rep.border_top);
+	swaps(&rep.border_right);
+	swaps(&rep.border_bottom);
     }
     WriteToClient(client, sizeof(xRRGetPanningReply), (char *)&rep);
     return Success;
@@ -1149,7 +1147,6 @@ ProcRRSetPanning (ClientPtr client)
     BoxRec		total;
     BoxRec		tracking;
     INT16		border[4];
-    int			n;
     
     REQUEST_SIZE_MATCH(xRRSetPanningReq);
     VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
@@ -1198,9 +1195,9 @@ sendReply:
     rep.newTimestamp = pScrPriv->lastSetTime.milliseconds;
 
     if (client->swapped) {
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.length, n);
-	swaps(&rep.newTimestamp, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.newTimestamp);
     }
     WriteToClient(client, sizeof(xRRSetPanningReply), (char *)&rep);
     return Success;
@@ -1212,7 +1209,6 @@ ProcRRGetCrtcGammaSize (ClientPtr client)
     REQUEST(xRRGetCrtcGammaSizeReq);
     xRRGetCrtcGammaSizeReply	reply;
     RRCrtcPtr			crtc;
-    int				n;
 
     REQUEST_SIZE_MATCH(xRRGetCrtcGammaSizeReq);
     VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
@@ -1226,9 +1222,9 @@ ProcRRGetCrtcGammaSize (ClientPtr client)
     reply.length = 0;
     reply.size = crtc->gammaSize;
     if (client->swapped) {
-	swaps (&reply.sequenceNumber, n);
-	swapl (&reply.length, n);
-	swaps (&reply.size, n);
+	swaps(&reply.sequenceNumber);
+	swapl(&reply.length);
+	swaps(&reply.size);
     }
     WriteToClient (client, sizeof (xRRGetCrtcGammaSizeReply), (char *) &reply);
     return Success;
@@ -1240,7 +1236,6 @@ ProcRRGetCrtcGamma (ClientPtr client)
     REQUEST(xRRGetCrtcGammaReq);
     xRRGetCrtcGammaReply	reply;
     RRCrtcPtr			crtc;
-    int				n;
     unsigned long		len;
     char			*extra = NULL;
     
@@ -1264,9 +1259,9 @@ ProcRRGetCrtcGamma (ClientPtr client)
     reply.length = bytes_to_int32(len);
     reply.size = crtc->gammaSize;
     if (client->swapped) {
-	swaps (&reply.sequenceNumber, n);
-	swapl (&reply.length, n);
-	swaps (&reply.size, n);
+	swaps(&reply.sequenceNumber);
+	swapl(&reply.length);
+	swaps(&reply.size);
     }
     WriteToClient (client, sizeof (xRRGetCrtcGammaReply), (char *) &reply);
     if (crtc->gammaSize)
@@ -1361,7 +1356,6 @@ transform_filter_encode (ClientPtr client, char *output,
 			 RRTransformPtr transform)
 {
     int	    nbytes, nparams;
-    int	    n;
 
     if (transform->filter == NULL) {
 	*nbytesFilter = 0;
@@ -1377,8 +1371,8 @@ transform_filter_encode (ClientPtr client, char *output,
 	output[nbytes++] = 0;
     memcpy (output + nbytes, transform->params, nparams * sizeof (xFixed));
     if (client->swapped) {
-	swaps (nbytesFilter, n);
-	swaps (nparamsFilter, n);
+	swaps(nbytesFilter);
+	swaps(nparamsFilter);
 	SwapLongs ((CARD32 *) (output + nbytes), nparams);
     }
     nbytes += nparams * sizeof (xFixed);
@@ -1399,7 +1393,7 @@ ProcRRGetCrtcTransform (ClientPtr client)
     REQUEST(xRRGetCrtcTransformReq);
     xRRGetCrtcTransformReply	*reply;
     RRCrtcPtr			crtc;
-    int				n, nextra;
+    int				nextra;
     RRTransformPtr		current, pending;
     char			*extra;
 
@@ -1436,8 +1430,8 @@ ProcRRGetCrtcTransform (ClientPtr client)
 				      current);
 
     if (client->swapped) {
-	swaps (&reply->sequenceNumber, n);
-	swapl (&reply->length, n);
+	swaps(&reply->sequenceNumber);
+	swapl(&reply->length);
     }
     WriteToClient (client, sizeof (xRRGetCrtcTransformReply) + nextra, (char *) reply);
     free(reply);

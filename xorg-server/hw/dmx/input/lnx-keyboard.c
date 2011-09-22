@@ -429,11 +429,11 @@ static int kbdLinuxOpenVT(int vtno)
 {
     int        fd = -1;
     int        i;
-    const char *vcs[] = { "/dev/vc/%d", "/dev/tty%d", NULL };
-    char       name[64];        /* RATS: Only used in XmuSnprintf */
+    const char *vcs[] = { "/dev/vc/", "/dev/tty", NULL };
+    char       name[64];        /* RATS: Only used in snprintf */
 
     for (i = 0; vcs[i]; i++) {
-        XmuSnprintf(name, sizeof(name), vcs[i], vtno);
+        snprintf(name, sizeof(name), "%s%d", vcs[i], vtno);
         if ((fd = open(name, O_RDWR | O_NONBLOCK, 0)) >= 0) break;
     }
     if (fd < 0)

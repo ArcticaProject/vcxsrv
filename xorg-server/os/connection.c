@@ -905,9 +905,9 @@ ErrorConnMax(XtransConnInfo trans_conn)
 	if (((*(char *) &whichbyte) && (byteOrder == 'B')) ||
 	    (!(*(char *) &whichbyte) && (byteOrder == 'l')))
 	{
-	    swaps(&csp.majorVersion, whichbyte);
-	    swaps(&csp.minorVersion, whichbyte);
-	    swaps(&csp.length, whichbyte);
+	    swaps(&csp.majorVersion);
+	    swaps(&csp.minorVersion);
+	    swaps(&csp.length);
 	}
 	iov[0].iov_len = sz_xConnSetupPrefix;
 	iov[0].iov_base = (char *) &csp;

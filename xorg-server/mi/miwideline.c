@@ -322,7 +322,7 @@ miPolyBuildEdge (
     {
 	double	realk, kerror;
     	realk = x0 * dy - y0 * dx;
-    	kerror = Fabs (realk - k);
+	kerror = fabs (realk - k);
     	if (kerror > .1)
 	    printf ("realk: %g k: %g\n", realk, k);
     }

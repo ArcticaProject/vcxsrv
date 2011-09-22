@@ -51,12 +51,12 @@ SOFTWARE.
 #include <X11/Xfuncproto.h>
 
 #define EPSILON	0.000001
-#define ISEQUAL(a,b) (Fabs((a) - (b)) <= EPSILON)
-#define UNEQUAL(a,b) (Fabs((a) - (b)) > EPSILON)
+#define ISEQUAL(a,b) (fabs((a) - (b)) <= EPSILON)
+#define UNEQUAL(a,b) (fabs((a) - (b)) > EPSILON)
 #define WITHINHALF(a, b) (((a) - (b) > 0.0) ? (a) - (b) < 0.5 : \
 					     (b) - (a) <= 0.5)
 #define ROUNDTOINT(x)   ((int) (((x) > 0.0) ? ((x) + 0.5) : ((x) - 0.5)))
-#define ISZERO(x) 	(Fabs((x)) <= EPSILON)
+#define ISZERO(x) 	(fabs((x)) <= EPSILON)
 #define PTISEQUAL(a,b) (ISEQUAL(a.x,b.x) && ISEQUAL(a.y,b.y))
 #define PTUNEQUAL(a,b) (UNEQUAL(a.x,b.x) || UNEQUAL(a.y,b.y))
 #define PtEqual(a, b) (((a).x == (b).x) && ((a).y == (b).y))

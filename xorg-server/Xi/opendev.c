@@ -76,10 +76,8 @@ extern CARD8 event_base[];
 int
 SProcXOpenDevice(ClientPtr client)
 {
-    char n;
-
     REQUEST(xOpenDeviceReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return (ProcXOpenDevice(client));
 }
 
@@ -166,9 +164,7 @@ ProcXOpenDevice(ClientPtr client)
 void
 SRepXOpenDevice(ClientPtr client, int size, xOpenDeviceReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

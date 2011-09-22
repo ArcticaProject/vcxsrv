@@ -669,8 +669,6 @@ static int
 ProcScreenSaverQueryVersion (ClientPtr client)
 {
     xScreenSaverQueryVersionReply	rep;
-    int		n;
-
     REQUEST_SIZE_MATCH (xScreenSaverQueryVersionReq);
     rep.type = X_Reply;
     rep.length = 0;
@@ -678,8 +676,8 @@ ProcScreenSaverQueryVersion (ClientPtr client)
     rep.majorVersion = SERVER_SAVER_MAJOR_VERSION;
     rep.minorVersion = SERVER_SAVER_MINOR_VERSION;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.length, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
     }
     WriteToClient(client, sizeof (xScreenSaverQueryVersionReply), (char *)&rep);
     return Success;
@@ -690,7 +688,7 @@ ProcScreenSaverQueryInfo (ClientPtr client)
 {
     REQUEST(xScreenSaverQueryInfoReq);
     xScreenSaverQueryInfoReply	rep;
-    int		n, rc;
+    int		rc;
     ScreenSaverStuffPtr		pSaver;
     DrawablePtr			pDraw;
     CARD32			lastInput;
@@ -750,12 +748,12 @@ ProcScreenSaverQueryInfo (ClientPtr client)
 	rep.kind = ScreenSaverInternal;
     if (client->swapped)
     {
-	swaps (&rep.sequenceNumber, n);
-	swapl (&rep.length, n);
-	swapl (&rep.window, n);
-	swapl (&rep.tilOrSince, n);
-	swapl (&rep.idle, n);
-	swapl (&rep.eventMask, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.window);
+	swapl(&rep.tilOrSince);
+	swapl(&rep.idle);
+	swapl(&rep.eventMask);
     }
     WriteToClient(client, sizeof (xScreenSaverQueryInfoReply), (char *)&rep);
     return Success;
@@ -1384,9 +1382,7 @@ static int
 SProcScreenSaverQueryVersion (ClientPtr client)
 {
     REQUEST(xScreenSaverQueryVersionReq);
-    int	    n;
-
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xScreenSaverQueryVersionReq);
     return ProcScreenSaverQueryVersion (client);
 }
@@ -1395,11 +1391,9 @@ static int
 SProcScreenSaverQueryInfo (ClientPtr client)
 {
     REQUEST(xScreenSaverQueryInfoReq);
-    int	    n;
-
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xScreenSaverQueryInfoReq);
-    swapl (&stuff->drawable, n);
+    swapl(&stuff->drawable);
     return ProcScreenSaverQueryInfo (client);
 }
 
@@ -1407,12 +1401,10 @@ static int
 SProcScreenSaverSelectInput (ClientPtr client)
 {
     REQUEST(xScreenSaverSelectInputReq);
-    int	    n;
-
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xScreenSaverSelectInputReq);
-    swapl (&stuff->drawable, n);
-    swapl (&stuff->eventMask, n);
+    swapl(&stuff->drawable);
+    swapl(&stuff->eventMask);
     return ProcScreenSaverSelectInput (client);
 }
 
@@ -1420,18 +1412,16 @@ static int
 SProcScreenSaverSetAttributes (ClientPtr client)
 {
     REQUEST(xScreenSaverSetAttributesReq);
-    int	    n;
-
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xScreenSaverSetAttributesReq);
-    swapl (&stuff->drawable, n);
-    swaps (&stuff->x, n);
-    swaps (&stuff->y, n);
-    swaps (&stuff->width, n);
-    swaps (&stuff->height, n);
-    swaps (&stuff->borderWidth, n);
-    swapl (&stuff->visualID, n);
-    swapl (&stuff->mask, n);
+    swapl(&stuff->drawable);
+    swaps(&stuff->x);
+    swaps(&stuff->y);
+    swaps(&stuff->width);
+    swaps(&stuff->height);
+    swaps(&stuff->borderWidth);
+    swapl(&stuff->visualID);
+    swapl(&stuff->mask);
     SwapRestL(stuff);
     return ProcScreenSaverSetAttributes (client);
 }
@@ -1440,23 +1430,19 @@ static int
 SProcScreenSaverUnsetAttributes (ClientPtr client)
 {
     REQUEST(xScreenSaverUnsetAttributesReq);
-    int	    n;
-
-    swaps (&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xScreenSaverUnsetAttributesReq);
-    swapl (&stuff->drawable, n);
+    swapl(&stuff->drawable);
     return ProcScreenSaverUnsetAttributes (client);
 }
 
 static int
 SProcScreenSaverSuspend (ClientPtr client)
 {
-    int n;
     REQUEST(xScreenSaverSuspendReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xScreenSaverSuspendReq);
-    swapl(&stuff->suspend, n);
     return ProcScreenSaverSuspend (client);
 }
 

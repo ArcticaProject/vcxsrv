@@ -75,14 +75,12 @@ extern int ExtEventIndex;
 int
 SProcXGrabDevice(ClientPtr client)
 {
-    char n;
-
     REQUEST(xGrabDeviceReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xGrabDeviceReq);
-    swapl(&stuff->grabWindow, n);
-    swapl(&stuff->time, n);
-    swaps(&stuff->event_count, n);
+    swapl(&stuff->grabWindow);
+    swapl(&stuff->time);
+    swaps(&stuff->event_count);
 
     if (stuff->length != bytes_to_int32(sizeof(xGrabDeviceReq)) + stuff->event_count)
        return BadLength;
@@ -210,9 +208,7 @@ CreateMaskFromList(ClientPtr client, XEventClass * list, int count,
 void
 SRepXGrabDevice(ClientPtr client, int size, xGrabDeviceReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
     WriteToClient(client, size, (char *)rep);
 }

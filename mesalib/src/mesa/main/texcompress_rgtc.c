@@ -48,9 +48,9 @@
 
 #define RGTC_DEBUG 0
 
-static void unsigned_encode_rgtc_chan(GLubyte *blkaddr, GLubyte srccolors[4][4],
+static void unsigned_encode_rgtc_ubyte(GLubyte *blkaddr, GLubyte srccolors[4][4],
 					GLint numxpixels, GLint numypixels);
-static void signed_encode_rgtc_chan(GLbyte *blkaddr, GLbyte srccolors[4][4],
+static void signed_encode_rgtc_ubyte(GLbyte *blkaddr, GLbyte srccolors[4][4],
 			     GLint numxpixels, GLint numypixels);
 
 static void unsigned_fetch_texel_rgtc(unsigned srcRowStride, const GLubyte *pixdata,
@@ -59,15 +59,15 @@ static void unsigned_fetch_texel_rgtc(unsigned srcRowStride, const GLubyte *pixd
 static void signed_fetch_texel_rgtc(unsigned srcRowStride, const GLbyte *pixdata,
 				      unsigned i, unsigned j, GLbyte *value, unsigned comps);
 
-static void extractsrc_u( GLubyte srcpixels[4][4], const GLchan *srcaddr,
+static void extractsrc_u( GLubyte srcpixels[4][4], const GLubyte *srcaddr,
 			  GLint srcRowStride, GLint numxpixels, GLint numypixels, GLint comps)
 {
    GLubyte i, j;
-   const GLchan *curaddr;
+   const GLubyte *curaddr;
    for (j = 0; j < numypixels; j++) {
       curaddr = srcaddr + j * srcRowStride * comps;
       for (i = 0; i < numxpixels; i++) {
-	 srcpixels[j][i] = *curaddr / (CHAN_MAX / 255);
+	 srcpixels[j][i] = *curaddr;
 	 curaddr += comps;
       }
    }
@@ -93,10 +93,10 @@ _mesa_texstore_red_rgtc1(TEXSTORE_PARAMS)
 {
    GLubyte *dst;
    const GLint texWidth = dstRowStride * 4 / 8; /* a bit of a hack */
-   const GLchan *tempImage = NULL;
+   const GLubyte *tempImage = NULL;
    int i, j;
    int numxpixels, numypixels;
-   const GLchan *srcaddr;
+   const GLubyte *srcaddr;
    GLubyte srcpixels[4][4];
    GLubyte *blkaddr;
    GLint dstRowDiff;
@@ -109,7 +109,7 @@ _mesa_texstore_red_rgtc1(TEXSTORE_PARAMS)
    (void) dstImageOffsets;
 
 
-   tempImage = _mesa_make_temp_chan_image(ctx, dims,
+   tempImage = _mesa_make_temp_ubyte_image(ctx, dims,
 					  baseInternalFormat,
 					  _mesa_get_format_base_format(dstFormat),
 					  srcWidth, srcHeight, srcDepth,
@@ -132,7 +132,7 @@ _mesa_texstore_red_rgtc1(TEXSTORE_PARAMS)
 	 if (srcWidth > i + 3) numxpixels = 4;
 	 else numxpixels = srcWidth - i;
 	 extractsrc_u(srcpixels, srcaddr, srcWidth, numxpixels, numypixels, 1);
-	 unsigned_encode_rgtc_chan(blkaddr, srcpixels, numxpixels, numypixels);
+	 unsigned_encode_rgtc_ubyte(blkaddr, srcpixels, numxpixels, numypixels);
 	 srcaddr += numxpixels;
 	 blkaddr += 8;
       }
@@ -187,7 +187,7 @@ _mesa_texstore_signed_red_rgtc1(TEXSTORE_PARAMS)
 	 if (srcWidth > i + 3) numxpixels = 4;
 	 else numxpixels = srcWidth - i;
 	 extractsrc_s(srcpixels, srcaddr, srcWidth, numxpixels, numypixels, 1);
-	 signed_encode_rgtc_chan(blkaddr, srcpixels, numxpixels, numypixels);
+	 signed_encode_rgtc_ubyte(blkaddr, srcpixels, numxpixels, numypixels);
 	 srcaddr += numxpixels;
 	 blkaddr += 8;
       }
@@ -204,10 +204,10 @@ _mesa_texstore_rg_rgtc2(TEXSTORE_PARAMS)
 {
    GLubyte *dst;
    const GLint texWidth = dstRowStride * 4 / 16; /* a bit of a hack */
-   const GLchan *tempImage = NULL;
+   const GLubyte *tempImage = NULL;
    int i, j;
    int numxpixels, numypixels;
-   const GLchan *srcaddr;
+   const GLubyte *srcaddr;
    GLubyte srcpixels[4][4];
    GLubyte *blkaddr;
    GLint dstRowDiff;
@@ -220,7 +220,7 @@ _mesa_texstore_rg_rgtc2(TEXSTORE_PARAMS)
    (void) dstZoffset;
    (void) dstImageOffsets;
 
-   tempImage = _mesa_make_temp_chan_image(ctx, dims,
+   tempImage = _mesa_make_temp_ubyte_image(ctx, dims,
 					  baseInternalFormat,
 					  _mesa_get_format_base_format(dstFormat),
 					  srcWidth, srcHeight, srcDepth,
@@ -243,11 +243,11 @@ _mesa_texstore_rg_rgtc2(TEXSTORE_PARAMS)
 	 if (srcWidth > i + 3) numxpixels = 4;
 	 else numxpixels = srcWidth - i;
 	 extractsrc_u(srcpixels, srcaddr, srcWidth, numxpixels, numypixels, 2);
-	 unsigned_encode_rgtc_chan(blkaddr, srcpixels, numxpixels, numypixels);
+	 unsigned_encode_rgtc_ubyte(blkaddr, srcpixels, numxpixels, numypixels);
 
 	 blkaddr += 8;
-	 extractsrc_u(srcpixels, (GLchan *)srcaddr + 1, srcWidth, numxpixels, numypixels, 2);
-	 unsigned_encode_rgtc_chan(blkaddr, srcpixels, numxpixels, numypixels);
+	 extractsrc_u(srcpixels, (GLubyte *)srcaddr + 1, srcWidth, numxpixels, numypixels, 2);
+	 unsigned_encode_rgtc_ubyte(blkaddr, srcpixels, numxpixels, numypixels);
 
 	 blkaddr += 8;
 
@@ -306,11 +306,11 @@ _mesa_texstore_signed_rg_rgtc2(TEXSTORE_PARAMS)
 	 else numxpixels = srcWidth - i;
 
 	 extractsrc_s(srcpixels, srcaddr, srcWidth, numxpixels, numypixels, 2);
-	 signed_encode_rgtc_chan(blkaddr, srcpixels, numxpixels, numypixels);
+	 signed_encode_rgtc_ubyte(blkaddr, srcpixels, numxpixels, numypixels);
 	 blkaddr += 8;
 
 	 extractsrc_s(srcpixels, srcaddr + 1, srcWidth, numxpixels, numypixels, 2);
-	 signed_encode_rgtc_chan(blkaddr, srcpixels, numxpixels, numypixels);
+	 signed_encode_rgtc_ubyte(blkaddr, srcpixels, numxpixels, numypixels);
 	 blkaddr += 8;
 
 	 srcaddr += numxpixels * 2;

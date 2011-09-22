@@ -74,13 +74,11 @@ SOFTWARE.
 int
 SProcXSetDeviceFocus(ClientPtr client)
 {
-    char n;
-
     REQUEST(xSetDeviceFocusReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xSetDeviceFocusReq);
-    swapl(&stuff->focus, n);
-    swapl(&stuff->time, n);
+    swapl(&stuff->focus);
+    swapl(&stuff->time);
     return (ProcXSetDeviceFocus(client));
 }
 

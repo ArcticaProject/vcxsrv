@@ -1419,7 +1419,6 @@ CreatePmap:
 	}
 	if (AddResource(stuff->pid, RT_PIXMAP, (pointer)pMap))
 	    return Success;
-	(*pDraw->pScreen->DestroyPixmap)(pMap);
     }
     return BadAlloc;
 }
@@ -3443,8 +3442,7 @@ CloseDownClient(ClientPtr client)
 	 * now.  If it hasn't gotten to Running, nClients has *not*
 	 * been incremented, so *don't* decrement it.
 	 */
-	if (client->clientState != ClientStateInitial &&
-	    client->clientState != ClientStateAuthenticating )
+	if (client->clientState != ClientStateInitial)
 	{
 	    --nClients;
 	}
@@ -3584,7 +3582,7 @@ ProcInitialConnection(ClientPtr client)
 		     bytes_to_int32(prefix->nbytesAuthString);
     if (client->swapped)
     {
-	swaps(&stuff->length, whichbyte);
+	swaps(&stuff->length);
     }
     ResetCurrentRequest(client);
     return Success;
@@ -3706,19 +3704,8 @@ ProcEstablishConnection(ClientPtr client)
 				  auth_proto,
 				  (unsigned short)prefix->nbytesAuthString,
 				  auth_string);
-    /*
-     * If Kerberos is being used for this client, the clientState
-     * will be set to ClientStateAuthenticating at this point.
-     * More messages need to be exchanged among the X server, Kerberos
-     * server, and client to figure out if everyone is authorized.
-     * So we don't want to send the connection setup info yet, since
-     * the auth step isn't really done.
-     */
-    if (client->clientState == ClientStateCheckingSecurity)
-	client->clientState = ClientStateCheckedSecurity;
-    else if (client->clientState != ClientStateAuthenticating)
-	return(SendConnSetup(client, reason));
-    return Success;
+
+    return(SendConnSetup(client, reason));
 }
 
 void
@@ -3911,7 +3898,7 @@ AddScreen(
 	return -1;
     }
 
-    dixRegisterPrivateKey(&cursorScreenDevPriv[i], PRIVATE_CURSOR, 0);
+    dixRegisterScreenPrivateKey(&cursorScreenDevPriv, pScreen, PRIVATE_CURSOR, 0);
 
     return i;
 }

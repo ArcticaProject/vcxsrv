@@ -147,7 +147,6 @@ ProcAppleWMQueryVersion(
 )
 {
     xAppleWMQueryVersionReply rep;
-    register int n;
 
     REQUEST_SIZE_MATCH(xAppleWMQueryVersionReq);
     rep.type = X_Reply;
@@ -157,8 +156,8 @@ ProcAppleWMQueryVersion(
     rep.minorVersion = SERVER_APPLEWM_MINOR_VERSION;
     rep.patchVersion = SERVER_APPLEWM_PATCH_VERSION;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
     }
     WriteToClient(client, sizeof(xAppleWMQueryVersionReply), (char *)&rep);
     return Success;
@@ -681,9 +680,8 @@ SProcAppleWMQueryVersion(
     register ClientPtr  client
 )
 {
-    register int n;
     REQUEST(xAppleWMQueryVersionReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return ProcAppleWMQueryVersion(client);
 }
 

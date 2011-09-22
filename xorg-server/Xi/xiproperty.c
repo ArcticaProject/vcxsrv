@@ -1036,10 +1036,9 @@ ProcXGetDeviceProperty (ClientPtr client)
 int
 SProcXListDeviceProperties (ClientPtr client)
 {
-    char n;
     REQUEST(xListDevicePropertiesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
 
     REQUEST_SIZE_MATCH(xListDevicePropertiesReq);
     return (ProcXListDeviceProperties(client));
@@ -1048,25 +1047,23 @@ SProcXListDeviceProperties (ClientPtr client)
 int
 SProcXChangeDeviceProperty (ClientPtr client)
 {
-    char n;
     REQUEST(xChangeDevicePropertyReq);
 
     REQUEST_AT_LEAST_SIZE(xChangeDevicePropertyReq);
-    swaps(&stuff->length, n);
-    swapl(&stuff->property, n);
-    swapl(&stuff->type, n);
-    swapl(&stuff->nUnits, n);
+    swaps(&stuff->length);
+    swapl(&stuff->property);
+    swapl(&stuff->type);
+    swapl(&stuff->nUnits);
     return (ProcXChangeDeviceProperty(client));
 }
 
 int
 SProcXDeleteDeviceProperty (ClientPtr client)
 {
-    char n;
     REQUEST(xDeleteDevicePropertyReq);
 
-    swaps(&stuff->length, n);
-    swapl(&stuff->property, n);
+    swaps(&stuff->length);
+    swapl(&stuff->property);
     REQUEST_SIZE_MATCH(xDeleteDevicePropertyReq);
     return (ProcXDeleteDeviceProperty(client));
 }
@@ -1074,14 +1071,13 @@ SProcXDeleteDeviceProperty (ClientPtr client)
 int
 SProcXGetDeviceProperty (ClientPtr client)
 {
-    char n;
     REQUEST(xGetDevicePropertyReq);
 
-    swaps(&stuff->length, n);
-    swapl(&stuff->property, n);
-    swapl(&stuff->type, n);
-    swapl(&stuff->longOffset, n);
-    swapl(&stuff->longLength, n);
+    swaps(&stuff->length);
+    swapl(&stuff->property);
+    swapl(&stuff->type);
+    swapl(&stuff->longOffset);
+    swapl(&stuff->longLength);
     REQUEST_SIZE_MATCH(xGetDevicePropertyReq);
     return (ProcXGetDeviceProperty(client));
 }
@@ -1093,10 +1089,9 @@ void
 SRepXListDeviceProperties(ClientPtr client, int size,
                           xListDevicePropertiesReply *rep)
 {
-    char n;
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->nAtoms, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->nAtoms);
     /* properties will be swapped later, see ProcXListDeviceProperties */
     WriteToClient(client, size, (char*)rep);
 }
@@ -1105,13 +1100,11 @@ void
 SRepXGetDeviceProperty(ClientPtr client, int size,
                        xGetDevicePropertyReply *rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swapl(&rep->propertyType, n);
-    swapl(&rep->bytesAfter, n);
-    swapl(&rep->nItems, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swapl(&rep->propertyType);
+    swapl(&rep->bytesAfter);
+    swapl(&rep->nItems);
     /* data will be swapped, see ProcXGetDeviceProperty */
     WriteToClient(client, size, (char*)rep);
 }
@@ -1279,11 +1272,10 @@ ProcXIGetProperty(ClientPtr client)
 int
 SProcXIListProperties(ClientPtr client)
 {
-    char n;
     REQUEST(xXIListPropertiesReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
 
     REQUEST_SIZE_MATCH(xXIListPropertiesReq);
     return (ProcXIListProperties(client));
@@ -1292,27 +1284,25 @@ SProcXIListProperties(ClientPtr client)
 int
 SProcXIChangeProperty(ClientPtr client)
 {
-    char n;
     REQUEST(xXIChangePropertyReq);
 
     REQUEST_AT_LEAST_SIZE(xXIChangePropertyReq);
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->property, n);
-    swapl(&stuff->type, n);
-    swapl(&stuff->num_items, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->property);
+    swapl(&stuff->type);
+    swapl(&stuff->num_items);
     return (ProcXIChangeProperty(client));
 }
 
 int
 SProcXIDeleteProperty(ClientPtr client)
 {
-    char n;
     REQUEST(xXIDeletePropertyReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->property, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->property);
     REQUEST_SIZE_MATCH(xXIDeletePropertyReq);
     return (ProcXIDeleteProperty(client));
 }
@@ -1320,15 +1310,14 @@ SProcXIDeleteProperty(ClientPtr client)
 int
 SProcXIGetProperty(ClientPtr client)
 {
-    char n;
     REQUEST(xXIGetPropertyReq);
 
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->property, n);
-    swapl(&stuff->type, n);
-    swapl(&stuff->offset, n);
-    swapl(&stuff->len, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->property);
+    swapl(&stuff->type);
+    swapl(&stuff->offset);
+    swapl(&stuff->len);
     REQUEST_SIZE_MATCH(xXIGetPropertyReq);
     return (ProcXIGetProperty(client));
 }
@@ -1338,10 +1327,9 @@ void
 SRepXIListProperties(ClientPtr client, int size,
                      xXIListPropertiesReply *rep)
 {
-    char n;
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swaps(&rep->num_properties, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swaps(&rep->num_properties);
     /* properties will be swapped later, see ProcXIListProperties */
     WriteToClient(client, size, (char*)rep);
 }
@@ -1350,13 +1338,11 @@ void
 SRepXIGetProperty(ClientPtr client, int size,
                   xXIGetPropertyReply *rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swapl(&rep->type, n);
-    swapl(&rep->bytes_after, n);
-    swapl(&rep->num_items, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swapl(&rep->type);
+    swapl(&rep->bytes_after);
+    swapl(&rep->num_items);
     /* data will be swapped, see ProcXIGetProperty */
     WriteToClient(client, size, (char*)rep);
 }

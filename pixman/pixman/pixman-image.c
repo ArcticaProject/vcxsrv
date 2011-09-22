@@ -250,6 +250,47 @@ compute_image_info (pixman_image_t *image)
     case PIXMAN_FILTER_GOOD:
     case PIXMAN_FILTER_BEST:
 	flags |= (FAST_PATH_BILINEAR_FILTER | FAST_PATH_NO_CONVOLUTION_FILTER);
+
+	/* Here we have a chance to optimize BILINEAR filter to NEAREST if
+	 * they are equivalent for the currently used transformation matrix.
+	 */
+	if (flags & FAST_PATH_ID_TRANSFORM)
+	{
+	    flags |= FAST_PATH_NEAREST_FILTER;
+	}
+	else if (
+	    /* affine and integer translation components in matrix ... */
+	    ((flags & FAST_PATH_AFFINE_TRANSFORM) &&
+	     !pixman_fixed_frac (image->common.transform->matrix[0][2] |
+				 image->common.transform->matrix[1][2])) &&
+	    (
+		/* ... combined with a simple rotation */
+		(flags & (FAST_PATH_ROTATE_90_TRANSFORM |
+			  FAST_PATH_ROTATE_180_TRANSFORM |
+			  FAST_PATH_ROTATE_270_TRANSFORM)) ||
+		/* ... or combined with a simple non-rotated translation */
+		(image->common.transform->matrix[0][0] == pixman_fixed_1 &&
+		 image->common.transform->matrix[1][1] == pixman_fixed_1 &&
+		 image->common.transform->matrix[0][1] == 0 &&
+		 image->common.transform->matrix[1][0] == 0)
+		)
+	    )
+	{
+	    /* FIXME: there are some affine-test failures, showing that
+	     * handling of BILINEAR and NEAREST filter is not quite
+	     * equivalent when getting close to 32K for the translation
+	     * components of the matrix. That's likely some bug, but for
+	     * now just skip BILINEAR->NEAREST optimization in this case.
+	     */
+	    pixman_fixed_t magic_limit = pixman_int_to_fixed (30000);
+	    if (image->common.transform->matrix[0][2] <= magic_limit  &&
+	        image->common.transform->matrix[1][2] <= magic_limit  &&
+	        image->common.transform->matrix[0][2] >= -magic_limit &&
+	        image->common.transform->matrix[1][2] >= -magic_limit)
+	    {
+		flags |= FAST_PATH_NEAREST_FILTER;
+	    }
+	}
 	break;
 
     case PIXMAN_FILTER_CONVOLUTION:

@@ -62,6 +62,7 @@
 #include "dmx.h"
 #include "dmxprop.h"
 #include "dmxlog.h"
+#include <X11/Xmu/SysUtil.h>        /* For XmuGetHostname */
 
 /** Holds the window id of all DMX windows on the backend X server. */
 #define DMX_ATOMNAME "DMX_NAME"
@@ -87,7 +88,7 @@ static const unsigned char *dmxPropertyIdentifier(void)
     if (initialized++) return (unsigned char *)buf;
     
     XmuGetHostname(hostname, sizeof(hostname));
-    XmuSnprintf(buf, sizeof(buf), "%s:%s:%s", DMX_IDENT, hostname, display);
+    snprintf(buf, sizeof(buf), "%s:%s:%s", DMX_IDENT, hostname, display);
     return (unsigned char *)buf;
 }
 
@@ -319,7 +320,7 @@ void dmxPropertyWindow(DMXScreenInfo *dmxScreen)
     Display             *dpy = dmxScreen->beDisplay;
     Window              win  = dmxScreen->scrnWin;
     DMXScreenInfo       *other;
-    char                buf[128]; /* RATS: only used with XmuSnprintf */
+    char                buf[128]; /* RATS: only used with snprintf */
 
     if (!dpy)
 	return; /* FIXME: What should be done here if Xdmx is started
@@ -336,12 +337,12 @@ void dmxPropertyWindow(DMXScreenInfo *dmxScreen)
                other->index, other->name, other->scrnWin);
     }
 
-    XmuSnprintf(buf, sizeof(buf), ".%d,%lu", dmxScreen->index,
+    snprintf(buf, sizeof(buf), ".%d,%lu", dmxScreen->index,
                 (long unsigned)win);
     XChangeProperty(dpy, RootWindow(dpy,0), atom, XA_STRING, 8,
                     PropModeAppend, (unsigned char *)buf, strlen(buf));
 
-    XmuSnprintf(buf, sizeof(buf), "%s,%d", id, dmxScreen->index);
+    snprintf(buf, sizeof(buf), "%s,%d", id, dmxScreen->index);
     XChangeProperty(dpy, win, atom, XA_STRING, 8,
                     PropModeAppend, (unsigned char *)buf, strlen(buf));
 }

@@ -533,43 +533,39 @@ SReplyIDispatch(ClientPtr client, int len, xGrabDeviceReply * rep)
 static void
 SEventDeviceValuator(deviceValuator * from, deviceValuator * to)
 {
-    char n;
     int i;
     INT32 *ip B32;
 
     *to = *from;
-    swaps(&to->sequenceNumber, n);
-    swaps(&to->device_state, n);
+    swaps(&to->sequenceNumber);
+    swaps(&to->device_state);
     ip = &to->valuator0;
     for (i = 0; i < 6; i++) {
-	swapl((ip + i), n);	/* macro - braces are required      */
+	swapl(ip + i);
     }
 }
 
 static void
 SEventFocus(deviceFocus * from, deviceFocus * to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->time, n);
-    swapl(&to->window, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->time);
+    swapl(&to->window);
 }
 
 static void
 SDeviceStateNotifyEvent(deviceStateNotify * from, deviceStateNotify * to)
 {
     int i;
-    char n;
     INT32 *ip B32;
 
     *to = *from;
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->time, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->time);
     ip = &to->valuator0;
     for (i = 0; i < 3; i++) {
-	swapl((ip + i), n);	/* macro - braces are required      */
+	swapl(ip + i);
     }
 }
 
@@ -577,93 +573,78 @@ static void
 SDeviceKeyStateNotifyEvent(deviceKeyStateNotify * from,
 			   deviceKeyStateNotify * to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber, n);
+    swaps(&to->sequenceNumber);
 }
 
 static void
 SDeviceButtonStateNotifyEvent(deviceButtonStateNotify * from,
 			      deviceButtonStateNotify * to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber, n);
+    swaps(&to->sequenceNumber);
 }
 
 static void
 SChangeDeviceNotifyEvent(changeDeviceNotify * from, changeDeviceNotify * to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->time, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->time);
 }
 
 static void
 SDeviceMappingNotifyEvent(deviceMappingNotify * from, deviceMappingNotify * to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->time, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->time);
 }
 
 static void
 SDevicePresenceNotifyEvent (devicePresenceNotify *from, devicePresenceNotify *to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber,n);
-    swapl(&to->time, n);
-    swaps(&to->control, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->time);
+    swaps(&to->control);
 }
 
 static void
 SDevicePropertyNotifyEvent (devicePropertyNotify *from, devicePropertyNotify *to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber,n);
-    swapl(&to->time, n);
-    swapl(&to->atom, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->time);
+    swapl(&to->atom);
 }
 
 static void
 SDeviceLeaveNotifyEvent (xXILeaveEvent *from, xXILeaveEvent *to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber,n);
-    swapl(&to->length, n);
-    swaps(&to->evtype, n);
-    swaps(&to->deviceid, n);
-    swapl(&to->time, n);
-    swapl(&to->root, n);
-    swapl(&to->event, n);
-    swapl(&to->child, n);
-    swapl(&to->root_x, n);
-    swapl(&to->root_y, n);
-    swapl(&to->event_x, n);
-    swapl(&to->event_y, n);
-    swaps(&to->sourceid, n);
-    swaps(&to->buttons_len, n);
-    swapl(&to->mods.base_mods, n);
-    swapl(&to->mods.latched_mods, n);
-    swapl(&to->mods.locked_mods, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->length);
+    swaps(&to->evtype);
+    swaps(&to->deviceid);
+    swapl(&to->time);
+    swapl(&to->root);
+    swapl(&to->event);
+    swapl(&to->child);
+    swapl(&to->root_x);
+    swapl(&to->root_y);
+    swapl(&to->event_x);
+    swapl(&to->event_y);
+    swaps(&to->sourceid);
+    swaps(&to->buttons_len);
+    swapl(&to->mods.base_mods);
+    swapl(&to->mods.latched_mods);
+    swapl(&to->mods.locked_mods);
 }
 
 static void
 SDeviceChangedEvent(xXIDeviceChangedEvent* from, xXIDeviceChangedEvent* to)
 {
-    char n;
     int i, j;
     xXIAnyInfo *any;
 
@@ -682,8 +663,8 @@ SDeviceChangedEvent(xXIDeviceChangedEvent* from, xXIDeviceChangedEvent* to)
                     xXIKeyInfo *ki = (xXIKeyInfo*)any;
                     uint32_t *key = (uint32_t*)&ki[1];
                     for (j = 0; j < ki->num_keycodes; j++, key++)
-                        swapl(key, n);
-                    swaps(&ki->num_keycodes, n);
+                        swapl(key);
+                    swaps(&ki->num_keycodes);
                 }
                 break;
             case ButtonClass:
@@ -692,71 +673,70 @@ SDeviceChangedEvent(xXIDeviceChangedEvent* from, xXIDeviceChangedEvent* to)
                     Atom *labels = (Atom*)((char*)bi + sizeof(xXIButtonInfo) +
                                            pad_to_int32(bits_to_bytes(bi->num_buttons)));
                     for (j = 0; j < bi->num_buttons; j++)
-                        swapl(&labels[j], n);
-                    swaps(&bi->num_buttons, n);
+                        swapl(&labels[j]);
+                    swaps(&bi->num_buttons);
                 }
                 break;
             case ValuatorClass:
                 {
                     xXIValuatorInfo* ai = (xXIValuatorInfo*)any;
-                    swapl(&ai->label, n);
-                    swapl(&ai->min.integral, n);
-                    swapl(&ai->min.frac, n);
-                    swapl(&ai->max.integral, n);
-                    swapl(&ai->max.frac, n);
-                    swapl(&ai->resolution, n);
-                    swaps(&ai->number, n);
+                    swapl(&ai->label);
+                    swapl(&ai->min.integral);
+                    swapl(&ai->min.frac);
+                    swapl(&ai->max.integral);
+                    swapl(&ai->max.frac);
+                    swapl(&ai->resolution);
+                    swaps(&ai->number);
                 }
                 break;
         }
 
-        swaps(&any->type, n);
-        swaps(&any->length, n);
-        swaps(&any->sourceid, n);
+        swaps(&any->type);
+        swaps(&any->length);
+        swaps(&any->sourceid);
 
         any = (xXIAnyInfo*)((char*)any + length * 4);
     }
 
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->length, n);
-    swaps(&to->evtype, n);
-    swaps(&to->deviceid, n);
-    swapl(&to->time, n);
-    swaps(&to->num_classes, n);
-    swaps(&to->sourceid, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->length);
+    swaps(&to->evtype);
+    swaps(&to->deviceid);
+    swapl(&to->time);
+    swaps(&to->num_classes);
+    swaps(&to->sourceid);
 
 }
 
 static void SDeviceEvent(xXIDeviceEvent *from, xXIDeviceEvent *to)
 {
     int i;
-    char n;
     char *ptr;
     char *vmask;
 
     memcpy(to, from, sizeof(xEvent) + from->length * 4);
 
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->length, n);
-    swaps(&to->evtype, n);
-    swaps(&to->deviceid, n);
-    swapl(&to->time, n);
-    swapl(&to->detail, n);
-    swapl(&to->root, n);
-    swapl(&to->event, n);
-    swapl(&to->child, n);
-    swapl(&to->root_x, n);
-    swapl(&to->root_y, n);
-    swapl(&to->event_x, n);
-    swapl(&to->event_y, n);
-    swaps(&to->buttons_len, n);
-    swaps(&to->valuators_len, n);
-    swaps(&to->sourceid, n);
-    swapl(&to->mods.base_mods, n);
-    swapl(&to->mods.latched_mods, n);
-    swapl(&to->mods.locked_mods, n);
-    swapl(&to->mods.effective_mods, n);
-    swapl(&to->flags, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->length);
+    swaps(&to->evtype);
+    swaps(&to->deviceid);
+    swapl(&to->time);
+    swapl(&to->detail);
+    swapl(&to->root);
+    swapl(&to->event);
+    swapl(&to->child);
+    swapl(&to->root_x);
+    swapl(&to->root_y);
+    swapl(&to->event_x);
+    swapl(&to->event_y);
+    swaps(&to->buttons_len);
+    swaps(&to->valuators_len);
+    swaps(&to->sourceid);
+    swapl(&to->mods.base_mods);
+    swapl(&to->mods.latched_mods);
+    swapl(&to->mods.locked_mods);
+    swapl(&to->mods.effective_mods);
+    swapl(&to->flags);
 
     ptr = (char*)(&to[1]);
     ptr += from->buttons_len * 4;
@@ -766,9 +746,9 @@ static void SDeviceEvent(xXIDeviceEvent *from, xXIDeviceEvent *to)
     {
         if (BitIsOn(vmask, i))
         {
-            swapl(((uint32_t*)ptr), n);
+            swapl(((uint32_t *)ptr));
             ptr += 4;
-            swapl(((uint32_t*)ptr), n);
+            swapl(((uint32_t *)ptr));
             ptr += 4;
         }
     }
@@ -778,55 +758,51 @@ static void SDeviceHierarchyEvent(xXIHierarchyEvent *from,
                                   xXIHierarchyEvent *to)
 {
     int i;
-    char n;
     xXIHierarchyInfo *info;
 
     *to = *from;
     memcpy(&to[1], &from[1], from->length * 4);
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->length, n);
-    swaps(&to->evtype, n);
-    swaps(&to->deviceid, n);
-    swapl(&to->time, n);
-    swapl(&to->flags, n);
-    swaps(&to->num_info, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->length);
+    swaps(&to->evtype);
+    swaps(&to->deviceid);
+    swapl(&to->time);
+    swapl(&to->flags);
+    swaps(&to->num_info);
 
     info = (xXIHierarchyInfo*)&to[1];
     for (i = 0; i< from->num_info; i++)
     {
-        swaps(&info->deviceid, n);
-        swaps(&info->attachment, n);
+        swaps(&info->deviceid);
+        swaps(&info->attachment);
         info++;
     }
 }
 
 static void SXIPropertyEvent(xXIPropertyEvent *from, xXIPropertyEvent *to)
 {
-    char n;
-
     *to = *from;
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->length, n);
-    swaps(&to->evtype, n);
-    swaps(&to->deviceid, n);
-    swapl(&to->property, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->length);
+    swaps(&to->evtype);
+    swaps(&to->deviceid);
+    swapl(&to->property);
 }
 
 static void SRawEvent(xXIRawEvent *from, xXIRawEvent *to)
 {
-    char n;
     int i;
     FP3232 *values;
     unsigned char *mask;
 
     memcpy(to, from, sizeof(xEvent) + from->length * 4);
 
-    swaps(&to->sequenceNumber, n);
-    swapl(&to->length, n);
-    swaps(&to->evtype, n);
-    swaps(&to->deviceid, n);
-    swapl(&to->time, n);
-    swapl(&to->detail, n);
+    swaps(&to->sequenceNumber);
+    swapl(&to->length);
+    swaps(&to->evtype);
+    swaps(&to->deviceid);
+    swapl(&to->time);
+    swapl(&to->detail);
 
 
     mask = (unsigned char*)&to[1];
@@ -841,16 +817,16 @@ static void SRawEvent(xXIRawEvent *from, xXIRawEvent *to)
              * they were in aAbBcC order because it's easier and really
              * doesn't matter.
              */
-            swapl(&values->integral, n);
-            swapl(&values->frac, n);
+            swapl(&values->integral);
+            swapl(&values->frac);
             values++;
-            swapl(&values->integral, n);
-            swapl(&values->frac, n);
+            swapl(&values->integral);
+            swapl(&values->frac);
             values++;
         }
     }
 
-    swaps(&to->valuators_len, n);
+    swaps(&to->valuators_len);
 }
 
 

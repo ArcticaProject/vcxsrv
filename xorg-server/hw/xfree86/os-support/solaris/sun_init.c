@@ -63,6 +63,22 @@ static char consoleDev[PATH_MAX] = "/dev/fb";
    Used by hw/xfree86/common/xf86AutoConfig.c for VIS_GETIDENTIFIER */
 _X_HIDDEN char xf86SolarisFbDev[PATH_MAX] = "/dev/fb";
 
+static void
+switch_to(int vt, const char *from)
+{
+    int ret;
+
+    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_ACTIVATE, vt));
+    if (ret != 0)
+        xf86Msg(X_WARNING, "%s: VT_ACTIVATE failed: %s\n",
+		from, strerror(errno));
+
+    SYSCALL(ret = ioctl(xf86Info.consoleFd, VT_WAITACTIVE, vt));
+    if (ret != 0)
+        xf86Msg(X_WARNING, "%s: VT_WAITACTIVE failed: %s\n",
+		from, strerror(errno));
+}
+
 void
 xf86OpenConsole(void)
 {
@@ -170,6 +186,11 @@ xf86OpenConsole(void)
 	    xf86Info.vtno = VTnum;
 	    from = X_CMDLINE;
 	}
+	else if (xf86Info.ShareVTs)
+	{
+	    xf86Info.vtno = vtinfo.v_active;
+	    from = X_CMDLINE;
+	}
 	else
 	{
 	    if ((ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
@@ -201,16 +222,15 @@ OPENCONSOLE:
 	chown(consoleDev, getuid(), getgid());
 
 #ifdef HAS_USL_VTS
+	if (xf86Info.ShareVTs)
+	    return;
+
 	if (vtEnabled)
 	{
 	    /*
 	     * Now get the VT
 	     */
-	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) != 0)
-		xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed\n");
-
-	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
-		xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
+	    switch_to(xf86Info.vtno, "xf86OpenConsole");
 
 #ifdef VT_SET_CONSUSER /* added in snv_139 */
 	    if (strcmp(display, "0") == 0)
@@ -249,16 +269,13 @@ OPENCONSOLE:
     else /* serverGeneration != 1 */
     {
 #ifdef HAS_USL_VTS
-	if (vtEnabled)
+	if (vtEnabled && !xf86Info.ShareVTs)
 	{
 	    /*
 	     * Now re-get the VT
 	     */
-	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) != 0)
-		xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed\n");
-
-	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
-		xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
+	    if (xf86Info.autoVTSwitch)
+		switch_to(xf86Info.vtno, "xf86OpenConsole");
 
 #ifdef VT_SET_CONSUSER /* added in snv_139 */
 	    if (strcmp(display, "0") == 0)
@@ -347,7 +364,8 @@ xf86CloseConsole(void)
 	}
 
 	/* Activate the VT that X was started on */
-	ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86StartVT);
+	if (xf86Info.autoVTSwitch)
+	    switch_to(xf86StartVT, "xf86CloseConsole");
     }
 #endif /* HAS_USL_VTS */
 

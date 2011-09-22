@@ -174,7 +174,6 @@ static int dmxFetchInputAttributes(unsigned int mask,
 static int ProcDMXQueryVersion(ClientPtr client)
 {
     xDMXQueryVersionReply rep;
-    int                   n;
 
     REQUEST_SIZE_MATCH(xDMXQueryVersionReq);
 
@@ -185,11 +184,11 @@ static int ProcDMXQueryVersion(ClientPtr client)
     rep.minorVersion   = SERVER_DMX_MINOR_VERSION;
     rep.patchVersion   = SERVER_DMX_PATCH_VERSION;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-	swapl(&rep.majorVersion, n);
-	swapl(&rep.minorVersion, n);
-	swapl(&rep.patchVersion, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swapl(&rep.majorVersion);
+	swapl(&rep.minorVersion);
+	swapl(&rep.patchVersion);
     }
     WriteToClient(client, sizeof(xDMXQueryVersionReply), (char *)&rep);
     return Success;
@@ -198,7 +197,6 @@ static int ProcDMXQueryVersion(ClientPtr client)
 static int ProcDMXSync(ClientPtr client)
 {
     xDMXSyncReply rep;
-    int           n;
 
     REQUEST_SIZE_MATCH(xDMXSyncReq);
 
@@ -209,9 +207,9 @@ static int ProcDMXSync(ClientPtr client)
     rep.length         = 0;
     rep.status         = 0;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
     }
     WriteToClient(client, sizeof(xDMXSyncReply), (char *)&rep);
     return Success;
@@ -222,7 +220,6 @@ static int ProcDMXForceWindowCreation(ClientPtr client)
     xDMXForceWindowCreationReply rep;
     REQUEST(xDMXForceWindowCreationReq);
     WindowPtr     pWin;
-    int           n;
 
     REQUEST_SIZE_MATCH(xDMXForceWindowCreationReq);
 
@@ -259,9 +256,9 @@ static int ProcDMXForceWindowCreation(ClientPtr client)
     rep.length         = 0;
     rep.status         = 0;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
     }
     WriteToClient(client, sizeof(xDMXForceWindowCreationReply), (char *)&rep);
     return Success;
@@ -270,7 +267,6 @@ static int ProcDMXForceWindowCreation(ClientPtr client)
 static int ProcDMXGetScreenCount(ClientPtr client)
 {
     xDMXGetScreenCountReply rep;
-    int                     n;
 
     REQUEST_SIZE_MATCH(xDMXGetScreenCountReq);
 
@@ -279,9 +275,9 @@ static int ProcDMXGetScreenCount(ClientPtr client)
     rep.length         = 0;
     rep.screenCount    = dmxGetNumScreens();
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.screenCount, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.screenCount);
     }
     WriteToClient(client, sizeof(xDMXGetScreenCountReply), (char *)&rep);
     return Success;
@@ -291,7 +287,6 @@ static int ProcDMXGetScreenAttributes(ClientPtr client)
 {
     REQUEST(xDMXGetScreenAttributesReq);
     xDMXGetScreenAttributesReply rep;
-    int                          n;
     int                          length;
     int                          paddedLength;
     DMXScreenAttributesRec       attr;
@@ -325,20 +320,20 @@ static int ProcDMXGetScreenAttributes(ClientPtr client)
     rep.displayNameLength   = length;
 
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.displayNameLength, n);
-        swapl(&rep.logicalScreen, n);
-        swaps(&rep.screenWindowWidth, n);
-        swaps(&rep.screenWindowHeight, n);
-        swaps(&rep.screenWindowXoffset, n);
-        swaps(&rep.screenWindowYoffset, n);
-        swaps(&rep.rootWindowWidth, n);
-        swaps(&rep.rootWindowHeight, n);
-        swaps(&rep.rootWindowXoffset, n);
-        swaps(&rep.rootWindowYoffset, n);
-        swaps(&rep.rootWindowXorigin, n);
-        swaps(&rep.rootWindowYorigin, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.displayNameLength);
+        swapl(&rep.logicalScreen);
+        swaps(&rep.screenWindowWidth);
+        swaps(&rep.screenWindowHeight);
+        swaps(&rep.screenWindowXoffset);
+        swaps(&rep.screenWindowYoffset);
+        swaps(&rep.rootWindowWidth);
+        swaps(&rep.rootWindowHeight);
+        swaps(&rep.rootWindowXoffset);
+        swaps(&rep.rootWindowYoffset);
+        swaps(&rep.rootWindowXorigin);
+        swaps(&rep.rootWindowYorigin);
     }
     WriteToClient(client, sizeof(xDMXGetScreenAttributesReply), (char *)&rep);
     if (length) WriteToClient(client, length, (char *)attr.displayName);
@@ -349,7 +344,6 @@ static int ProcDMXChangeScreensAttributes(ClientPtr client)
 {
     REQUEST(xDMXChangeScreensAttributesReq);
     xDMXChangeScreensAttributesReply rep;
-    int                              n;
     int                              status = DMX_BAD_XINERAMA;
     unsigned int                     mask   = 0;
     unsigned int                     i;
@@ -407,10 +401,10 @@ static int ProcDMXChangeScreensAttributes(ClientPtr client)
     rep.status         = status;
     rep.errorScreen    = errorScreen;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
-        swapl(&rep.errorScreen, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
+        swapl(&rep.errorScreen);
     }
     WriteToClient(client,
                   sizeof(xDMXChangeScreensAttributesReply),
@@ -422,7 +416,6 @@ static int ProcDMXAddScreen(ClientPtr client)
 {
     REQUEST(xDMXAddScreenReq);
     xDMXAddScreenReply     rep;
-    int                    n;
     int                    status = 0;
     CARD32                 *value_list;
     DMXScreenAttributesRec attr;
@@ -458,10 +451,10 @@ static int ProcDMXAddScreen(ClientPtr client)
     rep.status         = status;
     rep.physicalScreen = stuff->physicalScreen;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
-        swapl(&rep.physicalScreen, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
+        swapl(&rep.physicalScreen);
     }
     WriteToClient(client,
                   sizeof(xDMXAddScreenReply),
@@ -473,7 +466,6 @@ static int ProcDMXRemoveScreen(ClientPtr client)
 {
     REQUEST(xDMXRemoveScreenReq);
     xDMXRemoveScreenReply rep;
-    int                   n;
     int                   status = 0;
 
     REQUEST_SIZE_MATCH(xDMXRemoveScreenReq);
@@ -485,9 +477,9 @@ static int ProcDMXRemoveScreen(ClientPtr client)
     rep.length         = 0;
     rep.status         = status;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
     }
     WriteToClient(client,
                   sizeof(xDMXRemoveScreenReply),
@@ -563,7 +555,7 @@ static int ProcDMXGetWindowAttributes(ClientPtr client)
 {
     REQUEST(xDMXGetWindowAttributesReq);
     xDMXGetWindowAttributesReply rep;
-    int                          i, n;
+    int                          i;
     CARD32                       *screens;
     CARD32                       *windows;
     xRectangle                   *pos, *vis;
@@ -603,22 +595,22 @@ static int ProcDMXGetWindowAttributes(ClientPtr client)
     rep.length         = count * 6;
     rep.screenCount    = count;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.screenCount, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.screenCount);
         for (i = 0; i < count; i++) {
-            swapl(&screens[i], n);
-            swapl(&windows[i], n);
+            swapl(&screens[i]);
+            swapl(&windows[i]);
             
-            swaps(&pos[i].x, n);
-            swaps(&pos[i].y, n);
-            swaps(&pos[i].width, n);
-            swaps(&pos[i].height, n);
+            swaps(&pos[i].x);
+            swaps(&pos[i].y);
+            swaps(&pos[i].width);
+            swaps(&pos[i].height);
             
-            swaps(&vis[i].x, n);
-            swaps(&vis[i].y, n);
-            swaps(&vis[i].width, n);
-            swaps(&vis[i].height, n);
+            swaps(&vis[i].x);
+            swaps(&vis[i].y);
+            swaps(&vis[i].width);
+            swaps(&vis[i].height);
         }
     }
 
@@ -643,7 +635,6 @@ static int ProcDMXGetWindowAttributes(ClientPtr client)
 static int ProcDMXGetDesktopAttributes(ClientPtr client)
 {
     xDMXGetDesktopAttributesReply rep;
-    int                           n;
     DMXDesktopAttributesRec       attr;
 
     REQUEST_SIZE_MATCH(xDMXGetDesktopAttributesReq);
@@ -660,12 +651,12 @@ static int ProcDMXGetDesktopAttributes(ClientPtr client)
     rep.length              = 0;
 
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.width, n);
-        swapl(&rep.height, n);
-        swapl(&rep.shiftX, n);
-        swapl(&rep.shiftY, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swaps(&rep.width);
+        swaps(&rep.height);
+        swaps(&rep.shiftX);
+        swaps(&rep.shiftY);
     }
     WriteToClient(client, sizeof(xDMXGetDesktopAttributesReply), (char *)&rep);
     return Success;
@@ -675,7 +666,6 @@ static int ProcDMXChangeDesktopAttributes(ClientPtr client)
 {
     REQUEST(xDMXChangeDesktopAttributesReq);
     xDMXChangeDesktopAttributesReply rep;
-    int                              n;
     int                              status = DMX_BAD_XINERAMA;
     CARD32                           *value_list;
     DMXDesktopAttributesRec          attr;
@@ -704,9 +694,9 @@ static int ProcDMXChangeDesktopAttributes(ClientPtr client)
     rep.length         = 0;
     rep.status         = status;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
     }
     WriteToClient(client,
                   sizeof(xDMXChangeDesktopAttributesReply),
@@ -717,7 +707,6 @@ static int ProcDMXChangeDesktopAttributes(ClientPtr client)
 static int ProcDMXGetInputCount(ClientPtr client)
 {
     xDMXGetInputCountReply rep;
-    int                     n;
 
     REQUEST_SIZE_MATCH(xDMXGetInputCountReq);
 
@@ -726,9 +715,9 @@ static int ProcDMXGetInputCount(ClientPtr client)
     rep.length         = 0;
     rep.inputCount     = dmxGetInputCount();
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.inputCount, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.inputCount);
     }
     WriteToClient(client, sizeof(xDMXGetInputCountReply), (char *)&rep);
     return Success;
@@ -738,7 +727,6 @@ static int ProcDMXGetInputAttributes(ClientPtr client)
 {
     REQUEST(xDMXGetInputAttributesReq);
     xDMXGetInputAttributesReply rep;
-    int                          n;
     int                          length;
     int                          paddedLength;
     DMXInputAttributesRec        attr;
@@ -760,12 +748,12 @@ static int ProcDMXGetInputAttributes(ClientPtr client)
     rep.length         = bytes_to_int32(paddedLength);
     rep.nameLength     = length;
     if (client->swapped) {
-    	swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.inputType, n);
-        swapl(&rep.physicalScreen, n);
-        swapl(&rep.physicalId, n);
-        swapl(&rep.nameLength, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.inputType);
+        swapl(&rep.physicalScreen);
+        swapl(&rep.physicalId);
+        swapl(&rep.nameLength);
     }
     WriteToClient(client, sizeof(xDMXGetInputAttributesReply), (char *)&rep);
     if (length) WriteToClient(client, length, (char *)attr.name);
@@ -776,7 +764,6 @@ static int ProcDMXAddInput(ClientPtr client)
 {
     REQUEST(xDMXAddInputReq);
     xDMXAddInputReply      rep;
-    int                    n;
     int                    status = 0;
     CARD32                 *value_list;
     DMXInputAttributesRec  attr;
@@ -814,10 +801,10 @@ static int ProcDMXAddInput(ClientPtr client)
     rep.status         = status;
     rep.physicalId     = id;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
-        swapl(&rep.physicalId, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
+        swapl(&rep.physicalId);
     }
     WriteToClient(client, sizeof(xDMXAddInputReply), (char *)&rep);
     return Success;
@@ -827,7 +814,6 @@ static int ProcDMXRemoveInput(ClientPtr client)
 {
     REQUEST(xDMXRemoveInputReq);
     xDMXRemoveInputReply     rep;
-    int                      n;
     int                      status = 0;
 
     REQUEST_SIZE_MATCH(xDMXRemoveInputReq);
@@ -841,9 +827,9 @@ static int ProcDMXRemoveInput(ClientPtr client)
     rep.length         = 0;
     rep.status         = status;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
-        swapl(&rep.status, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
+        swapl(&rep.status);
     }
     WriteToClient(client, sizeof(xDMXRemoveInputReply), (char *)&rep);
     return Success;
@@ -883,79 +869,72 @@ static int ProcDMXDispatch(ClientPtr client)
 
 static int SProcDMXQueryVersion(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXQueryVersionReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXQueryVersionReq);
     return ProcDMXQueryVersion(client);
 }
 
 static int SProcDMXSync(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXSyncReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXSyncReq);
     return ProcDMXSync(client);
 }
 
 static int SProcDMXForceWindowCreation(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXForceWindowCreationReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXForceWindowCreationReq);
-    swaps(&stuff->window, n);
+    swapl(&stuff->window);
     return ProcDMXForceWindowCreation(client);
 }
 
 static int SProcDMXGetScreenCount(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXGetScreenCountReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXGetScreenCountReq);
     return ProcDMXGetScreenCount(client);
 }
 
 static int SProcDMXGetScreenAttributes(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXGetScreenAttributesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXGetScreenAttributesReq);
-    swapl(&stuff->physicalScreen, n);
+    swapl(&stuff->physicalScreen);
     return ProcDMXGetScreenAttributes(client);
 }
 
 static int SProcDMXChangeScreensAttributes(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXChangeScreensAttributesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xDMXGetScreenAttributesReq);
-    swapl(&stuff->screenCount, n);
-    swapl(&stuff->maskCount, n);
+    swapl(&stuff->screenCount);
+    swapl(&stuff->maskCount);
     SwapRestL(stuff);
     return ProcDMXGetScreenAttributes(client);
 }
 
 static int SProcDMXAddScreen(ClientPtr client)
 {
-    int n;
     int paddedLength;
     REQUEST(xDMXAddScreenReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xDMXAddScreenReq);
-    swapl(&stuff->displayNameLength, n);
-    swapl(&stuff->valueMask, n);
+    swapl(&stuff->displayNameLength);
+    swapl(&stuff->valueMask);
     paddedLength = pad_to_int32(stuff->displayNameLength);
     SwapLongs((CARD32 *)(stuff+1), LengthRestL(stuff) - paddedLength/4);
     return ProcDMXAddScreen(client);
@@ -963,79 +942,72 @@ static int SProcDMXAddScreen(ClientPtr client)
 
 static int SProcDMXRemoveScreen(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXRemoveScreenReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXRemoveScreenReq);
-    swapl(&stuff->physicalScreen, n);
+    swapl(&stuff->physicalScreen);
     return ProcDMXRemoveScreen(client);
 }
 
 static int SProcDMXGetWindowAttributes(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXGetWindowAttributesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXGetWindowAttributesReq);
-    swapl(&stuff->window, n);
+    swapl(&stuff->window);
     return ProcDMXGetWindowAttributes(client);
 }
 
 static int SProcDMXGetDesktopAttributes(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXGetDesktopAttributesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXGetDesktopAttributesReq);
     return ProcDMXGetDesktopAttributes(client);
 }
 
 static int SProcDMXChangeDesktopAttributes(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXChangeDesktopAttributesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xDMXChangeDesktopAttributesReq);
-    swapl(&stuff->valueMask, n);
+    swapl(&stuff->valueMask);
     SwapRestL(stuff);
     return ProcDMXChangeDesktopAttributes(client);
 }
 
 static int SProcDMXGetInputCount(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXGetInputCountReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXGetInputCountReq);
     return ProcDMXGetInputCount(client);
 }
 
 static int SProcDMXGetInputAttributes(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXGetInputAttributesReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXGetInputAttributesReq);
-    swapl(&stuff->deviceId, n);
+    swapl(&stuff->deviceId);
     return ProcDMXGetInputAttributes(client);
 }
 
 static int SProcDMXAddInput(ClientPtr client)
 {
-    int n;
     int paddedLength;
     REQUEST(xDMXAddInputReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xDMXAddInputReq);
-    swapl(&stuff->displayNameLength, n);
-    swapl(&stuff->valueMask, n);
+    swapl(&stuff->displayNameLength);
+    swapl(&stuff->valueMask);
     paddedLength = pad_to_int32(stuff->displayNameLength);
     SwapLongs((CARD32 *)(stuff+1), LengthRestL(stuff) - paddedLength/4);
     return ProcDMXAddInput(client);
@@ -1043,12 +1015,11 @@ static int SProcDMXAddInput(ClientPtr client)
 
 static int SProcDMXRemoveInput(ClientPtr client)
 {
-    int n;
     REQUEST(xDMXRemoveInputReq);
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xDMXRemoveInputReq);
-    swapl(&stuff->physicalId, n);
+    swapl(&stuff->physicalId);
     return ProcDMXRemoveInput(client);
 }
 

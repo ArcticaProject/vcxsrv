@@ -368,10 +368,9 @@ ProcSecurityQueryVersion(
     rep.minorVersion  	= SERVER_SECURITY_MINOR_VERSION;
     if(client->swapped)
     {
-	char n;
-    	swaps(&rep.sequenceNumber, n);
-	swaps(&rep.majorVersion, n);
-	swaps(&rep.minorVersion, n);
+	swaps(&rep.sequenceNumber);
+	swaps(&rep.majorVersion);
+	swaps(&rep.minorVersion);
     }
     (void)WriteToClient(client, SIZEOF(xSecurityQueryVersionReply),
 			(char *)&rep);
@@ -580,11 +579,10 @@ ProcSecurityGenerateAuthorization(
 
     if (client->swapped)
     {
-	char n;
-    	swapl(&rep.length, n);
-    	swaps(&rep.sequenceNumber, n);
-    	swapl(&rep.authId, n);
-    	swaps(&rep.dataLength, n);
+	swapl(&rep.length);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.authId);
+	swaps(&rep.dataLength);
     }
 
     WriteToClient(client, SIZEOF(xSecurityGenerateAuthorizationReply),
@@ -652,12 +650,11 @@ SProcSecurityQueryVersion(
     ClientPtr client)
 {
     REQUEST(xSecurityQueryVersionReq);
-    char	n;
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xSecurityQueryVersionReq);
-    swaps(&stuff->majorVersion, n);
-    swaps(&stuff->minorVersion,n);
+    swaps(&stuff->majorVersion);
+    swaps(&stuff->minorVersion);
     return ProcSecurityQueryVersion(client);
 } /* SProcSecurityQueryVersion */
 
@@ -667,16 +664,15 @@ SProcSecurityGenerateAuthorization(
     ClientPtr client)
 {
     REQUEST(xSecurityGenerateAuthorizationReq);
-    char	n;
     CARD32 *values;
     unsigned long nvalues;
     int values_offset;
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xSecurityGenerateAuthorizationReq);
-    swaps(&stuff->nbytesAuthProto, n);
-    swaps(&stuff->nbytesAuthData, n);
-    swapl(&stuff->valueMask, n);
+    swaps(&stuff->nbytesAuthProto);
+    swaps(&stuff->nbytesAuthData);
+    swapl(&stuff->valueMask);
     values_offset = bytes_to_int32(stuff->nbytesAuthProto) +
 		    bytes_to_int32(stuff->nbytesAuthData);
     if (values_offset > 
@@ -694,11 +690,10 @@ SProcSecurityRevokeAuthorization(
     ClientPtr client)
 {
     REQUEST(xSecurityRevokeAuthorizationReq);
-    char	n;
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xSecurityRevokeAuthorizationReq);
-    swapl(&stuff->authId, n);
+    swapl(&stuff->authId);
     return ProcSecurityRevokeAuthorization(client);
 } /* SProcSecurityRevokeAuthorization */
 

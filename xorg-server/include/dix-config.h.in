@@ -209,9 +209,6 @@
    */
 #undef HAVE_SYS_DIR_H
 
-/* Define to 1 if you have the <sys/io.h> header file. */
-#undef HAVE_SYS_IO_H
-
 /* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
    */
 #undef HAVE_SYS_NDIR_H
@@ -224,9 +221,6 @@
 
 /* Define to 1 if you have the <sys/utsname.h> header file. */
 #undef HAVE_SYS_UTSNAME_H
-
-/* Define to 1 if you have the <sys/vm86.h> header file. */
-#undef HAVE_SYS_VM86_H
 
 /* Define to 1 if you have the <tslib.h> header file. */
 #undef HAVE_TSLIB_H

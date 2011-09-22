@@ -74,14 +74,12 @@ SOFTWARE.
 int
 SProcXGrabDeviceKey(ClientPtr client)
 {
-    char n;
-
     REQUEST(xGrabDeviceKeyReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_AT_LEAST_SIZE(xGrabDeviceKeyReq);
-    swapl(&stuff->grabWindow, n);
-    swaps(&stuff->modifiers, n);
-    swaps(&stuff->event_count, n);
+    swapl(&stuff->grabWindow);
+    swaps(&stuff->modifiers);
+    swaps(&stuff->event_count);
     REQUEST_FIXED_SIZE(xGrabDeviceKeyReq, stuff->event_count * sizeof(CARD32));
     SwapLongs((CARD32 *) (&stuff[1]), stuff->event_count);
     return (ProcXGrabDeviceKey(client));

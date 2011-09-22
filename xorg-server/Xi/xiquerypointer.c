@@ -61,12 +61,10 @@
 int
 SProcXIQueryPointer(ClientPtr client)
 {
-    char n;
-
     REQUEST(xXIQueryPointerReq);
-    swaps(&stuff->length, n);
-    swaps(&stuff->deviceid, n);
-    swapl(&stuff->win, n);
+    swaps(&stuff->length);
+    swaps(&stuff->deviceid);
+    swapl(&stuff->win);
     return (ProcXIQueryPointer(client));
 }
 
@@ -212,17 +210,15 @@ void
 SRepXIQueryPointer(ClientPtr client, int size,
                    xXIQueryPointerReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swapl(&rep->root, n);
-    swapl(&rep->child, n);
-    swapl(&rep->root_x, n);
-    swapl(&rep->root_y, n);
-    swapl(&rep->win_x, n);
-    swapl(&rep->win_y, n);
-    swaps(&rep->buttons_len, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swapl(&rep->root);
+    swapl(&rep->child);
+    swapl(&rep->root_x);
+    swapl(&rep->root_y);
+    swapl(&rep->win_x);
+    swapl(&rep->win_y);
+    swaps(&rep->buttons_len);
 
     WriteToClient(client, size, (char *)rep);
 }

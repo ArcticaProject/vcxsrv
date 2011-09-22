@@ -742,14 +742,10 @@ TRANS(NAMEDOpenPipe)(const char *server_path)
     struct stat		sbuf;
     int			mode;
 
-#if defined(sun) && defined(X11_t)
-    mode = 0775;	/* Solaris requires uid or gid 0 to create X11 pipes */
-#else
 #ifdef HAS_STICKY_DIR_BIT
     mode = 01777;
 #else
     mode = 0777;
-#endif
 #endif
     if (trans_mkdir(X_STREAMS_DIR, mode) == -1) {
 	PRMSG (1, "NAMEDOpenPipe: mkdir(%s) failed, errno = %d\n",

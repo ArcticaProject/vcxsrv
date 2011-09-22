@@ -59,9 +59,6 @@
 extern __GLXFBConfig **__glXFBConfigs;
 extern int            __glXNumFBConfigs;
 
-extern __GLXFBConfig *glxLookupFBConfig( GLXFBConfigID id );
-extern __GLXFBConfig *glxLookupFBConfigByVID( VisualID vid );
-extern __GLXFBConfig *glxLookupBackEndFBConfig( GLXFBConfigID id, int screen );
 extern int glxIsExtensionSupported( char *ext );
 extern int __glXGetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc);
 
@@ -69,6 +66,44 @@ extern int __glXGetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc);
            ( (x) >= __glXerrorBase ? \
              (x) - dmxScreen->glxErrorBase + __glXerrorBase \
 	     : (x) )
+
+static __GLXFBConfig *glxLookupFBConfig( GLXFBConfigID id )
+{
+   int i,j;
+
+   for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
+      if ( __glXFBConfigs[j]->id == id)
+	 return __glXFBConfigs[j];
+   }
+
+   return NULL;
+}
+
+static __GLXFBConfig *glxLookupFBConfigByVID( VisualID vid )
+{
+   int i,j;
+
+   for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
+      if ( __glXFBConfigs[j]->associatedVisualId == vid)
+	 return __glXFBConfigs[j];
+   }
+
+   return NULL;
+}
+
+static __GLXFBConfig *glxLookupBackEndFBConfig( GLXFBConfigID id, int screen )
+{
+   int i;
+   int j;
+
+   for (i=0, j=0; i<__glXNumFBConfigs; i++,j+=(__glXNumActiveScreens+1) ) {
+      if ( __glXFBConfigs[j]->id == id)
+	 return __glXFBConfigs[j+screen+1];
+   }
+
+   return NULL;
+
+}
 
 Display *GetBackEndDisplay( __GLXclientState *cl, int s )
 {

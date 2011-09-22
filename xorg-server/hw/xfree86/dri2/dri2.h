@@ -110,6 +110,16 @@ typedef DRI2BufferPtr	(*DRI2CreateBufferProcPtr)(DrawablePtr pDraw,
 typedef void		(*DRI2DestroyBufferProcPtr)(DrawablePtr pDraw,
 						    DRI2BufferPtr buffer);
 /**
+ * Notifies driver when DRI2GetBuffers reuses a dri2 buffer.
+ *
+ * Driver may rename the dri2 buffer in this notify if it is required.
+ *
+ * \param pDraw drawable whose count we want
+ * \param buffer buffer that will be returned to client
+ */
+typedef void		(*DRI2ReuseBufferNotifyProcPtr)(DrawablePtr pDraw,
+						      DRI2BufferPtr buffer);
+/**
  * Get current media stamp counter values
  *
  * This callback is used to support the SGI_video_sync and OML_sync_control
@@ -159,9 +169,22 @@ typedef void		(*DRI2InvalidateProcPtr)(DrawablePtr pDraw,
 						 void *data);
 
 /**
+ * DRI2 calls this hook when ever swap_limit is going to be changed. Default
+ * implementation for the hook only accepts one as swap_limit. If driver can
+ * support other swap_limits it has to implement supported limits with this
+ * callback.
+ *
+ * \param pDraw drawable whos swap_limit is going to be changed
+ * \param swap_limit new swap_limit that going to be set
+ * \return TRUE if limit is support, FALSE if not.
+ */
+typedef Bool		(*DRI2SwapLimitValidateProcPtr)(DrawablePtr pDraw,
+							int swap_limit);
+
+/**
  * Version of the DRI2InfoRec structure defined in this header
  */
-#define DRI2INFOREC_VERSION 5
+#define DRI2INFOREC_VERSION 6
 
 typedef struct {
     unsigned int version;	/**< Version of this struct */
@@ -189,6 +212,11 @@ typedef struct {
     /* added in version 5 */
 
     DRI2AuthMagicProcPtr	AuthMagic;
+
+    /* added in version 6 */
+
+    DRI2ReuseBufferNotifyProcPtr ReuseBufferNotify;
+    DRI2SwapLimitValidateProcPtr SwapLimitValidate;
 }  DRI2InfoRec, *DRI2InfoPtr;
 
 extern _X_EXPORT int DRI2EventBase;
@@ -251,6 +279,7 @@ extern _X_EXPORT DRI2BufferPtr *DRI2GetBuffersWithFormat(DrawablePtr pDraw,
 	int *out_count);
 
 extern _X_EXPORT void DRI2SwapInterval(DrawablePtr pDrawable, int interval);
+extern _X_EXPORT Bool DRI2SwapLimit(DrawablePtr pDraw, int swap_limit);
 extern _X_EXPORT int DRI2SwapBuffers(ClientPtr client, DrawablePtr pDrawable,
 				     CARD64 target_msc, CARD64 divisor,
 				     CARD64 remainder, CARD64 *swap_target,

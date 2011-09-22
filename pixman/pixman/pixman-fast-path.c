@@ -1764,7 +1764,7 @@ static const pixman_fast_path_t c_fast_paths[] =
 #define SIMPLE_ROTATE_FLAGS(angle)					  \
     (FAST_PATH_ROTATE_ ## angle ## _TRANSFORM	|			  \
      FAST_PATH_NEAREST_FILTER			|			  \
-     FAST_PATH_SAMPLES_COVER_CLIP		|			  \
+     FAST_PATH_SAMPLES_COVER_CLIP_NEAREST	|			  \
      FAST_PATH_STANDARD_FLAGS)
 
 #define SIMPLE_ROTATE_FAST_PATH(op,s,d,suffix)				  \

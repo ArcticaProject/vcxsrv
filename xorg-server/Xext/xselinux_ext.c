@@ -71,11 +71,10 @@ ProcSELinuxQueryVersion(ClientPtr client)
     rep.server_major = SELINUX_MAJOR_VERSION;
     rep.server_minor = SELINUX_MINOR_VERSION;
     if (client->swapped) {
-	int n;
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.length, n);
-	swaps(&rep.server_major, n);
-	swaps(&rep.server_minor, n);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.length);
+	swaps(&rep.server_major);
+	swaps(&rep.server_minor);
     }
     WriteToClient(client, sizeof(rep), (char *)&rep);
     return Success;
@@ -100,10 +99,9 @@ SELinuxSendContextReply(ClientPtr client, security_id_t sid)
     rep.context_len = len;
 
     if (client->swapped) {
-	int n;
-	swapl(&rep.length, n);
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.context_len, n);
+	swapl(&rep.length);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.context_len);
     }
 
     WriteToClient(client, sizeof(SELinuxGetContextReply), (char *)&rep);
@@ -353,17 +351,17 @@ SELinuxSendItemsToClient(ClientPtr client, SELinuxListItemRec *items,
     for (k = 0; k < count; k++) {
 	buf[pos] = items[k].id;
 	if (client->swapped)
-	    swapl(buf + pos, n);
+	    swapl(buf + pos);
 	pos++;
 
 	buf[pos] = items[k].octx_len * 4;
 	if (client->swapped)
-	    swapl(buf + pos, n);
+	    swapl(buf + pos);
 	pos++;
 
 	buf[pos] = items[k].dctx_len * 4;
 	if (client->swapped)
-	    swapl(buf + pos, n);
+	    swapl(buf + pos);
 	pos++;
 
 	memcpy((char *)(buf + pos), items[k].octx, strlen(items[k].octx) + 1);
@@ -379,9 +377,9 @@ SELinuxSendItemsToClient(ClientPtr client, SELinuxListItemRec *items,
     rep.count = count;
 
     if (client->swapped) {
-	swapl(&rep.length, n);
-	swaps(&rep.sequenceNumber, n);
-	swapl(&rep.count, n);
+	swapl(&rep.length);
+	swaps(&rep.sequenceNumber);
+	swapl(&rep.count);
     }
 
     WriteToClient(client, sizeof(SELinuxListItemsReply), (char *)&rep);
@@ -529,11 +527,10 @@ static int
 SProcSELinuxQueryVersion(ClientPtr client)
 {
     REQUEST(SELinuxQueryVersionReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxQueryVersionReq);
-    swaps(&stuff->client_major, n);
-    swaps(&stuff->client_minor, n);
+    swaps(&stuff->client_major);
+    swaps(&stuff->client_minor);
     return ProcSELinuxQueryVersion(client);
 }
 
@@ -541,10 +538,9 @@ static int
 SProcSELinuxSetCreateContext(ClientPtr client, unsigned offset)
 {
     REQUEST(SELinuxSetCreateContextReq);
-    int n;
 
     REQUEST_AT_LEAST_SIZE(SELinuxSetCreateContextReq);
-    swapl(&stuff->context_len, n);
+    swapl(&stuff->context_len);
     return ProcSELinuxSetCreateContext(client, offset);
 }
 
@@ -552,11 +548,10 @@ static int
 SProcSELinuxSetDeviceContext(ClientPtr client)
 {
     REQUEST(SELinuxSetContextReq);
-    int n;
 
     REQUEST_AT_LEAST_SIZE(SELinuxSetContextReq);
-    swapl(&stuff->id, n);
-    swapl(&stuff->context_len, n);
+    swapl(&stuff->id);
+    swapl(&stuff->context_len);
     return ProcSELinuxSetDeviceContext(client);
 }
 
@@ -564,10 +559,9 @@ static int
 SProcSELinuxGetDeviceContext(ClientPtr client)
 {
     REQUEST(SELinuxGetContextReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
-    swapl(&stuff->id, n);
+    swapl(&stuff->id);
     return ProcSELinuxGetDeviceContext(client);
 }
 
@@ -575,10 +569,9 @@ static int
 SProcSELinuxGetDrawableContext(ClientPtr client)
 {
     REQUEST(SELinuxGetContextReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
-    swapl(&stuff->id, n);
+    swapl(&stuff->id);
     return ProcSELinuxGetDrawableContext(client);
 }
 
@@ -586,11 +579,10 @@ static int
 SProcSELinuxGetPropertyContext(ClientPtr client, pointer privKey)
 {
     REQUEST(SELinuxGetPropertyContextReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetPropertyContextReq);
-    swapl(&stuff->window, n);
-    swapl(&stuff->property, n);
+    swapl(&stuff->window);
+    swapl(&stuff->property);
     return ProcSELinuxGetPropertyContext(client, privKey);
 }
 
@@ -598,10 +590,9 @@ static int
 SProcSELinuxGetSelectionContext(ClientPtr client, pointer privKey)
 {
     REQUEST(SELinuxGetContextReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
-    swapl(&stuff->id, n);
+    swapl(&stuff->id);
     return ProcSELinuxGetSelectionContext(client, privKey);
 }
 
@@ -609,10 +600,9 @@ static int
 SProcSELinuxListProperties(ClientPtr client)
 {
     REQUEST(SELinuxGetContextReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
-    swapl(&stuff->id, n);
+    swapl(&stuff->id);
     return ProcSELinuxListProperties(client);
 }
 
@@ -620,10 +610,9 @@ static int
 SProcSELinuxGetClientContext(ClientPtr client)
 {
     REQUEST(SELinuxGetContextReq);
-    int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
-    swapl(&stuff->id, n);
+    swapl(&stuff->id);
     return ProcSELinuxGetClientContext(client);
 }
 
@@ -631,9 +620,8 @@ static int
 SProcSELinuxDispatch(ClientPtr client)
 {
     REQUEST(xReq);
-    int n;
 
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
 
     switch (stuff->data) {
     case X_SELinuxQueryVersion:

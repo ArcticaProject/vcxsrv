@@ -91,7 +91,6 @@ ProcAppleDRIQueryVersion(
 )
 {
     xAppleDRIQueryVersionReply rep;
-    register int n;
 
     REQUEST_SIZE_MATCH(xAppleDRIQueryVersionReq);
     rep.type = X_Reply;
@@ -101,8 +100,8 @@ ProcAppleDRIQueryVersion(
     rep.minorVersion = SERVER_APPLEDRI_MINOR_VERSION;
     rep.patchVersion = SERVER_APPLEDRI_PATCH_VERSION;
     if (client->swapped) {
-        swaps(&rep.sequenceNumber, n);
-        swapl(&rep.length, n);
+        swaps(&rep.sequenceNumber);
+        swapl(&rep.length);
     }
     WriteToClient(client, sizeof(xAppleDRIQueryVersionReply), (char *)&rep);
     return Success;
@@ -372,9 +371,8 @@ SProcAppleDRIQueryVersion(
     register ClientPtr client
 )
 {
-    register int n;
     REQUEST(xAppleDRIQueryVersionReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     return ProcAppleDRIQueryVersion(client);
 }
 

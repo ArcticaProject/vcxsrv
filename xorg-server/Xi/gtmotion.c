@@ -71,13 +71,11 @@ SOFTWARE.
 int
 SProcXGetDeviceMotionEvents(ClientPtr client)
 {
-    char n;
-
     REQUEST(xGetDeviceMotionEventsReq);
-    swaps(&stuff->length, n);
+    swaps(&stuff->length);
     REQUEST_SIZE_MATCH(xGetDeviceMotionEventsReq);
-    swapl(&stuff->start, n);
-    swapl(&stuff->stop, n);
+    swapl(&stuff->start);
+    swapl(&stuff->stop);
     return (ProcXGetDeviceMotionEvents(client));
 }
 
@@ -143,11 +141,9 @@ ProcXGetDeviceMotionEvents(ClientPtr client)
     WriteReplyToClient(client, sizeof(xGetDeviceMotionEventsReply), &rep);
     if (nEvents) {
 	if (client->swapped) {
-	    char n;
-
 	    bufptr = coords;
 	    for (i = 0; i < nEvents * (axes + 1); i++) {
-		swapl(bufptr, n);
+		swapl(bufptr);
 		bufptr++;
 	    }
 	}
@@ -168,10 +164,8 @@ void
 SRepXGetDeviceMotionEvents(ClientPtr client, int size,
 			   xGetDeviceMotionEventsReply * rep)
 {
-    char n;
-
-    swaps(&rep->sequenceNumber, n);
-    swapl(&rep->length, n);
-    swapl(&rep->nEvents, n);
+    swaps(&rep->sequenceNumber);
+    swapl(&rep->length);
+    swapl(&rep->nEvents);
     WriteToClient(client, size, (char *)rep);
 }

@@ -676,7 +676,6 @@ typedef enum {
     FLAG_DPMS_SUSPENDTIME,
     FLAG_DPMS_OFFTIME,
     FLAG_PIXMAP,
-    FLAG_PC98,
     FLAG_NOPM,
     FLAG_XINERAMA,
     FLAG_LOG,
@@ -724,8 +723,6 @@ static OptionInfoRec FlagOptions[] = {
 	{0}, FALSE },
   { FLAG_PIXMAP,		"Pixmap",			OPTV_INTEGER,
 	{0}, FALSE },
-  { FLAG_PC98,			"PC98",				OPTV_BOOLEAN,
-	{0}, FALSE },
   { FLAG_NOPM,			"NoPM",				OPTV_BOOLEAN,
 	{0}, FALSE },
   { FLAG_XINERAMA,		"Xinerama",			OPTV_BOOLEAN,
@@ -755,21 +752,6 @@ static OptionInfoRec FlagOptions[] = {
   { -1,				NULL,				OPTV_NONE,
 	{0}, FALSE },
 };
-
-#ifdef SUPPORT_PC98
-static Bool
-detectPC98(void)
-{
-    unsigned char buf[2];
-
-    if (xf86ReadBIOS(0xf8000, 0xe80, buf, 2) != 2)
-	return FALSE;
-    if ((buf[0] == 0x98) && (buf[1] == 0x21))
-	return TRUE;
-    else
-	return FALSE;
-}
-#endif
 
 static Bool
 configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
@@ -1026,18 +1008,6 @@ configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
 	xf86Info.pixmap24 = Pix24DontCare;
 	xf86Info.pix24From = X_DEFAULT;
     }
-#ifdef SUPPORT_PC98
-    if (xf86GetOptValBool(FlagOptions, FLAG_PC98, &value)) {
-	xf86Info.pc98 = value;
-	if (value) {
-	    xf86Msg(X_CONFIG, "Japanese PC98 architecture\n");
-	}
-    } else
-	if (detectPC98()) {
-	    xf86Info.pc98 = TRUE;
-	    xf86Msg(X_PROBED, "Japanese PC98 architecture\n");
-	}
-#endif
 
 #ifdef PANORAMIX
     from = X_DEFAULT;
