@@ -58,7 +58,7 @@ static struct {
 static int  XftAllocCount, XftAllocMem;
 static int  XftFreeCount, XftFreeMem;
 
-static int  XftMemNotice = 1*1024*1024;
+static const int  XftMemNotice = 1*1024*1024;
 
 static int  XftAllocNotify, XftFreeNotify;
 

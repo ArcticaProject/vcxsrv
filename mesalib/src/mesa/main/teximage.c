@@ -610,7 +610,7 @@ _mesa_free_texture_image_data(struct gl_context *ctx,
 {
    (void) ctx;
 
-   if (texImage->Data && !texImage->IsClientData) {
+   if (texImage->Data) {
       /* free the old texture data */
       _mesa_free_texmemory(texImage->Data);
    }
@@ -1159,13 +1159,6 @@ _mesa_init_teximage_fields(struct gl_context *ctx, GLenum target,
 
    img->MaxLog2 = MAX2(img->WidthLog2, img->HeightLog2);
 
-   if ((width == 1 || _mesa_is_pow_two(img->Width2)) &&
-       (height == 1 || _mesa_is_pow_two(img->Height2)) &&
-       (depth == 1 || _mesa_is_pow_two(img->Depth2)))
-      img->_IsPowerOfTwo = GL_TRUE;
-   else
-      img->_IsPowerOfTwo = GL_FALSE;
-
    /* RowStride and ImageOffsets[] describe how to address texels in 'Data' */
    img->RowStride = width;
    /* Allocate the ImageOffsets array and initialize to typical values.
@@ -1177,19 +1170,6 @@ _mesa_init_teximage_fields(struct gl_context *ctx, GLenum target,
    img->ImageOffsets = (GLuint *) malloc(depth * sizeof(GLuint));
    for (i = 0; i < depth; i++) {
       img->ImageOffsets[i] = i * width * height;
-   }
-
-   /* Compute Width/Height/DepthScale for mipmap lod computation */
-   if (target == GL_TEXTURE_RECTANGLE_NV) {
-      /* scale = 1.0 since texture coords directly map to texels */
-      img->WidthScale = 1.0;
-      img->HeightScale = 1.0;
-      img->DepthScale = 1.0;
-   }
-   else {
-      img->WidthScale = (GLfloat) img->Width;
-      img->HeightScale = (GLfloat) img->Height;
-      img->DepthScale = (GLfloat) img->Depth;
    }
 
    img->TexFormat = format;

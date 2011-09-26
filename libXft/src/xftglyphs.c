@@ -428,7 +428,7 @@ XftFontLoadGlyphs (Display	    *dpy,
 		{
 		    if (font->info.antialias)
 		    {
-			static char    den[] = { " .:;=+*#" };
+			static const char    den[] = { " .:;=+*#" };
 			for (x = 0; x < pitch; x++)
 			    printf ("%c", den[line[x] >> 5]);
 		    }

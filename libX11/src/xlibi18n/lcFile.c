@@ -36,7 +36,7 @@
 
 /************************************************************************/
 
-#ifdef __UNIXOS2__
+#ifndef HAVE_SETEUID
 # define seteuid setuid
 #endif
 #define	iscomment(ch)	((ch) == '#' || (ch) == '\0')
