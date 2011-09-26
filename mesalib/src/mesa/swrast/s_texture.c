@@ -67,6 +67,7 @@ _swrast_alloc_texture_image_buffer(struct gl_context *ctx,
                                    gl_format format, GLsizei width,
                                    GLsizei height, GLsizei depth)
 {
+   struct swrast_texture_image *swImg = swrast_texture_image(texImage);
    GLuint bytes = _mesa_format_image_size(format, width, height, depth);
 
    /* This _should_ be true (revisit if these ever fail) */
@@ -76,6 +77,26 @@ _swrast_alloc_texture_image_buffer(struct gl_context *ctx,
 
    assert(!texImage->Data);
    texImage->Data = _mesa_align_malloc(bytes, 512);
+
+   if ((width == 1 || _mesa_is_pow_two(texImage->Width2)) &&
+       (height == 1 || _mesa_is_pow_two(texImage->Height2)) &&
+       (depth == 1 || _mesa_is_pow_two(texImage->Depth2)))
+      swImg->_IsPowerOfTwo = GL_TRUE;
+   else
+      swImg->_IsPowerOfTwo = GL_FALSE;
+
+   /* Compute Width/Height/DepthScale for mipmap lod computation */
+   if (texImage->TexObject->Target == GL_TEXTURE_RECTANGLE_NV) {
+      /* scale = 1.0 since texture coords directly map to texels */
+      swImg->WidthScale = 1.0;
+      swImg->HeightScale = 1.0;
+      swImg->DepthScale = 1.0;
+   }
+   else {
+      swImg->WidthScale = (GLfloat) texImage->Width;
+      swImg->HeightScale = (GLfloat) texImage->Height;
+      swImg->DepthScale = (GLfloat) texImage->Depth;
+   }
 
    return texImage->Data != NULL;
 }
@@ -88,7 +109,7 @@ void
 _swrast_free_texture_image_buffer(struct gl_context *ctx,
                                   struct gl_texture_image *texImage)
 {
-   if (texImage->Data && !texImage->IsClientData) {
+   if (texImage->Data) {
       _mesa_align_free(texImage->Data);
    }
 

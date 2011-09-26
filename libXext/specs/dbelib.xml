@@ -56,7 +56,7 @@ purpose of the information in this document. This documentation is provided
 
 </bookinfo>
 
-<chapter id="introduction">
+<chapter id='Introduction'>
 <title>Introduction</title>
 <para>
 The Double Buffer Extension (DBE) provides a standard way to utilize
@@ -74,7 +74,7 @@ frame. The result is a flicker-free animation.
 
 </chapter>
 
-<chapter id="goals">
+<chapter id='Goals'>
 <title>Goals</title>
 
 <para>
@@ -142,7 +142,7 @@ hardware access (DGHA) architectures.
 
 </chapter>
 
-<chapter id="concepts">
+<chapter id='Concepts'>
 <title>Concepts</title>
 <para>
 Normal windows are created using the core CreateWindow request, which
@@ -293,7 +293,7 @@ that need such facilities (for example, to maintain a constant frame rate)
 should investigate the Synchronization Extension, an X Consortium standard.
 </para>
 
-<sect1 id="window_management_operations">
+<sect1 id='Window_Management_Operations'>
 <title>Window Management Operations</title>
 
 <para>
@@ -344,7 +344,7 @@ events are generated for D.
 
 </sect1>
 
-<sect1 id="complex_swap_actions">
+<sect1 id='Complex_Swap_Actions'>
 <title>Complex Swap Actions</title>
 <para>
 DBE has no explicit knowledge of ancillary buffers (for example, depth buffers
@@ -451,14 +451,14 @@ variety of implementations.
 </sect1>
 </chapter>
 
-<chapter id="c_language_bindings">
+<chapter id='C_Language_Binding'>
 <title>C Language Binding</title>
 <para>
 All identiﬁer The header for this extension is &lt;X11/extensions/Xdbe.h&gt;.
 names provided by this header begin with Xdbe.
 </para>
 
-<sect1 id="types">
+<sect1 id='Types'>
 <title>Types</title>
 
 <para>
@@ -475,7 +475,7 @@ The type <function>XdbeSwapAction</function> can be one of the constants
 
 </sect1>
 
-<sect1 id="c_functions">
+<sect1 id='C_Functions'>
 <title>C Functions</title>
 <para>
 The C functions provide direct access to the protocol and add no additional
@@ -486,7 +486,7 @@ start of the function name with DBE. All functions that have return type
 zero for failure.
 </para>
 
-<funcsynopsis id='xdbequeryextension'>
+<funcsynopsis id='XdbeQueryExtension'>
 <funcprototype>
   <funcdef>Status <function>XdbeQueryExtension</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -496,7 +496,7 @@ zero for failure.
 </funcsynopsis>
 
 <para>
-<function>XdbeQueryExtension</function> sets major version return and minor
+<olink targetdoc='dbelib' targetptr='XdbeQueryExtension'><function>XdbeQueryExtension</function></olink> sets major version return and minor
 version return to the major and minor DBE protocol version supported by
 the server. If the DBE library is compatible with the version returned by
 the server, it returns nonzero. If dpy does not support the DBE extension,
@@ -507,7 +507,7 @@ violates this rule, the effects of all subsequent Xdbe calls that it makes
 are undefined.
 </para>
 
-<funcsynopsis id='xdbegetvisualinfo'>
+<funcsynopsis id='XdbeGetVisualInfo'>
 <funcprototype>
   <funcdef>XdbeScreenVisualInfo *<function>XdbeGetVisualInfo</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -518,7 +518,7 @@ are undefined.
 
 <para>
 
-<function>XdbeGetVisualInfo</function> returns information about which
+<olink targetdoc='dbelib' targetptr='XdbeGetVisualInfo'><function>XdbeGetVisualInfo</function></olink> returns information about which
 visuals support double buffering. The argument num_screens specifies how
 many elements there are in the screen_specifiers list. Each drawable in
 screen_specifiers designates a screen for which the supported visuals are
@@ -564,11 +564,11 @@ int              perflevel  performance level of visual
 <para>
 <function>XdbeFreeVisualInfo</function> frees the list of
 <function>XdbeScreenVisualInfo</function> returned by
-<function>XdbeGetVisualInfo</function>.
+<olink targetdoc='dbelib' targetptr='XdbeGetVisualInfo'><function>XdbeGetVisualInfo</function></olink>.
 </para>
 
 
-<funcsynopsis id='xdbeallocatebackbuffername'>
+<funcsynopsis id='XdbeAllocateBackBufferName'>
 <funcprototype>
   <funcdef>XdbeBackBuffer <function>XdbeAllocateBackBufferName</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -579,16 +579,16 @@ int              perflevel  performance level of visual
 
 
 <para>
-<function>XdbeAllocateBackBufferName</function> returns a drawable ID used
+<olink targetdoc='dbelib' targetptr='XdbeAllocateBackBufferName'><function>XdbeAllocateBackBufferName</function></olink> returns a drawable ID used
 to refer to the back buffer of the specified window. The swap_action is a
 hint to indicate the swap_action that will likely be used in subsequent
-calls to <function>XdbeSwapBuffers</function>.  The actual swap_action
-used in calls to <function>XdbeSwapBuffers</function> does not have to be
+calls to <olink targetdoc='dbelib' targetptr='XdbeSwapBuffers'><function>XdbeSwapBuffers</function></olink>.  The actual swap_action
+used in calls to <olink targetdoc='dbelib' targetptr='XdbeSwapBuffers'><function>XdbeSwapBuffers</function></olink> does not have to be
 the same as the swap_action passed to this function, though clients are
 encouraged to provide accurate information whenever possible.
 </para>
 
-<funcsynopsis id='xdbedeallocatebackbuffername'>
+<funcsynopsis id='XdbeDeallocateBackBufferName'>
 <funcprototype>
   <funcdef>Status <function>XdbeDeallocateBackBufferName</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -597,14 +597,14 @@ encouraged to provide accurate information whenever possible.
 </funcsynopsis>
 
 <para>
-<function>XdbeDeallocateBackBufferName</function> frees the specified
+<olink targetdoc='dbelib' targetptr='XdbeDeallocateBackBufferName'><function>XdbeDeallocateBackBufferName</function></olink> frees the specified
 drawable ID, buffer, that was obtained via
-<function>XdbeAllocateBackBufferName</function>. The buffer must be a valid
+<olink targetdoc='dbelib' targetptr='XdbeAllocateBackBufferName'><function>XdbeAllocateBackBufferName</function></olink>. The buffer must be a valid
 name for the back buffer of a window, or an
 <function>XdbeBadBuffer</function> error results.
 </para>
 
-<funcsynopsis id='xdbeswapbuffers'>
+<funcsynopsis id='XdbeSwapBuffers'>
 <funcprototype>
   <funcdef>Status <function>XdbeSwapBuffers</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -614,7 +614,7 @@ name for the back buffer of a window, or an
 </funcsynopsis>
 
 <para>
-<function>XdbeSwapBuffers</function> swaps the front and back buffers
+<olink targetdoc='dbelib' targetptr='XdbeSwapBuffers'><function>XdbeSwapBuffers</function></olink> swaps the front and back buffers
 for a list of windows. The argument num_windows specifies how many windows
 are to have their buffers swapped; it is the number of elements in the
 swap_info array. The argument swap_info specifies the information needed
@@ -629,7 +629,7 @@ Window              swap_window    window for which to swap buffers
 XdbeSwapAction      swap_action    swap action to use for this swap window
 </literallayout>
 
-<funcsynopsis id='xdbebeginidiom'>
+<funcsynopsis id='XdbeBeginIdiom'>
 <funcprototype>
   <funcdef>Status <function>XdbeBeginIdiom</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -637,14 +637,14 @@ XdbeSwapAction      swap_action    swap action to use for this swap window
 </funcsynopsis>
 
 <para>
-<function>XdbeBeginIdiom</function> marks the beginning of an idiom
+<olink targetdoc='dbelib' targetptr='XdbeBeginIdiom'><function>XdbeBeginIdiom</function></olink> marks the beginning of an idiom
 sequence. See
-<link linkend="complex_swap_actions">
-<xref linkend="complex_swap_actions"></xref></link>
+<link linkend='Complex_Swap_Actions'>
+<xref linkend='Complex_Swap_Actions'></xref></link>
 for a complete discussion of idioms.
 </para>
 
-<funcsynopsis id='xdbeendidiom'>
+<funcsynopsis id='XdbeEndIdiom'>
 <funcprototype>
   <funcdef>Status <function>XdbeEndIdiom</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -652,10 +652,10 @@ for a complete discussion of idioms.
 </funcsynopsis>
 
 <para>
-<function>XdbeEndIdiom</function> marks the end of an idiom sequence.
+<olink targetdoc='dbelib' targetptr='XdbeEndIdiom'><function>XdbeEndIdiom</function></olink> marks the end of an idiom sequence.
 </para>
 
-<funcsynopsis id='xdbegetbackbufferattributes'>
+<funcsynopsis id='XdbeGetBackBufferAttributes'>
 <funcprototype>
   <funcdef>XdbeBackBufferAttributes *<function>XdbeGetBackBufferAttributes</function></funcdef>
     <paramdef>Display <parameter> *dpy</parameter></paramdef>
@@ -664,7 +664,7 @@ for a complete discussion of idioms.
 </funcsynopsis>
 
 <para>
-<function>XdbeGetBackBufferAttributes</function> returns the attributes associated with
+<olink targetdoc='dbelib' targetptr='XdbeGetBackBufferAttributes'><function>XdbeGetBackBufferAttributes</function></olink> returns the attributes associated with
 the specified buffer.
 </para>
 <para>
@@ -681,11 +681,11 @@ set to None.
 </para>
 <para>
 The returned <function>XdbeBackBufferAttributes</function> structure
-can be freed with the Xlib function <function>XFree</function>.
+can be freed with the Xlib function <olink targetdoc='libX11' targetptr='XFree'><function>XFree</function></olink>.
 </para>
 </sect1>
 
-<sect1 id="errors">
+<sect1 id='Errors'>
 <title>Errors</title>
 <para>
 The <function>XdbeBufferError</function> structure has the following fields:
@@ -702,7 +702,7 @@ unsigned char       minor code    Minor op-code of failed request
 </sect1>
 </chapter>
 
-<chapter id="acknowledgements">
+<chapter id='Acknowledgements'>
 <title>Acknowledgements</title>
 
 <para>
@@ -727,7 +727,7 @@ of the specification. David served as architect.
 </para>
 
 </chapter>
-<chapter id="references">
+<chapter id='References'>
 <title>References</title>
 <para>
 Jeffrey Friedberg, Larry Seiler, and Jeff Vroom, "Multi-buffering Extension

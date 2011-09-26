@@ -175,14 +175,22 @@ XCOMM "₴" U20b4 HRYVNIA SIGN
 XCOMM "₵" U20b5 CEDI SIGN
 
 
+<Multi_key> <bar> <C>            	: "¢"   cent # CENT SIGN
 <Multi_key> <bar> <c>            	: "¢"   cent # CENT SIGN
+<Multi_key> <C> <bar>            	: "¢"   cent # CENT SIGN
 <Multi_key> <c> <bar>            	: "¢"   cent # CENT SIGN
+<Multi_key> <C> <slash>          	: "¢"   cent # CENT SIGN
 <Multi_key> <c> <slash>          	: "¢"   cent # CENT SIGN
+<Multi_key> <slash> <C>          	: "¢"   cent # CENT SIGN
 <Multi_key> <slash> <c>          	: "¢"   cent # CENT SIGN
 <Multi_key> <L> <minus>          	: "£"   sterling # POUND SIGN
+<Multi_key> <l> <minus>          	: "£"   sterling # POUND SIGN
 <Multi_key> <minus> <L>          	: "£"   sterling # POUND SIGN
+<Multi_key> <minus> <l>          	: "£"   sterling # POUND SIGN
 <Multi_key> <Y> <equal>          	: "¥"   yen # YEN SIGN
+<Multi_key> <y> <equal>          	: "¥"   yen # YEN SIGN
 <Multi_key> <equal> <Y>          	: "¥"   yen # YEN SIGN
+<Multi_key> <equal> <y>          	: "¥"   yen # YEN SIGN
 
 XCOMM Long S
 <Multi_key> <f> <s>              	: "ſ"   U017f # LATIN SMALL LETTER LONG S

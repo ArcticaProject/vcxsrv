@@ -214,7 +214,9 @@ typedef enum
    VERT_RESULT_BFC0 = 13,
    VERT_RESULT_BFC1 = 14,
    VERT_RESULT_EDGE = 15,
-   VERT_RESULT_VAR0 = 16,  /**< shader varying */
+   VERT_RESULT_CLIP_DIST0 = 16,
+   VERT_RESULT_CLIP_DIST1 = 17,
+   VERT_RESULT_VAR0 = 18,  /**< shader varying */
    VERT_RESULT_MAX = (VERT_RESULT_VAR0 + MAX_VARYING)
 } gl_vert_result;
 
@@ -312,7 +314,9 @@ typedef enum
    FRAG_ATTRIB_TEX7 = 11,
    FRAG_ATTRIB_FACE = 12,  /**< front/back face */
    FRAG_ATTRIB_PNTC = 13,  /**< sprite/point coord */
-   FRAG_ATTRIB_VAR0 = 14,  /**< shader varying */
+   FRAG_ATTRIB_CLIP_DIST0 = 14,
+   FRAG_ATTRIB_CLIP_DIST1 = 15,
+   FRAG_ATTRIB_VAR0 = 16,  /**< shader varying */
    FRAG_ATTRIB_MAX = (FRAG_ATTRIB_VAR0 + MAX_VARYING)
 } gl_frag_attrib;
 
@@ -329,8 +333,8 @@ typedef enum
 static INLINE int
 _mesa_vert_result_to_frag_attrib(gl_vert_result vert_result)
 {
-   if (vert_result >= VERT_RESULT_VAR0)
-      return vert_result - VERT_RESULT_VAR0 + FRAG_ATTRIB_VAR0;
+   if (vert_result >= VERT_RESULT_CLIP_DIST0)
+      return vert_result - VERT_RESULT_CLIP_DIST0 + FRAG_ATTRIB_CLIP_DIST0;
    else if (vert_result <= VERT_RESULT_TEX7)
       return vert_result;
    else
@@ -351,8 +355,8 @@ _mesa_frag_attrib_to_vert_result(gl_frag_attrib frag_attrib)
 {
    if (frag_attrib <= FRAG_ATTRIB_TEX7)
       return frag_attrib;
-   else if (frag_attrib >= FRAG_ATTRIB_VAR0)
-      return frag_attrib - FRAG_ATTRIB_VAR0 + VERT_RESULT_VAR0;
+   else if (frag_attrib >= FRAG_ATTRIB_CLIP_DIST0)
+      return frag_attrib - FRAG_ATTRIB_CLIP_DIST0 + VERT_RESULT_CLIP_DIST0;
    else
       return -1;
 }
@@ -1254,11 +1258,6 @@ struct gl_texture_image
    GLuint HeightLog2;		/**< = log2(Height2) */
    GLuint DepthLog2;		/**< = log2(Depth2) */
    GLuint MaxLog2;		/**< = MAX(WidthLog2, HeightLog2) */
-   GLfloat WidthScale;		/**< used for mipmap LOD computation */
-   GLfloat HeightScale;		/**< used for mipmap LOD computation */
-   GLfloat DepthScale;		/**< used for mipmap LOD computation */
-   GLboolean IsClientData;	/**< Data owned by client? */
-   GLboolean _IsPowerOfTwo;	/**< Are all dimensions powers of two? */
 
    struct gl_texture_object *TexObject;  /**< Pointer back to parent object */
    GLuint Level;                /**< Which mipmap level am I? */
@@ -1559,7 +1558,6 @@ struct gl_pixelstore_attrib
    GLint SkipImages;
    GLboolean SwapBytes;
    GLboolean LsbFirst;
-   GLboolean ClientStorage; /**< GL_APPLE_client_storage */
    GLboolean Invert;        /**< GL_MESA_pack_invert */
    struct gl_buffer_object *BufferObj; /**< GL_ARB_pixel_buffer_object */
 };
@@ -1882,6 +1880,7 @@ struct gl_vertex_program
    struct gl_program Base;   /**< base class */
    GLboolean IsNVProgram;    /**< is this a GL_NV_vertex_program program? */
    GLboolean IsPositionInvariant;
+   GLboolean UsesClipDistance;
 };
 
 
@@ -2167,6 +2166,11 @@ struct gl_shader_program
       GLenum OutputType; /**< GL_POINTS, GL_LINE_STRIP or GL_TRIANGLE_STRIP */
    } Geom;
 
+   /** Vertex shader state - copied into gl_vertex_program at link time */
+   struct {
+      GLboolean UsesClipDistance; /**< True if gl_ClipDistance is written to. */
+   } Vert;
+
    /* post-link info: */
    struct gl_vertex_program *VertexProgram;     /**< Linked vertex program */
    struct gl_fragment_program *FragmentProgram; /**< Linked fragment prog */
@@ -2241,6 +2245,7 @@ struct gl_shader_compiler_options
    GLboolean EmitNoMainReturn;            /**< Emit CONT/RET opcodes? */
    GLboolean EmitNoNoise;                 /**< Emit NOISE opcodes? */
    GLboolean EmitNoPow;                   /**< Emit POW opcodes? */
+   GLboolean LowerClipDistance; /**< Lower gl_ClipDistance from float[8] to vec4[2]? */
 
    /**
     * \name Forms of indirect addressing the driver cannot do.
@@ -2862,7 +2867,6 @@ struct gl_extensions
    /* vendor extensions */
    GLboolean AMD_conservative_depth;
    GLboolean AMD_seamless_cubemap_per_texture;
-   GLboolean APPLE_client_storage;
    GLboolean APPLE_packed_pixels;
    GLboolean APPLE_vertex_array_object;
    GLboolean APPLE_object_purgeable;

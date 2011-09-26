@@ -220,7 +220,7 @@ AC_CHECK_HEADERS([sys/select.h])
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
-AC_CHECK_FUNCS([strtol])
+AC_CHECK_FUNCS([strtol seteuid])
 # Used in lcFile.c (see also --enable-xlocaledir settings below)
 XLOCALEDIR_IS_SAFE="no"
 AC_CHECK_FUNC([issetugid], [XLOCALEDIR_IS_SAFE="yes"]

@@ -64,36 +64,7 @@ AC_SUBST([XFT_LT_VERSION])
 #
 # Check for Xrender
 #
-PKG_CHECK_MODULES(XRENDER, xrender >= 0.8.2, [xrender_found_with_pkgconfig=yes],
-                  [xrender_found_with_pkgconfig=no])
-case "$xrender_found_with_pkgconfig" in
-no)
-	PKG_CHECK_MODULES(XRENDER, xrender >= 0, [old_xrender_found_with_pkgconfig=yes],
-			  [old_xrender_found_with_pkgconfig=no])
-	case "$old_xrender_found_with_pkgconfig" in
-	yes)
-		XRENDER_LIBS="$XRENDER_LIBS -lXext -lX11"
-		;;
-	*)
-	        # checks for X
-	        AC_PATH_X
-
-	        XRENDER_CFLAGS="-I$x_includes"
-	        XRENDER_LIBS="-L$x_libraries -lXrender -lXext -lX11"
-
-	        saved_CPPFLAGS="$CPPFLAGS"
-	        CPPFLAGS="$CPPFLAGS $XRENDER_CFLAGS"
-	        AC_CHECK_HEADERS([X11/extensions/Xrender.h], [], [AC_MSG_ERROR([Xrender.h not found.])])
-	        CPPFLAGS="$saved_CPPFLAGS"
-
-	        saved_LIBS="$LIBS"
-	        LIBS="$LIBS $XRENDER_LIBS"
-	        AC_CHECK_FUNCS([XRenderFindStandardFormat], [], [AC_MSG_ERROR([libXrender not found or too old.])])
-	        LIBS="$saved_LIBS"
-		;;
-	esac
-        ;;
-esac
+PKG_CHECK_MODULES(XRENDER, xrender >= 0.8.2 x11)
 
 # Check freetype configuration
 AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=auto)
