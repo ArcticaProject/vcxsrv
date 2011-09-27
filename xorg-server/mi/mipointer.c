@@ -569,9 +569,9 @@ miPointerMoveNoEvent (DeviceIntPtr pDev, ScreenPtr pScreen,
  *
  * @param pDev The device to move
  * @param mode Movement mode (Absolute or Relative)
- * @param[in,out] x The x coordiante in screen coordinates (in regards to total
+ * @param[in,out] x The x coordinate in screen coordinates (in regards to total
  * desktop size)
- * @param[in,out] y The y coordiante in screen coordinates (in regards to total
+ * @param[in,out] y The y coordinate in screen coordinates (in regards to total
  * desktop size)
  */
 void
@@ -603,7 +603,7 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, int *x, int *y)
 		pScreen = newScreen;
 		(*pScreenPriv->screenFuncs->NewEventScreen) (pDev, pScreen,
 							     FALSE);
-	    	/* Smash the confine to the new screen */
+		/* Smash the confine to the new screen */
                 pPointer->limits.x2 = pScreen->width;
                 pPointer->limits.y2 = pScreen->height;
 	    }
@@ -622,8 +622,8 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, int *x, int *y)
     if (pScreen->ConstrainCursorHarder)
        pScreen->ConstrainCursorHarder(pDev, pScreen, mode, x, y);
 
-    if (pPointer->x == *x && pPointer->y == *y && 
-            pPointer->pScreen == pScreen) 
+    if (pPointer->x == *x && pPointer->y == *y &&
+            pPointer->pScreen == pScreen)
         return;
 
     miPointerMoveNoEvent(pDev, pScreen, *x, *y);

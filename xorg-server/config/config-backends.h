@@ -27,10 +27,10 @@
 #include <dix-config.h>
 #endif
 #include "input.h"
+#include "list.h"
 
 void remove_devices(const char *backend, const char *config_info);
 BOOL device_is_duplicate(const char *config_info);
-void add_option(InputOption **options, const char *key, const char *value);
 
 #ifdef CONFIG_UDEV
 int config_udev_init(void);

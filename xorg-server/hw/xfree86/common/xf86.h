@@ -331,7 +331,7 @@ extern _X_EXPORT DisplayModePtr xf86ModesAdd(DisplayModePtr modes, DisplayModePt
 
 /* xf86Option.c */
 
-extern _X_EXPORT void xf86CollectOptions(ScrnInfoPtr pScrn, pointer extraOpts);
+extern _X_EXPORT void xf86CollectOptions(ScrnInfoPtr pScrn, XF86OptionPtr extraOpts);
 
 
 /* xf86RandR.c */

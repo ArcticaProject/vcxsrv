@@ -472,7 +472,10 @@ typedef struct _SpriteInfoRec {
 #define MASTER_POINTER          1
 #define MASTER_KEYBOARD         2
 #define SLAVE                   3
-#define MASTER_ATTACHED         4  /* special type for GetMaster */
+/* special types for GetMaster */
+#define MASTER_ATTACHED         4       /* Master for this device */
+#define KEYBOARD_OR_FLOAT       5       /* Keyboard master for this device or this device if floating */
+#define POINTER_OR_FLOAT        6       /* Pointer master for this device or this device if floating */
 
 typedef struct _DeviceIntRec {
     DeviceRec	public;
@@ -598,5 +601,12 @@ static inline WindowPtr DeepestSpriteWin(SpritePtr sprite)
     assert(sprite->spriteTraceGood > 0);
     return sprite->spriteTrace[sprite->spriteTraceGood - 1];
 }
+
+struct _InputOption {
+    char                *key;
+    char                *value;
+    struct _InputOption *next;
+};
+
 
 #endif /* INPUTSTRUCT_H */

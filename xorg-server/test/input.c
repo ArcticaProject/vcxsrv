@@ -1223,7 +1223,7 @@ static void dix_valuator_alloc(void)
 
         assert(v);
         assert(v->numAxes == num_axes);
-#ifndef __i386__
+#if !defined(__i386__) && !defined(__sh__)
         /* must be double-aligned on 64 bit */
         assert(((void*)v->axisVal - (void*)v) % sizeof(double) == 0);
         assert(((void*)v->axes - (void*)v) % sizeof(double) == 0);
@@ -1233,6 +1233,169 @@ static void dix_valuator_alloc(void)
 
     free(v);
 }
+
+static void dix_get_master(void)
+{
+    DeviceIntRec vcp, vck;
+    DeviceIntRec ptr, kbd;
+    DeviceIntRec floating;
+    SpriteInfoRec vcp_sprite, vck_sprite;
+    SpriteInfoRec ptr_sprite, kbd_sprite;
+    SpriteInfoRec floating_sprite;
+
+    memset(&vcp, 0, sizeof(DeviceIntRec));
+    memset(&vck, 0, sizeof(DeviceIntRec));
+    memset(&ptr, 0, sizeof(DeviceIntRec));
+    memset(&kbd, 0, sizeof(DeviceIntRec));
+    memset(&floating, 0, sizeof(DeviceIntRec));
+
+    memset(&vcp_sprite, 0, sizeof(DeviceIntRec));
+    memset(&vck_sprite, 0, sizeof(DeviceIntRec));
+    memset(&ptr_sprite, 0, sizeof(DeviceIntRec));
+    memset(&kbd_sprite, 0, sizeof(DeviceIntRec));
+    memset(&floating_sprite, 0, sizeof(DeviceIntRec));
+
+    vcp.type = MASTER_POINTER;
+    vck.type = MASTER_KEYBOARD;
+    ptr.type = SLAVE;
+    kbd.type = SLAVE;
+    floating.type = SLAVE;
+
+    vcp.spriteInfo = &vcp_sprite;
+    vck.spriteInfo = &vck_sprite;
+    ptr.spriteInfo = &ptr_sprite;
+    kbd.spriteInfo = &kbd_sprite;
+    floating.spriteInfo = &floating_sprite;
+
+    vcp_sprite.paired = &vck;
+    vck_sprite.paired = &vcp;
+    ptr_sprite.paired = &vcp;
+    kbd_sprite.paired = &vck;
+    floating_sprite.paired = &floating;
+
+    vcp_sprite.spriteOwner = TRUE;
+    floating_sprite.spriteOwner = TRUE;
+
+    ptr.master = &vcp;
+    kbd.master = &vck;
+
+    assert(GetPairedDevice(&vcp) == &vck);
+    assert(GetPairedDevice(&vck) == &vcp);
+    assert(GetMaster(&ptr, MASTER_POINTER) == &vcp);
+    assert(GetMaster(&ptr, MASTER_KEYBOARD) == &vck);
+    assert(GetMaster(&kbd, MASTER_POINTER) == &vcp);
+    assert(GetMaster(&kbd, MASTER_KEYBOARD) == &vck);
+    assert(GetMaster(&ptr, MASTER_ATTACHED) == &vcp);
+    assert(GetMaster(&kbd, MASTER_ATTACHED) == &vck);
+
+    assert(GetPairedDevice(&floating) == &floating);
+    assert(GetMaster(&floating, MASTER_POINTER) == NULL);
+    assert(GetMaster(&floating, MASTER_KEYBOARD) == NULL);
+    assert(GetMaster(&floating, MASTER_ATTACHED) == NULL);
+
+    assert(GetMaster(&vcp, POINTER_OR_FLOAT) == &vcp);
+    assert(GetMaster(&vck, POINTER_OR_FLOAT) == &vcp);
+    assert(GetMaster(&ptr, POINTER_OR_FLOAT) == &vcp);
+    assert(GetMaster(&kbd, POINTER_OR_FLOAT) == &vcp);
+
+    assert(GetMaster(&vcp, KEYBOARD_OR_FLOAT) == &vck);
+    assert(GetMaster(&vck, KEYBOARD_OR_FLOAT) == &vck);
+    assert(GetMaster(&ptr, KEYBOARD_OR_FLOAT) == &vck);
+    assert(GetMaster(&kbd, KEYBOARD_OR_FLOAT) == &vck);
+
+    assert(GetMaster(&floating, KEYBOARD_OR_FLOAT) == &floating);
+    assert(GetMaster(&floating, POINTER_OR_FLOAT) == &floating);
+}
+
+
+static void input_option_test(void)
+{
+    InputOption *list = NULL;
+    InputOption *opt;
+    const char *val;
+
+    printf("Testing input_option list interface\n");
+
+    list = input_option_new(list, "key", "value");
+    assert(list);
+    opt = input_option_find(list, "key");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "value") == 0);
+
+    list = input_option_new(list, "2", "v2");
+    opt = input_option_find(list, "key");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "value") == 0);
+
+    opt = input_option_find(list, "2");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "v2") == 0);
+
+    list = input_option_new(list, "3", "v3");
+
+    /* search, delete */
+    opt = input_option_find(list, "key");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "value") == 0);
+    list = input_option_free_element(list, "key");
+    opt = input_option_find(list, "key");
+    assert(opt == NULL);
+
+    opt = input_option_find(list, "2");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "v2") == 0);
+    list = input_option_free_element(list, "2");
+    opt = input_option_find(list, "2");
+    assert(opt == NULL);
+
+    opt = input_option_find(list, "3");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "v3") == 0);
+    list = input_option_free_element(list, "3");
+    opt = input_option_find(list, "3");
+    assert(opt == NULL);
+
+    /* list deletion */
+    list = input_option_new(list, "1", "v3");
+    list = input_option_new(list, "2", "v3");
+    list = input_option_new(list, "3", "v3");
+    input_option_free_list(&list);
+
+    assert(list == NULL);
+
+    list = input_option_new(list, "1", "v1");
+    list = input_option_new(list, "2", "v2");
+    list = input_option_new(list, "3", "v3");
+
+    /* value replacement */
+    opt = input_option_find(list, "2");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "v2") == 0);
+    input_option_set_value(opt, "foo");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "foo") == 0);
+    opt = input_option_find(list, "2");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "foo") == 0);
+
+    /* key replacement */
+    input_option_set_key(opt, "bar");
+    val = input_option_get_key(opt);
+    assert(strcmp(val, "bar") == 0);
+    opt = input_option_find(list, "bar");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "foo") == 0);
+
+    /* value replacement in input_option_new */
+    list = input_option_new(list, "bar", "foobar");
+    opt = input_option_find(list, "bar");
+    val = input_option_get_value(opt);
+    assert(strcmp(val, "foobar") == 0);
+
+    input_option_free_list(&list);
+    assert(list == NULL);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -1249,6 +1412,8 @@ int main(int argc, char** argv)
     include_bit_test_macros();
     xi_unregister_handlers();
     dix_valuator_alloc();
+    dix_get_master();
+    input_option_test();
 
     return 0;
 }

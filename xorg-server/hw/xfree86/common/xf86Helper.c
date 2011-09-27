@@ -1027,36 +1027,20 @@ xf86EnableDisableFBAccess(int scrnIndex, Bool enable)
     }
 }
 
-/* Print driver messages in the standard format */
-
-#undef PREFIX_SIZE
-#define PREFIX_SIZE 14
-
+/* Print driver messages in the standard format of
+   (<type>) <screen name>(<screen index>): <message> */
 void
 xf86VDrvMsgVerb(int scrnIndex, MessageType type, int verb, const char *format,
 		va_list args)
 {
-    char *tmpFormat;
-
     /* Prefix the scrnIndex name to the format string. */
     if (scrnIndex >= 0 && scrnIndex < xf86NumScreens &&
-	xf86Screens[scrnIndex]->name) {
-	tmpFormat = malloc(strlen(format) +
-			   strlen(xf86Screens[scrnIndex]->name) +
-			   PREFIX_SIZE + 1);
-	if (!tmpFormat)
-	    return;
-
-	snprintf(tmpFormat, PREFIX_SIZE + 1, "%s(%d): ",
-		 xf86Screens[scrnIndex]->name, scrnIndex);
-
-	strcat(tmpFormat, format);
-	LogVMessageVerb(type, verb, tmpFormat, args);
-	free(tmpFormat);
-    } else
+	xf86Screens[scrnIndex]->name)
+	LogHdrMessageVerb(type, verb, format, args, "%s(%d): ",
+	    xf86Screens[scrnIndex]->name, scrnIndex);
+    else
 	LogVMessageVerb(type, verb, format, args);
 }
-#undef PREFIX_SIZE
 
 /* Print driver messages, with verbose level specified directly */
 void
@@ -1082,20 +1066,23 @@ xf86DrvMsg(int scrnIndex, MessageType type, const char *format, ...)
 }
 
 /* Print input driver messages in the standard format of
-   <driver>: <device name>: <message> */
+   (<type>) <driver>: <device name>: <message> */
 void
-xf86VIDrvMsgVerb(InputInfoPtr dev, MessageType type, int verb, const char *format,
-		 va_list args)
+xf86VIDrvMsgVerb(InputInfoPtr dev, MessageType type, int verb,
+		 const char *format, va_list args)
 {
-    char *msg;
+    const char *driverName = NULL;
+    const char *deviceName = NULL;
 
-    if (asprintf(&msg, "%s: %s: %s", dev->drv->driverName, dev->name, format)
-	== -1) {
-	LogVMessageVerb(type, verb, "%s", args);
-    } else {
-	LogVMessageVerb(type, verb, msg, args);
-	free(msg);
+    /* Prefix driver and device names to formatted message. */
+    if (dev) {
+	deviceName = dev->name;
+	if (dev->drv)
+	    driverName = dev->drv->driverName;
     }
+
+    LogHdrMessageVerb(type, verb, format, args, "%s: %s: ", driverName,
+	deviceName);
 }
 
 /* Print input driver message, with verbose level specified directly */

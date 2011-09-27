@@ -68,8 +68,7 @@ static int
 add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
 {
     DBusMessageIter iter, reply_iter, subiter;
-    InputOption *tmpo = NULL, *options = NULL;
-    char *tmp = NULL;
+    InputOption *input_options = NULL;
     int ret, err;
     DeviceIntPtr dev = NULL;
 
@@ -80,15 +79,8 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
         MALFORMED_MESSAGE();
     }
 
-    options = calloc(sizeof(*options), 1);
-    if (!options) {
-        ErrorF("[config/dbus] couldn't allocate option\n");
-        return BadAlloc;
-    }
-
-    options->key = strdup("_source");
-    options->value = strdup("client/dbus");
-    if (!options->key || !options->value) {
+    input_options = input_option_new(input_options, "_source", "client/dbus");
+    if (!input_options) {
         ErrorF("[config/dbus] couldn't allocate first key/value pair\n");
         ret = BadAlloc;
         goto unwind;
@@ -96,35 +88,21 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
 
     /* signature should be [ss][ss]... */
     while (dbus_message_iter_get_arg_type(&iter) == DBUS_TYPE_ARRAY) {
-        tmpo = calloc(sizeof(*tmpo), 1);
-        if (!tmpo) {
-            ErrorF("[config/dbus] couldn't allocate option\n");
-            ret = BadAlloc;
-            goto unwind;
-        }
-        tmpo->next = options;
-        options = tmpo;
-
+        char *key, *value;
         dbus_message_iter_recurse(&iter, &subiter);
 
         if (dbus_message_iter_get_arg_type(&subiter) != DBUS_TYPE_STRING)
             MALFORMED_MESSAGE();
 
-        dbus_message_iter_get_basic(&subiter, &tmp);
-        if (!tmp)
+        dbus_message_iter_get_basic(&subiter, &key);
+        if (!key)
             MALFORMED_MESSAGE();
         /* The _ prefix refers to internal settings, and may not be given by
          * the client. */
-        if (tmp[0] == '_') {
+        if (key[0] == '_') {
             ErrorF("[config/dbus] attempted subterfuge: option name %s given\n",
-                   tmp);
+                   key);
             MALFORMED_MESSAGE();
-        }
-        options->key = strdup(tmp);
-        if (!options->key) {
-            ErrorF("[config/dbus] couldn't duplicate key!\n");
-            ret = BadAlloc;
-            goto unwind;
         }
 
         if (!dbus_message_iter_has_next(&subiter))
@@ -133,20 +111,16 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
         if (dbus_message_iter_get_arg_type(&subiter) != DBUS_TYPE_STRING)
             MALFORMED_MESSAGE();
 
-        dbus_message_iter_get_basic(&subiter, &tmp);
-        if (!tmp)
+        dbus_message_iter_get_basic(&subiter, &value);
+        if (!value)
             MALFORMED_MESSAGE();
-        options->value = strdup(tmp);
-        if (!options->value) {
-            ErrorF("[config/dbus] couldn't duplicate option!\n");
-            ret = BadAlloc;
-            goto unwind;
-        }
+
+        input_options = input_option_new(input_options, key, value);
 
         dbus_message_iter_next(&iter);
     }
 
-    ret = NewInputDeviceRequest(options, NULL, &dev);
+    ret = NewInputDeviceRequest(input_options, NULL, &dev);
     if (ret != Success) {
         DebugF("[config/dbus] NewInputDeviceRequest failed\n");
         goto unwind;
@@ -180,13 +154,7 @@ unwind:
         dbus_message_iter_append_basic(&reply_iter, DBUS_TYPE_INT32, &err);
     }
 
-    while (options) {
-        tmpo = options;
-        options = options->next;
-        free(tmpo->key);
-        free(tmpo->value);
-        free(tmpo);
-    }
+    input_option_free_list(&input_options);
 
     return ret;
 }

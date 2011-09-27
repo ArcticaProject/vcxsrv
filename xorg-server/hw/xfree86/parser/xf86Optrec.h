@@ -65,32 +65,9 @@
 #define _xf86Optrec_h_
 #include <stdio.h>
 #include <string.h>
+#include "xf86Optionstr.h"
 
 #include <X11/Xfuncproto.h>
-
-/* 
- * all records that need to be linked lists should contain a GenericList as
- * their first field.
- */
-typedef struct generic_list_rec
-{
-	void *next;
-}
-GenericListRec, *GenericListPtr, *glp;
-
-/*
- * All options are stored using this data type.
- */
-typedef struct
-{
-	GenericListRec list;
-	char *opt_name;
-	char *opt_val;
-	int opt_used;
-	char *opt_comment;
-}
-XF86OptionRec, *XF86OptionPtr;
-
 
 extern _X_EXPORT XF86OptionPtr xf86addNewOption(XF86OptionPtr head, char *name, char *val);
 extern _X_EXPORT XF86OptionPtr xf86optionListDup(XF86OptionPtr opt);

@@ -35,6 +35,7 @@
 #include "hotplug.h"
 #include "config-backends.h"
 #include "os.h"
+#include "globals.h"
 
 #define UDEV_XKB_PROP_KEY "xkb"
 
@@ -59,18 +60,29 @@ device_added(struct udev_device *udev_device)
     const char *syspath;
     const char *tags_prop;
     const char *key, *value, *tmp;
-    InputOption *options = NULL, *tmpo;
+    InputOption *input_options;
     InputAttributes attrs = {};
     DeviceIntPtr dev = NULL;
     struct udev_list_entry *set, *entry;
     struct udev_device *parent;
     int rc;
+    const char *dev_seat;
 
     path = udev_device_get_devnode(udev_device);
 
     syspath = udev_device_get_syspath(udev_device);
 
     if (!path || !syspath)
+        return;
+
+    dev_seat = udev_device_get_property_value(udev_device, "ID_SEAT");
+    if (!dev_seat)
+        dev_seat = "seat0";
+
+    if (SeatId && strcmp(dev_seat, SeatId))
+        return;
+
+    if (!SeatId && strcmp(dev_seat, "seat0"))
         return;
 
     if (!udev_device_get_property_value(udev_device, "ID_INPUT")) {
@@ -81,14 +93,9 @@ device_added(struct udev_device *udev_device)
         return;
     }
 
-    options = calloc(sizeof(*options), 1);
-    if (!options)
+    input_options = input_option_new(NULL, "_source", "server/udev");
+    if (!input_options)
         return;
-
-    options->key = strdup("_source");
-    options->value = strdup("server/udev");
-    if (!options->key || !options->value)
-        goto unwind;
 
     parent = udev_device_get_parent(udev_device);
     if (parent) {
@@ -114,17 +121,16 @@ device_added(struct udev_device *udev_device)
                 == -1)
                 attrs.usb_id = NULL;
             else
-                LOG_PROPERTY(path, "PRODUCT", product);
+                LOG_PROPERTY(ppath, "PRODUCT", product);
         }
     }
     if (!name)
         name = "(unnamed)";
     else
         attrs.product = strdup(name);
-    add_option(&options, "name", name);
-
-    add_option(&options, "path", path);
-    add_option(&options, "device", path);
+    input_options = input_option_new(input_options, "name", name);
+    input_options = input_option_new(input_options, "path", path);
+    input_options = input_option_new(input_options, "device", path);
     if (path)
         attrs.device = strdup(path);
 
@@ -154,15 +160,15 @@ device_added(struct udev_device *udev_device)
             LOG_PROPERTY(path, key, value);
             tmp = key + sizeof(UDEV_XKB_PROP_KEY) - 1;
             if (!strcasecmp(tmp, "rules"))
-                add_option(&options, "xkb_rules", value);
+                input_options = input_option_new(input_options, "xkb_rules", value);
             else if (!strcasecmp(tmp, "layout"))
-                add_option(&options, "xkb_layout", value);
+                input_options = input_option_new(input_options, "xkb_layout", value);
             else if (!strcasecmp(tmp, "variant"))
-                add_option(&options, "xkb_variant", value);
+                input_options = input_option_new(input_options, "xkb_variant", value);
             else if (!strcasecmp(tmp, "model"))
-                add_option(&options, "xkb_model", value);
+                input_options = input_option_new(input_options, "xkb_model", value);
             else if (!strcasecmp(tmp, "options"))
-                add_option(&options, "xkb_options", value);
+                input_options = input_option_new(input_options, "xkb_options", value);
         } else if (!strcmp(key, "ID_VENDOR")) {
             LOG_PROPERTY(path, key, value);
             attrs.vendor = strdup(value);
@@ -187,22 +193,17 @@ device_added(struct udev_device *udev_device)
         }
     }
 
-    add_option(&options, "config_info", config_info);
+    input_options = input_option_new(input_options, "config_info", config_info);
 
     LogMessage(X_INFO, "config/udev: Adding input device %s (%s)\n",
                name, path);
-    rc = NewInputDeviceRequest(options, &attrs, &dev);
+    rc = NewInputDeviceRequest(input_options, &attrs, &dev);
     if (rc != Success)
         goto unwind;
 
  unwind:
     free(config_info);
-    while ((tmpo = options)) {
-        options = tmpo->next;
-        free(tmpo->key);        /* NULL if dev != NULL */
-        free(tmpo->value);      /* NULL if dev != NULL */
-        free(tmpo);
-    }
+    input_option_free_list(&input_options);
 
     free(attrs.usb_id);
     free(attrs.pnp_id);
@@ -284,6 +285,9 @@ config_udev_init(void)
     udev_monitor_filter_add_match_subsystem_devtype(udev_monitor, "input", NULL);
     udev_monitor_filter_add_match_subsystem_devtype(udev_monitor, "tty", NULL); /* For Wacom serial devices */
 
+    if (SeatId && strcmp(SeatId, "seat0"))
+        udev_monitor_filter_add_match_tag(udev_monitor, SeatId);
+
     if (udev_monitor_enable_receiving(udev_monitor)) {
         ErrorF("config/udev: failed to bind the udev monitor\n");
         return 0;
@@ -295,6 +299,9 @@ config_udev_init(void)
 
     udev_enumerate_add_match_subsystem(enumerate, "input");
     udev_enumerate_add_match_subsystem(enumerate, "tty");
+
+    if (SeatId && strcmp(SeatId, "seat0"))
+        udev_enumerate_add_match_tag(enumerate, SeatId);
 
     udev_enumerate_scan_devices(enumerate);
     devices = udev_enumerate_get_list_entry(enumerate);

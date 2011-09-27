@@ -126,6 +126,7 @@
 
 #include <X11/Xfuncproto.h>
 #include "opaque.h"
+#include "xf86Optionstr.h"
 
 _XFUNCPROTOBEGIN
 
@@ -145,8 +146,8 @@ extern _X_EXPORT void xf86SetRGBOut(void);
 extern _X_EXPORT void xf86OSRingBell(int, int, int);
 extern _X_EXPORT void xf86SetReallySlowBcopy(void);
 extern _X_EXPORT void xf86SlowBcopy(unsigned char *, unsigned char *, int);
-extern _X_EXPORT int xf86OpenSerial(pointer options);
-extern _X_EXPORT int xf86SetSerial(int fd, pointer options);
+extern _X_EXPORT int xf86OpenSerial(XF86OptionPtr options);
+extern _X_EXPORT int xf86SetSerial(int fd, XF86OptionPtr options);
 extern _X_EXPORT int xf86SetSerialSpeed(int fd, int speed);
 extern _X_EXPORT int xf86ReadSerial(int fd, void *buf, int count);
 extern _X_EXPORT int xf86WriteSerial(int fd, const void *buf, int count);

@@ -584,3 +584,158 @@ void verify_internal_event(const InternalEvent *ev)
         FatalError("Wrong event type %d. Aborting server\n", ev->any.header);
     }
 }
+
+/**
+ * Initializes the given event to zero (or default values), for the given
+ * device.
+ */
+void init_device_event(DeviceEvent *event, DeviceIntPtr dev, Time ms)
+{
+    memset(event, 0, sizeof(DeviceEvent));
+    event->header = ET_Internal;
+    event->length = sizeof(DeviceEvent);
+    event->time = ms;
+    event->deviceid = dev->id;
+    event->sourceid = dev->id;
+}
+
+/**
+ * Delete the element with the key from the list, freeing all memory
+ * associated with the element..
+ */
+static void
+input_option_free(InputOption *o)
+{
+    free(o->key);
+    free(o->value);
+    free(o);
+}
+
+/*
+ * Create a new InputOption with the key/value pair provided.
+ * If a list is provided, the new options is added to the list and the list
+ * is returned.
+ *
+ * If a new option is added to a list that already contains that option, the
+ * previous option is overwritten.
+ *
+ * @param list The list to add to.
+ * @param key Option key, will be copied.
+ * @param value Option value, will be copied.
+ *
+ * @return If list is not NULL, the list with the new option added. If list
+ * is NULL, a new option list with one element. On failure, NULL is
+ * returned.
+ */
+InputOption*
+input_option_new(InputOption* list, const char *key, const char *value)
+{
+    InputOption *opt = NULL;
+
+    if (!key)
+        return NULL;
+
+    if (list)
+    {
+        nt_list_for_each_entry(opt, list, next)
+        {
+            if (strcmp(input_option_get_key(opt), key) == 0)
+            {
+                input_option_set_value(opt, value);
+                return list;
+            }
+        }
+    }
+
+    opt = calloc(1, sizeof(InputOption));
+    if (!opt)
+        return NULL;
+
+    nt_list_init(opt, next);
+    input_option_set_key(opt, key);
+    input_option_set_value(opt, value);
+
+    if (list)
+    {
+        nt_list_append(opt, list, InputOption, next);
+        return list;
+    } else
+        return opt;
+}
+
+InputOption*
+input_option_free_element(InputOption *list, const char *key)
+{
+    InputOption *element;
+
+    nt_list_for_each_entry(element, list, next) {
+        if (strcmp(input_option_get_key(element), key) == 0) {
+            nt_list_del(element, list, InputOption, next);
+            input_option_free(element);
+            break;
+        }
+    }
+    return list;
+}
+
+/**
+ * Free the list pointed at by opt.
+ */
+void
+input_option_free_list(InputOption **opt)
+{
+    InputOption *element, *tmp;
+
+    nt_list_for_each_entry_safe(element, tmp, *opt, next) {
+        nt_list_del(element, *opt, InputOption, next);
+        input_option_free(element);
+    }
+    *opt = NULL;
+}
+
+
+/**
+ * Find the InputOption with the given option name.
+ *
+ * @return The InputOption or NULL if not present.
+ */
+InputOption*
+input_option_find(InputOption *list, const char *key)
+{
+    InputOption *element;
+
+    nt_list_for_each_entry(element, list, next) {
+        if (strcmp(input_option_get_key(element), key) == 0)
+            return element;
+    }
+
+    return NULL;
+}
+
+const char*
+input_option_get_key(const InputOption *opt)
+{
+    return opt->key;
+}
+
+const char*
+input_option_get_value(const InputOption *opt)
+{
+    return opt->value;
+}
+
+void
+input_option_set_key(InputOption *opt, const char *key)
+{
+    free(opt->key);
+    if (key)
+        opt->key = strdup(key);
+}
+
+void
+input_option_set_value(InputOption *opt, const char *value)
+{
+    free(opt->value);
+    if (value)
+        opt->value = strdup(value);
+}

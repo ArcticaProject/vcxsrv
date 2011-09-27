@@ -940,8 +940,6 @@ static void
 miSpriteSaveUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
     miSpriteScreenPtr   pScreenPriv;
-    int			x, y;
-    CursorPtr		pCursor;
     miCursorInfoPtr     pCursorInfo;
 
     if (IsFloating(pDev))
@@ -952,10 +950,7 @@ miSpriteSaveUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen)
     pCursorInfo = MISPRITE(pDev);
 
     miSpriteComputeSaved (pDev, pScreen);
-    pCursor = pCursorInfo->pCursor;
 
-    x = pCursorInfo->x - (int)pCursor->bits->xhot;
-    y = pCursorInfo->y - (int)pCursor->bits->yhot;
     miSpriteDisableDamage(pScreen, pScreenPriv);
 
     miDCSaveUnderCursor(pDev,

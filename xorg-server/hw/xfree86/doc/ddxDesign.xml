@@ -3175,7 +3175,7 @@ would not need to use these directly.
 
     <blockquote><para>
 	<programlisting>
-    pointer xf86FindOption(pointer options, const char *name);
+    XF86OptionPtr xf86FindOption(XF86OptionPtr options, const char *name);
 	</programlisting>
 	<blockquote><para>
       Takes a list of options and an option name, and returns a handle
@@ -3187,7 +3187,7 @@ would not need to use these directly.
 
     <blockquote><para>
 	<programlisting>
-    char *xf86FindOptionValue(pointer options, const char *name);
+    char *xf86FindOptionValue(XF86OptionPtr options, const char *name);
 	</programlisting>
 	<blockquote><para>
       Takes a list of options and an option name, and returns the value
@@ -3201,7 +3201,7 @@ would not need to use these directly.
 
     <blockquote><para>
 	<programlisting>
-    void xf86MarkOptionUsed(pointer option);
+    void xf86MarkOptionUsed(XF86OptionPtr option);
 	</programlisting>
 	<blockquote><para>
       Takes a handle for an option, and marks that option as used.
@@ -3211,7 +3211,7 @@ would not need to use these directly.
 
     <blockquote><para>
 	<programlisting>
-    void xf86MarkOptionUsedByName(pointer options, const char *name);
+    void xf86MarkOptionUsedByName(XF86OptionPtr options, const char *name);
 	</programlisting>
 	<blockquote><para>
       Takes a list of options and an option name and marks the first
@@ -3225,7 +3225,7 @@ Next, the higher level functions that most drivers would use.
     </para>
     <blockquote><para>
 	<programlisting>
-    void xf86CollectOptions(ScrnInfoPtr pScrn, pointer extraOpts);
+    void xf86CollectOptions(ScrnInfoPtr pScrn, XF86OptionPtr extraOpts);
 	</programlisting>
 	<blockquote><para>
       Collect the options from each of the config file sections used by
@@ -3245,7 +3245,7 @@ Next, the higher level functions that most drivers would use.
 
     <blockquote><para>
 	<programlisting>
-    void xf86ProcessOptions(int scrnIndex, pointer options,
+    void xf86ProcessOptions(int scrnIndex, XF86OptionPtr options,
                             OptionInfoPtr optinfo);
 	</programlisting>
 	<blockquote><para>
@@ -3354,7 +3354,7 @@ Next, the higher level functions that most drivers would use.
 
     <blockquote><para>
 	<programlisting>
-    void xf86ShowUnusedOptions(int scrnIndex, pointer options);
+    void xf86ShowUnusedOptions(int scrnIndex, XF86OptionPtr options);
 	</programlisting>
 	<blockquote><para>
       Prints out warning messages for each option in the list of options

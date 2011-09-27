@@ -718,7 +718,6 @@ UpdateDeviceState(DeviceIntPtr device, DeviceEvent* event)
 {
     int i;
     int key = 0,
-        bit = 0,
         last_valuator;
 
     KeyClassPtr k       = NULL;
@@ -752,7 +751,6 @@ UpdateDeviceState(DeviceIntPtr device, DeviceEvent* event)
     b = device->button;
 
     key = event->detail.key;
-    bit = 1 << (key & 7);
 
     /* Update device axis */
     /* Check valuators first */
@@ -890,8 +888,6 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     Bool deactivateDeviceGrab = FALSE;
     int key = 0, rootX, rootY;
     ButtonClassPtr b;
-    KeyClassPtr k;
-    ValuatorClassPtr v;
     int ret = 0;
     int state, i;
     DeviceIntPtr mouse = NULL, kbd = NULL;
@@ -955,9 +951,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     if (ret == DONT_PROCESS)
         return;
 
-    v = device->valuator;
     b = device->button;
-    k = device->key;
 
     if (IsMaster(device) || IsFloating(device))
         CheckMotion(event, device);

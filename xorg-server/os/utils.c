@@ -201,6 +201,8 @@ Bool PanoramiXExtensionDisabledHack = FALSE;
 
 int auditTrailLevel = 1;
 
+char *SeatId = NULL;
+
 #ifdef _MSC_VER
 static HANDLE s_hSmartScheduleTimer = NULL;
 static HANDLE s_hSmartScheduleTimerQueue = NULL;
@@ -241,7 +243,7 @@ OsSignal(int sig, OsSigHandlerPtr handler)
 #define LOCK_SUFFIX "-lock"
 
 static Bool StillLocking = FALSE;
-static char szLockFile[PATH_MAX];
+static char LockFile[PATH_MAX];
 static Bool nolock = FALSE;
 
 /*
@@ -261,26 +263,26 @@ LockServer(void)
     FatalError("Server is already active for display %d\n", atoi(display));
   }
 #else
-  char port[20];
   char tmp[PATH_MAX], pid_str[12];
   int lfd, i, haslock, l_pid, t;
   char *tmppath = NULL;
   int len;
+  char port[20];
 
   if (nolock) return;
   /*
    * Path names
    */
   tmppath = LOCK_DIR;
-  sprintf(port, "%d", atoi(display));
 
+  sprintf(port, "%d", atoi(display));
   len = strlen(LOCK_PREFIX) > strlen(LOCK_TMP_PREFIX) ? strlen(LOCK_PREFIX) :
 						strlen(LOCK_TMP_PREFIX);
   len += strlen(tmppath) + strlen(port) + strlen(LOCK_SUFFIX) + 1;
-  if (len > sizeof(szLockFile))
+  if (len > sizeof(LockFile))
     FatalError("Display name `%s' is too long\n", port);
   (void)sprintf(tmp, "%s" LOCK_TMP_PREFIX "%s" LOCK_SUFFIX, tmppath, port);
-  (void)sprintf(szLockFile, "%s" LOCK_PREFIX "%s" LOCK_SUFFIX, tmppath, port);
+  (void)sprintf(LockFile, "%s" LOCK_PREFIX "%s" LOCK_SUFFIX, tmppath, port);
 
   /*
    * Create a temporary file containing our PID.  Attempt three times
@@ -322,7 +324,7 @@ LockServer(void)
   i = 0;
   haslock = 0;
   while ((!haslock) && (i++ < 3)) {
-    haslock = (link(tmp,szLockFile) == 0);
+    haslock = (link(tmp,LockFile) == 0);
     if (haslock) {
       /*
        * We're done.
@@ -333,17 +335,17 @@ LockServer(void)
       /*
        * Read the pid from the existing file
        */
-      lfd = open(szLockFile, O_RDONLY);
+      lfd = open(LockFile, O_RDONLY);
       if (lfd < 0) {
         unlink(tmp);
-        FatalError("Can't read lock file %s\n", szLockFile);
+        FatalError("Can't read lock file %s\n", LockFile);
       }
       pid_str[0] = '\0';
       if (read(lfd, pid_str, 11) != 11) {
         /*
          * Bogus lock file.
          */
-        unlink(szLockFile);
+        unlink(LockFile);
         close(lfd);
         continue;
       }
@@ -360,7 +362,7 @@ LockServer(void)
         /*
          * Stale lock file.
          */
-        unlink(szLockFile);
+        unlink(LockFile);
         continue;
       }
       else if (((t < 0) && (errno == EPERM)) || (t == 0)) {
@@ -370,13 +372,13 @@ LockServer(void)
         unlink(tmp);
 	FatalError("Server is already active for display %s\n%s %s\n%s\n",
 		   port, "\tIf this server is no longer running, remove",
-		   szLockFile, "\tand start again.");
+		   LockFile, "\tand start again.");
       }
     }
   }
   unlink(tmp);
   if (!haslock)
-    FatalError("Could not create server lock file: %s\n", szLockFile);
+    FatalError("Could not create server lock file: %s\n", LockFile);
   StillLocking = FALSE;
 #endif
 }
@@ -392,7 +394,7 @@ UnlockServer(void)
 
   if (!StillLocking){
 
-  (void) unlink(szLockFile);
+  (void) unlink(LockFile);
   }
 }
 
@@ -532,6 +534,7 @@ void UseMsg(void)
     ErrorF("r                      turns on auto-repeat \n");
     ErrorF("-render [default|mono|gray|color] set render color alloc policy\n");
     ErrorF("-retro                 start with classic stipple\n");
+    ErrorF("-seat string           seat to run on\n");
     ErrorF("-t #                   default pointer threshold (pixels/t)\n");
     ErrorF("-terminate             terminate at server reset\n");
     ErrorF("-to #                  connection time out\n");
@@ -821,6 +824,13 @@ ProcessCommandLine(int argc, char *argv[])
 	    if(++i < argc)
 	        defaultScreenSaverTime = ((CARD32)atoi(argv[i])) *
 					 MILLI_PER_MIN;
+	    else
+		UseMsg();
+	}
+	else if ( strcmp( argv[i], "-seat") == 0)
+	{
+	    if(++i < argc)
+		SeatId = argv[i];
 	    else
 		UseMsg();
 	}

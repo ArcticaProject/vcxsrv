@@ -56,6 +56,7 @@ SOFTWARE.
 #include "window.h"     /* for WindowPtr */
 #include "xkbrules.h"
 #include "events.h"
+#include "list.h"
 
 #define DEVICE_INIT	0
 #define DEVICE_ON	1
@@ -202,11 +203,7 @@ typedef struct {
 extern _X_EXPORT KeybdCtrl	defaultKeyboardControl;
 extern _X_EXPORT PtrCtrl	defaultPointerControl;
 
-typedef struct _InputOption {
-    char                *key;
-    char                *value;
-    struct _InputOption *next;
-} InputOption;
+typedef struct _InputOption InputOption;
 
 typedef struct _InputAttributes {
     char                *product;
@@ -594,5 +591,15 @@ extern _X_EXPORT int valuator_mask_num_valuators(const ValuatorMask *mask);
 extern _X_EXPORT void valuator_mask_copy(ValuatorMask *dest,
                                          const ValuatorMask *src);
 extern _X_EXPORT int valuator_mask_get(const ValuatorMask *mask, int valnum);
+
+/* InputOption handling interface */
+extern _X_EXPORT InputOption* input_option_new(InputOption *list, const char *key, const char *value);
+extern _X_EXPORT void input_option_free_list(InputOption **opt);
+extern _X_EXPORT InputOption* input_option_free_element(InputOption *opt, const char *key);
+extern _X_EXPORT InputOption* input_option_find(InputOption *list, const char *key);
+extern _X_EXPORT const char* input_option_get_key(const InputOption *opt);
+extern _X_EXPORT const char* input_option_get_value(const InputOption *opt);
+extern _X_EXPORT void input_option_set_key(InputOption *opt, const char* key);
+extern _X_EXPORT void input_option_set_value(InputOption *opt, const char* value);
 
 #endif /* INPUT_H */

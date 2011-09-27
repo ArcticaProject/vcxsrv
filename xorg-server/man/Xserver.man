@@ -220,6 +220,12 @@ sets screen-saver timeout time in minutes.
 .B \-su
 disables save under support on all screens.
 .TP 8
+.B \-seat \fIseat\fP
+seat to run on. Takes a string identifying a seat in a platform
+specific syntax. On platforms which support this feature this may be
+used to limit the server to expose only a specific subset of devices
+connected to the system.
+.TP 8
 .B \-t \fInumber\fP
 sets pointer acceleration threshold in pixels (i.e. after how many pixels
 pointer acceleration should take effect).

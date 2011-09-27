@@ -30,6 +30,9 @@
  * byte-ordering. */
 #define XATOM_FLOAT "FLOAT"
 
+/* STRING. Seat name of this display */
+#define SEAT_ATOM_NAME "Xorg_Seat"
+
 /* BOOL. 0 - device disabled, 1 - device enabled */
 #define XI_PROP_ENABLED      "Device Enabled"
 /* BOOL. If present, device is a virtual XTEST device */
