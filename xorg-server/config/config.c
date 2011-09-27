@@ -122,18 +122,3 @@ device_is_duplicate(const char *config_info)
     return FALSE;
 }
 
-void
-add_option(InputOption **options, const char *key, const char *value)
-{
-    if (!value || *value == '\0')
-        return;
-
-    for (; *options; options = &(*options)->next)
-        ;
-    *options = calloc(sizeof(**options), 1);
-    if (!*options) /* Yeesh. */
-        return;
-    (*options)->key = strdup(key);
-    (*options)->value = strdup(value);
-    (*options)->next = NULL;
-}

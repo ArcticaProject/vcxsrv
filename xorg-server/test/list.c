@@ -29,6 +29,7 @@
 #include <list.h>
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 
 struct parent {
     int a;
@@ -161,6 +162,164 @@ test_list_for_each(void)
     }
 }
 
+struct foo {
+    char a;
+    struct foo *next;
+    char b;
+};
+
+static void
+test_nt_list_init(void)
+{
+    struct foo foo;
+
+    foo.a = 10;
+    foo.b = 20;
+    nt_list_init(&foo, next);
+
+    assert(foo.a == 10);
+    assert(foo.b == 20);
+    assert(foo.next == NULL);
+    assert(nt_list_next(&foo, next) == NULL);
+}
+
+static void
+test_nt_list_append(void)
+{
+    int i;
+    struct foo *foo = calloc(10, sizeof(struct foo));
+    struct foo *item;
+
+    for (item = foo, i = 1; i <= 10; i++, item++)
+    {
+	item->a = i;
+	item->b = i * 2;
+	nt_list_init(item, next);
+
+	if (item != foo)
+	    nt_list_append(item, foo, struct foo, next);
+    }
+
+    /* Test using nt_list_next */
+    for (item = foo, i = 1; i <= 10; i++, item = nt_list_next(item, next))
+    {
+	assert(item->a = i);
+	assert(item->b = i * 2);
+    }
+
+    /* Test using nt_list_for_each_entry */
+    i = 1;
+    nt_list_for_each_entry(item, foo, next) {
+	assert(item->a = i);
+	assert(item->b = i * 2);
+	i++;
+    }
+    assert(i == 11);
+}
+
+static void
+test_nt_list_insert(void)
+{
+    int i;
+    struct foo *foo = calloc(10, sizeof(struct foo));
+    struct foo *item;
+
+    foo->a = 10;
+    foo->b = 20;
+    nt_list_init(foo, next);
+
+    for (item = &foo[1], i = 9; i > 0; i--, item++)
+    {
+	item->a = i;
+	item->b = i * 2;
+	nt_list_init(item, next);
+	nt_list_insert(item, foo, struct foo, next);
+    }
+
+    /* Test using nt_list_next */
+    for (item = foo, i = 10; i > 0; i--, item = nt_list_next(item, next))
+    {
+	assert(item->a = i);
+	assert(item->b = i * 2);
+    }
+
+    /* Test using nt_list_for_each_entry */
+    i = 1;
+    nt_list_for_each_entry(item, foo, next) {
+	assert(item->a = i);
+	assert(item->b = i * 2);
+	i++;
+    }
+    assert(i == 11);
+}
+
+static void
+test_nt_list_delete(void)
+{
+    int i = 1;
+    struct foo *list = calloc(10, sizeof(struct foo));
+    struct foo *foo = list;
+    struct foo *item, *tmp;
+    struct foo *empty_list = foo;
+
+    nt_list_init(empty_list, next);
+    nt_list_del(empty_list, empty_list, struct foo, next);
+    assert(!empty_list);
+
+    for (item = foo, i = 1; i <= 10; i++, item++)
+    {
+	item->a = i;
+	item->b = i * 2;
+	nt_list_init(item, next);
+
+	if (item != foo)
+	    nt_list_append(item, foo, struct foo, next);
+    }
+
+    i = 0;
+    nt_list_for_each_entry(item, foo, next) {
+	i++;
+    }
+    assert(i == 10);
+
+    /* delete last item */
+    nt_list_del(&foo[9], foo, struct foo, next);
+    i = 0;
+    nt_list_for_each_entry(item, foo, next) {
+	assert(item->a != 10); /* element 10 is gone now */
+	i++;
+    }
+    assert(i == 9); /* 9 elements left */
+
+    /* delete second item */
+    nt_list_del(foo->next, foo, struct foo, next);
+    assert(foo->next->a == 3);
+
+    i = 0;
+    nt_list_for_each_entry(item, foo, next) {
+	assert(item->a != 10); /* element 10 is gone now */
+	assert(item->a != 2); /* element 2 is gone now */
+	i++;
+    }
+    assert(i == 8); /* 9 elements left */
+
+    item = foo;
+    /* delete first item */
+    nt_list_del(foo, foo, struct foo, next);
+    assert(item != foo);
+    assert(item->next == NULL);
+    assert(foo->a == 3);
+    assert(foo->next->a == 4);
+
+    nt_list_for_each_entry_safe(item, tmp, foo, next) {
+	nt_list_del(item, foo, struct foo, next);
+    }
+
+    assert(!foo);
+    assert(!item);
+
+    free(list);
+}
 
 int main(int argc, char** argv)
 {
@@ -168,6 +327,11 @@ int main(int argc, char** argv)
     test_list_add();
     test_list_del();
     test_list_for_each();
+
+    test_nt_list_init();
+    test_nt_list_append();
+    test_nt_list_insert();
+    test_nt_list_delete();
 
     return 0;
 }

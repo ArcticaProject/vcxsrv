@@ -209,14 +209,29 @@ mieqEnqueue(DeviceIntPtr pDev, InternalEvent *e)
 #endif
 }
 
+/**
+ * Changes the screen reference events are being enqueued from.
+ * Input events are enqueued with a screen reference and dequeued and
+ * processed with a (potentially different) screen reference.
+ * This function is called whenever a new event has changed screen but is
+ * still logically on the previous screen as seen by the client.
+ * This usually happens whenever the visible cursor moves across screen
+ * boundaries during event generation, before the same event is processed
+ * and sent down the wire.
+ *
+ * @param pDev The device that triggered a screen change.
+ * @param pScreen The new screen events are being enqueued for.
+ * @param set_dequeue_screen If TRUE, pScreen is set as both enqueue screen
+ * and dequeue screen.
+ */
 void
-mieqSwitchScreen(DeviceIntPtr pDev, ScreenPtr pScreen, Bool fromDIX)
+mieqSwitchScreen(DeviceIntPtr pDev, ScreenPtr pScreen, Bool set_dequeue_screen)
 {
 #ifdef XQUARTZ
     pthread_mutex_lock(&miEventQueueMutex);
 #endif
     EnqueueScreen(pDev) = pScreen;
-    if (fromDIX)
+    if (set_dequeue_screen)
         DequeueScreen(pDev) = pScreen;
 #ifdef XQUARTZ
     pthread_mutex_unlock(&miEventQueueMutex);

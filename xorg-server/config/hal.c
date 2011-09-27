@@ -128,7 +128,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
 {
     char *path = NULL, *driver = NULL, *name = NULL, *config_info = NULL;
     char *hal_tags, *parent;
-    InputOption *options = NULL, *tmpo = NULL;
+    InputOption *input_options = NULL;
     InputAttributes attrs = {0};
     DeviceIntPtr dev = NULL;
     DBusError error;
@@ -205,26 +205,19 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         free(parent);
     }
 
-    options = calloc(sizeof(*options), 1);
-    if (!options){
-        LogMessage(X_ERROR, "config/hal: couldn't allocate space for input options!\n");
-        goto unwind;
-    }
-
-    options->key = strdup("_source");
-    options->value = strdup("server/hal");
-    if (!options->key || !options->value) {
+    input_options = input_option_new(NULL, "_source", "server/hal");
+    if (!input_options) {
         LogMessage(X_ERROR, "config/hal: couldn't allocate first key/value pair\n");
         goto unwind;
     }
 
     /* most drivers use device.. not path. evdev uses both however, but the
      * path version isn't documented apparently. support both for now. */
-    add_option(&options, "path", path);
-    add_option(&options, "device", path);
+    input_options = input_option_new(input_options, "path", path);
+    input_options = input_option_new(input_options, "device", path);
 
-    add_option(&options, "driver", driver);
-    add_option(&options, "name", name);
+    input_options = input_option_new(input_options, "driver", driver);
+    input_options = input_option_new(input_options, "name", name);
 
     if (asprintf (&config_info, "hal:%s", udi) == -1) {
         config_info = NULL;
@@ -298,7 +291,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
                     } else
                     {
                         /* all others */
-                        add_option(&options, psi_key + sizeof(LIBHAL_PROP_KEY)-1, tmp_val);
+                        input_options = input_option_new(input_options, psi_key + sizeof(LIBHAL_PROP_KEY)-1, tmp_val);
                         free(tmp_val);
                     }
                 } else
@@ -366,20 +359,20 @@ device_added(LibHalContext *hal_ctx, const char *udi)
 
     /* Now add xkb options */
     if (xkb_opts.layout)
-        add_option(&options, "xkb_layout", xkb_opts.layout);
+        input_options = input_option_new(input_options, "xkb_layout", xkb_opts.layout);
     if (xkb_opts.rules)
-        add_option(&options, "xkb_rules", xkb_opts.rules);
+        input_options = input_option_new(input_options, "xkb_rules", xkb_opts.rules);
     if (xkb_opts.variant)
-        add_option(&options, "xkb_variant", xkb_opts.variant);
+        input_options = input_option_new(input_options, "xkb_variant", xkb_opts.variant);
     if (xkb_opts.model)
-        add_option(&options, "xkb_model", xkb_opts.model);
+        input_options = input_option_new(input_options, "xkb_model", xkb_opts.model);
     if (xkb_opts.options)
-        add_option(&options, "xkb_options", xkb_opts.options);
-    add_option(&options, "config_info", config_info);
+        input_options = input_option_new(input_options, "xkb_options", xkb_opts.options);
+    input_options = input_option_new(input_options, "config_info", config_info);
 
     /* this isn't an error, but how else do you output something that the user can see? */
     LogMessage(X_INFO, "config/hal: Adding input device %s\n", name);
-    if ((rc = NewInputDeviceRequest(options, &attrs, &dev)) != Success) {
+    if ((rc = NewInputDeviceRequest(input_options, &attrs, &dev)) != Success) {
         LogMessage(X_ERROR, "config/hal: NewInputDeviceRequest failed (%d)\n", rc);
         dev = NULL;
         goto unwind;
@@ -392,12 +385,7 @@ unwind:
     free(driver);
     free(name);
     free(config_info);
-    while ((tmpo = options)) {
-        options = tmpo->next;
-        free(tmpo->key);        /* NULL if dev != NULL */
-        free(tmpo->value);      /* NULL if dev != NULL */
-        free(tmpo);
-    }
+    input_option_free_list(&input_options);
 
     free(attrs.product);
     free(attrs.vendor);

@@ -103,7 +103,7 @@ typedef struct _InputInfoRec {
     char *		    type_name;
     InputDriverPtr	    drv;
     pointer		    module;
-    pointer		    options;
+    XF86OptionPtr	    options;
     InputAttributes         *attrs;
 } *InputInfoPtr;
 
@@ -144,7 +144,7 @@ extern _X_EXPORT void xf86PostKeyboardEvent(DeviceIntPtr device, unsigned int ke
 extern _X_EXPORT InputInfoPtr xf86FirstLocalDevice(void);
 extern _X_EXPORT int xf86ScaleAxis(int Cx, int to_max, int to_min, int from_max, int from_min);
 extern _X_EXPORT void xf86XInputSetScreen(InputInfoPtr pInfo, int screen_number, int x, int y);
-extern _X_EXPORT void xf86ProcessCommonOptions(InputInfoPtr pInfo, pointer options);
+extern _X_EXPORT void xf86ProcessCommonOptions(InputInfoPtr pInfo, XF86OptionPtr options);
 extern _X_EXPORT void xf86InitValuatorAxisStruct(DeviceIntPtr dev, int axnum, Atom label, int minval,
 				int maxval, int resolution, int min_res,
 				int max_res, int mode);

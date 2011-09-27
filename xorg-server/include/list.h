@@ -278,4 +278,164 @@ list_is_empty(struct list *head)
 	 &pos->member != (head);					\
 	 pos = tmp, tmp = __container_of(pos->member.next, tmp, member))
 
+
+
+/* NULL-Terminated List Interface
+ *
+ * The interface below does _not_ use the struct list as described above.
+ * It is mainly for legacy structures that cannot easily be switched to
+ * struct list.
+ *
+ * This interface is for structs like
+ *      struct foo {
+ *          [...]
+ *          struct foo *next;
+ *           [...]
+ *      };
+ *
+ * The position and field name of "next" are arbitrary.
+ */
+
+/**
+ * Init the element as null-terminated list.
+ *
+ * Example:
+ * struct foo *list = malloc();
+ * nt_list_init(list, next);
+ *
+ * @param list The list element that will be the start of the list
+ * @param member Member name of the field pointing to next struct
+ */
+#define nt_list_init(_list, _member) \
+	(_list)->_member = NULL
+
+/**
+ * Returns the next element in the list or NULL on termination.
+ *
+ * Example:
+ * struct foo *element = list;
+ * while ((element = nt_list_next(element, next)) { }
+ *
+ * This macro is not safe for node deletion. Use list_for_each_entry_safe
+ * instead.
+ *
+ * @param list The list or current element.
+ * @param member Member name of the field pointing to next struct.
+ */
+#define nt_list_next(_list, _member) \
+	(_list)->_member
+
+/**
+ * Iterate through each element in the list.
+ *
+ * Example:
+ * struct foo *iterator;
+ * nt_list_for_each_entry(iterator, list, next) {
+ *      [modify iterator]
+ * }
+ *
+ * @param entry Assigned to the current list element
+ * @param list The list to iterate through.
+ * @param member Member name of the field pointing to next struct.
+ */
+#define nt_list_for_each_entry(_entry, _list, _member)			\
+	for (_entry = _list; _entry; _entry = (_entry)->_member)
+
+/**
+ * Iterate through each element in the list, keeping a backup pointer to the
+ * element. This macro allows for the deletion of a list element while
+ * looping through the list.
+ *
+ * See nt_list_for_each_entry for more details.
+ *
+ * @param entry Assigned to the current list element
+ * @param tmp The pointer to the next element
+ * @param list The list to iterate through.
+ * @param member Member name of the field pointing to next struct.
+ */
+#define nt_list_for_each_entry_safe(_entry, _tmp, _list, _member)	\
+	for (_entry = _list, _tmp = (_entry) ? (_entry)->_member : NULL;\
+		_entry;							\
+		_entry = _tmp, _tmp = (_tmp) ? (_tmp)->_member: NULL)
+
+
+/**
+ * Append the element to the end of the list. This macro may be used to
+ * merge two lists.
+ *
+ * Example:
+ * struct foo *elem = malloc(...);
+ * nt_list_init(elem, next)
+ * nt_list_append(elem, list, struct foo, next);
+ *
+ * Resulting list order:
+ * list_item_0 -> list_item_1 -> ... -> elem_item_0 -> elem_item_1 ...
+ *
+ * @param entry An entry (or list) to append to the list
+ * @param list The list to append to. This list must be a valid list, not
+ * NULL.
+ * @param type The list type
+ * @param member Member name of the field pointing to next struct
+ */
+#define nt_list_append(_entry, _list, _type, _member)		        \
+    do {								\
+	_type *__iterator = _list;					\
+	while (__iterator->_member) { __iterator = __iterator->_member;}\
+	__iterator->_member = _entry;					\
+    } while (0)
+
+/**
+ * Insert the element at the next position in the list. This macro may be
+ * used to insert a list into a list.
+ *
+ * struct foo *elem = malloc(...);
+ * nt_list_init(elem, next)
+ * nt_list_insert(elem, list, struct foo, next);
+ *
+ * Resulting list order:
+ * list_item_0 -> elem_item_0 -> elem_item_1 ... -> list_item_1 -> ...
+ *
+ * @param entry An entry (or list) to append to the list
+ * @param list The list to insert to. This list must be a valid list, not
+ * NULL.
+ * @param type The list type
+ * @param member Member name of the field pointing to next struct
+ */
+#define nt_list_insert(_entry, _list, _type, _member)			\
+    do {								\
+	nt_list_append((_list)->_member, _entry, _type, _member);	\
+	(_list)->_member = _entry;					\
+    } while (0)
+
+/**
+ * Delete the entry from the list by iterating through the list and
+ * removing any reference from the list to the entry.
+ *
+ * Example:
+ * struct foo *elem = <assign to right element>
+ * nt_list_del(elem, list, struct foo, next);
+ *
+ * @param entry The entry to delete from the list. entry is always
+ * re-initialized as a null-terminated list.
+ * @param list The list containing the entry, set to the new list without
+ * the removed entry.
+ * @param type The list type
+ * @param member Member name of the field pointing to the next entry
+ */
+#define nt_list_del(_entry, _list, _type, _member)		\
+	do {							\
+		_type *__e = _entry;				\
+		if (__e == NULL) break;				\
+		if ((_list) == __e) {				\
+		    _list = __e->_member;			\
+		} else {					\
+		    _type *__prev = _list;			\
+		    while (__prev->_member && __prev->_member != __e)	\
+			__prev = nt_list_next(__prev, _member);	\
+		    if (__prev->_member)			\
+			__prev->_member = __e->_member;		\
+		}						\
+		nt_list_init(__e, _member);			\
+	} while(0)
+
 #endif

@@ -408,6 +408,24 @@ static const Mask default_filter[128] =
 	CantBeFiltered		       /* MappingNotify */
 };
 
+static inline Mask
+GetEventFilterMask(DeviceIntPtr dev, int evtype)
+{
+    return filters[dev ? dev->id : 0][evtype];
+}
+
+static inline Mask
+GetXI2EventFilterMask(int evtype)
+{
+    return (1 << (evtype % 8));
+}
+
+static inline int
+GetXI2EventFilterOffset(int evtype)
+{
+    return (evtype / 8);
+}
+
 /**
  * For the given event, return the matching event filter. This filter may then
  * be AND'ed with the selected event mask.
@@ -429,12 +447,26 @@ GetEventFilter(DeviceIntPtr dev, xEvent *event)
     int evtype = 0;
 
     if (event->u.u.type != GenericEvent)
-        return filters[dev ? dev->id : 0][event->u.u.type];
+        return GetEventFilterMask(dev, event->u.u.type);
     else if ((evtype = xi2_get_type(event)))
-        return (1 << (evtype % 8));
+        return GetXI2EventFilterMask(evtype);
     ErrorF("[dix] Unknown event type %d. No filter\n", event->u.u.type);
     return 0;
 }
+
+/**
+ * Return the single byte of the device's XI2 mask that contains the mask
+ * for the event_type.
+ */
+static int
+GetXI2MaskByte(unsigned char xi2mask[][XI2MASKSIZE], DeviceIntPtr dev, int event_type)
+{
+    int byte = GetXI2EventFilterOffset(event_type);
+    return xi2mask[dev->id][byte] |
+           xi2mask[XIAllDevices][byte] |
+           (IsMaster(dev) ? xi2mask[XIAllMasterDevices][byte] : 0);
+}
+
 
 /**
  * Return the windows complete XI2 mask for the given XI2 event type.
@@ -452,9 +484,7 @@ GetWindowXI2Mask(DeviceIntPtr dev, WindowPtr win, xEvent* ev)
     evtype = ((xGenericEvent*)ev)->evtype;
     filter = GetEventFilter(dev, ev);
 
-    return ((inputMasks->xi2mask[dev->id][evtype/8] & filter) ||
-            inputMasks->xi2mask[XIAllDevices][evtype/8] ||
-            (inputMasks->xi2mask[XIAllMasterDevices][evtype/8] && IsMaster(dev)));
+    return (GetXI2MaskByte(inputMasks->xi2mask, dev, evtype) & filter);
 }
 
 Mask
@@ -465,10 +495,7 @@ GetEventMask(DeviceIntPtr dev, xEvent *event, InputClients* other)
     /* XI2 filters are only ever 8 bit, so let's return a 8 bit mask */
     if ((evtype = xi2_get_type(event)))
     {
-        int byte = evtype / 8;
-        return (other->xi2mask[dev->id][byte] |
-                other->xi2mask[XIAllDevices][byte] |
-                (IsMaster(dev)? other->xi2mask[XIAllMasterDevices][byte] : 0));
+        return GetXI2MaskByte(other->xi2mask, dev, evtype);
     } else if (core_get_type(event) != 0)
         return other->mask[XIAllDevices];
     else
@@ -680,9 +707,7 @@ ConfineToShape(DeviceIntPtr pDev, RegionPtr shape, int *px, int *py)
     BoxRec box;
     int x = *px, y = *py;
     int incx = 1, incy = 1;
-    SpritePtr pSprite;
 
-    pSprite = pDev->spriteInfo->sprite;
     if (RegionContainsPoint(shape, x, y, &box))
 	return;
     box = *RegionExtents(shape);
@@ -2478,44 +2503,45 @@ EventIsDeliverable(DeviceIntPtr dev, InternalEvent* event, WindowPtr win)
     int filter = 0;
     int type;
     OtherInputMasks *inputMasks = wOtherInputMasks(win);
-    xEvent ev;
 
-    /* XXX: this makes me gag */
-    type = GetXI2Type(event);
-    ev.u.u.type = GenericEvent; /* GetEventFilter only cares about type and evtype*/
-    ((xGenericEvent*)&ev)->extension = IReqCode;
-    ((xGenericEvent*)&ev)->evtype = type;
-    filter = GetEventFilter(dev, &ev);
-    if (type && inputMasks &&
-        ((inputMasks->xi2mask[XIAllDevices][type/8] & filter) ||
-         ((inputMasks->xi2mask[XIAllMasterDevices][type/8] & filter) && IsMaster(dev)) ||
-         (inputMasks->xi2mask[dev->id][type/8] & filter)))
-        rc |= EVENT_XI2_MASK;
+    if ((type = GetXI2Type(event)) != 0)
+    {
+        filter = GetXI2EventFilterMask(type);
 
-    type = GetXIType(event);
-    ev.u.u.type = type;
-    filter = GetEventFilter(dev, &ev);
+        if (inputMasks &&
+            (GetXI2MaskByte(inputMasks->xi2mask,  dev, type) & filter))
+            rc |= EVENT_XI2_MASK;
+    }
 
-    /* Check for XI mask */
-    if (type && inputMasks &&
-        (inputMasks->deliverableEvents[dev->id] & filter) &&
-        (inputMasks->inputEvents[dev->id] & filter))
-        rc |= EVENT_XI1_MASK;
+    if ((type = GetXIType(event)) != 0)
+    {
+        filter = GetEventFilterMask(dev, type);
 
-    /* Check for XI DontPropagate mask */
-    if (type && inputMasks &&
-        (inputMasks->dontPropagateMask[dev->id] & filter))
-        rc |= EVENT_DONT_PROPAGATE_MASK;
+        /* Check for XI mask */
+        if (inputMasks &&
+            (inputMasks->deliverableEvents[dev->id] & filter) &&
+            (inputMasks->inputEvents[dev->id] & filter))
+            rc |= EVENT_XI1_MASK;
 
-    /* Check for core mask */
-    type = GetCoreType(event);
-    if (type && (win->deliverableEvents & filter) &&
-        ((wOtherEventMasks(win) | win->eventMask) & filter))
-        rc |= EVENT_CORE_MASK;
+        /* Check for XI DontPropagate mask */
+        if (inputMasks && (inputMasks->dontPropagateMask[dev->id] & filter))
+            rc |= EVENT_DONT_PROPAGATE_MASK;
 
-    /* Check for core DontPropagate mask */
-    if (type && (filter & wDontPropagateMask(win)))
-        rc |= EVENT_DONT_PROPAGATE_MASK;
+    }
+
+    if ((type = GetCoreType(event)) != 0)
+    {
+        filter = GetEventFilterMask(dev, type);
+
+        /* Check for core mask */
+        if ((win->deliverableEvents & filter) &&
+            ((wOtherEventMasks(win) | win->eventMask) & filter))
+            rc |= EVENT_CORE_MASK;
+
+        /* Check for core DontPropagate mask */
+        if (filter & wDontPropagateMask(win))
+            rc |= EVENT_DONT_PROPAGATE_MASK;
+    }
 
     return rc;
 }
@@ -3351,16 +3377,21 @@ XineramaWarpPointer(ClientPtr client)
 {
     WindowPtr	dest = NULL;
     int		x, y, rc;
-    SpritePtr   pSprite = PickPointer(client)->spriteInfo->sprite;
+    DeviceIntPtr dev;
+    SpritePtr   pSprite;
 
     REQUEST(xWarpPointerReq);
-
 
     if (stuff->dstWid != None) {
 	rc = dixLookupWindow(&dest, stuff->dstWid, client, DixReadAccess);
 	if (rc != Success)
 	    return rc;
     }
+
+    /* Post through the XTest device */
+    dev = PickPointer(client);
+    dev = GetXTestDevice(dev);
+    pSprite = dev->spriteInfo->sprite;
     x = pSprite->hotPhys.x;
     y = pSprite->hotPhys.y;
 
@@ -3410,9 +3441,9 @@ XineramaWarpPointer(ClientPtr client)
     else if (y >= pSprite->physLimits.y2)
 	y = pSprite->physLimits.y2 - 1;
     if (pSprite->hotShape)
-	ConfineToShape(PickPointer(client), pSprite->hotShape, &x, &y);
+	ConfineToShape(dev, pSprite->hotShape, &x, &y);
 
-    XineramaSetCursorPosition(PickPointer(client), x, y, TRUE);
+    XineramaSetCursorPosition(dev, x, y, TRUE);
 
     return Success;
 }
@@ -3430,7 +3461,7 @@ ProcWarpPointer(ClientPtr client)
     WindowPtr	dest = NULL;
     int		x, y, rc;
     ScreenPtr	newScreen;
-    DeviceIntPtr dev, tmp;
+    DeviceIntPtr dev, tmp, xtest_dev = NULL;
     SpritePtr   pSprite;
 
     REQUEST(xWarpPointerReq);
@@ -3443,11 +3474,13 @@ ProcWarpPointer(ClientPtr client)
 	    rc = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixWriteAccess);
 	    if (rc != Success)
 		return rc;
+            if (IsXTestDevice(tmp, dev))
+                xtest_dev = tmp;
 	}
     }
 
-    if (dev->lastSlave)
-        dev = dev->lastSlave;
+    /* Use the XTest device to actually move the pointer */
+    dev = xtest_dev;
     pSprite = dev->spriteInfo->sprite;
 
 #ifdef PANORAMIX
@@ -3678,7 +3711,7 @@ CheckPassiveGrabsOnWindow(
             if (tempGrab.type < GenericEvent)
             {
                 grab->device = device;
-                grab->modifierDevice = GetPairedDevice(device);
+                grab->modifierDevice = GetMaster(device, MASTER_KEYBOARD);
             }
 
             for (other = inputInfo.devices; other; other = other->next)
@@ -4063,9 +4096,7 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
             if (rc == Success)
             {
                 int evtype = xi2_get_type(xi2);
-                mask = grab->xi2mask[XIAllDevices][evtype/8] |
-                    grab->xi2mask[XIAllMasterDevices][evtype/8] |
-                    grab->xi2mask[thisDev->id][evtype/8];
+                mask = GetXI2MaskByte(grab->xi2mask, thisDev, evtype);
                 /* try XI2 event */
                 FixUpEventFromWindow(pSprite, xi2, grab->window, None, TRUE);
                 /* XXX: XACE */
@@ -4544,9 +4575,7 @@ DeviceEnterLeaveEvent(
     if (grab)
     {
         Mask mask;
-        mask = grab->xi2mask[XIAllDevices][type/8] |
-               grab->xi2mask[XIAllMasterDevices][type/8] |
-               grab->xi2mask[mouse->id][type/8];
+        mask = GetXI2MaskByte(grab->xi2mask, mouse, type);
         TryClientEvents(rClient(grab), mouse, (xEvent*)event, 1, mask,
                         filter, grab);
     } else {
@@ -4765,7 +4794,6 @@ ProcGrabPointer(ClientPtr client)
     WindowPtr confineTo;
     CursorPtr oldCursor;
     REQUEST(xGrabPointerReq);
-    TimeStamp time;
     int rc;
 
     REQUEST_SIZE_MATCH(xGrabPointerReq);
@@ -4811,7 +4839,6 @@ ProcGrabPointer(ClientPtr client)
     if (oldCursor && rep.status == GrabSuccess)
         FreeCursor (oldCursor, (Cursor)0);
 
-    time = ClientTimeToServerTime(stuff->time);
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.length = 0;
@@ -5224,6 +5251,8 @@ CloseDownEvents(void)
     InputEventList = NULL;
 }
 
+#define SEND_EVENT_BIT 0x80
+
 /**
  * Server-side protocol handling for SendEvent request.
  *
@@ -5240,6 +5269,16 @@ ProcSendEvent(ClientPtr client)
     REQUEST(xSendEventReq);
 
     REQUEST_SIZE_MATCH(xSendEventReq);
+
+    /* libXext and other extension libraries may set the bit indicating
+     * that this event came from a SendEvent request so remove it
+     * since otherwise the event type may fail the range checks
+     * and cause an invalid BadValue error to be returned.
+     *
+     * This is safe to do since we later add the SendEvent bit (0x80)
+     * back in once we send the event to the client */
+
+    stuff->event.u.u.type &= ~(SEND_EVENT_BIT);
 
     /* The client's event type must be a core event type or one defined by an
 	extension. */
@@ -5298,7 +5337,7 @@ ProcSendEvent(ClientPtr client)
 	client->errorValue = stuff->propagate;
 	return BadValue;
     }
-    stuff->event.u.u.type |= 0x80;
+    stuff->event.u.u.type |= SEND_EVENT_BIT;
     if (stuff->propagate)
     {
 	for (;pWin; pWin = pWin->parent)
@@ -5360,7 +5399,7 @@ ProcUngrabKey(ClientPtr client)
     tempGrab.window = pWin;
     tempGrab.modifiersDetail.exact = stuff->modifiers;
     tempGrab.modifiersDetail.pMask = NULL;
-    tempGrab.modifierDevice = GetPairedDevice(keybd);
+    tempGrab.modifierDevice = keybd;
     tempGrab.type = KeyPress;
     tempGrab.grabtype = GRABTYPE_CORE;
     tempGrab.detail.exact = stuff->key;

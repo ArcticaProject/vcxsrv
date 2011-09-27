@@ -206,7 +206,7 @@ extern _X_EXPORT void mieqEnqueue(
 extern _X_EXPORT void mieqSwitchScreen(
     DeviceIntPtr /* pDev */,
     ScreenPtr /*pScreen*/,
-    Bool /*fromDIX*/
+    Bool /*set_dequeue_screen*/
 );
 
 extern _X_EXPORT void mieqProcessDeviceEvent(

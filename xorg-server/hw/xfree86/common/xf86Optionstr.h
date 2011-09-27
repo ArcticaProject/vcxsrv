@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Red Hat, Inc.
+ * Copyright © 2011 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,22 +22,32 @@
  *
  */
 
-#ifdef HAVE_DIX_CONFIG_H
-#include "dix-config.h"
-#endif
+#ifndef XF86OPTIONSTR_H
+#define XF86OPTIONSTR_H
 
-#ifndef INPUTUTILS_H
-#define INPUTUTILS_H
+/*
+ * all records that need to be linked lists should contain a GenericList as
+ * their first field.
+ */
+typedef struct generic_list_rec
+{
+	void *next;
+}
+GenericListRec, *GenericListPtr, *glp;
 
-#include "input.h"
+/*
+ * All options are stored using this data type.
+ */
+typedef struct _XF86OptionRec
+{
+	GenericListRec list;
+	char *opt_name;
+	char *opt_val;
+	int opt_used;
+	char *opt_comment;
+}
+XF86OptionRec;
 
-struct _ValuatorMask {
-    int8_t      last_bit; /* highest bit set in mask */
-    uint8_t     mask[(MAX_VALUATORS + 7)/8];
-    int         valuators[MAX_VALUATORS]; /* valuator data */
-};
-
-extern void verify_internal_event(const InternalEvent *ev);
-extern void init_device_event(DeviceEvent *event, DeviceIntPtr dev, Time ms);
+typedef struct _XF86OptionRec *XF86OptionPtr;
 
 #endif

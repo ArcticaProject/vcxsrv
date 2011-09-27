@@ -942,7 +942,18 @@ is equivalent to
 
 This option controls the startup behavior only, a device
 may be reattached or set floating at runtime.
-.PP
+.TP 7
+.BI "Option \*qTransformationMatrix\*q \*q" a " " b " " c " " d " " e " " f " " g " " h " " i \*q
+Specifies the 3x3 transformation matrix for absolute input devices. The
+input device will be bound to the area given in the matrix.  In most
+configurations, "a" and "e" specify the width and height of the area the
+device is bound to, and "c" and "f" specify the x and y offset of the area.
+The value range is 0 to 1, where 1 represents the width or height of all
+root windows together, 0.5 represents half the area, etc. The values
+represent a 3x3 matrix, with the first, second and third group of three
+values representing the first, second and third row of the matrix,
+respectively.  The identity matrix is "1 0 0 0 1 0 0 0 1".
+.SS POINTER ACCELERATION
 For pointing devices, the following options control how the pointer
 is accelerated or decelerated with respect to physical device motion. Most of
 these can be adjusted at runtime, see the xinput(1) man page for details. Only
@@ -1432,7 +1443,7 @@ driver plus the identifier of a monitor section, one associates a monitor
 section with an output by adding an option to the Device section in the
 following format:
 
-.B Option \*qMonitor-outputname\*q \*qmonitorsection\*q
+.BI "Option \*qMonitor-" outputname "\*q \*q" monitorsection \*q
 
 (for example,
 .B Option \*qMonitor-VGA\*q \*qVGA monitor\*q
@@ -1448,7 +1459,7 @@ modes available.
 When modes are specified explicitly in the
 .B Monitor
 section (with the
-.BR Modes ,
+.BR Mode ,
 .BR ModeLine ,
 or
 .B UseModes
@@ -1597,7 +1608,7 @@ mentioned above doubles this value.
 This entry is a more compact version of the
 .B Mode
 entry, and it also can be used to specify video modes for the monitor.
-is a single line format for specifying video modes.
+This is a single line format for specifying video modes.
 In most cases this isn't necessary because the built\-in set of VESA
 standard modes will be sufficient.
 .PP
@@ -1652,61 +1663,61 @@ The
 and
 .B VScan
 options mentioned above in the
-.B Modes
+.B Mode
 entry description can also be used here.
 .RE
 .TP 7
-.BI "Option " "\*qDPMS\*q  " \*qbool\*q
+.BI "Option \*qDPMS\*q \*q" bool \*q
 This option controls whether the server should enable the DPMS extension
 for power management for this screen.  The default is to enable the
 extension.
 .TP 7
-.BI "Option " "\*qSyncOnGreen\*q  " \*qbool\*q
+.BI "Option \*qSyncOnGreen\*q \*q" bool \*q
 This option controls whether the video card should drive the sync signal
 on the green color pin.  Not all cards support this option, and most
 monitors do not require it.  The default is off.
 .TP 7
-.BI "Option " "\*qPrimary\*q  " \*qbool\*q
+.BI "Option \*qPrimary\*q \*q" bool \*q
 This optional entry specifies that the monitor should be treated as the primary
 monitor. (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qPreferredMode\*q  " \*qstring\*q
+.BI "Option \*qPreferredMode\*q \*q" name \*q
 This optional entry specifies a mode to be marked as the preferred initial mode
 of the monitor.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qPosition\*q  " "\*qx y\*q"
+.BI "Option \*qPosition\*q \*q" x " " y \*q
 This optional entry specifies the position of the monitor within the X
 screen.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qLeftOf\*q  " \*qoutput\*q
+.BI "Option \*qLeftOf\*q \*q" output \*q
 This optional entry specifies that the monitor should be positioned to the
 left of the output (not monitor) of the given name.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qRightOf\*q  " \*qoutput\*q
+.BI "Option \*qRightOf\*q \*q" output \*q
 This optional entry specifies that the monitor should be positioned to the
 right of the output (not monitor) of the given name.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qAbove\*q  " \*qoutput\*q
+.BI "Option \*qAbove\*q \*q" output \*q
 This optional entry specifies that the monitor should be positioned above the
 output (not monitor) of the given name.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qBelow\*q  " \*qoutput\*q
+.BI "Option \*qBelow\*q \*q" output \*q
 This optional entry specifies that the monitor should be positioned below the
 output (not monitor) of the given name.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qEnable\*q  " \*qbool\*q
+.BI "Option \*qEnable\*q \*q" bool \*q
 This optional entry specifies whether the monitor should be turned on
 at startup.  By default, the server will attempt to enable all connected
 monitors.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qDefaultModes\*q  " \*qbool\*q
+.BI "Option \*qDefaultModes\*q \*q" bool \*q
 This optional entry specifies whether the server should add supported default
 modes to the list of modes offered on this monitor. By default, the server
 will add default modes; you should only disable this if you can guarantee
@@ -1714,21 +1725,21 @@ that EDID will be available at all times, or if you have added custom modelines
 which the server can use.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qMinClock\*q  " \*qfrequency\*q
+.BI "Option \*qMinClock\*q \*q" frequency \*q
 This optional entry specifies the minimum dot clock, in kHz, that is supported
 by the monitor.
 .TP 7
-.BI "Option " "\*qMaxClock\*q  " \*qfrequency\*q
+.BI "Option \*qMaxClock\*q \*q" frequency \*q
 This optional entry specifies the maximum dot clock, in kHz, that is supported
 by the monitor.
 .TP 7
-.BI "Option " "\*qIgnore\*q  " \*qbool\*q
+.BI "Option \*qIgnore\*q \*q" bool \*q
 This optional entry specifies that the monitor should be ignored entirely,
 and not reported through RandR.  This is useful if the hardware reports the
 presence of outputs that don't exist.
 (RandR 1.2-supporting drivers only)
 .TP 7
-.BI "Option " "\*qRotate\*q  " \*qrotation\*q
+.BI "Option \*qRotate\*q \*q" rotation \*q
 This optional entry specifies the initial rotation of the given monitor.
 Valid values for rotation are \*qnormal\*q, \*qleft\*q, \*qright\*q, and
 \*qinverted\*q.

@@ -201,6 +201,8 @@ Bool PanoramiXExtensionDisabledHack = FALSE;
 
 int auditTrailLevel = 1;
 
+char *SeatId = NULL;
+
 #if defined(SVR4) || defined(__linux__) || defined(CSRG_BASED)
 #define HAS_SAVED_IDS_AND_SETEUID
 #endif
@@ -511,6 +513,7 @@ void UseMsg(void)
     ErrorF("-render [default|mono|gray|color] set render color alloc policy\n");
     ErrorF("-retro                 start with classic stipple and cursor\n");
     ErrorF("-s #                   screen-saver timeout (minutes)\n");
+    ErrorF("-seat string           seat to run on\n");
     ErrorF("-t #                   default pointer threshold (pixels/t)\n");
     ErrorF("-terminate             terminate at server reset\n");
     ErrorF("-to #                  connection time out\n");
@@ -799,6 +802,13 @@ ProcessCommandLine(int argc, char *argv[])
 	    if(++i < argc)
 	        defaultScreenSaverTime = ((CARD32)atoi(argv[i])) *
 					 MILLI_PER_MIN;
+	    else
+		UseMsg();
+	}
+	else if ( strcmp( argv[i], "-seat") == 0)
+	{
+	    if(++i < argc)
+		SeatId = argv[i];
 	    else
 		UseMsg();
 	}

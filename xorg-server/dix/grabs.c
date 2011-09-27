@@ -479,7 +479,7 @@ AddPassiveGrabToList(ClientPtr client, GrabPtr pGrab)
 
     for (grab = wPassiveGrabs(pGrab->window); grab; grab = grab->next)
     {
-	if (GrabMatchesSecond(pGrab, grab, FALSE))
+	if (GrabMatchesSecond(pGrab, grab, (pGrab->grabtype == GRABTYPE_CORE)))
 	{
 	    if (CLIENT_BITS(pGrab->resource) != CLIENT_BITS(grab->resource))
 	    {

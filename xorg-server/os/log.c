@@ -165,6 +165,9 @@ asm (".desc ___crashreporter_info__, 0x10");
 #ifndef X_NOT_IMPLEMENTED_STRING
 #define X_NOT_IMPLEMENTED_STRING	"(NI)"
 #endif
+#ifndef X_NONE_STRING
+#define X_NONE_STRING                   ""
+#endif
 
 /*
  * LogInit is called to start logging to a file.  It is also called (with
@@ -325,58 +328,65 @@ LogWrite(int verb, const char *f, ...)
     va_end(args);
 }
 
+/* Returns the Message Type string to prepend to a logging message, or NULL
+ * if the message will be dropped due to insufficient verbosity. */
+static const char *
+LogMessageTypeVerbString(MessageType type, int verb)
+{
+    if (type == X_ERROR)
+	verb = 0;
+
+    if (logVerbosity < verb && logFileVerbosity < verb)
+	return NULL;
+
+    switch (type) {
+    case X_PROBED:
+	return X_PROBE_STRING;
+    case X_CONFIG:
+	return X_CONFIG_STRING;
+    case X_DEFAULT:
+	return X_DEFAULT_STRING;
+    case X_CMDLINE:
+	return X_CMDLINE_STRING;
+    case X_NOTICE:
+	return X_NOTICE_STRING;
+    case X_ERROR:
+	return X_ERROR_STRING;
+    case X_WARNING:
+	return X_WARNING_STRING;
+    case X_INFO:
+	return X_INFO_STRING;
+    case X_NOT_IMPLEMENTED:
+	return X_NOT_IMPLEMENTED_STRING;
+    case X_UNKNOWN:
+	return X_UNKNOWN_STRING;
+    case X_NONE:
+	return X_NONE_STRING;
+    default:
+	return X_UNKNOWN_STRING;
+    }
+}
+
 void
 LogVMessageVerb(MessageType type, int verb, const char *format, va_list args)
 {
-    const char *s  = X_UNKNOWN_STRING;
-    char tmpBuf[1024];
+    const char *type_str;
+    char tmpFormat[1024];
+    char *new_format;
 
-    /* Ignore verbosity for X_ERROR */
-    if (logVerbosity >= verb || logFileVerbosity >= verb || type == X_ERROR) {
-	switch (type) {
-	case X_PROBED:
-	    s = X_PROBE_STRING;
-	    break;
-	case X_CONFIG:
-	    s = X_CONFIG_STRING;
-	    break;
-	case X_DEFAULT:
-	    s = X_DEFAULT_STRING;
-	    break;
-	case X_CMDLINE:
-	    s = X_CMDLINE_STRING;
-	    break;
-	case X_NOTICE:
-	    s = X_NOTICE_STRING;
-	    break;
-	case X_ERROR:
-	    s = X_ERROR_STRING;
-	    if (verb > 0)
-		verb = 0;
-	    break;
-	case X_WARNING:
-	    s = X_WARNING_STRING;
-	    break;
-	case X_INFO:
-	    s = X_INFO_STRING;
-	    break;
-	case X_NOT_IMPLEMENTED:
-	    s = X_NOT_IMPLEMENTED_STRING;
-	    break;
-	case X_UNKNOWN:
-	    s = X_UNKNOWN_STRING;
-	    break;
-	case X_NONE:
-	    s = NULL;
-	    break;
-	}
+    type_str = LogMessageTypeVerbString(type, verb);
+    if (!type_str)
+	return;
 
-        /* if s is not NULL we need a space before format */
-        snprintf(tmpBuf, sizeof(tmpBuf), "%s%s%s", s ? s : "",
-                                                   s ? " " : "",
-                                                   format);
-        LogVWrite(verb, tmpBuf, args);
+    /* if type_str is not "", prepend it and ' ', to format */
+    if (type_str[0] == '\0')
+        new_format = format;
+    else {
+        new_format = tmpFormat;
+        snprintf(tmpFormat, sizeof(tmpFormat), "%s %s", type_str, format);
     }
+
+    LogVWrite(verb, new_format, args);
 }
 
 /* Log message with verbosity level specified. */
@@ -399,6 +409,61 @@ LogMessage(MessageType type, const char *format, ...)
     va_start(ap, format);
     LogVMessageVerb(type, 1, format, ap);
     va_end(ap);
+}
+
+
+void
+LogVHdrMessageVerb(MessageType type, int verb, const char *msg_format,
+		   va_list msg_args, const char *hdr_format, va_list hdr_args)
+{
+    const char *type_str;
+    char tmpFormat[1024];
+    char *tmpFormat_end = &tmpFormat[sizeof(tmpFormat)];
+    char *p;
+    int left;
+
+    type_str = LogMessageTypeVerbString(type, verb);
+    if (!type_str)
+	return;
+
+    /* if type_str != "", copy it and ' ' to tmpFormat; set p after ' ' */
+    p = tmpFormat;
+    if (type_str[0] != '\0')
+	p += snprintf(tmpFormat, sizeof(tmpFormat), "%s ", type_str);
+
+    /* append as much of hdr as fits after type_str (if there was one) */
+    left = tmpFormat_end - p;
+    if (left > 1)
+	p += vsnprintf(p, left, hdr_format, hdr_args);
+
+    /* append as much of msg_format as will fit after hdr */
+    left = tmpFormat_end - p;
+    if (left > 1)
+	snprintf(p, left, "%s", msg_format);
+
+    LogVWrite(verb, tmpFormat, msg_args);
+}
+
+void
+LogHdrMessageVerb(MessageType type, int verb, const char *msg_format,
+		  va_list msg_args, const char *hdr_format, ...)
+{
+    va_list hdr_args;
+
+    va_start(hdr_args, hdr_format);
+    LogVHdrMessageVerb(type, verb, msg_format, msg_args, hdr_format, hdr_args);
+    va_end(hdr_args);
+}
+
+void
+LogHdrMessage(MessageType type, const char *msg_format, va_list msg_args,
+	      const char *hdr_format, ...)
+{
+    va_list hdr_args;
+
+    va_start(hdr_args, hdr_format);
+    LogVHdrMessageVerb(type, 1, msg_format, msg_args, hdr_format, hdr_args);
+    va_end(hdr_args);
 }
 
 void

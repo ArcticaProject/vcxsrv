@@ -256,9 +256,16 @@ ProcXIPassiveUngrabDevice(ClientPtr client)
     REQUEST(xXIPassiveUngrabDeviceReq);
     REQUEST_AT_LEAST_SIZE(xXIPassiveUngrabDeviceReq);
 
-    rc = dixLookupDevice(&dev, stuff->deviceid, client, DixGrabAccess);
-    if (rc != Success)
-	return rc;
+    if (stuff->deviceid == XIAllDevices)
+        dev = inputInfo.all_devices;
+    else if (stuff->deviceid == XIAllMasterDevices)
+        dev = inputInfo.all_master_devices;
+    else
+    {
+        rc = dixLookupDevice(&dev, stuff->deviceid, client, DixGrabAccess);
+        if (rc != Success)
+	    return rc;
+    }
 
     if (stuff->grab_type != XIGrabtypeButton &&
         stuff->grab_type != XIGrabtypeKeycode &&

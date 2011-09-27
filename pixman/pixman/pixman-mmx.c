@@ -1142,12 +1142,9 @@ mmx_composite_over_n_8888 (pixman_implementation_t *imp,
 
 	CHECKPOINT ();
 
-	while (w)
+	if (w)
 	{
 	    *dst = store8888 (over (vsrc, vsrca, load8888 (*dst)));
-
-	    w--;
-	    dst++;
 	}
     }
 
@@ -1383,16 +1380,12 @@ mmx_composite_over_8888_n_8888 (pixman_implementation_t *imp,
 	    src += 2;
 	}
 
-	while (w)
+	if (w)
 	{
 	    __m64 s = load8888 (*src);
 	    __m64 d = load8888 (*dst);
 
 	    *dst = store8888 (in_over (s, expand_alpha (s), vmask, d));
-
-	    w--;
-	    dst++;
-	    src++;
 	}
     }
 
@@ -1758,7 +1751,7 @@ mmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
 
 	CHECKPOINT ();
 
-	while (w)
+	if (w)
 	{
 	    uint64_t m = *mask;
 
@@ -1770,10 +1763,6 @@ mmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
 		    vsrc, vsrca, expand_alpha_rev (to_m64 (m)), vdest);
 		*dst = store8888 (vdest);
 	    }
-
-	    w--;
-	    mask++;
-	    dst++;
 	}
     }
 
@@ -2026,7 +2015,7 @@ mmx_composite_src_n_8_8888 (pixman_implementation_t *imp,
 
 	CHECKPOINT ();
 
-	while (w)
+	if (w)
 	{
 	    uint64_t m = *mask;
 
@@ -2041,10 +2030,6 @@ mmx_composite_src_n_8_8888 (pixman_implementation_t *imp,
 	    {
 		*dst = 0;
 	    }
-
-	    w--;
-	    mask++;
-	    dst++;
 	}
     }
 
@@ -2366,16 +2351,12 @@ mmx_composite_over_pixbuf_8888 (pixman_implementation_t *imp,
 	    src += 2;
 	}
 
-	while (w)
+	if (w)
 	{
 	    __m64 s = load8888 (*src);
 	    __m64 d = load8888 (*dst);
 
 	    *dst = store8888 (over_rev_non_pre (s, d));
-
-	    w--;
-	    dst++;
-	    src++;
 	}
     }
 
@@ -3040,8 +3021,8 @@ static const pixman_fast_path_t mmx_fast_paths[] =
      */
     PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, a8,       x8r8g8b8, mmx_composite_over_x888_8_8888    ),
     PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, a8,       a8r8g8b8, mmx_composite_over_x888_8_8888    ),
-    PIXMAN_STD_FAST_PATH    (OVER, x8b8r8g8, a8,       x8b8g8r8, mmx_composite_over_x888_8_8888    ),
-    PIXMAN_STD_FAST_PATH    (OVER, x8b8r8g8, a8,       a8r8g8b8, mmx_composite_over_x888_8_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8g8r8, a8,       x8b8g8r8, mmx_composite_over_x888_8_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8g8r8, a8,       a8b8g8r8, mmx_composite_over_x888_8_8888    ),
 #endif
     PIXMAN_STD_FAST_PATH    (OVER, solid,    null,     a8r8g8b8, mmx_composite_over_n_8888         ),
     PIXMAN_STD_FAST_PATH    (OVER, solid,    null,     x8r8g8b8, mmx_composite_over_n_8888         ),

@@ -525,6 +525,19 @@ extern _X_EXPORT void LogMessageVerb(MessageType type, int verb, const char *for
 			   ...) _X_ATTRIBUTE_PRINTF(3,4);
 extern _X_EXPORT void LogMessage(MessageType type, const char *format, ...)
 			_X_ATTRIBUTE_PRINTF(2,3);
+
+extern _X_EXPORT void LogVHdrMessageVerb(MessageType type, int verb,
+			    const char *msg_format, va_list msg_args,
+			    const char *hdr_format, va_list hdr_args)
+			_X_ATTRIBUTE_PRINTF(3,0) _X_ATTRIBUTE_PRINTF(5,0);
+extern _X_EXPORT void LogHdrMessageVerb(MessageType type, int verb,
+			    const char *msg_format, va_list msg_args,
+			    const char *hdr_format, ...)
+			_X_ATTRIBUTE_PRINTF(3,0) _X_ATTRIBUTE_PRINTF(5,6);
+extern _X_EXPORT void LogHdrMessage(MessageType type, const char *msg_format,
+			    va_list msg_args, const char *hdr_format, ...)
+			_X_ATTRIBUTE_PRINTF(2,0) _X_ATTRIBUTE_PRINTF(4,5);
+
 extern _X_EXPORT void FreeAuditTimer(void);
 extern _X_EXPORT void AuditF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
 extern _X_EXPORT void VAuditF(const char *f, va_list args) _X_ATTRIBUTE_PRINTF(1,0);
