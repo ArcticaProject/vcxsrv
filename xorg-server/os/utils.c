@@ -242,6 +242,10 @@ OsSignal(int sig, OsSigHandlerPtr handler)
 #define LOCK_PREFIX "/.X"
 #define LOCK_SUFFIX "-lock"
 
+#ifdef _MSC_VER
+#define LockFile szLockFile
+#endif
+
 static Bool StillLocking = FALSE;
 static char LockFile[PATH_MAX];
 static Bool nolock = FALSE;
