@@ -219,6 +219,9 @@
     <ClCompile Include="..\..\..\..\src\glsl\lower_jumps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\glsl\lower_clip_distance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\opt_constant_propagation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

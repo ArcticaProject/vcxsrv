@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\..\..\src\glsl\lower_if_to_cond_assign.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\lower_instructions.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\lower_jumps.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\lower_clip_distance.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\lower_mat_op_to_vec.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\lower_noise.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\lower_texture_projection.cpp" />
