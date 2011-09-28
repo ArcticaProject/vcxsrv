@@ -187,7 +187,7 @@ pixman_have_vmx (void)
 #endif /* __APPLE__ */
 #endif /* USE_VMX */
 
-#if defined(USE_ARM_SIMD) || defined(USE_ARM_NEON)
+#if defined(USE_ARM_SIMD) || defined(USE_ARM_NEON) || defined(USE_ARM_IWMMXT)
 
 #if defined(_MSC_VER)
 
@@ -328,16 +328,29 @@ pixman_have_arm_neon (void)
 
 #endif /* USE_ARM_NEON */
 
+#if defined(USE_ARM_IWMMXT)
+pixman_bool_t
+pixman_have_arm_iwmmxt (void)
+{
+    if (!arm_tests_initialized)
+	pixman_arm_read_auxv ();
+
+    return arm_has_iwmmxt;
+}
+
+#endif /* USE_ARM_IWMMXT */
+
 #else /* linux ELF */
 
 #define pixman_have_arm_simd() FALSE
 #define pixman_have_arm_neon() FALSE
+#define pixman_have_arm_iwmmxt() FALSE
 
 #endif
 
-#endif /* USE_ARM_SIMD || USE_ARM_NEON */
+#endif /* USE_ARM_SIMD || USE_ARM_NEON || USE_ARM_IWMMXT */
 
-#if defined(USE_MMX) || defined(USE_SSE2)
+#if defined(USE_X86_MMX) || defined(USE_SSE2)
 /* The CPU detection code needs to be in a file not compiled with
  * "-mmmx -msse", as gcc would generate CMOV instructions otherwise
  * that would lead to SIGILL instructions on old CPUs that don't have
@@ -564,7 +577,7 @@ pixman_have_sse2 (void)
 #endif
 
 #else /* __amd64__ */
-#ifdef USE_MMX
+#ifdef USE_X86_MMX
 #define pixman_have_mmx() TRUE
 #endif
 #ifdef USE_SSE2
@@ -581,7 +594,7 @@ _pixman_choose_implementation (void)
     imp = _pixman_implementation_create_general();
     imp = _pixman_implementation_create_fast_path (imp);
     
-#ifdef USE_MMX
+#ifdef USE_X86_MMX
     if (pixman_have_mmx ())
 	imp = _pixman_implementation_create_mmx (imp);
 #endif
@@ -596,11 +609,16 @@ _pixman_choose_implementation (void)
 	imp = _pixman_implementation_create_arm_simd (imp);
 #endif
 
+#ifdef USE_ARM_IWMMXT
+    if (pixman_have_arm_iwmmxt ())
+	imp = _pixman_implementation_create_mmx (imp);
+#endif
+
 #ifdef USE_ARM_NEON
     if (pixman_have_arm_neon ())
 	imp = _pixman_implementation_create_arm_neon (imp);
 #endif
-    
+
 #ifdef USE_VMX
     if (pixman_have_vmx ())
 	imp = _pixman_implementation_create_vmx (imp);

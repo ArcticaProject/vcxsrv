@@ -1,10 +1,10 @@
 if HAVE_GTK
 
-AM_CFLAGS = @OPENMP_CFLAGS@
-AM_LDFLAGS = @OPENMP_CFLAGS@
+AM_CFLAGS = $(OPENMP_CFLAGS)
+AM_LDFLAGS = $(OPENMP_CFLAGS)
 
-LDADD = $(top_builddir)/pixman/libpixman-1.la -lm $(GTK_LIBS)
-INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman $(GTK_CFLAGS)
+LDADD = $(top_builddir)/pixman/libpixman-1.la -lm $(GTK_LIBS) $(PNG_LIBS)
+INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman $(GTK_CFLAGS) $(PNG_CFLAGS)
 
 GTK_UTILS = gtk-utils.c gtk-utils.h
 

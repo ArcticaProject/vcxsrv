@@ -926,10 +926,10 @@ decompress_with_blit(struct gl_context * ctx, GLenum target, GLint level,
  * then unmap it.
  */
 static void
-st_get_tex_image(struct gl_context * ctx, GLenum target, GLint level,
-                 GLenum format, GLenum type, GLvoid * pixels,
-                 struct gl_texture_object *texObj,
-                 struct gl_texture_image *texImage, GLboolean compressed_dst)
+st_GetTexImage(struct gl_context * ctx, GLenum target, GLint level,
+               GLenum format, GLenum type, GLvoid * pixels,
+               struct gl_texture_object *texObj,
+               struct gl_texture_image *texImage)
 {
    struct st_context *st = st_context(ctx);
    struct st_texture_image *stImage = st_texture_image(texImage);
@@ -939,9 +939,7 @@ st_get_tex_image(struct gl_context * ctx, GLenum target, GLint level,
    GLuint depth, i;
    GLubyte *dest;
 
-   if (stImage->pt &&
-       util_format_is_s3tc(stImage->pt->format) &&
-       !compressed_dst) {
+   if (stImage->pt && util_format_is_s3tc(stImage->pt->format)) {
       /* Need to decompress the texture.
        * We'll do this by rendering a textured quad.
        * Note that we only expect RGBA formats (no Z/depth formats).
@@ -951,46 +949,14 @@ st_get_tex_image(struct gl_context * ctx, GLenum target, GLint level,
       return;
    }
 
-   /* Map */
-   if (stImage->pt) {
-      /* Image is stored in hardware format in a buffer managed by the
-       * kernel.  Need to explicitly map and unmap it.
-       */
-      texImage->Data = st_texture_image_map(st, stImage, 0,
-                                            PIPE_TRANSFER_READ, 0, 0,
-                                            stImage->base.Width,
-                                            stImage->base.Height);
-      /* compute stride in texels from stride in bytes */
-      texImage->RowStride = stImage->transfer->stride
-         * util_format_get_blockwidth(stImage->pt->format)
-         / util_format_get_blocksize(stImage->pt->format);
-   }
-   else {
-      /* Otherwise, the image should actually be stored in
-       * texImage->Data.  This is pretty confusing for
-       * everybody, I'd much prefer to separate the two functions of
-       * texImage->Data - storage for texture images in main memory
-       * and access (ie mappings) of images.  In other words, we'd
-       * create a new texImage->Map field and leave Data simply for
-       * storage.
-       */
-      assert(texImage->Data);
-   }
-
    depth = texImage->Depth;
    texImage->Depth = 1;
 
    dest = (GLubyte *) pixels;
 
    for (i = 0; i < depth; i++) {
-      if (compressed_dst) {
-	 _mesa_get_compressed_teximage(ctx, target, level, dest,
-				       texObj, texImage);
-      }
-      else {
-	 _mesa_get_teximage(ctx, target, level, format, type, dest,
-			    texObj, texImage);
-      }
+      _mesa_get_teximage(ctx, target, level, format, type, dest,
+			 texObj, texImage);
 
       if (stImage->pt && i + 1 < depth) {
          /* unmap this slice */
@@ -1005,36 +971,7 @@ st_get_tex_image(struct gl_context * ctx, GLenum target, GLint level,
    }
 
    texImage->Depth = depth;
-
-   /* Unmap */
-   if (stImage->pt) {
-      st_texture_image_unmap(st, stImage);
-      texImage->Data = NULL;
-   }
 }
-
-
-static void
-st_GetTexImage(struct gl_context * ctx, GLenum target, GLint level,
-               GLenum format, GLenum type, GLvoid * pixels,
-               struct gl_texture_object *texObj,
-               struct gl_texture_image *texImage)
-{
-   st_get_tex_image(ctx, target, level, format, type, pixels, texObj, texImage,
-                    GL_FALSE);
-}
-
-
-static void
-st_GetCompressedTexImage(struct gl_context *ctx, GLenum target, GLint level,
-                         GLvoid *pixels,
-                         struct gl_texture_object *texObj,
-                         struct gl_texture_image *texImage)
-{
-   st_get_tex_image(ctx, target, level, 0, 0, pixels, texObj, texImage,
-                    GL_TRUE);
-}
-
 
 
 static void
@@ -1924,7 +1861,7 @@ st_init_texture_functions(struct dd_function_table *functions)
 
    /* compressed texture functions */
    functions->CompressedTexImage2D = st_CompressedTexImage2D;
-   functions->GetCompressedTexImage = st_GetCompressedTexImage;
+   functions->GetCompressedTexImage = _mesa_get_compressed_teximage;
 
    functions->NewTextureObject = st_NewTextureObject;
    functions->NewTextureImage = st_NewTextureImage;

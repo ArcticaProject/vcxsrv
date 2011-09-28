@@ -33,7 +33,7 @@
 #include <config.h>
 #endif
 
-#ifdef USE_MMX
+#if defined USE_X86_MMX || defined USE_ARM_IWMMXT
 
 #include <mmintrin.h>
 #include "pixman-private.h"
@@ -45,6 +45,15 @@
 #define CHECKPOINT() error_f ("at %s %d\n", __FUNCTION__, __LINE__)
 #else
 #define CHECKPOINT()
+#endif
+
+#ifdef USE_ARM_IWMMXT
+/* Empty the multimedia state. For some reason, ARM's mmintrin.h doesn't provide this.  */
+extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+_mm_empty (void)
+{
+
+}
 #endif
 
 /* Notes about writing mmx code
@@ -301,6 +310,39 @@ in_over (__m64 src, __m64 srca, __m64 mask, __m64 dest)
     over (in (src, mask), pix_multiply (srca, mask), dest)
 
 #endif
+
+/* Elemental unaligned loads */
+
+static __inline__ uint64_t ldq_u(uint64_t *p)
+{
+#ifdef USE_X86_MMX
+    /* x86's alignment restrictions are very relaxed. */
+    return *p;
+#elif defined USE_ARM_IWMMXT
+    int align = (uintptr_t)p & 7;
+    __m64 *aligned_p;
+    if (align == 0)
+	return *p;
+    aligned_p = (__m64 *)((uintptr_t)p & ~7);
+    return _mm_align_si64 (aligned_p[0], aligned_p[1], align);
+#else
+    struct __una_u64 { uint64_t x __attribute__((packed)); };
+    const struct __una_u64 *ptr = (const struct __una_u64 *) p;
+    return ptr->x;
+#endif
+}
+
+static __inline__ uint32_t ldl_u(uint32_t *p)
+{
+#ifdef USE_X86_MMX
+    /* x86's alignment restrictions are very relaxed. */
+    return *p;
+#else
+    struct __una_u32 { uint32_t x __attribute__((packed)); };
+    const struct __una_u32 *ptr = (const struct __una_u32 *) p;
+    return ptr->x;
+#endif
+}
 
 static force_inline __m64
 load8888 (uint32_t v)
@@ -1382,7 +1424,7 @@ mmx_composite_over_8888_n_8888 (pixman_implementation_t *imp,
 
 	while (w >= 2)
 	{
-	    __m64 vs = *(__m64 *)src;
+	    __m64 vs = (__m64)ldq_u((uint64_t *)src);
 	    __m64 vd = *(__m64 *)dst;
 	    __m64 vsrc0 = expand8888 (vs, 0);
 	    __m64 vsrc1 = expand8888 (vs, 1);
@@ -1463,14 +1505,14 @@ mmx_composite_over_x888_n_8888 (pixman_implementation_t *imp,
 	    __m64 vd6 = *(__m64 *)(dst + 12);
 	    __m64 vd7 = *(__m64 *)(dst + 14);
 
-	    __m64 vs0 = *(__m64 *)(src + 0);
-	    __m64 vs1 = *(__m64 *)(src + 2);
-	    __m64 vs2 = *(__m64 *)(src + 4);
-	    __m64 vs3 = *(__m64 *)(src + 6);
-	    __m64 vs4 = *(__m64 *)(src + 8);
-	    __m64 vs5 = *(__m64 *)(src + 10);
-	    __m64 vs6 = *(__m64 *)(src + 12);
-	    __m64 vs7 = *(__m64 *)(src + 14);
+	    __m64 vs0 = (__m64)ldq_u((uint64_t *)(src + 0));
+	    __m64 vs1 = (__m64)ldq_u((uint64_t *)(src + 2));
+	    __m64 vs2 = (__m64)ldq_u((uint64_t *)(src + 4));
+	    __m64 vs3 = (__m64)ldq_u((uint64_t *)(src + 6));
+	    __m64 vs4 = (__m64)ldq_u((uint64_t *)(src + 8));
+	    __m64 vs5 = (__m64)ldq_u((uint64_t *)(src + 10));
+	    __m64 vs6 = (__m64)ldq_u((uint64_t *)(src + 12));
+	    __m64 vs7 = (__m64)ldq_u((uint64_t *)(src + 14));
 
 	    vd0 = pack8888 (
 	        in_over (expandx888 (vs0, 0), srca, vmask, expand8888 (vd0, 0)),
@@ -1800,7 +1842,7 @@ pixman_fill_mmx (uint32_t *bits,
     uint32_t byte_width;
     uint8_t     *byte_line;
 
-#ifdef __GNUC__
+#if defined __GNUC__ && defined USE_X86_MMX
     __m64 v1, v2, v3, v4, v5, v6, v7;
 #endif
 
@@ -1834,7 +1876,7 @@ pixman_fill_mmx (uint32_t *bits,
     fill = ((uint64_t)xor << 32) | xor;
     vfill = to_m64 (fill);
 
-#ifdef __GNUC__
+#if defined __GNUC__ && defined USE_X86_MMX
     __asm__ (
         "movq		%7,	%0\n"
         "movq		%7,	%1\n"
@@ -1880,7 +1922,7 @@ pixman_fill_mmx (uint32_t *bits,
 
 	while (w >= 64)
 	{
-#ifdef __GNUC__
+#if defined __GNUC__ && defined USE_X86_MMX
 	    __asm__ (
 	        "movq	%1,	  (%0)\n"
 	        "movq	%2,	 8(%0)\n"
@@ -2507,23 +2549,35 @@ mmx_composite_in_n_8_8 (pixman_implementation_t *imp,
 	mask_line += mask_stride;
 	w = width;
 
-	if ((((unsigned long)dest_image & 3) == 0) &&
-	    (((unsigned long)src_image & 3) == 0))
+	while (w && (unsigned long)dst & 7)
 	{
-	    while (w >= 4)
-	    {
-		__m64 vmask;
-		__m64 vdest;
+	    uint16_t tmp;
+	    uint8_t a;
+	    uint32_t m, d;
 
-		vmask = load8888 (*(uint32_t *)mask);
-		vdest = load8888 (*(uint32_t *)dst);
+	    a = *mask++;
+	    d = *dst;
 
-		*(uint32_t *)dst = store8888 (in (in (vsrca, vmask), vdest));
+	    m = MUL_UN8 (sa, a, tmp);
+	    d = MUL_UN8 (m, d, tmp);
 
-		dst += 4;
-		mask += 4;
-		w -= 4;
-	    }
+	    *dst++ = d;
+	    w--;
+	}
+
+	while (w >= 4)
+	{
+	    __m64 vmask;
+	    __m64 vdest;
+
+	    vmask = load8888 (ldl_u((uint32_t *)mask));
+	    vdest = load8888 (*(uint32_t *)dst);
+
+	    *(uint32_t *)dst = store8888 (in (in (vsrca, vmask), vdest));
+
+	    dst += 4;
+	    mask += 4;
+	    w -= 4;
 	}
 
 	while (w--)
@@ -2566,20 +2620,31 @@ mmx_composite_in_8_8 (pixman_implementation_t *imp,
 	src_line += src_stride;
 	w = width;
 
-	if ((((unsigned long)dest_image & 3) == 0) &&
-	    (((unsigned long)src_image & 3) == 0))
+	while (w && (unsigned long)dst & 3)
 	{
-	    while (w >= 4)
-	    {
-		uint32_t *s = (uint32_t *)src;
-		uint32_t *d = (uint32_t *)dst;
+	    uint8_t s, d;
+	    uint16_t tmp;
 
-		*d = store8888 (in (load8888 (*s), load8888 (*d)));
+	    s = *src;
+	    d = *dst;
 
-		w -= 4;
-		dst += 4;
-		src += 4;
-	    }
+	    *dst = MUL_UN8 (s, d, tmp);
+
+	    src++;
+	    dst++;
+	    w--;
+	}
+
+	while (w >= 4)
+	{
+	    uint32_t *s = (uint32_t *)src;
+	    uint32_t *d = (uint32_t *)dst;
+
+	    *d = store8888 (in (load8888 (ldl_u((uint32_t *)s)), load8888 (*d)));
+
+	    w -= 4;
+	    dst += 4;
+	    src += 4;
 	}
 
 	while (w--)
@@ -2634,20 +2699,36 @@ mmx_composite_add_n_8_8 (pixman_implementation_t *imp,
 	mask_line += mask_stride;
 	w = width;
 
-	if ((((unsigned long)mask_image & 3) == 0) &&
-	    (((unsigned long)dest_image  & 3) == 0))
+	while (w && (unsigned long)dst & 3)
 	{
-	    while (w >= 4)
-	    {
-		__m64 vmask = load8888 (*(uint32_t *)mask);
-		__m64 vdest = load8888 (*(uint32_t *)dst);
+	    uint16_t tmp;
+	    uint16_t a;
+	    uint32_t m, d;
+	    uint32_t r;
 
-		*(uint32_t *)dst = store8888 (_mm_adds_pu8 (in (vsrca, vmask), vdest));
+	    a = *mask++;
+	    d = *dst;
 
-		w -= 4;
-		dst += 4;
-		mask += 4;
-	    }
+	    m = MUL_UN8 (sa, a, tmp);
+	    r = ADD_UN8 (m, d, tmp);
+
+	    *dst++ = r;
+	    w--;
+	}
+
+	while (w >= 4)
+	{
+	    __m64 vmask;
+	    __m64 vdest;
+
+	    vmask = load8888 (ldl_u((uint32_t *)mask));
+	    vdest = load8888 (*(uint32_t *)dst);
+
+	    *(uint32_t *)dst = store8888 (_mm_adds_pu8 (in (vsrca, vmask), vdest));
+
+	    dst += 4;
+	    mask += 4;
+	    w -= 4;
 	}
 
 	while (w--)
@@ -2710,7 +2791,7 @@ mmx_composite_add_8_8 (pixman_implementation_t *imp,
 
 	while (w >= 8)
 	{
-	    *(__m64*)dst = _mm_adds_pu8 (*(__m64*)src, *(__m64*)dst);
+	    *(__m64*)dst = _mm_adds_pu8 ((__m64)ldq_u((uint64_t *)src), *(__m64*)dst);
 	    dst += 8;
 	    src += 8;
 	    w -= 8;
@@ -2768,7 +2849,7 @@ mmx_composite_add_8888_8888 (pixman_implementation_t *imp,
 
 	while (w >= 2)
 	{
-	    dst64 = _mm_adds_pu8 (*(__m64*)src, *(__m64*)dst);
+	    dst64 = _mm_adds_pu8 ((__m64)ldq_u((uint64_t *)src), *(__m64*)dst);
 	    *(uint64_t*)dst = to_uint64 (dst64);
 	    dst += 2;
 	    src += 2;
@@ -2841,6 +2922,14 @@ pixman_blt_mmx (uint32_t *src_bits,
 	dst_bytes += dst_stride;
 	w = byte_width;
 
+	while (w >= 1 && ((unsigned long)d & 1))
+	{
+	    *(uint8_t *)d = *(uint8_t *)s;
+	    w -= 1;
+	    s += 1;
+	    d += 1;
+	}
+
 	while (w >= 2 && ((unsigned long)d & 3))
 	{
 	    *(uint16_t *)d = *(uint16_t *)s;
@@ -2851,7 +2940,7 @@ pixman_blt_mmx (uint32_t *src_bits,
 
 	while (w >= 4 && ((unsigned long)d & 7))
 	{
-	    *(uint32_t *)d = *(uint32_t *)s;
+	    *(uint32_t *)d = ldl_u((uint32_t *)s);
 
 	    w -= 4;
 	    s += 4;
@@ -2860,7 +2949,7 @@ pixman_blt_mmx (uint32_t *src_bits,
 
 	while (w >= 64)
 	{
-#if defined (__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
+#if (defined (__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))) && defined USE_X86_MMX
 	    __asm__ (
 	        "movq	  (%1),	  %%mm0\n"
 	        "movq	 8(%1),	  %%mm1\n"
@@ -2885,14 +2974,14 @@ pixman_blt_mmx (uint32_t *src_bits,
 		  "%mm0", "%mm1", "%mm2", "%mm3",
 		  "%mm4", "%mm5", "%mm6", "%mm7");
 #else
-	    __m64 v0 = *(__m64 *)(s + 0);
-	    __m64 v1 = *(__m64 *)(s + 8);
-	    __m64 v2 = *(__m64 *)(s + 16);
-	    __m64 v3 = *(__m64 *)(s + 24);
-	    __m64 v4 = *(__m64 *)(s + 32);
-	    __m64 v5 = *(__m64 *)(s + 40);
-	    __m64 v6 = *(__m64 *)(s + 48);
-	    __m64 v7 = *(__m64 *)(s + 56);
+	    __m64 v0 = ldq_u((uint64_t *)(s + 0));
+	    __m64 v1 = ldq_u((uint64_t *)(s + 8));
+	    __m64 v2 = ldq_u((uint64_t *)(s + 16));
+	    __m64 v3 = ldq_u((uint64_t *)(s + 24));
+	    __m64 v4 = ldq_u((uint64_t *)(s + 32));
+	    __m64 v5 = ldq_u((uint64_t *)(s + 40));
+	    __m64 v6 = ldq_u((uint64_t *)(s + 48));
+	    __m64 v7 = ldq_u((uint64_t *)(s + 56));
 	    *(__m64 *)(d + 0)  = v0;
 	    *(__m64 *)(d + 8)  = v1;
 	    *(__m64 *)(d + 16) = v2;
@@ -2909,7 +2998,7 @@ pixman_blt_mmx (uint32_t *src_bits,
 	}
 	while (w >= 4)
 	{
-	    *(uint32_t *)d = *(uint32_t *)s;
+	    *(uint32_t *)d = ldl_u((uint32_t *)s);
 
 	    w -= 4;
 	    s += 4;
@@ -3161,4 +3250,4 @@ _pixman_implementation_create_mmx (pixman_implementation_t *fallback)
     return imp;
 }
 
-#endif /* USE_MMX */
+#endif /* USE_X86_MMX || USE_ARM_IWMMXT */

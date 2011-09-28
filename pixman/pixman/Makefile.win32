@@ -14,7 +14,7 @@ ifeq ($(SSE2_VAR),)
 SSE2_VAR=on
 endif
 
-MMX_CFLAGS = -DUSE_MMX -w14710 -w14714
+MMX_CFLAGS = -DUSE_X86_MMX -w14710 -w14714
 SSE2_CFLAGS = -DUSE_SSE2
 
 # MMX compilation flags
