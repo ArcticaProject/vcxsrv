@@ -23,10 +23,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xkeyboard-config-2.3\n"
+"Project-Id-Version: xkeyboard-config-2.3.99\n"
 "Report-Msgid-Bugs-To: svu@users.sourceforge.net\n"
-"POT-Creation-Date: 2011-05-17 21:08+0100\n"
-"PO-Revision-Date: 2011-05-31 09:35+0800\n"
+"POT-Creation-Date: 2011-09-15 21:25+0100\n"
+"PO-Revision-Date: 2011-09-20 00:27+0800\n"
 "Last-Translator: Tino Meinen <tino.meinen@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -240,7 +240,7 @@ msgstr "Armeens"
 msgid "Armenian (alternative eastern)"
 msgstr "Armeens (alternatief Oosters)"
 
-#: ../rules/base.xml.in.h:50 ../rules/base.extras.xml.in.h:3
+#: ../rules/base.xml.in.h:50
 msgid "Armenian (alternative phonetic)"
 msgstr "Armeens (alternatief fonetisch)"
 
@@ -409,53 +409,69 @@ msgid "Bengali"
 msgstr "Bengaals"
 
 #: ../rules/base.xml.in.h:90
+msgid "Bengali (Baishakhi Inscript)"
+msgstr "Bengaals (Baishakhi Inscript)"
+
+#: ../rules/base.xml.in.h:91
+msgid "Bengali (Baishakhi)"
+msgstr "Bengaals (Baishakhi)"
+
+#: ../rules/base.xml.in.h:92
+msgid "Bengali (Bornona)"
+msgstr "Bengaals (Bornona)"
+
+#: ../rules/base.xml.in.h:93
 msgid "Bengali (Probhat)"
 msgstr "Bengaals (Probhat)"
 
-#: ../rules/base.xml.in.h:91
+#: ../rules/base.xml.in.h:94
+msgid "Bengali (Uni Gitanjali)"
+msgstr "Bengaals (Uni Gitanjali)"
+
+#: ../rules/base.xml.in.h:95
 msgid "Berber (Morocco, Tifinagh alternative phonetic)"
 msgstr "Berbers (Marokko, Tifinagh alternatief fonetisch)"
 
-#: ../rules/base.xml.in.h:92
+#: ../rules/base.xml.in.h:96
 msgid "Berber (Morocco, Tifinagh alternative)"
 msgstr "Berbers (Marokko, Tifinagh alternatief)"
 
-#: ../rules/base.xml.in.h:93
+#: ../rules/base.xml.in.h:97
 msgid "Berber (Morocco, Tifinagh extended phonetic)"
 msgstr "Berbers (Marokko, Tifinagh fonetisch uitgebreid)"
 
-#: ../rules/base.xml.in.h:94
+#: ../rules/base.xml.in.h:98
 msgid "Berber (Morocco, Tifinagh extended)"
 msgstr "Berbers (Marokko, Tifinagh uitgebreid)"
 
-#: ../rules/base.xml.in.h:95
+#: ../rules/base.xml.in.h:99
 msgid "Berber (Morocco, Tifinagh phonetic)"
 msgstr "Berbers (Marokko, Tifinagh fonetisch)"
 
-#: ../rules/base.xml.in.h:96
+#: ../rules/base.xml.in.h:100
 msgid "Berber (Morocco, Tifinagh)"
 msgstr "Berbers (Marokko, Tifinagh)"
 
-#: ../rules/base.xml.in.h:97
+#: ../rules/base.xml.in.h:101
 msgid "Bosnian"
 msgstr "Bosnisch"
 
 # digraaf - lettersamenstelling
-#: ../rules/base.xml.in.h:98
+#: ../rules/base.xml.in.h:102
 msgid "Bosnian (US keyboard with Bosnian digraphs)"
 msgstr "Bosnisch (US toetsenbord met Bosnische digrafen)"
 
-#: ../rules/base.xml.in.h:99
+#: ../rules/base.xml.in.h:103
 msgid "Bosnian (US keyboard with Bosnian letters)"
 msgstr "Bosnisch (US toetsenbord met Bosnische lettertekens)"
 
-#: ../rules/base.xml.in.h:100
+#: ../rules/base.xml.in.h:104
 msgid "Bosnian (use Bosnian digraphs)"
 msgstr "Bosnisch (met Bosnische digrafen)"
 
 # Guillemets of ook quillemets zijn Franse aanhalingstekens.
 # Dit is de "Nederlandse" en dit is de «Franse manier» van aanhalen.
-#: ../rules/base.xml.in.h:101
+#: ../rules/base.xml.in.h:105
 msgid "Bosnian (use guillemets for quotes)"
 msgstr "Bosnisch (met Franse aanhalingstekens voor citaten)"
 
@@ -463,274 +479,284 @@ msgstr "Bosnisch (met Franse aanhalingstekens voor citaten)"
 # "Beide Alt-toetsen samen verandert de groep."
 #
 # tezamen/samen/tegelijk
-#: ../rules/base.xml.in.h:102
+#: ../rules/base.xml.in.h:106
 msgid "Both Alt keys together"
 msgstr "Beide Alt-toetsen samen"
 
-#: ../rules/base.xml.in.h:103
+#: ../rules/base.xml.in.h:107
 msgid "Both Ctrl keys together"
 msgstr "Beide Ctrl-toetsen samen"
 
-#: ../rules/base.xml.in.h:104
+#: ../rules/base.xml.in.h:108
 msgid "Both Shift keys together"
 msgstr "Beide Shift-toetsen samen"
 
-#: ../rules/base.xml.in.h:105
+#: ../rules/base.xml.in.h:109
 msgid "Both Shift-Keys together activate Caps Lock, one Shift-Key deactivates"
 msgstr "Beide Shift-toetsen samen zet de Caps Lock aan, een Shift-toets deactiveert"
 
-#: ../rules/base.xml.in.h:106
+#: ../rules/base.xml.in.h:110
 msgid "Both Shift-Keys together toggle Caps Lock"
 msgstr "Beide Shift-toetsen samen zet de Caps Lock aan/uit"
 
-#: ../rules/base.xml.in.h:107
+#: ../rules/base.xml.in.h:111
 msgid "Both Shift-Keys together toggle ShiftLock"
 msgstr "Beide Shift-toetsen samen zet de Caps Lock aan/uit"
 
-#: ../rules/base.xml.in.h:108
+#: ../rules/base.xml.in.h:112
 msgid "Braille"
 msgstr "Braille"
 
-#: ../rules/base.xml.in.h:109
+#: ../rules/base.xml.in.h:113
 msgid "Braille (left hand)"
 msgstr "Braille (linker hand)"
 
-#: ../rules/base.xml.in.h:110
+#: ../rules/base.xml.in.h:114
 msgid "Braille (right hand)"
 msgstr "Braille (rechter hand)"
 
-#: ../rules/base.xml.in.h:111
+#: ../rules/base.xml.in.h:115
 msgid "Brother Internet Keyboard"
 msgstr "Brother internettoetsenbord"
 
-#: ../rules/base.xml.in.h:112
+#: ../rules/base.xml.in.h:116
 msgid "Bulgarian"
 msgstr "Bulgaars"
 
-#: ../rules/base.xml.in.h:113
+#: ../rules/base.xml.in.h:117
 msgid "Bulgarian (new phonetic)"
 msgstr "Bulgaars (nieuw fonetisch)"
 
-#: ../rules/base.xml.in.h:114
+#: ../rules/base.xml.in.h:118
 msgid "Bulgarian (traditional phonetic)"
 msgstr "Bulgaars (traditioneel fonetisch)"
 
-#: ../rules/base.xml.in.h:115
+#: ../rules/base.xml.in.h:119
 msgid "Burmese"
 msgstr "Burmees"
 
-#: ../rules/base.xml.in.h:116
+#: ../rules/base.xml.in.h:120
+msgid "Cameroon Multilingual (azerty)"
+msgstr "Canadees Meertalig (azerty)"
+
+#: ../rules/base.xml.in.h:121
+msgid "Cameroon Multilingual (qwerty)"
+msgstr "Canadees Meertalig  (qwerty)"
+
+#: ../rules/base.xml.in.h:122
 msgid "Canadian Multilingual"
 msgstr "Canadees Meertalig"
 
-#: ../rules/base.xml.in.h:117
+#: ../rules/base.xml.in.h:123
 msgid "Canadian Multilingual (first part)"
 msgstr "Canadees Meertalig (eerste deel)"
 
-#: ../rules/base.xml.in.h:118
+#: ../rules/base.xml.in.h:124
 msgid "Canadian Multilingual (second part)"
 msgstr "Canadees Meertalig  (tweede deel)"
 
-#: ../rules/base.xml.in.h:119
+#: ../rules/base.xml.in.h:125
 msgid "Caps Lock"
 msgstr "Caps Lock"
 
-#: ../rules/base.xml.in.h:120
+#: ../rules/base.xml.in.h:126
 msgid "Caps Lock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)"
 msgstr "Caps Lock geeft het 3de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer"
 
 # CapsLock wisselt naar de eerste indeling, Shift+CapsLock wisselt naar de laatste indeling
-#: ../rules/base.xml.in.h:121
+#: ../rules/base.xml.in.h:127
 msgid "Caps Lock (to first layout), Shift+Caps Lock (to last layout)"
 msgstr "Caps Lock (naar eerste indeling), Shift+Caps Lock (naar laatste indeling)"
 
-#: ../rules/base.xml.in.h:122
+#: ../rules/base.xml.in.h:128
 msgid "Caps Lock (while pressed), Alt+Caps Lock does the original capslock action"
 msgstr "Caps Lock (ingedrukt houden), Alt+Caps Lock geeft de oorspronkelijke caps lock actie"
 
-#: ../rules/base.xml.in.h:123
+# fungeert als/werkt als
+#: ../rules/base.xml.in.h:129
 msgid "Caps Lock acts as Shift with locking. Shift \"pauses\" Caps Lock"
 msgstr "Caps Lock werkt als Shift met blokkering, Shift heft Caps Lock tijdelijk op"
 
-#: ../rules/base.xml.in.h:124
+#: ../rules/base.xml.in.h:130
 msgid "Caps Lock acts as Shift with locking. Shift doesn't affect Caps Lock"
 msgstr "Caps Lock werkt als Shift met blokkering. Shift heft Caps Lock niet op"
 
-#: ../rules/base.xml.in.h:125
+# werkt als/is
+# Ctrl-toets is hier duidelijker
+#: ../rules/base.xml.in.h:131
+msgid "Caps Lock as Ctrl"
+msgstr "Caps Lock is Ctrl-toets"
+
+# heeft geen functie/geen effect
+#: ../rules/base.xml.in.h:132
 msgid "Caps Lock is disabled"
 msgstr "Caps Lock is uitgezet"
 
-#: ../rules/base.xml.in.h:126
+#: ../rules/base.xml.in.h:133
 msgid "Caps Lock key behavior"
 msgstr "Caps Lock-toets gedrag"
 
-#: ../rules/base.xml.in.h:127
+#: ../rules/base.xml.in.h:134
 msgid "Caps Lock toggles Shift so all keys are affected"
 msgstr "Caps Lock wisselt Shift op alle toetsen"
 
 # heeft alleen effect op/werkt alleen op/beinvloedt alleen ~ 
 #  de alfabetische toetsen/
 # bepaalt hoofdletters/kleine letters bij alfabetische tekens.<
-#: ../rules/base.xml.in.h:128
+#: ../rules/base.xml.in.h:135
 msgid "Caps Lock toggles normal capitalization of alphabetic characters"
 msgstr "Caps Lock beïnvloedt alleen de alfabetische toetsen"
 
-#: ../rules/base.xml.in.h:129
+#: ../rules/base.xml.in.h:136
 msgid "Caps Lock uses internal capitalization. Shift \"pauses\" Caps Lock"
 msgstr "Caps Lock gebruikt interne conversie naar hoofdletters. Shift heft Caps Lock tijdelijk op"
 
-#: ../rules/base.xml.in.h:130
+#: ../rules/base.xml.in.h:137
 msgid "Caps Lock uses internal capitalization. Shift doesn't affect Caps Lock"
 msgstr "Caps Lock gebruikt interne conversie naar hoofdletters. Shift heft Caps Lock niet op"
 
-#: ../rules/base.xml.in.h:131
+#: ../rules/base.xml.in.h:138
 msgid "Catalan"
 msgstr "Catalaans"
 
-#: ../rules/base.xml.in.h:132
+#: ../rules/base.xml.in.h:139
 msgid "Catalan (Spain, with middle-dot L)"
 msgstr "Catalaans (Spanje, met midden-punt L)"
 
-#: ../rules/base.xml.in.h:133
+#: ../rules/base.xml.in.h:140
 msgid "Cherokee"
 msgstr "Cherokee"
 
-#: ../rules/base.xml.in.h:134
+#: ../rules/base.xml.in.h:141
 msgid "Cherry B.UNLIMITED"
 msgstr "Cherry B.UNLIMITED"
 
-#: ../rules/base.xml.in.h:135
+#: ../rules/base.xml.in.h:142
 msgid "Cherry Blue Line CyBo@rd"
 msgstr "Cherry Blue Line CyBo@rd"
 
-#: ../rules/base.xml.in.h:136
+#: ../rules/base.xml.in.h:143
 msgid "Cherry Blue Line CyBo@rd (alternate option)"
 msgstr "Cherry Blue Line CyBo@rd (alternatieve optie)"
 
-#: ../rules/base.xml.in.h:137
+#: ../rules/base.xml.in.h:144
 msgid "Cherry CyBo@rd USB-Hub"
 msgstr "Cherry CyBo@rd USB-Hub"
 
-#: ../rules/base.xml.in.h:138
+#: ../rules/base.xml.in.h:145
 msgid "Cherry CyMotion Expert"
 msgstr "Cherry CyMotion Master Expert"
 
-#: ../rules/base.xml.in.h:139
+#: ../rules/base.xml.in.h:146
 msgid "Cherry CyMotion Master Linux"
 msgstr "Cherry CyMotion Master Linux"
 
-#: ../rules/base.xml.in.h:140
+#: ../rules/base.xml.in.h:147
 msgid "Cherry CyMotion Master XPress"
 msgstr "Cherry CyMotion Master XPress"
 
-#: ../rules/base.xml.in.h:141
+#: ../rules/base.xml.in.h:148
 msgid "Chicony Internet Keyboard"
 msgstr "Chicony internet toetsenbord"
 
-#: ../rules/base.xml.in.h:142
+#: ../rules/base.xml.in.h:149
 msgid "Chicony KB-9885"
 msgstr "Chicony KB-9885"
 
-#: ../rules/base.xml.in.h:143
+#: ../rules/base.xml.in.h:150
 msgid "Chicony KU-0108"
 msgstr "Chicony KU-0108"
 
-#: ../rules/base.xml.in.h:144
+#: ../rules/base.xml.in.h:151
 msgid "Chicony KU-0420"
 msgstr "Chicony KU-0420"
 
-#: ../rules/base.xml.in.h:145
+#: ../rules/base.xml.in.h:152
 msgid "Chinese"
 msgstr "Chinees"
 
-#: ../rules/base.xml.in.h:146
+#: ../rules/base.xml.in.h:153
 msgid "Chuvash"
 msgstr "Tsjoevasjisch"
 
-#: ../rules/base.xml.in.h:147
+#: ../rules/base.xml.in.h:154
 msgid "Chuvash (Latin)"
 msgstr "Tsjoevasjisch (Latijns)"
 
-#: ../rules/base.xml.in.h:148
+#: ../rules/base.xml.in.h:155
 msgid "Classmate PC"
 msgstr "Classmate PC"
 
 # Iers
-#: ../rules/base.xml.in.h:149
+#: ../rules/base.xml.in.h:156
 msgid "CloGaelach"
 msgstr "CloGaelach"
 
-#: ../rules/base.xml.in.h:150
+#: ../rules/base.xml.in.h:157
 msgid "Compaq Easy Access Keyboard"
 msgstr "Compaq Easy Access toetsenbord"
 
-#: ../rules/base.xml.in.h:151
+#: ../rules/base.xml.in.h:158
 msgid "Compaq Internet Keyboard (13 keys)"
 msgstr "Compaq internet toetsenbord (13 toetsen)"
 
-#: ../rules/base.xml.in.h:152
+#: ../rules/base.xml.in.h:159
 msgid "Compaq Internet Keyboard (18 keys)"
 msgstr "Compaq internet toetsenbord (18 toetsen)"
 
-#: ../rules/base.xml.in.h:153
+#: ../rules/base.xml.in.h:160
 msgid "Compaq Internet Keyboard (7 keys)"
 msgstr "Compaq internet toetsenbord (7 toetsen)"
 
-#: ../rules/base.xml.in.h:154
+#: ../rules/base.xml.in.h:161
 msgid "Compaq iPaq Keyboard"
 msgstr "Compaq iPaq toetsenbord"
 
-#: ../rules/base.xml.in.h:155
+#: ../rules/base.xml.in.h:162
 msgid "Compose key position"
 msgstr "Samensteltoets positie"
 
-#: ../rules/base.xml.in.h:156
+#: ../rules/base.xml.in.h:163
 msgid "Control + Alt + Backspace"
 msgstr "Ctrl + Alt + Backspace"
 
-#: ../rules/base.xml.in.h:157
+#: ../rules/base.xml.in.h:164
 msgid "Control is mapped to Alt keys, Alt is mapped to Win keys"
 msgstr "Ctrl zit op de Alt-toetsen, Alt zit op de Win-toetsen"
 
-#: ../rules/base.xml.in.h:158
+#: ../rules/base.xml.in.h:165
 msgid "Control is mapped to Win keys (and the usual Ctrl keys)"
 msgstr "Ctrl zit op de Win-toetsen (en de gebruikelijke Ctrl-toetsen)"
 
-#: ../rules/base.xml.in.h:159
+#: ../rules/base.xml.in.h:166
 msgid "Creative Desktop Wireless 7000"
 msgstr "Creative Desktop Wireless 7000"
 
-# Krim-Tataars of Krim-Turks
-# http://nl.wikipedia.org/wiki/Krim-Tataars
-#: ../rules/base.xml.in.h:160
-msgid "Crimean Tatar (Dobruja Q)"
-msgstr "Krim-Tataars (Dobruca-1 Q)"
-
-#: ../rules/base.xml.in.h:161
+#: ../rules/base.xml.in.h:167
 msgid "Crimean Tatar (Turkish Alt-Q)"
 msgstr "Krim-Tataars (Turks Alt-Q)"
 
-#: ../rules/base.xml.in.h:162
+#: ../rules/base.xml.in.h:168
 msgid "Crimean Tatar (Turkish F)"
 msgstr "Krim-Tataars (Turks F)"
 
-#: ../rules/base.xml.in.h:163
+#: ../rules/base.xml.in.h:169
 msgid "Crimean Tatar (Turkish Q)"
 msgstr "Krim-Tataars (Turks Q)"
 
-#: ../rules/base.xml.in.h:164
+#: ../rules/base.xml.in.h:170
 msgid "Croatian"
 msgstr "Kroatisch"
 
-#: ../rules/base.xml.in.h:165
+#: ../rules/base.xml.in.h:171
 msgid "Croatian (US keyboard with Croatian digraphs)"
 msgstr "Kroatisch (US toetsenbord met Kroatische digrafen)"
 
-#: ../rules/base.xml.in.h:166
+#: ../rules/base.xml.in.h:172
 msgid "Croatian (US keyboard with Croatian letters)"
 msgstr "Kroatisch (US toetsenbord met Kroatische lettertekens)"
 
-#: ../rules/base.xml.in.h:167
+#: ../rules/base.xml.in.h:173
 msgid "Croatian (use Croatian digraphs)"
 msgstr "Kroatisch (met Kroatische digrafen)"
 
@@ -738,480 +764,472 @@ msgstr "Kroatisch (met Kroatische digrafen)"
 # Dit is de "Nederlandse" en dit is de «Franse manier» van aanhalen.
 #
 # ..voor citeren/voor citaten
-#: ../rules/base.xml.in.h:168
+#: ../rules/base.xml.in.h:174
 msgid "Croatian (use guillemets for quotes)"
 msgstr "Kroatisch (met Franse aanhalingstekens voor citaten)"
 
-#: ../rules/base.xml.in.h:169
+#: ../rules/base.xml.in.h:175
 msgid "Ctrl key position"
 msgstr "Ctrl-toetspositie"
 
-#: ../rules/base.xml.in.h:170
+#: ../rules/base.xml.in.h:176
 msgid "Ctrl+Shift"
 msgstr "Ctrl+Shift"
 
-#: ../rules/base.xml.in.h:171
+#: ../rules/base.xml.in.h:177
 msgid "Czech"
 msgstr "Tsjechisch"
 
 # geaccentueerde lettertekens/lettertekens met accenten
-#: ../rules/base.xml.in.h:172
+#: ../rules/base.xml.in.h:178
 msgid "Czech (UCW layout, accented letters only)"
 msgstr "Tsjechisch (UCW-indeling, alleen lettertekens met accenten)"
 
-#: ../rules/base.xml.in.h:173
+#: ../rules/base.xml.in.h:179
 msgid "Czech (US Dvorak with CZ UCW support)"
 msgstr "Tsjechisch (US Dvorak met CZ UCW ondersteuning)"
 
-#: ../rules/base.xml.in.h:174
+#: ../rules/base.xml.in.h:180
 msgid "Czech (qwerty)"
 msgstr "Tsjechisch (qwerty)"
 
 # brede backslash/uitgebreide backslash
-#: ../rules/base.xml.in.h:175
+#: ../rules/base.xml.in.h:181
 msgid "Czech (qwerty, extended Backslash)"
 msgstr "Tsjechisch (qwerty, brede backslash)"
 
-#: ../rules/base.xml.in.h:176
+#: ../rules/base.xml.in.h:182
 msgid "Czech (with &lt;\\|&gt; key)"
 msgstr "Tsjechisch (met &lt;\\|&gt;-toets)"
 
-#: ../rules/base.xml.in.h:177
+#: ../rules/base.xml.in.h:183
 msgid "DTK2000"
 msgstr "DTK2000"
 
-#: ../rules/base.xml.in.h:178
+#: ../rules/base.xml.in.h:184
 msgid "Danish"
 msgstr "Deens"
 
-#: ../rules/base.xml.in.h:179
+#: ../rules/base.xml.in.h:185
 msgid "Danish (Dvorak)"
 msgstr "Deens (Dvorak)"
 
-#: ../rules/base.xml.in.h:180
+#: ../rules/base.xml.in.h:186
 msgid "Danish (Macintosh)"
 msgstr "Deens (Macintosh)"
 
-#: ../rules/base.xml.in.h:181
+#: ../rules/base.xml.in.h:187
 msgid "Danish (Macintosh, eliminate dead keys)"
 msgstr "Deens (Macintosh, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:182
+#: ../rules/base.xml.in.h:188
 msgid "Danish (eliminate dead keys)"
 msgstr "Deens (zonder dode toetsen)"
 
 # dubbelop numeriek/cijfer
-#: ../rules/base.xml.in.h:183
+#: ../rules/base.xml.in.h:189
 msgid "Default numeric keypad keys"
 msgstr "Standaard cijferblok-toetsen"
 
-#: ../rules/base.xml.in.h:184
+#: ../rules/base.xml.in.h:190
 msgid "Dell"
 msgstr "Dell"
 
-#: ../rules/base.xml.in.h:185
+#: ../rules/base.xml.in.h:191
 msgid "Dell 101-key PC"
 msgstr "Dell 101-toetsen PC"
 
-#: ../rules/base.xml.in.h:186
+#: ../rules/base.xml.in.h:192
 msgid "Dell Laptop/notebook Inspiron 6xxx/8xxx"
 msgstr "Dell Laptop/notebook Inspiron 6xxx/8xxx"
 
-#: ../rules/base.xml.in.h:187
+#: ../rules/base.xml.in.h:193
 msgid "Dell Laptop/notebook Precision M series"
 msgstr "Dell Laptop/notebook Precision M series"
 
-#: ../rules/base.xml.in.h:188
+#: ../rules/base.xml.in.h:194
 msgid "Dell Latitude series laptop"
 msgstr "Dell Latitude laptopserie"
 
-#: ../rules/base.xml.in.h:189
+#: ../rules/base.xml.in.h:195
 msgid "Dell Precision M65"
 msgstr "Dell Precision M65"
 
-#: ../rules/base.xml.in.h:190
+#: ../rules/base.xml.in.h:196
 msgid "Dell SK-8125"
 msgstr "Dell SK-8125"
 
-#: ../rules/base.xml.in.h:191
+#: ../rules/base.xml.in.h:197
 msgid "Dell SK-8135"
 msgstr "Dell SK-8135"
 
-#: ../rules/base.xml.in.h:192
+#: ../rules/base.xml.in.h:198
 msgid "Dell USB Multimedia Keyboard"
 msgstr "Dell USB multimediatoetsenbord"
 
-#: ../rules/base.xml.in.h:193
+#: ../rules/base.xml.in.h:199
 msgid "Dexxa Wireless Desktop Keyboard"
 msgstr "Dexxa Wireless Desktop toetsenbord"
 
-#: ../rules/base.xml.in.h:194
+#: ../rules/base.xml.in.h:200
 msgid "Dhivehi"
 msgstr "Dhivehi"
 
-#: ../rules/base.xml.in.h:195
+#: ../rules/base.xml.in.h:201
 msgid "Diamond 9801 / 9802 series"
 msgstr "Diamond 9801 / 9802 serie"
 
-#: ../rules/base.xml.in.h:196
+#: ../rules/base.xml.in.h:202
 msgid "Dutch"
 msgstr "Nederlands"
 
-#: ../rules/base.xml.in.h:197
+#: ../rules/base.xml.in.h:203
 msgid "Dutch (Macintosh)"
 msgstr "Nederlands (Macintosh)"
 
-#: ../rules/base.xml.in.h:198
+#: ../rules/base.xml.in.h:204
 msgid "Dutch (Sun dead keys)"
 msgstr "Nederlands (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:199
+#: ../rules/base.xml.in.h:205
 msgid "Dutch (standard)"
 msgstr "Nederlands (standaard)"
 
 # Dzongkha is een taal die is afgeleid van het oud-Tibetaans
-#: ../rules/base.xml.in.h:200
+#: ../rules/base.xml.in.h:206
 msgid "Dzongkha"
 msgstr "Dzongkha"
 
-#: ../rules/base.xml.in.h:201
+#: ../rules/base.xml.in.h:207
 msgid "Enable extra typographic characters"
 msgstr "Extra typografische tekens aanzetten"
 
-#: ../rules/base.xml.in.h:202
+#: ../rules/base.xml.in.h:208
 msgid "English (Cameroon Dvorak)"
 msgstr "Engels (Kameroen Dvorak)"
 
-#: ../rules/base.xml.in.h:203
-msgid "English (Cameroon qwerty)"
-msgstr "Engels (Kameroen qwerty)"
-
-#: ../rules/base.xml.in.h:204
+#: ../rules/base.xml.in.h:209
 msgid "English (Cameroon)"
 msgstr "Engels (Kameroen)"
 
-#: ../rules/base.xml.in.h:205
+#: ../rules/base.xml.in.h:210
 msgid "English (Canada)"
 msgstr "Engels (Canada)"
 
-#: ../rules/base.xml.in.h:206
+#: ../rules/base.xml.in.h:211
 msgid "English (Colemak)"
 msgstr "Engels (Colemak)"
 
-#: ../rules/base.xml.in.h:207
+#: ../rules/base.xml.in.h:212
 msgid "English (Dvorak alternative international no dead keys)"
 msgstr "Engels (Dvorak alternatief internationaal geen dode toetsen)"
 
-#: ../rules/base.xml.in.h:208
+#: ../rules/base.xml.in.h:213
 msgid "English (Dvorak international with dead keys)"
 msgstr "Engels (Dvorak internationaal met dode toetsen)"
 
-#: ../rules/base.xml.in.h:209
+#: ../rules/base.xml.in.h:214
 msgid "English (Dvorak)"
 msgstr "Engers (Dvorak)"
 
-#: ../rules/base.xml.in.h:210
+#: ../rules/base.xml.in.h:215
 msgid "English (Ghana)"
 msgstr "Engels (Ghana)"
 
-#: ../rules/base.xml.in.h:211
+#: ../rules/base.xml.in.h:216
 msgid "English (Ghana, GILLBT)"
 msgstr "Engels (Ghana, GILLBT)"
 
-#: ../rules/base.xml.in.h:212
+#: ../rules/base.xml.in.h:217
 msgid "English (Ghana, multilingual)"
 msgstr "Engels (Ghana, meertalig)"
 
-#: ../rules/base.xml.in.h:213
+#: ../rules/base.xml.in.h:218
 msgid "English (India, with RupeeSign)"
 msgstr "Engels (India, met Roepie-teken)"
 
-#: ../rules/base.xml.in.h:214
+#: ../rules/base.xml.in.h:219
 msgid "English (Macintosh)"
 msgstr "Engels (Macintosh)"
 
-#: ../rules/base.xml.in.h:215
+#: ../rules/base.xml.in.h:220
 msgid "English (Mali, US Macintosh)"
 msgstr "Engels (Mali, US Macintosh)"
 
-#: ../rules/base.xml.in.h:216
+#: ../rules/base.xml.in.h:221
 msgid "English (Mali, US international)"
 msgstr "Engels (Mali, US internationaal)"
 
-#: ../rules/base.xml.in.h:217
+#: ../rules/base.xml.in.h:222
 msgid "English (Nigeria)"
 msgstr "Engels (Nigeria)"
 
-#: ../rules/base.xml.in.h:218
+#: ../rules/base.xml.in.h:223
 msgid "English (South Africa)"
 msgstr "Engels (Zuid-Afrika)"
 
-#: ../rules/base.xml.in.h:219
+#: ../rules/base.xml.in.h:224
 msgid "English (UK)"
 msgstr "Engels (UK)"
 
-#: ../rules/base.xml.in.h:220
+#: ../rules/base.xml.in.h:225
 msgid "English (UK, Colemak)"
 msgstr "Engels (UK, Colemak)"
 
-#: ../rules/base.xml.in.h:221
+#: ../rules/base.xml.in.h:226
 msgid "English (UK, Dvorak with UK punctuation)"
 msgstr "Engels (UK, Dvorak met UK-leestekens)"
 
-#: ../rules/base.xml.in.h:222
+#: ../rules/base.xml.in.h:227
 msgid "English (UK, Dvorak)"
 msgstr "Engels (UK, Dvorak)"
 
-#: ../rules/base.xml.in.h:223
+#: ../rules/base.xml.in.h:228
 msgid "English (UK, Macintosh international)"
 msgstr "Engels (UK, Macintosh internationaal)"
 
-#: ../rules/base.xml.in.h:224
+#: ../rules/base.xml.in.h:229
 msgid "English (UK, Macintosh)"
 msgstr "Engels (UK, Macintosh)"
 
-#: ../rules/base.xml.in.h:225
+#: ../rules/base.xml.in.h:230
 msgid "English (UK, extended WinKeys)"
 msgstr "Engels (UK, uitgebreid, Windows-toetsen)"
 
-#: ../rules/base.xml.in.h:226
+#: ../rules/base.xml.in.h:231
 msgid "English (UK, international with dead keys)"
 msgstr "Engels (UK, internationaal met dode toetsen)"
 
-#: ../rules/base.xml.in.h:227 ../rules/base.extras.xml.in.h:7
+#: ../rules/base.xml.in.h:232 ../rules/base.extras.xml.in.h:8
 msgid "English (US)"
 msgstr "Engels (US)"
 
-#: ../rules/base.xml.in.h:228
+#: ../rules/base.xml.in.h:233
 msgid "English (US, alternative international)"
 msgstr "Engels (US, alternatief internationaal)"
 
-#: ../rules/base.xml.in.h:229
+#: ../rules/base.xml.in.h:234
 msgid "English (US, international with dead keys)"
 msgstr "Engels (US, internationaal met dode toetsen)"
 
-#: ../rules/base.xml.in.h:230
+#: ../rules/base.xml.in.h:235
 msgid "English (US, with euro on 5)"
 msgstr "Engels (US, met de Euro op 5)"
 
-#: ../rules/base.xml.in.h:231
+#: ../rules/base.xml.in.h:236
 msgid "English (classic Dvorak)"
 msgstr "Engels (Dvorak klassiek)"
 
-#: ../rules/base.xml.in.h:232
+#: ../rules/base.xml.in.h:237
 msgid "English (international AltGr dead keys)"
 msgstr "Engels (internationaal AltGr dode toetsen)"
 
-#: ../rules/base.xml.in.h:233
+#: ../rules/base.xml.in.h:238
 msgid "English (layout toggle on multiply/divide key)"
 msgstr "Engels (Indeling wisselen met de toetsen vermenigvuldigen/delen)"
 
-#: ../rules/base.xml.in.h:234
+#: ../rules/base.xml.in.h:239
 msgid "English (left handed Dvorak)"
 msgstr "Engels (Linkshandige Dvorak)"
 
-#: ../rules/base.xml.in.h:235
+#: ../rules/base.xml.in.h:240
 msgid "English (programmer Dvorak)"
 msgstr "Engels (Programmeer-Dvorak)"
 
-#: ../rules/base.xml.in.h:236
+#: ../rules/base.xml.in.h:241
 msgid "English (right handed Dvorak)"
 msgstr "Engels (Rechtshandige Dvorak("
 
-#: ../rules/base.xml.in.h:237
+#: ../rules/base.xml.in.h:242
 msgid "Ennyah DKB-1008"
 msgstr "Ennyah DKB-1008"
 
-#: ../rules/base.xml.in.h:238
+#: ../rules/base.xml.in.h:243
 msgid "Enter on keypad"
 msgstr "Enter op cijferblok"
 
-#: ../rules/base.xml.in.h:239
+#: ../rules/base.xml.in.h:244
 msgid "Esperanto"
 msgstr "Esperanto"
 
-#: ../rules/base.xml.in.h:240
+#: ../rules/base.xml.in.h:245
 msgid "Esperanto (Portugal, Nativo)"
 msgstr "Esperanto (Portugal, Nativo)"
 
-#: ../rules/base.xml.in.h:241
+#: ../rules/base.xml.in.h:246
 msgid "Esperanto (displaced semicolon and quote, obsolete)"
 msgstr "Esperanto (puntkomma en aanhalingsteken op afwijkende plek, historisch)"
 
 # Estisch, de taal, die ook Estlands of Ests wordt genoemd, 
 # heeft ongeveer 1 miljoen sprekers
-#: ../rules/base.xml.in.h:242
+#: ../rules/base.xml.in.h:247
 msgid "Estonian"
 msgstr "Estisch"
 
-#: ../rules/base.xml.in.h:243
+#: ../rules/base.xml.in.h:248
 msgid "Estonian (Dvorak)"
 msgstr "Estisch (Dvorak)"
 
-#: ../rules/base.xml.in.h:244
+#: ../rules/base.xml.in.h:249
 msgid "Estonian (US keyboard with Estonian letters)"
 msgstr "Estisch (US toetsenbord met Estische lettertekens)"
 
-#: ../rules/base.xml.in.h:245
+#: ../rules/base.xml.in.h:250
 msgid "Estonian (eliminate dead keys)"
 msgstr "Estisch (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:246
+#: ../rules/base.xml.in.h:251
 msgid "Euro on 2"
 msgstr "Euro-teken op 2"
 
-#: ../rules/base.xml.in.h:247
+#: ../rules/base.xml.in.h:252
 msgid "Euro on 4"
 msgstr "Euro-teken op 4"
 
-#: ../rules/base.xml.in.h:248
+#: ../rules/base.xml.in.h:253
 msgid "Euro on 5"
 msgstr "Euro-teken op 5"
 
-#: ../rules/base.xml.in.h:249
+#: ../rules/base.xml.in.h:254
 msgid "Euro on E"
 msgstr "Euro-teken op E"
 
-#: ../rules/base.xml.in.h:250
+#: ../rules/base.xml.in.h:255
 msgid "Everex STEPnote"
 msgstr "Everex STEPnote"
 
-#: ../rules/base.xml.in.h:251
+#: ../rules/base.xml.in.h:256
 msgid "Ewe"
 msgstr "Ewe"
 
-#: ../rules/base.xml.in.h:252
+#: ../rules/base.xml.in.h:257
 msgid "FL90"
 msgstr "FL90"
 
-#: ../rules/base.xml.in.h:253
+#: ../rules/base.xml.in.h:258
 msgid "Faroese"
 msgstr "Faeröers"
 
-#: ../rules/base.xml.in.h:254
+#: ../rules/base.xml.in.h:259
 msgid "Faroese (eliminate dead keys)"
 msgstr "Faeröers (zonder dode toetsen)"
 
 # Het Filipijns (Filipino of Pilipino)
-#: ../rules/base.xml.in.h:255
+#: ../rules/base.xml.in.h:260
 msgid "Filipino"
 msgstr "Filipijns"
 
-#: ../rules/base.xml.in.h:256
+#: ../rules/base.xml.in.h:261
 msgid "Filipino (Capewell-Dvorak Baybayin)"
 msgstr "Filipijns (Capewell-Dvorak Baybayin)"
 
-#: ../rules/base.xml.in.h:257
+#: ../rules/base.xml.in.h:262
 msgid "Filipino (Capewell-Dvorak Latin)"
 msgstr "Filipijns (Capewell-Dvorak Latijns)"
 
-#: ../rules/base.xml.in.h:258
+#: ../rules/base.xml.in.h:263
 msgid "Filipino (Capewell-QWERF 2006 Baybayin)"
 msgstr "Filipijns (Capewell-QWERF 2006 Baybayin)"
 
-#: ../rules/base.xml.in.h:259
+#: ../rules/base.xml.in.h:264
 msgid "Filipino (Capewell-QWERF 2006 Latin)"
 msgstr "Filipijns (Capewell-QWERF 2006 Latijns)"
 
-#: ../rules/base.xml.in.h:260
+#: ../rules/base.xml.in.h:265
 msgid "Filipino (Colemak Baybayin)"
 msgstr "Filipijns (Colemak Baybayin)"
 
-#: ../rules/base.xml.in.h:261
+#: ../rules/base.xml.in.h:266
 msgid "Filipino (Colemak Latin)"
 msgstr "Filipijns (Colemak Latijns)"
 
-#: ../rules/base.xml.in.h:262
+#: ../rules/base.xml.in.h:267
 msgid "Filipino (Dvorak Baybayin)"
 msgstr "Filipijns (Dvorak Baybayin)"
 
-#: ../rules/base.xml.in.h:263
+#: ../rules/base.xml.in.h:268
 msgid "Filipino (Dvorak Latin)"
 msgstr "Filipijns (Dvorak Latijns)"
 
-#: ../rules/base.xml.in.h:264
+#: ../rules/base.xml.in.h:269
 msgid "Filipino (QWERTY Baybayin)"
 msgstr "Filipijns (QWERTY Baybayin)"
 
-#: ../rules/base.xml.in.h:265
+#: ../rules/base.xml.in.h:270
 msgid "Finnish"
 msgstr "Fins"
 
-#: ../rules/base.xml.in.h:266
+#: ../rules/base.xml.in.h:271
 msgid "Finnish (Macintosh)"
 msgstr "Fins (Macintosh)"
 
-#: ../rules/base.xml.in.h:267
+#: ../rules/base.xml.in.h:272
 msgid "Finnish (classic)"
 msgstr "Fins (klassiek)"
 
-#: ../rules/base.xml.in.h:268
+#: ../rules/base.xml.in.h:273
 msgid "Finnish (classic, eliminate dead keys)"
 msgstr "Fins (klassiek, zonder dode toetsen)"
 
 #. This assumes the KP_ abstract symbols are actually useful for some apps
 #. The description needs to be rewritten
-#: ../rules/base.xml.in.h:271
+#: ../rules/base.xml.in.h:276
 msgid "Four-level key with abstract separators"
 msgstr "Vier-niveaus toets met abstracte scheidingstekens"
 
-#: ../rules/base.xml.in.h:272
+#: ../rules/base.xml.in.h:277
 msgid "Four-level key with comma"
 msgstr "Vier-niveaus toets met komma"
 
-#: ../rules/base.xml.in.h:273
+#: ../rules/base.xml.in.h:278
 msgid "Four-level key with dot"
 msgstr "Vier-niveaus toets met punt"
 
-#: ../rules/base.xml.in.h:274
+#: ../rules/base.xml.in.h:279
 msgid "Four-level key with dot, latin-9 restriction"
 msgstr "Vier-niveaus toets met punt, latin-9 restrictie"
 
-#: ../rules/base.xml.in.h:275
+#: ../rules/base.xml.in.h:280
 msgid "Four-level key with momayyez"
 msgstr "Vier-niveaus toets met momayyez"
 
-#: ../rules/base.xml.in.h:276
+#: ../rules/base.xml.in.h:281
 msgid "French"
 msgstr "Frans"
 
-#: ../rules/base.xml.in.h:277
+#: ../rules/base.xml.in.h:282
 msgid "French (Bepo, ergonomic, Dvorak way)"
 msgstr "Frans (Bepo, ergonomisch, Dvorak wijze)"
 
-#: ../rules/base.xml.in.h:278
+#: ../rules/base.xml.in.h:283
 msgid "French (Bepo, ergonomic, Dvorak way, latin-9 only)"
 msgstr "Frans (Bepo, ergonomisch, Dvorak wijze, enkel latin-9)"
 
-#: ../rules/base.xml.in.h:279
+#: ../rules/base.xml.in.h:284
 msgid "French (Breton)"
 msgstr "Frans (Bretons)"
 
-#: ../rules/base.xml.in.h:280
-msgid "French (Cameroon azerty)"
-msgstr "Frans (Kameroen azerty)"
-
-#: ../rules/base.xml.in.h:281
+#: ../rules/base.xml.in.h:285
 msgid "French (Cameroon)"
 msgstr "Frans (Kameroen)"
 
-#: ../rules/base.xml.in.h:282 ../rules/base.extras.xml.in.h:10
+#: ../rules/base.xml.in.h:286 ../rules/base.extras.xml.in.h:11
 msgid "French (Canada)"
 msgstr "Frans (Canada)"
 
-#: ../rules/base.xml.in.h:283
+#: ../rules/base.xml.in.h:287
 msgid "French (Canada, Dvorak)"
 msgstr "Frans (Canada, Dvorak)"
 
-#: ../rules/base.xml.in.h:284
+#: ../rules/base.xml.in.h:288
 msgid "French (Canada, legacy)"
 msgstr "Frans (Canada, historisch)"
 
-#: ../rules/base.xml.in.h:285
+#: ../rules/base.xml.in.h:289
 msgid "French (Democratic Republic of the Congo)"
 msgstr "Frans (Democratisch republiek van Congo)"
 
-#: ../rules/base.xml.in.h:286
+#: ../rules/base.xml.in.h:290
 msgid "French (Dvorak)"
 msgstr "Frans (Dvorak)"
 
@@ -1219,1279 +1237,1275 @@ msgstr "Frans (Dvorak)"
 # de Republiek Guinee, is grondwettelijk een presidentiële republiek in 
 # West-Afrika, gelegen aan de Atlantische Oceaan tussen Guinee-Bissau en
 # Sierra Leone. De hoofdstad is Conakry.
-#: ../rules/base.xml.in.h:287
+#: ../rules/base.xml.in.h:291
 msgid "French (Guinea)"
 msgstr "Frans (Guinee)"
 
-#: ../rules/base.xml.in.h:288
+#: ../rules/base.xml.in.h:292
 msgid "French (Macintosh)"
 msgstr "Frans (Macintosh)"
 
-#: ../rules/base.xml.in.h:289
+#: ../rules/base.xml.in.h:293
 msgid "French (Mali, alternative)"
 msgstr "Frans (Mali, alternatief)"
 
-#: ../rules/base.xml.in.h:290
+#: ../rules/base.xml.in.h:294
 msgid "French (Morocco)"
 msgstr "Frans (Marokko)"
 
-#: ../rules/base.xml.in.h:291
+#: ../rules/base.xml.in.h:295
 msgid "French (Sun dead keys)"
 msgstr "Frans (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:292
+#: ../rules/base.xml.in.h:296
 msgid "French (Switzerland)"
 msgstr "Frans (Zwitserland)"
 
-#: ../rules/base.xml.in.h:293
+#: ../rules/base.xml.in.h:297
 msgid "French (Switzerland, Macintosh)"
 msgstr "Frans (Zwitserland, Macintosh)"
 
-#: ../rules/base.xml.in.h:294
+#: ../rules/base.xml.in.h:298
 msgid "French (Switzerland, Sun dead keys)"
 msgstr "Frans (Zwitserland, Sun-dode toetsen)"
 
-#: ../rules/base.xml.in.h:295
+#: ../rules/base.xml.in.h:299
 msgid "French (Switzerland, eliminate dead keys)"
 msgstr "Frans (Zwitserland, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:296
+#: ../rules/base.xml.in.h:300
 msgid "French (alternative)"
 msgstr "Frans (alternatief)"
 
-#: ../rules/base.xml.in.h:297
+#: ../rules/base.xml.in.h:301
 msgid "French (alternative, Sun dead keys)"
 msgstr "Frans (alternatief, Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:298
+#: ../rules/base.xml.in.h:302
 msgid "French (alternative, eliminate dead keys)"
 msgstr "Frans (alternatief, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:299
+#: ../rules/base.xml.in.h:303
 msgid "French (alternative, latin-9 only)"
 msgstr "Fans (alternatief, enkel latin-9)"
 
-#: ../rules/base.xml.in.h:300
+#: ../rules/base.xml.in.h:304
 msgid "French (eliminate dead keys)"
 msgstr "Frans (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:301
+#: ../rules/base.xml.in.h:305
 msgid "French (legacy, alternative)"
 msgstr "Frans (historisch, alternatief)"
 
-#: ../rules/base.xml.in.h:302
+#: ../rules/base.xml.in.h:306
 msgid "French (legacy, alternative, Sun dead keys)"
 msgstr "Frans (historisch, alternatief, Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:303
+#: ../rules/base.xml.in.h:307
 msgid "French (legacy, alternative, eliminate dead keys)"
 msgstr "Frans (historisch, alternatief, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:304
+#: ../rules/base.xml.in.h:308
 msgid "Fujitsu-Siemens Computers AMILO laptop"
 msgstr "Fujitsu-Siemens Computers AMILO laptop"
 
-#: ../rules/base.xml.in.h:305
+#: ../rules/base.xml.in.h:309
 msgid "Fula"
 msgstr "Fula"
 
-#: ../rules/base.xml.in.h:306
+#: ../rules/base.xml.in.h:310
 msgid "Ga"
 msgstr "Ga"
 
-#: ../rules/base.xml.in.h:307
+#: ../rules/base.xml.in.h:311
 msgid "Generic 101-key PC"
 msgstr "Algemeen 101-toetsen PC"
 
-#: ../rules/base.xml.in.h:308
+#: ../rules/base.xml.in.h:312
 msgid "Generic 102-key (Intl) PC"
 msgstr "Algemeen 102-toetsen (internationaal) PC"
 
-#: ../rules/base.xml.in.h:309
+#: ../rules/base.xml.in.h:313
 msgid "Generic 104-key PC"
 msgstr "Algemeen 104-toetsen PC"
 
-#: ../rules/base.xml.in.h:310
+#: ../rules/base.xml.in.h:314
 msgid "Generic 105-key (Intl) PC"
 msgstr "Algemeen 105-toetsen (internationaal) PC"
 
-#: ../rules/base.xml.in.h:311
+#: ../rules/base.xml.in.h:315
 msgid "Genius Comfy KB-12e"
 msgstr "Genius Comfy KB-12e"
 
-#: ../rules/base.xml.in.h:312
+#: ../rules/base.xml.in.h:316
 msgid "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
 msgstr "Genius Comfy KB-16M / Genius MM toetsenbord KWD-910"
 
-#: ../rules/base.xml.in.h:313
+#: ../rules/base.xml.in.h:317
 msgid "Genius Comfy KB-21e-Scroll"
 msgstr "Genius Comfy KB-21e-Scroll"
 
-#: ../rules/base.xml.in.h:314
+#: ../rules/base.xml.in.h:318
 msgid "Genius KB-19e NB"
 msgstr "Genius KB-19e NB"
 
-#: ../rules/base.xml.in.h:315
+#: ../rules/base.xml.in.h:319
 msgid "Genius KKB-2050HS"
 msgstr "Genius KKB-2050HS"
 
-#: ../rules/base.xml.in.h:316
+#: ../rules/base.xml.in.h:320
 msgid "Georgian"
 msgstr "Georgisch"
 
-#: ../rules/base.xml.in.h:317
+#: ../rules/base.xml.in.h:321
 msgid "Georgian (France, AZERTY Tskapo)"
 msgstr "Georgisch (Frankrijk, AZERTY Tskapo)"
 
-#: ../rules/base.xml.in.h:318
+#: ../rules/base.xml.in.h:322
 msgid "Georgian (Italy)"
 msgstr "Georgisch (Italië)"
 
-#: ../rules/base.xml.in.h:319
+#: ../rules/base.xml.in.h:323
 msgid "Georgian (MESS)"
 msgstr "Georgisch (MESS)"
 
-#: ../rules/base.xml.in.h:320
+#: ../rules/base.xml.in.h:324
 msgid "Georgian (ergonomic)"
 msgstr "Georgisch (ergonomisch)"
 
-#: ../rules/base.xml.in.h:321
+#: ../rules/base.xml.in.h:325 ../rules/base.extras.xml.in.h:12
 msgid "German"
 msgstr "Duits"
 
-#: ../rules/base.xml.in.h:322
+#: ../rules/base.xml.in.h:326
 msgid "German (Austria)"
 msgstr "Duits (Oostenrijk)"
 
-#: ../rules/base.xml.in.h:323
+#: ../rules/base.xml.in.h:327
 msgid "German (Austria, Macintosh)"
 msgstr "Duits (Oostenrijk, Macintosh)"
 
-#: ../rules/base.xml.in.h:324
+#: ../rules/base.xml.in.h:328
 msgid "German (Austria, Sun dead keys)"
 msgstr "Duits (Oostenrijk, Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:325
+#: ../rules/base.xml.in.h:329
 msgid "German (Austria, eliminate dead keys)"
 msgstr "Duits (Oostenrijk, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:326
+#: ../rules/base.xml.in.h:330
 msgid "German (Dvorak)"
 msgstr "Duits (Dvorak)"
 
-#: ../rules/base.xml.in.h:327
+#: ../rules/base.xml.in.h:331
 msgid "German (Macintosh)"
 msgstr "Duits (Macintosh)"
 
-#: ../rules/base.xml.in.h:328
+#: ../rules/base.xml.in.h:332
 msgid "German (Macintosh, eliminate dead keys)"
 msgstr "Duits (Macintosh, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:329
+#: ../rules/base.xml.in.h:333
 msgid "German (Neo 2)"
 msgstr "Duits (Neo 2)"
 
-#: ../rules/base.xml.in.h:330
+#: ../rules/base.xml.in.h:334
 msgid "German (Sun dead keys)"
 msgstr "Duits (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:331
+#: ../rules/base.xml.in.h:335
 msgid "German (Switzerland)"
 msgstr "Duits (Zwitserland)"
 
-#: ../rules/base.xml.in.h:332
+#: ../rules/base.xml.in.h:336
 msgid "German (Switzerland, Macintosh)"
 msgstr "Duits (Zwitserland, Macintosh)"
 
-#: ../rules/base.xml.in.h:333
+#: ../rules/base.xml.in.h:337
 msgid "German (Switzerland, Sun dead keys)"
 msgstr "Duits (Zwitserland, Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:334
+#: ../rules/base.xml.in.h:338
 msgid "German (Switzerland, eliminate dead keys)"
 msgstr "Duits (Zwitserland, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:335
+#: ../rules/base.xml.in.h:339
 msgid "German (Switzerland, legacy)"
 msgstr "Duits (Zwitserland, historisch)"
 
 # acute - aigu  (bijv.  á)
-#: ../rules/base.xml.in.h:336
+#: ../rules/base.xml.in.h:340
 msgid "German (dead acute)"
 msgstr "Duits (dode aigu)"
 
 # grave (bijv: à)
-#: ../rules/base.xml.in.h:337
+#: ../rules/base.xml.in.h:341
 msgid "German (dead grave acute)"
 msgstr "Duits (dode grave en aigu)"
 
-#: ../rules/base.xml.in.h:338
+#: ../rules/base.xml.in.h:342
 msgid "German (eliminate dead keys)"
 msgstr "Duits (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:339
-msgid "German (qwerty)"
-msgstr "Duits (qwerty)"
-
-#: ../rules/base.xml.in.h:340
+#: ../rules/base.xml.in.h:343
 msgid "Greek"
 msgstr "Grieks"
 
-#: ../rules/base.xml.in.h:341
+#: ../rules/base.xml.in.h:344
 msgid "Greek (eliminate dead keys)"
 msgstr "Grieks (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:342
+#: ../rules/base.xml.in.h:345
 msgid "Greek (extended)"
 msgstr "Grieks (uitgebreid)"
 
-#: ../rules/base.xml.in.h:343
+#: ../rules/base.xml.in.h:346
 msgid "Greek (polytonic)"
 msgstr "Grieks (meertonig)"
 
-#: ../rules/base.xml.in.h:344
+#: ../rules/base.xml.in.h:347
 msgid "Greek (simple)"
 msgstr "Grieks (eenvoudig)"
 
-#: ../rules/base.xml.in.h:345
+#: ../rules/base.xml.in.h:348
 msgid "Gujarati"
 msgstr "Gujarati"
 
 # het zal wel een merk zijn
-#: ../rules/base.xml.in.h:346
+#: ../rules/base.xml.in.h:349
 msgid "Gyration"
 msgstr "Gyration"
 
-#: ../rules/base.xml.in.h:347
+#: ../rules/base.xml.in.h:350
 msgid "HTC Dream"
 msgstr "HTC Dream"
 
-#: ../rules/base.xml.in.h:348
+#: ../rules/base.xml.in.h:351
 msgid "Happy Hacking Keyboard"
 msgstr "Happy Hacking toetsenbord"
 
-#: ../rules/base.xml.in.h:349
+#: ../rules/base.xml.in.h:352
 msgid "Happy Hacking Keyboard for Mac"
 msgstr "Happy Hacking toetsenbord voor Mac"
 
-#: ../rules/base.xml.in.h:350
+#: ../rules/base.xml.in.h:353
 msgid "Hausa"
 msgstr "Hausa"
 
-#: ../rules/base.xml.in.h:351
+#: ../rules/base.xml.in.h:354
 msgid "Hebrew"
 msgstr "Hebreeuws"
 
-#: ../rules/base.xml.in.h:352
+#: ../rules/base.xml.in.h:355
 msgid "Hebrew (Biblical, Tiro)"
 msgstr "Hebreeuws (Bijbers, Tiro)"
 
-#: ../rules/base.xml.in.h:353
+#: ../rules/base.xml.in.h:356
 msgid "Hebrew (lyx)"
 msgstr "Hebreeuws (lyx)"
 
-#: ../rules/base.xml.in.h:354
+#: ../rules/base.xml.in.h:357
 msgid "Hebrew (phonetic)"
 msgstr "Hebreeuws (fonetisch)"
 
-#: ../rules/base.xml.in.h:355
+#: ../rules/base.xml.in.h:358
 msgid "Hewlett-Packard Internet Keyboard"
 msgstr "Hewlett-Packard internet toetsenbord"
 
-#: ../rules/base.xml.in.h:356
+#: ../rules/base.xml.in.h:359
 msgid "Hewlett-Packard Mini 110 Notebook"
 msgstr "Hewlett-Packard Mini 110 Notebook"
 
-#: ../rules/base.xml.in.h:357
+#: ../rules/base.xml.in.h:360
 msgid "Hewlett-Packard Omnibook 500 FA"
 msgstr "Hewlett-Packard Omnibook 500 FA"
 
-#: ../rules/base.xml.in.h:358
+#: ../rules/base.xml.in.h:361
 msgid "Hewlett-Packard Omnibook 5xx"
 msgstr "Hewlett-Packard Omnibook 5xx"
 
-#: ../rules/base.xml.in.h:359
+#: ../rules/base.xml.in.h:362
 msgid "Hewlett-Packard Omnibook 6000/6100"
 msgstr "Hewlett-Packard Omnibook 6000/6100"
 
-#: ../rules/base.xml.in.h:360
+#: ../rules/base.xml.in.h:363
 msgid "Hewlett-Packard Omnibook XE3 GC"
 msgstr "Hewlett-Packard Omnibook XE3 GC"
 
-#: ../rules/base.xml.in.h:361
+#: ../rules/base.xml.in.h:364
 msgid "Hewlett-Packard Omnibook XE3 GF"
 msgstr "Hewlett-Packard Omnibook XE3 GF"
 
-#: ../rules/base.xml.in.h:362
+#: ../rules/base.xml.in.h:365
 msgid "Hewlett-Packard Omnibook XT1000"
 msgstr "Hewlett-Packard Omnibook XT1000"
 
-#: ../rules/base.xml.in.h:363
+#: ../rules/base.xml.in.h:366
 msgid "Hewlett-Packard Pavilion ZT11xx"
 msgstr "Hewlett-Packard Pavilion ZT11xx"
 
-#: ../rules/base.xml.in.h:364
+#: ../rules/base.xml.in.h:367
 msgid "Hewlett-Packard Pavilion dv5"
 msgstr "Hewlett-Packard Pavilion dv5"
 
-#: ../rules/base.xml.in.h:365
+#: ../rules/base.xml.in.h:368
 msgid "Hewlett-Packard SK-250x Multimedia Keyboard"
 msgstr "Hewlett-Packard SK-250x multimedia toetsenbord"
 
-#: ../rules/base.xml.in.h:366
+#: ../rules/base.xml.in.h:369
 msgid "Hewlett-Packard nx9020"
 msgstr "Hewlett-Packard nx9020"
 
-#: ../rules/base.xml.in.h:367
+#: ../rules/base.xml.in.h:370
 msgid "Hexadecimal"
 msgstr "Hexadecimaal"
 
-#: ../rules/base.xml.in.h:368
+#: ../rules/base.xml.in.h:371
 msgid "Hindi (Bolnagri)"
 msgstr "Hindi (Bolnagri)"
 
-#: ../rules/base.xml.in.h:369
+#: ../rules/base.xml.in.h:372
 msgid "Hindi (Wx)"
 msgstr "Hindi (Wx)"
 
-#: ../rules/base.xml.in.h:370
+#: ../rules/base.xml.in.h:373
 msgid "Honeywell Euroboard"
 msgstr "Honeywell Euroboard"
 
-#: ../rules/base.xml.in.h:371
+#: ../rules/base.xml.in.h:374
 msgid "Htc Dream phone"
 msgstr "Htc Dream phone"
 
-#: ../rules/base.xml.in.h:372
+#: ../rules/base.xml.in.h:375
 msgid "Hungarian"
 msgstr "Hongaars"
 
-#: ../rules/base.xml.in.h:373
+#: ../rules/base.xml.in.h:376
 msgid "Hungarian (101/qwerty/comma/dead keys)"
 msgstr "Hongaars (101/qwerty/komma/dode toetsen)"
 
-#: ../rules/base.xml.in.h:374
+#: ../rules/base.xml.in.h:377
 msgid "Hungarian (101/qwerty/comma/eliminate dead keys)"
 msgstr "Hongaars (101/qwerty/komma/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:375
+#: ../rules/base.xml.in.h:378
 msgid "Hungarian (101/qwerty/dot/dead keys)"
 msgstr "Hongaars (101/qwerty/punt/dode toetsen)"
 
-#: ../rules/base.xml.in.h:376
+#: ../rules/base.xml.in.h:379
 msgid "Hungarian (101/qwerty/dot/eliminate dead keys)"
 msgstr "Hongaars (101/qwerty/punt/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:377
+#: ../rules/base.xml.in.h:380
 msgid "Hungarian (101/qwertz/comma/dead keys)"
 msgstr "Hongaars (101/qwertz/komma/dode toetsen)"
 
-#: ../rules/base.xml.in.h:378
+#: ../rules/base.xml.in.h:381
 msgid "Hungarian (101/qwertz/comma/eliminate dead keys)"
 msgstr "Hongaars (101/qwertz/komma/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:379
+#: ../rules/base.xml.in.h:382
 msgid "Hungarian (101/qwertz/dot/dead keys)"
 msgstr "Hongaars (101/qwertz/punt/dode toetsen)"
 
-#: ../rules/base.xml.in.h:380
+#: ../rules/base.xml.in.h:383
 msgid "Hungarian (101/qwertz/dot/eliminate dead keys)"
 msgstr "Hongaars (101/qwertz/punt/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:381
+#: ../rules/base.xml.in.h:384
 msgid "Hungarian (102/qwerty/comma/dead keys)"
 msgstr "Hongaars (102/qwerty/komma/dode toetsen)"
 
-#: ../rules/base.xml.in.h:382
+#: ../rules/base.xml.in.h:385
 msgid "Hungarian (102/qwerty/comma/eliminate dead keys)"
 msgstr "Hongaars (102/qwerty/komma/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:383
+#: ../rules/base.xml.in.h:386
 msgid "Hungarian (102/qwerty/dot/dead keys)"
 msgstr "Hongaars (102/qwerty/punt/dode toetsen)"
 
-#: ../rules/base.xml.in.h:384
+#: ../rules/base.xml.in.h:387
 msgid "Hungarian (102/qwerty/dot/eliminate dead keys)"
 msgstr "Hongaars (102/qwerty/punt/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:385
+#: ../rules/base.xml.in.h:388
 msgid "Hungarian (102/qwertz/comma/dead keys)"
 msgstr "Hongaars (102/qwertz/komma/dode toetsen)"
 
-#: ../rules/base.xml.in.h:386
+#: ../rules/base.xml.in.h:389
 msgid "Hungarian (102/qwertz/comma/eliminate dead keys)"
 msgstr "Hongaars (102/qwertz/komma/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:387
+#: ../rules/base.xml.in.h:390
 msgid "Hungarian (102/qwertz/dot/dead keys)"
 msgstr "Hongaars (102/qwertz/punt/dode toetsen)"
 
-#: ../rules/base.xml.in.h:388
+#: ../rules/base.xml.in.h:391
 msgid "Hungarian (102/qwertz/dot/eliminate dead keys)"
 msgstr "Hongaars (102/qwertz/punt/zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:389
+#: ../rules/base.xml.in.h:392
 msgid "Hungarian (eliminate dead keys)"
 msgstr "Hongaars (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:390
+#: ../rules/base.xml.in.h:393
 msgid "Hungarian (qwerty)"
 msgstr "Hongaars (qwerty)"
 
-#: ../rules/base.xml.in.h:391
+#: ../rules/base.xml.in.h:394
 msgid "Hungarian (standard)"
 msgstr "Hongaars (standaard)"
 
-#: ../rules/base.xml.in.h:392
+#: ../rules/base.xml.in.h:395
 msgid "Hyper is mapped to Win-keys"
 msgstr "Hyper zit op de Win-toetsen"
 
-#: ../rules/base.xml.in.h:393
+#: ../rules/base.xml.in.h:396
 msgid "IBM Rapid Access"
 msgstr "IBM Rapid Access"
 
-#: ../rules/base.xml.in.h:394
+#: ../rules/base.xml.in.h:397
 msgid "IBM Rapid Access II"
 msgstr "IBM Rapid Access II"
 
-#: ../rules/base.xml.in.h:395
+#: ../rules/base.xml.in.h:398
 msgid "IBM Space Saver"
 msgstr "IBM Space Saver"
 
-#: ../rules/base.xml.in.h:396
+#: ../rules/base.xml.in.h:399
 msgid "IBM ThinkPad 560Z/600/600E/A22E"
 msgstr "IBM ThinkPad 560Z/600/600E/A22E"
 
-#: ../rules/base.xml.in.h:397
+#: ../rules/base.xml.in.h:400
 msgid "IBM ThinkPad R60/T60/R61/T61"
 msgstr "IBM ThinkPad R60/T60/R61/T61"
 
-#: ../rules/base.xml.in.h:398
+#: ../rules/base.xml.in.h:401
 msgid "IBM ThinkPad Z60m/Z60t/Z61m/Z61t"
 msgstr "IBM ThinkPad Z60m/Z60t/Z61m/Z61t"
 
-#: ../rules/base.xml.in.h:399
+#: ../rules/base.xml.in.h:402
 msgid "Icelandic"
 msgstr "IJslands"
 
-#: ../rules/base.xml.in.h:400
+#: ../rules/base.xml.in.h:403
 msgid "Icelandic (Dvorak)"
 msgstr "IJslands (Dvorak)"
 
-#: ../rules/base.xml.in.h:401
+#: ../rules/base.xml.in.h:404
 msgid "Icelandic (Macintosh)"
 msgstr "IJslands (Macintosh)"
 
-#: ../rules/base.xml.in.h:402
+#: ../rules/base.xml.in.h:405
 msgid "Icelandic (Sun dead keys)"
 msgstr "IJslands (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:403
+#: ../rules/base.xml.in.h:406
 msgid "Icelandic (eliminate dead keys)"
 msgstr "IJslands (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:404
+#: ../rules/base.xml.in.h:407
 msgid "Igbo"
 msgstr "Igbo"
 
-#: ../rules/base.xml.in.h:405
+#: ../rules/base.xml.in.h:408
 msgid "Indian"
 msgstr "Indisch"
 
-#: ../rules/base.xml.in.h:406
+#: ../rules/base.xml.in.h:409
 msgid "Inuktitut"
 msgstr "Inuktitut"
 
-#: ../rules/base.xml.in.h:407
+#: ../rules/base.xml.in.h:410
 msgid "Iraqi"
 msgstr "Irakees"
 
-#: ../rules/base.xml.in.h:408
+#: ../rules/base.xml.in.h:411
 msgid "Irish"
 msgstr "Iers"
 
-#: ../rules/base.xml.in.h:409
+#: ../rules/base.xml.in.h:412
 msgid "Irish (UnicodeExpert)"
 msgstr "Iers (UnicodeExpert)"
 
-#: ../rules/base.xml.in.h:410
+#: ../rules/base.xml.in.h:413
 msgid "Italian"
 msgstr "Italiaans"
 
-#: ../rules/base.xml.in.h:411
+#: ../rules/base.xml.in.h:414
 msgid "Italian (Macintosh)"
 msgstr "Italiaans (Macintosh)"
 
-#: ../rules/base.xml.in.h:412
+#: ../rules/base.xml.in.h:415
 msgid "Italian (US keyboard with Italian letters)"
 msgstr "Italiaans (US toetsenbord met Italiaanse lettertekens)"
 
-#: ../rules/base.xml.in.h:413
+#: ../rules/base.xml.in.h:416
 msgid "Italian (eliminate dead keys)"
 msgstr "Italiaans (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:414
+#: ../rules/base.xml.in.h:417
 msgid "Japanese"
 msgstr "Japans"
 
-#: ../rules/base.xml.in.h:415
+#: ../rules/base.xml.in.h:418
 msgid "Japanese (Kana 86)"
 msgstr "Japans (Kana 86)"
 
-#: ../rules/base.xml.in.h:416
+#: ../rules/base.xml.in.h:419
 msgid "Japanese (Kana)"
 msgstr "Japans (Kana)"
 
-#: ../rules/base.xml.in.h:417
+#: ../rules/base.xml.in.h:420
 msgid "Japanese (Macintosh)"
 msgstr "Japans (Macintosh)"
 
-#: ../rules/base.xml.in.h:418
+#: ../rules/base.xml.in.h:421
 msgid "Japanese (OADG 109A)"
 msgstr "Japans (OADG 109A)"
 
-#: ../rules/base.xml.in.h:419
+#: ../rules/base.xml.in.h:422
 msgid "Japanese (PC-98xx Series)"
 msgstr "Japans (PC-98xx serie)"
 
-#: ../rules/base.xml.in.h:420
+#: ../rules/base.xml.in.h:423
 msgid "Japanese keyboard options"
 msgstr "Japanse toetsenbordopties"
 
-#: ../rules/base.xml.in.h:421
+#: ../rules/base.xml.in.h:424
 msgid "Kalmyk"
 msgstr "Kalmyk"
 
-#: ../rules/base.xml.in.h:422
+#: ../rules/base.xml.in.h:425
 msgid "Kana Lock key is locking"
 msgstr "Kana Lock-toets is blokkerend"
 
-#: ../rules/base.xml.in.h:423
+#: ../rules/base.xml.in.h:426
 msgid "Kannada"
 msgstr "Kannada"
 
-#: ../rules/base.xml.in.h:424
+#: ../rules/base.xml.in.h:427
 msgid "Kashubian"
 msgstr "Kasjoebisch"
 
-#: ../rules/base.xml.in.h:425
+#: ../rules/base.xml.in.h:428
 msgid "Kazakh"
 msgstr "Kazachstaans"
 
-#: ../rules/base.xml.in.h:426
+#: ../rules/base.xml.in.h:429
 msgid "Kazakh (with Russian)"
 msgstr "Kazachstaans (met Russisch)"
 
 # om zeep te helpen/af te breken/te stoppen/
-#: ../rules/base.xml.in.h:427
+#: ../rules/base.xml.in.h:430
 msgid "Key sequence to kill the X server"
 msgstr "Toetscombinatie om de X-server af te breken"
 
 # aan te zetten/te kiezen/te selecteren/te krijgen/te bereiken
 # voor het derde niveau
 # 'to choose' is hier een slechte woordkeuze IMO
-#: ../rules/base.xml.in.h:428
+#: ../rules/base.xml.in.h:431
 msgid "Key to choose 3rd level"
 msgstr "De toets om het 3e niveau te krijgen"
 
 # aan te zetten/te kiezen/te selecteren/te krijgen
 #
 # 'to choose' is hier een slechte woordkeuze IMO
-#: ../rules/base.xml.in.h:429
+#: ../rules/base.xml.in.h:432
 msgid "Key to choose 5th level"
 msgstr "De toets om het 5e niveau te krijgen"
 
 # wijzigen/veranderen
-#: ../rules/base.xml.in.h:430
+#: ../rules/base.xml.in.h:433
 msgid "Key(s) to change layout"
 msgstr "De toets(en) om de indeling te veranderen"
 
-#: ../rules/base.xml.in.h:431
+#: ../rules/base.xml.in.h:434
 msgid "Keytronic FlexPro"
 msgstr "Keytronic FlexPro"
 
-#: ../rules/base.xml.in.h:432
+#: ../rules/base.xml.in.h:435
 msgid "Khmer (Cambodia)"
 msgstr "Khmer (Cambodja)"
 
-#: ../rules/base.xml.in.h:433
+#: ../rules/base.xml.in.h:436
 msgid "Kikuyu"
 msgstr "Kikuyu"
 
-#: ../rules/base.xml.in.h:434
+#: ../rules/base.xml.in.h:437
 msgid "Kinesis"
 msgstr "Kinesis"
 
-#: ../rules/base.xml.in.h:435
+#: ../rules/base.xml.in.h:438
 msgid "Komi"
 msgstr "Komi"
 
-#: ../rules/base.xml.in.h:436
+#: ../rules/base.xml.in.h:439
 msgid "Korean"
 msgstr "Koreaans"
 
-#: ../rules/base.xml.in.h:437
+#: ../rules/base.xml.in.h:440
 msgid "Korean (101/104 key compatible)"
 msgstr "Koreaans (101/104-toetsen compatibel)"
 
-#: ../rules/base.xml.in.h:438
+#: ../rules/base.xml.in.h:441
 msgid "Kurdish (Iran, Arabic-Latin)"
 msgstr "Koerdisch (Iran, Arabisch-Latijns)"
 
-#: ../rules/base.xml.in.h:439
+#: ../rules/base.xml.in.h:442
 msgid "Kurdish (Iran, F)"
 msgstr "Koerdisch (Iran, F)"
 
-#: ../rules/base.xml.in.h:440
+#: ../rules/base.xml.in.h:443
 msgid "Kurdish (Iran, Latin Alt-Q)"
 msgstr "Koerdisch (Iran, Latijns Alt-Q)"
 
-#: ../rules/base.xml.in.h:441
+#: ../rules/base.xml.in.h:444
 msgid "Kurdish (Iran, Latin Q)"
 msgstr "Koerdisch (Iran, Latijns Q)"
 
-#: ../rules/base.xml.in.h:442
+#: ../rules/base.xml.in.h:445
 msgid "Kurdish (Iraq, Arabic-Latin)"
 msgstr "Koerdisch (Irak, Arabisch-Latijns)"
 
-#: ../rules/base.xml.in.h:443
+#: ../rules/base.xml.in.h:446
 msgid "Kurdish (Iraq, F)"
 msgstr "Koerdisch (Irak, F)"
 
-#: ../rules/base.xml.in.h:444
+#: ../rules/base.xml.in.h:447
 msgid "Kurdish (Iraq, Latin Alt-Q)"
 msgstr "Koerdisch (Irak, Latijns Alt-Q)"
 
-#: ../rules/base.xml.in.h:445
+#: ../rules/base.xml.in.h:448
 msgid "Kurdish (Iraq, Latin Q)"
 msgstr "Koerdisch (Irak, Latijns Q)"
 
-#: ../rules/base.xml.in.h:446
+#: ../rules/base.xml.in.h:449
 msgid "Kurdish (Syria, F)"
 msgstr "Koerdisch (Syrië, F)"
 
-#: ../rules/base.xml.in.h:447
+#: ../rules/base.xml.in.h:450
 msgid "Kurdish (Syria, Latin Alt-Q)"
 msgstr "Koerdisch (Syrië, Latijns Alt-Q)"
 
-#: ../rules/base.xml.in.h:448
+#: ../rules/base.xml.in.h:451
 msgid "Kurdish (Syria, Latin Q)"
 msgstr "Koerdisch (Syrië, Latijns Q)"
 
-#: ../rules/base.xml.in.h:449
+#: ../rules/base.xml.in.h:452
 msgid "Kurdish (Turkey, F)"
 msgstr "Koerdisch (Turks, F)"
 
-#: ../rules/base.xml.in.h:450
+#: ../rules/base.xml.in.h:453
 msgid "Kurdish (Turkey, Latin Alt-Q)"
 msgstr "Koerdisch (Turks, Latijns Alt-Q)"
 
-#: ../rules/base.xml.in.h:451
+#: ../rules/base.xml.in.h:454
 msgid "Kurdish (Turkey, Latin Q)"
 msgstr "Koerdisch (Turks, Latijns Q)"
 
-#: ../rules/base.xml.in.h:452
+#: ../rules/base.xml.in.h:455
 msgid "Kyrgyz"
 msgstr "Kirgizisch"
 
-#: ../rules/base.xml.in.h:453
+#: ../rules/base.xml.in.h:456
 msgid "Kyrgyz (phonetic)"
 msgstr "Kirgizisch (fonetisch)"
 
-#: ../rules/base.xml.in.h:454
+#: ../rules/base.xml.in.h:457
 msgid "Lao"
 msgstr "Lao"
 
-#: ../rules/base.xml.in.h:455
+#: ../rules/base.xml.in.h:458
 msgid "Lao (STEA proposed standard layout)"
 msgstr "Lao (STEA voorgestelde standaard indeling)"
 
-#: ../rules/base.xml.in.h:456
+#: ../rules/base.xml.in.h:459
 msgid "Laptop/notebook Compaq (eg. Armada) Laptop Keyboard"
 msgstr "Laptop/notebook Compaq (bijv. Armada) laptop toetsenbord"
 
-#: ../rules/base.xml.in.h:457
+#: ../rules/base.xml.in.h:460
 msgid "Laptop/notebook Compaq (eg. Presario) Internet Keyboard"
 msgstr "Laptop/notebook Compaq (bijv. Presario) internet toetsenbord"
 
-#: ../rules/base.xml.in.h:458
+#: ../rules/base.xml.in.h:461
 msgid "Laptop/notebook eMachines m68xx"
 msgstr "Laptop/notebook eMachines m68xx"
 
-#: ../rules/base.xml.in.h:459 ../rules/base.extras.xml.in.h:12
+#: ../rules/base.xml.in.h:462 ../rules/base.extras.xml.in.h:16
 msgid "Latvian"
 msgstr "Lets"
 
-#: ../rules/base.xml.in.h:460
+#: ../rules/base.xml.in.h:463
 msgid "Latvian (F variant)"
 msgstr "Lets (F variant)"
 
-#: ../rules/base.xml.in.h:461
+#: ../rules/base.xml.in.h:464
 msgid "Latvian (adapted)"
 msgstr "Lets (aangepast)"
 
-#: ../rules/base.xml.in.h:462
+#: ../rules/base.xml.in.h:465
 msgid "Latvian (apostrophe variant)"
 msgstr "Lets (apostrof variant)"
 
-#: ../rules/base.xml.in.h:463
+#: ../rules/base.xml.in.h:466
 msgid "Latvian (ergonomic, ŪGJRMV)"
 msgstr "Lets (ergonomisch,  ŪGJRMV)"
 
-#: ../rules/base.xml.in.h:464
+#: ../rules/base.xml.in.h:467
 msgid "Latvian (modern)"
 msgstr "Lets (modern)"
 
-#: ../rules/base.xml.in.h:465
+#: ../rules/base.xml.in.h:468
 msgid "Latvian (tilde variant)"
 msgstr "Lets (tilde variant)"
 
-#: ../rules/base.xml.in.h:466
+#: ../rules/base.xml.in.h:469
 msgid "Left Alt"
 msgstr "Linker Alt-toets"
 
-#: ../rules/base.xml.in.h:467
+#: ../rules/base.xml.in.h:470
 msgid "Left Alt (while pressed)"
 msgstr "Linker Alt-toets (ingedrukt houden)"
 
-#: ../rules/base.xml.in.h:468
+#: ../rules/base.xml.in.h:471
 msgid "Left Alt is swapped with Left Win"
 msgstr "De linker Alt-toets en Win-toets worden gewisseld"
 
-#: ../rules/base.xml.in.h:469
+#: ../rules/base.xml.in.h:472
 msgid "Left Ctrl"
 msgstr "Linker Ctrl-toets"
 
 # Linker Win-toets wisselt naar de eerste indeling, rechter Win/Menu-toets wisselt naar de laatste indeling
 # vorige indeling/laatste indeling
-#: ../rules/base.xml.in.h:470
+#: ../rules/base.xml.in.h:473
 msgid "Left Ctrl (to first layout), Right Ctrl (to last layout)"
 msgstr "Linker Ctrl-toets (naar de eerste indeling), rechter Ctrl-toets (naar de laatste indeling)"
 
+# werkt als/fungeert als/is
+#: ../rules/base.xml.in.h:474
+msgid "Left Ctrl as Meta"
+msgstr "Linker Ctrl is Meta-toets"
+
 # Linker Ctrl + Shift-toets
-#: ../rules/base.xml.in.h:471
+#: ../rules/base.xml.in.h:475
 msgid "Left Ctrl+Left Shift"
 msgstr "Linker Ctrl + linker Shift-toets"
 
-#: ../rules/base.xml.in.h:472
+#: ../rules/base.xml.in.h:476
 msgid "Left Shift"
 msgstr "Linker Shift-toets"
 
-#: ../rules/base.xml.in.h:473
+#: ../rules/base.xml.in.h:477
 msgid "Left Win"
 msgstr "Linker Win-toets"
 
 # Linker Win-toets wisselt naar de eerste indeling, rechter Win/Menu-toets wisselt naar de laatste indeling
-#: ../rules/base.xml.in.h:474
+#: ../rules/base.xml.in.h:478
 msgid "Left Win (to first layout), Right Win/Menu (to last layout)"
 msgstr "Linker Win-toets (naar de eerste indeling), rechter Win/Menu-toets (naar de laatste indeling)"
 
-#: ../rules/base.xml.in.h:475
+#: ../rules/base.xml.in.h:479
 msgid "Left Win (while pressed)"
 msgstr "Linker Win-toets (ingedrukt houden)"
 
-#: ../rules/base.xml.in.h:476
+#: ../rules/base.xml.in.h:480
 msgid "Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser"
 msgstr "Linker Win-toets geeft het 5de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer"
 
-#: ../rules/base.xml.in.h:477
+#: ../rules/base.xml.in.h:481
 msgid "Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
 msgstr "Linker Win-toets geeft het 5de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer, één toetsaanslag heft de vergrendeling op"
 
-#: ../rules/base.xml.in.h:478
+#: ../rules/base.xml.in.h:482
 msgid "LeftCtrl+LeftWin (to first layout), RightCtrl+Menu (to second layout)"
 msgstr "Linker Ctrl+ Linker Win-toets (naar de eerste indeling), rechter Ctrl+Menu-toets (naar de tweede indeling)"
 
-#: ../rules/base.xml.in.h:479
+#: ../rules/base.xml.in.h:483
 msgid "Legacy"
 msgstr "Historisch"
 
-#: ../rules/base.xml.in.h:480
+#: ../rules/base.xml.in.h:484
 msgid "Legacy Wang 724"
 msgstr "Historisch Wang 724"
 
 #. Actually, with KP_SEPARATOR, as the old keypad(comma)
-#: ../rules/base.xml.in.h:482
+#: ../rules/base.xml.in.h:486
 msgid "Legacy key with comma"
 msgstr "Historisch cijferblok met komma"
 
-#: ../rules/base.xml.in.h:483
+#: ../rules/base.xml.in.h:487
 msgid "Legacy key with dot"
 msgstr "Historisch cijferblok met punt"
 
-#: ../rules/base.xml.in.h:484 ../rules/base.extras.xml.in.h:21
+#: ../rules/base.xml.in.h:488 ../rules/base.extras.xml.in.h:25
 msgid "Lithuanian"
 msgstr "Litouws"
 
-#: ../rules/base.xml.in.h:485
+#: ../rules/base.xml.in.h:489
 msgid "Lithuanian (IBM LST 1205-92)"
 msgstr "Litouws (IBM LST 1205-92)"
 
-#: ../rules/base.xml.in.h:486
+#: ../rules/base.xml.in.h:490
 msgid "Lithuanian (LEKP)"
 msgstr "Litouws (LEKP)"
 
-#: ../rules/base.xml.in.h:487
+#: ../rules/base.xml.in.h:491
 msgid "Lithuanian (LEKPa)"
 msgstr "Litouws (LEKPa)"
 
-#: ../rules/base.xml.in.h:488
+#: ../rules/base.xml.in.h:492
 msgid "Lithuanian (US keyboard with Lithuanian letters)"
 msgstr "Litouws (US toetsenbord met Litouwse lettertekens)"
 
-#: ../rules/base.xml.in.h:489
+#: ../rules/base.xml.in.h:493
 msgid "Lithuanian (standard)"
 msgstr "Litouws (standaard)"
 
-#: ../rules/base.xml.in.h:490
+#: ../rules/base.xml.in.h:494
 msgid "Logitech Access Keyboard"
 msgstr "Logitech Access toetsenbord"
 
-#: ../rules/base.xml.in.h:491
+#: ../rules/base.xml.in.h:495
 msgid "Logitech Cordless Desktop"
 msgstr "Logitech Cordless Desktop"
 
-#: ../rules/base.xml.in.h:492
+#: ../rules/base.xml.in.h:496
 msgid "Logitech Cordless Desktop (alternate option)"
 msgstr "Logitech Cordless Desktop (alternatieve optie)"
 
-#: ../rules/base.xml.in.h:493
+#: ../rules/base.xml.in.h:497
 msgid "Logitech Cordless Desktop EX110"
 msgstr "Logitech Cordless Desktop EX110"
 
-#: ../rules/base.xml.in.h:494
+#: ../rules/base.xml.in.h:498
 msgid "Logitech Cordless Desktop LX-300"
 msgstr "Logitech Cordless Desktop LX-300"
 
-#: ../rules/base.xml.in.h:495
+#: ../rules/base.xml.in.h:499
 msgid "Logitech Cordless Desktop Navigator"
 msgstr "Logitech Cordless Desktop Navigator"
 
-#: ../rules/base.xml.in.h:496
+#: ../rules/base.xml.in.h:500
 msgid "Logitech Cordless Desktop Optical"
 msgstr "Logitech Cordless Desktop Optisch"
 
-#: ../rules/base.xml.in.h:497
+#: ../rules/base.xml.in.h:501
 msgid "Logitech Cordless Desktop Pro (alternate option 2)"
 msgstr "Logitech Cordless Desktop Pro (alternatieve optie 2)"
 
-#: ../rules/base.xml.in.h:498
+#: ../rules/base.xml.in.h:502
 msgid "Logitech Cordless Desktop iTouch"
 msgstr "Logitech Cordless Desktop iTouch"
 
-#: ../rules/base.xml.in.h:499
+#: ../rules/base.xml.in.h:503
 msgid "Logitech Cordless Freedom/Desktop Navigator"
 msgstr "Logitech Cordless Freedom/Desktop Navigator"
 
-#: ../rules/base.xml.in.h:500
+#: ../rules/base.xml.in.h:504
 msgid "Logitech G15 extra keys via G15daemon"
 msgstr "Logitech G15 extra toetsen via G15daemon"
 
-#: ../rules/base.xml.in.h:501
+#: ../rules/base.xml.in.h:505
 msgid "Logitech Generic Keyboard"
 msgstr "Logitech algemeen toetsenbord"
 
-#: ../rules/base.xml.in.h:502
+#: ../rules/base.xml.in.h:506
 msgid "Logitech Internet 350 Keyboard"
 msgstr "Logitech internet 350 toetsenbord"
 
-#: ../rules/base.xml.in.h:503
+#: ../rules/base.xml.in.h:507
 msgid "Logitech Internet Keyboard"
 msgstr "Logitech internet toetsenbord"
 
-#: ../rules/base.xml.in.h:504
+#: ../rules/base.xml.in.h:508
 msgid "Logitech Internet Navigator Keyboard"
 msgstr "Logitech Internet Navigator toetsenbord"
 
-#: ../rules/base.xml.in.h:505
+#: ../rules/base.xml.in.h:509
 msgid "Logitech Media Elite Keyboard"
 msgstr "Logitech Media Elite toetsenbord"
 
-#: ../rules/base.xml.in.h:506
+#: ../rules/base.xml.in.h:510
 msgid "Logitech Ultra-X Cordless Media Desktop Keyboard"
 msgstr "Logitech Ultra-X Cordless Media Desktop toetsenbord"
 
-#: ../rules/base.xml.in.h:507
+#: ../rules/base.xml.in.h:511
 msgid "Logitech Ultra-X Keyboard"
 msgstr "Logitech Ultra-X toetsenbord"
 
-#: ../rules/base.xml.in.h:508
+#: ../rules/base.xml.in.h:512
 msgid "Logitech diNovo Edge Keyboard"
 msgstr "Logitech diNovo Edge toetsenbord"
 
-#: ../rules/base.xml.in.h:509
+#: ../rules/base.xml.in.h:513
 msgid "Logitech diNovo Keyboard"
 msgstr "Logitech diNovo toetsenbord"
 
-#: ../rules/base.xml.in.h:510
+#: ../rules/base.xml.in.h:514
 msgid "Logitech iTouch"
 msgstr "Logitech iTouch"
 
-#: ../rules/base.xml.in.h:511
+#: ../rules/base.xml.in.h:515
 msgid "Logitech iTouch Cordless Keyboard (model Y-RB6)"
 msgstr "Logitech iTouch draadloos toetsenbord (model Y-RB6)"
 
-#: ../rules/base.xml.in.h:512
+#: ../rules/base.xml.in.h:516
 msgid "Logitech iTouch Internet Navigator Keyboard SE"
 msgstr "Logitech iTouch Internet Navigator toetsenbord SE"
 
-#: ../rules/base.xml.in.h:513
+#: ../rules/base.xml.in.h:517
 msgid "Logitech iTouch Internet Navigator Keyboard SE (USB)"
 msgstr "Logitech iTouch Internet Navigator toetsenbord SE (USB)"
 
 # Het Nedersorbisch is de noordelijke versie van de in Brandenburg
 # gesproken Sorbische taal.
 # http://nl.wikipedia.org/wiki/Nedersorbisch
-#: ../rules/base.xml.in.h:514
+#: ../rules/base.xml.in.h:518
 msgid "Lower Sorbian"
 msgstr "Nedersorbisch"
 
-#: ../rules/base.xml.in.h:515
+#: ../rules/base.xml.in.h:519
 msgid "Lower Sorbian (qwertz)"
 msgstr "Nedersorbisch (qwertz)"
 
-#: ../rules/base.xml.in.h:516
+#: ../rules/base.xml.in.h:520
 msgid "MacBook/MacBook Pro"
 msgstr "MacBook/MacBook Pro"
 
-#: ../rules/base.xml.in.h:517
+#: ../rules/base.xml.in.h:521
 msgid "MacBook/MacBook Pro (Intl)"
 msgstr "MacBook/MacBook Pro (Intl)"
 
-#: ../rules/base.xml.in.h:518
+#: ../rules/base.xml.in.h:522
 msgid "Macedonian"
 msgstr "Macedonisch"
 
-#: ../rules/base.xml.in.h:519
+#: ../rules/base.xml.in.h:523
 msgid "Macedonian (eliminate dead keys)"
 msgstr "Macedonisch (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:520
+#: ../rules/base.xml.in.h:524
 msgid "Macintosh"
 msgstr "Macintosh"
 
-#: ../rules/base.xml.in.h:521
+#: ../rules/base.xml.in.h:525
 msgid "Macintosh Old"
 msgstr "Macintosh oud"
 
 # Backspace-toets
-#: ../rules/base.xml.in.h:522
+#: ../rules/base.xml.in.h:526
 msgid "Make Caps Lock an additional Backspace"
 msgstr "Van Caps Lock een extra Backspace maken"
 
-#: ../rules/base.xml.in.h:523
+#: ../rules/base.xml.in.h:527
 msgid "Make Caps Lock an additional Control but keep the Caps_Lock keysym"
 msgstr "Van Caps Lock een extra Ctrl maken, maar de Caps_Lock keysym behouden"
 
-# Ctrl-toets
-#: ../rules/base.xml.in.h:524
-msgid "Make Caps Lock an additional Ctrl"
-msgstr "Van Caps Lock een extra Ctrl maken"
-
 # ESC-toets
-#: ../rules/base.xml.in.h:525
+#: ../rules/base.xml.in.h:528
 msgid "Make Caps Lock an additional ESC"
 msgstr "Van Caps Lock een extra ESC maken"
 
-#: ../rules/base.xml.in.h:526
+#: ../rules/base.xml.in.h:529
 msgid "Make Caps Lock an additional Hyper"
 msgstr "Van Caps Lock een extra Hyper maken"
 
-#: ../rules/base.xml.in.h:527
+#: ../rules/base.xml.in.h:530
 msgid "Make Caps Lock an additional Num Lock"
 msgstr "Van Caps Lock een extra Num Lock maken"
 
-#: ../rules/base.xml.in.h:528
+#: ../rules/base.xml.in.h:531
 msgid "Make Caps Lock an additional Super"
 msgstr "Van Caps Lock een extra Super maken"
 
 # een van de 23 Indische talen
-#: ../rules/base.xml.in.h:529
+#: ../rules/base.xml.in.h:532
 msgid "Malayalam"
 msgstr "Malayalam"
 
 # een van de 23 Indische talen
-#: ../rules/base.xml.in.h:530
+#: ../rules/base.xml.in.h:533
 msgid "Malayalam (Lalitha)"
 msgstr "Malayalam (Lalitha)"
 
-#: ../rules/base.xml.in.h:531
+#: ../rules/base.xml.in.h:534
 msgid "Malayalam (enhanced Inscript with Rupee Sign)"
 msgstr "Malayalam (verbeterd Inscript met Roepie-teken)"
 
-#: ../rules/base.xml.in.h:532
+#: ../rules/base.xml.in.h:535
 msgid "Maltese"
 msgstr "Maltees"
 
-#: ../rules/base.xml.in.h:533
+#: ../rules/base.xml.in.h:536
 msgid "Maltese (with US layout)"
 msgstr "Maltees (met US-indeling)"
 
-#: ../rules/base.xml.in.h:534
+#: ../rules/base.xml.in.h:537
 msgid "Maori"
 msgstr "Maori"
 
-#: ../rules/base.xml.in.h:535
+#: ../rules/base.xml.in.h:538
 msgid "Mari"
 msgstr "Mari"
 
-#: ../rules/base.xml.in.h:536
+#: ../rules/base.xml.in.h:539
 msgid "Memorex MX1998"
 msgstr "Memorex MX1998"
 
-#: ../rules/base.xml.in.h:537
+#: ../rules/base.xml.in.h:540
 msgid "Memorex MX2500 EZ-Access Keyboard"
 msgstr "Memorex MX2500 EZ-Access toetsenbord"
 
-#: ../rules/base.xml.in.h:538
+#: ../rules/base.xml.in.h:541
 msgid "Memorex MX2750"
 msgstr "Memorex MX2750"
 
-#: ../rules/base.xml.in.h:539
+#: ../rules/base.xml.in.h:542
 msgid "Menu"
 msgstr "Menu"
 
-#: ../rules/base.xml.in.h:540
+#: ../rules/base.xml.in.h:543
+msgid "Menu as Right Ctrl"
+msgstr "Menu is rechter Ctrl-toets"
+
+#: ../rules/base.xml.in.h:544
 msgid "Meta is mapped to Left Win"
 msgstr "Meta zit op de linker Win-toets"
 
-#: ../rules/base.xml.in.h:541
+#: ../rules/base.xml.in.h:545
 msgid "Meta is mapped to Win keys"
 msgstr "Meta zit op de Win-toetsen"
 
-#: ../rules/base.xml.in.h:542
-msgid "Meta on Left Ctrl"
-msgstr "Meta op Linker Ctrl-toets"
-
-#: ../rules/base.xml.in.h:543
+#: ../rules/base.xml.in.h:546
 msgid "Microsoft Comfort Curve Keyboard 2000"
 msgstr "Microsoft Comfort Curve toetsenbord 2000"
 
-#: ../rules/base.xml.in.h:544
+#: ../rules/base.xml.in.h:547
 msgid "Microsoft Internet Keyboard"
 msgstr "Microsoft internet toetsenbord"
 
-#: ../rules/base.xml.in.h:545
+#: ../rules/base.xml.in.h:548
 msgid "Microsoft Internet Keyboard Pro, Swedish"
 msgstr "Microsoft Internet Keyboard Pro, Zweeds"
 
-#: ../rules/base.xml.in.h:546
+#: ../rules/base.xml.in.h:549
 msgid "Microsoft Natural"
 msgstr "Microsoft Natural"
 
-#: ../rules/base.xml.in.h:547
+#: ../rules/base.xml.in.h:550
 msgid "Microsoft Natural Keyboard Elite"
 msgstr "Microsoft Natural Keyboard Elite"
 
-#: ../rules/base.xml.in.h:548
+#: ../rules/base.xml.in.h:551
 msgid "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
 msgstr "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
 
-#: ../rules/base.xml.in.h:549
+#: ../rules/base.xml.in.h:552
 msgid "Microsoft Natural Keyboard Pro OEM"
 msgstr "Microsoft Natural Keyboard Pro OEM"
 
-#: ../rules/base.xml.in.h:550
+#: ../rules/base.xml.in.h:553
 msgid "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
 msgstr "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
 
-#: ../rules/base.xml.in.h:551
+#: ../rules/base.xml.in.h:554
 msgid "Microsoft Natural Wireless Ergonomic Keyboard 4000"
 msgstr "Microsoft Natural Wireless Ergonomic Keyboard 4000"
 
-#: ../rules/base.xml.in.h:552
+#: ../rules/base.xml.in.h:555
 msgid "Microsoft Natural Wireless Ergonomic Keyboard 7000"
 msgstr "Microsoft Natural Wireless Ergonomic Keyboard 7000"
 
-#: ../rules/base.xml.in.h:553
+#: ../rules/base.xml.in.h:556
 msgid "Microsoft Office Keyboard"
 msgstr "Microsoft Office toetsenbord"
 
-#: ../rules/base.xml.in.h:554
+#: ../rules/base.xml.in.h:557
 msgid "Microsoft Wireless Multimedia Keyboard 1.0A"
 msgstr "Microsoft draadloos multimediatoetsenbord 1.0A"
 
-#: ../rules/base.xml.in.h:555
+#: ../rules/base.xml.in.h:558
 msgid "Miscellaneous compatibility options"
 msgstr "Overige compatibiliteitsopties"
 
-#: ../rules/base.xml.in.h:556
+#: ../rules/base.xml.in.h:559
 msgid "Mongolian"
 msgstr "Mongools"
 
 # Montenegrijns is het Servo-Kroatische (Štokavische) dialect 
 # dat in Montenegro wordt gesproken
-#: ../rules/base.xml.in.h:557
+#: ../rules/base.xml.in.h:560
 msgid "Montenegrin"
 msgstr "Montenegrijns"
 
 # Guillemets of ook quillemets zijn Franse aanhalingstekens.
 # Dit is "Nederlands" en dit is de «Franse manier» van aanhalen.
-#: ../rules/base.xml.in.h:558
+#: ../rules/base.xml.in.h:561
 msgid "Montenegrin (Cyrillic with guillemets)"
 msgstr "Montenegrijns (Cyrillisch met Franse aanhalingstekens)"
 
-#: ../rules/base.xml.in.h:559
+#: ../rules/base.xml.in.h:562
 msgid "Montenegrin (Cyrillic)"
 msgstr "Montenegrijns (Cyrillisch)"
 
 # verwisseld/gewisseld/omgewisseld
-#: ../rules/base.xml.in.h:560
+#: ../rules/base.xml.in.h:563
 msgid "Montenegrin (Cyrillic, Z and ZHE swapped)"
 msgstr "Montenegrijns (Cyrillisch, Z en ZHE omgewisseld)"
 
-#: ../rules/base.xml.in.h:561
+#: ../rules/base.xml.in.h:564
 msgid "Montenegrin (Latin Unicode qwerty)"
 msgstr "Montenegrijns (Latijns Unicode qwerty)"
 
-#: ../rules/base.xml.in.h:562
+#: ../rules/base.xml.in.h:565
 msgid "Montenegrin (Latin Unicode)"
 msgstr "Montenegrijns (Latijns Unicode)"
 
-#: ../rules/base.xml.in.h:563
+#: ../rules/base.xml.in.h:566
 msgid "Montenegrin (Latin qwerty)"
 msgstr "Montenegrijns (Latijns qwerty)"
 
-#: ../rules/base.xml.in.h:564
+#: ../rules/base.xml.in.h:567
 msgid "Montenegrin (Latin with guillemets)"
 msgstr "Montenegrijns (Latijns met Franse aanhalingstekens)"
 
-#: ../rules/base.xml.in.h:565
+#: ../rules/base.xml.in.h:568
 msgid "NICOLA-F style Backspace"
 msgstr "NICOLA-F stijl backspace"
 
-#: ../rules/base.xml.in.h:566
+#: ../rules/base.xml.in.h:569
 msgid "Nepali"
 msgstr "Nepalees"
 
 # Spatiebalk geeft harde spatie op het vierde niveau.
-#: ../rules/base.xml.in.h:567
+#: ../rules/base.xml.in.h:570
 msgid "Non-breakable space character at fourth level"
 msgstr "Harde spatie op het vierde niveau"
 
 # sixth level? hoeveel levels zijn er wel niet?
-#: ../rules/base.xml.in.h:568
+#: ../rules/base.xml.in.h:571
 msgid "Non-breakable space character at fourth level, thin non-breakable space character at sixth level"
 msgstr "Harde spatie op het vierde niveau, smalle harde spatie op het zesde niveau"
 
 # sixth level? hoeveel levels zijn er wel niet?
-#: ../rules/base.xml.in.h:569
+#: ../rules/base.xml.in.h:572
 msgid "Non-breakable space character at fourth level, thin non-breakable space character at sixth level (via Ctrl+Shift)"
 msgstr "Harde spatie op het vierde niveau, smalle harde spatie op het zesde niveau (via Ctrl+Shift)"
 
-#: ../rules/base.xml.in.h:570
+#: ../rules/base.xml.in.h:573
 msgid "Non-breakable space character at second level"
 msgstr "Harde spatie op het tweede niveau"
 
-#: ../rules/base.xml.in.h:571
+#: ../rules/base.xml.in.h:574
 msgid "Non-breakable space character at third level"
 msgstr "Harde spatie op het derde niveau"
 
-#: ../rules/base.xml.in.h:572
+#: ../rules/base.xml.in.h:575
 msgid "Non-breakable space character at third level, nothing at fourth level"
 msgstr "Harde spatie op het derde niveau, niets op het vierde niveau"
 
-#: ../rules/base.xml.in.h:573
+#: ../rules/base.xml.in.h:576
 msgid "Non-breakable space character at third level, thin non-breakable space character at fourth level"
 msgstr "Harde spatie op het derde niveau, smalle harde spatie op het vierde niveau"
 
-#: ../rules/base.xml.in.h:574
+#: ../rules/base.xml.in.h:577
 msgid "Northern Saami (Finland)"
 msgstr "Noord-Samisch (Finland)"
 
-#: ../rules/base.xml.in.h:575
+#: ../rules/base.xml.in.h:578
 msgid "Northern Saami (Norway)"
 msgstr "Noord-Samisch (Noorwegen)"
 
-#: ../rules/base.xml.in.h:576
+#: ../rules/base.xml.in.h:579
 msgid "Northern Saami (Norway, eliminate dead keys)"
 msgstr "Noord-Samisch (Noorwegen, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:577
+#: ../rules/base.xml.in.h:580
 msgid "Northern Saami (Sweden)"
 msgstr "Noord-Samisch (Zweden)"
 
-#: ../rules/base.xml.in.h:578
+#: ../rules/base.xml.in.h:581
 msgid "Northgate OmniKey 101"
 msgstr "Northgate OmniKey 101"
 
-#: ../rules/base.xml.in.h:579
+#: ../rules/base.xml.in.h:582
 msgid "Norwegian"
 msgstr "Noors"
 
-#: ../rules/base.xml.in.h:580
+#: ../rules/base.xml.in.h:583
 msgid "Norwegian (Dvorak)"
 msgstr "Noors (Dvorak)"
 
-#: ../rules/base.xml.in.h:581
+#: ../rules/base.xml.in.h:584
 msgid "Norwegian (Macintosh)"
 msgstr "Noors (Macintosh)"
 
-#: ../rules/base.xml.in.h:582
+#: ../rules/base.xml.in.h:585
 msgid "Norwegian (Macintosh, eliminate dead keys)"
 msgstr "Noors (Macintosh, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:583
+#: ../rules/base.xml.in.h:586
 msgid "Norwegian (eliminate dead keys)"
 msgstr "Noors (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:584
+#: ../rules/base.xml.in.h:587
 msgid "Num Lock"
 msgstr "Num Lock"
 
 # op het cijferblok is de delete toets aangegeven met del
-#: ../rules/base.xml.in.h:585
+#: ../rules/base.xml.in.h:588
 msgid "Numeric keypad delete key behaviour"
 msgstr "Cijferblok del-toetsgedrag"
 
 # Apple-computer/Macintosh
-#: ../rules/base.xml.in.h:586
+#: ../rules/base.xml.in.h:589
 msgid "Numeric keypad keys work as with Macintosh"
 msgstr "Cijferblok-toetsen werken net als bij een Macintosh"
 
-#: ../rules/base.xml.in.h:587
+#: ../rules/base.xml.in.h:590
 msgid "Numeric keypad layout selection"
 msgstr "Cijferblok-indeling selecteren"
 
-#: ../rules/base.xml.in.h:588
+#: ../rules/base.xml.in.h:591
 msgid "OLPC"
 msgstr "OLPC"
 
-#: ../rules/base.xml.in.h:589
+#: ../rules/base.xml.in.h:592
 msgid "Occitan"
 msgstr "Occitaans"
 
-#: ../rules/base.xml.in.h:590
+#: ../rules/base.xml.in.h:593
 msgid "Ogham"
 msgstr "Ogham"
 
 # Iers (Ogham IS434)
-#: ../rules/base.xml.in.h:591
+#: ../rules/base.xml.in.h:594
 msgid "Ogham (IS434)"
 msgstr "Ogham (IS434)"
 
-#: ../rules/base.xml.in.h:592
+#: ../rules/base.xml.in.h:595
 msgid "Oriya"
 msgstr "Oriya"
 
-#: ../rules/base.xml.in.h:593
+#: ../rules/base.xml.in.h:596
 msgid "Ortek MCK-800 MM/Internet keyboard"
 msgstr "Ortek MCK-800 MM/Internet toetsenbord"
 
 # Russisch (Georgisch)
-#: ../rules/base.xml.in.h:594
+#: ../rules/base.xml.in.h:597
 msgid "Ossetian (Georgia)"
 msgstr "Ossetisch (Georgië)"
 
-#: ../rules/base.xml.in.h:595
+#: ../rules/base.xml.in.h:598
 msgid "Ossetian (WinKeys)"
 msgstr "Ossetisch (Windows-toetsen)"
 
-#: ../rules/base.xml.in.h:596
+#: ../rules/base.xml.in.h:599
 msgid "Ossetian (legacy)"
 msgstr "Ossetisch (historisch)"
 
-#: ../rules/base.xml.in.h:597
+#: ../rules/base.xml.in.h:600
 msgid "PC-98xx Series"
 msgstr "PC-98xx serie"
 
@@ -2500,866 +2514,867 @@ msgstr "PC-98xx serie"
 # north-western Serbia (Bačka region) and eastern Croatia 
 # (therefore also called Yugoslavo-Ruthenian, Vojvodina-Ruthenian
 # or Bačka-Ruthenian).
-#: ../rules/base.xml.in.h:598
+#: ../rules/base.xml.in.h:601
 msgid "Pannonian Rusyn (homophonic)"
 msgstr "Pannonisch Rusyn (homophonisch)"
 
-#: ../rules/base.xml.in.h:599
+#: ../rules/base.xml.in.h:602
 msgid "Pashto"
 msgstr "Pashto"
 
-#: ../rules/base.xml.in.h:600
+#: ../rules/base.xml.in.h:603
 msgid "Pashto (Afghanistan, OLPC)"
 msgstr "Pashto (Afghanistan, OLPC)"
 
 # de text op de Pause-toets is meestal "Pause"
-#: ../rules/base.xml.in.h:601
+#: ../rules/base.xml.in.h:604
 msgid "Pause"
 msgstr "Pause"
 
-#: ../rules/base.xml.in.h:602 ../rules/base.extras.xml.in.h:23
+#: ../rules/base.xml.in.h:605 ../rules/base.extras.xml.in.h:27
 msgid "Persian"
 msgstr "Persisch"
 
-#: ../rules/base.xml.in.h:603
+#: ../rules/base.xml.in.h:606
 msgid "Persian (Afghanistan, Dari OLPC)"
 msgstr "Persisch (Afghanistan, Dari OLPC)"
 
-#: ../rules/base.xml.in.h:604
+#: ../rules/base.xml.in.h:607
 msgid "Persian (with Persian Keypad)"
 msgstr "Persisch (met Persisch cijferblok)"
 
-#: ../rules/base.xml.in.h:605 ../rules/base.extras.xml.in.h:24
+#: ../rules/base.xml.in.h:608 ../rules/base.extras.xml.in.h:28
 msgid "Polish"
 msgstr "Pools"
 
-#: ../rules/base.xml.in.h:606
+#: ../rules/base.xml.in.h:609
 msgid "Polish (Dvorak)"
 msgstr "Pools (Dvorak)"
 
-#: ../rules/base.xml.in.h:607
+#: ../rules/base.xml.in.h:610
 msgid "Polish (Dvorak, Polish quotes on key 1)"
 msgstr "Pools (Dvorak, Poolse aanhalingstekens op toets 1)"
 
-#: ../rules/base.xml.in.h:608
+#: ../rules/base.xml.in.h:611
 msgid "Polish (Dvorak, Polish quotes on quotemark key)"
 msgstr "Pools (Dvorak, Poolse aanhalingstekens op aanhalingstekentoets)"
 
-#: ../rules/base.xml.in.h:609
+#: ../rules/base.xml.in.h:612
 msgid "Polish (programmer Dvorak)"
 msgstr "Pools (Programmeer-Dvorak)"
 
-#: ../rules/base.xml.in.h:610
+#: ../rules/base.xml.in.h:613
 msgid "Polish (qwertz)"
 msgstr "Pools (qwertz)"
 
-#: ../rules/base.xml.in.h:611
+#: ../rules/base.xml.in.h:614
 msgid "Portuguese"
 msgstr "Portugees"
 
-#: ../rules/base.xml.in.h:612
+#: ../rules/base.xml.in.h:615
 msgid "Portuguese (Brazil)"
 msgstr "Portugees (Brazilië)"
 
-#: ../rules/base.xml.in.h:613
+#: ../rules/base.xml.in.h:616
 msgid "Portuguese (Brazil, Dvorak)"
 msgstr "Portugees (Brazilië, Dvorak)"
 
-#: ../rules/base.xml.in.h:614
+#: ../rules/base.xml.in.h:617
 msgid "Portuguese (Brazil, eliminate dead keys)"
 msgstr "Portugees (Brazilië, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:615
+#: ../rules/base.xml.in.h:618
 msgid "Portuguese (Brazil, nativo for Esperanto)"
 msgstr "Portugees (Brazilië, nativo voor Esperanto)"
 
 # BUG USA keyboards ipv US keyboards
-#: ../rules/base.xml.in.h:616
+#: ../rules/base.xml.in.h:619
 msgid "Portuguese (Brazil, nativo for USA keyboards)"
 msgstr "Portugees (Brazilië, Nativo voor US toetsenborden)"
 
-#: ../rules/base.xml.in.h:617
+#: ../rules/base.xml.in.h:620
 msgid "Portuguese (Brazil, nativo)"
 msgstr "Portugees (Brazilië, nativo)"
 
-#: ../rules/base.xml.in.h:618
+#: ../rules/base.xml.in.h:621
 msgid "Portuguese (Macintosh)"
 msgstr "Portugees (Macintosh)"
 
-#: ../rules/base.xml.in.h:619
+#: ../rules/base.xml.in.h:622
 msgid "Portuguese (Macintosh, Sun dead keys)"
 msgstr "Portugees (Macintosh, Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:620
+#: ../rules/base.xml.in.h:623
 msgid "Portuguese (Macintosh, eliminate dead keys)"
 msgstr "Portugees (Macintosh, zonder dode toetsen)"
 
 # BUG USA keyboards in plaats van US keyboards
-#: ../rules/base.xml.in.h:621
+#: ../rules/base.xml.in.h:624
 msgid "Portuguese (Nativo for USA keyboards)"
 msgstr "Portugees (Nativo voor US toetsenborden)"
 
-#: ../rules/base.xml.in.h:622
+#: ../rules/base.xml.in.h:625
 msgid "Portuguese (Nativo)"
 msgstr "Portugees (Nativo)"
 
-#: ../rules/base.xml.in.h:623
+#: ../rules/base.xml.in.h:626
 msgid "Portuguese (Sun dead keys)"
 msgstr "Portugees (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:624
+#: ../rules/base.xml.in.h:627
 msgid "Portuguese (eliminate dead keys)"
 msgstr "Portugees (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:625
+#: ../rules/base.xml.in.h:628
 msgid "Propeller Voyager (KTEZ-1000)"
 msgstr "Propeller Voyager (KTEZ-1000)"
 
-#: ../rules/base.xml.in.h:626
+#: ../rules/base.xml.in.h:629
 msgid "PrtSc"
 msgstr "PrtSc"
 
-#: ../rules/base.xml.in.h:627
+#: ../rules/base.xml.in.h:630
 msgid "Punjabi (Gurmukhi Jhelum)"
 msgstr "Punjabi (Gurmukhi Jhelum)"
 
-#: ../rules/base.xml.in.h:628
+#: ../rules/base.xml.in.h:631
 msgid "Punjabi (Gurmukhi)"
 msgstr "Punjabi (Gurmukhi)"
 
-#: ../rules/base.xml.in.h:629
+#: ../rules/base.xml.in.h:632
 msgid "QTronix Scorpius 98N+"
 msgstr "QTronix Scorpius 98N+"
 
-#: ../rules/base.xml.in.h:630
+#: ../rules/base.xml.in.h:633
 msgid "Right Alt"
 msgstr "Rechter Alt-toets"
 
 # BUG Alt ipv Alt key
-#: ../rules/base.xml.in.h:631
+#: ../rules/base.xml.in.h:634
 msgid "Right Alt (while pressed)"
 msgstr "Rechter Alt-toets (ingedrukt houden)"
 
-#: ../rules/base.xml.in.h:632
+# Rechter Alt-toets fungeert als de rechter Ctrl-toets/
+# Rechter Ctrl-toets is de Rechter Alt-toets/werkt als
+#: ../rules/base.xml.in.h:635
+msgid "Right Alt as Right Ctrl"
+msgstr "Rechter Alt is rechter Ctrl-toets"
+
+#: ../rules/base.xml.in.h:636
 msgid "Right Alt chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock"
 msgstr "Rechter Alt-toets geeft het 5de niveau en vergrendelt dit niveau wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer, één toetsaanslag heft de vergrendeling op"
 
-#: ../rules/base.xml.in.h:633
+#: ../rules/base.xml.in.h:637
 msgid "Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser"
 msgstr "Rechter Alt-toets geeft het 5de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer"
 
-#: ../rules/base.xml.in.h:634
+#: ../rules/base.xml.in.h:638
 msgid "Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
 msgstr "Rechter Alt-toets geeft het 5de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer, één toetsaanslag heft de vergrendeling op"
 
-#: ../rules/base.xml.in.h:635
+#: ../rules/base.xml.in.h:639
 msgid "Right Alt key never chooses 3rd level"
 msgstr "Rechter Alt-toets geeft nooit het 3e niveau"
 
-#: ../rules/base.xml.in.h:636
+#: ../rules/base.xml.in.h:640
 msgid "Right Alt, Shift+Right Alt key is Multi_Key"
 msgstr "Rechter Alt-toets, Shift + rechter Alt-toets is Multi_Key"
 
-#: ../rules/base.xml.in.h:637
+#: ../rules/base.xml.in.h:641
 msgid "Right Ctrl"
 msgstr "Rechter Ctrl-toets"
 
-#: ../rules/base.xml.in.h:638
+#: ../rules/base.xml.in.h:642
 msgid "Right Ctrl (while pressed)"
 msgstr "Rechter Ctrl-toets (ingedrukt houden)"
 
-# Rechter Ctrl-toets doet hetzelfde als de rechter Alt-toets.
-#: ../rules/base.xml.in.h:639
+# fungeert als/werkt als/is
+#: ../rules/base.xml.in.h:643
 msgid "Right Ctrl as Right Alt"
-msgstr "Rechter Ctrl en Alt-toets doen hetzelfde"
-
-#: ../rules/base.xml.in.h:640
-msgid "Right Ctrl is mapped to Menu"
-msgstr "Rechter Ctrl zit op de Menu-toets"
+msgstr "Rechter Ctrl is rechter Alt-toets"
 
 # Rechter Ctrl+Shift-toets
-#: ../rules/base.xml.in.h:641
+#: ../rules/base.xml.in.h:644
 msgid "Right Ctrl+Right Shift"
 msgstr "Rechter Ctrl-toets + Rechter Shift-toets"
 
-#: ../rules/base.xml.in.h:642
+#: ../rules/base.xml.in.h:645
 msgid "Right Shift"
 msgstr "Rechter Shift-toets"
 
-#: ../rules/base.xml.in.h:643
+#: ../rules/base.xml.in.h:646
 msgid "Right Win"
 msgstr "Rechter Win-toets"
 
-#: ../rules/base.xml.in.h:644
+#: ../rules/base.xml.in.h:647
 msgid "Right Win (while pressed)"
 msgstr "Rechter Win-toets (ingedrukt houden)"
 
-#: ../rules/base.xml.in.h:645
+#: ../rules/base.xml.in.h:648
 msgid "Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser"
 msgstr "Rechter Win-toets geeft het 5de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer"
 
-#: ../rules/base.xml.in.h:646
+#: ../rules/base.xml.in.h:649
 msgid "Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock"
 msgstr "Rechter Win-toets geeft het 5de niveau en vergrendelt wanneer het ingedrukt wordt samen met een andere 5de niveau-kiezer, één toetsaanslag heft de vergrendeling op"
 
-#: ../rules/base.xml.in.h:647 ../rules/base.extras.xml.in.h:26
+#: ../rules/base.xml.in.h:650 ../rules/base.extras.xml.in.h:30
 msgid "Romanian"
 msgstr "Roemeens"
 
-#: ../rules/base.xml.in.h:648
+#: ../rules/base.xml.in.h:651
 msgid "Romanian (Germany)"
 msgstr "Roemeens (Duitsland)"
 
-#: ../rules/base.xml.in.h:649
+#: ../rules/base.xml.in.h:652
 msgid "Romanian (Germany, eliminate dead keys)"
 msgstr "Roemeens (Duitsland, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:650
+#: ../rules/base.xml.in.h:653
 msgid "Romanian (WinKeys)"
 msgstr "Roemeens (Windows-toetsen)"
 
-#: ../rules/base.xml.in.h:651
+#: ../rules/base.xml.in.h:654
 msgid "Romanian (cedilla)"
 msgstr "Roemeens (cedilla)"
 
-#: ../rules/base.xml.in.h:652
+#: ../rules/base.xml.in.h:655
 msgid "Romanian (standard cedilla)"
 msgstr "Roemeens (standaard cedilla)"
 
-#: ../rules/base.xml.in.h:653
+#: ../rules/base.xml.in.h:656
 msgid "Romanian (standard)"
 msgstr "Roemeens (standaard)"
 
-#: ../rules/base.xml.in.h:654
+#: ../rules/base.xml.in.h:657
 msgid "Rupee on 4"
 msgstr "Roepie op 4"
 
-#: ../rules/base.xml.in.h:655 ../rules/base.extras.xml.in.h:28
+#: ../rules/base.xml.in.h:658 ../rules/base.extras.xml.in.h:32
 msgid "Russian"
 msgstr "Russisch"
 
-#: ../rules/base.xml.in.h:656
+#: ../rules/base.xml.in.h:659
 msgid "Russian (DOS)"
 msgstr "Russisch (DOS)"
 
-#: ../rules/base.xml.in.h:657
+#: ../rules/base.xml.in.h:660
 msgid "Russian (Georgia)"
 msgstr "Russisch (Georgisch)"
 
-#: ../rules/base.xml.in.h:658
+#: ../rules/base.xml.in.h:661
 msgid "Russian (Germany, phonetic)"
 msgstr "Russisch (Duitsland fonetisch)"
 
-#: ../rules/base.xml.in.h:659
+#: ../rules/base.xml.in.h:662
 msgid "Russian (Kazakhstan, with Kazakh)"
 msgstr "Russisch (Kazachstans, met Kazachstaans)"
 
-#: ../rules/base.xml.in.h:660
+#: ../rules/base.xml.in.h:663
 msgid "Russian (Poland, phonetic Dvorak)"
 msgstr "Russisch (Polen, fonetisch Dvorak)"
 
-#: ../rules/base.xml.in.h:661
+#: ../rules/base.xml.in.h:664
 msgid "Russian (Sweden, phonetic)"
 msgstr "Russisch (Zweden, fonetisch)"
 
-#: ../rules/base.xml.in.h:662
+#: ../rules/base.xml.in.h:665
 msgid "Russian (Sweden, phonetic, eliminate dead keys)"
 msgstr "Russisch (Zweden, fonetisch, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:663
+#: ../rules/base.xml.in.h:666
 msgid "Russian (US, phonetic)"
 msgstr "Russisch (US, fonetisch)"
 
 # Oekraïens (standaard RSTU)<
-#: ../rules/base.xml.in.h:664
+#: ../rules/base.xml.in.h:667
 msgid "Russian (Ukraine, standard RSTU)"
 msgstr "Russisch (Oekraïne, standaard RSTU)"
 
-#: ../rules/base.xml.in.h:665
+#: ../rules/base.xml.in.h:668
 msgid "Russian (legacy)"
 msgstr "Russisch (historisch)"
 
-#: ../rules/base.xml.in.h:666
+#: ../rules/base.xml.in.h:669
 msgid "Russian (phonetic WinKeys)"
 msgstr "Russisch (fonetisch Windows-toetsen)"
 
-#: ../rules/base.xml.in.h:667
+#: ../rules/base.xml.in.h:670
 msgid "Russian (phonetic)"
 msgstr "Russisch (fonetisch)"
 
-#: ../rules/base.xml.in.h:668
+#: ../rules/base.xml.in.h:671
 msgid "Russian (typewriter)"
 msgstr "Russisch (typmachine)"
 
-#: ../rules/base.xml.in.h:669
+#: ../rules/base.xml.in.h:672
 msgid "Russian (typewriter, legacy)"
 msgstr "Russisch (typmachine, historisch)"
 
 # draadloos toetsenbord
-#: ../rules/base.xml.in.h:670
+#: ../rules/base.xml.in.h:673
 msgid "SILVERCREST Multimedia Wireless Keyboard"
 msgstr "SILVERCREST Multimedia Wireless Keyboard"
 
-#: ../rules/base.xml.in.h:671
+#: ../rules/base.xml.in.h:674
 msgid "SK-1300"
 msgstr "SK-1300"
 
-#: ../rules/base.xml.in.h:672
+#: ../rules/base.xml.in.h:675
 msgid "SK-2500"
 msgstr "SK-2500"
 
-#: ../rules/base.xml.in.h:673
+#: ../rules/base.xml.in.h:676
 msgid "SK-6200"
 msgstr "SK-6200"
 
-#: ../rules/base.xml.in.h:674
+#: ../rules/base.xml.in.h:677
 msgid "SK-7100"
 msgstr "SK-7100"
 
-#: ../rules/base.xml.in.h:675
+#: ../rules/base.xml.in.h:678
 msgid "SVEN Ergonomic 2500"
 msgstr "SVEN Ergonomic 2500"
 
-#: ../rules/base.xml.in.h:676
+#: ../rules/base.xml.in.h:679
 msgid "SVEN Slim 303"
 msgstr "SVEN Slim 303"
 
 # Saisiyat, ook Saiset, Seisirat, Saisett, Saisiat, Saisiett, Saisirat, 
 # Saisyet, Saisyett, Amutoura of Bouiok
-#: ../rules/base.xml.in.h:677
+#: ../rules/base.xml.in.h:680
 msgid "Saisiyat (Taiwan)"
 msgstr "Saisiyat (Taiwan)"
 
-#: ../rules/base.xml.in.h:678
+#: ../rules/base.xml.in.h:681
 msgid "Samsung SDM 4500P"
 msgstr "Samsung SDM 4500P"
 
-#: ../rules/base.xml.in.h:679
+#: ../rules/base.xml.in.h:682
 msgid "Samsung SDM 4510P"
 msgstr "Samsung SDM 4510P"
 
-#: ../rules/base.xml.in.h:680
+#: ../rules/base.xml.in.h:683
 msgid "Sanwa Supply SKB-KG3"
 msgstr "Sanwa Supply SKB-KG3"
 
-#: ../rules/base.xml.in.h:681
+#: ../rules/base.xml.in.h:684
 msgid "Scroll Lock"
 msgstr "Scroll Lock"
 
-#: ../rules/base.xml.in.h:682
+#: ../rules/base.xml.in.h:685
 msgid "Semi-colon on third level"
 msgstr "Punt-komma op derde niveau"
 
-#: ../rules/base.xml.in.h:683 ../rules/base.extras.xml.in.h:31
+#: ../rules/base.xml.in.h:686 ../rules/base.extras.xml.in.h:35
 msgid "Serbian"
 msgstr "Servisch"
 
-#: ../rules/base.xml.in.h:684
+#: ../rules/base.xml.in.h:687
 msgid "Serbian (Latin Unicode qwerty)"
 msgstr "Servisch (Latijns Unicode qwerty)"
 
-#: ../rules/base.xml.in.h:685
+#: ../rules/base.xml.in.h:688
 msgid "Serbian (Latin Unicode)"
 msgstr "Servisch (Latijns Unicode)"
 
-#: ../rules/base.xml.in.h:686
+#: ../rules/base.xml.in.h:689
 msgid "Serbian (Latin qwerty)"
 msgstr "Servisch (Latijns qwerty)"
 
 # Guillemets of ook quillemets zijn Franse aanhalingstekens.
 # Dit is "Nederlands" en dit is de «Franse manier» van aanhalen.
-#: ../rules/base.xml.in.h:687
+#: ../rules/base.xml.in.h:690
 msgid "Serbian (Latin with guillemets)"
 msgstr "Servisch (Latijns met Franse aanhalingstekens)"
 
-#: ../rules/base.xml.in.h:688
+#: ../rules/base.xml.in.h:691
 msgid "Serbian (Latin)"
 msgstr "Servisch (Latijns)"
 
-#: ../rules/base.xml.in.h:689
+#: ../rules/base.xml.in.h:692
 msgid "Serbian (Russia)"
 msgstr "Servisch (Rusland)"
 
-#: ../rules/base.xml.in.h:690
+#: ../rules/base.xml.in.h:693
 msgid "Serbian (Z and ZHE swapped)"
 msgstr "Servisch (Z en ZHE omgewisseld)"
 
-#: ../rules/base.xml.in.h:691
+#: ../rules/base.xml.in.h:694
 msgid "Serbian (with guillemets)"
 msgstr "Servisch (met Franse aanhalingstekens)"
 
-#: ../rules/base.xml.in.h:692
+#: ../rules/base.xml.in.h:695
 msgid "Serbo-Croatian (US)"
 msgstr "Servo-Kroatisch (US)"
 
-#: ../rules/base.xml.in.h:693
+#: ../rules/base.xml.in.h:696
 msgid "Shift cancels Caps Lock"
 msgstr "Shift heft Caps Lock op"
 
-#: ../rules/base.xml.in.h:694
+#: ../rules/base.xml.in.h:697
 msgid "Shift does not cancel Num Lock, chooses 3rd level instead"
 msgstr "Shift heft Num Lock niet op, maar geeft juist het 3e niveau"
 
-#: ../rules/base.xml.in.h:695
+#: ../rules/base.xml.in.h:698
 msgid "Shift with numeric keypad keys works as in MS Windows"
 msgstr "Shift met cijferblok-toetsen werkt zoals in MS Windows"
 
-#: ../rules/base.xml.in.h:696
+#: ../rules/base.xml.in.h:699
 msgid "Shift+Caps Lock"
 msgstr "Shift+Caps Lock"
 
-#: ../rules/base.xml.in.h:697
+#: ../rules/base.xml.in.h:700
 msgid "Sindhi"
 msgstr "Sindhi"
 
-# Het Singalees of Sinhala
-#: ../rules/base.xml.in.h:698
-msgid "Sinhala"
-msgstr "Singalees"
+#: ../rules/base.xml.in.h:701
+msgid "Sinhala (phonetic)"
+msgstr "Singalees (fonetisch)"
 
-#: ../rules/base.xml.in.h:699
+#: ../rules/base.xml.in.h:702
 msgid "Slovak"
 msgstr "Slowaaks"
 
 # brede backslash/uitgebreide backslash
-#: ../rules/base.xml.in.h:700
+#: ../rules/base.xml.in.h:703
 msgid "Slovak (extended Backslash)"
 msgstr "Slovaaks (brede backslash)"
 
-#: ../rules/base.xml.in.h:701
+#: ../rules/base.xml.in.h:704
 msgid "Slovak (qwerty)"
 msgstr "Slovaaks (qwerty)"
 
 # brede backslash/uitgebreide backslash
-#: ../rules/base.xml.in.h:702
+#: ../rules/base.xml.in.h:705
 msgid "Slovak (qwerty, extended Backslash)"
 msgstr "Slovaaks (qwerty, brede backslash)"
 
-#: ../rules/base.xml.in.h:703
+#: ../rules/base.xml.in.h:706
 msgid "Slovenian"
 msgstr "Sloveens"
 
-#: ../rules/base.xml.in.h:704
+#: ../rules/base.xml.in.h:707
 msgid "Slovenian (US keyboard with Slovenian letters)"
 msgstr "Sloveens (US toetsenbord met Sloveense lettertekens)"
 
-#: ../rules/base.xml.in.h:705
+#: ../rules/base.xml.in.h:708
 msgid "Slovenian (use guillemets for quotes)"
 msgstr "Sloveens (met Franse aanhalingstekens voor citaten)"
 
-#: ../rules/base.xml.in.h:706
+#: ../rules/base.xml.in.h:709
 msgid "Spanish"
 msgstr "Spaans"
 
-#: ../rules/base.xml.in.h:707
+#: ../rules/base.xml.in.h:710
 msgid "Spanish (Dvorak)"
 msgstr "Spaans (Dvorak)"
 
-#: ../rules/base.xml.in.h:708
+#: ../rules/base.xml.in.h:711
 msgid "Spanish (Latin American)"
 msgstr "Spaans (Latijns-Amerika)"
 
-#: ../rules/base.xml.in.h:709
+#: ../rules/base.xml.in.h:712
 msgid "Spanish (Latin American, Sun dead keys)"
 msgstr "Spaans (Latijns-Amerika, Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:710
+#: ../rules/base.xml.in.h:713
 msgid "Spanish (Latin American, eliminate dead keys)"
 msgstr "Spaans (Latijns-Amerika, zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:711
+#: ../rules/base.xml.in.h:714
 msgid "Spanish (Latin American, include dead tilde)"
 msgstr "Spaans (Latijns-Amerika, met dode tilde)"
 
-#: ../rules/base.xml.in.h:712
+#: ../rules/base.xml.in.h:715
 msgid "Spanish (Macintosh)"
 msgstr "Spaans (Macintosh)"
 
-#: ../rules/base.xml.in.h:713
+#: ../rules/base.xml.in.h:716
 msgid "Spanish (Sun dead keys)"
 msgstr "Spaans (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:714
+#: ../rules/base.xml.in.h:717
 msgid "Spanish (eliminate dead keys)"
 msgstr "Spaans (zonder dode toetsen)"
 
 # met/bijvoegen
 # inactieve/dode/latente
-#: ../rules/base.xml.in.h:715
+#: ../rules/base.xml.in.h:718
 msgid "Spanish (include dead tilde)"
 msgstr "Spaans (met dode tilde)"
 
-#: ../rules/base.xml.in.h:716
+#: ../rules/base.xml.in.h:719
 msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server"
 msgstr "Speciale toetsen (Ctrl+Alt+&lt;toets&gt;) afgehandeld in een server"
 
-#: ../rules/base.xml.in.h:717
+#: ../rules/base.xml.in.h:720
 msgid "Sun Type 5/6"
 msgstr "Sun type 5/6"
 
-#: ../rules/base.xml.in.h:718
+#: ../rules/base.xml.in.h:721
 msgid "Super Power Multimedia Keyboard"
 msgstr "Super Power multimediatoetsenbord"
 
-#: ../rules/base.xml.in.h:719
+#: ../rules/base.xml.in.h:722
 msgid "Swahili (Kenya)"
 msgstr "Swahili (Kenia)"
 
-#: ../rules/base.xml.in.h:720
+#: ../rules/base.xml.in.h:723
 msgid "Swahili (Tanzania)"
 msgstr "Swahili (Tanzania)"
 
-#: ../rules/base.xml.in.h:721
+#: ../rules/base.xml.in.h:724
 msgid "Swap Ctrl and Caps Lock"
 msgstr "Ctrl en Caps Lock omwisselen"
 
-#: ../rules/base.xml.in.h:722
+#: ../rules/base.xml.in.h:725
 msgid "Swap ESC and Caps Lock"
 msgstr "Esc en Caps Lock omwisselen"
 
-#: ../rules/base.xml.in.h:723
+#: ../rules/base.xml.in.h:726
 msgid "Swedish"
 msgstr "Zweeds"
 
-#: ../rules/base.xml.in.h:724
+#: ../rules/base.xml.in.h:727
 msgid "Swedish (Dvorak)"
 msgstr "Zweeds (Dvorak)"
 
-#: ../rules/base.xml.in.h:725
+#: ../rules/base.xml.in.h:728
 msgid "Swedish (Macintosh)"
 msgstr "Zweeds (Macintosh)"
 
-#: ../rules/base.xml.in.h:726
+#: ../rules/base.xml.in.h:729
 msgid "Swedish (Svdvorak)"
 msgstr "Zweeds (Svdvorak)"
 
-#: ../rules/base.xml.in.h:727
+#: ../rules/base.xml.in.h:730
 msgid "Swedish (eliminate dead keys)"
 msgstr "Zweeds (zonder dode toetsen)"
 
-#: ../rules/base.xml.in.h:728
+#: ../rules/base.xml.in.h:731
 msgid "Swedish Sign Language"
 msgstr "Zweedse gebarentaal"
 
-#: ../rules/base.xml.in.h:729
+#: ../rules/base.xml.in.h:732
 msgid "Symplon PaceBook (tablet PC)"
 msgstr "Symplon PaceBook (tablet PC)"
 
-#: ../rules/base.xml.in.h:730
+#: ../rules/base.xml.in.h:733
 msgid "Syriac"
 msgstr "Syrisch"
 
-#: ../rules/base.xml.in.h:731
+#: ../rules/base.xml.in.h:734
 msgid "Syriac (phonetic)"
 msgstr "Syrisch (fonetisch)"
 
-#: ../rules/base.xml.in.h:732
+#: ../rules/base.xml.in.h:735
 msgid "Taiwanese"
 msgstr "Taiwanees"
 
-#: ../rules/base.xml.in.h:733
+#: ../rules/base.xml.in.h:736
 msgid "Taiwanese (indigenous)"
 msgstr "Taiwanees (oorspronkelijk)"
 
 # Het Tadzjieks of Tajiki
-#: ../rules/base.xml.in.h:734
+#: ../rules/base.xml.in.h:737
 msgid "Tajik"
 msgstr "Tadzjieks"
 
-#: ../rules/base.xml.in.h:735
+#: ../rules/base.xml.in.h:738
 msgid "Tajik (legacy)"
 msgstr "Tadzjieks (historisch)"
 
-#: ../rules/base.xml.in.h:736
+#: ../rules/base.xml.in.h:739
 msgid "Tamil"
 msgstr "Tamil"
 
-#: ../rules/base.xml.in.h:737
+#: ../rules/base.xml.in.h:740
 msgid "Tamil (Sri Lanka, TAB Typewriter)"
 msgstr "Tamil (Sri Lanka, TAB typmachine)"
 
-#: ../rules/base.xml.in.h:738
+#: ../rules/base.xml.in.h:741
 msgid "Tamil (Sri Lanka, Unicode)"
 msgstr "Tamil (Sri Lanka, Unicode)"
 
-#: ../rules/base.xml.in.h:739
+#: ../rules/base.xml.in.h:742
 msgid "Tamil (TAB typewriter)"
 msgstr "Tamil (TAB typmachine)"
 
-#: ../rules/base.xml.in.h:740
+#: ../rules/base.xml.in.h:743
 msgid "Tamil (TSCII typewriter)"
 msgstr "Tamil (TSCII typmachine)"
 
-#: ../rules/base.xml.in.h:741
+#: ../rules/base.xml.in.h:744
 msgid "Tamil (Unicode)"
 msgstr "Tamil (Unicode)"
 
-#: ../rules/base.xml.in.h:742
+#: ../rules/base.xml.in.h:745
 msgid "Tamil (keyboard with numerals)"
 msgstr "Tamil (toetsenbord met cijfertekens)"
 
-#: ../rules/base.xml.in.h:743
+#: ../rules/base.xml.in.h:746
 msgid "Targa Visionary 811"
 msgstr "Targa Visionary 811"
 
-#: ../rules/base.xml.in.h:744
+#: ../rules/base.xml.in.h:747
 msgid "Tatar"
 msgstr "Tatar"
 
-#: ../rules/base.xml.in.h:745
+#: ../rules/base.xml.in.h:748
 msgid "Telugu"
 msgstr "Telugu"
 
 # Het Thai is de officiële taal van Thailand.
-#: ../rules/base.xml.in.h:746
+#: ../rules/base.xml.in.h:749
 msgid "Thai"
 msgstr "Thai"
 
 # Pattachote en Kedmanee zijn de twee toetsenbordindelingen voor Thai
-#: ../rules/base.xml.in.h:747
+#: ../rules/base.xml.in.h:750
 msgid "Thai (Pattachote)"
 msgstr "Thai (Pattachote)"
 
-#: ../rules/base.xml.in.h:748
+#: ../rules/base.xml.in.h:751
 msgid "Thai (TIS-820.2538)"
 msgstr "Thai (TIS-820.2538)"
 
-#: ../rules/base.xml.in.h:749
+#: ../rules/base.xml.in.h:752
 msgid "Tibetan"
 msgstr "Tibetaans"
 
-#: ../rules/base.xml.in.h:750
+#: ../rules/base.xml.in.h:753
 msgid "Tibetan (with ASCII numerals)"
 msgstr "Tibetaans (met ASCII-cijfers)"
 
-#: ../rules/base.xml.in.h:751
+#: ../rules/base.xml.in.h:754
 msgid "To the corresponding key in a Dvorak keyboard."
 msgstr "Naar de corresponderende toets op een Dvorak toetsenbord."
 
-#: ../rules/base.xml.in.h:752
+#: ../rules/base.xml.in.h:755
 msgid "To the corresponding key in a Qwerty keyboard."
 msgstr "Naar de corresponderende toets op een Qwerty toetsenbord."
 
 # XKB PointerKeys are the mouse emulation XKB provides on the hit of a key
 # press(Test with Shift+NumLock, then the keypad will move the mouse
 # around)
-#: ../rules/base.xml.in.h:753
+#: ../rules/base.xml.in.h:756
 msgid "Toggle PointerKeys with Shift + NumLock."
 msgstr "Muistoetsen aan/uitzetten met Shift+NumLock."
 
-#: ../rules/base.xml.in.h:754
+#: ../rules/base.xml.in.h:757
 msgid "Toshiba Satellite S3000"
 msgstr "Toshiba Satellite S3000"
 
-#: ../rules/base.xml.in.h:755
+#: ../rules/base.xml.in.h:758
 msgid "Trust Direct Access Keyboard"
 msgstr "Trust Direct Access toetsenbord"
 
-#: ../rules/base.xml.in.h:756
+#: ../rules/base.xml.in.h:759
 msgid "Trust Slimline"
 msgstr "Trust Slimline"
 
 # classic is hier onderdeel van merknaam?
-#: ../rules/base.xml.in.h:757
+#: ../rules/base.xml.in.h:760
 msgid "Trust Wireless Keyboard Classic"
 msgstr "Trust Wireless Keyboard Classic"
 
 # Tswana of Setswana is een Bantoetaal die wordt gesproken in Botswana
 # Andere benamingen voor Tswana zijn onder meer Sechuana en Beetjuans.
-#: ../rules/base.xml.in.h:758
+#: ../rules/base.xml.in.h:761
 msgid "Tswana"
 msgstr "Tswana"
 
-#: ../rules/base.xml.in.h:759
+#: ../rules/base.xml.in.h:762
 msgid "Turkish"
 msgstr "Turks"
 
-#: ../rules/base.xml.in.h:760
+#: ../rules/base.xml.in.h:763
 msgid "Turkish (Alt-Q)"
 msgstr "Turks (Alt-Q)"
 
-#: ../rules/base.xml.in.h:761
+#: ../rules/base.xml.in.h:764
 msgid "Turkish (F)"
 msgstr "Turks (F)"
 
-#: ../rules/base.xml.in.h:762
+#: ../rules/base.xml.in.h:765
 msgid "Turkish (Sun dead keys)"
 msgstr "Turks (Sun dode toetsen)"
 
-#: ../rules/base.xml.in.h:763
+#: ../rules/base.xml.in.h:766
 msgid "Turkish (international with dead keys)"
 msgstr "Turks (internationaal met dode toetsen)"
 
-#: ../rules/base.xml.in.h:764
+#: ../rules/base.xml.in.h:767
 msgid "Turkmen"
 msgstr "Turkmeens"
 
-#: ../rules/base.xml.in.h:765
+#: ../rules/base.xml.in.h:768
 msgid "Turkmen (Alt-Q)"
 msgstr "Turkmeens (Alt-Q)"
 
-#: ../rules/base.xml.in.h:766
+#: ../rules/base.xml.in.h:769
 msgid "TypeMatrix EZ-Reach 2020"
 msgstr "TypeMatrix EZ-Reach 2020"
 
-#: ../rules/base.xml.in.h:767
+#: ../rules/base.xml.in.h:770
 msgid "TypeMatrix EZ-Reach 2030 PS2"
 msgstr "TypeMatrix EZ-Reach 2030 PS2"
 
-#: ../rules/base.xml.in.h:768
+#: ../rules/base.xml.in.h:771
 msgid "TypeMatrix EZ-Reach 2030 USB"
 msgstr "TypeMatrix EZ-Reach 2030 USB"
 
-#: ../rules/base.xml.in.h:769
+#: ../rules/base.xml.in.h:772
 msgid "TypeMatrix EZ-Reach 2030 USB (102/105:EU mode)"
 msgstr "TypeMatrix EZ-Reach 2030 USB (102/105:EU mode)"
 
-#: ../rules/base.xml.in.h:770
+#: ../rules/base.xml.in.h:773
 msgid "TypeMatrix EZ-Reach 2030 USB (106:JP mode)"
 msgstr "TypeMatrix EZ-Reach 2030 USB (106:JP mode)"
 
-#: ../rules/base.xml.in.h:771
+#: ../rules/base.xml.in.h:774
 msgid "Udmurt"
 msgstr "Udmurts"
 
-#: ../rules/base.xml.in.h:772
+#: ../rules/base.xml.in.h:775
 msgid "Ukrainian"
 msgstr "Oekraïens"
 
-#: ../rules/base.xml.in.h:773
+#: ../rules/base.xml.in.h:776
 msgid "Ukrainian (WinKeys)"
 msgstr "Oekraïens (Windows-toetsen)"
 
 # Pannonian Rusyn (руска бешеда) or simply Rusyn (or Ruthenian) is a Slavic language
 # or dialect spoken by Pannonian Rusyns in north-western Serbia (Bačka region) and eastern
 # Croatia (therefore also called Yugoslavo-Ruthenian, Vojvodina-Ruthenian or Bačka-Ruthenian).
-#: ../rules/base.xml.in.h:774
+#: ../rules/base.xml.in.h:777
 msgid "Ukrainian (homophonic)"
 msgstr "Oekraïens (homophonisch)"
 
-#: ../rules/base.xml.in.h:775
+#: ../rules/base.xml.in.h:778
 msgid "Ukrainian (legacy)"
 msgstr "Oekraïens (historisch)"
 
-#: ../rules/base.xml.in.h:776
+#: ../rules/base.xml.in.h:779
 msgid "Ukrainian (phonetic)"
 msgstr "Oekraïens (fonetisch)"
 
-#: ../rules/base.xml.in.h:777
+#: ../rules/base.xml.in.h:780
 msgid "Ukrainian (standard RSTU)"
 msgstr "Oekraïens (standaard RSTU)"
 
-#: ../rules/base.xml.in.h:778
+#: ../rules/base.xml.in.h:781
 msgid "Ukrainian (typewriter)"
 msgstr "Oekraïens (typmachine)"
 
-#: ../rules/base.xml.in.h:779
+#: ../rules/base.xml.in.h:782
 msgid "Unicode additions (arrows and math operators)"
 msgstr "Unicode-aanvullingen (pijlen en wiskundige operatoren)"
 
-#: ../rules/base.xml.in.h:780
+#: ../rules/base.xml.in.h:783
 msgid "Unicode additions (arrows and math operators). Math operators on default level"
 msgstr "Unicode-aanvullingen (pijlen en wiskundige operatoren). Wiskundige operatoren op het standaard niveau"
 
-#: ../rules/base.xml.in.h:781
+#: ../rules/base.xml.in.h:784
 msgid "Unitek KB-1925"
 msgstr "Unitek KB-1925"
 
 # Het Urdu, vroeger door Westerse taalkundigen vaak Hindoestani genoemd, 
 # is de officiële taal van Pakistan 
-#: ../rules/base.xml.in.h:782
+#: ../rules/base.xml.in.h:785
 msgid "Urdu (Pakistan)"
 msgstr "Urdu (Pakistan)"
 
-#: ../rules/base.xml.in.h:783
+#: ../rules/base.xml.in.h:786
 msgid "Urdu (Pakistan, CRULP)"
 msgstr "Urdu (Pakistan, CRULP)"
 
-#: ../rules/base.xml.in.h:784
+#: ../rules/base.xml.in.h:787
 msgid "Urdu (Pakistan, NLA)"
 msgstr "Urdu (Pakistan, NLA)"
 
-#: ../rules/base.xml.in.h:785
+#: ../rules/base.xml.in.h:788
 msgid "Urdu (WinKeys)"
 msgstr "Urdu (Windows-toetsen)"
 
-#: ../rules/base.xml.in.h:786
+#: ../rules/base.xml.in.h:789
 msgid "Urdu (alternative phonetic)"
 msgstr "Urdu (alternatief fonetisch)"
 
-#: ../rules/base.xml.in.h:787
+#: ../rules/base.xml.in.h:790
 msgid "Urdu (phonetic)"
 msgstr "Urdu (fonetisch)"
 
-#: ../rules/base.xml.in.h:788
+#: ../rules/base.xml.in.h:791
 msgid "Use keyboard LED to show alternative layout"
 msgstr "Toetsenbord-LED gebruiken om alternatieve indeling te tonen"
 
-#: ../rules/base.xml.in.h:789
+#: ../rules/base.xml.in.h:792
 msgid "Using space key to input non-breakable space character"
 msgstr "Spatiebalk gebruiken voor het invoeren van niet-afbrekende (harde) spaties"
 
 # Spatiebalk geeft de gebruikelijke spatie op elk niveau.
-#: ../rules/base.xml.in.h:790
+#: ../rules/base.xml.in.h:793
 msgid "Usual space at any level"
 msgstr "Gebruikelijke spatie op elk niveau"
 
-#: ../rules/base.xml.in.h:791
+#: ../rules/base.xml.in.h:794
 msgid "Uyghur"
 msgstr "Oeigoers"
 
-#: ../rules/base.xml.in.h:792
+#: ../rules/base.xml.in.h:795
 msgid "Uzbek"
 msgstr "Oezbeeks"
 
-#: ../rules/base.xml.in.h:793
+#: ../rules/base.xml.in.h:796
 msgid "Uzbek (Afghanistan)"
 msgstr "Oezbeeks (Afghanistan)"
 
-#: ../rules/base.xml.in.h:794
+#: ../rules/base.xml.in.h:797
 msgid "Uzbek (Afghanistan, OLPC)"
 msgstr "Oezbeeks (Afghanistanm, OLPC)"
 
-#: ../rules/base.xml.in.h:795
+#: ../rules/base.xml.in.h:798
 msgid "Uzbek (Latin)"
 msgstr "Oezbeeks (Latijns)"
 
-#: ../rules/base.xml.in.h:796
+#: ../rules/base.xml.in.h:799
 msgid "Vietnamese"
 msgstr "Viëtnamees"
 
-#: ../rules/base.xml.in.h:797
+#: ../rules/base.xml.in.h:800
 msgid "ViewSonic KU-306 Internet Keyboard"
 msgstr "ViewSonic KU-306 internet toetsenbord"
 
-#: ../rules/base.xml.in.h:798
+#: ../rules/base.xml.in.h:801
 msgid "Wang 724 keypad with Unicode additions (arrows and math operators)"
 msgstr "Wang 724 cijferblok met Unicode-aanvullingen (pijlen en wiskundige operatoren)"
 
-#: ../rules/base.xml.in.h:799
+#: ../rules/base.xml.in.h:802
 msgid "Wang 724 keypad with Unicode additions (arrows and math operators). Math operators on default level"
 msgstr "Wang 724 cijferblok met Unicode aanvullingen (pijlen en wiskundige operatoren). Wiskundige operatoren op het standaard niveau"
 
-#: ../rules/base.xml.in.h:800
+#: ../rules/base.xml.in.h:803
 msgid "Winbook Model XP5"
 msgstr "Winbook Model XP5"
 
-#: ../rules/base.xml.in.h:801
+#: ../rules/base.xml.in.h:804
 msgid "Wolof"
 msgstr "Wolof"
 
-#: ../rules/base.xml.in.h:802
+#: ../rules/base.xml.in.h:805
 msgid "Yahoo! Internet Keyboard"
 msgstr "Yahoo! internettoetsenbord"
 
 # Het Jakoets is een Turkse taal met ongeveer 363.000 sprekers
-#: ../rules/base.xml.in.h:803
+#: ../rules/base.xml.in.h:806
 msgid "Yakut"
 msgstr "Jakoets"
 
 # Het Yoruba is een Afrikaanse taal. Het is de taal van de Yoruba 
 # en wordt gesproken in Nigeria, Benin en Togo.
-#: ../rules/base.xml.in.h:804
+#: ../rules/base.xml.in.h:807
 msgid "Yoruba"
 msgstr "Yoruba"
 
@@ -3373,433 +3388,437 @@ msgstr "Yoruba"
 # Nulbreedte-losmaker/non-verbinder/non-verbindingsteken
 # losmaker is het duidelijkst, het maakt twee tekens los die anders verbonden zouden worden. 
 # (Tino)
-#: ../rules/base.xml.in.h:805
+#: ../rules/base.xml.in.h:808
 msgid "Zero-width non-joiner character at second level"
 msgstr "Nulbreedte-losmaker op het tweede niveau"
 
-#: ../rules/base.xml.in.h:806
+#: ../rules/base.xml.in.h:809
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level"
 msgstr "Nulbreedte-losmaker op het tweede niveau, harde spatie op het derde niveau"
 
-#: ../rules/base.xml.in.h:807
+#: ../rules/base.xml.in.h:810
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level, nothing at fourth level"
 msgstr "Nulbreedte-losmaker op het tweede niveau, harde spatie op het derde niveau, niets op het vierde niveau"
 
-#: ../rules/base.xml.in.h:808
+#: ../rules/base.xml.in.h:811
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level, thin non-breakable space at fourth level"
 msgstr "Nulbreedte-losmaker op het tweede niveau, harde spatie op het derde niveau, smalle harde spatie op het vierde niveau"
 
-#: ../rules/base.xml.in.h:809
+#: ../rules/base.xml.in.h:812
 msgid "Zero-width non-joiner character at second level, non-breakable space character at third level, zero-width joiner at fourth level"
 msgstr "Nulbreedte-losmaker op het tweede niveau, harde spatie op het derde niveau, nulbreedte-verbinder op het vierde niveau"
 
-#: ../rules/base.xml.in.h:810
+#: ../rules/base.xml.in.h:813
 msgid "Zero-width non-joiner character at second level, zero-width joiner character at third level"
 msgstr "Nulbreedte-losmaker op het tweede niveau, nulbreedte-verbinder op het derde niveau"
 
-#: ../rules/base.xml.in.h:811
+#: ../rules/base.xml.in.h:814
 msgid "Zero-width non-joiner character at second level, zero-width joiner character at third level, non-breakable space character at fourth level"
 msgstr "Nulbreedte-losmaker op het tweede niveau, nulbreedte-verbinder op het derde niveau, harde spatie op het vierde niveau"
 
-#: ../rules/base.xml.in.h:812
+#: ../rules/base.xml.in.h:815
 msgid "Zero-width non-joiner character at third level, zero-width joiner at fourth level"
 msgstr "Nulbreedte-losmaker op het derde niveau, nulbreedte-verbinder op het vierde niveau"
 
-#: ../rules/base.xml.in.h:813
+#: ../rules/base.xml.in.h:816
 msgid "ak"
 msgstr "ak"
 
-#: ../rules/base.xml.in.h:814
+#: ../rules/base.xml.in.h:817
 msgid "am"
 msgstr "am"
 
-#: ../rules/base.xml.in.h:815
+#: ../rules/base.xml.in.h:818
 msgid "ar"
 msgstr "ar"
 
-#: ../rules/base.xml.in.h:816
+#: ../rules/base.xml.in.h:819
 msgid "avn"
 msgstr "avn"
 
-#: ../rules/base.xml.in.h:817
+#: ../rules/base.xml.in.h:820
 msgid "az"
 msgstr "az"
 
-#: ../rules/base.xml.in.h:818
+#: ../rules/base.xml.in.h:821
 msgid "be"
 msgstr "be"
 
-#: ../rules/base.xml.in.h:819
+#: ../rules/base.xml.in.h:822
 msgid "ber"
 msgstr "ber"
 
-#: ../rules/base.xml.in.h:820
+#: ../rules/base.xml.in.h:823
 msgid "bg"
 msgstr "bg"
 
-#: ../rules/base.xml.in.h:821
+#: ../rules/base.xml.in.h:824
 msgid "bm"
 msgstr "bm"
 
-#: ../rules/base.xml.in.h:822
+#: ../rules/base.xml.in.h:825
 msgid "bn"
 msgstr "bn"
 
-#: ../rules/base.xml.in.h:823
+#: ../rules/base.xml.in.h:826
 msgid "brl"
 msgstr "brl"
 
-#: ../rules/base.xml.in.h:824
+#: ../rules/base.xml.in.h:827
 msgid "bs"
 msgstr "bs"
 
-#: ../rules/base.xml.in.h:825
+#: ../rules/base.xml.in.h:828
 msgid "ca"
 msgstr "ca"
 
-#: ../rules/base.xml.in.h:826
+#: ../rules/base.xml.in.h:829
 msgid "chr"
 msgstr "chr"
 
-#: ../rules/base.xml.in.h:827
+#: ../rules/base.xml.in.h:830
 msgid "cm"
 msgstr "cm"
 
-#: ../rules/base.xml.in.h:828
+#: ../rules/base.xml.in.h:831 ../rules/base.extras.xml.in.h:38
 msgid "crh"
 msgstr "crh"
 
-#: ../rules/base.xml.in.h:829
+#: ../rules/base.xml.in.h:832
 msgid "cs"
 msgstr "cs"
 
-#: ../rules/base.xml.in.h:830
+#: ../rules/base.xml.in.h:833
 msgid "da"
 msgstr "da"
 
-#: ../rules/base.xml.in.h:831
+#: ../rules/base.xml.in.h:834 ../rules/base.extras.xml.in.h:39
 msgid "de"
 msgstr "de"
 
-#: ../rules/base.xml.in.h:832
+#: ../rules/base.xml.in.h:835
 msgid "dv"
 msgstr "dv"
 
-#: ../rules/base.xml.in.h:833
+#: ../rules/base.xml.in.h:836
 msgid "dz"
 msgstr "dz"
 
-#: ../rules/base.xml.in.h:834
+#: ../rules/base.xml.in.h:837
 msgid "ee"
 msgstr "ee"
 
-#: ../rules/base.xml.in.h:835 ../rules/base.extras.xml.in.h:34
+#: ../rules/base.xml.in.h:838 ../rules/base.extras.xml.in.h:40
 msgid "en"
 msgstr "en"
 
-#: ../rules/base.xml.in.h:836
+#: ../rules/base.xml.in.h:839
 msgid "eo"
 msgstr "eo"
 
-#: ../rules/base.xml.in.h:837
+#: ../rules/base.xml.in.h:840
 msgid "es"
 msgstr "es"
 
-#: ../rules/base.xml.in.h:838
+#: ../rules/base.xml.in.h:841
 msgid "et"
 msgstr "et"
 
-#: ../rules/base.xml.in.h:839 ../rules/base.extras.xml.in.h:35
+#: ../rules/base.xml.in.h:842 ../rules/base.extras.xml.in.h:41
 msgid "fa"
 msgstr "fa"
 
-#: ../rules/base.xml.in.h:840
+#: ../rules/base.xml.in.h:843
 msgid "ff"
 msgstr "ff"
 
-#: ../rules/base.xml.in.h:841
+#: ../rules/base.xml.in.h:844
 msgid "fi"
 msgstr "fi"
 
-#: ../rules/base.xml.in.h:842
+#: ../rules/base.xml.in.h:845
 msgid "fo"
 msgstr "fo"
 
-#: ../rules/base.xml.in.h:843 ../rules/base.extras.xml.in.h:36
+#: ../rules/base.xml.in.h:846 ../rules/base.extras.xml.in.h:42
 msgid "fr"
 msgstr "fr"
 
-#: ../rules/base.xml.in.h:844
+#: ../rules/base.xml.in.h:847
 msgid "gaa"
 msgstr "gaa"
 
-#: ../rules/base.xml.in.h:845
+#: ../rules/base.xml.in.h:848
 msgid "gr"
 msgstr "gr"
 
-#: ../rules/base.xml.in.h:846
+#: ../rules/base.xml.in.h:849
 msgid "gu"
 msgstr "gu"
 
-#: ../rules/base.xml.in.h:847
+#: ../rules/base.xml.in.h:850
 msgid "ha"
 msgstr "ha"
 
-#: ../rules/base.xml.in.h:848
+#: ../rules/base.xml.in.h:851
 msgid "he"
 msgstr "he"
 
-#: ../rules/base.xml.in.h:849
+#: ../rules/base.xml.in.h:852
 msgid "hi"
 msgstr "hi"
 
-#: ../rules/base.xml.in.h:850
+#: ../rules/base.xml.in.h:853
 msgid "hr"
 msgstr "hr"
 
-#: ../rules/base.xml.in.h:851
+#: ../rules/base.xml.in.h:854
 msgid "hu"
 msgstr "hu"
 
-#: ../rules/base.xml.in.h:852 ../rules/base.extras.xml.in.h:37
+#: ../rules/base.xml.in.h:855 ../rules/base.extras.xml.in.h:43
 msgid "hy"
 msgstr "hy"
 
-#: ../rules/base.xml.in.h:853
+#: ../rules/base.xml.in.h:856
 msgid "ie"
 msgstr "ie"
 
-#: ../rules/base.xml.in.h:854
+#: ../rules/base.xml.in.h:857
 msgid "ig"
 msgstr "ig"
 
-#: ../rules/base.xml.in.h:855
+#: ../rules/base.xml.in.h:858
 msgid "ike"
 msgstr "ike"
 
-#: ../rules/base.xml.in.h:856
+#: ../rules/base.xml.in.h:859
 msgid "in"
 msgstr "in"
 
-#: ../rules/base.xml.in.h:857
+#: ../rules/base.xml.in.h:860
 msgid "is"
 msgstr "is"
 
-#: ../rules/base.xml.in.h:858
+#: ../rules/base.xml.in.h:861
 msgid "it"
 msgstr "it"
 
-#: ../rules/base.xml.in.h:859
+#: ../rules/base.xml.in.h:862
 msgid "ja"
 msgstr "ja"
 
-#: ../rules/base.xml.in.h:860
+#: ../rules/base.xml.in.h:863
 msgid "ka"
 msgstr "ka"
 
-#: ../rules/base.xml.in.h:861
+#: ../rules/base.xml.in.h:864
 msgid "ki"
 msgstr "ki"
 
-#: ../rules/base.xml.in.h:862
+#: ../rules/base.xml.in.h:865
 msgid "kk"
 msgstr "kk"
 
-#: ../rules/base.xml.in.h:863
+#: ../rules/base.xml.in.h:866
 msgid "km"
 msgstr "km"
 
-#: ../rules/base.xml.in.h:864
+#: ../rules/base.xml.in.h:867
 msgid "kn"
 msgstr "kn"
 
-#: ../rules/base.xml.in.h:865
+#: ../rules/base.xml.in.h:868
 msgid "ko"
 msgstr "ko"
 
-#: ../rules/base.xml.in.h:866
+#: ../rules/base.xml.in.h:869
 msgid "ku"
 msgstr "ku"
 
-#: ../rules/base.xml.in.h:867
+#: ../rules/base.xml.in.h:870
 msgid "lo"
 msgstr "lo"
 
-#: ../rules/base.xml.in.h:868 ../rules/base.extras.xml.in.h:39
+#: ../rules/base.xml.in.h:871 ../rules/base.extras.xml.in.h:45
 msgid "lt"
 msgstr "lt"
 
-#: ../rules/base.xml.in.h:869 ../rules/base.extras.xml.in.h:40
+#: ../rules/base.xml.in.h:872 ../rules/base.extras.xml.in.h:46
 msgid "lv"
 msgstr "lv"
 
-#: ../rules/base.xml.in.h:870
+#: ../rules/base.xml.in.h:873
 msgid "mi"
 msgstr "mi"
 
-#: ../rules/base.xml.in.h:871
+#: ../rules/base.xml.in.h:874
 msgid "mk"
 msgstr "mk"
 
-#: ../rules/base.xml.in.h:872
+#: ../rules/base.xml.in.h:875
 msgid "ml"
 msgstr "ml"
 
-#: ../rules/base.xml.in.h:873
+#: ../rules/base.xml.in.h:876
 msgid "mn"
 msgstr "mn"
 
-#: ../rules/base.xml.in.h:874
+#: ../rules/base.xml.in.h:877
 msgid "mt"
 msgstr "mt"
 
-#: ../rules/base.xml.in.h:875
+#: ../rules/base.xml.in.h:878
 msgid "my"
 msgstr "my"
 
-#: ../rules/base.xml.in.h:876
+#: ../rules/base.xml.in.h:879
 msgid "ne"
 msgstr "ne"
 
-#: ../rules/base.xml.in.h:877
+#: ../rules/base.xml.in.h:880
 msgid "nl"
 msgstr "nl"
 
-#: ../rules/base.xml.in.h:878
+#: ../rules/base.xml.in.h:881
 msgid "no"
 msgstr "no"
 
-#: ../rules/base.xml.in.h:879
+#: ../rules/base.xml.in.h:882
 msgid "or"
 msgstr "or"
 
-#: ../rules/base.xml.in.h:880
+#: ../rules/base.xml.in.h:883
 msgid "pa"
 msgstr "pa"
 
-#: ../rules/base.xml.in.h:881
+#: ../rules/base.xml.in.h:884
 msgid "ph"
 msgstr "ph"
 
-#: ../rules/base.xml.in.h:882 ../rules/base.extras.xml.in.h:41
+#: ../rules/base.xml.in.h:885 ../rules/base.extras.xml.in.h:47
 msgid "pl"
 msgstr "pl"
 
-#: ../rules/base.xml.in.h:883
+#: ../rules/base.xml.in.h:886
 msgid "ps"
 msgstr "ps"
 
-#: ../rules/base.xml.in.h:884
+#: ../rules/base.xml.in.h:887
 msgid "pt"
 msgstr "pt"
 
-#: ../rules/base.xml.in.h:885 ../rules/base.extras.xml.in.h:42
+#: ../rules/base.xml.in.h:888 ../rules/base.extras.xml.in.h:48
 msgid "ro"
 msgstr "ro"
 
-#: ../rules/base.xml.in.h:886 ../rules/base.extras.xml.in.h:43
+#: ../rules/base.xml.in.h:889 ../rules/base.extras.xml.in.h:49
 msgid "ru"
 msgstr "ru"
 
-#: ../rules/base.xml.in.h:887
+#: ../rules/base.xml.in.h:890
 msgid "sd"
 msgstr "sd"
 
-#: ../rules/base.xml.in.h:888
+#: ../rules/base.xml.in.h:891
 msgid "si"
 msgstr "si"
 
-#: ../rules/base.xml.in.h:889
+#: ../rules/base.xml.in.h:892
 msgid "sk"
 msgstr "sk"
 
-#: ../rules/base.xml.in.h:890
+#: ../rules/base.xml.in.h:893
 msgid "sl"
 msgstr "sl"
 
-#: ../rules/base.xml.in.h:891
+#: ../rules/base.xml.in.h:894
 msgid "sq"
 msgstr "sq"
 
-#: ../rules/base.xml.in.h:892 ../rules/base.extras.xml.in.h:45
+#: ../rules/base.xml.in.h:895 ../rules/base.extras.xml.in.h:51
 msgid "sr"
 msgstr "sr"
 
-#: ../rules/base.xml.in.h:893
+#: ../rules/base.xml.in.h:896
 msgid "sv"
 msgstr "sv"
 
-#: ../rules/base.xml.in.h:894
+#: ../rules/base.xml.in.h:897
 msgid "sw"
 msgstr "sw"
 
-#: ../rules/base.xml.in.h:895
+#: ../rules/base.xml.in.h:898
 msgid "syc"
 msgstr "syc"
 
-#: ../rules/base.xml.in.h:896
+#: ../rules/base.xml.in.h:899
 msgid "ta"
 msgstr "ta"
 
-#: ../rules/base.xml.in.h:897
+#: ../rules/base.xml.in.h:900
 msgid "te"
 msgstr "te"
 
-#: ../rules/base.xml.in.h:898
+#: ../rules/base.xml.in.h:901
 msgid "tg"
 msgstr "tg"
 
-#: ../rules/base.xml.in.h:899
+#: ../rules/base.xml.in.h:902
 msgid "th"
 msgstr "th"
 
-#: ../rules/base.xml.in.h:900
+#: ../rules/base.xml.in.h:903
 msgid "tk"
 msgstr "tk"
 
-#: ../rules/base.xml.in.h:901
+#: ../rules/base.xml.in.h:904
 msgid "tn"
 msgstr "tn"
 
-#: ../rules/base.xml.in.h:902
+#: ../rules/base.xml.in.h:905
 msgid "tr"
 msgstr "tr"
 
-#: ../rules/base.xml.in.h:903
+#: ../rules/base.xml.in.h:906
 msgid "uk"
 msgstr "uk"
 
-#: ../rules/base.xml.in.h:904
+#: ../rules/base.xml.in.h:907
 msgid "ur"
 msgstr "ur"
 
-#: ../rules/base.xml.in.h:905
+#: ../rules/base.xml.in.h:908
 msgid "uz"
 msgstr "uz"
 
-#: ../rules/base.xml.in.h:906
+#: ../rules/base.xml.in.h:909
 msgid "vi"
 msgstr "vi"
 
-#: ../rules/base.xml.in.h:907
+#: ../rules/base.xml.in.h:910
 msgid "wo"
 msgstr "wo"
 
-#: ../rules/base.xml.in.h:908
+#: ../rules/base.xml.in.h:911
 msgid "xsy"
 msgstr "xsy"
 
-#: ../rules/base.xml.in.h:909
+#: ../rules/base.xml.in.h:912
 msgid "yo"
 msgstr "yo"
 
-#: ../rules/base.xml.in.h:910
+#: ../rules/base.xml.in.h:913
 msgid "zh"
 msgstr "zh"
 
 #: ../rules/base.extras.xml.in.h:1
 msgid "APL Keyboard Symbols"
 msgstr "APL toetsenbordsymbolen"
+
+#: ../rules/base.extras.xml.in.h:3
+msgid "Armenian (OLPC phonetic)"
+msgstr "Armeens (OLPC fonetisch)"
 
 #: ../rules/base.extras.xml.in.h:4
 msgid "Atsina"
@@ -3819,13 +3838,27 @@ msgstr "Avestisch"
 msgid "Couer D'alene Salish"
 msgstr "Coeur D'alene Salish"
 
-#: ../rules/base.extras.xml.in.h:8
+# Krim-Tataars of Krim-Turks
+# http://nl.wikipedia.org/wiki/Krim-Tataars
+#: ../rules/base.extras.xml.in.h:7
+msgid "Crimean Tatar (Dobruja Q)"
+msgstr "Krim-Tataars (Dobruca-1 Q)"
+
+#: ../rules/base.extras.xml.in.h:9
 msgid "English (US, international AltGr Unicode combining)"
 msgstr "Engels (US, internationaal AltGr Unicode combineren)"
 
-#: ../rules/base.extras.xml.in.h:9
+#: ../rules/base.extras.xml.in.h:10
 msgid "English (US, international AltGr Unicode combining, alternative)"
 msgstr "Engels (US, internationaal AltGr Unicode combineren, alternatief)"
+
+#: ../rules/base.extras.xml.in.h:13
+msgid "German (US keyboard with German letters)"
+msgstr "Duits (US toetsenbord met Duitse lettertekens)"
+
+#: ../rules/base.extras.xml.in.h:14
+msgid "German (with Hungarian letters and no dead keys)"
+msgstr "Duits (met Hongaarse lettertekens en zonder dode toetsen)"
 
 # Kutenai is a language isolate having no demonstrable relation
 # to any other language.
@@ -3833,78 +3866,101 @@ msgstr "Engels (US, internationaal AltGr Unicode combineren, alternatief)"
 # after and is spoken by some of the Kootenai Native American/First 
 # Nations people who are indigenous to the area of North America that
 # is now Montana, Idaho, and British Columbia.
-#: ../rules/base.extras.xml.in.h:11
+#: ../rules/base.extras.xml.in.h:15
 msgid "Kutenai"
 msgstr "Kutenai"
 
-#: ../rules/base.extras.xml.in.h:13
+#: ../rules/base.extras.xml.in.h:17
 msgid "Latvian (US Colemak)"
 msgstr "Lets (US, Colemak)"
 
-#: ../rules/base.extras.xml.in.h:14
+#: ../rules/base.extras.xml.in.h:18
 msgid "Latvian (US Colemak, apostrophe variant)"
 msgstr "Lets (US Colemak, apostrof variant)"
 
-#: ../rules/base.extras.xml.in.h:15
+#: ../rules/base.extras.xml.in.h:19
 msgid "Latvian (US Dvorak)"
 msgstr "Lets (US Dvorak)"
 
-#: ../rules/base.extras.xml.in.h:16
+#: ../rules/base.extras.xml.in.h:20
 msgid "Latvian (US Dvorak, Y variant)"
 msgstr "Lets (US Dvorak, Y variant)"
 
-#: ../rules/base.extras.xml.in.h:17
+#: ../rules/base.extras.xml.in.h:21
 msgid "Latvian (US Dvorak, minus variant)"
 msgstr "Lets (US Dvorak, min variant)"
 
-#: ../rules/base.extras.xml.in.h:18
+#: ../rules/base.extras.xml.in.h:22
 msgid "Latvian (programmer US Dvorak)"
 msgstr "Lets (programmeer US Dvorak)"
 
-#: ../rules/base.extras.xml.in.h:19
+#: ../rules/base.extras.xml.in.h:23
 msgid "Latvian (programmer US Dvorak, Y variant)"
 msgstr "Lets (programmeer US Dvorak, Y variant)"
 
-#: ../rules/base.extras.xml.in.h:20
+#: ../rules/base.extras.xml.in.h:24
 msgid "Latvian (programmer US Dvorak, minus variant)"
 msgstr "Lets (programmeer US Dvorak, min variant)"
 
-#: ../rules/base.extras.xml.in.h:22
+#: ../rules/base.extras.xml.in.h:26
 msgid "Lithuanian (US Dvorak with Lithuanian letters)"
 msgstr "Litouws (US Dvorak met Litouwse lettertekens)"
 
-#: ../rules/base.extras.xml.in.h:25
+#: ../rules/base.extras.xml.in.h:29
 msgid "Polish (international with dead keys)"
 msgstr "Pools (internationaal met dode toetsen)"
 
-#: ../rules/base.extras.xml.in.h:27
+#: ../rules/base.extras.xml.in.h:31
 msgid "Romanian (ergonomic Touchtype)"
 msgstr "Roemeens (ergonomisch Touchtype)"
 
-#: ../rules/base.extras.xml.in.h:29
-msgid "Russian (with UKR and BEL layout)"
-msgstr "Russisch (met UKR en BEL indeling)"
+#: ../rules/base.extras.xml.in.h:33
+msgid "Russian (with Ukrainian-Belorussian layout)"
+msgstr "Russisch (met Oekraïens-Wit-Russische indeling)"
 
 # Canadees-Indiaanse taal (Shuswap)
-#: ../rules/base.extras.xml.in.h:30
+#: ../rules/base.extras.xml.in.h:34
 msgid "Secwepemctsin"
 msgstr "Secwepemctsin"
 
-#: ../rules/base.extras.xml.in.h:32
+#: ../rules/base.extras.xml.in.h:36
 msgid "Serbian (combining accents instead of dead keys)"
 msgstr "Servisch  (Combinerende accenten in plaats van dode toetsen)"
 
-#: ../rules/base.extras.xml.in.h:33
+#: ../rules/base.extras.xml.in.h:37
 msgid "apl"
 msgstr "apl"
 
-#: ../rules/base.extras.xml.in.h:38
+#: ../rules/base.extras.xml.in.h:44
 msgid "kut"
 msgstr "kut"
 
-#: ../rules/base.extras.xml.in.h:44
+#: ../rules/base.extras.xml.in.h:50
 msgid "shs"
 msgstr "shs"
+
+#~ msgid "English (Cameroon qwerty)"
+#~ msgstr "Engels (Kameroen qwerty)"
+
+#~ msgid "French (Cameroon azerty)"
+#~ msgstr "Frans (Kameroen azerty)"
+
+#~ msgid "German (qwerty)"
+#~ msgstr "Duits (qwerty)"
+
+# Ctrl-toets
+#~ msgid "Make Caps Lock an additional Ctrl"
+#~ msgstr "Van Caps Lock een extra Ctrl maken"
+
+#~ msgid "Meta on Left Ctrl"
+#~ msgstr "Meta op Linker Ctrl-toets"
+
+#~ msgid "Right Ctrl is mapped to Menu"
+#~ msgstr "Rechter Ctrl zit op de Menu-toets"
+
+# Het Singalees of Sinhala
+#~ msgid "Sinhala"
+#~ msgstr "Singalees"
 
 #~ msgid "Afg"
 #~ msgstr "Afg"

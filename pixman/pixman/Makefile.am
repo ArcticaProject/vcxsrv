@@ -22,7 +22,7 @@ EXTRA_DIST =				\
 DISTCLEANFILES = $(BUILT_SOURCES)
 
 # mmx code
-if USE_MMX
+if USE_X86_MMX
 noinst_LTLIBRARIES += libpixman-mmx.la
 libpixman_mmx_la_SOURCES = \
 	pixman-mmx.c
@@ -88,6 +88,18 @@ libpixman_arm_neon_la_LIBADD = $(DEP_LIBS)
 libpixman_1_la_LIBADD += libpixman-arm-neon.la
 
 ASM_CFLAGS_arm_neon=
+endif
+
+# iwmmxt code
+if USE_ARM_IWMMXT
+noinst_LTLIBRARIES += libpixman-iwmmxt.la
+libpixman_iwmmxt_la_SOURCES = pixman-mmx.c
+libpixman_iwmmxt_la_CFLAGS = $(DEP_CFLAGS) $(IWMMXT_CFLAGS)
+libpixman_iwmmxt_la_LIBADD = $(DEP_LIBS)
+libpixman_1_la_LDFLAGS += $(IWMMXT_LDFLAGS)
+libpixman_1_la_LIBADD += libpixman-iwmmxt.la
+
+ASM_CFLAGS_IWMMXT=$(IWMMXT_CFLAGS)
 endif
 
 .c.s : $(libpixmaninclude_HEADERS) $(BUILT_SOURCES)
