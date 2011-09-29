@@ -43,7 +43,7 @@ XftGetVersion (void)
 }
 
 static struct {
-    char    *name;
+    const char *name;
     int	    alloc_count;
     int	    alloc_mem;
     int	    free_count;

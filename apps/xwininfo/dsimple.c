@@ -76,7 +76,7 @@ from The Open Group.
 
 
 /* This stuff is defined in the calling program by dsimple.h */
-char    *program_name = "unknown_program";
+const char    *program_name = "unknown_program";
 
 /*
  * Get_Display_Name (argc, argv) - return string representing display name
@@ -404,7 +404,7 @@ Window_With_Name (
 /*
  * Standard fatal error routine - call like printf
  */
-void Fatal_Error (char *msg, ...)
+void Fatal_Error (const char *msg, ...)
 {
     va_list args;
     fflush (stdout);

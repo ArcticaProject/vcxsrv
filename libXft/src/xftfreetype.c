@@ -164,7 +164,7 @@ _XftLockFile (XftFtFile *f)
 }
 
 static void
-_XftLockError (char *reason)
+_XftLockError (const char *reason)
 {
     fprintf (stderr, "Xft: locking error %s\n", reason);
 }

@@ -44,7 +44,7 @@ typedef int Bool;
 #define True 1
     /* Global variables used by routines in dsimple.c */
 
-extern char *program_name;                   /* Name of this program */
+extern const char *program_name;             /* Name of this program */
 
     /* Declarations for functions in dsimple.c */
 
@@ -55,7 +55,7 @@ void Setup_Display_And_Screen (const char *displayname,
 xcb_window_t Select_Window (xcb_connection_t *, const xcb_screen_t *, int);
 xcb_window_t Window_With_Name (xcb_connection_t *, xcb_window_t, const char *);
 
-void Fatal_Error (char *, ...) _X_NORETURN _X_ATTRIBUTE_PRINTF(1, 2);
+void Fatal_Error (const char *, ...) _X_NORETURN _X_ATTRIBUTE_PRINTF(1, 2);
 
 void Print_X_Error (xcb_connection_t *, xcb_generic_error_t *);
 
