@@ -376,7 +376,7 @@ void
 _XftDisplayManageMemory (Display *dpy);
 
 int
-XftDefaultParseBool (char *v);
+XftDefaultParseBool (const char *v);
 
 FcBool
 XftDefaultGetBool (Display *dpy, const char *object, int screen, FcBool def);

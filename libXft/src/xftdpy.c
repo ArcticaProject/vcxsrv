@@ -282,7 +282,7 @@ XftDefaultSet (Display *dpy, FcPattern *defaults)
 }
 
 _X_HIDDEN int
-XftDefaultParseBool (char *v)
+XftDefaultParseBool (const char *v)
 {
     char    c0, c1;
 
@@ -307,7 +307,7 @@ XftDefaultParseBool (char *v)
 }
 
 static Bool
-_XftDefaultInitBool (Display *dpy, FcPattern *pat, char *option)
+_XftDefaultInitBool (Display *dpy, FcPattern *pat, const char *option)
 {
     char    *v;
     int	    i;
@@ -319,7 +319,7 @@ _XftDefaultInitBool (Display *dpy, FcPattern *pat, char *option)
 }
 
 static Bool
-_XftDefaultInitDouble (Display *dpy, FcPattern *pat, char *option)
+_XftDefaultInitDouble (Display *dpy, FcPattern *pat, const char *option)
 {
     char    *v, *e;
     double  d;
@@ -335,7 +335,7 @@ _XftDefaultInitDouble (Display *dpy, FcPattern *pat, char *option)
 }
 
 static Bool
-_XftDefaultInitInteger (Display *dpy, FcPattern *pat, char *option)
+_XftDefaultInitInteger (Display *dpy, FcPattern *pat, const char *option)
 {
     char    *v, *e;
     int	    i;

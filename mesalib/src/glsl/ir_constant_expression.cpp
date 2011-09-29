@@ -69,7 +69,9 @@ ir_expression::constant_expression_value()
    }
 
    if (op[1] != NULL)
-      assert(op[0]->type->base_type == op[1]->type->base_type);
+      assert(op[0]->type->base_type == op[1]->type->base_type ||
+	     this->operation == ir_binop_lshift ||
+	     this->operation == ir_binop_rshift);
 
    bool op0_scalar = op[0]->type->is_scalar();
    bool op1_scalar = op[1] != NULL && op[1]->type->is_scalar();
@@ -1371,6 +1373,8 @@ ir_call::constant_expression_value()
 	    data.f[m*i+j] += op[0]->value.f[i+n*j];
 	 }
       }
+   } else if (strcmp(callee, "trunc") == 0) {
+      expr = new(mem_ctx) ir_expression(ir_unop_trunc, op[0]);
    } else {
       /* Unsupported builtin - some are not allowed in constant expressions. */
       return NULL;
