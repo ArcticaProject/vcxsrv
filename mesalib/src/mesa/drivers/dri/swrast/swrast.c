@@ -595,17 +595,13 @@ static const char *es2_extensions[] = {
    /* Required by GLES2 */
    "GL_ARB_fragment_program",
    "GL_ARB_fragment_shader",
-   "GL_ARB_multitexture",
    "GL_ARB_shader_objects",
    "GL_ARB_texture_cube_map",
-   "GL_ARB_texture_mirrored_repeat",
    "GL_ARB_texture_non_power_of_two",
    "GL_ARB_vertex_shader",
    "GL_EXT_blend_color",
    "GL_EXT_blend_equation_separate",
    "GL_EXT_blend_minmax",
-   "GL_EXT_blend_subtract",
-   "GL_EXT_stencil_wrap",
 
    /* Optional GLES2 */
    "GL_ARB_framebuffer_object",

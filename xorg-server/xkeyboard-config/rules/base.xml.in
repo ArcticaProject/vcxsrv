@@ -1715,7 +1715,7 @@
           <configItem>
             <name>ben</name>
             <_shortDescription>bn</_shortDescription>
-            <_description>Bengali</_description>
+            <_description>Bengali (India)</_description>
             <languageList>
               <iso639Id>ben</iso639Id>
             </languageList>
@@ -1725,7 +1725,7 @@
           <configItem>
             <name>ben_probhat</name>
             <_shortDescription>bn</_shortDescription>
-            <_description>Bengali (Probhat)</_description>
+            <_description>Bengali (India, Probhat)</_description>
             <languageList>
               <iso639Id>ben</iso639Id>
             </languageList>
@@ -1734,28 +1734,28 @@
 	<variant>
           <configItem>
             <name>ben_baishakhi</name>
-            <_description>Bengali (Baishakhi)</_description>
+            <_description>Bengali (India, Baishakhi)</_description>
             <languageList><iso639Id>ben</iso639Id></languageList>	
           </configItem>
         </variant>
 	 <variant>
           <configItem>
             <name>ben_bornona</name>
-            <_description>Bengali (Bornona)</_description>
+            <_description>Bengali (India, Bornona)</_description>
             <languageList><iso639Id>ben</iso639Id></languageList>	
           </configItem>
         </variant>
 	 <variant>
           <configItem>
             <name>ben_gitanjali</name>
-            <_description>Bengali (Uni Gitanjali)</_description>
+            <_description>Bengali (India, Uni Gitanjali)</_description>
             <languageList><iso639Id>ben</iso639Id></languageList>	
           </configItem>
         </variant>
 	 <variant>
           <configItem>
             <name>ben_inscript</name>
-            <_description>Bengali (Baishakhi Inscript)</_description>
+            <_description>Bengali (India, Baishakhi Inscript)</_description>
             <languageList><iso639Id>ben</iso639Id></languageList>	
           </configItem>
         </variant>
@@ -2235,7 +2235,7 @@
         <variant>
           <configItem>
             <name>dvorak</name>
-            <_description>English (Cameroon Dvorak)</_description>
+            <_description>Cameroon Multilingual (Dvorak)</_description>
           </configItem>
         </variant>
       </variantList>
