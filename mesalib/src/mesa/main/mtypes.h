@@ -2766,7 +2766,6 @@ struct gl_extensions
    GLboolean ARB_half_float_vertex;
    GLboolean ARB_instanced_arrays;
    GLboolean ARB_map_buffer_range;
-   GLboolean ARB_multitexture;
    GLboolean ARB_occlusion_query;
    GLboolean ARB_occlusion_query2;
    GLboolean ARB_point_sprite;
@@ -2787,7 +2786,6 @@ struct gl_extensions
    GLboolean ARB_texture_env_crossbar;
    GLboolean ARB_texture_env_dot3;
    GLboolean ARB_texture_float;
-   GLboolean ARB_texture_mirrored_repeat;
    GLboolean ARB_texture_multisample;
    GLboolean ARB_texture_non_power_of_two;
    GLboolean ARB_texture_rg;
@@ -2805,7 +2803,6 @@ struct gl_extensions
    GLboolean EXT_blend_equation_separate;
    GLboolean EXT_blend_func_separate;
    GLboolean EXT_blend_minmax;
-   GLboolean EXT_blend_subtract;
    GLboolean EXT_clip_volume_hint;
    GLboolean EXT_compiled_vertex_array;
    GLboolean EXT_depth_bounds_test;
@@ -2829,18 +2826,14 @@ struct gl_extensions
    GLboolean EXT_secondary_color;
    GLboolean EXT_separate_shader_objects;
    GLboolean EXT_separate_specular_color;
-   GLboolean EXT_stencil_wrap;
    GLboolean EXT_stencil_two_side;
    GLboolean EXT_texture3D;
    GLboolean EXT_texture_array;
    GLboolean EXT_texture_compression_latc;
    GLboolean EXT_texture_compression_s3tc;
-   GLboolean EXT_texture_env_add;
-   GLboolean EXT_texture_env_combine;
    GLboolean EXT_texture_env_dot3;
    GLboolean EXT_texture_filter_anisotropic;
    GLboolean EXT_texture_integer;
-   GLboolean EXT_texture_lod_bias;
    GLboolean EXT_texture_mirror_clamp;
    GLboolean EXT_texture_shared_exponent;
    GLboolean EXT_texture_snorm;

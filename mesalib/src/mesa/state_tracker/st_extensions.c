@@ -267,7 +267,6 @@ void st_init_extensions(struct st_context *st)
    ctx->Extensions.EXT_blend_color = GL_TRUE;
    ctx->Extensions.EXT_blend_func_separate = GL_TRUE;
    ctx->Extensions.EXT_blend_minmax = GL_TRUE;
-   ctx->Extensions.EXT_blend_subtract = GL_TRUE;
    ctx->Extensions.EXT_framebuffer_blit = GL_TRUE;
    ctx->Extensions.EXT_framebuffer_object = GL_TRUE;
    ctx->Extensions.EXT_framebuffer_multisample = GL_TRUE;
@@ -277,11 +276,7 @@ void st_init_extensions(struct st_context *st)
    ctx->Extensions.EXT_point_parameters = GL_TRUE;
    ctx->Extensions.EXT_provoking_vertex = GL_TRUE;
    ctx->Extensions.EXT_secondary_color = GL_TRUE;
-   ctx->Extensions.EXT_stencil_wrap = GL_TRUE;
-   ctx->Extensions.EXT_texture_env_add = GL_TRUE;
-   ctx->Extensions.EXT_texture_env_combine = GL_TRUE;
    ctx->Extensions.EXT_texture_env_dot3 = GL_TRUE;
-   ctx->Extensions.EXT_texture_lod_bias = GL_TRUE;
    ctx->Extensions.EXT_vertex_array_bgra = GL_TRUE;
 
    ctx->Extensions.APPLE_vertex_array_object = GL_TRUE;
@@ -327,10 +322,6 @@ void st_init_extensions(struct st_context *st)
       ctx->Extensions.EXT_separate_shader_objects = GL_TRUE;
    }
 
-   if (screen->get_param(screen, PIPE_CAP_TEXTURE_MIRROR_REPEAT) > 0) {
-      ctx->Extensions.ARB_texture_mirrored_repeat = GL_TRUE;
-   }
-
    if (screen->get_param(screen, PIPE_CAP_BLEND_EQUATION_SEPARATE)) {
       ctx->Extensions.EXT_blend_equation_separate = GL_TRUE;
    }
@@ -342,10 +333,6 @@ void st_init_extensions(struct st_context *st)
 
    if (screen->get_param(screen, PIPE_CAP_NPOT_TEXTURES)) {
       ctx->Extensions.ARB_texture_non_power_of_two = GL_TRUE;
-   }
-
-   if (screen->get_param(screen, PIPE_CAP_MAX_TEXTURE_IMAGE_UNITS) > 1) {
-      ctx->Extensions.ARB_multitexture = GL_TRUE;
    }
 
    if (screen->get_param(screen, PIPE_CAP_TWO_SIDED_STENCIL)) {
