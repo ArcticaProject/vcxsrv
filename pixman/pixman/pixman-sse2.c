@@ -3373,7 +3373,7 @@ pixman_fill_sse2 (uint32_t *bits,
 
 	if (w >= 1)
 	{
-	    *(uint8_t *)d = data;
+	    *(uint8_t *)d = data&0xff;
 	    w -= 1;
 	    d += 1;
 	}
