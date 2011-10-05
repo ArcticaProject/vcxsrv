@@ -47,6 +47,7 @@ extern Bool			g_fXdmcpEnabled;
 extern Bool			g_fNoHelpMessageBox;
 extern Bool			g_fSilentDupError;
 extern Bool                     g_fNativeGl;
+extern Bool                     g_fswrastwgl;
 
 extern HWND			g_hDlgDepthChange;
 extern HWND			g_hDlgExit;

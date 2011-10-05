@@ -127,7 +127,8 @@ load_makefile xkeyboard-config\makefile MAKESERVER=0 DEBUG=0
 
 all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XErrorDB \
      ..\libX11\nls\all fonts.src\all xkeyboard-config\all plink.exe xclock.exe xcalc.exe \
-     xwininfo.exe swrast_dri_dbg.dll swrast_dri.dll dxtn.dll dxtn_dbg.dll
+     xwininfo.exe swrast_dri_dbg.dll swrast_dri.dll dxtn.dll dxtn_dbg.dll \
+     wglglx_dri.dll wglglx_dri_dbg.dll
 
 
 load_makefile ..\mesalib\windows\VC8\mesa\makefile MAKESERVER=0 DEBUG=0
@@ -136,6 +137,15 @@ swrast_dri.dll: ..\mesalib\windows\VC8\mesa\Release\swrast_dri.dll
 
 swrast_dri_dbg.dll: ..\mesalib\windows\VC8\mesa\Debug\swrast_dri.dll
 	copy $< $@
+
+load_makefile hw\xwin\swrastwgl_dri\makefile MAKESERVER=0 DEBUG=0
+swrastwgl_dri.dll: hw\xwin\swrastwgl_dri\obj\release\swrastwgl_dri.dll
+	copy $< $@
+
+load_makefile hw\xwin\swrastwgl_dri\makefile MAKESERVER=0 DEBUG=1
+swrastwgl_dri_dbg.dll: hw\xwin\swrastwgl_dri\obj\debug\swrastwgl_dri.dll
+	copy $< $@
+
 
 load_makefile ..\dxtn\makefile MAKESERVER=0 DEBUG=0
 dxtn.dll: ..\dxtn\obj\release\dxtn.dll

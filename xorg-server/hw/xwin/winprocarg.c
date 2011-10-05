@@ -1138,10 +1138,14 @@ ddxProcessArgument (int argc, char *argv[], int i)
       g_fNativeGl = TRUE;
       return 1;
     }
-
-  if (IS_OPTION("-nowgl"))
+  else if (IS_OPTION("-nowgl"))
     {
       g_fNativeGl = FALSE;
+      return 1;
+    }
+  else if (IS_OPTION("-swrastwgl"))
+    {
+      g_fswrastwgl = TRUE;
       return 1;
     }
 

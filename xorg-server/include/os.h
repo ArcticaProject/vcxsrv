@@ -551,8 +551,18 @@ extern _X_EXPORT void FatalError(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2) _X
 #define DebugF(...) /* */
 #endif
 
+#ifdef _MSC_VER
+#ifdef INSERVER
+#define SERVEXTERN _declspec(dllimport)
+#else
+#define SERVEXTERN _declspec(dllexport)
+#endif
+#else
+#define SERVEXTERN _X_EXPORT
+#endif
+
 extern _X_EXPORT void VErrorF(const char *f, va_list args) _X_ATTRIBUTE_PRINTF(1,0);
-extern _X_EXPORT void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
+extern SERVEXTERN void ErrorF(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
 extern _X_EXPORT void Error(const char *str);
 extern _X_EXPORT void LogPrintMarkers(void);
 

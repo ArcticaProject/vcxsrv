@@ -871,6 +871,9 @@ winUseMsg (void)
   ErrorF ("-[no]wgl\n"
 	  "\tEnable the GLX extension to use the native Windows WGL interface for accelerated OpenGL\n");
 
+  ErrorF ("-swrastwgl\n"
+	  "\tEnable the GLX extension to use the native Windows WGL interface based on the swrast interface for accelerated OpenGL\n");
+
   ErrorF ("-[no]winkill\n"
           "\tAlt+F4 exits the X Server.\n");
 

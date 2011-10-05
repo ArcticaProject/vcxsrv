@@ -35,11 +35,17 @@
  * Silicon Graphics, Inc.
  */
 
+#ifdef INSERVER
+#define SERVEXTERN _declspec(dllimport)
+#else
+#define SERVEXTERN _declspec(dllexport)
+#endif
+
 extern GLboolean __glXFreeContext(__GLXcontext *glxc);
 extern void __glXFlushContextCache(void);
 
 extern void __glXAddToContextList(__GLXcontext *cx);
-extern void __glXErrorCallBack(GLenum code);
+SERVEXTERN void __glXErrorCallBack(GLenum code);
 extern void __glXClearErrorOccured(void);
 extern GLboolean __glXErrorOccured(void);
 extern void __glXResetLargeCommandStatus(__GLXclientState*);

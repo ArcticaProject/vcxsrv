@@ -422,12 +422,19 @@ initializeExtensions(__GLXDRIscreen *screen)
     }
 }
 
+extern Bool g_fswrastwgl;
+
 static __GLXscreen *
 __glXDRIscreenProbe(ScreenPtr pScreen)
 {
-    const char *driverName = "swrast";
+    const char *driverName;
     __GLXDRIscreen *screen;
     const __DRIconfig **driConfigs;
+    
+    if (g_fswrastwgl)
+      driverName = "swrastwgl";
+    else
+      driverName = "swrast";
 
     screen = calloc(1, sizeof *screen);
     if (screen == NULL)
