@@ -196,6 +196,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\querymatrix.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderapi.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderobj.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\shader_query.cpp" />
     <ClCompile Include="..\..\..\..\src\mesa\main\transformfeedback.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\uniforms.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\arbprogparse.c" />
@@ -236,6 +237,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\hash.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\hash_table.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\ir_to_mesa.cpp" />
+    <ClCompile Include="..\..\..\..\src\mesa\program\string_to_uint_map.cpp" />
     <ClCompile Include="..\..\..\..\src\mesa\program\lex.yy.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\nvfragparse.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\nvvertparse.c" />

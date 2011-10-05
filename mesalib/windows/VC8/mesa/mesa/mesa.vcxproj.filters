@@ -434,6 +434,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderobj.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\main\shader_query.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -447,6 +450,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\program\ir_to_mesa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\program\string_to_uint_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\ralloc.c">
