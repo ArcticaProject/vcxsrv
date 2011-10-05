@@ -12,25 +12,25 @@ xkb_symbols "stdkeypad" {
 // Ungrab cancels server/keyboard/pointer grabs
     key <KPDV> {
 	type="CTRL+ALT",
-	symbols[Group1]= [ KP_Divide,	XF86_Ungrab ]
+	symbols[Group1]= [ KP_Divide, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Ungrab ]
     };
 
 // ClsGrb kills whichever client has a grab in effect
     key <KPMU> {
 	type="CTRL+ALT",
-	symbols[Group1]= [ KP_Multiply,	XF86_ClearGrab ]
+	symbols[Group1]= [ KP_Multiply, VoidSymbol, VoidSymbol, VoidSymbol, XF86_ClearGrab ]
     };
 
 // -VMode switches to the previous video mode
     key <KPSU> {
 	type="CTRL+ALT",
-	symbols[Group1]= [ KP_Subtract, XF86_Prev_VMode ]
+	symbols[Group1]= [ KP_Subtract, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Prev_VMode ]
     };
 
 // +VMode switches to the next video mode
     key <KPAD> {
 	type="CTRL+ALT",
-	symbols[Group1]= [ KP_Add,	XF86_Next_VMode]
+	symbols[Group1]= [ KP_Add, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Next_VMode]
     };
 
 };

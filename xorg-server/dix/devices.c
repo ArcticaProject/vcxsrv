@@ -260,6 +260,8 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
 					  offsetof(DeviceIntRec, devPrivates), PRIVATE_DEVICE);
     if (!dev)
 	return (DeviceIntPtr)NULL;
+
+    dev->last.scroll = NULL;
     dev->id = devid;
     dev->public.processInputProc = ProcessOtherEvent;
     dev->public.realInputProc = ProcessOtherEvent;
@@ -939,6 +941,7 @@ CloseDevice(DeviceIntPtr dev)
 
     free(dev->deviceGrab.sync.event);
     free(dev->config_info);     /* Allocated in xf86ActivateDevice. */
+    free(dev->last.scroll);
     dev->config_info = NULL;
     dixFreeObjectWithPrivates(dev, PRIVATE_DEVICE);
 }
@@ -1277,10 +1280,19 @@ InitValuatorClassDeviceStruct(DeviceIntPtr dev, int numAxes, Atom *labels,
     if (!valc)
         return FALSE;
 
+    dev->last.scroll = valuator_mask_new(numAxes);
+    if (!dev->last.scroll)
+    {
+        free(valc);
+        return FALSE;
+    }
+
     valc->sourceid = dev->id;
     valc->motion = NULL;
     valc->first_motion = 0;
     valc->last_motion = 0;
+    valc->h_scroll_axis = -1;
+    valc->v_scroll_axis = -1;
 
     valc->numMotionEvents = numMotionEvents;
     valc->motionHintWindow = NullWindow;

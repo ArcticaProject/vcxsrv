@@ -43,6 +43,9 @@ struct gl_context;
 
 #if FEATURE_pixel_transfer
 
+extern void GLAPIENTRY
+_mesa_PixelTransferf(GLenum pname, GLfloat param);
+
 extern void 
 _mesa_update_pixel( struct gl_context *ctx, GLuint newstate );
 
@@ -51,12 +54,18 @@ _mesa_init_pixel_dispatch( struct _glapi_table * disp );
 
 #else /* FEATURE_pixel_transfer */
 
-static INLINE void
+static inline void GLAPIENTRY
+_mesa_PixelTransferf(GLenum pname, GLfloat param)
+{
+}
+
+
+static inline void
 _mesa_update_pixel(struct gl_context *ctx, GLuint newstate)
 {
 }
 
-static INLINE void
+static inline void
 _mesa_init_pixel_dispatch(struct _glapi_table *disp)
 {
 }

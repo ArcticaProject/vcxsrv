@@ -1302,31 +1302,30 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 			goto bail;
 		    }
 		    *new_closure = *c;
-		    c = new_closure;
 
-		    len = c->endReq - c->pElt;
-		    c->data = malloc(len);
-		    if (!c->data)
+		    len = new_closure->endReq - new_closure->pElt;
+		    new_closure->data = malloc(len);
+		    if (!new_closure->data)
 		    {
-			free(c);
+			free(new_closure);
 			err = BadAlloc;
 			goto bail;
 		    }
-		    memmove(c->data, c->pElt, len);
-		    c->pElt = c->data;
-		    c->endReq = c->pElt + len;
+		    memmove(new_closure->data, new_closure->pElt, len);
+		    new_closure->pElt = new_closure->data;
+		    new_closure->endReq = new_closure->pElt + len;
 
 		    /* Step 2 */
 
-		    pGC = GetScratchGC(c->pGC->depth, c->pGC->pScreen);
+		    pGC = GetScratchGC(new_closure->pGC->depth, new_closure->pGC->pScreen);
 		    if (!pGC)
 		    {
-			free(c->data);
-			free(c);
+			free(new_closure->data);
+			free(new_closure);
 			err = BadAlloc;
 			goto bail;
 		    }
-		    if ((err = CopyGC(c->pGC, pGC, GCFunction |
+		    if ((err = CopyGC(new_closure->pGC, pGC, GCFunction |
 				      GCPlaneMask | GCForeground |
 				      GCBackground | GCFillStyle |
 				      GCTile | GCStipple |
@@ -1337,15 +1336,16 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 				      Success)
 		    {
 			FreeScratchGC(pGC);
-			free(c->data);
-			free(c);
+			free(new_closure->data);
+			free(new_closure);
 			err = BadAlloc;
 			goto bail;
 		    }
+		    c = new_closure;
 		    origGC = c->pGC;
 		    c->pGC = pGC;
 		    ValidateGC(c->pDraw, c->pGC);
-		    
+
 		    ClientSleep(client, (ClientSleepProcPtr)doPolyText, c);
 
 		    /* Set up to perform steps 3 and 4 */

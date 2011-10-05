@@ -356,7 +356,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                          */
                         _appFlags._active = YES;
 
-                        X11ApplicationSetFrontProcess();
+                        [self set_front_process:nil];
 
                         /* Get the Spaces preference for SwitchOnActivate */
                         (void)CFPreferencesAppSynchronize(CFSTR("com.apple.dock"));

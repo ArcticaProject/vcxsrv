@@ -41,7 +41,10 @@
 #include <errno.h>
 
 static Bool KeepTty = FALSE;
+
+#ifdef PCCONS_SUPPORT
 static int devConsoleFd = -1;
+#endif
 #if defined (SYSCONS_SUPPORT) || defined (PCVT_SUPPORT)
 static int VTnum = -1;
 static int initialVT = -1;
@@ -207,11 +210,7 @@ xf86OpenConsole()
 		"%s: No console driver found\n\tSupported drivers: %s\n\t%s",
 		"xf86OpenConsole", cons_drivers, CHECK_DRIVER_MSG);
 	}
-#if 0 /* stdin is already closed in OsInit() */
-	fclose(stdin);
-#endif
 	xf86Info.consoleFd = fd;
-	xf86Info.screenFd = fd;
 
 	switch (xf86Info.consType)
 	{
@@ -292,13 +291,13 @@ acquire_vt:
 		    {
 			FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed");
 		    }
-	#if !defined(USE_DEV_IO) && !defined(USE_I386_IOPL)
+#if !defined(__OpenBSD__) && !defined(USE_DEV_IO) && !defined(USE_I386_IOPL)
 		    if (ioctl(xf86Info.consoleFd, KDENABIO, 0) < 0)
 		    {
 			FatalError("xf86OpenConsole: KDENABIO failed (%s)",
 				   strerror(errno));
 		    }
-	#endif
+#endif
 		    if (ioctl(xf86Info.consoleFd, KDSETMODE, KD_GRAPHICS) < 0)
 		    {
 			FatalError("xf86OpenConsole: KDSETMODE KD_GRAPHICS failed");
@@ -370,7 +369,6 @@ xf86OpenSyscons()
     int fd = -1;
     vtmode_t vtmode;
     char vtname[12];
-    struct stat status;
     long syscons_version;
     MessageType from;
 
@@ -423,19 +421,10 @@ xf86OpenSyscons()
 		{
 		    /*
 		     * All VTs are in use.  If initialVT was found, use it.
-		     * Otherwise, if stdin is a VT, use that one.
-		     * XXX stdin is already closed, so this won't work.
 		     */
 		    if (initialVT != -1)
 		    {
 			xf86Info.vtno = initialVT;
-		    }
-		    else if ((fstat(0, &status) >= 0)
-			     && S_ISCHR(status.st_mode)
-			     && (ioctl(0, VT_GETMODE, &vtmode) >= 0))
-		    {
-			/* stdin is a VT */
-			xf86Info.vtno = minor(status.st_rdev) + 1;
 		    }
 		    else
 		    {
@@ -457,11 +446,7 @@ xf86OpenSyscons()
 	    }
 
 	    close(fd);
-#ifndef __OpenBSD__
 	    sprintf(vtname, "/dev/ttyv%01x", xf86Info.vtno - 1);
-#else 
-	    sprintf(vtname, "/dev/ttyC%01x", xf86Info.vtno - 1);
-#endif	    
 	    if ((fd = open(vtname, SYSCONS_CONSOLE_MODE, 0)) < 0)
 	    {
 		FatalError("xf86OpenSyscons: Cannot open %s (%s)",
@@ -506,7 +491,6 @@ xf86OpenPcvt()
     int fd = -1;
     vtmode_t vtmode;
     char vtname[12], *vtprefix;
-    struct stat status;
     struct pcvtid pcvt_version;
 
 #ifndef __OpenBSD__
@@ -552,19 +536,10 @@ xf86OpenPcvt()
 		{
 		    /*
 		     * All VTs are in use.  If initialVT was found, use it.
-		     * Otherwise, if stdin is a VT, use that one.
-		     * XXX stdin is already closed, so this won't work.
 		     */
 		    if (initialVT != -1)
 		    {
 			xf86Info.vtno = initialVT;
-		    }
-		    else if ((fstat(0, &status) >= 0)
-			     && S_ISCHR(status.st_mode)
-			     && (ioctl(0, VT_GETMODE, &vtmode) >= 0))
-		    {
-			/* stdin is a VT */
-			xf86Info.vtno = minor(status.st_rdev) + 1;
 		    }
 		    else
 		    {
@@ -673,7 +648,7 @@ xf86CloseConsole()
 	    VT.mode = VT_AUTO;
 	    ioctl(xf86Info.consoleFd, VT_SETMODE, &VT); /* dflt vt handling */
         }
-#if !defined(OpenBSD) && !defined(USE_DEV_IO) && !defined(USE_I386_IOPL)
+#if !defined(__OpenBSD__) && !defined(USE_DEV_IO) && !defined(USE_I386_IOPL)
         if (ioctl(xf86Info.consoleFd, KDDISABIO, 0) < 0)
         {
             xf86FatalError("xf86CloseConsole: KDDISABIO failed (%s)",
@@ -688,25 +663,17 @@ xf86CloseConsole()
     case WSCONS:
       {
 	int mode = WSDISPLAYIO_MODE_EMUL;
-	ioctl(xf86Info.screenFd, WSDISPLAYIO_SMODE, &mode);
+	ioctl(xf86Info.consoleFd, WSDISPLAYIO_SMODE, &mode);
 	break;
       }
 #endif
     }
 
-    if (xf86Info.screenFd != xf86Info.consoleFd)
-    {
-	close(xf86Info.screenFd);
-	close(xf86Info.consoleFd);
-	if ((xf86Info.consoleFd = open("/dev/console",O_RDONLY,0)) <0)
-	{
-	    xf86FatalError("xf86CloseConsole: Cannot open /dev/console (%s)",
-			   strerror(errno));
-	}
-    }
     close(xf86Info.consoleFd);
+#ifdef PCCONS_SUPPORT
     if (devConsoleFd >= 0)
 	close(devConsoleFd);
+#endif
     return;
 }
 

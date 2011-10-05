@@ -258,7 +258,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 	base = mmap(0, Size,
 		    (flags & VIDMEM_READONLY) ?
 		     PROT_READ : (PROT_READ | PROT_WRITE),
-		    MAP_FLAGS, xf86Info.screenFd,
+		    MAP_FLAGS, xf86Info.consoleFd,
 		    (unsigned long)Base - 0xA0000
 	    );
 	if (base == MAP_FAILED)

@@ -57,7 +57,6 @@ typedef enum {
 typedef struct {
     int			consoleFd;
     int			vtno;
-    Bool		vtSysreq;
 
     /* event handler part */
     int			lastEventTime;
@@ -76,8 +75,6 @@ typedef struct {
     /* graphics part */
     ScreenPtr		currentScreen;
 #if defined(CSRG_BASED) || defined(__FreeBSD_kernel__)
-    int			screenFd;	/* fd for memory mapped access to
-					 * vga card */
     int			consType;	/* Which console driver? */
 #endif
 

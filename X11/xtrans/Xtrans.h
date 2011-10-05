@@ -70,14 +70,14 @@ from The Open Group.
 #ifdef X11_t
 #define TRANS(func) _X11Trans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_X11Trans";
+static const char *__xtransname = "_X11Trans";
 #endif
 #endif /* X11_t */
 
 #ifdef XSERV_t
 #define TRANS(func) _XSERVTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_XSERVTrans";
+static const char *__xtransname = "_XSERVTrans";
 #endif
 #define X11_t
 #endif /* XSERV_t */
@@ -85,35 +85,35 @@ static char* __xtransname = "_XSERVTrans";
 #ifdef XIM_t
 #define TRANS(func) _XimXTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_XimTrans";
+static const char *__xtransname = "_XimTrans";
 #endif
 #endif /* XIM_t */
 
 #ifdef FS_t
 #define TRANS(func) _FSTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_FSTrans";
+static const char *__xtransname = "_FSTrans";
 #endif
 #endif /* FS_t */
 
 #ifdef FONT_t
 #define TRANS(func) _FontTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_FontTrans";
+static const char *__xtransname = "_FontTrans";
 #endif
 #endif /* FONT_t */
 
 #ifdef ICE_t
 #define TRANS(func) _IceTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_IceTrans";
+static const char *__xtransname = "_IceTrans";
 #endif
 #endif /* ICE_t */
 
 #ifdef TEST_t
 #define TRANS(func) _TESTTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_TESTTrans";
+static const char *__xtransname = "_TESTTrans";
 #endif
 #endif /* TEST_t */
 
@@ -121,14 +121,14 @@ static char* __xtransname = "_TESTTrans";
 #define TRANS(func) _LBXPROXYTrans##func
 #define X11_t		/* The server defines this - so should the LBX proxy */
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_LBXPROXYTrans";
+static const char *__xtransname = "_LBXPROXYTrans";
 #endif
 #endif /* LBXPROXY_t */
 
 #if !defined(TRANS)
 #define TRANS(func) _XTrans##func
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_XTrans";
+static const char *__xtransname = "_XTrans";
 #endif
 #endif /* !TRANS */
 
@@ -304,7 +304,7 @@ int TRANS(CreateListener)(
 );
 
 int TRANS(NoListen) (
-    char*               /* protocol*/
+    const char*         /* protocol*/
 );
 
 int TRANS(ResetListener)(

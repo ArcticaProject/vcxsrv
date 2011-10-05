@@ -75,6 +75,16 @@ extern _X_EXPORT int CountBits(const uint8_t *mask, int len);
 #define XI2MASKSIZE     ((XI2LASTEVENT + 7)/8) /* no of bits for masks */
 
 /**
+ * Scroll types for ::SetScrollValuator and the scroll type in the
+ * ::ScrollInfoPtr.
+ */
+enum ScrollType {
+    SCROLL_TYPE_NONE = 0,           /**< Not a scrolling valuator */
+    SCROLL_TYPE_VERTICAL = 8,
+    SCROLL_TYPE_HORIZONTAL = 9,
+};
+
+/**
  * This struct stores the core event mask for each client except the client
  * that created the window.
  *
@@ -252,6 +262,12 @@ typedef struct _KeyClassRec {
     struct _XkbSrvInfo *xkbInfo;
 } KeyClassRec, *KeyClassPtr;
 
+typedef struct _ScrollInfo {
+    enum ScrollType	type;
+    double		increment;
+    int			flags;
+} ScrollInfo, *ScrollInfoPtr;
+
 typedef struct _AxisInfo {
     int		resolution;
     int		min_resolution;
@@ -260,6 +276,7 @@ typedef struct _AxisInfo {
     int		max_value;
     Atom	label;
     CARD8	mode;
+    ScrollInfo  scroll;
 } AxisInfo, *AxisInfoPtr;
 
 typedef struct _ValuatorAccelerationRec {
@@ -283,6 +300,8 @@ typedef struct _ValuatorClassRec {
     unsigned short	  numAxes;
     double		  *axisVal; /* always absolute, but device-coord system */
     ValuatorAccelerationRec	accelScheme;
+    int                   h_scroll_axis; /* horiz smooth-scrolling axis */
+    int                   v_scroll_axis; /* vert smooth-scrolling axis */
 } ValuatorClassRec;
 
 typedef struct _ButtonClassRec {
@@ -521,10 +540,10 @@ typedef struct _DeviceIntRec {
      * remainder supports acceleration
      */
     struct {
-        int             valuators[MAX_VALUATORS];
-        float           remainder[MAX_VALUATORS];
+        double          valuators[MAX_VALUATORS];
         int             numValuators;
         DeviceIntPtr    slave;
+        ValuatorMask    *scroll;
     } last;
 
     /* Input device property handling. */

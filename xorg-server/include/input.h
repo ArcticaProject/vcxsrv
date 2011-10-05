@@ -68,6 +68,7 @@ SOFTWARE.
 #define POINTER_ACCELERATE	(1 << 3)
 #define POINTER_SCREEN		(1 << 4)	/* Data in screen coordinates */
 #define POINTER_NORAW		(1 << 5)	/* Don't generate RawEvents */
+#define POINTER_EMULATED	(1 << 6)	/* Event was emulated from another event */
 
 /*int constants for pointer acceleration schemes*/
 #define PtrAccelNoOp            0
@@ -583,6 +584,9 @@ extern _X_EXPORT void valuator_mask_set_range(ValuatorMask *mask,
 extern _X_EXPORT void valuator_mask_set(ValuatorMask *mask,
                                         int valuator,
                                         int data);
+extern _X_EXPORT void valuator_mask_set_double(ValuatorMask *mask,
+                                               int valuator,
+                                               double data);
 extern _X_EXPORT void valuator_mask_zero(ValuatorMask *mask);
 extern _X_EXPORT int valuator_mask_size(const ValuatorMask *mask);
 extern _X_EXPORT int valuator_mask_isset(const ValuatorMask *mask, int bit);
@@ -591,6 +595,8 @@ extern _X_EXPORT int valuator_mask_num_valuators(const ValuatorMask *mask);
 extern _X_EXPORT void valuator_mask_copy(ValuatorMask *dest,
                                          const ValuatorMask *src);
 extern _X_EXPORT int valuator_mask_get(const ValuatorMask *mask, int valnum);
+extern _X_EXPORT double valuator_mask_get_double(const ValuatorMask *mask,
+                                                 int valnum);
 
 /* InputOption handling interface */
 extern _X_EXPORT InputOption* input_option_new(InputOption *list, const char *key, const char *value);

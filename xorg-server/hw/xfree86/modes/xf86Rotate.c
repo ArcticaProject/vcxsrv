@@ -1,5 +1,6 @@
 /*
  * Copyright © 2006 Keith Packard
+ * Copyright © 2011 Aaron Plattner
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -84,7 +85,10 @@ xf86RotateCrtcRedisplay (xf86CrtcPtr crtc, RegionPtr region)
     int			n = RegionNumRects(region);
     BoxPtr		b = RegionRects(region);
     XID			include_inferiors = IncludeInferiors;
-    
+
+    if (crtc->driverIsPerformingTransform)
+	return;
+
     src = CreatePicture (None,
 			 &root->drawable,
 			 format,
@@ -194,7 +198,7 @@ xf86RotatePrepare (ScreenPtr pScreen)
 	    if (!xf86_config->rotation_damage_registered)
 	    {
 		/* Hook damage to screen pixmap */
-		DamageRegister (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
+		DamageRegister (&pScreen->root->drawable,
 				xf86_config->rotation_damage);
 		xf86_config->rotation_damage_registered = TRUE;
 		EnableLimitedSchedulingLatency();
@@ -290,7 +294,7 @@ xf86RotateDestroy (xf86CrtcPtr crtc)
     }
 
     for (c = 0; c < xf86_config->num_crtc; c++)
-	if (xf86_config->crtc[c]->transform_in_use)
+	if (xf86_config->crtc[c]->rotatedData)
 	    return;
 
     /*
@@ -301,7 +305,7 @@ xf86RotateDestroy (xf86CrtcPtr crtc)
 	/* Free damage structure */
 	if (xf86_config->rotation_damage_registered)
 	{
-	    DamageUnregister (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
+	    DamageUnregister (&pScreen->root->drawable,
 			      xf86_config->rotation_damage);
 	    xf86_config->rotation_damage_registered = FALSE;
 	    DisableLimitedSchedulingLatency();
@@ -414,52 +418,73 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
     }
     else
     {
-	/*
-	 * these are the size of the shadow pixmap, which
-	 * matches the mode, not the pre-rotated copy in the
-	 * frame buffer
-	 */
-	int	    width = crtc->mode.HDisplay;
-	int	    height = crtc->mode.VDisplay;
-	void	    *shadowData = crtc->rotatedData;
-	PixmapPtr   shadow = crtc->rotatedPixmap;
-	int	    old_width = shadow ? shadow->drawable.width : 0;
-	int	    old_height = shadow ? shadow->drawable.height : 0;
+	if (crtc->driverIsPerformingTransform) {
+	    xf86RotateDestroy(crtc);
+	} else {
+	    /*
+	     * these are the size of the shadow pixmap, which
+	     * matches the mode, not the pre-rotated copy in the
+	     * frame buffer
+	     */
+	    int		width = crtc->mode.HDisplay;
+	    int		height = crtc->mode.VDisplay;
+	    void	*shadowData = crtc->rotatedData;
+	    PixmapPtr	shadow = crtc->rotatedPixmap;
+	    int		old_width = shadow ? shadow->drawable.width : 0;
+	    int		old_height = shadow ? shadow->drawable.height : 0;
 
-	/* Allocate memory for rotation */
-	if (old_width != width || old_height != height)
-	{
-	    if (shadow || shadowData)
+	    /* Allocate memory for rotation */
+	    if (old_width != width || old_height != height)
 	    {
-		crtc->funcs->shadow_destroy (crtc, shadow, shadowData);
-		crtc->rotatedPixmap = NULL;
-		crtc->rotatedData = NULL;
+		if (shadow || shadowData)
+		{
+		    crtc->funcs->shadow_destroy (crtc, shadow, shadowData);
+		    crtc->rotatedPixmap = NULL;
+		    crtc->rotatedData = NULL;
+		}
+		shadowData = crtc->funcs->shadow_allocate (crtc, width, height);
+		if (!shadowData)
+		    goto bail1;
+		crtc->rotatedData = shadowData;
+		/* shadow will be damaged in xf86RotatePrepare */
 	    }
-	    shadowData = crtc->funcs->shadow_allocate (crtc, width, height);
-	    if (!shadowData)
-		goto bail1;
-	    crtc->rotatedData = shadowData;
-	    /* shadow will be damaged in xf86RotatePrepare */
-	}
-	else
-	{
-	    /* mark shadowed area as damaged so it will be repainted */
-	    damage = TRUE;
-	}
+	    else
+	    {
+		/* mark shadowed area as damaged so it will be repainted */
+		damage = TRUE;
+	    }
 
-	if (!xf86_config->rotation_damage)
-	{
-	    /* Create damage structure */
-	    xf86_config->rotation_damage = DamageCreate (NULL, NULL,
-						DamageReportNone,
-						TRUE, pScreen, pScreen);
 	    if (!xf86_config->rotation_damage)
-		goto bail2;
-	    
-	    /* Wrap block handler */
-	    if (!xf86_config->BlockHandler) {
-		xf86_config->BlockHandler = pScreen->BlockHandler;
-		pScreen->BlockHandler = xf86RotateBlockHandler;
+	    {
+		/* Create damage structure */
+		xf86_config->rotation_damage = DamageCreate (NULL, NULL,
+						    DamageReportNone,
+						    TRUE, pScreen, pScreen);
+		if (!xf86_config->rotation_damage)
+		    goto bail2;
+
+		/* Wrap block handler */
+		if (!xf86_config->BlockHandler) {
+		    xf86_config->BlockHandler = pScreen->BlockHandler;
+		    pScreen->BlockHandler = xf86RotateBlockHandler;
+		}
+	    }
+
+	    if (0)
+	    {
+	bail2:
+		if (shadow || shadowData)
+		{
+		    crtc->funcs->shadow_destroy (crtc, shadow, shadowData);
+		    crtc->rotatedPixmap = NULL;
+		    crtc->rotatedData = NULL;
+		}
+	bail1:
+		if (old_width && old_height)
+		    crtc->rotatedPixmap =
+			crtc->funcs->shadow_create (crtc, NULL, old_width,
+						    old_height);
+		return FALSE;
 	    }
 	}
 #ifdef RANDR_12_INTERFACE
@@ -482,24 +507,6 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
 	    }
 	}
 #endif
-
-	if (0)
-	{
-    bail2:
-	    if (shadow || shadowData)
-	    {
-		crtc->funcs->shadow_destroy (crtc, shadow, shadowData);
-		crtc->rotatedPixmap = NULL;
-		crtc->rotatedData = NULL;
-	    }
-    bail1:
-	    if (old_width && old_height)
-		crtc->rotatedPixmap = crtc->funcs->shadow_create (crtc,
-								  NULL,
-								  old_width,
-								  old_height);
-	    return FALSE;
-	}
 	crtc->transform_in_use = TRUE;
     }
     crtc->crtc_to_framebuffer = crtc_to_fb;

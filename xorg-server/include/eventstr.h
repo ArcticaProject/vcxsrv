@@ -95,8 +95,7 @@ struct _DeviceEvent
     struct {
         uint8_t  mask[(MAX_VALUATORS + 7)/8]; /**< Valuator mask */
         uint8_t  mode[(MAX_VALUATORS + 7)/8]; /**< Valuator mode (Abs or Rel)*/
-        int32_t  data[MAX_VALUATORS];         /**< Valuator data */
-        int32_t  data_frac[MAX_VALUATORS];    /**< Fractional part for data */
+        double   data[MAX_VALUATORS];         /**< Valuator data */
     } valuators;
     struct {
         uint32_t base;    /**< XKB base modifiers */
@@ -113,6 +112,7 @@ struct _DeviceEvent
     Window      root; /**< Root window of the event */
     int corestate;    /**< Core key/button state BEFORE the event */
     int key_repeat;   /**< Internally-generated key repeat event */
+    uint32_t flags;   /**< Flags to be copied into the generated event */
 };
 
 
@@ -198,11 +198,10 @@ struct _RawDeviceEvent
     } detail;
     struct {
         uint8_t  mask[(MAX_VALUATORS + 7)/8]; /**< Valuator mask */
-        int32_t  data[MAX_VALUATORS];         /**< Valuator data */
-        int32_t  data_frac[MAX_VALUATORS];    /**< Fractional part for data */
-        int32_t  data_raw[MAX_VALUATORS];     /**< Valuator data as posted */
-        int32_t  data_raw_frac[MAX_VALUATORS];/**< Fractional part for data_raw */
+        double   data[MAX_VALUATORS];         /**< Valuator data */
+        double   data_raw[MAX_VALUATORS];     /**< Valuator data as posted */
     } valuators;
+    uint32_t flags;       /**< Flags to be copied into the generated event */
 };
 
 #ifdef XQUARTZ

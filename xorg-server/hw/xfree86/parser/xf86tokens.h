@@ -207,8 +207,6 @@ typedef enum {
     XKBLAYOUT,
     XKBVARIANT,
     XKBOPTIONS,
-    /* The next two have become ServerFlags options */
-    VTSYSREQ,
     /* Obsolete keyboard tokens */
     SERVERNUM,
     LEFTALT,

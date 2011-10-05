@@ -114,7 +114,7 @@ extern struct gl_program_parameter_list *
 _mesa_combine_parameter_lists(const struct gl_program_parameter_list *a,
                               const struct gl_program_parameter_list *b);
 
-static INLINE GLuint
+static inline GLuint
 _mesa_num_parameters(const struct gl_program_parameter_list *list)
 {
    return list ? list->NumParameters : 0;
@@ -172,10 +172,6 @@ extern GLboolean
 _mesa_lookup_parameter_constant(const struct gl_program_parameter_list *list,
                                 const gl_constant_value v[], GLuint vSize,
                                 GLint *posOut, GLuint *swizzleOut);
-
-extern GLuint
-_mesa_longest_parameter_name(const struct gl_program_parameter_list *list,
-                             gl_register_file type);
 
 extern GLuint
 _mesa_num_parameters_of_type(const struct gl_program_parameter_list *list,

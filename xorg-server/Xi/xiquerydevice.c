@@ -229,7 +229,16 @@ SizeDeviceClasses(DeviceIntPtr dev)
     }
 
     if (dev->valuator)
-        len += sizeof(xXIValuatorInfo) * dev->valuator->numAxes;
+    {
+        int i;
+        len += (sizeof(xXIValuatorInfo)) * dev->valuator->numAxes;
+
+        for (i = 0; i < dev->valuator->numAxes; i++) {
+            if (dev->valuator->axes[i].scroll.type != SCROLL_TYPE_NONE)
+                len += sizeof(xXIScrollInfo);
+        }
+    }
+
 
     return len;
 }
@@ -369,6 +378,56 @@ SwapValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info)
     swaps(&info->sourceid);
 }
 
+int
+ListScrollInfo(DeviceIntPtr dev, xXIScrollInfo *info, int axisnumber)
+{
+    ValuatorClassPtr v = dev->valuator;
+    AxisInfoPtr axis = &v->axes[axisnumber];
+
+    if (axis->scroll.type == SCROLL_TYPE_NONE)
+        return 0;
+
+    info->type = XIScrollClass;
+    info->length = sizeof(xXIScrollInfo)/4;
+    info->number = axisnumber;
+    switch(axis->scroll.type)
+    {
+        case SCROLL_TYPE_VERTICAL:
+            info->scroll_type = XIScrollTypeVertical;
+            break;
+        case SCROLL_TYPE_HORIZONTAL:
+            info->scroll_type = XIScrollTypeHorizontal;
+            break;
+        default:
+            ErrorF("[Xi] Unknown scroll type %d. This is a bug.\n", axis->scroll.type);
+            break;
+    }
+    info->increment.integral = (int)axis->scroll.increment;
+    info->increment.frac = (unsigned int)(axis->scroll.increment * (1UL << 16) * (1UL << 16));
+    info->sourceid = v->sourceid;
+
+    info->flags = 0;
+
+    if (axis->scroll.flags & SCROLL_FLAG_DONT_EMULATE)
+        info->flags |= XIScrollFlagNoEmulation;
+    if (axis->scroll.flags & SCROLL_FLAG_PREFERRED)
+        info->flags |= XIScrollFlagPreferred;
+
+    return info->length * 4;
+}
+
+static void
+SwapScrollInfo(DeviceIntPtr dev, xXIScrollInfo* info)
+{
+    swaps(&info->type);
+    swaps(&info->length);
+    swaps(&info->number);
+    swaps(&info->sourceid);
+    swaps(&info->scroll_type);
+    swapl(&info->increment.integral);
+    swapl(&info->increment.frac);
+}
+
 int GetDeviceUse(DeviceIntPtr dev, uint16_t *attachment)
 {
     DeviceIntPtr master = GetMaster(dev, MASTER_ATTACHED);
@@ -458,6 +517,15 @@ ListDeviceClasses(ClientPtr client, DeviceIntPtr dev,
         total_len += len;
     }
 
+    for (i = 0; dev->valuator && i < dev->valuator->numAxes; i++)
+    {
+        len = ListScrollInfo(dev, (xXIScrollInfo*)any, i);
+        if (len)
+            (*nclasses)++;
+        any += len;
+        total_len += len;
+    }
+
     return total_len;
 }
 
@@ -483,6 +551,9 @@ SwapDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info)
                 break;
             case XIValuatorClass:
                 SwapValuatorInfo(dev, (xXIValuatorInfo*)any);
+                break;
+            case XIScrollClass:
+                SwapScrollInfo(dev, (xXIScrollInfo*)any);
                 break;
         }
 

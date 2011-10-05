@@ -58,7 +58,7 @@ static pointer
 sparc64MapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, 
 		 int flags)
 {
-	int fd = xf86Info.screenFd;
+	int fd = xf86Info.consoleFd;
 	pointer base;
 
 #ifdef DEBUG

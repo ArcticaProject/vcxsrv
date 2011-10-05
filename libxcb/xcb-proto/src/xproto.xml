@@ -2155,6 +2155,7 @@ authorization from the authors.
     <field type="CARD8" name="keycode_count" />
     <field type="KEYCODE" name="first_keycode" />
     <field type="CARD8" name="keysyms_per_keycode" />
+    <pad bytes="2" />
     <list type="KEYSYM" name="keysyms">
       <op op="*">
         <fieldref>keycode_count</fieldref>

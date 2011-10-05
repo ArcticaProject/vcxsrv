@@ -168,11 +168,6 @@
 #  define POSIX_TTY
 # endif /* SVR4 */
 
-
-# if defined(sun) && defined(HAS_USL_VTS)
-#  define USE_VT_SYSREQ
-# endif
-
 #endif /* (SYSV || SVR4) */
 
 /**************************************************************************/
@@ -207,7 +202,6 @@
 #  define LDSMAP PIO_SCRNMAP
 #  define LDNMAP LDSMAP
 #  define CLEARDTR_SUPPORT
-#  define USE_VT_SYSREQ
 # endif
 
 # define POSIX_TTY
@@ -266,35 +260,25 @@
 #  else /* __bsdi__ */
 #   ifdef SYSCONS_SUPPORT
 #    define COMPAT_SYSCONS
-#    if defined(__NetBSD__) || defined(__OpenBSD__)
-#     include <machine/console.h>
+#    if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
+#       if defined(__DragonFly__)  || (__FreeBSD_kernel_version >= 410000)
+#         include <sys/consio.h>
+#         include <sys/kbio.h>
+#       else
+#         include <machine/console.h>
+#       endif /* FreeBSD 4.1 RELEASE or lator */
 #    else
-#     if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#        if defined(__DragonFly__)  || (__FreeBSD_kernel_version >= 410000)
-#          include <sys/consio.h>
-#          include <sys/kbio.h>
-#        else
-#          include <machine/console.h>
-#        endif /* FreeBSD 4.1 RELEASE or lator */
-#     else
-#      include <sys/console.h>
-#     endif
+#     include <sys/console.h>
 #    endif
 #   endif /* SYSCONS_SUPPORT */
-#   if defined(PCVT_SUPPORT)
+#   if defined(PCVT_SUPPORT) && !defined(__NetBSD__) && !defined(__OpenBSD__)
 #    if !defined(SYSCONS_SUPPORT)
       /* no syscons, so include pcvt specific header file */
 #     if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 #      include <machine/pcvt_ioctl.h>
 #     else
-#      if defined(__NetBSD__) || defined(__OpenBSD__)
-#       if !defined(WSCONS_SUPPORT)
-#        include <machine/pcvt_ioctl.h>
-#       endif /* WSCONS_SUPPORT */
-#      else
-#       include <sys/pcvt_ioctl.h>
-#      endif /* __NetBSD__ */
-#     endif /* __FreeBSD_kernel__ || __OpenBSD__ */
+#      include <sys/pcvt_ioctl.h>
+#     endif /* __FreeBSD_kernel__ */
 #    else /* pcvt and syscons: hard-code the ID magic */
 #     define VGAPCVTID _IOWR('V',113, struct pcvtid)
       struct pcvtid {
@@ -352,10 +336,6 @@
 #endif
 
 # define CLEARDTR_SUPPORT
-
-# if defined(SYSCONS_SUPPORT) || defined(PCVT_SUPPORT) || defined(WSCONS_SUPPORT)
-#  define USE_VT_SYSREQ
-# endif
 
 #endif
 /* __FreeBSD_kernel__ || __NetBSD__ || __OpenBSD__ || __bsdi__ */

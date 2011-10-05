@@ -605,6 +605,7 @@ eventToDeviceEvent(DeviceEvent *ev, xEvent **xi)
     xde->root_x         = FP1616(ev->root_x, ev->root_x_frac);
     xde->root_y         = FP1616(ev->root_y, ev->root_y_frac);
 
+    xde->flags          = ev->flags;
     if (ev->key_repeat)
         xde->flags      |= XIKeyRepeat;
 
@@ -632,8 +633,9 @@ eventToDeviceEvent(DeviceEvent *ev, xEvent **xi)
         if (BitIsOn(ev->valuators.mask, i))
         {
             SetBit(ptr, i);
-            axisval->integral = ev->valuators.data[i];
-            axisval->frac = ev->valuators.data_frac[i];
+            axisval->integral = trunc(ev->valuators.data[i]);
+            axisval->frac = (ev->valuators.data[i] - axisval->integral) *
+                            (1 << 16) * (1 << 16);
             axisval++;
         }
     }
@@ -648,7 +650,7 @@ eventToRawEvent(RawDeviceEvent *ev, xEvent **xi)
     int vallen, nvals;
     int i, len = sizeof(xXIRawEvent);
     char *ptr;
-    FP3232 *axisval;
+    FP3232 *axisval, *axisval_raw;
 
     nvals = count_bits(ev->valuators.mask, sizeof(ev->valuators.mask));
     len += nvals * sizeof(FP3232) * 2; /* 8 byte per valuator, once
@@ -666,19 +668,25 @@ eventToRawEvent(RawDeviceEvent *ev, xEvent **xi)
     raw->detail         = ev->detail.button;
     raw->deviceid       = ev->deviceid;
     raw->valuators_len  = vallen;
+    raw->flags          = ev->flags;
 
     ptr = (char*)&raw[1];
     axisval = (FP3232*)(ptr + raw->valuators_len * 4);
+    axisval_raw = axisval + nvals;
     for (i = 0; i < sizeof(ev->valuators.mask) * 8; i++)
     {
         if (BitIsOn(ev->valuators.mask, i))
         {
             SetBit(ptr, i);
-            axisval->integral = ev->valuators.data[i];
-            axisval->frac = ev->valuators.data_frac[i];
-            (axisval + nvals)->integral = ev->valuators.data_raw[i];
-            (axisval + nvals)->frac = ev->valuators.data_raw_frac[i];
+            axisval->integral = trunc(ev->valuators.data[i]);
+            axisval->frac = (ev->valuators.data[i] - axisval->integral) *
+                            (1 << 16) * (1 << 16);
+            axisval_raw->integral = trunc(ev->valuators.data_raw[i]);
+            axisval_raw->frac =
+                (ev->valuators.data_raw[i] - axisval_raw->integral) *
+                  (1 << 16) * (1 << 16);
             axisval++;
+            axisval_raw++;
         }
     }
 

@@ -49,6 +49,7 @@
 #include "main/macros.h"
 #include "main/matrix.h"
 #include "main/mipmap.h"
+#include "main/pixel.h"
 #include "main/pbo.h"
 #include "main/polygon.h"
 #include "main/readpix.h"
@@ -3235,8 +3236,27 @@ decompress_texture_image(struct gl_context *ctx,
    }
 
    /* read pixels from renderbuffer */
-   ctx->Pack.RowLength = destRowLength;
-   _mesa_ReadPixels(0, 0, width, height, destFormat, destType, dest);
+   {
+      GLenum baseTexFormat = texImage->_BaseFormat;
+
+      /* The pixel transfer state will be set to default values at this point
+       * (see MESA_META_PIXEL_TRANSFER) so pixel transfer ops are effectively
+       * turned off (as required by glGetTexImage) but we need to handle some
+       * special cases.  In particular, single-channel texture values are
+       * returned as red and two-channel texture values are returned as
+       * red/alpha.
+       */
+      if (baseTexFormat == GL_LUMINANCE ||
+          baseTexFormat == GL_LUMINANCE_ALPHA ||
+          baseTexFormat == GL_INTENSITY) {
+         /* Green and blue must be zero */
+         _mesa_PixelTransferf(GL_GREEN_SCALE, 0.0f);
+         _mesa_PixelTransferf(GL_BLUE_SCALE, 0.0f);
+      }
+
+      ctx->Pack.RowLength = destRowLength;
+      _mesa_ReadPixels(0, 0, width, height, destFormat, destType, dest);
+   }
 
    /* disable texture unit */
    _mesa_set_enable(ctx, target, GL_FALSE);
@@ -3260,9 +3280,8 @@ decompress_texture_image(struct gl_context *ctx,
  * from core Mesa.
  */
 void
-_mesa_meta_GetTexImage(struct gl_context *ctx, GLenum target, GLint level,
+_mesa_meta_GetTexImage(struct gl_context *ctx,
                        GLenum format, GLenum type, GLvoid *pixels,
-                       struct gl_texture_object *texObj,
                        struct gl_texture_image *texImage)
 {
    /* We can only use the decompress-with-blit method here if the texels are
@@ -3272,6 +3291,7 @@ _mesa_meta_GetTexImage(struct gl_context *ctx, GLenum target, GLint level,
    if (_mesa_is_format_compressed(texImage->TexFormat) &&
        _mesa_get_format_datatype(texImage->TexFormat)
        == GL_UNSIGNED_NORMALIZED) {
+      struct gl_texture_object *texObj = texImage->TexObject;
       const GLuint slice = 0; /* only 2D compressed textures for now */
       /* Need to unlock the texture here to prevent deadlock... */
       _mesa_unlock_texture(ctx, texObj);
@@ -3281,7 +3301,6 @@ _mesa_meta_GetTexImage(struct gl_context *ctx, GLenum target, GLint level,
       _mesa_lock_texture(ctx, texObj);
    }
    else {
-      _mesa_get_teximage(ctx, target, level, format, type, pixels,
-                          texObj, texImage);
+      _mesa_get_teximage(ctx, format, type, pixels, texImage);
    }
 }

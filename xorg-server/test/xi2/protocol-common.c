@@ -29,6 +29,8 @@
 #include "extinit.h" /* for XInputExtensionInit */
 #include "exglobals.h"
 #include "xkbsrv.h" /* for XkbInitPrivates */
+#include "xserver-properties.h"
+#include <X11/extensions/XI2.h>
 
 #include "protocol-common.h"
 
@@ -63,6 +65,65 @@ static void fake_init_sprite(DeviceIntPtr dev)
     sprite->physLimits.y2 = screen.height;
 }
 
+/* This is essentially CorePointerProc with ScrollAxes added */
+static int
+TestPointerProc(DeviceIntPtr pDev, int what)
+{
+#define NBUTTONS 10
+#define NAXES 4
+    BYTE map[NBUTTONS + 1];
+    int i = 0;
+    Atom btn_labels[NBUTTONS] = {0};
+    Atom axes_labels[NAXES] = {0};
+
+    switch (what) {
+    case DEVICE_INIT:
+        for (i = 1; i <= NBUTTONS; i++)
+            map[i] = i;
+
+	btn_labels[0] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_LEFT);
+	btn_labels[1] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_MIDDLE);
+	btn_labels[2] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_RIGHT);
+	btn_labels[3] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_UP);
+	btn_labels[4] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_DOWN);
+	btn_labels[5] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_LEFT);
+	btn_labels[6] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_RIGHT);
+	/* don't know about the rest */
+
+	axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_X);
+	axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_Y);
+	axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_VSCROLL);
+	axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_HSCROLL);
+
+        if (!InitPointerDeviceStruct((DevicePtr)pDev, map, NBUTTONS, btn_labels,
+                                (PtrCtrlProcPtr)NoopDDA,
+                                GetMotionHistorySize(), NAXES, axes_labels))
+        {
+            ErrorF("Could not initialize device '%s'. Out of memory.\n",
+                   pDev->name);
+            return BadAlloc;
+        }
+        pDev->valuator->axisVal[0] = screenInfo.screens[0]->width / 2;
+        pDev->last.valuators[0] = pDev->valuator->axisVal[0];
+        pDev->valuator->axisVal[1] = screenInfo.screens[0]->height / 2;
+        pDev->last.valuators[1] = pDev->valuator->axisVal[1];
+
+        SetScrollValuator(pDev, 2, SCROLL_TYPE_VERTICAL, 2.4, SCROLL_FLAG_NONE);
+        SetScrollValuator(pDev, 3, SCROLL_TYPE_HORIZONTAL, 3.5, SCROLL_FLAG_PREFERRED);
+        break;
+
+    case DEVICE_CLOSE:
+        break;
+
+    default:
+        break;
+    }
+
+    return Success;
+
+#undef NBUTTONS
+#undef NAXES
+}
 /**
  * Create and init 2 master devices (VCP + VCK) and two slave devices, one
  * default mouse, one default keyboard.
@@ -84,7 +145,7 @@ struct devices init_devices(void)
     EnableDevice(devices.vck, FALSE);
 
     AllocDevicePair(&client, "", &devices.mouse, &devices.kbd,
-                    CorePointerProc, CoreKeyboardProc, FALSE);
+                    TestPointerProc, CoreKeyboardProc, FALSE);
     ActivateDevice(devices.mouse, FALSE);
     ActivateDevice(devices.kbd, FALSE);
     EnableDevice(devices.mouse, FALSE);

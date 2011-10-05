@@ -261,14 +261,16 @@ version_compare(uint16_t a_major, uint16_t a_minor,
 #define SwapRestL(stuff) \
     SwapLongs((CARD32 *)(stuff + 1), LengthRestL(stuff))
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))
 void __attribute__((error("wrong sized variable passed to swap"))) wrong_size(void);
 #else
 static inline void wrong_size(void)
 {
 }
+#endif
 
-static inline void __builtin_constant_p(int x)
+#if !(defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C < 0x590)))
+static inline int __builtin_constant_p(int x)
 {
 	return 0;
 }
@@ -277,7 +279,7 @@ static inline void __builtin_constant_p(int x)
 /* byte swap a 32-bit value */
 static inline void swap_uint32(uint32_t *x)
 {
-	char n = ((char *) &x)[0];
+	char n = ((char *) x)[0];
 	((char *) x)[0] = ((char *) x)[3];
 	((char *) x)[3] = n;
 	n = ((char *) x)[1];

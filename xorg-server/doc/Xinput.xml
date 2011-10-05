@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-
+                   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"[
+ <!ENTITY % defs SYSTEM "/xserver/doc/xml/xserver.ent"> %defs;
+]>
 
 <!-- lifted from troff+ms+XMan by doclifter -->
 <book id="porting">
 
 <bookinfo>
    <title>X11 Input Extension Porting Document</title>
-   <releaseinfo>X Version 11, Release 6.7</releaseinfo>
    <authorgroup>
       <author>
          <firstname>George</firstname><surname>Sachs</surname>
          <affiliation><orgname>Hewlett-Packard</orgname></affiliation>
       </author>
    </authorgroup>
-   <corpname>X Consortium Standard</corpname>
-   <copyright><year>1989</year><holder>Hewlett-Packard Company</holder></copyright>
-   <copyright><year>1990</year><holder>Hewlett-Packard Company</holder></copyright>
-   <copyright><year>1991</year><holder>Hewlett-Packard Company</holder></copyright>
-
-   <copyright><year>1989</year><holder>X Consortium</holder></copyright>
-   <copyright><year>1990</year><holder>X Consortium</holder></copyright>
-   <copyright><year>1991</year><holder>X Consortium</holder></copyright>
-   <affiliation><orgname>X Consortium</orgname></affiliation>
-   <productnumber>X Version 11, Release 6.7</productnumber>
+   <releaseinfo>X server version &xserver.version;</releaseinfo>
+   <copyright><year>1989</year><year>1990</year><year>1991</year>
+     <holder>Hewlett-Packard Company</holder>
+   </copyright>
 
 <legalnotice>
 
@@ -36,11 +30,11 @@ Hewlett-Packard makes no representations about the suitability for any purpose o
 document. It is provided "as is" without express or implied warranty. This document is only a draft stan-
 dard of the X Consortium and is therefore subject to change.
 </para>
+</legalnotice>
 
+<legalnotice>
+<para role="multiLicensing">Copyright © 1989, 1990, 1991 X Consortium</para>
 <para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &ldquo;Software&rdquo;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
-
-<para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &ldquo;Software&rdquo;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
-
 <para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
 
 <para>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</para>

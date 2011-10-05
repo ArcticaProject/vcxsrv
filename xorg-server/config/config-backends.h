@@ -68,3 +68,8 @@ int config_hal_init(void);
 void config_hal_fini(void);
 # endif
 #endif
+
+#ifdef CONFIG_WSCONS
+int config_wscons_init(void);
+void config_wscons_fini(void);
+#endif

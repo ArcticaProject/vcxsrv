@@ -134,19 +134,9 @@ KdNewPointer (void)
 void
 KdFreePointer(KdPointerInfo *pi)
 {
-    InputOption *option, *prev = NULL;
-
     free(pi->name);
     free(pi->path);
-
-    for (option = pi->options; option; option = option->next) {
-        free(prev);
-        free(option->key);
-        free(option->value);
-        prev = option;
-    }
-
-    free(prev);
+    input_option_free_list(&pi->options);
     free(pi);
 }
 

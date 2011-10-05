@@ -77,6 +77,8 @@
 #define AXIS_LABEL_PROP_REL_DIAL        "Rel Dial"
 #define AXIS_LABEL_PROP_REL_WHEEL       "Rel Vert Wheel"
 #define AXIS_LABEL_PROP_REL_MISC        "Rel Misc"
+#define AXIS_LABEL_PROP_REL_VSCROLL     "Rel Vert Scroll"
+#define AXIS_LABEL_PROP_REL_HSCROLL     "Rel Horiz Scroll"
 
 /*
  * Absolute axes

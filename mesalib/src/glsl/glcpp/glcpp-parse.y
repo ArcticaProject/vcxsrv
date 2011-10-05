@@ -1275,6 +1275,48 @@ _glcpp_parser_expand_if (glcpp_parser_t *parser, int type, token_list_t *list)
 	glcpp_parser_lex_from (parser, expanded);
 }
 
+static void
+_glcpp_parser_apply_pastes (glcpp_parser_t *parser, token_list_t *list)
+{
+	token_node_t *node;
+
+	node = list->head;
+	while (node)
+	{
+		token_node_t *next_non_space;
+
+		/* Look ahead for a PASTE token, skipping space. */
+		next_non_space = node->next;
+		while (next_non_space && next_non_space->token->type == SPACE)
+			next_non_space = next_non_space->next;
+
+		if (next_non_space == NULL)
+			break;
+
+		if (next_non_space->token->type != PASTE) {
+			node = next_non_space;
+			continue;
+		}
+
+		/* Now find the next non-space token after the PASTE. */
+		next_non_space = next_non_space->next;
+		while (next_non_space && next_non_space->token->type == SPACE)
+			next_non_space = next_non_space->next;
+
+		if (next_non_space == NULL) {
+			yyerror (&node->token->location, parser, "'##' cannot appear at either end of a macro expansion\n");
+			return;
+		}
+
+		node->token = _token_paste (parser, node->token, next_non_space->token);
+		node->next = next_non_space->next;
+		if (next_non_space == list->tail)
+			list->tail = node;
+	}
+
+	list->non_space_tail = list->tail;
+}
+
 /* This is a helper function that's essentially part of the
  * implementation of _glcpp_parser_expand_node. It shouldn't be called
  * except for by that function.
@@ -1386,43 +1428,7 @@ _glcpp_parser_expand_function (glcpp_parser_t *parser,
 
 	_token_list_trim_trailing_space (substituted);
 
-	node = substituted->head;
-	while (node)
-	{
-		token_node_t *next_non_space;
-
-		/* Look ahead for a PASTE token, skipping space. */
-		next_non_space = node->next;
-		while (next_non_space && next_non_space->token->type == SPACE)
-			next_non_space = next_non_space->next;
-
-		if (next_non_space == NULL)
-			break;
-
-		if (next_non_space->token->type != PASTE) {
-			node = next_non_space;
-			continue;
-		}
-
-		/* Now find the next non-space token after the PASTE. */
-		next_non_space = next_non_space->next;
-		while (next_non_space && next_non_space->token->type == SPACE)
-			next_non_space = next_non_space->next;
-
-		if (next_non_space == NULL) {
-			yyerror (&node->token->location, parser, "'##' cannot appear at either end of a macro expansion\n");
-			return NULL;
-		}
-
-		node->token = _token_paste (parser, node->token, next_non_space->token);
-		node->next = next_non_space->next;
-		if (next_non_space == substituted->tail)
-			substituted->tail = node;
-
-		node = node->next;
-	}
-
-	substituted->non_space_tail = substituted->tail;
+	_glcpp_parser_apply_pastes (parser, substituted);
 
 	return substituted;
 }
@@ -1492,13 +1498,16 @@ _glcpp_parser_expand_node (glcpp_parser_t *parser,
 
 	if (! macro->is_function)
 	{
+		token_list_t *replacement;
 		*last = node;
 
 		/* Replace a macro defined as empty with a SPACE token. */
 		if (macro->replacements == NULL)
 			return _token_list_create_with_one_space (parser);
 
-		return _token_list_copy (parser, macro->replacements);
+		replacement = _token_list_copy (parser, macro->replacements);
+		_glcpp_parser_apply_pastes (parser, replacement);
+		return replacement;
 	}
 
 	return _glcpp_parser_expand_function (parser, node, last);
@@ -1654,8 +1663,8 @@ _check_for_reserved_macro_name (glcpp_parser_t *parser, YYLTYPE *loc,
 	/* According to the GLSL specification, macro names starting with "__"
 	 * or "GL_" are reserved for future use.  So, don't allow them.
 	 */
-	if (strncmp(identifier, "__", 2) == 0) {
-		glcpp_error (loc, parser, "Macro names starting with \"__\" are reserved.\n");
+	if (strstr(identifier, "__")) {
+		glcpp_error (loc, parser, "Macro names containing \"__\" are reserved.\n");
 	}
 	if (strncmp(identifier, "GL_", 3) == 0) {
 		glcpp_error (loc, parser, "Macro names starting with \"GL_\" are reserved.\n");

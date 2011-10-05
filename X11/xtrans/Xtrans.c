@@ -132,7 +132,7 @@ void
 TRANS(FreeConnInfo) (XtransConnInfo ciptr)
 
 {
-    PRMSG (3,"FreeConnInfo(%p)\n", ciptr, 0, 0);
+    prmsg (3,"FreeConnInfo(%p)\n", ciptr);
 
     if (ciptr->addr)
 	xfree (ciptr->addr);
@@ -150,13 +150,13 @@ TRANS(FreeConnInfo) (XtransConnInfo ciptr)
 #define PROTOBUFSIZE	20
 
 static Xtransport *
-TRANS(SelectTransport) (char *protocol)
+TRANS(SelectTransport) (const char *protocol)
 
 {
     char 	protobuf[PROTOBUFSIZE];
     int		i;
 
-    PRMSG (3,"SelectTransport(%s)\n", protocol, 0, 0);
+    prmsg (3,"SelectTransport(%s)\n", protocol);
 
     /*
      * Force Protocol to be lowercase as a way of doing
@@ -203,11 +203,12 @@ TRANS(ParseAddress) (char *address, char **protocol, char **host, char **port)
      */
 
     char	*mybuf, *tmpptr;
-    char	*_protocol, *_host, *_port;
+    const char	*_protocol;
+    char	*_host, *_port;
     char	hostnamebuf[256];
     int		_host_len;
 
-    PRMSG (3,"ParseAddress(%s)\n", address, 0, 0);
+    prmsg (3,"ParseAddress(%s)\n", address);
 
     /* Copy the string so it can be changed */
 
@@ -404,12 +405,12 @@ TRANS(Open) (int type, char *address)
     XtransConnInfo	ciptr = NULL;
     Xtransport		*thistrans;
 
-    PRMSG (2,"Open(%d,%s)\n", type, address, 0);
+    prmsg (2,"Open(%d,%s)\n", type, address);
 
 #if defined(WIN32) && defined(TCPCONN)
     if (TRANS(WSAStartup)())
     {
-	PRMSG (1,"Open: WSAStartup failed\n", 0, 0, 0);
+	prmsg (1,"Open: WSAStartup failed\n");
 	return NULL;
     }
 #endif
@@ -418,7 +419,7 @@ TRANS(Open) (int type, char *address)
 
     if (TRANS(ParseAddress) (address, &protocol, &host, &port) == 0)
     {
-	PRMSG (1,"Open: Unable to Parse address %s\n", address, 0, 0);
+	prmsg (1,"Open: Unable to Parse address %s\n", address);
 	return NULL;
     }
 
@@ -426,8 +427,8 @@ TRANS(Open) (int type, char *address)
 
     if ((thistrans = TRANS(SelectTransport) (protocol)) == NULL)
     {
-	PRMSG (1,"Open: Unable to find transport for %s\n",
-	       protocol, 0, 0);
+	prmsg (1,"Open: Unable to find transport for %s\n",
+	       protocol);
 
 	xfree (protocol);
 	xfree (host);
@@ -460,14 +461,14 @@ TRANS(Open) (int type, char *address)
 #endif /* TRANS_SERVER */
 	break;
     default:
-	PRMSG (1,"Open: Unknown Open type %d\n", type, 0, 0);
+	prmsg (1,"Open: Unknown Open type %d\n", type);
     }
 
     if (ciptr == NULL)
     {
 	if (!(thistrans->flags & TRANS_DISABLED))
 	{
-	    PRMSG (1,"Open: transport open failed for %s/%s:%s\n",
+	    prmsg (1,"Open: transport open failed for %s/%s:%s\n",
 	           protocol, host, port);
 	}
 	xfree (protocol);
@@ -503,7 +504,7 @@ TRANS(Reopen) (int type, int trans_id, int fd, char *port)
     char		*save_port;
     int			i;
 
-    PRMSG (2,"Reopen(%d,%d,%s)\n", trans_id, fd, port);
+    prmsg (2,"Reopen(%d,%d,%s)\n", trans_id, fd, port);
 
     /* Determine the transport type */
 
@@ -516,15 +517,15 @@ TRANS(Reopen) (int type, int trans_id, int fd, char *port)
 
     if (thistrans == NULL)
     {
-	PRMSG (1,"Reopen: Unable to find transport id %d\n",
-	       trans_id, 0, 0);
+	prmsg (1,"Reopen: Unable to find transport id %d\n",
+	       trans_id);
 
 	return NULL;
     }
 
     if ((save_port = (char *) xalloc (strlen (port) + 1)) == NULL)
     {
-	PRMSG (1,"Reopen: Unable to malloc port string\n", 0, 0, 0);
+	prmsg (1,"Reopen: Unable to malloc port string\n");
 
 	return NULL;
     }
@@ -542,12 +543,12 @@ TRANS(Reopen) (int type, int trans_id, int fd, char *port)
 	ciptr = thistrans->ReopenCLTSServer(thistrans, fd, port);
 	break;
     default:
-	PRMSG (1,"Reopen: Bad Open type %d\n", type, 0, 0);
+	prmsg (1,"Reopen: Bad Open type %d\n", type);
     }
 
     if (ciptr == NULL)
     {
-	PRMSG (1,"Reopen: transport open failed\n", 0, 0, 0);
+	prmsg (1,"Reopen: transport open failed\n");
 	return NULL;
     }
 
@@ -573,7 +574,7 @@ XtransConnInfo
 TRANS(OpenCOTSClient) (char *address)
 
 {
-    PRMSG (2,"OpenCOTSClient(%s)\n", address, 0, 0);
+    prmsg (2,"OpenCOTSClient(%s)\n", address);
     return TRANS(Open) (XTRANS_OPEN_COTS_CLIENT, address);
 }
 
@@ -586,7 +587,7 @@ XtransConnInfo
 TRANS(OpenCOTSServer) (char *address)
 
 {
-    PRMSG (2,"OpenCOTSServer(%s)\n", address, 0, 0);
+    prmsg (2,"OpenCOTSServer(%s)\n", address);
     return TRANS(Open) (XTRANS_OPEN_COTS_SERVER, address);
 }
 
@@ -599,7 +600,7 @@ XtransConnInfo
 TRANS(OpenCLTSClient) (char *address)
 
 {
-    PRMSG (2,"OpenCLTSClient(%s)\n", address, 0, 0);
+    prmsg (2,"OpenCLTSClient(%s)\n", address);
     return TRANS(Open) (XTRANS_OPEN_CLTS_CLIENT, address);
 }
 
@@ -612,7 +613,7 @@ XtransConnInfo
 TRANS(OpenCLTSServer) (char *address)
 
 {
-    PRMSG (2,"OpenCLTSServer(%s)\n", address, 0, 0);
+    prmsg (2,"OpenCLTSServer(%s)\n", address);
     return TRANS(Open) (XTRANS_OPEN_CLTS_SERVER, address);
 }
 
@@ -625,7 +626,7 @@ XtransConnInfo
 TRANS(ReopenCOTSServer) (int trans_id, int fd, char *port)
 
 {
-    PRMSG (2,"ReopenCOTSServer(%d, %d, %s)\n", trans_id, fd, port);
+    prmsg (2,"ReopenCOTSServer(%d, %d, %s)\n", trans_id, fd, port);
     return TRANS(Reopen) (XTRANS_OPEN_COTS_SERVER, trans_id, fd, port);
 }
 
@@ -633,7 +634,7 @@ XtransConnInfo
 TRANS(ReopenCLTSServer) (int trans_id, int fd, char *port)
 
 {
-    PRMSG (2,"ReopenCLTSServer(%d, %d, %s)\n", trans_id, fd, port);
+    prmsg (2,"ReopenCLTSServer(%d, %d, %s)\n", trans_id, fd, port);
     return TRANS(Reopen) (XTRANS_OPEN_CLTS_SERVER, trans_id, fd, port);
 }
 
@@ -673,7 +674,7 @@ TRANS(SetOption) (XtransConnInfo ciptr, int option, int arg)
     int	fd = ciptr->fd;
     int	ret = 0;
 
-    PRMSG (2,"SetOption(%d,%d,%d)\n", fd, option, arg);
+    prmsg (2,"SetOption(%d,%d,%d)\n", fd, option, arg);
 
     /*
      * For now, all transport type use the same stuff for setting options.
@@ -759,7 +760,7 @@ TRANS(CreateListener) (XtransConnInfo ciptr, char *port, unsigned int flags)
 }
 
 int
-TRANS(NoListen) (char * protocol)
+TRANS(NoListen) (const char * protocol)
 
 {
    Xtransport *trans;
@@ -767,8 +768,8 @@ TRANS(NoListen) (char * protocol)
 
    if ((trans = TRANS(SelectTransport)(protocol)) == NULL)
    {
-	PRMSG (1,"TransNoListen: unable to find transport: %s\n",
-	       protocol, 0, 0);
+	prmsg (1,"TransNoListen: unable to find transport: %s\n",
+	       protocol);
 
 	return -1;
    }
@@ -801,7 +802,7 @@ TRANS(Accept) (XtransConnInfo ciptr, int *status)
 {
     XtransConnInfo	newciptr;
 
-    PRMSG (2,"Accept(%d)\n", ciptr->fd, 0, 0);
+    prmsg (2,"Accept(%d)\n", ciptr->fd);
 
     newciptr = ciptr->transptr->Accept (ciptr, status);
 
@@ -825,12 +826,12 @@ TRANS(Connect) (XtransConnInfo ciptr, char *address)
     char	*port;
     int		ret;
 
-    PRMSG (2,"Connect(%d,%s)\n", ciptr->fd, address, 0);
+    prmsg (2,"Connect(%d,%s)\n", ciptr->fd, address);
 
     if (TRANS(ParseAddress) (address, &protocol, &host, &port) == 0)
     {
-	PRMSG (1,"Connect: Unable to Parse address %s\n",
-	       address, 0, 0);
+	prmsg (1,"Connect: Unable to Parse address %s\n",
+	       address);
 	return -1;
     }
 
@@ -840,8 +841,8 @@ TRANS(Connect) (XtransConnInfo ciptr, char *address)
 
     if (!port || !*port)
     {
-	PRMSG (1,"Connect: Missing port specification in %s\n",
-	      address, 0, 0);
+	prmsg (1,"Connect: Missing port specification in %s\n",
+	      address);
 	if (protocol) xfree (protocol);
 	if (host) xfree (host);
 	return -1;
@@ -907,7 +908,7 @@ TRANS(Close) (XtransConnInfo ciptr)
 {
     int ret;
 
-    PRMSG (2,"Close(%d)\n", ciptr->fd, 0, 0);
+    prmsg (2,"Close(%d)\n", ciptr->fd);
 
     ret = ciptr->transptr->Close (ciptr);
 
@@ -922,7 +923,7 @@ TRANS(CloseForCloning) (XtransConnInfo ciptr)
 {
     int ret;
 
-    PRMSG (2,"CloseForCloning(%d)\n", ciptr->fd, 0, 0);
+    prmsg (2,"CloseForCloning(%d)\n", ciptr->fd);
 
     ret = ciptr->transptr->CloseForCloning (ciptr);
 
@@ -944,14 +945,14 @@ TRANS(GetMyAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp,
 		  Xtransaddr **addrp)
 
 {
-    PRMSG (2,"GetMyAddr(%d)\n", ciptr->fd, 0, 0);
+    prmsg (2,"GetMyAddr(%d)\n", ciptr->fd);
 
     *familyp = ciptr->family;
     *addrlenp = ciptr->addrlen;
 
     if ((*addrp = (Xtransaddr *) xalloc (ciptr->addrlen)) == NULL)
     {
-	PRMSG (1,"GetMyAddr: malloc failed\n", 0, 0, 0);
+	prmsg (1,"GetMyAddr: malloc failed\n");
 	return -1;
     }
     memcpy(*addrp, ciptr->addr, ciptr->addrlen);
@@ -964,14 +965,14 @@ TRANS(GetPeerAddr) (XtransConnInfo ciptr, int *familyp, int *addrlenp,
 		    Xtransaddr **addrp)
 
 {
-    PRMSG (2,"GetPeerAddr(%d)\n", ciptr->fd, 0, 0);
+    prmsg (2,"GetPeerAddr(%d)\n", ciptr->fd);
 
     *familyp = ciptr->family;
     *addrlenp = ciptr->peeraddrlen;
 
     if ((*addrp = (Xtransaddr *) xalloc (ciptr->peeraddrlen)) == NULL)
     {
-	PRMSG (1,"GetPeerAddr: malloc failed\n", 0, 0, 0);
+	prmsg (1,"GetPeerAddr: malloc failed\n");
 	return -1;
     }
     memcpy(*addrp, ciptr->peeraddr, ciptr->peeraddrlen);
@@ -1040,8 +1041,8 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 #if defined(IPv6) && defined(AF_INET6)
     int		ipv6_succ = 0;
 #endif
-    PRMSG (2,"MakeAllCOTSServerListeners(%s,%p)\n",
-	   port ? port : "NULL", ciptrs_ret, 0);
+    prmsg (2,"MakeAllCOTSServerListeners(%s,%p)\n",
+	   port ? port : "NULL", ciptrs_ret);
 
     *count_ret = 0;
 
@@ -1067,17 +1068,17 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 	snprintf(buffer, sizeof(buffer), "%s/:%s",
 		 trans->TransName, port ? port : "");
 
-	PRMSG (5,"MakeAllCOTSServerListeners: opening %s\n",
-	       buffer, 0, 0);
+	prmsg (5,"MakeAllCOTSServerListeners: opening %s\n",
+	       buffer);
 
 	if ((ciptr = TRANS(OpenCOTSServer(buffer))) == NULL)
 	{
 	    if (trans->flags & TRANS_DISABLED)
 		continue;
 
-	    PRMSG (1,
+	    prmsg (1,
 	  "MakeAllCOTSServerListeners: failed to open listener for %s\n",
-		  trans->TransName, 0, 0);
+		  trans->TransName);
 	    continue;
 	}
 #if defined(IPv6) && defined(AF_INET6)
@@ -1096,9 +1097,8 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 		 * running at this address, and this function should fail.
 		 */
 
-		PRMSG (1,
-		"MakeAllCOTSServerListeners: server already running\n",
-		  0, 0, 0);
+		prmsg (1,
+		"MakeAllCOTSServerListeners: server already running\n");
 
 		for (j = 0; j < *count_ret; j++)
 		    TRANS(Close) (temp_ciptrs[j]);
@@ -1110,9 +1110,9 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 	    }
 	    else
 	    {
-		PRMSG (1,
+		prmsg (1,
 	"MakeAllCOTSServerListeners: failed to create listener for %s\n",
-		  trans->TransName, 0, 0);
+		  trans->TransName);
 
 		continue;
 	    }
@@ -1123,9 +1123,9 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 	    ipv6_succ = 1;
 #endif
 
-	PRMSG (5,
+	prmsg (5,
 	      "MakeAllCOTSServerListeners: opened listener for %s, %d\n",
-	      trans->TransName, ciptr->fd, 0);
+	      trans->TransName, ciptr->fd);
 
 	temp_ciptrs[*count_ret] = ciptr;
 	(*count_ret)++;
@@ -1133,7 +1133,7 @@ TRANS(MakeAllCOTSServerListeners) (char *port, int *partial, int *count_ret,
 
     *partial = (*count_ret < complete_network_count());
 
-    PRMSG (5,
+    prmsg (5,
      "MakeAllCOTSServerListeners: partial=%d, actual=%d, complete=%d \n",
 	*partial, *count_ret, complete_network_count());
 
@@ -1165,8 +1165,8 @@ TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
     XtransConnInfo	ciptr, temp_ciptrs[NUMTRANS];
     int			status, i, j;
 
-    PRMSG (2,"MakeAllCLTSServerListeners(%s,%p)\n",
-	port ? port : "NULL", ciptrs_ret, 0);
+    prmsg (2,"MakeAllCLTSServerListeners(%s,%p)\n",
+	port ? port : "NULL", ciptrs_ret);
 
     *count_ret = 0;
 
@@ -1180,14 +1180,14 @@ TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
 	snprintf(buffer, sizeof(buffer), "%s/:%s",
 		 trans->TransName, port ? port : "");
 
-	PRMSG (5,"MakeAllCLTSServerListeners: opening %s\n",
-	    buffer, 0, 0);
+	prmsg (5,"MakeAllCLTSServerListeners: opening %s\n",
+	    buffer);
 
 	if ((ciptr = TRANS(OpenCLTSServer (buffer))) == NULL)
 	{
-	    PRMSG (1,
+	    prmsg (1,
 	"MakeAllCLTSServerListeners: failed to open listener for %s\n",
-		  trans->TransName, 0, 0);
+		  trans->TransName);
 	    continue;
 	}
 
@@ -1201,9 +1201,8 @@ TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
 		 * running at this address, and this function should fail.
 		 */
 
-		PRMSG (1,
-		"MakeAllCLTSServerListeners: server already running\n",
-		  0, 0, 0);
+		prmsg (1,
+		"MakeAllCLTSServerListeners: server already running\n");
 
 		for (j = 0; j < *count_ret; j++)
 		    TRANS(Close) (temp_ciptrs[j]);
@@ -1215,24 +1214,24 @@ TRANS(MakeAllCLTSServerListeners) (char *port, int *partial, int *count_ret,
 	    }
 	    else
 	    {
-		PRMSG (1,
+		prmsg (1,
 	"MakeAllCLTSServerListeners: failed to create listener for %s\n",
-		  trans->TransName, 0, 0);
+		  trans->TransName);
 
 		continue;
 	    }
 	}
 
-	PRMSG (5,
+	prmsg (5,
 	"MakeAllCLTSServerListeners: opened listener for %s, %d\n",
-	      trans->TransName, ciptr->fd, 0);
+	      trans->TransName, ciptr->fd);
 	temp_ciptrs[*count_ret] = ciptr;
 	(*count_ret)++;
     }
 
     *partial = (*count_ret < complete_network_count());
 
-    PRMSG (5,
+    prmsg (5,
      "MakeAllCLTSServerListeners: partial=%d, actual=%d, complete=%d \n",
 	*partial, *count_ret, complete_network_count());
 

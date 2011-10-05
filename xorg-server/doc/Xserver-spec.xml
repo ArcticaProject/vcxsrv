@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+ <!ENTITY % xorg-defs SYSTEM "defs.ent"> %xorg-defs;
  <!ENTITY % defs SYSTEM "/xserver/doc/xml/xserver.ent"> %defs;
 ]>
 
 <article>
   <articleinfo>
+    <title>Definition of the Porting Layer for the X v11 Sample Server</title>
+    <titleabbrev>X Porting Layer</titleabbrev>
     <author>
       <firstname>Susan</firstname><surname>Angebranndt</surname>
       <affiliation><orgname>Digital Equipment Corporation</orgname></affiliation>
@@ -39,10 +42,17 @@
       <affiliation><orgname>X.org Foundation and Hewlett Packard</orgname></affiliation>
     </author>
     <publisher><publishername>The X.Org Foundation</publishername></publisher>
-    <pubdate>&xserver.reldate;</pubdate>
+    <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
     <releaseinfo>X server version &xserver.version;</releaseinfo>
-    <title>Definition of the Porting Layer for the X v11 Sample Server</title>
-    <titleabbrev>X Porting Layer</titleabbrev>
+    <copyright><year>1994</year><holder>X Consortium, Inc.</holder></copyright>
+    <copyright><year>2004</year><holder>X.org Foundation, Inc.</holder></copyright>
+    <legalnotice>
+      <para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ``Software''), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
+      <para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
+      <para>THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</para>
+      <para>LK201 and DEC are trademarks of Digital Equipment Corporation.  Macintosh and Apple are trademarks of Apple Computer, Inc.  PostScript is a trademark of Adobe Systems, Inc.  Ethernet is a trademark of Xerox Corporation.  X Window System is a trademark of the X.org Foundation, Inc.  Cray is a trademark of Cray Research, Inc.</para>
+    </legalnotice>
+    <pubdate>&xserver.reldate;</pubdate>
     <revhistory>
       <revision>
 	<revnumber>1.0</revnumber>
@@ -100,13 +110,6 @@
 	  and 1.8 CreateNewResourceType changes</revremark>
       </revision>
     </revhistory>
-    <legalnotice>
-      <para>Copyright &#xA9; 1994 X Consortium, Inc., 2004 X.org Foundation, Inc.</para>
-      <para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ``Software''), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
-      <para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
-      <para>THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</para>
-      <para>LK201 and DEC are trademarks of Digital Equipment Corporation.  Macintosh and Apple are trademarks of Apple Computer, Inc.  PostScript is a trademark of Adobe Systems, Inc.  Ethernet is a trademark of Xerox Corporation.  X Window System is a trademark of the X.org Foundation, Inc.  Cray is a trademark of Cray Research, Inc.</para>
-    </legalnotice>
     <abstract>
       <para>The following document explains the structure of the X Window System display server and the interfaces among the larger pieces.  It is intended as a reference for programmers who are implementing an X Display Server on their workstation hardware.  It is included with the X Window System source tape, along with the document "Strategies for Porting the X v11 Sample Server."  The order in which you should read these documents is:
       <orderedlist>

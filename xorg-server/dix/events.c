@@ -2268,33 +2268,93 @@ DeliverEventsToWindow(DeviceIntPtr pDev, WindowPtr pWin, xEvent
     return nondeliveries;
 }
 
+/**
+ * Filter out raw events for XI 2.0 and XI 2.1 clients.
+ *
+ * If there is a grab on the device, 2.0 clients only get raw events if they
+ * have the grab. 2.1+ clients get raw events in all cases.
+ *
+ * @return TRUE if the event should be discarded, FALSE otherwise.
+ */
+static BOOL
+FilterRawEvents(const ClientPtr client, const GrabPtr grab)
+{
+    XIClientPtr client_xi_version;
+    int cmp;
+
+    /* device not grabbed -> don't filter */
+    if (!grab)
+        return FALSE;
+
+    client_xi_version = dixLookupPrivate(&client->devPrivates, XIClientPrivateKey);
+
+    cmp = version_compare(client_xi_version->major_version,
+                          client_xi_version->minor_version, 2, 0);
+    /* XI 2.0: if device is grabbed, skip
+       XI 2.1: if device is grabbed by us, skip, we've already delivered */
+    return (cmp == 0) ? TRUE : SameClient(grab, client);
+}
+
+/**
+ * Deliver a raw event to the grab owner (if any) and to all root windows.
+ *
+ * Raw event delivery differs between XI 2.0 and XI 2.1.
+ * XI 2.0: events delivered to the grabbing client (if any) OR to all root
+ * windows
+ * XI 2.1: events delivered to all root windows, regardless of grabbing
+ * state.
+ */
 void
 DeliverRawEvent(RawDeviceEvent *ev, DeviceIntPtr device)
 {
     GrabPtr grab = device->deviceGrab.grab;
+    xEvent *xi;
+    int i, rc;
+    int filter;
+
+    rc = EventToXI2((InternalEvent*)ev, (xEvent**)&xi);
+    if (rc != Success)
+    {
+        ErrorF("[Xi] %s: XI2 conversion failed in %s (%d)\n",
+                __func__, device->name, rc);
+        return;
+    }
 
     if (grab)
         DeliverGrabbedEvent((InternalEvent*)ev, device, FALSE);
-    else { /* deliver to all root windows */
-        xEvent *xi;
-        int i;
-        int filter;
 
-        i = EventToXI2((InternalEvent*)ev, (xEvent**)&xi);
-        if (i != Success)
+    filter = GetEventFilter(device, xi);
+
+    for (i = 0; i < screenInfo.numScreens; i++)
+    {
+        WindowPtr root;
+        InputClients *inputclients;
+
+        root = screenInfo.screens[i]->root;
+        if (!GetClientsForDelivery(device, root, xi, filter, &inputclients))
+            continue;
+
+        for (; inputclients; inputclients = inputclients->next)
         {
-            ErrorF("[Xi] %s: XI2 conversion failed in %s (%d)\n",
-                    __func__, device->name, i);
-            return;
+            ClientPtr c; /* unused */
+            Mask m;      /* unused */
+            InputClients ic = *inputclients;
+
+            /* Because we run through the list manually, copy the actual
+             * list, shorten the copy to only have one client and then pass
+             * that down to DeliverEventToInputClients. This way we avoid
+             * double events on XI 2.1 clients that have a grab on the
+             * device.
+             */
+            ic.next = NULL;
+
+            if (!FilterRawEvents(rClient(&ic), grab))
+                DeliverEventToInputClients(device, &ic, root, xi, 1,
+                                           filter, NULL, &c, &m);
         }
-
-        filter = GetEventFilter(device, xi);
-
-        for (i = 0; i < screenInfo.numScreens; i++)
-            DeliverEventsToWindow(device, screenInfo.screens[i]->root, xi, 1,
-                                  filter, NullGrab);
-        free(xi);
     }
+
+    free(xi);
 }
 
 /* If the event goes to dontClient, don't send it and return 0.  if

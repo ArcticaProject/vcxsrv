@@ -63,9 +63,9 @@
 /* fwds */
 int
 SetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
-static float
-SimpleSmoothProfile(DeviceIntPtr dev, DeviceVelocityPtr vel, float velocity,
-                    float threshold, float acc);
+static double
+SimpleSmoothProfile(DeviceIntPtr dev, DeviceVelocityPtr vel, double velocity,
+                    double threshold, double acc);
 static PointerAccelerationProfileFunc
 GetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
 static BOOL
@@ -478,14 +478,10 @@ DoGetDirection(int dx, int dy){
         else
             dir = UNDEFINED; /* shouldn't happen */
     } else { /* compute angle and set appropriate flags */
-        float r;
+        double r;
         int i1, i2;
 
-#ifdef _ISOC99_SOURCE
-        r = atan2f(dy, dx);
-#else
         r = atan2(dy, dx);
-#endif
         /* find direction.
          *
          * Add 360° to avoid r become negative since C has no well-defined
@@ -524,8 +520,7 @@ static int
 GetDirection(int dx, int dy){
     static int cache[DIRECTION_CACHE_SIZE][DIRECTION_CACHE_SIZE];
     int dir;
-    if (abs(dx) <= DIRECTION_CACHE_RANGE &&
-	abs(dy) <= DIRECTION_CACHE_RANGE) {
+    if (abs(dx) <= DIRECTION_CACHE_RANGE && abs(dy) <= DIRECTION_CACHE_RANGE) {
 	/* cacheable */
 	dir = cache[DIRECTION_CACHE_RANGE+dx][DIRECTION_CACHE_RANGE+dy];
 	if(dir == 0) {
@@ -553,7 +548,7 @@ GetDirection(int dx, int dy){
  * 0/0 and set it as the current one.
  */
 static inline void
-FeedTrackers(DeviceVelocityPtr vel, int dx, int dy, int cur_t)
+FeedTrackers(DeviceVelocityPtr vel, double dx, double dy, int cur_t)
 {
     int n;
     for(n = 0; n < vel->num_tracker; n++){
@@ -561,8 +556,8 @@ FeedTrackers(DeviceVelocityPtr vel, int dx, int dy, int cur_t)
 	vel->tracker[n].dy += dy;
     }
     n = (vel->cur_tracker + 1) % vel->num_tracker;
-    vel->tracker[n].dx = 0;
-    vel->tracker[n].dy = 0;
+    vel->tracker[n].dx = 0.0;
+    vel->tracker[n].dy = 0.0;
     vel->tracker[n].time = cur_t;
     vel->tracker[n].dir = GetDirection(dx, dy);
     DebugAccelF("(dix prtacc) motion [dx: %i dy: %i dir:%i diff: %i]\n",
@@ -576,9 +571,9 @@ FeedTrackers(DeviceVelocityPtr vel, int dx, int dy, int cur_t)
  * velocity scaling.
  * This assumes linear motion.
  */
-static float
+static double
 CalcTracker(const MotionTracker *tracker, int cur_t){
-    float dist = sqrt(tracker->dx * tracker->dx + tracker->dy * tracker->dy);
+    double dist = sqrt(tracker->dx * tracker->dx + tracker->dy * tracker->dy);
     int dtime = cur_t - tracker->time;
     if(dtime > 0)
 	return dist / dtime;
@@ -593,16 +588,16 @@ CalcTracker(const MotionTracker *tracker, int cur_t){
  *
  * @return The tracker's velocity or 0 if the above conditions are unmet
  */
-static float
+static double
 QueryTrackers(DeviceVelocityPtr vel, int cur_t){
     int offset, dir = UNDEFINED, used_offset = -1, age_ms;
     /* initial velocity: a low-offset, valid velocity */
-    float initial_velocity = 0, result = 0, velocity_diff;
-    float velocity_factor =  vel->corr_mul * vel->const_acceleration; /* premultiply */
+    double initial_velocity = 0, result = 0, velocity_diff;
+    double velocity_factor =  vel->corr_mul * vel->const_acceleration; /* premultiply */
     /* loop from current to older data */
     for(offset = 1; offset < vel->num_tracker; offset++){
 	MotionTracker *tracker = TRACKER(vel, offset);
-	float tracker_velocity;
+	double tracker_velocity;
 
 	age_ms = cur_t - tracker->time;
 
@@ -674,11 +669,11 @@ QueryTrackers(DeviceVelocityPtr vel, int cur_t){
 BOOL
 ProcessVelocityData2D(
     DeviceVelocityPtr vel,
-    int dx,
-    int dy,
+    double dx,
+    double dy,
     int time)
 {
-    float velocity;
+    double velocity;
 
     vel->last_velocity = vel->velocity;
 
@@ -694,12 +689,12 @@ ProcessVelocityData2D(
  * this flattens significant ( > 1) mickeys a little bit for more steady
  * constant-velocity response
  */
-static inline float
-ApplySimpleSoftening(int prev_delta, int delta)
+static inline double
+ApplySimpleSoftening(double prev_delta, double delta)
 {
-    float result = delta;
+    double result = delta;
 
-    if (delta < -1 || delta > 1) {
+    if (delta < -1.0 || delta > 1.0) {
 	if (delta > prev_delta)
 	    result -= 0.5;
 	else if (delta < prev_delta)
@@ -718,8 +713,8 @@ ApplySimpleSoftening(int prev_delta, int delta)
 static void
 ApplySoftening(
         DeviceVelocityPtr vel,
-        float* fdx,
-        float* fdy)
+        double* fdx,
+        double* fdy)
 {
     if (vel->use_softening) {
         *fdx = ApplySimpleSoftening(vel->last_dx, *fdx);
@@ -728,7 +723,7 @@ ApplySoftening(
 }
 
 static void
-ApplyConstantDeceleration(DeviceVelocityPtr vel, float *fdx, float *fdy)
+ApplyConstantDeceleration(DeviceVelocityPtr vel, double *fdx, double *fdy)
 {
     *fdx *= vel->const_acceleration;
     *fdy *= vel->const_acceleration;
@@ -737,15 +732,15 @@ ApplyConstantDeceleration(DeviceVelocityPtr vel, float *fdx, float *fdy)
 /*
  * compute the acceleration for given velocity and enforce min_acceleartion
  */
-float
+double
 BasicComputeAcceleration(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc){
+    double velocity,
+    double threshold,
+    double acc){
 
-    float result;
+    double result;
     result = vel->Profile(dev, vel, velocity, threshold, acc);
 
     /* enforce min_acceleration */
@@ -759,13 +754,13 @@ BasicComputeAcceleration(
  * If the velocity has changed, an average is taken of 6 velocity factors:
  * current velocity, last velocity and 4 times the average between the two.
  */
-static float
+static double
 ComputeAcceleration(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float threshold,
-    float acc){
-    float result;
+    double threshold,
+    double acc){
+    double result;
 
     if(vel->velocity <= 0){
 	DebugAccelF("(dix ptracc) profile skipped\n");
@@ -808,13 +803,13 @@ ComputeAcceleration(
 /**
  * Polynomial function similar previous one, but with f(1) = 1
  */
-static float
+static double
 PolynomialAccelerationProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float ignored,
-    float acc)
+    double velocity,
+    double ignored,
+    double acc)
 {
    return pow(velocity, (acc - 1.0) * 0.5);
 }
@@ -824,13 +819,13 @@ PolynomialAccelerationProfile(
  * returns acceleration for velocity.
  * This profile selects the two functions like the old scheme did
  */
-static float
+static double
 ClassicProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
     if (threshold > 0) {
 	return SimpleSmoothProfile (dev,
@@ -856,15 +851,15 @@ ClassicProfile(
  * This has the expense of overall response dependency on min-acceleration.
  * In effect, min_acceleration mimics const_acceleration in this profile.
  */
-static float
+static double
 PowerProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
-    float vel_dist;
+    double vel_dist;
 
     acc = (acc-1.0) * 0.1f + 1.0; /* without this, acc of 2 is unuseable */
 
@@ -882,11 +877,11 @@ PowerProfile(
  *  - starts faster than a sinoid
  *  - smoothness C1 (Cinf if you dare to ignore endpoints)
  */
-static inline float
-CalcPenumbralGradient(float x){
+static inline double
+CalcPenumbralGradient(double x){
     x *= 2.0f;
     x -= 1.0f;
-    return 0.5f + (x * sqrt(1.0f - x*x) + asin(x))/M_PI;
+    return 0.5f + (x * sqrt(1.0 - x*x) + asin(x))/M_PI;
 }
 
 
@@ -894,13 +889,13 @@ CalcPenumbralGradient(float x){
  * acceleration function similar to classic accelerated/unaccelerated,
  * but with smooth transition in between (and towards zero for adaptive dec.).
  */
-static float
+static double
 SimpleSmoothProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
     if(velocity < 1.0f)
         return CalcPenumbralGradient(0.5 + velocity*0.5) * 2.0f - 1.0f;
@@ -920,15 +915,15 @@ SimpleSmoothProfile(
  * This profile uses the first half of the penumbral gradient as a start
  * and then scales linearly.
  */
-static float
+static double
 SmoothLinearProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
-    float res, nv;
+    double res, nv;
 
     if(acc > 1.0f)
         acc -= 1.0f; /*this is so acc = 1 is no acceleration */
@@ -955,15 +950,15 @@ SmoothLinearProfile(
  * From 0 to threshold, the response graduates smoothly from min_accel to
  * acceleration. Beyond threshold it is exactly the specified acceleration.
  */
-static float
+static double
 SmoothLimitedProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
-    float res;
+    double res;
 
     if(velocity >= threshold || threshold == 0.0f)
 	return acc;
@@ -976,24 +971,24 @@ SmoothLimitedProfile(
 }
 
 
-static float
+static double
 LinearProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
     return acc * velocity;
 }
 
-static float
+static double
 NoProfile(
     DeviceIntPtr dev,
     DeviceVelocityPtr vel,
-    float velocity,
-    float threshold,
-    float acc)
+    double velocity,
+    double threshold,
+    double acc)
 {
     return 1.0f;
 }
@@ -1119,11 +1114,11 @@ acceleratePointerPredictable(
     ValuatorMask* val,
     CARD32 evtime)
 {
-    int dx = 0, dy = 0, tmpi;
+    double dx = 0, dy = 0;
     DeviceVelocityPtr velocitydata = GetDevicePredictableAccelData(dev);
     Bool soften = TRUE;
 
-    if (!velocitydata)
+    if (valuator_mask_num_valuators(val) == 0 || !velocitydata)
         return;
 
     if (velocitydata->statistics.profile_number == AccelProfileNone &&
@@ -1132,59 +1127,39 @@ acceleratePointerPredictable(
     }
 
     if (valuator_mask_isset(val, 0)) {
-        dx = valuator_mask_get(val, 0);
+        dx = valuator_mask_get_double(val, 0);
     }
 
     if (valuator_mask_isset(val, 1)) {
-        dy = valuator_mask_get(val, 1);
+        dy = valuator_mask_get_double(val, 1);
     }
 
-    if (dx || dy){
+    if (dx != 0.0 || dy != 0.0) {
         /* reset non-visible state? */
         if (ProcessVelocityData2D(velocitydata, dx , dy, evtime)) {
             soften = FALSE;
         }
 
         if (dev->ptrfeed && dev->ptrfeed->ctrl.num) {
-            float mult;
+            double mult;
 
             /* invoke acceleration profile to determine acceleration */
             mult = ComputeAcceleration (dev, velocitydata,
-                                        dev->ptrfeed->ctrl.threshold,
-                                        (float)dev->ptrfeed->ctrl.num /
-                                            (float)dev->ptrfeed->ctrl.den);
+					dev->ptrfeed->ctrl.threshold,
+					(double)dev->ptrfeed->ctrl.num /
+					(double)dev->ptrfeed->ctrl.den);
 
             if(mult != 1.0f || velocitydata->const_acceleration != 1.0f) {
-                float fdx = dx,
-                      fdy = dy;
-
                 if (mult > 1.0f && soften)
-                    ApplySoftening(velocitydata, &fdx, &fdy);
-                ApplyConstantDeceleration(velocitydata, &fdx, &fdy);
+                    ApplySoftening(velocitydata, &dx, &dy);
+                ApplyConstantDeceleration(velocitydata, &dx, &dy);
 
-                /* Calculate the new delta (with accel) and drop it back
-                 * into the valuator masks */
-                if (dx) {
-                    float tmp;
-                    tmp = mult * fdx + dev->last.remainder[0];
-                    /* Since it may not be apparent: lrintf() does not offer
-                     * strong statements about rounding; however because we
-                     * process each axis conditionally, there's no danger
-                     * of a toggling remainder. Its lack of guarantees likely
-                     * makes it faster on the average target. */
-                    tmpi = lrintf(tmp);
-                    valuator_mask_set(val, 0, tmpi);
-                    dev->last.remainder[0] = tmp - (float)tmpi;
-                }
-                if (dy) {
-                    float tmp;
-                    tmp = mult * fdy + dev->last.remainder[1];
-                    tmpi = lrintf(tmp);
-                    valuator_mask_set(val, 1, tmpi);
-                    dev->last.remainder[1] = tmp - (float)tmpi;
-                }
-                DebugAccelF("pos (%i | %i) remainders x: %.3f y: %.3f delta x:%.3f y:%.3f\n",
-                            *px, *py, dev->last.remainder[0], dev->last.remainder[1], fdx, fdy);
+                if (dx != 0.0)
+                    valuator_mask_set_double(val, 0, mult * dx);
+                if (dy != 0.0)
+                    valuator_mask_set_double(val, 1, mult * dy);
+                DebugAccelF("pos (%i | %i) delta x:%.3f y:%.3f\n", mult * dx,
+                            mult * dy);
             }
         }
     }
@@ -1205,8 +1180,8 @@ acceleratePointerLightweight(
     ValuatorMask* val,
     CARD32 ignored)
 {
-    float mult = 0.0, tmpf;
-    int dx = 0, dy = 0, tmpi;
+    double mult = 0.0, tmpf;
+    double dx = 0.0, dy = 0.0;
 
     if (valuator_mask_isset(val, 0)) {
         dx = valuator_mask_get(val, 0);
@@ -1216,53 +1191,35 @@ acceleratePointerLightweight(
         dy = valuator_mask_get(val, 1);
     }
 
-    if (!dx && !dy)
+    if (valuator_mask_num_valuators(val) == 0)
         return;
 
     if (dev->ptrfeed && dev->ptrfeed->ctrl.num) {
         /* modeled from xf86Events.c */
         if (dev->ptrfeed->ctrl.threshold) {
-            if ((abs(dx) + abs(dy)) >= dev->ptrfeed->ctrl.threshold) {
-                tmpf = ((float)dx *
-                        (float)(dev->ptrfeed->ctrl.num)) /
-                       (float)(dev->ptrfeed->ctrl.den) +
-                       dev->last.remainder[0];
-                if (dx) {
-                    tmpi = (int) tmpf;
-                    valuator_mask_set(val, 0, tmpi);
-                    dev->last.remainder[0] = tmpf - (float)tmpi;
+            if ((fabs(dx) + fabs(dy)) >= dev->ptrfeed->ctrl.threshold) {
+                if (dx != 0.0) {
+                    tmpf = (dx * (double)(dev->ptrfeed->ctrl.num)) /
+                           (double)(dev->ptrfeed->ctrl.den);
+                    valuator_mask_set_double(val, 0, tmpf);
                 }
 
-                tmpf = ((float)dy *
-                        (float)(dev->ptrfeed->ctrl.num)) /
-                       (float)(dev->ptrfeed->ctrl.den) +
-                       dev->last.remainder[1];
-                if (dy) {
-                    tmpi = (int) tmpf;
-                    valuator_mask_set(val, 1, tmpi);
-                    dev->last.remainder[1] = tmpf - (float)tmpi;
+                if (dy != 0.0) {
+                    tmpf = (dy * (double)(dev->ptrfeed->ctrl.num)) /
+                           (double)(dev->ptrfeed->ctrl.den);
+                    valuator_mask_set_double(val, 1, tmpf);
                 }
             }
         }
         else {
-            mult = pow((float)dx * (float)dx + (float)dy * (float)dy,
-                       ((float)(dev->ptrfeed->ctrl.num) /
-                        (float)(dev->ptrfeed->ctrl.den) - 1.0) /
+	    mult = pow(dx * dx + dy * dy,
+                       ((double)(dev->ptrfeed->ctrl.num) /
+                        (double)(dev->ptrfeed->ctrl.den) - 1.0) /
                        2.0) / 2.0;
-            if (dx) {
-                tmpf = mult * (float)dx +
-                       dev->last.remainder[0];
-                tmpi = (int) tmpf;
-                valuator_mask_set(val, 0, tmpi);
-                dev->last.remainder[0] = tmpf - (float)tmpi;
-            }
-            if (dy) {
-                tmpf = mult * (float)dy +
-                       dev->last.remainder[1];
-                tmpi = (int)tmpf;
-                valuator_mask_set(val, 1, tmpi);
-                dev->last.remainder[1] = tmpf - (float)tmpi;
-            }
+            if (dx != 0.0)
+                valuator_mask_set_double(val, 0, mult * dx);
+            if (dy != 0.0)
+                valuator_mask_set_double(val, 1, mult * dy);
         }
     }
 }

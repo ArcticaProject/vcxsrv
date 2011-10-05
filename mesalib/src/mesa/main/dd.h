@@ -284,9 +284,8 @@ struct dd_function_table {
    /**
     * Called by glGetTexImage().
     */
-   void (*GetTexImage)( struct gl_context *ctx, GLenum target, GLint level,
+   void (*GetTexImage)( struct gl_context *ctx,
                         GLenum format, GLenum type, GLvoid *pixels,
-                        struct gl_texture_object *texObj,
                         struct gl_texture_image *texImage );
 
    /**
@@ -813,25 +812,6 @@ struct dd_function_table {
     * \name Support for multiple T&L engines
     */
    /*@{*/
-
-   /**
-    * Bitmask of state changes that require the current T&L module to be
-    * validated, using ValidateTnlModule() below.
-    */
-   GLuint NeedValidate;
-
-   /**
-    * Validate the current T&L module. 
-    *
-    * This is called directly after UpdateState() when a state change that has
-    * occurred matches the dd_function_table::NeedValidate bitmask above.  This
-    * ensures all computed values are up to date, thus allowing the driver to
-    * decide if the current T&L module needs to be swapped out.
-    *
-    * This must be non-NULL if a driver installs a custom T&L module and sets
-    * the dd_function_table::NeedValidate bitmask, but may be NULL otherwise.
-    */
-   void (*ValidateTnlModule)( struct gl_context *ctx, GLuint new_state );
 
    /**
     * Set by the driver-supplied T&L engine.  

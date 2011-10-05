@@ -629,6 +629,7 @@ AC_ARG_ENABLE(dpms,           AS_HELP_STRING([--disable-dpms], [Build DPMS exten
 AC_ARG_ENABLE(config-udev,    AS_HELP_STRING([--enable-config-udev], [Build udev support (default: auto)]), [CONFIG_UDEV=$enableval], [CONFIG_UDEV=auto])
 AC_ARG_ENABLE(config-dbus,    AS_HELP_STRING([--enable-config-dbus], [Build D-BUS API support (default: no)]), [CONFIG_DBUS_API=$enableval], [CONFIG_DBUS_API=no])
 AC_ARG_ENABLE(config-hal,     AS_HELP_STRING([--disable-config-hal], [Build HAL support (default: auto)]), [CONFIG_HAL=$enableval], [CONFIG_HAL=auto])
+AC_ARG_ENABLE(config-wscons,  AS_HELP_STRING([--enable-config-wscons], [Build wscons config support (default: auto)]), [CONFIG_WSCONS=$enableval], [CONFIG_WSCONS=auto])
 AC_ARG_ENABLE(xfree86-utils,     AS_HELP_STRING([--enable-xfree86-utils], [Build xfree86 DDX utilities (default: enabled)]), [XF86UTILS=$enableval], [XF86UTILS=yes])
 AC_ARG_ENABLE(xaa,               AS_HELP_STRING([--enable-xaa], [Build XAA (default: enabled)]), [XAA=$enableval], [XAA=yes])
 AC_ARG_ENABLE(vgahw,          AS_HELP_STRING([--enable-vgahw], [Build Xorg with vga access (default: enabled)]), [VGAHW=$enableval], [VGAHW=yes])
@@ -723,7 +724,7 @@ case $host_os in
 			AC_CACHE_CHECK([whether to build Xquartz],xorg_cv_Carbon_framework,[
 		 		save_LDFLAGS=$LDFLAGS
 				LDFLAGS="$LDFLAGS -framework Carbon"
-				AC_LINK_IFELSE([char FSFindFolder(); int main() { FSFindFolder(); return 0;}],
+				AC_LINK_IFELSE([AC_LANG_SOURCE([char FSFindFolder(); int main() { FSFindFolder(); return 0;}])],
 				               [xorg_cv_Carbon_framework=yes],
 				               [xorg_cv_Carbon_framework=no])
 			        LDFLAGS=$save_LDFLAGS])
@@ -778,7 +779,7 @@ WINDOWSWMPROTO="windowswmproto"
 APPLEWMPROTO="applewmproto >= 1.4"
 
 dnl Core modules for most extensions, et al.
-SDK_REQUIRED_MODULES="[xproto >= 7.0.22] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.1.99] [inputproto >= 1.9.99.902] [kbproto >= 1.0.3] fontsproto"
+SDK_REQUIRED_MODULES="[xproto >= 7.0.22] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.1.99] [inputproto >= 2.0.99.1] [kbproto >= 1.0.3] fontsproto"
 # Make SDK_REQUIRED_MODULES available for inclusion in xorg-server.pc
 AC_SUBST(SDK_REQUIRED_MODULES)
 
@@ -822,6 +823,15 @@ if test "x$CONFIG_UDEV" = xyes; then
 		AC_MSG_ERROR([udev configuration API requested, but libudev is not installed])
 	fi
 	AC_DEFINE(CONFIG_UDEV, 1, [Use libudev for input hotplug])
+
+	SAVE_LIBS=$LIBS
+	SAVE_CFLAGS=$CFLAGS
+	CFLAGS=$UDEV_CFLAGS
+	LIBS=$UDEV_LIBS
+	AC_CHECK_FUNCS([udev_monitor_filter_add_match_tag])
+	AC_CHECK_FUNCS([udev_enumerate_add_match_tag])
+	LIBS=$SAVE_LIBS
+	CFLAGS=$SAVE_CFLAGS
 fi
 
 dnl HAVE_DBUS is true if we actually have the D-Bus library, whereas
@@ -865,6 +875,21 @@ if test "x$CONFIG_NEED_DBUS" = xyes; then
 fi
 AM_CONDITIONAL(CONFIG_NEED_DBUS, [test "x$CONFIG_NEED_DBUS" = xyes])
 
+if test "x$CONFIG_WSCONS" = xauto; then
+	case $host_os in
+		*openbsd*)
+			CONFIG_WSCONS=yes;
+			;;
+		*)
+			CONFIG_WSCONS=no;
+			;;
+	esac
+fi
+AM_CONDITIONAL(CONFIG_WSCONS, [test "x$CONFIG_WSCONS" = xyes])
+if test "x$CONFIG_WSCONS" = xyes; then
+	AC_DEFINE(CONFIG_WSCONS, 1, [Use wscons for input auto configuration])
+fi
+
 if test "x$USE_SIGIO_BY_DEFAULT" = xyes; then
 	USE_SIGIO_BY_DEFAULT_VALUE=TRUE
 else
@@ -874,12 +899,12 @@ AC_DEFINE_UNQUOTED([USE_SIGIO_BY_DEFAULT], [$USE_SIGIO_BY_DEFAULT_VALUE],
 		   [Use SIGIO handlers for input device events by default])
 
 AC_MSG_CHECKING([for glibc...])
-AC_PREPROC_IFELSE([
+AC_PREPROC_IFELSE([AC_LANG_SOURCE([
 #include <features.h>
 #ifndef __GLIBC__
 #error
 #endif
-], glibc=yes, glibc=no)
+])], glibc=yes, glibc=no)
 AC_MSG_RESULT([$glibc])
 
 AC_CHECK_FUNCS([clock_gettime], [have_clock_gettime=yes],
@@ -903,7 +928,7 @@ if ! test "x$have_clock_gettime" = xno; then
         CPPFLAGS="$CPPFLAGS -D_POSIX_C_SOURCE=200112L"
     fi
 
-    AC_RUN_IFELSE([
+    AC_RUN_IFELSE([AC_LANG_SOURCE([
 #include <time.h>
 
 int main(int argc, char *argv[[]]) {
@@ -914,7 +939,7 @@ int main(int argc, char *argv[[]]) {
     else
         return 1;
 }
-    ], [MONOTONIC_CLOCK=yes], [MONOTONIC_CLOCK=no],
+    ])], [MONOTONIC_CLOCK=yes], [MONOTONIC_CLOCK=no],
        [MONOTONIC_CLOCK="cross compiling"])
 
     LIBS="$LIBS_SAVE"

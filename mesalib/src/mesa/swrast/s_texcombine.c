@@ -45,7 +45,7 @@ typedef float (*float4_array)[4];
 /**
  * Return array of texels for given unit.
  */
-static INLINE float4_array
+static inline float4_array
 get_texel_array(SWcontext *swrast, GLuint unit)
 {
 #ifdef _OPENMP
@@ -589,6 +589,26 @@ _swrast_texture_span( struct gl_context *ctx, SWspan *span )
    SWcontext *swrast = SWRAST_CONTEXT(ctx);
    float4_array primary_rgba;
    GLuint unit;
+
+   if (!swrast->TexelBuffer) {
+#ifdef _OPENMP
+      const GLint maxThreads = omp_get_max_threads();
+#else
+      const GLint maxThreads = 1;
+#endif
+
+      /* TexelBuffer is also global and normally shared by all SWspan
+       * instances; when running with multiple threads, create one per
+       * thread.
+       */
+      swrast->TexelBuffer =
+	 (GLfloat *) MALLOC(ctx->Const.MaxTextureImageUnits * maxThreads *
+			    MAX_WIDTH * 4 * sizeof(GLfloat));
+      if (!swrast->TexelBuffer) {
+	 _mesa_error(ctx, GL_OUT_OF_MEMORY, "texture_combine");
+	 return;
+      }
+   }
 
    primary_rgba = (float4_array) malloc(span->end * 4 * sizeof(GLfloat));
 

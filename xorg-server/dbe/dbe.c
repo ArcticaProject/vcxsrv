@@ -38,12 +38,7 @@
 #endif
 
 #include <string.h>
-#if HAVE_STDINT_H
 #include <stdint.h>
-#elif !defined(UINT32_MAX)
-#define UINT32_MAX 0xffffffffU
-#endif
-
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "scrnintstr.h"

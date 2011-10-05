@@ -133,6 +133,7 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
 	crtcs = malloc((xf86_config->num_crtc + 1) * sizeof (xf86CrtcPtr));
     if (!crtcs)
     {
+	free(crtc->gamma_red);
 	free(crtc);
 	return NULL;
     }

@@ -774,12 +774,9 @@ UpdateDeviceState(DeviceIntPtr device, DeviceEvent* event)
 
     for (i = 0; i <= last_valuator && i < v->numAxes; i++)
     {
+        /* XXX: Relative/Absolute mode */
         if (BitIsOn(&event->valuators.mask, i))
-        {
-            /* XXX: Relative/Absolute mode */
             v->axisVal[i] = event->valuators.data[i];
-            v->axisVal[i] += (event->valuators.data_frac[i] * 1.0f / (1 << 16) / (1 << 16));
-        }
     }
 
     if (event->type == ET_KeyPress) {
@@ -1070,16 +1067,16 @@ InitProximityClassDeviceStruct(DeviceIntPtr dev)
  *
  * @see InitValuatorClassDeviceStruct
  */
-void
+Bool
 InitValuatorAxisStruct(DeviceIntPtr dev, int axnum, Atom label, int minval, int maxval,
 		       int resolution, int min_res, int max_res, int mode)
 {
     AxisInfoPtr ax;
 
-    if (!dev || !dev->valuator || minval > maxval)
-        return;
+    if (!dev || !dev->valuator || (minval > maxval && mode == Absolute))
+        return FALSE;
     if (axnum >= dev->valuator->numAxes)
-        return;
+        return FALSE;
 
     ax = dev->valuator->axes + axnum;
 
@@ -1093,6 +1090,57 @@ InitValuatorAxisStruct(DeviceIntPtr dev, int axnum, Atom label, int minval, int 
 
     if (mode & OutOfProximity)
         dev->proximity->in_proximity = FALSE;
+
+    return SetScrollValuator(dev, axnum, SCROLL_TYPE_NONE, 0, SCROLL_FLAG_NONE);
+}
+
+/**
+ * Set the given axis number as a scrolling valuator.
+ */
+Bool
+SetScrollValuator(DeviceIntPtr dev, int axnum, enum ScrollType type, double increment, int flags)
+{
+    AxisInfoPtr ax;
+    int *current_ax;
+
+    if (!dev || !dev->valuator || axnum >= dev->valuator->numAxes)
+        return FALSE;
+
+    switch (type)
+    {
+        case SCROLL_TYPE_VERTICAL:
+            current_ax = &dev->valuator->v_scroll_axis;
+            break;
+        case SCROLL_TYPE_HORIZONTAL:
+            current_ax = &dev->valuator->h_scroll_axis;
+            break;
+        case SCROLL_TYPE_NONE:
+            ax = &dev->valuator->axes[axnum];
+            ax->scroll.type = type;
+            return TRUE;
+        default:
+            return FALSE;
+    }
+
+    if (increment == 0.0)
+        return FALSE;
+
+    if (*current_ax != -1 && axnum != *current_ax)
+    {
+        ax = &dev->valuator->axes[*current_ax];
+        if (ax->scroll.type == type &&
+            (flags & SCROLL_FLAG_PREFERRED) && (ax->scroll.flags & SCROLL_FLAG_PREFERRED))
+            return FALSE;
+    }
+    *current_ax = axnum;
+
+    ax = &dev->valuator->axes[axnum];
+    ax->scroll.type = type;
+    ax->scroll.increment = increment;
+    ax->scroll.flags = flags;
+    /* FIXME: generate DeviceChanged Events */
+
+    return TRUE;
 }
 
 static void

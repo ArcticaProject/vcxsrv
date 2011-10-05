@@ -172,7 +172,7 @@ xkb_symbols "bolnagri" {
 
 partial alphanumeric_keys
 xkb_symbols "ben" {
-    name[Group1]= "Bengali";
+    name[Group1]= "Bengali (India)";
 
       // Mainly numbers.
       key <AE01> { [      U09E7 		]	};
@@ -237,7 +237,7 @@ xkb_symbols "ben" {
 };
 
 xkb_symbols "ben_probhat" {
- name[Group1]= "Bengali (Probhat)";
+ name[Group1]= "Bengali (India, Probhat)";
    key <ESC>  { [ Escape ] };
 
 // numbers
@@ -312,7 +312,7 @@ xkb_symbols "ben_probhat" {
 // Bengali Baishakhi, Bengali Baishakhi Inscript, Bengali Bornona, Uni Gitanjali Layouts are added by Promathesh Mandal <promathesh812004@gmail.com>
 
 xkb_symbols "ben_baishakhi" {
- name[Group1]= "Bengali (Baishakhi)";
+ name[Group1]= "Bengali (India, Baishakhi)";
    key <ESC>   { [ Escape 					] };
 
 // numbers
@@ -389,7 +389,7 @@ xkb_symbols "ben_baishakhi" {
 };
 
 xkb_symbols "ben_inscript" {
-    name[Group1]= "Bengali (Baishakhi Inscript)";
+    name[Group1]= "Bengali (India, Baishakhi Inscript)";
 
       // Mainly numbers.
       key <TLDE> { [      0x100200D, 0x100200C	] 	};
@@ -455,7 +455,7 @@ xkb_symbols "ben_inscript" {
 };
 
 xkb_symbols "ben_gitanjali" {
- name[Group1]= "Bengali (Uni Gitanjali)";
+ name[Group1]= "Bengali (India, Uni Gitanjali)";
    key <ESC>   { [ Escape			] };
 
 // numbers
@@ -533,7 +533,7 @@ xkb_symbols "ben_gitanjali" {
 
 
 xkb_symbols "ben_bornona" {
- name[Group1]= "Bengali (Bornona)";
+ name[Group1]= "Bengali (India, Bornona)";
    key <ESC>  { [ Escape 					] };
 
 // numbers
