@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Red Hat, Inc.
+ * Copyright © 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -19,25 +19,24 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- *
  */
 
-#ifdef HAVE_DIX_CONFIG_H
-#include "dix-config.h"
-#endif
+/**
+ * \file string_to_uint_map.cpp
+ * \brief Dumb wrapprs so that C code can create and destroy maps.
+ *
+ * \author Ian Romanick <ian.d.romanick@intel.com>
+ */
+#include "hash_table.h"
 
-#ifndef INPUTUTILS_H
-#define INPUTUTILS_H
+extern "C" struct string_to_uint_map *
+string_to_uint_map_ctor()
+{
+   return new string_to_uint_map;
+}
 
-#include "input.h"
-
-struct _ValuatorMask {
-    int8_t      last_bit; /* highest bit set in mask */
-    uint8_t     mask[(MAX_VALUATORS + 7)/8];
-    double      valuators[MAX_VALUATORS]; /* valuator data */
-};
-
-extern void verify_internal_event(const InternalEvent *ev);
-extern void init_device_event(DeviceEvent *event, DeviceIntPtr dev, Time ms);
-
-#endif
+extern "C" void
+string_to_uint_map_dtor(struct string_to_uint_map *map)
+{
+   delete map;
+}

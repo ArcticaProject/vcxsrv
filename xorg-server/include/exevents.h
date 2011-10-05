@@ -37,10 +37,26 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *              Interface available to drivers                 *
  ***************************************************************/
 
+/**
+ * Scroll flags for ::SetScrollValuator.
+ */
+enum ScrollFlags {
+    SCROLL_FLAG_NONE            = 0,
+    /**
+     * Do not emulate legacy button events for valuator events on this axis.
+     */
+    SCROLL_FLAG_DONT_EMULATE    = (1 << 1),
+    /**
+     * This axis is the preferred axis for valuator emulation for this axis'
+     * scroll type.
+     */
+    SCROLL_FLAG_PREFERRED       = (1 << 2)
+};
+
 extern _X_EXPORT int InitProximityClassDeviceStruct(
 	DeviceIntPtr           /* dev */);
 
-extern _X_EXPORT void InitValuatorAxisStruct(
+extern _X_EXPORT Bool InitValuatorAxisStruct(
 	DeviceIntPtr           /* dev */,
 	int                    /* axnum */,
 	Atom                   /* label */,
@@ -50,6 +66,13 @@ extern _X_EXPORT void InitValuatorAxisStruct(
 	int                    /* min_res */,
 	int                    /* max_res */,
 	int                    /* mode */);
+
+extern _X_EXPORT Bool SetScrollValuator(
+	DeviceIntPtr           /* dev */,
+	int                    /* axnum */,
+	enum ScrollType        /* type */,
+	double                 /* increment */,
+	int                    /* flags */);
 
 /* Input device properties */
 extern _X_EXPORT void XIDeleteAllDeviceProperties(

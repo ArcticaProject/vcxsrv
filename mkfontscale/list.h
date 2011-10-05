@@ -25,7 +25,7 @@
 
 #include <X11/Xfuncproto.h> /* for _X_ATTRIBUTE_PRINTF */
 
-char *dsprintf(char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
+char *dsprintf(const char *f, ...) _X_ATTRIBUTE_PRINTF(1,2);
 
 typedef struct _List {
     char *value;

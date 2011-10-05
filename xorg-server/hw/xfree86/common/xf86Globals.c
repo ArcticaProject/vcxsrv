@@ -96,7 +96,6 @@ InputInfoPtr xf86InputDevs = NULL;
 xf86InfoRec xf86Info = {
     .consoleFd                  = -1,
     .vtno                       = -1,
-    .vtSysreq                   = FALSE,
     .lastEventTime              = -1,
     .vtRequestsPending          = FALSE,
 #ifdef sun
@@ -111,7 +110,6 @@ xf86InfoRec xf86Info = {
     .caughtSignal               = FALSE,
     .currentScreen              = NULL,
 #ifdef CSRG_BASED
-    .screenFd                   = -1,
     .consType                   = -1,
 #endif
     .allowMouseOpenFail         = FALSE,
@@ -125,7 +123,7 @@ xf86InfoRec xf86Info = {
     .log                        = LogNone,
     .disableRandR               = FALSE,
     .randRFrom                  = X_DEFAULT,
-#if defined(CONFIG_HAL) || defined(CONFIG_UDEV)
+#if defined(CONFIG_HAL) || defined(CONFIG_UDEV) || defined(CONFIG_WSCONS)
     .forceInputDevices          = FALSE,
     .autoAddDevices             = TRUE,
     .autoEnableDevices          = TRUE

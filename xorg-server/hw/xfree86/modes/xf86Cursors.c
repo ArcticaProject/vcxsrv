@@ -1,6 +1,6 @@
 /*
  * Copyright © 2007 Keith Packard
- * Copyright © 2010 Aaron Plattner
+ * Copyright © 2010-2011 Aaron Plattner
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -45,6 +45,18 @@
 #include "picturestr.h"
 #include "cursorstr.h"
 #include "inputstr.h"
+
+/*
+ * Returns the rotation being performed by the server.  If the driver indicates
+ * that it's handling the screen transform, then this returns RR_Rotate_0.
+ */
+static Rotation
+xf86_crtc_cursor_rotation (xf86CrtcPtr crtc)
+{
+    if (crtc->driverIsPerformingTransform)
+	return RR_Rotate_0;
+    return crtc->rotation;
+}
 
 /*
  * Given a screen coordinate, rotate back to a cursor source coordinate
@@ -214,6 +226,7 @@ xf86_crtc_convert_cursor_to_argb (xf86CrtcPtr crtc, unsigned char *src)
     int			xin, yin;
     int			flags = cursor_info->Flags;
     CARD32		bits;
+    const Rotation	rotation = xf86_crtc_cursor_rotation(crtc);
 
 #ifdef ARGB_CURSOR
     crtc->cursor_argb = FALSE;
@@ -222,7 +235,7 @@ xf86_crtc_convert_cursor_to_argb (xf86CrtcPtr crtc, unsigned char *src)
     for (y = 0; y < cursor_info->MaxHeight; y++)
 	for (x = 0; x < cursor_info->MaxWidth; x++) 
 	{
-	    xf86_crtc_rotate_coord (crtc->rotation,
+	    xf86_crtc_rotate_coord (rotation,
 				    cursor_info->MaxWidth,
 				    cursor_info->MaxHeight,
 				    x, y, &xin, &yin);
@@ -324,7 +337,36 @@ xf86_show_cursors (ScrnInfoPtr scrn)
 	    xf86_crtc_show_cursor (crtc);
     }
 }
-    
+
+void xf86CrtcTransformCursorPos (xf86CrtcPtr crtc, int *x, int *y)
+{
+    ScrnInfoPtr scrn = crtc->scrn;
+    ScreenPtr screen = scrn->pScreen;
+    xf86CrtcConfigPtr xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
+    xf86CursorInfoPtr cursor_info = xf86_config->cursor_info;
+    xf86CursorScreenPtr ScreenPriv =
+	(xf86CursorScreenPtr)dixLookupPrivate(&screen->devPrivates,
+					      xf86CursorScreenKey);
+    struct pict_f_vector v;
+    int dx, dy;
+
+    v.v[0] = (*x + ScreenPriv->HotX) + 0.5;
+    v.v[1] = (*y + ScreenPriv->HotY) + 0.5;
+    v.v[2] = 1;
+    pixman_f_transform_point (&crtc->f_framebuffer_to_crtc, &v);
+    /* cursor will have 0.5 added to it already so floor is sufficent */
+    *x = floor (v.v[0]);
+    *y = floor (v.v[1]);
+    /*
+     * Transform position of cursor upper left corner
+     */
+    xf86_crtc_rotate_coord_back (crtc->rotation, cursor_info->MaxWidth,
+				 cursor_info->MaxHeight, ScreenPriv->HotX,
+				 ScreenPriv->HotY, &dx, &dy);
+    *x -= dx;
+    *y -= dy;
+}
+
 static void
 xf86_crtc_set_cursor_position (xf86CrtcPtr crtc, int x, int y)
 {
@@ -333,36 +375,12 @@ xf86_crtc_set_cursor_position (xf86CrtcPtr crtc, int x, int y)
     xf86CursorInfoPtr	cursor_info = xf86_config->cursor_info;
     DisplayModePtr	mode = &crtc->mode;
     Bool		in_range;
-    int			dx, dy;
 
     /*
      * Transform position of cursor on screen
      */
-    if (crtc->transform_in_use)
-    {
-	ScreenPtr	screen = scrn->pScreen;
-	xf86CursorScreenPtr ScreenPriv =
-	    (xf86CursorScreenPtr)dixLookupPrivate(&screen->devPrivates,
-						  xf86CursorScreenKey);
-	struct pict_f_vector   v;
-
-	v.v[0] = (x + ScreenPriv->HotX) + 0.5;
-	v.v[1] = (y + ScreenPriv->HotY) + 0.5;
-	v.v[2] = 1;
-	pixman_f_transform_point (&crtc->f_framebuffer_to_crtc, &v);
-	/* cursor will have 0.5 added to it already so floor is sufficent */
-	x = floor (v.v[0]);
-	y = floor (v.v[1]);
-	/*
-	 * Transform position of cursor upper left corner
-	 */
-	xf86_crtc_rotate_coord_back (crtc->rotation,
-				     cursor_info->MaxWidth,
-				     cursor_info->MaxHeight,
-				     ScreenPriv->HotX, ScreenPriv->HotY, &dx, &dy);
-	x -= dx;
-	y -= dy;
-   }
+    if (crtc->transform_in_use && !crtc->driverIsPerformingTransform)
+	xf86CrtcTransformCursorPos(crtc, &x, &y);
     else
     {
 	x -= crtc->x;
@@ -420,12 +438,13 @@ xf86_crtc_load_cursor_image (xf86CrtcPtr crtc, CARD8 *src)
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
     xf86CursorInfoPtr	cursor_info = xf86_config->cursor_info;
     CARD8		*cursor_image;
+    const Rotation	rotation = xf86_crtc_cursor_rotation(crtc);
 
 #ifdef ARGB_CURSOR
     crtc->cursor_argb = FALSE;
 #endif
 
-    if (crtc->rotation == RR_Rotate_0)
+    if (rotation == RR_Rotate_0)
 	cursor_image = src;
     else
     {
@@ -439,7 +458,7 @@ xf86_crtc_load_cursor_image (xf86CrtcPtr crtc, CARD8 *src)
         for (y = 0; y < cursor_info->MaxHeight; y++)
 	    for (x = 0; x < cursor_info->MaxWidth; x++) 
 	    {
-		xf86_crtc_rotate_coord (crtc->rotation,
+		xf86_crtc_rotate_coord (rotation,
 					cursor_info->MaxWidth,
 					cursor_info->MaxHeight,
 					x, y, &xin, &yin);
@@ -532,12 +551,13 @@ xf86_crtc_load_cursor_argb (xf86CrtcPtr crtc, CursorPtr cursor)
     int			source_height = cursor->bits->height;
     int			image_width = cursor_info->MaxWidth;
     int			image_height = cursor_info->MaxHeight;
-    
+    const Rotation	rotation = xf86_crtc_cursor_rotation(crtc);
+
     for (y = 0; y < image_height; y++)
 	for (x = 0; x < image_width; x++)
 	{
-	    xf86_crtc_rotate_coord (crtc->rotation, image_width, image_height,
-				    x, y, &xin, &yin);
+	    xf86_crtc_rotate_coord (rotation, image_width, image_height, x, y,
+				    &xin, &yin);
 	    if (xin < source_width && yin < source_height)
 		bits = cursor_source[yin * source_width + xin];
 	    else

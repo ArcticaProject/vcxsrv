@@ -330,7 +330,7 @@ typedef enum
  * (VERT_RESULT_PSIZ, VERT_RESULT_BFC0, VERT_RESULT_BFC1, and
  * VERT_RESULT_EDGE) are converted to a value of -1.
  */
-static INLINE int
+static inline int
 _mesa_vert_result_to_frag_attrib(gl_vert_result vert_result)
 {
    if (vert_result >= VERT_RESULT_CLIP_DIST0)
@@ -350,7 +350,7 @@ _mesa_vert_result_to_frag_attrib(gl_vert_result vert_result)
  * gl_frag_attrib values which have no corresponding gl_vert_result
  * (FRAG_ATTRIB_FACE and FRAG_ATTRIB_PNTC) are converted to a value of -1.
  */
-static INLINE int
+static inline int
 _mesa_frag_attrib_to_vert_result(gl_frag_attrib frag_attrib)
 {
    if (frag_attrib <= FRAG_ATTRIB_TEX7)
@@ -1834,11 +1834,6 @@ struct gl_program
    /** Numbered local parameters */
    GLfloat LocalParams[MAX_PROGRAM_LOCAL_PARAMS][4];
 
-   /** Vertex/fragment shader varying vars */
-   struct gl_program_parameter_list *Varying;
-   /** Vertex program user-defined attributes */
-   struct gl_program_parameter_list *Attributes;
-
    /** Map from sampler unit to texture unit (set by glUniform1i()) */
    GLubyte SamplerUnits[MAX_SAMPLERS];
    /** Which texture target is being sampled (TEXTURE_1D/2D/3D/etc_INDEX) */
@@ -2148,8 +2143,14 @@ struct gl_shader_program
    GLuint NumShaders;          /**< number of attached shaders */
    struct gl_shader **Shaders; /**< List of attached the shaders */
 
-   /** User-defined attribute bindings (glBindAttribLocation) */
-   struct gl_program_parameter_list *Attributes;
+   /**
+    * User-defined attribute bindings
+    *
+    * These are set via \c glBindAttribLocation and are used to direct the
+    * GLSL linker.  These are \b not the values used in the compiled shader,
+    * and they are \b not the values returned by \c glGetAttribLocation.
+    */
+   struct string_to_uint_map *AttributeBindings;
 
    /** Transform feedback varyings */
    struct {
@@ -2751,7 +2752,6 @@ struct gl_extensions
    GLboolean ARB_depth_buffer_float;
    GLboolean ARB_depth_clamp;
    GLboolean ARB_depth_texture;
-   GLboolean ARB_draw_buffers;
    GLboolean ARB_draw_buffers_blend;
    GLboolean ARB_draw_elements_base_vertex;
    GLboolean ARB_draw_instanced;

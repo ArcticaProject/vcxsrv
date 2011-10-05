@@ -44,6 +44,9 @@
 #ifndef _GLAPI_H
 #define _GLAPI_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifdef _GLAPI_NO_EXPORTS
 #  define _GLAPI_EXPORT
 #else /* _GLAPI_NO_EXPORTS */
@@ -177,4 +180,7 @@ _glapi_get_proc_address(const char *funcName);
 extern struct _glapi_table *
 _glapi_create_table_from_handle(void *handle, const char *symbol_prefix);
 
+#endif
+#ifdef __cplusplus
+}
 #endif

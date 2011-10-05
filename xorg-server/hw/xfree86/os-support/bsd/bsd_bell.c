@@ -37,10 +37,6 @@
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
 
-#ifdef WSCONS_SUPPORT
-#define KBD_FD(i) ((i).kbdFd != -1 ? (i).kbdFd : (i).consoleFd)
-#endif
-
 void
 xf86OSRingBell(int loudness, int pitch, int duration)
 {

@@ -47,9 +47,9 @@ struct _DeviceVelocityRec;
  * profile
  * returns actual acceleration depending on velocity, acceleration control,...
  */
-typedef float (*PointerAccelerationProfileFunc)
+typedef double (*PointerAccelerationProfileFunc)
               (DeviceIntPtr dev, struct _DeviceVelocityRec* vel,
-               float velocity, float threshold, float accelCoeff);
+               double velocity, double threshold, double accelCoeff);
 
 /**
  * a motion history, with just enough information to
@@ -57,8 +57,8 @@ typedef float (*PointerAccelerationProfileFunc)
  * a more or less straight line
  */
 typedef struct _MotionTracker {
-    int dx, dy;     /* accumulated delta for each axis */
-    int time;         /* time of creation */
+    double dx, dy;  /* accumulated delta for each axis */
+    int time;       /* time of creation */
     int dir;        /* initial direction bitfield */
 } MotionTracker, *MotionTrackerPtr;
 
@@ -69,17 +69,17 @@ typedef struct _DeviceVelocityRec {
     MotionTrackerPtr tracker;
     int num_tracker;
     int cur_tracker;        /* current index */
-    float   velocity;       /* velocity as guessed by algorithm */
-    float   last_velocity;  /* previous velocity estimate */
-    int     last_dx;      /* last time-difference */
-    int     last_dy ;     /* phase of last/current estimate */
-    float   corr_mul;       /* config: multiply this into velocity */
-    float   const_acceleration;  /* config: (recipr.) const deceleration */
-    float   min_acceleration;    /* config: minimum acceleration */
+    double  velocity;       /* velocity as guessed by algorithm */
+    double  last_velocity;  /* previous velocity estimate */
+    double  last_dx;        /* last time-difference */
+    double  last_dy;        /* phase of last/current estimate */
+    double  corr_mul;       /* config: multiply this into velocity */
+    double  const_acceleration;  /* config: (recipr.) const deceleration */
+    double  min_acceleration;    /* config: minimum acceleration */
     short   reset_time;     /* config: reset non-visible state after # ms */
     short   use_softening;  /* config: use softening of mouse values */
-    float   max_rel_diff;   /* config: max. relative difference */
-    float   max_diff;       /* config: max. difference */
+    double  max_rel_diff;   /* config: max. relative difference */
+    double  max_diff;       /* config: max. difference */
     int     initial_range;  /* config: max. offset used as initial velocity */
     Bool    average_accel;  /* config: average acceleration over velocity */
     PointerAccelerationProfileFunc Profile;
@@ -107,11 +107,11 @@ extern _X_EXPORT void
 InitTrackers(DeviceVelocityPtr vel, int ntracker);
 
 extern _X_EXPORT BOOL
-ProcessVelocityData2D(DeviceVelocityPtr vel, int dx, int dy, int time);
+ProcessVelocityData2D(DeviceVelocityPtr vel, double dx, double dy, int time);
 
-extern _X_EXPORT float
+extern _X_EXPORT double
 BasicComputeAcceleration(DeviceIntPtr dev, DeviceVelocityPtr vel,
-    float velocity, float threshold, float acc);
+    double velocity, double threshold, double acc);
 
 extern _X_EXPORT void
 FreeVelocityData(DeviceVelocityPtr vel);

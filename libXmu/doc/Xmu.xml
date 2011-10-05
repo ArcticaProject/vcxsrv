@@ -49,8 +49,8 @@ is a trademark of The Open Group.
     </legalnotice>
   </articleinfo>
 
-  <sect1 id='introduction'>
-    <title>Introduction</title>
+  <sect1 id='Introduction'>
+<title>Introduction</title>
 
     <para>
 The Xmu Library is a collection of miscellaneous (some might say random)
@@ -81,8 +81,8 @@ cc -o xapplication xapplication.o `pkg-config --libs xmu`
 
   </sect1>
 
-  <sect1 id='atom_functions'>
-    <title>Atom Functions</title>
+  <sect1 id='Atom_Functions'>
+<title>Atom Functions</title>
 
     <para>
 To use the functions and macros defined in this section, you should include
@@ -203,11 +203,11 @@ value is cached, such that subsequent requests do not cause
 another round-trip to the server.
     </para>
 
-    <para id="XmuMakeAtom">
+    <para>
       <indexterm zone="XmuMakeAtom">
-	<primary><function>XmuMakeAtom</function></primary>
+	<primary><xref linkend='XmuMakeAtom' xrefstyle='select: title'/></primary>
       </indexterm>
-      <funcsynopsis id='xmumakeatom'>
+      <funcsynopsis id='XmuMakeAtom'>
 	<funcprototype>
 	  <funcdef>AtomPtr <function>XmuMakeAtom</function></funcdef>
 	  <paramdef>const char *<parameter>name</parameter></paramdef>
@@ -228,15 +228,15 @@ for an
 <type>Atom</type>
 with the
 given name.
-<function>XmuInternAtom</function>
+<xref linkend='XmuInternAtom' xrefstyle='select: title'/>
 can be used to cache the Atom value for one or more displays.
     </para>
 
-    <para id="XmuNameOfAtom">
+    <para>
       <indexterm zone="XmuNameOfAtom">
-	<primary><function>XmuNameOfAtom</function></primary>
+	<primary><xref linkend='XmuNameOfAtom' xrefstyle='select: title'/></primary>
       </indexterm>
-      <funcsynopsis id='xmunameofatom'>
+      <funcsynopsis id='XmuNameOfAtom'>
 	<funcprototype>
 	  <funcdef>char *<function>XmuNameOfAtom</function></funcdef>
 	  <paramdef>AtomPtr <parameter>atom_ptr</parameter></paramdef>
@@ -254,11 +254,11 @@ specifies the AtomPtr
 The function returns the name of an AtomPtr.
     </para>
 
-    <para id="XmuInternAtom">
+    <para>
       <indexterm zone="XmuInternAtom">
-	<primary><function>XmuInternAtom</function></primary>
+	<primary><xref linkend='XmuInternAtom' xrefstyle='select: title'/></primary>
       </indexterm>
-      <funcsynopsis id='xmuinternatom'>
+      <funcsynopsis id='XmuInternAtom'>
 	<funcprototype>
 	  <funcdef>Atom <function>XmuInternAtom</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -290,11 +290,11 @@ is cached,
 such that subsequent requests do not cause another round-trip to the server.
     </para>
 
-    <para id="XmuGetAtomName">
+    <para>
       <indexterm zone="XmuGetAtomName">
-	<primary><function>XmuGetAtomName</function></primary>
+	<primary><xref linkend='XmuGetAtomName' xrefstyle='select: title'/></primary>
       </indexterm>
-      <funcsynopsis id='xmugetatomname'>
+      <funcsynopsis id='XmuGetAtomName'>
 	<funcprototype>
 	  <funcdef>char *<function>XmuGetAtomName</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -322,11 +322,11 @@ The result is cached, such that subsequent
 requests do not cause another round-trip to the server.
     </para>
 
-    <para id="XmuInternStrings">
+    <para>
       <indexterm zone="XmuInternStrings">
-	<primary><function>XmuInternStrings</function></primary>
+	<primary><xref linkend='XmuInternStrings' xrefstyle='select: title'/></primary>
       </indexterm>
-      <funcsynopsis id='xmuinternstrings'>
+      <funcsynopsis id='XmuInternStrings'>
 	<funcprototype>
 	  <funcdef>void <function>XmuInternStrings</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -371,8 +371,8 @@ The caller is responsible for preallocating the array pointed at by atoms.
 
   </sect1>
 
-  <sect1 id='error_handler_functions'>
-    <title>Error Handler Functions</title>
+  <sect1 id='Error_Handler_Functions'>
+<title>Error Handler Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -384,11 +384,11 @@ file
 and link against the libXmu or libXmuu library.
     </para>
 
-    <para id="XmuPrintDefaultErrorMessage">
+    <para>
       <indexterm zone="XmuPrintDefaultErrorMessage">
-	<primary><function>XmuPrintDefaultErrorMessage</function></primary>
+	<primary><xref linkend='XmuPrintDefaultErrorMessage' xrefstyle='select: title'/></primary>
       </indexterm>
-      <funcsynopsis id='xmuprintdefaulterrormessage'>
+      <funcsynopsis id='XmuPrintDefaultErrorMessage'>
 	<funcprototype>
 	  <funcdef>int <function>XmuPrintDefaultErrorMessage</function></funcdef>
 	  <paramdef>Display *<parameter>dpy</parameter></paramdef>
@@ -454,21 +454,21 @@ specifies the error
 This function ignores errors for
 <errorname>BadWindow</errorname>
 errors for
-<function>XQueryTree</function>
+<olink targetdoc='libX11' targetptr='XQueryTree'><function>XQueryTree</function></olink>
 and
-<function>XGetWindowAttributes</function>,
+<olink targetdoc='libX11' targetptr='XGetWindowAttributes'><function>XGetWindowAttributes</function></olink>,
 and ignores
 <errorname>BadDrawable</errorname>
 errors for
-<function>XGetGeometry</function>;
+<olink targetdoc='libX11' targetptr='XGetGeometry'><function>XGetGeometry</function></olink>;
 it returns 0 in those cases.  Otherwise, it prints the default error message,
 and returns a non-zero value if the caller should consider exiting,
 and 0 if the caller should not exit.
     </para>
   </sect1>
 
-  <sect1 id='system_utility_functions'>
-    <title>System Utility Functions</title>
+  <sect1 id='System_Utility_Functions'>
+<title>System Utility Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -550,8 +550,8 @@ in software that needs to continue to support non-Unix98 compliant platforms.
 
   </sect1>
 
-  <sect1 id='window_utility_functions'>
-    <title>Window Utility Functions</title>
+  <sect1 id='Window_Utility_Functions'>
+<title>Window Utility Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -675,17 +675,17 @@ and
 flags in the hints structure, and then stores the hints for the
 window using
       <indexterm zone="XmuUpdateMapHints">
-	<primary><function>XSetWMNormalHints</function></primary>
+	<primary><olink targetdoc='libX11' targetptr='XSetWMNormalHints'><function>XSetWMNormalHints</function></olink></primary>
       </indexterm>
-<function>XSetWMNormalHints</function>
+<olink targetdoc='libX11' targetptr='XSetWMNormalHints'><function>XSetWMNormalHints</function></olink>
 and returns
 <symbol>True</symbol>.
 If <symbol>NULL</symbol> is passed for the
 hints structure, then the current hints are read back from the window using
       <indexterm zone="XmuUpdateMapHints">
-	<primary><function>XGetWMNormalHints</function></primary>
+	<primary><olink targetdoc='libX11' targetptr='XGetWMNormalHints'><function>XGetWMNormalHints</function></olink></primary>
       </indexterm>
-<function>XGetWMNormalHints</function>
+<olink targetdoc='libX11' targetptr='XGetWMNormalHints'><function>XGetWMNormalHints</function></olink>
 and are used instead, and
 <symbol>True</symbol>
 is returned; otherwise
@@ -695,8 +695,8 @@ is returned.
 
   </sect1>
 
-  <sect1 id='cursor_utility_functions'>
-    <title>Cursor Utility Functions</title>
+  <sect1 id='Cursor_Utility_Functions'>
+<title>Cursor Utility Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -736,8 +736,8 @@ manual.
 
   </sect1>
 
-  <sect1 id='graphics_functions'>
-    <title>Graphics Functions</title>
+  <sect1 id='Graphics_Functions'>
+<title>Graphics Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -1128,10 +1128,10 @@ returns the y coordinate of the hotspot
 
 This function reads a standard bitmap file description from the specified
 stream, and returns the parsed data in a format suitable for passing to
-<function>XCreateBitmapFromData</function>.
+<olink targetdoc='libX11' targetptr='XCreateBitmapFromData'><function>XCreateBitmapFromData</function></olink>.
 The return value of the function has the same
 interpretation as the return value for
-<function>XReadBitmapFile</function>.
+<olink targetdoc='libX11' targetptr='XReadBitmapFile'><function>XReadBitmapFile</function></olink>.
     </para>
 
     <para id="XmuReadBitmapDataFromFile">
@@ -1190,10 +1190,10 @@ returns the y coordinate of the hotspot
 
 This function reads a standard bitmap file description from the specified
 file, and returns the parsed data in a format suitable for passing to
-<function>XCreateBitmapFromData</function>.
+<olink targetdoc='libX11' targetptr='XCreateBitmapFromData'><function>XCreateBitmapFromData</function></olink>.
 The return value of the function has the same
 interpretation as the return value for
-<function>XReadBitmapFile</function>.
+<olink targetdoc='libX11' targetptr='XReadBitmapFile'><function>XReadBitmapFile</function></olink>.
     </para>
 
     <para id="XmuLocateBitmapFile">
@@ -1265,7 +1265,7 @@ returns the y coordinate of the hotspot
       </variablelist>
 
 This function reads a file in standard bitmap file format, using
-<function>XReadBitmapFile</function>,
+<olink targetdoc='libX11' targetptr='XReadBitmapFile'><function>XReadBitmapFile</function></olink>,
 and returns the created bitmap.  The filename may be
 absolute, or relative to the global resource named
       <indexterm zone="XmuLocateBitmapFile">
@@ -1352,7 +1352,7 @@ specifies the background pixel value
 
 This function creates a pixmap of the specified width, height, and depth, on
 the same screen as the specified drawable, and then performs an
-<function>XCopyPlane</function>
+<olink targetdoc='libX11' targetptr='XCopyPlane'><function>XCopyPlane</function></olink>
 from the specified bitmap to the pixmap,
 using the specified foreground and background pixel values.
 The created pixmap is returned.
@@ -1360,8 +1360,8 @@ The created pixmap is returned.
 
   </sect1>
 
-  <sect1 id='selection_functions'>
-    <title>Selection Functions</title>
+  <sect1 id='Selection_Functions'>
+<title>Selection Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -1450,8 +1450,8 @@ if the conversion was successful, else it returns
     </para>
   </sect1>
 
-  <sect1 id='type_converter_functions'>
-    <title>Type Converter Functions</title>
+  <sect1 id='Type_Converter_Functions'>
+<title>Type Converter Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -2310,8 +2310,8 @@ XtSetTypeConverter(XtRString, XtRWidget, XmuNewCvtStringToWidget,
 
   </sect1>
 
-  <sect1 id='character_set_functions'>
-    <title>Character Set Functions</title>
+  <sect1 id='Character_Set_Functions'>
+<title>Character Set Functions</title>
 
 <para>
 To use the functions defined in this section, you should include the header
@@ -2517,8 +2517,8 @@ less than second.  The two strings are assumed to be encoded using ISO
     </para>
   </sect1>
 
-  <sect1 id='keyboard_event'>
-    <title>Keyboard Event Translation Functions</title>
+  <sect1 id='Keyboard_Event_Translation_Functions'>
+<title>Keyboard Event Translation Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -2533,7 +2533,7 @@ and link against the libXmu library.
     <warning><para>
 The functions in this section are <emphasis remap='B'>deprecated</emphasis> because they don't work
 in most locales now supported by X11; the function
-<function>XmbLookupString</function>
+<olink targetdoc='libX11' targetptr='XmbLookupString'><function>XmbLookupString</function></olink>
 provides a better alternative.
       </para></warning>
 
@@ -2585,7 +2585,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is identical to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 and exists only for naming symmetry with other functions.
     </para>
 
@@ -2637,7 +2637,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to an Latin-2 (ISO 8859-2) string, or to an ASCII control string.
     </para>
@@ -2690,7 +2690,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to an Latin-3 (ISO 8859-3) string, or to an ASCII control string.
     </para>
@@ -2743,7 +2743,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to an Latin-4 (ISO 8859-4) string, or to an ASCII control string.
     </para>
@@ -2796,7 +2796,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to a string in an encoding consisting of Latin-1 (ISO 8859-1) and ASCII
 control in the Graphics Left half (values 0 to 127), and Katakana in the
@@ -2852,7 +2852,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to a string in the JIS X0201-1976 encoding, including ASCII control.
     </para>
@@ -2905,7 +2905,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to a Latin/Arabic (ISO 8859-6) string, or to an ASCII control string.
     </para>
@@ -2958,7 +2958,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to a Latin/Cyrillic (ISO 8859-5) string, or to an ASCII control string.
     </para>
@@ -3011,7 +3011,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to a Latin/Greek (ISO 8859-7) string, or to an ASCII control string.
     </para>
@@ -3064,7 +3064,7 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event
 to a Latin/Hebrew (ISO 8859-8) string, or to an ASCII control string.
     </para>
@@ -3117,14 +3117,14 @@ specifies or returns the compose state
       </variablelist>
 
 This function is similar to
-<function>XLookupString</function>,
+<olink targetdoc='libX11' targetptr='XLookupString'><function>XLookupString</function></olink>,
 except that it maps a key event to an APL string.
     </para>
 
   </sect1>
 
-  <sect1 id='compound_text_functions'>
-    <title>Compound Text Functions</title>
+  <sect1 id='Compound_Text_Functions'>
+<title>Compound Text Functions</title>
 
     <para>
 The functions defined in this section are for parsing Compound Text strings,
@@ -3478,8 +3478,8 @@ structure.
 
   </sect1>
 
-  <sect1 id='closedisplay_hook_functions'>
-    <title>CloseDisplay Hook Functions</title>
+  <sect1 id='CloseDisplay_Hook_Functions'>
+<title>CloseDisplay Hook Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -3652,8 +3652,8 @@ if a matching callback exists, else returns
     </para>
   </sect1>
 
-  <sect1 id='display_queue_functions'>
-    <title>Display Queue Functions</title>
+  <sect1 id='Display_Queue_Functions'>
+<title>Display Queue Functions</title>
 
     <para>
 To use the functions and types defined in this section, you should include the
@@ -3917,8 +3917,8 @@ is not called on the display.
 
   </sect1>
 
-  <sect1 id='toolkit_convenience_functions'>
-    <title>Toolkit Convenience Functions</title>
+  <sect1 id='Toolkit_Convenience_Functions'>
+<title>Toolkit Convenience Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -3995,8 +3995,8 @@ Otherwise, this function does nothing.
 
   </sect1>
 
-  <sect1 id='standard_colormap_functions'>
-    <title>Standard Colormap Functions</title>
+  <sect1 id='Standard_Colormap_Functions'>
+<title>Standard Colormap Functions</title>
 
     <para>
 To use the functions defined in this section, you should include the header
@@ -4534,8 +4534,8 @@ possible.
 
   </sect1>
 
-  <sect1 id='widget_description_functions'>
-    <title>Widget Description Functions</title>
+  <sect1 id='Widget_Description_Functions'>
+<title>Widget Description Functions</title>
 
     <para>
 The functions defined in this section are for building a description of
@@ -4601,7 +4601,7 @@ specifies the widget class for which resources should be obtained.
 specifies the widget that should be used for creating an instance of
 <parameter>node</parameter>
 from which resources are extracted.  This is typically the value returned
-by <function>XtAppInitialize</function>.
+by <olink targetdoc='libXaw' targetptr='XtAppInitialize'><function>XtAppInitialize</function></olink>.
 	    </para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -4696,8 +4696,8 @@ widget name or widget class name.  If no match is found, it returns
 
   </sect1>
 
-  <sect1 id='participation_in_the_editres_protocol'>
-    <title>Participation in the Editres Protocol</title>
+  <sect1 id='Participation_in_the_Editres_Protocol'>
+<title>Participation in the Editres Protocol</title>
 
     <para>
       <indexterm>

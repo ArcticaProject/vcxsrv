@@ -936,7 +936,8 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
 
         if (strcmp(input_option_get_key(option), "_source") == 0 &&
             (strcmp(input_option_get_value(option), "server/hal") == 0 ||
-             strcmp(input_option_get_value(option), "server/udev") == 0)) {
+             strcmp(input_option_get_value(option), "server/udev") == 0 ||
+             strcmp(input_option_get_value(option), "server/wscons") == 0)) {
             is_auto = 1;
             if (!xf86Info.autoAddDevices) {
                 rval = BadMatch;
@@ -1363,15 +1364,15 @@ xf86XInputSetScreen(InputInfoPtr	pInfo,
 }
 
 
-void
+Bool
 xf86InitValuatorAxisStruct(DeviceIntPtr dev, int axnum, Atom label, int minval, int maxval,
 			   int resolution, int min_res, int max_res, int mode)
 {
     if (!dev || !dev->valuator)
-        return;
+        return FALSE;
 
-    InitValuatorAxisStruct(dev, axnum, label, minval, maxval, resolution, min_res,
-			   max_res, mode);
+    return InitValuatorAxisStruct(dev, axnum, label, minval, maxval, resolution, min_res,
+				  max_res, mode);
 }
 
 /*

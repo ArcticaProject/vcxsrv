@@ -560,18 +560,6 @@ drivers to not report failure if the mouse device can't be opened/initialised.
 It has no effect on the evdev(__drivermansuffix__) or other drivers.
 Default: false.
 .TP 7
-.BI "Option \*qVTSysReq\*q  \*q" boolean \*q
-enables the SYSV\-style VT switch sequence for non\-SYSV systems
-which support VT switching.
-This sequence is
-.B Alt\-SysRq
-followed by a function key
-.RB ( Fn ).
-This prevents the __xservername__ server trapping the
-keys used for the default VT switch sequence, which means that clients can
-access them.
-Default: off.
-.TP 7
 .BI "Option \*qBlankTime\*q  \*q" time \*q
 sets the inactivity timeout for the
 .B blank

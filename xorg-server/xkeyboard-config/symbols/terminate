@@ -2,6 +2,6 @@ partial default modifier_keys
 xkb_symbols "ctrl_alt_bksp" {
     key <BKSP> {
         type="CTRL+ALT",
-        symbols[Group1] = [ NoSymbol,        Terminate_Server ]
+        symbols[Group1] = [ NoSymbol, VoidSymbol, VoidSymbol, VoidSymbol, Terminate_Server ]
     };
 };

@@ -59,7 +59,7 @@ listAdjoin(char *car, ListPtr cdr)
 }
 
 char *
-dsprintf(char *f, ...)
+dsprintf(const char *f, ...)
 {
     va_list args;
     char *string;

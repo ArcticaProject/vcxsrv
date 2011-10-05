@@ -90,11 +90,13 @@ void st_init_limits(struct st_context *st)
       = screen->get_param(screen, PIPE_CAP_MAX_TEXTURE_ARRAY_LAYERS);
 
    c->MaxTextureImageUnits
-      = _min(screen->get_param(screen, PIPE_CAP_MAX_TEXTURE_IMAGE_UNITS),
+      = _min(screen->get_shader_param(screen, PIPE_SHADER_FRAGMENT,
+                                      PIPE_SHADER_CAP_MAX_TEXTURE_SAMPLERS),
             MAX_TEXTURE_IMAGE_UNITS);
 
    c->MaxVertexTextureImageUnits
-      = _min(screen->get_param(screen, PIPE_CAP_MAX_VERTEX_TEXTURE_UNITS),
+      = _min(screen->get_shader_param(screen, PIPE_SHADER_VERTEX,
+                                      PIPE_SHADER_CAP_MAX_TEXTURE_SAMPLERS),
              MAX_VERTEX_TEXTURE_IMAGE_UNITS);
 
    c->MaxCombinedTextureImageUnits
@@ -305,10 +307,6 @@ void st_init_extensions(struct st_context *st)
    /*
     * Extensions that depend on the driver/hardware:
     */
-   if (screen->get_param(screen, PIPE_CAP_MAX_RENDER_TARGETS) > 0) {
-      ctx->Extensions.ARB_draw_buffers = GL_TRUE;
-   }
-
    if (screen->get_param(screen, PIPE_CAP_TEXTURE_SWIZZLE) > 0) {
       ctx->Extensions.EXT_texture_swizzle = GL_TRUE;
    }
@@ -499,7 +497,7 @@ void st_init_extensions(struct st_context *st)
       ctx->Extensions.ARB_framebuffer_object = GL_TRUE;
    }
 
-   if (st->pipe->render_condition) {
+   if (screen->get_param(screen, PIPE_CAP_CONDITIONAL_RENDER)) {
       ctx->Extensions.NV_conditional_render = GL_TRUE;
    }
 
@@ -609,7 +607,7 @@ void st_init_extensions(struct st_context *st)
       ctx->Extensions.ARB_sync = GL_TRUE;
    }
 
-   if (st->pipe->texture_barrier) {
+   if (screen->get_param(screen, PIPE_CAP_TEXTURE_BARRIER)) {
       ctx->Extensions.NV_texture_barrier = GL_TRUE;
    }
 

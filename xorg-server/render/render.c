@@ -52,11 +52,7 @@
 #include "panoramiXsrv.h"
 #endif
 
-#if HAVE_STDINT_H
 #include <stdint.h>
-#elif !defined(UINT32_MAX)
-#define UINT32_MAX 0xffffffffU
-#endif
 
 static int ProcRenderQueryVersion (ClientPtr pClient);
 static int ProcRenderQueryPictFormats (ClientPtr pClient);

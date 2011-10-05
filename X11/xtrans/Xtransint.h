@@ -68,7 +68,7 @@ from The Open Group.
  * message.
  */
 
-#ifndef XTRANSDEBUG
+#if !defined(XTRANSDEBUG) && defined(XTRANS_TRANSPORT_C)
 #  define XTRANSDEBUG 1
 #endif
 
@@ -77,6 +77,10 @@ from The Open Group.
 #endif
 
 #include "Xtrans.h"
+
+#ifndef _X_UNUSED  /* Defined in Xfuncproto.h in xproto >= 7.0.22 */
+# define _X_UNUSED  /* */
+#endif
 
 #ifdef XTRANSDEBUG
 # include <stdio.h>
@@ -140,7 +144,7 @@ struct _XtransConnInfo {
 
 
 typedef struct _Xtransport {
-    char	*TransName;
+    const char	*TransName;
     int		flags;
 
 #ifdef TRANS_CLIENT
@@ -155,7 +159,7 @@ typedef struct _Xtransport {
 #endif /* TRANS_CLIENT */
 
 #ifdef TRANS_SERVER
-    char **	nolisten;
+    const char **	nolisten;
     XtransConnInfo (*OpenCOTSServer)(
 	struct _Xtransport *,	/* transport */
 	char *,			/* protocol */
@@ -307,6 +311,9 @@ typedef struct _Xtransport_table {
 /* Flags to preserve when setting others */
 #define TRANS_KEEPFLAGS	(TRANS_NOUNLINK|TRANS_ABSTRACT)
 
+#ifdef XTRANS_TRANSPORT_C /* only provide static function prototypes when
+			     building the transport.c file that has them in */
+
 #ifdef __clang__
 /* Not all clients make use of all provided statics */
 #pragma clang diagnostic push
@@ -371,54 +378,62 @@ static int trans_mkdir (
  * Some XTRANSDEBUG stuff
  */
 
-#if defined(XTRANSDEBUG)
-/* add hack to the format string to avoid warnings about extra arguments
- * to fprintf.
+#ifdef XTRANSDEBUG
+#include <stdarg.h>
+
+/*
+ * The X server provides ErrorF() & VErrorF(), for other software that uses
+ * xtrans, we provide our own simple versions.
  */
-#ifdef XTRANSDEBUGTIMESTAMP
-#if defined(XSERV_t) && defined(TRANS_SERVER)
-/* Use ErrorF() for the X server */
-#define PRMSG(lvl,x,a,b,c)	if (lvl <= XTRANSDEBUG){ \
-			int hack= 0, saveerrno=errno; \
-                        struct timeval tp;\
-                        gettimeofday(&tp,0); \
-			ErrorF("%s",__xtransname);	\
-			ErrorF(x+hack,a,b,c); \
-                        ErrorF("timestamp (ms): %d\n",tp.tv_sec*1000+tp.tv_usec/1000); \
-			errno=saveerrno; \
-			} else ((void)0)
-#else
-#define PRMSG(lvl,x,a,b,c)	if (lvl <= XTRANSDEBUG){ \
-			int hack= 0, saveerrno=errno; \
-                        struct timeval tp;\
-                        gettimeofday(&tp,0); \
-			fprintf(stderr, "%s", __xtransname); fflush(stderr); \
-			fprintf(stderr, x+hack,a,b,c); fflush(stderr); \
-                        fprintf(stderr, "timestamp (ms): %d\n",tp.tv_sec*1000+tp.tv_usec/1000); \
-                        fflush(stderr); \
-			errno=saveerrno; \
-			} else ((void)0)
-#endif /* XSERV_t && TRANS_SERVER */
-#else /* XTRANSDEBUGTIMESTAMP */
-#if defined(XSERV_t) && defined(TRANS_SERVER)
-/* Use ErrorF() for the X server */
-#define PRMSG(lvl,x,a,b,c)	if (lvl <= XTRANSDEBUG){ \
-			int hack= 0, saveerrno=errno; \
-			ErrorF("%s",__xtransname);    \
-			ErrorF(x+hack,a,b,c); \
-			errno=saveerrno; \
-			} else ((void)0)
-#else
-#define PRMSG(lvl,x,a,b,c)	if (lvl <= XTRANSDEBUG){ \
-			int hack= 0, saveerrno=errno; \
-			fprintf(stderr, "%s", __xtransname); fflush(stderr); \
-			fprintf(stderr, x+hack,a,b,c); fflush(stderr); \
-			errno=saveerrno; \
-			} else ((void)0)
-#endif /* XSERV_t && TRANS_SERVER */
-#endif /* XTRANSDEBUGTIMESTAMP */
-#else
-#define PRMSG(lvl,x,a,b,c)	((void)0)
+# if defined(XSERV_t) && defined(TRANS_SERVER)
+#  include "os.h"
+# else
+static inline void _X_ATTRIBUTE_PRINTF(1, 0)
+VErrorF(const char *f, va_list args)
+{
+    vfprintf(stderr, f, args);
+    fflush(stderr);
+}
+
+static inline void  _X_ATTRIBUTE_PRINTF(1, 2)
+ErrorF(const char *f, ...)
+{
+    va_list args;
+
+    va_start(args, f);
+    VErrorF(f, args);
+    va_end(args);
+}
+# endif /* xserver */
 #endif /* XTRANSDEBUG */
+
+static inline void  _X_ATTRIBUTE_PRINTF(2, 3)
+prmsg(int lvl, const char *f, ...)
+{
+#ifdef XTRANSDEBUG
+    va_list args;
+
+    va_start(args, f);
+    if (lvl <= XTRANSDEBUG) {
+	int saveerrno = errno;
+
+	ErrorF("%s", __xtransname);
+	VErrorF(f, args);
+
+# ifdef XTRANSDEBUGTIMESTAMP
+	{
+	    struct timeval tp;
+	    gettimeofday(&tp, 0);
+	    ErrorF("timestamp (ms): %d\n",
+		   tp.tv_sec * 1000 + tp.tv_usec / 1000);
+	}
+# endif
+	errno = saveerrno;
+    }
+    va_end(args);
+#endif /* XTRANSDEBUG */
+}
+
+#endif /* XTRANS_TRANSPORT_C */
 
 #endif /* _XTRANSINT_H_ */

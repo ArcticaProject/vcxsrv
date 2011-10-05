@@ -1591,7 +1591,7 @@ should terminate the protocol at this point and display an error to the user.
       <entry spanname="col4_on">
 Is the data sent to the display to indicate the type of authorization the
 manager will be using in the first call to
-<function>XOpenDisplay</function>
+<olink targetdoc='libX11' targetptr='XOpenDisplay'><function>XOpenDisplay</function></olink>
 after the
 <function>Manage</function>
 packet is received.
@@ -3312,7 +3312,7 @@ Send <function>Refuse</function> packet
 Terminate any session in progress
       </para>
       <para>
-<function>XOpenDisplay</function>
+<olink targetdoc='libX11' targetptr='XOpenDisplay'><function>XOpenDisplay</function></olink>
       </para>
       <para>
 Open display succeeds -&gt;

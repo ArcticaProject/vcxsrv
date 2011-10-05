@@ -6,7 +6,7 @@
 
 <article id="Xserver-DTrace">
   <articleinfo>
-    <title>Xserver provider for DTrace</title>
+    <title>Xserver Provider for DTrace</title>
     <author>
       <firstname>Alan</firstname><surname>Coopersmith</surname>
       <affiliation>
@@ -15,11 +15,11 @@
       </affiliation>
     </author>
     <releaseinfo>X.Org Xserver version &xserver.version;</releaseinfo>
-    <legalnotice>
+    <copyright><year>2005</year><year>2006</year><year>2007</year><year>2010</year>
+      <holder>Oracle and/or its affiliates. All rights reserved.</holder>
+    </copyright>
+    <legalnotice id="copyright">
       <para>
-Copyright (c) 2005, 2006, 2007, 2010, Oracle and/or its affiliates.
-All rights reserved.
-      </para><para>
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
@@ -79,7 +79,7 @@ DEALINGS IN THE SOFTWARE.
       <parameter>arg2</parameter>, etc.  These tables should help you
       determine what the real data is for each of the probe arguments.
 
-    <table>
+    <table id="Probes_and_their_arguments">
       <title>Probes and their arguments</title>
       <tgroup cols='7'>
 	<colspec colname="probe" colwidth="2*"/>
@@ -195,7 +195,7 @@ DEALINGS IN THE SOFTWARE.
       To access data buffers referenced via <type>uintptr_t</type>'s, you will
       need to use <ulink url="http://wikis.sun.com/display/DTrace/Actions+and+Subroutines#ActionsandSubroutines-{{copyin}}"><function>copyin()</function></ulink>.
 
-    <table>
+    <table id="Probe_Arguments">
       <title>Probe Arguments</title>
       <tgroup cols='3'>
 	<colspec colname="arg" colwidth="2*"/>
@@ -313,7 +313,7 @@ DEALINGS IN THE SOFTWARE.
   <sect1 id="examples">
     <title>Examples</title>
 
-    <example>
+    <example id="Counting_requests_by_request_name">
       <title>Counting requests by request name</title>
 
       <para>
@@ -370,7 +370,7 @@ Xserver*:::request-start
       </para>
     </example>
 
-    <example>
+    <example id="Get_average_CPU_time_per_request">
       <title>Get average CPU time per request</title>
 
       <para>This script records the CPU time used between the probes at
@@ -419,7 +419,7 @@ Xserver*:::request-done
       </para>
     </example>
 
-    <example>
+    <example id="Monitoring_clients_that_connect_and_disconnect">
       <title>Monitoring clients that connect and disconnect</title>
 
       <para>
@@ -476,7 +476,7 @@ CPU     ID                    FUNCTION:NAME
       </para>
     </example>
 
-    <example>
+    <example id="Monitoring_clients_creating_Pixmaps">
       <title>Monitoring clients creating Pixmaps</title>
 
       <para>

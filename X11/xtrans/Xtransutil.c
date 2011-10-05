@@ -91,7 +91,7 @@ TRANS(ConvertAddress)(int *familyp, int *addrlenp, Xtransaddr **addrp)
 
 {
 
-    PRMSG(2,"ConvertAddress(%d,%d,%x)\n",*familyp,*addrlenp,*addrp);
+    prmsg(2,"ConvertAddress(%d,%d,%p)\n",*familyp,*addrlenp,*addrp);
 
     switch( *familyp )
     {
@@ -178,8 +178,8 @@ TRANS(ConvertAddress)(int *familyp, int *addrlenp, Xtransaddr **addrp)
 #endif
 
     default:
-	PRMSG(1,"ConvertAddress: Unknown family type %d\n",
-	      *familyp, 0,0 );
+	prmsg(1,"ConvertAddress: Unknown family type %d\n",
+	      *familyp);
 	return -1;
     }
 
@@ -242,7 +242,7 @@ TRANS(GetMyNetworkId) (XtransConnInfo ciptr)
     char 	*addr = ciptr->addr;
     char	hostnamebuf[256];
     char 	*networkId = NULL;
-    char	*transName = ciptr->transptr->TransName;
+    const char	*transName = ciptr->transptr->TransName;
 
     if (gethostname (hostnamebuf, sizeof (hostnamebuf)) < 0)
     {
@@ -316,7 +316,7 @@ int
 void
 #endif
 #endif
-nameserver_lost(int sig)
+nameserver_lost(int sig _X_UNUSED)
 {
   nameserver_timedout = 1;
   longjmp (env, -1);
@@ -437,7 +437,7 @@ TRANS(WSAStartup) (void)
 {
     static WSADATA wsadata;
 
-    PRMSG (2,"WSAStartup()\n", 0, 0, 0);
+    prmsg (2,"WSAStartup()\n");
 
     if (!wsadata.wVersion && WSAStartup(MAKEWORD(2,2), &wsadata))
         return 1;
@@ -485,8 +485,8 @@ trans_mkdir(const char *path, int mode)
 
     if (lstat(path, &buf) != 0) {
 	if (errno != ENOENT) {
-	    PRMSG(1, "mkdir: ERROR: (l)stat failed for %s (%d)\n",
-		  path, errno, 0);
+	    prmsg(1, "mkdir: ERROR: (l)stat failed for %s (%d)\n",
+		  path, errno);
 	    return -1;
 	}
 	/* Dir doesn't exist. Try to create it */
@@ -499,15 +499,15 @@ trans_mkdir(const char *path, int mode)
 	 */
 	if (geteuid() != 0) {
 	    if (mode & 01000) {
-		PRMSG(1, "mkdir: ERROR: euid != 0,"
+		prmsg(1, "mkdir: ERROR: euid != 0,"
 		      "directory %s will not be created.\n",
-		      path, 0, 0);
+		      path);
 #ifdef FAIL_HARD
 		return -1;
 #endif
 	    } else {
-		PRMSG(1, "mkdir: Cannot create %s with root ownership\n",
-		      path, 0, 0);
+		prmsg(1, "mkdir: Cannot create %s with root ownership\n",
+		      path);
 	    }
 	}
 #endif
@@ -515,8 +515,8 @@ trans_mkdir(const char *path, int mode)
 #ifndef WIN32
 	if (mkdir(path, mode) == 0) {
 	    if (chmod(path, mode)) {
-		PRMSG(1, "mkdir: ERROR: Mode of %s should be set to %04o\n",
-		      path, mode, 0);
+		prmsg(1, "mkdir: ERROR: Mode of %s should be set to %04o\n",
+		      path, mode);
 #ifdef FAIL_HARD
 		return -1;
 #endif
@@ -525,8 +525,8 @@ trans_mkdir(const char *path, int mode)
 	if (mkdir(path) == 0) {
 #endif
 	} else {
-	    PRMSG(1, "mkdir: ERROR: Cannot create %s\n",
-		  path, 0, 0);
+	    prmsg(1, "mkdir: ERROR: Cannot create %s\n",
+		  path);
 	    return -1;
 	}
 
@@ -584,8 +584,8 @@ trans_mkdir(const char *path, int mode)
 		struct stat fbuf;
 		if ((fd = open(path, O_RDONLY)) != -1) {
 		    if (fstat(fd, &fbuf) == -1) {
-			PRMSG(1, "mkdir: ERROR: fstat failed for %s (%d)\n",
-			      path, errno, 0);
+			prmsg(1, "mkdir: ERROR: fstat failed for %s (%d)\n",
+			      path, errno);
 			return -1;
 		    }
 		    /*
@@ -595,8 +595,8 @@ trans_mkdir(const char *path, int mode)
 		    if (!S_ISDIR(fbuf.st_mode) ||
 			buf.st_dev != fbuf.st_dev ||
 			buf.st_ino != fbuf.st_ino) {
-			PRMSG(1, "mkdir: ERROR: inode for %s changed\n",
-			      path, 0, 0);
+			prmsg(1, "mkdir: ERROR: inode for %s changed\n",
+			      path);
 			return -1;
 		    }
 		    if (updateOwner && fchown(fd, 0, 0) == 0)
@@ -611,30 +611,29 @@ trans_mkdir(const char *path, int mode)
 	    if (updateOwner && !updatedOwner) {
 #ifdef FAIL_HARD
 		if (status & FAIL_IF_NOT_ROOT) {
-		    PRMSG(1, "mkdir: ERROR: Owner of %s must be set to root\n",
-			  path, 0, 0);
+		    prmsg(1, "mkdir: ERROR: Owner of %s must be set to root\n",
+			  path);
 		    return -1;
 		}
 #endif
 #if !defined(__APPLE_CC__) && !defined(__CYGWIN__)
-	  	PRMSG(1, "mkdir: Owner of %s should be set to root\n",
-		      path, 0, 0);
+		prmsg(1, "mkdir: Owner of %s should be set to root\n",
+		      path);
 #endif
 	    }
 
 	    if (updateMode && !updatedMode) {
 #ifdef FAIL_HARD
 		if (status & FAIL_IF_NOMODE) {
-		    PRMSG(1, "mkdir: ERROR: Mode of %s must be set to %04o\n",
-			  path, mode, 0);
+		    prmsg(1, "mkdir: ERROR: Mode of %s must be set to %04o\n",
+			  path, mode);
 		    return -1;
 		}
 #endif
-	  	PRMSG(1, "mkdir: Mode of %s should be set to %04o\n",
-		      path, mode, 0);
+		prmsg(1, "mkdir: Mode of %s should be set to %04o\n",
+		      path, mode);
 		if (status & WARN_NO_ACCESS) {
-		    PRMSG(1, "mkdir: this may cause subsequent errors\n",
-			  0, 0, 0);
+		    prmsg(1, "mkdir: this may cause subsequent errors\n");
 		}
 	    }
 	    return 0;

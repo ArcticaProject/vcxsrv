@@ -34,6 +34,12 @@ libconfig_la_SOURCES += hal.c
 libconfig_la_LIBADD += $(HAL_LIBS)
 endif
 
+else
+
+if CONFIG_WSCONS
+libconfig_la_SOURCES += wscons.c
+endif # CONFIG_WSCONS
+
 endif # CONFIG_NEED_DBUS
 
 endif # !CONFIG_UDEV

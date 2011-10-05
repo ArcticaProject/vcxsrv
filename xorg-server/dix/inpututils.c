@@ -497,10 +497,10 @@ valuator_mask_isset(const ValuatorMask *mask, int valuator)
 }
 
 /**
- * Set the valuator to the given data.
+ * Set the valuator to the given floating-point data.
  */
 void
-valuator_mask_set(ValuatorMask *mask, int valuator, int data)
+valuator_mask_set_double(ValuatorMask *mask, int valuator, double data)
 {
     mask->last_bit = max(valuator, mask->last_bit);
     SetBit(mask->mask, valuator);
@@ -508,13 +508,33 @@ valuator_mask_set(ValuatorMask *mask, int valuator, int data)
 }
 
 /**
- * Return the requested valuator value. If the mask bit is not set for the
- * given valuator, the returned value is undefined.
+ * Set the valuator to the given integer data.
+ */
+void
+valuator_mask_set(ValuatorMask *mask, int valuator, int data)
+{
+    valuator_mask_set_double(mask, valuator, data);
+}
+
+/**
+ * Return the requested valuator value as a double. If the mask bit is not
+ * set for the given valuator, the returned value is undefined.
+ */
+double
+valuator_mask_get_double(const ValuatorMask *mask, int valuator)
+{
+    return mask->valuators[valuator];
+}
+
+/**
+ * Return the requested valuator value as an integer, rounding towards zero.
+ * If the mask bit is not set for the given valuator, the returned value is
+ * undefined.
  */
 int
 valuator_mask_get(const ValuatorMask *mask, int valuator)
 {
-    return mask->valuators[valuator];
+    return trunc(valuator_mask_get_double(mask, valuator));
 }
 
 /**
@@ -527,7 +547,7 @@ valuator_mask_unset(ValuatorMask *mask, int valuator)
         int i, lastbit = -1;
 
         ClearBit(mask->mask, valuator);
-        mask->valuators[valuator] = 0;
+        mask->valuators[valuator] = 0.0;
 
         for (i = 0; i <= mask->last_bit; i++)
             if (valuator_mask_isset(mask, i))

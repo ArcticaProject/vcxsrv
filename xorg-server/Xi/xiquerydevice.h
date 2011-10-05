@@ -44,4 +44,5 @@ int ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info, Bool reportState);
 int ListKeyInfo(DeviceIntPtr dev, xXIKeyInfo* info);
 int ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info,
 		     int axisnumber, Bool reportState);
+int ListScrollInfo(DeviceIntPtr dev, xXIScrollInfo* info, int axisnumber);
 #endif /* QUERYDEV_H */

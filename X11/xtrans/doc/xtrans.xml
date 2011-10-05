@@ -103,7 +103,7 @@ for client vs. server code.
 </para></note>
 </preface>
 
-<chapter id='purposes_and_goals'>
+<chapter id='Purposes_and_Goals'>
 <title>Purposes and Goals</title>
 
 <para>The X Transport Interface is intended to combine all system and
@@ -121,7 +121,7 @@ FS, and connection-less oriented protocols such as XDMCP.</para>
 
 </chapter>
 
-<chapter id='overview_of_the_interface'>
+<chapter id='Overview_of_the_Interface'>
 <title>Overview of the Interface</title>
 
 <para>
@@ -142,7 +142,7 @@ an interface would affect performance.
 </para>
 </chapter>
 
-<chapter id='definition_of_address_specification_format'>
+<chapter id='Definition_of_Address_Specification_Format'>
 <title>Definition of Address Specification Format</title>
 
 <para>
@@ -169,14 +169,14 @@ part of an address.
 </para>
 </chapter>
 
-<chapter id='internal_data_structures'>
+<chapter id='Internal_Data_Structures'>
 <title>Internal Data Structures</title>
 <para>
 There are two major data structures associated with the transport
 independent portion of this interface.  Additional data structures
 may be used internally by each transport.
 </para>
-<sect1 id="xtransport">
+<sect1 id='Xtransport'>
 <title>Xtransport</title>
 <para>
 Each transport supported has an entry in the transport table. The transport
@@ -337,7 +337,7 @@ should not be unlinked.
 </para>
 </sect1>
 
-<sect1 id="xtransconninfo">
+<sect1 id='XtransConnInfo'>
 <title>XtransConnInfo</title>
 <para>
 Each connection will have an opaque <structname>XtransConnInfo</structname>
@@ -364,7 +364,7 @@ struct _XtransConnInfo {
 </sect1>
 </chapter>
 
-<chapter id='exposed_transport_independent_api'>
+<chapter id='Exposed_Transport_Independent_API'>
 <title>Exposed Transport Independent API</title>
 
 <para>
@@ -385,7 +385,7 @@ All failures are considered fatal, and the connection should be closed
 and re-established if desired. In most cases, however, the value of
 errno will be available for debugging purposes.
 </para>
-<sect1 id="core_interface_api">
+<sect1 id='Core_Interface_API'>
 <title>Core Interface API</title>
 <itemizedlist mark='bullet'>
   <listitem>
@@ -659,7 +659,7 @@ is the list of transports.
 </itemizedlist>
 </sect1>
 
-<sect1 id="utility_api">
+<sect1 id='Utility_API'>
 <title>Utility API</title>
 <para>
 This section describes a few useful functions that have been implemented on
@@ -681,7 +681,7 @@ FamilyLocal)).
 </sect1>
 </chapter>
 
-<chapter id="transport_option_definition">
+<chapter id='Transport_Option_Definition'>
 <title>Transport Option Definition</title>
 <para>
 The following options are defined for the
@@ -715,7 +715,7 @@ connection will not be closed when an exec occurs.
 </itemizedlist>
 </chapter>
 
-<chapter id="hidden_transport_dependent_api">
+<chapter id='Hidden_Transport_Dependent_API'>
 <title>Hidden Transport Dependent API</title>
 <para>
 The hidden transport dependent functions are placed in the Xtransport record.
@@ -935,7 +935,7 @@ This function will break the connection, and close the endpoint.
   </listitem>
 </itemizedlist>
 </chapter>
-<chapter id="configuration">
+<chapter id='Configuration'>
 <title>Configuration</title>
 
 <para>
@@ -1018,7 +1018,7 @@ In X11R7 modular releases, these flags are set when running
 
 </chapter>
 
-<chapter id="transport_specific_definitions">
+<chapter id='Transport_Specific_Definitions'>
 <title>Transport Specific Definitions</title>
 
 <informaltable pgwide='0' frame='none'>
@@ -1075,7 +1075,7 @@ In X11R7 modular releases, these flags are set when running
 
 </chapter>
 
-<chapter id="implementation_notes">
+<chapter id='Implementation_Notes'>
 <title>Implementation Notes</title>
 <para>
 This section refers to the prototype implementation that is being developed

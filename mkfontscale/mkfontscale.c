@@ -426,6 +426,8 @@ t1Weight(char *weight)
         return NULL;
     if(strcmp(weight, "Thin") == 0)
         return "thin";
+    if(strcmp(weight, "ExtraLight") == 0) /* FontForge uses this for 200*/
+        return "extralight";
     if(strcmp(weight, "Light") == 0)
         return "light";
     if(strcmp(weight, "Regular") == 0)
@@ -446,6 +448,8 @@ t1Weight(char *weight)
         return "semibold";
     else if(strcmp(weight, "Bold") == 0)
         return "bold";
+    else if(strcmp(weight, "Heavy") == 0) /* FontForge uses this for 800*/
+        return "extrabold";
     else if(strcmp(weight, "Black") == 0)
         return "black";
     else {

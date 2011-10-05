@@ -52,6 +52,9 @@ config_init(void)
     else {
 	ErrorF("[config] failed to initialise D-Bus core\n");
     }
+#elif defined(CONFIG_WSCONS)
+    if (!config_wscons_init())
+	ErrorF("[config] failed to initialise wscons\n");
 #endif
 }
 
@@ -68,6 +71,8 @@ config_fini(void)
     config_dbus_fini();
 # endif
     config_dbus_core_fini();
+#elif defined(CONFIG_WSCONS)
+    config_wscons_fini();
 #endif
 }
 

@@ -53,6 +53,9 @@ from The Open Group.
 #define xrealloc(_ptr,_size)	realloc(_ptr,_size)
 #define xfree(_ptr)		free(_ptr)
 
+#define XTRANS_TRANSPORT_C  /* used to flag Xtransint.h that it's being used
+			       here, not just #included in another file */
+
 #include "Xtransint.h"
 
 #ifdef __clang__

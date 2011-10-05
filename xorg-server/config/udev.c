@@ -285,8 +285,10 @@ config_udev_init(void)
     udev_monitor_filter_add_match_subsystem_devtype(udev_monitor, "input", NULL);
     udev_monitor_filter_add_match_subsystem_devtype(udev_monitor, "tty", NULL); /* For Wacom serial devices */
 
+#ifdef HAVE_UDEV_MONITOR_FILTER_ADD_MATCH_TAG
     if (SeatId && strcmp(SeatId, "seat0"))
         udev_monitor_filter_add_match_tag(udev_monitor, SeatId);
+#endif
 
     if (udev_monitor_enable_receiving(udev_monitor)) {
         ErrorF("config/udev: failed to bind the udev monitor\n");
@@ -300,8 +302,10 @@ config_udev_init(void)
     udev_enumerate_add_match_subsystem(enumerate, "input");
     udev_enumerate_add_match_subsystem(enumerate, "tty");
 
+#ifdef HAVE_UDEV_ENUMERATE_ADD_MATCH_TAG
     if (SeatId && strcmp(SeatId, "seat0"))
         udev_enumerate_add_match_tag(enumerate, SeatId);
+#endif
 
     udev_enumerate_scan_devices(enumerate);
     devices = udev_enumerate_get_list_entry(enumerate);

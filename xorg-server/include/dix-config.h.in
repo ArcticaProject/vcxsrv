@@ -178,9 +178,6 @@
 /* Define to 1 if you have the `shmctl64' function. */
 #undef HAVE_SHMCTL64
 
-/* Define to 1 if you have the <stdint.h> header file. */
-#undef HAVE_STDINT_H
-
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
@@ -401,6 +398,12 @@
 
 /* Use libudev for input hotplug */
 #undef CONFIG_UDEV
+
+/* Use udev_monitor_filter_add_match_tag() */
+#undef HAVE_UDEV_MONITOR_FILTER_ADD_MATCH_TAG
+
+/* Use udev_enumerate_add_match_tag() */
+#undef HAVE_UDEV_ENUMERATE_ADD_MATCH_TAG
 
 /* Use D-Bus for input hotplug */
 #undef CONFIG_NEED_DBUS

@@ -84,19 +84,19 @@ xkb_symbols "x11" {
 // Ungrab cancels server/keyboard/pointer grabs
     key <KPDV> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Divide,	XF86_Ungrab ]
+        symbols[Group1]= [ KP_Divide, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Ungrab ]
     };
 
 // ClsGrb kills whichever client has a grab in effect
     key <KPMU> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Multiply,	XF86_ClearGrab ]
+        symbols[Group1]= [ KP_Multiply,	VoidSymbol, VoidSymbol, VoidSymbol, XF86_ClearGrab ]
     };
 
 // -VMode switches to the previous video mode
     key <KPSU> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Subtract,	XF86_Prev_VMode ]
+        symbols[Group1]= [ KP_Subtract, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Prev_VMode ]
     };
 
     key  <KP7> {	[  KP_Home,	KP_7	]	};
@@ -106,7 +106,7 @@ xkb_symbols "x11" {
 // +VMode switches to the next video mode
     key <KPAD> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Add,	XF86_Next_VMode ]
+        symbols[Group1]= [ KP_Add, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Next_VMode ]
     };
 
     key  <KP4> {	[  KP_Left,	KP_4	]	};
@@ -242,11 +242,11 @@ xkb_symbols "legacymath" {
 
     key.type[Group1]="CTRL+ALT" ;
 
-    key <KPDV> { [   KP_Divide,     XF86_Ungrab ] }; // / <XF86_Ungrab>
-    key <KPMU> { [ KP_Multiply,  XF86_ClearGrab ] }; // * <XF86_ClearGrab>
-    key <KPSU> { [ KP_Subtract, XF86_Prev_VMode ] }; // - <XF86_Prev_VMode>
+    key <KPDV> { [   KP_Divide, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Ungrab ] }; // / <XF86_Ungrab>
+    key <KPMU> { [ KP_Multiply, VoidSymbol, VoidSymbol, VoidSymbol, XF86_ClearGrab ] }; // * <XF86_ClearGrab>
+    key <KPSU> { [ KP_Subtract, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Prev_VMode ] }; // - <XF86_Prev_VMode>
 
-    key <KPAD> { [      KP_Add, XF86_Next_VMode ] }; // + <XF86_Next_VMode>
+    key <KPAD> { [      KP_Add, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Next_VMode ] }; // + <XF86_Next_VMode>
 
 };
 
@@ -602,7 +602,7 @@ xkb_symbols "numoperdecsep" {
 // ClsGrb kills whichever client has a grab in effect
     key <KOMU> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Multiply,	XF86_ClearGrab ]
+        symbols[Group1]= [ KP_Multiply, VoidSymbol, VoidSymbol, VoidSymbol, XF86_ClearGrab ]
     };
 
     key  <KO4> {	[  KP_4	]	};
@@ -611,7 +611,7 @@ xkb_symbols "numoperdecsep" {
 // -VMode switches to the previous video mode
     key <KOSU> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Subtract,	XF86_Prev_VMode ]
+        symbols[Group1]= [ KP_Subtract, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Prev_VMode ]
     };
 
     key  <KO1> {	[  KP_1	]	};
@@ -620,7 +620,7 @@ xkb_symbols "numoperdecsep" {
 // +VMode switches to the next video mode
     key <KOAD> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Add,	XF86_Next_VMode ]
+        symbols[Group1]= [ KP_Add, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Next_VMode ]
     };
 
     key  <KO0> {	[  KP_0	]	};
@@ -628,6 +628,6 @@ xkb_symbols "numoperdecsep" {
 // Ungrab cancels server/keyboard/pointer grabs
     key <KODV> {
         type="CTRL+ALT",
-        symbols[Group1]= [ KP_Divide,	XF86_Ungrab ]
+        symbols[Group1]= [ KP_Divide, VoidSymbol, VoidSymbol, VoidSymbol, XF86_Ungrab ]
     };
 };

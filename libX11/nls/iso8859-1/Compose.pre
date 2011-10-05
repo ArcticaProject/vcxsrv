@@ -477,7 +477,7 @@ XCOMM Special Character
 Ctrl<T> <plus> <plus>			: "#"	numbersign
 Ctrl<T> <apostrophe> <space>		: "'"	apostrophe
 Ctrl<T> <space> <apostrophe>		: "'"	apostrophe
-Ctrl<T> <A> <A>				: "@"	at
+Ctrl<T> <A> <T>				: "@"	at
 Ctrl<T> <parenleft> <parenleft>		: "["	bracketleft
 Ctrl<T> <slash> <slash>			: "\\"	backslash
 Ctrl<T> <slash> <less>			: "\\"	backslash

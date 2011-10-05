@@ -213,7 +213,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 	base = mmap(0, Size,
 		    (flags & VIDMEM_READONLY) ?
 		     PROT_READ : (PROT_READ | PROT_WRITE),
-		    MAP_FLAGS, xf86Info.screenFd,
+		    MAP_FLAGS, xf86Info.consoleFd,
 		    (unsigned long)Base - 0xA0000);
 	if (base == MAP_FAILED)
 	{
@@ -306,7 +306,7 @@ checkMapInfo(Bool warn, int Region)
     
     if(!memAccP->Checked)
     {	
-	if(ioctl(xf86Info.screenFd, memAccP->ioctl, &(memAccP->memInfo)) == -1)
+	if(ioctl(xf86Info.consoleFd, memAccP->ioctl, &(memAccP->memInfo)) == -1)
 	{
 	    if(warn)
 	    {
@@ -360,7 +360,7 @@ xf86MapInfoMap(struct memAccess *memInfoP, pointer Base, unsigned long Size)
 			 Size,
 			 PROT_READ | PROT_WRITE,
 			 MAP_SHARED,
-			 xf86Info.screenFd,
+			 xf86Info.consoleFd,
 			 (unsigned long)mapInfoP->u.map_info_mmap.map_offset))
 		   == (pointer)-1)
 		{

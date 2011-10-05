@@ -2,6 +2,7 @@ AM_CPPFLAGS=-F/System/Library/Frameworks/ApplicationServices.framework/Framework
 	-DBUNDLE_ID_PREFIX=\"$(BUNDLE_ID_PREFIX)\"
 
 AM_CFLAGS=$(XPBPROXY_CFLAGS) 
+AM_OBJCFLAGS=$(XPBPROXY_CFLAGS)
 
 noinst_LTLIBRARIES = libxpbproxy.la
 libxpbproxy_la_SOURCES = \

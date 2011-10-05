@@ -41,6 +41,7 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
     int nvals = 0;
     int bits_set;
     int len;
+    uint32_t flagmask = 0;
 
     if (swap)
     {
@@ -51,6 +52,7 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
         swapl(&out->time);
         swapl(&out->detail);
         swaps(&out->valuators_len);
+        swapl(&out->flags);
     }
 
 
@@ -61,7 +63,17 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
     assert(out->detail == in->detail.button);
     assert(out->deviceid == in->deviceid);
     assert(out->valuators_len >= bytes_to_int32(bits_to_bytes(sizeof(in->valuators.mask))));
-    assert(out->flags == 0); /* FIXME: we don't set the flags yet */
+
+    switch (in->type) {
+    case ET_RawMotion:
+    case ET_RawButtonPress:
+    case ET_RawButtonRelease:
+        flagmask = XIPointerEmulated;
+        break;
+    default:
+        flagmask = 0;
+    }
+    assert((out->flags & ~flagmask) == 0);
 
     ptr = (unsigned char*)&out[1];
     bits_set = 0;
@@ -92,8 +104,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
             value = (FP3232*)(((unsigned char*)&out[1]) + out->valuators_len * 4);
             value += nvals;
 
-            vi.integral = in->valuators.data[i];
-            vi.frac = in->valuators.data_frac[i];
+            vi.integral = trunc(in->valuators.data[i]);
+            vi.frac = in->valuators.data[i] - vi.integral;
 
             vo.integral = value->integral;
             vo.frac = value->frac;
@@ -108,8 +120,8 @@ static void test_values_XIRawEvent(RawDeviceEvent *in, xXIRawEvent *out,
 
             raw_value = value + bits_set;
 
-            vi.integral = in->valuators.data_raw[i];
-            vi.frac = in->valuators.data_raw_frac[i];
+            vi.integral = trunc(in->valuators.data_raw[i]);
+            vi.frac = in->valuators.data_raw[i] - vi.integral;
 
             vo.integral = raw_value->integral;
             vo.frac = raw_value->frac;
@@ -247,10 +259,8 @@ static void test_convert_XIRawEvent(void)
     {
         XISetMask(in.valuators.mask, i);
 
-        in.valuators.data[i] = i;
-        in.valuators.data_raw[i] = i + 10;
-        in.valuators.data_frac[i] = i + 20;
-        in.valuators.data_raw_frac[i] = i + 30;
+        in.valuators.data[i] = i + (i * 0.0010);
+        in.valuators.data_raw[i] = (i + 10) + (i * 0.0030);
         test_XIRawEvent(&in);
         XIClearMask(in.valuators.mask, i);
     }
@@ -305,6 +315,11 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
     assert(out->sourceid == in->sourceid);
 
     switch (in->type) {
+        case ET_ButtonPress:
+        case ET_Motion:
+        case ET_ButtonRelease:
+            flagmask = XIPointerEmulated;
+            break;
         case ET_KeyPress:
             flagmask = XIKeyRepeat;
             break;
@@ -375,8 +390,8 @@ static void test_values_XIDeviceEvent(DeviceEvent *in, xXIDeviceEvent *out,
             {
                 FP3232 vi, vo;
 
-                vi.integral = in->valuators.data[i];
-                vi.frac = in->valuators.data_frac[i];
+                vi.integral = trunc(in->valuators.data[i]);
+                vi.frac = (in->valuators.data[i] - vi.integral) * (1UL << 32);
 
                 vo = *values;
 
@@ -618,8 +633,7 @@ static void test_convert_XIDeviceEvent(void)
     {
         XISetMask(in.valuators.mask, i);
 
-        in.valuators.data[i] = i;
-        in.valuators.data_frac[i] = i + 20;
+        in.valuators.data[i] = i + (i * 0.0020);
         test_XIDeviceEvent(&in);
         XIClearMask(in.valuators.mask, i);
     }
