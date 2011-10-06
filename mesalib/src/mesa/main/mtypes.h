@@ -73,10 +73,7 @@ struct _mesa_HashTable;
 struct gl_attrib_node;
 struct gl_list_extensions;
 struct gl_meta_state;
-struct gl_pixelstore_attrib;
 struct gl_program_cache;
-struct gl_texture_format;
-struct gl_texture_image;
 struct gl_texture_object;
 struct gl_context;
 struct st_context;
@@ -214,9 +211,10 @@ typedef enum
    VERT_RESULT_BFC0 = 13,
    VERT_RESULT_BFC1 = 14,
    VERT_RESULT_EDGE = 15,
-   VERT_RESULT_CLIP_DIST0 = 16,
-   VERT_RESULT_CLIP_DIST1 = 17,
-   VERT_RESULT_VAR0 = 18,  /**< shader varying */
+   VERT_RESULT_CLIP_VERTEX = 16,
+   VERT_RESULT_CLIP_DIST0 = 17,
+   VERT_RESULT_CLIP_DIST1 = 18,
+   VERT_RESULT_VAR0 = 19,  /**< shader varying */
    VERT_RESULT_MAX = (VERT_RESULT_VAR0 + MAX_VARYING)
 } gl_vert_result;
 
@@ -1268,13 +1266,6 @@ struct gl_texture_image
    GLuint *ImageOffsets;        /**< if 3D texture: array [Depth] of offsets to
                                      each 2D slice in 'Data', in texels */
    GLvoid *Data;		/**< Image data, accessed via FetchTexel() */
-
-   /**
-    * \name For device driver:
-    */
-   /*@{*/
-   void *DriverData;		/**< Arbitrary device driver data */
-   /*@}*/
 };
 
 
@@ -1492,13 +1483,20 @@ struct gl_texture_attrib
 
 
 /**
+ * Data structure representing a single clip plane (e.g. one of the elements
+ * of the ctx->Transform.EyeUserPlane or ctx->Transform._ClipUserPlane array).
+ */
+typedef GLfloat gl_clip_plane[4];
+
+
+/**
  * Transformation attribute group (GL_TRANSFORM_BIT).
  */
 struct gl_transform_attrib
 {
    GLenum MatrixMode;				/**< Matrix mode */
-   GLfloat EyeUserPlane[MAX_CLIP_PLANES][4];	/**< User clip planes */
-   GLfloat _ClipUserPlane[MAX_CLIP_PLANES][4];	/**< derived */
+   gl_clip_plane EyeUserPlane[MAX_CLIP_PLANES];	/**< User clip planes */
+   gl_clip_plane _ClipUserPlane[MAX_CLIP_PLANES]; /**< derived */
    GLbitfield ClipPlanesEnabled;                /**< on/off bitmask */
    GLboolean Normalize;				/**< Normalize all normals? */
    GLboolean RescaleNormals;			/**< GL_EXT_rescale_normal */

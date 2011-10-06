@@ -81,7 +81,7 @@ long	dead)
 	if (creat_fd == -1) {
 	    creat_fd = open (creat_name, O_WRONLY | O_CREAT | O_EXCL, 0600);
 	    if (creat_fd == -1) {
-		if (errno != EACCES)
+		if (errno != EACCES && errno != EEXIST)
 		    return LOCK_ERROR;
 	    } else
 		(void) close (creat_fd);

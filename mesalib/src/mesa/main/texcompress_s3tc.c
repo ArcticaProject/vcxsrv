@@ -178,7 +178,6 @@ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
    (void) dstZoffset;
-   (void) dstImageOffsets;
 
    if (srcFormat != GL_RGB ||
        srcType != GL_UNSIGNED_BYTE ||
@@ -202,7 +201,7 @@ _mesa_texstore_rgb_dxt1(TEXSTORE_PARAMS)
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
                                         dstFormat,
-                                        texWidth, (GLubyte *) dstAddr);
+                                        texWidth, dstSlices[0]);
 
    if (ext_tx_compress_dxtn) {
       (*ext_tx_compress_dxtn)(3, srcWidth, srcHeight, pixels,
@@ -237,7 +236,6 @@ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
    (void) dstZoffset;
-   (void) dstImageOffsets;
 
    if (srcFormat != GL_RGBA ||
        srcType != GL_UNSIGNED_BYTE ||
@@ -261,7 +259,7 @@ _mesa_texstore_rgba_dxt1(TEXSTORE_PARAMS)
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
                                         dstFormat,
-                                        texWidth, (GLubyte *) dstAddr);
+                                        texWidth, dstSlices[0]);
    if (ext_tx_compress_dxtn) {
       (*ext_tx_compress_dxtn)(4, srcWidth, srcHeight, pixels,
                               GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
@@ -295,7 +293,6 @@ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
    (void) dstZoffset;
-   (void) dstImageOffsets;
 
    if (srcFormat != GL_RGBA ||
        srcType != GL_UNSIGNED_BYTE ||
@@ -318,7 +315,7 @@ _mesa_texstore_rgba_dxt3(TEXSTORE_PARAMS)
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
                                         dstFormat,
-                                        texWidth, (GLubyte *) dstAddr);
+                                        texWidth, dstSlices[0]);
    if (ext_tx_compress_dxtn) {
       (*ext_tx_compress_dxtn)(4, srcWidth, srcHeight, pixels,
                               GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
@@ -352,7 +349,6 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
    ASSERT(dstYoffset % 4 == 0);
    ASSERT(dstZoffset % 4 == 0);
    (void) dstZoffset;
-   (void) dstImageOffsets;
 
    if (srcFormat != GL_RGBA ||
        srcType != GL_UNSIGNED_BYTE ||
@@ -375,7 +371,7 @@ _mesa_texstore_rgba_dxt5(TEXSTORE_PARAMS)
 
    dst = _mesa_compressed_image_address(dstXoffset, dstYoffset, 0,
                                         dstFormat,
-                                        texWidth, (GLubyte *) dstAddr);
+                                        texWidth, dstSlices[0]);
    if (ext_tx_compress_dxtn) {
       (*ext_tx_compress_dxtn)(4, srcWidth, srcHeight, pixels,
                               GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
