@@ -267,16 +267,11 @@ bool commandqueue::StartExecuteCommands(fileinfo* pTarget)
   pActiveEntry->pTarget=pTarget;
   pActiveEntry->CurrentCommandIt=CommandIt;
 
-  while (1)
+  while (pActiveEntry->CurrentCommandIt!=pRule->GetCommands().end())
   {
     if (StartExecuteNextCommand(pActiveEntry, &ActiveProcess))
     {
       pActiveEntry->CurrentCommandIt++;
-      if (pActiveEntry->CurrentCommandIt==pRule->GetCommands().end())
-      {
-         // All commands executed
-         break;
-      }
     }
     else
     {
