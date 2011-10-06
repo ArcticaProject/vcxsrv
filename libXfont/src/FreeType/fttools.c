@@ -40,6 +40,13 @@
 #define MSBFirst 1
 #endif
 
+#ifdef LOBYTE
+#undef LOBYTE
+#endif
+#ifdef HIBYTE
+#undef HIBYTE
+#endif
+
 #define LOBYTE(s,byte) ((byte)==LSBFirst?*(char*)(s):*((char*)(s)+1))
 #define HIBYTE(s,byte) ((byte)==LSBFirst?*((char*)(s)+1):*(char*)(s))
 
