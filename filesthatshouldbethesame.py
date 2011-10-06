@@ -189,25 +189,25 @@ Files=FilesStr.split()
 
 Diff=False
 
-def CompareFiles(SrcFile, DestFile):
+# do linefeed independent compare
+def CompareFiles(f1name, f2name):
   try:
     if len(sys.argv)>1:
-      print "Comparing",SrcFile,DestFile
-    Src=open(SrcFile,'rb')
-    Dest=open(DestFile,'rb')
-    while 1:
-      SrcLine=Src.read(4096)
-      DestLine=Dest.read(4096)
-      if SrcLine!=DestLine:
-        print "\n!!!!",SrcFile,"and",DestFile,"are different\n"
+      print "Comparing",f1name,f2name
+    f1 = open(f1name, 'U')
+    f2 = open(f2name, 'U')
+
+    a = f1.readlines(); f1.close()
+    b = f2.readlines(); f2.close()
+    for line in difflib.ndiff(a, b):
+      if line[0]!=' ':
         return True
-      if not SrcLine:
-        return False
-  except:
-    if not os.path.exists(SrcFile): print "\n",SrcFile,"does not exist\n"
-    if not os.path.exists(DestFile): print "\n",DestFile,"does not exist\n"
+
     return False
-  
+  except:
+    if not os.path.exists(f1name): print "\n",f1name,"does not exist\n"
+    if not os.path.exists(f2name): print "\n",f2name,"does not exist\n"
+    return False
 
 for SrcFile,DestFile in izip(Files[0::2], Files[1::2]):
   Diff |= CompareFiles(SrcFile, DestFile)
