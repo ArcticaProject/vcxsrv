@@ -25,22 +25,35 @@
 #ifndef _XI2_H_
 #define _XI2_H_
 
-/* Indices into the versions[] array (XExtInt.c). Used as a index to
- * retrieve the minimum version of XI from _XiCheckExtInit.
- * For indices 0 to 6 see XI.h */
-#ifndef Dont_Check /* defined in XI.h */
-#define Dont_Check                              0
+#warning "XI 2.1 is not stable yet."
+#warning "Applications relying on this header will break as the protocol sees updates."
+#ifndef XINPUT2_1_USE_UNSTABLE_PROTOCOL
+#error "Define XINPUT2_1_USE_UNSTABLE_PROTOCOL to disable this error"
+#endif
+#warning "XI 2.2 is not stable yet."
+#warning "Applications relying on this header will break as the protocol sees updates."
+#ifndef XINPUT2_2_USE_UNSTABLE_PROTOCOL
+#error "Define XINPUT2_2_USE_UNSTABLE_PROTOCOL to disable this error"
 #endif
 #define XInput_2_0                              7
-
+/* DO NOT ADD TO THIS LIST. These are libXi-specific defines.
+   See commit libXi-1.4.2-21-ge8531dd */
 
 #define XI_2_Major                              2
-#define XI_2_Minor                              0
+#define XI_2_Minor                              2
 
 /* Property event flags */
 #define XIPropertyDeleted                       0
 #define XIPropertyCreated                       1
 #define XIPropertyModified                      2
+
+/* Property modes */
+#define XIPropModeReplace                       0
+#define XIPropModePrepend                       1
+#define XIPropModeAppend                        2
+
+/* Special property type used for XIGetProperty */
+#define XIAnyPropertyType                       0L
 
 /* Enter/Leave and Focus In/Out modes */
 #define XINotifyNormal                          0
@@ -60,11 +73,28 @@
 #define XINotifyPointerRoot                     6
 #define XINotifyDetailNone                      7
 
+/* Grab modes */
+#define XIGrabModeSync                          0
+#define XIGrabModeAsync                         1
+#define XIGrabModeTouch                         2
+
+/* Grab reply status codes */
+#define XIGrabSuccess                           0
+#define XIAlreadyGrabbed                        1
+#define XIGrabInvalidTime                       2
+#define XIGrabNotViewable                       3
+#define XIGrabFrozen                            4
+
+/* Grab owner events values */
+#define XIOwnerEvents                           True
+#define XINoOwnerEvents                         False
+
 /* Passive grab types */
 #define XIGrabtypeButton                        0
 #define XIGrabtypeKeycode                       1
 #define XIGrabtypeEnter                         2
 #define XIGrabtypeFocusIn                       3
+#define XIGrabtypeTouchBegin                    4
 
 /* Passive grab modifier */
 #define XIAnyModifier                           (1U << 31)
@@ -78,6 +108,8 @@
 #define XIAsyncPairedDevice                     3
 #define XIAsyncPair                             4
 #define XISyncPair                              5
+#define XIAcceptTouch                           6
+#define XIRejectTouch                           7
 
 /* DeviceChangedEvent change reasons */
 #define XISlaveSwitch                           1
@@ -113,15 +145,33 @@
 #define XISlaveKeyboard                         4
 #define XIFloatingSlave                         5
 
-/* Device classes */
+/* Device classes: classes that are not identical to Xi 1.x classes must be
+ * numbered starting from 8. */
 #define XIKeyClass                              0
 #define XIButtonClass                           1
 #define XIValuatorClass                         2
+#define XIScrollClass                           3
+#define XITouchClass                            8
+
+/* Scroll class types */
+#define XIScrollTypeVertical                    1
+#define XIScrollTypeHorizontal                  2
+
+/* Scroll class flags */
+#define XIScrollFlagNoEmulation                 (1 << 0)
+#define XIScrollFlagPreferred                   (1 << 1)
 
 /* Device event flags (common) */
 /* Device event flags (key events only) */
 #define XIKeyRepeat                             (1 << 16)
 /* Device event flags (pointer events only) */
+#define XIPointerEmulated                       (1 << 16)
+/* Device event flags (touch events only) */
+#define XITouchPendingEnd                       (1 << 16)
+
+/* Touch modes */
+#define XIDirectTouch                           1
+#define XIDependentTouch                        2
 
 /* XI2 event mask macros */
 #define XISetMask(ptr, event)   (((unsigned char*)(ptr))[(event)>>3] |=  (1 << ((event) & 7)))
@@ -151,7 +201,14 @@
 #define XI_RawButtonPress                15
 #define XI_RawButtonRelease              16
 #define XI_RawMotion                     17
-#define XI_LASTEVENT                     XI_RawMotion
+#define XI_TouchBegin                    18 /* XI 2.1 */
+#define XI_TouchEnd                      19
+#define XI_TouchOwnership                20
+#define XI_TouchUpdate                   21
+#define XI_RawTouchBegin                 22
+#define XI_RawTouchEnd                   23
+#define XI_RawTouchUpdate                24
+#define XI_LASTEVENT                     XI_RawTouchUpdate
 /* NOTE: XI2LASTEVENT in xserver/include/inputstr.h must be the same value
  * as XI_LASTEVENT if the server is supposed to handle masks etc. for this
  * type of event. */
@@ -177,5 +234,12 @@
 #define XI_RawButtonPressMask            (1 << XI_RawButtonPress)
 #define XI_RawButtonReleaseMask          (1 << XI_RawButtonRelease)
 #define XI_RawMotionMask                 (1 << XI_RawMotion)
+#define XI_TouchBeginMask                (1 << XI_TouchBegin)
+#define XI_TouchEndMask                  (1 << XI_TouchEnd)
+#define XI_TouchOwnershipChangedMask     (1 << XI_TouchOwnershipChanged)
+#define XI_TouchUpdateMask               (1 << XI_TouchUpdate)
+#define XI_RawTouchBeginMask             (1 << XI_RawTouchBegin)
+#define XI_RawTouchEndMask               (1 << XI_RawTouchEnd)
+#define XI_RawTouchUpdateMask            (1 << XI_RawTouchUpdate)
 
 #endif /* _XI2_H_ */

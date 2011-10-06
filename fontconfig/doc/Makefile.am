@@ -102,7 +102,7 @@ if CROSS_COMPILING
 .fncs.sgml:
 	@echo Warning: cannot rebuild $@ when cross-compiling
 else
-.fncs.sgml:
+.fncs.sgml: ./edit-sgml$(EXEEXT)
 	$(RM) $@
 	./edit-sgml$(EXEEXT) $(FNCS_TMPL) < '$<' > $*.sgml
 endif

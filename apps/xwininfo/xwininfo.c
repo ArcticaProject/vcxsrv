@@ -245,14 +245,14 @@ static void Display_Window_Shape (xcb_window_t);
 static void Display_WM_Info (struct wininfo *);
 static void wininfo_wipe (struct wininfo *);
 
-static const char *window_id_format = "0x%lx";
+static Bool window_id_format_dec = False;
 
 #ifdef HAVE_ICONV
 static iconv_t iconv_from_utf8;
 #endif
 static const char *user_encoding;
 static void print_utf8 (const char *, char *, size_t, const char *);
-static void print_friendly_name (const char *, const char *, const char *);
+static char *get_friendly_name (const char *, const char *);
 
 static xcb_connection_t *dpy;
 static xcb_screen_t *screen;
@@ -420,6 +420,19 @@ bscale (int b)
     return (nscale (b, bp, bmm, bbuf, sizeof(bbuf)));
 }
 
+static const char *
+window_id_str (xcb_window_t id)
+{
+    static char str[20];
+
+    if (window_id_format_dec)
+	snprintf (str, sizeof(str), "%u", id);
+    else
+	snprintf (str, sizeof(str), "0x%x", id);
+
+    return str;
+}
+
 /* end of pixel to inch, metric converter */
 
 int
@@ -472,7 +485,7 @@ main (int argc, char **argv)
 	    continue;
 	}
 	if (!strcmp (argv[i], "-int")) {
-	    window_id_format = "%ld";
+	    window_id_format_dec = True;
 	    continue;
 	}
 	if (!strcmp (argv[i], "-children")) {
@@ -576,13 +589,10 @@ main (int argc, char **argv)
 	w->geometry = xcb_get_geometry_reply(dpy, gg_cookie, &err);
 
 	if (!w->geometry) {
-	    char badid[20];
-
 	    if (err)
 		Print_X_Error (dpy, err);
 
-	    snprintf (badid, sizeof(badid), window_id_format, window);
-	    Fatal_Error ("No such window with id %s.", badid);
+	    Fatal_Error ("No such window with id %s.", window_id_str (window));
 	}
     }
 
@@ -794,7 +804,7 @@ Display_Window_Id (struct wininfo *w, Bool newline_wanted)
     unsigned int wm_name_len = 0;
     xcb_atom_t wm_name_encoding = XCB_NONE;
 
-    printf (window_id_format, w->window);      /* print id # in hex/dec */
+    printf ("%s", window_id_str (w->window));
 
     if (!w->window) {
 	printf (" (none)");
@@ -1624,6 +1634,20 @@ wm_hints_reply (xcb_connection_t *dpy, xcb_get_property_cookie_t cookie,
 #endif
 
 static void
+Display_Atom_Name (xcb_atom_t atom, const char *prefix)
+{
+    const char *atom_name = Get_Atom_Name (dpy, atom);
+
+    if (atom_name) {
+	char *friendly_name = get_friendly_name (atom_name, prefix);
+	printf ("          %s\n", friendly_name);
+	free (friendly_name);
+    } else {
+	printf ("          (unresolvable ATOM 0x%x)\n", atom);
+    }
+}
+
+static void
 Display_WM_Info (struct wininfo *w)
 {
     xcb_icccm_wm_hints_t wmhints;
@@ -1687,17 +1711,8 @@ Display_WM_Info (struct wininfo *w)
 
 	    if (atom_count > 0) {
 		printf ("      Window type:\n");
-		for (i = 0; i < atom_count; i++) {
-		    const char *atom_name = Get_Atom_Name (dpy, atoms[i]);
-
-		    if (atom_name) {
-			print_friendly_name ("          %s\n", atom_name,
-					     "_NET_WM_WINDOW_TYPE_");
-		    } else {
-			printf ("          (unresolvable ATOM 0x%x)\n",
-				atoms[i]);
-		    }
-		}
+		for (i = 0; i < atom_count; i++)
+		    Display_Atom_Name (atoms[i], "_NET_WM_WINDOW_TYPE_");
 	    }
 	}
 	free (prop);
@@ -1711,17 +1726,8 @@ Display_WM_Info (struct wininfo *w)
 
 	    if (atom_count > 0) {
 		printf ("      Window state:\n");
-		for (i = 0; i < atom_count; i++) {
-		    const char *atom_name = Get_Atom_Name (dpy, atoms[i]);
-
-		    if (atom_name) {
-			print_friendly_name ("          %s\n", atom_name,
-					     "_NET_WM_STATE_");
-		    } else {
-			printf ("          (unresolvable ATOM 0x%x)\n",
-				atoms[i]);
-		    }
-		}
+		for (i = 0; i < atom_count; i++)
+		    Display_Atom_Name (atoms[i], "_NET_WM_STATE_");
 	    }
 	}
 	free (prop);
@@ -1936,14 +1942,14 @@ print_utf8 (const char *prefix, char *u8str, size_t length, const char *suffix)
 /*
  * Takes a string such as an atom name, strips the prefix, converts
  * underscores to spaces, lowercases all but the first letter of each word,
- * and prints it.
+ * and returns it. The returned string should be freed by the caller.
  */
-static void
-print_friendly_name (const char *format, const char *string,
-		     const char *prefix)
+static char *
+get_friendly_name (const char *string, const char *prefix)
 {
     const char *name_start = string;
     char *lowered_name, *n;
+    Bool first = True;
     int prefix_len = strlen (prefix);
 
     if (strncmp (name_start, prefix, prefix_len) == 0) {
@@ -1951,22 +1957,19 @@ print_friendly_name (const char *format, const char *string,
     }
 
     lowered_name = strdup (name_start);
-    if (lowered_name) {
-	Bool first = True;
+    if (lowered_name == NULL)
+	Fatal_Error ("Failed to allocate memory in get_friendly_name");
 
-	for (n = lowered_name ; *n != 0 ; n++) {
-	    if (*n == '_') {
-		*n = ' ';
-		first = True;
-	    } else if (first) {
-		first = False;
-	    } else {
-		*n = tolower(*n);
-	    }
+    for (n = lowered_name ; *n != 0 ; n++) {
+	if (*n == '_') {
+	    *n = ' ';
+	    first = True;
+	} else if (first) {
+	    first = False;
+	} else {
+	    *n = tolower(*n);
 	}
-	name_start = lowered_name;
     }
 
-    printf (format, name_start);
-    free (lowered_name);
+    return lowered_name;
 }

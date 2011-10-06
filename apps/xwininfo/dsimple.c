@@ -441,92 +441,92 @@ Print_X_Error (
 	switch (err->error_code)
 	{
 	    case XCB_REQUEST:
-		snprintf (buffer, sizeof(buffer), ": Bad Request");
+		snprintf (buffer, sizeof(buffer), "Bad Request");
 		break;
 
 	    case XCB_VALUE:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Value: 0x%x", err->resource_id);
+			  "Bad Value: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_WINDOW:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Window: 0x%x", err->resource_id);
+			  "Bad Window: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_PIXMAP:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Pixmap: 0x%x", err->resource_id);
+			  "Bad Pixmap: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_ATOM:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Atom: 0x%x", err->resource_id);
+			  "Bad Atom: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_CURSOR:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Cursor: 0x%x", err->resource_id);
+			  "Bad Cursor: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_FONT:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Font: 0x%x", err->resource_id);
+			  "Bad Font: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_MATCH:
-		snprintf (buffer, sizeof(buffer), ": Bad Match");
+		snprintf (buffer, sizeof(buffer), "Bad Match");
 		break;
 
 	    case XCB_DRAWABLE:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Drawable: 0x%x", err->resource_id);
+			  "Bad Drawable: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_ACCESS:
-		snprintf (buffer, sizeof(buffer), ": Access Denied");
+		snprintf (buffer, sizeof(buffer), "Access Denied");
 		break;
 
 	    case XCB_ALLOC:
 		snprintf (buffer, sizeof(buffer),
-			  ": Server Memory Allocation Failure");
+			  "Server Memory Allocation Failure");
 		break;
 
 	    case XCB_COLORMAP:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Color: 0x%x", err->resource_id);
+			  "Bad Color: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_G_CONTEXT:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad GC: 0x%x", err->resource_id);
+			  "Bad GC: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_ID_CHOICE:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad XID: 0x%x", err->resource_id);
+			  "Bad XID: 0x%x", err->resource_id);
 		break;
 
 	    case XCB_NAME:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Name");
+			  "Bad Name");
 		break;
 
 	    case XCB_LENGTH:
 		snprintf (buffer, sizeof(buffer),
-			  ": Bad Request Length");
+			  "Bad Request Length");
 		break;
 
 	    case XCB_IMPLEMENTATION:
 		snprintf (buffer, sizeof(buffer),
-			  ": Server Implementation Failure");
+			  "Server Implementation Failure");
 		break;
 
 	    default:
-		snprintf (buffer, sizeof(buffer), ": Unknown error");
+		snprintf (buffer, sizeof(buffer), "Unknown error");
 		break;
 	}
-	fprintf (stderr, "X Error: %d%s\n", err->error_code, buffer);
+	fprintf (stderr, "X Error: %d: %s\n", err->error_code, buffer);
     }
 
     fprintf (stderr, "  Request Major code: %d\n", err->major_code);
