@@ -27,3 +27,5 @@
 
 /* Support gzip for bitmap fonts */
 #define X_GZIP_FONT_COMPRESSION 1
+
+#include <dix-config.h>
