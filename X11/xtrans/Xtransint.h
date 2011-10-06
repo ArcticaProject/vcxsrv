@@ -388,6 +388,11 @@ static int trans_mkdir (
 # if defined(XSERV_t) && defined(TRANS_SERVER)
 #  include "os.h"
 # else
+
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 static inline void _X_ATTRIBUTE_PRINTF(1, 0)
 VErrorF(const char *f, va_list args)
 {
