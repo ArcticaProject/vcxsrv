@@ -84,6 +84,11 @@ OF THIS SOFTWARE.
 
 #ifdef _MSC_VER
 #define inline __inline
+#include <math.h>
+static double __inline trunc(double d)
+{
+  return (d>0) ? floor(d) : ceil(d) ;
+}
 #endif
 
 #ifndef MAXSCREENS
