@@ -25,16 +25,6 @@
 #ifndef _XI2_H_
 #define _XI2_H_
 
-#warning "XI 2.1 is not stable yet."
-#warning "Applications relying on this header will break as the protocol sees updates."
-#ifndef XINPUT2_1_USE_UNSTABLE_PROTOCOL
-#error "Define XINPUT2_1_USE_UNSTABLE_PROTOCOL to disable this error"
-#endif
-#warning "XI 2.2 is not stable yet."
-#warning "Applications relying on this header will break as the protocol sees updates."
-#ifndef XINPUT2_2_USE_UNSTABLE_PROTOCOL
-#error "Define XINPUT2_2_USE_UNSTABLE_PROTOCOL to disable this error"
-#endif
 #define XInput_2_0                              7
 /* DO NOT ADD TO THIS LIST. These are libXi-specific defines.
    See commit libXi-1.4.2-21-ge8531dd */
