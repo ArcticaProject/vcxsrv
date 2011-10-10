@@ -1,4 +1,4 @@
-<chapter id='keyboard_controls'>
+<chapter id='Keyboard_Controls'>
 <title>Keyboard Controls</title>
 
 <para>
@@ -197,7 +197,7 @@ XkbControlsRec</emphasis>
 once follow at the end of the chapter.
 </para>
 
-<sect1 id='controls_that_enable_and_disable_other_controls'>
+<sect1 id='Controls_that_Enable_and_Disable_Other_Controls'>
 <title>Controls that Enable and Disable Other Controls</title>
 
 <para>
@@ -211,7 +211,7 @@ AutoReset</emphasis>
 </para>
 
 
-<sect2 id='the_enabledcontrols_control'>
+<sect2 id='The_EnabledControls_Control'>
 <title>The EnabledControls Control</title>
 
 <para>
@@ -337,7 +337,7 @@ its behavior in detail.
 
 
 </sect2>
-<sect2 id='the_autoreset_control'>
+<sect2 id='The_AutoReset_Control'>
 <title>The AutoReset Control</title>
 
 <para>
@@ -597,7 +597,7 @@ changes</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='control_for_bell_behavior'>
+<sect1 id='Control_for_Bell_Behavior'>
 <title>Control for Bell Behavior</title>
 
 <para>
@@ -607,7 +607,7 @@ AudibleBell</emphasis>
 </para>
 
 
-<sect2 id='the_audiblebell_control'>
+<sect2 id='The_AudibleBell_Control'>
 <title>The AudibleBell Control</title>
 
 <para>
@@ -627,7 +627,7 @@ sound is forced. See section 9.2. <!-- xref -->
 
 </sect2>
 </sect1>
-<sect1 id='controls_for_repeat_key_behavior'>
+<sect1 id='Controls_for_Repeat_Key_Behavior'>
 <title>Controls for Repeat Key Behavior</title>
 
 <para>
@@ -650,7 +650,7 @@ down.
 </para>
 
 
-<sect2 id='the_perkeyrepeat_control'>
+<sect2 id='The_PerKeyRepeat_Control'>
 <title>The PerKeyRepeat Control</title>
 
 <para>
@@ -672,7 +672,7 @@ XkbControlsRec</emphasis>
 
 
 </sect2>
-<sect2 id='the_repeatkeys_control'>
+<sect2 id='The_RepeatKeys_Control'>
 <title>The RepeatKeys Control</title>
 
 <para>
@@ -865,7 +865,7 @@ False</emphasis>
 
 
 </sect2>
-<sect2 id='the_detectableautorepeat_control'>
+<sect2 id='The_DetectableAutorepeat_Control'>
 <title>The DetectableAutorepeat Control</title>
 
 <para>
@@ -1110,7 +1110,7 @@ False</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='controls_for_keyboard_overlays_overlay1_and_overlay2_controls'>
+<sect1 id='Controls_for_Keyboard_Overlays_Overlay1_and_Overlay2_Controls'>
 <title>Controls for Keyboard Overlays (Overlay1 and Overlay2 Controls)</title>
 
 <para>
@@ -1159,7 +1159,7 @@ XkbKB_Overlay2</emphasis>
 
 
 </sect1>
-<sect1 id='controls_for_using_the_mouse_from_the_keyboard'>
+<sect1 id='Controls_for_Using_the_Mouse_from_the_Keyboard'>
 <title>Controls for Using the Mouse from the Keyboard</title>
 
 <para>
@@ -1183,7 +1183,7 @@ discussed in Chapter 16. <!-- xref -->
 </para>
 
 
-<sect2 id='the_mousekeys_control'>
+<sect2 id='The_MouseKeys_Control'>
 <title>The MouseKeys Control</title>
 
 <para>
@@ -1226,7 +1226,7 @@ Shift+Alt+NumLock</emphasis>
 , but this may vary depending on the keymap.</para></note>
 
 </sect2>
-<sect2 id='the_mousekeysaccel_control'>
+<sect2 id='The_MouseKeysAccel_Control'>
 <title>The MouseKeysAccel Control</title>
 
 <para>
@@ -1302,7 +1302,7 @@ XkbSA_MovePtr</emphasis>
  action (see section 16.1) specifies relative or absolute pointer motion. <!-- xref -->
 </para>
 
-<sect3 id='absolute_pointer_motion'>
+<sect3 id='Absolute_Pointer_Motion'>
 <title>Absolute Pointer Motion</title>
 
 <para>
@@ -1319,7 +1319,7 @@ stays at the same X position.
 
 
 </sect3>
-<sect3 id='relative_pointer_motion'>
+<sect3 id='Relative_Pointer_Motion'>
 <title>Relative Pointer Motion</title>
 
 <para>
@@ -1474,7 +1474,7 @@ MouseKeys Acceleration</H5>
 </sect3>
 </sect2>
 </sect1>
-<sect1 id='controls_for_better_keyboard_access_by_physically_impaired_persons'>
+<sect1 id='Controls_for_Better_Keyboard_Access_by_Physically_ImpairedPersons'>
 <title>Controls for Better Keyboard Access by Physically Impaired
 Persons</title>
 
@@ -1493,7 +1493,7 @@ Wisconsin-Madison WI 53705-2280. Phone: 608-262-6966. e-mail: info@trace.wisc.ed
 </para></footnote>.
 </para>
 
-<sect2 id='the_accessxkeys_control'>
+<sect2 id='The_AccessXKeys_Control'>
 <title>The AccessXKeys Control</title>
 
 <para>
@@ -1561,7 +1561,7 @@ in state, as described in section 10.6.3, or  <!-- xref -->
 </para>
 
 </sect2>
-<sect2 id='the_accessxtimeout_control'>
+<sect2 id='The_AccessXTimeout_Control'>
 <title>The AccessXTimeout Control</title>
 
 <para>
@@ -1849,7 +1849,7 @@ False</emphasis>
 
 
 </sect2>
-<sect2 id='the_accessxfeedback_control'>
+<sect2 id='The_AccessXFeedback_Control'>
 <title>The AccessXFeedback Control</title>
 
 <para>
@@ -1989,7 +1989,7 @@ XkbBellNotify</emphasis>
 
 
 </sect2>
-<sect2 id='accessxnotify_events'>
+<sect2 id='AccessXNotify_Events'>
 <title>AccessXNotify Events</title>
 
 <para>
@@ -2089,7 +2089,7 @@ BounceKeys</emphasis>
  debounce delay.
 </para>
 
-<sect3 id='selecting_for_accessx_events'>
+<sect3 id='Selecting_for_AccessX_Events'>
 <title>Selecting for AccessX Events</title>
 
 <para>
@@ -2183,7 +2183,7 @@ values_for_bits</emphasis>
 
 </sect3>
 </sect2>
-<sect2 id='stickykeys_repeatkeys_and_mousekeys_events'>
+<sect2 id='StickyKeys_RepeatKeys_and_MouseKeys_Events'>
 <title>StickyKeys, RepeatKeys, and MouseKeys Events</title>
 
 <para>
@@ -2211,7 +2211,7 @@ MouseKeys</emphasis>
 
 
 </sect2>
-<sect2 id='the_slowkeys_control'>
+<sect2 id='The_SlowKeys_Control'>
 <title>The SlowKeys Control</title>
 
 <para>
@@ -2399,7 +2399,7 @@ False</emphasis>
 
 
 </sect2>
-<sect2 id='the_bouncekeys_control'>
+<sect2 id='The_BounceKeys_Control'>
 <title>The BounceKeys Control</title>
 
 <para>
@@ -2581,7 +2581,7 @@ False</emphasis>
 </para>
 
 </sect2>
-<sect2 id='the_stickykeys_control'>
+<sect2 id='The_StickyKeys_Control'>
 <title>The StickyKeys Control</title>
 
 <para>
@@ -2698,7 +2698,7 @@ configured: one to automatically disable it, and one to control the latching
 behavior of modifier keys.
 </para>
 
-<sect3 id='stickykeys_options'>
+<sect3 id='StickyKeys_Options'>
 <title>StickyKeys Options</title>
 
 <para>
@@ -2904,7 +2904,7 @@ False</emphasis>
 </sect3>
 </sect2>
 </sect1>
-<sect1 id='controls_for_general_keyboard_mapping'>
+<sect1 id='Controls_for_General_Keyboard_Mapping'>
 <title>Controls for General Keyboard Mapping</title>
 
 <para>
@@ -2944,7 +2944,7 @@ IgnoreGroupLock</emphasis>
 specifying a grab for every possible modifier combination.
 </para>
 
-<sect2 id='the_groupswrap_control'>
+<sect2 id='The_GroupsWrap_Control'>
 <title>The GroupsWrap Control</title>
 
 <para>
@@ -3019,7 +3019,7 @@ group_info</emphasis>
 , which also normalizes a group under certain circumstances.</para></note>
 
 </sect2>
-<sect2 id='the_ignorelockmods_control'>
+<sect2 id='The_IgnoreLockMods_Control'>
 <title>The IgnoreLockMods Control</title>
 
 <para>
@@ -3202,7 +3202,7 @@ False</emphasis>
 </para>
 
 </sect2>
-<sect2 id='the_ignoregrouplock_control'>
+<sect2 id='The_IgnoreGroupLock_Control'>
 <title>The IgnoreGroupLock Control</title>
 
 <para>
@@ -3222,7 +3222,7 @@ functions (see section 10.1) to change its state. <!-- xref -->
 
 
 </sect2>
-<sect2 id='the_internalmods_control'>
+<sect2 id='The_InternalMods_Control'>
 <title>The InternalMods Control</title>
 
 <para>
@@ -3397,7 +3397,7 @@ False</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='the_xkbcontrolsrec_structure'>
+<sect1 id='The_XkbControlsRec_Structure'>
 <title>The XkbControlsRec Structure</title>
 
 <para>
@@ -4303,7 +4303,7 @@ indicates that the key is a repeating key.
 </sect3>
 </sect2>
 </sect1>
-<sect1 id='querying_controls'>
+<sect1 id='Querying_Controls'>
 <title>Querying Controls</title>
 
 <para>
@@ -4443,7 +4443,7 @@ which</emphasis>
 
 
 </sect1>
-<sect1 id='changing_controls'>
+<sect1 id='Changing_Controls'>
 <title>Changing Controls</title>
 
 <para>
@@ -4585,7 +4585,7 @@ XkbChangeEnabledControls</emphasis>
 </para>
 
 
-<sect2 id='the_xkbcontrolschangesrec_structure'>
+<sect2 id='The_XkbControlsChangesRec_Structure'>
 <title>The XkbControlsChangesRec Structure</title>
 
 <para>
@@ -4707,7 +4707,7 @@ dpy</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='tracking_changes_to_keyboard_controls'>
+<sect1 id='Tracking_Changes_to_Keyboard_Controls'>
 <title>Tracking Changes to Keyboard Controls</title>
 
 <para>
@@ -5019,7 +5019,7 @@ BadMatch</emphasis>
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_an_xkbcontrolsrec'>
+<sect1 id='Allocating_and_Freeing_an_XkbControlsRec'>
 <title>Allocating and Freeing an XkbControlsRec</title>
 
 <para>
@@ -5208,7 +5208,7 @@ NULL.</emphasis>
 </para>
 
 </sect1>
-<sect1 id='the_miscellaneous_per_client_controls'>
+<sect1 id='The_Miscellaneous_Per_client_Controls'>
 <title>The Miscellaneous Per-client Controls</title>
 
 <para>

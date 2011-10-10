@@ -250,6 +250,19 @@ _pixman_radial_gradient_iter_init (pixman_image_t *image, pixman_iter_t *iter);
 void
 _pixman_conical_gradient_iter_init (pixman_image_t *image, pixman_iter_t *iter);
 
+void
+_pixman_image_init (pixman_image_t *image);
+
+pixman_bool_t
+_pixman_bits_image_init (pixman_image_t *     image,
+                         pixman_format_code_t format,
+                         int                  width,
+                         int                  height,
+                         uint32_t *           bits,
+                         int                  rowstride);
+pixman_bool_t
+_pixman_image_fini (pixman_image_t *image);
+
 pixman_image_t *
 _pixman_image_allocate (void);
 
@@ -360,6 +373,10 @@ typedef struct
     int32_t                  dest_y;
     int32_t                  width;
     int32_t                  height;
+
+    uint32_t                 src_flags;
+    uint32_t                 mask_flags;
+    uint32_t                 dest_flags;
 } pixman_composite_info_t;
 
 #define PIXMAN_COMPOSITE_ARGS(info)					\
@@ -618,6 +635,7 @@ _pixman_iter_get_scanline_noop (pixman_iter_t *iter, const uint32_t *mask);
 #define FAST_PATH_ROTATE_270_TRANSFORM		(1 << 22)
 #define FAST_PATH_SAMPLES_COVER_CLIP_NEAREST	(1 << 23)
 #define FAST_PATH_SAMPLES_COVER_CLIP_BILINEAR	(1 << 24)
+#define FAST_PATH_BITS_IMAGE			(1 << 25)
 
 #define FAST_PATH_PAD_REPEAT						\
     (FAST_PATH_NO_NONE_REPEAT		|				\
@@ -712,6 +730,17 @@ pixman_contract (uint32_t *      dst,
                  const uint64_t *src,
                  int             width);
 
+pixman_bool_t
+_pixman_lookup_composite_function (pixman_implementation_t     *toplevel,
+				   pixman_op_t			op,
+				   pixman_format_code_t		src_format,
+				   uint32_t			src_flags,
+				   pixman_format_code_t		mask_format,
+				   uint32_t			mask_flags,
+				   pixman_format_code_t		dest_format,
+				   uint32_t			dest_flags,
+				   pixman_implementation_t    **out_imp,
+				   pixman_composite_func_t     *out_func);
 
 /* Region Helpers */
 pixman_bool_t

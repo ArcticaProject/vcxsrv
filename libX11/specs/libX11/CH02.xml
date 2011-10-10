@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="display_functions">
+<chapter id='Display_Functions'>
 <title>Display Functions</title>
 <para>
 Before your program can use a display, you must establish a connection
@@ -63,10 +63,10 @@ Use internal connections
 <para>
 <!-- .LP -->
 To open a connection to the X server that controls a display, use
-<function>XOpenDisplay</function>.
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XOpenDisplay</primary></indexterm>
 </para>
-<funcsynopsis id='xopendisplay'>
+<funcsynopsis id='XOpenDisplay'>
 <funcprototype>
   <funcdef>Display *<function>XOpenDisplay</function></funcdef>
   <paramdef>char *<parameter>display_name</parameter></paramdef>
@@ -157,9 +157,9 @@ The screen_number sets an internal variable that can be accessed by
 using the 
 <function>DefaultScreen</function>
 macro or the 
-<function>XDefaultScreen</function>
+<xref linkend='XDefaultScreen' xrefstyle='select: title'/>
 function if you are using languages other than C
-(see <link linkend="Display_Macros_">section 2.2.1</link>).
+(see <link linkend='Display_Macros'>section 2.2.1</link>).
     </para>
   </listitem>
   </varlistentry>
@@ -179,13 +179,13 @@ dual-headed:0.1
 <para>
 <!-- .LP -->
 The
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 function returns a 
 <type>Display</type>
 structure that serves as the
 connection to the X server and that contains all the information
 about that X server.
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 connects your application to the X server through <acronym>TCP</acronym>
 or DECnet communications protocols,
 or through some local inter-process communication protocol.
@@ -194,7 +194,7 @@ or through some local inter-process communication protocol.
 If the protocol is specified as "tcp", "inet", or "inet6", or
 if no protocol is specified and the hostname is a host machine name and a single colon (:)
 separates the hostname and display number,
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 connects using <acronym>TCP</acronym> streams.  (If the protocol is specified as "inet", <acronym>TCP</acronym> over
 IPv4 is used.  If the protocol is specified as "inet6", <acronym>TCP</acronym> over IPv6 is used.
 Otherwise, the implementation determines which <acronym>IP</acronym> version is used.)
@@ -202,7 +202,7 @@ If the hostname and protocol are both not specified,
 Xlib uses whatever it believes is the fastest transport.
 If the hostname is a host machine name and a double colon (::)
 separates the hostname and display number,
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 connects using DECnet.
 A single X server can support any or all of these transport mechanisms
 simultaneously.
@@ -213,7 +213,7 @@ mechanisms.
 <!-- .LP -->
 <indexterm><primary>Display</primary></indexterm>
 If successful, 
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 returns a pointer to a 
 <type>Display</type>
 structure,
@@ -223,16 +223,16 @@ which is defined in
 <indexterm><primary>Files</primary><secondary><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></secondary></indexterm>
 <indexterm><primary>Headers</primary><secondary><filename class="headerfile">&lt;X11/Xlib.h&gt;</filename></secondary></indexterm>
 If 
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 does not succeed, it returns NULL.
 After a successful call to
-<function>XOpenDisplay</function>,
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>,
 all of the screens in the display can be used by the client.
 The screen number specified in the display_name argument is returned 
 by the 
 <function>DefaultScreen</function>
 macro (or the
-<function>XDefaultScreen</function>
+<xref linkend='XDefaultScreen' xrefstyle='select: title'/>
 function).
 You can access elements of the
 <type>Display</type>
@@ -243,7 +243,7 @@ For information about using macros and functions to obtain information from
 the
 <type>Display</type>
 structure,
-see <link linkend="Display_Macros_">section 2.2.1</link>.
+see <link linkend='Display_Macros'>section 2.2.1</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -295,21 +295,21 @@ Applications must never directly modify or inspect these private members of the
 structure.
 <!-- .NT Note -->
 The
-<function>XDisplayWidth</function>,
-<function>XDisplayHeight</function>,
-<function>XDisplayCells</function>,
-<function>XDisplayPlanes</function>,
-<function>XDisplayWidthMM</function>,
+<xref linkend='XDisplayWidth' xrefstyle='select: title'/>,
+<xref linkend='XDisplayHeight' xrefstyle='select: title'/>,
+<xref linkend='XDisplayCells' xrefstyle='select: title'/>,
+<xref linkend='XDisplayPlanes' xrefstyle='select: title'/>,
+<xref linkend='XDisplayWidthMM' xrefstyle='select: title'/>,
 and
-<function>XDisplayHeightMM</function>
+<xref linkend='XDisplayHeightMM' xrefstyle='select: title'/>
 functions in the next sections are misnamed.
 These functions really should be named Screen<emphasis remap='I'>whatever</emphasis> 
 and XScreen<emphasis remap='I'>whatever</emphasis>, not Display<emphasis remap='I'>whatever</emphasis> or XDisplay<emphasis remap='I'>whatever</emphasis>.
 Our apologies for the resulting confusion.
 <!-- .NE -->
 </para>
-<sect2 id="Display_Macros_">
-<title>Display Macros </title>
+<sect2 id='Display_Macros'>
+<title>Display Macros</title>
 <!-- .XS -->
 <!-- (SN Display Macros -->
 <!-- .XE -->
@@ -357,7 +357,7 @@ The names are intended to convey the expected relative intensity of the colors.
 <para>
 BlackPixel(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xblackpixel'>
+<funcsynopsis id='XBlackPixel'>
 <funcprototype>
   <funcdef>unsigned long <function>XBlackPixel</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -402,7 +402,7 @@ Both return the black pixel value for the specified screen.
 <para>
 WhitePixel(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xwhitepixel'>
+<funcsynopsis id='XWhitePixel'>
 <funcprototype>
   <funcdef>unsigned long <function>XWhitePixel</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -447,7 +447,7 @@ Both return the white pixel value for the specified screen.
 <para>
 ConnectionNumber(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xconnectionnumber'>
+<funcsynopsis id='XConnectionNumber'>
 <funcprototype>
   <funcdef>int <function>XConnectionNumber</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -484,7 +484,7 @@ this is the file descriptor of the connection.
 <para>
 DefaultColormap(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdefaultcolormap'>
+<funcsynopsis id='XDefaultColormap'>
 <funcprototype>
   <funcdef>Colormap <function>XDefaultColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -530,7 +530,7 @@ Most routine allocations of color should be made out of this colormap.
 <para>
 DefaultDepth(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdefaultdepth'>
+<funcsynopsis id='XDefaultDepth'>
 <funcprototype>
   <funcdef>int <function>XDefaultDepth</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -568,7 +568,7 @@ Specifies the appropriate screen number on the host server.
 Both return the depth (number of planes) of the default root window for the
 specified screen.
 Other depths may also be supported on this screen (see
-<function>XMatchVisualInfo</function>).
+<xref linkend='XMatchVisualInfo' xrefstyle='select: title'/>).
 </para>
 <para>
 <!-- .LP -->
@@ -581,7 +581,7 @@ To determine the number of depths that are available on a given screen, use
 <para>
 DefaultGC(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdefaultgc'>
+<funcsynopsis id='XDefaultGC'>
 <funcprototype>
   <funcdef>GC <function>XDefaultGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -636,7 +636,7 @@ can be allocated,
 sets count_return to the number of available depths.
 Otherwise, it does not set count_return and returns NULL.
 To release the memory allocated for the array of depths, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -699,7 +699,7 @@ This GC should never be freed.
 <para>
 DefaultRootWindow(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xdefaultrootwindow'>
+<funcsynopsis id='XDefaultRootWindow'>
 <funcprototype>
   <funcdef>Window <function>XDefaultRootWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -733,7 +733,7 @@ Both return the root window for the default screen.
 <para>
 DefaultScreenOfDisplay(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xdefaultscreenofdisplay'>
+<funcsynopsis id='XDefaultScreenOfDisplay'>
 <funcprototype>
   <funcdef>Screen *<function>XDefaultScreenOfDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -767,7 +767,7 @@ Both return a pointer to the default screen.
 <para>
 ScreenOfDisplay(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xscreenofdisplay'>
+<funcsynopsis id='XScreenOfDisplay'>
 <funcprototype>
   <funcdef>Screen *<function>XScreenOfDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -812,7 +812,7 @@ Both return a pointer to the indicated screen.
 <para>
 DefaultScreen(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xdefaultscreen'>
+<funcsynopsis id='XDefaultScreen'>
 <funcprototype>
   <funcdef>int <function>XDefaultScreen</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -837,7 +837,7 @@ Specifies the connection to the X server.
 <indexterm significance="preferred"><primary>DefaultScreen</primary></indexterm>
 <indexterm significance="preferred"><primary>XDefaultScreen</primary></indexterm>
 Both return the default screen number referenced by the 
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 function. 
 This macro or function should be used to retrieve the screen number 
 in applications that will use only a single screen.
@@ -850,7 +850,7 @@ in applications that will use only a single screen.
 <para>
 DefaultVisual(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdefaultvisual'>
+<funcsynopsis id='XDefaultVisual'>
 <funcprototype>
   <funcdef>Visual *<function>XDefaultVisual</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -897,7 +897,7 @@ see <link linkend="Visual_Types">section 3.1</link>.
 <para>
 DisplayCells(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdisplaycells'>
+<funcsynopsis id='XDisplayCells'>
 <funcprototype>
   <funcdef>int <function>XDisplayCells</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -942,7 +942,7 @@ Both return the number of entries in the default colormap.
 <para>
 DisplayPlanes(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdisplayplanes'>
+<funcsynopsis id='XDisplayPlanes'>
 <funcprototype>
   <funcdef>int <function>XDisplayPlanes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -989,7 +989,7 @@ see the glossary.
 <para>
 DisplayString(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xdisplaystring'>
+<funcsynopsis id='XDisplayString'>
 <funcprototype>
   <funcdef>char *<function>XDisplayString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1014,7 +1014,7 @@ Specifies the connection to the X server.
 <indexterm significance="preferred"><primary>DisplayString</primary></indexterm>
 <indexterm significance="preferred"><primary>XDisplayString</primary></indexterm>
 Both return the string that was passed to 
-<function>XOpenDisplay</function>
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>
 when the current display was opened. 
 On <acronym>POSIX</acronym>-conformant systems,
 if the passed string was NULL, these return the value of
@@ -1033,7 +1033,7 @@ child process as well as for printing error messages.
 <para>
 LastKnownRequestProcessed(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xlastknownrequestprocessed'>
+<funcsynopsis id='XLastKnownRequestProcessed'>
 <funcprototype>
   <funcdef>unsigned long <function>XLastKnownRequestProcessed</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1057,28 +1057,28 @@ Specifies the connection to the X server.
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XExtendedMaxRequestSize</primary></indexterm>
 The
-<function>XExtendedMaxRequestSize</function>
+<olink targetdoc='bigreq' targetptr='XExtendedMaxRequestSize'><function>XExtendedMaxRequestSize</function></olink>
 function returns zero if the specified display does not support an
 extended-length protocol encoding; otherwise,
 it returns the maximum request size (in 4-byte units) supported
 by the server using the extended-length encoding.
 The Xlib functions
-<function>XDrawLines</function>,
-<function>XDrawArcs</function>,
-<function>XFillPolygon</function>,
-<function>XChangeProperty</function>,
-<function>XSetClipRectangles</function>,
+<xref linkend='XDrawLines' xrefstyle='select: title'/>,
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>,
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>,
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>,
+<xref linkend='XSetClipRectangles' xrefstyle='select: title'/>,
 and
-<function>XSetRegion</function>
+<xref linkend='XSetRegion' xrefstyle='select: title'/>
 will use the extended-length encoding as necessary, if supported
 by the server.  Use of the extended-length encoding in other Xlib
 functions (for example,
-<function>XDrawPoints</function>,
-<function>XDrawRectangles</function>,
-<function>XDrawSegments</function>,
-<function>XFillArcs</function>,
-<function>XFillRectangles</function>,
-<function>XPutImage</function>)
+<xref linkend='XDrawPoints' xrefstyle='select: title'/>,
+<xref linkend='XDrawRectangles' xrefstyle='select: title'/>,
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>,
+<xref linkend='XFillArcs' xrefstyle='select: title'/>,
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>,
+<xref linkend='XPutImage' xrefstyle='select: title'/>)
 is permitted but not required; an Xlib implementation may choose to
 split the data across multiple smaller requests instead.
 </para>
@@ -1123,13 +1123,13 @@ The protocol guarantees the size to be no smaller than 4096 units
 (16384 bytes).
 Xlib automatically breaks data up into multiple protocol requests
 as necessary for the following functions:
-<function>XDrawPoints</function>,
-<function>XDrawRectangles</function>,
-<function>XDrawSegments</function>,
-<function>XFillArcs</function>,
-<function>XFillRectangles</function>,
+<xref linkend='XDrawPoints' xrefstyle='select: title'/>,
+<xref linkend='XDrawRectangles' xrefstyle='select: title'/>,
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>,
+<xref linkend='XFillArcs' xrefstyle='select: title'/>,
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>,
 and 
-<function>XPutImage</function>.
+<xref linkend='XPutImage' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -1176,7 +1176,7 @@ are received.
 <para>
 NextRequest(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xnextrequest'>
+<funcsynopsis id='XNextRequest'>
 <funcprototype>
   <funcdef>unsigned long <function>XNextRequest</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1212,7 +1212,7 @@ Serial numbers are maintained separately for each display connection.
 <para>
 ProtocolVersion(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xprotocolversion'>
+<funcsynopsis id='XProtocolVersion'>
 <funcprototype>
   <funcdef>int <function>XProtocolVersion</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1247,7 +1247,7 @@ the connected display.
 <para>
 ProtocolRevision(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xprotocolrevision'>
+<funcsynopsis id='XProtocolRevision'>
 <funcprototype>
   <funcdef>int <function>XProtocolRevision</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1281,7 +1281,7 @@ Both return the minor protocol revision number of the X server.
 <para>
 QLength(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xqlength'>
+<funcsynopsis id='XQLength'>
 <funcprototype>
   <funcdef>int <function>XQLength</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1308,7 +1308,7 @@ Specifies the connection to the X server.
 Both return the length of the event queue for the connected display.
 Note that there may be more events that have not been read into
 the queue yet (see
-<function>XEventsQueued</function>).
+<xref linkend='XEventsQueued' xrefstyle='select: title'/>).
 </para>
 <para>
 <!-- .LP -->
@@ -1318,7 +1318,7 @@ the queue yet (see
 <para>
 RootWindow(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xrootwindow'>
+<funcsynopsis id='XRootWindow'>
 <funcprototype>
   <funcdef>Window <function>XRootWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1367,7 +1367,7 @@ and for creating top-level windows.
 <para>
 ScreenCount(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xscreencount'>
+<funcsynopsis id='XScreenCount'>
 <funcprototype>
   <funcdef>int <function>XScreenCount</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1401,7 +1401,7 @@ Both return the number of available screens.
 <para>
 ServerVendor(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xservervendor'>
+<funcsynopsis id='XServerVendor'>
 <funcprototype>
   <funcdef>char *<function>XServerVendor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1439,7 +1439,7 @@ Otherwise, the contents of the string are implementation-dependent.
 <para>
 VendorRelease(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xvendorrelease'>
+<funcsynopsis id='XVendorRelease'>
 <funcprototype>
   <funcdef>int <function>XVendorRelease</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1514,7 +1514,7 @@ To obtain the pixmap format information for a given display, use
 <para>
 ImageByteOrder(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='ximagebyteorder'>
+<funcsynopsis id='XImageByteOrder'>
 <funcprototype>
   <funcdef>int <function>XImageByteOrder</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1560,7 +1560,7 @@ returns NULL.
 To free the allocated storage for the
 <structname>XPixmapFormatValues</structname>
 structures, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP  -->
@@ -1617,7 +1617,7 @@ or
 <para>
 BitmapUnit(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xbitmapunit'>
+<funcsynopsis id='XBitmapUnit'>
 <funcprototype>
   <funcdef>int <function>XBitmapUnit</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1652,7 +1652,7 @@ The scanline is calculated in multiples of this value.
 <para>
 BitmapBitOrder(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xbitmpabitorder'>
+<funcsynopsis id='XBitmapBitOrder'>
 <funcprototype>
   <funcdef>int <function>XBitmapBitOrder</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1692,7 +1692,7 @@ or
 <para>
 BitmapPad(<emphasis remap='I'>display</emphasis>)
 </para>
-<funcsynopsis id='xbitmappad'>
+<funcsynopsis id='XBitmapPad'>
 <funcprototype>
   <funcdef>int <function>XBitmapPad</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1727,7 +1727,7 @@ by this macro or function.
 <para>
 DisplayHeight(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdisplayheight'>
+<funcsynopsis id='XDisplayHeight'>
 <funcprototype>
   <funcdef>int <function>XDisplayHeight</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1773,7 +1773,7 @@ in pixels.
 <para>
 DisplayHeightMM(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdisplayheightmm'>
+<funcsynopsis id='XDisplayHeightMM'>
 <funcprototype>
   <funcdef>int <function>XDisplayHeightMM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1818,7 +1818,7 @@ Both return the height of the specified screen in millimeters.
 <para>
 DisplayWidth(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdisplaywidth'>
+<funcsynopsis id='XDisplayWidth'>
 <funcprototype>
   <funcdef>int <function>XDisplayWidth</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1863,7 +1863,7 @@ Both return the width of the screen in pixels.
 <para>
 DisplayWidthMM(<emphasis remap='I'>display</emphasis>, <emphasis remap='I'>screen_number</emphasis>)
 </para>
-<funcsynopsis id='xdisplaywidthmm'>
+<funcsynopsis id='XDisplayWidthMM'>
 <funcprototype>
   <funcdef>int <function>XDisplayWidthMM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1922,7 +1922,7 @@ structure.
 <para>
 BlackPixelOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xblackpixelofscreen'>
+<funcsynopsis id='XBlackPixelOfScreen'>
 <funcprototype>
   <funcdef>unsigned long <function>XBlackPixelOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -1958,7 +1958,7 @@ Both return the black pixel value of the specified screen.
 <para>
 WhitePixelOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xwhitepixelofscreen'>
+<funcsynopsis id='XWhitePixelOfScreen'>
 <funcprototype>
   <funcdef>unsigned long <function>XWhitePixelOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -1994,7 +1994,7 @@ Both return the white pixel value of the specified screen.
 <para>
 CellsOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xcellsofscreen'>
+<funcsynopsis id='XCellsOfScreen'>
 <funcprototype>
   <funcdef>int <function>XCellsOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2031,7 +2031,7 @@ of the specified screen.
 <para>
 DefaultColormapOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdefaultcolormapofscreen'>
+<funcsynopsis id='XDefaultColormapOfScreen'>
 <funcprototype>
   <funcdef>Colormap <function>XDefaultColormapOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2067,7 +2067,7 @@ Both return the default colormap of the specified screen.
 <para>
 DefaultDepthOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdefaultdepthofscreen'>
+<funcsynopsis id='XDefaultDepthOfScreen'>
 <funcprototype>
   <funcdef>int <function>XDefaultDepthOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2103,7 +2103,7 @@ Both return the depth of the root window.
 <para>
 DefaultGCOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdefaultgcofscreen'>
+<funcsynopsis id='XDefaultGCOfScreen'>
 <funcprototype>
   <funcdef>GC <function>XDefaultGCOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2141,7 +2141,7 @@ The GC must never be freed.
 <para>
 DefaultVisualOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdefaultvisualofscreen'>
+<funcsynopsis id='XDefaultVisualOfScreen'>
 <funcprototype>
   <funcdef>Visual *<function>XDefaultVisualOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2179,7 +2179,7 @@ see <link linkend="Visual_Types">section 3.1</link>.
 <para>
 DoesBackingStore(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdoesbackingstore'>
+<funcsynopsis id='XDoesBackingStore'>
 <funcprototype>
   <funcdef>int <function>XDoesBackingStore</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2222,7 +2222,7 @@ or
 <para>
 DoesSaveUnders(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdoessaveunders'>
+<funcsynopsis id='XDoesSaveUnders'>
 <funcprototype>
   <funcdef>Bool <function>XDoesSaveUnders</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2266,7 +2266,7 @@ the screen does not support save unders
 <para>
 DisplayOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xdisplayofscreen'>
+<funcsynopsis id='XDisplayOfScreen'>
 <funcprototype>
   <funcdef>Display *<function>XDisplayOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2303,7 +2303,7 @@ Both return the display of the specified screen.
 <para>
 EventMaskOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xeventmaskofscreen'>
+<funcsynopsis id='XEventMaskOfScreen'>
 <funcprototype>
   <funcdef>long <function>XEventMaskOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2376,7 +2376,7 @@ at connection setup time.
 <para>
 WidthOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xwidthofscreen'>
+<funcsynopsis id='XWidthOfScreen'>
 <funcprototype>
   <funcdef>int <function>XWidthOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2412,7 +2412,7 @@ Both return the width of the specified screen in pixels.
 <para>
 HeightOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xheightofscreen'>
+<funcsynopsis id='XHeightOfScreen'>
 <funcprototype>
   <funcdef>int <function>XHeightOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2448,7 +2448,7 @@ Both return the height of the specified screen in pixels.
 <para>
 WidthMMOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xwidthmmofscreen'>
+<funcsynopsis id='XWidthMMOfScreen'>
 <funcprototype>
   <funcdef>int <function>XWidthMMOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2484,7 +2484,7 @@ Both return the width of the specified screen in millimeters.
 <para>
 HeightMMOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xheightmmofscreen'>
+<funcsynopsis id='XHeightMMOfScreen'>
 <funcprototype>
   <funcdef>int <function>XHeightMMOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2520,7 +2520,7 @@ Both return the height of the specified screen in millimeters.
 <para>
 MaxCmapsOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xmaxcmapsofscreen'>
+<funcsynopsis id='XMaxCmapsOfScreen'>
 <funcprototype>
   <funcdef>int <function>XMaxCmapsOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2558,7 +2558,7 @@ by the specified screen
 <para>
 MinCmapsOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xmincmapsofscreen'>
+<funcsynopsis id='XMinCmapsOfScreen'>
 <funcprototype>
   <funcdef>int <function>XMinCmapsOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2596,7 +2596,7 @@ by the specified screen
 <para>
 PlanesOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xplanesofscreen'>
+<funcsynopsis id='XPlanesOfScreen'>
 <funcprototype>
   <funcdef>int <function>XPlanesOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2632,7 +2632,7 @@ Both return the depth of the root window.
 <para>
 RootWindowOfScreen(<emphasis remap='I'>screen</emphasis>)
 </para>
-<funcsynopsis id='xrootwindowofscreen'>
+<funcsynopsis id='XRootWindowOfScreen'>
 <funcprototype>
   <funcdef>Window <function>XRootWindowOfScreen</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -2672,11 +2672,11 @@ Both return the root window of the specified screen.
 To execute a 
 <systemitem>NoOperation</systemitem>
 protocol request, use
-<function>XNoOp</function>.
+<xref linkend='XNoOp' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XNoOp</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xnoop'>
+<funcsynopsis id='XNoOp'>
 <funcprototype>
   <funcdef><function>XNoOp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2695,7 +2695,7 @@ protocol request, use
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XNoOp</function>
+<xref linkend='XNoOp' xrefstyle='select: title'/>
 function sends a 
 <systemitem>NoOperation</systemitem>
 protocol request to the X server,
@@ -2710,11 +2710,11 @@ thereby exercising the connection.
 <para>
 <!-- .LP -->
 To free in-memory data that was created by an Xlib function, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XFree</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xfree'>
+<funcsynopsis id='XFree'>
 <funcprototype>
   <funcdef>XFree</funcdef>
   <paramdef>void<parameter> *data</parameter></paramdef>
@@ -2738,7 +2738,7 @@ Specifies the data that is to be freed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFree</function>
+<xref linkend='XFree' xrefstyle='select: title'/>
 function is a general-purpose Xlib routine that frees the specified data.
 You must use it to free any objects that were allocated by Xlib,
 unless an alternate function is explicitly specified for the object.
@@ -2798,7 +2798,7 @@ and
 or other resources that the client has created
 on this display, unless the close-down mode of the resource has been changed
 (see
-<function>XSetCloseDownMode</function>).
+<xref linkend='XSetCloseDownMode' xrefstyle='select: title'/>).
 Therefore, these windows, resource IDs, and other resources should never be 
 referenced again or an error will be generated.
 Before exiting, you should call
@@ -2806,7 +2806,7 @@ Before exiting, you should call
 explicitly so that any pending errors are reported as
 <function>XCloseDisplay</function>
 performs a final
-<function>XSync</function>
+<xref linkend='XSync' xrefstyle='select: title'/>
 operation.
 <indexterm><primary>Resource IDs</primary></indexterm>
 <indexterm><primary>XCloseDisplay</primary></indexterm>
@@ -2824,11 +2824,11 @@ error.
 Xlib provides a function to permit the resources owned by a client
 to survive after the client's connection is closed.
 To change a client's close-down mode, use
-<function>XSetCloseDownMode</function>.
+<xref linkend='XSetCloseDownMode' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XSetCloseDownMode</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xsetclosedownmode'>
+<funcsynopsis id='XSetCloseDownMode'>
 <funcprototype>
   <funcdef>XSetCloseDownMode</funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2867,7 +2867,7 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetCloseDownMode</function>
+<xref linkend='XSetCloseDownMode' xrefstyle='select: title'/>
 defines what will happen to the client's resources at connection close.
 A connection starts in
 <symbol>DestroyAll</symbol>
@@ -2877,18 +2877,18 @@ close_mode argument is
 <symbol>RetainPermanent</symbol>
 or
 <symbol>RetainTemporary</symbol>,
-see <link linkend="Using_X_Server_Connection_Close_Operations_">section 2.6</link>.
+see <link linkend='Using_X_Server_Connection_Close_Operations'>section 2.6</link>.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetCloseDownMode</function>
+<xref linkend='XSetCloseDownMode' xrefstyle='select: title'/>
 can generate a
 <errorname>BadValue</errorname>
 error.
 </para>
 </sect1>
-<sect1 id="Using_X_Server_Connection_Close_Operations_">
-<title>Using X Server Connection Close Operations </title>
+<sect1 id='Using_X_Server_Connection_Close_Operations'>
+<title>Using X Server Connection Close Operations</title>
 <!-- .XS -->
 <!-- (SN Using X Server Connection Close Operations -->
 <!-- .XE -->
@@ -2905,15 +2905,15 @@ automatic operations:
     <para>
 It disowns all selections owned by the client
 (see 
-<function>XSetSelectionOwner</function>).
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>).
     </para>
   </listitem>
   <listitem>
     <para>
 It performs an
-<function>XUngrabPointer</function>
+<xref linkend='XUngrabPointer' xrefstyle='select: title'/>
 and
-<function>XUngrabKeyboard</function>
+<xref linkend='XUngrabKeyboard' xrefstyle='select: title'/>
 if the client has actively grabbed the pointer 
 or the keyboard.
     </para>
@@ -2921,7 +2921,7 @@ or the keyboard.
   <listitem>
     <para>
 It performs an
-<function>XUngrabServer</function>
+<xref linkend='XUngrabServer' xrefstyle='select: title'/>
 if the client has grabbed the server.
     </para>
   </listitem>
@@ -2940,7 +2940,7 @@ or
 <symbol>RetainTemporary</symbol>.
 However, this does not prevent other client applications from explicitly
 destroying the resources (see 
-<function>XSetCloseDownMode</function>).
+<xref linkend='XSetCloseDownMode' xrefstyle='select: title'/>).
     </para>
   </listitem>
 </itemizedlist>
@@ -3144,7 +3144,7 @@ the display is unlocked by this thread.
 Nested calls to
 <function>XLockDisplay</function>
 work correctly; the display will not actually be unlocked until
-<function>XUnlockDisplay</function>
+<xref linkend='XUnlockDisplay' xrefstyle='select: title'/>
 has been called the same number of times as
 <function>XLockDisplay</function>.
 This function has no effect unless Xlib was successfully initialized
@@ -3155,11 +3155,11 @@ for threads using
 <!-- .LP -->
 <!-- .sp -->
 To unlock a display, use
-<function>XUnlockDisplay</function>.
+<xref linkend='XUnlockDisplay' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XUnlockDisplay</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xunlockdisplay'>
+<funcsynopsis id='XUnlockDisplay'>
 <funcprototype>
   <funcdef>XUnlockDisplay</funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3182,13 +3182,13 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnlockDisplay</function>
+<xref linkend='XUnlockDisplay' xrefstyle='select: title'/>
 function allows other threads to use the specified display again.
 Any threads that have blocked on the display are allowed to continue.
 Nested locking works correctly; if
 <function>XLockDisplay</function>
 has been called multiple times by a thread, then
-<function>XUnlockDisplay</function>
+<xref linkend='XUnlockDisplay' xrefstyle='select: title'/>
 must be called an equal number of times before the display is
 actually unlocked.
 This function has no effect unless Xlib was successfully initialized
@@ -3206,7 +3206,7 @@ for threads using
 In addition to the connection to the X server, an Xlib implementation
 may require connections to other kinds of servers (for example, to
 input method servers as described in
-<link linkend="locales_and_internationalized_text_functions">chapter 13</link>).
+<link linkend='Locales_and_Internationalized_Text_Functions'>chapter 13</link>).
 Toolkits and clients
 that use multiple displays, or that use displays in combination with
 other inputs, need to obtain these additional connections to correctly
@@ -3218,7 +3218,7 @@ facilities.
 <para>
 <!-- .LP -->
 To track internal connections for a display, use
-<function>XAddConnectionWatch</function>.
+<xref linkend='XAddConnectionWatch' xrefstyle='select: title'/>.
 </para>
 <funcsynopsis id='xconnectionwatch'>
 <funcprototype>
@@ -3231,7 +3231,7 @@ To track internal connections for a display, use
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis id='xaddconnectionwatch'>
+<funcsynopsis id='XAddConnectionWatch'>
 <funcprototype>
   <funcdef>Status XAddConnectionWatch</funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3276,7 +3276,7 @@ Specifies the additional client data.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAddConnectionWatch</function>
+<xref linkend='XAddConnectionWatch' xrefstyle='select: title'/>
 function registers a procedure to be called each time Xlib opens or closes an
 internal connection for the specified display.  The procedure is passed the
 display, the specified client_data, the file descriptor for the connection,
@@ -3294,9 +3294,9 @@ the location pointed to by watch_data will hold this same private data pointer.
 This function can be called at any time after a display is opened.
 If internal connections already exist, the registered procedure will
 immediately be called for each of them, before
-<function>XAddConnectionWatch</function>
+<xref linkend='XAddConnectionWatch' xrefstyle='select: title'/>
 returns.
-<function>XAddConnectionWatch</function>
+<xref linkend='XAddConnectionWatch' xrefstyle='select: title'/>
 returns a nonzero status if the procedure is successfully registered;
 otherwise, it returns zero.
 </para>
@@ -3377,14 +3377,14 @@ was initially registered.
 <!-- .LP -->
 <!-- .sp -->
 To process input on an internal connection, use
-<function>XProcessInternalConnection</function>.
+<xref linkend='XProcessInternalConnection' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XProcessInternalConnection</primary></indexterm>
 <!-- .sM -->
 </para>
 <para>
 ()
 </para>
-<funcsynopsis id='xprocessinternalconnection'>
+<funcsynopsis id='XProcessInternalConnection'>
 <funcprototype>
   <funcdef>void <function>XProcessInternalConnection</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3418,7 +3418,7 @@ Specifies the file descriptor.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XProcessInternalConnection</function>
+<xref linkend='XProcessInternalConnection' xrefstyle='select: title'/>
 function processes input available on an internal connection.
 This function should be called for an internal connection only
 after an operating system facility (for example,
@@ -3432,14 +3432,14 @@ the effect is not defined.
 <!-- .LP -->
 <!-- .sp -->
 To obtain all of the current internal connections for a display, use
-<function>XInternalConnectionNumbers</function>.
+<xref linkend='XInternalConnectionNumbers' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XInternalConnectionNumbers</primary></indexterm>
 <!-- .sM -->
 </para>
 <para>
 ()
 </para>
-<funcsynopsis id='xinternalconnectionnumbers'>
+<funcsynopsis id='XInternalConnectionNumbers'>
 <funcprototype>
   <funcdef>Status <function>XInternalConnectionNumbers</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3485,12 +3485,12 @@ Returns the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XInternalConnectionNumbers</function>
+<xref linkend='XInternalConnectionNumbers' xrefstyle='select: title'/>
 function returns a list of the file descriptors for all internal
 connections currently open for the specified display.
 When the allocated list is no longer needed,
 free it by using
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 This functions returns a nonzero status if the list is successfully allocated;
 otherwise, it returns zero.
 </para>

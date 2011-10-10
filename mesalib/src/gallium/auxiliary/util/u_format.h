@@ -120,8 +120,9 @@ enum util_format_colorspace {
 
 struct util_format_channel_description
 {
-   unsigned type:6;        /**< UTIL_FORMAT_TYPE_x */
+   unsigned type:5;        /**< UTIL_FORMAT_TYPE_x */
    unsigned normalized:1;
+   unsigned pure_integer:1;
    unsigned size:9;        /**< bits per channel */
 };
 
@@ -321,6 +322,37 @@ struct util_format_description
                       const uint8_t *src, unsigned src_stride,
                       unsigned width, unsigned height);
 
+  /**
+    * Unpack pixel blocks to R32G32B32A32_UINT.
+    * Note: strides are in bytes.
+    *
+    * Only defined for INT formats.
+    */
+   void
+   (*unpack_rgba_uint)(unsigned *dst, unsigned dst_stride,
+                       const uint8_t *src, unsigned src_stride,
+                       unsigned width, unsigned height);
+
+   void
+   (*pack_rgba_uint)(uint8_t *dst, unsigned dst_stride,
+                     const unsigned *src, unsigned src_stride,
+                     unsigned width, unsigned height);
+
+  /**
+    * Unpack pixel blocks to R32G32B32A32_SINT.
+    * Note: strides are in bytes.
+    *
+    * Only defined for INT formats.
+    */
+   void
+   (*unpack_rgba_sint)(signed *dst, unsigned dst_stride,
+                       const uint8_t *src, unsigned src_stride,
+                       unsigned width, unsigned height);
+
+   void
+   (*pack_rgba_sint)(uint8_t *dst, unsigned dst_stride,
+                     const int *src, unsigned src_stride,
+                     unsigned width, unsigned height);
 };
 
 
@@ -511,6 +543,14 @@ util_format_is_luminance_alpha(enum pipe_format format);
 boolean
 util_format_is_intensity(enum pipe_format format);
 
+boolean
+util_format_is_pure_integer(enum pipe_format format);
+
+boolean
+util_format_is_pure_sint(enum pipe_format format);
+
+boolean
+util_format_is_pure_uint(enum pipe_format format);
 
 /**
  * Whether the src format can be blitted to destation format with a simple
@@ -806,6 +846,26 @@ util_format_get_nr_components(enum pipe_format format)
    return desc->nr_channels;
 }
 
+/**
+ * Return the index of the first non-void channel
+ * -1 if no non-void channels
+ */
+static INLINE int
+util_format_get_first_non_void_channel(enum pipe_format format)
+{
+   const struct util_format_description *desc = util_format_description(format);
+   int i;
+
+   for (i = 0; i < 4; i++)
+      if (desc->channel[i].type != UTIL_FORMAT_TYPE_VOID)
+         break;
+
+   if (i == 4)
+       return -1;
+
+   return i;
+}
+
 /*
  * Format access functions.
  */
@@ -833,6 +893,30 @@ util_format_write_4ub(enum pipe_format format,
                       const uint8_t *src, unsigned src_stride, 
                       void *dst, unsigned dst_stride, 
                       unsigned x, unsigned y, unsigned w, unsigned h);
+
+void
+util_format_read_4ui(enum pipe_format format,
+                     unsigned *dst, unsigned dst_stride,
+                     const void *src, unsigned src_stride,
+                     unsigned x, unsigned y, unsigned w, unsigned h);
+
+void
+util_format_write_4ui(enum pipe_format format,
+                      const unsigned int *src, unsigned src_stride,
+                      void *dst, unsigned dst_stride,
+                      unsigned x, unsigned y, unsigned w, unsigned h);
+
+void
+util_format_read_4i(enum pipe_format format,
+                    int *dst, unsigned dst_stride,
+                    const void *src, unsigned src_stride,
+                    unsigned x, unsigned y, unsigned w, unsigned h);
+
+void
+util_format_write_4i(enum pipe_format format,
+                     const int *src, unsigned src_stride,
+                     void *dst, unsigned dst_stride,
+                     unsigned x, unsigned y, unsigned w, unsigned h);
 
 /*
  * Generic format conversion;

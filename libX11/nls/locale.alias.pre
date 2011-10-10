@@ -51,7 +51,6 @@ ar_EG.iso88596:					ar_EG.ISO8859-6
 ar_EG.ISO-8859-6:				ar_EG.ISO8859-6
 ar_EG.utf8:					ar_EG.UTF-8
 ar_IN.utf8:					ar_IN.UTF-8
-ar_IN.UTF-8:					ar_IN.UTF-8
 ar_IQ:						ar_IQ.ISO8859-6
 ar_IQ.iso88596:					ar_IQ.ISO8859-6
 ar_IQ.ISO-8859-6:				ar_IQ.ISO8859-6
@@ -102,7 +101,6 @@ ar_TN.ISO-8859-6:				ar_TN.ISO8859-6
 ar_TN.utf8:					ar_TN.UTF-8
 as:						as_IN.UTF-8
 as_IN.utf8:					as_IN.UTF-8
-as_IN.UTF-8:					as_IN.UTF-8
 ar_YE:						ar_YE.ISO8859-6
 ar_YE.iso88596:					ar_YE.ISO8859-6
 ar_YE.ISO-8859-6:				ar_YE.ISO8859-6
@@ -131,9 +129,7 @@ bg_BG.ISO-8859-5:				bg_BG.ISO8859-5
 bg_BG.koi8r:					bg_BG.KOI8-R
 be_BG.utf8:					bg_BG.UTF-8
 bn_IN.utf8:					bn_IN.UTF-8
-bn_IN.UTF-8:					bn_IN.UTF-8
 bo_IN.utf8:					bo_IN.UTF-8
-bo_IN.UTF-8:					bo_IN.UTF-8
 br:						br_FR.ISO8859-1
 br_FR:						br_FR.ISO8859-1
 br_FR.iso88591:					br_FR.ISO8859-1
@@ -607,7 +603,6 @@ gl_ES@euro:					gl_ES.ISO8859-15
 gl_ES.UTF-8@euro:				gl_ES.UTF-8
 gl_ES.utf8:					gl_ES.UTF-8
 gu_IN.utf8:					gu_IN.UTF-8
-gu_IN.UTF-8:					gu_IN.UTF-8
 gv:						gv_GB.ISO8859-1
 gv_GB:						gv_GB.ISO8859-1
 gv_GB.iso88591:					gv_GB.ISO8859-1
@@ -635,7 +630,6 @@ hi_IN.utf8:					hi_IN.UTF-8
 HI_IN.UTF-8:					hi_IN.UTF-8
 hne:						hne_IN.UTF-8
 hne_IN.utf8:					hne_IN.UTF-8
-hne_IN.UTF-8:					hne_IN.UTF-8
 hr:						hr_HR.ISO8859-2
 hr_HR:						hr_HR.ISO8859-2
 hr_HR.iso88592:					hr_HR.ISO8859-2
@@ -729,7 +723,6 @@ kl_GL.iso885915:				kl_GL.ISO8859-15
 kl_GL.utf8:					kl_GL.UTF-8
 kn:						kn_IN.UTF-8
 kn_IN.utf8:					kn_IN.UTF-8
-kn_IN.UTF-8:					kn_IN.UTF-8
 ko:						ko_KR.eucKR
 ko.UTF-8:					ko_KR.UTF-8
 ko_KR:						ko_KR.eucKR
@@ -742,10 +735,8 @@ ko_KR.utf8:					ko_KR.UTF-8
 KO_KR.UTF-8:					ko_KR.UTF-8
 ks:						ks_IN.UTF-8
 ks_IN.utf8:					ks_IN.UTF-8
-ks_IN.UTF-8:					ks_IN.UTF-8
 ks_IN@devanagari:				ks_IN@devanagari.UTF-8
 ks_IN@devanagari.utf8:				ks_IN@devanagari.UTF-8
-ks_IN@devanagari.UTF-8:				ks_IN@devanagari.UTF-8
 kw:						kw_GB.ISO8859-1
 kw_GB:						kw_GB.ISO8859-1
 kw_GB.iso88591:					kw_GB.ISO8859-1
@@ -756,7 +747,6 @@ kw_GB.iso885915:				kw_GB.ISO8859-15
 kw_GB.ISO-8859-15:				kw_GB.ISO8859-15
 ky:						ky_KG.UTF-8
 ky_KG:							ky_KG.UTF-8
-ky_KG.utf8:						ky_KG.UTF-8
 ky_KG.UTF-8:					ky_KG.UTF-8
 lo:						lo_LA.MULELAO-1
 lo_LA:						lo_LA.MULELAO-1
@@ -789,7 +779,6 @@ lv_LV.ISO_8859-13:				lv_LV.ISO8859-13
 lv_LV.utf8:					lv_LV.UTF-8
 mai:						mai_IN.UTF-8
 mai_IN.utf8:					mai_IN.UTF-8
-mai_IN.UTF-8:					mai_IN.UTF-8
 mi:						mi_NZ.ISO8859-1
 mi_NZ:						mi_NZ.ISO8859-1
 mi_NZ.iso88591:					mi_NZ.ISO8859-1
@@ -804,11 +793,9 @@ mk_MK.MICROSOFT-CP1251:				mk_MK.CP1251
 mk_MK.utf8:					mk_MK.UTF-8
 ml:						ml_IN.UTF-8
 ml_IN.utf8:					ml_IN.UTF-8
-ml_IN.UTF-8:					ml_IN.UTF-8
 mr:						mr_IN.UTF-8
 mr_IN:						mr_IN.UTF-8
 mr_IN.utf8:					mr_IN.UTF-8
-mr_IN.UTF-8:					mr_IN.UTF-8
 ms:						ms_MY.ISO8859-1
 ms_MY:						ms_MY.ISO8859-1
 ms_MY.iso88591:					ms_MY.ISO8859-1
@@ -825,7 +812,6 @@ nb_NO.iso885915:				nb_NO.ISO8859-15
 nb_NO.ISO-8859-15:				nb_NO.ISO8859-15
 nb_NO.utf8:					nb_NO.UTF-8
 ne_NP.utf8:					ne_NP.UTF-8
-ne_NP.UTF-8:					ne_NP.UTF-8
 nl:						nl_NL.ISO8859-1
 nl.ISO8859-15:					nl_NL.ISO8859-15
 nl_BE:						nl_BE.ISO8859-1
@@ -895,10 +881,8 @@ oc_FR.ISO-8859-15:				oc_FR.ISO8859-15
 oc_FR@euro:					oc_FR.ISO8859-15
 or:						or_IN.UTF-8
 or_IN.utf8:					or_IN.UTF-8
-or_IN.UTF-8:					or_IN.UTF-8
 pa:						pa_IN.UTF-8
 pa_IN.utf8:					pa_IN.UTF-8
-pa_IN.UTF-8:					pa_IN.UTF-8
 pa_PK.utf8:					pa_PK.UTF-8
 pd:						pd_US.ISO8859-1
 pd_DE:						pd_DE.ISO8859-1
@@ -979,7 +963,6 @@ sd:						sd_IN.UTF-8
 sd_IN.utf8:					sd_IN.UTF-8
 sd:						sd_IN@devanagari.UTF-8
 sd_IN@devanagari.utf8:				sd_IN@devanagari.UTF-8
-sd_IN@devanagari.UTF-8:				sd_IN@devanagari.UTF-8
 se_NO:						se_NO.UTF-8
 se_NO.utf8:					se_NO.UTF-8
 XCOMM sh was the old ISO code for Serbo-Croatian (now individual sr and hr).
@@ -1066,7 +1049,6 @@ ta_IN.tscii:					ta_IN.TSCII-0
 ta_IN.tscii0:					ta_IN.TSCII-0
 te:						te_IN.UTF-8
 te_IN.utf8:					te_IN.UTF-8
-te_IN.UTF-8:					te_IN.UTF-8
 tg:						tg_TJ.KOI8-C
 tg_TJ:						tg_TJ.KOI8-C
 tg_TJ.koi8c:					tg_TJ.KOI8-C
@@ -1111,7 +1093,6 @@ uk_UA.MICROSOFT-CP1251:				uk_UA.CP1251
 uk_UA.utf8:					uk_UA.UTF-8
 ur:						ur_IN.UTF-8
 ur_IN.utf8:					ur_IN.UTF-8
-ur_IN.UTF-8:					ur_IN.UTF-8
 ur:						ur_PK.CP1256
 ur_PK:						ur_PK.CP1256
 ur_PK.cp1256:					ur_PK.CP1256

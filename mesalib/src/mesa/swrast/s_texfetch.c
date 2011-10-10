@@ -121,9 +121,9 @@ static void store_null_texel(struct swrast_texture_image *texImage,
  */
 static struct {
    gl_format Name;
-   FetchTexelFuncF Fetch1D;
-   FetchTexelFuncF Fetch2D;
-   FetchTexelFuncF Fetch3D;
+   FetchTexelFunc Fetch1D;
+   FetchTexelFunc Fetch2D;
+   FetchTexelFunc Fetch3D;
    StoreTexelFunc StoreTexel;
 }
 texfetch_funcs[MESA_FORMAT_COUNT] =
@@ -1250,7 +1250,7 @@ texfetch_funcs[MESA_FORMAT_COUNT] =
 };
 
 
-FetchTexelFuncF
+FetchTexelFunc
 _mesa_get_texel_fetch_func(gl_format format, GLuint dims)
 {
 #ifdef DEBUG
@@ -1287,63 +1287,7 @@ _mesa_get_texel_store_func(gl_format format)
 
 
 /**
- * Adaptor for fetching a GLchan texel from a float-valued texture.
- */
-static void
-fetch_texel_float_to_chan(const struct swrast_texture_image *texImage,
-                          GLint i, GLint j, GLint k, GLchan *texelOut)
-{
-   GLfloat temp[4];
-   GLenum baseFormat = _mesa_get_format_base_format(texImage->Base.TexFormat);
-
-   ASSERT(texImage->FetchTexelf);
-   texImage->FetchTexelf(texImage, i, j, k, temp);
-   if (baseFormat == GL_DEPTH_COMPONENT ||
-       baseFormat == GL_DEPTH_STENCIL_EXT) {
-      /* just one channel */
-      UNCLAMPED_FLOAT_TO_CHAN(texelOut[0], temp[0]);
-   }
-   else {
-      /* four channels */
-      UNCLAMPED_FLOAT_TO_CHAN(texelOut[0], temp[0]);
-      UNCLAMPED_FLOAT_TO_CHAN(texelOut[1], temp[1]);
-      UNCLAMPED_FLOAT_TO_CHAN(texelOut[2], temp[2]);
-      UNCLAMPED_FLOAT_TO_CHAN(texelOut[3], temp[3]);
-   }
-}
-
-
-#if 0
-/**
- * Adaptor for fetching a float texel from a GLchan-valued texture.
- */
-static void
-fetch_texel_chan_to_float(const struct swrast_texture_image *texImage,
-                          GLint i, GLint j, GLint k, GLfloat *texelOut)
-{
-   GLchan temp[4];
-   GLenum baseFormat = _mesa_get_format_base_format(texImage->TexFormat);
-
-   ASSERT(texImage->FetchTexelc);
-   texImage->FetchTexelc(texImage, i, j, k, temp);
-   if (baseFormat == GL_DEPTH_COMPONENT ||
-       baseFormat == GL_DEPTH_STENCIL_EXT) {
-      /* just one channel */
-      texelOut[0] = CHAN_TO_FLOAT(temp[0]);
-   }
-   else {
-      /* four channels */
-      texelOut[0] = CHAN_TO_FLOAT(temp[0]);
-      texelOut[1] = CHAN_TO_FLOAT(temp[1]);
-      texelOut[2] = CHAN_TO_FLOAT(temp[2]);
-      texelOut[3] = CHAN_TO_FLOAT(temp[3]);
-   }
-}
-#endif
-
-
-/**
- * Initialize the texture image's FetchTexelc and FetchTexelf methods.
+ * Initialize the texture image's FetchTexel methods.
  */
 static void
 set_fetch_functions(struct swrast_texture_image *texImage, GLuint dims)
@@ -1357,12 +1301,8 @@ set_fetch_functions(struct swrast_texture_image *texImage, GLuint dims)
       format = _mesa_get_srgb_format_linear(format);
    }
 
-   texImage->FetchTexelf = _mesa_get_texel_fetch_func(format, dims);
-
-   texImage->FetchTexelc = fetch_texel_float_to_chan;
-
-   ASSERT(texImage->FetchTexelc);
-   ASSERT(texImage->FetchTexelf);
+   texImage->FetchTexel = _mesa_get_texel_fetch_func(format, dims);
+   ASSERT(texImage->FetchTexel);
 }
 
 void

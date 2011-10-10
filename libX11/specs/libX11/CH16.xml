@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="application_utility_functions">
+<chapter id='Application_Utility_Functions'>
 <title>Application Utility Functions</title>
 <!-- .sp 2 -->
 <!-- .nr H1 16 -->
@@ -97,11 +97,11 @@ use the functions described in section 12.7.
 <!-- .LP -->
 <!-- .sp -->
 To obtain a KeySym for the KeyCode of an event, use
-<function>XLookupKeysym</function>.
+<xref linkend='XLookupKeysym' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLookupKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlookupkeysym'>
+<funcsynopsis id='XLookupKeysym'>
 <funcprototype>
   <funcdef>KeySym <function>XLookupKeysym</function></funcdef>
   <paramdef>XKeyEvent<parameter> *key_event</parameter></paramdef>
@@ -139,7 +139,7 @@ Specifies the index into the KeySyms list for the event's KeyCode.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLookupKeysym</function>
+<xref linkend='XLookupKeysym' xrefstyle='select: title'/>
 function uses a given keyboard event and the index you specified to return
 the KeySym from the list that corresponds to the KeyCode member in the
 <type>XKeyPressedEvent</type>
@@ -147,7 +147,7 @@ or
 <type>XKeyReleasedEvent</type>
 structure.
 If no KeySym is defined for the KeyCode of the event,
-<function>XLookupKeysym</function>
+<xref linkend='XLookupKeysym' xrefstyle='select: title'/>
 returns
 <symbol>NoSymbol</symbol>.
 </para>
@@ -155,11 +155,11 @@ returns
 <!-- .LP -->
 <!-- .sp -->
 To obtain a KeySym for a specific KeyCode, use
-<function>XKeycodeToKeysym</function>.
+<xref linkend='XKeycodeToKeysym' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XKeycodeToKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xkeycodetokeysym'>
+<funcsynopsis id='XKeycodeToKeysym'>
 <funcprototype>
   <funcdef>KeySym <function>XKeycodeToKeysym</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -204,12 +204,12 @@ Specifies the element of KeyCode vector.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XKeycodeToKeysym</function>
+<xref linkend='XKeycodeToKeysym' xrefstyle='select: title'/>
 function uses internal Xlib tables
 and returns the KeySym defined for the specified KeyCode and
 the element of the KeyCode vector.
 If no symbol is defined,
-<function>XKeycodeToKeysym</function>
+<xref linkend='XKeycodeToKeysym' xrefstyle='select: title'/>
 returns
 <symbol>NoSymbol</symbol>.
 </para>
@@ -217,11 +217,11 @@ returns
 <!-- .LP -->
 <!-- .sp -->
 To obtain a KeyCode for a key having a specific KeySym, use
-<function>XKeysymToKeycode</function>.
+<xref linkend='XKeysymToKeycode' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XKeysymToKeycode</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xkeysymtokeycode'>
+<funcsynopsis id='XKeysymToKeycode'>
 <funcprototype>
   <funcdef>KeyCode <function>XKeysymToKeycode</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -255,7 +255,7 @@ Specifies the KeySym that is to be searched for.
 <!-- .LP -->
 <!-- .eM -->
 If the specified KeySym is not defined for any KeyCode,
-<function>XKeysymToKeycode</function>
+<xref linkend='XKeysymToKeycode' xrefstyle='select: title'/>
 returns zero.
 </para>
 <para>
@@ -265,11 +265,11 @@ The mapping between KeyCodes and KeySyms is cached internal to Xlib.
 When this information is changed at the server, an Xlib function must
 be called to refresh the cache.
 To refresh the stored modifier and keymap information, use
-<function>XRefreshKeyboardMapping</function>.
+<xref linkend='XRefreshKeyboardMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRefreshKeyboardMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrefreshkeyboardmapping'>
+<funcsynopsis id='XRefreshKeyboardMapping'>
 <funcprototype>
   <funcdef><function>XRefreshKeyboardMapping</function></funcdef>
   <paramdef>XMappingEvent<parameter> *event_map</parameter></paramdef>
@@ -292,7 +292,7 @@ Specifies the mapping event that is to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XRefreshKeyboardMapping</function>
+<xref linkend='XRefreshKeyboardMapping' xrefstyle='select: title'/>
 function refreshes the stored modifier and keymap information.
 You usually call this function when a
 <symbol>MappingNotify</symbol>
@@ -307,11 +307,11 @@ The result is to update Xlib's knowledge of the keyboard.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the uppercase and lowercase forms of a KeySym, use
-<function>XConvertCase</function>.
+<xref linkend='XConvertCase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XConvertCase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xconvertcase'>
+<funcsynopsis id='XConvertCase'>
 <funcprototype>
   <funcdef>void <function>XConvertCase</function></funcdef>
   <paramdef>KeySym<parameter> keysym</parameter></paramdef>
@@ -357,7 +357,7 @@ Returns the uppercase form of keysym, or keysym.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XConvertCase</function>
+<xref linkend='XConvertCase' xrefstyle='select: title'/>
 function returns the uppercase and lowercase forms of the specified Keysym,
 if the KeySym is subject to case conversion;
 otherwise, the specified KeySym is returned to both lower_return and
@@ -370,11 +370,11 @@ implementation-dependent.
 <!-- .sp -->
 KeySyms have string names as well as numeric codes.
 To convert the name of the KeySym to the KeySym code, use
-<function>XStringToKeysym</function>.
+<xref linkend='XStringToKeysym' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XStringToKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstringtokeysym'>
+<funcsynopsis id='XStringToKeysym'>
 <funcprototype>
   <funcdef>KeySym <function>XStringToKeysym</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
@@ -412,7 +412,7 @@ and the mechanisms by which Xlib obtains them is implementation-dependent.
 If the KeySym name is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 If the specified string does not match a valid KeySym,
-<function>XStringToKeysym</function>
+<xref linkend='XStringToKeysym' xrefstyle='select: title'/>
 returns
 <symbol>NoSymbol</symbol>.
 </para>
@@ -420,11 +420,11 @@ returns
 <!-- .LP -->
 <!-- .sp -->
 To convert a KeySym code to the name of the KeySym, use
-<function>XKeysymToString</function>.
+<xref linkend='XKeysymToString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XKeysymToString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xkeysymtostring'>
+<funcsynopsis id='XKeysymToString'>
 <funcprototype>
   <funcdef>char *<function>XKeysymToString</function></funcdef>
   <paramdef>KeySym<parameter> keysym</parameter></paramdef>
@@ -450,7 +450,7 @@ Specifies the KeySym that is to be (Fn.
 The returned string is in a static area and must not be modified.
 The returned string is in the Host Portable Character Encoding.
 If the specified KeySym is not defined,
-<function>XKeysymToString</function>
+<xref linkend='XKeysymToString' xrefstyle='select: title'/>
 returns a NULL.
 </para>
 <sect2 id="KeySym_Classification_Macros">
@@ -648,19 +648,19 @@ if the specified KeySym is a PF key.
 </para>
 </sect2>
 </sect1>
-<sect1 id="Using_Latin_Keyboard_Event_Functions">
+<sect1 id='Using_Latin_1_Keyboard_Event_Functions'>
 <title>Using Latin-1 Keyboard Event Functions</title>
 <!-- .XS -->
 <!-- (SN Using Latin-1 Keyboard Event Functions  -->
 <!-- .XE -->
 <para>
 <!-- .LP -->
-<link linkend="locales_and_internationalized_text_functions">Chapter 13</link>
+<link linkend='Locales_and_Internationalized_Text_Functions'>Chapter 13</link>
 describes internationalized text input facilities,
 but sometimes it is expedient to write an application that
 only deals with Latin-1 characters and ASCII controls,
 so Xlib provides a simple function for that purpose.
-<function>XLookupString</function>
+<xref linkend='XLookupString' xrefstyle='select: title'/>
 handles the standard modifier semantics described in section 12.7.
 This function does not use any of the input method facilities
 described in chapter 13 and does not depend on the current locale.
@@ -669,11 +669,11 @@ described in chapter 13 and does not depend on the current locale.
 <!-- .LP -->
 <!-- .sp -->
 To map a key event to an ISO Latin-1 string, use
-<function>XLookupString</function>.
+<xref linkend='XLookupString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLookupString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlookupstring'>
+<funcsynopsis id='XLookupString'>
 <funcprototype>
   <funcdef>int <function>XLookupString</function></funcdef>
   <paramdef>XKeyEvent<parameter> *event_struct</parameter></paramdef>
@@ -747,19 +747,19 @@ structure or NULL.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLookupString</function>
+<xref linkend='XLookupString' xrefstyle='select: title'/>
 function translates a key event to a KeySym and a string.
 The KeySym is obtained by using the standard interpretation of the
 <symbol>Shift</symbol>,
 <symbol>Lock</symbol>,
 group, and numlock modifiers as defined in the X Protocol specification.
 If the KeySym has been rebound (see
-<function>XRebindKeysym</function>),
+<xref linkend='XRebindKeysym' xrefstyle='select: title'/>),
 the bound string will be stored in the buffer.
 Otherwise, the KeySym is mapped, if possible, to an ISO Latin-1 character
 or (if the Control modifier is on) to an ASCII control character,
 and that character is stored in the buffer.
-<function>XLookupString</function>
+<xref linkend='XLookupString' xrefstyle='select: title'/>
 returns the number of characters that are stored in the buffer.
 </para>
 <para>
@@ -770,7 +770,7 @@ the
 structure records the state,
 which is private to Xlib,
 that needs preservation across calls to
-<function>XLookupString</function>
+<xref linkend='XLookupString' xrefstyle='select: title'/>
 to implement compose processing.
 The creation of
 <structname>XComposeStatus</structname>
@@ -779,23 +779,23 @@ a portable program must pass NULL for this argument.
 </para>
 <para>
 <!-- .LP -->
-<function>XLookupString</function>
+<xref linkend='XLookupString' xrefstyle='select: title'/>
 depends on the cached keyboard information mentioned in the
 previous section, so it is necessary to use
-<function>XRefreshKeyboardMapping</function>
+<xref linkend='XRefreshKeyboardMapping' xrefstyle='select: title'/>
 to keep this information up-to-date.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To rebind the meaning of a KeySym for
-<function>XLookupString</function>,
+<xref linkend='XLookupString' xrefstyle='select: title'/>,
 use
-<function>XRebindKeysym</function>.
+<xref linkend='XRebindKeysym' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRebindKeysym</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrebindkeysym'>
+<funcsynopsis id='XRebindKeysym'>
 <funcprototype>
   <funcdef><function>XRebindKeysym</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -856,7 +856,7 @@ Specifies the number of modifiers in the modifier list.
     <listitem>
       <para>
 Specifies the string that is copied and will be returned by 
-<function>XLookupString</function>.
+<xref linkend='XLookupString' xrefstyle='select: title'/>.
       </para>
     </listitem>
   </varlistentry>
@@ -875,11 +875,11 @@ Specifies the number of bytes in the string argument.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XRebindKeysym</function>
+<xref linkend='XRebindKeysym' xrefstyle='select: title'/>
 function can be used to rebind the meaning of a KeySym for the client.
 It does not redefine any key in the X server but merely
 provides an easy way for long strings to be attached to keys.
-<function>XLookupString</function>
+<xref linkend='XLookupString' xrefstyle='select: title'/>
 returns this string when the appropriate set of
 modifier keys are pressed and when the KeySym would have been used for
 the translation.
@@ -896,10 +896,10 @@ Note that you can rebind a KeySym that may not exist.
 <para>
 <!-- .LP -->
 To allocate some memory you will never give back, use
-<function>Xpermalloc</function>.
+<xref linkend='Xpermalloc' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>Xpermalloc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xpermalloc'>
+<funcsynopsis id='Xpermalloc'>
 <funcprototype>
   <funcdef>char *<function>Xpermalloc</function></funcdef>
   <paramdef>unsignedint<parameter> size</parameter></paramdef>
@@ -911,7 +911,7 @@ To allocate some memory you will never give back, use
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>Xpermalloc</function>
+<xref linkend='Xpermalloc' xrefstyle='select: title'/>
 function allocates storage that can never be freed for the life of the
 program.  The memory is allocated with alignment for the C type double.
 This function may provide some performance and space savings over
@@ -926,13 +926,13 @@ the standard operating system memory allocator.
 <para>
 <!-- .LP -->
 To parse standard window geometry strings, use
-<function>XParseGeometry</function>.
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>.
 <indexterm><primary>Window</primary><secondary>determining location</secondary></indexterm>
 <indexterm significance="preferred"><primary>XParseGeometry</primary></indexterm>
 </para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis id='xparsegeometry'>
+<funcsynopsis id='XParseGeometry'>
 <funcprototype>
   <funcdef>int <function>XParseGeometry</function></funcdef>
   <paramdef>char<parameter> *parsestring</parameter></paramdef>
@@ -1000,7 +1000,7 @@ Return the width and height determined.
 <!-- .eM -->
 By convention,
 X applications use a standard string to indicate window size and placement.
-<function>XParseGeometry</function>
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>
 makes it easier to conform to this standard because it allows you
 to parse the standard window geometry.
 Specifically, this function lets you parse strings of the form:
@@ -1025,7 +1025,7 @@ the result is implementation-dependent.
 <para>
 <!-- .LP -->
 The
-<function>XParseGeometry</function>
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>
 function returns a bitmask that indicates which of the four values (width,
 height, xoffset, and yoffset) were actually found in the string 
 and whether the x and y values are negative. 
@@ -1062,11 +1062,11 @@ you should place the window at the requested position.
 <para>
 <!-- .LP -->
 To construct a window's geometry information, use
-<function>XWMGeometry</function>.
+<xref linkend='XWMGeometry' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XWMGeometry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xwmgeometry'>
+<funcsynopsis id='XWMGeometry'>
 <funcprototype>
   <funcdef>int <function>XWMGeometry</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1200,9 +1200,9 @@ Returns the window gravity.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XWMGeometry</function>
+<xref linkend='XWMGeometry' xrefstyle='select: title'/>
 function combines any geometry information (given in the format used by 
-<function>XParseGeometry</function>)
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>)
 specified by the user and by the calling program with size hints 
 (usually the ones to be stored in <property>WM_NORMAL_HINTS</property>) and returns the position, 
 size, and gravity
@@ -1220,7 +1220,7 @@ Otherwise, a base size of zero is assumed.
 If no minimum size is set in the hints structure, 
 the base size is used.
 A mask (in the form returned by 
-<function>XParseGeometry</function>)
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>)
 that describes which values came from the user specification 
 and whether or not the position coordinates are relative
 to the right and bottom edges is returned.
@@ -1300,11 +1300,11 @@ To create a new empty region, use
 <!-- .eM -->
 <!-- .sp -->
 To generate a region from a polygon, use
-<function>XPolygonRegion</function>.
+<xref linkend='XPolygonRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XPolygonRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xpolygonregion'>
+<funcsynopsis id='XPolygonRegion'>
 <funcprototype>
   <funcdef>Region <function>XPolygonRegion</function></funcdef>
   <paramdef>XPoint<parameter> points[]</parameter></paramdef>
@@ -1354,21 +1354,21 @@ or
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XPolygonRegion</function>
+<xref linkend='XPolygonRegion' xrefstyle='select: title'/>
 function returns a region for the polygon defined by the points array.
 For an explanation of fill_rule,
 see
-<function>XCreateGC</function>.
+<xref linkend='XCreateGC' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To set the clip-mask of a GC to a region, use
-<function>XSetRegion</function>.
+<xref linkend='XSetRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetregion'>
+<funcsynopsis id='XSetRegion'>
 <funcprototype>
   <funcdef><function>XSetRegion</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1413,7 +1413,7 @@ Specifies the region.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetRegion</function>
+<xref linkend='XSetRegion' xrefstyle='select: title'/>
 function sets the clip-mask in the GC to the specified region.
 The region is specified relative to the drawable's origin.
 The resulting GC clip origin is implementation-dependent.
@@ -1424,11 +1424,11 @@ the region can be destroyed.
 <!-- .LP  -->
 <!-- .sp -->
 To deallocate the storage associated with a specified region, use
-<function>XDestroyRegion</function>.
+<xref linkend='XDestroyRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroyRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroyregion'>
+<funcsynopsis id='XDestroyRegion'>
 <funcprototype>
   <funcdef><function>XDestroyRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1460,11 +1460,11 @@ Specifies the region.
 <para>
 <!-- .LP -->
 To move a region by a specified amount, use 
-<function>XOffsetRegion</function>.
+<xref linkend='XOffsetRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XOffsetRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xoffsetregion'>
+<funcsynopsis id='XOffsetRegion'>
 <funcprototype>
   <funcdef><function>XOffsetRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1512,11 +1512,11 @@ which define the amount you want to (Dy the specified region.
 <!-- .eM  -->
 <!-- .sp -->
 To reduce a region by a specified amount, use
-<function>XShrinkRegion</function>.
+<xref linkend='XShrinkRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XShrinkRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xshrinkregion'>
+<funcsynopsis id='XShrinkRegion'>
 <funcprototype>
   <funcdef><function>XShrinkRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1575,11 +1575,11 @@ and negative values expand the region.
 <!-- .LP -->
 <!-- .sp -->
 To generate the smallest rectangle enclosing a region, use
-<function>XClipBox</function>.
+<xref linkend='XClipBox' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XClipBox</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xclipbox'>
+<funcsynopsis id='XClipBox'>
 <funcprototype>
   <funcdef><function>XClipBox</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1613,18 +1613,18 @@ Returns the smallest enclosing rectangle.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XClipBox</function>
+<xref linkend='XClipBox' xrefstyle='select: title'/>
 function returns the smallest rectangle enclosing the specified region.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To compute the intersection of two regions, use
-<function>XIntersectRegion</function>.
+<xref linkend='XIntersectRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XIntersectRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xintersectregion'>
+<funcsynopsis id='XIntersectRegion'>
 <funcprototype>
   <funcdef><function>XIntersectRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1669,11 +1669,11 @@ Returns the result of the computation.
 <!-- .eM -->
 <!-- .sp -->
 To compute the union of two regions, use
-<function>XUnionRegion</function>.
+<xref linkend='XUnionRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XUnionRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunionregion'>
+<funcsynopsis id='XUnionRegion'>
 <funcprototype>
   <funcdef><function>XUnionRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1718,11 +1718,11 @@ Returns the result of the computation.
 <!-- .eM -->
 <!-- .sp -->
 To create a union of a source region and a rectangle, use
-<function>XUnionRectWithRegion</function>.
+<xref linkend='XUnionRectWithRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XUnionRectWithRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunionrectwithregion'>
+<funcsynopsis id='XUnionRectWithRegion'>
 <funcprototype>
   <funcdef><function>XUnionRectWithRegion</function></funcdef>
   <paramdef>XRectangle<parameter> *rectangle</parameter></paramdef>
@@ -1767,7 +1767,7 @@ Returns the destination region.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnionRectWithRegion</function>
+<xref linkend='XUnionRectWithRegion' xrefstyle='select: title'/>
 function updates the destination region from a union of the specified rectangle
 and the specified source region.
 </para>
@@ -1775,11 +1775,11 @@ and the specified source region.
 <!-- .LP -->
 <!-- .sp -->
 To subtract two regions, use
-<function>XSubtractRegion</function>.
+<xref linkend='XSubtractRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSubtractRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsubtractregion'>
+<funcsynopsis id='XSubtractRegion'>
 <funcprototype>
   <funcdef><function>XSubtractRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1823,7 +1823,7 @@ Returns the result of the computation.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSubtractRegion</function>
+<xref linkend='XSubtractRegion' xrefstyle='select: title'/>
 function subtracts srb from sra and stores the results in dr_return.
 </para>
 <para>
@@ -1831,11 +1831,11 @@ function subtracts srb from sra and stores the results in dr_return.
 <!-- .sp -->
 To calculate the difference between the union and intersection 
 of two regions, use
-<function>XXorRegion</function>.
+<xref linkend='XXorRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XXorRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xxorregion'>
+<funcsynopsis id='XXorRegion'>
 <funcprototype>
   <funcdef><function>XXorRegion</function></funcdef>
   <paramdef>Regionsra,srb,<parameter> dr_return</parameter></paramdef>
@@ -1888,11 +1888,11 @@ Returns the result of the computation.
 <para>
 <!-- .LP -->
 To determine if the specified region is empty, use
-<function>XEmptyRegion</function>.
+<xref linkend='XEmptyRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XEmptyRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xemptyregion'>
+<funcsynopsis id='XEmptyRegion'>
 <funcprototype>
   <funcdef>Bool <function>XEmptyRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -1915,7 +1915,7 @@ Specifies the region.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XEmptyRegion</function>
+<xref linkend='XEmptyRegion' xrefstyle='select: title'/>
 function returns
 <symbol>True</symbol>
 if the region is empty.
@@ -1924,11 +1924,11 @@ if the region is empty.
 <!-- .LP -->
 <!-- .sp -->
 To determine if two regions have the same offset, size, and shape, use
-<function>XEqualRegion</function>.
+<xref linkend='XEqualRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XEqualRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xequalregion'>
+<funcsynopsis id='XEqualRegion'>
 <funcprototype>
   <funcdef>Bool <function>XEqualRegion</function></funcdef>
   <paramdef>Regionr1,<parameter> r2</parameter></paramdef>
@@ -1962,7 +1962,7 @@ Specify the two regions.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XEqualRegion</function>
+<xref linkend='XEqualRegion' xrefstyle='select: title'/>
 function returns
 <symbol>True</symbol>
 if the two regions have the same offset, size, and shape.
@@ -1976,11 +1976,11 @@ if the two regions have the same offset, size, and shape.
 <para>
 <!-- .LP -->
 To determine if a specified point resides in a specified region, use
-<function>XPointInRegion</function>.
+<xref linkend='XPointInRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XPointInRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xpointinregion'>
+<funcsynopsis id='XPointInRegion'>
 <funcprototype>
   <funcdef>Bool <function>XPointInRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -2026,7 +2026,7 @@ Specify the x and y coordinates(Xy.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XPointInRegion</function>
+<xref linkend='XPointInRegion' xrefstyle='select: title'/>
 function returns 
 <symbol>True</symbol>
 if the point (x, y) is contained in the region r.
@@ -2035,11 +2035,11 @@ if the point (x, y) is contained in the region r.
 <!-- .LP -->
 <!-- .sp -->
 To determine if a specified rectangle is inside a region, use
-<function>XRectInRegion</function>.
+<xref linkend='XRectInRegion' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRectInRegion</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrectinregion'>
+<funcsynopsis id='XRectInRegion'>
 <funcprototype>
   <funcdef>int <function>XRectInRegion</function></funcdef>
   <paramdef>Region<parameter> r</parameter></paramdef>
@@ -2108,7 +2108,7 @@ Specify the width and height(Wh.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XRectInRegion</function>
+<xref linkend='XRectInRegion' xrefstyle='select: title'/>
 function returns
 <symbol>RectangleIn</symbol>
 if the rectangle is entirely in the specified region,
@@ -2148,11 +2148,11 @@ and can be accessed as a ring or as explicit buffers (numbered 0 through 7).
 <!-- .LP -->
 <!-- .sp -->
 To store data in cut buffer 0, use 
-<function>XStoreBytes</function>.
+<xref linkend='XStoreBytes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XStoreBytes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstorebytes'>
+<funcsynopsis id='XStoreBytes'>
 <funcprototype>
   <funcdef><function>XStoreBytes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2200,11 +2200,11 @@ The data can have embedded null characters
 and need not be null-terminated.
 The cut buffer's contents can be retrieved later by
 any client calling
-<function>XFetchBytes</function>.
+<xref linkend='XFetchBytes' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XStoreBytes</function>
+<xref linkend='XStoreBytes' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAlloc</errorname>
 error.
@@ -2213,11 +2213,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To store data in a specified cut buffer, use
-<function>XStoreBuffer</function>.
+<xref linkend='XStoreBuffer' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XStoreBuffer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstorebuffer'>
+<funcsynopsis id='XStoreBuffer'>
 <funcprototype>
   <funcdef><function>XStoreBuffer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2279,7 +2279,7 @@ and need not be null-terminated.
 </para>
 <para>
 <!-- .LP -->
-<function>XStoreBuffer</function>
+<xref linkend='XStoreBuffer' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAlloc</errorname>
 error.
@@ -2288,11 +2288,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To return data from cut buffer 0, use 
-<function>XFetchBytes</function>.
+<xref linkend='XFetchBytes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFetchBytes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfetchbytes'>
+<funcsynopsis id='XFetchBytes'>
 <funcprototype>
   <funcdef>char *<function>XFetchBytes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2326,7 +2326,7 @@ Returns the number of bytes in the buffer.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFetchBytes</function>
+<xref linkend='XFetchBytes' xrefstyle='select: title'/>
 function
 returns the number of bytes in the nbytes_return argument,
 if the buffer contains data.
@@ -2334,17 +2334,17 @@ Otherwise, the function
 returns NULL and sets nbytes to 0.
 The appropriate amount of storage is allocated and the pointer returned.
 The client must free this storage when finished with it by calling
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To return data from a specified cut buffer, use 
-<function>XFetchBuffer</function>.
+<xref linkend='XFetchBuffer' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFetchBuffer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfetchbuffer'>
+<funcsynopsis id='XFetchBuffer'>
 <funcprototype>
   <funcdef>char *<function>XFetchBuffer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2390,7 +2390,7 @@ Specifies the buffer (Fn.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFetchBuffer</function>
+<xref linkend='XFetchBuffer' xrefstyle='select: title'/>
 function returns zero to the nbytes_return argument 
 if there is no data in the buffer or if an invalid
 buffer is specified.
@@ -2399,11 +2399,11 @@ buffer is specified.
 <!-- .LP -->
 <!-- .sp -->
 To rotate the cut buffers, use 
-<function>XRotateBuffers</function>.
+<xref linkend='XRotateBuffers' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRotateBuffers</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrotatebuffers'>
+<funcsynopsis id='XRotateBuffers'>
 <funcprototype>
   <funcdef><function>XRotateBuffers</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2437,13 +2437,13 @@ Specifies how much to rotate the cut buffers.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XRotateBuffers</function>
+<xref linkend='XRotateBuffers' xrefstyle='select: title'/>
 function rotates the cut
 buffers, such that buffer 0 becomes buffer n, 
 buffer 1 becomes n + 1 mod 8, and so on.
 This cut buffer numbering is global to the display.
 Note that
-<function>XRotateBuffers</function>
+<xref linkend='XRotateBuffers' xrefstyle='select: title'/>
 generates
 <errorname>BadMatch</errorname>
 errors if any of the eight buffers have not been created.
@@ -2519,11 +2519,11 @@ typedef struct {
 <!-- .eM -->
 To obtain a list of visual information structures that match a specified
 template, use
-<function>XGetVisualInfo</function>.
+<xref linkend='XGetVisualInfo' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetVisualInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetvisualinfo'>
+<funcsynopsis id='XGetVisualInfo'>
 <funcprototype>
   <funcdef>XVisualInfo *<function>XGetVisualInfo</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2580,25 +2580,25 @@ Returns the number of matching visual structures.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetVisualInfo</function>
+<xref linkend='XGetVisualInfo' xrefstyle='select: title'/>
 function returns a list of visual structures that have attributes 
 equal to the attributes specified by vinfo_template.
 If no visual structures match the template using the specified vinfo_mask,
-<function>XGetVisualInfo</function>
+<xref linkend='XGetVisualInfo' xrefstyle='select: title'/>
 returns a NULL.
 To free the data returned by this function, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the visual information that matches the specified depth and
 class of the screen, use
-<function>XMatchVisualInfo</function>.
+<xref linkend='XMatchVisualInfo' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XMatchVisualInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmatchvisualinfo'>
+<funcsynopsis id='XMatchVisualInfo'>
 <funcprototype>
   <funcdef>Status <function>XMatchVisualInfo</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2665,16 +2665,16 @@ Returns the matched visual information.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMatchVisualInfo</function>
+<xref linkend='XMatchVisualInfo' xrefstyle='select: title'/>
 function returns the visual information for a visual that matches the specified
 depth and class for a screen.
 Because multiple visuals that match the specified depth and class can exist,
 the exact visual chosen is undefined.
 If a visual is found,
-<function>XMatchVisualInfo</function>
+<xref linkend='XMatchVisualInfo' xrefstyle='select: title'/>
 returns nonzero and the information on the visual to vinfo_return.
 Otherwise, when a visual is not found,
-<function>XMatchVisualInfo</function>
+<xref linkend='XMatchVisualInfo' xrefstyle='select: title'/>
 returns zero.
 </para>
 </sect1>
@@ -2707,9 +2707,9 @@ processing.
 Rather, they are here to provide minimal functions on screen format
 images.
 The basic operations for getting and putting images are
-<function>XGetImage</function>
+<xref linkend='XGetImage' xrefstyle='select: title'/>
 and 
-<function>XPutImage</function>.
+<xref linkend='XPutImage' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2729,7 +2729,7 @@ Other members (for example, byte order, bitmap_unit, and so forth)
 are characteristics of both the image and the server.  
 If these members
 differ between the image and the server, 
-<function>XPutImage</function>
+<xref linkend='XPutImage' xrefstyle='select: title'/>
 makes the appropriate conversions.
 The first byte of the first line of
 plane n must be located at the address (data + (n * height * bytes_per_line)).
@@ -2744,11 +2744,11 @@ see <link linkend="Transferring_Images_between_Client_and_Server">section 8.7</l
 To allocate an 
 <structname>XImage</structname>
 structure and initialize it with image format values from a display, use
-<function>XCreateImage</function>.
+<xref linkend='XCreateImage' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreateimage'>
+<funcsynopsis id='XCreateImage'>
 <funcprototype>
   <funcdef>XImage *<function>XCreateImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2880,7 +2880,7 @@ the start of one scanline and the start of the next.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateImage</function>
+<xref linkend='XCreateImage' xrefstyle='select: title'/>
 function allocates the memory needed for an
 <structname>XImage</structname>
 structure for the
@@ -2903,12 +2903,12 @@ in memory and calculates the value of bytes_per_line itself.
 <para>
 <!-- .LP -->
 Note that when the image is created using
-<function>XCreateImage</function>,
-<function>XGetImage</function>,
+<xref linkend='XCreateImage' xrefstyle='select: title'/>,
+<xref linkend='XGetImage' xrefstyle='select: title'/>,
 or
-<function>XSubImage</function>,
+<xref linkend='XSubImage' xrefstyle='select: title'/>,
 the destroy procedure that the 
-<function>XDestroyImage</function>
+<xref linkend='XDestroyImage' xrefstyle='select: title'/>
 function calls frees both the image structure 
 and the data pointed to by the image structure.
 </para>
@@ -2927,11 +2927,11 @@ in the image object and are defined in
 <!-- .LP -->
 <!-- .sp -->
 To obtain a pixel value in an image, use
-<function>XGetPixel</function>.
+<xref linkend='XGetPixel' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetPixel</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetpixel'>
+<funcsynopsis id='XGetPixel'>
 <funcprototype>
   <funcdef>unsigned long <function>XGetPixel</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -2977,7 +2977,7 @@ Specify the x and y coordinates.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetPixel</function>
+<xref linkend='XGetPixel' xrefstyle='select: title'/>
 function returns the specified pixel from the named image.
 The pixel value is returned in normalized format (that is,
 the least significant byte of the long is the least significant byte
@@ -2988,11 +2988,11 @@ The image must contain the x and y coordinates.
 <!-- .LP -->
 <!-- .sp -->
 To set a pixel value in an image, use
-<function>XPutPixel</function>.
+<xref linkend='XPutPixel' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XPutPixel</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xputpixel'>
+<funcsynopsis id='XPutPixel'>
 <funcprototype>
   <funcdef><function>XPutPixel</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -3049,7 +3049,7 @@ Specifies the new pixel value.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XPutPixel</function>
+<xref linkend='XPutPixel' xrefstyle='select: title'/>
 function overwrites the pixel in the named image with the specified pixel value.
 The input pixel value must be in normalized format
 (that is, the least significant byte of the long is the least significant
@@ -3060,11 +3060,11 @@ The image must contain the x and y coordinates.
 <!-- .LP -->
 <!-- .sp -->
 To create a subimage, use
-<function>XSubImage</function>.
+<xref linkend='XSubImage' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSubImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsubimage'>
+<funcsynopsis id='XSubImage'>
 <funcprototype>
   <funcdef>XImage *<function>XSubImage</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -3132,7 +3132,7 @@ Specifies the height of the new subimage, in pixels.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSubImage</function>
+<xref linkend='XSubImage' xrefstyle='select: title'/>
 function creates a new image that is a subsection of an existing one.
 It allocates the memory necessary for the new
 <structname>XImage</structname>
@@ -3146,11 +3146,11 @@ and subimage_height.
 <!-- .LP -->
 <!-- .sp -->
 To increment each pixel in an image by a constant value, use
-<function>XAddPixel</function>.
+<xref linkend='XAddPixel' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XAddPixel</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xaddpixel'>
+<funcsynopsis id='XAddPixel'>
 <funcprototype>
   <funcdef><function>XAddPixel</function></funcdef>
   <paramdef>XImage<parameter> *ximage</parameter></paramdef>
@@ -3184,7 +3184,7 @@ Specifies the constant value that is to be added.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAddPixel</function>
+<xref linkend='XAddPixel' xrefstyle='select: title'/>
 function adds a constant value to every pixel in an image.
 It is useful when you have a base pixel value from allocating
 color resources and need to manipulate the image to that form.
@@ -3193,13 +3193,13 @@ color resources and need to manipulate the image to that form.
 <!-- .LP -->
 <!-- .sp -->
 To deallocate the memory allocated in a previous call to
-<function>XCreateImage</function>,
+<xref linkend='XCreateImage' xrefstyle='select: title'/>,
 use
-<function>XDestroyImage</function>.
+<xref linkend='XDestroyImage' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroyImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroyimage'>
+<funcsynopsis id='XDestroyImage'>
 <funcprototype>
   <funcdef><function>XDestroyImage</function></funcdef>
   <paramdef>XImage *<parameter>ximage</parameter></paramdef>
@@ -3222,7 +3222,7 @@ Specifies the image.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDestroyImage</function>
+<xref linkend='XDestroyImage' xrefstyle='select: title'/>
 function deallocates the memory associated with the
 <structname>XImage</structname>
 structure.
@@ -3230,10 +3230,10 @@ structure.
 <para>
 <!-- .LP -->
 Note that when the image is created using
-<function>XCreateImage</function>,
-<function>XGetImage</function>,
+<xref linkend='XCreateImage' xrefstyle='select: title'/>,
+<xref linkend='XGetImage' xrefstyle='select: title'/>,
 or 
-<function>XSubImage</function>,
+<xref linkend='XSubImage' xrefstyle='select: title'/>,
 the destroy procedure that this macro calls
 frees both the image structure and the data pointed to by the image structure. 
 </para>
@@ -3282,11 +3282,11 @@ The bitmap unit is 8.
 <!-- .LP -->
 <!-- .sp -->
 To read a bitmap from a file and store it in a pixmap, use
-<function>XReadBitmapFile</function>.
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XReadBitmapFile</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xreadbitmapfile'>
+<funcsynopsis id='XReadBitmapFile'>
 <funcprototype>
   <funcdef>int <function>XReadBitmapFile</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3388,13 +3388,13 @@ Return the hotspot coordinates.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XReadBitmapFile</function>
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>
 function reads in a file containing a bitmap.
 The file is parsed in the encoding of the current locale.
 The ability to read other than the standard format 
 is implementation-dependent.
 If the file cannot be opened, 
-<function>XReadBitmapFile</function>
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>
 returns 
 <returnvalue>BitmapOpenFailed</returnvalue>.
 If the file can be opened but does not contain valid bitmap data, 
@@ -3409,23 +3409,23 @@ it returns
 </para>
 <para>
 <!-- .LP -->
-<function>XReadBitmapFile</function>
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>
 returns the bitmap's height and width, as read
 from the file, to width_return and height_return.
 It then creates a pixmap of the appropriate size, 
 reads the bitmap data from the file into the pixmap,
 and assigns the pixmap to the caller's variable bitmap.  
 The caller must free the bitmap using 
-<function>XFreePixmap</function>
+<xref linkend='XFreePixmap' xrefstyle='select: title'/>
 when finished.
 If <emphasis remap='I'>name</emphasis>_x_hot and <emphasis remap='I'>name</emphasis>_y_hot exist,
-<function>XReadBitmapFile</function>
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>
 returns them to x_hot_return and y_hot_return;
 otherwise, it returns &minus;1,&minus;1.
 </para>
 <para>
 <!-- .LP -->
-<function>XReadBitmapFile</function>
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadDrawable</errorname>,
@@ -3437,11 +3437,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read a bitmap from a file and return it as data, use
-<function>XReadBitmapFileData</function>.
+<xref linkend='XReadBitmapFileData' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XReadBitmapFileData</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xreadbitmapfiledata'>
+<funcsynopsis id='XReadBitmapFileData'>
 <funcprototype>
   <funcdef>int <function>XReadBitmapFileData</function></funcdef>
   <paramdef>char<parameter> *filename</parameter></paramdef>
@@ -3520,25 +3520,25 @@ Return the hotspot coordinates.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XReadBitmapFileData</function>
+<xref linkend='XReadBitmapFileData' xrefstyle='select: title'/>
 function reads in a file containing a bitmap, in the same manner as
-<function>XReadBitmapFile</function>,
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>,
 but returns the data directly rather than creating a pixmap in the server.
 The bitmap data is returned in data_return; the client must free this
 storage when finished with it by calling
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 The status and other return values are the same as for
-<function>XReadBitmapFile</function>.
+<xref linkend='XReadBitmapFile' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To write out a bitmap from a pixmap to a file, use
-<function>XWriteBitmapFile</function>.
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XWriteBitmapFile</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xwritebitmapfile'>
+<funcsynopsis id='XWriteBitmapFile'>
 <funcprototype>
   <funcdef>int <function>XWriteBitmapFile</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3629,7 +3629,7 @@ in the file.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XWriteBitmapFile</function>
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>
 function writes a bitmap out to a file in the X Version 11 format.
 The name used in the output file is derived from the file name
 by deleting the directory prefix.
@@ -3638,19 +3638,19 @@ If the file cannot be opened for writing,
 it returns 
 <returnvalue>BitmapOpenFailed</returnvalue>.
 If insufficient memory is allocated,
-<function>XWriteBitmapFile</function>
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>
 returns
 <returnvalue>BitmapNoMemory</returnvalue>;
 otherwise, on no error,
 it returns
 <returnvalue>BitmapSuccess</returnvalue>.
 If x_hot and y_hot are not &minus;1, &minus;1,
-<function>XWriteBitmapFile</function>
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>
 writes them out as the hotspot coordinates for the bitmap.
 </para>
 <para>
 <!-- .LP -->
-<function>XWriteBitmapFile</function>
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>
 and
@@ -3661,11 +3661,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To create a pixmap and then store bitmap-format data into it, use
-<function>XCreatePixmapFromBitmapData</function>.
+<xref linkend='XCreatePixmapFromBitmapData' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreatePixmapFromBitmapData</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreatepixmapfrombitmapdata'>
+<funcsynopsis id='XCreatePixmapFromBitmapData'>
 <funcprototype>
   <funcdef>Pixmap <function>XCreatePixmapFromBitmapData</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3766,9 +3766,9 @@ Specifies the depth of the pixmap.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreatePixmapFromBitmapData</function>
+<xref linkend='XCreatePixmapFromBitmapData' xrefstyle='select: title'/>
 function creates a pixmap of the given depth and then does a bitmap-format
-<function>XPutImage</function>
+<xref linkend='XPutImage' xrefstyle='select: title'/>
 of the data into it.
 The depth must be supported by the screen of the specified drawable,
 or a
@@ -3777,7 +3777,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreatePixmapFromBitmapData</function>
+<xref linkend='XCreatePixmapFromBitmapData' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadDrawable</errorname>,
@@ -3790,14 +3790,14 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To include a bitmap written out by 
-<function>XWriteBitmapFile</function>
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>
 <indexterm><primary>XWriteBitmapFile</primary></indexterm>
 in a program directly, as opposed to reading it in every time at run time, use
-<function>XCreateBitmapFromData</function>.
+<xref linkend='XCreateBitmapFromData' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateBitmapFromData</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreatebitmapfromdata'>
+<funcsynopsis id='XCreateBitmapFromData'>
 <funcprototype>
   <funcdef>Pixmap <function>XCreateBitmapFromData</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3865,11 +3865,11 @@ Specify the width and height.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateBitmapFromData</function>
+<xref linkend='XCreateBitmapFromData' xrefstyle='select: title'/>
 function allows you to include in your C program (using
 <code>#include</code>)
 a bitmap file that was written out by
-<function>XWriteBitmapFile</function>
+<xref linkend='XWriteBitmapFile' xrefstyle='select: title'/>
 (X version 11 format only) without reading in the bitmap file.
 The following example creates a gray bitmap:
 </para>
@@ -3885,17 +3885,17 @@ bitmap = XCreateBitmapFromData(display, window, gray_bits, gray_width, gray_heig
 <para>
 <!-- .LP -->
 If insufficient working storage was allocated,
-<function>XCreateBitmapFromData</function>
+<xref linkend='XCreateBitmapFromData' xrefstyle='select: title'/>
 returns
 <symbol>None</symbol>.
 It is your responsibility to free the
 bitmap using
-<function>XFreePixmap</function>
+<xref linkend='XFreePixmap' xrefstyle='select: title'/>
 when finished.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateBitmapFromData</function>
+<xref linkend='XCreateBitmapFromData' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3939,11 +3939,11 @@ The symbols used are in
 <!-- .LP -->
 <!-- .sp -->
 To save a data value that corresponds to a resource ID and context type, use
-<function>XSaveContext</function>.
+<xref linkend='XSaveContext' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSaveContext</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsavecontext'>
+<funcsynopsis id='XSaveContext'>
 <funcprototype>
   <funcdef>int <function>XSaveContext</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3999,10 +3999,10 @@ Specifies the data to be associated with the window and type.
 <!-- .LP -->
 <!-- .eM -->
 If an entry with the specified resource ID and type already exists,
-<function>XSaveContext</function>
+<xref linkend='XSaveContext' xrefstyle='select: title'/>
 overrides it with the specified context.
 The
-<function>XSaveContext</function>
+<xref linkend='XSaveContext' xrefstyle='select: title'/>
 function returns a nonzero error code if an error has occurred
 and zero otherwise.
 Possible errors are
@@ -4013,11 +4013,11 @@ Possible errors are
 <!-- .LP -->
 <!-- .sp -->
 To get the data associated with a resource ID and type, use
-<function>XFindContext</function>.
+<xref linkend='XFindContext' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFindContext</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfindcontext'>
+<funcsynopsis id='XFindContext'>
 <funcprototype>
   <funcdef>int <function>XFindContext</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4075,7 +4075,7 @@ Returns the data.
 Because it is a return value,
 the data is a pointer.
 The
-<function>XFindContext</function>
+<xref linkend='XFindContext' xrefstyle='select: title'/>
 function returns a nonzero error code if an error has occurred
 and zero otherwise.
 Possible errors are
@@ -4086,11 +4086,11 @@ Possible errors are
 <!-- .LP -->
 <!-- .sp -->
 To delete an entry for a given resource ID and type, use
-<function>XDeleteContext</function>.
+<xref linkend='XDeleteContext' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDeleteContext</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdeletecontext'>
+<funcsynopsis id='XDeleteContext'>
 <funcprototype>
   <funcdef>int <function>XDeleteContext</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4135,22 +4135,22 @@ Specifies the context type to which the data belongs.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDeleteContext</function>
+<xref linkend='XDeleteContext' xrefstyle='select: title'/>
 function deletes the entry for the given resource ID 
 and type from the data structure.
 This function returns the same error codes that
-<function>XFindContext</function>
+<xref linkend='XFindContext' xrefstyle='select: title'/>
 returns if called with the same arguments.
-<function>XDeleteContext</function>
+<xref linkend='XDeleteContext' xrefstyle='select: title'/>
 does not free the data whose address was saved.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To create a unique context type that may be used in subsequent calls to
-<function>XSaveContext</function>
+<xref linkend='XSaveContext' xrefstyle='select: title'/>
 and
-<function>XFindContext</function>,
+<xref linkend='XFindContext' xrefstyle='select: title'/>,
 use
 <function>XUniqueContext</function>.
 </para>

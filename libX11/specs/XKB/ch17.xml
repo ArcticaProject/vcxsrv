@@ -1,4 +1,4 @@
-<chapter id='the_xkb_compatibility_map'>
+<chapter id='The_Xkb_Compatibility_Map'>
 <title>The Xkb Compatibility Map</title>
 
 <para>
@@ -122,7 +122,7 @@ subsequent transformations have a particular result.
 </para>
 
 
-<sect1 id='the_xkbcompatmap_structure'>
+<sect1 id='The_XkbCompatMap_Structure'>
 <title>The XkbCompatMap Structure</title>
 
 <para>
@@ -171,7 +171,7 @@ override controls are used in each of the three cases where compatibility
 transformations are made.
 </para>
 
-<sect2 id='xkb_state_to_core_protocol_state_transformation'>
+<sect2 id='Xkb_State_to_Core_Protocol_State_Transformation'>
 <title>Xkb State to Core Protocol State Transformation</title>
 
 <para>
@@ -247,7 +247,7 @@ event as zero.
 </para>
 
 </sect2>
-<sect2 id='core_keyboard_mapping_to_xkb_keyboard_mapping_transformation'>
+<sect2 id='Core_Keyboard_Mapping_to_Xkb_Keyboard_Mapping_Transformation'>
 <title>Core Keyboard Mapping to Xkb Keyboard Mapping Transformation</title>
 
 <para>
@@ -399,7 +399,7 @@ XkbCompatMapRec</emphasis>
  (see Figure 17.3).
 </para>
 
-<sect3 id='symbol_interpretations_the_xkbsyminterpretrec_structure'>
+<sect3 id='Symbol_Interpretations__the_XkbSymInterpretRec_Structure'>
 <title>Symbol Interpretations — the XkbSymInterpretRec Structure</title>
 
 <para>
@@ -671,7 +671,7 @@ KB_Lock</emphasis>
 
 </sect3>
 </sect2>
-<sect2 id='xkb_keyboard_mapping_to_core_keyboard_mapping_transformations'>
+<sect2 id='Xkb_Keyboard_Mapping_to_Core_Keyboard_Mapping_Transformations'>
 <title>Xkb Keyboard Mapping to Core Keyboard Mapping Transformations</title>
 
 <para>
@@ -733,7 +733,7 @@ modifier mapping.
 
 </sect2>
 </sect1>
-<sect1 id='getting_compatibility_map_components_from_the_server'>
+<sect1 id='Getting_Compatibility_Map_Components_From_the_Server'>
 <title>Getting Compatibility Map Components From the Server</title>
 
 <para>
@@ -883,7 +883,7 @@ BadLength</emphasis>
 
 
 </sect1>
-<sect1 id='using_the_compatibility_map'>
+<sect1 id='Using_the_Compatibility_Map'>
 <title>Using the Compatibility Map</title>
 
 <para>
@@ -1241,7 +1241,7 @@ bindings of the key.
 
 
 </sect1>
-<sect1 id='changing_the_servers_compatibility_map'>
+<sect1 id='Changing_the_Servers_Compatibility_Map'>
 <title>Changing the Server’s Compatibility Map</title>
 
 <para>
@@ -1456,7 +1456,7 @@ NULL</emphasis>
 
 
 </sect1>
-<sect1 id='tracking_changes_to_the_compatibility_map'>
+<sect1 id='Tracking_Changes_to_the_Compatibility_Map'>
 <title>Tracking Changes to the Compatibility Map</title>
 
 <para>
@@ -1585,7 +1585,7 @@ compat.sym_interpret</emphasis>
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_the_compatibility_map'>
+<sect1 id='Allocating_and_Freeing_the_Compatibility_Map'>
 <title>Allocating and Freeing the Compatibility Map</title>
 
 <para>

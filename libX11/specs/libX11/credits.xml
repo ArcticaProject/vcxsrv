@@ -17,9 +17,7 @@ and recognition for their work on Xlib.
 Our apologies to anyone inadvertently overlooked.
 </para>
 <simplesect>
-<title>
-Release 1
-</title>
+<title>Release 1</title>
 <para>
 Our thanks does to Ron Newman (MIT Project Athena),
 who contributed substantially to the
@@ -96,9 +94,7 @@ and IBM for providing the environment where it could happen.
 </para>
 </simplesect>
 <simplesect>
-<title>
-Release 4
-</title>
+<title>Release 4</title>
 <para>
 Our thanks go to Jim Fulton (MIT X Consortium) for designing and
 specifying the new Xlib functions for Inter-Client Communication
@@ -111,9 +107,7 @@ for their much-appreciated efforts in reviewing the changes.
 </para>
 </simplesect>
 <simplesect>
-<title>
-Release 5
-</title>
+<title>Release 5</title>
 <para>
 The principal authors of the Input Method facilities are
 Vania Joloboff (Open Software Foundation) and Bill McMahon (Hewlett-Packard).
@@ -171,9 +165,7 @@ number of small errors.
 </para>
 </simplesect>
 <simplesect>
-<title>
-Release 6
-</title>
+<title>Release 6</title>
 <para>
 Stephen Gildea (X Consortium) authored the threads support.
 Ovais Ashraf (Sun) and Greg Olsen (Sun) contributed substantially

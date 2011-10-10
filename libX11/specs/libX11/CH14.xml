@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="inter_client_communication_functions">
+<chapter id='Inter_Client_Communication_Functions'>
 <title>Inter-Client Communication Functions</title>
 <para>
 The Inter-Client Communication Conventions Manual, hereafter referred to as the <acronym>ICCCM</acronym>,
@@ -252,17 +252,17 @@ of the root window).
 Note that the subwindows that you create are ignored by window managers.
 Therefore,
 you should use the basic window functions described in
-<link linkend="window_functions">chapter 3</link>
+<link linkend='Window_Functions'>chapter 3</link>
 to manipulate your application's subwindows.
 </para>
 <para>
 <!-- .LP -->
 To request that a top-level window be iconified, use
-<function>XIconifyWindow</function>.
+<xref linkend='XIconifyWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XIconifyWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xiconifywindow'>
+<funcsynopsis id='XIconifyWindow'>
 <funcprototype>
   <funcdef>Status <function>XIconifyWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -307,7 +307,7 @@ Specifies the appropriate screen number on the host server.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XIconifyWindow</function>
+<xref linkend='XIconifyWindow' xrefstyle='select: title'/>
 function sends a <property>WM_CHANGE_STATE</property> 
 <symbol>ClientMessage</symbol>
 event with a format of 32 and a first data element of 
@@ -323,7 +323,7 @@ Window managers may elect to receive this message and
 if the window is in its normal state, 
 may treat it as a request to change the window's state from normal to iconic.
 If the <property>WM_CHANGE_STATE</property> property cannot be interned, 
-<function>XIconifyWindow</function>
+<xref linkend='XIconifyWindow' xrefstyle='select: title'/>
 does not send a message and returns a zero status.
 It returns a nonzero status if the client message is sent successfully;
 otherwise, it returns a zero status.
@@ -332,11 +332,11 @@ otherwise, it returns a zero status.
 <para>
 <!-- .LP -->
 To request that a top-level window be withdrawn, use
-<function>XWithdrawWindow</function>.
+<xref linkend='XWithdrawWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XWithdrawWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xwithdrawwindow'>
+<funcsynopsis id='XWithdrawWindow'>
 <funcprototype>
   <funcdef>Status <function>XWithdrawWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -381,7 +381,7 @@ Specifies the appropriate screen number on the host server.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XWithdrawWindow</function>
+<xref linkend='XWithdrawWindow' xrefstyle='select: title'/>
 function unmaps the specified window 
 and sends a synthetic 
 <symbol>UnmapNotify</symbol>
@@ -397,7 +397,7 @@ otherwise, it returns a zero status.
 </para>
 <para>
 <!-- .LP -->
-<function>XWithdrawWindow</function>
+<xref linkend='XWithdrawWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -406,11 +406,11 @@ error.
 <para>
 <!-- .LP -->
 To request that a top-level window be reconfigured, use
-<function>XReconfigureWMWindow</function>.
+<xref linkend='XReconfigureWMWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XReconfigureWMWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xreconfigurewmwindow'>
+<funcsynopsis id='XReconfigureWMWindow'>
 <funcprototype>
   <funcdef>Status <function>XReconfigureWMWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -481,7 +481,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XReconfigureWMWindow</function>
+<xref linkend='XReconfigureWMWindow' xrefstyle='select: title'/>
 function issues a 
 <systemitem>ConfigureWindow</systemitem>
 request on the specified top-level window.
@@ -499,7 +499,7 @@ otherwise, it returns a zero status.
 </para>
 <para>
 <!-- .LP -->
-<function>XReconfigureWMWindow</function>
+<xref linkend='XReconfigureWMWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and 
@@ -577,14 +577,14 @@ typedef enum {
 To convert a list of text strings to an 
 <structname>XTextProperty</structname>
 structure, use
-<function>XmbTextListToTextProperty</function>
+<xref linkend='XmbTextListToTextProperty' xrefstyle='select: title'/>
 or
-<function>XwcTextListToTextProperty</function>.
+<xref linkend='XwcTextListToTextProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbTextListToTextProperty</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextListToTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbtextlisttotextproperty'>
+<funcsynopsis id='XmbTextListToTextProperty'>
 <funcprototype>
   <funcdef>int <function>XmbTextListToTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -595,7 +595,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwctextlisttotextproperty'>
+<funcsynopsis id='XwcTextListToTextProperty'>
 <funcprototype>
   <funcdef>int <function>XwcTextListToTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -664,9 +664,9 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbTextListToTextProperty</function>
+<xref linkend='XmbTextListToTextProperty' xrefstyle='select: title'/>
 and
-<function>XwcTextListToTextProperty</function>
+<xref linkend='XwcTextListToTextProperty' xrefstyle='select: title'/>
 functions set the specified 
 <structname>XTextProperty</structname>
 value to a set of null-separated elements representing the concatenation
@@ -731,7 +731,7 @@ is guaranteed.
 <para>
 <!-- .LP -->
 To free the storage for the value field, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 <!-- .sp -->
 </para>
 <para>
@@ -739,14 +739,14 @@ To free the storage for the value field, use
 To obtain a list of text strings from an 
 <structname>XTextProperty</structname>
 structure, use
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 or
-<function>XwcTextPropertyToTextList</function>.
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbTextPropertyToTextList</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextPropertyToTextList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbtextpropertytotextlist'>
+<funcsynopsis id='XmbTextPropertyToTextList'>
 <funcprototype>
   <funcdef>int <function>XmbTextPropertyToTextList</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -756,7 +756,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwctextpropertytotextlist'>
+<funcsynopsis id='XwcTextPropertyToTextList'>
 <funcprototype>
   <funcdef>int <function>XwcTextPropertyToTextList</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -815,9 +815,9 @@ Returns the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 and 
-<function>XwcTextPropertyToTextList</function>
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>
 functions return a list of text strings in the current locale representing the
 null-separated elements of the specified
 <structname>XTextProperty</structname>
@@ -834,9 +834,9 @@ any terminating null should not be included in text_prop.nitems.
 <para>
 <!-- .LP -->
 If insufficient memory is available for the list and its elements,
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 and
-<function>XwcTextPropertyToTextList</function>
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>
 return 
 <symbol>XNoMemory</symbol>.
 If the current locale is not supported,
@@ -861,9 +861,9 @@ the functions do not set any return values.
 <para>
 <!-- .LP -->
 Otherwise, 
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 and
-<function>XwcTextPropertyToTextList</function>
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>
 return the list of null-terminated text strings to list_return
 and the number of text strings to count_return.
 </para>
@@ -878,33 +878,33 @@ To obtain the value of this string,
 use
 <function>XDefaultString</function>.
 Otherwise,
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 and
-<function>XwcTextPropertyToTextList</function>
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>
 return 
 <symbol>Success</symbol>.
 </para>
 <para>
 <!-- .LP -->
 To free the storage for the list and its contents returned by
-<function>XmbTextPropertyToTextList</function>,
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>,
 use
-<function>XFreeStringList</function>.
+<xref linkend='XFreeStringList' xrefstyle='select: title'/>.
 To free the storage for the list and its contents returned by
-<function>XwcTextPropertyToTextList</function>,
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>,
 use
-<function>XwcFreeStringList</function>.
+<xref linkend='XwcFreeStringList' xrefstyle='select: title'/>.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To free the in-memory data associated with the specified
 wide character string list, use
-<function>XwcFreeStringList</function>.
+<xref linkend='XwcFreeStringList' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XwcFreeStringList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xwcfreestringlist'>
+<funcsynopsis id='XwcFreeStringList'>
 <funcprototype>
   <funcdef>void <function>XwcFreeStringList</function></funcdef>
   <paramdef>wchar_t<parameter> **list</parameter></paramdef>
@@ -927,9 +927,9 @@ Specifies the list of strings to be freed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XwcFreeStringList</function>
+<xref linkend='XwcFreeStringList' xrefstyle='select: title'/>
 function frees memory allocated by
-<function>XwcTextPropertyToTextList</function>.
+<xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/>.
 <!-- .sp -->
 </para>
 <para>
@@ -946,7 +946,7 @@ The
 <function>XDefaultString</function>
 function returns the default string used by Xlib for text conversion
 (for example, in 
-<function>XmbTextPropertyToTextList</function>).
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>).
 The default string is the string in the current locale that is output 
 when an unconvertible character is found during text conversion.
 If the string returned by
@@ -962,7 +962,7 @@ The string returned by
 <function>XDefaultString</function>
 is independent of the default string for text drawing;
 see 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 to obtain the default string for an
 <type>XFontSet</type>.
 </para>
@@ -984,11 +984,11 @@ Until freed, it will not be modified by Xlib.
 To set the specified list of strings in the STRING encoding to a 
 <structname>XTextProperty</structname>
 structure, use
-<function>XStringListToTextProperty</function>.
+<xref linkend='XStringListToTextProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XStringListToTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstringlisttotextproperty'>
+<funcsynopsis id='XStringListToTextProperty'>
 <funcprototype>
   <funcdef>Status <function>XStringListToTextProperty</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -1036,7 +1036,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XStringListToTextProperty</function>
+<xref linkend='XStringListToTextProperty' xrefstyle='select: title'/>
 function sets the specified 
 <structname>XTextProperty</structname>
 to be of type STRING (format 8) with a value representing the
@@ -1045,13 +1045,13 @@ An extra null byte (which is not included in the nitems member)
 is stored at the end of the value field of text_prop_return.
 The strings are assumed (without verification) to be in the STRING encoding.
 If insufficient memory is available for the new value string, 
-<function>XStringListToTextProperty</function>
+<xref linkend='XStringListToTextProperty' xrefstyle='select: title'/>
 does not set any fields in the
 <structname>XTextProperty</structname>
 structure and returns a zero status.
 Otherwise, it returns a nonzero status.
 To free the storage for the value field, use 
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 <!-- .sp -->
 </para>
 <para>
@@ -1059,11 +1059,11 @@ To free the storage for the value field, use
 To obtain a list of strings from a specified
 <structname>XTextProperty</structname>
 structure in the STRING encoding, use
-<function>XTextPropertyToStringList</function>.
+<xref linkend='XTextPropertyToStringList' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XTextPropertyToStringList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xtextpropertytostringlist'>
+<funcsynopsis id='XTextPropertyToStringList'>
 <funcprototype>
   <funcdef>Status <function>XTextPropertyToStringList</function></funcdef>
   <paramdef>XTextProperty<parameter> *text_prop</parameter></paramdef>
@@ -1111,7 +1111,7 @@ Returns the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XTextPropertyToStringList</function>
+<xref linkend='XTextPropertyToStringList' xrefstyle='select: title'/>
 function returns a list of strings representing the null-separated elements 
 of the specified
 <structname>XTextProperty</structname>
@@ -1122,21 +1122,21 @@ Multiple elements of the property
 are separated by NULL (encoding 0).
 The contents of the property are not null-terminated.
 If insufficient memory is available for the list and its elements, 
-<function>XTextPropertyToStringList</function>
+<xref linkend='XTextPropertyToStringList' xrefstyle='select: title'/>
 sets no return values and returns a zero status.
 Otherwise, it returns a nonzero status.
 To free the storage for the list and its contents, use 
-<function>XFreeStringList</function>.
+<xref linkend='XFreeStringList' xrefstyle='select: title'/>.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To free the in-memory data associated with the specified string list, use
-<function>XFreeStringList</function>.
+<xref linkend='XFreeStringList' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeStringList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreestringlist'>
+<funcsynopsis id='XFreeStringList'>
 <funcprototype>
   <funcdef>void <function>XFreeStringList</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -1159,13 +1159,13 @@ Specifies the list of strings to be freed.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XFreeStringList</function>
+<xref linkend='XFreeStringList' xrefstyle='select: title'/>
 function releases memory allocated by 
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 and
-<function>XTextPropertyToStringList</function>
+<xref linkend='XTextPropertyToStringList' xrefstyle='select: title'/>
 and the missing charset list allocated by 
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 </para>
 </sect2>
 <sect2 id="Setting_and_Reading_Text_Properties">
@@ -1194,11 +1194,11 @@ respectively.
 <para>
 <!-- .LP -->
 To set one of a window's text properties, use
-<function>XSetTextProperty</function>.
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsettextproperty'>
+<funcsynopsis id='XSetTextProperty'>
 <funcprototype>
   <funcdef>void <function>XSetTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1256,7 +1256,7 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetTextProperty</function>
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>
 function replaces the existing specified property for the named window 
 with the data, type, format, and number of items determined 
 by the value field, the encoding field, the format field, 
@@ -1264,12 +1264,12 @@ and the nitems field, respectively, of the specified
 <structname>XTextProperty</structname>
 structure.
 If the property does not already exist,
-<function>XSetTextProperty</function>
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>
 sets it for the specified window.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetTextProperty</function>
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadAtom</errorname>,
@@ -1282,11 +1282,11 @@ errors.
 <para>
 <!-- .LP -->
 To read one of a window's text properties, use
-<function>XGetTextProperty</function>.
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetTextProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgettextproperty'>
+<funcsynopsis id='XGetTextProperty'>
 <funcprototype>
   <funcdef>Status <function>XGetTextProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1344,7 +1344,7 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 function reads the specified property from the window
 and stores the data in the returned
 <structname>XTextProperty</structname>
@@ -1358,7 +1358,7 @@ is stored at the end of the value field of text_prop_return.
 The particular interpretation of the property's encoding 
 and data as text is left to the calling application.
 If the specified property does not exist on the window,
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 sets the value field to NULL, 
 the encoding field to
 <symbol>None</symbol>,
@@ -1370,13 +1370,13 @@ and the nitems field to zero.
 If it was able to read and store the data in the
 <structname>XTextProperty</structname>
 structure,
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 returns a nonzero status; 
 otherwise, it returns a zero status.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and 
@@ -1398,11 +1398,11 @@ the <property>WM_NAME</property> property for a given window.
 <para>
 <!-- .LP -->
 To set a window's <property>WM_NAME</property> property with the supplied convenience function, use
-<function>XSetWMName</function>.
+<xref linkend='XSetWMName' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmname'>
+<funcsynopsis id='XSetWMName'>
 <funcprototype>
   <funcdef>void <function>XSetWMName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1449,20 +1449,20 @@ structure to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWMName</function>
+<xref linkend='XSetWMName' xrefstyle='select: title'/>
 convenience function calls
-<function>XSetTextProperty</function>
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>
 to set the <property>WM_NAME</property> property.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To read a window's <property>WM_NAME</property> property with the supplied convenience function, use
-<function>XGetWMName</function>.
+<xref linkend='XGetWMName' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmname'>
+<funcsynopsis id='XGetWMName'>
 <funcprototype>
   <funcdef>Status <function>XGetWMName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1509,9 +1509,9 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetWMName</function>
+<xref linkend='XGetWMName' xrefstyle='select: title'/>
 convenience function calls
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 to obtain the <property>WM_NAME</property> property.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
@@ -1519,9 +1519,9 @@ otherwise, it returns a zero status.
 <para>
 <!-- .LP -->
 The following two functions have been superseded by
-<function>XSetWMName</function>
+<xref linkend='XSetWMName' xrefstyle='select: title'/>
 and
-<function>XGetWMName</function>,
+<xref linkend='XGetWMName' xrefstyle='select: title'/>,
 respectively. 
 You can use these additional convenience functions 
 for window names that are encoded as STRING properties.
@@ -1530,12 +1530,12 @@ for window names that are encoded as STRING properties.
 <para>
 <!-- .LP -->
 To assign a name to a window, use
-<function>XStoreName</function>.
+<xref linkend='XStoreName' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XStoreName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstorename'>
+<funcsynopsis id='XStoreName'>
 <funcprototype>
   <funcdef><function>XStoreName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1581,7 +1581,7 @@ which should be a null-terminated string.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XStoreName</function>
+<xref linkend='XStoreName' xrefstyle='select: title'/>
 function assigns the name passed to window_name to the specified window.
 A window manager can display the window name in some prominent
 place, such as the title bar, to allow users to identify windows easily.
@@ -1593,7 +1593,7 @@ the result is implementation-dependent.
 </para>
 <para>
 <!-- .LP -->
-<function>XStoreName</function>
+<xref linkend='XStoreName' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1604,11 +1604,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To get the name of a window, use
-<function>XFetchName</function>.
+<xref linkend='XFetchName' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFetchName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfetchname'>
+<funcsynopsis id='XFetchName'>
 <funcprototype>
   <funcdef>Status <function>XFetchName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1653,25 +1653,25 @@ Returns the window name, which is a null-terminated string.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFetchName</function>
+<xref linkend='XFetchName' xrefstyle='select: title'/>
 function returns the name of the specified window.
 If it succeeds,
 it returns a nonzero status; 
 otherwise, no name has been set for the window,
 and it returns zero.
 If the <property>WM_NAME</property> property has not been set for this window,
-<function>XFetchName</function>
+<xref linkend='XFetchName' xrefstyle='select: title'/>
 sets window_name_return to NULL.
 If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned string is in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 When finished with it, a client must free
 the window name string using
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XFetchName</function>
+<xref linkend='XFetchName' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -1692,11 +1692,11 @@ the <property>WM_ICON_NAME</property> property for a given window.
 <!-- .sp -->
 To set a window's <property>WM_ICON_NAME</property> property,
 use
-<function>XSetWMIconName</function>.
+<xref linkend='XSetWMIconName' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmiconname'>
+<funcsynopsis id='XSetWMIconName'>
 <funcprototype>
   <funcdef>void <function>XSetWMIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1743,9 +1743,9 @@ structure to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWMIconName</function>
+<xref linkend='XSetWMIconName' xrefstyle='select: title'/>
 convenience function calls
-<function>XSetTextProperty</function>
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>
 to set the <property>WM_ICON_NAME</property> property.
 <!-- .sp -->
 </para>
@@ -1753,11 +1753,11 @@ to set the <property>WM_ICON_NAME</property> property.
 <!-- .LP -->
 To read a window's <property>WM_ICON_NAME</property> property,
 use
-<function>XGetWMIconName</function>.
+<xref linkend='XGetWMIconName' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmiconname'>
+<funcsynopsis id='XGetWMIconName'>
 <funcprototype>
   <funcdef>Status <function>XGetWMIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1804,9 +1804,9 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetWMIconName</function>
+<xref linkend='XGetWMIconName' xrefstyle='select: title'/>
 convenience function calls
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 to obtain the <property>WM_ICON_NAME</property> property.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
@@ -1814,9 +1814,9 @@ otherwise, it returns a zero status.
 <para>
 <!-- .LP -->
 The next two functions have been superseded by
-<function>XSetWMIconName</function>
+<xref linkend='XSetWMIconName' xrefstyle='select: title'/>
 and
-<function>XGetWMIconName</function>,
+<xref linkend='XGetWMIconName' xrefstyle='select: title'/>,
 respectively.
 You can use these additional convenience functions 
 for window names that are encoded as STRING properties.
@@ -1826,12 +1826,12 @@ for window names that are encoded as STRING properties.
 <!-- .LP -->
 <!-- .sp -->
 To set the name to be displayed in a window's icon, use
-<function>XSetIconName</function>.
+<xref linkend='XSetIconName' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>icon name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xseticonname'>
+<funcsynopsis id='XSetIconName'>
 <funcprototype>
   <funcdef><function>XSetIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1878,7 +1878,7 @@ which should be a null-terminated string.
 <!-- .eM -->
 If the string is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
-<function>XSetIconName</function>
+<xref linkend='XSetIconName' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1889,11 +1889,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To get the name a window wants displayed in its icon, use
-<function>XGetIconName</function>.
+<xref linkend='XGetIconName' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetIconName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgeticonname'>
+<funcsynopsis id='XGetIconName'>
 <funcprototype>
   <funcdef>Status <function>XGetIconName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1939,24 +1939,24 @@ which is a null-terminated string.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetIconName</function>
+<xref linkend='XGetIconName' xrefstyle='select: title'/>
 function returns the name to be displayed in the specified window's icon.
 If it succeeds, it returns a nonzero status; otherwise, 
 if no icon name has been set for the window,
 it returns zero.
 If you never assigned a name to the window,
-<function>XGetIconName</function>
+<xref linkend='XGetIconName' xrefstyle='select: title'/>
 sets icon_name_return to NULL.
 If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned string is in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 When finished with it, a client must free
 the icon name string using
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetIconName</function>
+<xref linkend='XGetIconName' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2009,7 +2009,7 @@ If insufficient memory is available,
 returns NULL.
 To free the memory allocated to this structure,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2127,11 +2127,11 @@ or the window to be withdrawn.
 <!-- .LP -->
 <!-- .sp -->
 To set a window's <property>WM_HINTS</property> property, use
-<function>XSetWMHints</function>.
+<xref linkend='XSetWMHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmhints'>
+<funcsynopsis id='XSetWMHints'>
 <funcprototype>
   <funcdef><function>XSetWMHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2178,14 +2178,14 @@ structure to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWMHints</function>
+<xref linkend='XSetWMHints' xrefstyle='select: title'/>
 function sets the window manager hints that include icon information and location,
 the initial state of the window, and whether the application relies on the
 window manager to get keyboard input.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWMHints</function>
+<xref linkend='XSetWMHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -2196,11 +2196,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read a window's <property>WM_HINTS</property> property, use
-<function>XGetWMHints</function>.
+<xref linkend='XGetWMHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmhints'>
+<funcsynopsis id='XGetWMHints'>
 <funcprototype>
   <funcdef>XWMHints *<function>XGetWMHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2234,7 +2234,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetWMHints</function>
+<xref linkend='XGetWMHints' xrefstyle='select: title'/>
 function reads the window manager hints and 
 returns NULL if no <property>WM_HINTS</property> property was set on the window 
 or returns a pointer to an 
@@ -2242,11 +2242,11 @@ or returns a pointer to an
 structure if it succeeds.
 When finished with the data,
 free the space used for it by calling
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWMHints</function>
+<xref linkend='XGetWMHints' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2310,7 +2310,7 @@ If insufficient memory is available,
 returns NULL.
 To free the memory allocated to this structure,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2393,11 +2393,11 @@ macro is highly discouraged.
 <para>
 <!-- .LP -->
 To set a window's <property>WM_NORMAL_HINTS</property> property, use
-<function>XSetWMNormalHints</function>.
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmnormalhints'>
+<funcsynopsis id='XSetWMNormalHints'>
 <funcprototype>
   <funcdef>void <function>XSetWMNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2442,17 +2442,17 @@ Specifies the size hints for the window in its normal state.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XSetWMNormalHints</function>
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>
 function replaces the size hints for the <property>WM_NORMAL_HINTS</property> property 
 on the specified window.
 If the property does not already exist,
-<function>XSetWMNormalHints</function>
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>
 sets the size hints for the <property>WM_NORMAL_HINTS</property> property on the specified window.
 The property is stored with a type of <property>WM_SIZE_HINTS</property> and a format of 32.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWMNormalHints</function>
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -2463,11 +2463,11 @@ errors.
 <para>
 <!-- .LP -->
 To read a window's <property>WM_NORMAL_HINTS</property> property, use
-<function>XGetWMNormalHints</function>.
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmnormalhints'>
+<funcsynopsis id='XGetWMNormalHints'>
 <funcprototype>
   <funcdef>Status <function>XGetWMNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2523,13 +2523,13 @@ Returns the hints that were supplied by the user.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetWMNormalHints</function>
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>
 function returns the size hints stored in the <property>WM_NORMAL_HINTS</property> property 
 on the specified window.
 If the property is of type <property>WM_SIZE_HINTS</property>, is of format 32,
 and is long enough to contain either an old (pre-<acronym>ICCCM</acronym>) 
 or new size hints structure, 
-<function>XGetWMNormalHints</function>
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>
 sets the various fields of the 
 <structname>XSizeHints</structname>
 structure, sets the supplied_return argument to the list of fields 
@@ -2540,7 +2540,7 @@ Otherwise, it returns a zero status.
 <para>
 <!-- .LP -->
 If 
-<function>XGetWMNormalHints</function>
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>
 returns successfully and a pre-<acronym>ICCCM</acronym> size hints property is read, 
 the supplied_return argument will contain the following bits:
 </para>
@@ -2565,7 +2565,7 @@ PBaseSize|PWinGravity
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWMNormalHints</function>
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2574,11 +2574,11 @@ error.
 <para>
 <!-- .LP -->
 To set a window's <property>WM_SIZE_HINTS</property> property, use
-<function>XSetWMSizeHints</function>.
+<xref linkend='XSetWMSizeHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmsizehints'>
+<funcsynopsis id='XSetWMSizeHints'>
 <funcprototype>
   <funcdef>void <function>XSetWMSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2636,22 +2636,22 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XSetWMSizeHints</function>
+<xref linkend='XSetWMSizeHints' xrefstyle='select: title'/>
 function replaces the size hints for the specified property 
 on the named window.
 If the specified property does not already exist,
-<function>XSetWMSizeHints</function>
+<xref linkend='XSetWMSizeHints' xrefstyle='select: title'/>
 sets the size hints for the specified property
 on the named window.
 The property is stored with a type of <property>WM_SIZE_HINTS</property> and a format of 32.
 To set a window's normal size hints, 
 you can use the 
-<function>XSetWMNormalHints</function>
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>
 function.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWMSizeHints</function>
+<xref linkend='XSetWMSizeHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadAtom</errorname>,
@@ -2663,11 +2663,11 @@ errors.
 <para>
 <!-- .LP -->
 To read a window's <property>WM_SIZE_HINTS</property> property, use
-<function>XGetWMSizeHints</function>.
+<xref linkend='XGetWMSizeHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmsizehints'>
+<funcsynopsis id='XGetWMSizeHints'>
 <funcprototype>
   <funcdef>Status <function>XGetWMSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2736,13 +2736,13 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetWMSizeHints</function>
+<xref linkend='XGetWMSizeHints' xrefstyle='select: title'/>
 function returns the size hints stored in the specified property 
 on the named window.
 If the property is of type <property>WM_SIZE_HINTS</property>, is of format 32, 
 and is long enough to contain either an old (pre-<acronym>ICCCM</acronym>) 
 or new size hints structure, 
-<function>XGetWMSizeHints</function>
+<xref linkend='XGetWMSizeHints' xrefstyle='select: title'/>
 sets the various fields of the 
 <structname>XSizeHints</structname>
 structure, sets the supplied_return argument to the
@@ -2752,13 +2752,13 @@ and returns a nonzero status.
 Otherwise, it returns a zero status.
 To get a window's normal size hints, 
 you can use the 
-<function>XGetWMNormalHints</function>
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>
 function.
 </para>
 <para>
 <!-- .LP -->
 If 
-<function>XGetWMSizeHints</function>
+<xref linkend='XGetWMSizeHints' xrefstyle='select: title'/>
 returns successfully and a pre-<acronym>ICCCM</acronym> size hints property is read, 
 the supplied_return argument will contain the following bits:
 </para>
@@ -2783,7 +2783,7 @@ PBaseSize|PWinGravity
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWMSizeHints</function>
+<xref linkend='XGetWMSizeHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and 
@@ -2840,7 +2840,7 @@ If insufficient memory is available,
 returns NULL.
 To free the memory allocated to this structure,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2879,11 +2879,11 @@ resource database.
 <!-- .LP -->
 <!-- .sp -->
 To set a window's <property>WM_CLASS</property> property, use
-<function>XSetClassHint</function>.
+<xref linkend='XSetClassHint' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetClassHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetclasshint'>
+<funcsynopsis id='XSetClassHint'>
 <funcprototype>
   <funcdef><function>XSetClassHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2930,14 +2930,14 @@ structure that is to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetClassHint</function>
+<xref linkend='XSetClassHint' xrefstyle='select: title'/>
 function sets the class hint for the specified window.
 If the strings are not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetClassHint</function>
+<xref linkend='XSetClassHint' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -2948,11 +2948,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read a window's <property>WM_CLASS</property> property, use
-<function>XGetClassHint</function>.
+<xref linkend='XGetClassHint' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetClassHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetclasshint'>
+<funcsynopsis id='XGetClassHint'>
 <funcprototype>
   <funcdef>Status <function>XGetClassHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2999,7 +2999,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetClassHint</function>
+<xref linkend='XGetClassHint' xrefstyle='select: title'/>
 function returns the class hint of the specified window to the members
 of the supplied structure.
 If the data returned by the server is in the Latin Portable Character Encoding,
@@ -3009,12 +3009,12 @@ It returns a nonzero status on success;
 otherwise, it returns a zero status.
 To free res_name and res_class when finished with the strings,
 use
-<function>XFree</function>
+<xref linkend='XFree' xrefstyle='select: title'/>
 on each individually.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetClassHint</function>
+<xref linkend='XGetClassHint' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3034,11 +3034,11 @@ the <property>WM_TRANSIENT_FOR</property> property for a given window.
 <!-- .LP -->
 <!-- .sp -->
 To set a window's <property>WM_TRANSIENT_FOR</property> property, use
-<function>XSetTransientForHint</function>.
+<xref linkend='XSetTransientForHint' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetTransientForHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsettransientforhint'>
+<funcsynopsis id='XSetTransientForHint'>
 <funcprototype>
   <funcdef><function>XSetTransientForHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3083,13 +3083,13 @@ Specifies the window that the <property>WM_TRANSIENT_FOR</property> property is 
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetTransientForHint</function>
+<xref linkend='XSetTransientForHint' xrefstyle='select: title'/>
 function sets the <property>WM_TRANSIENT_FOR</property> property of the specified window to the 
 specified prop_window.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetTransientForHint</function>
+<xref linkend='XSetTransientForHint' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3100,11 +3100,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read a window's <property>WM_TRANSIENT_FOR</property> property, use
-<function>XGetTransientForHint</function>.
+<xref linkend='XGetTransientForHint' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetTransientForHint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgettransientforhint'>
+<funcsynopsis id='XGetTransientForHint'>
 <funcprototype>
   <funcdef>Status <function>XGetTransientForHint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3149,14 +3149,14 @@ Returns the <property>WM_TRANSIENT_FOR</property> property of the specified wind
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetTransientForHint</function>
+<xref linkend='XGetTransientForHint' xrefstyle='select: title'/>
 function returns the <property>WM_TRANSIENT_FOR</property> property for the specified window.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetTransientForHint</function>
+<xref linkend='XGetTransientForHint' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3176,11 +3176,11 @@ the <property>WM_PROTOCOLS</property> property for a given window.
 <!-- .LP -->
 <!-- .sp -->
 To set a window's <property>WM_PROTOCOLS</property> property, use
-<function>XSetWMProtocols</function>.
+<xref linkend='XSetWMProtocols' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMProtocols</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmprotocols'>
+<funcsynopsis id='XSetWMProtocols'>
 <funcprototype>
   <funcdef>Status <function>XSetWMProtocols</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3237,22 +3237,22 @@ Specifies the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XSetWMProtocols</function>
+<xref linkend='XSetWMProtocols' xrefstyle='select: title'/>
 function replaces the <property>WM_PROTOCOLS</property> property on the specified window 
 with the list of atoms specified by the protocols argument.
 If the property does not already exist,
-<function>XSetWMProtocols</function>
+<xref linkend='XSetWMProtocols' xrefstyle='select: title'/>
 sets the <property>WM_PROTOCOLS</property> property on the specified window
 to the list of atoms specified by the protocols argument.
 The property is stored with a type of ATOM and a format of 32.
 If it cannot intern the <property>WM_PROTOCOLS</property> atom, 
-<function>XSetWMProtocols</function>
+<xref linkend='XSetWMProtocols' xrefstyle='select: title'/>
 returns a zero status.
 Otherwise, it returns a nonzero status.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWMProtocols</function>
+<xref linkend='XSetWMProtocols' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3263,11 +3263,11 @@ errors.
 <para>
 <!-- .LP -->
 To read a window's <property>WM_PROTOCOLS</property> property, use
-<function>XGetWMProtocols</function>.
+<xref linkend='XGetWMProtocols' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMProtocols</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmprotocols'>
+<funcsynopsis id='XGetWMProtocols'>
 <funcprototype>
   <funcdef>Status <function>XGetWMProtocols</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3324,25 +3324,25 @@ Returns the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetWMProtocols</function>
+<xref linkend='XGetWMProtocols' xrefstyle='select: title'/>
 function returns the list of atoms stored in the <property>WM_PROTOCOLS</property> property 
 on the specified window.
 These atoms describe window manager protocols in which the owner 
 of this window is willing to participate.
 If the property exists, is of type ATOM, is of format 32, 
 and the atom <property>WM_PROTOCOLS</property> can be interned, 
-<function>XGetWMProtocols</function>
+<xref linkend='XGetWMProtocols' xrefstyle='select: title'/>
 sets the protocols_return argument to a list of atoms, 
 sets the count_return argument to the number of elements in the list, 
 and returns a nonzero status.
 Otherwise, it sets neither of the return arguments
 and returns a zero status.
 To release the list of atoms, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWMProtocols</function>
+<xref linkend='XGetWMProtocols' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3362,11 +3362,11 @@ the <property>WM_COLORMAP_WINDOWS</property> property for a given window.
 <para>
 <!-- .LP -->
 To set a window's <property>WM_COLORMAP_WINDOWS</property> property, use
-<function>XSetWMColormapWindows</function>.
+<xref linkend='XSetWMColormapWindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmcolormapwindows'>
+<funcsynopsis id='XSetWMColormapWindows'>
 <funcprototype>
   <funcdef>Status <function>XSetWMColormapWindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3423,22 +3423,22 @@ Specifies the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XSetWMColormapWindows</function>
+<xref linkend='XSetWMColormapWindows' xrefstyle='select: title'/>
 function replaces the <property>WM_COLORMAP_WINDOWS</property> property on the specified
 window with the list of windows specified by the colormap_windows argument.
 If the property does not already exist,
-<function>XSetWMColormapWindows</function>
+<xref linkend='XSetWMColormapWindows' xrefstyle='select: title'/>
 sets the <property>WM_COLORMAP_WINDOWS</property> property on the specified
 window to the list of windows specified by the colormap_windows argument.
 The property is stored with a type of WINDOW and a format of 32.
 If it cannot intern the <property>WM_COLORMAP_WINDOWS</property> atom,
-<function>XSetWMColormapWindows</function>
+<xref linkend='XSetWMColormapWindows' xrefstyle='select: title'/>
 returns a zero status.
 Otherwise, it returns a nonzero status.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWMColormapWindows</function>
+<xref linkend='XSetWMColormapWindows' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3449,11 +3449,11 @@ errors.
 <para>
 <!-- .LP -->
 To read a window's <property>WM_COLORMAP_WINDOWS</property> property, use
-<function>XGetWMColormapWindows</function>.
+<xref linkend='XGetWMColormapWindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMColormapWindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmcolormapwindows'>
+<funcsynopsis id='XGetWMColormapWindows'>
 <funcprototype>
   <funcdef>Status <function>XGetWMColormapWindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3510,25 +3510,25 @@ Returns the number of (Cn.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetWMColormapWindows</function>
+<xref linkend='XGetWMColormapWindows' xrefstyle='select: title'/>
 function returns the list of window identifiers stored 
 in the <property>WM_COLORMAP_WINDOWS</property> property on the specified window.
 These identifiers indicate the colormaps that the window manager
 may need to install for this window.
 If the property exists, is of type WINDOW, is of format 32, 
 and the atom <property>WM_COLORMAP_WINDOWS</property> can be interned, 
-<function>XGetWMColormapWindows</function>
+<xref linkend='XGetWMColormapWindows' xrefstyle='select: title'/>
 sets the windows_return argument to a list of window identifiers, 
 sets the count_return argument to the number of elements in the list, 
 and returns a nonzero status.
 Otherwise, it sets neither of the return arguments
 and returns a zero status.
 To release the list of window identifiers, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWMColormapWindows</function>
+<xref linkend='XGetWMColormapWindows' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3582,7 +3582,7 @@ If insufficient memory is available,
 returns NULL.
 To free the memory allocated to this structure,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3614,11 +3614,11 @@ sizes (minimum to maximum) that represent the supported icon sizes.
 <!-- .LP -->
 <!-- .sp -->
 To set a window's <property>WM_ICON_SIZE</property> property, use
-<function>XSetIconSizes</function>.
+<xref linkend='XSetIconSizes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetIconSizes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xseticonsizes'>
+<funcsynopsis id='XSetIconSizes'>
 <funcprototype>
   <funcdef><function>XSetIconSizes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3674,12 +3674,12 @@ Specifies the number of items in the size list.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetIconSizes</function>
+<xref linkend='XSetIconSizes' xrefstyle='select: title'/>
 function is used only by window managers to set the supported icon sizes.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetIconSizes</function>
+<xref linkend='XSetIconSizes' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3690,11 +3690,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read a window's <property>WM_ICON_SIZE</property> property, use
-<function>XGetIconSizes</function>.
+<xref linkend='XGetIconSizes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetIconSizes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgeticonsizes'>
+<funcsynopsis id='XGetIconSizes'>
 <funcprototype>
   <funcdef>Status <function>XGetIconSizes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3750,24 +3750,24 @@ Returns the number of items in the size list.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetIconSizes</function>
+<xref linkend='XGetIconSizes' xrefstyle='select: title'/>
 function returns zero if a window manager has not set icon sizes;
 otherwise, it returns nonzero.
-<function>XGetIconSizes</function>
+<xref linkend='XGetIconSizes' xrefstyle='select: title'/>
 should be called by an application that
 wants to find out what icon sizes would be most appreciated by the
 window manager under which the application is running.
 The application
 should then use
-<function>XSetWMHints</function>
+<xref linkend='XSetWMHints' xrefstyle='select: title'/>
 to supply the window manager with an icon pixmap or window in one of the
 supported sizes.
 To free the data allocated in size_list_return, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetIconSizes</function>
+<xref linkend='XGetIconSizes' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3781,7 +3781,7 @@ error.
 <para>
 <!-- .LP -->
 The 
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 function stores the standard set of window manager properties,
 with text properties in standard encodings
 for internationalized text communication.
@@ -3791,7 +3791,7 @@ The standard window manager properties for a given window are
 </para>
 <indexterm significance="preferred"><primary>XmbSetWMProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbsetwmproperties'>
+<funcsynopsis id='XmbSetWMProperties'>
 <funcprototype>
   <funcdef>void <function>XmbSetWMProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3908,7 +3908,7 @@ structure to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 convenience function provides a simple programming interface 
 for setting those essential window properties that are used 
 for communicating with other clients
@@ -3917,10 +3917,10 @@ for communicating with other clients
 <para>
 <!-- .LP -->
 If the window_name argument is non-NULL,
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 sets the <property>WM_NAME</property> property.
 If the icon_name argument is non-NULL,
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 sets the <property>WM_ICON_NAME</property> property.
 The window_name and icon_name arguments are null-terminated strings
 in the encoding of the current locale.
@@ -3932,35 +3932,35 @@ and the properties are created with type ``COMPOUND_TEXT''.
 <para>
 <!-- .LP -->
 If the normal_hints argument is non-NULL,
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetWMNormalHints</function>,
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>,
 which sets the <property>WM_NORMAL_HINTS</property> property
 (see <link linkend="Setting_and_Reading_the_WM_NORMAL_HINTS_Property">section 14.1.7</link>).
 If the wm_hints argument is non-NULL, 
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetWMHints</function>,
+<xref linkend='XSetWMHints' xrefstyle='select: title'/>,
 which sets the <property>WM_HINTS</property> property
 (see <link linkend="Setting_and_Reading_the_WM_HINTS_Property">section 14.1.6</link>).
 </para>
 <para>
 <!-- .LP -->
 If the argv argument is non-NULL,
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 sets the <property>WM_COMMAND</property> property from argv and argc.
 An argc of zero indicates a zero-length command.
 </para>
 <para>
 <!-- .LP -->
 The hostname of the machine is stored using 
-<function>XSetWMClientMachine</function>
+<xref linkend='XSetWMClientMachine' xrefstyle='select: title'/>
 (see <link linkend="Setting_and_Reading_the_WM_CLIENT_MACHINE_Property">section 14.2.2</link>).
 </para>
 <para>
 <!-- .LP -->
 If the class_hints argument is non-NULL,
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 sets the <property>WM_CLASS</property> property.
 If the res_name member in the 
 <structname>XClassHint</structname>
@@ -3985,14 +3985,14 @@ No encoding conversion is performed prior to storage in the properties.
 <para>
 <!-- .LP -->
 For clients that need to process the property text in a locale,
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 sets the <property>WM_LOCALE_NAME</property> property to be the name of the current locale.
 The name is assumed to be in the Host Portable Character Encoding
 and is converted to STRING for storage in the property.
 </para>
 <para>
 <!-- .LP -->
-<function>XmbSetWMProperties</function>
+<xref linkend='XmbSetWMProperties' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -4004,14 +4004,14 @@ errors.
 <!-- .LP -->
 To set a window's standard window manager properties
 with strings in client-specified encodings, use
-<function>XSetWMProperties</function>.
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>.
 The standard window manager properties for a given window are
 <property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_NORMAL_HINTS</property>, <property>WM_CLASS</property>,
 <property>WM_COMMAND</property>, and <property>WM_CLIENT_MACHINE</property>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmproperties'>
+<funcsynopsis id='XSetWMProperties'>
 <funcprototype>
   <funcdef>void <function>XSetWMProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4128,7 +4128,7 @@ structure to be used.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 convenience function provides a single programming interface 
 for setting those essential window properties that are used 
 for communicating with other clients (particularly window and session
@@ -4137,49 +4137,49 @@ managers).
 <para>
 <!-- .LP -->
 If the window_name argument is non-NULL, 
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetWMName</function>,
+<xref linkend='XSetWMName' xrefstyle='select: title'/>,
 which, in turn, sets the <property>WM_NAME</property> property
 (see <link linkend="Setting_and_Reading_the_WM_NAME_Property">section 14.1.4</link>).
 If the icon_name argument is non-NULL,
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetWMIconName</function>,
+<xref linkend='XSetWMIconName' xrefstyle='select: title'/>,
 which sets the <property>WM_ICON_NAME</property> property
 (see <link linkend="Setting_and_Reading_the_WM_ICON_NAME_Property">section 14.1.5</link>).
 If the argv argument is non-NULL, 
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetCommand</function>,
+<xref linkend='XSetCommand' xrefstyle='select: title'/>,
 which sets the <property>WM_COMMAND</property> property
 (see <link linkend="Setting_and_Reading_the_WM_COMMAND_Property">section 14.2.1</link>).
 Note that an argc of zero is allowed to indicate a zero-length command.
 Note also that the hostname of this machine is stored using
-<function>XSetWMClientMachine</function>
+<xref linkend='XSetWMClientMachine' xrefstyle='select: title'/>
 (see <link linkend="Setting_and_Reading_the_WM_CLIENT_MACHINE_Property">section 14.2.2</link>).
 </para>
 <para>
 <!-- .LP -->
 If the normal_hints argument is non-NULL, 
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetWMNormalHints</function>,
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>,
 which sets the <property>WM_NORMAL_HINTS</property> property
 (see <link linkend="Setting_and_Reading_the_WM_NORMAL_HINTS_Property">section 14.1.7</link>).
 If the wm_hints argument is non-NULL, 
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetWMHints</function>,
+<xref linkend='XSetWMHints' xrefstyle='select: title'/>,
 which sets the <property>WM_HINTS</property> property
 (see <link linkend="Setting_and_Reading_the_WM_HINTS_Property">section 14.1.6</link>).
 </para>
 <para>
 <!-- .LP -->
 If the class_hints argument is non-NULL, 
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 calls
-<function>XSetClassHint</function>,
+<xref linkend='XSetClassHint' xrefstyle='select: title'/>,
 which sets the <property>WM_CLASS</property> property
 (see <link linkend="Setting_and_Reading_the_WM_CLASS_Property">section 14.1.8</link>).
 If the res_name member in the
@@ -4195,7 +4195,7 @@ any directory prefixes, is substituted for res_name.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -4239,11 +4239,11 @@ the <property>WM_COMMAND</property> property for a given window.
 <para>
 <!-- .LP -->
 To set a window's <property>WM_COMMAND</property> property, use
-<function>XSetCommand</function>.
+<xref linkend='XSetCommand' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetCommand</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetcommand'>
+<funcsynopsis id='XSetCommand'>
 <funcprototype>
   <funcdef><function>XSetCommand</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4299,7 +4299,7 @@ Specifies the number of arguments.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetCommand</function>
+<xref linkend='XSetCommand' xrefstyle='select: title'/>
 function sets the command and arguments used to invoke the
 application.
 (Typically, argv is the argv array of your main program.)
@@ -4308,7 +4308,7 @@ the result is implementation-dependent.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetCommand</function>
+<xref linkend='XSetCommand' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -4319,11 +4319,11 @@ errors.
 <para>
 <!-- .LP -->
 To read a window's <property>WM_COMMAND</property> property, use
-<function>XGetCommand</function>.
+<xref linkend='XGetCommand' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetCommand</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetcommand'>
+<funcsynopsis id='XGetCommand'>
 <funcprototype>
   <funcdef>Status <function>XGetCommand</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4379,13 +4379,13 @@ Returns the number of arguments returned.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetCommand</function>
+<xref linkend='XGetCommand' xrefstyle='select: title'/>
 function reads the <property>WM_COMMAND</property> property from the specified window 
 and returns a string list.
 If the <property>WM_COMMAND</property> property exists, 
 it is of type STRING and format 8.
 If sufficient memory can be allocated to contain the string list, 
-<function>XGetCommand</function>
+<xref linkend='XGetCommand' xrefstyle='select: title'/>
 fills in the argv_return and argc_return arguments
 and returns a nonzero status.
 Otherwise, it returns a zero status.
@@ -4393,7 +4393,7 @@ If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned strings are in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 To free the memory allocated to the string list, use
-<function>XFreeStringList</function>.
+<xref linkend='XFreeStringList' xrefstyle='select: title'/>.
 </para>
 </sect2>
 <sect2 id="Setting_and_Reading_the_WM_CLIENT_MACHINE_Property">
@@ -4410,11 +4410,11 @@ the <property>WM_CLIENT_MACHINE</property> property for a given window.
 <para>
 <!-- .LP -->
 To set a window's <property>WM_CLIENT_MACHINE</property> property, use
-<function>XSetWMClientMachine</function>.
+<xref linkend='XSetWMClientMachine' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWMClientMachine</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwmclientmachine'>
+<funcsynopsis id='XSetWMClientMachine'>
 <funcprototype>
   <funcdef>void <function>XSetWMClientMachine</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4461,20 +4461,20 @@ structure to be used.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWMClientMachine</function>
+<xref linkend='XSetWMClientMachine' xrefstyle='select: title'/>
 convenience function calls
-<function>XSetTextProperty</function>
+<xref linkend='XSetTextProperty' xrefstyle='select: title'/>
 to set the <property>WM_CLIENT_MACHINE</property> property.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To read a window's <property>WM_CLIENT_MACHINE</property> property, use
-<function>XGetWMClientMachine</function>.
+<xref linkend='XGetWMClientMachine' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWMClientMachine</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwmclientmachine'>
+<funcsynopsis id='XGetWMClientMachine'>
 <funcprototype>
   <funcdef>Status <function>XGetWMClientMachine</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4521,9 +4521,9 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetWMClientMachine</function>
+<xref linkend='XGetWMClientMachine' xrefstyle='select: title'/>
 convenience function performs an 
-<function>XGetTextProperty</function>
+<xref linkend='XGetTextProperty' xrefstyle='select: title'/>
 on the <property>WM_CLIENT_MACHINE</property> property.
 It returns a nonzero status on success;
 otherwise, it returns a zero status.
@@ -4659,7 +4659,7 @@ If insufficient memory is available,
 returns NULL.
 To free the memory allocated to this structure,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -4692,7 +4692,7 @@ typedef struct {
 <!-- .LP -->
 <!-- .eM -->
 The colormap member is the colormap created by the
-<function>XCreateColormap</function>
+<xref linkend='XCreateColormap' xrefstyle='select: title'/>
 function.
 The red_max, green_max, and blue_max members give the maximum
 red, green, and blue values, respectively.  
@@ -4720,7 +4720,7 @@ green_mult might be 6, and blue_mult might be 1.
 The base_pixel member gives the base pixel value used to
 compose a full pixel value.  
 Usually, the base_pixel is obtained from a call to the 
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 function.  
 Given integer red, green, and blue coefficients in their appropriate 
 ranges, one then can compute a corresponding pixel value by
@@ -4771,7 +4771,7 @@ colormap was created.
 The killid member gives a resource ID that indicates whether
 the cells held by this standard colormap are to be released 
 by freeing the colormap ID or by calling the
-<function>XKillClient</function>
+<xref linkend='XKillClient' xrefstyle='select: title'/>
 function on the indicated resource.
 (Note that this method is necessary for allocating out of an existing colormap.)
 </para>
@@ -4932,11 +4932,11 @@ structure.
 To set an
 <structname>XStandardColormap</structname>
 structure, use
-<function>XSetRGBColormaps</function>.
+<xref linkend='XSetRGBColormaps' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetRGBColormaps</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetrgbcolormaps'>
+<funcsynopsis id='XSetRGBColormaps'>
 <funcprototype>
   <funcdef>void <function>XSetRGBColormaps</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5006,11 +5006,11 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XSetRGBColormaps</function>
+<xref linkend='XSetRGBColormaps' xrefstyle='select: title'/>
 function replaces the <acronym>RGB</acronym> colormap definition in the specified property 
 on the named window.
 If the property does not already exist,
-<function>XSetRGBColormaps</function>
+<xref linkend='XSetRGBColormaps' xrefstyle='select: title'/>
 sets the <acronym>RGB</acronym> colormap definition in the specified property
 on the named window.
 The property is stored with a type of RGB_COLOR_MAP and a format of 32.
@@ -5020,7 +5020,7 @@ restriction that only RGB_DEFAULT_MAP contain more than one definition.
 <para>
 <!-- .LP -->
 The
-<function>XSetRGBColormaps</function>
+<xref linkend='XSetRGBColormaps' xrefstyle='select: title'/>
 function usually is only used by window or session managers.
 To create a standard colormap, 
 follow this procedure:
@@ -5066,7 +5066,7 @@ Allocate cells in the colormap (or create it with
   <listitem>
     <para>
 Call 
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 to store appropriate color values in the colormap.
     </para>
   </listitem>
@@ -5085,7 +5085,7 @@ Attach the property to the root window.
   <listitem>
     <para>
 Use
-<function>XSetCloseDownMode</function>
+<xref linkend='XSetCloseDownMode' xrefstyle='select: title'/>
 to make the resource permanent.
 <!-- .RE -->
     </para>
@@ -5098,7 +5098,7 @@ Ungrab the server.
 </itemizedlist>
 <para>
 <!-- .LP -->
-<function>XSetRGBColormaps</function>
+<xref linkend='XSetRGBColormaps' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadAtom</errorname>,
@@ -5112,11 +5112,11 @@ errors.
 To obtain the 
 <structname>XStandardColormap</structname>
 structure associated with the specified property, use
-<function>XGetRGBColormaps</function>.
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetRGBColormaps</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetrgbcolormaps'>
+<funcsynopsis id='XGetRGBColormaps'>
 <funcprototype>
   <funcdef>Status <function>XGetRGBColormaps</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5186,30 +5186,30 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetRGBColormaps</function>
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>
 function returns the <acronym>RGB</acronym> colormap definitions stored 
 in the specified property on the named window.
 If the property exists, is of type RGB_COLOR_MAP, is of format 32, 
 and is long enough to contain a colormap definition,
-<function>XGetRGBColormaps</function>
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>
 allocates and fills in space for the returned colormaps
 and returns a nonzero status.
 If the visualid is not present, 
-<function>XGetRGBColormaps</function>
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>
 assumes the default visual for the screen on which the window is located; 
 if the killid is not present, 
 <symbol>None</symbol>
 is assumed, which indicates that the resources cannot be released.
 Otherwise, 
 none of the fields are set, and 
-<function>XGetRGBColormaps</function>
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>
 returns a zero status.
 Note that it is the caller's responsibility to honor the <acronym>ICCCM</acronym>
 restriction that only RGB_DEFAULT_MAP contain more than one definition.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetRGBColormaps</function>
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and

@@ -1,4 +1,4 @@
-<chapter id='xkb_server_keyboard_mapping'>
+<chapter id='Xkb_Server_Keyboard_Mapping'>
 <title>Xkb Server Keyboard Mapping</title>
 
 <para>
@@ -72,7 +72,7 @@ vmodmap</emphasis>
 and are defined in section 16.4.
 </para>
 
-<sect1 id='key_actions'>
+<sect1 id='Key_Actions'>
 <title>Key Actions</title>
 
 <para>
@@ -410,7 +410,7 @@ keycode</emphasis>
 </para>
 
 
-<sect2 id='the_xkbaction_structure'>
+<sect2 id='The_XkbAction_Structure'>
 <title>The XkbAction Structure</title>
 
 <para>
@@ -448,7 +448,7 @@ structures for each action in detail.
 
 
 </sect2>
-<sect2 id='the_xkbanyaction_structure'>
+<sect2 id='The_XkbAnyAction_Structure'>
 <title>The XkbAnyAction Structure</title>
 
 <para>
@@ -598,7 +598,7 @@ have an associated data structure.
 </table>
 
 </sect2>
-<sect2 id='actions_for_changing_modifiers_state'>
+<sect2 id='Actions_for_Changing_Modifiers_State'>
 <title>Actions for Changing Modifiers’ State</title>
 
 <para>
@@ -973,7 +973,7 @@ XkbISOAction</emphasis>
 
 
 </sect2>
-<sect2 id='actions_for_changing_group_state'>
+<sect2 id='Actions_for_Changing_Group_State'>
 <title>Actions for Changing Group State</title>
 
 <para>
@@ -1272,7 +1272,7 @@ XkbISOAction</emphasis>
 
 
 </sect2>
-<sect2 id='actions_for_moving_the_pointer'>
+<sect2 id='Actions_for_Moving_the_Pointer'>
 <title>Actions for Moving the Pointer</title>
 
 <para>
@@ -1563,7 +1563,7 @@ y</emphasis>
 
 
 </sect2>
-<sect2 id='actions_for_simulating_pointer_button_press_and_release'>
+<sect2 id='Actions_for_Simulating_Pointer_Button_Press_and_Release'>
 <title>Actions for Simulating Pointer Button Press and Release</title>
 
 <para>
@@ -1782,7 +1782,7 @@ XkbSA_LockPtrBtn</emphasis>
 </table>
 
 </sect2>
-<sect2 id='actions_for_changing_the_pointer_button_simulated'>
+<sect2 id='Actions_for_Changing_the_Pointer_Button_Simulated'>
 <title>Actions for Changing the Pointer Button Simulated</title>
 
 <para>
@@ -1982,7 +1982,7 @@ val</emphasis>
 
 
 </sect2>
-<sect2 id='actions_for_locking_modifiers_and_group'>
+<sect2 id='Actions_for_Locking_Modifiers_and_Group'>
 <title>Actions for Locking Modifiers and Group</title>
 
 <para>
@@ -2424,7 +2424,7 @@ SA_LockControls</emphasis>
 </table>
 
 </sect2>
-<sect2 id='actions_for_changing_the_active_screen'>
+<sect2 id='Actions_for_Changing_the_Active_Screen'>
 <title>Actions for Changing the Active Screen</title>
 
 <para>
@@ -2596,7 +2596,7 @@ s</emphasis>
 
 
 </sect2>
-<sect2 id='actions_for_changing_boolean_controls_state'>
+<sect2 id='Actions_for_Changing_Boolean_Controls_State'>
 <title>Actions for Changing Boolean Controls State</title>
 
 <para>
@@ -2858,7 +2858,7 @@ ctrls</emphasis>
 
 
 </sect2>
-<sect2 id='actions_for_generating_messages'>
+<sect2 id='Actions_for_Generating_Messages'>
 <title>Actions for Generating Messages</title>
 
 <para>
@@ -2954,7 +2954,7 @@ XkbActionMessageLength</emphasis>
  unsigned characters and may be set to anything the keymap designer wishes.
 </para>
 
-<sect3 id='detecting_key_action_messages'>
+<sect3 id='Detecting_Key_Action_Messages'>
 <title>Detecting Key Action Messages</title>
 
 <para>
@@ -3090,7 +3090,7 @@ XkbActionMessageLength</emphasis>
 
 </sect3>
 </sect2>
-<sect2 id='actions_for_generating_a_different_keycode'>
+<sect2 id='Actions_for_Generating_a_Different_Keycode'>
 <title>Actions for Generating a Different Keycode</title>
 
 <para>
@@ -3351,7 +3351,7 @@ v</emphasis>
 </literallayout>
 
 </sect2>
-<sect2 id='actions_for_generating_devicebuttonpress_and_devicebuttonrelease'>
+<sect2 id='Actions_for_Generating_DeviceButtonPress_and_DeviceButtonRelease'>
 <title>Actions for Generating DeviceButtonPress and DeviceButtonRelease</title>
 
 <para>
@@ -3531,7 +3531,7 @@ XkbSA_LockDeviceBtn</emphasis>
 </table>
 
 </sect2>
-<sect2 id='actions_for_simulating_events_from_device_valuators'>
+<sect2 id='Actions_for_Simulating_Events_from_Device_Valuators'>
 <title>Actions for Simulating Events from Device Valuators</title>
 
 <para>
@@ -3683,7 +3683,7 @@ For a dial box with eight dials, any value in the range 0..7 would be correct.
 
 
 </sect2>
-<sect2 id='obtaining_key_actions_for_keys_from_the_server'>
+<sect2 id='Obtaining_Key_Actions_for_Keys_from_the_Server'>
 <title>Obtaining Key Actions for Keys from the Server</title>
 
 <para>
@@ -3802,7 +3802,7 @@ BadAlloc</emphasis>
 
 
 </sect2>
-<sect2 id='changing_the_number_of_actions_bound_to_a_key'>
+<sect2 id='Changing_the_Number_of_Actions_Bound_to_a_Key'>
 <title>Changing the Number of Actions Bound to a Key</title>
 
 <para>
@@ -3932,7 +3932,7 @@ a key.</para></note>
 
 </sect2>
 </sect1>
-<sect1 id='key_behavior'>
+<sect1 id='Key_Behavior'>
 <title>Key Behavior</title>
 
 <para>
@@ -3944,7 +3944,7 @@ pressed again.
 </para>
 
 
-<sect2 id='radio_groups2'>
+<sect2 id='Radio_Groups_2'>
 <title>Radio Groups</title>
 
 <para>
@@ -3989,7 +3989,7 @@ currently defined is:
 </programlisting></para>
 
 </sect2>
-<sect2 id='the_xkbbehavior_structure'>
+<sect2 id='The_XkbBehavior_Structure'>
 <title>The XkbBehavior Structure</title>
 
 <para>
@@ -4123,7 +4123,7 @@ keyboard to implement the behavior.
 
 
 </sect2>
-<sect2 id='obtaining_key_behaviors_for_keys_from_the_server'>
+<sect2 id='Obtaining_Key_Behaviors_for_Keys_from_the_Server'>
 <title>Obtaining Key Behaviors for Keys from the Server</title>
 
 <para>
@@ -4242,7 +4242,7 @@ BadAlloc</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='explicit_components_avoiding_automatic_remapping_by_the_server'>
+<sect1 id='Explicit_ComponentsAvoiding_Automatic_Remapping_by_the_Server'>
 <title>Explicit Components—Avoiding Automatic Remapping by the Server</title>
 
 <para>
@@ -4354,7 +4354,7 @@ match the key.
 </tgroup>
 </table>
 
-<sect2 id='obtaining_explicit_components_for_keys_from_the_server'>
+<sect2 id='Obtaining_Explicit_Components_for_Keys_from_the_Server'>
 <title>Obtaining Explicit Components for Keys from the Server</title>
 
 <para>
@@ -4473,7 +4473,7 @@ BadAlloc</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='virtual_modifier_mapping'>
+<sect1 id='Virtual_Modifier_Mapping'>
 <title>Virtual Modifier Mapping</title>
 
 <para>
@@ -4565,7 +4565,7 @@ keyboard description are shown in Figure 16.2.
 Virtual Modifier Relationships</H5>
 -->
 
-<sect2 id='obtaining_virtual_modifier_bindings_from_the_server'>
+<sect2 id='Obtaining_Virtual_Modifier_Bindings_from_the_Server'>
 <title>Obtaining Virtual Modifier Bindings from the Server</title>
 
 <para>
@@ -4670,7 +4670,7 @@ BadAlloc</emphasis>.
 
 
 </sect2>
-<sect2 id='obtaining_per_key_virtual_modifier_mappings_from_the_server'>
+<sect2 id='Obtaining_Per_Key_Virtual_Modifier_Mappings_from_the_Server'>
 <title>Obtaining Per-Key Virtual Modifier Mappings from the Server</title>
 
 <para>

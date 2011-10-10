@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="graphics_context_functions">
+<chapter id='Graphics_Context_Functions'>
 <title>Graphics Context Functions</title>
 
 <para>
@@ -25,7 +25,7 @@ This chapter discusses how to:
   <listitem><para>Use graphics context convenience functions</para></listitem>
 </itemizedlist>
 
-<sect1 id="Manipulating_Graphics_Context_State">
+<sect1 id='Manipulating_Graphics_ContextState'>
 <title>Manipulating Graphics Context/State</title>
 <!-- .XS -->
 <!-- (SN Manipulating Graphics Context/State  -->
@@ -47,9 +47,9 @@ resource IDs to allow Xlib to implement the transparent coalescing of changes
 to GCs.
 For example,
 a call to
-<function>XSetForeground</function>
+<xref linkend='XSetForeground' xrefstyle='select: title'/>
 of a GC followed by a call to
-<function>XSetLineAttributes</function>
+<xref linkend='XSetLineAttributes' xrefstyle='select: title'/>
 results in only a single-change GC protocol request to the server.
 GCs are neither expected nor encouraged to be shared between client 
 applications, so this write-back caching should present no problems.
@@ -63,7 +63,7 @@ To set an attribute of a GC,
 set the appropriate member of the
 <structname>XGCValues</structname>
 structure and OR in the corresponding value bitmask in your subsequent calls to
-<function>XCreateGC</function>.
+<xref linkend='XCreateGC' xrefstyle='select: title'/>.
 The symbols for the value mask bits and the
 <structname>XGCValues</structname>
 structure are:
@@ -720,20 +720,20 @@ any size pixmap can be used for tiling or stippling.
 The fill-style defines the contents of the source for line, text, and
 fill requests.  
 For all text and fill requests (for example,
-<function>XDrawText</function>,
-<function>XDrawText16</function>,
-<function>XFillRectangle</function>,
-<function>XFillPolygon</function>,
+<xref linkend='XDrawText' xrefstyle='select: title'/>,
+<xref linkend='XDrawText16' xrefstyle='select: title'/>,
+<xref linkend='XFillRectangle' xrefstyle='select: title'/>,
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>,
 and
-<function>XFillArc</function>);
+<xref linkend='XFillArc' xrefstyle='select: title'/>);
 for line requests 
 with line-style 
 <symbol>LineSolid</symbol>
 (for example,
-<function>XDrawLine</function>,
-<function>XDrawSegments</function>,
-<function>XDrawRectangle</function>,
-<function>XDrawArc</function>);
+<xref linkend='XDrawLine' xrefstyle='select: title'/>,
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>,
+<xref linkend='XDrawRectangle' xrefstyle='select: title'/>,
+<xref linkend='XDrawArc' xrefstyle='select: title'/>);
 and for the even dashes for line requests with line-style 
 <symbol>LineOnOffDash</symbol>
 or 
@@ -825,10 +825,10 @@ of GCs.
 <!-- .LP -->
 The dashes value is actually a simplified form of the
 more general patterns that can be set with 
-<function>XSetDashes</function>.
+<xref linkend='XSetDashes' xrefstyle='select: title'/>.
 Specifying a
 value of N is equivalent to specifying the two-element list [N, N] in 
-<function>XSetDashes</function>.
+<xref linkend='XSetDashes' xrefstyle='select: title'/>.
 The value must be nonzero,
 or a
 <errorname>BadValue</errorname>
@@ -846,9 +846,9 @@ If clip-mask is set to
 <symbol>None</symbol>,
 the pixels are always drawn regardless of the clip origin.
 The clip-mask also can be set by calling the
-<function>XSetClipRectangles</function>
+<xref linkend='XSetClipRectangles' xrefstyle='select: title'/>
 or
-<function>XSetRegion</function>
+<xref linkend='XSetRegion' xrefstyle='select: title'/>
 functions.
 Only pixels where the clip-mask has a bit set to 1 are drawn.  
 Pixels are not drawn outside the area covered by the clip-mask 
@@ -885,7 +885,7 @@ undefined by the core protocol.
 <!-- .LP -->
 The fill-rule defines what pixels are inside (drawn) for
 paths given in 
-<function>XFillPolygon</function>
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>
 requests and can be set to 
 <symbol>EvenOddRule</symbol>
 or
@@ -928,7 +928,7 @@ and are inside if and only if the polygon interior is immediately below
 <para>
 <!-- .LP -->
 The arc-mode controls filling in the 
-<function>XFillArcs</function>
+<xref linkend='XFillArcs' xrefstyle='select: title'/>
 function and can be set to
 <symbol>ArcPieSlice</symbol>
 or
@@ -946,9 +946,9 @@ The graphics-exposure flag controls
 <symbol>GraphicsExpose</symbol>
 event generation
 for 
-<function>XCopyArea</function>
+<xref linkend='XCopyArea' xrefstyle='select: title'/>
 and 
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 requests (and any similar requests defined by extensions).
 </para>
 <para>
@@ -956,12 +956,12 @@ requests (and any similar requests defined by extensions).
 <!-- .sp -->
 To create a new GC that is usable on a given screen with a 
 depth of drawable, use
-<function>XCreateGC</function>.
+<xref linkend='XCreateGC' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Graphics context</primary><secondary>initializing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCreateGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreategc'>
+<funcsynopsis id='XCreateGC'>
 <funcprototype>
   <funcdef>GC <function>XCreateGC</function></funcdef>
   <paramdef>Display <parameter> *display</parameter></paramdef>
@@ -1020,7 +1020,7 @@ Specifies any values as specified by the valuemask.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateGC</function>
+<xref linkend='XCreateGC' xrefstyle='select: title'/>
 function creates a graphics context and returns a GC.
 The GC can be used with any destination drawable having the same root
 and depth as the specified drawable.
@@ -1030,7 +1030,7 @@ error.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateGC</function>
+<xref linkend='XCreateGC' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadDrawable</errorname>,
@@ -1045,11 +1045,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To copy components from a source GC to a destination GC, use
-<function>XCopyGC</function>.
+<xref linkend='XCopyGC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCopyGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcopygc'>
+<funcsynopsis id='XCopyGC'>
 <funcprototype>
   <funcdef><function>XCopyGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1107,7 +1107,7 @@ Specifies the destination GC.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XCopyGC</function>
+<xref linkend='XCopyGC' xrefstyle='select: title'/>
 function copies the specified components from the source GC
 to the destination GC.
 The source and destination GCs must have the same root and depth,
@@ -1115,11 +1115,11 @@ or a
 <errorname>BadMatch</errorname>
 error results.
 The valuemask specifies which component to copy, as for
-<function>XCreateGC</function>.
+<xref linkend='XCreateGC' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XCopyGC</function>
+<xref linkend='XCopyGC' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -1131,11 +1131,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To change the components in a given GC, use
-<function>XChangeGC</function>.
+<xref linkend='XChangeGC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XChangeGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangegc'>
+<funcsynopsis id='XChangeGC'>
 <funcprototype>
   <funcdef><function>XChangeGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1194,25 +1194,25 @@ Specifies any values as specified by the valuemask.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XChangeGC</function>
+<xref linkend='XChangeGC' xrefstyle='select: title'/>
 function changes the components specified by valuemask for
 the specified GC.
 The values argument contains the values to be set.
 The values and restrictions are the same as for 
-<function>XCreateGC</function>.
+<xref linkend='XCreateGC' xrefstyle='select: title'/>.
 Changing the clip-mask overrides any previous 
-<function>XSetClipRectangles</function>
+<xref linkend='XSetClipRectangles' xrefstyle='select: title'/>
 request on the context. 
 Changing the dash-offset or dash-list
 overrides any previous 
-<function>XSetDashes</function>
+<xref linkend='XSetDashes' xrefstyle='select: title'/>
 request on the context.
 The order in which components are verified and altered is server dependent.
 If an error is generated, a subset of the components may have been altered.
 </para>
 <para>
 <!-- .LP -->
-<function>XChangeGC</function>
+<xref linkend='XChangeGC' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadFont</errorname>,
@@ -1227,11 +1227,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain components of a given GC, use
-<function>XGetGCValues</function>.
+<xref linkend='XGetGCValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetGCValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetgcvalues'>
+<funcsynopsis id='XGetGCValues'>
 <funcprototype>
   <funcdef>Status <function>XGetGCValues</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1292,7 +1292,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetGCValues</function>
+<xref linkend='XGetGCValues' xrefstyle='select: title'/>
 function returns the components specified by valuemask for the specified GC.
 If the valuemask contains a valid set of GC mask bits
 (<symbol>GCFunction</symbol>,
@@ -1318,7 +1318,7 @@ If the valuemask contains a valid set of GC mask bits
 or
 <symbol>GCArcMode</symbol>)
 and no error occurs,
-<function>XGetGCValues</function>
+<xref linkend='XGetGCValues' xrefstyle='select: title'/>
 sets the requested components in values_return and returns a nonzero status.
 Otherwise, it returns a zero status.
 Note that the clip-mask and dash-list (represented by the
@@ -1339,11 +1339,11 @@ if the component has never been explicitly set by the client.
 <!-- .LP -->
 <!-- .sp -->
 To free a given GC, use
-<function>XFreeGC</function>.
+<xref linkend='XFreeGC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreegc'>
+<funcsynopsis id='XFreeGC'>
 <funcprototype>
   <funcdef><function>XFreeGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1377,12 +1377,12 @@ Specifies the GC.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeGC</function>
+<xref linkend='XFreeGC' xrefstyle='select: title'/>
 function destroys the specified GC as well as all the associated storage.
 </para>
 <para>
 <!-- .LP -->
-<function>XFreeGC</function>
+<xref linkend='XFreeGC' xrefstyle='select: title'/>
 can generate a
 <errorname>BadGC</errorname>
 error.
@@ -1393,11 +1393,11 @@ error.
 To obtain the 
 <type>GContext</type>
 resource ID for a given GC, use 
-<function>XGContextFromGC</function>.
+<xref linkend='XGContextFromGC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGContextFromGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgcontextfromgc'>
+<funcsynopsis id='XGContextFromGC'>
 <funcprototype>
   <funcdef>GContext <function>XGContextFromGC</function></funcdef>
   <paramdef>GC<parameter> gc</parameter></paramdef>
@@ -1429,11 +1429,11 @@ to explicitly force sending the changes to the server.
 An example might be when a protocol extension uses the GC indirectly,
 in such a way that the extension interface cannot know what GC will be used.
 To force sending GC component changes, use
-<function>XFlushGC</function>.
+<xref linkend='XFlushGC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFlushGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xflushgc'>
+<funcsynopsis id='XFlushGC'>
 <funcprototype>
   <funcdef>void <function>XFlushGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1523,11 +1523,11 @@ Arc mode, subwindow mode, and graphics exposure components
 <!-- .LP -->
 To set the foreground, background, plane mask, and function components
 for a given GC, use
-<function>XSetState</function>.
+<xref linkend='XSetState' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetState</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetstate'>
+<funcsynopsis id='XSetState'>
 <funcprototype>
   <funcdef><function>XSetState</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1604,7 +1604,7 @@ Specifies the plane mask.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetState</function>
+<xref linkend='XSetState' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -1616,11 +1616,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the foreground of a given GC, use
-<function>XSetForeground</function>.
+<xref linkend='XSetForeground' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetForeground</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetforeground'>
+<funcsynopsis id='XSetForeground'>
 <funcprototype>
   <funcdef><function>XSetForeground</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1664,7 +1664,7 @@ Specifies the foreground you want to set for the specified GC.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetForeground</function>
+<xref linkend='XSetForeground' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1675,11 +1675,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the background of a given GC, use
-<function>XSetBackground</function>.
+<xref linkend='XSetBackground' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetBackground</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetbackground'>
+<funcsynopsis id='XSetBackground'>
 <funcprototype>
   <funcdef><function>XSetBackground</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1723,7 +1723,7 @@ Specifies the background you want to set for the specified GC.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetBackground</function>
+<xref linkend='XSetBackground' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1734,11 +1734,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the display function in a given GC, use
-<function>XSetFunction</function>.
+<xref linkend='XSetFunction' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetFunction</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetfunction'>
+<funcsynopsis id='XSetFunction'>
 <funcprototype>
   <funcdef><function>XSetFunction</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1782,7 +1782,7 @@ Specifies the function you want to set for the specified GC.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetFunction</function>
+<xref linkend='XSetFunction' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -1794,11 +1794,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the plane mask of a given GC, use
-<function>XSetPlaneMask</function>.
+<xref linkend='XSetPlaneMask' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetPlaneMask</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetplanemask'>
+<funcsynopsis id='XSetPlaneMask'>
 <funcprototype>
   <funcdef><function>XSetPlaneMask</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1843,7 +1843,7 @@ Specifies the plane mask.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetPlaneMask</function>
+<xref linkend='XSetPlaneMask' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1859,11 +1859,11 @@ errors.
 <para>
 <!-- .LP -->
 To set the line drawing components of a given GC, use
-<function>XSetLineAttributes</function>.
+<xref linkend='XSetLineAttributes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetLineAttributes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetlineattributes'>
+<funcsynopsis id='XSetLineAttributes'>
 <funcprototype>
   <funcdef><function>XSetLineAttributes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1956,7 +1956,7 @@ or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetLineAttributes</function>
+<xref linkend='XSetLineAttributes' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -1968,11 +1968,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the dash-offset and dash-list for dashed line styles of a given GC, use
-<function>XSetDashes</function>.
+<xref linkend='XSetDashes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetDashes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetdashes'>
+<funcsynopsis id='XSetDashes'>
 <funcprototype>
   <funcdef><function>XSetDashes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2041,7 +2041,7 @@ Specifies the number of elements in dash_list.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XSetDashes</function>
+<xref linkend='XSetDashes' xrefstyle='select: title'/>
 function sets the dash-offset and dash-list attributes for dashed line styles
 in the specified GC.
 There must be at least one element in the specified dash_list,
@@ -2080,7 +2080,7 @@ For all other lines, the major axis is the y axis.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetDashes</function>
+<xref linkend='XSetDashes' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -2089,19 +2089,19 @@ and
 errors.
 </para>
 </sect2>
-<sect2 id="Setting_the_Fill_Style_and_Fill_Rule_">
-<title>Setting the Fill Style and Fill Rule </title>
+<sect2 id='Setting_the_Fill_Style_and_Fill_Rule'>
+<title>Setting the Fill Style and Fill Rule</title>
 <!-- .XS -->
 <!-- (SN Setting the Fill Style and Fill Rule  -->
 <!-- .XE -->
 <para>
 <!-- .LP -->
 To set the fill-style of a given GC, use
-<function>XSetFillStyle</function>.
+<xref linkend='XSetFillStyle' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetFillStyle</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetfillstyle'>
+<funcsynopsis id='XSetFillStyle'>
 <funcprototype>
   <funcdef><function>XSetFillStyle</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2151,7 +2151,7 @@ or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetFillStyle</function>
+<xref linkend='XSetFillStyle' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -2163,11 +2163,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the fill-rule of a given GC, use
-<function>XSetFillRule</function>.
+<xref linkend='XSetFillRule' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetFillRule</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetfillrule'>
+<funcsynopsis id='XSetFillRule'>
 <funcprototype>
   <funcdef><function>XSetFillRule</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2215,7 +2215,7 @@ or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetFillRule</function>
+<xref linkend='XSetFillRule' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -2224,8 +2224,8 @@ and
 errors.
 </para>
 </sect2>
-<sect2 id="Setting_the_Fill_Tile_and_Stipple_">
-<title>Setting the Fill Tile and Stipple </title>
+<sect2 id='Setting_the_Fill_Tile_and_Stipple'>
+<title>Setting the Fill Tile and Stipple</title>
 <!-- .XS -->
 <!-- (SN Setting the Fill Tile and Stipple  -->
 <!-- .XE -->
@@ -2243,11 +2243,11 @@ as well as to set the tile or stipple shape and the tile or stipple origin.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the best size of a tile, stipple, or cursor, use
-<function>XQueryBestSize</function>.
+<xref linkend='XQueryBestSize' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryBestSize</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerybestsize'>
+<funcsynopsis id='XQueryBestSize'>
 <funcprototype>
   <funcdef>Status <function>XQueryBestSize</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2342,7 +2342,7 @@ by the display hardware.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryBestSize</function>
+<xref linkend='XQueryBestSize' xrefstyle='select: title'/>
 function returns the best or closest size to the specified size.
 For 
 <symbol>CursorShape</symbol>,
@@ -2374,7 +2374,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryBestSize</function>
+<xref linkend='XQueryBestSize' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadMatch</errorname>,
@@ -2386,11 +2386,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the best fill tile shape, use
-<function>XQueryBestTile</function>.
+<xref linkend='XQueryBestTile' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryBestTile</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerybesttile'>
+<funcsynopsis id='XQueryBestTile'>
 <funcprototype>
   <funcdef>Status <function>XQueryBestTile</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2469,7 +2469,7 @@ by the display hardware.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryBestTile</function>
+<xref linkend='XQueryBestTile' xrefstyle='select: title'/>
 function returns the best or closest size, that is, the size that can be
 tiled fastest on the screen specified by which_screen.
 The drawable indicates the screen and possibly the window class and depth.
@@ -2481,7 +2481,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryBestTile</function>
+<xref linkend='XQueryBestTile' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>
 and
@@ -2492,11 +2492,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the best stipple shape, use
-<function>XQueryBestStipple</function>.
+<xref linkend='XQueryBestStipple' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryBestStipple</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerybeststipple'>
+<funcsynopsis id='XQueryBestStipple'>
 <funcprototype>
   <funcdef>Status <function>XQueryBestStipple</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2575,7 +2575,7 @@ by the display hardware.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryBestStipple</function>
+<xref linkend='XQueryBestStipple' xrefstyle='select: title'/>
 function returns the best or closest size, that is, the size that can be
 stippled fastest on the screen specified by which_screen.
 The drawable indicates the screen and possibly the window class and depth.
@@ -2587,7 +2587,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryBestStipple</function>
+<xref linkend='XQueryBestStipple' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>
 and
@@ -2598,11 +2598,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the fill tile of a given GC, use
-<function>XSetTile</function>.
+<xref linkend='XSetTile' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetTile</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsettile'>
+<funcsynopsis id='XSetTile'>
 <funcprototype>
   <funcdef><function>XSetTile</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2653,7 +2653,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetTile</function>
+<xref linkend='XSetTile' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -2666,11 +2666,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the stipple of a given GC, use
-<function>XSetStipple</function>.
+<xref linkend='XSetStipple' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetStipple</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetstipple'>
+<funcsynopsis id='XSetStipple'>
 <funcprototype>
   <funcdef><function>XSetStipple</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2721,7 +2721,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetStipple</function>
+<xref linkend='XSetStipple' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -2734,11 +2734,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the tile or stipple origin of a given GC, use
-<function>XSetTSOrigin</function>.
+<xref linkend='XSetTSOrigin' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetTSOrigin</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsettsorigin'>
+<funcsynopsis id='XSetTSOrigin'>
 <funcprototype>
   <funcdef><function>XSetTSOrigin</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2799,7 +2799,7 @@ drawable is specified in the graphics request.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetTSOrigin</function>
+<xref linkend='XSetTSOrigin' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -2807,19 +2807,19 @@ and
 errors.
 </para>
 </sect2>
-<sect2 id="Setting_the_Current_Font_">
-<title>Setting the Current Font </title>
+<sect2 id='Setting_the_Current_Font'>
+<title>Setting the Current Font</title>
 <!-- .XS -->
 <!-- (SN Setting the Current Font  -->
 <!-- .XE -->
 <para>
 <!-- .LP -->
 To set the current font of a given GC, use
-<function>XSetFont</function>.
+<xref linkend='XSetFont' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetfont'>
+<funcsynopsis id='XSetFont'>
 <funcprototype>
   <funcdef><function>XSetFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2863,7 +2863,7 @@ Specifies the font.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetFont</function>
+<xref linkend='XSetFont' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadFont</errorname>,
@@ -2886,11 +2886,11 @@ and the clip-mask or set the clip-mask to a list of rectangles.
 <!-- .LP -->
 <!-- .sp -->
 To set the clip-origin of a given GC, use
-<function>XSetClipOrigin</function>.
+<xref linkend='XSetClipOrigin' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetClipOrigin</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetcliporigin'>
+<funcsynopsis id='XSetClipOrigin'>
 <funcprototype>
   <funcdef><function>XSetClipOrigin</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2950,7 +2950,7 @@ destination drawable is specified in the graphics request.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetClipOrigin</function>
+<xref linkend='XSetClipOrigin' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -2961,11 +2961,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the clip-mask of a given GC to the specified pixmap, use
-<function>XSetClipMask</function>.
+<xref linkend='XSetClipMask' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetClipMask</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetclipmask'>
+<funcsynopsis id='XSetClipMask'>
 <funcprototype>
   <funcdef><function>XSetClipMask</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3016,7 +3016,7 @@ the pixels are always drawn (regardless of the clip-origin).
 </para>
 <para>
 <!-- .LP -->
-<function>XSetClipMask</function>
+<xref linkend='XSetClipMask' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -3029,11 +3029,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the clip-mask of a given GC to the specified list of rectangles, use
-<function>XSetClipRectangles</function>.
+<xref linkend='XSetClipRectangles' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetClipRectangles</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetcliprectangles'>
+<funcsynopsis id='XSetClipRectangles'>
 <funcprototype>
   <funcdef><function>XSetClipRectangles</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3128,7 +3128,7 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetClipRectangles</function>
+<xref linkend='XSetClipRectangles' xrefstyle='select: title'/>
 function changes the clip-mask in the specified GC 
 to the specified list of rectangles and sets the clip origin.
 The output is clipped to remain contained within the
@@ -3143,10 +3143,10 @@ which effectively disables output.
 This is the opposite of passing
 <symbol>None</symbol>
 as the clip-mask in
-<function>XCreateGC</function>,
-<function>XChangeGC</function>,
+<xref linkend='XCreateGC' xrefstyle='select: title'/>,
+<xref linkend='XChangeGC' xrefstyle='select: title'/>,
 and
-<function>XSetClipMask</function>.
+<xref linkend='XSetClipMask' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3178,7 +3178,7 @@ scanline have an identical Y origins and Y extents.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetClipRectangles</function>
+<xref linkend='XSetClipRectangles' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -3195,19 +3195,19 @@ For information about these functions,
 see <link linkend="Manipulating_Regions">section 16.5</link>.
 </para>
 </sect2>
-<sect2 id="Setting_the_Arc_Mode_Subwindow_Mode_and_Graphics_Exposure_">
-<title>Setting the Arc Mode, Subwindow Mode, and Graphics Exposure </title>
+<sect2 id='Setting_the_Arc_Mode_Subwindow_Mode_and_Graphics_Exposure'>
+<title>Setting the Arc Mode, Subwindow Mode, and Graphics Exposure</title>
 <!-- .XS -->
 <!-- (SN Setting the Arc Mode, Subwindow Mode, and Graphics Exposure  -->
 <!-- .XE -->
 <para>
 <!-- .LP -->
 To set the arc mode of a given GC, use
-<function>XSetArcMode</function>.
+<xref linkend='XSetArcMode' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetArcMode</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetarcmode'>
+<funcsynopsis id='XSetArcMode'>
 <funcprototype>
   <funcdef><function>XSetArcMode</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3255,7 +3255,7 @@ or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetArcMode</function>
+<xref linkend='XSetArcMode' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -3267,11 +3267,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the subwindow mode of a given GC, use
-<function>XSetSubwindowMode</function>.
+<xref linkend='XSetSubwindowMode' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetSubwindowMode</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetsubwindowmode'>
+<funcsynopsis id='XSetSubwindowMode'>
 <funcprototype>
   <funcdef><function>XSetSubwindowMode</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3319,7 +3319,7 @@ or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetSubwindowMode</function>
+<xref linkend='XSetSubwindowMode' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,
@@ -3331,11 +3331,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the graphics-exposures flag of a given GC, use
-<function>XSetGraphicsExposures</function>.
+<xref linkend='XSetGraphicsExposures' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetGraphicsExposures</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetgraphicsexposures'>
+<funcsynopsis id='XSetGraphicsExposures'>
 <funcprototype>
   <funcdef><function>XSetGraphicsExposures</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3376,9 +3376,9 @@ Specifies a Boolean value that indicates whether you want
 and
 <symbol>NoExpose</symbol>
 events to be reported when calling
-<function>XCopyArea</function>
+<xref linkend='XCopyArea' xrefstyle='select: title'/>
 and
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 with this GC.
     </para>
   </listitem>
@@ -3387,7 +3387,7 @@ with this GC.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XSetGraphicsExposures</function>
+<xref linkend='XSetGraphicsExposures' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadGC</errorname>,

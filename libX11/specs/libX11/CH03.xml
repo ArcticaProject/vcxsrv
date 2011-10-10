@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="window_functions"><title>Window Functions</title>
+<chapter id='Window_Functions'><title>Window Functions</title>
 <sect1 id="Visual_Types">
 <title>Visual Types</title>
 <!-- .XS -->
@@ -23,7 +23,7 @@ Because default windows and visual types are defined for each screen,
 most simple applications need not deal with this complexity.
 Xlib provides macros and functions that return the default root window, 
 the default depth of the default root window, and the default visual type
-(see sections <link linkend="Display_Macros_">2.2.1</link>
+(see sections <link linkend='Display_Macros'>2.2.1</link>
 and <link linkend="Determining_the_Appropriate_Visual_Type">16.7</link>).
 </para>
 <para>
@@ -176,11 +176,11 @@ this is the size of an individual pixel subfield.
 To obtain the visual ID from a 
 <structname>Visual</structname>,
 use
-<function>XVisualIDFromVisual</function>.
+<xref linkend='XVisualIDFromVisual' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XVisualIDFromVisual</primary></indexterm>
 </para>
 <!-- .sM -->
-<funcsynopsis id='xvisualidfromvisual'>
+<funcsynopsis id='XVisualIDFromVisual'>
 <funcprototype>
   <funcdef>VisualID <function>XVisualIDFromVisual</function></funcdef>
   <paramdef>Visual *<parameter>visual</parameter></paramdef>
@@ -203,7 +203,7 @@ Specifies the visual type.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XVisualIDFromVisual</function>
+<xref linkend='XVisualIDFromVisual' xrefstyle='select: title'/>
 function returns the visual ID for the specified visual type.
 </para>
 </sect1>
@@ -330,7 +330,7 @@ An application may wish to create a window long before it is
 mapped to the screen.
 When a window is eventually mapped to the screen 
 (using
-<function>XMapWindow</function>),
+<xref linkend='XMapWindow' xrefstyle='select: title'/>),
 <indexterm><primary>XMapWindow</primary></indexterm>
 the X server generates an 
 <symbol>Expose</symbol>
@@ -356,9 +356,9 @@ To set an attribute of a window,
 set the appropriate member of the
 <structname>XSetWindowAttributes</structname>
 structure and OR in the corresponding value bitmask in your subsequent calls to
-<function>XCreateWindow</function>
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>
 and
-<function>XChangeWindowAttributes</function>,
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>,
 or use one of the other convenience functions that set the appropriate 
 attribute.
 The symbols for the value mask bits and the
@@ -1072,7 +1072,7 @@ or
 <symbol>False</symbol>
 (default).
 Window managers use this information to avoid tampering with pop-up windows
-(see also <link linkend="inter_client_communication_functions">chapter 14</link>).
+(see also <link linkend='Inter_Client_Communication_Functions'>chapter 14</link>).
 </para>
 </sect2>
 <sect2 id="Colormap_Attribute">
@@ -1093,7 +1093,7 @@ error results.
 X servers capable of supporting multiple 
 hardware colormaps can use this information, 
 and window managers can use it for calls to
-<function>XInstallColormap</function>.
+<xref linkend='XInstallColormap' xrefstyle='select: title'/>.
 You can set the colormap attribute to a colormap or to
 <symbol>CopyFromParent</symbol>
 (default).
@@ -1147,7 +1147,7 @@ or
 window, and any change in the parent's cursor will cause an
 immediate change in the displayed cursor.
 By calling
-<function>XFreeCursor</function>,
+<xref linkend='XFreeCursor' xrefstyle='select: title'/>,
 the cursor can be freed immediately as long as no further explicit reference 
 to it is made.
 </para>
@@ -1167,7 +1167,7 @@ which are discussed in the appropriate toolkit documentation.
 If you do not use a toolkit, however,
 you must provide some standard information or hints for the window
 manager by using the Xlib inter-client communication functions
-(see <link linkend="inter_client_communication_functions">chapter 14</link>).
+(see <link linkend='Inter_Client_Communication_Functions'>chapter 14</link>).
 </para>
 <para>
 <!-- .LP -->
@@ -1211,15 +1211,15 @@ you should set these properties for top-level windows before mapping them.
 <para>
 <!-- .LP -->
 For further information,
-see <link linkend="inter_client_communication_functions">chapter 14</link> and
+see <link linkend='Inter_Client_Communication_Functions'>chapter 14</link> and
 the <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateWindow</function>
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>
 is the more general function that allows you to set specific window attributes 
 when you create a window.
-<function>XCreateSimpleWindow</function>
+<xref linkend='XCreateSimpleWindow' xrefstyle='select: title'/>
 creates a window that inherits its attributes from its parent window.
 </para>
 <para>
@@ -1245,11 +1245,11 @@ Extension packages can define other classes of windows.
 <para>
 <!-- .LP -->
 To create an unmapped window and set its window attributes, use
-<function>XCreateWindow</function>.
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreatewindow'>
+<funcsynopsis id='XCreateWindow'>
 <funcprototype>
   <funcdef>Window <function>XCreateWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1424,7 +1424,7 @@ set to indicate which attributes have been set in the structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateWindow</function>
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>
 function creates an unmapped subwindow for a specified parent window, 
 returns the window ID of the created window, 
 and causes the X server to generate a
@@ -1480,11 +1480,11 @@ error results.
 <!-- .LP -->
 The created window is not yet displayed (mapped) on the user's display.
 To display the window, call
-<function>XMapWindow</function>.
+<xref linkend='XMapWindow' xrefstyle='select: title'/>.
 The new window initially uses the same cursor as
 its parent. 
 A new cursor can be defined for the new window by calling
-<function>XDefineCursor</function>.
+<xref linkend='XDefineCursor' xrefstyle='select: title'/>.
 <indexterm><primary>Cursor</primary><secondary>Initial State</secondary></indexterm>
 <indexterm><primary>XDefineCursor</primary></indexterm>
 The window will not be visible on the screen unless it and all of its
@@ -1492,7 +1492,7 @@ ancestors are mapped and it is not obscured by any of its ancestors.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateWindow</function>
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadColor</errorname>,
@@ -1510,11 +1510,11 @@ errors.
 To create an unmapped 
 <symbol>InputOutput</symbol>
 subwindow of a given parent window, use
-<function>XCreateSimpleWindow</function>.
+<xref linkend='XCreateSimpleWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateSimpleWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreatesimplewindow'>
+<funcsynopsis id='XCreateSimpleWindow'>
 <funcprototype>
   <funcdef>Window <function>XCreateSimpleWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1634,7 +1634,7 @@ Specifies the background pixel value of the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateSimpleWindow</function>
+<xref linkend='XCreateSimpleWindow' xrefstyle='select: title'/>
 function creates an unmapped
 <symbol>InputOutput</symbol>
 subwindow for a specified parent window, returns the
@@ -1649,14 +1649,14 @@ The border_width for an
 window must be zero, or a
 <errorname>BadMatch</errorname>
 error results.
-<function>XCreateSimpleWindow</function>
+<xref linkend='XCreateSimpleWindow' xrefstyle='select: title'/>
 inherits its depth, class, and visual from its parent.
 All other window attributes, except background and border, 
 have their default values.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateSimpleWindow</function>
+<xref linkend='XCreateSimpleWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadMatch</errorname>,
@@ -1680,11 +1680,11 @@ subwindows of a window.
 <!-- .LP -->
 <!-- .sp -->
 To destroy a window and all of its subwindows, use
-<function>XDestroyWindow</function>.
+<xref linkend='XDestroyWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroyWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroywindow'>
+<funcsynopsis id='XDestroyWindow'>
 <funcprototype>
   <funcdef><function>XDestroyWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1718,7 +1718,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDestroyWindow</function>
+<xref linkend='XDestroyWindow' xrefstyle='select: title'/>
 function destroys the specified window as well as all of its subwindows and causes
 the X server to generate a
 <symbol>DestroyNotify</symbol>
@@ -1741,7 +1741,7 @@ events on other windows that were obscured by the window being destroyed.
 </para>
 <para>
 <!-- .LP -->
-<function>XDestroyWindow</function>
+<xref linkend='XDestroyWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -1750,11 +1750,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To destroy all subwindows of a specified window, use 
-<function>XDestroySubwindows</function>.
+<xref linkend='XDestroySubwindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroySubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroysubwindows'>
+<funcsynopsis id='XDestroySubwindows'>
 <funcprototype>
   <funcdef><function>XDestroySubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1788,7 +1788,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDestroySubwindows</function>
+<xref linkend='XDestroySubwindows' xrefstyle='select: title'/>
 function destroys all inferior windows of the specified window, 
 in bottom-to-top stacking order.
 It causes the X server to generate a
@@ -1796,7 +1796,7 @@ It causes the X server to generate a
 event for each window.
 If any mapped
 subwindows were actually destroyed,
-<function>XDestroySubwindows</function>
+<xref linkend='XDestroySubwindows' xrefstyle='select: title'/>
 causes the X server to generate 
 <symbol>Expose</symbol>
 events on the specified window.
@@ -1807,21 +1807,21 @@ The subwindows should never be referenced again.
 </para>
 <para>
 <!-- .LP -->
-<function>XDestroySubwindows</function>
+<xref linkend='XDestroySubwindows' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
 </para>
 </sect1>
-<sect1 id="Mapping_Windows_">
-<title>Mapping Windows </title>
+<sect1 id='Mapping_Windows'>
+<title>Mapping Windows</title>
 <!-- .XS -->
 <!-- (SN Mapping Windows  -->
 <!-- .XE -->
 <para>
 <!-- .LP -->
 A window is considered mapped if an 
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 call has been made on it.
 It may not be visible on the screen for one of the following reasons:
 </para>
@@ -1876,7 +1876,7 @@ A window manager that wants to provide decoration might
 reparent the child into a frame first.
 For further information,
 see <link linkend="Override_Redirect_Flag">sections 3.2.8</link>
-and <link linkend="Window_State_Change_Events_">10.10</link>.
+and <link linkend='Window_State_Change_Events'>10.10</link>.
 Only a single client at a time can select for 
 <symbol>SubstructureRedirectMask</symbol>.
 </para>
@@ -1894,11 +1894,11 @@ event.
 <!-- .LP -->
 <!-- .sp -->
 To map a given window, use 
-<function>XMapWindow</function>.
+<xref linkend='XMapWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XMapWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmapwindow'>
+<funcsynopsis id='XMapWindow'>
 <funcprototype>
   <funcdef><function>XMapWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1932,7 +1932,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 function
 maps the window and all of its
 subwindows that have had map requests.
@@ -1954,7 +1954,7 @@ and if some other client has selected
 on the parent window, then the X server generates a
 <symbol>MapRequest</symbol>
 event, and the
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 function does not map the window.
 Otherwise, the window is mapped, and the X server generates a
 <symbol>MapNotify</symbol>
@@ -1984,7 +1984,7 @@ Similar tiling and exposure take place for any newly viewable inferiors.
 If the window is an
 <symbol>InputOutput</symbol>
 window,
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 generates 
 <symbol>Expose</symbol>
 events on each 
@@ -2011,7 +2011,7 @@ with window managers.
 </para>
 <para>
 <!-- .LP -->
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2020,11 +2020,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To map and raise a window, use
-<function>XMapRaised</function>.
+<xref linkend='XMapRaised' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XMapRaised</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmapraised'>
+<funcsynopsis id='XMapRaised'>
 <funcprototype>
   <funcdef><function>XMapRaised</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2058,20 +2058,20 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMapRaised</function>
+<xref linkend='XMapRaised' xrefstyle='select: title'/>
 function
 essentially is similar to
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 in that it maps the window and all of its
 subwindows that have had map requests.
 However, it also raises the specified window to the top of the stack.
 For additional information,
 see 
-<function>XMapWindow</function>.
+<xref linkend='XMapWindow' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XMapRaised</function>
+<xref linkend='XMapRaised' xrefstyle='select: title'/>
 can generate multiple
 <errorname>BadWindow</errorname>
 errors.
@@ -2080,11 +2080,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To map all subwindows for a specified window, use 
-<function>XMapSubwindows</function>.
+<xref linkend='XMapSubwindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XMapSubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmapsubwindows'>
+<funcsynopsis id='XMapSubwindows'>
 <funcprototype>
   <funcdef><function>XMapSubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2118,7 +2118,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMapSubwindows</function>
+<xref linkend='XMapSubwindows' xrefstyle='select: title'/>
 <indexterm><primary>XMapSubwindows</primary></indexterm>
 function maps all subwindows for a specified window in top-to-bottom stacking 
 order.
@@ -2131,7 +2131,7 @@ only once, for all of the windows, rather than for each window.
 </para>
 <para>
 <!-- .LP -->
-<function>XMapSubwindows</function>
+<xref linkend='XMapSubwindows' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2150,11 +2150,11 @@ Xlib provides functions that you can use to unmap a window or all subwindows.
 <!-- .LP -->
 <!-- .sp -->
 To unmap a window, use 
-<function>XUnmapWindow</function>.
+<xref linkend='XUnmapWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XUnmapWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunmapwindow'>
+<funcsynopsis id='XUnmapWindow'>
 <funcprototype>
   <funcdef><function>XUnmapWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2188,14 +2188,14 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnmapWindow</function>
+<xref linkend='XUnmapWindow' xrefstyle='select: title'/>
 function unmaps the specified window and causes the X server to generate an
 <symbol>UnmapNotify</symbol>
 <indexterm><primary>UnmapNotify Event</primary></indexterm>
 <indexterm><primary>XUnmapWindow</primary></indexterm>
 event.
 If the specified window is already unmapped, 
-<function>XUnmapWindow</function>
+<xref linkend='XUnmapWindow' xrefstyle='select: title'/>
 has no effect.
 Normal exposure processing on formerly obscured windows is performed.
 Any child window will no longer be visible until another map call is
@@ -2208,7 +2208,7 @@ events on windows that were formerly obscured by it.
 </para>
 <para>
 <!-- .LP -->
-<function>XUnmapWindow</function>
+<xref linkend='XUnmapWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2217,11 +2217,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To unmap all subwindows for a specified window, use 
-<function>XUnmapSubwindows</function>.
+<xref linkend='XUnmapSubwindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XUnmapSubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunmapsubwindows'>
+<funcsynopsis id='XUnmapSubwindows'>
 <funcprototype>
   <funcdef><function>XUnmapSubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2255,7 +2255,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnmapSubwindows</function>
+<xref linkend='XUnmapSubwindows' xrefstyle='select: title'/>
 function unmaps all subwindows for the specified window in bottom-to-top
 stacking order.
 It causes the X server to generate an
@@ -2270,7 +2270,7 @@ only once, for all of the windows, rather than for each window.
 </para>
 <para>
 <!-- .LP -->
-<function>XUnmapSubwindows</function>
+<xref linkend='XUnmapSubwindows' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2293,7 +2293,7 @@ To change one of these parameters,
 set the appropriate member of the
 <structname>XWindowChanges</structname>
 structure and OR in the corresponding value mask in subsequent calls to
-<function>XConfigureWindow</function>.
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>.
 The symbols for the value mask bits and the
 <structname>XWindowChanges</structname>
 structure are:
@@ -2524,11 +2524,11 @@ Attempts to configure a root window have no effect.
 <!-- .LP -->
 <!-- .sp -->
 To configure a window's size, location, stacking, or border, use
-<function>XConfigureWindow</function>.
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XConfigureWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xconfigurewindow'>
+<funcsynopsis id='XConfigureWindow'>
 <funcprototype>
   <funcdef><function>XConfigureWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2589,7 +2589,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XConfigureWindow</function>
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>
 function uses the values specified in the
 <structname>XWindowChanges</structname>
 structure to reconfigure a window's size, position, border, and stacking order.
@@ -2609,7 +2609,7 @@ and
 <symbol>Opposite</symbol>
 are performed with respect to the window's final geometry (as controlled by the
 other arguments passed to
-<function>XConfigureWindow</function>),
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>),
 not its initial geometry.
 Any backing store contents of the window, its
 inferiors, and other newly visible windows are either discarded or
@@ -2618,7 +2618,7 @@ changed to reflect the current screen contents
 </para>
 <para>
 <!-- .LP -->
-<function>XConfigureWindow</function>
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>,
 <errorname>BadValue</errorname>,
@@ -2630,11 +2630,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To move a window without changing its size, use 
-<function>XMoveWindow</function>.
+<xref linkend='XMoveWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XMoveWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmovewindow'>
+<funcsynopsis id='XMoveWindow'>
 <funcprototype>
   <funcdef><function>XMoveWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2693,7 +2693,7 @@ Specify the x and y coordinates(Xy.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMoveWindow</function>
+<xref linkend='XMoveWindow' xrefstyle='select: title'/>
 function moves the specified window to the specified x and y coordinates,
 but it does not change the window's size, raise the window, or
 change the mapping state of the window.
@@ -2723,7 +2723,7 @@ Otherwise, the window is moved.
 </para>
 <para>
 <!-- .LP -->
-<function>XMoveWindow</function>
+<xref linkend='XMoveWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -2732,11 +2732,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To change a window's size without changing the upper-left coordinate, use 
-<function>XResizeWindow</function>.
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XResizeWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xresizewindow'>
+<funcsynopsis id='XResizeWindow'>
 <funcprototype>
   <funcdef><function>XResizeWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2794,7 +2794,7 @@ Specify the width and height(Wh.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XResizeWindow</function>
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>
 function changes the inside dimensions of the specified window, not including
 its borders.
 This function does not change the window's upper-left coordinate or
@@ -2824,7 +2824,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XResizeWindow</function>
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and
@@ -2835,11 +2835,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To change the size and location of a window, use 
-<function>XMoveResizeWindow</function>.
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XMoveResizeWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmoveresizewindow'>
+<funcsynopsis id='XMoveResizeWindow'>
 <funcprototype>
   <funcdef><function>XMoveResizeWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2920,7 +2920,7 @@ Specify the width and height(Wh.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMoveResizeWindow</function>
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>
 function changes the size and location of the specified window 
 without raising it.
 Moving and resizing a mapped window may generate an
@@ -2945,7 +2945,7 @@ Otherwise, the window size and location are changed.
 </para>
 <para>
 <!-- .LP -->
-<function>XMoveResizeWindow</function>
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and
@@ -2956,11 +2956,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To change the border width of a given window, use
-<function>XSetWindowBorderWidth</function>.
+<xref linkend='XSetWindowBorderWidth' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWindowBorderWidth</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwindowborderwidth'>
+<funcsynopsis id='XSetWindowBorderWidth'>
 <funcprototype>
   <funcdef><function>XSetWindowBorderWidth</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3005,12 +3005,12 @@ Specifies the width of the window border.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWindowBorderWidth</function>
+<xref linkend='XSetWindowBorderWidth' xrefstyle='select: title'/>
 function sets the specified window's border width to the specified width.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWindowBorderWidth</function>
+<xref linkend='XSetWindowBorderWidth' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3033,11 +3033,11 @@ or restack windows.
 <!-- .LP -->
 <!-- .sp -->
 To raise a window so that no sibling window obscures it, use 
-<function>XRaiseWindow</function>.
+<xref linkend='XRaiseWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRaiseWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xraisewindow'>
+<funcsynopsis id='XRaiseWindow'>
 <funcprototype>
   <funcdef><function>XRaiseWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3071,7 +3071,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XRaiseWindow</function>
+<xref linkend='XRaiseWindow' xrefstyle='select: title'/>
 function
 raises the specified window to the top of the stack so that no sibling window
 obscures it.
@@ -3097,7 +3097,7 @@ Otherwise, the window is raised.
 </para>
 <para>
 <!-- .LP -->
-<function>XRaiseWindow</function>
+<xref linkend='XRaiseWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3106,11 +3106,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To lower a window so that it does not obscure any sibling windows, use 
-<function>XLowerWindow</function>.
+<xref linkend='XLowerWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLowerWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlowerwindow'>
+<funcsynopsis id='XLowerWindow'>
 <funcprototype>
   <funcdef><function>XLowerWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3144,7 +3144,7 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLowerWindow</function>
+<xref linkend='XLowerWindow' xrefstyle='select: title'/>
 function lowers the specified window to the bottom of the stack
 so that it does not obscure any sibling
 windows.
@@ -3171,7 +3171,7 @@ stack.
 </para>
 <para>
 <!-- .LP -->
-<function>XLowerWindow</function>
+<xref linkend='XLowerWindow' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3180,11 +3180,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To circulate a subwindow up or down, use
-<function>XCirculateSubwindows</function>.
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCirculateSubwindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcirculatesubwindows'>
+<funcsynopsis id='XCirculateSubwindows'>
 <funcprototype>
   <funcdef><function>XCirculateSubwindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3234,17 +3234,17 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCirculateSubwindows</function>
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>
 function circulates children of the specified window in the specified 
 direction.
 If you specify
 <symbol>RaiseLowest</symbol>,
-<function>XCirculateSubwindows</function>
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>
 raises the lowest mapped child (if any) that is occluded 
 by another child to the top of the stack.
 If you specify
 <symbol>LowerHighest</symbol>,
-<function>XCirculateSubwindows</function>
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>
 lowers the highest mapped child (if any) that occludes another child
 to the bottom of the stack.
 Exposure processing is then performed on formerly obscured windows.
@@ -3260,7 +3260,7 @@ event.
 </para>
 <para>
 <!-- .LP -->
-<function>XCirculateSubwindows</function>
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and
@@ -3272,11 +3272,11 @@ errors.
 <!-- .sp -->
 To raise the lowest mapped child of a window that is partially or completely
 occluded by another child, use
-<function>XCirculateSubwindowsUp</function>.
+<xref linkend='XCirculateSubwindowsUp' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCirculateSubwindowsUp</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcirculatesubwindowsup'>
+<funcsynopsis id='XCirculateSubwindowsUp'>
 <funcprototype>
   <funcdef><function>XCirculateSubwindowsUp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3310,21 +3310,21 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCirculateSubwindowsUp</function>
+<xref linkend='XCirculateSubwindowsUp' xrefstyle='select: title'/>
 function raises the lowest mapped child of the specified window that
 is partially
 or completely
 occluded by another child.
 Completely unobscured children are not affected.
 This is a convenience function equivalent to
-<function>XCirculateSubwindows</function>
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>
 with
 <symbol>RaiseLowest</symbol>
 specified.
 </para>
 <para>
 <!-- .LP -->
-<function>XCirculateSubwindowsUp</function>
+<xref linkend='XCirculateSubwindowsUp' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3334,11 +3334,11 @@ error.
 <!-- .sp -->
 To lower the highest mapped child of a window that partially or 
 completely occludes another child, use 
-<function>XCirculateSubwindowsDown</function>.
+<xref linkend='XCirculateSubwindowsDown' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCirculateSubwindowsDown</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcirculatesubwindowsdown'>
+<funcsynopsis id='XCirculateSubwindowsDown'>
 <funcprototype>
   <funcdef><function>XCirculateSubwindowsDown</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3372,19 +3372,19 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCirculateSubwindowsDown</function>
+<xref linkend='XCirculateSubwindowsDown' xrefstyle='select: title'/>
 function lowers the highest mapped child of the specified window that partially
 or completely occludes another child.
 Completely unobscured children are not affected.
 This is a convenience function equivalent to
-<function>XCirculateSubwindows</function>
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>
 with
 <symbol>LowerHighest</symbol>
 specified.
 </para>
 <para>
 <!-- .LP -->
-<function>XCirculateSubwindowsDown</function>
+<xref linkend='XCirculateSubwindowsDown' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3393,11 +3393,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To restack a set of windows from top to bottom, use 
-<function>XRestackWindows</function>.
+<xref linkend='XRestackWindows' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRestackWindows</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrestackwindows'>
+<funcsynopsis id='XRestackWindows'>
 <funcprototype>
   <funcdef><function>XRestackWindows</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3442,7 +3442,7 @@ Specifies the number of windows to be restacked.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XRestackWindows</function>
+<xref linkend='XRestackWindows' xrefstyle='select: title'/>
 function restacks the windows in the order specified,
 from top to bottom.
 The stacking order of the first window in the windows array is unaffected,
@@ -3469,7 +3469,7 @@ Otherwise, the windows will be restacked in top-to-bottom order.
 </para>
 <para>
 <!-- .LP -->
-<function>XRestackWindows</function>
+<xref linkend='XRestackWindows' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -3486,7 +3486,7 @@ error.
 <para>
 <!-- .LP -->
 Xlib provides functions that you can use to set window attributes.
-<function>XChangeWindowAttributes</function>
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>
 is the more general function that allows you to set one or more window
 attributes provided by the
 <structname>XSetWindowAttributes</structname>
@@ -3498,11 +3498,11 @@ window attribute, such as a window's background.
 <!-- .LP -->
 <!-- .sp -->
 To change one or more attributes for a given window, use
-<function>XChangeWindowAttributes</function>.
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XChangeWindowAttributes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangewindowattributes'>
+<funcsynopsis id='XChangeWindowAttributes'>
 <funcprototype>
   <funcdef><function>XChangeWindowAttributes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3546,7 +3546,7 @@ If valuemask is zero,
 the attributes are ignored and are not referenced.
 The values and restrictions are
 the same as for
-<function>XCreateWindow</function>.
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>.
       </para>
     </listitem>
   </varlistentry>
@@ -3579,14 +3579,14 @@ set to indicate which attributes have been set in the structure
 <!-- .eM -->
 Depending on the valuemask,
 the
-<function>XChangeWindowAttributes</function>
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>
 function uses the window attributes in the
 <structname>XSetWindowAttributes</structname>
 structure to change the specified window attributes.
 Changing the background does not cause the window contents to be
 changed.
 To repaint the window and its background, use 
-<function>XClearWindow</function>.
+<xref linkend='XClearWindow' xrefstyle='select: title'/>.
 Setting the border or changing the background such that the
 border tile origin changes causes the border to be repainted.
 Changing the background of a root window to 
@@ -3612,7 +3612,7 @@ event.
 Changing the colormap of a visible window may have no
 immediate effect on the screen because the map may not be installed
 (see
-<function>XInstallColormap</function>).
+<xref linkend='XInstallColormap' xrefstyle='select: title'/>).
 Changing the cursor of a root window to 
 <symbol>None</symbol>
 restores the default
@@ -3640,7 +3640,7 @@ not one per client.
 </para>
 <para>
 <!-- .LP -->
-<function>XChangeWindowAttributes</function>
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -3656,11 +3656,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the background of a window to a given pixel, use 
-<function>XSetWindowBackground</function>.
+<xref linkend='XSetWindowBackground' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWindowBackground</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwindowbackground'>
+<funcsynopsis id='XSetWindowBackground'>
 <funcprototype>
   <funcdef><function>XSetWindowBackground</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3705,10 +3705,10 @@ Specifies the pixel that is to be used for the background.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWindowBackground</function>
+<xref linkend='XSetWindowBackground' xrefstyle='select: title'/>
 function sets the background of the window to the specified pixel value.
 Changing the background does not cause the window contents to be changed.
-<function>XSetWindowBackground</function>
+<xref linkend='XSetWindowBackground' xrefstyle='select: title'/>
 uses a pixmap of undefined size filled with the pixel value you passed.
 If you try to change the background of an 
 <symbol>InputOnly</symbol>
@@ -3718,7 +3718,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWindowBackground</function>
+<xref linkend='XSetWindowBackground' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>
 and
@@ -3732,12 +3732,12 @@ errors.
 <para>
 <!-- .LP -->
 To set the background of a window to a given pixmap, use 
-<function>XSetWindowBackgroundPixmap</function>.
+<xref linkend='XSetWindowBackgroundPixmap' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>background</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetWindowBackgroundPixmap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwindowbackgroundpixmap'>
+<funcsynopsis id='XSetWindowBackgroundPixmap'>
 <funcprototype>
   <funcdef><function>XSetWindowBackgroundPixmap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3787,7 +3787,7 @@ or
 <indexterm><primary>Resource IDs</primary><secondary>freeing</secondary></indexterm>
 <indexterm><primary>Freeing</primary><secondary>resources</secondary></indexterm>
 The
-<function>XSetWindowBackgroundPixmap</function>
+<xref linkend='XSetWindowBackgroundPixmap' xrefstyle='select: title'/>
 function sets the background pixmap of the window to the specified pixmap.
 The background pixmap can immediately be freed if no further explicit
 references to it are to be made.
@@ -3807,7 +3807,7 @@ the window has no defined background.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWindowBackgroundPixmap</function>
+<xref linkend='XSetWindowBackgroundPixmap' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>,
 <errorname>BadPixmap</errorname>,
@@ -3815,9 +3815,9 @@ and
 <errorname>BadWindow</errorname>
 errors.
 <!-- .NT Note -->
-<function>XSetWindowBackground</function>
+<xref linkend='XSetWindowBackground' xrefstyle='select: title'/>
 and
-<function>XSetWindowBackgroundPixmap</function>
+<xref linkend='XSetWindowBackgroundPixmap' xrefstyle='select: title'/>
 do not change the current contents of the window.
 <!-- .NE -->
 </para>
@@ -3825,11 +3825,11 @@ do not change the current contents of the window.
 <!-- .LP -->
 <!-- .sp -->
 To change and repaint a window's border to a given pixel, use 
-<function>XSetWindowBorder</function>.
+<xref linkend='XSetWindowBorder' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWindowBorder</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwindowborder'>
+<funcsynopsis id='XSetWindowBorder'>
 <funcprototype>
   <funcdef><function>XSetWindowBorder</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3874,7 +3874,7 @@ Specifies the entry in the colormap.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWindowBorder</function>
+<xref linkend='XSetWindowBorder' xrefstyle='select: title'/>
 function sets the border of the window to the pixel value you specify.
 If you attempt to perform this on an
 <symbol>InputOnly</symbol>
@@ -3884,7 +3884,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWindowBorder</function>
+<xref linkend='XSetWindowBorder' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>
 and
@@ -3895,11 +3895,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To change and repaint the border tile of a given window, use 
-<function>XSetWindowBorderPixmap</function>.
+<xref linkend='XSetWindowBorderPixmap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWindowBorderPixmap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwindowborderpixmap'>
+<funcsynopsis id='XSetWindowBorderPixmap'>
 <funcprototype>
   <funcdef><function>XSetWindowBorderPixmap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3945,7 +3945,7 @@ Specifies the border pixmap or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWindowBorderPixmap</function>
+<xref linkend='XSetWindowBorderPixmap' xrefstyle='select: title'/>
 function sets the border pixmap of the window to the pixmap you specify.
 The border pixmap can be freed immediately if no further explicit
 references to it are to be made.
@@ -3962,7 +3962,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWindowBorderPixmap</function>
+<xref linkend='XSetWindowBorderPixmap' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>,
 <errorname>BadPixmap</errorname>,
@@ -3974,11 +3974,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set the colormap of a given window, use
-<function>XSetWindowColormap</function>.
+<xref linkend='XSetWindowColormap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetWindowColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetwindowcolormap'>
+<funcsynopsis id='XSetWindowColormap'>
 <funcprototype>
   <funcdef><function>XSetWindowColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4023,7 +4023,7 @@ Specifies the colormap.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetWindowColormap</function>
+<xref linkend='XSetWindowColormap' xrefstyle='select: title'/>
 function sets the specified colormap of the specified window.
 The colormap must have the same visual type as the window,
 or a
@@ -4032,7 +4032,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetWindowColormap</function>
+<xref linkend='XSetWindowColormap' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>,
 <errorname>BadMatch</errorname>,
@@ -4044,12 +4044,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To define which cursor will be used in a window, use
-<function>XDefineCursor</function>.
+<xref linkend='XDefineCursor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>defining the cursor</secondary></indexterm>
 <indexterm significance="preferred"><primary>XDefineCursor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdefinecursor'>
+<funcsynopsis id='XDefineCursor'>
 <funcprototype>
   <funcdef><function>XDefineCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4098,11 +4098,11 @@ If a cursor is set, it will be used when the pointer is in the window.
 If the cursor is
 <symbol>None</symbol>,
 it is equivalent to
-<function>XUndefineCursor</function>.
+<xref linkend='XUndefineCursor' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XDefineCursor</function>
+<xref linkend='XDefineCursor' xrefstyle='select: title'/>
 can generate
 <errorname>BadCursor</errorname>
 and
@@ -4113,12 +4113,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To undefine the cursor in a given window, use
-<function>XUndefineCursor</function>.
+<xref linkend='XUndefineCursor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>undefining the cursor</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUndefineCursor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xundefinecursor'>
+<funcsynopsis id='XUndefineCursor'>
 <funcprototype>
   <funcdef><function>XUndefineCursor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4152,9 +4152,9 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUndefineCursor</function>
+<xref linkend='XUndefineCursor' xrefstyle='select: title'/>
 function undoes the effect of a previous
-<function>XDefineCursor</function>
+<xref linkend='XDefineCursor' xrefstyle='select: title'/>
 for this window.
 When the pointer is in the window,
 the parent's cursor will now be used.
@@ -4163,7 +4163,7 @@ the default cursor is restored.
 </para>
 <para>
 <!-- .LP -->
-<function>XUndefineCursor</function>
+<xref linkend='XUndefineCursor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.

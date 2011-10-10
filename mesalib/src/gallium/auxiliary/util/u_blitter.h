@@ -89,7 +89,7 @@ struct blitter_context
    void *saved_dsa_state;     /**< depth stencil alpha state */
    void *saved_velem_state;   /**< vertex elements state */
    void *saved_rs_state;      /**< rasterizer state */
-   void *saved_fs, *saved_vs; /**< fragment shader, vertex shader */
+   void *saved_fs, *saved_vs, *saved_gs; /**< shaders */
 
    struct pipe_framebuffer_state saved_fb_state;  /**< framebuffer state */
    struct pipe_stencil_ref saved_stencil_ref;     /**< stencil ref */
@@ -126,24 +126,28 @@ struct pipe_context *util_blitter_get_pipe(struct blitter_context *blitter)
 }
 
 /*
- * These states must be saved before any of the following functions is called:
- * - blend state
- * - depth stencil alpha state
- * - rasterizer state
- * - vertex shader
- * - any other shader??? (XXX)
- * - fragment shader
+ * These states must be saved before any of the following functions are called:
  * - vertex buffers
  * - vertex elements
+ * - vertex shader
+ * - geometry shader (if supported)
+ * - rasterizer state
  */
 
 /**
  * Clear a specified set of currently bound buffers to specified values.
+ *
+ * These states must be saved in the blitter in addition to the state objects
+ * already required to be saved:
+ * - fragment shader
+ * - depth stencil alpha state
+ * - blend state
  */
 void util_blitter_clear(struct blitter_context *blitter,
                         unsigned width, unsigned height,
                         unsigned num_cbufs,
                         unsigned clear_buffers,
+                        enum pipe_format cbuf_format,
                         const union pipe_color_union *color,
                         double depth, unsigned stencil);
 
@@ -155,7 +159,7 @@ void util_blitter_clear_depth_custom(struct blitter_context *blitter,
  * Copy a block of pixels from one surface to another.
  *
  * You can copy from any color format to any other color format provided
- * the former can be sampled and the latter can be rendered to. Otherwise,
+ * the former can be sampled from and the latter can be rendered to. Otherwise,
  * a software fallback path is taken and both surfaces must be of the same
  * format.
  *
@@ -163,14 +167,18 @@ void util_blitter_clear_depth_custom(struct blitter_context *blitter,
  * cannot be copied unless you set ignore_stencil to FALSE. In that case,
  * a software fallback path is taken and both surfaces must be of the same
  * format.
+ * XXX implement hw-accel stencil copy using shader stencil export.
  *
  * Use pipe_screen->is_format_supported to know your options.
  *
  * These states must be saved in the blitter in addition to the state objects
  * already required to be saved:
- * - framebuffer state
+ * - fragment shader
+ * - depth stencil alpha state
+ * - blend state
  * - fragment sampler states
  * - fragment sampler textures
+ * - framebuffer state
  */
 void util_blitter_copy_texture(struct blitter_context *blitter,
                                struct pipe_resource *dst,
@@ -186,6 +194,9 @@ void util_blitter_copy_texture(struct blitter_context *blitter,
  *
  * These states must be saved in the blitter in addition to the state objects
  * already required to be saved:
+ * - fragment shader
+ * - depth stencil alpha state
+ * - blend state
  * - framebuffer state
  */
 void util_blitter_clear_render_target(struct blitter_context *blitter,
@@ -200,6 +211,9 @@ void util_blitter_clear_render_target(struct blitter_context *blitter,
  *
  * These states must be saved in the blitter in addition to the state objects
  * already required to be saved:
+ * - fragment shader
+ * - depth stencil alpha state
+ * - blend state
  * - framebuffer state
  */
 void util_blitter_clear_depth_stencil(struct blitter_context *blitter,
@@ -220,7 +234,7 @@ void util_blitter_custom_depth_stencil(struct blitter_context *blitter,
  * of the util_blitter_{clear, copy_region, fill_region} functions and then
  * forgotten.
  *
- * CSOs not listed here are not affected by util_blitter. */
+ * States not listed here are not affected by util_blitter. */
 
 static INLINE
 void util_blitter_save_blend(struct blitter_context *blitter,
@@ -269,6 +283,13 @@ void util_blitter_save_vertex_shader(struct blitter_context *blitter,
                                      void *vs)
 {
    blitter->saved_vs = vs;
+}
+
+static INLINE
+void util_blitter_save_geometry_shader(struct blitter_context *blitter,
+                                       void *gs)
+{
+   blitter->saved_gs = gs;
 }
 
 static INLINE
@@ -322,8 +343,8 @@ util_blitter_save_fragment_sampler_views(struct blitter_context *blitter,
 
 static INLINE void
 util_blitter_save_vertex_buffers(struct blitter_context *blitter,
-                                         int num_vertex_buffers,
-                                         struct pipe_vertex_buffer *vertex_buffers)
+                                 int num_vertex_buffers,
+                                 struct pipe_vertex_buffer *vertex_buffers)
 {
    assert(num_vertex_buffers <= Elements(blitter->saved_vertex_buffers));
 

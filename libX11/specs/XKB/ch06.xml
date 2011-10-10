@@ -1,4 +1,4 @@
-<chapter id='complete_keyboard_description'>
+<chapter id='Complete_Keyboard_Description'>
 <title>Complete Keyboard Description</title>
 
 <para>
@@ -8,7 +8,7 @@ this single structure and provides references to other sections of this
 document that discuss the major Xkb components in detail.
 </para>
 
-<sect1 id='the_xkbdescrec_structure'>
+<sect1 id='The_XkbDescRec_Structure'>
 <title>The XkbDescRec Structure</title>
 
 <para>
@@ -189,7 +189,7 @@ XkbDescRec</emphasis>
 </table>
 
 </sect1>
-<sect1 id='obtaining_a_keyboard_description_from_the_server'>
+<sect1 id='Obtaining_a_Keyboard_Description_from_the_Server'>
 <title>Obtaining a Keyboard Description from the Server</title>
 
 <para>
@@ -277,7 +277,7 @@ XkbFreeKeyboard</emphasis>
 
 
 </sect1>
-<sect1 id='tracking_changes_to_the_keyboard_description_in_the_server'>
+<sect1 id='Tracking_Changes_to_the_Keyboard_Description_in_the_Server'>
 <title>Tracking Changes to the Keyboard Description in the Server</title>
 
 <para>
@@ -288,7 +288,7 @@ tracking changes to the keyboard description.
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_a_keyboard_description'>
+<sect1 id='Allocating_and_Freeing_a_Keyboard_Description'>
 <title>Allocating and Freeing a Keyboard Description</title>
 
 <para>

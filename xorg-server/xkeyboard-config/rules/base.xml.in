@@ -194,14 +194,14 @@
     <model>
       <configItem>
         <name>btc9019u</name>
-	<_description>BTC 9019U</_description>
+        <_description>BTC 9019U</_description>
         <vendor>BTC</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>btc9116u</name>
-	<_description>BTC 9116U Mini Wireless Internet and Gaming</_description>
+        <_description>BTC 9116U Mini Wireless Internet and Gaming</_description>
       </configItem>
     </model>
     <model>
@@ -921,84 +921,84 @@
       <configItem>
         <name>sk1300</name>
         <_description>SK-1300</_description>
-	<vendor>NEC</vendor>
+        <vendor>NEC</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>sk2500</name>
         <_description>SK-2500</_description>
-	<vendor>NEC</vendor>
+        <vendor>NEC</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>sk6200</name>
         <_description>SK-6200</_description>
-	<vendor>NEC</vendor>
+        <vendor>NEC</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>sk7100</name>
         <_description>SK-7100</_description>
-	<vendor>NEC</vendor>
+        <vendor>NEC</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>sp_inet</name>
         <_description>Super Power Multimedia Keyboard</_description>
-	<vendor>Generic</vendor>
+        <vendor>Generic</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>sven</name>
         <_description>SVEN Ergonomic 2500</_description>
-	<vendor>SVEN</vendor>
+        <vendor>SVEN</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>sven303</name>
         <_description>SVEN Slim 303</_description>
-	<vendor>SVEN</vendor>
+        <vendor>SVEN</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>symplon</name>
         <_description>Symplon PaceBook (tablet PC)</_description>
-	<vendor>Symplon</vendor>
+        <vendor>Symplon</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>toshiba_s3000</name>
         <_description>Toshiba Satellite S3000</_description>
-	<vendor>Toshiba</vendor>
+        <vendor>Toshiba</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>trust</name>
         <_description>Trust Wireless Keyboard Classic</_description>
-	<vendor>Trust</vendor>
+        <vendor>Trust</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>trustda</name>
         <_description>Trust Direct Access Keyboard</_description>
-	<vendor>Trust</vendor>
+        <vendor>Trust</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>trust_slimline</name>
         <_description>Trust Slimline</_description>
-	<vendor>Trust</vendor>
+        <vendor>Trust</vendor>
       </configItem>
     </model>
     <model>
@@ -1040,161 +1040,161 @@
       <configItem>
         <name>yahoo</name>
         <_description>Yahoo! Internet Keyboard</_description>
-	<vendor>Yahoo!</vendor>
+        <vendor>Yahoo!</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>macbook78</name>
         <_description>MacBook/MacBook Pro</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>macbook79</name>
         <_description>MacBook/MacBook Pro (Intl)</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>macintosh</name>
         <_description>Macintosh</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>macintosh_old</name>
         <_description>Macintosh Old</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>macintosh_hhk</name>
         <_description>Happy Hacking Keyboard for Mac</_description>
-	<vendor>Fujitsu</vendor>
+        <vendor>Fujitsu</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>acer_c300</name>
         <_description>Acer C300</_description>
-	<vendor>Acer</vendor>
+        <vendor>Acer</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>acer_ferrari4k</name>
         <_description>Acer Ferrari 4000</_description>
-	<vendor>Acer</vendor>
+        <vendor>Acer</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>acer_laptop</name>
         <_description>Acer Laptop</_description>
-	<vendor>Acer</vendor>
+        <vendor>Acer</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>asus_laptop</name>
         <_description>Asus Laptop</_description>
-	<vendor>Asus</vendor>
+        <vendor>Asus</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>apple</name>
         <_description>Apple</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>apple_laptop</name>
         <_description>Apple Laptop</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>applealu_ansi</name>
         <_description>Apple Aluminium Keyboard (ANSI)</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>applealu_iso</name>
         <_description>Apple Aluminium Keyboard (ISO)</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>applealu_jis</name>
         <_description>Apple Aluminium Keyboard (JIS)</_description>
-	<vendor>Apple</vendor>
+        <vendor>Apple</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>silvercrest</name>
         <_description>SILVERCREST Multimedia Wireless Keyboard</_description>
-	<vendor>Silvercrest</vendor>
+        <vendor>Silvercrest</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>emachines</name>
         <_description>Laptop/notebook eMachines m68xx</_description>
-	<vendor>eMachines</vendor>
+        <vendor>eMachines</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
-	<name>benqx</name>
-	<_description>BenQ X-Touch</_description>
-	<vendor>BenQ</vendor>
+        <name>benqx</name>
+        <_description>BenQ X-Touch</_description>
+        <vendor>BenQ</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
-	<name>benqx730</name>
-	<_description>BenQ X-Touch 730</_description>
-	<vendor>BenQ</vendor>
+        <name>benqx730</name>
+        <_description>BenQ X-Touch 730</_description>
+        <vendor>BenQ</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
-	<name>benqx800</name>
-	<_description>BenQ X-Touch 800</_description>
-	<vendor>BenQ</vendor>
+        <name>benqx800</name>
+        <_description>BenQ X-Touch 800</_description>
+        <vendor>BenQ</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
-	<name>hhk</name>
-	<_description>Happy Hacking Keyboard</_description>
-	<vendor>Fujitsu</vendor>
+        <name>hhk</name>
+        <_description>Happy Hacking Keyboard</_description>
+        <vendor>Fujitsu</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
-	<name>classmate</name>
-	<_description>Classmate PC</_description>
-	<vendor>Intel</vendor>
+        <name>classmate</name>
+        <_description>Classmate PC</_description>
+        <vendor>Intel</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
-	<name>olpc</name>
-	<_description>OLPC</_description>
-	<vendor>OLPC</vendor>
+        <name>olpc</name>
+        <_description>OLPC</_description>
+        <vendor>OLPC</vendor>
       </configItem>
     </model>
     <model>
@@ -1244,6 +1244,7 @@
     <layout>
       <configItem>
         <name>us</name>
+        <!-- Keyboard indicator for English layouts -->
         <_shortDescription>en</_shortDescription>
         <_description>English (US)</_description>
         <languageList>
@@ -1254,6 +1255,7 @@
         <variant>
           <configItem>
             <name>chr</name>
+            <!-- Keyboard indicator for Cherokee layouts -->
             <_shortDescription>chr</_shortDescription>
             <_description>Cherokee</_description>
             <languageList>
@@ -1330,6 +1332,7 @@
         <variant>
           <configItem>
             <name>rus</name>
+            <!-- Keyboard indicator for Russian layouts -->
             <_shortDescription>ru</_shortDescription>
             <_description>Russian (US, phonetic)</_description>
             <languageList>
@@ -1374,6 +1377,7 @@
     <layout>
       <configItem>
         <name>ad</name>
+        <!-- Keyboard indicator for Catalan layouts -->
         <_shortDescription>ca</_shortDescription>
         <_description>Catalan</_description>
         <languageList>
@@ -1385,6 +1389,7 @@
     <layout>
       <configItem>
         <name>af</name>
+        <!-- Keyboard indicator for Afghani layouts -->
         <_shortDescription>fa</_shortDescription>
         <_description>Afghani</_description>
       </configItem>
@@ -1392,6 +1397,7 @@
         <variant>
           <configItem>
             <name>ps</name>
+            <!-- Keyboard indicator for Pashto layouts -->
             <_shortDescription>ps</_shortDescription>
             <_description>Pashto</_description>
             <languageList>
@@ -1402,6 +1408,7 @@
         <variant>
           <configItem>
             <name>uz</name>
+            <!-- Keyboard indicator for Uzbek layouts -->
             <_shortDescription>uz</_shortDescription>
             <_description>Uzbek (Afghanistan)</_description>
             <languageList>
@@ -1412,6 +1419,7 @@
         <variant>
           <configItem>
             <name>olpc-ps</name>
+            <!-- Keyboard indicator for Pashto layouts -->
             <_shortDescription>ps</_shortDescription>
             <_description>Pashto (Afghanistan, OLPC)</_description>
             <languageList>
@@ -1422,6 +1430,7 @@
         <variant>
           <configItem>
             <name>fa-olpc</name>
+            <!-- Keyboard indicator for Persian layouts -->
             <_shortDescription>fa</_shortDescription>
             <_description>Persian (Afghanistan, Dari OLPC)</_description>
           </configItem>
@@ -1429,6 +1438,7 @@
         <variant>
           <configItem>
             <name>uz-olpc</name>
+            <!-- Keyboard indicator for Uzbek layouts -->
             <_shortDescription>uz</_shortDescription>
             <_description>Uzbek (Afghanistan, OLPC)</_description>
             <languageList>
@@ -1441,6 +1451,7 @@
     <layout>
       <configItem>
         <name>ara</name>
+        <!-- Keyboard indicator for Arabic layouts -->
         <_shortDescription>ar</_shortDescription>
         <_description>Arabic</_description>
         <countryList>
@@ -1510,6 +1521,7 @@
     <layout>
       <configItem>
         <name>al</name>
+        <!-- Keyboard indicator for Albanian layouts -->
         <_shortDescription>sq</_shortDescription>
         <_description>Albanian</_description>
         <languageList>
@@ -1521,6 +1533,7 @@
     <layout>
       <configItem>
         <name>am</name>
+        <!-- Keyboard indicator for Armenian layouts -->
         <_shortDescription>hy</_shortDescription>
         <_description>Armenian</_description>
         <languageList>
@@ -1563,6 +1576,7 @@
     <layout>
       <configItem>
         <name>at</name>
+        <!-- Keyboard indicator for German layouts -->
         <_shortDescription>de</_shortDescription>
         <_description>German (Austria)</_description>
         <languageList>
@@ -1593,6 +1607,7 @@
     <layout>
       <configItem>
         <name>az</name>
+        <!-- Keyboard indicator for Azerbaijani layouts -->
         <_shortDescription>az</_shortDescription>
         <_description>Azerbaijani</_description>
         <languageList>
@@ -1611,7 +1626,8 @@
     <layout>
       <configItem>
         <name>by</name>
-        <_shortDescription>be</_shortDescription>
+        <!-- Keyboard indicator for Belarusian layouts -->
+        <_shortDescription>by</_shortDescription>
         <_description>Belarusian</_description>
         <languageList>
           <iso639Id>bel</iso639Id>
@@ -1635,6 +1651,7 @@
     <layout>
       <configItem>
         <name>be</name>
+        <!-- Keyboard indicator for Belgian layouts -->
         <_shortDescription>be</_shortDescription>
         <_description>Belgian</_description>
         <languageList><iso639Id>ger</iso639Id>
@@ -1689,6 +1706,7 @@
     <layout>
       <configItem>
         <name>bd</name>
+        <!-- Keyboard indicator for Bengali layouts -->
         <_shortDescription>bn</_shortDescription>
         <_description>Bengali</_description>
         <languageList>
@@ -1707,6 +1725,7 @@
     <layout>
       <configItem>
         <name>in</name>
+        <!-- Keyboard indicator for Indian layouts -->
         <_shortDescription>in</_shortDescription>
         <_description>Indian</_description>
       </configItem>
@@ -1714,6 +1733,7 @@
         <variant>
           <configItem>
             <name>ben</name>
+            <!-- Keyboard indicator for Bengali layouts -->
             <_shortDescription>bn</_shortDescription>
             <_description>Bengali (India)</_description>
             <languageList>
@@ -1724,6 +1744,7 @@
         <variant>
           <configItem>
             <name>ben_probhat</name>
+            <!-- Keyboard indicator for Bengali layouts -->
             <_shortDescription>bn</_shortDescription>
             <_description>Bengali (India, Probhat)</_description>
             <languageList>
@@ -1731,37 +1752,38 @@
             </languageList>
           </configItem>
         </variant>
-	<variant>
+        <variant>
           <configItem>
             <name>ben_baishakhi</name>
             <_description>Bengali (India, Baishakhi)</_description>
-            <languageList><iso639Id>ben</iso639Id></languageList>	
+            <languageList><iso639Id>ben</iso639Id></languageList>
           </configItem>
         </variant>
-	 <variant>
+        <variant>
           <configItem>
             <name>ben_bornona</name>
             <_description>Bengali (India, Bornona)</_description>
-            <languageList><iso639Id>ben</iso639Id></languageList>	
-          </configItem>
+            <languageList><iso639Id>ben</iso639Id></languageList>
+            </configItem>
         </variant>
-	 <variant>
+         <variant>
           <configItem>
             <name>ben_gitanjali</name>
             <_description>Bengali (India, Uni Gitanjali)</_description>
-            <languageList><iso639Id>ben</iso639Id></languageList>	
+            <languageList><iso639Id>ben</iso639Id></languageList>
           </configItem>
         </variant>
-	 <variant>
+        <variant>
           <configItem>
             <name>ben_inscript</name>
             <_description>Bengali (India, Baishakhi Inscript)</_description>
-            <languageList><iso639Id>ben</iso639Id></languageList>	
+            <languageList><iso639Id>ben</iso639Id></languageList>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>guj</name>
+            <!-- Keyboard indicator for Gujarati layouts -->
             <_shortDescription>gu</_shortDescription>
             <_description>Gujarati</_description>
             <languageList>
@@ -1772,6 +1794,7 @@
         <variant>
           <configItem>
             <name>guru</name>
+            <!-- Keyboard indicator for Punjabi layouts -->
             <_shortDescription>pa</_shortDescription>
             <_description>Punjabi (Gurmukhi)</_description>
             <languageList>
@@ -1782,6 +1805,7 @@
         <variant>
           <configItem>
             <name>jhelum</name>
+            <!-- Keyboard indicator for Punjabi layouts -->
             <_shortDescription>pa</_shortDescription>
             <_description>Punjabi (Gurmukhi Jhelum)</_description>
             <languageList>
@@ -1792,6 +1816,7 @@
         <variant>
           <configItem>
             <name>kan</name>
+            <!-- Keyboard indicator for Kannada layouts -->
             <_shortDescription>kn</_shortDescription>
             <_description>Kannada</_description>
             <languageList>
@@ -1802,6 +1827,7 @@
         <variant>
           <configItem>
             <name>mal</name>
+            <!-- Keyboard indicator for Malayalam layouts -->
             <_shortDescription>ml</_shortDescription>
             <_description>Malayalam</_description>
             <languageList>
@@ -1812,6 +1838,7 @@
         <variant>
           <configItem>
             <name>mal_lalitha</name>
+            <!-- Keyboard indicator for Malayalam layouts -->
             <_shortDescription>ml</_shortDescription>
             <_description>Malayalam (Lalitha)</_description>
             <languageList>
@@ -1822,6 +1849,7 @@
         <variant>
           <configItem>
             <name>mal_enhanced</name>
+            <!-- Keyboard indicator for Malayalam layouts -->
             <_shortDescription>ml</_shortDescription>
             <_description>Malayalam (enhanced Inscript with Rupee Sign)</_description>
             <languageList><iso639Id>mal</iso639Id></languageList>
@@ -1830,8 +1858,9 @@
          <variant>
            <configItem>
             <name>ori</name>
+            <!-- Keyboard indicator for Oriya layouts -->
             <_shortDescription>or</_shortDescription>
-            <_description> Oriya</_description>
+            <_description>Oriya</_description>
             <languageList>
               <iso639Id>ori</iso639Id>
             </languageList>
@@ -1840,6 +1869,7 @@
         <variant>
           <configItem>
             <name>tam_unicode</name>
+            <!-- Keyboard indicator for Tamil layouts -->
             <_shortDescription>ta</_shortDescription>
             <_description>Tamil (Unicode)</_description>
             <languageList>
@@ -1850,6 +1880,7 @@
         <variant>
           <configItem>
             <name>tam_keyboard_with_numerals</name>
+            <!-- Keyboard indicator for Tamil layouts -->
             <_shortDescription>ta</_shortDescription>
             <_description>Tamil (keyboard with numerals)</_description>
             <languageList>
@@ -1860,6 +1891,7 @@
         <variant>
           <configItem>
             <name>tam_TAB</name>
+            <!-- Keyboard indicator for Tamil layouts -->
             <_shortDescription>ta</_shortDescription>
             <_description>Tamil (TAB typewriter)</_description>
             <languageList>
@@ -1870,6 +1902,7 @@
         <variant>
           <configItem>
             <name>tam_TSCII</name>
+            <!-- Keyboard indicator for Tamil layouts -->
             <_shortDescription>ta</_shortDescription>
             <_description>Tamil (TSCII typewriter)</_description>
             <languageList>
@@ -1880,6 +1913,7 @@
         <variant>
           <configItem>
             <name>tam</name>
+            <!-- Keyboard indicator for Tamil layouts -->
             <_shortDescription>ta</_shortDescription>
             <_description>Tamil</_description>
             <languageList>
@@ -1890,6 +1924,7 @@
         <variant>
           <configItem>
             <name>tel</name>
+            <!-- Keyboard indicator for Telugu layouts -->
             <_shortDescription>te</_shortDescription>
             <_description>Telugu</_description>
             <languageList>
@@ -1900,6 +1935,7 @@
         <variant>
           <configItem>
             <name>urd-phonetic</name>
+            <!-- Keyboard indicator for Urdu layouts -->
             <_shortDescription>ur</_shortDescription>
             <_description>Urdu (phonetic)</_description>
             <languageList>
@@ -1910,6 +1946,7 @@
         <variant>
           <configItem>
             <name>urd-phonetic3</name>
+            <!-- Keyboard indicator for Urdu layouts -->
             <_shortDescription>ur</_shortDescription>
             <_description>Urdu (alternative phonetic)</_description>
             <languageList>
@@ -1920,6 +1957,7 @@
         <variant>
           <configItem>
             <name>urd-winkeys</name>
+            <!-- Keyboard indicator for Urdu layouts -->
             <_shortDescription>ur</_shortDescription>
             <_description>Urdu (WinKeys)</_description>
             <languageList>
@@ -1930,6 +1968,7 @@
         <variant>
           <configItem>
             <name>bolnagri</name>
+            <!-- Keyboard indicator for Hindi layouts -->
             <_shortDescription>hi</_shortDescription>
             <_description>Hindi (Bolnagri)</_description>
             <languageList>
@@ -1940,6 +1979,7 @@
         <variant>
           <configItem>
             <name>hin-wx</name>
+            <!-- Keyboard indicator for Hindi layouts -->
             <_shortDescription>hi</_shortDescription>
             <_description>Hindi (Wx)</_description>
             <languageList>
@@ -1950,6 +1990,7 @@
         <variant>
           <configItem>
             <name>eng</name>
+            <!-- Keyboard indicator for English layouts -->
             <_shortDescription>en</_shortDescription>
             <_description>English (India, with RupeeSign)</_description>
             <languageList>
@@ -1962,6 +2003,7 @@
     <layout>
       <configItem>
         <name>ba</name>
+        <!-- Keyboard indicator for Bosnian layouts -->
         <_shortDescription>bs</_shortDescription>
         <_description>Bosnian</_description>
         <languageList>
@@ -1998,6 +2040,7 @@
     <layout>
       <configItem>
         <name>br</name>
+        <!-- Keyboard indicator for Portuguese layouts -->
         <_shortDescription>pt</_shortDescription>
         <_description>Portuguese (Brazil)</_description>
         <languageList>
@@ -2043,6 +2086,7 @@
     <layout>
       <configItem>
         <name>bg</name>
+        <!-- Keyboard indicator for Bulgarian layouts -->
         <_shortDescription>bg</_shortDescription>
         <_description>Bulgarian</_description>
         <languageList>
@@ -2067,6 +2111,7 @@
     <layout>
       <configItem>
         <name>ma</name>
+        <!-- Keyboard indicator for Arabic layouts -->
         <_shortDescription>ar</_shortDescription>
         <_description>Arabic (Morocco)</_description>
       </configItem>
@@ -2074,6 +2119,7 @@
         <variant>
           <configItem>
             <name>french</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Morocco)</_description>
             <languageList>
@@ -2084,6 +2130,7 @@
         <variant>
           <configItem>
             <name>tifinagh</name>
+            <!-- Keyboard indicator for Berber layouts -->
             <_shortDescription>ber</_shortDescription>
             <_description>Berber (Morocco, Tifinagh)</_description>
             <languageList>
@@ -2094,6 +2141,7 @@
         <variant>
           <configItem>
             <name>tifinagh-alt</name>
+            <!-- Keyboard indicator for Berber layouts -->
             <_shortDescription>ber</_shortDescription>
             <_description>Berber (Morocco, Tifinagh alternative)</_description>
             <languageList>
@@ -2104,6 +2152,7 @@
         <variant>
           <configItem>
             <name>tifinagh-alt-phonetic</name>
+            <!-- Keyboard indicator for Berber layouts -->
             <_shortDescription>ber</_shortDescription>
             <_description>Berber (Morocco, Tifinagh alternative phonetic)</_description>
             <languageList>
@@ -2114,6 +2163,7 @@
         <variant>
           <configItem>
             <name>tifinagh-extended</name>
+            <!-- Keyboard indicator for Berber layouts -->
             <_shortDescription>ber</_shortDescription>
             <_description>Berber (Morocco, Tifinagh extended)</_description>
             <languageList>
@@ -2124,6 +2174,7 @@
         <variant>
           <configItem>
             <name>tifinagh-phonetic</name>
+            <!-- Keyboard indicator for Berber layouts -->
             <_shortDescription>ber</_shortDescription>
             <_description>Berber (Morocco, Tifinagh phonetic)</_description>
             <languageList>
@@ -2134,6 +2185,7 @@
         <variant>
           <configItem>
             <name>tifinagh-extended-phonetic</name>
+            <!-- Keyboard indicator for Berber layouts -->
             <_shortDescription>ber</_shortDescription>
             <_description>Berber (Morocco, Tifinagh extended phonetic)</_description>
             <languageList>
@@ -2146,6 +2198,7 @@
     <layout>
       <configItem>
         <name>cm</name>
+        <!-- Keyboard indicator for Cameroon layouts -->
         <_shortDescription>cm</_shortDescription>
         <_description>English (Cameroon)</_description>
         <languageList><iso639Id>eng</iso639Id></languageList>
@@ -2243,6 +2296,7 @@
     <layout>
       <configItem>
         <name>mm</name>
+        <!-- Keyboard indicator for Burmese layouts -->
         <_shortDescription>my</_shortDescription>
         <_description>Burmese</_description>
         <languageList>
@@ -2254,6 +2308,7 @@
     <layout>
       <configItem>
         <name>ca</name>
+        <!-- Keyboard indicator for French layouts -->
         <_shortDescription>fr</_shortDescription>
         <_description>French (Canada)</_description>
         <languageList>
@@ -2264,6 +2319,7 @@
         <variant>
           <configItem>
             <name>fr-dvorak</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Canada, Dvorak)</_description>
           </configItem>
@@ -2271,6 +2327,7 @@
         <variant>
           <configItem>
             <name>fr-legacy</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Canada, legacy)</_description>
           </configItem>
@@ -2296,6 +2353,7 @@
         <variant>
           <configItem>
             <name>ike</name>
+            <!-- Keyboard indicator for Inuktikut layouts -->
             <_shortDescription>ike</_shortDescription>
             <_description>Inuktitut</_description>
             <languageList>
@@ -2306,6 +2364,7 @@
         <variant>
           <configItem>
             <name>eng</name>
+            <!-- Keyboard indicator for English layouts -->
             <_shortDescription>en</_shortDescription>
             <_description>English (Canada)</_description>
             <languageList>
@@ -2318,6 +2377,7 @@
     <layout>
       <configItem>
         <name>cd</name>
+        <!-- Keyboard indicator for French layouts -->
         <_shortDescription>fr</_shortDescription>
         <_description>French (Democratic Republic of the Congo)</_description>
         <languageList>
@@ -2329,6 +2389,7 @@
     <layout>
       <configItem>
         <name>cn</name>
+        <!-- Keyboard indicator for Chinese layouts -->
         <_shortDescription>zh</_shortDescription>
         <_description>Chinese</_description>
         <languageList>
@@ -2368,6 +2429,7 @@
     <layout>
       <configItem>
         <name>hr</name>
+        <!-- Keyboard indicator for Croatian layouts -->
         <_shortDescription>hr</_shortDescription>
         <_description>Croatian</_description>
         <languageList>
@@ -2404,6 +2466,7 @@
     <layout>
       <configItem>
         <name>cz</name>
+        <!-- Keyboard indicator for Chech layouts -->
         <_shortDescription>cs</_shortDescription>
         <_description>Czech</_description>
         <languageList>
@@ -2446,6 +2509,7 @@
     <layout>
       <configItem>
         <name>dk</name>
+        <!-- Keyboard indicator for Danish layouts -->
         <_shortDescription>da</_shortDescription>
         <_description>Danish</_description>
         <languageList>
@@ -2482,6 +2546,7 @@
     <layout>
       <configItem>
         <name>nl</name>
+        <!-- Keyboard indicator for Dutch layouts -->
         <_shortDescription>nl</_shortDescription>
         <_description>Dutch</_description>
         <languageList>
@@ -2512,6 +2577,7 @@
     <layout>
       <configItem>
         <name>bt</name>
+        <!-- Keyboard indicator for Dzongkha layouts -->
         <_shortDescription>dz</_shortDescription>
         <_description>Dzongkha</_description>
         <languageList>
@@ -2522,6 +2588,7 @@
     <layout>
       <configItem>
         <name>ee</name>
+        <!-- Keyboard indicator for Estonian layouts -->
         <_shortDescription>et</_shortDescription>
         <_description>Estonian</_description>
         <languageList>
@@ -2552,6 +2619,7 @@
     <layout>
       <configItem>
         <name>ir</name>
+        <!-- Keyboard indicator for Persian layouts -->
         <_shortDescription>fa</_shortDescription>
         <_description>Persian</_description>
         <languageList>
@@ -2568,6 +2636,7 @@
         <variant>
           <configItem>
             <name>ku</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iran, Latin Q)</_description>
             <languageList>
@@ -2578,6 +2647,7 @@
         <variant>
           <configItem>
             <name>ku_f</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iran, F)</_description>
             <languageList>
@@ -2588,6 +2658,7 @@
         <variant>
           <configItem>
             <name>ku_alt</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iran, Latin Alt-Q)</_description>
             <languageList>
@@ -2598,6 +2669,7 @@
         <variant>
           <configItem>
             <name>ku_ara</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iran, Arabic-Latin)</_description>
             <languageList>
@@ -2610,6 +2682,7 @@
     <layout>
       <configItem>
         <name>iq</name>
+        <!-- Keyboard indicator for Iraqi layouts -->
         <_shortDescription>ar</_shortDescription>
         <_description>Iraqi</_description>
         <languageList><iso639Id>ara</iso639Id>
@@ -2619,6 +2692,7 @@
         <variant>
           <configItem>
             <name>ku</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iraq, Latin Q)</_description>
             <languageList>
@@ -2629,6 +2703,7 @@
         <variant>
           <configItem>
             <name>ku_f</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iraq, F)</_description>
             <languageList>
@@ -2639,6 +2714,7 @@
         <variant>
           <configItem>
             <name>ku_alt</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iraq, Latin Alt-Q)</_description>
             <languageList>
@@ -2649,6 +2725,7 @@
         <variant>
           <configItem>
             <name>ku_ara</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Iraq, Arabic-Latin)</_description>
             <languageList>
@@ -2661,6 +2738,7 @@
     <layout>
       <configItem>
         <name>fo</name>
+        <!-- Keyboard indicator for Faroese layouts -->
         <_shortDescription>fo</_shortDescription>
         <_description>Faroese</_description>
         <languageList>
@@ -2679,6 +2757,7 @@
     <layout>
       <configItem>
         <name>fi</name>
+        <!-- Keyboard indicator for Finnish layouts -->
         <_shortDescription>fi</_shortDescription>
         <_description>Finnish</_description>
         <languageList>
@@ -2701,7 +2780,7 @@
         <variant>
           <configItem>
             <name>smi</name>
-	    <_description>Northern Saami (Finland)</_description>
+            <_description>Northern Saami (Finland)</_description>
             <languageList><iso639Id>sme</iso639Id></languageList>
           </configItem>
         </variant>
@@ -2716,6 +2795,7 @@
     <layout>
       <configItem>
         <name>fr</name>
+        <!-- Keyboard indicator for French layouts -->
         <_shortDescription>fr</_shortDescription>
         <_description>French</_description>
         <languageList>
@@ -2830,6 +2910,7 @@
     <layout>
       <configItem>
         <name>gh</name>
+        <!-- Keyboard indicator for English layouts -->
         <_shortDescription>en</_shortDescription>
         <_description>English (Ghana)</_description>
         <languageList>
@@ -2846,6 +2927,7 @@
         <variant>
           <configItem>
             <name>akan</name>
+            <!-- Keyboard indicator for Akan layouts -->
             <_shortDescription>ak</_shortDescription>
             <_description>Akan</_description>
             <languageList>
@@ -2856,6 +2938,7 @@
         <variant>
           <configItem>
             <name>ewe</name>
+            <!-- Keyboard indicator for Ewe layouts -->
             <_shortDescription>ee</_shortDescription>
             <_description>Ewe</_description>
             <languageList>
@@ -2866,6 +2949,7 @@
         <variant>
           <configItem>
             <name>fula</name>
+            <!-- Keyboard indicator for Fula layouts -->
             <_shortDescription>ff</_shortDescription>
             <_description>Fula</_description>
             <languageList>
@@ -2876,6 +2960,7 @@
         <variant>
           <configItem>
             <name>ga</name>
+            <!-- Keyboard indicator for Ga layouts -->
             <_shortDescription>gaa</_shortDescription>
             <_description>Ga</_description>
             <languageList>
@@ -2886,6 +2971,7 @@
         <variant>
           <configItem>
             <name>hausa</name>
+            <!-- Keyboard indicator for Hausa layouts -->
             <_shortDescription>ha</_shortDescription>
             <_description>Hausa</_description>
             <languageList>
@@ -2896,6 +2982,7 @@
         <variant>
           <configItem>
             <name>avn</name>
+            <!-- Keyboard indicator for Avatime layouts -->
             <_shortDescription>avn</_shortDescription>
             <_description>Avatime</_description>
             <languageList>
@@ -2914,6 +3001,7 @@
     <layout>
       <configItem>
         <name>gn</name>
+        <!-- Keyboard indicator for French layouts -->
         <_shortDescription>fr</_shortDescription>
         <_description>French (Guinea)</_description>
         <languageList>
@@ -2925,6 +3013,7 @@
     <layout>
       <configItem>
         <name>ge</name>
+        <!-- Keyboard indicator for Georgian layouts -->
         <_shortDescription>ka</_shortDescription>
         <_description>Georgian</_description>
         <languageList>
@@ -2947,6 +3036,7 @@
         <variant>
           <configItem>
             <name>ru</name>
+            <!-- Keyboard indicator for Russian layouts -->
             <_shortDescription>ru</_shortDescription>
             <_description>Russian (Georgia)</_description>
             <languageList>
@@ -2968,6 +3058,7 @@
     <layout>
       <configItem>
         <name>de</name>
+        <!-- Keyboard indicator for German layouts -->
         <_shortDescription>de</_shortDescription>
         <_description>German</_description>
         <languageList>
@@ -3069,6 +3160,7 @@
     <layout>
       <configItem>
         <name>gr</name>
+        <!-- Keyboard indicator for Greek layouts -->
         <_shortDescription>gr</_shortDescription>
         <_description>Greek</_description>
         <languageList>
@@ -3105,6 +3197,7 @@
     <layout>
       <configItem>
         <name>hu</name>
+        <!-- Keyboard indicator for Hungarian layouts -->
         <_shortDescription>hu</_shortDescription>
         <_description>Hungarian</_description>
         <languageList>
@@ -3231,6 +3324,7 @@
     <layout>
       <configItem>
         <name>is</name>
+        <!-- Keyboard indicator for Icelandic layouts -->
         <_shortDescription>is</_shortDescription>
         <_description>Icelandic</_description>
         <languageList>
@@ -3267,6 +3361,7 @@
     <layout>
       <configItem>
         <name>il</name>
+        <!-- Keyboard indicator for Hebrew layouts -->
         <_shortDescription>he</_shortDescription>
         <_description>Hebrew</_description>
         <languageList>
@@ -3297,6 +3392,7 @@
     <layout>
       <configItem>
         <name>it</name>
+        <!-- Keyboard indicator for Italian layouts -->
         <_shortDescription>it</_shortDescription>
         <_description>Italian</_description>
         <languageList>
@@ -3336,6 +3432,7 @@
     <layout>
       <configItem>
         <name>jp</name>
+        <!-- Keyboard indicator for Japanese layouts -->
         <_shortDescription>ja</_shortDescription>
         <_description>Japanese</_description>
         <languageList>
@@ -3372,6 +3469,7 @@
     <layout>
       <configItem>
         <name>kg</name>
+        <!-- Keyboard indicator for Kyrgyz layouts -->
         <_shortDescription>ki</_shortDescription>
         <_description>Kyrgyz</_description>
         <languageList>
@@ -3390,6 +3488,7 @@
     <layout>
       <configItem>
         <name>kh</name>
+        <!-- Keyboard indicator for Khmer layouts -->
         <_shortDescription>km</_shortDescription>
         <_description>Khmer (Cambodia)</_description>
         <languageList>
@@ -3401,6 +3500,7 @@
     <layout>
       <configItem>
         <name>kz</name>
+        <!-- Keyboard indicator for Kazakh layouts -->
         <_shortDescription>kk</_shortDescription>
         <_description>Kazakh</_description>
         <languageList>
@@ -3411,6 +3511,7 @@
         <variant>
           <configItem>
             <name>ruskaz</name>
+            <!-- Keyboard indicator for Russian layouts -->
             <_shortDescription>ru</_shortDescription>
             <_description>Russian (Kazakhstan, with Kazakh)</_description>
             <languageList><iso639Id>kaz</iso639Id>
@@ -3430,6 +3531,7 @@
     <layout>
       <configItem>
         <name>la</name>
+        <!-- Keyboard indicator for Lao layouts -->
         <_shortDescription>lo</_shortDescription>
         <_description>Lao</_description>
         <languageList>
@@ -3450,6 +3552,7 @@
     <layout>
       <configItem>
         <name>latam</name>
+        <!-- Keyboard indicator for Spanish layouts -->
         <_shortDescription>es</_shortDescription>
         <_description>Spanish (Latin American)</_description>
         <countryList>
@@ -3503,6 +3606,7 @@
     <layout>
       <configItem>
         <name>lt</name>
+        <!-- Keyboard indicator for Lithuanian layouts -->
         <_shortDescription>lt</_shortDescription>
         <_description>Lithuanian</_description>
         <languageList>
@@ -3545,6 +3649,7 @@
     <layout>
       <configItem>
         <name>lv</name>
+        <!-- Keyboard indicator for Latvian layouts -->
         <_shortDescription>lv</_shortDescription>
         <_description>Latvian</_description>
         <languageList>
@@ -3593,6 +3698,7 @@
     <layout>
       <configItem>
         <name>mao</name>
+        <!-- Keyboard indicator for Maori layouts -->
         <_shortDescription>mi</_shortDescription>
         <_description>Maori</_description>
         <languageList>
@@ -3604,6 +3710,7 @@
     <layout>
       <configItem>
         <name>me</name>
+        <!-- Keyboard indicator for Montenegrin layouts -->
         <_shortDescription>sr</_shortDescription>
         <_description>Montenegrin</_description>
         <languageList>
@@ -3658,6 +3765,7 @@
     <layout>
       <configItem>
         <name>mk</name>
+        <!-- Keyboard indicator for Macedonian layouts -->
         <_shortDescription>mk</_shortDescription>
         <_description>Macedonian</_description>
         <languageList>
@@ -3676,6 +3784,7 @@
     <layout>
       <configItem>
         <name>mt</name>
+        <!-- Keyboard indicator for Maltese layouts -->
         <_shortDescription>mt</_shortDescription>
         <_description>Maltese</_description>
         <languageList>
@@ -3694,6 +3803,7 @@
     <layout>
       <configItem>
         <name>mn</name>
+        <!-- Keyboard indicator for Mongolian layouts -->
         <_shortDescription>mn</_shortDescription>
         <_description>Mongolian</_description>
         <languageList>
@@ -3705,6 +3815,7 @@
     <layout>
       <configItem>
         <name>no</name>
+        <!-- Keyboard indicator for Norwegian layouts -->
         <_shortDescription>no</_shortDescription>
         <_description>Norwegian</_description>
         <languageList>
@@ -3759,6 +3870,7 @@
     <layout>
       <configItem>
         <name>pl</name>
+        <!-- Keyboard indicator for Polish layouts -->
         <_shortDescription>pl</_shortDescription>
         <_description>Polish</_description>
         <languageList>
@@ -3802,6 +3914,7 @@
         <variant>
           <configItem>
             <name>ru_phonetic_dvorak</name>
+            <!-- Keyboard indicator for Russian layouts -->
             <_shortDescription>ru</_shortDescription>
             <_description>Russian (Poland, phonetic Dvorak)</_description>
             <languageList>
@@ -3820,6 +3933,7 @@
     <layout>
       <configItem>
         <name>pt</name>
+        <!-- Keyboard indicator for Portuguese layouts -->
         <_shortDescription>pt</_shortDescription>
         <_description>Portuguese</_description>
         <languageList>
@@ -3883,6 +3997,7 @@
     <layout>
       <configItem>
         <name>ro</name>
+        <!-- Keyboard indicator for Romanian layouts -->
         <_shortDescription>ro</_shortDescription>
         <_description>Romanian</_description>
         <languageList>
@@ -3919,6 +4034,7 @@
     <layout>
       <configItem>
         <name>ru</name>
+        <!-- Keyboard indicator for Russian layouts -->
         <_shortDescription>ru</_shortDescription>
         <_description>Russian</_description>
         <languageList>
@@ -4074,6 +4190,7 @@
     <layout>
       <configItem>
         <name>rs</name>
+        <!-- Keyboard indicator for Serbian layouts -->
         <_shortDescription>sr</_shortDescription>
         <_description>Serbian</_description>
         <languageList>
@@ -4137,6 +4254,7 @@
     <layout>
       <configItem>
         <name>si</name>
+        <!-- Keyboard indicator for Slovenian layouts -->
         <_shortDescription>sl</_shortDescription>
         <_description>Slovenian</_description>
         <languageList>
@@ -4161,6 +4279,7 @@
     <layout>
       <configItem>
         <name>sk</name>
+        <!-- Keyboard indicator for Slovak layouts -->
         <_shortDescription>sk</_shortDescription>
         <_description>Slovak</_description>
         <languageList>
@@ -4191,6 +4310,7 @@
     <layout>
       <configItem>
         <name>es</name>
+        <!-- Keyboard indicator for Spanish layouts -->
         <_shortDescription>es</_shortDescription>
         <_description>Spanish</_description>
         <languageList>
@@ -4251,6 +4371,7 @@
     <layout>
       <configItem>
         <name>se</name>
+        <!-- Keyboard indicator for Swedish layouts -->
         <_shortDescription>sv</_shortDescription>
         <_description>Swedish</_description>
         <languageList>
@@ -4273,6 +4394,7 @@
         <variant>
           <configItem>
             <name>rus</name>
+            <!-- Keyboard indicator for Russian layouts -->
             <_shortDescription>ru</_shortDescription>
             <_description>Russian (Sweden, phonetic)</_description>
             <languageList>
@@ -4283,6 +4405,7 @@
         <variant>
           <configItem>
             <name>rus_nodeadkeys</name>
+            <!-- Keyboard indicator for Russian layouts -->
             <_shortDescription>ru</_shortDescription>
             <_description>Russian (Sweden, phonetic, eliminate dead keys)</_description>
             <languageList>
@@ -4323,6 +4446,7 @@
     <layout>
       <configItem>
         <name>ch</name>
+        <!-- Keyboard indicator for German layouts -->
         <_shortDescription>de</_shortDescription>
         <_description>German (Switzerland)</_description>
         <languageList><iso639Id>ger</iso639Id>
@@ -4338,6 +4462,7 @@
         <variant>
           <configItem>
             <name>de_nodeadkeys</name>
+            <!-- Keyboard indicator for German layouts -->
             <_shortDescription>de</_shortDescription>
             <_description>German (Switzerland, eliminate dead keys)</_description>
           </configItem>
@@ -4345,6 +4470,7 @@
         <variant>
           <configItem>
             <name>de_sundeadkeys</name>
+            <!-- Keyboard indicator for German layouts -->
             <_shortDescription>de</_shortDescription>
             <_description>German (Switzerland, Sun dead keys)</_description>
           </configItem>
@@ -4352,6 +4478,7 @@
         <variant>
           <configItem>
             <name>fr</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Switzerland)</_description>
             <languageList>
@@ -4362,6 +4489,7 @@
         <variant>
           <configItem>
             <name>fr_nodeadkeys</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Switzerland, eliminate dead keys)</_description>
             <languageList>
@@ -4372,6 +4500,7 @@
         <variant>
           <configItem>
             <name>fr_sundeadkeys</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Switzerland, Sun dead keys)</_description>
             <languageList>
@@ -4382,6 +4511,7 @@
         <variant>
           <configItem>
             <name>fr_mac</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Switzerland, Macintosh)</_description>
             <languageList>
@@ -4392,6 +4522,7 @@
         <variant>
           <configItem>
             <name>de_mac</name>
+            <!-- Keyboard indicator for German layouts -->
             <_shortDescription>de</_shortDescription>
             <_description>German (Switzerland, Macintosh)</_description>
           </configItem>
@@ -4401,6 +4532,7 @@
     <layout>
       <configItem>
         <name>sy</name>
+        <!-- Keyboard indicator for Arabic layouts -->
         <_shortDescription>ar</_shortDescription>
         <_description>Arabic (Syria)</_description>
         <languageList>
@@ -4411,6 +4543,7 @@
         <variant>
           <configItem>
             <name>syc</name>
+            <!-- Keyboard indicator for Syriac layouts -->
             <_shortDescription>syc</_shortDescription>
             <_description>Syriac</_description>
           </configItem>
@@ -4418,6 +4551,7 @@
         <variant>
           <configItem>
             <name>syc_phonetic</name>
+            <!-- Keyboard indicator for Syriac layouts -->
             <_shortDescription>syc</_shortDescription>
             <_description>Syriac (phonetic)</_description>
           </configItem>
@@ -4425,6 +4559,7 @@
         <variant>
           <configItem>
             <name>ku</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Syria, Latin Q)</_description>
             <languageList>
@@ -4435,6 +4570,7 @@
         <variant>
           <configItem>
             <name>ku_f</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Syria, F)</_description>
             <languageList>
@@ -4445,6 +4581,7 @@
         <variant>
           <configItem>
             <name>ku_alt</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Syria, Latin Alt-Q)</_description>
             <languageList>
@@ -4457,6 +4594,7 @@
     <layout>
       <configItem>
         <name>tj</name>
+        <!-- Keyboard indicator for Tajik layouts -->
         <_shortDescription>tg</_shortDescription>
         <_description>Tajik</_description>
         <languageList>
@@ -4475,6 +4613,7 @@
     <layout>
       <configItem>
         <name>lk</name>
+        <!-- Keyboard indicator for Sinhala layouts -->
         <_shortDescription>si</_shortDescription>
         <_description>Sinhala (phonetic)</_description>
         <languageList>
@@ -4485,6 +4624,7 @@
         <variant>
           <configItem>
             <name>tam_unicode</name>
+            <!-- Keyboard indicator for Tamil layouts -->
             <_shortDescription>ta</_shortDescription>
             <_description>Tamil (Sri Lanka, Unicode)</_description>
             <languageList>
@@ -4506,6 +4646,7 @@
     <layout>
       <configItem>
         <name>th</name>
+        <!-- Keyboard indicator for Thai layouts -->
         <_shortDescription>th</_shortDescription>
         <_description>Thai</_description>
         <languageList>
@@ -4530,6 +4671,7 @@
     <layout>
       <configItem>
         <name>tr</name>
+        <!-- Keyboard indicator for Turkish layouts -->
         <_shortDescription>tr</_shortDescription>
         <_description>Turkish</_description>
         <languageList>
@@ -4558,6 +4700,7 @@
         <variant>
           <configItem>
             <name>ku</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Turkey, Latin Q)</_description>
             <languageList>
@@ -4568,6 +4711,7 @@
         <variant>
           <configItem>
             <name>ku_f</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Turkey, F)</_description>
             <languageList>
@@ -4578,6 +4722,7 @@
         <variant>
           <configItem>
             <name>ku_alt</name>
+            <!-- Keyboard indicator for Kurdish layouts -->
             <_shortDescription>ku</_shortDescription>
             <_description>Kurdish (Turkey, Latin Alt-Q)</_description>
             <languageList>
@@ -4594,6 +4739,7 @@
         <variant>
           <configItem>
             <name>crh</name>
+            <!-- Keyboard indicator for Crimean Tatar layouts -->
             <_shortDescription>crh</_shortDescription>
             <_description>Crimean Tatar (Turkish Q)</_description>
             <languageList>
@@ -4604,6 +4750,7 @@
         <variant>
           <configItem>
             <name>crh_f</name>
+            <!-- Keyboard indicator for Crimean Tatar layouts -->
             <_shortDescription>crh</_shortDescription>
             <_description>Crimean Tatar (Turkish F)</_description>
             <languageList>
@@ -4614,6 +4761,7 @@
         <variant>
           <configItem>
             <name>crh_alt</name>
+            <!-- Keyboard indicator for Crimean Tatar layouts -->
             <_shortDescription>crh</_shortDescription>
             <_description>Crimean Tatar (Turkish Alt-Q)</_description>
             <languageList>
@@ -4626,6 +4774,7 @@
     <layout>
       <configItem>
         <name>tw</name>
+        <!-- Keyboard indicator for Taiwanese layouts -->
         <_shortDescription>zh</_shortDescription>
         <_description>Taiwanese</_description>
         <languageList>
@@ -4655,6 +4804,7 @@
         <variant>
           <configItem>
             <name>saisiyat</name>
+            <!-- Keyboard indicator for Saisiyat layouts -->
             <_shortDescription>xsy</_shortDescription>
             <_description>Saisiyat (Taiwan)</_description>
             <languageList>
@@ -4667,6 +4817,7 @@
     <layout>
       <configItem>
         <name>ua</name>
+        <!-- Keyboard indicator for Ukranian layouts -->
         <_shortDescription>uk</_shortDescription>
         <_description>Ukrainian</_description>
         <languageList>
@@ -4721,6 +4872,7 @@
     <layout>
       <configItem>
         <name>gb</name>
+        <!-- Keyboard indicator for English layouts -->
         <_shortDescription>en</_shortDescription>
         <_description>English (UK)</_description>
         <languageList>
@@ -4775,6 +4927,7 @@
     <layout>
       <configItem>
         <name>uz</name>
+        <!-- Keyboard indicator for Uzbek layouts -->
         <_shortDescription>uz</_shortDescription>
         <_description>Uzbek</_description>
         <languageList>
@@ -4793,6 +4946,7 @@
     <layout>
       <configItem>
         <name>vn</name>
+        <!-- Keyboard indicator for Vietnamese layouts -->
         <_shortDescription>vi</_shortDescription>
         <_description>Vietnamese</_description>
         <languageList>
@@ -4804,6 +4958,7 @@
     <layout>
       <configItem>
         <name>kr</name>
+        <!-- Keyboard indicator for Korean layouts -->
         <_shortDescription>ko</_shortDescription>
         <_description>Korean</_description>
         <languageList>
@@ -4822,6 +4977,7 @@
     <layout>
       <configItem>
         <name>nec_vndr/jp</name>
+        <!-- Keyboard indicator for Japanese layouts -->
         <_shortDescription>ja</_shortDescription>
         <_description>Japanese (PC-98xx Series)</_description>
         <countryList>
@@ -4836,6 +4992,7 @@
     <layout>
       <configItem>
         <name>ie</name>
+        <!-- Keyboard indicator for Irish layouts -->
         <_shortDescription>ie</_shortDescription>
         <_description>Irish</_description>
         <languageList>
@@ -4881,6 +5038,7 @@
     <layout>
       <configItem>
         <name>pk</name>
+        <!-- Keyboard indicator for Urdu layouts -->
         <_shortDescription>ur</_shortDescription>
         <_description>Urdu (Pakistan)</_description>
         <languageList>
@@ -4913,6 +5071,7 @@
         <variant>
           <configItem>
             <name>snd</name>
+            <!-- Keyboard indicator for Sindhi layouts -->
             <_shortDescription>sd</_shortDescription>
             <_description>Sindhi</_description>
             <languageList>
@@ -4925,6 +5084,7 @@
     <layout>
       <configItem>
         <name>mv</name>
+        <!-- Keyboard indicator for Dhivehi layouts -->
         <_shortDescription>dv</_shortDescription>
         <_description>Dhivehi</_description>
         <languageList>
@@ -4936,6 +5096,7 @@
     <layout>
       <configItem>
         <name>za</name>
+        <!-- Keyboard indicator for English layouts -->
         <_shortDescription>en</_shortDescription>
         <_description>English (South Africa)</_description>
         <languageList>
@@ -4946,6 +5107,7 @@
     <layout>
       <configItem>
         <name>epo</name>
+        <!-- Keyboard indicator for Esperanto layouts -->
         <_shortDescription>eo</_shortDescription>
         <_description>Esperanto</_description>
         <languageList>
@@ -4964,6 +5126,7 @@
     <layout>
       <configItem>
         <name>np</name>
+        <!-- Keyboard indicator for Nepali layouts -->
         <_shortDescription>ne</_shortDescription>
         <_description>Nepali</_description>
         <languageList>
@@ -4974,6 +5137,7 @@
     <layout>
       <configItem>
         <name>ng</name>
+        <!-- Keyboard indicator for English layouts -->
         <_shortDescription>en</_shortDescription>
         <_description>English (Nigeria)</_description>
         <languageList>
@@ -4984,6 +5148,7 @@
         <variant>
           <configItem>
             <name>igbo</name>
+            <!-- Keyboard indicator for Igbo layouts -->
             <_shortDescription>ig</_shortDescription>
             <_description>Igbo</_description>
             <languageList>
@@ -4994,6 +5159,7 @@
         <variant>
           <configItem>
             <name>yoruba</name>
+            <!-- Keyboard indicator for Yoruba layouts -->
             <_shortDescription>yo</_shortDescription>
             <_description>Yoruba</_description>
             <languageList>
@@ -5004,6 +5170,7 @@
         <variant>
           <configItem>
             <name>hausa</name>
+            <!-- Keyboard indicator for Hausa layouts -->
             <_shortDescription>ha</_shortDescription>
             <_description>Hausa</_description>
             <languageList>
@@ -5016,6 +5183,7 @@
     <layout>
       <configItem>
         <name>et</name>
+        <!-- Keyboard indicator for Amharic layouts -->
         <_shortDescription>am</_shortDescription>
         <_description>Amharic</_description>
         <languageList>
@@ -5027,6 +5195,7 @@
     <layout>
       <configItem>
         <name>sn</name>
+        <!-- Keyboard indicator for Wolof layouts -->
         <_shortDescription>wo</_shortDescription>
         <_description>Wolof</_description>
         <languageList>
@@ -5038,6 +5207,7 @@
     <layout>
       <configItem>
         <name>brai</name>
+        <!-- Keyboard indicator for Braille layouts -->
         <_shortDescription>brl</_shortDescription>
         <_description>Braille</_description>
       </configItem>
@@ -5059,6 +5229,7 @@
     <layout>
       <configItem>
         <name>tm</name>
+        <!-- Keyboard indicator for Turkmen layouts -->
         <_shortDescription>tk</_shortDescription>
         <_description>Turkmen</_description>
         <languageList>
@@ -5077,6 +5248,7 @@
     <layout>
       <configItem>
         <name>ml</name>
+        <!-- Keyboard indicator for Bambara layouts -->
         <_shortDescription>bm</_shortDescription>
         <_description>Bambara</_description>
         <languageList>
@@ -5087,6 +5259,7 @@
         <variant>
           <configItem>
             <name>fr-oss</name>
+            <!-- Keyboard indicator for French layouts -->
             <_shortDescription>fr</_shortDescription>
             <_description>French (Mali, alternative)</_description>
             <languageList>
@@ -5097,6 +5270,7 @@
         <variant>
           <configItem>
             <name>us-mac</name>
+            <!-- Keyboard indicator for English layouts -->
             <_shortDescription>en</_shortDescription>
             <_description>English (Mali, US Macintosh)</_description>
           </configItem>
@@ -5104,6 +5278,7 @@
         <variant>
           <configItem>
             <name>us-intl</name>
+            <!-- Keyboard indicator for English layouts -->
             <_shortDescription>en</_shortDescription>
             <_description>English (Mali, US international)</_description>
           </configItem>
@@ -5113,6 +5288,7 @@
     <layout>
       <configItem>
         <name>tz</name>
+        <!-- Keyboard indicator for Swahili layouts -->
         <_shortDescription>sw</_shortDescription>
         <_description>Swahili (Tanzania)</_description>
         <languageList>
@@ -5123,6 +5299,7 @@
     <layout>
       <configItem>
         <name>ke</name>
+        <!-- Keyboard indicator for Swahili layouts -->
         <_shortDescription>sw</_shortDescription>
         <_description>Swahili (Kenya)</_description>
         <languageList>
@@ -5133,6 +5310,7 @@
         <variant>
           <configItem>
             <name>kik</name>
+            <!-- Keyboard indicator for Kikuyu layouts -->
             <_shortDescription>ki</_shortDescription>
             <_description>Kikuyu</_description>
             <languageList>
@@ -5145,6 +5323,7 @@
     <layout>
       <configItem>
         <name>bw</name>
+        <!-- Keyboard indicator for Tswana layouts -->
         <_shortDescription>tn</_shortDescription>
         <_description>Tswana</_description>
         <languageList>
@@ -5155,6 +5334,7 @@
     <layout>
       <configItem>
         <name>ph</name>
+        <!-- Keyboard indicator for Filipino layouts -->
         <_shortDescription>ph</_shortDescription>
         <_description>Filipino</_description>
         <languageList><iso639Id>eng</iso639Id>
@@ -5485,7 +5665,7 @@
     </group>
     <group allowMultipleSelection="true">
       <!-- The key combination used to choose the 3rd (and 4th, together with Shift)
-	   level of symbols -->
+           level of symbols -->
       <configItem>
         <name>lv3</name>
         <_description>Key to choose 3rd level</_description>
@@ -5571,25 +5751,25 @@
       <option>
         <configItem>
           <name>lv3:lsgt_switch</name>
-	  <_description>&lt;Less/Greater&gt;</_description>
+          <_description>&lt;Less/Greater&gt;</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv3:caps_switch_latch</name>
-          <_description>Caps Lock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
+          <_description>Caps Lock chooses 3rd level, acts as onetime lock when pressed together with another 3rd-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv3:bksl_switch_latch</name>
-          <_description>Backslash (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
+          <_description>Backslash chooses 3rd level, acts as onetime lock when pressed together with another 3rd-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv3:lsgt_switch_latch</name>
-	  <_description>&lt;Less/Greater&gt; (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</_description>
+          <_description>&lt;Less/Greater&gt; chooses 3rd level, acts as onetime lock when pressed together with another 3rd-level-chooser</_description>
         </configItem>
       </option>
     </group>
@@ -5790,8 +5970,8 @@
     </group>
     <group allowMultipleSelection="false">
       <!-- Caps Lock tweaks. 
-	   "Internal" capitalization means capitalization using some internal tables.
-	   Otherwise "as Shift" - means using next group. -->
+           "Internal" capitalization means capitalization using some internal tables.
+           Otherwise "as Shift" - means using next group. -->
       <configItem>
         <name>caps</name>
         <_description>Caps Lock key behavior</_description>
@@ -6138,7 +6318,7 @@
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock</name>
-	  <_description>&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
+          <_description>&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
@@ -6162,37 +6342,37 @@
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock_cancel</name>
-	  <_description>&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>&lt;Less/Greater&gt; chooses 5th level, acts as onetime lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:ralt_switch_lock_cancel</name>
-          <_description>Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Right Alt chooses 5th level, acts as onetime lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:lwin_switch_lock_cancel</name>
-          <_description>Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Left Win chooses 5th level, acts as onetime lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:rwin_switch_lock_cancel</name>
-          <_description>Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Right Win chooses 5th level, acts as onetime lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock_cancel</name>
-	  <_description>&lt;Less/Greater&gt; chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>&lt;Less/Greater&gt; chooses 5th level, acts as onetime lock lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:ralt_switch_lock_cancel</name>
-          <_description>Right Alt chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Right Alt chooses 5th level, acts as onetime lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
     </group>

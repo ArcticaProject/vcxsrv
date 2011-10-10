@@ -1724,40 +1724,30 @@ a set of pixel values in scanline order.
 </biblioentry>
 
 <biblioentry>
-<title>
-ISO2022: Information processing - ISO 7-bit and 8-bit coded character
-sets - Code extension techniques.
-</title>
+<title>ISO2022: Information processing - ISO 7-bit and 8-bit coded character
+sets - Code extension techniques.</title>
 </biblioentry>
 
 <biblioentry>
-<title>
-ISO8859-1: Information processing - 8-bit single-byte coded graphic
-character sets - Part 1: Latin alphabet No. 1.
-</title>
+<title>ISO8859-1: Information processing - 8-bit single-byte coded graphic
+character sets - Part 1: Latin alphabet No. 1.</title>
 </biblioentry>
 
 <biblioentry>
-<title>
-<acronym>POSIX</acronym>: Information Technology - Portable Operating System Interface (<acronym>POSIX</acronym>) -
+<title><acronym>POSIX</acronym>: Information Technology - Portable Operating System Interface (<acronym>POSIX</acronym>) -
 Part 1: System Application Program Interface (API) [C Language],
-ISO/IEC 9945-1.
-</title>
+ISO/IEC 9945-1.</title>
 </biblioentry>
 
 <biblioentry>
-<title>
-Text of ISO/IEC/DIS 9541-1, Information Processing - Font Information
-Interchange - Part 1:  Architecture.
-</title>
+<title>Text of ISO/IEC/DIS 9541-1, Information Processing - Font Information
+Interchange - Part 1:  Architecture.</title>
 </biblioentry>
 
 <biblioentry>
-<title>
-X/Open Portability Guide, Issue 3, December 1988 (XPG3), X/Open Company,
+<title>X/Open Portability Guide, Issue 3, December 1988 (XPG3), X/Open Company,
 Ltd, Prentice-Hall, Inc. 1989. ISBN 0-13-685835-8.
-(See especially Volume 3:  XSI Supplementary Definitions.)
-</title>
+(See especially Volume 3:  XSI Supplementary Definitions.)</title>
 </biblioentry>
 </bibliography>
 

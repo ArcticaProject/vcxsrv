@@ -1,4 +1,4 @@
-<chapter id='symbolic_names'>
+<chapter id='Symbolic_Names'>
 <title>Symbolic Names</title>
 
 <para>
@@ -26,7 +26,7 @@ names</emphasis>
  component of the keyboard description.
 </para>
 
-<sect1 id='the_xkbnamesrec_structure'>
+<sect1 id='The_XkbNamesRec_Structure'>
 <title>The XkbNamesRec Structure</title>
 
 <para>
@@ -227,7 +227,7 @@ radio_groups</emphasis>
 
 
 </sect1>
-<sect1 id='symbolic_names_masks'>
+<sect1 id='Symbolic_Names_Masks'>
 <title>Symbolic Names Masks</title>
 
 <para>
@@ -361,7 +361,7 @@ description are shown in Table 18.1.
 </table>
 
 </sect1>
-<sect1 id='getting_symbolic_names_from_the_server'>
+<sect1 id='Getting_Symbolic_Names_From_the_Server'>
 <title>Getting Symbolic Names From the Server</title>
 
 <para>
@@ -495,7 +495,7 @@ XkbFreeNames</emphasis>
 
 
 </sect1>
-<sect1 id='changing_symbolic_names_on_the_server'>
+<sect1 id='Changing_Symbolic_Names_on_the_Server'>
 <title>Changing Symbolic Names on the Server</title>
 
 <para>
@@ -621,7 +621,7 @@ num_types</emphasis>
 <sect2>
 <title/>
 
-<sect3 id='the_xkbnamechangesrec_structure'>
+<sect3 id='The_XkbNameChangesRec_Structure'>
 <title>The XkbNameChangesRec Structure</title>
 
 <para>
@@ -814,7 +814,7 @@ changes</emphasis>
 </sect3>
 </sect2>
 </sect1>
-<sect1 id='tracking_name_changes'>
+<sect1 id='Tracking_Name_Changes'>
 <title>Tracking Name Changes</title>
 
 <para>
@@ -1044,7 +1044,7 @@ BadMatch</emphasis>
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_symbolic_names'>
+<sect1 id='Allocating_and_Freeing_Symbolic_Names'>
 <title>Allocating and Freeing Symbolic Names</title>
 
 <para>

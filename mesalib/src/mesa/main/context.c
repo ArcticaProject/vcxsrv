@@ -1852,17 +1852,15 @@ _mesa_valid_to_render(struct gl_context *ctx, const char *where)
 	 sh = shProg[i]->_LinkedShaders[i];
 	 switch (sh->Type) {
 	 case GL_VERTEX_SHADER:
-	    _mesa_append_uniforms_to_file(sh, &shProg[i]->VertexProgram->Base);
+	    _mesa_append_uniforms_to_file(sh, sh->Program);
 	    break;
 
 	 case GL_GEOMETRY_SHADER_ARB:
-	    _mesa_append_uniforms_to_file(sh,
-					  &shProg[i]->GeometryProgram->Base);
+	    _mesa_append_uniforms_to_file(sh, sh->Program);
 	    break;
 
 	 case GL_FRAGMENT_SHADER:
-	    _mesa_append_uniforms_to_file(sh,
-					  &shProg[i]->FragmentProgram->Base);
+	    _mesa_append_uniforms_to_file(sh, sh->Program);
 	    break;
 	 }
       }

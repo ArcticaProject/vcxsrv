@@ -1,4 +1,4 @@
-<chapter id='server_database_of_keyboard_components'>
+<chapter id='Server_Database_of_Keyboard_Components'>
 <title>Server Database of Keyboard Components</title>
 
 <para>
@@ -117,7 +117,7 @@ When a keyboard description is built, the components are processed in the order
 in which they appear in Table 20.1; later definitions override earlier ones.
 </para>
 
-<sect1 id='component_names'>
+<sect1 id='Component_Names'>
 <title>Component Names</title>
 
 <para>
@@ -151,7 +151,7 @@ use of other characters is implementation-dependent.
 </para>
 
 </sect1>
-<sect1 id='listing_the_known_keyboard_components'>
+<sect1 id='Listing_the_Known_Keyboard_Components'>
 <title>Listing the Known Keyboard Components</title>
 
 <para>
@@ -389,7 +389,7 @@ XkbComponentListRec</emphasis>
 
 
 </sect1>
-<sect1 id='component_hints'>
+<sect1 id='Component_Hints'>
 <title>Component Hints</title>
 
 <para>
@@ -523,7 +523,7 @@ XkbLC_AlternateGroup</emphasis>
 </table>
 
 </sect1>
-<sect1 id='building_a_keyboard_description_using_the_server_database'>
+<sect1 id='Building_a_Keyboard_Description_Using_the_Server_Database'>
 <title>Building a Keyboard Description Using the Server Database</title>
 
 <para>

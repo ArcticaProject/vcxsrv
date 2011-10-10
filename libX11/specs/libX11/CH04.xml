@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="window_information_functions">
+<chapter id='Window_Information_Functions'>
 <title>Window Information Functions</title>
 
 <para>
@@ -35,13 +35,13 @@ exists.
 <!-- .sp -->
 To obtain the parent, a list of children, and number of children for 
 a given window, use 
-<function>XQueryTree</function>.
+<xref linkend='XQueryTree' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Child Window</primary></indexterm>
 <indexterm><primary>Parent Window</primary></indexterm>
 <indexterm significance="preferred"><primary>XQueryTree</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerytree'>
+<funcsynopsis id='XQueryTree'>
 <funcprototype>
   <funcdef>Status <function>XQueryTree</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -121,21 +121,21 @@ Returns the number of children.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryTree</function>
+<xref linkend='XQueryTree' xrefstyle='select: title'/>
 function returns the root ID, the parent window ID, 
 a pointer to the list of children windows
 (NULL when there are no children), 
 and the number of children in the list for the specified window.
 The children are listed in current stacking order, from bottom-most 
 (first) to top-most (last).
-<function>XQueryTree</function>
+<xref linkend='XQueryTree' xrefstyle='select: title'/>
 returns zero if it fails and nonzero if it succeeds.
 To free a non-NULL children list when it is no longer needed, use 
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryTree</function>
+<xref linkend='XQueryTree' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -144,11 +144,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the current attributes of a given window, use 
-<function>XGetWindowAttributes</function>.
+<xref linkend='XGetWindowAttributes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetWindowAttributes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwindowattributes'>
+<funcsynopsis id='XGetWindowAttributes'>
 <funcprototype>
   <funcdef>Status <function>XGetWindowAttributes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -196,7 +196,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetWindowAttributes</function>
+<xref linkend='XGetWindowAttributes' xrefstyle='select: title'/>
 function returns the current attributes for the specified window to an
 <structname>XWindowAttributes</structname>
 structure.
@@ -358,7 +358,7 @@ having to loop over the root window fields to see which field matches.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWindowAttributes</function>
+<xref linkend='XGetWindowAttributes' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>
 and
@@ -369,11 +369,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the current geometry of a given drawable, use 
-<function>XGetGeometry</function>.
+<xref linkend='XGetGeometry' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetGeometry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetgeometry'>
+<funcsynopsis id='XGetGeometry'>
 <funcprototype>
   <funcdef>Status <function>XGetGeometry</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -492,7 +492,7 @@ Returns the depth of the drawable (bits per pixel for the object).
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetGeometry</function>
+<xref linkend='XGetGeometry' xrefstyle='select: title'/>
 function returns the root window and the current geometry of the drawable.
 The geometry of the drawable includes the x and y coordinates, width and height,
 border width, and depth.
@@ -502,7 +502,7 @@ It is legal to pass to this function a window whose class is
 </para>
 <para>
 <!-- .LP -->
-<function>XGetGeometry</function>
+<xref linkend='XGetGeometry' xrefstyle='select: title'/>
 can generate a
 <errorname>BadDrawable</errorname>
 error.
@@ -519,9 +519,9 @@ Applications sometimes
 need to perform a coordinate transformation from the coordinate
 space of one window to another window or need to determine which
 window the pointing device is in.
-<function>XTranslateCoordinates</function>
+<xref linkend='XTranslateCoordinates' xrefstyle='select: title'/>
 and
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 fulfill these needs (and avoid any race conditions) by
 asking the X server to perform these operations.
 </para>
@@ -530,11 +530,11 @@ asking the X server to perform these operations.
 <!-- .sp -->
 To translate a coordinate in one window to the coordinate
 space of another window, use
-<function>XTranslateCoordinates</function>.
+<xref linkend='XTranslateCoordinates' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XTranslateCoordinates</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xtranslatecoordinates'>
+<funcsynopsis id='XTranslateCoordinates'>
 <funcprototype>
   <funcdef>Bool <function>XTranslateCoordinates</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -634,7 +634,7 @@ destination window.
 <!-- .LP -->
 <!-- .eM -->
 If
-<function>XTranslateCoordinates</function>
+<xref linkend='XTranslateCoordinates' xrefstyle='select: title'/>
 returns
 <symbol>True</symbol>,
 it takes the src_x and src_y coordinates relative
@@ -642,7 +642,7 @@ to the source window's origin and returns these coordinates to
 dest_x_return and dest_y_return
 relative to the destination window's origin.
 If
-<function>XTranslateCoordinates</function>
+<xref linkend='XTranslateCoordinates' xrefstyle='select: title'/>
 returns 
 <symbol>False</symbol>,
 src_w and dest_w are on different screens,
@@ -654,7 +654,7 @@ Otherwise, child_return is set to
 </para>
 <para>
 <!-- .LP -->
-<function>XTranslateCoordinates</function>
+<xref linkend='XTranslateCoordinates' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -664,11 +664,11 @@ error.
 <!-- .sp -->
 To obtain the screen coordinates of the pointer
 or to determine the pointer coordinates relative to a specified window, use 
-<function>XQueryPointer</function>.
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerypointer'>
+<funcsynopsis id='XQueryPointer'>
 <funcprototype>
   <funcdef>Bool <function>XQueryPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -779,26 +779,26 @@ Returns the current state of the modifier keys and pointer buttons.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 function returns the root window the pointer is logically on and the pointer
 coordinates relative to the root window's origin.
 If
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 returns 
 <symbol>False</symbol>,
 the pointer is not on the same screen as the specified window, and
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 returns 
 <symbol>None</symbol>
 to child_return and zero to win_x_return and win_y_return.
 If 
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 returns 
 <symbol>True</symbol>,
 the pointer coordinates returned to win_x_return and win_y_return
 are relative to the origin of the specified window.
 In this case, 
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 returns the child that contains the pointer, if any,
 or else
 <symbol>None</symbol>
@@ -806,7 +806,7 @@ to child_return.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 returns the current logical state of the keyboard buttons 
 and the modifier keys in mask_return.
 It sets mask_return to the bitwise inclusive OR of one or more
@@ -817,11 +817,11 @@ the current state of the mouse buttons and the modifier keys.
 <!-- .LP -->
 Note that the logical state of a device (as seen through Xlib)
 may lag the physical state if device event processing is frozen
-(see <link linkend="Pointer_Grabbing_">section 12.1</link>).
+(see <link linkend='Pointer_Grabbing'>section 12.1</link>).
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -851,7 +851,7 @@ property name.
 Clients can store and retrieve properties associated with windows.
 For efficiency reasons,
 an atom is used rather than a character string.
-<function>XInternAtom</function>
+<xref linkend='XInternAtom' xrefstyle='select: title'/>
 can be used to obtain the atom for property names.
 <indexterm><primary>Atom</primary></indexterm>
 </para>
@@ -887,7 +887,7 @@ To avoid name clashes with user symbols, the
 name for each atom has the XA_ prefix.
 For an explanation of the functions that let you get and set
 much of the information stored in these predefined properties,
-see <link linkend="inter_client_communication_functions">chapter 14</link>.
+see <link linkend='Inter_Client_Communication_Functions'>chapter 14</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -1046,12 +1046,12 @@ see <link linkend="Font_Metrics">section 8.5</link>.
 <!-- .LP -->
 <!-- .sp -->
 To return an atom for a given name, use 
-<function>XInternAtom</function>.
+<xref linkend='XInternAtom' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Atom</primary><secondary>interning</secondary></indexterm>
 <indexterm significance="preferred"><primary>XInternAtom</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xinternatom'>
+<funcsynopsis id='XInternAtom'>
 <funcprototype>
   <funcdef>Atom <function>XInternAtom</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1096,14 +1096,14 @@ Specifies a Boolean value that indicates whether the atom must be created.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XInternAtom</function>
+<xref linkend='XInternAtom' xrefstyle='select: title'/>
 function returns the atom identifier associated with the specified atom_name
 string.
 If only_if_exists is 
 <symbol>False</symbol>,
 the atom is created if it does not exist.
 Therefore,
-<function>XInternAtom</function>
+<xref linkend='XInternAtom' xrefstyle='select: title'/>
 can return
 <symbol>None</symbol>.
 If the atom name is not in the Host Portable Character Encoding, 
@@ -1117,7 +1117,7 @@ the X server closes.
 </para>
 <para>
 <!-- .LP -->
-<function>XInternAtom</function>
+<xref linkend='XInternAtom' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1128,12 +1128,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To return atoms for an array of names, use 
-<function>XInternAtoms</function>.
+<xref linkend='XInternAtoms' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Atom</primary><secondary>interning</secondary></indexterm>
 <indexterm significance="preferred"><primary>XInternAtoms</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xinternatoms'>
+<funcsynopsis id='XInternAtoms'>
 <funcprototype>
   <funcdef>Status <function>XInternAtoms</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1201,11 +1201,11 @@ Returns the atoms.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XInternAtoms</function>
+<xref linkend='XInternAtoms' xrefstyle='select: title'/>
 function returns the atom identifiers associated with the specified names.
 The atoms are stored in the atoms_return array supplied by the caller.
 Calling this function is equivalent to calling
-<function>XInternAtom</function>
+<xref linkend='XInternAtom' xrefstyle='select: title'/>
 for each of the names in turn with the specified value of only_if_exists,
 but this function minimizes the number of round-trip protocol exchanges
 between the client and the X server.
@@ -1218,7 +1218,7 @@ otherwise, it returns zero.
 </para>
 <para>
 <!-- .LP -->
-<function>XInternAtoms</function>
+<xref linkend='XInternAtoms' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1229,12 +1229,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To return a name for a given atom identifier, use 
-<function>XGetAtomName</function>.
+<xref linkend='XGetAtomName' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Atom</primary><secondary>getting name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGetAtomName</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetatomname'>
+<funcsynopsis id='XGetAtomName'>
 <funcprototype>
   <funcdef>char *<function>XGetAtomName</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1268,18 +1268,18 @@ Specifies the atom for the property name you want returned.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetAtomName</function>
+<xref linkend='XGetAtomName' xrefstyle='select: title'/>
 function returns the name associated with the specified atom.
 If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned string is in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 To free the resulting string,
 call
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetAtomName</function>
+<xref linkend='XGetAtomName' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAtom</errorname>
 error.
@@ -1288,12 +1288,12 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To return the names for an array of atom identifiers, use 
-<function>XGetAtomNames</function>.
+<xref linkend='XGetAtomNames' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Atom</primary><secondary>getting name</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGetAtomNames</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetatomnames'>
+<funcsynopsis id='XGetAtomNames'>
 <funcprototype>
   <funcdef>Status <function>XGetAtomNames</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1350,11 +1350,11 @@ Returns the atom names.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetAtomNames</function>
+<xref linkend='XGetAtomNames' xrefstyle='select: title'/>
 function returns the names associated with the specified atoms.
 The names are stored in the names_return array supplied by the caller.
 Calling this function is equivalent to calling
-<function>XGetAtomName</function>
+<xref linkend='XGetAtomName' xrefstyle='select: title'/>
 for each of the atoms in turn,
 but this function minimizes the number of round-trip protocol exchanges
 between the client and the X server.
@@ -1367,7 +1367,7 @@ otherwise, it returns zero.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetAtomNames</function>
+<xref linkend='XGetAtomNames' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAtom</errorname>
 error.
@@ -1398,19 +1398,19 @@ Xlib provides functions that you can use to obtain,
 change, update, or interchange window properties.
 In addition, Xlib provides other utility functions for inter-client
 communication
-(see <link linkend="inter_client_communication_functions">chapter 14</link>).
+(see <link linkend='Inter_Client_Communication_Functions'>chapter 14</link>).
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the type, format, and value of a property of a given window, use 
-<function>XGetWindowProperty</function>.
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>.
 <indexterm><primary>Property</primary><secondary>getting</secondary></indexterm>
 </para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XGetWindowProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetwindowproperty'>
+<funcsynopsis id='XGetWindowProperty'>
 <funcprototype>
   <funcdef>int <function>XGetWindowProperty</function></funcdef>
   <paramdef><parameter> display</parameter></paramdef>
@@ -1559,18 +1559,18 @@ Returns the data in the specified format.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 function returns the actual type of the property; the actual format of the property;
 the number of 8-bit, 16-bit, or 32-bit items transferred; the number of bytes remaining
 to be read in the property; and a pointer to the data actually returned.
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 sets the return arguments as follows:
 </para>
 <itemizedlist>
   <listitem>
     <para>
 If the specified property does not exist for the specified window,
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 returns 
 <symbol>None</symbol>
 to actual_type_return and the value zero to 
@@ -1583,7 +1583,7 @@ In this case, the delete argument is ignored.
     <para>
 If the specified property exists 
 but its type does not match the specified type,
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 returns the actual property type to actual_type_return, 
 the actual property format (never zero) to actual_format_return, 
 and the property length in bytes
@@ -1598,7 +1598,7 @@ The nitems_return argument is empty.
 If the specified property exists and either you assign 
 <symbol>AnyPropertyType</symbol>
 to the req_type argument or the specified type matches the actual property type,
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 returns the actual property type to actual_type_return and the actual
 property format (never zero) to actual_format_return. 
 It also returns a value to bytes_after_return and nitems_return, by 
@@ -1645,7 +1645,7 @@ array and should be cast to that type to obtain the elements.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 always allocates one extra byte in prop_return 
 (even if the property is zero length) 
 and sets it to zero so that simple properties consisting of characters
@@ -1656,7 +1656,7 @@ do not have to be copied into yet another string before use.
 If delete is 
 <symbol>True</symbol>
 and bytes_after_return is zero, 
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 deletes the property 
 from the window and generates a 
 <symbol>PropertyNotify</symbol>
@@ -1669,11 +1669,11 @@ The function returns
 if it executes successfully.
 To free the resulting data,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetWindowProperty</function>
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>,
 <errorname>BadValue</errorname>,
@@ -1685,12 +1685,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain a given window's property list, use 
-<function>XListProperties</function>.
+<xref linkend='XListProperties' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Property</primary><secondary>listing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XListProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlistproperties'>
+<funcsynopsis id='XListProperties'>
 <funcprototype>
   <funcdef>Atom *<function>XListProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1736,15 +1736,15 @@ Returns the length of the properties array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XListProperties</function>
+<xref linkend='XListProperties' xrefstyle='select: title'/>
 function returns a pointer to an array of atom properties that are defined for 
 the specified window or returns NULL if no properties were found.
 To free the memory allocated by this function, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XListProperties</function>
+<xref linkend='XListProperties' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -1753,7 +1753,7 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To change a property of a given window, use
-<function>XChangeProperty</function>.
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Property</primary><secondary>changing</secondary></indexterm>
 <indexterm><primary>Property</primary><secondary>appending</secondary></indexterm>
@@ -1763,7 +1763,7 @@ To change a property of a given window, use
 <indexterm><primary>Property</primary><secondary>type</secondary></indexterm>
 <indexterm significance="preferred"><primary>XChangeProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangeproperty'>
+<funcsynopsis id='XChangeProperty'>
 <funcprototype>
   <funcdef><function>XChangeProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1817,7 +1817,7 @@ Specifies the property name.
 Specifies the type of the property.
 The X server does not interpret the type but simply
 passes it back to an application that later calls 
-<function>XGetWindowProperty</function>.
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>.
       </para>
     </listitem>
   </varlistentry>
@@ -1835,7 +1835,7 @@ byte-swap operations as necessary.
 If the format is 16-bit or 32-bit,
 you must explicitly cast your data pointer to an (unsigned char *) in the call
 to 
-<function>XChangeProperty</function>.
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>.
 <!-- .\" Changed name of this file to prop_mode.a on 1/13/87 -->
       </para>
     </listitem>
@@ -1880,12 +1880,12 @@ Specifies the number of elements of the specified data format.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 function alters the property for the specified window and
 causes the X server to generate a
 <symbol>PropertyNotify</symbol>
 event on that window.
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 performs the following:
 </para>
 <itemizedlist>
@@ -1893,7 +1893,7 @@ performs the following:
     <para>
 If mode is
 <symbol>PropModeReplace</symbol>,
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 discards the previous property value and stores the new data.
     </para>
   </listitem>
@@ -1903,7 +1903,7 @@ If mode is
 <symbol>PropModePrepend</symbol>
 or
 <symbol>PropModeAppend</symbol>,
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 inserts the specified data before the beginning of the existing data
 or onto the end of the existing data, respectively.
 The type and format must match the existing property value,
@@ -1934,7 +1934,7 @@ The lifetime of a property is not tied to the storing client.
 Properties remain until explicitly deleted, until the window is destroyed,
 or until the server resets.
 For a discussion of what happens when the connection to the X server is closed,
-see <link linkend="Using_X_Server_Connection_Close_Operations_">section 2.6</link>.
+see <link linkend='Using_X_Server_Connection_Close_Operations'>section 2.6</link>.
 The maximum size of a property is server dependent and can vary dynamically
 depending on the amount of memory the server has available.
 (If there is insufficient space, a
@@ -1943,7 +1943,7 @@ error results.)
 </para>
 <para>
 <!-- .LP -->
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadAtom</errorname>,
@@ -1957,12 +1957,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To rotate a window's property list, use
-<function>XRotateWindowProperties</function>.
+<xref linkend='XRotateWindowProperties' xrefstyle='select: title'/>.
 </para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XRotateWindowProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrotatewindowproperties'>
+<funcsynopsis id='XRotateWindowProperties'>
 <funcprototype>
   <funcdef><function>XRotateWindowProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2029,7 +2029,7 @@ Specifies the rotation amount.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XRotateWindowProperties</function>
+<xref linkend='XRotateWindowProperties' xrefstyle='select: title'/>
 function allows you to rotate properties on a window and causes
 the X server to generate
 <symbol>PropertyNotify</symbol>
@@ -2059,7 +2059,7 @@ no properties are changed.
 </para>
 <para>
 <!-- .LP -->
-<function>XRotateWindowProperties</function>
+<xref linkend='XRotateWindowProperties' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>,
 <errorname>BadMatch</errorname>,
@@ -2071,12 +2071,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To delete a property on a given window, use 
-<function>XDeleteProperty</function>.
+<xref linkend='XDeleteProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Property</primary><secondary>deleting</secondary></indexterm>
 <indexterm significance="preferred"><primary>XDeleteProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdeleteproperty'>
+<funcsynopsis id='XDeleteProperty'>
 <funcprototype>
   <funcdef><function>XDeleteProperty</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2122,7 +2122,7 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDeleteProperty</function>
+<xref linkend='XDeleteProperty' xrefstyle='select: title'/>
 function deletes the specified property only if the
 property was defined on the specified window
 and causes the X server to generate a
@@ -2131,7 +2131,7 @@ event on the window unless the property does not exist.
 </para>
 <para>
 <!-- .LP -->
-<function>XDeleteProperty</function>
+<xref linkend='XDeleteProperty' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and
@@ -2194,12 +2194,12 @@ The protocol does not constrain the semantics.
 <!-- .LP -->
 <!-- .sp -->
 To set the selection owner, use 
-<function>XSetSelectionOwner</function>.
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Selection</primary><secondary>setting the owner</secondary></indexterm>
 <indexterm significance="preferred"><primary>XSetSelectionOwner</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetselectionowner'>
+<funcsynopsis id='XSetSelectionOwner'>
 <funcprototype>
   <funcdef><function>XSetSelectionOwner</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2259,7 +2259,7 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetSelectionOwner</function>
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>
 function changes the owner and last-change time for the specified selection
 and has no effect if the specified time is earlier than the current
 last-change time of the specified selection 
@@ -2296,7 +2296,7 @@ reverts to
 <symbol>None</symbol>,
 but the last-change time is not affected.
 The selection atom is uninterpreted by the X server.
-<function>XGetSelectionOwner</function>
+<xref linkend='XGetSelectionOwner' xrefstyle='select: title'/>
 returns the owner window, which is reported in 
 <symbol>SelectionRequest</symbol>
 and
@@ -2306,7 +2306,7 @@ Selections are global to the X server.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetSelectionOwner</function>
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and
@@ -2317,12 +2317,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To return the selection owner, use 
-<function>XGetSelectionOwner</function>.
+<xref linkend='XGetSelectionOwner' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Selection</primary><secondary>getting the owner</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGetSelectionOwner</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetselectionowner'>
+<funcsynopsis id='XGetSelectionOwner'>
 <funcprototype>
   <funcdef>Window <function>XGetSelectionOwner</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2357,7 +2357,7 @@ Specifies the selection atom (Se.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetSelectionOwner</function>
+<xref linkend='XGetSelectionOwner' xrefstyle='select: title'/>
 function
 returns the window ID associated with the window that currently owns the
 specified selection.
@@ -2370,7 +2370,7 @@ there is no owner for the selection.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetSelectionOwner</function>
+<xref linkend='XGetSelectionOwner' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAtom</errorname>
 error.
@@ -2379,12 +2379,12 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To request conversion of a selection, use 
-<function>XConvertSelection</function>.
+<xref linkend='XConvertSelection' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Selection</primary><secondary>converting</secondary></indexterm>
 <indexterm significance="preferred"><primary>XConvertSelection</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xconvertselection'>
+<funcsynopsis id='XConvertSelection'>
 <funcprototype>
   <funcdef><function>XConvertSelection</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2464,7 +2464,7 @@ You can pass either a timestamp or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XConvertSelection</function>
+<xref linkend='XConvertSelection' xrefstyle='select: title'/>
 requests that the specified selection be converted to the specified target
 type:
 </para>
@@ -2494,7 +2494,7 @@ There are two predefined selection atoms: PRIMARY and SECONDARY.
 </para>
 <para>
 <!-- .LP -->
-<function>XConvertSelection</function>
+<xref linkend='XConvertSelection' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and

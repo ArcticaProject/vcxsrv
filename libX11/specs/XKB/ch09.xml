@@ -1,4 +1,4 @@
-<chapter id='bells'>
+<chapter id='Bells'>
 <title>Bells</title>
 
 <para>
@@ -95,7 +95,7 @@ This chapter describes bell names, the functions used to generate named bells,
 and the events the server generates for bells.
 </para>
 
-<sect1 id='bell_names'>
+<sect1 id='Bell_Names'>
 <title>Bell Names</title>
 
 <para>
@@ -192,7 +192,7 @@ XkbBellNotify</emphasis>
 </table>
 
 </sect1>
-<sect1 id='audible_bells'>
+<sect1 id='Audible_Bells'>
 <title>Audible Bells</title>
 
 <para>
@@ -232,7 +232,7 @@ information on auto-reset controls, see section 10.1.2. <!-- xref -->
 </para>
 
 </sect1>
-<sect1 id='bell_functions'>
+<sect1 id='Bell_Functions'>
 <title>Bell Functions</title>
 
 <para>
@@ -334,7 +334,7 @@ XkbBellNotifyEvent</emphasis>
 </tgroup>
 </table>
 
-<sect2 id='generating_named_bells'>
+<sect2 id='Generating_Named_Bells'>
 <title>Generating Named Bells</title>
 
 <para>
@@ -564,7 +564,7 @@ XkbBell</emphasis>
 </para>
 
 </sect2>
-<sect2 id='generating_named_bell_events'>
+<sect2 id='Generating_Named_Bell_Events'>
 <title>Generating Named Bell Events</title>
 
 <para>
@@ -787,7 +787,7 @@ without first initializing the keyboard extension.
 </para>
 
 </sect2>
-<sect2 id='forcing_a_server_generated_bell'>
+<sect2 id='Forcing_a_Server_Generated_Bell'>
 <title>Forcing a Server-Generated Bell</title>
 
 <para>
@@ -980,7 +980,7 @@ XkbBell</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='detecting_bells'>
+<sect1 id='Detecting_Bells'>
 <title>Detecting Bells</title>
 
 <para>

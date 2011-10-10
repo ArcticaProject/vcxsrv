@@ -1,4 +1,4 @@
-<chapter id='virtual_modifiers'>
+<chapter id='Virtual_Modifiers'>
 <title>Virtual Modifiers</title>
 
 <para>
@@ -62,7 +62,7 @@ specify the desired behavior, without regard for the actual physical bindings
 in effect.
 </para>
 
-<sect1 id='virtual_modifier_names_and_masks'>
+<sect1 id='Virtual_Modifier_Names_and_Masks'>
 <title>Virtual Modifier Names and Masks</title>
 
 <para>
@@ -101,7 +101,7 @@ XkbGetNames</emphasis>
 
 
 </sect1>
-<sect1 id='modifier_definitions'>
+<sect1 id='Modifier_Definitions'>
 <title>Modifier Definitions</title>
 
 <para>
@@ -158,7 +158,7 @@ for the keyboard mapping of interest.
 
 
 </sect1>
-<sect1 id='binding_virtual_modifiers_to_real_modifiers'>
+<sect1 id='Binding_Virtual_Modifiers_to_Real_Modifiers'>
 <title>Binding Virtual Modifiers to Real Modifiers</title>
 
 <para>
@@ -174,7 +174,7 @@ Figure 16.2. <!-- xref -->
 
 
 </sect1>
-<sect1 id='virtual_modifier_key_mapping'>
+<sect1 id='Virtual_Modifier_Key_Mapping'>
 <title>Virtual Modifier Key Mapping</title>
 
 <para>
@@ -326,7 +326,7 @@ client has not requested it) while the server’s corresponding definition may
 contain virtual modifier information. </para></note>
 
 
-<sect2 id='inactive_modifier_sets'>
+<sect2 id='Inactive_Modifier_Sets'>
 <title>Inactive Modifier Sets</title>
 
 <para>
@@ -364,7 +364,7 @@ virtual modifiers are bound.
 
 </sect2>
 </sect1>
-<sect1 id='conventions'>
+<sect1 id='Conventions'>
 <title>Conventions</title>
 
 <para>
@@ -384,7 +384,7 @@ following names are suggested:
 </literallayout>
 
 </sect1>
-<sect1 id='example'>
+<sect1 id='Example'>
 <title>Example</title>
 
 <para>

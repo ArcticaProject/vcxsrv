@@ -47,16 +47,16 @@ Get X environment defaults
 <para>
 To specify a minimum set of properties describing the simplest application,
 use
-<function>XSetStandardProperties</function>.
+<xref linkend='XSetStandardProperties' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XSetWMProperties</function>
+<xref linkend='XSetWMProperties' xrefstyle='select: title'/>
 and sets all or portions of the 
 <property>WM_NAME</property>, <property>WM_ICON_NAME</property>, <property>WM_HINTS</property>, <property>WM_COMMAND</property>, 
 and <property>WM_NORMAL_HINTS</property> properties.
 </para>
 <indexterm significance="preferred"><primary>XSetStandardProperties</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetstandardproperties'>
+<funcsynopsis id='XSetStandardProperties'>
 <funcprototype>
   <funcdef><function>XSetStandardProperties</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -159,22 +159,22 @@ Specifies a pointer to the size hints for the window in its normal state.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetStandardProperties</function>
+<xref linkend='XSetStandardProperties' xrefstyle='select: title'/>
 function provides a means by which simple applications set the
 most essential properties with a single call.
-<function>XSetStandardProperties</function>
+<xref linkend='XSetStandardProperties' xrefstyle='select: title'/>
 should be used to give a window manager some information about 
 your program's preferences. 
 It should not be used by applications that need
 to communicate more information than is possible with
-<function>XSetStandardProperties</function>.
+<xref linkend='XSetStandardProperties' xrefstyle='select: title'/>.
 (Typically, argv is the argv array of your main program.)
 If the strings are not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetStandardProperties</function>
+<xref linkend='XSetStandardProperties' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -199,13 +199,13 @@ header file and use the <property>WM_NORMAL_HINTS</property> property.
 <!-- .LP -->
 <!-- .sp -->
 To set the size hints for a given window in its normal state, use
-<function>XSetNormalHints</function>.
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XSetWMNormalHints</function>.
+<xref linkend='XSetWMNormalHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetnormalhints'>
+<funcsynopsis id='XSetNormalHints'>
 <funcprototype>
   <funcdef><function>XSetNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -250,15 +250,15 @@ Specifies a pointer to the size hints for the window in its normal state.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetNormalHints</function>
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>
 function sets the size hints structure for the specified window.
 Applications use
-<function>XSetNormalHints</function>
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>
 to inform the window manager of the size
 or position desirable for that window.
 In addition, 
 an application that wants to move or resize itself should call
-<function>XSetNormalHints</function>
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>
 and specify its new desired location and size
 as well as making direct Xlib calls to move or resize.  
 This is because window managers may ignore redirected
@@ -271,13 +271,13 @@ an application not only must assign values to the appropriate members
 in the hints structure but also must set the flags member of the structure 
 to indicate which information is present and where it came from.  
 A call to
-<function>XSetNormalHints</function>
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>
 is meaningless, unless the flags member is set to indicate which members of
 the structure have been assigned values.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetNormalHints</function>
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -288,13 +288,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To return the size hints for a window in its normal state, use
-<function>XGetNormalHints</function>.
+<xref linkend='XGetNormalHints' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XGetWMNormalHints</function>.
+<xref linkend='XGetWMNormalHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetNormalHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetnormalhints'>
+<funcsynopsis id='XGetNormalHints'>
 <funcprototype>
   <funcdef>Status <function>XGetNormalHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -339,14 +339,14 @@ Returns the size hints for the window in its normal state.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetNormalHints</function>
+<xref linkend='XGetNormalHints' xrefstyle='select: title'/>
 function returns the size hints for a window in its normal state.
 It returns a nonzero status if it succeeds or zero if
 the application specified no normal size hints for this window.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetNormalHints</function>
+<xref linkend='XGetNormalHints' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -359,13 +359,13 @@ The next two functions set and read the <property>WM_ZOOM_HINTS</property> prope
 <para>
 <!-- .LP -->
 To set the zoom hints for a window, use
-<function>XSetZoomHints</function>.
+<xref linkend='XSetZoomHints' xrefstyle='select: title'/>.
 This function is no longer supported by the
 <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
 </para>
 <indexterm significance="preferred"><primary>XSetZoomHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetzoomhints'>
+<funcsynopsis id='XSetZoomHints'>
 <funcprototype>
   <funcdef><function>XSetZoomHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -412,13 +412,13 @@ Specifies a pointer to the zoom hints.
 Many window managers think of windows in one of three states:
 iconic, normal, or zoomed.
 The
-<function>XSetZoomHints</function>
+<xref linkend='XSetZoomHints' xrefstyle='select: title'/>
 function provides the window manager with information for the window in the
 zoomed state.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetZoomHints</function>
+<xref linkend='XSetZoomHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -429,13 +429,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read the zoom hints for a window, use
-<function>XGetZoomHints</function>.
+<xref linkend='XGetZoomHints' xrefstyle='select: title'/>.
 This function is no longer supported by the
 <emphasis remap='I'>Inter-Client Communication Conventions Manual</emphasis>.
 </para>
 <indexterm significance="preferred"><primary>XGetZoomHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetzoomhints'>
+<funcsynopsis id='XGetZoomHints'>
 <funcprototype>
   <funcdef>Status <function>XGetZoomHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -480,14 +480,14 @@ Returns the zoom hints.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetZoomHints</function>
+<xref linkend='XGetZoomHints' xrefstyle='select: title'/>
 function returns the size hints for a window in its zoomed state.
 It returns a nonzero status if it succeeds or zero if
 the application specified no zoom size hints for this window.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetZoomHints</function>
+<xref linkend='XGetZoomHints' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -496,13 +496,13 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To set the value of any property of type <property>WM_SIZE_HINTS</property>, use
-<function>XSetSizeHints</function>.
+<xref linkend='XSetSizeHints' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XSetWMSizeHints</function>.
+<xref linkend='XSetWMSizeHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetsizehints'>
+<funcsynopsis id='XSetSizeHints'>
 <funcprototype>
   <funcdef><function>XSetSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -558,20 +558,20 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetSizeHints</function>
+<xref linkend='XSetSizeHints' xrefstyle='select: title'/>
 function sets the
 <structname>XSizeHints</structname>
 structure for the named property and the specified window.
 This is used by
-<function>XSetNormalHints</function>
+<xref linkend='XSetNormalHints' xrefstyle='select: title'/>
 and
-<function>XSetZoomHints</function>
+<xref linkend='XSetZoomHints' xrefstyle='select: title'/>
 and can be used to set the value of any property of type <property>WM_SIZE_HINTS</property>.
 Thus, it may be useful if other properties of that type get defined.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetSizeHints</function>
+<xref linkend='XSetSizeHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadAtom</errorname>,
@@ -583,13 +583,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To read the value of any property of type <property>WM_SIZE_HINTS</property>, use
-<function>XGetSizeHints</function>.
+<xref linkend='XGetSizeHints' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XGetWMSizeHints</function>.
+<xref linkend='XGetWMSizeHints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetSizeHints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetsizehints'>
+<funcsynopsis id='XGetSizeHints'>
 <funcprototype>
   <funcdef>Status <function>XGetSizeHints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -645,24 +645,24 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetSizeHints</function>
+<xref linkend='XGetSizeHints' xrefstyle='select: title'/>
 function returns the
 <structname>XSizeHints</structname>
 structure for the named property and the specified window.
 This is used by
-<function>XGetNormalHints</function>
+<xref linkend='XGetNormalHints' xrefstyle='select: title'/>
 and
-<function>XGetZoomHints</function>.
+<xref linkend='XGetZoomHints' xrefstyle='select: title'/>.
 It also can be used to retrieve the value of any property of type
 <property>WM_SIZE_HINTS</property>.
 Thus, it may be useful if other properties of that type get defined.
-<function>XGetSizeHints</function>
+<xref linkend='XGetSizeHints' xrefstyle='select: title'/>
 returns a nonzero status if a size hint was defined
 or zero otherwise.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetSizeHints</function>
+<xref linkend='XGetSizeHints' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and 
@@ -676,13 +676,13 @@ errors.
 To get the 
 <structname>XStandardColormap</structname>
 structure associated with one of the described atoms, use
-<function>XGetStandardColormap</function>.
+<xref linkend='XGetStandardColormap' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XGetRGBColormaps</function>.
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetStandardColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetstandardcolormap'>
+<funcsynopsis id='XGetStandardColormap'>
 <funcprototype>
   <funcdef>Status <function>XGetStandardColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -738,17 +738,17 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetStandardColormap</function>
+<xref linkend='XGetStandardColormap' xrefstyle='select: title'/>
 function returns the colormap definition associated with the atom supplied
 as the property argument.
-<function>XGetStandardColormap</function>
+<xref linkend='XGetStandardColormap' xrefstyle='select: title'/>
 returns a nonzero status if successful and zero otherwise.
 For example,
 to fetch the standard
 <symbol>GrayScale</symbol>
 colormap for a display,
 you use
-<function>XGetStandardColormap</function>
+<xref linkend='XGetStandardColormap' xrefstyle='select: title'/>
 with the following syntax:
 <programlisting>
 XGetStandardColormap(dpy, DefaultRootWindow(dpy), &amp;cmap, XA_RGB_GRAY_MAP);
@@ -758,7 +758,7 @@ semantics of standard colormaps.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetStandardColormap</function>
+<xref linkend='XGetStandardColormap' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>
 and
@@ -769,13 +769,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To set a standard colormap, use
-<function>XSetStandardColormap</function>.
+<xref linkend='XSetStandardColormap' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XSetRGBColormaps</function>.
+<xref linkend='XSetRGBColormaps' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetStandardColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetstandardcolormap'>
+<funcsynopsis id='XSetStandardColormap'>
 <funcprototype>
   <funcdef><function>XSetStandardColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -831,12 +831,12 @@ Specifies the property name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetStandardColormap</function>
+<xref linkend='XSetStandardColormap' xrefstyle='select: title'/>
 function usually is only used by window or session managers.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetStandardColormap</function>
+<xref linkend='XSetStandardColormap' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadAtom</errorname>,
@@ -851,14 +851,14 @@ errors.
 <para>
 To parse window geometry given a user-specified position 
 and a default position, use
-<function>XGeometry</function>.
+<xref linkend='XGeometry' xrefstyle='select: title'/>.
 This function has been superseded by
-<function>XWMGeometry</function>.
+<xref linkend='XWMGeometry' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>determining location</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGeometry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgeometry'>
+<funcsynopsis id='XGeometry'>
 <funcprototype>
   <funcdef>int <function>XGeometry</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1018,19 +1018,19 @@ size of the increments fwidth and fheight
 and any additional interior space (xadder and yadder)
 to make it easy to compute the resulting size.
 The
-<function>XGeometry</function>
+<xref linkend='XGeometry' xrefstyle='select: title'/>
 function returns the position the window should be placed given a position and
 a default position.
-<function>XGeometry</function>
+<xref linkend='XGeometry' xrefstyle='select: title'/>
 determines the placement of
 a window using a geometry specification as specified by
-<function>XParseGeometry</function>
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>
 and the additional information about the window.
 Given a fully qualified default geometry specification and
 an incomplete geometry specification, 
-<function>XParseGeometry</function>
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>
 returns a bitmask value as defined above in the 
-<function>XParseGeometry</function>
+<xref linkend='XParseGeometry' xrefstyle='select: title'/>
 call,
 by using the position argument.
 </para>
@@ -1049,16 +1049,16 @@ geometry specifications.
 <title>Getting the X Environment Defaults</title>
 <para>
 The
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 function provides a primitive interface to the resource manager facilities 
-discussed in <link linkend="resource_manager_functions">chapter 15</link>.
+discussed in <link linkend='Resource_Manager_Functions'>chapter 15</link>.
 It is only useful in very simple applications.
 </para>
 <!-- .LP -->
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XGetDefault</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetdefault'>
+<funcsynopsis id='XGetDefault'>
 <funcprototype>
   <funcdef>char *<function>XGetDefault</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1104,31 +1104,31 @@ Specifies the option name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 function returns the value of the resource <emphasis remap='I'>prog</emphasis>.<emphasis remap='I'>option</emphasis>,
 where <emphasis remap='I'>prog</emphasis> is the program argument with the directory prefix removed
 and <emphasis remap='I'>option</emphasis> must be a single component.
 Note that multilevel resources cannot be used with
-<function>XGetDefault</function>.
+<xref linkend='XGetDefault' xrefstyle='select: title'/>.
 The class "Program.Name" is always used for the resource lookup.
 If the specified option name does not exist for this program,
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 returns NULL.
 The strings returned by
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 are owned by Xlib and should not be modified or freed by the client.
 </para>
 <para>
 <!-- .LP -->
 If a database has been set with 
-<function>XrmSetDatabase</function>,
+<xref linkend='XrmSetDatabase' xrefstyle='select: title'/>,
 that database is used for the lookup.
 Otherwise, a database is created
 and is set in the display (as if by calling 
-<function>XrmSetDatabase</function>).
+<xref linkend='XrmSetDatabase' xrefstyle='select: title'/>).
 The database is created in the current locale.
 To create a database,
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 uses resources from the RESOURCE_MANAGER property on the root
 window of screen zero.
 If no such property exists,
@@ -1138,13 +1138,13 @@ this file is
 <function>"$HOME/.Xdefaults"</function>.
 <indexterm><primary>Files</primary><secondary><filename>$HOME/.Xdefaults</filename></secondary></indexterm>
 After loading these defaults,
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 merges additional defaults specified by the XENVIRONMENT
 environment variable.
 If XENVIRONMENT is defined,
 it contains a full path name for the additional resource file.
 If XENVIRONMENT is not defined,
-<function>XGetDefault</function>
+<xref linkend='XGetDefault' xrefstyle='select: title'/>
 looks for
 "<filename>$HOME/.Xdefaults-<replaceable>name</replaceable></filename>" ,
 where <replaceable>name</replaceable> specifies the name of the machine on which the application
@@ -1179,10 +1179,10 @@ These functions are provided mainly for compatibility with X Version 10
 and have no server support.  
 That is, they call other Xlib functions, not the server directly.  
 Thus, if you just have straight lines to draw, using 
-<function>XDrawLines</function>
+<xref linkend='XDrawLines' xrefstyle='select: title'/>
 <indexterm><primary>XDrawLines</primary></indexterm>
 or
-<function>XDrawSegments</function>
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>
 <indexterm><primary>XDrawSegments</primary></indexterm>
 is much faster.
 </para>
@@ -1190,9 +1190,9 @@ is much faster.
 <!-- .LP -->
 The functions discussed here provide all the functionality of the 
 X Version 10 functions 
-<function>XDraw</function>,
+<xref linkend='XDraw' xrefstyle='select: title'/>,
 <indexterm ><primary>X10 compatibility</primary><secondary>XDraw</secondary></indexterm>
-<function>XDrawFilled</function>,
+<xref linkend='XDrawFilled' xrefstyle='select: title'/>,
 <indexterm><primary>X10 compatibility</primary><secondary>XDrawFilled</secondary></indexterm>
 <function>XDrawPatterned</function>,
 <indexterm ><primary>X10 compatibility</primary><secondary>XDrawPatterned</secondary></indexterm>
@@ -1219,7 +1219,7 @@ Just how the graphics context you use is set up actually
 determines whether you get dashes or not, and so on.  
 Lines are properly joined if they connect and include
 the closing of a closed figure  (see 
-<function>XDrawLines</function>).
+<xref linkend='XDrawLines' xrefstyle='select: title'/>).
 The functions discussed here fail (return zero) only if they run out of memory
 or are passed a 
 <structname>Vertex</structname>
@@ -1237,7 +1237,7 @@ set.
 <!-- .LP -->
 <!-- .sp -->
 To achieve the effects of the X Version 10
-<function>XDraw</function>,
+<xref linkend='XDraw' xrefstyle='select: title'/>,
 <indexterm ><primary>X10 compatibility</primary><secondary>XDraw</secondary></indexterm>
 <function>XDrawDashed</function>,
 <indexterm><primary>X10 compatibility</primary><secondary>XDrawDashed</secondary></indexterm>
@@ -1245,14 +1245,14 @@ and
 <function>XDrawPatterned</function>,
 <indexterm ><primary>X10 compatibility</primary><secondary>XDrawPatterned</secondary></indexterm>
 use
-<function>XDraw</function>.
+<xref linkend='XDraw' xrefstyle='select: title'/>.
 </para>
 
 <para>
 #include &lt;X11/X10.h&gt;
 </para>
 
-<funcsynopsis id='xdraw'>
+<funcsynopsis id='XDraw'>
 <funcprototype>
   <funcdef>Status <function>XDraw</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1319,7 +1319,7 @@ Specifies how many vertices are in vlist.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDraw</function>
+<xref linkend='XDraw' xrefstyle='select: title'/>
 function draws an arbitrary polygon or curve.  
 The figure drawn is defined by the specified list of vertices (vlist).
 The points are connected by lines as specified in the flags in the
@@ -1451,15 +1451,15 @@ To achieve the effects of the X Version 10
 <function>XDrawTiled</function>
 <indexterm><primary>X10 compatibility</primary><secondary>XDrawTiled</secondary></indexterm>
 and 
-<function>XDrawFilled</function>,
+<xref linkend='XDrawFilled' xrefstyle='select: title'/>,
 <indexterm><primary>X10 compatibility</primary><secondary>XDrawFilled</secondary></indexterm>
 use
-<function>XDrawFilled</function>.
+<xref linkend='XDrawFilled' xrefstyle='select: title'/>.
 </para>
 
 <para>#include &lt;X11/X10.h&gt;</para>
 
-<funcsynopsis id='xdrawfilled'>
+<funcsynopsis id='XDrawFilled'>
 <funcprototype>
   <funcdef>Status <function>XDrawFilled</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1527,7 +1527,7 @@ Specifies how many vertices are in vlist.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawFilled</function>
+<xref linkend='XDrawFilled' xrefstyle='select: title'/>
 function draws arbitrary polygons or curves and then fills them.
 </para>
 <para>
@@ -1611,11 +1611,11 @@ bucket.
 To return a pointer to a new
 <function>XAssocTable</function>,
 use 
-<function>XCreateAssocTable</function>.
+<xref linkend='XCreateAssocTable' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XCreateAssocTable</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xcreateassoctable'>
+<funcsynopsis id='XCreateAssocTable'>
 <funcprototype>
   <funcdef>XAssocTable *<function>XCreateAssocTable</function></funcdef>
   <paramdef>int<parameter> size</parameter></paramdef>
@@ -1657,11 +1657,11 @@ a NULL pointer is returned.
 To create an entry in a given 
 <function>XAssocTable</function>,
 use 
-<function>XMakeAssoc</function>.
+<xref linkend='XMakeAssoc' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XMakeAssoc</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xmakeassoc'>
+<funcsynopsis id='XMakeAssoc'>
 <funcprototype>
   <funcdef><function>XMakeAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1717,7 +1717,7 @@ Specifies the data to be associated with the X resource ID.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XMakeAssoc</function>
+<xref linkend='XMakeAssoc' xrefstyle='select: title'/>
 function inserts data into an 
 <function>XAssocTable</function>
 keyed on an XID.
@@ -1732,11 +1732,11 @@ the highest XID.
 To obtain data from a given 
 <function>XAssocTable</function>,
 use 
-<function>XLookUpAssoc</function>.
+<xref linkend='XLookUpAssoc' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLookUpAssoc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlookupassoc'>
+<funcsynopsis id='XLookUpAssoc'>
 <funcprototype>
   <funcdef>char *<function>XLookUpAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1781,12 +1781,12 @@ Specifies the X resource ID.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLookUpAssoc</function>
+<xref linkend='XLookUpAssoc' xrefstyle='select: title'/>
 function retrieves the data stored in an 
 <function>XAssocTable</function>
 by its XID.  
 If  an appropriately  matching XID can be found in the table,
-<function>XLookUpAssoc</function>
+<xref linkend='XLookUpAssoc' xrefstyle='select: title'/>
 returns the data associated with it.
 If the x_id cannot be found in the table,
 it returns NULL.
@@ -1797,11 +1797,11 @@ it returns NULL.
 To delete an entry from a given 
 <function>XAssocTable</function>,
 use 
-<function>XDeleteAssoc</function>.
+<xref linkend='XDeleteAssoc' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDeleteAssoc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdeleteassoc'>
+<funcsynopsis id='XDeleteAssoc'>
 <funcprototype>
   <funcdef><function>XDeleteAssoc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1846,7 +1846,7 @@ Specifies the X resource ID.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDeleteAssoc</function>
+<xref linkend='XDeleteAssoc' xrefstyle='select: title'/>
 function deletes an association in an 
 <function>XAssocTable</function>
 keyed on its XID.
@@ -1860,11 +1860,11 @@ Deleting associations in no way impairs the performance of an
 To free the memory associated with a given 
 <function>XAssocTable</function>,
 use 
-<function>XDestroyAssocTable</function>.
+<xref linkend='XDestroyAssocTable' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroyAssocTable</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroyassoctable'>
+<funcsynopsis id='XDestroyAssocTable'>
 <funcprototype>
   <funcdef><function>XDestroyAssocTable</function></funcdef>
   <paramdef>XAssocTable<parameter> *table</parameter></paramdef>

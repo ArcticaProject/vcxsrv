@@ -1,4 +1,4 @@
-<chapter id='keyboard_state'>
+<chapter id='Keyboard_State'>
 <title>Keyboard State</title>
 
 <para>
@@ -13,7 +13,7 @@ Keyboard state encompasses all of the transitory information necessary to map a 
 </mediaobject>
 
 
-<sect1 id='keyboard_state_description'>
+<sect1 id='Keyboard_State_Description'>
 <title>Keyboard State Description</title>
 <para>
 The Xkb keyboard state is comprised of the state of all keyboard modifiers, the keyboard group, and the state of the pointer buttons. These are grouped into the following components:
@@ -294,10 +294,10 @@ The X11 protocol interpretation of modifiers does not include direct support for
 
 
 </sect1>
-<sect1 id='changing_the_keyboard_state'>
+<sect1 id='Changing_the_Keyboard_State'>
 <title>Changing the Keyboard State</title>
 
-<sect2 id='changing_modifiers'>
+<sect2 id='Changing_Modifiers'>
 <title>Changing Modifiers</title>
 
 <para>
@@ -492,7 +492,7 @@ False</emphasis>
 
 
 </sect2>
-<sect2 id='changing_groups'>
+<sect2 id='Changing_Groups'>
 <title>Changing Groups</title>
 
 <para>
@@ -645,7 +645,7 @@ False</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='determining_keyboard_state'>
+<sect1 id='Determining_Keyboard_State'>
 <title>Determining Keyboard State</title>
 
 <para>
@@ -739,7 +739,7 @@ All group values are expressed as group indices in the range [0..3]. Modifiers a
 
 
 </sect1>
-<sect1 id='tracking_keyboard_state'>
+<sect1 id='Tracking_Keyboard_State'>
 <title>Tracking Keyboard State</title>
 
 <para>

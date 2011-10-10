@@ -75,7 +75,7 @@ this Software without prior written authorization from the X Consortium.
 </legalnotice>
 </bookinfo>
 
-<chapter id="xim_transport_specification">
+<chapter id='X_Transport_Specification'>
 <title>X Transport Specification</title>
 
 <sect1 id="Introduction">
@@ -269,7 +269,7 @@ described below.
 
 </sect2>
 </sect1>
-<sect1 id="The_interface_transport_layer_functions">
+<sect1 id='The_interfacetransport_layer_functions'>
 <title>The interface/transport layer functions</title>
 <para>
 Following functions are used for the transport interface.
@@ -339,7 +339,7 @@ provided so as to make easier to implement the Protocol Layer.
 <title>Opening connection</title>
 <para>
 <!-- .LP -->
-When <function>XOpenIM</function> is called, the following function is called to connect
+When <olink targetdoc='libX11' targetptr='XOpenIM'><function>XOpenIM</function></olink> is called, the following function is called to connect
 with the IM Server.
 </para>
 
@@ -369,7 +369,7 @@ connection is established successfully, this function returns True.
 The Alternative Entry for this function is:
 </para>
 
-<funcsynopsis id='_ximconnect'>
+<funcsynopsis id='_XimConnect'>
 <funcprototype>
   <funcdef>Bool <function> _XimConnect</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -397,7 +397,7 @@ Specifies XIM structure address.
 <!-- .XE -->
 <para>
 <!-- .LP -->
-When <function>XCloseIM</function> is called, the following function is called to
+When <olink targetdoc='libX11' targetptr='XCloseIM'><function>XCloseIM</function></olink> is called, the following function is called to
 disconnect the connection with the IM Server. The Alternative Entry
 for this function is:
 </para>
@@ -429,7 +429,7 @@ connection is closed successfully, this function returns True. The
 Alternative Entry for this function is:
 </para>
 
-<funcsynopsis id='_ximshutdown'>
+<funcsynopsis id='_XimShutdown'>
 <funcprototype>
   <funcdef>Bool <function>_XimShutdown</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -458,7 +458,7 @@ The following function is called, when Xlib needs to write data to the
 IM Server.
 </para>
 
-<funcsynopsis id='_ximwrite'>
+<funcsynopsis id='_XimWrite'>
 <funcprototype>
   <funcdef>Bool <function> _XimWrite</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -559,7 +559,7 @@ The following function is called when Xlib waits for response from IM
 server synchronously.
 </para>
 
-<funcsynopsis id='_ximread'>
+<funcsynopsis id='_XimRead'>
 <funcprototype>
   <funcdef>Bool <function> _XimRead</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -798,7 +798,7 @@ transport layer. If data transfer is completed, the function returns
 True.  The Alternative Entry for this function is:
 </para>
 
-<funcsynopsis id='_ximflush'>
+<funcsynopsis id='_XimFlush'>
 <funcprototype>
   <funcdef>void <function> _XimFlush</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -833,7 +833,7 @@ will call asynchronous data handler in the protocol layer. Then it
 calls dispatchers in the transport layer. The dispatchers are
 implemented by the protocol layer. This function must store the
 information and prepare for later call of the dispatchers using
-<function>_XimCallDispatcher</function>.
+<xref linkend='_XimCallDispatcher' xrefstyle='select: title'/>.
 </para>
 
 <para>
@@ -953,7 +953,7 @@ that the data has been processed by the upper layer.  The Alternative
 Entry for this function is:
 </para>
 
-<funcsynopsis id='_ximregisterdispatcher'>
+<funcsynopsis id='_XimRegisterDispatcher'>
 <funcprototype>
   <funcdef>Bool <function> _XimRegisterDispatcher</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -1062,7 +1062,7 @@ Protocol packet unit or not.
 The Alternative Entry for this function is:
 </para>
 
-<funcsynopsis id='_ximcalldispatcher'>
+<funcsynopsis id='_XimCallDispatcher'>
 <funcprototype>
   <funcdef>Bool <function> _XimCallDispatcher</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -1363,8 +1363,8 @@ lager than this size, is sent via Property.
 
 </sect3>
 
-<sect3 id="read_write_">
-<title>read/write  </title>
+<sect3 id='readwrite'>
+<title>read/write</title>
 <para>
 The data is transferred via either ClientMessage or Window Property in
 the X Window System.
@@ -1589,7 +1589,7 @@ The arguments of the XChangeProperty are as follows:
 
 <para>
 (*1) The read/write property ATOM allocates the following strings by
-<function>XInternAtom</function>.
+<olink targetdoc='libX11' targetptr='XInternAtom'><function>XInternAtom</function></olink>.
 "_clientXXX"
 </para>
 
@@ -1888,7 +1888,7 @@ The arguments of the XChangeProperty are as follows:
 
 <para>
 (*1) The read/write property ATOM allocates some strings, which are not
-allocated by the client, by <function>XInternAtom</function>.
+allocated by the client, by <olink targetdoc='libX11' targetptr='XInternAtom'><function>XInternAtom</function></olink>.
 </para>
 
 <para>

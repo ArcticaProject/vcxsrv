@@ -374,11 +374,9 @@ synchronization problem between the IM library and the IM Server.
 Using this method, the IM library forwards all KeyPress and KeyRelease
 events to the IM Server (as required by the Event Flow Control model
 described in
-<link linkend="event_flow_control">
-<xref linkend="event_flow_control"></xref></link>)
+<xref linkend='Event_Flow_Control' xrefstyle='select: title'/>)
 and synchronizes with the IM Server (as described in
-<link linkend="filtering_events">
-<xref linkend="filtering_events"></xref></link>).
+<xref linkend='Filtering_Events' xrefstyle='select: title'/>).
 
 </para>
 </sect3>
@@ -405,8 +403,7 @@ client, and these problems could possibly cause the loss or duplication
 of key events.  For this reason, the BackEnd method is the core method
 supported, and the FrontEnd method is made available as an extension for
 performance purposes. (Refer to
-<link linkend="common_extensions">
-<xref linkend="common_extensions"></xref></link>
+<xref linkend="common_extensions" xrefstyle='select: title'/>
 for more information.)
 </para>
 
@@ -426,7 +423,7 @@ Fig.1 The Flow of Events
 </sect3>
 </sect2>
 
-<sect2 id="event_flow_control">
+<sect2 id='Event_Flow_Control'>
 <title>Event Flow Control</title>
 <!-- .XS -->
 <!-- (SN Event Flow Control -->
@@ -466,8 +463,7 @@ message in order to switch the event flow in the Dynamic Event Flow.
 <para>
 <!-- .LP -->
 The protocol for this process is described in
-<link linkend="event_flow_control_2">
-<xref linkend="event_flow_control_2"></xref></link>.
+<xref linkend='Event_Flow_Control_2' xrefstyle='select: title'/>.
 </para>
 </sect2>
 </sect1>
@@ -511,8 +507,7 @@ The address information retrievable from the
 <function>TRANSPORT</function>
 target is a transport-specific name.
 The preregistered formats for transport-specific names are listed in
-<link linkend="transport_list">
-<xref linkend="transport_list"></xref></link>.
+<xref linkend="transport_list" xrefstyle='select: title'/>.
 Additional transport-specific names may be registered with X Consortium.
 </para>
 
@@ -1431,7 +1426,7 @@ XIM_CLOSE_REPLY (IM Server -&gt; IM library)
 
 </sect2>
 
-<sect2 id="event_flow_control_2">
+<sect2 id='Event_Flow_Control_2'>
 <title>Event Flow Control</title>
 <!-- .XS -->
 <!-- (SN Event Flow Control -->
@@ -1933,7 +1928,7 @@ is an asynchronous request.
 
 </sect2>
 
-<sect2 id="filtering_events">
+<sect2 id='Filtering_Events'>
 <title>Filtering Events</title>
 <para>
 Event filtering is mainly provided for BackEnd method to allow input method
@@ -3534,7 +3529,7 @@ The arguments of the XChangeProperty are as follows:
 
 <para>
 The read/write property ATOM allocates the following strings by
-<function>XInternAtom</function>.
+<olink targetdoc='libX11' targetptr='XInternAtom'><function>XInternAtom</function></olink>.
 </para>
 
 <para>
@@ -3844,7 +3839,7 @@ The arguments of the XChangeProperty are as follows:
 
 <para>
 (*1)  The read/write property ATOM allocates some strings, which are not
-allocated by the client, by <function>XInternAtom</function>.
+allocated by the client, by <olink targetdoc='libX11' targetptr='XInternAtom'><function>XInternAtom</function></olink>.
 </para>
 
 <para>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="resource_manager_functions">
+<chapter id='Resource_Manager_Functions'>
 <title>Resource Manager Functions</title>
 <!-- .sp 2 -->
 <!-- .nr H1 15 -->
@@ -406,7 +406,7 @@ typedef XrmQuarkList XrmClassList;
 <!-- .eM -->
 <!-- .sp -->
 To convert a string to a quark, use
-<function>XrmStringToQuark</function>
+<xref linkend='XrmStringToQuark' xrefstyle='select: title'/>
 or
 <function>XrmPermStringToQuark</function>.
 </para>
@@ -419,7 +419,7 @@ or
 <indexterm significance="preferred"><primary>XrmStringToQuark</primary></indexterm>
 <indexterm significance="preferred"><primary>XrmPermStringToQuark</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmstringtoquark'>
+<funcsynopsis id='XrmStringToQuark'>
 <funcprototype>
   <funcdef>XrmQuark <function>XrmStringToQuark</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
@@ -446,20 +446,20 @@ These functions can be used to convert from string to quark representation.
 If the string is not in the Host Portable Character Encoding,
 the conversion is implementation-dependent.
 The string argument to
-<function>XrmStringToQuark</function>
+<xref linkend='XrmStringToQuark' xrefstyle='select: title'/>
 need not be permanently allocated storage.
 <function>XrmPermStringToQuark</function>
 is just like
-<function>XrmStringToQuark</function>,
+<xref linkend='XrmStringToQuark' xrefstyle='select: title'/>,
 except that Xlib is permitted to assume the string argument is permanently
 allocated,
 and, hence, that it can be used as the value to be returned by
-<function>XrmQuarkToString</function>.
+<xref linkend='XrmQuarkToString' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 For any given quark, if
-<function>XrmStringToQuark</function>
+<xref linkend='XrmStringToQuark' xrefstyle='select: title'/>
 returns a non-NULL value,
 all future calls will return the same value (identical address).
 </para>
@@ -467,7 +467,7 @@ all future calls will return the same value (identical address).
 <!-- .LP -->
 <!-- .sp -->
 To convert a quark to a string, use 
-<function>XrmQuarkToString</function>.
+<xref linkend='XrmQuarkToString' xrefstyle='select: title'/>.
 </para>
 
 <literallayout class="monospaced">
@@ -477,7 +477,7 @@ To convert a quark to a string, use
 </literallayout>
 <indexterm significance="preferred"><primary>XrmQuarkToString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmquarktostring'>
+<funcsynopsis id='XrmQuarkToString'>
 <funcprototype>
   <funcdef>char *<function>XrmQuarkToString</function></funcdef>
   <paramdef>XrmQuark<parameter> quark</parameter></paramdef>
@@ -503,10 +503,10 @@ The string pointed to by the return value must not be modified or freed.
 The returned string is byte-for-byte equal to the original
 string passed to one of the string-to-quark routines.
 If no string exists for that quark,
-<function>XrmQuarkToString</function>
+<xref linkend='XrmQuarkToString' xrefstyle='select: title'/>
 returns NULL.
 For any given quark, if
-<function>XrmQuarkToString</function>
+<xref linkend='XrmQuarkToString' xrefstyle='select: title'/>
 returns a non-NULL value,
 all future calls will return the same value (identical address).
 </para>
@@ -514,7 +514,7 @@ all future calls will return the same value (identical address).
 <!-- .LP -->
 <!-- .sp -->
 To convert a string with one or more components to a quark list, use
-<function>XrmStringToQuarkList</function>.
+<xref linkend='XrmStringToQuarkList' xrefstyle='select: title'/>.
 </para>
 
 <literallayout class="monospaced">
@@ -524,7 +524,7 @@ To convert a string with one or more components to a quark list, use
 
 <indexterm significance="preferred"><primary>XrmStringToQuarkList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmstringtoquarklist'>
+<funcsynopsis id='XrmStringToQuarkList'>
 <funcprototype>
   <funcdef>void <function>XrmStringToQuarkList</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
@@ -552,7 +552,7 @@ Specifies the string for which a quark(Ql is to be allocated.
       <para>
 Returns the list of quarks.
 The caller must allocate sufficient space for the quarks list before calling 
-<function>XrmStringToQuarkList</function>.
+<xref linkend='XrmStringToQuarkList' xrefstyle='select: title'/>.
     </para>
   </listitem>
   </varlistentry>
@@ -562,7 +562,7 @@ The caller must allocate sufficient space for the quarks list before calling
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmStringToQuarkList</function>
+<xref linkend='XrmStringToQuarkList' xrefstyle='select: title'/>
 function converts the null-terminated string (generally a fully qualified name)
 to a list of quarks.
 Note that the string must be in the valid ResourceName format 
@@ -595,11 +595,11 @@ indicates that an asterisk separates the components.
 <!-- .sp -->
 To convert a string with one or more components to a binding list
 and a quark list, use
-<function>XrmStringToBindingQuarkList</function>.
+<xref linkend='XrmStringToBindingQuarkList' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmStringToBindingQuarkList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmstringtobindingquarklist'>
+<funcsynopsis id='XrmStringToBindingQuarkList'>
 <funcprototype>
   <funcdef><function>XrmStringToBindingQuarkList</function></funcdef>
   <paramdef>char<parameter> *string</parameter></paramdef>
@@ -628,7 +628,7 @@ Specifies the string for which a quark(Ql is to be allocated.
       <para>
 Returns the binding list.
 The caller must allocate sufficient space for the binding list before calling 
-<function>XrmStringToBindingQuarkList</function>.
+<xref linkend='XrmStringToBindingQuarkList' xrefstyle='select: title'/>.
       </para>
     </listitem>
   </varlistentry>
@@ -640,7 +640,7 @@ The caller must allocate sufficient space for the binding list before calling
       <para>
 Returns the list of quarks.
 The caller must allocate sufficient space for the quarks list before calling 
-<function>XrmStringToBindingQuarkList</function>.
+<xref linkend='XrmStringToBindingQuarkList' xrefstyle='select: title'/>.
     </para>
   </listitem>
   </varlistentry>
@@ -706,10 +706,10 @@ typedef struct {
 <!-- .eM -->
 <!-- .sp -->
 To initialize the resource manager, use
-<function>XrmInitialize</function>.
+<xref linkend='XrmInitialize' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XrmInitialize</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrminitialize'>
+<funcsynopsis id='XrmInitialize'>
 <funcprototype>
   <funcdef>void <function>XrmInitialize</function></funcdef>
   <paramdef>void<parameter> XrmInitialize(\|)</parameter></paramdef>
@@ -721,11 +721,11 @@ To initialize the resource manager, use
 <!-- .LP -->
 <!-- .eM -->
 To retrieve a database from disk, use
-<function>XrmGetFileDatabase</function>.
+<xref linkend='XrmGetFileDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmGetFileDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmgetfiledatabase'>
+<funcsynopsis id='XrmGetFileDatabase'>
 <funcprototype>
   <funcdef>XrmDatabase <function>XrmGetFileDatabase</function></funcdef>
   <paramdef>char<parameter> *filename</parameter></paramdef>
@@ -748,7 +748,7 @@ Specifies the resource database file name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmGetFileDatabase</function>
+<xref linkend='XrmGetFileDatabase' xrefstyle='select: title'/>
 function opens the specified file,
 creates a new resource database, and loads it with the specifications
 read in from the specified file.
@@ -759,18 +759,18 @@ with incorrect syntax is implementation-dependent.
 The file is parsed in the current locale, 
 and the database is created in the current locale.
 If it cannot open the specified file,
-<function>XrmGetFileDatabase</function>
+<xref linkend='XrmGetFileDatabase' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To store a copy of a database to disk, use
-<function>XrmPutFileDatabase</function>.
+<xref linkend='XrmPutFileDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmPutFileDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmputfiledatabase'>
+<funcsynopsis id='XrmPutFileDatabase'>
 <funcprototype>
   <funcdef>void <function>XrmPutFileDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -804,7 +804,7 @@ Specifies the file name for the stored database.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmPutFileDatabase</function>
+<xref linkend='XrmPutFileDatabase' xrefstyle='select: title'/>
 function stores a copy of the specified database in the specified file.
 Text is written to the file as a sequence of entries in valid
 ResourceLine format
@@ -820,11 +820,11 @@ Entries with representation types other than ``String'' are ignored.
 <!-- .LP -->
 <!-- .sp -->
 To obtain a pointer to the screen-independent resources of a display, use
-<function>XResourceManagerString</function>.
+<xref linkend='XResourceManagerString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XResourceManagerString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xresourcemanagerstring'>
+<funcsynopsis id='XResourceManagerString'>
 <funcprototype>
   <funcdef>char *<function>XResourceManagerString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -847,28 +847,28 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XResourceManagerString</function>
+<xref linkend='XResourceManagerString' xrefstyle='select: title'/>
 function returns the RESOURCE_MANAGER property from the server's root
 window of screen zero, which was returned when the connection was opened using
-<function>XOpenDisplay</function>.
+<xref linkend='XOpenDisplay' xrefstyle='select: title'/>.
 The property is converted from type STRING to the current locale.
 The conversion is identical to that produced by 
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 for a single element STRING property.
 The returned string is owned by Xlib and should not be freed by the client.
 The property value must be in a format that is acceptable to
-<function>XrmGetStringDatabase</function>.
+<xref linkend='XrmGetStringDatabase' xrefstyle='select: title'/>.
 If no property exists, NULL is returned.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain a pointer to the screen-specific resources of a screen, use
-<function>XScreenResourceString</function>.
+<xref linkend='XScreenResourceString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XScreenResourceString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xscreenresourcestring'>
+<funcsynopsis id='XScreenResourceString'>
 <funcprototype>
   <funcdef>char *<function>XScreenResourceString</function></funcdef>
   <paramdef>Screen<parameter> *screen</parameter></paramdef>
@@ -891,28 +891,28 @@ Specifies the screen.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XScreenResourceString</function>
+<xref linkend='XScreenResourceString' xrefstyle='select: title'/>
 function returns the SCREEN_RESOURCES property from the root window of the
 specified screen.
 The property is converted from type STRING to the current locale.
 The conversion is identical to that produced by 
-<function>XmbTextPropertyToTextList</function>
+<xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/>
 for a single element STRING property.
 The property value must be in a format that is acceptable to
-<function>XrmGetStringDatabase</function>.
+<xref linkend='XrmGetStringDatabase' xrefstyle='select: title'/>.
 If no property exists, NULL is returned.
 The caller is responsible for freeing the returned string by using
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To create a database from a string, use
-<function>XrmGetStringDatabase</function>.
+<xref linkend='XrmGetStringDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmGetStringDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmgetstringdatabase'>
+<funcsynopsis id='XrmGetStringDatabase'>
 <funcprototype>
   <funcdef>XrmDatabase <function>XrmGetStringDatabase</function></funcdef>
   <paramdef>char<parameter> *data</parameter></paramdef>
@@ -935,12 +935,12 @@ Specifies the database contents using a string.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmGetStringDatabase</function>
+<xref linkend='XrmGetStringDatabase' xrefstyle='select: title'/>
 function creates a new database and stores the resources specified
 in the specified null-terminated string.
-<function>XrmGetStringDatabase</function>
+<xref linkend='XrmGetStringDatabase' xrefstyle='select: title'/>
 is similar to
-<function>XrmGetFileDatabase</function>
+<xref linkend='XrmGetFileDatabase' xrefstyle='select: title'/>
 except that it reads the information out of a string instead of out of a file.
 The string should contain a sequence of entries in valid ResourceLine
 format (see <link linkend="Resource_File_Syntax">section 15.1</link>)
@@ -954,11 +954,11 @@ and the database is created in the current locale.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the locale name of a database, use
-<function>XrmLocaleOfDatabase</function>.
+<xref linkend='XrmLocaleOfDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmLocaleOfDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmlocaleofdatabase'>
+<funcsynopsis id='XrmLocaleOfDatabase'>
 <funcprototype>
   <funcdef>char *<function>XrmLocaleOfDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -981,7 +981,7 @@ Specifies the resource database.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmLocaleOfDatabase</function>
+<xref linkend='XrmLocaleOfDatabase' xrefstyle='select: title'/>
 function returns the name of the locale bound to the specified
 database, as a null-terminated string.
 The returned locale name string is owned by Xlib and should not be
@@ -994,11 +994,11 @@ it will not be modified by Xlib.
 <!-- .LP -->
 <!-- .sp -->
 To destroy a resource database and free its allocated memory, use
-<function>XrmDestroyDatabase</function>.
+<xref linkend='XrmDestroyDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmDestroyDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmdestroydatabase'>
+<funcsynopsis id='XrmDestroyDatabase'>
 <funcprototype>
   <funcdef>void <function>XrmDestroyDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -1021,18 +1021,18 @@ Specifies the resource database.
 <!-- .LP -->
 <!-- .eM -->
 If database is NULL,
-<function>XrmDestroyDatabase</function>
+<xref linkend='XrmDestroyDatabase' xrefstyle='select: title'/>
 returns immediately.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To associate a resource database with a display, use
-<function>XrmSetDatabase</function>.
+<xref linkend='XrmSetDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmSetDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmsetdatabase'>
+<funcsynopsis id='XrmSetDatabase'>
 <funcprototype>
   <funcdef>void <function>XrmSetDatabase</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1066,7 +1066,7 @@ Specifies the resource database.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmSetDatabase</function>
+<xref linkend='XrmSetDatabase' xrefstyle='select: title'/>
 function associates the specified resource database (or NULL)
 with the specified display.
 The database previously associated with the display (if any) is not destroyed.
@@ -1077,11 +1077,11 @@ once it is constructed.
 <!-- .LP -->
 <!-- .sp -->
 To get the resource database associated with a display, use
-<function>XrmGetDatabase</function>.
+<xref linkend='XrmGetDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmGetDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmgetdatabase'>
+<funcsynopsis id='XrmGetDatabase'>
 <funcprototype>
   <funcdef>XrmDatabase <function>XrmGetDatabase</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1104,7 +1104,7 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmGetDatabase</function>
+<xref linkend='XrmGetDatabase' xrefstyle='select: title'/>
 function returns the database associated with the specified display.
 It returns NULL if a database has not yet been set.
 </para>
@@ -1117,11 +1117,11 @@ It returns NULL if a database has not yet been set.
 <para>
 <!-- .LP -->
 To merge the contents of a resource file into a database, use
-<function>XrmCombineFileDatabase</function>.
+<xref linkend='XrmCombineFileDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmCombineFileDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmcombinefiledatabase'>
+<funcsynopsis id='XrmCombineFileDatabase'>
 <funcprototype>
   <funcdef>Status <function>XrmCombineFileDatabase</function></funcdef>
   <paramdef>char<parameter> *filename</parameter></paramdef>
@@ -1167,7 +1167,7 @@ Specifies whether source entries override target ones.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XrmCombineFileDatabase</function>
+<xref linkend='XrmCombineFileDatabase' xrefstyle='select: title'/>
 function merges the contents of a resource file into a database.
 If the same specifier is used for an entry in both the file and
 the database,
@@ -1180,7 +1180,7 @@ If the file cannot be read,
 a zero status is returned;
 otherwise, a nonzero status is returned.
 If target_db contains NULL,
-<function>XrmCombineFileDatabase</function>
+<xref linkend='XrmCombineFileDatabase' xrefstyle='select: title'/>
 creates and returns a new database to it.
 Otherwise, the database pointed to by target_db is not destroyed by the merge.
 The database entries are merged without changing values or types,
@@ -1191,11 +1191,11 @@ The locale of the target database is not modified.
 <!-- .LP -->
 <!-- .sp -->
 To merge the contents of one database into another database, use
-<function>XrmCombineDatabase</function>.
+<xref linkend='XrmCombineDatabase' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmCombineDatabase</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmcombinedatabase'>
+<funcsynopsis id='XrmCombineDatabase'>
 <funcprototype>
   <funcdef>void <function>XrmCombineDatabase</function></funcdef>
   <paramdef>XrmDatabasesource_db,<parameter> *target_db</parameter></paramdef>
@@ -1240,7 +1240,7 @@ Specifies whether source entries override target ones.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XrmCombineDatabase</function>
+<xref linkend='XrmCombineDatabase' xrefstyle='select: title'/>
 function merges the contents of one database into another.
 If the same specifier is used for an entry in both databases,
 the entry in the source_db will replace the entry in the target_db
@@ -1248,7 +1248,7 @@ if override is
 <symbol>True</symbol>;
 otherwise, the entry in source_db is discarded.
 If target_db contains NULL,
-<function>XrmCombineDatabase</function>
+<xref linkend='XrmCombineDatabase' xrefstyle='select: title'/>
 simply stores source_db in it.
 Otherwise, source_db is destroyed by the merge, but the database pointed
 to by target_db is not destroyed.
@@ -1261,11 +1261,11 @@ The locale of the target database is not modified.
 <!-- .sp -->
 To merge the contents of one database into another database with override
 semantics, use
-<function>XrmMergeDatabases</function>.
+<xref linkend='XrmMergeDatabases' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmMergeDatabases</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmmergedatabases'>
+<funcsynopsis id='XrmMergeDatabases'>
 <funcprototype>
   <funcdef>void <function>XrmMergeDatabases</function></funcdef>
   <paramdef>XrmDatabasesource_db,<parameter> *target_db</parameter></paramdef>
@@ -1299,9 +1299,9 @@ database is to be merged.
 <!-- .LP -->
 <!-- .eM  -->
 Calling the
-<function>XrmMergeDatabases</function>
+<xref linkend='XrmMergeDatabases' xrefstyle='select: title'/>
 function is equivalent to calling the
-<function>XrmCombineDatabase</function>
+<xref linkend='XrmCombineDatabase' xrefstyle='select: title'/>
 function with an override argument of
 <symbol>True</symbol>.
 </para>
@@ -1314,14 +1314,14 @@ function with an override argument of
 <para>
 <!-- .LP -->
 To retrieve a resource from a resource database, use
-<function>XrmGetResource</function>,
-<function>XrmQGetResource</function>,
+<xref linkend='XrmGetResource' xrefstyle='select: title'/>,
+<xref linkend='XrmQGetResource' xrefstyle='select: title'/>,
 or
-<function>XrmQGetSearchResource</function>.
+<xref linkend='XrmQGetSearchResource' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmGetResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmgetresource'>
+<funcsynopsis id='XrmGetResource'>
 <funcprototype>
   <funcdef>Bool <function>XrmGetResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -1386,7 +1386,7 @@ Returns the value in the database.
 </variablelist>
 <indexterm significance="preferred"><primary>XrmQGetResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmqgetresource'>
+<funcsynopsis id='XrmQGetResource'>
 <funcprototype>
   <funcdef>Bool <function>XrmQGetResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -1453,9 +1453,9 @@ Returns the value in the database.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XrmGetResource</function>
+<xref linkend='XrmGetResource' xrefstyle='select: title'/>
 and 
-<function>XrmQGetResource</function>
+<xref linkend='XrmQGetResource' xrefstyle='select: title'/>
 functions retrieve a resource from the specified database.
 Both take a fully qualified name/class pair, a destination
 resource representation, and the address of a value
@@ -1466,17 +1466,17 @@ therefore, you must not modify the data.
 <para>
 <!-- .LP -->
 The database only frees or overwrites entries on
-<function>XrmPutResource</function>,
-<function>XrmQPutResource</function>,
+<xref linkend='XrmPutResource' xrefstyle='select: title'/>,
+<xref linkend='XrmQPutResource' xrefstyle='select: title'/>,
 or 
-<function>XrmMergeDatabases</function>.
+<xref linkend='XrmMergeDatabases' xrefstyle='select: title'/>.
 A client that is not storing new values into the database or
 is not merging the database should be safe using the address passed 
 back at any time until it exits.
 If a resource was found, both
-<function>XrmGetResource</function>
+<xref linkend='XrmGetResource' xrefstyle='select: title'/>
 and
-<function>XrmQGetResource</function>
+<xref linkend='XrmQGetResource' xrefstyle='select: title'/>
 return 
 <symbol>True</symbol>;
 otherwise, they return 
@@ -1491,7 +1491,7 @@ The X toolkit access pattern for a resource database is quite stylized.
 A series of from 1 to 20 probes is made with only the 
 last name/class differing in each probe.
 The 
-<function>XrmGetResource</function>
+<xref linkend='XrmGetResource' xrefstyle='select: title'/>
 function is at worst a
 2<superscript><emphasis remap='I'>n</emphasis></superscript> algorithm,
 where <emphasis remap='I'>n</emphasis> is the length of the name/class list.
@@ -1506,7 +1506,7 @@ To obtain a list of database levels, use
 </para>
 <indexterm significance="preferred"><primary>XrmQGetSearchList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmqgetsearchlist'>
+<funcsynopsis id='XrmQGetSearchResource'>
 <funcprototype>
   <funcdef>Bool <function>XrmQGetSearchResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -1580,7 +1580,7 @@ function takes a list of names and classes
 and returns a list of database levels where a match might occur.
 The returned list is in best-to-worst order and
 uses the same algorithm as 
-<function>XrmGetResource</function>
+<xref linkend='XrmGetResource' xrefstyle='select: title'/>
 for determining precedence.
 If list_return was large enough for the search list,
 <function>XrmQGetSearchList</function>
@@ -1611,11 +1611,11 @@ only the common prefix should be specified in the name and class list to
 <!-- .LP -->
 <!-- .sp -->
 To search resource database levels for a given resource, use
-<function>XrmQGetSearchResource</function>.
+<xref linkend='XrmQGetSearchResource' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmQGetSearchResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmqgetsearchresource'>
+<funcsynopsis id='XrmQGetSearchResource_2'>
 <funcprototype>
   <funcdef>Bool <function>XrmQGetSearchResource</function></funcdef>
   <paramdef>XrmSearchList<parameter> list</parameter></paramdef>
@@ -1683,11 +1683,11 @@ Returns the value in the database.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmQGetSearchResource</function>
+<xref linkend='XrmQGetSearchResource' xrefstyle='select: title'/>
 function searches the specified database levels for the resource 
 that is fully identified by the specified name and class.
 The search stops with the first match.
-<function>XrmQGetSearchResource</function>
+<xref linkend='XrmQGetSearchResource' xrefstyle='select: title'/>
 returns 
 <symbol>True</symbol>
 if the resource was found;
@@ -1700,11 +1700,11 @@ A call to
 <function>XrmQGetSearchList</function>
 with a name and class list containing all but the last component 
 of a resource name followed by a call to 
-<function>XrmQGetSearchResource</function>
+<xref linkend='XrmQGetSearchResource' xrefstyle='select: title'/>
 with the last component name and class returns the same database entry as 
-<function>XrmGetResource</function>
+<xref linkend='XrmGetResource' xrefstyle='select: title'/>
 and 
-<function>XrmQGetResource</function>
+<xref linkend='XrmQGetResource' xrefstyle='select: title'/>
 with the fully qualified name and class.
 </para>
 </sect1>
@@ -1716,9 +1716,9 @@ with the fully qualified name and class.
 <para>
 <!-- .LP -->
 To store resources into the database, use
-<function>XrmPutResource</function>
+<xref linkend='XrmPutResource' xrefstyle='select: title'/>
 or
-<function>XrmQPutResource</function>.
+<xref linkend='XrmQPutResource' xrefstyle='select: title'/>.
 Both functions take a partial resource specification, a
 representation type, and a value.
 This value is copied into the specified database.
@@ -1727,7 +1727,7 @@ This value is copied into the specified database.
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XrmPutResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmputresource'>
+<funcsynopsis id='XrmPutResource'>
 <funcprototype>
   <funcdef>void <function>XrmPutResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
@@ -1783,11 +1783,11 @@ Specifies the value of the resource, which is specified as a string.
 <!-- .LP -->
 <!-- .eM -->
 If database contains NULL,
-<function>XrmPutResource</function>
+<xref linkend='XrmPutResource' xrefstyle='select: title'/>
 creates a new database and returns a pointer to it.
-<function>XrmPutResource</function>
+<xref linkend='XrmPutResource' xrefstyle='select: title'/>
 is a convenience function that calls
-<function>XrmStringToBindingQuarkList</function>
+<xref linkend='XrmStringToBindingQuarkList' xrefstyle='select: title'/>
 followed by:
 </para>
 <para>
@@ -1803,7 +1803,7 @@ The value is stored in the database without modification.
 <!-- .sp -->
 <indexterm significance="preferred"><primary>XrmQPutResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmqputresource'>
+<funcsynopsis id='XrmQPutResource'>
 <funcprototype>
   <funcdef>void <function>XrmQPutResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
@@ -1870,7 +1870,7 @@ Specifies the value of the resource, which is specified as a string.
 <!-- .LP -->
 <!-- .eM -->
 If database contains NULL,
-<function>XrmQPutResource</function>
+<xref linkend='XrmQPutResource' xrefstyle='select: title'/>
 creates a new database and returns a pointer to it.
 If a resource entry with the identical bindings and quarks already
 exists in the database, the previous type and value are replaced by the new
@@ -1881,11 +1881,11 @@ The value is stored in the database without modification.
 <!-- .LP -->
 <!-- .sp -->
 To add a resource that is specified as a string, use
-<function>XrmPutStringResource</function>.
+<xref linkend='XrmPutStringResource' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmPutStringResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmputstringresource'>
+<funcsynopsis id='XrmPutStringResource'>
 <funcprototype>
   <funcdef>void <function>XrmPutStringResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
@@ -1930,15 +1930,15 @@ Specifies the value of the resource, which is specified as a string.
 <!-- .LP -->
 <!-- .eM -->
 If database contains NULL,
-<function>XrmPutStringResource</function>
+<xref linkend='XrmPutStringResource' xrefstyle='select: title'/>
 creates a new database and returns a pointer to it.
-<function>XrmPutStringResource</function>
+<xref linkend='XrmPutStringResource' xrefstyle='select: title'/>
 adds a resource with the specified value to the specified database.
-<function>XrmPutStringResource</function>
+<xref linkend='XrmPutStringResource' xrefstyle='select: title'/>
 is a convenience function that first calls
-<function>XrmStringToBindingQuarkList</function>
+<xref linkend='XrmStringToBindingQuarkList' xrefstyle='select: title'/>
 on the specifier and then calls
-<function>XrmQPutResource</function>,
+<xref linkend='XrmQPutResource' xrefstyle='select: title'/>,
 using a ``String'' representation type.
 If the specifier is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
@@ -1948,11 +1948,11 @@ The value is stored in the database without modification.
 <!-- .LP -->
 <!-- .sp -->
 To add a string resource using quarks as a specification, use
-<function>XrmQPutStringResource</function>.
+<xref linkend='XrmQPutStringResource' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmQPutStringResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmqputstringresource'>
+<funcsynopsis id='XrmQPutStringResource'>
 <funcprototype>
   <funcdef>void <function>XrmQPutStringResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
@@ -2008,16 +2008,16 @@ Specifies the value of the resource, which is specified as a string.
 <!-- .LP -->
 <!-- .eM -->
 If database contains NULL,
-<function>XrmQPutStringResource</function>
+<xref linkend='XrmQPutStringResource' xrefstyle='select: title'/>
 creates a new database and returns a pointer to it.
-<function>XrmQPutStringResource</function>
+<xref linkend='XrmQPutStringResource' xrefstyle='select: title'/>
 is a convenience routine that constructs an
 <type>XrmValue</type>
 for the value string (by calling
 <function>strlen</function>
 to compute the size) and
 then calls
-<function>XrmQPutResource</function>,
+<xref linkend='XrmQPutResource' xrefstyle='select: title'/>,
 using a ``String'' representation type.
 The value is stored in the database without modification.
 </para>
@@ -2026,11 +2026,11 @@ The value is stored in the database without modification.
 <!-- .sp -->
 To add a single resource entry that is specified as a string that contains
 both a name and a value, use
-<function>XrmPutLineResource</function>.
+<xref linkend='XrmPutLineResource' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmPutLineResource</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmputlineresource'>
+<funcsynopsis id='XrmPutLineResource'>
 <funcprototype>
   <funcdef>void <function>XrmPutLineResource</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
@@ -2064,9 +2064,9 @@ Specifies the resource name and value pair as a single string.
 <!-- .LP -->
 <!-- .eM -->
 If database contains NULL,
-<function>XrmPutLineResource</function>
+<xref linkend='XrmPutLineResource' xrefstyle='select: title'/>
 creates a new database and returns a pointer to it.
-<function>XrmPutLineResource</function>
+<xref linkend='XrmPutLineResource' xrefstyle='select: title'/>
 adds a single resource entry to the specified database.
 The line should be in valid ResourceLine format
 (see <link linkend="Resource_File_Syntax">section 15.1</link>)
@@ -2089,7 +2089,7 @@ Note that comment lines are not stored.
 <para>
 <!-- .LP -->
 To enumerate the entries of a database, use
-<function>XrmEnumerateDatabase</function>.
+<xref linkend='XrmEnumerateDatabase' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XrmEnumerateDatabase</primary></indexterm>
 <!-- .sM -->
 </para>
@@ -2099,7 +2099,7 @@ To enumerate the entries of a database, use
 #define       XrmEnumOneLevel        0
 </literallayout>
 
-<funcsynopsis id='xrmenumeratedatabase'>
+<funcsynopsis id='XrmEnumerateDatabase'>
 <funcprototype>
   <funcdef>Bool <function>XrmEnumerateDatabase</function></funcdef>
   <paramdef>XrmDatabase<parameter> database</parameter></paramdef>
@@ -2178,7 +2178,7 @@ Specifies the user-supplied argument that will be passed to the procedure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmEnumerateDatabase</function>
+<xref linkend='XrmEnumerateDatabase' xrefstyle='select: title'/>
 function calls the specified procedure for each resource in the database
 that would match some completion of the given name/class resource prefix.
 The order in which resources are found is implementation-dependent.
@@ -2241,7 +2241,7 @@ Xlib function using the same database is not defined.
 <para>
 <!-- .LP -->
 The
-<function>XrmParseCommand</function>
+<xref linkend='XrmParseCommand' xrefstyle='select: title'/>
 function can be used to parse the command line arguments to a program
 and modify a resource database with selected entries from the command line.
 </para>
@@ -2300,11 +2300,11 @@ typedef struct {
 <!-- .eM -->
 <!-- .sp -->
 To load a resource database from a C command line, use
-<function>XrmParseCommand</function>.
+<xref linkend='XrmParseCommand' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XrmParseCommand</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xrmparsecommand'>
+<funcsynopsis id='XrmParseCommand'>
 <funcprototype>
   <funcdef>void <function>XrmParseCommand</function></funcdef>
   <paramdef>XrmDatabase<parameter> *database</parameter></paramdef>
@@ -2383,12 +2383,12 @@ and returns the remaining arguments.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XrmParseCommand</function>
+<xref linkend='XrmParseCommand' xrefstyle='select: title'/>
 function parses an (argc, argv) pair according to the specified option table,
 loads recognized options into the specified database with type ``String,''
 and modifies the (argc, argv) pair to remove all recognized options.
 If database contains NULL,
-<function>XrmParseCommand</function>
+<xref linkend='XrmParseCommand' xrefstyle='select: title'/>
 creates a new database and returns a pointer to it.
 Otherwise, entries are added to the database specified.
 If a database is created, it is created in the current locale.
