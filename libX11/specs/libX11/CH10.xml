@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="events">
+<chapter id='Events'>
 <title>Events</title>
 
 <para>
@@ -25,7 +25,7 @@ This chapter discusses the following topics associated with events:
 
 <para>
 Functions for handling events are dealt with in
-<link linkend="event_handling_functions">the next chapter</link>.
+<link linkend='Event_Handling_Functions'>the next chapter</link>.
 </para>
 
 <sect1 id="Event_Types">
@@ -341,9 +341,9 @@ Unless the client suppresses them by setting graphics-exposures in the GC to
 and 
 <symbol>NoExpose</symbol>
 are reported by default as a result of
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 and
-<function>XCopyArea</function>.
+<xref linkend='XCopyArea' xrefstyle='select: title'/>.
 <symbol>SelectionClear</symbol>,
 <symbol>SelectionRequest</symbol>,
 <symbol>SelectionNotify</symbol>,
@@ -887,7 +887,7 @@ If no matching passive grab on the button exists,
 the X server automatically starts an active grab for the client receiving
 the event and sets the last-pointer-grab time to the current server time.
 The effect is essentially equivalent to an
-<function>XGrabButton</function>
+<xref linkend='XGrabButton' xrefstyle='select: title'/>
 with these client passed arguments:
 </para>
 <informaltable>
@@ -943,9 +943,9 @@ with these client passed arguments:
 The active grab is automatically terminated when 
 the logical state of the pointer has all buttons released.
 Clients can modify the active grab by calling
-<function>XUngrabPointer</function>
+<xref linkend='XUngrabPointer' xrefstyle='select: title'/>
 and
-<function>XChangeActivePointerGrab</function>.
+<xref linkend='XChangeActivePointerGrab' xrefstyle='select: title'/>.
 </para>
 </sect2>
 
@@ -972,7 +972,7 @@ and the pointer events
 and
 <symbol>MotionNotify</symbol>.
 For information about the keyboard event-handling utilities,
-see <link linkend="event_handling_functions">chapter 11</link>.
+see <link linkend='Event_Handling_Functions'>chapter 11</link>.
 </para>
 <para>
 <!-- .LP -->
@@ -1092,9 +1092,9 @@ structure set to
 to the client for the event window, 
 until either the key or button state changes,
 the pointer leaves the event window, or the client calls
-<function>XQueryPointer</function>
+<xref linkend='XQueryPointer' xrefstyle='select: title'/>
 or
-<function>XGetMotionEvents</function>.
+<xref linkend='XGetMotionEvents' xrefstyle='select: title'/>.
 The server still may send
 <symbol>MotionNotify</symbol>
 events without is_hint set to
@@ -1396,7 +1396,7 @@ follows:
 
 </sect2>
 </sect1>
-<sect1 id="Window_Entry_Exit_Events">
+<sect1 id='Window_EntryExit_Events'>
 <title>Window Entry/Exit Events</title>
 <!-- .XS -->
 <!-- (SN Window Entry/Exit Events -->
@@ -1452,9 +1452,9 @@ An
 or
 <symbol>LeaveNotify</symbol>
 event also can be generated when some client application calls
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 and
-<function>XUngrabPointer</function>.
+<xref linkend='XUngrabPointer' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -1620,7 +1620,7 @@ The detail member is set to indicate the notify detail and can be
 or
 <symbol>NotifyNonlinearVirtual</symbol>.
 </para>
-<sect2 id="Normal_Entry_Exit_Events">
+<sect2 id='Normal_EntryExit_Events'>
 <title>Normal Entry/Exit Events</title>
 <!-- .XS -->
 <!-- (SN Normal Entry/Exit Events -->
@@ -1827,7 +1827,7 @@ structure set to
   </listitem>
 </itemizedlist>
 </sect2>
-<sect2 id="Grab_and_Ungrab_Entry_Exit_Events">
+<sect2 id='Grab_and_Ungrab_EntryExit_Events'>
 <title>Grab and Ungrab Entry/Exit Events</title>
 <!-- .XS -->
 <!-- (SN Grab and Ungrab Entry/Exit Events -->
@@ -1854,7 +1854,7 @@ or
 structures whose mode member is set to 
 <symbol>NotifyUngrab</symbol>
 (see
-<function>XGrabPointer</function>).
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>).
 </para>
 <itemizedlist>
   <listitem>
@@ -1875,7 +1875,7 @@ It generates
 <symbol>EnterNotify</symbol>
 and
 <symbol>LeaveNotify</symbol>
-events (see <link linkend="Normal_Entry_Exit_Events">section 10.6.1</link>)
+events (see <link linkend='Normal_EntryExit_Events'>section 10.6.1</link>)
 with the mode members of the 
 <type>XEnterWindowEvent</type>
 and
@@ -1907,7 +1907,7 @@ It generates
 <symbol>EnterNotify</symbol>
 and
 <symbol>LeaveNotify</symbol>
-events (see <link linkend="Normal_Entry_Exit_Events">section 10.6.1</link>)
+events (see <link linkend='Normal_EntryExit_Events'>section 10.6.1</link>)
 with the mode members of the
 <type>XEnterWindowEvent</type>
 and
@@ -2044,8 +2044,8 @@ the detail member is set to indicate the notify detail and can be
 or
 <symbol>NotifyDetailNone</symbol>.
 </para>
-<sect2 id="Normal_Focus_Events_and_Focus_Events_While_Grabbed_">
-<title>Normal Focus Events and Focus Events While Grabbed </title>
+<sect2 id='Normal_Focus_Events_and_Focus_Events_While_Grabbed'>
+<title>Normal Focus Events and Focus Events While Grabbed</title>
 <!-- .XS -->
 <!-- (SN Normal Focus Events and Focus Events While Grabbed  -->
 <!-- .XE -->
@@ -2560,7 +2560,7 @@ or
 structures whose mode member is set to 
 <symbol>NotifyUngrab</symbol>
 (see 
-<function>XGrabKeyboard</function>).
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>).
 </para>
 <itemizedlist>
   <listitem>
@@ -2814,9 +2814,9 @@ The X server can report
 <symbol>GraphicsExpose</symbol>
 events to clients wanting information about when a destination region could not
 be computed during certain graphics requests:
-<function>XCopyArea</function>
+<xref linkend='XCopyArea' xrefstyle='select: title'/>
 or
-<function>XCopyPlane</function>.
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>.
 The X server generates this event whenever a destination region could not be
 computed because of an obscured or out-of-bounds source region.
 In addition, the X server guarantees to report contiguously all of the regions exposed by
@@ -2850,9 +2850,9 @@ attribute of the graphics context to
 <symbol>True</symbol>.
 You also can set the graphics-expose attribute when creating a graphics
 context using
-<function>XCreateGC</function>
+<xref linkend='XCreateGC' xrefstyle='select: title'/>
 or by calling
-<function>XSetGraphicsExposures</function>.
+<xref linkend='XSetGraphicsExposures' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2910,12 +2910,12 @@ or
 If it is
 <symbol>X_CopyArea</symbol>,
 a call to
-<function>XCopyArea</function>
+<xref linkend='XCopyArea' xrefstyle='select: title'/>
 initiated the request.
 If it is
 <symbol>X_CopyPlane</symbol>,
 a call to
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 initiated the request.
 These constants are defined in 
 <filename class="headerfile">&lt;X11/Xproto.h&gt;</filename>.
@@ -2950,8 +2950,8 @@ events (and possibly more) are to follow for this window.
 </para>
 </sect2>
 </sect1>
-<sect1 id="Window_State_Change_Events_">
-<title>Window State Change Events </title>
+<sect1 id='Window_State_Change_Events'>
+<title>Window State Change Events</title>
 <!-- .XS -->
 <!-- (SN Window State Change Events -->
 <!-- .XE -->
@@ -3037,10 +3037,10 @@ events to clients wanting information about when a window changes
 its position in the stack.
 The X server generates this event type whenever a window is actually restacked 
 as a result of a client application calling
-<function>XCirculateSubwindows</function>,
-<function>XCirculateSubwindowsUp</function>,
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>,
+<xref linkend='XCirculateSubwindowsUp' xrefstyle='select: title'/>,
 or
-<function>XCirculateSubwindowsDown</function>.
+<xref linkend='XCirculateSubwindowsDown' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3120,47 +3120,47 @@ window requests made by a client application actually completes:
     <para>
 A window's size, position, border, and/or stacking order is reconfigured 
 by calling
-<function>XConfigureWindow</function>.
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>.
     </para>
   </listitem>
   <listitem>
     <para>
 The window's position in the stacking order is changed by calling
-<function>XLowerWindow</function>,
-<function>XRaiseWindow</function>,
+<xref linkend='XLowerWindow' xrefstyle='select: title'/>,
+<xref linkend='XRaiseWindow' xrefstyle='select: title'/>,
 or
-<function>XRestackWindows</function>.
+<xref linkend='XRestackWindows' xrefstyle='select: title'/>.
     </para>
   </listitem>
   <listitem>
     <para>
 A window is moved by calling
-<function>XMoveWindow</function>.
+<xref linkend='XMoveWindow' xrefstyle='select: title'/>.
     </para>
   </listitem>
   <listitem>
     <para>
 A window's size is changed by calling
-<function>XResizeWindow</function>.
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>.
     </para>
   </listitem>
   <listitem>
     <para>
 A window's size and location is changed by calling
-<function>XMoveResizeWindow</function>.
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>.
     </para>
   </listitem>
   <listitem>
     <para>
 A window is mapped and its position in the stacking order is changed
 by calling
-<function>XMapRaised</function>.
+<xref linkend='XMapRaised' xrefstyle='select: title'/>.
     </para>
   </listitem>
   <listitem>
     <para>
 A window's border width is changed by calling
-<function>XSetWindowBorderWidth</function>.
+<xref linkend='XSetWindowBorderWidth' xrefstyle='select: title'/>.
     </para>
   </listitem>
 </itemizedlist>
@@ -3256,9 +3256,9 @@ The X server can report
 events to clients wanting information about creation of windows.
 The X server generates this event whenever a client
 application creates a window by calling
-<function>XCreateWindow</function>
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>
 or
-<function>XCreateSimpleWindow</function>.
+<xref linkend='XCreateSimpleWindow' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3326,9 +3326,9 @@ The X server can report
 events to clients wanting information about which windows are destroyed.
 The X server generates this event whenever a client application destroys a 
 window by calling
-<function>XDestroyWindow</function>
+<xref linkend='XDestroyWindow' xrefstyle='select: title'/>
 or
-<function>XDestroySubwindows</function>.
+<xref linkend='XDestroySubwindows' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3400,10 +3400,10 @@ events to clients wanting information about when a window is moved because of a
 change in the size of its parent.
 The X server generates this event whenever a client
 application actually moves a child window as a result of resizing its parent by calling
-<function>XConfigureWindow</function>,
-<function>XMoveResizeWindow</function>,
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>,
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>,
 or
-<function>XResizeWindow</function>.
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3469,10 +3469,10 @@ The X server can report
 events to clients wanting information about which windows are mapped.
 The X server generates this event type whenever a client application changes the
 window's state from unmapped to mapped by calling
-<function>XMapWindow</function>,
-<function>XMapRaised</function>,
-<function>XMapSubwindows</function>,
-<function>XReparentWindow</function>,
+<xref linkend='XMapWindow' xrefstyle='select: title'/>,
+<xref linkend='XMapRaised' xrefstyle='select: title'/>,
+<xref linkend='XMapSubwindows' xrefstyle='select: title'/>,
+<xref linkend='XReparentWindow' xrefstyle='select: title'/>,
 or as a result of save-set processing.
 </para>
 <para>
@@ -3546,19 +3546,19 @@ successfully calls:
 <itemizedlist>
   <listitem>
     <para>
-<function>XSetModifierMapping</function>
+<xref linkend='XSetModifierMapping' xrefstyle='select: title'/>
 to indicate which KeyCodes are to be used as modifiers
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XChangeKeyboardMapping</function>
+<xref linkend='XChangeKeyboardMapping' xrefstyle='select: title'/>
 to change the keyboard mapping
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XSetPointerMapping</function>
+<xref linkend='XSetPointerMapping' xrefstyle='select: title'/>
 to set the pointer mapping
     </para>
   </listitem>
@@ -3616,7 +3616,7 @@ and count represents the number of keycodes altered.
 <!-- .LP -->
 To update the client application's knowledge of the keyboard,
 you should call
-<function>XRefreshKeyboardMapping</function>.
+<xref linkend='XRefreshKeyboardMapping' xrefstyle='select: title'/>.
 </para>
 </sect2>
 <sect2 id="ReparentNotify_Events">
@@ -3633,7 +3633,7 @@ The X server can report
 events to clients wanting information about changing a window's parent.
 The X server generates this event whenever a client
 application calls
-<function>XReparentWindow</function>
+<xref linkend='XReparentWindow' xrefstyle='select: title'/>
 and the window is actually reparented.
 </para>
 <para>
@@ -3936,10 +3936,10 @@ on a specified window.
 The X server generates this event type whenever a client initiates a circulate
 window request on a window and a subwindow actually needs to be restacked. 
 The client initiates a circulate window request on the window by calling
-<function>XCirculateSubwindows</function>,
-<function>XCirculateSubwindowsUp</function>,
+<xref linkend='XCirculateSubwindows' xrefstyle='select: title'/>,
+<xref linkend='XCirculateSubwindowsUp' xrefstyle='select: title'/>,
 or
-<function>XCirculateSubwindowsDown</function>.
+<xref linkend='XCirculateSubwindowsDown' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -3952,7 +3952,7 @@ Then, in the future,
 the circulate window request for the specified window is not executed,
 and thus, any subwindow's position in the stack is not changed.
 For example, suppose a client application calls
-<function>XCirculateSubwindowsUp</function>
+<xref linkend='XCirculateSubwindowsUp' xrefstyle='select: title'/>
 to raise a subwindow to the top of the stack.
 If you had selected
 <symbol>SubstructureRedirectMask</symbol>
@@ -4017,16 +4017,16 @@ The configure window request attempts to
 reconfigure a window's size, position, border, and stacking order.
 The X server generates this event whenever a different client initiates
 a configure window request on a window by calling
-<function>XConfigureWindow</function>,
-<function>XLowerWindow</function>,
-<function>XRaiseWindow</function>,
-<function>XMapRaised</function>,
-<function>XMoveResizeWindow</function>,
-<function>XMoveWindow</function>,
-<function>XResizeWindow</function>,
-<function>XRestackWindows</function>,
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>,
+<xref linkend='XLowerWindow' xrefstyle='select: title'/>,
+<xref linkend='XRaiseWindow' xrefstyle='select: title'/>,
+<xref linkend='XMapRaised' xrefstyle='select: title'/>,
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>,
+<xref linkend='XMoveWindow' xrefstyle='select: title'/>,
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>,
+<xref linkend='XRestackWindows' xrefstyle='select: title'/>,
 or
-<function>XSetWindowBorderWidth</function>.
+<xref linkend='XSetWindowBorderWidth' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -4040,7 +4040,7 @@ events are generated when a
 <systemitem>ConfigureWindow</systemitem>
 protocol request is issued on a child window by another client.
 For example, suppose a client application calls
-<function>XLowerWindow</function>
+<xref linkend='XLowerWindow' xrefstyle='select: title'/>
 to lower a window.
 If you had selected
 <symbol>SubstructureRedirectMask</symbol>
@@ -4116,10 +4116,10 @@ a map window request on an unmapped window whose override_redirect member
 is set to
 <symbol>False</symbol>.
 Clients initiate map window requests by calling
-<function>XMapWindow</function>,
-<function>XMapRaised</function>,
+<xref linkend='XMapWindow' xrefstyle='select: title'/>,
+<xref linkend='XMapRaised' xrefstyle='select: title'/>,
 or
-<function>XMapSubwindows</function>.
+<xref linkend='XMapSubwindows' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -4133,7 +4133,7 @@ the map window request functions is intercepted, and you are sent a
 <symbol>MapRequest</symbol>
 instead.
 For example, suppose a client application calls
-<function>XMapWindow</function>
+<xref linkend='XMapWindow' xrefstyle='select: title'/>
 to map a window.
 If you (usually a window manager) had selected
 <symbol>SubstructureRedirectMask</symbol>
@@ -4190,10 +4190,10 @@ events to clients wanting information about another client's attempts to change 
 size of a window.
 The X server generates this event whenever some other client attempts to change
 the size of the specified window by calling
-<function>XConfigureWindow</function>,
-<function>XResizeWindow</function>,
+<xref linkend='XConfigureWindow' xrefstyle='select: title'/>,
+<xref linkend='XResizeWindow' xrefstyle='select: title'/>,
 or
-<function>XMoveResizeWindow</function>.
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -4257,18 +4257,18 @@ Changes the colormap member of the
 <structname>XSetWindowAttributes</structname>
 structure by 
 calling
-<function>XChangeWindowAttributes</function>,
-<function>XFreeColormap</function>,
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>,
+<xref linkend='XFreeColormap' xrefstyle='select: title'/>,
 or
-<function>XSetWindowColormap</function>
+<xref linkend='XSetWindowColormap' xrefstyle='select: title'/>
     </para>
   </listitem>
   <listitem>
     <para>
 Installs or uninstalls the colormap by calling
-<function>XInstallColormap</function>
+<xref linkend='XInstallColormap' xrefstyle='select: title'/>
 or
-<function>XUninstallColormap</function>
+<xref linkend='XUninstallColormap' xrefstyle='select: title'/>
     </para>
   </listitem>
 </itemizedlist>
@@ -4311,7 +4311,7 @@ colormap is changed, installed, or uninstalled.
 For a colormap that is changed, installed, or uninstalled,
 the colormap member is set to the colormap associated with the window. 
 For a colormap that is changed by a call to
-<function>XFreeColormap</function>,
+<xref linkend='XFreeColormap' xrefstyle='select: title'/>,
 the colormap member is set to
 <symbol>None</symbol>.
 The new member is set to indicate whether the colormap 
@@ -4386,7 +4386,7 @@ events
 The X server generates
 <symbol>ClientMessage</symbol>
 events only when a client calls the function
-<function>XSendEvent</function>.
+<xref linkend='XSendEvent' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -4491,22 +4491,22 @@ or
 The state member is set to
 <symbol>PropertyNewValue</symbol>
 when a property of the window is changed using
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 or
-<function>XRotateWindowProperties</function>
+<xref linkend='XRotateWindowProperties' xrefstyle='select: title'/>
 (even when adding zero-length data using
-<function>XChangeProperty</function>)
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>)
 and when replacing all or part of a property with identical data using
-<function>XChangeProperty</function>
+<xref linkend='XChangeProperty' xrefstyle='select: title'/>
 or 
-<function>XRotateWindowProperties</function>.
+<xref linkend='XRotateWindowProperties' xrefstyle='select: title'/>.
 The state member is set to
 <symbol>PropertyDelete</symbol>
 when a property of the window is deleted using
-<function>XDeleteProperty</function>
+<xref linkend='XDeleteProperty' xrefstyle='select: title'/>
 or, if the delete argument is 
 <symbol>True</symbol>,
-<function>XGetWindowProperty</function>.
+<xref linkend='XGetWindowProperty' xrefstyle='select: title'/>.
 </para>
 </sect2>
 <sect2 id="SelectionClear_Events">
@@ -4523,7 +4523,7 @@ The X server reports
 events to the client losing ownership of a selection.
 The X server generates this event type when another client
 asserts ownership of the selection by calling
-<function>XSetSelectionOwner</function>.
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -4555,7 +4555,7 @@ The time member is set to the last change time recorded for the
 selection.
 The window member is the window that was specified by the current owner
 (the owner losing the selection) in its
-<function>XSetSelectionOwner</function>
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>
 call.
 </para>
 </sect2>
@@ -4573,7 +4573,7 @@ The X server reports
 events to the owner of a selection.
 The X server generates this event whenever a client 
 requests a selection conversion by calling 
-<function>XConvertSelection</function>
+<xref linkend='XConvertSelection' xrefstyle='select: title'/>
 for the owned selection.
 </para>
 <para>
@@ -4606,7 +4606,7 @@ typedef struct {
 <!-- .eM -->
 The owner member is set to the window
 that was specified by the current owner in its
-<function>XSetSelectionOwner</function>
+<xref linkend='XSetSelectionOwner' xrefstyle='select: title'/>
 call.
 The requestor member is set to the window requesting the selection.
 The selection member is set to the atom that names the selection.
@@ -4645,7 +4645,7 @@ This event is generated by the X server in response to a
 protocol request when there is no owner for the selection.
 When there is an owner, it should be generated by the owner
 of the selection by using
-<function>XSendEvent</function>.
+<xref linkend='XSendEvent' xrefstyle='select: title'/>.
 The owner of a selection should send this event to a requestor when a selection
 has been converted and stored as a property
 or when a selection conversion could

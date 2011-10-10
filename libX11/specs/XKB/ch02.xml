@@ -1,6 +1,6 @@
-<chapter id='initialization_and_general_programming_information'>
+<chapter id='Initialization_and_General_Programming_Information'>
 <title>Initialization and General Programming Information</title>
-<sect1 id='extension_header_files'>
+<sect1 id='Extension_Header_Files'>
 <title>Extension Header Files</title>
 <para>
 The following include files are part of the Xkb standard:
@@ -48,7 +48,7 @@ keyboard geometry descriptions.
   </listitem>
 </itemizedlist>
 </sect1>
-<sect1 id='extension_name'>
+<sect1 id='Extension_Name'>
 <title>Extension Name</title>
 <para>
 The name of the Xkb extension is given in <emphasis>
@@ -70,7 +70,7 @@ XInitExtension</emphasis>
  directly.
 </para>
 </sect1>
-<sect1 id='determining_library_compatibility'>
+<sect1 id='Determining_Library_Compatibility'>
 <title>Determining Library Compatibility</title>
 <para>
 If an application is dynamically linked, both the X server and the client-side
@@ -160,7 +160,7 @@ XkbQueryExtension</emphasis>
 </para>
 
 </sect1>
-<sect1 id='initializing_the_keyboard_extension'>
+<sect1 id='Initializing_the_Keyboard_Extension'>
 <title>Initializing the Keyboard Extension</title>
 <para>
 Call <emphasis>
@@ -469,7 +469,7 @@ XkbOD_Success</emphasis>
 </itemizedlist>
 </sect1>
 
-<sect1 id='disabling_the_keyboard_extension'>
+<sect1 id='Disabling_the_Keyboard_Extension'>
 <title>Disabling the Keyboard Extension</title>
 <para>
 If a server supports the Xkb extension, the X library normally implements
@@ -538,7 +538,7 @@ False</emphasis>
 </para>
 
 </sect1>
-<sect1 id='protocol_errors'>
+<sect1 id='Protocol_Errors'>
 <title>Protocol Errors</title>
 <para>
 Many of the Xkb extension library functions described in this document can
@@ -712,7 +712,7 @@ indicated ID
 </table>
 </sect1>
 
-<sect1 id='display_and_device_specifications_in_function_calls'>
+<sect1 id='Display_and_Device_Specifications_in_Function_Calls'>
 <title>Display and Device Specifications in Function Calls</title>
 <para>
 Where a connection to the server is passed as an argument (Display*) and an

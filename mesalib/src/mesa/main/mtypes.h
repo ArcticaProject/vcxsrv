@@ -1231,8 +1231,8 @@ typedef enum
 
 
 /**
- * Texture image state.  Describes the dimensions of a texture image,
- * the texel format and pointers to Texel Fetch functions.
+ * Texture image state.  Drivers will typically create a subclass of this
+ * with extra fields for memory buffers, etc.
  */
 struct gl_texture_image
 {
@@ -2171,9 +2171,6 @@ struct gl_shader_program
    } Vert;
 
    /* post-link info: */
-   struct gl_vertex_program *VertexProgram;     /**< Linked vertex program */
-   struct gl_fragment_program *FragmentProgram; /**< Linked fragment prog */
-   struct gl_geometry_program *GeometryProgram; /**< Linked geometry prog */
    struct gl_uniform_list *Uniforms;
    struct gl_program_parameter_list *Varying;
    GLboolean LinkStatus;   /**< GL_LINK_STATUS */

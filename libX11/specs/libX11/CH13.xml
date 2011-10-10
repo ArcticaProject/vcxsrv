@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="locales_and_internationalized_text_functions">
+<chapter id='Locales_and_Internationalized_Text_Functions'>
 <title>Locales and Internationalized Text Functions</title>
 
 <para>
@@ -128,7 +128,7 @@ They will configure the locale by calling three functions:
 the host locale configuration function,
 <function>XSupportsLocale</function>,
 and 
-<function>XSetLocaleModifiers</function>.
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -142,11 +142,11 @@ is selecting one of several styles of keyboard input method.
 <!-- .LP -->
 <!-- .sp -->
 To configure Xlib locale modifiers for the current locale, use
-<function>XSetLocaleModifiers</function>.
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetLocaleModifiers</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetlocalemodifiers'>
+<funcsynopsis id='XSetLocaleModifiers'>
 <funcprototype>
   <funcdef>char *<function>XSetLocaleModifiers</function></funcdef>
   <paramdef>char<parameter> *modifier_list</parameter></paramdef>
@@ -169,7 +169,7 @@ Specifies the modifiers.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 function sets the X modifiers for the current locale setting.
 The modifier_list argument is a null-terminated string of the form
 ``{@<emphasis remap='I'>category</emphasis>=<emphasis remap='I'>value</emphasis>}'', that is,
@@ -198,7 +198,7 @@ If the function is successful, it returns a pointer to a string.
 The contents of the string are such that a subsequent call with that string
 (in the same locale) will restore the modifiers to the same settings.
 If modifier_list is a NULL pointer,
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 also returns a pointer to such a string,
 and the current locale modifiers are not changed.
 </para>
@@ -216,7 +216,7 @@ the first successful call to set them.  Whenever the locale is changed, the
 modifiers that are in effect become unspecified until the next successful call
 to set them.
 Clients should always call
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 with a non-NULL modifier_list after setting the locale
 before they call any locale-dependent Xlib routine.
 </para>
@@ -279,7 +279,7 @@ overriding any category-specific settings in the local host environment.
 <!-- .LP -->
 The internationalized Xlib functions operate in the current locale
 configured by the host environment and X locale modifiers set by
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 or in the locale and modifiers configured at the time
 some object supplied to the function was created.
 For each locale-dependent function,
@@ -309,7 +309,7 @@ the following table describes the locale (and modifiers) dependency:
       <entry>Locale queried</entry>
     </row>
     <row>
-      <entry><function>XSetLocaleModifiers</function></entry>
+      <entry><xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/></entry>
       <entry>Locale modified</entry>
     </row>
     <row>
@@ -319,16 +319,16 @@ the following table describes the locale (and modifiers) dependency:
     <row>
       <entry><function>setlocale</function></entry>
       <entry>
-        <para><function>XrmGetFileDatabase</function></para>
-        <para><function>XrmGetStringDatabase</function></para>
+        <para><xref linkend='XrmGetFileDatabase' xrefstyle='select: title'/></para>
+        <para><xref linkend='XrmGetStringDatabase' xrefstyle='select: title'/></para>
       </entry>
       <entry>Locale of <type>XrmDatabase</type></entry>
     </row>
     <row>
       <entry><type>XrmDatabase</type></entry>
       <entry>
-        <para><function>XrmPutFileDatabase</function></para>
-        <para><function>XrmLocaleOfDatabase</function></para>
+        <para><xref linkend='XrmPutFileDatabase' xrefstyle='select: title'/></para>
+        <para><xref linkend='XrmLocaleOfDatabase' xrefstyle='select: title'/></para>
       </entry>
       <entry>Locale of <type>XrmDatabase</type></entry>
     </row>
@@ -338,7 +338,7 @@ the following table describes the locale (and modifiers) dependency:
     </row>
     <row>
       <entry><function>setlocale</function></entry>
-      <entry><function>XmbSetWMProperties</function></entry>
+      <entry><xref linkend='XmbSetWMProperties' xrefstyle='select: title'/></entry>
       <entry>Encoding of supplied/returned
       text (some WM_ property
       text in environment locale)</entry>
@@ -346,10 +346,10 @@ the following table describes the locale (and modifiers) dependency:
     <row>
       <entry><function>setlocale</function></entry>
       <entry>
-        <para><function>XmbTextPropertyToTextList</function></para>
-        <para><function>XwcTextPropertyToTextList</function></para>
-        <para><function>XmbTextListToTextProperty</function></para>
-        <para><function>XwcTextListToTextProperty</function></para>
+        <para><xref linkend='XmbTextPropertyToTextList' xrefstyle='select: title'/></para>
+        <para><xref linkend='XwcTextPropertyToTextList' xrefstyle='select: title'/></para>
+        <para><xref linkend='XmbTextListToTextProperty' xrefstyle='select: title'/></para>
+        <para><xref linkend='XwcTextListToTextProperty' xrefstyle='select: title'/></para>
       </entry>
       <entry>Encoding of supplied/returned text</entry>
     </row>
@@ -359,33 +359,33 @@ the following table describes the locale (and modifiers) dependency:
     </row>
     <row>
       <entry morerows='2'><function>setlocale</function></entry>
-      <entry><function>XOpenIM</function></entry>
+      <entry><xref linkend='XOpenIM' xrefstyle='select: title'/></entry>
       <entry><acronym>XIM</acronym> input method selection</entry>
     </row>
     <row>
-      <entry><function>XRegisterIMInstantiateCallback</function></entry>
+      <entry><xref linkend='XRegisterIMInstantiateCallback' xrefstyle='select: title'/></entry>
       <entry><acronym>XIM</acronym> selection</entry>
     </row>
     <row>
-      <entry><function>XUnregisterIMInstantiateCallback</function></entry>
+      <entry><xref linkend='XUnregisterIMInstantiateCallback' xrefstyle='select: title'/></entry>
       <entry><acronym>XIM</acronym> selection</entry>
     </row>
     <row>
       <entry morerows='1'><type>XIM</type></entry>
-      <entry><function>XCreateIC</function></entry>
+      <entry><xref linkend='XCreateIC' xrefstyle='select: title'/></entry>
       <entry><acronym>XIC</acronym> input method configuration</entry>
     </row>
     <row>
-      <entry><function>XLocaleOfIM</function>,  and so on</entry>
+      <entry><xref linkend='XLocaleOfIM' xrefstyle='select: title'/>,  and so on</entry>
       <entry>Queried locale</entry>
     </row>
     <row>
       <entry morerows='1'><type>XIC</type></entry>
-      <entry><function>XmbLookupString</function></entry>
+      <entry><xref linkend='XmbLookupString' xrefstyle='select: title'/></entry>
       <entry>Keyboard layout</entry>
     </row>
     <row>
-      <entry><function>XwcLookupString</function></entry>
+      <entry><xref linkend='XwcLookupString' xrefstyle='select: title'/></entry>
       <entry>Encoding of returned text</entry>
     </row>
     <row>
@@ -394,35 +394,35 @@ the following table describes the locale (and modifiers) dependency:
     </row>
     <row>
       <entry morerows='1'><function>setlocale</function></entry>
-      <entry><function>XOpenOM</function></entry>
+      <entry><xref linkend='XOpenOM' xrefstyle='select: title'/></entry>
       <entry><acronym>XOM</acronym> output method selection</entry>
     </row>
     <row>
-      <entry><function>XCreateFontSet</function></entry>
+      <entry><xref linkend='XCreateFontSet' xrefstyle='select: title'/></entry>
       <entry>Charsets of fonts in XFontSet</entry>
     </row>
     <row>
       <entry morerows='1'><type>XOM</type></entry>
-      <entry><function>XCreateOC</function></entry>
+      <entry><xref linkend='XCreateOC' xrefstyle='select: title'/></entry>
       <entry><acronym>XOC</acronym> output method configuration</entry>
     </row>
     <row>
-      <entry><function>XLocaleOfOM</function>,  and so on</entry>
+      <entry><xref linkend='XLocaleOfOM' xrefstyle='select: title'/>,  and so on</entry>
       <entry>Queried locale</entry>
     </row>
     <row>
       <entry morerows='2'><type>XFontSet</type></entry>
-      <entry><function>XmbDrawText</function>,</entry>
+      <entry><xref linkend='XmbDrawText' xrefstyle='select: title'/>,</entry>
       <entry>Locale of supplied text</entry>
     </row>
     <row>
-      <entry><function>XwcDrawText</function>, and so on</entry>
+      <entry><xref linkend='XwcDrawText' xrefstyle='select: title'/>, and so on</entry>
       <entry>Locale of supplied text</entry>
     </row>
     <row>
       <entry>
-        <para><function>XExtentsOfFontSet</function>,  and so on</para>
-        <para><function>XmbTextExtents</function>,</para>
+        <para><xref linkend='XExtentsOfFontSet' xrefstyle='select: title'/>,  and so on</para>
+        <para><xref linkend='XmbTextExtents' xrefstyle='select: title'/>,</para>
         <para><function>XwcTextExtents</function>,  and so on</para>
       </entry>
       <entry>Locale-dependent metrics</entry>
@@ -434,8 +434,8 @@ the following table describes the locale (and modifiers) dependency:
     <row>
       <entry><function>setlocale</function></entry>
       <entry>
-        <para><function>XGetErrorDatabaseText</function>,</para>
-        <para><function>XGetErrorText</function>,  and so on</para>
+        <para><xref linkend='XGetErrorDatabaseText' xrefstyle='select: title'/>,</para>
+        <para><xref linkend='XGetErrorText' xrefstyle='select: title'/>,  and so on</para>
       </entry>
       <entry>Locale of error message</entry>
     </row>
@@ -460,7 +460,7 @@ is state-dependent.
 All Xlib functions behave as if they do not change the current locale
 or X modifier setting.
 (This means that if they do change locale or call 
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 with a non-NULL argument, they must save and restore the current state on
 entry and exit.)
 Also, Xlib functions on implementations that conform to the ANSI C library do
@@ -503,11 +503,11 @@ A NULL identifies the end of a nested list.
 <!-- .LP -->
 <!-- .sp -->
 To allocate a nested variable argument list dynamically, use
-<function>XVaCreateNestedList</function>.
+<xref linkend='XVaCreateNestedList' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XVaCreateNestedList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xvacreatenestedlist'>
+<funcsynopsis id='XVaCreateNestedList'>
 <funcprototype>
   <funcdef>XVaNestedList <function>XVaCreateNestedList</function></funcdef>
   <paramdef>int<parameter> dummy</parameter></paramdef>
@@ -541,7 +541,7 @@ Specifies the variable length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XVaCreateNestedList</function>
+<xref linkend='XVaCreateNestedList' xrefstyle='select: title'/>
 function allocates memory and copies its arguments into
 a single list pointer,
 which may be used as a value for arguments requiring a list value.
@@ -550,7 +550,7 @@ Data passed by reference is not copied;
 the caller must ensure data remains valid for the lifetime
 of the nested list.
 The list should be freed using
-<function>XFree</function>
+<xref linkend='XFree' xrefstyle='select: title'/>
 when it is no longer needed.
 </para>
 </sect1>
@@ -690,11 +690,11 @@ a broader, more generalized abstraction.
 <para>
 <!-- .LP -->
 To open an output method, use
-<function>XOpenOM</function>.
+<xref linkend='XOpenOM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XOpenOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xopenom'>
+<funcsynopsis id='XOpenOM'>
 <funcprototype>
   <funcdef>XOM <function>XOpenOM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -750,12 +750,12 @@ Specifies the full class name of the application.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XOpenOM</function>
+<xref linkend='XOpenOM' xrefstyle='select: title'/>
 function opens an output method
 matching the current locale and modifiers specification.
 The current locale and modifiers are bound to the output method
 when
-<function>XOpenOM</function>
+<xref linkend='XOpenOM' xrefstyle='select: title'/>
 is called.
 The locale associated with an output method cannot be changed.
 </para>
@@ -763,11 +763,11 @@ The locale associated with an output method cannot be changed.
 <!-- .LP -->
 The specific output method to which this call will be routed
 is identified on the basis of the current locale and modifiers.
-<function>XOpenOM</function>
+<xref linkend='XOpenOM' xrefstyle='select: title'/>
 will identify a default output method corresponding to the
 current locale.
 That default can be modified using 
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 to set the output method modifier.
 </para>
 <para>
@@ -795,24 +795,24 @@ if res_name or res_class is NULL.
 <!-- .LP -->
 The res_name and res_class arguments are not assumed to exist beyond
 the call to
-<function>XOpenOM</function>.
+<xref linkend='XOpenOM' xrefstyle='select: title'/>.
 The specified resource database is assumed to exist for the lifetime
 of the output method.
 </para>
 <para>
 <!-- .LP -->
-<function>XOpenOM</function>
+<xref linkend='XOpenOM' xrefstyle='select: title'/>
 returns NULL if no output method could be opened.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To close an output method, use
-<function>XCloseOM</function>.
+<xref linkend='XCloseOM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCloseOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcloseom'>
+<funcsynopsis id='XCloseOM'>
 <funcprototype>
   <funcdef>Status <function>XCloseOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -835,18 +835,18 @@ Specifies the output method.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCloseOM</function>
+<xref linkend='XCloseOM' xrefstyle='select: title'/>
 function closes the specified output method.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To set output method attributes, use 
-<function>XSetOMValues</function>.
+<xref linkend='XSetOMValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetOMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetomvalues'>
+<funcsynopsis id='XSetOMValues'>
 <funcprototype>
   <funcdef>char *<function>XSetOMValues</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -880,7 +880,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetOMValues</function>
+<xref linkend='XSetOMValues' xrefstyle='select: title'/>
 function presents a variable argument list programming interface
 for setting properties or features of the specified output method.
 This function returns NULL if it succeeds;
@@ -895,11 +895,11 @@ No standard arguments are currently defined by Xlib.
 <!-- .LP -->
 <!-- .sp -->
 To query an output method, use 
-<function>XGetOMValues</function>.
+<xref linkend='XGetOMValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetOMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetomvalues'>
+<funcsynopsis id='XGetOMValues'>
 <funcprototype>
   <funcdef>char *<function>XGetOMValues</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -933,7 +933,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetOMValues</function>
+<xref linkend='XGetOMValues' xrefstyle='select: title'/>
 function presents a variable argument list programming interface
 for querying properties or features of the specified output method.
 This function returns NULL if it succeeds;
@@ -943,11 +943,11 @@ it returns the name of the first argument that could not be obtained.
 <para>
 <!-- .LP -->
 To obtain the display associated with an output method, use
-<function>XDisplayOfOM</function>.
+<xref linkend='XDisplayOfOM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDisplayOfOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdisplayofom'>
+<funcsynopsis id='XDisplayOfOM'>
 <funcprototype>
   <funcdef>Display *<function>XDisplayOfOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -970,18 +970,18 @@ Specifies the output method.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDisplayOfOM</function>
+<xref linkend='XDisplayOfOM' xrefstyle='select: title'/>
 function returns the display associated with the specified output method.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To get the locale associated with an output method, use
-<function>XLocaleOfOM</function>.
+<xref linkend='XLocaleOfOM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLocaleOfOM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlocaleofom'>
+<funcsynopsis id='XLocaleOfOM'>
 <funcprototype>
   <funcdef>char *<function>XLocaleOfOM</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -1004,7 +1004,7 @@ Specifies the output method.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLocaleOfOM</function>
+<xref linkend='XLocaleOfOM' xrefstyle='select: title'/>
 returns the locale associated with the specified output method.
 </para>
 </sect2>
@@ -1041,7 +1041,7 @@ The following key applies to this table.
   <tbody>
     <row>
       <entry>G</entry>
-      <entry>This value may be read using <function>XGetOMValues</function>.</entry>
+      <entry>This value may be read using <xref linkend='XGetOMValues' xrefstyle='select: title'/>.</entry>
     </row>
   </tbody>
   </tgroup>
@@ -1127,7 +1127,7 @@ charset names.
 The required charset list is owned by Xlib and should not be modified or
 freed by the client.
 It will be freed by a call to 
-<function>XCloseOM</function>
+<xref linkend='XCloseOM' xrefstyle='select: title'/>
 with the associated 
 <type>XOM</type>.
 Until freed, its contents will not be modified by Xlib.
@@ -1154,7 +1154,7 @@ The value of the argument is a pointer to a structure of type
 Clients are responsible for freeing the
 <structname>XOMOrientation</structname>
 structure by using
-<function>XFree</function>;
+<xref linkend='XFree' xrefstyle='select: title'/>;
 this also frees the contents of the structure.
 </para>
 
@@ -1247,7 +1247,7 @@ of the drawing origin.
 <para>
 <!-- .LP -->
 This OM value presents functionality identical to the
-<function>XDirectionalDependentDrawing</function>
+<xref linkend='XDirectionalDependentDrawing' xrefstyle='select: title'/>
 function.
 </para>
 </sect3>
@@ -1271,7 +1271,7 @@ dependent on the locale implementation and the font set used.
 <para>
 <!-- .LP -->
 This OM value presents functionality identical to the
-<function>XContextualDrawing</function>
+<xref linkend='XContextualDrawing' xrefstyle='select: title'/>
 function.
 </para>
 </sect3>
@@ -1315,11 +1315,11 @@ is defined as an upward compatible type of
 <!-- .LP -->
 <!-- .sp -->
 To create an output context, use
-<function>XCreateOC</function>.
+<xref linkend='XCreateOC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateOC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreateoc'>
+<funcsynopsis id='XCreateOC'>
 <funcprototype>
   <funcdef>XOC <function>XCreateOC</function></funcdef>
   <paramdef>XOM<parameter> om</parameter></paramdef>
@@ -1353,7 +1353,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateOC</function>
+<xref linkend='XCreateOC' xrefstyle='select: title'/>
 function creates an output context within the specified output method.
 </para>
 <para>
@@ -1364,7 +1364,7 @@ All other output context values can be set later.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateOC</function>
+<xref linkend='XCreateOC' xrefstyle='select: title'/>
 returns NULL if no output context could be created.
 NULL can be returned for any of the following reasons:
 </para>
@@ -1392,7 +1392,7 @@ The output method encountered an output method implementation-dependent error.
 </itemizedlist>
 <para>
 <!-- .LP -->
-<function>XCreateOC</function>
+<xref linkend='XCreateOC' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAtom</errorname>
 error.
@@ -1401,11 +1401,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To destroy an output context, use
-<function>XDestroyOC</function>.
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroyOC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroyoc'>
+<funcsynopsis id='XDestroyOC'>
 <funcprototype>
   <funcdef>void <function>XDestroyOC</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1428,18 +1428,18 @@ Specifies the output context.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDestroyOC</function>
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>
 function destroys the specified output context.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To get the output method associated with an output context, use
-<function>XOMOfOC</function>.
+<xref linkend='XOMOfOC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XOMOfOC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xomofoc'>
+<funcsynopsis id='XOMOfOC'>
 <funcprototype>
   <funcdef>XOM <function>XOMOfOC</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1462,7 +1462,7 @@ Specifies the output context.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XOMOfOC</function>
+<xref linkend='XOMOfOC' xrefstyle='select: title'/>
 function returns the output method associated with the
 specified output context.
 </para>
@@ -1471,9 +1471,9 @@ specified output context.
 <!-- .sp -->
 Xlib provides two functions for setting and reading output context values,
 respectively,
-<function>XSetOCValues</function>
+<xref linkend='XSetOCValues' xrefstyle='select: title'/>
 and
-<function>XGetOCValues</function>.
+<xref linkend='XGetOCValues' xrefstyle='select: title'/>.
 Both functions have a variable-length argument list.
 In that argument list, any <acronym>XOC</acronym> value's name must be denoted
 with a character string using the X Portable Character Set.
@@ -1482,11 +1482,11 @@ with a character string using the X Portable Character Set.
 <!-- .LP -->
 <!-- .sp -->
 To set <acronym>XOC</acronym> values, use
-<function>XSetOCValues</function>.
+<xref linkend='XSetOCValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetOCValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetocvalues'>
+<funcsynopsis id='XSetOCValues'>
 <funcprototype>
   <funcdef>char *<function>XSetOCValues</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1520,7 +1520,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetOCValues</function>
+<xref linkend='XSetOCValues' xrefstyle='select: title'/>
 function returns NULL if no error occurred; 
 otherwise,
 it returns the name of the first argument that could not be set.
@@ -1550,7 +1550,7 @@ matching the data type imposed by the semantics of the argument.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetOCValues</function>
+<xref linkend='XSetOCValues' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAtom</errorname>
 error.
@@ -1559,11 +1559,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To obtain <acronym>XOC</acronym> values, use
-<function>XGetOCValues</function>.
+<xref linkend='XGetOCValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetOCValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetocvalues'>
+<funcsynopsis id='XGetOCValues'>
 <funcprototype>
   <funcdef>char *<function>XGetOCValues</function></funcdef>
   <paramdef>XOC<parameter> oc</parameter></paramdef>
@@ -1597,7 +1597,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetOCValues</function>
+<xref linkend='XGetOCValues' xrefstyle='select: title'/>
 function returns NULL if no error occurred; otherwise,
 it returns the name of the first argument that could not be obtained.
 An argument might not be obtained for any of the following reasons:
@@ -1652,20 +1652,20 @@ The following keys apply to this table.
   <tbody>
     <row>
       <entry>C</entry>
-      <entry>This value must be set with <function>XCreateOC</function>.</entry>
+      <entry>This value must be set with <xref linkend='XCreateOC' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>D</entry>
-      <entry>This value may be set using <function>XCreateOC</function>.
+      <entry>This value may be set using <xref linkend='XCreateOC' xrefstyle='select: title'/>.
       If it is not set,a default is provided.</entry>
     </row>
     <row>
       <entry>G</entry>
-      <entry>This value may be read using <function>XGetOCValues</function>.</entry>
+      <entry>This value may be read using <xref linkend='XGetOCValues' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>S</entry>
-      <entry>This value must be set using <function>XSetOCValues</function>.</entry>
+      <entry>This value must be set using <xref linkend='XSetOCValues' xrefstyle='select: title'/>.</entry>
     </row>
   </tbody>
   </tgroup>
@@ -1688,17 +1688,17 @@ The following keys apply to this table.
   <tbody>
     <row>
       <entry>BaseFontName</entry>
-      <entry><function>XCreateFontSet</function></entry>
+      <entry><xref linkend='XCreateFontSet' xrefstyle='select: title'/></entry>
       <entry>C-G</entry>
     </row>
     <row>
       <entry>MissingCharSet</entry>
-      <entry><function>XCreateFontSet</function></entry>
+      <entry><xref linkend='XCreateFontSet' xrefstyle='select: title'/></entry>
       <entry>G</entry>
     </row>
     <row>
       <entry>DefaultString</entry>
-      <entry><function>XCreateFontSet</function></entry>
+      <entry><xref linkend='XCreateFontSet' xrefstyle='select: title'/></entry>
       <entry>G</entry>
     </row>
     <row>
@@ -1718,7 +1718,7 @@ The following keys apply to this table.
     </row>
     <row>
       <entry>FontInfo</entry>
-      <entry><function>XFontsOfFontSet</function></entry>
+      <entry><xref linkend='XFontsOfFontSet' xrefstyle='select: title'/></entry>
       <entry>G</entry>
     </row>
     <row>
@@ -1768,7 +1768,7 @@ If a base font name is not an <acronym>XLFD</acronym> name,
 Xlib will attempt to obtain an <acronym>XLFD</acronym> name from the font properties
 for the font.
 If Xlib is successful, the
-<function>XGetOCValues</function>
+<xref linkend='XGetOCValues' xrefstyle='select: title'/>
 function will return this <acronym>XLFD</acronym> name instead of the client-supplied name.
 </para>
 <para>
@@ -1778,7 +1778,7 @@ and cannot be changed.
 If no fonts exist for any of the required charsets,
 or if the locale definition in Xlib requires that a font exist
 for a particular charset and a font is not found for that charset,
-<function>XCreateOC</function>
+<xref linkend='XCreateOC' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
@@ -1786,13 +1786,13 @@ returns NULL.
 When querying for the
 <symbol>XNBaseFontName</symbol>
 <acronym>XOC</acronym> value,
-<function>XGetOCValues</function>
+<xref linkend='XGetOCValues' xrefstyle='select: title'/>
 returns a null-terminated string identifying the base font names that
 Xlib used to load the fonts needed for the locale.
 This string is owned by Xlib and should not be modified or freed by
 the client.
 The string will be freed by a call to
-<function>XDestroyOC</function>
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>
 with the associated
 <type>XOC</type>.
 Until freed, the string contents will not be modified by Xlib.
@@ -1829,7 +1829,7 @@ may be able to remap a required charset.
 The missing charset list is owned by Xlib and should not be modified or
 freed by the client.
 It will be freed by a call to 
-<function>XDestroyOC</function>
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>
 with the associated
 <type>XOC</type>.
 Until freed, its contents will not be modified by Xlib.
@@ -1869,7 +1869,7 @@ no glyphs are drawn and the escapement is zero.
 The returned string is null-terminated.
 It is owned by Xlib and should not be modified or freed by the client.
 It will be freed by a call to
-<function>XDestroyOC</function>
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>
 with the associated
 <type>XOC</type>.
 Until freed, its contents will not be modified by Xlib.
@@ -1886,7 +1886,7 @@ The
 <symbol>XNOrientation</symbol>
 argument specifies the current orientation of text when drawn.  The value of
 this argument is one of the values returned by the
-<function>XGetOMValues</function>
+<xref linkend='XGetOMValues' xrefstyle='select: title'/>
 function with the
 <symbol>XNQueryOrientation</symbol>
 argument specified in the
@@ -1950,16 +1950,16 @@ When querying for the
 or
 <symbol>XNResourceClass</symbol>
 <acronym>XOC</acronym> value,
-<function>XGetOCValues</function>
+<xref linkend='XGetOCValues' xrefstyle='select: title'/>
 returns a null-terminated string.
 This string is owned by Xlib and should not be modified or freed by
 the client.
 The string will be freed by a call to
-<function>XDestroyOC</function>
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>
 with the associated
 <type>XOC</type>
 or when the associated value is changed via
-<function>XSetOCValues</function>.
+<xref linkend='XSetOCValues' xrefstyle='select: title'/>.
 Until freed, the string contents will not be modified by Xlib.
 </para>
 </sect3>
@@ -2051,23 +2051,23 @@ is closed.
 The
 <symbol>XNOMAutomatic</symbol>
 argument returns whether the associated output context was created by
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 or not.  Because the
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 function not only destroys the output context but also closes the implicit
 output method associated with it,
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 should be used with any output context created by 
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 However, it is possible that a client does not know how the output context
 was created.
 Before a client destroys the output context,
 it can query whether
 <symbol>XNOMAutomatic</symbol>
 is set to determine whether 
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 or 
-<function>XDestroyOC</function>
+<xref linkend='XDestroyOC' xrefstyle='select: title'/>
 should be used to destroy the output context.
 </para>
 </sect3>
@@ -2093,7 +2093,7 @@ and is equivalent to the type
 <!-- .LP -->
 <!-- .sp -->
 The 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 function is a convenience function for creating an output context using
 only default values.  The returned
 <type>XFontSet</type>
@@ -2106,13 +2106,13 @@ has an OM value
 automatically set to
 <symbol>True</symbol>
 so that the output context self indicates whether it was created by
-<function>XCreateOC</function>
+<xref linkend='XCreateOC' xrefstyle='select: title'/>
 or
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreatefontset'>
+<funcsynopsis id='XCreateFontSet'>
 <funcprototype>
   <funcdef>XFontSet <function>XCreateFontSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2179,10 +2179,10 @@ Returns the string drawn for missing charsets.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 function creates a font set for the specified display.
 The font set is bound to the current locale when 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 is called.
 The font set may be used in subsequent calls to obtain font
 and character information and to image text in the locale of the font set.
@@ -2216,7 +2216,7 @@ If a base font name is not an <acronym>XLFD</acronym> name,
 Xlib will attempt to obtain an <acronym>XLFD</acronym> name from the font properties
 for the font.
 If this action is successful in obtaining an <acronym>XLFD</acronym> name, the
-<function>XBaseFontNameListOfFontSet</function>
+<xref linkend='XBaseFontNameListOfFontSet' xrefstyle='select: title'/>
 function will return this <acronym>XLFD</acronym> name instead of the client-supplied name.
 </para>
 <para>
@@ -2340,16 +2340,16 @@ For example:
 <para>
 <!-- .LP -->
 If 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 is unable to create the font set, 
 either because there is insufficient memory or because the current locale
 is not supported,
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 returns NULL, missing_charset_list_return is set to NULL,
 and missing_charset_count_return
 is set to zero.
 If fonts exist for all of the charsets required by the current locale,
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 returns a valid
 <type>XFontSet</type>,
 missing_charset_list_return is set to NULL,
@@ -2358,7 +2358,7 @@ and missing_charset_count_return is set to zero.
 <para>
 <!-- .LP -->
 If no font exists for one or more of the required charsets,
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 sets missing_charset_list_return to a
 list of one or more null-terminated charset names for which no font exists
 and sets missing_charset_count_return to the number of missing fonts.
@@ -2371,10 +2371,10 @@ may be able to remap a required charset.
 If no font exists for any of the required charsets
 or if the locale definition in Xlib requires that a font exist
 for a particular charset and a font is not found for that charset, 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 returns NULL.
 Otherwise, 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 returns a valid 
 <type>XFontSet</type>
 to font_set.
@@ -2386,7 +2386,7 @@ When an Xmb/wc drawing or measuring function is called with an
 that has missing charsets, some characters in the locale will not be
 drawable.
 If def_string_return is non-NULL,
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 returns a pointer to a string that represents the glyphs
 that are drawn with this 
 <type>XFontSet</type>
@@ -2406,7 +2406,7 @@ no glyphs are drawn, and the escapement is zero.
 The returned string is null-terminated.
 It is owned by Xlib and should not be modified or freed by the client.
 It will be freed by a call to 
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 with the associated 
 <type>XFontSet</type>.
 Until freed, its contents will not be modified by Xlib.
@@ -2422,13 +2422,13 @@ operation in the case that some fonts did not exist.
 The returned 
 <type>XFontSet</type>
 and missing charset list should be freed with 
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 and
-<function>XFreeStringList</function>,
+<xref linkend='XFreeStringList' xrefstyle='select: title'/>,
 respectively.
 The client-supplied base_font_name_list may be freed 
 by the client after calling 
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2438,11 +2438,11 @@ To obtain a list of
 structures and full font names given an 
 <type>XFontSet</type>,
 use
-<function>XFontsOfFontSet</function>.
+<xref linkend='XFontsOfFontSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFontsOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfontsoffontset'>
+<funcsynopsis id='XFontsOfFontSet'>
 <funcprototype>
   <funcdef>int <function>XFontsOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2487,7 +2487,7 @@ Returns the list of font names.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFontsOfFontSet</function>
+<xref linkend='XFontsOfFontSet' xrefstyle='select: title'/>
 function returns a list of one or more 
 <structname>XFontStruct</structname>s
 and font names for the fonts used by the Xmb and Xwc layers
@@ -2536,7 +2536,7 @@ The
 and font name lists are owned by Xlib 
 and should not be modified or freed by the client.
 They will be freed by a call to
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 with the associated
 <type>XFontSet</type>.
 Until freed, their contents will not be modified by Xlib.
@@ -2547,11 +2547,11 @@ Until freed, their contents will not be modified by Xlib.
 To obtain the base font name list and the selected font name list given an
 <type>XFontSet</type>,
 use
-<function>XBaseFontNameListOfFontSet</function>.
+<xref linkend='XBaseFontNameListOfFontSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XBaseFontNameListOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xbasefontnamelistoffontset'>
+<funcsynopsis id='XBaseFontNameListOfFontSet'>
 <funcprototype>
   <funcdef>char *<function>XBaseFontNameListOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2574,7 +2574,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XBaseFontNameListOfFontSet</function>
+<xref linkend='XBaseFontNameListOfFontSet' xrefstyle='select: title'/>
 function returns the original base font name list supplied
 by the client when the 
 <type>XFontSet</type>
@@ -2587,10 +2587,10 @@ White space may appear immediately on either side of separating commas.
 <para>
 <!-- .LP -->
 If 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 obtained an <acronym>XLFD</acronym> name from the font properties for the font specified
 by a non-<acronym>XLFD</acronym> base name, the
-<function>XBaseFontNameListOfFontSet</function>
+<xref linkend='XBaseFontNameListOfFontSet' xrefstyle='select: title'/>
 function will return the <acronym>XLFD</acronym> name instead of the non-<acronym>XLFD</acronym> base name.
 </para>
 <para>
@@ -2598,7 +2598,7 @@ function will return the <acronym>XLFD</acronym> name instead of the non-<acrony
 The base font name list is owned by Xlib and should not be modified or
 freed by the client.
 It will be freed by a call to 
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 with the associated 
 <type>XFontSet</type>.
 Until freed, its contents will not be modified by Xlib.
@@ -2609,11 +2609,11 @@ Until freed, its contents will not be modified by Xlib.
 To obtain the locale name given an 
 <type>XFontSet</type>,
 use
-<function>XLocaleOfFontSet</function>.
+<xref linkend='XLocaleOfFontSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLocaleOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlocaleoffontset'>
+<funcsynopsis id='XLocaleOfFontSet'>
 <funcprototype>
   <funcdef>char *<function>XLocaleOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2636,7 +2636,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLocaleOfFontSet</function>
+<xref linkend='XLocaleOfFontSet' xrefstyle='select: title'/>
 function
 returns the name of the locale bound to the specified
 <type>XFontSet</type>,
@@ -2647,7 +2647,7 @@ as a null-terminated string.
 The returned locale name string is owned by Xlib
 and should not be modified or freed by the client.
 It may be freed by a call to
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 with the associated 
 <type>XFontSet</type>.
 Until freed, it will not be modified by Xlib.
@@ -2656,17 +2656,17 @@ Until freed, it will not be modified by Xlib.
 <!-- .LP -->
 <!-- .sp -->
 The 
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 function is a convenience function for freeing an output context.
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 also frees its associated 
 <type>XOM</type>
 if the output context was created by
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreefontset'>
+<funcsynopsis id='XFreeFontSet'>
 <funcprototype>
   <funcdef>void <function>XFreeFontSet</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2700,7 +2700,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 function frees the specified font set.
 The associated base font name list, font name list, 
 <structname>XFontStruct</structname>
@@ -2743,9 +2743,9 @@ Regardless of the character rendering order,
 the origins of all characters are on the primary draw direction side
 of the drawing origin.
 The screen location of a particular character image may be determined with
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 or
-<function>XwcTextPerCharExtents</function>.
+<xref linkend='XwcTextPerCharExtents' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2753,10 +2753,10 @@ The drawing functions are allowed to implement context-dependent
 rendering, where the glyphs drawn for a string are not simply a
 concatenation of the glyphs that represent each individual character.
 A string of two characters drawn with 
-<function>XmbDrawString</function>
+<xref linkend='XmbDrawString' xrefstyle='select: title'/>
 may render differently than if the two characters 
 were drawn with separate calls to
-<function>XmbDrawString</function>.
+<xref linkend='XmbDrawString' xrefstyle='select: title'/>.
 If the client appends or inserts a character 
 in a previously drawn string,
 the client may need to redraw some adjacent characters 
@@ -2766,11 +2766,11 @@ to obtain proper rendering.
 <!-- .LP -->
 <!-- .sp -->
 To find out about direction-dependent rendering, use
-<function>XDirectionalDependentDrawing</function>.
+<xref linkend='XDirectionalDependentDrawing' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDirectionalDependentDrawing</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdirectionaldependentdrawing'>
+<funcsynopsis id='XDirectionalDependentDrawing'>
 <funcprototype>
   <funcdef>Bool <function>XDirectionalDependentDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2793,7 +2793,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDirectionalDependentDrawing</function>
+<xref linkend='XDirectionalDependentDrawing' xrefstyle='select: title'/>
 function returns
 <symbol>True</symbol>
 if the drawing functions implement implicit text directionality;
@@ -2804,11 +2804,11 @@ otherwise, it returns
 <!-- .LP -->
 <!-- .sp -->
 To find out about context-dependent rendering, use
-<function>XContextualDrawing</function>.
+<xref linkend='XContextualDrawing' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XContextualDrawing</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcontextualdrawing'>
+<funcsynopsis id='XContextualDrawing'>
 <funcprototype>
   <funcdef>Bool <function>XContextualDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2831,7 +2831,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XContextualDrawing</function>
+<xref linkend='XContextualDrawing' xrefstyle='select: title'/>
 function returns
 <symbol>True</symbol>
 if text drawn with the font set might include context-dependent drawing;
@@ -2842,11 +2842,11 @@ otherwise, it returns
 <!-- .LP -->
 <!-- .sp -->
 To find out about context-dependent or direction-dependent rendering, use
-<function>XContextDependentDrawing</function>.
+<xref linkend='XContextDependentDrawing' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XContextDependentDrawing</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcontextdependentdrawing'>
+<funcsynopsis id='XContextDependentDrawing'>
 <funcprototype>
   <funcdef>Bool <function>XContextDependentDrawing</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2869,7 +2869,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XContextDependentDrawing</function>
+<xref linkend='XContextDependentDrawing' xrefstyle='select: title'/>
 function returns
 <symbol>True</symbol>
 if the drawing functions implement implicit text directionality or
@@ -2919,7 +2919,7 @@ The max_ink_extent member gives the maximum extent, over all drawable characters
 the rectangles that bound the character glyph image drawn in the
 foreground color, relative to a constant origin.
 See 
-<function>XmbTextExtents</function>
+<xref linkend='XmbTextExtents' xrefstyle='select: title'/>
 and
 <function>XwcTextExtents</function>
 for detailed semantics.
@@ -2946,9 +2946,9 @@ individual extent.
 <para>
 <!-- .LP -->
 The rectangles for a given character in a string can be obtained from
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 or
-<function>XwcTextPerCharExtents</function>.
+<xref linkend='XwcTextPerCharExtents' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -2956,11 +2956,11 @@ or
 To obtain the maximum extents structure given an
 <type>XFontSet</type>,
 use
-<function>XExtentsOfFontSet</function>.
+<xref linkend='XExtentsOfFontSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XExtentsOfFontSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xextentsoffontset'>
+<funcsynopsis id='XExtentsOfFontSet'>
 <funcprototype>
   <funcdef>XFontSetExtents *<function>XExtentsOfFontSet</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -2983,7 +2983,7 @@ Specifies the font set.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XExtentsOfFontSet</function>
+<xref linkend='XExtentsOfFontSet' xrefstyle='select: title'/>
 function returns an
 <structname>XFontSetExtents</structname>
 structure for the fonts used by the Xmb and Xwc layers
@@ -2996,7 +2996,7 @@ The
 structure is owned by Xlib and should not be modified
 or freed by the client.
 It will be freed by a call to 
-<function>XFreeFontSet</function>
+<xref linkend='XFreeFontSet' xrefstyle='select: title'/>
 with the associated 
 <type>XFontSet</type>.
 Until freed, its contents will not be modified by Xlib.
@@ -3006,14 +3006,14 @@ Until freed, its contents will not be modified by Xlib.
 <!-- .sp -->
 To obtain the escapement in pixels of the specified text as a value,
 use
-<function>XmbTextEscapement</function>
+<xref linkend='XmbTextEscapement' xrefstyle='select: title'/>
 or 
-<function>XwcTextEscapement</function>.
+<xref linkend='XwcTextEscapement' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbTextEscapement</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextEscapement</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbtextescapement'>
+<funcsynopsis id='XmbTextEscapement'>
 <funcprototype>
   <funcdef>int <function>XmbTextEscapement</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3022,7 +3022,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwctextescapement'>
+<funcsynopsis id='XwcTextEscapement'>
 <funcprototype>
   <funcdef>int <function>XwcTextEscapement</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3077,9 +3077,9 @@ Specifies the number of characters in the string argument.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbTextEscapement</function>
+<xref linkend='XmbTextEscapement' xrefstyle='select: title'/>
 and
-<function>XwcTextEscapement</function>
+<xref linkend='XwcTextEscapement' xrefstyle='select: title'/>
 functions return the escapement in pixels of the specified string as a value,
 using the fonts loaded for the specified font set.
 The escapement is the distance in pixels in the primary draw
@@ -3098,14 +3098,14 @@ the escapement is always positive.
 To obtain the overall_ink_return and overall_logical_return arguments,
 the overall bounding box of the string's image, and a logical bounding box,
 use
-<function>XmbTextExtents</function>
+<xref linkend='XmbTextExtents' xrefstyle='select: title'/>
  or
 <function>XwcTextExtents</function>.
 </para>
 <indexterm significance="preferred"><primary>XmbTextExtents</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbtextextents'>
+<funcsynopsis id='XmbTextExtents'>
 <funcprototype>
   <funcdef>int <function>XmbTextExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3194,7 +3194,7 @@ Returns the overall logical dimensions.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbTextExtents</function>
+<xref linkend='XmbTextExtents' xrefstyle='select: title'/>
 and
 <function>XwcTextExtents</function>
 functions set the components of the specified overall_ink_return and
@@ -3202,9 +3202,9 @@ overall_logical_return
 arguments to the overall bounding box of the string's image
 and a logical bounding box for spacing purposes, respectively.
 They return the value returned by 
-<function>XmbTextEscapement</function>
+<xref linkend='XmbTextEscapement' xrefstyle='select: title'/>
 or
-<function>XwcTextEscapement</function>.
+<xref linkend='XwcTextEscapement' xrefstyle='select: title'/>.
 These metrics are relative to the drawing origin of the string,
 using the fonts loaded for the specified font set.
 </para>
@@ -3236,7 +3236,7 @@ When the
 has missing charsets,
 metrics for each unavailable character are taken 
 from the default string returned by 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 so that the metrics represent the text as it will actually be drawn.
 The behavior for an invalid codepoint is undefined.
 </para>
@@ -3244,7 +3244,7 @@ The behavior for an invalid codepoint is undefined.
 <!-- .LP -->
 To determine the effective drawing origin for a character in a drawn string,
 the client should call 
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 on the entire string, then on the character,
 and subtract the x values of the returned 
 rectangles for the character.
@@ -3258,14 +3258,14 @@ and get the same rendering.
 <!-- .sp -->
 To obtain per-character information for a text string,
 use
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 or
-<function>XwcTextPerCharExtents</function>.
+<xref linkend='XwcTextPerCharExtents' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbTextPerCharExtents</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcTextPerCharExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbtextpercharextents'>
+<funcsynopsis id='XmbTextPerCharExtents'>
 <funcprototype>
   <funcdef>Status <function>XmbTextPerCharExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3280,7 +3280,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwctextpercharextents'>
+<funcsynopsis id='XwcTextPerCharExtents'>
 <funcprototype>
   <funcdef>Status <function>XwcTextPerCharExtents</function></funcdef>
   <paramdef>XFontSet<parameter> font_set</parameter></paramdef>
@@ -3403,9 +3403,9 @@ Returns the overall logical dimensions.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 and
-<function>XwcTextPerCharExtents</function>
+<xref linkend='XwcTextPerCharExtents' xrefstyle='select: title'/>
 functions return the text dimensions of each character of the specified text,
 using the fonts loaded for the specified font set.
 Each successive element of ink_array_return and logical_array_return
@@ -3444,7 +3444,7 @@ When the
 <type>XFontSet</type>
 has missing charsets, metrics for each unavailable
 character are taken from the default string returned by 
-<function>XCreateFontSet</function>
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>
 so that the metrics represent the text as it will actually be drawn.
 The behavior for an invalid codepoint is undefined.
 </para>
@@ -3458,12 +3458,12 @@ Otherwise, the functions return a nonzero value.
 <para>
 <!-- .LP -->
 If the overall_ink_return or overall_logical_return argument is non-NULL,
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 and 
-<function>XwcTextPerCharExtents</function>
+<xref linkend='XwcTextPerCharExtents' xrefstyle='select: title'/>
 return the maximum extent of the string's metrics to overall_ink_return
 or overall_logical_return, as returned by 
-<function>XmbTextExtents</function>
+<xref linkend='XmbTextExtents' xrefstyle='select: title'/>
 or 
 <function>XwcTextExtents</function>.
 </para>
@@ -3478,10 +3478,10 @@ or
 The functions defined in this section
 draw text at a specified location in a drawable.
 They are similar to the functions
-<function>XDrawText</function>,
-<function>XDrawString</function>,
+<xref linkend='XDrawText' xrefstyle='select: title'/>,
+<xref linkend='XDrawString' xrefstyle='select: title'/>,
 and
-<function>XDrawImageString</function>
+<xref linkend='XDrawImageString' xrefstyle='select: title'/>
 except that they work with font sets instead of single fonts
 and interpret the text based on the locale of the font set
 instead of treating the bytes of the string as direct font indexes.
@@ -3502,9 +3502,9 @@ No validation that all fonts conform to some width rule is performed.
 <para>
 <!-- .LP -->
 The text functions
-<function>XmbDrawText</function>
+<xref linkend='XmbDrawText' xrefstyle='select: title'/>
 and
-<function>XwcDrawText</function>
+<xref linkend='XwcDrawText' xrefstyle='select: title'/>
 use the following structures:
 </para>
 <para>
@@ -3541,14 +3541,14 @@ typedef struct {
 <!-- .eM -->
 <!-- .sp -->
 To draw text using multiple font sets in a given drawable, use
-<function>XmbDrawText</function>
+<xref linkend='XmbDrawText' xrefstyle='select: title'/>
 or
-<function>XwcDrawText</function>.
+<xref linkend='XwcDrawText' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbDrawText</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawText</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbdrawtext'>
+<funcsynopsis id='XmbDrawText'>
 <funcprototype>
   <funcdef>void <function>XmbDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3560,7 +3560,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwcdrawtext'>
+<funcsynopsis id='XwcDrawText'>
 <funcprototype>
   <funcdef>void <function>XwcDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3650,9 +3650,9 @@ Specifies the number of text items in the array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbDrawText</function>
+<xref linkend='XmbDrawText' xrefstyle='select: title'/>
 and 
-<function>XwcDrawText</function>
+<xref linkend='XwcDrawText' xrefstyle='select: title'/>
 functions allow complex spacing and font set shifts between text strings.
 Each text item is processed in turn, with the origin of a text
 element advanced in the primary draw direction by the escapement of the
@@ -3669,37 +3669,37 @@ will not be drawn.
 </para>
 <para>
 <!-- .LP -->
-<function>XmbDrawText</function>
+<xref linkend='XmbDrawText' xrefstyle='select: title'/>
 and
-<function>XwcDrawText</function>
+<xref linkend='XwcDrawText' xrefstyle='select: title'/>
 do not perform any context-dependent rendering between text segments.
 Clients may compute the drawing metrics by passing each text segment to
-<function>XmbTextExtents</function>
+<xref linkend='XmbTextExtents' xrefstyle='select: title'/>
 and
 <function>XwcTextExtents</function>
 or 
-<function>XmbTextPerCharExtents</function>
+<xref linkend='XmbTextPerCharExtents' xrefstyle='select: title'/>
 and
-<function>XwcTextPerCharExtents</function>.
+<xref linkend='XwcTextPerCharExtents' xrefstyle='select: title'/>.
 When the 
 <type>XFontSet</type>
 has missing charsets, each unavailable character is drawn 
 with the default string returned by 
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 The behavior for an invalid codepoint is undefined.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To draw text using a single font set in a given drawable, use
-<function>XmbDrawString</function>
+<xref linkend='XmbDrawString' xrefstyle='select: title'/>
 or
-<function>XwcDrawString</function>.
+<xref linkend='XwcDrawString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbDrawString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbdrawstring'>
+<funcsynopsis id='XmbDrawString'>
 <funcprototype>
   <funcdef>void <function>XmbDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3712,7 +3712,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwcdrawstring'>
+<funcsynopsis id='XwcDrawString'>
 <funcprototype>
   <funcdef>void <function>XwcDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3823,29 +3823,29 @@ Specifies the number of characters in the string argument.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbDrawString</function>
+<xref linkend='XmbDrawString' xrefstyle='select: title'/>
 and
-<function>XwcDrawString</function>
+<xref linkend='XwcDrawString' xrefstyle='select: title'/>
 functions draw the specified text with the foreground pixel.
 When the 
 <type>XFontSet</type>
 has missing charsets, each unavailable character is drawn 
 with the default string returned by 
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 The behavior for an invalid codepoint is undefined.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To draw image text using a single font set in a given drawable, use
-<function>XmbDrawImageString</function>
+<xref linkend='XmbDrawImageString' xrefstyle='select: title'/>
 or
-<function>XwcDrawImageString</function>.
+<xref linkend='XwcDrawImageString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbDrawImageString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcDrawImageString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbdrawimagestring'>
+<funcsynopsis id='XmbDrawImageString'>
 <funcprototype>
   <funcdef>void <function>XmbDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3858,7 +3858,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwcdrawimagestring'>
+<funcsynopsis id='XwcDrawImageString'>
 <funcprototype>
   <funcdef>void <function>XwcDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3969,13 +3969,13 @@ Specifies the number of characters in the string argument.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbDrawImageString</function>
+<xref linkend='XmbDrawImageString' xrefstyle='select: title'/>
 and
-<function>XwcDrawImageString</function>
+<xref linkend='XwcDrawImageString' xrefstyle='select: title'/>
 functions fill a destination rectangle with the background pixel defined
 in the GC and then paint the text with the foreground pixel.
 The filled rectangle is the rectangle returned to overall_logical_return by
-<function>XmbTextExtents</function>
+<xref linkend='XmbTextExtents' xrefstyle='select: title'/>
 or 
 <function>XwcTextExtents</function>
 for the same text and 
@@ -3987,7 +3987,7 @@ When the
 <type>XFontSet</type>
 has missing charsets, each unavailable character is drawn 
 with the default string returned by 
-<function>XCreateFontSet</function>.
+<xref linkend='XCreateFontSet' xrefstyle='select: title'/>.
 The behavior for an invalid codepoint is undefined.
 </para>
 </sect2>
@@ -4358,7 +4358,7 @@ is an opaque data structure represented by the
 <type>XIM</type>
 data type.
 This data structure is returned by the 
-<function>XOpenIM</function>
+<xref linkend='XOpenIM' xrefstyle='select: title'/>
 function, which opens an input method on a given display.
 Subsequent operations on this data structure encapsulate all communication
 between client and input method.
@@ -4410,13 +4410,13 @@ possibly with the same client window.
 An 
 <type>XIC</type>
 is created with the
-<function>XCreateIC</function>
+<xref linkend='XCreateIC' xrefstyle='select: title'/>
 function, providing an 
 <type>XIM</type>
 argument and affiliating the input context to the input method
 for its lifetime. 
 When an input method is closed with 
-<function>XCloseIM</function>,
+<xref linkend='XCloseIM' xrefstyle='select: title'/>,
 all of its affiliated input contexts should not be used any more
 (and should preferably be destroyed before closing the input method).
 </para>
@@ -4458,16 +4458,16 @@ according to the needs of their application.
 <!-- .LP -->
 To obtain characters from an input method,
 a client must call the function
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or 
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 with an input context created from that input method.
 Both a locale and display are bound to an input method when it is opened,
 and an input context inherits this locale and display.
 Any strings returned by 
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 will be encoded in that locale. 
 </para>
 </sect3>
@@ -4479,9 +4479,9 @@ will be encoded in that locale.
 <para>
 <!-- .LP -->
 For each text entry area in which the
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 functions are used,
 there will be an associated input context.
 </para>
@@ -4491,7 +4491,7 @@ When the application focus moves to a text entry area,
 the application must set the input context focus to the
 input context associated with that area.
 The input context focus is set by calling 
-<function>XSetICFocus</function>
+<xref linkend='XSetICFocus' xrefstyle='select: title'/>
 with the appropriate input context.
 </para>
 <para>
@@ -4499,9 +4499,9 @@ with the appropriate input context.
 Also, when the application focus moves out of a text entry area, the
 application should unset the focus for the associated input context
 by calling
-<function>XUnsetICFocus</function>.
+<xref linkend='XUnsetICFocus' xrefstyle='select: title'/>.
 As an optimization, if
-<function>XSetICFocus</function>
+<xref linkend='XSetICFocus' xrefstyle='select: title'/>
 is called successively on two different input contexts,
 setting the focus on the second 
 will automatically unset the focus on the first.
@@ -4580,7 +4580,7 @@ or
 in its 
 <structname>XIMStyles</structname>
 value returned by 
-<function>XGetIMValues</function>.
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>.
 When a client has decided that it will provide geometry management
 for an input method, 
 it indicates that decision by setting the
@@ -4661,9 +4661,9 @@ by which an input method can initiate a geometry change.
 A filtering mechanism is provided to allow input methods
 to capture X events transparently to clients.
 It is expected that toolkits (or clients) using
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 will call this filter at some point in the event processing mechanism
 to make sure that events needed by an input method can be filtered
 by that input method.
@@ -4720,9 +4720,9 @@ by the client itself, tightly coupled with the input method logic.
 <!-- .LP -->
 When the user enters a keystroke,
 the client calls
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>.
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>.
 At this point, in the on-the-spot case,
 the echo of the keystroke in the preedit has not yet been done.
 Before returning to the client logic that handles the input characters,
@@ -4780,9 +4780,9 @@ As highlighted before, the input method architecture provides
 preediting, which supports a type of preprocessor input composition.
 In this case, composition consists of interpreting a sequence
 of key events and returning a committed string via 
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>.
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>.
 This provides the basics for input methods.
 </para>
 <para>
@@ -4866,9 +4866,9 @@ and starts editing again.
 <!-- .sp -->
 For this reason, an input method supporting this type of conversion
 should take notice of when the client calls
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 or
-<function>XwcResetIC</function>,
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>,
 which is usually an indication of a context change.  
     </para>
   </listitem>
@@ -4880,9 +4880,9 @@ while other conversions replace the client's text with new text
 to achieve the reconversion or transliteration.   Yet in all
 cases the result of a conversion, either immediately or via preediting,
 is returned by the
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 and
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 functions.
 </para>
 <para>
@@ -4895,7 +4895,7 @@ or
 Because the input method may not support string conversions,
 clients have to query the availability of string conversion
 operations by checking the supported <acronym>XIC</acronym> values list by calling
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with the
 <symbol>XNQueryICValuesList</symbol>
 IM value.
@@ -4961,9 +4961,9 @@ additional text.
 <!-- .LP -->
 The interface to input methods might appear to be simply creating
 an input method
-(<function>XOpenIM</function>)
+(<xref linkend='XOpenIM' xrefstyle='select: title'/>)
 and freeing an input method
-(<function>XCloseIM</function>).
+(<xref linkend='XCloseIM' xrefstyle='select: title'/>).
 However, input methods may 
 require complex communication with input method servers (IM servers),
 for example:
@@ -5007,17 +5007,17 @@ functions are provided:
   <colspec colname='c2'/>
   <tbody>
     <row>
-      <entry><function>XRegisterIMInstantiateCallback</function></entry>
+      <entry><xref linkend='XRegisterIMInstantiateCallback' xrefstyle='select: title'/></entry>
       <entry>This function allows clients to register a callback procedure
       to be called when Xlib detects that an IM server is up and available.</entry>
     </row>
     <row>
-      <entry><function>XOpenIM</function></entry>
+      <entry><xref linkend='XOpenIM' xrefstyle='select: title'/></entry>
       <entry>A client calls this function as a result of the callback procedure
       being called.</entry>
     </row>
     <row>
-      <entry><function>XSetIMValues</function>, <function>XSetICValues</function></entry>
+      <entry><xref linkend='XSetIMValues' xrefstyle='select: title'/>, <xref linkend='XSetICValues' xrefstyle='select: title'/></entry>
       <entry>These functions use the <acronym>XIM</acronym> and <acronym>XIC</acronym> values,
       <symbol>XNDestroyCallback</symbol>,
       to allow a client 
@@ -5030,7 +5030,7 @@ functions are provided:
       switching IM servers.</entry>
     </row>
     <row>
-      <entry><function>XUnregisterIMInstantiateCallback</function></entry>
+      <entry><xref linkend='XUnregisterIMInstantiateCallback' xrefstyle='select: title'/></entry>
       <entry>This function removes a callback procedure registered by the client.</entry>
     </row>
   </tbody>
@@ -5082,7 +5082,7 @@ to specify a set of keys for this purpose.  However, the input
 method might not allow clients to specify hot keys.
 Therefore, clients have to query support of hot keys by checking the
 supported <acronym>XIC</acronym> values list by calling
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with the
 <symbol>XNQueryICValuesList</symbol>
 IM value.
@@ -5109,20 +5109,20 @@ Xlib provides the ability for an application to manage the preedit state
 programmatically.  Two methods are provided for
 retrieving the preedit state of an input context.
 One method is to query the state by calling
-<function>XGetICValues</function>
+<xref linkend='XGetICValues' xrefstyle='select: title'/>
 with the
 <symbol>XNPreeditState</symbol>
 <acronym>XIC</acronym> value.
 Another method is to receive notification whenever
 the preedit state is changed.  To receive such notification,
 an application needs to register a callback by calling
-<function>XSetICValues</function>
+<xref linkend='XSetICValues' xrefstyle='select: title'/>
 with the
 <symbol>XNPreeditStateNotifyCallback</symbol>
 <acronym>XIC</acronym> value. 
 In order to change the preedit state programmatically, an application 
 needs to call 
-<function>XSetICValues</function>
+<xref linkend='XSetICValues' xrefstyle='select: title'/>
 with
 <symbol>XNPreeditState</symbol>.
 </para>
@@ -5133,7 +5133,7 @@ method may not provide the ability to set the state or to
 retrieve the state programmatically.  Therefore, clients have to 
 query availability of preedit state operations by checking the 
 supported <acronym>XIC</acronym> values list by calling
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with the
 <symbol>XNQueryICValuesList</symbol>
 IM value.
@@ -5148,11 +5148,11 @@ IM value.
 <para>
 <!-- .LP -->
 To open a connection, use
-<function>XOpenIM</function>.
+<xref linkend='XOpenIM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XOpenIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xopenim'>
+<funcsynopsis id='XOpenIM'>
 <funcprototype>
   <funcdef>XIM <function>XOpenIM</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5208,15 +5208,15 @@ Specifies the full class name of the application.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XOpenIM</function>
+<xref linkend='XOpenIM' xrefstyle='select: title'/>
 function opens an input method, 
 matching the current locale and modifiers specification.
 Current locale and modifiers are bound to the input method at opening time.
 The locale associated with an input method cannot be changed dynamically.
 This implies that the strings returned by
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>,
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>,
 for any input context affiliated with a given input method,
 will be encoded in the locale current at the time the input method is opened.
 </para>
@@ -5224,11 +5224,11 @@ will be encoded in the locale current at the time the input method is opened.
 <!-- .LP -->
 The specific input method to which this call will be routed
 is identified on the basis of the current locale. 
-<function>XOpenIM</function>
+<xref linkend='XOpenIM' xrefstyle='select: title'/>
 will identify a default input method corresponding to the
 current locale.
 That default can be modified using 
-<function>XSetLocaleModifiers</function>
+<xref linkend='XSetLocaleModifiers' xrefstyle='select: title'/>
 for the input method modifier.
 </para>
 <para>
@@ -5256,24 +5256,24 @@ if res_name or res_class is NULL.
 <!-- .LP -->
 The res_name and res_class arguments are not assumed to exist beyond
 the call to
-<function>XOpenIM</function>.
+<xref linkend='XOpenIM' xrefstyle='select: title'/>.
 The specified resource database is assumed to exist for the lifetime
 of the input method.
 </para>
 <para>
 <!-- .LP -->
-<function>XOpenIM</function>
+<xref linkend='XOpenIM' xrefstyle='select: title'/>
 returns NULL if no input method could be opened.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To close a connection, use
-<function>XCloseIM</function>.
+<xref linkend='XCloseIM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCloseIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcloseim'>
+<funcsynopsis id='XCloseIM'>
 <funcprototype>
   <funcdef>Status <function>XCloseIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5296,18 +5296,18 @@ Specifies the input method.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCloseIM</function>
+<xref linkend='XCloseIM' xrefstyle='select: title'/>
 function closes the specified input method.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To set input method attributes, use
-<function>XSetIMValues</function>.
+<xref linkend='XSetIMValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetIMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetimvalues'>
+<funcsynopsis id='XSetIMValues'>
 <funcprototype>
   <funcdef>char *<function>XSetIMValues</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5341,7 +5341,7 @@ Specifies the variable-length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetIMValues</function>
+<xref linkend='XSetIMValues' xrefstyle='select: title'/>
 function presents a variable argument list programming interface
 for setting attributes of the specified input method.
 It returns NULL if it succeeds;
@@ -5356,11 +5356,11 @@ correctly.
 <!-- .LP -->
 <!-- .sp -->
 To query an input method, use 
-<function>XGetIMValues</function>.
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetIMValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetimvalues'>
+<funcsynopsis id='XGetIMValues'>
 <funcprototype>
   <funcdef>char *<function>XGetIMValues</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5394,7 +5394,7 @@ Specifies the variable length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 function presents a variable argument list programming interface
 for querying properties or features of the specified input method.
 This function returns NULL if it succeeds;
@@ -5409,21 +5409,21 @@ That is, if the <acronym>XIM</acronym> value is of type T,
 the argument must be of type T*.
 If T itself is a pointer type,
 then
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 allocates memory to store the actual data,
 and the client is responsible for freeing this data by calling
-<function>XFree</function>
+<xref linkend='XFree' xrefstyle='select: title'/>
 with the returned pointer.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the display associated with an input method, use
-<function>XDisplayOfIM</function>.
+<xref linkend='XDisplayOfIM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDisplayOfIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdisplayofim'>
+<funcsynopsis id='XDisplayOfIM'>
 <funcprototype>
   <funcdef>Display *<function>XDisplayOfIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5446,18 +5446,18 @@ Specifies the input method.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDisplayOfIM</function>
+<xref linkend='XDisplayOfIM' xrefstyle='select: title'/>
 function returns the display associated with the specified input method.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To get the locale associated with an input method, use
-<function>XLocaleOfIM</function>.
+<xref linkend='XLocaleOfIM' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLocaleOfIM</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlocaleofim'>
+<funcsynopsis id='XLocaleOfIM'>
 <funcprototype>
   <funcdef>char *<function>XLocaleOfIM</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -5480,18 +5480,18 @@ Specifies the input method.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLocaleOfIM</function>
+<xref linkend='XLocaleOfIM' xrefstyle='select: title'/>
 function returns the locale associated with the specified input method.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To register an input method instantiate callback, use
-<function>XRegisterIMInstantiateCallback</function>.
+<xref linkend='XRegisterIMInstantiateCallback' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XRegisterIMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xregisteriminstantiatecallback'>
+<funcsynopsis id='XRegisterIMInstantiateCallback'>
 <funcprototype>
   <funcdef>Bool <function>XRegisterIMInstantiateCallback</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5569,7 +5569,7 @@ Specifies the additional client data.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XRegisterIMInstantiateCallback</function>
+<xref linkend='XRegisterIMInstantiateCallback' xrefstyle='select: title'/>
 function registers a callback to be invoked whenever a new input method
 becomes available for the specified display that matches the current
 locale and modifiers.
@@ -5587,7 +5587,7 @@ The generic prototype is as follows:
 </para>
 <indexterm significance="preferred"><primary>IMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='iminstantiatecallback'>
+<funcsynopsis id='IMInstantiateCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>IMInstantiateCallback</replaceable></function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5632,11 +5632,11 @@ Not used for this callback and always passed as NULL.
 <!-- .LP -->
 <!-- .eM -->
 To unregister an input method instantiation callback, use
-<function>XUnregisterIMInstantiateCallback</function>.
+<xref linkend='XUnregisterIMInstantiateCallback' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XUnregisterIMInstantiateCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunregisteriminstantiatecallback'>
+<funcsynopsis id='XUnregisterIMInstantiateCallback'>
 <funcprototype>
   <funcdef>Bool <function>XUnregisterIMInstantiateCallback</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5714,7 +5714,7 @@ Specifies the additional client data.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnregisterIMInstantiateCallback</function>
+<xref linkend='XUnregisterIMInstantiateCallback' xrefstyle='select: title'/>
 function removes an input method instantiation callback previously
 registered.
 The function returns
@@ -5757,17 +5757,17 @@ The following keys apply to this table.
     <row>
       <entry>D</entry>
       <entry>This value may be set using
-      <function>XSetIMValues</function>.
+      <xref linkend='XSetIMValues' xrefstyle='select: title'/>.
       If it is not set,
       a default is provided.</entry>
     </row>
     <row>
       <entry>S</entry>
-      <entry>This value may be set using <function>XSetIMValues</function>.</entry>
+      <entry>This value may be set using <xref linkend='XSetIMValues' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>G</entry>
-      <entry>This value may be read using <function>XGetIMValues</function>.</entry>
+      <entry>This value may be read using <xref linkend='XGetIMValues' xrefstyle='select: title'/>.</entry>
     </row>
   </tbody>
   </tgroup>
@@ -5856,7 +5856,7 @@ Clients are responsible for freeing the
 <structname>XIMStyles</structname>
 structure.
 To do so, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -6068,9 +6068,9 @@ is triggered when an input method stops its service for any reason.
 After the callback is invoked, the input method is closed and the
 associated input context(s) are destroyed by Xlib.
 Therefore, the client should not call
-<function>XCloseIM</function>
+<xref linkend='XCloseIM' xrefstyle='select: title'/>
 or
-<function>XDestroyIC</function>.
+<xref linkend='XDestroyIC' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -6078,7 +6078,7 @@ The generic prototype of this callback function is as follows:
 </para>
 <indexterm significance="preferred"><primary>DestroyCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='destroycallback'>
+<funcsynopsis id='DestroyCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>DestroyCallback</replaceable></function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -6128,7 +6128,7 @@ A DestroyCallback is always called with a NULL call_data argument.
 <!-- .LP -->
 </para>
 </sect3>
-<sect3 id="Query_IM_IC_Values_List">
+<sect3 id='Query_IMIC_Values_List'>
 <title>Query IM/IC Values List</title>
 <!-- .XS -->
 <!-- (SN Query IM/IC Values List -->
@@ -6150,7 +6150,7 @@ Clients are responsible for freeing the
 <structname>XIMValuesList</structname>
 structure.
 To do so, use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -6203,7 +6203,7 @@ otherwise, the input method does not use the masks.
 <para>
 <!-- .LP -->
 Because this <acronym>XIM</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryIMValuesList</symbol>
 before using this argument.
@@ -6273,7 +6273,7 @@ must be set to
 <para>
 <!-- .LP -->
 Because this <acronym>XIM</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryIMValuesList</symbol>
 before using this argument.
@@ -6310,11 +6310,11 @@ they should be registered with the X Consortium.
 <!-- .LP -->
 <!-- .sp -->
 To create an input context, use
-<function>XCreateIC</function>.
+<xref linkend='XCreateIC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCreateIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreateic'>
+<funcsynopsis id='XCreateIC'>
 <funcprototype>
   <funcdef>XIC <function>XCreateIC</function></funcdef>
   <paramdef>XIM<parameter> im</parameter></paramdef>
@@ -6348,7 +6348,7 @@ Specifies the variable length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateIC</function>
+<xref linkend='XCreateIC' xrefstyle='select: title'/>
 function creates a context within the specified input method.
 </para>
 <para>
@@ -6361,7 +6361,7 @@ All other input context values can be set later.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateIC</function>
+<xref linkend='XCreateIC' xrefstyle='select: title'/>
 returns a NULL value if no input context could be created.
 A NULL value could be returned for any of the following reasons:
 </para>
@@ -6390,7 +6390,7 @@ The input method encountered an input method implementation-dependent error.
 </itemizedlist>
 <para>
 <!-- .LP -->
-<function>XCreateIC</function>
+<xref linkend='XCreateIC' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>,
 <errorname>BadColor</errorname>,
@@ -6403,11 +6403,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To destroy an input context, use
-<function>XDestroyIC</function>.
+<xref linkend='XDestroyIC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDestroyIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdestroyic'>
+<funcsynopsis id='XDestroyIC'>
 <funcprototype>
   <funcdef>void <function>XDestroyIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6429,7 +6429,7 @@ Specifies the input context.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XDestroyIC</function>
+<xref linkend='XDestroyIC' xrefstyle='select: title'/>
 destroys the specified input context.
 </para>
 <para>
@@ -6438,13 +6438,13 @@ destroys the specified input context.
 To communicate to and synchronize with input method
 for any changes in keyboard focus from the client side,
 use 
-<function>XSetICFocus</function>
+<xref linkend='XSetICFocus' xrefstyle='select: title'/>
 and
-<function>XUnsetICFocus</function>.
+<xref linkend='XUnsetICFocus' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetICFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xseticfocus'>
+<funcsynopsis id='XSetICFocus'>
 <funcprototype>
   <funcdef>void <function>XSetICFocus</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6467,7 +6467,7 @@ Specifies the input context.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetICFocus</function>
+<xref linkend='XSetICFocus' xrefstyle='select: title'/>
 function allows a client to notify an input method that the focus window
 attached to the specified input context has received keyboard focus.
 The input method should take action to provide appropriate feedback.
@@ -6476,12 +6476,12 @@ Complete feedback specification is a matter of user interface policy.
 <para>
 <!-- .LP -->
 Calling
-<function>XSetICFocus</function>
+<xref linkend='XSetICFocus' xrefstyle='select: title'/>
 does not affect the focus window value.
 </para>
 <indexterm significance="preferred"><primary>XUnsetICFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunseticfocus'>
+<funcsynopsis id='XUnsetICFocus'>
 <funcprototype>
   <funcdef>void <function>XUnsetICFocus</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6504,7 +6504,7 @@ Specifies the input context.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnsetICFocus</function>
+<xref linkend='XUnsetICFocus' xrefstyle='select: title'/>
 function allows a client to notify an input method that the specified input context
 has lost the keyboard focus and that no more input is expected on the focus window
 attached to that input context.
@@ -6514,7 +6514,7 @@ Complete feedback specification is a matter of user interface policy.
 <para>
 <!-- .LP -->
 Calling
-<function>XUnsetICFocus</function>
+<xref linkend='XUnsetICFocus' xrefstyle='select: title'/>
 does not affect the focus window value;
 the client may still receive 
 events from the input method that are directed to the focus window.
@@ -6523,21 +6523,21 @@ events from the input method that are directed to the focus window.
 <!-- .LP -->
 <!-- .sp -->
 To reset the state of an input context to its initial state, use
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 or
-<function>XwcResetIC</function>.
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbResetIC</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcResetIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmbresetic'>
+<funcsynopsis id='XmbResetIC'>
 <funcprototype>
   <funcdef>char *<function>XmbResetIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwcresetic'>
+<funcsynopsis id='XwcResetIC'>
 <funcprototype>
   <funcdef>wchar_t *<function>XwcResetIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6563,9 +6563,9 @@ When
 <symbol>XNResetState</symbol>
 is set to
 <symbol>XIMInitialState</symbol>,
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 and
-<function>XwcResetIC</function>
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>
 reset an input context to its initial state;
 when
 <symbol>XNResetState</symbol>
@@ -6576,15 +6576,15 @@ In both cases, any input pending on that context is deleted.
 The input method is required to clear the preedit area, if any,
 and update the status accordingly.
 Calling 
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 or
-<function>XwcResetIC</function>
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>
 does not change the focus.
 </para>
 <para>
 <!-- .LP -->
 The return value of
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 is its current preedit string as a multibyte string.
 If there is any preedit text drawn or visible to the user,
 then these procedures must return a non-NULL string.
@@ -6595,17 +6595,17 @@ whether these procedures return a non-NULL string or NULL.
 <para>
 <!-- .LP -->
 The client should free the returned string by calling
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To get the input method associated with an input context, use
-<function>XIMOfIC</function>.
+<xref linkend='XIMOfIC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XIMOfIC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='ximofic'>
+<funcsynopsis id='XIMOfIC'>
 <funcprototype>
   <funcdef>XIM <function>XIMOfIC</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6628,16 +6628,16 @@ Specifies the input context.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XIMOfIC</function>
+<xref linkend='XIMOfIC' xrefstyle='select: title'/>
 function returns the input method associated with the specified input context.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 Xlib provides two functions for setting and reading <acronym>XIC</acronym> values, respectively,
-<function>XSetICValues</function>
+<xref linkend='XSetICValues' xrefstyle='select: title'/>
 and
-<function>XGetICValues</function>.
+<xref linkend='XGetICValues' xrefstyle='select: title'/>.
 Both functions have a variable-length argument list.
 In that argument list, any <acronym>XIC</acronym> value's name must be denoted
 with a character string using the X Portable Character Set.
@@ -6646,11 +6646,11 @@ with a character string using the X Portable Character Set.
 <!-- .LP -->
 <!-- .sp -->
 To set <acronym>XIC</acronym> values, use
-<function>XSetICValues</function>.
+<xref linkend='XSetICValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetICValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xseticvalues'>
+<funcsynopsis id='XSetICValues'>
 <funcprototype>
   <funcdef>char *<function>XSetICValues</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6684,7 +6684,7 @@ Specifies the variable length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetICValues</function>
+<xref linkend='XSetICValues' xrefstyle='select: title'/>
 function returns NULL if no error occurred; 
 otherwise,
 it returns the name of the first argument that could not be set.
@@ -6715,7 +6715,7 @@ matching the data type imposed by the semantics of the argument.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetICValues</function>
+<xref linkend='XSetICValues' xrefstyle='select: title'/>
 can generate
 <errorname>BadAtom</errorname>,
 <errorname>BadColor</errorname>,
@@ -6729,11 +6729,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain <acronym>XIC</acronym> values, use
-<function>XGetICValues</function>.
+<xref linkend='XGetICValues' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetICValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgeticvalues'>
+<funcsynopsis id='XGetICValues'>
 <funcprototype>
   <funcdef>char *<function>XGetICValues</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -6767,7 +6767,7 @@ Specifies the variable length argument list(Al.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetICValues</function>
+<xref linkend='XGetICValues' xrefstyle='select: title'/>
 function returns NULL if no error occurred; otherwise,
 it returns the name of the first argument that could not be obtained.
 An argument could not be obtained for any of the following reasons:
@@ -6792,10 +6792,10 @@ That is, if the IC value is of type T,
 the argument must be of type T*.
 If T itself is a pointer type,
 then
-<function>XGetICValues</function>
+<xref linkend='XGetICValues' xrefstyle='select: title'/>
 allocates memory to store the actual data,
 and the client is responsible for freeing this data by calling
-<function>XFree</function>
+<xref linkend='XFree' xrefstyle='select: title'/>
 with the returned pointer.
 The exception to this rule is for an IC value of type
 <type>XVaNestedList</type>
@@ -6844,26 +6844,26 @@ The following keys apply to these tables.
   <tbody>
     <row>
       <entry>C</entry>
-      <entry>This value must be set with <function>XCreateIC</function>.</entry>
+      <entry>This value must be set with <xref linkend='XCreateIC' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>D</entry>
       <entry>This value may be set using 
-      <function>XCreateIC</function>.>
+      <xref linkend='XCreateIC' xrefstyle='select: title'/>.>
       If it is not set,>
       a default is provided.</entry>
     </row>
     <row>
       <entry>G</entry>
       <entry>This value may be read using 
-      <function>XGetICValues</function>.</entry>
+      <xref linkend='XGetICValues' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>GN</entry>
       <entry>This value may cause geometry negotiation when its value is set by means of
-      <function>XCreateIC</function>
+      <xref linkend='XCreateIC' xrefstyle='select: title'/>
       or
-      <function>XSetICValues</function>.</entry>
+      <xref linkend='XSetICValues' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>GR</entry>
@@ -6882,7 +6882,7 @@ The following keys apply to these tables.
     <row>
       <entry>S</entry>
       <entry>This value may be set with
-      <function>XSetICValues</function>.</entry>
+      <xref linkend='XSetICValues' xrefstyle='select: title'/>.</entry>
     </row>
     <row>
       <entry>Ignored</entry>
@@ -7332,7 +7332,7 @@ The
 <symbol>XNInputStyle</symbol>
 argument specifies the input style to be used.
 The value of this argument must be one of the values returned by the
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 function with the
 <symbol>XNQueryInputStyle</symbol>
 argument specified in the supported_styles list.
@@ -7367,11 +7367,11 @@ the input method may not operate correctly.
 <para>
 <!-- .LP -->
 If an attempt is made to set this value a second time with
-<function>XSetICValues</function>,
+<xref linkend='XSetICValues' xrefstyle='select: title'/>,
 the string
 <symbol>XNClientWindow</symbol>
 will be returned by
-<function>XSetICValues</function>,
+<xref linkend='XSetICValues' xrefstyle='select: title'/>,
 and the client window will not be changed.
 </para>
 <para>
@@ -7538,9 +7538,9 @@ stops its service for any reason; for example, when a connection to an IM
 server is broken.  After the destroy callback is called, 
 the input context is destroyed and the input method is closed.
 Therefore, the client should not call 
-<function>XDestroyIC</function>
+<xref linkend='XDestroyIC' xrefstyle='select: title'/>
 and
-<function>XCloseIM</function>.
+<xref linkend='XCloseIM' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -7573,7 +7573,7 @@ will filter any events that it uses to initiate the conversion.
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryICValuesList</symbol>
 before using this argument.
@@ -7582,8 +7582,8 @@ before using this argument.
 <!-- .LP -->
 </para>
 </sect3>
-<sect3 id="String_Conversion_">
-<title>String Conversion </title>
+<sect3 id='String_Conversion'>
+<title>String Conversion</title>
 <!-- .XS -->
 <!-- (SN String Conversion -->
 <!-- .XE -->
@@ -7613,7 +7613,7 @@ reconversion, or transliteration conversion on it.
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryICValuesList</symbol>
 before using this argument.
@@ -7665,16 +7665,16 @@ element to NULL.
 The
 <symbol>XNResetState</symbol>
 argument specifies the state the input context will return to after calling
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 or
-<function>XwcResetIC</function>.
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 The <acronym>XIC</acronym> state may be set to its initial state, as specified by the
 <symbol>XNPreeditState</symbol>
 value when
-<function>XCreateIC</function>
+<xref linkend='XCreateIC' xrefstyle='select: title'/>
 was called, or it may be set to preserve the current state.
 </para>
 <para>
@@ -7703,9 +7703,9 @@ typedef unsigned long XIMResetState;
 If
 <symbol>XIMInitialState</symbol>
 is set, then
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 and
-<function>XwcResetIC</function>
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>
 will return to the initial
 <symbol>XNPreeditState</symbol>
 state of the <acronym>XIC</acronym>.
@@ -7715,9 +7715,9 @@ state of the <acronym>XIC</acronym>.
 If
 <symbol>XIMPreserveState</symbol>
 is set, then 
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 and
-<function>XwcResetIC</function>
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>
 will preserve the current state of the <acronym>XIC</acronym>.
 </para>
 <para>
@@ -7736,7 +7736,7 @@ values other than those specified above will default to
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryICValuesList</symbol>
 before using this argument.
@@ -7768,7 +7768,7 @@ to
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryICValuesList</symbol>
 before using this functionality.
@@ -7904,9 +7904,9 @@ arguments specify to an input method the attributes to be used for the
 preedit and status areas,
 if any.
 Those attributes are passed to 
-<function>XSetICValues</function>
+<xref linkend='XSetICValues' xrefstyle='select: title'/>
 or
-<function>XGetICValues</function>
+<xref linkend='XGetICValues' xrefstyle='select: title'/>
 as a nested variable-length list.
 The names to be used in these lists are described in the following sections.
 </para>
@@ -8077,7 +8077,7 @@ in which the input method should allocate colors.
 The argument value is an 
 <type>Atom</type>
 that should be a valid atom for calling
-<function>XGetRGBColormaps</function>.
+<xref linkend='XGetRGBColormaps' xrefstyle='select: title'/>.
 An invalid argument may generate a
 <errorname>BadAtom</errorname>
 error when it is used by the input method.
@@ -8263,14 +8263,14 @@ is set to
 the
 <symbol>XNPreeditState</symbol>
 value specified at the creation time will be reflected as the initial state for
-<function>XmbResetIC</function>
+<xref linkend='XmbResetIC' xrefstyle='select: title'/>
 and
-<function>XwcResetIC</function>.
+<xref linkend='XwcResetIC' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryICValuesList</symbol>
 before using this argument.
@@ -8293,7 +8293,7 @@ The generic prototype is as follows:
 </para>
 <indexterm significance="preferred"><primary>PreeditStateNotifyCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='preeditstatenotifycallback'>
+<funcsynopsis id='PreeditStateNotifyCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditStateNotifyCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8360,7 +8360,7 @@ typedef struct _XIMPreeditStateNotifyCallbackStruct {
 <para>
 <!-- .LP -->
 Because this <acronym>XIC</acronym> value is optional, a client should call
-<function>XGetIMValues</function>
+<xref linkend='XGetIMValues' xrefstyle='select: title'/>
 with argument
 <symbol>XNQueryICValuesList</symbol>
 before using this argument.
@@ -8644,7 +8644,7 @@ The generic prototype is as follows:
 </para>
 <indexterm significance="preferred"><primary>DestroyCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='destroycallback_xic'>
+<funcsynopsis id='DestroyCallback_2'>
 <funcprototype>
   <funcdef>void <function><replaceable>DestroyCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8706,7 +8706,7 @@ The callback prototype is as follows:
 </para>
 <indexterm significance="preferred"><primary>StringConversionCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='stringconversioncallback'>
+<funcsynopsis id='StringConversionCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StringConversionCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8755,14 +8755,14 @@ The callback is passed an
 structure in the call_data argument.
 The text member is an
 <structname>XIMStringConversionText</structname>
-structure (see <link linkend="String_Conversion_">section 13.5.6.9</link>)
+structure (see <link linkend='String_Conversion'>section 13.5.6.9</link>)
 to be filled in by the client
 and describes the text to be sent to the input method.
 The data pointed to by the 
 string and feedback elements of the
 <structname>XIMStringConversionText</structname>
 structure will be freed using
-<function>XFree</function>
+<xref linkend='XFree' xrefstyle='select: title'/>
 by the input method
 after the callback returns.  So the client should not point to 
 internal buffers that are critical to the client.
@@ -8860,15 +8860,15 @@ conversion.
 <para>
 <!-- .LP -->
 When the input method turns preediting on or off, a
-<function><replaceable>PreeditStartCallback</replaceable></function>
+<xref linkend='PreeditStartCallback' xrefstyle='select: title'/>
 or
-<function><replaceable>PreeditDoneCallback</replaceable></function>
+<xref linkend='PreeditDoneCallback' xrefstyle='select: title'/>
 callback is triggered to let the toolkit do the setup
 or the cleanup for the preedit region.
 </para>
 <indexterm significance="preferred"><primary>PreeditStartCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='preeditstartcallback'>
+<funcsynopsis id='PreeditStartCallback'>
 <funcprototype>
   <funcdef>int <function><replaceable>PreeditStartCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8914,7 +8914,7 @@ Not used for this callback and always passed as NULL.
 <!-- .eM -->
 When preedit starts on the specified input context,
 the callback is called with a NULL call_data argument.
-<function><replaceable>PreeditStartCallback</replaceable></function>
+<xref linkend='PreeditStartCallback' xrefstyle='select: title'/>
 will return the maximum size of the preedit string.
 A positive number indicates the maximum number of bytes allowed
 in the preedit string, 
@@ -8922,7 +8922,7 @@ and a value of -1 indicates there is no limit.
 </para>
 <indexterm significance="preferred"><primary>PreeditDoneCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='preeditdonecallback'>
+<funcsynopsis id='PreeditDoneCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditDoneCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -8969,19 +8969,19 @@ Not used for this callback and always passed as NULL.
 When preedit stops on the specified input context,
 the callback is called with a NULL call_data argument.
 The client can release the data allocated by
-<function><replaceable>PreeditStartCallback</replaceable></function>.
+<xref linkend='PreeditStartCallback' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function><replaceable>PreeditStartCallback</replaceable></function>
+<xref linkend='PreeditStartCallback' xrefstyle='select: title'/>
 should initialize appropriate data needed for
 displaying preedit information and for handling further 
-<function><replaceable>PreeditDrawCallback</replaceable></function>
+<xref linkend='PreeditDrawCallback' xrefstyle='select: title'/>
 calls.
 Once
-<function><replaceable>PreeditStartCallback</replaceable></function>
+<xref linkend='PreeditStartCallback' xrefstyle='select: title'/>
 is called, it will not be called again before
-<function><replaceable>PreeditDoneCallback</replaceable></function>
+<xref linkend='PreeditDoneCallback' xrefstyle='select: title'/>
 has been called.
 </para>
 </sect3>
@@ -9003,7 +9003,7 @@ is as follows:
 </para>
 <indexterm significance="preferred"><primary>PreeditDrawCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='preeditdrawcallback'>
+<funcsynopsis id='PreeditDrawCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditDrawCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9390,7 +9390,7 @@ It then calls the PreeditCaretCallback.
 </para>
 <indexterm significance="preferred"><primary>PreeditCaretCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='preeditcaretcallback'>
+<funcsynopsis id='PreeditCaretCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>PreeditCaretCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9606,7 +9606,7 @@ the input method calls the StatusStartCallback callback.
 </para>
 <indexterm significance="preferred"><primary>StatusStartCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='statusstartcallback'>
+<funcsynopsis id='StatusStartCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StatusStartCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9663,7 +9663,7 @@ is destroyed or when it loses focus, the input method calls StatusDoneCallback.
 </para>
 <indexterm significance="preferred"><primary>StatusDoneCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='statusdonecallback'>
+<funcsynopsis id='StatusDoneCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StatusDoneCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9718,7 +9718,7 @@ StatusDrawCallback.
 </para>
 <indexterm significance="preferred"><primary>StatusDrawCallback</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='statusdrawcallback'>
+<funcsynopsis id='StatusDrawCallback'>
 <funcprototype>
   <funcdef>void <function><replaceable>StatusDrawCallback</replaceable></function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9827,13 +9827,13 @@ structure.
 Xlib provides the ability for an input method
 to register a filter internal to Xlib.
 This filter is called by a client (or toolkit) by calling
-<function>XFilterEvent</function>
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>
 after calling 
-<function>XNextEvent</function>.
+<xref linkend='XNextEvent' xrefstyle='select: title'/>.
 Any client that uses the 
 <type>XIM</type>
 interface should call
-<function>XFilterEvent</function>
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>
 to allow input methods to process their events without knowledge
 of the client's dispatching mechanism.
 A client's user interface policy may determine the priority
@@ -9845,18 +9845,18 @@ of event filters with respect to other event-handling mechanisms
 Clients may not know how many filters there are, if any,
 and what they do.
 They may only know if an event has been filtered on return of 
-<function>XFilterEvent</function>.
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>.
 Clients should discard filtered events.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To filter an event, use
-<function>XFilterEvent</function>.
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFilterEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfilterevent'>
+<funcsynopsis id='XFilterEvent'>
 <funcprototype>
   <funcdef>Bool <function>XFilterEvent</function></funcdef>
   <paramdef>XEvent<parameter> *event</parameter></paramdef>
@@ -9893,7 +9893,7 @@ Specifies the window (Wi.
 <!-- .eM -->
 If the window argument is
 <symbol>None</symbol>,
-<function>XFilterEvent</function>
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>
 applies the filter to the window specified in the
 <structname>XEvent</structname>
 structure.
@@ -9904,13 +9904,13 @@ has been redirected.
 <para>
 <!-- .LP -->
 If
-<function>XFilterEvent</function>
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>
 returns
 <symbol>True</symbol>,
 then some input method has filtered the event,
 and the client should discard the event.
 If
-<function>XFilterEvent</function>
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>
 returns
 <symbol>False</symbol>,
 then the client should continue processing the event.
@@ -9918,7 +9918,7 @@ then the client should continue processing the event.
 <para>
 <!-- .LP -->
 If a grab has occurred in the client and
-<function>XFilterEvent</function>
+<xref linkend='XFilterEvent' xrefstyle='select: title'/>
 returns
 <symbol>True</symbol>,
 the client should ungrab the keyboard.
@@ -9933,14 +9933,14 @@ the client should ungrab the keyboard.
 <!-- .LP -->
 To get composed input from an input method,
 use
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>.
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XmbLookupString</primary></indexterm>
 <indexterm significance="preferred"><primary>XwcLookupString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xmblookupstring'>
+<funcsynopsis id='XmbLookupString'>
 <funcprototype>
   <funcdef>int <function>XmbLookupString</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -9952,7 +9952,7 @@ or
 </funcprototype>
 </funcsynopsis>
 <!-- .FN -->
-<funcsynopsis id='xwclookupstring'>
+<funcsynopsis id='XwcLookupString'>
 <funcprototype>
   <funcdef>int <function>XwcLookupString</function></funcdef>
   <paramdef>XIC<parameter> ic</parameter></paramdef>
@@ -10043,9 +10043,9 @@ Returns a value indicating what kind of data is returned.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 and
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 functions return the string from the input method specified
 in the buffer_return argument.
 If no string is returned,
@@ -10061,23 +10061,23 @@ the KeySym value does not necessarily correspond to the string returned.
 </para>
 <para>
 <!-- .LP -->
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 returns the length of the string in bytes, and
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 returns the length of the string in characters.
 Both
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 and
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 return text in the encoding of the locale bound to the input method
 of the specified input context.
 </para>
 <para>
 <!-- .LP -->
 Each string returned by
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 and
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 begins in the initial state of the encoding of the locale
 (if the encoding of the locale is state-dependent).
 <!-- .NT -->
@@ -10086,9 +10086,9 @@ To insure proper input processing,
 it is essential that the client pass only 
 <symbol>KeyPress</symbol>
 events to
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 and
-<function>XwcLookupString</function>.
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>.
 Their behavior when a client passes a 
 <symbol>KeyRelease</symbol>
 event is undefined.
@@ -10113,9 +10113,9 @@ The possible values returned are:
       <entry><symbol>XBufferOverflow</symbol></entry>
       <entry>The input string to be returned is too large for the supplied buffer_return.
       The required size
-      (<function>XmbLookupString</function>
+      (<xref linkend='XmbLookupString' xrefstyle='select: title'/>
       in bytes;
-      <function>XwcLookupString</function>
+      <xref linkend='XwcLookupString' xrefstyle='select: title'/>
       in characters) is returned as the value of the function,
       and the contents of buffer_return and keysym_return are not modified.
       The client should recall the function with the same event
@@ -10157,15 +10157,15 @@ The possible values returned are:
 <para>
 <!-- .LP -->
 It does not make any difference if the input context passed as an argument to
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 and
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 is the one currently in possession of the focus or not.
 Input may have been composed within an input context before it lost the focus,
 and that input may be returned on subsequent calls to
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>
 even though it does not have any more keyboard focus.
 </para>
 </sect2>
@@ -10207,9 +10207,9 @@ A
 <symbol>KeyPress</symbol>
 event with a KeyCode of zero is used exclusively as a
 signal that an input method has composed input that can be returned by
-<function>XmbLookupString</function>
+<xref linkend='XmbLookupString' xrefstyle='select: title'/>
 or
-<function>XwcLookupString</function>.
+<xref linkend='XwcLookupString' xrefstyle='select: title'/>.
 No other use is made of a 
 <symbol>KeyPress</symbol>
 event with KeyCode of zero.

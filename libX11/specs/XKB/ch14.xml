@@ -1,4 +1,4 @@
-<chapter id='xkb_keyboard_mapping'>
+<chapter id='Xkb_Keyboard_Mapping'>
 <title>Xkb Keyboard Mapping</title>
 
 <para>
@@ -30,7 +30,7 @@ Chapter 15, "Xkb Client Keyboard Mapping" and Chapter 16, "Xkb Server Keyboard
 Mapping."
 </para>
 
-<sect1 id='notation_and_terminology'>
+<sect1 id='Notation_and_Terminology'>
 <title>Notation and Terminology</title>
 
 <para>
@@ -118,7 +118,7 @@ A</emphasis>
 .
 </para>
 
-<sect2 id='core_implementation'>
+<sect2 id='Core_Implementation'>
 <title>Core Implementation</title>
 
 <para>
@@ -161,7 +161,7 @@ Num_Lock</emphasis>
 
 
 </sect2>
-<sect2 id='xkb_implementation'>
+<sect2 id='Xkb_Implementation'>
 <title>Xkb Implementation</title>
 
 <para>
@@ -209,7 +209,7 @@ detail in section 16.2. <!-- xref -->
 
 </sect2>
 </sect1>
-<sect1 id='getting_map_components_from_the_server'>
+<sect1 id='Getting_Map_Components_from_the_Server'>
 <title>Getting Map Components from the Server</title>
 
 <para>
@@ -571,7 +571,7 @@ the reply from the server was invalid).
 </para>
 
 </sect1>
-<sect1 id='changing_map_components_in_the_server'>
+<sect1 id='Changing_Map_Components_in_the_Server'>
 <title>Changing Map Components in the Server</title>
 
 <para>
@@ -679,7 +679,7 @@ helper functions and provides a pointer to where they are defined.
 </para>
 
 
-<sect2 id='the_xkbmapchangesrec_structure'>
+<sect2 id='The_XkbMapChangesRec_Structure'>
 <title>The XkbMapChangesRec Structure</title>
 
 <para>
@@ -944,7 +944,7 @@ BadValue</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='tracking_changes_to_map_components'>
+<sect1 id='Tracking_Changes_to_Map_Components'>
 <title>Tracking Changes to Map Components</title>
 
 <para>
@@ -1042,7 +1042,7 @@ resized</emphasis>
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_client_and_server_maps'>
+<sect1 id='Allocating_and_Freeing_Client_and_Server_Maps'>
 <title>Allocating and Freeing Client and Server Maps</title>
 
 <para>
@@ -1082,7 +1082,7 @@ Xfree</emphasis>
 </para>
 
 
-<sect2 id='allocating_an_empty_client_map'>
+<sect2 id='Allocating_an_Empty_Client_Map'>
 <title>Allocating an Empty Client Map</title>
 
 <para>
@@ -1271,7 +1271,7 @@ BadValue</emphasis>
 
 
 </sect2>
-<sect2 id='freeing_a_client_map'>
+<sect2 id='Freeing_a_Client_Map'>
 <title>Freeing a Client Map</title>
 
 <para>
@@ -1363,7 +1363,7 @@ NULL.</emphasis>
 
 
 </sect2>
-<sect2 id='allocating_an_empty_server_map'>
+<sect2 id='Allocating_an_Empty_Server_Map'>
 <title>Allocating an Empty Server Map</title>
 
 <para>
@@ -1548,7 +1548,7 @@ BadAlloc</emphasis>
 
 
 </sect2>
-<sect2 id='freeing_a_server_map'>
+<sect2 id='Freeing_a_Server_Map'>
 <title>Freeing a Server Map</title>
 
 <para>

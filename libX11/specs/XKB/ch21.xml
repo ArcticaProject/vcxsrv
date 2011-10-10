@@ -1,4 +1,4 @@
-<chapter id='attaching_xkb_actions_to_x_input_extension_devices'>
+<chapter id='Attaching_Xkb_Actions_to_X_Input_Extension_Devices'>
 <title>Attaching Xkb Actions to X Input Extension Devices</title>
 
 <para>
@@ -154,7 +154,7 @@ KeyClass</emphasis>
 silently if Xkb access to those devices is not supported by the X server.
 </para>
 
-<sect1 id='xkbdeviceinforec'>
+<sect1 id='XkbDeviceInfoRec'>
 <title>XkbDeviceInfoRec</title>
 
 <para>
@@ -364,7 +364,7 @@ them.
 </para>
 
 </sect1>
-<sect1 id='querying_xkb_features_for_non_keyclass_input_extension_devices'>
+<sect1 id='Querying_Xkb_Features_for_Non_KeyClass_Input_Extension_Devices'>
 <title>Querying Xkb Features for Non-KeyClass Input Extension Devices</title>
 
 <para>
@@ -923,8 +923,7 @@ Match</emphasis>
 
 
 </sect1>
-<sect1
-id='allocating_initializing_and_freeing_the_xkbdeviceinforec_structure'>
+<sect1 id='Allocating_Initializing_and_Freeing_the_XkbDeviceInfoRecStructure'>
 <title>Allocating, Initializing, and Freeing the XkbDeviceInfoRec
 Structure</title>
 
@@ -1319,8 +1318,8 @@ themselves are preserved.
 
 
 </sect1>
-<sect1 id='setting_xkb_features_for_non_keyclass_input_extension_devices_'>
-<title>Setting Xkb Features for Non-KeyClass Input Extension Devices </title>
+<sect1 id='Setting_Xkb_Features_for_Non_KeyClass_Input_Extension_Devices'>
+<title>Setting Xkb Features for Non-KeyClass Input Extension Devices</title>
 
 <para>
 The Xkb extension allows clients to assign any key action to either core
@@ -1681,7 +1680,7 @@ BadMatch</emphasis>
 
 
 </sect1>
-<sect1 id='xkbextensiondevicenotify_event'>
+<sect1 id='XkbExtensionDeviceNotify_Event'>
 <title>XkbExtensionDeviceNotify Event</title>
 
 <para>
@@ -1783,7 +1782,7 @@ state or configuration.
 
 
 </sect1>
-<sect1 id='tracking_changes_to_extension_devices'>
+<sect1 id='Tracking_Changes_to_Extension_Devices'>
 <title>Tracking Changes to Extension Devices</title>
 
 <para>

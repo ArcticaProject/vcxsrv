@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="graphics_functions">
+<chapter id='Graphics_Functions'>
 <title>Graphics Functions</title>
 <para>
 Once you have established a connection to a display, you can use the Xlib graphics functions to:
@@ -31,20 +31,20 @@ Because pixmaps do not have defined backgrounds,
 they cannot be filled by using the functions described in this section.
 Instead, to accomplish an analogous operation on a pixmap,
 you should use 
-<function>XFillRectangle</function>,
+<xref linkend='XFillRectangle' xrefstyle='select: title'/>,
 which sets the pixmap to a known value.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To clear a rectangular area of a given window, use
-<function>XClearArea</function>.
+<xref linkend='XClearArea' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Areas</primary><secondary>clearing</secondary></indexterm>
 <indexterm><primary>Clearing</primary><secondary>areas</secondary></indexterm>
 <indexterm significance="preferred"><primary>XClearArea</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcleararea'>
+<funcsynopsis id='XClearArea'>
 <funcprototype>
   <funcdef><function>XClearArea</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -138,7 +138,7 @@ events are to be generated.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XClearArea</function>
+<xref linkend='XClearArea' xrefstyle='select: title'/>
 function paints a rectangular area in the specified window according to the
 specified dimensions with the window's background pixel or pixmap.
 The subwindow-mode effectively is
@@ -168,7 +168,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XClearArea</function>
+<xref linkend='XClearArea' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>,
 <errorname>BadValue</errorname>,
@@ -180,13 +180,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To clear the entire area in a given window, use
-<function>XClearWindow</function>.
+<xref linkend='XClearWindow' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Window</primary><secondary>clearing</secondary></indexterm>
 <indexterm><primary>Clearing</primary><secondary>windows</secondary></indexterm>
 <indexterm significance="preferred"><primary>XClearWindow</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xclearwindow'>
+<funcsynopsis id='XClearWindow'>
 <funcprototype>
   <funcdef><function>XClearWindow</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -220,10 +220,10 @@ Specifies the window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XClearWindow</function>
+<xref linkend='XClearWindow' xrefstyle='select: title'/>
 function clears the entire area in the specified window and is
 equivalent to
-<function>XClearArea</function>
+<xref linkend='XClearArea' xrefstyle='select: title'/>
 (display, w, 0, 0, 0, 0, 
 <symbol>False</symbol>).
 If the window has a defined background tile, the rectangle is tiled with a
@@ -242,7 +242,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XClearWindow</function>
+<xref linkend='XClearWindow' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>
 and
@@ -264,13 +264,13 @@ Xlib provides functions that you can use to copy an area or a bit plane.
 <!-- .sp -->
 To copy an area between drawables of the same
 root and depth, use
-<function>XCopyArea</function>.
+<xref linkend='XCopyArea' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Areas</primary><secondary>copying</secondary></indexterm>
 <indexterm><primary>Copying</primary><secondary>areas</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCopyArea</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcopyarea'>
+<funcsynopsis id='XCopyArea'>
 <funcprototype>
   <funcdef><function>XCopyArea</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -398,7 +398,7 @@ Specify the x and y coordinates(Dx.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCopyArea</function>
+<xref linkend='XCopyArea' xrefstyle='select: title'/>
 function combines the specified rectangle of src with the specified rectangle 
 of dest.
 The drawables must have the same root and depth,
@@ -447,7 +447,7 @@ clip-y-origin, and clip-mask.
 </para>
 <para>
 <!-- .LP -->
-<function>XCopyArea</function>
+<xref linkend='XCopyArea' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -459,13 +459,13 @@ errors.
 <para>
 <!-- .LP -->
 To copy a single bit plane of a given drawable, use
-<function>XCopyPlane</function>.
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Plane</primary><secondary>copying</secondary></indexterm>
 <indexterm><primary>Copying</primary><secondary>planes</secondary></indexterm>
 <indexterm significance="preferred"><primary>XCopyPlane</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcopyplane'>
+<funcsynopsis id='XCopyPlane'>
 <funcprototype>
   <funcdef><function>XCopyPlane</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -604,7 +604,7 @@ You must set exactly one bit to 1.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 function uses a single bit plane of the specified source rectangle
 combined with the specified GC to modify the specified rectangle of dest.
 The drawables must have the same root but need not have the same depth.
@@ -619,7 +619,7 @@ error results.
 <para>
 <!-- .LP -->
 Effectively, 
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 forms a pixmap of the same depth as the rectangle of dest and with a
 size specified by the source region. 
 It uses the foreground/background pixels in the GC (foreground
@@ -641,7 +641,7 @@ and clip-mask.
 </para>
 <para>
 <!-- .LP -->
-<function>XCopyPlane</function>
+<xref linkend='XCopyPlane' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -765,11 +765,11 @@ for these values.
 <para>
 <!-- .LP -->
 To draw a single point in a given drawable, use
-<function>XDrawPoint</function>.
+<xref linkend='XDrawPoint' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawPoint</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawpoint'>
+<funcsynopsis id='XDrawPoint'>
 <funcprototype>
   <funcdef><function>XDrawPoint</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -837,11 +837,11 @@ Specify the x and y coordinates where you want the point drawn.
 <!-- .eM -->
 <!-- .sp -->
 To draw multiple points in a given drawable, use
-<function>XDrawPoints</function>.
+<xref linkend='XDrawPoints' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawPoints</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawpoints'>
+<funcsynopsis id='XDrawPoints'>
 <funcprototype>
   <funcdef><function>XDrawPoints</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -923,17 +923,17 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawPoint</function>
+<xref linkend='XDrawPoint' xrefstyle='select: title'/>
 function uses the foreground pixel and function components of the
 GC to draw a single point into the specified drawable; 
-<function>XDrawPoints</function>
+<xref linkend='XDrawPoints' xrefstyle='select: title'/>
 draws multiple points this way.
 <symbol>CoordModeOrigin</symbol>
 treats all coordinates as relative to the origin,
 and
 <symbol>CoordModePrevious</symbol>
 treats all coordinates after the first as relative to the previous point.
-<function>XDrawPoints</function>
+<xref linkend='XDrawPoints' xrefstyle='select: title'/>
 draws the points in the order listed in the array.
 </para>
 <para>
@@ -943,14 +943,14 @@ foreground, subwindow-mode, clip-x-origin, clip-y-origin, and clip-mask.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawPoint</function>
+<xref linkend='XDrawPoint' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
 and 
 <errorname>BadMatch</errorname>
 errors.
-<function>XDrawPoints</function>
+<xref linkend='XDrawPoints' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -978,11 +978,11 @@ errors.
 <para>
 <!-- .LP -->
 To draw a single line between two points in a given drawable, use
-<function>XDrawLine</function>.
+<xref linkend='XDrawLine' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawLine</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawline'>
+<funcsynopsis id='XDrawLine'>
 <funcprototype>
   <funcdef><function>XDrawLine</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1072,11 +1072,11 @@ Specify the points (x1, y1) and (x2, y2) to be connected.
 <!-- .eM -->
 <!-- .sp -->
 To draw multiple lines in a given drawable, use
-<function>XDrawLines</function>.
+<xref linkend='XDrawLines' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawLines</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawlines'>
+<funcsynopsis id='XDrawLines'>
 <funcprototype>
   <funcdef><function>XDrawLines</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1160,11 +1160,11 @@ or
 <!-- .sp -->
 To draw multiple, unconnected lines in a given drawable,
 use
-<function>XDrawSegments</function>.
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawSegments</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawsegments'>
+<funcsynopsis id='XDrawSegments'>
 <funcprototype>
   <funcdef><function>XDrawSegments</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1231,19 +1231,19 @@ Specifies the number of segments in the array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawLine</function>
+<xref linkend='XDrawLine' xrefstyle='select: title'/>
 function uses the components of the specified GC to
 draw a line between the specified set of points (x1, y1) and (x2, y2).
 It does not perform joining at coincident endpoints.
 For any given line, 
-<function>XDrawLine</function>
+<xref linkend='XDrawLine' xrefstyle='select: title'/>
 does not draw a pixel more than once.
 If lines intersect, the intersecting pixels are drawn multiple times.  
 </para>
 <para>
 <!-- .LP -->
 The
-<function>XDrawLines</function>
+<xref linkend='XDrawLines' xrefstyle='select: title'/>
 function uses the components of the specified GC to draw 
 npoints-1 lines between each pair of points (point[i], point[i+1]) 
 in the array of
@@ -1253,7 +1253,7 @@ It draws the lines in the order listed in the array.
 The lines join correctly at all intermediate points, and if the first and last
 points coincide, the first and last lines also join correctly.
 For any given line, 
-<function>XDrawLines</function>
+<xref linkend='XDrawLines' xrefstyle='select: title'/>
 does not draw a pixel more than once.
 If thin (zero line-width) lines intersect, 
 the intersecting pixels are drawn multiple times.
@@ -1270,17 +1270,17 @@ treats all coordinates after the first as relative to the previous point.
 <para>
 <!-- .LP -->
 The
-<function>XDrawSegments</function>
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>
 function draws multiple, unconnected lines. 
 For each segment, 
-<function>XDrawSegments</function>
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>
 draws a
 line between (x1, y1) and (x2, y2).
 It draws the lines in the order listed in the array of
 <structname>XSegment</structname>
 structures and does not perform joining at coincident endpoints.
 For any given line, 
-<function>XDrawSegments</function>
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>
 does not draw a pixel more than once.  
 If lines intersect, the intersecting pixels are drawn multiple times.  
 </para>
@@ -1291,7 +1291,7 @@ function, plane-mask, line-width,
 line-style, cap-style, fill-style, subwindow-mode,
 clip-x-origin, clip-y-origin, and clip-mask.
 The
-<function>XDrawLines</function>
+<xref linkend='XDrawLines' xrefstyle='select: title'/>
 function also uses the join-style GC component.
 All three functions also use these GC mode-dependent components:
 foreground, background, tile, stipple, tile-stipple-x-origin, 
@@ -1299,24 +1299,24 @@ tile-stipple-y-origin, dash-offset, and dash-list.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawLine</function>,
-<function>XDrawLines</function>,
+<xref linkend='XDrawLine' xrefstyle='select: title'/>,
+<xref linkend='XDrawLines' xrefstyle='select: title'/>,
 and
-<function>XDrawSegments</function>
+<xref linkend='XDrawSegments' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
 and
 <errorname>BadMatch</errorname>
 errors.
-<function>XDrawLines</function>
+<xref linkend='XDrawLines' xrefstyle='select: title'/>
 also can generate
 <errorname>BadValue</errorname>
 errors.
 </para>
 </sect2>
-<sect2 id="Drawing_Single_and_Multiple_Rectangles_">
-<title>Drawing Single and Multiple Rectangles </title>
+<sect2 id='Drawing_Single_and_Multiple_Rectangles'>
+<title>Drawing Single and Multiple Rectangles</title>
 <!-- .XS -->
 <!-- (SN Drawing Single and Multiple Rectangles  -->
 <!-- .XE -->
@@ -1330,11 +1330,11 @@ errors.
 <para>
 <!-- .LP -->
 To draw the outline of a single rectangle in a given drawable, use
-<function>XDrawRectangle</function>.
+<xref linkend='XDrawRectangle' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawRectangle</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawrectangle'>
+<funcsynopsis id='XDrawRectangle'>
 <funcprototype>
   <funcdef><function>XDrawRectangle</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1427,11 +1427,11 @@ Specify the width and height(Wh.
 <!-- .sp -->
 To draw the outline of multiple rectangles
 in a given drawable, use
-<function>XDrawRectangles</function>.
+<xref linkend='XDrawRectangles' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawRectangles</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawrectangles'>
+<funcsynopsis id='XDrawRectangles'>
 <funcprototype>
   <funcdef><function>XDrawRectangles</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1498,9 +1498,9 @@ Specifies the number of rectangles in the array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawRectangle</function>
+<xref linkend='XDrawRectangle' xrefstyle='select: title'/>
 and
-<function>XDrawRectangles</function>
+<xref linkend='XDrawRectangles' xrefstyle='select: title'/>
 functions draw the outlines of the specified rectangle or rectangles as
 if a five-point 
 <systemitem>PolyLine</systemitem>
@@ -1517,7 +1517,7 @@ protocol request were specified for each rectangle:
 <!-- .LP  -->
 For the specified rectangle or rectangles, 
 these functions do not draw a pixel more than once.
-<function>XDrawRectangles</function>
+<xref linkend='XDrawRectangles' xrefstyle='select: title'/>
 draws the rectangles in the order listed in the array.
 If rectangles intersect,
 the intersecting pixels are drawn multiple times.
@@ -1534,9 +1534,9 @@ tile-stipple-y-origin, dash-offset, and dash-list.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawRectangle</function>
+<xref linkend='XDrawRectangle' xrefstyle='select: title'/>
 and
-<function>XDrawRectangles</function>
+<xref linkend='XDrawRectangles' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -1561,11 +1561,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To draw a single arc in a given drawable, use
-<function>XDrawArc</function>.
+<xref linkend='XDrawArc' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawArc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawarc'>
+<funcsynopsis id='XDrawArc'>
 <funcprototype>
   <funcdef><function>XDrawArc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1681,11 +1681,11 @@ arc, in units of degrees * 64.
 <!-- .eM -->
 <!-- .sp -->
 To draw multiple arcs in a given drawable, use
-<function>XDrawArcs</function>.
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawArcs</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawarcs'>
+<funcsynopsis id='XDrawArcs'>
 <funcprototype>
   <funcdef><function>XDrawArcs</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1754,9 +1754,9 @@ Specifies the number of arcs in the array.
 <!-- .EQ -->
 delim %%
 <!-- .EN -->
-<function>XDrawArc</function>
+<xref linkend='XDrawArc' xrefstyle='select: title'/>
 draws a single circular or elliptical arc, and 
-<function>XDrawArcs</function>
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>
 draws multiple circular or elliptical arcs.
 Each arc is specified by a rectangle and two angles.  
 The center of the circle or ellipse is the center of the
@@ -1764,9 +1764,9 @@ rectangle, and the major and minor axes are specified by the width and height.
 Positive angles indicate counterclockwise motion, 
 and negative angles indicate clockwise motion.  
 If the magnitude of angle2 is greater than 360 degrees, 
-<function>XDrawArc</function>
+<xref linkend='XDrawArc' xrefstyle='select: title'/>
 or 
-<function>XDrawArcs</function>
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>
 truncates it to 360 degrees.
 </para>
 <para>
@@ -1827,15 +1827,15 @@ and adjust is:
 <para>
 <!-- .LP -->
 For any given arc, 
-<function>XDrawArc</function>
+<xref linkend='XDrawArc' xrefstyle='select: title'/>
 and
-<function>XDrawArcs</function>
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>
 do not draw a pixel more than once.  
 If two arcs join correctly and if the line-width is greater than zero 
 and the arcs intersect, 
-<function>XDrawArc</function>
+<xref linkend='XDrawArc' xrefstyle='select: title'/>
 and
-<function>XDrawArcs</function>
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>
 do not draw a pixel more than once.
 Otherwise, 
 the intersecting pixels of intersecting arcs are drawn multiple times.
@@ -1865,9 +1865,9 @@ tile-stipple-y-origin, dash-offset, and dash-list.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawArc</function>
+<xref linkend='XDrawArc' xrefstyle='select: title'/>
 and
-<function>XDrawArcs</function>
+<xref linkend='XDrawArcs' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -1919,11 +1919,11 @@ A single arc or multiple arcs
 <!-- .LP -->
 <!-- .sp -->
 To fill a single rectangular area in a given drawable, use
-<function>XFillRectangle</function>.
+<xref linkend='XFillRectangle' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFillRectangle</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfillrectangle'>
+<funcsynopsis id='XFillRectangle'>
 <funcprototype>
   <funcdef><function>XFillRectangle</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2016,11 +2016,11 @@ Specify the width and height(Wh.
 <!-- .eM -->
 <!-- .sp -->
 To fill multiple rectangular areas in a given drawable, use
-<function>XFillRectangles</function>.
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFillRectangles</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfillrectangles'>
+<funcsynopsis id='XFillRectangles'>
 <funcprototype>
   <funcdef><function>XFillRectangles</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2087,9 +2087,9 @@ Specifies the number of rectangles in the array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFillRectangle</function>
+<xref linkend='XFillRectangle' xrefstyle='select: title'/>
 and
-<function>XFillRectangles</function>
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>
 functions fill the specified rectangle or rectangles
 as if a four-point 
 <systemitem>FillPolygon</systemitem>
@@ -2108,12 +2108,12 @@ width and height dimensions, and GC you specify.
 </para>
 <para>
 <!-- .LP -->
-<function>XFillRectangles</function>
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>
 fills the rectangles in the order listed in the array.  
 For any given rectangle,
-<function>XFillRectangle</function>
+<xref linkend='XFillRectangle' xrefstyle='select: title'/>
 and
-<function>XFillRectangles</function>
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>
 do not draw a pixel more than once.  
 If rectangles intersect, the intersecting pixels are
 drawn multiple times.
@@ -2129,9 +2129,9 @@ and tile-stipple-y-origin.
 </para>
 <para>
 <!-- .LP -->
-<function>XFillRectangle</function>
+<xref linkend='XFillRectangle' xrefstyle='select: title'/>
 and
-<function>XFillRectangles</function>
+<xref linkend='XFillRectangles' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -2149,13 +2149,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To fill a polygon area in a given drawable, use
-<function>XFillPolygon</function>.
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>.
 <indexterm><primary>Polygons</primary><secondary>filling</secondary></indexterm>
 <indexterm><primary>Filling</primary><secondary>polygon</secondary></indexterm>
 </para>
 <indexterm significance="preferred"><primary>XFillPolygon</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfillpolygon'>
+<funcsynopsis id='XFillPolygon'>
 <funcprototype>
   <funcdef><function>XFillPolygon</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2252,12 +2252,12 @@ or
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>XFillPolygon</function>
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>
 fills the region closed by the specified path.
 The path is closed
 automatically if the last point in the list does not coincide with the
 first point.
-<function>XFillPolygon</function>
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>
 does not draw a pixel of the region more than once.
 <symbol>CoordModeOrigin</symbol>
 treats all coordinates as relative to the origin,
@@ -2329,7 +2329,7 @@ and tile-stipple-y-origin.
 </para>
 <para>
 <!-- .LP -->
-<function>XFillPolygon</function>
+<xref linkend='XFillPolygon' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -2350,11 +2350,11 @@ errors.
 <indexterm><primary>Arcs</primary><secondary>filling</secondary></indexterm>
 <indexterm><primary>Filling</primary><secondary>arcs</secondary></indexterm>
 To fill a single arc in a given drawable, use
-<function>XFillArc</function>.
+<xref linkend='XFillArc' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFillArc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfillarc'>
+<funcsynopsis id='XFillArc'>
 <funcprototype>
   <funcdef><function>XFillArc</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2470,11 +2470,11 @@ arc, in units of degrees * 64.
 <!-- .eM -->
 <!-- .sp -->
 To fill multiple arcs in a given drawable, use
-<function>XFillArcs</function>.
+<xref linkend='XFillArcs' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFillArcs</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfillarcs'>
+<funcsynopsis id='XFillArcs'>
 <funcprototype>
   <funcdef><function>XFillArcs</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2541,9 +2541,9 @@ Specifies the number of arcs in the array.
 <!-- .LP -->
 <!-- .eM -->
 For each arc, 
-<function>XFillArc</function>
+<xref linkend='XFillArc' xrefstyle='select: title'/>
 or
-<function>XFillArcs</function>
+<xref linkend='XFillArcs' xrefstyle='select: title'/>
 fills the region closed by the infinitely thin path
 described by the specified arc and, depending on the 
 arc-mode specified in the GC, one or two line segments. 
@@ -2554,12 +2554,12 @@ For
 <symbol>ArcPieSlice</symbol>,
 the two line segments joining the endpoints of the arc with the center
 point are used.  
-<function>XFillArcs</function>
+<xref linkend='XFillArcs' xrefstyle='select: title'/>
 fills the arcs in the order listed in the array.  
 For any given arc,  
-<function>XFillArc</function>
+<xref linkend='XFillArc' xrefstyle='select: title'/>
 and
-<function>XFillArcs</function>
+<xref linkend='XFillArcs' xrefstyle='select: title'/>
 do not draw a pixel more than once.  
 If regions intersect, 
 the intersecting pixels are drawn multiple times.
@@ -2575,9 +2575,9 @@ and tile-stipple-y-origin.
 </para>
 <para>
 <!-- .LP -->
-<function>XFillArc</function>
+<xref linkend='XFillArc' xrefstyle='select: title'/>
 and
-<function>XFillArcs</function>
+<xref linkend='XFillArcs' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -2637,7 +2637,7 @@ The server can cache fonts for quick lookup.
 Fonts are global across all screens in a server.
 Several levels are possible when dealing with fonts.
 Most applications simply use 
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 to load a font and query the font metrics.
 </para>
 <para>
@@ -3017,11 +3017,11 @@ resource ID or a font ID interchangeably.
 <!-- .LP -->
 <!-- .sp -->
 To load a given font, use
-<function>XLoadFont</function>.
+<xref linkend='XLoadFont' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLoadFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xloadfont'>
+<funcsynopsis id='XLoadFont'>
 <funcprototype>
   <funcdef>Font <function>XLoadFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3056,7 +3056,7 @@ which is a null-terminated string.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLoadFont</function>
+<xref linkend='XLoadFont' xrefstyle='select: title'/>
 function loads the specified font and returns its associated font ID.
 If the font name is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
@@ -3069,7 +3069,7 @@ and the ``*'' character will match any number of characters.
 A structured format for font names is specified in the X Consortium standard 
 <emphasis remap='I'>X Logical Font Description Conventions</emphasis>.
 If 
-<function>XLoadFont</function>
+<xref linkend='XLoadFont' xrefstyle='select: title'/>
 was unsuccessful at loading the specified font, 
 a 
 <errorname>BadName</errorname>
@@ -3078,11 +3078,11 @@ Fonts are not associated with a particular screen
 and can be stored as a component
 of any GC.
 When the font is no longer needed, call 
-<function>XUnloadFont</function>.
+<xref linkend='XUnloadFont' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XLoadFont</function>
+<xref linkend='XLoadFont' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3093,11 +3093,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To return information about an available font, use
-<function>XQueryFont</function>.
+<xref linkend='XQueryFont' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xqueryfont'>
+<funcsynopsis id='XQueryFont'>
 <funcprototype>
   <funcdef>XFontStruct *<function>XQueryFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3133,7 +3133,7 @@ ID.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryFont</function>
+<xref linkend='XQueryFont' xrefstyle='select: title'/>
 function returns a pointer to the
 <structname>XFontStruct</structname>
 structure, which contains information associated with the font.
@@ -3144,26 +3144,26 @@ structure will be the
 <type>GContext</type>
 ID, and you need to be careful when using this ID in other functions
 (see
-<function>XGContextFromGC</function>).
+<xref linkend='XGContextFromGC' xrefstyle='select: title'/>).
 If the font does not exist,
-<function>XQueryFont</function>
+<xref linkend='XQueryFont' xrefstyle='select: title'/>
 returns NULL.
 To free this data, use
-<function>XFreeFontInfo</function>.
+<xref linkend='XFreeFontInfo' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To perform a
-<function>XLoadFont</function>
+<xref linkend='XLoadFont' xrefstyle='select: title'/>
 and
-<function>XQueryFont</function>
+<xref linkend='XQueryFont' xrefstyle='select: title'/>
 in a single operation, use
-<function>XLoadQueryFont</function>.
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XLoadQueryFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xloadqueryfont'>
+<funcsynopsis id='XLoadQueryFont'>
 <funcprototype>
   <funcdef>XFontStruct *<function>XLoadQueryFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3198,9 +3198,9 @@ which is a null-terminated string.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 function provides the most common way for accessing a font.
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 both opens (loads) the specified font and returns a pointer to the
 appropriate
 <structname>XFontStruct</structname>
@@ -3208,12 +3208,12 @@ structure.
 If the font name is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 If the font does not exist,
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
 <!-- .LP -->
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 can generate a
 <errorname>BadAlloc</errorname>
 error.
@@ -3223,15 +3223,15 @@ error.
 <!-- .sp -->
 To unload the font and free the storage used by the font structure
 that was allocated by
-<function>XQueryFont</function>
+<xref linkend='XQueryFont' xrefstyle='select: title'/>
 or
-<function>XLoadQueryFont</function>,
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>,
 use
-<function>XFreeFont</function>.
+<xref linkend='XFreeFont' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreefont'>
+<funcsynopsis id='XFreeFont'>
 <funcprototype>
   <funcdef><function>XFreeFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3265,7 +3265,7 @@ Specifies the storage associated with the font.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XFreeFont</function>
+<xref linkend='XFreeFont' xrefstyle='select: title'/>
 function deletes the association between the font resource ID and the specified 
 font and frees the
 <structname>XFontStruct</structname>
@@ -3275,7 +3275,7 @@ The data and the font should not be referenced again.
 </para>
 <para>
 <!-- .LP -->
-<function>XFreeFont</function>
+<xref linkend='XFreeFont' xrefstyle='select: title'/>
 can generate a
 <errorname>BadFont</errorname>
 error.
@@ -3284,11 +3284,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To return a given font property, use
-<function>XGetFontProperty</function>.
+<xref linkend='XGetFontProperty' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetFontProperty</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetfontproperty'>
+<funcsynopsis id='XGetFontProperty'>
 <funcprototype>
   <funcdef>Bool <function>XGetFontProperty</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3334,9 +3334,9 @@ Returns the value of the font property.
 <!-- .eM -->
 Given the atom for that property,
 the
-<function>XGetFontProperty</function>
+<xref linkend='XGetFontProperty' xrefstyle='select: title'/>
 function returns the value of the specified font property. 
-<function>XGetFontProperty</function>
+<xref linkend='XGetFontProperty' xrefstyle='select: title'/>
 also returns 
 <symbol>False</symbol>
 if the property was not defined or 
@@ -3357,13 +3357,13 @@ it is likely that the predefined font properties will be present.
 <!-- .LP -->
 <!-- .sp -->
 To unload a font that was loaded by
-<function>XLoadFont</function>,
+<xref linkend='XLoadFont' xrefstyle='select: title'/>,
 use
-<function>XUnloadFont</function>.
+<xref linkend='XUnloadFont' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XUnloadFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xunloadfont'>
+<funcsynopsis id='XUnloadFont'>
 <funcprototype>
   <funcdef><function>XUnloadFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3397,14 +3397,14 @@ Specifies the font.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUnloadFont</function>
+<xref linkend='XUnloadFont' xrefstyle='select: title'/>
 function deletes the association between the font resource ID and the specified font.
 The font itself will be freed when no other resource references it.
 The font should not be referenced again.
 </para>
 <para>
 <!-- .LP -->
-<function>XUnloadFont</function>
+<xref linkend='XUnloadFont' xrefstyle='select: title'/>
 can generate a
 <errorname>BadFont</errorname>
 error.
@@ -3424,11 +3424,11 @@ when querying a font type for a list of available sizes and so on.
 <!-- .LP -->
 <!-- .sp -->
 To return a list of the available font names, use
-<function>XListFonts</function>.
+<xref linkend='XListFonts' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XListFonts</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlistfonts'>
+<funcsynopsis id='XListFonts'>
 <funcprototype>
   <funcdef>char **<function>XListFonts</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3485,10 +3485,10 @@ Returns the actual number of font names.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XListFonts</function>
+<xref linkend='XListFonts' xrefstyle='select: title'/>
 function returns an array of available font names 
 (as controlled by the font search path; see
-<function>XSetFontPath</function>)
+<xref linkend='XSetFontPath' xrefstyle='select: title'/>)
 that match the string you passed to the pattern argument.
 The pattern string can contain any characters,
 but each asterisk (*) is a wildcard for any number of characters,
@@ -3501,21 +3501,21 @@ If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned strings are in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 If there are no matching font names,
-<function>XListFonts</function>
+<xref linkend='XListFonts' xrefstyle='select: title'/>
 returns NULL.
 The client should call
-<function>XFreeFontNames</function>
+<xref linkend='XFreeFontNames' xrefstyle='select: title'/>
 when finished with the result to free the memory.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To free a font name array, use
-<function>XFreeFontNames</function>.
+<xref linkend='XFreeFontNames' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeFontNames</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreefontnames'>
+<funcsynopsis id='XFreeFontNames'>
 <funcprototype>
   <funcdef><function>XFreeFontNames</function></funcdef>
   <paramdef>char<parameter> *list[]</parameter></paramdef>
@@ -3538,21 +3538,21 @@ Specifies the array of strings you want to free.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeFontNames</function>
+<xref linkend='XFreeFontNames' xrefstyle='select: title'/>
 function frees the array and strings returned by
-<function>XListFonts</function>
+<xref linkend='XListFonts' xrefstyle='select: title'/>
 or
-<function>XListFontsWithInfo</function>.
+<xref linkend='XListFontsWithInfo' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To obtain the names and information about available fonts, use
-<function>XListFontsWithInfo</function>.
+<xref linkend='XListFontsWithInfo' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XListFontsWithInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlistfontswithinfo'>
+<funcsynopsis id='XListFontsWithInfo'>
 <funcprototype>
   <funcdef>char **<function>XListFontsWithInfo</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3620,12 +3620,12 @@ Returns the font information.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XListFontsWithInfo</function>
+<xref linkend='XListFontsWithInfo' xrefstyle='select: title'/>
 function returns a list of font names that match the specified pattern and their
 associated font information.
 The list of names is limited to size specified by maxnames.
 The information returned for each font is identical to what
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 would return except that the per-character metrics are not returned.
 The pattern string can contain any characters,
 but each asterisk (*) is a wildcard for any number of characters,
@@ -3638,28 +3638,28 @@ If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned strings are in the Host Portable Character Encoding.
 Otherwise, the result is implementation-dependent.
 If there are no matching font names,
-<function>XListFontsWithInfo</function>
+<xref linkend='XListFontsWithInfo' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
 <!-- .LP -->
 To free only the allocated name array,
 the client should call
-<function>XFreeFontNames</function>.
+<xref linkend='XFreeFontNames' xrefstyle='select: title'/>.
 To free both the name array and the font information array
 or to free just the font information array,
 the client should call
-<function>XFreeFontInfo</function>.
+<xref linkend='XFreeFontInfo' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To free font structures and font names, use
-<function>XFreeFontInfo</function>.
+<xref linkend='XFreeFontInfo' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeFontInfo</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreefontinfo'>
+<funcsynopsis id='XFreeFontInfo'>
 <funcprototype>
   <funcdef><function>XFreeFontInfo</function></funcdef>
   <paramdef>char<parameter> **names</parameter></paramdef>
@@ -3707,15 +3707,15 @@ Specifies the actual number of font names.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeFontInfo</function>
+<xref linkend='XFreeFontInfo' xrefstyle='select: title'/>
 function frees a font structure or an array of font structures
 and optionally an array of font names.
 If NULL is passed for names, no font names are freed.
 If a font structure for an open font (returned by
-<function>XLoadQueryFont</function>)
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>)
 is passed, the structure is freed,
 but the font is not closed; use
-<function>XUnloadFont</function>
+<xref linkend='XUnloadFont' xrefstyle='select: title'/>
 to close the font.
 </para>
 </sect2>
@@ -3739,11 +3739,11 @@ These functions return the sum of the character metrics in pixels.
 <!-- .LP -->
 <!-- .sp -->
 To determine the width of an 8-bit character string, use
-<function>XTextWidth</function>.
+<xref linkend='XTextWidth' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XTextWidth</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xtextwidth'>
+<funcsynopsis id='XTextWidth'>
 <funcprototype>
   <funcdef>int <function>XTextWidth</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3789,11 +3789,11 @@ Specifies the character count in the specified string.
 <!-- .eM -->
 <!-- .sp -->
 To determine the width of a 2-byte character string, use
-<function>XTextWidth16</function>.
+<xref linkend='XTextWidth16' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XTextWidth16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xtextwidth16'>
+<funcsynopsis id='XTextWidth16'>
 <funcprototype>
   <funcdef>int <function>XTextWidth16</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3847,11 +3847,11 @@ Specifies the character count in the specified string.
 <para>
 <!-- .LP -->
 To compute the bounding box of an 8-bit character string in a given font, use
-<function>XTextExtents</function>.
+<xref linkend='XTextExtents' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XTextExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xtextextents'>
+<funcsynopsis id='XTextExtents'>
 <funcprototype>
   <funcdef><function>XTextExtents</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -3947,11 +3947,11 @@ structure.
 <!-- .eM -->
 <!-- .sp -->
 To compute the bounding box of a 2-byte character string in a given font, use
-<function>XTextExtents16</function>.
+<xref linkend='XTextExtents16' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XTextExtents16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xtextextents16'>
+<funcsynopsis id='XTextExtents16'>
 <funcprototype>
   <funcdef><function>XTextExtents16</function></funcdef>
   <paramdef>XFontStruct<parameter> *font_struct</parameter></paramdef>
@@ -4046,15 +4046,15 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XTextExtents</function>
+<xref linkend='XTextExtents' xrefstyle='select: title'/>
 and
-<function>XTextExtents16</function>
+<xref linkend='XTextExtents16' xrefstyle='select: title'/>
 functions 
 perform the size computation locally and, thereby,
 avoid the round-trip overhead of
-<function>XQueryTextExtents</function>
+<xref linkend='XQueryTextExtents' xrefstyle='select: title'/>
 and
-<function>XQueryTextExtents16</function>.
+<xref linkend='XQueryTextExtents16' xrefstyle='select: title'/>.
 Both functions return an
 <structname>XCharStruct</structname>
 structure, whose members are set to the values as follows.
@@ -4094,11 +4094,11 @@ undefined characters in the string are taken to have all zero metrics.
 <!-- .LP -->
 To query the server for the bounding box of an 8-bit character string in a 
 given font, use 
-<function>XQueryTextExtents</function>.
+<xref linkend='XQueryTextExtents' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryTextExtents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerytextextents'>
+<funcsynopsis id='XQueryTextExtents'>
 <funcprototype>
   <funcdef><function>XQueryTextExtents</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4206,11 +4206,11 @@ structure.
 <!-- .sp -->
 To query the server for the bounding box of a 2-byte character string
 in a given font, use
-<function>XQueryTextExtents16</function>.
+<xref linkend='XQueryTextExtents16' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryTextExtents16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerytextextents16'>
+<funcsynopsis id='XQueryTextExtents16'>
 <funcprototype>
   <funcdef><function>XQueryTextExtents16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4316,17 +4316,17 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryTextExtents</function>
+<xref linkend='XQueryTextExtents' xrefstyle='select: title'/>
 and
-<function>XQueryTextExtents16</function>
+<xref linkend='XQueryTextExtents16' xrefstyle='select: title'/>
 functions return the bounding box of the specified 8-bit and 16-bit
 character string in the specified font or the font contained in the
 specified GC.
 These functions query the X server and, therefore, suffer the round-trip
 overhead that is avoided by
-<function>XTextExtents</function>
+<xref linkend='XTextExtents' xrefstyle='select: title'/>
 and 
-<function>XTextExtents16</function>.
+<xref linkend='XTextExtents16' xrefstyle='select: title'/>.
 Both functions return a
 <structname>XCharStruct</structname>
 structure, whose members are set to the values as follows.
@@ -4364,9 +4364,9 @@ the undefined characters in the string are also ignored.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryTextExtents</function>
+<xref linkend='XQueryTextExtents' xrefstyle='select: title'/>
 and
-<function>XQueryTextExtents16</function>
+<xref linkend='XQueryTextExtents16' xrefstyle='select: title'/>
 can generate
 <errorname>BadFont</errorname>
 and
@@ -4404,9 +4404,9 @@ Image text characters
 <para>
 <!-- .LP -->
 The fundamental text functions
-<function>XDrawText</function>
+<xref linkend='XDrawText' xrefstyle='select: title'/>
 and
-<function>XDrawText16</function>
+<xref linkend='XDrawText16' xrefstyle='select: title'/>
 use the following structures:
 </para>
 <para>
@@ -4452,7 +4452,7 @@ coordinates that you pass in the text drawing functions.
 <para>
 <!-- .LP -->
 For example, consider the background rectangle drawn by
-<function>XDrawImageString</function>.
+<xref linkend='XDrawImageString' xrefstyle='select: title'/>.
 If you want the upper-left corner of the background rectangle
 to be at pixel coordinate (x,y), pass the (x,y + ascent)
 as the baseline origin coordinates to the text functions.
@@ -4479,11 +4479,11 @@ structure.
 <para>
 <!-- .LP -->
 To draw 8-bit characters in a given drawable, use
-<function>XDrawText</function>.
+<xref linkend='XDrawText' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawText</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawtext'>
+<funcsynopsis id='XDrawText'>
 <funcprototype>
   <funcdef><function>XDrawText</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4575,11 +4575,11 @@ Specifies the number of text items in the array.
 <!-- .eM -->
 <!-- .sp -->
 To draw 2-byte characters in a given drawable, use
-<function>XDrawText16</function>.
+<xref linkend='XDrawText16' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawText16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawtext16'>
+<funcsynopsis id='XDrawText16'>
 <funcprototype>
   <funcdef><function>XDrawText16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4670,9 +4670,9 @@ Specifies the number of text items in the array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawText16</function>
+<xref linkend='XDrawText16' xrefstyle='select: title'/>
 function is similar to
-<function>XDrawText</function>
+<xref linkend='XDrawText' xrefstyle='select: title'/>
 except that it uses 2-byte or 16-bit characters.
 Both functions allow complex spacing and font shifts between counted strings.
 </para>
@@ -4713,9 +4713,9 @@ and tile-stipple-y-origin.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawText</function>
+<xref linkend='XDrawText' xrefstyle='select: title'/>
 and
-<function>XDrawText16</function>
+<xref linkend='XDrawText16' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadFont</errorname>,
@@ -4735,11 +4735,11 @@ errors.
 <indexterm><primary>Strings</primary><secondary>drawing</secondary></indexterm>
 <indexterm><primary>Drawing</primary><secondary>strings</secondary></indexterm>
 To draw 8-bit characters in a given drawable, use
-<function>XDrawString</function>.
+<xref linkend='XDrawString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawstring'>
+<funcsynopsis id='XDrawString'>
 <funcprototype>
   <funcdef><function>XDrawString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4832,11 +4832,11 @@ Specifies the number of characters in the string argument.
 <!-- .eM -->
 <!-- .sp -->
 To draw 2-byte characters in a given drawable, use
-<function>XDrawString16</function>.
+<xref linkend='XDrawString16' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawString16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawstring16'>
+<funcsynopsis id='XDrawString16'>
 <funcprototype>
   <funcdef><function>XDrawString16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4931,7 +4931,7 @@ additional mask for a fill operation on the drawable.
 The drawable is modified only where the font character has a bit set to 1.
 For fonts defined with 2-byte matrix indexing
 and used with
-<function>XDrawString16</function>,
+<xref linkend='XDrawString16' xrefstyle='select: title'/>,
 each byte is used as a byte2 with a byte1 of zero.
 </para>
 <para>
@@ -4945,9 +4945,9 @@ and tile-stipple-y-origin.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawString</function>
+<xref linkend='XDrawString' xrefstyle='select: title'/>
 and
-<function>XDrawString16</function>
+<xref linkend='XDrawString16' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -4976,11 +4976,11 @@ This prevents annoying flicker on many displays.
 <!-- .LP -->
 <!-- .sp -->
 To draw 8-bit image text characters in a given drawable, use
-<function>XDrawImageString</function>.
+<xref linkend='XDrawImageString' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawImageString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawimagestring'>
+<funcsynopsis id='XDrawImageString'>
 <funcprototype>
   <funcdef><function>XDrawImageString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5072,11 +5072,11 @@ Specifies the number of characters in the string argument.
 <!-- .eM -->
 <!-- .sp -->
 To draw 2-byte image text characters in a given drawable, use
-<function>XDrawImageString16</function>.
+<xref linkend='XDrawImageString16' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDrawImageString16</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdrawimagestring16'>
+<funcsynopsis id='XDrawImageString16'>
 <funcprototype>
   <funcdef><function>XDrawImageString16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5167,9 +5167,9 @@ Specifies the number of characters in the string argument.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDrawImageString16</function>
+<xref linkend='XDrawImageString16' xrefstyle='select: title'/>
 function is similar to
-<function>XDrawImageString</function>
+<xref linkend='XDrawImageString' xrefstyle='select: title'/>
 except that it uses 2-byte or 16-bit characters.
 Both functions also use both the foreground and background pixels 
 of the GC in the destination.
@@ -5211,7 +5211,7 @@ font-ascent + font-descent
 <!-- .LP -->
 The overall-width, font-ascent, and font-descent
 are as would be returned by 
-<function>XQueryTextExtents</function>
+<xref linkend='XQueryTextExtents' xrefstyle='select: title'/>
 using gc and string.
 The function and fill-style defined in the GC are ignored for these functions. 
 The effective function is 
@@ -5223,7 +5223,7 @@ and the effective fill-style is
 <!-- .LP -->
 For fonts defined with 2-byte matrix indexing
 and used with
-<function>XDrawImageString</function>,
+<xref linkend='XDrawImageString' xrefstyle='select: title'/>,
 each byte is used as a byte2 with a byte1 of zero.
 </para>
 <para>
@@ -5234,9 +5234,9 @@ clip-y-origin, and clip-mask.
 </para>
 <para>
 <!-- .LP -->
-<function>XDrawImageString</function>
+<xref linkend='XDrawImageString' xrefstyle='select: title'/>
 and
-<function>XDrawImageString16</function>
+<xref linkend='XDrawImageString16' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -5317,11 +5317,11 @@ typedef struct _XImage {
 <!-- .eM -->
 <!-- .sp -->
 To initialize the image manipulation routines of an image structure, use
-<function>XInitImage</function>.
+<xref linkend='XInitImage' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XInitImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xinitimage'>
+<funcsynopsis id='XInitImage'>
 <funcprototype>
   <funcdef>Status <function>XInitImage</function></funcdef>
   <paramdef>XImage<parameter> *image</parameter></paramdef>
@@ -5344,12 +5344,12 @@ Specifies the image.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XInitImage</function>
+<xref linkend='XInitImage' xrefstyle='select: title'/>
 function initializes the internal image manipulation routines of an
 image structure, based on the values of the various structure members.
 All fields other than the manipulation routines must already be initialized.
 If the bytes_per_line member is zero,
-<function>XInitImage</function>
+<xref linkend='XInitImage' xrefstyle='select: title'/>
 will assume the image data is contiguous in memory and set the
 bytes_per_line member to an appropriate value based on the other
 members; otherwise, the value of bytes_per_line is not changed.
@@ -5375,11 +5375,11 @@ or inconsistency in the structure, in which case the image is not changed.
 <!-- .sp -->
 To combine an image with a rectangle of a drawable on the display,
 use
-<function>XPutImage</function>.
+<xref linkend='XPutImage' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XPutImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xputimage'>
+<funcsynopsis id='XPutImage'>
 <funcprototype>
   <funcdef><function>XPutImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5509,7 +5509,7 @@ Specify the width and height(Wh.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XPutImage</function>
+<xref linkend='XPutImage' xrefstyle='select: title'/>
 function
 combines an image with a rectangle of the specified drawable.
 The section of the image defined by the src_x, src_y, width, and height 
@@ -5535,7 +5535,7 @@ error results.
 <!-- .LP -->
 If the characteristics of the image (for example, byte_order and bitmap_unit)
 differ from what the server requires,
-<function>XPutImage</function>
+<xref linkend='XPutImage' xrefstyle='select: title'/>
 automatically makes the appropriate
 conversions.
 </para>
@@ -5549,7 +5549,7 @@ foreground and background.
 </para>
 <para>
 <!-- .LP -->
-<function>XPutImage</function>
+<xref linkend='XPutImage' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,
@@ -5563,12 +5563,12 @@ errors.
 <!-- .sp -->
 To return the contents of a rectangle in a given drawable on the display,
 use
-<function>XGetImage</function>.
+<xref linkend='XGetImage' xrefstyle='select: title'/>.
 This function specifically supports rudimentary screen dumps.
 </para>
 <indexterm significance="preferred"><primary>XGetImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetimage'>
+<funcsynopsis id='XGetImage'>
 <funcprototype>
   <funcdef>XImage *<function>XGetImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5676,7 +5676,7 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetImage</function>
+<xref linkend='XGetImage' xrefstyle='select: title'/>
 function returns a pointer to an
 <structname>XImage</structname>
 structure.
@@ -5690,7 +5690,7 @@ display, the depth of the returned image will be the number of planes
 requested.
 If the format argument is 
 <symbol>ZPixmap</symbol>,
-<function>XGetImage</function>
+<xref linkend='XGetImage' xrefstyle='select: title'/>
 returns as zero the bits in all planes not 
 specified in the plane_mask argument.
 The function performs no range checking on the values in plane_mask and ignores
@@ -5698,7 +5698,7 @@ extraneous bits.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetImage</function>
+<xref linkend='XGetImage' xrefstyle='select: title'/>
 returns the depth of the image to the depth member of the
 <structname>XImage</structname>
 structure.
@@ -5733,12 +5733,12 @@ The returned contents of visible regions of inferiors
 of a different depth than the specified window's depth are also undefined.
 The pointer cursor image is not included in the returned contents.
 If a problem occurs,
-<function>XGetImage</function>
+<xref linkend='XGetImage' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetImage</function>
+<xref linkend='XGetImage' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadMatch</errorname>,
@@ -5751,11 +5751,11 @@ errors.
 <!-- .LP -->
 To copy the contents of a rectangle on the display
 to a location within a preexisting image structure, use
-<function>XGetSubImage</function>.
+<xref linkend='XGetSubImage' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetSubImage</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetsubimage'>
+<funcsynopsis id='XGetSubImage'>
 <funcprototype>
   <funcdef>XImage *<function>XGetSubImage</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -5899,21 +5899,21 @@ Specify the x and y coordinates(Dx.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetSubImage</function>
+<xref linkend='XGetSubImage' xrefstyle='select: title'/>
 function updates dest_image with the specified subimage in the same manner as 
-<function>XGetImage</function>.
+<xref linkend='XGetImage' xrefstyle='select: title'/>.
 If the format argument is 
 <symbol>XYPixmap</symbol>,
 the image contains only the bit planes you passed to the plane_mask argument.
 If the format argument is 
 <symbol>ZPixmap</symbol>,
-<function>XGetSubImage</function>
+<xref linkend='XGetSubImage' xrefstyle='select: title'/>
 returns as zero the bits in all planes not 
 specified in the plane_mask argument.
 The function performs no range checking on the values in plane_mask and ignores
 extraneous bits.
 As a convenience,
-<function>XGetSubImage</function>
+<xref linkend='XGetSubImage' xrefstyle='select: title'/>
 returns a pointer to the same
 <structname>XImage</structname>
 structure specified by dest_image.
@@ -5946,12 +5946,12 @@ the returned contents of such obscured regions are undefined.
 The returned contents of visible regions of inferiors
 of a different depth than the specified window's depth are also undefined.
 If a problem occurs,
-<function>XGetSubImage</function>
+<xref linkend='XGetSubImage' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetSubImage</function>
+<xref linkend='XGetSubImage' xrefstyle='select: title'/>
 can generate
 <errorname>BadDrawable</errorname>,
 <errorname>BadGC</errorname>,

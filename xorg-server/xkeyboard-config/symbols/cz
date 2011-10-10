@@ -89,7 +89,8 @@ xkb_symbols "qwerty" {
     name[Group1]= "Czech (qwerty)";
 
     key <AB01>	{ [         z,          Z,       degree,         NoSymbol ] };
-    key <AC10>	{ [     uring,   quotedbl,    semicolon,         NoSymbol ] };
+    key <AC10>	{ [     uring,   quotedbl,    semicolon,            colon ] };
+    key <AC11>	{ [   section,     exclam,   apostrophe,         quotedbl ] };
     key <AD06>	{ [         y,          Y,     NoSymbol,         NoSymbol ] };
     key <AD11>	{ [    uacute,      slash,  bracketleft,        braceleft ] };
     key <AD12>	{ [parenright,  parenleft, bracketright,       braceright ] };

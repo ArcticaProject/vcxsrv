@@ -1,4 +1,4 @@
-<chapter id='x_library_controls'>
+<chapter id='X_Library_Controls'>
 <title>X Library Controls</title>
 
 <para>
@@ -53,7 +53,7 @@ normally; however, the feedback that would normally occur with the controls
 enabled may be missing.
 </para>
 
-<sect1 id='controls_affecting_keycode_to_string_translation'>
+<sect1 id='Controls_Affecting_Keycode_to_String_Translation'>
 <title>Controls Affecting Keycode-to-String Translation</title>
 
 <para>
@@ -71,7 +71,7 @@ affecting simple string lookups are:
      <emphasis>LevelOneUsesShiftAndLock</emphasis>
 </programlisting></para>
 
-<sect2 id='forcelatin1lookup'>
+<sect2 id='ForceLatin1Lookup'>
 <title>ForceLatin1Lookup</title>
 
 <para>
@@ -89,7 +89,7 @@ is disabled, allowing characters outside of the Latin1 set to be returned.
 
 
 </sect2>
-<sect2 id='consumelookupmods'>
+<sect2 id='ConsumeLookupMods'>
 <title>ConsumeLookupMods</title>
 
 <para>
@@ -166,7 +166,7 @@ refer to Chapter 12.
 
 
 </sect2>
-<sect2 id='alwaysconsumeshiftandlock'>
+<sect2 id='AlwaysConsumeShiftAndLock'>
 <title>AlwaysConsumeShiftAndLock</title>
 
 <para>
@@ -187,7 +187,7 @@ AlwaysConsumeShiftAndLock</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='controls_affecting_compose_processing'>
+<sect1 id='Controls_Affecting_Compose_Processing'>
 <title>Controls Affecting Compose Processing</title>
 
 <para>
@@ -216,7 +216,7 @@ the compose processing controls is optional in an Xkb implementation.
 </para>
 
 
-<sect2 id='consumekeysoncomposefail'>
+<sect2 id='ConsumeKeysOnComposeFail'>
 <title>ConsumeKeysOnComposeFail</title>
 
 <para>
@@ -255,7 +255,7 @@ ConsumeKeysOnComposeFail</emphasis>
 
 
 </sect2>
-<sect2 id='composeled'>
+<sect2 id='ComposeLED'>
 <title>ComposeLED</title>
 
 <para>
@@ -288,7 +288,7 @@ this purpose.
 
 
 </sect2>
-<sect2 id='beeponcomposefail'>
+<sect2 id='BeepOnComposeFail'>
 <title>BeepOnComposeFail</title>
 
 <para>
@@ -325,10 +325,10 @@ ComposeFail</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='controls_effecting_event_delivery'>
+<sect1 id='Controls_Effecting_Event_Delivery'>
 <title>Controls Effecting Event Delivery</title>
 
-<sect2 id='ignorenewkeyboards'>
+<sect2 id='IgnoreNewKeyboards'>
 <title>IgnoreNewKeyboards</title>
 
 <para>
@@ -361,7 +361,7 @@ MappingNotify</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='manipulating_the_library_controls'>
+<sect1 id='Manipulating_the_Library_Controls'>
 <title>Manipulating the Library Controls</title>
 
 <para>
@@ -418,7 +418,7 @@ defined in Table 11.1. <!-- xref -->
 </tgroup>
 </table>
 
-<sect2 id='determining_which_library_controls_are_implemented'>
+<sect2 id='Determining_Which_Library_Controls_are_Implemented'>
 <title>Determining Which Library Controls are Implemented</title>
 
 <para>
@@ -459,7 +459,7 @@ library and is composed of an inclusive OR of bits from Table 11.1.
 
 
 </sect2>
-<sect2 id='determining_the_state_of_the_library_controls'>
+<sect2 id='Determining_the_State_of_the_Library_Controls'>
 <title>Determining the State of the Library Controls</title>
 
 <para>
@@ -502,7 +502,7 @@ is enabled does not imply that it is actually implemented.
 </para>
 
 </sect2>
-<sect2 id='changing_the_state_of_the_library_controls'>
+<sect2 id='Changing_the_State_of_the_Library_Controls'>
 <title>Changing the State of the Library Controls</title>
 
 <para>

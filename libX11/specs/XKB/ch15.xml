@@ -1,4 +1,4 @@
-<chapter id='xkb_client_keyboard_mapping'>
+<chapter id='Xkb_Client_Keyboard_Mapping'>
 <title>Xkb Client Keyboard Mapping</title>
 
 <para>
@@ -25,7 +25,7 @@ Figure 15.1 shows the relationships between elements in the client map:
 Xkb Client Map</H5>
 -->
 
-<sect1 id='the_xkbclientmaprec_structure'>
+<sect1 id='The_XkbClientMapRec_Structure'>
 <title>The XkbClientMapRec Structure</title>
 
 <para>
@@ -58,7 +58,7 @@ XkbClientMapRec</emphasis>
 
 
 </sect1>
-<sect1 id='key_types'>
+<sect1 id='Key_Types'>
 <title>Key Types</title>
 
 <para>
@@ -398,7 +398,7 @@ level-one symbols.
 </para>
 
 
-<sect2 id='the_canonical_key_types'>
+<sect2 id='The_Canonical_Key_Types'>
 <title>The Canonical Key Types</title>
 
 <para>
@@ -423,7 +423,7 @@ types</emphasis>
      <emphasis>XkbKeypadIndex</emphasis>
 </programlisting></para>
 
-<sect3 id='one_level'>
+<sect3 id='ONE_LEVEL'>
 <title>ONE_LEVEL</title>
 
 <para>
@@ -451,7 +451,7 @@ XkbOneLevelIndex</emphasis>
 
 
 </sect3>
-<sect3 id='two_level'>
+<sect3 id='TWO_LEVEL'>
 <title>TWO_LEVEL</title>
 
 <para>
@@ -484,7 +484,7 @@ XkbTwoLevelIndex</emphasis>
 
 
 </sect3>
-<sect3 id='alphabetic'>
+<sect3 id='ALPHABETIC'>
 <title>ALPHABETIC</title>
 
 <para>
@@ -561,7 +561,7 @@ XkbAlphabeticIndex</emphasis>
 
 
 </sect3>
-<sect3 id='keypad'>
+<sect3 id='KEYPAD'>
 <title>KEYPAD</title>
 
 <para>
@@ -635,7 +635,7 @@ XkbKeypadIndex</emphasis>
 
 
 </sect3>
-<sect3 id='initializing_the_canonical_key_types_in_a_new_client_map'>
+<sect3 id='Initializing_the_Canonical_Key_Types_in_a_New_Client_Map'>
 <title>Initializing the Canonical Key Types in a New Client Map</title>
 
 <para>
@@ -740,7 +740,7 @@ xkb</emphasis>
 
 </sect3>
 </sect2>
-<sect2 id='getting_key_types_from_the_server'>
+<sect2 id='Getting_Key_Types_from_the_Server'>
 <title>Getting Key Types from the Server</title>
 
 <para>
@@ -834,7 +834,7 @@ num</emphasis>
 
 
 </sect2>
-<sect2 id='changing_the_number_of_levels_in_a_key_type'>
+<sect2 id='Changing_the_Number_of_Levels_in_a_Key_Type'>
 <title>Changing the Number of Levels in a Key Type</title>
 
 <para>
@@ -1004,7 +1004,7 @@ Success</emphasis>
 
 
 </sect2>
-<sect2 id='copying_key_types'>
+<sect2 id='Copying_Key_Types'>
 <title>Copying Key Types</title>
 
 <para>
@@ -1182,7 +1182,7 @@ Success</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='key_symbol_map'>
+<sect1 id='Key_Symbol_Map'>
 <title>Key Symbol Map</title>
 
 <para>
@@ -1264,7 +1264,7 @@ These fields are described in detail in the following sections.
 </para>
 
 
-<sect2 id='per_key_key_type_indices'>
+<sect2 id='Per_Key_Key_Type_Indices'>
 <title>Per-Key Key Type Indices</title>
 
 <para>
@@ -1392,7 +1392,7 @@ group</emphasis>
 
 
 </sect2>
-<sect2 id='per_key_group_information'>
+<sect2 id='Per_Key_Group_Information'>
 <title>Per-Key Group Information</title>
 
 <para>
@@ -1646,7 +1646,7 @@ XkbSymMapRec</emphasis>
 
 
 </sect2>
-<sect2 id='key_width'>
+<sect2 id='Key_Width'>
 <title>Key Width</title>
 
 <para>
@@ -1664,7 +1664,7 @@ symbols or set of types bound to a key are changed.
 
 
 </sect2>
-<sect2 id='offset_in_to_the_symbol_map'>
+<sect2 id='Offset_in_to_the_Symbol_Map'>
 <title>Offset in to the Symbol Map</title>
 
 <para>
@@ -1974,7 +1974,7 @@ keycode</emphasis>
 
 
 </sect2>
-<sect2 id='getting_the_symbol_map_for_keys_from_the_server'>
+<sect2 id='Getting_the_Symbol_Map_for_Keys_from_the_Server'>
 <title>Getting the Symbol Map for Keys from the Server</title>
 
 <para>
@@ -2090,7 +2090,7 @@ BadAlloc</emphasis>
 
 
 </sect2>
-<sect2 id='changing_the_number_of_groups_and_types_bound_to_a_key'>
+<sect2 id='Changing_the_Number_of_Groups_and_Types_Bound_to_a_Key'>
 <title>Changing the Number of Groups and Types Bound to a Key</title>
 
 <para>
@@ -2332,7 +2332,7 @@ BadAlloc</emphasis>
 
 
 </sect2>
-<sect2 id='changing_the_number_of_symbols_bound_to_a_key'>
+<sect2 id='Changing_the_Number_of_Symbols_Bound_to_a_Key'>
 <title>Changing the Number of Symbols Bound to a Key</title>
 
 <para>
@@ -2458,7 +2458,7 @@ a key.</para></note>
 
 </sect2>
 </sect1>
-<sect1 id='the_per_key_modifier_map'>
+<sect1 id='The_Per_Key_Modifier_Map'>
 <title>The Per-Key Modifier Map</title>
 
 <para>
@@ -2496,7 +2496,7 @@ Chapter 16).
 </para>
 
 
-<sect2 id='getting_the_per_key_modifier_map_from_the_server'>
+<sect2 id='Getting_the_Per_Key_Modifier_Map_from_the_Server'>
 <title>Getting the Per-Key Modifier Map from the Server</title>
 
 <para>

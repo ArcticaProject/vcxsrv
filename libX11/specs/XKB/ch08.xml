@@ -1,4 +1,4 @@
-<chapter id='indicators'>
+<chapter id='Indicators'>
 <title>Indicators</title>
 
 <para>
@@ -42,7 +42,7 @@ keyboard indicators, which makes it straightforward to provide an on-screen
 used for manipulating them.
 </para>
 
-<sect1 id='indicator_names'>
+<sect1 id='Indicator_Names'>
 <title>Indicator Names</title>
 
 <para>
@@ -62,7 +62,7 @@ XkbGetNames</emphasis>
 
 
 </sect1>
-<sect1 id='indicator_data_structures'>
+<sect1 id='Indicator_Data_Structures'>
 <title>Indicator Data Structures</title>
 
 <para>
@@ -74,7 +74,7 @@ XkbIndicatorMapRec</emphasis>
 </para>
 
 
-<sect2 id='xkbindicatorrec'>
+<sect2 id='XkbIndicatorRec'>
 <title>XkbIndicatorRec</title>
 
 <para>
@@ -129,7 +129,7 @@ phys_indicators</emphasis>
 
 
 </sect2>
-<sect2 id='xkbindicatormaprec'>
+<sect2 id='XkbIndicatorMapRec'>
 <title>XkbIndicatorMapRec</title>
 
 <para>
@@ -191,7 +191,7 @@ For more information on the effects of explicit changes to indicators and the
 relationship to the indicator map, see section 8.4.1. <!-- xref -->
 </para>
 
-<sect3 id='xkbindicatormaprec_flags_field'>
+<sect3 id='XkbIndicatorMapRec_flags_field'>
 <title>XkbIndicatorMapRec flags field</title>
 
 <para>
@@ -306,7 +306,7 @@ indicator on. If the conditions do not match, Xkb turns the indicator off.
 
 </sect3>
 
-<sect3 id='xkbindicatormaprec_which_groups_and_groups_fields'>
+<sect3 id='XkbIndicatorMapRec_which_groups_and_groups_fields'>
 <title>XkbIndicatorMapRec which_groups and groups fields</title>
 
 <para>
@@ -520,7 +520,7 @@ groups</emphasis>
 </table>
 
 </sect3>
-<sect3 id='xkbindicatormaprec_which_mods_and_mods_fields'>
+<sect3 id='XkbIndicatorMapRec_which_mods_and_mods_fields'>
 <title>XkbIndicatorMapRec which_mods and mods fields</title>
 
 <para>
@@ -787,7 +787,7 @@ mods</emphasis>
 </table>
 
 </sect3>
-<sect3 id='xkbindicatormaprec_ctrls_field'>
+<sect3 id='XkbIndicatorMapRec_ctrls_field'>
 <title>XkbIndicatorMapRec ctrls field</title>
 
 <para>
@@ -824,7 +824,7 @@ ctrls</emphasis>
 </sect3>
 </sect2>
 </sect1>
-<sect1 id='getting_information_about_indicators'>
+<sect1 id='Getting_Information_About_Indicators'>
 <title>Getting Information About Indicators</title>
 
 <para>
@@ -842,7 +842,7 @@ XkbIndicatorRec</emphasis>
 </para>
 
 
-<sect2 id='getting_indicator_state'>
+<sect2 id='Getting_Indicator_State'>
 <title>Getting Indicator State</title>
 
 <para>
@@ -923,7 +923,7 @@ XkbGetIndicatorState</emphasis>
 
 
 </sect2>
-<sect2 id='getting_indicator_information_by_index'>
+<sect2 id='Getting_Indicator_Information_by_Index'>
 <title>Getting Indicator Information by Index</title>
 
 <para>
@@ -1018,7 +1018,7 @@ XkbFreeIndicatorMaps</emphasis>
 
 
 </sect2>
-<sect2 id='getting_indicator_information_by_name'>
+<sect2 id='Getting_Indicator_Information_by_Name'>
 <title>Getting Indicator Information by Name</title>
 
 <para>
@@ -1189,7 +1189,7 @@ BadImplementation</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='changing_indicator_maps_and_state'>
+<sect1 id='Changing_Indicator_Maps_and_State'>
 <title>Changing Indicator Maps and State</title>
 
 <para>
@@ -1216,7 +1216,7 @@ XkbChangeIndicators</emphasis>.
 </para>
 
 
-<sect2 id='effects_of_explicit_changes_on_indicators'>
+<sect2 id='Effects_of_Explicit_Changes_on_Indicators'>
 <title>Effects of Explicit Changes on Indicators</title>
 
 <para>
@@ -1314,7 +1314,7 @@ ctrls</emphasis>
 
 
 </sect2>
-<sect2 id='changing_indicator_maps_by_index'>
+<sect2 id='Changing_Indicator_Maps_by_Index'>
 <title>Changing Indicator Maps by Index</title>
 
 <para>
@@ -1380,7 +1380,7 @@ desc</emphasis>
 
 
 </sect2>
-<sect2 id='changing_indicator_maps_by_name'>
+<sect2 id='Changing_Indicator_Maps_by_Name'>
 <title>Changing Indicator Maps by Name</title>
 
 <para>
@@ -1567,7 +1567,7 @@ XkbNamesNotify</emphasis>
 
 
 </sect2>
-<sect2 id='the_xkbindicatorchangesrec_structure'>
+<sect2 id='The_XkbIndicatorChangesRec_Structure'>
 <title>The XkbIndicatorChangesRec Structure</title>
 
 <para>
@@ -1704,7 +1704,7 @@ XkbIndicatorMapNotify</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='tracking_changes_to_indicator_state_or_map'>
+<sect1 id='Tracking_Changes_to_Indicator_State_or_Map'>
 <title>Tracking Changes to Indicator State or Map</title>
 
 <para>
@@ -1983,7 +1983,7 @@ BadMatch</emphasis>
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_indicator_maps'>
+<sect1 id='Allocating_and_Freeing_Indicator_Maps'>
 <title>Allocating and Freeing Indicator Maps</title>
 
 <para>

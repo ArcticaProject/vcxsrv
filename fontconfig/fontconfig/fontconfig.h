@@ -605,10 +605,10 @@ FcLangSetHash (const FcLangSet *ls);
 FcPublic FcStrSet *
 FcLangSetGetLangs (const FcLangSet *ls);
 
-FcLangSet *
+FcPublic FcLangSet *
 FcLangSetUnion (const FcLangSet *a, const FcLangSet *b);
 
-FcLangSet *
+FcPublic FcLangSet *
 FcLangSetSubtract (const FcLangSet *a, const FcLangSet *b);
 
 /* fclist.c */

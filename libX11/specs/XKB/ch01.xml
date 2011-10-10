@@ -1,4 +1,4 @@
-<chapter id='overview'>
+<chapter id='Overview'>
 <title>Overview</title>
 
 <para>
@@ -6,7 +6,7 @@ The X Keyboard Extension provides capabilities that are lacking or are
 cumbersome in the core X protocol.
 </para>
 
-<sect1 id='core_x_protocol_support_for_keyboards'>
+<sect1 id='Core_X_Protocol_Support_for_Keyboards'>
 <title>Core X Protocol Support for Keyboards</title>
 
 <para>
@@ -74,7 +74,7 @@ heuristics.
 </itemizedlist>
 
 </sect1>
-<sect1 id='xkb_keyboard_extension_support_for_keyboards'>
+<sect1 id='Xkb_Keyboard_Extension_Support_for_Keyboards'>
 <title>Xkb Keyboard Extension Support for Keyboards</title>
 
 <para>
@@ -93,7 +93,7 @@ designed to make keyboards more accessible to people with movement impairments.
 
 </sect1>
 
-<sect1 id='xkb_extension_components'>
+<sect1 id='Xkb_Extension_Components'>
 <title>Xkb Extension Components</title>
 
 <para>
@@ -214,7 +214,7 @@ configuration from its database of named components. Partial reconfiguration
 and incremental reconfiguration are both supported.
 </para>
 
-<sect2 id='groups_and_shift_levels'>
+<sect2 id='Groups_and_Shift_Levels'>
 <title>Groups and Shift Levels</title>
 
 <para>
@@ -225,7 +225,7 @@ description of groups and levels.
 
 
 </sect2>
-<sect2 id='radio_groups'>
+<sect2 id='Radio_Groups'>
 <title>Radio Groups</title>
 
 <para>
@@ -242,7 +242,7 @@ XkbKB_RadioGroup</emphasis>
 </sect2>
 </sect1>
 
-<sect1 id='client_types'>
+<sect1 id='Client_Types'>
 <title>Client Types</title>
 
 <para>
@@ -285,7 +285,7 @@ operate properly.
 
 </sect1>
 
-<sect1 id='compatibility_with_the_core_protocol'>
+<sect1 id='Compatibility_With_the_Core_Protocol'>
 <title>Compatibility With the Core Protocol</title>
 
 <para>
@@ -301,7 +301,7 @@ configuration.
 
 
 </sect1>
-<sect1 id='additional_protocol_errors'>
+<sect1 id='Additional_Protocol_Errors'>
 <title>Additional Protocol Errors</title>
 
 <para>
@@ -315,7 +315,7 @@ BadKeyboard</emphasis>
 
 
 </sect1>
-<sect1 id='extension_library_functions'>
+<sect1 id='Extension_Library_Functions'>
 <title>Extension Library Functions</title>
 
 <para>
@@ -345,7 +345,7 @@ directly manipulate the new capabilities.
 </para>
 
 
-<sect2 id='error_indications'>
+<sect2 id='Error_Indications'>
 <title>Error Indications</title>
 
 <para>

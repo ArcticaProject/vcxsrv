@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="input_device_functions">
+<chapter id='Input_Device_Functions'>
 <title>Input Device Functions</title>
 
 <para>
@@ -18,8 +18,8 @@ You can use the Xlib input device functions to:
   <listitem><para>Manipulate the keyboard encoding</para></listitem>
 </itemizedlist>
 
-<sect1 id="Pointer_Grabbing_">
-<title>Pointer Grabbing </title>
+<sect1 id='Pointer_Grabbing'>
+<title>Pointer Grabbing</title>
 <!-- .XS -->
 <!-- (SN Pointer Grabbing   -->
 <!-- .XE -->
@@ -47,7 +47,7 @@ further mouse and keyboard events will continue to be processed.
 If the keyboard or pointer is in synchronous mode, no
 further events are processed until the grabbing client
 allows them (see
-<function>XAllowEvents</function>).
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>).
 The keyboard or pointer is considered frozen during this
 interval.
 The event that triggered the grab can also be replayed.
@@ -64,9 +64,9 @@ There are two kinds of grabs:
 active and passive.
 An active grab occurs when a single client grabs the keyboard and/or pointer
 explicitly (see
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 and
-<function>XGrabKeyboard</function>).
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>).
 <indexterm><primary>Passive grab</primary></indexterm>
 A passive grab occurs when clients grab a particular keyboard key 
 or pointer button in a window,
@@ -154,13 +154,13 @@ and
 <!-- .LP -->
 <!-- .sp -->
 To grab the pointer, use
-<function>XGrabPointer</function>.
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Grabbing</primary><secondary>pointer</secondary></indexterm>
 <indexterm><primary>Pointer</primary><secondary>grabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgrabpointer'>
+<funcsynopsis id='XGrabPointer'>
 <funcprototype>
   <funcdef>int <function>XGrabPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -285,12 +285,12 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 function actively grabs control of the pointer and returns
 <symbol>GrabSuccess</symbol>
 if the grab was successful.
 Further pointer events are reported only to the grabbing client.
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 overrides any active pointer grab by this client.
 If owner_events is 
 <symbol>False</symbol>,
@@ -319,7 +319,7 @@ the state of the pointer, as seen by
 client applications,
 appears to freeze, and the X server generates no further pointer events
 until the grabbing client calls 
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 or until the pointer grab is released.
 Actual pointer changes are not lost while the pointer is frozen;
 they are simply queued in the server for later processing.
@@ -335,7 +335,7 @@ the state of the keyboard, as seen by
 client applications,
 appears to freeze, and the X server generates no further keyboard events
 until the grabbing client calls 
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 or until the pointer grab is released.
 Actual keyboard changes are not lost while the pointer is frozen;
 they are simply queued in the server for later processing.
@@ -378,7 +378,7 @@ grabbed the pointer before its request was processed.
 </para>
 <para>
 <!-- .LP -->
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 generates
 <symbol>EnterNotify</symbol>
 and
@@ -390,7 +390,7 @@ events.
 Either if grab_window or confine_to window is not viewable
 or if the confine_to window lies completely outside the boundaries of the root
 window,
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 fails and returns
 <symbol>GrabNotViewable</symbol>.
 If the pointer is actively grabbed by some other client,
@@ -408,7 +408,7 @@ is replaced by the current X server time).
 </para>
 <para>
 <!-- .LP -->
-<function>XGrabPointer</function>
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>
 can generate
 <errorname>BadCursor</errorname>,
 <errorname>BadValue</errorname>,
@@ -420,13 +420,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To ungrab the pointer, use
-<function>XUngrabPointer</function>.
+<xref linkend='XUngrabPointer' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Ungrabbing</primary><secondary>pointer</secondary></indexterm>
 <indexterm><primary>Pointer</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xungrabpointer'>
+<funcsynopsis id='XUngrabPointer'>
 <funcprototype>
   <funcdef><function>XUngrabPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -462,13 +462,13 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUngrabPointer</function>
+<xref linkend='XUngrabPointer' xrefstyle='select: title'/>
 function releases the pointer and any queued events
 if this client has actively grabbed the pointer from
-<function>XGrabPointer</function>,
-<function>XGrabButton</function>,
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>,
+<xref linkend='XGrabButton' xrefstyle='select: title'/>,
 or from a normal button press.
-<function>XUngrabPointer</function>
+<xref linkend='XUngrabPointer' xrefstyle='select: title'/>
 does not release the pointer if the specified
 time is earlier than the last-pointer-grab time or is later than the
 current X server time.
@@ -488,13 +488,13 @@ outside the boundaries of the root window.
 <!-- .LP -->
 <!-- .sp -->
 To change an active pointer grab, use
-<function>XChangeActivePointerGrab</function>.
+<xref linkend='XChangeActivePointerGrab' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Pointer</primary><secondary>grabbing</secondary></indexterm>
 <indexterm ><primary>Changing</primary><secondary>pointer grab</secondary></indexterm>
 <indexterm significance="preferred"><primary>XChangeActivePointerGrab</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangeactivepointergrab'>
+<funcsynopsis id='XChangeActivePointerGrab'>
 <funcprototype>
   <funcdef><function>XChangeActivePointerGrab</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -554,18 +554,18 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XChangeActivePointerGrab</function>
+<xref linkend='XChangeActivePointerGrab' xrefstyle='select: title'/>
 function changes the specified dynamic parameters if the pointer is actively
 grabbed by the client and if the specified time is no earlier than the
 last-pointer-grab time and no later than the current X server time.
 This function has no effect on the passive parameters of an
-<function>XGrabButton</function>.
+<xref linkend='XGrabButton' xrefstyle='select: title'/>.
 The interpretation of event_mask and cursor is the same as described in
-<function>XGrabPointer</function>.
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XChangeActivePointerGrab</function>
+<xref linkend='XChangeActivePointerGrab' xrefstyle='select: title'/>
 can generate
 <errorname>BadCursor</errorname>
 and
@@ -576,13 +576,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To grab a pointer button, use
-<function>XGrabButton</function>.
+<xref linkend='XGrabButton' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Grabbing</primary><secondary>buttons</secondary></indexterm>
 <indexterm><primary>Button</primary><secondary>grabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabButton</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgrabbutton'>
+<funcsynopsis id='XGrabButton'>
 <funcprototype>
   <funcdef><function>XGrabButton</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -720,11 +720,11 @@ Specifies the cursor that is to be displayed or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGrabButton</function>
+<xref linkend='XGrabButton' xrefstyle='select: title'/>
 function establishes a passive grab.
 In the future,
 the pointer is actively grabbed (as for
-<function>XGrabPointer</function>),
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>),
 the last-pointer-grab time is set to the time at which the button was pressed
 (as transmitted in the
 <symbol>ButtonPress</symbol>
@@ -760,7 +760,7 @@ on any ancestor of grab_window.
 <para>
 <!-- .LP -->
 The interpretation of the remaining arguments is as for
-<function>XGrabPointer</function>.
+<xref linkend='XGrabPointer' xrefstyle='select: title'/>.
 The active grab is terminated automatically when the logical state of the
 pointer has all buttons released
 (independent of the state of the logical modifier keys).
@@ -790,7 +790,7 @@ to a physical button.
 <para>
 <!-- .LP -->
 If some other client has already issued an
-<function>XGrabButton</function>
+<xref linkend='XGrabButton' xrefstyle='select: title'/>
 with the same button/key combination on the same window, a
 <errorname>BadAccess</errorname>
 error results.
@@ -803,12 +803,12 @@ and a
 <errorname>BadAccess</errorname>
 error results (no grabs are
 established) if there is a conflicting grab for any combination.
-<function>XGrabButton</function>
+<xref linkend='XGrabButton' xrefstyle='select: title'/>
 has no effect on an active grab.
 </para>
 <para>
 <!-- .LP -->
-<function>XGrabButton</function>
+<xref linkend='XGrabButton' xrefstyle='select: title'/>
 can generate
 <errorname>BadCursor</errorname>,
 <errorname>BadValue</errorname>,
@@ -820,13 +820,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To ungrab a pointer button, use
-<function>XUngrabButton</function>.
+<xref linkend='XUngrabButton' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Ungrabbing</primary><secondary>buttons</secondary></indexterm>
 <indexterm><primary>Button</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabButton</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xungrabbutton'>
+<funcsynopsis id='XUngrabButton'>
 <funcprototype>
   <funcdef><function>XUngrabButton</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -886,7 +886,7 @@ Specifies the grab window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUngrabButton</function>
+<xref linkend='XUngrabButton' xrefstyle='select: title'/>
 function releases the passive button/key combination on the specified window if
 it was grabbed by this client.
 A modifiers of 
@@ -899,12 +899,12 @@ A button of
 <symbol>AnyButton</symbol>
 is equivalent to issuing the
 request for all possible buttons.
-<function>XUngrabButton</function>
+<xref linkend='XUngrabButton' xrefstyle='select: title'/>
 has no effect on an active grab.
 </para>
 <para>
 <!-- .LP -->
-<function>XUngrabButton</function>
+<xref linkend='XUngrabButton' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and
@@ -912,8 +912,8 @@ and
 errors.
 </para>
 </sect1>
-<sect1 id="Keyboard_Grabbing_">
-<title>Keyboard Grabbing </title>
+<sect1 id='Keyboard_Grabbing'>
+<title>Keyboard Grabbing</title>
 <!-- .XS -->
 <!-- (SN Keyboard Grabbing  -->
 <!-- .XE -->
@@ -941,13 +941,13 @@ and
 <!-- .LP -->
 <!-- .sp -->
 To grab the keyboard, use
-<function>XGrabKeyboard</function>.
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Keyboard</primary><secondary>grabbing</secondary></indexterm>
 <indexterm><primary>Grabbing</primary><secondary>keyboard</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabKeyboard</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgrabkeyboard'>
+<funcsynopsis id='XGrabKeyboard'>
 <funcprototype>
   <funcdef>int <function>XGrabKeyboard</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1035,7 +1035,7 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGrabKeyboard</function>
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>
 function actively grabs control of the keyboard and generates
 <symbol>FocusIn</symbol>
 and
@@ -1043,7 +1043,7 @@ and
 events.
 Further key events are reported only to the
 grabbing client.
-<function>XGrabKeyboard</function>
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>
 overrides any active keyboard grab by this client.
 If owner_events is 
 <symbol>False</symbol>,
@@ -1075,7 +1075,7 @@ If the keyboard_mode  argument is
 the state of the keyboard (as seen by client applications) appears to freeze,
 and the X server generates no further keyboard events until the
 grabbing client issues a releasing 
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 call or until the keyboard grab is released.
 Actual keyboard changes are not lost while the keyboard is frozen; 
 they are simply queued in the server for later processing.
@@ -1091,7 +1091,7 @@ If pointer_mode is
 the state of the pointer (as seen by client applications) appears to freeze, 
 and the X server generates no further pointer events 
 until the grabbing client issues a releasing 
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 call or until the keyboard grab is released.
 Actual pointer changes are not lost while the pointer is frozen; 
 they are simply queued in the server for later processing.
@@ -1099,7 +1099,7 @@ they are simply queued in the server for later processing.
 <para>
 <!-- .LP -->
 If the keyboard is actively grabbed by some other client,
-<function>XGrabKeyboard</function>
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>
 fails and returns
 <symbol>AlreadyGrabbed</symbol>.
 If grab_window is not viewable,
@@ -1118,7 +1118,7 @@ is replaced by the current X server time).
 </para>
 <para>
 <!-- .LP -->
-<function>XGrabKeyboard</function>
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and 
@@ -1129,13 +1129,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To ungrab the keyboard, use
-<function>XUngrabKeyboard</function>.
+<xref linkend='XUngrabKeyboard' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Keyboard</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm><primary>Ungrabbing</primary><secondary>keyboard</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabKeyboard</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xungrabkeyboard'>
+<funcsynopsis id='XUngrabKeyboard'>
 <funcprototype>
   <funcdef><function>XUngrabKeyboard</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1171,14 +1171,14 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUngrabKeyboard</function>
+<xref linkend='XUngrabKeyboard' xrefstyle='select: title'/>
 function
 releases the keyboard and any queued events if this client has it actively grabbed from
 either
-<function>XGrabKeyboard</function>
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>
 or
-<function>XGrabKey</function>.
-<function>XUngrabKeyboard</function>
+<xref linkend='XGrabKey' xrefstyle='select: title'/>.
+<xref linkend='XUngrabKeyboard' xrefstyle='select: title'/>
 does not release the keyboard and any queued events
 if the specified time is earlier than
 the last-keyboard-grab time or is later than the current X server time.
@@ -1196,13 +1196,13 @@ active keyboard grab becomes not viewable.
 <!-- .LP -->
 <!-- .sp -->
 To passively grab a single key of the keyboard, use
-<function>XGrabKey</function>.
+<xref linkend='XGrabKey' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Key</primary><secondary>grabbing</secondary></indexterm>
 <indexterm><primary>Grabbing</primary><secondary>keys</secondary></indexterm>
 <indexterm significance="preferred"><primary>XGrabKey</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgrabkey'>
+<funcsynopsis id='XGrabKey'>
 <funcprototype>
   <funcdef><function>XGrabKey</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1302,11 +1302,11 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGrabKey</function>
+<xref linkend='XGrabKey' xrefstyle='select: title'/>
 function establishes a passive grab on the keyboard.
 In the future,
 the keyboard is actively grabbed (as for
-<function>XGrabKeyboard</function>),
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>),
 the last-keyboard-grab time is set to the time at which the key was pressed
 (as transmitted in the
 <symbol>KeyPress</symbol>
@@ -1339,7 +1339,7 @@ on any ancestor of grab_window.
 <para>
 <!-- .LP -->
 The interpretation of the remaining arguments is as for 
-<function>XGrabKeyboard</function>.
+<xref linkend='XGrabKeyboard' xrefstyle='select: title'/>.
 The active grab is terminated automatically when the logical state of the
 keyboard has the specified key released
 (independent of the logical state of the modifier keys).
@@ -1372,7 +1372,7 @@ error results.
 <para>
 <!-- .LP -->
 If some other client has issued a 
-<function>XGrabKey</function>
+<xref linkend='XGrabKey' xrefstyle='select: title'/>
 with the same key combination on the same window, a 
 <errorname>BadAccess</errorname>
 error results.
@@ -1388,7 +1388,7 @@ if there is a conflicting grab for any combination.
 </para>
 <para>
 <!-- .LP -->
-<function>XGrabKey</function>
+<xref linkend='XGrabKey' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadValue</errorname>,
@@ -1400,13 +1400,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To ungrab a key, use
-<function>XUngrabKey</function>.
+<xref linkend='XUngrabKey' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Key</primary><secondary>ungrabbing</secondary></indexterm>
 <indexterm><primary>Ungrabbing</primary><secondary>keys</secondary></indexterm>
 <indexterm significance="preferred"><primary>XUngrabKey</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xungrabkey'>
+<funcsynopsis id='XUngrabKey'>
 <funcprototype>
   <funcdef><function>XUngrabKey</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1465,7 +1465,7 @@ Specifies the grab window.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XUngrabKey</function>
+<xref linkend='XUngrabKey' xrefstyle='select: title'/>
 function releases the key combination on the specified window if it was grabbed
 by this client.
 It has no effect on an active grab.
@@ -1480,7 +1480,7 @@ is equivalent to issuing the request for all possible key codes.
 </para>
 <para>
 <!-- .LP -->
-<function>XUngrabKey</function>
+<xref linkend='XUngrabKey' xrefstyle='select: title'/>
 can generate
 <errorname>BadValue</errorname>
 and
@@ -1503,11 +1503,11 @@ describes the mechanism for resuming event processing.
 <!-- .LP -->
 <!-- .sp -->
 To allow further events to be processed when the device has been frozen, use
-<function>XAllowEvents</function>.
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XAllowEvents</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xallowevents'>
+<funcsynopsis id='XAllowEvents'>
 <funcprototype>
   <funcdef><function>XAllowEvents</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1564,7 +1564,7 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 function releases some queued events if the client has caused a device 
 to freeze.
 It has no effect if the specified time is earlier than the last-grab
@@ -1608,13 +1608,13 @@ Depending on the event_mode argument, the following occurs:
       <entry><symbol>ReplayPointer</symbol></entry>
       <entry>If the pointer is actively grabbed by the client and is frozen as the result of
       an event having been sent to the client (either from the activation of an
-      <function>XGrabButton</function>
+      <xref linkend='XGrabButton' xrefstyle='select: title'/>
       or from a previous
-      <function>XAllowEvents</function>
+      <xref linkend='XAllowEvents' xrefstyle='select: title'/>
       with mode
       <symbol>SyncPointer</symbol>
       but not from an 
-      <function>XGrabPointer</function>),
+      <xref linkend='XGrabPointer' xrefstyle='select: title'/>),
       the pointer grab is released and that event is completely reprocessed.
       This time, however, the function ignores any passive grabs at or above 
       (toward the root of) the grab_window of the grab just released.
@@ -1653,13 +1653,13 @@ Depending on the event_mode argument, the following occurs:
       <entry>If the keyboard is actively grabbed by the client and is frozen
       as the result of an event having been sent to the client (either from the
       activation of an
-      <function>XGrabKey</function>
+      <xref linkend='XGrabKey' xrefstyle='select: title'/>
       or from a previous
-      <function>XAllowEvents</function>
+      <xref linkend='XAllowEvents' xrefstyle='select: title'/>
       with mode
       <symbol>SyncKeyboard</symbol>
       but not from an 
-      <function>XGrabKeyboard</function>),
+      <xref linkend='XGrabKeyboard' xrefstyle='select: title'/>),
       the keyboard grab is released and that event is completely reprocessed.
       This time, however, the function ignores any passive grabs at or above
       (toward the root of)
@@ -1732,12 +1732,12 @@ the freeze must be released on behalf of both grabs before events can
 again be processed.
 If a device is frozen twice by a single client,
 then a single
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 releases both.
 </para>
 <para>
 <!-- .LP -->
-<function>XAllowEvents</function>
+<xref linkend='XAllowEvents' xrefstyle='select: title'/>
 can generate a
 <errorname>BadValue</errorname>
 error.
@@ -1758,11 +1758,11 @@ pointer to a new position under program control.
 <!-- .LP -->
 <!-- .sp -->
 To move the pointer to an arbitrary point in a window, use
-<function>XWarpPointer</function>.
+<xref linkend='XWarpPointer' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XWarpPointer</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xwarppointer'>
+<funcsynopsis id='XWarpPointer'>
 <funcprototype>
   <funcdef><function>XWarpPointer</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1876,11 +1876,11 @@ Specify the x and y coordinates within the destination window.
 <!-- .eM -->
 If dest_w is
 <symbol>None</symbol>,
-<function>XWarpPointer</function>
+<xref linkend='XWarpPointer' xrefstyle='select: title'/>
 moves the pointer by the offsets (dest_x, dest_y) relative to the current
 position of the pointer.
 If dest_w is a window,
-<function>XWarpPointer</function>
+<xref linkend='XWarpPointer' xrefstyle='select: title'/>
 moves the pointer to the offsets (dest_x, dest_y) relative to the origin of
 dest_w.
 However, if src_w is a window,
@@ -1902,14 +1902,14 @@ The pointer should normally be left to the user.
 If you do use this function, however, it generates events just as if the user
 had instantaneously moved the pointer from one position to another.
 Note that you cannot use
-<function>XWarpPointer</function>
+<xref linkend='XWarpPointer' xrefstyle='select: title'/>
 to move the pointer outside the confine_to window of an active pointer grab.
 An attempt to do so will only move the pointer as far as the closest edge of the
 confine_to window. 
 </para>
 <para>
 <!-- .LP -->
-<function>XWarpPointer</function>
+<xref linkend='XWarpPointer' xrefstyle='select: title'/>
 can generate a
 <errorname>BadWindow</errorname>
 error.
@@ -1932,11 +1932,11 @@ for input focus policy.
 <!-- .LP -->
 <!-- .sp -->
 To set the input focus, use
-<function>XSetInputFocus</function>.
+<xref linkend='XSetInputFocus' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetInputFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetinputfocus'>
+<funcsynopsis id='XSetInputFocus'>
 <funcprototype>
   <funcdef><function>XSetInputFocus</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2003,14 +2003,14 @@ You can pass either a timestamp or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetInputFocus</function>
+<xref linkend='XSetInputFocus' xrefstyle='select: title'/>
 function changes the input focus and the last-focus-change time.
 It has no effect if the specified time is earlier than the current
 last-focus-change time or is later than the current X server time.
 Otherwise, the last-focus-change time is set to the specified time
 (<symbol>CurrentTime</symbol>
 is replaced by the current X server time).
-<function>XSetInputFocus</function>
+<xref linkend='XSetInputFocus' xrefstyle='select: title'/>
 causes the X server to generate
 <symbol>FocusIn</symbol>
 and 
@@ -2053,7 +2053,7 @@ In this case, the revert_to argument is ignored.
 <para>
 <!-- .LP -->
 The specified focus window must be viewable at the time 
-<function>XSetInputFocus</function>
+<xref linkend='XSetInputFocus' xrefstyle='select: title'/>
 is called,
 or a
 <errorname>BadMatch</errorname>
@@ -2094,7 +2094,7 @@ events, but the last-focus-change time is not affected.
 </itemizedlist>
 <para>
 <!-- .LP -->
-<function>XSetInputFocus</function>
+<xref linkend='XSetInputFocus' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>,
 <errorname>BadValue</errorname>,
@@ -2106,11 +2106,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the current input focus, use
-<function>XGetInputFocus</function>.
+<xref linkend='XGetInputFocus' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetInputFocus</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetinputfocus'>
+<funcsynopsis id='XGetInputFocus'>
 <funcprototype>
   <funcdef><function>XGetInputFocus</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2162,7 +2162,7 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetInputFocus</function>
+<xref linkend='XGetInputFocus' xrefstyle='select: title'/>
 function returns the focus window and the current focus state.
 </para>
 </sect1>
@@ -2195,7 +2195,7 @@ parameters.
 <para>
 <!-- .LP -->
 The
-<function>XChangeKeyboardControl</function>
+<xref linkend='XChangeKeyboardControl' xrefstyle='select: title'/>
 function changes control of a keyboard and operates on a
 <structname>XKeyboardControl</structname>
 structure:
@@ -2325,7 +2325,7 @@ If an error is generated, a subset of the controls may have been altered.
 </para>
 <indexterm significance="preferred"><primary>XChangeKeyboardControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangekeyboardcontrol'>
+<funcsynopsis id='XChangeKeyboardControl'>
 <funcprototype>
   <funcdef><function>XChangeKeyboardControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2371,7 +2371,7 @@ Specifies one value for each bit set to 1 in the mask.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XChangeKeyboardControl</function>
+<xref linkend='XChangeKeyboardControl' xrefstyle='select: title'/>
 function controls the keyboard characteristics defined by the
 <structname>XKeyboardControl</structname>
 structure.
@@ -2379,7 +2379,7 @@ The value_mask argument specifies which values are to be changed.
 </para>
 <para>
 <!-- .LP -->
-<function>XChangeKeyboardControl</function>
+<xref linkend='XChangeKeyboardControl' xrefstyle='select: title'/>
 can generate
 <errorname>BadMatch</errorname>
 and
@@ -2390,11 +2390,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the current control values for the keyboard, use
-<function>XGetKeyboardControl</function>.
+<xref linkend='XGetKeyboardControl' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetKeyboardControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetkeyboardcontrol'>
+<funcsynopsis id='XGetKeyboardControl'>
 <funcprototype>
   <funcdef><function>XGetKeyboardControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2430,7 +2430,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetKeyboardControl</function>
+<xref linkend='XGetKeyboardControl' xrefstyle='select: title'/>
 function returns the current control values for the keyboard to the
 <structname>XKeyboardState</structname>
 structure.
@@ -2474,11 +2474,11 @@ with the least significant bit in the byte representing key 8N.
 <!-- .LP -->
 <!-- .sp -->
 To turn on keyboard auto-repeat, use
-<function>XAutoRepeatOn</function>.
+<xref linkend='XAutoRepeatOn' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XAutoRepeatOn</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xautorepeaton'>
+<funcsynopsis id='XAutoRepeatOn'>
 <funcprototype>
   <funcdef><function>XAutoRepeatOn</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2501,18 +2501,18 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAutoRepeatOn</function>
+<xref linkend='XAutoRepeatOn' xrefstyle='select: title'/>
 function turns on auto-repeat for the keyboard on the specified display.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To turn off keyboard auto-repeat, use
-<function>XAutoRepeatOff</function>.
+<xref linkend='XAutoRepeatOff' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XAutoRepeatOff</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xautorepeatoff'>
+<funcsynopsis id='XAutoRepeatOff'>
 <funcprototype>
   <funcdef><function>XAutoRepeatOff</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2535,18 +2535,18 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAutoRepeatOff</function>
+<xref linkend='XAutoRepeatOff' xrefstyle='select: title'/>
 function turns off auto-repeat for the keyboard on the specified display.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To ring the bell, use
-<function>XBell</function>.
+<xref linkend='XBell' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XBell</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xbell'>
+<funcsynopsis id='XBell'>
 <funcprototype>
   <funcdef><function>XBell</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2581,7 +2581,7 @@ which can range from -100 to 100 inclusive.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XBell</function>
+<xref linkend='XBell' xrefstyle='select: title'/>
 function rings the bell on the keyboard on the specified display, if possible.
 The specified volume is relative to the base volume for the keyboard.
 If the value for the percent argument is not in the range -100 to 100
@@ -2613,11 +2613,11 @@ base + [(base * percent) / 100]
 <para>
 <!-- .LP -->
 To change the base volume of the bell, use
-<function>XChangeKeyboardControl</function>.
+<xref linkend='XChangeKeyboardControl' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XBell</function>
+<xref linkend='XBell' xrefstyle='select: title'/>
 can generate a
 <errorname>BadValue</errorname>
 error.
@@ -2626,11 +2626,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To obtain a bit vector that describes the state of the keyboard, use
-<function>XQueryKeymap</function>.
+<xref linkend='XQueryKeymap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryKeymap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerykeymap'>
+<funcsynopsis id='XQueryKeymap'>
 <funcprototype>
   <funcdef><function>XQueryKeymap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2665,7 +2665,7 @@ Each bit represents one key of the keyboard.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryKeymap</function>
+<xref linkend='XQueryKeymap' xrefstyle='select: title'/>
 function returns a bit vector for the logical state of the keyboard, 
 where each bit set to 1 indicates that the corresponding key is currently 
 pressed down.
@@ -2682,11 +2682,11 @@ may lag the physical state if device event processing is frozen.
 <!-- .LP -->
 <!-- .sp -->
 To set the mapping of the pointer buttons, use
-<function>XSetPointerMapping</function>.
+<xref linkend='XSetPointerMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetPointerMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetpointermapping'>
+<funcsynopsis id='XSetPointerMapping'>
 <funcprototype>
   <funcdef>int <function>XSetPointerMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2731,18 +2731,18 @@ Specifies the number of items in the mapping list.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetPointerMapping</function>
+<xref linkend='XSetPointerMapping' xrefstyle='select: title'/>
 function sets the mapping of the pointer.
 If it succeeds, the X server generates a
 <symbol>MappingNotify</symbol>
 event, and
-<function>XSetPointerMapping</function>
+<xref linkend='XSetPointerMapping' xrefstyle='select: title'/>
 returns
 <symbol>MappingSuccess</symbol>.
 Element map[i] defines the logical button number for the physical button
 i+1.
 The length of the list must be the same as
-<function>XGetPointerMapping</function>
+<xref linkend='XGetPointerMapping' xrefstyle='select: title'/>
 would return,
 or a
 <errorname>BadValue</errorname>
@@ -2754,14 +2754,14 @@ or a
 <errorname>BadValue</errorname>
 error results.
 If any of the buttons to be altered are logically in the down state,
-<function>XSetPointerMapping</function>
+<xref linkend='XSetPointerMapping' xrefstyle='select: title'/>
 returns
 <symbol>MappingBusy</symbol>,
 and the mapping is not changed.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetPointerMapping</function>
+<xref linkend='XSetPointerMapping' xrefstyle='select: title'/>
 can generate a
 <errorname>BadValue</errorname>
 error.
@@ -2770,11 +2770,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To get the pointer mapping, use
-<function>XGetPointerMapping</function>.
+<xref linkend='XGetPointerMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetPointerMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetpointermapping'>
+<funcsynopsis id='XGetPointerMapping'>
 <funcprototype>
   <funcdef>int <function>XGetPointerMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2819,10 +2819,10 @@ Specifies the number of items in the mapping list.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetPointerMapping</function>
+<xref linkend='XGetPointerMapping' xrefstyle='select: title'/>
 function returns the current mapping of the pointer.
 Pointer buttons are numbered starting from one.
-<function>XGetPointerMapping</function>
+<xref linkend='XGetPointerMapping' xrefstyle='select: title'/>
 returns the number of physical buttons actually on the pointer.
 The nominal mapping for a pointer is map[i]=i+1.
 The nmap argument specifies the length of the array where the pointer
@@ -2833,11 +2833,11 @@ in map_return.
 <!-- .LP -->
 <!-- .sp -->
 To control the pointer's interactive feel, use
-<function>XChangePointerControl</function>.
+<xref linkend='XChangePointerControl' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XChangePointerControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangepointercontrol'>
+<funcsynopsis id='XChangePointerControl'>
 <funcprototype>
   <funcdef><function>XChangePointerControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2915,7 +2915,7 @@ Specifies the acceleration threshold.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XChangePointerControl</function>
+<xref linkend='XChangePointerControl' xrefstyle='select: title'/>
 function defines how the pointing device moves.
 The acceleration, expressed as a fraction, is a
 multiplier for movement. 
@@ -2937,7 +2937,7 @@ for the accel_denominator argument.
 </para>
 <para>
 <!-- .LP -->
-<function>XChangePointerControl</function>
+<xref linkend='XChangePointerControl' xrefstyle='select: title'/>
 can generate a
 <errorname>BadValue</errorname>
 error.
@@ -2946,11 +2946,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To get the current pointer parameters, use
-<function>XGetPointerControl</function>.
+<xref linkend='XGetPointerControl' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetPointerControl</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetpointercontrol'>
+<funcsynopsis id='XGetPointerControl'>
 <funcprototype>
   <funcdef><function>XGetPointerControl</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3005,7 +3005,7 @@ Returns the acceleration threshold.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetPointerControl</function>
+<xref linkend='XGetPointerControl' xrefstyle='select: title'/>
 function returns the pointer's current acceleration multiplier
 and acceleration threshold.
 </para>
@@ -3221,11 +3221,11 @@ Rather, it merely stores it for reading and writing by clients.
 <para>
 <!-- .LP -->
 To obtain the legal KeyCodes for a display, use
-<function>XDisplayKeycodes</function>.
+<xref linkend='XDisplayKeycodes' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDisplayKeycodes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdisplaykeycodes'>
+<funcsynopsis id='XDisplayKeycodes'>
 <funcprototype>
   <funcdef><function>XDisplayKeycodes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3269,7 +3269,7 @@ Returns the maximum number of KeyCodes.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDisplayKeycodes</function>
+<xref linkend='XDisplayKeycodes' xrefstyle='select: title'/>
 function returns the min-keycodes and max-keycodes supported by the
 specified display.
 The minimum number of KeyCodes returned is never less than 8,
@@ -3280,11 +3280,11 @@ Not all KeyCodes in this range are required to have corresponding keys.
 <para>
 <!-- .LP -->
 To obtain the symbols for the specified KeyCodes, use
-<function>XGetKeyboardMapping</function>.
+<xref linkend='XGetKeyboardMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetKeyboardMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetkeyboardmapping'>
+<funcsynopsis id='XGetKeyboardMapping'>
 <funcprototype>
   <funcdef>KeySym *<function>XGetKeyboardMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3341,18 +3341,18 @@ Returns the number of KeySyms per KeyCode.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetKeyboardMapping</function>
+<xref linkend='XGetKeyboardMapping' xrefstyle='select: title'/>
 function returns the symbols for the specified number of KeyCodes
 starting with first_keycode.
 The value specified in first_keycode must be greater than 
 or equal to min_keycode as returned by
-<function>XDisplayKeycodes</function>,
+<xref linkend='XDisplayKeycodes' xrefstyle='select: title'/>,
 or a
 <errorname>BadValue</errorname>
 error results.
 In addition, the following expression must be less than or equal 
 to max_keycode as returned by
-<function>XDisplayKeycodes</function>:
+<xref linkend='XDisplayKeycodes' xrefstyle='select: title'/>:
 </para>
 <para>
 <!-- .LP -->
@@ -3390,13 +3390,13 @@ A special KeySym value of
 is used to fill in unused elements for
 individual KeyCodes.
 To free the storage returned by 
-<function>XGetKeyboardMapping</function>,
+<xref linkend='XGetKeyboardMapping' xrefstyle='select: title'/>,
 use
-<function>XFree</function>.
+<xref linkend='XFree' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XGetKeyboardMapping</function>
+<xref linkend='XGetKeyboardMapping' xrefstyle='select: title'/>
 can generate a
 <errorname>BadValue</errorname>
 error.
@@ -3405,11 +3405,11 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To change the keyboard mapping, use
-<function>XChangeKeyboardMapping</function>.
+<xref linkend='XChangeKeyboardMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XChangeKeyboardMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xchangekeyboardmapping'>
+<funcsynopsis id='XChangeKeyboardMapping'>
 <funcprototype>
   <funcdef><function>XChangeKeyboardMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3477,7 +3477,7 @@ Specifies the number of KeyCodes that are to be changed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XChangeKeyboardMapping</function>
+<xref linkend='XChangeKeyboardMapping' xrefstyle='select: title'/>
 function defines the symbols for the specified number of KeyCodes
 starting with first_keycode.
 The symbols for KeyCodes outside this range remain unchanged.  
@@ -3493,13 +3493,13 @@ num_codes * keysyms_per_keycode
 <!-- .LP -->
 The specified first_keycode must be greater than or equal to min_keycode 
 returned by
-<function>XDisplayKeycodes</function>,
+<xref linkend='XDisplayKeycodes' xrefstyle='select: title'/>,
 or a 
 <errorname>BadValue</errorname>
 error results.
 In addition, the following expression must be less than or equal to 
 max_keycode as returned by
-<function>XDisplayKeycodes</function>,
+<xref linkend='XDisplayKeycodes' xrefstyle='select: title'/>,
 or a
 <errorname>BadValue</errorname>
 error results:
@@ -3533,7 +3533,7 @@ It is legal for
 <symbol>NoSymbol</symbol>
 to appear in nontrailing positions
 of the effective list for a KeyCode.
-<function>XChangeKeyboardMapping</function>
+<xref linkend='XChangeKeyboardMapping' xrefstyle='select: title'/>
 generates a 
 <symbol>MappingNotify</symbol>
 event.
@@ -3545,7 +3545,7 @@ It is merely stored for reading and writing by clients.
 </para>
 <para>
 <!-- .LP -->
-<function>XChangeKeyboardMapping</function>
+<xref linkend='XChangeKeyboardMapping' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -3577,11 +3577,11 @@ typedef struct {
 To create an
 <structname>XModifierKeymap</structname>
 structure, use
-<function>XNewModifiermap</function>.
+<xref linkend='XNewModifiermap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XNewModifiermap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xnewmodifiermap'>
+<funcsynopsis id='XNewModifiermap'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XNewModifiermap</function></funcdef>
   <paramdef>int<parameter> max_keys_per_mod</parameter></paramdef>
@@ -3605,7 +3605,7 @@ in the map.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XNewModifiermap</function>
+<xref linkend='XNewModifiermap' xrefstyle='select: title'/>
 function returns a pointer to
 <structname>XModifierKeymap</structname>
 structure for later use.
@@ -3616,11 +3616,11 @@ structure for later use.
 To add a new entry to an 
 <structname>XModifierKeymap</structname>
 structure, use
-<function>XInsertModifiermapEntry</function>.
+<xref linkend='XInsertModifiermapEntry' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XInsertModifiermapEntry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xinsertmodifiermapentry'>
+<funcsynopsis id='XInsertModifiermapEntry'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XInsertModifiermapEntry</function></funcdef>
   <paramdef>XModifierKeymap<parameter> *modmap</parameter></paramdef>
@@ -3667,7 +3667,7 @@ Specifies the modifier.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XInsertModifiermapEntry</function>
+<xref linkend='XInsertModifiermapEntry' xrefstyle='select: title'/>
 function adds the specified KeyCode to the set that controls the specified
 modifier and returns the resulting
 <structname>XModifierKeymap</structname>
@@ -3679,11 +3679,11 @@ structure (expanded as needed).
 To delete an entry from an 
 <structname>XModifierKeymap</structname>
 structure, use
-<function>XDeleteModifiermapEntry</function>.
+<xref linkend='XDeleteModifiermapEntry' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XDeleteModifiermapEntry</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xdeletemodifiermapentry'>
+<funcsynopsis id='XDeleteModifiermapEntry'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XDeleteModifiermapEntry</function></funcdef>
   <paramdef>XModifierKeymap<parameter> *modmap</parameter></paramdef>
@@ -3730,7 +3730,7 @@ Specifies the modifier.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XDeleteModifiermapEntry</function>
+<xref linkend='XDeleteModifiermapEntry' xrefstyle='select: title'/>
 function deletes the specified KeyCode from the set that controls the
 specified modifier and returns a pointer to the resulting
 <structname>XModifierKeymap</structname>
@@ -3742,11 +3742,11 @@ structure.
 To destroy an
 <structname>XModifierKeymap</structname>
 structure, use
-<function>XFreeModifiermap</function>.
+<xref linkend='XFreeModifiermap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XFreeModifiermap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreemodifiermap'>
+<funcsynopsis id='XFreeModifiermap'>
 <funcprototype>
   <funcdef><function>XFreeModifiermap</function></funcdef>
   <paramdef>XModifierKeymap<parameter> *modmap</parameter></paramdef>
@@ -3771,7 +3771,7 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeModifiermap</function>
+<xref linkend='XFreeModifiermap' xrefstyle='select: title'/>
 function frees the specified
 <structname>XModifierKeymap</structname>
 structure.
@@ -3780,11 +3780,11 @@ structure.
 <!-- .LP -->
 <!-- .sp -->
 To set the KeyCodes to be used as modifiers, use
-<function>XSetModifierMapping</function>.
+<xref linkend='XSetModifierMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XSetModifierMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetmodifiermapping'>
+<funcsynopsis id='XSetModifierMapping'>
 <funcprototype>
   <funcdef>int <function>XSetModifierMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3820,14 +3820,14 @@ structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XSetModifierMapping</function>
+<xref linkend='XSetModifierMapping' xrefstyle='select: title'/>
 function specifies the KeyCodes of the keys (if any) that are to be used 
 as modifiers.
 If it succeeds,
 the X server generates a
 <symbol>MappingNotify</symbol>
 event, and
-<function>XSetModifierMapping</function>
+<xref linkend='XSetModifierMapping' xrefstyle='select: title'/>
 returns
 <symbol>MappingSuccess</symbol>.
 X permits at most 8 modifier keys.
@@ -3876,14 +3876,14 @@ and none of the modifiers are changed.
 If the new KeyCodes specified for a modifier differ from those
 currently defined and any (current or new) keys for that modifier are
 in the logically down state, 
-<function>XSetModifierMapping</function>
+<xref linkend='XSetModifierMapping' xrefstyle='select: title'/>
 returns
 <symbol>MappingBusy</symbol>,
 and none of the modifiers is changed.
 </para>
 <para>
 <!-- .LP -->
-<function>XSetModifierMapping</function>
+<xref linkend='XSetModifierMapping' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and 
@@ -3894,11 +3894,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the KeyCodes used as modifiers, use
-<function>XGetModifierMapping</function>.
+<xref linkend='XGetModifierMapping' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XGetModifierMapping</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xgetmodifiermapping'>
+<funcsynopsis id='XGetModifierMapping'>
 <funcprototype>
   <funcdef>XModifierKeymap *<function>XGetModifierMapping</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3921,12 +3921,12 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XGetModifierMapping</function>
+<xref linkend='XGetModifierMapping' xrefstyle='select: title'/>
 function returns a pointer to a newly created
 <structname>XModifierKeymap</structname>
 structure that contains the keys being used as modifiers.
 The structure should be freed after use by calling
-<function>XFreeModifiermap</function>.
+<xref linkend='XFreeModifiermap' xrefstyle='select: title'/>.
 If only zero values appear in the set for any modifier, 
 that modifier is disabled.
 <!-- .bp -->

@@ -489,26 +489,26 @@ static void
 update_texture_state( struct gl_context *ctx )
 {
    GLuint unit;
-   struct gl_fragment_program *fprog = NULL;
-   struct gl_vertex_program *vprog = NULL;
+   struct gl_program *fprog = NULL;
+   struct gl_program *vprog = NULL;
    GLbitfield enabledFragUnits = 0x0;
 
    if (ctx->Shader.CurrentVertexProgram &&
        ctx->Shader.CurrentVertexProgram->LinkStatus) {
-      vprog = ctx->Shader.CurrentVertexProgram->VertexProgram;
+      vprog = ctx->Shader.CurrentVertexProgram->_LinkedShaders[MESA_SHADER_VERTEX]->Program;
    } else if (ctx->VertexProgram._Enabled) {
       /* XXX enable this if/when non-shader vertex programs get
        * texture fetches:
-       vprog = ctx->VertexProgram.Current;
+       vprog = &ctx->VertexProgram.Current->Base;
        */
    }
 
    if (ctx->Shader.CurrentFragmentProgram &&
        ctx->Shader.CurrentFragmentProgram->LinkStatus) {
-      fprog = ctx->Shader.CurrentFragmentProgram->FragmentProgram;
+      fprog = ctx->Shader.CurrentFragmentProgram->_LinkedShaders[MESA_SHADER_FRAGMENT]->Program;
    }
    else if (ctx->FragmentProgram._Enabled) {
-      fprog = ctx->FragmentProgram.Current;
+      fprog = &ctx->FragmentProgram.Current->Base;
    }
 
    /* FINISHME: Geometry shader texture accesses should also be considered
@@ -540,11 +540,11 @@ update_texture_state( struct gl_context *ctx )
        * settle on the one with highest priority (see below).
        */
       if (vprog) {
-         enabledVertTargets |= vprog->Base.TexturesUsed[unit];
+         enabledVertTargets |= vprog->TexturesUsed[unit];
       }
 
       if (fprog) {
-         enabledFragTargets |= fprog->Base.TexturesUsed[unit];
+         enabledFragTargets |= fprog->TexturesUsed[unit];
       }
       else {
          /* fixed-function fragment program */
@@ -611,7 +611,7 @@ update_texture_state( struct gl_context *ctx )
    if (fprog) {
       const GLuint coordMask = (1 << MAX_TEXTURE_COORD_UNITS) - 1;
       ctx->Texture._EnabledCoordUnits
-         = (fprog->Base.InputsRead >> FRAG_ATTRIB_TEX0) & coordMask;
+         = (fprog->InputsRead >> FRAG_ATTRIB_TEX0) & coordMask;
    }
    else {
       ctx->Texture._EnabledCoordUnits = enabledFragUnits;

@@ -246,10 +246,12 @@ update_program(struct gl_context *ctx)
     * come up, or matter.
     */
 
-   if (fsProg && fsProg->LinkStatus && fsProg->FragmentProgram) {
+   if (fsProg && fsProg->LinkStatus
+       && fsProg->_LinkedShaders[MESA_SHADER_FRAGMENT]) {
       /* Use GLSL fragment shader */
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current,
-                               fsProg->FragmentProgram);
+			       (struct gl_fragment_program *)
+			       fsProg->_LinkedShaders[MESA_SHADER_FRAGMENT]->Program);
    }
    else if (ctx->FragmentProgram._Enabled) {
       /* Use user-defined fragment program */
@@ -268,10 +270,12 @@ update_program(struct gl_context *ctx)
       _mesa_reference_fragprog(ctx, &ctx->FragmentProgram._Current, NULL);
    }
 
-   if (gsProg && gsProg->LinkStatus && gsProg->GeometryProgram) {
+   if (gsProg && gsProg->LinkStatus
+       && gsProg->_LinkedShaders[MESA_SHADER_GEOMETRY]) {
       /* Use GLSL geometry shader */
       _mesa_reference_geomprog(ctx, &ctx->GeometryProgram._Current,
-                               gsProg->GeometryProgram);
+			       (struct gl_geometry_program *)
+			       gsProg->_LinkedShaders[MESA_SHADER_GEOMETRY]->Program);
    } else {
       /* No geometry program */
       _mesa_reference_geomprog(ctx, &ctx->GeometryProgram._Current, NULL);
@@ -281,10 +285,12 @@ update_program(struct gl_context *ctx)
     * _mesa_get_fixed_func_vertex_program() needs to know active
     * fragprog inputs.
     */
-   if (vsProg && vsProg->LinkStatus && vsProg->VertexProgram) {
+   if (vsProg && vsProg->LinkStatus
+       && vsProg->_LinkedShaders[MESA_SHADER_VERTEX]) {
       /* Use GLSL vertex shader */
       _mesa_reference_vertprog(ctx, &ctx->VertexProgram._Current,
-                               vsProg->VertexProgram);
+			       (struct gl_vertex_program *)
+			       vsProg->_LinkedShaders[MESA_SHADER_VERTEX]->Program);
    }
    else if (ctx->VertexProgram._Enabled) {
       /* Use user-defined vertex program */

@@ -3288,31 +3288,20 @@ _mesa_ir_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
       linked_prog = get_mesa_program(ctx, prog, prog->_LinkedShaders[i]);
 
       if (linked_prog) {
-         bool ok = true;
+	 static const GLenum targets[] = {
+	    GL_VERTEX_PROGRAM_ARB,
+	    GL_FRAGMENT_PROGRAM_ARB,
+	    GL_GEOMETRY_PROGRAM_NV
+	 };
 
-         switch (prog->_LinkedShaders[i]->Type) {
-         case GL_VERTEX_SHADER:
+	 if (i == MESA_SHADER_VERTEX) {
             ((struct gl_vertex_program *)linked_prog)->UsesClipDistance
                = prog->Vert.UsesClipDistance;
-            _mesa_reference_vertprog(ctx, &prog->VertexProgram,
-                                     (struct gl_vertex_program *)linked_prog);
-            ok = ctx->Driver.ProgramStringNotify(ctx, GL_VERTEX_PROGRAM_ARB,
-                                                 linked_prog);
-            break;
-         case GL_FRAGMENT_SHADER:
-            _mesa_reference_fragprog(ctx, &prog->FragmentProgram,
-                                     (struct gl_fragment_program *)linked_prog);
-            ok = ctx->Driver.ProgramStringNotify(ctx, GL_FRAGMENT_PROGRAM_ARB,
-                                                 linked_prog);
-            break;
-         case GL_GEOMETRY_SHADER:
-            _mesa_reference_geomprog(ctx, &prog->GeometryProgram,
-                                     (struct gl_geometry_program *)linked_prog);
-            ok = ctx->Driver.ProgramStringNotify(ctx, GL_GEOMETRY_PROGRAM_NV,
-                                                 linked_prog);
-            break;
-         }
-         if (!ok) {
+	 }
+
+	 _mesa_reference_program(ctx, &prog->_LinkedShaders[i]->Program,
+				 linked_prog);
+         if (!ctx->Driver.ProgramStringNotify(ctx, targets[i], linked_prog)) {
             return GL_FALSE;
          }
       }
@@ -3426,10 +3415,6 @@ _mesa_glsl_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
 	 prog->LinkStatus = GL_FALSE;
       }
    }
-
-   _mesa_reference_vertprog(ctx, &prog->VertexProgram, NULL);
-   _mesa_reference_fragprog(ctx, &prog->FragmentProgram, NULL);
-   _mesa_reference_geomprog(ctx, &prog->GeometryProgram, NULL);
 
    if (prog->LinkStatus) {
       link_shaders(ctx, prog);

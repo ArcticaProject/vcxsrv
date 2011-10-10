@@ -335,117 +335,6 @@ pixman_compute_composite_region32 (pixman_region32_t * region,
     return TRUE;
 }
 
-#define N_CACHED_FAST_PATHS 8
-
-typedef struct
-{
-    struct
-    {
-	pixman_implementation_t *	imp;
-	pixman_fast_path_t		fast_path;
-    } cache [N_CACHED_FAST_PATHS];
-} cache_t;
-
-PIXMAN_DEFINE_THREAD_LOCAL (cache_t, fast_path_cache);
-
-static force_inline pixman_bool_t
-lookup_composite_function (pixman_op_t			op,
-			   pixman_format_code_t		src_format,
-			   uint32_t			src_flags,
-			   pixman_format_code_t		mask_format,
-			   uint32_t			mask_flags,
-			   pixman_format_code_t		dest_format,
-			   uint32_t			dest_flags,
-			   pixman_implementation_t    **out_imp,
-			   pixman_composite_func_t     *out_func)
-{
-    pixman_implementation_t *imp;
-    cache_t *cache;
-    int i;
-
-    /* Check cache for fast paths */
-    cache = PIXMAN_GET_THREAD_LOCAL (fast_path_cache);
-
-    for (i = 0; i < N_CACHED_FAST_PATHS; ++i)
-    {
-	const pixman_fast_path_t *info = &(cache->cache[i].fast_path);
-
-	/* Note that we check for equality here, not whether
-	 * the cached fast path matches. This is to prevent
-	 * us from selecting an overly general fast path
-	 * when a more specific one would work.
-	 */
-	if (info->op == op			&&
-	    info->src_format == src_format	&&
-	    info->mask_format == mask_format	&&
-	    info->dest_format == dest_format	&&
-	    info->src_flags == src_flags	&&
-	    info->mask_flags == mask_flags	&&
-	    info->dest_flags == dest_flags	&&
-	    info->func)
-	{
-	    *out_imp = cache->cache[i].imp;
-	    *out_func = cache->cache[i].fast_path.func;
-
-	    goto update_cache;
-	}
-    }
-
-    for (imp = get_implementation (); imp != NULL; imp = imp->delegate)
-    {
-	const pixman_fast_path_t *info = imp->fast_paths;
-
-	while (info->op != PIXMAN_OP_NONE)
-	{
-	    if ((info->op == op || info->op == PIXMAN_OP_any)		&&
-		/* Formats */
-		((info->src_format == src_format) ||
-		 (info->src_format == PIXMAN_any))			&&
-		((info->mask_format == mask_format) ||
-		 (info->mask_format == PIXMAN_any))			&&
-		((info->dest_format == dest_format) ||
-		 (info->dest_format == PIXMAN_any))			&&
-		/* Flags */
-		(info->src_flags & src_flags) == info->src_flags	&&
-		(info->mask_flags & mask_flags) == info->mask_flags	&&
-		(info->dest_flags & dest_flags) == info->dest_flags)
-	    {
-		*out_imp = imp;
-		*out_func = info->func;
-
-		/* Set i to the last spot in the cache so that the
-		 * move-to-front code below will work
-		 */
-		i = N_CACHED_FAST_PATHS - 1;
-
-		goto update_cache;
-	    }
-
-	    ++info;
-	}
-    }
-    return FALSE;
-
-update_cache:
-    if (i)
-    {
-	while (i--)
-	    cache->cache[i + 1] = cache->cache[i];
-
-	cache->cache[0].imp = *out_imp;
-	cache->cache[0].fast_path.op = op;
-	cache->cache[0].fast_path.src_format = src_format;
-	cache->cache[0].fast_path.src_flags = src_flags;
-	cache->cache[0].fast_path.mask_format = mask_format;
-	cache->cache[0].fast_path.mask_flags = mask_flags;
-	cache->cache[0].fast_path.dest_format = dest_format;
-	cache->cache[0].fast_path.dest_flags = dest_flags;
-	cache->cache[0].fast_path.func = *out_func;
-    }
-
-    return TRUE;
-}
-
 typedef struct
 {
     pixman_fixed_48_16_t	x1;
@@ -790,11 +679,10 @@ pixman_image_composite32 (pixman_op_t      op,
      */
     op = optimize_operator (op, src_flags, mask_flags, dest_flags);
 
-    if (lookup_composite_function (op,
-				   src_format, src_flags,
-				   mask_format, mask_flags,
-				   dest_format, dest_flags,
-				   &imp, &func))
+    if (_pixman_lookup_composite_function (
+	    get_implementation (), op,
+	    src_format, src_flags, mask_format, mask_flags, dest_format, dest_flags,
+	    &imp, &func))
     {
 	pixman_composite_info_t info;
 	const pixman_box32_t *pbox;
@@ -804,6 +692,9 @@ pixman_image_composite32 (pixman_op_t      op,
 	info.src_image = src;
 	info.mask_image = mask;
 	info.dest_image = dest;
+	info.src_flags = src_flags;
+	info.mask_flags = mask_flags;
+	info.dest_flags = dest_flags;
 
 	pbox = pixman_region32_rectangles (&region, &n);
 

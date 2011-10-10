@@ -42,13 +42,13 @@ Basic Protocol Support Routines
 </para>
 <para>
 The basic protocol requests for extensions are 
-<function>XQueryExtension</function>
+<xref linkend='XQueryExtension' xrefstyle='select: title'/>
 and
-<function>XListExtensions</function>.
+<xref linkend='XListExtensions' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XQueryExtension</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xqueryextension'>
+<funcsynopsis id='XQueryExtension'>
 <funcprototype>
   <funcdef>Bool <function>XQueryExtension</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -96,29 +96,29 @@ and
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryExtension</function>
+<xref linkend='XQueryExtension' xrefstyle='select: title'/>
 function determines if the named extension is present.  
 If the extension is not present,
-<function>XQueryExtension</function>
+<xref linkend='XQueryExtension' xrefstyle='select: title'/>
 returns
 <symbol>False</symbol>;
 otherwise, it returns
 <symbol>True</symbol>.
 If the extension is present,
-<function>XQueryExtension</function>
+<xref linkend='XQueryExtension' xrefstyle='select: title'/>
 returns the major opcode for the extension to major_opcode_return;
 otherwise,
 it returns zero.
 Any minor opcode and the request formats are specific to the
 extension.  
 If the extension involves additional event types, 
-<function>XQueryExtension</function>
+<xref linkend='XQueryExtension' xrefstyle='select: title'/>
 returns the base event type code to first_event_return;
 otherwise, 
 it returns zero.  
 The format of the events is specific to the extension.  
 If the extension involves additional error codes, 
-<function>XQueryExtension</function>
+<xref linkend='XQueryExtension' xrefstyle='select: title'/>
 returns the base error code to first_error_return;
 otherwise, 
 it returns zero.  
@@ -134,7 +134,7 @@ are all considered different names.
 </para>
 <indexterm significance="preferred"><primary>XListExtensions</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xlistextensions'>
+<funcsynopsis id='XListExtensions'>
 <funcprototype>
   <funcdef>char **<function>XListExtensions</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -168,7 +168,7 @@ Returns the number of extensions listed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XListExtensions</function>
+<xref linkend='XListExtensions' xrefstyle='select: title'/>
 function returns a list of all extensions supported by the server.
 If the data returned by the server is in the Latin Portable Character Encoding,
 then the returned strings are in the Host Portable Character Encoding.
@@ -176,7 +176,7 @@ Otherwise, the result is implementation-dependent.
 </para>
 <indexterm significance="preferred"><primary>XFreeExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfreeextensionlist'>
+<funcsynopsis id='XFreeExtensionList'>
 <funcprototype>
   <funcdef><function>XFreeExtensionList</function></funcdef>
   <paramdef>char<parameter> **list</parameter></paramdef>
@@ -199,9 +199,9 @@ Specifies the list of extension names.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeExtensionList</function>
+<xref linkend='XFreeExtensionList' xrefstyle='select: title'/>
 function frees the memory allocated by 
-<function>XListExtensions</function>.
+<xref linkend='XListExtensions' xrefstyle='select: title'/>.
 <!-- .SH -->
 Hooking into Xlib 
 </para>
@@ -219,7 +219,7 @@ called stubs.
 In extensions, stubs first should check to see if they have initialized 
 themselves on a connection.
 If they have not, they then should call 
-<function>XInitExtension</function>
+<xref linkend='XInitExtension' xrefstyle='select: title'/>
 to attempt to initialize themselves on the connection.
 </para>
 <para>
@@ -234,7 +234,7 @@ called when these events occur.
 The
 <structname>XExtCodes</structname>
 structure returns the information from 
-<function>XInitExtension</function>
+<xref linkend='XInitExtension' xrefstyle='select: title'/>
 and is defined in
 <filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>:
 </para>
@@ -257,7 +257,7 @@ typedef struct _XExtCodes {	/* public to extension, cannot be changed */
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XInitExtension</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xinitextension'>
+<funcsynopsis id='XInitExtension'>
 <funcprototype>
   <funcdef>XExtCodes *<function>XInitExtension</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -291,7 +291,7 @@ Specifies the extension name.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XInitExtension</function>
+<xref linkend='XInitExtension' xrefstyle='select: title'/>
 function determines if the named extension exists. 
 Then, it allocates storage for maintaining the 
 information about the extension on the connection, 
@@ -299,7 +299,7 @@ chains this onto the extension list for the connection,
 and returns the information the stub implementor will need to access
 the extension.
 If the extension does not exist,
-<function>XInitExtension</function>
+<xref linkend='XInitExtension' xrefstyle='select: title'/>
 returns NULL.
 </para>
 <para>
@@ -321,7 +321,7 @@ This extension number is unique only to a single connection.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XAddExtension</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xaddextension'>
+<funcsynopsis id='XAddExtension'>
 <funcprototype>
   <funcdef>XExtCodes *<function>XAddExtension</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -344,7 +344,7 @@ Specifies the connection to the X server.
 <!-- .LP -->
 <!-- .eM -->
 For local Xlib extensions, the
-<function>XAddExtension</function>
+<xref linkend='XAddExtension' xrefstyle='select: title'/>
 function allocates the
 <structname>XExtCodes</structname>
 structure, bumps the extension number count,
@@ -369,7 +369,7 @@ extension.
 </para>
 <indexterm significance="preferred"><primary>XESetCloseDisplay</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetclosedisplay'>
+<funcsynopsis id='XESetCloseDisplay'>
 <funcprototype>
   <funcdef>int <function>XESetCloseDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -414,7 +414,7 @@ Specifies the procedure to call when the display is closed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetCloseDisplay</function>
+<xref linkend='XESetCloseDisplay' xrefstyle='select: title'/>
 function defines a procedure to be called whenever
 <function>XCloseDisplay</function>
 is called.  
@@ -437,7 +437,7 @@ with these arguments:
 </para>
 <indexterm significance="preferred"><primary>XESetCreateGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetcreategc'>
+<funcsynopsis id='XESetCreateGC'>
 <funcprototype>
   <funcdef>int *<function>XESetCreateGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -482,7 +482,7 @@ Specifies the procedure to call when a GC is closed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetCreateGC</function>
+<xref linkend='XESetCreateGC' xrefstyle='select: title'/>
 function defines a procedure to be called whenever
 a new GC is created.  
 It returns any previously defined procedure, usually NULL.
@@ -504,7 +504,7 @@ your procedure is called with these arguments:
 </para>
 <indexterm significance="preferred"><primary>XESetCopyGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetcopygc'>
+<funcsynopsis id='XESetCopyGC'>
 <funcprototype>
   <funcdef>int *<function>XESetCopyGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -549,7 +549,7 @@ Specifies the procedure to call when GC components are copied.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetCopyGC</function>
+<xref linkend='XESetCopyGC' xrefstyle='select: title'/>
 function defines a procedure to be called whenever
 a GC is copied.  
 It returns any previously defined procedure, usually NULL.
@@ -567,7 +567,7 @@ your procedure is called with these arguments:
 </funcprototype>
 </funcsynopsis>
 </para>
-<funcsynopsis id='xesetfreegc'>
+<funcsynopsis id='XESetFreeGC'>
 <funcprototype>
   <funcdef>int *<function>XESetFreeGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -611,7 +611,7 @@ Specifies the procedure to call when a GC is freed.
 
 <para>
 The
-<function>XESetFreeGC</function>
+<xref linkend='XESetFreeGC' xrefstyle='select: title'/>
 function defines a procedure to be called whenever
 a GC is freed.  
 It returns any previously defined procedure, usually NULL.
@@ -638,7 +638,7 @@ your procedure is called with these arguments:
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XESetCreateFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetcreatefont'>
+<funcsynopsis id='XESetCreateFont'>
 <funcprototype>
   <funcdef>int *<function>XESetCreateFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -683,20 +683,20 @@ Specifies the procedure to call when a font is created.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetCreateFont</function>
+<xref linkend='XESetCreateFont' xrefstyle='select: title'/>
 function defines a procedure to be called whenever
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 and
-<function>XQueryFont</function>
+<xref linkend='XQueryFont' xrefstyle='select: title'/>
 are called.  
 It returns any previously defined procedure, usually NULL.
 </para>
 <para>
 <!-- .LP -->
 When 
-<function>XLoadQueryFont</function>
+<xref linkend='XLoadQueryFont' xrefstyle='select: title'/>
 or
-<function>XQueryFont</function>
+<xref linkend='XQueryFont' xrefstyle='select: title'/>
 is called, 
 your procedure is called with these arguments:
 <!-- .LP -->
@@ -717,7 +717,7 @@ your procedure is called with these arguments:
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XESetFreeFont</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetfreefont'>
+<funcsynopsis id='XESetFreeFont'>
 <funcprototype>
   <funcdef>int *<function>XESetFreeFont</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -762,16 +762,16 @@ Specifies the procedure to call when a font is freed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetFreeFont</function>
+<xref linkend='XESetFreeFont' xrefstyle='select: title'/>
 function defines a procedure to be called whenever
-<function>XFreeFont</function>
+<xref linkend='XFreeFont' xrefstyle='select: title'/>
 is called.  
 It returns any previously defined procedure, usually NULL.
 </para>
 <para>
 <!-- .LP -->
 When 
-<function>XFreeFont</function>
+<xref linkend='XFreeFont' xrefstyle='select: title'/>
 is called, your procedure is called with these arguments:
 <!-- .LP -->
 <!-- .sM -->
@@ -791,9 +791,9 @@ is called, your procedure is called with these arguments:
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XESetWireToEvent</function>
+<xref linkend='XESetWireToEvent' xrefstyle='select: title'/>
 and
-<function>XESetEventToWire</function>
+<xref linkend='XESetEventToWire' xrefstyle='select: title'/>
 functions allow you to define new events to the library.
 An 
 <structname>XEvent</structname>
@@ -829,7 +829,7 @@ in the structure will be fully portable between machines.
 <!-- .NE -->
 <indexterm significance="preferred"><primary>XESetWireToEvent</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetwiretoevent'>
+<funcsynopsis id='XESetWireToEvent'>
 <funcprototype>
   <funcdef>int *<function>XESetWireToEvent</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -874,7 +874,7 @@ Specifies the procedure to call when converting an event.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetWireToEvent</function>
+<xref linkend='XESetWireToEvent' xrefstyle='select: title'/>
 function defines a procedure to be called when an event
 needs to be converted from wire format 
 (<structname>xEvent</structname>)
@@ -882,7 +882,7 @@ to host format
 (<structname>XEvent</structname>).
 The event number defines which protocol event number to install a
 conversion procedure for.
-<function>XESetWireToEvent</function>
+<xref linkend='XESetWireToEvent' xrefstyle='select: title'/>
 returns any previously defined procedure.
 <!-- .NT -->
 You can replace a core event conversion function with one
@@ -931,13 +931,13 @@ if it should not be placed in the queue.
 <para>
 <!-- .LP -->
 To initialize the serial number component of the event, call
-<function>_XSetLastRequestRead</function>
+<xref linkend='_XSetLastRequestRead' xrefstyle='select: title'/>
 with the event and use the return value.
 </para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>_XSetLastRequestRead</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xsetlastrequestread'>
+<funcsynopsis id='_XSetLastRequestRead'>
 <funcprototype>
   <funcdef>unsigned long<function>_XSetLastRequestRead</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -971,7 +971,7 @@ Specifies the wire event structure.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XSetLastRequestRead</function>
+<xref linkend='_XSetLastRequestRead' xrefstyle='select: title'/>
 function computes and returns a complete serial number from the partial
 serial number in the event.
 <!-- .sp -->
@@ -979,7 +979,7 @@ serial number in the event.
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XESetEventToWire</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xeseteventtowire'>
+<funcsynopsis id='XESetEventToWire'>
 <funcprototype>
   <funcdef>Status *<function>XESetEventToWire</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1024,7 +1024,7 @@ Specifies the procedure to call when converting an event.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetEventToWire</function>
+<xref linkend='XESetEventToWire' xrefstyle='select: title'/>
 function defines a procedure to be called when an event
 needs to be converted from host format
 (<structname>XEvent</structname>)
@@ -1033,7 +1033,7 @@ to wire format
 form.  
 The event number defines which protocol event number to install a
 conversion procedure for.
-<function>XESetEventToWire</function>
+<xref linkend='XESetEventToWire' xrefstyle='select: title'/>
 returns any previously defined procedure.
 It returns zero if the conversion fails or nonzero otherwise.
 <!-- .NT -->
@@ -1071,7 +1071,7 @@ structure.
 </para>
 <indexterm significance="preferred"><primary>XESetWireToError</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetwiretoerror'>
+<funcsynopsis id='XESetWireToError'>
 <funcprototype>
   <funcdef>Bool *<function>XESetWireToError</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1116,12 +1116,12 @@ Specifies the procedure to call when an error is received.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetWireToError</function>
+<xref linkend='XESetWireToError' xrefstyle='select: title'/>
 function defines a procedure to be called when an extension
 error needs to be converted from wire format to host format.
 The error number defines which protocol error code to install
 the conversion procedure for.
-<function>XESetWireToError</function>
+<xref linkend='XESetWireToError' xrefstyle='select: title'/>
 returns any previously defined procedure.
 </para>
 <para>
@@ -1166,7 +1166,7 @@ otherwise, it should return
 </para>
 <indexterm significance="preferred"><primary>XESetError</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xeseterror'>
+<funcsynopsis id='XESetError'>
 <funcprototype>
   <funcdef>int *<function>XESetError</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1219,7 +1219,7 @@ case, and are typically programmed to be synchronous).
 <para>
 <!-- .LP -->
 When Xlib detects a protocol error in 
-<function>_XReply</function>,
+<xref linkend='_XReply' xrefstyle='select: title'/>,
 it calls your procedure with these arguments:
 <!-- .LP -->
 <!-- .sM -->
@@ -1240,7 +1240,7 @@ it calls your procedure with these arguments:
 The err argument is a pointer to the 32-byte wire format error.
 The codes argument is a pointer to the extension codes structure.
 The ret_code argument is the return code you may want 
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 returned to.
 </para>
 <para>
@@ -1252,12 +1252,12 @@ the client's error handler is called.
 see <link linkend="Using_the_Default_Error_Handlers">section 11.8.2</link>.)
 If your procedure returns nonzero, 
 the error is suppressed, and 
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 returns the value of ret_code.
 </para>
 <indexterm significance="preferred"><primary>XESetErrorString</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xeseterrorstring'>
+<funcsynopsis id='XESetErrorString'>
 <funcprototype>
   <funcdef>char *<function>XESetErrorString</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1302,9 +1302,9 @@ Specifies the procedure to call to obtain an error string.
 <!-- .LP -->
 <!-- .eM -->
 The 
-<function>XGetErrorText</function>
+<xref linkend='XGetErrorText' xrefstyle='select: title'/>
 function returns a string to the user for an error.
-<function>XESetErrorString</function>
+<xref linkend='XESetErrorString' xrefstyle='select: title'/>
 allows you to define a procedure to be called that
 should return a pointer to the error message.
 The following is an example.
@@ -1333,7 +1333,7 @@ error message into buffer.
 </para>
 <indexterm significance="preferred"><primary>XESetPrintErrorValues</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetprinterrorvalues'>
+<funcsynopsis id='XESetPrintErrorValues'>
 <funcprototype>
   <funcdef>void *<function>XESetPrintErrorValues</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1378,7 +1378,7 @@ Specifies the procedure to call when an error is printed.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XESetPrintErrorValues</function>
+<xref linkend='XESetPrintErrorValues' xrefstyle='select: title'/>
 function defines a procedure to be called when an extension
 error is printed, to print the error values.
 Use this function for extension errors that contain additional error values
@@ -1409,13 +1409,13 @@ The structure pointed at by ev is guaranteed to be as large as an
 structure and so can be cast to a type larger than an
 <structname>XErrorEvent</structname>
 to obtain additional values set by using
-<function>XESetWireToError</function>.
+<xref linkend='XESetWireToError' xrefstyle='select: title'/>.
 The underlying type of the fp argument is system dependent;
 on a <acronym>POSIX</acronym>-compliant system, fp should be cast to type FILE*.
 </para>
 <indexterm significance="preferred"><primary>XESetFlushGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xesetflushgc'>
+<funcsynopsis id='XESetFlushGC'>
 <funcprototype>
   <funcdef>int *<function>XESetFlushGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1460,9 +1460,9 @@ Specifies the procedure to call when a GC is flushed.
 <!-- .LP -->
 <!-- .eM -->
 The procedure set by the
-<function>XESetFlushGC</function>
+<xref linkend='XESetFlushGC' xrefstyle='select: title'/>
 function has the same interface as the procedure set by the
-<function>XESetCopyGC</function>
+<xref linkend='XESetCopyGC' xrefstyle='select: title'/>
 function, but is called when a GC cache needs to be updated in the server.
 </para>
 <indexterm significance="preferred"><primary>XESetBeforeFlush</primary></indexterm>
@@ -1603,7 +1603,7 @@ union {	Display *display;
 <!-- .eM -->
 <indexterm significance="preferred"><primary>XEHeadOfExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xeheadofextensionlist'>
+<funcsynopsis id='XEHeadOfExtensionList'>
 <funcprototype>
   <funcdef>XExtData **<function>XEHeadOfExtensionList</function></funcdef>
   <paramdef>XEDataObject<parameter> object</parameter></paramdef>
@@ -1626,12 +1626,12 @@ Specifies the object.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XEHeadOfExtensionList</function>
+<xref linkend='XEHeadOfExtensionList' xrefstyle='select: title'/>
 function returns a pointer to the list of extension structures attached
 to the specified object.
 In concert with 
-<function>XAddToExtensionList</function>,
-<function>XEHeadOfExtensionList</function>
+<xref linkend='XAddToExtensionList' xrefstyle='select: title'/>,
+<xref linkend='XEHeadOfExtensionList' xrefstyle='select: title'/>
 allows an extension to attach arbitrary data to any of the structures
 of types contained in
 <structname>XEDataObject</structname>.
@@ -1639,7 +1639,7 @@ of types contained in
 <!-- .LP -->
 <indexterm significance="preferred"><primary>XAddToExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xaddtoextensionlist'>
+<funcsynopsis id='XAddToExtensionList'>
 <funcprototype>
   <funcdef><function>XAddToExtensionList</function></funcdef>
   <paramdef>XExtData<parameter> **structure</parameter></paramdef>
@@ -1679,7 +1679,7 @@ before calling this function.
 </para>
 <indexterm significance="preferred"><primary>XFindOnExtensionList</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xfindonextensionlist'>
+<funcsynopsis id='XFindOnExtensionList'>
 <funcprototype>
   <funcdef>XExtData *<function>XFindOnExtensionList</function></funcdef>
   <paramdef>struct_XExtData<parameter> **structure</parameter></paramdef>
@@ -1705,7 +1705,7 @@ Specifies the extension list.
     <listitem>
       <para>
 Specifies the extension number from
-<function>XInitExtension</function>.
+<xref linkend='XInitExtension' xrefstyle='select: title'/>.
     </para>
   </listitem>
   </varlistentry>
@@ -1714,7 +1714,7 @@ Specifies the extension number from
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFindOnExtensionList</function>
+<xref linkend='XFindOnExtensionList' xrefstyle='select: title'/>
 function returns the first extension data structure
 for the extension numbered number.
 It is expected that an extension will add at most one extension
@@ -1724,13 +1724,13 @@ There is no way to find additional structures.
 <para>
 <!-- .LP -->
 The 
-<function>XAllocID</function>
+<xref linkend='XAllocID' xrefstyle='select: title'/>
 macro, which allocates and returns a resource ID, is defined in 
 <filename class="headerfile">&lt;X11/Xlib.h&gt;</filename>.
 </para>
 <indexterm significance="preferred"><primary>XAllocID</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xallocid'>
+<funcsynopsis id='XAllocID'>
 <funcprototype>
   <funcdef><function>XAllocID</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1760,12 +1760,12 @@ It returns a resource ID that you can use when creating new resources.
 <para>
 <!-- .LP -->
 The 
-<function>XAllocIDs</function>
+<xref linkend='XAllocIDs' xrefstyle='select: title'/>
 macro allocates and returns an array of resource ID.
 </para>
 <indexterm significance="preferred"><primary>XAllocIDs</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xallocids'>
+<funcsynopsis id='XAllocIDs'>
 <funcprototype>
   <funcdef><function>XAllocIDs</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1814,7 +1814,7 @@ This macro is a call through the
 structure to an internal resource ID allocator.
 It returns resource IDs to the array supplied by the caller.
 To correctly handle automatic reuse of resource IDs, you must call
-<function>XAllocIDs</function>
+<xref linkend='XAllocIDs' xrefstyle='select: title'/>
 when requesting multiple resource IDs.  This call might generate
 protocol requests.
 <!-- .SH -->
@@ -1832,17 +1832,17 @@ in its GC.
 <para>
 <!-- .LP -->
 The 
-<function>FlushGC</function>
+<xref linkend='FlushGC' xrefstyle='select: title'/>
 macro checks the dirty bits in the library's GC structure and calls
-<function>_XFlushGCCache</function>
+<xref linkend='_XFlushGCCache' xrefstyle='select: title'/>
 if any elements have changed.
 The
-<function>FlushGC</function>
+<xref linkend='FlushGC' xrefstyle='select: title'/>
 macro is defined as follows:
 </para>
 <indexterm significance="preferred"><primary>FlushGC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='flushgc'>
+<funcsynopsis id='FlushGC'>
 <funcprototype>
   <funcdef><function>FlushGC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1882,17 +1882,17 @@ using it, so if you only stored the value in the cache without
 forcing a protocol request, the resource might be destroyed before being
 set into the GC.
 You can use the
-<function>_XFlushGCCache</function>
+<xref linkend='_XFlushGCCache' xrefstyle='select: title'/>
 procedure 
 to force the cache to be flushed.
 The
-<function>_XFlushGCCache</function>
+<xref linkend='_XFlushGCCache' xrefstyle='select: title'/>
 procedure
 is defined as follows:
 </para>
 <indexterm significance="preferred"><primary>_XFlushGCCache</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='_xflushgccache'>
+<funcsynopsis id='_XFlushGCCache'>
 <funcprototype>
   <funcdef><function>_XFlushGCCache</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1945,7 +1945,7 @@ to just extend the previous graphics request by extending the length
 field of the request and appending the data to the buffer.  
 This can improve performance by five times or more in naive programs.  
 For example, here is the source for the 
-<function>XDrawPoint</function>
+<xref linkend='XDrawPoint' xrefstyle='select: title'/>
 stub.
 (Writing extension stubs is discussed in the next section.)
 </para>
@@ -2007,7 +2007,7 @@ there is a symbol defined in
 of EPERBATCH on the number of requests batched.
 Most of the performance benefit occurs in the first few merged requests.
 Note that 
-<function>FlushGC</function>
+<xref linkend='FlushGC' xrefstyle='select: title'/>
 is called <emphasis remap='I'>before</emphasis> picking up the value of last_req,
 because it may modify this field.
 <!-- .SH -->
@@ -2314,7 +2314,7 @@ architecture.
 Two calls, which are generally implemented as macros, have been provided.
 <indexterm significance="preferred"><primary>LockDisplay</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='lockdisplay'>
+<funcsynopsis id='LockDisplay'>
 <funcprototype>
   <funcdef><function>LockDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2324,7 +2324,7 @@ Two calls, which are generally implemented as macros, have been provided.
 </para>
 <!-- .LP -->
 <indexterm significance="preferred"><primary>UnlockDisplay</primary></indexterm>
-<funcsynopsis id='unlockdisplay'>
+<funcsynopsis id='UnlockDisplay'>
 <funcprototype>
   <funcdef><function>UnlockDisplay</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2427,13 +2427,13 @@ req-&gt;arg2 = arg2;
 ...
 </programlisting>
 A few stub procedures (such as 
-<function>XCreateGC</function>
+<xref linkend='XCreateGC' xrefstyle='select: title'/>
 and 
-<function>XCreatePixmap</function>)
+<xref linkend='XCreatePixmap' xrefstyle='select: title'/>)
 return a resource ID to the caller but pass a resource ID as an argument
 to the protocol request.   
 Such procedures use the macro 
-<function>XAllocID</function>
+<xref linkend='XAllocID' xrefstyle='select: title'/>
 to allocate a resource ID from the range of IDs 
 that were assigned to this client when it opened the connection.
 </para>
@@ -2448,13 +2448,13 @@ return (rid);
 Finally, some stub procedures transmit a fixed amount of variable-length
 data after the request.  
 Typically, these procedures (such as
-<function>XMoveWindow</function>
+<xref linkend='XMoveWindow' xrefstyle='select: title'/>
 and 
-<function>XSetBackground</function>)
+<xref linkend='XSetBackground' xrefstyle='select: title'/>)
 are special cases of more general functions like 
-<function>XMoveResizeWindow</function>
+<xref linkend='XMoveResizeWindow' xrefstyle='select: title'/>
 and 
-<function>XChangeGC</function>.
+<xref linkend='XChangeGC' xrefstyle='select: title'/>.
 These procedures use 
 <function>GetReqExtra</function>,
 which is the same as 
@@ -2491,23 +2491,23 @@ then you must round the length up and shift it before adding:
 req-&gt;length += (nbytes+3)&gt;&gt;2;
 </programlisting>
 To transmit variable-length data, use the 
-<function>Data</function>
+<xref linkend='Data' xrefstyle='select: title'/>
 macros.
 If the data fits into the output buffer, 
 then this macro copies it to the buffer.  
 If it does not fit, however,
 the 
-<function>Data</function>
+<xref linkend='Data' xrefstyle='select: title'/>
 macro calls 
 <function>_XSend</function>,
 which transmits first the contents of the buffer and then your data.
 The 
-<function>Data</function>
+<xref linkend='Data' xrefstyle='select: title'/>
 macros take three arguments:  
 the display, a pointer to the beginning of the data, 
 and the number of bytes to be sent.
 <!-- .sM -->
-<funcsynopsis id='data'>
+<funcsynopsis id='Data'>
 <funcprototype>
   <funcdef><function>Data</function></funcdef>
   <paramdef><parameter> display</parameter></paramdef>
@@ -2519,7 +2519,7 @@ and the number of bytes to be sent.
 <para>
 <!-- .LP -->
 <!-- .eM -->
-<function>Data</function>,
+<xref linkend='Data' xrefstyle='select: title'/>,
 <function>Data16</function>,
 and
 <function>Data32</function>
@@ -2536,13 +2536,13 @@ If the protocol request requires a reply,
 then call the procedure 
 <function>_XSend</function>
 instead of the 
-<function>Data</function>
+<xref linkend='Data' xrefstyle='select: title'/>
 macro.  
 <function>_XSend</function>
 takes the same arguments, but because it sends your data immediately instead of 
 copying it into the output buffer (which would later be flushed
 anyway by the following call on 
-<function>_XReply</function>),
+<xref linkend='_XReply' xrefstyle='select: title'/>),
 it is faster.
 <!-- .SH -->
 Replies
@@ -2551,20 +2551,20 @@ Replies
 <!-- .LP -->
 If the protocol request has a reply, 
 then call 
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 after you have finished dealing with 
 all the fixed-length and variable-length arguments.  
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 flushes the output buffer and waits for an 
 <structname>xReply</structname>
 packet to arrive.  
 If any events arrive in the meantime,
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 places them in the queue for later use.
 </para>
 <indexterm significance="preferred"><primary>_XReply</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='_xreply'>
+<funcsynopsis id='_XReply'>
 <funcprototype>
   <funcdef>Status <function>_XReply</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2621,12 +2621,12 @@ should be discarded.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 function waits for a reply packet and copies its contents into the
 specified rep.  
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 handles error and event packets that occur before the reply is received.
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 takes four arguments:
 </para>
 <itemizedlist>
@@ -2655,7 +2655,7 @@ in the reply structure
   <listitem>
     <para>
 A Boolean that indicates whether
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 is to discard any additional bytes
 beyond those it was told to read
     </para>
@@ -2693,7 +2693,7 @@ larger, but compatible,
 <structname>xGetWindowAttributesReply</structname>
 that contains additional attribute data at the end.
 <!-- .NE -->
-<function>_XReply</function>
+<xref linkend='_XReply' xrefstyle='select: title'/>
 returns 
 <symbol>True</symbol>
 if it received a reply successfully or 
@@ -2725,12 +2725,12 @@ change the
 to 
 <symbol>False</symbol>,
 and use the appropriate
-<function>_XRead</function>
+<xref linkend='_XRead' xrefstyle='select: title'/>
 function to read the variable-length data.
 </para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis id='_xread'>
+<funcsynopsis id='_XRead'>
 <funcprototype>
   <funcdef><function>_XRead</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2775,12 +2775,12 @@ Specifies the number of bytes required.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XRead</function>
+<xref linkend='_XRead' xrefstyle='select: title'/>
 function reads the specified number of bytes into data_return.
 </para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis id='_xread16'>
+<funcsynopsis id='_XRead16'>
 <funcprototype>
   <funcdef><function>_XRead16</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2825,14 +2825,14 @@ Specifies the number of bytes required.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XRead16</function>
+<xref linkend='_XRead16' xrefstyle='select: title'/>
 function reads the specified number of bytes,
 unpacking them as 16-bit quantities,
 into the specified array as shorts.
 </para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis id='_xread32'>
+<funcsynopsis id='_XRead32'>
 <funcprototype>
   <funcdef><function>_XRead32</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2877,14 +2877,14 @@ Specifies the number of bytes required.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XRead32</function>
+<xref linkend='_XRead32' xrefstyle='select: title'/>
 function reads the specified number of bytes,
 unpacking them as 32-bit quantities,
 into the specified array as longs.
 </para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis id='_xread16pad'>
+<funcsynopsis id='_XRead16Pad'>
 <funcprototype>
   <funcdef><function>_XRead16Pad</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2929,17 +2929,17 @@ Specifies the number of bytes required.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XRead16Pad</function>
+<xref linkend='_XRead16Pad' xrefstyle='select: title'/>
 function reads the specified number of bytes,
 unpacking them as 16-bit quantities,
 into the specified array as shorts.
 If the number of bytes is not a multiple of four,
-<function>_XRead16Pad</function>
+<xref linkend='_XRead16Pad' xrefstyle='select: title'/>
 reads and discards up to two additional pad bytes.
 </para>
 <!-- .LP -->
 <!-- .sM -->
-<funcsynopsis id='_xreadpad'>
+<funcsynopsis id='_XReadPad'>
 <funcprototype>
   <funcdef><function>_XReadPad</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2984,10 +2984,10 @@ Specifies the number of bytes required.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>_XReadPad</function>
+<xref linkend='_XReadPad' xrefstyle='select: title'/>
 function reads the specified number of bytes into data_return.
 If the number of bytes is not a multiple of four,
-<function>_XReadPad</function>
+<xref linkend='_XReadPad' xrefstyle='select: title'/>
 reads and discards up to three additional pad bytes.
 </para>
 <para>
@@ -3039,7 +3039,7 @@ critical section:
 </para>
 <indexterm significance="preferred"><primary>_XAllocScratch</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='_xallocscratch'>
+<funcsynopsis id='_XAllocScratch'>
 <funcprototype>
   <funcdef>char *<function>_XAllocScratch</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3078,14 +3078,14 @@ that might permit another thread to execute inside Xlib.  For example,
 the pointer cannot be assumed valid after any use of the
 <function>GetReq</function>
 or
-<function>Data</function>
+<xref linkend='Data' xrefstyle='select: title'/>
 families of macros,
 after any use of
-<function>_XReply</function>,
+<xref linkend='_XReply' xrefstyle='select: title'/>,
 or after any use of the
 <function>_XSend</function>
 or
-<function>_XRead</function>
+<xref linkend='_XRead' xrefstyle='select: title'/>
 families of functions.
 </para>
 <para>
@@ -3096,7 +3096,7 @@ critical sections:
 </para>
 <indexterm significance="preferred"><primary>_XAllocTemp</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='_xalloctemp'>
+<funcsynopsis id='_XAllocTemp'>
 <funcprototype>
   <funcdef>char *<function>_XAllocTemp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3135,7 +3135,7 @@ The following function returns the storage:
 </para>
 <indexterm significance="preferred"><primary>_XFreeTemp</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='_xfreetemp'>
+<funcsynopsis id='_XFreeTemp'>
 <funcprototype>
   <funcdef>void <function>_XFreeTemp</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3180,7 +3180,7 @@ Specifies the size of the buffer.
 <!-- .LP -->
 <!-- .eM -->
 You must pass back the same pointer and size that were returned by
-<function>_XAllocTemp</function>.
+<xref linkend='_XAllocTemp' xrefstyle='select: title'/>.
 <!-- .SH -->
 Portability Considerations
 </para>
@@ -3288,7 +3288,7 @@ Call your initialization procedure and pass to it the display pointer.
   <listitem>
     <para>
 Once in your initialization procedure, call 
-<function>XInitExtension</function>;
+<xref linkend='XInitExtension' xrefstyle='select: title'/>;
 if it succeeds, store the pointer returned into this array.  
 Make sure to establish a close display handler to allow you to zero the entry.
 Do whatever other initialization your extension requires.

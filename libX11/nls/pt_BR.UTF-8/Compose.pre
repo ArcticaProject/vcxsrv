@@ -74,7 +74,7 @@ XCOMM on some keyboards.
 <Multi_key> <space> <minus>		: "~"	asciitilde
 
 XCOMM Spaces
-<Multi_key> <space> <space> : " " nobreakspace # NO-BREAK SPACE
+<Multi_key> <space> <space> : "\240" nobreakspace # NO-BREAK SPACE
 <Multi_key> <space> <period>: " " U2008 # PUNCTUATION SPACE
 
 <Multi_key> <o> <c> : "©" copyright

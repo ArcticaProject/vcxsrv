@@ -5,7 +5,7 @@
 <title>X Font Cursors</title>
 <para>
 The following are the available cursors that can be used with
-<function>XCreateFontCursor</function>.
+<xref linkend='XCreateFontCursor' xrefstyle='select: title'/>.
 </para>
 <literallayout class="monospaced">
 #define XC_X_cursor 0                     #define XC_ll_angle 76

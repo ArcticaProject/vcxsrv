@@ -1,4 +1,4 @@
-<chapter id='data_structures'>
+<chapter id='Data_Structures'>
 <title>Data Structures</title>
 
 <para>
@@ -27,7 +27,7 @@ structures. You should use them instead of allocating and freeing the
 structures yourself.
 </para>
 
-<sect1 id='allocating_xkb_data_structures'>
+<sect1 id='Allocating_Xkb_Data_Structures'>
 <title>Allocating Xkb Data Structures</title>
 
 <para>
@@ -62,7 +62,7 @@ might be invalidated by calls to allocator functions.
 </para>
 
 </sect1>
-<sect1 id='adding_data_and_editing_data_structures'>
+<sect1 id='Adding_Data_and_Editing_Data_Structures'>
 <title>Adding Data and Editing Data Structures</title>
 
 <para>
@@ -141,7 +141,7 @@ num_</emphasis>
 
 
 </sect1>
-<sect1 id='making_changes_to_the_servers_keyboard_description'>
+<sect1 id='Making_Changes_to_the_Servers_Keyboard_Description'>
 <title>Making Changes to the Server’s Keyboard Description</title>
 
 <para>
@@ -178,7 +178,7 @@ changes data structure causes indeterminate behavior.
 
 
 </sect1>
-<sect1 id='tracking_keyboard_changes_in_the_server'>
+<sect1 id='Tracking_Keyboard_Changes_in_the_Server'>
 <title>Tracking Keyboard Changes in the Server</title>
 
 <para>
@@ -224,7 +224,7 @@ keyboard description.
 </para>
 
 </sect1>
-<sect1 id='freeing_data_structures'>
+<sect1 id='Freeing_Data_Structures'>
 <title>Freeing Data Structures</title>
 
 <para>

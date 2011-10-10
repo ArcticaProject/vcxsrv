@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="color_management_functions">
+<chapter id='Color_Management_Functions'>
 <title>Color Management Functions</title>
 <!-- .sp 2 -->
 <!-- .nr H1 6 -->
@@ -138,9 +138,9 @@ At any time, there is a set of installed colormaps for a screen.
 Windows using one of the installed colormaps display with true colors, and
 windows using other colormaps generally display with incorrect colors.
 You can control the set of installed colormaps by using
-<function>XInstallColormap</function>
+<xref linkend='XInstallColormap' xrefstyle='select: title'/>
 and
-<function>XUninstallColormap</function>.
+<xref linkend='XUninstallColormap' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
@@ -301,9 +301,9 @@ If references to such a color space must be made outside the client
 (for example, storing a color specification in a file),
 then reference should be made by color space string prefix
 (see 
-<function>XcmsFormatOfPrefix</function>
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>
 and
-<function>XcmsPrefixOfFormat</function>).
+<xref linkend='XcmsPrefixOfFormat' xrefstyle='select: title'/>).
 </para>
 <para>
 <!-- .LP -->
@@ -499,32 +499,32 @@ Color strings are used in the following functions:
 <itemizedlist>
   <listitem>
     <para>
-<function>XAllocNamedColor</function>
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XcmsAllocNamedColor</function>
+<xref linkend='XcmsAllocNamedColor' xrefstyle='select: title'/>
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XLookupColor</function>
+<xref linkend='XLookupColor' xrefstyle='select: title'/>
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XcmsLookupColor</function>
+<xref linkend='XcmsLookupColor' xrefstyle='select: title'/>
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XParseColor</function>
+<xref linkend='XParseColor' xrefstyle='select: title'/>
     </para>
   </listitem>
   <listitem>
     <para>
-<function>XStoreNamedColor</function>
+<xref linkend='XStoreNamedColor' xrefstyle='select: title'/>
     </para>
   </listitem>
 </itemizedlist>
@@ -811,10 +811,10 @@ or in the CCC indirectly specified by means of the colormap argument.
 <para>
 <!-- .LP -->
 To create a colormap for a screen, use
-<function>XCreateColormap</function>.</para>
+<xref linkend='XCreateColormap' xrefstyle='select: title'/>.</para>
 <indexterm significance="preferred"><primary>XCreateColormap</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcreatecolormap'>
+<funcsynopsis id='XCreateColormap'>
 <funcprototype>
   <funcdef>Colormap <function>XCreateColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -880,7 +880,7 @@ or
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCreateColormap</function>
+<xref linkend='XCreateColormap' xrefstyle='select: title'/>
 function creates a colormap of the specified visual type for the screen 
 on which the specified window resides and returns the colormap ID 
 associated with it.
@@ -930,23 +930,23 @@ For
 and
 <symbol>PseudoColor</symbol>,
 the effect is as if an
-<function>XAllocColorCells</function>
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>
 call returned all pixel values from zero to N - 1,
 where N is the colormap entries value in the specified visual.
 For
 <symbol>DirectColor</symbol>,
 the effect is as if an
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 call returned a pixel value of zero and red_mask, green_mask, 
 and blue_mask values containing the same bits as the corresponding
 masks in the specified visual.
 However, in all cases,
 none of these entries can be freed by using
-<function>XFreeColors</function>.
+<xref linkend='XFreeColors' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->
-<function>XCreateColormap</function>
+<xref linkend='XCreateColormap' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>,
 <errorname>BadMatch</errorname>,
@@ -960,11 +960,11 @@ errors.
 <!-- .sp -->
 To create a new colormap when the allocation out of a previously
 shared colormap has failed because of resource exhaustion, use
-<function>XCopyColormapAndFree</function>.
+<xref linkend='XCopyColormapAndFree' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XCopyColormapAndFree</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcopycolormapandfree'>
+<funcsynopsis id='XCopyColormapAndFree'>
 <funcprototype>
   <funcdef>Colormap <function>XCopyColormapAndFree</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -998,7 +998,7 @@ Specifies the colormap.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XCopyColormapAndFree</function>
+<xref linkend='XCopyColormapAndFree' xrefstyle='select: title'/>
 function creates a colormap of the same visual type and for the same screen
 as the specified colormap and returns the new colormap ID.
 It also moves all of the client's existing allocation from the specified
@@ -1016,16 +1016,16 @@ If the specified colormap was not created by the client with
 <symbol>AllocAll</symbol>,
 the allocations to be moved are all those pixels and planes
 that have been allocated by the client using
-<function>XAllocColor</function>,
-<function>XAllocNamedColor</function>,
-<function>XAllocColorCells</function>,
+<xref linkend='XAllocColor' xrefstyle='select: title'/>,
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>,
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>,
 or
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 and that have not been freed since they were allocated.
 </para>
 <para>
 <!-- .LP -->
-<function>XCopyColormapAndFree</function>
+<xref linkend='XCopyColormapAndFree' xrefstyle='select: title'/>
 can generate
 <errorname>BadAlloc</errorname>
 and
@@ -1036,11 +1036,11 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To destroy a colormap, use 
-<function>XFreeColormap</function>.
+<xref linkend='XFreeColormap' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XFreeColormap</primary></indexterm>
 </para>
 <!-- .sM -->
-<funcsynopsis id='xfreecolormap'>
+<funcsynopsis id='XFreeColormap'>
 <funcprototype>
   <funcdef><function>XFreeColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1076,19 +1076,19 @@ Specifies the colormap (Cm.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeColormap</function>
+<xref linkend='XFreeColormap' xrefstyle='select: title'/>
 function deletes the association between the colormap resource ID 
 and the colormap and frees the colormap storage.
 However, this function has no effect on the default colormap for a screen.
 If the specified colormap is an installed map for a screen,
 it is uninstalled (see
-<function>XUninstallColormap</function>).
+<xref linkend='XUninstallColormap' xrefstyle='select: title'/>).
 If the specified colormap is defined as the colormap for a window (by
-<function>XCreateWindow</function>,
-<function>XSetWindowColormap</function>,
+<xref linkend='XCreateWindow' xrefstyle='select: title'/>,
+<xref linkend='XSetWindowColormap' xrefstyle='select: title'/>,
 or
-<function>XChangeWindowAttributes</function>),
-<function>XFreeColormap</function>
+<xref linkend='XChangeWindowAttributes' xrefstyle='select: title'/>),
+<xref linkend='XFreeColormap' xrefstyle='select: title'/>
 changes the colormap associated with the window to
 <symbol>None</symbol>
 and generates a
@@ -1099,7 +1099,7 @@ X does not define the colors displayed for a window with a colormap of
 </para>
 <para>
 <!-- .LP -->
-<function>XFreeColormap</function>
+<xref linkend='XFreeColormap' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error.
@@ -1114,12 +1114,12 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To map a color name to an <acronym>RGB</acronym> value, use
-<function>XLookupColor</function>.
+<xref linkend='XLookupColor' xrefstyle='select: title'/>.
 <indexterm><primary>Color</primary><secondary>naming</secondary></indexterm>
 <indexterm significance="preferred"><primary>XLookupColor</primary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xlookupcolor'>
+<funcsynopsis id='XLookupColor'>
 <funcprototype>
   <funcdef>Status <function>XLookupColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1187,7 +1187,7 @@ Returns the closest <acronym>RGB</acronym> values provided by the hardware.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XLookupColor</function>
+<xref linkend='XLookupColor' xrefstyle='select: title'/>
 function looks up the string name of a color with respect to the screen
 associated with the specified colormap.
 It returns both the exact color values and
@@ -1196,13 +1196,13 @@ with respect to the visual type of the specified colormap.
 If the color name is not in the Host Portable Character Encoding, 
 the result is implementation-dependent.
 Use of uppercase or lowercase does not matter.
-<function>XLookupColor</function>
+<xref linkend='XLookupColor' xrefstyle='select: title'/>
 returns nonzero if the name is resolved;
 otherwise, it returns zero.
 </para>
 <para>
 <!-- .LP -->
-<function>XLookupColor</function>
+<xref linkend='XLookupColor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error.
@@ -1211,12 +1211,12 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To map a color name to the exact <acronym>RGB</acronym> value, use
-<function>XParseColor</function>.
+<xref linkend='XParseColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>naming</secondary></indexterm>
 <indexterm significance="preferred"><primary>XParseColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xparsecolor'>
+<funcsynopsis id='XParseColor'>
 <funcprototype>
   <funcdef>Status <function>XParseColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1279,20 +1279,20 @@ flags.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XParseColor</function>
+<xref linkend='XParseColor' xrefstyle='select: title'/>
 function looks up the string name of a color with respect to the screen
 associated with the specified colormap.
 It returns the exact color value.
 If the color name is not in the Host Portable Character Encoding, 
 the result is implementation-dependent.
 Use of uppercase or lowercase does not matter.
-<function>XParseColor</function>
+<xref linkend='XParseColor' xrefstyle='select: title'/>
 returns nonzero if the name is resolved;
 otherwise, it returns zero.
 </para>
 <para>
 <!-- .LP -->
-<function>XParseColor</function>
+<xref linkend='XParseColor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error.
@@ -1301,12 +1301,12 @@ error.
 <!-- .LP -->
 <!-- .sp -->
 To map a color name to a value in an arbitrary color space, use
-<function>XcmsLookupColor</function>.
+<xref linkend='XcmsLookupColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>naming</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsLookupColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmslookupcolor'>
+<funcsynopsis id='XcmsLookupColor'>
 <funcprototype>
   <funcdef>Status <function>XcmsLookupColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1398,7 +1398,7 @@ to store the color in the database.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsLookupColor</function>
+<xref linkend='XcmsLookupColor' xrefstyle='select: title'/>
 function looks up the string name of a color with respect to the screen
 associated with the specified colormap.
 It returns both the exact color values and
@@ -1408,7 +1408,7 @@ The values are returned in the format specified by result_format.
 If the color name is not in the Host Portable Character Encoding, 
 the result is implementation-dependent.
 Use of uppercase or lowercase does not matter.
-<function>XcmsLookupColor</function>
+<xref linkend='XcmsLookupColor' xrefstyle='select: title'/>
 returns
 <symbol>XcmsSuccess</symbol>
 or
@@ -1455,14 +1455,14 @@ times, the server counts each such allocation, not just the first one.
 <!-- .LP -->
 <!-- .sp -->
 To allocate a read-only color cell with an <acronym>RGB</acronym> value, use
-<function>XAllocColor</function>.
+<xref linkend='XAllocColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Allocation</primary><secondary>read-only colormap cells</secondary></indexterm>
 <indexterm><primary>Read-only colormap cells</primary><secondary>allocating</secondary></indexterm>
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
 <indexterm significance="preferred"><primary>XAllocColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xalloccolor'>
+<funcsynopsis id='XAllocColor'>
 <funcprototype>
   <funcdef>Status <function>XAllocColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1508,16 +1508,16 @@ Specifies and returns the values actually used in the colormap.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 function allocates a read-only colormap entry corresponding to the closest
 <acronym>RGB</acronym> value supported by the hardware.
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 returns the pixel value of the color closest to the specified
 <acronym>RGB</acronym> elements supported by the hardware
 and returns the <acronym>RGB</acronym> value actually used.
 The corresponding colormap cell is read-only.
 In addition,
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 returns nonzero if it succeeded or zero if it failed.
 <indexterm><primary>Color map</primary></indexterm>
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
@@ -1526,14 +1526,14 @@ returns nonzero if it succeeded or zero if it failed.
 Multiple clients that request the same effective <acronym>RGB</acronym> value can be assigned
 the same read-only entry, thus allowing entries to be shared.
 When the last client deallocates a shared cell, it is deallocated.
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 does not use or affect the flags in the
 <structname>XColor</structname>
 structure.
 </para>
 <para>
 <!-- .LP -->
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error.
@@ -1545,14 +1545,14 @@ delim %%
 <!-- .LP -->
 <!-- .sp -->
 To allocate a read-only color cell with a color in arbitrary format, use
-<function>XcmsAllocColor</function>.
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Allocation</primary><secondary>read-only colormap cells</secondary></indexterm>
 <indexterm><primary>Read-only colormap cells</primary><secondary>allocating</secondary></indexterm>
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsAllocColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsalloccolor'>
+<funcsynopsis id='XcmsAllocColor'>
 <funcprototype>
   <funcdef>Status <function>XcmsAllocColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1609,25 +1609,25 @@ Specifies the color format for the returned color specification.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsAllocColor</function>
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 function is similar to
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 except the color can be specified in any format.
 The
-<function>XcmsAllocColor</function>
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 function ultimately calls 
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 to allocate a read-only color cell (colormap entry) with the specified color.
-<function>XcmsAllocColor</function>
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 first converts the color specified
 to an <acronym>RGB</acronym> value and then passes this to
-<function>XAllocColor</function>.
-<function>XcmsAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>.
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 returns the pixel value of the color cell and the color specification
 actually allocated.
 This returned color specification is the result of converting the <acronym>RGB</acronym> value
 returned by 
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 into the format specified with the result_format argument.
 If there is no interest in a returned color specification, 
 unnecessary computation can be bypassed if result_format is set to
@@ -1639,7 +1639,7 @@ the color_in_out color specification is left unchanged.
 </para>
 <para>
 <!-- .LP -->
-<function>XcmsAllocColor</function>
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error.
@@ -1649,7 +1649,7 @@ error.
 <!-- .sp -->
 To allocate a read-only color cell using a color name and return the closest
 color supported by the hardware in <acronym>RGB</acronym> format, use
-<function>XAllocNamedColor</function>.
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Allocation</primary><secondary>read-only colormap cells</secondary></indexterm>
 <indexterm><primary>Read-only colormap cells</primary><secondary>allocating</secondary></indexterm>
@@ -1657,7 +1657,7 @@ color supported by the hardware in <acronym>RGB</acronym> format, use
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
 <indexterm significance="preferred"><primary>XAllocNamedColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xallocnamedcolor'>
+<funcsynopsis id='XAllocNamedColor'>
 <funcprototype>
   <funcdef>Status <function>XAllocNamedColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1725,7 +1725,7 @@ Returns the exact <acronym>RGB</acronym> values.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XAllocNamedColor</function>
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>
 function looks up the named color with respect to the screen that is
 associated with the specified colormap.
 It returns both the exact database definition and
@@ -1738,13 +1738,13 @@ Use of uppercase or lowercase does not matter.
 If screen_def_return and exact_def_return
 point to the same structure, the pixel field will be set correctly,
 but the color values are undefined.
-<function>XAllocNamedColor</function>
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>
 returns nonzero if a cell is allocated;
 otherwise, it returns zero.
 </para>
 <para>
 <!-- .LP -->
-<function>XAllocNamedColor</function>
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error. 
@@ -1754,7 +1754,7 @@ error.
 <!-- .sp -->
 To allocate a read-only color cell using a color name and return the closest
 color supported by the hardware in an arbitrary format, use
-<function>XcmsAllocNamedColor</function>.
+<xref linkend='XcmsAllocNamedColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Allocation</primary><secondary>read-only colormap cells</secondary></indexterm>
 <indexterm><primary>Read-only colormap cells</primary><secondary>allocating</secondary></indexterm>
@@ -1762,7 +1762,7 @@ color supported by the hardware in an arbitrary format, use
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsAllocNamedColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsallocnamedcolor'>
+<funcsynopsis id='XcmsAllocNamedColor'>
 <funcprototype>
   <funcdef>Status <function>XcmsAllocNamedColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -1855,22 +1855,22 @@ to store the color in the database.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsAllocNamedColor</function>
+<xref linkend='XcmsAllocNamedColor' xrefstyle='select: title'/>
 function is similar to
-<function>XAllocNamedColor</function>
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>
 except that the color returned can be in any format specified.
 This function
 ultimately calls
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 to allocate a read-only color cell with
 the color specified by a color string.
 The color string is parsed into an
 <structname>XcmsColor</structname>
 structure (see
-<function>XcmsLookupColor</function>),
+<xref linkend='XcmsLookupColor' xrefstyle='select: title'/>),
 converted
 to an <acronym>RGB</acronym> value, and finally passed to
-<function>XAllocColor</function>.
+<xref linkend='XAllocColor' xrefstyle='select: title'/>.
 If the color name is not in the Host Portable Character Encoding, 
 the result is implementation-dependent.
 Use of uppercase or lowercase does not matter.
@@ -1882,7 +1882,7 @@ of parsing (exact specification) and the actual color specification
 stored (screen specification).
 This screen specification is the result of converting the <acronym>RGB</acronym> value
 returned by
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 into the format specified in result_format.
 If there is no interest in a returned color specification,
 unnecessary computation can be bypassed if result_format is set to
@@ -1893,7 +1893,7 @@ but the color values are undefined.
 </para>
 <para>
 <!-- .LP -->
-<function>XcmsAllocNamedColor</function>
+<xref linkend='XcmsAllocNamedColor' xrefstyle='select: title'/>
 can generate a
 <errorname>BadColor</errorname>
 error.
@@ -1904,14 +1904,14 @@ error.
 To allocate read/write color cell and color plane combinations for a
 <symbol>PseudoColor</symbol>
 model, use
-<function>XAllocColorCells</function>.
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Read/write colormap cells</primary><secondary>allocating</secondary></indexterm>
 <indexterm><primary>Allocation</primary><secondary>read/write colormap cells</secondary></indexterm>
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
 <indexterm significance="preferred"><primary>XAllocColorCells</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xalloccolorcells'>
+<funcsynopsis id='XAllocColorCells'>
 <funcprototype>
   <funcdef>Status <function>XAllocColorCells</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2004,7 +2004,7 @@ pixels_return array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XAllocColorCells</function>
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>
 function allocates read/write color cells.
 The number of colors must be positive and the number of planes nonnegative,
 or a
@@ -2040,12 +2040,12 @@ pixel subfield) for
 <symbol>DirectColor</symbol>.
 The <acronym>RGB</acronym> values of the allocated
 entries are undefined.
-<function>XAllocColorCells</function>
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>
 returns nonzero if it succeeded or zero if it failed.
 </para>
 <para>
 <!-- .LP -->
-<function>XAllocColorCells</function>
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>
 and
@@ -2058,14 +2058,14 @@ errors.
 To allocate read/write color resources for a
 <symbol>DirectColor</symbol>
 model, use
-<function>XAllocColorPlanes</function>.
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Read/write colormap planes</primary><secondary>allocating</secondary></indexterm>
 <indexterm><primary>Allocation</primary><secondary>read/write colormap planes</secondary></indexterm>
 <indexterm><primary>Color</primary><secondary>allocation</secondary></indexterm>
 <indexterm significance="preferred"><primary>XAllocColorPlanes</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xalloccolorplanes'>
+<funcsynopsis id='XAllocColorPlanes'>
 <funcprototype>
   <funcdef>Status <function>XAllocColorPlanes</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2116,7 +2116,7 @@ Specifies a Boolean value that indicates whether the planes must be contiguous.
     <listitem>
       <para>
 Returns an array of pixel values. 
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 returns the pixel values in this array.
       </para>
     </listitem>
@@ -2239,18 +2239,18 @@ This is true even for
 <symbol>PseudoColor</symbol>.
 When the colormap entry of a pixel
 value is changed (using 
-<function>XStoreColors</function>,
-<function>XStoreColor</function>,
+<xref linkend='XStoreColors' xrefstyle='select: title'/>,
+<xref linkend='XStoreColor' xrefstyle='select: title'/>,
 or 
-<function>XStoreNamedColor</function>),
+<xref linkend='XStoreNamedColor' xrefstyle='select: title'/>),
 the pixel is decomposed according to the masks, 
 and the corresponding independent entries are updated.
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 returns nonzero if it succeeded or zero if it failed.
 </para>
 <para>
 <!-- .LP -->
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>
 and
@@ -2262,12 +2262,12 @@ errors.
 <!-- .sp -->
 <indexterm><primary>Freeing</primary><secondary>colors</secondary></indexterm>
 To free colormap cells, use
-<function>XFreeColors</function>.
+<xref linkend='XFreeColors' xrefstyle='select: title'/>.
 <indexterm significance="preferred"><primary>XFreeColors</primary></indexterm>
 <indexterm><primary>Color</primary><secondary>deallocation</secondary></indexterm>
 <!-- .sM -->
 </para>
-<funcsynopsis id='xfreecolors'>
+<funcsynopsis id='XFreeColors'>
 <funcprototype>
   <funcdef><function>XFreeColors</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2336,7 +2336,7 @@ Specifies the planes you want to free.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XFreeColors</function>
+<xref linkend='XFreeColors' xrefstyle='select: title'/>
 function frees the cells represented by pixels whose values are in the
 pixels array.
 The planes argument should not have any bits set to 1 in common with any of the
@@ -2349,14 +2349,14 @@ were allocated by the client (using
 <indexterm><primary>XAllocNamedColor</primary></indexterm>
 <indexterm><primary>XAllocColorCells</primary></indexterm>
 <indexterm><primary>XAllocColorPlanes</primary></indexterm>
-<function>XAllocColor</function>,
-<function>XAllocNamedColor</function>,
-<function>XAllocColorCells</function>,
+<xref linkend='XAllocColor' xrefstyle='select: title'/>,
+<xref linkend='XAllocNamedColor' xrefstyle='select: title'/>,
+<xref linkend='XAllocColorCells' xrefstyle='select: title'/>,
 and 
-<function>XAllocColorPlanes</function>).
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>).
 Note that freeing an
 individual pixel obtained from 
-<function>XAllocColorPlanes</function>
+<xref linkend='XAllocColorPlanes' xrefstyle='select: title'/>
 may not actually allow
 it to be reused until all of its related pixels are also freed.
 Similarly,
@@ -2376,7 +2376,7 @@ client (that is, is unallocated or is only allocated by another client)
 or if the colormap was created with all entries writable (by passing
 <symbol>AllocAll</symbol>
 to
-<function>XCreateColormap</function>),
+<xref linkend='XCreateColormap' xrefstyle='select: title'/>),
 a
 <errorname>BadAccess</errorname>
 error results. 
@@ -2385,7 +2385,7 @@ the one that gets reported is arbitrary.
 </para>
 <para>
 <!-- .LP -->
-<function>XFreeColors</function>
+<xref linkend='XFreeColors' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -2403,12 +2403,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To store an <acronym>RGB</acronym> value in a single colormap cell, use
-<function>XStoreColor</function>.
+<xref linkend='XStoreColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>storing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XStoreColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstorecolor'>
+<funcsynopsis id='XStoreColor'>
 <funcprototype>
   <funcdef><function>XStoreColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2454,7 +2454,7 @@ Specifies the pixel and <acronym>RGB</acronym> values.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XStoreColor</function>
+<xref linkend='XStoreColor' xrefstyle='select: title'/>
 function changes the colormap entry of the pixel value specified in the
 pixel member of the
 <structname>XColor</structname>
@@ -2468,7 +2468,7 @@ If a specified pixel is not a valid index into the colormap,
 a
 <errorname>BadValue</errorname>
 error results.
-<function>XStoreColor</function>
+<xref linkend='XStoreColor' xrefstyle='select: title'/>
 also changes the red, green, and/or blue color components.
 You specify which color components are to be changed by setting
 <symbol>DoRed</symbol>,
@@ -2483,7 +2483,7 @@ the changes are visible immediately.
 </para>
 <para>
 <!-- .LP -->
-<function>XStoreColor</function>
+<xref linkend='XStoreColor' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -2495,12 +2495,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To store multiple <acronym>RGB</acronym> values in multiple colormap cells, use
-<function>XStoreColors</function>.
+<xref linkend='XStoreColors' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>storing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XStoreColors</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstorecolors'>
+<funcsynopsis id='XStoreColors'>
 <funcprototype>
   <funcdef><function>XStoreColors</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2560,7 +2560,7 @@ structures in the color definition array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 function changes the colormap entries of the pixel values
 specified in the pixel members of the
 <structname>XColor</structname>
@@ -2575,7 +2575,7 @@ in the flags member of the
 structures.
 If the colormap is an installed map for its screen, the
 changes are visible immediately.
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 changes the specified pixels if they are allocated writable in the colormap 
 by any client, even if one or more pixels generates an error.
 If a specified pixel is not a valid index into the colormap, a
@@ -2589,7 +2589,7 @@ the one that gets reported is arbitrary.
 </para>
 <para>
 <!-- .LP -->
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -2601,12 +2601,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To store a color of arbitrary format in a single colormap cell, use
-<function>XcmsStoreColor</function>.
+<xref linkend='XcmsStoreColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>storing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsStoreColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsstorecolor'>
+<funcsynopsis id='XcmsStoreColor'>
 <funcprototype>
   <funcdef>Status <function>XcmsStoreColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2655,7 +2655,7 @@ structure remain unchanged on return.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsStoreColor</function>
+<xref linkend='XcmsStoreColor' xrefstyle='select: title'/>
 function converts the color specified in the
 <structname>XcmsColor</structname>
 structure into <acronym>RGB</acronym> values.
@@ -2667,7 +2667,7 @@ structure, whose three flags
 and
 <symbol>DoBlue</symbol>)
 are set, in a call to
-<function>XStoreColor</function>
+<xref linkend='XStoreColor' xrefstyle='select: title'/>
 to change the color cell specified by the pixel member of the
 <structname>XcmsColor</structname>
 structure.
@@ -2685,22 +2685,22 @@ the changes are visible immediately.
 <para>
 <!-- .LP -->
 Note that 
-<function>XStoreColor</function>
+<xref linkend='XStoreColor' xrefstyle='select: title'/>
 has no return value; therefore, an
 <symbol>XcmsSuccess</symbol>
 return value from this function indicates that the conversion 
 to <acronym>RGB</acronym> succeeded and the call to
-<function>XStoreColor</function>
+<xref linkend='XStoreColor' xrefstyle='select: title'/>
 was made.
 To obtain the actual color stored, use
-<function>XcmsQueryColor</function>.
+<xref linkend='XcmsQueryColor' xrefstyle='select: title'/>.
 Because of the screen's hardware limitations or gamut compression,
 the color stored in the colormap may not be identical
 to the color specified.
 </para>
 <para>
 <!-- .LP -->
-<function>XcmsStoreColor</function>
+<xref linkend='XcmsStoreColor' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -2712,12 +2712,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To store multiple colors of arbitrary format in multiple colormap cells, use
-<function>XcmsStoreColors</function>.
+<xref linkend='XcmsStoreColors' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>storing</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsStoreColors</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsstorecolors'>
+<funcsynopsis id='XcmsStoreColors'>
 <funcprototype>
   <funcdef>Status <function>XcmsStoreColors</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2798,7 +2798,7 @@ Pass NULL if the compression status is not useful.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsStoreColors</function>
+<xref linkend='XcmsStoreColors' xrefstyle='select: title'/>
 function converts the colors specified in the array of
 <structname>XcmsColor</structname>
 structures into <acronym>RGB</acronym> values and then uses these <acronym>RGB</acronym> specifications in
@@ -2809,7 +2809,7 @@ structures, whose three flags
 and
 <symbol>DoBlue</symbol>)
 are set, in a call to
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 to change the color cells specified by the pixel member of the corresponding
 <structname>XcmsColor</structname>
 structure.
@@ -2829,22 +2829,22 @@ the changes are visible immediately.
 <para>
 <!-- .LP -->
 Note that 
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 has no return value; therefore, an
 <symbol>XcmsSuccess</symbol>
 return value from this function indicates that conversions 
 to <acronym>RGB</acronym> succeeded and the call to
-<function>XStoreColors</function>
+<xref linkend='XStoreColors' xrefstyle='select: title'/>
 was made.
 To obtain the actual colors stored, use
-<function>XcmsQueryColors</function>.
+<xref linkend='XcmsQueryColors' xrefstyle='select: title'/>.
 Because of the screen's hardware limitations or gamut compression,
 the colors stored in the colormap may not be identical
 to the colors specified.
 </para>
 <para>
 <!-- .LP -->
-<function>XcmsStoreColors</function>
+<xref linkend='XcmsStoreColors' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -2856,13 +2856,13 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To store a color specified by name in a single colormap cell, use
-<function>XStoreNamedColor</function>.
+<xref linkend='XStoreNamedColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>storing</secondary></indexterm>
 <indexterm><primary>Color</primary><secondary>naming</secondary></indexterm>
 <indexterm significance="preferred"><primary>XStoreNamedColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xstorenamedcolor'>
+<funcsynopsis id='XStoreNamedColor'>
 <funcprototype>
   <funcdef><function>XStoreNamedColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -2930,7 +2930,7 @@ Specifies which red, green, and blue components are set.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XStoreNamedColor</function>
+<xref linkend='XStoreNamedColor' xrefstyle='select: title'/>
 function looks up the named color with respect to the screen associated with
 the colormap and stores the result in the specified colormap.
 The pixel argument determines the entry in the colormap.
@@ -2954,7 +2954,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XStoreNamedColor</function>
+<xref linkend='XStoreNamedColor' xrefstyle='select: title'/>
 can generate
 <errorname>BadAccess</errorname>,
 <errorname>BadColor</errorname>,
@@ -2966,9 +2966,9 @@ errors.
 <para>
 <!-- .LP -->
 The
-<function>XQueryColor</function>
+<xref linkend='XQueryColor' xrefstyle='select: title'/>
 and
-<function>XQueryColors</function>
+<xref linkend='XQueryColors' xrefstyle='select: title'/>
 functions take pixel values in the pixel member of
 <structname>XColor</structname>
 structures and store in the structures the <acronym>RGB</acronym> values for those
@@ -2987,12 +2987,12 @@ the one that gets reported is arbitrary.
 <!-- .LP -->
 <!-- .sp -->
 To query the <acronym>RGB</acronym> value of a single colormap cell, use
-<function>XQueryColor</function>.
+<xref linkend='XQueryColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>querying</secondary></indexterm>
 <indexterm significance="preferred"><primary>XQueryColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerycolor'>
+<funcsynopsis id='XQueryColor'>
 <funcprototype>
   <funcdef><function>XQueryColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3038,7 +3038,7 @@ Specifies and returns the <acronym>RGB</acronym> values for the pixel specified 
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryColor</function>
+<xref linkend='XQueryColor' xrefstyle='select: title'/>
 function returns the current <acronym>RGB</acronym> value for the pixel in the
 <structname>XColor</structname>
 structure and sets the
@@ -3050,7 +3050,7 @@ flags.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryColor</function>
+<xref linkend='XQueryColor' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>
 and
@@ -3061,12 +3061,12 @@ errors.
 <!-- .LP -->
 <!-- .sp -->
 To query the <acronym>RGB</acronym> values of multiple colormap cells, use
-<function>XQueryColors</function>.
+<xref linkend='XQueryColors' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>querying</secondary></indexterm>
 <indexterm significance="preferred"><primary>XQueryColors</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xquerycolors'>
+<funcsynopsis id='XQueryColors'>
 <funcprototype>
   <funcdef><function>XQueryColors</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3127,7 +3127,7 @@ structures in the color definition array.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XQueryColors</function>
+<xref linkend='XQueryColors' xrefstyle='select: title'/>
 function returns the <acronym>RGB</acronym> value for each pixel in each
 <structname>XColor</structname>
 structure and sets the
@@ -3140,7 +3140,7 @@ flags in each structure.
 </para>
 <para>
 <!-- .LP -->
-<function>XQueryColors</function>
+<xref linkend='XQueryColors' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>
 and
@@ -3151,12 +3151,12 @@ errors.
 <para>
 <!-- .LP -->
 To query the color of a single colormap cell in an arbitrary format, use
-<function>XcmsQueryColor</function>.
+<xref linkend='XcmsQueryColor' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>querying</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsQueryColor</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsquerycolor'>
+<funcsynopsis id='XcmsQueryColor'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryColor</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3216,7 +3216,7 @@ Specifies the color format for the returned color specification.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsQueryColor</function>
+<xref linkend='XcmsQueryColor' xrefstyle='select: title'/>
 function obtains the <acronym>RGB</acronym> value
 for the pixel value in the pixel member of the specified
 <structname>XcmsColor</structname>
@@ -3229,7 +3229,7 @@ error results.
 </para>
 <para>
 <!-- .LP -->
-<function>XcmsQueryColor</function>
+<xref linkend='XcmsQueryColor' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>
 and
@@ -3240,12 +3240,12 @@ errors.
 <para>
 <!-- .LP -->
 To query the color of multiple colormap cells in an arbitrary format, use
-<function>XcmsQueryColors</function>.
+<xref linkend='XcmsQueryColors' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color</primary><secondary>querying</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsQueryColors</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsquerycolors'>
+<funcsynopsis id='XcmsQueryColors'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryColors</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3318,7 +3318,7 @@ Specifies the color format for the returned color specification.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsQueryColors</function>
+<xref linkend='XcmsQueryColors' xrefstyle='select: title'/>
 function obtains the <acronym>RGB</acronym> values
 for pixel values in the pixel members of
 <structname>XcmsColor</structname>
@@ -3333,7 +3333,7 @@ the one that gets reported is arbitrary.
 </para>
 <para>
 <!-- .LP -->
-<function>XcmsQueryColors</function>
+<xref linkend='XcmsQueryColors' xrefstyle='select: title'/>
 can generate
 <errorname>BadColor</errorname>
 and
@@ -3397,14 +3397,14 @@ There is a default CCC associated with each screen.
 <!-- .LP -->
 <!-- .sp -->
 To obtain the CCC associated with a colormap, use
-<function>XcmsCCCOfColormap</function>.
+<xref linkend='XcmsCCCOfColormap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsCCCOfColormap</primary></indexterm>
 <indexterm><primary>Colormap</primary><secondary>CCC of</secondary></indexterm>
 <indexterm><primary>CCC</primary><secondary>of colormap</secondary></indexterm>
 <indexterm><primary>Color Conversion Context</primary><secondary>of colormap</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscccofcolormap'>
+<funcsynopsis id='XcmsCCCOfColormap'>
 <funcprototype>
   <funcdef>XcmsCCC <function>XcmsCCCOfColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3439,12 +3439,12 @@ Specifies the colormap.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsCCCOfColormap</function>
+<xref linkend='XcmsCCCOfColormap' xrefstyle='select: title'/>
 function returns the CCC associated with the specified colormap.
 Once obtained, 
 the CCC attributes can be queried or modified.
 Unless the CCC associated with the specified colormap is changed with
-<function>XcmsSetCCCOfColormap</function>,
+<xref linkend='XcmsSetCCCOfColormap' xrefstyle='select: title'/>,
 this CCC is used when the specified colormap is used as an argument 
 to color functions.
 <!-- .sp -->
@@ -3452,14 +3452,14 @@ to color functions.
 <para>
 <!-- .LP -->
 To change the CCC associated with a colormap, use
-<function>XcmsSetCCCOfColormap</function>.
+<xref linkend='XcmsSetCCCOfColormap' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsSetCCCOfColormap</primary></indexterm>
 <indexterm><primary>Colormap</primary><secondary>CCC of</secondary></indexterm>
 <indexterm><primary>CCC</primary><secondary>of colormap</secondary></indexterm>
 <indexterm><primary>Color Conversion Context</primary><secondary>of colormap</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmssetcccofcolormap'>
+<funcsynopsis id='XcmsSetCCCOfColormap'>
 <funcprototype>
   <funcdef>XcmsCCC <function>XcmsSetCCCOfColormap</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3505,12 +3505,12 @@ Specifies the CCC.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsSetCCCOfColormap</function>
+<xref linkend='XcmsSetCCCOfColormap' xrefstyle='select: title'/>
 function changes the CCC associated with the specified colormap.
 It returns the CCC previously associated with the colormap.
 If they are not used again in the application,
 CCCs should be freed by calling
-<function>XcmsFreeCCC</function>.
+<xref linkend='XcmsFreeCCC' xrefstyle='select: title'/>.
 Several colormaps may share the same CCC without restriction; this
 includes the CCCs generated by Xlib with each colormap.  Xlib, however,
 creates a new CCC with each new colormap.
@@ -3533,13 +3533,13 @@ A default CCC is associated with each screen.
 <para>
 <!-- .LP -->
 To obtain the default CCC for a screen, use
-<function>XcmsDefaultCCC</function>.
+<xref linkend='XcmsDefaultCCC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsDefaultCCC</primary></indexterm>
 <indexterm><primary>Color Conversion Context</primary><secondary>default</secondary></indexterm>
 <indexterm><primary>CCC</primary><secondary>default</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsdefaultccc'>
+<funcsynopsis id='XcmsDefaultCCC'>
 <funcprototype>
   <funcdef>XcmsCCC <function>XcmsDefaultCCC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -3574,7 +3574,7 @@ Specifies the appropriate screen number on the host server.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsDefaultCCC</function>
+<xref linkend='XcmsDefaultCCC' xrefstyle='select: title'/>
 function returns the default CCC for the specified screen.
 Its visual is the default visual of the screen.
 Its initial gamut compression and white point
@@ -3601,14 +3601,14 @@ can return.
 <indexterm significance="preferred"><primary>XcmsDisplayOfCCC</primary></indexterm>
 <!-- .sM -->
 
-<funcsynopsis id='displayofccc'>
+<funcsynopsis id='DisplayOfCCC'>
 <funcprototype>
   <funcdef><function>DisplayOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis id='xcmsdisplayofccc'>
+<funcsynopsis id='XcmsDisplayOfCCC'>
 <funcprototype>
   <funcdef>Display *<function>XcmsDisplayOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3638,14 +3638,14 @@ Both return the display associated with the specified CCC.
 <indexterm significance="preferred"><primary>VisualOfCCC</primary></indexterm>
 <indexterm significance="preferred"><primary>XcmsVisualOfCCC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='visualofccc'>
+<funcsynopsis id='VisualOfCCC'>
 <funcprototype>
   <funcdef><function>VisualOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis id='xcmsvisualofccc'>
+<funcsynopsis id='XcmsVisualOfCCC'>
 <funcprototype>
   <funcdef>Visual *<function>XcmsVisualOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3675,14 +3675,14 @@ Both return the visual associated with the specified CCC.
 <indexterm significance="preferred"><primary>ScreenNumberOfCCC</primary></indexterm>
 <indexterm significance="preferred"><primary>XcmsScreenNumberOfCCC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='screennumberofccc'>
+<funcsynopsis id='ScreenNumberOfCCC'>
 <funcprototype>
   <funcdef><function>ScreenNumberOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis id='xcmsscreennumberofccc'>
+<funcsynopsis id='XcmsScreenNumberOfCCC'>
 <funcprototype>
   <funcdef>int <function>XcmsScreenNumberOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3712,13 +3712,13 @@ Both return the number of the screen associated with the specified CCC.
 <indexterm significance="preferred"><primary>ScreenWhitePointOfCCC</primary></indexterm>
 <indexterm significance="preferred"><primary>XcmsScreenWhitePointOfCCC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='screenwhitepointofccc'>
+<funcsynopsis id='ScreenWhitePointOfCCC'>
 <funcprototype>
   <funcdef><function>ScreenWhitePointOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
-<funcsynopsis id='xcmsscreenwhitepointofccc'>
+<funcsynopsis id='XcmsScreenWhitePointOfCCC'>
 <funcprototype>
   <funcdef>XcmsColor <function>XcmsScreenWhitePointOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3748,14 +3748,14 @@ Both return the white point of the screen associated with the specified CCC.
 <indexterm significance="preferred"><primary>ClientWhitePointOfCCC</primary></indexterm>
 <indexterm significance="preferred"><primary>XcmsClientWhitePointOfCCC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='clientwhitepointofccc'>
+<funcsynopsis id='ClientWhitePointOfCCC'>
 <funcprototype>
   <funcdef> <function>ClientWhitePointOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
 </funcprototype>
 </funcsynopsis>
 
-<funcsynopsis id='xcmsclientwhitepointofccc'>
+<funcsynopsis id='XcmsClientWhitePointOfCCC'>
 <funcprototype>
   <funcdef>XcmsColor *<function>XcmsClientWhitePointOfCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3790,12 +3790,12 @@ Both return the Client White Point of the specified CCC.
 <para>
 <!-- .LP -->
 To set the Client White Point in the CCC, use
-<function>XcmsSetWhitePoint</function>.
+<xref linkend='XcmsSetWhitePoint' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsSetWhitePoint</primary></indexterm>
 <indexterm><primary>Client White Point</primary><secondary>of Color Conversion Context</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmssetwhitepoint'>
+<funcsynopsis id='XcmsSetWhitePoint'>
 <funcprototype>
   <funcdef>Status <function>XcmsSetWhitePoint</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3831,7 +3831,7 @@ Specifies the new Client White Point.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsSetWhitePoint</function>
+<xref linkend='XcmsSetWhitePoint' xrefstyle='select: title'/>
 function changes the Client White Point in the specified CCC.
 Note that the pixel member is ignored 
 and that the color specification is left unchanged upon return.
@@ -3859,14 +3859,14 @@ otherwise, it returns zero.
 <!-- .LP -->
 To set the gamut compression procedure and corresponding client data
 in a specified CCC, use
-<function>XcmsSetCompressionProc</function>.
+<xref linkend='XcmsSetCompressionProc' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsSetCompressionProc</primary></indexterm>
 <indexterm><primary>Gamut compression</primary><secondary>setting in Color Conversion Context</secondary></indexterm>
 <indexterm><primary>Gamut compression</primary><secondary>procedure</secondary></indexterm>
 <indexterm><primary>Gamut compression</primary><secondary>client data</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmssetcompressionproc'>
+<funcsynopsis id='XcmsSetCompressionProc'>
 <funcprototype>
   <funcdef>XcmsCompressionProc <function>XcmsSetCompressionProc</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3919,7 +3919,7 @@ Specifies client data for gamut compression procedure or NULL.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsSetCompressionProc</function>
+<xref linkend='XcmsSetCompressionProc' xrefstyle='select: title'/>
 function first sets the gamut compression procedure and client data 
 in the specified CCC with the newly specified procedure and client data
 and then returns the old procedure.
@@ -3929,13 +3929,13 @@ and then returns the old procedure.
 <!-- .LP -->
 To set the white point adjustment procedure and corresponding client data
 in a specified CCC, use
-<function>XcmsSetWhiteAdjustProc</function>.
+<xref linkend='XcmsSetWhiteAdjustProc' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsSetWhiteAdjustProc</primary></indexterm>
 <indexterm><primary>White point adjustment</primary><secondary>setting in Color Conversion Context</secondary></indexterm>
 <indexterm><primary>White point adjustment</primary><secondary>procedure</secondary></indexterm>
 <indexterm><primary>White point adjustment</primary><secondary>client data</secondary></indexterm>
-<funcsynopsis id='xcmssetwhiteadjustproc'>
+<funcsynopsis id='XcmsSetWhiteAdjustProc'>
 <funcprototype>
   <funcdef>XcmsWhiteAdjustProc <function>XcmsSetWhiteAdjustProc</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -3982,7 +3982,7 @@ Specifies client data for white point adjustment procedure or NULL.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsSetWhiteAdjustProc</function>
+<xref linkend='XcmsSetWhiteAdjustProc' xrefstyle='select: title'/>
 function first sets the white point adjustment procedure and client data 
 in the specified CCC with the newly specified procedure and client data
 and then returns the old procedure.
@@ -3996,23 +3996,23 @@ and then returns the old procedure.
 <para>
 <!-- .LP -->
 You can explicitly create a CCC within your application by calling
-<function>XcmsCreateCCC</function>.
+<xref linkend='XcmsCreateCCC' xrefstyle='select: title'/>.
 These created CCCs can then be used by those functions that explicitly
 call for a CCC argument.
 Old CCCs that will not be used by the application should be freed using
-<function>XcmsFreeCCC</function>.
+<xref linkend='XcmsFreeCCC' xrefstyle='select: title'/>.
 <!-- .sp -->
 </para>
 <para>
 <!-- .LP -->
 To create a CCC, use
-<function>XcmsCreateCCC</function>.
+<xref linkend='XcmsCreateCCC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsCreateCCC</primary></indexterm>
 <indexterm><primary>Color Conversion Context</primary><secondary>creation</secondary></indexterm>
 <indexterm><primary>CCC</primary><secondary>creation</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscreateccc'>
+<funcsynopsis id='XcmsCreateCCC'>
 <funcprototype>
   <funcdef>XcmsCCC <function>XcmsCreateCCC</function></funcdef>
   <paramdef>Display<parameter> *display</parameter></paramdef>
@@ -4126,20 +4126,20 @@ Specifies client data for use with the white point adjustment procedure or NULL.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsCreateCCC</function>
+<xref linkend='XcmsCreateCCC' xrefstyle='select: title'/>
 function creates a CCC for the specified display, screen, and visual.
 </para>
 <para>
 <!-- .LP -->
 <!-- .sp -->
 To free a CCC, use
-<function>XcmsFreeCCC</function>.
+<xref linkend='XcmsFreeCCC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsFreeCCC</primary></indexterm>
 <indexterm><primary>Color Conversion Context</primary><secondary>freeing</secondary></indexterm>
 <indexterm><primary>CCC</primary><secondary>freeing</secondary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsfreeccc'>
+<funcsynopsis id='XcmsFreeCCC'>
 <funcprototype>
   <funcdef>void <function>XcmsFreeCCC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -4163,7 +4163,7 @@ Specifies the CCC.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsFreeCCC</function>
+<xref linkend='XcmsFreeCCC' xrefstyle='select: title'/>
 function frees the memory used for the specified CCC.
 Note that default CCCs and those currently associated with colormaps
 are ignored.
@@ -4180,13 +4180,13 @@ are ignored.
 <!-- .sp -->
 To convert an array of color specifications in arbitrary color formats
 to a single destination format, use
-<function>XcmsConvertColors</function>.
+<xref linkend='XcmsConvertColors' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Color conversion</primary></indexterm>
 <indexterm><primary>Color</primary><secondary>conversion</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsConvertColors</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsconvertcolors'>
+<funcsynopsis id='XcmsConvertColors'>
 <funcprototype>
   <funcdef>Status <function>XcmsConvertColors</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -4267,7 +4267,7 @@ Pass NULL if the compression status is not useful.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsConvertColors</function>
+<xref linkend='XcmsConvertColors' xrefstyle='select: title'/>
 function converts the color specifications in the specified array of
 <structname>XcmsColor</structname>
 structures from their current format to a single target format,
@@ -4330,7 +4330,7 @@ following:
 </para>
 <indexterm significance="preferred"><primary>XcmsCompressionProc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscompressionproc'>
+<funcsynopsis id='XcmsCompressionProc'>
 <funcprototype>
   <funcdef>typedef Status<function>(*XcmsCompressionProc</function>)</funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -4466,7 +4466,7 @@ is the Screen White Point.
     <para>
 If the gamut compression procedure uses a device-independent color space not
 initially accessible for use in the color management system, use 
-<function>XcmsAddColorSpace</function>
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>
 to ensure that it is added.
     </para>
   </listitem>
@@ -4518,7 +4518,7 @@ then while maintaining the same Psychometric Hue Angle,
 the color will be clipped to the <acronym>CIE</acronym> L*a*b* coordinates of maximum
 Psychometric Chroma.
 See
-<function>XcmsCIELabQueryMaxC</function>.
+<xref linkend='XcmsCIELabQueryMaxC' xrefstyle='select: title'/>.
 No client data is necessary.
     </para>
   </listitem>
@@ -4567,7 +4567,7 @@ then, while maintaining the same Psychometric Hue Angle,
 the color will be clipped to the <acronym>CIE</acronym> L*u*v* coordinates of maximum
 Psychometric Chroma.
 See
-<function>XcmsCIELuvQueryMaxC</function>.
+<xref linkend='XcmsCIELuvQueryMaxC' xrefstyle='select: title'/>.
 No client data is necessary.
     </para>
   </listitem>
@@ -4657,7 +4657,7 @@ The white point adjustment procedure interface must adhere to the following:
 </para>
 <indexterm significance="preferred"><primary>XcmsWhiteAdjustProc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmswhiteadjustproc'>
+<funcsynopsis id='XcmsWhiteAdjustProc'>
 <funcprototype>
   <funcdef>typedef Status <function>(*XcmsWhiteAdjustProc</function>)</funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -4838,7 +4838,7 @@ are <acronym>CIE</acronym> u'v'Y, <acronym>CIE</acronym> XYZ, and <acronym>CIE</
 When developing a custom white point adjustment procedure that uses a
 device-independent color space not initially accessible for use in the
 color management system, use
-<function>XcmsAddColorSpace</function>
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>
 to ensure that it is added.
 </para>
 <para>
@@ -4846,7 +4846,7 @@ to ensure that it is added.
 As an example, 
 if the CCC specifies a white point adjustment procedure
 and if the Client White Point and Screen White Point differ, the
-<function>XcmsAllocColor</function>
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 function will use the white point adjustment
 procedure twice: 
 </para>
@@ -4873,7 +4873,7 @@ and the adjustment procedure is
 During conversion to
 <structname>XcmsRGB</structname>,
 the call to 
-<function>XcmsAllocColor</function>
+<xref linkend='XcmsAllocColor' xrefstyle='select: title'/>
 results in the following series of color specification conversions:
 <!-- .\" Do these need to be font coded? -->
 </para>
@@ -4925,10 +4925,10 @@ to
 <para>
 <!-- .LP -->
 The resulting <acronym>RGB</acronym> specification is passed to
-<function>XAllocColor</function>,
+<xref linkend='XAllocColor' xrefstyle='select: title'/>,
 and the <acronym>RGB</acronym>
 specification returned by
-<function>XAllocColor</function>
+<xref linkend='XAllocColor' xrefstyle='select: title'/>
 is converted back to 
 <structname>XcmsCIEuvY</structname>
 by reversing the color conversion sequence.
@@ -5004,7 +5004,7 @@ The &lt;dimensions&gt; consists of a letter or letters
 that identify the dimensions of the color space 
 that are not fixed.
 For example, 
-<function>XcmsTekHVCQueryMaxC</function>
+<xref linkend='XcmsTekHVCQueryMaxC' xrefstyle='select: title'/>
 is given a fixed Hue and Value for which maximum Chroma is found.
 </para>
 <sect2 id="Red_Green_and_Blue_Queries">
@@ -5016,11 +5016,11 @@ is given a fixed Hue and Value for which maximum Chroma is found.
 <!-- .LP -->
 To obtain the color specification for black 
 (zero-intensity red, green, and blue), use
-<function>XcmsQueryBlack</function>.
+<xref linkend='XcmsQueryBlack' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsQueryBlack</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsqueryblack'>
+<funcsynopsis id='XcmsQueryBlack'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryBlack</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5073,7 +5073,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsQueryBlack</function>
+<xref linkend='XcmsQueryBlack' xrefstyle='select: title'/>
 function returns the color specification in the specified target format
 for zero-intensity red, green, and blue.
 <!-- .sp -->
@@ -5082,11 +5082,11 @@ for zero-intensity red, green, and blue.
 <!-- .LP -->
 To obtain the color specification for blue 
 (full-intensity blue while red and green are zero), use
-<function>XcmsQueryBlue</function>.
+<xref linkend='XcmsQueryBlue' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsQueryBlue</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsqueryblue'>
+<funcsynopsis id='XcmsQueryBlue'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryBlue</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5139,7 +5139,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsQueryBlue</function>
+<xref linkend='XcmsQueryBlue' xrefstyle='select: title'/>
 function returns the color specification in the specified target format
 for full-intensity blue while red and green are zero.
 <!-- .sp -->
@@ -5148,11 +5148,11 @@ for full-intensity blue while red and green are zero.
 <!-- .LP -->
 To obtain the color specification for green
 (full-intensity green while red and blue are zero), use
-<function>XcmsQueryGreen</function>.
+<xref linkend='XcmsQueryGreen' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsQueryGreen</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsquerygreen'>
+<funcsynopsis id='XcmsQueryGreen'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryGreen</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5205,7 +5205,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsQueryGreen</function>
+<xref linkend='XcmsQueryGreen' xrefstyle='select: title'/>
 function returns the color specification in the specified target format
 for full-intensity green while red and blue are zero.
 <!-- .sp -->
@@ -5214,11 +5214,11 @@ for full-intensity green while red and blue are zero.
 <!-- .LP -->
 To obtain the color specification for red
 (full-intensity red while green and blue are zero), use
-<function>XcmsQueryRed</function>.
+<xref linkend='XcmsQueryRed' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsQueryRed</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsqueryred'>
+<funcsynopsis id='XcmsQueryRed'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryRed</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5271,7 +5271,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsQueryRed</function>
+<xref linkend='XcmsQueryRed' xrefstyle='select: title'/>
 function returns the color specification in the specified target format
 for full-intensity red while green and blue are zero.
 </para>
@@ -5280,11 +5280,11 @@ for full-intensity red while green and blue are zero.
 <!-- .sp -->
 To obtain the color specification for white
 (full-intensity red, green, and blue), use
-<function>XcmsQueryWhite</function>.
+<xref linkend='XcmsQueryWhite' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsQueryWhite</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsquerywhite'>
+<funcsynopsis id='XcmsQueryWhite'>
 <funcprototype>
   <funcdef>Status <function>XcmsQueryWhite</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5337,7 +5337,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsQueryWhite</function>
+<xref linkend='XcmsQueryWhite' xrefstyle='select: title'/>
 function returns the color specification in the specified target format
 for full-intensity red, green, and blue.
 </para>
@@ -5368,11 +5368,11 @@ delim %%
 <!-- .sp -->
 To obtain the <acronym>CIE</acronym> L*a*b* coordinates of maximum Psychometric Chroma
 for a given Psychometric Hue Angle and <acronym>CIE</acronym> metric lightness (L*), use
-<function>XcmsCIELabQueryMaxC</function>.
+<xref linkend='XcmsCIELabQueryMaxC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsCIELabQueryMaxC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscielabquerymaxc'>
+<funcsynopsis id='XcmsCIELabQueryMaxC'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELabQueryMaxC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5439,7 +5439,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELabQueryMaxC</function>
+<xref linkend='XcmsCIELabQueryMaxC' xrefstyle='select: title'/>
 function, given a hue angle and lightness,
 finds the point of maximum chroma displayable by the screen.
 It returns this point in <acronym>CIE</acronym> L*a*b* coordinates.
@@ -5449,14 +5449,14 @@ It returns this point in <acronym>CIE</acronym> L*a*b* coordinates.
 <!-- .sp -->
 To obtain the <acronym>CIE</acronym> L*a*b* coordinates of maximum <acronym>CIE</acronym> metric lightness (L*)
 for a given Psychometric Hue Angle and Psychometric Chroma, use
-<function>XcmsCIELabQueryMaxL</function>.
+<xref linkend='XcmsCIELabQueryMaxL' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Psychometric Hue Angle</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsCIELabQueryMaxL</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscielabquerymaxl'>
+<funcsynopsis id='XcmsCIELabQueryMaxL'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELabQueryMaxL</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5523,7 +5523,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELabQueryMaxL</function>
+<xref linkend='XcmsCIELabQueryMaxL' xrefstyle='select: title'/>
 function, given a hue angle and chroma,
 finds the point in <acronym>CIE</acronym> L*a*b* color space of maximum 
 lightness (L*) displayable by the screen.
@@ -5538,7 +5538,7 @@ is beyond maximum for the given hue angle.
 <!-- .LP -->
 To obtain the <acronym>CIE</acronym> L*a*b* coordinates of maximum Psychometric Chroma
 for a given Psychometric Hue Angle, use
-<function>XcmsCIELabQueryMaxLC</function>.
+<xref linkend='XcmsCIELabQueryMaxLC' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Psychometric Hue Angle</primary></indexterm>
 <indexterm><primary>Psychometric Chroma</primary></indexterm>
@@ -5547,7 +5547,7 @@ for a given Psychometric Hue Angle, use
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsCIELabQueryMaxLC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscielabquerymaxlc'>
+<funcsynopsis id='XcmsCIELabQueryMaxLC'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELabQueryMaxLC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5602,7 +5602,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELabQueryMaxLC</function>
+<xref linkend='XcmsCIELabQueryMaxLC' xrefstyle='select: title'/>
 function, given a hue angle,
 finds the point of maximum chroma displayable by the screen.
 It returns this point in <acronym>CIE</acronym> L*a*b* coordinates.
@@ -5612,14 +5612,14 @@ It returns this point in <acronym>CIE</acronym> L*a*b* coordinates.
 <!-- .LP -->
 To obtain the <acronym>CIE</acronym> L*a*b* coordinates of minimum <acronym>CIE</acronym> metric lightness (L*)
 for a given Psychometric Hue Angle and Psychometric Chroma, use
-<function>XcmsCIELabQueryMinL</function>.
+<xref linkend='XcmsCIELabQueryMinL' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Psychometric Hue Angle</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary><secondary>minimum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsCIELabQueryMinL</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscielabqueryminlc'>
+<funcsynopsis id='XcmsCIELabQueryMinL'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELabQueryMinL</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5686,7 +5686,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELabQueryMinL</function>
+<xref linkend='XcmsCIELabQueryMinL' xrefstyle='select: title'/>
 function, given a hue angle and chroma,
 finds the point of minimum lightness (L*) displayable by the screen.
 It returns this point in <acronym>CIE</acronym> L*a*b* coordinates.
@@ -5725,11 +5725,11 @@ delim %%
 <!-- .LP -->
 To obtain the <acronym>CIE</acronym> L*u*v* coordinates of maximum Psychometric Chroma
 for a given Psychometric Hue Angle and <acronym>CIE</acronym> metric lightness (L*), use
-<function>XcmsCIELuvQueryMaxC</function>.
+<xref linkend='XcmsCIELuvQueryMaxC' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsCIELuvQueryMaxC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmxcieluvquerymaxc'>
+<funcsynopsis id='XcmsCIELuvQueryMaxC'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELuvQueryMaxC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5796,7 +5796,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELuvQueryMaxC</function>
+<xref linkend='XcmsCIELuvQueryMaxC' xrefstyle='select: title'/>
 function, given a hue angle and lightness,
 finds the point of maximum chroma displayable by the screen.
 It returns this point in <acronym>CIE</acronym> L*u*v* coordinates.
@@ -5806,14 +5806,14 @@ It returns this point in <acronym>CIE</acronym> L*u*v* coordinates.
 <!-- .LP -->
 To obtain the <acronym>CIE</acronym> L*u*v* coordinates of maximum <acronym>CIE</acronym> metric lightness (L*)
 for a given Psychometric Hue Angle and Psychometric Chroma, use
-<function>XcmsCIELuvQueryMaxL</function>.
+<xref linkend='XcmsCIELuvQueryMaxL' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Psychometric Hue Angle</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsCIELuvQueryMaxL</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscieluvquerymaxl'>
+<funcsynopsis id='XcmsCIELuvQueryMaxL'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELuvQueryMaxL</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5880,7 +5880,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELuvQueryMaxL</function>
+<xref linkend='XcmsCIELuvQueryMaxL' xrefstyle='select: title'/>
 function, given a hue angle and chroma,
 finds the point in <acronym>CIE</acronym> L*u*v* color space of maximum 
 lightness (L*) displayable by the screen.
@@ -5895,7 +5895,7 @@ is beyond maximum for the given hue angle.
 <!-- .LP -->
 To obtain the <acronym>CIE</acronym> L*u*v* coordinates of maximum Psychometric Chroma
 for a given Psychometric Hue Angle, use
-<function>XcmsCIELuvQueryMaxLC</function>.
+<xref linkend='XcmsCIELuvQueryMaxLC' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Psychometric Hue Angle</primary></indexterm>
 <indexterm><primary>Psychometric Chroma</primary></indexterm>
@@ -5904,7 +5904,7 @@ for a given Psychometric Hue Angle, use
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsCIELuvQueryMaxLC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscieluvquerymaxlc'>
+<funcsynopsis id='XcmsCIELuvQueryMaxLC'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELuvQueryMaxLC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -5959,7 +5959,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsCIELuvQueryMaxLC</function>
+<xref linkend='XcmsCIELuvQueryMaxLC' xrefstyle='select: title'/>
 function, given a hue angle,
 finds the point of maximum chroma displayable by the screen.
 It returns this point in <acronym>CIE</acronym> L*u*v* coordinates.
@@ -5969,14 +5969,14 @@ It returns this point in <acronym>CIE</acronym> L*u*v* coordinates.
 <!-- .LP -->
 To obtain the <acronym>CIE</acronym> L*u*v* coordinates of minimum <acronym>CIE</acronym> metric lightness (L*)
 for a given Psychometric Hue Angle and Psychometric Chroma, use
-<function>XcmsCIELuvQueryMinL</function>.
+<xref linkend='XcmsCIELuvQueryMinL' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Psychometric Hue Angle</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary></indexterm>
 <indexterm><primary><acronym>CIE</acronym> metric lightness</primary><secondary>minimum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsCIELuvQueryMinL</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmscieluvqueryminl'>
+<funcsynopsis id='XcmsCIELuvQueryMinL'>
 <funcprototype>
   <funcdef>Status <function>XcmsCIELuvQueryMinL</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -6043,7 +6043,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsCIELuvQueryMinL</function>
+<xref linkend='XcmsCIELuvQueryMinL' xrefstyle='select: title'/>
 function, given a hue angle and chroma,
 finds the point of minimum lightness (L*) displayable by the screen.
 It returns this point in <acronym>CIE</acronym> L*u*v* coordinates.
@@ -6061,13 +6061,13 @@ is beyond maximum for the given hue angle.
 <para>
 <!-- .LP -->
 To obtain the maximum Chroma for a given Hue and Value, use
-<function>XcmsTekHVCQueryMaxC</function>.
+<xref linkend='XcmsTekHVCQueryMaxC' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Chroma</primary></indexterm>
 <indexterm><primary>Chroma</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsTekHVCQueryMaxC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmstekhvcquerymaxc'>
+<funcsynopsis id='XcmsTekHVCQueryMaxC'>
 <funcprototype>
   <funcdef>Status <function>XcmsTekHVCQueryMaxC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -6133,7 +6133,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsTekHVCQueryMaxC</function>
+<xref linkend='XcmsTekHVCQueryMaxC' xrefstyle='select: title'/>
 function, given a Hue and Value,
 determines the maximum Chroma in TekHVC color space
 displayable by the screen.
@@ -6144,13 +6144,13 @@ and Value at which the maximum Chroma was found.
 <para>
 <!-- .LP -->
 To obtain the maximum Value for a given Hue and Chroma, use
-<function>XcmsTekHVCQueryMaxV</function>.
+<xref linkend='XcmsTekHVCQueryMaxV' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Value</primary></indexterm>
 <indexterm><primary>Value</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsTekHVCQueryMaxV</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmstekhvcquerymaxv'>
+<funcsynopsis id='XcmsTekHVCQueryMaxV'>
 <funcprototype>
   <funcdef>Status <function>XcmsTekHVCQueryMaxV</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -6216,7 +6216,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsTekHVCQueryMaxV</function>
+<xref linkend='XcmsTekHVCQueryMaxV' xrefstyle='select: title'/>
 function, given a Hue and Chroma,
 determines the maximum Value in TekHVC color space
 displayable by the screen.
@@ -6229,7 +6229,7 @@ at which the maximum Value was found.
 <!-- .LP -->
 To obtain the maximum Chroma and Value at which it is reached
 for a specified Hue, use
-<function>XcmsTekHVCQueryMaxVC</function>.
+<xref linkend='XcmsTekHVCQueryMaxVC' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Chroma</primary></indexterm>
 <indexterm><primary>Value</primary></indexterm>
@@ -6237,7 +6237,7 @@ for a specified Hue, use
 <indexterm><primary>Value</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsTekHVCQueryMaxVC</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmstekhvcquerymaxvc'>
+<funcsynopsis id='XcmsTekHVCQueryMaxVC'>
 <funcprototype>
   <funcdef>Status <function>XcmsTekHVCQueryMaxVC</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -6293,7 +6293,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsTekHVCQueryMaxVC</function>
+<xref linkend='XcmsTekHVCQueryMaxVC' xrefstyle='select: title'/>
 function, given a Hue,
 determines the maximum Chroma in TekHVC color space displayable by the screen
 and the Value at which that maximum Chroma is reached.
@@ -6307,7 +6307,7 @@ and the actual Hue for which the maximum Chroma was found.
 To obtain a specified number of TekHVC specifications such that they
 contain maximum Values for a specified Hue and the
 Chroma at which the maximum Values are reached, use
-<function>XcmsTekHVCQueryMaxVSamples</function>.
+<xref linkend='XcmsTekHVCQueryMaxVSamples' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Chroma</primary></indexterm>
 <indexterm><primary>Value</primary></indexterm>
@@ -6315,7 +6315,7 @@ Chroma at which the maximum Values are reached, use
 <indexterm><primary>Value</primary><secondary>maximum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsTekHVCQueryMaxVSamples</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmstekhvcquerymaxvsamples'>
+<funcsynopsis id='XcmsTekHVCQueryMaxVSamples'>
 <funcprototype>
   <funcdef>Status <function>XcmsTekHVCQueryMaxVSamples</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -6379,7 +6379,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsTekHVCQueryMaxVSamples</function>
+<xref linkend='XcmsTekHVCQueryMaxVSamples' xrefstyle='select: title'/>
 returns nsamples of maximum Value, the Chroma at which that maximum Value
 is reached, and the actual Hue for which the maximum Chroma was found.
 These sample points may then be used to plot the maximum Value/Chroma
@@ -6390,13 +6390,13 @@ space.
 <para>
 <!-- .LP -->
 To obtain the minimum Value for a given Hue and Chroma, use
-<function>XcmsTekHVCQueryMinV</function>.
+<xref linkend='XcmsTekHVCQueryMinV' xrefstyle='select: title'/>.
 </para>
 <indexterm><primary>Value</primary></indexterm>
 <indexterm><primary>Value</primary><secondary>minimum</secondary></indexterm>
 <indexterm significance="preferred"><primary>XcmsTekHVCQueryMinV</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmstekhvcqueryminv'>
+<funcsynopsis id='XcmsTekHVCQueryMinV'>
 <funcprototype>
   <funcdef>Status <function>XcmsTekHVCQueryMinV</function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -6462,7 +6462,7 @@ The value returned in the pixel member is undefined.
 <!-- .LP -->
 <!-- .eM  -->
 The
-<function>XcmsTekHVCQueryMinV</function>
+<xref linkend='XcmsTekHVCQueryMinV' xrefstyle='select: title'/>
 function, given a Hue and Chroma,
 determines the minimum Value in TekHVC color space displayable by the screen.
 It returns the minimum Value and the actual Hue and Chroma at which
@@ -6490,7 +6490,7 @@ Device-Independent Color Spaces
     <para>
 Device-independent color spaces that are derivable to <acronym>CIE</acronym> XYZ
 space can be added using the
-<function>XcmsAddColorSpace</function>
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>
 function.
     </para>
   </listitem>
@@ -6506,7 +6506,7 @@ device-dependent color spaces and their functions that
 convert between these color spaces and the <acronym>CIE</acronym> XYZ
 color space, bundled together for a specific class of output devices.
 A function set can be added using the
-<function>XcmsAddFunctionSet</function>
+<xref linkend='XcmsAddFunctionSet' xrefstyle='select: title'/>
 function.
     </para>
   </listitem>
@@ -6550,11 +6550,11 @@ thus bypassing conversion between <acronym>CIE</acronym> u*v*Y and <acronym>CIE<
 <para>
 <!-- .LP -->
 To add a device-independent color space, use
-<function>XcmsAddColorSpace</function>.
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsAddColorSpace</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsaddcolorspace'>
+<funcsynopsis id='XcmsAddColorSpace'>
 <funcprototype>
   <funcdef>Status <function>XcmsAddColorSpace</function></funcdef>
   <paramdef>XcmsColorSpace<parameter> *color_space</parameter></paramdef>
@@ -6578,7 +6578,7 @@ Specifies the device-independent color space to add.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsAddColorSpace</function>
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>
 function makes a device-independent color space (actually an
 <structname>XcmsColorSpace</structname>
 structure) accessible by the color management system.
@@ -6589,16 +6589,16 @@ outside the client (for example, storing color specifications
 in a file using the unregistered color space), 
 then reference should be made by color space prefix
 (see
-<function>XcmsFormatOfPrefix</function>
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>
 and
-<function>XcmsPrefixOfFormat</function>).
+<xref linkend='XcmsPrefixOfFormat' xrefstyle='select: title'/>).
 </para>
 <para>
 <!-- .LP -->
 If the 
 <structname>XcmsColorSpace</structname>
 structure is already accessible in the color management system, 
-<function>XcmsAddColorSpace</function>
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>
 returns 
 <symbol>XcmsSuccess</symbol>.
 </para>
@@ -6618,11 +6618,11 @@ must be retained for reference by Xlib.
 <!-- .LP -->
 To obtain the format associated with the color space
 associated with a specified color string prefix, use
-<function>XcmsFormatOfPrefix</function>.
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsFormatOfPrefix</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsformatofprefix'>
+<funcsynopsis id='XcmsFormatOfPrefix'>
 <funcprototype>
   <funcdef>XcmsColorFormat <function>XcmsFormatOfPrefix</function></funcdef>
   <paramdef>char<parameter> *prefix</parameter></paramdef>
@@ -6646,12 +6646,12 @@ Specifies the string that contains the color space prefix.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsFormatOfPrefix</function>
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>
 function returns the format for the specified color space prefix
 (for example, the string ``CIEXYZ'').
 The prefix is case-insensitive.
 If the color space is not accessible in the color management system,
-<function>XcmsFormatOfPrefix</function>
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>
 returns 
 <symbol>XcmsUndefinedFormat</symbol>.
 </para>
@@ -6660,11 +6660,11 @@ returns
 <!-- .sp -->
 To obtain the color string prefix associated with the color space
 specified by a color format, use
-<function>XcmsPrefixOfFormat</function>.
+<xref linkend='XcmsPrefixOfFormat' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsPrefixOfFormat</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsprefixofformat'>
+<funcsynopsis id='XcmsPrefixOfFormat'>
 <funcprototype>
   <funcdef>char *<function>XcmsPrefixOfFormat</function></funcdef>
   <paramdef>XcmsColorFormat<parameter> format</parameter></paramdef>
@@ -6688,7 +6688,7 @@ Specifies the color specification format.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsPrefixOfFormat</function>
+<xref linkend='XcmsPrefixOfFormat' xrefstyle='select: title'/>
 function returns the string prefix associated with the color specification
 encoding specified by the format argument.
 Otherwise, if no encoding is found, it returns NULL.
@@ -6711,7 +6711,7 @@ for each additional color space.
 In the case of device-independent color spaces,
 a handle to this new structure (that is, by means of a global variable)
 is usually made accessible to the client program for use with the
-<function>XcmsAddColorSpace</function>
+<xref linkend='XcmsAddColorSpace' xrefstyle='select: title'/>
 function.
 </para>
 <para>
@@ -6725,9 +6725,9 @@ If references to an unregistered color space must be made outside the
 client (for example, storing color specifications in a file using the
 unregistered color space), then reference should be made by color space prefix
 (see
-<function>XcmsFormatOfPrefix</function>
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>
 and
-<function>XcmsPrefixOfFormat</function>).
+<xref linkend='XcmsPrefixOfFormat' xrefstyle='select: title'/>).
 <!-- .sM -->
 </para>
 <para>
@@ -6808,7 +6808,7 @@ adhere to the following software interface specification:
 </para>
 <indexterm significance="preferred"><primary>XcmsParseStringProc</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsparsestringproc'>
+<funcsynopsis id='XcmsParseStringProc'>
 <funcprototype>
   <funcdef>Status <function>XcmsParseStringProc</function></funcdef>
   <paramdef>char<parameter> *color_string</parameter></paramdef>
@@ -6858,7 +6858,7 @@ spaces must adhere to the
 following software interface specification:
 </para>
 <!-- .sM -->
-<funcsynopsis id='conversionproc'>
+<funcsynopsis id='ConversionProc'>
 <funcprototype>
   <funcdef>Status <function><replaceable>ConversionProc</replaceable></function></funcdef>
   <paramdef>XcmsCCC<parameter> ccc</parameter></paramdef>
@@ -7126,11 +7126,11 @@ its corresponding data may be stored on different root window properties.
 <para>
 <!-- .LP -->
 To add a function set, use
-<function>XcmsAddFunctionSet</function>.
+<xref linkend='XcmsAddFunctionSet' xrefstyle='select: title'/>.
 </para>
 <indexterm significance="preferred"><primary>XcmsAddFunctionSet</primary></indexterm>
 <!-- .sM -->
-<funcsynopsis id='xcmsaddfunctionset'>
+<funcsynopsis id='XcmsAddFunctionSet'>
 <funcprototype>
   <funcdef>Status <function>XcmsAddFunctionSet</function></funcdef>
   <paramdef>XcmsFunctionSet<parameter> *function_set</parameter></paramdef>
@@ -7154,12 +7154,12 @@ Specifies the function set to add.
 <!-- .LP -->
 <!-- .eM -->
 The
-<function>XcmsAddFunctionSet</function>
+<xref linkend='XcmsAddFunctionSet' xrefstyle='select: title'/>
 function adds a function set to the color management system.
 If the function set uses device-dependent 
 <structname>XcmsColorSpace</structname>
 structures not accessible in the color management system,
-<function>XcmsAddFunctionSet</function>
+<xref linkend='XcmsAddFunctionSet' xrefstyle='select: title'/>
 adds them.
 If an added
 <structname>XcmsColorSpace</structname>
@@ -7172,9 +7172,9 @@ client (for example, storing color specifications in a file
 using the unregistered color space),
 then reference should be made by color space prefix
 (see 
-<function>XcmsFormatOfPrefix</function>
+<xref linkend='XcmsFormatOfPrefix' xrefstyle='select: title'/>
 and
-<function>XcmsPrefixOfFormat</function>).
+<xref linkend='XcmsPrefixOfFormat' xrefstyle='select: title'/>).
 </para>
 <para>
 <!-- .LP -->
@@ -7207,7 +7207,7 @@ This data is stored in an
 structure.
 A handle to this structure (that is, by means of global variable)
 is usually made accessible to the client program for use with
-<function>XcmsAddFunctionSet</function>.
+<xref linkend='XcmsAddFunctionSet' xrefstyle='select: title'/>.
 </para>
 <para>
 <!-- .LP -->

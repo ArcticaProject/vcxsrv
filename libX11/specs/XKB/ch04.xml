@@ -1,4 +1,4 @@
-<chapter id='xkb_events'>
+<chapter id='Xkb_Events'>
 <title>Xkb Events</title>
 
 <para>
@@ -39,7 +39,7 @@ XkbSelectEventDetails</emphasis>
 specify have been met.
 </para>
 
-<sect1 id='xkb_event_types'>
+<sect1 id='Xkb_Event_Types'>
 <title>Xkb Event Types</title>
 
 <para>
@@ -264,7 +264,7 @@ event.
 </table>
 
 </sect1>
-<sect1 id='xkb_event_data_structures'>
+<sect1 id='Xkb_Event_Data_Structures'>
 <title>Xkb Event Data Structures</title>
 
 <para>
@@ -334,7 +334,7 @@ chapters where the events are described.
 
 
 </sect1>
-<sect1 id='selecting_xkb_events'>
+<sect1 id='Selecting_Xkb_Events'>
 <title>Selecting Xkb Events</title>
 
 <para>
@@ -635,7 +635,7 @@ XkbSelectEventDetails</emphasis>
 </para>
 
 
-<sect2 id='event_masks'>
+<sect2 id='Event_Masks'>
 <title>Event Masks</title>
 
 <para>
@@ -767,7 +767,7 @@ XkbSelectEvents</emphasis>
 
 </sect2>
 </sect1>
-<sect1 id='unified_xkb_event_type'>
+<sect1 id='Unified_Xkb_Event_Type'>
 <title>Unified Xkb Event Type</title>
 
 <para>

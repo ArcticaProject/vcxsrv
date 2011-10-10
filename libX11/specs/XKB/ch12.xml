@@ -1,4 +1,4 @@
-<chapter id='interpreting_key_events'>
+<chapter id='Interpreting_Key_Events'>
 <title>Interpreting Key Events</title>
 
 <para>
@@ -7,7 +7,7 @@ to directly interpret Xkb data structures. Xkb also modifies the behavior of
 several core X library functions.
 </para>
 
-<sect1 id='effects_of_xkb_on_the_core_x_library'>
+<sect1 id='Effects_of_Xkb_on_the_Core_X_Library'>
 <title>Effects of Xkb on the Core X Library</title>
 
 <para>
@@ -24,7 +24,7 @@ includes ways to control or disable it.
 </para>
 
 
-<sect2 id='effects_of_xkb_on_event_state'>
+<sect2 id='Effects_of_Xkb_on_Event_State'>
 <title>Effects of Xkb on Event State</title>
 
 <para>
@@ -38,7 +38,7 @@ by the core protocol.
 
 
 </sect2>
-<sect2 id='effects_of_xkb_on_mappingnotify_events'>
+<sect2 id='Effects_of_Xkb_on_MappingNotify_Events'>
 <title>Effects of Xkb on MappingNotify Events</title>
 
 <para>
@@ -112,7 +112,7 @@ requesting notification of changes to the legal range of keycodes.
 
 
 </sect2>
-<sect2 id='x_library_functions_affected_by_xkb'>
+<sect2 id='X_Library_Functions_Affected_by_Xkb'>
 <title>X Library Functions Affected by Xkb</title>
 
 <para>
@@ -228,7 +228,7 @@ the keysym are consumed and are not used to look up the string.
 
 </sect2>
 </sect1>
-<sect1 id='xkb_event_and_keymap_functions'>
+<sect1 id='Xkb_Event_and_Keymap_Functions'>
 <title>Xkb Event and Keymap Functions</title>
 
 <para>

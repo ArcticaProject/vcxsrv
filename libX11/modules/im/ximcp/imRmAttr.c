@@ -177,6 +177,8 @@ _XimMakeICAttrIDList(
 		    else *len += new_len;
 		    return name;
 		}
+		*len += new_len;
+		buf = (CARD16 *)((char *)buf + new_len);
 	    } else if (res->xrm_name == sts_quark) {
 		if ((name = _XimMakeICAttrIDList(ic, res_list, res_num,
 				(XIMArg *)p->value, buf, &new_len,
@@ -185,9 +187,10 @@ _XimMakeICAttrIDList(
 		    else *len += new_len;
 		    return name;
 		}
+		*len += new_len;
+		buf = (CARD16 *)((char *)buf + new_len);
 	    }
-	    *len += new_len;
-	    buf = (CARD16 *)((char *)buf + new_len);
+
 	    if (!(res = _XimGetNestedListSeparator(res_list, res_num))) {
 		p++;
 		if (p) {

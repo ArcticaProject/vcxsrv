@@ -1,4 +1,4 @@
-<chapter id='keyboard_geometry'>
+<chapter id='Keyboard_Geometry'>
 <title>Keyboard Geometry</title>
 
 <para>
@@ -244,7 +244,7 @@ section.
 Keyboard with Four Sections</H5>
 -->
 
-<sect1 id='shapes_and_outlines'>
+<sect1 id='Shapes_and_Outlines'>
 <title>Shapes and Outlines</title>
 
 <para>
@@ -348,7 +348,7 @@ degraded image of the keyboard.
 </para>
 
 </sect1>
-<sect1 id='sections'>
+<sect1 id='Sections'>
 <title>Sections</title>
 
 <para>
@@ -436,7 +436,7 @@ containing the entire section.
 </listitem>
 </itemizedlist>
 </sect1>
-<sect1 id='rows_and_keys'>
+<sect1 id='Rows_and_Keys'>
 <title>Rows and Keys</title>
 
 <para>
@@ -464,7 +464,7 @@ between a key and its predecessor.
 
 
 </sect1>
-<sect1 id='doodads'>
+<sect1 id='Doodads'>
 <title>Doodads</title>
 
 <para>
@@ -629,7 +629,7 @@ XkbLogoDoodad</emphasis>
 </table>
 
 </sect1>
-<sect1 id='overlay_rows_and_overlay_keys'>
+<sect1 id='Overlay_Rows_and_Overlay_Keys'>
 <title>Overlay Rows and Overlay Keys</title>
 
 <para>
@@ -660,7 +660,7 @@ while the key specified in over must not be.
 
 
 </sect1>
-<sect1 id='drawing_a_keyboard_representation'>
+<sect1 id='Drawing_a_Keyboard_Representation'>
 <title>Drawing a Keyboard Representation</title>
 
 <para>
@@ -678,7 +678,7 @@ To draw a representation of the keyboard, draw in the following order:
 </programlisting></para>
 
 </sect1>
-<sect1 id='geometry_data_structures'>
+<sect1 id='Geometry_Data_Structures'>
 <title>Geometry Data Structures</title>
 
 <para>
@@ -956,7 +956,7 @@ angle</emphasis>
  degrees.
 </para>
 
-<sect2 id='doodadrec_structures'>
+<sect2 id='DoodadRec_Structures'>
 <title>DoodadRec Structures</title>
 
 <para>
@@ -1071,7 +1071,7 @@ typedef struct _XkbLogoDoodad {
 
 </sect2>
 </sect1>
-<sect1 id='getting_keyboard_geometry_from_the_server'>
+<sect1 id='Getting_Keyboard_Geometry_From_the_Server'>
 <title>Getting Keyboard Geometry From the Server</title>
 
 <para>
@@ -1202,7 +1202,7 @@ name</emphasis>
 </para>
 
 </sect1>
-<sect1 id='using_keyboard_geometry'>
+<sect1 id='Using_Keyboard_Geometry'>
 <title>Using Keyboard Geometry</title>
 
 <para>
@@ -1544,7 +1544,7 @@ under</emphasis>
 
 
 </sect1>
-<sect1 id='adding_elements_to_a_keyboard_geometry'>
+<sect1 id='Adding_Elements_to_a_Keyboard_Geometry'>
 <title>Adding Elements to a Keyboard Geometry</title>
 
 <para>
@@ -2402,7 +2402,7 @@ NULL</emphasis>
 
 
 </sect1>
-<sect1 id='allocating_and_freeing_geometry_components'>
+<sect1 id='Allocating_and_Freeing_Geometry_Components'>
 <title>Allocating and Freeing Geometry Components</title>
 
 <para>

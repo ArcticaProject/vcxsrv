@@ -808,12 +808,15 @@ print_shader_info(const struct gl_shader_program *shProg)
 	     shProg->Shaders[i]->Name,
 	     shProg->Shaders[i]->SourceChecksum);
    }
-   if (shProg->VertexProgram)
-      printf("  vert prog %u\n", shProg->VertexProgram->Base.Id);
-   if (shProg->FragmentProgram)
-      printf("  frag prog %u\n", shProg->FragmentProgram->Base.Id);
-   if (shProg->GeometryProgram)
-      printf("  geom prog %u\n", shProg->GeometryProgram->Base.Id);
+   if (shProg->_LinkedShaders[MESA_SHADER_VERTEX])
+      printf("  vert prog %u\n",
+	     shProg->_LinkedShaders[MESA_SHADER_VERTEX]->Program->Id);
+   if (shProg->_LinkedShaders[MESA_SHADER_FRAGMENT])
+      printf("  frag prog %u\n",
+	     shProg->_LinkedShaders[MESA_SHADER_FRAGMENT]->Program->Id);
+   if (shProg->_LinkedShaders[MESA_SHADER_GEOMETRY])
+      printf("  geom prog %u\n",
+	     shProg->_LinkedShaders[MESA_SHADER_GEOMETRY]->Program->Id);
 }
 
 
@@ -963,9 +966,7 @@ static GLboolean
 validate_shader_program(const struct gl_shader_program *shProg,
                         char *errMsg)
 {
-   const struct gl_vertex_program *vp = shProg->VertexProgram;
-   const struct gl_geometry_program *gp = shProg->GeometryProgram;
-   const struct gl_fragment_program *fp = shProg->FragmentProgram;
+   unsigned i;
 
    if (!shProg->LinkStatus) {
       return GL_FALSE;
@@ -991,14 +992,11 @@ validate_shader_program(const struct gl_shader_program *shProg,
     * Check: any two active samplers in the current program object are of
     * different types, but refer to the same texture image unit,
     */
-   if (vp && !validate_samplers(&vp->Base, errMsg)) {
-      return GL_FALSE;
-   }
-   if (gp && !validate_samplers(&gp->Base, errMsg)) {
-      return GL_FALSE;
-   }
-   if (fp && !validate_samplers(&fp->Base, errMsg)) {
-      return GL_FALSE;
+   for (i = 0; i < Elements(shProg->_LinkedShaders); i++) {
+      if (shProg->_LinkedShaders[i]
+	  && !validate_samplers(shProg->_LinkedShaders[i]->Program, errMsg)) {
+	 return GL_FALSE;
+      }
    }
 
    return GL_TRUE;
