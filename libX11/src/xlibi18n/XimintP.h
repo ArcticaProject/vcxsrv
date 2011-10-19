@@ -161,6 +161,8 @@ typedef struct _XimProtoPrivateRec {
 #define DELAYBINDABLE		(1L << 3)
 #define RECONNECTABLE		(1L << 4)
 #endif /* XIM_CONNECTABLE */
+#define FABRICATED		(1L << 5)
+#define NEED_SYNC_REPLY		(1L << 6)
 
 /*
  * macro for the flag of XIMPrivateRec
@@ -198,6 +200,20 @@ typedef struct _XimProtoPrivateRec {
 #define UNMAKE_CONNECTABLE(im) \
     (((Xim)im)->private.proto.flag &= ~(DELAYBINDABLE|RECONNECTABLE))
 #endif /* XIM_CONNECTABLE */
+
+#define IS_FABRICATED(im) \
+		(((Xim)im)->private.proto.flag & FABRICATED)
+#define MARK_FABRICATED(im) \
+		(((Xim)im)->private.proto.flag |= FABRICATED)
+#define UNMARK_FABRICATED(im) \
+		(((Xim)im)->private.proto.flag &= ~FABRICATED)
+
+#define IS_NEED_SYNC_REPLY(im) \
+		(((Xim)im)->private.proto.flag & NEED_SYNC_REPLY)
+#define MARK_NEED_SYNC_REPLY(im) \
+		(((Xim)im)->private.proto.flag |= NEED_SYNC_REPLY)
+#define UNMARK_NEED_SYNC_REPLY(im) \
+		(((Xim)im)->private.proto.flag &= ~NEED_SYNC_REPLY)
 
 /*
  * bit mask for the register_filter_event of XIMPrivateRec/XICPrivateRec
@@ -259,9 +275,6 @@ typedef struct _XicProtoPrivateRec {
  * bit mask for the flag of XICPrivateRec
  */
 #define IC_CONNECTED		(1L)
-#define FABLICATED		(1L << 1)
-#define	NEED_SYNC_REPLY		(1L << 2)
-#define FOCUSED			(1L << 3)
 
 /*
  * macro for the flag of XICPrivateRec
@@ -272,27 +285,6 @@ typedef struct _XicProtoPrivateRec {
 		(((Xic)ic)->private.proto.flag |= IC_CONNECTED)
 #define	UNMARK_IC_CONNECTED(ic) \
 		(((Xic)ic)->private.proto.flag &= ~IC_CONNECTED)
-
-#define IS_FABLICATED(ic) \
-		(((Xic)ic)->private.proto.flag & FABLICATED)
-#define MARK_FABLICATED(ic) \
-		(((Xic)ic)->private.proto.flag |= FABLICATED)
-#define UNMARK_FABLICATED(ic) \
-		(((Xic)ic)->private.proto.flag &= ~FABLICATED)
-
-#define	IS_NEED_SYNC_REPLY(ic) \
-		(((Xic)ic)->private.proto.flag & NEED_SYNC_REPLY)
-#define	MARK_NEED_SYNC_REPLY(ic) \
-		(((Xic)ic)->private.proto.flag |= NEED_SYNC_REPLY)
-#define	UNMARK_NEED_SYNC_REPLY(ic) \
-		(((Xic)ic)->private.proto.flag &= ~NEED_SYNC_REPLY)
-
-#define IS_FOCUSED(ic) \
-		(((Xic)ic)->private.proto.flag & FOCUSED)
-#define MARK_FOCUSED(ic) \
-		(((Xic)ic)->private.proto.flag |= FOCUSED)
-#define UNMARK_FOCUSED(ic) \
-		(((Xic)ic)->private.proto.flag &= ~FOCUSED)
 
 /*
  * macro for the filter_event_mask of XICPrivateRec

@@ -128,9 +128,9 @@ _XimPendingFilter(
 {
     Xim          im = (Xim)ic->core.im;
 
-    if (IS_NEED_SYNC_REPLY(ic)) {
+    if (IS_NEED_SYNC_REPLY(im)) {
 	(void)_XimProcSyncReply(im, ic);
-	UNMARK_NEED_SYNC_REPLY(ic);
+	UNMARK_NEED_SYNC_REPLY(im);
     }
     return;
 }
@@ -140,13 +140,11 @@ _XimProtoKeypressFilter(
     Xic		 ic,
     XKeyEvent	*ev)
 {
-#ifdef XIM_CONNECTABLE
     Xim		im = (Xim)ic->core.im;
-#endif
 
-    if (IS_FABLICATED(ic)) {
+    if (IS_FABRICATED(im)) {
 	_XimPendingFilter(ic);
-	UNMARK_FABLICATED(ic);
+	UNMARK_FABRICATED(im);
 	return NOTFILTERD;
     }
 
@@ -203,13 +201,11 @@ _XimProtoKeyreleaseFilter(
     Xic		 ic,
     XKeyEvent	*ev)
 {
-#ifdef XIM_CONNECTABLE
     Xim		im = (Xim)ic->core.im;
-#endif
 
-    if (IS_FABLICATED(ic)) {
+    if (IS_FABRICATED(im)) {
 	_XimPendingFilter(ic);
-	UNMARK_FABLICATED(ic);
+	UNMARK_FABRICATED(im);
 	return NOTFILTERD;
     }
 

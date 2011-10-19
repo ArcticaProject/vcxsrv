@@ -369,18 +369,16 @@ _XftDefaultInit (Display *dpy)
 	goto bail1;
     if (!_XftDefaultInitInteger (dpy, pat, FC_RGBA))
 	goto bail1;
+    if (!_XftDefaultInitInteger (dpy, pat, FC_LCD_FILTER))
+	goto bail1;
     if (!_XftDefaultInitBool (dpy, pat, FC_ANTIALIAS))
 	goto bail1;
-#ifdef FC_EMBOLDEN
     if (!_XftDefaultInitBool (dpy, pat, FC_EMBOLDEN))
 	goto bail1;
-#endif
     if (!_XftDefaultInitBool (dpy, pat, FC_AUTOHINT))
 	goto bail1;
-#ifdef FC_HINT_STYLE
     if (!_XftDefaultInitInteger (dpy, pat, FC_HINT_STYLE))
 	goto bail1;
-#endif
     if (!_XftDefaultInitBool (dpy, pat, FC_HINTING))
 	goto bail1;
     if (!_XftDefaultInitBool (dpy, pat, FC_MINSPACE))
@@ -471,28 +469,24 @@ XftDefaultSubstitute (Display *dpy, int screen, FcPattern *pattern)
 			   XftDefaultGetBool (dpy, FC_ANTIALIAS, screen,
 					      True));
     }
-#ifdef FC_EMBOLDEN
     if (FcPatternGet (pattern, FC_EMBOLDEN, 0, &v) == FcResultNoMatch)
     {
 	FcPatternAddBool (pattern, FC_EMBOLDEN,
 			   XftDefaultGetBool (dpy, FC_EMBOLDEN, screen,
 					      False));
     }
-#endif
     if (FcPatternGet (pattern, FC_HINTING, 0, &v) == FcResultNoMatch)
     {
 	FcPatternAddBool (pattern, FC_HINTING,
 			  XftDefaultGetBool (dpy, FC_HINTING, screen,
 					     True));
     }
-#ifdef FC_HINT_STYLE
     if (FcPatternGet (pattern, FC_HINT_STYLE, 0, &v) == FcResultNoMatch)
     {
 	FcPatternAddInteger (pattern, FC_HINT_STYLE,
 			     XftDefaultGetInteger (dpy, FC_HINT_STYLE, screen,
 						   FC_HINT_FULL));
     }
-#endif
     if (FcPatternGet (pattern, FC_AUTOHINT, 0, &v) == FcResultNoMatch)
     {
 	FcPatternAddBool (pattern, FC_AUTOHINT,
@@ -520,6 +514,12 @@ XftDefaultSubstitute (Display *dpy, int screen, FcPattern *pattern)
 	FcPatternAddInteger (pattern, FC_RGBA,
 			      XftDefaultGetInteger (dpy, FC_RGBA, screen,
 						    subpixel));
+    }
+    if (FcPatternGet (pattern, FC_LCD_FILTER, 0, &v) == FcResultNoMatch)
+    {
+	FcPatternAddInteger (pattern, FC_LCD_FILTER,
+			     XftDefaultGetInteger (dpy, FC_LCD_FILTER, screen,
+						   FC_LCD_DEFAULT));
     }
     if (FcPatternGet (pattern, FC_MINSPACE, 0, &v) == FcResultNoMatch)
     {

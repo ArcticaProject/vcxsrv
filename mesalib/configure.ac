@@ -172,6 +172,10 @@ if test "x$GCC" = xyes; then
 
     # Work around aliasing bugs - developers should comment this out
     CFLAGS="$CFLAGS -fno-strict-aliasing"
+
+    # gcc's builtin memcmp is slower than glibc's
+    # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=43052
+    CFLAGS="$CFLAGS -fno-builtin-memcmp"
 fi
 if test "x$GXX" = xyes; then
     CXXFLAGS="$CXXFLAGS -Wall"
@@ -191,6 +195,10 @@ if test "x$GXX" = xyes; then
 
     # Work around aliasing bugs - developers should comment this out
     CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
+
+    # gcc's builtin memcmp is slower than glibc's
+    # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=43052
+    CXXFLAGS="$CXXFLAGS -fno-builtin-memcmp"
 fi
 
 dnl even if the compiler appears to support it, using visibility attributes isn't
@@ -340,6 +348,28 @@ else
         LIB_EXTENSION='so' ;;
     esac
 fi
+
+dnl
+dnl Mangled Mesa support
+dnl
+AC_ARG_ENABLE([mangling],
+  [AS_HELP_STRING([--enable-mangling],
+    [enable mangled symbols and library name @<:@default=disabled@:>@])],
+  [enable_mangling="${enableval}"],
+  [enable_mangling=no]
+)
+GL_LIB="GL"
+GLU_LIB="GLU"
+OSMESA_LIB="OSMesa"
+if test "x${enable_mangling}" = "xyes" ; then
+  DEFINES="${DEFINES} -DUSE_MGL_NAMESPACE"
+  GL_LIB="MangledGL"
+  GLU_LIB="MangledGLU"
+  OSMESA_LIB="MangledOSMesa"
+fi
+AC_SUBST([GL_LIB])
+AC_SUBST([GLU_LIB])
+AC_SUBST([OSMESA_LIB])
 
 dnl
 dnl potentially-infringing-but-nobody-knows-for-sure stuff
@@ -1280,17 +1310,16 @@ if test "x$osmesa_bits" != x8; then
 fi
 case "x$osmesa_bits" in
 x8)
-    OSMESA_LIB=OSMesa
+    OSMESA_LIB="${OSMESA_LIB}"
     ;;
 x16|x32)
-    OSMESA_LIB="OSMesa$osmesa_bits"
+    OSMESA_LIB="${OSMESA_LIB}$osmesa_bits"
     DEFINES="$DEFINES -DCHAN_BITS=$osmesa_bits -DDEFAULT_SOFTWARE_DEPTH_BITS=31"
     ;;
 *)
     AC_MSG_ERROR([OSMesa bits '$osmesa_bits' is not a valid option])
     ;;
 esac
-AC_SUBST([OSMESA_LIB])
 
 if test "x$enable_osmesa" = xyes; then
     # only link libraries with osmesa if shared
@@ -1719,7 +1748,7 @@ if test "x$enable_gallium_llvm" = xyes; then
     if test "x$LLVM_CONFIG" != xno; then
 	LLVM_VERSION=`$LLVM_CONFIG --version`
 	LLVM_CFLAGS=`$LLVM_CONFIG --cppflags|sed 's/-DNDEBUG\>//g'`
-	LLVM_LIBS="`$LLVM_CONFIG --libs` -lstdc++"
+	LLVM_LIBS="`$LLVM_CONFIG --libs`"
 
 	LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags`
 	DEFINES="$DEFINES -D__STDC_CONSTANT_MACROS"

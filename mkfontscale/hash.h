@@ -34,7 +34,7 @@ typedef HashBucketPtr* HashTablePtr;
 
 HashTablePtr makeHashTable(void);
 void destroyHashTable(HashTablePtr table);
-char *getHash(HashTablePtr table, char *key);
+char *getHash(HashTablePtr table, const char *key);
 int putHash(HashTablePtr table, char *key, char *value, int prio);
 int hashElements(HashTablePtr table);
 HashBucketPtr *hashArray(HashTablePtr table, int value_first);

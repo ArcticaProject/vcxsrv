@@ -17,6 +17,9 @@ is" without express or implied warranty.
 #include <xnest-config.h>
 #endif
 
+#include <string.h>
+#include <errno.h>
+
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "screenint.h"
@@ -52,6 +55,14 @@ Pixmap xnestScreenSaverPixmap;
 XlibGC xnestBitmapGC;
 unsigned long xnestEventMask;
 
+static int _X_NORETURN
+x_io_error_handler (Display *dpy) {
+    ErrorF("Lost connection to X server: %s\n", strerror(errno));
+    CloseWellKnownConnections();
+    OsCleanup(1);
+    exit(1);
+}
+
 void
 xnestOpenDisplay(int argc, char *argv[])
 {
@@ -60,7 +71,9 @@ xnestOpenDisplay(int argc, char *argv[])
   int i, j;
 
   if (!xnestDoFullGeneration) return;
-  
+
+  XSetIOErrorHandler(x_io_error_handler);
+
   xnestCloseDisplay();
 
   xnestDisplay = XOpenDisplay(xnestDisplayName);

@@ -176,13 +176,8 @@ _XftUnlockFile (XftFtFile *f)
 	_XftLockError ("too many file unlocks");
 }
 
-#if HAVE_FT_BITMAP_SIZE_Y_PPEM
 #define X_SIZE(face,i) ((face)->available_sizes[i].x_ppem)
 #define Y_SIZE(face,i) ((face)->available_sizes[i].y_ppem)
-#else
-#define X_SIZE(face,i) ((face)->available_sizes[i].width << 6)
-#define Y_SIZE(face,i) ((face)->available_sizes[i].height << 6)
-#endif
 
 _X_HIDDEN FcBool
 _XftSetFace (XftFtFile *f, FT_F26Dot6 xsize, FT_F26Dot6 ysize, FT_Matrix *matrix)
@@ -224,12 +219,9 @@ _XftSetFace (XftFtFile *f, FT_F26Dot6 xsize, FT_F26Dot6 ysize, FT_Matrix *matrix
 	     * files have but a single strike per file, we can
 	     * simply try both sizes.
 	     */
-	    if (
-#if HAVE_FT_BITMAP_SIZE_Y_PPEM
-		FT_Set_Char_Size (face, face->available_sizes[best].x_ppem,
+	    if (FT_Set_Char_Size (face, face->available_sizes[best].x_ppem,
 				  face->available_sizes[best].y_ppem, 0, 0) != 0
 		&&
-#endif
 		FT_Set_Char_Size (face, face->available_sizes[best].width << 6,
 				  face->available_sizes[best].height << 6,
 				  0, 0) != 0)
@@ -379,9 +371,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     double	    aspect;
     FcMatrix	    *font_matrix;
     FcBool	    hinting, vertical_layout, autohint, global_advance;
-#ifdef FC_HINT_STYLE
     int             hint_style;
-#endif
     FcChar32	    hash, *hashp;
     FT_Face	    face;
     int		    nhash;
@@ -470,6 +460,19 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     }
 
     /*
+     * Get lcd_filter value
+     */
+    switch (FcPatternGetInteger (pattern, FC_LCD_FILTER, 0, &fi->lcd_filter)) {
+    case FcResultNoMatch:
+	fi->lcd_filter = FC_LCD_DEFAULT;
+	break;
+    case FcResultMatch:
+	break;
+    default:
+	goto bail1;
+    }
+
+    /*
      * Get matrix and transform values
      */
     switch (FcPatternGetMatrix (pattern, FC_MATRIX, 0, &font_matrix)) {
@@ -542,7 +545,6 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 	goto bail1;
     }
 
-#ifdef FC_EMBOLDEN
     switch (FcPatternGetBool (pattern, FC_EMBOLDEN, 0, &fi->embolden)) {
     case FcResultNoMatch:
 	fi->embolden = FcFalse;
@@ -552,11 +554,7 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail1;
     }
-#else
-    fi->embolden = FcFalse;
-#endif
 
-#ifdef FC_HINT_STYLE
     switch (FcPatternGetInteger (pattern, FC_HINT_STYLE, 0, &hint_style)) {
     case FcResultNoMatch:
 	hint_style = FC_HINT_FULL;
@@ -566,12 +564,9 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
     default:
 	goto bail1;
     }
-#endif
 
     if (!hinting
-#ifdef FC_HINT_STYLE
 	|| hint_style == FC_HINT_NONE
-#endif
 	)
     {
 	fi->load_flags |= FT_LOAD_NO_HINTING;
@@ -582,15 +577,11 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
      */
     if (fi->antialias)
     {
-#ifdef FC_HINT_STYLE
-#ifdef FT_LOAD_TARGET_LIGHT
 	if (FC_HINT_NONE < hint_style && hint_style < FC_HINT_FULL)
 	{
 	    fi->load_flags |= FT_LOAD_TARGET_LIGHT;
 	}
 	else
-#endif
-#endif
 	{
 	    /* autohinter will snap stems to integer widths, when
 	     * the LCD targets are used.
@@ -598,23 +589,17 @@ XftFontInfoFill (Display *dpy, _Xconst FcPattern *pattern, XftFontInfo *fi)
 	    switch (fi->rgba) {
 	    case FC_RGBA_RGB:
 	    case FC_RGBA_BGR:
-#ifdef FT_LOAD_TARGET_LCD
 		fi->load_flags |= FT_LOAD_TARGET_LCD;
-#endif
 		break;
 	    case FC_RGBA_VRGB:
 	    case FC_RGBA_VBGR:
-#ifdef FT_LOAD_TARGET_LCD_V
 		fi->load_flags |= FT_LOAD_TARGET_LCD_V;
-#endif
 		break;
 	    }
 	}
     }
-#ifdef FT_LOAD_TARGET_MONO
     else
 	fi->load_flags |= FT_LOAD_TARGET_MONO;
-#endif
 
     /* set vertical layout if requested */
     switch (FcPatternGetBool (pattern, FC_VERTICAL_LAYOUT, 0, &vertical_layout)) {

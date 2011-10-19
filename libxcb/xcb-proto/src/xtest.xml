@@ -88,8 +88,8 @@ authorization from the authors.
         <field type="CARD32" name="time" />
         <field type="WINDOW" name="root" />
         <pad bytes="8" />
-        <field type="CARD16" name="rootX" />
-        <field type="CARD16" name="rootY" />
+        <field type="INT16" name="rootX" />
+        <field type="INT16" name="rootY" />
         <pad bytes="7" />
         <!-- Version 2.2: XInput device -->
         <field type="CARD8"  name="deviceid" />

@@ -31,7 +31,7 @@
 #define NUMBUCKETS (1 << LOG2_NUMBUCKETS)
 
 static unsigned
-hash(char *string)
+hash(const char *string)
 {
     int i;
     unsigned u = 0;
@@ -41,7 +41,7 @@ hash(char *string)
 }
 
 static void
-strcpy_lwr(char *dst, char *src)
+strcpy_lwr(char *dst, const char *src)
 {
     while(1) {
         *dst = tolower(*src);
@@ -77,7 +77,7 @@ destroyHashTable(HashTablePtr table)
 }
 
 char *
-getHash(HashTablePtr table, char *key)
+getHash(HashTablePtr table, const char *key)
 {
     int i = hash(key);
     HashBucketPtr bp;
@@ -173,7 +173,7 @@ hashArray(HashTablePtr table, int value_first)
 {
     int i, j, n;
     HashBucketPtr *dst;
-    
+
     n = hashElements(table);
     dst = malloc((n + 1) * sizeof(HashBucketPtr));
     if(dst == NULL)

@@ -143,12 +143,12 @@ is platform and configuration specific.
 disables named extension.   If an unknown extension name is specified,
 a list of accepted extension names is printed.
 .TP 8
-.BI \+extension extensionName
+.BI +extension extensionName
 enables named extension.   If an unknown extension name is specified,
 a list of accepted extension names is printed.
 .TP 8
 .B \-f \fIvolume\fP
-sets feep (bell) volume (allowable range: 0-100).
+sets beep (bell) volume (allowable range: 0-100).
 .TP 8
 .B \-fc \fIcursorFont\fP
 sets default cursor font.
@@ -524,8 +524,8 @@ An example configuration:
 .fi
 
 This will add /usr/share/X11/fonts/misc as the first FPE with the attribute
-'unscaled', second FPE will be /usr/share/X11/fonts/75dpi, also with
-the attribute unscaled etc. This is functionally equivalent to setting
+\N'39'unscaled', second FPE will be /usr/share/X11/fonts/75dpi, also with
+the attribute 'unscaled' etc. This is functionally equivalent to setting
 the following font path:
 
 .nf

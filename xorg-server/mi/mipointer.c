@@ -569,35 +569,37 @@ miPointerMoveNoEvent (DeviceIntPtr pDev, ScreenPtr pScreen,
  *
  * @param pDev The device to move
  * @param mode Movement mode (Absolute or Relative)
- * @param[in,out] x The x coordinate in screen coordinates (in regards to total
- * desktop size)
- * @param[in,out] y The y coordinate in screen coordinates (in regards to total
- * desktop size)
+ * @param[in,out] screenx The x coordinate in screen coordinates
+ * @param[in,out] screeny The y coordinate in screen coordinates
  */
-void
-miPointerSetPosition(DeviceIntPtr pDev, int mode, int *x, int *y)
+ScreenPtr
+miPointerSetPosition(DeviceIntPtr pDev, int mode, double *screenx, double *screeny)
 {
     miPointerScreenPtr	pScreenPriv;
     ScreenPtr		pScreen;
     ScreenPtr		newScreen;
+    int			x, y;
 
     miPointerPtr        pPointer; 
 
     if (!pDev || !pDev->coreEvents)
-        return;
+        return NULL;
 
     pPointer = MIPOINTER(pDev);
     pScreen = pPointer->pScreen;
     if (!pScreen)
-	return;	    /* called before ready */
+	return NULL;    /* called before ready */
 
-    if (*x < 0 || *x >= pScreen->width || *y < 0 || *y >= pScreen->height)
+    x = trunc(*screenx);
+    y = trunc(*screeny);
+
+    if (x < 0 || x >= pScreen->width || y < 0 || y >= pScreen->height)
     {
 	pScreenPriv = GetScreenPrivate (pScreen);
 	if (!pPointer->confined)
 	{
 	    newScreen = pScreen;
-	    (*pScreenPriv->screenFuncs->CursorOffScreen) (&newScreen, x, y);
+	    (*pScreenPriv->screenFuncs->CursorOffScreen) (&newScreen, &x, &y);
 	    if (newScreen != pScreen)
 	    {
 		pScreen = newScreen;
@@ -610,23 +612,32 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, int *x, int *y)
 	}
     }
     /* Constrain the sprite to the current limits. */
-    if (*x < pPointer->limits.x1)
-	*x = pPointer->limits.x1;
-    if (*x >= pPointer->limits.x2)
-	*x = pPointer->limits.x2 - 1;
-    if (*y < pPointer->limits.y1)
-	*y = pPointer->limits.y1;
-    if (*y >= pPointer->limits.y2)
-	*y = pPointer->limits.y2 - 1;
+    if (x < pPointer->limits.x1)
+	x = pPointer->limits.x1;
+    if (x >= pPointer->limits.x2)
+	x = pPointer->limits.x2 - 1;
+    if (y < pPointer->limits.y1)
+	y = pPointer->limits.y1;
+    if (y >= pPointer->limits.y2)
+	y = pPointer->limits.y2 - 1;
 
     if (pScreen->ConstrainCursorHarder)
-       pScreen->ConstrainCursorHarder(pDev, pScreen, mode, x, y);
+       pScreen->ConstrainCursorHarder(pDev, pScreen, mode, &x, &y);
 
-    if (pPointer->x == *x && pPointer->y == *y &&
-            pPointer->pScreen == pScreen)
-        return;
+    if (pPointer->x != x || pPointer->y != y ||
+            pPointer->pScreen != pScreen)
+        miPointerMoveNoEvent(pDev, pScreen, x, y);
 
-    miPointerMoveNoEvent(pDev, pScreen, *x, *y);
+    /* In the event we actually change screen or we get confined, we just
+     * drop the float component on the floor
+     * FIXME: only drop remainder for ConstrainCursorHarder, not for screen
+     * crossings */
+    if (x != trunc(*screenx))
+        *screenx = x;
+    if (y != trunc(*screeny))
+        *screeny = y;
+
+    return pScreen;
 }
 
 /**

@@ -2250,17 +2250,17 @@ _XimSetIMValueData(
 
     for(p = values; p->name != NULL; p++) {
 	if(!(res = _XimGetResourceListRec(res_list, list_num, p->name))) {
-	    return p->value;
+	    return p->name;
 	}
 	check = _XimCheckIMMode(res, XIM_SETIMVALUES);
 	if(check == XIM_CHECK_INVALID) {
 	    continue;
 	} else if (check == XIM_CHECK_ERROR) {
-	    return p->value;
+	    return p->name;
 	}
 
 	if(!_XimEncodeLocalIMAttr(res, top, p->value)) {
-	    return p->value;
+	    return p->name;
 	}
     }
     return NULL;
@@ -2280,17 +2280,17 @@ _XimGetIMValueData(
 
     for(p = values; p->name != NULL; p++) {
 	if(!(res = _XimGetResourceListRec(res_list, list_num, p->name))) {
-	    return p->value;
+	    return p->name;
 	}
 	check = _XimCheckIMMode(res, XIM_GETIMVALUES);
 	if(check == XIM_CHECK_INVALID) {
 	    continue;
 	} else if (check == XIM_CHECK_ERROR) {
-	    return p->value;
+	    return p->name;
 	}
 
 	if(!_XimDecodeLocalIMAttr(res, top, p->value)) {
-	    return p->value;
+	    return p->name;
 	}
     }
     return NULL;
@@ -2885,13 +2885,13 @@ _XimSetICValueData(
 
 	    if(mode & XIM_PREEDIT_ATTR) {
 		if (!_XimEncodeLocalPreeditValue(ic, res, (XPointer)p))
-	    	    return False;
+		    return p->name;
     	    } else if(mode & XIM_STATUS_ATTR) {
 		if (!_XimEncodeLocalStatusValue(ic, res, (XPointer)p))
-	    	    return False;
+		    return p->name;
     	    } else {
 		if (!_XimEncodeLocalTopValue(ic, res, (XPointer)p, flag))
-	    	    return False;
+		    return p->name;
     	    }
 	    if(_XimEncodeLocalICAttr(ic, res, top, p, mode) == False) {
 		return p->name;

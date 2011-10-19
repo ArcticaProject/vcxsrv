@@ -1,5 +1,5 @@
 module_LTLIBRARIES = libshadowfb.la
-libshadowfb_la_LDFLAGS = -avoid-version
+libshadowfb_la_LDFLAGS = -module -avoid-version
 libshadowfb_la_SOURCES = sfbmodule.c shadow.c
 
 sdk_HEADERS = shadowfb.h

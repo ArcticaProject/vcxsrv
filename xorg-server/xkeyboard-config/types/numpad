@@ -14,15 +14,11 @@ partial default xkb_types "pc" {
 // On Mac keypads, level 1 and 2 are swapped
 partial xkb_types "mac" {
     type "KEYPAD" {
-	modifiers = Shift+NumLock;
+	modifiers = None;
 	map[None] = Level2;
-	map[Shift] = Level1;
-	map[NumLock] = Level1;
-	map[Shift+NumLock] = Level2;
-	level_name[Level2] = "Base";
-	level_name[Level1] = "Number";
+	level_name[Level2] = "Number";
     };
-    include "extra(mac_keypad)"
+    include "extra(keypad)"
 };
 
 partial xkb_types "microsoft" {

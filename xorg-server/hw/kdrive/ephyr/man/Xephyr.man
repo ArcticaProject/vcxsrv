@@ -1,18 +1,18 @@
-."
-." Copyright (c) Matthieu Herrb <matthieu@herrb.eu>
-."
-." Permission to use, copy, modify, and distribute this software for any
-." purpose with or without fee is hereby granted, provided that the above
-." copyright notice and this permission notice appear in all copies.
-."
-." THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-." WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-." MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-." ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-." WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-." ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-." OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-."
+.\"
+.\" Copyright (c) Matthieu Herrb <matthieu@herrb.eu>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
 .TH Xephyr __appmansuffix__ __vendorversion__
 .SH NAME
 Xephyr - X server outputting to a window on a pre-existing X display
@@ -81,7 +81,7 @@ build flags are causing this. I haven't figured as yet how to work
 round it. It doesn't appear to break anything however.
 .IP \(bu 2
 Keyboard handling is basic but works.
-.TP \(bu 2
+.IP \(bu 2
 Mouse button 5 probably won't work.
 .SH "SEE ALSO"
 X(__miscmansuffix__), Xserver(__appmansuffix__)

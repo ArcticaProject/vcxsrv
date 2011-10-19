@@ -58,7 +58,6 @@ typedef struct {
     DevUnion *                  entityPrivates;
     int                         numInstances;
     GDevPtr *                   devices;   
-    IOADDRESS                   domainIO;
 } EntityRec, *EntityPtr;
 
 #define ACCEL_IS_SHARABLE 0x100

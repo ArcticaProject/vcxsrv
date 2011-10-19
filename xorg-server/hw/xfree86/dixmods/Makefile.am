@@ -30,21 +30,21 @@ INCLUDES = @XORG_INCS@ \
            -I$(top_srcdir)/miext/shadow \
            -I$(top_srcdir)/glx
 
-libdbe_la_LDFLAGS = -avoid-version
+libdbe_la_LDFLAGS = -module -avoid-version
 libdbe_la_LIBADD = $(top_builddir)/dbe/libdbe.la
 libdbe_la_SOURCES = dbemodule.c
 
-libfb_la_LDFLAGS = -avoid-version
+libfb_la_LDFLAGS = -module -avoid-version
 libfb_la_LIBADD = $(top_builddir)/fb/libfb.la
 libfb_la_SOURCES = $(top_builddir)/fb/fbcmap_mi.c fbmodule.c
 libfb_la_CFLAGS = $(AM_CFLAGS)
 
-libwfb_la_LDFLAGS = -avoid-version
+libwfb_la_LDFLAGS = -module -avoid-version
 libwfb_la_LIBADD = $(top_builddir)/fb/libwfb.la
 libwfb_la_SOURCES = $(top_builddir)/fb/fbcmap_mi.c fbmodule.c
 libwfb_la_CFLAGS = $(AM_CFLAGS) -DFB_ACCESS_WRAPPER
 
-libglx_la_LDFLAGS = -avoid-version
+libglx_la_LDFLAGS = -module -avoid-version
 if AIGLX_DRI_LOADER
 GLXDRI_LIBRARY = $(top_builddir)/glx/libglxdri.la
 endif
@@ -53,11 +53,11 @@ libglx_la_LIBADD = \
 	$(GLXDRI_LIBRARY)
 libglx_la_SOURCES = glxmodule.c
 
-librecord_la_LDFLAGS = -avoid-version
+librecord_la_LDFLAGS = -module -avoid-version
 librecord_la_LIBADD = $(top_builddir)/record/librecord.la
 librecord_la_SOURCES = recordmod.c
 
-libshadow_la_LDFLAGS = -avoid-version
+libshadow_la_LDFLAGS = -module -avoid-version
 libshadow_la_LIBADD = $(top_builddir)/miext/shadow/libshadow.la
 libshadow_la_SOURCES = shmodule.c
 

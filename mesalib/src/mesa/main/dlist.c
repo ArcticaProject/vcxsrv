@@ -875,7 +875,7 @@ translate_id(GLsizei n, GLenum type, const GLvoid * list)
 /**********************************************************************/
 
 /**
- * Wrapper for _mesa_unpack_image() that handles pixel buffer objects.
+ * Wrapper for _mesa_unpack_image/bitmap() that handles pixel buffer objects.
  * If width < 0 or height < 0 or format or type are invalid we'll just
  * return NULL.  We will not generate an error since OpenGL command
  * arguments aren't error-checked until the command is actually executed
@@ -899,8 +899,13 @@ unpack_image(struct gl_context *ctx, GLuint dimensions,
 
    if (!_mesa_is_bufferobj(unpack->BufferObj)) {
       /* no PBO */
-      GLvoid *image = _mesa_unpack_image(dimensions, width, height, depth,
-                                         format, type, pixels, unpack);
+      GLvoid *image;
+
+      if (type == GL_BITMAP)
+         image = _mesa_unpack_bitmap(width, height, pixels, unpack);
+      else
+         image = _mesa_unpack_image(dimensions, width, height, depth,
+                                    format, type, pixels, unpack);
       if (pixels && !image) {
          _mesa_error(ctx, GL_OUT_OF_MEMORY, "display list construction");
       }
@@ -921,8 +926,11 @@ unpack_image(struct gl_context *ctx, GLuint dimensions,
       }
 
       src = ADD_POINTERS(map, pixels);
-      image = _mesa_unpack_image(dimensions, width, height, depth,
-                                 format, type, src, unpack);
+      if (type == GL_BITMAP)
+         image = _mesa_unpack_bitmap(width, height, src, unpack);
+      else
+         image = _mesa_unpack_image(dimensions, width, height, depth,
+                                    format, type, src, unpack);
 
       ctx->Driver.UnmapBuffer(ctx, unpack->BufferObj);
 
@@ -934,7 +942,6 @@ unpack_image(struct gl_context *ctx, GLuint dimensions,
    /* bad access! */
    return NULL;
 }
-
 
 /**
  * Allocate space for a display list instruction (opcode + payload space).
@@ -1121,7 +1128,8 @@ save_Bitmap(GLsizei width, GLsizei height,
       n[4].f = yorig;
       n[5].f = xmove;
       n[6].f = ymove;
-      n[7].data = _mesa_unpack_bitmap(width, height, pixels, &ctx->Unpack);
+      n[7].data = unpack_image(ctx, 2, width, height, 1, GL_COLOR_INDEX,
+                               GL_BITMAP, pixels, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_Bitmap(ctx->Exec, (width, height,
@@ -4509,6 +4517,24 @@ save_MultTransposeMatrixfARB(const GLfloat m[16])
    save_MultMatrixf(tm);
 }
 
+static GLvoid *copy_data(const GLvoid *data, GLsizei size, const char *func)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   GLvoid *image;
+
+   if (!data)
+      return NULL;
+
+   image = malloc(size);
+   if (!image) {
+      _mesa_error(ctx, GL_OUT_OF_MEMORY, "%s", func);
+      return NULL;
+   }
+   memcpy(image, data, size);
+
+   return image;
+}
+
 
 /* GL_ARB_texture_compression */
 static void GLAPIENTRY
@@ -4526,15 +4552,8 @@ save_CompressedTexImage1DARB(GLenum target, GLint level,
    }
    else {
       Node *n;
-      GLvoid *image;
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
-      /* make copy of image */
-      image = malloc(imageSize);
-      if (!image) {
-         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexImage1DARB");
-         return;
-      }
-      memcpy(image, data, imageSize);
+
       n = alloc_instruction(ctx, OPCODE_COMPRESSED_TEX_IMAGE_1D, 7);
       if (n) {
          n[1].e = target;
@@ -4543,10 +4562,7 @@ save_CompressedTexImage1DARB(GLenum target, GLint level,
          n[4].i = (GLint) width;
          n[5].i = border;
          n[6].i = imageSize;
-         n[7].data = image;
-      }
-      else if (image) {
-         free(image);
+         n[7].data = copy_data(data, imageSize, "glCompressedTexImage1DARB");
       }
       if (ctx->ExecuteFlag) {
          CALL_CompressedTexImage1DARB(ctx->Exec,
@@ -4572,15 +4588,8 @@ save_CompressedTexImage2DARB(GLenum target, GLint level,
    }
    else {
       Node *n;
-      GLvoid *image;
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
-      /* make copy of image */
-      image = malloc(imageSize);
-      if (!image) {
-         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexImage2DARB");
-         return;
-      }
-      memcpy(image, data, imageSize);
+
       n = alloc_instruction(ctx, OPCODE_COMPRESSED_TEX_IMAGE_2D, 8);
       if (n) {
          n[1].e = target;
@@ -4590,10 +4599,7 @@ save_CompressedTexImage2DARB(GLenum target, GLint level,
          n[5].i = (GLint) height;
          n[6].i = border;
          n[7].i = imageSize;
-         n[8].data = image;
-      }
-      else if (image) {
-         free(image);
+         n[8].data = copy_data(data, imageSize, "glCompressedTexImage2DARB");
       }
       if (ctx->ExecuteFlag) {
          CALL_CompressedTexImage2DARB(ctx->Exec,
@@ -4619,15 +4625,8 @@ save_CompressedTexImage3DARB(GLenum target, GLint level,
    }
    else {
       Node *n;
-      GLvoid *image;
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
-      /* make copy of image */
-      image = malloc(imageSize);
-      if (!image) {
-         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexImage3DARB");
-         return;
-      }
-      memcpy(image, data, imageSize);
+
       n = alloc_instruction(ctx, OPCODE_COMPRESSED_TEX_IMAGE_3D, 9);
       if (n) {
          n[1].e = target;
@@ -4638,10 +4637,7 @@ save_CompressedTexImage3DARB(GLenum target, GLint level,
          n[6].i = (GLint) depth;
          n[7].i = border;
          n[8].i = imageSize;
-         n[9].data = image;
-      }
-      else if (image) {
-         free(image);
+         n[9].data = copy_data(data, imageSize, "glCompressedTexImage3DARB");
       }
       if (ctx->ExecuteFlag) {
          CALL_CompressedTexImage3DARB(ctx->Exec,
@@ -4659,18 +4655,9 @@ save_CompressedTexSubImage1DARB(GLenum target, GLint level, GLint xoffset,
                                 GLsizei imageSize, const GLvoid * data)
 {
    Node *n;
-   GLvoid *image;
-
    GET_CURRENT_CONTEXT(ctx);
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
 
-   /* make copy of image */
-   image = malloc(imageSize);
-   if (!image) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexSubImage1DARB");
-      return;
-   }
-   memcpy(image, data, imageSize);
    n = alloc_instruction(ctx, OPCODE_COMPRESSED_TEX_SUB_IMAGE_1D, 7);
    if (n) {
       n[1].e = target;
@@ -4679,10 +4666,7 @@ save_CompressedTexSubImage1DARB(GLenum target, GLint level, GLint xoffset,
       n[4].i = (GLint) width;
       n[5].e = format;
       n[6].i = imageSize;
-      n[7].data = image;
-   }
-   else if (image) {
-      free(image);
+      n[7].data = copy_data(data, imageSize, "glCompressedTexSubImage1DARB");
    }
    if (ctx->ExecuteFlag) {
       CALL_CompressedTexSubImage1DARB(ctx->Exec, (target, level, xoffset,
@@ -4699,18 +4683,9 @@ save_CompressedTexSubImage2DARB(GLenum target, GLint level, GLint xoffset,
                                 const GLvoid * data)
 {
    Node *n;
-   GLvoid *image;
-
    GET_CURRENT_CONTEXT(ctx);
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
 
-   /* make copy of image */
-   image = malloc(imageSize);
-   if (!image) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexSubImage2DARB");
-      return;
-   }
-   memcpy(image, data, imageSize);
    n = alloc_instruction(ctx, OPCODE_COMPRESSED_TEX_SUB_IMAGE_2D, 9);
    if (n) {
       n[1].e = target;
@@ -4721,10 +4696,7 @@ save_CompressedTexSubImage2DARB(GLenum target, GLint level, GLint xoffset,
       n[6].i = (GLint) height;
       n[7].e = format;
       n[8].i = imageSize;
-      n[9].data = image;
-   }
-   else if (image) {
-      free(image);
+      n[9].data = copy_data(data, imageSize, "glCompressedTexSubImage2DARB");
    }
    if (ctx->ExecuteFlag) {
       CALL_CompressedTexSubImage2DARB(ctx->Exec,
@@ -4741,18 +4713,9 @@ save_CompressedTexSubImage3DARB(GLenum target, GLint level, GLint xoffset,
                                 GLsizei imageSize, const GLvoid * data)
 {
    Node *n;
-   GLvoid *image;
-
    GET_CURRENT_CONTEXT(ctx);
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
 
-   /* make copy of image */
-   image = malloc(imageSize);
-   if (!image) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexSubImage3DARB");
-      return;
-   }
-   memcpy(image, data, imageSize);
    n = alloc_instruction(ctx, OPCODE_COMPRESSED_TEX_SUB_IMAGE_3D, 11);
    if (n) {
       n[1].e = target;
@@ -4765,10 +4728,7 @@ save_CompressedTexSubImage3DARB(GLenum target, GLint level, GLint xoffset,
       n[8].i = (GLint) depth;
       n[9].e = format;
       n[10].i = imageSize;
-      n[11].data = image;
-   }
-   else if (image) {
-      free(image);
+      n[11].data = copy_data(data, imageSize, "glCompressedTexSubImage3DARB");
    }
    if (ctx->ExecuteFlag) {
       CALL_CompressedTexSubImage3DARB(ctx->Exec,

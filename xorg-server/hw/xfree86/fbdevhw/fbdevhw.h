@@ -5,8 +5,6 @@
 #include "xf86str.h"
 #include "colormapst.h"
 
-#include <pciaccess.h>
-
 #define FBDEVHW_PACKED_PIXELS		0	/* Packed Pixels	*/
 #define FBDEVHW_PLANES			1	/* Non interleaved planes */
 #define FBDEVHW_INTERLEAVED_PLANES	2	/* Interleaved planes	*/

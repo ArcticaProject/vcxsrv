@@ -638,6 +638,7 @@ AC_ARG_ENABLE(int10-module,     AS_HELP_STRING([--enable-int10-module], [Build X
 AC_ARG_ENABLE(windowswm,      AS_HELP_STRING([--enable-windowswm], [Build XWin with WindowsWM extension (default: no)]), [WINDOWSWM=$enableval], [WINDOWSWM=no])
 AC_ARG_ENABLE(libdrm,         AS_HELP_STRING([--enable-libdrm], [Build Xorg with libdrm support (default: enabled)]), [DRM=$enableval],[DRM=yes])
 AC_ARG_ENABLE(clientids,      AS_HELP_STRING([--disable-clientids], [Build Xorg with client ID tracking (default: enabled)]), [CLIENTIDS=$enableval], [CLIENTIDS=yes])
+AC_ARG_ENABLE(pciaccess, AS_HELP_STRING([--enable-pciaccess], [Build Xorg with pciaccess library (default: enabled)]), [PCI=$enableval], [PCI=yes])
 
 dnl DDXes.
 AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
@@ -718,6 +719,11 @@ case $host_os in
 		XV=no
 		;;
 	darwin*)
+		PCI=no
+		INT10MODULE=no
+		VGAHW=no
+		VBE=no
+		DRM=no
 		DRI2=no
 
 		if test x$XQUARTZ = xauto; then
@@ -778,11 +784,6 @@ VIDMODEPROTO="xf86vidmodeproto >= 2.2.99.1"
 WINDOWSWMPROTO="windowswmproto"
 APPLEWMPROTO="applewmproto >= 1.4"
 
-dnl Core modules for most extensions, et al.
-SDK_REQUIRED_MODULES="[xproto >= 7.0.22] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.1.99] [inputproto >= 2.0.99.1] [kbproto >= 1.0.3] fontsproto"
-# Make SDK_REQUIRED_MODULES available for inclusion in xorg-server.pc
-AC_SUBST(SDK_REQUIRED_MODULES)
-
 dnl List of libraries that require a specific version
 LIBAPPLEWM="applewm >= 1.4"
 LIBDMX="dmx >= 1.0.99.1"
@@ -793,7 +794,7 @@ LIBXEXT="xext >= 1.0.99.4"
 LIBXFONT="xfont >= 1.4.2"
 LIBXI="xi >= 1.2.99.1"
 LIBXTST="xtst >= 1.0.99.2"
-LIBPCIACCESS="pciaccess >= 0.8.0"
+LIBPCIACCESS="pciaccess >= 0.12.901"
 LIBUDEV="libudev >= 143"
 LIBSELINUX="libselinux >= 2.0.86"
 LIBDBUS="dbus-1 >= 1.0"
@@ -803,6 +804,11 @@ dnl Pixman is always required, but we separate it out so we can link
 dnl specific modules against it
 PKG_CHECK_MODULES(PIXMAN, $LIBPIXMAN)
 REQUIRED_LIBS="$REQUIRED_LIBS $LIBPIXMAN $LIBXFONT xau"
+
+dnl Core modules for most extensions, et al.
+SDK_REQUIRED_MODULES="[xproto >= 7.0.22] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.1.99] [inputproto >= 2.0.99.1] [kbproto >= 1.0.3] fontsproto $LIBPIXMAN"
+# Make SDK_REQUIRED_MODULES available for inclusion in xorg-server.pc
+AC_SUBST(SDK_REQUIRED_MODULES)
 
 REQUIRED_MODULES="[fixesproto >= 5.0] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] $SDK_REQUIRED_MODULES"
 
@@ -1270,7 +1276,6 @@ if test "x$XDMAUTH" = xyes; then
 fi
 
 AC_DEFINE_DIR(COMPILEDDEFAULTFONTPATH, FONTPATH, [Default font path])
-AC_DEFINE_DIR(PCI_TXT_IDS_PATH, PCI_TXT_IDS_DIR, [Default PCI text file ID path])
 AC_DEFINE_DIR(SERVER_MISC_CONFIG_PATH, SERVERCONFIG, [Server miscellaneous config path])
 AC_DEFINE_DIR(BASE_FONT_PATH, FONTROOTDIR, [Default base font path])
 dridriverdir=`$PKG_CONFIG --variable=dridriverdir dri`
@@ -1521,10 +1526,6 @@ if test "x$XORG" = xauto; then
 fi
 AC_MSG_RESULT([$XORG])
 
-xorg_bus_linuxpci=no
-xorg_bus_bsdpci=no
-xorg_bus_sparc=no
-
 if test "x$XORG" = xyes; then
 	XORG_DDXINCS='-I$(top_srcdir)/hw/xfree86 -I$(top_srcdir)/hw/xfree86/include -I$(top_srcdir)/hw/xfree86/common'
 	XORG_OSINCS='-I$(top_srcdir)/hw/xfree86/os-support -I$(top_srcdir)/hw/xfree86/os-support/bus -I$(top_srcdir)/os'
@@ -1572,19 +1573,38 @@ if test "x$XORG" = xyes; then
 	AC_SUBST([symbol_visibility])
 	dnl ===================================================================
 
+	dnl ===================================================================
+	dnl ================= beginning of PCI configuration ==================
+	dnl ===================================================================
+	xorg_bus_bsdpci=no
+	xorg_bus_sparc=no
+
+	AC_MSG_CHECKING([whether to build Xorg PCI functions])
+	if test "x$PCI" = xyes; then
+
 	PKG_CHECK_MODULES([PCIACCESS], $LIBPCIACCESS)
-	SAVE_LIBS=$LIBS
-	SAVE_CFLAGS=$CFLAGS
-	CFLAGS=$PCIACCESS_CFLAGS
-	LIBS=$PCIACCESS_LIBS
-	AC_CHECK_FUNCS([pci_system_init_dev_mem])
-	AC_CHECK_FUNCS([pci_device_enable])
-	AC_CHECK_FUNCS([pci_device_is_boot_vga])
-	AC_CHECK_FUNCS([pci_device_vgaarb_init])
-	LIBS=$SAVE_LIBS
-	CFLAGS=$SAVE_CFLAGS
+	SDK_REQUIRED_MODULES="$SDK_REQUIRED_MODULES $LIBPCIACCESS"
 	XORG_SYS_LIBS="$XORG_SYS_LIBS $PCIACCESS_LIBS $GLX_SYS_LIBS"
 	XORG_CFLAGS="$XORG_CFLAGS $PCIACCESS_CFLAGS"
+
+	AC_DEFINE(XSERVER_LIBPCIACCESS, 1, [Use libpciaccess for all pci manipulation])
+	AC_DEFINE_DIR(PCI_TXT_IDS_PATH, PCI_TXT_IDS_DIR, [Default PCI text file ID path])
+	case $host_os in
+	  gnu* | freebsd* | kfreebsd*-gnu | netbsd* | openbsd* | solaris* | dragonfly*)
+		xorg_bus_bsdpci="yes"
+		;;
+	esac
+	case $host_cpu in
+	  sparc*)
+		xorg_bus_sparc="yes"
+		;;
+	esac
+	fi
+	AC_MSG_RESULT([$PCI])
+
+	dnl ===================================================================
+	dnl ==================== end of PCI configuration =====================
+	dnl ===================================================================
 
 	case $host_os in
 	  linux*)
@@ -1592,17 +1612,12 @@ if test "x$XORG" = xyes; then
 			XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
 		fi
 		XORG_OS_SUBDIR="linux"
-		xorg_bus_linuxpci="yes"
 		linux_acpi="no"
 		case $host_cpu in
-		  ia64*)
-			linux_ia64=yes
-			linux_acpi="yes"
-			;;
 		  alpha*)
 		  	linux_alpha=yes
 			;;
-		  i*86|amd64*|x86_64*)
+		  i*86|amd64*|x86_64*|ia64*)
 			linux_acpi="yes"
 			;;
 		  *)
@@ -1611,11 +1626,9 @@ if test "x$XORG" = xyes; then
 		;;
 	  freebsd* | kfreebsd*-gnu | dragonfly*)
 		XORG_OS_SUBDIR="bsd"
-		xorg_bus_bsdpci="yes"
 		;;
 	  netbsd*)
 		XORG_OS_SUBDIR="bsd"
-		xorg_bus_bsdpci="yes"
 		;;
 	  openbsd*)
 		if test "x$ac_cv_BSD_APM" = xyes \
@@ -1623,14 +1636,10 @@ if test "x$XORG" = xyes; then
 			XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
 		fi
 		XORG_OS_SUBDIR="bsd"
-		xorg_bus_bsdpci="yes"
 		;;
 	  solaris*)
 		XORG_OS_SUBDIR="solaris"
 		XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
-		# Use the same stubs as BSD for old functions, since we now
-		# use libpciaccess for PCI
-		xorg_bus_bsdpci="yes"
 		AC_CHECK_HEADERS([sys/kd.h])
 		AC_CHECK_HEADERS([sys/vt.h], [solaris_vt=yes], [solaris_vt=no])
 		# Check for minimum supported release
@@ -1675,13 +1684,10 @@ if test "x$XORG" = xyes; then
 		;;
 	  gnu*)
 		XORG_OS_SUBDIR="hurd"
-		# Use the same stubs as BSD for old functions, since we now
-		# use libpciaccess for PCI
-		xorg_bus_bsdpci="yes"
 		;;
 	  *)
-		XORG_OS_SUBDIR="unknown"
-		AC_MSG_ERROR([m4_text_wrap(m4_join([ ],
+		XORG_OS_SUBDIR="stub"
+		AC_MSG_NOTICE([m4_text_wrap(m4_join([ ],
 		[Your OS is unknown. Xorg currently only supports Linux,],
 		[Free/Open/Net/DragonFlyBSD, Solaris/OpenSolaris, & GNU Hurd.],
 		[If you are interested in porting Xorg to your platform,],
@@ -1690,9 +1696,6 @@ if test "x$XORG" = xyes; then
 	esac
 
 	case $host_cpu in
-	  sparc*)
-		xorg_bus_sparc="yes"
-		;;
 	  i*86)
 		;;
 	esac
@@ -1749,7 +1752,6 @@ if test "x$XORG" = xyes; then
 	AC_DEFINE_DIR(DEFAULT_LIBRARY_PATH, libdir, [Default library install path])
 	AC_DEFINE_DIR(DEFAULT_LOGPREFIX, LOGPREFIX, [Default log location])
 	AC_DEFINE_UNQUOTED(__VENDORDWEBSUPPORT__, ["$VENDOR_WEB"], [Vendor web address for support])
-	AC_DEFINE(XSERVER_LIBPCIACCESS, 1, [Use libpciaccess for all pci manipulation])
 	if test "x$VGAHW" = xyes; then
 		AC_DEFINE(WITH_VGAHW, 1, [Building vgahw module])
 	fi
@@ -1779,10 +1781,9 @@ if test "x$XORG" = xyes; then
 	AC_SUBST([abi_extension])
 fi
 AM_CONDITIONAL([XORG], [test "x$XORG" = xyes])
-AM_CONDITIONAL([XORG_BUS_LINUXPCI], [test "x$xorg_bus_linuxpci" = xyes])
+AM_CONDITIONAL([XORG_BUS_PCI], [test "x$PCI" = xyes])
 AM_CONDITIONAL([XORG_BUS_BSDPCI], [test "x$xorg_bus_bsdpci" = xyes])
 AM_CONDITIONAL([XORG_BUS_SPARC], [test "x$xorg_bus_sparc" = xyes])
-AM_CONDITIONAL([LINUX_IA64], [test "x$linux_ia64" = xyes])
 AM_CONDITIONAL([LINUX_ALPHA], [test "x$linux_alpha" = xyes])
 AM_CONDITIONAL([LNXACPI], [test "x$linux_acpi" = xyes])
 AM_CONDITIONAL([SOLARIS_ASM_INLINE], [test "x$solaris_asm_inline" = xyes])
@@ -2184,6 +2185,7 @@ hw/xfree86/os-support/hurd/Makefile
 hw/xfree86/os-support/misc/Makefile
 hw/xfree86/os-support/linux/Makefile
 hw/xfree86/os-support/solaris/Makefile
+hw/xfree86/os-support/stub/Makefile
 hw/xfree86/parser/Makefile
 hw/xfree86/ramdac/Makefile
 hw/xfree86/shadowfb/Makefile

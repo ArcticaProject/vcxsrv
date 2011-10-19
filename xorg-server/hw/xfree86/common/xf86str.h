@@ -41,9 +41,6 @@
 #include "colormapst.h"
 #include "xf86Module.h"
 #include "xf86Opt.h"
-#include "xf86Pci.h"
-
-#include <pciaccess.h>
 
 /**
  * Integer type that is of the size of the addressable memory (machine size).
@@ -309,6 +306,8 @@ typedef struct {
 struct _SymTabRec;
 struct _PciChipsets;
 
+struct pci_device;
+
 typedef struct _DriverRec {
     int			driverVersion;
     char *		driverName;
@@ -349,8 +348,6 @@ typedef enum {
     BUS_SBUS,
     BUS_last    /* Keep last */
 } BusType;
-
-struct pci_device;
 
 typedef struct {
     int		fbNum;
@@ -742,7 +739,6 @@ typedef struct _ScrnInfoRec {
     unsigned long	biosBase;		/* Base address of video BIOS */
     unsigned long	memPhysBase;		/* Physical address of FB */
     unsigned long 	fbOffset;		/* Offset of FB in the above */
-    IOADDRESS    	domainIOBase;		/* Domain I/O base address */
     int			memClk;			/* memory clock */
     int			textClockFreq;		/* clock of text mode */
     Bool		flipPixels;		/* swap default black/white */

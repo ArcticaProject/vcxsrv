@@ -41,7 +41,7 @@ typedef struct {
     int flags;
     int stackseg;
     struct pci_device *dev;
-    IOADDRESS ioBase;
+    struct pci_io_handle *io;
 } xf86Int10InfoRec, *xf86Int10InfoPtr;
 
 typedef struct _int10Mem {

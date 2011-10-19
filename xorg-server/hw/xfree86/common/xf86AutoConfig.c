@@ -255,9 +255,9 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
 	    matches[i++] = xnfstrdup(sbusDriver);
     }
 #endif
-
+#ifdef XSERVER_LIBPCIACCESS
     i = xf86PciMatchDriver(matches, nmatches);
-
+#endif
     /* Fallback to platform default hardware */
     if (i < (nmatches - 1)) {
 #if defined(__i386__) || defined(__amd64__) || defined(__hurd__)

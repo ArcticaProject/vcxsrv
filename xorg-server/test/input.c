@@ -1309,17 +1309,17 @@ static void dix_get_master(void)
     SpriteInfoRec ptr_sprite, kbd_sprite;
     SpriteInfoRec floating_sprite;
 
-    memset(&vcp, 0, sizeof(DeviceIntRec));
-    memset(&vck, 0, sizeof(DeviceIntRec));
-    memset(&ptr, 0, sizeof(DeviceIntRec));
-    memset(&kbd, 0, sizeof(DeviceIntRec));
-    memset(&floating, 0, sizeof(DeviceIntRec));
+    memset(&vcp, 0, sizeof(vcp));
+    memset(&vck, 0, sizeof(vck));
+    memset(&ptr, 0, sizeof(ptr));
+    memset(&kbd, 0, sizeof(kbd));
+    memset(&floating, 0, sizeof(floating));
 
-    memset(&vcp_sprite, 0, sizeof(DeviceIntRec));
-    memset(&vck_sprite, 0, sizeof(DeviceIntRec));
-    memset(&ptr_sprite, 0, sizeof(DeviceIntRec));
-    memset(&kbd_sprite, 0, sizeof(DeviceIntRec));
-    memset(&floating_sprite, 0, sizeof(DeviceIntRec));
+    memset(&vcp_sprite, 0, sizeof(vcp_sprite));
+    memset(&vck_sprite, 0, sizeof(vck_sprite));
+    memset(&ptr_sprite, 0, sizeof(ptr_sprite));
+    memset(&kbd_sprite, 0, sizeof(kbd_sprite));
+    memset(&floating_sprite, 0, sizeof(floating_sprite));
 
     vcp.type = MASTER_POINTER;
     vck.type = MASTER_KEYBOARD;
@@ -1462,9 +1462,137 @@ static void input_option_test(void)
     assert(list == NULL);
 }
 
+static void
+_test_double_fp16_values(double orig_d)
+{
+    FP1616 first_fp16, final_fp16;
+    double final_d;
+    char first_fp16_s[64];
+    char final_fp16_s[64];
+
+    if (orig_d > 0x7FFF) {
+        printf("Test out of range\n");
+        assert(0);
+    }
+
+    first_fp16 = double_to_fp1616(orig_d);
+    final_d = fp1616_to_double(first_fp16);
+    final_fp16 = double_to_fp1616(final_d);
+
+    snprintf(first_fp16_s, sizeof(first_fp16_s), "%d + %u * 2^-16", (first_fp16 & 0xffff0000) >> 16, first_fp16 & 0xffff);
+    snprintf(final_fp16_s, sizeof(final_fp16_s), "%d + %u * 2^-16", (final_fp16 & 0xffff0000) >> 16, final_fp16 & 0xffff);
+
+    printf("FP16: original double: %f first fp16: %s, re-encoded double: %f, final fp16: %s\n", orig_d, first_fp16_s, final_d, final_fp16_s);
+
+    /* since we lose precision, we only do rough range testing */
+    assert(final_d > orig_d - 0.1);
+    assert(final_d < orig_d + 0.1);
+
+    assert(memcmp(&first_fp16, &final_fp16, sizeof(FP1616)) == 0);
+
+    if (orig_d > 0)
+        _test_double_fp16_values(-orig_d);
+}
+
+static void
+_test_double_fp32_values(double orig_d)
+{
+    FP3232 first_fp32, final_fp32;
+    double final_d;
+
+    if (orig_d > 0x7FFFFFFF) {
+        printf("Test out of range\n");
+        assert(0);
+    }
+
+    first_fp32 = double_to_fp3232(orig_d);
+    final_d = fp3232_to_double(first_fp32);
+    final_fp32 = double_to_fp3232(final_d);
+
+    /* {
+     *     char first_fp32_s[64];
+     *     char final_fp32_s[64];
+     *     snprintf(first_fp32_s, sizeof(first_fp32_s), "%d + %u * 2^-32", first_fp32.integral, first_fp32.frac);
+     *     snprintf(final_fp32_s, sizeof(final_fp32_s), "%d + %u * 2^-32", first_fp32.integral, final_fp32.frac);
+     *
+     *     printf("FP32: original double: %f first fp32: %s, re-encoded double: %f, final fp32: %s\n", orig_d, first_fp32_s, final_d, final_fp32_s);
+     * }
+     */
+
+    /* since we lose precision, we only do rough range testing */
+    assert(final_d > orig_d - 0.1);
+    assert(final_d < orig_d + 0.1);
+
+    assert(memcmp(&first_fp32, &final_fp32, sizeof(FP3232)) == 0);
+
+    if (orig_d > 0)
+        _test_double_fp32_values(-orig_d);
+}
+
+static void
+dix_double_fp_conversion(void)
+{
+    uint32_t i;
+    printf("Testing double to FP1616/FP3232 conversions\n");
+
+    _test_double_fp16_values(0);
+    for (i = 1; i < 0x7FFF; i <<= 1) {
+        double val;
+
+        val = i;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        /* and some pseudo-random floating points */
+        val = i - 0.00382;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.00382;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.05234;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.12342;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.27583;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.50535;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.72342;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+
+        val = i + 0.80408;
+        _test_double_fp16_values(val);
+        _test_double_fp32_values(val);
+    }
+
+    for (i = 0x7FFFF; i < 0x7FFFFFFF; i <<= 1) {
+        _test_double_fp32_values(i);
+        /* and a few more random floating points, obtained
+         * by faceplanting into the numpad repeatedly */
+        _test_double_fp32_values(i + 0.010177);
+        _test_double_fp32_values(i + 0.213841);
+        _test_double_fp32_values(i + 0.348720);
+        _test_double_fp32_values(i + 0.472020);
+        _test_double_fp32_values(i + 0.572020);
+        _test_double_fp32_values(i + 0.892929);
+    }
+}
 
 int main(int argc, char** argv)
 {
+    dix_double_fp_conversion();
     dix_input_valuator_masks();
     dix_input_attributes();
     dix_init_valuators();

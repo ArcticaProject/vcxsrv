@@ -27,6 +27,8 @@
 
 #include "os.h"
 #include "misc.h"
+#include <errno.h>
+#include <string.h>
 
 #ifdef HAVE_BACKTRACE
 #ifndef _GNU_SOURCE
@@ -199,9 +201,8 @@ void xorg_backtrace(void) {
 	    walkcontext(&u, xorg_backtrace_frame, &depth);
 	else
 #  endif
-	    Error("Failed to get backtrace info");
+	    ErrorF("Failed to get backtrace info: %s\n", strerror(errno));
     }
-    ErrorF("\n");	
 }
 
 # else

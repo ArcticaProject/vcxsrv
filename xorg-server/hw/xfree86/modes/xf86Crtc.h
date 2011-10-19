@@ -956,6 +956,7 @@ xf86_cursors_fini (ScreenPtr screen);
 extern _X_EXPORT void
 xf86CrtcTransformCursorPos (xf86CrtcPtr crtc, int *x, int *y);
 
+#ifdef XV
 /*
  * For overlay video, compute the relevant CRTC and
  * clip video to that.
@@ -974,6 +975,7 @@ xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 			    RegionPtr   reg,
 			    INT32	width,
 			    INT32	height);
+#endif
     
 extern _X_EXPORT xf86_crtc_notify_proc_ptr
 xf86_wrap_crtc_notify (ScreenPtr pScreen, xf86_crtc_notify_proc_ptr new);

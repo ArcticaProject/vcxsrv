@@ -8,7 +8,7 @@ MSB_FIXED = mf-xaaBitmap.c mf-xaaStipple.c mf-xaaTEGlyph.c
 MSB_3_FIXED = mf3-xaaBitmap.c mf3-xaaStipple.c
 POLYSEG = s-xaaLine.c s-xaaDashLine.c
 
-libxaa_la_LDFLAGS = -avoid-version
+libxaa_la_LDFLAGS = -module -avoid-version
 if COMPOSITE
 libxaa_la_LIBADD = $(top_builddir)/miext/cw/libcw.la
 endif

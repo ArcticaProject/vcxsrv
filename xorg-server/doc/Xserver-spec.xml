@@ -1324,10 +1324,6 @@ This re-enables X request processing for the specified client.
 
 	void
 	FatalError(char *f, ...)
-
-	void
-	Error(str)
-	    char *str;
 </programlisting></blockquote>
 You should write these three routines to provide for diagnostic output
 from the dix and ddx layers, although implementing them to produce no
@@ -1335,11 +1331,7 @@ output will not affect the correctness of your server.  ErrorF() and
 FatalError() take a printf() type of format specification in the first
 argument and an implementation-dependent number of arguments following
 that.  Normally, the formats passed to ErrorF() and FatalError()
-should be terminated with a newline.  Error() provides an os interface
-for printing out the string passed as an argument followed by a
-meaningful explanation of the last system error.  Normally the string
-does not contain a newline, and it is only called by the ddx layer.
-In the sample implementation, Error() uses the perror() function.
+should be terminated with a newline.
 </para>
 <para>
 After printing the message arguments, FatalError() must be implemented

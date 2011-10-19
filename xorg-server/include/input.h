@@ -608,4 +608,6 @@ extern _X_EXPORT const char* input_option_get_value(const InputOption *opt);
 extern _X_EXPORT void input_option_set_key(InputOption *opt, const char* key);
 extern _X_EXPORT void input_option_set_value(InputOption *opt, const char* value);
 
+extern _X_HIDDEN Bool point_on_screen(ScreenPtr pScreen, int x, int y);
+
 #endif /* INPUT_H */

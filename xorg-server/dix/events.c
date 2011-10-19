@@ -525,13 +525,6 @@ SyntheticMotion(DeviceIntPtr dev, int x, int y) {
 static void PostNewCursor(DeviceIntPtr pDev);
 
 static Bool
-pointOnScreen(ScreenPtr pScreen, int x, int y)
-{
-    return x >= pScreen->x && x < pScreen->x + pScreen->width &&
-           y >= pScreen->y && y < pScreen->y + pScreen->height;
-}
-
-static Bool
 XineramaSetCursorPosition(
     DeviceIntPtr pDev,
     int x,
@@ -550,13 +543,13 @@ XineramaSetCursorPosition(
     x += screenInfo.screens[0]->x;
     y += screenInfo.screens[0]->y;
 
-    if(!pointOnScreen(pScreen, x, y))
+    if(!point_on_screen(pScreen, x, y))
     {
 	FOR_NSCREENS(i)
 	{
 	    if(i == pScreen->myNum)
 		continue;
-	    if(pointOnScreen(screenInfo.screens[i], x, y))
+	    if(point_on_screen(screenInfo.screens[i], x, y))
 	    {
 		pScreen = screenInfo.screens[i];
 		break;
@@ -3360,7 +3353,11 @@ WindowHasNewCursor(WindowPtr pWin)
 void
 NewCurrentScreen(DeviceIntPtr pDev, ScreenPtr newScreen, int x, int y)
 {
-    SpritePtr pSprite = pDev->spriteInfo->sprite;
+    DeviceIntPtr ptr;
+    SpritePtr pSprite;
+
+    ptr = IsFloating(pDev) ? pDev : GetXTestDevice(GetMaster(pDev, MASTER_POINTER));
+    pSprite = ptr->spriteInfo->sprite;
 
     pSprite->hotPhys.x = x;
     pSprite->hotPhys.y = y;
@@ -3372,15 +3369,15 @@ NewCurrentScreen(DeviceIntPtr pDev, ScreenPtr newScreen, int x, int y)
 	    pSprite->screen = newScreen;
 	    /* Make sure we tell the DDX to update its copy of the screen */
 	    if(pSprite->confineWin)
-		XineramaConfineCursorToWindow(pDev,
+		XineramaConfineCursorToWindow(ptr,
                         pSprite->confineWin, TRUE);
 	    else
-		XineramaConfineCursorToWindow(pDev, screenInfo.screens[0]->root, TRUE);
+		XineramaConfineCursorToWindow(ptr, screenInfo.screens[0]->root, TRUE);
 	    /* if the pointer wasn't confined, the DDX won't get
 	       told of the pointer warp so we reposition it here */
 	    if(!syncEvents.playingEvents)
 		(*pSprite->screen->SetCursorPosition)(
-                                                      pDev,
+                                                      ptr,
                                                       pSprite->screen,
 		    pSprite->hotPhys.x + screenInfo.screens[0]->x -
 			pSprite->screen->x,
@@ -3390,7 +3387,7 @@ NewCurrentScreen(DeviceIntPtr pDev, ScreenPtr newScreen, int x, int y)
     } else
 #endif
     if (newScreen != pSprite->hotPhys.pScreen)
-	ConfineCursorToWindow(pDev, newScreen->root, TRUE, FALSE);
+	ConfineCursorToWindow(ptr, newScreen->root, TRUE, FALSE);
 }
 
 #ifdef PANORAMIX

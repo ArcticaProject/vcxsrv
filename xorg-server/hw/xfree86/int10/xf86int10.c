@@ -84,7 +84,7 @@ int42_handler(xf86Int10InfoPtr pInt)
 	/* Leave:  Nothing                                    */
 	/* Implemented (except for clearing the screen)       */
 	{                                         /* Localise */
-	    IOADDRESS ioport;
+	    unsigned int ioport;
 	    int i;
 	    CARD16 int1d, regvals, tmp;
 	    CARD8 mode, cgamode, cgacolour;
@@ -172,18 +172,15 @@ int42_handler(xf86Int10InfoPtr pInt)
 	    /* Rows */
 	    MEM_WB(pInt, 0x0484, (25 - 1));
 
-	    /* Remap I/O port number into its domain */
-	    ioport += pInt->ioBase;
-
-	    /* Programme the mode */
-	    outb(ioport + 4, cgamode & 0x37);   /* Turn off screen */
+	    /* Program the mode */
+	    pci_io_write8(pInt->io, ioport + 4, cgamode & 0x37);   /* Turn off screen */
 	    for (i = 0; i < 0x10; i++) {
 		tmp = MEM_RB(pInt, regvals + i);
-		outb(ioport, i);
-		outb(ioport + 1, tmp);
+		pci_io_write8(pInt->io, ioport, i);
+		pci_io_write8(pInt->io, ioport + 1, tmp);
 	    }
-	    outb(ioport + 5, cgacolour);        /* Select colour mode */
-	    outb(ioport + 4, cgamode);          /* Turn on screen */
+	    pci_io_write8(pInt->io, ioport + 5, cgacolour);        /* Select colour mode */
+	    pci_io_write8(pInt->io, ioport + 4, cgamode);          /* Turn on screen */
 	}
 	break;
 
@@ -194,15 +191,15 @@ int42_handler(xf86Int10InfoPtr pInt)
 	/* Leave:  Nothing                                    */
 	/* Implemented                                        */
 	{                                         /* Localise */
-	    IOADDRESS ioport = MEM_RW(pInt, 0x0463) + pInt->ioBase;
+	    unsigned int ioport = MEM_RW(pInt, 0x0463);
 
 	    MEM_WB(pInt, 0x0460, X86_CL);
 	    MEM_WB(pInt, 0x0461, X86_CH);
 
-	    outb(ioport, 0x0A);
-	    outb(ioport + 1, X86_CH);
-	    outb(ioport, 0x0B);
-	    outb(ioport + 1, X86_CL);
+	    pci_io_write8(pInt->io, ioport, 0x0A);
+	    pci_io_write8(pInt->io, ioport + 1, X86_CH);
+	    pci_io_write8(pInt->io, ioport, 0x0B);
+	    pci_io_write8(pInt->io, ioport + 1, X86_CL);
 	}
 	break;
 
@@ -214,7 +211,7 @@ int42_handler(xf86Int10InfoPtr pInt)
 	/* Leave:  Nothing                                    */
 	/* Implemented                                        */
 	{                                         /* Localise */
-	    IOADDRESS ioport;
+	    unsigned int ioport;
 	    CARD16 offset;
 
 	    MEM_WB(pInt, (X86_BH << 1) + 0x0450, X86_DL);
@@ -226,11 +223,11 @@ int42_handler(xf86Int10InfoPtr pInt)
 	    offset = (X86_DH * MEM_RW(pInt, 0x044A)) + X86_DL;
 	    offset += MEM_RW(pInt, 0x044E) << 1;
 
-	    ioport = MEM_RW(pInt, 0x0463) + pInt->ioBase;
-	    outb(ioport, 0x0E);
-	    outb(ioport + 1, offset >> 8);
-	    outb(ioport, 0x0F);
-	    outb(ioport + 1, offset & 0xFF);
+	    ioport = MEM_RW(pInt, 0x0463);
+	    pci_io_write8(pInt->io, ioport, 0x0E);
+	    pci_io_write8(pInt->io, ioport + 1, offset >> 8);
+	    pci_io_write8(pInt->io, ioport, 0x0F);
+	    pci_io_write8(pInt->io, ioport + 1, offset & 0xFF);
 	}
 	break;
 
@@ -276,7 +273,7 @@ int42_handler(xf86Int10InfoPtr pInt)
 	/* Leave:  Nothing                                    */
 	/* Implemented                                        */
 	{                                         /* Localise */
-	    IOADDRESS ioport = MEM_RW(pInt, 0x0463) + pInt->ioBase;
+	    unsigned int ioport = MEM_RW(pInt, 0x0463);
 	    CARD16 start;
 	    CARD8 x, y;
 
@@ -287,10 +284,10 @@ int42_handler(xf86Int10InfoPtr pInt)
 	    start <<= 1;
 
 	    /* Update start address */
-	    outb(ioport, 0x0C);
-	    outb(ioport + 1, start >> 8);
-	    outb(ioport, 0x0D);
-	    outb(ioport + 1, start & 0xFF);
+	    pci_io_write8(pInt->io, ioport, 0x0C);
+	    pci_io_write8(pInt->io, ioport + 1, start >> 8);
+	    pci_io_write8(pInt->io, ioport, 0x0D);
+	    pci_io_write8(pInt->io, ioport + 1, start & 0xFF);
 
 	    /* Switch cursor position */
 	    y = MEM_RB(pInt, (X86_AL << 1) + 0x0450);
@@ -298,10 +295,10 @@ int42_handler(xf86Int10InfoPtr pInt)
 	    start += (y * MEM_RW(pInt, 0x044A)) + x;
 
 	    /* Update cursor position */
-	    outb(ioport, 0x0E);
-	    outb(ioport + 1, start >> 8);
-	    outb(ioport, 0x0F);
-	    outb(ioport + 1, start & 0xFF);
+	    pci_io_write8(pInt->io, ioport, 0x0E);
+	    pci_io_write8(pInt->io, ioport + 1, start >> 8);
+	    pci_io_write8(pInt->io, ioport, 0x0F);
+	    pci_io_write8(pInt->io, ioport + 1, start & 0xFF);
 	}
 	break;
 
@@ -426,7 +423,7 @@ int42_handler(xf86Int10InfoPtr pInt)
 	/* Leave:  Nothing                                    */
 	/* Implemented                                        */
 	{                                         /* Localise */
-	    IOADDRESS ioport = MEM_RW(pInt, 0x0463) + 5 + pInt->ioBase;
+	    unsigned int ioport = MEM_RW(pInt, 0x0463) + 5;
 	    CARD8 cgacolour = MEM_RB(pInt, 0x0466);
 
 	    if (X86_BH) {
@@ -438,7 +435,7 @@ int42_handler(xf86Int10InfoPtr pInt)
 	    }
 
 	    MEM_WB(pInt, 0x0466, cgacolour);
-	    outb(ioport, cgacolour);
+	    pci_io_write8(pInt->io, ioport, cgacolour);
 	}
 	break;
 

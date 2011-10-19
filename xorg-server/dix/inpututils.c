@@ -37,6 +37,7 @@
 #include "xkbstr.h"
 #include "inpututils.h"
 #include "eventstr.h"
+#include "scrnintstr.h"
 
 /* Check if a button map change is okay with the device.
  * Returns -1 for BadValue, as it collides with MappingBusy. */
@@ -619,6 +620,13 @@ void init_device_event(DeviceEvent *event, DeviceIntPtr dev, Time ms)
     event->sourceid = dev->id;
 }
 
+Bool
+point_on_screen(ScreenPtr pScreen, int x, int y)
+{
+    return x >= pScreen->x && x < pScreen->x + pScreen->width &&
+           y >= pScreen->y && y < pScreen->y + pScreen->height;
+}
+
 /**
  * Delete the element with the key from the list, freeing all memory
  * associated with the element..
@@ -758,4 +766,67 @@ input_option_set_value(InputOption *opt, const char *value)
     free(opt->value);
     if (value)
         opt->value = strdup(value);
+}
+
+
+/* FP1616/FP3232 conversion functions.
+ * Fixed point types are encoded as signed integral and unsigned frac. So any
+ * negative number -n.m is encoded as floor(n) + (1 - 0.m).
+ */
+double
+fp1616_to_double(FP1616 in)
+{
+    double ret;
+
+    ret  = (double)(in >> 16);
+    ret += (double)(in & 0xffff) * (1.0 / (1UL << 16)); /* Optimized: ldexp((double)(in & 0xffff), -16); */
+    return ret;
+}
+
+double
+fp3232_to_double(FP3232 in)
+{
+    double ret;
+    ret  = (double)in.integral;
+    ret += (double)in.frac * (1.0 / (1ULL << 32)); /* Optimized: ldexp((double)in.frac, -32); */
+    return ret;
+}
+
+
+FP1616
+double_to_fp1616(double in)
+{
+    FP1616 ret;
+    int32_t integral;
+    double tmp;
+    uint32_t frac_d;
+
+    tmp = floor(in);
+    integral = (int32_t)tmp;
+
+    tmp = (in - integral) * (1UL << 16); /* Optimized: ldexp(in - integral, 16) */
+    frac_d = (uint16_t)tmp;
+
+    ret = integral << 16;
+    ret |= frac_d & 0xffff;
+    return ret;
+}
+
+FP3232
+double_to_fp3232(double in)
+{
+    FP3232 ret;
+    int32_t integral;
+    double tmp;
+    uint32_t frac_d;
+
+    tmp = floor(in);
+    integral = (int32_t)tmp;
+
+    tmp = (in - integral) * (1ULL << 32); /* Optimized: ldexp(in - integral, 32) */
+    frac_d = (uint32_t)tmp;
+
+    ret.integral = integral;
+    ret.frac = frac_d;
+    return ret;
 }

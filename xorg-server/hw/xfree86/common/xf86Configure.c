@@ -87,9 +87,11 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
     /* Check for duplicates */
     for (i = 0;  i < nDevToConfig;  i++) {
         switch (bus) {
+#ifdef XSERVER_LIBPCIACCESS
             case BUS_PCI:
                 ret = xf86PciConfigure(busData, DevToConfig[i].pVideo);
-                break;
+	            break;
+#endif
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
             case BUS_SBUS:
                 ret = xf86SbusConfigure(busData, DevToConfig[i].sVideo);
@@ -118,10 +120,12 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
     for (j = 0;  (DevToConfig[i].GDev.driver[j] = tolower(driver[j]));  j++);
 
     switch (bus) {
+#ifdef XSERVER_LIBPCIACCESS
         case BUS_PCI:
             xf86PciConfigureNewDev(busData, DevToConfig[i].pVideo,
                                    &DevToConfig[i].GDev, &chipset);
 	        break;
+#endif
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
         case BUS_SBUS:
             xf86SbusConfigureNewDev(busData, DevToConfig[i].sVideo,

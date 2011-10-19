@@ -261,10 +261,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
 	    struct pci_device *rom_device =
 		xf86GetPciInfoForEntity(pInt->entityIndex);
 
-#if HAVE_PCI_DEVICE_ENABLE
 	    pci_device_enable(rom_device);
-#endif
-
 	    err = pci_device_read_rom(rom_device, (unsigned char *)(V_BIOS));
 	    if (err) {
 		xf86DrvMsg(screen,X_ERROR,"Cannot read V_BIOS (%s)\n",

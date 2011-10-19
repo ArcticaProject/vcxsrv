@@ -45,6 +45,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h> 		/* for memset */
+#include <errno.h>
 #include <time.h>
 
 #include <sys/ipc.h>
@@ -331,6 +332,14 @@ hostx_set_title (char *title)
   ephyrTitle = title;
 }
 
+static int _X_NORETURN
+x_io_error_handler (Display *dpy) {
+    ErrorF("Lost connection to X server: %s\n", strerror(errno));
+    CloseWellKnownConnections();
+    OsCleanup(1);
+    exit(1);
+}
+
 int
 hostx_init (void)
 {
@@ -357,6 +366,8 @@ hostx_init (void)
       fprintf(stderr, "\nXephyr cannot open host display. Is DISPLAY set?\n");
       exit(1);
     }
+
+  XSetIOErrorHandler(x_io_error_handler);
 
   HostX.screen  = DefaultScreen(HostX.dpy);
   HostX.winroot = RootWindow(HostX.dpy, HostX.screen);

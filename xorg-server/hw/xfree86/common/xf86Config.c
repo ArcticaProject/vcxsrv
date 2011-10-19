@@ -2398,7 +2398,7 @@ xf86HandleConfigFile(Bool autoconfig)
     }
 
     xf86ProcessOptions(-1, xf86ConfigLayout.options, LayoutOptions);
-
+#ifdef XSERVER_LIBPCIACCESS
     if ((scanptr = xf86GetOptValString(LayoutOptions, LAYOUT_ISOLATEDEVICE))) {
        ; /* IsolateDevice specified; overrides SingleCard */
     } else {
@@ -2413,7 +2413,7 @@ xf86HandleConfigFile(Bool autoconfig)
        } else
            xf86PciIsolateDevice(scanptr);
     }
-
+#endif
     /* Now process everything else */
     if (!configServerFlags(xf86configptr->conf_flags,xf86ConfigLayout.options)){
              ErrorF ("Problem when converting the config data structures\n");

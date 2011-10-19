@@ -87,7 +87,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <stdlib.h>	/* for malloc() */
-#include <errno.h>
 
 #include "input.h"
 #include "site.h"
@@ -636,19 +635,6 @@ ErrorF(const char * f, ...)
     va_start(args, f);
     VErrorF(f, args);
     va_end(args);
-}
-
-/* A perror() workalike. */
-
-void
-Error(const char *str)
-{
-    const char *err = strerror(errno);
-
-    if (str)
-	LogWrite(-1, "%s: %s", str, err);
-    else
-	LogWrite(-1, "%s", err);
 }
 
 void

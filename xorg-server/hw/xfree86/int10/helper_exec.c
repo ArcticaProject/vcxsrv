@@ -331,7 +331,7 @@ x_inb(CARD16 port)
 	}
 #endif /* __NOT_YET__ */
     } else if (!pciCfg1inb(port, &val)) {
-	val = inb(Int10Current->ioBase + port);
+	val = pci_io_read8(Int10Current->io, port);
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" inb(%#x) = %2.2x\n", port, val);
     }
@@ -353,7 +353,7 @@ x_inw(CARD16 port)
 	X_GETTIMEOFDAY(&tv);
 	val = (CARD16)(tv.tv_usec / 3);
     } else if (!pciCfg1inw(port, &val)) {
-	val = inw(Int10Current->ioBase + port);
+	val = pci_io_read16(Int10Current->io, port);
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" inw(%#x) = %4.4x\n", port, val);
     }
@@ -387,7 +387,7 @@ x_outb(CARD16 port, CARD8 val)
     } else if (!pciCfg1outb(port, val)) {
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" outb(%#x, %2.2x)\n", port, val);
-	outb(Int10Current->ioBase + port, val);
+	pci_io_write8(Int10Current->io, port, val);
     }
 }
 
@@ -398,7 +398,7 @@ x_outw(CARD16 port, CARD16 val)
     if (!pciCfg1outw(port, val)) {
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" outw(%#x, %4.4x)\n", port, val);
-	outw(Int10Current->ioBase + port, val);
+	pci_io_write16(Int10Current->io, port, val);
     }
 }
 
@@ -408,7 +408,7 @@ x_inl(CARD16 port)
     CARD32 val;
 
     if (!pciCfg1in(port, &val)) {
-	val = inl(Int10Current->ioBase + port);
+	val = pci_io_read32(Int10Current->io, port);
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" inl(%#x) = %8.8" PRIx32 "\n", port, val);
     }
@@ -421,7 +421,7 @@ x_outl(CARD16 port, CARD32 val)
     if (!pciCfg1out(port, val)) {
 	if (PRINT_PORT && DEBUG_IO_TRACE())
 	    ErrorF(" outl(%#x, %8.8" PRIx32 ")\n", port, val);
-	outl(Int10Current->ioBase + port, val);
+	pci_io_write32(Int10Current->io, port, val);
     }
 }
 
@@ -475,7 +475,7 @@ static struct pci_device*
 pci_device_for_cfg_address (CARD32 addr)
 {
 	struct pci_device *dev = NULL;
-	PCITAG tag = PCI_TAG(addr);
+	CARD32 tag = PCI_TAG(addr);
 	struct pci_slot_match slot_match = {
 		.domain = PCI_DOM_FROM_TAG(tag),
 		.bus = PCI_BUS_NO_DOMAIN(PCI_BUS_FROM_TAG(tag)),
@@ -650,29 +650,29 @@ bios_checksum(const CARD8 *start, int size)
 void
 LockLegacyVGA(xf86Int10InfoPtr pInt, legacyVGAPtr vga)
 {
-    vga->save_msr    = inb(pInt->ioBase + 0x03CC);
-    vga->save_vse    = inb(pInt->ioBase + 0x03C3);
+    vga->save_msr    = pci_io_read8(pInt->io, 0x03CC);
+    vga->save_vse    = pci_io_read8(pInt->io, 0x03C3);
 #ifndef __ia64__
-    vga->save_46e8   = inb(pInt->ioBase + 0x46E8);
+    vga->save_46e8   = pci_io_read8(pInt->io, 0x46E8);
 #endif
-    vga->save_pos102 = inb(pInt->ioBase + 0x0102);
-    outb(pInt->ioBase + 0x03C2, ~(CARD8)0x03 & vga->save_msr);
-    outb(pInt->ioBase + 0x03C3, ~(CARD8)0x01 & vga->save_vse);
+    vga->save_pos102 = pci_io_read8(pInt->io, 0x0102);
+    pci_io_write8(pInt->io, 0x03C2, ~(CARD8)0x03 & vga->save_msr);
+    pci_io_write8(pInt->io, 0x03C3, ~(CARD8)0x01 & vga->save_vse);
 #ifndef __ia64__
-    outb(pInt->ioBase + 0x46E8, ~(CARD8)0x08 & vga->save_46e8);
+    pci_io_write8(pInt->io, 0x46E8, ~(CARD8)0x08 & vga->save_46e8);
 #endif
-    outb(pInt->ioBase + 0x0102, ~(CARD8)0x01 & vga->save_pos102);
+    pci_io_write8(pInt->io, 0x0102, ~(CARD8)0x01 & vga->save_pos102);
 }
 
 void
 UnlockLegacyVGA(xf86Int10InfoPtr pInt, legacyVGAPtr vga)
 {
-    outb(pInt->ioBase + 0x0102, vga->save_pos102);
+    pci_io_write8(pInt->io, 0x0102, vga->save_pos102);
 #ifndef __ia64__
-    outb(pInt->ioBase + 0x46E8, vga->save_46e8);
+    pci_io_write8(pInt->io, 0x46E8, vga->save_46e8);
 #endif
-    outb(pInt->ioBase + 0x03C3, vga->save_vse);
-    outb(pInt->ioBase + 0x03C2, vga->save_msr);
+    pci_io_write8(pInt->io, 0x03C3, vga->save_vse);
+    pci_io_write8(pInt->io, 0x03C2, vga->save_msr);
 }
 
 #if defined (_PC)
@@ -680,9 +680,11 @@ static void
 SetResetBIOSVars(xf86Int10InfoPtr pInt, Bool set)
 {
     int pagesize = getpagesize();
-    unsigned char* base = xf86MapVidMem(pInt->scrnIndex,
-					VIDMEM_MMIO, 0, pagesize);
+    unsigned char* base;
     int i;
+
+    if (pci_device_map_legacy(pInt->dev, 0, pagesize, PCI_DEV_MAP_FLAG_WRITABLE, (void **)&base))
+	return; /* eek */
 
     if (set) {
 	for (i = BIOS_SCRATCH_OFF; i < BIOS_SCRATCH_END; i++)
@@ -692,7 +694,7 @@ SetResetBIOSVars(xf86Int10InfoPtr pInt, Bool set)
 	    *(base + i) = MEM_RW(pInt, i);
     }
     
-    xf86UnMapVidMem(pInt->scrnIndex,base,pagesize);
+    pci_device_unmap_legacy(pInt->dev, base, pagesize);
 }
 
 void
@@ -706,7 +708,9 @@ xf86Int10SaveRestoreBIOSVars(xf86Int10InfoPtr pInt, Bool save)
 	|| (!save && !pInt->BIOSScratch))
 	return;
     
-    base = xf86MapVidMem(pInt->scrnIndex, VIDMEM_MMIO, 0, pagesize);
+    if (pci_device_map_legacy(pInt->dev, 0, pagesize, PCI_DEV_MAP_FLAG_WRITABLE, (void **)&base))
+	return; /* eek */
+
     base += BIOS_SCRATCH_OFF;
     if (save) {
 	if ((pInt->BIOSScratch
@@ -722,7 +726,7 @@ xf86Int10SaveRestoreBIOSVars(xf86Int10InfoPtr pInt, Bool save)
 	}
     }
     
-    xf86UnMapVidMem(pInt->scrnIndex,base - BIOS_SCRATCH_OFF ,pagesize);
+    pci_device_unmap_legacy(pInt->dev, base, pagesize);
 }
 #endif
 

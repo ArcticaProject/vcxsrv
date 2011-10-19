@@ -667,6 +667,7 @@ eventToRawEvent(RawDeviceEvent *ev, xEvent **xi)
     raw->length         = bytes_to_int32(len - sizeof(xEvent));
     raw->detail         = ev->detail.button;
     raw->deviceid       = ev->deviceid;
+    raw->sourceid       = ev->sourceid;
     raw->valuators_len  = vallen;
     raw->flags          = ev->flags;
 

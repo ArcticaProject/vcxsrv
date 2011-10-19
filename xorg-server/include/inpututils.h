@@ -30,6 +30,7 @@
 #define INPUTUTILS_H
 
 #include "input.h"
+#include <X11/extensions/XI2proto.h>
 
 struct _ValuatorMask {
     int8_t      last_bit; /* highest bit set in mask */
@@ -39,5 +40,10 @@ struct _ValuatorMask {
 
 extern void verify_internal_event(const InternalEvent *ev);
 extern void init_device_event(DeviceEvent *event, DeviceIntPtr dev, Time ms);
+
+FP3232 double_to_fp3232(double in);
+FP1616 double_to_fp1616(double in);
+double fp1616_to_double(FP1616 in);
+double fp3232_to_double(FP3232 in);
 
 #endif
