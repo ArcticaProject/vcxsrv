@@ -437,6 +437,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\shader_query.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\main\uniform_query.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
