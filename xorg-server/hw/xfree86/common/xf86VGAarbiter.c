@@ -31,8 +31,6 @@
 #include "xorg-config.h"
 
 #include "xf86VGAarbiter.h"
-
-#ifdef HAVE_PCI_DEVICE_VGAARB_INIT
 #include "xf86VGAarbiterPriv.h"
 #include "xf86Bus.h"
 #include "xf86Priv.h"
@@ -1112,16 +1110,3 @@ VGAarbiterCompositeRects(CARD8 op, PicturePtr pDst, xRenderColor *color, int nRe
     VGAPut();
     PICTURE_EPILOGUE (CompositeRects, VGAarbiterCompositeRects);
 }
-#else
-/* dummy functions */
-void xf86VGAarbiterInit(void) {}
-void xf86VGAarbiterFini(void) {}
-
-void xf86VGAarbiterLock(ScrnInfoPtr pScrn) {}
-void xf86VGAarbiterUnlock(ScrnInfoPtr pScrn) {}
-Bool xf86VGAarbiterAllowDRI(ScreenPtr pScreen) { return TRUE; }
-void xf86VGAarbiterScrnInit(ScrnInfoPtr pScrn) {}
-void xf86VGAarbiterDeviceDecodes(ScrnInfoPtr pScrn, int rsrc) {}
-Bool xf86VGAarbiterWrapFunctions(void) { return FALSE; }
-
-#endif

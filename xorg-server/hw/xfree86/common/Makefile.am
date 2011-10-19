@@ -1,5 +1,10 @@
 noinst_LTLIBRARIES = libcommon.la
 
+if XORG_BUS_PCI
+PCI_SOURCES = xf86pciBus.c xf86VGAarbiter.c xf86VGAarbiter.h \
+              xf86VGAarbiterPriv.h
+endif
+
 if XORG_BUS_SPARC
 SBUS_SOURCES = xf86sbusBus.c
 endif
@@ -19,7 +24,7 @@ endif
 
 RANDRSOURCES = xf86RandR.c
 
-BUSSOURCES = xf86pciBus.c xf86fbBus.c xf86noBus.c $(SBUS_SOURCES)
+BUSSOURCES = xf86fbBus.c xf86noBus.c $(PCI_SOURCES) $(SBUS_SOURCES)
 
 MODEDEFSOURCES = $(srcdir)/vesamodes $(srcdir)/extramodes
 
@@ -33,7 +38,7 @@ AM_LDFLAGS = -r
 libcommon_la_SOURCES = xf86Configure.c xf86ShowOpts.c xf86Bus.c xf86Config.c \
                       xf86Cursor.c $(DGASOURCES) xf86DPMS.c \
                       xf86Events.c xf86Globals.c xf86AutoConfig.c \
-                      xf86Option.c xf86Init.c xf86VGAarbiter.c \
+                      xf86Option.c xf86Init.c \
                       xf86VidMode.c xf86fbman.c xf86cmap.c \
                       xf86Helper.c xf86PM.c xf86Xinput.c xisb.c \
                       xf86Mode.c xorgHelper.c \

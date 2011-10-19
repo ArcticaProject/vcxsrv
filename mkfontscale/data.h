@@ -26,7 +26,7 @@
 /* Order is significant.  For example, some B&H fonts are hinted by
    URW++, and both strings appear in the notice. */
 
-static char *notice_foundries[][2] =
+static const char *notice_foundries[][2] =
     {{"Bigelow", "b&h"},
      {"Adobe", "adobe"},
      {"Bitstream", "bitstream"},
@@ -42,14 +42,16 @@ static char *notice_foundries[][2] =
      {"Microsoft", "microsoft"},
      {"Omega", "omega"},
      {"Font21", "hwan"},
-     {"HanYang System", "hanyang"}};
+     {"HanYang System", "hanyang"},
+     {"Iorsh", "culmus"},
+     {"Gnat", "culmus"}};
 
 /* This table is partly taken from ttmkfdir by Joerg Pommnitz. */
 
 /* It should not contain useless entries (such as UNKN) nor duplicate
    entries for padding both with spaces and NULs. */
 
-static char *vendor_foundries[][2] =
+static const char *vendor_foundries[][2] =
     {{"ADBE", "adobe"},
      {"AGFA", "agfa"},
      {"ALTS", "altsys"},
@@ -59,6 +61,7 @@ static char *vendor_foundries[][2] =
      {"B&H", "b&h"},
      {"BITS", "bitstream"},
      {"CANO", "cannon"},
+     {"CLM", "culmus"},
      {"DYNA", "dynalab"},
      {"EPSN", "epson"},
      {"FJ",  "fujitsu"},

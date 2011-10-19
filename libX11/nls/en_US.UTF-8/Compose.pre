@@ -110,6 +110,14 @@ XCOMM Spaces
 <Multi_key> <O> <E>              	: "Œ"   OE # LATIN CAPITAL LIGATURE OE
 <Multi_key> <a> <e>              	: "æ"   ae # LATIN SMALL LETTER AE
 <Multi_key> <A> <E>              	: "Æ"   AE # LATIN CAPITAL LETTER AE
+<Multi_key> <f> <f>              	: "ﬀ"   Ufb00 # LATIN SMALL LIGATURE FF
+<Multi_key> <f> <i>              	: "ﬁ"   Ufb01 # LATIN SMALL LIGATURE FI
+<Multi_key> <f> <l>              	: "ﬂ"   Ufb02 # LATIN SMALL LIGATURE FL
+<Multi_key> <F> <i>              	: "ﬃ"   Ufb03 # LATIN SMALL LIGATURE FFI
+<Multi_key> <F> <l>              	: "ﬄ"   Ufb04 # LATIN SMALL LIGATURE FFL
+<Multi_key> <I> <J>              	: "Ĳ"   U0132 # LATIN CAPITAL LIGATURE IJ
+<Multi_key> <I> <j>              	: "Ĳ"   U0132 # LATIN CAPITAL LIGATURE IJ
+<Multi_key> <i> <j>              	: "ĳ"   U0133 # LATIN SMALL LIGATURE IJ
 
 <Multi_key> <o> <o>              	: "°"   degree # DEGREE SIGN
 
@@ -193,6 +201,8 @@ XCOMM "₵" U20b5 CEDI SIGN
 XCOMM Long S
 <Multi_key> <f> <s>              	: "ſ"   U017f # LATIN SMALL LETTER LONG S
 <Multi_key> <f> <S>              	: "ſ"   U017f # LATIN SMALL LETTER LONG S
+<dead_abovedot> <Multi_key> <f> <s>	: "ẛ"   U1e9b # LATIN SMALL LETTER LONG S WITH DOT ABOVE
+<Multi_key> <dead_abovedot> <f> <s>	: "ẛ"   U1e9b # LATIN SMALL LETTER LONG S WITH DOT ABOVE
 
 XCOMM Dashes
 <Multi_key> <minus> <minus> <period> 	: "–"   U2013 # EN DASH
@@ -4173,6 +4183,7 @@ XCOMM Part 3
 <Multi_key> <less> <minus> 	: "←" U2190 # LEFTWARDS ARROW
 <Multi_key> <minus> <greater> 	: "→" U2192 # RIGHTWARDS ARROW
 <Multi_key> <U2203> <U0338> 	: "∄"   U2204 # THERE DOES NOT EXIST
+<Multi_key> <braceleft> <braceright>	: "∅"   U2205 # EMPTY SET
 <Multi_key> <U2208> <U0338> 	: "∉"   U2209 # NOT AN ELEMENT OF
 <Multi_key> <U220B> <U0338> 	: "∌"   U220C # DOES NOT CONTAIN AS MEMBER
 <Multi_key> <U2223> <U0338> 	: "∤"   U2224 # DOES NOT DIVIDE
@@ -4219,6 +4230,7 @@ XCOMM Part 3
 <Multi_key> <U22B3> <U0338> 	: "⋫"   U22EB # DOES NOT CONTAIN AS NORMAL SUBGROUP
 <Multi_key> <U22B4> <U0338> 	: "⋬"   U22EC # NOT NORMAL SUBGROUP OF OR EQUAL TO
 <Multi_key> <U22B5> <U0338> 	: "⋭"   U22ED # DOES NOT CONTAIN AS NORMAL SUBGROUP OR EQUAL
+<Multi_key> <d> <i>		: "⌀"   U2300 # DIAMETER SIGN
 <Multi_key> <parenleft> <1> <parenright> 	: "①"   U2460 # CIRCLED DIGIT ONE
 <Multi_key> <parenleft> <KP_1> <parenright> 	: "①"   U2460 # CIRCLED DIGIT ONE
 <Multi_key> <parenleft> <2> <parenright> 	: "②"   U2461 # CIRCLED DIGIT TWO
@@ -4972,6 +4984,7 @@ XCOMM
 <dead_hook> <p> 		      : "ƥ"   U01A5               # LATIN SMALL LETTER P WITH HOOK
 <dead_hook> <q> 		      : "ʠ"   U02A0               # LATIN SMALL LETTER Q WITH HOOK
 <dead_hook> <U025C> 		      : "ɝ"   U025D               # LATIN SMALL LETTER REVERSED OPEN E WITH HOOK
+<dead_hook> <r> 		      : "ɼ"   U027C               # LATIN SMALL LETTER R WITH LONG LEG
 <dead_hook> <s> 		      : "ʂ"   U0282               # LATIN SMALL LETTER S WITH HOOK
 <dead_hook> <schwa> 		      : "ɚ"   U025A               # LATIN SMALL LETTER SCHWA WITH HOOK
 <dead_hook> <T> 		      : "Ƭ"   U01AC               # LATIN CAPITAL LETTER T WITH HOOK

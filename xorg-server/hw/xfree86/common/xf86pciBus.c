@@ -121,12 +121,10 @@ xf86PciProbe(void)
 	    xf86PciVideoInfo[num - 1] = info;
 
 	    pci_device_probe(info);
-#ifdef HAVE_PCI_DEVICE_IS_BOOT_VGA
 	    if (pci_device_is_boot_vga(info)) {
                 primaryBus.type = BUS_PCI;
                 primaryBus.id.pci = info;
             }
-#endif
 	    info->user_data = 0;
 	}
     }
@@ -235,11 +233,6 @@ xf86ClaimPciSlot(struct pci_device * d, DriverPtr drvp,
             xf86AddDevToEntity(num, dev);
 	pciSlotClaimed = TRUE;
 
-	if (active) {
-	    /* Map in this domain's I/O space */
-	   p->domainIO = xf86MapLegacyIO(d);
-	}
-	
  	return num;
     } else
  	return -1;
@@ -1356,4 +1349,16 @@ xf86PciConfigureNewDev(void *busData, struct pci_device *pVideo,
 
     if (*chipset < 0)
         *chipset = (pVideo->vendor_id << 16) | pVideo->device_id;
+}
+
+struct pci_io_handle *
+xf86MapLegacyIO(struct pci_device *dev)
+{
+    return pci_legacy_open_io(dev, 0, 64 * 1024);
+}
+
+void
+xf86UnmapLegacyIO(struct pci_device *dev, struct pci_io_handle *handle)
+{
+    pci_device_close_io(dev, handle);
 }

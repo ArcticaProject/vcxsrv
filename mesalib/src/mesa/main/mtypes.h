@@ -1311,9 +1311,6 @@ struct gl_sampler_object
 
    /* deprecated sampler state */
    GLenum DepthMode;		/**< GL_ARB_depth_texture */
-
-   /** Is the texture object complete with respect to this sampler? */
-   GLboolean _CompleteTexture;
 };
 
 
@@ -2137,6 +2134,17 @@ struct gl_shader_program
    GLuint Name;  /**< aka handle or ID */
    GLint RefCount;  /**< Reference count */
    GLboolean DeletePending;
+
+   /**
+    * Flags that the linker should not reject the program if it lacks
+    * a vertex or fragment shader.  GLES2 doesn't allow separate
+    * shader objects, and would reject them.  However, we internally
+    * build separate shader objects for fixed function programs, which
+    * we use for drivers/common/meta.c and for handling
+    * _mesa_update_state with no program bound (for example in
+    * glClear()).
+    */
+   GLboolean InternalSeparateShader;
 
    GLuint NumShaders;          /**< number of attached shaders */
    struct gl_shader **Shaders; /**< List of attached the shaders */

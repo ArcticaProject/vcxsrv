@@ -169,10 +169,12 @@ xkb_symbols "mac" {
 
     key <AE02> {	[               2,              at,         EuroSign	]	};
     key <AE03> {	[               3,        sterling,       numbersign	]	};
+    key <LSGT> {	[               grave,  asciitilde ]	};
 
     // End alphanumeric section
     
     include "level3(ralt_switch)"
+    include "level3(enter_switch)"
 };
 
 

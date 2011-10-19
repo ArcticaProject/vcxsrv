@@ -52,7 +52,9 @@ cat > sdksyms.c << EOF
  */
 #include "geext.h"
 #include "geint.h"
+#ifdef MITSHM
 #include "shmint.h"
+#endif
 #include "syncsdk.h"
 #if XINERAMA
 # include "panoramiXsrv.h"
@@ -118,14 +120,16 @@ cat > sdksyms.c << EOF
 #include "xf86.h"
 #include "xf86Module.h"
 #include "xf86Opt.h"
-#include "xf86PciInfo.h"
+#ifdef XSERVER_LIBPCIACCESS
+ #include "xf86PciInfo.h"
+ #include "xf86VGAarbiter.h"
+#endif
 #include "xf86Priv.h"
 #include "xf86Privstr.h"
 #include "xf86cmap.h"
 #include "xf86fbman.h"
 #include "xf86str.h"
 #include "xf86Xinput.h"
-#include "xf86VGAarbiter.h"
 #include "xisb.h"
 #if XV
 # include "xf86xv.h"
@@ -170,7 +174,9 @@ cat > sdksyms.c << EOF
 
 
 /* hw/xfree86/os-support/bus/Makefile.am */
-#include "xf86Pci.h"
+#ifdef XSERVER_LIBPCIACCESS
+# include "xf86Pci.h"
+#endif
 #if defined(__sparc__) || defined(__sparc)
 # include "xf86Sbus.h"
 #endif

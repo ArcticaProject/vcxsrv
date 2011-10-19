@@ -47,8 +47,9 @@
 
 #define XF86_OS_PRIVS
 #include "xf86_OSproc.h"
+#ifdef XSERVER_LIBPCIACCESS
 #include "xf86VGAarbiter.h"
-
+#endif
 /* Entity data */
 EntityPtr *xf86Entities = NULL;	/* Bus slots claimed by drivers */
 int xf86NumEntities = 0;
@@ -75,7 +76,7 @@ Bool
 xf86CallDriverProbe( DriverPtr drv, Bool detect_only )
 {
     Bool     foundScreen = FALSE;
-
+#ifdef XSERVER_LIBPCIACCESS
     if (drv->PciProbe != NULL) {
         if (xf86DoConfigure && xf86DoConfigurePass1) {
             assert(detect_only);
@@ -86,7 +87,7 @@ xf86CallDriverProbe( DriverPtr drv, Bool detect_only )
             foundScreen = xf86PciProbeDev(drv);
         }
     }
-
+#endif
     if (!foundScreen && (drv->Probe != NULL)) {
         xf86Msg( X_WARNING, "Falling back to old probe method for %s\n",
                              drv->driverName);
@@ -195,7 +196,9 @@ xf86BusConfig(void)
 void
 xf86BusProbe(void)
 {
+#ifdef XSERVER_LIBPCIACCESS
     xf86PciProbe();
+#endif
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
     xf86SbusProbe();
 #endif
@@ -308,7 +311,6 @@ xf86AddEntityToScreen(ScrnInfoPtr pScrn, int entityIndex)
     pScrn->entityInstanceList = xnfrealloc(pScrn->entityInstanceList,
 				    pScrn->numEntities * sizeof(int));
     pScrn->entityInstanceList[pScrn->numEntities - 1] = 0;
-    pScrn->domainIOBase = xf86Entities[entityIndex]->domainIO;
 }
 
 void
@@ -505,9 +507,14 @@ xf86PostProbe(void)
 {
     int i;
 
-    if (fbSlotClaimed && (pciSlotClaimed
+    if (fbSlotClaimed && (
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
-	    || sbusSlotClaimed
+	    sbusSlotClaimed ||
+#endif
+#ifdef XSERVER_LIBPCIACCESS
+	    pciSlotClaimed
+#else
+        TRUE
 #endif
 	    ))
 	    FatalError("Cannot run in framebuffer mode. Please specify busIDs "

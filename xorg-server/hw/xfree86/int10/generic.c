@@ -62,62 +62,6 @@ static void UnmapVRam(xf86Int10InfoPtr pInt);
 
 static void *sysMem = NULL;
 
-/**
- * Read legacy VGA video BIOS associated with specified domain.
- * 
- * Attempts to read up to 128KiB of legacy VGA video BIOS.
- * 
- * \return
- * The number of bytes read on success or -1 on failure.
- *
- * \bug
- * PCI ROMs can contain multiple BIOS images (e.g., OpenFirmware, x86 VGA,
- * etc.).  How do we know that \c pci_device_read_rom will return the
- * legacy VGA BIOS image?
- */
-#ifndef _PC
-static int
-read_legacy_video_BIOS(struct pci_device *dev, unsigned char *Buf)
-{
-    const ADDRESS Base = 0xC0000;
-    const int Len = 0x10000 * 2;
-    const int pagemask = getpagesize() - 1;
-    const ADDRESS offset = Base & ~pagemask;
-    const unsigned long size = ((Base + Len + pagemask) & ~pagemask) - offset;
-    unsigned char *ptr, *src;
-    int len;
-
-
-    /* Try to use the civilized PCI interface first.
-     */
-    if (pci_device_read_rom(dev, Buf) == 0) {
-	return dev->rom_size;
-    }
-
-    ptr = xf86MapDomainMemory(-1, VIDMEM_READONLY, dev, offset, size);
-
-    if (!ptr)
-	return -1;
-
-    /* Using memcpy() here can hang the system */
-    src = ptr + (Base - offset);
-    for (len = 0; len < (Len / 2); len++) {
-	Buf[len] = src[len];
-    }
-
-    if ((Buf[0] == 0x55) && (Buf[1] == 0xAA) && (Buf[2] > 0x80)) {
-	for ( /* empty */ ; len < Len; len++) {
-	    Buf[len] = src[len];
-	}
-    }
-
-    xf86UnMapVidMem(-1, ptr, size);
-
-    return Len;
-}
-#endif /* _PC */
-
-
 xf86Int10InfoPtr
 xf86ExtendedInitInt10(int entityIndex, int Flags)
 {
@@ -159,8 +103,8 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
     MapVRam(pInt);
 #ifdef _PC
     if (!sysMem)
-	sysMem = xf86MapVidMem(screen, VIDMEM_MMIO, V_BIOS,
-			       BIOS_SIZE + SYS_BIOS - V_BIOS);
+	pci_device_map_legacy(pInt->dev, V_BIOS, BIOS_SIZE + SYS_BIOS - V_BIOS,
+			      PCI_DEV_MAP_FLAG_WRITABLE, &sysMem);
     INTPriv(pInt)->sysMem = sysMem;
 
     if (xf86ReadBIOS(0, 0, base, LOW_PAGE_SIZE) < 0) {
@@ -232,7 +176,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
      */
     vbiosMem = (char *)base + V_BIOS;
     memset(vbiosMem, 0, 2 * V_BIOS_SIZE);
-    if (read_legacy_video_BIOS(pInt->dev, vbiosMem) < V_BIOS_SIZE) {
+    if (pci_device_read_rom(pInt->dev, vbiosMem) < V_BIOS_SIZE) {
 	xf86DrvMsg(screen, X_WARNING,
 		   "Unable to retrieve all of segment 0x0C0000.\n");
     }
@@ -294,10 +238,8 @@ MapVRam(xf86Int10InfoPtr pInt)
     int pagesize = getpagesize();
     int size = ((VRAM_SIZE + pagesize - 1) / pagesize) * pagesize;
 
-    INTPriv(pInt)->vRam = xf86MapDomainMemory(pInt->scrnIndex, VIDMEM_MMIO,
-					      pInt->dev, V_RAM, size);
-
-    pInt->ioBase = xf86Screens[pInt->scrnIndex]->domainIOBase;
+    pci_device_map_legacy(pInt->dev, V_RAM, size, PCI_DEV_MAP_FLAG_WRITABLE, &(INTPriv(pInt)->vRam));
+    pInt->io = pci_legacy_open_io(pInt->dev, 0, 64 * 1024);
 }
 
 static void
@@ -307,7 +249,9 @@ UnmapVRam(xf86Int10InfoPtr pInt)
     int pagesize = getpagesize();
     int size = ((VRAM_SIZE + pagesize - 1)/pagesize) * pagesize;
 
-    xf86UnMapVidMem(screen, INTPriv(pInt)->vRam, size);
+    pci_device_unmap_legacy(pInt->dev, INTPriv(pInt)->vRam, size);
+    pci_device_close_io(pInt->dev, pInt->io);
+    pInt->io = NULL;
 }
 
 Bool

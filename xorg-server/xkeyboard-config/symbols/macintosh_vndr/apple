@@ -68,7 +68,7 @@ xkb_symbols "alukbd" {
     key <FK19> { [ F19 ] };
 
     // On aluminium keyboards, Num_Lock is replace by Clear
-    replace key <NMLK> { [ XF86Clear ] };
+    replace key <NMLK> { [ Clear ] };
     // CAPS key is always Caps_Lock, even for JIS keyboards
     replace key <CAPS> { [ Caps_Lock ] };
 

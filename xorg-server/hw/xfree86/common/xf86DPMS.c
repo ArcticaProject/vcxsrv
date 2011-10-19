@@ -42,8 +42,9 @@
 #include <X11/extensions/dpmsconst.h>
 #include "dpmsproc.h"
 #endif
+#ifdef XSERVER_LIBPCIACCESS
 #include "xf86VGAarbiter.h"
-
+#endif
 
 #ifdef DPMSExtension
 static DevPrivateKeyRec DPMSKeyRec;

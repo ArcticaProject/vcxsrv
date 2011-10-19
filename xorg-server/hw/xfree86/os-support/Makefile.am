@@ -1,5 +1,5 @@
 SUBDIRS = bus @XORG_OS_SUBDIR@ misc $(DRI_SUBDIRS)
-DIST_SUBDIRS = bsd bus misc linux solaris hurd
+DIST_SUBDIRS = bsd bus misc linux solaris stub hurd
 
 sdk_HEADERS = xf86_OSproc.h xf86_OSlib.h
 
@@ -16,6 +16,3 @@ libxorgos_la_LIBADD = @XORG_OS_SUBDIR@/lib@XORG_OS_SUBDIR@.la \
 
 AM_CFLAGS = $(DIX_CFLAGS) 
 
-# FIXME: These don't seem to be used anywhere
-EXTRA_DIST += \
-	shared/bios_devmem.c

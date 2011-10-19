@@ -2,7 +2,7 @@ SUBDIRS = man
 
 module_LTLIBRARIES = libexa.la
 
-libexa_la_LDFLAGS = -avoid-version
+libexa_la_LDFLAGS = -module -avoid-version
 
 INCLUDES = \
 	$(XORG_INCS) \

@@ -159,7 +159,7 @@ _XimProcExtForwardKeyEvent(
     XPutBackEvent(im->core.display, &ev);
 
     _XimRespSyncReply(ic, buf_s[0]);
-    MARK_FABLICATED(ic);
+    MARK_FABRICATED(im);
 
     return True;
 }

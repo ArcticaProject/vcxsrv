@@ -137,20 +137,14 @@
 #define PCI_BUS_NO_DOMAIN(bus) ((bus) & 0xffu)
 #define PCI_TAG_NO_DOMAIN(tag) ((tag) & 0x00ffff00u)
 
-#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
+#if defined(linux)
+#define osPciInit(x) do {} while (0)
+#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
 	defined(__OpenBSD__) || defined(__NetBSD__) || \
 	defined(__DragonFly__) || defined(__sun) || defined(__GNU__)
-#define ARCH_PCI_INIT bsdPciInit
-#endif
-
-#if defined(linux)
-#define ARCH_PCI_INIT linuxPciInit
-#endif /* defined(linux) */
-
-#ifndef ARCH_PCI_INIT
+extern void osPciInit(void);
+#else
 #error No PCI support available for this architecture/OS combination
 #endif
-
-extern void ARCH_PCI_INIT(void);
 
 #endif /* _PCI_H */

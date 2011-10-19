@@ -44,6 +44,7 @@
 #include "main/depth.h"
 #include "main/enable.h"
 #include "main/fbobject.h"
+#include "main/feedback.h"
 #include "main/formats.h"
 #include "main/image.h"
 #include "main/macros.h"
@@ -172,6 +173,11 @@ struct save_state
    struct gl_query_object *CondRenderQuery;
    GLenum CondRenderMode;
 
+   /** MESA_META_SELECT_FEEDBACK */
+   GLenum RenderMode;
+   struct gl_selection Select;
+   struct gl_feedback Feedback;
+
    /** Miscellaneous (always disabled) */
    GLboolean Lighting;
 };
@@ -273,7 +279,7 @@ struct decompress_state
 };
 
 
-#define MAX_META_OPS_DEPTH      2
+#define MAX_META_OPS_DEPTH      8
 /**
  * All per-context meta state.
  */
@@ -464,7 +470,7 @@ _mesa_meta_begin(struct gl_context *ctx, GLbitfield state)
 	 _mesa_reference_shader_program(ctx, &save->FragmentShader,
 					ctx->Shader.CurrentFragmentProgram);
 	 _mesa_reference_shader_program(ctx, &save->ActiveShader,
-					ctx->Shader.CurrentFragmentProgram);
+					ctx->Shader.ActiveProgram);
 
          _mesa_UseProgramObjectARB(0);
       }
@@ -606,6 +612,17 @@ _mesa_meta_begin(struct gl_context *ctx, GLbitfield state)
 
       if (ctx->Query.CondRenderQuery)
 	 _mesa_EndConditionalRender();
+   }
+
+   if (state & MESA_META_SELECT_FEEDBACK) {
+      save->RenderMode = ctx->RenderMode;
+      if (ctx->RenderMode == GL_SELECT) {
+	 save->Select = ctx->Select; /* struct copy */
+	 _mesa_RenderMode(GL_RENDER);
+      } else if (ctx->RenderMode == GL_FEEDBACK) {
+	 save->Feedback = ctx->Feedback; /* struct copy */
+	 _mesa_RenderMode(GL_RENDER);
+      }
    }
 
    /* misc */
@@ -891,6 +908,16 @@ _mesa_meta_end(struct gl_context *ctx)
       if (save->CondRenderQuery)
 	 _mesa_BeginConditionalRender(save->CondRenderQuery->Id,
 				      save->CondRenderMode);
+   }
+
+   if (state & MESA_META_SELECT_FEEDBACK) {
+      if (save->RenderMode == GL_SELECT) {
+	 _mesa_RenderMode(GL_SELECT);
+	 ctx->Select = save->Select;
+      } else if (save->RenderMode == GL_FEEDBACK) {
+	 _mesa_RenderMode(GL_FEEDBACK);
+	 ctx->Feedback = save->Feedback;
+      }
    }
 
    /* misc */
@@ -2942,7 +2969,7 @@ get_temp_image_type(struct gl_context *ctx, GLenum baseFormat)
    case GL_INTENSITY:
       if (ctx->DrawBuffer->Visual.redBits <= 8)
          return GL_UNSIGNED_BYTE;
-      else if (ctx->DrawBuffer->Visual.redBits <= 8)
+      else if (ctx->DrawBuffer->Visual.redBits <= 16)
          return GL_UNSIGNED_SHORT;
       else
          return GL_FLOAT;

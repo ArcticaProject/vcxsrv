@@ -118,18 +118,6 @@
 /* Have execinfo.h */
 #undef HAVE_EXECINFO_H
 
-/* Have pci_system_init_dev_mem() */
-#undef HAVE_PCI_SYSTEM_INIT_DEV_MEM
-
-/* Define to 1 if you have the `pci_device_is_boot_vga' function. */
-#undef HAVE_PCI_DEVICE_IS_BOOT_VGA
-
-/* Have pci_enable_device */
-#undef HAVE_PCI_DEVICE_ENABLE
-
-/* Define to 1 if you have the `pci_device_vgaarb_init' function. */
-#undef HAVE_PCI_DEVICE_VGAARB_INIT
-
 /* Path to text files containing PCI IDs */
 #undef PCI_TXT_IDS_PATH
 
@@ -138,5 +126,8 @@
 
 /* Build with libdrm support */
 #undef WITH_LIBDRM
+
+/* Use libpciaccess */
+#undef XSERVER_LIBPCIACCESS
 
 #endif /* _XORG_CONFIG_H_ */

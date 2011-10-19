@@ -151,17 +151,13 @@ typedef struct _vgaHWRec {
     vgaHWWriteProcPtr		writeDacData;
     vgaHWReadProcPtr		readDacData;
     pointer                     ddc;
-    IOADDRESS			PIOOffset;	/* offset + vgareg
-						   = pioreg */
+    struct pci_io_handle        *io;
     vgaHWReadProcPtr		readEnable;
     vgaHWWriteProcPtr		writeEnable;
     struct pci_device          *dev;
 } vgaHWRec;
 
 /* Some macros that VGA drivers can use in their ChipProbe() function */
-#define VGAHW_GET_IOBASE()	((inb(VGA_MISC_OUT_R) & 0x01) ?		      \
-					 VGA_IOBASE_COLOR : VGA_IOBASE_MONO)
-
 #define OVERSCAN 0x11		/* Index of OverScan register */
 
 /* Flags that define how overscan correction should take place */
@@ -174,15 +170,11 @@ typedef struct _vgaHWRec {
 #define BITS_PER_GUN 6
 #define COLORMAP_SIZE 256
 
-#if defined(__powerpc__) || defined(__arm__) || defined(__s390__) || defined(__nds32__)
-#define DACDelay(hw) /* No legacy VGA support */
-#else
-#define DACDelay(hw)							      \
-	do {								      \
-	    (void)inb((hw)->PIOOffset + (hw)->IOBase + VGA_IN_STAT_1_OFFSET); \
-	    (void)inb((hw)->PIOOffset + (hw)->IOBase + VGA_IN_STAT_1_OFFSET); \
+#define DACDelay(hw)							 \
+	do {								 \
+	    pci_io_read8((hw)->io, (hw)->IOBase + VGA_IN_STAT_1_OFFSET); \
+	    pci_io_read8((hw)->io, (hw)->IOBase + VGA_IN_STAT_1_OFFSET); \
 	} while (0)
-#endif
 
 /* Function Prototypes */
 
@@ -231,5 +223,11 @@ extern _X_EXPORT Bool vgaHWAllocDefaultRegs(vgaRegPtr regp);
 
 extern _X_EXPORT DDC1SetSpeedProc vgaHWddc1SetSpeedWeak(void);
 extern _X_EXPORT SaveScreenProcPtr vgaHWSaveScreenWeak(void);
+extern _X_EXPORT void xf86GetClocks(ScrnInfoPtr pScrn, int num,
+		   Bool (*ClockFunc)(ScrnInfoPtr, int),
+		   void (*ProtectRegs)(ScrnInfoPtr, Bool),
+		   void (*BlankScreen)(ScrnInfoPtr, Bool),
+		   unsigned long vertsyncreg, int maskval,
+		   int knownclkindex, int knownclkvalue);
 
 #endif /* _VGAHW_H */

@@ -235,8 +235,8 @@
 
 /* Primitive Types */
 typedef unsigned long ADDRESS;		/* Memory/PCI address */
-typedef unsigned long IOADDRESS;	/* Must be large enough for a pointer */
-typedef unsigned long PCITAG;
+typedef unsigned long IOADDRESS _X_DEPRECATED;	/* Must be large enough for a pointer */
+typedef CARD32 PCITAG _X_DEPRECATED;
 
 typedef enum {
     PCI_MEM,
@@ -251,12 +251,10 @@ typedef enum {
 
 
 /* Public PCI access functions */
-extern _X_EXPORT PCITAG pciTag(int busnum, int devnum, int funcnum);
 extern _X_EXPORT Bool xf86scanpci(void);
 
 /* Domain access functions.  Some of these probably shouldn't be public */
-extern _X_EXPORT pointer xf86MapDomainMemory(int ScreenNum, int Flags, struct pci_device *dev,
-    ADDRESS Base, unsigned long Size);
-extern _X_EXPORT IOADDRESS xf86MapLegacyIO(struct pci_device *dev);
+extern _X_EXPORT struct pci_io_handle *xf86MapLegacyIO(struct pci_device *dev);
+extern _X_EXPORT void xf86UnmapLegacyIO(struct pci_device *, struct pci_io_handle *);
 
 #endif /* _XF86PCI_H */

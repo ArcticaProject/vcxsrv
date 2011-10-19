@@ -85,7 +85,7 @@ These are mapped onto the X DPMS Extension like this:
 <title>DPMS Functions</title>
 
 
-<funcsynopsis id='dpmsqueryextention'>
+<funcsynopsis id='DPMSQueryExtention'>
 <funcprototype>
   <funcdef>Bool <function>DPMSQueryExtention</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -120,7 +120,7 @@ return value is FALSE, and the values of
 <emphasis remap='I'>error_base</emphasis> are undefined.
 </para>
 
-<funcsynopsis id='dpmsgetversion'>
+<funcsynopsis id='DPMSGetVersion'>
 <funcprototype>
   <funcdef>Status <function>DPMSGetVersion</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -156,7 +156,7 @@ incompatible changes, and the minor version will be incremented for small,
 upwardly compatible changes.
 </para>
 
-<funcsynopsis id='dpmscapable'>
+<funcsynopsis id='DPMSCapable'>
 <funcprototype>
   <funcdef>Bool <function>DPMSCapable</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -179,7 +179,7 @@ is capable of DPMS on one head, and incapable on another, the truth value of
 this function is defined by the X server implementation.
 </para>
 
-<funcsynopsis id='dpmssettimeouts'>
+<funcsynopsis id='DPMSSetTimeouts'>
 <funcprototype>
   <funcdef>Status <function>DPMSSetTimeouts</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -255,7 +255,7 @@ or equal to the timeout values of earlier modes.  If inconsistent values
 are supplied, a BadValue error will result.
 </para>
 
-<funcsynopsis id='dpmsgettimeouts'>
+<funcsynopsis id='DPMSGetTimeouts'>
 <funcprototype>
   <funcdef>Status <function>DPMSGetTimeouts</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -307,7 +307,7 @@ inactivity in seconds before the third and final level of power savings is
 invoked. A value of zero indicates that this mode has been disabled.
 </para>
 
-<funcsynopsis id='dpmsenable'>
+<funcsynopsis id='DPMSEnable'>
 <funcprototype>
   <funcdef>Status <function>DPMSEnable</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -331,7 +331,7 @@ error is returned.  If DPMSEnable is invoked on a display without
 support for DPMS, no change is made and no error is returned.
 </para>
 
-<funcsynopsis id='dpmsdisable'>
+<funcsynopsis id='DPMSDisable'>
 <funcprototype>
   <funcdef>Status <function>DPMSDisable</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -353,7 +353,7 @@ and no error is returned.  If DPMSDisable is invoked on a display
 without support for DPMS, no change is made and no error is returned.
 </para>
 
-<funcsynopsis id='dpmsforcelevel'>
+<funcsynopsis id='DPMSForceLevel'>
 <funcprototype>
   <funcdef>Status <function>DPMSForceLevel</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>
@@ -382,7 +382,7 @@ is disabled on the display, a BadMatch protocol error will result.
 
 <para>Status DPMSInfo(<emphasis remap='I'>display, power_level, state</emphasis>)</para>
 
-<funcsynopsis id='dpmsinfo'>
+<funcsynopsis id='DPMSInfo'>
 <funcprototype>
   <funcdef>Status <function>DPMSInfo</function></funcdef>
     <paramdef>Display <parameter>*display</parameter></paramdef>

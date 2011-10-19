@@ -26,8 +26,8 @@ AC_PREREQ([2.57])
 #
 #   - The version in git has an odd MICRO version number
 #
-#   - Released versions both development and stable have an even MICRO 
-#     version number
+#   - Released versions, both development and stable, have an
+#     even MICRO version number
 #
 #   - Released development versions have an odd MINOR number
 #
@@ -54,7 +54,7 @@ AC_PREREQ([2.57])
 
 m4_define([pixman_major], 0)
 m4_define([pixman_minor], 23)
-m4_define([pixman_micro], 5)
+m4_define([pixman_micro], 7)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 

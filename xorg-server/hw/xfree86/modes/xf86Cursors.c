@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <X11/Xarch.h>
 #include "xf86.h"
 #include "xf86DDC.h"
 #include "xf86Crtc.h"

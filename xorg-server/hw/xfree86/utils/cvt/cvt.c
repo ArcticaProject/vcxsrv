@@ -25,13 +25,6 @@
 
 #include "xf86.h"
 
-/* Error implementation used by the server code we built in */
-void
-Error(const char *str)
-{
-    perror(str);
-}
-
 /* FatalError implementation used by the server code we built in */
 void
 FatalError(const char *f, ...)

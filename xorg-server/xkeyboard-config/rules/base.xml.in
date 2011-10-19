@@ -6209,7 +6209,7 @@
       <option>
         <configItem>
           <name>numpad:mac</name>
-          <_description>Numeric keypad keys work as with Macintosh</_description>
+          <_description>Numeric keypad keys always enter digits (as in Mac OS)</_description>
         </configItem>
       </option>
       <option>
@@ -6339,6 +6339,7 @@
           <_description>Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
+<!--
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock_cancel</name>
@@ -6375,6 +6376,7 @@
           <_description>Right Alt chooses 5th level, acts as onetime lock when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
+-->
     </group>
     <group allowMultipleSelection="false">
       <!-- Let space output NBSP, NNBSP, ZWNJ, and ZWJ for the desired level -->

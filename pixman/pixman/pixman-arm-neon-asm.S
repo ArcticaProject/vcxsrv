@@ -1219,6 +1219,145 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_src_n_8_8888_process_pixblock_head
+    /* expecting solid source in {d0, d1, d2, d3} */
+    /* mask is in d24 (d25, d26, d27 are unused) */
+
+    /* in */
+    vmull.u8    q8, d24, d0
+    vmull.u8    q9, d24, d1
+    vmull.u8    q10, d24, d2
+    vmull.u8    q11, d24, d3
+    vrsra.u16   q8, q8, #8
+    vrsra.u16   q9, q9, #8
+    vrsra.u16   q10, q10, #8
+    vrsra.u16   q11, q11, #8
+.endm
+
+.macro pixman_composite_src_n_8_8888_process_pixblock_tail
+    vrshrn.u16  d28, q8, #8
+    vrshrn.u16  d29, q9, #8
+    vrshrn.u16  d30, q10, #8
+    vrshrn.u16  d31, q11, #8
+.endm
+
+.macro pixman_composite_src_n_8_8888_process_pixblock_tail_head
+    fetch_mask_pixblock
+                                    PF add PF_X, PF_X, #8
+        vrshrn.u16  d28, q8, #8
+                                    PF tst PF_CTL, #0x0F
+        vrshrn.u16  d29, q9, #8
+                                    PF addne PF_X, PF_X, #8
+        vrshrn.u16  d30, q10, #8
+                                    PF subne PF_CTL, PF_CTL, #1
+        vrshrn.u16  d31, q11, #8
+                                    PF cmp PF_X, ORIG_W
+    vmull.u8    q8, d24, d0
+                                    PF pld, [PF_MASK, PF_X, lsl #mask_bpp_shift]
+    vmull.u8    q9, d24, d1
+                                    PF subge PF_X, PF_X, ORIG_W
+    vmull.u8    q10, d24, d2
+                                    PF subges PF_CTL, PF_CTL, #0x10
+    vmull.u8    q11, d24, d3
+                                    PF ldrgeb DUMMY, [PF_MASK, MASK_STRIDE, lsl #mask_bpp_shift]!
+        vst4.8      {d28, d29, d30, d31}, [DST_W, :128]!
+    vrsra.u16   q8, q8, #8
+    vrsra.u16   q9, q9, #8
+    vrsra.u16   q10, q10, #8
+    vrsra.u16   q11, q11, #8
+.endm
+
+.macro pixman_composite_src_n_8_8888_init
+    add         DUMMY, sp, #ARGS_STACK_OFFSET
+    vld1.32     {d3[0]}, [DUMMY]
+    vdup.8      d0, d3[0]
+    vdup.8      d1, d3[1]
+    vdup.8      d2, d3[2]
+    vdup.8      d3, d3[3]
+.endm
+
+.macro pixman_composite_src_n_8_8888_cleanup
+.endm
+
+generate_composite_function \
+    pixman_composite_src_n_8_8888_asm_neon, 0, 8, 32, \
+    FLAG_DST_WRITEONLY | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_src_n_8_8888_init, \
+    pixman_composite_src_n_8_8888_cleanup, \
+    pixman_composite_src_n_8_8888_process_pixblock_head, \
+    pixman_composite_src_n_8_8888_process_pixblock_tail, \
+    pixman_composite_src_n_8_8888_process_pixblock_tail_head, \
+
+/******************************************************************************/
+
+.macro pixman_composite_src_n_8_8_process_pixblock_head
+    vmull.u8    q0, d24, d16
+    vmull.u8    q1, d25, d16
+    vmull.u8    q2, d26, d16
+    vmull.u8    q3, d27, d16
+    vrsra.u16   q0, q0,  #8
+    vrsra.u16   q1, q1,  #8
+    vrsra.u16   q2, q2,  #8
+    vrsra.u16   q3, q3,  #8
+.endm
+
+.macro pixman_composite_src_n_8_8_process_pixblock_tail
+    vrshrn.u16  d28, q0, #8
+    vrshrn.u16  d29, q1, #8
+    vrshrn.u16  d30, q2, #8
+    vrshrn.u16  d31, q3, #8
+.endm
+
+.macro pixman_composite_src_n_8_8_process_pixblock_tail_head
+    fetch_mask_pixblock
+                                    PF add PF_X, PF_X, #8
+        vrshrn.u16  d28, q0, #8
+                                    PF tst PF_CTL, #0x0F
+        vrshrn.u16  d29, q1, #8
+                                    PF addne PF_X, PF_X, #8
+        vrshrn.u16  d30, q2, #8
+                                    PF subne PF_CTL, PF_CTL, #1
+        vrshrn.u16  d31, q3, #8
+                                    PF cmp PF_X, ORIG_W
+    vmull.u8    q0,  d24, d16
+                                    PF pld, [PF_MASK, PF_X, lsl #mask_bpp_shift]
+    vmull.u8    q1,  d25, d16
+                                    PF subge PF_X, PF_X, ORIG_W
+    vmull.u8    q2,  d26, d16
+                                    PF subges PF_CTL, PF_CTL, #0x10
+    vmull.u8    q3,  d27, d16
+                                    PF ldrgeb DUMMY, [PF_MASK, MASK_STRIDE, lsl #mask_bpp_shift]!
+        vst1.8      {d28, d29, d30, d31}, [DST_W, :128]!
+    vrsra.u16   q0, q0,  #8
+    vrsra.u16   q1, q1,  #8
+    vrsra.u16   q2, q2,  #8
+    vrsra.u16   q3, q3,  #8
+.endm
+
+.macro pixman_composite_src_n_8_8_init
+    add         DUMMY, sp, #ARGS_STACK_OFFSET
+    vld1.32     {d16[0]}, [DUMMY]
+    vdup.8      d16, d16[3]
+.endm
+
+.macro pixman_composite_src_n_8_8_cleanup
+.endm
+
+generate_composite_function \
+    pixman_composite_src_n_8_8_asm_neon, 0, 8, 8, \
+    FLAG_DST_WRITEONLY, \
+    32, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_src_n_8_8_init, \
+    pixman_composite_src_n_8_8_cleanup, \
+    pixman_composite_src_n_8_8_process_pixblock_head, \
+    pixman_composite_src_n_8_8_process_pixblock_tail, \
+    pixman_composite_src_n_8_8_process_pixblock_tail_head
+
+/******************************************************************************/
+
 .macro pixman_composite_over_n_8_8888_process_pixblock_head
     /* expecting deinterleaved source data in {d8, d9, d10, d11} */
     /* d8 - blue, d9 - green, d10 - red, d11 - alpha */

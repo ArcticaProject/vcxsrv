@@ -51,11 +51,9 @@
  */
 
 typedef struct {
-	unsigned long 	physBase;
 	unsigned long 	size;
 	pointer		virtBase;
 	pointer 	mtrrInfo;
-	int		flags;
 } MappingRec, *MappingPtr;
 	
 typedef struct {
@@ -169,10 +167,8 @@ xf86MakeNewMapping(int ScreenNum, int Flags, unsigned long Base, unsigned long S
 
 	vp = getVidMapRec(ScreenNum);
 	mp = newMapping(vp);
-	mp->physBase = Base;
 	mp->size = Size;
 	mp->virtBase = Vbase;
-	mp->flags = Flags;
 }
 
 void
@@ -206,10 +202,8 @@ xf86MapVidMem(int ScreenNum, int Flags, unsigned long Base, unsigned long Size)
 
 	vp = getVidMapRec(ScreenNum);
 	mp = newMapping(vp);
-	mp->physBase = Base;
 	mp->size = Size;
 	mp->virtBase = vbase;
-	mp->flags = Flags;
 
 	/*
 	 * Check the "mtrr" option even when MTRR isn't supported to avoid

@@ -2,7 +2,7 @@ SUBDIRS = man
 
 module_LTLIBRARIES = libfbdevhw.la
 
-libfbdevhw_la_LDFLAGS = -avoid-version
+libfbdevhw_la_LDFLAGS = -module -avoid-version
 
 if FBDEVHW
 libfbdevhw_la_SOURCES = fbdevhw.c

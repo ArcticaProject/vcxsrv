@@ -159,25 +159,3 @@ partial xkb_types "keypad" {
 	level_name[Level4] = "Alt Number";
     };       
 };
-
-// This enables the four level shifting also for the keypad,
-// but levels 1 and 2, and 3 and 4 are swapped on Mac keypads.
-partial xkb_types "mac_keypad" {
-    virtual_modifiers LevelThree;
-
-    type "FOUR_LEVEL_KEYPAD" {
-	modifiers = Shift+NumLock+LevelThree;
-	map[None] = Level2;
-	map[Shift] = Level1;
-	map[NumLock] = Level1;
-	map[Shift+NumLock] = Level2;
-	map[LevelThree] = Level4;
-	map[Shift+LevelThree] = Level3;
-	map[NumLock+LevelThree] = Level3;
-	map[Shift+NumLock+LevelThree] = Level4;
-	level_name[Level2] = "Base";
-	level_name[Level1] = "Number";
-	level_name[Level4] = "Alt Base";
-	level_name[Level3] = "Alt Number";
-    };       
-};

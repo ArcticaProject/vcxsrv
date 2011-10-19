@@ -54,8 +54,10 @@ xf86ClaimFbSlot(DriverPtr drvp, int chipset, GDevPtr dev, Bool active)
     EntityPtr p;
     int num;
 
+#ifdef XSERVER_LIBPCIACCESS
     if (pciSlotClaimed)
 	return -1;
+#endif
 #if defined(__sparc__) || defined (__sparc64__)
     if (sbusSlotClaimed)
 	return -1;

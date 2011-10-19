@@ -78,7 +78,9 @@
 #include "picturestr.h"
 
 #include "xf86Bus.h"
+#ifdef XSERVER_LIBPCIACCESS
 #include "xf86VGAarbiter.h"
+#endif
 #include "globals.h"
 #include "xserver-properties.h"
 
@@ -87,7 +89,6 @@
 #include "dpmsproc.h"
 #endif
 #include <hotplug.h>
-
 
 #ifdef XF86PM
 void (*xf86OSPMClose)(void) = NULL;
@@ -1355,6 +1356,7 @@ ddxProcessArgument(int argc, char **argv, int i)
     xf86DoShowOptions = TRUE;
     return 1;
   }
+#ifdef XSERVER_LIBPCIACCESS
   if (!strcmp(argv[i], "-isolateDevice"))
   {
     CHECK_FOR_REQUIRED_ARGUMENT();
@@ -1364,6 +1366,7 @@ ddxProcessArgument(int argc, char **argv, int i)
     xf86PciIsolateDevice(argv[i]);
     return 2;
   }
+#endif
   /* Notice cmdline xkbdir, but pass to dix as well */
   if (!strcmp(argv[i], "-xkbdir"))
   {
@@ -1432,7 +1435,9 @@ ddxUseMsg(void)
 #endif
   ErrorF("-allowMouseOpenFail    start server even if the mouse can't be initialized\n");
   ErrorF("-ignoreABI             make module ABI mismatches non-fatal\n");
+#ifdef XSERVER_LIBPCIACCESS
   ErrorF("-isolateDevice bus_id  restrict device resets to bus_id (PCI only)\n");
+#endif
   ErrorF("-version               show the server version\n");
   ErrorF("-showDefaultModulePath show the server default module path\n");
   ErrorF("-showDefaultLibPath    show the server default library path\n");

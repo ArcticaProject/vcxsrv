@@ -1342,7 +1342,10 @@ assign_attribute_or_color_locations(gl_shader_program *prog,
 	 }
       }
 
-      /* The location was explicitly assigned, nothing to do here.
+      /* If the variable is not a built-in and has a location statically
+       * assigned in the shader (presumably via a layout qualifier), make sure
+       * that it doesn't collide with other assigned locations.  Otherwise,
+       * add it to the list of variables that need linker-assigned locations.
        */
       const unsigned slots = count_attribute_slots(var->type);
       if (var->location != -1) {
@@ -1802,7 +1805,8 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
     * present in a linked program.  By checking for use of shading language
     * version 1.00, we also catch the GL_ARB_ES2_compatibility case.
     */
-   if (ctx->API == API_OPENGLES2 || prog->Version == 100) {
+   if (!prog->InternalSeparateShader &&
+       (ctx->API == API_OPENGLES2 || prog->Version == 100)) {
       if (prog->_LinkedShaders[MESA_SHADER_VERTEX] == NULL) {
 	 linker_error(prog, "program lacks a vertex shader\n");
       } else if (prog->_LinkedShaders[MESA_SHADER_FRAGMENT] == NULL) {

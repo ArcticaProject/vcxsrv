@@ -163,67 +163,67 @@ static CARD8 defaultDAC[768] =
 static void
 stdWriteCrtc(vgaHWPtr hwp, CARD8 index, CARD8 value)
 {
-    outb(hwp->IOBase + hwp->PIOOffset + VGA_CRTC_INDEX_OFFSET, index);
-    outb(hwp->IOBase + hwp->PIOOffset + VGA_CRTC_DATA_OFFSET, value);
+    pci_io_write8(hwp->io, hwp->IOBase + VGA_CRTC_INDEX_OFFSET, index);
+    pci_io_write8(hwp->io, hwp->IOBase + VGA_CRTC_DATA_OFFSET, value);
 }
 
 static CARD8
 stdReadCrtc(vgaHWPtr hwp, CARD8 index)
 {
-    outb(hwp->IOBase + hwp->PIOOffset + VGA_CRTC_INDEX_OFFSET, index);
-    return inb(hwp->IOBase + hwp->PIOOffset + VGA_CRTC_DATA_OFFSET);
+    pci_io_write8(hwp->io, hwp->IOBase + VGA_CRTC_INDEX_OFFSET, index);
+    return pci_io_read8(hwp->io, hwp->IOBase + VGA_CRTC_DATA_OFFSET);
 }
 
 static void
 stdWriteGr(vgaHWPtr hwp, CARD8 index, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_GRAPH_INDEX, index);
-    outb(hwp->PIOOffset + VGA_GRAPH_DATA, value);
+    pci_io_write8(hwp->io, VGA_GRAPH_INDEX, index);
+    pci_io_write8(hwp->io, VGA_GRAPH_DATA, value);
 }
 
 static CARD8
 stdReadGr(vgaHWPtr hwp, CARD8 index)
 {
-    outb(hwp->PIOOffset + VGA_GRAPH_INDEX, index);
-    return inb(hwp->PIOOffset + VGA_GRAPH_DATA);
+    pci_io_write8(hwp->io, VGA_GRAPH_INDEX, index);
+    return pci_io_read8(hwp->io, VGA_GRAPH_DATA);
 }
 
 static void
 stdWriteSeq(vgaHWPtr hwp, CARD8 index, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_SEQ_INDEX, index);
-    outb(hwp->PIOOffset + VGA_SEQ_DATA, value);
+    pci_io_write8(hwp->io, VGA_SEQ_INDEX, index);
+    pci_io_write8(hwp->io, VGA_SEQ_DATA, value);
 }
 
 static CARD8
 stdReadSeq(vgaHWPtr hwp, CARD8 index)
 {
-    outb(hwp->PIOOffset + VGA_SEQ_INDEX, index);
-    return inb(hwp->PIOOffset + VGA_SEQ_DATA);
+    pci_io_write8(hwp->io, VGA_SEQ_INDEX, index);
+    return pci_io_read8(hwp->io, VGA_SEQ_DATA);
 }
 
 static CARD8
 stdReadST00(vgaHWPtr hwp)
 {
-    return inb(hwp->PIOOffset + VGA_IN_STAT_0);
+    return pci_io_read8(hwp->io, VGA_IN_STAT_0);
 }
 
 static CARD8
 stdReadST01(vgaHWPtr hwp)
 {
-    return inb(hwp->IOBase + hwp->PIOOffset + VGA_IN_STAT_1_OFFSET);
+    return pci_io_read8(hwp->io, hwp->IOBase + VGA_IN_STAT_1_OFFSET);
 }
 
 static CARD8
 stdReadFCR(vgaHWPtr hwp)
 {
-    return inb(hwp->PIOOffset + VGA_FEATURE_R);
+    return pci_io_read8(hwp->io, VGA_FEATURE_R);
 }
 
 static void
 stdWriteFCR(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->IOBase + hwp->PIOOffset + VGA_FEATURE_W_OFFSET,value);
+    pci_io_write8(hwp->io, hwp->IOBase + VGA_FEATURE_W_OFFSET,value);
 }
 
 static void
@@ -234,9 +234,9 @@ stdWriteAttr(vgaHWPtr hwp, CARD8 index, CARD8 value)
     else
 	index |= 0x20;
 
-    (void) inb(hwp->IOBase + hwp->PIOOffset + VGA_IN_STAT_1_OFFSET);
-    outb(hwp->PIOOffset + VGA_ATTR_INDEX, index);
-    outb(hwp->PIOOffset + VGA_ATTR_DATA_W, value);
+    (void) pci_io_read8(hwp->io, hwp->IOBase + VGA_IN_STAT_1_OFFSET);
+    pci_io_write8(hwp->io, VGA_ATTR_INDEX, index);
+    pci_io_write8(hwp->io, VGA_ATTR_DATA_W, value);
 }
 
 static CARD8
@@ -247,85 +247,85 @@ stdReadAttr(vgaHWPtr hwp, CARD8 index)
     else
 	index |= 0x20;
 
-    (void) inb(hwp->IOBase + hwp->PIOOffset + VGA_IN_STAT_1_OFFSET);
-    outb(hwp->PIOOffset + VGA_ATTR_INDEX, index);
-    return inb(hwp->PIOOffset + VGA_ATTR_DATA_R);
+    (void) pci_io_read8(hwp->io, hwp->IOBase + VGA_IN_STAT_1_OFFSET);
+    pci_io_write8(hwp->io, VGA_ATTR_INDEX, index);
+    return pci_io_read8(hwp->io, VGA_ATTR_DATA_R);
 }
 
 static void
 stdWriteMiscOut(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_MISC_OUT_W, value);
+    pci_io_write8(hwp->io, VGA_MISC_OUT_W, value);
 }
 
 static CARD8
 stdReadMiscOut(vgaHWPtr hwp)
 {
-    return inb(hwp->PIOOffset + VGA_MISC_OUT_R);
+    return pci_io_read8(hwp->io, VGA_MISC_OUT_R);
 }
 
 static void
 stdEnablePalette(vgaHWPtr hwp)
 {
-    (void) inb(hwp->IOBase + hwp->PIOOffset + VGA_IN_STAT_1_OFFSET);
-    outb(hwp->PIOOffset + VGA_ATTR_INDEX, 0x00);
+    (void) pci_io_read8(hwp->io, hwp->IOBase + VGA_IN_STAT_1_OFFSET);
+    pci_io_write8(hwp->io, VGA_ATTR_INDEX, 0x00);
     hwp->paletteEnabled = TRUE;
 }
 
 static void
 stdDisablePalette(vgaHWPtr hwp)
 {
-    (void) inb(hwp->IOBase + hwp->PIOOffset + VGA_IN_STAT_1_OFFSET);
-    outb(hwp->PIOOffset + VGA_ATTR_INDEX, 0x20);
+    (void) pci_io_read8(hwp->io, hwp->IOBase + VGA_IN_STAT_1_OFFSET);
+    pci_io_write8(hwp->io, VGA_ATTR_INDEX, 0x20);
     hwp->paletteEnabled = FALSE;
 }
 
 static void
 stdWriteDacMask(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_DAC_MASK, value);
+    pci_io_write8(hwp->io, VGA_DAC_MASK, value);
 }
 
 static CARD8
 stdReadDacMask(vgaHWPtr hwp)
 {
-    return inb(hwp->PIOOffset + VGA_DAC_MASK);
+    return pci_io_read8(hwp->io, VGA_DAC_MASK);
 }
 
 static void
 stdWriteDacReadAddr(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_DAC_READ_ADDR, value);
+    pci_io_write8(hwp->io, VGA_DAC_READ_ADDR, value);
 }
 
 static void
 stdWriteDacWriteAddr(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_DAC_WRITE_ADDR, value);
+    pci_io_write8(hwp->io, VGA_DAC_WRITE_ADDR, value);
 }
 
 static void
 stdWriteDacData(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_DAC_DATA, value);
+    pci_io_write8(hwp->io, VGA_DAC_DATA, value);
 }
 
 static CARD8
 stdReadDacData(vgaHWPtr hwp)
 {
-    return inb(hwp->PIOOffset + VGA_DAC_DATA);
+    return pci_io_read8(hwp->io, VGA_DAC_DATA);
 }
 
 static CARD8
 stdReadEnable(vgaHWPtr hwp)
 {
-    return inb(hwp->PIOOffset + VGA_ENABLE);
+    return pci_io_read8(hwp->io, VGA_ENABLE);
 }
 
 static void
 stdWriteEnable(vgaHWPtr hwp, CARD8 value)
 {
-    outb(hwp->PIOOffset + VGA_ENABLE, value);
+    pci_io_write8(hwp->io, VGA_ENABLE, value);
 }
 
 void
@@ -353,9 +353,10 @@ vgaHWSetStdFuncs(vgaHWPtr hwp)
     hwp->writeDacReadAddr	= stdWriteDacReadAddr;
     hwp->writeDacData		= stdWriteDacData;
     hwp->readDacData		= stdReadDacData;
-    hwp->PIOOffset		= 0;
     hwp->readEnable		= stdReadEnable;
     hwp->writeEnable		= stdWriteEnable;
+
+    hwp->io = pci_legacy_open_io(hwp->dev, 0, 64 * 1024);
 }
 
 /*
@@ -1706,10 +1707,6 @@ vgaHWGetHWRec(ScrnInfoPtr scrp)
     hwp->MapSize = 0;
     hwp->pScrn = scrp;
 
-    /* Initialise the function pointers with the standard VGA versions */
-    vgaHWSetStdFuncs(hwp);
-
-    hwp->PIOOffset = scrp->domainIOBase;
     hwp->dev = xf86GetPciInfoForEntity(scrp->entityList[0]);
 
     return TRUE;
@@ -1723,7 +1720,9 @@ vgaHWFreeHWRec(ScrnInfoPtr scrp)
 	vgaHWPtr hwp = VGAHWPTR(scrp);
 
 	if (!hwp)
-	    return;
+            return;
+
+        pci_device_close_io(hwp->dev, hwp->io);
 
 	free(hwp->FontInfo1);
 	free(hwp->FontInfo2);
@@ -1742,7 +1741,6 @@ Bool
 vgaHWMapMem(ScrnInfoPtr scrp)
 {
     vgaHWPtr hwp = VGAHWPTR(scrp);
-    int scr_index = scrp->scrnIndex;
     
     if (hwp->Base)
 	return TRUE;
@@ -1760,8 +1758,7 @@ vgaHWMapMem(ScrnInfoPtr scrp)
      * for now.
      */
     DebugF("Mapping VGAMem\n");
-    hwp->Base = xf86MapDomainMemory(scr_index, VIDMEM_MMIO_32BIT, hwp->dev,
-				    hwp->MapPhys, hwp->MapSize);
+    pci_device_map_legacy(hwp->dev, hwp->MapPhys, hwp->MapSize, PCI_DEV_MAP_FLAG_WRITABLE, &hwp->Base);
     return hwp->Base != NULL;
 }
 
@@ -1770,13 +1767,12 @@ void
 vgaHWUnmapMem(ScrnInfoPtr scrp)
 {
     vgaHWPtr hwp = VGAHWPTR(scrp);
-    int scr_index = scrp->scrnIndex;
 
     if (hwp->Base == NULL)
 	return;
     
     DebugF("Unmapping VGAMem\n");
-    xf86UnMapVidMem(scr_index, hwp->Base, hwp->MapSize);
+    pci_device_unmap_legacy(hwp->dev, hwp->Base, hwp->MapSize);
     hwp->Base = NULL;
 }
 
@@ -1793,8 +1789,7 @@ vgaHWGetIOBase(vgaHWPtr hwp)
     hwp->IOBase = (hwp->readMiscOut(hwp) & 0x01) ?
 				VGA_IOBASE_COLOR : VGA_IOBASE_MONO;
     xf86DrvMsgVerb(hwp->pScrn->scrnIndex, X_INFO, 3,
-	"vgaHWGetIOBase: hwp->IOBase is 0x%04x, hwp->PIOOffset is 0x%04lx\n",
-	hwp->IOBase, hwp->PIOOffset);
+	"vgaHWGetIOBase: hwp->IOBase is 0x%04x\n", hwp->IOBase);
 }
 
 
@@ -1991,4 +1986,95 @@ vgaHWddc1SetSpeedWeak(void)
 SaveScreenProcPtr vgaHWSaveScreenWeak(void)
 {
     return vgaHWSaveScreen;
+}
+
+/*
+ * xf86GetClocks -- get the dot-clocks via a BIG BAD hack ...
+ */
+void
+xf86GetClocks(ScrnInfoPtr pScrn, int num, Bool (*ClockFunc)(ScrnInfoPtr, int),
+	      void (*ProtectRegs)(ScrnInfoPtr, Bool),
+	      void (*BlankScreen)(ScrnInfoPtr, Bool), unsigned long vertsyncreg,
+	      int maskval, int knownclkindex, int knownclkvalue)
+{
+    register int status = vertsyncreg;
+    unsigned long i, cnt, rcnt, sync;
+    vgaHWPtr hwp = VGAHWPTR(pScrn);
+
+    /* First save registers that get written on */
+    (*ClockFunc)(pScrn, CLK_REG_SAVE);
+
+    if (num > MAXCLOCKS)
+	num = MAXCLOCKS;
+
+    for (i = 0; i < num; i++)
+    {
+	if (ProtectRegs)
+	    (*ProtectRegs)(pScrn, TRUE);
+	if (!(*ClockFunc)(pScrn, i))
+	{
+	    pScrn->clock[i] = -1;
+	    continue;
+	}
+	if (ProtectRegs)
+	    (*ProtectRegs)(pScrn, FALSE);
+	if (BlankScreen)
+	    (*BlankScreen)(pScrn, FALSE);
+
+	usleep(50000);     /* let VCO stabilise */
+
+	cnt  = 0;
+	sync = 200000;
+
+	while ((pci_io_read8(hwp->io, status) & maskval) == 0x00)
+	    if (sync-- == 0) goto finish;
+	/* Something appears to be happening, so reset sync count */
+	sync = 200000;
+	while ((pci_io_read8(hwp->io, status) & maskval) == maskval)
+	    if (sync-- == 0) goto finish;
+	/* Something appears to be happening, so reset sync count */
+	sync = 200000;
+	while ((pci_io_read8(hwp->io, status) & maskval) == 0x00)
+	    if (sync-- == 0) goto finish;
+
+	for (rcnt = 0; rcnt < 5; rcnt++)
+	{
+	    while (!(pci_io_read8(hwp->io, status) & maskval))
+		cnt++;
+	    while ((pci_io_read8(hwp->io, status) & maskval))
+		cnt++;
+	}
+
+finish:
+	pScrn->clock[i] = cnt ? cnt : -1;
+	if (BlankScreen)
+            (*BlankScreen)(pScrn, TRUE);
+    }
+
+    for (i = 0; i < num; i++)
+    {
+	if (i != knownclkindex)
+	{
+	    if (pScrn->clock[i] == -1)
+	    {
+		pScrn->clock[i] = 0;
+	    }
+	    else
+	    {
+		pScrn->clock[i] = (int)(0.5 +
+                    (((float)knownclkvalue) * pScrn->clock[knownclkindex]) /
+	            (pScrn->clock[i]));
+		/* Round to nearest 10KHz */
+		pScrn->clock[i] += 5;
+		pScrn->clock[i] /= 10;
+		pScrn->clock[i] *= 10;
+	    }
+	}
+    }
+
+    pScrn->clock[knownclkindex] = knownclkvalue;
+    pScrn->numClocks = num;
+
+    /* Restore registers that were written on */
+    (*ClockFunc)(pScrn, CLK_REG_RESTORE);
 }

@@ -126,12 +126,6 @@
 
 #include "Pci.h"
 
-PCITAG
-pciTag(int busnum, int devnum, int funcnum)
-{
-	return(PCI_MAKE_TAG(busnum,devnum,funcnum));
-}
-
 Bool
 xf86scanpci(void)
 {
@@ -140,7 +134,7 @@ xf86scanpci(void)
     success = (pci_system_init() == 0);
 
     /* choose correct platform/OS specific PCI init routine */
-	ARCH_PCI_INIT();
+    osPciInit();
 
     return success;
 }

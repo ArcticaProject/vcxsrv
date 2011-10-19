@@ -67,29 +67,10 @@ AC_SUBST([XFT_LT_VERSION])
 PKG_CHECK_MODULES(XRENDER, xrender >= 0.8.2 x11)
 
 # Check freetype configuration
-AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=auto)
-
-if test "$freetype_config" = "auto"; then
-	PKG_CHECK_MODULES(FREETYPE, freetype2,
-		freetype_config=no, freetype_config=yes)
-fi
-
-if test "$freetype_config" = "yes"; then
-	AC_PATH_PROG(ft_config,freetype-config,no)
-	if test "$ft_config" = "no"; then
-		AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
-	fi
-else
-	ft_config="$freetype_config"
-fi
-
-if test "$freetype_config" != "no"; then
-	FREETYPE_CFLAGS="`$ft_config --cflags`"
-	FREETYPE_LIBS="`$ft_config --libs`"
-fi
+PKG_CHECK_MODULES(FREETYPE, freetype2 >= 2.1.6)
 
 # Check fontconfig configuration
-PKG_CHECK_MODULES(FONTCONFIG, fontconfig >= 2.2)
+PKG_CHECK_MODULES(FONTCONFIG, fontconfig >= 2.5.92)
 
 AC_SUBST(XRENDER_CFLAGS)
 AC_SUBST(XRENDER_LIBS)
@@ -97,22 +78,6 @@ AC_SUBST(FREETYPE_CFLAGS)
 AC_SUBST(FREETYPE_LIBS)
 AC_SUBST(FONTCONFIG_CFLAGS)
 AC_SUBST(FONTCONFIG_LIBS)
-
-fontconfig_save_libs="$LIBS"
-fontconfig_save_cflags="$CFLAGS"
-LIBS="$LIBS $FREETYPE_LIBS"
-CFLAGS="$CFLAGS $FREETYPE_CFLAGS"
-AC_CHECK_FUNCS(FT_Get_Next_Char FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_GlyphSlot_Embolden)
-AC_CHECK_MEMBER(FT_Bitmap_Size.y_ppem,
-		HAVE_FT_BITMAP_SIZE_Y_PPEM=1,
-		HAVE_FT_BITMAP_SIZE_Y_PPEM=0,
-[#include <ft2build.h>
-#include FT_FREETYPE_H])
-AC_DEFINE_UNQUOTED(HAVE_FT_BITMAP_SIZE_Y_PPEM,$HAVE_FT_BITMAP_SIZE_Y_PPEM,
-		   [FT_Bitmap_Size structure includes y_ppem field])
-
-LIBS="$fontconfig_save_libs"
-CFLAGS="$fontconfig_save_cflags"
 
 if test "$VERSION" = "" ; then
        VERSION=$PACKAGE_VERSION;

@@ -1,5 +1,5 @@
 module_LTLIBRARIES = libvbe.la
-libvbe_la_LDFLAGS = -avoid-version
+libvbe_la_LDFLAGS = -module -avoid-version
 libvbe_la_SOURCES = vbe.c vbeModes.c vbe_module.c
 
 sdk_HEADERS = vbe.h vbeModes.h

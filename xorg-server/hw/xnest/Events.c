@@ -198,6 +198,8 @@ xnestCollectEvents(void)
     case DestroyNotify:
       if (xnestParentWindow != (Window) 0 &&
 	  X.xdestroywindow.window == xnestParentWindow)
+	CloseWellKnownConnections();
+	OsCleanup(1);
 	exit (0);
       break;
 
