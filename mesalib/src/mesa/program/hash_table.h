@@ -36,6 +36,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <assert.h>
+#include <unistd.h>
 
 struct hash_table;
 struct string_to_uint_map;
