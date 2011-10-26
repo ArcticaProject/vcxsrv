@@ -1553,13 +1553,7 @@ xf86LoadOneModule(char *name, pointer opt)
 void
 xf86UnloadSubModule(pointer mod)
 {
-    /*
-     * This is disabled for now.  The loader isn't smart enough yet to undo
-     * relocations.
-     */
-#if 0
     UnloadSubModule(mod);
-#endif
 }
 
 Bool

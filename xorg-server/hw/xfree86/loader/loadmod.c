@@ -94,6 +94,8 @@ const ModuleVersions LoaderVersionInfo = {
     ABI_FONT_VERSION
 };
 
+static int ModuleDuplicated[] = {};
+
 static void
 FreeStringList(char **paths)
 {
@@ -785,7 +787,6 @@ ModuleDescPtr
 DuplicateModule(ModuleDescPtr mod, ModuleDescPtr parent)
 {
     ModuleDescPtr ret;
-    int errmaj, errmin;
 
     if (!mod)
 	return NULL;
@@ -794,14 +795,11 @@ DuplicateModule(ModuleDescPtr mod, ModuleDescPtr parent)
     if (ret == NULL)
 	return NULL;
 
-    if (!(ret->handle = LoaderOpen(mod->path, &errmaj, &errmin))) {
-        free(ret);
-        return NULL;
-    }
+    ret->handle = mod->handle;
 
     ret->SetupProc = mod->SetupProc;
     ret->TearDownProc = mod->TearDownProc;
-    ret->TearDownData = NULL;
+    ret->TearDownData = ModuleDuplicated;
     ret->child = DuplicateModule(mod->child, ret);
     ret->sib = DuplicateModule(mod->sib, parent);
     ret->parent = parent;
@@ -1072,11 +1070,16 @@ UnloadModuleOrDriver(ModuleDescPtr mod)
     if (mod == NULL || mod->name == NULL)
 	return;
 
-    xf86MsgVerb(X_INFO, 3, "UnloadModule: \"%s\"\n", mod->name);
+    if (mod->parent)
+	xf86MsgVerb(X_INFO, 3, "UnloadSubModule: \"%s\"\n", mod->name);
+    else
+	xf86MsgVerb(X_INFO, 3, "UnloadModule: \"%s\"\n", mod->name);
 
-    if ((mod->TearDownProc) && (mod->TearDownData))
-	mod->TearDownProc(mod->TearDownData);
-    LoaderUnload(mod->name, mod->handle);
+    if (mod->TearDownData != ModuleDuplicated) {
+	if ((mod->TearDownProc) && (mod->TearDownData))
+	    mod->TearDownProc(mod->TearDownData);
+	LoaderUnload(mod->name, mod->handle);
+    }
 
     if (mod->child)
 	UnloadModuleOrDriver(mod->child);
@@ -1092,23 +1095,8 @@ UnloadSubModule(pointer _mod)
 {
     ModuleDescPtr mod = (ModuleDescPtr)_mod;
 
-    if (mod == NULL || mod->name == NULL)
-	return;
-
-    xf86MsgVerb(X_INFO, 3, "UnloadSubModule: \"%s\"\n", mod->name);
-
-    if ((mod->TearDownProc) && (mod->TearDownData))
-	mod->TearDownProc(mod->TearDownData);
-    LoaderUnload(mod->name, mod->handle);
-
     RemoveChild(mod);
-
-    if (mod->child)
-	UnloadModuleOrDriver(mod->child);
-
-    free(mod->path);
-    free(mod->name);
-    free(mod);
+    UnloadModuleOrDriver(mod);
 }
 
 static void
@@ -1135,6 +1123,7 @@ RemoveChild(ModuleDescPtr child)
     }
     if (mdp == child)
 	prevsib->sib = child->sib;
+    child->sib = NULL;
     return;
 }
 

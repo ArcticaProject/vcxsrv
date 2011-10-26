@@ -299,29 +299,29 @@ typedef struct
     uint32_t                left_rb;
     uint32_t                right_ag;
     uint32_t                right_rb;
-    int32_t                 left_x;
-    int32_t                 right_x;
-    int32_t                 stepper;
+    pixman_fixed_t	    left_x;
+    pixman_fixed_t          right_x;
+    pixman_fixed_t          stepper;
 
     pixman_gradient_stop_t *stops;
     int                     num_stops;
-    unsigned int            spread;
+    pixman_repeat_t	    repeat;
 
-    int                     need_reset;
+    pixman_bool_t           need_reset;
 } pixman_gradient_walker_t;
 
 void
 _pixman_gradient_walker_init (pixman_gradient_walker_t *walker,
                               gradient_t *              gradient,
-                              unsigned int              spread);
+			      pixman_repeat_t           repeat);
 
 void
 _pixman_gradient_walker_reset (pixman_gradient_walker_t *walker,
-                               pixman_fixed_32_32_t      pos);
+                               pixman_fixed_48_16_t      pos);
 
 uint32_t
 _pixman_gradient_walker_pixel (pixman_gradient_walker_t *walker,
-                               pixman_fixed_32_32_t      x);
+                               pixman_fixed_48_16_t      x);
 
 /*
  * Edges

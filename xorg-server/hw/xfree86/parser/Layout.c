@@ -63,7 +63,7 @@
 #include "xf86tokens.h"
 #include "Configint.h"
 #include <string.h>
-
+#include "optionstr.h"
 
 /* Needed for auto server layout */
 extern int xf86CheckBoolOption(void* optlist, const char *name, int deflt);

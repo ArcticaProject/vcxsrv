@@ -114,11 +114,13 @@ xnestChangeKeyboardControl(DeviceIntPtr pDev, KeybdCtrl *ctrl)
 int
 xnestKeyboardProc(DeviceIntPtr pDev, int onoff)
 {
+  XModifierKeymap *modifier_keymap;
   KeySym *keymap;
   int mapWidth;
   int min_keycode, max_keycode;
   KeySymsRec keySyms;
-  int i;
+  CARD8 modmap[MAP_LENGTH];
+  int i, j;
   XKeyboardState values;
   XkbDescPtr xkb;
   int op, event, error, major, minor;
@@ -130,7 +132,7 @@ xnestKeyboardProc(DeviceIntPtr pDev, int onoff)
 #ifdef _XSERVER64
       {
 	KeySym64 *keymap64;
-	int i, len;
+	int len;
 	keymap64 = XGetKeyboardMapping(xnestDisplay,
 				     min_keycode,
 				     max_keycode - min_keycode + 1,
@@ -147,7 +149,17 @@ xnestKeyboardProc(DeviceIntPtr pDev, int onoff)
 				   max_keycode - min_keycode + 1,
 				   &mapWidth);
 #endif
-      
+
+      memset(modmap, 0, sizeof(modmap));
+      modifier_keymap = XGetModifierMapping(xnestDisplay);
+      for (j = 0; j < 8; j++)
+            for(i = 0; i < modifier_keymap->max_keypermod; i++) {
+                  CARD8 keycode;
+                  if ((keycode = modifier_keymap->modifiermap[j * modifier_keymap->max_keypermod + i]))
+                      modmap[keycode] |= 1<<j;
+      }
+      XFreeModifiermap(modifier_keymap);
+
       keySyms.minKeyCode = min_keycode;
       keySyms.maxKeyCode = max_keycode;
       keySyms.mapWidth = mapWidth;
@@ -165,7 +177,12 @@ xnestKeyboardProc(DeviceIntPtr pDev, int onoff)
       XkbGetControls(xnestDisplay, XkbAllControlsMask, xkb);
 
       InitKeyboardDeviceStruct(pDev, NULL,
-			       xnestBell, xnestChangeKeyboardControl);
+                               xnestBell, xnestChangeKeyboardControl);
+
+      XkbApplyMappingChange(pDev, &keySyms, keySyms.minKeyCode,
+                            keySyms.maxKeyCode - keySyms.minKeyCode + 1,
+                            modmap, serverClient);
+
       XkbDDXChangeControls(pDev, xkb->ctrls, xkb->ctrls);
       XkbFreeKeyboard(xkb, 0, False);
       free(keymap);

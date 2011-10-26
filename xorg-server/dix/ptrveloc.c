@@ -649,13 +649,13 @@ QueryTrackers(DeviceVelocityPtr vel, int cur_t){
 	DebugAccelF("(dix prtacc) query: last tracker in effect\n");
 	used_offset = vel->num_tracker-1;
     }
-#ifdef PTRACCEL_DEBUGGING
     if(used_offset >= 0){
+#ifdef PTRACCEL_DEBUGGING
 	MotionTracker *tracker = TRACKER(vel, used_offset);
 	DebugAccelF("(dix prtacc) result: offset %i [dx: %i dy: %i diff: %i]\n",
 	            used_offset, tracker->dx, tracker->dy, cur_t - tracker->time);
-    }
 #endif
+    }
     return result;
 }
 

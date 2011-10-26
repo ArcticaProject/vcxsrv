@@ -24,16 +24,7 @@
 
 #ifndef XF86OPTIONSTR_H
 #define XF86OPTIONSTR_H
-
-/*
- * all records that need to be linked lists should contain a GenericList as
- * their first field.
- */
-typedef struct generic_list_rec
-{
-	void *next;
-}
-GenericListRec, *GenericListPtr, *glp;
+#include "list.h"
 
 /*
  * All options are stored using this data type.
@@ -48,6 +39,6 @@ typedef struct _XF86OptionRec
 }
 XF86OptionRec;
 
-typedef struct _XF86OptionRec *XF86OptionPtr;
+typedef struct _InputOption *XF86OptionPtr;
 
 #endif

@@ -427,7 +427,8 @@ extern _X_EXPORT void FreeEventList(InternalEvent *list, int num_events);
 extern void CreateClassesChangedEvent(InternalEvent *event,
                                       DeviceIntPtr master,
                                       DeviceIntPtr slave,
-                                      int type);
+                                      int flags);
+
 extern InternalEvent * UpdateFromMaster(
     InternalEvent *events,
     DeviceIntPtr pDev,
@@ -597,6 +598,10 @@ extern _X_EXPORT void valuator_mask_copy(ValuatorMask *dest,
 extern _X_EXPORT int valuator_mask_get(const ValuatorMask *mask, int valnum);
 extern _X_EXPORT double valuator_mask_get_double(const ValuatorMask *mask,
                                                  int valnum);
+extern _X_EXPORT Bool valuator_mask_fetch(const ValuatorMask *mask,
+                                          int valnum, int *val);
+extern _X_EXPORT Bool valuator_mask_fetch_double(const ValuatorMask *mask,
+                                                 int valnum, double *val);
 
 /* InputOption handling interface */
 extern _X_EXPORT InputOption* input_option_new(InputOption *list, const char *key, const char *value);

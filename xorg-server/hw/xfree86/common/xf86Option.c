@@ -44,6 +44,7 @@
 #include "xf86Xinput.h"
 #include "xf86Optrec.h"
 #include "xf86Parser.h"
+#include "optionstr.h"
 
 static Bool ParseOptionValue(int scrnIndex, XF86OptionPtr options, OptionInfoPtr p,
 			     Bool markUsed);
@@ -298,7 +299,7 @@ xf86CheckPercentOption(XF86OptionPtr optlist, const char *name, double deflt)
     return LookupPercentOption(optlist, name, deflt, FALSE);
 }
 /*
- * addNewOption() has the required property of replacing the option value
+ * xf86AddNewOption() has the required property of replacing the option value
  * if the option is already present.
  */
 XF86OptionPtr

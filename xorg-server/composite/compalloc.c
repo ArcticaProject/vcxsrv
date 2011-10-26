@@ -196,11 +196,7 @@ compRedirectWindow (ClientPtr pClient, WindowPtr pWin, int update)
 
 	anyMarked = compMarkWindows (pWin, &pLayerWin);
 
-	/* Make sure our borderClip is correct for ValidateTree */
 	RegionNull(&cw->borderClip);
-	RegionCopy(&cw->borderClip, &pWin->borderClip);
-	cw->borderClipX = pWin->drawable.x;
-	cw->borderClipY = pWin->drawable.y;
 	cw->update = CompositeRedirectAutomatic;
 	cw->clients = 0;
 	cw->oldx = COMP_ORIGIN_INVALID;
@@ -658,6 +654,13 @@ compAllocPixmap (WindowPtr pWin)
 	DamageRegister (&pWin->drawable, cw->damage);
 	cw->damageRegistered = TRUE;
     }
+
+    /* Make sure our borderClip is up to date */
+    RegionUninit(&cw->borderClip);
+    RegionCopy(&cw->borderClip, &pWin->borderClip);
+    cw->borderClipX = pWin->drawable.x;
+    cw->borderClipY = pWin->drawable.y;
+
     return TRUE;
 }
 

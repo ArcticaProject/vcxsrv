@@ -87,6 +87,8 @@ release-upload: release-check $(tar_gz) $(tar_bz2) $(sha1_tgz) $(sha1_tbz2) $(md
 	scp $(tar_gz) $(tar_bz2) $(RELEASE_XORG_HOST):$(RELEASE_XORG_DIR)
 	ssh $(RELEASE_CAIRO_HOST) "rm -f $(RELEASE_CAIRO_DIR)/LATEST-$(PACKAGE)-[0-9]* && ln -s $(tar_gz) $(RELEASE_CAIRO_DIR)/LATEST-$(PACKAGE)-$(VERSION)"
 
+RELEASE_TYPE = $$(if test "x$(PIXMAN_VERSION_MINOR)" = "x$$(echo "$(PIXMAN_VERSION_MINOR)/2*2" | bc)" ; then echo "stable release in the" ; else echo "development snapshot leading up to a stable"; fi)
+
 release-publish-message: $(HASHFILES) ensure-prev
 	@echo "Please follow the instructions in RELEASING to push stuff out and"
 	@echo "send out the announcement mails.  Here is the excerpt you need:"
@@ -94,7 +96,7 @@ release-publish-message: $(HASHFILES) ensure-prev
 	@echo "Lists:  $(RELEASE_ANNOUNCE_LIST)"
 	@echo "Subject: [ANNOUNCE] $(PACKAGE) release $(VERSION) now available"
 	@echo "============================== CUT HERE =============================="
-	@echo "A new $(PACKAGE) release $(VERSION) is now available"
+	@echo "A new $(PACKAGE) release $(VERSION) is now available. This is a $(RELEASE_TYPE)"
 	@echo ""
 	@echo "tar.gz:"
 	@echo "	$(RELEASE_CAIRO_URL)/$(tar_gz)"

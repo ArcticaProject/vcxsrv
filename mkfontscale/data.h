@@ -27,7 +27,9 @@
    URW++, and both strings appear in the notice. */
 
 static const char *notice_foundries[][2] =
-    {{"Bigelow", "b&h"},
+    {{"Iorsh", "culmus"},
+     {"Gnat", "culmus"},
+     {"Bigelow", "b&h"},
      {"Adobe", "adobe"},
      {"Bitstream", "bitstream"},
      {"Monotype", "monotype"},
@@ -42,9 +44,7 @@ static const char *notice_foundries[][2] =
      {"Microsoft", "microsoft"},
      {"Omega", "omega"},
      {"Font21", "hwan"},
-     {"HanYang System", "hanyang"},
-     {"Iorsh", "culmus"},
-     {"Gnat", "culmus"}};
+     {"HanYang System", "hanyang"}};
 
 /* This table is partly taken from ttmkfdir by Joerg Pommnitz. */
 

@@ -38,6 +38,7 @@
 #include "inpututils.h"
 #include "eventstr.h"
 #include "scrnintstr.h"
+#include "optionstr.h"
 
 /* Check if a button map change is okay with the device.
  * Returns -1 for BadValue, as it collides with MappingBusy. */
@@ -539,6 +540,42 @@ valuator_mask_get(const ValuatorMask *mask, int valuator)
 }
 
 /**
+ * Set value to the requested valuator. If the mask bit is set for this
+ * valuator, value contains the requested valuator value and TRUE is
+ * returned.
+ * If the mask bit is not set for this valuator, value is unchanged and
+ * FALSE is returned.
+ */
+Bool
+valuator_mask_fetch_double(const ValuatorMask *mask, int valuator, double *value)
+{
+    if (valuator_mask_isset(mask, valuator))
+    {
+        *value = valuator_mask_get_double(mask, valuator);
+        return TRUE;
+    } else
+        return FALSE;
+}
+
+/**
+ * Set value to the requested valuator. If the mask bit is set for this
+ * valuator, value contains the requested valuator value and TRUE is
+ * returned.
+ * If the mask bit is not set for this valuator, value is unchanged and
+ * FALSE is returned.
+ */
+Bool
+valuator_mask_fetch(const ValuatorMask *mask, int valuator, int *value)
+{
+    if (valuator_mask_isset(mask, valuator))
+    {
+        *value = valuator_mask_get(mask, valuator);
+        return TRUE;
+    } else
+        return FALSE;
+}
+
+/**
  * Remove the valuator from the mask.
  */
 void
@@ -634,8 +671,9 @@ point_on_screen(ScreenPtr pScreen, int x, int y)
 static void
 input_option_free(InputOption *o)
 {
-    free(o->key);
-    free(o->value);
+    free(o->opt_name);
+    free(o->opt_val);
+    free(o->opt_comment);
     free(o);
 }
 
@@ -665,7 +703,7 @@ input_option_new(InputOption* list, const char *key, const char *value)
 
     if (list)
     {
-        nt_list_for_each_entry(opt, list, next)
+        nt_list_for_each_entry(opt, list, list.next)
         {
             if (strcmp(input_option_get_key(opt), key) == 0)
             {
@@ -679,13 +717,13 @@ input_option_new(InputOption* list, const char *key, const char *value)
     if (!opt)
         return NULL;
 
-    nt_list_init(opt, next);
+    nt_list_init(opt, list.next);
     input_option_set_key(opt, key);
     input_option_set_value(opt, value);
 
     if (list)
     {
-        nt_list_append(opt, list, InputOption, next);
+        nt_list_append(opt, list, InputOption, list.next);
         return list;
     } else
         return opt;
@@ -696,9 +734,9 @@ input_option_free_element(InputOption *list, const char *key)
 {
     InputOption *element;
 
-    nt_list_for_each_entry(element, list, next) {
+    nt_list_for_each_entry(element, list, list.next) {
         if (strcmp(input_option_get_key(element), key) == 0) {
-            nt_list_del(element, list, InputOption, next);
+            nt_list_del(element, list, InputOption, list.next);
             input_option_free(element);
             break;
         }
@@ -714,8 +752,8 @@ input_option_free_list(InputOption **opt)
 {
     InputOption *element, *tmp;
 
-    nt_list_for_each_entry_safe(element, tmp, *opt, next) {
-        nt_list_del(element, *opt, InputOption, next);
+    nt_list_for_each_entry_safe(element, tmp, *opt, list.next) {
+        nt_list_del(element, *opt, InputOption, list.next);
         input_option_free(element);
     }
     *opt = NULL;
@@ -732,7 +770,7 @@ input_option_find(InputOption *list, const char *key)
 {
     InputOption *element;
 
-    nt_list_for_each_entry(element, list, next) {
+    nt_list_for_each_entry(element, list, list.next) {
         if (strcmp(input_option_get_key(element), key) == 0)
             return element;
     }
@@ -743,29 +781,29 @@ input_option_find(InputOption *list, const char *key)
 const char*
 input_option_get_key(const InputOption *opt)
 {
-    return opt->key;
+    return opt->opt_name;
 }
 
 const char*
 input_option_get_value(const InputOption *opt)
 {
-    return opt->value;
+    return opt->opt_val;
 }
 
 void
 input_option_set_key(InputOption *opt, const char *key)
 {
-    free(opt->key);
+    free(opt->opt_name);
     if (key)
-        opt->key = strdup(key);
+        opt->opt_name = strdup(key);
 }
 
 void
 input_option_set_value(InputOption *opt, const char *value)
 {
-    free(opt->value);
+    free(opt->opt_val);
     if (value)
-        opt->value = strdup(value);
+        opt->opt_val = strdup(value);
 }
 
 

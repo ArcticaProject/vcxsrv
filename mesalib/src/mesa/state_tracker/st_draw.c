@@ -353,9 +353,26 @@ setup_interleaved_attribs(struct gl_context *ctx,
    struct pipe_context *pipe = st->pipe;
    GLuint attr;
    const GLubyte *low_addr = NULL;
+   GLboolean usingVBO;      /* all arrays in a VBO? */
+   struct gl_buffer_object *bufobj;
+   GLuint user_buffer_size = 0;
+   GLuint vertex_size = 0;  /* bytes per vertex, in bytes */
+   GLsizei stride;
 
-   /* Find the lowest address of the arrays we're drawing */
+   /* Find the lowest address of the arrays we're drawing,
+    * Init bufobj and stride.
+    */
    if (vpv->num_inputs) {
+      const GLuint mesaAttr0 = vp->index_to_input[0];
+      const struct gl_client_array *array = arrays[mesaAttr0];
+
+      /* Since we're doing interleaved arrays, we know there'll be at most
+       * one buffer object and the stride will be the same for all arrays.
+       * Grab them now.
+       */
+      bufobj = array->BufferObj;
+      stride = array->StrideB;
+
       low_addr = arrays[vp->index_to_input[0]]->Ptr;
 
       for (attr = 1; attr < vpv->num_inputs; attr++) {
@@ -363,43 +380,23 @@ setup_interleaved_attribs(struct gl_context *ctx,
          low_addr = MIN2(low_addr, start);
       }
    }
+   else {
+      /* not sure we'll ever have zero inputs, but play it safe */
+      bufobj = NULL;
+      stride = 0;
+      low_addr = 0;
+   }
+
+   /* are the arrays in user space? */
+   usingVBO = bufobj && _mesa_is_bufferobj(bufobj);
 
    for (attr = 0; attr < vpv->num_inputs; attr++) {
       const GLuint mesaAttr = vp->index_to_input[attr];
       const struct gl_client_array *array = arrays[mesaAttr];
-      struct gl_buffer_object *bufobj = array->BufferObj;
-      struct st_buffer_object *stobj = st_buffer_object(bufobj);
       unsigned src_offset = (unsigned) (array->Ptr - low_addr);
       GLuint element_size = array->_ElementSize;
-      GLsizei stride = array->StrideB;
 
       assert(element_size == array->Size * _mesa_sizeof_type(array->Type));
-
-      if (attr == 0) {
-         if (bufobj && _mesa_is_bufferobj(bufobj)) {
-            vbuffer->buffer = NULL;
-            pipe_resource_reference(&vbuffer->buffer, stobj->buffer);
-            vbuffer->buffer_offset = pointer_to_offset(low_addr);
-         }
-         else {
-            uint divisor = array->InstanceDivisor;
-            uint last_index = divisor ? num_instances / divisor : max_index;
-            uint bytes = src_offset + stride * last_index + element_size;
-
-            vbuffer->buffer = pipe_user_buffer_create(pipe->screen,
-                                                      (void*) low_addr,
-                                                      bytes,
-                                                      PIPE_BIND_VERTEX_BUFFER);
-            vbuffer->buffer_offset = 0;
-
-            /* Track user vertex buffers. */
-            pipe_resource_reference(&st->user_attrib[0].buffer, vbuffer->buffer);
-            st->user_attrib[0].element_size = element_size;
-            st->user_attrib[0].stride = stride;
-            st->num_user_attribs = 1;
-         }
-         vbuffer->stride = stride; /* in bytes */
-      }
 
       velements[attr].src_offset = src_offset;
       velements[attr].instance_divisor = array->InstanceDivisor;
@@ -409,6 +406,54 @@ setup_interleaved_attribs(struct gl_context *ctx,
                                                          array->Format,
                                                          array->Normalized);
       assert(velements[attr].src_format);
+
+      if (!usingVBO) {
+         /* how many bytes referenced by this attribute array? */
+         uint divisor = array->InstanceDivisor;
+         uint last_index = divisor ? num_instances / divisor : max_index;
+         uint bytes = src_offset + stride * last_index + element_size;
+
+         user_buffer_size = MAX2(user_buffer_size, bytes);
+
+         /* update vertex size */
+         vertex_size = MAX2(vertex_size, src_offset + element_size);
+      }
+   }
+
+   /*
+    * Return the vbuffer info and setup user-space attrib info, if needed.
+    */
+   if (vpv->num_inputs == 0) {
+      /* just defensive coding here */
+      vbuffer->buffer = NULL;
+      vbuffer->buffer_offset = 0;
+      vbuffer->stride = 0;
+      st->num_user_attribs = 0;
+   }
+   else if (usingVBO) {
+      /* all interleaved arrays in a VBO */
+      struct st_buffer_object *stobj = st_buffer_object(bufobj);
+
+      vbuffer->buffer = NULL;
+      pipe_resource_reference(&vbuffer->buffer, stobj->buffer);
+      vbuffer->buffer_offset = pointer_to_offset(low_addr);
+      vbuffer->stride = stride;
+      st->num_user_attribs = 0;
+   }
+   else {
+      /* all interleaved arrays in user memory */
+      vbuffer->buffer = pipe_user_buffer_create(pipe->screen,
+                                                (void*) low_addr,
+                                                user_buffer_size,
+                                                PIPE_BIND_VERTEX_BUFFER);
+      vbuffer->buffer_offset = 0;
+      vbuffer->stride = stride;
+
+      /* Track user vertex buffers. */
+      pipe_resource_reference(&st->user_attrib[0].buffer, vbuffer->buffer);
+      st->user_attrib[0].element_size = vertex_size;
+      st->user_attrib[0].stride = stride;
+      st->num_user_attribs = 1;
    }
 }
 
@@ -580,6 +625,127 @@ check_uniforms(struct gl_context *ctx)
          }
       }
    }
+}
+
+/** Helper code for primitive restart fallback */
+#define DO_DRAW(pipe, cur_start, cur_count) \
+   do { \
+      info.start = cur_start; \
+      info.count = cur_count; \
+      if (u_trim_pipe_prim(info.mode, &info.count)) { \
+         if (transfer) \
+            pipe_buffer_unmap(pipe, transfer); \
+         pipe->draw_vbo(pipe, &info); \
+         if (transfer) { \
+            ptr = pipe_buffer_map(pipe, ibuffer->buffer, PIPE_TRANSFER_READ, &transfer); \
+            assert(ptr != NULL); \
+            ptr = ADD_POINTERS(ptr, ibuffer->offset); \
+         } \
+      } \
+   } while(0)
+      
+/** More helper code for primitive restart fallback */
+#define PRIM_RESTART_LOOP(elements) \
+   do { \
+      for (i = start; i < end; i++) { \
+         if (elements[i] == info.restart_index) { \
+            if (cur_count > 0) { \
+               /* draw elts up to prev pos */ \
+               DO_DRAW(pipe, cur_start, cur_count); \
+            } \
+            /* begin new prim at next elt */ \
+            cur_start = i + 1; \
+            cur_count = 0; \
+         } \
+         else { \
+            cur_count++; \
+         } \
+      } \
+      if (cur_count > 0) { \
+         DO_DRAW(pipe, cur_start, cur_count); \
+      } \
+   } while (0)
+
+static void
+handle_fallback_primitive_restart(struct pipe_context *pipe,
+                                  const struct _mesa_index_buffer *ib,
+                                  struct pipe_index_buffer *ibuffer,
+                                  struct pipe_draw_info *orig_info)
+{
+   const unsigned start = orig_info->start;
+   const unsigned count = orig_info->count;
+   const unsigned end = start + count;
+   struct pipe_draw_info info = *orig_info;
+   struct pipe_transfer *transfer = NULL;
+   unsigned instance, i, cur_start, cur_count;
+   const void *ptr;
+
+   info.primitive_restart = FALSE;
+
+   if (!info.indexed) {
+      /* Splitting the draw arrays call is handled by the VBO module */
+      if (u_trim_pipe_prim(info.mode, &info.count))
+         pipe->draw_vbo(pipe, &info);
+
+      return;
+   }
+
+   /* info.indexed == TRUE */
+   assert(ibuffer);
+   assert(ibuffer->buffer);
+
+   if (ib) {
+      struct gl_buffer_object *bufobj = ib->obj;
+      if (bufobj && bufobj->Name) {
+         ptr = NULL;
+      }
+      else {
+         ptr = ib->ptr;
+      }
+   } else {
+      ptr = NULL;
+   }
+
+   if (!ptr)
+      ptr = pipe_buffer_map(pipe, ibuffer->buffer, PIPE_TRANSFER_READ, &transfer);
+
+   if (!ptr)
+     return;
+   ptr = ADD_POINTERS(ptr, ibuffer->offset);
+
+   /* Need to loop over instances as well to preserve draw order */
+   for (instance = 0; instance < orig_info->instance_count; instance++) {
+      info.start_instance = instance + orig_info->start_instance;
+      info.instance_count = 1;
+      cur_start = start;
+      cur_count = 0;
+
+      switch (ibuffer->index_size) {
+      case 1:
+         {
+            const ubyte *elt_ub = (const ubyte *)ptr; 
+            PRIM_RESTART_LOOP(elt_ub);
+         }
+         break;
+      case 2:
+         {
+            const ushort *elt_us = (const ushort *)ptr;
+            PRIM_RESTART_LOOP(elt_us);
+         }
+         break;
+      case 4:
+         {
+            const uint *elt_ui = (const uint *)ptr;
+            PRIM_RESTART_LOOP(elt_ui);
+         }
+         break;
+      default:
+         assert(0 && "bad index_size in handle_fallback_primitive_restart()");
+      }
+   }
+
+   if (transfer)
+      pipe_buffer_unmap(pipe, transfer);
 }
 
 
@@ -794,7 +960,22 @@ st_draw_vbo(struct gl_context *ctx,
          info.max_index = info.start + info.count - 1;
       }
 
-      if (u_trim_pipe_prim(info.mode, &info.count))
+      if (info.primitive_restart) {
+         /*
+          * Handle primitive restart for drivers that doesn't support it.
+          *
+          * The VBO module handles restart inside of draw_arrays for us,
+          * but we should still remove the primitive_restart flag on the
+          * info struct, the fallback function does this for us. Just
+          * remove the flag for all drivers in this case as well.
+          */
+         if (st->sw_primitive_restart || !info.indexed)
+            handle_fallback_primitive_restart(pipe, ib, &ibuffer, &info);
+         else
+            /* don't trim, restarts might be inside index list */
+            pipe->draw_vbo(pipe, &info);
+      }
+      else if (u_trim_pipe_prim(info.mode, &info.count))
          pipe->draw_vbo(pipe, &info);
    }
 

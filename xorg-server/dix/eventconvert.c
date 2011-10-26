@@ -43,10 +43,13 @@
 #include "inputstr.h"
 #include "misc.h"
 #include "eventstr.h"
+#include "exevents.h"
 #include "exglobals.h"
 #include "eventconvert.h"
+#include "inpututils.h"
 #include "xiquerydevice.h"
 #include "xkbsrv.h"
+#include "inpututils.h"
 
 
 static int countValuators(DeviceEvent *ev, int *first);
@@ -482,6 +485,40 @@ appendValuatorInfo(DeviceChangedEvent *dce, xXIValuatorInfo *info, int axisnumbe
 }
 
 static int
+appendScrollInfo(DeviceChangedEvent *dce, xXIScrollInfo *info, int axisnumber)
+{
+    if (dce->valuators[axisnumber].scroll.type == SCROLL_TYPE_NONE)
+        return 0;
+
+    info->type = XIScrollClass;
+    info->length = sizeof(xXIScrollInfo)/4;
+    info->number = axisnumber;
+    switch(dce->valuators[axisnumber].scroll.type)
+    {
+        case SCROLL_TYPE_VERTICAL:
+            info->scroll_type = XIScrollTypeVertical;
+            break;
+        case SCROLL_TYPE_HORIZONTAL:
+            info->scroll_type = XIScrollTypeHorizontal;
+            break;
+        default:
+            ErrorF("[Xi] Unknown scroll type %d. This is a bug.\n", dce->valuators[axisnumber].scroll.type);
+            break;
+    }
+    info->increment = double_to_fp3232(dce->valuators[axisnumber].scroll.increment);
+    info->sourceid = dce->sourceid;
+
+    info->flags = 0;
+
+    if (dce->valuators[axisnumber].scroll.flags & SCROLL_FLAG_DONT_EMULATE)
+        info->flags |= XIScrollFlagNoEmulation;
+    if (dce->valuators[axisnumber].scroll.flags & SCROLL_FLAG_PREFERRED)
+        info->flags |= XIScrollFlagPreferred;
+
+    return info->length * 4;
+}
+
+static int
 eventToDeviceChanged(DeviceChangedEvent *dce, xEvent **xi)
 {
     xXIDeviceChangedEvent *dcce;
@@ -496,7 +533,15 @@ eventToDeviceChanged(DeviceChangedEvent *dce, xEvent **xi)
         len += pad_to_int32(bits_to_bytes(dce->buttons.num_buttons));
     }
     if (dce->num_valuators)
+    {
+        int i;
+
         len += sizeof(xXIValuatorInfo) * dce->num_valuators;
+
+        for (i = 0; i < dce->num_valuators; i++)
+            if (dce->valuators[i].scroll.type != SCROLL_TYPE_NONE)
+                len += sizeof(xXIScrollInfo);
+    }
 
     nkeys = (dce->keys.max_keycode > 0) ?
                 dce->keys.max_keycode - dce->keys.min_keycode + 1 : 0;
@@ -543,6 +588,15 @@ eventToDeviceChanged(DeviceChangedEvent *dce, xEvent **xi)
         dcce->num_classes += dce->num_valuators;
         for (i = 0; i < dce->num_valuators; i++)
             ptr += appendValuatorInfo(dce, (xXIValuatorInfo*)ptr, i);
+
+        for (i = 0; i < dce->num_valuators; i++)
+        {
+            if (dce->valuators[i].scroll.type != SCROLL_TYPE_NONE)
+            {
+                dcce->num_classes++;
+                ptr += appendScrollInfo(dce, (xXIScrollInfo*)ptr, i);
+            }
+        }
     }
 
     *xi = (xEvent*)dcce;
@@ -633,9 +687,7 @@ eventToDeviceEvent(DeviceEvent *ev, xEvent **xi)
         if (BitIsOn(ev->valuators.mask, i))
         {
             SetBit(ptr, i);
-            axisval->integral = trunc(ev->valuators.data[i]);
-            axisval->frac = (ev->valuators.data[i] - axisval->integral) *
-                            (1 << 16) * (1 << 16);
+            *axisval = double_to_fp3232(ev->valuators.data[i]);
             axisval++;
         }
     }
@@ -679,13 +731,8 @@ eventToRawEvent(RawDeviceEvent *ev, xEvent **xi)
         if (BitIsOn(ev->valuators.mask, i))
         {
             SetBit(ptr, i);
-            axisval->integral = trunc(ev->valuators.data[i]);
-            axisval->frac = (ev->valuators.data[i] - axisval->integral) *
-                            (1 << 16) * (1 << 16);
-            axisval_raw->integral = trunc(ev->valuators.data_raw[i]);
-            axisval_raw->frac =
-                (ev->valuators.data_raw[i] - axisval_raw->integral) *
-                  (1 << 16) * (1 << 16);
+            *axisval =  double_to_fp3232(ev->valuators.data[i]);
+            *axisval_raw = double_to_fp3232(ev->valuators.data_raw[i]);
             axisval++;
             axisval_raw++;
         }

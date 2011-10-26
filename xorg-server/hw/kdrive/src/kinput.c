@@ -49,6 +49,7 @@
 #include "eventstr.h"
 #include "xserver-properties.h"
 #include "inpututils.h"
+#include "optionstr.h"
 
 #define AtomFromName(x) MakeAtom(x, strlen(x), 1)
 
@@ -344,7 +345,7 @@ KdEnableInput (void)
 }
 
 static KdKeyboardDriver *
-KdFindKeyboardDriver (char *name)
+KdFindKeyboardDriver (const char *name)
 {
     KdKeyboardDriver *ret;
 
@@ -361,7 +362,7 @@ KdFindKeyboardDriver (char *name)
 }
 
 static KdPointerDriver *
-KdFindPointerDriver (char *name)
+KdFindPointerDriver (const char *name)
 {
     KdPointerDriver *ret;
 
@@ -1040,33 +1041,39 @@ KdRemovePointer (KdPointerInfo *pi)
 static Bool
 KdGetOptions (InputOption **options, char *string)
 {
-    InputOption     *newopt = NULL, **tmpo = NULL;
+    InputOption     *newopt = NULL;
+    char            *key = NULL,
+                    *value = NULL;
     int             tam_key = 0;
-
-    newopt = calloc(1, sizeof (InputOption));
-    if (!newopt)
-        return FALSE;
-
-    for (tmpo = options; *tmpo; tmpo = &(*tmpo)->next)
-        ; /* Hello, I'm here */
-    *tmpo = newopt;
 
     if (strchr(string, '='))
     {
         tam_key = (strchr(string, '=') - string);
-        newopt->key = (char *)malloc(tam_key);
-        strncpy(newopt->key, string, tam_key);
-        newopt->key[tam_key] = '\0';
-        newopt->value = strdup(strchr(string, '=') + 1);
+        key = malloc(tam_key + 1);
+        if (!key)
+            goto out;
+
+        strncpy(key, string, tam_key);
+        key[tam_key] = '\0';
+        value = strdup(strchr(string, '=') + 1);
+        if (!value)
+            goto out;
     }
     else
     {
-        newopt->key = strdup(string);
-        newopt->value = NULL;
+        key = strdup(string);
+        value = NULL;
     }
-    newopt->next = NULL;
 
-    return TRUE;
+    newopt = input_option_new(*options, key, value);
+    if (newopt)
+        *options = newopt;
+
+out:
+    free(key);
+    free(value);
+
+    return (newopt != NULL);
 }
 
 static void
@@ -1074,23 +1081,26 @@ KdParseKbdOptions (KdKeyboardInfo *ki)
 {
     InputOption *option = NULL;
 
-    for (option = ki->options; option; option = option->next)
+    nt_list_for_each_entry(option, ki->options, list.next)
     {
-        if (strcasecmp(option->key, "XkbRules") == 0)
-            ki->xkbRules = option->value;
-        else if (strcasecmp(option->key, "XkbModel") == 0)
-            ki->xkbModel = option->value;
-        else if (strcasecmp(option->key, "XkbLayout") == 0)
-            ki->xkbLayout = option->value;
-        else if (strcasecmp(option->key, "XkbVariant") == 0)
-            ki->xkbVariant = option->value;
-        else if (strcasecmp(option->key, "XkbOptions") == 0)
-            ki->xkbOptions = option->value;
-        else if (!strcasecmp (option->key, "device"))
-            ki->path = strdup(option->value);
+        const char *key = input_option_get_key(option);
+        const char *value = input_option_get_value(option);
+
+        if (strcasecmp(key, "XkbRules") == 0)
+            ki->xkbRules = strdup(value);
+        else if (strcasecmp(key, "XkbModel") == 0)
+            ki->xkbModel = strdup(value);
+        else if (strcasecmp(key, "XkbLayout") == 0)
+            ki->xkbLayout = strdup(value);
+        else if (strcasecmp(key, "XkbVariant") == 0)
+            ki->xkbVariant = strdup(value);
+        else if (strcasecmp(key, "XkbOptions") == 0)
+            ki->xkbOptions = strdup(value);
+        else if (!strcasecmp (key, "device"))
+            ki->path = strdup(value);
         else
            ErrorF("Kbd option key (%s) of value (%s) not assigned!\n",
-                    option->key, option->value);
+                    key, value);
     }
 }
 
@@ -1171,23 +1181,26 @@ KdParsePointerOptions (KdPointerInfo *pi)
 {
     InputOption *option = NULL;
 
-    for (option = pi->options; option; option = option->next)
+    nt_list_for_each_entry(option, pi->options, list.next)
     {
-        if (!strcmp (option->key, "emulatemiddle"))
+        const char *key = input_option_get_key(option);
+        const char *value = input_option_get_value(option);
+
+        if (!strcmp (key, "emulatemiddle"))
             pi->emulateMiddleButton = TRUE;
-        else if (!strcmp (option->key, "noemulatemiddle"))
+        else if (!strcmp (key, "noemulatemiddle"))
             pi->emulateMiddleButton = FALSE;
-        else if (!strcmp (option->key, "transformcoord"))
+        else if (!strcmp (key, "transformcoord"))
             pi->transformCoordinates = TRUE;
-        else if (!strcmp (option->key, "rawcoord"))
+        else if (!strcmp (key, "rawcoord"))
             pi->transformCoordinates = FALSE;
-        else if (!strcasecmp (option->key, "device"))
-            pi->path = strdup(option->value);
-        else if (!strcasecmp (option->key, "protocol"))
-            pi->protocol = strdup(option->value);
+        else if (!strcasecmp (key, "device"))
+            pi->path = strdup(value);
+        else if (!strcasecmp (key, "protocol"))
+            pi->protocol = strdup(value);
         else
             ErrorF("Pointer option key (%s) of value (%s) not assigned!\n",
-                    option->key, option->value);
+                    key, value);
     }
 }
 
@@ -2216,14 +2229,17 @@ NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
     KdPointerInfo *pi = NULL;
     KdKeyboardInfo *ki = NULL;
 
-    for (option = options; option; option = option->next) {
-        if (strcmp(option->key, "type") == 0) {
-            if (strcmp(option->value, "pointer") == 0) {
+    nt_list_for_each_entry(option, options, list.next) {
+        const char *key = input_option_get_key(option);
+        const char *value = input_option_get_value(option);
+
+        if (strcmp(key, "type") == 0) {
+            if (strcmp(value, "pointer") == 0) {
                 pi = KdNewPointer();
                 if (!pi)
                     return BadAlloc;
             }
-            else if (strcmp(option->value, "keyboard") == 0) {
+            else if (strcmp(value, "keyboard") == 0) {
                 ki = KdNewKeyboard();
                 if (!ki)
                     return BadAlloc;
@@ -2234,16 +2250,16 @@ NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
             }
         }
 #ifdef CONFIG_HAL
-        else if (strcmp(option->key, "_source") == 0 &&
-                 strcmp(option->value, "server/hal") == 0)
+        else if (strcmp(key, "_source") == 0 &&
+                 strcmp(value, "server/hal") == 0)
         {
             ErrorF("Ignoring device from HAL.\n");
             return BadValue;
         }
 #endif
 #ifdef CONFIG_UDEV
-        else if (strcmp(option->key, "_source") == 0 &&
-                 strcmp(option->value, "server/udev") == 0)
+        else if (strcmp(key, "_source") == 0 &&
+                 strcmp(value, "server/udev") == 0)
         {
             ErrorF("Ignoring device from udev.\n");
             return BadValue;
@@ -2258,16 +2274,19 @@ NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
 
     /* FIXME: change this code below to use KdParseKbdOptions and
      * KdParsePointerOptions */
-    for (option = options; option; option = option->next) {
-        if (strcmp(option->key, "device") == 0) {
-            if (pi && option->value)
-                pi->path = strdup(option->value);
-            else if (ki && option->value)
-                ki->path = strdup(option->value);
+    nt_list_for_each_entry(option, options, list.next) {
+        const char *key = input_option_get_key(option);
+        const char *value = input_option_get_value(option);
+
+        if (strcmp(key, "device") == 0) {
+            if (pi && value)
+                pi->path = strdup(value);
+            else if (ki && value)
+                ki->path = strdup(value);
         }
-        else if (strcmp(option->key, "driver") == 0) {
+        else if (strcmp(key, "driver") == 0) {
             if (pi) {
-                pi->driver = KdFindPointerDriver(option->value);
+                pi->driver = KdFindPointerDriver(value);
                 if (!pi->driver) {
                     ErrorF("couldn't find driver!\n");
                     KdFreePointer(pi);
@@ -2276,7 +2295,7 @@ NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
                 pi->options = options;
             }
             else if (ki) {
-                ki->driver = KdFindKeyboardDriver(option->value);
+                ki->driver = KdFindKeyboardDriver(value);
                 if (!ki->driver) {
                     ErrorF("couldn't find driver!\n");
                     KdFreeKeyboard(ki);

@@ -45,15 +45,12 @@ static char vtname[11];
 static struct termios tty_attr; /* tty state to restore */
 static int tty_mode; /* kbd mode to restore */
 
-static void *console_handler;
-
 static void
 drain_console(int fd, void *closure)
 {
     errno = 0;
     if (tcflush(fd, TCIOFLUSH) == -1 && errno == EIO) {
-	xf86RemoveGeneralHandler(console_handler);
-	console_handler = NULL;
+        xf86SetConsoleHandler(NULL, NULL);
     }
 }
 
@@ -257,10 +254,11 @@ xf86CloseConsole(void)
         return;
     }
 
-    if (console_handler) {
-	xf86RemoveGeneralHandler(console_handler);
-	console_handler = NULL;
-    };
+    /*
+     * unregister the drain_console handler
+     * - what to do if someone else changed it in the meantime?
+     */
+    xf86SetConsoleHandler(NULL, NULL);
 
     /* Back to text mode ... */
     SYSCALL(ret = ioctl(xf86Info.consoleFd, KDSETMODE, KD_TEXT));

@@ -58,27 +58,6 @@
 
 
 /**
- * We allocate texture memory on 512-byte boundaries so we can use MMX/SSE
- * elsewhere.
- */
-void *
-_mesa_alloc_texmemory(GLsizei bytes)
-{
-   return _mesa_align_malloc(bytes, 512);
-}
-
-
-/**
- * Free texture memory allocated with _mesa_alloc_texmemory()
- */
-void
-_mesa_free_texmemory(void *m)
-{
-   _mesa_align_free(m);
-}
-
-
-/**
  * Return the simple base format for a given internal texture format.
  * For example, given GL_LUMINANCE12_ALPHA4, return GL_LUMINANCE_ALPHA.
  *
@@ -599,29 +578,6 @@ _mesa_new_texture_image( struct gl_context *ctx )
 
 
 /**
- * Free texture image data.
- * This function is a fallback called via ctx->Driver.FreeTextureImageBuffer().
- *
- * \param texImage texture image.
- *
- * Free the texture image data if it's not marked as client data.
- */
-void
-_mesa_free_texture_image_data(struct gl_context *ctx,
-                              struct gl_texture_image *texImage)
-{
-   (void) ctx;
-
-   if (texImage->Data) {
-      /* free the old texture data */
-      _mesa_free_texmemory(texImage->Data);
-   }
-
-   texImage->Data = NULL;
-}
-
-
-/**
  * Free a gl_texture_image and associated data.
  * This function is a fallback called via ctx->Driver.DeleteTextureImage().
  *
@@ -638,11 +594,6 @@ _mesa_delete_texture_image(struct gl_context *ctx,
     */
    ASSERT(ctx->Driver.FreeTextureImageBuffer);
    ctx->Driver.FreeTextureImageBuffer( ctx, texImage );
-
-   ASSERT(texImage->Data == NULL);
-   if (texImage->ImageOffsets)
-      free(texImage->ImageOffsets);
-   free(texImage);
 }
 
 
@@ -1084,18 +1035,12 @@ clear_teximage_fields(struct gl_texture_image *img)
    img->Width = 0;
    img->Height = 0;
    img->Depth = 0;
-   img->RowStride = 0;
-   if (img->ImageOffsets) {
-      free(img->ImageOffsets);
-      img->ImageOffsets = NULL;
-   }
    img->Width2 = 0;
    img->Height2 = 0;
    img->Depth2 = 0;
    img->WidthLog2 = 0;
    img->HeightLog2 = 0;
    img->DepthLog2 = 0;
-   img->Data = NULL;
    img->TexFormat = MESA_FORMAT_NONE;
 }
 
@@ -1123,8 +1068,6 @@ _mesa_init_teximage_fields(struct gl_context *ctx, GLenum target,
                            GLint border, GLenum internalFormat,
                            gl_format format)
 {
-   GLint i;
-
    ASSERT(img);
    ASSERT(width >= 0);
    ASSERT(height >= 0);
@@ -1160,19 +1103,6 @@ _mesa_init_teximage_fields(struct gl_context *ctx, GLenum target,
    }
 
    img->MaxLog2 = MAX2(img->WidthLog2, img->HeightLog2);
-
-   /* RowStride and ImageOffsets[] describe how to address texels in 'Data' */
-   img->RowStride = width;
-   /* Allocate the ImageOffsets array and initialize to typical values.
-    * We allocate the array for 1D/2D textures too in order to avoid special-
-    * case code in the texstore routines.
-    */
-   if (img->ImageOffsets)
-      free(img->ImageOffsets);
-   img->ImageOffsets = (GLuint *) malloc(depth * sizeof(GLuint));
-   for (i = 0; i < depth; i++) {
-      img->ImageOffsets[i] = i * width * height;
-   }
 
    img->TexFormat = format;
 }
@@ -2409,7 +2339,6 @@ teximage(struct gl_context *ctx, GLuint dims,
 
             ctx->Driver.FreeTextureImageBuffer(ctx, texImage);
 
-            ASSERT(texImage->Data == NULL);
             texFormat = _mesa_choose_texture_format(ctx, texObj, target, level,
                                                     internalFormat, format,
                                                     type);
@@ -2548,7 +2477,6 @@ _mesa_EGLImageTargetTexture2DOES (GLenum target, GLeglImageOES image)
    } else {
       ctx->Driver.FreeTextureImageBuffer(ctx, texImage);
 
-      ASSERT(texImage->Data == NULL);
       ctx->Driver.EGLImageTargetTexture2D(ctx, target,
 					  texObj, texImage, image);
 
@@ -3370,7 +3298,6 @@ compressedteximage(struct gl_context *ctx, GLuint dims,
             gl_format texFormat;
 
             ctx->Driver.FreeTextureImageBuffer(ctx, texImage);
-            ASSERT(texImage->Data == NULL);
 
             texFormat = _mesa_choose_texture_format(ctx, texObj, target, level,
                                                     internalFormat, GL_NONE,

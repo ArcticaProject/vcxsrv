@@ -41,6 +41,7 @@
 #include "xserver-properties.h"
 #include "exevents.h"
 #include "xace.h"
+#include "inpututils.h"
 
 #include "xiquerydevice.h"
 
@@ -351,8 +352,7 @@ ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info, int axisnumber,
     info->min.frac = 0;
     info->max.integral = v->axes[axisnumber].max_value;
     info->max.frac = 0;
-    info->value.integral = (int)v->axisVal[axisnumber];
-    info->value.frac = (int)(v->axisVal[axisnumber] * (1 << 16) * (1 << 16));
+    info->value = double_to_fp3232(v->axisVal[axisnumber]);
     info->resolution = v->axes[axisnumber].resolution;
     info->number = axisnumber;
     info->mode = valuator_get_mode(dev, axisnumber);
@@ -402,8 +402,7 @@ ListScrollInfo(DeviceIntPtr dev, xXIScrollInfo *info, int axisnumber)
             ErrorF("[Xi] Unknown scroll type %d. This is a bug.\n", axis->scroll.type);
             break;
     }
-    info->increment.integral = (int)axis->scroll.increment;
-    info->increment.frac = (unsigned int)(axis->scroll.increment * (1UL << 16) * (1UL << 16));
+    info->increment = double_to_fp3232(axis->scroll.increment);
     info->sourceid = v->sourceid;
 
     info->flags = 0;

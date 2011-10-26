@@ -1915,19 +1915,25 @@ xf86SetScrnInfoModes (ScrnInfoPtr scrn)
 		break;
     }
 
-    if (scrn->modes != NULL) {
-	/* For some reason, scrn->modes is circular, unlike the other mode
-	 * lists.  How great is that?
-	 */
-	for (last = scrn->modes; last && last->next; last = last->next)
-	    ;
-	last->next = scrn->modes;
-	scrn->modes->prev = last;
-	if (mode) {
-	    while (scrn->modes != mode)
-		scrn->modes = scrn->modes->next;
-	}
+    if (!scrn->modes) {
+	scrn->modes = xf86ModesAdd(scrn->modes,
+				   xf86CVTMode(scrn->display->virtualX,
+					       scrn->display->virtualY,
+					       60, 0, 0));
     }
+
+    /* For some reason, scrn->modes is circular, unlike the other mode
+     * lists.  How great is that?
+     */
+    for (last = scrn->modes; last && last->next; last = last->next)
+	;
+    last->next = scrn->modes;
+    scrn->modes->prev = last;
+    if (mode) {
+	while (scrn->modes != mode)
+	    scrn->modes = scrn->modes->next;
+    }
+
     scrn->currentMode = scrn->modes;
 #ifdef XFreeXDGA
     if (scrn->pScreen)
@@ -2060,13 +2066,28 @@ xf86TargetPreferred(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
 		if (o == p)
 		    continue;
 
-		for (mode = output->probed_modes; mode; mode = mode->next) {
-		    Rotation r = output->initial_rotation;
-		    if (xf86ModeWidth(mode, r) == pref_width &&
-			    xf86ModeHeight(mode, r) == pref_height) {
+		/*
+		 * First see if the preferred mode matches on the next
+		 * output as well.  This catches the common case of identical
+		 * monitors and makes sure they all have the same timings
+		 * and refresh.  If that fails, we fall back to trying to
+		 * match just width & height.
+		 */
+		mode = xf86OutputHasPreferredMode(output, pref_width,
+						  pref_height);
+		if (mode && xf86ModesEqual(mode, preferred[p])) {
 			preferred[o] = mode;
 			match = TRUE;
-		    }
+		} else {
+			for (mode = output->probed_modes; mode;
+			     mode = mode->next) {
+				Rotation r = output->initial_rotation;
+				if (xf86ModeWidth(mode, r) == pref_width &&
+				    xf86ModeHeight(mode, r) == pref_height) {
+					preferred[o] = mode;
+					match = TRUE;
+				}
+			}
 		}
 
 		all_match &= match;
@@ -2514,16 +2535,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 			      width, height);
     }
 
-    if (have_outputs) {
-	/* Mirror output modes to scrn mode list */
-	xf86SetScrnInfoModes (scrn);
-    } else {
-	/* Clear any existing modes from scrn->modes */
-	while (scrn->modes != NULL)
-	    xf86DeleteMode(&scrn->modes, scrn->modes);
-	scrn->modes = xf86ModesAdd(scrn->modes,
-				   xf86CVTMode(width, height, 60, 0, 0));
-    }
+    xf86SetScrnInfoModes (scrn);
 
     success = TRUE;
  bailout:

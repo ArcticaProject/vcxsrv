@@ -569,6 +569,64 @@ miRenderPixelToColor (PictFormatPtr format,
     }
 }
 
+void
+miTriStrip (CARD8	    op,
+	    PicturePtr	    pSrc,
+	    PicturePtr	    pDst,
+	    PictFormatPtr  maskFormat,
+	    INT16	    xSrc,
+	    INT16	    ySrc,
+	    int		    npoints,
+	    xPointFixed    *points)
+{
+    xTriangle           *tris, *tri;
+    int                 ntri;
+
+    ntri = npoints - 2;
+    tris = malloc(ntri * sizeof (xTriangle));
+    if (!tris)
+        return;
+
+    for (tri = tris; npoints >= 3; npoints--, points++, tri++)
+    {
+        tri->p1 = points[0];
+        tri->p2 = points[1];
+        tri->p3 = points[2];
+    }
+    CompositeTriangles (op, pSrc, pDst, maskFormat, xSrc, ySrc, ntri, tris);
+    free(tris);
+}
+
+void
+miTriFan (CARD8		op,
+	  PicturePtr	pSrc,
+	  PicturePtr	pDst,
+	  PictFormatPtr	maskFormat,
+	  INT16		xSrc,
+	  INT16		ySrc,
+	  int		npoints,
+	  xPointFixed	*points)
+{
+    xTriangle		*tris, *tri;
+    xPointFixed		*first;
+    int			ntri;
+
+    ntri = npoints - 2;
+    tris = malloc(ntri * sizeof (xTriangle));
+    if (!tris)
+	return;
+
+    first = points++;
+    for (tri = tris; npoints >= 3; npoints--, points++, tri++)
+    {
+	tri->p1 = *first;
+	tri->p2 = points[0];
+	tri->p3 = points[1];
+    }
+    CompositeTriangles (op, pSrc, pDst, maskFormat, xSrc, ySrc, ntri, tris);
+    free(tris);
+}
+
 Bool
 miPictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
 {
@@ -601,6 +659,9 @@ miPictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     ps->RasterizeTrapezoid = 0;			/* requires DDX support */
     ps->AddTraps	= 0;			/* requires DDX support */
     ps->AddTriangles	= 0;			/* requires DDX support */
+
+    ps->TriStrip	= miTriStrip; /* converts call to CompositeTriangles */
+    ps->TriFan		= miTriFan;
 
     return TRUE;
 }

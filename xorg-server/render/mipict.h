@@ -140,6 +140,26 @@ miCompositeRects (CARD8		op,
 		  xRectangle    *rects);
 
 extern _X_EXPORT void
+miTriStrip (CARD8	    op,
+	    PicturePtr	    pSrc,
+	    PicturePtr	    pDst,
+	    PictFormatPtr  maskFormat,
+	    INT16	    xSrc,
+	    INT16	    ySrc,
+	    int		    npoints,
+	    xPointFixed    *points);
+
+extern _X_EXPORT void
+miTriFan (CARD8		op,
+	  PicturePtr	pSrc,
+	  PicturePtr	pDst,
+	  PictFormatPtr	maskFormat,
+	  INT16		xSrc,
+	  INT16		ySrc,
+	  int		npoints,
+	  xPointFixed	*points);
+
+extern _X_EXPORT void
 miTrapezoidBounds (int ntrap, xTrapezoid *traps, BoxPtr box);
 
 extern _X_EXPORT void

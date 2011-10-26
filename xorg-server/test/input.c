@@ -40,6 +40,7 @@
 #include "dixgrabs.h"
 #include "eventstr.h"
 #include "inpututils.h"
+#include "mi.h"
 #include "assert.h"
 
 /**
@@ -1199,14 +1200,19 @@ static void dix_input_valuator_masks(void)
     assert(valuator_mask_num_valuators(mask) == num_vals);
     for (i = 0; i < nvaluators; i++)
     {
+        double val;
         if (i < first_val || i >= first_val + num_vals)
+        {
             assert(!valuator_mask_isset(mask, i));
-        else
+            assert(!valuator_mask_fetch_double(mask, i, &val));
+        } else
         {
             assert(valuator_mask_isset(mask, i));
             assert(valuator_mask_get(mask, i) == val_ranged[i - first_val]);
             assert(valuator_mask_get_double(mask, i) ==
                     val_ranged[i - first_val]);
+            assert(valuator_mask_fetch_double(mask, i, &val));
+            assert(val_ranged[i - first_val] == val);
         }
     }
 
@@ -1218,10 +1224,18 @@ static void dix_input_valuator_masks(void)
 
     for (i = 0; i < nvaluators; i++)
     {
+        double a, b;
         assert(valuator_mask_isset(mask, i) == valuator_mask_isset(copy, i));
+
+        if (!valuator_mask_isset(mask, i))
+            continue;
+
         assert(valuator_mask_get(mask, i) == valuator_mask_get(copy, i));
         assert(valuator_mask_get_double(mask, i) ==
                 valuator_mask_get_double(copy, i));
+        assert(valuator_mask_fetch_double(mask, i, &a));
+        assert(valuator_mask_fetch_double(copy, i, &b));
+        assert(a == b);
     }
 
     valuator_mask_free(&mask);
@@ -1467,8 +1481,6 @@ _test_double_fp16_values(double orig_d)
 {
     FP1616 first_fp16, final_fp16;
     double final_d;
-    char first_fp16_s[64];
-    char final_fp16_s[64];
 
     if (orig_d > 0x7FFF) {
         printf("Test out of range\n");
@@ -1479,10 +1491,15 @@ _test_double_fp16_values(double orig_d)
     final_d = fp1616_to_double(first_fp16);
     final_fp16 = double_to_fp1616(final_d);
 
-    snprintf(first_fp16_s, sizeof(first_fp16_s), "%d + %u * 2^-16", (first_fp16 & 0xffff0000) >> 16, first_fp16 & 0xffff);
-    snprintf(final_fp16_s, sizeof(final_fp16_s), "%d + %u * 2^-16", (final_fp16 & 0xffff0000) >> 16, final_fp16 & 0xffff);
-
-    printf("FP16: original double: %f first fp16: %s, re-encoded double: %f, final fp16: %s\n", orig_d, first_fp16_s, final_d, final_fp16_s);
+    /* {
+     *    char first_fp16_s[64];
+     *    char final_fp16_s[64];
+     *    snprintf(first_fp16_s, sizeof(first_fp16_s), "%d + %u * 2^-16", (first_fp16 & 0xffff0000) >> 16, first_fp16 & 0xffff);
+     *    snprintf(final_fp16_s, sizeof(final_fp16_s), "%d + %u * 2^-16", (final_fp16 & 0xffff0000) >> 16, final_fp16 & 0xffff);
+     *
+     *    printf("FP16: original double: %f first fp16: %s, re-encoded double: %f, final fp16: %s\n", orig_d, first_fp16_s, final_d, final_fp16_s);
+     * }
+     */
 
     /* since we lose precision, we only do rough range testing */
     assert(final_d > orig_d - 0.1);
@@ -1590,6 +1607,73 @@ dix_double_fp_conversion(void)
     }
 }
 
+/* The mieq test verifies that events added to the queue come out in the same
+ * order that they went in.
+ */
+static uint32_t mieq_test_event_last_processed;
+
+static void
+mieq_test_event_handler(int screenNum, InternalEvent *ie, DeviceIntPtr dev) {
+    RawDeviceEvent *e = (RawDeviceEvent *)ie;
+
+    assert(e->type == ET_RawMotion);
+    assert(e->flags > mieq_test_event_last_processed);
+    mieq_test_event_last_processed = e->flags;
+}
+
+static void _mieq_test_generate_events(uint32_t start, uint32_t count) {
+    count += start;
+    while (start < count) {
+        RawDeviceEvent e = {0};
+        e.header = ET_Internal;
+        e.type = ET_RawMotion;
+        e.length = sizeof(e);
+        e.time = GetTimeInMillis();
+        e.flags = start;
+
+        mieqEnqueue(NULL, (InternalEvent*)&e);
+
+        start++;
+    }
+}
+
+#define mieq_test_generate_events(c) { _mieq_test_generate_events(next, c); next += c; }
+
+static void
+mieq_test(void) {
+    uint32_t next = 1;
+
+    mieq_test_event_last_processed = 0;
+    mieqInit();
+    mieqSetHandler(ET_RawMotion, mieq_test_event_handler);
+
+    /* Enough to fit the buffer but trigger a grow */
+    mieq_test_generate_events(180);
+
+    /* We should resize to 512 now */
+    mieqProcessInputEvents();
+
+    /* Some should now get dropped */
+    mieq_test_generate_events(500);
+
+    /* Tell us how many got dropped, 1024 now */
+    mieqProcessInputEvents();
+
+    /* Now make it 2048 */
+    mieq_test_generate_events(900);
+    mieqProcessInputEvents();
+
+    /* Now make it 4096 (max) */
+    mieq_test_generate_events(1950);
+    mieqProcessInputEvents();
+
+    /* Now overflow one last time with the maximal queue and reach the verbosity limit */
+    mieq_test_generate_events(10000);
+    mieqProcessInputEvents();
+
+    mieqFini();
+}
+
 int main(int argc, char** argv)
 {
     dix_double_fp_conversion();
@@ -1608,6 +1692,7 @@ int main(int argc, char** argv)
     dix_valuator_alloc();
     dix_get_master();
     input_option_test();
+    mieq_test();
 
     return 0;
 }

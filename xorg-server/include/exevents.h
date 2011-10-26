@@ -322,8 +322,7 @@ extern int
 XIShouldNotify(ClientPtr client, DeviceIntPtr dev);
 
 extern void
-XISendDeviceChangedEvent(DeviceIntPtr device, DeviceIntPtr master,
-                         DeviceChangedEvent *dce);
+XISendDeviceChangedEvent(DeviceIntPtr device, DeviceChangedEvent *dce);
 
 extern int
 XISetEventMask(DeviceIntPtr dev, WindowPtr win, ClientPtr client,
