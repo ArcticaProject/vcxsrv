@@ -284,11 +284,7 @@ string &NormalizePathName(string &Name)
     }
     else
     {
-      #ifdef WIN32
-      *pWr++ = tolower(Char);
-      #else
       *pWr++ = Char;
-      #endif
     }
     Char=*pPtr++;
   }
