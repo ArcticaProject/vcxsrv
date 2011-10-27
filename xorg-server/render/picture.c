@@ -1715,23 +1715,14 @@ CompositeTriStrip (CARD8	    op,
 		   int		    npoints,
 		   xPointFixed	    *points)
 {
-    xTriangle           *tris, *tri;
-    int                 ntri;
-    
+    PictureScreenPtr	ps = GetPictureScreen(pDst->pDrawable->pScreen);
+
     if (npoints < 3)
         return;
-    ntri = npoints - 2;
-    tris = malloc(ntri * sizeof (xTriangle));
-    if (!tris)
-        return;
-    for (tri = tris; npoints >= 3; npoints--, points++, tri++)
-    {
-        tri->p1 = points[0];
-        tri->p2 = points[1];
-        tri->p3 = points[2];
-    }
-    CompositeTriangles (op, pSrc, pDst, maskFormat, xSrc, ySrc, ntri, tris);
-    free(tris);
+
+    ValidatePicture (pSrc);
+    ValidatePicture (pDst);
+    (*ps->TriStrip) (op, pSrc, pDst, maskFormat, xSrc, ySrc, npoints, points);
 }
 
 void
@@ -1744,25 +1735,14 @@ CompositeTriFan (CARD8		op,
 		 int		npoints,
 		 xPointFixed	*points)
 {
-    xTriangle		*tris, *tri;
-    xPointFixed		*first;
-    int			ntri;
-    
+    PictureScreenPtr	ps = GetPictureScreen(pDst->pDrawable->pScreen);
+
     if (npoints < 3)
 	return;
-    ntri = npoints - 2;
-    tris = malloc(ntri * sizeof (xTriangle));
-    if (!tris)
-	return;
-    first = points++;
-    for (tri = tris; npoints >= 3; npoints--, points++, tri++)
-    {
-	tri->p1 = *first;
-	tri->p2 = points[0];
-	tri->p3 = points[1];
-    }
-    CompositeTriangles (op, pSrc, pDst, maskFormat, xSrc, ySrc, ntri, tris);
-    free(tris);
+
+    ValidatePicture (pSrc);
+    ValidatePicture (pDst);
+    (*ps->TriFan) (op, pSrc, pDst, maskFormat, xSrc, ySrc, npoints, points);
 }
 
 void

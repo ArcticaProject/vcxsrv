@@ -88,15 +88,15 @@ this may be useful if you want no dialogs.
 This instruction defines a menu and asigns a \fIMenu_Name\fP to it.
 \fIMenu_Item_Line\fP are lines  of any of the following types:
 .TP 8
-.B \t SEPARATOR
+.B SEPARATOR
 .TP 8
-.B  \t \fIItem_Label\fP  EXEC \fICommand\fP
+.B \fIItem_Label\fP  EXEC \fICommand\fP
 .TP 8
-.B \t \fIItem_Label\fP  MENU \fIpreviously-defined-menu-name\fP
+.B \fIItem_Label\fP  MENU \fIpreviously-defined-menu-name\fP
 .TP 8
-.B \t \fIItem_Label\fP  ALWAYSONTOP
+.B \fIItem_Label\fP  ALWAYSONTOP
 .TP 8
-.B \t \fIItem_Label\fP  RELOAD
+.B \fIItem_Label\fP  RELOAD
 .br
 The \fIItem_Label\fP is the string that is written in the menu item.
 .br

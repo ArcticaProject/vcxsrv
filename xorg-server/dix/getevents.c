@@ -224,7 +224,7 @@ void
 CreateClassesChangedEvent(InternalEvent* event,
                           DeviceIntPtr master,
                           DeviceIntPtr slave,
-                          int type)
+                          int flags)
 {
     int i;
     DeviceChangedEvent *dce;
@@ -233,13 +233,12 @@ CreateClassesChangedEvent(InternalEvent* event,
     dce = &event->changed_event;
     memset(dce, 0, sizeof(DeviceChangedEvent));
     dce->deviceid = slave->id;
-    dce->masterid = master->id;
+    dce->masterid = master ? master->id : 0;
     dce->header = ET_Internal;
     dce->length = sizeof(DeviceChangedEvent);
     dce->type = ET_DeviceChanged;
     dce->time = ms;
-    dce->flags = type;
-    dce->flags |= DEVCHANGE_SLAVE_SWITCH;
+    dce->flags = flags;
     dce->sourceid = slave->id;
 
     if (slave->button)
@@ -258,6 +257,7 @@ CreateClassesChangedEvent(InternalEvent* event,
             dce->valuators[i].resolution = slave->valuator->axes[i].resolution;
             dce->valuators[i].mode = slave->valuator->axes[i].mode;
             dce->valuators[i].name = slave->valuator->axes[i].label;
+            dce->valuators[i].scroll = slave->valuator->axes[i].scroll;
         }
     }
     if (slave->key)
@@ -688,7 +688,7 @@ UpdateFromMaster(InternalEvent* events, DeviceIntPtr dev, int type, int *num_eve
 
     if (master && master->last.slave != dev)
     {
-        CreateClassesChangedEvent(events, master, dev, type);
+        CreateClassesChangedEvent(events, master, dev, type | DEVCHANGE_SLAVE_SWITCH);
         if (IsPointerDevice(master))
         {
             updateSlaveDeviceCoords(master, dev);
@@ -1249,6 +1249,7 @@ fill_pointer_events(InternalEvent *events, DeviceIntPtr pDev, int type,
  *
  * @param events The pointer to the event list to fill the events
  * @param dev The device to generate the events for
+ * @param type The real type of the event
  * @param axis The axis number to generate events for
  * @param mask State before this event in absolute coords
  * @param[in,out] last Last scroll state posted in absolute coords (modified
@@ -1260,6 +1261,7 @@ fill_pointer_events(InternalEvent *events, DeviceIntPtr pDev, int type,
 static int
 emulate_scroll_button_events(InternalEvent *events,
                              DeviceIntPtr dev,
+                             int type,
                              int axis,
                              const ValuatorMask *mask,
                              ValuatorMask *last,
@@ -1272,6 +1274,7 @@ emulate_scroll_button_events(InternalEvent *events,
     int num_events = 0;
     double total;
     int b;
+    int flags = 0;
 
     if (dev->valuator->axes[axis].scroll.type == SCROLL_TYPE_NONE)
         return 0;
@@ -1281,6 +1284,9 @@ emulate_scroll_button_events(InternalEvent *events,
 
     ax = &dev->valuator->axes[axis];
     incr = ax->scroll.increment;
+
+    if (type != ButtonPress && type != ButtonRelease)
+        flags |= POINTER_EMULATED;
 
     if (!valuator_mask_isset(last, axis))
         valuator_mask_set_double(last, axis, 0);
@@ -1309,14 +1315,20 @@ emulate_scroll_button_events(InternalEvent *events,
          */
         if (num_events + 4 < max_events)
         {
-            nev_tmp = fill_pointer_events(events, dev, ButtonPress, b, ms,
-                                          POINTER_EMULATED, NULL);
-            events += nev_tmp;
-            num_events += nev_tmp;
-            nev_tmp = fill_pointer_events(events, dev, ButtonRelease, b, ms,
-                                          POINTER_EMULATED, NULL);
-            events += nev_tmp;
-            num_events += nev_tmp;
+            if (type != ButtonRelease)
+            {
+                nev_tmp = fill_pointer_events(events, dev, ButtonPress, b, ms,
+                                              flags, NULL);
+                events += nev_tmp;
+                num_events += nev_tmp;
+            }
+            if (type != ButtonPress)
+            {
+                nev_tmp = fill_pointer_events(events, dev, ButtonRelease, b, ms,
+                                              flags, NULL);
+                events += nev_tmp;
+                num_events += nev_tmp;
+            }
         }
     }
 
@@ -1361,6 +1373,7 @@ GetPointerEvents(InternalEvent *events, DeviceIntPtr pDev, int type,
     ValuatorMask mask;
     ValuatorMask scroll;
     int i;
+    int realtype = type;
 
     /* refuse events from disabled devices */
     if (!pDev->enabled)
@@ -1413,6 +1426,7 @@ GetPointerEvents(InternalEvent *events, DeviceIntPtr pDev, int type,
             valuator_mask_set_double(&mask, axis, val);
             type = MotionNotify;
             buttons = 0;
+            flags |= POINTER_EMULATED;
         }
     }
 
@@ -1432,7 +1446,7 @@ GetPointerEvents(InternalEvent *events, DeviceIntPtr pDev, int type,
 
         valuator_mask_set_double(&scroll, i, pDev->last.valuators[i]);
 
-        nev_tmp = emulate_scroll_button_events(events, pDev, i, &scroll,
+        nev_tmp = emulate_scroll_button_events(events, pDev, realtype, i, &scroll,
                                                pDev->last.scroll, ms,
                                                GetMaximumEventsNum() - num_events);
         events += nev_tmp;

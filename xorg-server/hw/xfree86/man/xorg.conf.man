@@ -379,7 +379,9 @@ is a number used to order the fontfile FPEs. Examples:
 .I misc:unscaled:pri=10 \-> /usr/share/X11/fonts/misc
 .fi
 .PP
-.RE .RE .RE
+.RE
+.RE
+.RE
 .PP
 .RS 7
 Font server identifiers:

@@ -549,18 +549,31 @@ int
 ProcRRDeleteOutputProperty (ClientPtr client)
 {
     REQUEST(xRRDeleteOutputPropertyReq);
-    RROutputPtr	output;
-              
+    RROutputPtr		output;
+    RRPropertyPtr	prop;
+
     REQUEST_SIZE_MATCH(xRRDeleteOutputPropertyReq);
     UpdateCurrentTime();
     VERIFY_RR_OUTPUT(stuff->output, output, DixReadAccess);
-    
+
     if (!ValidAtom(stuff->property))
     {
 	client->errorValue = stuff->property;
 	return BadAtom;
     }
 
+    prop = RRQueryOutputProperty(output, stuff->property);
+    if (!prop)
+    {
+	client->errorValue = stuff->property;
+	return BadName;
+    }
+
+    if (prop->immutable)
+    {
+	client->errorValue = stuff->property;
+	return BadAccess;
+    }
 
     RRDeleteOutputProperty(output, stuff->property);
     return Success;

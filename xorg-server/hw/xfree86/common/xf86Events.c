@@ -601,16 +601,15 @@ xf86AddGeneralHandler(int fd, InputHandlerProc proc, pointer data)
 InputHandlerProc
 xf86SetConsoleHandler(InputHandlerProc proc, pointer data)
 {
-    static InputHandlerProc handler = NULL;
-    InputHandlerProc old_handler = handler;
+    static IHPtr handler = NULL;
+    IHPtr old_handler = handler;
 
     if (old_handler)
         xf86RemoveGeneralHandler(old_handler);
 
-    xf86AddGeneralHandler(xf86Info.consoleFd, proc, data);
-    handler = proc;
+    handler = xf86AddGeneralHandler(xf86Info.consoleFd, proc, data);
 
-    return old_handler;
+    return (old_handler) ? old_handler->ihproc : NULL;
 }
 
 static void

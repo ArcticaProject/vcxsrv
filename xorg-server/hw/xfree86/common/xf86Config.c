@@ -1194,8 +1194,12 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 	if (Pointer)
 	    foundPointer = configInput(Pointer, confInput, from);
 	if (foundPointer) {
-	    Pointer->options = xf86addNewOption(Pointer->options,
-					       xnfstrdup("CorePointer"), "on");
+	    Pointer->options = xf86AddNewOption(Pointer->options,
+					        "CorePointer", "on");
+	    Pointer->options = xf86AddNewOption(Pointer->options,
+						"driver", confInput->inp_driver);
+	    Pointer->options = xf86AddNewOption(Pointer->options,
+						"identifier", confInput->inp_identifier);
 	    servlayoutp->inputs = addDevice(servlayoutp->inputs, Pointer);
 	}
     }
@@ -1284,8 +1288,12 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 	if (Keyboard)
 	    foundKeyboard = configInput(Keyboard, confInput, from);
 	if (foundKeyboard) {
-	    Keyboard->options = xf86addNewOption(Keyboard->options,
-						xnfstrdup("CoreKeyboard"), "on");
+	    Keyboard->options = xf86AddNewOption(Keyboard->options,
+						 "CoreKeyboard", "on");
+	    Keyboard->options = xf86AddNewOption(Keyboard->options,
+						 "driver", confInput->inp_driver);
+	    Keyboard->options = xf86AddNewOption(Keyboard->options,
+						 "identifier", confInput->inp_identifier);
 	    servlayoutp->inputs = addDevice(servlayoutp->inputs, Keyboard);
 	}
     }

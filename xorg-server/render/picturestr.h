@@ -260,6 +260,24 @@ typedef void	(*TrianglesProcPtr)	    (CARD8	    op,
 					     int	    ntri,
 					     xTriangle	    *tris);
 
+typedef void	(*TriStripProcPtr)	    (CARD8	    op,
+					     PicturePtr	    pSrc,
+					     PicturePtr	    pDst,
+					     PictFormatPtr  maskFormat,
+					     INT16	    xSrc,
+					     INT16	    ySrc,
+					     int	    npoint,
+					     xPointFixed    *points);
+
+typedef void	(*TriFanProcPtr)	    (CARD8	    op,
+					     PicturePtr	    pSrc,
+					     PicturePtr	    pDst,
+					     PictFormatPtr  maskFormat,
+					     INT16	    xSrc,
+					     INT16	    ySrc,
+					     int	    npoint,
+					     xPointFixed    *points);
+
 typedef Bool	(*InitIndexedProcPtr)	    (ScreenPtr	    pScreen,
 					     PictFormatPtr  pFormat);
 
@@ -348,6 +366,9 @@ typedef struct _PictureScreen {
     RealizeGlyphProcPtr   	RealizeGlyph;
     UnrealizeGlyphProcPtr 	UnrealizeGlyph;
 
+#define PICTURE_SCREEN_VERSION 2
+    TriStripProcPtr		TriStrip;
+    TriFanProcPtr		TriFan;
 } PictureScreenRec, *PictureScreenPtr;
 
 extern _X_EXPORT DevPrivateKeyRec PictureScreenPrivateKeyRec;

@@ -1261,11 +1261,6 @@ struct gl_texture_image
    GLuint Level;                /**< Which mipmap level am I? */
    /** Cube map face: index into gl_texture_object::Image[] array */
    GLuint Face;
-
-   GLuint RowStride;		/**< Padded width in units of texels */
-   GLuint *ImageOffsets;        /**< if 3D texture: array [Depth] of offsets to
-                                     each 2D slice in 'Data', in texels */
-   GLvoid *Data;		/**< Image data, accessed via FetchTexel() */
 };
 
 
@@ -1535,6 +1530,7 @@ struct gl_buffer_object
    GLintptr Offset;     /**< Mapped offset */
    GLsizeiptr Length;   /**< Mapped length */
    /*@}*/
+   GLboolean DeletePending;   /**< true if buffer object is removed from the hash */
    GLboolean Written;   /**< Ever written to? (for debugging) */
    GLboolean Purgeable; /**< Is the buffer purgeable under memory pressure? */
 };
@@ -2736,6 +2732,20 @@ struct gl_constants
 
    /* GL_ARB_robustness */
    GLenum ResetStrategy;
+
+   /**
+    * Whether the implementation strips out and ignores texture borders.
+    *
+    * Many GPU hardware implementations don't support rendering with texture
+    * borders and mipmapped textures.  (Note: not static border color, but the
+    * old 1-pixel border around each edge).  Implementations then have to do
+    * slow fallbacks to be correct, or just ignore the border and be fast but
+    * wrong.  Setting the flag stripts the border off of TexImage calls,
+    * providing "fast but wrong" at significantly reduced driver complexity.
+    *
+    * Texture borders are deprecated in GL 3.0.
+    **/
+   GLboolean StripTextureBorder;
 };
 
 

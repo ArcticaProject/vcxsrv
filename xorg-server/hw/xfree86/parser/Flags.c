@@ -63,6 +63,7 @@
 #include "Configint.h"
 #include <X11/Xfuncproto.h>
 #include "Xprintf.h"
+#include "optionstr.h"
 
 extern LexRec val;
 
@@ -203,7 +204,7 @@ addNewOption2 (XF86OptionPtr head, char *name, char *val, int used)
 		free(new->opt_val);
 	}
 	else
-		new = calloc (1, sizeof (XF86OptionRec));
+		new = calloc (1, sizeof (*new));
 	new->opt_name = name;
 	new->opt_val = val;
 	new->opt_used = used;
@@ -284,7 +285,7 @@ xf86newOption(char *name, char *value)
 {
 	XF86OptionPtr opt;
 
-	opt = calloc(1, sizeof (XF86OptionRec));
+	opt = calloc(1, sizeof (*opt));
 	if (!opt)
 		return NULL;
 

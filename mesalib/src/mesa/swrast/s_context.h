@@ -138,20 +138,17 @@ struct swrast_texture_image
    /** used for mipmap LOD computation */
    GLfloat WidthScale, HeightScale, DepthScale;
 
-#if 0
-   GLubyte *Data;    /**< The actual texture data in malloc'd memory */
+   /** These fields only valid when texture memory is mapped */
+   GLint RowStride;		/**< Padded width in units of texels */
+   GLuint *ImageOffsets;        /**< if 3D texture: array [Depth] of offsets to
+                                     each 2D slice in 'Data', in texels */
+   GLubyte *Data;		/**< Image data, accessed via FetchTexel() */
 
-   GLint TexelSize;  /**< bytes per texel block */
-#endif
+   /** Malloc'd texture memory */
+   GLubyte *Buffer;
 
    FetchTexelFunc FetchTexel;
    StoreTexelFunc Store;
-
-#if 0
-   /** These fields only valid when texture memory is mapped */
-   GLubyte **SliceMaps;  /**< points to OneMap or a malloc'd array */
-   GLint RowStride;  /**< bytes per row of blocks */
-#endif
 };
 
 
@@ -338,6 +335,31 @@ swrast_render_finish(struct gl_context *ctx)
       swrast->Driver.SpanRenderFinish(ctx);
 }
 
+
+extern void
+_swrast_span_render_start(struct gl_context *ctx);
+
+extern void
+_swrast_span_render_finish(struct gl_context *ctx);
+
+extern void
+_swrast_map_textures(struct gl_context *ctx);
+
+extern void
+_swrast_unmap_textures(struct gl_context *ctx);
+
+extern void
+_swrast_map_texture(struct gl_context *ctx, struct gl_texture_object *texObj);
+
+extern void
+_swrast_unmap_texture(struct gl_context *ctx, struct gl_texture_object *texObj);
+
+
+extern void
+_swrast_map_renderbuffers(struct gl_context *ctx);
+
+extern void
+_swrast_unmap_renderbuffers(struct gl_context *ctx);
 
 
 /**

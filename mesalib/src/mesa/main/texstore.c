@@ -4499,6 +4499,9 @@ _mesa_store_teximage1d(struct gl_context *ctx, GLenum target, GLint level,
 
    (void) border;
 
+   if (width == 0)
+      return;
+
    /* allocate storage for texture data */
    if (!ctx->Driver.AllocTextureImageBuffer(ctx, texImage, texImage->TexFormat,
                                             width, 1, 1)) {
@@ -4559,6 +4562,9 @@ _mesa_store_teximage2d(struct gl_context *ctx, GLenum target, GLint level,
    GLboolean success;
 
    (void) border;
+
+   if (width == 0 || height == 0)
+      return;
 
    /* allocate storage for texture data */
    if (!ctx->Driver.AllocTextureImageBuffer(ctx, texImage, texImage->TexFormat,
@@ -4650,6 +4656,9 @@ _mesa_store_teximage3d(struct gl_context *ctx, GLenum target, GLint level,
    GLint dstRowStride;
 
    (void) border;
+
+   if (width == 0 || height == 0 || depth == 0)
+      return;
 
    /* allocate storage for texture data */
    if (!ctx->Driver.AllocTextureImageBuffer(ctx, texImage, texImage->TexFormat,
@@ -4906,7 +4915,6 @@ _mesa_store_compressed_teximage2d(struct gl_context *ctx,
    ASSERT(texImage->Width > 0);
    ASSERT(texImage->Height > 0);
    ASSERT(texImage->Depth == 1);
-   ASSERT(texImage->Data == NULL); /* was freed in glCompressedTexImage2DARB */
 
    /* allocate storage for texture data */
    if (!ctx->Driver.AllocTextureImageBuffer(ctx, texImage, texImage->TexFormat,

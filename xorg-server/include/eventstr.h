@@ -153,6 +153,7 @@ struct _DeviceChangedEvent
         uint32_t resolution;    /**< Resolution counts/m */
         uint8_t mode;           /**< Relative or Absolute */
         Atom name;              /**< Axis name */
+        ScrollInfo scroll;      /**< Smooth scrolling info */
     } valuators[MAX_VALUATORS];
 
     struct {

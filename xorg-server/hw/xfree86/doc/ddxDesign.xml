@@ -189,7 +189,7 @@ following changes:
 	  <varlistentry><term><emphasis>Keyboard</emphasis></term>
 	    <listitem><literallayout>
              &k.identifier; "Implicit Core Keyboard"
-             &k.driver; "keyboard"
+             &k.driver; "kbd"
 	      </literallayout></listitem></varlistentry>
 	  <varlistentry><term><emphasis>Pointer</emphasis></term>
 	    <listitem><literallayout>
@@ -206,7 +206,7 @@ following changes:
     is no &k.serverlayout; section, if the <option>-screen</option> command
     line options is used, or if the &k.serverlayout; section doesn't
     reference any &k.inputdevice; sections.  In this case, the first
-    sections with drivers "keyboard" and "mouse" are used as the core
+    sections with drivers "kbd" and "mouse" are used as the core
     keyboard and pointer respectively.
       </para>
     </sect2>

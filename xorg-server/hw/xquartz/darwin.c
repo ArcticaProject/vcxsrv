@@ -621,7 +621,7 @@ void OsVendorInit(void)
         char *lf;
         char *home = getenv("HOME");
         assert(home);
-        assert(0 < asprintf(&lf, "%s/Library/Logs/X11.%s.log", home, bundle_id_prefix));
+        assert(0 < asprintf(&lf, "%s/Library/Logs/%s.X11.log", home, bundle_id_prefix));
         LogInit(lf, ".old");
         free(lf);
 

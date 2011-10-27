@@ -570,6 +570,9 @@ XftFontLoadGlyphs (Display	    *dpy,
 	    xftg->metrics.yOff = -TRUNC(ROUND(glyphslot->advance.y));
 	}
 
+	// compute the size of the final bitmap
+	ftbit = &glyphslot->bitmap;
+
 	width = ftbit->width;
 	height = ftbit->rows;
 

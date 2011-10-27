@@ -31,6 +31,50 @@
 
 #include "pixman-private.h"
 
+static const pixman_color_t transparent_black = { 0, 0, 0, 0 };
+
+static void
+gradient_property_changed (pixman_image_t *image)
+{
+    gradient_t *gradient = &image->gradient;
+    int n = gradient->n_stops;
+    pixman_gradient_stop_t *stops = gradient->stops;
+    pixman_gradient_stop_t *begin = &(gradient->stops[-1]);
+    pixman_gradient_stop_t *end = &(gradient->stops[n]);
+
+    switch (gradient->common.repeat)
+    {
+    default:
+    case PIXMAN_REPEAT_NONE:
+	begin->x = INT32_MIN;
+	begin->color = transparent_black;
+	end->x = INT32_MAX;
+	end->color = transparent_black;
+	break;
+
+    case PIXMAN_REPEAT_NORMAL:
+	begin->x = stops[n - 1].x - pixman_fixed_1;
+	begin->color = stops[n - 1].color;
+	end->x = stops[0].x + pixman_fixed_1;
+	end->color = stops[0].color;
+	break;
+
+    case PIXMAN_REPEAT_REFLECT:
+	begin->x = - stops[0].x;
+	begin->color = stops[0].color;
+	end->x = pixman_int_to_fixed (2) - stops[n - 1].x;
+	end->color = stops[n - 1].color;
+	break;
+
+    case PIXMAN_REPEAT_PAD:
+	begin->x = INT32_MIN;
+	begin->color = stops[0].color;
+	end->x = INT32_MAX;
+	end->color = stops[n - 1].color;
+	break;
+    }
+}
+
 pixman_bool_t
 _pixman_init_gradient (gradient_t *                  gradient,
                        const pixman_gradient_stop_t *stops,
@@ -38,13 +82,26 @@ _pixman_init_gradient (gradient_t *                  gradient,
 {
     return_val_if_fail (n_stops > 0, FALSE);
 
-    gradient->stops = pixman_malloc_ab (n_stops, sizeof (pixman_gradient_stop_t));
+    /* We allocate two extra stops, one before the beginning of the stop list,
+     * and one after the end. These stops are initialized to whatever color
+     * would be used for positions outside the range of the stop list.
+     *
+     * This saves a bit of computation in the gradient walker.
+     *
+     * The pointer we store in the gradient_t struct still points to the
+     * first user-supplied struct, so when freeing, we will have to
+     * subtract one.
+     */
+    gradient->stops =
+	pixman_malloc_ab (n_stops + 2, sizeof (pixman_gradient_stop_t));
     if (!gradient->stops)
 	return FALSE;
 
+    gradient->stops += 1;
     memcpy (gradient->stops, stops, n_stops * sizeof (pixman_gradient_stop_t));
-
     gradient->n_stops = n_stops;
+
+    gradient->common.property_changed = gradient_property_changed;
 
     return TRUE;
 }
@@ -102,7 +159,17 @@ _pixman_image_fini (pixman_image_t *image)
 	    image->type == CONICAL)
 	{
 	    if (image->gradient.stops)
-		free (image->gradient.stops);
+	    {
+		/* See _pixman_init_gradient() for an explanation of the - 1 */
+		free (image->gradient.stops - 1);
+	    }
+
+	    /* This will trigger if someone adds a property_changed
+	     * method to the linear/radial/conical gradient overwriting
+	     * the general one.
+	     */
+	    assert (
+		image->common.property_changed == gradient_property_changed);
 	}
 
 	if (image->type == BITS && image->bits.free_me)

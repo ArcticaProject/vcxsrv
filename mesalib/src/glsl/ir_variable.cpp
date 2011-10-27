@@ -166,15 +166,15 @@ static struct gl_builtin_uniform_element gl_NormalScale_elements[] = {
    {NULL, {STATE_NORMAL_SCALE}, SWIZZLE_XXXX},
 };
 
-static struct gl_builtin_uniform_element gl_MESABumpRotMatrix0_elements[] = {
+static struct gl_builtin_uniform_element gl_BumpRotMatrix0MESA_elements[] = {
    {NULL, {STATE_INTERNAL, STATE_ROT_MATRIX_0}, SWIZZLE_XYZW},
 };
 
-static struct gl_builtin_uniform_element gl_MESABumpRotMatrix1_elements[] = {
+static struct gl_builtin_uniform_element gl_BumpRotMatrix1MESA_elements[] = {
    {NULL, {STATE_INTERNAL, STATE_ROT_MATRIX_1}, SWIZZLE_XYZW},
 };
 
-static struct gl_builtin_uniform_element gl_MESAFogParamsOptimized_elements[] = {
+static struct gl_builtin_uniform_element gl_FogParamsOptimizedMESA_elements[] = {
    {NULL, {STATE_INTERNAL, STATE_FOG_PARAMS_OPTIMIZED}, SWIZZLE_XYZW},
 };
 
@@ -232,11 +232,11 @@ MATRIX(gl_TextureMatrixInverseTranspose,
 
 static struct gl_builtin_uniform_element gl_NormalMatrix_elements[] = {
    { NULL, { STATE_MODELVIEW_MATRIX, 0, 0, 0, STATE_MATRIX_INVERSE},
-     SWIZZLE_XYZW },
+     MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_Z) },
    { NULL, { STATE_MODELVIEW_MATRIX, 0, 1, 1, STATE_MATRIX_INVERSE},
-     SWIZZLE_XYZW },
+     MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_Z) },
    { NULL, { STATE_MODELVIEW_MATRIX, 0, 2, 2, STATE_MATRIX_INVERSE},
-     SWIZZLE_XYZW },
+     MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_Z) },
 };
 
 #undef MATRIX
@@ -289,9 +289,9 @@ const struct gl_builtin_uniform_desc _mesa_builtin_uniform_desc[] = {
    STATEVAR(gl_NormalMatrix),
    STATEVAR(gl_NormalScale),
 
-   STATEVAR(gl_MESABumpRotMatrix0),
-   STATEVAR(gl_MESABumpRotMatrix1),
-   STATEVAR(gl_MESAFogParamsOptimized),
+   STATEVAR(gl_BumpRotMatrix0MESA),
+   STATEVAR(gl_BumpRotMatrix1MESA),
+   STATEVAR(gl_FogParamsOptimizedMESA),
    STATEVAR(gl_CurrentAttribVertMESA),
    STATEVAR(gl_CurrentAttribFragMESA),
 
@@ -615,6 +615,8 @@ generate_130_uniforms(exec_list *instructions,
 
    add_builtin_constant(instructions, symtab, "gl_MaxClipDistances",
                         state->Const.MaxClipPlanes);
+   add_builtin_constant(instructions, symtab, "gl_MaxVaryingComponents",
+			state->Const.MaxVaryingFloats);
 }
 
 

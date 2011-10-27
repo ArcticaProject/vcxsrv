@@ -811,21 +811,6 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 				 NULL);
 }
 
-static InputInfoPtr
-duplicateDevice(InputInfoPtr pInfo)
-{
-    InputInfoPtr dup = calloc(1, sizeof(InputInfoRec));
-    if (dup) {
-        dup->name = strdup(pInfo->name);
-        dup->driver = strdup(pInfo->driver);
-        dup->options = xf86OptionListDuplicate(pInfo->options);
-        /* type_name is a const string */
-        dup->type_name = pInfo->type_name;
-        dup->fd = -1;
-    }
-    return dup;
-}
-
 /**
  * Initialize all supported input devices present and referenced in the
  * xorg.conf.
@@ -842,20 +827,8 @@ InitInput(int argc, char **argv)
 
     /* Initialize all configured input devices */
     for (pInfo = xf86ConfigLayout.inputs; pInfo && *pInfo; pInfo++) {
-        InputInfoPtr dup;
-        /* Replace obsolete keyboard driver with kbd */
-        if (!xf86NameCmp((*pInfo)->driver, "keyboard")) {
-            strcpy((*pInfo)->driver, "kbd");
-        }
-
-        /* Data passed into xf86NewInputDevice will be freed on shutdown.
-         * Duplicate from xf86ConfigLayout.inputs, otherwise we don't have any
-         * xorg.conf input devices in the second generation
-         */
-        dup = duplicateDevice(*pInfo);
-
         /* If one fails, the others will too */
-        if (xf86NewInputDevice(dup, &dev, TRUE) == BadAlloc)
+        if (NewInputDeviceRequest((*pInfo)->options, NULL, &dev) == BadAlloc)
             break;
     }
 

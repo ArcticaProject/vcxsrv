@@ -87,6 +87,12 @@ XORG_PROG_RAWCPP
 # easier overrides at build time.
 XSERVER_CFLAGS='$(CWARNFLAGS)'
 
+dnl Explicitly add -fno-strict-aliasing since this option should disappear
+dnl from util-macros CWARNFLAGS
+if  test "x$GCC" = xyes ; then
+    XSERVER_CFLAGS="$XSERVER_CFLAGS -fno-strict-aliasing"
+fi
+
 dnl Check for dtrace program (needed to build Xserver dtrace probes)
 dnl Also checks for <sys/sdt.h>, since some Linux distros have an 
 dnl ISDN trace program named dtrace

@@ -68,6 +68,7 @@
 #include "exglobals.h"
 #include "eventstr.h"
 #include "inpututils.h"
+#include "optionstr.h"
 
 #include <string.h>     /* InputClassMatches */
 #ifdef HAVE_FNMATCH_H
@@ -908,7 +909,7 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
     if (!pInfo)
         return BadAlloc;
 
-    nt_list_for_each_entry(option, options, next) {
+    nt_list_for_each_entry(option, options, list.next) {
         if (strcasecmp(input_option_get_key(option), "driver") == 0) {
             if (pInfo->driver) {
                 rval = BadRequest;
@@ -946,7 +947,7 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
         }
     }
 
-    nt_list_for_each_entry(option, options, next) {
+    nt_list_for_each_entry(option, options, list.next) {
         /* Copy option key/value strings from the provided list */
         pInfo->options = xf86AddNewOption(pInfo->options,
                                           input_option_get_key(option),

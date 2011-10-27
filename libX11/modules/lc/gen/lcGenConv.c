@@ -1784,9 +1784,6 @@ mbtocs(
         return( 0 );
     }
 
-    if (*from_left > *to_left)
-        *from_left = *to_left;
-
     while (*from_left && *to_left) {
 
 	ch = *inbufptr++;
@@ -1872,7 +1869,7 @@ output:
 	return -1;
     }
 
-    /* nomal end */
+    /* normal end */
     *from = (XPointer) inbufptr;
     *to = (XPointer) outbufptr;
 
@@ -2171,7 +2168,7 @@ end:
         return -1;
     }
 
-    /* nomal end */
+    /* normal end */
     *from = (XPointer) inbufptr;
     *to = (XPointer) outbufptr;
 
@@ -2225,7 +2222,7 @@ end:
 	return -1;
     }
 
-    /* nomal end */
+    /* normal end */
     *from = (XPointer) src;
     *from_left = src_left;
 

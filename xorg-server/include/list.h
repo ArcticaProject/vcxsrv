@@ -438,4 +438,16 @@ list_is_empty(struct list *head)
 		nt_list_init(__e, _member);			\
 	} while(0)
 
+/**
+ * DO NOT USE THIS.
+ * This is a remainder of the xfree86 DDX attempt of having a set of generic
+ * list functions. Unfortunately, the xf86OptionRec uses it and we can't
+ * easily get rid of it. Do not use for new code.
+ */
+typedef struct generic_list_rec
+{
+	void *next;
+}
+GenericListRec, *GenericListPtr, *glp;
+
 #endif

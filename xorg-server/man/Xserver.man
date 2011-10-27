@@ -100,6 +100,12 @@ specifies a file which contains a collection of authorization records used
 to authenticate access.  See also the \fIxdm\fP(1) and
 \fIXsecurity\fP(__miscmansuffix__) manual pages.
 .TP 8
+.BI \-background\ none
+Asks the driver not to clear the background on startup, if the driver supports that.
+May be useful for smooth transition with eg. fbdev driver.
+For security reasons this is not the default as the screen contents might
+show a previous user session.
+.TP 8
 .B \-br
 sets the default root window to solid black instead of the standard root weave
 pattern.   This is the default unless -retro or -wr is specified.

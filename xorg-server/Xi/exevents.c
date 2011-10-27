@@ -653,7 +653,7 @@ DeepCopyDeviceClasses(DeviceIntPtr from, DeviceIntPtr to, DeviceChangedEvent *dc
  * Send an XI2 DeviceChangedEvent to all interested clients.
  */
 void
-XISendDeviceChangedEvent(DeviceIntPtr device, DeviceIntPtr master, DeviceChangedEvent *dce)
+XISendDeviceChangedEvent(DeviceIntPtr device, DeviceChangedEvent *dce)
 {
     xXIDeviceChangedEvent *dcce;
     int rc;
@@ -667,7 +667,7 @@ XISendDeviceChangedEvent(DeviceIntPtr device, DeviceIntPtr master, DeviceChanged
 
     /* we don't actually swap if there's a NullClient, swapping is done
      * later when event is delivered. */
-    SendEventToAllWindows(master, XI_DeviceChangedMask, (xEvent*)dcce, 1);
+    SendEventToAllWindows(device, XI_DeviceChangedMask, (xEvent*)dcce, 1);
     free(dcce);
 }
 
@@ -701,7 +701,8 @@ ChangeMasterDeviceClasses(DeviceIntPtr device, DeviceChangedEvent *dce)
 
     /* FIXME: the classes may have changed since we generated the event. */
     DeepCopyDeviceClasses(slave, device, dce);
-    XISendDeviceChangedEvent(slave, device, dce);
+    dce->deviceid = device->id;
+    XISendDeviceChangedEvent(device, dce);
 }
 
 /**
@@ -1106,6 +1107,8 @@ SetScrollValuator(DeviceIntPtr dev, int axnum, enum ScrollType type, double incr
 {
     AxisInfoPtr ax;
     int *current_ax;
+    InternalEvent dce;
+    DeviceIntPtr master;
 
     if (!dev || !dev->valuator || axnum >= dev->valuator->numAxes)
         return FALSE;
@@ -1142,7 +1145,16 @@ SetScrollValuator(DeviceIntPtr dev, int axnum, enum ScrollType type, double incr
     ax->scroll.type = type;
     ax->scroll.increment = increment;
     ax->scroll.flags = flags;
-    /* FIXME: generate DeviceChanged Events */
+
+    master = GetMaster(dev, MASTER_ATTACHED);
+    CreateClassesChangedEvent(&dce, master, dev, DEVCHANGE_POINTER_EVENT | DEVCHANGE_DEVICE_CHANGE);
+    XISendDeviceChangedEvent(dev, &dce.changed_event);
+
+    /* if the current slave is us, update the master. If not, we'll update
+     * whenever the next slave switch happens anyway. CMDC sends the event
+     * for us */
+    if (master && master->lastSlave == dev)
+        ChangeMasterDeviceClasses(master, &dce.changed_event);
 
     return TRUE;
 }
