@@ -584,9 +584,9 @@ loadedmakefile::loadedmakefile(const fileinfo *pDir, vector<string> &Args,const 
     {
       const string &RootDir=loadedmakefile::sm_Statics.m_MhMakeConf->GetFullFileName();
       string MakeDir=m_MakeDir->GetFullFileName();
-      if (RootDir.length()>MakeDir.length() || _strnicmp(RootDir.c_str(),MakeDir.c_str(),RootDir.length()))
+      if (RootDir.length()>MakeDir.length() || strncmp(RootDir.c_str(),MakeDir.c_str(),RootDir.length()))
       {
-        cerr<<"mhmake needs to run in a directory that is a subdirectory of the directory specified with %MHMAKECONF : "<<RootDir<<", make dir : "<<m_MakeDir->GetFullFileName()<<endl;
+        cerr<<"mhmake needs to run in a directory that is a subdirectory of the directory specified with %MHMAKECONF : "<<RootDir<<", make dir : "<<m_MakeDir->GetFullFileName()<<"\nComparison is case sensitive!\n";
         exit(1);
       }
     }
