@@ -527,6 +527,9 @@
     <ClCompile Include="..\..\..\..\src\glsl\link_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\glsl\link_uniforms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\loop_unroll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
