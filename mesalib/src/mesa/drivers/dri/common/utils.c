@@ -137,8 +137,6 @@ driGetRendererString( char * buffer, const char * hardware_name,
 }
 
 
-#ifdef _GLAPI_USE_REMAP_TABLE
-#endif
 /**
  * Utility function used by drivers to test the verions of other components.
  *
