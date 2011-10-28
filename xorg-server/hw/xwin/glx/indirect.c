@@ -1681,7 +1681,7 @@ glxWinContextLoseCurrent(__GLXcontext *base)
 #endif
 
    /* Clear the last active context in the drawable */
-  drawPriv->drawContext = NULL;
+  if (drawPriv) drawPriv->drawContext = NULL;
 
   if (wglGetCurrentContext()==gc->ctx)
   {
