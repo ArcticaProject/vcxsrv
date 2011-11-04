@@ -198,6 +198,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderapi.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\shaderobj.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\shader_query.cpp" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\texstorage.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\uniform_query.cpp" />
     <ClCompile Include="..\..\..\..\src\mesa\main\transformfeedback.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\uniforms.c" />

@@ -327,7 +327,7 @@ fast_read_depth_stencil_pixels(struct gl_context *ctx,
       _mesa_unpack_uint_24_8_depth_stencil_row(rb->Format, width,
 					       map, (GLuint *)dst);
       map += stride;
-      dst += dstStride;
+      dst = (char*)dst + dstStride;
    }
 
    ctx->Driver.UnmapRenderbuffer(ctx, rb);

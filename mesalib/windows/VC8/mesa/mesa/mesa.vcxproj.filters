@@ -686,6 +686,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_rgtc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\main\texstorage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\src\glsl\strtod.h">
