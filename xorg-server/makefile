@@ -10,7 +10,7 @@ INCLUDELIBFILES =  \
  dix\$(OBJDIR)\libdix.lib \
  fb\$(OBJDIR)\libfb.lib \
  glx\$(OBJDIR)\libglx.lib \
- hw\xwin\$(OBJDIR)\libxwin.lib \
+ hw\xwin\$(OBJDIR)\libXWin.lib \
  hw\xwin\glx\$(OBJDIR)\libwinglx.lib \
  mi\$(OBJDIR)\libmi.lib \
  miext\damage\$(OBJDIR)\libdamage.lib \
