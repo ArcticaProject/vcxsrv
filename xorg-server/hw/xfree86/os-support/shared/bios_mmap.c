@@ -31,10 +31,6 @@
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((void *)-1)
-#endif
-
 /*
  * Read BIOS via mmap()ing DEV_MEM
  */

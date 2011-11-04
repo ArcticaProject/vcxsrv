@@ -1093,7 +1093,7 @@ char *
 xf86addComment(char *cur, char *add)
 {
 	char *str;
-	int len, curlen, iscomment, hasnewline = 0, endnewline;
+	int len, curlen, iscomment, hasnewline = 0, insnewline, endnewline;
 
 	if (add == NULL || add[0] == '\0')
 		return cur;
@@ -1118,14 +1118,23 @@ xf86addComment(char *cur, char *add)
 
 	len = strlen(add);
 	endnewline = add[len - 1] == '\n';
-	len +=  1 + iscomment + (!hasnewline) + (!endnewline) + eol_seen;
 
-	if ((str = realloc(cur, len + curlen)) == NULL)
+	insnewline = eol_seen || (curlen && !hasnewline);
+	if (insnewline)
+		len++;
+	if (!iscomment)
+		len++;
+	if (!endnewline)
+		len++;
+
+	/* Allocate + 1 char for '\0' terminator. */
+	str = realloc(cur, curlen + len + 1);
+	if (!str)
 		return cur;
 
 	cur = str;
 
-	if (eol_seen || (curlen && !hasnewline))
+	if (insnewline)
 		cur[curlen++] = '\n';
 	if (!iscomment)
 		cur[curlen++] = '#';

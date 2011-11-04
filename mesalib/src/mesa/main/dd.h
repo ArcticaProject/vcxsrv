@@ -514,6 +514,24 @@ struct dd_function_table {
    /** Unmap texture images from user space */
    void (*UnmapTexture)( struct gl_context *ctx, struct gl_texture_object *tObj );
 
+   /** For GL_ARB_texture_storage.  Allocate memory for whole mipmap stack.
+    * All the gl_texture_images in the texture object will have their
+    * dimensions, format, etc. initialized already.
+    */
+   GLboolean (*AllocTextureStorage)(struct gl_context *ctx,
+                                    struct gl_texture_object *texObj,
+                                    GLsizei levels, GLsizei width,
+                                    GLsizei height, GLsizei depth);
+
+   void (*MapRenderbuffer)(struct gl_context *ctx,
+			   struct gl_renderbuffer *rb,
+			   GLuint x, GLuint y, GLuint w, GLuint h,
+			   GLbitfield mode,
+			   GLubyte **mapOut, GLint *rowStrideOut);
+
+   void (*UnmapRenderbuffer)(struct gl_context *ctx,
+			     struct gl_renderbuffer *rb);
+
    /**
     * Note: no context argument.  This function doesn't initially look
     * like it belongs here, except that the driver is the only entity

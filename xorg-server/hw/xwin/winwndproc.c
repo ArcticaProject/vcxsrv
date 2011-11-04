@@ -776,8 +776,8 @@ winWindowProc (HWND hwnd, UINT message,
 	  tme.hwndTrack = hwnd;
 
 	  /* Call the tracking function */
-	  if (!(*g_fpTrackMouseEvent) (&tme))
-	    ErrorF ("winWindowProc - _TrackMouseEvent failed\n");
+	  if (!TrackMouseEvent(&tme))
+	    ErrorF ("winWindowProc - TrackMouseEvent failed\n");
 
 	  /* Flag that we are tracking now */
 	  s_fTracking = TRUE;

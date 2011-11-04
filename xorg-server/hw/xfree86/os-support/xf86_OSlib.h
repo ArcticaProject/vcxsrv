@@ -230,20 +230,13 @@
 # include <sys/mman.h>
 # include <sys/stat.h>
 
-# if defined(__bsdi__)
-#  include <sys/param.h>
-# if (_BSDI_VERSION < 199510)
-#  include <i386/isa/vgaioctl.h>
-# endif
-# endif /* __bsdi__ */
-
 #endif /* CSRG_BASED */
 
 /**************************************************************************/
 /* Kernel of *BSD                                                         */
 /**************************************************************************/
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
- defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
+ defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
 
 # include <sys/param.h>
 # if defined(__FreeBSD_version) && !defined(__FreeBSD_kernel_version)
@@ -252,12 +245,6 @@
 
 # if !defined(LINKKIT)
   /* Don't need this stuff for the Link Kit */
-#  if defined(__bsdi__)
-#   include <i386/isa/pcconsioctl.h>
-#   define CONSOLE_X_MODE_ON PCCONIOCRAW
-#   define CONSOLE_X_MODE_OFF PCCONIOCCOOK
-#   define CONSOLE_X_BELL PCCONIOCBEEP
-#  else /* __bsdi__ */
 #   ifdef SYSCONS_SUPPORT
 #    define COMPAT_SYSCONS
 #    if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
@@ -328,7 +315,6 @@
 #ifndef CONSOLE_GET_MEM_INFO 
 #    define CONSOLE_GET_MEM_INFO            _IOR('t',159,struct map_info)
 #endif
-#  endif /* __bsdi__ */
 # endif /* !LINKKIT */
 
 #if defined(USE_I386_IOPL) || defined(USE_AMD64_IOPL)
@@ -337,8 +323,7 @@
 
 # define CLEARDTR_SUPPORT
 
-#endif
-/* __FreeBSD_kernel__ || __NetBSD__ || __OpenBSD__ || __bsdi__ */
+#endif /* __FreeBSD__ || __NetBSD__ || __OpenBSD__ || __DragonFly__ */
 
 /**************************************************************************/
 /* IRIX                                                                   */
@@ -378,8 +363,8 @@
 #define DEV_MEM "/dev/mem"
 #endif
 
-#ifndef VT_SYSREQ_DEFAULT
-#define VT_SYSREQ_DEFAULT FALSE
+#ifndef MAP_FAILED
+#define MAP_FAILED ((void *)-1)
 #endif
 
 #define SYSCALL(call) while(((call) == -1) && (errno == EINTR))

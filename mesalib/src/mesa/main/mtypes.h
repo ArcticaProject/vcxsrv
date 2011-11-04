@@ -884,6 +884,7 @@ struct gl_fog_attrib
    GLboolean ColorSumEnabled;
    GLenum FogCoordinateSource;  /**< GL_EXT_fog_coord */
    GLfloat _Scale;		/**< (End == Start) ? 1.0 : 1.0 / (End - Start) */
+   GLenum FogDistanceMode;     /**< GL_NV_fog_distance */
 };
 
 
@@ -1165,6 +1166,7 @@ typedef enum
    TEXTURE_BUFFER_INDEX,
    TEXTURE_2D_ARRAY_INDEX,
    TEXTURE_1D_ARRAY_INDEX,
+   TEXTURE_EXTERNAL_INDEX,
    TEXTURE_CUBE_INDEX,
    TEXTURE_3D_INDEX,
    TEXTURE_RECT_INDEX,
@@ -1182,6 +1184,7 @@ typedef enum
 #define TEXTURE_BUFFER_BIT   (1 << TEXTURE_BUFFER_INDEX)
 #define TEXTURE_2D_ARRAY_BIT (1 << TEXTURE_2D_ARRAY_INDEX)
 #define TEXTURE_1D_ARRAY_BIT (1 << TEXTURE_1D_ARRAY_INDEX)
+#define TEXTURE_EXTERNAL_BIT (1 << TEXTURE_EXTERNAL_INDEX)
 #define TEXTURE_CUBE_BIT     (1 << TEXTURE_CUBE_INDEX)
 #define TEXTURE_3D_BIT       (1 << TEXTURE_3D_INDEX)
 #define TEXTURE_RECT_BIT     (1 << TEXTURE_RECT_INDEX)
@@ -1334,6 +1337,7 @@ struct gl_texture_object
    GLboolean _Complete;		/**< Is texture object complete? */
    GLboolean _RenderToTexture;  /**< Any rendering to this texture? */
    GLboolean Purgeable;         /**< Is the buffer purgeable under memory pressure? */
+   GLboolean Immutable;         /**< GL_ARB_texture_storage */
 
    /** Actual texture images, indexed by [cube face] and [mipmap level] */
    struct gl_texture_image *Image[MAX_FACES][MAX_TEXTURE_LEVELS];
@@ -1341,6 +1345,9 @@ struct gl_texture_object
    /** GL_ARB_texture_buffer_object */
    struct gl_buffer_object *BufferObject;
    GLenum BufferObjectFormat;
+
+   /** GL_OES_EGL_image_external */
+   GLint RequiredTextureImageUnits;
 
    /**
     * \name For device driver.
@@ -2826,6 +2833,7 @@ struct gl_extensions
    GLboolean ARB_texture_non_power_of_two;
    GLboolean ARB_texture_rg;
    GLboolean ARB_texture_rgb10_a2ui;
+   GLboolean ARB_texture_storage;
    GLboolean ARB_timer_query;
    GLboolean ARB_transform_feedback2;
    GLboolean ARB_transpose_matrix;
@@ -2900,6 +2908,7 @@ struct gl_extensions
    GLboolean MESA_texture_array;
    GLboolean NV_blend_square;
    GLboolean NV_conditional_render;
+   GLboolean NV_fog_distance;
    GLboolean NV_fragment_program;
    GLboolean NV_fragment_program_option;
    GLboolean NV_light_max_exponent;
@@ -2916,6 +2925,7 @@ struct gl_extensions
    GLboolean S3_s3tc;
    GLboolean OES_EGL_image;
    GLboolean OES_draw_texture;
+   GLboolean OES_EGL_image_external;
    GLboolean extension_sentinel;
    /** The extension string */
    const GLubyte *String;

@@ -134,6 +134,7 @@ static const struct extension extension_table[] = {
    { "GL_ARB_texture_rectangle",                   o(NV_texture_rectangle),                    GL,             2004 },
    { "GL_ARB_texture_rgb10_a2ui",                  o(ARB_texture_rgb10_a2ui),                  GL,             2009 },
    { "GL_ARB_texture_rg",                          o(ARB_texture_rg),                          GL,             2008 },
+   { "GL_ARB_texture_storage",                     o(ARB_texture_storage),                     GL,             2011 },
    { "GL_ARB_texture_swizzle",                     o(EXT_texture_swizzle),                     GL,             2008 },
    { "GL_ARB_transform_feedback2",                 o(ARB_transform_feedback2),                 GL,             2010 },
    { "GL_ARB_transpose_matrix",                    o(ARB_transpose_matrix),                    GL,             1999 },
@@ -228,6 +229,7 @@ static const struct extension extension_table[] = {
 #if FEATURE_OES_EGL_image
    /*  FIXME: Mesa expects GL_OES_EGL_image to be available in OpenGL contexts. */
    { "GL_OES_EGL_image",                           o(OES_EGL_image),                           GL | ES1 | ES2, 2006 },
+   { "GL_OES_EGL_image_external",                  o(OES_EGL_image_external),                       ES1 | ES2, 2010 },
 #endif
    { "GL_OES_element_index_uint",                  o(dummy_true),                                   ES1 | ES2, 2005 },
    { "GL_OES_fbo_render_mipmap",                   o(EXT_framebuffer_object),                       ES1 | ES2, 2005 },
@@ -286,6 +288,7 @@ static const struct extension extension_table[] = {
    { "GL_NV_depth_clamp",                          o(ARB_depth_clamp),                         GL,             2001 },
    { "GL_NV_draw_buffers",                         o(dummy_true),                                         ES2, 2011 },
    { "GL_NV_fbo_color_attachments",                o(EXT_framebuffer_object),                             ES2, 2010 },
+   { "GL_NV_fog_distance",                         o(NV_fog_distance),                         GL,             2001 },
    { "GL_NV_fragment_program",                     o(NV_fragment_program),                     GL,             2001 },
    { "GL_NV_fragment_program_option",              o(NV_fragment_program_option),              GL,             2005 },
    { "GL_NV_light_max_exponent",                   o(NV_light_max_exponent),                   GL,             1999 },
@@ -421,6 +424,7 @@ _mesa_enable_sw_extensions(struct gl_context *ctx)
    ctx->Extensions.ARB_texture_non_power_of_two = GL_TRUE;
    ctx->Extensions.ARB_texture_rg = GL_TRUE;
    ctx->Extensions.ARB_texture_compression_rgtc = GL_TRUE;
+   ctx->Extensions.ARB_texture_storage = GL_TRUE;
    ctx->Extensions.ARB_vertex_array_object = GL_TRUE;
 #if FEATURE_ARB_vertex_program
    ctx->Extensions.ARB_vertex_program = GL_TRUE;

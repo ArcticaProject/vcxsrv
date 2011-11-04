@@ -967,16 +967,9 @@ event queue.  It is simply passed the event to be queued.
 </para>
 
 <para>The cursor position should be updated when motion events are
-enqueued, by calling either miPointerAbsoluteCursor() or
-miPointerDeltaCursor():
+enqueued by calling miPointerDeltaCursor():
 
 <variablelist>
-<varlistentry>
-<term>miPointerAbsoluteCursor()</term>
-<listitem>
-<para>This MI function is used to move the
-cursor to the absolute coordinates provided.
-</para></listitem></varlistentry>
 <varlistentry>
 <term>miPointerDeltaCursor()</term>
 <listitem>

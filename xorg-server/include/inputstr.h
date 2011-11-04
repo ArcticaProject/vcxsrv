@@ -534,8 +534,9 @@ typedef struct _DeviceIntRec {
     DeviceIntPtr        lastSlave;  /* last slave device used */
 
     /* last valuator values recorded, not posted to client;
-     * for slave devices, valuators is in device coordinates
-     * for master devices, valuators is in screen coordinates
+     * for slave devices, valuators is in device coordinates, mapped to the
+     * desktop
+     * for master devices, valuators is in desktop coordinates.
      * see dix/getevents.c
      * remainder supports acceleration
      */

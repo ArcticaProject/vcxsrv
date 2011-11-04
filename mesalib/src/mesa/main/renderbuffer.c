@@ -1716,6 +1716,33 @@ _mesa_soft_renderbuffer_storage(struct gl_context *ctx, struct gl_renderbuffer *
 }
 
 
+void
+_mesa_map_soft_renderbuffer(struct gl_context *ctx,
+			    struct gl_renderbuffer *rb,
+			    GLuint x, GLuint y, GLuint w, GLuint h,
+			    GLbitfield mode,
+			    GLubyte **out_map,
+			    GLint *out_stride)
+{
+   GLubyte *map = rb->Data;
+   int cpp = _mesa_get_format_bytes(rb->Format);
+   int stride = rb->RowStride * cpp;
+
+   ASSERT(rb->Data);
+
+   map += y * stride;
+   map += x * cpp;
+
+   *out_map = map;
+   *out_stride = stride;
+}
+
+void
+_mesa_unmap_soft_renderbuffer(struct gl_context *ctx,
+			      struct gl_renderbuffer *rb)
+{
+}
+
 
 /**********************************************************************/
 /**********************************************************************/
@@ -1984,7 +2011,7 @@ _mesa_init_renderbuffer(struct gl_renderbuffer *rb, GLuint name)
 
    rb->Width = 0;
    rb->Height = 0;
-   rb->InternalFormat = GL_NONE;
+   rb->InternalFormat = GL_RGBA;
    rb->Format = MESA_FORMAT_NONE;
 
    rb->DataType = GL_NONE;

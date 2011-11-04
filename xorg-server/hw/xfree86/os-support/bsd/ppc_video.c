@@ -36,18 +36,11 @@
 
 #include "bus/Pci.h"
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((caddr_t)-1)
-#endif
-
-
 /***************************************************************************/
 /* Video Memory Mapping section                                            */
 /***************************************************************************/
 
-#ifndef __OpenBSD__
-#define DEV_MEM "/dev/mem"
-#else
+#ifdef __OpenBSD__
 #define DEV_MEM "/dev/xf86"
 #endif
 

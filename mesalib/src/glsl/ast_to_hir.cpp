@@ -935,6 +935,28 @@ check_builtin_array_max_size(const char *name, unsigned size,
    return false;
 }
 
+/**
+ * Create the constant 1, of a which is appropriate for incrementing and
+ * decrementing values of the given GLSL type.  For example, if type is vec4,
+ * this creates a constant value of 1.0 having type float.
+ *
+ * If the given type is invalid for increment and decrement operators, return
+ * a floating point 1--the error will be detected later.
+ */
+static ir_rvalue *
+constant_one_for_inc_dec(void *ctx, const glsl_type *type)
+{
+   switch (type->base_type) {
+   case GLSL_TYPE_UINT:
+      return new(ctx) ir_constant((unsigned) 1);
+   case GLSL_TYPE_INT:
+      return new(ctx) ir_constant(1);
+   default:
+   case GLSL_TYPE_FLOAT:
+      return new(ctx) ir_constant(1.0f);
+   }
+}
+
 ir_rvalue *
 ast_expression::hir(exec_list *instructions,
 		    struct _mesa_glsl_parse_state *state)
@@ -1442,10 +1464,7 @@ ast_expression::hir(exec_list *instructions,
    case ast_pre_inc:
    case ast_pre_dec: {
       op[0] = this->subexpressions[0]->hir(instructions, state);
-      if (op[0]->type->base_type == GLSL_TYPE_FLOAT)
-	 op[1] = new(ctx) ir_constant(1.0f);
-      else
-	 op[1] = new(ctx) ir_constant(1);
+      op[1] = constant_one_for_inc_dec(ctx, op[0]->type);
 
       type = arithmetic_result_type(op[0], op[1], false, state, & loc);
 
@@ -1463,10 +1482,7 @@ ast_expression::hir(exec_list *instructions,
    case ast_post_inc:
    case ast_post_dec: {
       op[0] = this->subexpressions[0]->hir(instructions, state);
-      if (op[0]->type->base_type == GLSL_TYPE_FLOAT)
-	 op[1] = new(ctx) ir_constant(1.0f);
-      else
-	 op[1] = new(ctx) ir_constant(1);
+      op[1] = constant_one_for_inc_dec(ctx, op[0]->type);
 
       error_emitted = op[0]->type->is_error() || op[1]->type->is_error();
 
@@ -1812,7 +1828,17 @@ process_array_type(YYLTYPE *loc, const glsl_type *base, ast_node *array_size,
 {
    unsigned length = 0;
 
-   /* FINISHME: Reject delcarations of multidimensional arrays. */
+   /* From page 19 (page 25) of the GLSL 1.20 spec:
+    *
+    *     "Only one-dimensional arrays may be declared."
+    */
+   if (base->is_array()) {
+      _mesa_glsl_error(loc, state,
+		       "invalid array of `%s' (only one-dimensional arrays "
+		       "may be declared)",
+		       base->name);
+      return glsl_type::error_type;
+   }
 
    if (array_size != NULL) {
       exec_list dummy_instructions;
@@ -2341,6 +2367,9 @@ process_initializer(ir_variable *var, ast_declaration *decl,
       } else
 	 initializer_type = rhs->type;
 
+      var->constant_initializer = rhs->constant_expression_value();
+      var->has_initializer = true;
+
       /* If the declared variable is an unsized array, it must inherrit
        * its full type from the initializer.  A declaration such as
        *
@@ -2445,14 +2474,32 @@ ast_declarator_list::hir(exec_list *instructions,
 
    decl_type = this->type->specifier->glsl_type(& type_name, state);
    if (this->declarations.is_empty()) {
-      if (decl_type != NULL) {
-	 /* Warn if this empty declaration is not for declaring a structure.
-	  */
-	 if (this->type->specifier->structure == NULL) {
+      /* If there is no structure involved in the program text, there are two
+       * possible scenarios:
+       *
+       * - The program text contained something like 'vec4;'.  This is an
+       *   empty declaration.  It is valid but weird.  Emit a warning.
+       *
+       * - The program text contained something like 'S;' and 'S' is not the
+       *   name of a known structure type.  This is both invalid and weird.
+       *   Emit an error.
+       *
+       * Note that if decl_type is NULL and there is a structure involved,
+       * there must have been some sort of error with the structure.  In this
+       * case we assume that an error was already generated on this line of
+       * code for the structure.  There is no need to generate an additional,
+       * confusing error.
+       */
+      assert(this->type->specifier->structure == NULL || decl_type != NULL
+	     || state->error);
+      if (this->type->specifier->structure == NULL) {
+	 if (decl_type != NULL) {
 	    _mesa_glsl_warning(&loc, state, "empty declaration");
+	 } else {
+	    _mesa_glsl_error(&loc, state,
+			     "invalid type `%s' in empty declaration",
+			     type_name);
 	 }
-      } else {
-	    _mesa_glsl_error(& loc, state, "incomplete declaration");
       }
    }
 
@@ -2480,6 +2527,8 @@ ast_declarator_list::hir(exec_list *instructions,
       if (decl->is_array) {
 	 var_type = process_array_type(&loc, decl_type, decl->array_size,
 				       state);
+	 if (var_type->is_error())
+	    continue;
       } else {
 	 var_type = decl_type;
       }
@@ -2921,7 +2970,7 @@ ast_parameter_declarator::hir(exec_list *instructions,
       type = process_array_type(&loc, type, this->array_size, state);
    }
 
-   if (type->array_size() == 0) {
+   if (!type->is_error() && type->array_size() == 0) {
       _mesa_glsl_error(&loc, state, "arrays passed as parameters must have "
 		       "a declared size.");
       type = glsl_type::error_type;

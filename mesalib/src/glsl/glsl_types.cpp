@@ -203,6 +203,15 @@ glsl_type::generate_OES_texture_3D_types(glsl_symbol_table *symtab, bool warn)
 
 
 void
+glsl_type::generate_OES_EGL_image_external_types(glsl_symbol_table *symtab,
+						 bool warn)
+{
+   add_types_to_symbol_table(symtab, builtin_OES_EGL_image_external_types,
+			     Elements(builtin_OES_EGL_image_external_types),
+			     warn);
+}
+
+void
 _mesa_glsl_initialize_types(struct _mesa_glsl_parse_state *state)
 {
    switch (state->language_version) {
@@ -238,6 +247,15 @@ _mesa_glsl_initialize_types(struct _mesa_glsl_parse_state *state)
       glsl_type::generate_EXT_texture_array_types(state->symbols,
 				       state->EXT_texture_array_warn);
    }
+
+   /* We cannot check for language_version == 100 here because we need the
+    * types to support fixed-function program generation.  But this is fine
+    * since the extension is never enabled for OpenGL contexts.
+    */
+   if (state->OES_EGL_image_external_enable) {
+      glsl_type::generate_OES_EGL_image_external_types(state->symbols,
+					       state->OES_EGL_image_external_warn);
+   }
 }
 
 
@@ -254,6 +272,29 @@ const glsl_type *glsl_type::get_base_type() const
       return bool_type;
    default:
       return error_type;
+   }
+}
+
+
+const glsl_type *glsl_type::get_scalar_type() const
+{
+   const glsl_type *type = this;
+
+   /* Handle arrays */
+   while (type->base_type == GLSL_TYPE_ARRAY)
+      type = type->fields.array;
+
+   /* Handle vectors and matrices */
+   switch (type->base_type) {
+   case GLSL_TYPE_UINT:
+      return uint_type;
+   case GLSL_TYPE_INT:
+      return int_type;
+   case GLSL_TYPE_FLOAT:
+      return float_type;
+   default:
+      /* Handle everything else */
+      return type;
    }
 }
 

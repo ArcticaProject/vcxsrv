@@ -561,6 +561,10 @@ typedef struct _ScreenInfo {
 		formats[MAXFORMATS];
     int		numScreens;
     ScreenPtr	screens[MAXSCREENS];
+    int         x;      /* origin */
+    int         y;      /* origin */
+    int		width;  /* total width of all screens together */
+    int		height; /* total height of all screens together */
 } ScreenInfo;
 
 extern _X_EXPORT ScreenInfo screenInfo;

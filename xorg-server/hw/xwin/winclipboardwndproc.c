@@ -56,8 +56,6 @@ extern void		*g_pClipboardDisplay;
 extern Window		g_iClipboardWindow;
 extern Atom		g_atomLastOwnedSelection;
 
-/* BPS - g_hwndClipboard needed for X app->Windows paste fix */
-extern HWND		g_hwndClipboard;
 
 /* 
  * Local function prototypes
@@ -142,12 +140,6 @@ winProcessXEventsTimeout (HWND hwnd, int iWindow, Display *pDisplay,
 /*
  * Process a given Windows message
  */
-
-/* BPS - Define our own message, which we'll post to ourselves to facilitate
- * resetting the delayed rendering mechanism after each paste from X app to
- * Windows app. TODO - Perhaps move to win.h with the other WM_USER messages.
- */
-#define WM_USER_PASTE_COMPLETE		(WM_USER + 1003)
 
 LRESULT CALLBACK
 winClipboardWindowProc (HWND hwnd, UINT message, 
@@ -343,6 +335,8 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	     * previous XSetSelectionOwner messages.
 	     */
 	    XSync (pDisplay, FALSE);
+
+            winDebug("winClipboardWindowProc - XSync done.\n");
 	    
 	    /* Release PRIMARY selection if owned */
 	    iReturn = XGetSelectionOwner (pDisplay, XA_PRIMARY);
@@ -540,13 +534,6 @@ winClipboardWindowProc (HWND hwnd, UINT message,
             ErrorF("winClipboardWindowProc - timed out waiting for WIN_XEVENTS_NOTIFY\n");
 	  }
 
-	/* BPS - Post ourselves a user message whose handler will reset the
-	 * delayed rendering mechanism after the paste is complete. This is
-	 * necessary because calling SetClipboardData() with a NULL argument
-	 * here will cause the data we just put on the clipboard to be lost!
-	 */
-	PostMessage(g_hwndClipboard, WM_USER_PASTE_COMPLETE, 0, 0);
-
 	/* Special handling for WM_RENDERALLFORMATS */
 	if (message == WM_RENDERALLFORMATS)
 	  {
@@ -564,37 +551,6 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	winDebug ("winClipboardWindowProc - WM_RENDER*FORMAT - Returning.\n");
 	return 0;
       }
-    /* BPS - This WM_USER message is posted by us. It gives us the opportunity
-     * to reset the delayed rendering mechanism after each and every paste
-     * from an X app to a Windows app. Without such a mechanism, subsequent
-     * changes of selection in the X app owning the selection are not
-     * reflected in pastes into Windows apps, since Windows won't send us the
-     * WM_RENDERFORMAT message unless someone has set changed data (or NULL)
-     * on the clipboard. */
-    case WM_USER_PASTE_COMPLETE:
-      {
-	if (hwnd != GetClipboardOwner ())
-	  /* In case we've lost the selection since posting the message */
-	  return 0;
-	winDebug ("winClipboardWindowProc - WM_USER_PASTE_COMPLETE\n");
-
-	/* Set up for another delayed rendering callback */
-	OpenClipboard (g_hwndClipboard);
-
-	/* Take ownership of the Windows clipboard */
-	EmptyClipboard ();
-
-	/* Advertise Unicode if we support it */
-	if (g_fUnicodeSupport)
-	  SetClipboardData (CF_UNICODETEXT, NULL);
-
-	/* Always advertise regular text */
-	SetClipboardData (CF_TEXT, NULL);
-
-	/* Release the clipboard */
-	CloseClipboard ();
-      }
-      return 0;
     }
 
   /* Let Windows perform default processing for unhandled messages */

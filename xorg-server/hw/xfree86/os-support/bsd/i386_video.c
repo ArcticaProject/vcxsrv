@@ -64,10 +64,6 @@
 #define MAP_FLAGS (MAP_FILE | MAP_SHARED)
 #endif
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((caddr_t)-1)
-#endif
-
 #ifdef __OpenBSD__
 #define SYSCTL_MSG "\tCheck that you have set 'machdep.allowaperture=1'\n"\
 		   "\tin /etc/sysctl.conf and reboot your machine\n" \
@@ -88,7 +84,6 @@ static int  devMemFd = -1;
 #ifdef HAS_APERTURE_DRV
 #define DEV_APERTURE "/dev/xf86"
 #endif
-#define DEV_MEM "/dev/mem"
 
 static pointer mapVidMem(int, unsigned long, unsigned long, int);
 static void unmapVidMem(int, pointer, unsigned long);

@@ -725,10 +725,12 @@ AppleWMExtensionInit(
                                  NULL,
                                  StandardMinorOpcode)))
     {
+        size_t i;
         WMReqCode = (unsigned char)extEntry->base;
         WMErrorBase = extEntry->errorBase;
         WMEventBase = extEntry->eventBase;
-        EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
+        for (i=0; i < AppleWMNumberEvents; i++)
+            EventSwapVector[WMEventBase + i] = (EventSwapPtr) SNotifyEvent;
         appleWMProcs = procsPtr;
     }
 }

@@ -39,10 +39,13 @@ tbd
 <li>GL_ARB_ES2_compatibility (r300g, r600g)
 <li>GL_ARB_depth_buffer_float (r600g)
 <li>GL_ARB_vertex_type_2_10_10_10_rev (r600g)
+<li>GL_ARB_texture_storage (gallium drivers and swrast)
 <li>GL_EXT_packed_float (i965)
 <li>GL_EXT_texture_array (r600g)
 <li>GL_EXT_texture_shared_exponent (i965)
+<li>GL_NV_fog_distance (all gallium drivers, nouveau classic)
 <li>GL_NV_primitive_restart (r600g)
+<li>GL_OES_EGL_image_external (gallium drivers)
 <li>Many updates to the VMware svga Gallium driver
 </ul>
 
@@ -66,6 +69,8 @@ tbd
   to a color (e.g., RGBA) texture.  However, the data cannot be stored
   internally as color-index.</li>
 <li>Removed support for GL_APPLE_client_storage extension.
+<li>Removed the classic Mesa r300 and r600 drivers, which are superseded
+  by the gallium drivers for this hardware.
 </ul>
 
 

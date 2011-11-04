@@ -64,7 +64,7 @@
 #define WIN_DEFAULT_BLACKPIXEL			0
 #define WIN_DEFAULT_LINEBIAS			0
 #define WIN_DEFAULT_E3B_TIME			50 /* milliseconds */
-#define WIN_DEFAULT_DPI				75
+#define WIN_DEFAULT_DPI				96
 #define WIN_DEFAULT_REFRESH			0
 #define WIN_DEFAULT_WIN_KILL			TRUE
 #define WIN_DEFAULT_UNIX_KILL			FALSE
@@ -673,7 +673,6 @@ extern DeviceIntPtr             g_pwinKeyboard;
 
 extern FARPROC			g_fpDirectDrawCreate;
 extern FARPROC			g_fpDirectDrawCreateClipper;
-extern FARPROC			g_fpTrackMouseEvent;
 
 
 /*

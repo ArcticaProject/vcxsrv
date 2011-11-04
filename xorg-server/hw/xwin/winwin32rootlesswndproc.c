@@ -547,8 +547,8 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	  tme.hwndTrack = hwnd;
 
 	  /* Call the tracking function */
-	  if (!(*g_fpTrackMouseEvent) (&tme))
-	    ErrorF ("winMWExtWMWindowProc - _TrackMouseEvent failed\n");
+	  if (!TrackMouseEvent(&tme))
+	    ErrorF ("winMWExtWMWindowProc - TrackMouseEvent failed\n");
 
 	  /* Flag that we are tracking now */
 	  s_fTracking = TRUE;

@@ -571,8 +571,8 @@ typedef struct {
 
 extern int XItoCoreType(int xi_type);
 extern Bool DevHasCursor(DeviceIntPtr pDev);
-extern Bool _X_EXPORT IsPointerDevice( DeviceIntPtr dev);
-extern Bool _X_EXPORT IsKeyboardDevice(DeviceIntPtr dev);
+extern _X_EXPORT Bool IsPointerDevice(DeviceIntPtr dev);
+extern _X_EXPORT Bool IsKeyboardDevice(DeviceIntPtr dev);
 extern Bool IsPointerEvent(InternalEvent *event);
 extern _X_EXPORT Bool IsMaster(DeviceIntPtr dev);
 extern _X_EXPORT Bool IsFloating(DeviceIntPtr dev);

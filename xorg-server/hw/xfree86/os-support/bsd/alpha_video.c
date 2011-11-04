@@ -33,12 +33,10 @@
 
 #include <sys/param.h>
 #ifndef __NetBSD__
-#  include <sys/sysctl.h>
-#  if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
-#      include <machine/sysarch.h>
-#   endif
-# else
-#  include <machine/sysarch.h>
+#include <sys/sysctl.h>
+#endif
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__)
+#include <machine/sysarch.h>
 #endif
 
 #include "xf86Axp.h"
@@ -52,10 +50,6 @@
 #define MAP_FLAGS (MAP_FILE | MAP_SHARED)
 #endif
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((caddr_t)-1)
-#endif
-
 axpDevice bsdGetAXP(void);
 
 #ifndef __NetBSD__
@@ -64,8 +58,6 @@ extern unsigned long dense_base(void);
 static int axpSystem = -1;
 static unsigned long hae_thresh;
 static unsigned long hae_mask;
-static unsigned long bus_base;
-static unsigned long sparse_size;
 
 static unsigned long
 memory_base(void)
@@ -197,7 +189,6 @@ static int  devMemFd = -1;
 #ifdef HAS_APERTURE_DRV
 #define DEV_APERTURE "/dev/xf86"
 #endif
-#define DEV_MEM "/dev/mem"
 
 static pointer mapVidMem(int, unsigned long, unsigned long, int);
 static void unmapVidMem(int, pointer, unsigned long);
@@ -297,7 +288,6 @@ xf86OSInitVidMem(VidMemInfoPtr pVidMem)
                 axpSystem = bsdGetAXP(); 
 	    hae_thresh = xf86AXPParams[axpSystem].hae_thresh;
             hae_mask = xf86AXPParams[axpSystem].hae_mask;
-            sparse_size = xf86AXPParams[axpSystem].size;
 #endif /* __NetBSD__ */
 	}
 	pVidMem->initialised = TRUE;
@@ -440,7 +430,6 @@ xf86DisableIO()
 
 #define vuip    volatile unsigned int *
 
-static unsigned long msb_set = 0;
 static pointer memSBase = 0;
 static pointer memBase = 0;
 
@@ -478,29 +467,25 @@ writeSparse32(int Value, pointer Base, register unsigned long Offset);
 
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 extern int sysarch(int, void *);
-#endif
 
 struct parms {
 	u_int64_t hae;
 };
 
-#ifndef __NetBSD__
-static int
+static void
 sethae(u_int64_t hae)
 {
-#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 #ifndef ALPHA_SETHAE
 #define ALPHA_SETHAE 0
 #endif
-	struct parms p;
-	p.hae = hae;
-	return (sysarch(ALPHA_SETHAE, (char *)&p));
-#endif
-#ifdef __OpenBSD__
-	return -1;
-#endif
+	static struct parms p;
+
+	if (p.hae != hae) {
+		p.hae = hae;
+		sysarch(ALPHA_SETHAE, (char *)&p);
+	}
 }
-#endif /* __NetBSD__ */
+#endif
 
 static pointer
 mapVidMemSparse(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
@@ -555,12 +540,9 @@ readSparse8(pointer Base, register unsigned long Offset)
       if (Offset >= (hae_thresh)) {
         msb = Offset & hae_mask;
         Offset -= msb;
-	if (msb_set != msb) {
-#ifndef __NetBSD__
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	sethae(msb);
 #endif
-	msb_set = msb;
-	}
       }
     result = *(vuip) ((unsigned long)memSBase + (Offset << 5));
     result >>= shift;
@@ -579,12 +561,9 @@ readSparse16(pointer Base, register unsigned long Offset)
     if (Offset >= (hae_thresh)) {
         msb = Offset & hae_mask;
         Offset -= msb;
-      if (msb_set != msb) {
-#ifndef __NetBSD__
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	sethae(msb);
 #endif
-	msb_set = msb;
-      }
     }
     result = *(vuip)((unsigned long)memSBase+(Offset<<5)+(1<<(5-2)));
     result >>= shift;
@@ -609,12 +588,9 @@ writeSparse8(int Value, pointer Base, register unsigned long Offset)
     if (Offset >= (hae_thresh)) {
       msb = Offset & hae_mask;
       Offset -= msb;
-      if (msb_set != msb) {
-#ifndef __NetBSD__
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	sethae(msb);
 #endif
-	msb_set = msb;
-      }
     }
     *(vuip) ((unsigned long)memSBase + (Offset << 5)) = b * 0x01010101;
 }
@@ -630,12 +606,9 @@ writeSparse16(int Value, pointer Base, register unsigned long Offset)
     if (Offset >= (hae_thresh)) {
       msb = Offset & hae_mask;
       Offset -= msb;
-      if (msb_set != msb) {
-#ifndef __NetBSD__
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	sethae(msb);
 #endif
-	msb_set = msb;
-      }
     }
     *(vuip)((unsigned long)memSBase+(Offset<<5)+(1<<(5-2))) =
       w * 0x00010001;
@@ -660,12 +633,9 @@ writeSparseNB8(int Value, pointer Base, register unsigned long Offset)
     if (Offset >= (hae_thresh)) {
       msb = Offset & hae_mask;
       Offset -= msb;
-      if (msb_set != msb) {
-#ifndef __NetBSD__
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	sethae(msb);
 #endif
-	msb_set = msb;
-      }
     }
     *(vuip) ((unsigned long)memSBase + (Offset << 5)) = b * 0x01010101;
 }
@@ -680,12 +650,9 @@ writeSparseNB16(int Value, pointer Base, register unsigned long Offset)
     if (Offset >= (hae_thresh)) {
       msb = Offset & hae_mask ;
       Offset -= msb;
-      if (msb_set != msb) {
-#ifndef __NetBSD__
+#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 	sethae(msb);
 #endif
-	msb_set = msb;
-      }
     }
     *(vuip)((unsigned long)memSBase+(Offset<<5)+(1<<(5-2))) =
       w * 0x00010001;

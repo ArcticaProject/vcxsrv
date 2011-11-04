@@ -629,9 +629,11 @@ winWindowsWMExtensionInit (void)
 			       NULL,
 			       StandardMinorOpcode)))
     {
+      size_t i;
       WMReqCode = (unsigned char)extEntry->base;
       WMErrorBase = extEntry->errorBase;
       WMEventBase = extEntry->eventBase;
-      EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
+      for (i=0; i < WindowsWMNumberEvents; i++)
+        EventSwapVector[WMEventBase + i] = (EventSwapPtr) SNotifyEvent;
     }
 }

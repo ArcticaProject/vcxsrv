@@ -267,6 +267,9 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 		nameRtrn[nameRtrnLen-1]= '\0';
 	    }
             free(buf);
+#ifdef WIN32
+	    unlink(tmpname);
+#endif
 	    return TRUE;
 	}
 	else

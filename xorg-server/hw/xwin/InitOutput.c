@@ -70,12 +70,6 @@ extern HWND			g_hwndClipboard;
 extern Bool			g_fClipboard;
 #endif
 
-
-/*
-  module handle for dynamically loaded comctl32 library
-*/
-static HMODULE g_hmodCommonControls = NULL;
-
 /*
  * Function prototypes
  */
@@ -235,14 +229,6 @@ ddxGiveUp (enum ExitCode error)
    * we are guaranteed to not need the DirectDraw functions.
    */
   winReleaseDDProcAddresses();
-
-  /* Unload our TrackMouseEvent function pointer */
-  if (g_hmodCommonControls != NULL)
-    {
-      FreeLibrary (g_hmodCommonControls);
-      g_hmodCommonControls = NULL;
-      g_fpTrackMouseEvent = (FARPROC) (void (*)(void))NoopDDA;
-    }
   
   /* Free concatenated command line */
   free(g_pszCommandLine);
@@ -602,34 +588,17 @@ winFixupPaths (void)
     }
     if (getenv("HOME") == NULL)
     {
-        HMODULE shfolder;
-        SHGETFOLDERPATHPROC shgetfolderpath = NULL;
         char buffer[MAX_PATH + 5];
         strncpy(buffer, "HOME=", 5);
 
-        /* Try to load SHGetFolderPath from shfolder.dll and shell32.dll */
-        
-        shfolder = LoadLibrary("shfolder.dll");
-        /* fallback to shell32.dll */
-        if (shfolder == NULL)
-            shfolder = LoadLibrary("shell32.dll");
-
-        /* resolve SHGetFolderPath */
-        if (shfolder != NULL)
-            shgetfolderpath = (SHGETFOLDERPATHPROC)GetProcAddress(shfolder, "SHGetFolderPathA");
-
         /* query appdata directory */
-        if (shgetfolderpath &&
-                shgetfolderpath(NULL, CSIDL_APPDATA|CSIDL_FLAG_CREATE, NULL, 0, 
-                    buffer + 5) == 0)
-        { 
+        if (SHGetFolderPathA(NULL, CSIDL_APPDATA|CSIDL_FLAG_CREATE, NULL, 0, buffer + 5) == 0)
+        {
             putenv(buffer);
         } else
         {
             winMsg (X_ERROR, "Can not determine HOME directory\n");
-        } 
-        if (shfolder != NULL)
-            FreeLibrary(shfolder);
+        }
     }
     if (!g_fLogFileChanged) {
         static char buffer[MAX_PATH];
@@ -839,10 +808,10 @@ winUseMsg (void)
 	  "\theight and initial position for that screen. Additionally\n"
 	  "\ta monitor number can be specified to start the server on,\n"
 	  "\tat which point, all coordinates become relative to that\n"
-      "\tmonitor (Not for Windows NT4 and 95). Examples:\n"
-      "\t -screen 0 800x600+100+100@2 ; 2nd monitor offset 100,100 size 800x600\n"
-      "\t -screen 0 1024x768@3        ; 3rd monitor size 1024x768\n"
-      "\t -screen 0 @1 ; on 1st monitor using its full resolution (the default)\n");
+	  "\tmonitor. Examples:\n"
+	  "\t -screen 0 800x600+100+100@2 ; 2nd monitor offset 100,100 size 800x600\n"
+	  "\t -screen 0 1024x768@3        ; 3rd monitor size 1024x768\n"
+	  "\t -screen 0 @1 ; on 1st monitor using its full resolution (the default)\n");
 
   ErrorF ("-silent-dup-error\n"
 	  "\tIf another instance of " EXECUTABLE_NAME " with the same display number is running\n"
@@ -978,27 +947,6 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
   
   /* Detect supported engines */
   winDetectSupportedEngines ();
-
-  /* Load common controls library */
-  g_hmodCommonControls = LoadLibraryEx ("comctl32.dll", NULL, 0);
-
-  /* Load TrackMouseEvent function pointer */  
-  g_fpTrackMouseEvent = GetProcAddress (g_hmodCommonControls,
-					 "_TrackMouseEvent");
-  if (g_fpTrackMouseEvent == NULL)
-    {
-      winErrorFVerb (1, "InitOutput - Could not get pointer to function\n"
-	      "\t_TrackMouseEvent in comctl32.dll.  Try installing\n"
-	      "\tInternet Explorer 3.0 or greater if you have not\n"
-	      "\talready.\n");
-
-      /* Free the library since we won't need it */
-      FreeLibrary (g_hmodCommonControls);
-      g_hmodCommonControls = NULL;
-
-      /* Set function pointer to point to no operation function */
-      g_fpTrackMouseEvent = (FARPROC) (void (*)(void))NoopDDA;
-    }
 
   /* Store the instance handle */
   g_hInstance = GetModuleHandle (NULL);

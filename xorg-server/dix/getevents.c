@@ -257,10 +257,10 @@ CreateClassesChangedEvent(InternalEvent* event,
  */
 static double
 rescaleValuatorAxis(double coord, AxisInfoPtr from, AxisInfoPtr to,
-                    double defmax)
+                    double defmin, double defmax)
 {
-    double fmin = 0.0, fmax = defmax;
-    double tmin = 0.0, tmax = defmax;
+    double fmin = defmin, fmax = defmax;
+    double tmin = defmin, tmax = defmax;
 
     if (from && from->min_value < from->max_value) {
         fmin = from->min_value;
@@ -295,7 +295,7 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
     int i;
     DeviceIntPtr lastSlave;
 
-    /* master->last.valuators[0]/[1] is in screen coords and the actual
+    /* master->last.valuators[0]/[1] is in desktop-wide coords and the actual
      * position of the pointer */
     pDev->last.valuators[0] = master->last.valuators[0];
     pDev->last.valuators[1] = master->last.valuators[1];
@@ -309,14 +309,14 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
         pDev->last.valuators[0] = rescaleValuatorAxis(pDev->last.valuators[0],
                                                       NULL,
                                                       pDev->valuator->axes + 0,
-                                                      scr->width);
+                                                      0, scr->width);
     }
     if(pDev->valuator->numAxes > 1)
     {
         pDev->last.valuators[1] = rescaleValuatorAxis(pDev->last.valuators[1],
                                                       NULL,
                                                       pDev->valuator->axes + 1,
-                                                      scr->height);
+                                                      0, scr->height);
     }
 
     /* calculate the other axis as well based on info from the old
@@ -333,7 +333,7 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
             {
                 double val = pDev->last.valuators[i];
                 val = rescaleValuatorAxis(val, lastSlave->valuator->axes + i,
-                                          pDev->valuator->axes + i, 0);
+                                          pDev->valuator->axes + i, 0, 0);
                 pDev->last.valuators[i] = val;
             }
         }
@@ -445,7 +445,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                 /* scale to screen coords */
                 to = &core_axis;
                 to->max_value = pScreen->width;
-                coord = rescaleValuatorAxis(coord, &from, to, pScreen->width);
+                coord = rescaleValuatorAxis(coord, &from, to, 0, pScreen->width);
 
                 memcpy(corebuf, &coord, sizeof(INT16));
                 corebuf++;
@@ -456,7 +456,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                 memcpy(&coord, icbuf++, sizeof(INT32));
 
                 to->max_value = pScreen->height;
-                coord = rescaleValuatorAxis(coord, &from, to, pScreen->height);
+                coord = rescaleValuatorAxis(coord, &from, to, 0, pScreen->height);
                 memcpy(corebuf, &coord, sizeof(INT16));
 
             } else if (IsMaster(pDev))
@@ -484,7 +484,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                         from.max_value = pScreen->height;
 
                     /* scale from stored range into current range */
-                    coord = rescaleValuatorAxis(coord, &from, to, 0);
+                    coord = rescaleValuatorAxis(coord, &from, to, 0, 0);
                     memcpy(ocbuf, &coord, sizeof(INT32));
                     ocbuf++;
                 }
@@ -757,8 +757,8 @@ accelPointer(DeviceIntPtr dev, ValuatorMask* valuators, CARD32 ms)
  * device's coordinate range.
  *
  * @param dev The device to scale for.
- * @param[in, out] mask The mask in sceen coordinates, modified in place to
- * contain device coordinate range.
+ * @param[in, out] mask The mask in desktop coordinates, modified in place
+ * to contain device coordinate range.
  */
 static void
 scale_from_screen(DeviceIntPtr dev, ValuatorMask *mask)
@@ -768,16 +768,18 @@ scale_from_screen(DeviceIntPtr dev, ValuatorMask *mask)
 
     if (valuator_mask_isset(mask, 0))
     {
-        scaled = rescaleValuatorAxis(valuator_mask_get_double(mask, 0),
+        scaled = valuator_mask_get_double(mask, 0) + scr->x;
+        scaled = rescaleValuatorAxis(scaled,
                                      NULL, dev->valuator->axes + 0,
-                                     scr->width);
+                                     0, scr->width);
         valuator_mask_set_double(mask, 0, scaled);
     }
     if (valuator_mask_isset(mask, 1))
     {
-        scaled = rescaleValuatorAxis(valuator_mask_get_double(mask, 1),
+        scaled = valuator_mask_get_double(mask, 1) + scr->y;
+        scaled = rescaleValuatorAxis(scaled,
                                      NULL, dev->valuator->axes + 1,
-                                     scr->height);
+                                     0, scr->height);
         valuator_mask_set_double(mask, 1, scaled);
     }
 }
@@ -793,16 +795,21 @@ scale_from_screen(DeviceIntPtr dev, ValuatorMask *mask)
  *
  * The coordinates provided are always absolute. The parameter mode
  * specifies whether it was relative or absolute movement that landed us at
- * those coordinates.
+ * those coordinates. see fill_pointer_events for information on coordinate
+ * systems.
  *
  * @param dev The device to be moved.
  * @param mode Movement mode (Absolute or Relative)
- * @param mask Mask of axis values for this event
- * @param screenx Screen x coordinate the sprite is on after the update.
- * @param screeny Screen y coordinate the sprite is on after the update.
+ * @param[in,out] mask Mask of axis values for this event, returns the
+ * per-screen device coordinates after confinement
+ * @param[out] devx x desktop-wide coordinate in device coordinate system
+ * @param[out] devy y desktop-wide coordinate in device coordinate system
+ * @param[out] screenx x coordinate in desktop coordinate system
+ * @param[out] screeny y coordinate in desktop coordinate system
  */
 static ScreenPtr
 positionSprite(DeviceIntPtr dev, int mode, ValuatorMask *mask,
+               double *devx, double *devy,
                double *screenx, double *screeny)
 {
     double x, y;
@@ -821,16 +828,20 @@ positionSprite(DeviceIntPtr dev, int mode, ValuatorMask *mask,
     else
         y = dev->last.valuators[1];
 
-    /* scale x&y to screen */
+    /* scale x&y to desktop coordinates */
     *screenx = rescaleValuatorAxis(x, dev->valuator->axes + 0, NULL,
-                                   scr->width);
+                                   screenInfo.x, screenInfo.width);
     *screeny = rescaleValuatorAxis(y, dev->valuator->axes + 1, NULL,
-                                   scr->height);
+                                   screenInfo.y, screenInfo.height);
 
     tmpx = *screenx;
     tmpy = *screeny;
+    *devx = x;
+    *devy = y;
+
     /* miPointerSetPosition takes care of crossing screens for us, as well as
-     * clipping to the current screen. */
+     * clipping to the current screen. Coordinates returned are in desktop
+     * coord system */
     scr = miPointerSetPosition(dev, mode, screenx, screeny);
 
     /* If we were constrained, rescale x/y from the screen coordinates so
@@ -838,17 +849,24 @@ positionSprite(DeviceIntPtr dev, int mode, ValuatorMask *mask,
      * crossing this doesn't matter much, the coords would be 0 or max.
      */
     if (tmpx != *screenx)
-        x = rescaleValuatorAxis(*screenx, NULL, dev->valuator->axes + 0,
-                                scr->width);
+        *devx = rescaleValuatorAxis(*screenx, NULL, dev->valuator->axes + 0,
+                                    screenInfo.x, screenInfo.width);
+
     if (tmpy != *screeny)
-        y = rescaleValuatorAxis(*screeny, NULL, dev->valuator->axes + 1,
-                                scr->height);
+        *devy = rescaleValuatorAxis(*screeny, NULL, dev->valuator->axes + 1,
+                                    screenInfo.y, screenInfo.height);
 
-
-    if (valuator_mask_isset(mask, 0))
+    /* Recalculate the per-screen device coordinates */
+    if (valuator_mask_isset(mask, 0)) {
+        x = rescaleValuatorAxis(*screenx - scr->x, NULL, dev->valuator->axes + 0,
+                                0, scr->width);
         valuator_mask_set_double(mask, 0, x);
-    if (valuator_mask_isset(mask, 1))
+    }
+    if (valuator_mask_isset(mask, 1)) {
+        y = rescaleValuatorAxis(*screeny - scr->y, NULL, dev->valuator->axes + 1,
+                                0, scr->height);
         valuator_mask_set_double(mask, 1, y);
+    }
 
     return scr;
 }
@@ -1105,6 +1123,38 @@ QueuePointerEvents(DeviceIntPtr device, int type,
  *
  * Should not be called by anyone other than GetPointerEvents.
  *
+ * We use several different coordinate systems and need to switch between
+ * the three in fill_pointer_events, positionSprite and
+ * miPointerSetPosition. "desktop" refers to the width/height of all
+ * screenInfo.screens[n]->width/height added up. "screen" is ScreenRec, not
+ * output.
+ *
+ * Coordinate systems:
+ * - relative events have a mask_in in relative coordinates, mapped to
+ *   pixels. These events are mapped to the current position±delta.
+ * - absolute events have a mask_in in absolute device coordinates in
+ *   device-specific range. This range is mapped to the desktop.
+ * - POINTER_SCREEN absolute events (x86WarpCursor) are in screen-relative
+ *   screen coordinate range.
+ * - rootx/rooty in events must be be relative to the current screen's
+ *   origin (screen coordinate system)
+ * - XI2 valuators must be relative to the current screen's origin. On
+ *   the protocol the device min/max range maps to the current screen.
+ *
+ * For screen switching we need to get the desktop coordinates for each
+ * event, then map that to the respective position on each screen and
+ * position the cursor there.
+ * The device's last.valuator[] stores the last position in desktop-wide
+ * coordinates (in device range for slave devices, desktop range for master
+ * devices).
+ *
+ * screen-relative device coordinates requires scaling: A device coordinate
+ * x/y of range [n..m] that maps to positions Sx/Sy on Screen S must be
+ * rescaled to match Sx/Sy for [n..m]. In the simplest example, x of (m/2-1)
+ * is the last coordinate on the first screen and must be rescaled for the
+ * event to be m. XI2 clients that do their own coordinate mapping would
+ * otherwise interpret the position of the device elsewere to the cursor.
+ *
  * @return the number of events written into events.
  */
 static int
@@ -1115,8 +1165,10 @@ fill_pointer_events(InternalEvent *events, DeviceIntPtr pDev, int type,
     int num_events = 1, i;
     DeviceEvent *event;
     RawDeviceEvent *raw;
-    double screenx = 0.0, screeny = 0.0;
+    double screenx = 0.0, screeny = 0.0; /* desktop coordinate system */
+    double devx = 0.0, devy = 0.0; /* desktop-wide in device coords */
     ValuatorMask mask;
+    ScreenPtr scr;
 
     switch (type)
     {
@@ -1155,6 +1207,8 @@ fill_pointer_events(InternalEvent *events, DeviceIntPtr pDev, int type,
         set_raw_valuators(raw, &mask, raw->valuators.data_raw);
     }
 
+    /* valuators are in driver-native format (rel or abs) */
+
     if (flags & POINTER_ABSOLUTE)
     {
         if (flags & POINTER_SCREEN) /* valuators are in screen coords */
@@ -1168,22 +1222,34 @@ fill_pointer_events(InternalEvent *events, DeviceIntPtr pDev, int type,
         moveRelative(pDev, &mask);
     }
 
+    /* valuators are in device coordinate system in absolute coordinates */
+
     if ((flags & POINTER_NORAW) == 0)
         set_raw_valuators(raw, &mask, raw->valuators.data);
 
-    positionSprite(pDev, (flags & POINTER_ABSOLUTE) ? Absolute : Relative,
-                   &mask, &screenx, &screeny);
+    scr = positionSprite(pDev, (flags & POINTER_ABSOLUTE) ? Absolute : Relative,
+                         &mask, &devx, &devy, &screenx, &screeny);
+
+    /* screenx, screeny are in desktop coordinates,
+       mask is in device coordinates per-screen (the event data)
+       devx/devy is in device coordinate desktop-wide */
     updateHistory(pDev, &mask, ms);
 
     clipValuators(pDev, &mask);
 
-    for (i = 0; i < valuator_mask_size(&mask); i++)
+    /* store desktop-wide in last.valuators */
+    if (valuator_mask_isset(&mask, 0))
+        pDev->last.valuators[0] = devx;
+    if (valuator_mask_isset(&mask, 1))
+        pDev->last.valuators[1] = devy;
+
+    for (i = 2; i < valuator_mask_size(&mask); i++)
     {
         if (valuator_mask_isset(&mask, i))
             pDev->last.valuators[i] = valuator_mask_get_double(&mask, i);
     }
 
-    /* Update the MD's co-ordinates, which are always in screen space. */
+    /* Update the MD's co-ordinates, which are always in desktop space. */
     if (!IsMaster(pDev) || !IsFloating(pDev)) {
         DeviceIntPtr master = GetMaster(pDev, MASTER_POINTER);
         master->last.valuators[0] = screenx;
@@ -1209,8 +1275,8 @@ fill_pointer_events(InternalEvent *events, DeviceIntPtr pDev, int type,
         event->detail.button = buttons;
     }
 
-    /* root_x and root_y must be in screen co-ordinates */
-    event_set_root_coordinates(event, screenx, screeny);
+    /* root_x and root_y must be in per-screen co-ordinates */
+    event_set_root_coordinates(event, screenx - scr->x, screeny - scr->y);
 
     if (flags & POINTER_EMULATED) {
         raw->flags = XIPointerEmulated;

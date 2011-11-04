@@ -88,12 +88,27 @@ winInitializeScreenDefaults(void)
   dwWidth = GetSystemMetrics (SM_CXSCREEN);
   dwHeight = GetSystemMetrics (SM_CYSCREEN);
 
-  winErrorFVerb (2, "winInitializeScreenDefaults - w %d h %d\n",
-	  (int) dwWidth, (int) dwHeight);
+  winErrorFVerb(2, "winInitializeScreenDefaults - primary monitor w %d h %d\n", (int) dwWidth, (int) dwHeight);
 
-  /* Set a default DPI, if no parameter was passed */
+  /* Set a default DPI, if no '-dpi' option was used */
   if (monitorResolution == 0)
-    monitorResolution = WIN_DEFAULT_DPI;
+    {
+      HDC hdc = GetDC(NULL);
+      if (hdc)
+        {
+          int dpiX = GetDeviceCaps(hdc, LOGPIXELSX);
+          int dpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+
+          winErrorFVerb(2, "winInitializeDefaultScreens - native DPI x %d y %d\n", dpiX, dpiY);
+          monitorResolution = dpiY;
+          ReleaseDC(NULL, hdc);
+        }
+      else
+        {
+          winErrorFVerb(1, "winInitializeDefaultScreens - Failed to retrieve native DPI, falling back to default of %d DPI\n", WIN_DEFAULT_DPI);
+          monitorResolution = WIN_DEFAULT_DPI;
+        }
+    }
 
   defaultScreenInfo.iMonitor = 1;
   defaultScreenInfo.dwWidth  = dwWidth;
@@ -311,8 +326,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
         struct GetMonitorInfoData data;
         if (!QueryMonitor(iMonitor, &data))
         {
-            ErrorF ("ddxProcessArgument - screen - "
-                    "Querying monitors is not supported on NT4 and Win95\n");
+            ErrorF ("ddxProcessArgument - screen - Querying monitors failed\n");
         } else if (data.bMonitorSpecifiedExists == TRUE) 
         {
 		  winErrorFVerb(2, "ddxProcessArgument - screen - Found Valid ``@Monitor'' = %d arg\n", iMonitor);
@@ -368,8 +382,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
           struct GetMonitorInfoData data;
           if (!QueryMonitor(iMonitor, &data))
           {
-              ErrorF ("ddxProcessArgument - screen - "
-                      "Querying monitors is not supported on NT4 and Win95\n");
+              ErrorF ("ddxProcessArgument - screen - Querying monitors failed\n");
           } else if (data.bMonitorSpecifiedExists == TRUE) 
           {
 			g_ScreenInfo[nScreenNum].iMonitor = iMonitor;
@@ -396,8 +409,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
         struct GetMonitorInfoData data;
         if (!QueryMonitor(iMonitor, &data))
         {
-		  ErrorF ("ddxProcessArgument - screen - "
-                  "Querying monitors is not supported on NT4 and Win95\n");
+		  ErrorF ("ddxProcessArgument - screen - Querying monitors failed\n");
         } else if (data.bMonitorSpecifiedExists == TRUE) 
         {
 		  winErrorFVerb (2, "ddxProcessArgument - screen - Found Valid ``@Monitor'' = %d arg\n", iMonitor);

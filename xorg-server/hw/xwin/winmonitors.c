@@ -53,30 +53,8 @@ wBOOL CALLBACK getMonitorInfo(HMONITOR hMonitor, HDC hdc, LPRECT rect, LPARAM _d
   return TRUE;
 }
 
-typedef WINAPI wBOOL (*ENUMDISPLAYMONITORSPROC)(HDC,LPCRECT,MONITORENUMPROC,LPARAM);
-ENUMDISPLAYMONITORSPROC _EnumDisplayMonitors;
-
-wBOOL CALLBACK getMonitorInfo(HMONITOR hMonitor, HDC hdc, LPRECT rect, LPARAM _data);
-
 Bool QueryMonitor(int index, struct GetMonitorInfoData *data)
 {
-    /* Load EnumDisplayMonitors from DLL */
-    HMODULE user32;
-    FARPROC func;
-    user32 = LoadLibrary("user32.dll");
-    if (user32 == NULL)
-    {
-        winW32Error(2, "Could not open user32.dll");
-        return FALSE;
-    }
-    func = GetProcAddress(user32, "EnumDisplayMonitors");
-    if (func == NULL)
-    {
-        winW32Error(2, "Could not resolve EnumDisplayMonitors: ");
-        return FALSE;
-    }
-    _EnumDisplayMonitors = (ENUMDISPLAYMONITORSPROC)func;
-
     /* prepare data */
     if (data == NULL)
         return FALSE;
@@ -84,9 +62,5 @@ Bool QueryMonitor(int index, struct GetMonitorInfoData *data)
     data->requestedMonitor = index;
 
     /* query information */
-    _EnumDisplayMonitors(NULL, NULL, getMonitorInfo, (LPARAM) data);
-
-    /* cleanup */
-    FreeLibrary(user32);
-    return TRUE;
+    return EnumDisplayMonitors(NULL, NULL, getMonitorInfo, (LPARAM) data);
 }

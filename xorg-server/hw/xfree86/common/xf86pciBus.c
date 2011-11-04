@@ -1116,7 +1116,15 @@ videoPtrToDriverList(struct pci_device *dev,
 	    break;
 	case 0x102b:		    driverList[0] = "mga";	break;
 	case 0x10c8:		    driverList[0] = "neomagic"; break;
-	case 0x10de: case 0x12d2:   driverList[0] = "nv";	break;
+	case 0x10de: case 0x12d2:
+	{
+	    int idx = 0;
+#ifdef __linux__
+	    driverList[idx++] = "nouveau";
+#endif
+	    driverList[idx++] = "nv";
+	    break;
+	}
 	case 0x1106:		    driverList[0] = "openchrome"; break;
         case 0x1b36:		    driverList[0] = "qxl"; break;
 	case 0x1163:		    driverList[0] = "rendition"; break;

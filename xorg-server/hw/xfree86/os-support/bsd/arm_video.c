@@ -97,11 +97,6 @@ struct memAccess ioMemInfo = { CONSOLE_GET_IO_INFO, NULL, NULL,
 #define MAP_FLAGS (MAP_FILE | MAP_SHARED)
 #endif
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((caddr_t)-1)
-#endif
-
-
 #define BUS_BASE	0L
 #define BUS_BASE_BWX	0L
 
@@ -112,8 +107,6 @@ struct memAccess ioMemInfo = { CONSOLE_GET_IO_INFO, NULL, NULL,
 
 static Bool useDevMem = FALSE;
 static int  devMemFd = -1;
-
-#define DEV_MEM "/dev/mem"
 
 static pointer mapVidMem(int, unsigned long, unsigned long, int);
 static void unmapVidMem(int, pointer, unsigned long);

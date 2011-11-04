@@ -2273,6 +2273,9 @@ ir_to_mesa_visitor::visit(ir_texture *ir)
    case GLSL_SAMPLER_DIM_BUF:
       assert(!"FINISHME: Implement ARB_texture_buffer_object");
       break;
+   case GLSL_SAMPLER_DIM_EXTERNAL:
+      inst->tex_target = TEXTURE_EXTERNAL_INDEX;
+      break;
    default:
       assert(!"Should not get here.");
    }
@@ -2546,7 +2549,7 @@ count_resources(struct gl_program *prog)
  *
  * XXX more checks are needed...
  */
-static void
+static bool
 check_resources(const struct gl_context *ctx,
                 struct gl_shader_program *shader_program,
                 struct gl_program *prog)
@@ -2586,6 +2589,8 @@ check_resources(const struct gl_context *ctx,
    default:
       _mesa_problem(ctx, "unexpected program type in check_resources()");
    }
+
+   return shader_program->LinkStatus;
 }
 
 class add_uniform_to_shader : public uniform_field_visitor {
@@ -3168,9 +3173,7 @@ get_mesa_program(struct gl_context *ctx,
    }
 
    if (!shader_program->LinkStatus) {
-      free(mesa_instructions);
-      _mesa_reference_program(ctx, &shader->Program, NULL);
-      return NULL;
+      goto fail_exit;
    }
 
    set_branchtargets(&v, mesa_instructions, num_instructions);
@@ -3191,10 +3194,16 @@ get_mesa_program(struct gl_context *ctx,
    prog->Instructions = mesa_instructions;
    prog->NumInstructions = num_instructions;
 
+   /* Setting this to NULL prevents a possible double free in the fail_exit
+    * path (far below).
+    */
+   mesa_instructions = NULL;
+
    do_set_program_inouts(shader->ir, prog, shader->Type == GL_FRAGMENT_SHADER);
    count_resources(prog);
 
-   check_resources(ctx, shader_program, prog);
+   if (!check_resources(ctx, shader_program, prog))
+      goto fail_exit;
 
    _mesa_reference_program(ctx, &shader->Program, prog);
 
@@ -3203,6 +3212,11 @@ get_mesa_program(struct gl_context *ctx,
    }
 
    return prog;
+
+fail_exit:
+   free(mesa_instructions);
+   _mesa_reference_program(ctx, &shader->Program, NULL);
+   return NULL;
 }
 
 extern "C" {
@@ -3301,7 +3315,7 @@ _mesa_ir_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
       _mesa_reference_program(ctx, &linked_prog, NULL);
    }
 
-   return GL_TRUE;
+   return prog->LinkStatus;
 }
 
 

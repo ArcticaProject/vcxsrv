@@ -264,6 +264,7 @@ void st_init_extensions(struct st_context *st)
    ctx->Extensions.ARB_texture_env_combine = GL_TRUE;
    ctx->Extensions.ARB_texture_env_crossbar = GL_TRUE;
    ctx->Extensions.ARB_texture_env_dot3 = GL_TRUE;
+   ctx->Extensions.ARB_texture_storage = GL_TRUE;
    ctx->Extensions.ARB_vertex_array_object = GL_TRUE;
    ctx->Extensions.ARB_vertex_program = GL_TRUE;
    ctx->Extensions.ARB_window_pos = GL_TRUE;
@@ -290,6 +291,7 @@ void st_init_extensions(struct st_context *st)
    ctx->Extensions.MESA_pack_invert = GL_TRUE;
 
    ctx->Extensions.NV_blend_square = GL_TRUE;
+   ctx->Extensions.NV_fog_distance = GL_TRUE;
    ctx->Extensions.NV_texgen_reflection = GL_TRUE;
    ctx->Extensions.NV_texture_env_combine4 = GL_TRUE;
    ctx->Extensions.NV_texture_rectangle = GL_TRUE;
@@ -301,6 +303,8 @@ void st_init_extensions(struct st_context *st)
 
 #if FEATURE_OES_EGL_image
    ctx->Extensions.OES_EGL_image = GL_TRUE;
+   if (ctx->API != API_OPENGL)
+      ctx->Extensions.OES_EGL_image_external = GL_TRUE;
 #endif
 #if FEATURE_OES_draw_texture
    ctx->Extensions.OES_draw_texture = GL_TRUE;

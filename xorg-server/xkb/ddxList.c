@@ -44,7 +44,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #ifdef WIN32
 /* from ddxLoad.c */
-extern const char* Win32TempDir();
+extern const char* Win32TempDir(void);
 extern int Win32System(const char *cmdline);
 #undef System
 #define System Win32System
@@ -126,10 +126,11 @@ XkbDDXListComponent(	DeviceIntPtr 		dev,
 char 	*file,*map,*tmp,*buf=NULL;
 FILE 	*in;
 Status	status;
-int	rval;
 Bool	haveDir;
 #ifdef WIN32
 char	tmpname[PATH_MAX];
+#else
+int	rval;
 #endif
 
     if ((list->pattern[what]==NULL)||(list->pattern[what][0]=='\0'))
@@ -223,6 +224,9 @@ char	tmpname[PATH_MAX];
     buf = malloc(PATH_MAX * sizeof(char));
     if (!buf) {
         fclose(in);
+#ifdef WIN32
+        unlink(tmpname);
+#endif
         return BadAlloc;
     }
     while ((status==Success)&&((tmp=fgets(buf,PATH_MAX,in))!=NULL)) {

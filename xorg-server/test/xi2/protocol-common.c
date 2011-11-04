@@ -108,6 +108,7 @@ TestPointerProc(DeviceIntPtr pDev, int what)
         pDev->valuator->axisVal[1] = screenInfo.screens[0]->height / 2;
         pDev->last.valuators[1] = pDev->valuator->axisVal[1];
 
+        /* protocol-xiquerydevice.c relies on these increment */
         SetScrollValuator(pDev, 2, SCROLL_TYPE_VERTICAL, 2.4, SCROLL_FLAG_NONE);
         SetScrollValuator(pDev, 3, SCROLL_TYPE_HORIZONTAL, 3.5, SCROLL_FLAG_PREFERRED);
         break;

@@ -313,6 +313,9 @@ xf86RandRSetConfig (ScreenPtr		pScreen,
 	return FALSE;
     }
 
+
+    update_desktop_dimensions();
+
     /*
      * Move the cursor back where it belongs; SwitchMode repositions it
      * FIXME: duplicated code, see modes/xf86RandR12.c
