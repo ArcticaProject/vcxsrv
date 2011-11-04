@@ -1,13 +1,10 @@
 mesa_dri_common_gallium_SOURCES := \
 	utils.c \
-	vblank.c \
 	dri_util.c \
 	xmlconfig.c
 
 mesa_dri_common_SOURCES := \
-	$(mesa_dri_common_gallium_SOURCES) \
-        texmem.c \
-        drirenderbuffer.c
+	$(mesa_dri_common_gallium_SOURCES)
 
 # Paths are relative to MESA_TOP.
 mesa_dri_common_INCLUDES := \

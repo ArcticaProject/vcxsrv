@@ -710,7 +710,6 @@ xf86UseMsg()
 {
 #if defined (SYSCONS_SUPPORT) || defined (PCVT_SUPPORT)
 	ErrorF("vtXX                   use the specified VT number (1-12)\n");
-	ErrorF("-sharevts              share VTs with another X server\n");
 #endif /* SYSCONS_SUPPORT || PCVT_SUPPORT */
 	ErrorF("-keeptty               ");
 	ErrorF("don't detach controlling tty (for debugging only)\n");

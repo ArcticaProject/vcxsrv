@@ -76,12 +76,12 @@ noop_src_iter_init (pixman_implementation_t *imp, pixman_iter_t *iter)
     {
 	iter->get_scanline = _pixman_iter_get_scanline_noop;
     }
-    else if ((iter->flags & ITER_NARROW)				&&
+    else if (image->common.extended_format_code == PIXMAN_a8r8g8b8	&&
+	     (iter->flags & ITER_NARROW)				&&
 	     (image->common.flags & FLAGS) == FLAGS			&&
 	     iter->x >= 0 && iter->y >= 0				&&
 	     iter->x + iter->width <= image->bits.width			&&
-	     iter->y + iter->height <= image->bits.height		&&
-	     image->common.extended_format_code == PIXMAN_a8r8g8b8)
+	     iter->y + iter->height <= image->bits.height)
     {
 	iter->buffer =
 	    image->bits.bits + iter->y * image->bits.rowstride + iter->x;

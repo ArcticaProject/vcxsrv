@@ -2070,6 +2070,14 @@ DoGetImage(ClientPtr client, int format, Drawable drawable,
 	if (!pWin->viewable)
 	    return BadMatch;
 
+	/* If the drawable is a window, the rectangle must be contained within
+	 * its bounds (including the border). */
+	if (x < -wBorderWidth(pWin) ||
+	    x + width > wBorderWidth(pWin) + (int)pDraw->width ||
+	    y < -wBorderWidth(pWin) ||
+	    y + height > wBorderWidth(pWin) + (int)pDraw->height)
+	    return BadMatch;
+
 	relx += pDraw->x;
 	rely += pDraw->y;
 
@@ -3938,6 +3946,8 @@ AddScreen(
 	screenInfo.numScreens--;
 	return -1;
     }
+
+    update_desktop_dimensions();
 
     dixRegisterScreenPrivateKey(&cursorScreenDevPriv, pScreen, PRIVATE_CURSOR, 0);
 

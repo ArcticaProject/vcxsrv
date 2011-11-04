@@ -614,5 +614,6 @@ extern _X_EXPORT void input_option_set_key(InputOption *opt, const char* key);
 extern _X_EXPORT void input_option_set_value(InputOption *opt, const char* value);
 
 extern _X_HIDDEN Bool point_on_screen(ScreenPtr pScreen, int x, int y);
+extern _X_HIDDEN void update_desktop_dimensions(void);
 
 #endif /* INPUT_H */

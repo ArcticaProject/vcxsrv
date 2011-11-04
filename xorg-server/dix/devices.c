@@ -616,6 +616,7 @@ CorePointerProc(DeviceIntPtr pDev, int what)
     int i = 0;
     Atom btn_labels[NBUTTONS] = {0};
     Atom axes_labels[NAXES] = {0};
+    ScreenPtr scr = screenInfo.screens[0];
 
     switch (what) {
     case DEVICE_INIT:
@@ -642,10 +643,11 @@ CorePointerProc(DeviceIntPtr pDev, int what)
                    pDev->name);
             return BadAlloc; /* IPDS only fails on allocs */
         }
-        pDev->valuator->axisVal[0] = screenInfo.screens[0]->width / 2;
-        pDev->last.valuators[0] = pDev->valuator->axisVal[0];
-        pDev->valuator->axisVal[1] = screenInfo.screens[0]->height / 2;
-        pDev->last.valuators[1] = pDev->valuator->axisVal[1];
+        /* axisVal is per-screen, last.valuators is desktop-wide */
+        pDev->valuator->axisVal[0] = scr->width / 2;
+        pDev->last.valuators[0] = pDev->valuator->axisVal[0] + scr->x;
+        pDev->valuator->axisVal[1] = scr->height / 2;
+        pDev->last.valuators[1] = pDev->valuator->axisVal[1] + scr->y;
         break;
 
     case DEVICE_CLOSE:
@@ -989,6 +991,8 @@ CloseDownDevices(void)
 {
     DeviceIntPtr dev;
 
+    OsBlockSignals();
+
     /* Float all SDs before closing them. Note that at this point resources
      * (e.g. cursors) have been freed already, so we can't just call
      * AttachDevice(NULL, dev, NULL). Instead, we have to forcibly set master
@@ -1015,6 +1019,8 @@ CloseDownDevices(void)
     inputInfo.keyboard = NULL;
     inputInfo.pointer = NULL;
     XkbDeleteRulesDflts();
+
+    OsReleaseSignals();
 }
 
 /**

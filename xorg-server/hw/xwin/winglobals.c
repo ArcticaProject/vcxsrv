@@ -79,13 +79,6 @@ Bool		g_fSilentDupError = FALSE;
 Bool		g_fNativeGl = FALSE;
 Bool		g_fswrastwgl = FALSE;
 
-/*
- * Global variables for dynamically loaded libraries and
- * their function pointers
- */
-
-FARPROC		g_fpTrackMouseEvent = (FARPROC) (void (*)(void))NoopDDA;
-
 
 #ifdef XWIN_CLIPBOARD
 /*

@@ -24,7 +24,7 @@ USER_CXXFLAGS="$CXXFLAGS"
 dnl Versions for external dependencies
 LIBDRM_REQUIRED=2.4.24
 LIBDRM_RADEON_REQUIRED=2.4.24
-LIBDRM_INTEL_REQUIRED=2.4.24
+LIBDRM_INTEL_REQUIRED=2.4.27
 LIBDRM_NOUVEAU_REQUIRED=0.6
 DRI2PROTO_REQUIRED=2.6
 GLPROTO_REQUIRED=1.4.14
@@ -1185,19 +1185,19 @@ if test "x$enable_dri" = xyes; then
         case "$host_cpu" in
         x86_64)
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="i915 i965 nouveau r200 r300 r600 radeon swrast"
+                DRI_DIRS="i915 i965 nouveau r200 radeon swrast"
             fi
             ;;
         powerpc*)
             # Build only the drivers for cards that exist on PowerPC.
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="r200 r300 r600 radeon swrast"
+                DRI_DIRS="r200 radeon swrast"
             fi
             ;;
         sparc*)
             # Build only the drivers for cards that exist on sparc
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="r200 r300 r600 radeon swrast"
+                DRI_DIRS="r200 radeon swrast"
             fi
             ;;
         esac
@@ -1207,7 +1207,7 @@ if test "x$enable_dri" = xyes; then
         DEFINES="$DEFINES -DIN_DRI_DRIVER -DHAVE_ALIAS"
 
         if test "x$DRI_DIRS" = "xyes"; then
-            DRI_DIRS="i915 i965 nouveau r200 r300 r600 radeon swrast"
+            DRI_DIRS="i915 i965 nouveau r200 radeon swrast"
         fi
         ;;
     gnu*)
@@ -1227,7 +1227,7 @@ if test "x$enable_dri" = xyes; then
 
     # default drivers
     if test "x$DRI_DIRS" = "xyes"; then
-        DRI_DIRS="i915 i965 nouveau r200 r300 r600 radeon swrast"
+        DRI_DIRS="i915 i965 nouveau r200 radeon swrast"
     fi
 
     DRI_DIRS=`echo "$DRI_DIRS" | $SED 's/  */ /g'`
@@ -1276,20 +1276,10 @@ case $DRI_DIRS in
 esac
 
 case $DRI_DIRS in
-*radeon*|*r200*|*r300*|*r600*)
-    PKG_CHECK_MODULES([LIBDRM_RADEON],
-		      [libdrm_radeon >= $LIBDRM_RADEON_REQUIRED],
-		      HAVE_LIBDRM_RADEON=yes,
-		      HAVE_LIBDRM_RADEON=no)
-
-    if test "x$HAVE_LIBDRM_RADEON" = xyes; then
-	RADEON_CFLAGS="-DHAVE_LIBDRM_RADEON=1 $LIBDRM_RADEON_CFLAGS"
-	RADEON_LDFLAGS=$LIBDRM_RADEON_LIBS
-    fi
+*radeon*|*r200*)
+    PKG_CHECK_MODULES([RADEON], [libdrm_radeon >= $LIBDRM_RADEON_REQUIRED])
     ;;
 esac
-AC_SUBST([RADEON_CFLAGS])
-AC_SUBST([RADEON_LDFLAGS])
 
 
 dnl
@@ -1878,9 +1868,9 @@ if test "x$with_gallium_drivers" != x; then
             if test "x$HAVE_ST_VA" = xyes; then
                 GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS va-softpipe"
             fi
-            if test "x$HAVE_ST_VDPAU" == xyes ||
-               test "x$HAVE_ST_XVMC" == xyes ||
-               test "x$HAVE_ST_VA" == xyes; then
+            if test "x$HAVE_ST_VDPAU" = xyes ||
+               test "x$HAVE_ST_XVMC" = xyes ||
+               test "x$HAVE_ST_VA" = xyes; then
                if test "x$HAVE_WINSYS_XLIB" != xyes; then
                   GALLIUM_WINSYS_DIRS="$GALLIUM_WINSYS_DIRS sw/xlib"
                fi

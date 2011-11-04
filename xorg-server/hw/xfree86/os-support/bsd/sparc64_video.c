@@ -34,10 +34,6 @@
 #include "xf86_OSlib.h"
 #include "xf86OSpriv.h"
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((caddr_t)-1)
-#endif
-
 /***************************************************************************/
 /* Video Memory Mapping section                                            */
 /***************************************************************************/

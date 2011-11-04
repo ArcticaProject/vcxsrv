@@ -67,7 +67,5 @@ Bool QueryMonitor(int index, struct GetMonitorInfoData *data)
     data->requestedMonitor = index;
 
     /* query information */
-    xEnumDisplayMonitors(NULL, NULL, getMonitorInfo, (LPARAM) data);
-
-    return TRUE;
+    return EnumDisplayMonitors(NULL, NULL, getMonitorInfo, (LPARAM) data);
 }

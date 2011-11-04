@@ -108,7 +108,7 @@ struct state_key {
    /* NOTE: This array of structs must be last! (see "keySize" below) */
    struct {
       GLuint enabled:1;
-      GLuint source_index:3;   /**< TEXTURE_x_INDEX */
+      GLuint source_index:4;   /**< TEXTURE_x_INDEX */
       GLuint shadow:1;
       GLuint ScaleShiftRGB:2;
       GLuint ScaleShiftA:2;
@@ -1041,6 +1041,11 @@ static void load_texture( struct texenv_fragment_program *p, GLuint unit )
 	 sampler_type = p->shader->symbols->get_type("samplerCube");
       coords = 3;
       break;
+   case TEXTURE_EXTERNAL_INDEX:
+      assert(!p->state->unit[unit].shadow);
+      sampler_type = p->shader->symbols->get_type("samplerExternalOES");
+      coords = 2;
+      break;
    }
 
    p->src_texture[unit] = new(p->mem_ctx) ir_variable(glsl_type::vec4_type,
@@ -1437,6 +1442,8 @@ create_new_program(struct gl_context *ctx, struct state_key *key)
    p.shader_program->InternalSeparateShader = GL_TRUE;
 
    state->language_version = 130;
+   if (ctx->Extensions.OES_EGL_image_external)
+      state->OES_EGL_image_external_enable = true;
    _mesa_glsl_initialize_types(state);
    _mesa_glsl_initialize_variables(p.instructions, state);
 

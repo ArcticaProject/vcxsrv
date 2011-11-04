@@ -569,8 +569,8 @@ miPointerMoveNoEvent (DeviceIntPtr pDev, ScreenPtr pScreen,
  *
  * @param pDev The device to move
  * @param mode Movement mode (Absolute or Relative)
- * @param[in,out] screenx The x coordinate in screen coordinates
- * @param[in,out] screeny The y coordinate in screen coordinates
+ * @param[in,out] screenx The x coordinate in desktop coordinates
+ * @param[in,out] screeny The y coordinate in desktop coordinates
  */
 ScreenPtr
 miPointerSetPosition(DeviceIntPtr pDev, int mode, double *screenx, double *screeny)
@@ -579,6 +579,7 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, double *screenx, double *scree
     ScreenPtr		pScreen;
     ScreenPtr		newScreen;
     int			x, y;
+    Bool		switch_screen = FALSE;
 
     miPointerPtr        pPointer; 
 
@@ -593,7 +594,14 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, double *screenx, double *scree
     x = trunc(*screenx);
     y = trunc(*screeny);
 
-    if (x < 0 || x >= pScreen->width || y < 0 || y >= pScreen->height)
+    switch_screen = !point_on_screen(pScreen, x, y);
+
+    /* Switch to per-screen coordinates for CursorOffScreen and
+     * Pointer->limits */
+    x -= pScreen->x;
+    y -= pScreen->y;
+
+    if (switch_screen)
     {
 	pScreenPriv = GetScreenPrivate (pScreen);
 	if (!pPointer->confined)
@@ -627,6 +635,10 @@ miPointerSetPosition(DeviceIntPtr pDev, int mode, double *screenx, double *scree
     if (pPointer->x != x || pPointer->y != y ||
             pPointer->pScreen != pScreen)
         miPointerMoveNoEvent(pDev, pScreen, x, y);
+
+    /* Convert to desktop coordinates again */
+    x += pScreen->x;
+    y += pScreen->y;
 
     /* In the event we actually change screen or we get confined, we just
      * drop the float component on the floor

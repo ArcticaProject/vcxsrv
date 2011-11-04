@@ -1459,7 +1459,7 @@ RRConstrainCursorHarder(DeviceIntPtr pDev, ScreenPtr pScreen, int mode, int *x, 
 
        crtc_bounds(crtc, &left, &right, &top, &bottom);
 
-       if ((*x >= left) && (*x <= right) && (*y >= top) && (*y <= bottom))
+       if ((*x >= left) && (*x < right) && (*y >= top) && (*y < bottom))
            return;
     }
 
@@ -1475,24 +1475,15 @@ RRConstrainCursorHarder(DeviceIntPtr pDev, ScreenPtr pScreen, int mode, int *x, 
        crtc_bounds(crtc, &left, &right, &top, &bottom);
        miPointerGetPosition(pDev, &nx, &ny);
 
-       if ((nx >= left) && (nx <= right) && (ny >= top) && (ny <= bottom)) {
-           if ((*x <= left) || (*x >= right)) {
-               int dx = *x - nx;
-
-               if (dx > 0)
-                   *x = right;
-               else if (dx < 0)
-                   *x = left;
-           }
-
-           if ((*y <= top) || (*y >= bottom)) {
-               int dy = *y - ny;
-
-               if (dy > 0)
-                   *y = bottom;
-               else if (dy < 0)
-                   *y = top;
-           }
+       if ((nx >= left) && (nx < right) && (ny >= top) && (ny < bottom)) {
+           if (*x < left)
+               *x = left;
+           if (*x >= right)
+               *x = right - 1;
+           if (*y < top)
+               *y = top;
+           if (*y >= bottom)
+               *y = bottom - 1;
 
            return;
        }

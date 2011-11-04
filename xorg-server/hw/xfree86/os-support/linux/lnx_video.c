@@ -46,10 +46,6 @@
 #include <asm/mtrr.h>
 #endif
 
-#ifndef MAP_FAILED
-#define MAP_FAILED ((void *)-1)
-#endif
-
 static Bool ExtendedEnabled = FALSE;
 
 #ifdef __ia64__

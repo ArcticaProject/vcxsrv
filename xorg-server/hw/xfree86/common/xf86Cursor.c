@@ -838,6 +838,8 @@ xf86InitOrigins(void)
 		FillOutEdge(pLayout->down, pScreen->width);
 	}
     }
+
+    update_desktop_dimensions();
 }
 
 void

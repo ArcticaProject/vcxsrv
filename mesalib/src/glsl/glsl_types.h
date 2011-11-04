@@ -62,7 +62,8 @@ enum glsl_sampler_dim {
    GLSL_SAMPLER_DIM_3D,
    GLSL_SAMPLER_DIM_CUBE,
    GLSL_SAMPLER_DIM_RECT,
-   GLSL_SAMPLER_DIM_BUF
+   GLSL_SAMPLER_DIM_BUF,
+   GLSL_SAMPLER_DIM_EXTERNAL
 };
 
 
@@ -176,6 +177,17 @@ struct glsl_type {
     * error type is returned.
     */
    const glsl_type *get_base_type() const;
+
+   /**
+    * Get the basic scalar type which this type aggregates.
+    *
+    * If the type is a numeric or boolean scalar, vector, or matrix, or an
+    * array of any of those, this function gets the scalar type of the
+    * individual components.  For structs and arrays of structs, this function
+    * returns the struct type.  For samplers and arrays of samplers, this
+    * function returns the sampler type.
+    */
+   const glsl_type *get_scalar_type() const;
 
    /**
     * Query the type of elements in an array
@@ -478,6 +490,7 @@ private:
    static const glsl_type builtin_ARB_texture_rectangle_types[];
    static const glsl_type builtin_EXT_texture_array_types[];
    static const glsl_type builtin_EXT_texture_buffer_object_types[];
+   static const glsl_type builtin_OES_EGL_image_external_types[];
    /*@}*/
 
    /**
@@ -496,6 +509,7 @@ private:
    static void generate_ARB_texture_rectangle_types(glsl_symbol_table *, bool);
    static void generate_EXT_texture_array_types(glsl_symbol_table *, bool);
    static void generate_OES_texture_3D_types(glsl_symbol_table *, bool);
+   static void generate_OES_EGL_image_external_types(glsl_symbol_table *, bool);
    /*@}*/
 
    /**

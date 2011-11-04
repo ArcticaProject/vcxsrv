@@ -736,6 +736,8 @@ xf86RandR12ScreenSetSize (ScreenPtr	pScreen,
     xf86SetViewport (pScreen, 0, 0);
 
 finish:
+    update_desktop_dimensions();
+
     if (pRoot && pScrn->vtSema)
 	(*pScrn->EnableDisableFBAccess) (pScreen->myNum, TRUE);
 #if RANDR_12_INTERFACE

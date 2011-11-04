@@ -58,8 +58,6 @@ extern void		*g_pClipboardDisplay;
 extern Window		g_iClipboardWindow;
 extern Atom		g_atomLastOwnedSelection;
 extern Bool		g_fClipboardStarted;
-/* BPS - g_hwndClipboard needed for X app->Windows paste fix */
-extern HWND		g_hwndClipboard;
 extern Bool		g_fClipboardPrimary;
 
 /* 

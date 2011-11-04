@@ -29,6 +29,7 @@
 
 
 #include "xf86.h"
+#include "xf86Parser.h"
 
 static void
 xfree86_option_list_duplicate(void)
@@ -73,9 +74,34 @@ xfree86_option_list_duplicate(void)
     assert(a && b);
 }
 
+static void
+xfree86_add_comment(void)
+{
+    char *current = NULL, *comment;
+    char compare[1024] =  {0};
+
+    comment = "# foo";
+    current =  xf86addComment(current, comment);
+    strcpy(compare, comment);
+    strcat(compare, "\n");
+
+    assert(!strcmp(current, compare));
+
+    /* this used to overflow */
+    strcpy(current, "\n");
+    comment = "foobar\n";
+    current =  xf86addComment(current, comment);
+    strcpy(compare, "\n#");
+    strcat(compare, comment);
+    assert(!strcmp(current, compare));
+
+    free(current);
+}
+
 int main(int argc, char** argv)
 {
     xfree86_option_list_duplicate();
+    xfree86_add_comment();
 
     return 0;
 }

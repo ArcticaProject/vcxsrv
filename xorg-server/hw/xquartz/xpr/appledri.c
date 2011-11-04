@@ -529,9 +529,11 @@ AppleDRIExtensionInit(void)
                                  SProcAppleDRIDispatch,
                                  AppleDRIResetProc,
                                  StandardMinorOpcode))) {
+        size_t i;
         DRIReqCode = (unsigned char)extEntry->base;
         DRIErrorBase = extEntry->errorBase;
         DRIEventBase = extEntry->eventBase;
-        EventSwapVector[DRIEventBase] = (EventSwapPtr) SNotifyEvent;
+        for (i=0; i < AppleDRINumberEvents; i++)
+            EventSwapVector[DRIEventBase + i] = (EventSwapPtr) SNotifyEvent;
     }
 }
