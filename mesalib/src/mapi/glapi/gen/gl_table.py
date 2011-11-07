@@ -81,6 +81,7 @@ class PrintRemapTable(gl_XML.gl_print_base):
 
 	def printRealHeader(self):
 		print """
+#include "glapitable.h"
 /**
  * \\file main/dispatch.h
  * Macros for handling GL dispatch tables.
@@ -91,8 +92,6 @@ class PrintRemapTable(gl_XML.gl_print_base):
  * can SET_FuncName, are used to get and set the dispatch pointer for the
  * named function in the specified dispatch table.
  */
-
-#include "main/mfeatures.h"
 """
 		return
 

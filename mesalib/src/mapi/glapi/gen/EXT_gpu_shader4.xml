@@ -31,10 +31,10 @@
     <enum name="UNSIGNED_INT_SAMPLER_1D_ARRAY_EXT"      value="0x8DD6"/>
     <enum name="UNSIGNED_INT_SAMPLER_2D_ARRAY_EXT"      value="0x8DD7"/>
     <enum name="UNSIGNED_INT_SAMPLER_BUFFER_EXT"        value="0x8DD8"/>
-    <enum name="MIN_PROGRAM_TEXEL_OFFSET_EXT"           value="0x8904">
+    <enum name="MIN_PROGRAM_TEXEL_OFFSET"               value="0x8904">
         <size name="Get" mode="get"/>
     </enum>
-    <enum name="MAX_PROGRAM_TEXEL_OFFSET_EXT"           value="0x8905">
+    <enum name="MAX_PROGRAM_TEXEL_OFFSET"               value="0x8905">
         <size name="Get" mode="get"/>
     </enum>
 

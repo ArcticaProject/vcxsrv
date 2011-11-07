@@ -77,6 +77,14 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 
 
 	def printRealHeader(self):
+		print '#ifdef HAVE_DIX_CONFIG_H'
+		print '#include <dix-config.h>'
+		print '#else'
+		print ''
+		print '#include "glheader.h"'
+		print ''
+		print '#endif'
+		print ''
 		print '#include <X11/Xmd.h>'
 		print '#include <GL/gl.h>'
 		print '#include <GL/glxproto.h>'
@@ -92,7 +100,7 @@ class PrintGlxDispatchFunctions(glX_proto_common.glx_print_proto):
 		print '#include "glapi.h"'
 		print '#include "glapitable.h"'
 		print '#include "glthread.h"'
-		print '#include "glapidispatch.h"'
+		print '#include "dispatch.h"'
 		print ''
 		print '#define __GLX_PAD(x)  (((x) + 3) & ~3)'
 		print ''

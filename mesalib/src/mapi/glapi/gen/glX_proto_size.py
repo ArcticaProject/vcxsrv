@@ -313,6 +313,14 @@ class PrintGlxSizeStubs_common(gl_XML.gl_print_base):
 class PrintGlxSizeStubs_c(PrintGlxSizeStubs_common):
 	def printRealHeader(self):
 		print ''
+		print '#ifdef HAVE_DIX_CONFIG_H'
+		print '#include <dix-config.h>'
+		print '#else'
+		print ''
+		print '#include "glheader.h"'
+		print ''
+		print '#endif'
+		print ''
 		print '#include <GL/gl.h>'
 		if self.emit_get:
 			print '#include "indirect_size_get.h"'
@@ -444,6 +452,14 @@ class PrintGlxReqSize_c(PrintGlxReqSize_common):
 
 
 	def printRealHeader(self):
+		print ''
+		print '#ifdef HAVE_DIX_CONFIG_H'
+		print '#include <dix-config.h>'
+		print '#else'
+		print ''
+		print '#include "glheader.h"'
+		print ''
+		print '#endif'
 		print ''
 		print '#include <GL/gl.h>'
 		print '#include "glxserver.h"'

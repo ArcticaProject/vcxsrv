@@ -357,12 +357,15 @@ class PrintGlxDispatchTables(glX_proto_common.glx_print_proto):
 
 
 	def printRealHeader(self):
+		print '#ifndef HAVE_DIX_CONFIG_H'
+		print '#include "glheader.h"'
+		print '#endif'
+		print ''
 		print '#include <inttypes.h>'
 		print '#include "glxserver.h"'
 		print '#include "glxext.h"'
 		print '#include "indirect_dispatch.h"'
 		print '#include "indirect_reqsize.h"'
-		print '#include "g_disptab.h"'
 		print '#include "indirect_table.h"'
 		print ''
 		return

@@ -34,7 +34,11 @@ import gl_XML, glX_XML
 import sys, getopt
 
 header = """
-#if defined(DEBUG) && !defined(_WIN32_WCE)
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#endif
+
+#ifdef HAVE_BACKTRACE
 #include <execinfo.h>
 #endif
 
@@ -47,11 +51,15 @@ header = """
 #include "glapi.h"
 #include "glapitable.h"
 
+#include "os.h"
+
 static void
 __glapi_gentable_NoOp(void) {
 #if defined(DEBUG) && !defined(_WIN32_WCE)
     if (getenv("MESA_DEBUG") || getenv("LIBGL_DEBUG")) {
         const char *fstr = "Unknown";
+
+#ifdef HAVE_BACKTRACE
         void *frames[2];
 
         if(backtrace(frames, 2) == 2) {
@@ -60,8 +68,9 @@ __glapi_gentable_NoOp(void) {
             if(info.dli_sname)
                 fstr = info.dli_sname;
         }
+#endif
 
-        fprintf(stderr, "Call to unimplemented API: %s\\n", fstr);
+        LogMessage(X_ERROR, "GLX: Call to unimplemented API: %s\\n", fstr);
     }
 #endif
 }
