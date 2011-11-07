@@ -313,28 +313,24 @@ in_over (__m64 src, __m64 srca, __m64 mask, __m64 dest)
 
 /* Elemental unaligned loads */
 
-#ifdef _MSC_VER
-#define ldq_u(p) *((__m64*)(p))
-#else
 static __inline__ __m64 ldq_u(uint64_t *p)
 {
 #ifdef USE_X86_MMX
     /* x86's alignment restrictions are very relaxed. */
-    return (__m64)*p;
+    return *(__m64 *)p;
 #elif defined USE_ARM_IWMMXT
     int align = (uintptr_t)p & 7;
     __m64 *aligned_p;
     if (align == 0)
-	return (__m64)*p;
+	return *p;
     aligned_p = (__m64 *)((uintptr_t)p & ~7);
-    return _mm_align_si64 (aligned_p[0], aligned_p[1], align);
+    return (__m64) _mm_align_si64 (aligned_p[0], aligned_p[1], align);
 #else
     struct __una_u64 { uint64_t x __attribute__((packed)); };
     const struct __una_u64 *ptr = (const struct __una_u64 *) p;
-    return (__m64)ptr->x;
+    return (__m64) ptr->x;
 #endif
 }
-#endif
 
 static __inline__ uint32_t ldl_u(uint32_t *p)
 {

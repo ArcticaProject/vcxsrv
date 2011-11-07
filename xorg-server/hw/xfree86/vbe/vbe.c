@@ -1036,12 +1036,15 @@ VBEInterpretPanelID(int scrnIndex, struct vbePanelID *data)
     mode = xf86CVTMode(data->hsize, data->vsize, PANEL_HZ, 1, 0);
 
     pScrn->monitor->nHsync = 1;
-    pScrn->monitor->hsync[0].lo = 31.5;
+    pScrn->monitor->hsync[0].lo = 29.37;
     pScrn->monitor->hsync[0].hi = (float)mode->Clock / (float)mode->HTotal;
     pScrn->monitor->nVrefresh = 1;
     pScrn->monitor->vrefresh[0].lo = 56.0;
     pScrn->monitor->vrefresh[0].hi =
 	(float)mode->Clock*1000.0 / (float)mode->HTotal / (float)mode->VTotal;
+
+    if (pScrn->monitor->vrefresh[0].hi < 59.47)
+	pScrn->monitor->vrefresh[0].hi = 59.47;
 
     free(mode);
 }
