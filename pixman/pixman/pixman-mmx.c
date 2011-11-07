@@ -309,22 +309,22 @@ in_over (__m64 src, __m64 srca, __m64 mask, __m64 dest)
 
 /* Elemental unaligned loads */
 
-static __inline__ uint64_t ldq_u(uint64_t *p)
+static __inline__ __m64 ldq_u(uint64_t *p)
 {
 #ifdef USE_X86_MMX
     /* x86's alignment restrictions are very relaxed. */
-    return *p;
+    return *(__m64 *)p;
 #elif defined USE_ARM_IWMMXT
     int align = (uintptr_t)p & 7;
     __m64 *aligned_p;
     if (align == 0)
 	return *p;
     aligned_p = (__m64 *)((uintptr_t)p & ~7);
-    return _mm_align_si64 (aligned_p[0], aligned_p[1], align);
+    return (__m64) _mm_align_si64 (aligned_p[0], aligned_p[1], align);
 #else
     struct __una_u64 { uint64_t x __attribute__((packed)); };
     const struct __una_u64 *ptr = (const struct __una_u64 *) p;
-    return ptr->x;
+    return (__m64) ptr->x;
 #endif
 }
 
@@ -1408,7 +1408,7 @@ mmx_composite_over_8888_n_8888 (pixman_implementation_t *imp,
 
 	while (w >= 2)
 	{
-	    __m64 vs = (__m64)ldq_u((uint64_t *)src);
+	    __m64 vs = ldq_u((uint64_t *)src);
 	    __m64 vd = *(__m64 *)dst;
 	    __m64 vsrc0 = expand8888 (vs, 0);
 	    __m64 vsrc1 = expand8888 (vs, 1);
@@ -1489,14 +1489,14 @@ mmx_composite_over_x888_n_8888 (pixman_implementation_t *imp,
 	    __m64 vd6 = *(__m64 *)(dst + 12);
 	    __m64 vd7 = *(__m64 *)(dst + 14);
 
-	    __m64 vs0 = (__m64)ldq_u((uint64_t *)(src + 0));
-	    __m64 vs1 = (__m64)ldq_u((uint64_t *)(src + 2));
-	    __m64 vs2 = (__m64)ldq_u((uint64_t *)(src + 4));
-	    __m64 vs3 = (__m64)ldq_u((uint64_t *)(src + 6));
-	    __m64 vs4 = (__m64)ldq_u((uint64_t *)(src + 8));
-	    __m64 vs5 = (__m64)ldq_u((uint64_t *)(src + 10));
-	    __m64 vs6 = (__m64)ldq_u((uint64_t *)(src + 12));
-	    __m64 vs7 = (__m64)ldq_u((uint64_t *)(src + 14));
+	    __m64 vs0 = ldq_u((uint64_t *)(src + 0));
+	    __m64 vs1 = ldq_u((uint64_t *)(src + 2));
+	    __m64 vs2 = ldq_u((uint64_t *)(src + 4));
+	    __m64 vs3 = ldq_u((uint64_t *)(src + 6));
+	    __m64 vs4 = ldq_u((uint64_t *)(src + 8));
+	    __m64 vs5 = ldq_u((uint64_t *)(src + 10));
+	    __m64 vs6 = ldq_u((uint64_t *)(src + 12));
+	    __m64 vs7 = ldq_u((uint64_t *)(src + 14));
 
 	    vd0 = pack8888 (
 	        in_over (expandx888 (vs0, 0), srca, vmask, expand8888 (vd0, 0)),
@@ -2775,7 +2775,7 @@ mmx_composite_add_8_8 (pixman_implementation_t *imp,
 
 	while (w >= 8)
 	{
-	    *(__m64*)dst = _mm_adds_pu8 ((__m64)ldq_u((uint64_t *)src), *(__m64*)dst);
+	    *(__m64*)dst = _mm_adds_pu8 (ldq_u((uint64_t *)src), *(__m64*)dst);
 	    dst += 8;
 	    src += 8;
 	    w -= 8;
@@ -2833,7 +2833,7 @@ mmx_composite_add_8888_8888 (pixman_implementation_t *imp,
 
 	while (w >= 2)
 	{
-	    dst64 = _mm_adds_pu8 ((__m64)ldq_u((uint64_t *)src), *(__m64*)dst);
+	    dst64 = _mm_adds_pu8 (ldq_u((uint64_t *)src), *(__m64*)dst);
 	    *(uint64_t*)dst = to_uint64 (dst64);
 	    dst += 2;
 	    src += 2;
