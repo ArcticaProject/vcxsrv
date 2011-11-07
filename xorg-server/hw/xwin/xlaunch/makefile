@@ -1,15 +1,15 @@
 INCLUDELIBFILES = window\$(OBJDIR)\window.lib \
-                  $(MHMAKECONF)\libx11\src\$(OBJDIR)\libx11.lib \
+                  $(MHMAKECONF)\libX11\src\$(OBJDIR)\libx11.lib \
                   $(MHMAKECONF)\libxcb\src\$(OBJDIR)\libxcb.lib \
-                  $(MHMAKECONF)\libxau\$(OBJDIR)\libxau.lib \
-                  $(MHMAKECONF)\libx11\src\xlibi18n\$(OBJDIR)\libi18n.lib \
-                  $(MHMAKECONF)\libx11\modules\lc\xlocale\$(OBJDIR)\libxlocale.lib \
-                  $(MHMAKECONF)\libx11\modules\lc\utf8\$(OBJDIR)\libxlcUTF8Load.lib \
-                  $(MHMAKECONF)\libx11\modules\lc\gen\$(OBJDIR)\liblcGenConvLoad.lib \
-                  $(MHMAKECONF)\libx11\modules\lc\def\$(OBJDIR)\libxlcDef.lib \
-                  $(MHMAKECONF)\libx11\src\xkb\$(OBJDIR)\libxkb.lib \
-                  $(MHMAKECONF)\libx11\modules\im\ximcp\$(OBJDIR)\libximcp.lib \
-                  $(MHMAKECONF)\libx11\modules\om\generic\$(OBJDIR)\libxomGeneric.lib
+                  $(MHMAKECONF)\libXau\$(OBJDIR)\libXau.lib \
+                  $(MHMAKECONF)\libX11\src\xlibi18n\$(OBJDIR)\libi18n.lib \
+                  $(MHMAKECONF)\libX11\modules\lc\xlocale\$(OBJDIR)\libxlocale.lib \
+                  $(MHMAKECONF)\libX11\modules\lc\utf8\$(OBJDIR)\libxlcUTF8Load.lib \
+                  $(MHMAKECONF)\libX11\modules\lc\gen\$(OBJDIR)\liblcGenConvLoad.lib \
+                  $(MHMAKECONF)\libX11\modules\lc\def\$(OBJDIR)\libxlcDef.lib \
+                  $(MHMAKECONF)\libX11\src\xkb\$(OBJDIR)\libxkb.lib \
+                  $(MHMAKECONF)\libX11\modules\im\ximcp\$(OBJDIR)\libximcp.lib \
+                  $(MHMAKECONF)\libX11\modules\om\generic\$(OBJDIR)\libxomGeneric.lib
 
 CSRCS=config.cc main.cc
 

@@ -14,7 +14,7 @@ INCLUDELIBFILES = \
  $(MHMAKECONF)\libx11\modules\im\ximcp\$(OBJDIR)\libximcp.lib \
  $(MHMAKECONF)\libxcb\src\$(OBJDIR)\libxcb.lib \
  $(MHMAKECONF)\libxkbfile\src\$(OBJDIR)\libxkbfile.lib \
- $(MHMAKECONF)\libxpm\src\$(OBJDIR)\libxpm.lib \
+ $(MHMAKECONF)\libXpm\src\$(OBJDIR)\libXpm.lib \
  $(MHMAKECONF)\libxau\$(OBJDIR)\libxau.lib \
  $(MHMAKECONF)\libXaw\src\$(OBJDIR)\libXaw.lib \
  $(MHMAKECONF)\libXt\src\$(OBJDIR)\libXt.lib \
