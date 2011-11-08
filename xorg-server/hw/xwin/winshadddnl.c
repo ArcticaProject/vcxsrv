@@ -117,9 +117,13 @@ static HRESULT myIDirectDrawSurface4_Blt( ScreenPtr pScreen, RECT *pRect, RECT *
   unsigned i;
   winScreenPriv(pScreen);
 
+
   for (i = 0; i < 3; ++i)
   {
-    ddrval = IDirectDrawSurface4_Blt(pScreenPriv->pddsPrimary4, pRect, pScreenPriv->pddsShadow4, prcSrc, DDBLT_WAIT, NULL);
+    if (pScreenPriv->pddsPrimary4)
+      ddrval = IDirectDrawSurface4_Blt(pScreenPriv->pddsPrimary4, pRect, pScreenPriv->pddsShadow4, prcSrc, DDBLT_WAIT, NULL);
+    else
+      ddrval = DDERR_SURFACELOST; // Surface has been closed
      /* Try to regain the primary surface and blit again if we've lost it */
     if (ddrval == DDERR_SURFACELOST)
     {
@@ -162,7 +166,7 @@ static HRESULT myIDirectDrawSurface4_Blt( ScreenPtr pScreen, RECT *pRect, RECT *
               "lost: %08x %d\n", ddrval, ddrval);
     }
     break;
-  }    
+  }
   return ddrval;
 }
 
@@ -821,7 +825,7 @@ winCloseScreenShadowDDNL (int nIndex, ScreenPtr pScreen)
 {
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  Bool			fReturn;
+  Bool			fReturn=FALSE;
 
   winDebug ("winCloseScreenShadowDDNL - Freeing screen resources\n");
 
@@ -862,7 +866,7 @@ winCloseScreenShadowDDNL (int nIndex, ScreenPtr pScreen)
 
 #if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
   /* Destroy the thread startup mutex */
-  pthread_mutex_destroy (&pScreenPriv->pmServerStarted);
+  if (pScreenPriv->pmServerStarted) pthread_mutex_destroy (&pScreenPriv->pmServerStarted);
 #endif
 
   /* Kill our screeninfo's pointer to the screen */

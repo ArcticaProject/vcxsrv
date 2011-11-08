@@ -722,7 +722,7 @@ winCloseScreenShadowDD (int nIndex, ScreenPtr pScreen)
 
 #if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
   /* Destroy the thread startup mutex */
-  pthread_mutex_destroy (&pScreenPriv->pmServerStarted);
+  if (pScreenPriv->pmServerStarted) pthread_mutex_destroy (&pScreenPriv->pmServerStarted);
 #endif
 
   /* Kill our screeninfo's pointer to the screen */
