@@ -145,11 +145,8 @@ _pixman_image_fini (pixman_image_t *image)
 
 	pixman_region32_fini (&common->clip_region);
 
-	if (common->transform)
-	    free (common->transform);
-
-	if (common->filter_params)
-	    free (common->filter_params);
+	free (common->transform);
+	free (common->filter_params);
 
 	if (common->alpha_map)
 	    pixman_image_unref ((pixman_image_t *)common->alpha_map);

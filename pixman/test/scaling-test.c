@@ -7,7 +7,6 @@
  * Script 'fuzzer-find-diff.pl' can be used to narrow down the problem in
  * the case of test failure.
  */
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "utils.h"

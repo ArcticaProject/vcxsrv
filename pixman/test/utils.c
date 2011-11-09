@@ -2,6 +2,7 @@
 
 #include "utils.h"
 #include <signal.h>
+#include <stdlib.h>
 
 #ifdef HAVE_GETTIMEOFDAY
 #include <sys/time.h>

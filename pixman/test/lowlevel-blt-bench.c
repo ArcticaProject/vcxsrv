@@ -25,10 +25,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define PIXMAN_USE_INTERNAL_API
-#include <pixman.h>
-
 #include "utils.h"
 
 #define SOLID_FLAG 1
@@ -707,7 +703,7 @@ main (int argc, char *argv[])
             x / 1000000., x / 4000000);
     printf ("---\n");
 
-    for (i = 0; i < sizeof(tests_tbl) / sizeof(tests_tbl[0]); i++)
+    for (i = 0; i < ARRAY_LENGTH (tests_tbl); i++)
     {
 	if (strcmp (pattern, "all") == 0 || strstr (tests_tbl[i].testname, pattern))
 	{

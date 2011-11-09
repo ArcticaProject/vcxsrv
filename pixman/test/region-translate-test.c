@@ -1,5 +1,5 @@
-#include <pixman.h>
 #include <assert.h>
+#include "utils.h"
 
 /* Pixman had a bug where 32bit regions where clipped to 16bit sizes when
  * pixman_region32_translate() was called. This test exercises that bug.

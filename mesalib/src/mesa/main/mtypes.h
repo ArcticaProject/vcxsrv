@@ -43,6 +43,11 @@
 #include "main/formats.h"       /* MESA_FORMAT_COUNT */
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /**
  * Stencil buffer data type.
  */
@@ -77,6 +82,7 @@ struct gl_program_cache;
 struct gl_texture_object;
 struct gl_context;
 struct st_context;
+struct gl_uniform_storage;
 /*@}*/
 
 
@@ -2184,6 +2190,15 @@ struct gl_shader_program
     */
    struct string_to_uint_map *AttributeBindings;
 
+   /**
+    * User-defined fragment data bindings
+    *
+    * These are set via \c glBindFragDataLocation and are used to direct the
+    * GLSL linker.  These are \b not the values used in the compiled shader,
+    * and they are \b not the values returned by \c glGetFragDataLocation.
+    */
+   struct string_to_uint_map *FragDataBindings;
+
    /** Transform feedback varyings */
    struct {
       GLenum BufferMode;
@@ -2205,7 +2220,30 @@ struct gl_shader_program
    } Vert;
 
    /* post-link info: */
-   struct gl_uniform_list *Uniforms;
+   unsigned NumUserUniformStorage;
+   struct gl_uniform_storage *UniformStorage;
+
+   /**
+    * Map of active uniform names to locations
+    *
+    * Maps any active uniform that is not an array element to a location.
+    * Each active uniform, including individual structure members will appear
+    * in this map.  This roughly corresponds to the set of names that would be
+    * enumerated by \c glGetActiveUniform.
+    */
+   struct string_to_uint_map *UniformHash;
+
+   /**
+    * Map from sampler unit to texture unit (set by glUniform1i())
+    *
+    * A sampler unit is associated with each sampler uniform by the linker.
+    * The sampler unit associated with each uniform is stored in the
+    * \c gl_uniform_storage::sampler field.
+    */
+   GLubyte SamplerUnits[MAX_SAMPLERS];
+   /** Which texture target is being sampled (TEXTURE_1D/2D/3D/etc_INDEX) */
+   gl_texture_index SamplerTargets[MAX_SAMPLERS];
+
    struct gl_program_parameter_list *Varying;
    GLboolean LinkStatus;   /**< GL_LINK_STATUS */
    GLboolean Validated;
@@ -3420,5 +3458,9 @@ enum _debug
 };
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MTYPES_H */

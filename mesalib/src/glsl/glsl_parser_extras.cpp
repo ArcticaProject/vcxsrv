@@ -50,7 +50,8 @@ _mesa_glsl_parse_state::_mesa_glsl_parse_state(struct gl_context *ctx,
    this->symbols = new(mem_ctx) glsl_symbol_table;
    this->info_log = ralloc_strdup(mem_ctx, "");
    this->error = false;
-   this->loop_or_switch_nesting = NULL;
+   this->loop_nesting_ast = NULL;
+   this->switch_nesting_ast = NULL;
 
    this->num_builtins_to_link = 0;
 
@@ -802,6 +803,106 @@ ast_selection_statement::ast_selection_statement(ast_expression *condition,
    this->condition = condition;
    this->then_statement = then_statement;
    this->else_statement = else_statement;
+}
+
+
+void
+ast_switch_statement::print(void) const
+{
+   printf("switch ( ");
+   test_expression->print();
+   printf(") ");
+
+   body->print();
+}
+
+
+ast_switch_statement::ast_switch_statement(ast_expression *test_expression,
+					   ast_node *body)
+{
+   this->test_expression = test_expression;
+   this->body = body;
+}
+
+
+void
+ast_switch_body::print(void) const
+{
+   printf("{\n");
+   if (stmts != NULL) {
+      stmts->print();
+   }
+   printf("}\n");
+}
+
+
+ast_switch_body::ast_switch_body(ast_case_statement_list *stmts)
+{
+   this->stmts = stmts;
+}
+
+
+void ast_case_label::print(void) const
+{
+   if (test_value != NULL) {
+      printf("case ");
+      test_value->print();
+      printf(": ");
+   } else {
+      printf("default: ");
+   }
+}
+
+
+ast_case_label::ast_case_label(ast_expression *test_value)
+{
+   this->test_value = test_value;
+}
+
+
+void ast_case_label_list::print(void) const
+{
+   foreach_list_const(n, & this->labels) {
+      ast_node *ast = exec_node_data(ast_node, n, link);
+      ast->print();
+   }
+   printf("\n");
+}
+
+
+ast_case_label_list::ast_case_label_list(void)
+{
+}
+
+
+void ast_case_statement::print(void) const
+{
+   labels->print();
+   foreach_list_const(n, & this->stmts) {
+      ast_node *ast = exec_node_data(ast_node, n, link);
+      ast->print();
+      printf("\n");
+   }
+}
+
+
+ast_case_statement::ast_case_statement(ast_case_label_list *labels)
+{
+   this->labels = labels;
+}
+
+
+void ast_case_statement_list::print(void) const
+{
+   foreach_list_const(n, & this->cases) {
+      ast_node *ast = exec_node_data(ast_node, n, link);
+      ast->print();
+   }
+}
+
+
+ast_case_statement_list::ast_case_statement_list(void)
+{
 }
 
 

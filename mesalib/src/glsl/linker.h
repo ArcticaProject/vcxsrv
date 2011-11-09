@@ -30,6 +30,13 @@ extern bool
 link_function_calls(gl_shader_program *prog, gl_shader *main,
 		    gl_shader **shader_list, unsigned num_shaders);
 
+extern void
+link_invalidate_variable_locations(gl_shader *sh, enum ir_variable_mode mode,
+				   int generic_base);
+
+extern void
+link_assign_uniform_locations(struct gl_shader_program *prog);
+
 /**
  * Class for processing all of the leaf fields of an uniform
  *
