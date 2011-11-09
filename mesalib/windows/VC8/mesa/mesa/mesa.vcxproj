@@ -258,7 +258,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_parameter_layout.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_print.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\prog_statevars.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\program\prog_uniform.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\register_allocate.c" />
     <ClCompile Include="..\..\..\..\src\mesa\program\sampler.cpp" />
     <ClCompile Include="..\..\..\..\src\mesa\program\symbol_table.c" />

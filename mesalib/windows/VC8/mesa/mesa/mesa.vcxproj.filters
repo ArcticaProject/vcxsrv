@@ -371,9 +371,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\program\programopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\program\prog_uniform.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\program\program.c">
       <Filter>Source Files</Filter>
     </ClCompile>
