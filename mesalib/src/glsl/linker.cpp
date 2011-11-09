@@ -191,8 +191,8 @@ linker_warning(gl_shader_program *prog, const char *fmt, ...)
 
 
 void
-invalidate_variable_locations(gl_shader *sh, enum ir_variable_mode mode,
-			      int generic_base)
+link_invalidate_variable_locations(gl_shader *sh, enum ir_variable_mode mode,
+				   int generic_base)
 {
    foreach_list(node, sh->ir) {
       ir_variable *const var = ((ir_instruction *) node)->as_variable();
@@ -1021,13 +1021,6 @@ link_intrastage_shaders(void *mem_ctx,
    return linked;
 }
 
-
-struct uniform_node {
-   exec_node link;
-   struct gl_uniform *u;
-   unsigned slots;
-};
-
 /**
  * Update the sizes of linked shader uniform arrays to the maximum
  * array index used.
@@ -1100,151 +1093,6 @@ update_array_sizes(struct gl_shader_program *prog)
    }
 }
 
-static void
-add_uniform(void *mem_ctx, exec_list *uniforms, struct hash_table *ht,
-	    const char *name, const glsl_type *type, GLenum shader_type,
-	    unsigned *next_shader_pos, unsigned *total_uniforms)
-{
-   if (type->is_record()) {
-      for (unsigned int i = 0; i < type->length; i++) {
-	 const glsl_type *field_type = type->fields.structure[i].type;
-	 char *field_name = ralloc_asprintf(mem_ctx, "%s.%s", name,
-					    type->fields.structure[i].name);
-
-	 add_uniform(mem_ctx, uniforms, ht, field_name, field_type,
-		     shader_type, next_shader_pos, total_uniforms);
-      }
-   } else {
-      uniform_node *n = (uniform_node *) hash_table_find(ht, name);
-      unsigned int vec4_slots;
-      const glsl_type *array_elem_type = NULL;
-
-      if (type->is_array()) {
-	 array_elem_type = type->fields.array;
-	 /* Array of structures. */
-	 if (array_elem_type->is_record()) {
-	    for (unsigned int i = 0; i < type->length; i++) {
-	       char *elem_name = ralloc_asprintf(mem_ctx, "%s[%d]", name, i);
-	       add_uniform(mem_ctx, uniforms, ht, elem_name, array_elem_type,
-			   shader_type, next_shader_pos, total_uniforms);
-	    }
-	    return;
-	 }
-      }
-
-      /* Fix the storage size of samplers at 1 vec4 each. Be sure to pad out
-       * vectors to vec4 slots.
-       */
-      if (type->is_array()) {
-	 if (array_elem_type->is_sampler())
-	    vec4_slots = type->length;
-	 else
-	    vec4_slots = type->length * array_elem_type->matrix_columns;
-      } else if (type->is_sampler()) {
-	 vec4_slots = 1;
-      } else {
-	 vec4_slots = type->matrix_columns;
-      }
-
-      if (n == NULL) {
-	 n = (uniform_node *) calloc(1, sizeof(struct uniform_node));
-	 n->u = (gl_uniform *) calloc(1, sizeof(struct gl_uniform));
-	 n->slots = vec4_slots;
-
-	 n->u->Name = strdup(name);
-	 n->u->Type = type;
-	 n->u->VertPos = -1;
-	 n->u->FragPos = -1;
-	 n->u->GeomPos = -1;
-	 (*total_uniforms)++;
-
-	 hash_table_insert(ht, n, name);
-	 uniforms->push_tail(& n->link);
-      }
-
-      switch (shader_type) {
-      case GL_VERTEX_SHADER:
-	 n->u->VertPos = *next_shader_pos;
-	 break;
-      case GL_FRAGMENT_SHADER:
-	 n->u->FragPos = *next_shader_pos;
-	 break;
-      case GL_GEOMETRY_SHADER:
-	 n->u->GeomPos = *next_shader_pos;
-	 break;
-      }
-
-      (*next_shader_pos) += vec4_slots;
-   }
-}
-
-void
-assign_uniform_locations(struct gl_shader_program *prog)
-{
-   /* */
-   exec_list uniforms;
-   unsigned total_uniforms = 0;
-   hash_table *ht = hash_table_ctor(32, hash_table_string_hash,
-				    hash_table_string_compare);
-   void *mem_ctx = ralloc_context(NULL);
-
-   for (unsigned i = 0; i < MESA_SHADER_TYPES; i++) {
-      if (prog->_LinkedShaders[i] == NULL)
-	 continue;
-
-      unsigned next_position = 0;
-
-      foreach_list(node, prog->_LinkedShaders[i]->ir) {
-	 ir_variable *const var = ((ir_instruction *) node)->as_variable();
-
-	 if ((var == NULL) || (var->mode != ir_var_uniform))
-	    continue;
-
-	 if (strncmp(var->name, "gl_", 3) == 0) {
-	    /* At the moment, we don't allocate uniform locations for
-	     * builtin uniforms.  It's permitted by spec, and we'll
-	     * likely switch to doing that at some point, but not yet.
-	     */
-	    continue;
-	 }
-
-	 var->location = next_position;
-	 add_uniform(mem_ctx, &uniforms, ht, var->name, var->type,
-		     prog->_LinkedShaders[i]->Type,
-		     &next_position, &total_uniforms);
-      }
-   }
-
-   ralloc_free(mem_ctx);
-
-   gl_uniform_list *ul = (gl_uniform_list *)
-      calloc(1, sizeof(gl_uniform_list));
-
-   ul->Size = total_uniforms;
-   ul->NumUniforms = total_uniforms;
-   ul->Uniforms = (gl_uniform *) calloc(total_uniforms, sizeof(gl_uniform));
-
-   unsigned idx = 0;
-   uniform_node *next;
-   for (uniform_node *node = (uniform_node *) uniforms.head
-	   ; node->link.next != NULL
-	   ; node = next) {
-      next = (uniform_node *) node->link.next;
-
-      node->link.remove();
-      memcpy(&ul->Uniforms[idx], node->u, sizeof(gl_uniform));
-      idx++;
-
-      free(node->u);
-      free(node);
-   }
-
-   hash_table_dtor(ht);
-
-   prog->Uniforms = ul;
-}
-
-
 /**
  * Find a contiguous set of available bits in a bitmask.
  *
@@ -1291,12 +1139,6 @@ find_available_slots(unsigned used_mask, unsigned needed_count)
  * \return
  * If locations are successfully assigned, true is returned.  Otherwise an
  * error is emitted to the shader link log and false is returned.
- *
- * \bug
- * Locations set via \c glBindFragDataLocation are not currently supported.
- * Only locations assigned automatically by the linker, explicitly set by a
- * layout qualifier, or explicitly set by a built-in variable (e.g., \c
- * gl_FragColor) are supported for fragment shaders.
  */
 bool
 assign_attribute_or_color_locations(gl_shader_program *prog,
@@ -1320,7 +1162,8 @@ assign_attribute_or_color_locations(gl_shader_program *prog,
     * 1. Invalidate the location assignments for all vertex shader inputs.
     *
     * 2. Assign locations for inputs that have user-defined (via
-    *    glBindVertexAttribLocation) locations.
+    *    glBindVertexAttribLocation) locations and outputs that have
+    *    user-defined locations (via glBindFragDataLocation).
     *
     * 3. Sort the attributes without assigned locations by number of slots
     *    required in decreasing order.  Fragmentation caused by attribute
@@ -1337,7 +1180,7 @@ assign_attribute_or_color_locations(gl_shader_program *prog,
       (target_index == MESA_SHADER_VERTEX) ? ir_var_in : ir_var_out;
 
 
-   invalidate_variable_locations(sh, direction, generic_base);
+   link_invalidate_variable_locations(sh, direction, generic_base);
 
    /* Temporary storage for the set of attributes that need locations assigned.
     */
@@ -1379,6 +1222,13 @@ assign_attribute_or_color_locations(gl_shader_program *prog,
 
 	 if (prog->AttributeBindings->get(binding, var->name)) {
 	    assert(binding >= VERT_ATTRIB_GENERIC0);
+	    var->location = binding;
+	 }
+      } else if (target_index == MESA_SHADER_FRAGMENT) {
+	 unsigned binding;
+
+	 if (prog->FragDataBindings->get(binding, var->name)) {
+	    assert(binding >= FRAG_RESULT_DATA0);
 	    var->location = binding;
 	 }
       }
@@ -1539,8 +1389,8 @@ assign_varying_locations(struct gl_context *ctx,
     *    not being inputs.  This lets the optimizer eliminate them.
     */
 
-   invalidate_variable_locations(producer, ir_var_out, VERT_RESULT_VAR0);
-   invalidate_variable_locations(consumer, ir_var_in, FRAG_ATTRIB_VAR0);
+   link_invalidate_variable_locations(producer, ir_var_out, VERT_RESULT_VAR0);
+   link_invalidate_variable_locations(consumer, ir_var_in, FRAG_ATTRIB_VAR0);
 
    foreach_list(node, producer->ir) {
       ir_variable *const output_var = ((ir_instruction *) node)->as_variable();
@@ -1858,7 +1708,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
    }
 
    update_array_sizes(prog);
-   assign_uniform_locations(prog);
+   link_assign_uniform_locations(prog);
 
    /* OpenGL ES requires that a vertex shader and a fragment shader both be
     * present in a linked program.  By checking for use of shading language

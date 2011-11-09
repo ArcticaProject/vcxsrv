@@ -1135,10 +1135,10 @@ st_DrawPixels(struct gl_context *ctx, GLint x, GLint y,
                   assert(0);
                }
 
-	       sv[1] = st_create_texture_sampler_view_format(st->pipe, pt,
+               sv[1] = st_create_texture_sampler_view_format(st->pipe, pt,
                                                              stencil_format);
-	       num_sampler_view++;
-	    }
+               num_sampler_view++;
+            }
 
             draw_textured_quad(ctx, x, y, ctx->Current.RasterPos[2],
                                width, height,
@@ -1638,9 +1638,9 @@ st_destroy_drawpix(struct st_context *st)
 
    st_reference_fragprog(st, &st->pixel_xfer.combined_prog, NULL);
    if (st->drawpix.vert_shaders[0])
-      ureg_free_tokens(st->drawpix.vert_shaders[0]);
+      cso_delete_vertex_shader(st->cso_context, st->drawpix.vert_shaders[0]);
    if (st->drawpix.vert_shaders[1])
-      ureg_free_tokens(st->drawpix.vert_shaders[1]);
+      cso_delete_vertex_shader(st->cso_context, st->drawpix.vert_shaders[1]);
 }
 
 #endif /* FEATURE_drawpix */

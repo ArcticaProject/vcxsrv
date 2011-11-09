@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "pixman.h"
+#include "utils.h"
 
 typedef struct
 {
@@ -94,7 +94,7 @@ main (int argc, char **argv)
 {
     int i;
 
-    for (i = 0; i < sizeof (info) / sizeof (info[0]); ++i)
+    for (i = 0; i < ARRAY_LENGTH (info); ++i)
 	test_composite (&info[i]);
     
     return 0;

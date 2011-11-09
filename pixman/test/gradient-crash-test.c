@@ -106,17 +106,17 @@ main (int argc, char **argv)
 	if (i == 0)
 	{
 	    stops = onestop;
-	    num_stops = sizeof(onestop) / sizeof(onestop[0]);
+	    num_stops = ARRAY_LENGTH (onestop);
 	}
 	else if (i == 1)
 	{
 	    stops = subsetstops;
-	    num_stops = sizeof(subsetstops) / sizeof(subsetstops[0]);
+	    num_stops = ARRAY_LENGTH (subsetstops);
 	}
 	else
 	{
 	    stops = stops01;
-	    num_stops = sizeof(stops01) / sizeof(stops01[0]);
+	    num_stops = ARRAY_LENGTH (stops01);
 	}
 	
 	for (j = 0; j < 3; ++j)

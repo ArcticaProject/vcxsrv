@@ -139,8 +139,6 @@ get_alpha (pixman_image_t *image, int x, int y, int orig_x, int orig_y)
     return r;
 }
 
-#define ARRAY_LENGTH(A) ((int) (sizeof (A) / sizeof ((A) [0])))
-
 static int
 run_test (int s, int d, int sa, int da, int soff, int doff)
 {

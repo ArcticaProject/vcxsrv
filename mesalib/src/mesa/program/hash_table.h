@@ -38,15 +38,16 @@
 #include <assert.h>
 #include <unistd.h>
 
-struct hash_table;
 struct string_to_uint_map;
-
-typedef unsigned (*hash_func_t)(const void *key);
-typedef int (*hash_compare_func_t)(const void *key1, const void *key2);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+struct hash_table;
+
+typedef unsigned (*hash_func_t)(const void *key);
+typedef int (*hash_compare_func_t)(const void *key1, const void *key2);
 
 /**
  * Hash table constructor
@@ -212,6 +213,14 @@ public:
    {
       hash_table_call_foreach(this->ht, delete_key, NULL);
       hash_table_dtor(this->ht);
+   }
+
+   /**
+    * Remove all mappings from this map.
+    */
+   void clear()
+   {
+      hash_table_clear(this->ht);
    }
 
    /**

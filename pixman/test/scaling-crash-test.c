@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "pixman.h"
+#include "utils.h"
 
 /*
  * We have a source image filled with solid color, set NORMAL or PAD repeat,
@@ -130,12 +130,11 @@ do_test (int32_t		dst_size,
 	 int32_t		src_offs,
 	 int32_t		scale_factor)
 {
-#define N_ELEMENTS(a)	(sizeof (a) / sizeof ((a)[0]))
     int i, j;
 
-    for (i = 0; i < N_ELEMENTS(filters); ++i)
+    for (i = 0; i < ARRAY_LENGTH (filters); ++i)
     {
-	for (j = 0; j < N_ELEMENTS (repeats); ++j)
+	for (j = 0; j < ARRAY_LENGTH (repeats); ++j)
 	{
 	    /* horizontal test */
 	    if (run_test (dst_size, 1,

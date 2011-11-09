@@ -149,10 +149,6 @@ math_sources = [
     'math/m_xform.c',
 ]
 
-math_xform_sources = [
-    'math/m_xform.c'
-]
-
 swrast_sources = [
     'swrast/s_aaline.c',
     'swrast/s_aatriangle.c',
@@ -306,7 +302,6 @@ program_sources = [
     'program/prog_parameter_layout.c',
     'program/prog_print.c',
     'program/prog_statevars.c',
-    'program/prog_uniform.c',
     'program/programopt.c',
     'program/sampler.cpp',
     'program/symbol_table.c',
@@ -323,7 +318,6 @@ common_driver_sources =	[
 mesa_sources = (
     main_sources +
     math_sources +
-    math_xform_sources +
     program_sources +
     vbo_sources +
     tnl_sources +

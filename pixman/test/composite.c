@@ -22,8 +22,6 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-#define PIXMAN_USE_INTERNAL_API
-#include <pixman.h>
 #include <stdio.h>
 #include <stdlib.h> /* abort() */
 #include <math.h>

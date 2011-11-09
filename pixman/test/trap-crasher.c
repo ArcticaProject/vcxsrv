@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <pixman.h>
+#include "utils.h"
 
 int
 main()
@@ -22,6 +22,6 @@ main()
 
     dst = pixman_image_create_bits (PIXMAN_a8, 1, 1, NULL, -1);
 
-    pixman_add_trapezoids (dst, 0, 0, sizeof (traps)/sizeof (traps[0]), traps);
+    pixman_add_trapezoids (dst, 0, 0, ARRAY_LENGTH (traps), traps);
     return (0);
 }

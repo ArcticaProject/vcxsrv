@@ -123,7 +123,7 @@ main (int argc, char **argv)
     table = gtk_table_new (G_N_ELEMENTS (operators) / 6, 6, TRUE);
 
     src_img = pixman_image_create_linear_gradient (&p1, &p2, stops,
-						   sizeof (stops) / sizeof (stops[0]));
+						   G_N_ELEMENTS (stops));
 
     pixman_image_set_repeat (src_img, PIXMAN_REPEAT_PAD);
     

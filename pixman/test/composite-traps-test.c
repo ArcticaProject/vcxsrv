@@ -1,6 +1,5 @@
 /* Based loosely on scaling-test */
 
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "utils.h"
