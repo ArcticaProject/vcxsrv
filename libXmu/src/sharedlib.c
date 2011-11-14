@@ -36,15 +36,9 @@ struct _AtomRec {
     struct _DisplayRec* head;
 };
 
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define DeclareAtom(atom) \
 extern struct _AtomRec __##atom; \
 AtomPtr _##atom = &__##atom;
-#else
-#define DeclareAtom(atom) \
-extern struct _AtomRec __/**/atom; \
-AtomPtr _/**/atom = &__/**/atom;
-#endif
 
 DeclareAtom(XA_ATOM_PAIR)
 DeclareAtom(XA_CHARACTER_POSITION)

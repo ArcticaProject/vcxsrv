@@ -50,7 +50,7 @@ typedef struct _DisplayRec {
 } DisplayRec;
 
 struct _AtomRec {
-    char *name;
+    _Xconst char *name;
     DisplayRec* head;
 };
 
@@ -60,15 +60,9 @@ struct _AtomRec {
 #define STATIC static
 #endif
 
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define DeclareAtom(atom,text) \
 STATIC struct _AtomRec __##atom = { text, NULL }; \
 AtomPtr _##atom = &__##atom;
-#else
-#define DeclareAtom(atom,text) \
-STATIC struct _AtomRec __/**/atom = { text, NULL }; \
-AtomPtr _/**/atom = &__/**/atom;
-#endif
 
 DeclareAtom(XA_ATOM_PAIR,		"ATOM_PAIR"		)
 DeclareAtom(XA_CHARACTER_POSITION,	"CHARACTER_POSITION"	)
@@ -105,7 +99,7 @@ AtomPtr
 XmuMakeAtom(_Xconst char *name)
 {
     AtomPtr ptr = XtNew(struct _AtomRec);
-    ptr->name = (char *) name;
+    ptr->name = name;
     ptr->head = NULL;
     return ptr;
 }
@@ -113,7 +107,7 @@ XmuMakeAtom(_Xconst char *name)
 char *
 XmuNameOfAtom(AtomPtr atom_ptr)
 {
-    return atom_ptr->name;
+    return (char *) atom_ptr->name;
 }
 
 

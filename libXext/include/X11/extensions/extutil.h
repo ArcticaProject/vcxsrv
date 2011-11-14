@@ -123,7 +123,7 @@ extern void XextDestroyExtension(
 extern XExtDisplayInfo *XextAddDisplay(
     XExtensionInfo*	/* extinfo */,
     Display*		/* dpy */,
-    char*		/* ext_name */,
+    _Xconst char*	/* ext_name */,
     XExtensionHooks*	/* hooks */,
     int			/* nevents */,
     XPointer		/* data */

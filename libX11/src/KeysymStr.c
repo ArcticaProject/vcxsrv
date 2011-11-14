@@ -31,10 +31,9 @@ in this Software without prior written authorization from The Open Group.
 #include "Xlibint.h"
 #include <X11/Xresource.h>
 #include <X11/keysymdef.h>
+#include "Xresinternal.h"
 
 #include <stdio.h> /* sprintf */
-
-typedef unsigned long Signature;
 
 #define NEEDVTABLE
 #include "ks_tables.h"

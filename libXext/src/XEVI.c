@@ -31,7 +31,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/extutil.h>
 #include <X11/Xutil.h>
 static XExtensionInfo *xevi_info;/* needs to move to globals.c */
-static /* const */ char *xevi_extension_name = EVINAME;
+static const char *xevi_extension_name = EVINAME;
 #define XeviCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, xevi_extension_name, val)
 /*****************************************************************************

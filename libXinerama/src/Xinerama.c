@@ -34,7 +34,7 @@ Equipment Corporation.
 
 static XExtensionInfo _panoramiX_ext_info_data;
 static XExtensionInfo *panoramiX_ext_info = &_panoramiX_ext_info_data;
-static /* const */ char *panoramiX_extension_name = PANORAMIX_PROTOCOL_NAME;
+static const char *panoramiX_extension_name = PANORAMIX_PROTOCOL_NAME;
 
 #define PanoramiXCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, panoramiX_extension_name, val)

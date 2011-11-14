@@ -36,7 +36,7 @@ in this Software without prior written authorization from The Open Group.
 
 static XExtensionInfo _Security_info_data;
 static XExtensionInfo *Security_info = &_Security_info_data;
-static char *Security_extension_name = SECURITY_EXTENSION_NAME;
+static const char *Security_extension_name = SECURITY_EXTENSION_NAME;
 
 #define SecurityCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, Security_extension_name, val)
@@ -76,7 +76,7 @@ static XExtensionHooks Security_extension_hooks = {
     error_string                        /* error_string */
 };
 
-static char    *security_error_list[] = {
+static const char    *security_error_list[] = {
     "BadAuthorization",
     "BadAuthorizationProtocol"
 };

@@ -19,7 +19,26 @@ BENCHS  = $(patsubst %,   $(CFG_VAR)/%.exe, $(BENCHMARKS))
 all: inform $(TESTS) $(BENCHS)
 
 check: inform $(TESTS)
-	@for test in $(TESTS) ; do ./$$test && echo "PASS: $$test" || echo "FAIL: $$test" ; done
+	@failures=0 ; \
+	total=0 ; \
+	for test in $(TESTS) ; \
+	do \
+		total=`expr $$total + 1` ; \
+		if ./$$test ; \
+		then echo "PASS: $$test" ; \
+		else echo "FAIL: $$test" ; \
+		     failures=`expr $$failures + 1` ; \
+		fi ; \
+	done ; \
+	if test $$failures -eq 0 ; \
+	then banner="All $$total tests passed" ; \
+	else banner="$$failures of $$total tests failed" ; \
+	fi ; \
+	dashes=`echo "$$banner" | sed s/./=/g`; \
+	echo "$$dashes" ; \
+	echo "$$banner" ; \
+	echo "$$dashes" ; \
+	test $$failures -eq 0
 
 $(CFG_VAR)/libutils.lib: $(libutils_OBJECTS)
 	@$(AR) $(PIXMAN_ARFLAGS) -OUT:$@ $^

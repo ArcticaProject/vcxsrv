@@ -33,7 +33,7 @@
 
 static XExtensionInfo _lbx_info_data;
 static XExtensionInfo *lbx_info = &_lbx_info_data;
-static /* const */ char *lbx_extension_name = LBXNAME;
+static const char *lbx_extension_name = LBXNAME;
 
 #define LbxCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, lbx_extension_name, val)
@@ -55,7 +55,7 @@ static /* const */ XExtensionHooks lbx_extension_hooks = {
     error_string,			/* error_string */
 };
 
-static /* const */ char *lbx_error_list[] = {
+static const char *lbx_error_list[] = {
     "BadLbxClient",			/* BadLbxClient */
 };
 

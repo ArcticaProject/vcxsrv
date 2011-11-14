@@ -52,7 +52,7 @@ struct xagstuff {
 
 static XExtensionInfo _xag_info_data;
 static XExtensionInfo *xag_info = &_xag_info_data;
-static char *xag_extension_name = XAGNAME;
+static const char *xag_extension_name = XAGNAME;
 
 #define XagCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, xag_extension_name, val)

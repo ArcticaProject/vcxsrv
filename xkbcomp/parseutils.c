@@ -748,12 +748,12 @@ IncludeCreate(char *str, unsigned merge)
 void
 PrintStmtAddrs(ParseCommon * stmt)
 {
-    fprintf(stderr, "0x%x", stmt);
+    fprintf(stderr, "%p", stmt);
     if (stmt)
     {
         do
         {
-            fprintf(stderr, "->0x%x", stmt->next);
+            fprintf(stderr, "->%p", stmt->next);
             stmt = stmt->next;
         }
         while (stmt);

@@ -2,8 +2,10 @@
 #ifndef _XRESINTERNAL_H_
 #define _XRESINTERNAL_H_
 
+#include <inttypes.h>
+
 /* type defines */
-typedef unsigned long Signature;
+typedef uint32_t Signature;
 
 /* prototypes */
 extern XrmQuark _XrmInternalStringToQuark(
