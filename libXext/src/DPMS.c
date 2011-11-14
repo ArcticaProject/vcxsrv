@@ -42,7 +42,7 @@ Equipment Corporation.
 
 static XExtensionInfo _dpms_info_data;
 static XExtensionInfo *dpms_info = &_dpms_info_data;
-static char *dpms_extension_name = DPMSExtensionName;
+static const char *dpms_extension_name = DPMSExtensionName;
 
 #define DPMSCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, dpms_extension_name, val)

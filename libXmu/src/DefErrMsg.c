@@ -43,7 +43,7 @@ XmuPrintDefaultErrorMessage(Display *dpy, XErrorEvent *event, FILE *fp)
     char buffer[BUFSIZ];
     char mesg[BUFSIZ];
     char number[32];
-    char *mtype = "XlibMessage";
+    _Xconst char *mtype = "XlibMessage";
     register _XExtension *ext = (_XExtension *)NULL;
     _XExtension *bext = (_XExtension *)NULL;
     XGetErrorText(dpy, event->error_code, buffer, BUFSIZ);

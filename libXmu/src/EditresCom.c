@@ -142,13 +142,13 @@ static Boolean CvtStringToBlock(Display*, XrmValue*, Cardinal*,
 				XrmValue*, XrmValue*, XtPointer*);
 static EditresEvent *BuildEvent(Widget, Atom, XtPointer, ResIdent,
 				unsigned long);
-static char *DoFindChild(Widget, EditresEvent*, ProtocolStream*);
-static char *DoGetGeometry(Widget, EditresEvent*, ProtocolStream*);
-static char *DoGetResources(Widget, EditresEvent*, ProtocolStream*);
-static char *DoSetValues(Widget, EditresEvent*, ProtocolStream*);
+static _Xconst char *DoFindChild(Widget, EditresEvent*, ProtocolStream*);
+static _Xconst char *DoGetGeometry(Widget, EditresEvent*, ProtocolStream*);
+static _Xconst char *DoGetResources(Widget, EditresEvent*, ProtocolStream*);
+static _Xconst char *DoSetValues(Widget, EditresEvent*, ProtocolStream*);
 static void DumpChildren(Widget, ProtocolStream*, unsigned short*);
-static char *DumpValues(Widget, EditresEvent*, ProtocolStream*);
-static char *DumpWidgets(Widget, EditresEvent*, ProtocolStream*);
+static _Xconst char *DumpValues(Widget, EditresEvent*, ProtocolStream*);
+static _Xconst char *DumpWidgets(Widget, EditresEvent*, ProtocolStream*);
 static void ExecuteCommand(Widget, Atom, ResIdent, EditresEvent*);
 static void ExecuteGetGeometry(Widget, ProtocolStream*);
 static void ExecuteGetResources(Widget w, ProtocolStream *stream);
@@ -167,8 +167,8 @@ static Bool PositionInChild(Widget, int, int);
 static int qcmp_widget_list(register _Xconst void*, register _Xconst void*);
 static void SendCommand(Widget, Atom, ResIdent, EditResError,
 			ProtocolStream*);
-static void SendFailure(Widget, Atom, ResIdent, char*);
-static char *VerifyWidget(Widget, WidgetInfo*);
+static void SendFailure(Widget, Atom, ResIdent, _Xconst char*);
+static _Xconst char *VerifyWidget(Widget, WidgetInfo*);
 
 /*
  * External
@@ -215,13 +215,13 @@ _XEditResCheckMessages(Widget w, XtPointer data, XEvent *event, Boolean *cont)
 	if (!first_time)
 	{
 	    Atom atoms[4];
-	    static char *names[] = {
+	    static _Xconst char *names[] = {
 		EDITRES_NAME, EDITRES_COMMAND_ATOM,
 		EDITRES_PROTOCOL_ATOM, EDITRES_CLIENT_VALUE
 	    };
 
 	    first_time = True;
-	    XInternAtoms(dpy, names, 4, False, atoms);
+	    XInternAtoms(dpy, (char **) names, 4, False, atoms);
 	    res_editor = atoms[0];
 	    res_editor_command = atoms[1];
 	    res_editor_protocol = atoms[2];
@@ -479,8 +479,8 @@ GetCommand(Widget w, XtPointer data, Atom *selection, Atom *type,
 static void
 ExecuteCommand(Widget w, Atom sel, ResIdent ident, EditresEvent *event)
 {
-    char *(*func)(Widget, EditresEvent*, ProtocolStream*);
-    char *str;
+    _Xconst char *(*func)(Widget, EditresEvent*, ProtocolStream*);
+    _Xconst char *str;
 
     if (globals.block == BlockAll)
     {
@@ -609,7 +609,7 @@ CommandDone(Widget widget, Atom *selection, Atom *target)
  *	Sends a failure message
  */
 static void
-SendFailure(Widget w, Atom sel, ResIdent ident, char *str)
+SendFailure(Widget w, Atom sel, ResIdent ident, _Xconst char *str)
 {
     _XEditResResetStream(&globals.stream);
     _XEditResPutString8(&globals.stream, str);
@@ -889,7 +889,7 @@ IsChild(Widget top, Widget parent, Widget child)
  * Description:
  *	Makes sure all the widgets still exist
  */
-static char *
+static _Xconst char *
 VerifyWidget(Widget w, WidgetInfo *info)
 {
     Widget top;
@@ -938,10 +938,10 @@ VerifyWidget(Widget w, WidgetInfo *info)
  * Returns:
  *	NULL
  */
-static char *
+static _Xconst char *
 DoSetValues(Widget w, EditresEvent *event, ProtocolStream *stream)
 {
-    char *str;
+    _Xconst char *str;
     register unsigned i;
     unsigned short count = 0;
     SetValuesEvent *sv_event = (SetValuesEvent *)event;
@@ -1078,7 +1078,7 @@ ExecuteSetValues(Widget w, SetValuesEvent *sv_event, WidgetInfo *entry,
  */
 #define TOOLKIT_TYPE ("Xt")
 /*ARGSUSED*/
-static char *
+static _Xconst char *
 DumpWidgets(Widget w, EditresEvent *event, ProtocolStream *stream)
 {
     unsigned short count = 0;
@@ -1201,11 +1201,11 @@ DumpChildren(Widget w, ProtocolStream *stream, unsigned short *count)
  * Returns:
  *	NULL
  */
-static char *
+static _Xconst char *
 DoGetGeometry(Widget w, EditresEvent *event, ProtocolStream *stream)
 {
     unsigned i;
-    char *str;
+    _Xconst char *str;
     GetGeomEvent *geom_event = (GetGeomEvent *)event;
 
     _XEditResPut16(stream, geom_event->num_entries);
@@ -1414,10 +1414,10 @@ _FindChild(Widget parent, int x, int y)
  *	  An allocated error message if something went horribly wrong and
  *	no set values were performed, else NULL.
  */
-static char *
+static _Xconst char *
 DoFindChild(Widget w, EditresEvent *event, ProtocolStream *stream)
 {
-    char *str;
+    _Xconst char *str;
     Widget parent, child;
     Position parent_x, parent_y;
     FindChildEvent *find_event = (FindChildEvent *)event;
@@ -1456,11 +1456,11 @@ DoFindChild(Widget w, EditresEvent *event, ProtocolStream *stream)
  * Returns:
  *	NULL
  */
-static char *
+static _Xconst char *
 DoGetResources(Widget w, EditresEvent *event, ProtocolStream *stream)
 {
     unsigned int i;
-    char *str;
+    _Xconst char *str;
     GetResEvent *res_event = (GetResEvent *)event;
 
     _XEditResPut16(stream, res_event->num_entries); /* number of replys */
@@ -1558,12 +1558,12 @@ ExecuteGetResources(Widget w, ProtocolStream *stream)
  *	NULL
  */
 /*ARGSUSED*/
-static char *
+static _Xconst char *
 DumpValues(Widget w, EditresEvent* event, ProtocolStream* stream)
 {
-    char *str;
+    _Xconst char *str;
     Arg warg[1];
-    String res_value = NULL;
+    _Xconst _XtString res_value = NULL;
     GetValuesEvent *gv_event = (GetValuesEvent *)event;
 
     /* put the count in the stream */
@@ -1645,7 +1645,7 @@ InsertWidget(ProtocolStream *stream, Widget w)
  *	Inserts a string into the protocol stream.
  */
 void
-_XEditResPutString8(ProtocolStream *stream, char *str)
+_XEditResPutString8(ProtocolStream *stream, _Xconst char *str)
 {
     int i, len = strlen(str);
 

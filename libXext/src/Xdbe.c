@@ -42,7 +42,7 @@
 
 static XExtensionInfo _dbe_info_data;
 static XExtensionInfo *dbe_info = &_dbe_info_data;
-static char *dbe_extension_name = DBE_PROTOCOL_NAME;
+static const char *dbe_extension_name = DBE_PROTOCOL_NAME;
 
 #define DbeCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, dbe_extension_name, val)
@@ -86,7 +86,7 @@ static XExtensionHooks dbe_extension_hooks = {
     error_string,                       /* error_string */
 };
 
-static char *dbe_error_list[] = {
+static const char *dbe_error_list[] = {
     "BadBuffer",			/* DbeBadBuffer */
 };
 

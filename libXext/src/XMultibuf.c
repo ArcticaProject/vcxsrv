@@ -37,7 +37,7 @@ in this Software without prior written authorization from The Open Group.
 
 static XExtensionInfo _multibuf_info_data;
 static XExtensionInfo *multibuf_info = &_multibuf_info_data;
-static /* const */ char *multibuf_extension_name = MULTIBUFFER_PROTOCOL_NAME;
+static const char *multibuf_extension_name = MULTIBUFFER_PROTOCOL_NAME;
 
 #define MbufCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, multibuf_extension_name, val)
@@ -72,7 +72,7 @@ static /* const */ XExtensionHooks multibuf_extension_hooks = {
     error_string,			/* error_string */
 };
 
-static /* const */ char *multibuf_error_list[] = {
+static const char *multibuf_error_list[] = {
     "BadBuffer",			/* MultibufferBadBuffer */
 };
 

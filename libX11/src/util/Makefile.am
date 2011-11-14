@@ -5,6 +5,9 @@ makekeys_CFLAGS = \
 	$(X11_CFLAGS) \
 	$(CWARNFLAGS)
 
+makekeys_CPPFLAGS = \
+	-I$(top_srcdir)/include
+
 CC = @CC_FOR_BUILD@
 CPPFLAGS = @CPPFLAGS_FOR_BUILD@
 CFLAGS = @CFLAGS_FOR_BUILD@

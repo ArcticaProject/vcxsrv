@@ -40,7 +40,7 @@ in this Software without prior written authorization from The Open Group.
 
 static XExtensionInfo _shm_info_data;
 static XExtensionInfo *shm_info = &_shm_info_data;
-static /* const */ char *shm_extension_name = SHMNAME;
+static const char *shm_extension_name = SHMNAME;
 
 #define ShmCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, shm_extension_name, val)
@@ -70,7 +70,7 @@ static /* const */ XExtensionHooks shm_extension_hooks = {
     error_string,			/* error_string */
 };
 
-static /* const */ char *shm_error_list[] = {
+static const char *shm_error_list[] = {
     "BadShmSeg",			/* BadShmSeg */
 };
 

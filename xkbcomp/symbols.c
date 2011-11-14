@@ -1714,7 +1714,7 @@ FindKeyForSymbol(XkbDescPtr xkb, KeySym sym, unsigned int *kc_rtrn)
             if (j < (int) XkbKeyNumSyms(xkb, i))
             {
                 gotOne = True;
-                if ((XkbKeySym(xkb, i, j) == sym))
+                if (XkbKeySym(xkb, i, j) == sym)
                 {
                     *kc_rtrn = i;
                     return True;

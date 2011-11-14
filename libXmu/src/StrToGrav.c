@@ -39,7 +39,7 @@ in this Software without prior written authorization from The Open Group.
  */
 static struct _namepair {
     XrmQuark quark;
-    char *name;
+    _Xconst char *name;
     XtGravity gravity;
 } names[] = {
     { NULLQUARK, XtEForget, ForgetGravity },

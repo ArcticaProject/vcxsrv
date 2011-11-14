@@ -215,10 +215,10 @@ ApplyAliases(XkbDescPtr xkb, Bool toGeom, AliasInfo ** info_in)
             {
                 if (strncmp(a->alias, info->alias, XkbKeyNameLength) == 0)
                 {
-                    AliasInfo old;
-                    InitAliasInfo(&old, MergeAugment, 0, a->alias, a->real);
-                    HandleCollision(&old, info);
-                    memcpy(old.real, a->real, XkbKeyNameLength);
+                    AliasInfo oldai;
+                    InitAliasInfo(&oldai, MergeAugment, 0, a->alias, a->real);
+                    HandleCollision(&oldai, info);
+                    memcpy(oldai.real, a->real, XkbKeyNameLength);
                     info->alias[0] = '\0';
                     nNew--;
                     break;
@@ -278,7 +278,7 @@ ApplyAliases(XkbDescPtr xkb, Bool toGeom, AliasInfo ** info_in)
     if ((a - old) != (nOld + nNew))
     {
         WSGO2("Expected %d aliases total but created %d\n", nOld + nNew,
-              a - old);
+              (int)(a - old));
     }
 #endif
     if (toGeom)

@@ -37,7 +37,7 @@ in this Software without prior written authorization from The Open Group.
 
 static XExtensionInfo _mit_info_data;
 static XExtensionInfo *mit_info = &_mit_info_data;
-static /* const */ char *mit_extension_name = MITMISCNAME;
+static const char *mit_extension_name = MITMISCNAME;
 
 #define MITCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, mit_extension_name, val)

@@ -38,7 +38,7 @@ in this Software without prior written authorization from The Open Group.
 
 static XExtensionInfo _shape_info_data;
 static XExtensionInfo *shape_info = &_shape_info_data;
-static /* const */ char *shape_extension_name = SHAPENAME;
+static const char *shape_extension_name = SHAPENAME;
 
 #define ShapeCheckExtension(dpy,i,val) \
   XextCheckExtension (dpy, i, shape_extension_name, val)

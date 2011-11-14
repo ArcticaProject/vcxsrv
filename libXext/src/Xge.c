@@ -76,7 +76,7 @@ static Bool _xgeCheckExtension(Display* dpy, XExtDisplayInfo* info);
 
 /* main extension information data */
 static XExtensionInfo *xge_info;
-static char xge_extension_name[] = GE_NAME;
+static const char xge_extension_name[] = GE_NAME;
 static XExtensionHooks xge_extension_hooks = {
     NULL,	        /* create_gc */
     NULL,	        /* copy_gc */

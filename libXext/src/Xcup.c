@@ -39,7 +39,7 @@ in this Software without prior written authorization from The Open Group.
 
 static XExtensionInfo _xcup_info_data;
 static XExtensionInfo *xcup_info = &_xcup_info_data;
-static char *xcup_extension_name = XCUPNAME;
+static const char *xcup_extension_name = XCUPNAME;
 
 /*****************************************************************************
  *                                                                           *

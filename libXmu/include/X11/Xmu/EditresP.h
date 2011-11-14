@@ -335,7 +335,7 @@ _XFUNCPROTOBEGIN
 void _XEditResPutString8
 (
  ProtocolStream		*stream,
- char			*str
+ _Xconst char		*str
  );
 
 void _XEditResPut8

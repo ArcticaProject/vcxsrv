@@ -28,11 +28,8 @@ THE SOFTWARE.
    to be pure ASCII.  Bloody ``Code Set Independence''. */
 
 #include <string.h>
-#include <stdio.h>
-
-#if defined(__SCO__) || defined(__UNIXWARE__)
 #include <strings.h>
-#endif
+#include <stdio.h>
 
 #include <stdlib.h>
 

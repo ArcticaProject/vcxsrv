@@ -23,11 +23,7 @@ THE SOFTWARE.
 /* Backend-independent encoding code */
 
 #include <string.h>
-
-#if defined(__SCO__) || defined(__UNIXWARE__)
 #include <strings.h>
-#endif
-
 #include <stdlib.h>
 
 #define FALSE 0

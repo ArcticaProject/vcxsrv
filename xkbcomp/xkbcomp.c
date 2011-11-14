@@ -653,25 +653,25 @@ parseArgs(int argc, char *argv[])
         len = strlen(inputFile);
         if (inputFile[len - 1] == ')')
         {
-            char *tmp;
-            if ((tmp = strchr(inputFile, '(')) != NULL)
+            char *tmpstr;
+            if ((tmpstr = strchr(inputFile, '(')) != NULL)
             {
-                *tmp = '\0';
+                *tmpstr = '\0';
                 inputFile[len - 1] = '\0';
-                tmp++;
-                if (*tmp == '\0')
+                tmpstr++;
+                if (*tmpstr == '\0')
                 {
                     WARN("Empty map in filename\n");
                     ACTION("Ignored\n");
                 }
                 else if (inputMap == NULL)
                 {
-                    inputMap = uStringDup(tmp);
+                    inputMap = uStringDup(tmpstr);
                 }
                 else
                 {
                     WARN("Map specified in filename and with -m flag\n");
-                    ACTION1("map from name (\"%s\") ignored\n", tmp);
+                    ACTION1("map from name (\"%s\") ignored\n", tmpstr);
                 }
             }
             else
