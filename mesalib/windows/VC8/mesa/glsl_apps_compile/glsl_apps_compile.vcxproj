@@ -121,7 +121,7 @@
     <ClCompile Include="..\..\..\..\src\glsl\ir_rvalue_visitor.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_set_program_inouts.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_validate.cpp" />
-    <ClCompile Include="..\..\..\..\src\glsl\ir_variable.cpp" />
+    <ClCompile Include="..\..\..\..\src\glsl\builtin_variables.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\ir_variable_refcount.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\linker.cpp" />
     <ClCompile Include="..\..\..\..\src\glsl\link_functions.cpp" />

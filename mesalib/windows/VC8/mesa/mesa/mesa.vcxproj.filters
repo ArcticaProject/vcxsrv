@@ -20,9 +20,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\api_loopback.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\main\api_noop.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\api_validate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -305,6 +302,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\varray.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\vbo\vbo_noop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\vbo\vbo_context.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -470,7 +470,7 @@
     <ClCompile Include="..\..\..\..\src\glsl\glsl_types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\glsl\ir_variable.cpp">
+    <ClCompile Include="..\..\..\..\src\glsl\builtin_variables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\glsl\ir_function.cpp">

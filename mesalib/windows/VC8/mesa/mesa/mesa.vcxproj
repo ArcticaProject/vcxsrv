@@ -138,7 +138,7 @@
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\glsl\ir_variable.cpp">
+    <ClCompile Include="..\..\..\..\src\glsl\builtin_variables.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -187,7 +187,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\api_arrayelt.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\api_exec.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\api_loopback.c" />
-    <ClCompile Include="..\..\..\..\src\mesa\main\api_noop.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\api_validate.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\arbprogram.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\atifragshader.c" />
@@ -321,6 +320,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texstate.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texstore.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\varray.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\vbo\vbo_noop.c" />
     <ClCompile Include="..\..\..\..\src\mesa\vbo\vbo_context.c" />
     <ClCompile Include="..\..\..\..\src\mesa\vbo\vbo_exec.c" />
     <ClCompile Include="..\..\..\..\src\mesa\vbo\vbo_exec_api.c" />
