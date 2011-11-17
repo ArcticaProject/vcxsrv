@@ -337,7 +337,7 @@ static int
 SELinuxSendItemsToClient(ClientPtr client, SELinuxListItemRec *items,
 			 int size, int count)
 {
-    int rc, k, n, pos = 0;
+    int rc, k, pos = 0;
     SELinuxListItemsReply rep;
     CARD32 *buf;
 
@@ -526,11 +526,6 @@ ProcSELinuxDispatch(ClientPtr client)
 static int
 SProcSELinuxQueryVersion(ClientPtr client)
 {
-    REQUEST(SELinuxQueryVersionReq);
-
-    REQUEST_SIZE_MATCH(SELinuxQueryVersionReq);
-    swaps(&stuff->client_major);
-    swaps(&stuff->client_minor);
     return ProcSELinuxQueryVersion(client);
 }
 

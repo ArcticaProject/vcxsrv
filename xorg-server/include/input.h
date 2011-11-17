@@ -463,13 +463,13 @@ extern _X_EXPORT void QueueKeyboardEvents(
     int key_code,
     const ValuatorMask *mask);
 
-extern int GetProximityEvents(
+extern _X_EXPORT int GetProximityEvents(
     InternalEvent *events,
     DeviceIntPtr pDev,
     int type,
     const ValuatorMask *mask);
 
-extern void QueueProximityEvents(
+extern _X_EXPORT void QueueProximityEvents(
     DeviceIntPtr pDev,
     int type,
     const ValuatorMask *mask);

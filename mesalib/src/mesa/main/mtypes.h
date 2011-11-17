@@ -49,18 +49,6 @@ extern "C" {
 
 
 /**
- * Stencil buffer data type.
- */
-#if STENCIL_BITS==8
-   typedef GLubyte GLstencil;
-#elif STENCIL_BITS==16
-   typedef GLushort GLstencil;
-#else
-#  error "illegal number of stencil bits"
-#endif
-
-
-/**
  * \name 64-bit extension of GLbitfield.
  */
 /*@{*/
@@ -2157,6 +2145,16 @@ struct gl_shader
    struct gl_sl_pragmas Pragmas;
 
    unsigned Version;       /**< GLSL version used for linking */
+
+   unsigned num_samplers;	/**< Number of samplers used by this shader.
+				 * This field is only set post-linking.
+				 */
+   /**
+    * Number of uniform components used by this shader.
+    *
+    * This field is only set post-linking.
+    */
+   unsigned num_uniform_components;
 
    struct exec_list *ir;
    struct glsl_symbol_table *symbols;

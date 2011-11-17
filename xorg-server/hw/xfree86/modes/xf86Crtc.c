@@ -807,6 +807,9 @@ xf86CrtcScreenInit (ScreenPtr screen)
 
     config->CloseScreen = screen->CloseScreen;
     screen->CloseScreen = xf86CrtcCloseScreen;
+
+    /* This might still be marked wrapped from a previous generation */
+    config->BlockHandler = NULL;
     
 #ifdef XFreeXDGA
     _xf86_di_dga_init_internal(screen);

@@ -1275,7 +1275,7 @@ xf86PostKeyEventM(DeviceIntPtr	device,
     DeviceIntPtr pointer;
 
     /* Some pointers send key events, paired device is wrong then. */
-    pointer = IsPointerDevice(device) ? device : GetPairedDevice(device);
+    pointer = GetMaster(device, POINTER_OR_FLOAT);
     if (miPointerGetScreen(pointer)) {
         int index = miPointerGetScreen(pointer)->myNum;
 

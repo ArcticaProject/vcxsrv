@@ -104,7 +104,7 @@ int
 XIShouldNotify(ClientPtr client, DeviceIntPtr dev)
 {
     DeviceIntPtr current_ptr = PickPointer(client);
-    DeviceIntPtr current_kbd = GetPairedDevice(current_ptr);
+    DeviceIntPtr current_kbd = GetMaster(current_ptr, KEYBOARD_OR_FLOAT);
 
     if (dev == current_kbd || dev == current_ptr)
         return 1;
@@ -903,13 +903,13 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
 
     if (IsPointerDevice(device))
     {
-        kbd = GetPairedDevice(device);
+        kbd = GetMaster(device, KEYBOARD_OR_FLOAT);
         mouse = device;
         if (!kbd->key) /* can happen with floating SDs */
             kbd = NULL;
     } else
     {
-        mouse = GetPairedDevice(device);
+        mouse = GetMaster(device, POINTER_OR_FLOAT);
         kbd = device;
         if (!mouse->valuator || !mouse->button) /* may be float. SDs */
             mouse = NULL;
@@ -1495,7 +1495,7 @@ GrabKey(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr modifier_device,
     rc = CheckGrabValues(client, param);
     if (rc != Success)
         return rc;
-    if (k == NULL)
+    if ((dev->id != XIAllDevices && dev->id != XIAllMasterDevices) && k == NULL)
 	return BadMatch;
     if (grabtype == GRABTYPE_XI)
     {

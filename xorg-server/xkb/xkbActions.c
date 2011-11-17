@@ -1203,7 +1203,7 @@ xkbDeviceInfoPtr xkbPrivPtr = XKBDEVICEINFO(dev);
 	if (keyEvent)
             tmpdev = dev;
         else
-            tmpdev = GetPairedDevice(dev);
+            tmpdev = GetMaster(dev, POINTER_OR_FLOAT);
 
         UNWRAP_PROCESS_INPUT_PROC(tmpdev,xkbPrivPtr, backupproc);
         dev->public.processInputProc((InternalEvent*)event, tmpdev);

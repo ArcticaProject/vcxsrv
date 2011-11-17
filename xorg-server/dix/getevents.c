@@ -1546,7 +1546,7 @@ GetProximityEvents(InternalEvent *events, DeviceIntPtr pDev, int type, const Val
     /* Sanity checks. */
     if ((type != ProximityIn && type != ProximityOut) || !mask_in)
         return 0;
-    if (!pDev->valuator)
+    if (!pDev->valuator || !pDev->proximity)
         return 0;
 
     valuator_mask_copy(&mask, mask_in);

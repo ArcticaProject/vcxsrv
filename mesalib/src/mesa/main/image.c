@@ -39,25 +39,6 @@
 #include "mtypes.h"
 
 
-/**
- * NOTE:
- * Normally, BYTE_TO_FLOAT(0) returns 0.00392  That causes problems when
- * we later convert the float to a packed integer value (such as for
- * GL_RGB5_A1) because we'll wind up with a non-zero value.
- *
- * We redefine the macros here so zero is handled correctly.
- */
-#undef BYTE_TO_FLOAT
-#define BYTE_TO_FLOAT(B)    ((B) == 0 ? 0.0F : ((2.0F * (B) + 1.0F) * (1.0F/255.0F)))
-
-#undef SHORT_TO_FLOAT
-#define SHORT_TO_FLOAT(S)   ((S) == 0 ? 0.0F : ((2.0F * (S) + 1.0F) * (1.0F/65535.0F)))
-
-
-
-/** Compute ceiling of integer quotient of A divided by B. */
-#define CEILING( A, B )  ( (A) % (B) == 0 ? (A)/(B) : (A)/(B)+1 )
-
 
 /**
  * \return GL_TRUE if type is packed pixel type, GL_FALSE otherwise.
@@ -195,38 +176,24 @@ _mesa_sizeof_packed_type( GLenum type )
       case GL_FLOAT:
 	 return sizeof(GLfloat);
       case GL_UNSIGNED_BYTE_3_3_2:
-         return sizeof(GLubyte);
       case GL_UNSIGNED_BYTE_2_3_3_REV:
-         return sizeof(GLubyte);
       case MESA_UNSIGNED_BYTE_4_4:
          return sizeof(GLubyte);
       case GL_UNSIGNED_SHORT_5_6_5:
-         return sizeof(GLushort);
       case GL_UNSIGNED_SHORT_5_6_5_REV:
-         return sizeof(GLushort);
       case GL_UNSIGNED_SHORT_4_4_4_4:
-         return sizeof(GLushort);
       case GL_UNSIGNED_SHORT_4_4_4_4_REV:
-         return sizeof(GLushort);
       case GL_UNSIGNED_SHORT_5_5_5_1:
-         return sizeof(GLushort);
       case GL_UNSIGNED_SHORT_1_5_5_5_REV:
-         return sizeof(GLushort);
-      case GL_UNSIGNED_INT_8_8_8_8:
-         return sizeof(GLuint);
-      case GL_UNSIGNED_INT_8_8_8_8_REV:
-         return sizeof(GLuint);
-      case GL_UNSIGNED_INT_10_10_10_2:
-         return sizeof(GLuint);
-      case GL_UNSIGNED_INT_2_10_10_10_REV:
-         return sizeof(GLuint);
       case GL_UNSIGNED_SHORT_8_8_MESA:
       case GL_UNSIGNED_SHORT_8_8_REV_MESA:
-         return sizeof(GLushort);      
+         return sizeof(GLushort);
+      case GL_UNSIGNED_INT_8_8_8_8:
+      case GL_UNSIGNED_INT_8_8_8_8_REV:
+      case GL_UNSIGNED_INT_10_10_10_2:
+      case GL_UNSIGNED_INT_2_10_10_10_REV:
       case GL_UNSIGNED_INT_24_8_EXT:
-         return sizeof(GLuint);
       case GL_UNSIGNED_INT_5_9_9_9_REV:
-         return sizeof(GLuint);
       case GL_UNSIGNED_INT_10F_11F_11F_REV:
          return sizeof(GLuint);
       case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
@@ -263,29 +230,27 @@ _mesa_components_in_format( GLenum format )
       case GL_LUMINANCE_INTEGER_EXT:
       case GL_INTENSITY:
          return 1;
+
       case GL_LUMINANCE_ALPHA:
       case GL_LUMINANCE_ALPHA_INTEGER_EXT:
       case GL_RG:
-	 return 2;
-      case GL_RGB:
-      case GL_RGB_INTEGER_EXT:
-	 return 3;
-      case GL_RGBA:
-      case GL_RGBA_INTEGER_EXT:
-	 return 4;
-      case GL_BGR:
-	 return 3;
-      case GL_BGRA:
-	 return 4;
-      case GL_ABGR_EXT:
-         return 4;
       case GL_YCBCR_MESA:
-         return 2;
       case GL_DEPTH_STENCIL_EXT:
-         return 2;
       case GL_DUDV_ATI:
       case GL_DU8DV8_ATI:
-         return 2;
+	 return 2;
+
+      case GL_RGB:
+      case GL_BGR:
+      case GL_RGB_INTEGER_EXT:
+	 return 3;
+
+      case GL_RGBA:
+      case GL_BGRA:
+      case GL_ABGR_EXT:
+      case GL_RGBA_INTEGER_EXT:
+         return 4;
+
       default:
          return -1;
    }
@@ -987,36 +952,48 @@ _mesa_is_integer_format(GLenum format)
    /* specific integer formats */
    case GL_RGBA32UI_EXT:
    case GL_RGB32UI_EXT:
+   case GL_RG32UI:
+   case GL_R32UI:
    case GL_ALPHA32UI_EXT:
    case GL_INTENSITY32UI_EXT:
    case GL_LUMINANCE32UI_EXT:
    case GL_LUMINANCE_ALPHA32UI_EXT:
    case GL_RGBA16UI_EXT:
    case GL_RGB16UI_EXT:
+   case GL_RG16UI:
+   case GL_R16UI:
    case GL_ALPHA16UI_EXT:
    case GL_INTENSITY16UI_EXT:
    case GL_LUMINANCE16UI_EXT:
    case GL_LUMINANCE_ALPHA16UI_EXT:
    case GL_RGBA8UI_EXT:
    case GL_RGB8UI_EXT:
+   case GL_RG8UI:
+   case GL_R8UI:
    case GL_ALPHA8UI_EXT:
    case GL_INTENSITY8UI_EXT:
    case GL_LUMINANCE8UI_EXT:
    case GL_LUMINANCE_ALPHA8UI_EXT:
    case GL_RGBA32I_EXT:
    case GL_RGB32I_EXT:
+   case GL_RG32I:
+   case GL_R32I:
    case GL_ALPHA32I_EXT:
    case GL_INTENSITY32I_EXT:
    case GL_LUMINANCE32I_EXT:
    case GL_LUMINANCE_ALPHA32I_EXT:
    case GL_RGBA16I_EXT:
    case GL_RGB16I_EXT:
+   case GL_RG16I:
+   case GL_R16I:
    case GL_ALPHA16I_EXT:
    case GL_INTENSITY16I_EXT:
    case GL_LUMINANCE16I_EXT:
    case GL_LUMINANCE_ALPHA16I_EXT:
    case GL_RGBA8I_EXT:
    case GL_RGB8I_EXT:
+   case GL_RG8I:
+   case GL_R8I:
    case GL_ALPHA8I_EXT:
    case GL_INTENSITY8I_EXT:
    case GL_LUMINANCE8I_EXT:
