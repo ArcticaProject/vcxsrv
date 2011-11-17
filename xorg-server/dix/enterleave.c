@@ -766,7 +766,7 @@ CoreFocusOutNotifyPointerEvents(DeviceIntPtr dev,
 {
     WindowPtr P, stopAt;
 
-    P = PointerWin(GetPairedDevice(dev));
+    P = PointerWin(GetMaster(dev, POINTER_OR_FLOAT));
 
     if (!P)
         return;
@@ -821,7 +821,7 @@ CoreFocusInNotifyPointerEvents(DeviceIntPtr dev,
 {
     WindowPtr P;
 
-    P = PointerWin(GetPairedDevice(dev));
+    P = PointerWin(GetMaster(dev, POINTER_OR_FLOAT));
 
     if (!P || P == exclude || (pwin_parent != P && !IsParent(pwin_parent, P)))
         return;
@@ -1087,7 +1087,7 @@ CoreFocusPointerRootNoneSwitch(DeviceIntPtr dev,
     for (i = 0; i < nscreens; i++)
     {
         root = screenInfo.screens[i]->root;
-        if (!HasOtherPointer(root, GetPairedDevice(dev)) && !FirstFocusChild(root))
+        if (!HasOtherPointer(root, GetMaster(dev, POINTER_OR_FLOAT)) && !FirstFocusChild(root))
         {
             /* If pointer was on PointerRootWin and changes to NoneWin, and
              * the pointer paired with dev is below the current root window,
@@ -1095,7 +1095,7 @@ CoreFocusPointerRootNoneSwitch(DeviceIntPtr dev,
             if (dev->focus && dev->focus->win == PointerRootWin &&
                 B != PointerRootWin)
             {
-                WindowPtr ptrwin = PointerWin(GetPairedDevice(dev));
+                WindowPtr ptrwin = PointerWin(GetMaster(dev, POINTER_OR_FLOAT));
                 if (ptrwin && IsParent(root, ptrwin))
                     CoreFocusOutNotifyPointerEvents(dev, root, None, mode, TRUE);
             }
@@ -1187,7 +1187,7 @@ CoreFocusFromPointerRootOrNone(DeviceIntPtr dev,
             if (dev->focus && dev->focus->win == PointerRootWin &&
                 B != PointerRootWin)
             {
-                WindowPtr ptrwin = PointerWin(GetPairedDevice(dev));
+                WindowPtr ptrwin = PointerWin(GetMaster(dev, POINTER_OR_FLOAT));
                 if (ptrwin)
                     CoreFocusOutNotifyPointerEvents(dev, root, None, mode, TRUE);
             }

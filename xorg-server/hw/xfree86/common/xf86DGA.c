@@ -1016,7 +1016,7 @@ DGAProcessKeyboardEvent (ScreenPtr pScreen, DGAEvent *event, DeviceIntPtr keybd)
 {
     KeyClassPtr	    keyc = keybd->key;
     DGAScreenPtr    pScreenPriv = DGA_GET_SCREEN_PRIV(pScreen);
-    DeviceIntPtr    pointer = GetPairedDevice(keybd);
+    DeviceIntPtr    pointer = GetMaster(keybd, POINTER_OR_FLOAT);
     DeviceEvent     ev;
 
     memset(&ev, 0, sizeof(ev));

@@ -3704,10 +3704,7 @@ CheckPassiveGrabsOnWindow(
 	gdev= grab->modifierDevice;
         if (grab->grabtype == GRABTYPE_CORE)
         {
-            if (IsPointerDevice(device))
-                gdev = GetPairedDevice(device);
-            else
-                gdev = device;
+            gdev = GetMaster(device, KEYBOARD_OR_FLOAT);
         } else if (grab->grabtype == GRABTYPE_XI2)
         {
             /* if the device is an attached slave device, gdev must be the
@@ -4006,8 +4003,7 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
     }
 
     /* just deliver it to the focus window */
-    ptr = GetPairedDevice(keybd);
-
+    ptr = GetMaster(keybd, POINTER_OR_FLOAT);
 
     rc = EventToXI2(event, &xi2);
     if (rc == Success)
@@ -4507,7 +4503,7 @@ CoreEnterLeaveEvent(
     GrabPtr	        grab = mouse->deviceGrab.grab;
     Mask		mask;
 
-    keybd = GetPairedDevice(mouse);
+    keybd = GetMaster(mouse, KEYBOARD_OR_FLOAT);
 
     if ((pWin == mouse->valuator->motionHintWindow) &&
 	(detail != NotifyInferior))
@@ -4725,10 +4721,7 @@ SetInputFocus(
     }
     time = ClientTimeToServerTime(ctime);
 
-    if (IsKeyboardDevice(dev))
-        keybd = dev;
-    else
-        keybd = GetPairedDevice(dev);
+    keybd = GetMaster(dev, KEYBOARD_OR_FLOAT);
 
     if ((focusID == None) || (focusID == PointerRoot))
 	focusWin = (WindowPtr)(long)focusID;
@@ -5203,7 +5196,7 @@ ProcQueryPointer(ClientPtr client)
     if (rc != Success && rc != BadAccess)
 	return rc;
 
-    keyboard = GetPairedDevice(mouse);
+    keyboard = GetMaster(mouse, MASTER_KEYBOARD);
 
     pSprite = mouse->spriteInfo->sprite;
     if (mouse->valuator->motionHintWindow)
@@ -5327,7 +5320,7 @@ ProcSendEvent(ClientPtr client)
     WindowPtr pWin;
     WindowPtr effectiveFocus = NullWindow; /* only set if dest==InputFocus */
     DeviceIntPtr dev = PickPointer(client);
-    DeviceIntPtr keybd = GetPairedDevice(dev);
+    DeviceIntPtr keybd = GetMaster(dev, MASTER_KEYBOARD);
     SpritePtr pSprite = dev->spriteInfo->sprite;
     REQUEST(xSendEventReq);
 
@@ -5600,7 +5593,7 @@ ProcGrabButton(ClientPtr client)
     }
 
     ptr = PickPointer(client);
-    modifierDevice = GetPairedDevice(ptr);
+    modifierDevice = GetMaster(ptr, MASTER_KEYBOARD);
     if (stuff->pointerMode == GrabModeSync ||
 	stuff->keyboardMode == GrabModeSync)
 	access_mode |= DixFreezeAccess;
@@ -5657,7 +5650,7 @@ ProcUngrabButton(ClientPtr client)
     tempGrab.window = pWin;
     tempGrab.modifiersDetail.exact = stuff->modifiers;
     tempGrab.modifiersDetail.pMask = NULL;
-    tempGrab.modifierDevice = GetPairedDevice(ptr);
+    tempGrab.modifierDevice = GetMaster(ptr, MASTER_KEYBOARD);
     tempGrab.type = ButtonPress;
     tempGrab.detail.exact = stuff->button;
     tempGrab.grabtype = GRABTYPE_CORE;

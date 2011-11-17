@@ -113,9 +113,16 @@ uniform_field_visitor::recursion(const glsl_type *t, char **name,
 class count_uniform_size : public uniform_field_visitor {
 public:
    count_uniform_size(struct string_to_uint_map *map)
-      : num_active_uniforms(0), num_values(0), map(map)
+      : num_active_uniforms(0), num_values(0), num_shader_samplers(0),
+	num_shader_uniforms(0), map(map)
    {
       /* empty */
+   }
+
+   void start_shader()
+   {
+      this->num_shader_samplers = 0;
+      this->num_shader_uniforms = 0;
    }
 
    /**
@@ -128,11 +135,38 @@ public:
     */
    unsigned num_values;
 
+   /**
+    * Number of samplers used
+    */
+   unsigned num_shader_samplers;
+
+   /**
+    * Number of uniforms used in the current shader
+    */
+   unsigned num_shader_uniforms;
+
 private:
    virtual void visit_field(const glsl_type *type, const char *name)
    {
       assert(!type->is_record());
       assert(!(type->is_array() && type->fields.array->is_record()));
+
+      /* Count the number of samplers regardless of whether the uniform is
+       * already in the hash table.  The hash table prevents adding the same
+       * uniform for multiple shader targets, but in this case we want to
+       * count it for each shader target.
+       */
+      const unsigned values = values_for_type(type);
+      if (type->contains_sampler()) {
+	 this->num_shader_samplers +=
+	    type->is_array() ? type->array_size() : 1;
+      } else {
+	 /* Accumulate the total number of uniform slots used by this shader.
+	  * Note that samplers do not count against this limit because they
+	  * don't use any storage on current hardware.
+	  */
+	 this->num_shader_uniforms += values;
+      }
 
       /* If the uniform is already in the map, there's nothing more to do.
        */
@@ -147,7 +181,7 @@ private:
        * uniforms.
        */
       this->num_active_uniforms++;
-      this->num_values += values_for_type(type);
+      this->num_values += values;
    }
 
    struct string_to_uint_map *map;
@@ -267,6 +301,10 @@ link_assign_uniform_locations(struct gl_shader_program *prog)
       if (prog->_LinkedShaders[i] == NULL)
 	 continue;
 
+      /* Reset various per-shader target counts.
+       */
+      uniform_size.start_shader();
+
       foreach_list(node, prog->_LinkedShaders[i]->ir) {
 	 ir_variable *const var = ((ir_instruction *) node)->as_variable();
 
@@ -280,6 +318,10 @@ link_assign_uniform_locations(struct gl_shader_program *prog)
 
 	 uniform_size.process(var);
       }
+
+      prog->_LinkedShaders[i]->num_samplers = uniform_size.num_shader_samplers;
+      prog->_LinkedShaders[i]->num_uniform_components =
+	 uniform_size.num_shader_uniforms * 4;
    }
 
    const unsigned num_user_uniforms = uniform_size.num_active_uniforms;

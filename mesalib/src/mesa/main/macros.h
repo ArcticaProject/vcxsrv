@@ -54,6 +54,10 @@ extern GLfloat _mesa_ubyte_to_float_color_tab[256];
 #define FLOAT_TO_BYTE(X)    ( (((GLint) (255.0F * (X))) - 1) / 2 )
 
 
+/** Convert GLbyte to GLfloat while preserving zero */
+#define BYTE_TO_FLOATZ(B)   ((B) == 0 ? 0.0F : BYTE_TO_FLOAT(B))
+
+
 /** Convert GLbyte in [-128,127] to GLfloat in [-1.0,1.0], texture/fb data */
 #define BYTE_TO_FLOAT_TEX(B)    ((B) == -128 ? -1.0F : (B) * (1.0F/127.0F))
 
@@ -72,6 +76,9 @@ extern GLfloat _mesa_ubyte_to_float_color_tab[256];
 
 /** Convert GLfloat in [-1.0,1.0] to GLshort in [-32768,32767] */
 #define FLOAT_TO_SHORT(X)   ( (((GLint) (65535.0F * (X))) - 1) / 2 )
+
+/** Convert GLshort to GLfloat while preserving zero */
+#define SHORT_TO_FLOATZ(S)   ((S) == 0 ? 0.0F : SHORT_TO_FLOAT(S))
 
 
 /** Convert GLshort in [-32768,32767] to GLfloat in [-1.0,1.0], texture/fb data */
@@ -588,19 +595,6 @@ do {				\
  */
 #define LINTERP(T, OUT, IN) ((OUT) + (T) * ((IN) - (OUT)))
 
-/* Can do better with integer math
- */
-#define INTERP_UB( t, dstub, outub, inub )  \
-do {                        \
-   GLfloat inf = UBYTE_TO_FLOAT( inub );    \
-   GLfloat outf = UBYTE_TO_FLOAT( outub );  \
-   GLfloat dstf = LINTERP( t, outf, inf );  \
-   UNCLAMPED_FLOAT_TO_UBYTE( dstub, dstf ); \
-} while (0)
-
-#define INTERP_UI( t, dstui, outui, inui )  \
-   dstui = (GLuint) (GLint) LINTERP( (t), (GLfloat) (outui), (GLfloat) (inui) )
-
 #define INTERP_F( t, dstf, outf, inf )      \
    dstf = LINTERP( t, outf, inf )
 
@@ -618,16 +612,6 @@ do {                        \
    dst[1] = LINTERP( (t), (out)[1], (in)[1] );  \
    dst[2] = LINTERP( (t), (out)[2], (in)[2] );  \
 } while (0)
-
-#define INTERP_SZ( t, vec, to, out, in, sz )                \
-do {                                    \
-   switch (sz) {                            \
-   case 4: vec[to][3] = LINTERP( (t), (vec)[out][3], (vec)[in][3] );    \
-   case 3: vec[to][2] = LINTERP( (t), (vec)[out][2], (vec)[in][2] );    \
-   case 2: vec[to][1] = LINTERP( (t), (vec)[out][1], (vec)[in][1] );    \
-   case 1: vec[to][0] = LINTERP( (t), (vec)[out][0], (vec)[in][0] );    \
-   }                                    \
-} while(0)
 
 /*@}*/
 
@@ -656,9 +640,6 @@ do {                                    \
 #define DOT4( a, b )  ( (a)[0]*(b)[0] + (a)[1]*(b)[1] + \
             (a)[2]*(b)[2] + (a)[3]*(b)[3] )
 
-/** Dot product of two 4-element vectors */
-#define DOT4V(v,a,b,c,d) (v[0]*(a) + v[1]*(b) + v[2]*(c) + v[3]*(d))
-
 
 /** Cross product of two 3-element vectors */
 #define CROSS3(n, u, v)             \
@@ -686,6 +667,10 @@ do {                        \
 
 #define LEN_SQUARED_3FV( V ) ((V)[0]*(V)[0]+(V)[1]*(V)[1]+(V)[2]*(V)[2])
 #define LEN_SQUARED_2FV( V ) ((V)[0]*(V)[0]+(V)[1]*(V)[1])
+
+
+/** Compute ceiling of integer quotient of A divided by B. */
+#define CEILING( A, B )  ( (A) % (B) == 0 ? (A)/(B) : (A)/(B)+1 )
 
 
 /** casts to silence warnings with some compilers */

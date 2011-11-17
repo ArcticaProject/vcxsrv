@@ -109,7 +109,7 @@ ProcXIQueryPointer(ClientPtr client)
         MaybeStopHint(pDev, client);
 
     if (IsMaster(pDev))
-        kbd = GetPairedDevice(pDev);
+        kbd = GetMaster(pDev, MASTER_KEYBOARD);
     else
         kbd = (pDev->key) ? pDev : NULL;
 
