@@ -73,10 +73,10 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">objs/debug\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">objs/debug_mt\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">freetype247MT_D</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|Win32'">freetype247MT</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">freetype247_D</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">freetype247</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">freetype248MT_D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Multithreaded|Win32'">freetype248MT</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">freetype248_D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">freetype248</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
