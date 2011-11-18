@@ -4779,6 +4779,7 @@
         <_description>Taiwanese</_description>
         <languageList>
           <iso639Id>trv</iso639Id>
+          <iso639Id>pwn</iso639Id>
         </languageList>
       </configItem>
       <variantList>
@@ -6496,6 +6497,12 @@
         <configItem>
           <name>japan:nicola_f_bs</name>
           <_description>NICOLA-F style Backspace</_description>
+       </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>japan:hztg_escape</name>
+          <_description>Make Zenkaku Hankaku an additional ESC</_description>
        </configItem>
       </option>
     </group>

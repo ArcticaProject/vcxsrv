@@ -246,3 +246,9 @@ xkb_symbols "mac" {
 
     replace key <CAPS> { [ Caps_Lock ] };
 };
+
+partial alphanumeric_keys
+xkb_symbols "hztg_escape" {
+    replace key <HZTG> { [ Escape ] };
+};
+

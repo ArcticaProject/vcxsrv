@@ -103,6 +103,7 @@
   nbsp:level4n          =	+nbsp(level4n)
   nbsp:level4nl         =	+nbsp(level4nl)
   japan:nicola_f_bs     =	+jp(nicola_f_bs)
+  japan:hztg_escape     =	+jp(hztg_escape)
   kpdl:dot              =	+kpdl(dot)
   kpdl:comma            =	+kpdl(comma)
   kpdl:dotoss           =	+kpdl(dotoss)
