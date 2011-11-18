@@ -57,9 +57,6 @@
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_drawpix.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\mesa\swrast\s_readpix.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\swrast\s_zoom.c">
       <Filter>Source Files</Filter>
     </ClCompile>
