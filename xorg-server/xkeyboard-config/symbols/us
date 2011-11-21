@@ -573,7 +573,7 @@ xkb_symbols "dvp" {
     key <AE10> { [ bracketright,    6                                           ], type[Group1] = "FOUR_LEVEL_ALPHABETIC" };
     key <AE11> { [ exclam,          8,              exclamdown                  ], type[Group1] = "FOUR_LEVEL_ALPHABETIC" };
     key <AE12> { [ numbersign,      grave,          dead_grave                  ] };
-    key <BKSP> { [ BackSpace                                                    ] };
+    key <BKSP> { [ BackSpace,       BackSpace                                   ] };
 
     // upper row, left side
     key <AD01> { [ semicolon,       colon,          dead_diaeresis              ] };

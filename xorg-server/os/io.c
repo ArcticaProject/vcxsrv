@@ -809,6 +809,7 @@ WriteToClient (ClientPtr who, int count, const void *__buf)
 	replyinfo.client = who;
 	replyinfo.replyData = buf;
 	replyinfo.dataLenBytes = count + padBytes;
+	replyinfo.padBytes = padBytes;
 	if (who->replyBytesRemaining)
 	{ /* still sending data of an earlier reply */
 	    who->replyBytesRemaining -= count + padBytes;

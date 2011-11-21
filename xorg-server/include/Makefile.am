@@ -32,6 +32,7 @@ sdk_HEADERS =		\
 	misc.h		\
 	miscstruct.h	\
 	opaque.h	\
+	optionstr.h	\
 	os.h		\
 	pixmap.h	\
 	pixmapstr.h	\

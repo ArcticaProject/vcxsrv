@@ -14,7 +14,7 @@ xkb_symbols "pc105" {
     include "pc(editing)"
     include "keypad(x11)"
 
-    key <BKSP> {	[ BackSpace	]	};
+    key <BKSP> {	[ BackSpace, BackSpace	]	};
 
     key  <TAB> {	[ Tab,	ISO_Left_Tab	]	};
     key <RTRN> {	[ Return	]	};

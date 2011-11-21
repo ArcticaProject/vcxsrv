@@ -451,9 +451,10 @@ extern _X_EXPORT CallbackListPtr ReplyCallback;
 typedef struct {
     ClientPtr client;
     const void *replyData;
-    unsigned long dataLenBytes;
+    unsigned long dataLenBytes; /* actual bytes from replyData + pad bytes */
     unsigned long bytesRemaining;
     Bool startOfReply;
+    unsigned long padBytes;     /* pad bytes from zeroed array */
 } ReplyInfoRec;
 
 /* stuff for FlushCallback */

@@ -9,7 +9,6 @@
 #include "xf86_OSproc.h"
 
 /* pci stuff */
-#include "xf86PciInfo.h"
 #include "xf86Pci.h"
 
 #include "xf86cmap.h"

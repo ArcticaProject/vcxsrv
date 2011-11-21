@@ -465,11 +465,11 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 static void
 unmapVidMem(int ScreenNum, pointer Base, unsigned long Size)
 {
-    memType alignOff = (memType)Base 
-	- ((memType)Base & ~(getpagesize() - 1));
+    uintptr_t alignOff = (uintptr_t)Base
+	- ((uintptr_t)Base & ~(getpagesize() - 1));
 
-    DebugF("alignment offset: %lx\n",alignOff);
-    munmap((caddr_t)((memType)Base - alignOff), (Size + alignOff));
+    DebugF("alignment offset: %lx\n", (unsigned long)alignOff);
+    munmap((void *)((uintptr_t)Base - alignOff), (Size + alignOff));
 }
 
 

@@ -47,6 +47,8 @@
 #ifndef _XF86_PCIINFO_H
 #define _XF86_PCIINFO_H
 
+#warning "xf86PciInfo.h is deprecated.  For greater compatibility, drivers should include necessary PCI IDs locally rather than relying on this file from xorg-server."
+
 /* PCI Pseudo Vendor */
 #define PCI_VENDOR_GENERIC		0x00FF
 

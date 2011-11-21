@@ -165,6 +165,11 @@ static Bool quirk_detailed_use_maximum_size (int scrnIndex, xf86MonPtr DDC)
 	DDC->vendor.prod_id == 6400)
 	return TRUE;
 
+    /* Bug #41141: Acer Aspire One */
+    if (memcmp (DDC->vendor.name, "LGD", 4) == 0 &&
+	DDC->vendor.prod_id == 0x7f01)
+	return TRUE;
+
     return FALSE;
 }
 
