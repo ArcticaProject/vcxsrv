@@ -247,8 +247,8 @@ RootlessComposite(CARD8 op, PicturePtr pSrc, PicturePtr pMask, PicturePtr pDst,
     WindowPtr srcWin, dstWin, maskWin = NULL;
 
     if (pMask) {                        // pMask can be NULL
-        maskWin = (pMask->pDrawable->type == DRAWABLE_WINDOW) ?
-                  (WindowPtr)pMask->pDrawable :  NULL;
+        maskWin = (pMask->pDrawable && pMask->pDrawable->type == DRAWABLE_WINDOW) ?
+                  (WindowPtr)pMask->pDrawable : NULL;
     }
     srcWin  = (pSrc->pDrawable && pSrc->pDrawable->type  == DRAWABLE_WINDOW) ?
               (WindowPtr)pSrc->pDrawable  :  NULL;

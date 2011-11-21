@@ -108,7 +108,6 @@
 #define _PCI_H 1
 
 #include "xf86Pci.h"
-#include "xf86PciInfo.h"
 
 /*
  * Global Definitions

@@ -50,6 +50,7 @@
 #include "xf86Module.h"
 
 static ExtensionEntry	*dri2Extension;
+extern Bool DRI2ModuleSetup(void);
 
 static Bool
 validDrawable(ClientPtr client, XID drawable, Mask access_mode,
@@ -634,6 +635,8 @@ DRI2ExtensionInit(void)
 				 StandardMinorOpcode);
 
     DRI2EventBase = dri2Extension->eventBase;
+
+    DRI2ModuleSetup();
 }
 
 extern Bool noDRI2Extension;

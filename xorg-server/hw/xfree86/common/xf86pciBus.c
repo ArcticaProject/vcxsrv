@@ -49,6 +49,7 @@
 #define XF86_OS_PRIVS
 #include "xf86_OSproc.h"
 
+#define PCI_VENDOR_GENERIC		0x00FF
 
 /* Bus-specific globals */
 Bool pciSlotClaimed = FALSE;
