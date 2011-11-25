@@ -12,6 +12,7 @@ SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
 STRLCAT_SRCS = strlcat.c strlcpy.c
 XORG_SRCS = log.c
+STRNDUP_SRCS = strndup.c
 
 libos_la_SOURCES = 	\
 	WaitFor.c	\
