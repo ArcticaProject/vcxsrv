@@ -66,7 +66,7 @@ typedef enum {
 } SyncCounterType;
 
 typedef struct _SysCounterInfo {
-    char	*name;
+    const char	*name;
     CARD64	resolution;
     CARD64	bracket_greater;
     CARD64	bracket_less;
@@ -118,7 +118,7 @@ typedef union {
 } SyncAwaitUnion;
 
 extern pointer SyncCreateSystemCounter(
-    char *	/* name */,
+    const char */* name */,
     CARD64  	/* inital_value */,
     CARD64  	/* resolution */,
     SyncCounterType /* change characterization */,

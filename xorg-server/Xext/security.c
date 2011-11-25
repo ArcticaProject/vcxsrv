@@ -62,7 +62,7 @@ typedef struct {
 } SecurityStateRec;
 
 /* Extensions that untrusted clients shouldn't have access to */
-static char *SecurityTrustedExtensions[] = {
+static const char *SecurityTrustedExtensions[] = {
     "XC-MISC",
     "BIG-REQUESTS",
     "XpExtension",
@@ -98,7 +98,7 @@ static const Mask SecurityClientMask = DixGetAttrAccess;
  */
 
 static void
-SecurityAudit(char *format, ...)
+SecurityAudit(const char *format, ...)
 {
     va_list args;
 

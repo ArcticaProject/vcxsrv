@@ -103,13 +103,13 @@ exaPrintCompositeFallback(CARD8 op,
     switch(op)
     {
     case PictOpSrc:
-	sprintf(sop, "Src");
+	snprintf(sop, sizeof(sop), "Src");
 	break;
     case PictOpOver:
-	sprintf(sop, "Over");
+	snprintf(sop, sizeof(sop), "Over");
 	break;
     default:
-	sprintf(sop, "0x%x", (int)op);
+	snprintf(sop, sizeof(sop), "0x%x", (int)op);
 	break;
     }
 

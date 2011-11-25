@@ -1800,7 +1800,7 @@ ProcRenderQueryFilters (ClientPtr client)
 	{
 	    j = strlen (ps->filters[i].name);
 	    *names++ = j;
-	    strncpy (names, ps->filters[i].name, j);
+	    memcpy (names, ps->filters[i].name, j);
 	    names += j;
 	}
 	
@@ -1809,7 +1809,7 @@ ProcRenderQueryFilters (ClientPtr client)
 	{
 	    j = strlen (ps->filterAliases[i].alias);
 	    *names++ = j;
-	    strncpy (names, ps->filterAliases[i].alias, j);
+	    memcpy (names, ps->filterAliases[i].alias, j);
 	    names += j;
 	}
     }

@@ -172,7 +172,7 @@ void x86emu_decode_printf (char *x)
 void x86emu_decode_printf2 (char *x, int y)
 {
 	char temp[100];
-	sprintf(temp,x,y);
+	snprintf(temp,sizeof(temp),x,y);
 	sprintf(M.x86.decoded_buf+M.x86.enc_str_pos,"%s",temp);
 	M.x86.enc_str_pos += strlen(temp);
 }

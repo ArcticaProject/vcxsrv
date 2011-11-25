@@ -117,7 +117,7 @@ Bool
 winReadConfigfile ()
 {
   Bool		retval = TRUE;
-  const char	*filename, *dirname;
+  char		*filename, *dirname;
   MessageType	filefrom = X_DEFAULT;
   MessageType	dirfrom = X_DEFAULT;
   char		*xf86ConfigFile = NULL;
@@ -169,6 +169,8 @@ winReadConfigfile ()
     {
       return FALSE;
     }
+  free(filename);
+  free(dirname);
   if ((g_xf86configptr = xf86readConfigFile ()) == NULL)
     {
       winMsg (X_ERROR, "Problem parsing the config file\n");

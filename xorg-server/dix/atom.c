@@ -118,14 +118,11 @@ MakeAtom(const char *string, unsigned len, Bool makeit)
 	}
 	else
 	{
-	    char *newstring = malloc(len + 1);
-	    if (!newstring) {
+	    nd->string = strndup(string, len);
+	    if (!nd->string) {
 		free(nd);
 		return BAD_RESOURCE;
 	    }
-	    strncpy(newstring, string, (int)len);
-	    newstring[len] = 0;
-	    nd->string = newstring;
 	}
 	if ((lastAtom + 1) >= tableLength) {
 	    NodePtr *table;

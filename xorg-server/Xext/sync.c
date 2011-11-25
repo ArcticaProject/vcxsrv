@@ -971,7 +971,7 @@ static int FreeCounter(void *, XID);
 
 pointer
 SyncCreateSystemCounter(
-	char *name,
+	const char *name,
 	CARD64 initial,
 	CARD64 resolution,
 	SyncCounterType counterType,
@@ -1308,7 +1308,7 @@ ProcSyncListSystemCounters(ClientPtr client)
 
     for (i = len = 0; i < SyncNumSystemCounters; i++)
     {
-	char *name = SysCounterList[i]->pSysCounterInfo->name;
+	const char *name = SysCounterList[i]->pSysCounterInfo->name;
 	/* pad to 4 byte boundary */
 	len += pad_to_int32(sz_xSyncSystemCounter + strlen(name));
     }

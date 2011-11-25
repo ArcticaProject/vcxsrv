@@ -330,7 +330,7 @@ xf86findOption (XF86OptionPtr list, const char *name)
  * returned.  If the option is not found, a NULL is returned.
  */
 
-char *
+const char *
 xf86findOptionValue (XF86OptionPtr list, const char *name)
 {
 	XF86OptionPtr p = xf86findOption (list, name);

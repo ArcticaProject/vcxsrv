@@ -230,7 +230,7 @@ static Bool quirk_dvi_single_link(int scrnIndex, xf86MonPtr DDC)
 typedef struct {
     Bool	(*detect) (int scrnIndex, xf86MonPtr DDC);
     ddc_quirk_t	quirk;
-    char	*description;
+    const char	*description;
 } ddc_quirk_map_t;
 
 static const ddc_quirk_map_t ddc_quirks[] = {

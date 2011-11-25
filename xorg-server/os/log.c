@@ -371,7 +371,7 @@ LogVMessageVerb(MessageType type, int verb, const char *format, va_list args)
 {
     const char *type_str;
     char tmpFormat[1024];
-    char *new_format;
+    const char *new_format;
 
     type_str = LogMessageTypeVerbString(type, verb);
     if (!type_str)

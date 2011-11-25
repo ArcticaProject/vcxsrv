@@ -51,7 +51,7 @@ typedef enum _ConfigStatus {
 } ConfigStatus;
 
 typedef struct _ModuleDefault {
-    char *name;
+    const char *name;
     Bool toLoad;
     XF86OptionPtr load_opt;
 } ModuleDefault;

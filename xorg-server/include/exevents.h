@@ -126,7 +126,7 @@ extern _X_EXPORT void XIUnregisterPropertyHandler(
 );
 
 extern _X_EXPORT Atom XIGetKnownProperty(
-        char*                 name
+        const char*           name
 );
 
 extern _X_EXPORT DeviceIntPtr XIGetDevice(xEvent *ev);

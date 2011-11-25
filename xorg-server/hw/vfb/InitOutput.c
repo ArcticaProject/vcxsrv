@@ -560,7 +560,8 @@ vfbAllocateMmappedFramebuffer(vfbScreenInfoPtr pvfb)
     char dummyBuffer[DUMMY_BUFFER_SIZE];
     int currentFileSize, writeThisTime;
 
-    sprintf(pvfb->mmap_file, "%s/Xvfb_screen%d", pfbdir, (int) (pvfb - vfbScreens));
+    snprintf(pvfb->mmap_file, sizeof(pvfb->mmap_file), "%s/Xvfb_screen%d",
+	     pfbdir, (int) (pvfb - vfbScreens));
     if (-1 == (pvfb->mmap_fd = open(pvfb->mmap_file, O_CREAT|O_RDWR, 0666)))
     {
 	perror("open");

@@ -6,7 +6,7 @@
 #include "BT.h"
 
 typedef struct {
-	char *DeviceName;
+	const char *DeviceName;
 } xf86BTramdacInfo;
 
 extern xf86BTramdacInfo BTramdacDeviceInfo[];

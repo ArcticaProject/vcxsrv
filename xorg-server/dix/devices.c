@@ -2554,7 +2554,7 @@ GetMaster(DeviceIntPtr dev, int which)
  * the value for master.
  */
 int
-AllocDevicePair (ClientPtr client, char* name,
+AllocDevicePair (ClientPtr client, const char* name,
                  DeviceIntPtr* ptr,
                  DeviceIntPtr* keybd,
                  DeviceProc ptr_proc,

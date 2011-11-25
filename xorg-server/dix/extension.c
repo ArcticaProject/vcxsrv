@@ -71,7 +71,7 @@ static int lastError = FirstExtensionError;
 static unsigned int NumExtensions = 0;
 
 ExtensionEntry *
-AddExtension(char *name, int NumEvents, int NumErrors, 
+AddExtension(const char *name, int NumEvents, int NumErrors,
 	     int (*MainProc)(ClientPtr c1), 
 	     int (*SwappedMainProc)(ClientPtr c2), 
 	     void (*CloseDownProc)(ExtensionEntry *e), 
@@ -151,7 +151,7 @@ AddExtension(char *name, int NumEvents, int NumErrors,
     return ext;
 }
 
-Bool AddExtensionAlias(char *alias, ExtensionEntry *ext)
+Bool AddExtensionAlias(const char *alias, ExtensionEntry *ext)
 {
     char *name;
     char **aliases;
@@ -172,7 +172,7 @@ Bool AddExtensionAlias(char *alias, ExtensionEntry *ext)
 }
 
 static int
-FindExtension(char *extname, int len)
+FindExtension(const char *extname, int len)
 {
     int i, j;
 
@@ -201,7 +201,7 @@ CheckExtension(const char *extname)
 {
     int n;
 
-    n = FindExtension((char*)extname, strlen(extname));
+    n = FindExtension(extname, strlen(extname));
     if (n != -1)
 	return extensions[n];
     else

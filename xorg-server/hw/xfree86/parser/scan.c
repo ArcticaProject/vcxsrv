@@ -90,7 +90,7 @@
 #define CONFIG_BUF_LEN     1024
 #define CONFIG_MAX_FILES   64
 
-static int StringToToken (char *, xf86ConfigSymTabRec *);
+static int StringToToken (const char *, xf86ConfigSymTabRec *);
 
 static struct {
 	FILE *file;
@@ -101,8 +101,6 @@ static int builtinIndex = 0;
 static int configPos = 0;		/* current readers position */
 static int configLineNo = 0;	/* linenumber */
 static char *configBuf, *configRBuf;	/* buffer for lines */
-static char *configPath;		/* path to config file */
-static char *configDirPath;		/* path to config dir */
 static char *configSection = NULL;	/* name of current section being parsed */
 static int numFiles = 0;		/* number of config files */
 static int curFileIndex = 0;		/* index of current config file */
@@ -281,8 +279,10 @@ again:
 				if (builtinConfig[builtinIndex] == NULL)
 					ret = NULL;
 				else {
-					ret = strncpy(configBuf, builtinConfig[builtinIndex],
-							CONFIG_BUF_LEN);
+					strlcpy(configBuf,
+						builtinConfig[builtinIndex],
+						CONFIG_BUF_LEN);
+					ret = configBuf;
 					builtinIndex++;
 				}
 			}
@@ -800,14 +800,12 @@ AddConfigDirFiles(const char *dirpath, struct dirent **list, int num)
 				       "files opened\n");
 				warnOnce = TRUE;
 			}
-			free(list[i]);
 			continue;
 		}
 
 		path = malloc(PATH_MAX + 1);
 		snprintf(path, PATH_MAX + 1, "%s/%s", dirpath,
 			 list[i]->d_name);
-		free(list[i]);
 		file = fopen(path, "r");
 		if (!file) {
 			free(path);
@@ -858,8 +856,10 @@ OpenConfigDir(const char *path, const char *cmdline, const char *projroot,
 		if (!found) {
 			free(dirpath);
 			dirpath = NULL;
-			free(list);
 		}
+		while (num--)
+			free(list[num]);
+		free(list);
 	}
 
 	free(pathcopy);
@@ -892,7 +892,8 @@ xf86initConfigFiles(void)
  * of the located files.
  *
  * The return value is a pointer to the actual name of the file that was
- * opened.  When no file is found, the return value is NULL.
+ * opened.  When no file is found, the return value is NULL. The caller should
+ * free() the returned value.
  *
  * The escape sequences allowed in the search path are defined above.
  *
@@ -914,7 +915,7 @@ xf86initConfigFiles(void)
 							"%P/lib/X11/%X"
 #endif
 
-const char *
+char *
 xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 {
 	if (!path || !path[0])
@@ -923,8 +924,7 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 		projroot = PROJECTROOT;
 
 	/* Search for a config file */
-	configPath = OpenConfigFile(path, cmdline, projroot, XCONFIGFILE);
-	return configPath;
+	return OpenConfigFile(path, cmdline, projroot, XCONFIGFILE);
 }
 
 /*
@@ -937,12 +937,13 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
  * fails if it is not found.
  *
  * The return value is a pointer to the actual name of the direcoty that was
- * opened.  When no directory is found, the return value is NULL.
+ * opened.  When no directory is found, the return value is NULL. The caller
+ * should free() the returned value.
  *
  * The escape sequences allowed in the search path are defined above.
  *
  */
-const char *
+char *
 xf86openConfigDirFiles(const char *path, const char *cmdline,
 		       const char *projroot)
 {
@@ -952,8 +953,7 @@ xf86openConfigDirFiles(const char *path, const char *cmdline,
 		projroot = PROJECTROOT;
 
 	/* Search for the multiconf directory */
-	configDirPath = OpenConfigDir(path, cmdline, projroot, XCONFIGDIR);
-	return configDirPath;
+	return OpenConfigDir(path, cmdline, projroot, XCONFIGDIR);
 }
 
 void
@@ -961,10 +961,6 @@ xf86closeConfigFile (void)
 {
 	int i;
 
-	free (configPath);
-	configPath = NULL;
-	free (configDirPath);
-	configDirPath = NULL;
 	free (configRBuf);
 	configRBuf = NULL;
 	free (configBuf);
@@ -990,11 +986,11 @@ xf86setBuiltinConfig(const char *config[])
 }
 
 void
-xf86parseError (char *format,...)
+xf86parseError (const char *format,...)
 {
 	va_list ap;
-	char *filename = numFiles ? configFiles[curFileIndex].path :
-			 "<builtin configuration>";
+	const char *filename = numFiles ? configFiles[curFileIndex].path
+					: "<builtin configuration>";
 
 	ErrorF ("Parse error on line %d of section %s in file %s\n\t",
 		 configLineNo, configSection, filename);
@@ -1006,11 +1002,11 @@ xf86parseError (char *format,...)
 }
 
 void
-xf86validationError (char *format,...)
+xf86validationError (const char *format,...)
 {
 	va_list ap;
-	char *filename = numFiles ? configFiles[curFileIndex].path :
-			 "<builtin configuration>";
+	const char *filename = numFiles ? configFiles[curFileIndex].path
+					: "<builtin configuration>";
 
 	ErrorF ("Data incomplete in file %s\n\t", filename);
 	va_start (ap, format);
@@ -1021,7 +1017,7 @@ xf86validationError (char *format,...)
 }
 
 void
-xf86setSection (char *section)
+xf86setSection (const char *section)
 {
 	free(configSection);
 	configSection = strdup(section);
@@ -1038,7 +1034,7 @@ xf86getStringToken (xf86ConfigSymTabRec * tab)
 }
 
 static int
-StringToToken (char *str, xf86ConfigSymTabRec * tab)
+StringToToken (const char *str, xf86ConfigSymTabRec * tab)
 {
 	int i;
 

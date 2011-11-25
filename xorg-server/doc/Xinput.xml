@@ -15,7 +15,7 @@
          <affiliation><orgname>Hewlett-Packard</orgname></affiliation>
       </author>
    </authorgroup>
-   <releaseinfo>X server version &xserver.version;</releaseinfo>
+   <releaseinfo>X Server Version &xserver.version;</releaseinfo>
    <copyright><year>1989</year><year>1990</year><year>1991</year>
      <holder>Hewlett-Packard Company</holder>
    </copyright>

@@ -170,7 +170,7 @@ vbeFree(vbeInfoPtr pVbe)
 static Bool
 vbeProbeDDC(vbeInfoPtr pVbe)
 {
-    char *ddc_level;
+    const char *ddc_level;
     int screen = pVbe->pInt10->scrnIndex;
     
     if (pVbe->ddc == DDC_NONE)

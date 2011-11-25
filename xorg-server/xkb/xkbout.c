@@ -108,7 +108,7 @@ XkbWriteXKBKeycodes(	FILE *			file,
 {
 Atom			kcName;
 register unsigned 	i;
-char *			alternate;
+const char *		alternate;
 
     if ((!xkb)||(!xkb->names)||(!xkb->names->keys)) {
 	_XkbLibError(_XkbErrMissingNames,"XkbWriteXKBKeycodes",0);
@@ -133,7 +133,7 @@ char *			alternate;
     }
     if (xkb->indicators!=NULL) {
 	for (i=0;i<XkbNumIndicators;i++) {
-	    char *type;
+	    const char *type;
 	    if (xkb->indicators->phys_indicators&(1<<i))
 			type= "    ";
 	    else	type= "    virtual ";
@@ -395,7 +395,7 @@ Bool			showActions;
 	   						(showImplicit)) {
 		int 	typeNdx,g;
 		Bool	multi;
-		char *	comment="  ";
+		const char *	comment="  ";
 
 		if ((srv->explicit[i]&XkbExplicitKeyTypesMask)==0)
 		    comment= "//";

@@ -269,7 +269,7 @@ static inline void wrong_size(void)
 }
 #endif
 
-#if !(defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C < 0x590)))
+#if !(defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590)))
 static inline int __builtin_constant_p(int x)
 {
 	return 0;

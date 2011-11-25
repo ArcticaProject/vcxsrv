@@ -6,7 +6,7 @@
 #include "TI.h"
 
 typedef struct {
-	char *DeviceName;
+	const char *DeviceName;
 } xf86TIramdacInfo;
 
 extern xf86TIramdacInfo TIramdacDeviceInfo[];

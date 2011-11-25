@@ -460,10 +460,9 @@ HostOS(void)
 
     if (*host_os == '\0') {
         if (uname(&name) >= 0)
-            strcpy(host_os, name.sysname);
+            strlcpy(host_os, name.sysname, sizeof(host_os));
         else {
-            strncpy(host_os, "unknown", sizeof(host_os));
-            host_os[sizeof(host_os)-1] = '\0';
+            strlcpy(host_os, "unknown", sizeof(host_os));
         }
     }
     return host_os;

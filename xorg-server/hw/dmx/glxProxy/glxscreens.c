@@ -120,8 +120,9 @@ static void CalcServerVersionAndExtensions( void )
       __glXVersionMinor = GLX_SERVER_MINOR_VERSION;
    }
 
-   sprintf(GLXServerVersion, "%d.%d DMX %d back-end server(s)",
-              __glXVersionMajor, __glXVersionMinor, __glXNumActiveScreens );	 
+   snprintf(GLXServerVersion, sizeof(GLXServerVersion),
+             "%d.%d DMX %d back-end server(s)",
+              __glXVersionMajor, __glXVersionMinor, __glXNumActiveScreens );
    /*
     * set the ExtensionsString to the minimum extensions string
     */

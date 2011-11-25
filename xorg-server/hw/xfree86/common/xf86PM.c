@@ -41,7 +41,7 @@ pmWait (*xf86PMConfirmEventToOs)(int fd,pmEvent event) = NULL;
 static Bool suspended = FALSE;
 
 static int
-eventName(pmEvent event, char **str)
+eventName(pmEvent event, const char **str)
 {
     switch(event) {
     case XF86_APM_SYS_STANDBY: *str="System Standby Request"; return 0;
@@ -179,7 +179,7 @@ xf86HandlePMEvents(int fd, pointer data)
     if ((n = xf86PMGetEventFromOs(fd,events,MAX_NO_EVENTS))) {
 	do {
 	    for (i = 0; i < n; i++) {
-		char *str = NULL;
+		const char *str = NULL;
 		int verb = eventName(events[i],&str);
 
 		xf86MsgVerb(X_INFO,verb,"PM Event received: %s\n",str);

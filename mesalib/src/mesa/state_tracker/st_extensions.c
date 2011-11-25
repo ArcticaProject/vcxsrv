@@ -113,14 +113,18 @@ void st_init_limits(struct st_context *st)
               1, MAX_DRAW_BUFFERS);
 
    c->MaxLineWidth
-      = _maxf(1.0f, screen->get_paramf(screen, PIPE_CAP_MAX_LINE_WIDTH));
+      = _maxf(1.0f, screen->get_paramf(screen,
+                                       PIPE_CAPF_MAX_LINE_WIDTH));
    c->MaxLineWidthAA
-      = _maxf(1.0f, screen->get_paramf(screen, PIPE_CAP_MAX_LINE_WIDTH_AA));
+      = _maxf(1.0f, screen->get_paramf(screen,
+                                       PIPE_CAPF_MAX_LINE_WIDTH_AA));
 
    c->MaxPointSize
-      = _maxf(1.0f, screen->get_paramf(screen, PIPE_CAP_MAX_POINT_WIDTH));
+      = _maxf(1.0f, screen->get_paramf(screen,
+                                       PIPE_CAPF_MAX_POINT_WIDTH));
    c->MaxPointSizeAA
-      = _maxf(1.0f, screen->get_paramf(screen, PIPE_CAP_MAX_POINT_WIDTH_AA));
+      = _maxf(1.0f, screen->get_paramf(screen,
+                                       PIPE_CAPF_MAX_POINT_WIDTH_AA));
    /* called after _mesa_create_context/_mesa_init_point, fix default user
     * settable max point size up
     */
@@ -132,10 +136,11 @@ void st_init_limits(struct st_context *st)
    c->MinPointSizeAA = 0.0f;
 
    c->MaxTextureMaxAnisotropy
-      = _maxf(2.0f, screen->get_paramf(screen, PIPE_CAP_MAX_TEXTURE_ANISOTROPY));
+      = _maxf(2.0f, screen->get_paramf(screen,
+                                 PIPE_CAPF_MAX_TEXTURE_ANISOTROPY));
 
    c->MaxTextureLodBias
-      = screen->get_paramf(screen, PIPE_CAP_MAX_TEXTURE_LOD_BIAS);
+      = screen->get_paramf(screen, PIPE_CAPF_MAX_TEXTURE_LOD_BIAS);
 
    c->MaxDrawBuffers
       = CLAMP(screen->get_param(screen, PIPE_CAP_MAX_RENDER_TARGETS),
@@ -213,15 +218,10 @@ void st_init_limits(struct st_context *st)
    c->MaxVarying = screen->get_shader_param(screen, PIPE_SHADER_FRAGMENT, PIPE_SHADER_CAP_MAX_INPUTS) - 2;
    c->MaxVarying = MIN2(c->MaxVarying, MAX_VARYING);
 
-   /* XXX we'll need a better query here someday */
-   if (screen->get_param(screen, PIPE_CAP_GLSL)) {
-      c->MinProgramTexelOffset = screen->get_param(screen, PIPE_CAP_MIN_TEXEL_OFFSET);
-      c->MaxProgramTexelOffset = screen->get_param(screen, PIPE_CAP_MAX_TEXEL_OFFSET);
+   c->MinProgramTexelOffset = screen->get_param(screen, PIPE_CAP_MIN_TEXEL_OFFSET);
+   c->MaxProgramTexelOffset = screen->get_param(screen, PIPE_CAP_MAX_TEXEL_OFFSET);
 
-      c->GLSLVersion = 120;
-      _mesa_override_glsl_version(st->ctx);
-      c->UniformBooleanTrue = ~0;
-   }
+   c->UniformBooleanTrue = ~0;
 
    c->StripTextureBorder = GL_TRUE;
 }
@@ -249,16 +249,23 @@ void st_init_extensions(struct st_context *st)
    struct gl_context *ctx = st->ctx;
    int i;
 
+   ctx->Const.GLSLVersion = 120;
+   _mesa_override_glsl_version(st->ctx);
+
    /*
     * Extensions that are supported by all Gallium drivers:
     */
    ctx->Extensions.ARB_copy_buffer = GL_TRUE;
    ctx->Extensions.ARB_draw_elements_base_vertex = GL_TRUE;
+   ctx->Extensions.ARB_explicit_attrib_location = GL_TRUE;
    ctx->Extensions.ARB_fragment_coord_conventions = GL_TRUE;
    ctx->Extensions.ARB_fragment_program = GL_TRUE;
+   ctx->Extensions.ARB_fragment_shader = GL_TRUE;
    ctx->Extensions.ARB_half_float_pixel = GL_TRUE;
    ctx->Extensions.ARB_map_buffer_range = GL_TRUE;
    ctx->Extensions.ARB_sampler_objects = GL_TRUE;
+   ctx->Extensions.ARB_shader_objects = GL_TRUE;
+   ctx->Extensions.ARB_shading_language_100 = GL_TRUE;
    ctx->Extensions.ARB_texture_border_clamp = GL_TRUE; /* XXX temp */
    ctx->Extensions.ARB_texture_cube_map = GL_TRUE;
    ctx->Extensions.ARB_texture_env_combine = GL_TRUE;
@@ -267,6 +274,7 @@ void st_init_extensions(struct st_context *st)
    ctx->Extensions.ARB_texture_storage = GL_TRUE;
    ctx->Extensions.ARB_vertex_array_object = GL_TRUE;
    ctx->Extensions.ARB_vertex_program = GL_TRUE;
+   ctx->Extensions.ARB_vertex_shader = GL_TRUE;
    ctx->Extensions.ARB_window_pos = GL_TRUE;
 
    ctx->Extensions.EXT_blend_color = GL_TRUE;
@@ -281,6 +289,7 @@ void st_init_extensions(struct st_context *st)
    ctx->Extensions.EXT_point_parameters = GL_TRUE;
    ctx->Extensions.EXT_provoking_vertex = GL_TRUE;
    ctx->Extensions.EXT_secondary_color = GL_TRUE;
+   ctx->Extensions.EXT_separate_shader_objects = GL_TRUE;
    ctx->Extensions.EXT_texture_env_dot3 = GL_TRUE;
    ctx->Extensions.EXT_vertex_array_bgra = GL_TRUE;
 
@@ -315,15 +324,6 @@ void st_init_extensions(struct st_context *st)
     */
    if (screen->get_param(screen, PIPE_CAP_TEXTURE_SWIZZLE) > 0) {
       ctx->Extensions.EXT_texture_swizzle = GL_TRUE;
-   }
-
-   if (screen->get_param(screen, PIPE_CAP_GLSL)) {
-      ctx->Extensions.ARB_fragment_shader = GL_TRUE;
-      ctx->Extensions.ARB_vertex_shader = GL_TRUE;
-      ctx->Extensions.ARB_shader_objects = GL_TRUE;
-      ctx->Extensions.ARB_shading_language_100 = GL_TRUE;
-      ctx->Extensions.ARB_explicit_attrib_location = GL_TRUE;
-      ctx->Extensions.EXT_separate_shader_objects = GL_TRUE;
    }
 
    if (screen->get_param(screen, PIPE_CAP_BLEND_EQUATION_SEPARATE)) {

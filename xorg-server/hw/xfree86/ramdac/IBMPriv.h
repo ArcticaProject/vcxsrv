@@ -6,7 +6,7 @@
 #include "IBM.h"
 
 typedef struct {
-	char *DeviceName;
+	const char *DeviceName;
 } xf86IBMramdacInfo;
 
 extern xf86IBMramdacInfo IBMramdacDeviceInfo[];

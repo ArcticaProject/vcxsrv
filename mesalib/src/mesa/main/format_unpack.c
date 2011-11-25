@@ -936,7 +936,7 @@ unpack_INTENSITY_FLOAT16(const void *src, GLfloat dst[][4], GLuint n)
       dst[i][RCOMP] =
       dst[i][GCOMP] =
       dst[i][BCOMP] =
-      dst[i][ACOMP] = s[i];
+      dst[i][ACOMP] = _mesa_half_to_float(s[i]);
    }
 }
 
@@ -1751,6 +1751,12 @@ unpack_float_z_Z32(GLuint n, const void *src, GLfloat *dst)
 }
 
 static void
+unpack_float_z_Z32F(GLuint n, const void *src, GLfloat *dst)
+{
+   memcpy(dst, src, n * sizeof(float));
+}
+
+static void
 unpack_float_z_Z32X24S8(GLuint n, const void *src, GLfloat *dst)
 {
    const GLfloat *s = ((const GLfloat *) src);
@@ -1782,6 +1788,9 @@ _mesa_unpack_float_z_row(gl_format format, GLuint n,
       break;
    case MESA_FORMAT_Z32:
       unpack = unpack_float_z_Z32;
+      break;
+   case MESA_FORMAT_Z32_FLOAT:
+      unpack = unpack_float_z_Z32F;
       break;
    case MESA_FORMAT_Z32_FLOAT_X24S8:
       unpack = unpack_float_z_Z32X24S8;
@@ -1959,7 +1968,8 @@ _mesa_unpack_uint_24_8_depth_stencil_row(gl_format format, GLuint n,
       unpack_uint_24_8_depth_stencil_S8_Z24(src, dst, n);
       break;
    default:
-      _mesa_problem(NULL, "bad format %s in _mesa_unpack_ubyte_s_row",
+      _mesa_problem(NULL,
+                    "bad format %s in _mesa_unpack_uint_24_8_depth_stencil_row",
                     _mesa_get_format_name(format));
       return;
    }

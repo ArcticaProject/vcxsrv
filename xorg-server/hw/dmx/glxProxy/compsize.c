@@ -29,6 +29,7 @@
  */
 
 #include <GL/gl.h>
+#include "compsize.h"
 
 GLint __glFogiv_size(GLenum pname)
 {

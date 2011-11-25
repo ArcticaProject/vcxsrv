@@ -481,7 +481,7 @@ static void
 xf86OutputSetMonitor (xf86OutputPtr output)
 {
     char    *option_name;
-    char    *monitor;
+    const char    *monitor;
 
     if (!output->name)
 	return;
@@ -561,7 +561,7 @@ xf86OutputIgnored (xf86OutputPtr    output)
     return xf86ReturnOptValBool (output->options, OPTION_IGNORE, FALSE);
 }
 
-static char *direction[4] = {
+static const char *direction[4] = {
     "normal", 
     "left", 
     "inverted", 
@@ -3063,13 +3063,13 @@ xf86OutputGetEDID (xf86OutputPtr output, I2CBusPtr pDDCBus)
     return mon;
 }
 
-static char *_xf86ConnectorNames[] = {
+static const char *_xf86ConnectorNames[] = {
 					"None", "VGA", "DVI-I", "DVI-D",
 					"DVI-A", "Composite", "S-Video",
 					"Component", "LFP", "Proprietary",
 					"HDMI", "DisplayPort",
 				     };
-char *
+const char *
 xf86ConnectorGetName(xf86ConnectorType connector)
 {
     return _xf86ConnectorNames[connector];

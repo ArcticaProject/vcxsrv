@@ -446,7 +446,7 @@ xf86OpenSyscons()
 	    }
 
 	    close(fd);
-	    sprintf(vtname, "/dev/ttyv%01x", xf86Info.vtno - 1);
+	    snprintf(vtname, sizeof(vtname), "/dev/ttyv%01x", xf86Info.vtno - 1);
 	    if ((fd = open(vtname, SYSCONS_CONSOLE_MODE, 0)) < 0)
 	    {
 		FatalError("xf86OpenSyscons: Cannot open %s (%s)",
@@ -550,13 +550,13 @@ xf86OpenPcvt()
 	    }
 
 	    close(fd);
-            sprintf(vtname, "%s%01x", vtprefix, xf86Info.vtno - 1);
+            snprintf(vtname, sizeof(vtname), "%s%01x", vtprefix, xf86Info.vtno - 1);
 	    if ((fd = open(vtname, PCVT_CONSOLE_MODE, 0)) < 0)
 	    {
 		ErrorF("xf86OpenPcvt: Cannot open %s (%s)",
 			   vtname, strerror(errno));
 		xf86Info.vtno = initialVT;
-	        sprintf(vtname, "%s%01x", vtprefix, xf86Info.vtno - 1);
+	        snprintf(vtname, sizeof(vtname), "%s%01x", vtprefix, xf86Info.vtno - 1);
 		if ((fd = open(vtname, PCVT_CONSOLE_MODE, 0)) < 0) {
 			FatalError("xf86OpenPcvt: Cannot open %s (%s)",
 			   	vtname, strerror(errno));
@@ -602,9 +602,9 @@ xf86OpenWScons()
     /* XXX Is this ok? */
     for (i = 0; i < 8; i++) {
 #if defined(__NetBSD__)
-	sprintf(ttyname, "/dev/ttyE%d", i);
+	snprintf(ttyname, sizeof(ttyname), "/dev/ttyE%d", i);
 #elif defined(__OpenBSD__)
-	sprintf(ttyname, "/dev/ttyC%x", i);
+	snprintf(ttyname,  sizeof(ttyname), "/dev/ttyC%x", i);
 #endif
 	if ((fd = open(ttyname, 2)) != -1)
 	    break;

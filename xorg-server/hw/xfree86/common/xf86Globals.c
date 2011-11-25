@@ -163,7 +163,7 @@ const char *xf86VisualNames[] = {
 };
 
 /* Parameters set only from the command line */
-char *xf86ServerName = "no-name";
+const char *xf86ServerName = "no-name";
 Bool xf86fpFlag = FALSE;
 Bool xf86sFlag = FALSE;
 Bool xf86bsEnableFlag = FALSE;

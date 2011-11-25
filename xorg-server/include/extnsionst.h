@@ -92,7 +92,7 @@ extern _X_EXPORT void NotImplemented (	/* FIXME: this may move to another file..
 #define    GetGCValue(pGC, GCElement)    (pGC->GCElement)
 
 extern _X_EXPORT ExtensionEntry *AddExtension(
-    char* /*name*/,
+    const char* /*name*/,
     int /*NumEvents*/,
     int /*NumErrors*/,
     int (* /*MainProc*/)(ClientPtr /*client*/),
@@ -102,7 +102,7 @@ extern _X_EXPORT ExtensionEntry *AddExtension(
 );
 
 extern _X_EXPORT Bool AddExtensionAlias(
-    char* /*alias*/,
+    const char* /*alias*/,
     ExtensionEntry * /*extension*/);
 
 extern _X_EXPORT ExtensionEntry *CheckExtension(const char *extname);

@@ -462,9 +462,6 @@ extern _X_EXPORT Bool RRScreenInit(ScreenPtr pScreen);
 extern _X_EXPORT RROutputPtr
 RRFirstOutput (ScreenPtr pScreen);
 
-extern _X_EXPORT Rotation
-RRGetRotation (ScreenPtr pScreen);
-
 extern _X_EXPORT CARD16
 RRVerticalRefresh (xRRModeInfo *mode);
 
@@ -499,8 +496,6 @@ RRSetCurrentConfig (ScreenPtr		pScreen,
 		    Rotation		rotation,
 		    int			rate,
 		    RRScreenSizePtr	pSize);
-
-extern _X_EXPORT Bool RRScreenInit (ScreenPtr pScreen);
 
 extern _X_EXPORT Rotation
 RRGetRotation (ScreenPtr pScreen);

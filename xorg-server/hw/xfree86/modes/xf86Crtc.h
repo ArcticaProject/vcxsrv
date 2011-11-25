@@ -900,7 +900,7 @@ xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen);
 /*
  * Get a standard string name for a connector type 
  */
-extern _X_EXPORT char *
+extern _X_EXPORT const char *
 xf86ConnectorGetName(xf86ConnectorType connector);
 
 /*

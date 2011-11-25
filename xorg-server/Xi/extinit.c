@@ -162,7 +162,7 @@ Mask ExtExclusiveMasks[EMASKSIZE];
 static struct dev_type
 {
     Atom type;
-    char *name;
+    const char *name;
 } dev_type[] = {
     {
     0, XI_KEYBOARD}, {
@@ -1127,7 +1127,7 @@ IResetProc(ExtensionEntry * unused)
  */
 
 void
-AssignTypeAndName(DeviceIntPtr dev, Atom type, char *name)
+AssignTypeAndName(DeviceIntPtr dev, Atom type, const char *name)
 {
     dev->xinput_type = type;
     dev->name = strdup(name);

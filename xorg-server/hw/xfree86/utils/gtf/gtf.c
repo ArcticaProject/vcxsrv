@@ -151,7 +151,7 @@ typedef struct __options
 
 /* prototypes */
 
-void print_value(int n, char *name, float val);
+void print_value(int n, const char *name, float val);
 void print_xf86_mode (mode *m);
 void print_fb_mode (mode *m);
 mode *vert_refresh (int h_pixels, int v_lines, float freq,
@@ -168,7 +168,7 @@ options *parse_command_line (int argc, char *argv[]);
 
 int global_verbose = 0;
 
-void print_value(int n, char *name, float val)
+void print_value(int n, const char *name, float val)
 {
     if (global_verbose) {
         printf("%2d: %-27s: %15f\n", n, name, val);

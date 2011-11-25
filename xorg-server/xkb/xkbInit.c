@@ -88,8 +88,8 @@ typedef struct	_SrvXkmInfo {
 #define	XKB_DFLT_RULES_PROP	TRUE
 #endif
 
-char	*		XkbBaseDirectory=	XKB_BASE_DIRECTORY;
-char	*		XkbBinDirectory=	XKB_BIN_DIRECTORY;
+const char *		XkbBaseDirectory=	XKB_BASE_DIRECTORY;
+const char *		XkbBinDirectory=	XKB_BIN_DIRECTORY;
 static int	 	XkbWantAccessX=		0;	
 
 static char *		XkbRulesDflt=		NULL;
@@ -117,22 +117,11 @@ static Bool		XkbWantRulesProp=	XKB_DFLT_RULES_PROP;
 void
 XkbGetRulesDflts(XkbRMLVOSet *rmlvo)
 {
-    if (XkbRulesDflt)   rmlvo->rules = XkbRulesDflt;
-    else                rmlvo->rules = XKB_DFLT_RULES;
-    if (XkbModelDflt)	rmlvo->model= XkbModelDflt;
-    else		rmlvo->model= XKB_DFLT_MODEL;
-    if (XkbLayoutDflt)	rmlvo->layout= XkbLayoutDflt;
-    else		rmlvo->layout= XKB_DFLT_LAYOUT;
-    if (XkbVariantDflt)	rmlvo->variant= XkbVariantDflt;
-    else		rmlvo->variant= XKB_DFLT_VARIANT;
-    if (XkbOptionsDflt)	rmlvo->options= XkbOptionsDflt;
-    else		rmlvo->options= XKB_DFLT_OPTIONS;
-
-    rmlvo->rules = strdup(rmlvo->rules);
-    rmlvo->model = strdup(rmlvo->model);
-    rmlvo->layout = strdup(rmlvo->layout);
-    rmlvo->variant = strdup(rmlvo->variant);
-    rmlvo->options = strdup(rmlvo->options);
+    rmlvo->rules  = strdup(XkbRulesDflt   ? XkbRulesDflt   : XKB_DFLT_RULES);
+    rmlvo->model  = strdup(XkbModelDflt   ? XkbModelDflt   : XKB_DFLT_MODEL);
+    rmlvo->layout = strdup(XkbLayoutDflt  ? XkbLayoutDflt  : XKB_DFLT_LAYOUT);
+    rmlvo->variant= strdup(XkbVariantDflt ? XkbVariantDflt : XKB_DFLT_VARIANT);
+    rmlvo->options= strdup(XkbOptionsDflt ? XkbOptionsDflt : XKB_DFLT_OPTIONS);
 }
 
 void

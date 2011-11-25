@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+ <!ENTITY % defs SYSTEM "/xserver/doc/xml/xserver.ent"> %defs;
 ]>
 
 <article>
@@ -14,6 +15,7 @@
       <author><firstname>Rickard E.</firstname><surname>Faith</surname></author>
     </authorgroup>
     <pubdate>29 June 2004 (created 25 July 2001)</pubdate>
+    <releaseinfo>X Server Version &xserver.version;</releaseinfo>
     <abstract><para>
         This document covers the motivation, background, design, and
         implementation of the distributed multihead X (DMX) system.  It

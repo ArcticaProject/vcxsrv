@@ -88,7 +88,7 @@ xf86SbusProbe(void)
     xf86SbusInfo = malloc(sizeof(psdp));
     *xf86SbusInfo = NULL;
     for (i = 0; i < 32; i++) {
-	sprintf(fbDevName, "/dev/fb%d", i);
+	snprintf(fbDevName, sizeof(fbDevName), "/dev/fb%d", i);
 	CheckSbusDevice(fbDevName, i);
     }
     if (sparcPromInit() >= 0) {

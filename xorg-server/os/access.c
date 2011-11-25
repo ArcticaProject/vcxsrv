@@ -528,7 +528,7 @@ DefineSelf (int fd)
     ifn.lifn_family = AF_UNSPEC;
     ifn.lifn_flags = 0;
     if (ioctl (fd, SIOCGLIFNUM, (char *) &ifn) < 0)
-        Error ("Getting interface count");    
+        ErrorF ("Getting interface count: %s\n", strerror(errno));
     if (len < (ifn.lifn_count * sizeof(struct lifreq))) {
 	len = ifn.lifn_count * sizeof(struct lifreq);
 	bufptr = malloc(len);
@@ -558,7 +558,7 @@ DefineSelf (int fd)
 #endif
 
     if (ifioctl (fd, IFC_IOCTL_REQ, (pointer) &ifc) < 0)
-        Error ("Getting interface configuration (4)");
+        ErrorF ("Getting interface configuration (4): %s\n", strerror(errno));
 
     cplim = (char *) IFC_IFC_REQ + IFC_IFC_LEN;
     
@@ -1756,8 +1756,7 @@ siHostnameAddrMatch(int family, pointer addr, int len,
 	if (siAddrLen >= sizeof(hostname)) 
 	    return FALSE;
 
-	strncpy(hostname, siAddr, siAddrLen);
-	hostname[siAddrLen] = '\0';
+	strlcpy(hostname, siAddr, siAddrLen + 1);
 
 	if (getaddrinfo(hostname, NULL, NULL, &addresses) == 0) {
 	    for (a = addresses ; a != NULL ; a = a->ai_next) {
@@ -1786,8 +1785,7 @@ siHostnameAddrMatch(int family, pointer addr, int len,
 	if (siAddrLen >= sizeof(hostname)) 
 	    return FALSE;
 
-	strncpy(hostname, siAddr, siAddrLen);
-	hostname[siAddrLen] = '\0';
+	strlcpy(hostname, siAddr, siAddrLen + 1);
 
 	if ((hp = _XGethostbyname(hostname, hparams)) != NULL) {
 #ifdef h_addr				/* new 4.3bsd version of gethostent */

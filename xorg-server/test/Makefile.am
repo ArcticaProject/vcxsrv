@@ -1,10 +1,10 @@
 if ENABLE_UNIT_TESTS
-if HAVE_LD_WRAP
 SUBDIRS= . xi2
-noinst_PROGRAMS = xkb input xtest list misc fixes xfree86
+noinst_PROGRAMS = xkb input xtest list misc fixes xfree86 string
 check_LTLIBRARIES = libxservertest.la
 
 TESTS=$(noinst_PROGRAMS)
+TESTS_ENVIRONMENT = $(XORG_MALLOC_DEBUG_ENV)
 
 AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
 INCLUDES = $(XORG_INCS) -I$(top_srcdir)/hw/xfree86/parser \
@@ -42,5 +42,4 @@ libxservertest_la_LIBADD = \
             $(top_builddir)/os/libos.la \
             @XORG_LIBS@
 libxservertest_la_DEPENDENCIES = $(libxservertest_la_LIBADD)
-endif
 endif

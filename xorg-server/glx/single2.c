@@ -351,12 +351,10 @@ int DoGetString(__GLXclientState *cl, GLbyte *pc, GLboolean need_swap)
     }
     else if ( name == GL_VERSION ) {
 	if ( atof( string ) > atof( GLServerVersion ) ) {
-	    buf = malloc( strlen( string ) + strlen( GLServerVersion ) + 4 );
-	    if ( buf == NULL ) {
+	    if ( asprintf( &buf, "%s (%s)", GLServerVersion, string ) == -1) {
 		string = GLServerVersion;
 	    }
 	    else {
-		sprintf( buf, "%s (%s)", GLServerVersion, string );
 		string = buf;
 	    }
 	}

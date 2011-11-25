@@ -35,7 +35,7 @@ RROldModeAdd (RROutputPtr output, RRScreenSizePtr size, int refresh)
     RRModePtr   *modes;
     
     memset (&modeInfo, '\0', sizeof (modeInfo));
-    sprintf (name, "%dx%d", size->width, size->height);
+    snprintf (name, sizeof(name), "%dx%d", size->width, size->height);
     
     modeInfo.width = size->width;
     modeInfo.height = size->height;

@@ -41,7 +41,7 @@ extern _X_EXPORT void
 AssignTypeAndName (
 	DeviceIntPtr           /* dev */,
 	Atom                   /* type */,
-	char *                 /* name */
+	const char *           /* name */
 	);
 
 #endif /* EXTINIT_H */

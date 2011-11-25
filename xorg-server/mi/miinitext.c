@@ -268,7 +268,7 @@ extern void GEExtensionInit(INITARGS);
  * configurable extensions.
  */
 typedef struct {
-    char *name;
+    const char *name;
     Bool *disablePtr;
 } ExtensionToggle;
 
@@ -337,7 +337,7 @@ static ExtensionToggle ExtensionToggleList[] =
     { NULL, NULL }
 };
 
-Bool EnableDisableExtension(char *name, Bool enable)
+Bool EnableDisableExtension(const char *name, Bool enable)
 {
     ExtensionToggle *ext = &ExtensionToggleList[0];
 
@@ -357,7 +357,7 @@ Bool EnableDisableExtension(char *name, Bool enable)
     return FALSE;
 }
 
-void EnableDisableExtensionError(char *name, Bool enable)
+void EnableDisableExtensionError(const char *name, Bool enable)
 {
     ExtensionToggle *ext = &ExtensionToggleList[0];
     Bool found = FALSE;
