@@ -6,6 +6,7 @@ endif
 SECURE_RPC=1
 XDMCP=1
 NEED_STRLCAT=1
+NEED_STRNDUP=1
 
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
@@ -42,6 +43,10 @@ endif
 
 if NEED_STRLCAT
 libos_la_SOURCES += $(STRLCAT_SRCS)
+endif
+
+if NEED_STRNDUP
+libos_la_SOURCES += $(STRNDUP_SRCS)
 endif
 
 CSRCS = $(filter %.c,$(libos_la_SOURCES))

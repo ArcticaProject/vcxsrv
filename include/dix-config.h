@@ -210,6 +210,9 @@
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
 
+/* Define to 1 if you have the `strndup' function. */
+#undef HAVE_STRNDUP
+
 /* Define to 1 if you have the `strrchr' function. */
 #define HAVE_STRRCHR 1
 
@@ -449,6 +452,12 @@
 
 /* Use libudev for input hotplug */
 #undef CONFIG_UDEV
+
+/* Use udev_monitor_filter_add_match_tag() */
+#undef HAVE_UDEV_MONITOR_FILTER_ADD_MATCH_TAG
+
+/* Use udev_enumerate_add_match_tag() */
+#undef HAVE_UDEV_ENUMERATE_ADD_MATCH_TAG
 
 /* Use D-Bus for input hotplug */
 #undef CONFIG_NEED_DBUS
