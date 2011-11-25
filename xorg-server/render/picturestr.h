@@ -433,20 +433,20 @@ extern _X_EXPORT Bool
 PictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats);
 
 extern _X_EXPORT int
-PictureGetFilterId (char *filter, int len, Bool makeit);
+PictureGetFilterId (const char *filter, int len, Bool makeit);
 
 extern _X_EXPORT char *
 PictureGetFilterName (int id);
 
 extern _X_EXPORT int
 PictureAddFilter (ScreenPtr			    pScreen,
-		  char				    *filter,
+		  const char			    *filter,
 		  PictFilterValidateParamsProcPtr   ValidateParams,
 		  int				    width,
 		  int				    height);
 
 extern _X_EXPORT Bool
-PictureSetFilterAlias (ScreenPtr pScreen, char *filter, char *alias);
+PictureSetFilterAlias (ScreenPtr pScreen, const char *filter, const char *alias);
 
 extern _X_EXPORT Bool
 PictureSetDefaultFilters (ScreenPtr pScreen);

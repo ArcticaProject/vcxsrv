@@ -13,6 +13,7 @@ noinst_PROGRAMS =  \
         protocol-eventconvert
 
 TESTS=$(noinst_PROGRAMS)
+TESTS_ENVIRONMENT = $(XORG_MALLOC_DEBUG_ENV)
 
 AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
 INCLUDES = @XORG_INCS@
@@ -53,5 +54,14 @@ protocol_xigetclientpointer_SOURCES=$(COMMON_SOURCES) protocol-xigetclientpointe
 protocol_xiquerypointer_SOURCES=$(COMMON_SOURCES) protocol-xiquerypointer.c
 protocol_xipassivegrabdevice_SOURCES=$(COMMON_SOURCES) protocol-xipassivegrabdevice.c
 protocol_xiwarppointer_SOURCES=$(COMMON_SOURCES) protocol-xiwarppointer.c
+else
+# Print that xi2-tests were skipped (exit code 77 for automake test harness)
+TESTS = xi2-tests
+CLEANFILES = $(TESTS)
+
+xi2-tests:
+	@echo 'echo "ld -wrap support required for xi2 unit tests, skipping"' > $@
+	@echo 'exit 77' >> $@
+	$(AM_V_GEN)chmod +x $@
 endif
 endif

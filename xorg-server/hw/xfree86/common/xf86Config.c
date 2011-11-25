@@ -195,8 +195,7 @@ xf86ValidateFontPath(char *path)
 	dirlen = p1 - path_elem;
       else
 	dirlen = strlen(path_elem);
-      strncpy(dir_elem, path_elem, dirlen);
-      dir_elem[dirlen] = '\0';
+      strlcpy(dir_elem, path_elem, dirlen + 1);
       flag = stat(dir_elem, &stat_buf);
       if (flag == 0)
 	if (!S_ISDIR(stat_buf.st_mode))
@@ -249,9 +248,9 @@ xf86ModulelistFromConfig(pointer **optlist)
 {
     int count = 0, i = 0;
     char **modulearray;
-    char *ignore[] = { "GLcore", "speedo", "bitmap", "drm",
-		       "freetype", "type1",
-		       NULL };
+    const char *ignore[] = { "GLcore", "speedo", "bitmap", "drm",
+                             "freetype", "type1",
+                             NULL };
     pointer *optarray;
     XF86LoadPtr modp;
     Bool found;
@@ -523,7 +522,7 @@ fixup_video_driver_list(char **drivers)
 }
 
 static char **
-GenerateDriverlist(char * dirname)
+GenerateDriverlist(const char * dirname)
 {
     char **ret;
     const char *subdirs[] = { dirname, NULL };
@@ -554,7 +553,7 @@ xf86DriverlistFromCompile(void)
  *      available is printed.
  */
 static void
-xf86ConfigError(char *msg, ...)
+xf86ConfigError(const char *msg, ...)
 {
     va_list ap;
 
@@ -2301,8 +2300,8 @@ checkInput(serverLayoutPtr layout, Bool implicit_layout) {
 ConfigStatus
 xf86HandleConfigFile(Bool autoconfig)
 {
-    const char *filename, *dirname, *sysdirname;
-    char *filesearch, *dirsearch;
+    char *filename, *dirname, *sysdirname;
+    const char *filesearch, *dirsearch;
     MessageType filefrom = X_DEFAULT;
     MessageType dirfrom = X_DEFAULT;
     char *scanptr;
@@ -2352,6 +2351,10 @@ xf86HandleConfigFile(Bool autoconfig)
 	if (!filename && !dirname && !sysdirname)
 	    return CONFIG_NOFILE;
     }
+
+    free(filename);
+    free(dirname);
+    free(sysdirname);
 
     if ((xf86configptr = xf86readConfigFile ()) == NULL) {
 	xf86Msg(X_ERROR, "Problem parsing the config file\n");

@@ -72,7 +72,7 @@ typedef struct {
 
 extern _X_EXPORT int xf86SetIntOption(XF86OptionPtr optlist, const char *name, int deflt);
 extern _X_EXPORT double xf86SetRealOption(XF86OptionPtr optlist, const char *name, double deflt);
-extern _X_EXPORT char *xf86SetStrOption(XF86OptionPtr optlist, const char *name, char *deflt);
+extern _X_EXPORT char *xf86SetStrOption(XF86OptionPtr optlist, const char *name, const char *deflt);
 extern _X_EXPORT int xf86SetBoolOption(XF86OptionPtr list, const char *name, int deflt );
 extern _X_EXPORT double xf86SetPercentOption(XF86OptionPtr list, const char *name, double deflt );
 extern _X_EXPORT int xf86CheckIntOption(XF86OptionPtr optlist, const char *name, int deflt);
@@ -91,7 +91,7 @@ extern _X_EXPORT char *xf86OptionName(XF86OptionPtr opt);
 extern _X_EXPORT char *xf86OptionValue(XF86OptionPtr opt);
 extern _X_EXPORT void xf86OptionListReport(XF86OptionPtr parm);
 extern _X_EXPORT XF86OptionPtr xf86FindOption(XF86OptionPtr options, const char *name);
-extern _X_EXPORT char *xf86FindOptionValue(XF86OptionPtr options, const char *name);
+extern _X_EXPORT const char *xf86FindOptionValue(XF86OptionPtr options, const char *name);
 extern _X_EXPORT void xf86MarkOptionUsed(XF86OptionPtr option);
 extern _X_EXPORT void xf86MarkOptionUsedByName(XF86OptionPtr options, const char *name);
 extern _X_EXPORT Bool xf86CheckIfOptionUsed(XF86OptionPtr option);

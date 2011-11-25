@@ -263,8 +263,7 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
             if (xkbDebugFlags)
                 DebugF("[xkb] xkb executes: %s\n",buf);
 	    if (nameRtrn) {
-		strncpy(nameRtrn,keymap,nameRtrnLen);
-		nameRtrn[nameRtrnLen-1]= '\0';
+		strlcpy(nameRtrn,keymap,nameRtrnLen);
 	    }
             free(buf);
 #ifdef WIN32
@@ -322,8 +321,7 @@ FILE *	file;
     }
     else file= NULL;
     if ((fileNameRtrn!=NULL)&&(fileNameRtrnLen>0)) {
-	strncpy(fileNameRtrn,buf,fileNameRtrnLen);
-	buf[fileNameRtrnLen-1]= '\0';
+	strlcpy(fileNameRtrn,buf,fileNameRtrnLen);
     }
     return file;
 }

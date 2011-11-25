@@ -265,20 +265,20 @@ fbdev_open_pci(struct pci_device * pPci, char **namep)
     int	fd, i;
 
     for (i = 0; i < 8; i++) {
-	sprintf(filename, 
+	snprintf(filename, sizeof(filename),
 		"/sys/bus/pci/devices/%04x:%02x:%02x.%d/graphics/fb%d",
 		pPci->domain, pPci->bus, pPci->dev, pPci->func, i);
 
 	fd = open(filename, O_RDONLY, 0);
         if (fd < 0) {
-            sprintf(filename,
+            snprintf(filename, sizeof(filename),
                     "/sys/bus/pci/devices/%04x:%02x:%02x.%d/graphics:fb%d",
                     pPci->domain, pPci->bus, pPci->dev, pPci->func, i);
             fd = open(filename, O_RDONLY, 0);
         }
 	if (fd >= 0) {
 	    close(fd);
-	    sprintf(filename, "/dev/fb%d", i);
+	    snprintf(filename, sizeof(filename), "/dev/fb%d", i);
 
 	    fd = open(filename, O_RDWR, 0);
 	    if (fd != -1) {

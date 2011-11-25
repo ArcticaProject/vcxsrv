@@ -34,7 +34,7 @@
 
     <pubdate>&xserver.reldate;</pubdate>
     <releaseinfo>X Version 11, Release &fullrelvers;</releaseinfo>
-    <releaseinfo>Xorg server version &xserver.version;</releaseinfo>
+    <releaseinfo>X Server Version &xserver.version;</releaseinfo>
 
   </articleinfo>
 
@@ -3187,7 +3187,7 @@ would not need to use these directly.
 
     <blockquote><para>
 	<programlisting>
-    char *xf86FindOptionValue(XF86OptionPtr options, const char *name);
+    const char *xf86FindOptionValue(XF86OptionPtr options, const char *name);
 	</programlisting>
 	<blockquote><para>
       Takes a list of options and an option name, and returns the value

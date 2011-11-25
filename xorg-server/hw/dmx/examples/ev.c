@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 #define test_bit(bit) (mask[(bit)/8] & (1 << ((bit)%8)))
 
     for (i = 0; i < 32; i++) {
-        sprintf(name, "/dev/input/event%d", i);
+        snprintf(name, sizeof(name), "/dev/input/event%d", i);
         if ((fd = open(name, O_RDONLY, 0)) >= 0) {
             ioctl(fd, EVIOCGVERSION, &version);
             ioctl(fd, EVIOCGNAME(sizeof(buf)), buf);
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     }
 
     if (argc > 1) {
-        sprintf(name, "/dev/input/event%d", atoi(argv[1]));
+        snprintf(name, sizeof(name), "/dev/input/event%d", atoi(argv[1]));
         if ((fd = open(name, O_RDWR, 0)) >= 0) {
             printf("%s: open, fd = %d\n", name, fd);
             for (i = 0; i < LED_MAX; i++) {

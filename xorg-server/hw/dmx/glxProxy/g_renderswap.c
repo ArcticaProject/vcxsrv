@@ -32,6 +32,7 @@
 #include "glxext.h"
 #include "g_disptab.h"
 #include "unpack.h"
+#include "compsize.h"
 
 void __glXDispSwap_CallList(GLbyte *pc)
 {

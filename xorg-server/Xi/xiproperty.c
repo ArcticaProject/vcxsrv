@@ -48,7 +48,7 @@
 static struct dev_properties
 {
     Atom type;
-    char *name;
+    const char *name;
 } dev_properties[] = {
     {0, XI_PROP_ENABLED},
     {0, XI_PROP_XTEST_DEVICE},
@@ -386,7 +386,7 @@ change_property(ClientPtr client, DeviceIntPtr dev, Atom property, Atom type,
  * If name is NULL, None is returned.
  */
 Atom
-XIGetKnownProperty(char *name)
+XIGetKnownProperty(const char *name)
 {
     int i;
 

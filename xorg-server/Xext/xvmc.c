@@ -777,14 +777,12 @@ xf86XvMCRegisterDRInfo(ScreenPtr pScreen, char *name,
 		       int patchLevel)
 {
     XvMCScreenPtr pScreenPriv = XVMC_GET_PRIVATE(pScreen);
-    strncpy(pScreenPriv->clientDriverName, name,
+    strlcpy(pScreenPriv->clientDriverName, name,
 	    DR_CLIENT_DRIVER_NAME_SIZE);
-    strncpy(pScreenPriv->busID, busID, DR_BUSID_SIZE);
+    strlcpy(pScreenPriv->busID, busID, DR_BUSID_SIZE);
     pScreenPriv->major = major;
     pScreenPriv->minor = minor;
     pScreenPriv->patchLevel = patchLevel;
-    pScreenPriv->clientDriverName[DR_CLIENT_DRIVER_NAME_SIZE-1] = 0;
-    pScreenPriv->busID[DR_BUSID_SIZE-1] = 0;
     return Success;
 }
 

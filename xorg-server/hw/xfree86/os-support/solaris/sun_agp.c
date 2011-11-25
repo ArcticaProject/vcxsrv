@@ -233,7 +233,7 @@ xf86DeallocateGARTMemory(int screenNum, int key)
 	if (!GARTInit(screenNum) || (acquiredScreen != screenNum))
 		return FALSE;
 
- 	if (ioctl(gartFd, AGPIOC_DEALLOCATE, (int *)key) != 0) {
+	if (ioctl(gartFd, AGPIOC_DEALLOCATE, (int *)(uintptr_t)key) != 0) {
 		xf86DrvMsg(screenNum, X_WARNING, "xf86DeAllocateGARTMemory: "
 			   "deallocation of gart memory with key %d failed\n"
 			   "\t(%s)\n", key, strerror(errno));

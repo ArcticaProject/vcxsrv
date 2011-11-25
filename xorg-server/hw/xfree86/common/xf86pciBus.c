@@ -82,16 +82,6 @@ static struct pci_slot_match xf86IsolateDevice = {
     PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, 0
 };
 
-void
-xf86FormatPciBusNumber(int busnum, char *buffer)
-{
-    /* 'buffer' should be at least 8 characters long */
-    if (busnum < 256)
-	sprintf(buffer, "%d", busnum);
-    else
-	sprintf(buffer, "%d@%d", busnum & 0x00ff, busnum >> 8);
-}
-
 /*
  * xf86Bus.c interface
  */
@@ -1072,7 +1062,7 @@ videoPtrToDriverList(struct pci_device *dev,
     int i;
     /* Add more entries here if we ever return more than 4 drivers for
        any device */
-    char *driverList[5] = { NULL, NULL, NULL, NULL, NULL };
+    const char *driverList[5] = { NULL, NULL, NULL, NULL, NULL };
 
     switch (dev->vendor_id)
     {
@@ -1219,9 +1209,8 @@ matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip
         /* A tiny bit of sanity checking. We should probably do better */
         if (strncmp(&(direntry->d_name[len-4]), ".ids", 4) == 0) {
             /* We need the full path name to open the file */
-            strncpy(path_name, PCI_TXT_IDS_PATH, 256);
-            strncat(path_name, "/", 1);
-            strncat(path_name, direntry->d_name, (256 - strlen(path_name) - 1));
+            snprintf(path_name, sizeof(path_name), "%s/%s",
+                     PCI_TXT_IDS_PATH, direntry->d_name);
             fp = fopen(path_name, "r");
             if (fp == NULL) {
                 xf86Msg(X_ERROR, "Could not open %s for reading. Exiting.\n", path_name);
@@ -1235,8 +1224,7 @@ matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip
 #endif /* __GLIBC __ */
                 xchomp(line);
                 if (isdigit(line[0])) {
-                    strncpy(vendor_str, line, 4);
-                    vendor_str[4] = '\0';
+                    strlcpy(vendor_str, line, sizeof(vendor_str));
                     vendor = (int)strtol(vendor_str, NULL, 16);
                     if ((strlen(&line[4])) == 0) {
                         chip_str[0] = '\0';
@@ -1248,8 +1236,7 @@ matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip
                             chip = -1;
                         } else {
                             /* Ok, it's a real ID */
-                            strncpy(chip_str, &line[4], 4);
-                            chip_str[4] = '\0';
+                            strlcpy(chip_str, &line[4], sizeof(chip_str));
                             chip = (int)strtol(chip_str, NULL, 16);
                         }
                     }
@@ -1349,7 +1336,12 @@ xf86PciConfigureNewDev(void *busData, struct pci_device *pVideo,
 
     pVideo = (struct pci_device *) busData;
 
-    xf86FormatPciBusNumber(pVideo->bus, busnum);
+    if (pVideo->bus < 256)
+	snprintf(busnum, sizeof(busnum), "%d", pVideo->bus);
+    else
+	snprintf(busnum, sizeof(busnum), "%d@%d",
+		 pVideo->bus & 0x00ff, pVideo->bus >> 8);
+
     XNFasprintf(&GDev->busID, "PCI:%s:%d:%d",
 		busnum, pVideo->dev, pVideo->func);
 

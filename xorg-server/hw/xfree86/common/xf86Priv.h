@@ -69,7 +69,7 @@ extern _X_EXPORT  Pix24Flags xf86Pix24;
 extern _X_EXPORT  rgb xf86Weight;
 extern _X_EXPORT  Bool xf86FlipPixels;
 extern _X_EXPORT  Gamma xf86Gamma;
-extern _X_EXPORT  char *xf86ServerName;
+extern _X_EXPORT  const char *xf86ServerName;
 
 /* Other parameters */
 

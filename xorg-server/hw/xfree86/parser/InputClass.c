@@ -128,60 +128,70 @@ xf86parseInputClassSection(void)
                 Error(QUOTE_MSG, "MatchProduct");
             add_group_entry(&ptr->match_product,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_VENDOR:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchVendor");
             add_group_entry(&ptr->match_vendor,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_DEVICE_PATH:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchDevicePath");
             add_group_entry(&ptr->match_device,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_OS:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchOS");
             add_group_entry(&ptr->match_os,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_PNPID:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchPnPID");
             add_group_entry(&ptr->match_pnpid,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_USBID:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchUSBID");
             add_group_entry(&ptr->match_usbid,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_DRIVER:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchDriver");
             add_group_entry(&ptr->match_driver,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_TAG:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchTag");
             add_group_entry(&ptr->match_tag,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_LAYOUT:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchLayout");
             add_group_entry(&ptr->match_layout,
                             xstrtokenize(val.str, TOKEN_SEP));
+            free(val.str);
             break;
         case MATCH_IS_KEYBOARD:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchIsKeyboard");
             ptr->is_keyboard.set = xf86getBoolValue(&ptr->is_keyboard.val,
                                                     val.str);
+            free(val.str);
             if (!ptr->is_keyboard.set)
                 Error(BOOL_MSG, "MatchIsKeyboard");
             break;
@@ -190,6 +200,7 @@ xf86parseInputClassSection(void)
                 Error(QUOTE_MSG, "MatchIsPointer");
             ptr->is_pointer.set = xf86getBoolValue(&ptr->is_pointer.val,
                                                    val.str);
+            free(val.str);
             if (!ptr->is_pointer.set)
                 Error(BOOL_MSG, "MatchIsPointer");
             break;
@@ -198,6 +209,7 @@ xf86parseInputClassSection(void)
                 Error(QUOTE_MSG, "MatchIsJoystick");
             ptr->is_joystick.set = xf86getBoolValue(&ptr->is_joystick.val,
                                                     val.str);
+            free(val.str);
             if (!ptr->is_joystick.set)
                 Error(BOOL_MSG, "MatchIsJoystick");
             break;
@@ -206,6 +218,7 @@ xf86parseInputClassSection(void)
                 Error(QUOTE_MSG, "MatchIsTablet");
             ptr->is_tablet.set = xf86getBoolValue(&ptr->is_tablet.val,
                                                   val.str);
+            free(val.str);
             if (!ptr->is_tablet.set)
                 Error(BOOL_MSG, "MatchIsTablet");
             break;
@@ -214,6 +227,7 @@ xf86parseInputClassSection(void)
                 Error(QUOTE_MSG, "MatchIsTouchpad");
             ptr->is_touchpad.set = xf86getBoolValue(&ptr->is_touchpad.val,
                                                     val.str);
+            free(val.str);
             if (!ptr->is_touchpad.set)
                 Error(BOOL_MSG, "MatchIsTouchpad");
             break;
@@ -222,6 +236,7 @@ xf86parseInputClassSection(void)
                 Error(QUOTE_MSG, "MatchIsTouchscreen");
             ptr->is_touchscreen.set = xf86getBoolValue(&ptr->is_touchscreen.val,
                                                        val.str);
+            free(val.str);
             if (!ptr->is_touchscreen.set)
                 Error(BOOL_MSG, "MatchIsTouchscreen");
             break;

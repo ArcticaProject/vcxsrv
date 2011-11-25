@@ -140,7 +140,7 @@ ephyrHostXVLogXErrorEvent (Display *a_display,
             mesg, BUFSIZ);
     (void) fprintf(a_fp, mesg, a_err_event->request_code);
     if (a_err_event->request_code < 128) {
-        sprintf(number, "%d", a_err_event->request_code);
+        snprintf(number, sizeof(number), "%d", a_err_event->request_code);
         XGetErrorDatabaseText(dpy, "XRequest", number, "", buffer, BUFSIZ);
     } else {
         for (ext = dpy->ext_procs;
@@ -159,7 +159,8 @@ ephyrHostXVLogXErrorEvent (Display *a_display,
         fputs("  ", a_fp);
         (void) fprintf(a_fp, mesg, a_err_event->minor_code);
         if (ext) {
-            sprintf(mesg, "%s.%d", ext->name, a_err_event->minor_code);
+            snprintf(mesg, sizeof(mesg), "%s.%d",
+                     ext->name, a_err_event->minor_code);
             XGetErrorDatabaseText(dpy, "XRequest", mesg, "", buffer, BUFSIZ);
             (void) fprintf(a_fp, " (%s)", buffer);
         }
@@ -182,8 +183,8 @@ ephyrHostXVLogXErrorEvent (Display *a_display,
                 bext = ext;
         }
         if (bext)
-            sprintf(buffer, "%s.%d", bext->name,
-                    a_err_event->error_code - bext->codes.first_error);
+            snprintf(buffer, sizeof(buffer), "%s.%d", bext->name,
+                     a_err_event->error_code - bext->codes.first_error);
         else
             strcpy(buffer, "Value");
         XGetErrorDatabaseText(dpy, mtype, buffer, "", mesg, BUFSIZ);

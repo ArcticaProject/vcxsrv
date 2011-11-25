@@ -150,7 +150,7 @@ AC_CHECK_DECL([__amd64], [AMD64_ABI="yes"], [AMD64_ABI="no"])
 # if we're using Sun Studio and neither the user nor a config.site
 # has set CFLAGS.
 if test $SUNCC = yes &&			\
-   test "$test_CFLAGS" == "" &&		\
+   test "x$test_CFLAGS" = "x" &&	\
    test "$CFLAGS" = "-g"
 then
   CFLAGS="-O -g"

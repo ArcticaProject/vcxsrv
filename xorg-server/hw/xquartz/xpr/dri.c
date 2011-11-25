@@ -813,8 +813,7 @@ Bool DRICreatePixmap(ScreenPtr pScreen, Drawable id,
 	return FALSE;
     }
     
-    strncpy(path, shared->shmPath, pathmax);
-    path[pathmax - 1] = '\0';
+    strlcpy(path, shared->shmPath, pathmax);
     
     dixSetPrivate(&pPix->devPrivates, DRIPixmapBufferPrivKey, shared);
 

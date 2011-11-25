@@ -200,7 +200,7 @@ Bool	endOfFile,spacePending,slashPending,inComment;
 #define	PART_MASK	0x000F
 #define	COMPONENT_MASK	0x03F0
 
-static	char *	cname[MAX_WORDS] = {
+static	const char *	cname[MAX_WORDS] = {
 	"model", "layout", "variant", "option", 
 	"keycodes", "symbols", "types", "compat", "geometry"
 };
@@ -250,8 +250,7 @@ get_index(char *str, int *ndx)
        *ndx = -1;
        return end + 1;
    }
-   strncpy(ndx_buf, str, end - str);
-   ndx_buf[end - str] = '\0';
+   strlcpy(ndx_buf, str, 1 + end - str);
    *ndx = atoi(ndx_buf);
    return end + 1;
 }

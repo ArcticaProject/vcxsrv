@@ -45,7 +45,7 @@ XORG_WITH_XMLTO(0.0.20)
 XORG_WITH_FOP
 XORG_WITH_XSLTPROC
 XORG_ENABLE_UNIT_TESTS
-XORG_LD_WRAP
+XORG_LD_WRAP([optional])
 
 m4_ifndef([XORG_FONT_MACROS_VERSION], [m4_fatal([must install fontutil 1.1 or later before running autoconf/autogen])])
 XORG_FONT_MACROS_VERSION(1.1)
@@ -218,6 +218,8 @@ AC_CHECK_FUNCS([geteuid getuid link memmove memset mkstemp strchr strrchr \
 		strtol getopt getopt_long vsnprintf walkcontext backtrace \
 		getisax getzoneid shmctl64 strcasestr ffs vasprintf])
 AC_FUNC_ALLOCA
+AC_CHECK_FUNCS([strndup], [HAVE_STRNDUP=yes], [HAVE_STRNDUP=no])
+AM_CONDITIONAL(NEED_STRNDUP, [test x$HAVE_STRNDUP = xno])
 dnl Old HAS_* names used in os/*.c.
 AC_CHECK_FUNC([getdtablesize],
 	AC_DEFINE(HAS_GETDTABLESIZE, 1, [Have the 'getdtablesize' function.]))

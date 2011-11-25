@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
  "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+ <!ENTITY % defs SYSTEM "/xserver/doc/xml/xserver.ent"> %defs;
 ]>
   <article>
 
@@ -12,6 +13,7 @@
       <author><firstname>Rickard E.</firstname><surname>Faith</surname></author>
     </authorgroup>
     <pubdate>15 October 2003 (created 19 September 2003)</pubdate>
+    <releaseinfo>X Server Version &xserver.version;</releaseinfo>
     <abstract>
       <para>
       This document investigates the possibility of adding scaled window

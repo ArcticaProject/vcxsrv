@@ -35,10 +35,13 @@
 #include <pixmapstr.h>
 #include <windowstr.h>
 #include "unpack.h"
+#include "glxcmds.h"
 #include "glxext.h"
 #include "glxvendor.h"
 
 extern int glxIsExtensionSupported( char *ext );
+
+int __glXSwapGetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc);
 
 /************************************************************************/
 

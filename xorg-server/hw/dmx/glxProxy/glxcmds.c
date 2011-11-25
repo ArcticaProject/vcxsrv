@@ -52,6 +52,8 @@
 #include "glxvisuals.h"
 #include "glxswap.h"
 
+#include "glxcmds.h"
+
 #ifdef PANORAMIX
 #include "panoramiXsrv.h"
 #endif

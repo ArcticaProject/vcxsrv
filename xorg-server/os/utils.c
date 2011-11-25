@@ -279,7 +279,7 @@ LockServer(void)
    */
   tmppath = LOCK_DIR;
 
-  sprintf(port, "%d", atoi(display));
+  snprintf(port, sizeof(port), "%d", atoi(display));
   len = strlen(LOCK_PREFIX) > strlen(LOCK_TMP_PREFIX) ? strlen(LOCK_PREFIX) :
 						strlen(LOCK_TMP_PREFIX);
   len += strlen(tmppath) + strlen(port) + strlen(LOCK_SUFFIX) + 1;
@@ -316,7 +316,7 @@ LockServer(void)
   }
   if (lfd < 0)
     FatalError("Could not create lock file in %s\n", tmp);
-  (void) sprintf(pid_str, "%10ld\n", (long)getpid());
+  snprintf(pid_str, sizeof(pid_str), "%10ld\n", (long)getpid());
   (void) write(lfd, pid_str, 11);
   (void) fchmod(lfd, 0444);
   (void) close(lfd);
@@ -1308,7 +1308,7 @@ OsAbort (void)
  */
 
 int
-System(char *command)
+System(const char *command)
 {
     int pid, p;
     void (*csig)(int);
@@ -1358,7 +1358,7 @@ static struct pid {
 OsSigHandlerPtr old_alarm = NULL; /* XXX horrible awful hack */
 
 pointer
-Popen(char *command, char *type)
+Popen(const char *command, const char *type)
 {
     struct pid *cur;
     FILE *iop;
@@ -1444,7 +1444,7 @@ Popen(char *command, char *type)
 
 /* fopen that drops privileges */
 pointer
-Fopen(char *file, char *type)
+Fopen(const char *file, const char *type)
 {
     FILE *iop;
 #ifndef HAS_SAVED_IDS_AND_SETEUID
@@ -1722,13 +1722,11 @@ CheckUserParameters(int argc, char **argv, char **envp)
 		    if (!eq)
 			continue;
 		    len = eq - envp[i];
-		    e = malloc(len + 1);
+		    e = strndup(envp[i], len);
 		    if (!e) {
 			bad = InternalError;
 			break;
 		    }
-		    strncpy(e, envp[i], len);
-		    e[len] = 0;
 		    if (len >= 4 &&
 			(strcmp(e + len - 4, "PATH") == 0 ||
 			 strcmp(e, "TERMCAP") == 0)) {

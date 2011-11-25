@@ -90,9 +90,6 @@ typedef struct _GlyphList {
     PictFormatPtr   format;
 } GlyphListRec, *GlyphListPtr;
 
-extern _X_EXPORT GlyphHashSetPtr
-FindGlyphHashSet (CARD32 filled);
-
 extern _X_EXPORT void
 GlyphUninit (ScreenPtr pScreen);
 

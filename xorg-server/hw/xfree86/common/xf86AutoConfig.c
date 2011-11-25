@@ -267,6 +267,7 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
 #endif
     }
 
+#if !defined(sun)
     /* Fallback to platform default frame buffer driver */
     if (i < (nmatches - 1)) {
 #if !defined(__linux__) && defined(__sparc__)
@@ -275,6 +276,7 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
 	matches[i++] = xnfstrdup("fbdev");
 #endif
     }
+#endif /* !sun */
 }
 
 /* copy a screen section and enter the desired driver

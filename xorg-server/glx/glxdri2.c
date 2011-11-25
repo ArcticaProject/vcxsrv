@@ -73,6 +73,7 @@ struct __GLXDRIscreen {
     const __DRIcopySubBufferExtension *copySubBuffer;
     const __DRIswapControlExtension *swapControl;
     const __DRItexBufferExtension *texBuffer;
+    const __DRIconfig **driConfigs;
 
     unsigned char glx_enable_bits[__GLX_EXT_BYTES];
 };
@@ -363,6 +364,8 @@ static __GLXtextureFromPixmap __glXDRItextureFromPixmap = {
 static void
 __glXDRIscreenDestroy(__GLXscreen *baseScreen)
 {
+    int i;
+
     __GLXDRIscreen *screen = (__GLXDRIscreen *) baseScreen;
 
     (*screen->core->destroyScreen)(screen->driScreen);
@@ -370,6 +373,12 @@ __glXDRIscreenDestroy(__GLXscreen *baseScreen)
     dlclose(screen->driver);
 
     __glXScreenDestroy(baseScreen);
+
+    if (screen->driConfigs) {
+	for (i = 0; screen->driConfigs[i] != NULL; i++)
+	    free((__DRIconfig **)screen->driConfigs[i]);
+	free(screen->driConfigs);
+    }
 
     free(screen);
 }
@@ -688,7 +697,6 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     __GLXDRIscreen *screen;
     size_t buffer_size;
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
-    const __DRIconfig **driConfigs;
 
     screen = calloc(1, sizeof *screen);
     if (screen == NULL)
@@ -720,7 +728,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 	(*screen->dri2->createNewScreen)(pScreen->myNum,
 					 screen->fd,
 					 loader_extensions,
-					 &driConfigs,
+					 &screen->driConfigs,
 					 screen);
 
     if (screen->driScreen == NULL) {
@@ -731,7 +739,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     initializeExtensions(screen);
 
-    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs,
+    screen->base.fbconfigs = glxConvertConfigs(screen->core, screen->driConfigs,
 					       GLX_WINDOW_BIT |
 					       GLX_PIXMAP_BIT |
 					       GLX_PBUFFER_BIT);

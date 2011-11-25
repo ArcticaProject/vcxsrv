@@ -446,14 +446,14 @@ promGetReg(int type)
     if (prop && len >= 4) {
 	unsigned int *reg = (unsigned int *)prop;
 	if (!promP1275 || (type == PROM_NODE_SBUS) || (type == PROM_NODE_EBUS))
-	    sprintf (regstr, "@%x,%x", reg[0], reg[1]);
+	    snprintf (regstr, sizeof(regstr), "@%x,%x", reg[0], reg[1]);
 	else if (type == PROM_NODE_PCI) {
 	    if ((reg[0] >> 8) & 7)
-		sprintf (regstr, "@%x,%x", (reg[0] >> 11) & 0x1f, (reg[0] >> 8) & 7);
+		snprintf (regstr, sizeof(regstr), "@%x,%x", (reg[0] >> 11) & 0x1f, (reg[0] >> 8) & 7);
 	    else
-		sprintf (regstr, "@%x", (reg[0] >> 11) & 0x1f);
+		snprintf (regstr, sizeof(regstr), "@%x", (reg[0] >> 11) & 0x1f);
 	} else if (len == 4)
-	    sprintf (regstr, "@%x", reg[0]);
+	    snprintf (regstr, sizeof(regstr), "@%x", reg[0]);
 	else {
 	    unsigned int regs[2];
 
@@ -465,9 +465,9 @@ promGetReg(int type)
 	    prop = promGetProperty("upa-portid", &len);
 	    if (prop && len == 4) {
 		reg = (unsigned int *)prop;
-		sprintf (regstr, "@%x,%x", reg[0], regs[1]);
+		snprintf (regstr, sizeof(regstr), "@%x,%x", reg[0], regs[1]);
 	    } else
-		sprintf (regstr, "@%x,%x", regs[0] >> 4, regs[1]);
+		snprintf (regstr, sizeof(regstr), "@%x,%x", regs[0] >> 4, regs[1]);
 	}
     }
     return regstr;

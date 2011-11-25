@@ -96,7 +96,7 @@
 static void
 printModeRejectMessage(int index, DisplayModePtr p, int status)
 {
-    char *type;
+    const char *type;
 
     if (p->type & M_T_BUILTIN)
 	type = "built-in ";
@@ -2065,7 +2065,7 @@ xf86PrintModes(ScrnInfoPtr scrp)
 {
     DisplayModePtr p;
     float hsync, refresh = 0;
-    char *desc, *desc2, *prefix, *uprefix;
+    const char *desc, *desc2, *prefix, *uprefix;
 
     if (scrp == NULL)
 	return;

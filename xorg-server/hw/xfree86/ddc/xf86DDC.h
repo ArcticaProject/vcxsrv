@@ -100,11 +100,6 @@ typedef enum {
     DDC_QUIRK_DVI_SINGLE_LINK = 1 << 8,
 } ddc_quirk_t;
 
-DisplayModePtr xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC);
-
-extern Bool
-xf86MonitorIsHDMI(xf86MonPtr mon);
-
 typedef void (* handle_detailed_fn)(struct detailed_monitor_section *,void *);
 
 void xf86ForEachDetailedBlock(xf86MonPtr mon,

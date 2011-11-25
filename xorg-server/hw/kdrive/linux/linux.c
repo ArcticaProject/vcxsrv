@@ -109,7 +109,7 @@ LinuxInit (void)
 	close(fd);
     }
 
-    sprintf(vtname,"/dev/tty%d",vtno); /* /dev/tty1-64 */
+    snprintf(vtname,sizeof(vtname),"/dev/tty%d",vtno); /* /dev/tty1-64 */
 
     if ((LinuxConsoleFd = open(vtname, O_RDWR|O_NDELAY, 0)) < 0)
     {

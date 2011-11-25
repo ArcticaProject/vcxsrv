@@ -603,17 +603,16 @@ DeviceSetXTestProperty(DeviceIntPtr dev, Atom property,
  * This only creates the pair, Activate/Enable Device
  * still need to be called.
  */
-int AllocXTestDevice (ClientPtr client, char* name,
+int AllocXTestDevice (ClientPtr client, const char* name,
                      DeviceIntPtr* ptr, DeviceIntPtr* keybd,
                      DeviceIntPtr master_ptr, DeviceIntPtr master_keybd)
 {
     int retval;
-    int len = strlen(name);
-    char *xtestname = calloc(len + 7, 1 );
+    char *xtestname;
     char dummy = 1;
 
-    strncpy( xtestname, name, len);
-    strncat( xtestname, " XTEST", 6 );
+    if (asprintf(&xtestname, "%s XTEST", name) == -1)
+	return BadAlloc;
 
     retval = AllocDevicePair( client, xtestname, ptr, keybd, CorePointerProc, CoreKeyboardProc, FALSE);
     if ( retval == Success ){

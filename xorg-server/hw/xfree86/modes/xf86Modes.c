@@ -272,7 +272,7 @@ xf86ModesEqual(const DisplayModeRec *pMode1, const DisplayModeRec *pMode2)
 }
 
 static void
-add(char **p, char *new)
+add(char **p, const char *new)
 {
     *p = xnfrealloc(*p, strlen(*p) + strlen(new) + 2);
     strcat(*p, " ");
@@ -599,7 +599,7 @@ xf86PruneInvalidModes(ScrnInfoPtr pScrn, DisplayModePtr *modeList,
 
 	if (mode->status != MODE_OK) {
 	    if (verbose) {
-		char *type = "";
+		const char *type = "";
 		if (mode->type & M_T_BUILTIN)
 		    type = "built-in ";
 		else if (mode->type & M_T_DEFAULT)

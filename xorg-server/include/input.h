@@ -505,7 +505,7 @@ extern _X_EXPORT DeviceIntPtr GetPairedDevice(DeviceIntPtr kbd);
 extern DeviceIntPtr GetMaster(DeviceIntPtr dev, int type);
 
 extern _X_EXPORT int AllocDevicePair(ClientPtr client,
-                             char* name,
+                             const char* name,
                              DeviceIntPtr* ptr,
                              DeviceIntPtr* keybd,
                              DeviceProc ptr_proc,
@@ -521,7 +521,7 @@ extern _X_EXPORT int generate_modkeymap(ClientPtr client, DeviceIntPtr dev,
 extern int change_modmap(ClientPtr client, DeviceIntPtr dev, KeyCode *map,
                          int max_keys_per_mod);
 extern int AllocXTestDevice(ClientPtr client,
-                             char* name,
+                             const char* name,
                              DeviceIntPtr* ptr,
                              DeviceIntPtr* keybd,
                              DeviceIntPtr master_ptr,

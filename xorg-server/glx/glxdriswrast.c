@@ -71,6 +71,7 @@ struct __GLXDRIscreen {
     const __DRIswrastExtension *swrast;
     const __DRIcopySubBufferExtension *copySubBuffer;
     const __DRItexBufferExtension *texBuffer;
+    const __DRIconfig **driConfigs;
 };
 
 struct __GLXDRIcontext {
@@ -237,6 +238,8 @@ static __GLXtextureFromPixmap __glXDRItextureFromPixmap = {
 static void
 __glXDRIscreenDestroy(__GLXscreen *baseScreen)
 {
+    int i;
+
     __GLXDRIscreen *screen = (__GLXDRIscreen *) baseScreen;
 
     (*screen->core->destroyScreen)(screen->driScreen);
@@ -248,6 +251,12 @@ __glXDRIscreenDestroy(__GLXscreen *baseScreen)
 #endif
 
     __glXScreenDestroy(baseScreen);
+
+    if (screen->driConfigs) {
+	for (i = 0; screen->driConfigs[i] != NULL; i++)
+	    free((__DRIconfig **)screen->driConfigs[i]);
+	free(screen->driConfigs);
+    }
 
     free(screen);
 }
@@ -429,7 +438,6 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 {
     const char *driverName;
     __GLXDRIscreen *screen;
-    const __DRIconfig **driConfigs;
     
     if (g_fswrastwgl)
       driverName = "swrastwgl";
@@ -458,7 +466,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->driScreen =
 	(*screen->swrast->createNewScreen)(pScreen->myNum,
 					   loader_extensions,
-					   &driConfigs,
+					   &screen->driConfigs,
 					   screen);
 
     if (screen->driScreen == NULL) {
@@ -469,7 +477,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     initializeExtensions(screen);
 
-    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs,
+    screen->base.fbconfigs = glxConvertConfigs(screen->core, screen->driConfigs,
 					       GLX_WINDOW_BIT |
 					       GLX_PIXMAP_BIT |
 					       GLX_PBUFFER_BIT);

@@ -187,7 +187,7 @@ LookupRealOption(XF86OptionPtr optlist, const char *name, double deflt,
 
 
 static char *
-LookupStrOption(XF86OptionPtr optlist, const char *name, char *deflt, Bool markUsed)
+LookupStrOption(XF86OptionPtr optlist, const char *name, const char *deflt, Bool markUsed)
 {
     OptionInfoRec o;
 
@@ -243,7 +243,7 @@ xf86SetRealOption(XF86OptionPtr optlist, const char *name, double deflt)
 
 
 char *
-xf86SetStrOption(XF86OptionPtr optlist, const char *name, char *deflt)
+xf86SetStrOption(XF86OptionPtr optlist, const char *name, const char *deflt)
 {
     return LookupStrOption(optlist, name, deflt, TRUE);
 }
@@ -306,7 +306,7 @@ XF86OptionPtr
 xf86ReplaceIntOption(XF86OptionPtr optlist, const char *name, const int val)
 {
     char tmp[16];
-    sprintf(tmp,"%i",val);
+    snprintf(tmp,sizeof(tmp),"%i",val);
     return xf86AddNewOption(optlist,name,tmp);
 }
 
@@ -314,7 +314,7 @@ XF86OptionPtr
 xf86ReplaceRealOption(XF86OptionPtr optlist, const char *name, const double val)
 {
     char tmp[32];
-    snprintf(tmp,32,"%f",val);
+    snprintf(tmp,sizeof(tmp),"%f",val);
     return xf86AddNewOption(optlist,name,tmp);
 }
 
@@ -328,7 +328,7 @@ XF86OptionPtr
 xf86ReplacePercentOption(XF86OptionPtr optlist, const char *name, const double val)
 {
     char tmp[16];
-    sprintf(tmp, "%lf%%", val);
+    snprintf(tmp, sizeof(tmp), "%lf%%", val);
     return xf86AddNewOption(optlist,name,tmp);
 }
 
@@ -416,7 +416,7 @@ xf86FindOption(XF86OptionPtr options, const char *name)
 }
 
 
-char *
+const char *
 xf86FindOptionValue(XF86OptionPtr options, const char *name)
 {
     return xf86findOptionValue(options, name);

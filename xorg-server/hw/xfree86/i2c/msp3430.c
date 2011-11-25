@@ -20,7 +20,7 @@
 void InitMSP34xxG(MSP3430Ptr m);
 void InitMSP34x5D(MSP3430Ptr m);
 void CheckModeMSP34x5D(MSP3430Ptr m);
-char *MSP_getProductName (CARD16 product_id);
+static const char *MSP_getProductName (CARD16 product_id);
 void mpause(int milliseconds);
 
 #define __MSPDEBUG__	0
@@ -305,7 +305,8 @@ void MSP3430SetSource(MSP3430Ptr m, CARD8 value)
 #endif
 
 
-char *MSP_getProductName (CARD16 product_id)
+static const char *
+MSP_getProductName (CARD16 product_id)
 {
 	switch (product_id) {
 		case 0x0400: return "MSP3400D";

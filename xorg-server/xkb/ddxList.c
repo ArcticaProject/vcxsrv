@@ -60,7 +60,7 @@ extern int Win32System(const char *cmdline);
 
 /***====================================================================***/
 
-static char *componentDirs[_XkbListNumComponents] = {
+static const char *componentDirs[_XkbListNumComponents] = {
 	"keycodes", "types", "compat", "symbols", "geometry"
 };
 

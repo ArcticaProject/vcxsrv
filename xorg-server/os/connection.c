@@ -412,7 +412,7 @@ CreateWellKnownSockets(void)
 
     FD_ZERO (&WellKnownConnections);
 
-    sprintf (port, "%d", atoi (display));
+    snprintf (port, sizeof(port), "%d", atoi (display));
 
     if ((_XSERVTransMakeAllCOTSServerListeners (port, &partial,
 	&ListenTransCount, &ListenTransConns) >= 0) &&
@@ -528,7 +528,6 @@ AuthAudit (ClientPtr client, Bool letin,
     unsigned int proto_n, char *auth_proto, int auth_id)
 {
     char addr[128];
-    char *out = addr;
     char client_uid_string[64];
     LocalClientCredRec *lcc;
 #ifdef XSERVER_DTRACE
@@ -537,7 +536,7 @@ AuthAudit (ClientPtr client, Bool letin,
 #endif
 
     if (!len)
-        strcpy(out, "local host");
+        strlcpy(addr, "local host", sizeof(addr));
     else
 	switch (saddr->sa_family)
 	{
@@ -545,11 +544,11 @@ AuthAudit (ClientPtr client, Bool letin,
 #if defined(UNIXCONN) || defined(LOCALCONN)
 	case AF_UNIX:
 #endif
-	    strcpy(out, "local host");
+	    strlcpy(addr, "local host", sizeof(addr));
 	    break;
 #if defined(TCPCONN) || defined(STREAMSCONN)
 	case AF_INET:
-	    sprintf(out, "IP %s",
+	    snprintf(addr, sizeof(addr), "IP %s",
 		inet_ntoa(((struct sockaddr_in *) saddr)->sin_addr));
 	    break;
 #if defined(IPv6) && defined(AF_INET6)
@@ -557,13 +556,13 @@ AuthAudit (ClientPtr client, Bool letin,
 	    char ipaddr[INET6_ADDRSTRLEN];
 	    inet_ntop(AF_INET6, &((struct sockaddr_in6 *) saddr)->sin6_addr,
 	      ipaddr, sizeof(ipaddr));
-	    sprintf(out, "IP %s", ipaddr);
+	    snprintf(addr, sizeof(addr), "IP %s", ipaddr);
 	}
 	    break;
 #endif
 #endif
 	default:
-	    strcpy(out, "unknown address");
+	    strlcpy(addr, "unknown address", sizeof(addr));
 	}
 
     if (GetLocalClientCreds(client, &lcc) != -1) {
@@ -1307,7 +1306,7 @@ void ListenOnOpenFD(int fd, int noxauth) {
         strcpy(port, display_env);
     } else {
         /* Just some default so things don't break and die. */
-        sprintf(port, ":%d", atoi(display));
+        snprintf(port, sizeof(port), ":%d", atoi(display));
     }
 
     /* Make our XtransConnInfo
