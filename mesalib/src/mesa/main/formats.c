@@ -1496,6 +1496,15 @@ static struct gl_format_info format_info[MESA_FORMAT_COUNT] =
       0, 0, 0, 32, 8,              /* Lum/Int/Index/Depth/StencilBits */
       1, 1, 8                      /* BlockWidth/Height,Bytes */
    },
+   {
+      MESA_FORMAT_ARGB2101010_UINT,
+      "MESA_FORMAT_ARGB2101010_UINT",
+      GL_RGBA,
+      GL_UNSIGNED_INT,
+      10, 10, 10, 2,
+      0, 0, 0, 0, 0,
+      1, 1, 4
+   },
 };
 
 
@@ -2449,6 +2458,11 @@ _mesa_format_to_type_and_comps(gl_format format,
       *comps = 3;
       return;
 
+   case MESA_FORMAT_ARGB2101010_UINT:
+      *datatype = GL_UNSIGNED_INT_2_10_10_10_REV;
+      *comps = 4;
+      return;
+
    case MESA_FORMAT_COUNT:
       assert(0);
       return;
@@ -2466,11 +2480,12 @@ _mesa_format_to_type_and_comps(gl_format format,
 }
 
 /**
- * Returns a MESA_FORMAT describing pixels with the given format/type if
- * available, or MESA_FORMAT_NONE.
+ * Check if a gl_format exactly matches a GL formaat/type combination
+ * such that we can use memcpy() from one to the other.
  *
- * If a format is returned, it should be suitable to memcpy
- * _mesa_get_format_bytes() at a time to move the pixel data.
+ * Note: this matching assumes that GL_PACK/UNPACK_SWAP_BYTES is unset.
+ *
+ * \return GL_TRUE if the formats match, GL_FALSE otherwise.
  */
 GLboolean
 _mesa_format_matches_format_and_type(gl_format gl_format,
@@ -2480,13 +2495,11 @@ _mesa_format_matches_format_and_type(gl_format gl_format,
 
    /* Note: When reading a GL format/type combination, the format lists channel
     * assignments from most significant channel in the type to least
-    * significant.  A type with _REV indicates that the assignments are swapped,
-    * so they are listed from least significant to most significant.
+    * significant.  A type with _REV indicates that the assignments are
+    * swapped, so they are listed from least significant to most significant.
     *
-    * For sanity, please keep this switch statement ordered the same as the enum
-    * in formats.h.
-    *
-    * This matching assumes that GL_PACK/UNPACK_SWAP_BYTES is unset.
+    * For sanity, please keep this switch statement ordered the same as the
+    * enums in formats.h.
     */
 
    switch (gl_format) {
@@ -2770,6 +2783,9 @@ _mesa_format_matches_format_and_type(gl_format gl_format,
    case MESA_FORMAT_SIGNED_AL1616:
    case MESA_FORMAT_SIGNED_I16:
       /* FINISHME: SNORM */
+      return GL_FALSE;
+
+   case MESA_FORMAT_ARGB2101010_UINT:
       return GL_FALSE;
 
    case MESA_FORMAT_RGB9_E5_FLOAT:

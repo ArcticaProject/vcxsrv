@@ -120,7 +120,7 @@ check_valid_to_render(struct gl_context *ctx, const char *function)
    case API_OPENGLES:
       /* For OpenGL ES, only draw if we have vertex positions
        */
-      if (!ctx->Array.ArrayObj->Vertex.Enabled)
+      if (!ctx->Array.ArrayObj->VertexAttrib[VERT_ATTRIB_POS].Enabled)
 	 return GL_FALSE;
       break;
 #endif
@@ -142,8 +142,8 @@ check_valid_to_render(struct gl_context *ctx, const char *function)
             /* Draw if we have vertex positions (GL_VERTEX_ARRAY or generic
              * array [0]).
              */
-            return (ctx->Array.ArrayObj->Vertex.Enabled ||
-                    ctx->Array.ArrayObj->VertexAttrib[0].Enabled);
+            return (ctx->Array.ArrayObj->VertexAttrib[VERT_ATTRIB_POS].Enabled ||
+                    ctx->Array.ArrayObj->VertexAttrib[VERT_ATTRIB_GENERIC0].Enabled);
          }
       }
       break;
@@ -182,7 +182,7 @@ check_index_bounds(struct gl_context *ctx, GLsizei count, GLenum type,
    memset(&ib, 0, sizeof(ib));
    ib.type = type;
    ib.ptr = indices;
-   ib.obj = ctx->Array.ElementArrayBufferObj;
+   ib.obj = ctx->Array.ArrayObj->ElementArrayBufferObj;
 
    vbo_get_minmax_index(ctx, &prim, &ib, &min, &max);
 
@@ -254,10 +254,10 @@ _mesa_validate_DrawElements(struct gl_context *ctx,
       return GL_FALSE;
 
    /* Vertex buffer object tests */
-   if (_mesa_is_bufferobj(ctx->Array.ElementArrayBufferObj)) {
+   if (_mesa_is_bufferobj(ctx->Array.ArrayObj->ElementArrayBufferObj)) {
       /* use indices in the buffer object */
       /* make sure count doesn't go outside buffer bounds */
-      if (index_bytes(type, count) > ctx->Array.ElementArrayBufferObj->Size) {
+      if (index_bytes(type, count) > ctx->Array.ArrayObj->ElementArrayBufferObj->Size) {
          _mesa_warning(ctx, "glDrawElements index out of buffer bounds");
          return GL_FALSE;
       }
@@ -315,10 +315,10 @@ _mesa_validate_DrawRangeElements(struct gl_context *ctx, GLenum mode,
       return GL_FALSE;
 
    /* Vertex buffer object tests */
-   if (_mesa_is_bufferobj(ctx->Array.ElementArrayBufferObj)) {
+   if (_mesa_is_bufferobj(ctx->Array.ArrayObj->ElementArrayBufferObj)) {
       /* use indices in the buffer object */
       /* make sure count doesn't go outside buffer bounds */
-      if (index_bytes(type, count) > ctx->Array.ElementArrayBufferObj->Size) {
+      if (index_bytes(type, count) > ctx->Array.ArrayObj->ElementArrayBufferObj->Size) {
          _mesa_warning(ctx, "glDrawRangeElements index out of buffer bounds");
          return GL_FALSE;
       }
@@ -454,10 +454,10 @@ _mesa_validate_DrawElementsInstanced(struct gl_context *ctx,
       return GL_FALSE;
 
    /* Vertex buffer object tests */
-   if (_mesa_is_bufferobj(ctx->Array.ElementArrayBufferObj)) {
+   if (_mesa_is_bufferobj(ctx->Array.ArrayObj->ElementArrayBufferObj)) {
       /* use indices in the buffer object */
       /* make sure count doesn't go outside buffer bounds */
-      if (index_bytes(type, count) > ctx->Array.ElementArrayBufferObj->Size) {
+      if (index_bytes(type, count) > ctx->Array.ArrayObj->ElementArrayBufferObj->Size) {
          _mesa_warning(ctx,
                        "glDrawElementsInstanced index out of buffer bounds");
          return GL_FALSE;

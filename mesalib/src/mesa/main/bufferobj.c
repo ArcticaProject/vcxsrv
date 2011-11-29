@@ -77,7 +77,7 @@ get_buffer_target(struct gl_context *ctx, GLenum target)
    case GL_ARRAY_BUFFER_ARB:
       return &ctx->Array.ArrayBufferObj;
    case GL_ELEMENT_ARRAY_BUFFER_ARB:
-      return &ctx->Array.ElementArrayBufferObj;
+      return &ctx->Array.ArrayObj->ElementArrayBufferObj;
    case GL_PIXEL_PACK_BUFFER_EXT:
       return &ctx->Pack.BufferObj;
    case GL_PIXEL_UNPACK_BUFFER_EXT:
@@ -270,7 +270,7 @@ _mesa_reference_buffer_object_(struct gl_context *ctx,
 #if 0
          /* unfortunately, these tests are invalid during context tear-down */
 	 ASSERT(ctx->Array.ArrayBufferObj != bufObj);
-	 ASSERT(ctx->Array.ElementArrayBufferObj != bufObj);
+	 ASSERT(ctx->Array.ArrayObj->ElementArrayBufferObj != bufObj);
 	 ASSERT(ctx->Array.ArrayObj->Vertex.BufferObj != bufObj);
 #endif
 
@@ -531,8 +531,6 @@ _mesa_init_buffer_objects( struct gl_context *ctx )
 
    _mesa_reference_buffer_object(ctx, &ctx->Array.ArrayBufferObj,
                                  ctx->Shared->NullBufferObj);
-   _mesa_reference_buffer_object(ctx, &ctx->Array.ElementArrayBufferObj,
-                                 ctx->Shared->NullBufferObj);
 
    _mesa_reference_buffer_object(ctx, &ctx->CopyReadBuffer,
                                  ctx->Shared->NullBufferObj);
@@ -545,7 +543,6 @@ void
 _mesa_free_buffer_objects( struct gl_context *ctx )
 {
    _mesa_reference_buffer_object(ctx, &ctx->Array.ArrayBufferObj, NULL);
-   _mesa_reference_buffer_object(ctx, &ctx->Array.ElementArrayBufferObj, NULL);
 
    _mesa_reference_buffer_object(ctx, &ctx->CopyReadBuffer, NULL);
    _mesa_reference_buffer_object(ctx, &ctx->CopyWriteBuffer, NULL);
@@ -741,17 +738,6 @@ _mesa_DeleteBuffersARB(GLsizei n, const GLuint *ids)
          }
 
          /* unbind any vertex pointers bound to this buffer */
-         unbind(ctx, &arrayObj->Vertex.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->Weight.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->Normal.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->Color.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->SecondaryColor.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->FogCoord.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->Index.BufferObj, bufObj);
-         unbind(ctx, &arrayObj->EdgeFlag.BufferObj, bufObj);
-         for (j = 0; j < Elements(arrayObj->TexCoord); j++) {
-            unbind(ctx, &arrayObj->TexCoord[j].BufferObj, bufObj);
-         }
          for (j = 0; j < Elements(arrayObj->VertexAttrib); j++) {
             unbind(ctx, &arrayObj->VertexAttrib[j].BufferObj, bufObj);
          }
@@ -759,7 +745,7 @@ _mesa_DeleteBuffersARB(GLsizei n, const GLuint *ids)
          if (ctx->Array.ArrayBufferObj == bufObj) {
             _mesa_BindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
          }
-         if (ctx->Array.ElementArrayBufferObj == bufObj) {
+         if (arrayObj->ElementArrayBufferObj == bufObj) {
             _mesa_BindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
          }
 
@@ -1286,14 +1272,14 @@ _mesa_CopyBufferSubData(GLenum readTarget, GLenum writeTarget,
    ASSERT_OUTSIDE_BEGIN_END(ctx);
 
    src = get_buffer(ctx, readTarget);
-   if (!src || !_mesa_is_bufferobj(src)) {
+   if (!_mesa_is_bufferobj(src)) {
       _mesa_error(ctx, GL_INVALID_ENUM,
                   "glCopyBuffserSubData(readTarget = 0x%x)", readTarget);
       return;
    }
 
    dst = get_buffer(ctx, writeTarget);
-   if (!dst || !_mesa_is_bufferobj(dst)) {
+   if (!_mesa_is_bufferobj(dst)) {
       _mesa_error(ctx, GL_INVALID_ENUM,
                   "glCopyBuffserSubData(writeTarget = 0x%x)", writeTarget);
       return;
@@ -1421,7 +1407,7 @@ _mesa_MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length,
    }
 
    bufObj = get_buffer(ctx, target);
-   if (!bufObj || !_mesa_is_bufferobj(bufObj)) {
+   if (!_mesa_is_bufferobj(bufObj)) {
       _mesa_error(ctx, GL_INVALID_ENUM,
                   "glMapBufferRange(target = 0x%x)", target);
       return NULL;

@@ -1322,19 +1322,6 @@ copy_array_object(struct gl_context *ctx,
    /* In theory must be the same anyway, but on recreate make sure it matches */
    dest->VBOonly = src->VBOonly;
 
-   _mesa_copy_client_array(ctx, &dest->Vertex, &src->Vertex);
-   _mesa_copy_client_array(ctx, &dest->Weight, &src->Weight);
-   _mesa_copy_client_array(ctx, &dest->Normal, &src->Normal);
-   _mesa_copy_client_array(ctx, &dest->Color, &src->Color);
-   _mesa_copy_client_array(ctx, &dest->SecondaryColor, &src->SecondaryColor);
-   _mesa_copy_client_array(ctx, &dest->FogCoord, &src->FogCoord);
-   _mesa_copy_client_array(ctx, &dest->Index, &src->Index);
-   _mesa_copy_client_array(ctx, &dest->EdgeFlag, &src->EdgeFlag);
-#if FEATURE_point_size_array
-   _mesa_copy_client_array(ctx, &dest->PointSize, &src->PointSize);
-#endif
-   for (i = 0; i < Elements(src->TexCoord); i++)
-      _mesa_copy_client_array(ctx, &dest->TexCoord[i], &src->TexCoord[i]);
    for (i = 0; i < Elements(src->VertexAttrib); i++)
       _mesa_copy_client_array(ctx, &dest->VertexAttrib[i], &src->VertexAttrib[i]);
 
@@ -1385,8 +1372,8 @@ save_array_attrib(struct gl_context *ctx,
    /* Just reference them here */
    _mesa_reference_buffer_object(ctx, &dest->ArrayBufferObj,
                                  src->ArrayBufferObj);
-   _mesa_reference_buffer_object(ctx, &dest->ElementArrayBufferObj,
-                                 src->ElementArrayBufferObj);
+   _mesa_reference_buffer_object(ctx, &dest->ArrayObj->ElementArrayBufferObj,
+                                 src->ArrayObj->ElementArrayBufferObj);
 }
 
 /**
@@ -1407,7 +1394,7 @@ restore_array_attrib(struct gl_context *ctx,
    _mesa_BindBufferARB(GL_ARRAY_BUFFER_ARB,
                        src->ArrayBufferObj->Name);
    _mesa_BindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-                       src->ElementArrayBufferObj->Name);
+                       src->ArrayObj->ElementArrayBufferObj->Name);
 
    /* Better safe than sorry?! */
    dest->RebindArrays = GL_TRUE;
@@ -1447,7 +1434,6 @@ free_array_attrib_data(struct gl_context *ctx,
    _mesa_delete_array_object(ctx, attrib->ArrayObj);
    attrib->ArrayObj = 0;
    _mesa_reference_buffer_object(ctx, &attrib->ArrayBufferObj, NULL);
-   _mesa_reference_buffer_object(ctx, &attrib->ElementArrayBufferObj, NULL);
 }
 
 

@@ -334,7 +334,7 @@ static GLbitfield get_fp_input_mask( struct gl_context *ctx )
    else if (!(vertexProgram || vertexShader)) {
       /* Fixed function vertex logic */
       /* _NEW_ARRAY */
-      GLbitfield varying_inputs = ctx->varying_vp_inputs;
+      GLbitfield64 varying_inputs = ctx->varying_vp_inputs;
 
       /* These get generated in the setup routine regardless of the
        * vertex program:
@@ -488,6 +488,12 @@ static GLuint make_state_key( struct gl_context *ctx,  struct state_key *key )
 
    /* _NEW_BUFFERS */
    key->num_draw_buffers = ctx->DrawBuffer->_NumColorDrawBuffers;
+
+   /* _NEW_COLOR */
+   if (ctx->Color.AlphaEnabled && key->num_draw_buffers == 0) {
+      /* if alpha test is enabled we need to emit at least one color */
+      key->num_draw_buffers = 1;
+   }
 
    key->inputs_available = (inputs_available & inputs_referenced);
 
