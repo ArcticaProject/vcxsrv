@@ -110,7 +110,6 @@ typedef enum
    VERT_ATTRIB_COLOR1 = 4,
    VERT_ATTRIB_FOG = 5,
    VERT_ATTRIB_COLOR_INDEX = 6,
-   VERT_ATTRIB_POINT_SIZE = 6,  /*alias*/
    VERT_ATTRIB_EDGEFLAG = 7,
    VERT_ATTRIB_TEX0 = 8,
    VERT_ATTRIB_TEX1 = 9,
@@ -120,65 +119,93 @@ typedef enum
    VERT_ATTRIB_TEX5 = 13,
    VERT_ATTRIB_TEX6 = 14,
    VERT_ATTRIB_TEX7 = 15,
-   VERT_ATTRIB_GENERIC0 = 16,
-   VERT_ATTRIB_GENERIC1 = 17,
-   VERT_ATTRIB_GENERIC2 = 18,
-   VERT_ATTRIB_GENERIC3 = 19,
-   VERT_ATTRIB_GENERIC4 = 20,
-   VERT_ATTRIB_GENERIC5 = 21,
-   VERT_ATTRIB_GENERIC6 = 22,
-   VERT_ATTRIB_GENERIC7 = 23,
-   VERT_ATTRIB_GENERIC8 = 24,
-   VERT_ATTRIB_GENERIC9 = 25,
-   VERT_ATTRIB_GENERIC10 = 26,
-   VERT_ATTRIB_GENERIC11 = 27,
-   VERT_ATTRIB_GENERIC12 = 28,
-   VERT_ATTRIB_GENERIC13 = 29,
-   VERT_ATTRIB_GENERIC14 = 30,
-   VERT_ATTRIB_GENERIC15 = 31,
-   VERT_ATTRIB_MAX = 32
+   VERT_ATTRIB_POINT_SIZE = 16,
+   VERT_ATTRIB_GENERIC0 = 17,
+   VERT_ATTRIB_GENERIC1 = 18,
+   VERT_ATTRIB_GENERIC2 = 19,
+   VERT_ATTRIB_GENERIC3 = 20,
+   VERT_ATTRIB_GENERIC4 = 21,
+   VERT_ATTRIB_GENERIC5 = 22,
+   VERT_ATTRIB_GENERIC6 = 23,
+   VERT_ATTRIB_GENERIC7 = 24,
+   VERT_ATTRIB_GENERIC8 = 25,
+   VERT_ATTRIB_GENERIC9 = 26,
+   VERT_ATTRIB_GENERIC10 = 27,
+   VERT_ATTRIB_GENERIC11 = 28,
+   VERT_ATTRIB_GENERIC12 = 29,
+   VERT_ATTRIB_GENERIC13 = 30,
+   VERT_ATTRIB_GENERIC14 = 31,
+   VERT_ATTRIB_GENERIC15 = 32,
+   VERT_ATTRIB_MAX = 33
 } gl_vert_attrib;
+
+/**
+ * Symbolic constats to help iterating over
+ * specific blocks of vertex attributes.
+ *
+ * VERT_ATTRIB_FF
+ *   includes all fixed function attributes as well as
+ *   the aliased GL_NV_vertex_program shader attributes.
+ * VERT_ATTRIB_TEX
+ *   include the classic texture coordinate attributes.
+ *   Is a subset of VERT_ATTRIB_FF.
+ * VERT_ATTRIB_GENERIC_NV
+ *   include the NV shader attributes.
+ *   Is a subset of VERT_ATTRIB_FF.
+ * VERT_ATTRIB_GENERIC
+ *   include the OpenGL 2.0+ GLSL generic shader attributes.
+ *   These alias the generic GL_ARB_vertex_shader attributes.
+ */
+#define VERT_ATTRIB_FF(i)           (VERT_ATTRIB_POS + (i))
+#define VERT_ATTRIB_FF_MAX          VERT_ATTRIB_GENERIC0
+
+#define VERT_ATTRIB_TEX(i)          (VERT_ATTRIB_TEX0 + (i))
+#define VERT_ATTRIB_TEX_MAX         MAX_TEXTURE_COORD_UNITS
+
+#define VERT_ATTRIB_GENERIC_NV(i)   (VERT_ATTRIB_POS + (i))
+#define VERT_ATTRIB_GENERIC_NV_MAX  MAX_VERTEX_GENERIC_ATTRIBS
+
+#define VERT_ATTRIB_GENERIC(i)      (VERT_ATTRIB_GENERIC0 + (i))
+#define VERT_ATTRIB_GENERIC_MAX     MAX_VERTEX_GENERIC_ATTRIBS
 
 /**
  * Bitflags for vertex attributes.
  * These are used in bitfields in many places.
  */
 /*@{*/
-#define VERT_BIT_POS         (1 << VERT_ATTRIB_POS)
-#define VERT_BIT_WEIGHT      (1 << VERT_ATTRIB_WEIGHT)
-#define VERT_BIT_NORMAL      (1 << VERT_ATTRIB_NORMAL)
-#define VERT_BIT_COLOR0      (1 << VERT_ATTRIB_COLOR0)
-#define VERT_BIT_COLOR1      (1 << VERT_ATTRIB_COLOR1)
-#define VERT_BIT_FOG         (1 << VERT_ATTRIB_FOG)
-#define VERT_BIT_COLOR_INDEX (1 << VERT_ATTRIB_COLOR_INDEX)
-#define VERT_BIT_EDGEFLAG    (1 << VERT_ATTRIB_EDGEFLAG)
-#define VERT_BIT_TEX0        (1 << VERT_ATTRIB_TEX0)
-#define VERT_BIT_TEX1        (1 << VERT_ATTRIB_TEX1)
-#define VERT_BIT_TEX2        (1 << VERT_ATTRIB_TEX2)
-#define VERT_BIT_TEX3        (1 << VERT_ATTRIB_TEX3)
-#define VERT_BIT_TEX4        (1 << VERT_ATTRIB_TEX4)
-#define VERT_BIT_TEX5        (1 << VERT_ATTRIB_TEX5)
-#define VERT_BIT_TEX6        (1 << VERT_ATTRIB_TEX6)
-#define VERT_BIT_TEX7        (1 << VERT_ATTRIB_TEX7)
-#define VERT_BIT_GENERIC0    (1 << VERT_ATTRIB_GENERIC0)
-#define VERT_BIT_GENERIC1    (1 << VERT_ATTRIB_GENERIC1)
-#define VERT_BIT_GENERIC2    (1 << VERT_ATTRIB_GENERIC2)
-#define VERT_BIT_GENERIC3    (1 << VERT_ATTRIB_GENERIC3)
-#define VERT_BIT_GENERIC4    (1 << VERT_ATTRIB_GENERIC4)
-#define VERT_BIT_GENERIC5    (1 << VERT_ATTRIB_GENERIC5)
-#define VERT_BIT_GENERIC6    (1 << VERT_ATTRIB_GENERIC6)
-#define VERT_BIT_GENERIC7    (1 << VERT_ATTRIB_GENERIC7)
-#define VERT_BIT_GENERIC8    (1 << VERT_ATTRIB_GENERIC8)
-#define VERT_BIT_GENERIC9    (1 << VERT_ATTRIB_GENERIC9)
-#define VERT_BIT_GENERIC10   (1 << VERT_ATTRIB_GENERIC10)
-#define VERT_BIT_GENERIC11   (1 << VERT_ATTRIB_GENERIC11)
-#define VERT_BIT_GENERIC12   (1 << VERT_ATTRIB_GENERIC12)
-#define VERT_BIT_GENERIC13   (1 << VERT_ATTRIB_GENERIC13)
-#define VERT_BIT_GENERIC14   (1 << VERT_ATTRIB_GENERIC14)
-#define VERT_BIT_GENERIC15   (1 << VERT_ATTRIB_GENERIC15)
+#define VERT_BIT_POS             BITFIELD64_BIT(VERT_ATTRIB_POS)
+#define VERT_BIT_WEIGHT          BITFIELD64_BIT(VERT_ATTRIB_WEIGHT)
+#define VERT_BIT_NORMAL          BITFIELD64_BIT(VERT_ATTRIB_NORMAL)
+#define VERT_BIT_COLOR0          BITFIELD64_BIT(VERT_ATTRIB_COLOR0)
+#define VERT_BIT_COLOR1          BITFIELD64_BIT(VERT_ATTRIB_COLOR1)
+#define VERT_BIT_FOG             BITFIELD64_BIT(VERT_ATTRIB_FOG)
+#define VERT_BIT_COLOR_INDEX     BITFIELD64_BIT(VERT_ATTRIB_COLOR_INDEX)
+#define VERT_BIT_EDGEFLAG        BITFIELD64_BIT(VERT_ATTRIB_EDGEFLAG)
+#define VERT_BIT_TEX0            BITFIELD64_BIT(VERT_ATTRIB_TEX0)
+#define VERT_BIT_TEX1            BITFIELD64_BIT(VERT_ATTRIB_TEX1)
+#define VERT_BIT_TEX2            BITFIELD64_BIT(VERT_ATTRIB_TEX2)
+#define VERT_BIT_TEX3            BITFIELD64_BIT(VERT_ATTRIB_TEX3)
+#define VERT_BIT_TEX4            BITFIELD64_BIT(VERT_ATTRIB_TEX4)
+#define VERT_BIT_TEX5            BITFIELD64_BIT(VERT_ATTRIB_TEX5)
+#define VERT_BIT_TEX6            BITFIELD64_BIT(VERT_ATTRIB_TEX6)
+#define VERT_BIT_TEX7            BITFIELD64_BIT(VERT_ATTRIB_TEX7)
+#define VERT_BIT_POINT_SIZE      BITFIELD64_BIT(VERT_ATTRIB_POINT_SIZE)
+#define VERT_BIT_GENERIC0        BITFIELD64_BIT(VERT_ATTRIB_GENERIC0)
 
-#define VERT_BIT_TEX(u)  (1 << (VERT_ATTRIB_TEX0 + (u)))
-#define VERT_BIT_GENERIC(g)  (1 << (VERT_ATTRIB_GENERIC0 + (g)))
+#define VERT_BIT(i)              BITFIELD64_BIT(i)
+#define VERT_BIT_ALL             (BITFIELD64_BIT(VERT_ATTRIB_MAX) - 1)
+
+#define VERT_BIT_FF(i)           VERT_BIT(i)
+#define VERT_BIT_FF_ALL          (BITFIELD64_BIT(VERT_ATTRIB_FF_MAX) - 1)
+#define VERT_BIT_TEX(i)          VERT_BIT(VERT_ATTRIB_TEX(i))
+#define VERT_BIT_TEX_ALL         \
+  ((BITFIELD64_BIT(VERT_ATTRIB_TEX_MAX) - 1) << VERT_ATTRIB_TEX(0))
+#define VERT_BIT_GENERIC_NV(i)   VERT_BIT(VERT_ATTRIB_GENERIC_NV(i))
+#define VERT_BIT_GENERIC_NV_ALL  \
+  ((BITFIELD64_BIT(VERT_ATTRIB_GENERIC_NV_MAX) - 1) << (VERT_ATTRIB_GENERIC_NV(0)))
+#define VERT_BIT_GENERIC(i)      VERT_BIT(VERT_ATTRIB_GENERIC(i))
+#define VERT_BIT_GENERIC_ALL     \
+  ((BITFIELD64_BIT(VERT_ATTRIB_GENERIC_MAX) - 1) << (VERT_ATTRIB_GENERIC(0)))
 /*@}*/
 
 
@@ -1342,15 +1369,6 @@ struct gl_texture_object
 
    /** GL_OES_EGL_image_external */
    GLint RequiredTextureImageUnits;
-
-   /**
-    * \name For device driver.
-    * Note: instead of attaching driver data to this pointer, it's preferable
-    * to instead use this struct as a base class for your own texture object
-    * class.  Driver->NewTextureObject() can be used to implement the
-    * allocation.
-    */
-   void *DriverData;	/**< Arbitrary device driver data */
 };
 
 
@@ -1590,36 +1608,19 @@ struct gl_array_object
    _glthread_Mutex Mutex;
    GLboolean VBOonly;  /**< require all arrays to live in VBOs? */
 
-   /** Conventional vertex arrays */
-   /*@{*/
-   struct gl_client_array Vertex;
-   struct gl_client_array Weight;
-   struct gl_client_array Normal;
-   struct gl_client_array Color;
-   struct gl_client_array SecondaryColor;
-   struct gl_client_array FogCoord;
-   struct gl_client_array Index;
-   struct gl_client_array EdgeFlag;
-   struct gl_client_array TexCoord[MAX_TEXTURE_COORD_UNITS];
-   struct gl_client_array PointSize;
-   /*@}*/
+   /** Vertex attribute arrays */
+   struct gl_client_array VertexAttrib[VERT_ATTRIB_MAX];
 
-   /**
-    * Generic arrays for vertex programs/shaders.
-    * For NV vertex programs, these attributes alias and take priority
-    * over the conventional attribs above.  For ARB vertex programs and
-    * GLSL vertex shaders, these attributes are separate.
-    */
-   struct gl_client_array VertexAttrib[MAX_VERTEX_GENERIC_ATTRIBS];
-
-   /** Mask of _NEW_ARRAY_* values indicating which arrays are enabled */
-   GLbitfield _Enabled;
+   /** Mask of VERT_BIT_* values indicating which arrays are enabled */
+   GLbitfield64 _Enabled;
 
    /**
     * Min of all enabled arrays' _MaxElement.  When arrays reside inside VBOs
     * we can determine the max legal (in bounds) glDrawElements array index.
     */
    GLuint _MaxElement;
+
+   struct gl_buffer_object *ElementArrayBufferObj;
 };
 
 
@@ -1645,12 +1646,11 @@ struct gl_array_attrib
    GLboolean PrimitiveRestart;
    GLuint RestartIndex;
 
-   GLbitfield NewState;		/**< mask of _NEW_ARRAY_* values */
+   GLbitfield64 NewState;		/**< mask of VERT_BIT_* values */
    GLboolean RebindArrays; /**< whether the VBO module should rebind arrays */
 
    /* GL_ARB_vertex_buffer_object */
    struct gl_buffer_object *ArrayBufferObj;
-   struct gl_buffer_object *ElementArrayBufferObj;
 };
 
 
@@ -1838,7 +1838,7 @@ struct gl_program
 
    struct prog_instruction *Instructions;
 
-   GLbitfield InputsRead;     /**< Bitmask of which input regs are read */
+   GLbitfield64 InputsRead;     /**< Bitmask of which input regs are read */
    GLbitfield64 OutputsWritten; /**< Bitmask of which output regs are written */
    GLbitfield SystemValuesRead;   /**< Bitmask of SYSTEM_VALUE_x inputs used */
    GLbitfield InputFlags[MAX_PROGRAM_INPUTS];   /**< PROG_PARAM_BIT_x flags */
@@ -3055,39 +3055,6 @@ struct gl_matrix_stack
 
 
 /**
- * \name Bits to track array state changes 
- *
- * Also used to summarize array enabled.
- */
-/*@{*/
-#define _NEW_ARRAY_VERTEX           VERT_BIT_POS
-#define _NEW_ARRAY_WEIGHT           VERT_BIT_WEIGHT
-#define _NEW_ARRAY_NORMAL           VERT_BIT_NORMAL
-#define _NEW_ARRAY_COLOR0           VERT_BIT_COLOR0
-#define _NEW_ARRAY_COLOR1           VERT_BIT_COLOR1
-#define _NEW_ARRAY_FOGCOORD         VERT_BIT_FOG
-#define _NEW_ARRAY_INDEX            VERT_BIT_COLOR_INDEX
-#define _NEW_ARRAY_EDGEFLAG         VERT_BIT_EDGEFLAG
-#define _NEW_ARRAY_POINT_SIZE       VERT_BIT_COLOR_INDEX  /* aliased */
-#define _NEW_ARRAY_TEXCOORD_0       VERT_BIT_TEX0
-#define _NEW_ARRAY_TEXCOORD_1       VERT_BIT_TEX1
-#define _NEW_ARRAY_TEXCOORD_2       VERT_BIT_TEX2
-#define _NEW_ARRAY_TEXCOORD_3       VERT_BIT_TEX3
-#define _NEW_ARRAY_TEXCOORD_4       VERT_BIT_TEX4
-#define _NEW_ARRAY_TEXCOORD_5       VERT_BIT_TEX5
-#define _NEW_ARRAY_TEXCOORD_6       VERT_BIT_TEX6
-#define _NEW_ARRAY_TEXCOORD_7       VERT_BIT_TEX7
-#define _NEW_ARRAY_ATTRIB_0         VERT_BIT_GENERIC0  /* start at bit 16 */
-#define _NEW_ARRAY_ALL              0xffffffff
-
-
-#define _NEW_ARRAY_TEXCOORD(i) (_NEW_ARRAY_TEXCOORD_0 << (i))
-#define _NEW_ARRAY_ATTRIB(i) (_NEW_ARRAY_ATTRIB_0 << (i))
-/*@}*/
-
-
-
-/**
  * \name A bunch of flags that we think might be useful to drivers.
  * 
  * Set in the __struct gl_contextRec::_TriangleCaps bitfield.
@@ -3378,7 +3345,7 @@ struct gl_context
 
    GLboolean ViewportInitialized;  /**< has viewport size been initialized? */
 
-   GLbitfield varying_vp_inputs;  /**< mask of VERT_BIT_* flags */
+   GLbitfield64 varying_vp_inputs;  /**< mask of VERT_BIT_* flags */
 
    /** \name Derived state */
    /*@{*/

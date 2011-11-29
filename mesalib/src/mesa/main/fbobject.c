@@ -39,6 +39,7 @@
 #include "formats.h"
 #include "framebuffer.h"
 #include "hash.h"
+#include "image.h"
 #include "macros.h"
 #include "mfeatures.h"
 #include "mtypes.h"
@@ -1299,6 +1300,9 @@ _mesa_base_fbo_format(struct gl_context *ctx, GLenum internalFormat)
    case GL_LUMINANCE_ALPHA32UI_EXT:
       return ctx->Extensions.EXT_texture_integer &&
              ctx->Extensions.ARB_framebuffer_object ? GL_LUMINANCE_ALPHA : 0;
+
+   case GL_RGB10_A2UI:
+      return ctx->Extensions.ARB_texture_rgb10_a2ui ? GL_RGBA : 0;
    default:
       return 0;
    }
@@ -1474,48 +1478,10 @@ _mesa_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 static GLint
 get_component_bits(GLenum pname, GLenum baseFormat, gl_format format)
 {
-   switch (pname) {
-   case GL_RENDERBUFFER_RED_SIZE_EXT:
-   case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
-      if (baseFormat == GL_RGB || baseFormat == GL_RGBA ||
-	  baseFormat == GL_RG || baseFormat == GL_RED)
-         return _mesa_get_format_bits(format, pname);
-      else
-         return 0;
-   case GL_RENDERBUFFER_GREEN_SIZE_EXT:
-   case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
-      if (baseFormat == GL_RGB || baseFormat == GL_RGBA || baseFormat == GL_RG)
-         return _mesa_get_format_bits(format, pname);
-      else
-         return 0;
-   case GL_RENDERBUFFER_BLUE_SIZE_EXT:
-   case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
-      if (baseFormat == GL_RGB || baseFormat == GL_RGBA)
-         return _mesa_get_format_bits(format, pname);
-      else
-         return 0;
-   case GL_RENDERBUFFER_ALPHA_SIZE_EXT:
-   case GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE:
-      if (baseFormat == GL_RGBA || baseFormat == GL_ALPHA ||
-	  baseFormat == GL_LUMINANCE_ALPHA)
-         return _mesa_get_format_bits(format, pname);
-      else
-         return 0;
-   case GL_RENDERBUFFER_DEPTH_SIZE_EXT:
-   case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
-      if (baseFormat == GL_DEPTH_COMPONENT || baseFormat == GL_DEPTH_STENCIL)
-         return _mesa_get_format_bits(format, pname);
-      else
-         return 0;
-   case GL_RENDERBUFFER_STENCIL_SIZE_EXT:
-   case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
-      if (baseFormat == GL_STENCIL_INDEX || baseFormat == GL_DEPTH_STENCIL)
-         return _mesa_get_format_bits(format, pname);
-      else
-         return 0;
-   default:
+   if (_mesa_base_format_has_channel(baseFormat, pname))
+      return _mesa_get_format_bits(format, pname);
+   else
       return 0;
-   }
 }
 
 
