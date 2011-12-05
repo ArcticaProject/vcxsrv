@@ -148,9 +148,7 @@ SecurityLabelInitial(void)
 static _X_INLINE const char *
 SecurityLookupRequestName(ClientPtr client)
 {
-    int major = ((xReq *)client->requestBuffer)->reqType;
-    int minor = MinorOpcodeOfRequest(client);
-    return LookupRequestName(major, minor);
+    return LookupRequestName(client->majorOp, client->minorOp);
 }
 
 

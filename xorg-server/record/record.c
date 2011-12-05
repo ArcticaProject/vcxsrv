@@ -552,7 +552,7 @@ RecordARequest(ClientPtr client)
 	    }
 	    else /* extension, check minor opcode */
 	    {
-		int minorop = MinorOpcodeOfRequest(client);
+		int minorop = client->minorOp;
 		int numMinOpInfo;
 		RecordMinorOpPtr pMinorOpInfo = pRCAP->pRequestMinOpInfo;
 
@@ -609,12 +609,9 @@ RecordAReply(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
     RecordContextPtr pContext;
     RecordClientsAndProtocolPtr pRCAP;
     int eci;
-    int majorop;
     ReplyInfoRec *pri = (ReplyInfoRec *)calldata;
     ClientPtr client = pri->client;
-    REQUEST(xReq);
 
-    majorop = stuff->reqType;
     for (eci = 0; eci < numEnabledContexts; eci++)
     {
 	pContext = ppAllContexts[eci];
@@ -622,6 +619,7 @@ RecordAReply(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
 					  NULL);
 	if (pRCAP)
 	{
+	    int majorop = client->majorOp;
 	    if (pContext->continuedReply)
 	    {
 		RecordAProtocolElement(pContext, client, XRecordFromServer,
@@ -642,7 +640,7 @@ RecordAReply(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
 		}
 		else /* extension, check minor opcode */
 		{
-		    int minorop = MinorOpcodeOfRequest(client);
+		    int minorop = client->minorOp;
 		    int numMinOpInfo;
 		    RecordMinorOpPtr pMinorOpInfo = pRCAP->pReplyMinOpInfo;
 		    		    assert (pMinorOpInfo);

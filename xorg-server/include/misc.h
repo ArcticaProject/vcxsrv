@@ -359,4 +359,11 @@ typedef struct _CharInfo *CharInfoPtr; /* also in fonts/include/font.h */
 extern _X_EXPORT unsigned long globalSerialNumber;
 extern _X_EXPORT unsigned long serverGeneration;
 
+#define BUG_WARN(cond)                                                    \
+          do { if (cond) {                                                \
+              ErrorF("BUG: triggered 'if (" #cond ")'\nBUG: %s:%d in %s()\n",     \
+                      __FILE__, __LINE__, __func__);                      \
+              xorg_backtrace();                                           \
+          } } while(0)
+
 #endif /* MISC_H */

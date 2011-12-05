@@ -111,7 +111,6 @@ symbols/sun_vndr/Makefile
 symbols/xfree68_vndr/Makefile
 types/Makefile
 xkeyboard-config.pc
-xkeyboard-config.spec
 docs/Makefile
 man/Makefile
 ])

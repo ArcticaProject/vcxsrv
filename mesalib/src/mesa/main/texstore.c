@@ -67,6 +67,7 @@
 #include "texcompress_fxt1.h"
 #include "texcompress_rgtc.h"
 #include "texcompress_s3tc.h"
+#include "texcompress_etc.h"
 #include "teximage.h"
 #include "texstore.h"
 #include "enums.h"
@@ -2141,8 +2142,8 @@ _mesa_texstore_unorm88(TEXSTORE_PARAMS)
 
    ASSERT(dstFormat == MESA_FORMAT_AL88 ||
           dstFormat == MESA_FORMAT_AL88_REV ||
-          dstFormat == MESA_FORMAT_RG88 ||
-          dstFormat == MESA_FORMAT_RG88_REV);
+          dstFormat == MESA_FORMAT_GR88 ||
+          dstFormat == MESA_FORMAT_RG88);
    ASSERT(texelBytes == 2);
 
    if (!ctx->_ImageTransferState &&
@@ -2150,7 +2151,7 @@ _mesa_texstore_unorm88(TEXSTORE_PARAMS)
        ((dstFormat == MESA_FORMAT_AL88 &&
          baseInternalFormat == GL_LUMINANCE_ALPHA &&
          srcFormat == GL_LUMINANCE_ALPHA) ||
-        (dstFormat == MESA_FORMAT_RG88 &&
+        (dstFormat == MESA_FORMAT_GR88 &&
          baseInternalFormat == srcFormat)) &&
        srcType == GL_UNSIGNED_BYTE &&
        littleEndian) {
@@ -2182,8 +2183,8 @@ _mesa_texstore_unorm88(TEXSTORE_PARAMS)
 	 }
       }
       else {
-	 if ((littleEndian && dstFormat == MESA_FORMAT_RG88) ||
-	     (!littleEndian && dstFormat == MESA_FORMAT_RG88_REV)) {
+	 if ((littleEndian && dstFormat == MESA_FORMAT_GR88) ||
+	     (!littleEndian && dstFormat == MESA_FORMAT_RG88)) {
 	    dstmap[0] = 0;
 	    dstmap[1] = 1;
 	 }
@@ -2224,7 +2225,7 @@ _mesa_texstore_unorm88(TEXSTORE_PARAMS)
          for (row = 0; row < srcHeight; row++) {
             GLushort *dstUS = (GLushort *) dstRow;
             if (dstFormat == MESA_FORMAT_AL88 ||
-		dstFormat == MESA_FORMAT_RG88) {
+		dstFormat == MESA_FORMAT_GR88) {
                for (col = 0; col < srcWidth; col++) {
                   /* src[0] is luminance (or R), src[1] is alpha (or G) */
                  dstUS[col] = PACK_COLOR_88( src[1],
@@ -4374,8 +4375,8 @@ _mesa_get_texstore_func(gl_format format)
       table[MESA_FORMAT_YCBCR] = _mesa_texstore_ycbcr;
       table[MESA_FORMAT_YCBCR_REV] = _mesa_texstore_ycbcr;
       table[MESA_FORMAT_R8] = _mesa_texstore_unorm8;
+      table[MESA_FORMAT_GR88] = _mesa_texstore_unorm88;
       table[MESA_FORMAT_RG88] = _mesa_texstore_unorm88;
-      table[MESA_FORMAT_RG88_REV] = _mesa_texstore_unorm88;
       table[MESA_FORMAT_R16] = _mesa_texstore_unorm16;
       table[MESA_FORMAT_RG1616] = _mesa_texstore_unorm1616;
       table[MESA_FORMAT_RG1616_REV] = _mesa_texstore_unorm1616;
@@ -4437,6 +4438,7 @@ _mesa_get_texstore_func(gl_format format)
       table[MESA_FORMAT_SIGNED_L_LATC1] = _mesa_texstore_signed_red_rgtc1;
       table[MESA_FORMAT_LA_LATC2] = _mesa_texstore_rg_rgtc2;
       table[MESA_FORMAT_SIGNED_LA_LATC2] = _mesa_texstore_signed_rg_rgtc2;
+      table[MESA_FORMAT_ETC1_RGB8] = _mesa_texstore_etc1_rgb8;
       table[MESA_FORMAT_SIGNED_A8] = _mesa_texstore_snorm8;
       table[MESA_FORMAT_SIGNED_L8] = _mesa_texstore_snorm8;
       table[MESA_FORMAT_SIGNED_AL88] = _mesa_texstore_snorm88;
@@ -4832,7 +4834,7 @@ _mesa_store_texsubimage1d(struct gl_context *ctx, GLenum target, GLint level,
    if (!pixels)
       return;
 
-   /* Map dest texture buffer (write to whole region) */
+   /* Map dest texture buffer */
    ctx->Driver.MapTextureImage(ctx, texImage, 0,
                                xoffset, 0, width, 1,
                                rwMode,
@@ -4885,7 +4887,7 @@ _mesa_store_texsubimage2d(struct gl_context *ctx, GLenum target, GLint level,
    if (!pixels)
       return;
 
-   /* Map dest texture buffer (write to whole region) */
+   /* Map dest texture buffer */
    ctx->Driver.MapTextureImage(ctx, texImage, 0,
                                xoffset, yoffset, width, height,
                                rwMode,
@@ -5015,11 +5017,9 @@ _mesa_store_compressed_teximage2d(struct gl_context *ctx,
                                   struct gl_texture_object *texObj,
                                   struct gl_texture_image *texImage)
 {
-   GLubyte *dstMap;
-   GLint dstRowStride;
-
-   /* This is pretty simple, basically just do a memcpy without worrying
-    * about the usual image unpacking or image transfer operations.
+   /* This is pretty simple, because unlike the general texstore path we don't
+    * have to worry about the usual image unpacking or image transfer
+    * operations.
     */
    ASSERT(texObj);
    ASSERT(texImage);
@@ -5034,29 +5034,12 @@ _mesa_store_compressed_teximage2d(struct gl_context *ctx,
       return;
    }
 
-   data = _mesa_validate_pbo_compressed_teximage(ctx, imageSize, data,
-                                                 &ctx->Unpack,
-                                                 "glCompressedTexImage2D");
-   if (!data)
-      return;
-
-
-   /* Map dest texture buffer (write to whole region) */
-   ctx->Driver.MapTextureImage(ctx, texImage, 0,
-                               0, 0, width, height,
-                               GL_MAP_WRITE_BIT,
-                               &dstMap, &dstRowStride);
-   if (dstMap) {
-      /* copy the data */
-      memcpy(dstMap, data, imageSize);
-
-      ctx->Driver.UnmapTextureImage(ctx, texImage, 0);
-   }
-   else {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCompressedTexImage2D");
-   }
-
-   _mesa_unmap_teximage_pbo(ctx, &ctx->Unpack);
+   _mesa_store_compressed_texsubimage2d(ctx, target, level,
+					0, 0,
+					width, height,
+					texImage->TexFormat,
+					imageSize, data,
+					texObj, texImage);
 }
 
 
@@ -5133,8 +5116,8 @@ _mesa_store_compressed_texsubimage2d(struct gl_context *ctx, GLenum target,
    _mesa_get_format_block_size(texFormat, &bw, &bh);
 
    /* these should have been caught sooner */
-   ASSERT((width % bw) == 0 || width == 2 || width == 1);
-   ASSERT((height % bh) == 0 || height == 2 || height == 1);
+   ASSERT((width % bw) == 0 || width < bw);
+   ASSERT((height % bh) == 0 || height < bh);
    ASSERT((xoffset % bw) == 0);
    ASSERT((yoffset % bh) == 0);
 
@@ -5148,7 +5131,7 @@ _mesa_store_compressed_texsubimage2d(struct gl_context *ctx, GLenum target,
    srcRowStride = _mesa_format_row_stride(texFormat, width);
    src = (const GLubyte *) data;
 
-   /* Map dest texture buffer (write to whole region) */
+   /* Map dest texture buffer */
    ctx->Driver.MapTextureImage(ctx, texImage, 0,
                                xoffset, yoffset, width, height,
                                GL_MAP_WRITE_BIT,
@@ -5156,7 +5139,7 @@ _mesa_store_compressed_texsubimage2d(struct gl_context *ctx, GLenum target,
 
    if (dstMap) {
       bytesPerRow = srcRowStride;  /* bytes per row of blocks */
-      rows = height / bh;  /* rows in blocks */
+      rows = (height + bh - 1) / bh;  /* rows in blocks */
 
       /* copy rows of blocks */
       for (i = 0; i < rows; i++) {

@@ -763,12 +763,12 @@ _mesa_choose_tex_format( struct gl_context *ctx, GLint internalFormat,
 
       case GL_RG:
       case GL_RG8:
-	 RETURN_IF_SUPPORTED(MESA_FORMAT_RG88);
+	 RETURN_IF_SUPPORTED(MESA_FORMAT_GR88);
 	 break;
 
       case GL_COMPRESSED_RG:
 	 RETURN_IF_SUPPORTED(MESA_FORMAT_RG_RGTC2);
-	 RETURN_IF_SUPPORTED(MESA_FORMAT_RG88);
+	 RETURN_IF_SUPPORTED(MESA_FORMAT_GR88);
 	 break;
 
       case GL_RG16:
@@ -913,6 +913,16 @@ _mesa_choose_tex_format( struct gl_context *ctx, GLint internalFormat,
       switch (internalFormat) {
          case GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI:
             RETURN_IF_SUPPORTED(MESA_FORMAT_LA_LATC2);
+            break;
+         default:
+            ; /* fallthrough */
+      }
+   }
+
+   if (ctx->Extensions.OES_compressed_ETC1_RGB8_texture) {
+      switch (internalFormat) {
+         case GL_ETC1_RGB8_OES:
+            RETURN_IF_SUPPORTED(MESA_FORMAT_ETC1_RGB8);
             break;
          default:
             ; /* fallthrough */

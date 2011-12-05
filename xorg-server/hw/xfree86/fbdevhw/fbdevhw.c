@@ -98,8 +98,6 @@ fbdevHWFreeRec(ScrnInfoPtr pScrn)
 {
 	if (fbdevHWPrivateIndex < 0)
 		return;
-	if (FBDEVHWPTR(pScrn) == NULL)
-		return;
 	free(FBDEVHWPTR(pScrn));
 	FBDEVHWPTRLVAL(pScrn) = NULL;
 }

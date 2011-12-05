@@ -228,20 +228,6 @@ StandardMinorOpcode(ClientPtr client)
     return ((xReq *)client->requestBuffer)->data;
 }
 
-unsigned short
-MinorOpcodeOfRequest(ClientPtr client)
-{
-    unsigned char major;
-
-    major = ((xReq *)client->requestBuffer)->reqType;
-    if (major < EXTENSION_BASE)
-	return 0;
-    major -= EXTENSION_BASE;
-    if (major >= NumExtensions)
-	return 0;
-    return (*extensions[major]->MinorOpcode)(client);
-}
-
 void
 CloseDownExtensions(void)
 {

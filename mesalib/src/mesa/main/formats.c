@@ -375,8 +375,8 @@ static struct gl_format_info format_info[MESA_FORMAT_COUNT] =
       1, 1, 1
    },
    {
-      MESA_FORMAT_RG88,
-      "MESA_FORMAT_RG88",
+      MESA_FORMAT_GR88,
+      "MESA_FORMAT_GR88",
       GL_RG,
       GL_UNSIGNED_NORMALIZED,
       8, 8, 0, 0,
@@ -384,8 +384,8 @@ static struct gl_format_info format_info[MESA_FORMAT_COUNT] =
       1, 1, 2
    },
    {
-      MESA_FORMAT_RG88_REV,
-      "MESA_FORMAT_RG88_REV",
+      MESA_FORMAT_RG88,
+      "MESA_FORMAT_RG88",
       GL_RG,
       GL_UNSIGNED_NORMALIZED,
       8, 8, 0, 0,
@@ -1386,6 +1386,16 @@ static struct gl_format_info format_info[MESA_FORMAT_COUNT] =
      4, 4, 16                     /* 16 bytes per 4x4 block */
    },
 
+   {
+      MESA_FORMAT_ETC1_RGB8,
+      "MESA_FORMAT_ETC1_RGB8",
+      GL_RGB,
+      GL_UNSIGNED_NORMALIZED,
+      8, 8, 8, 0,
+      0, 0, 0, 0, 0,
+      4, 4, 8                     /* 8 bytes per 4x4 block */
+   },
+
    /* Signed formats from EXT_texture_snorm that are not in GL3.1 */
    {
       MESA_FORMAT_SIGNED_A8,
@@ -1491,7 +1501,10 @@ static struct gl_format_info format_info[MESA_FORMAT_COUNT] =
       MESA_FORMAT_Z32_FLOAT_X24S8, /* Name */
       "MESA_FORMAT_Z32_FLOAT_X24S8", /* StrName */
       GL_DEPTH_STENCIL,            /* BaseFormat */
-      GL_NONE /* XXX */,           /* DataType */
+      /* DataType here is used to answer GL_TEXTURE_DEPTH_TYPE queries, and is
+       * never used for stencil because stencil is always GL_UNSIGNED_INT.
+       */
+      GL_FLOAT,                    /* DataType */
       0, 0, 0, 0,                  /* Red/Green/Blue/AlphaBits */
       0, 0, 0, 32, 8,              /* Lum/Int/Index/Depth/StencilBits */
       1, 1, 8                      /* BlockWidth/Height,Bytes */
@@ -1776,7 +1789,7 @@ _mesa_get_uncompressed_format(gl_format format)
    case MESA_FORMAT_SIGNED_RED_RGTC1:
       return MESA_FORMAT_SIGNED_R8;
    case MESA_FORMAT_RG_RGTC2:
-      return MESA_FORMAT_RG88;
+      return MESA_FORMAT_GR88;
    case MESA_FORMAT_SIGNED_RG_RGTC2:
       return MESA_FORMAT_SIGNED_RG88_REV;
    case MESA_FORMAT_L_LATC1:
@@ -1787,6 +1800,8 @@ _mesa_get_uncompressed_format(gl_format format)
       return MESA_FORMAT_AL88;
    case MESA_FORMAT_SIGNED_LA_LATC2:
       return MESA_FORMAT_SIGNED_AL88;
+   case MESA_FORMAT_ETC1_RGB8:
+      return MESA_FORMAT_RGB888;
    default:
 #ifdef DEBUG
       assert(!_mesa_is_format_compressed(format));
@@ -2061,8 +2076,8 @@ _mesa_format_to_type_and_comps(gl_format format,
 
    case MESA_FORMAT_AL88:
    case MESA_FORMAT_AL88_REV:
+   case MESA_FORMAT_GR88:
    case MESA_FORMAT_RG88:
-   case MESA_FORMAT_RG88_REV:
       *datatype = GL_UNSIGNED_BYTE;
       *comps = 2;
       return;
@@ -2237,6 +2252,7 @@ _mesa_format_to_type_and_comps(gl_format format,
    case MESA_FORMAT_SIGNED_L_LATC1:
    case MESA_FORMAT_LA_LATC2:
    case MESA_FORMAT_SIGNED_LA_LATC2:
+   case MESA_FORMAT_ETC1_RGB8:
       /* XXX generate error instead? */
       *datatype = GL_UNSIGNED_BYTE;
       *comps = 0;
@@ -2595,9 +2611,9 @@ _mesa_format_matches_format_and_type(gl_format gl_format,
 
    case MESA_FORMAT_R8:
       return format == GL_RED && type == GL_UNSIGNED_BYTE;
+   case MESA_FORMAT_GR88:
+      return format == GL_RG && type == GL_UNSIGNED_BYTE && littleEndian;
    case MESA_FORMAT_RG88:
-      return format == GL_LUMINANCE_ALPHA && type == GL_UNSIGNED_BYTE && littleEndian;
-   case MESA_FORMAT_RG88_REV:
       return GL_FALSE;
 
    case MESA_FORMAT_R16:
@@ -2772,6 +2788,9 @@ _mesa_format_matches_format_and_type(gl_format gl_format,
    case MESA_FORMAT_SIGNED_L_LATC1:
    case MESA_FORMAT_LA_LATC2:
    case MESA_FORMAT_SIGNED_LA_LATC2:
+      return GL_FALSE;
+
+   case MESA_FORMAT_ETC1_RGB8:
       return GL_FALSE;
 
    case MESA_FORMAT_SIGNED_A8:

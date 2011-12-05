@@ -72,7 +72,7 @@ extern _X_EXPORT int CountBits(const uint8_t *mask, int len);
  * this number here is bumped.
  */
 #define XI2LASTEVENT    17 /* XI_RawMotion */
-#define XI2MASKSIZE     ((XI2LASTEVENT + 7)/8) /* no of bits for masks */
+#define XI2MASKSIZE     ((XI2LASTEVENT >> 3) + 1) /* no of bytes for masks */
 
 /**
  * Scroll types for ::SetScrollValuator and the scroll type in the

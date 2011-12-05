@@ -1628,6 +1628,19 @@ SelectForWindow(DeviceIntPtr dev, WindowPtr pWin, ClientPtr client,
     return Success;
 }
 
+static void
+FreeInputClient(InputClientsPtr *other)
+{
+    free(*other);
+    *other = NULL;
+}
+
+static InputClientsPtr
+AllocInputClient(void)
+{
+    return calloc(1, sizeof(InputClients));
+}
+
 int
 AddExtensionClient(WindowPtr pWin, ClientPtr client, Mask mask, int mskidx)
 {
@@ -1635,7 +1648,7 @@ AddExtensionClient(WindowPtr pWin, ClientPtr client, Mask mask, int mskidx)
 
     if (!pWin->optional && !MakeWindowOptional(pWin))
 	return BadAlloc;
-    others = calloc(1, sizeof(InputClients));
+    others = AllocInputClient();
     if (!others)
 	return BadAlloc;
     if (!pWin->optional->inputMasks && !MakeInputMasks(pWin))
@@ -1649,7 +1662,7 @@ AddExtensionClient(WindowPtr pWin, ClientPtr client, Mask mask, int mskidx)
     return Success;
 
 bail:
-    free(others);
+    FreeInputClient(&others);
     return BadAlloc;
 }
 
@@ -1663,6 +1676,13 @@ MakeInputMasks(WindowPtr pWin)
 	return FALSE;
     pWin->optional->inputMasks = imasks;
     return TRUE;
+}
+
+static void
+FreeInputMask(OtherInputMasks **imask)
+{
+    free(*imask);
+    *imask = NULL;
 }
 
 void
@@ -1721,14 +1741,15 @@ InputClientGone(WindowPtr pWin, XID id)
 	if (other->resource == id) {
 	    if (prev) {
 		prev->next = other->next;
-		free(other);
+		FreeInputClient(&other);
 	    } else if (!(other->next)) {
 		if (ShouldFreeInputMasks(pWin, TRUE)) {
-		    wOtherInputMasks(pWin)->inputClients = other->next;
-		    free(wOtherInputMasks(pWin));
+		    OtherInputMasks *mask = wOtherInputMasks(pWin);
+		    mask->inputClients = other->next;
+		    FreeInputMask(&mask);
 		    pWin->optional->inputMasks = (OtherInputMasks *) NULL;
 		    CheckWindowOptionalNeed(pWin);
-		    free(other);
+		    FreeInputClient(&other);
 		} else {
 		    other->resource = FakeClientID(0);
 		    if (!AddResource(other->resource, RT_INPUTCLIENT,
@@ -1737,7 +1758,7 @@ InputClientGone(WindowPtr pWin, XID id)
 		}
 	    } else {
 		wOtherInputMasks(pWin)->inputClients = other->next;
-		free(other);
+		FreeInputClient(&other);
 	    }
 	    RecalculateDeviceDeliverableEvents(pWin);
 	    return Success;

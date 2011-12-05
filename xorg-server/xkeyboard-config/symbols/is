@@ -2,6 +2,10 @@
 // XKB keyboard by Hrafnkell Eiriksson - hkelle@rhi.hi.is
 //     fixes by Olafur Osvaldsson - oli@isnic.is
 //
+// "basic" corrected according to the Icelandic standard for keyboards,
+//     IST 125:1995 (some symbols substituted by a dead diacritic).
+//     Some positions are according to IST ISO/IEC 9995-3:1994
+//     Added nobreakspace
 
 default partial alphanumeric_keys
 xkb_symbols "basic" {
@@ -10,20 +14,26 @@ xkb_symbols "basic" {
 
     name[Group1]="Icelandic";
 
+//  <AE00> = <TLDE>
     key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
     key <AE04>	{ [         4,     dollar,   onequarter,     currency ]	};
     key <AE11>	{ [odiaeresis, Odiaeresis,    backslash, questiondown ]	};
-    key <AE12>	{ [     minus, underscore,     ccedilla,  dead_ogonek ]	};
+    key <AE12>	{ [     minus, underscore, dead_cedilla,  dead_ogonek ]	};
 
     key <AD11>	{ [       eth,        ETH, dead_diaeresis, dead_abovering ] };
-    key <AD12>	{ [apostrophe,   question,   asciitilde,  dead_macron ]	};
+    key <AD12>	{ [apostrophe,   question,   dead_tilde,  dead_macron ]	};
 
     key <AC10>	{ [        ae,         AE,  asciicircum, dead_doubleacute ] };
-    key <AC11>	{ [dead_acute, dead_circumflex, dead_circumflex ] };
-    key <TLDE>	{ [    degree,  diaeresis,      notsign,      notsign ]	};
+    key <AC11>	{ [dead_acute, dead_acute, dead_circumflex, dead_caron ] };
+    key <TLDE>	{ [dead_abovering,  dead_diaeresis,      notsign,      hyphen ]	};
 
-    key <BKSL>	{ [      plus,   asterisk,        grave,   dead_breve ]	};
+//  <AC12> = <BKSL>
+    key <BKSL>	{ [      plus,   asterisk,   dead_grave,   dead_breve ]	};
+
+//  <AB00> = <LSGT>, is in file "pc": pc105
     key <AB10>	{ [     thorn,      THORN, dead_belowdot, dead_abovedot ] };
+
+    key <SPCE>  { [     space,      space,  nobreakspace, nobreakspace ] };
 
     include "level3(ralt_switch)"
 };

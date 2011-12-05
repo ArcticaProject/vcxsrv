@@ -80,7 +80,6 @@ ProcXIPassiveGrabDevice(ClientPtr client)
     DeviceIntPtr dev, mod_dev;
     xXIPassiveGrabDeviceReply rep;
     int i, ret = Success;
-    uint8_t status;
     uint32_t *modifiers;
     xXIGrabModifierInfo *modifiers_failed;
     GrabMask mask;
@@ -145,32 +144,36 @@ ProcXIPassiveGrabDevice(ClientPtr client)
 
     if (stuff->cursor != None)
     {
-        status = dixLookupResourceByType(&tmp, stuff->cursor,
-                                         RT_CURSOR, client, DixUseAccess);
-	if (status != Success)
-	{
-	    client->errorValue = stuff->cursor;
-	    return status;
-	}
+        ret = dixLookupResourceByType(&tmp, stuff->cursor,
+                                      RT_CURSOR, client, DixUseAccess);
+        if (ret != Success)
+        {
+            client->errorValue = stuff->cursor;
+            goto out;
+        }
     }
 
-    status = dixLookupWindow((WindowPtr*)&tmp, stuff->grab_window, client, DixSetAttrAccess);
-    if (status != Success)
-	return status;
+    ret = dixLookupWindow((WindowPtr*)&tmp, stuff->grab_window, client, DixSetAttrAccess);
+    if (ret != Success)
+        goto out;
 
-    status = CheckGrabValues(client, &param);
-    if (status != Success)
-        return status;
+    ret = CheckGrabValues(client, &param);
+    if (ret != Success)
+        goto out;
 
     modifiers = (uint32_t*)&stuff[1] + stuff->mask_len;
     modifiers_failed = calloc(stuff->num_modifiers, sizeof(xXIGrabModifierInfo));
-    if (!modifiers_failed)
-        return BadAlloc;
+    if (!modifiers_failed) {
+        ret = BadAlloc;
+        goto out;
+    }
 
     mod_dev = (IsFloating(dev)) ? dev : GetMaster(dev, MASTER_KEYBOARD);
 
     for (i = 0; i < stuff->num_modifiers; i++, modifiers++)
     {
+        uint8_t status = Success;
+
         param.modifiers = *modifiers;
         switch(stuff->grab_type)
         {
@@ -208,6 +211,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
         WriteToClient(client, rep.length * 4, (char*)modifiers_failed);
 
     free(modifiers_failed);
+out:
     return ret;
 }
 
