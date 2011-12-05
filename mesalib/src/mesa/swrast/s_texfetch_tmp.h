@@ -1007,10 +1007,10 @@ static void store_texel_argb2101010(struct swrast_texture_image *texImage,
 #endif
 
 
-/* MESA_FORMAT_RG88 **********************************************************/
+/* MESA_FORMAT_GR88 **********************************************************/
 
 /* Fetch texel from 1D, 2D or 3D rg88 texture, return 4 GLchans */
-static void FETCH(f_rg88)( const struct swrast_texture_image *texImage,
+static void FETCH(f_gr88)( const struct swrast_texture_image *texImage,
                            GLint i, GLint j, GLint k, GLfloat *texel )
 {
    const GLushort s = *TEXEL_ADDR(GLushort, texImage, i, j, k, 1);
@@ -1021,7 +1021,7 @@ static void FETCH(f_rg88)( const struct swrast_texture_image *texImage,
 }
 
 #if DIM == 3
-static void store_texel_rg88(struct swrast_texture_image *texImage,
+static void store_texel_gr88(struct swrast_texture_image *texImage,
                              GLint i, GLint j, GLint k, const void *texel)
 {
    const GLchan *rgba = (const GLchan *) texel;
@@ -1033,26 +1033,26 @@ static void store_texel_rg88(struct swrast_texture_image *texImage,
 #endif
 
 
-/* MESA_FORMAT_RG88_REV ******************************************************/
+/* MESA_FORMAT_RG88 ******************************************************/
 
 /* Fetch texel from 1D, 2D or 3D rg88_rev texture, return 4 GLchans */
-static void FETCH(f_rg88_rev)( const struct swrast_texture_image *texImage,
+static void FETCH(f_rg88)( const struct swrast_texture_image *texImage,
                            GLint i, GLint j, GLint k, GLfloat *texel )
 {
    const GLushort s = *TEXEL_ADDR(GLushort, texImage, i, j, k, 1);
-   texel[RCOMP] = UBYTE_TO_FLOAT( s & 0xff );
-   texel[GCOMP] = UBYTE_TO_FLOAT( s >> 8 );
+   texel[RCOMP] = UBYTE_TO_FLOAT( s >> 8 );
+   texel[GCOMP] = UBYTE_TO_FLOAT( s & 0xff );
    texel[BCOMP] = 0.0;
    texel[ACOMP] = 1.0;
 }
 
 #if DIM == 3
-static void store_texel_rg88_rev(struct swrast_texture_image *texImage,
+static void store_texel_rg88(struct swrast_texture_image *texImage,
                              GLint i, GLint j, GLint k, const void *texel)
 {
    const GLubyte *rgba = (const GLubyte *) texel;
    GLushort *dst = TEXEL_ADDR(GLushort, texImage, i, j, k, 1);
-   *dst = PACK_COLOR_88(rgba[GCOMP], rgba[RCOMP]);
+   *dst = PACK_COLOR_88(rgba[RCOMP], rgba[GCOMP]);
 }
 #endif
 

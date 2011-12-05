@@ -30,7 +30,7 @@ xkb_symbols "basic" {
     key <AD04> { [         r,          R                                  ] };
     key <AD05> { [	   t,          T                                  ] };
     key <AD06> { [	   y,          Y                                  ] };
-    key <AD07> { [	   u,          U,    0x01000289,       0x01001d7e ] };
+    key <AD07> { [	   u,          U,    0x01000289,       0x01000244 ] };
     key <AD08> { [	   i,          I,    0x01000268,       0x01000197 ] };
     key <AD09> { [	   o,          O,        oslash,         Ooblique ] };
     key <AD10> { [	   p,          P                                  ] };

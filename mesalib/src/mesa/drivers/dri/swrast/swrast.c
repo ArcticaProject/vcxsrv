@@ -424,8 +424,8 @@ swrast_map_renderbuffer(struct gl_context *ctx,
       stride = -stride;
    }
 
-   map += y * stride;
-   map += x * cpp;
+   map += (GLsizei)y * stride;
+   map += (GLsizei)x * cpp;
 
    *out_map = map;
    *out_stride = stride;

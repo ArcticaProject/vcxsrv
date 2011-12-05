@@ -76,7 +76,6 @@ static void dix_update_desktop_dimensions(void)
 
 #define assert_dimensions(_x, _y, _w, _h) \
     update_desktop_dimensions();          \
-    printf("%d %d %d %d\n", screenInfo.x, screenInfo.y, screenInfo.width, screenInfo.height); \
     assert(screenInfo.x == _x);           \
     assert(screenInfo.y == _y);           \
     assert(screenInfo.width == _w);       \
@@ -87,8 +86,6 @@ static void dix_update_desktop_dimensions(void)
     screenInfo.screens[idx]->y = _y;      \
     screenInfo.screens[idx]->width = _w;  \
     screenInfo.screens[idx]->height = _h; \
-
-    printf("Testing\n");
 
     /* single screen */
     screenInfo.numScreens = 1;

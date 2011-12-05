@@ -341,8 +341,6 @@ DisableLimitedSchedulingLatency(void)
 	SmartScheduleLatencyLimited = 0;
 }
 
-#define MAJOROP ((xReq *)client->requestBuffer)->reqType
-
 void
 Dispatch(void)
 {
@@ -426,40 +424,47 @@ Dispatch(void)
 	        }
 
 		client->sequence++;
+		client->majorOp = ((xReq *)client->requestBuffer)->reqType;
+		client->minorOp = 0;
+		if (client->majorOp >= EXTENSION_BASE) {
+		    ExtensionEntry *ext = GetExtensionEntry(client->majorOp);
+		    if (ext)
+			client->minorOp = ext->MinorOpcode(client);
+		}
 #ifdef XSERVER_DTRACE
-		StartMajorOp=MAJOROP;
-		XSERVER_REQUEST_START(LookupMajorName(StartMajorOp), StartMajorOp,
+		StartMajorOp=client->majorOp;
+		XSERVER_REQUEST_START(LookupMajorName(client->majorOp), client->majorOp,
 			      ((xReq *)client->requestBuffer)->length,
 			      client->index, client->requestBuffer);
 #endif
 		if (result > (maxBigRequestSize << 2))
 		    result = BadLength;
 		else {
-		    result = XaceHookDispatch(client, MAJOROP);
+		    result = XaceHookDispatch(client, client->majorOp);
 		    if (result == Success)
-			result = (* client->requestVector[MAJOROP])(client);
+			result = (* client->requestVector[client->majorOp])(client);
 		    XaceHookAuditEnd(client, result);
 		}
 #ifdef XSERVER_DTRACE
 		if (result!=Success)
 		{
 		  char Message[255];
-		  sprintf(Message,"ERROR: %s (0x%x)",LookupMajorName(StartMajorOp),client->errorValue);
-		  XSERVER_REQUEST_DONE(Message, MAJOROP,
+		  sprintf(Message,"ERROR: %s (0x%x)",LookupMajorName(client->majorOp),client->errorValue);
+		  XSERVER_REQUEST_DONE(Message, client->majorOp,
 		                       client->sequence, client->index, result);
 		}
 		else
 		{
-		  if (StartMajorOp!=MAJOROP)
+		  if (StartMajorOp!=client->majorOp)
 		  {
 		    char Message[255];
-		    sprintf(Message,"Changed request: %s -> %s",LookupMajorName(StartMajorOp),LookupMajorName(MAJOROP));
-		    XSERVER_REQUEST_DONE(Message, MAJOROP,
+		    sprintf(Message,"Changed request: %s -> %s",LookupMajorName(StartMajorOp),LookupMajorName(client->majorOp));
+		    XSERVER_REQUEST_DONE(Message, client->majorOp,
 		                         client->sequence, client->index, result);
 		  }
 		  else
 		  {
-		    XSERVER_REQUEST_DONE(LookupMajorName(MAJOROP), MAJOROP,
+		    XSERVER_REQUEST_DONE(LookupMajorName(client->majorOp), client->majorOp,
 		                         client->sequence, client->index, result);
 		  }
 		}
@@ -472,8 +477,8 @@ Dispatch(void)
 		}
 		else if (result != Success)
 		{
-		    SendErrorToClient(client, MAJOROP,
-				      MinorOpcodeOfRequest(client),
+		    SendErrorToClient(client, client->majorOp,
+				      client->minorOp,
 				      client->errorValue, result);
 		    break;
 		}
@@ -493,8 +498,6 @@ Dispatch(void)
     dispatchException &= ~DE_RESET;
     SmartScheduleLatencyLimited = 0;
 }
-
-#undef MAJOROP
 
 static int  VendorRelease = VENDOR_RELEASE;
 static char *VendorString = VENDOR_NAME;

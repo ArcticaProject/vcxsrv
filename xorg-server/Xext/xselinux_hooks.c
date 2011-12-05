@@ -263,8 +263,8 @@ SELinuxAudit(void *auditdata,
     if (client) {
 	REQUEST(xReq);
 	if (stuff) {
-	    major = stuff->reqType;
-	    minor = MinorOpcodeOfRequest(client);
+	    major = client->majorOp;
+	    minor = client->minorOp;
 	}
     }
     if (audit->id)

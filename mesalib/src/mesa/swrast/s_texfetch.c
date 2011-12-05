@@ -39,6 +39,7 @@
 #include "main/texcompress_fxt1.h"
 #include "main/texcompress_s3tc.h"
 #include "main/texcompress_rgtc.h"
+#include "main/texcompress_etc.h"
 #include "main/teximage.h"
 #include "s_context.h"
 #include "s_texfetch.h"
@@ -361,18 +362,18 @@ texfetch_funcs[MESA_FORMAT_COUNT] =
       store_texel_r8,
    },
    {
+      MESA_FORMAT_GR88,
+      fetch_texel_1d_f_gr88,
+      fetch_texel_2d_f_gr88,
+      fetch_texel_3d_f_gr88,
+      store_texel_gr88,
+   },
+   {
       MESA_FORMAT_RG88,
       fetch_texel_1d_f_rg88,
       fetch_texel_2d_f_rg88,
       fetch_texel_3d_f_rg88,
       store_texel_rg88,
-   },
-   {
-      MESA_FORMAT_RG88_REV,
-      fetch_texel_1d_f_rg88_rev,
-      fetch_texel_2d_f_rg88_rev,
-      fetch_texel_3d_f_rg88_rev,
-      store_texel_rg88_rev,
    },
    {
       MESA_FORMAT_R16,
@@ -1178,6 +1179,13 @@ texfetch_funcs[MESA_FORMAT_COUNT] =
       NULL
    },
    {
+      MESA_FORMAT_ETC1_RGB8,
+      NULL,
+      _mesa_fetch_texel_2d_f_etc1_rgb8,
+      NULL,
+      NULL
+   },
+   {
       MESA_FORMAT_SIGNED_A8,
       fetch_texel_1d_signed_a8,
       fetch_texel_2d_signed_a8,
@@ -1282,7 +1290,8 @@ _mesa_get_texel_fetch_func(gl_format format, GLuint dims)
    }
 #endif
 
-   assert(Elements(texfetch_funcs) == MESA_FORMAT_COUNT);
+   STATIC_ASSERT(Elements(texfetch_funcs) == MESA_FORMAT_COUNT);
+
    assert(format < MESA_FORMAT_COUNT);
 
    switch (dims) {
