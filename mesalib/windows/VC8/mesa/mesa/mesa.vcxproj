@@ -309,6 +309,7 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_fxt1.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_rgtc.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_s3tc.c" />
+    <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_etc.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texenv.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\samplerobj.c" />
     <ClCompile Include="..\..\..\..\src\mesa\main\texformat.c" />

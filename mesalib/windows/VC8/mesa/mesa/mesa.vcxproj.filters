@@ -269,6 +269,9 @@
     <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_s3tc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\mesa\main\texcompress_etc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\mesa\main\texenv.c">
       <Filter>Source Files</Filter>
     </ClCompile>
