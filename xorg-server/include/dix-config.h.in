@@ -51,26 +51,8 @@
 /* Support XDM-AUTH*-1 */
 #undef HASXDMAUTH
 
-/* Define to 1 if you have the `getdtablesize' function. */
-#undef HAS_GETDTABLESIZE
-
-/* Define to 1 if you have the `getifaddrs' function. */
-#undef HAS_GETIFADDRS
-
-/* Define to 1 if you have the `getpeereid' function. */
-#undef HAS_GETPEEREID
-
-/* Define to 1 if you have the `getpeerucred' function. */
-#undef HAS_GETPEERUCRED
-
-/* Define to 1 if you have the `mmap' function. */
-#undef HAS_MMAP
-
 /* Support SHM */
 #undef HAS_SHM
-
-/* Have the 'strlcpy' function */
-#undef HAS_STRLCPY
 
 /* Define to 1 if you have the <asm/mtrr.h> header file. */
 #undef HAVE_ASM_MTRR_H
@@ -81,7 +63,7 @@
 /* Define to 1 if you have the <byteswap.h> header file. */
 #undef HAVE_BYTESWAP_H
 
-/* Define to 1 if you have cbrt */
+/* Define to 1 if you have the `cbrt' function. */
 #undef HAVE_CBRT
 
 /* Define to 1 if you have the <dbm.h> header file. */
@@ -94,23 +76,26 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
-#undef HAVE_DOPRNT
-
 /* Have execinfo.h */
 #undef HAVE_EXECINFO_H
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
-/* Define to 1 if you have the `geteuid' function. */
-#undef HAVE_GETEUID
+/* Define to 1 if you have the `ffs' function. */
+#undef HAVE_FFS
 
-/* Define to 1 if you have the `getisax' function. */
-#undef HAVE_GETISAX
+/* Define to 1 if you have the `getdtablesize' function. */
+#undef HAVE_GETDTABLESIZE
 
-/* Define to 1 if you have the `getuid' function. */
-#undef HAVE_GETUID
+/* Define to 1 if you have the `getifaddrs' function. */
+#undef HAVE_GETIFADDRS
+
+/* Define to 1 if you have the `getpeereid' function. */
+#undef HAVE_GETPEEREID
+
+/* Define to 1 if you have the `getpeerucred' function. */
+#undef HAVE_GETPEERUCRED
 
 /* Define to 1 if you have the `getzoneid' function. */
 #undef HAVE_GETZONEID
@@ -136,9 +121,6 @@
 /* Define to 1 if you have the libdispatch (GCD) available */
 #undef HAVE_LIBDISPATCH
 
-/* Define to 1 if you have the `link' function. */
-#undef HAVE_LINK
-
 /* Define to 1 if you have the <linux/agpgart.h> header file. */
 #undef HAVE_LINUX_AGPGART_H
 
@@ -148,8 +130,8 @@
 /* Define to 1 if you have the <linux/fb.h> header file. */
 #undef HAVE_LINUX_FB_H
 
-/* Define to 1 if you have the `mkstemp' function. */
-#undef HAVE_MKSTEMP
+/* Define to 1 if you have the `mmap' function. */
+#undef HAVE_MMAP
 
 /* Define to 1 if you have the <ndbm.h> header file. */
 #undef HAVE_NDBM_H
@@ -181,8 +163,20 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the `strchr' function. */
-#undef HAVE_STRCHR
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
+
+/* Define to 1 if you have the `strcasestr' function. */
+#undef HAVE_STRCASESTR
+
+/* Define to 1 if you have the `strncasecmp' function. */
+#undef HAVE_STRNCASECMP
+
+/* Define to 1 if you have the `strlcat' function. */
+#undef HAVE_STRLCAT
+
+/* Define to 1 if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
 
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
@@ -192,12 +186,6 @@
 
 /* Define to 1 if you have the `strndup' function. */
 #undef HAVE_STRNDUP
-
-/* Define to 1 if you have the `strrchr' function. */
-#undef HAVE_STRRCHR
-
-/* Define to 1 if you have the `strtol' function. */
-#undef HAVE_STRTOL
 
 /* Define to 1 if SYSV IPC is available */
 #undef HAVE_SYSV_IPC
@@ -233,9 +221,6 @@
 
 /* Have /dev/urandom */
 #undef HAVE_URANDOM
-
-/* Define to 1 if you have the `vprintf' function. */
-#undef HAVE_VPRINTF
 
 /* Define to 1 if you have the `vasprintf' function. */
 #undef HAVE_VASPRINTF
@@ -431,18 +416,6 @@
 
 /* Define to 64-bit byteswap macro */
 #undef bswap_64
-
-/* Need the strcasecmp function. */
-#undef NEED_STRCASECMP
-
-/* Need the strncasecmp function. */
-#undef NEED_STRNCASECMP
-
-/* Need the strcasestr function. */
-#undef NEED_STRCASESTR
-
-/* Define to 1 if you have the `ffs' function. */
-#undef HAVE_FFS
 
 /* The compiler supported TLS storage class, prefering initial-exec if tls_model is supported */
 #undef TLS

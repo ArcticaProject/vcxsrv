@@ -20,9 +20,6 @@
 /* Define to 1 if unsigned long is 64 bits. */
 #undef _XSERVER64
 
-/* Do we require our own snprintf? */
-#undef NEED_SNPRINTF
-
 /* Short vendor name */
 #undef XVENDORNAMESHORT
 

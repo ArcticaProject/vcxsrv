@@ -41,7 +41,7 @@
 /*
  * Find the first occurrence of find in s, ignore case.
  */
-#ifdef NEED_STRCASESTR
+#ifndef HAVE_STRCASESTR
 char *
 xstrcasestr(const char *s, const char *find)
 {

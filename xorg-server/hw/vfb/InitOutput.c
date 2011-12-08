@@ -48,12 +48,12 @@ from The Open Group.
 #include "mipointer.h"
 #include "micmap.h"
 #include <sys/types.h>
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
 #include <sys/mman.h>
 #ifndef MAP_FILE
 #define MAP_FILE 0
 #endif
-#endif /* HAS_MMAP */
+#endif /* HAVE_MMAP */
 #include <sys/stat.h>
 #include <errno.h>
 #ifndef WIN32
@@ -93,7 +93,7 @@ typedef struct
     unsigned int lineBias;
     CloseScreenProcPtr closeScreen;
 
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
     int mmap_fd;
     char mmap_file[MAXPATHLEN];
 #endif
@@ -114,7 +114,7 @@ static vfbScreenInfo defaultScreenInfo = {
     .lineBias = VFB_DEFAULT_LINEBIAS,
 };
 static Bool vfbPixmapDepths[33];
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
 static char *pfbdir = NULL;
 #endif
 typedef enum { NORMAL_MEMORY_FB, SHARED_MEMORY_FB, MMAPPED_FILE_FB } fbMemType;
@@ -158,7 +158,7 @@ ddxGiveUp(enum ExitCode error)
 
     switch (fbmemtype)
     {
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
     case MMAPPED_FILE_FB: 
 	for (i = 0; i < vfbNumScreens; i++)
 	{
@@ -170,10 +170,10 @@ ddxGiveUp(enum ExitCode error)
 	    }
 	}
 	break;
-#else /* HAS_MMAP */
+#else /* HAVE_MMAP */
     case MMAPPED_FILE_FB:
         break;
-#endif /* HAS_MMAP */
+#endif /* HAVE_MMAP */
 	
 #ifdef HAS_SHM
     case SHARED_MEMORY_FB:
@@ -241,7 +241,7 @@ ddxUseMsg(void)
     ErrorF("-blackpixel n          pixel value for black\n");
     ErrorF("-whitepixel n          pixel value for white\n");
 
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
     ErrorF("-fbdir directory       put framebuffers in mmap'ed files in directory\n");
 #endif
 
@@ -280,7 +280,9 @@ ddxProcessArgument(int argc, char *argv[], int i)
 	int screenNum;
 	CHECK_FOR_REQUIRED_ARGUMENTS(2);
 	screenNum = atoi(argv[i+1]);
-	if (screenNum < 0)
+	/* The protocol only has a CARD8 for number of screens in the
+	   connection setup block, so don't allow more than that. */
+	if ((screenNum < 0) || (screenNum >= 255))
 	{
 	    ErrorF("Invalid screen number %d\n", screenNum);
 	    UseMsg();
@@ -368,7 +370,7 @@ ddxProcessArgument(int argc, char *argv[], int i)
 	return 2;
     }
 
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
     if (strcmp (argv[i], "-fbdir") == 0)	/* -fbdir directory */
     {
 	CHECK_FOR_REQUIRED_ARGUMENTS(1);
@@ -376,7 +378,7 @@ ddxProcessArgument(int argc, char *argv[], int i)
 	fbmemtype = MMAPPED_FILE_FB;
 	return 2;
     }
-#endif /* HAS_MMAP */
+#endif /* HAVE_MMAP */
 
 #ifdef HAS_SHM
     if (strcmp (argv[i], "-shmem") == 0)	/* -shmem */
@@ -521,7 +523,7 @@ vfbSaveScreen(ScreenPtr pScreen, int on)
     return TRUE;
 }
 
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
 
 /* this flushes any changes to the screens out to the mmapped file */
 static void
@@ -606,7 +608,7 @@ vfbAllocateMmappedFramebuffer(vfbScreenInfoPtr pvfb)
 	pvfb->pXWDHeader = NULL;
     }
 }
-#endif /* HAS_MMAP */
+#endif /* HAVE_MMAP */
 
 
 #ifdef HAS_SHM
@@ -670,7 +672,7 @@ vfbAllocateFramebufferMemory(vfbScreenInfoPtr pvfb)
     pvfb->pXWDHeader = NULL; 
     switch (fbmemtype)
     {
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
     case MMAPPED_FILE_FB:  vfbAllocateMmappedFramebuffer(pvfb); break;
 #else
     case MMAPPED_FILE_FB: break;

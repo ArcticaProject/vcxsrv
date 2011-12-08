@@ -106,7 +106,7 @@ SOFTWARE.
 #include <netinet/in.h>
 #endif /* TCPCONN || STREAMSCONN */
 
-#ifdef HAS_GETPEERUCRED
+#ifdef HAVE_GETPEERUCRED
 # include <ucred.h>
 # ifdef sun
 #  include <zone.h>
@@ -146,7 +146,7 @@ SOFTWARE.
 #endif
 #endif
 
-#ifdef HAS_GETIFADDRS
+#ifdef HAVE_GETIFADDRS
 #include <ifaddrs.h>
 #endif
 
@@ -495,7 +495,7 @@ in6_fillscopeid(struct sockaddr_in6 *sin6)
 void
 DefineSelf (int fd)
 {
-#ifndef HAS_GETIFADDRS
+#ifndef HAVE_GETIFADDRS
     char 		*cp, *cplim;
 # ifdef USE_SIOCGLIFCONF
     struct sockaddr_storage buf[16];
@@ -510,7 +510,7 @@ DefineSelf (int fd)
     register struct ifreq *ifr;
 # endif
     void *		bufptr = buf;   
-#else /* HAS_GETIFADDRS */
+#else /* HAVE_GETIFADDRS */
     struct ifaddrs *	ifap, *ifr;
 #endif
     int 		len;
@@ -518,7 +518,7 @@ DefineSelf (int fd)
     int 		family;
     register HOST 	*host;
     
-#ifndef HAS_GETIFADDRS
+#ifndef HAVE_GETIFADDRS
 
     len = sizeof(buf);
 
@@ -689,7 +689,7 @@ DefineSelf (int fd)
     }
     if (bufptr != buf)
         free(bufptr);    
-#else /* HAS_GETIFADDRS */
+#else /* HAVE_GETIFADDRS */
     if (getifaddrs(&ifap) < 0) {
 	ErrorF("Warning: getifaddrs returns %s\n", strerror(errno));
 	return;
@@ -777,7 +777,7 @@ DefineSelf (int fd)
 		
     } /* for */
     freeifaddrs(ifap);
-#endif /* HAS_GETIFADDRS */
+#endif /* HAVE_GETIFADDRS */
 
     /*
      * add something of FamilyLocalHost
@@ -798,7 +798,7 @@ DefineSelf (int fd)
 	}
     }
 }
-#endif /* hpux && !HAS_IFREQ */
+#endif /* hpux && !HAVE_IFREQ */
 
 #ifdef XDMCP
 void
@@ -1091,14 +1091,14 @@ LocalClientCred(ClientPtr client, int *pUid, int *pGid)
 int
 GetLocalClientCreds(ClientPtr client, LocalClientCredRec **lccp)
 {
-#if defined(HAS_GETPEEREID) || defined(HAS_GETPEERUCRED) || defined(SO_PEERCRED)
+#if defined(HAVE_GETPEEREID) || defined(HAVE_GETPEERUCRED) || defined(SO_PEERCRED)
     int fd;
     XtransConnInfo ci;
     LocalClientCredRec *lcc;
-#ifdef HAS_GETPEEREID
+#ifdef HAVE_GETPEEREID
     uid_t uid;
     gid_t gid;
-#elif defined(HAS_GETPEERUCRED)
+#elif defined(HAVE_GETPEERUCRED)
     ucred_t *peercred = NULL;
     const gid_t *gids;
 #elif defined(SO_PEERCRED)
@@ -1109,7 +1109,7 @@ GetLocalClientCreds(ClientPtr client, LocalClientCredRec **lccp)
     if (client == NULL)
 	return -1;
     ci = ((OsCommPtr)client->osPrivate)->trans_conn;
-#if !(defined(sun) && defined(HAS_GETPEERUCRED))
+#if !(defined(sun) && defined(HAVE_GETPEERUCRED))
     /* Most implementations can only determine peer credentials for Unix 
      * domain sockets - Solaris getpeerucred can work with a bit more, so 
      * we just let it tell us if the connection type is supported or not
@@ -1125,7 +1125,7 @@ GetLocalClientCreds(ClientPtr client, LocalClientCredRec **lccp)
     lcc = *lccp;
         
     fd = _XSERVTransGetConnectionNumber(ci);
-#ifdef HAS_GETPEEREID
+#ifdef HAVE_GETPEEREID
     if (getpeereid(fd, &uid, &gid) == -1) {
 	FreeLocalClientCreds(lcc);
 	return -1;
@@ -1134,7 +1134,7 @@ GetLocalClientCreds(ClientPtr client, LocalClientCredRec **lccp)
     lcc->egid = gid;
     lcc->fieldsSet = LCC_UID_SET | LCC_GID_SET;
     return 0;
-#elif defined(HAS_GETPEERUCRED)
+#elif defined(HAVE_GETPEERUCRED)
     if (getpeerucred(fd, &peercred) < 0) {
 	FreeLocalClientCreds(lcc);
     	return -1;

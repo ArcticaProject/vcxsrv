@@ -852,6 +852,10 @@ OpenConfigDir(const char *path, const char *cmdline, const char *projroot,
 
 		/* match files named *.conf */
 		num = scandir(dirpath, &list, ConfigFilter, alphasort);
+		if (num < 0) {
+			list = NULL;
+			num = 0;
+		}
 		found = AddConfigDirFiles(dirpath, list, num);
 		if (!found) {
 			free(dirpath);

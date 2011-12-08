@@ -34,7 +34,7 @@
 #include <ctype.h>
 #include "dix.h"
 
-#ifdef NEED_STRCASECMP
+#ifndef HAVE_STRCASECMP
 int
 xstrcasecmp(const char *str1, const char *str2)
 {
@@ -50,7 +50,7 @@ xstrcasecmp(const char *str1, const char *str2)
 }
 #endif
 
-#ifdef NEED_STRNCASECMP
+#ifndef HAVE_STRNCASECMP
 int
 xstrncasecmp(const char *s1, const char *s2, size_t n)
 {

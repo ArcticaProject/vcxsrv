@@ -1238,7 +1238,7 @@ ProcXvDispatch(ClientPtr client)
 
   UpdateCurrentTime();
 
-  if (stuff->data > xvNumRequests) {
+  if (stuff->data >= xvNumRequests) {
     SendErrorToClient(client, XvReqCode, stuff->data, 0, BadRequest);
     return BadRequest;
   }
@@ -1542,7 +1542,7 @@ SProcXvDispatch(ClientPtr client)
 
   UpdateCurrentTime();
 
-  if (stuff->data > xvNumRequests) {
+  if (stuff->data >= xvNumRequests) {
     SendErrorToClient(client, XvReqCode, stuff->data, 0, BadRequest);
     return BadRequest;
   }

@@ -63,7 +63,7 @@ SOFTWARE.
 #include <X11/Xmd.h>
 #include "servermd.h"
 
-#ifndef HAS_FFS
+#ifndef HAVE_FFS
 extern int ffs(int);
 #endif
 

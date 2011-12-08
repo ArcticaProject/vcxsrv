@@ -239,6 +239,7 @@ XAADestroyGC(GCPtr pGC)
 	free(pGCPriv->XAAOps);
 
     free(pGCPriv->DashPattern);
+    pGCPriv->flags = 0;
 
     (*pGC->funcs->DestroyGC)(pGC);
     XAA_GC_FUNC_EPILOGUE (pGC);

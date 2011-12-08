@@ -2146,12 +2146,6 @@ KdCursorOffScreen(ScreenPtr *ppScreen, int *x, int *y)
 static void
 KdCrossScreen(ScreenPtr pScreen, Bool entering)
 {
-#ifndef XIPAQ
-    if (entering)
-	KdEnableScreen (pScreen);
-    else
-	KdDisableScreen (pScreen);
-#endif
 }
 
 int KdCurScreen;	/* current event screen */

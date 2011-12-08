@@ -472,22 +472,22 @@ extern _X_EXPORT void ddxGiveUp(enum ExitCode error);
 extern _X_EXPORT int TimeSinceLastInputEvent(void);
 
 /* strcasecmp.c */
-#if NEED_STRCASECMP
+#ifndef HAVE_STRCASECMP
 #define strcasecmp xstrcasecmp
 extern _X_EXPORT int xstrcasecmp(const char *s1, const char *s2);
 #endif
 
-#if NEED_STRNCASECMP
+#ifndef HAVE_STRNCASECMP
 #define strncasecmp xstrncasecmp
 extern _X_EXPORT int xstrncasecmp(const char *s1, const char *s2, size_t n);
 #endif
 
-#if NEED_STRCASESTR
+#ifndef HAVE_STRCASESTR
 #define strcasestr xstrcasestr
 extern _X_EXPORT char *xstrcasestr(const char *s, const char *find);
 #endif
 
-#ifndef HAS_STRLCPY
+#ifndef HAVE_STRLCPY
 extern _X_EXPORT size_t strlcpy(char *dst, const char *src, size_t siz);
 extern _X_EXPORT size_t strlcat(char *dst, const char *src, size_t siz);
 #endif

@@ -911,7 +911,7 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
 	goto LoadModule_fail;
     }
     ret->handle = LoaderOpen(found, errmaj, errmin);
-    if (ret->handle < 0)
+    if (ret->handle == NULL)
 	goto LoadModule_fail;
     ret->path = strdup(found);
 

@@ -1288,33 +1288,56 @@ typedef struct {
 } xGLXHyperpipeConfigSGIXReply;
 #define sz_xGLXHyperpipeConfigSGIXReply 32
 
-/*
- * GLX_ARB_create_context
+/**
+ * \name Protocol structures for GLX_ARB_create_context and
  * GLX_ARB_create_context_profile
  */
-
-/*
- * glXSetClientInfoARB
+/*@{*/
+/**
+ * Protocol header for glXSetClientInfoARB
+ *
+ * This structure is follwed by \c numVersions * 2 \c CARD32 values listing
+ * the OpenGL versions supported by the client.  The pairs of values are an
+ * OpenGL major version followed by a minor version.  For example,
+ *
+ *      CARD32 versions[4] = { 2, 1, 3, 0 };
+ *
+ * says that the client supports OpenGL 2.1 and OpenGL 3.0.
+ * 
+ * These are followed by \c numGLExtensionBytes bytes of \c STRING8 containing
+ * the OpenGL extension string supported by the client and up to 3 bytes of
+ * padding.
+ *
+ * The list of OpenGL extensions is followed by \c numGLXExtensionBytes bytes
+ * of \c STRING8 containing the GLX extension string supported by the client
+ * and up to 3 bytes of padding.
+ *
+ * This protocol replaces \c GLXClientInfo.
+ *
+ * \sa GLXClientInfo, GLXSetClientInfo2ARB
  */
-typedef struct {
+typedef struct GLXSetClientInfoARB {
     CARD8	reqType;
     CARD8	glxCode;
     CARD16	length B16;
     CARD32	major B32;
     CARD32	minor B32;
-    CARD32	n0 B32;
-    CARD32	n1 B32;
-    CARD32	n2 B32;
+    CARD32	numVersions B32;
+    CARD32	numGLExtensionBytes B32;
+    CARD32	numGLXExtensionBytes B32;
     /*
     ** More data may follow; this is just the header.
     */
-} xGLXSetClientInfoARB;
-#define sz_xGLXSetClientInfoARB 24
+} xGLXSetClientInfoARBReq;
+#define sz_xGLXSetClientInfoARBReq 24
 
-/*
-** glXCreateContextAttribsARB
-*/
-typedef struct {
+/**
+ * Protocol head for glXCreateContextAttribsARB
+ *
+ * This protocol replaces \c GLXCreateContext, \c GLXCreateNewContext, and
+ * \c GLXCreateContextWithConfigSGIX.
+ */
+typedef struct GLXCreateContextAttribsARB {
     CARD8	reqType;
     CARD8	glxCode;
     CARD16	length B16;
@@ -1327,26 +1350,36 @@ typedef struct {
     CARD16	reserved2 B16;
     CARD32	numAttribs B32;
     /* followed by attribute list */
-} xGLXCreateContextAttribsARB;
-#define sz_xGLXCreateContextAttribsARB 28
+} xGLXCreateContextAttribsARBReq;
+#define sz_xGLXCreateContextAttribsARBReq 28
 
-/*
- * glXSetClientInfo2ARB
+/**
+ * Protocol header for glXSetClientInfo2ARB
+ *
+ * The glXSetClientInfo2ARB protocol differs from glXSetClientInfoARB in that
+ * the list of OpenGL versions supported by the client is 3 \c CARD32 values
+ * per version: major version, minor version, and supported profile mask.
+ *
+ * This protocol replaces \c GLXClientInfo and \c GLXSetClientInfoARB.
+ *
+ * \sa GLXClientInfo, GLXSetClientInfoARB
  */
-typedef struct {
+typedef struct GLXSetClientInfo2ARB {
     CARD8	reqType;
     CARD8	glxCode;
     CARD16	length B16;
     CARD32	major B32;
     CARD32	minor B32;
-    CARD32	n0 B32;
-    CARD32	n1 B32;
-    CARD32	n2 B32;
+    CARD32	numVersions B32;
+    CARD32	numGLExtensionBytes B32;
+    CARD32	numGLXExtensionBytes B32;
     /*
     ** More data may follow; this is just the header.
     */
-} xGLXSetClientInfo2ARB;
-#define sz_xGLXSetClientInfo2ARB 24
+} xGLXSetClientInfo2ARBReq;
+#define sz_xGLXSetClientInfo2ARBReq 24
+/*@}*/
+
 /************************************************************************/
 
 /*

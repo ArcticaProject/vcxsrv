@@ -143,12 +143,12 @@
 #undef HANDLE
 #endif
 
-#ifdef HAS_MMAP
+#ifdef HAVE_MMAP
 #include <sys/mman.h>
 #ifndef MAP_FILE
 #define MAP_FILE 0
 #endif /* MAP_FILE */
-#endif /* HAS_MMAP */
+#endif /* HAVE_MMAP */
 
 #include <X11/X.h>
 #include <X11/Xproto.h>
