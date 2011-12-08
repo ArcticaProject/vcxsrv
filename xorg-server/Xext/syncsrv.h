@@ -118,7 +118,7 @@ typedef union {
 } SyncAwaitUnion;
 
 extern pointer SyncCreateSystemCounter(
-    const char */* name */,
+    const char * /* name */,
     CARD64  	/* inital_value */,
     CARD64  	/* resolution */,
     SyncCounterType /* change characterization */,

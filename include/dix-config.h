@@ -58,30 +58,12 @@
 /* Support XDM-AUTH*-1 */
 #define HASXDMAUTH 1
 
-/* Define to 1 if you have the `getdtablesize' function. */
-#define HAS_GETDTABLESIZE 1
-
-/* Define to 1 if you have the `getifaddrs' function. */
-#undef HAS_GETIFADDRS
-
-/* Define to 1 if you have the `getpeereid' function. */
-#undef HAS_GETPEEREID
-
-/* Define to 1 if you have the `getpeerucred' function. */
-#undef HAS_GETPEERUCRED
-
-/* Define to 1 if you have the `mmap' function. */
-#undef HAS_MMAP
-
 /* Support SHM */
 #undef HAS_SHM
 
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
    */
 #define HAVE_ALLOCA_H 1
-
-/* Have the 'strlcpy' function */
-#undef HAS_STRLCPY
 
 /* Define to 1 if you have the <asm/mtrr.h> header file. */
 #undef HAVE_ASM_MTRR_H
@@ -105,29 +87,26 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
 
-/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
-#undef HAVE_DOPRNT
-
 /* Have execinfo.h */
 #undef HAVE_EXECINFO_H
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
 
-/* Define to 1 if you have the `geteuid' function. */
-#define HAVE_GETEUID 1
+/* Define to 1 if you have the `ffs' function. */
+#undef HAVE_FFS
 
-/* Define to 1 if you have the `getisax' function. */
-#undef HAVE_GETISAX
+/* Define to 1 if you have the `getdtablesize' function. */
+#define HAVE_GETDTABLESIZE 1
 
-/* Define to 1 if you have the `getopt' function. */
-#define HAVE_GETOPT 1
+/* Define to 1 if you have the `getifaddrs' function. */
+#undef HAVE_GETIFADDRS
 
-/* Define to 1 if you have the `getopt_long' function. */
-#define HAVE_GETOPT_LONG 1
+/* Define to 1 if you have the `getpeereid' function. */
+#undef HAVE_GETPEEREID
 
-/* Define to 1 if you have the `getuid' function. */
-#define HAVE_GETUID 1
+/* Define to 1 if you have the `getpeerucred' function. */
+#undef HAVE_GETPEERUCRED
 
 /* Define to 1 if you have the `getzoneid' function. */
 #undef HAVE_GETZONEID
@@ -141,8 +120,8 @@
 /* Support application updating through sparkle. */
 #undef XQUARTZ_SPARKLE
 
-/* Prefix to use for launchd identifiers */
-#undef LAUNCHD_ID_PREFIX
+/* Prefix to use for bundle identifiers */
+#undef BUNDLE_ID_PREFIX
 
 /* Build a standalone xpbproxy */
 #undef STANDALONE_XPBPROXY
@@ -153,9 +132,6 @@
 /* Define to 1 if you have the libdispatch (GCD) available */
 #undef HAVE_LIBDISPATCH
 
-/* Define to 1 if you have the `link' function. */
-#define HAVE_LINK 1
-
 /* Define to 1 if you have the <linux/agpgart.h> header file. */
 #undef HAVE_LINUX_AGPGART_H
 
@@ -165,8 +141,8 @@
 /* Define to 1 if you have the <linux/fb.h> header file. */
 #undef HAVE_LINUX_FB_H
 
-/* Define to 1 if you have the `mkstemp' function. */
-#define HAVE_MKSTEMP 1
+/* Define to 1 if you have the `mmap' function. */
+#undef HAVE_MMAP
 
 /* Define to 1 if you have the <ndbm.h> header file. */
 #undef HAVE_NDBM_H
@@ -201,8 +177,20 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
 
-/* Define to 1 if you have the `strchr' function. */
-#define HAVE_STRCHR 1
+/* Define to 1 if you have the `strcasecmp' function. */
+#define HAVE_STRCASECMP 1
+
+/* Define to 1 if you have the `strcasestr' function. */
+#undef HAVE_STRCASESTR
+
+/* Define to 1 if you have the `strncasecmp' function. */
+#define HAVE_STRNCASECMP 1
+
+/* Define to 1 if you have the `strlcat' function. */
+#undef HAVE_STRLCAT
+
+/* Define to 1 if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
 
 /* Define to 1 if you have the <strings.h> header file. */
 #define HAVE_STRINGS_H 1
@@ -213,12 +201,6 @@
 /* Define to 1 if you have the `strndup' function. */
 #undef HAVE_STRNDUP
 
-/* Define to 1 if you have the `strrchr' function. */
-#define HAVE_STRRCHR 1
-
-/* Define to 1 if you have the `strtol' function. */
-#define HAVE_STRTOL 1
-
 /* Define to 1 if SYSV IPC is available */
 #undef HAVE_SYSV_IPC
 
@@ -228,9 +210,6 @@
 /* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
    */
 #undef HAVE_SYS_DIR_H
-
-/* Define to 1 if you have the <sys/io.h> header file. */
-#undef HAVE_SYS_IO_H
 
 /* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
    */
@@ -245,9 +224,6 @@
 /* Define to 1 if you have the <sys/utsname.h> header file. */
 #undef HAVE_SYS_UTSNAME_H
 
-/* Define to 1 if you have the <sys/vm86.h> header file. */
-#undef HAVE_SYS_VM86_H
-
 /* Define to 1 if you have the <tslib.h> header file. */
 #undef HAVE_TSLIB_H
 
@@ -259,9 +235,6 @@
 
 /* Have /dev/urandom */
 #undef HAVE_URANDOM
-
-/* Define to 1 if you have the `vprintf' function. */
-#define HAVE_VPRINTF 1
 
 /* Define to 1 if you have the `vasprintf' function. */
 #undef HAVE_VASPRINTF
@@ -483,18 +456,6 @@
 /* Define to 64-bit byteswap macro */
 #undef bswap_64
 
-/* Need the strcasecmp function. */
-#undef NEED_STRCASECMP
-
-/* Need the strncasecmp function. */
-#undef NEED_STRNCASECMP
-
-/* Need the strcasestr function. */
-#define NEED_STRCASESTR 1
-
-/* Define to 1 if you have the `ffs' function. */
-#undef HAVE_FFS
-
 /* The compiler supported TLS storage class, prefering initial-exec if tls_model is supported */
 #undef TLS
 
@@ -513,6 +474,7 @@ const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt);
 #endif
 #include <assert.h>
 #define strcasecmp _stricmp
+#define strncasecmp _strnicmp
 
 #undef MINSHORT
 #undef MAXSHORT
