@@ -931,7 +931,7 @@ ScreenSaverSetAttributes (ClientPtr client)
 	goto bail;
     }
     /* over allocate for override redirect */
-    values = malloc((len + 1) * sizeof (unsigned long));
+    pAttr->values = values = malloc((len + 1) * sizeof (unsigned long));
     if (!values)
     {
 	ret = BadAlloc;
@@ -951,7 +951,6 @@ ScreenSaverSetAttributes (ClientPtr client)
     pAttr->pCursor = NullCursor;
     pAttr->pBackgroundPixmap = NullPixmap;
     pAttr->pBorderPixmap = NullPixmap;
-    pAttr->values = values;
     /*
      * go through the mask, checking the values,
      * looking up pixmaps and cursors and hold a reference

@@ -89,6 +89,7 @@ The patch that fixed this server bug in X.org CVS is here:
 	<errorcopy name="BadPbuffer" number="10" ref="Generic" />
 	<errorcopy name="BadCurrentDrawable" number="11" ref="Generic" />
 	<errorcopy name="BadWindow" number="12" ref="Generic" />
+	<errorcopy name="GLXBadProfileARB" number="13" ref="Generic" />
 
 	<!-- Events -->
 	<event name="PbufferClobber" number="0">
@@ -348,7 +349,7 @@ The patch that fixed this server bug in X.org CVS is here:
 
 	<request name="CreatePixmap" opcode="22">
 		<field type="CARD32" name="screen" />
-		<field type="CARD32" name="fbconfig" />
+		<field type="FBCONFIG" name="fbconfig" />
 		<field type="xproto:PIXMAP" name="pixmap" />
 		<field type="glx:PIXMAP" name="glx_pixmap" />
 		<field type="CARD32" name="num_attribs" />  
@@ -366,13 +367,12 @@ The patch that fixed this server bug in X.org CVS is here:
 
 	<request name="CreateNewContext" opcode="24">
 		<field type="glx:CONTEXT" name="context" />
-		<field type="CARD32" name="fbconfig" />
+		<field type="FBCONFIG" name="fbconfig" />
 		<field type="CARD32" name="screen" />
 		<field type="CARD32" name="render_type" />
-		<field type="CARD32" name="share_list" />
+		<field type="glx:CONTEXT" name="share_list" />
 		<field type="BOOL" name="is_direct" />
-		<field type="CARD8" name="reserved1" />
-		<field type="CARD16" name="reserved2" />
+		<pad bytes="3" />
 	</request>
 
 	<request name="QueryContext" opcode="25">
@@ -461,6 +461,64 @@ The patch that fixed this server bug in X.org CVS is here:
 
 	<request name="DeleteWindow" opcode="32">
 		<field type="glx:WINDOW" name="glxwindow" />
+	</request>
+
+	<!-- Start of GLX_ARB_create_context and GLX_ARB_create_context_profile
+             requests. -->
+	<request name="SetClientInfoARB" opcode="33">
+		<field type="CARD32" name="major_version" />
+		<field type="CARD32" name="minor_version" />
+		<field type="CARD32" name="num_versions" />
+		<field type="CARD32" name="gl_str_len" />
+		<field type="CARD32" name="glx_str_len" />
+		<list type="CARD32" name="gl_versions">
+			<op op="*">
+				<fieldref>num_versions</fieldref>
+				<value>2</value>
+			</op>
+		</list>
+		<list type="char" name="gl_extension_string">
+			<fieldref>gl_str_len</fieldref>
+		</list>
+		<list type="char" name="glx_extension_string">
+			<fieldref>glx_str_len</fieldref>
+		</list>
+	</request>
+
+	<request name="CreateContextAttribsARB" opcode="34">
+		<field type="glx:CONTEXT" name="context" />
+		<field type="FBCONFIG" name="fbconfig" />
+		<field type="CARD32" name="screen" />
+		<field type="glx:CONTEXT" name="share_list" />
+		<field type="BOOL" name="is_direct" />
+		<pad bytes="3" />
+		<field type="CARD32" name="num_attribs" />
+		<list type="CARD32" name="attribs">
+			<op op="*">
+				<fieldref>num_attribs</fieldref>
+				<value>2</value>
+			</op>
+		</list>
+	</request>
+
+	<request name="SetClientInfo2ARB" opcode="35">
+		<field type="CARD32" name="major_version" />
+		<field type="CARD32" name="minor_version" />
+		<field type="CARD32" name="num_versions" />
+		<field type="CARD32" name="gl_str_len" />
+		<field type="CARD32" name="glx_str_len" />
+		<list type="CARD32" name="gl_versions">
+			<op op="*">
+				<fieldref>num_versions</fieldref>
+				<value>3</value>
+			</op>
+		</list>
+		<list type="char" name="gl_extension_string">
+			<fieldref>gl_str_len</fieldref>
+		</list>
+		<list type="char" name="glx_extension_string">
+			<fieldref>glx_str_len</fieldref>
+		</list>
 	</request>
 
 	<!-- Requests for GL Non-rendering Commands (single ops) -->

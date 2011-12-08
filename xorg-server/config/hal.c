@@ -348,6 +348,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
                         if (!strcasecmp(tmp, ".options") && (!xkb_opts.options))
                             xkb_opts.options = strdup(tmp_val);
                     }
+                    free(tmp_val);
                 }
             }
         }

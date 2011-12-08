@@ -4,7 +4,6 @@ AM_CFLAGS = $(DIX_CFLAGS) $(SHA1_CFLAGS)
 
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
-STRLCAT_SRCS = strlcat.c strlcpy.c
 XORG_SRCS = log.c
 
 libos_la_SOURCES = 	\
@@ -20,14 +19,12 @@ libos_la_SOURCES = 	\
 	osdep.h		\
 	osinit.c	\
 	utils.c		\
-	strcasecmp.c	\
-	strcasestr.c	\
 	xdmauth.c	\
 	xsha1.c		\
 	xstrans.c	\
 	xprintf.c	\
 	$(XORG_SRCS)
-libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS)
+libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS) $(LTLIBOBJS)
 
 if SECURE_RPC
 libos_la_SOURCES += $(SECURERPC_SRCS)
@@ -37,16 +34,7 @@ if XDMCP
 libos_la_SOURCES += $(XDMCP_SRCS)
 endif
 
-if NEED_STRLCAT
-libos_la_SOURCES += $(STRLCAT_SRCS)
-endif
-
-if NEED_STRNDUP
-libos_la_SOURCES += $(STRNDUP_SRCS)
-endif
-
-EXTRA_DIST = $(SECURERPC_SRCS) $(INTERNALMALLOC_SRCS) \
-     $(XDMCP_SRCS) $(STRLCAT_SRCS)
+EXTRA_DIST = $(SECURERPC_SRCS) $(XDMCP_SRCS)
 
 if SPECIAL_DTRACE_OBJECTS
 # Generate dtrace object code for probes in libos & libdix

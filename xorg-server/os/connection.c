@@ -121,7 +121,7 @@ typedef int pid_t;
 #define Pid_t pid_t
 
 
-#ifdef HAS_GETPEERUCRED
+#ifdef HAVE_GETPEERUCRED
 # include <ucred.h>
 # include <zone.h>
 #endif
@@ -129,7 +129,7 @@ typedef int pid_t;
 #ifdef XSERVER_DTRACE
 # include <sys/types.h>
 typedef const char *string;
-# ifndef HAS_GETPEERUCRED
+# ifndef HAVE_GETPEERUCRED
 #  define zoneid_t int
 # endif
 # include "../dix/Xserver-dtrace.h"
@@ -308,7 +308,7 @@ InitConnectionLimits(void)
     lastfdesc = sysconf(_SC_OPEN_MAX) - 1;
 #endif
 
-#ifdef HAS_GETDTABLESIZE
+#ifdef HAVE_GETDTABLESIZE
     if (lastfdesc < 0)
 	lastfdesc = getdtablesize() - 1;
 #endif

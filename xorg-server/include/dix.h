@@ -529,7 +529,9 @@ extern _X_EXPORT void
 ScreenRestructured (ScreenPtr pScreen);
 #endif
 
+#ifndef HAVE_FFS
 extern _X_EXPORT int ffs(int i);
+#endif
 
 
 /*

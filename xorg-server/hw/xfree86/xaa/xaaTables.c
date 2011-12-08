@@ -1,3 +1,6 @@
+#ifdef HAVE_XORG_CONFIG_H
+#include <xorg-config.h>
+#endif
 #include "xaalocal.h"
 /*
  * This is a table of 24-bit values, indexed with an 8-bit byte value, then

@@ -1,20 +1,31 @@
 if ENABLE_UNIT_TESTS
-SUBDIRS= . xi2
-noinst_PROGRAMS = xkb input xtest list misc fixes xfree86 string
+SUBDIRS= .
+noinst_PROGRAMS = list string
+if XORG
+# Tests that require at least some DDX functions in order to fully link
+# For now, requires xf86 ddx, could be adjusted to use another
+SUBDIRS += xi2
+noinst_PROGRAMS += xkb input xtest misc fixes xfree86
+endif
 check_LTLIBRARIES = libxservertest.la
 
 TESTS=$(noinst_PROGRAMS)
 TESTS_ENVIRONMENT = $(XORG_MALLOC_DEBUG_ENV)
 
 AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
-INCLUDES = $(XORG_INCS) -I$(top_srcdir)/hw/xfree86/parser \
-	-I$(top_srcdir)/miext/cw -I$(top_srcdir)/hw/xfree86/ddc \
+INCLUDES = $(XORG_INCS) -I$(top_srcdir)/miext/cw
+if XORG
+INCLUDES += -I$(top_srcdir)/hw/xfree86/parser \
+	-I$(top_srcdir)/hw/xfree86/ddc \
 	-I$(top_srcdir)/hw/xfree86/i2c -I$(top_srcdir)/hw/xfree86/modes \
 	-I$(top_srcdir)/hw/xfree86/ramdac
+endif
 TEST_LDADD=libxservertest.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
 
+if XORG
 if SPECIAL_DTRACE_OBJECTS
 TEST_LDADD += $(OS_LIB) $(DIX_LIB)
+endif
 endif
 
 xkb_LDADD=$(TEST_LDADD)
@@ -25,9 +36,10 @@ misc_LDADD=$(TEST_LDADD)
 fixes_LDADD=$(TEST_LDADD)
 xfree86_LDADD=$(TEST_LDADD)
 
+libxservertest_la_LIBADD = $(XSERVER_LIBS)
+if XORG
 nodist_libxservertest_la_SOURCES = $(top_builddir)/hw/xfree86/sdksyms.c
-libxservertest_la_LIBADD = \
-            $(XSERVER_LIBS) \
+libxservertest_la_LIBADD += \
             $(top_builddir)/hw/xfree86/loader/libloader.la \
             $(top_builddir)/hw/xfree86/os-support/libxorgos.la \
             $(top_builddir)/hw/xfree86/common/libcommon.la \
@@ -37,7 +49,9 @@ libxservertest_la_LIBADD = \
             $(top_builddir)/hw/xfree86/ramdac/libramdac.la \
             $(top_builddir)/hw/xfree86/ddc/libddc.la \
             $(top_builddir)/hw/xfree86/i2c/libi2c.la \
-            $(top_builddir)/hw/xfree86/dixmods/libxorgxkb.la \
+            $(top_builddir)/hw/xfree86/dixmods/libxorgxkb.la
+endif
+libxservertest_la_LIBADD += \
             $(top_builddir)/mi/libmi.la \
             $(top_builddir)/os/libos.la \
             @XORG_LIBS@
