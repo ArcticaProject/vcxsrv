@@ -31,6 +31,10 @@ struct _GrabParameters;
 extern void PrintDeviceGrabInfo(DeviceIntPtr dev);
 extern void UngrabAllDevices(Bool kill_client);
 
+extern GrabPtr AllocGrab(void);
+extern void FreeGrab(GrabPtr grab);
+extern Bool CopyGrab(GrabPtr dst, const GrabPtr src);
+
 extern GrabPtr CreateGrab(
 	int /* client */,
 	DeviceIntPtr /* device */,

@@ -1674,8 +1674,75 @@ mieq_test(void) {
     mieqFini();
 }
 
+/* Simple check that we're replaying events in-order */
+static void
+process_input_proc(InternalEvent *ev, DeviceIntPtr device)
+{
+    static int last_evtype = -1;
+
+    if (ev->any.header == 0xac)
+        last_evtype = -1;
+
+    assert(ev->any.type == ++last_evtype);
+}
+
+static void
+dix_enqueue_events(void) {
+#define NEVENTS 5
+    DeviceIntRec dev;
+    InternalEvent ev[NEVENTS];
+    SpriteInfoRec spriteInfo;
+    SpriteRec sprite;
+    QdEventPtr qe;
+    int i;
+
+    memset(&dev, 0, sizeof(dev));
+    dev.public.processInputProc = process_input_proc;
+
+    memset(&spriteInfo, 0, sizeof(spriteInfo));
+    memset(&sprite, 0, sizeof(sprite));
+    dev.spriteInfo = &spriteInfo;
+    spriteInfo.sprite = &sprite;
+
+    InitEvents();
+    assert(list_is_empty(&syncEvents.pending));
+
+    /* this way PlayReleasedEvents really runs through all events in the
+     * queue */
+    inputInfo.devices = &dev;
+
+    /* to reset process_input_proc */
+    ev[0].any.header = 0xac;
+
+    for (i = 0; i < NEVENTS; i++)
+    {
+        ev[i].any.length = sizeof(*ev);
+        ev[i].any.type = i;
+        EnqueueEvent(&ev[i], &dev);
+        assert(!list_is_empty(&syncEvents.pending));
+        qe = list_last_entry(&syncEvents.pending, QdEventRec, next);
+        assert(memcmp(qe->event, &ev[i], ev[i].any.length) == 0);
+        qe = list_first_entry(&syncEvents.pending, QdEventRec, next);
+        assert(memcmp(qe->event, &ev[0], ev[i].any.length) == 0);
+    }
+
+    /* calls process_input_proc */
+    dev.deviceGrab.sync.frozen = 1;
+    PlayReleasedEvents();
+    assert(!list_is_empty(&syncEvents.pending));
+
+
+    dev.deviceGrab.sync.frozen = 0;
+    PlayReleasedEvents();
+    assert(list_is_empty(&syncEvents.pending));
+
+    inputInfo.devices = NULL;
+}
+
+
 int main(int argc, char** argv)
 {
+    dix_enqueue_events();
     dix_double_fp_conversion();
     dix_input_valuator_masks();
     dix_input_attributes();

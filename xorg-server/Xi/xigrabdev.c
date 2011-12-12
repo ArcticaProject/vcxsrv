@@ -41,6 +41,7 @@
 #include "exglobals.h" /* BadDevice */
 #include "exevents.h"
 #include "xigrabdev.h"
+#include "inpututils.h"
 
 int
 SProcXIGrabDevice(ClientPtr client)
@@ -64,7 +65,7 @@ ProcXIGrabDevice(ClientPtr client)
     xXIGrabDeviceReply rep;
     int ret = Success;
     uint8_t status;
-    GrabMask mask;
+    GrabMask mask = { 0 };
     int mask_len;
 
     REQUEST(xXIGrabDeviceReq);
@@ -81,9 +82,13 @@ ProcXIGrabDevice(ClientPtr client)
                                stuff->mask_len * 4) != Success)
         return BadValue;
 
-    mask_len = min(sizeof(mask.xi2mask[stuff->deviceid]), stuff->mask_len * 4);
-    memset(mask.xi2mask, 0, sizeof(mask.xi2mask));
-    memcpy(mask.xi2mask, (char*)&stuff[1], mask_len);
+    mask.xi2mask = xi2mask_new();
+    if (!mask.xi2mask)
+        return BadAlloc;
+
+    mask_len = min(xi2mask_mask_size(mask.xi2mask), stuff->mask_len * 4);
+    /* FIXME: I think the old code was broken here */
+    xi2mask_set_one_mask(mask.xi2mask, dev->id, (unsigned char*)&stuff[1], mask_len);
 
     ret = GrabDevice(client, dev, stuff->grab_mode,
                      stuff->paired_device_mode,
@@ -95,6 +100,8 @@ ProcXIGrabDevice(ClientPtr client)
                      stuff->cursor,
                      None /* confineTo */,
                      &status);
+
+    xi2mask_free(&mask.xi2mask);
 
     if (ret != Success)
         return ret;

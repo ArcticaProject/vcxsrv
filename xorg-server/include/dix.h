@@ -339,6 +339,7 @@ extern _X_EXPORT void NoticeEventTime(InternalEvent *ev);
 extern void EnqueueEvent(
     InternalEvent * /* ev */,
     DeviceIntPtr  /* device */);
+extern void PlayReleasedEvents(void);
 
 extern void ActivatePointerGrab(
     DeviceIntPtr /* mouse */,

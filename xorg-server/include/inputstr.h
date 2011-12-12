@@ -118,7 +118,7 @@ typedef struct _InputClients {
     XID			resource; /**< id for putting into resource manager */
     Mask		mask[EMASKSIZE]; /**< Actual XI event mask, deviceid is index */
     /** XI2 event masks. One per device, each bit is a mask of (1 << type) */
-    unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
+    struct _XI2Mask     *xi2mask;
 } InputClients;
 
 /**
@@ -148,7 +148,7 @@ typedef struct _OtherInputMasks {
     /** The clients that selected for events */
     InputClientsPtr	inputClients;
     /* XI2 event masks. One per device, each bit is a mask of (1 << type) */
-    unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
+    struct _XI2Mask     *xi2mask;
 } OtherInputMasks;
 
 /*
@@ -176,7 +176,7 @@ typedef enum {
 union _GrabMask {
     Mask core;
     Mask xi;
-    char xi2mask[EMASKSIZE][XI2MASKSIZE];
+    struct _XI2Mask *xi2mask;
 };
 
 /**
@@ -210,7 +210,7 @@ typedef struct _GrabRec {
     Mask		eventMask;
     Mask                deviceMask;     
     /* XI2 event masks. One per device, each bit is a mask of (1 << type) */
-    unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
+    struct _XI2Mask *xi2mask;
 } GrabRec;
 
 /**
@@ -451,7 +451,7 @@ typedef struct _GrabInfoRec {
     TimeStamp	    grabTime;
     Bool            fromPassiveGrab;    /* true if from passive grab */
     Bool            implicitGrab;       /* implicit from ButtonPress */
-    GrabRec         activeGrab;
+    GrabPtr         activeGrab;
     GrabPtr         grab;
     CARD8           activatingKey;
     void	    (*ActivateGrab) (
@@ -575,7 +575,7 @@ extern _X_EXPORT InputInfo inputInfo;
 /* for keeping the events for devices grabbed synchronously */
 typedef struct _QdEvent *QdEventPtr;
 typedef struct _QdEvent {
-    QdEventPtr		next;
+    struct list		next;
     DeviceIntPtr	device;
     ScreenPtr		pScreen;	/* what screen the pointer was on */
     unsigned long	months;		/* milliseconds is in the event */
@@ -591,8 +591,8 @@ typedef struct _QdEvent {
  * replayed and processed as if they would come from the device directly.
  */
 typedef struct _EventSyncInfo {
-    QdEventPtr          pending, /**<  list of queued events */
-                        *pendtail; /**< last event in list */
+    struct list         pending;
+
     /** The device to replay events for. Only set in AllowEvents(), in which
      * case it is set to the device specified in the request. */
     DeviceIntPtr        replayDev;      /* kludgy rock to put flag for */
@@ -621,5 +621,11 @@ static inline WindowPtr DeepestSpriteWin(SpritePtr sprite)
     assert(sprite->spriteTraceGood > 0);
     return sprite->spriteTrace[sprite->spriteTraceGood - 1];
 }
+
+struct _XI2Mask {
+    unsigned char **masks;      /* event mask in masks[deviceid][event type byte] */
+    size_t nmasks;              /* number of masks */
+    size_t mask_size;           /* size of each mask in bytes */
+};
 
 #endif /* INPUTSTRUCT_H */

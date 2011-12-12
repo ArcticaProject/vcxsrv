@@ -42,6 +42,7 @@ MAIN_SOURCES = \
 	main/ffvertex_prog.c \
 	main/fog.c \
 	main/formats.c \
+	main/format_pack.c \
 	main/format_unpack.c \
 	main/framebuffer.c \
 	main/get.c \
@@ -124,7 +125,6 @@ MATH_XFORM_SOURCES = \
 SWRAST_SOURCES = \
 	swrast/s_aaline.c \
 	swrast/s_aatriangle.c \
-	swrast/s_accum.c \
 	swrast/s_alpha.c \
 	swrast/s_atifragshader.c \
 	swrast/s_bitmap.c \
@@ -142,6 +142,7 @@ SWRAST_SOURCES = \
 	swrast/s_logic.c \
 	swrast/s_masking.c \
 	swrast/s_points.c \
+	swrast/s_renderbuffer.c \
 	swrast/s_span.c \
 	swrast/s_stencil.c \
 	swrast/s_texcombine.c \
@@ -208,7 +209,6 @@ STATETRACKER_SOURCES = \
 	state_tracker/st_atom_stipple.c \
 	state_tracker/st_atom_texture.c \
 	state_tracker/st_atom_viewport.c \
-	state_tracker/st_cb_accum.c \
 	state_tracker/st_cb_bitmap.c \
 	state_tracker/st_cb_blit.c \
 	state_tracker/st_cb_bufferobjects.c \

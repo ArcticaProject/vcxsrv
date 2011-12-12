@@ -892,3 +892,184 @@ double_to_fp3232(double in)
     ret.frac = frac_d;
     return ret;
 }
+
+/**
+ * DO NOT USE THIS FUNCTION. It only exists for the test cases. Use
+ * xi2mask_new() instead to get the standard sized masks.
+ *
+ * @param nmasks The number of masks (== number of devices)
+ * @param size The size of the masks in bytes
+ * @return The new mask or NULL on allocation error.
+ */
+XI2Mask*
+xi2mask_new_with_size(size_t nmasks, size_t size)
+{
+    int i;
+
+    XI2Mask *mask = calloc(1, sizeof(*mask));
+    if (!mask)
+        return NULL;
+
+
+    mask->nmasks = nmasks;
+    mask->mask_size = size;
+
+    mask->masks = calloc(mask->nmasks, sizeof(*mask->masks));
+    if (!mask->masks)
+        goto unwind;
+
+    for (i = 0; i < mask->nmasks; i++) {
+        mask->masks[i] = calloc(1, mask->mask_size);
+        if (!mask->masks[i])
+            goto unwind;
+    }
+    return mask;
+
+unwind:
+    xi2mask_free(&mask);
+    return NULL;
+}
+
+
+/**
+ * Create a new XI2 mask of the standard size, i.e. for all devices + fake
+ * devices and for the highest supported XI2 event type.
+ *
+ * @return The new mask or NULL on allocation error.
+ */
+XI2Mask*
+xi2mask_new(void)
+{
+    return xi2mask_new_with_size(EMASKSIZE, XI2MASKSIZE);
+}
+
+/**
+ * Frees memory associated with mask and resets mask to NULL.
+ */
+void
+xi2mask_free(XI2Mask** mask)
+{
+    int i;
+
+    if (!(*mask))
+        return;
+
+    for (i = 0; (*mask)->masks && i < (*mask)->nmasks; i++)
+        free((*mask)->masks[i]);
+    free((*mask)->masks);
+    free((*mask));
+    *mask = NULL;
+}
+
+/**
+ * Test if the bit for event type is set for this device, or the
+ * XIAllDevices/XIAllMasterDevices (if applicable) is set.
+ *
+ * @return TRUE if the bit is set, FALSE otherwise
+ */
+Bool
+xi2mask_isset(XI2Mask* mask, const DeviceIntPtr dev, int event_type)
+{
+    int set = 0;
+
+    BUG_WARN(dev->id < 0);
+    BUG_WARN(dev->id >= mask->nmasks);
+    BUG_WARN(bits_to_bytes(event_type + 1) > mask->mask_size);
+
+    set = !!BitIsOn(mask->masks[XIAllDevices], event_type);
+    if (!set)
+        set = !!BitIsOn(mask->masks[dev->id], event_type);
+    if (!set && IsMaster(dev))
+        set = !!BitIsOn(mask->masks[XIAllMasterDevices], event_type);
+
+    return set;
+}
+
+/**
+ * Set the mask bit for this event type for this device.
+ */
+void
+xi2mask_set(XI2Mask *mask, int deviceid, int event_type)
+{
+    BUG_WARN(deviceid < 0);
+    BUG_WARN(deviceid >= mask->nmasks);
+    BUG_WARN(bits_to_bytes(event_type + 1) > mask->mask_size);
+
+    SetBit(mask->masks[deviceid], event_type);
+}
+
+/**
+ * Zero out the xi2mask, for the deviceid given. If the deviceid is < 0, all
+ * masks are zeroed.
+ */
+void
+xi2mask_zero(XI2Mask *mask, int deviceid)
+{
+    int i;
+
+    BUG_WARN(deviceid > 0 && deviceid >= mask->nmasks);
+
+    if (deviceid >= 0)
+        memset(mask->masks[deviceid], 0, mask->mask_size);
+    else
+        for (i = 0; i < mask->nmasks; i++)
+            memset(mask->masks[i], 0, mask->mask_size);
+}
+
+/**
+ * Merge source into dest, i.e. dest |= source.
+ * If the masks are of different size, only the overlapping section is merged.
+ */
+void
+xi2mask_merge(XI2Mask *dest, const XI2Mask *source)
+{
+    int i, j;
+
+    for (i = 0; i < min(dest->nmasks, source->nmasks); i++)
+        for (j = 0; j < min(dest->mask_size, source->mask_size); j++)
+            dest->masks[i][j] |= source->masks[i][j];
+}
+
+/**
+ * @return The number of masks in mask
+ */
+size_t
+xi2mask_num_masks(const XI2Mask *mask)
+{
+    return mask->nmasks;
+}
+
+/**
+ * @return The size of each mask in bytes
+ */
+size_t
+xi2mask_mask_size(const XI2Mask *mask)
+{
+    return mask->mask_size;
+}
+
+/**
+ * Set the mask for the given deviceid to the source mask.
+ * If the mask given is larger than the target memory, only the overlapping
+ * parts are copied.
+ */
+void
+xi2mask_set_one_mask(XI2Mask *xi2mask, int deviceid, const unsigned char *mask, size_t mask_size)
+{
+    BUG_WARN(deviceid < 0);
+    BUG_WARN(deviceid >= xi2mask->nmasks);
+
+    memcpy(xi2mask->masks[deviceid], mask, min(xi2mask->mask_size, mask_size));
+}
+
+/**
+ * Get a reference to the XI2mask for this particular device.
+ */
+const unsigned char*
+xi2mask_get_one_mask(const XI2Mask *mask, int deviceid)
+{
+    BUG_WARN(deviceid < 0);
+    BUG_WARN(deviceid >= mask->nmasks);
+
+    return mask->masks[deviceid];
+}

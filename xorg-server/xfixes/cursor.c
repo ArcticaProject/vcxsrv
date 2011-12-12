@@ -179,9 +179,9 @@ CursorDisplayCursor (DeviceIntPtr pDev,
 		ev.type = XFixesEventBase + XFixesCursorNotify;
 		ev.subtype = XFixesDisplayCursorNotify;
 		ev.window = e->pWindow->drawable.id;
-		ev.cursorSerial = pCursor->serialNumber;
+		ev.cursorSerial = pCursor ? pCursor->serialNumber : 0;
 		ev.timestamp = currentTime.milliseconds;
-		ev.name = pCursor->name;
+		ev.name = pCursor ? pCursor->name : None;
 		WriteEventsToClient (e->pClient, 1, (xEvent *) &ev);
 	    }
 	}

@@ -89,6 +89,42 @@ test_list_add(void)
 };
 
 static void
+test_list_append(void)
+{
+    struct parent parent = {0};
+    struct child child[3];
+    struct child *c;
+    int i;
+
+    list_init(&parent.children);
+
+    list_append(&child[0].node, &parent.children);
+    assert(!list_is_empty(&parent.children));
+
+    c = list_first_entry(&parent.children, struct child, node);
+    assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
+    c = list_last_entry(&parent.children, struct child, node);
+    assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
+
+    list_append(&child[1].node, &parent.children);
+    c = list_first_entry(&parent.children, struct child, node);
+    assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
+    c = list_last_entry(&parent.children, struct child, node);
+    assert(memcmp(c, &child[1], sizeof(struct child)) == 0);
+
+    list_append(&child[2].node, &parent.children);
+    c = list_first_entry(&parent.children, struct child, node);
+    assert(memcmp(c, &child[0], sizeof(struct child)) == 0);
+    c = list_last_entry(&parent.children, struct child, node);
+    assert(memcmp(c, &child[2], sizeof(struct child)) == 0);
+
+    i = 0;
+    list_for_each_entry(c, &parent.children, node) {
+        assert(memcmp(c, &child[i++], sizeof(struct child)) == 0);
+    }
+};
+
+static void
 test_list_del(void)
 {
     struct parent parent = {0};
@@ -325,6 +361,7 @@ int main(int argc, char** argv)
 {
     test_list_init();
     test_list_add();
+    test_list_append();
     test_list_del();
     test_list_for_each();
 

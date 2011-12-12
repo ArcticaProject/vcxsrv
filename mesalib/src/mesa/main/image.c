@@ -238,6 +238,7 @@ _mesa_components_in_format( GLenum format )
       case GL_DEPTH_STENCIL_EXT:
       case GL_DUDV_ATI:
       case GL_DU8DV8_ATI:
+      case GL_RG_INTEGER:
 	 return 2;
 
       case GL_RGB:
@@ -527,6 +528,7 @@ _mesa_is_legal_format_and_type(const struct gl_context *ctx,
       case GL_GREEN_INTEGER_EXT:
       case GL_BLUE_INTEGER_EXT:
       case GL_ALPHA_INTEGER_EXT:
+      case GL_RG_INTEGER:
          switch (type) {
             case GL_BYTE:
             case GL_UNSIGNED_BYTE:
@@ -751,6 +753,7 @@ _mesa_is_color_format(GLenum format)
       case GL_RGBA_INTEGER_EXT:
       case GL_BGR_INTEGER_EXT:
       case GL_BGRA_INTEGER_EXT:
+      case GL_RG_INTEGER:
       case GL_LUMINANCE_INTEGER_EXT:
       case GL_LUMINANCE_ALPHA_INTEGER_EXT:
       /* sized integer formats */
@@ -954,6 +957,7 @@ _mesa_is_integer_format(GLenum format)
    case GL_BGRA_INTEGER_EXT:
    case GL_LUMINANCE_INTEGER_EXT:
    case GL_LUMINANCE_ALPHA_INTEGER_EXT:
+   case GL_RG_INTEGER:
    /* specific integer formats */
    case GL_RGBA32UI_EXT:
    case GL_RGB32UI_EXT:
@@ -1160,32 +1164,30 @@ _mesa_base_format_has_channel(GLenum base_format, GLenum pname)
 
 
 /**
- * Return the address of a specific pixel in an image (1D, 2D or 3D).
+ * Return the byte offset of a specific pixel in an image (1D, 2D or 3D).
  *
  * Pixel unpacking/packing parameters are observed according to \p packing.
  *
  * \param dimensions either 1, 2 or 3 to indicate dimensionality of image
- * \param image  starting address of image data
- * \param width  the image width
- * \param height  theimage height
- * \param format  the pixel format
- * \param type  the pixel data type
  * \param packing  the pixelstore attributes
+ * \param width  the image width
+ * \param height  the image height
+ * \param format  the pixel format (must be validated beforehand)
+ * \param type  the pixel data type (must be validated beforehand)
  * \param img  which image in the volume (0 for 1D or 2D images)
  * \param row  row of pixel in the image (0 for 1D images)
  * \param column column of pixel in the image
- * 
- * \return address of pixel on success, or NULL on error.
+ *
+ * \return offset of pixel.
  *
  * \sa gl_pixelstore_attrib.
  */
-GLvoid *
-_mesa_image_address( GLuint dimensions,
-                     const struct gl_pixelstore_attrib *packing,
-                     const GLvoid *image,
-                     GLsizei width, GLsizei height,
-                     GLenum format, GLenum type,
-                     GLint img, GLint row, GLint column )
+GLintptr
+_mesa_image_offset( GLuint dimensions,
+                    const struct gl_pixelstore_attrib *packing,
+                    GLsizei width, GLsizei height,
+                    GLenum format, GLenum type,
+                    GLint img, GLint row, GLint column )
 {
    GLint alignment;        /* 1, 2 or 4 */
    GLint pixels_per_row;
@@ -1193,7 +1195,7 @@ _mesa_image_address( GLuint dimensions,
    GLint skiprows;
    GLint skippixels;
    GLint skipimages;       /* for 3-D volume images */
-   GLubyte *pixel_addr;
+   GLintptr offset;
 
    ASSERT(dimensions >= 1 && dimensions <= 3);
 
@@ -1219,30 +1221,20 @@ _mesa_image_address( GLuint dimensions,
 
    if (type == GL_BITMAP) {
       /* BITMAP data */
-      GLint comp_per_pixel;   /* components per pixel */
-      GLint bytes_per_comp;   /* bytes per component */
       GLint bytes_per_row;
       GLint bytes_per_image;
+      /* components per pixel for color or stencil index: */
+      const GLint comp_per_pixel = 1;
 
-      /* Compute bytes per component */
-      bytes_per_comp = _mesa_sizeof_packed_type( type );
-      if (bytes_per_comp < 0) {
-         return NULL;
-      }
-
-      /* Compute number of components per pixel */
-      comp_per_pixel = _mesa_components_in_format( format );
-      if (comp_per_pixel < 0) {
-         return NULL;
-      }
+      /* The pixel type and format should have been error checked earlier */
+      assert(format == GL_COLOR_INDEX || format == GL_STENCIL_INDEX);
 
       bytes_per_row = alignment
                     * CEILING( comp_per_pixel*pixels_per_row, 8*alignment );
 
       bytes_per_image = bytes_per_row * rows_per_image;
 
-      pixel_addr = (GLubyte *) image
-                 + (skipimages + img) * bytes_per_image
+      offset = (skipimages + img) * bytes_per_image
                  + (skiprows + row) * bytes_per_row
                  + (skippixels + column) / 8;
    }
@@ -1275,14 +1267,50 @@ _mesa_image_address( GLuint dimensions,
       }
 
       /* compute final pixel address */
-      pixel_addr = (GLubyte *) image
-                 + (skipimages + img) * bytes_per_image
+      offset = (skipimages + img) * bytes_per_image
                  + topOfImage
                  + (skiprows + row) * bytes_per_row
                  + (skippixels + column) * bytes_per_pixel;
    }
 
-   return (GLvoid *) pixel_addr;
+   return offset;
+}
+
+
+/**
+ * Return the address of a specific pixel in an image (1D, 2D or 3D).
+ *
+ * Pixel unpacking/packing parameters are observed according to \p packing.
+ *
+ * \param dimensions either 1, 2 or 3 to indicate dimensionality of image
+ * \param packing  the pixelstore attributes
+ * \param image  starting address of image data
+ * \param width  the image width
+ * \param height  the image height
+ * \param format  the pixel format (must be validated beforehand)
+ * \param type  the pixel data type (must be validated beforehand)
+ * \param img  which image in the volume (0 for 1D or 2D images)
+ * \param row  row of pixel in the image (0 for 1D images)
+ * \param column column of pixel in the image
+ *
+ * \return address of pixel.
+ *
+ * \sa gl_pixelstore_attrib.
+ */
+GLvoid *
+_mesa_image_address( GLuint dimensions,
+                     const struct gl_pixelstore_attrib *packing,
+                     const GLvoid *image,
+                     GLsizei width, GLsizei height,
+                     GLenum format, GLenum type,
+                     GLint img, GLint row, GLint column )
+{
+   const GLubyte *addr = (const GLubyte *) image;
+
+   addr += _mesa_image_offset(dimensions, packing, width, height,
+                              format, type, img, row, column);
+
+   return (GLvoid *) addr;
 }
 
 
@@ -1520,8 +1548,12 @@ _mesa_convert_colors(GLenum srcType, const GLvoid *src,
                      GLenum dstType, GLvoid *dst,
                      GLuint count, const GLubyte mask[])
 {
-   GLuint tempBuffer[MAX_WIDTH][4];
+   GLuint *tempBuffer;
    const GLboolean useTemp = (src == dst);
+
+   tempBuffer = malloc(count * MAX_PIXEL_BYTES);
+   if (!tempBuffer)
+      return;
 
    ASSERT(srcType != dstType);
 
@@ -1624,6 +1656,8 @@ _mesa_convert_colors(GLenum srcType, const GLvoid *src,
    default:
       _mesa_problem(NULL, "Invalid datatype in _mesa_convert_colors");
    }
+
+   free(tempBuffer);
 }
 
 

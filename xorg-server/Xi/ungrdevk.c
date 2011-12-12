@@ -98,7 +98,7 @@ ProcXUngrabDeviceKey(ClientPtr client)
     DeviceIntPtr dev;
     DeviceIntPtr mdev;
     WindowPtr pWin;
-    GrabRec temporaryGrab;
+    GrabPtr temporaryGrab;
     int rc;
 
     REQUEST(xUngrabDeviceKeyReq);
@@ -133,17 +133,22 @@ ProcXUngrabDeviceKey(ClientPtr client)
 	(stuff->modifiers & ~AllModifiersMask))
 	return BadValue;
 
-    temporaryGrab.resource = client->clientAsMask;
-    temporaryGrab.device = dev;
-    temporaryGrab.window = pWin;
-    temporaryGrab.type = DeviceKeyPress;
-    temporaryGrab.grabtype = GRABTYPE_XI;
-    temporaryGrab.modifierDevice = mdev;
-    temporaryGrab.modifiersDetail.exact = stuff->modifiers;
-    temporaryGrab.modifiersDetail.pMask = NULL;
-    temporaryGrab.detail.exact = stuff->key;
-    temporaryGrab.detail.pMask = NULL;
+    temporaryGrab = AllocGrab();
+    if (!temporaryGrab)
+        return BadAlloc;
 
-    DeletePassiveGrabFromList(&temporaryGrab);
+    temporaryGrab->resource = client->clientAsMask;
+    temporaryGrab->device = dev;
+    temporaryGrab->window = pWin;
+    temporaryGrab->type = DeviceKeyPress;
+    temporaryGrab->grabtype = GRABTYPE_XI;
+    temporaryGrab->modifierDevice = mdev;
+    temporaryGrab->modifiersDetail.exact = stuff->modifiers;
+    temporaryGrab->modifiersDetail.pMask = NULL;
+    temporaryGrab->detail.exact = stuff->key;
+    temporaryGrab->detail.pMask = NULL;
+
+    DeletePassiveGrabFromList(temporaryGrab);
+    FreeGrab(temporaryGrab);
     return Success;
 }

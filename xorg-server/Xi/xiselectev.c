@@ -33,6 +33,7 @@
 #include "exglobals.h"
 #include "exevents.h"
 #include <X11/extensions/XI2proto.h>
+#include "inpututils.h"
 
 #include "xiselectev.h"
 
@@ -249,7 +250,7 @@ ProcXIGetSelectedEvents(ClientPtr client)
     for (i = 0; i < MAXDEVICES; i++)
     {
         int j;
-        unsigned char *devmask = others->xi2mask[i];
+        const unsigned char *devmask = xi2mask_get_one_mask(others->xi2mask, i);
 
         if (i > 2)
         {
@@ -259,7 +260,7 @@ ProcXIGetSelectedEvents(ClientPtr client)
         }
 
 
-        for (j = XI2MASKSIZE - 1; j >= 0; j--)
+        for (j = xi2mask_mask_size(others->xi2mask) - 1; j >= 0; j--)
         {
             if (devmask[j] != 0)
             {
