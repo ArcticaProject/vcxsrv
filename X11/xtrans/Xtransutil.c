@@ -197,11 +197,11 @@ TRANS(ConvertAddress)(int *familyp, int *addrlenp, Xtransaddr **addrp)
 	if (len > 0) {
 	    if (*addrp && *addrlenp < (len + 1))
 	    {
-		xfree ((char *) *addrp);
+		free (*addrp);
 		*addrp = NULL;
 	    }
 	    if (!*addrp)
-		*addrp = (Xtransaddr *) xalloc (len + 1);
+		*addrp = malloc (len + 1);
 	    if (*addrp) {
 		strcpy ((char *) *addrp, hostnamebuf);
 		*addrlenp = len;
@@ -212,7 +212,7 @@ TRANS(ConvertAddress)(int *familyp, int *addrlenp, Xtransaddr **addrp)
 	else
 	{
 	    if (*addrp)
-		xfree ((char *) *addrp);
+		free (*addrp);
 	    *addrp = NULL;
 	    *addrlenp = 0;
 	}
@@ -255,7 +255,7 @@ TRANS(GetMyNetworkId) (XtransConnInfo ciptr)
     case AF_UNIX:
     {
 	struct sockaddr_un *saddr = (struct sockaddr_un *) addr;
-	networkId = (char *) xalloc (3 + strlen (transName) +
+	networkId = malloc (3 + strlen (transName) +
 	    strlen (hostnamebuf) + strlen (saddr->sun_path));
 	sprintf (networkId, "%s/%s:%s", transName,
 	    hostnamebuf, saddr->sun_path);
@@ -285,7 +285,7 @@ TRANS(GetMyNetworkId) (XtransConnInfo ciptr)
 	    portnum = ntohs (saddr->sin_port);
 
 	snprintf (portnumbuf, sizeof(portnumbuf), "%d", portnum);
-	networkId = (char *) xalloc (3 + strlen (transName) +
+	networkId = malloc (3 + strlen (transName) +
 	    strlen (hostnamebuf) + strlen (portnumbuf));
 	sprintf (networkId, "%s/%s:%s", transName, hostnamebuf, portnumbuf);
 	break;
@@ -418,8 +418,7 @@ TRANS(GetPeerNetworkId) (XtransConnInfo ciptr)
     }
 
 
-    hostname = (char *) xalloc (
-	strlen (ciptr->transptr->TransName) + strlen (addr) + 2);
+    hostname = malloc (strlen (ciptr->transptr->TransName) + strlen (addr) + 2);
     strcpy (hostname, ciptr->transptr->TransName);
     strcat (hostname, "/");
     if (addr)
@@ -586,6 +585,7 @@ trans_mkdir(const char *path, int mode)
 		    if (fstat(fd, &fbuf) == -1) {
 			prmsg(1, "mkdir: ERROR: fstat failed for %s (%d)\n",
 			      path, errno);
+			close(fd);
 			return -1;
 		    }
 		    /*
@@ -597,6 +597,7 @@ trans_mkdir(const char *path, int mode)
 			buf.st_ino != fbuf.st_ino) {
 			prmsg(1, "mkdir: ERROR: inode for %s changed\n",
 			      path);
+			close(fd);
 			return -1;
 		    }
 		    if (updateOwner && fchown(fd, 0, 0) == 0)

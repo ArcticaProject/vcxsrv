@@ -887,7 +887,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     int key = 0, rootX, rootY;
     ButtonClassPtr b;
     int ret = 0;
-    int state, i;
+    int corestate, i;
     DeviceIntPtr mouse = NULL, kbd = NULL;
     DeviceEvent *event = &ev->device_event;
 
@@ -917,9 +917,9 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
             mouse = NULL;
     }
 
-    /* State needs to be assembled BEFORE the device is updated. */
-    state = (kbd && kbd->key) ? XkbStateFieldFromRec(&kbd->key->xkbInfo->state) : 0;
-    state |= (mouse && mouse->button) ? (mouse->button->state) : 0;
+    /* core state needs to be assembled BEFORE the device is updated. */
+    corestate = (kbd && kbd->key) ? XkbStateFieldFromRec(&kbd->key->xkbInfo->state) : 0;
+    corestate |= (mouse && mouse->button) ? (mouse->button->state) : 0;
 
     for (i = 0; mouse && mouse->button && i < mouse->button->numButtons; i++)
         if (BitIsOn(mouse->button->down, i))
@@ -969,7 +969,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
             event->root_x = rootX;
             event->root_y = rootY;
             NoticeEventTime((InternalEvent*)event);
-            event->corestate = state;
+            event->corestate = corestate;
             key = event->detail.key;
             break;
         default:
@@ -1006,11 +1006,9 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
                 deactivateDeviceGrab = TRUE;
             break;
         case ET_ButtonPress:
-            event->detail.button = b->map[key];
-            if (!event->detail.button) { /* there's no button 0 */
-                event->detail.button = key;
+            if (b->map[key] == 0) /* there's no button 0 */
                 return;
-            }
+            event->detail.button = b->map[key];
             if (!grab && CheckDeviceGrabs(device, event, 0))
             {
                 /* if a passive grab was activated, the event has been sent
@@ -1019,11 +1017,9 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
             }
             break;
         case ET_ButtonRelease:
-            event->detail.button = b->map[key];
-            if (!event->detail.button) { /* there's no button 0 */
-                event->detail.button = key;
+            if (b->map[key] == 0) /* there's no button 0 */
                 return;
-            }
+            event->detail.button = b->map[key];
             if (grab && !b->buttonsDown &&
                 device->deviceGrab.fromPassiveGrab &&
                 (device->deviceGrab.grab->type == ButtonPress ||
@@ -1037,7 +1033,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
 
     if (grab)
         DeliverGrabbedEvent((InternalEvent*)event, device, deactivateDeviceGrab);
-    else if (device->focus && !IsPointerEvent((InternalEvent*)ev))
+    else if (device->focus && !IsPointerEvent(ev))
         DeliverFocusedEvent(device, (InternalEvent*)event,
                             GetSpriteWindow(device));
     else
@@ -1635,6 +1631,7 @@ SelectForWindow(DeviceIntPtr dev, WindowPtr pWin, ClientPtr client,
 static void
 FreeInputClient(InputClientsPtr *other)
 {
+    xi2mask_free(&(*other)->xi2mask);
     free(*other);
     *other = NULL;
 }
@@ -1657,6 +1654,9 @@ AddExtensionClient(WindowPtr pWin, ClientPtr client, Mask mask, int mskidx)
 	return BadAlloc;
     if (!pWin->optional->inputMasks && !MakeInputMasks(pWin))
 	goto bail;
+    others->xi2mask = xi2mask_new();
+    if (!others->xi2mask)
+        goto bail;
     others->mask[mskidx] = mask;
     others->resource = FakeClientID(client->index);
     others->next = pWin->optional->inputMasks->inputClients;
@@ -1678,6 +1678,12 @@ MakeInputMasks(WindowPtr pWin)
     imasks = calloc(1, sizeof(struct _OtherInputMasks));
     if (!imasks)
 	return FALSE;
+    imasks->xi2mask = xi2mask_new();
+    if (!imasks->xi2mask)
+    {
+        free(imasks);
+        return FALSE;
+    }
     pWin->optional->inputMasks = imasks;
     return TRUE;
 }
@@ -1685,6 +1691,7 @@ MakeInputMasks(WindowPtr pWin)
 static void
 FreeInputMask(OtherInputMasks **imask)
 {
+    xi2mask_free(&(*imask)->xi2mask);
     free(*imask);
     *imask = NULL;
 }
@@ -1695,20 +1702,17 @@ RecalculateDeviceDeliverableEvents(WindowPtr pWin)
     InputClientsPtr others;
     struct _OtherInputMasks *inputMasks;	/* default: NULL */
     WindowPtr pChild, tmp;
-    int i, j;
+    int i;
 
     pChild = pWin;
     while (1) {
 	if ((inputMasks = wOtherInputMasks(pChild)) != 0) {
-            for (i = 0; i < EMASKSIZE; i++)
-                memset(inputMasks->xi2mask[i], 0, sizeof(inputMasks->xi2mask[i]));
+            xi2mask_zero(inputMasks->xi2mask, -1);
 	    for (others = inputMasks->inputClients; others;
 		 others = others->next) {
 		for (i = 0; i < EMASKSIZE; i++)
 		    inputMasks->inputEvents[i] |= others->mask[i];
-                for (i = 0; i < EMASKSIZE; i++)
-                    for (j = 0; j < XI2MASKSIZE; j++)
-                        inputMasks->xi2mask[i][j] |= others->xi2mask[i][j];
+                xi2mask_merge(inputMasks->xi2mask, others->xi2mask);
 	    }
 	    for (i = 0; i < EMASKSIZE; i++)
 		inputMasks->deliverableEvents[i] = inputMasks->inputEvents[i];
@@ -2032,20 +2036,25 @@ CheckDeviceGrabAndHintWindow(WindowPtr pWin, int type,
 	dev->valuator->motionHintWindow = pWin;
     else if ((type == DeviceButtonPress) && (!grab) &&
 	     (deliveryMask & DeviceButtonGrabMask)) {
-	GrabRec tempGrab;
+	GrabPtr tempGrab;
 
-	tempGrab.device = dev;
-	tempGrab.resource = client->clientAsMask;
-	tempGrab.window = pWin;
-	tempGrab.ownerEvents =
+	tempGrab = AllocGrab();
+	if (!tempGrab)
+	    return;
+
+	tempGrab->device = dev;
+	tempGrab->resource = client->clientAsMask;
+	tempGrab->window = pWin;
+	tempGrab->ownerEvents =
 	    (deliveryMask & DeviceOwnerGrabButtonMask) ? TRUE : FALSE;
-	tempGrab.eventMask = deliveryMask;
-	tempGrab.keyboardMode = GrabModeAsync;
-	tempGrab.pointerMode = GrabModeAsync;
-	tempGrab.confineTo = NullWindow;
-	tempGrab.cursor = NullCursor;
-        tempGrab.next = NULL;
-	(*dev->deviceGrab.ActivateGrab) (dev, &tempGrab, currentTime, TRUE);
+	tempGrab->eventMask = deliveryMask;
+	tempGrab->keyboardMode = GrabModeAsync;
+	tempGrab->pointerMode = GrabModeAsync;
+	tempGrab->confineTo = NullWindow;
+	tempGrab->cursor = NullCursor;
+	tempGrab->next = NULL;
+	(*dev->deviceGrab.ActivateGrab) (dev, tempGrab, currentTime, TRUE);
+	FreeGrab(tempGrab);
     }
 }
 
@@ -2191,14 +2200,12 @@ XISetEventMask(DeviceIntPtr dev, WindowPtr win, ClientPtr client,
 	for (others = wOtherInputMasks(win)->inputClients; others;
 	     others = others->next) {
 	    if (SameClient(others, client)) {
-                memset(others->xi2mask[dev->id], 0,
-                       sizeof(others->xi2mask[dev->id]));
+                xi2mask_zero(others->xi2mask, dev->id);
                 break;
             }
         }
     }
 
-    len = min(len, sizeof(others->xi2mask[dev->id]));
 
     if (len && !others)
     {
@@ -2207,11 +2214,14 @@ XISetEventMask(DeviceIntPtr dev, WindowPtr win, ClientPtr client,
         others= wOtherInputMasks(win)->inputClients;
     }
 
-    if (others)
-        memset(others->xi2mask[dev->id], 0, sizeof(others->xi2mask[dev->id]));
+    if (others) {
+        xi2mask_zero(others->xi2mask, dev->id);
+        len = min(len, xi2mask_mask_size(others->xi2mask));
+    }
 
-    if (len)
-        memcpy(others->xi2mask[dev->id], mask, len);
+    if (len) {
+        xi2mask_set_one_mask(others->xi2mask, dev->id, mask, len);
+    }
 
     RecalculateDeviceDeliverableEvents(win);
 

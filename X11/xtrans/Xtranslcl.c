@@ -158,7 +158,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
     ciptr->family = AF_UNIX;
     ciptr->addrlen = sizeof (struct sockaddr_un);
 
-    if ((sunaddr = (struct sockaddr_un *) xalloc (ciptr->addrlen)) == NULL)
+    if ((sunaddr = malloc (ciptr->addrlen)) == NULL)
     {
 	prmsg(1,"FillAddrInfo: failed to allocate memory for addr\n");
 	return 0;
@@ -168,7 +168,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 
     if (strlen(sun_path) > sizeof(sunaddr->sun_path) - 1) {
 	prmsg(1, "FillAddrInfo: path too long\n");
-	xfree((char *) sunaddr);
+	free((char *) sunaddr);
 	return 0;
     }
     strcpy (sunaddr->sun_path, sun_path);
@@ -180,12 +180,11 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 
     ciptr->peeraddrlen = sizeof (struct sockaddr_un);
 
-    if ((p_sunaddr = (struct sockaddr_un *) xalloc (
-	ciptr->peeraddrlen)) == NULL)
+    if ((p_sunaddr = malloc (ciptr->peeraddrlen)) == NULL)
     {
 	prmsg(1,
 	   "FillAddrInfo: failed to allocate memory for peer addr\n");
-	xfree ((char *) sunaddr);
+	free (sunaddr);
 	ciptr->addr = NULL;
 
 	return 0;
@@ -195,7 +194,7 @@ TRANS(FillAddrInfo)(XtransConnInfo ciptr, char *sun_path, char *peer_sun_path)
 
     if (strlen(peer_sun_path) > sizeof(p_sunaddr->sun_path) - 1) {
 	prmsg(1, "FillAddrInfo: peer path too long\n");
-	xfree((char *) p_sunaddr);
+	free((char *) p_sunaddr);
 	return 0;
     }
     strcpy (p_sunaddr->sun_path, peer_sun_path);
@@ -619,7 +618,7 @@ TRANS(PTSAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
      */
 
     newciptr->addrlen=ciptr->addrlen;
-    if( (newciptr->addr=(char *)xalloc(newciptr->addrlen)) == NULL ) {
+    if( (newciptr->addr = malloc(newciptr->addrlen)) == NULL ) {
 	prmsg(1,"PTSAccept: failed to allocate memory for peer addr\n");
 	close(newfd);
 	*status = TRANS_ACCEPT_BAD_MALLOC;
@@ -629,9 +628,9 @@ TRANS(PTSAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
     memcpy(newciptr->addr,ciptr->addr,newciptr->addrlen);
 
     newciptr->peeraddrlen=sizeof(struct sockaddr_un);
-    if( (sunaddr=(struct sockaddr_un *)xalloc(newciptr->peeraddrlen)) == NULL ) {
+    if( (sunaddr = malloc(newciptr->peeraddrlen)) == NULL ) {
 	prmsg(1,"PTSAccept: failed to allocate memory for peer addr\n");
-	xfree(newciptr->addr);
+	free(newciptr->addr);
 	close(newfd);
 	*status = TRANS_ACCEPT_BAD_MALLOC;
 	return -1;
@@ -891,7 +890,7 @@ TRANS(NAMEDAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
      */
     newciptr->family=ciptr->family;
     newciptr->addrlen=ciptr->addrlen;
-    if( (newciptr->addr=(char *)xalloc(newciptr->addrlen)) == NULL ) {
+    if( (newciptr->addr = malloc(newciptr->addrlen)) == NULL ) {
 	prmsg(1,
 	      "NAMEDAccept: failed to allocate memory for pipe addr\n");
 	close(str.fd);
@@ -902,10 +901,10 @@ TRANS(NAMEDAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
     memcpy(newciptr->addr,ciptr->addr,newciptr->addrlen);
 
     newciptr->peeraddrlen=newciptr->addrlen;
-    if( (newciptr->peeraddr=(char *)xalloc(newciptr->peeraddrlen)) == NULL ) {
+    if( (newciptr->peeraddr = malloc(newciptr->peeraddrlen)) == NULL ) {
 	prmsg(1,
 	"NAMEDAccept: failed to allocate memory for peer addr\n");
-	xfree(newciptr->addr);
+	free(newciptr->addr);
 	close(str.fd);
 	*status = TRANS_ACCEPT_BAD_MALLOC;
 	return -1;
@@ -1229,7 +1228,7 @@ TRANS(SCOAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
      */
 
     newciptr->addrlen=ciptr->addrlen;
-    if( (newciptr->addr=(char *)xalloc(newciptr->addrlen)) == NULL ) {
+    if( (newciptr->addr = malloc(newciptr->addrlen)) == NULL ) {
 	prmsg(1,
 	      "SCOAccept: failed to allocate memory for peer addr\n");
 	close(fd);
@@ -1243,10 +1242,10 @@ TRANS(SCOAccept)(XtransConnInfo ciptr, XtransConnInfo newciptr, int *status)
 #endif
 
     newciptr->peeraddrlen=newciptr->addrlen;
-    if( (newciptr->peeraddr=(char *)xalloc(newciptr->peeraddrlen)) == NULL ) {
+    if( (newciptr->peeraddr = malloc(newciptr->peeraddrlen)) == NULL ) {
 	prmsg(1,
 	      "SCOAccept: failed to allocate memory for peer addr\n");
-	xfree(newciptr->addr);
+	free(newciptr->addr);
 	close(fd);
 	*status = TRANS_ACCEPT_BAD_MALLOC;
 	return -1;
@@ -1677,17 +1676,13 @@ TRANS(LocalInitTransports)(const char *protocol)
 
     if( strcmp(protocol,"local") && strcmp(protocol,"LOCAL") )
     {
-	workingXLOCAL=freeXLOCAL=(char *)xalloc (strlen (protocol) + 1);
-	if (workingXLOCAL)
-	    strcpy (workingXLOCAL, protocol);
+	workingXLOCAL = freeXLOCAL = strdup (protocol);
     }
     else {
 	XLOCAL=(char *)getenv("XLOCAL");
 	if(XLOCAL==NULL)
 	    XLOCAL=DEF_XLOCAL;
-	workingXLOCAL=freeXLOCAL=(char *)xalloc (strlen (XLOCAL) + 1);
-	if (workingXLOCAL)
-	    strcpy (workingXLOCAL, XLOCAL);
+	workingXLOCAL = freeXLOCAL = strdup (XLOCAL);
     }
 }
 
@@ -1696,7 +1691,7 @@ TRANS(LocalEndTransports)(void)
 
 {
     prmsg(3,"LocalEndTransports()\n");
-    xfree(freeXLOCAL);
+    free(freeXLOCAL);
 }
 
 #define TYPEBUFSIZE	32
@@ -1821,7 +1816,7 @@ TRANS(LocalOpenClient)(int type, char *protocol, char *host, char *port)
      */
 #endif /* X11_t */
 
-    if( (ciptr=(XtransConnInfo)xcalloc(1,sizeof(struct _XtransConnInfo))) == NULL )
+    if( (ciptr = calloc(1,sizeof(struct _XtransConnInfo))) == NULL )
     {
 	prmsg(1,"LocalOpenClient: calloc(1,%lu) failed\n",
 	      sizeof(struct _XtransConnInfo));
@@ -1862,7 +1857,7 @@ TRANS(LocalOpenClient)(int type, char *protocol, char *host, char *port)
 
     if( ciptr->fd < 0 )
     {
-	xfree(ciptr);
+	free(ciptr);
 	return NULL;
     }
 
@@ -1895,7 +1890,7 @@ TRANS(LocalOpenServer)(int type, char *protocol, char *host _X_UNUSED, char *por
      */
 #endif /* X11_t */
 
-    if( (ciptr=(XtransConnInfo)xcalloc(1,sizeof(struct _XtransConnInfo))) == NULL )
+    if( (ciptr = calloc(1,sizeof(struct _XtransConnInfo))) == NULL )
     {
 	prmsg(1,"LocalOpenServer: calloc(1,%lu) failed\n",
 	      sizeof(struct _XtransConnInfo));
@@ -1931,7 +1926,7 @@ TRANS(LocalOpenServer)(int type, char *protocol, char *host _X_UNUSED, char *por
 	}
     }
 
-    xfree(ciptr);
+    free(ciptr);
     return NULL;
 }
 
@@ -1949,7 +1944,7 @@ TRANS(LocalReopenServer)(int type, int index, int fd, char *port)
 
     prmsg(2,"LocalReopenServer(%d,%d,%d)\n", type, index, fd);
 
-    if( (ciptr=(XtransConnInfo)xcalloc(1,sizeof(struct _XtransConnInfo))) == NULL )
+    if( (ciptr = calloc(1,sizeof(struct _XtransConnInfo))) == NULL )
     {
 	prmsg(1,"LocalReopenServer: calloc(1,%lu) failed\n",
 	      sizeof(struct _XtransConnInfo));
@@ -1978,7 +1973,7 @@ TRANS(LocalReopenServer)(int type, int index, int fd, char *port)
 	return ciptr;
     }
 
-    xfree(ciptr);
+    free(ciptr);
     return NULL;
 }
 
@@ -2181,7 +2176,7 @@ TRANS(LocalAccept)(XtransConnInfo ciptr, int *status)
 
     transptr=(LOCALtrans2dev *)ciptr->priv;
 
-    if( (newciptr=(XtransConnInfo)xcalloc(1,sizeof(struct _XtransConnInfo)))==NULL )
+    if( (newciptr = calloc(1,sizeof(struct _XtransConnInfo)))==NULL )
     {
 	prmsg(1,"LocalAccept: calloc(1,%lu) failed\n",
 	      sizeof(struct _XtransConnInfo));
@@ -2193,7 +2188,7 @@ TRANS(LocalAccept)(XtransConnInfo ciptr, int *status)
 
     if( newciptr->fd < 0 )
     {
-	xfree(newciptr);
+	free(newciptr);
 	return NULL;
     }
 

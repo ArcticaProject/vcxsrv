@@ -205,6 +205,7 @@ extern _X_EXPORT KeybdCtrl	defaultKeyboardControl;
 extern _X_EXPORT PtrCtrl	defaultPointerControl;
 
 typedef struct _InputOption InputOption;
+typedef struct _XI2Mask XI2Mask;
 
 typedef struct _InputAttributes {
     char                *product;

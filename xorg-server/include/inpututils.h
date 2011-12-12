@@ -46,4 +46,16 @@ FP1616 double_to_fp1616(double in);
 double fp1616_to_double(FP1616 in);
 double fp3232_to_double(FP3232 in);
 
+
+XI2Mask* xi2mask_new(void);
+XI2Mask* xi2mask_new_with_size(size_t, size_t); /* don't use it */
+void xi2mask_free(XI2Mask** mask);
+Bool xi2mask_isset(XI2Mask* mask, const DeviceIntPtr dev, int event_type);
+void xi2mask_set(XI2Mask *mask, int deviceid, int event_type);
+void xi2mask_zero(XI2Mask *mask, int deviceid);
+void xi2mask_merge(XI2Mask *dest, const XI2Mask *source);
+size_t xi2mask_num_masks(const XI2Mask *mask);
+size_t xi2mask_mask_size(const XI2Mask *mask);
+void xi2mask_set_one_mask(XI2Mask *xi2mask, int deviceid, const unsigned char *mask, size_t mask_size);
+const unsigned char* xi2mask_get_one_mask(const XI2Mask *xi2mask, int deviceid);
 #endif

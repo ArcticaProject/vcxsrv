@@ -48,10 +48,6 @@ from The Open Group.
  */
 
 #include <stdlib.h>
-#define xalloc(_size)		malloc(_size)
-#define xcalloc(_num,_size)	calloc(_num,_size)
-#define xrealloc(_ptr,_size)	realloc(_ptr,_size)
-#define xfree(_ptr)		free(_ptr)
 
 #define XTRANS_TRANSPORT_C  /* used to flag Xtransint.h that it's being used
 			       here, not just #included in another file */

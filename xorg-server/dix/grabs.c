@@ -60,6 +60,7 @@ SOFTWARE.
 #include "dixgrabs.h"
 #include "xace.h"
 #include "exevents.h"
+#include "inpututils.h"
 
 #define BITMASK(i) (((Mask)1) << ((i) & 31))
 #define MASKIDX(i) ((i) >> 5)
@@ -122,13 +123,15 @@ PrintDeviceGrabInfo(DeviceIntPtr dev)
     }
     else if (grab->grabtype == GRABTYPE_XI2)
     {
-        for (i = 0; i < EMASKSIZE; i++)
+        for (i = 0; i < xi2mask_num_masks(grab->xi2mask); i++)
         {
+            const unsigned char *mask;
             int print;
             print = 0;
             for (j = 0; j < XI2MASKSIZE; j++)
             {
-                if (grab->xi2mask[i][j])
+                mask = xi2mask_get_one_mask(grab->xi2mask, i);
+                if (mask[j])
                 {
                     print = 1;
                     break;
@@ -137,8 +140,8 @@ PrintDeviceGrabInfo(DeviceIntPtr dev)
             if (!print)
                 continue;
             ErrorF("      xi2 event mask for device %d: 0x", dev->id);
-            for (j = 0; j < XI2MASKSIZE; j++)
-                ErrorF("%x", grab->xi2mask[i][j]);
+            for (j = 0; j < xi2mask_mask_size(grab->xi2mask); j++)
+                ErrorF("%x", mask[j]);
             ErrorF("\n");
         }
     }
@@ -181,6 +184,22 @@ UngrabAllDevices(Bool kill_client)
 }
 
 GrabPtr
+AllocGrab(void)
+{
+    GrabPtr grab = calloc(1, sizeof(GrabRec));
+
+    if (grab) {
+        grab->xi2mask = xi2mask_new();
+        if (!grab->xi2mask) {
+            free(grab);
+            grab = NULL;
+        }
+    }
+
+    return grab;
+}
+
+GrabPtr
 CreateGrab(
     int client,
     DeviceIntPtr device,
@@ -196,7 +215,7 @@ CreateGrab(
 {
     GrabPtr grab;
 
-    grab = calloc(1, sizeof(GrabRec));
+    grab = AllocGrab();
     if (!grab)
 	return (GrabPtr)NULL;
     grab->resource = FakeClientID(client);
@@ -219,14 +238,14 @@ CreateGrab(
     grab->next = NULL;
 
     if (grabtype == GRABTYPE_XI2)
-        memcpy(grab->xi2mask, mask->xi2mask, sizeof(mask->xi2mask));
+        xi2mask_merge(grab->xi2mask, mask->xi2mask);
     if (cursor)
 	cursor->refcnt++;
     return grab;
 
 }
 
-static void
+void
 FreeGrab(GrabPtr pGrab)
 {
     free(pGrab->modifiersDetail.pMask);
@@ -235,7 +254,58 @@ FreeGrab(GrabPtr pGrab)
     if (pGrab->cursor)
 	FreeCursor(pGrab->cursor, (Cursor)0);
 
+    xi2mask_free(&pGrab->xi2mask);
     free(pGrab);
+}
+
+Bool
+CopyGrab(GrabPtr dst, const GrabPtr src)
+{
+    Mask *mdetails_mask = NULL;
+    Mask *details_mask = NULL;
+    XI2Mask *xi2mask;
+
+    if (src->cursor)
+        src->cursor->refcnt++;
+
+    if (src->modifiersDetail.pMask) {
+        int len = MasksPerDetailMask * sizeof(Mask);
+        mdetails_mask = malloc(len);
+        if (!mdetails_mask)
+            return FALSE;
+        memcpy(mdetails_mask, src->modifiersDetail.pMask, len);
+    }
+
+    if (src->detail.pMask) {
+        int len = MasksPerDetailMask * sizeof(Mask);
+        details_mask = malloc(len);
+        if (!details_mask) {
+            free(mdetails_mask);
+            return FALSE;
+        }
+        memcpy(details_mask, src->detail.pMask, len);
+    }
+
+    if (!dst->xi2mask) {
+        xi2mask = xi2mask_new();
+        if (!xi2mask) {
+            free(mdetails_mask);
+            free(details_mask);
+            return FALSE;
+        }
+    } else {
+        xi2mask = dst->xi2mask;
+        xi2mask_zero(xi2mask, -1);
+    }
+
+    *dst = *src;
+    dst->modifiersDetail.pMask = mdetails_mask;
+    dst->detail.pMask = details_mask;
+    dst->xi2mask = xi2mask;
+
+    xi2mask_merge(dst->xi2mask, src->xi2mask);
+
+    return TRUE;
 }
 
 int

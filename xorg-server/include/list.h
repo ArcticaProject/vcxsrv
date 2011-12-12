@@ -28,6 +28,7 @@
 
 /**
  * @file Classic doubly-link circular list implementation.
+ * For real usage examples of the linked list, see the file test/list.c
  *
  * Example:
  * We need to keep a list of struct foo in the parent struct bar, i.e. what
@@ -35,16 +36,16 @@
  *
  *     struct bar {
  *          ...
- *          struct foo *foos; -----> struct foo {}, struct foo {}, struct foo{}
+ *          struct foo *list_of_foos; -----> struct foo {}, struct foo {}, struct foo{}
  *          ...
  *     }
  *
- * We need one list head in bar and a list element in all foos (both are of
+ * We need one list head in bar and a list element in all list_of_foos (both are of
  * data type 'struct list').
  *
  *     struct bar {
  *          ...
- *          struct list foos;
+ *          struct list list_of_foos;
  *          ...
  *     }
  *
@@ -58,27 +59,27 @@
  *
  *     struct bar bar;
  *     ...
- *     list_init(&bar.foos);
+ *     list_init(&bar.list_of_foos);
  *
  * Then we create the first element and add it to this list:
  *
  *     struct foo *foo = malloc(...);
  *     ....
- *     list_add(&foo->entry, &bar.foos);
+ *     list_add(&foo->entry, &bar.list_of_foos);
  *
  * Repeat the above for each element you want to add to the list. Deleting
  * works with the element itself.
  *      list_del(&foo->entry);
  *      free(foo);
  *
- * Note: calling list_del(&bar.foos) will set bar.foos to an empty
+ * Note: calling list_del(&bar.list_of_foos) will set bar.list_of_foos to an empty
  * list again.
  *
  * Looping through the list requires a 'struct foo' as iterator and the
  * name of the field the subnodes use.
  *
  * struct foo *iterator;
- * list_for_each_entry(iterator, &bar.foos, entry) {
+ * list_for_each_entry(iterator, &bar.list_of_foos, entry) {
  *      if (iterator->something == ...)
  *             ...
  * }
@@ -87,7 +88,7 @@
  * loop. You need to run the safe for-each loop instead:
  *
  * struct foo *iterator, *next;
- * list_for_each_entry_safe(iterator, next, &bar.foos, entry) {
+ * list_for_each_entry_safe(iterator, next, &bar.list_of_foos, entry) {
  *      if (...)
  *              list_del(&iterator->entry);
  * }
@@ -96,14 +97,8 @@
 
 /**
  * The linkage struct for list nodes. This struct must be part of your
- * to-be-linked struct.
- *
- * Example:
- * struct foo {
- *      int a;
- *      void *b;
- *      struct list *mylist;
- * }
+ * to-be-linked struct. struct list is required for both the head of the
+ * list and for each list node.
  *
  * Position and name of the struct list field is irrelevant.
  * There are no requirements that elements of a list are of the same type.
@@ -118,7 +113,7 @@ struct list {
  * Initialize the list as an empty list.
  *
  * Example:
- * list_init(&foo->mylist);
+ * list_init(&bar->list_of_foos);
  *
  * @param The list to initialized.
  */
@@ -140,7 +135,8 @@ __list_add(struct list *entry,
 }
 
 /**
- * Insert a new element after the given list head.
+ * Insert a new element after the given list head. The new element does not
+ * need to be initialised as empty list.
  * The list changes from:
  *      head → some element → ...
  * to
@@ -148,7 +144,7 @@ __list_add(struct list *entry,
  *
  * Example:
  * struct foo *newfoo = malloc(...);
- * list_add(&newfoo->mylist, &foo->mylist);
+ * list_add(&newfoo->entry, &bar->list_of_foos);
  *
  * @param entry The new element to prepend to the list.
  * @param head The existing list.
@@ -158,6 +154,28 @@ list_add(struct list *entry, struct list *head)
 {
     __list_add(entry, head, head->next);
 }
+
+/**
+ * Append a new element to the end of the list given with this list head.
+ *
+ * The list changes from:
+ *      head → some element → ... → lastelement
+ * to
+ *      head → some element → ... → lastelement → new element
+ *
+ * Example:
+ * struct foo *newfoo = malloc(...);
+ * list_append(&newfoo->entry, &bar->list_of_foos);
+ *
+ * @param entry The new element to prepend to the list.
+ * @param head The existing list.
+ */
+static inline void
+list_append(struct list *entry, struct list *head)
+{
+    __list_add(entry, head->prev, head);
+}
+
 
 static inline void
 __list_del(struct list *prev, struct list *next)
@@ -176,7 +194,7 @@ __list_del(struct list *prev, struct list *next)
  * the list but rather reset the list as empty list.
  *
  * Example:
- * list_del(&newfoo->mylist);
+ * list_del(&foo->entry);
  *
  * @param entry The element to remove.
  */
@@ -191,7 +209,7 @@ list_del(struct list *entry)
  * Check if the list is empty.
  *
  * Example:
- * list_is_empty(&foo->mylist);
+ * list_is_empty(&bar->list_of_foos);
  *
  * @return True if the list contains one or more elements or False otherwise.
  */
@@ -206,7 +224,7 @@ list_is_empty(struct list *head)
  *
  * Example:
  * struct foo* f;
- * f = container_of(&foo->mylist, struct foo, mylist);
+ * f = container_of(&foo->entry, struct foo, entry);
  * assert(f == foo);
  *
  * @param ptr Pointer to the struct list.
@@ -230,7 +248,7 @@ list_is_empty(struct list *head)
  *
  * Example:
  * struct foo *first;
- * first = list_first_entry(&foo->mylist, struct foo, mylist);
+ * first = list_first_entry(&bar->list_of_foos, struct foo, list_of_foos);
  *
  * @param ptr The list head
  * @param type Data type of the list element to retrieve
@@ -240,6 +258,21 @@ list_is_empty(struct list *head)
 #define list_first_entry(ptr, type, member) \
     list_entry((ptr)->next, type, member)
 
+/**
+ * Retrieve the last list entry for the given listpointer.
+ *
+ * Example:
+ * struct foo *first;
+ * first = list_last_entry(&bar->list_of_foos, struct foo, list_of_foos);
+ *
+ * @param ptr The list head
+ * @param type Data type of the list element to retrieve
+ * @param member Member name of the struct list field in the list element.
+ * @return A pointer to the last list element.
+ */
+#define list_last_entry(ptr, type, member) \
+    list_entry((ptr)->prev, type, member)
+
 #define __container_of(ptr, sample, member)				\
     (void *)((char *)(ptr)						\
 	     - ((char *)&(sample)->member - (char *)(sample)))
@@ -248,7 +281,7 @@ list_is_empty(struct list *head)
  *
  * Example:
  * struct foo *iterator;
- * list_for_each_entry(iterator, &foo->mylist, mylist) {
+ * list_for_each_entry(iterator, &bar->list_of_foos, entry) {
  *      [modify iterator]
  * }
  *

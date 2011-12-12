@@ -2,6 +2,10 @@
 #ifndef _XAALOCAL_H
 #define _XAALOCAL_H
 
+#ifdef HAVE_XORG_CONFIG_H
+#include <xorg-config.h>
+#endif
+
 /* This file is very unorganized ! */
 
 
