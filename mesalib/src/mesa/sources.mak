@@ -27,7 +27,6 @@ MAIN_SOURCES = \
 	main/cpuinfo.c \
 	main/debug.c \
 	main/depth.c \
-	main/depthstencil.c \
 	main/dlist.c \
 	main/dlopen.c \
 	main/drawpix.c \
@@ -134,6 +133,7 @@ SWRAST_SOURCES = \
 	swrast/s_copypix.c \
 	swrast/s_context.c \
 	swrast/s_depth.c \
+	swrast/s_depthstencil.c \
 	swrast/s_drawpix.c \
 	swrast/s_feedback.c \
 	swrast/s_fog.c \
