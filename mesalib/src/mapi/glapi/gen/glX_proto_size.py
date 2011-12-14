@@ -225,7 +225,7 @@ class glx_enum_function:
 
 
 	def Print(self, name):
-		print 'INTERNAL PURE FASTCALL GLint'
+		print '_X_INTERNAL PURE FASTCALL GLint'
 		print '__gl%s_size( GLenum e )' % (name)
 		print '{'
 
@@ -334,20 +334,18 @@ class PrintGlxSizeStubs_c(PrintGlxSizeStubs_common):
 		print ''
 		self.printFastcall()
 		print ''
-		self.printVisibility( "INTERNAL", "internal" )
-		print ''
 		print ''
 		print '#if defined(__CYGWIN__) || defined(__MINGW32__) || defined(GLX_USE_APPLEGL)'
 		print '#  undef HAVE_ALIAS'
 		print '#endif'
 		print '#ifdef HAVE_ALIAS'
 		print '#  define ALIAS2(from,to) \\'
-		print '    INTERNAL PURE FASTCALL GLint __gl ## from ## _size( GLenum e ) \\'
+		print '    _X_INTERNAL PURE FASTCALL GLint __gl ## from ## _size( GLenum e ) \\'
 		print '        __attribute__ ((alias( # to )));'
 		print '#  define ALIAS(from,to) ALIAS2( from, __gl ## to ## _size )'
 		print '#else'
 		print '#  define ALIAS(from,to) \\'
-		print '    INTERNAL PURE FASTCALL GLint __gl ## from ## _size( GLenum e ) \\'
+		print '    _X_INTERNAL PURE FASTCALL GLint __gl ## from ## _size( GLenum e ) \\'
 		print '    { return __gl ## to ## _size( e ); }'
 		print '#endif'
 		print ''
@@ -387,11 +385,11 @@ class PrintGlxSizeStubs_h(PrintGlxSizeStubs_common):
  * \\author Ian Romanick <idr@us.ibm.com>
  */
 """
+		print '#include <X11/Xfuncproto.h>'
+		print ''
 		self.printPure();
 		print ''
 		self.printFastcall();
-		print ''
-		self.printVisibility( "INTERNAL", "internal" );
 		print ''
 
 
@@ -402,7 +400,7 @@ class PrintGlxSizeStubs_h(PrintGlxSizeStubs_common):
 				continue
 
 			if (ef.is_set() and self.emit_set) or (not ef.is_set() and self.emit_get):
-				print 'extern INTERNAL PURE FASTCALL GLint __gl%s_size(GLenum);' % (func.name)
+				print 'extern _X_INTERNAL PURE FASTCALL GLint __gl%s_size(GLenum);' % (func.name)
 
 
 class PrintGlxReqSize_common(gl_XML.gl_print_base):
@@ -426,7 +424,7 @@ class PrintGlxReqSize_h(PrintGlxReqSize_common):
 
 
 	def printRealHeader(self):
-		self.printVisibility("HIDDEN", "hidden")
+		print '#include <X11/Xfuncproto.h>'
 		print ''
 		self.printPure()
 		print ''
@@ -435,7 +433,7 @@ class PrintGlxReqSize_h(PrintGlxReqSize_common):
 	def printBody(self, api):
 		for func in api.functionIterateGlx():
 			if not func.ignore and func.has_variable_size_request():
-				print 'extern PURE HIDDEN int __glX%sReqSize(const GLbyte *pc, Bool swap);' % (func.name)
+				print 'extern PURE _X_HIDDEN int __glX%sReqSize(const GLbyte *pc, Bool swap);' % (func.name)
 
 
 class PrintGlxReqSize_c(PrintGlxReqSize_common):

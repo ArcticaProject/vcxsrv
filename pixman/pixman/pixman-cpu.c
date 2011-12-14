@@ -244,6 +244,43 @@ pixman_have_arm_neon (void)
 
 #endif /* USE_ARM_NEON */
 
+#elif defined (__linux__) || defined(__ANDROID__) || defined(ANDROID) /* linux ELF or ANDROID */
+
+static pixman_bool_t arm_has_v7 = FALSE;
+static pixman_bool_t arm_has_v6 = FALSE;
+static pixman_bool_t arm_has_vfp = FALSE;
+static pixman_bool_t arm_has_neon = FALSE;
+static pixman_bool_t arm_has_iwmmxt = FALSE;
+static pixman_bool_t arm_tests_initialized = FALSE;
+
+#if defined(__ANDROID__) || defined(ANDROID) /* Android device support */
+
+#include <cpu-features.h>
+
+static void
+pixman_arm_read_auxv_or_cpu_features ()
+{
+    AndroidCpuFamily cpu_family;
+    uint64_t cpu_features;
+
+    cpu_family = android_getCpuFamily();
+    cpu_features = android_getCpuFeatures();
+
+    if (cpu_family == ANDROID_CPU_FAMILY_ARM)
+    {
+	if (cpu_features & ANDROID_CPU_ARM_FEATURE_ARMv7)
+	    arm_has_v7 = TRUE;
+	
+	if (cpu_features & ANDROID_CPU_ARM_FEATURE_VFPv3)
+	    arm_has_vfp = TRUE;
+	
+	if (cpu_features & ANDROID_CPU_ARM_FEATURE_NEON)
+	    arm_has_neon = TRUE;
+    }
+
+    arm_tests_initialized = TRUE;
+}
+
 #elif defined (__linux__) /* linux ELF */
 
 #include <stdlib.h>
@@ -255,15 +292,8 @@ pixman_have_arm_neon (void)
 #include <string.h>
 #include <elf.h>
 
-static pixman_bool_t arm_has_v7 = FALSE;
-static pixman_bool_t arm_has_v6 = FALSE;
-static pixman_bool_t arm_has_vfp = FALSE;
-static pixman_bool_t arm_has_neon = FALSE;
-static pixman_bool_t arm_has_iwmmxt = FALSE;
-static pixman_bool_t arm_tests_initialized = FALSE;
-
 static void
-pixman_arm_read_auxv ()
+pixman_arm_read_auxv_or_cpu_features ()
 {
     int fd;
     Elf32_auxv_t aux;
@@ -304,12 +334,14 @@ pixman_arm_read_auxv ()
     arm_tests_initialized = TRUE;
 }
 
+#endif /* Linux elf */
+
 #if defined(USE_ARM_SIMD)
 pixman_bool_t
 pixman_have_arm_simd (void)
 {
     if (!arm_tests_initialized)
-	pixman_arm_read_auxv ();
+	pixman_arm_read_auxv_or_cpu_features ();
 
     return arm_has_v6;
 }
@@ -321,7 +353,7 @@ pixman_bool_t
 pixman_have_arm_neon (void)
 {
     if (!arm_tests_initialized)
-	pixman_arm_read_auxv ();
+	pixman_arm_read_auxv_or_cpu_features ();
 
     return arm_has_neon;
 }
@@ -333,14 +365,14 @@ pixman_bool_t
 pixman_have_arm_iwmmxt (void)
 {
     if (!arm_tests_initialized)
-	pixman_arm_read_auxv ();
+	pixman_arm_read_auxv_or_cpu_features ();
 
     return arm_has_iwmmxt;
 }
 
 #endif /* USE_ARM_IWMMXT */
 
-#else /* linux ELF */
+#else /* !_MSC_VER && !Linux elf && !Android */
 
 #define pixman_have_arm_simd() FALSE
 #define pixman_have_arm_neon() FALSE

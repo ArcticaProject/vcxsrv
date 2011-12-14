@@ -2650,8 +2650,9 @@ struct gl_framebuffer
    struct gl_renderbuffer *_ColorDrawBuffers[MAX_DRAW_BUFFERS];
    struct gl_renderbuffer *_ColorReadBuffer;
 
-   /** The Actual depth/stencil buffers to use.  May be wrappers around the
-    * depth/stencil buffers attached above. */
+   /** Wrappers to make combined depth/stencil buffers look like separate
+    * buffers.  Only used by swrast.  Will be removed in the future.
+    */
    struct gl_renderbuffer *_DepthBuffer;
    struct gl_renderbuffer *_StencilBuffer;
 
@@ -2829,6 +2830,15 @@ struct gl_constants
     * Texture borders are deprecated in GL 3.0.
     **/
    GLboolean StripTextureBorder;
+
+   /**
+    * For drivers which can do a better job at eliminating unused varyings
+    * and uniforms than the GLSL compiler.
+    *
+    * XXX Remove these as soon as a better solution is available.
+    */
+   GLboolean GLSLSkipStrictMaxVaryingLimitCheck;
+   GLboolean GLSLSkipStrictMaxUniformLimitCheck;
 };
 
 

@@ -22,13 +22,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "glheader.h"
-#include "imports.h"
-#include "context.h"
-#include "formats.h"
-#include "mtypes.h"
-#include "depthstencil.h"
-#include "renderbuffer.h"
+#include "main/glheader.h"
+#include "main/imports.h"
+#include "main/context.h"
+#include "main/formats.h"
+#include "main/mtypes.h"
+#include "main/renderbuffer.h"
+#include "swrast/s_depthstencil.h"
 
 
 /**
@@ -349,9 +349,9 @@ put_mono_values_z24(struct gl_context *ctx, struct gl_renderbuffer *z24rb,
  * a depth renderbuffer.
  * \return new depth renderbuffer
  */
-struct gl_renderbuffer *
-_mesa_new_z24_renderbuffer_wrapper(struct gl_context *ctx,
-                                   struct gl_renderbuffer *dsrb)
+static struct gl_renderbuffer *
+new_z24_renderbuffer_wrapper(struct gl_context *ctx,
+                             struct gl_renderbuffer *dsrb)
 {
    struct gl_renderbuffer *z24rb;
 
@@ -563,9 +563,9 @@ put_mono_values_z32f(struct gl_context *ctx, struct gl_renderbuffer *z32frb,
  * a depth renderbuffer.
  * \return new depth renderbuffer
  */
-struct gl_renderbuffer *
-_mesa_new_z32f_renderbuffer_wrapper(struct gl_context *ctx,
-                                    struct gl_renderbuffer *dsrb)
+static struct gl_renderbuffer *
+new_z32f_renderbuffer_wrapper(struct gl_context *ctx,
+                              struct gl_renderbuffer *dsrb)
 {
    struct gl_renderbuffer *z32frb;
 
@@ -915,8 +915,8 @@ put_mono_values_s8(struct gl_context *ctx, struct gl_renderbuffer *s8rb, GLuint 
  * a stencil renderbuffer.
  * \return new stencil renderbuffer
  */
-struct gl_renderbuffer *
-_mesa_new_s8_renderbuffer_wrapper(struct gl_context *ctx, struct gl_renderbuffer *dsrb)
+static struct gl_renderbuffer *
+new_s8_renderbuffer_wrapper(struct gl_context *ctx, struct gl_renderbuffer *dsrb)
 {
    struct gl_renderbuffer *s8rb;
 
@@ -956,4 +956,82 @@ _mesa_new_s8_renderbuffer_wrapper(struct gl_context *ctx, struct gl_renderbuffer
    s8rb->PutMonoValues = put_mono_values_s8;
 
    return s8rb;
+}
+
+
+/**
+ * Update the framebuffer's _DepthBuffer field using the renderbuffer
+ * found at the given attachment index.
+ *
+ * If that attachment points to a combined GL_DEPTH_STENCIL renderbuffer,
+ * create and install a depth wrapper/adaptor.
+ *
+ * \param fb  the framebuffer whose _DepthBuffer field to update
+ */
+void
+_swrast_update_depth_buffer(struct gl_context *ctx, struct gl_framebuffer *fb)
+{
+   struct gl_renderbuffer *depthRb =
+      fb->Attachment[BUFFER_DEPTH].Renderbuffer;
+
+   if (depthRb && _mesa_is_format_packed_depth_stencil(depthRb->Format)) {
+      /* The attached depth buffer is a GL_DEPTH_STENCIL renderbuffer */
+      if (!fb->_DepthBuffer
+          || fb->_DepthBuffer->Wrapped != depthRb
+          || _mesa_get_format_base_format(fb->_DepthBuffer->Format) != GL_DEPTH_COMPONENT) {
+         /* need to update wrapper */
+         struct gl_renderbuffer *wrapper;
+
+         if (depthRb->Format == MESA_FORMAT_Z32_FLOAT_X24S8) {
+            wrapper = new_z32f_renderbuffer_wrapper(ctx, depthRb);
+         }
+         else {
+            wrapper = new_z24_renderbuffer_wrapper(ctx, depthRb);
+         }
+         _mesa_reference_renderbuffer(&fb->_DepthBuffer, wrapper);
+      }
+      ASSERT(fb->_DepthBuffer->Wrapped == depthRb);
+      fb->_DepthBuffer->Width = depthRb->Width;
+      fb->_DepthBuffer->Height = depthRb->Height;
+   }
+   else {
+      /* depthRb may be null */
+      _mesa_reference_renderbuffer(&fb->_DepthBuffer, depthRb);
+   }
+}
+
+
+/**
+ * Update the framebuffer's _StencilBuffer field using the renderbuffer
+ * found at the given attachment index.
+ *
+ * If that attachment points to a combined GL_DEPTH_STENCIL renderbuffer,
+ * create and install a stencil wrapper/adaptor.
+ *
+ * \param fb  the framebuffer whose _StencilBuffer field to update
+ */
+void
+_swrast_update_stencil_buffer(struct gl_context *ctx, struct gl_framebuffer *fb)
+{
+   struct gl_renderbuffer *stencilRb =
+      fb->Attachment[BUFFER_STENCIL].Renderbuffer;
+
+   if (stencilRb && _mesa_is_format_packed_depth_stencil(stencilRb->Format)) {
+      /* The attached stencil buffer is a GL_DEPTH_STENCIL renderbuffer */
+      if (!fb->_StencilBuffer
+          || fb->_StencilBuffer->Wrapped != stencilRb
+          || _mesa_get_format_base_format(fb->_StencilBuffer->Format) != GL_STENCIL_INDEX) {
+         /* need to update wrapper */
+         struct gl_renderbuffer *wrapper
+            = new_s8_renderbuffer_wrapper(ctx, stencilRb);
+         _mesa_reference_renderbuffer(&fb->_StencilBuffer, wrapper);
+      }
+      ASSERT(fb->_StencilBuffer->Wrapped == stencilRb);
+      fb->_StencilBuffer->Width = stencilRb->Width;
+      fb->_StencilBuffer->Height = stencilRb->Height;
+   }
+   else {
+      /* stencilRb may be null */
+      _mesa_reference_renderbuffer(&fb->_StencilBuffer, stencilRb);
+   }
 }

@@ -41,21 +41,13 @@ MESA_OUTPUTS = \
 XORG_GLX_DIR = $(XORG_BASE)/glx
 XORG_GLAPI_DIR = $(XORG_BASE)/glx
 
-XORG_GLAPI_FILES = \
-	$(XORG_GLAPI_DIR)/glapi_getproc.c \
-	$(XORG_GLAPI_DIR)/glapi_nop.c \
-	$(XORG_GLAPI_DIR)/glthread.c \
-	$(XORG_GLAPI_DIR)/glthread.h
-
 XORG_GLAPI_OUTPUTS = \
 	$(XORG_GLAPI_DIR)/glprocs.h \
-	$(XORG_GLAPI_DIR)/glapioffsets.h \
 	$(XORG_GLAPI_DIR)/glapitable.h \
-	$(XORG_GLAPI_DIR)/glapidispatch.h \
+	$(XORG_GLAPI_DIR)/dispatch.h \
 	$(XORG_GLAPI_DIR)/glapi_gentable.c
 
 XORG_OUTPUTS = \
-	$(XORG_GLAPI_FILES) \
 	$(XORG_GLAPI_OUTPUTS) \
 	$(XORG_GLX_DIR)/indirect_dispatch.c \
 	$(XORG_GLX_DIR)/indirect_dispatch_swap.c \
@@ -146,6 +138,9 @@ clean:
 ######################################################################
 
 $(XORG_GLAPI_DIR)/%.c: $(MESA_GLAPI_DIR)/%.c
+	cp $< $@
+
+$(XORG_GLAPI_DIR)/dispatch.h: $(MESA_DIR)/main/dispatch.h
 	cp $< $@
 
 $(XORG_GLAPI_DIR)/%.h: $(MESA_GLAPI_DIR)/%.h
