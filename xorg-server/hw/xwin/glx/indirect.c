@@ -2092,6 +2092,8 @@ glxWinCreateConfigs(HDC hdc, glxWinScreen * screen)
         /* EXT_visual_rating / GLX 1.2 */
         if (pfd.dwFlags & PFD_GENERIC_FORMAT) {
             c->base.visualRating = GLX_SLOW_VISUAL_EXT;
+            GLWIN_DEBUG_MSG("pixelFormat %d is un-accelerated, skipping", i + 1);
+            continue;
         }
         else {
             // PFD_GENERIC_ACCELERATED is not considered, so this may be MCD or ICD acclerated...
@@ -2435,6 +2437,8 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen * screen)
 
         case WGL_NO_ACCELERATION_ARB:
             c->base.visualRating = GLX_SLOW_VISUAL_EXT;
+            GLWIN_DEBUG_MSG("pixelFormat %d is un-accelerated, skipping", i + 1);
+            continue;
             break;
 
         case WGL_GENERIC_ACCELERATION_ARB:
