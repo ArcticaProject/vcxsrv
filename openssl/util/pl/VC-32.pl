@@ -47,8 +47,8 @@ if ($FLAVOR =~ /WIN64/)
     $lib_cflag='/Zl' if (!$shlib);	# remove /DEFAULTLIBs from static lib
     $opt_cflags=$f.' /O2 /Ob2 /Oi /Ox /Oy /Ot /GL /Gy /GF /Zi';     
     $dbg_cflags=$f.'d /RTCc /RTC1 /Od /GS /GR /Gy /GF /Zi';   
-    $lflags="/NOLOGO /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:STATUS";
-    $lflagsd="/NOLOGO /SUBSYSTEM:CONSOLE";
+    $lflags="/NOLOGO /SUBSYSTEM:CONSOLE,5.01 /OPT:REF /OPT:ICF /LTCG:STATUS";
+    $lflagsd="/NOLOGO /SUBSYSTEM:CONSOLE,5.01";
 
     *::perlasm_compile_target = sub {
 	my ($target,$source,$bname)=@_;
@@ -131,8 +131,8 @@ else	# Win32
     $lib_cflag='/Zl' if (!$shlib);	# remove /DEFAULTLIBs from static lib
     $opt_cflags=$f.' /O2 /Ob2 /Oi /Ox /Oy /Ot /GL /Gy /GF /Zi';     
     $dbg_cflags=$f.'d /RTCc /RTC1 /Od /GS /GR /Gy /GF /Zi';   
-    $lflags="/NOLOGO /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:STATUS";
-    $lflagsd="/NOLOGO /SUBSYSTEM:CONSOLE";
+    $lflags="/NOLOGO /SUBSYSTEM:CONSOLE,5.01 /OPT:REF /OPT:ICF /LTCG:STATUS";
+    $lflagsd="/NOLOGO /SUBSYSTEM:CONSOLE,5.01";
     }
 $mlflags='';
 
