@@ -18,10 +18,10 @@
 ;--------------------------------
 
 ; The name of the installer
-Name "VcXsrv"
+Name "VcXsrv - XP Compatible"
 
 ; The file to write
-OutFile "vcxsrv-64-debug.1.15.2.0.installer.exe"
+OutFile "vcxsrv-xp-64-debug.1.15.2.0.installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES64\VcXsrv
