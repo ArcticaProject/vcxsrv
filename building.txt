@@ -16,7 +16,7 @@ Prerequisites:
 
 Open up cygwin's bash shell and cd to the top directory
 Run the command `source setvcenv.sh`
-Run the command (FIXME: `buildall.bat` or `buildall.sh`). This will build everything including the installer.
+Run the command `./buildall.sh`. This will build everything including the installer.
 The 64-bit version will not be built and the 64-bit installer will fail. This is a limitation this XP compatible branch. Patches are welcome.
 
 To clean the project tree (uses git) go to the top directory at a cygwin bash shell
