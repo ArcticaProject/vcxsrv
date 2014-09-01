@@ -7,6 +7,8 @@ function check-error {
     fi
 }
 
+. ./setvcenv.sh
+
 which nasm > /dev/null 2>&1
 check-error 'Please install nasm'
 
