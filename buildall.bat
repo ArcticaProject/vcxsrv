@@ -3,9 +3,9 @@ if %errorlevel% NEQ 0 goto nasmerror
 
 echo on
 
-devenv.com freetype\freetypevc10.sln /build "Release Multithreaded|Win32"
+MSBuild.exe freetype\freetypevc10.sln /t:Build /p:Configuration="Release Multithreaded" /p:Platform=Win32
 if %errorlevel% NEQ 0 goto end
-devenv.com freetype\freetypevc10.sln /build "Debug Multithreaded|Win32"
+MSBuild.exe freetype\freetypevc10.sln /t:Build /p:Configuration="Debug Multithreaded" /p:Platform=Win32
 if %errorlevel% NEQ 0 goto end
 cd openssl
 perl Configure VC-WIN32
@@ -22,9 +22,9 @@ if %errorlevel% NEQ 0 goto end
 nmake VC-static-debug
 if %errorlevel% NEQ 0 goto end
 cd ..
-devenv.com tools\mhmake\mhmakevc10.sln /build "Release|Win32"
+MSBuild.exe tools\mhmake\mhmakevc10.sln /t:Build /p:Configuration=Release /p:Platform=Win32
 if %errorlevel% NEQ 0 goto end
-devenv.com tools\mhmake\mhmakevc10.sln /build "Debug|Win32"
+MSBuild.exe tools\mhmake\mhmakevc10.sln /t:Build /p:Configuration=Debug /p:Platform=Win32
 if %errorlevel% NEQ 0 goto end
 
 set MHMAKECONF=%~dp0
