@@ -3,7 +3,8 @@ Prerequisites:
 - Visual C++ 2013 Express Edition (Update 3 is currently used)
   Visual C++ 2013 is probably also ok (not tested)
 - Cygwin. I am not sure of the exact packages, but perl and git are 2 of them. Only 32-bit Cygwin has been tested.
-- Python (2.7 used: http://www.python.org/) + libxml2 python bindings
+- Python (3.2.x used: http://www.python.org/) + lxml python bindings (3.3.x used, https://pypi.python.org/pypi/lxml/)
+- Set the Env Var PYTHON3 to the path to your python.exe . For example, C:\Python32\python.exe
 - Gnuwin32 gperf, gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/), gperf
 - nasm (http://nasm.sourceforge.net). Make sure the nasm directory is in your path
 - Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
