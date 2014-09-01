@@ -65,7 +65,7 @@ check-error 'Error compiling mhmake for release'
 MSBuild.exe tools/mhmake/mhmakevc10.sln /t:Build /p:Configuration=Debug /p:Platform=Win32
 check-error 'Error compiling mhmake for debug'
 
-export MHMAKECONF=`cygpath -da .`
+export MHMAKECONF=`cygpath -wa .`
 
 tools/mhmake/release/mhmake $PARBUILD -C xorg-server MAKESERVER=1 DEBUG=1
 check-error 'Error compiling vcxsrv for debug'

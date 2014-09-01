@@ -1,18 +1,23 @@
-Prerequisits:
-- Visual C++ 2010
-  Visual C++ 2010 Express Edition is probably also ok (not tested)
-- Perl (cygwin perl (http://www.cygwin.com/), strawberry perl (http://strawberryperl.com)  or activestate perl (http://www.activestate.com/activeperl/) )
+Prerequisites:
+- Windows Vista or later (The built code can run on XP, but your build machine must be Vista or later. This is a limitation of Visual Studio 2013.)
+- Visual C++ 2013 Express Edition (Update 3 is currently used)
+  Visual C++ 2013 is probably also ok (not tested)
+- Cygwin. I am not sure of the exact packages, but perl and git are 2 of them. Only 32-bit Cygwin has been tested.
 - Python (2.7 used: http://www.python.org/) + libxml2 python bindings
 - Gnuwin32 gperf, gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/), gperf
 - nasm (http://nasm.sourceforge.net). Make sure the nasm directory is in your path
 - Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
 - Make sure the environment PATH includes the directory where the gnuwin32 binaries are
-- Make sure python, perl are in the environment PATH
-- make sure the command prompt is set for compiling with the visual studio compiler (vcvars32.bat)
-- To build the installer: nsis
+- Make sure python is in the environment PATH
+- To build the installer: NSIS Unicode
+- To build the installer, make sure NSIS Unicode is in the path (e.g. C:\Program Files (x86)\NSIS\Unicode)
+- If you are on 32-bit Windows instead of 64-bit like I am, edit setvcenv.sh for the 32-bit folder path differences
 
-Run the command buildall.bat. This will build everything including the installer.
+Open up cygwin's bash shell and cd to the top directory
+Run the command `source setvcenv.sh`
+Run the command `buildall.bat`. This will build everything including the installer.
+The 64-bit version will not be built and the 64-bit installer will fail. This is a limitation this XP compatible branch. Patches are welcome.
 
-To clean the project tree (uses git) go to the top directory at a command prompt
-and type in 'git clean -dfx'
+To clean the project tree (uses git) go to the top directory at a cygwin bash shell
+and type in `git clean -dfx`
 
