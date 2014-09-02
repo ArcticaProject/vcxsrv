@@ -107,6 +107,7 @@ winCreateWindowMultiWindow(WindowPtr pWin)
     winDebug ("winCreateWindowMultiWindow - pWin: %p\n", pWin);
 #endif
 
+
     WIN_UNWRAP(CreateWindow);
     fResult = (*pScreen->CreateWindow) (pWin);
     WIN_WRAP(CreateWindow, winCreateWindowMultiWindow);
@@ -319,6 +320,7 @@ winUnmapWindowMultiWindow(WindowPtr pWin)
     winDebug ("winUnmapWindowMultiWindow - pWin: %08x\n", pWin);
 #endif
 
+
     WIN_UNWRAP(UnrealizeWindow);
     fResult = (*pScreen->UnrealizeWindow) (pWin);
     WIN_WRAP(UnrealizeWindow, winUnmapWindowMultiWindow);
@@ -363,6 +365,7 @@ winMapWindowMultiWindow(WindowPtr pWin)
     /* Update the Windows window's shape */
     winReshapeMultiWindow(pWin);
     winUpdateRgnMultiWindow(pWin);
+
 
     return fResult;
 }
@@ -913,10 +916,16 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
     LONG dX, dY, dW, dH, x, y;
     DWORD dwStyle, dwExStyle;
 
+    int ret;
+    HMONITOR currentMonitor;
+    MONITORINFO monitorInfo;
+
 #define WIDTH(rc) (rc.right - rc.left)
 #define HEIGHT(rc) (rc.bottom - rc.top)
 
     winDebug("winAdjustXWindow\n");
+
+
 
     if (IsIconic(hwnd)) {
       winDebug("\timmediately return because the window is iconized\n");
@@ -941,13 +950,17 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
     dwExStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
     dwStyle = GetWindowLongPtr(hwnd, GWL_STYLE);
     winDebug("\tWindowStyle: %08x %08x\n", dwStyle, dwExStyle);
+
     AdjustWindowRectEx(&rcDraw, dwStyle, FALSE, dwExStyle);
 
     /* The source of adjust */
     GetWindowRect(hwnd, &rcWin);
+
     winDebug("\tWindow extend {%d, %d, %d, %d}, {%d, %d}\n",
              rcWin.left, rcWin.top, rcWin.right, rcWin.bottom,
              rcWin.right - rcWin.left, rcWin.bottom - rcWin.top);
+
+
     winDebug("\tDraw extend {%d, %d, %d, %d}, {%d, %d}\n",
              rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom,
              rcDraw.right - rcDraw.left, rcDraw.bottom - rcDraw.top);
@@ -976,8 +989,42 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
     vlist[3] = pDraw->height + dH;
     winDebug("\tConfigureWindow to (%ld, %ld) - %ldx%ld\n", vlist[0], vlist[1],
               vlist[2], vlist[3]);
-    return ConfigureWindow(pWin, CWX | CWY | CWWidth | CWHeight,
+
+    ret=ConfigureWindow(pWin, CWX | CWY | CWWidth | CWHeight,
                            vlist, wClient(pWin));
+
+
+    currentMonitor=MonitorFromWindow(hwnd,MONITOR_DEFAULTTONULL);
+    if(!currentMonitor)
+    {
+        return ret;
+    }
+    monitorInfo.cbSize=sizeof ( MONITORINFO );
+    if(!GetMonitorInfo(currentMonitor, &monitorInfo))
+    {
+        return ret;
+    }
+
+
+    if((rcWin.left <= monitorInfo.rcMonitor.left) && (rcWin.top <= monitorInfo.rcMonitor.top) &&
+               (rcWin.right - rcWin.left > monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left) &&
+               (rcWin.bottom - rcWin.top > monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top))
+    {
+
+       SetWindowLongPtr(hwnd, GWL_STYLE,
+                  WS_VISIBLE);
+
+       SetWindowLongPtr(hwnd, GWL_EXSTYLE,
+                  0);
+
+       SetWindowPos ( hwnd, HWND_TOPMOST, monitorInfo.rcMonitor.left,
+                   monitorInfo.rcMonitor.top,
+                   monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+                   monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
+                   0);
+    }
+
+    return ret;
 
 #undef WIDTH
 #undef HEIGHT
