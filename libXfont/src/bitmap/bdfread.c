@@ -458,7 +458,10 @@ bdfReadCharacters(FontFilePtr file, FontPtr pFont, bdfFileState *pState,
 	    ci->metrics.descent = -bb;
 	    ci->metrics.characterWidth = wx;
 	    ci->bits = NULL;
-	    bdfReadBitmap(ci, file, bit, byte, glyph, scan, bitmapsSizes);
+	    if (!bdfReadBitmap(ci, file, bit, byte, glyph, scan, bitmapsSizes)) {
+		bdfError("could not read bitmap for character '%s'\n", charName);
+		goto BAILOUT;
+	    }
 	    ci++;
 	    ndx++;
 	} else
