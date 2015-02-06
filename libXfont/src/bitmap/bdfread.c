@@ -604,7 +604,9 @@ bdfReadProperties(FontFilePtr file, FontPtr pFont, bdfFileState *pState)
 	bdfError("missing 'STARTPROPERTIES'\n");
 	return (FALSE);
     }
-    if (sscanf((char *) line, "STARTPROPERTIES %d", &nProps) != 1) {
+    if ((sscanf((char *) line, "STARTPROPERTIES %d", &nProps) != 1) ||
+	(nProps <= 0) ||
+	(nProps > ((INT32_MAX / sizeof(FontPropRec)) - BDF_GENPROPS))) {
 	bdfError("bad 'STARTPROPERTIES'\n");
 	return (FALSE);
     }
