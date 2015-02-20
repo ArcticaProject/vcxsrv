@@ -21,7 +21,7 @@
 Name "VcXsrv - XP Compatible"
 
 ; The file to write
-OutFile "vcxsrv-xp-64.1.15.2.2.installer.exe"
+OutFile "vcxsrv-xp-64.1.15.2.3.installer.exe"
 
 ; The default installation directory
 InstallDir $programfiles64\VcXsrv
