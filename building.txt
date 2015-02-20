@@ -1,7 +1,6 @@
 Prerequisites:
 - Windows Vista or later (The built code can run on XP, but your build machine must be Vista or later. This is a limitation of Visual Studio 2013.)
-- Visual C++ 2013 Express Edition (Update 4 is currently used)
-  Visual C++ 2013 is probably also ok (not tested)
+- Visual Studio (C++) 2013. Update 4 is currently used. Express Edition, Community Edition, or one of the commercial editions should all work fine. (Currently built using community edition.)
 - Cygwin. I am not sure of the exact packages, but perl and git are 2 of them. Only 32-bit Cygwin has been tested.
 - Python 2.7.x (2.7.9 used)
 - Make sure python 2.7 (not 3.2) is in the environment PATH
