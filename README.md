@@ -32,9 +32,11 @@ http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-pro
 
 The current version: 
 
-vcxsrv.1.15.2.3-xp+vc2013+x2go1.installer.exe (43M)
+vcxsrv.1.15.2.4-xp+vc2013+x2go1.installer.exe (43M)
 
-http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/vcxsrv.1.15.2.3-xp+vc2013+x2go1.installer.exe
+http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/vcxsrv.1.15.2.4-xp+vc2013+x2go1.installer.exe
+
+Note that the version string will be simplified with the next release.
 
 ------
 
