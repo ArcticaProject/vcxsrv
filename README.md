@@ -56,4 +56,4 @@ You might be wondering why this repo and these builds exist. Why not upstream yo
 1. master - The upstream VcXsrv branch that upstream VcXsrv is built from. Currently on the 1.16.x version series.
 2. 1.15.2.x - the 1.15.2.x branch maintained by Arctica and X2Go.
 3. released - Upstream copies the released (or git) versions of the various packages into the released branch (and updates the packages.txt file at the root.)  This branch contains 0 modifications to those packages. Upstream then uses git's merge feature to merge these packages updates/upgrades packages into master, where upstream does make modifications to those packages.
-4. released-1.15.2.x - same to released, but for 1.15.2.x rather than master.
+4. released-1.15.2.x - same as released, but for 1.15.2.x rather than master.
