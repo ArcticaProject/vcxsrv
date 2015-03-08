@@ -40,11 +40,20 @@ Note that the version string will be simplified with the next release.
 
 ------
 
-#### Why this repo and these builds exist.
+## Info for developers
 
-Contributors and users might be wondering why this repo and these builds exist. Why not upstream your changes?
+####  Why this repo and these builds exist.
+
+You might be wondering why this repo and these builds exist. Why not upstream your changes?
 
 1. The primary developer of this repo and these builds (Mike DePaulo) tried multiple times to submit merge requests (the SourceForge equivalent of pull requests) and bug reports to the upstream VcXsrv project. The upstream VcXsrv developer (marha) only replied once. He rejected the merge request (for a legit reason), and gave good advice. However, he did not reject the merge request via the actual SourceForge system, and he has not responded since.
 2. SourceForge's support for git is terrible. For example, whenever I tried to merge request from branch Y on my personal repo to the master branch on the upstream VcXsrv repo, it tried to merge my master branch instead.
 3. [SourceForge has recently done terrible things as GitHub has gained popularity](https://en.wikipedia.org/wiki/SourceForge#DevShare_adware_controversy)
 4. Using a GitHub repo is much preferable to using a personal SourceForge repo in terms of visibility.
+
+#### Explanation of branches:
+
+1. master - The upstream VcXsrv branch that upstream VcXsrv is built from. Currently on the 1.16.x version series.
+2. 1.15.2.x - the 1.15.2.x branch maintained by Arctica and X2Go.
+3. released - Upstream copies the released (or git) versions of the various packages into the released branch (and updates the packages.txt file at the root.)  This branch contains 0 modifications to those packages. Upstream then uses git's merge feature to merge these packages updates/upgrades packages into master, where upstream does make modifications to those packages.
+4. released-1.15.2.x - same to released, but for 1.15.2.x rather than master.
