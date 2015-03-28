@@ -91,7 +91,7 @@ xkbcomp git version
 xkeyboard-config git version
 xrdb git version
 xproto-7.0.26
-xserver git version
+xserver git version with CVE-2015-0255 fix
 xtrans git version
 xwininfo git version
 zlib-1.2.8
