@@ -70,6 +70,7 @@ openssl-1.0.1k
 pixman git version
 presentproto-1.0
 pthreads-w32 cvs version
+putty (plink only) svn revision 10192 with CVE-2015-2157 fix
 randrproto git version
 recordproto-1.14.2
 renderproto-0.11.1
