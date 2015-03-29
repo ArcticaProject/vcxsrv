@@ -18,7 +18,7 @@
 ;--------------------------------
 
 ; The name of the installer
-Name "VcXsrv - XP Compatible"
+Name "VcXsrv (X2Go/Arctica Builds)"
 
 ; The file to write
 OutFile "vcxsrv-64-debug.1.15.2.4-xp+vc2013+x2go1.installer.exe"
