@@ -5,6 +5,7 @@ Changes in 1.15.2.5 (X2Go/Arctica Builds)
      openssl 1.0.1k -> 1.0.1m
      libXfont 1.4.8 -> 1.4.9
 - Fix plink CVE-2015-2157
+- uninstaller: Remove the entire VcXsrv directory (GitHub Issue #1)
 
 Changes in 1.15.2.4-xp+vc2013+x2go1
 -------------------
