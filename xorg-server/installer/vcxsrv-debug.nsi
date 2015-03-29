@@ -21,7 +21,7 @@
 Name "VcXsrv (X2Go/Arctica Builds)"
 
 ; The file to write
-OutFile "vcxsrv-debug.1.15.2.4-xp+vc2013+x2go1.installer.exe"
+OutFile "vcxsrv-debug.1.15.2.5.x2go+arctica.installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES32\VcXsrv
