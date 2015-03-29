@@ -18,7 +18,7 @@
 ;--------------------------------
 
 ; The name of the installer
-Name "VcXsrv"
+Name "VcXsrv (X2Go/Arctica Builds)"
 
 ; The file to write
 OutFile "vcxsrv-debug.1.17.0.0.installer.exe"

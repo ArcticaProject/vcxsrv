@@ -19,7 +19,7 @@
  !include "FileFunc.nsh"
 
 ; The name of the installer
-Name "VcXsrv"
+Name "VcXsrv (X2Go/Arctica Builds)"
 
 ; The file to write
 OutFile "vcxsrv-64.1.17.0.0.installer.exe"
