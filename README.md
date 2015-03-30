@@ -40,6 +40,16 @@ Note that the version string will be simplified with the next release.
 
 ------
 
+#### Community Support
+
+You can post *issues* using GitHub.
+
+You can also ask questions about VcXsrv usage or discuss development on [the X2Go mailing lists.](http://lists.x2go.org/listinfo/) Note that this may change in the future.
+
+#### Professional Support
+
+[Professional Support is available from one of the X2Go Developers.](http://wiki.x2go.org/doku.php/doc:professional-support)
+
 ## Info for developers
 
 ####  Why this repo and these builds exist.
