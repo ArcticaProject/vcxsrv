@@ -17,11 +17,14 @@
 */
 ;--------------------------------
 
+!define NAME_STRING "VcXsrv (X2Go/Arctica Builds)"
+!define VERSION "1.17.0.0"
+
 ; The name of the installer
-Name "VcXsrv (X2Go/Arctica Builds)"
+Name "${NAME_STRING}"
 
 ; The file to write
-OutFile "vcxsrv-debug.1.17.0.0.installer.exe"
+OutFile "vcxsrv-debug.${VERSION}.x2go+arctica.installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES32\VcXsrv
@@ -32,11 +35,11 @@ InstallDirRegKey HKLM SOFTWARE\VcXsrv "Install_Dir"
 
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
 
-VIProductVersion "1.17.0.0"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "VcXsrv"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "VcXsrv windows xserver"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.17.0.0"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "1.17.0.0"
+VIProductVersion "${VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${NAME_STRING}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "VcXsrv windows xserver (X2Go/Arctica Builds)"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
