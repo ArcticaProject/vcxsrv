@@ -28,15 +28,15 @@ Other changes are:
 
 #### Download builds:
 
+Current version is `1.15.2.6`: 
+
+vcxsrv.1.15.2.6.x2go+arctica.installer.exe (43M)
+
+http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/vcxsrv.1.15.2.6.x2go+arctica.installer.exe
+
+Other versions:
+
 http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/
-
-The current version: 
-
-vcxsrv.1.15.2.4-xp+vc2013+x2go1.installer.exe (43M)
-
-http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/vcxsrv.1.15.2.4-xp+vc2013+x2go1.installer.exe
-
-Note that the version string will be simplified with the next release.
 
 ------
 
