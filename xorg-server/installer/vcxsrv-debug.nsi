@@ -17,11 +17,14 @@
 */
 ;--------------------------------
 
+!define NAME_STRING "VcXsrv (X2Go/Arctica Builds)"
+!define VERSION "1.15.2.5"
+
 ; The name of the installer
-Name "VcXsrv (X2Go/Arctica Builds)"
+Name "${NAME_STRING}"
 
 ; The file to write
-OutFile "vcxsrv-debug.1.15.2.5.x2go+arctica.installer.exe"
+OutFile "vcxsrv-debug.${VERSION}.x2go+arctica.installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES32\VcXsrv

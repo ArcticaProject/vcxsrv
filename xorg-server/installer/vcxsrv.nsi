@@ -17,11 +17,16 @@
 */
 ;--------------------------------
 
+!define NAME_STRING "VcXsrv (X2Go/Arctica Builds)"
+!define VERSION "1.15.2.5"
+!define UNINSTALL_PUBLISHER "X2Go & Arctica Projects"
+!define UNINSTALL_URL "https://github.com/ArcticaProject/vcxsrv"
+
 ; The name of the installer
-Name "VcXsrv (X2Go/Arctica Builds)"
+Name "${NAME_STRING}"
 
 ; The file to write
-OutFile "vcxsrv.1.15.2.5.x2go+arctica.installer.exe"
+OutFile "vcxsrv.${VERSION}.x2go+arctica.installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES32\VcXsrv
@@ -123,8 +128,14 @@ Section "VcXsrv (required)"
   WriteRegStr HKLM SOFTWARE\VcXsrv "Install_Dir" "$INSTDIR"
 
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "DisplayName" "VcXsrv"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "DisplayIcon" "$INSTDIR\vcxsrv.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "DisplayName" "${NAME_STRING}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "Publisher" "${UNINSTALL_PUBLISHER}}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "UninstallString" "$INSTDIR\uninstall.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "HelpLink"         "${UNINSTALL_URL}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "URLInfoAbout"     "${UNINSTALL_URL}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "URLUpdateInfo"    "${UNINSTALL_URL}"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
