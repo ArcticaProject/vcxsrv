@@ -2,6 +2,8 @@ Changes in 1.15.2.6 (X2Go/Arctica Builds)
 -------------------
 
 - Fix xorg-server CVE-2015-3418
+- Do not make the font files differ each time due to timestamp
+  differences
 - installer: specify Icon, Version, Publisher & URLs
   (Shows up in "Add/Remove Programs")
 - installer: change name in "Add/Remove Programs" to:

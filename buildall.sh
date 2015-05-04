@@ -9,6 +9,12 @@ function check-error {
 
 . ./setvcenv.sh
 
+# Do not make the font files differ each time due to timestamp differences.
+# (This prevents git repos from becoming very large & slow when you commit
+# multiple builds.)
+# x2goclient-contrib.git needs this.
+export GZIP="--no-name"
+
 which nasm > /dev/null 2>&1
 check-error 'Please install nasm'
 
