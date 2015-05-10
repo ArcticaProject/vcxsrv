@@ -1,7 +1,7 @@
 VcXsrv Windows X Server (Custom builds by X2Go & Arctica)
 ------------------------------------------------
 
-The X2Go Project and Arctica Project are maintaining a 1.15.2.x branch of VcXsrv.
+The X2Go Project and Arctica Project are maintaining 1.15.2.x & 1.17.0.0-x branches of VcXsrv.
 
 VcXsrv is a Windows X-server based on the xorg git sources (like xming or cygwin's xwin), but compiled with Visual Studio.
 
@@ -23,16 +23,25 @@ Other changes are:
 1. Only 32-bit builds (for the time being)
 2. Fixes for issues when used with nx-libs
 3. Improvements for contributors: Build Instructions are current & correct, we accept pull requests/patches, we respond to issues (although we cannot guarantee timely fixes), etc
+4. Better compression within the installer (for 1.17.0.0-x)
 
 ------
 
 #### Download builds:
 
-Current version is `1.15.2.6`: 
+Current versions are:
+
+`1.15.2.6`
 
 vcxsrv.1.15.2.6.x2go+arctica.installer.exe (43M)
 
 http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/vcxsrv.1.15.2.6.x2go+arctica.installer.exe
+
+`1.17.0.0-1`
+
+vcxsrv.1.17.0.0-1.x2go+arctica.installer.exe (38M)
+
+http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/vcxsrv.1.17.0.0-1.x2go+arctica.installer.exe
 
 Other versions:
 
@@ -65,5 +74,7 @@ You might be wondering why this repo and these builds exist. Why not upstream yo
 
 1. master - The upstream VcXsrv branch that upstream VcXsrv is built from. Currently on the 1.16.x version series.
 2. release/1.15.2.x - the 1.15.2.x branch maintained by Arctica and X2Go.
-3. release/external - Upstream copies the released (or git) versions of the various packages into this branch, which they call `released` . They then update the packages.txt file at the root.  This branch contains 0 modifications to those packages. Upstream then uses git's merge feature to merge these packages updates/upgrades into master, where upstream does make modifications to those packages.
-4. release/external-1.15.2.x - same as `release/external`, but for `release/1.15.2.x` rather than `master`.
+3. release/1.17.0.0-x - the 1.17.0.0-x branch maintained by Arctica and X2Go.
+4. release/external - Upstream copies the released (or git) versions of the various packages into this branch, which they call `released` . They then update the packages.txt file at the root.  This branch contains 0 modifications to those packages. Upstream then uses git's merge feature to merge these packages updates/upgrades into master, where upstream does make modifications to those packages.
+5. release/external-1.15.2.x - same as `release/external`, but for `release/1.15.2.x` rather than `master`.
+6. release/external-1.17.0.0-x - same as `release/external`, but for `release/1.17.0.0-x` rather than `master`.
