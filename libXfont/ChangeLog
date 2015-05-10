@@ -1,3 +1,85 @@
+commit da4246c98bc51297daeec47c15181e179df94013
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Tue Mar 17 08:12:19 2015 -0700
+
+    libXfont 1.5.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 2351c83a77a478b49cba6beb2ad386835e264744
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Mar 6 22:54:58 2015 -0800
+
+    bdfReadCharacters: ensure metrics fit into xCharInfo struct [CVE-2015-1804]
+    
+    We use 32-bit ints to read from the bdf file, but then try to stick
+    into a 16-bit int in the xCharInfo struct, so make sure they won't
+    overflow that range.
+    
+    Found by afl-1.24b.
+    
+    v2: Verify that additions won't overflow 32-bit int range either.
+    v3: As Julien correctly observes, the previous check for bh & bw not
+        being < 0 reduces the number of cases we need to check for overflow.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 78c2e3d70d29698244f70164428bd2868c0ab34c
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 6 15:54:00 2015 -0800
+
+    bdfReadCharacters: bailout if a char's bitmap cannot be read [CVE-2015-1803]
+    
+    Previously would charge on ahead with a NULL pointer in ci->bits, and
+    then crash later in FontCharInkMetrics() trying to access the bits.
+    
+    Found with afl-1.23b.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 2deda9906480f9c8ae07b8c2a5510cc7e4c59a8e
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 6 15:50:45 2015 -0800
+
+    bdfReadProperties: property count needs range check [CVE-2015-1802]
+    
+    Avoid integer overflow or underflow when allocating memory arrays
+    by multiplying the number of properties reported for a BDF font.
+    
+    Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit d9fda3d247942292a5f24694c22337c547006e11
+Author: Christos Zoulas <christos@NetBSD.org>
+Date:   Wed Feb 25 21:39:30 2015 +0100
+
+    Set close-on-exec for font file I/O.
+    
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Signed-off-by: Thomas Klausner <wiz@NetBSD.org>
+
+commit 3b33588117c2ca3099b999939985ffe098d479b3
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Nov 5 17:41:24 2014 -0800
+
+    Use 'imdent' to realign cpp indentation levels in fslibos.h
+    
+    Parts were indented, others weren't, now is more consistent.
+    'git diff -w' shows no non-whitespace changes in this commit
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 03c035b061a0582159467dcadfc8e95074e2a84f
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Nov 5 17:39:05 2014 -0800
+
+    Remove unneeded checks for #ifndef X_NOT_POSIX
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
 commit ad4f4d8a2d0730c0ea3c09210bf921638b4682bc
 Author: Alan Coopersmith <alan.coopersmith@oracle.com>
 Date:   Sat Jul 19 09:49:23 2014 -0700
