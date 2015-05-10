@@ -62,8 +62,16 @@ from The Open Group.
 
 #if HAVE_STDINT_H
 #include <stdint.h>
-#elif !defined(INT32_MAX)
-#define INT32_MAX 0x7fffffff
+#else
+# ifndef INT32_MAX
+#  define INT32_MAX 0x7fffffff
+# endif
+# ifndef INT16_MAX
+#  define INT16_MAX 0x7fff
+# endif
+# ifndef INT16_MIN
+#  define INT16_MIN (0 - 0x8000)
+# endif
 #endif
 
 #define INDICES 256
@@ -417,6 +425,12 @@ bdfReadCharacters(FontFilePtr file, FontPtr pFont, bdfFileState *pState,
 	    bdfError("DWIDTH y value must be zero\n");
 	    goto BAILOUT;
 	}
+	/* xCharInfo metrics are stored as INT16 */
+	if ((wx < 0) || (wx > INT16_MAX)) {
+	    bdfError("character '%s' has out of range width, %d\n",
+		     charName, wx);
+	    goto BAILOUT;
+	}
 	line = bdfGetLine(file, lineBuf, BDFLINELEN);
 	if ((!line) || (sscanf((char *) line, "BBX %d %d %d %d", &bw, &bh, &bl, &bb) != 4)) {
 	    bdfError("bad 'BBX'\n");
@@ -425,6 +439,14 @@ bdfReadCharacters(FontFilePtr file, FontPtr pFont, bdfFileState *pState,
 	if ((bh < 0) || (bw < 0)) {
 	    bdfError("character '%s' has a negative sized bitmap, %dx%d\n",
 		     charName, bw, bh);
+	    goto BAILOUT;
+	}
+	/* xCharInfo metrics are read as int, but stored as INT16 */
+	if ((bl > INT16_MAX) || (bl < INT16_MIN) ||
+	    (bb > INT16_MAX) || (bb < INT16_MIN) ||
+	    (bw > (INT16_MAX - bl)) || (bh > (INT16_MAX - bb))) {
+	    bdfError("character '%s' has out of range metrics, %d %d %d %d\n",
+		     charName, bl, (bl+bw), (bh+bb), -bb);
 	    goto BAILOUT;
 	}
 	line = bdfGetLine(file, lineBuf, BDFLINELEN);
@@ -458,7 +480,10 @@ bdfReadCharacters(FontFilePtr file, FontPtr pFont, bdfFileState *pState,
 	    ci->metrics.descent = -bb;
 	    ci->metrics.characterWidth = wx;
 	    ci->bits = NULL;
-	    bdfReadBitmap(ci, file, bit, byte, glyph, scan, bitmapsSizes);
+	    if (!bdfReadBitmap(ci, file, bit, byte, glyph, scan, bitmapsSizes)) {
+		bdfError("could not read bitmap for character '%s'\n", charName);
+		goto BAILOUT;
+	    }
 	    ci++;
 	    ndx++;
 	} else
@@ -604,7 +629,9 @@ bdfReadProperties(FontFilePtr file, FontPtr pFont, bdfFileState *pState)
 	bdfError("missing 'STARTPROPERTIES'\n");
 	return (FALSE);
     }
-    if (sscanf((char *) line, "STARTPROPERTIES %d", &nProps) != 1) {
+    if ((sscanf((char *) line, "STARTPROPERTIES %d", &nProps) != 1) ||
+	(nProps <= 0) ||
+	(nProps > ((INT32_MAX / sizeof(FontPropRec)) - BDF_GENPROPS))) {
 	bdfError("bad 'STARTPROPERTIES'\n");
 	return (FALSE);
     }

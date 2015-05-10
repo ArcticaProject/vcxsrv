@@ -55,7 +55,7 @@ libXaw-1.0.12
 libXdmcp git version
 libXext git version
 libXfixes-5.0
-libXfont-1.5.0
+libXfont-1.5.1
 libXft git version
 libXinerama git version
 libXmu git version
@@ -71,6 +71,7 @@ openssl-1.0.2a
 pixman git version
 presentproto-1.0
 pthreads-w32 cvs version
+putty (plink only) svn revision 10285 with CVE-2015-2157 fix
 randrproto git version
 recordproto-1.14.2
 renderproto-0.11.1
