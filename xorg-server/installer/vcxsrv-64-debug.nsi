@@ -29,6 +29,10 @@ OutFile "vcxsrv-64-debug.${VERSION}.x2go+arctica.installer.exe"
 ; The default installation directory
 InstallDir $PROGRAMFILES64\VcXsrv
 
+; NSIS 2.46 defaults to zlib.
+; Setting this reduces the size of a build from 7.0 to 4.6 MB (34%)
+SetCompressor /SOLID lzma
+
 ; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM SOFTWARE\VcXsrv "Install_Dir_64"

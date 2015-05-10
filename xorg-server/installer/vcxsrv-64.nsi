@@ -32,6 +32,9 @@ OutFile "vcxsrv-64.${VERSION}.x2go+arctica.installer.exe"
 ; The default installation directory
 InstallDir $programfiles64\VcXsrv
 
+; NSIS 2.46 defaults to zlib.
+SetCompressor /SOLID lzma
+
 ; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM SOFTWARE\VcXsrv "Install_Dir_64"
