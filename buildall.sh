@@ -82,5 +82,5 @@ tools/mhmake/release/mhmake.exe $PARBUILD -C xorg-server MAKESERVER=1
 check-error 'Error compiling vcxsrv for release'
 
 cd xorg-server/installer
-./packageall.bat
+./packageall.bat nox64
 
