@@ -48,12 +48,12 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-            VALUE "FileDescription",  "VcXsrv windows xserver\0"
+            VALUE "FileDescription",  "VcXsrv windows xserver (X2Go/Arctica Builds)\0"
             VALUE "FileVersion",      VER_FILEVERSION_STR"\0"
             VALUE "InternalName",     "VcXsrv\0"
-            VALUE "LegalCopyright",   "marha@users.sourceforge.net\0"
+            VALUE "LegalCopyright",   "marha@users.sourceforge.net & Mike DePaulo\0"
             VALUE "OriginalFilename", "vcxsrv.exe\0"
-            VALUE "ProductName",      "VcXsrv\0"
+            VALUE "ProductName",      "VcXsrv (X2Go/Arctica Builds)\0"
             VALUE "ProductVersion",   VER_PRODUCTVERSION_STR"\0"
         END
     END

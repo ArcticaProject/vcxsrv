@@ -14,7 +14,7 @@
 #define BIGREQS 1
 
 /* Builder address */
-#define BUILDERADDR "marha@users.sourceforge.net"
+#define BUILDERADDR "https://github.com/ArcticaProject/vcxsrv"
 
 /* Operating System Name */
 #define OSNAME "Win32"
@@ -402,7 +402,7 @@
 #define DBE 1
 
 /* Vendor name */
-#define XVENDORNAME "The VcXsrv Project"
+#define XVENDORNAME "The X2Go and Arctica Projects"
 
 /* Endian order */
 #ifndef X_BYTE_ORDER
