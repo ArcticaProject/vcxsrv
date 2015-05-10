@@ -18,7 +18,7 @@
 ;--------------------------------
 
 !define NAME_STRING "VcXsrv (X2Go/Arctica Builds)"
-!define VERSION "1.17.0.0"
+!define VERSION "1.17.0.0-1"
 
 ; The name of the installer
 Name "${NAME_STRING}"
