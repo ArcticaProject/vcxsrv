@@ -3,10 +3,13 @@ Prerequisites:
 - Visual Studio (C++) 2013. Update 4 is currently used. Express Edition, Community Edition, or one of the commercial editions should all work fine. (Currently built using community edition.)
 - Cygwin. I am not sure of the exact packages, but perl and git are 2 of them. Only 32-bit Cygwin has been tested.
 - Python 2.7.x (2.7.9 used)
+- lxml python bindings for Python 2.7.x (3.3.x used, https://pypi.python.org/pypi/lxml/)
+- Mako for Python 2.7 (as administrator: `pip install mako`. pip.exe is under c:\Python27\Scripts\ by default.)
 - Make sure python 2.7 (not 3.2) is in the environment PATH
-- Python 3 (3.2.x used: http://www.python.org/) + lxml python bindings (3.3.x used, https://pypi.python.org/pypi/lxml/)
+- Python 3 (3.2.x used: http://www.python.org/)
+- lxml python bindings for Python 3.2.x (3.3.x used, https://pypi.python.org/pypi/lxml/)
 - Set the Env Var PYTHON3 to the path to your Python 3 python.exe . For example, C:\Python32\python.exe
-- Gnuwin32 gperf, gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/), gperf
+- Gnuwin32 gperf, gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/)
 - nasm (http://nasm.sourceforge.net). Make sure the nasm directory is in your path
 - Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
 - Make sure the environment PATH includes the directory where the gnuwin32 binaries are
