@@ -1,5 +1,7 @@
 Changes in 1.17.0.0-2 (X2Go/Arctica Builds)
 -------------------
+- Update the following packages:
+     openssl-1.0.2c
 
 Changes in 1.17.0.0-1 (X2Go/Arctica Builds)
 -------------------
