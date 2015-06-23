@@ -1021,7 +1021,7 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
                    monitorInfo.rcMonitor.top,
                    monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
                    monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
-                   SWP_DRAWFRAME);
+                   0);
     }
 
     return ret;
