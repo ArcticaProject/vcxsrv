@@ -19,7 +19,7 @@
  !include "FileFunc.nsh"
 
 !define NAME_STRING "VcXsrv (X2Go/Arctica Builds)"
-!define VERSION "1.17.0.0-2-bug3test2"
+!define VERSION "1.17.0.0-2-bug3test3"
 !define UNINSTALL_PUBLISHER "X2Go & Arctica Projects"
 !define UNINSTALL_URL "https://github.com/ArcticaProject/vcxsrv"
 
