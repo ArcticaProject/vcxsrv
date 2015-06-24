@@ -107,7 +107,6 @@ winCreateWindowMultiWindow(WindowPtr pWin)
     winDebug ("winCreateWindowMultiWindow - pWin: %p\n", pWin);
 #endif
 
-
     WIN_UNWRAP(CreateWindow);
     fResult = (*pScreen->CreateWindow) (pWin);
     WIN_WRAP(CreateWindow, winCreateWindowMultiWindow);
@@ -320,7 +319,6 @@ winUnmapWindowMultiWindow(WindowPtr pWin)
     winDebug ("winUnmapWindowMultiWindow - pWin: %p\n", pWin);
 #endif
 
-
     WIN_UNWRAP(UnrealizeWindow);
     fResult = (*pScreen->UnrealizeWindow) (pWin);
     WIN_WRAP(UnrealizeWindow, winUnmapWindowMultiWindow);
@@ -365,7 +363,6 @@ winMapWindowMultiWindow(WindowPtr pWin)
     /* Update the Windows window's shape */
     winReshapeMultiWindow(pWin);
     winUpdateRgnMultiWindow(pWin);
-
 
     return fResult;
 }
@@ -911,26 +908,15 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
 {
     RECT rcDraw;                /* Rect made from pWin->drawable to be adjusted */
     RECT rcWin;                 /* The source: WindowRect from hwnd */
-    RECT new_size;              /* Structure holding a new window size, in case
-                                 * the window exceeds visible limits.
-                                 * Caveat: right and bottom values are really
-                                 * width and height! */
     DrawablePtr pDraw;
     XID vlist[4];
     LONG dX, dY, dW, dH, x, y;
     DWORD dwStyle, dwExStyle;
 
-    int ret, need_resize;
-    HMONITOR currentMonitor;
-    MONITORINFO monitorInfo;
-    LONG_PTR old_style, old_ex_style;
-
 #define WIDTH(rc) (rc.right - rc.left)
 #define HEIGHT(rc) (rc.bottom - rc.top)
 
     winDebug("winAdjustXWindow\n");
-
-
 
     if (IsIconic(hwnd)) {
       winDebug("\timmediately return because the window is iconized\n");
@@ -955,17 +941,13 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
     dwExStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
     dwStyle = GetWindowLongPtr(hwnd, GWL_STYLE);
     winDebug("\tWindowStyle: %08x %08x\n", dwStyle, dwExStyle);
-
     AdjustWindowRectEx(&rcDraw, dwStyle, FALSE, dwExStyle);
 
     /* The source of adjust */
     GetWindowRect(hwnd, &rcWin);
-
     winDebug("\tWindow extend {%d, %d, %d, %d}, {%d, %d}\n",
              rcWin.left, rcWin.top, rcWin.right, rcWin.bottom,
              rcWin.right - rcWin.left, rcWin.bottom - rcWin.top);
-
-
     winDebug("\tDraw extend {%d, %d, %d, %d}, {%d, %d}\n",
              rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom,
              rcDraw.right - rcDraw.left, rcDraw.bottom - rcDraw.top);
@@ -994,78 +976,8 @@ winAdjustXWindow(WindowPtr pWin, HWND hwnd)
     vlist[3] = pDraw->height + dH;
     winDebug("\tConfigureWindow to (%ld, %ld) - %ldx%ld\n", vlist[0], vlist[1],
               vlist[2], vlist[3]);
-
-    ret=ConfigureWindow(pWin, CWX | CWY | CWWidth | CWHeight,
+    return ConfigureWindow(pWin, CWX | CWY | CWWidth | CWHeight,
                            vlist, wClient(pWin));
-
-
-    currentMonitor=MonitorFromWindow(hwnd,MONITOR_DEFAULTTONULL);
-    if(!currentMonitor)
-    {
-        return ret;
-    }
-    monitorInfo.cbSize=sizeof ( MONITORINFO );
-    if(!GetMonitorInfo(currentMonitor, &monitorInfo))
-    {
-        return ret;
-    }
-
-    need_resize = 0;
-    if (rcWin.left <= monitorInfo.rcWork.left) {
-      new_size.left = monitorInfo.rcWork.left;
-      need_resize = 1;
-    }
-    else {
-      new_size.left = rcWin.left;
-    }
-
-    if (rcWin.top <= monitorInfo.rcWork.top) {
-      new_size.top = monitorInfo.rcWork.top;
-      need_resize = 1;
-    }
-    else {
-      new_size.top = rcWin.top;
-    }
-
-    if ((rcWin.right - rcWin.left) > (monitorInfo.rcWork.right - monitorInfo.rcWork.left)) {
-      new_size.right = (monitorInfo.rcWork.right - monitorInfo.rcWork.left);
-      need_resize = 1;
-    }
-    else {
-      new_size.right = (rcWin.right - rcWin.left);
-    }
-
-    if ((rcWin.bottom - rcWin.top) > (monitorInfo.rcWork.bottom - monitorInfo.rcWork.top)) {
-      new_size.bottom = (monitorInfo.rcWork.bottom - monitorInfo.rcWork.top);
-      need_resize = 1;
-    }
-    else {
-      new_size.bottom = (rcWin.bottom - rcWin.top);
-    }
-
-    if (need_resize)
-    {
-       old_style = GetWindowLongPtr (hwnd, GWL_STYLE);
-       old_ex_style = GetWindowLongPtr (hwnd, GWL_EXSTYLE);
-
-       if (!old_style || !old_ex_style) {
-          return ret;
-       }
-
-       SetWindowLongPtr(hwnd, GWL_STYLE,
-                  WS_VISIBLE | old_style);
-
-       SetWindowLongPtr(hwnd, GWL_EXSTYLE,
-                  old_ex_style);
-
-       SetWindowPos ( hwnd, HWND_TOPMOST, new_size.left,
-                   new_size.top,
-                   new_size.right,
-                   new_size.bottom,
-                   SWP_DRAWFRAME | SWP_SHOWWINDOW);
-    }
-
-    return ret;
 
 #undef WIDTH
 #undef HEIGHT
