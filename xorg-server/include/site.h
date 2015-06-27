@@ -51,7 +51,7 @@ SOFTWARE.
  * server executable.
  */
 #ifndef VENDOR_STRING
-#define VENDOR_STRING "HC-Consult"
+#define VENDOR_STRING "The X2Go and Arctica Projects"
 #endif
 
 /*

@@ -7,7 +7,7 @@
 #undef VENDOR_MAN_VERSION
 
 /* Vendor name */
-#define VENDOR_NAME  "HC-Consult"
+#define VENDOR_NAME  "The X2Go and Arctica Projects"
 
 /* Vendor release */
 #define VENDOR_RELEASE  XORG_VERSION_CURRENT

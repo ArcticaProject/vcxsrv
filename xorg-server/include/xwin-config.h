@@ -21,10 +21,10 @@
 /* #undef _XSERVER64 */
 
 /* Short vendor name */
-#define XVENDORNAMESHORT "VcXsrv"
+#define XVENDORNAMESHORT "VcXsrv-X2Go/Arctica"
 
 /* Vendor web address for support */
-#define __VENDORDWEBSUPPORT__ "http://www.hc-consult.be/"
+#define __VENDORDWEBSUPPORT__ "https://github.com/ArcticaProject/vcxsrv/issues"
 
 /* Location of system.XWinrc */
 #define SYSCONFDIR "."
