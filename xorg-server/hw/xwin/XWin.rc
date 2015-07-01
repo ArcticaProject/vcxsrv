@@ -84,7 +84,7 @@ BEGIN
   LTEXT			"VcXsrv X Server (X2Go/Arctica Builds) ", IDC_STATIC, 36, 8, 220, 8
   LTEXT			"https://github.com/ArcticaProject/vcxsrv", IDC_STATIC, 36, 18, 220, 8
   LTEXT			"http://code.x2go.org/gitweb?p=vcxsrv.git", IDC_STATIC, 36, 28, 220, 8
-  LTEXT			"Version "VER_PRODUCTVERSION_STR" (27 Jun 2015)", IDC_STATIC, 36, 38, 220, 8
+  LTEXT			"Version "VER_PRODUCTVERSION_STR" (30 Jun 2015)", IDC_STATIC, 36, 38, 220, 8
   DEFPUSHBUTTON		"OK", IDOK, 105, 75, 50, 15
 END
 
