@@ -18,7 +18,7 @@
 ;--------------------------------
 
 !define NAME_STRING "VcXsrv (X2Go/Arctica Builds)"
-!define VERSION "1.15.2.7"
+!define VERSION "1.15.2.8"
 !define UNINSTALL_PUBLISHER "X2Go & Arctica Projects"
 !define UNINSTALL_URL "https://github.com/ArcticaProject/vcxsrv"
 
