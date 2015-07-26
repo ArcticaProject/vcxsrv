@@ -31,7 +31,7 @@ Other changes are:
 
 Current versions of both 1.15.2.x & 1.17.0.0-x and be found on the [Releases](https://github.com/ArcticaProject/vcxsrv/releases) page on GitHub.:
 
-`1.15.2.6` and earlier, as well as `1.17.0.0-1`, can be found [here](http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/):
+`1.15.2.6` and earlier, as well as `1.17.0.0-1`, can be found [here](http://code.x2go.org/releases/binary-win32/3rd-party/vcxsrv-modified-by-x2go-project/).
 
 
 
