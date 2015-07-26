@@ -27,7 +27,7 @@ Other changes are:
 
 ------
 
-#### Download builds:
+#### Download Builds:
 
 Current versions of both 1.15.2.x & 1.17.0.0-x and be found on the [Releases](https://github.com/ArcticaProject/vcxsrv/releases) page on GitHub.:
 
@@ -47,7 +47,7 @@ You can also ask questions about VcXsrv usage or discuss development on [the X2G
 
 [Professional Support is available from one of the X2Go Developers.](http://wiki.x2go.org/doku.php/doc:professional-support)
 
-## Info for developers
+## Info for Developers
 
 ####  Why this repo and these builds exist.
 
@@ -58,7 +58,7 @@ You might be wondering why this repo and these builds exist. Why not upstream yo
 3. [SourceForge has recently done terrible things as GitHub has gained popularity](https://en.wikipedia.org/wiki/SourceForge#DevShare_adware_controversy)
 4. Using a GitHub repo is much preferable to using a personal SourceForge repo in terms of visibility.
 
-#### Explanation of branches:
+#### Explanation of Branches:
 
 1. master - The upstream VcXsrv branch that upstream VcXsrv is built from. Currently on the 1.16.x version series.
 2. release/1.15.2.x - the 1.15.2.x branch maintained by Arctica and X2Go.
